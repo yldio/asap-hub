@@ -3,7 +3,6 @@ import {
   Button,
   chevronCircleDownIcon,
   chevronCircleUpIcon,
-  crossQuery,
   Headline3,
   Paragraph,
   pixels,
@@ -20,14 +19,13 @@ type ProjectMilestonesProps = {
 };
 
 const contentStyles = css({
-  padding: `${rem(24)} 0`,
+  padding: `${rem(16)} 0`,
 });
 const gridMixin = {
   display: 'grid',
   borderBottom: `1px solid ${colors.neutral500.rgb}`,
   marginBottom: rem(12),
-  paddingBottom: rem(12),
-  gap: rem(12),
+  padding: `${rem(16)} 0 ${rem(12)}`,
 };
 const rowStyles = css({
   ...gridMixin,
@@ -38,10 +36,7 @@ const buttonWrapperStyles = css({
   display: 'flex',
   justifyContent: 'center',
   width: '100%',
-  borderBottom: `1px solid ${colors.neutral500.rgb}`,
-  [crossQuery]: {
-    borderBottom: `transparent`,
-  },
+  borderBottom: `transparent`,
 });
 const hideStyles = css({
   ...gridMixin,
@@ -54,15 +49,9 @@ const ProjectMilestones: React.FC<ProjectMilestonesProps> = ({
   const minimumMilestonesToDisplay = 3;
   const [expanded, setExpanded] = useState(false);
   const getMilestoneListStyles = () => {
-    if (milestones.length < minimumMilestonesToDisplay + 1) {
-      return {
-        ...rowStyles,
-        [crossQuery]: {
-          borderBottom: `1px solid ${colors.neutral500.rgb}`,
-        },
-      };
+    if (milestones.length < minimumMilestonesToDisplay + 1 || expanded) {
+      return rowStyles;
     }
-    if (expanded) return rowStyles;
 
     return { ...rowStyles, ...hideStyles };
   };

@@ -13,12 +13,8 @@ const { rem } = pixels;
 
 const rowStyles = css({
   display: 'flex',
-  paddingTop: rem(8),
-  paddingBottom: rem(15),
-  flexDirection: 'column',
-  [crossQuery]: {
-    flexDirection: 'row',
-  },
+  paddingBottom: rem(16),
+  flexDirection: 'row',
 });
 
 type ProjectMilestoneProps = {
@@ -27,13 +23,14 @@ type ProjectMilestoneProps = {
 
 const ProjectMilestone: React.FC<ProjectMilestoneProps> = ({ milestone }) => (
   <>
-    <div css={[rowStyles, css({ gap: rem(4) })]}>
+    <div css={[rowStyles]}>
       <div css={css({ display: 'inline-flex' })}>
         <StatusPill status={milestone.status} />
       </div>
       {milestone.link && (
         <div
           css={css({
+            paddingLeft: rem(44),
             [crossQuery]: {
               marginLeft: 'auto',
             },
@@ -48,8 +45,10 @@ const ProjectMilestone: React.FC<ProjectMilestoneProps> = ({ milestone }) => (
         </div>
       )}
     </div>
-    <Subtitle hasMargin={false}>{milestone.title}</Subtitle>
-    <div css={css({ paddingBottom: rem(8) })}>
+    <Subtitle styleAsHeading={4} hasMargin={false}>
+      {milestone.title}
+    </Subtitle>
+    <div css={css({ padding: `${rem(8)} 0` })}>
       <Paragraph hasMargin={false} accent="lead">
         {milestone.description}
       </Paragraph>

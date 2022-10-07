@@ -1,4 +1,4 @@
-import { css, CSSObject } from '@emotion/react';
+import { css, CSSObject, SerializedStyles } from '@emotion/react';
 import { borderRadius, paddingStyles } from '../card';
 import * as colors from '../colors';
 import { perRem } from '../pixels';
@@ -58,6 +58,7 @@ interface CardProps {
   readonly stroke?: boolean;
   readonly strokeColor?: string;
   readonly strokeSize?: number;
+  readonly overrideStyles?: SerializedStyles;
 
   readonly children: React.ReactNode;
 }
@@ -68,6 +69,7 @@ const Card: React.FC<CardProps> = ({
   stroke = false,
   strokeColor = colors.cerulean.rgb,
   strokeSize = borderRadius,
+  overrideStyles,
 }) => (
   <section
     css={[
@@ -76,6 +78,7 @@ const Card: React.FC<CardProps> = ({
       stroke && strokeStyles(strokeColor, strokeSize),
       padding && paddingStyles,
       accents[accent],
+      overrideStyles,
     ]}
   >
     {children}

@@ -33,7 +33,7 @@ const Discover: FC<Record<string, never>> = () => {
       .then(loadTutorials)
       .then(loadWorkingGroups)
       .then(loadAbout)
-      .then(loadTutorials);
+      .then(loadTutorial);
   }, []);
 
   const { path } = useRouteMatch();

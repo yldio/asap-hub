@@ -13,18 +13,14 @@ export interface TutorialsDataProvider {
 export class TutorialsSquidexDataProvider implements TutorialsDataProvider {
   constructor(private squidexGraphlClient: SquidexGraphqlClient) {}
   async fetchById(id: string): Promise<TutorialsDataObject | null> {
-    const { findTutorialsContent } = await this.queryFetchByIdData(id);
+    const { findTutorialsContent } = await this.squidexGraphlClient.request<
+      FetchTutorialsQuery,
+      FetchTutorialsQueryVariables
+    >(FETCH_TUTORIAL, { id });
 
     if (!findTutorialsContent) {
       return null;
     }
     return parseGraphQLTutorials(findTutorialsContent);
-  }
-
-  private async queryFetchByIdData(id: string) {
-    return this.squidexGraphlClient.request<
-      FetchTutorialsQuery,
-      FetchTutorialsQueryVariables
-    >(FETCH_TUTORIAL, { id });
   }
 }

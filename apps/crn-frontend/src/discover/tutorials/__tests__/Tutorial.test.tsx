@@ -56,9 +56,6 @@ const renderPage = async () => {
   );
 
   await waitFor(() =>
-    expect(result.queryByText(/auth0/i)).not.toBeInTheDocument(),
-  );
-  await waitFor(() =>
     expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
   );
   return result;

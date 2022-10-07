@@ -68,7 +68,7 @@ beforeEach(() => {
   mockGetTutorialById.mockClear();
 });
 
-it('renders not found when the request doesnt return a TutorialResponse Object', async () => {
+it('renders not found when the tutorial hook doesnt return a tutorial', async () => {
   mockGetTutorialById.mockResolvedValue(undefined);
 
   const { getByRole } = await renderPage();
@@ -77,7 +77,7 @@ it('renders not found when the request doesnt return a TutorialResponse Object',
   );
 });
 
-it('renders title', async () => {
+it('renders a tutorial when the tutorial hook returns a tutorial', async () => {
   mockGetTutorialById.mockResolvedValue(tutorial);
 
   const { getByRole } = await renderPage();

@@ -15,20 +15,26 @@ import { useState } from 'react';
 
 const { rem } = pixels;
 
-const { UserRegion, userRegions } = gp2Model;
+const { userRegions } = gp2Model;
 
 const containerStyles = css({
   padding: `${rem(32)} ${rem(24)}`,
 });
 
 type FiltersModalProps = {
-  backHref: string;
+  onBackClick: () => void;
+  onApplyClick: (filters) => void;
 };
 
-const FiltersModal: React.FC<FiltersModalProps> = ({ backHref }) => {
-  const [seletedRegions, setSelectedRegions] = useState(
-    new Array<typeof UserRegion>(),
-  );
+const FiltersModal: React.FC<FiltersModalProps> = ({
+  onBackClick,
+  onApplyClick,
+  filters,
+}) => {
+  const [seletedRegions, setSelectedRegions] = useState(filters.regions || []);
+  const resetFilters = () => {
+    setSelectedRegions([]);
+  };
   return (
     <Modal padding={false}>
       <div css={containerStyles}>
@@ -71,11 +77,15 @@ const FiltersModal: React.FC<FiltersModalProps> = ({ backHref }) => {
           suggestions={[]}
         />
         <Divider />
-        <Link small buttonStyle href={backHref}>
-          Close
-        </Link>
-        <Button noMargin>Reset</Button>
-        <Button primary noMargin>
+        <Button onClick={() => onBackClick()}>Close</Button>
+        <Button noMargin onClick={() => resetFilters()}>
+          Reset
+        </Button>
+        <Button
+          primary
+          noMargin
+          onClick={() => onApplyClick({ regions: seletedRegions })}
+        >
           Apply
         </Button>
       </div>

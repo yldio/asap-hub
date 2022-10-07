@@ -1,4 +1,4 @@
-import { ListResponse } from '../common';
+import { FetchOptions, ListResponse } from '../common';
 import { Connection } from '../user';
 
 export const userRoles = [
@@ -73,3 +73,9 @@ export interface UserResponse extends Omit<UserDataObject, 'connections'> {
 }
 export type ListUserResponse = ListResponse<UserResponse>;
 export type UserUpdateRequest = UserUpdateDataObject;
+
+export type FetchUsersFilter = {
+  regions: UserRegion[];
+};
+
+export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;

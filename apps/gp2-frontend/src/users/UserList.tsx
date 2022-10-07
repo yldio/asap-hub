@@ -2,12 +2,14 @@ import { UsersPageBody, FiltersModal } from '@asap-hub/gp2-components';
 import { gp2 } from '@asap-hub/routing';
 import { Route } from 'react-router-dom';
 import { usePagination, usePaginationParams } from '../hooks/pagination';
+import { useSearch } from '../hooks/search';
 import { useUsersState } from './state';
 
 const UserList: React.FC<Record<string, never>> = () => {
   const { users } = gp2;
 
   const { currentPage, pageSize } = usePaginationParams();
+  const { filters, updateFilters, searchQuery, changeLocation } = useSearch();
   const userList = useUsersState({
     currentPage,
     pageSize,
@@ -20,6 +22,10 @@ const UserList: React.FC<Record<string, never>> = () => {
   );
   const backHref = users({}).$;
   const filtersHref = users({}).filters({}).$;
+  const onBackClick = () => changeLocation(backHref);
+  const onFiltersClick = () => changeLocation(filtersHref);
+  console.log(searchQuery);
+  console.log('filters', filters);
   return (
     <>
       <UsersPageBody
@@ -27,10 +33,14 @@ const UserList: React.FC<Record<string, never>> = () => {
         numberOfPages={numberOfPages}
         currentPageIndex={currentPage}
         renderPageHref={renderPageHref}
-        filtersHref={filtersHref}
+        onFiltersClick={onFiltersClick}
       />
       <Route exact path={filtersHref}>
-        <FiltersModal backHref={backHref} />
+        <FiltersModal
+          onBackClick={onBackClick}
+          filters={filters}
+          onApplyClick={(f) => updateFilters(backHref, f)}
+        />
       </Route>
     </>
   );

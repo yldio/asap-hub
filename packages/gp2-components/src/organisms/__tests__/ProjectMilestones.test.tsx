@@ -1,5 +1,6 @@
 import { gp2 } from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import ProjectMilestones from '../ProjectMilestones';
 
 describe('ProjectMilestones', () => {
@@ -31,5 +32,43 @@ describe('ProjectMilestones', () => {
     expect(
       screen.getByRole('heading', { name: 'a title 1' }),
     ).toBeInTheDocument();
+  });
+
+  it('Renders show more button for more than 3 milestones', async () => {
+    const milestones = getMilestones(4);
+
+    render(<ProjectMilestones milestones={milestones} />);
+
+    expect(screen.getByRole('button', { name: /Show more/i })).toBeVisible();
+  });
+  it('Renders show less button when the show more button is clicked', async () => {
+    const milestones = getMilestones(4);
+
+    render(<ProjectMilestones milestones={milestones} />);
+
+    const button = screen.getByRole('button', { name: /Show more/i });
+    userEvent.click(button);
+    expect(screen.getByRole('button', { name: /Show less/i })).toBeVisible();
+  });
+  it('does not show a more button for less than 3 milestones', async () => {
+    const milestones = getMilestones(3);
+
+    render(<ProjectMilestones milestones={milestones} />);
+
+    expect(
+      screen.queryByRole('button', { name: /Show more/i }),
+    ).not.toBeInTheDocument();
+  });
+  it('displays the hidden milestones if the button is clicked', () => {
+    const milestones = getMilestones(4);
+
+    render(<ProjectMilestones milestones={milestones} />);
+    expect(
+      screen.getByRole('heading', { name: 'a title 2' }),
+    ).toBeInTheDocument();
+    expect(screen.getByText('a title 3')).not.toBeVisible();
+    const button = screen.getByRole('button', { name: /Show more/i });
+    userEvent.click(button);
+    expect(screen.getByText('a title 3')).toBeVisible();
   });
 });

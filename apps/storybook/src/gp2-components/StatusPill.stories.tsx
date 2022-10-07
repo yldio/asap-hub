@@ -3,7 +3,7 @@ import { gp2 } from '@asap-hub/model';
 import { select } from '@storybook/addon-knobs';
 
 export default {
-  title: 'GP2 / Molecules /Status Pill',
+  title: 'GP2 / Molecules / Status Pill',
   component: StatusPill,
 };
 

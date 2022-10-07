@@ -65,9 +65,9 @@ describe('News', () => {
 
   it.each`
     type                | route
-    ${'News'}           | ${'news'}
-    ${'Working Groups'} | ${'news'}
-    ${undefined}        | ${'tutorials'}
+    ${'News'}           | ${'/news/news-1'}
+    ${'Working Groups'} | ${'/news/news-1'}
+    ${'non existent'}   | ${'/discover/tutorials/news-1'}
   `(
     'links to detail page when text is present and type is $type',
     ({ type, route }) => {
@@ -77,7 +77,7 @@ describe('News', () => {
       expect(queryByRole('link')).not.toBeInTheDocument();
 
       const { type: _type, ...newsCardPropsWithoutType } = newsCardProps;
-      const mockType = type ? { type } : {};
+      const mockType = type === 'non existent' ? {} : { type };
 
       rerender(
         <NewsCard
@@ -88,7 +88,7 @@ describe('News', () => {
           id="news-1"
         />,
       );
-      expect(getByText('findThis')).toHaveAttribute('href', `/${route}/news-1`);
+      expect(getByText('findThis')).toHaveAttribute('href', route);
     },
   );
 });

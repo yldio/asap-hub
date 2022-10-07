@@ -53,7 +53,7 @@ const NewsDetailsPage: React.FC<NewsDetailsPageProps> = ({
   return (
     <div css={containerStyles}>
       <Card>
-        {'type' in rest ? <Pill>{rest.type}</Pill> : <Pill>'Tutorial'</Pill>}
+        <Pill>{'type' in rest ? rest.type : 'Tutorial'}</Pill>
         <Display styleAsHeading={3}>{title}</Display>
         {publishDateComponent}
         <div css={richTextContainer}>

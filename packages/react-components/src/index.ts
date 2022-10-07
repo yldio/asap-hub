@@ -36,6 +36,7 @@ export * from './hooks';
 export * from './icons';
 export * from './images';
 export * from './layout';
+export * from './routing';
 export { MessageLayout, WelcomeMessage } from './messages';
 export {
   Accordion,

@@ -71,7 +71,7 @@ describe('Tutorial detail page', () => {
     );
   });
 
-  it('renders title', async () => {
+  it('renders a tutorial when the tutorial hook returns a tutorial', async () => {
     mockGetTutorialById.mockResolvedValue(tutorial);
 
     const { getByRole } = await renderPage();

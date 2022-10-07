@@ -62,7 +62,7 @@ describe('Tutorial detail page', () => {
     mockGetTutorialById.mockClear();
   });
 
-  it('renders not found when the request doesnt return a TutorialResponse Object', async () => {
+  it('renders not found when the tutorial hook doesnt return a tutorial', async () => {
     mockGetTutorialById.mockResolvedValue(undefined);
 
     const { getByRole } = await renderPage();

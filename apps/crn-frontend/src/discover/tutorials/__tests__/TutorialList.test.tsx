@@ -12,12 +12,12 @@ import {
 import { discover } from '@asap-hub/routing';
 import { TutorialsResponse } from '@asap-hub/model';
 
-import Tutorials from '../Tutorials';
-import Tutorial from '../tutorials/Tutorial';
-import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { refreshDiscoverState } from '../state';
-import { getDiscover } from '../api';
-import { getTutorialById } from '../tutorials/api';
+import Tutorials from '../TutorialList';
+import Tutorial from '../Tutorial';
+import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
+import { refreshDiscoverState } from '../../state';
+import { getDiscover } from '../../api';
+import { getTutorialById } from '../api';
 
 jest.mock('../api');
 jest.mock('../tutorials/api');

@@ -64,24 +64,22 @@ const renderPage = async () => {
   return result;
 };
 
-describe('Tutorial detail page', () => {
-  beforeEach(() => {
-    mockGetTutorialById.mockClear();
-  });
+beforeEach(() => {
+  mockGetTutorialById.mockClear();
+});
 
-  it('renders not found when the request doesnt return a TutorialResponse Object', async () => {
-    mockGetTutorialById.mockResolvedValue(undefined);
+it('renders not found when the request doesnt return a TutorialResponse Object', async () => {
+  mockGetTutorialById.mockResolvedValue(undefined);
 
-    const { getByRole } = await renderPage();
-    expect(getByRole('heading').textContent).toContain(
-      'Sorry! We can’t seem to find that page.',
-    );
-  });
+  const { getByRole } = await renderPage();
+  expect(getByRole('heading').textContent).toContain(
+    'Sorry! We can’t seem to find that page.',
+  );
+});
 
-  it('renders title', async () => {
-    mockGetTutorialById.mockResolvedValue(tutorial);
+it('renders title', async () => {
+  mockGetTutorialById.mockResolvedValue(tutorial);
 
-    const { getByRole } = await renderPage();
-    expect(getByRole('heading').textContent).toContain('Tutorial Title');
-  });
+  const { getByRole } = await renderPage();
+  expect(getByRole('heading').textContent).toContain('Tutorial Title');
 });

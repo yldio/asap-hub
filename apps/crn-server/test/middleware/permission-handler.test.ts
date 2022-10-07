@@ -215,6 +215,27 @@ describe('Permission middleware', () => {
           expect(response.status).toBe(access === 'allow' ? 200 : 403);
         },
       );
+
+      describe('User profile', () => {
+        test('Should allow access to GET /users/{user_id} when the requested user is the logged-in user', async () => {
+          userControllerMock.fetchById.mockResolvedValueOnce(getUserResponse());
+
+          const response = await supertest(appWithMockedAuth).get(
+            `/users/${mockUser.id}`,
+          );
+          expect(response.status).toBe(200);
+        });
+
+        test('Should deny access to PATCH /users/{user_id}', async () => {
+          userControllerMock.update.mockResolvedValueOnce(getUserResponse());
+
+          const response = await supertest(appWithMockedAuth)
+            .patch(`/users/${mockUser.id}`)
+            .send({ jobTitle: 'CEO' });
+
+          expect(response.status).toBe(403);
+        });
+      });
     });
   });
 });

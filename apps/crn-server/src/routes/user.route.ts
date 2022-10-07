@@ -156,6 +156,11 @@ export const userRouteFactory = (
       throw Boom.forbidden();
     }
 
+    // user is an alumni
+    if (req.loggedInUser!.alumniSinceDate) {
+      throw Boom.forbidden('User is an alumni');
+    }
+
     const { onboarded, ...userProfileUpdate } = payload;
 
     const result = await userController.update(userId, userProfileUpdate);

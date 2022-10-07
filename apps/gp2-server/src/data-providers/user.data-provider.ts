@@ -167,30 +167,13 @@ function getUserSquidexData(
   return cleanedUser;
 }
 
-const generateFetchQueryFilter = ({ search, filter }: FetchUsersOptions) => {
-  const searchFilter = [
-    ...(search || '')
-      .split(' ')
-      .filter(Boolean) // removes whitespaces
-      .map(sanitiseForSquidex)
-      .reduce(
-        (acc: string[], word: string) =>
-          acc.concat(
-            `(${[
-              [`contains(data/firstName/iv, '${word}')`],
-              [`contains(data/lastName/iv, '${word}')`],
-            ].join(' or ')})`,
-          ),
-        [],
-      ),
-  ].join(' and ');
-  const { code } = filter || {};
-  const filterCode = code && `data/connections/iv/code eq '${code}'`;
+const generateFetchQueryFilter = ({ filter }: gp2.FetchUsersOptions) => {
+  const { regions } = filter || {};
+  const filterRegions = regions
+    ?.map((region) => `data/region/iv eq '${region}'`)
+    .join(' or ');
 
-  const queryFilter = [filterCode, searchFilter && `(${searchFilter})`]
-    .filter(Boolean)
-    .join(' and ')
-    .trim();
+  const queryFilter = [filterRegions].filter(Boolean).join(' and ').trim();
   return queryFilter;
 };
 

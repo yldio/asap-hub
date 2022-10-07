@@ -2,27 +2,8 @@ import { GenericError, NotFoundError } from '@asap-hub/errors';
 import { gp2 } from '@asap-hub/model';
 import { UserDataProvider } from '../data-providers/user.data-provider';
 
-export type FetchUsersFilter = {
-  role?: string[];
-  labId?: string[];
-  teamId?: string[];
-  code?: string;
-  hidden?: boolean;
-  onboarded?: boolean;
-  orcid?: string;
-};
-
-export type FetchOptions<TFilter = string[]> = {
-  search?: string;
-  filter?: TFilter;
-  take?: number;
-  skip?: number;
-};
-
-export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;
-
 export interface UserController {
-  fetch(options: FetchUsersOptions): Promise<gp2.ListUserResponse>;
+  fetch(options: gp2.FetchUsersOptions): Promise<gp2.ListUserResponse>;
   fetchByCode(code: string): Promise<gp2.UserResponse>;
   fetchById(id: string): Promise<gp2.UserResponse>;
   update(id: string, update: gp2.UserUpdateRequest): Promise<gp2.UserResponse>;
@@ -44,7 +25,7 @@ export default class Users implements UserController {
     return this.fetchById(id);
   }
 
-  async fetch(options: FetchUsersOptions): Promise<gp2.ListUserResponse> {
+  async fetch(options: gp2.FetchUsersOptions): Promise<gp2.ListUserResponse> {
     const { total, items: users } = await this.userDataProvider.fetch(options);
 
     const items = total > 0 ? users.map(parseUserToResponse) : [];

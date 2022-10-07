@@ -1,5 +1,6 @@
 import { gp2 } from '@asap-hub/model';
 import {
+  Button,
   filterIcon,
   Link,
   PageControls,
@@ -24,14 +25,14 @@ const containerStyles = css({
 
 const UsersPageBody: React.FC<UsersPageBodyProps> = ({
   users,
-  filtersHref,
+  onFiltersClick,
   ...pageProps
 }) => (
   <article css={containerStyles}>
-    <Link buttonStyle href={filtersHref}>
+    <Button onClick={() => onFiltersClick()}>
       {filterIcon}
       Filters
-    </Link>
+    </Button>
     {users.items.map((user) => (
       <UserCard key={user.id} {...user} />
     ))}

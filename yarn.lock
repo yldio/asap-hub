@@ -493,7 +493,7 @@ __metadata:
     "@graphql-codegen/typescript-operations": 2.5.3
     "@graphql-typed-document-node/core": 3.1.1
     contentful-cli: 1.15.19
-    contentful-migrate: ^0.17.0
+    contentful-migrate: 0.17.0
     graphql-tag: 2.12.6
     graphql-typescript-integration: 1.2.1
   languageName: unknown
@@ -18367,7 +18367,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"contentful-migrate@npm:^0.17.0":
+"contentful-migrate@npm:0.17.0":
   version: 0.17.0
   resolution: "contentful-migrate@npm:0.17.0"
   dependencies:

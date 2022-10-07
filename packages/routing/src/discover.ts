@@ -1,9 +1,6 @@
 import { route, stringParser } from 'typesafe-routes';
 
-const tutorial = (() => {
-  return route('/:tutorialId', { tutorialId: stringParser }, {});
-})();
-
+const tutorial = route('/:tutorialId', { tutorialId: stringParser }, {});
 const tutorials = route('/tutorials', {}, { tutorial });
 const guides = route('/guides', {}, {});
 const workingGroups = route('/working-groups', {}, {});

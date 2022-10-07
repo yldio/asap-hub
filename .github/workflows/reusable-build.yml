@@ -145,6 +145,8 @@ jobs:
           yarn check:packages
       - name: Build
         env:
+          CRN_AUTH_FRONTEND_BASE_URL: '${{ steps.setup.outputs.crn-auth-url}}'
+          GP2_AUTH_FRONTEND_BASE_URL: '${{ steps.setup.outputs.gp2-auth-url}}'
           REACT_APP_ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           REACT_APP_ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
           REACT_APP_API_BASE_URL: ${{ steps.setup.outputs.crn-api-url }}
@@ -166,7 +168,18 @@ jobs:
         with:
           cache-prefix: ${{ steps.setup.outputs.cache-prefix-frontend }}
           environment-name: ${{ inputs.environment-name }}
-
+      - name: CRN Auth frontend artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: crn-auth-frontend-${{ inputs.environment-name }}
+          path: apps/crn-auth-frontend/build
+          retention-days: 5
+      - name: GP2 Auth frontend artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: gp2-auth-frontend-${{ inputs.environment-name }}
+          path: apps/gp2-auth-frontend/build
+          retention-days: 5
   typecheck:
     needs: [definitions]
     runs-on: ubuntu-latest

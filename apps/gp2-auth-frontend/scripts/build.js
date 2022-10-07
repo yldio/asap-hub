@@ -5,5 +5,5 @@ const { build } = require('@asap-hub/auth-frontend-scripts');
 build(resolve(__dirname, '../build'), {
   ...env,
   PUBLIC_URL:
-    env.AUTH_GP2_FRONTEND_BASE_URL || 'https://dev.gp2.asap.science/.auth/',
+    env.GP2_AUTH_FRONTEND_BASE_URL || 'https://dev.gp2.asap.science/.auth/',
 });

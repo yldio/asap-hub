@@ -9,7 +9,7 @@ import {
   createNewsResponse,
   createTutorialsResponse,
 } from '@asap-hub/fixtures';
-import { discover, tutorials } from '@asap-hub/routing';
+import { discover } from '@asap-hub/routing';
 import { TutorialsResponse } from '@asap-hub/model';
 
 import Tutorials from '../Tutorials';
@@ -52,7 +52,13 @@ const renderDiscoverTutorials = async (user: Partial<User>) => {
               <Route path={discover.template}>
                 <Tutorials />
               </Route>
-              <Route path={tutorials.template + tutorials({}).article.template}>
+              <Route
+                path={
+                  discover.template +
+                  discover({}).tutorials.template +
+                  discover({}).tutorials({}).tutorial.template
+                }
+              >
                 <Tutorial />
               </Route>
             </MemoryRouter>
@@ -109,7 +115,12 @@ it('renders tutorial page when user clicks tutorial card title', async () => {
   expect(tutorialAnchorTitle.href).toContain('/tutorials/');
 
   userEvent.click(tutorialAnchorTitle);
-  await waitFor(() => expect(mockGetTutorialById).toHaveBeenCalled());
+  await waitFor(() =>
+    expect(mockGetTutorialById).toHaveBeenCalledWith(
+      'uuid-First One',
+      'Bearer access_token',
+    ),
+  );
 
   expect(
     await screen.findByText(/First One title/i, { selector: 'h1' }),

@@ -16,44 +16,67 @@ const loadWorkingGroups = () =>
 const loadAbout = () =>
   import(/* webpackChunkName: "discover-about" */ './About');
 
+const loadTutorial = () =>
+  import(
+    /* webpackChunkName: "tutorials-details-page" */ './tutorials/Tutorial'
+  );
+
 const Guides = lazy(loadGuides);
 const Tutorials = lazy(loadTutorials);
 const WorkingGroups = lazy(loadWorkingGroups);
 const About = lazy(loadAbout);
+const TutorialDetailsPage = lazy(loadTutorial);
 
 const Discover: FC<Record<string, never>> = () => {
   useEffect(() => {
-    loadGuides().then(loadTutorials).then(loadWorkingGroups).then(loadAbout);
+    loadGuides()
+      .then(loadTutorials)
+      .then(loadWorkingGroups)
+      .then(loadAbout)
+      .then(loadTutorials);
   }, []);
 
   const { path } = useRouteMatch();
 
   return (
-    <DiscoverPage>
-      <Switch>
-        <Route exact path={path + discover({}).guides.template}>
-          <Frame title="Guides">
-            <Guides />
-          </Frame>
-        </Route>
-        <Route exact path={path + discover({}).tutorials.template}>
-          <Frame title="Tutorials">
-            <Tutorials />
-          </Frame>
-        </Route>
-        <Route exact path={path + discover({}).workingGroups.template}>
-          <Frame title="Working Groups">
-            <WorkingGroups />
-          </Frame>
-        </Route>
-        <Route exact path={path + discover({}).about.template}>
-          <Frame title="About ASAP">
-            <About />
-          </Frame>
-        </Route>
-        <Redirect to={discover({}).guides({}).$} />
-      </Switch>
-    </DiscoverPage>
+    <Switch>
+      <Route
+        path={
+          path +
+          discover({}).tutorials.template +
+          discover({}).tutorials({}).tutorial.template
+        }
+      >
+        <Frame title={null}>
+          <TutorialDetailsPage />
+        </Frame>
+      </Route>
+      <DiscoverPage>
+        <Switch>
+          <Route exact path={path + discover({}).guides.template}>
+            <Frame title="Guides">
+              <Guides />
+            </Frame>
+          </Route>
+          <Route exact path={path + discover({}).tutorials.template}>
+            <Frame title="Tutorials">
+              <Tutorials />
+            </Frame>
+          </Route>
+          <Route exact path={path + discover({}).workingGroups.template}>
+            <Frame title="Working Groups">
+              <WorkingGroups />
+            </Frame>
+          </Route>
+          <Route exact path={path + discover({}).about.template}>
+            <Frame title="About ASAP">
+              <About />
+            </Frame>
+          </Route>
+          <Redirect to={discover({}).guides({}).$} />
+        </Switch>
+      </DiscoverPage>
+    </Switch>
   );
 };
 

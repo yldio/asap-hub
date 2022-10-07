@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { TutorialsResponse } from '@asap-hub/model';
-import { tutorials } from '@asap-hub/routing';
+import { discover } from '@asap-hub/routing';
 
 import Tutorial from '../Tutorial';
 
@@ -35,10 +35,17 @@ const renderPage = async () => {
           <WhenReady>
             <MemoryRouter
               initialEntries={[
-                tutorials({}).article({ articleId: tutorial.id }).$,
+                discover({}).tutorials({}).tutorial({ tutorialId: tutorial.id })
+                  .$,
               ]}
             >
-              <Route path={tutorials.template + tutorials({}).article.template}>
+              <Route
+                path={
+                  discover.template +
+                  discover({}).tutorials.template +
+                  discover({}).tutorials({}).tutorial.template
+                }
+              >
                 <Tutorial />
               </Route>
             </MemoryRouter>

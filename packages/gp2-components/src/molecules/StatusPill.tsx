@@ -20,8 +20,8 @@ export const statusStyles: Record<
     borderColor: colors.info900.rgba,
   },
   Completed: {
-    color: colors.secondary900.rgba,
-    borderColor: colors.secondary900.rgba,
+    color: colors.success900.rgba,
+    borderColor: colors.success900.rgba,
   },
   Inactive: {
     color: colors.warning900.rgba,

@@ -21,14 +21,11 @@ type ProjectMilestonesProps = {
 const contentStyles = css({
   padding: `${rem(16)} 0`,
 });
-const gridMixin = {
+const rowStyles = css({
   display: 'grid',
   borderBottom: `1px solid ${colors.neutral500.rgb}`,
   marginBottom: rem(12),
   padding: `${rem(16)} 0 ${rem(12)}`,
-};
-const rowStyles = css({
-  ...gridMixin,
 });
 
 const buttonWrapperStyles = css({
@@ -39,7 +36,6 @@ const buttonWrapperStyles = css({
   borderBottom: `transparent`,
 });
 const hideStyles = css({
-  ...gridMixin,
   [`:nth-of-type(n+5)`]: { display: 'none' },
 });
 
@@ -53,7 +49,7 @@ const ProjectMilestones: React.FC<ProjectMilestonesProps> = ({
       return rowStyles;
     }
 
-    return { ...rowStyles, ...hideStyles };
+    return [rowStyles, hideStyles];
   };
   return (
     <>

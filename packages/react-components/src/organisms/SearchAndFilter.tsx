@@ -16,7 +16,6 @@ const styles = css({
 
 type SearchFieldProps = ComponentProps<typeof SearchField>;
 interface SearchAndFilterProps<V extends string> {
-  readonly filterTitle: ComponentProps<typeof Filter>['filterTitle'];
   readonly filters?: Set<V>;
   readonly onChangeFilter?: (filter: V) => void;
   readonly filterOptions: Option<V>[];
@@ -34,7 +33,6 @@ export default function SearchAndFilter<V extends string>({
   filters,
   onChangeFilter,
   filterOptions,
-  filterTitle,
 }: SearchAndFilterProps<V>): ReturnType<React.FC> {
   return (
     <div role="search" css={styles}>
@@ -47,7 +45,6 @@ export default function SearchAndFilter<V extends string>({
         filters={filters}
         onChangeFilter={onChangeFilter}
         filterOptions={filterOptions}
-        filterTitle={filterTitle}
       />
     </div>
   );

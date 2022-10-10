@@ -50,6 +50,7 @@ type NetworkPageHeaderProps = (
 };
 
 const userFilters: Option<TeamRole | Role | UserTag>[] = [
+  { label: 'TEAM ROLES' },
   { label: 'Lead PI', value: 'Lead PI (Core Leadership)' },
   { label: 'Co-PI', value: 'Co-PI (Core Leadership)' },
   { label: 'Project Manager', value: 'Project Manager' },
@@ -57,6 +58,7 @@ const userFilters: Option<TeamRole | Role | UserTag>[] = [
   { label: 'Key Personnel', value: 'Key Personnel' },
   { label: 'ASAP Staff', value: 'ASAP Staff' },
   { label: 'SAB', value: 'Scientific Advisory Board' },
+  { label: 'TYPE OF USERS' },
   { label: 'CRN Member', value: 'CRN Member' },
   { label: 'Alumni Member', value: 'Alumni Member' },
 ];
@@ -100,7 +102,6 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
           searchQuery={searchQuery}
           onChangeFilter={onChangeFilter}
           filterOptions={userFilters}
-          filterTitle="TEAM ROLES"
           filters={filters}
         />
       ) : (

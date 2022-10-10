@@ -3,9 +3,10 @@ import { v4 as uuidV4 } from 'uuid';
 
 import { noop } from '../utils';
 import { LabeledCheckbox } from '../molecules';
+import { Caption } from '../atoms';
 
 export interface Option<V extends string> {
-  value: V;
+  value?: V;
   label: string;
   enabled?: boolean;
 }
@@ -25,16 +26,24 @@ export default function CheckboxGroup<V extends string>({
   const groupName = useRef(uuidV4());
   return (
     <>
-      {options.map((option, index) => (
-        <LabeledCheckbox
-          key={`${groupName}-${index}`}
-          groupName={groupName.current}
-          title={option.label}
-          enabled={option.enabled}
-          checked={values.has(option.value)}
-          onSelect={() => onChange(option.value)}
-        />
-      ))}
+      {options.map((option, index) =>
+        option.value === undefined ? (
+          <Caption asParagraph>
+            <strong>{option.label}</strong>
+          </Caption>
+        ) : (
+          <LabeledCheckbox
+            key={`${groupName}-${index}`}
+            groupName={groupName.current}
+            title={option.label}
+            enabled={option.enabled}
+            checked={values.has(option.value)}
+            onSelect={() =>
+              option.value !== undefined && onChange(option.value)
+            }
+          />
+        ),
+      )}
     </>
   );
 }

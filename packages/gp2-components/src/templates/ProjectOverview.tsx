@@ -81,25 +81,23 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
         </div>
       </Card>
     </div>
-    {!!members.length && (
-      <Card>
-        <Headline3 noMargin>{`Project Members (${members.length})`}</Headline3>
-        <div css={contentStyles}>
-          <MembersList
-            members={members.map(
-              ({ role, firstName, lastName, avatarUrl, userId: id }) => ({
-                firstLine: `${firstName} ${lastName}`,
-                secondLine: role,
-                avatarUrl,
-                firstName,
-                lastName,
-                id,
-              }),
-            )}
-          />
-        </div>
-      </Card>
-    )}
+    <Card>
+      <Headline3 noMargin>{`Project Members (${members.length})`}</Headline3>
+      <div css={contentStyles}>
+        <MembersList
+          members={members.map(
+            ({ role, firstName, lastName, avatarUrl, userId: id }) => ({
+              firstLine: `${firstName} ${lastName}`,
+              secondLine: role,
+              avatarUrl,
+              firstName,
+              lastName,
+              id,
+            }),
+          )}
+        />
+      </div>
+    </Card>
     <Card padding={false} overrideStyles={cardStyles}>
       <ProjectMilestones milestones={milestones} />
     </Card>

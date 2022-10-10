@@ -52,27 +52,25 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
         />
       </div>
     </Card>
-    {!!members.length && (
-      <Card>
-        <Headline3
-          noMargin
-        >{`Working Group Members (${members.length})`}</Headline3>
-        <div css={contentStyles}>
-          <MembersList
-            members={members.map(
-              ({ role, firstName, lastName, avatarUrl, userId: id }) => ({
-                firstLine: `${firstName} ${lastName}`,
-                secondLine: role,
-                avatarUrl,
-                firstName,
-                lastName,
-                id,
-              }),
-            )}
-          />
-        </div>
-      </Card>
-    )}
+    <Card>
+      <Headline3
+        noMargin
+      >{`Working Group Members (${members.length})`}</Headline3>
+      <div css={contentStyles}>
+        <MembersList
+          members={members.map(
+            ({ role, firstName, lastName, avatarUrl, userId: id }) => ({
+              firstLine: `${firstName} ${lastName}`,
+              secondLine: role,
+              avatarUrl,
+              firstName,
+              lastName,
+              id,
+            }),
+          )}
+        />
+      </div>
+    </Card>
   </div>
 );
 

@@ -125,12 +125,12 @@ describe('ProjectOverview', () => {
     expect(screen.getByText('Project manager')).toBeInTheDocument();
   });
 
-  it('does not render the list if there are no members', () => {
+  it('renders the member list if there are no members. It displays a count of 0', () => {
     render(
       <ProjectOverview {...defaultProps} members={[]}>
         Body
       </ProjectOverview>,
     );
-    expect(screen.queryByText(/Project Members/i)).not.toBeInTheDocument();
+    expect(screen.getByText('Project Members (0)')).toBeInTheDocument();
   });
 });

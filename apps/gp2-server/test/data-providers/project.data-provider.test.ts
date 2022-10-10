@@ -201,15 +201,6 @@ describe('Project Data Provider', () => {
           const { milestones } = parseProjectToDataObject(project);
           expect(milestones[0]?.description).toEqual(description);
         });
-        test('throws with invalid status', () => {
-          const project = getGraphQLProject();
-          const milestone = getGraphQLProjectMilestone();
-          milestone.status = null;
-          project.flatData.milestones = [milestone];
-          expect(() => parseProjectToDataObject(project)).toThrowError(
-            new TypeError('milestone status is unknown'),
-          );
-        });
       });
     });
   });

@@ -1,7 +1,9 @@
 export * from './images';
 export * from './messages';
+export { StatusPill } from './molecules';
 export {
   NavigationHeader,
+  ProjectMilestones,
   ProjectsBody,
   UserCard,
   UsersPageBody,
@@ -15,8 +17,8 @@ export {
   ProjectDetailPage,
   ProjectOverview,
   ProjectsPage,
-  UserDetailPage,
   Theme,
+  UserDetailPage,
   UsersPage,
   WorkingGroupDetailPage,
   WorkingGroupOverview,

@@ -5,6 +5,7 @@ import ProjectOverview from '../ProjectOverview';
 describe('ProjectOverview', () => {
   const defaultProps = {
     keywords: [],
+    milestones: [],
   };
   it('renders the description', () => {
     const description = 'this is a description';
@@ -81,5 +82,19 @@ describe('ProjectOverview', () => {
     );
 
     expect(screen.getByText(keyword)).toBeInTheDocument();
+  });
+  it('displays the milestones', () => {
+    render(
+      <ProjectOverview
+        {...defaultProps}
+        milestones={[{ title: 'the milestone', status: 'Active' }]}
+      />,
+    );
+    expect(
+      screen.getByRole('heading', { name: 'Project Milestones (1)' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: /the milestone/ }),
+    ).toBeInTheDocument();
   });
 });

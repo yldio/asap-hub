@@ -1,6 +1,6 @@
 import { css, SerializedStyles } from '@emotion/react';
 import { Ellipsis } from '.';
-import { steel, lead, paper } from '../colors';
+import { lead, paper, steel } from '../colors';
 import { lineHeight, perRem } from '../pixels';
 
 const borderWidth = 1;
@@ -23,13 +23,16 @@ const styles = css({
 type PillProps = {
   readonly children?: React.ReactNode;
   readonly overrideStyles?: SerializedStyles;
+  readonly small?: boolean;
 };
 
-const Pill: React.FC<PillProps> = ({ children, overrideStyles }) => (
+const Pill: React.FC<PillProps> = ({
+  children,
+  overrideStyles,
+  small = true,
+}) => (
   <span css={[styles, overrideStyles]}>
-    <Ellipsis>
-      <small>{children}</small>
-    </Ellipsis>
+    <Ellipsis>{small ? <small>{children}</small> : children}</Ellipsis>
   </span>
 );
 

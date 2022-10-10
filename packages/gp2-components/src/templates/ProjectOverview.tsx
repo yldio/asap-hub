@@ -8,11 +8,12 @@ import {
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import ExpandableText from '../molecules/ExpandableText';
+import { ProjectMilestones } from '../organisms';
 import EmailSection from '../organisms/EmailSection';
 
 type ProjectOverviewProps = Pick<
   ProjectResponse,
-  'pmEmail' | 'leadEmail' | 'description' | 'keywords'
+  'pmEmail' | 'leadEmail' | 'description' | 'keywords' | 'milestones'
 >;
 
 const { rem } = pixels;
@@ -25,7 +26,7 @@ const containerStyles = css({
 });
 
 const contentStyles = css({
-  marginTop: rem(32),
+  paddingTop: rem(32),
 });
 
 const columnStyles = css({
@@ -37,15 +38,17 @@ const columnStyles = css({
     rowGap: rem(32),
   },
 });
+const cardStyles = css({ padding: `${rem(32)} ${rem(24)}` });
 const ProjectOverview: React.FC<ProjectOverviewProps> = ({
   description,
   pmEmail,
   leadEmail,
   keywords,
+  milestones,
 }) => (
   <div css={containerStyles}>
     {!!description && (
-      <Card>
+      <Card overrideStyles={cardStyles}>
         <Headline3 noMargin>Description</Headline3>
         <div css={contentStyles}>
           <ExpandableText>{description}</ExpandableText>
@@ -53,7 +56,7 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
       </Card>
     )}
     <div css={columnStyles}>
-      <Card>
+      <Card overrideStyles={cardStyles}>
         <Headline3 noMargin>Contact Information</Headline3>
         <div css={contentStyles}>
           <EmailSection
@@ -64,11 +67,16 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
           />
         </div>
       </Card>
-      <Card>
+      <Card overrideStyles={cardStyles}>
         <Headline3 noMargin>Keywords</Headline3>
-        <TagList tags={keywords} />
+        <div css={contentStyles}>
+          <TagList tags={keywords} />
+        </div>
       </Card>
     </div>
+    <Card padding={false} overrideStyles={cardStyles}>
+      <ProjectMilestones milestones={milestones} />
+    </Card>
   </div>
 );
 

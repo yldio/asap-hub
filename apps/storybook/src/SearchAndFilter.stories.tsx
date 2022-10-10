@@ -13,7 +13,6 @@ export const Normal = () => (
     searchPlaceholder={text('Placeholder', 'Search for a protein, a method…')}
     onChangeSearch={() => action('Search')}
     searchQuery={text('Search Query', '')}
-    filterTitle={text('Filter Title', 'TYPE OF OUTPUTS')}
     filterOptions={[
       { label: 'Grant Document', value: '1' },
       { label: 'Dataset', value: '2' },

@@ -3,6 +3,7 @@ import {
   Card,
   crossQuery,
   Headline3,
+  MembersList,
   pixels,
   TagList,
 } from '@asap-hub/react-components';
@@ -13,7 +14,12 @@ import EmailSection from '../organisms/EmailSection';
 
 type ProjectOverviewProps = Pick<
   ProjectResponse,
-  'pmEmail' | 'leadEmail' | 'description' | 'keywords' | 'milestones'
+  | 'pmEmail'
+  | 'leadEmail'
+  | 'description'
+  | 'keywords'
+  | 'milestones'
+  | 'members'
 >;
 
 const { rem } = pixels;
@@ -45,6 +51,7 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
   leadEmail,
   keywords,
   milestones,
+  members,
 }) => (
   <div css={containerStyles}>
     {!!description && (
@@ -74,6 +81,26 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
         </div>
       </Card>
     </div>
+    {!!members.length && (
+      <Card>
+        <Headline3
+          noMargin
+        >{`Working Group Members (${members.length})`}</Headline3>
+        <div css={contentStyles}>
+          <MembersList
+            members={members.map(
+              ({ firstName, lastName, avatarUrl, userId: id }) => ({
+                firstLine: `${firstName} ${lastName}`,
+                avatarUrl,
+                firstName,
+                lastName,
+                id,
+              }),
+            )}
+          />
+        </div>
+      </Card>
+    )}
     <Card padding={false} overrideStyles={cardStyles}>
       <ProjectMilestones milestones={milestones} />
     </Card>

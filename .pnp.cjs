@@ -2283,7 +2283,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@types/jest",\
-        "npm:27.5.1"\
+        "npm:27.5.2"\
       ],\
       [\
         "@types/jest-when",\
@@ -9984,7 +9984,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@jeysal/babel-plugin-ramda", "npm:2.0.1"],\
             ["@peculiar/webcrypto", "npm:1.4.0"],\
             ["@testing-library/jest-dom", "npm:5.16.5"],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["@types/react-test-renderer", "npm:17.0.2"],\
             ["@types/uuid", "npm:8.3.4"],\
             ["@types/webpack", "npm:4.41.32"],\
@@ -10502,7 +10502,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],\
             ["@types/babel__core", "npm:7.1.19"],\
             ["@types/hapi__boom", "npm:9.0.1"],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["@types/jwt-decode", "npm:2.2.1"],\
             ["@types/jwt-encode", "workspace:@types/jwt-encode"],\
             ["@types/luxon", "npm:1.26.4"],\
@@ -10539,7 +10539,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/model", "workspace:packages/model"],\
             ["@auth0/auth0-spa-js", "npm:1.22.4"],\
             ["@babel/runtime-corejs3", "npm:7.19.1"],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["@types/node", "npm:14.18.31"]\
           ],\
           "linkType": "SOFT"\
@@ -10553,7 +10553,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],\
             ["@babel/core", "npm:7.19.3"],\
             ["@babel/runtime-corejs3", "npm:7.19.1"],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["@types/jsdom", "npm:16.2.3"],\
             ["@types/node", "npm:14.18.31"],\
             ["core-js", "npm:3.24.1"],\
@@ -10574,7 +10574,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/preset-react", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.18.6"],\
             ["@babel/runtime-corejs3", "npm:7.19.1"],\
             ["@types/auth0-js", "npm:9.14.6"],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["@types/node", "npm:14.18.31"],\
             ["@types/pify", "npm:3.0.2"],\
             ["auth0-js", "npm:9.19.1"],\
@@ -10597,7 +10597,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/preset-env", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.19.3"],\
             ["@babel/preset-typescript", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.18.6"],\
             ["@babel/runtime-corejs3", "npm:7.19.1"],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["got", "npm:11.8.5"],\
             ["nock", "npm:13.0.11"]\
           ],\
@@ -10641,7 +10641,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:11.2.7"],\
             ["@testing-library/user-event", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:12.8.3"],\
             ["@types/history", "npm:4.7.11"],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["@types/jsdom", "npm:16.2.3"],\
             ["@types/react", "npm:17.0.49"],\
             ["@types/react-dom", "npm:17.0.17"],\
@@ -10696,7 +10696,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/react-hooks", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:8.0.1"],\
             ["@testing-library/user-event", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:12.8.3"],\
             ["@types/history", "npm:4.7.11"],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["@types/nock", "npm:11.1.0"],\
             ["@types/node", "npm:14.18.31"],\
             ["@types/qs", "npm:6.9.7"],\
@@ -10836,7 +10836,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/hapi__boom", "npm:9.0.1"],\
             ["@types/hapi__bourne", "workspace:@types/hapi__bourne"],\
             ["@types/hapi__joi", "npm:17.1.8"],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["@types/jest-when", "npm:3.5.2"],\
             ["@types/jsonwebtoken", "npm:8.5.9"],\
             ["@types/jwt-decode", "npm:2.2.1"],\
@@ -10915,7 +10915,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],\
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],\
             ["@babel/runtime-corejs3", "npm:7.19.1"],\
-            ["@types/jest", "npm:27.5.1"]\
+            ["@types/jest", "npm:27.5.2"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -10997,7 +10997,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/flags", "workspace:packages/flags"],\
             ["@babel/runtime-corejs3", "npm:7.19.1"],\
             ["@types/asap-hub__inline-environment", "workspace:@types/asap-hub__inline-environment"],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["core-js", "npm:3.24.1"]\
           ],\
           "linkType": "SOFT"\
@@ -11018,7 +11018,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@sentry/react", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:6.11.0"],\
             ["@testing-library/react", "virtual:62c7ec58dd69955f8ac9a6b533186c9c2adfe613fbc53211111199550b42e49684cf8582ccf253607db2a5e90990a1492b1a6d2645fd102ea82501f845583321#npm:11.2.7"],\
             ["@types/history", "npm:4.7.11"],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["@types/node", "npm:14.18.31"],\
             ["@types/react", "npm:17.0.49"],\
             ["@types/react-router-dom", "npm:5.3.3"],\
@@ -11059,7 +11059,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@sentry/react", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:6.11.0"],\
             ["@testing-library/react", "virtual:62c7ec58dd69955f8ac9a6b533186c9c2adfe613fbc53211111199550b42e49684cf8582ccf253607db2a5e90990a1492b1a6d2645fd102ea82501f845583321#npm:11.2.7"],\
             ["@types/history", "npm:4.7.11"],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["@types/node", "npm:14.18.31"],\
             ["@types/react", "npm:17.0.49"],\
             ["@types/react-router-dom", "npm:5.3.3"],\
@@ -11096,7 +11096,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:11.2.7"],\
             ["@testing-library/user-event", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:12.8.3"],\
             ["@types/history", "npm:4.7.11"],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["@types/jsdom", "npm:16.2.3"],\
             ["@types/react", "npm:17.0.49"],\
             ["@types/react-dom", "npm:17.0.17"],\
@@ -11151,7 +11151,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/emotion__react", null],\
             ["@types/hast-util-sanitize", "workspace:@types/hast-util-sanitize"],\
             ["@types/history", "npm:4.7.11"],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["@types/react", "npm:17.0.49"],\
             ["@types/react-dom", "npm:17.0.17"],\
             ["@types/react-router-dom", "npm:5.3.3"],\
@@ -11214,7 +11214,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/emotion__react", null],\
             ["@types/hast-util-sanitize", "workspace:@types/hast-util-sanitize"],\
             ["@types/history", "npm:4.7.11"],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["@types/react", "npm:17.0.49"],\
             ["@types/react-dom", "npm:17.0.17"],\
             ["@types/react-router-dom", "npm:5.3.3"],\
@@ -11281,7 +11281,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/emotion__react", null],\
             ["@types/hast-util-sanitize", "workspace:@types/hast-util-sanitize"],\
             ["@types/history", "npm:4.7.11"],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["@types/react", "npm:17.0.49"],\
             ["@types/react-dom", "npm:17.0.17"],\
             ["@types/react-router-dom", "npm:5.3.3"],\
@@ -11345,7 +11345,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/asap-hub__assets", "workspace:@types/asap-hub__assets"],\
             ["@types/hast-util-sanitize", "workspace:@types/hast-util-sanitize"],\
             ["@types/history", "npm:4.7.11"],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["@types/react", "npm:17.0.49"],\
             ["@types/react-dom", "npm:17.0.17"],\
             ["@types/react-router-dom", "npm:5.3.3"],\
@@ -11403,7 +11403,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/react-hooks", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:8.0.1"],\
             ["@testing-library/user-event", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:12.8.3"],\
             ["@types/history", "npm:4.7.11"],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["@types/nock", "npm:11.1.0"],\
             ["@types/node", "npm:14.18.31"],\
             ["@types/react", "npm:17.0.49"],\
@@ -11511,7 +11511,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/aws-lambda", "npm:8.10.106"],\
             ["@types/cors", "npm:2.8.12"],\
             ["@types/express", "npm:4.17.13"],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["@types/jsonwebtoken", "npm:8.5.9"],\
             ["@types/jwt-encode", "workspace:@types/jwt-encode"],\
             ["@types/node", "npm:14.18.31"],\
@@ -11608,7 +11608,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/preset-env", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.19.3"],\
             ["@babel/preset-typescript", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.18.6"],\
             ["@babel/runtime-corejs3", "npm:7.19.1"],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["@types/jsonwebtoken", "npm:8.5.9"],\
             ["jsonwebtoken", "npm:8.5.1"]\
           ],\
@@ -11646,7 +11646,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/asap-hub__react-context", null],\
             ["@types/hast-util-sanitize", "workspace:@types/hast-util-sanitize"],\
             ["@types/history", "npm:4.7.11"],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["@types/ramda", "npm:0.27.20"],\
             ["@types/react", "npm:17.0.49"],\
             ["@types/react-dom", "npm:17.0.17"],\
@@ -11732,7 +11732,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/asap-hub__react-context", null],\
             ["@types/hast-util-sanitize", "workspace:@types/hast-util-sanitize"],\
             ["@types/history", "npm:4.7.11"],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["@types/ramda", "npm:0.27.20"],\
             ["@types/react", "npm:17.0.49"],\
             ["@types/react-dom", "npm:17.0.17"],\
@@ -11822,7 +11822,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/asap-hub__react-context", null],\
             ["@types/hast-util-sanitize", "workspace:@types/hast-util-sanitize"],\
             ["@types/history", "npm:4.7.11"],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["@types/ramda", "npm:0.27.20"],\
             ["@types/react", "npm:17.0.49"],\
             ["@types/react-dom", "npm:17.0.17"],\
@@ -11912,7 +11912,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/asap-hub__assets", "workspace:@types/asap-hub__assets"],\
             ["@types/hast-util-sanitize", "workspace:@types/hast-util-sanitize"],\
             ["@types/history", "npm:4.7.11"],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["@types/ramda", "npm:0.27.20"],\
             ["@types/react", "npm:17.0.49"],\
             ["@types/react-dom", "npm:17.0.17"],\
@@ -11976,7 +11976,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/runtime-corejs3", "npm:7.19.1"],\
             ["@testing-library/react", "virtual:62c7ec58dd69955f8ac9a6b533186c9c2adfe613fbc53211111199550b42e49684cf8582ccf253607db2a5e90990a1492b1a6d2645fd102ea82501f845583321#npm:11.2.7"],\
             ["@testing-library/react-hooks", "virtual:62c7ec58dd69955f8ac9a6b533186c9c2adfe613fbc53211111199550b42e49684cf8582ccf253607db2a5e90990a1492b1a6d2645fd102ea82501f845583321#npm:8.0.1"],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["@types/react", "npm:17.0.49"],\
             ["@types/testing-library__jest-dom", "npm:5.14.5"],\
             ["@types/testing-library__react", "npm:10.0.1"],\
@@ -12005,7 +12005,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/runtime-corejs3", "npm:7.19.1"],\
             ["@testing-library/react", "virtual:62c7ec58dd69955f8ac9a6b533186c9c2adfe613fbc53211111199550b42e49684cf8582ccf253607db2a5e90990a1492b1a6d2645fd102ea82501f845583321#npm:11.2.7"],\
             ["@testing-library/react-hooks", "virtual:62c7ec58dd69955f8ac9a6b533186c9c2adfe613fbc53211111199550b42e49684cf8582ccf253607db2a5e90990a1492b1a6d2645fd102ea82501f845583321#npm:8.0.1"],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["@types/react", "npm:17.0.49"],\
             ["@types/testing-library__jest-dom", "npm:5.14.5"],\
             ["@types/testing-library__react", "npm:10.0.1"],\
@@ -12092,7 +12092,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],\
             ["@types/aws-lambda", "npm:8.10.106"],\
             ["@types/express", "npm:4.17.13"],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["@types/jsonwebtoken", "npm:8.5.9"],\
             ["@types/supertest", "npm:2.0.12"],\
             ["@types/uuid", "npm:8.3.4"],\
@@ -12135,7 +12135,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/hapi__boom", "npm:9.0.1"],\
             ["@types/hapi__bourne", "workspace:@types/hapi__bourne"],\
             ["@types/hapi__joi", "npm:17.1.8"],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["@types/jwt-decode", "npm:2.2.1"],\
             ["@types/jwt-encode", "workspace:@types/jwt-encode"],\
             ["apr-intercept", "npm:3.0.4"],\
@@ -12171,7 +12171,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/hapi__boom", "npm:9.0.1"],\
             ["@types/hapi__bourne", "workspace:@types/hapi__bourne"],\
             ["@types/hapi__joi", "npm:17.1.8"],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["@types/jwt-decode", "npm:2.2.1"],\
             ["@types/jwt-encode", "workspace:@types/jwt-encode"],\
             ["@types/luxon", "npm:1.26.4"],\
@@ -27261,7 +27261,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/runtime", "npm:7.18.9"],\
             ["@emotion/css-prettifier", "npm:1.1.0"],\
             ["@types/enzyme-to-json", null],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["chalk", "npm:4.1.0"],\
             ["enzyme-to-json", null],\
             ["specificity", "npm:0.4.1"],\
@@ -34435,10 +34435,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:27.5.1", {\
-          "packageLocation": "./.yarn/cache/@types-jest-npm-27.5.1-853338350a-be20e39f7a.zip/node_modules/@types/jest/",\
+        ["npm:27.5.2", {\
+          "packageLocation": "./.yarn/cache/@types-jest-npm-27.5.2-f8ba570ba6-7e11c6826a.zip/node_modules/@types/jest/",\
           "packageDependencies": [\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["jest-matcher-utils", "npm:27.5.1"],\
             ["pretty-format", "npm:27.5.1"]\
           ],\
@@ -37704,7 +37704,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@jeysal/babel-plugin-ramda", "npm:2.0.1"],\
             ["@peculiar/webcrypto", "npm:1.4.0"],\
             ["@testing-library/jest-dom", "npm:5.16.5"],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["@types/react-test-renderer", "npm:17.0.2"],\
             ["@types/uuid", "npm:8.3.4"],\
             ["@types/webpack", "npm:4.41.32"],\
@@ -51700,7 +51700,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/__virtual__/jest-playwright-preset-virtual-fd9605ffdf/0/cache/jest-playwright-preset-npm-1.7.2-bc0bea9503-1e9c7d9994.zip/node_modules/jest-playwright-preset/",\
           "packageDependencies": [\
             ["jest-playwright-preset", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:1.7.2"],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["@types/jest-circus", null],\
             ["@types/jest-environment-node", null],\
             ["@types/jest-runner", null],\
@@ -51890,7 +51890,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["jest-runner-eslint", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.0"],\
             ["@types/eslint", null],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["chalk", "npm:3.0.0"],\
             ["cosmiconfig", "npm:6.0.0"],\
             ["create-jest-runner", "npm:0.6.0"],\
@@ -52047,7 +52047,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/__virtual__/jest-watch-suspend-virtual-5493e21eb0/0/cache/jest-watch-suspend-npm-1.1.2-947454efef-e08173dbc3.zip/node_modules/jest-watch-suspend/",\
           "packageDependencies": [\
             ["jest-watch-suspend", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.2"],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["chalk", "npm:2.4.2"],\
             ["jest", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:27.5.1"],\
             ["unpartial", "npm:0.6.3"]\
@@ -52098,7 +52098,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/__virtual__/jest-watch-typeahead-virtual-0c45540078/0/cache/jest-watch-typeahead-npm-0.6.5-aacaa3cef5-01f5113e51.zip/node_modules/jest-watch-typeahead/",\
           "packageDependencies": [\
             ["jest-watch-typeahead", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:0.6.5"],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["ansi-escapes", "npm:4.3.1"],\
             ["chalk", "npm:4.0.0"],\
             ["jest", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:27.5.1"],\
@@ -52158,7 +52158,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/__virtual__/jest-when-virtual-bbca986f47/0/cache/jest-when-npm-3.5.1-50bed3876d-1efb9f497f.zip/node_modules/jest-when/",\
           "packageDependencies": [\
             ["jest-when", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:3.5.1"],\
-            ["@types/jest", "npm:27.5.1"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["jest", null]\
           ],\
           "packagePeers": [\

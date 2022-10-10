@@ -12,7 +12,7 @@ export interface LabeledRadioButtonGroupProps<V extends string> {
   readonly subtitle?: string;
   readonly options: ReadonlyArray<Option<V>>;
 
-  readonly value: V;
+  readonly value?: V;
   readonly onChange?: (newValue: V) => void;
 }
 
@@ -58,7 +58,7 @@ export default function LabeledRadioButtonGroup<V extends string>({
             groupName={groupName.current}
             title={option.label}
             checked={option.value === value}
-            onSelect={() => onChange(option.value)}
+            onSelect={() => option.value && onChange(option.value)}
           />
         ))}
       </div>

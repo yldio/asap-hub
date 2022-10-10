@@ -10,6 +10,7 @@ export type ResearchOutputsSearchProps = {
 };
 
 export const researchOutputFilters: Option<ResearchOutputDocumentType>[] = [
+  { label: 'TYPE OF OUTPUTS' },
   { label: 'Grant Document', value: 'Grant Document' },
   { label: 'Presentation', value: 'Presentation' },
   { label: 'Protocol', value: 'Protocol' },
@@ -30,7 +31,6 @@ const ResearchOutputsSearch: React.FC<ResearchOutputsSearchProps> = ({
     onChangeSearch={onChangeSearch}
     searchQuery={searchQuery}
     filterOptions={researchOutputFilters}
-    filterTitle="TYPE OF OUTPUTS"
     onChangeFilter={onChangeFilter}
     filters={filters}
   />

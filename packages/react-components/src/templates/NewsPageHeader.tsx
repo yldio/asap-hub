@@ -25,12 +25,15 @@ const controlsStyles = css({
   padding: `${30 / perRem}em ${contentSidePaddingWithNavigation(8)} 0`,
 });
 
-const newsFilters = newsFrequency.map(
-  (frequency): Option<NewsFrequency> => ({
-    label: frequency,
-    value: frequency,
-  }),
-);
+const newsFilters = [
+  { label: 'TYPE OF OUTPUTS' },
+  ...newsFrequency.map(
+    (frequency): Option<NewsFrequency> => ({
+      label: frequency,
+      value: frequency,
+    }),
+  ),
+];
 
 type NewsPageHeaderProps = Pick<
   ComponentProps<typeof SearchAndFilter>,
@@ -60,7 +63,6 @@ const NewsPageHeader: React.FC<NewsPageHeaderProps> = ({
         searchQuery={searchQuery}
         onChangeFilter={onChangeFilter}
         filterOptions={newsFilters}
-        filterTitle="TYPE OF OUTPUTS"
         filters={filters}
       />
     </div>

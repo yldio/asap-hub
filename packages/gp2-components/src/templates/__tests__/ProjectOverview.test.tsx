@@ -98,4 +98,39 @@ describe('ProjectOverview', () => {
       screen.getByRole('heading', { name: /the milestone/ }),
     ).toBeInTheDocument();
   });
+  it('renders the members list', () => {
+    render(
+      <ProjectOverview
+        {...defaultProps}
+        members={[
+          {
+            userId: '11',
+            firstName: 'Tony',
+            lastName: 'Stark',
+            role: 'Project manager',
+          },
+        ]}
+      >
+        Body
+      </ProjectOverview>,
+    );
+
+    expect(screen.getByText('Project Members (1)')).toBeInTheDocument();
+    const avatar = screen.getByText(/tony stark/i);
+    expect(avatar).toBeVisible();
+    expect(avatar.closest('a')).toHaveAttribute(
+      'href',
+      expect.stringMatching(/11/i),
+    );
+    expect(screen.getByText('Project manager')).toBeInTheDocument();
+  });
+
+  it('does not render the list if there are no members', () => {
+    render(
+      <ProjectOverview {...defaultProps} members={[]}>
+        Body
+      </ProjectOverview>,
+    );
+    expect(screen.queryByText(/Project Members/i)).not.toBeInTheDocument();
+  });
 });

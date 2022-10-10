@@ -19,6 +19,7 @@ describe('ProjectSummaryFooter', () => {
           userId: '7',
           firstName: 'Tony',
           lastName: 'Stark',
+          role: 'Project manager' as const,
         },
       ],
     };
@@ -34,11 +35,13 @@ describe('ProjectSummaryFooter', () => {
           userId: '7',
           firstName: 'Tony',
           lastName: 'Stark',
+          role: 'Project manager' as const,
         },
         {
           userId: '11',
           firstName: 'Peter',
           lastName: 'Parker',
+          role: 'Investigator' as const,
         },
       ],
     };

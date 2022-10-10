@@ -6,6 +6,7 @@ describe('ProjectOverview', () => {
   const defaultProps = {
     keywords: [],
     milestones: [],
+    members: [],
   };
   it('renders the description', () => {
     const description = 'this is a description';

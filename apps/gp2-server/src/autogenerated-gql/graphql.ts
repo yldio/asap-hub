@@ -1200,11 +1200,13 @@ export type ProjectsDataLeadEmailInputDto = {
 
 /** The structure of the Members nested schema. */
 export type ProjectsDataMembersChildDto = {
+  role: Maybe<ProjectsDataMembersRoleEnum>;
   user: Maybe<Array<Users>>;
 };
 
 /** The structure of the Members nested schema. */
 export type ProjectsDataMembersChildInputDto = {
+  role: InputMaybe<ProjectsDataMembersRoleEnum>;
   user: InputMaybe<Array<Scalars['String']>>;
 };
 
@@ -1217,6 +1219,19 @@ export type ProjectsDataMembersDto = {
 export type ProjectsDataMembersInputDto = {
   iv: InputMaybe<Array<ProjectsDataMembersChildInputDto>>;
 };
+
+export enum ProjectsDataMembersRoleEnum {
+  /** Contributor */
+  Contributor = 'Contributor',
+  /** Investigator */
+  Investigator = 'Investigator',
+  /** Project_CoLead */
+  ProjectCoLead = 'Project_CoLead',
+  /** Project_Lead */
+  ProjectLead = 'Project_Lead',
+  /** Project_Manager */
+  ProjectManager = 'Project_Manager',
+}
 
 /** The structure of the Project Milestones nested schema. */
 export type ProjectsDataMilestonesChildDto = {
@@ -2007,17 +2022,19 @@ export type ProjectContentFragment = Pick<Projects, 'id'> & {
     | 'keywords'
   > & {
     members: Maybe<
-      Array<{
-        user: Maybe<
-          Array<
-            Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
-              flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'> & {
-                avatar: Maybe<Array<Pick<Asset, 'id'>>>;
-              };
-            }
-          >
-        >;
-      }>
+      Array<
+        Pick<ProjectsDataMembersChildDto, 'role'> & {
+          user: Maybe<
+            Array<
+              Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
+                flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'> & {
+                  avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+                };
+              }
+            >
+          >;
+        }
+      >
     >;
     milestones: Maybe<
       Array<
@@ -2050,17 +2067,20 @@ export type FetchProjectQuery = {
         | 'keywords'
       > & {
         members: Maybe<
-          Array<{
-            user: Maybe<
-              Array<
-                Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
-                  flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'> & {
-                    avatar: Maybe<Array<Pick<Asset, 'id'>>>;
-                  };
-                }
-              >
-            >;
-          }>
+          Array<
+            Pick<ProjectsDataMembersChildDto, 'role'> & {
+              user: Maybe<
+                Array<
+                  Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
+                    flatData: Pick<
+                      UsersFlatDataDto,
+                      'firstName' | 'lastName'
+                    > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+                  }
+                >
+              >;
+            }
+          >
         >;
         milestones: Maybe<
           Array<
@@ -2096,21 +2116,23 @@ export type FetchProjectsQuery = {
               | 'keywords'
             > & {
               members: Maybe<
-                Array<{
-                  user: Maybe<
-                    Array<
-                      Pick<
-                        Users,
-                        'id' | 'created' | 'lastModified' | 'version'
-                      > & {
-                        flatData: Pick<
-                          UsersFlatDataDto,
-                          'firstName' | 'lastName'
-                        > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
-                      }
-                    >
-                  >;
-                }>
+                Array<
+                  Pick<ProjectsDataMembersChildDto, 'role'> & {
+                    user: Maybe<
+                      Array<
+                        Pick<
+                          Users,
+                          'id' | 'created' | 'lastModified' | 'version'
+                        > & {
+                          flatData: Pick<
+                            UsersFlatDataDto,
+                            'firstName' | 'lastName'
+                          > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+                        }
+                      >
+                    >;
+                  }
+                >
               >;
               milestones: Maybe<
                 Array<
@@ -2626,6 +2648,7 @@ export const ProjectContentFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'role' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'user' },

@@ -10,11 +10,26 @@ export const projectMilestoneStatus = [
 ] as const;
 export type ProjectMilestoneStatus = typeof projectMilestoneStatus[number];
 
+export const projectMemberRole = [
+  'Contributor',
+  'Investigator',
+  'Project co-lead',
+  'Project lead',
+  'Project manager',
+] as const;
+export type ProjectMemberRole = typeof projectMemberRole[number];
+
+export const isProjectMemberRole = (
+  data: string | null,
+): data is ProjectMemberRole =>
+  projectMemberRole.includes(data as ProjectMemberRole);
+
 export type ProjectMember = {
-  userId: string;
+  avatarUrl?: string;
   firstName: string;
   lastName: string;
-  avatarUrl?: string;
+  role: ProjectMemberRole;
+  userId: string;
 };
 
 export const projectKeywords = [

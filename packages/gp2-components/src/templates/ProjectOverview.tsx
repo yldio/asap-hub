@@ -83,14 +83,13 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
     </div>
     {!!members.length && (
       <Card>
-        <Headline3
-          noMargin
-        >{`Working Group Members (${members.length})`}</Headline3>
+        <Headline3 noMargin>{`Project Members (${members.length})`}</Headline3>
         <div css={contentStyles}>
           <MembersList
             members={members.map(
-              ({ firstName, lastName, avatarUrl, userId: id }) => ({
+              ({ role, firstName, lastName, avatarUrl, userId: id }) => ({
                 firstLine: `${firstName} ${lastName}`,
+                secondLine: role,
                 avatarUrl,
                 firstName,
                 lastName,

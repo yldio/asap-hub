@@ -7,11 +7,6 @@ const workingGroupMemberRole = [
 ] as const;
 export type WorkingGroupMemberRole = typeof workingGroupMemberRole[number];
 
-export const isWorkingGroupMemberRole = (
-  data: string | null,
-): data is WorkingGroupMemberRole =>
-  workingGroupMemberRole.includes(data as WorkingGroupMemberRole);
-
 export type WorkingGroupMember = {
   userId: string;
   role: WorkingGroupMemberRole;

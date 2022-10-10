@@ -15,7 +15,7 @@ export const getUserResponse = (): gp2.UserResponse => ({
   firstName: 'Tom',
   lastName: 'Hardy',
   region: 'Europe',
-  degrees: ['MPH'],
+  degrees: [UsersDataDegreeEnum.Mph],
   role: 'Trainee',
 });
 
@@ -31,7 +31,7 @@ export const fetchExpectation: gp2.ListUserResponse = {
       firstName: 'Tony',
       lastName: 'Stark',
       region: 'North America',
-      degrees: ['MSc'],
+      degrees: [UsersDataDegreeEnum.MSc],
       role: 'Network Investigator',
     },
   ],
@@ -70,7 +70,7 @@ export const patchResponse = (): SquidexGp2.InputUser => ({
     region: { iv: 'Europe' },
     avatar: { iv: ['squidex-asset-id'] },
     connections: { iv: [] },
-    degree: { iv: ['MPH'] },
+    degree: { iv: [UsersDataDegreeEnum.Mph] },
   },
   created: '2020-09-25T09:42:51Z',
   lastModified: '2020-09-25T09:42:51Z',
@@ -84,7 +84,7 @@ export const getUserDataObject = (): gp2.UserDataObject => ({
   firstName: 'Tom',
   lastName: 'Hardy',
   region: 'Europe',
-  degrees: ['MPH'],
+  degrees: [UsersDataDegreeEnum.Mph],
   role: 'Trainee',
 });
 
@@ -113,7 +113,7 @@ export const getGraphQLUser = (
     firstName: 'Tom',
     lastName: 'Hardy',
     region: 'Europe',
-    degree: ['MPH'] as UsersDataDegreeEnum[],
+    degree: [UsersDataDegreeEnum.Mph],
     role: 'Trainee',
     ...user?.flatData,
   },

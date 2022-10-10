@@ -1978,13 +1978,13 @@ input WorkingGroupsDataLeadingMembersInputDto {
 
 """The structure of the Members nested schema."""
 type WorkingGroupsDataMembersChildDto {
-  role: String
+  role: WorkingGroupsDataMembersRoleEnum
   user: [Users!]
 }
 
 """The structure of the Members nested schema."""
 input WorkingGroupsDataMembersChildInputDto {
-  role: String
+  role: WorkingGroupsDataMembersRoleEnum
   user: [String!]
 }
 
@@ -1996,6 +1996,15 @@ type WorkingGroupsDataMembersDto {
 """The structure of the Members field of the Working Groups content input type."""
 input WorkingGroupsDataMembersInputDto {
   iv: [WorkingGroupsDataMembersChildInputDto!]
+}
+
+enum WorkingGroupsDataMembersRoleEnum {
+  """Co_lead"""
+  Co_lead
+  """Lead"""
+  Lead
+  """Working_group_member"""
+  Working_group_member
 }
 
 """The structure of the Working Group Email field of the Working Groups content type."""

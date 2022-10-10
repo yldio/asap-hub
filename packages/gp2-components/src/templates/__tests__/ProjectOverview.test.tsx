@@ -1,9 +1,10 @@
 import { gp2 } from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
+import { ComponentProps } from 'react';
 import ProjectOverview from '../ProjectOverview';
 
 describe('ProjectOverview', () => {
-  const defaultProps = {
+  const defaultProps: ComponentProps<typeof ProjectOverview> = {
     keywords: [],
     milestones: [],
     members: [],

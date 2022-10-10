@@ -19,11 +19,6 @@ export const projectMemberRole = [
 ] as const;
 export type ProjectMemberRole = typeof projectMemberRole[number];
 
-export const isProjectMemberRole = (
-  data: string | null,
-): data is ProjectMemberRole =>
-  projectMemberRole.includes(data as ProjectMemberRole);
-
 export type ProjectMember = {
   avatarUrl?: string;
   firstName: string;

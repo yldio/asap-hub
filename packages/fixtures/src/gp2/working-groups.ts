@@ -1,9 +1,16 @@
 import { gp2 } from '@asap-hub/model';
 
-const mockedWorkingGroup = {
+const mockedWorkingGroup: gp2.WorkingGroupResponse = {
   id: '42',
   title: 'Working Group Title',
-  members: [],
+  members: [
+    {
+      userId: '11',
+      firstName: 'Tony',
+      lastName: 'Stark',
+      role: 'Lead',
+    },
+  ],
   shortDescription: 'This is a short description',
   description: 'This is a long description',
   leadingMembers: 'This is a list of leading members',

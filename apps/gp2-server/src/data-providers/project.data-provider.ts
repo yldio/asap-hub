@@ -117,10 +117,7 @@ export function parseProjectToDataObject({
     project.members?.reduce(
       (membersList: gp2.ProjectMember[], member: GraphQLProjectMember) => {
         const user = member.user && member.user[0];
-        if (!member.role) {
-          return membersList;
-        }
-        if (!user) {
+        if (!(user && member.role)) {
           return membersList;
         }
 

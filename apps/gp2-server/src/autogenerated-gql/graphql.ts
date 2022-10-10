@@ -1929,13 +1929,13 @@ export type WorkingGroupsDataLeadingMembersInputDto = {
 
 /** The structure of the Members nested schema. */
 export type WorkingGroupsDataMembersChildDto = {
-  role: Maybe<Scalars['String']>;
+  role: Maybe<WorkingGroupsDataMembersRoleEnum>;
   user: Maybe<Array<Users>>;
 };
 
 /** The structure of the Members nested schema. */
 export type WorkingGroupsDataMembersChildInputDto = {
-  role: InputMaybe<Scalars['String']>;
+  role: InputMaybe<WorkingGroupsDataMembersRoleEnum>;
   user: InputMaybe<Array<Scalars['String']>>;
 };
 
@@ -1948,6 +1948,15 @@ export type WorkingGroupsDataMembersDto = {
 export type WorkingGroupsDataMembersInputDto = {
   iv: InputMaybe<Array<WorkingGroupsDataMembersChildInputDto>>;
 };
+
+export enum WorkingGroupsDataMembersRoleEnum {
+  /** Co_lead */
+  CoLead = 'Co_lead',
+  /** Lead */
+  Lead = 'Lead',
+  /** Working_group_member */
+  WorkingGroupMember = 'Working_group_member',
+}
 
 /** The structure of the Working Group Email field of the Working Groups content type. */
 export type WorkingGroupsDataPrimaryEmailDto = {

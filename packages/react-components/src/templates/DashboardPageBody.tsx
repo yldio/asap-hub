@@ -22,7 +22,7 @@ import {
   PastEventsDashboardCard,
   RecentSharedOutputs,
 } from '../organisms';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { Card, Paragraph, Link, Headline2 } from '../atoms';
 import { lead } from '..';
 import { Accordion } from '../molecules';
@@ -30,26 +30,26 @@ import { confidentialIcon, giftIcon, learnIcon } from '../icons';
 
 const styles = css({
   display: 'grid',
-  gridRowGap: `${56 / perRem}em`,
-  marginBottom: `${24 / perRem}em`,
+  gridRowGap: rem(56),
+  marginBottom: rem(25),
 });
 
 const containerStyles = css({
-  marginTop: `${24 / perRem}em`,
+  marginTop: rem(24),
 });
 
 const listStyles = css({
-  paddingLeft: `${18 / perRem}em`,
+  paddingLeft: rem(18),
 });
 
 const infoStyles = css({
   color: lead.rgb,
-  padding: `${3 / perRem}em 0 ${24 / perRem}em`,
-  lineHeight: `${24 / perRem} em`,
+  padding: `${rem(3)} 0 ${rem(24)}`,
+  lineHeight: rem(24),
 });
 
 const viewAllStyles = css({
-  marginTop: `${24 / perRem}em`,
+  marginTop: rem(24),
   textAlign: 'right',
 });
 
@@ -171,7 +171,16 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         )}
       </div>
       {news.length ? (
-        <NewsSection title="Latest News from ASAP" news={news} />
+        <div>
+          <NewsSection
+            news={news}
+            title="Latest News from ASAP"
+            subtitle="Explore the latest shared research and learn more about them."
+          />
+          <p css={viewAllStyles}>
+            <Link href={newsRoute({}).$}>View All →</Link>
+          </p>
+        </div>
       ) : null}
       <section>
         <Headline2 styleAsHeading={3}>You may want to try</Headline2>

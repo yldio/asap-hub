@@ -67,4 +67,7 @@ it('renders dashboard with news', async () => {
 
   expect(await screen.findByText(/john/i, { selector: 'h1' })).toBeVisible();
   expect(screen.getAllByText(/title/i, { selector: 'h4' }).length).toBe(2);
+  expect(
+    screen.getAllByText(/title/i, { selector: 'h4' }).at(0)?.textContent,
+  ).toEqual('News Title');
 });

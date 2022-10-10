@@ -47,7 +47,8 @@ it('renders news section when there are no pages', () => {
   expect(
     screen.queryByText('Not sure where to start?'),
   ).not.toBeInTheDocument();
-  expect(
-    screen.getAllByRole('heading').map(({ textContent }) => textContent),
-  ).toEqual(expect.arrayContaining(['News Title', 'Tutorial Title']));
+  expect(screen.getByText('Latest News from ASAP')).toBeVisible();
+  expect(screen.getByText('News Title')).toBeVisible();
+  expect(screen.getByText('Tutorial Title')).toBeVisible();
+  expect(screen.getByText('View All →', { selector: 'a' })).toBeVisible();
 });

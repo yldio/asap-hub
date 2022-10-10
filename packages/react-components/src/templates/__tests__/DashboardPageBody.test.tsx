@@ -67,9 +67,14 @@ it('renders news section when there are no news', () => {
 it('renders news section', () => {
   render(<DashboardPageBody {...props} />);
 
+  expect(screen.getByText('Latest News from ASAP')).toBeVisible();
+  expect(screen.getByText('News Title')).toBeVisible();
   expect(
-    screen.getAllByRole('heading').map(({ textContent }) => textContent),
-  ).toEqual(expect.arrayContaining(['News Title', 'Tutorial Title']));
+    screen
+      .getAllByText('View All →', { selector: 'a' })
+      .map(({ textContent }) => textContent),
+    // There are two View all links because the past events one is always shown
+  ).toEqual(expect.arrayContaining(['View All →', 'View All →']));
 });
 
 it('hides add links to your work space section when user is not a member of a team', () => {

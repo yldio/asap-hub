@@ -5,7 +5,7 @@ import { network } from '@asap-hub/routing';
 import { Card, Anchor, Paragraph, StateTag } from '../atoms';
 import { perRem, mobileScreen } from '../pixels';
 import { lead } from '../colors';
-import { teamIcon, labIcon } from '../icons';
+import { teamIcon, labIcon, inactiveBadgeIcon } from '../icons';
 import { LinkHeadline, TagList } from '../molecules';
 import { getCounterString } from '../utils';
 
@@ -67,7 +67,9 @@ const TeamCard: React.FC<TeamCardProps> = ({
       >
         Team {displayName}
       </LinkHeadline>
-      {!!inactiveSince && <StateTag label="Inactive" />}
+      {!!inactiveSince && (
+        <StateTag icon={inactiveBadgeIcon} label="Inactive" />
+      )}
     </div>
     <Anchor href={network({}).teams({}).team({ teamId: id }).$}>
       <Paragraph hasMargin={false} accent="lead">

@@ -9,6 +9,7 @@ import {
   article,
   bioinformatics,
   dataset,
+  inactiveBadgeIcon,
   labIcon,
   labResource,
   plusIcon,
@@ -170,7 +171,9 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
     <header css={containerStyles}>
       <div css={titleStyle}>
         <Display styleAsHeading={2}>Team {displayName}</Display>
-        {!!inactiveSince && <StateTag label="Inactive" />}
+        {!!inactiveSince && (
+          <StateTag icon={inactiveBadgeIcon} label="Inactive" />
+        )}
       </div>
 
       <section

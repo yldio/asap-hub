@@ -7,7 +7,7 @@ import { paper, lead, steel } from '../colors';
 import { perRem, tabletScreen } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { Display, Link, StateTag, TabLink } from '../atoms';
-import { teamIcon } from '../icons';
+import { inactiveBadgeIcon, teamIcon } from '../icons';
 import { TabNav } from '../molecules';
 import { EventSearch } from '../organisms';
 import { queryParamString } from '../routing';
@@ -73,7 +73,7 @@ const GroupProfileHeader: React.FC<GroupProfileHeaderProps> = ({
       <div css={visualHeaderStyles}>
         <div css={titleStyle}>
           <Display styleAsHeading={2}>{name}</Display>
-          {!active && <StateTag label="Inactive" />}
+          {!active && <StateTag icon={inactiveBadgeIcon} label="Inactive" />}
         </div>
         <div css={belowHeadlineStyles}>
           <div

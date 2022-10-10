@@ -33,7 +33,8 @@ it('renders the tag for inactive teams', () => {
       inactiveSince="2022-09-30T09:00:00Z"
     />,
   );
-  expect(screen.getByText('Inactive')).toBeVisible();
+  expect(screen.getByText('Inactive', { selector: 'span' })).toBeVisible();
+  expect(screen.getByTitle('Inactive')).toBeInTheDocument();
 });
 
 it('does not render the tag for active teams', () => {

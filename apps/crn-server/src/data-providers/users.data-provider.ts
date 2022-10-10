@@ -505,5 +505,6 @@ export const parseGraphQLUserToDataObject = (
     reachOut: item.flatData.reachOut || undefined,
     labs: flatLabs || [],
     orcidLastSyncDate: item.flatData.orcidLastSyncDate || undefined,
+    _tags: [item.flatData.alumniSinceDate ? 'Alumni Member' : 'CRN Member'],
   };
 };

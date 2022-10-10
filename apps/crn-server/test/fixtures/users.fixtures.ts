@@ -250,6 +250,7 @@ export const updateAvatarBody: { avatar: string } = {
 };
 
 export const getUserResponse = (): UserResponse => ({
+  _tags: ['CRN Member'],
   id: 'user-id-1',
   biography: 'some bio',
   onboarded: true,
@@ -311,6 +312,7 @@ export const fetchExpectation: ListUserResponse = {
   items: [
     getUserResponse(),
     {
+      _tags: ['CRN Member'],
       id: 'user-id-2',
       biography: 'some biography',
       city: 'some city',
@@ -538,6 +540,7 @@ export const getUserEvent = (id: string, eventType: UserEvent) =>
   );
 
 export const getUserDataObject = (): UserDataObject => ({
+  _tags: ['CRN Member'],
   id: 'user-id-1',
   biography: 'some bio',
   onboarded: true,
@@ -601,6 +604,7 @@ export const getUserCreateDataObject = (): UserCreateDataObject => {
     lastModifiedDate: _lastModifiedDate,
     createdDate: _createdDate,
     social: _social,
+    _tags,
     ...createDataObject
   } = getUserDataObject();
 

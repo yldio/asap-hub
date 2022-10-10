@@ -427,10 +427,10 @@ describe('User data provider', () => {
       const userCreateDataObject = getUserCreateDataObject();
 
       nock(baseUrl)
-        .post(
-          `/api/content/${appName}/users?publish=true`,
-          getInputUser() as any,
-        )
+        .post(`/api/content/${appName}/users?publish=true`, {
+          ...(getInputUser() as any),
+          // _tags: { iv: ['CRN Member'] },
+        })
         .reply(201, { id: userId });
 
       const result = await userDataProvider.create(userCreateDataObject);

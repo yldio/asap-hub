@@ -7630,6 +7630,7 @@ export type ResearchOutputContentFragment = Pick<
                 | 'responsibilities'
                 | 'researchInterests'
                 | 'reachOut'
+                | 'alumniSinceDate'
               > & {
                 avatar: Maybe<Array<Pick<Asset, 'id'>>>;
                 orcidWorks: Maybe<
@@ -7788,6 +7789,7 @@ export type FetchResearchOutputQuery = {
                     | 'responsibilities'
                     | 'researchInterests'
                     | 'reachOut'
+                    | 'alumniSinceDate'
                   > & {
                     avatar: Maybe<Array<Pick<Asset, 'id'>>>;
                     orcidWorks: Maybe<
@@ -7966,6 +7968,7 @@ export type FetchResearchOutputsQuery = {
                           | 'responsibilities'
                           | 'researchInterests'
                           | 'reachOut'
+                          | 'alumniSinceDate'
                         > & {
                           avatar: Maybe<Array<Pick<Asset, 'id'>>>;
                           orcidWorks: Maybe<
@@ -10550,6 +10553,13 @@ export const ResearchOutputContentFragmentDoc = {
                                           },
                                         },
                                       ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'alumniSinceDate',
                                     },
                                   },
                                 ],

@@ -185,13 +185,13 @@ describe('User data provider', () => {
         nock(baseUrl)
           .patch(`/api/content/${appName}/users/${userId}`, {
             region: { iv: expected },
-            lastName: { iv: 'Smith' },
+            lastName: { iv: 'Stark' },
           })
           .reply(200, fetchUserResponse());
         expect(
           await userDataProvider.update(userId, {
             region,
-            lastName: 'Smith',
+            lastName: 'Stark',
           }),
         ).not.toBeDefined();
         expect(nock.isDone()).toBe(true);
@@ -210,13 +210,13 @@ describe('User data provider', () => {
         nock(baseUrl)
           .patch(`/api/content/${appName}/users/${userId}`, {
             role: { iv: expected },
-            lastName: { iv: 'Smith' },
+            lastName: { iv: 'Stark' },
           })
           .reply(200, fetchUserResponse());
         expect(
           await userDataProvider.update(userId, {
             role,
-            lastName: 'Smith',
+            lastName: 'Stark',
           }),
         ).not.toBeDefined();
         expect(nock.isDone()).toBe(true);
@@ -226,13 +226,28 @@ describe('User data provider', () => {
       nock(baseUrl)
         .patch(`/api/content/${appName}/users/${userId}`, {
           degree: { iv: [UsersDataDegreeEnum.MdPhD] },
-          lastName: { iv: 'Smith' },
+          lastName: { iv: 'Stark' },
         })
         .reply(200, fetchUserResponse());
       expect(
         await userDataProvider.update(userId, {
           degrees: ['MD, PhD'],
-          lastName: 'Smith',
+          lastName: 'Stark',
+        }),
+      ).not.toBeDefined();
+      expect(nock.isDone()).toBe(true);
+    });
+    test('Should update the other degrees', async () => {
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/users/${userId}`, {
+          degree: { iv: [UsersDataDegreeEnum.PhD] },
+          lastName: { iv: 'Stark' },
+        })
+        .reply(200, fetchUserResponse());
+      expect(
+        await userDataProvider.update(userId, {
+          degrees: ['PhD'],
+          lastName: 'Stark',
         }),
       ).not.toBeDefined();
       expect(nock.isDone()).toBe(true);

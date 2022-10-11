@@ -87,15 +87,21 @@ describe('User data provider', () => {
         '"Region not defined: null"',
       );
     });
-    test('Should correctly map MD, PhD Correctly', async () => {
-      const degreeUser = getGraphQLUser();
-      degreeUser.flatData.degree = [UsersDataDegreeEnum.MdPhD];
-      const mockResponse = getSquidexUserGraphqlResponse(degreeUser);
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
-      const result = await userDataProvider.fetchById('user-id');
-      expect(result?.degrees).toEqual(['MD, PhD']);
-    });
+    test.each(Object.values(UsersDataDegreeEnum))(
+      'Should correctly map MD, PhD Correctly - %s',
+      async (degree) => {
+        const expected =
+          degree === UsersDataDegreeEnum.MdPhD ? 'MD, PhD' : degree;
+        const degreeUser = getGraphQLUser();
+        degreeUser.flatData.degree = [degree];
+        const mockResponse = getSquidexUserGraphqlResponse(degreeUser);
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.degrees).toEqual([expected]);
+      },
+    );
 
     test.each`
       region                                       | expected
@@ -127,7 +133,7 @@ describe('User data provider', () => {
       ${UsersDataRoleEnum.Administrator}           | ${'Administrator'}
       ${UsersDataRoleEnum.Trainee}                 | ${'Trainee'}
     `(
-      'Should correctly map regions $role => $expected',
+      'Should correctly map role $role => $expected',
       async ({ role, expected }) => {
         const user = getGraphQLUser();
         user.flatData.role = role;
@@ -149,24 +155,36 @@ describe('User data provider', () => {
     test('Should throw when sync asset fails', async () => {
       nock(baseUrl)
         .patch(`/api/content/${appName}/users/${userId}`, {
-          firstName: { iv: 'John' },
+          firstName: { iv: 'Tony' },
         })
         .reply(404);
 
       await expect(
-        userDataProvider.update(userId, { firstName: 'John' }),
+        userDataProvider.update(userId, { firstName: 'Tony' }),
       ).rejects.toThrow(NotFoundError);
       expect(nock.isDone()).toBe(true);
     });
-    test('Should update job title through a clean-update', async () => {
+    test('Should update first name', async () => {
       nock(baseUrl)
         .patch(`/api/content/${appName}/users/${userId}`, {
-          firstName: { iv: 'John' },
+          firstName: { iv: 'Tony' },
         })
         .reply(200, fetchUserResponse());
 
       expect(
-        await userDataProvider.update(userId, { firstName: 'John' }),
+        await userDataProvider.update(userId, { firstName: 'Tony' }),
+      ).not.toBeDefined();
+      expect(nock.isDone()).toBe(true);
+    });
+    test('Should update last name', async () => {
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/users/${userId}`, {
+          lastName: { iv: 'Stark' },
+        })
+        .reply(200, fetchUserResponse());
+
+      expect(
+        await userDataProvider.update(userId, { lastName: 'Stark' }),
       ).not.toBeDefined();
       expect(nock.isDone()).toBe(true);
     });
@@ -180,18 +198,16 @@ describe('User data provider', () => {
       ${'South America'}          | ${UsersDataRegionEnum.SouthAmerica}
       ${'Latin America'}          | ${UsersDataRegionEnum.LatinAmerica}
     `(
-      'Should update the region and last name through a clean-update $region => $expected',
+      'Should update the region $region => $expected',
       async ({ region, expected }) => {
         nock(baseUrl)
           .patch(`/api/content/${appName}/users/${userId}`, {
             region: { iv: expected },
-            lastName: { iv: 'Stark' },
           })
           .reply(200, fetchUserResponse());
         expect(
           await userDataProvider.update(userId, {
             region,
-            lastName: 'Stark',
           }),
         ).not.toBeDefined();
         expect(nock.isDone()).toBe(true);
@@ -205,53 +221,39 @@ describe('User data provider', () => {
       ${'Administrator'}             | ${UsersDataRoleEnum.Administrator}
       ${'Trainee'}                   | ${UsersDataRoleEnum.Trainee}
     `(
-      'Should update the role and last name through a clean-update $role => $expected',
+      'Should update the role $role => $expected',
       async ({ role, expected }) => {
         nock(baseUrl)
           .patch(`/api/content/${appName}/users/${userId}`, {
             role: { iv: expected },
-            lastName: { iv: 'Stark' },
           })
           .reply(200, fetchUserResponse());
         expect(
           await userDataProvider.update(userId, {
             role,
-            lastName: 'Stark',
           }),
         ).not.toBeDefined();
         expect(nock.isDone()).toBe(true);
       },
     );
-    test('Should update the degree MD, PhD => MD_PhD', async () => {
-      nock(baseUrl)
-        .patch(`/api/content/${appName}/users/${userId}`, {
-          degree: { iv: [UsersDataDegreeEnum.MdPhD] },
-          lastName: { iv: 'Stark' },
-        })
-        .reply(200, fetchUserResponse());
-      expect(
-        await userDataProvider.update(userId, {
-          degrees: ['MD, PhD'],
-          lastName: 'Stark',
-        }),
-      ).not.toBeDefined();
-      expect(nock.isDone()).toBe(true);
-    });
-    test('Should update the other degrees', async () => {
-      nock(baseUrl)
-        .patch(`/api/content/${appName}/users/${userId}`, {
-          degree: { iv: [UsersDataDegreeEnum.PhD] },
-          lastName: { iv: 'Stark' },
-        })
-        .reply(200, fetchUserResponse());
-      expect(
-        await userDataProvider.update(userId, {
-          degrees: ['PhD'],
-          lastName: 'Stark',
-        }),
-      ).not.toBeDefined();
-      expect(nock.isDone()).toBe(true);
-    });
+    test.each(Object.values(UsersDataDegreeEnum))(
+      'Should update the degree %s',
+      async (degree) => {
+        const expected =
+          degree === UsersDataDegreeEnum.MdPhD ? 'MD, PhD' : degree;
+        nock(baseUrl)
+          .patch(`/api/content/${appName}/users/${userId}`, {
+            degree: { iv: [degree] },
+          })
+          .reply(200, fetchUserResponse());
+        expect(
+          await userDataProvider.update(userId, {
+            degrees: [expected],
+          }),
+        ).not.toBeDefined();
+        expect(nock.isDone()).toBe(true);
+      },
+    );
   });
 
   describe('Fetch', () => {

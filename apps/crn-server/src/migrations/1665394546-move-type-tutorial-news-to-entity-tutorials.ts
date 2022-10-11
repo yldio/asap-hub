@@ -1,64 +1,67 @@
 /* istanbul ignore file */
-import {
-  RestNews,
-  Results,
-  SquidexRest,
-  RestTutorials,
-} from '@asap-hub/squidex';
+import { RestNews, SquidexRest, RestTutorials } from '@asap-hub/squidex';
 import { appName, baseUrl } from '../config';
 import { Migration } from '../handlers/webhooks/webhook-run-migrations';
 import { getAuthToken } from '../utils/auth';
+import { applyToAllItemsInCollection } from '../utils/migrations';
+
+const squidexTutorialsClient = new SquidexRest<RestTutorials>(
+  getAuthToken,
+  'tutorials',
+  { appName, baseUrl },
+  {
+    unpublished: true,
+  },
+);
+
+const squidexNewsClient = new SquidexRest<RestNews>(
+  getAuthToken,
+  'tutorials',
+  { appName, baseUrl },
+  {
+    unpublished: true,
+  },
+);
 
 export default class MoveTypeTutorialNewsToEntityTutorials extends Migration {
   up = async (): Promise<void> => {
-    const squidexNewsClient = new SquidexRest<RestNews>(
-      getAuthToken,
+    await applyToAllItemsInCollection<RestNews>(
       'news-and-events',
-      { appName, baseUrl },
-      {
-        unpublished: true,
-      },
-    );
-
-    const squidexTutorialsClient = new SquidexRest<RestTutorials>(
-      getAuthToken,
-      'tutorials',
-      { appName, baseUrl },
-      {
-        unpublished: true,
-      },
-    );
-
-    let pointer = 0;
-    let result: Results<RestNews>;
-
-    do {
-      result = await squidexNewsClient.fetch({
-        $top: 10,
-        $skip: pointer,
-        $orderby: 'created asc',
-      });
-
-      for (const news of result.items) {
+      async (news, squidexClient) => {
         if (
           news.data.type !== ('Tutorial' as unknown as RestNews['data']['type'])
         ) {
-          continue;
+          return;
         }
 
         const { type, frequency, ...tutorialData } = news.data;
 
         try {
           await squidexTutorialsClient.create(tutorialData);
-          await squidexNewsClient.delete(news.id);
+          await squidexClient.delete(news.id);
         } catch (err) {
           console.log('error: ', err);
         }
-      }
-
-      pointer += 10;
-    } while (pointer < result.total);
+      },
+    );
   };
 
-  down = async (): Promise<void> => {};
+  down = async (): Promise<void> => {
+    await applyToAllItemsInCollection<RestTutorials>(
+      'tutorials',
+      async (tutorials, squidexClient) => {
+        try {
+          await squidexNewsClient.create({
+            ...tutorials.data,
+            type: {
+              iv: 'Tutorial',
+            },
+          });
+          await squidexClient.delete(tutorials.id);
+        } catch (err) {
+          console.log('error: ', err);
+        }
+      },
+    );
+  };
 }

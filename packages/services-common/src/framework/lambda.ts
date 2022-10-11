@@ -23,6 +23,7 @@ export interface Request<T = unknown> {
   headers: Record<string, string>;
   params?: { [key: string]: string };
   payload: T;
+  rawPayload: string;
   query?: Query;
 }
 
@@ -174,6 +175,7 @@ export const http =
       headers,
       params: event.pathParameters,
       payload: body,
+      rawPayload: event.body,
       query,
     } as Request<T>;
 

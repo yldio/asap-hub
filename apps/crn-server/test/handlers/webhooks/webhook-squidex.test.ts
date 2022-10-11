@@ -30,19 +30,6 @@ describe('Squidex event webhook', () => {
     expect(evenBridgeMock.putEvents).not.toHaveBeenCalled();
   });
 
-  test('Should return 204 when no event type is provided', async () => {
-    const payload = {
-      ...getLabWebhookPayload('lab-id', 'LabsUpdated'),
-      type: undefined as unknown as string,
-    };
-    const res = (await handler(
-      createSignedPayload(payload),
-    )) as APIGatewayProxyResult;
-
-    expect(res.statusCode).toStrictEqual(204);
-    expect(evenBridgeMock.putEvents).not.toHaveBeenCalled();
-  });
-
   test('Should put the squidex event into the event bus and return 200', async () => {
     const payload = getLabWebhookPayload('lab-id', 'LabsUpdated');
     const res = (await handler(

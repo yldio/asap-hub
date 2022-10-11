@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 import { css } from '@emotion/react';
-// should be renamed tabButton
 import { layoutStyles } from '../text';
 import { perRem } from '../pixels';
 import { fern, lead, charcoal } from '../colors';
@@ -37,15 +36,30 @@ const resetButtonStyles = css({
   padding: 0,
   margin: 0,
 });
-interface TabProps {
+interface TabButtonProps {
   readonly children: ReactNode;
   active?: boolean;
   disabled?: boolean;
+  onClick?: () => void;
 }
-const Tab: React.FC<TabProps> = ({ children, active, disabled }) => (
-  <button css={[resetButtonStyles, styles, active && activeStyles, disabled && disabledStyles]}>
+const TabButton: React.FC<TabButtonProps> = ({
+  children,
+  active,
+  disabled,
+  onClick,
+}) => (
+  <button
+    onClick={onClick}
+    disabled={disabled}
+    css={[
+      resetButtonStyles,
+      styles,
+      active && activeStyles,
+      disabled && disabledStyles,
+    ]}
+  >
     <p css={layoutStyles}>{children}</p>
   </button>
 );
 
-export default Tab;
+export default TabButton;

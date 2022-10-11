@@ -54,16 +54,17 @@ it('is not rendered when there are no groups', async () => {
 });
 
 it('is rendered when there are groups', async () => {
-  mockGetUserGroups.mockResolvedValue(createListGroupResponse(1));
+  const groups = createListGroupResponse(1);
   const { queryByText } = render(
     <GroupsCard
       user={{ ...createUserResponse({}, 1), id: userId, firstName: 'test' }}
+      groups={groups}
     />,
     { wrapper },
   );
   await waitFor(() => {
     expect(queryByText(/loading/i)).not.toBeInTheDocument();
-    expect(queryByText(/groups/i, { selector: 'h2' })).toBeInTheDocument();
+    expect(queryByText(/groups/i, { selector: 'h3' })).toBeInTheDocument();
   });
 });
 
@@ -72,7 +73,10 @@ it('throws if the user does not exist', async () => {
   const errorWrapper: FC = ({ children }) =>
     createElement(wrapper, {}, <ErrorBoundary>{children}</ErrorBoundary>);
   const { findByText } = render(
-    <GroupsCard user={{ ...createUserResponse(), id: userId }} />,
+    <GroupsCard
+      user={{ ...createUserResponse(), id: userId }}
+      groups="noSuchUser"
+    />,
     {
       wrapper: errorWrapper,
     },

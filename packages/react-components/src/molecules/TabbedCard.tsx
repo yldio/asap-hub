@@ -1,68 +1,99 @@
-import { GroupResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import React from 'react';
-import { Card, Paragraph, Headline3, Tab, Button } from '../atoms';
-import { TabNav } from './';
+import {
+  Card,
+  Paragraph,
+  Headline3,
+  TabButton,
+  Button,
+  Divider,
+} from '../atoms';
+import { steel } from '../colors';
+import { perRem } from '../pixels';
+import { TabNav } from '.';
+
+const topDividerStyles = css({
+  display: 'flex',
+  height: 1,
+  flexDirection: 'column',
+});
+
+const itemsListWrapper = css({
+  display: 'flex',
+  flexDirection: 'column',
+  marginTop: `${33 / perRem}em`,
+  paddingBottom: `${21 / perRem}em`,
+});
 
 const showMoreStyles = css({
   display: 'flex',
   justifyContent: 'center',
+  paddingTop: `${21 / perRem}em`,
+  borderTop: `1px solid ${steel.rgb}`,
 });
 
-export type TabProps = {
-  title: string;
-  items: GroupResponse[];
-  createItem: (group: GroupResponse) => JSX.Element;
+export type TabProps<T> = {
+  tabTitle: string;
+  items: T[];
+  createItem: (data: T, index: number) => JSX.Element;
   truncateFrom?: number;
+  disabled?: boolean;
 };
 
-type TabbedCardProps = {
+type TabbedCardProps<T> = {
   title: string;
   description: string;
-  tabs: TabProps[];
-  activeTab?: number;
+  tabs: TabProps<T>[];
+  activeTabIndex?: number;
 };
 
-const TabbedCard: React.FC<TabbedCardProps> = ({
+const TabbedCard = <T extends object>({
   title,
   description,
   tabs,
-}) => {
-  const [active, setActive] = React.useState(0);
+  activeTabIndex = 0,
+}: TabbedCardProps<T>) => {
+  const [active, setActive] = React.useState(activeTabIndex);
   const [showMore, setShowMore] = React.useState(false);
 
   const activeTab = tabs[active];
   const { items, truncateFrom, createItem } = activeTab;
-  
   return (
     <Card>
       <Headline3>{title}</Headline3>
-      <Paragraph accent="lead">{description}</Paragraph>
-      <div>active is {active}</div>
+      <Paragraph hasMargin={false} accent="lead">
+        {description}
+      </Paragraph>
       <TabNav>
-        {tabs.map(({ title }, index) => (
-          <div
-            key={title}
+        {tabs.map(({ tabTitle, disabled }, index) => (
+          <TabButton
+            key={tabTitle}
+            active={index === active}
             onClick={() => {
               setShowMore(false);
               setActive(index);
             }}
+            disabled={disabled}
           >
-            <Tab active={index === active}>{title}</Tab>
-          </div>
+            {tabTitle}
+          </TabButton>
         ))}
       </TabNav>
-      {items
-        .slice(0, showMore ? undefined : truncateFrom)
-        .map((item) => createItem(item))}
-      {truncateFrom &&
-        items.length >= truncateFrom && (
-          <div css={showMoreStyles}>
-            <Button linkStyle onClick={() => setShowMore(!showMore)}>
-              Show {showMore ? 'less' : 'more'} component
-            </Button>
-          </div>
-        )}
+      <div css={topDividerStyles}>
+        <Divider />
+      </div>
+      <div css={itemsListWrapper}>
+        {items
+          .slice(0, showMore ? undefined : truncateFrom)
+          .map((item, index) => createItem(item, index))}
+      </div>
+      {truncateFrom && items.length > truncateFrom && (
+        <div css={[showMoreStyles]}>
+          <Button linkStyle onClick={() => setShowMore(!showMore)}>
+            {`View ${showMore ? 'less' : 'more'} interest groups`}
+          </Button>
+        </div>
+      )}
     </Card>
   );
 };

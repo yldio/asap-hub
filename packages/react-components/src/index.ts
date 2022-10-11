@@ -26,7 +26,7 @@ export {
   Pill,
   Subtitle,
   TabLink,
-  Tab,
+  TabButton,
   Toggle,
   Tooltip,
   MaterialAvailability,

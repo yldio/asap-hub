@@ -34,14 +34,14 @@ export default class MoveTypeTutorialNewsToEntityTutorials extends Migration {
           return;
         }
 
-        const { type, frequency, ...tutorialData } = news.data;
+        const {
+          type: _type,
+          frequency: _frequency,
+          ...tutorialData
+        } = news.data;
 
-        try {
-          await squidexTutorialsClient.create(tutorialData);
-          await squidexClient.delete(news.id);
-        } catch (err) {
-          console.log('error: ', err);
-        }
+        await squidexTutorialsClient.create(tutorialData);
+        await squidexClient.delete(news.id);
       },
     );
   };
@@ -50,17 +50,13 @@ export default class MoveTypeTutorialNewsToEntityTutorials extends Migration {
     await applyToAllItemsInCollection<RestTutorials>(
       'tutorials',
       async (tutorials, squidexClient) => {
-        try {
-          await squidexNewsClient.create({
-            ...tutorials.data,
-            type: {
-              iv: 'Tutorial',
-            },
-          });
-          await squidexClient.delete(tutorials.id);
-        } catch (err) {
-          console.log('error: ', err);
-        }
+        await squidexNewsClient.create({
+          ...tutorials.data,
+          type: {
+            iv: 'Tutorial',
+          },
+        });
+        await squidexClient.delete(tutorials.id);
       },
     );
   };

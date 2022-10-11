@@ -14,6 +14,7 @@ export const Normal = () => (
     onChangeSearch={() => action('Search')}
     searchQuery={text('Search Query', '')}
     filterOptions={[
+      { title: 'TYPE OF OUTPUTS' },
       { label: 'Grant Document', value: '1' },
       { label: 'Dataset', value: '2' },
       { label: 'Bioinformatics', value: '3' },

@@ -16,6 +16,7 @@ import {
 } from '../pixels';
 import { Option } from '../select';
 import { noop } from '../utils';
+import { Title } from './CheckboxGroup';
 
 const buttonTextStyles = css({
   display: 'none',
@@ -54,7 +55,7 @@ const showMenuStyles = css({
 interface FilterProps<V extends string> {
   readonly filters?: Set<V>;
   readonly onChangeFilter?: (filter: V) => void;
-  readonly filterOptions: Option<V>[];
+  readonly filterOptions: ReadonlyArray<Option<V> | Title>;
 }
 export default function Filter<V extends string>({
   filters = new Set(),

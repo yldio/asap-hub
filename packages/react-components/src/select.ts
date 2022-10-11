@@ -24,7 +24,7 @@ import {
 import { lineHeight, perRem } from './pixels';
 
 export interface Option<V extends string> {
-  value?: V;
+  value: V;
   label: string;
 }
 

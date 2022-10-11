@@ -26,7 +26,7 @@ const controlsStyles = css({
 });
 
 const newsFilters = [
-  { label: 'TYPE OF OUTPUTS' },
+  { title: 'TYPE OF OUTPUTS' },
   ...newsFrequency.map(
     (frequency): Option<NewsFrequency> => ({
       label: frequency,

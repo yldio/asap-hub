@@ -6,6 +6,7 @@ import { perRem } from '../pixels';
 import { noop } from '../utils';
 import { Filter } from '.';
 import { Option } from '../select';
+import { Title } from './CheckboxGroup';
 
 const styles = css({
   display: 'grid',
@@ -18,7 +19,7 @@ type SearchFieldProps = ComponentProps<typeof SearchField>;
 interface SearchAndFilterProps<V extends string> {
   readonly filters?: Set<V>;
   readonly onChangeFilter?: (filter: V) => void;
-  readonly filterOptions: Option<V>[];
+  readonly filterOptions: ReadonlyArray<Option<V> | Title>;
 
   readonly searchQuery: SearchFieldProps['value'];
   readonly onChangeSearch: SearchFieldProps['onChange'];

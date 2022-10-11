@@ -7,7 +7,7 @@ import { perRem } from '../pixels';
 import { paper, steel } from '../colors';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { SearchAndFilter } from '../organisms';
-import { Option } from '../organisms/CheckboxGroup';
+import { Option, Title } from '../organisms/CheckboxGroup';
 import { TabNav, SearchField } from '../molecules';
 import { teamIcon, userIcon, groupsIcon } from '../icons';
 import { queryParamString } from '../routing';
@@ -49,8 +49,8 @@ type NetworkPageHeaderProps = (
   onChangeSearchQuery?: (newSearchQuery: string) => void;
 };
 
-const userFilters: Option<TeamRole | Role | UserTag>[] = [
-  { label: 'TEAM ROLES' },
+const userFilters: ReadonlyArray<Option<TeamRole | Role | UserTag> | Title> = [
+  { title: 'TEAM ROLES' },
   { label: 'Lead PI', value: 'Lead PI (Core Leadership)' },
   { label: 'Co-PI', value: 'Co-PI (Core Leadership)' },
   { label: 'Project Manager', value: 'Project Manager' },
@@ -58,7 +58,7 @@ const userFilters: Option<TeamRole | Role | UserTag>[] = [
   { label: 'Key Personnel', value: 'Key Personnel' },
   { label: 'ASAP Staff', value: 'ASAP Staff' },
   { label: 'SAB', value: 'Scientific Advisory Board' },
-  { label: 'TYPE OF USERS' },
+  { title: 'TYPE OF USERS' },
   { label: 'CRN Member', value: 'CRN Member' },
   { label: 'Alumni Member', value: 'Alumni Member' },
 ];

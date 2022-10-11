@@ -6,14 +6,18 @@ import { LabeledCheckbox } from '../molecules';
 import { Caption } from '../atoms';
 
 export interface Option<V extends string> {
-  value?: V;
+  value: V;
   label: string;
   enabled?: boolean;
 }
 
-interface CheckboxGroupProps<V extends string> {
-  readonly options: ReadonlyArray<Option<V>>;
+export interface Title {
+  title: string;
+  label?: undefined;
+}
 
+interface CheckboxGroupProps<V extends string> {
+  readonly options: ReadonlyArray<Option<V> | Title>;
   readonly values?: ReadonlySet<V>;
   readonly onChange?: (newValue: V) => void;
 }
@@ -27,9 +31,9 @@ export default function CheckboxGroup<V extends string>({
   return (
     <>
       {options.map((option, index) =>
-        option.value === undefined ? (
+        option.label === undefined ? (
           <Caption asParagraph>
-            <strong>{option.label}</strong>
+            <strong>{option.title}</strong>
           </Caption>
         ) : (
           <LabeledCheckbox
@@ -38,9 +42,7 @@ export default function CheckboxGroup<V extends string>({
             title={option.label}
             enabled={option.enabled}
             checked={values.has(option.value)}
-            onSelect={() =>
-              option.value !== undefined && onChange(option.value)
-            }
+            onSelect={() => onChange(option.value)}
           />
         ),
       )}

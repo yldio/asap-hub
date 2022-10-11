@@ -1,6 +1,6 @@
 import { ResearchOutputDocumentType } from '@asap-hub/model';
 import { SearchAndFilter } from '../organisms';
-import { Option } from '../organisms/CheckboxGroup';
+import { Option, Title } from '../organisms/CheckboxGroup';
 
 export type ResearchOutputsSearchProps = {
   onChangeSearch: (newSearchQuery: string) => void;
@@ -9,8 +9,10 @@ export type ResearchOutputsSearchProps = {
   filters: Set<string>;
 };
 
-export const researchOutputFilters: Option<ResearchOutputDocumentType>[] = [
-  { label: 'TYPE OF OUTPUTS' },
+export const researchOutputFilters: ReadonlyArray<
+  Option<ResearchOutputDocumentType> | Title
+> = [
+  { title: 'TYPE OF OUTPUTS' },
   { label: 'Grant Document', value: 'Grant Document' },
   { label: 'Presentation', value: 'Presentation' },
   { label: 'Protocol', value: 'Protocol' },

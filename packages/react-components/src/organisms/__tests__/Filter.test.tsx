@@ -8,7 +8,7 @@ it('shows and hides the dropdown menu', () => {
   const { getByRole, getByText } = render(
     <Filter
       filterOptions={[
-        { label: 'Filter by Stuff' },
+        { title: 'Filter by Stuff' },
         { label: 'F1', value: 'f1' },
       ]}
     />,

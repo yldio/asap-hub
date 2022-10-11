@@ -5,32 +5,13 @@ import { Migration } from '../handlers/webhooks/webhook-run-migrations';
 import { getAuthToken } from '../utils/auth';
 import { applyToAllItemsInCollection } from '../utils/migrations';
 
-const squidexTutorialsClient = new SquidexRest<RestTutorials>(
-  getAuthToken,
-  'tutorials',
-  { appName, baseUrl },
-  {
-    unpublished: true,
-  },
-);
-
-const squidexNewsClient = new SquidexRest<RestNews>(
-  getAuthToken,
-  'tutorials',
-  { appName, baseUrl },
-  {
-    unpublished: true,
-  },
-);
-
 export default class MoveTypeTutorialNewsToEntityTutorials extends Migration {
   up = async (): Promise<void> => {
     await applyToAllItemsInCollection<RestNews>(
       'news-and-events',
       async (news, squidexClient) => {
-        if (
-          news.data.type !== ('Tutorial' as unknown as RestNews['data']['type'])
-        ) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        if ((news.data.type as any) !== 'Tutorial') {
           return;
         }
 
@@ -39,6 +20,15 @@ export default class MoveTypeTutorialNewsToEntityTutorials extends Migration {
           frequency: _frequency,
           ...tutorialData
         } = news.data;
+
+        const squidexTutorialsClient = new SquidexRest<RestTutorials>(
+          getAuthToken,
+          'tutorials',
+          { appName, baseUrl },
+          {
+            unpublished: true,
+          },
+        );
 
         await squidexTutorialsClient.create(tutorialData);
         await squidexClient.delete(news.id);
@@ -50,6 +40,14 @@ export default class MoveTypeTutorialNewsToEntityTutorials extends Migration {
     await applyToAllItemsInCollection<RestTutorials>(
       'tutorials',
       async (tutorials, squidexClient) => {
+        const squidexNewsClient = new SquidexRest<RestNews>(
+          getAuthToken,
+          'news-and-events',
+          { appName, baseUrl },
+          {
+            unpublished: true,
+          },
+        );
         await squidexNewsClient.create({
           ...tutorials.data,
           type: {

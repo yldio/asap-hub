@@ -32,7 +32,7 @@ export default function CheckboxGroup<V extends string>({
     <>
       {options.map((option, index) =>
         option.label === undefined ? (
-          <Caption asParagraph>
+          <Caption key={`${groupName}-${index}`} asParagraph>
             <strong>{option.title}</strong>
           </Caption>
         ) : (

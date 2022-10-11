@@ -10,16 +10,11 @@ export default class MoveTypeTutorialNewsToEntityTutorials extends Migration {
     await applyToAllItemsInCollection<RestNews>(
       'news-and-events',
       async (news, squidexClient) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        if ((news.data.type as any) !== 'Tutorial') {
+        if (news.data.type.iv !== 'Tutorial') {
           return;
         }
 
-        const {
-          type: _type,
-          frequency: _frequency,
-          ...tutorialData
-        } = news.data;
+        const { title, shortText, text, link, linkText, thumbnail } = news.data;
 
         const squidexTutorialsClient = new SquidexRest<RestTutorials>(
           getAuthToken,
@@ -30,7 +25,14 @@ export default class MoveTypeTutorialNewsToEntityTutorials extends Migration {
           },
         );
 
-        await squidexTutorialsClient.create(tutorialData);
+        await squidexTutorialsClient.create({
+          title,
+          shortText,
+          text,
+          link,
+          linkText,
+          thumbnail,
+        });
         await squidexClient.delete(news.id);
       },
     );

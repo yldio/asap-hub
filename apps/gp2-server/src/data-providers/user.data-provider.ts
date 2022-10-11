@@ -66,21 +66,10 @@ export class UserSquidexDataProvider implements UserDataProvider {
     id: string,
     userToUpdate: gp2.UserUpdateDataObject,
   ): Promise<void> {
-    const isFullUpdate = shouldDoFullUpdate(userToUpdate);
-
     const fieldMappedUser = mapUserFields(userToUpdate);
     const cleanedUser = cleanUser(fieldMappedUser);
 
-    if (isFullUpdate) {
-      const existingUser = await this.userSquidexRestClient.fetchById(id);
-
-      await this.userSquidexRestClient.put(id, {
-        ...existingUser.data,
-        ...cleanedUser,
-      });
-    } else {
-      await this.userSquidexRestClient.patch(id, cleanedUser);
-    }
+    await this.userSquidexRestClient.patch(id, cleanedUser);
   }
   async fetch(options: FetchUsersOptions): Promise<gp2.ListUserDataObject> {
     const queryFilter = generateFetchQueryFilter(options);
@@ -115,11 +104,6 @@ export class UserSquidexDataProvider implements UserDataProvider {
     >(FETCH_USER, { id });
   }
 }
-
-const shouldDoFullUpdate = (userToUpdate: gp2.UserUpdateDataObject) =>
-  Object.values(userToUpdate).some(
-    (value) => typeof value === 'string' && value.trim() === '',
-  );
 
 const mapUserFields = ({
   role,

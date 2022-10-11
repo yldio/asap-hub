@@ -25,7 +25,7 @@
     "@asap-hub/model": "workspace:*",
     "@asap-hub/routing": "workspace:*",
     "@asap-hub/validation": "workspace:*",
-    "@babel/runtime-corejs3": "7.19.1",
+    "@babel/runtime-corejs3": "7.19.4",
     "@emotion/react": "11.10.4",
     "@emotion/serialize": "1.1.0",
     "core-js": "3.24.1",

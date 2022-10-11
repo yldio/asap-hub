@@ -37,6 +37,6 @@ export const Normal = () => (
   <TabbedCard
     title="Tabbed card"
     description="description"
-    tabs={[firstTab, secondTab]}
+    tabs={[firstTab, secondTab, { ...firstTab, tabTitle: 'Third Tab' }]}
   />
 );

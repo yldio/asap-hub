@@ -23,6 +23,7 @@ export const getLambdaRequest = <T>(
     },
     method: 'post',
     payload,
+    rawPayload: JSON.stringify(payload),
   };
 };
 
@@ -110,13 +111,12 @@ export const createHandlerContext = () =>
 export const getConnectByCodeRequest = <T>(
   payload: T,
   headers: Record<string, string>,
-): lambda.Request<T> => {
-  return {
-    headers: {
-      'Content-Type': 'application/json',
-      ...headers,
-    },
-    method: 'post',
-    payload,
-  };
-};
+): lambda.Request<T> => ({
+  headers: {
+    'Content-Type': 'application/json',
+    ...headers,
+  },
+  method: 'post',
+  payload,
+  rawPayload: JSON.stringify(payload),
+});

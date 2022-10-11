@@ -5,5 +5,5 @@ export const createSignedHeader = <T>(
   payload: WebhookPayload<T>,
   squidexSharedSecret: string,
 ) => ({
-  'x-signature': signPayload(payload, squidexSharedSecret),
+  'x-signature': signPayload(JSON.stringify(payload), squidexSharedSecret),
 });

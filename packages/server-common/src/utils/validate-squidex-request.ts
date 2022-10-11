@@ -3,7 +3,7 @@ import Boom from '@hapi/boom';
 import crypto from 'crypto';
 
 export const signPayload = (
-  payload: lambda.Request['payload'],
+  payload: lambda.Request['rawPayload'],
   squidexSharedSecret: string,
 ): string =>
   crypto

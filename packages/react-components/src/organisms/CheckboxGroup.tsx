@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { Fragment, useRef } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 
 import { noop } from '../utils';
@@ -30,22 +30,23 @@ export default function CheckboxGroup<V extends string>({
   const groupName = useRef(uuidV4());
   return (
     <>
-      {options.map((option, index) =>
-        option.label === undefined ? (
-          <Caption key={`${groupName}-${index}`} asParagraph>
-            <strong>{option.title}</strong>
-          </Caption>
-        ) : (
-          <LabeledCheckbox
-            key={`${groupName}-${index}`}
-            groupName={groupName.current}
-            title={option.label}
-            enabled={option.enabled}
-            checked={values.has(option.value)}
-            onSelect={() => onChange(option.value)}
-          />
-        ),
-      )}
+      {options.map((option, index) => (
+        <Fragment key={`${groupName}-${index}`}>
+          {option.label === undefined ? (
+            <Caption asParagraph>
+              <strong>{option.title}</strong>
+            </Caption>
+          ) : (
+            <LabeledCheckbox
+              groupName={groupName.current}
+              title={option.label}
+              enabled={option.enabled}
+              checked={values.has(option.value)}
+              onSelect={() => onChange(option.value)}
+            />
+          )}
+        </Fragment>
+      ))}
     </>
   );
 }

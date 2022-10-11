@@ -1619,24 +1619,54 @@ input UsersDataLastNameInputDto {
 
 """The structure of the Region field of the Users content type."""
 type UsersDataRegionDto {
-  iv: String
+  iv: UsersDataRegionEnum
+}
+
+enum UsersDataRegionEnum {
+  """Africa"""
+  Africa
+  """Asia"""
+  Asia
+  """Australia_Australiasia"""
+  Australia_Australiasia
+  """Europe"""
+  Europe
+  """Latin_America"""
+  Latin_America
+  """North_America"""
+  North_America
+  """South_America"""
+  South_America
 }
 
 """The structure of the Region field of the Users content input type."""
 input UsersDataRegionInputDto {
-  iv: String
+  iv: UsersDataRegionEnum
 }
 
 """The structure of the GP2 Hub Role field of the Users content type."""
 type UsersDataRoleDto {
   """Role on the GP2 Hub"""
-  iv: String
+  iv: UsersDataRoleEnum
+}
+
+enum UsersDataRoleEnum {
+  """Administrator"""
+  Administrator
+  """Network_Collaborator"""
+  Network_Collaborator
+  """Network_Investigator"""
+  Network_Investigator
+  """Trainee"""
+  Trainee
+  """Working_Group_Participant"""
+  Working_Group_Participant
 }
 
 """The structure of the GP2 Hub Role field of the Users content input type."""
 input UsersDataRoleInputDto {
   """Role on the GP2 Hub"""
-  iv: String
+  iv: UsersDataRoleEnum
 }
 
 """The structure of the flat Users data type."""
@@ -1647,9 +1677,9 @@ type UsersFlatDataDto {
   email: String
   firstName: String
   lastName: String
-  region: String
+  region: UsersDataRegionEnum
   """Role on the GP2 Hub"""
-  role: String
+  role: UsersDataRoleEnum
 }
 
 """List of Users items and total count."""

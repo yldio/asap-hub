@@ -114,37 +114,37 @@ describe('Project Data Provider', () => {
 
       describe('members', () => {
         test('undefined members returns empty array', () => {
-          const Project = getGraphQLProject();
-          Project.flatData.members = null;
-          const { members } = parseProjectToDataObject(Project);
+          const project = getGraphQLProject();
+          project.flatData.members = null;
+          const { members } = parseProjectToDataObject(project);
           expect(members).toEqual([]);
         });
         test('avatar urls are added if available', () => {
-          const Project = getGraphQLProject();
+          const project = getGraphQLProject();
           const member = getGraphQLProjectMember();
           member!.user![0]!.flatData.avatar = [{ id: 'avatar-id' }];
-          Project.flatData.members = [member];
-          const { members } = parseProjectToDataObject(Project);
+          project.flatData.members = [member];
+          const { members } = parseProjectToDataObject(project);
           expect(members[0]?.avatarUrl).toEqual(
             `${baseUrl}/api/assets/${appName}/avatar-id`,
           );
         });
 
         test('should skip the user from the result if the user property is undefined', () => {
-          const Project = getGraphQLProject();
+          const project = getGraphQLProject();
           const member = getGraphQLProjectMember();
           member!.user = null;
-          Project.flatData.members = [member];
-          const { members } = parseProjectToDataObject(Project);
+          project.flatData.members = [member];
+          const { members } = parseProjectToDataObject(project);
           expect(members).toEqual([]);
         });
 
         test('should skip the user from the result if the role property is undefined', () => {
-          const Project = getGraphQLProject();
+          const project = getGraphQLProject();
           const member = getGraphQLProjectMember();
           member!.role = null;
-          Project.flatData.members = [member];
-          const { members } = parseProjectToDataObject(Project);
+          project.flatData.members = [member];
+          const { members } = parseProjectToDataObject(project);
           expect(members).toEqual([]);
         });
         test.each`
@@ -155,11 +155,11 @@ describe('Project Data Provider', () => {
           ${ProjectsDataMembersRoleEnum.Contributor}    | ${'Contributor'}
           ${ProjectsDataMembersRoleEnum.Investigator}   | ${'Investigator'}
         `('should parse the role', ({ role, expectedRole }) => {
-          const Project = getGraphQLProject();
+          const project = getGraphQLProject();
           const member = getGraphQLProjectMember();
           member!.role = role;
-          Project.flatData.members = [member];
-          const { members } = parseProjectToDataObject(Project);
+          project.flatData.members = [member];
+          const { members } = parseProjectToDataObject(project);
           expect(members[0]?.role).toEqual(expectedRole);
         });
       });

@@ -141,11 +141,11 @@ describe('Working Group Data Provider', () => {
     });
 
     test('should skip the user from the result if the role property is undefined', () => {
-      const Project = getGraphQLWorkingGroup();
+      const workingGroup = getGraphQLWorkingGroup();
       const member = getGraphQLWorkingGroupMember();
       member!.role = null;
-      Project.flatData.members = [member];
-      const { members } = parseWorkingGroupToDataObject(Project);
+      workingGroup.flatData.members = [member];
+      const { members } = parseWorkingGroupToDataObject(workingGroup);
       expect(members).toEqual([]);
     });
     test.each`
@@ -154,11 +154,11 @@ describe('Working Group Data Provider', () => {
       ${WorkingGroupsDataMembersRoleEnum.CoLead}             | ${'Co-lead'}
       ${WorkingGroupsDataMembersRoleEnum.WorkingGroupMember} | ${'Working group member'}
     `('should parse the role', ({ role, expectedRole }) => {
-      const Project = getGraphQLWorkingGroup();
+      const workingGroup = getGraphQLWorkingGroup();
       const member = getGraphQLWorkingGroupMember();
       member!.role = role;
-      Project.flatData.members = [member];
-      const { members } = parseWorkingGroupToDataObject(Project);
+      workingGroup.flatData.members = [member];
+      const { members } = parseWorkingGroupToDataObject(workingGroup);
       expect(members[0]?.role).toEqual(expectedRole);
     });
 

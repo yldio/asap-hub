@@ -1590,24 +1590,54 @@ export type UsersDataLastNameInputDto = {
 
 /** The structure of the Region field of the Users content type. */
 export type UsersDataRegionDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: Maybe<UsersDataRegionEnum>;
 };
+
+export enum UsersDataRegionEnum {
+  /** Africa */
+  Africa = 'Africa',
+  /** Asia */
+  Asia = 'Asia',
+  /** Australia_Australiasia */
+  AustraliaAustraliasia = 'Australia_Australiasia',
+  /** Europe */
+  Europe = 'Europe',
+  /** Latin_America */
+  LatinAmerica = 'Latin_America',
+  /** North_America */
+  NorthAmerica = 'North_America',
+  /** South_America */
+  SouthAmerica = 'South_America',
+}
 
 /** The structure of the Region field of the Users content input type. */
 export type UsersDataRegionInputDto = {
-  iv: InputMaybe<Scalars['String']>;
+  iv: InputMaybe<UsersDataRegionEnum>;
 };
 
 /** The structure of the GP2 Hub Role field of the Users content type. */
 export type UsersDataRoleDto = {
   /** Role on the GP2 Hub */
-  iv: Maybe<Scalars['String']>;
+  iv: Maybe<UsersDataRoleEnum>;
 };
+
+export enum UsersDataRoleEnum {
+  /** Administrator */
+  Administrator = 'Administrator',
+  /** Network_Collaborator */
+  NetworkCollaborator = 'Network_Collaborator',
+  /** Network_Investigator */
+  NetworkInvestigator = 'Network_Investigator',
+  /** Trainee */
+  Trainee = 'Trainee',
+  /** Working_Group_Participant */
+  WorkingGroupParticipant = 'Working_Group_Participant',
+}
 
 /** The structure of the GP2 Hub Role field of the Users content input type. */
 export type UsersDataRoleInputDto = {
   /** Role on the GP2 Hub */
-  iv: InputMaybe<Scalars['String']>;
+  iv: InputMaybe<UsersDataRoleEnum>;
 };
 
 /** The structure of the flat Users data type. */
@@ -1618,9 +1648,9 @@ export type UsersFlatDataDto = {
   email: Maybe<Scalars['String']>;
   firstName: Maybe<Scalars['String']>;
   lastName: Maybe<Scalars['String']>;
-  region: Maybe<Scalars['String']>;
+  region: Maybe<UsersDataRegionEnum>;
   /** Role on the GP2 Hub */
-  role: Maybe<Scalars['String']>;
+  role: Maybe<UsersDataRoleEnum>;
 };
 
 /** List of Users items and total count. */

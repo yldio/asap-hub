@@ -7,8 +7,10 @@ import { FILTERS_KEY, FILTER_EVENT } from '../../analytics';
 it('shows and hides the dropdown menu', () => {
   const { getByRole, getByText } = render(
     <Filter
-      filterOptions={[{ label: 'F1', value: 'f1' }]}
-      filterTitle="Filter by Stuff"
+      filterOptions={[
+        { title: 'Filter by Stuff' },
+        { label: 'F1', value: 'f1' },
+      ]}
     />,
   );
   const filterButton = getByRole('button');
@@ -20,23 +22,15 @@ it('shows and hides the dropdown menu', () => {
   expect(getByText('Filter by Stuff')).not.toBeVisible();
 });
 
-it('hides the dropdown menu when the title changes', () => {
+it('hides the dropdown menu when the options changes', () => {
   const { rerender, getByRole, getByText } = render(
-    <Filter
-      filterOptions={[{ label: 'F1', value: 'f1' }]}
-      filterTitle="Filter by Stuff"
-    />,
+    <Filter filterOptions={[{ label: 'F1', value: 'f1' }]} />,
   );
   userEvent.click(getByRole('button'));
-  expect(getByText('Filter by Stuff')).toBeVisible();
+  expect(getByText('F1')).toBeVisible();
 
-  rerender(
-    <Filter
-      filterOptions={[{ label: 'F1', value: 'f1' }]}
-      filterTitle="Filter by Things"
-    />,
-  );
-  expect(getByText('Filter by Things')).not.toBeVisible();
+  rerender(<Filter filterOptions={[{ label: 'F2', value: 'f2' }]} />);
+  expect(getByText('F2')).not.toBeVisible();
 });
 
 describe('GTM data', () => {
@@ -60,14 +54,10 @@ describe('GTM data', () => {
 
   it('is not pushed immediately after changing the filters', () => {
     const { rerender } = render(
-      <Filter
-        filterTitle="title"
-        filterOptions={[{ value: 'f1', label: 'F1' }]}
-      />,
+      <Filter filterOptions={[{ value: 'f1', label: 'F1' }]} />,
     );
     rerender(
       <Filter
-        filterTitle="title"
         filterOptions={[{ value: 'f1', label: 'F1' }]}
         filters={new Set(['f1'])}
       />,
@@ -79,14 +69,10 @@ describe('GTM data', () => {
   });
   it('is pushed after changing the query and waiting for a debounce', () => {
     const { rerender } = render(
-      <Filter
-        filterTitle="title"
-        filterOptions={[{ value: 'f1', label: 'F1' }]}
-      />,
+      <Filter filterOptions={[{ value: 'f1', label: 'F1' }]} />,
     );
     rerender(
       <Filter
-        filterTitle="title"
         filterOptions={[{ value: 'f1', label: 'F1' }]}
         filters={new Set(['f1'])}
       />,
@@ -103,14 +89,12 @@ describe('GTM data', () => {
   it('is not pushed after changing the query to be empty', () => {
     const { rerender } = render(
       <Filter
-        filterTitle="title"
         filterOptions={[{ value: 'f1', label: 'F1' }]}
         filters={new Set(['f1'])}
       />,
     );
     rerender(
       <Filter
-        filterTitle="title"
         filterOptions={[{ value: 'f1', label: 'F1' }]}
         filters={new Set<string>()}
       />,
@@ -125,14 +109,12 @@ describe('GTM data', () => {
   it('is reset immediately after changing the query to be empty', () => {
     const { rerender } = render(
       <Filter
-        filterTitle="title"
         filterOptions={[{ value: 'f1', label: 'F1' }]}
         filters={new Set(['f1'])}
       />,
     );
     rerender(
       <Filter
-        filterTitle="title"
         filterOptions={[{ value: 'f1', label: 'F1' }]}
         filters={new Set<string>()}
       />,
@@ -145,10 +127,7 @@ describe('GTM data', () => {
 
   it('is reset after unmount', () => {
     const { unmount } = render(
-      <Filter
-        filterTitle="title"
-        filterOptions={[{ value: 'f1', label: 'F1' }]}
-      />,
+      <Filter filterOptions={[{ value: 'f1', label: 'F1' }]} />,
     );
     unmount();
     expect(window.dataLayer?.reduce(Object.assign)).not.toHaveProperty(

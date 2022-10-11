@@ -4,7 +4,7 @@ import { useDebounce } from 'use-debounce';
 
 import { CheckboxGroup } from '.';
 import { FILTERS_KEY, FILTER_EVENT, FILTER_TITLE_KEY } from '../analytics';
-import { Button, Caption } from '../atoms';
+import { Button } from '../atoms';
 import { paper, steel, colorWithTransparency, tin } from '../colors';
 import { filterIcon } from '../icons';
 import {
@@ -16,6 +16,7 @@ import {
 } from '../pixels';
 import { Option } from '../select';
 import { noop } from '../utils';
+import { Title } from './CheckboxGroup';
 
 const buttonTextStyles = css({
   display: 'none',
@@ -54,26 +55,23 @@ const showMenuStyles = css({
 interface FilterProps<V extends string> {
   readonly filters?: Set<V>;
   readonly onChangeFilter?: (filter: V) => void;
-  readonly filterOptions: Option<V>[];
-  readonly filterTitle: string;
+  readonly filterOptions: ReadonlyArray<Option<V> | Title>;
 }
 export default function Filter<V extends string>({
   filters = new Set(),
   onChangeFilter = noop,
   filterOptions,
-  filterTitle,
 }: FilterProps<V>): ReturnType<React.FC> {
   const [menuShown, setMenuShown] = useState(false);
   useEffect(() => {
     setMenuShown(false);
-  }, [filterTitle]);
+  }, [filterOptions]);
 
   const [debouncedFilters] = useDebounce(filters, 5000);
   useEffect(() => {
     if (filters.size && filters === debouncedFilters) {
       window.dataLayer?.push({
         [FILTERS_KEY]: [...filters],
-        [FILTER_TITLE_KEY]: filterTitle,
         event: FILTER_EVENT,
       });
     }
@@ -84,7 +82,7 @@ export default function Filter<V extends string>({
         [FILTER_TITLE_KEY]: undefined,
       });
     };
-  }, [debouncedFilters, filterTitle, filters]);
+  }, [debouncedFilters, filters]);
 
   return (
     <div>
@@ -98,9 +96,6 @@ export default function Filter<V extends string>({
         }}
       >
         <div css={[dropdownContainer, menuShown && showMenuStyles]}>
-          <Caption asParagraph>
-            <strong>{filterTitle}</strong>
-          </Caption>
           <CheckboxGroup<V>
             onChange={onChangeFilter}
             options={filterOptions}

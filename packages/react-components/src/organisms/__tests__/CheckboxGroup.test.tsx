@@ -18,6 +18,13 @@ it('renders a checkbox for each option', () => {
   expect(getByLabelText('Blue')).toBeVisible();
 });
 
+it('renders title', () => {
+  const { getByText } = render(
+    <CheckboxGroup options={[{ title: 'A TITLE' }]} />,
+  );
+  expect(getByText('A TITLE')).toBeVisible();
+});
+
 it('checks specified checkboxes', () => {
   const { getByLabelText } = render(
     <CheckboxGroup

@@ -9,7 +9,6 @@ const props: ComponentProps<typeof SearchAndFilter> = {
   searchPlaceholder: '',
   onChangeSearch: noop,
   filterOptions: [],
-  filterTitle: '',
 };
 it('renders the search and filter controls', () => {
   const { getByRole } = render(<SearchAndFilter {...props} />);

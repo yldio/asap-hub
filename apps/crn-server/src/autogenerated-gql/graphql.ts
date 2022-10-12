@@ -4947,12 +4947,22 @@ export type UsersDataAdminNotesInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
-/** The structure of the AlumniSinceDate field of the Users content type. */
+/** The structure of the Alumni New Location field of the Users content type. */
+export type UsersDataAlumniLocationDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Alumni New Location field of the Users content input type. */
+export type UsersDataAlumniLocationInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Alumni Since field of the Users content type. */
 export type UsersDataAlumniSinceDateDto = {
   iv: Maybe<Scalars['Instant']>;
 };
 
-/** The structure of the AlumniSinceDate field of the Users content input type. */
+/** The structure of the Alumni Since field of the Users content input type. */
 export type UsersDataAlumniSinceDateInputDto = {
   iv: InputMaybe<Scalars['Instant']>;
 };
@@ -5052,6 +5062,7 @@ export type UsersDataDismissedGettingStartedInputDto = {
 /** The structure of the Users data type. */
 export type UsersDataDto = {
   adminNotes: Maybe<UsersDataAdminNotesDto>;
+  alumniLocation: Maybe<UsersDataAlumniLocationDto>;
   alumniSinceDate: Maybe<UsersDataAlumniSinceDateDto>;
   avatar: Maybe<UsersDataAvatarDto>;
   biography: Maybe<UsersDataBiographyDto>;
@@ -5127,6 +5138,7 @@ export type UsersDataFirstNameInputDto = {
 /** The structure of the Users data input type. */
 export type UsersDataInputDto = {
   adminNotes: InputMaybe<UsersDataAdminNotesInputDto>;
+  alumniLocation: InputMaybe<UsersDataAlumniLocationInputDto>;
   alumniSinceDate: InputMaybe<UsersDataAlumniSinceDateInputDto>;
   avatar: InputMaybe<UsersDataAvatarInputDto>;
   biography: InputMaybe<UsersDataBiographyInputDto>;
@@ -5417,6 +5429,7 @@ export type UsersDataTeamsInputDto = {
 /** The structure of the flat Users data type. */
 export type UsersFlatDataDto = {
   adminNotes: Maybe<Scalars['String']>;
+  alumniLocation: Maybe<Scalars['String']>;
   alumniSinceDate: Maybe<Scalars['Instant']>;
   avatar: Maybe<Array<Asset>>;
   biography: Maybe<Scalars['String']>;

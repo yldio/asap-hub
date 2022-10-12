@@ -168,6 +168,15 @@ describe('User data provider', () => {
           ).rejects.toThrowError('Position not defined');
         },
       );
+      test('Should return empty array if positions has not been defined', async () => {
+        const invalidRoleUser = getGraphQLUser();
+        invalidRoleUser.flatData.positions = null;
+        const mockResponse = getSquidexUserGraphqlResponse(invalidRoleUser);
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.positions).toEqual([]);
+      });
     });
   });
 

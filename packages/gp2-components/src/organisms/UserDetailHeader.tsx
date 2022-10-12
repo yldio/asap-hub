@@ -3,6 +3,7 @@ import {
   Avatar,
   BackLink,
   crossQuery,
+  drawerQuery,
   pixels,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
@@ -60,9 +61,11 @@ const titleStyles = css({
 });
 
 const avatarStyles = css({
-  margin: 'auto',
   width: rem(avatarSize),
   height: rem(avatarSize),
+  [drawerQuery]: {
+    margin: 'auto',
+  },
 });
 const rowStyles = css({
   display: 'flex',

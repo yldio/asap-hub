@@ -1,5 +1,10 @@
 import { RestNews } from '@asap-hub/squidex';
-import { ListNewsResponse } from '@asap-hub/model';
+import {
+  ListNewsDataObject,
+  ListNewsResponse,
+  NewsDataObject,
+  NewsResponse,
+} from '@asap-hub/model';
 import { appName, baseUrl } from '../../src/config';
 
 export const newsSquidexApiResponse: {
@@ -57,26 +62,24 @@ export const newsSquidexApiResponse: {
   ],
 };
 
-export const listNewsResponse: ListNewsResponse = {
-  total: 2,
-  items: [
-    {
-      id: 'news-1',
-      title: 'News 1',
-      type: 'News',
-      shortText: 'Short text of news 1',
-      text: '<p>text</p>',
-      thumbnail: `${baseUrl}/api/assets/${appName}/thumbnail-uuid1`,
-      created: '2020-09-08T16:35:28.000Z',
-    },
-    {
-      id: 'news-2',
-      title: 'Tutorial 2',
-      type: 'Tutorial',
-      shortText: 'Short text of tutorial 2',
-      text: '<p>text</p>',
-      thumbnail: `${baseUrl}/api/assets/${appName}/thumbnail-uuid2`,
-      created: '2020-09-16T14:31:19.000Z',
-    },
-  ],
-};
+export const getNewsDataObject = (): NewsDataObject => ({
+  id: 'news-1',
+  title: 'News 1',
+  type: 'News',
+  shortText: 'Short text of news 1',
+  text: '<p>text</p>',
+  thumbnail: `${baseUrl}/api/assets/${appName}/thumbnail-uuid1`,
+  created: '2020-09-08T16:35:28.000Z',
+});
+
+export const getListNewsDataObject = (): ListNewsDataObject => ({
+  total: 1,
+  items: [getNewsDataObject()],
+});
+
+export const getNewsResponse = (): NewsResponse => getNewsDataObject();
+
+export const getListNewsResponse = (): ListNewsResponse => ({
+  total: 1,
+  items: [getNewsDataObject()],
+});

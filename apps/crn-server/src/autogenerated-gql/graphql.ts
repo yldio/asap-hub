@@ -8462,6 +8462,7 @@ export type UsersContentFragment = Pick<
   flatData: Pick<
     UsersFlatDataDto,
     | 'alumniSinceDate'
+    | 'alumniLocation'
     | 'biography'
     | 'degree'
     | 'email'

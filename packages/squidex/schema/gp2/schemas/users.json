@@ -253,7 +253,7 @@
           "maxItems": 3,
           "fieldType": "Array",
           "label": "Positions",
-          "isRequired": false,
+          "isRequired": true,
           "isRequiredOnPublish": false,
           "isHalfWidth": false
         },

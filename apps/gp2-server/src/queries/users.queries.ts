@@ -16,6 +16,13 @@ export const usersContentQueryFragment = gql`
       lastName
       region
       role
+      country
+      city
+      positions {
+        role
+        department
+        institution
+      }
     }
   }
 `;

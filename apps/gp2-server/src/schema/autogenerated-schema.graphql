@@ -1504,6 +1504,16 @@ input UsersDataAvatarInputDto {
   iv: [String!]
 }
 
+"""The structure of the City field of the Users content type."""
+type UsersDataCityDto {
+  iv: String
+}
+
+"""The structure of the City field of the Users content input type."""
+input UsersDataCityInputDto {
+  iv: String
+}
+
 """The structure of the Connections nested schema."""
 type UsersDataConnectionsChildDto {
   code: String
@@ -1522,6 +1532,16 @@ type UsersDataConnectionsDto {
 """The structure of the Connections field of the Users content input type."""
 input UsersDataConnectionsInputDto {
   iv: [UsersDataConnectionsChildInputDto!]
+}
+
+"""The structure of the Country field of the Users content type."""
+type UsersDataCountryDto {
+  iv: String
+}
+
+"""The structure of the Country field of the Users content input type."""
+input UsersDataCountryInputDto {
+  iv: String
 }
 
 """The structure of the Degree field of the Users content type."""
@@ -1566,11 +1586,14 @@ input UsersDataDegreeInputDto {
 """The structure of the Users data type."""
 type UsersDataDto {
   avatar: UsersDataAvatarDto
+  city: UsersDataCityDto
   connections: UsersDataConnectionsDto
+  country: UsersDataCountryDto
   degree: UsersDataDegreeDto
   email: UsersDataEmailDto
   firstName: UsersDataFirstNameDto
   lastName: UsersDataLastNameDto
+  positions: UsersDataPositionsDto
   region: UsersDataRegionDto
   role: UsersDataRoleDto
 }
@@ -1598,11 +1621,14 @@ input UsersDataFirstNameInputDto {
 """The structure of the Users data input type."""
 input UsersDataInputDto {
   avatar: UsersDataAvatarInputDto
+  city: UsersDataCityInputDto
   connections: UsersDataConnectionsInputDto
+  country: UsersDataCountryInputDto
   degree: UsersDataDegreeInputDto
   email: UsersDataEmailInputDto
   firstName: UsersDataFirstNameInputDto
   lastName: UsersDataLastNameInputDto
+  positions: UsersDataPositionsInputDto
   region: UsersDataRegionInputDto
   role: UsersDataRoleInputDto
 }
@@ -1615,6 +1641,30 @@ type UsersDataLastNameDto {
 """The structure of the Last Name field of the Users content input type."""
 input UsersDataLastNameInputDto {
   iv: String
+}
+
+"""The structure of the Positions nested schema."""
+type UsersDataPositionsChildDto {
+  department: String
+  institution: String
+  role: String
+}
+
+"""The structure of the Positions nested schema."""
+input UsersDataPositionsChildInputDto {
+  department: String
+  institution: String
+  role: String
+}
+
+"""The structure of the Positions field of the Users content type."""
+type UsersDataPositionsDto {
+  iv: [UsersDataPositionsChildDto!]
+}
+
+"""The structure of the Positions field of the Users content input type."""
+input UsersDataPositionsInputDto {
+  iv: [UsersDataPositionsChildInputDto!]
 }
 
 """The structure of the Region field of the Users content type."""
@@ -1672,11 +1722,14 @@ input UsersDataRoleInputDto {
 """The structure of the flat Users data type."""
 type UsersFlatDataDto {
   avatar: [Asset!]
+  city: String
   connections: [UsersDataConnectionsChildDto!]
+  country: String
   degree: [UsersDataDegreeEnum!]
   email: String
   firstName: String
   lastName: String
+  positions: [UsersDataPositionsChildDto!]
   region: UsersDataRegionEnum
   """Role on the GP2 Hub"""
   role: UsersDataRoleEnum

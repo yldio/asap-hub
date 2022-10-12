@@ -59,7 +59,7 @@ const pageProps: ComponentProps<typeof PageControls> = {
 const defaultProps = {
   ...pageProps,
   users,
-  filtersHref: 'filters',
+  onFiltersClick: jest.fn,
 };
 
 describe('UsersPageBody', () => {

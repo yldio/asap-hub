@@ -1,6 +1,6 @@
 import { UserResponse } from '@asap-hub/model';
 import {
-  validateFetchOptions,
+  validateFetchUsersOptions,
   validateUserInviteParameters,
 } from '@asap-hub/server-common';
 import Boom, { isBoom } from '@hapi/boom';
@@ -42,11 +42,11 @@ export const userRouteFactory = (userController: UserController): Router => {
   const userRoutes = Router();
 
   userRoutes.get('/users', async (req, res) => {
-    const options = validateFetchOptions(req.query);
+    const options = validateFetchUsersOptions(req.query);
 
     const userFetchOptions = {
       ...options,
-      filter: options.filter && { role: options.filter },
+      filter: options.filter,
     };
 
     const users = await userController.fetch(userFetchOptions);

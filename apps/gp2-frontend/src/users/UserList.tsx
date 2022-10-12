@@ -11,10 +11,10 @@ const UserList: React.FC<Record<string, never>> = () => {
   const { currentPage, pageSize } = usePaginationParams();
   const { filters, updateFilters, searchQuery, changeLocation } = useSearch();
   const userList = useUsersState({
-    currentPage,
-    pageSize,
-    searchQuery: '',
-    filters: new Set(),
+    skip: currentPage * pageSize,
+    take: pageSize,
+    search: '',
+    filter: filters,
   });
   const { numberOfPages, renderPageHref } = usePagination(
     userList.total,

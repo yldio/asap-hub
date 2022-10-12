@@ -7,7 +7,6 @@ import {
   Button,
   Divider,
   pixels,
-  Link,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 
@@ -23,7 +22,8 @@ const containerStyles = css({
 
 type FiltersModalProps = {
   onBackClick: () => void;
-  onApplyClick: (filters) => void;
+  filters: gp2Model.FetchUsersFilter;
+  onApplyClick: (filters: gp2Model.FetchUsersFilter) => void;
 };
 
 const FiltersModal: React.FC<FiltersModalProps> = ({

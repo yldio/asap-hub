@@ -1,4 +1,4 @@
-import { FetchOptions, FetchPaginationOptions } from '@asap-hub/model';
+import { FetchOptions, FetchPaginationOptions, gp2 } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import Ajv, { JSONSchemaType, ValidateFunction } from 'ajv';
 import addFormats from 'ajv-formats';
@@ -74,8 +74,38 @@ export const fetchOptionsValidationSchema: JSONSchemaType<FetchOptions> = {
   additionalProperties: false,
 };
 
+export const fetchUsersOptionsValidationSchema: JSONSchemaType<gp2.FetchUsersOptions> =
+  {
+    type: 'object',
+    properties: {
+      take: { type: 'number', nullable: true },
+      skip: { type: 'number', nullable: true },
+      search: { type: 'string', nullable: true },
+      filter: {
+        type: 'object',
+        properties: {
+          regions: {
+            type: 'array',
+            items: { type: 'string' },
+            nullable: true,
+          },
+          code: { type: 'string', nullable: true },
+        },
+        nullable: true,
+      },
+    },
+    additionalProperties: false,
+  };
+
 export const validateFetchOptions = validateInput(
   fetchOptionsValidationSchema,
+  {
+    skipNull: true,
+    coerce: true,
+  },
+);
+export const validateFetchUsersOptions = validateInput(
+  fetchUsersOptionsValidationSchema,
   {
     skipNull: true,
     coerce: true,

@@ -2,7 +2,6 @@ import { gp2 } from '@asap-hub/model';
 import {
   Button,
   filterIcon,
-  Link,
   PageControls,
   pixels,
 } from '@asap-hub/react-components';
@@ -13,7 +12,7 @@ import UserCard from './UserCard';
 const { rem } = pixels;
 type UsersPageBodyProps = {
   users: gp2.ListUserResponse;
-  filtersHref: string;
+  onFiltersClick: () => void;
 } & ComponentProps<typeof PageControls>;
 
 const containerStyles = css({

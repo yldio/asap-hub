@@ -1158,7 +1158,28 @@
           "isRequiredOnPublish": false,
           "isHalfWidth": false,
           "fieldType": "DateTime",
-          "editor": "Date"
+          "editor": "Date",
+          "label": "Alumni Since"
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
+      },
+      {
+        "name": "alumniLocation",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "String",
+          "createEnum": false,
+          "editor": "Input",
+          "inlineEditable": false,
+          "isEmbeddable": false,
+          "isUnique": false,
+          "contentType": "Unspecified",
+          "label": "Alumni New Location"
         },
         "isLocked": false,
         "isHidden": false,
@@ -1169,7 +1190,13 @@
     "previewUrls": {
       "Web": "https://hub.asap.science/network/users/${id}"
     },
-    "fieldRules": [],
+    "fieldRules": [
+      {
+        "action": "Disable",
+        "field": "alumniLocation",
+        "condition": "ctx.data.alumniSinceDate"
+      }
+    ],
     "category": "Storage",
     "isPublished": true
   },

@@ -47,7 +47,7 @@ describe('Routes', () => {
     mockGetUsers.mockResolvedValue(gp2.createUsersResponse(1));
     await renderRoutes();
     expect(
-      screen.getByRole('heading', { name: 'Tom Hardy, PhD' }),
+      screen.getByRole('heading', { name: 'Tony Stark, PhD' }),
     ).toBeInTheDocument();
   }, 30_000);
 });

@@ -19,6 +19,7 @@ export const getUserResponse = (): gp2.UserResponse => ({
   region: 'Europe',
   degrees: ['MPH'],
   role: 'Trainee',
+  city: 'Madrid',
   country: 'Spain',
   positions: [
     {
@@ -101,11 +102,11 @@ export const getUserDataObject = (): gp2.UserDataObject => ({
   email: 'T@ark.io',
   firstName: 'Tony',
   lastName: 'Stark',
-  region: UsersDataRegionEnum.Europe,
-  degrees: [UsersDataDegreeEnum.Mph],
-  role: UsersDataRoleEnum.Trainee,
+  region: 'Europe',
+  degrees: ['MPH' as const],
+  role: 'Trainee',
   country: 'Spain',
-  city: 'LA',
+  city: 'Madrid',
   positions: [
     {
       role: 'CEO',
@@ -118,7 +119,7 @@ export const getUserDataObject = (): gp2.UserDataObject => ({
 export const fetchUserResponse = () => patchResponse();
 export const fetchUserResponseDataObject = (): gp2.UserDataObject => ({
   createdDate: '2020-09-25T09:42:51.000Z',
-  email: 'cristiano@ronaldo.com',
+  email: 'peter@parker.com',
   firstName: 'Peter',
   id: 'userId',
   lastName: 'Parker',
@@ -127,9 +128,9 @@ export const fetchUserResponseDataObject = (): gp2.UserDataObject => ({
   country: 'Spain',
   positions: [
     {
-      role: 'CEO',
-      department: 'Research',
-      institution: 'Stark Industries',
+      role: 'Photographer',
+      department: 'Newsdesk',
+      institution: 'Daily Bugle',
     },
   ],
 });
@@ -158,7 +159,7 @@ export const getGraphQLUser = (
         institution: 'Stark Industries',
       },
     ],
-    city: 'LA',
+    city: 'Madrid',
     ...user?.flatData,
   },
 });

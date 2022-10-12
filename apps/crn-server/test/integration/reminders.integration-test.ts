@@ -32,7 +32,7 @@ import { getUserCreateDataObject } from '../fixtures/users.fixtures';
 import { createRandomOrcid } from '../helpers/users';
 import Events from '../../src/controllers/events';
 import { getEventRestResponse } from '../fixtures/events.fixtures';
-import CalendarSquidexDataProvider from '../../src/data-providers/calendars.data-provider';
+import { CalendarSquidexDataProvider } from '../../src/data-providers/calendars.data-provider';
 import { getCalendarCreateDataObject } from '../fixtures/calendars.fixtures';
 
 jest.setTimeout(30000);

@@ -2,7 +2,7 @@ import { NewsResponse } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
-import { listNewsResponse } from '../fixtures/news.fixtures';
+import { getListNewsResponse } from '../fixtures/news.fixtures';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { loggerMock } from '../mocks/logger.mock';
 import { newsControllerMock } from '../mocks/news-controller.mock';
@@ -36,11 +36,11 @@ describe('/news/ route', () => {
     });
 
     test('Should return the results correctly', async () => {
-      newsControllerMock.fetch.mockResolvedValueOnce(listNewsResponse);
+      newsControllerMock.fetch.mockResolvedValueOnce(getListNewsResponse());
 
       const response = await supertest(app).get('/news');
 
-      expect(response.body).toEqual(listNewsResponse);
+      expect(response.body).toEqual(getListNewsResponse());
     });
 
     test('Should call the controller with the right parameters', async () => {

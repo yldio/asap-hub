@@ -217,7 +217,7 @@
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Country",
-          "isRequired": false,
+          "isRequired": true,
           "isRequiredOnPublish": false,
           "isHalfWidth": true
         }
@@ -272,7 +272,7 @@
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Role",
-              "isRequired": false,
+              "isRequired": true,
               "isRequiredOnPublish": false,
               "isHalfWidth": false
             }
@@ -291,7 +291,7 @@
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Department",
-              "isRequired": false,
+              "isRequired": true,
               "isRequiredOnPublish": false,
               "isHalfWidth": false
             }
@@ -312,7 +312,7 @@
               "label": "Institution",
               "hints": "",
               "placeholder": "",
-              "isRequired": false,
+              "isRequired": true,
               "isRequiredOnPublish": false,
               "isHalfWidth": true
             }

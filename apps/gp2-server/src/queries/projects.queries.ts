@@ -14,6 +14,7 @@ export const projectContentQueryFragment = gql`
       leadEmail
       keywords
       members {
+        role
         user {
           id
           created

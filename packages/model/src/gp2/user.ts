@@ -40,12 +40,6 @@ export const userRegions = [
 
 export type UserRegion = typeof userRegions[number];
 
-export const isUserRole = (data: string): data is UserRole =>
-  (userRoles as ReadonlyArray<string>).includes(data);
-
-export const isUserRegion = (data: string): data is UserRegion =>
-  (userRegions as ReadonlyArray<string>).includes(data);
-
 export type UserDataObject = {
   avatarUrl?: string;
   connections?: Connection[];

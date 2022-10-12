@@ -1200,11 +1200,13 @@ export type ProjectsDataLeadEmailInputDto = {
 
 /** The structure of the Members nested schema. */
 export type ProjectsDataMembersChildDto = {
+  role: Maybe<ProjectsDataMembersRoleEnum>;
   user: Maybe<Array<Users>>;
 };
 
 /** The structure of the Members nested schema. */
 export type ProjectsDataMembersChildInputDto = {
+  role: InputMaybe<ProjectsDataMembersRoleEnum>;
   user: InputMaybe<Array<Scalars['String']>>;
 };
 
@@ -1217,6 +1219,19 @@ export type ProjectsDataMembersDto = {
 export type ProjectsDataMembersInputDto = {
   iv: InputMaybe<Array<ProjectsDataMembersChildInputDto>>;
 };
+
+export enum ProjectsDataMembersRoleEnum {
+  /** Contributor */
+  Contributor = 'Contributor',
+  /** Investigator */
+  Investigator = 'Investigator',
+  /** Project_CoLead */
+  ProjectCoLead = 'Project_CoLead',
+  /** Project_Lead */
+  ProjectLead = 'Project_Lead',
+  /** Project_Manager */
+  ProjectManager = 'Project_Manager',
+}
 
 /** The structure of the Project Milestones nested schema. */
 export type ProjectsDataMilestonesChildDto = {
@@ -1575,24 +1590,54 @@ export type UsersDataLastNameInputDto = {
 
 /** The structure of the Region field of the Users content type. */
 export type UsersDataRegionDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: Maybe<UsersDataRegionEnum>;
 };
+
+export enum UsersDataRegionEnum {
+  /** Africa */
+  Africa = 'Africa',
+  /** Asia */
+  Asia = 'Asia',
+  /** Australia_Australiasia */
+  AustraliaAustraliasia = 'Australia_Australiasia',
+  /** Europe */
+  Europe = 'Europe',
+  /** Latin_America */
+  LatinAmerica = 'Latin_America',
+  /** North_America */
+  NorthAmerica = 'North_America',
+  /** South_America */
+  SouthAmerica = 'South_America',
+}
 
 /** The structure of the Region field of the Users content input type. */
 export type UsersDataRegionInputDto = {
-  iv: InputMaybe<Scalars['String']>;
+  iv: InputMaybe<UsersDataRegionEnum>;
 };
 
 /** The structure of the GP2 Hub Role field of the Users content type. */
 export type UsersDataRoleDto = {
   /** Role on the GP2 Hub */
-  iv: Maybe<Scalars['String']>;
+  iv: Maybe<UsersDataRoleEnum>;
 };
+
+export enum UsersDataRoleEnum {
+  /** Administrator */
+  Administrator = 'Administrator',
+  /** Network_Collaborator */
+  NetworkCollaborator = 'Network_Collaborator',
+  /** Network_Investigator */
+  NetworkInvestigator = 'Network_Investigator',
+  /** Trainee */
+  Trainee = 'Trainee',
+  /** Working_Group_Participant */
+  WorkingGroupParticipant = 'Working_Group_Participant',
+}
 
 /** The structure of the GP2 Hub Role field of the Users content input type. */
 export type UsersDataRoleInputDto = {
   /** Role on the GP2 Hub */
-  iv: InputMaybe<Scalars['String']>;
+  iv: InputMaybe<UsersDataRoleEnum>;
 };
 
 /** The structure of the flat Users data type. */
@@ -1603,9 +1648,9 @@ export type UsersFlatDataDto = {
   email: Maybe<Scalars['String']>;
   firstName: Maybe<Scalars['String']>;
   lastName: Maybe<Scalars['String']>;
-  region: Maybe<Scalars['String']>;
+  region: Maybe<UsersDataRegionEnum>;
   /** Role on the GP2 Hub */
-  role: Maybe<Scalars['String']>;
+  role: Maybe<UsersDataRoleEnum>;
 };
 
 /** List of Users items and total count. */
@@ -1914,13 +1959,13 @@ export type WorkingGroupsDataLeadingMembersInputDto = {
 
 /** The structure of the Members nested schema. */
 export type WorkingGroupsDataMembersChildDto = {
-  role: Maybe<Scalars['String']>;
+  role: Maybe<WorkingGroupsDataMembersRoleEnum>;
   user: Maybe<Array<Users>>;
 };
 
 /** The structure of the Members nested schema. */
 export type WorkingGroupsDataMembersChildInputDto = {
-  role: InputMaybe<Scalars['String']>;
+  role: InputMaybe<WorkingGroupsDataMembersRoleEnum>;
   user: InputMaybe<Array<Scalars['String']>>;
 };
 
@@ -1933,6 +1978,15 @@ export type WorkingGroupsDataMembersDto = {
 export type WorkingGroupsDataMembersInputDto = {
   iv: InputMaybe<Array<WorkingGroupsDataMembersChildInputDto>>;
 };
+
+export enum WorkingGroupsDataMembersRoleEnum {
+  /** Co_lead */
+  CoLead = 'Co_lead',
+  /** Lead */
+  Lead = 'Lead',
+  /** Working_group_member */
+  WorkingGroupMember = 'Working_group_member',
+}
 
 /** The structure of the Working Group Email field of the Working Groups content type. */
 export type WorkingGroupsDataPrimaryEmailDto = {
@@ -2007,17 +2061,19 @@ export type ProjectContentFragment = Pick<Projects, 'id'> & {
     | 'keywords'
   > & {
     members: Maybe<
-      Array<{
-        user: Maybe<
-          Array<
-            Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
-              flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'> & {
-                avatar: Maybe<Array<Pick<Asset, 'id'>>>;
-              };
-            }
-          >
-        >;
-      }>
+      Array<
+        Pick<ProjectsDataMembersChildDto, 'role'> & {
+          user: Maybe<
+            Array<
+              Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
+                flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'> & {
+                  avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+                };
+              }
+            >
+          >;
+        }
+      >
     >;
     milestones: Maybe<
       Array<
@@ -2050,17 +2106,20 @@ export type FetchProjectQuery = {
         | 'keywords'
       > & {
         members: Maybe<
-          Array<{
-            user: Maybe<
-              Array<
-                Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
-                  flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'> & {
-                    avatar: Maybe<Array<Pick<Asset, 'id'>>>;
-                  };
-                }
-              >
-            >;
-          }>
+          Array<
+            Pick<ProjectsDataMembersChildDto, 'role'> & {
+              user: Maybe<
+                Array<
+                  Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
+                    flatData: Pick<
+                      UsersFlatDataDto,
+                      'firstName' | 'lastName'
+                    > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+                  }
+                >
+              >;
+            }
+          >
         >;
         milestones: Maybe<
           Array<
@@ -2096,21 +2155,23 @@ export type FetchProjectsQuery = {
               | 'keywords'
             > & {
               members: Maybe<
-                Array<{
-                  user: Maybe<
-                    Array<
-                      Pick<
-                        Users,
-                        'id' | 'created' | 'lastModified' | 'version'
-                      > & {
-                        flatData: Pick<
-                          UsersFlatDataDto,
-                          'firstName' | 'lastName'
-                        > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
-                      }
-                    >
-                  >;
-                }>
+                Array<
+                  Pick<ProjectsDataMembersChildDto, 'role'> & {
+                    user: Maybe<
+                      Array<
+                        Pick<
+                          Users,
+                          'id' | 'created' | 'lastModified' | 'version'
+                        > & {
+                          flatData: Pick<
+                            UsersFlatDataDto,
+                            'firstName' | 'lastName'
+                          > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+                        }
+                      >
+                    >;
+                  }
+                >
               >;
               milestones: Maybe<
                 Array<
@@ -2626,6 +2687,7 @@ export const ProjectContentFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'role' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'user' },

@@ -1,8 +1,9 @@
 import { render, screen } from '@testing-library/react';
+import { ComponentProps } from 'react';
 import ProjectSummaryFooter from '../ProjectSummaryFooter';
 
 describe('ProjectSummaryFooter', () => {
-  const defaultProps = {
+  const defaultProps: ComponentProps<typeof ProjectSummaryFooter> = {
     members: [],
     startDate: '2020-07-06',
   };
@@ -12,13 +13,14 @@ describe('ProjectSummaryFooter', () => {
   });
 
   it('renders 1 member of the project', () => {
-    const props = {
+    const props: ComponentProps<typeof ProjectSummaryFooter> = {
       ...defaultProps,
       members: [
         {
           userId: '7',
           firstName: 'Tony',
           lastName: 'Stark',
+          role: 'Project manager',
         },
       ],
     };
@@ -27,18 +29,20 @@ describe('ProjectSummaryFooter', () => {
   });
 
   it('renders 2 members of the project', () => {
-    const props = {
+    const props: ComponentProps<typeof ProjectSummaryFooter> = {
       ...defaultProps,
       members: [
         {
           userId: '7',
           firstName: 'Tony',
           lastName: 'Stark',
+          role: 'Project manager',
         },
         {
           userId: '11',
           firstName: 'Peter',
           lastName: 'Parker',
+          role: 'Investigator',
         },
       ],
     };

@@ -124,16 +124,16 @@
           "allowedValues": [
             "Africa",
             "Asia",
-            "Australia/Australiasia",
+            "Australia_Australiasia",
             "Europe",
-            "North America",
-            "South America",
-            "Latin America"
+            "North_America",
+            "South_America",
+            "Latin_America"
           ],
           "isUnique": false,
           "isEmbeddable": false,
           "inlineEditable": true,
-          "createEnum": false,
+          "createEnum": true,
           "contentType": "Unspecified",
           "editor": "Dropdown",
           "label": "Region",
@@ -182,10 +182,11 @@
         "properties": {
           "fieldType": "String",
           "defaultValue": "",
+          "createEnum": true,
           "allowedValues": [
-            "Working Group Participant",
-            "Network Investigator",
-            "Network Collaborator",
+            "Working_Group_Participant",
+            "Network_Investigator",
+            "Network_Collaborator",
             "Administrator",
             "Trainee"
           ],

@@ -1217,11 +1217,13 @@ input ProjectsDataLeadEmailInputDto {
 
 """The structure of the Members nested schema."""
 type ProjectsDataMembersChildDto {
+  role: ProjectsDataMembersRoleEnum
   user: [Users!]
 }
 
 """The structure of the Members nested schema."""
 input ProjectsDataMembersChildInputDto {
+  role: ProjectsDataMembersRoleEnum
   user: [String!]
 }
 
@@ -1233,6 +1235,19 @@ type ProjectsDataMembersDto {
 """The structure of the Members field of the Projects content input type."""
 input ProjectsDataMembersInputDto {
   iv: [ProjectsDataMembersChildInputDto!]
+}
+
+enum ProjectsDataMembersRoleEnum {
+  """Contributor"""
+  Contributor
+  """Investigator"""
+  Investigator
+  """Project_CoLead"""
+  Project_CoLead
+  """Project_Lead"""
+  Project_Lead
+  """Project_Manager"""
+  Project_Manager
 }
 
 """The structure of the Project Milestones nested schema."""
@@ -1604,24 +1619,54 @@ input UsersDataLastNameInputDto {
 
 """The structure of the Region field of the Users content type."""
 type UsersDataRegionDto {
-  iv: String
+  iv: UsersDataRegionEnum
+}
+
+enum UsersDataRegionEnum {
+  """Africa"""
+  Africa
+  """Asia"""
+  Asia
+  """Australia_Australiasia"""
+  Australia_Australiasia
+  """Europe"""
+  Europe
+  """Latin_America"""
+  Latin_America
+  """North_America"""
+  North_America
+  """South_America"""
+  South_America
 }
 
 """The structure of the Region field of the Users content input type."""
 input UsersDataRegionInputDto {
-  iv: String
+  iv: UsersDataRegionEnum
 }
 
 """The structure of the GP2 Hub Role field of the Users content type."""
 type UsersDataRoleDto {
   """Role on the GP2 Hub"""
-  iv: String
+  iv: UsersDataRoleEnum
+}
+
+enum UsersDataRoleEnum {
+  """Administrator"""
+  Administrator
+  """Network_Collaborator"""
+  Network_Collaborator
+  """Network_Investigator"""
+  Network_Investigator
+  """Trainee"""
+  Trainee
+  """Working_Group_Participant"""
+  Working_Group_Participant
 }
 
 """The structure of the GP2 Hub Role field of the Users content input type."""
 input UsersDataRoleInputDto {
   """Role on the GP2 Hub"""
-  iv: String
+  iv: UsersDataRoleEnum
 }
 
 """The structure of the flat Users data type."""
@@ -1632,9 +1677,9 @@ type UsersFlatDataDto {
   email: String
   firstName: String
   lastName: String
-  region: String
+  region: UsersDataRegionEnum
   """Role on the GP2 Hub"""
-  role: String
+  role: UsersDataRoleEnum
 }
 
 """List of Users items and total count."""
@@ -1963,13 +2008,13 @@ input WorkingGroupsDataLeadingMembersInputDto {
 
 """The structure of the Members nested schema."""
 type WorkingGroupsDataMembersChildDto {
-  role: String
+  role: WorkingGroupsDataMembersRoleEnum
   user: [Users!]
 }
 
 """The structure of the Members nested schema."""
 input WorkingGroupsDataMembersChildInputDto {
-  role: String
+  role: WorkingGroupsDataMembersRoleEnum
   user: [String!]
 }
 
@@ -1981,6 +2026,15 @@ type WorkingGroupsDataMembersDto {
 """The structure of the Members field of the Working Groups content input type."""
 input WorkingGroupsDataMembersInputDto {
   iv: [WorkingGroupsDataMembersChildInputDto!]
+}
+
+enum WorkingGroupsDataMembersRoleEnum {
+  """Co_lead"""
+  Co_lead
+  """Lead"""
+  Lead
+  """Working_group_member"""
+  Working_group_member
 }
 
 """The structure of the Working Group Email field of the Working Groups content type."""

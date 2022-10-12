@@ -46,14 +46,12 @@ describe('WorkingGroupOverview', () => {
     expect(screen.getByText('Lead')).toBeInTheDocument();
   });
 
-  it('does not render the list if there are no members', () => {
+  it('renders the member list if there are no members. It displays a count of 0', () => {
     render(
       <WorkingGroupOverview {...defaultProps} members={[]}>
         Body
       </WorkingGroupOverview>,
     );
-    expect(
-      screen.queryByText(/Working Group Members/i),
-    ).not.toBeInTheDocument();
+    expect(screen.getByText('Working Group Members (0)')).toBeInTheDocument();
   });
 });

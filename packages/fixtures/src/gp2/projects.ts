@@ -8,6 +8,7 @@ const mockedProject: gp2.ProjectResponse = {
       userId: '11',
       firstName: 'Tony',
       lastName: 'Stark',
+      role: 'Project manager',
     },
   ],
   startDate: '2021-12-28',

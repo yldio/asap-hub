@@ -1,11 +1,13 @@
 import { gp2 } from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
+import { ComponentProps } from 'react';
 import ProjectOverview from '../ProjectOverview';
 
 describe('ProjectOverview', () => {
-  const defaultProps = {
+  const defaultProps: ComponentProps<typeof ProjectOverview> = {
     keywords: [],
     milestones: [],
+    members: [],
   };
   it('renders the description', () => {
     const description = 'this is a description';
@@ -96,5 +98,40 @@ describe('ProjectOverview', () => {
     expect(
       screen.getByRole('heading', { name: /the milestone/ }),
     ).toBeInTheDocument();
+  });
+  it('renders the members list', () => {
+    render(
+      <ProjectOverview
+        {...defaultProps}
+        members={[
+          {
+            userId: '11',
+            firstName: 'Tony',
+            lastName: 'Stark',
+            role: 'Project manager',
+          },
+        ]}
+      >
+        Body
+      </ProjectOverview>,
+    );
+
+    expect(screen.getByText('Project Members (1)')).toBeInTheDocument();
+    const avatar = screen.getByText(/tony stark/i);
+    expect(avatar).toBeVisible();
+    expect(avatar.closest('a')).toHaveAttribute(
+      'href',
+      expect.stringMatching(/11/i),
+    );
+    expect(screen.getByText('Project manager')).toBeInTheDocument();
+  });
+
+  it('renders the member list if there are no members. It displays a count of 0', () => {
+    render(
+      <ProjectOverview {...defaultProps} members={[]}>
+        Body
+      </ProjectOverview>,
+    );
+    expect(screen.getByText('Project Members (0)')).toBeInTheDocument();
   });
 });

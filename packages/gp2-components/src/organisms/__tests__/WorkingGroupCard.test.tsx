@@ -18,7 +18,7 @@ describe('WorkingGroupCard', () => {
     ).toBeInTheDocument();
   });
   it('renders a count of the members', () => {
-    render(<WorkingGroupCard {...defaultProps} />);
+    render(<WorkingGroupCard {...defaultProps} members={[]} />);
     expect(screen.getByText(/0 members/i)).toBeInTheDocument();
   });
   it('renders a single count of the members', () => {

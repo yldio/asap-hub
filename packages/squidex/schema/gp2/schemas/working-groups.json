@@ -133,11 +133,11 @@
             "isDisabled": false,
             "properties": {
               "fieldType": "String",
-              "allowedValues": ["Lead", "Co-lead", "Working group member"],
+              "allowedValues": ["Lead", "Co_lead", "Working_group_member"],
               "isUnique": false,
               "isEmbeddable": false,
               "inlineEditable": true,
-              "createEnum": false,
+              "createEnum": true,
               "contentType": "Unspecified",
               "editor": "Dropdown",
               "label": "Role",

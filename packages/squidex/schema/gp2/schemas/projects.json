@@ -67,6 +67,32 @@
               "isRequiredOnPublish": false,
               "isHalfWidth": true
             }
+          },
+          {
+            "name": "role",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "allowedValues": [
+                "Contributor",
+                "Investigator",
+                "Project_CoLead",
+                "Project_Lead",
+                "Project_Manager"
+              ],
+              "isUnique": false,
+              "isEmbeddable": false,
+              "inlineEditable": true,
+              "createEnum": true,
+              "contentType": "Unspecified",
+              "editor": "Dropdown",
+              "label": "Role",
+              "isRequired": true,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": true
+            }
           }
         ]
       },

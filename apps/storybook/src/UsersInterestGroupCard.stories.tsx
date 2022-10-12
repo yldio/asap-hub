@@ -1,6 +1,6 @@
 import { createListGroupResponse } from '@asap-hub/fixtures';
 import { UserInterestGroupCard } from '@asap-hub/react-components';
-import { number } from '@storybook/addon-knobs';
+import { boolean, number, text } from '@storybook/addon-knobs';
 
 export default {
   title: 'Organisms / User Interest Group Card',
@@ -8,14 +8,8 @@ export default {
 
 export const Normal = () => (
   <UserInterestGroupCard
-    displayName="Octavian"
-    groups={createListGroupResponse(number('Number of groups', 10)).items}
-  />
-);
-export const Alumni = () => (
-  <UserInterestGroupCard
-    alumniSinceDate="2020-01-01"
-    displayName="OctavianAlumni"
+    alumniSinceDate={boolean('is alumni', false) ? '2020-01-01' : undefined}
+    displayName={text('Display Name', 'John Doe')}
     groups={createListGroupResponse(number('Number of groups', 10)).items}
   />
 );

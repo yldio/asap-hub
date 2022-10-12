@@ -14,7 +14,6 @@ import { usePatchUserById } from './state';
 
 import GroupsCard from './groups/GroupsCard';
 import expertiseAndResourceSuggestions from './expertise-and-resource-suggestions';
-import { useUserGroupsById } from './groups/state';
 
 type ResearchProps = {
   user: UserResponse;
@@ -23,7 +22,7 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
   const { id } = useCurrentUser() ?? {};
   const { path } = useRouteMatch();
   const route = network({}).users({}).user({ userId: user.id }).research({});
-  const groups = useUserGroupsById(user.id);
+  
   const patchUser = usePatchUserById(user.id);
 
   return (
@@ -32,7 +31,7 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
         {...user}
         userProfileGroupsCard={
           <Frame title={null} fallback={null}>
-            <GroupsCard user={user} groups={groups} />
+            <GroupsCard user={user} />
           </Frame>
         }
         teams={user.teams.map((team) => ({

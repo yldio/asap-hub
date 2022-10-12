@@ -47,11 +47,11 @@ const listItemStyle = css({
   },
 });
 
-type UserGroupListProps = Pick<UserResponse, 'id'> & {
+type GroupListProps = Pick<UserResponse, 'id'> & {
   readonly groups: ReadonlyArray<GroupResponse>;
 };
 
-const UserGroupsList: React.FC<UserGroupListProps> = ({ id, groups }) => (
+const GroupList: React.FC<GroupListProps> = ({ id, groups }) => (
   <ul css={containerStyles}>
     {groups.map((group, idx) => (
       <Fragment key={`group-${idx}`}>
@@ -75,4 +75,4 @@ const UserGroupsList: React.FC<UserGroupListProps> = ({ id, groups }) => (
   </ul>
 );
 
-export default UserGroupsList;
+export default GroupList;

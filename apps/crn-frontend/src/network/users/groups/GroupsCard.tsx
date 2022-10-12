@@ -1,17 +1,18 @@
 import { UserInterestGroupCard } from '@asap-hub/react-components';
-import { ListGroupResponse, UserResponse } from '@asap-hub/model';
+import { UserResponse } from '@asap-hub/model';
 
-const GroupsCard: React.FC<{
-  user: UserResponse;
-  groups?: ListGroupResponse | 'noSuchUser';
-}> = ({ user, groups }) => {
+import { useUserGroupsById } from './state';
+
+const GroupsCard: React.FC<{ user: UserResponse }> = ({ user }) => {
+  const groups = useUserGroupsById(user.id);
+
   if (groups === 'noSuchUser') {
     throw new Error(
       `Failed to fetch groups for user with id ${user.id}. User does not exist.`,
     );
   }
 
-  return groups ? (
+  return groups.total ? (
     <UserInterestGroupCard {...user} groups={groups.items} />
   ) : null;
 };

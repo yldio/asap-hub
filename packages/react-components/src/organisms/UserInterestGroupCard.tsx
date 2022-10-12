@@ -47,7 +47,7 @@ type UserInterestGroupItemProps = GroupResponse & {
   index: number;
 };
 
-export const UserInterestGroupItem: React.FC<UserInterestGroupItemProps> = ({
+const UserInterestGroupItem: React.FC<UserInterestGroupItemProps> = ({
   id,
   name,
   leaders,

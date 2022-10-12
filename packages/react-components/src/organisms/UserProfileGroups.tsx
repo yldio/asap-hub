@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { UserResponse, GroupResponse } from '@asap-hub/model';
 
 import { Card, Headline2, Paragraph } from '../atoms';
-import UserGroupList from './UserGroupsList';
+import GroupList from './GroupList';
 
 type UserProfileGroupsProps = Pick<UserResponse, 'firstName' | 'id'> & {
   readonly groups: ReadonlyArray<GroupResponse>;
@@ -24,7 +24,7 @@ const UserProfileGroups: FC<UserProfileGroupsProps> = ({
         {firstName}’s team is collaborating with other teams via groups, which
         meet frequently
       </Paragraph>
-      <UserGroupList groups={groups} id={id} />
+      <GroupList groups={groups} id={id} />
     </div>
   </Card>
 );

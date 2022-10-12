@@ -1,10 +1,9 @@
 import { createGroupResponse, createUserResponse } from '@asap-hub/fixtures';
 import { render } from '@testing-library/react';
 import { ComponentProps } from 'react';
-import { UserGroupsList } from '..';
-import UserGroupList from '../UserGroupsList';
+import GroupList from '../GroupList';
 
-const props: ComponentProps<typeof UserGroupList> = {
+const props: ComponentProps<typeof GroupList> = {
   id: '',
   groups: [],
 };
@@ -12,7 +11,7 @@ const props: ComponentProps<typeof UserGroupList> = {
 it('displays member role when not defined as leader', () => {
   const group = createGroupResponse();
   const { getByRole } = render(
-    <UserGroupsList
+    <GroupList
       {...props}
       id="12"
       groups={[
@@ -40,7 +39,7 @@ it('displays member role when not defined as leader', () => {
 it('displays member role when defined as leader', () => {
   const group = createGroupResponse();
   const { getByRole } = render(
-    <UserGroupsList
+    <GroupList
       {...props}
       id={'12'}
       groups={[

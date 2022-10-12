@@ -1,40 +1,5 @@
 import { appName, baseUrl } from '../../src/config';
-import { parseNews, parseGraphQLNews } from '../../src/entities';
-
-describe('parse news entities', () => {
-  test('parse handles thumbnails', async () => {
-    const date = new Date().toISOString();
-    expect(
-      parseNews({
-        id: 'uuid',
-        created: date,
-        lastModified: date,
-        version: 42,
-        data: {
-          type: {
-            iv: 'News',
-          },
-          title: {
-            iv: 'Title',
-          },
-          shortText: { iv: 'shortText' },
-          thumbnail: { iv: ['uuid'] },
-          text: {
-            iv: 'text',
-          },
-        },
-      }),
-    ).toMatchObject({
-      id: 'uuid',
-      created: date,
-      type: 'News',
-      title: 'Title',
-      shortText: 'shortText',
-      text: 'text',
-      thumbnail: `${baseUrl}/api/assets/${appName}/uuid`,
-    });
-  });
-});
+import { parseGraphQLNews } from '../../src/entities';
 
 describe('parse GraphQL news entities', () => {
   test.each`

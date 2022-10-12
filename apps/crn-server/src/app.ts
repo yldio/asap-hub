@@ -52,7 +52,7 @@ import {
   AssetDataProvider,
   AssetSquidexDataProvider,
 } from './data-providers/assets.data-provider';
-import CalendarSquidexDataProvider from './data-providers/calendars.data-provider';
+import { CalendarSquidexDataProvider } from './data-providers/calendars.data-provider';
 import {
   ExternalAuthorDataProvider,
   ExternalAuthorSquidexDataProvider,
@@ -106,6 +106,10 @@ import { userPublicRouteFactory, userRouteFactory } from './routes/user.route';
 import assignUserToContext from './utils/assign-user-to-context';
 import { getAuthToken } from './utils/auth';
 import pinoLogger from './utils/logger';
+import {
+  NewsDataProvider,
+  NewsSquidexDataProvider,
+} from './data-providers/news.data-provider';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -173,6 +177,8 @@ export const appFactory = (libs: Libs = {}): Express => {
   const groupDataProvider =
     libs.groupDataProvider ||
     new GroupSquidexDataProvider(squidexGraphqlClient);
+  const newsDataProvider =
+    libs.newsDataProvider || new NewsSquidexDataProvider(newsRestClient);
   const teamDataProvider =
     libs.teamDataProvider ||
     new TeamSquidexDataProvider(squidexGraphqlClient, teamRestClient);
@@ -207,7 +213,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.calendarController || new Calendars(calendarDataProvider);
   const dashboardController =
     libs.dashboardController || new Dashboard(squidexGraphqlClient);
-  const newsController = libs.newsController || new News(newsRestClient);
+  const newsController = libs.newsController || new News(newsDataProvider);
   const discoverController =
     libs.discoverController || new Discover(squidexGraphqlClient);
   const eventController =
@@ -370,6 +376,7 @@ export type Libs = {
   userController?: UserController;
   assetDataProvider?: AssetDataProvider;
   groupDataProvider?: GroupDataProvider;
+  newsDataProvider?: NewsDataProvider;
   reminderDataProvider?: ReminderDataProvider;
   teamDataProvider?: TeamDataProvider;
   tutorialsDataProvider?: TutorialsDataProvider;

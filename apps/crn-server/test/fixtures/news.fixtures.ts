@@ -11,7 +11,7 @@ export const newsSquidexApiResponse: {
   total: number;
   items: RestNews[];
 } = {
-  total: 2,
+  total: 1,
   items: [
     {
       id: 'news-1',
@@ -35,29 +35,6 @@ export const newsSquidexApiResponse: {
       lastModified: '2020-09-25T09:42:51Z',
       version: 42,
       created: '2020-09-08T16:35:28Z',
-    },
-    {
-      id: 'news-2',
-      data: {
-        title: {
-          iv: 'Tutorial 2',
-        },
-        type: {
-          iv: 'Tutorial',
-        },
-        shortText: {
-          iv: 'Short text of tutorial 2',
-        },
-        text: {
-          iv: '<p>text</p>',
-        },
-        thumbnail: {
-          iv: ['thumbnail-uuid2'],
-        },
-      },
-      lastModified: '2020-09-25T09:42:51Z',
-      version: 42,
-      created: '2020-09-16T14:31:19Z',
     },
   ],
 };

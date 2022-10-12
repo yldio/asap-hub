@@ -1,13 +1,33 @@
-import { createSentryHeaders, GetListOptions } from '@asap-hub/frontend-utils';
+import { createSentryHeaders } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
 import { API_BASE_URL } from '../config';
-import createListApiUrl from '../CreateListApiUrl';
+
+export const createUserApiUrl = ({
+  search,
+  take,
+  skip,
+  filter,
+}: gp2.FetchUsersOptions) => {
+  const url = new URL('users', `${API_BASE_URL}/`);
+  if (search) url.searchParams.set('search', search);
+  if (take !== null) {
+    url.searchParams.set('take', String(take));
+    if (skip !== null) {
+      url.searchParams.set('skip', String(skip));
+    }
+  }
+  filter?.regions?.forEach((region) =>
+    url.searchParams.append('region', region),
+  );
+
+  return url;
+};
 
 export const getUsers = async (
-  options: GetListOptions,
+  options: gp2.FetchUsersOptions,
   authorization: string,
 ): Promise<gp2.ListUserResponse> => {
-  const resp = await fetch(createListApiUrl('users', options).toString(), {
+  const resp = await fetch(createUserApiUrl(options).toString(), {
     headers: { authorization, ...createSentryHeaders() },
   });
   if (!resp.ok) {

@@ -3,12 +3,12 @@ import Boom from '@hapi/boom';
 import crypto from 'crypto';
 
 export const signPayload = (
-  payload: lambda.Request['payload'],
+  payload: lambda.Request['rawPayload'],
   squidexSharedSecret: string,
 ): string =>
   crypto
     .createHash('SHA256')
-    .update(Buffer.from(JSON.stringify(payload) + squidexSharedSecret, 'utf8'))
+    .update(Buffer.from(payload + squidexSharedSecret, 'utf8'))
     .digest('base64');
 
 export function validateSquidexRequest(
@@ -24,7 +24,10 @@ export function validateSquidexRequest(
     throw Boom.unauthorized();
   }
 
-  const computedSignature = signPayload(request.payload, squidexSharedSecret);
+  const computedSignature = signPayload(
+    request.rawPayload,
+    squidexSharedSecret,
+  );
 
   if (signature !== computedSignature) {
     throw Boom.forbidden();

@@ -1,3 +1,4 @@
+import 'source-map-support/register';
 import { squidexHandlerFactory } from '@asap-hub/server-common';
 import { framework as lambda } from '@asap-hub/services-common';
 import { Handler } from 'aws-lambda/handler';

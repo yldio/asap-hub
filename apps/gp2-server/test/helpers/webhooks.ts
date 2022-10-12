@@ -6,7 +6,7 @@ import { getApiGatewayEvent } from './events';
 export const createSignedPayload = <T>(payload: WebhookPayload<T>) =>
   getApiGatewayEvent({
     headers: {
-      'x-signature': signPayload(payload, squidexSharedSecret),
+      'x-signature': signPayload(JSON.stringify(payload), squidexSharedSecret),
     },
     body: JSON.stringify(payload),
   });

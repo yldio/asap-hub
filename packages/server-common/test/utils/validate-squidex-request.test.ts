@@ -1,7 +1,7 @@
 import Boom from '@hapi/boom';
 import { validateSquidexRequest } from '../../src/utils/validate-squidex-request';
 
-const webhookPayload = {
+const webhookPayload = `{
   type: 'NewsCreated',
   payload: {
     $type: 'EnrichedContentEvent',
@@ -26,17 +26,18 @@ const webhookPayload = {
     version: 0,
   },
   timestamp: '2020-09-03T11:00:51Z',
-};
+}`;
+const squidexSharedSecret = 'squidex_shared_secret';
 
 describe('Verifies Squidex webhook payload signature', () => {
-  const squidexSharedSecret = 'squidex_shared_secret';
   test('throws 403 when X-Signature header is not defined', async () => {
     expect(() =>
       validateSquidexRequest(
         {
           method: 'post',
           headers: {},
-          payload: webhookPayload,
+          rawPayload: webhookPayload,
+          payload: undefined,
         },
         squidexSharedSecret,
       ),
@@ -51,7 +52,8 @@ describe('Verifies Squidex webhook payload signature', () => {
           headers: {
             'x-signature': 'invalidSignature',
           },
-          payload: webhookPayload,
+          rawPayload: webhookPayload,
+          payload: undefined,
         },
         squidexSharedSecret,
       ),
@@ -63,9 +65,10 @@ describe('Verifies Squidex webhook payload signature', () => {
       {
         method: 'post',
         headers: {
-          'x-signature': 'JXApQoo8MlxD0FAV6+gZRMulLll9HnjDLgZN41wLEH4=',
+          'x-signature': 'XAP5/U/oFcxFGOGH3T4tzDOiepYFPdc2+yfWPOQEz+8=',
         },
-        payload: webhookPayload,
+        rawPayload: webhookPayload,
+        payload: undefined,
       },
       squidexSharedSecret,
     );

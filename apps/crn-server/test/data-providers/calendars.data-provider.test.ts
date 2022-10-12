@@ -2,7 +2,6 @@ import nock from 'nock';
 import { InputCalendar, RestCalendar, SquidexRest } from '@asap-hub/squidex';
 import { getAuthToken } from '../../src/utils/auth';
 import { appName, baseUrl } from '../../src/config';
-import CalendarSquidexDataProvider from '../../src/data-providers/calendars.data-provider';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
 import { identity } from '../helpers/squidex';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
@@ -15,6 +14,7 @@ import {
   getSquidexGraphqlCalendar,
 } from '../fixtures/calendars.fixtures';
 import { GenericError } from '@asap-hub/errors';
+import { CalendarSquidexDataProvider } from '../../src/data-providers/calendars.data-provider';
 
 describe('Calendars data provider', () => {
   const squidexGraphqlClientMock = getSquidexGraphqlClientMock();

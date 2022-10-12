@@ -20,7 +20,8 @@ import {
 } from '../../utils/sync-google-calendar';
 import { syncEventFactory } from '../../utils/sync-google-event';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
-import CalendarSquidexDataProvider, {
+import {
+  CalendarSquidexDataProvider,
   CalendarDataProvider,
 } from '../../data-providers/calendars.data-provider';
 

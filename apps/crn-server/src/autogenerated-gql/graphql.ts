@@ -8547,6 +8547,7 @@ export type FetchUserQuery = {
       flatData: Pick<
         UsersFlatDataDto,
         | 'alumniSinceDate'
+        | 'alumniLocation'
         | 'biography'
         | 'degree'
         | 'email'
@@ -8638,6 +8639,7 @@ export type FetchUsersQuery = {
             flatData: Pick<
               UsersFlatDataDto,
               | 'alumniSinceDate'
+              | 'alumniLocation'
               | 'biography'
               | 'degree'
               | 'email'
@@ -10890,6 +10892,10 @@ export const UsersContentFragmentDoc = {
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'alumniSinceDate' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'alumniLocation' },
                 },
                 {
                   kind: 'Field',

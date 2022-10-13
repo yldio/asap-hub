@@ -154,7 +154,7 @@ const generateFetchQueryFilter = ({ filter }: gp2.FetchUsersOptions) => {
     ?.map((region) => `data/region/iv eq '${region}'`)
     .join(' or ');
 
-  const filterCode = code && { 'data/connections/iv/code': code };
+  const filterCode = code && `data/connections/iv/code eq '${code}'`;
 
   const queryFilter = [filterRegions, filterCode]
     .filter(Boolean)

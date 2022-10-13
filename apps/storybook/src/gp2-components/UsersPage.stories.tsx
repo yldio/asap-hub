@@ -2,7 +2,7 @@ import { Layout, UsersPage } from '@asap-hub/gp2-components';
 import { NoPaddingDecorator } from '../layout';
 
 export default {
-  title: 'GP2 / Templates /UsersPage / UsersPage',
+  title: 'GP2 / Templates / Users Directory / UsersPage',
   component: UsersPage,
   decorators: [NoPaddingDecorator],
 };

@@ -7,7 +7,7 @@ export default {
   component: StatusPill,
 };
 
-export const Pill = () => (
+export const Normal = () => (
   <StatusPill
     status={select<
       | gp2.ProjectResponse['status']

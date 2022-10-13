@@ -40,6 +40,12 @@ export const userRegions = [
 
 export type UserRegion = typeof userRegions[number];
 
+type UserPosition = {
+  role: string;
+  department: string;
+  institution: string;
+};
+
 export type UserDataObject = {
   avatarUrl?: string;
   connections?: Connection[];
@@ -51,6 +57,9 @@ export type UserDataObject = {
   lastName: string;
   region: UserRegion;
   role: UserRole;
+  positions: UserPosition[];
+  country: string;
+  city?: string;
 };
 
 export type UserUpdateDataObject = Partial<

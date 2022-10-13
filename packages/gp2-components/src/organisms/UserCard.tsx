@@ -88,14 +88,12 @@ const UserCard: React.FC<UserCardProps> = ({
         </Anchor>
 
         <div css={textContainerStyles}>
-          <div>
-            <Anchor href={userHref}>
-              <h3 css={titleStyles}>
-                {displayName}
-                {degrees && !!degrees.length && `, ${degrees.join(', ')}`}
-              </h3>
-            </Anchor>
-          </div>
+          <Anchor href={userHref}>
+            <h3 css={titleStyles}>
+              {displayName}
+              {degrees && !!degrees.length && `, ${degrees.join(', ')}`}
+            </h3>
+          </Anchor>
           <UserCardInfo
             projects={projects}
             role={role}

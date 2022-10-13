@@ -144,6 +144,40 @@ describe('User data provider', () => {
         expect(result?.role).toEqual(expected);
       },
     );
+    describe('positions', () => {
+      const position = {
+        role: 'CEO',
+        department: 'Research',
+        institution: 'Stark Industries',
+      };
+      test.each(['role', 'department', 'institution'])(
+        'Should throw when the position has %s not defined',
+        async (item) => {
+          const invalidRoleUser = getGraphQLUser();
+          invalidRoleUser.flatData.positions = [
+            {
+              ...position,
+              [item]: null,
+            },
+          ];
+          const mockResponse = getSquidexUserGraphqlResponse(invalidRoleUser);
+          squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+          expect(() =>
+            userDataProvider.fetchById('user-id'),
+          ).rejects.toThrowError('Position not defined');
+        },
+      );
+      test('Should return empty array if positions has not been defined', async () => {
+        const invalidRoleUser = getGraphQLUser();
+        invalidRoleUser.flatData.positions = null;
+        const mockResponse = getSquidexUserGraphqlResponse(invalidRoleUser);
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.positions).toEqual([]);
+      });
+    });
   });
 
   describe('update', () => {

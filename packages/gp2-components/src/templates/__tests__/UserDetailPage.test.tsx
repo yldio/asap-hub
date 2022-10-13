@@ -11,6 +11,15 @@ describe('UserDetailPage', () => {
     degrees: ['PhD' as const],
     role: 'Administrator' as const,
     region: 'Europe' as const,
+    positions: [
+      {
+        role: 'Safety Inspector',
+        department: 'Sector 7G',
+        institution: 'Springfield Nuclear Power Plant',
+      },
+    ],
+    country: 'USA',
+    city: 'Springfield',
   };
   it('renders header', () => {
     render(<UserDetailPage {...defaultProps}></UserDetailPage>);

@@ -10,25 +10,41 @@ const users: gp2.ListUserResponse = {
       id: 'u42',
       createdDate: '',
       email: '',
-      displayName: 'John Doe',
+      displayName: 'Tony Stark',
       degrees: ['PhD' as const],
-      firstName: 'John',
-      lastName: 'Doe',
+      firstName: 'Tony',
+      lastName: 'Stark',
       avatarUrl: '',
       role: 'Administrator' as const,
       region: 'Europe' as const,
+      country: 'Spain',
+      positions: [
+        {
+          role: 'CEO',
+          department: 'Research',
+          institution: 'Stark Industries',
+        },
+      ],
     },
     {
       id: 'u59',
       createdDate: '',
       email: '',
-      displayName: 'Sam Smyth',
-      degrees: ['PhD' as const],
-      firstName: 'Sam',
-      lastName: 'Smyth',
+      displayName: 'Peter Parker',
+      degrees: ['BSc' as const],
+      firstName: 'Peter',
+      lastName: 'Parket',
       avatarUrl: '',
       role: 'Administrator' as const,
-      region: 'Africa' as const,
+      region: 'North America' as const,
+      country: 'Canada',
+      positions: [
+        {
+          role: 'Photographer',
+          department: 'Newsroom',
+          institution: 'Daily Bugle',
+        },
+      ],
     },
   ],
   total: 2,
@@ -44,17 +60,17 @@ describe('UsersPageBody', () => {
     const userToRender = { items: [users.items[0]], total: 1 };
     render(<UsersPageBody users={userToRender} {...pageProps} />);
     expect(
-      screen.getByRole('heading', { name: /John Doe, PhD/i }),
+      screen.getByRole('heading', { name: /Tony Stark, PhD/i }),
     ).toBeVisible();
   });
 
   it('renders multiple users', () => {
     render(<UsersPageBody users={users} {...pageProps} />);
     expect(
-      screen.getByRole('heading', { name: /John Doe, PhD/i }),
+      screen.getByRole('heading', { name: /Tony Stark, PhD/i }),
     ).toBeVisible();
     expect(
-      screen.getByRole('heading', { name: /Sam Smyth, PhD/i }),
+      screen.getByRole('heading', { name: /Peter Parker, BSc/i }),
     ).toBeVisible();
   });
 });

@@ -1,5 +1,5 @@
+import { gp2 } from '@asap-hub/fixtures';
 import { UsersPageBody } from '@asap-hub/gp2-components';
-import { gp2 } from '@asap-hub/model';
 import { number } from '@storybook/addon-knobs';
 import { ComponentProps } from 'react';
 
@@ -8,16 +8,7 @@ export default {
   component: UsersPageBody,
 };
 
-const item: gp2.UserResponse = {
-  createdDate: '2020-03-03',
-  email: 'pmars@email.com',
-  firstName: 'Phillip',
-  displayName: 'Phillip Mars',
-  id: 'u42',
-  lastName: 'Mars',
-  region: 'Europe' as const,
-  role: 'Network Collaborator' as const,
-};
+const item = gp2.createUserResponse();
 
 const userProps = (): ComponentProps<typeof UsersPageBody> => {
   const numberOfItems = number('Number of Users', 2, { min: 0 });

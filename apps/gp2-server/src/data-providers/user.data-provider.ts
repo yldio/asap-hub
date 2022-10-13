@@ -198,6 +198,17 @@ export const parseGraphQLUserToDataObject = ({
       return degree;
     });
 
+  const positions =
+    item.positions?.map(({ role, department, institution }) => {
+      if (!(role && department && institution)) {
+        throw new Error('Position not defined');
+      }
+      return {
+        role,
+        department,
+        institution,
+      };
+    }) || [];
   return {
     id,
     createdDate,
@@ -207,5 +218,8 @@ export const parseGraphQLUserToDataObject = ({
     email: item.email || '',
     region: regionMap[item.region],
     role: roleMap[item.role],
+    country: item.country || '',
+    city: item.city || undefined,
+    positions,
   };
 };

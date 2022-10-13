@@ -12,13 +12,22 @@ import {
 export const getUserResponse = (): gp2.UserResponse => ({
   id: 'user-id-1',
   createdDate: '2020-09-23T20:45:22.000Z',
-  displayName: 'Tom Hardy',
-  email: 'H@rdy.io',
-  firstName: 'Tom',
-  lastName: 'Hardy',
+  displayName: 'Tony Stark',
+  email: 'T@ark.io',
+  firstName: 'Tony',
+  lastName: 'Stark',
   region: 'Europe',
   degrees: ['MPH'],
   role: 'Trainee',
+  city: 'Madrid',
+  country: 'Spain',
+  positions: [
+    {
+      role: 'CEO',
+      department: 'Research',
+      institution: 'Stark Industries',
+    },
+  ],
 });
 
 export const fetchExpectation: gp2.ListUserResponse = {
@@ -35,6 +44,14 @@ export const fetchExpectation: gp2.ListUserResponse = {
       region: 'North America',
       degrees: ['MSc'],
       role: 'Network Investigator',
+      country: 'Spain',
+      positions: [
+        {
+          role: 'CEO',
+          department: 'Research',
+          institution: 'Stark Industries',
+        },
+      ],
     },
   ],
 };
@@ -55,8 +72,8 @@ export const getUserWebhookPayload = (
       avatar: { iv: ['https://www.example.com/avatar.jpg'] },
       connections: { iv: [] },
       email: { iv: 'test@test.com' },
-      firstName: { iv: 'Tom' },
-      lastName: { iv: 'Hardy' },
+      firstName: { iv: 'Tony' },
+      lastName: { iv: 'Stark' },
       role: { iv: UsersDataRoleEnum.Trainee },
     },
   },
@@ -66,9 +83,9 @@ export const patchResponse = (): SquidexGp2.InputUser => ({
   id: 'userId',
   data: {
     role: { iv: UsersDataRoleEnum.Trainee },
-    email: { iv: 'cristiano@ronaldo.com' },
-    firstName: { iv: 'Cristiano' },
-    lastName: { iv: 'Ronaldo' },
+    email: { iv: 'peter@parker.com' },
+    firstName: { iv: 'Peter' },
+    lastName: { iv: 'parker' },
     region: { iv: UsersDataRegionEnum.Europe },
     avatar: { iv: ['squidex-asset-id'] },
     connections: { iv: [] },
@@ -82,23 +99,40 @@ export const patchResponse = (): SquidexGp2.InputUser => ({
 export const getUserDataObject = (): gp2.UserDataObject => ({
   id: 'user-id-1',
   createdDate: '2020-09-23T20:45:22.000Z',
-  email: 'H@rdy.io',
-  firstName: 'Tom',
-  lastName: 'Hardy',
-  region: UsersDataRegionEnum.Europe,
-  degrees: [UsersDataDegreeEnum.Mph],
-  role: UsersDataRoleEnum.Trainee,
+  email: 'T@ark.io',
+  firstName: 'Tony',
+  lastName: 'Stark',
+  region: 'Europe',
+  degrees: ['MPH' as const],
+  role: 'Trainee',
+  country: 'Spain',
+  city: 'Madrid',
+  positions: [
+    {
+      role: 'CEO',
+      department: 'Research',
+      institution: 'Stark Industries',
+    },
+  ],
 });
 
 export const fetchUserResponse = () => patchResponse();
 export const fetchUserResponseDataObject = (): gp2.UserDataObject => ({
   createdDate: '2020-09-25T09:42:51.000Z',
-  email: 'cristiano@ronaldo.com',
-  firstName: 'Cristiano',
+  email: 'peter@parker.com',
+  firstName: 'Peter',
   id: 'userId',
-  lastName: 'Ronaldo',
+  lastName: 'Parker',
   role: 'Trainee',
   region: 'Europe',
+  country: 'Spain',
+  positions: [
+    {
+      role: 'Photographer',
+      department: 'Newsdesk',
+      institution: 'Daily Bugle',
+    },
+  ],
 });
 
 export const getGraphQLUser = (
@@ -111,12 +145,21 @@ export const getGraphQLUser = (
   ...user,
   flatData: {
     avatar: [],
-    email: 'H@rdy.io',
-    firstName: 'Tom',
-    lastName: 'Hardy',
+    email: 'T@ark.io',
+    firstName: 'Tony',
+    lastName: 'Stark',
     region: UsersDataRegionEnum.Europe,
     degree: [UsersDataDegreeEnum.Mph],
     role: UsersDataRoleEnum.Trainee,
+    country: 'Spain',
+    positions: [
+      {
+        role: 'CEO',
+        department: 'Research',
+        institution: 'Stark Industries',
+      },
+    ],
+    city: 'Madrid',
     ...user?.flatData,
   },
 });

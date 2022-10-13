@@ -1190,13 +1190,7 @@
     "previewUrls": {
       "Web": "https://hub.asap.science/network/users/${id}"
     },
-    "fieldRules": [
-      {
-        "action": "Disable",
-        "field": "alumniLocation",
-        "condition": "ctx.data.alumniSinceDate"
-      }
-    ],
+    "fieldRules": [],
     "category": "Storage",
     "isPublished": true
   },

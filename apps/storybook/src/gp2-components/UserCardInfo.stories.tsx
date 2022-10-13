@@ -1,7 +1,11 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
+
 import UserCardInfo from '@asap-hub/gp2-components/src/molecules/UserCardInfo';
+
 import UserRegion from '@asap-hub/gp2-components/src/molecules/UserRegion';
+
 import { ComponentProps } from 'react';
+
 const { createUserResponse } = gp2Fixtures;
 
 export default {

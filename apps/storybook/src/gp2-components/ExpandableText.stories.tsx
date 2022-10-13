@@ -1,5 +1,7 @@
 import ExpandableText from '@asap-hub/gp2-components/src/molecules/ExpandableText';
+
 import { text } from '@storybook/addon-knobs';
+
 export default {
   title: 'GP2 / Molecules / Expandable Text',
   component: ExpandableText,

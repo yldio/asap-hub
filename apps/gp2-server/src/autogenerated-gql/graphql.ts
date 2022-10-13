@@ -1475,6 +1475,16 @@ export type UsersDataAvatarInputDto = {
   iv: InputMaybe<Array<Scalars['String']>>;
 };
 
+/** The structure of the City field of the Users content type. */
+export type UsersDataCityDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the City field of the Users content input type. */
+export type UsersDataCityInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
 /** The structure of the Connections nested schema. */
 export type UsersDataConnectionsChildDto = {
   code: Maybe<Scalars['String']>;
@@ -1493,6 +1503,16 @@ export type UsersDataConnectionsDto = {
 /** The structure of the Connections field of the Users content input type. */
 export type UsersDataConnectionsInputDto = {
   iv: InputMaybe<Array<UsersDataConnectionsChildInputDto>>;
+};
+
+/** The structure of the Country field of the Users content type. */
+export type UsersDataCountryDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Country field of the Users content input type. */
+export type UsersDataCountryInputDto = {
+  iv: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Degree field of the Users content type. */
@@ -1537,11 +1557,14 @@ export type UsersDataDegreeInputDto = {
 /** The structure of the Users data type. */
 export type UsersDataDto = {
   avatar: Maybe<UsersDataAvatarDto>;
+  city: Maybe<UsersDataCityDto>;
   connections: Maybe<UsersDataConnectionsDto>;
+  country: Maybe<UsersDataCountryDto>;
   degree: Maybe<UsersDataDegreeDto>;
   email: Maybe<UsersDataEmailDto>;
   firstName: Maybe<UsersDataFirstNameDto>;
   lastName: Maybe<UsersDataLastNameDto>;
+  positions: Maybe<UsersDataPositionsDto>;
   region: Maybe<UsersDataRegionDto>;
   role: Maybe<UsersDataRoleDto>;
 };
@@ -1569,11 +1592,14 @@ export type UsersDataFirstNameInputDto = {
 /** The structure of the Users data input type. */
 export type UsersDataInputDto = {
   avatar: InputMaybe<UsersDataAvatarInputDto>;
+  city: InputMaybe<UsersDataCityInputDto>;
   connections: InputMaybe<UsersDataConnectionsInputDto>;
+  country: InputMaybe<UsersDataCountryInputDto>;
   degree: InputMaybe<UsersDataDegreeInputDto>;
   email: InputMaybe<UsersDataEmailInputDto>;
   firstName: InputMaybe<UsersDataFirstNameInputDto>;
   lastName: InputMaybe<UsersDataLastNameInputDto>;
+  positions: InputMaybe<UsersDataPositionsInputDto>;
   region: InputMaybe<UsersDataRegionInputDto>;
   role: InputMaybe<UsersDataRoleInputDto>;
 };
@@ -1586,6 +1612,30 @@ export type UsersDataLastNameDto = {
 /** The structure of the Last Name field of the Users content input type. */
 export type UsersDataLastNameInputDto = {
   iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Positions nested schema. */
+export type UsersDataPositionsChildDto = {
+  department: Maybe<Scalars['String']>;
+  institution: Maybe<Scalars['String']>;
+  role: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Positions nested schema. */
+export type UsersDataPositionsChildInputDto = {
+  department: InputMaybe<Scalars['String']>;
+  institution: InputMaybe<Scalars['String']>;
+  role: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Positions field of the Users content type. */
+export type UsersDataPositionsDto = {
+  iv: Maybe<Array<UsersDataPositionsChildDto>>;
+};
+
+/** The structure of the Positions field of the Users content input type. */
+export type UsersDataPositionsInputDto = {
+  iv: InputMaybe<Array<UsersDataPositionsChildInputDto>>;
 };
 
 /** The structure of the Region field of the Users content type. */
@@ -1643,11 +1693,14 @@ export type UsersDataRoleInputDto = {
 /** The structure of the flat Users data type. */
 export type UsersFlatDataDto = {
   avatar: Maybe<Array<Asset>>;
+  city: Maybe<Scalars['String']>;
   connections: Maybe<Array<UsersDataConnectionsChildDto>>;
+  country: Maybe<Scalars['String']>;
   degree: Maybe<Array<UsersDataDegreeEnum>>;
   email: Maybe<Scalars['String']>;
   firstName: Maybe<Scalars['String']>;
   lastName: Maybe<Scalars['String']>;
+  positions: Maybe<Array<UsersDataPositionsChildDto>>;
   region: Maybe<UsersDataRegionEnum>;
   /** Role on the GP2 Hub */
   role: Maybe<UsersDataRoleEnum>;
@@ -2195,8 +2248,22 @@ export type UsersContentFragment = Pick<
 > & {
   flatData: Pick<
     UsersFlatDataDto,
-    'degree' | 'email' | 'firstName' | 'lastName' | 'region' | 'role'
-  > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+    | 'degree'
+    | 'email'
+    | 'firstName'
+    | 'lastName'
+    | 'region'
+    | 'role'
+    | 'country'
+    | 'city'
+  > & {
+    avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+    positions: Maybe<
+      Array<
+        Pick<UsersDataPositionsChildDto, 'role' | 'department' | 'institution'>
+      >
+    >;
+  };
 };
 
 export type FetchUserQueryVariables = Exact<{
@@ -2208,8 +2275,25 @@ export type FetchUserQuery = {
     Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
       flatData: Pick<
         UsersFlatDataDto,
-        'degree' | 'email' | 'firstName' | 'lastName' | 'region' | 'role'
-      > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+        | 'degree'
+        | 'email'
+        | 'firstName'
+        | 'lastName'
+        | 'region'
+        | 'role'
+        | 'country'
+        | 'city'
+      > & {
+        avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+        positions: Maybe<
+          Array<
+            Pick<
+              UsersDataPositionsChildDto,
+              'role' | 'department' | 'institution'
+            >
+          >
+        >;
+      };
     }
   >;
 };
@@ -2228,8 +2312,25 @@ export type FetchUsersQuery = {
           Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
             flatData: Pick<
               UsersFlatDataDto,
-              'degree' | 'email' | 'firstName' | 'lastName' | 'region' | 'role'
-            > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+              | 'degree'
+              | 'email'
+              | 'firstName'
+              | 'lastName'
+              | 'region'
+              | 'role'
+              | 'country'
+              | 'city'
+            > & {
+              avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+              positions: Maybe<
+                Array<
+                  Pick<
+                    UsersDataPositionsChildDto,
+                    'role' | 'department' | 'institution'
+                  >
+                >
+              >;
+            };
           }
         >
       >;
@@ -2812,6 +2913,26 @@ export const UsersContentFragmentDoc = {
                 { kind: 'Field', name: { kind: 'Name', value: 'lastName' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'region' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'role' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'country' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'city' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'positions' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'role' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'department' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'institution' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },

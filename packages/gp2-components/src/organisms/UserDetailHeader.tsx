@@ -3,11 +3,16 @@ import {
   Avatar,
   BackLink,
   crossQuery,
+  drawerQuery,
   pixels,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
+import locationIcon from '../icons/location-icon';
+import roleIcon from '../icons/role-icon';
 import { usersHeaderImage } from '../images';
 import CardWithBackground from '../molecules/CardWithBackground';
+import IconWithLabel from '../molecules/IconWithLabel';
+import UserRegion from '../molecules/UserRegion';
 
 const { rem } = pixels;
 
@@ -21,6 +26,9 @@ type UserDetailHeaderProps = Pick<
   | 'degrees'
   | 'region'
   | 'role'
+  | 'city'
+  | 'country'
+  | 'positions'
 > & {
   backHref: string;
 };
@@ -53,9 +61,22 @@ const titleStyles = css({
 });
 
 const avatarStyles = css({
-  margin: 'auto',
   width: rem(avatarSize),
   height: rem(avatarSize),
+  [drawerQuery]: {
+    margin: 'auto',
+  },
+});
+const rowStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  [crossQuery]: {
+    flexDirection: 'row',
+    gap: rem(24),
+  },
+});
+const rowContainerStyles = css({
+  marginBottom: rem(12),
 });
 
 const UserDetailHeader: React.FC<UserDetailHeaderProps> = ({
@@ -65,6 +86,11 @@ const UserDetailHeader: React.FC<UserDetailHeaderProps> = ({
   firstName,
   lastName,
   backHref,
+  region,
+  role,
+  city,
+  country,
+  positions,
 }) => (
   <header>
     <BackLink href={backHref} />
@@ -82,6 +108,27 @@ const UserDetailHeader: React.FC<UserDetailHeaderProps> = ({
             {displayName}
             {degrees && !!degrees.length && `, ${degrees.join(', ')}`}
           </h3>
+          <div css={rowContainerStyles}>
+            <div css={rowStyles}>
+              <IconWithLabel icon={roleIcon}>{role}</IconWithLabel>
+              <UserRegion region={region} />
+            </div>
+            <div css={rowContainerStyles}>
+              <IconWithLabel icon={locationIcon}>
+                <span>
+                  {city && `${city}, `}
+                  {country}
+                </span>
+              </IconWithLabel>
+            </div>
+            {positions.map(
+              ({ role: positionRole, department, institution }, idx) => (
+                <div css={rowContainerStyles} key={idx}>
+                  {positionRole} in {department} at {institution}
+                </div>
+              ),
+            )}
+          </div>
         </div>
       </div>
     </CardWithBackground>

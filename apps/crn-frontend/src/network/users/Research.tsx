@@ -22,7 +22,7 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
   const { id } = useCurrentUser() ?? {};
   const { path } = useRouteMatch();
   const route = network({}).users({}).user({ userId: user.id }).research({});
-  
+
   const patchUser = usePatchUserById(user.id);
 
   return (

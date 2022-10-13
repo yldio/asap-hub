@@ -96,6 +96,7 @@ export const getGraphQLUser = (
   ...user,
   flatData: {
     alumniSinceDate: null,
+    alumniLocation: null,
     biography: 'some bio',
     institution: 'some institution',
     jobTitle: 'some job title',

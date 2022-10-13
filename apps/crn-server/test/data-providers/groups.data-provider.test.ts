@@ -219,22 +219,49 @@ describe('Group Data Provider', () => {
       );
     });
 
-    test('Should apply the team and user filters', async () => {
+    test.each`
+      active
+      ${true} | ${false}
+    `(
+      'Should filter by active field when its value is $active',
+      async ({ active }) => {
+        squidexGraphqlClientMock.request.mockResolvedValue(
+          getSquidexGroupsGraphqlResponse(),
+        );
+
+        await groupDataProvider.fetch({ filter: { active } });
+
+        expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          {
+            filter: `data/active/iv eq ${active}`,
+            top: 50,
+            skip: 0,
+          },
+        );
+      },
+    );
+
+    test('Should apply the team, user and active filters', async () => {
       const userId = 'eb531b6e-195c-46e2-b347-58fb86715033';
       const teamIds = ['team-id-1', 'team-id-3'];
+      const active = true;
 
       squidexGraphqlClientMock.request.mockResolvedValue(
         getSquidexGroupsGraphqlResponse(),
       );
 
-      await groupDataProvider.fetch({ filter: { userId, teamId: teamIds } });
+      await groupDataProvider.fetch({
+        filter: { userId, teamId: teamIds, active },
+      });
 
       const teamFilter = `data/teams/iv in ('${teamIds[0]}','${teamIds[1]}')`;
       const userFilter = `data/leaders/iv/user eq '${userId}'`;
+      const activeFilter = `data/active/iv eq ${active}`;
       expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
         expect.anything(),
         {
-          filter: [teamFilter, userFilter].join(' and '),
+          filter: [teamFilter, userFilter, activeFilter].join(' and '),
           top: 50,
           skip: 0,
         },

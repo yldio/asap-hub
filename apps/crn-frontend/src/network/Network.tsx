@@ -102,9 +102,11 @@ const Network: FC<Record<string, never>> = () => {
           page="groups"
           searchQuery={searchQuery}
           onChangeSearchQuery={setSearchQuery}
+          filters={filters}
+          onChangeFilter={toggleFilter}
         >
           <SearchFrame title="Groups">
-            <GroupList searchQuery={debouncedSearchQuery} />
+            <GroupList filters={filters} searchQuery={debouncedSearchQuery} />
           </SearchFrame>
         </NetworkPage>
       </Route>

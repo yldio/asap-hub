@@ -31,19 +31,20 @@ const controlsStyles = css({
   padding: `0 ${contentSidePaddingWithNavigation(8)}`,
 });
 
-interface NetworkTeamsOrGroupsPageHeaderProps {
-  page: 'teams' | 'groups';
+interface NetworkTeamsPageHeaderProps {
+  page: 'teams';
   filters?: undefined;
   onChangeFilter?: undefined;
 }
-interface NetworkPeoplePageHeaderProps {
-  page: 'users';
+
+interface NetworkPeopleOrGroupsPageHeaderProps {
+  page: 'users' | 'groups';
   filters?: Set<string>;
   onChangeFilter?: (filter: string) => void;
 }
 type NetworkPageHeaderProps = (
-  | NetworkTeamsOrGroupsPageHeaderProps
-  | NetworkPeoplePageHeaderProps
+  | NetworkTeamsPageHeaderProps
+  | NetworkPeopleOrGroupsPageHeaderProps
 ) & {
   searchQuery: string;
   onChangeSearchQuery?: (newSearchQuery: string) => void;
@@ -61,6 +62,12 @@ const userFilters: ReadonlyArray<Option<TeamRole | Role | UserTag> | Title> = [
   { title: 'TYPE OF USERS' },
   { label: 'CRN Member', value: 'CRN Member' },
   { label: 'Alumni Member', value: 'Alumni Member' },
+];
+
+const groupFilters: ReadonlyArray<Option<'Active' | 'Inactive'> | Title> = [
+  { title: 'INTEREST GROUP STATUS' },
+  { label: 'Active', value: 'Active' },
+  { label: 'Inactive', value: 'Inactive' },
 ];
 
 const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
@@ -104,13 +111,18 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
           filterOptions={userFilters}
           filters={filters}
         />
+      ) : page === 'groups' ? (
+        <SearchAndFilter
+          onChangeSearch={onChangeSearchQuery}
+          searchPlaceholder="Enter a group, keyword, …"
+          searchQuery={searchQuery}
+          onChangeFilter={onChangeFilter}
+          filterOptions={groupFilters}
+          filters={filters}
+        />
       ) : (
         <SearchField
-          placeholder={
-            page === 'teams'
-              ? 'Enter name, keyword, method, …'
-              : 'Enter a group, keyword, …'
-          }
+          placeholder="Enter name, keyword, method, …"
           value={searchQuery}
           onChange={onChangeSearchQuery}
         />

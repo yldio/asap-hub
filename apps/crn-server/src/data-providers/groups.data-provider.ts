@@ -69,6 +69,10 @@ export class GroupSquidexDataProvider implements GroupDataProvider {
       if (options.filter.userId) {
         filterList.push({ 'data/leaders/iv/user': options.filter.userId });
       }
+
+      if ('active' in options.filter) {
+        filterList.push({ 'data/active/iv': options.filter.active });
+      }
     }
 
     const { queryGroupsContentsWithTotal } =

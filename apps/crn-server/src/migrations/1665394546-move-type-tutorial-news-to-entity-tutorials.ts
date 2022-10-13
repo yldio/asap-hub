@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-import { RestNews, SquidexRest, RestTutorials } from '@asap-hub/squidex';
+import { RestNews, SquidexRest } from '@asap-hub/squidex';
 import { appName, baseUrl } from '../config';
 import { Migration } from '../handlers/webhooks/webhook-run-migrations';
 import { getAuthToken } from '../utils/auth';
@@ -16,7 +16,7 @@ export default class MoveTypeTutorialNewsToEntityTutorials extends Migration {
 
         const { title, shortText, text, link, linkText, thumbnail } = news.data;
 
-        const squidexTutorialsClient = new SquidexRest<RestTutorials>(
+        const squidexTutorialsClient = new SquidexRest(
           getAuthToken,
           'tutorials',
           { appName, baseUrl },
@@ -39,7 +39,7 @@ export default class MoveTypeTutorialNewsToEntityTutorials extends Migration {
   };
 
   down = async (): Promise<void> => {
-    await applyToAllItemsInCollection<RestTutorials>(
+    await applyToAllItemsInCollection(
       'tutorials',
       async (tutorials, squidexClient) => {
         const squidexNewsClient = new SquidexRest<RestNews>(
@@ -51,7 +51,7 @@ export default class MoveTypeTutorialNewsToEntityTutorials extends Migration {
           },
         );
         await squidexNewsClient.create({
-          ...tutorials.data,
+          ...(tutorials.data as RestNews['data']),
           type: {
             iv: 'Tutorial',
           },

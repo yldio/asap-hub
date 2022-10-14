@@ -29,6 +29,13 @@ const Routes: React.FC<Record<string, never>> = () => {
           </Frame>
         </UsersPage>
       </Route>
+      <Route exact path={users({}).filters({}).$}>
+        <UsersPage>
+          <Frame title="Users">
+            <UserList displayFilters />
+          </Frame>
+        </UsersPage>
+      </Route>
       <Route path={path + users({}).user.template}>
         <UserDetail />
       </Route>

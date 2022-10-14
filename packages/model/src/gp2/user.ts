@@ -75,7 +75,7 @@ export type ListUserResponse = ListResponse<UserResponse>;
 export type UserUpdateRequest = UserUpdateDataObject;
 
 export type FetchUsersFilter = {
-  regions?: UserRegion[];
+  region?: UserRegion[];
   code?: string;
 };
 

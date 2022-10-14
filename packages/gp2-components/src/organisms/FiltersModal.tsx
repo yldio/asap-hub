@@ -31,7 +31,7 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
   onApplyClick,
   filters,
 }) => {
-  const [seletedRegions, setSelectedRegions] = useState(filters.regions || []);
+  const [seletedRegions, setSelectedRegions] = useState(filters.region || []);
   const resetFilters = () => {
     setSelectedRegions([]);
   };
@@ -84,7 +84,7 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
         <Button
           primary
           noMargin
-          onClick={() => onApplyClick({ regions: seletedRegions })}
+          onClick={() => onApplyClick({ region: seletedRegions })}
         >
           Apply
         </Button>

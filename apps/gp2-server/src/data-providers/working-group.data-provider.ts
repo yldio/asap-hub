@@ -106,11 +106,12 @@ const parseWorkingGroupMembers = (
   };
 };
 
-export function parseWorkingGroupToDataObject(
-  workingGroup: GraphQLWorkingGroup,
-): gp2.WorkingGroupDataObject {
+export function parseWorkingGroupToDataObject({
+  id,
+  flatData: workingGroup,
+}: GraphQLWorkingGroup): gp2.WorkingGroupDataObject {
   const members =
-    workingGroup.flatData.members?.reduce(
+    workingGroup.members?.reduce(
       (
         membersList: gp2.WorkingGroupMember[],
         member: GraphQLWorkingGroupMember,
@@ -126,13 +127,14 @@ export function parseWorkingGroupToDataObject(
     ) || [];
 
   return {
-    id: workingGroup.id,
-    title: workingGroup.flatData.title || '',
-    shortDescription: workingGroup.flatData.shortDescription || '',
-    description: workingGroup.flatData.description || '',
-    primaryEmail: workingGroup.flatData.primaryEmail || undefined,
-    secondaryEmail: workingGroup.flatData.secondaryEmail || undefined,
-    leadingMembers: workingGroup.flatData.leadingMembers || '',
+    id,
+    title: workingGroup.title || '',
+    shortDescription: workingGroup.shortDescription || '',
+    description: workingGroup.description || '',
+    primaryEmail: workingGroup.primaryEmail || undefined,
+    secondaryEmail: workingGroup.secondaryEmail || undefined,
+    leadingMembers: workingGroup.leadingMembers || '',
     members,
+    resources: [],
   };
 }

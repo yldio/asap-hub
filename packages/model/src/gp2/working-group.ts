@@ -15,6 +15,17 @@ export type WorkingGroupMember = {
   avatarUrl?: string;
 };
 
+const workingGroupResourceType = ['Link', 'Note'] as const;
+export type WorkingGroupResourceType = typeof workingGroupResourceType[number];
+
+export type WorkingGroupResource = {
+  id: string;
+  type: WorkingGroupResourceType;
+  title: string;
+  description: string;
+  externalLink?: string;
+};
+
 export type WorkingGroupDataObject = {
   id: string;
   title: string;
@@ -24,6 +35,7 @@ export type WorkingGroupDataObject = {
   secondaryEmail?: string;
   leadingMembers?: string;
   members: WorkingGroupMember[];
+  resources: WorkingGroupResource[];
 };
 
 export type ListWorkingGroupDataObject = ListResponse<WorkingGroupDataObject>;

@@ -189,6 +189,103 @@
           "isRequiredOnPublish": false,
           "isHalfWidth": true
         }
+      },
+      {
+        "name": "resources",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Array",
+          "label": "Resources",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        },
+        "nested": [
+          {
+            "name": "type",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "allowedValues": ["Link", "Note"],
+              "isUnique": false,
+              "isEmbeddable": false,
+              "inlineEditable": true,
+              "createEnum": true,
+              "contentType": "Unspecified",
+              "editor": "Dropdown",
+              "label": "type",
+              "isRequired": true,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": true
+            }
+          },
+          {
+            "name": "title",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "isEmbeddable": false,
+              "inlineEditable": false,
+              "createEnum": false,
+              "contentType": "Unspecified",
+              "editor": "Input",
+              "label": "Title",
+              "isRequired": true,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": true
+            }
+          },
+          {
+            "name": "description",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "isEmbeddable": false,
+              "inlineEditable": false,
+              "createEnum": false,
+              "contentType": "Unspecified",
+              "editor": "Input",
+              "label": "Description",
+              "isRequired": true,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": true
+            }
+          },
+          {
+            "name": "externalLink",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "pattern": "^(?:http(s)?:\\/\\/)[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#%[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
+              "patternMessage": "URL must start with http:// or https://",
+              "isUnique": true,
+              "isEmbeddable": false,
+              "inlineEditable": true,
+              "createEnum": false,
+              "contentType": "Unspecified",
+              "editor": "Input",
+              "label": "External Link",
+              "hints": "External link for a resource",
+              "placeholder": "",
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": true
+            }
+          }
+        ]
       }
     ],
     "previewUrls": {},

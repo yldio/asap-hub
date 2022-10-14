@@ -18,6 +18,7 @@ export const getWorkingGroupDataObject = (): gp2.WorkingGroupDataObject => ({
   secondaryEmail: 'secondary.email@example.com',
   leadingMembers: 'Leading members',
   members: [],
+  resources: [],
 });
 
 export const getListWorkingGroupDataObject =

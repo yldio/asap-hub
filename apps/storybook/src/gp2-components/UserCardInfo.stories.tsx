@@ -1,8 +1,6 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 
-import UserCardInfo from '@asap-hub/gp2-components/src/molecules/UserCardInfo';
-
-import UserRegion from '@asap-hub/gp2-components/src/molecules/UserRegion';
+import { UserCardInfo } from '@asap-hub/gp2-components';
 
 import { ComponentProps } from 'react';
 
@@ -13,16 +11,10 @@ export default {
   component: UserCardInfo,
 };
 
-type UserCardInfoProps = Pick<ComponentProps<typeof UserRegion>, 'region'> & {
-  workingGroups: { id: string; name: string }[];
-  projects: { id: string; name: string }[];
-  role: string;
-};
-
-const props: UserCardInfoProps = {
+const props: ComponentProps<typeof UserCardInfo> = {
   ...createUserResponse(),
   workingGroups: [],
   projects: [],
 };
 
-export const Overview = () => <UserCardInfo {...props} />;
+export const Normal = () => <UserCardInfo {...props} />;

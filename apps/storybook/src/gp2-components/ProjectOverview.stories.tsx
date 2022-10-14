@@ -24,4 +24,4 @@ const props: gp2Model.ProjectResponse = {
     milestone(i),
   ),
 };
-export const Overview = () => <ProjectOverview {...props} />;
+export const Normal = () => <ProjectOverview {...props} />;

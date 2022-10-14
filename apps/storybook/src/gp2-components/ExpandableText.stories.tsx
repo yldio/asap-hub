@@ -1,4 +1,4 @@
-import ExpandableText from '@asap-hub/gp2-components/src/molecules/ExpandableText';
+import { ExpandableText } from '@asap-hub/gp2-components';
 
 import { text } from '@storybook/addon-knobs';
 
@@ -12,6 +12,6 @@ const props = {
     'In order to show you the Hub, we will need to make your profile public to the Hub network. Would you like to continue?',
 };
 
-export const Text = () => (
+export const Normal = () => (
   <ExpandableText>{text('description', props.description)}</ExpandableText>
 );

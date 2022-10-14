@@ -7,6 +7,7 @@ describe('WorkingGroupDetailPage', () => {
     title: 'Underrepresented Populations',
     members: [],
     id: '1',
+    isWorkingGroupMember: true,
   };
   it('renders header', () => {
     render(<WorkingGroupDetailPage {...defaultProps}></WorkingGroupDetailPage>);

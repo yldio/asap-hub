@@ -1,23 +1,36 @@
-import { useRouteParams, gp2 } from '@asap-hub/routing';
+import { gp2, useRouteParams } from '@asap-hub/routing';
 
 import { Frame, useBackHref } from '@asap-hub/frontend-utils';
-import { Redirect, Route, Switch } from 'react-router-dom';
 import {
   WorkingGroupDetailPage,
   WorkingGroupOverview,
+  WorkingGroupResources,
 } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
+import { Redirect, Route, Switch } from 'react-router-dom';
 
+import { useCurrentUser } from '@asap-hub/react-context';
 import { useWorkingGroupById } from './state';
 
 const { workingGroups } = gp2;
+
 const WorkingGroupDetail = () => {
   const { workingGroupId } = useRouteParams(workingGroups({}).workingGroup);
   const workingGroupData = useWorkingGroupById(workingGroupId);
   const backHref = useBackHref() ?? workingGroups({}).$;
+  const currentUser = useCurrentUser();
+  const isWorkingGroupMember =
+    workingGroupData?.members.some(
+      ({ userId }) => userId === currentUser?.id,
+    ) || false;
+
   if (workingGroupData) {
     return (
-      <WorkingGroupDetailPage backHref={backHref} {...workingGroupData}>
+      <WorkingGroupDetailPage
+        backHref={backHref}
+        {...workingGroupData}
+        isWorkingGroupMember={isWorkingGroupMember}
+      >
         <Switch>
           <Route
             path={
@@ -28,6 +41,18 @@ const WorkingGroupDetail = () => {
               <WorkingGroupOverview {...workingGroupData} />
             </Frame>
           </Route>
+          {isWorkingGroupMember && (
+            <Route
+              path={
+                workingGroups({}).workingGroup({ workingGroupId }).resources({})
+                  .$
+              }
+            >
+              <Frame title="Resources">
+                <WorkingGroupResources {...workingGroupData} />
+              </Frame>
+            </Route>
+          )}
           <Redirect
             to={
               workingGroups({}).workingGroup({ workingGroupId }).overview({}).$

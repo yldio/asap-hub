@@ -7,6 +7,7 @@ const colors = {
   info900: color(0, 106, 146),
   neutral500: color(223, 229, 234),
   neutral800: color(146, 153, 158, 1),
+  neutral1000: color(0, 32, 44, 1),
   primary500: color(12, 141, 195),
   secondary100: color(228, 245, 238),
   secondary500: color(52, 162, 112),

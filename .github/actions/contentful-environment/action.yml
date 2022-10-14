@@ -31,12 +31,14 @@ runs:
   steps:
     - name: Install software
       id: install-software
+      shell: bash
       run: |
         apt update
         apt install -y jq
         apt install -y curl
     - name: Determine how many migrations need to be run
       id: count-outstanding-migrations
+      shell: bash
       run: |
         OUTSTANDING_MIGRATIONS=yarn workspace @asap-hub/contentful space:migrate:crn:count
         echo "OUTSTANDING_MIGRATIONS=$OUTSTANDING_MIGRATIONS" >> $GITHUB_ENV
@@ -46,6 +48,7 @@ runs:
         CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.contentful-token }}
     - name: Determine Environment
       id: determine-environment
+      shell: bash
       run: |
         CONTENTFUL_ENV=$CONTENTFUL_MASTER_ENV
 
@@ -60,6 +63,7 @@ runs:
         PR_NUMBER: ${{ inputs.pr-number }}
     - name: Determine how many Contentful environments are in use
       id: count-contentful-environments
+      shell: bash
       run: |
         ENVIRONMENTS_IN_USE=curl --include \
                                  --request GET \
@@ -74,6 +78,7 @@ runs:
         CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.contentful-token }}
     - name: Determine safety of creating Contentful Environment
       id: new-contentful-env
+      shell: bash
       run: |
         CONTENTFUL_ENV_CREATE=False
         if ["$ENVIRONMENTS_IN_USE" == "$MAX_CONTENTFUL_ENVIRONMENTS"]; then

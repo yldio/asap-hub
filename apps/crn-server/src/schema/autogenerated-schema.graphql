@@ -3719,21 +3719,8 @@ type NewsAndEvents implements Content {
   version: Int!
 }
 
-"""The structure of the Event Date field of the News content type."""
-type NewsAndEventsDataDateDto {
-  """Property only used on Event type items"""
-  iv: Instant
-}
-
-"""The structure of the Event Date field of the News content input type."""
-input NewsAndEventsDataDateInputDto {
-  """Property only used on Event type items"""
-  iv: Instant
-}
-
 """The structure of the News data type."""
 type NewsAndEventsDataDto {
-  date: NewsAndEventsDataDateDto
   frequency: NewsAndEventsDataFrequencyDto
   link: NewsAndEventsDataLinkDto
   linkText: NewsAndEventsDataLinkTextDto
@@ -3756,7 +3743,6 @@ input NewsAndEventsDataFrequencyInputDto {
 
 """The structure of the News data input type."""
 input NewsAndEventsDataInputDto {
-  date: NewsAndEventsDataDateInputDto
   frequency: NewsAndEventsDataFrequencyInputDto
   link: NewsAndEventsDataLinkInputDto
   linkText: NewsAndEventsDataLinkTextInputDto
@@ -3847,8 +3833,6 @@ input NewsAndEventsDataTypeInputDto {
 
 """The structure of the flat News data type."""
 type NewsAndEventsFlatDataDto {
-  """Property only used on Event type items"""
-  date: Instant
   frequency: String
   link: String
   """

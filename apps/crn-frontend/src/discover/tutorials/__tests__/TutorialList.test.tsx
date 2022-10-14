@@ -1,15 +1,20 @@
 import { Suspense } from 'react';
 import { User } from '@asap-hub/auth';
+import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitFor, screen } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
-import { createDiscoverResponse, createNewsResponse } from '@asap-hub/fixtures';
+import {
+  createDiscoverResponse,
+  createTutorialsResponse,
+} from '@asap-hub/fixtures';
+import { discover } from '@asap-hub/routing';
 
-import Tutorials from '../Tutorials';
-import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { refreshDiscoverState } from '../state';
-import { getDiscover } from '../api';
+import Tutorials from '../TutorialList';
+import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
+import { refreshDiscoverState } from '../../state';
+import { getDiscover } from '../../api';
 
-jest.mock('../api');
+jest.mock('../../api');
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -27,7 +32,11 @@ const renderDiscoverTutorials = async (user: Partial<User>) => {
       >
         <Auth0Provider user={user}>
           <WhenReady>
-            <Tutorials />
+            <MemoryRouter initialEntries={[{ pathname: discover({}).$ }]}>
+              <Route path={discover.template}>
+                <Tutorials />
+              </Route>
+            </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
       </RecoilRoot>
@@ -43,8 +52,8 @@ it('renders tutorial page with two items', async () => {
   mockGetDiscover.mockResolvedValue({
     ...createDiscoverResponse(),
     training: [
-      createNewsResponse({ key: 'First One', type: 'Tutorial' }),
-      createNewsResponse({ key: 'Second One', type: 'Tutorial' }),
+      createTutorialsResponse({ key: 'First One' }),
+      createTutorialsResponse({ key: 'Second One' }),
     ],
   });
 
@@ -53,7 +62,7 @@ it('renders tutorial page with two items', async () => {
     screen
       .getAllByRole('heading', { level: 4 })
       .map(({ textContent }) => textContent),
-  ).toEqual(['Tutorial First One title', 'Tutorial Second One title']);
+  ).toEqual(['First One title', 'Second One title']);
 });
 
 it('renders the correct title and subtitle', async () => {

@@ -1,5 +1,6 @@
 import gql from 'graphql-tag';
 import { newsQueryFragment } from './news.queries';
+import { tutorialsContentQueryFragment } from './tutorials.queries';
 
 export const FETCH_DISCOVER = gql`
   query FetchDiscover {
@@ -7,7 +8,7 @@ export const FETCH_DISCOVER = gql`
       flatData {
         aboutUs
         training {
-          ...News
+          ...TutorialsContent
         }
         workingGroups {
           ...News
@@ -66,4 +67,5 @@ export const FETCH_DISCOVER = gql`
     }
   }
   ${newsQueryFragment}
+  ${tutorialsContentQueryFragment}
 `;

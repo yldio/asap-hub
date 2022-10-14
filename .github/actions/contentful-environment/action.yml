@@ -71,8 +71,8 @@ runs:
                            https://api.contentful.com/spaces/$CONTENTFUL_SPACE_ID/environments
                            | jq '.total'`
 
-        echo "ENVIRONMENTS_IN_USE=$ENVIRONMENTS_IN_USE" >> $GITHUB_ENV
-        echo "$ENVIRONMENTS_IN_USE currently in use on Contentful."
+        echo "ENVIRONMENTS_IN_USE=$ENVIRONMENTS" >> $GITHUB_ENV
+        echo "$ENVIRONMENTS currently in use on Contentful."
       env:
         CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
         CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.contentful-token }}

@@ -1,6 +1,17 @@
+export * from './icons';
 export * from './images';
 export * from './messages';
-export { StatusPill } from './molecules';
+export {
+  CardWithBackground,
+  StatusPill,
+  ExpandableText,
+  HeaderLogo,
+  IconWithLabel,
+  NavigationLink,
+  UserMenu,
+  UserRegion,
+  UserCardInfo,
+} from './molecules';
 export {
   NavigationHeader,
   ProjectMilestones,

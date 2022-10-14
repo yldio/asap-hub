@@ -1,4 +1,4 @@
-import HeaderLogo from '@asap-hub/gp2-components/src/molecules/HeaderLogo';
+import { HeaderLogo } from '@asap-hub/gp2-components';
 
 export default {
   title: 'GP2 / Molecules / Header Logo',
@@ -9,4 +9,4 @@ const props = {
   logoHref: '/',
 };
 
-export const Logo = () => <HeaderLogo {...props} />;
+export const Normal = () => <HeaderLogo {...props} />;

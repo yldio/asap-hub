@@ -66,9 +66,10 @@ const containerStyles = css({
 const nameHeaderStyles = css({
   display: 'flex',
   alignItems: 'center',
-  gap: `${15 / perRem}em`,
-  [`@media (max-width: ${tabletScreen.min}px)`]: {
-    flexWrap: 'wrap',
+  gap: `${6 / perRem}em`,
+  [`@media (max-width: ${tabletScreen.max}px)`]: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
     marginBottom: `${24 / perRem}em`,
   },
 });

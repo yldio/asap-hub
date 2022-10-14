@@ -180,7 +180,7 @@ it('allows selection of group filters', async () => {
       expect.objectMatching({
         filters: new Set(['Active']),
       }),
-      'Bearer access_token',
+      expect.anything()
     ),
   );
 });

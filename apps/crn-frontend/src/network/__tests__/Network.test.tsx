@@ -177,12 +177,9 @@ it('allows selection of group filters', async () => {
   expect(checkbox).toBeChecked();
   await waitFor(() =>
     expect(mockGetGroups).toHaveBeenLastCalledWith(
-      {
-        currentPage: 0,
+      expect.objectMatching({
         filters: new Set(['Active']),
-        pageSize: 10,
-        searchQuery: '',
-      },
+      }),
       'Bearer access_token',
     ),
   );

@@ -21,7 +21,10 @@ inputs:
 outputs:
   contentful-env:
     description: 'Proposed Contentful environment'
-    value: ${{ steps.determine-environment.env-id }}
+    value: ${{ steps.determine-environment.outputs.env-id }}
+  new-contentful-env-needed:
+    description: 'Whether we should/can create a new Contentful environment'
+    value: ${{ steps.new-contentful-env.outputs.should }}
 
 runs:
   using: 'composite'
@@ -69,14 +72,21 @@ runs:
       env:
         CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
         CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.contentful-token }}
-    - name: Create Contentful Environment
-      id: create-contentful-environment
+    - name: Determine safety of creating Contentful Environment
+      id: new-contentful-env
       run: |
+        CONTENTFUL_ENV_CREATE=False
         if ["$ENVIRONMENTS_IN_USE" == "$MAX_CONTENTFUL_ENVIRONMENTS"]; then
           echo "Max Contentful environments reached. Cannot create."
+        elif ["$CONTENTFUL_ENV" == "$CONTENTFUL_MASTER_ENV"]; then
+          echo "No migrations to run."
         else
-          echo "Creating contentful environment $CONTENTFUL_ENV."
+          CONTENTFUL_ENV_CREATE=True
+          echo "We can/should create environment $CONTENTFUL_ENV."
         fi
+
+        echo "::set-output --name=should::$CONTENTFUL_ENV_CREATE"
       env:
         MAX_CONTENTFUL_ENVIRONMENTS: ${{ inputs.max-contentful-envs }}
-        CONTENTFUL_ENV: ${{ steps.determine-environment.contentful-env }}
+        CONTENTFUL_ENV: ${{ steps.determine-environment.outputs.contentful-env }}
+        CONTENTFUL_MASTER_ENV: ${{ inputs.contentful-master-env }}

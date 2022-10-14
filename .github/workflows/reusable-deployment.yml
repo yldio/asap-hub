@@ -43,6 +43,33 @@ on:
         required: true
 
 jobs:
+  crn-contentful-validate:
+    if: ${{ inputs.environment-name=='Branch'}}
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment-name }}
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:702f129e96908e57a5ca9572a9956409f644207f
+      credentials:
+        username: %{{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Determine Contentful Environment
+        id: determine-contentful-environment
+        uses: ./.github/actions/contentful-environment
+        with:
+          pr-number: ${{ steps.setup.outputs.pr-number }}
+          contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
+          contentful-master-env: ${{ steps.setup.outputs.contentful-environment }}
+          contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          max-contentful-envs: "6"
+
   crn-sls-deploy:
     concurrency:
       group: crn-${{ github.head_ref || inputs.environment-name }}
@@ -190,34 +217,6 @@ jobs:
           squidex-ci-client-id: ${{ steps.setup.outputs.gp2-squidex-ci-client-id }}
           squidex-ci-client-secret: ${{ secrets.GP2_SQUIDEX_CI_CLIENT_SECRET }}
           squidex-shared-secret: ${{ secrets.GP2_SQUIDEX_SHARED_SECRET }}
-
-  crn-contentful-create:
-    needs: [crn-sls-deploy]
-    if: ${{ inputs.environment-name=='Branch'}}
-    runs-on: ubuntu-latest
-    environment: ${{ inputs.environment-name }}
-    container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:702f129e96908e57a5ca9572a9956409f644207f
-      credentials:
-        username: %{{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup
-        id: setup
-        uses: ./.github/actions/setup-environment
-        with:
-          environment-name: ${{ inputs.environment-name }}
-      - name: Conditional Contentful Create
-        id: conditional-contentful-create
-        uses: ./.github/actions/contentful-create
-        with:
-          pr-number: ${{ steps.setup.outputs.pr-number }}
-          contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
-          contentful-master-env: ${{ steps.setup.outputs.contentful-environment }}
-          contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          max-contentful-envs: "6"
 
   crn-contentful-schema:
     needs: [crn-sls-deploy]

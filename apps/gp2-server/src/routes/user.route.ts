@@ -43,7 +43,6 @@ export const userRouteFactory = (userController: UserController): Router => {
 
   userRoutes.get('/users', async (req, res) => {
     const options = validateFetchUsersOptions(req.query);
-
     const userFetchOptions = {
       ...options,
       filter: options.filter,

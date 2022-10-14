@@ -1,5 +1,4 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
-import { GetListOptions } from '@asap-hub/frontend-utils';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import nock from 'nock';
 import { API_BASE_URL } from '../../config';
@@ -53,11 +52,11 @@ describe('getUsers', () => {
     nock.cleanAll();
   });
 
-  const options: GetListOptions = {
-    searchQuery: 'some-search',
-    filters: new Set(['some-filter']),
-    currentPage: 3,
-    pageSize: 15,
+  const options: gp2Model.FetchUsersOptions = {
+    search: 'some-search',
+    filter: {},
+    skip: 45,
+    take: 15,
   };
 
   it('returns a successfully fetched users', async () => {

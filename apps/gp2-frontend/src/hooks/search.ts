@@ -22,11 +22,11 @@ export const useSearch = () => {
 
   const updateFilters = (
     pathname: string,
-    { regions }: gp2.FetchUsersFilter,
+    { region }: gp2.FetchUsersFilter,
   ) => {
     resetPagination();
     const newUrlParams = new URLSearchParams(history.location.search);
-    updateRegions(newUrlParams, regions);
+    updateRegions(newUrlParams, region);
 
     history.push({ pathname, search: newUrlParams.toString() });
   };
@@ -37,7 +37,7 @@ export const useSearch = () => {
   return {
     searchQuery,
     changeLocation,
-    filters: { regions: selectedRegions },
+    filters: { region: selectedRegions },
     updateFilters,
   };
 };

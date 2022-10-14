@@ -16,9 +16,7 @@ export const createUserApiUrl = ({
       url.searchParams.set('skip', String(skip));
     }
   }
-  filter?.regions?.forEach((region) =>
-    url.searchParams.append('region', region),
-  );
+  filter?.region?.forEach((r) => url.searchParams.append('filter[region]', r));
 
   return url;
 };

@@ -66,10 +66,10 @@ runs:
       shell: bash
       run: |
         ENVIRONMENTS=$(curl --silent \
-                           --request GET \
-                           --header 'Authorization: Bearer $CONTENTFUL_MANAGEMENT_ACCESS_TOKEN' \
-                           https://api.contentful.com/spaces/$CONTENTFUL_SPACE_ID/environments \
-                           | jq '.total')
+                            --request GET \
+                            --header "Authorization: Bearer ${CONTENTFUL_MANAGEMENT_ACCESS_TOKEN}" \
+                            https://api.contentful.com/spaces/${CONTENTFUL_SPACE_ID}/environments \
+                            | jq '.total')
 
         echo "ENVIRONMENTS_IN_USE=$ENVIRONMENTS" >> $GITHUB_ENV
         echo "$ENVIRONMENTS currently in use on Contentful."

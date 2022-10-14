@@ -14,3 +14,4 @@ gp2-squidex-api-client-id=6058c1ce6d296b4d1681c3ad
 gp2-squidex-backup-bucket-name=gp2-hub-dev-data-backup
 gp2-squidex-ci-client-id=6058c1ce6d296b4d1681c3ad
 react-app-environment=development
+contentful-environment=Development

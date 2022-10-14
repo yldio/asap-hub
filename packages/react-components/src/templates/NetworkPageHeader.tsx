@@ -82,6 +82,7 @@ const getFilterOptionsAndPlaceholder = (page: Page) => {
       };
 
     case 'teams':
+    default:
       return {
         filterOptions: teamFilters,
         searchPlaceholder: 'Enter name, keyword, method, …',

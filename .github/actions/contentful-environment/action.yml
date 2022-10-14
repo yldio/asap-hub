@@ -65,11 +65,11 @@ runs:
       id: count-contentful-environments
       shell: bash
       run: |
-        ENVIRONMENTS_IN_USE=curl --include \
-                                 --request GET \
-                                 --header 'Authorization: Bearer $CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'
-                                 https://api.contentful.com/spaces/$CONTENTFUL_SPACE_ID/environments \
-                                 | jq '.total'
+        ENVIRONMENTS_IN_USE=`curl --include \
+                                  --request GET \
+                                  --header 'Authorization: Bearer $CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'
+                                  https://api.contentful.com/spaces/$CONTENTFUL_SPACE_ID/environments \
+                                  | jq '.total'`
 
         echo "ENVIRONMENTS_IN_USE=$ENVIRONMENTS_IN_USE" >> $GITHUB_ENV
         echo "$ENVIRONMENTS_IN_USE currently in use on Contentful."

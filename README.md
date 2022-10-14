@@ -218,6 +218,14 @@ The following command will create the migration content schema:
 yarn workspace @asap-hub/contentful ctf-migrate init
 ```
 
+### Counting Migrations to be Run
+
+If you want to know the number of migrations which have not yet been applied to the target environment:
+
+```
+yarn workspace @asap-hub/contentful space:migrate:crn:count
+```
+
 ### Running Migrations
 
 To run outstanding migrations, first do a dry run:

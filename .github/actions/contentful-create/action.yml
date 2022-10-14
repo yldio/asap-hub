@@ -1,0 +1,82 @@
+name: Contentful Create
+description: Creates a new Contentful environment if required
+
+inputs:
+  pr-number:
+    description: 'PR Number'
+    required: true
+  contentful-space-id:
+    description: 'Contentful Space ID'
+    required: true
+  contentful-master-env:
+    description: 'Contentful master environment'
+    required: true
+  contentful-token:
+    description: 'Contentful access token'
+    required: true
+  max-contentful-envs:
+    description: 'Max Contentful environments'
+    required: true
+
+outputs:
+  contentful-env:
+    description: 'Proposed Contentful environment'
+    value: ${{ steps.determine-environment.env-id }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Install software
+      id: install-software
+      run: |
+        apt update
+        apt install -y jq
+        apt install -y curl
+    - name: Determine how many migrations need to be run
+      id: count-outstanding-migrations
+      run: |
+        OUTSTANDING_MIGRATIONS=yarn workspace @asap-hub/contentful space:migrate:crn:count
+        echo "OUTSTANDING_MIGRATIONS=$OUTSTANDING_MIGRATIONS" >> $GITHUB_ENV
+      env:
+        CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
+        CONTENTFUL_ENV_ID: ${{ inputs.contentful-master-env }}
+        CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.contentful-token }}
+    - name: Determine Environment
+      id: determine-environment
+      run: |
+        CONTENTFUL_ENV=$CONTENTFUL_MASTER_ENV
+
+        if [ "$OUTSTANDING_MIGRATIONS" != "0" ]; then
+          CONTENTFUL_ENV=crn-$PR_NUMBER
+        fi
+
+        echo "$OUTSTANDING_MIGRATIONS migrations to run on $CONTENTFUL_ENV."
+        echo "::set-output --name=contentful-env::$CONTENTFUL_ENV"
+      env:
+        CONTENTFUL_MASTER_ENV: ${{ inputs.contentful-master-env }}
+        PR_NUMBER: ${{ inputs.pr-number }}
+    - name: Determine how many Contentful environments are in use
+      id: count-contentful-environments
+      run: |
+        ENVIRONMENTS_IN_USE=curl --include \
+                                 --request GET \
+                                 --header 'Authorization: Bearer $CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'
+                                 https://api.contentful.com/spaces/$CONTENTFUL_SPACE_ID/environments \
+                                 | jq '.total'
+
+        echo "ENVIRONMENTS_IN_USE=$ENVIRONMENTS_IN_USE" >> $GITHUB_ENV
+        echo "$ENVIRONMENTS_IN_USE currently in use on Contentful."
+      env:
+        CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
+        CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.contentful-token }}
+    - name: Create Contentful Environment
+      id: create-contentful-environment
+      run: |
+        if ["$ENVIRONMENTS_IN_USE" == "$MAX_CONTENTFUL_ENVIRONMENTS"]; then
+          echo "Max Contentful environments reached. Cannot create."
+        else
+          echo "Creating contentful environment $CONTENTFUL_ENV."
+        fi
+      env:
+        MAX_CONTENTFUL_ENVIRONMENTS: ${{ inputs.max-contentful-envs }}
+        CONTENTFUL_ENV: ${{ steps.determine-environment.contentful-env }}

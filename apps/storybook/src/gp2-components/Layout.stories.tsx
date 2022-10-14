@@ -3,7 +3,7 @@ import { Layout } from '@asap-hub/gp2-components';
 import { NoPaddingDecorator } from '../layout';
 
 export default {
-  title: 'GP2 / Templates /Layout / Layout',
+  title: 'GP2 / Templates / Layout',
   component: Layout,
   decorators: [NoPaddingDecorator],
 };

@@ -30,6 +30,26 @@ describe('Group controller', () => {
       expect(result).toEqual({ items: [getGroupResponse()], total: 1 });
     });
 
+    test.each`
+      filter                    | filterValue
+      ${['Active']}             | ${{ filter: { active: true } }}
+      ${['Inactive']}           | ${{ filter: { active: false } }}
+      ${[]}                     | ${{}}
+      ${['Active', 'Inactive']} | ${{}}
+    `(
+      `Should call data provider with correct filter when filter is $filter`,
+      async ({ filter, filterValue }) => {
+        groupDataProviderMock.fetch.mockResolvedValueOnce({
+          total: 1,
+          items: [getGroupDataObject()],
+        });
+
+        await groupController.fetch({ filter });
+
+        expect(groupDataProviderMock.fetch).toBeCalledWith(filterValue);
+      },
+    );
+
     test('Should return an empty list when there are no groups', async () => {
       groupDataProviderMock.fetch.mockResolvedValueOnce({
         total: 0,

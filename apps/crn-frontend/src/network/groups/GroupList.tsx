@@ -6,10 +6,12 @@ import { usePaginationParams, usePagination } from '../../hooks';
 import { usePrefetchTeams } from '../teams/state';
 
 interface NetworkGroupListProps {
+  filters: Set<string>;
   searchQuery?: string;
 }
 
 const NetworkGroupList: React.FC<NetworkGroupListProps> = ({
+  filters,
   searchQuery = '',
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
@@ -18,14 +20,14 @@ const NetworkGroupList: React.FC<NetworkGroupListProps> = ({
     searchQuery,
     currentPage,
     pageSize,
-    filters: new Set(),
+    filters,
   });
 
   usePrefetchTeams({
     currentPage: 0,
     pageSize,
     searchQuery,
-    filters: new Set(),
+    filters,
   });
 
   const { numberOfPages, renderPageHref } = usePagination(

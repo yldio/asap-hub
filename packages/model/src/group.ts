@@ -47,6 +47,7 @@ export type ListGroupResponse = ListResponse<GroupResponse>;
 type GroupFilter = {
   teamId?: string[];
   userId?: string;
+  active?: boolean;
 };
 
 export type FetchGroupOptions = FetchOptions<GroupFilter>;

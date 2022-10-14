@@ -32,8 +32,21 @@ export default class Groups implements GroupController {
   }
 
   async fetch(options: FetchOptions): Promise<ListGroupResponse> {
-    const { filter: _filter, ...fetchOptions } = options;
-    const { total, items } = await this.groupDataProvider.fetch(fetchOptions);
+    const { filter, ...fetchOptions } = options;
+
+    const groupFilter =
+      filter?.length === 1
+        ? {
+            filter: {
+              active: filter[0] === 'Active',
+            },
+          }
+        : {};
+
+    const { total, items } = await this.groupDataProvider.fetch({
+      ...fetchOptions,
+      ...groupFilter,
+    });
 
     return { total, items };
   }

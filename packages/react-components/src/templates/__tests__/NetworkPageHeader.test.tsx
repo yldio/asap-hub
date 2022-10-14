@@ -45,13 +45,13 @@ it('alters the search placeholder based on the tab', () => {
   ).toMatchInlineSnapshot(`"Enter a group, keyword, …"`);
 });
 
-it('shows the filter only on the users and groups tabs', () => {
+it('shows the filter in all the tabs (teams, groups and users)', () => {
   const { getByText, queryByText, rerender } = render(
     <MemoryRouter initialEntries={[network({}).teams({}).$]}>
       <NetworkPageHeader {...props} page="teams" />
     </MemoryRouter>,
   );
-  expect(queryByText(/filters/i)).not.toBeInTheDocument();
+  expect(queryByText(/filters/i)).toBeInTheDocument();
 
   rerender(
     <MemoryRouter initialEntries={[network({}).groups({}).$]}>

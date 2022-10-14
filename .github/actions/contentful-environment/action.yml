@@ -57,7 +57,7 @@ runs:
         fi
 
         echo "$OUTSTANDING_MIGRATIONS migrations to run on $CONTENTFUL_ENV."
-        echo "::set-output --name=contentful-env::$CONTENTFUL_ENV"
+        echo "::set-output name=contentful-env::$CONTENTFUL_ENV"
       env:
         CONTENTFUL_MASTER_ENV: ${{ inputs.contentful-master-env }}
         PR_NUMBER: ${{ inputs.pr-number }}
@@ -90,7 +90,7 @@ runs:
           echo "We can/should create environment $CONTENTFUL_ENV."
         fi
 
-        echo "::set-output --name=should::$CONTENTFUL_ENV_CREATE"
+        echo "::set-output name=should::$CONTENTFUL_ENV_CREATE"
       env:
         MAX_CONTENTFUL_ENVIRONMENTS: ${{ inputs.max-contentful-envs }}
         CONTENTFUL_ENV: ${{ steps.determine-environment.outputs.contentful-env }}

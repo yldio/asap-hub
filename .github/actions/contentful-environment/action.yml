@@ -40,7 +40,7 @@ runs:
       id: count-outstanding-migrations
       shell: bash
       run: |
-        OUTSTANDING_MIGRATIONS=`yarn workspace @asap-hub/contentful space:migrate:crn:count`
+        OUTSTANDING_MIGRATIONS=$(yarn workspace @asap-hub/contentful space:migrate:crn:count)
         echo "OUTSTANDING_MIGRATIONS=$OUTSTANDING_MIGRATIONS" >> $GITHUB_ENV
       env:
         CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
@@ -65,11 +65,11 @@ runs:
       id: count-contentful-environments
       shell: bash
       run: |
-        ENVIRONMENTS=`curl --silent \
+        ENVIRONMENTS=$(curl --silent \
                            --request GET \
                            --header 'Authorization: Bearer $CONTENTFUL_MANAGEMENT_ACCESS_TOKEN' \
                            https://api.contentful.com/spaces/$CONTENTFUL_SPACE_ID/environments \
-                           | jq '.total'`
+                           | jq '.total')
 
         echo "ENVIRONMENTS_IN_USE=$ENVIRONMENTS" >> $GITHUB_ENV
         echo "$ENVIRONMENTS currently in use on Contentful."

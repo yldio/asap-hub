@@ -177,10 +177,10 @@ it('allows selection of group filters', async () => {
   expect(checkbox).toBeChecked();
   await waitFor(() =>
     expect(mockGetGroups).toHaveBeenLastCalledWith(
-      expect.objectMatching({
+      expect.objectContaining({
         filters: new Set(['Active']),
       }),
-      expect.anything()
+      expect.anything(),
     ),
   );
 });

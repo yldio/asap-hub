@@ -48,7 +48,7 @@ jobs:
       group: crn-${{ github.head_ref || inputs.environment-name }}
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:702f129e96908e57a5ca9572a9956409f644207f
+      image: ghcr.io/yldio/asap-hub/node-python-sq:be0ebbcbd0ff209d56070f09590c5d9622e8a6dc
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -75,7 +75,7 @@ jobs:
       group: gp2-${{ github.head_ref || inputs.environment-name }}
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:702f129e96908e57a5ca9572a9956409f644207f
+      image: ghcr.io/yldio/asap-hub/node-python-sq:be0ebbcbd0ff209d56070f09590c5d9622e8a6dc
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -103,7 +103,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:702f129e96908e57a5ca9572a9956409f644207f
+      image: ghcr.io/yldio/asap-hub/node-python-sq:be0ebbcbd0ff209d56070f09590c5d9622e8a6dc
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -142,7 +142,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:702f129e96908e57a5ca9572a9956409f644207f
+      image: ghcr.io/yldio/asap-hub/node-python-sq:be0ebbcbd0ff209d56070f09590c5d9622e8a6dc
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -169,7 +169,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:702f129e96908e57a5ca9572a9956409f644207f
+      image: ghcr.io/yldio/asap-hub/node-python-sq:be0ebbcbd0ff209d56070f09590c5d9622e8a6dc
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -225,7 +225,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:702f129e96908e57a5ca9572a9956409f644207f
+      image: ghcr.io/yldio/asap-hub/node-python-sq:be0ebbcbd0ff209d56070f09590c5d9622e8a6dc
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}

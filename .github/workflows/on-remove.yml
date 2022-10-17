@@ -14,7 +14,7 @@ jobs:
     if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:702f129e96908e57a5ca9572a9956409f644207f
+      image: ghcr.io/yldio/asap-hub/node-python-sq:be0ebbcbd0ff209d56070f09590c5d9622e8a6dc
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -38,7 +38,7 @@ jobs:
     if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:702f129e96908e57a5ca9572a9956409f644207f
+      image: ghcr.io/yldio/asap-hub/node-python-sq:be0ebbcbd0ff209d56070f09590c5d9622e8a6dc
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -62,7 +62,7 @@ jobs:
     if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:702f129e96908e57a5ca9572a9956409f644207f
+      image: ghcr.io/yldio/asap-hub/node-python-sq:be0ebbcbd0ff209d56070f09590c5d9622e8a6dc
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -99,7 +99,7 @@ jobs:
     if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:702f129e96908e57a5ca9572a9956409f644207f
+      image: ghcr.io/yldio/asap-hub/node-python-sq:be0ebbcbd0ff209d56070f09590c5d9622e8a6dc
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -129,7 +129,7 @@ jobs:
     if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:702f129e96908e57a5ca9572a9956409f644207f
+      image: ghcr.io/yldio/asap-hub/node-python-sq:be0ebbcbd0ff209d56070f09590c5d9622e8a6dc
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}

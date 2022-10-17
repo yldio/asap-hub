@@ -1,0 +1,148 @@
+name: Contentful Checks
+description: Defines outputs to set up Contentful-based steps
+
+inputs:
+  pr-number:
+    description: 'PR Number'
+    required: true
+  contentful-space-id:
+    description: 'Contentful Space ID'
+    required: true
+  contentful-master-env:
+    description: 'Contentful master environment'
+    required: true
+  contentful-token:
+    description: 'Contentful access token'
+    required: true
+  max-contentful-envs:
+    description: 'Max Contentful environments'
+    required: true
+
+outputs:
+  contentful-env:
+    description: 'Contentful environment to be used on branch'
+    value: ${{ steps.determine-environment.outputs.env-id }}
+  on-branch-env:
+    description: 'Whether the Contentful environment being used is a branch environment'
+    value: ${{ steps.determine-environment.outputs.on-branch-env }}
+  contentful-limit-reached:
+    description: 'Whether Contentful environment limit has been reached'
+    value: ${{ steps.check-env-limit.outputs.limit-reached }}
+  contentful-env-exists:
+    description: 'Whether the Contentful environment already exists'
+    value: ${{ steps.check-contentful-exists.outputs.exists }}
+  contentful-env-migrations-up-to-date:
+    description: 'Whether the Contentful environment is up to date with local migrations'
+    value: ${{ steps.check-contentful-migrated.outputs.migrations-up-to-date }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Determine whether migrations need to be run on master environment
+      id: count-outstanding-migrations
+      shell: bash
+      run: |
+        OUTSTANDING_MIGRATIONS=$(yarn workspace @asap-hub/contentful space:migrate:crn:count)
+        echo "OUTSTANDING_MIGRATIONS=$OUTSTANDING_MIGRATIONS" >> $GITHUB_ENV
+      env:
+        CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
+        CONTENTFUL_ENV_ID: ${{ inputs.contentful-master-env }}
+        CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.contentful-token }}
+    - name: Determine Environment
+      id: determine-environment
+      shell: bash
+      run: |
+        CONTENTFUL_ENV=$CONTENTFUL_MASTER_ENV
+        BRANCH_ENV=False
+
+        if [ "$OUTSTANDING_MIGRATIONS" != "0" ]; then
+          CONTENTFUL_ENV=crn-$PR_NUMBER
+          BRANCH_ENV=True
+        fi
+
+        echo "$OUTSTANDING_MIGRATIONS migrations to run on $CONTENTFUL_ENV."
+        echo "::set-output name=env-id::$CONTENTFUL_ENV"
+        echo "::set-output name=on-branch-env::$BRANCH_ENV"
+      env:
+        CONTENTFUL_MASTER_ENV: ${{ inputs.contentful-master-env }}
+        PR_NUMBER: ${{ inputs.pr-number }}
+    - name: Determine how many Contentful environments are in use
+      id: count-contentful-environments
+      shell: bash
+      run: |
+        ENVIRONMENTS=$(curl --silent \
+                            --request GET \
+                            --header "Authorization: Bearer ${CONTENTFUL_MANAGEMENT_ACCESS_TOKEN}" \
+                            https://api.contentful.com/spaces/${CONTENTFUL_SPACE_ID}/environments \
+                            | jq '.total' -r)
+
+        echo "ENVIRONMENTS_IN_USE=$ENVIRONMENTS" >> $GITHUB_ENV
+        echo "$ENVIRONMENTS Environments currently in use on Contentful."
+      env:
+        CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
+        CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.contentful-token }}
+    - name: Determine whether we have reached the environment limit for our Contentful space
+      id: check-env-limit
+      shell: bash
+      run: |
+        CONTENTFUL_ENV_LIMIT_REACHED=False
+        if [[ "$ENVIRONMENTS_IN_USE" == "$MAX_CONTENTFUL_ENVIRONMENTS" ]]; then
+          CONTENTFUL_ENV_LIMIT_REACHED=True
+          echo "Max Contentful environments reached. Cannot create more."
+        else
+          echo "Max Contentful environments not reached. Safe to create more."
+        fi
+
+        echo "::set-output name=limit-reached::$CONTENTFUL_ENV_LIMIT_REACHED"
+      env:
+        MAX_CONTENTFUL_ENVIRONMENTS: ${{ inputs.max-contentful-envs }}
+        CONTENTFUL_ENV: ${{ steps.determine-environment.outputs.env-id }}
+        CONTENTFUL_MASTER_ENV: ${{ inputs.contentful-master-env }}
+    - name: Determine whether the Contentful environment has been created
+      id: check-contentful-exists
+      shell: bash
+      run: |
+        ENVIRONMENT_TYPE=$(curl --silent \
+                                --request GET \
+                                --header "Authorization: Bearer ${CONTENTFUL_MANAGEMENT_ACCESS_TOKEN}" \
+                                https://api.contentful.com/spaces/${CONTENTFUL_SPACE_ID}/environments/${CONTENTFUL_ENV} \
+                                | jq '.sys.type' -r)
+
+        if [[ "$ENVIRONMENT_TYPE" == "Environment" ]]; then
+          echo "Environment found, setting exists flag to True."
+          echo "::set-output name=exists::True"
+        else
+          echo "Environment not found, setting exists flag to False."
+          echo "::set-output name=exists::False"
+        fi
+      env:
+        CONTENTFUL_ENV: ${{ steps.determine-environment.outputs.env-id }}
+        CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
+        CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.contentful-token }}
+    - name: Determine whether the Contentful environment has been migrated
+      id: check-contentful-migrated
+      shell: bash
+      run: |
+        if [[ "$CONTENTFUL_ENV_ID" == "$CONTENTFUL_MASTER_ENV" ]]; then
+          echo "No new Contentful environment required for this branch."
+          echo "::set-output name=migrations-up-to-date::True"
+        elif [[ "$CONTENTFUL_ENV_EXISTS" == "False" ]]; then
+          echo "New Contentful environment required but has not yet been created."
+          echo "::set-output name=migrations-up-to-date::True"
+        else
+          OUTSTANDING_MIGRATIONS=$(yarn workspace @asap-hub/contentful space:migrate:crn:count)
+
+          if [[ "$OUTSTANDING_MIGRATIONS" == "0" ]]; then
+            echo "All migrations have been run on target environment."
+            echo "::set-output name=migrations-up-to-date::True"
+          else
+            echo "New migrations need to be run on target environment."
+            echo "::set-output name=migrations-up-to-date::False"
+          fi
+        fi
+      env:
+        CONTENTFUL_ENV_EXISTS: ${{ steps.check-contentful-exists.outputs.exists }}
+        CONTENTFUL_ENV_ID: ${{ steps.determine-environment.outputs.env-id }}
+        CONTENTFUL_MASTER_ENV: ${{ inputs.contentful-master-env }}
+        CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
+        CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.contentful-token }}

@@ -13,6 +13,7 @@
     "watch:babel": "../../scripts/build-babel.sh watch",
     "space:migrate:crn": "yarn ctf-migrate up --all",
     "space:migrate:crn:dryrun": "yarn ctf-migrate up --all --dry-run",
+    "space:migrate:crn:count": "yarn ctf-migrate list --all | grep \\\\[pending\\\\] | wc -l",
     "schema:update:crn": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {

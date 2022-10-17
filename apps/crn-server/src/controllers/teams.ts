@@ -44,12 +44,13 @@ export default class Teams implements TeamController {
   }
 
   async fetch(options: FetchTeamsOptions): Promise<ListTeamResponse> {
-    const { take = 8, skip = 0, search } = options;
+    const { take = 8, skip = 0, search, filter } = options;
 
     const { total, items } = await this.teamDataProvider.fetch({
       take,
       skip,
       search,
+      filter: filter?.length === 1 ? { active: filter[0] === 'Active' } : {},
     });
 
     return {

@@ -72,4 +72,4 @@ export type FetchTeamsOptions = {
   // select team IDs of which tools should be returned
   // leave undefined to return all teams' tools
   showTeamTools?: string[];
-} & Omit<FetchOptions, 'filter'>;
+} & FetchOptions;

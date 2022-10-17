@@ -185,6 +185,27 @@ it('allows selection of group filters', async () => {
   );
 });
 
+it('allows selection of teams filters', async () => {
+  const { getByText, getByLabelText } = await renderNetworkPage(
+    network({}).teams({}).$,
+  );
+
+  userEvent.click(getByText('Filters'));
+  const checkbox = getByLabelText('Active');
+  expect(checkbox).not.toBeChecked();
+
+  userEvent.click(checkbox);
+  expect(checkbox).toBeChecked();
+  await waitFor(() =>
+    expect(mockGetGroups).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        filters: new Set(['Active']),
+      }),
+      expect.anything(),
+    ),
+  );
+});
+
 it('reads filters from url', async () => {
   const { getByText, getByLabelText } = await renderNetworkPage(
     network({}).users({}).$,

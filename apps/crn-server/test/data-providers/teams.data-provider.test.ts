@@ -84,7 +84,7 @@ describe('Team Data Provider', () => {
       expect(result).toEqual({ items: [], total: 0 });
     });
 
-    describe('Text search', () => {
+    describe('Text search and active filter', () => {
       test('Should search by name and return the teams', async () => {
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           getSquidexTeamsGraphqlResponse(),
@@ -176,6 +176,63 @@ describe('Team Data Provider', () => {
           },
         );
       });
+
+      test('Should filter by text and active field', async () => {
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          getSquidexTeamsGraphqlResponse(),
+        );
+        const expectedQuery =
+          "(contains(data/displayName/iv, 'Tony')" +
+          " or contains(data/projectTitle/iv, 'Tony')" +
+          " or contains(data/expertiseAndResourceTags/iv, 'Tony'))" +
+          ' and' +
+          " (contains(data/displayName/iv, 'Stark')" +
+          " or contains(data/projectTitle/iv, 'Stark')" +
+          " or contains(data/expertiseAndResourceTags/iv, 'Stark'))" +
+          ' and ' +
+          'exists(data/inactiveSince/iv)';
+
+        const result = await teamDataProvider.fetch({
+          take: 8,
+          skip: 0,
+          search: 'Tony Stark',
+          filter: { active: false },
+        });
+
+        expect(result).toEqual({
+          total: 1,
+          items: [getTeamDataObject()],
+        });
+        expect(squidexGraphqlClientMock.request).toHaveBeenCalledTimes(1);
+        expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            filter: expectedQuery,
+          }),
+        );
+      });
+
+      test.each`
+        active   | expectedFilterQuery
+        ${true}  | ${'empty(data/inactiveSince/iv)'}
+        ${false} | ${'exists(data/inactiveSince/iv)'}
+      `(
+        'Should filter by active field when its value is $active',
+        async ({ active, expectedFilterQuery }) => {
+          squidexGraphqlClientMock.request.mockResolvedValue(
+            getSquidexTeamsGraphqlResponse(),
+          );
+
+          await teamDataProvider.fetch({ filter: { active } });
+
+          expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+            expect.anything(),
+            expect.objectContaining({
+              filter: expectedFilterQuery,
+            }),
+          );
+        },
+      );
     });
 
     describe('Tools', () => {

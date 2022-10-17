@@ -55,7 +55,7 @@ runs:
         CONTENTFUL_ENV=$CONTENTFUL_MASTER_ENV
         BRANCH_ENV=False
 
-        if [ $OUTSTANDING_MIGRATIONS != "0" ]; then
+        if [ "$OUTSTANDING_MIGRATIONS" != "0" ]; then
           CONTENTFUL_ENV=crn-$PR_NUMBER
           BRANCH_ENV=True
         fi

@@ -71,7 +71,7 @@ runs:
                             | jq '.total')
 
         echo "ENVIRONMENTS_IN_USE=$ENVIRONMENTS" >> $GITHUB_ENV
-        echo "$ENVIRONMENTS currently in use on Contentful."
+        echo "$ENVIRONMENTS Environments currently in use on Contentful."
       env:
         CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
         CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.contentful-token }}
@@ -103,10 +103,10 @@ runs:
                                 | jq '.sys.type')
 
         if [ $ENVIRONMENT_TYPE == "Environment" ]; then
-          echo "Environment found, setting exists flag to true."
+          echo "Environment found, setting exists flag to True."
           echo "::set-output name=exists::True"
         else
-          echo "Environment not found, setting exists flag to false."
+          echo "Environment not found, setting exists flag to False."
           echo "::set-output name=exists::False"
         fi
       env:

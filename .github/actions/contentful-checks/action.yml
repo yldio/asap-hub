@@ -22,6 +22,9 @@ outputs:
   contentful-env:
     description: 'Contentful environment to be used on branch'
     value: ${{ steps.determine-environment.outputs.env-id }}
+  on-branch-env:
+    description: 'Whether the Contentful environment being used is a branch environment'
+    value: ${{ steps.determine-environment.outputs.on-branch-env }}
   contentful-limit-reached:
     description: 'Whether Contentful environment limit has been reached'
     value: ${{ steps.check-env-limit.outputs.limit-reached }}
@@ -50,13 +53,16 @@ runs:
       shell: bash
       run: |
         CONTENTFUL_ENV=$CONTENTFUL_MASTER_ENV
+        BRANCH_ENV=False
 
         if [ $OUTSTANDING_MIGRATIONS != "0" ]; then
           CONTENTFUL_ENV=crn-$PR_NUMBER
+          BRANCH_ENV=True
         fi
 
         echo "$OUTSTANDING_MIGRATIONS migrations to run on $CONTENTFUL_ENV."
         echo "::set-output name=env-id::$CONTENTFUL_ENV"
+        echo "::set-output name=on-branch-env::$BRANCH_ENV"
       env:
         CONTENTFUL_MASTER_ENV: ${{ inputs.contentful-master-env }}
         PR_NUMBER: ${{ inputs.pr-number }}

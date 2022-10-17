@@ -122,6 +122,18 @@ it('renders tabs', () => {
   ]);
 });
 
+it('does not render upcoming events tab when team is inactive', () => {
+  render(
+    <TeamProfileHeader
+      {...boilerplateProps}
+      inactiveSince="2022-09-30T09:00:00Z"
+    />,
+  );
+  expect(
+    screen.getAllByRole('link').map(({ textContent }) => textContent),
+  ).toEqual(['About', 'Upcoming Events (0)', 'Past Events (0)']);
+});
+
 it('renders workspace tabs when tools provided', () => {
   render(
     <TeamProfileHeader
@@ -155,8 +167,14 @@ it('renders share an output button dropdown', () => {
   expect(screen.getByText(/article/i, { selector: 'span' })).toBeVisible();
 });
 
-it('displays upcoming event count', () => {
-  render(<TeamProfileHeader {...boilerplateProps} upcomingEventsCount={11} />);
+it('displays upcoming event count when team is active', () => {
+  render(
+    <TeamProfileHeader
+      {...boilerplateProps}
+      inactiveSince={undefined}
+      upcomingEventsCount={11}
+    />,
+  );
 
   const link = screen.getByRole('link', { name: /upcoming events \(11\)/i });
   expect(link).toBeVisible();

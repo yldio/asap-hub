@@ -132,7 +132,7 @@ runs:
         else
           OUTSTANDING_MIGRATIONS=$(yarn workspace @asap-hub/contentful space:migrate:crn:count)
 
-          if [[ "$OUTSTANDING_MIGRATIONS" == '0' ]]; then
+          if [[ "$OUTSTANDING_MIGRATIONS" == "0" ]]; then
             echo "All migrations have been run on target environment."
             echo "::set-output name=migrations-up-to-date::True"
           else

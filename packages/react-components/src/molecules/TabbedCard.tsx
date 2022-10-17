@@ -1,40 +1,10 @@
 import { css } from '@emotion/react';
-import React from 'react';
-import {
-  Card,
-  Paragraph,
-  Headline3,
-  TabButton,
-  Button,
-  Divider,
-} from '../atoms';
+import React, { ReactNode, useEffect } from 'react';
+import { Card, Paragraph, Headline3, TabButton, Button } from '../atoms';
 import { steel } from '../colors';
 import { perRem } from '../pixels';
 import { TabNav } from '.';
 import { paddingStyles } from '../card';
-
-const topDividerStyles = css({
-  display: 'flex',
-  height: 1,
-  flexDirection: 'column',
-});
-
-const itemsListWrapper = css({
-  display: 'flex',
-  flexDirection: 'column',
-  marginTop: `${33 / perRem}em`,
-  paddingBottom: `${33 / perRem}em`,
-});
-
-const truncatedStyles = css({
-  paddingBottom: 0,
-});
-
-const lastChildExpanded = css({
-  '&:last-child': {
-    paddingBottom: 0,
-  },
-});
 
 const showMoreStyles = css({
   display: 'flex',
@@ -48,16 +18,17 @@ const showMoreStyles = css({
 export type TabProps<T> = {
   tabTitle: string;
   items: T[];
-  createItem: (data: T, index: number) => JSX.Element;
   truncateFrom?: number;
   disabled?: boolean;
 };
 
 type TabbedCardProps<T> = {
   title: string;
-  description: string;
+  description?: string;
   tabs: TabProps<T>[];
   activeTabIndex?: number;
+  showMoreText: (showMore: boolean) => string;
+  children: (state: { data: T[] }) => ReactNode;
 };
 
 const TabbedCard = <T extends object>({
@@ -65,13 +36,15 @@ const TabbedCard = <T extends object>({
   description,
   tabs,
   activeTabIndex = 0,
+  showMoreText,
+  children,
 }: TabbedCardProps<T>) => {
+  useEffect(() => setActive(activeTabIndex), [activeTabIndex]);
   const [active, setActive] = React.useState(activeTabIndex);
   const [showMore, setShowMore] = React.useState(false);
-
-  const activeTab = tabs[active];
-  const { items, truncateFrom, createItem } = activeTab;
+  const { items, truncateFrom } = tabs[active];
   const showShowMoreButton = truncateFrom && items.length > truncateFrom;
+
   return (
     <Card padding={false}>
       <div css={[paddingStyles, { paddingBottom: 0 }]}>
@@ -95,26 +68,15 @@ const TabbedCard = <T extends object>({
           ))}
         </TabNav>
       </div>
-      <div css={topDividerStyles}>
-        <Divider />
-      </div>
       <div css={[paddingStyles, { paddingBottom: 0, paddingTop: 0 }]}>
-        <div
-          css={[
-            itemsListWrapper,
-            showMore && lastChildExpanded,
-            showShowMoreButton && truncatedStyles,
-          ]}
-        >
-          {items
-            .slice(0, showMore ? undefined : truncateFrom)
-            .map((item, index) => createItem(item, index))}
-        </div>
+        {children({
+          data: items.slice(0, showMore ? undefined : truncateFrom),
+        })}
       </div>
       {showShowMoreButton && (
         <div css={showMoreStyles}>
           <Button linkStyle onClick={() => setShowMore(!showMore)}>
-            {`View ${showMore ? 'less' : 'more'} interest groups`}
+            {showMoreText(showMore)}
           </Button>
         </div>
       )}

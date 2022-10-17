@@ -7,6 +7,18 @@ import { lead } from '../colors';
 import { TabbedCard } from '../molecules';
 import { perRem, tabletScreen } from '../pixels';
 
+const topDividerStyles = css({
+  display: 'flex',
+  height: 1,
+  flexDirection: 'column',
+});
+
+const itemsListWrapper = css({
+  display: 'flex',
+  flexDirection: 'column',
+  marginTop: `${33 / perRem}em`,
+  paddingBottom: `${21 / perRem}em`,
+});
 const dividerStyles = css({
   display: 'flex',
   height: `${42 / perRem}em`,
@@ -88,19 +100,15 @@ const UserInterestGroupCard: React.FC<UserInterestGroupCardProps> = ({
     title={`${displayName}'s Interest Groups`}
     description="Interest groups allow teams to share findings with other teams about topics of interest."
     activeTabIndex={alumniSinceDate ? 1 : 0}
+    showMoreText={(showMore) =>
+      `View ${showMore ? 'less' : 'more'} interest groups`
+    }
     tabs={[
       {
         tabTitle: `Active Collaborations (${
           alumniSinceDate ? 0 : groups.length
         })`,
         items: groups,
-        createItem: (group, index) => (
-          <UserInterestGroupItem
-            {...group}
-            index={index}
-            key={`group-${group.id}`}
-          />
-        ),
         truncateFrom: 5,
         disabled: alumniSinceDate !== undefined,
       },
@@ -109,18 +117,25 @@ const UserInterestGroupCard: React.FC<UserInterestGroupCardProps> = ({
           alumniSinceDate ? groups.length : 0
         })`,
         items: groups,
-        createItem: (group, index) => (
-          <UserInterestGroupItem
-            {...group}
-            index={index}
-            key={`group-${group.id}`}
-          />
-        ),
+
         truncateFrom: 5,
         disabled: alumniSinceDate === undefined,
       },
     ]}
-  />
+  >
+    {({ data }) => (
+      <>
+        <div css={topDividerStyles}>
+          <Divider />
+        </div>
+        <div css={itemsListWrapper}>
+          {data.map((item, index) => (
+            <UserInterestGroupItem {...item} index={index} />
+          ))}
+        </div>
+      </>
+    )}
+  </TabbedCard>
 );
 
 export default UserInterestGroupCard;

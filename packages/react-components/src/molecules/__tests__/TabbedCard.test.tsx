@@ -1,62 +1,62 @@
-import { createGroupResponse } from '@asap-hub/fixtures';
-import { GroupDataObject } from '@asap-hub/model';
-import { fireEvent, render } from '@testing-library/react';
+import { ComponentProps } from 'react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import TabbedCard from '../TabbedCard';
 
-const groups = [
-  { ...createGroupResponse(), name: 'Group 1', id: 'g1' },
-  { ...createGroupResponse(), name: 'Group 2', id: 'g2' },
-  { ...createGroupResponse(), name: 'Group 3', id: 'g3' },
-];
-
-const firstTab = {
-  tabTitle: `First Tab`,
-  items: groups,
-  createItem: (group: GroupDataObject) => (
-    <div key={`group-${group.id}`}>{group.name}</div>
+const props: ComponentProps<typeof TabbedCard<{ name: string }>> = {
+  title: '',
+  tabs: [{ tabTitle: '', items: [] }],
+  showMoreText: (showMore) => `View ${showMore ? 'less' : 'more'}`,
+  children: ({ data }) => (
+    <ul>
+      {data.map(({ name }, index) => (
+        <li title="item" key={`${index}`}>
+          {name}
+        </li>
+      ))}
+    </ul>
   ),
-  truncateFrom: 2,
 };
 
-const secondTab = {
-  ...firstTab,
-  tabTitle: `Second Tab`,
-  items: [
-    {
-      ...createGroupResponse(),
-      name: 'Second tab group',
-      id: '3',
-    },
-  ],
-};
+it('renders the tabbed card', () => {
+  const { getByRole } = render(<TabbedCard {...props} title="test card" />);
+  expect(getByRole('heading', { name: 'test card' })).toBeVisible();
+});
 
-const props = {
-  title: `Tabbed Card`,
-  description: `Description`,
-  tabs: [firstTab, secondTab],
-};
+it('shows a provided description', () => {
+  render(<TabbedCard {...props} description="Example Description" />);
+  expect(screen.getByText(/Example Description/)).toBeVisible();
+});
 
-describe('rendering and tabbing', () => {
-  it('renders the tabbed card', () => {
-    const { getByText, getByRole } = render(
-      <TabbedCard {...props} title="test card" description="description" />,
-    );
-
-    expect(getByRole('heading', { name: 'test card' })).toBeVisible();
-    expect(getByText('description')).toBeVisible();
-  });
-
+describe('tabs', () => {
   it('can switch to the second tab', () => {
-    const { getByText, queryByText } = render(<TabbedCard {...props} />);
+    render(
+      <TabbedCard
+        {...props}
+        tabs={[
+          {
+            tabTitle: 'First Tab',
+            items: [{ name: 'item a' }, { name: 'item b' }, { name: 'item c' }],
+          },
+          {
+            tabTitle: 'Second Tab',
+            items: [{ name: 'item d' }, { name: 'item e' }, { name: 'item f' }],
+          },
+        ]}
+      />,
+    );
+    expect(
+      screen
+        .getAllByRole('listitem', { name: 'item' })
+        .map(({ textContent }) => textContent),
+    ).toEqual(['item a', 'item b', 'item c']);
 
-    expect(getByText('Group 1')).toBeVisible();
-    expect(getByText('Group 2')).toBeVisible();
-    expect(queryByText('Second tab group')).not.toBeInTheDocument();
+    fireEvent.click(screen.getByText('Second Tab'));
 
-    fireEvent.click(getByText('Second Tab'));
-    expect(queryByText('Group 1')).not.toBeInTheDocument();
-    expect(queryByText('Group 2')).not.toBeInTheDocument();
-    expect(getByText('Second tab group')).toBeVisible();
+    expect(
+      screen
+        .getAllByRole('listitem', { name: 'item' })
+        .map(({ textContent }) => textContent),
+    ).toEqual(['item d', 'item e', 'item f']);
   });
 
   it('cannot switch to a disabled tab', () => {
@@ -64,8 +64,8 @@ describe('rendering and tabbing', () => {
       <TabbedCard
         {...props}
         tabs={[
-          { ...firstTab, tabTitle: 'First Tab' },
-          { ...secondTab, disabled: true, tabTitle: 'Second Tab' },
+          { items: [], tabTitle: 'First Tab' },
+          { items: [], tabTitle: 'Second Tab', disabled: true },
         ]}
       />,
     );
@@ -73,110 +73,167 @@ describe('rendering and tabbing', () => {
       'font-weight',
       'bold',
     );
-
     expect(getByRole('button', { name: 'First Tab' })).toBeEnabled();
+
     expect(getByRole('button', { name: 'Second Tab' })).toBeDisabled();
+    expect(getByRole('button', { name: 'Second Tab' })).not.toHaveStyleRule(
+      'font-weight',
+      'bold',
+    );
     fireEvent.click(getByText('Second Tab'));
+    expect(getByRole('button', { name: 'First Tab' })).toBeEnabled();
+    expect(getByRole('button', { name: 'First Tab' })).toHaveStyleRule(
+      'font-weight',
+      'bold',
+    );
+
     expect(getByRole('button', { name: 'Second Tab' })).toBeDisabled();
+    expect(getByRole('button', { name: 'Second Tab' })).not.toHaveStyleRule(
+      'font-weight',
+      'bold',
+    );
   });
 
-  it('shows the selected tab', () => {
-    const { getByText } = render(
+  it('shows the second tab', () => {
+    render(
       <TabbedCard
         {...props}
         activeTabIndex={1}
         tabs={[
-          firstTab,
+          { items: [{ name: 'item a' }], tabTitle: 'First Tab' },
+          { items: [{ name: 'item b' }], tabTitle: 'Second Tab' },
+        ]}
+      />,
+    );
+    expect(
+      screen.getByRole('button', { name: 'First Tab' }),
+    ).not.toHaveStyleRule('font-weight', 'bold');
+    expect(screen.getByRole('button', { name: 'Second Tab' })).toHaveStyleRule(
+      'font-weight',
+      'bold',
+    );
+    expect(
+      screen
+        .getAllByRole('listitem', { name: 'item' })
+        .map(({ textContent }) => textContent),
+    ).toEqual(['item b']);
+  });
+
+  it('displays tabs as active by default', () => {
+    const { rerender } = render(
+      <TabbedCard
+        {...props}
+        tabs={[
+          { items: [{ name: 'item a' }], tabTitle: 'First Tab' },
+          { items: [{ name: 'item b' }], tabTitle: 'Second Tab' },
+        ]}
+      />,
+    );
+    expect(screen.getByRole('button', { name: 'First Tab' })).toBeEnabled();
+    expect(screen.getByRole('button', { name: 'Second Tab' })).toBeEnabled();
+    rerender(
+      <TabbedCard
+        {...props}
+        tabs={[
           {
-            ...firstTab,
-            tabTitle: 'Target',
-            items: [
-              {
-                ...createGroupResponse(),
-                name: 'Second Tab Group',
-                id: 'g1',
-              },
-            ],
+            items: [{ name: 'item a' }],
+            tabTitle: 'First Tab',
+            disabled: true,
+          },
+          {
+            items: [{ name: 'item b' }],
+            tabTitle: 'Second Tab',
+            disabled: true,
           },
         ]}
       />,
     );
-
-    expect(getByText('Target')).not.toHaveStyleRule('font-weight', 'bold');
-    expect(getByText('Second Tab Group')).toBeVisible();
-  });
-
-  it('displays tabs as active by default', () => {
-    const { getByRole } = render(<TabbedCard {...props} />);
-    expect(getByRole('button', { name: 'First Tab' })).toBeEnabled();
-    expect(getByRole('button', { name: 'Second Tab' })).toBeEnabled();
+    expect(screen.getByRole('button', { name: 'First Tab' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Second Tab' })).toBeDisabled();
   });
 });
 
 describe('the view more functionality', () => {
   it('display the data once the button is clicked', () => {
-    const { getByText, queryByText } = render(<TabbedCard {...props} />);
-
-    expect(getByText('First Tab')).toBeVisible();
-    expect(getByText('Second Tab')).toBeVisible();
-    expect(getByText('View more interest groups')).toBeVisible();
-
-    expect(getByText('Group 1')).toBeVisible();
-    expect(getByText('Group 2')).toBeVisible();
-    expect(queryByText('Group 3')).not.toBeInTheDocument();
-    fireEvent.click(getByText('View more interest groups'));
-    expect(getByText('Group 3')).toBeVisible();
-    fireEvent.click(getByText('View less interest groups'));
-    expect(queryByText('Group 3')).not.toBeInTheDocument();
-  });
-
-  it('resets on tab change', () => {
-    const { getByText, queryByText } = render(
-      <TabbedCard
-        {...props}
-        tabs={[firstTab, { ...firstTab, tabTitle: 'Second Tab' }]}
-      />,
-    );
-
-    fireEvent.click(getByText('View more interest groups'));
-    expect(getByText('View less interest groups')).toBeVisible();
-
-    fireEvent.click(getByText('Second Tab'));
-    expect(getByText('View more interest groups')).toBeVisible();
-    expect(queryByText('View less interest groups')).not.toBeInTheDocument();
-  });
-
-  it('displays the right number both trimmed and expanded', () => {
-    const { getByText, queryByText, getAllByText } = render(
+    render(
       <TabbedCard
         {...props}
         tabs={[
           {
-            ...firstTab,
-            truncateFrom: 2,
             items: [
-              { ...createGroupResponse(), name: 'Group 1', id: 'g1' },
-              { ...createGroupResponse(), name: 'Group 2', id: 'g2' },
-              { ...createGroupResponse(), name: 'Group 3', id: 'g3' },
+              { name: 'item a' },
+              { name: 'item b' },
+              { name: 'item c' },
+              { name: 'item d' },
             ],
+            tabTitle: 'First Tab',
+            truncateFrom: 2,
           },
-          secondTab,
         ]}
       />,
     );
-
     expect(
-      getAllByText(/Group/i, { selector: 'div' }).map(
-        ({ textContent }) => textContent,
-      ),
-    ).toEqual(['Group 1', 'Group 2']);
-    expect(queryByText('Group 3')).not.toBeInTheDocument();
-
-    fireEvent.click(getByText('View more interest groups'));
+      screen
+        .getAllByRole('listitem', { name: 'item' })
+        .map(({ textContent }) => textContent),
+    ).toEqual(['item a', 'item b']);
+    fireEvent.click(screen.getByText(/View more/i));
     expect(
-      getAllByText(/Group/i, { selector: 'div' }).map(
-        ({ textContent }) => textContent,
-      ),
-    ).toEqual(['Group 1', 'Group 2', 'Group 3']);
+      screen
+        .getAllByRole('listitem', { name: 'item' })
+        .map(({ textContent }) => textContent),
+    ).toEqual(['item a', 'item b', 'item c', 'item d']);
+    fireEvent.click(screen.getByText(/View less/i));
+    expect(
+      screen
+        .getAllByRole('listitem', { name: 'item' })
+        .map(({ textContent }) => textContent),
+    ).toEqual(['item a', 'item b']);
+  });
+
+  it('truncates on tab change', () => {
+    const { getByText } = render(
+      <TabbedCard
+        {...props}
+        tabs={[
+          {
+            items: [
+              { name: 'item a' },
+              { name: 'item b' },
+              { name: 'item c' },
+              { name: 'item d' },
+            ],
+            tabTitle: 'First Tab',
+            truncateFrom: 2,
+          },
+          {
+            items: [
+              { name: 'item e' },
+              { name: 'item f' },
+              { name: 'item g' },
+              { name: 'item h' },
+            ],
+            tabTitle: 'Second Tab',
+            truncateFrom: 2,
+          },
+        ]}
+      />,
+    );
+    fireEvent.click(getByText('View more'));
+    expect(
+      screen
+        .getAllByRole('listitem', { name: 'item' })
+        .map(({ textContent }) => textContent),
+    ).toEqual(['item a', 'item b', 'item c', 'item d']);
+
+    expect(getByText('View less')).toBeVisible();
+
+    fireEvent.click(getByText('Second Tab'));
+    expect(getByText('View more')).toBeVisible();
+    expect(
+      screen
+        .getAllByRole('listitem', { name: 'item' })
+        .map(({ textContent }) => textContent),
+    ).toEqual(['item e', 'item f']);
   });
 });

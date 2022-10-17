@@ -50,7 +50,7 @@ jobs:
           environment-name: ${{ inputs.environment-name }}
       - name: Determine Contentful Environment
         id: determine-contentful-environment
-        uses: ./.github/actions/contentful-environment
+        uses: ./.github/actions/contentful-checks
         with:
           pr-number: ${{ steps.setup.outputs.pr-number }}
           contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}

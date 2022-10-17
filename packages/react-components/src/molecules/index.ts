@@ -41,6 +41,7 @@ export { default as PageControls } from './PageControls';
 export { default as PillList } from './PillList';
 export { default as SearchField } from './SearchField';
 export { default as SocialIcons } from './SocialIcons';
+export { default as TabbedCard } from './TabbedCard';
 export { default as TabNav } from './TabNav';
 export { default as TagList } from './TagList';
 export { default as ToastCard } from './ToastCard';

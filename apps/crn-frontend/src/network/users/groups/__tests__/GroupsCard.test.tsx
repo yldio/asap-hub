@@ -50,7 +50,7 @@ it('is not rendered when there are no groups', async () => {
     expect(queryByText(/loading/i)).not.toBeInTheDocument();
   });
 
-  expect(queryByText(/groups/i, { selector: 'h2' })).not.toBeInTheDocument();
+  expect(queryByText(/groups/i, { selector: 'h3' })).not.toBeInTheDocument();
 });
 
 it('is rendered when there are groups', async () => {
@@ -63,7 +63,7 @@ it('is rendered when there are groups', async () => {
   );
   await waitFor(() => {
     expect(queryByText(/loading/i)).not.toBeInTheDocument();
-    expect(queryByText(/groups/i, { selector: 'h2' })).toBeInTheDocument();
+    expect(queryByText(/groups/i, { selector: 'h3' })).toBeInTheDocument();
   });
 });
 

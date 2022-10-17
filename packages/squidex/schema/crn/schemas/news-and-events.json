@@ -13,7 +13,6 @@
       "meta.status.color",
       "thumbnail",
       "type",
-      "date",
       "title",
       "shortText",
       "text",
@@ -170,22 +169,6 @@
           "editor": "Input",
           "label": "External Link Text",
           "hints": "Leave this empty to show \"Open External Link\"",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
-        "name": "date",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "DateTime",
-          "editor": "DateTime",
-          "label": "Event Date",
-          "hints": "Property only used on Event type items",
           "isRequired": false,
           "isRequiredOnPublish": false,
           "isHalfWidth": false

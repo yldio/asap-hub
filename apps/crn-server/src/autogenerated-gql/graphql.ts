@@ -3586,21 +3586,8 @@ export type NewsAndEventsReferencingDiscoverContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-/** The structure of the Event Date field of the News content type. */
-export type NewsAndEventsDataDateDto = {
-  /** Property only used on Event type items */
-  iv: Maybe<Scalars['Instant']>;
-};
-
-/** The structure of the Event Date field of the News content input type. */
-export type NewsAndEventsDataDateInputDto = {
-  /** Property only used on Event type items */
-  iv: InputMaybe<Scalars['Instant']>;
-};
-
 /** The structure of the News data type. */
 export type NewsAndEventsDataDto = {
-  date: Maybe<NewsAndEventsDataDateDto>;
   frequency: Maybe<NewsAndEventsDataFrequencyDto>;
   link: Maybe<NewsAndEventsDataLinkDto>;
   linkText: Maybe<NewsAndEventsDataLinkTextDto>;
@@ -3623,7 +3610,6 @@ export type NewsAndEventsDataFrequencyInputDto = {
 
 /** The structure of the News data input type. */
 export type NewsAndEventsDataInputDto = {
-  date: InputMaybe<NewsAndEventsDataDateInputDto>;
   frequency: InputMaybe<NewsAndEventsDataFrequencyInputDto>;
   link: InputMaybe<NewsAndEventsDataLinkInputDto>;
   linkText: InputMaybe<NewsAndEventsDataLinkTextInputDto>;
@@ -3710,8 +3696,6 @@ export type NewsAndEventsDataTypeInputDto = {
 
 /** The structure of the flat News data type. */
 export type NewsAndEventsFlatDataDto = {
-  /** Property only used on Event type items */
-  date: Maybe<Scalars['Instant']>;
   frequency: Maybe<Scalars['String']>;
   link: Maybe<Scalars['String']>;
   /** Leave this empty to show "Open External Link" */

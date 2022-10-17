@@ -86,7 +86,7 @@ runs:
       shell: bash
       run: |
         CONTENTFUL_ENV_LIMIT_REACHED=False
-        if [ $ENVIRONMENTS_IN_USE == $MAX_CONTENTFUL_ENVIRONMENTS ]; then
+        if [[ "$ENVIRONMENTS_IN_USE" == "$MAX_CONTENTFUL_ENVIRONMENTS" ]]; then
           CONTENTFUL_ENV_LIMIT_REACHED=True
           echo "Max Contentful environments reached. Cannot create more."
         else

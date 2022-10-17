@@ -86,7 +86,7 @@ const UserInterestGroupCard: React.FC<UserInterestGroupCardProps> = ({
 }) => (
   <TabbedCard
     title={`${displayName}'s Interest Groups`}
-    description="Groups allow teams to share findings with other teams about topics of interest."
+    description="Interest groups allow teams to share findings with other teams about topics of interest."
     activeTabIndex={alumniSinceDate ? 1 : 0}
     tabs={[
       {

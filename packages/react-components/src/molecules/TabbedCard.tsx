@@ -11,6 +11,7 @@ import {
 import { steel } from '../colors';
 import { perRem } from '../pixels';
 import { TabNav } from '.';
+import { paddingStyles } from '../card';
 
 const topDividerStyles = css({
   display: 'flex',
@@ -22,14 +23,26 @@ const itemsListWrapper = css({
   display: 'flex',
   flexDirection: 'column',
   marginTop: `${33 / perRem}em`,
-  paddingBottom: `${21 / perRem}em`,
+  paddingBottom: `${33 / perRem}em`,
+});
+
+const truncatedStyles = css({
+  paddingBottom: 0,
+});
+
+const lastChildExpanded = css({
+  '&:last-child': {
+    paddingBottom: 0,
+  },
 });
 
 const showMoreStyles = css({
   display: 'flex',
   justifyContent: 'center',
-  paddingTop: `${21 / perRem}em`,
+  paddingTop: `${16 / perRem}em`,
+  paddingBottom: `${16 / perRem}em`,
   borderTop: `1px solid ${steel.rgb}`,
+  marginTop: `${33 / perRem}em`,
 });
 
 export type TabProps<T> = {
@@ -58,37 +71,48 @@ const TabbedCard = <T extends object>({
 
   const activeTab = tabs[active];
   const { items, truncateFrom, createItem } = activeTab;
+  const showShowMoreButton = truncateFrom && items.length > truncateFrom;
   return (
-    <Card>
-      <Headline3>{title}</Headline3>
-      <Paragraph hasMargin={false} accent="lead">
-        {description}
-      </Paragraph>
-      <TabNav>
-        {tabs.map(({ tabTitle, disabled }, index) => (
-          <TabButton
-            key={tabTitle}
-            active={index === active}
-            onClick={() => {
-              setShowMore(false);
-              setActive(index);
-            }}
-            disabled={disabled}
-          >
-            {tabTitle}
-          </TabButton>
-        ))}
-      </TabNav>
+    <Card padding={false}>
+      <div css={[paddingStyles, { paddingBottom: 0 }]}>
+        <Headline3>{title}</Headline3>
+        <Paragraph hasMargin={false} accent="lead">
+          {description}
+        </Paragraph>
+        <TabNav>
+          {tabs.map(({ tabTitle, disabled }, index) => (
+            <TabButton
+              key={tabTitle}
+              active={index === active}
+              onClick={() => {
+                setShowMore(false);
+                setActive(index);
+              }}
+              disabled={disabled}
+            >
+              {tabTitle}
+            </TabButton>
+          ))}
+        </TabNav>
+      </div>
       <div css={topDividerStyles}>
         <Divider />
       </div>
-      <div css={itemsListWrapper}>
-        {items
-          .slice(0, showMore ? undefined : truncateFrom)
-          .map((item, index) => createItem(item, index))}
+      <div css={[paddingStyles, { paddingBottom: 0, paddingTop: 0 }]}>
+        <div
+          css={[
+            itemsListWrapper,
+            showMore && lastChildExpanded,
+            showShowMoreButton && truncatedStyles,
+          ]}
+        >
+          {items
+            .slice(0, showMore ? undefined : truncateFrom)
+            .map((item, index) => createItem(item, index))}
+        </div>
       </div>
-      {truncateFrom && items.length > truncateFrom && (
-        <div css={[showMoreStyles]}>
+      {showShowMoreButton && (
+        <div css={showMoreStyles}>
           <Button linkStyle onClick={() => setShowMore(!showMore)}>
             {`View ${showMore ? 'less' : 'more'} interest groups`}
           </Button>

@@ -21,7 +21,7 @@ it('renders correctly for a normal user', () => {
   expect(getByText(`${displayName}'s Interest Groups`)).toBeVisible();
   expect(
     getByText(
-      'Groups allow teams to share findings with other teams about topics of interest.',
+      'Interest groups allow teams to share findings with other teams about topics of interest.',
     ),
   ).toBeVisible();
 

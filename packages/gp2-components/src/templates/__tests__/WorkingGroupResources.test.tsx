@@ -1,17 +1,20 @@
 import { gp2 } from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import WorkingGroupResources from '../WorkingGroupResources';
 
 describe('WorkingGroupResources', () => {
-  const getResource = (): gp2.WorkingGroupResource => ({
-    type: 'Link' as const,
-    title: 'test resource title',
-    description: 'test resource description',
-    externalLink: 'http://a-link-some-where',
-  });
+  const getResources = (length = 1): gp2.WorkingGroupResource[] =>
+    Array.from({ length }, (_, itemIndex) => ({
+      type: 'Link' as const,
+      title: `resource title ${itemIndex}`,
+      description: 'resource description',
+      externalLink: 'http://a-link-some-where',
+    }));
   const defaultProps = {
-    resources: [getResource()],
+    resources: getResources(),
   };
+
   it('renders heading', () => {
     render(<WorkingGroupResources {...defaultProps}></WorkingGroupResources>);
     expect(
@@ -19,7 +22,7 @@ describe('WorkingGroupResources', () => {
     ).toBeVisible();
   });
   it('renders a resource title', () => {
-    const resource = getResource();
+    const [resource] = getResources();
     resource.title = 'resource title';
     render(
       <WorkingGroupResources
@@ -32,7 +35,7 @@ describe('WorkingGroupResources', () => {
     ).toBeVisible();
   });
   it('renders a resource description', () => {
-    const resource = getResource();
+    const [resource] = getResources();
     resource.description = 'resource description';
     render(
       <WorkingGroupResources
@@ -43,7 +46,7 @@ describe('WorkingGroupResources', () => {
     expect(screen.getByText(/resource description/i)).toBeVisible();
   });
   it('renders a link resource external link', () => {
-    const resource = getResource();
+    const [resource] = getResources();
     resource.type = 'Link';
     resource.externalLink = 'http://a-link';
     render(
@@ -59,7 +62,7 @@ describe('WorkingGroupResources', () => {
   });
 
   it('renders a link resource pill for a link', () => {
-    const resource = getResource();
+    const [resource] = getResources();
     resource.type = 'Link';
     render(
       <WorkingGroupResources
@@ -71,7 +74,7 @@ describe('WorkingGroupResources', () => {
   });
 
   it('should not render a note resource external link', () => {
-    const resource = getResource();
+    const [resource] = getResources();
     resource.type = 'Note';
     render(
       <WorkingGroupResources
@@ -83,7 +86,7 @@ describe('WorkingGroupResources', () => {
   });
 
   it('renders a note resource pill for a note', () => {
-    const resource = getResource();
+    const [resource] = getResources();
     resource.type = 'Note';
     render(
       <WorkingGroupResources
@@ -95,9 +98,8 @@ describe('WorkingGroupResources', () => {
   });
 
   it('renders multiple resources', () => {
-    const resource1 = getResource();
+    const [resource1, resource2] = getResources(2);
     resource1.title = 'resource title 1';
-    const resource2 = getResource();
     resource2.title = 'resource title 2';
     render(
       <WorkingGroupResources
@@ -112,6 +114,43 @@ describe('WorkingGroupResources', () => {
       screen.getByRole('heading', { name: /resource title 2/i }),
     ).toBeVisible();
   });
-  test.todo('show more');
+
+  it('Renders show more button for more than 3 milestones', async () => {
+    const resources = getResources(4);
+
+    render(<WorkingGroupResources resources={resources} />);
+
+    expect(screen.getByRole('button', { name: /Show more/i })).toBeVisible();
+  });
+  it('Renders show less button when the show more button is clicked', async () => {
+    const resources = getResources(4);
+
+    render(<WorkingGroupResources resources={resources} />);
+
+    const button = screen.getByRole('button', { name: /Show more/i });
+    userEvent.click(button);
+    expect(screen.getByRole('button', { name: /Show less/i })).toBeVisible();
+  });
+  it('does not show a more button for less than 3 milestones', async () => {
+    const resources = getResources(3);
+
+    render(<WorkingGroupResources resources={resources} />);
+
+    expect(
+      screen.queryByRole('button', { name: /Show more/i }),
+    ).not.toBeInTheDocument();
+  });
+  it('displays the hidden milestones if the button is clicked', () => {
+    const resources = getResources(4);
+
+    render(<WorkingGroupResources resources={resources} />);
+    expect(
+      screen.getByRole('heading', { name: 'resource title 2' }),
+    ).toBeInTheDocument();
+    expect(screen.getByText('resource title 3')).not.toBeVisible();
+    const button = screen.getByRole('button', { name: /Show more/i });
+    userEvent.click(button);
+    expect(screen.getByText('resource title 3')).toBeVisible();
+  });
   test.todo('no resources');
 });

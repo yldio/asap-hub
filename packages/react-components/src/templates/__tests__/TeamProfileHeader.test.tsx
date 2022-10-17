@@ -131,7 +131,7 @@ it('does not render upcoming events tab when team is inactive', () => {
   );
   expect(
     screen.getAllByRole('link').map(({ textContent }) => textContent),
-  ).toEqual(['About', 'Upcoming Events (0)', 'Past Events (0)']);
+  ).toEqual(['About', 'Team Outputs (0)', 'Past Events (0)']);
 });
 
 it('renders workspace tabs when tools provided', () => {

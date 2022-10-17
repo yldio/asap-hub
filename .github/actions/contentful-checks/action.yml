@@ -51,7 +51,7 @@ runs:
       run: |
         CONTENTFUL_ENV=$CONTENTFUL_MASTER_ENV
 
-        if [ "$OUTSTANDING_MIGRATIONS" != "0" ]; then
+        if [ $OUTSTANDING_MIGRATIONS != "0" ]; then
           CONTENTFUL_ENV=crn-$PR_NUMBER
         fi
 
@@ -80,7 +80,7 @@ runs:
       shell: bash
       run: |
         CONTENTFUL_ENV_LIMIT_REACHED=False
-        if ["$ENVIRONMENTS_IN_USE" == "$MAX_CONTENTFUL_ENVIRONMENTS"]; then
+        if [ $ENVIRONMENTS_IN_USE == $MAX_CONTENTFUL_ENVIRONMENTS ]; then
           CONTENTFUL_ENV_LIMIT_REACHED=True
           echo "Max Contentful environments reached. Cannot create more."
         else
@@ -102,7 +102,7 @@ runs:
                                 https://api.contentful.com/spaces/${CONTENTFUL_SPACE_ID}/environments/${CONTENTFUL_ENV} \
                                 | jq '.sys.type')
 
-        if ["$ENVIRONMENT_TYPE" == "Environment"]; then
+        if [ $ENVIRONMENT_TYPE == "Environment" ]; then
           echo "Environment found, setting exists flag to true."
           echo "::set-output name=exists::True"
         else
@@ -126,7 +126,7 @@ runs:
         else
           OUTSTANDING_MIGRATIONS=$(yarn workspace @asap-hub/contentful space:migrate:crn:count)
 
-          if ["$OUTSTANDING_MIGRATIONS" == "0"]; then
+          if [ $OUTSTANDING_MIGRATIONS == '0' ]; then
             echo "All migrations have been run on target environment."
             echo "::set-output name=migrations-up-to-date::True"
           else

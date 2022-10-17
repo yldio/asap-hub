@@ -64,9 +64,9 @@ export class TeamSquidexDataProvider implements TeamDataProvider {
 
     const activeQuery =
       filter?.active === true
-        ? 'exists(data/inactiveSince/iv)'
-        : filter?.active === false
         ? 'empty(data/inactiveSince/iv)'
+        : filter?.active === false
+        ? 'exists(data/inactiveSince/iv)'
         : '';
 
     const { queryTeamsContentsWithTotal } =

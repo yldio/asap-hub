@@ -190,7 +190,7 @@ describe('Team Data Provider', () => {
           " or contains(data/projectTitle/iv, 'Stark')" +
           " or contains(data/expertiseAndResourceTags/iv, 'Stark'))" +
           ' and ' +
-          'empty(data/inactiveSince/iv)';
+          'exists(data/inactiveSince/iv)';
 
         const result = await teamDataProvider.fetch({
           take: 8,
@@ -214,8 +214,8 @@ describe('Team Data Provider', () => {
 
       test.each`
         active   | expectedFilterQuery
-        ${true}  | ${'exists(data/inactiveSince/iv)'}
-        ${false} | ${'empty(data/inactiveSince/iv)'}
+        ${true}  | ${'empty(data/inactiveSince/iv)'}
+        ${false} | ${'exists(data/inactiveSince/iv)'}
       `(
         'Should filter by active field when its value is $active',
         async ({ active, expectedFilterQuery }) => {

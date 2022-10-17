@@ -55,10 +55,9 @@ describe('WorkingGroupResources', () => {
         resources={[resource]}
       ></WorkingGroupResources>,
     );
-    expect(screen.getByTestId('external-link-0')).toHaveAttribute(
-      'href',
-      'http://a-link',
-    );
+    expect(
+      screen.getByRole('link', { name: /external link/i }),
+    ).toHaveAttribute('href', 'http://a-link');
   });
 
   it('renders a link resource pill for a link', () => {
@@ -152,5 +151,4 @@ describe('WorkingGroupResources', () => {
     userEvent.click(button);
     expect(screen.getByText('resource title 3')).toBeVisible();
   });
-  test.todo('no resources');
 });

@@ -8,6 +8,7 @@ const editIcon = (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
+    <title>Edit</title>
     <path
       fillRule="evenodd"
       clipRule="evenodd"

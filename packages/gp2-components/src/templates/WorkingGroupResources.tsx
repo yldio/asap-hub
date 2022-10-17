@@ -7,6 +7,7 @@ import {
   chevronCircleUpIcon,
   crossQuery,
   Headline3,
+  Link,
   Paragraph,
   Pill,
   pixels,
@@ -19,7 +20,7 @@ import colors from './colors';
 
 type WorkingGroupResourcesProps = Pick<gp2.WorkingGroupResponse, 'resources'>;
 
-const { rem } = pixels;
+const { rem, tabletScreen } = pixels;
 const containerStyles = css({
   display: 'flex',
   flexDirection: 'column',
@@ -39,7 +40,7 @@ const buttonWrapperStyles = css({
   borderBottom: `transparent`,
 });
 const hideStyles = css({
-  [`:nth-of-type(n+5)`]: { display: 'none' },
+  [`:nth-of-type(n+4)`]: { display: 'none' },
 });
 
 const WorkingGroupResources: React.FC<WorkingGroupResourcesProps> = ({
@@ -88,74 +89,75 @@ const WorkingGroupResources: React.FC<WorkingGroupResourcesProps> = ({
           </div>
         </div>
         View and share resources that others may find helpful.
-        {resources.map((resource, index) => (
-          <div
-            key={`working-group-resource-${index}`}
-            css={getResourcesListStyles()}
-          >
-            <Card overrideStyles={css([{ marginTop: '24px' }])}>
-              <div css={[rowStyles]}>
-                <Pill
-                  small={false}
-                  overrideStyles={css({
-                    margin: 0,
-                    fontSize: rem(14),
-                    padding: '4px 8px',
-                    lineHeight: rem(16),
-                  })}
-                >
-                  {resource.type === 'Link' ? 'Link' : 'Note'}
-                </Pill>
+        <div
+          css={css({ display: 'flex', flexDirection: 'column', gap: rem(32) })}
+        >
+          {resources.map((resource, index) => (
+            <div
+              key={`working-group-resource-${index}`}
+              css={getResourcesListStyles()}
+            >
+              <Card>
                 <div
-                  css={css({
-                    paddingLeft: rem(44),
-                    [crossQuery]: {
-                      marginLeft: 'auto',
+                  css={[
+                    rowStyles,
+                    {
+                      [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
+                        flexDirection: 'column-reverse',
+                        gap: rem(24),
+                      },
                     },
-                  })}
+                  ]}
                 >
                   <Pill
                     small={false}
                     overrideStyles={css({
                       margin: 0,
-                      fontSize: rem(17),
-                      fontWeight: 'bold',
-                      padding: '8px 8px',
-                      height: 'auto',
-                      color: colors.neutral1000.rgba,
+                      fontSize: rem(14),
+                      padding: '4px 8px',
+                      lineHeight: rem(16),
+                      maxWidth: 'fit-content',
                     })}
                   >
-                    Edit {editIcon}
+                    {resource.type === 'Link' ? 'Link' : 'Note'}
                   </Pill>
-                </div>
-              </div>
-              <div
-                css={css({
-                  display: 'flex',
-                  flexDirection: 'row',
-                  paddingTop: rem(8),
-                })}
-              >
-                <Subtitle styleAsHeading={4} hasMargin={false}>
-                  {resource.title}
-                </Subtitle>
-                {resource.type === 'Link' && (
-                  <div css={css({ padding: '4px 8px' })}>
-                    <Anchor
-                      data-testid={`external-link-${index}`}
-                      href={resource.externalLink}
-                    >
-                      {externalLinkIcon}
-                    </Anchor>
+                  <div
+                    css={css({
+                      [`@media (min-width: ${tabletScreen.width}px)`]: {
+                        marginLeft: 'auto',
+                      },
+                    })}
+                  >
+                    <Link href={''} buttonStyle noMargin small>
+                      Edit {editIcon}
+                    </Link>
                   </div>
-                )}
-              </div>
-              <Paragraph hasMargin={false} accent="lead">
-                {resource.description}
-              </Paragraph>
-            </Card>
-          </div>
-        ))}
+                </div>
+                <div
+                  css={css({
+                    display: 'flex',
+                    flexDirection: 'row',
+                    paddingTop: rem(8),
+                  })}
+                >
+                  <Subtitle styleAsHeading={4} hasMargin={false}>
+                    {resource.title}
+                  </Subtitle>
+                  {resource.type === 'Link' && (
+                    <div css={css({ padding: '4px 8px' })}>
+                      <Anchor href={resource.externalLink}>
+                        {externalLinkIcon}
+                      </Anchor>
+                    </div>
+                  )}
+                </div>
+                <Paragraph hasMargin={false} accent="lead">
+                  {resource.description}
+                </Paragraph>
+              </Card>
+            </div>
+          ))}
+        </div>
         {resources.length > minimumResourcesToDisplay && (
           <div css={buttonWrapperStyles}>
             <Button linkStyle onClick={() => setExpanded(!expanded)}>

@@ -8,6 +8,7 @@ const locationIcon = (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
+    <title>Location</title>
     <path
       fillRule="evenodd"
       clipRule="evenodd"

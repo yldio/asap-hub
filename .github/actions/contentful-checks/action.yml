@@ -108,7 +108,7 @@ runs:
                                 https://api.contentful.com/spaces/${CONTENTFUL_SPACE_ID}/environments/${CONTENTFUL_ENV} \
                                 | jq '.sys.type')
 
-        if [ $ENVIRONMENT_TYPE == "Environment" ]; then
+        if [[ "$ENVIRONMENT_TYPE" == "Environment" ]]; then
           echo "Environment found, setting exists flag to True."
           echo "::set-output name=exists::True"
         else

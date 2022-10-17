@@ -117,10 +117,10 @@ runs:
       id: check-contentful-migrated
       shell: bash
       run: |
-        if ["$CONTENTFUL_ENV_ID" == "$CONTENTFUL_MASTER_ENV" ]; then
+        if [ $CONTENTFUL_ENV_ID == $CONTENTFUL_MASTER_ENV ]; then
           echo "No new Contentful environment required for this branch."
           echo "::set-output name=migrations-up-to-date::True"
-        elif ["$CONTENTFUL_ENV_EXISTS" == "False"]; then
+        elif [ $CONTENTFUL_ENV_EXISTS == 'False' ]; then
           echo "New Contentful environment required but has not yet been created."
           echo "::set-output name=migrations-up-to-date::True"
         else

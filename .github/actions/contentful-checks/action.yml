@@ -35,13 +35,6 @@ outputs:
 runs:
   using: 'composite'
   steps:
-    - name: Install software
-      id: install-software
-      shell: bash
-      run: |
-        apt update
-        apt install -y jq
-        apt install -y curl
     - name: Determine whether migrations need to be run on master environment
       id: count-outstanding-migrations
       shell: bash

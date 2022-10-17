@@ -4,7 +4,6 @@ import WorkingGroupResources from '../WorkingGroupResources';
 
 describe('WorkingGroupResources', () => {
   const getResource = (): gp2.WorkingGroupResource => ({
-    id: '42',
     type: 'Link' as const,
     title: 'test resource title',
     description: 'test resource description',
@@ -46,7 +45,6 @@ describe('WorkingGroupResources', () => {
   it('renders a link resource external link', () => {
     const resource = getResource();
     resource.type = 'Link';
-    resource.id = '11';
     resource.externalLink = 'http://a-link';
     render(
       <WorkingGroupResources
@@ -54,7 +52,7 @@ describe('WorkingGroupResources', () => {
         resources={[resource]}
       ></WorkingGroupResources>,
     );
-    expect(screen.getByTestId('external-link-11')).toHaveAttribute(
+    expect(screen.getByTestId('external-link-0')).toHaveAttribute(
       'href',
       'http://a-link',
     );
@@ -75,14 +73,13 @@ describe('WorkingGroupResources', () => {
   it('should not render a note resource external link', () => {
     const resource = getResource();
     resource.type = 'Note';
-    resource.id = '11';
     render(
       <WorkingGroupResources
         {...defaultProps}
         resources={[resource]}
       ></WorkingGroupResources>,
     );
-    expect(screen.queryByTestId('external-link-11')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('external-link-0')).not.toBeInTheDocument();
   });
 
   it('renders a note resource pill for a note', () => {
@@ -99,10 +96,8 @@ describe('WorkingGroupResources', () => {
 
   it('renders multiple resources', () => {
     const resource1 = getResource();
-    resource1.id = '7';
     resource1.title = 'resource title 1';
     const resource2 = getResource();
-    resource2.id = '11';
     resource2.title = 'resource title 2';
     render(
       <WorkingGroupResources

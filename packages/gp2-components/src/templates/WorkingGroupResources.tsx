@@ -63,8 +63,8 @@ const WorkingGroupResources: React.FC<WorkingGroupResourcesProps> = ({
         </div>
       </div>
       View and share resources that others may find helpful.
-      {resources.map((resource) => (
-        <Card key={resource.id} overrideStyles={css({ marginTop: '24px' })}>
+      {resources.map((resource, idx) => (
+        <Card key={idx} overrideStyles={css({ marginTop: '24px' })}>
           <div css={[rowStyles]}>
             <div css={css({ display: 'inline-flex' })}>
               <Pill
@@ -109,7 +109,7 @@ const WorkingGroupResources: React.FC<WorkingGroupResourcesProps> = ({
             {resource.type === 'Link' && (
               <div css={css({ padding: '4px 8px' })}>
                 <a
-                  data-testid={`external-link-${resource.id}`}
+                  data-testid={`external-link-${idx}`}
                   href={resource.externalLink}
                 >
                   {externalLinkIcon}

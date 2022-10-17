@@ -16,7 +16,6 @@ const mockedWorkingGroup: gp2.WorkingGroupResponse = {
   leadingMembers: 'This is a list of leading members',
   resources: [
     {
-      id: '42',
       type: 'Note',
       title: 'This is a resource title',
       description: 'This is a resource description',

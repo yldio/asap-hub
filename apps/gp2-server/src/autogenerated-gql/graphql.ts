@@ -2412,6 +2412,14 @@ export type WorkingGroupNetworkContentFragment = Pick<
                 }
               >
             >;
+            resources: Maybe<
+              Array<
+                Pick<
+                  WorkingGroupsDataResourcesChildDto,
+                  'type' | 'title' | 'description' | 'externalLink'
+                >
+              >
+            >;
           };
         }
       >
@@ -2445,6 +2453,14 @@ export type WorkingGroupNetworkContentFragment = Pick<
                     >
                   >;
                 }
+              >
+            >;
+            resources: Maybe<
+              Array<
+                Pick<
+                  WorkingGroupsDataResourcesChildDto,
+                  'type' | 'title' | 'description' | 'externalLink'
+                >
               >
             >;
           };
@@ -2482,6 +2498,14 @@ export type WorkingGroupNetworkContentFragment = Pick<
                 }
               >
             >;
+            resources: Maybe<
+              Array<
+                Pick<
+                  WorkingGroupsDataResourcesChildDto,
+                  'type' | 'title' | 'description' | 'externalLink'
+                >
+              >
+            >;
           };
         }
       >
@@ -2515,6 +2539,14 @@ export type WorkingGroupNetworkContentFragment = Pick<
                     >
                   >;
                 }
+              >
+            >;
+            resources: Maybe<
+              Array<
+                Pick<
+                  WorkingGroupsDataResourcesChildDto,
+                  'type' | 'title' | 'description' | 'externalLink'
+                >
               >
             >;
           };
@@ -2564,6 +2596,14 @@ export type FetchWorkingGroupNetworkQuery = {
                       }
                     >
                   >;
+                  resources: Maybe<
+                    Array<
+                      Pick<
+                        WorkingGroupsDataResourcesChildDto,
+                        'type' | 'title' | 'description' | 'externalLink'
+                      >
+                    >
+                  >;
                 };
               }
             >
@@ -2597,6 +2637,14 @@ export type FetchWorkingGroupNetworkQuery = {
                           >
                         >;
                       }
+                    >
+                  >;
+                  resources: Maybe<
+                    Array<
+                      Pick<
+                        WorkingGroupsDataResourcesChildDto,
+                        'type' | 'title' | 'description' | 'externalLink'
+                      >
                     >
                   >;
                 };
@@ -2634,6 +2682,14 @@ export type FetchWorkingGroupNetworkQuery = {
                       }
                     >
                   >;
+                  resources: Maybe<
+                    Array<
+                      Pick<
+                        WorkingGroupsDataResourcesChildDto,
+                        'type' | 'title' | 'description' | 'externalLink'
+                      >
+                    >
+                  >;
                 };
               }
             >
@@ -2667,6 +2723,14 @@ export type FetchWorkingGroupNetworkQuery = {
                           >
                         >;
                       }
+                    >
+                  >;
+                  resources: Maybe<
+                    Array<
+                      Pick<
+                        WorkingGroupsDataResourcesChildDto,
+                        'type' | 'title' | 'description' | 'externalLink'
+                      >
                     >
                   >;
                 };
@@ -2704,6 +2768,14 @@ export type WorkingGroupContentFragment = Pick<WorkingGroups, 'id'> & {
         }
       >
     >;
+    resources: Maybe<
+      Array<
+        Pick<
+          WorkingGroupsDataResourcesChildDto,
+          'type' | 'title' | 'description' | 'externalLink'
+        >
+      >
+    >;
   };
 };
 
@@ -2737,6 +2809,14 @@ export type FetchWorkingGroupQuery = {
                 >
               >;
             }
+          >
+        >;
+        resources: Maybe<
+          Array<
+            Pick<
+              WorkingGroupsDataResourcesChildDto,
+              'type' | 'title' | 'description' | 'externalLink'
+            >
           >
         >;
       };
@@ -2778,6 +2858,14 @@ export type FetchWorkingGroupsQuery = {
                       >
                     >;
                   }
+                >
+              >;
+              resources: Maybe<
+                Array<
+                  Pick<
+                    WorkingGroupsDataResourcesChildDto,
+                    'type' | 'title' | 'description' | 'externalLink'
+                  >
                 >
               >;
             };
@@ -3078,6 +3166,25 @@ export const WorkingGroupContentFragmentDoc = {
                             },
                           ],
                         },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'resources' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'externalLink' },
                       },
                     ],
                   },

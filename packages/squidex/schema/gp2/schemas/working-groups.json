@@ -257,7 +257,7 @@
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Description",
-              "isRequired": true,
+              "isRequired": false,
               "isRequiredOnPublish": false,
               "isHalfWidth": true
             }

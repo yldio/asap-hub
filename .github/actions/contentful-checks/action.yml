@@ -56,7 +56,7 @@ runs:
         fi
 
         echo "$OUTSTANDING_MIGRATIONS migrations to run on $CONTENTFUL_ENV."
-        echo "::set-output name=contentful-env::$CONTENTFUL_ENV"
+        echo "::set-output name=env-id::$CONTENTFUL_ENV"
       env:
         CONTENTFUL_MASTER_ENV: ${{ inputs.contentful-master-env }}
         PR_NUMBER: ${{ inputs.pr-number }}
@@ -90,7 +90,7 @@ runs:
         echo "::set-output name=limit-reached::$CONTENTFUL_ENV_LIMIT_REACHED"
       env:
         MAX_CONTENTFUL_ENVIRONMENTS: ${{ inputs.max-contentful-envs }}
-        CONTENTFUL_ENV: ${{ steps.determine-environment.outputs.contentful-env }}
+        CONTENTFUL_ENV: ${{ steps.determine-environment.outputs.env-id }}
         CONTENTFUL_MASTER_ENV: ${{ inputs.contentful-master-env }}
     - name: Determine whether the Contentful environment has been created
       id: check-contentful-exists
@@ -99,7 +99,7 @@ runs:
         ENVIRONMENT_TYPE=$(curl --silent \
                                 --request GET \
                                 --header "Authorization: Bearer ${CONTENTFUL_MANAGEMENT_ACCESS_TOKEN}" \
-                                https://api.contentful.com/spaces/${CONTENTFUL_SPACE_ID}/environments/$(CONTENTFUL_ENVIRONMENT) \
+                                https://api.contentful.com/spaces/${CONTENTFUL_SPACE_ID}/environments/${CONTENTFUL_ENV} \
                                 | jq '.sys.type')
 
         if ["$ENVIRONMENT_TYPE" == "Environment"]; then
@@ -110,7 +110,7 @@ runs:
           echo "::set-output name=exists::False"
         fi
       env:
-        CONTENTFUL_ENVIRONMENT: ${{ steps.determine-environment.outputs.contentful-env }}
+        CONTENTFUL_ENV: ${{ steps.determine-environment.outputs.env-id }}
         CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
         CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.contentful-token }}
     - name: Determine whether the Contentful environment has been migrated
@@ -136,7 +136,7 @@ runs:
         fi
       env:
         CONTENTFUL_ENV_EXISTS: ${{ steps.check-contentful-exists.outputs.exists }}
-        CONTENTFUL_ENV_ID: ${{ steps.determine-environment.outputs.contentful-env }}
+        CONTENTFUL_ENV_ID: ${{ steps.determine-environment.outputs.env-id }}
         CONTENTFUL_MASTER_ENV: ${{ inputs.contentful-master-env }}
         CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
         CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.contentful-token }}

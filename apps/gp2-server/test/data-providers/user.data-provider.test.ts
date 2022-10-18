@@ -1,6 +1,6 @@
-import { NotFoundError } from '@asap-hub/errors';
+import { GenericError, NotFoundError } from '@asap-hub/errors';
 import { FetchUsersOptions } from '@asap-hub/model';
-import { RestUser, SquidexRest } from '@asap-hub/squidex';
+import { SquidexRest, gp2 } from '@asap-hub/squidex';
 import nock from 'nock';
 import {
   UsersDataDegreeEnum,
@@ -15,17 +15,23 @@ import {
   getGraphQLUser,
   getSquidexUserGraphqlResponse,
   getSquidexUsersGraphqlResponse,
+  getUserCreateDataObject,
   getUserDataObject,
+  getUserInput,
 } from '../fixtures/user.fixtures';
 import { identity } from '../helpers/squidex';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
 
 describe('User data provider', () => {
-  const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
-    appName,
-    baseUrl,
-  });
+  const userRestClient = new SquidexRest<gp2.RestUser, gp2.InputUser>(
+    getAuthToken,
+    'users',
+    {
+      appName,
+      baseUrl,
+    },
+  );
   const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
   const userDataProvider = new UserSquidexDataProvider(
     squidexGraphqlClientMock,
@@ -37,12 +43,14 @@ describe('User data provider', () => {
     squidexGraphqlClientMockServer,
     userRestClient,
   );
+
   beforeAll(() => {
     identity();
   });
   beforeEach(() => {
     jest.resetAllMocks();
   });
+
   describe('FetchById', () => {
     test('Should fetch the users from squidex graphql', async () => {
       const result = await usersMockGraphqlServer.fetchById('user-id');
@@ -180,13 +188,14 @@ describe('User data provider', () => {
     });
   });
 
-  describe('update', () => {
+  describe('Update', () => {
     afterEach(() => {
       nock.cleanAll();
     });
 
     const userId = 'user-id';
-    test('Should throw when sync asset fails', async () => {
+
+    test('Should throw when the PATCH request to squidex fails', async () => {
       nock(baseUrl)
         .patch(`/api/content/${appName}/users/${userId}`, {
           firstName: { iv: 'Tony' },
@@ -198,6 +207,7 @@ describe('User data provider', () => {
       ).rejects.toThrow(NotFoundError);
       expect(nock.isDone()).toBe(true);
     });
+
     test('Should update first name', async () => {
       nock(baseUrl)
         .patch(`/api/content/${appName}/users/${userId}`, {
@@ -210,6 +220,7 @@ describe('User data provider', () => {
       ).not.toBeDefined();
       expect(nock.isDone()).toBe(true);
     });
+
     test('Should update last name', async () => {
       nock(baseUrl)
         .patch(`/api/content/${appName}/users/${userId}`, {
@@ -286,6 +297,114 @@ describe('User data provider', () => {
           }),
         ).not.toBeDefined();
         expect(nock.isDone()).toBe(true);
+      },
+    );
+  });
+
+  describe('Create', () => {
+    afterEach(() => {
+      expect(nock.isDone()).toBe(true);
+    });
+
+    afterEach(() => {
+      nock.cleanAll();
+    });
+
+    test('Should throw when the POST request to squidex fails', async () => {
+      nock(baseUrl)
+        .post(`/api/content/${appName}/users?publish=true`)
+        .reply(500);
+
+      await expect(
+        userDataProvider.create(getUserCreateDataObject()),
+      ).rejects.toThrow(GenericError);
+    });
+
+    test('Should create the user', async () => {
+      const userResponse = fetchUserResponse();
+      const userCreateDataObject = getUserCreateDataObject();
+
+      nock(baseUrl)
+        .post(`/api/content/${appName}/users?publish=true`, getUserInput())
+        .reply(200, userResponse);
+
+      const response = await userDataProvider.create(userCreateDataObject);
+
+      expect(response).toEqual(userResponse.id);
+    });
+
+    test.each`
+      region                      | expected
+      ${'Africa'}                 | ${UsersDataRegionEnum.Africa}
+      ${'Asia'}                   | ${UsersDataRegionEnum.Asia}
+      ${'Australia/Australiasia'} | ${UsersDataRegionEnum.AustraliaAustraliasia}
+      ${'Europe'}                 | ${UsersDataRegionEnum.Europe}
+      ${'North America'}          | ${UsersDataRegionEnum.NorthAmerica}
+      ${'South America'}          | ${UsersDataRegionEnum.SouthAmerica}
+      ${'Latin America'}          | ${UsersDataRegionEnum.LatinAmerica}
+    `(
+      'Should create a user with the region $region => $expected',
+      async ({ region, expected }) => {
+        const userCreateDataObject = getUserCreateDataObject();
+
+        nock(baseUrl)
+          .post(`/api/content/${appName}/users?publish=true`, {
+            ...getUserInput(),
+            region: { iv: expected },
+          })
+          .reply(200, fetchUserResponse());
+
+        await userDataProvider.create({
+          ...userCreateDataObject,
+          region,
+        });
+      },
+    );
+
+    test.each`
+      role                           | expected
+      ${'Working Group Participant'} | ${UsersDataRoleEnum.WorkingGroupParticipant}
+      ${'Network Investigator'}      | ${UsersDataRoleEnum.NetworkInvestigator}
+      ${'Network Collaborator'}      | ${UsersDataRoleEnum.NetworkCollaborator}
+      ${'Administrator'}             | ${UsersDataRoleEnum.Administrator}
+      ${'Trainee'}                   | ${UsersDataRoleEnum.Trainee}
+    `(
+      'Should create a user with the role $role => $expected',
+      async ({ role, expected }) => {
+        const userCreateDataObject = getUserCreateDataObject();
+
+        nock(baseUrl)
+          .post(`/api/content/${appName}/users?publish=true`, {
+            ...getUserInput(),
+            role: { iv: expected },
+          })
+          .reply(200, fetchUserResponse());
+
+        await userDataProvider.create({
+          ...userCreateDataObject,
+          role,
+        });
+      },
+    );
+
+    test.each(Object.values(UsersDataDegreeEnum))(
+      'Should create a user with the degree %s',
+      async (degree) => {
+        const userCreateDataObject = getUserCreateDataObject();
+        const expected =
+          degree === UsersDataDegreeEnum.MdPhD ? 'MD, PhD' : degree;
+
+        nock(baseUrl)
+          .post(`/api/content/${appName}/users?publish=true`, {
+            ...getUserInput(),
+            degree: { iv: [degree] },
+          })
+          .reply(200, fetchUserResponse());
+
+        await userDataProvider.create({
+          ...userCreateDataObject,
+          degrees: [expected],
+        });
       },
     );
   });

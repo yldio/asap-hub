@@ -1,10 +1,11 @@
 import { gp2 } from '@asap-hub/model';
 import {
   parseDate,
-  RestUser,
+  parseToSquidex,
   sanitiseForSquidex,
   SquidexGraphqlClient,
   SquidexRestClient,
+  gp2 as gp2Squidex,
 } from '@asap-hub/squidex';
 import {
   FetchUserQuery,
@@ -22,6 +23,7 @@ import { reverseMap } from '../utils/reverse-map';
 export interface UserDataProvider {
   fetchById(id: string): Promise<gp2.UserDataObject | null>;
   update(id: string, update: gp2.UserUpdateDataObject): Promise<void>;
+  create(update: gp2.UserCreateDataObject): Promise<string>;
   fetch(options: FetchUsersOptions): Promise<gp2.ListUserDataObject>;
 }
 const regionMap: Record<UsersDataRegionEnum, gp2.UserRegion> = {
@@ -44,16 +46,14 @@ const reverseRegionMap = reverseMap(regionMap);
 const reverseRoleMap = reverseMap(roleMap);
 
 export class UserSquidexDataProvider implements UserDataProvider {
-  squidexGraphlClient: SquidexGraphqlClient;
-  userSquidexRestClient: SquidexRestClient<RestUser>;
-
   constructor(
-    squidexGraphlClient: SquidexGraphqlClient,
-    userSquidexRestClient: SquidexRestClient<RestUser>,
-  ) {
-    this.squidexGraphlClient = squidexGraphlClient;
-    this.userSquidexRestClient = userSquidexRestClient;
-  }
+    private squidexGraphlClient: SquidexGraphqlClient,
+    private userSquidexRestClient: SquidexRestClient<
+      gp2Squidex.RestUser,
+      gp2Squidex.InputUser
+    >,
+  ) {}
+
   async fetchById(id: string): Promise<gp2.UserDataObject | null> {
     const { findUsersContent } = await this.queryFetchByIdData(id);
     if (!findUsersContent) {
@@ -66,11 +66,27 @@ export class UserSquidexDataProvider implements UserDataProvider {
     id: string,
     userToUpdate: gp2.UserUpdateDataObject,
   ): Promise<void> {
-    const fieldMappedUser = mapUserFields(userToUpdate);
-    const cleanedUser = cleanUser(fieldMappedUser);
+    const { region, role, degrees, ...userInput } = userToUpdate;
+    const fieldMappedUser = mapUserFields({ region, role, degrees });
+    const cleanedUser = cleanUser({ ...userInput, ...fieldMappedUser });
 
     await this.userSquidexRestClient.patch(id, cleanedUser);
   }
+
+  async create(userToCreate: gp2.UserCreateDataObject): Promise<string> {
+    const { region, role, degrees, ...userInput } = userToCreate;
+    const fieldMappedUser = mapUserFields({ region, role, degrees });
+    const cleanedUser = parseToSquidex({ ...userInput, ...fieldMappedUser });
+
+    const response = await this.userSquidexRestClient.create({
+      ...cleanedUser,
+      avatar: { iv: [] },
+      connections: { iv: [] },
+    });
+
+    return response.id;
+  }
+
   async fetch(options: FetchUsersOptions): Promise<gp2.ListUserDataObject> {
     const queryFilter = generateFetchQueryFilter(options);
     const { take = 8, skip = 0 } = options;
@@ -105,26 +121,44 @@ export class UserSquidexDataProvider implements UserDataProvider {
   }
 }
 
-const mapUserFields = ({
-  role,
-  region,
-  degrees,
-  ...user
-}: gp2.UserUpdateDataObject) => {
-  const mappedDegrees = degrees?.map((degree) => {
+type UserCreateDataObjectEnumFields = Pick<
+  gp2.UserCreateDataObject,
+  'degrees' | 'region' | 'role'
+>;
+type UserCreateInputEnumFields = {
+  degree?: `${UsersDataDegreeEnum}`[];
+  region: UsersDataRegionEnum;
+  role: UsersDataRoleEnum;
+};
+type UserUpdateDataObjectEnumFields = Pick<
+  gp2.UserUpdateDataObject,
+  'degrees' | 'region' | 'role'
+>;
+type UserUpdateInputEnumFields = Partial<UserCreateInputEnumFields>;
+
+function mapUserFields(
+  input: UserCreateDataObjectEnumFields,
+): UserCreateInputEnumFields;
+function mapUserFields(
+  input: UserUpdateDataObjectEnumFields,
+): UserUpdateInputEnumFields;
+function mapUserFields(
+  input: UserCreateDataObjectEnumFields | UserUpdateDataObjectEnumFields,
+): UserCreateInputEnumFields | UserUpdateInputEnumFields {
+  const mappedDegrees = input.degrees?.map((degree) => {
     if (degree === 'MD, PhD') {
       return UsersDataDegreeEnum.MdPhD;
     }
 
     return degree;
   });
+
   return {
-    ...user,
-    ...(region && { region: reverseRegionMap[region] }),
-    ...(role && { role: reverseRoleMap[role] }),
-    ...(degrees && { degree: mappedDegrees }),
+    ...(input.region && { region: reverseRegionMap[input.region] }),
+    ...(input.role && { role: reverseRoleMap[input.role] }),
+    ...(input.degrees && { degree: mappedDegrees }),
   };
-};
+}
 
 const cleanUser = (
   userToUpdate: Omit<

@@ -1,6 +1,10 @@
 import { connectByCodeHandlerFactory } from '@asap-hub/server-common';
 import { framework as lambda } from '@asap-hub/services-common';
-import { RestUser, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
+import {
+  gp2 as gp2Squidex,
+  SquidexGraphql,
+  SquidexRest,
+} from '@asap-hub/squidex';
 import { appName, auth0SharedSecret, baseUrl } from '../../config';
 import Users from '../../controllers/user.controller';
 import { UserSquidexDataProvider } from '../../data-providers/user.data-provider';
@@ -12,7 +16,10 @@ const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
   appName,
   baseUrl,
 });
-const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
+const userRestClient = new SquidexRest<
+  gp2Squidex.RestUser,
+  gp2Squidex.InputUser
+>(getAuthToken, 'users', {
   appName,
   baseUrl,
 });

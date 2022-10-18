@@ -5,7 +5,7 @@ import { ExternalAuthorResponse, UserResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { isInternalUser } from '@asap-hub/validation';
 
-import { Avatar } from '../atoms';
+import { Avatar, Link } from '../atoms';
 import { ImageLink } from '.';
 import { perRem } from '../pixels';
 import { alumniBadge, userPlaceholderIcon } from '../icons';
@@ -74,27 +74,27 @@ const UsersList: FC<UsersListProps> = ({
   <ul css={listStyles}>
     {users.slice(0, max).map((user, i) => {
       const link = user.id && network({}).users({}).user({ userId: user.id }).$;
+      const internalUser = isInternalUser(user);
+      const imageUrl = internalUser
+        ? user.avatarUrl
+        : getPlaceholderAvatarUrl();
       return (
         <li key={`author-${i}`} css={itemStyles}>
-          {isInternalUser(user) ? (
+          {internalUser ? (
             <div css={userStyles}>
               <ImageLink link={link}>
-                <Avatar {...user} imageUrl={user.avatarUrl} />
+                <Avatar {...user} imageUrl={imageUrl} />
               </ImageLink>
-              <span css={nameStyles}>{user.displayName}</span>
+              <Link ellipsed href={link}>
+                <span css={nameStyles}>{user.displayName}</span>
+              </Link>
               {user.alumniSinceDate && (
                 <span css={iconStyles}>{alumniBadge}</span>
               )}
             </div>
           ) : (
             <div css={userStyles}>
-              {link ? (
-                <ImageLink link={link}>
-                  <Avatar {...user} imageUrl={getPlaceholderAvatarUrl()} />
-                </ImageLink>
-              ) : (
-                <Avatar {...user} imageUrl={getPlaceholderAvatarUrl()} />
-              )}
+              <Avatar {...user} imageUrl={imageUrl} />
               <span css={nameStyles}>{user.displayName}</span>
             </div>
           )}

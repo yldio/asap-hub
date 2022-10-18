@@ -5450,12 +5450,22 @@ input UsersDataAdminNotesInputDto {
   iv: String
 }
 
-"""The structure of the AlumniSinceDate field of the Users content type."""
+"""The structure of the Alumni New Location field of the Users content type."""
+type UsersDataAlumniLocationDto {
+  iv: String
+}
+
+"""The structure of the Alumni New Location field of the Users content input type."""
+input UsersDataAlumniLocationInputDto {
+  iv: String
+}
+
+"""The structure of the Alumni Since field of the Users content type."""
 type UsersDataAlumniSinceDateDto {
   iv: Instant
 }
 
-"""The structure of the AlumniSinceDate field of the Users content input type."""
+"""The structure of the Alumni Since field of the Users content input type."""
 input UsersDataAlumniSinceDateInputDto {
   iv: Instant
 }
@@ -5555,6 +5565,7 @@ input UsersDataDismissedGettingStartedInputDto {
 """The structure of the Users data type."""
 type UsersDataDto {
   adminNotes: UsersDataAdminNotesDto
+  alumniLocation: UsersDataAlumniLocationDto
   alumniSinceDate: UsersDataAlumniSinceDateDto
   avatar: UsersDataAvatarDto
   biography: UsersDataBiographyDto
@@ -5630,6 +5641,7 @@ input UsersDataFirstNameInputDto {
 """The structure of the Users data input type."""
 input UsersDataInputDto {
   adminNotes: UsersDataAdminNotesInputDto
+  alumniLocation: UsersDataAlumniLocationInputDto
   alumniSinceDate: UsersDataAlumniSinceDateInputDto
   avatar: UsersDataAvatarInputDto
   biography: UsersDataBiographyInputDto
@@ -5918,6 +5930,7 @@ input UsersDataTeamsInputDto {
 """The structure of the flat Users data type."""
 type UsersFlatDataDto {
   adminNotes: String
+  alumniLocation: String
   alumniSinceDate: Instant
   avatar: [Asset!]
   biography: String

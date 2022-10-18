@@ -8,6 +8,7 @@ export const usersContentQueryFragment = gql`
     version
     flatData {
       alumniSinceDate
+      alumniLocation
       avatar {
         id
       }

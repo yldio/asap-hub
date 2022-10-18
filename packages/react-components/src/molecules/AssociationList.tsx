@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { css } from '@emotion/react';
 import { network } from '@asap-hub/routing';
 
-import { labIcon, teamIcon } from '../icons';
+import { labIcon, teamIcon, inactiveBadgeIcon } from '../icons';
 import { Avatar, Link } from '../atoms';
 import { perRem } from '../pixels';
 import { lead, silver } from '../colors';
@@ -49,6 +49,12 @@ const iconStyles = css({
   marginRight: `${9 / perRem}em`,
 });
 
+const inactiveBadgeStyles = css({
+  lineHeight: `${18 / perRem}em`,
+  verticalAlign: 'middle',
+  marginLeft: `${8 / perRem}em`,
+});
+
 const moreStyles = css({
   overflow: 'hidden',
   display: 'grid',
@@ -71,6 +77,7 @@ interface AssociationListProps {
   readonly associations: ReadonlyArray<{
     displayName: string;
     id: string;
+    inactiveSince?: string;
   }>;
   readonly type: 'Team' | 'Lab';
   readonly inline?: boolean;
@@ -106,13 +113,18 @@ const AssociationList: FC<AssociationListProps> = ({
     <div>
       {inline && <div css={iconStyles}>{icon}</div>}
       <ul css={[containerStyles, inline && inlineContainerStyles]}>
-        {associations.map(({ displayName, id }) => (
+        {associations.map(({ displayName, id, inactiveSince }) => (
           <li key={id} css={[itemStyles, inline && inlineItemStyles]}>
             {inline || <div css={iconStyles}>{icon}</div>}
             {type === 'Team' ? (
-              <Link href={network({}).teams({}).team({ teamId: id }).$}>
-                {type} {displayName}
-              </Link>
+              <>
+                <Link href={network({}).teams({}).team({ teamId: id }).$}>
+                  {type} {displayName}
+                </Link>
+                {inactiveSince && (
+                  <span css={inactiveBadgeStyles}>{inactiveBadgeIcon}</span>
+                )}
+              </>
             ) : (
               <>
                 {displayName} {type}

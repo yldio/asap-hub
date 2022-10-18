@@ -143,6 +143,7 @@ export const researchOutputContentQueryFragment = gql`
       version
       flatData {
         displayName
+        inactiveSince
       }
       referencingUsersContents {
         flatData {

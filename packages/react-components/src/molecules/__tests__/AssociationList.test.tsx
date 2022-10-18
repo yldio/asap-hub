@@ -34,6 +34,22 @@ describe('Teams', () => {
     );
   });
 
+  it('displays inactive badge when team is inactive', () => {
+    const { getByTitle } = render(
+      <AssociationList
+        type="Team"
+        associations={[
+          {
+            displayName: 'One',
+            id: 't0',
+            inactiveSince: '2022-09-30T09:00:00Z',
+          },
+        ]}
+      />,
+    );
+    expect(getByTitle('Inactive')).toBeInTheDocument();
+  });
+
   it('display type in plural if there is more than one', () => {
     const { getByText } = render(
       <AssociationList

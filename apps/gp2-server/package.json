@@ -9,7 +9,8 @@
     "build:babel": "../../scripts/build-babel.sh build",
     "start": "SQUIDEX_APP_NAME=$GP2_SQUIDEX_APP_NAME SQUIDEX_CLIENT_ID=$GP2_SQUIDEX_CLIENT_ID SQUIDEX_CLIENT_SECRET=$GP2_SQUIDEX_CLIENT_SECRET AUTH0_AUDIENCE=$GP2_AUTH0_AUDIENCE node-dev ./src/server.ts",
     "watch:babel": "../../scripts/build-babel.sh watch",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "import:users": "ts-node ./scripts/import-users.ts"
   },
   "dependencies": {
     "@asap-hub/auth": "workspace:*",

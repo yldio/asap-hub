@@ -6,7 +6,7 @@ import UsersList from '../UsersList';
 import { userPlaceholderIcon } from '../../icons';
 
 it('links to an internal user', () => {
-  const { getByRole } = render(
+  const { getByText } = render(
     <UsersList
       users={[
         {
@@ -17,7 +17,7 @@ it('links to an internal user', () => {
       ]}
     />,
   );
-  expect(getByRole('link')).toHaveAttribute(
+  expect(getByText('John').closest('a')).toHaveAttribute(
     'href',
     expect.stringMatching(/42$/),
   );

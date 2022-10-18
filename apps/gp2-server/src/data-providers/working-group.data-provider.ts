@@ -1,8 +1,4 @@
 import { gp2 } from '@asap-hub/model';
-import {
-  WorkingGroupDataObject,
-  WorkingGroupResourceType,
-} from '@asap-hub/model/src/gp2';
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import {
   FetchWorkingGroupQuery,
@@ -19,7 +15,7 @@ import {
 import { createUrl } from '../utils/urls';
 
 export interface WorkingGroupDataProvider {
-  fetchById(id: string): Promise<WorkingGroupDataObject | null>;
+  fetchById(id: string): Promise<gp2.WorkingGroupDataObject | null>;
   fetch(): Promise<gp2.ListWorkingGroupDataObject>;
 }
 export class WorkingGroupSquidexDataProvider
@@ -27,7 +23,7 @@ export class WorkingGroupSquidexDataProvider
 {
   constructor(private squidexGraphlClient: SquidexGraphqlClient) {}
 
-  async fetchById(id: string): Promise<WorkingGroupDataObject | null> {
+  async fetchById(id: string): Promise<gp2.WorkingGroupDataObject | null> {
     const { findWorkingGroupsContent } = await this.queryFetchByIdData(id);
     if (!findWorkingGroupsContent) {
       return null;
@@ -154,7 +150,7 @@ export function parseWorkingGroupToDataObject({
             ? resource.externalLink
             : undefined;
 
-        const type: WorkingGroupResourceType =
+        const type: gp2.WorkingGroupResourceType =
           resource.type === WorkingGroupsDataResourcesTypeEnum.Note
             ? 'Note'
             : 'Link';

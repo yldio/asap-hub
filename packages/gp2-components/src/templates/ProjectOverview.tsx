@@ -1,4 +1,4 @@
-import { ProjectResponse } from '@asap-hub/model/src/gp2';
+import { gp2 } from '@asap-hub/model';
 import {
   Card,
   crossQuery,
@@ -13,7 +13,7 @@ import { ProjectMilestones } from '../organisms';
 import EmailSection from '../organisms/EmailSection';
 
 type ProjectOverviewProps = Pick<
-  ProjectResponse,
+  gp2.ProjectResponse,
   | 'pmEmail'
   | 'leadEmail'
   | 'description'

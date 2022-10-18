@@ -96,7 +96,7 @@ describe('/users/ route', () => {
         const response = await supertest(appWithMockedAuth)
           .get('/users')
           .query({
-            filter: 'Project Manager',
+            filter: { region: ['Europe'] },
           });
 
         expect(response.status).toBe(200);
@@ -108,7 +108,7 @@ describe('/users/ route', () => {
         const response = await supertest(appWithMockedAuth)
           .get('/users')
           .query({
-            filter: ['Project Manager', 'Lead PI'],
+            filter: { region: ['Europe', 'Asia'] },
           });
 
         expect(response.status).toBe(200);

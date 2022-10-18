@@ -79,7 +79,7 @@ describe('Users controller', () => {
       await userController.fetchByCode(code);
 
       expect(userDataProviderMock.fetch).toBeCalledWith({
-        filter: { code, hidden: false, onboarded: false },
+        filter: { code },
         take: 1,
         skip: 0,
       });

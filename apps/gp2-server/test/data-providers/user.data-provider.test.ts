@@ -1,5 +1,5 @@
 import { NotFoundError } from '@asap-hub/errors';
-import { FetchUsersOptions } from '@asap-hub/model';
+import { FetchUsersOptions, gp2 } from '@asap-hub/model';
 import { RestUser, SquidexRest } from '@asap-hub/squidex';
 import nock from 'nock';
 import {
@@ -329,22 +329,18 @@ describe('User data provider', () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexUsersGraphqlResponse(),
       );
-      const fetchOptions: FetchUsersOptions = {
+      const fetchOptions: gp2.FetchUsersOptions = {
         take: 12,
         skip: 2,
-        search: 'first last',
+        search: '',
         filter: {
-          role: ['role', 'Staff'],
+          region: ['Europe', 'Asia'],
         },
       };
       const users = await userDataProvider.fetch(fetchOptions);
 
       const filterQuery =
-        "((contains(data/firstName/iv, 'first')" +
-        " or contains(data/lastName/iv, 'first'))" +
-        ' and' +
-        " (contains(data/firstName/iv, 'last')" +
-        " or contains(data/lastName/iv, 'last')))";
+        "data/region/iv eq 'Europe'" + " or data/region/iv eq 'Asia'";
       expect(squidexGraphqlClientMock.request).toBeCalledWith(
         expect.anything(),
         {
@@ -354,78 +350,6 @@ describe('User data provider', () => {
         },
       );
       expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
-    });
-    test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        getSquidexUsersGraphqlResponse(),
-      );
-      const fetchOptions: FetchUsersOptions = {
-        take: 12,
-        skip: 2,
-        search: "'",
-      };
-      await userDataProvider.fetch(fetchOptions);
-
-      const expectedFilter =
-        "((contains(data/firstName/iv, '%27%27')" +
-        " or contains(data/lastName/iv, '%27%27')))";
-
-      expect(squidexGraphqlClientMock.request).toBeCalledWith(
-        expect.anything(),
-        {
-          top: 12,
-          skip: 2,
-          filter: expectedFilter,
-        },
-      );
-    });
-    test('Should sanitise double quotation mark by encoding to hex', async () => {
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        getSquidexUsersGraphqlResponse(),
-      );
-      const fetchOptions: FetchUsersOptions = {
-        take: 12,
-        skip: 2,
-        search: '"',
-      };
-      await userDataProvider.fetch(fetchOptions);
-
-      const expectedFilter =
-        "((contains(data/firstName/iv, '%22')" +
-        " or contains(data/lastName/iv, '%22')))";
-
-      expect(squidexGraphqlClientMock.request).toBeCalledWith(
-        expect.anything(),
-        {
-          top: 12,
-          skip: 2,
-          filter: expectedFilter,
-        },
-      );
-    });
-    test('Should search with special characters', async () => {
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        getSquidexUsersGraphqlResponse(),
-      );
-      const fetchOptions: FetchUsersOptions = {
-        take: 12,
-        skip: 2,
-        search: 'Solène',
-      };
-      await userDataProvider.fetch(fetchOptions);
-
-      const expectedFilter =
-        "((contains(data/firstName/iv, 'Solène')" +
-        " or contains(data/lastName/iv, 'Solène')))";
-
-      expect(squidexGraphqlClientMock.request).toBeCalledWith(
-        expect.anything(),
-        {
-          top: 12,
-          skip: 2,
-          filter: expectedFilter,
-        },
-      );
     });
     test('Should query with code filters and return the users', async () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(

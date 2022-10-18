@@ -34,6 +34,12 @@ it('shows the number of teams and links to them', () => {
     'href',
   );
 });
+
+it('does not show the number of teams and links to them if the group is inactive', () => {
+  render(<GroupProfileHeader {...props} numberOfTeams={1} active={false} />);
+  expect(screen.queryByText(/1 team(\s|$)/i)).not.toBeInTheDocument();
+});
+
 it('pluralizes the number of teams', () => {
   render(<GroupProfileHeader {...props} numberOfTeams={2} />);
   expect(screen.getByText(/2 teams(\s|$)/i)).toBeVisible();

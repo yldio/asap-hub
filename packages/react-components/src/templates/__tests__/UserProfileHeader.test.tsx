@@ -109,27 +109,65 @@ it('shows placeholder text for degree on own profile when omitted', () => {
   expect(queryByText(/, BA/i)).toBeVisible();
 });
 
-it('shows the alumni badge when user is alumni', () => {
-  const { queryByText, queryByTitle, rerender } = render(
-    <UserProfileContext.Provider value={{ isOwnProfile: false }}>
-      <UserProfileHeader
-        {...boilerplateProps}
-        alumniSinceDate={new Date().toISOString()}
-        degree={undefined}
-      />
-      ,
-    </UserProfileContext.Provider>,
-  );
-  expect(queryByText('Alumni')).toBeInTheDocument();
-  expect(queryByTitle('Alumni Badge')).toBeInTheDocument();
+describe('alumni', () => {
+  it('shows the alumni badge when user is alumni', () => {
+    const { queryByText, queryByTitle, rerender } = render(
+      <UserProfileContext.Provider value={{ isOwnProfile: false }}>
+        <UserProfileHeader
+          {...boilerplateProps}
+          alumniSinceDate={new Date().toISOString()}
+          degree={undefined}
+        />
+        ,
+      </UserProfileContext.Provider>,
+    );
+    expect(queryByText('Alumni')).toBeInTheDocument();
+    expect(queryByTitle('Alumni Badge')).toBeInTheDocument();
 
-  rerender(
-    <UserProfileContext.Provider value={{ isOwnProfile: false }}>
-      <UserProfileHeader {...boilerplateProps} degree={undefined} />,
-    </UserProfileContext.Provider>,
-  );
-  expect(queryByText('Alumni')).not.toBeInTheDocument();
-  expect(queryByTitle('Alumni Badge')).not.toBeInTheDocument();
+    rerender(
+      <UserProfileContext.Provider value={{ isOwnProfile: false }}>
+        <UserProfileHeader {...boilerplateProps} degree={undefined} />,
+      </UserProfileContext.Provider>,
+    );
+    expect(queryByText('Alumni')).not.toBeInTheDocument();
+    expect(queryByTitle('Alumni Badge')).not.toBeInTheDocument();
+  });
+
+  it('shows the proper alumni toast message when user is alumni', () => {
+    const { queryByText, rerender } = render(
+      <UserProfileContext.Provider value={{ isOwnProfile: false }}>
+        <UserProfileHeader
+          {...boilerplateProps}
+          alumniSinceDate={new Date('2021-02-01T12:00:00').toISOString()}
+          lastModifiedDate={new Date('2021-01-01T12:00:00').toISOString()}
+          degree={undefined}
+        />
+        ,
+      </UserProfileContext.Provider>,
+    );
+    expect(
+      queryByText(
+        `This alumni might not have all content updated or available. This user became alumni on the 1st February 2021, their contact details were last updated on the 1st January 2021.`,
+      ),
+    ).toBeInTheDocument();
+    rerender(
+      <UserProfileContext.Provider value={{ isOwnProfile: false }}>
+        <UserProfileHeader
+          {...boilerplateProps}
+          alumniSinceDate={new Date('2021-02-01T12:00:00').toISOString()}
+          alumniLocation={'Some University'}
+          lastModifiedDate={new Date('2021-01-01T12:00:00').toISOString()}
+          degree={undefined}
+        />
+        ,
+      </UserProfileContext.Provider>,
+    );
+    expect(
+      queryByText(
+        `This alumni might not have all content updated or available. This user became alumni on the 1st February 2021, their contact details were last updated on the 1st January 2021 and their role is now at Some University.`,
+      ),
+    ).toBeInTheDocument();
+  });
 });
 
 it('shows lab information if the user is in a lab', async () => {

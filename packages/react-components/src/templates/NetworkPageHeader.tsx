@@ -8,7 +8,7 @@ import { paper, steel } from '../colors';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { SearchAndFilter } from '../organisms';
 import { Option, Title } from '../organisms/CheckboxGroup';
-import { TabNav, SearchField } from '../molecules';
+import { TabNav } from '../molecules';
 import { teamIcon, userIcon, groupsIcon } from '../icons';
 import { queryParamString } from '../routing';
 
@@ -31,20 +31,12 @@ const controlsStyles = css({
   padding: `0 ${contentSidePaddingWithNavigation(8)}`,
 });
 
-interface NetworkTeamsOrGroupsPageHeaderProps {
-  page: 'teams' | 'groups';
-  filters?: undefined;
-  onChangeFilter?: undefined;
-}
-interface NetworkPeoplePageHeaderProps {
-  page: 'users';
+type Page = 'users' | 'groups' | 'teams';
+
+type NetworkPageHeaderProps = {
+  page: Page;
   filters?: Set<string>;
   onChangeFilter?: (filter: string) => void;
-}
-type NetworkPageHeaderProps = (
-  | NetworkTeamsOrGroupsPageHeaderProps
-  | NetworkPeoplePageHeaderProps
-) & {
   searchQuery: string;
   onChangeSearchQuery?: (newSearchQuery: string) => void;
 };
@@ -62,6 +54,41 @@ const userFilters: ReadonlyArray<Option<TeamRole | Role | UserTag> | Title> = [
   { label: 'CRN Member', value: 'CRN Member' },
   { label: 'Alumni Member', value: 'Alumni Member' },
 ];
+
+const groupFilters: ReadonlyArray<Option<'Active' | 'Inactive'> | Title> = [
+  { title: 'INTEREST GROUP STATUS' },
+  { label: 'Active', value: 'Active' },
+  { label: 'Inactive', value: 'Inactive' },
+];
+
+const teamFilters: ReadonlyArray<Option<'Active' | 'Inactive'> | Title> = [
+  { title: 'TEAM STATUS' },
+  { label: 'Active', value: 'Active' },
+  { label: 'Inactive', value: 'Inactive' },
+];
+
+const getFilterOptionsAndPlaceholder = (page: Page) => {
+  switch (page) {
+    case 'users':
+      return {
+        filterOptions: userFilters,
+        searchPlaceholder: 'Enter name, keyword, institution, …',
+      };
+
+    case 'groups':
+      return {
+        filterOptions: groupFilters,
+        searchPlaceholder: 'Enter a group, keyword, …',
+      };
+
+    case 'teams':
+    default:
+      return {
+        filterOptions: teamFilters,
+        searchPlaceholder: 'Enter name, keyword, method, …',
+      };
+  }
+};
 
 const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
   page,
@@ -95,26 +122,13 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
       </TabNav>
     </div>
     <div css={controlsStyles}>
-      {page === 'users' ? (
-        <SearchAndFilter
-          onChangeSearch={onChangeSearchQuery}
-          searchPlaceholder="Enter name, keyword, institution, …"
-          searchQuery={searchQuery}
-          onChangeFilter={onChangeFilter}
-          filterOptions={userFilters}
-          filters={filters}
-        />
-      ) : (
-        <SearchField
-          placeholder={
-            page === 'teams'
-              ? 'Enter name, keyword, method, …'
-              : 'Enter a group, keyword, …'
-          }
-          value={searchQuery}
-          onChange={onChangeSearchQuery}
-        />
-      )}
+      <SearchAndFilter
+        onChangeSearch={onChangeSearchQuery}
+        searchQuery={searchQuery}
+        onChangeFilter={onChangeFilter}
+        filters={filters}
+        {...getFilterOptionsAndPlaceholder(page)}
+      />
     </div>
   </header>
 );

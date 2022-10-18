@@ -42,6 +42,7 @@
       "contactEmail",
       "orcidWorks",
       "orcidLastSyncDate",
+      "alumniSinceDate",
       "reachOut",
       "meta.created",
       "meta.createdBy.avatar",

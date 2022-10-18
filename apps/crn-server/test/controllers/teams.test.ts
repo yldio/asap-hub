@@ -72,11 +72,34 @@ describe('Team Controller', () => {
       await teamController.fetch({ search: 'some-search', skip: 13, take: 9 });
 
       expect(teamDataProviderMock.fetch).toBeCalledWith({
+        filter: {},
         search: 'some-search',
         skip: 13,
         take: 9,
       });
     });
+
+    test.each`
+      filter                    | filterValue
+      ${['Active']}             | ${{ filter: { active: true } }}
+      ${['Inactive']}           | ${{ filter: { active: false } }}
+      ${[]}                     | ${{}}
+      ${['Active', 'Inactive']} | ${{}}
+    `(
+      `Should call data provider with correct filter when filter is $filter`,
+      async ({ filter, filterValue }) => {
+        teamDataProviderMock.fetch.mockResolvedValueOnce({
+          total: 1,
+          items: [getTeamDataObject()],
+        });
+
+        await teamController.fetch({ filter });
+
+        expect(teamDataProviderMock.fetch).toBeCalledWith(
+          expect.objectContaining(filterValue),
+        );
+      },
+    );
   });
 
   describe('Fetch-by-ID method', () => {

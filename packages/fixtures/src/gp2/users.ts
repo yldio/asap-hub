@@ -3,13 +3,21 @@ import { gp2 } from '@asap-hub/model';
 const mockedUser = {
   id: 'user-id-1',
   createdDate: '2020-09-23T20:45:22.000Z',
-  displayName: 'Tom Hardy',
-  email: 'H@rdy.io',
-  firstName: 'Tom',
-  lastName: 'Hardy',
+  displayName: 'Tony Stark',
+  email: 'T@ark.io',
+  firstName: 'Tony',
+  lastName: 'Stark',
   region: 'Europe' as const,
   degrees: ['PhD' as const],
   role: 'Trainee' as const,
+  country: 'Spain',
+  positions: [
+    {
+      role: 'CEO',
+      department: 'Research',
+      institution: 'Stark Industries',
+    },
+  ],
 };
 
 export const createUserResponse = (

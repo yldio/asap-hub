@@ -155,6 +155,17 @@ type ApplicationMutations {
     """The status for the content."""
     status: String!
   ): Teams!
+  """Change a Tutorials content."""
+  changeTutorialsContent(
+    """The timestamp when the status should be changed."""
+    dueTime: Instant
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The status for the content."""
+    status: String!
+  ): Tutorials!
   """Change a Users content."""
   changeUsersContent(
     """The timestamp when the status should be changed."""
@@ -309,6 +320,17 @@ type ApplicationMutations {
     """The initial status."""
     status: String
   ): Teams!
+  """Creates an Tutorials content."""
+  createTutorialsContent(
+    """The data for the content."""
+    data: TutorialsDataInputDto!
+    """The optional custom content ID."""
+    id: String
+    """Set to true to autopublish content on create."""
+    publish: Boolean = false
+    """The initial status."""
+    status: String
+  ): Tutorials!
   """Creates an Users content."""
   createUsersContent(
     """The data for the content."""
@@ -406,6 +428,13 @@ type ApplicationMutations {
   ): EntitySavedResultDto!
   """Delete an Teams content."""
   deleteTeamsContent(
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the content (usually GUID)."""
+    id: String!
+  ): EntitySavedResultDto!
+  """Delete an Tutorials content."""
+  deleteTutorialsContent(
     """The expected version."""
     expectedVersion: Int = -2
     """The ID of the content (usually GUID)."""
@@ -535,6 +564,15 @@ type ApplicationMutations {
     """The ID of the object (usually GUID)."""
     id: String
   ): Teams!
+  """Patch an Tutorials content by id."""
+  patchTutorialsContent(
+    """The data for the content."""
+    data: TutorialsDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String
+  ): Tutorials!
   """Patch an Users content by id."""
   patchUsersContent(
     """The data for the content."""
@@ -687,6 +725,17 @@ type ApplicationMutations {
     """The status for the content."""
     status: String!
   ): Teams! @deprecated(reason: "Use 'changeTeamsContent' instead")
+  """Publish a Tutorials content."""
+  publishTutorialsContent(
+    """The timestamp when the status should be changed."""
+    dueTime: Instant
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The status for the content."""
+    status: String!
+  ): Tutorials! @deprecated(reason: "Use 'changeTutorialsContent' instead")
   """Publish a Users content."""
   publishUsersContent(
     """The timestamp when the status should be changed."""
@@ -815,6 +864,15 @@ type ApplicationMutations {
     """The ID of the object (usually GUID)."""
     id: String
   ): Teams!
+  """Update an Tutorials content by id."""
+  updateTutorialsContent(
+    """The data for the content."""
+    data: TutorialsDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String
+  ): Tutorials!
   """Update an Users content by id."""
   updateUsersContent(
     """The data for the content."""
@@ -1019,6 +1077,21 @@ type ApplicationMutations {
     """The initial status."""
     status: String
   ): Teams!
+  """Upsert an Tutorials content by id."""
+  upsertTutorialsContent(
+    """The data for the content."""
+    data: TutorialsDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """Makes the update as patch."""
+    patch: Boolean = false
+    """Set to true to autopublish content on create."""
+    publish: Boolean = false
+    """The initial status."""
+    status: String
+  ): Tutorials!
   """Upsert an Users content by id."""
   upsertUsersContent(
     """The data for the content."""
@@ -1134,6 +1207,13 @@ type ApplicationQueries {
     """The optional version of the content to retrieve an older instance (not cached)."""
     version: Int
   ): Teams
+  """Find an Tutorials content by id."""
+  findTutorialsContent(
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The optional version of the content to retrieve an older instance (not cached)."""
+    version: Int
+  ): Tutorials
   """Find an Users content by id."""
   findUsersContent(
     """The ID of the object (usually GUID)."""
@@ -1501,6 +1581,32 @@ type ApplicationQueries {
     """Optional number of items to take."""
     top: Int
   ): TeamsResultDto
+  """Query Tutorials content items."""
+  queryTutorialsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [Tutorials!]
+  """Query Tutorials content items with total count."""
+  queryTutorialsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): TutorialsResultDto
   """Query Users content items."""
   queryUsersContents(
     """Optional OData filter."""
@@ -2079,6 +2185,32 @@ type Discover implements Content {
     """Optional number of items to take."""
     top: Int
   ): TeamsResultDto
+  """Query Tutorials content items."""
+  referencesTutorialsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [Tutorials!]
+  """Query Tutorials content items with total count."""
+  referencesTutorialsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): TutorialsResultDto
   """Query Users content items."""
   referencesUsersContents(
     """Optional OData filter."""
@@ -2189,7 +2321,7 @@ input DiscoverDataScientificAdvisoryBoardInputDto {
 
 """The structure of the Training field of the Discover ASAP content type."""
 type DiscoverDataTrainingDto {
-  iv: [NewsAndEvents!]
+  iv: [Tutorials!]
 }
 
 """The structure of the Training field of the Discover ASAP content input type."""
@@ -2214,7 +2346,7 @@ type DiscoverFlatDataDto {
   membersTeam: [Teams!]
   pages: [Pages!]
   scientificAdvisoryBoard: [Users!]
-  training: [NewsAndEvents!]
+  training: [Tutorials!]
   workingGroups: [NewsAndEvents!]
 }
 
@@ -3587,21 +3719,8 @@ type NewsAndEvents implements Content {
   version: Int!
 }
 
-"""The structure of the Event Date field of the News content type."""
-type NewsAndEventsDataDateDto {
-  """Property only used on Event type items"""
-  iv: Instant
-}
-
-"""The structure of the Event Date field of the News content input type."""
-input NewsAndEventsDataDateInputDto {
-  """Property only used on Event type items"""
-  iv: Instant
-}
-
 """The structure of the News data type."""
 type NewsAndEventsDataDto {
-  date: NewsAndEventsDataDateDto
   frequency: NewsAndEventsDataFrequencyDto
   link: NewsAndEventsDataLinkDto
   linkText: NewsAndEventsDataLinkTextDto
@@ -3624,7 +3743,6 @@ input NewsAndEventsDataFrequencyInputDto {
 
 """The structure of the News data input type."""
 input NewsAndEventsDataInputDto {
-  date: NewsAndEventsDataDateInputDto
   frequency: NewsAndEventsDataFrequencyInputDto
   link: NewsAndEventsDataLinkInputDto
   linkText: NewsAndEventsDataLinkTextInputDto
@@ -3715,8 +3833,6 @@ input NewsAndEventsDataTypeInputDto {
 
 """The structure of the flat News data type."""
 type NewsAndEventsFlatDataDto {
-  """Property only used on Event type items"""
-  date: Instant
   frequency: String
   link: String
   """
@@ -4949,6 +5065,175 @@ type TeamsFlatDataDto {
 type TeamsResultDto {
   """The contents."""
   items: [Teams!]
+  """The total count of  contents."""
+  total: Int!
+}
+
+"""The structure of a Tutorials content type."""
+type Tutorials implements Content {
+  """The timestamp when the object was created."""
+  created: Instant!
+  """The user who created the object."""
+  createdBy: String!
+  """The user who created the object."""
+  createdByUser: User!
+  """The data of the content."""
+  data: TutorialsDataDto!
+  """The edit token."""
+  editToken: String
+  """The flat data of the content."""
+  flatData: TutorialsFlatDataDto!
+  """The ID of the object (usually GUID)."""
+  id: String!
+  """The timestamp when the object was updated the last time."""
+  lastModified: Instant!
+  """The user who updated the object the last time."""
+  lastModifiedBy: String!
+  """The user who updated the object the last time."""
+  lastModifiedByUser: User!
+  """The new status of the content."""
+  newStatus: String
+  """The status color of the content."""
+  newStatusColor: String
+  """Query Discover ASAP content items."""
+  referencingDiscoverContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [Discover!]
+  """Query Discover ASAP content items with total count."""
+  referencingDiscoverContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): DiscoverResultDto
+  """The status of the content."""
+  status: String!
+  """The status color of the content."""
+  statusColor: String!
+  """The URL to the content."""
+  url: String!
+  """The version of the objec."""
+  version: Int!
+}
+
+"""The structure of the Tutorials data type."""
+type TutorialsDataDto {
+  link: TutorialsDataLinkDto
+  linkText: TutorialsDataLinkTextDto
+  shortText: TutorialsDataShortTextDto
+  text: TutorialsDataTextDto
+  thumbnail: TutorialsDataThumbnailDto
+  title: TutorialsDataTitleDto
+}
+
+"""The structure of the Tutorials data input type."""
+input TutorialsDataInputDto {
+  link: TutorialsDataLinkInputDto
+  linkText: TutorialsDataLinkTextInputDto
+  shortText: TutorialsDataShortTextInputDto
+  text: TutorialsDataTextInputDto
+  thumbnail: TutorialsDataThumbnailInputDto
+  title: TutorialsDataTitleInputDto
+}
+
+"""The structure of the External Link field of the Tutorials content type."""
+type TutorialsDataLinkDto {
+  iv: String
+}
+
+"""The structure of the External Link field of the Tutorials content input type."""
+input TutorialsDataLinkInputDto {
+  iv: String
+}
+
+"""The structure of the External Link Text field of the Tutorials content type."""
+type TutorialsDataLinkTextDto {
+  """
+  Leave this empty to show "Open External Link"
+  """
+  iv: String
+}
+
+"""The structure of the External Link Text field of the Tutorials content input type."""
+input TutorialsDataLinkTextInputDto {
+  """
+  Leave this empty to show "Open External Link"
+  """
+  iv: String
+}
+
+"""The structure of the Short Text field of the Tutorials content type."""
+type TutorialsDataShortTextDto {
+  iv: String
+}
+
+"""The structure of the Short Text field of the Tutorials content input type."""
+input TutorialsDataShortTextInputDto {
+  iv: String
+}
+
+"""The structure of the Text field of the Tutorials content type."""
+type TutorialsDataTextDto {
+  iv: String
+}
+
+"""The structure of the Text field of the Tutorials content input type."""
+input TutorialsDataTextInputDto {
+  iv: String
+}
+
+"""The structure of the Thumbnail field of the Tutorials content type."""
+type TutorialsDataThumbnailDto {
+  iv: [Asset!]
+}
+
+"""The structure of the Thumbnail field of the Tutorials content input type."""
+input TutorialsDataThumbnailInputDto {
+  iv: [String!]
+}
+
+"""The structure of the Title field of the Tutorials content type."""
+type TutorialsDataTitleDto {
+  iv: String
+}
+
+"""The structure of the Title field of the Tutorials content input type."""
+input TutorialsDataTitleInputDto {
+  iv: String
+}
+
+"""The structure of the flat Tutorials data type."""
+type TutorialsFlatDataDto {
+  link: String
+  """
+  Leave this empty to show "Open External Link"
+  """
+  linkText: String
+  shortText: String
+  text: String
+  thumbnail: [Asset!]
+  title: String
+}
+
+"""List of Tutorials items and total count."""
+type TutorialsResultDto {
+  """The contents."""
+  items: [Tutorials!]
   """The total count of  contents."""
   total: Int!
 }

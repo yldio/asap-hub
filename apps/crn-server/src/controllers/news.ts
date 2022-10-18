@@ -1,98 +1,40 @@
+import { NotFoundError } from '@asap-hub/errors';
 import {
   ListNewsResponse,
   NewsResponse,
   FetchNewsOptions,
-  NewsFrequency,
 } from '@asap-hub/model';
-import { RestNews, SquidexRestClient, Filter, Query } from '@asap-hub/squidex';
-
-import { parseNews } from '../entities';
-
-const notTutorialFilter: Filter = {
-  path: 'data.type.iv',
-  op: 'ne',
-  value: 'Tutorial',
-};
-
-const getFrequencyFilter = (frequencyFilter: NewsFrequency[]) => {
-  const selectByFrequencyFilter = {
-    path: 'data.frequency.iv',
-    op: 'in',
-    value: frequencyFilter,
-  };
-
-  // Select news that were created before
-  // frequency field was created
-  const selectNewsArticlesFilter = {
-    path: 'data.frequency.iv',
-    op: 'empty',
-    value: null,
-  };
-
-  if (frequencyFilter.includes('News Articles')) {
-    return {
-      and: [
-        notTutorialFilter,
-        {
-          or: [selectNewsArticlesFilter, selectByFrequencyFilter],
-        },
-      ],
-    };
-  }
-
-  return {
-    and: [notTutorialFilter, selectByFrequencyFilter],
-  };
-};
-
-const getFiltersQuery = (options?: FetchNewsOptions) => {
-  const textSearchFilter = {
-    path: 'data.title.iv',
-    op: 'contains',
-    value: options?.search,
-  };
-
-  if (options?.filter?.frequency) {
-    const filterQuery = getFrequencyFilter(options.filter.frequency);
-
-    return options?.search
-      ? { and: [...filterQuery.and, textSearchFilter] }
-      : filterQuery;
-  }
-  return options?.search
-    ? { and: [notTutorialFilter, textSearchFilter] }
-    : notTutorialFilter;
-};
-
-export default class News implements NewsController {
-  newsSquidexRestClient: SquidexRestClient<RestNews>;
-
-  constructor(newsSquidexRestClient: SquidexRestClient<RestNews>) {
-    this.newsSquidexRestClient = newsSquidexRestClient;
-  }
-
-  async fetch(options?: FetchNewsOptions): Promise<ListNewsResponse> {
-    const { search: _search, ...optionsWithoutSearch } = options || {};
-
-    const { total, items } = await this.newsSquidexRestClient.fetch({
-      ...optionsWithoutSearch,
-      filter: getFiltersQuery(options) as Query['filter'],
-      sort: [{ order: 'descending', path: 'created' }],
-    });
-
-    return {
-      total,
-      items: items.map(parseNews),
-    };
-  }
-
-  async fetchById(id: string): Promise<NewsResponse> {
-    const result = await this.newsSquidexRestClient.fetchById(id);
-    return parseNews(result);
-  }
-}
+import { NewsDataProvider } from '../data-providers/news.data-provider';
 
 export interface NewsController {
   fetch: (options?: FetchNewsOptions) => Promise<ListNewsResponse>;
   fetchById: (id: string) => Promise<NewsResponse>;
+}
+
+export default class News implements NewsController {
+  constructor(private newsDataProvider: NewsDataProvider) {}
+
+  async fetch(options?: FetchNewsOptions): Promise<ListNewsResponse> {
+    const { search, filter, ...paginationOptions } = options || {};
+
+    const { total, items } = await this.newsDataProvider.fetch({
+      ...paginationOptions,
+      filter: { frequency: filter?.frequency, title: search },
+    });
+
+    return {
+      total,
+      items,
+    };
+  }
+
+  async fetchById(newsId: string): Promise<NewsResponse> {
+    const news = await this.newsDataProvider.fetchById(newsId);
+
+    if (!news) {
+      throw new NotFoundError(undefined, `News with id ${newsId} not found`);
+    }
+
+    return news;
+  }
 }

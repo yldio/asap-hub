@@ -1,4 +1,4 @@
-import { UserProfileGroups } from '@asap-hub/react-components';
+import { UserInterestGroupCard } from '@asap-hub/react-components';
 import { UserResponse } from '@asap-hub/model';
 
 import { useUserGroupsById } from './state';
@@ -13,7 +13,7 @@ const GroupsCard: React.FC<{ user: UserResponse }> = ({ user }) => {
   }
 
   return groups.total ? (
-    <UserProfileGroups {...user} groups={groups.items} />
+    <UserInterestGroupCard {...user} groups={groups.items} />
   ) : null;
 };
 

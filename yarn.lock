@@ -681,7 +681,7 @@ __metadata:
     "@sentry/serverless": 6.19.7
     "@serverless/typescript": 3.19.0
     "@types/apr-intercept": "workspace:*"
-    "@types/aws-lambda": 8.10.106
+    "@types/aws-lambda": 8.10.107
     "@types/babel__preset-env": 7.9.2
     "@types/chance": 1.1.3
     "@types/cors": 2.8.12
@@ -753,7 +753,7 @@ __metadata:
     serverless: 3.22.0
     serverless-http: 2.7.0
     serverless-iam-roles-per-function: 2.0.2
-    serverless-s3-sync: 3.0.0
+    serverless-s3-sync: 3.1.0
     serverless-webpack: 5.9.1
     source-map-support: 0.5.21
     stream-json: 1.7.4
@@ -1117,7 +1117,7 @@ __metadata:
     "@sentry/serverless": 6.19.7
     "@serverless/typescript": 3.19.0
     "@types/apr-intercept": "workspace:*"
-    "@types/aws-lambda": 8.10.106
+    "@types/aws-lambda": 8.10.107
     "@types/cors": 2.8.12
     "@types/express": 4.17.13
     "@types/jest": 27.5.2
@@ -1146,7 +1146,7 @@ __metadata:
     node-dev: 6.7.0
     serverless: 3.22.0
     serverless-http: 2.7.0
-    serverless-s3-sync: 3.0.0
+    serverless-s3-sync: 3.1.0
     serverless-webpack: 5.9.1
     source-map-support: 0.5.21
     supertest: 6.2.4
@@ -1360,7 +1360,7 @@ __metadata:
     "@hapi/boom": 9.1.4
     "@sentry/serverless": 6.19.7
     "@types/apr-intercept": "workspace:*"
-    "@types/aws-lambda": 8.10.106
+    "@types/aws-lambda": 8.10.107
     "@types/express": 4.17.13
     "@types/jest": 27.5.2
     "@types/jsonwebtoken": 8.5.9
@@ -1397,7 +1397,7 @@ __metadata:
     "@hapi/bourne": 2.1.0
     "@hapi/joi": 17.1.1
     "@types/apr-intercept": "workspace:*"
-    "@types/aws-lambda": 8.10.106
+    "@types/aws-lambda": 8.10.107
     "@types/debug": 4.1.7
     "@types/hapi": 18.0.7
     "@types/hapi__boom": 9.0.1
@@ -12017,10 +12017,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/aws-lambda@npm:8.10.106":
-  version: 8.10.106
-  resolution: "@types/aws-lambda@npm:8.10.106"
-  checksum: 989a33a58ffb59bf3997383585d22b3f49b7ff78f7ccd42cd841bd0621dd5a24bec7bdb9b14e9f31f986679d05b8428f36df9b2f057be09f0f91267b3234810d
+"@types/aws-lambda@npm:8.10.107":
+  version: 8.10.107
+  resolution: "@types/aws-lambda@npm:8.10.107"
+  checksum: b4a1a666f9ceb6bee1179ed85678aa81af8314eb2026181c6c96d453cc01123585e66e468f4f9d84fbe4302f6ed1d95ee1397f90caf0ed3d5e9860867131f26e
   languageName: node
   linkType: hard
 
@@ -35099,9 +35099,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"serverless-s3-sync@npm:3.0.0":
-  version: 3.0.0
-  resolution: "serverless-s3-sync@npm:3.0.0"
+"serverless-s3-sync@npm:3.1.0":
+  version: 3.1.0
+  resolution: "serverless-s3-sync@npm:3.1.0"
   dependencies:
     "@auth0/s3": ^1.0.0
     bluebird: ^3.5.4
@@ -35109,7 +35109,7 @@ __metadata:
     minimatch: ^3.0.4
   peerDependencies:
     serverless: ^3.0.0
-  checksum: 9e41193ed40b1a5009625317dc10c8cc21f0b18da20e60ab77f99923c35372cda847bd912cf8284ad59ee3e7eb3a1333e8da73319b33e5bdcdf559581485e191
+  checksum: e9c3ef7301397f39f877e7a63575fd2e2c7abbc9ff5d37da6a066ce981eab89f7a2e099024e338b782efc28e66c763900100628ff57a242d92cce79b13e6249a
   languageName: node
   linkType: hard
 

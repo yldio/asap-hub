@@ -43,7 +43,7 @@ export class TeamSquidexDataProvider implements TeamDataProvider {
   }
 
   async fetch(options: FetchTeamsOptions): Promise<ListTeamDataObject> {
-    const { take = 8, skip = 0, search } = options;
+    const { take = 8, skip = 0, search, filter } = options;
 
     const searchQ = (search || '')
       .split(' ')
@@ -62,12 +62,22 @@ export class TeamSquidexDataProvider implements TeamDataProvider {
       )
       .join(' and ');
 
+    const activeQuery =
+      filter?.active === true
+        ? 'empty(data/inactiveSince/iv)'
+        : filter?.active === false
+        ? 'exists(data/inactiveSince/iv)'
+        : '';
+
     const { queryTeamsContentsWithTotal } =
       await this.squidexGraphqlClient.request<
         FetchTeamsQuery,
         FetchTeamsQueryVariables
       >(FETCH_TEAMS, {
-        filter: searchQ,
+        filter:
+          searchQ && activeQuery
+            ? [searchQ, activeQuery].join(' and ')
+            : searchQ || activeQuery,
         top: take,
         skip,
       });
@@ -142,4 +152,8 @@ export class TeamSquidexDataProvider implements TeamDataProvider {
   }
 }
 
-export type FetchTeamsOptions = Omit<FetchOptions, 'filter'>;
+type TeamFilter = {
+  active?: boolean;
+};
+
+export type FetchTeamsOptions = FetchOptions<TeamFilter>;

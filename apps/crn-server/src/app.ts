@@ -46,12 +46,13 @@ import ResearchTags, {
   ResearchTagController,
 } from './controllers/research-tags';
 import Teams, { TeamController } from './controllers/teams';
+import Tutorials, { TutorialsController } from './controllers/tutorials';
 import Users, { UserController } from './controllers/users';
 import {
   AssetDataProvider,
   AssetSquidexDataProvider,
 } from './data-providers/assets.data-provider';
-import CalendarSquidexDataProvider from './data-providers/calendars.data-provider';
+import { CalendarSquidexDataProvider } from './data-providers/calendars.data-provider';
 import {
   ExternalAuthorDataProvider,
   ExternalAuthorSquidexDataProvider,
@@ -80,6 +81,10 @@ import {
   UserDataProvider,
   UserSquidexDataProvider,
 } from './data-providers/users.data-provider';
+import {
+  TutorialsDataProvider,
+  TutorialsSquidexDataProvider,
+} from './data-providers/tutorials.data-provider';
 import { permissionHandler } from './middleware/permission-handler';
 import { sentryTransactionIdMiddleware } from './middleware/sentry-transaction-id-handler';
 import { tracingHandlerFactory } from './middleware/tracing-handler';
@@ -96,10 +101,15 @@ import { reminderRouteFactory } from './routes/reminders.route';
 import { researchOutputRouteFactory } from './routes/research-outputs.route';
 import { researchTagsRouteFactory } from './routes/research-tags.route';
 import { teamRouteFactory } from './routes/teams.route';
+import { tutorialsRouteFactory } from './routes/tutorials.route';
 import { userPublicRouteFactory, userRouteFactory } from './routes/user.route';
 import assignUserToContext from './utils/assign-user-to-context';
 import { getAuthToken } from './utils/auth';
 import pinoLogger from './utils/logger';
+import {
+  NewsDataProvider,
+  NewsSquidexDataProvider,
+} from './data-providers/news.data-provider';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -167,9 +177,14 @@ export const appFactory = (libs: Libs = {}): Express => {
   const groupDataProvider =
     libs.groupDataProvider ||
     new GroupSquidexDataProvider(squidexGraphqlClient);
+  const newsDataProvider =
+    libs.newsDataProvider || new NewsSquidexDataProvider(newsRestClient);
   const teamDataProvider =
     libs.teamDataProvider ||
     new TeamSquidexDataProvider(squidexGraphqlClient, teamRestClient);
+  const tutorialsDataProvider =
+    libs.tutorialsDataProvider ||
+    new TutorialsSquidexDataProvider(squidexGraphqlClient);
   const userDataProvider =
     libs.userDataProvider ||
     new UserSquidexDataProvider(squidexGraphqlClient, userRestClient);
@@ -198,7 +213,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.calendarController || new Calendars(calendarDataProvider);
   const dashboardController =
     libs.dashboardController || new Dashboard(squidexGraphqlClient);
-  const newsController = libs.newsController || new News(newsRestClient);
+  const newsController = libs.newsController || new News(newsDataProvider);
   const discoverController =
     libs.discoverController || new Discover(squidexGraphqlClient);
   const eventController =
@@ -218,6 +233,8 @@ export const appFactory = (libs: Libs = {}): Express => {
   const researchTagController =
     libs.researchTagController || new ResearchTags(squidexGraphqlClient);
   const teamController = libs.teamController || new Teams(teamDataProvider);
+  const tutorialsController =
+    libs.tutorialsController || new Tutorials(tutorialsDataProvider);
   const userController =
     libs.userController || new Users(userDataProvider, assetDataProvider);
   const labsController = libs.labsController || new Labs(squidexGraphqlClient);
@@ -251,6 +268,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   );
   const researchTagsRoutes = researchTagsRouteFactory(researchTagController);
   const teamRoutes = teamRouteFactory(groupController, teamController);
+  const tutorialsRoutes = tutorialsRouteFactory(tutorialsController);
   const userPublicRoutes = userPublicRouteFactory(userController);
   const userRoutes = userRouteFactory(userController, groupController);
 
@@ -314,6 +332,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(researchOutputsRoutes);
   app.use(researchTagsRoutes);
   app.use(teamRoutes);
+  app.use(tutorialsRoutes);
 
   app.get('*', async (_req, res) => {
     res.status(404).json({
@@ -353,11 +372,14 @@ export type Libs = {
   researchOutputController?: ResearchOutputController;
   researchTagController?: ResearchTagController;
   teamController?: TeamController;
+  tutorialsController?: TutorialsController;
   userController?: UserController;
   assetDataProvider?: AssetDataProvider;
   groupDataProvider?: GroupDataProvider;
+  newsDataProvider?: NewsDataProvider;
   reminderDataProvider?: ReminderDataProvider;
   teamDataProvider?: TeamDataProvider;
+  tutorialsDataProvider?: TutorialsDataProvider;
   userDataProvider?: UserDataProvider;
   researchOutputDataProvider?: ResearchOutputDataProvider;
   researchTagDataProvider?: ResearchTagDataProvider;

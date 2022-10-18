@@ -2,7 +2,8 @@ import { ScheduledHandlerAsync } from '@asap-hub/server-common';
 import { RestCalendar, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import { DateTime } from 'luxon';
 import { appName, baseUrl } from '../../config';
-import CalendarSquidexDataProvider, {
+import {
+  CalendarSquidexDataProvider,
   CalendarDataProvider,
 } from '../../data-providers/calendars.data-provider';
 import { getAuthToken } from '../../utils/auth';

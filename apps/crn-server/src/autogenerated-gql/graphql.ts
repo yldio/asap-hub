@@ -53,6 +53,8 @@ export type ApplicationMutations = {
   changeResearchTagsContent: ResearchTags;
   /** Change a Teams content. */
   changeTeamsContent: Teams;
+  /** Change a Tutorials content. */
+  changeTutorialsContent: Tutorials;
   /** Change a Users content. */
   changeUsersContent: Users;
   /** Creates an Calendars content. */
@@ -81,6 +83,8 @@ export type ApplicationMutations = {
   createResearchTagsContent: ResearchTags;
   /** Creates an Teams content. */
   createTeamsContent: Teams;
+  /** Creates an Tutorials content. */
+  createTutorialsContent: Tutorials;
   /** Creates an Users content. */
   createUsersContent: Users;
   /** Delete an Calendars content. */
@@ -109,6 +113,8 @@ export type ApplicationMutations = {
   deleteResearchTagsContent: EntitySavedResultDto;
   /** Delete an Teams content. */
   deleteTeamsContent: EntitySavedResultDto;
+  /** Delete an Tutorials content. */
+  deleteTutorialsContent: EntitySavedResultDto;
   /** Delete an Users content. */
   deleteUsersContent: EntitySavedResultDto;
   /** Patch an Calendars content by id. */
@@ -137,6 +143,8 @@ export type ApplicationMutations = {
   patchResearchTagsContent: ResearchTags;
   /** Patch an Teams content by id. */
   patchTeamsContent: Teams;
+  /** Patch an Tutorials content by id. */
+  patchTutorialsContent: Tutorials;
   /** Patch an Users content by id. */
   patchUsersContent: Users;
   /**
@@ -205,6 +213,11 @@ export type ApplicationMutations = {
    */
   publishTeamsContent: Teams;
   /**
+   * Publish a Tutorials content.
+   * @deprecated Use 'changeTutorialsContent' instead
+   */
+  publishTutorialsContent: Tutorials;
+  /**
    * Publish a Users content.
    * @deprecated Use 'changeUsersContent' instead
    */
@@ -235,6 +248,8 @@ export type ApplicationMutations = {
   updateResearchTagsContent: ResearchTags;
   /** Update an Teams content by id. */
   updateTeamsContent: Teams;
+  /** Update an Tutorials content by id. */
+  updateTutorialsContent: Tutorials;
   /** Update an Users content by id. */
   updateUsersContent: Users;
   /** Upsert an Calendars content by id. */
@@ -263,6 +278,8 @@ export type ApplicationMutations = {
   upsertResearchTagsContent: ResearchTags;
   /** Upsert an Teams content by id. */
   upsertTeamsContent: Teams;
+  /** Upsert an Tutorials content by id. */
+  upsertTutorialsContent: Tutorials;
   /** Upsert an Users content by id. */
   upsertUsersContent: Users;
 };
@@ -365,6 +382,14 @@ export type ApplicationMutationsChangeResearchTagsContentArgs = {
 
 /** The app mutations. */
 export type ApplicationMutationsChangeTeamsContentArgs = {
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  status: Scalars['String'];
+};
+
+/** The app mutations. */
+export type ApplicationMutationsChangeTutorialsContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -484,6 +509,14 @@ export type ApplicationMutationsCreateTeamsContentArgs = {
 };
 
 /** The app mutations. */
+export type ApplicationMutationsCreateTutorialsContentArgs = {
+  data: TutorialsDataInputDto;
+  id: InputMaybe<Scalars['String']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
 export type ApplicationMutationsCreateUsersContentArgs = {
   data: UsersDataInputDto;
   id: InputMaybe<Scalars['String']>;
@@ -565,6 +598,12 @@ export type ApplicationMutationsDeleteResearchTagsContentArgs = {
 
 /** The app mutations. */
 export type ApplicationMutationsDeleteTeamsContentArgs = {
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+};
+
+/** The app mutations. */
+export type ApplicationMutationsDeleteTutorialsContentArgs = {
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
@@ -662,6 +701,13 @@ export type ApplicationMutationsPatchResearchTagsContentArgs = {
 /** The app mutations. */
 export type ApplicationMutationsPatchTeamsContentArgs = {
   data: TeamsDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
+export type ApplicationMutationsPatchTutorialsContentArgs = {
+  data: TutorialsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
@@ -778,6 +824,14 @@ export type ApplicationMutationsPublishTeamsContentArgs = {
 };
 
 /** The app mutations. */
+export type ApplicationMutationsPublishTutorialsContentArgs = {
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  status: Scalars['String'];
+};
+
+/** The app mutations. */
 export type ApplicationMutationsPublishUsersContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
   expectedVersion?: InputMaybe<Scalars['Int']>;
@@ -872,6 +926,13 @@ export type ApplicationMutationsUpdateResearchTagsContentArgs = {
 /** The app mutations. */
 export type ApplicationMutationsUpdateTeamsContentArgs = {
   data: TeamsDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
+export type ApplicationMutationsUpdateTutorialsContentArgs = {
+  data: TutorialsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
@@ -1014,6 +1075,16 @@ export type ApplicationMutationsUpsertTeamsContentArgs = {
 };
 
 /** The app mutations. */
+export type ApplicationMutationsUpsertTutorialsContentArgs = {
+  data: TutorialsDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  patch?: InputMaybe<Scalars['Boolean']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
 export type ApplicationMutationsUpsertUsersContentArgs = {
   data: UsersDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
@@ -1053,6 +1124,8 @@ export type ApplicationQueries = {
   findResearchTagsContent: Maybe<ResearchTags>;
   /** Find an Teams content by id. */
   findTeamsContent: Maybe<Teams>;
+  /** Find an Tutorials content by id. */
+  findTutorialsContent: Maybe<Tutorials>;
   /** Find an Users content by id. */
   findUsersContent: Maybe<Users>;
   /** Get assets. */
@@ -1111,6 +1184,10 @@ export type ApplicationQueries = {
   queryTeamsContents: Maybe<Array<Teams>>;
   /** Query Teams content items with total count. */
   queryTeamsContentsWithTotal: Maybe<TeamsResultDto>;
+  /** Query Tutorials content items. */
+  queryTutorialsContents: Maybe<Array<Tutorials>>;
+  /** Query Tutorials content items with total count. */
+  queryTutorialsContentsWithTotal: Maybe<TutorialsResultDto>;
   /** Query Users content items. */
   queryUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
@@ -1196,6 +1273,12 @@ export type ApplicationQueriesFindResearchTagsContentArgs = {
 
 /** The app queries. */
 export type ApplicationQueriesFindTeamsContentArgs = {
+  id: Scalars['String'];
+  version: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type ApplicationQueriesFindTutorialsContentArgs = {
   id: Scalars['String'];
   version: InputMaybe<Scalars['Int']>;
 };
@@ -1449,6 +1532,24 @@ export type ApplicationQueriesQueryTeamsContentsArgs = {
 
 /** The app queries. */
 export type ApplicationQueriesQueryTeamsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type ApplicationQueriesQueryTutorialsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type ApplicationQueriesQueryTutorialsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -1954,6 +2055,10 @@ export type Discover = Content & {
   referencesTeamsContents: Maybe<Array<Teams>>;
   /** Query Teams content items with total count. */
   referencesTeamsContentsWithTotal: Maybe<TeamsResultDto>;
+  /** Query Tutorials content items. */
+  referencesTutorialsContents: Maybe<Array<Tutorials>>;
+  /** Query Tutorials content items with total count. */
+  referencesTutorialsContentsWithTotal: Maybe<TutorialsResultDto>;
   /** Query Users content items. */
   referencesUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
@@ -2015,6 +2120,24 @@ export type DiscoverReferencesTeamsContentsArgs = {
 
 /** The structure of a Discover ASAP content type. */
 export type DiscoverReferencesTeamsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Discover ASAP content type. */
+export type DiscoverReferencesTutorialsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Discover ASAP content type. */
+export type DiscoverReferencesTutorialsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -2114,7 +2237,7 @@ export type DiscoverDataScientificAdvisoryBoardInputDto = {
 
 /** The structure of the Training field of the Discover ASAP content type. */
 export type DiscoverDataTrainingDto = {
-  iv: Maybe<Array<NewsAndEvents>>;
+  iv: Maybe<Array<Tutorials>>;
 };
 
 /** The structure of the Training field of the Discover ASAP content input type. */
@@ -2139,7 +2262,7 @@ export type DiscoverFlatDataDto = {
   membersTeam: Maybe<Array<Teams>>;
   pages: Maybe<Array<Pages>>;
   scientificAdvisoryBoard: Maybe<Array<Users>>;
-  training: Maybe<Array<NewsAndEvents>>;
+  training: Maybe<Array<Tutorials>>;
   workingGroups: Maybe<Array<NewsAndEvents>>;
 };
 
@@ -3463,21 +3586,8 @@ export type NewsAndEventsReferencingDiscoverContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-/** The structure of the Event Date field of the News content type. */
-export type NewsAndEventsDataDateDto = {
-  /** Property only used on Event type items */
-  iv: Maybe<Scalars['Instant']>;
-};
-
-/** The structure of the Event Date field of the News content input type. */
-export type NewsAndEventsDataDateInputDto = {
-  /** Property only used on Event type items */
-  iv: InputMaybe<Scalars['Instant']>;
-};
-
 /** The structure of the News data type. */
 export type NewsAndEventsDataDto = {
-  date: Maybe<NewsAndEventsDataDateDto>;
   frequency: Maybe<NewsAndEventsDataFrequencyDto>;
   link: Maybe<NewsAndEventsDataLinkDto>;
   linkText: Maybe<NewsAndEventsDataLinkTextDto>;
@@ -3500,7 +3610,6 @@ export type NewsAndEventsDataFrequencyInputDto = {
 
 /** The structure of the News data input type. */
 export type NewsAndEventsDataInputDto = {
-  date: InputMaybe<NewsAndEventsDataDateInputDto>;
   frequency: InputMaybe<NewsAndEventsDataFrequencyInputDto>;
   link: InputMaybe<NewsAndEventsDataLinkInputDto>;
   linkText: InputMaybe<NewsAndEventsDataLinkTextInputDto>;
@@ -3587,8 +3696,6 @@ export type NewsAndEventsDataTypeInputDto = {
 
 /** The structure of the flat News data type. */
 export type NewsAndEventsFlatDataDto = {
-  /** Property only used on Event type items */
-  date: Maybe<Scalars['Instant']>;
   frequency: Maybe<Scalars['String']>;
   link: Maybe<Scalars['String']>;
   /** Leave this empty to show "Open External Link" */
@@ -4759,6 +4866,165 @@ export type TeamsResultDto = {
   total: Scalars['Int'];
 };
 
+/** The structure of a Tutorials content type. */
+export type Tutorials = Content & {
+  /** The timestamp when the object was created. */
+  created: Scalars['Instant'];
+  /** The user who created the object. */
+  createdBy: Scalars['String'];
+  /** The user who created the object. */
+  createdByUser: User;
+  /** The data of the content. */
+  data: TutorialsDataDto;
+  /** The edit token. */
+  editToken: Maybe<Scalars['String']>;
+  /** The flat data of the content. */
+  flatData: TutorialsFlatDataDto;
+  /** The ID of the object (usually GUID). */
+  id: Scalars['String'];
+  /** The timestamp when the object was updated the last time. */
+  lastModified: Scalars['Instant'];
+  /** The user who updated the object the last time. */
+  lastModifiedBy: Scalars['String'];
+  /** The user who updated the object the last time. */
+  lastModifiedByUser: User;
+  /** The new status of the content. */
+  newStatus: Maybe<Scalars['String']>;
+  /** The status color of the content. */
+  newStatusColor: Maybe<Scalars['String']>;
+  /** Query Discover ASAP content items. */
+  referencingDiscoverContents: Maybe<Array<Discover>>;
+  /** Query Discover ASAP content items with total count. */
+  referencingDiscoverContentsWithTotal: Maybe<DiscoverResultDto>;
+  /** The status of the content. */
+  status: Scalars['String'];
+  /** The status color of the content. */
+  statusColor: Scalars['String'];
+  /** The URL to the content. */
+  url: Scalars['String'];
+  /** The version of the objec. */
+  version: Scalars['Int'];
+};
+
+/** The structure of a Tutorials content type. */
+export type TutorialsReferencingDiscoverContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Tutorials content type. */
+export type TutorialsReferencingDiscoverContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of the Tutorials data type. */
+export type TutorialsDataDto = {
+  link: Maybe<TutorialsDataLinkDto>;
+  linkText: Maybe<TutorialsDataLinkTextDto>;
+  shortText: Maybe<TutorialsDataShortTextDto>;
+  text: Maybe<TutorialsDataTextDto>;
+  thumbnail: Maybe<TutorialsDataThumbnailDto>;
+  title: Maybe<TutorialsDataTitleDto>;
+};
+
+/** The structure of the Tutorials data input type. */
+export type TutorialsDataInputDto = {
+  link: InputMaybe<TutorialsDataLinkInputDto>;
+  linkText: InputMaybe<TutorialsDataLinkTextInputDto>;
+  shortText: InputMaybe<TutorialsDataShortTextInputDto>;
+  text: InputMaybe<TutorialsDataTextInputDto>;
+  thumbnail: InputMaybe<TutorialsDataThumbnailInputDto>;
+  title: InputMaybe<TutorialsDataTitleInputDto>;
+};
+
+/** The structure of the External Link field of the Tutorials content type. */
+export type TutorialsDataLinkDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the External Link field of the Tutorials content input type. */
+export type TutorialsDataLinkInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the External Link Text field of the Tutorials content type. */
+export type TutorialsDataLinkTextDto = {
+  /** Leave this empty to show "Open External Link" */
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the External Link Text field of the Tutorials content input type. */
+export type TutorialsDataLinkTextInputDto = {
+  /** Leave this empty to show "Open External Link" */
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Short Text field of the Tutorials content type. */
+export type TutorialsDataShortTextDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Short Text field of the Tutorials content input type. */
+export type TutorialsDataShortTextInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Text field of the Tutorials content type. */
+export type TutorialsDataTextDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Text field of the Tutorials content input type. */
+export type TutorialsDataTextInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Thumbnail field of the Tutorials content type. */
+export type TutorialsDataThumbnailDto = {
+  iv: Maybe<Array<Asset>>;
+};
+
+/** The structure of the Thumbnail field of the Tutorials content input type. */
+export type TutorialsDataThumbnailInputDto = {
+  iv: InputMaybe<Array<Scalars['String']>>;
+};
+
+/** The structure of the Title field of the Tutorials content type. */
+export type TutorialsDataTitleDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Title field of the Tutorials content input type. */
+export type TutorialsDataTitleInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the flat Tutorials data type. */
+export type TutorialsFlatDataDto = {
+  link: Maybe<Scalars['String']>;
+  /** Leave this empty to show "Open External Link" */
+  linkText: Maybe<Scalars['String']>;
+  shortText: Maybe<Scalars['String']>;
+  text: Maybe<Scalars['String']>;
+  thumbnail: Maybe<Array<Asset>>;
+  title: Maybe<Scalars['String']>;
+};
+
+/** List of Tutorials items and total count. */
+export type TutorialsResultDto = {
+  /** The contents. */
+  items: Maybe<Array<Tutorials>>;
+  /** The total count of  contents. */
+  total: Scalars['Int'];
+};
+
 /** A user that created or modified a content or asset. */
 export type User = {
   /** The display name of this user. */
@@ -5598,19 +5864,10 @@ export type FetchDiscoverQuery = {
       flatData: Pick<DiscoverFlatDataDto, 'aboutUs'> & {
         training: Maybe<
           Array<
-            Pick<
-              NewsAndEvents,
-              'id' | 'created' | 'lastModified' | 'version'
-            > & {
+            Pick<Tutorials, 'id' | 'created'> & {
               flatData: Pick<
-                NewsAndEventsFlatDataDto,
-                | 'title'
-                | 'shortText'
-                | 'text'
-                | 'type'
-                | 'frequency'
-                | 'link'
-                | 'linkText'
+                TutorialsFlatDataDto,
+                'title' | 'shortText' | 'text' | 'link' | 'linkText'
               > & { thumbnail: Maybe<Array<Pick<Asset, 'id'>>> };
             }
           >
@@ -7643,6 +7900,7 @@ export type ResearchOutputContentFragment = Pick<
                 | 'responsibilities'
                 | 'researchInterests'
                 | 'reachOut'
+                | 'alumniSinceDate'
               > & {
                 avatar: Maybe<Array<Pick<Asset, 'id'>>>;
                 orcidWorks: Maybe<
@@ -7801,6 +8059,7 @@ export type FetchResearchOutputQuery = {
                     | 'responsibilities'
                     | 'researchInterests'
                     | 'reachOut'
+                    | 'alumniSinceDate'
                   > & {
                     avatar: Maybe<Array<Pick<Asset, 'id'>>>;
                     orcidWorks: Maybe<
@@ -7979,6 +8238,7 @@ export type FetchResearchOutputsQuery = {
                           | 'responsibilities'
                           | 'researchInterests'
                           | 'reachOut'
+                          | 'alumniSinceDate'
                         > & {
                           avatar: Maybe<Array<Pick<Asset, 'id'>>>;
                           orcidWorks: Maybe<
@@ -8451,6 +8711,28 @@ export type FetchTeamsQuery = {
           }
         >
       >;
+    }
+  >;
+};
+
+export type TutorialsContentFragment = Pick<Tutorials, 'id' | 'created'> & {
+  flatData: Pick<
+    TutorialsFlatDataDto,
+    'title' | 'shortText' | 'text' | 'link' | 'linkText'
+  > & { thumbnail: Maybe<Array<Pick<Asset, 'id'>>> };
+};
+
+export type FetchTutorialsQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchTutorialsQuery = {
+  findTutorialsContent: Maybe<
+    Pick<Tutorials, 'id' | 'created'> & {
+      flatData: Pick<
+        TutorialsFlatDataDto,
+        'title' | 'shortText' | 'text' | 'link' | 'linkText'
+      > & { thumbnail: Maybe<Array<Pick<Asset, 'id'>>> };
     }
   >;
 };
@@ -10568,6 +10850,13 @@ export const ResearchOutputContentFragmentDoc = {
                                       ],
                                     },
                                   },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'alumniSinceDate',
+                                    },
+                                  },
                                 ],
                               },
                             },
@@ -10866,6 +11155,50 @@ export const ResearchTagContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<ResearchTagContentFragment, unknown>;
+export const TutorialsContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'TutorialsContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Tutorials' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'created' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'flatData' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'shortText' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'text' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'thumbnail' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'link' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'linkText' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<TutorialsContentFragment, unknown>;
 export const UsersContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -11409,7 +11742,7 @@ export const FetchDiscoverDocument = {
                           selections: [
                             {
                               kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'News' },
+                              name: { kind: 'Name', value: 'TutorialsContent' },
                             },
                           ],
                         },
@@ -11660,6 +11993,7 @@ export const FetchDiscoverDocument = {
         ],
       },
     },
+    ...TutorialsContentFragmentDoc.definitions,
     ...NewsFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchDiscoverQuery, FetchDiscoverQueryVariables>;
@@ -12902,6 +13236,58 @@ export const FetchTeamsDocument = {
     ...TeamsContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchTeamsQuery, FetchTeamsQueryVariables>;
+export const FetchTutorialsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchTutorials' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'findTutorialsContent' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'TutorialsContent' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...TutorialsContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<FetchTutorialsQuery, FetchTutorialsQueryVariables>;
 export const FetchUserDocument = {
   kind: 'Document',
   definitions: [

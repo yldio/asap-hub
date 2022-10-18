@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { DiscoverNewsCardList } from '@asap-hub/react-components';
-import { useDiscoverState } from './state';
+import { useDiscoverState } from '../state';
 
 const Tutorials: FC<Record<string, never>> = () => {
   const { training } = useDiscoverState();

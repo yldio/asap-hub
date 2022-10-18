@@ -1,7 +1,6 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { ProjectOverview } from '@asap-hub/gp2-components';
-import { gp2 as gp2Model } from '@asap-hub/model';
-import { number } from '@storybook/addon-knobs';
+import { number, text } from '@storybook/addon-knobs';
 
 const { createProjectResponse } = gp2Fixtures;
 export default {
@@ -15,13 +14,13 @@ const milestone = (id: number) => ({
   link: 'http://example.com/',
 });
 
-const props: gp2Model.ProjectResponse = {
-  ...createProjectResponse(),
-  keywords: ['R', 'Bash', 'Diversity', 'Data Science'],
-  pmEmail: 'pm@example.com',
-  leadEmail: 'lead@example.com',
-  milestones: Array.from({ length: number('Milestone count', 5) }, (_, i) =>
-    milestone(i),
-  ),
-};
-export const Overview = () => <ProjectOverview {...props} />;
+export const Normal = () => (
+  <ProjectOverview
+    {...createProjectResponse()}
+    milestones={Array.from({ length: number('Milestone count', 5) }, (_, i) =>
+      milestone(i),
+    )}
+    pmEmail={text('PM Email', 'pm@example.com')}
+    leadEmail={text('Lead Email', 'lead@example.com')}
+  />
+);

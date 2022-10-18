@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
   software-properties-common \
   wget \
   curl \
+  jq \
   unzip \
   dirmngr \
   gnupg \
@@ -31,4 +32,3 @@ RUN curl -sL https://deb.nodesource.com/setup_16.x | bash \
 
 COPY .github/scripts/squidex/requirements.txt /tmp/
 RUN pip install -r /tmp/requirements.txt
-

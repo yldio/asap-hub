@@ -1,7 +1,7 @@
 import { createListUserResponse } from '@asap-hub/fixtures';
 import { ExternalAuthorResponse } from '@asap-hub/model';
 import { UsersList } from '@asap-hub/react-components';
-import { number } from '@storybook/addon-knobs';
+import { date, number } from '@storybook/addon-knobs';
 
 export default {
   title: 'Molecules / Users / List',
@@ -10,7 +10,17 @@ export default {
 
 export const Normal = () => (
   <UsersList
-    users={createListUserResponse(number('Number of Users', 3)).items}
+    users={createListUserResponse(number('Number of Users', 3)).items.map(
+      (u, i) => ({
+        ...u,
+        alumniSinceDate:
+          i % 2 === 0
+            ? new Date(
+                date('Alumni Since Date', new Date(2021, 6, 12, 14, 32)),
+              ).toISOString()
+            : undefined,
+      }),
+    )}
     max={number('Max Authors', 3)}
   />
 );

@@ -38,7 +38,7 @@ export interface CalendarDataProvider {
   fetchById(id: string): Promise<CalendarDataObject | null>;
 }
 
-export default class CalendarSquidexDataProvider {
+export class CalendarSquidexDataProvider {
   squidexRestClient: SquidexRestClient<RestCalendar, InputCalendar>;
   squidexGraphqlClient: SquidexGraphqlClient;
 

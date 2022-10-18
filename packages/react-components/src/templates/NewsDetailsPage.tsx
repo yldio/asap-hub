@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { NewsResponse } from '@asap-hub/model';
+import { NewsResponse, TutorialsResponse } from '@asap-hub/model';
 
 import { Pill, Display, Card, Caption } from '../atoms';
 import { RichText } from '../organisms';
@@ -21,18 +21,20 @@ const richTextContainer = css({
   marginBottom: `${24 / perRem}em`,
 });
 
-type NewsDetailsPageProps = Pick<
-  NewsResponse,
-  'text' | 'title' | 'type' | 'created' | 'link' | 'linkText'
->;
+type NewsDetailsPageProps =
+  | Pick<
+      NewsResponse,
+      'text' | 'title' | 'type' | 'created' | 'link' | 'linkText'
+    >
+  | Pick<TutorialsResponse, 'text' | 'title' | 'created' | 'link' | 'linkText'>;
 
 const NewsDetailsPage: React.FC<NewsDetailsPageProps> = ({
   text = '',
   created,
   title,
-  type,
   link,
   linkText,
+  ...rest
 }) => {
   const attachmentComponent = link ? (
     <div>
@@ -51,7 +53,7 @@ const NewsDetailsPage: React.FC<NewsDetailsPageProps> = ({
   return (
     <div css={containerStyles}>
       <Card>
-        <Pill>{type}</Pill>
+        <Pill>{'type' in rest ? rest.type : 'Tutorial'}</Pill>
         <Display styleAsHeading={3}>{title}</Display>
         {publishDateComponent}
         <div css={richTextContainer}>

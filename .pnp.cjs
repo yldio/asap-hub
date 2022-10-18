@@ -2107,7 +2107,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@types/aws-lambda",\
-        "npm:8.10.106"\
+        "npm:8.10.107"\
       ],\
       [\
         "@types/babel__core",\
@@ -8560,7 +8560,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "serverless-s3-sync",\
-        "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:3.0.0"\
+        "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:3.1.0"\
       ],\
       [\
         "serverless-webpack",\
@@ -10825,7 +10825,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@sentry/serverless", "npm:6.19.7"],\
             ["@serverless/typescript", "npm:3.19.0"],\
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],\
-            ["@types/aws-lambda", "npm:8.10.106"],\
+            ["@types/aws-lambda", "npm:8.10.107"],\
             ["@types/babel__preset-env", "npm:7.9.2"],\
             ["@types/chance", "npm:1.1.3"],\
             ["@types/cors", "npm:2.8.12"],\
@@ -10897,7 +10897,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["serverless", "npm:3.22.0"],\
             ["serverless-http", "npm:2.7.0"],\
             ["serverless-iam-roles-per-function", "npm:2.0.2"],\
-            ["serverless-s3-sync", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:3.0.0"],\
+            ["serverless-s3-sync", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:3.1.0"],\
             ["serverless-webpack", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:5.9.1"],\
             ["source-map-support", "npm:0.5.21"],\
             ["stream-json", "npm:1.7.4"],\
@@ -11508,7 +11508,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@sentry/serverless", "npm:6.19.7"],\
             ["@serverless/typescript", "npm:3.19.0"],\
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],\
-            ["@types/aws-lambda", "npm:8.10.106"],\
+            ["@types/aws-lambda", "npm:8.10.107"],\
             ["@types/cors", "npm:2.8.12"],\
             ["@types/express", "npm:4.17.13"],\
             ["@types/jest", "npm:27.5.2"],\
@@ -11537,7 +11537,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["node-dev", "npm:6.7.0"],\
             ["serverless", "npm:3.22.0"],\
             ["serverless-http", "npm:2.7.0"],\
-            ["serverless-s3-sync", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:3.0.0"],\
+            ["serverless-s3-sync", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:3.1.0"],\
             ["serverless-webpack", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:5.9.1"],\
             ["source-map-support", "npm:0.5.21"],\
             ["supertest", "npm:6.2.4"],\
@@ -12090,7 +12090,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@hapi/boom", "npm:9.1.4"],\
             ["@sentry/serverless", "npm:6.19.7"],\
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],\
-            ["@types/aws-lambda", "npm:8.10.106"],\
+            ["@types/aws-lambda", "npm:8.10.107"],\
             ["@types/express", "npm:4.17.13"],\
             ["@types/jest", "npm:27.5.2"],\
             ["@types/jsonwebtoken", "npm:8.5.9"],\
@@ -12129,7 +12129,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@hapi/bourne", "npm:2.1.0"],\
             ["@hapi/joi", "npm:17.1.1"],\
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],\
-            ["@types/aws-lambda", "npm:8.10.106"],\
+            ["@types/aws-lambda", "npm:8.10.107"],\
             ["@types/debug", "npm:4.1.7"],\
             ["@types/hapi", "npm:18.0.7"],\
             ["@types/hapi__boom", "npm:9.0.1"],\
@@ -33905,10 +33905,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/aws-lambda", [\
-        ["npm:8.10.106", {\
-          "packageLocation": "./.yarn/cache/@types-aws-lambda-npm-8.10.106-ddebc7242a-989a33a58f.zip/node_modules/@types/aws-lambda/",\
+        ["npm:8.10.107", {\
+          "packageLocation": "./.yarn/cache/@types-aws-lambda-npm-8.10.107-13a23c31c3-b4a1a666f9.zip/node_modules/@types/aws-lambda/",\
           "packageDependencies": [\
-            ["@types/aws-lambda", "npm:8.10.106"]\
+            ["@types/aws-lambda", "npm:8.10.107"]\
           ],\
           "linkType": "HARD"\
         }],\
@@ -62277,17 +62277,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["serverless-s3-sync", [\
-        ["npm:3.0.0", {\
-          "packageLocation": "./.yarn/cache/serverless-s3-sync-npm-3.0.0-d74a551c6f-9e41193ed4.zip/node_modules/serverless-s3-sync/",\
+        ["npm:3.1.0", {\
+          "packageLocation": "./.yarn/cache/serverless-s3-sync-npm-3.1.0-fbe76ae7b9-e9c3ef7301.zip/node_modules/serverless-s3-sync/",\
           "packageDependencies": [\
-            ["serverless-s3-sync", "npm:3.0.0"]\
+            ["serverless-s3-sync", "npm:3.1.0"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:3.0.0", {\
-          "packageLocation": "./.yarn/__virtual__/serverless-s3-sync-virtual-ba1633a485/0/cache/serverless-s3-sync-npm-3.0.0-d74a551c6f-9e41193ed4.zip/node_modules/serverless-s3-sync/",\
+        ["virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:3.1.0", {\
+          "packageLocation": "./.yarn/__virtual__/serverless-s3-sync-virtual-e649f7f2e6/0/cache/serverless-s3-sync-npm-3.1.0-fbe76ae7b9-e9c3ef7301.zip/node_modules/serverless-s3-sync/",\
           "packageDependencies": [\
-            ["serverless-s3-sync", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:3.0.0"],\
+            ["serverless-s3-sync", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:3.1.0"],\
             ["@auth0/s3", "npm:1.0.0"],\
             ["@types/serverless", "npm:3.12.8"],\
             ["bluebird", "npm:3.7.2"],\

@@ -11,7 +11,7 @@ export const newsFrequency = [
 export type NewsType = typeof newsType[number];
 export type NewsFrequency = typeof newsFrequency[number];
 
-export interface NewsResponse {
+export type NewsDataObject = {
   id: string;
   title: string;
   type: NewsType;
@@ -22,7 +22,10 @@ export interface NewsResponse {
   link?: string;
   linkText?: string;
   created: string;
-}
+};
+export type ListNewsDataObject = ListResponse<NewsDataObject>;
+
+export type NewsResponse = NewsDataObject;
 export type ListNewsResponse = ListResponse<NewsResponse>;
 
 export type FetchNewsFilter = {

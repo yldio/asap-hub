@@ -19,7 +19,8 @@ import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { validateBody } from '../../validation/subscribe-handler.validation';
 import { CalendarEvent, CalendarPayload } from '../event-bus';
-import CalendarSquidexDataProvider, {
+import {
+  CalendarSquidexDataProvider,
   CalendarDataProvider,
 } from '../../data-providers/calendars.data-provider';
 

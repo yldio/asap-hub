@@ -11,6 +11,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import Network from '../Network';
 import { getTeams } from '../teams/api';
+import { getGroups } from '../groups/api';
 import { useUsers } from '../users/state';
 
 jest.mock('../users/state', () => ({
@@ -22,6 +23,7 @@ jest.mock('../groups/api');
 
 const mockUseUsers = useUsers as jest.MockedFunction<typeof useUsers>;
 const mockGetTeams = getTeams as jest.MockedFunction<typeof getTeams>;
+const mockGetGroups = getGroups as jest.MockedFunction<typeof getGroups>;
 
 mockUseUsers.mockReturnValue(createListUserResponse(1));
 
@@ -142,7 +144,7 @@ it('allows typing in search queries', async () => {
   expect(searchBox.value).toEqual('test123');
 });
 
-it('allows selection of filters', async () => {
+it('allows selection of user filters', async () => {
   const { getByText, getByLabelText } = await renderNetworkPage(
     network({}).users({}).$,
   );
@@ -158,6 +160,48 @@ it('allows selection of filters', async () => {
       expect.objectContaining({
         filters: new Set(['Lead PI (Core Leadership)']),
       }),
+    ),
+  );
+});
+
+it('allows selection of group filters', async () => {
+  const { getByText, getByLabelText } = await renderNetworkPage(
+    network({}).groups({}).$,
+  );
+
+  userEvent.click(getByText('Filters'));
+  const checkbox = getByLabelText('Active');
+  expect(checkbox).not.toBeChecked();
+
+  userEvent.click(checkbox);
+  expect(checkbox).toBeChecked();
+  await waitFor(() =>
+    expect(mockGetGroups).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        filters: new Set(['Active']),
+      }),
+      expect.anything(),
+    ),
+  );
+});
+
+it('allows selection of teams filters', async () => {
+  const { getByText, getByLabelText } = await renderNetworkPage(
+    network({}).teams({}).$,
+  );
+
+  userEvent.click(getByText('Filters'));
+  const checkbox = getByLabelText('Active');
+  expect(checkbox).not.toBeChecked();
+
+  userEvent.click(checkbox);
+  expect(checkbox).toBeChecked();
+  await waitFor(() =>
+    expect(mockGetGroups).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        filters: new Set(['Active']),
+      }),
+      expect.anything(),
     ),
   );
 });

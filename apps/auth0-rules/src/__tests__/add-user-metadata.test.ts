@@ -112,6 +112,8 @@ const gp2ApiUser: gp2.UserResponse = {
   createdDate: '2020-08-21T14:23:31.924Z',
   role: 'Trainee',
   region: 'Europe',
+  country: 'Portugal',
+  positions: [],
 };
 
 describe('Auth0 Rule - Add User Metadata', () => {

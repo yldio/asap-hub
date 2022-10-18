@@ -1,6 +1,7 @@
 export * from './calendar';
 export * from './lab';
 export * from './news';
+export * from './tutorials';
 export * from './page';
 export * from './research-output';
 export * from './team';

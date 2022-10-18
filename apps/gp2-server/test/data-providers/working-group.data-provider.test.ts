@@ -111,181 +111,186 @@ describe('Working Group Data Provider', () => {
       expect(workingGroupDataObject).toEqual(expected);
     });
 
-    test('the members in working group are parsed', () => {
-      const workingGroup = getGraphQLWorkingGroup();
-      workingGroup.flatData.members = [getGraphQLWorkingGroupMember()];
-      const { members } = parseWorkingGroupToDataObject(workingGroup);
-      expect(members).toEqual([
-        {
-          userId: '42',
-          role: 'Lead',
-          firstName: 'Tony',
-          lastName: 'Stark',
-        },
-      ]);
+    describe('members', () => {
+      test('the members in working group are parsed', () => {
+        const workingGroup = getGraphQLWorkingGroup();
+        workingGroup.flatData.members = [getGraphQLWorkingGroupMember()];
+        const { members } = parseWorkingGroupToDataObject(workingGroup);
+        expect(members).toEqual([
+          {
+            userId: '42',
+            role: 'Lead',
+            firstName: 'Tony',
+            lastName: 'Stark',
+          },
+        ]);
+      });
+
+      test('undefined members returns empty array', () => {
+        const workingGroup = getGraphQLWorkingGroup();
+
+        workingGroup.flatData.members = null;
+        const { members } = parseWorkingGroupToDataObject(workingGroup);
+        expect(members).toEqual([]);
+      });
+
+      test('avatar urls are added if available', () => {
+        const workingGroup = getGraphQLWorkingGroup();
+        const member = getGraphQLWorkingGroupMember();
+        member!.user![0]!.flatData.avatar = [{ id: 'avatar-id' }];
+        workingGroup.flatData.members = [member];
+        const { members } = parseWorkingGroupToDataObject(workingGroup);
+        expect(members[0]?.avatarUrl).toEqual(
+          `${baseUrl}/api/assets/${appName}/avatar-id`,
+        );
+      });
+
+      test('should skip the user from the result if the role property is undefined', () => {
+        const workingGroup = getGraphQLWorkingGroup();
+        const member = getGraphQLWorkingGroupMember();
+        member!.role = null;
+        workingGroup.flatData.members = [member];
+        const { members } = parseWorkingGroupToDataObject(workingGroup);
+        expect(members).toEqual([]);
+      });
+      test.each`
+        role                                                   | expectedRole
+        ${WorkingGroupsDataMembersRoleEnum.Lead}               | ${'Lead'}
+        ${WorkingGroupsDataMembersRoleEnum.CoLead}             | ${'Co-lead'}
+        ${WorkingGroupsDataMembersRoleEnum.WorkingGroupMember} | ${'Working group member'}
+      `('should parse the role', ({ role, expectedRole }) => {
+        const workingGroup = getGraphQLWorkingGroup();
+        const member = getGraphQLWorkingGroupMember();
+        member!.role = role;
+        workingGroup.flatData.members = [member];
+        const { members } = parseWorkingGroupToDataObject(workingGroup);
+        expect(members[0]?.role).toEqual(expectedRole);
+      });
+
+      test('should skip the user from the result if the user property is undefined', () => {
+        const workingGroup = getGraphQLWorkingGroup();
+        const member = getGraphQLWorkingGroupMember();
+        member!.user = null;
+        workingGroup.flatData.members = [member];
+        const { members } = parseWorkingGroupToDataObject(workingGroup);
+        expect(members).toEqual([]);
+      });
     });
 
-    test('undefined members returns empty array', () => {
-      const workingGroup = getGraphQLWorkingGroup();
+    describe('resources', () => {
+      test('should map a resource note', () => {
+        const workingGroup = getGraphQLWorkingGroup();
+        const title = 'working group title';
+        const description = 'working group description';
+        const resource = getGraphQLWorkingGroupResource();
+        resource.type = WorkingGroupsDataResourcesTypeEnum.Note;
+        resource.title = title;
+        resource.description = description;
+        workingGroup.flatData.resources = [resource];
+        const { resources } = parseWorkingGroupToDataObject(workingGroup);
+        expect(resources).toEqual([
+          {
+            type: 'Note',
+            title,
+            description,
+          },
+        ]);
+      });
+      test('should ignore an external link for a resource note', () => {
+        const workingGroup = getGraphQLWorkingGroup();
+        const title = 'working group title';
+        const description = 'working group description';
+        const resource = getGraphQLWorkingGroupResource();
+        resource.type = WorkingGroupsDataResourcesTypeEnum.Note;
+        resource.title = title;
+        resource.description = description;
+        resource.externalLink = 'some external link';
+        workingGroup.flatData.resources = [resource];
+        const { resources } = parseWorkingGroupToDataObject(workingGroup);
+        expect(resources).toEqual([
+          {
+            type: 'Note',
+            title,
+            description,
+          },
+        ]);
+      });
+      test('should map a resource link', () => {
+        const workingGroup = getGraphQLWorkingGroup();
+        const title = 'working group title';
+        const description = 'working group description';
+        const externalLink = 'this is an external link';
+        const resource = getGraphQLWorkingGroupResource();
+        resource.type = WorkingGroupsDataResourcesTypeEnum.Link;
+        resource.title = title;
+        resource.description = description;
+        resource.externalLink = externalLink;
+        workingGroup.flatData.resources = [resource];
+        const { resources } = parseWorkingGroupToDataObject(workingGroup);
+        expect(resources).toEqual([
+          {
+            type: 'Link',
+            title,
+            description,
+            externalLink,
+          },
+        ]);
+      });
+      test('should ignore a resource if title is undefined.', () => {
+        const workingGroup = getGraphQLWorkingGroup();
+        const title = null;
+        const description = 'working group description';
+        const externalLink = 'this is an external link';
+        const resource = getGraphQLWorkingGroupResource();
+        resource.type = WorkingGroupsDataResourcesTypeEnum.Link;
+        resource.title = title;
+        resource.description = description;
+        resource.externalLink = externalLink;
+        workingGroup.flatData.resources = [resource];
+        const { resources } = parseWorkingGroupToDataObject(workingGroup);
+        expect(resources).toEqual([]);
+      });
+      test('should return a resource if description is undefined.', () => {
+        const workingGroup = getGraphQLWorkingGroup();
+        const title = 'working group title';
+        const description = null;
+        const externalLink = 'this is an external link';
+        const resource = getGraphQLWorkingGroupResource();
+        resource.type = WorkingGroupsDataResourcesTypeEnum.Link;
+        resource.title = title;
+        resource.description = description;
+        resource.externalLink = externalLink;
+        workingGroup.flatData.resources = [resource];
+        const { resources } = parseWorkingGroupToDataObject(workingGroup);
+        expect(resources).toEqual([
+          {
+            type: 'Link',
+            title,
+            externalLink,
+          },
+        ]);
+      });
+      test('should ignore a resource if external Link is undefined for a Link.', () => {
+        const workingGroup = getGraphQLWorkingGroup();
+        const title = 'working group title';
+        const description = 'working group description';
+        const externalLink = null;
+        const resource = getGraphQLWorkingGroupResource();
+        resource.type = WorkingGroupsDataResourcesTypeEnum.Link;
+        resource.title = title;
+        resource.description = description;
+        resource.externalLink = externalLink;
+        workingGroup.flatData.resources = [resource];
+        const { resources } = parseWorkingGroupToDataObject(workingGroup);
+        expect(resources).toEqual([]);
+      });
+      test('undefined resources returns empty array', () => {
+        const workingGroup = getGraphQLWorkingGroup();
 
-      workingGroup.flatData.members = null;
-      const { members } = parseWorkingGroupToDataObject(workingGroup);
-      expect(members).toEqual([]);
-    });
-
-    test('avatar urls are added if available', () => {
-      const workingGroup = getGraphQLWorkingGroup();
-      const member = getGraphQLWorkingGroupMember();
-      member!.user![0]!.flatData.avatar = [{ id: 'avatar-id' }];
-      workingGroup.flatData.members = [member];
-      const { members } = parseWorkingGroupToDataObject(workingGroup);
-      expect(members[0]?.avatarUrl).toEqual(
-        `${baseUrl}/api/assets/${appName}/avatar-id`,
-      );
-    });
-
-    test('should skip the user from the result if the role property is undefined', () => {
-      const workingGroup = getGraphQLWorkingGroup();
-      const member = getGraphQLWorkingGroupMember();
-      member!.role = null;
-      workingGroup.flatData.members = [member];
-      const { members } = parseWorkingGroupToDataObject(workingGroup);
-      expect(members).toEqual([]);
-    });
-    test.each`
-      role                                                   | expectedRole
-      ${WorkingGroupsDataMembersRoleEnum.Lead}               | ${'Lead'}
-      ${WorkingGroupsDataMembersRoleEnum.CoLead}             | ${'Co-lead'}
-      ${WorkingGroupsDataMembersRoleEnum.WorkingGroupMember} | ${'Working group member'}
-    `('should parse the role', ({ role, expectedRole }) => {
-      const workingGroup = getGraphQLWorkingGroup();
-      const member = getGraphQLWorkingGroupMember();
-      member!.role = role;
-      workingGroup.flatData.members = [member];
-      const { members } = parseWorkingGroupToDataObject(workingGroup);
-      expect(members[0]?.role).toEqual(expectedRole);
-    });
-
-    test('should skip the user from the result if the user property is undefined', () => {
-      const workingGroup = getGraphQLWorkingGroup();
-      const member = getGraphQLWorkingGroupMember();
-      member!.user = null;
-      workingGroup.flatData.members = [member];
-      const { members } = parseWorkingGroupToDataObject(workingGroup);
-      expect(members).toEqual([]);
-    });
-    test('should map a resource note', () => {
-      const workingGroup = getGraphQLWorkingGroup();
-      const title = 'working group title';
-      const description = 'working group description';
-      const resource = getGraphQLWorkingGroupResource();
-      resource.type = WorkingGroupsDataResourcesTypeEnum.Note;
-      resource.title = title;
-      resource.description = description;
-      workingGroup.flatData.resources = [resource];
-      const { resources } = parseWorkingGroupToDataObject(workingGroup);
-      expect(resources).toEqual([
-        {
-          type: 'Note',
-          title,
-          description,
-        },
-      ]);
-    });
-    test('should ignore an external link for a resource note', () => {
-      const workingGroup = getGraphQLWorkingGroup();
-      const title = 'working group title';
-      const description = 'working group description';
-      const resource = getGraphQLWorkingGroupResource();
-      resource.type = WorkingGroupsDataResourcesTypeEnum.Note;
-      resource.title = title;
-      resource.description = description;
-      resource.externalLink = 'some external link';
-      workingGroup.flatData.resources = [resource];
-      const { resources } = parseWorkingGroupToDataObject(workingGroup);
-      expect(resources).toEqual([
-        {
-          type: 'Note',
-          title,
-          description,
-        },
-      ]);
-    });
-    test('should map a resource link', () => {
-      const workingGroup = getGraphQLWorkingGroup();
-      const title = 'working group title';
-      const description = 'working group description';
-      const externalLink = 'this is an external link';
-      const resource = getGraphQLWorkingGroupResource();
-      resource.type = WorkingGroupsDataResourcesTypeEnum.Link;
-      resource.title = title;
-      resource.description = description;
-      resource.externalLink = externalLink;
-      workingGroup.flatData.resources = [resource];
-      const { resources } = parseWorkingGroupToDataObject(workingGroup);
-      expect(resources).toEqual([
-        {
-          type: 'Link',
-          title,
-          description,
-          externalLink,
-        },
-      ]);
-    });
-    test('should ignore a resource if title is undefined.', () => {
-      const workingGroup = getGraphQLWorkingGroup();
-      const title = null;
-      const description = 'working group description';
-      const externalLink = 'this is an external link';
-      const resource = getGraphQLWorkingGroupResource();
-      resource.type = WorkingGroupsDataResourcesTypeEnum.Link;
-      resource.title = title;
-      resource.description = description;
-      resource.externalLink = externalLink;
-      workingGroup.flatData.resources = [resource];
-      const { resources } = parseWorkingGroupToDataObject(workingGroup);
-      expect(resources).toEqual([]);
-    });
-    test('should return a resource if description is undefined.', () => {
-      const workingGroup = getGraphQLWorkingGroup();
-      const title = 'working group title';
-      const description = null;
-      const externalLink = 'this is an external link';
-      const resource = getGraphQLWorkingGroupResource();
-      resource.type = WorkingGroupsDataResourcesTypeEnum.Link;
-      resource.title = title;
-      resource.description = description;
-      resource.externalLink = externalLink;
-      workingGroup.flatData.resources = [resource];
-      const { resources } = parseWorkingGroupToDataObject(workingGroup);
-      expect(resources).toEqual([
-        {
-          type: 'Link',
-          title,
-          externalLink,
-        },
-      ]);
-    });
-    test('should ignore a resource if external Link is undefined for a Link.', () => {
-      const workingGroup = getGraphQLWorkingGroup();
-      const title = 'working group title';
-      const description = 'working group description';
-      const externalLink = null;
-      const resource = getGraphQLWorkingGroupResource();
-      resource.type = WorkingGroupsDataResourcesTypeEnum.Link;
-      resource.title = title;
-      resource.description = description;
-      resource.externalLink = externalLink;
-      workingGroup.flatData.resources = [resource];
-      const { resources } = parseWorkingGroupToDataObject(workingGroup);
-      expect(resources).toEqual([]);
-    });
-    test('undefined resources returns empty array', () => {
-      const workingGroup = getGraphQLWorkingGroup();
-
-      workingGroup.flatData.resources = null;
-      const { resources } = parseWorkingGroupToDataObject(workingGroup);
-      expect(resources).toEqual([]);
+        workingGroup.flatData.resources = null;
+        const { resources } = parseWorkingGroupToDataObject(workingGroup);
+        expect(resources).toEqual([]);
+      });
     });
   });
 });

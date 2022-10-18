@@ -5,6 +5,7 @@ import {
   Card,
   chevronCircleDownIcon,
   chevronCircleUpIcon,
+  externalLinkIcon,
   Headline3,
   Link,
   Paragraph,
@@ -14,7 +15,7 @@ import {
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { useState } from 'react';
-import { addIcon, editIcon, externalLinkIcon } from '../icons';
+import { addIcon, editIcon } from '../icons';
 
 type WorkingGroupResourcesProps = Pick<gp2.WorkingGroupResponse, 'resources'>;
 

@@ -39,6 +39,7 @@ describe('News data provider', () => {
           q: JSON.stringify({
             take: 8,
             skip: 5,
+            filter: undefined,
             sort: [{ order: 'descending', path: 'created' }],
           }),
         })
@@ -59,6 +60,7 @@ describe('News data provider', () => {
           q: JSON.stringify({
             take: 8,
             skip: 5,
+            filter: undefined,
             sort: [{ order: 'descending', path: 'created' }],
           }),
         })
@@ -79,6 +81,7 @@ describe('News data provider', () => {
           q: JSON.stringify({
             take: 8,
             skip: 5,
+            filter: undefined,
             sort: [{ order: 'descending', path: 'created' }],
           }),
         })
@@ -111,6 +114,7 @@ describe('News data provider', () => {
           q: JSON.stringify({
             take: 8,
             skip: 5,
+            filter: undefined,
             sort: [{ order: 'descending', path: 'created' }],
           }),
         })
@@ -127,6 +131,7 @@ describe('News data provider', () => {
         .query({
           q: JSON.stringify({
             take: 8,
+            filter: undefined,
             sort: [{ order: 'descending', path: 'created' }],
           }),
         })

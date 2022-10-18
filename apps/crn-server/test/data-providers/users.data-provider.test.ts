@@ -285,6 +285,20 @@ describe('User data provider', () => {
         expectedOrcidWorksPublicationDate,
       );
     });
+    test('Should provide alumni values when they exist', async () => {
+      const mockResponse = getSquidexUserGraphqlResponse();
+      mockResponse.findUsersContent!.flatData.alumniSinceDate =
+        '2020-10-26T15:33:18Z';
+      mockResponse.findUsersContent!.flatData.alumniLocation =
+        'Some University in London';
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+      const expectedResponse = getUserDataObject();
+      expectedResponse.alumniSinceDate = '2020-10-26T15:33:18Z';
+      expectedResponse.alumniLocation = 'Some University in London';
+      expectedResponse._tags = ['Alumni Member'];
+      const result = await userDataProvider.fetchById('user-id');
+      expect(result).toEqual(expectedResponse);
+    });
   });
 
   describe('Update', () => {

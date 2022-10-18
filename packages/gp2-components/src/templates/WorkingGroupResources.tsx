@@ -59,7 +59,7 @@ const WorkingGroupResources: React.FC<WorkingGroupResourcesProps> = ({
   const minimumResourcesToDisplay = 3;
   const [expanded, setExpanded] = useState(false);
   const getResourcesListStyles = () => {
-    if (resources.length < minimumResourcesToDisplay + 1 || expanded) {
+    if ((resources || []).length < minimumResourcesToDisplay + 1 || expanded) {
       return [];
     }
 
@@ -87,7 +87,7 @@ const WorkingGroupResources: React.FC<WorkingGroupResourcesProps> = ({
         <div
           css={css({ display: 'flex', flexDirection: 'column', gap: rem(32) })}
         >
-          {resources.map((resource, index) => (
+          {resources?.map((resource, index) => (
             <div
               key={`working-group-resource-${index}`}
               css={getResourcesListStyles()}
@@ -137,7 +137,7 @@ const WorkingGroupResources: React.FC<WorkingGroupResourcesProps> = ({
             </div>
           ))}
         </div>
-        {resources.length > minimumResourcesToDisplay && (
+        {resources && resources.length > minimumResourcesToDisplay && (
           <div css={buttonWrapperStyles}>
             <Button linkStyle onClick={() => setExpanded(!expanded)}>
               <span

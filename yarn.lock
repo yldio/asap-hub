@@ -1093,6 +1093,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/gp2-server@workspace:apps/gp2-server"
   dependencies:
+    "@asap-hub/auth": "workspace:*"
     "@asap-hub/errors": "workspace:*"
     "@asap-hub/fixtures": "workspace:*"
     "@asap-hub/message-templates": "workspace:*"

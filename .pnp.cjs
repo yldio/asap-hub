@@ -11484,6 +11484,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./apps/gp2-server/",\
           "packageDependencies": [\
             ["@asap-hub/gp2-server", "workspace:apps/gp2-server"],\
+            ["@asap-hub/auth", "workspace:packages/auth"],\
             ["@asap-hub/errors", "workspace:packages/errors"],\
             ["@asap-hub/fixtures", "workspace:packages/fixtures"],\
             ["@asap-hub/message-templates", "workspace:packages/message-templates"],\

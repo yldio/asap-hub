@@ -34,7 +34,7 @@ export type WorkingGroupDataObject = {
   secondaryEmail?: string;
   leadingMembers?: string;
   members: WorkingGroupMember[];
-  resources: WorkingGroupResource[];
+  resources?: WorkingGroupResource[];
 };
 
 export type ListWorkingGroupDataObject = ListResponse<WorkingGroupDataObject>;

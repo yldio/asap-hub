@@ -118,7 +118,7 @@ describe('Working Group Data Provider', () => {
         const { members } = parseWorkingGroupToDataObject(workingGroup);
         expect(members).toEqual([
           {
-            userId: '42',
+            userId: '11',
             role: 'Lead',
             firstName: 'Tony',
             lastName: 'Stark',

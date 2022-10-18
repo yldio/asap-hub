@@ -23,8 +23,11 @@ export const workingGroupRouteFactory = (
       const { params } = req;
 
       const { workingGroupId } = validateWorkingGroupParameters(params);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const loggedInUserId = req.loggedInUser!.id;
       const workingGroup = await workingGroupController.fetchById(
         workingGroupId,
+        loggedInUserId,
       );
 
       res.json(workingGroup);

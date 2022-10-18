@@ -19,8 +19,16 @@ export const getWorkingGroupDataObject = (): gp2.WorkingGroupDataObject => ({
   primaryEmail: 'primary.email@example.com',
   secondaryEmail: 'secondary.email@example.com',
   leadingMembers: 'Leading members',
-  members: [],
-  resources: [],
+  members: [
+    { userId: '11', firstName: 'Tony', lastName: 'Stark', role: 'Lead' },
+  ],
+  resources: [
+    {
+      type: 'Note',
+      description: 'Working group resource description',
+      title: 'Working group resource title',
+    },
+  ],
 });
 
 export const getListWorkingGroupDataObject =
@@ -52,24 +60,11 @@ export const getSquidexWorkingGroupGraphqlResponse = (
   findWorkingGroupsContent,
 });
 
-export const getGraphQLWorkingGroup = (): GraphQLWorkingGroup => ({
-  id: '42',
-  flatData: {
-    title: 'Working Group',
-    shortDescription: 'Short description',
-    description: 'longer description',
-    primaryEmail: 'primary.email@example.com',
-    secondaryEmail: 'secondary.email@example.com',
-    leadingMembers: 'Leading members',
-    members: [],
-    resources: [],
-  },
-});
 export const getGraphQLWorkingGroupMember = (): GraphQLWorkingGroupMember => ({
   role: WorkingGroupsDataMembersRoleEnum.Lead,
   user: [
     {
-      id: '42',
+      id: '11',
       created: '2021-01-01T00:00:00Z',
       lastModified: '2021-01-01T00:00:00Z',
       version: 1,
@@ -89,3 +84,17 @@ export const getGraphQLWorkingGroupResource =
     description: 'Working group resource description',
     externalLink: null,
   });
+
+export const getGraphQLWorkingGroup = (): GraphQLWorkingGroup => ({
+  id: '42',
+  flatData: {
+    title: 'Working Group',
+    shortDescription: 'Short description',
+    description: 'longer description',
+    primaryEmail: 'primary.email@example.com',
+    secondaryEmail: 'secondary.email@example.com',
+    leadingMembers: 'Leading members',
+    members: [getGraphQLWorkingGroupMember()],
+    resources: [getGraphQLWorkingGroupResource()],
+  },
+});

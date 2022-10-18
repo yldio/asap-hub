@@ -21,7 +21,7 @@ const showMoreStyles = css({
 
 export type TabProps<T> = {
   tabTitle: string;
-  items: T[];
+  items: ReadonlyArray<T>;
   truncateFrom?: number;
   disabled?: boolean;
 };

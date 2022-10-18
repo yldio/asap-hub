@@ -29,7 +29,7 @@ type TeamsTabbedCardProps = Pick<
   ComponentProps<typeof TabbedCard>,
   'title' | 'description'
 > & {
-  readonly teams: Pick<TeamResponse, 'id' | 'displayName'>[];
+  teams: ReadonlyArray<Pick<TeamResponse, 'id' | 'displayName'>>;
 };
 
 const TeamsTabbedCard: React.FC<TeamsTabbedCardProps> = ({

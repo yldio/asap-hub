@@ -55,7 +55,7 @@ const GroupProfileAbout: React.FC<GroupProfileAboutProps> = ({
         {active ? (
           <GroupMembersSection teams={teams} leaders={leaders} />
         ) : (
-          <TeamsTabbedCard teams={teams} />
+          <TeamsTabbedCard title="Interest Group Teams" teams={teams} />
         )}
       </div>
       {contactEmails.length !== 0 && (

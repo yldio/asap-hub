@@ -24,6 +24,7 @@ const propsViewOnly = (): Omit<
   );
   return {
     id: 'u42',
+    lastModifiedDate: new Date().toISOString(),
     displayName: text('Display Name', 'Phillip Mars'),
     institution: text('Institution', 'Yale University'),
     firstName: text('First Name', 'Phillip'),

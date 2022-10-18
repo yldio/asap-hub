@@ -5,7 +5,6 @@ import {
   Card,
   chevronCircleDownIcon,
   chevronCircleUpIcon,
-  crossQuery,
   Headline3,
   Link,
   Paragraph,
@@ -16,7 +15,6 @@ import {
 import { css } from '@emotion/react';
 import { useState } from 'react';
 import { addIcon, editIcon, externalLinkIcon } from '../icons';
-import colors from './colors';
 
 type WorkingGroupResourcesProps = Pick<gp2.WorkingGroupResponse, 'resources'>;
 
@@ -38,6 +36,17 @@ const buttonWrapperStyles = css({
   justifyContent: 'center',
   width: '100%',
   borderBottom: `transparent`,
+});
+const buttonStyles = css({
+  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
+    flexDirection: 'column-reverse',
+    gap: rem(24),
+  },
+});
+const editButtonStyles = css({
+  [`@media (min-width: ${tabletScreen.width}px)`]: {
+    marginLeft: 'auto',
+  },
 });
 const hideStyles = css({
   [`:nth-of-type(n+4)`]: { display: 'none' },
@@ -63,32 +72,17 @@ const WorkingGroupResources: React.FC<WorkingGroupResourcesProps> = ({
         upload here.
       </Card>
       <Card>
-        <div css={[rowStyles]}>
+        <div css={[rowStyles, buttonStyles]}>
           <Headline3 noMargin>Resource List</Headline3>
-          <div
-            css={css({
-              paddingLeft: rem(44),
-              [crossQuery]: {
-                marginLeft: 'auto',
-              },
-            })}
-          >
-            <Pill
-              small={false}
-              overrideStyles={css({
-                margin: 0,
-                fontSize: rem(17),
-                fontWeight: 'bold',
-                padding: '8px 8px',
-                height: 'auto',
-                color: colors.neutral1000.rgba,
-              })}
-            >
+          <div css={editButtonStyles}>
+            <Link href={''} buttonStyle noMargin small>
               Add {addIcon}
-            </Pill>
+            </Link>
           </div>
         </div>
-        View and share resources that others may find helpful.
+        <div css={css({ paddingBottom: rem(32) })}>
+          View and share resources that others may find helpful.
+        </div>
         <div
           css={css({ display: 'flex', flexDirection: 'column', gap: rem(32) })}
         >
@@ -98,17 +92,7 @@ const WorkingGroupResources: React.FC<WorkingGroupResourcesProps> = ({
               css={getResourcesListStyles()}
             >
               <Card>
-                <div
-                  css={[
-                    rowStyles,
-                    {
-                      [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
-                        flexDirection: 'column-reverse',
-                        gap: rem(24),
-                      },
-                    },
-                  ]}
-                >
+                <div css={[rowStyles, buttonStyles]}>
                   <Pill
                     small={false}
                     overrideStyles={css({
@@ -121,13 +105,7 @@ const WorkingGroupResources: React.FC<WorkingGroupResourcesProps> = ({
                   >
                     {resource.type === 'Link' ? 'Link' : 'Note'}
                   </Pill>
-                  <div
-                    css={css({
-                      [`@media (min-width: ${tabletScreen.width}px)`]: {
-                        marginLeft: 'auto',
-                      },
-                    })}
-                  >
+                  <div css={editButtonStyles}>
                     <Link href={''} buttonStyle noMargin small>
                       Edit {editIcon}
                     </Link>

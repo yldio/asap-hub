@@ -123,6 +123,7 @@ export interface Connection {
 
 export interface UserDataObject extends Invitee {
   alumniSinceDate?: string;
+  alumniLocation?: string;
   id: string;
   onboarded?: boolean | null;
   dismissedGettingStarted?: boolean;

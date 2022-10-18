@@ -12,7 +12,7 @@ import { css } from '@emotion/react';
 
 import { useState } from 'react';
 
-const { rem } = pixels;
+const { rem, tabletScreen } = pixels;
 
 const { userRegions } = gp2Model;
 
@@ -39,7 +39,7 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
     <Modal padding={false}>
       <div css={containerStyles}>
         <Headline3>Filters</Headline3>
-        <Subtitle>
+        <Subtitle accent="lead" styleAsHeading={6}>
           Apply filters to narrow down your search results. You currently have
           three filters selected.
         </Subtitle>
@@ -77,17 +77,60 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
           suggestions={[]}
         />
         <Divider />
-        <Button onClick={() => onBackClick()}>Close</Button>
-        <Button noMargin onClick={() => resetFilters()}>
-          Reset
-        </Button>
-        <Button
-          primary
-          noMargin
-          onClick={() => onApplyClick({ region: seletedRegions })}
+        <div
+          css={css({
+            display: 'inline-flex',
+            gap: rem(24),
+            width: '100%',
+            [`@media (max-width: ${tabletScreen.max - 1}px)`]: {
+              display: 'flex',
+              flexDirection: 'column-reverse',
+            },
+          })}
         >
-          Apply
-        </Button>
+          <Button
+            overrideStyles={css({
+              margin: 0,
+              maxWidth: 'fit-content',
+              [`@media (max-width: ${tabletScreen.max - 1}px)`]: {
+                maxWidth: '100%',
+              },
+            })}
+            onClick={() => onBackClick()}
+          >
+            Close
+          </Button>
+          <div
+            css={css({
+              display: 'inline-flex',
+              gap: rem(24),
+              marginLeft: 'auto',
+              [`@media (max-width: ${tabletScreen.max - 1}px)`]: {
+                marginLeft: 'unset',
+                display: 'flex',
+                flexDirection: 'column-reverse',
+              },
+            })}
+          >
+            <Button
+              overrideStyles={css({
+                margin: 0,
+              })}
+              onClick={() => resetFilters()}
+            >
+              Reset
+            </Button>
+            <Button
+              overrideStyles={css({
+                margin: 0,
+              })}
+              primary
+              onClick={() => onApplyClick({ region: seletedRegions })}
+            >
+              Apply
+            </Button>
+          </div>
+        </div>
       </div>
     </Modal>
   );

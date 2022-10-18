@@ -67,7 +67,8 @@ const GroupProfile: FC<GroupProfileProps> = ({ currentTime }) => {
       active: group.active,
       name: group.name,
       lastModifiedDate: group.lastModifiedDate,
-      numberOfTeams: group.teams.length,
+      numberOfTeams: group.teams.filter(({ inactiveSince }) => !inactiveSince)
+        .length,
       groupTeamsHref: `${
         route({ groupId }).about({}).$
       }#${groupTeamsElementId}`,

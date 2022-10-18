@@ -28,7 +28,6 @@ beforeEach(jest.clearAllMocks);
 const renderGroupProfile = async (
   groupResponse = createGroupResponse(),
   { groupId = groupResponse.id } = {},
-  getEventsFromSquidex = async () => createListEventResponse(1),
 ) => {
   mockGetGroup.mockImplementation(async (id) =>
     id === groupResponse.id ? groupResponse : undefined,

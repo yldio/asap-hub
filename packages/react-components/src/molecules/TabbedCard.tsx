@@ -6,13 +6,17 @@ import { perRem } from '../pixels';
 import { TabNav } from '.';
 import { paddingStyles } from '../card';
 
+const headerStyles = css({
+  paddingBottom: 0,
+  borderBottom: `1px solid ${steel.rgb}`,
+});
+
 const showMoreStyles = css({
   display: 'flex',
   justifyContent: 'center',
   paddingTop: `${16 / perRem}em`,
   paddingBottom: `${16 / perRem}em`,
   borderTop: `1px solid ${steel.rgb}`,
-  marginTop: `${33 / perRem}em`,
 });
 
 export type TabProps<T> = {
@@ -47,7 +51,7 @@ const TabbedCard = <T extends object>({
 
   return (
     <Card padding={false}>
-      <div css={[paddingStyles, { paddingBottom: 0 }]}>
+      <div css={[paddingStyles, headerStyles]}>
         <Headline3>{title}</Headline3>
         <Paragraph hasMargin={false} accent="lead">
           {description}

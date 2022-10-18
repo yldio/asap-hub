@@ -7,18 +7,13 @@ import { lead } from '../colors';
 import { TabbedCard } from '../molecules';
 import { perRem, tabletScreen } from '../pixels';
 
-const topDividerStyles = css({
-  display: 'flex',
-  height: 1,
-  flexDirection: 'column',
-});
-
 const itemsListWrapper = css({
   display: 'flex',
   flexDirection: 'column',
-  marginTop: `${33 / perRem}em`,
-  paddingBottom: `${21 / perRem}em`,
+  paddingTop: `${33 / perRem}em`,
+  paddingBottom: `${33 / perRem}em`,
 });
+
 const dividerStyles = css({
   display: 'flex',
   height: `${42 / perRem}em`,
@@ -124,16 +119,11 @@ const UserInterestGroupCard: React.FC<UserInterestGroupCardProps> = ({
     ]}
   >
     {({ data }) => (
-      <>
-        <div css={topDividerStyles}>
-          <Divider />
-        </div>
-        <div css={itemsListWrapper}>
-          {data.map((item, index) => (
-            <UserInterestGroupItem {...item} index={index} />
-          ))}
-        </div>
-      </>
+      <div css={itemsListWrapper}>
+        {data.map((item, index) => (
+          <UserInterestGroupItem {...item} index={index} />
+        ))}
+      </div>
     )}
   </TabbedCard>
 );

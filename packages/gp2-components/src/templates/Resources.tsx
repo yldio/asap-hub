@@ -17,7 +17,7 @@ import { css } from '@emotion/react';
 import { useState } from 'react';
 import { addIcon, editIcon } from '../icons';
 
-type WorkingGroupResourcesProps = Pick<gp2.WorkingGroupResponse, 'resources'>;
+type ResourcesProps = { resources?: gp2.Resource[] };
 
 const { rem, tabletScreen } = pixels;
 const containerStyles = css({
@@ -53,9 +53,7 @@ const hideStyles = css({
   [`:nth-of-type(n+4)`]: { display: 'none' },
 });
 
-const WorkingGroupResources: React.FC<WorkingGroupResourcesProps> = ({
-  resources,
-}) => {
+const Resources: React.FC<ResourcesProps> = ({ resources }) => {
   const minimumResourcesToDisplay = 3;
   const [expanded, setExpanded] = useState(false);
   const getResourcesListStyles = () => {
@@ -158,4 +156,4 @@ const WorkingGroupResources: React.FC<WorkingGroupResourcesProps> = ({
   );
 };
 
-export default WorkingGroupResources;
+export default Resources;

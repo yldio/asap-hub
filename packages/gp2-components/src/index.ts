@@ -3,14 +3,14 @@ export * from './images';
 export * from './messages';
 export {
   CardWithBackground,
-  StatusPill,
   ExpandableText,
   HeaderLogo,
   IconWithLabel,
   NavigationLink,
+  StatusPill,
+  UserCardInfo,
   UserMenu,
   UserRegion,
-  UserCardInfo,
 } from './molecules';
 export {
   NavigationHeader,
@@ -42,11 +42,11 @@ export {
   ProjectDetailPage,
   ProjectOverview,
   ProjectsPage,
+  Resources,
   Theme,
   UserDetailPage,
   UsersPage,
   WorkingGroupDetailPage,
   WorkingGroupOverview,
-  WorkingGroupResources,
   WorkingGroupsPage,
 } from './templates';

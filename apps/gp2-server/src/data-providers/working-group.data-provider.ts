@@ -132,10 +132,7 @@ export function parseWorkingGroupToDataObject({
 
   const resources =
     workingGroup.resources?.reduce(
-      (
-        resourceList: gp2.WorkingGroupResource[],
-        resource: GraphQLWorkingGroupResource,
-      ) => {
+      (resourceList: gp2.Resource[], resource: GraphQLWorkingGroupResource) => {
         if (
           !(resource.title && resource.type) ||
           (resource.type === WorkingGroupsDataResourcesTypeEnum.Link &&

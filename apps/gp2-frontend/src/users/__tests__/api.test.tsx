@@ -70,7 +70,6 @@ describe('getUsers', () => {
         take: 15,
         skip: 45,
         search: 'some-search',
-        filter: 'some-filter',
       })
       .reply(200, usersResponse);
 
@@ -85,7 +84,6 @@ describe('getUsers', () => {
         take: 15,
         skip: 45,
         search: 'some-search',
-        filter: 'some-filter',
       })
       .reply(500);
 

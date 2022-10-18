@@ -12,6 +12,7 @@ import {
   tin,
   silver,
   color,
+  TransparentColor,
 } from './colors';
 
 export const activePrimaryBackgroundColorDefault = color(122, 210, 169, 0.18);
@@ -37,9 +38,9 @@ const styles = css({
   lineHeight: 'unset',
   fontWeight: 'bold',
 
-  '+ button': {
-    marginTop: 0,
-  },
+  // '+ button': {
+  //   marginTop: 0,
+  // },
 
   transition: '200ms',
 
@@ -108,30 +109,35 @@ const smallIconOnlyStyles = css({
   paddingRight: `${(9 - borderWidth) / perRem}em`,
 });
 
-const boxShadow = (opaqueColor: OpaqueColor) =>
-  `0px 2px 4px -2px ${opaqueColor.rgb}`;
-const primaryStyles = css({
-  color: paper.rgb,
+const boxShadow = (opaqueColor: OpaqueColor | TransparentColor) =>
+  `0px 2px 4px -2px ${opaqueColor.rgba}`;
 
-  backgroundColor: fern.rgb,
-  borderColor: pine.rgb,
-  boxShadow: boxShadow(pine),
-  svg: {
-    stroke: paper.rgb,
-  },
-  ':hover, :focus': {
-    backgroundColor: pine.rgb,
-    borderColor: pine.rgb,
-    boxShadow: boxShadow(lead),
-  },
-
-  ':active': {
-    backgroundColor: pine.rgb,
-    borderColor: pine.rgb,
-    boxShadow: 'none',
+const primaryStyles = ({
+  primary500 = fern,
+  primary900 = pine,
+}: Theme['colors'] = {}) =>
+  css({
     color: paper.rgb,
-  },
-});
+
+    backgroundColor: primary500.rgba,
+    borderColor: primary900.rgba,
+    boxShadow: boxShadow(primary900),
+    svg: {
+      stroke: paper.rgb,
+    },
+    ':hover, :focus': {
+      backgroundColor: primary900.rgba,
+      borderColor: primary900.rgba,
+      boxShadow: boxShadow(lead),
+    },
+
+    ':active': {
+      backgroundColor: primary900.rgba,
+      borderColor: primary900.rgba,
+      boxShadow: 'none',
+      color: paper.rgb,
+    },
+  });
 const secondaryStyles = css({
   backgroundColor: paper.rgb,
   borderColor: steel.rgb,
@@ -211,7 +217,7 @@ export const getButtonStyles = ({
           ? activePrimaryStyles(colors)
           : activeSecondaryStyles
         : primary
-        ? primaryStyles
+        ? primaryStyles(colors)
         : secondaryStyles
       : disabledStyles,
     (Array.isArray(children)

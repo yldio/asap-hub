@@ -50,7 +50,10 @@ it('fetches the user information', async () => {
   await waitFor(() =>
     expect(mockGetUsers).toHaveBeenCalledWith(
       expect.objectContaining({
-        currentPage: 0,
+        filter: { region: [] },
+        search: '',
+        skip: 0,
+        take: 10,
       }),
       expect.anything(),
     ),

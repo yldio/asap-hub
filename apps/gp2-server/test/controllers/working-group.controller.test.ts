@@ -22,7 +22,7 @@ describe('Working Group controller', () => {
       workingGroupDataProviderMock.fetch.mockResolvedValue(
         getListWorkingGroupDataObject(),
       );
-      const result = await workingGroupController.fetch();
+      const result = await workingGroupController.fetch('11');
 
       expect(result).toEqual(getListWorkingGroupsResponse());
     });
@@ -32,9 +32,36 @@ describe('Working Group controller', () => {
         total: 0,
         items: [],
       });
-      const result = await workingGroupController.fetch();
+      const result = await workingGroupController.fetch('11');
 
       expect(result).toEqual({ items: [], total: 0 });
+    });
+
+    test('Should removes the resource if the user is not a member of the working group', async () => {
+      const list = getListWorkingGroupDataObject();
+
+      const nonMemberWorkingGroup = {
+        ...getWorkingGroupDataObject(),
+        members: [],
+      };
+      const listWithNonMemberWorkingGroup = {
+        total: 2,
+        items: [...list.items, nonMemberWorkingGroup],
+      };
+      workingGroupDataProviderMock.fetch.mockResolvedValue(
+        listWithNonMemberWorkingGroup,
+      );
+      const result = await workingGroupController.fetch('11');
+
+      const expectedItems = getListWorkingGroupsResponse().items;
+      expect(result.items).toEqual([
+        ...expectedItems,
+        {
+          ...getWorkingGroupResponse(),
+          members: [],
+          resources: undefined,
+        },
+      ]);
     });
   });
   describe('FetchById', () => {

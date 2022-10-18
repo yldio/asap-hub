@@ -10,8 +10,10 @@ export const workingGroupRouteFactory = (
 
   workingGroupRoutes.get<unknown, gp2.ListWorkingGroupResponse>(
     '/working-groups',
-    async (_req, res) => {
-      const workingGroups = await workingGroupController.fetch();
+    async (req, res) => {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const loggedInUserId = req.loggedInUser!.id;
+      const workingGroups = await workingGroupController.fetch(loggedInUserId);
 
       res.json(workingGroups);
     },

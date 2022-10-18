@@ -7,14 +7,20 @@ export interface WorkingGroupController {
     id: string,
     loggedInUserId: string,
   ): Promise<gp2.WorkingGroupResponse>;
-  fetch(): Promise<gp2.ListWorkingGroupResponse>;
+  fetch(loggedInUserId: string): Promise<gp2.ListWorkingGroupResponse>;
 }
 
 export default class WorkingGroups implements WorkingGroupController {
   constructor(private workingGroupDataProvider: WorkingGroupDataProvider) {}
 
-  async fetch(): Promise<gp2.ListWorkingGroupResponse> {
-    return this.workingGroupDataProvider.fetch();
+  async fetch(loggedInUserId: string): Promise<gp2.ListWorkingGroupResponse> {
+    const workingGroups = await this.workingGroupDataProvider.fetch();
+    return {
+      ...workingGroups,
+      items: workingGroups.items.map((workingGroup) =>
+        removeNotAllowedResources(workingGroup, loggedInUserId),
+      ),
+    };
   }
   async fetchById(
     id: string,
@@ -27,9 +33,15 @@ export default class WorkingGroups implements WorkingGroupController {
         `working group with id ${id} not found`,
       );
     }
-    const isMember = workingGroup.members.some(
-      (member) => member.userId === loggedInUserId,
-    );
-    return isMember ? workingGroup : { ...workingGroup, resources: undefined };
+    return removeNotAllowedResources(workingGroup, loggedInUserId);
   }
 }
+const removeNotAllowedResources = (
+  workingGroup: gp2.WorkingGroupDataObject,
+  loggedInUserId: string,
+) => {
+  const isMember = workingGroup.members.some(
+    (member) => member.userId === loggedInUserId,
+  );
+  return isMember ? workingGroup : { ...workingGroup, resources: undefined };
+};

@@ -152,7 +152,7 @@ jobs:
           contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           max-contentful-envs: ${{ steps.setup.outputs.max-contentful-envs }}
       - name: Contentful Teardown
-        if: ${{ steps.contentful-checks.outputs.on-branch-env }}
+        if: ${{ steps.contentful-checks.outputs.on-branch-env == 'True' }}
         id: contentful-teardown
         uses: ./.github/actions/contentful-teardown
         with:
@@ -208,6 +208,7 @@ jobs:
         gp2-sls-remove,
         crn-squidex-remove,
         gp2-squidex-remove,
+        crn-contentful-remove,
         algolia-index,
       ]
     if: ${{ failure() && (github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub') }}

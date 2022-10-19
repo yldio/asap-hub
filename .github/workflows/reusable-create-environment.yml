@@ -56,7 +56,7 @@ jobs:
           contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
           contentful-master-env: ${{ steps.setup.outputs.contentful-environment }}
           contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          max-contentful-envs: 6
+          max-contentful-envs: ${{ steps.setup.outputs.max-contentful-envs }}
 
   crn-squidex:
     runs-on: ubuntu-latest

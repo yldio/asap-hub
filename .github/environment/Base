@@ -15,3 +15,4 @@ gp2-sentry-dsn-handlers=https://dca6e589151c4a16bc49b2d93c9ddfd8@o850903.ingest.
 squidex-base-url=https://cloud.squidex.io
 contentful-space-id=5v6w5j61tndm
 contentful-environment=Production
+max-contentful-envs=6

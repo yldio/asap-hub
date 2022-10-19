@@ -1,0 +1,40 @@
+name: Contentful Teardown
+description: Tears down Contentful Environment if required
+
+inputs:
+  contentful-space-id:
+    description: 'Contentful Space ID'
+    required: true
+  contentful-token:
+    description: 'Contentful access token'
+    required: true
+  contentful-env:
+    description: 'Contentful environment'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Remove Contentful PR Environment
+      if: ${{ inputs.contentful-env != 'Development' }} && ${{ inputs.contentful-env != 'Production' }}
+      shell: bash
+      run: |
+        STATUS_CODE=$(curl --silent \
+                           --request DELETE \
+                           --output /dev/null \
+                           --write-out "%{http_code}
+                           --header "Authorization: Bearer ${CONTENTFUL_MANAGEMENT_ACCESS_TOKEN}" \
+                           https://api.contentful.com/spaces/${CONTENTFUL_SPACE_ID}/environments/${CONTENTFUL_ENV_ID})
+
+        if [["$STATUS_CODE" == "204"]]; then
+          echo "Successfully requested deletion of Environment ${CONTENTFUL_ENV_ID}."
+          exit 0
+        else
+          echo "Failed to request deletion of Environment ${CONTENTFUL_ENV_ID}."
+          echo "Status code was ${STATUS_CODE}."
+          exit 1
+        fi
+      env:
+        CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
+        CONTENTFUL_ENV_ID: ${{ inputs.contentful-env }}
+        CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.contentful-token }}

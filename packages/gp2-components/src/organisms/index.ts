@@ -4,6 +4,7 @@ export { default as ProjectMilestone } from './ProjectMilestone';
 export { default as ProjectSummaryFooter } from './ProjectSummaryFooter';
 export { default as ProjectSummaryHeader } from './ProjectSummaryHeader';
 export { default as ProjectCard } from './ProjectCard';
+export { default as ProjectsBody } from './ProjectsBody';
 export { default as UserNavigation } from './UserNavigation';
 export { default as ProjectDetailHeader } from './ProjectDetailHeader';
 export { default as UserDetailHeader } from './UserDetailHeader';

@@ -22,6 +22,7 @@ export {
   UserNavigation,
   EmailSection,
   PageBanner,
+  ProjectsBody,
   MainNavigation,
   UserCard,
   UsersPageBody,

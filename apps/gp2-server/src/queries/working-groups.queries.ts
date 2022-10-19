@@ -26,6 +26,12 @@ export const workingGroupContentQueryFragment = gql`
           }
         }
       }
+      resources {
+        type
+        title
+        description
+        externalLink
+      }
     }
   }
 `;

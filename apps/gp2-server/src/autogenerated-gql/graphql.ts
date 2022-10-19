@@ -1984,6 +1984,7 @@ export type WorkingGroupsDataDto = {
   leadingMembers: Maybe<WorkingGroupsDataLeadingMembersDto>;
   members: Maybe<WorkingGroupsDataMembersDto>;
   primaryEmail: Maybe<WorkingGroupsDataPrimaryEmailDto>;
+  resources: Maybe<WorkingGroupsDataResourcesDto>;
   secondaryEmail: Maybe<WorkingGroupsDataSecondaryEmailDto>;
   shortDescription: Maybe<WorkingGroupsDataShortDescriptionDto>;
   title: Maybe<WorkingGroupsDataTitleDto>;
@@ -1995,6 +1996,7 @@ export type WorkingGroupsDataInputDto = {
   leadingMembers: InputMaybe<WorkingGroupsDataLeadingMembersInputDto>;
   members: InputMaybe<WorkingGroupsDataMembersInputDto>;
   primaryEmail: InputMaybe<WorkingGroupsDataPrimaryEmailInputDto>;
+  resources: InputMaybe<WorkingGroupsDataResourcesInputDto>;
   secondaryEmail: InputMaybe<WorkingGroupsDataSecondaryEmailInputDto>;
   shortDescription: InputMaybe<WorkingGroupsDataShortDescriptionInputDto>;
   title: InputMaybe<WorkingGroupsDataTitleInputDto>;
@@ -2051,6 +2053,41 @@ export type WorkingGroupsDataPrimaryEmailInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
+/** The structure of the Resources nested schema. */
+export type WorkingGroupsDataResourcesChildDto = {
+  description: Maybe<Scalars['String']>;
+  /** External link for a resource */
+  externalLink: Maybe<Scalars['String']>;
+  title: Maybe<Scalars['String']>;
+  type: Maybe<WorkingGroupsDataResourcesTypeEnum>;
+};
+
+/** The structure of the Resources nested schema. */
+export type WorkingGroupsDataResourcesChildInputDto = {
+  description: InputMaybe<Scalars['String']>;
+  /** External link for a resource */
+  externalLink: InputMaybe<Scalars['String']>;
+  title: InputMaybe<Scalars['String']>;
+  type: InputMaybe<WorkingGroupsDataResourcesTypeEnum>;
+};
+
+/** The structure of the Resources field of the Working Groups content type. */
+export type WorkingGroupsDataResourcesDto = {
+  iv: Maybe<Array<WorkingGroupsDataResourcesChildDto>>;
+};
+
+/** The structure of the Resources field of the Working Groups content input type. */
+export type WorkingGroupsDataResourcesInputDto = {
+  iv: InputMaybe<Array<WorkingGroupsDataResourcesChildInputDto>>;
+};
+
+export enum WorkingGroupsDataResourcesTypeEnum {
+  /** Link */
+  Link = 'Link',
+  /** Note */
+  Note = 'Note',
+}
+
 /** The structure of the WG's Lead Email field of the Working Groups content type. */
 export type WorkingGroupsDataSecondaryEmailDto = {
   iv: Maybe<Scalars['String']>;
@@ -2087,6 +2124,7 @@ export type WorkingGroupsFlatDataDto = {
   leadingMembers: Maybe<Scalars['String']>;
   members: Maybe<Array<WorkingGroupsDataMembersChildDto>>;
   primaryEmail: Maybe<Scalars['String']>;
+  resources: Maybe<Array<WorkingGroupsDataResourcesChildDto>>;
   secondaryEmail: Maybe<Scalars['String']>;
   shortDescription: Maybe<Scalars['String']>;
   title: Maybe<Scalars['String']>;
@@ -2374,6 +2412,14 @@ export type WorkingGroupNetworkContentFragment = Pick<
                 }
               >
             >;
+            resources: Maybe<
+              Array<
+                Pick<
+                  WorkingGroupsDataResourcesChildDto,
+                  'type' | 'title' | 'description' | 'externalLink'
+                >
+              >
+            >;
           };
         }
       >
@@ -2407,6 +2453,14 @@ export type WorkingGroupNetworkContentFragment = Pick<
                     >
                   >;
                 }
+              >
+            >;
+            resources: Maybe<
+              Array<
+                Pick<
+                  WorkingGroupsDataResourcesChildDto,
+                  'type' | 'title' | 'description' | 'externalLink'
+                >
               >
             >;
           };
@@ -2444,6 +2498,14 @@ export type WorkingGroupNetworkContentFragment = Pick<
                 }
               >
             >;
+            resources: Maybe<
+              Array<
+                Pick<
+                  WorkingGroupsDataResourcesChildDto,
+                  'type' | 'title' | 'description' | 'externalLink'
+                >
+              >
+            >;
           };
         }
       >
@@ -2477,6 +2539,14 @@ export type WorkingGroupNetworkContentFragment = Pick<
                     >
                   >;
                 }
+              >
+            >;
+            resources: Maybe<
+              Array<
+                Pick<
+                  WorkingGroupsDataResourcesChildDto,
+                  'type' | 'title' | 'description' | 'externalLink'
+                >
               >
             >;
           };
@@ -2526,6 +2596,14 @@ export type FetchWorkingGroupNetworkQuery = {
                       }
                     >
                   >;
+                  resources: Maybe<
+                    Array<
+                      Pick<
+                        WorkingGroupsDataResourcesChildDto,
+                        'type' | 'title' | 'description' | 'externalLink'
+                      >
+                    >
+                  >;
                 };
               }
             >
@@ -2559,6 +2637,14 @@ export type FetchWorkingGroupNetworkQuery = {
                           >
                         >;
                       }
+                    >
+                  >;
+                  resources: Maybe<
+                    Array<
+                      Pick<
+                        WorkingGroupsDataResourcesChildDto,
+                        'type' | 'title' | 'description' | 'externalLink'
+                      >
                     >
                   >;
                 };
@@ -2596,6 +2682,14 @@ export type FetchWorkingGroupNetworkQuery = {
                       }
                     >
                   >;
+                  resources: Maybe<
+                    Array<
+                      Pick<
+                        WorkingGroupsDataResourcesChildDto,
+                        'type' | 'title' | 'description' | 'externalLink'
+                      >
+                    >
+                  >;
                 };
               }
             >
@@ -2629,6 +2723,14 @@ export type FetchWorkingGroupNetworkQuery = {
                           >
                         >;
                       }
+                    >
+                  >;
+                  resources: Maybe<
+                    Array<
+                      Pick<
+                        WorkingGroupsDataResourcesChildDto,
+                        'type' | 'title' | 'description' | 'externalLink'
+                      >
                     >
                   >;
                 };
@@ -2666,6 +2768,14 @@ export type WorkingGroupContentFragment = Pick<WorkingGroups, 'id'> & {
         }
       >
     >;
+    resources: Maybe<
+      Array<
+        Pick<
+          WorkingGroupsDataResourcesChildDto,
+          'type' | 'title' | 'description' | 'externalLink'
+        >
+      >
+    >;
   };
 };
 
@@ -2699,6 +2809,14 @@ export type FetchWorkingGroupQuery = {
                 >
               >;
             }
+          >
+        >;
+        resources: Maybe<
+          Array<
+            Pick<
+              WorkingGroupsDataResourcesChildDto,
+              'type' | 'title' | 'description' | 'externalLink'
+            >
           >
         >;
       };
@@ -2740,6 +2858,14 @@ export type FetchWorkingGroupsQuery = {
                       >
                     >;
                   }
+                >
+              >;
+              resources: Maybe<
+                Array<
+                  Pick<
+                    WorkingGroupsDataResourcesChildDto,
+                    'type' | 'title' | 'description' | 'externalLink'
+                  >
                 >
               >;
             };
@@ -3040,6 +3166,25 @@ export const WorkingGroupContentFragmentDoc = {
                             },
                           ],
                         },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'resources' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'externalLink' },
                       },
                     ],
                   },

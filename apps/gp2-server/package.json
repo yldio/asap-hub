@@ -12,6 +12,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@asap-hub/auth": "workspace:*",
     "@asap-hub/errors": "workspace:*",
     "@asap-hub/fixtures": "workspace:*",
     "@asap-hub/message-templates": "workspace:*",

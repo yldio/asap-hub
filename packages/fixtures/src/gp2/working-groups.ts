@@ -14,6 +14,13 @@ const mockedWorkingGroup: gp2.WorkingGroupResponse = {
   shortDescription: 'This is a short description',
   description: 'This is a long description',
   leadingMembers: 'This is a list of leading members',
+  resources: [
+    {
+      type: 'Note',
+      title: 'This is a resource title',
+      description: 'This is a resource description',
+    },
+  ],
 };
 
 export const createWorkingGroupResponse = (

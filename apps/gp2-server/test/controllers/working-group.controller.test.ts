@@ -22,7 +22,7 @@ describe('Working Group controller', () => {
       workingGroupDataProviderMock.fetch.mockResolvedValue(
         getListWorkingGroupDataObject(),
       );
-      const result = await workingGroupController.fetch();
+      const result = await workingGroupController.fetch('11');
 
       expect(result).toEqual(getListWorkingGroupsResponse());
     });
@@ -32,9 +32,50 @@ describe('Working Group controller', () => {
         total: 0,
         items: [],
       });
-      const result = await workingGroupController.fetch();
+      const result = await workingGroupController.fetch('11');
 
       expect(result).toEqual({ items: [], total: 0 });
+    });
+
+    test('Should removes the resource if the user is not a member of the working group', async () => {
+      const list = getListWorkingGroupDataObject();
+
+      const nonMemberWorkingGroup = {
+        ...getWorkingGroupDataObject(),
+        members: [
+          {
+            userId: '7',
+            firstName: 'Peter',
+            lastName: 'Parker',
+            role: 'Lead' as const,
+          },
+        ],
+      };
+      const listWithNonMemberWorkingGroup = {
+        total: 2,
+        items: [...list.items, nonMemberWorkingGroup],
+      };
+      workingGroupDataProviderMock.fetch.mockResolvedValue(
+        listWithNonMemberWorkingGroup,
+      );
+      const result = await workingGroupController.fetch('11');
+
+      const expectedItems = getListWorkingGroupsResponse().items;
+      expect(result.items).toEqual([
+        ...expectedItems,
+        {
+          ...getWorkingGroupResponse(),
+          members: [
+            {
+              userId: '7',
+              firstName: 'Peter',
+              lastName: 'Parker',
+              role: 'Lead',
+            },
+          ],
+          resources: undefined,
+        },
+      ]);
     });
   });
   describe('FetchById', () => {
@@ -46,7 +87,7 @@ describe('Working Group controller', () => {
       workingGroupDataProviderMock.fetchById.mockResolvedValue(null);
 
       await expect(
-        workingGroupController.fetchById('not-found'),
+        workingGroupController.fetchById('not-found', '11'),
       ).rejects.toThrow(NotFoundError);
     });
 
@@ -54,9 +95,43 @@ describe('Working Group controller', () => {
       workingGroupDataProviderMock.fetchById.mockResolvedValue(
         getWorkingGroupDataObject(),
       );
-      const result = await workingGroupController.fetchById('working-group-id');
+      const result = await workingGroupController.fetchById(
+        'working-group-id',
+        '11',
+      );
 
       expect(result).toEqual(getWorkingGroupResponse());
+    });
+
+    test('Should not return the resources when the user is not part of the team', async () => {
+      workingGroupDataProviderMock.fetchById.mockResolvedValue({
+        ...getWorkingGroupDataObject(),
+        members: [
+          {
+            userId: '7',
+            firstName: 'Peter',
+            lastName: 'Parker',
+            role: 'Lead' as const,
+          },
+        ],
+      });
+      const result = await workingGroupController.fetchById(
+        'working-group-id',
+        '11',
+      );
+
+      expect(result).toEqual({
+        ...getWorkingGroupResponse(),
+        members: [
+          {
+            userId: '7',
+            firstName: 'Peter',
+            lastName: 'Parker',
+            role: 'Lead',
+          },
+        ],
+        resources: undefined,
+      });
     });
   });
 });

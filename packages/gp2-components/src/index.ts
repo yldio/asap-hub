@@ -33,5 +33,6 @@ export {
   UsersPage,
   WorkingGroupDetailPage,
   WorkingGroupOverview,
+  WorkingGroupResources,
   WorkingGroupsPage,
 } from './templates';

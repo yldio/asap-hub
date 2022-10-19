@@ -8,6 +8,7 @@ describe('WorkingGroupDetailHeader', () => {
     members: [],
     projects: [],
     id: '1',
+    isWorkingGroupMember: true,
   };
 
   it('renders title, number of members and number of projects', () => {

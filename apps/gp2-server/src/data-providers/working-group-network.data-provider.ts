@@ -1,5 +1,4 @@
 import { gp2 } from '@asap-hub/model';
-import { workingGroupNetworkRole } from '@asap-hub/model/src/gp2';
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import {
   FetchWorkingGroupNetworkQuery,
@@ -8,6 +7,7 @@ import {
 import { FETCH_WORKING_GROUP_NETWORK } from '../queries/working-group-network.queries';
 import { parseWorkingGroupToDataObject } from './working-group.data-provider';
 
+const { workingGroupNetworkRole } = gp2;
 export interface WorkingGroupNetworkDataProvider {
   fetch(): Promise<gp2.ListWorkingGroupNetworkDataObject>;
 }

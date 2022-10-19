@@ -14,10 +14,20 @@ const props = {
   shortDescription: '',
   projects: [],
   backHref: '',
+  isWorkingGroupMember: false,
 };
 
 export const Normal = () => (
   <Layout>
     <WorkingGroupDetailPage {...props}></WorkingGroupDetailPage>
+  </Layout>
+);
+
+export const WithResources = () => (
+  <Layout>
+    <WorkingGroupDetailPage
+      {...props}
+      isWorkingGroupMember={true}
+    ></WorkingGroupDetailPage>
   </Layout>
 );

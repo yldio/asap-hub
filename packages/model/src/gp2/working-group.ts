@@ -15,9 +15,6 @@ export type WorkingGroupMember = {
   avatarUrl?: string;
 };
 
-const workingGroupResourceType = ['Link', 'Note'] as const;
-export type WorkingGroupResourceType = typeof workingGroupResourceType[number];
-
 export type WorkingGroupResource = {
   title: string;
   description?: string;

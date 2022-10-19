@@ -6,8 +6,8 @@ export default {
 };
 
 const emails = [
-  { email: 'example@mail.com', contact: 'PM Email' },
-  { email: 'example2@mail.com', contact: 'Lead Email' },
+  { email: 'pm@example.com', contact: 'PM Email' },
+  { email: 'lead@example.com', contact: 'Lead Email' },
 ];
 
 export const Normal = () => <EmailSection contactEmails={emails} />;

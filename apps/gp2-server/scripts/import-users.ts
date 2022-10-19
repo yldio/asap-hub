@@ -4,7 +4,7 @@ import {
   getAccessTokenFactory,
   SquidexGraphql,
   SquidexRest,
-  gp2 as gp2squidex,
+  gp2 as gp2Squidex,
 } from '@asap-hub/squidex';
 import { appName, baseUrl, clientId, clientSecret } from '../src/config';
 import { UserSquidexDataProvider } from '../src/data-providers/user.data-provider';
@@ -45,7 +45,7 @@ const app = async () => {
 
   const filePath = args[0];
 
-  const a = parse(
+  const userCsvImport = parse(
     (input): gp2.UserCreateDataObject => {
       const data = input.map((s) => s.trim());
       return {
@@ -91,7 +91,7 @@ const app = async () => {
     },
   );
 
-  await a(filePath);
+  await userCsvImport(filePath);
 
   console.log(
     `Imported ${numberOfImportedUsers} users, already exist ${usersAlreadyExist}, failed ${usersFailed}`,

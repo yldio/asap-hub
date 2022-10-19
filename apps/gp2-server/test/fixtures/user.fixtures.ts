@@ -1,7 +1,7 @@
 import { gp2 } from '@asap-hub/model';
 import { UserEvent } from '@asap-hub/server-common';
 import {
-  gp2 as SquidexGp2,
+  gp2 as gp2Squidex,
   parseToSquidex,
   WebhookPayload,
 } from '@asap-hub/squidex';

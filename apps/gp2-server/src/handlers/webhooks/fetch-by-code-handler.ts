@@ -2,7 +2,7 @@ import { ValidationError } from '@asap-hub/errors';
 import { validateAuth0Request } from '@asap-hub/server-common';
 import { framework as lambda } from '@asap-hub/services-common';
 import {
-  gp2 as gp2squidex,
+  gp2 as gp2Squidex,
   SquidexGraphql,
   SquidexRest,
 } from '@asap-hub/squidex';

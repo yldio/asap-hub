@@ -39,6 +39,21 @@ it('renders a google drive tool', () => {
   );
 });
 
+it('renders only the google drive tool for inactive group', () => {
+  const { queryByText } = render(
+    <GroupTools
+      {...props}
+      tools={{
+        googleDrive: 'http://drive.google.com/123',
+        slack: 'http://asap.slack.com',
+      }}
+      active={false}
+    />,
+  );
+  expect(queryByText('Access Google Drive')).toBeVisible();
+  expect(queryByText(/join slack/i)).not.toBeInTheDocument();
+});
+
 it('renders the subscribe button', () => {
   const { getByText, queryAllByRole } = render(
     <GroupTools {...props} calendarId="12w3" />,

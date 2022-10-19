@@ -106,6 +106,13 @@ describe('the calendar tab', () => {
     userEvent.click(await findByText(/calendar/i, { selector: 'nav a *' }));
     expect(await findAllByText(/subscribe/i)).not.toHaveLength(0);
   });
+  it('cannot be switched to if the group is inactive', async () => {
+    const { queryByText } = await renderGroupProfile({
+      ...createGroupResponse(),
+      active: false,
+    });
+    expect(await queryByText('Calendar')).not.toBeInTheDocument();
+  });
 });
 
 describe('the upcoming events tab', () => {
@@ -113,6 +120,13 @@ describe('the upcoming events tab', () => {
     const { findByText } = await renderGroupProfile();
     userEvent.click(await findByText(/upcoming/i, { selector: 'nav a *' }));
     expect(await findByText(/results/i)).toBeVisible();
+  });
+  it('cannot be switched to if the group is inactive', async () => {
+    const { queryByText } = await renderGroupProfile({
+      ...createGroupResponse(),
+      active: false,
+    });
+    expect(await queryByText('Upcoming Events')).not.toBeInTheDocument();
   });
 });
 

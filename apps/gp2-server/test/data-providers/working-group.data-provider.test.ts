@@ -180,105 +180,59 @@ describe('Working Group Data Provider', () => {
     describe('resources', () => {
       test('should map a resource note', () => {
         const workingGroup = getGraphQLWorkingGroup();
-        const title = 'working group title';
-        const description = 'working group description';
-        const resource = getGraphQLWorkingGroupResource();
-        resource.type = WorkingGroupsDataResourcesTypeEnum.Note;
-        resource.title = title;
-        resource.description = description;
-        workingGroup.flatData.resources = [resource];
         const { resources } = parseWorkingGroupToDataObject(workingGroup);
-        expect(resources).toEqual([
-          {
-            type: 'Note',
-            title,
-            description,
-          },
-        ]);
+        const { resources: expectedResources } = getWorkingGroupDataObject();
+        expect(resources).toStrictEqual(expectedResources);
       });
       test('should ignore an external link for a resource note', () => {
         const workingGroup = getGraphQLWorkingGroup();
-        const title = 'working group title';
-        const description = 'working group description';
         const resource = getGraphQLWorkingGroupResource();
         resource.type = WorkingGroupsDataResourcesTypeEnum.Note;
-        resource.title = title;
-        resource.description = description;
         resource.externalLink = 'some external link';
         workingGroup.flatData.resources = [resource];
         const { resources } = parseWorkingGroupToDataObject(workingGroup);
-        expect(resources).toEqual([
-          {
-            type: 'Note',
-            title,
-            description,
-          },
-        ]);
+        const { resources: expectedResources } = getWorkingGroupDataObject();
+        expect(resources).toStrictEqual(expectedResources);
       });
       test('should map a resource link', () => {
         const workingGroup = getGraphQLWorkingGroup();
-        const title = 'working group title';
-        const description = 'working group description';
         const externalLink = 'this is an external link';
         const resource = getGraphQLWorkingGroupResource();
         resource.type = WorkingGroupsDataResourcesTypeEnum.Link;
-        resource.title = title;
-        resource.description = description;
         resource.externalLink = externalLink;
         workingGroup.flatData.resources = [resource];
         const { resources } = parseWorkingGroupToDataObject(workingGroup);
+        const { resources: expectedResources } = getWorkingGroupDataObject();
         expect(resources).toEqual([
           {
+            ...expectedResources![0],
             type: 'Link',
-            title,
-            description,
             externalLink,
           },
         ]);
       });
       test('should ignore a resource if title is undefined.', () => {
         const workingGroup = getGraphQLWorkingGroup();
-        const title = null;
-        const description = 'working group description';
-        const externalLink = 'this is an external link';
         const resource = getGraphQLWorkingGroupResource();
-        resource.type = WorkingGroupsDataResourcesTypeEnum.Link;
-        resource.title = title;
-        resource.description = description;
-        resource.externalLink = externalLink;
+        resource.title = null;
         workingGroup.flatData.resources = [resource];
         const { resources } = parseWorkingGroupToDataObject(workingGroup);
         expect(resources).toEqual([]);
       });
       test('should return a resource if description is undefined.', () => {
         const workingGroup = getGraphQLWorkingGroup();
-        const title = 'working group title';
-        const description = null;
-        const externalLink = 'this is an external link';
         const resource = getGraphQLWorkingGroupResource();
-        resource.type = WorkingGroupsDataResourcesTypeEnum.Link;
-        resource.title = title;
-        resource.description = description;
-        resource.externalLink = externalLink;
+        resource.description = null;
         workingGroup.flatData.resources = [resource];
         const { resources } = parseWorkingGroupToDataObject(workingGroup);
-        expect(resources).toEqual([
-          {
-            type: 'Link',
-            title,
-            externalLink,
-          },
-        ]);
+        const description = resources![0]?.description;
+        expect(description).toBeUndefined();
       });
       test('should ignore a resource if external Link is undefined for a Link.', () => {
         const workingGroup = getGraphQLWorkingGroup();
-        const title = 'working group title';
-        const description = 'working group description';
         const externalLink = null;
         const resource = getGraphQLWorkingGroupResource();
         resource.type = WorkingGroupsDataResourcesTypeEnum.Link;
-        resource.title = title;
-        resource.description = description;
         resource.externalLink = externalLink;
         workingGroup.flatData.resources = [resource];
         const { resources } = parseWorkingGroupToDataObject(workingGroup);
@@ -286,7 +240,6 @@ describe('Working Group Data Provider', () => {
       });
       test('undefined resources returns empty array', () => {
         const workingGroup = getGraphQLWorkingGroup();
-
         workingGroup.flatData.resources = null;
         const { resources } = parseWorkingGroupToDataObject(workingGroup);
         expect(resources).toEqual([]);

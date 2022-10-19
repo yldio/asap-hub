@@ -161,7 +161,7 @@ export function parseWorkingGroupToDataObject({
             type,
             title: resource.title,
             description: resource.description || undefined,
-            externalLink,
+            ...(externalLink && { externalLink }),
           },
         ];
       },

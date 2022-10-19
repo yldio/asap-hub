@@ -42,7 +42,14 @@ describe('Working Group controller', () => {
 
       const nonMemberWorkingGroup = {
         ...getWorkingGroupDataObject(),
-        members: [],
+        members: [
+          {
+            userId: '7',
+            firstName: 'Peter',
+            lastName: 'Parker',
+            role: 'Lead' as const,
+          },
+        ],
       };
       const listWithNonMemberWorkingGroup = {
         total: 2,
@@ -58,7 +65,14 @@ describe('Working Group controller', () => {
         ...expectedItems,
         {
           ...getWorkingGroupResponse(),
-          members: [],
+          members: [
+            {
+              userId: '7',
+              firstName: 'Peter',
+              lastName: 'Parker',
+              role: 'Lead',
+            },
+          ],
           resources: undefined,
         },
       ]);
@@ -92,16 +106,30 @@ describe('Working Group controller', () => {
     test('Should not return the resources when the user is not part of the team', async () => {
       workingGroupDataProviderMock.fetchById.mockResolvedValue({
         ...getWorkingGroupDataObject(),
-        members: [],
+        members: [
+          {
+            userId: '7',
+            firstName: 'Peter',
+            lastName: 'Parker',
+            role: 'Lead' as const,
+          },
+        ],
       });
       const result = await workingGroupController.fetchById(
         'working-group-id',
-        '12',
+        '11',
       );
 
       expect(result).toEqual({
         ...getWorkingGroupResponse(),
-        members: [],
+        members: [
+          {
+            userId: '7',
+            firstName: 'Peter',
+            lastName: 'Parker',
+            role: 'Lead',
+          },
+        ],
         resources: undefined,
       });
     });

@@ -207,10 +207,20 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
         <Toast accent="info">
           This alumni might not have all content updated or available. This user
           became alumni on the{' '}
-          {formatDateToTimezone(alumniSinceDate, 'do MMMM yyyy')}, their contact
-          details were last updated on the{' '}
-          {formatDateToTimezone(lastModifiedDate, 'do MMMM yyyy')}
-          {alumniLocation && ` and their role is now at ${alumniLocation}`}.
+          <strong>
+            {formatDateToTimezone(alumniSinceDate, 'do MMMM yyyy')}
+          </strong>
+          , their contact details were last updated on the{' '}
+          <strong>
+            {formatDateToTimezone(lastModifiedDate, 'do MMMM yyyy')}
+          </strong>
+          {alumniLocation && (
+            <span>
+              {' '}
+              and their role is now at <strong>{alumniLocation}</strong>
+            </span>
+          )}
+          .
         </Toast>
       )}
       <header css={[containerStyles]}>

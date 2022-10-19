@@ -138,8 +138,8 @@ describe('alumni', () => {
       <UserProfileContext.Provider value={{ isOwnProfile: false }}>
         <UserProfileHeader
           {...boilerplateProps}
-          alumniSinceDate={new Date('2021-02-01T12:00:00').toISOString()}
-          lastModifiedDate={new Date('2021-01-01T12:00:00').toISOString()}
+          alumniSinceDate={new Date('2022-09-12T12:00:00').toISOString()}
+          lastModifiedDate={new Date('2021-09-01T12:00:00').toISOString()}
           degree={undefined}
         />
         ,
@@ -147,25 +147,26 @@ describe('alumni', () => {
     );
     expect(
       queryByText(
-        `This alumni might not have all content updated or available. This user became alumni on the 1st February 2021, their contact details were last updated on the 1st January 2021.`,
+        'This alumni might not have all content updated or available.',
+        { exact: false },
       ),
     ).toBeInTheDocument();
     rerender(
       <UserProfileContext.Provider value={{ isOwnProfile: false }}>
         <UserProfileHeader
           {...boilerplateProps}
-          alumniSinceDate={new Date('2021-02-01T12:00:00').toISOString()}
+          alumniSinceDate={new Date('2022-09-12T12:00:00').toISOString()}
+          lastModifiedDate={new Date('2021-09-01T12:00:00').toISOString()}
           alumniLocation={'Some University'}
-          lastModifiedDate={new Date('2021-01-01T12:00:00').toISOString()}
           degree={undefined}
         />
         ,
       </UserProfileContext.Provider>,
     );
     expect(
-      queryByText(
-        `This alumni might not have all content updated or available. This user became alumni on the 1st February 2021, their contact details were last updated on the 1st January 2021 and their role is now at Some University.`,
-      ),
+      queryByText('and their role is now at', {
+        exact: false,
+      }),
     ).toBeInTheDocument();
   });
 });

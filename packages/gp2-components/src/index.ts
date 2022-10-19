@@ -15,10 +15,23 @@ export {
 export {
   NavigationHeader,
   ProjectMilestones,
+  ProjectMilestone,
+  ProjectCard,
+  ProjectDetailHeader,
+  UserDetailHeader,
+  UserNavigation,
+  EmailSection,
+  PageBanner,
   ProjectsBody,
+  MainNavigation,
   UserCard,
   UsersPageBody,
+  WorkingGroupDetailHeader,
   WorkingGroupsBody,
+  WorkingGroupCard,
+  WorkingGroupNetwork,
+  ProjectSummaryFooter,
+  ProjectSummaryHeader,
 } from './organisms';
 export {
   BasicLayout,

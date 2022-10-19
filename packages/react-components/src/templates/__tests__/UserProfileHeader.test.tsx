@@ -2,6 +2,7 @@ import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router-dom';
 
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { UserProfileContext } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
@@ -75,17 +76,20 @@ describe('an edit button', () => {
       '/edit-contact-info',
     );
   });
-});
 
-it('is rendered for avatar', () => {
-  const { getByLabelText } = render(
-    <UserProfileHeader
-      {...boilerplateProps}
-      onImageSelect={(file: File) => {}}
-    />,
-  );
-  expect(getByLabelText(/edit.+avatar/i)).toBeVisible();
-  expect(getByLabelText(/upload.+avatar/i)).not.toHaveAttribute('disabled');
+  it('is rendered for avatar', () => {
+    const onImageSelect = jest.fn((file: File) => {});
+    const testFile = new File(['foo'], 'foo.png', { type: 'image/png' });
+    const { getByLabelText } = render(
+      <UserProfileHeader {...boilerplateProps} onImageSelect={onImageSelect} />,
+    );
+    const editButton = getByLabelText(/edit.+avatar/i);
+    const uploadInput = getByLabelText(/upload.+avatar/i);
+    expect(editButton).toBeVisible();
+    expect(uploadInput).not.toHaveAttribute('disabled');
+    userEvent.upload(uploadInput, testFile);
+    expect(onImageSelect).toBeCalledWith(testFile);
+  });
 });
 
 it('shows placeholder text for degree on own profile when omitted', () => {

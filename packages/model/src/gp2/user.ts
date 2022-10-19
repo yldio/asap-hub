@@ -62,9 +62,9 @@ export type UserDataObject = {
   city?: string;
 };
 
-export type UserUpdateDataObject = Partial<UserCreateDataObject>;
-
 export type UserCreateDataObject = Omit<UserDataObject, 'id' | 'createdDate'>;
+
+export type UserUpdateDataObject = Partial<UserCreateDataObject>;
 
 export type ListUserDataObject = ListResponse<UserDataObject>;
 

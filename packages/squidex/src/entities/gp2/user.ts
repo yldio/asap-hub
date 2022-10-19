@@ -1,16 +1,5 @@
 import { Entity, Rest, RestPayload } from '../common';
 
-export interface User<TAvatar = string> {
-  avatar: TAvatar[];
-  connections: { code: string }[];
-  degree?: RestUsersDegree[];
-  email: string;
-  firstName: string;
-  lastName: string;
-  region: RestUsersRegion;
-  role: RestUsersRole;
-}
-
 export type RestUsersDegree =
   | 'AA'
   | 'AAS'
@@ -41,6 +30,17 @@ export type RestUsersRole =
   | 'Network_Investigator'
   | 'Trainee'
   | 'Working_Group_Participant';
+
+export interface User<TAvatar = string> {
+  avatar: TAvatar[];
+  connections: { code: string }[];
+  degree?: RestUsersDegree[];
+  email: string;
+  firstName: string;
+  lastName: string;
+  region: RestUsersRegion;
+  role: RestUsersRole;
+}
 
 export interface RestUser extends Entity, Rest<User> {}
 

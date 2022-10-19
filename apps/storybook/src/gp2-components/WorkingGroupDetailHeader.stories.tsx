@@ -10,6 +10,7 @@ export default {
 const item = {
   ...gp2Fixtures.createWorkingGroupResponse(),
   backHref: '/',
+  isWorkingGroupMember: true,
 };
 
 export const Normal = () => <WorkingGroupDetailHeader {...item} />;

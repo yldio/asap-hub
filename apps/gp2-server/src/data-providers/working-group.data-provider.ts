@@ -144,24 +144,26 @@ export function parseWorkingGroupToDataObject({
           return resourceList;
         }
 
-        const externalLink =
-          resource.type === WorkingGroupsDataResourcesTypeEnum.Link &&
-          resource.externalLink
-            ? resource.externalLink
-            : undefined;
-
-        const type: gp2.WorkingGroupResourceType =
-          resource.type === WorkingGroupsDataResourcesTypeEnum.Note
-            ? 'Note'
-            : 'Link';
-
+        const parsedResource = {
+          title: resource.title,
+          description: resource.description || undefined,
+        };
+        if (resource.type === WorkingGroupsDataResourcesTypeEnum.Note) {
+          return [
+            ...resourceList,
+            {
+              type: 'Note' as const,
+              ...parsedResource,
+            },
+          ];
+        }
+        const externalLink = resource.externalLink || '';
         return [
           ...resourceList,
           {
-            type,
-            title: resource.title,
-            description: resource.description || undefined,
-            ...(externalLink && { externalLink }),
+            type: 'Link' as const,
+            ...parsedResource,
+            externalLink,
           },
         ];
       },

@@ -47,12 +47,15 @@ describe('WorkingGroupResources', () => {
   });
   it('renders a link resource external link', () => {
     const [resource] = getResources();
-    resource.type = 'Link';
-    resource.externalLink = 'http://a-link';
+    const resourceLink: gp2.WorkingGroupResource = {
+      ...resource,
+      type: 'Link',
+      externalLink: 'http://a-link',
+    };
     render(
       <WorkingGroupResources
         {...defaultProps}
-        resources={[resource]}
+        resources={[resourceLink]}
       ></WorkingGroupResources>,
     );
     expect(

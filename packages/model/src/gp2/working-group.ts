@@ -19,11 +19,17 @@ const workingGroupResourceType = ['Link', 'Note'] as const;
 export type WorkingGroupResourceType = typeof workingGroupResourceType[number];
 
 export type WorkingGroupResource = {
-  type: WorkingGroupResourceType;
   title: string;
   description?: string;
-  externalLink?: string;
-};
+} & (
+  | {
+      type: 'Link';
+      externalLink: string;
+    }
+  | {
+      type: 'Note';
+    }
+);
 
 export type WorkingGroupDataObject = {
   id: string;

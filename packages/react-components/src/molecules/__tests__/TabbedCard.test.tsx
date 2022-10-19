@@ -5,7 +5,7 @@ import TabbedCard from '../TabbedCard';
 const props: ComponentProps<typeof TabbedCard<{ name: string }>> = {
   title: '',
   tabs: [{ tabTitle: '', items: [] }],
-  showMoreText: (showMore) => `View ${showMore ? 'less' : 'more'}`,
+  getShowMoreText: (showMore) => `View ${showMore ? 'less' : 'more'}`,
   children: ({ data }) => (
     <ul>
       {data.map(({ name }, index) => (

@@ -9,7 +9,7 @@ export const Normal = () => (
   <TabbedCard
     title={text('Title', 'Tabbed Card')}
     description={text('Description', 'Description')}
-    showMoreText={(showMore) => `Show ${showMore ? 'Less' : 'More'}`}
+    getShowMoreText={(showMore) => `Show ${showMore ? 'Less' : 'More'}`}
     activeTabIndex={number('Selected Tab', 0, { max: 3 })}
     tabs={[
       {

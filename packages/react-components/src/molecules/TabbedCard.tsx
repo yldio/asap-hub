@@ -31,7 +31,7 @@ type TabbedCardProps<T> = {
   description?: string;
   tabs: TabProps<T>[];
   activeTabIndex?: number;
-  showMoreText: (showMore: boolean) => string;
+  getShowMoreText: (showMore: boolean) => string;
   children: (state: { data: T[] }) => ReactNode;
 };
 
@@ -40,7 +40,7 @@ const TabbedCard = <T extends object>({
   description,
   tabs,
   activeTabIndex = 0,
-  showMoreText,
+  getShowMoreText,
   children,
 }: TabbedCardProps<T>) => {
   useEffect(() => setActive(activeTabIndex), [activeTabIndex]);
@@ -80,7 +80,7 @@ const TabbedCard = <T extends object>({
       {showShowMoreButton && (
         <div css={showMoreStyles}>
           <Button linkStyle onClick={() => setShowMore(!showMore)}>
-            {showMoreText(showMore)}
+            {getShowMoreText(showMore)}
           </Button>
         </div>
       )}

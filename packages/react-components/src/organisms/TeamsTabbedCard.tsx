@@ -55,7 +55,7 @@ const TeamsTabbedCard: React.FC<TeamsTabbedCardProps> = ({
         disabled: false,
       },
     ]}
-    showMoreText={(showMore) => `View ${showMore ? 'Less' : 'More'} Teams`}
+    getShowMoreText={(showMore) => `View ${showMore ? 'Less' : 'More'} Teams`}
   >
     {({ data }) => (
       <ul css={containerStyles}>

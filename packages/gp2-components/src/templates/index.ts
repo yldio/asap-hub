@@ -1,3 +1,4 @@
+export { default as Resources } from '../organisms/Resources';
 export { default as BasicLayout } from './BasicLayout';
 export { default as DashboardPage } from './DashboardPage';
 export { default as DashboardPageBody } from './DashboardPageBody';
@@ -6,10 +7,10 @@ export { default as Layout } from './Layout';
 export { default as ProjectDetailPage } from './ProjectDetailPage';
 export { default as ProjectOverview } from './ProjectOverview';
 export { default as ProjectsPage } from './ProjectsPage';
-export { default as Resources } from './Resources';
 export { default as Theme } from './Theme';
 export { default as UserDetailPage } from './UserDetailPage';
 export { default as UsersPage } from './UsersPage';
 export { default as WorkingGroupDetailPage } from './WorkingGroupDetailPage';
 export { default as WorkingGroupOverview } from './WorkingGroupOverview';
+export { default as WorkingGroupResources } from './WorkingGroupResources';
 export { default as WorkingGroupsPage } from './WorkingGroupsPage';

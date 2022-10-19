@@ -16,19 +16,6 @@ export type WorkingGroupMember = {
   avatarUrl?: string;
 };
 
-export type WorkingGroupResource = {
-  title: string;
-  description?: string;
-} & (
-  | {
-      type: 'Link';
-      externalLink: string;
-    }
-  | {
-      type: 'Note';
-    }
-);
-
 export type WorkingGroupDataObject = {
   id: string;
   title: string;

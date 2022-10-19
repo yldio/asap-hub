@@ -4,12 +4,11 @@ import { Frame, useBackHref } from '@asap-hub/frontend-utils';
 import {
   WorkingGroupDetailPage,
   WorkingGroupOverview,
-  Resources,
+  WorkingGroupResources,
 } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
-import { Redirect, Route, Switch } from 'react-router-dom';
-
 import { useCurrentUser } from '@asap-hub/react-context';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { useWorkingGroupById } from './state';
 
 const { workingGroups } = gp2;
@@ -49,7 +48,7 @@ const WorkingGroupDetail = () => {
               }
             >
               <Frame title="Resources">
-                <Resources resources={workingGroupData.resources} />
+                <WorkingGroupResources resources={workingGroupData.resources} />
               </Frame>
             </Route>
           )}

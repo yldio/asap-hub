@@ -13,6 +13,8 @@ describe('Resources', () => {
     }));
   const defaultProps = {
     resources: getResources(),
+    headline: 'a headline',
+    hint: 'a hint',
   };
 
   it('renders heading', () => {
@@ -20,6 +22,14 @@ describe('Resources', () => {
     expect(
       screen.getByRole('heading', { name: /Resource List/i }),
     ).toBeVisible();
+  });
+  it('renders the headline', () => {
+    render(<Resources {...defaultProps} />);
+    expect(screen.getByText(/a headline/i)).toBeVisible();
+  });
+  it('renders the hint', () => {
+    render(<Resources {...defaultProps} />);
+    expect(screen.getByText(/a hint/i)).toBeVisible();
   });
   it('renders a resource title', () => {
     const [resource] = getResources();
@@ -37,7 +47,7 @@ describe('Resources', () => {
   });
   it('renders a link resource external link', () => {
     const [resource] = getResources();
-    const resourceLink: gp2.WorkingGroupResource = {
+    const resourceLink: gp2.Resource = {
       ...resource,
       type: 'Link',
       externalLink: 'http://a-link',
@@ -85,14 +95,14 @@ describe('Resources', () => {
   it('Renders show more button for more than 3 milestones', async () => {
     const resources = getResources(4);
 
-    render(<Resources resources={resources} />);
+    render(<Resources {...defaultProps} resources={resources} />);
 
     expect(screen.getByRole('button', { name: /Show more/i })).toBeVisible();
   });
   it('Renders show less button when the show more button is clicked', async () => {
     const resources = getResources(4);
 
-    render(<Resources resources={resources} />);
+    render(<Resources {...defaultProps} resources={resources} />);
 
     const button = screen.getByRole('button', { name: /Show more/i });
     userEvent.click(button);
@@ -101,7 +111,7 @@ describe('Resources', () => {
   it('does not show a more button for less than 3 milestones', async () => {
     const resources = getResources(3);
 
-    render(<Resources resources={resources} />);
+    render(<Resources {...defaultProps} resources={resources} />);
 
     expect(
       screen.queryByRole('button', { name: /Show more/i }),
@@ -110,7 +120,7 @@ describe('Resources', () => {
   it('displays the hidden milestones if the button is clicked', () => {
     const resources = getResources(4);
 
-    render(<Resources resources={resources} />);
+    render(<Resources {...defaultProps} resources={resources} />);
     expect(
       screen.getByRole('heading', { name: 'resource title 2' }),
     ).toBeInTheDocument();

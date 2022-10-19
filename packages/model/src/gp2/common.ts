@@ -1,9 +1,12 @@
-const resourceType = ['Link', 'Note'] as const;
-export type ResourceType = typeof resourceType[number];
-
-export interface Resource {
-  type: ResourceType;
+export type Resource = {
   title: string;
   description?: string;
-  externalLink?: string;
-}
+} & (
+  | {
+      type: 'Link';
+      externalLink: string;
+    }
+  | {
+      type: 'Note';
+    }
+);

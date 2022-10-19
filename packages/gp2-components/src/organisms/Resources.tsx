@@ -17,7 +17,11 @@ import { css } from '@emotion/react';
 import { useState } from 'react';
 import { addIcon, editIcon } from '../icons';
 
-type ResourcesProps = { resources?: gp2.Resource[] };
+type ResourcesProps = {
+  resources?: gp2.Resource[];
+  headline: string;
+  hint: string;
+};
 
 const { rem, tabletScreen } = pixels;
 const containerStyles = css({
@@ -53,7 +57,7 @@ const hideStyles = css({
   [`:nth-of-type(n+4)`]: { display: 'none' },
 });
 
-const Resources: React.FC<ResourcesProps> = ({ resources }) => {
+const Resources: React.FC<ResourcesProps> = ({ resources, headline, hint }) => {
   const minimumResourcesToDisplay = 3;
   const [expanded, setExpanded] = useState(false);
   const getResourcesListStyles = () => {
@@ -65,11 +69,7 @@ const Resources: React.FC<ResourcesProps> = ({ resources }) => {
   };
   return (
     <div css={containerStyles}>
-      <Card>
-        Please note, this is a private space for this working group on the
-        network. Nobody outside of this working group can see anything that you
-        upload here.
-      </Card>
+      <Card>{headline}</Card>
       <Card>
         <div css={[rowStyles, buttonStyles]}>
           <Headline3 noMargin>Resource List</Headline3>
@@ -79,17 +79,12 @@ const Resources: React.FC<ResourcesProps> = ({ resources }) => {
             </Link>
           </div>
         </div>
-        <div css={css({ paddingBottom: rem(32) })}>
-          View and share resources that others may find helpful.
-        </div>
+        <div css={css({ paddingBottom: rem(32) })}>{hint}</div>
         <div
           css={css({ display: 'flex', flexDirection: 'column', gap: rem(32) })}
         >
           {resources?.map((resource, index) => (
-            <div
-              key={`working-group-resource-${index}`}
-              css={getResourcesListStyles()}
-            >
+            <div key={`resource-${index}`} css={getResourcesListStyles()}>
               <Card>
                 <div css={[rowStyles, buttonStyles]}>
                   <Pill

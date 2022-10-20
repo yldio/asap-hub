@@ -153,6 +153,7 @@ jobs:
           max-contentful-envs: ${{ steps.setup.outputs.max-contentful-envs }}
       - name: Contentful Teardown
         id: contentful-teardown
+        if: ${{ steps.contentful-branch-state.outputs.on-branch-env == 'True' && steps.contentful-branch-state.outputs.contentful-env != 'Development' && steps.contentful-branch-state.outputs.contentful-env != 'Production' }}
         shell: bash
         run: bash .github/scripts/contentful/teardown.sh
         env:

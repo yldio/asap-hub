@@ -49,6 +49,21 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
+      - name: Test one conditional
+        if: ${{ 'Test' == 'Test' && 'Test2' == 'Test2' }}
+        run: echo 'Test one conditional success'
+      - name: Test 2 conditional
+        if: ${{ 'Test' == 'Test1' }} && ${{ 'Test2' == 'Test2' }}
+        run: echo 'Test two conditional success'
+      - name: Test 3 conditional
+        if: ${{ 'Test' == 'Test' }} && ${{ 'Test2' == 'Test' }}
+        run: echo 'Test three conditional success'
+      - name: Test 4 conditional
+        if: ${{ 'Test' == 'Test1' }} && ${{ 'Test2' == 'Test' }}
+        run: echo 'Test four conditional success'
+      - name: Test 5 conditional
+        if: ${{ 'Test' == 'Test1' && 'Test2' == 'Test' }}
+        run: echo 'Test five conditional success'
       - name: Build
         run: |
           yarn build:babel

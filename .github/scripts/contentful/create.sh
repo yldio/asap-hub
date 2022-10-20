@@ -23,7 +23,7 @@ STATUS_CODE=$(curl --silent \
                    --header "Content-Type: application/vnd.contentful.management.v1+json" \
                    --header "X-Contentful-Source-Environment: ${CONTENTFUL_SOURCE_ENV}" \
                    --data-binary '{"name": "'"${CONTENTFUL_ENV_ID}"'"}' \
-                   https://api.contentful.com/spaces/${CONTENTFUL_SPACE_ID}/environments)
+                   https://api.contentful.com/spaces/${CONTENTFUL_SPACE_ID}/environments/${CONTENTFUL_ENV_ID})
 
 if [[ "$STATUS_CODE" == "201" ]]; then
   echo "Successfully created Environment ${CONTENTFUL_ENV_ID}."

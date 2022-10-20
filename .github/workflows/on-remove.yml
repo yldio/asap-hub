@@ -142,8 +142,8 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: Branch
-      - name: Contentful checks
-        id: contentful-checks
+      - name: Get Contentful Branch State
+        id: contentful-branch-state
         uses: ./.github/actions/contentful-checks
         with:
           pr-number: ${{ github.event.inputs.pr-number }}
@@ -152,13 +152,13 @@ jobs:
           contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           max-contentful-envs: ${{ steps.setup.outputs.max-contentful-envs }}
       - name: Contentful Teardown
-        if: ${{ steps.contentful-checks.outputs.on-branch-env == 'True' }}
+        if: ${{ steps.contentful-branch-state.outputs.on-branch-env == 'True' }}
         id: contentful-teardown
         uses: ./.github/actions/contentful-teardown
         with:
           contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
           contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          contentful-env: ${{ steps.contentful-checks.outputs.contentful-env }}
+          contentful-env: ${{ steps.contentful-branch-state.outputs.contentful-env }}
 
   algolia-index:
     if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}

@@ -56,7 +56,7 @@ jobs:
           contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
           contentful-master-env: ${{ steps.setup.outputs.contentful-environment }}
           contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          max-contentful-envs: ${{ steps.setup.outputs.max-contentful-envs }}
+          max-contentful-envs: '3'
       - name: Ensure that we are not at Contentful environment limit
         id: ensure-limit-not-reached
         if: ${{ steps.get-contentful-state.outputs.on-branch-env == 'True' && steps.get-contentful-state.outputs.contentful-env-exists == 'False' && steps.get-contentful-state.outputs.contentful-limit-reached == 'True' }}

@@ -125,6 +125,42 @@ jobs:
           SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.gp2-squidex-ci-client-id }}
           SQUIDEX_CLIENT_SECRET: ${{ secrets.GP2_SQUIDEX_CI_CLIENT_SECRET }}
 
+  crn-contentful-remove:
+    if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:be0ebbcbd0ff209d56070f09590c5d9622e8a6dc
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    environment: Branch
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: Branch
+      - name: Get Contentful Branch State
+        id: contentful-branch-state
+        uses: ./.github/actions/contentful-checks
+        with:
+          pr-number: ${{ github.event.inputs.pr-number }}
+          contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
+          contentful-master-env: ${{ steps.setup.outputs.contentful-environment }}
+          contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          max-contentful-envs: ${{ steps.setup.outputs.max-contentful-envs }}
+      - name: Contentful Teardown
+        if: ${{ steps.contentful-branch-state.outputs.on-branch-env == 'True' }} && ${{ steps.contentful-branch-state.outputs.contentful-env != 'Development' }} && ${{ steps.contentful-branch-state.outputs.contentful-env != 'Production' }}
+        id: contentful-teardown
+        shell: bash
+        run: bash .github/scripts/contentful/teardown.sh
+        env:
+          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.contentful-space-id }}
+          CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          CONTENTFUL_ENV_ID: ${{ steps.contentful-branch-state.outputs.contentful-env }}
+
   algolia-index:
     if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
     runs-on: ubuntu-latest
@@ -173,6 +209,7 @@ jobs:
         gp2-sls-remove,
         crn-squidex-remove,
         gp2-squidex-remove,
+        crn-contentful-remove,
         algolia-index,
       ]
     if: ${{ failure() && (github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub') }}

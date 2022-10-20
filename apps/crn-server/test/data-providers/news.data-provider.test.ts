@@ -39,7 +39,7 @@ describe('News data provider', () => {
           q: JSON.stringify({
             take: 8,
             skip: 5,
-            filter: { path: 'data.type.iv', op: 'ne', value: 'Tutorial' },
+            filter: undefined,
             sort: [{ order: 'descending', path: 'created' }],
           }),
         })
@@ -53,14 +53,14 @@ describe('News data provider', () => {
       });
     });
 
-    test('Should return an empty result when resource does not exists', async () => {
+    test('Should return an empty result when resource does not exist', async () => {
       nock(baseUrl)
         .get(`/api/content/${appName}/news-and-events`)
         .query({
           q: JSON.stringify({
             take: 8,
             skip: 5,
-            filter: { path: 'data.type.iv', op: 'ne', value: 'Tutorial' },
+            filter: undefined,
             sort: [{ order: 'descending', path: 'created' }],
           }),
         })
@@ -81,7 +81,7 @@ describe('News data provider', () => {
           q: JSON.stringify({
             take: 8,
             skip: 5,
-            filter: { path: 'data.type.iv', op: 'ne', value: 'Tutorial' },
+            filter: undefined,
             sort: [{ order: 'descending', path: 'created' }],
           }),
         })
@@ -114,7 +114,7 @@ describe('News data provider', () => {
           q: JSON.stringify({
             take: 8,
             skip: 5,
-            filter: { path: 'data.type.iv', op: 'ne', value: 'Tutorial' },
+            filter: undefined,
             sort: [{ order: 'descending', path: 'created' }],
           }),
         })
@@ -131,7 +131,7 @@ describe('News data provider', () => {
         .query({
           q: JSON.stringify({
             take: 8,
-            filter: { path: 'data.type.iv', op: 'ne', value: 'Tutorial' },
+            filter: undefined,
             sort: [{ order: 'descending', path: 'created' }],
           }),
         })
@@ -151,14 +151,9 @@ describe('News data provider', () => {
               take: 8,
               skip: 5,
               filter: {
-                and: [
-                  { path: 'data.type.iv', op: 'ne', value: 'Tutorial' },
-                  {
-                    path: 'data.frequency.iv',
-                    op: 'in',
-                    value: ['CRN Quarterly'],
-                  },
-                ],
+                path: 'data.frequency.iv',
+                op: 'in',
+                value: ['CRN Quarterly'],
               },
               sort: [{ order: 'descending', path: 'created' }],
             }),
@@ -176,7 +171,7 @@ describe('News data provider', () => {
         expect(result).toEqual(getListNewsDataObject());
       });
 
-      test('Should query data properly when CRN Quarterly and News Articles frequency is selected', async () => {
+      test('Should query data properly when CRN Quarterly and News Articles frequency are selected', async () => {
         nock(baseUrl)
           .get(`/api/content/${appName}/news-and-events`)
           .query({
@@ -184,21 +179,16 @@ describe('News data provider', () => {
               take: 8,
               skip: 5,
               filter: {
-                and: [
-                  { path: 'data.type.iv', op: 'ne', value: 'Tutorial' },
+                or: [
                   {
-                    or: [
-                      {
-                        path: 'data.frequency.iv',
-                        op: 'empty',
-                        value: null,
-                      },
-                      {
-                        path: 'data.frequency.iv',
-                        op: 'in',
-                        value: ['CRN Quarterly', 'News Articles'],
-                      },
-                    ],
+                    path: 'data.frequency.iv',
+                    op: 'empty',
+                    value: null,
+                  },
+                  {
+                    path: 'data.frequency.iv',
+                    op: 'in',
+                    value: ['CRN Quarterly', 'News Articles'],
                   },
                 ],
               },
@@ -228,10 +218,9 @@ describe('News data provider', () => {
               take: 8,
               skip: 5,
               filter: {
-                and: [
-                  { path: 'data.type.iv', op: 'ne', value: 'Tutorial' },
-                  { path: 'data.title.iv', op: 'contains', value: 'hey' },
-                ],
+                path: 'data.title.iv',
+                op: 'contains',
+                value: 'hey',
               },
               sort: [{ order: 'descending', path: 'created' }],
             }),
@@ -256,7 +245,6 @@ describe('News data provider', () => {
               skip: 5,
               filter: {
                 and: [
-                  { path: 'data.type.iv', op: 'ne', value: 'Tutorial' },
                   {
                     path: 'data.frequency.iv',
                     op: 'in',

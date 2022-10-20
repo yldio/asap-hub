@@ -25,9 +25,6 @@ export const Normal = () => (
 
 export const WithResources = () => (
   <Layout>
-    <WorkingGroupDetailPage
-      {...props}
-      isWorkingGroupMember={true}
-    ></WorkingGroupDetailPage>
+    <WorkingGroupDetailPage {...props} isWorkingGroupMember={true} />
   </Layout>
 );

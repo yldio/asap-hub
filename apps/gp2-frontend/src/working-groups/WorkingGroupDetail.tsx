@@ -15,19 +15,18 @@ const { workingGroups } = gp2;
 
 const WorkingGroupDetail = () => {
   const { workingGroupId } = useRouteParams(workingGroups({}).workingGroup);
-  const workingGroupData = useWorkingGroupById(workingGroupId);
+  const workingGroup = useWorkingGroupById(workingGroupId);
   const backHref = useBackHref() ?? workingGroups({}).$;
   const currentUser = useCurrentUser();
   const isWorkingGroupMember =
-    workingGroupData?.members.some(
-      ({ userId }) => userId === currentUser?.id,
-    ) || false;
+    workingGroup?.members.some(({ userId }) => userId === currentUser?.id) ||
+    false;
 
-  if (workingGroupData) {
+  if (workingGroup) {
     return (
       <WorkingGroupDetailPage
         backHref={backHref}
-        {...workingGroupData}
+        {...workingGroup}
         isWorkingGroupMember={isWorkingGroupMember}
       >
         <Switch>
@@ -37,7 +36,7 @@ const WorkingGroupDetail = () => {
             }
           >
             <Frame title="Overview">
-              <WorkingGroupOverview {...workingGroupData} />
+              <WorkingGroupOverview {...workingGroup} />
             </Frame>
           </Route>
           {isWorkingGroupMember && (
@@ -48,7 +47,7 @@ const WorkingGroupDetail = () => {
               }
             >
               <Frame title="Resources">
-                <WorkingGroupResources resources={workingGroupData.resources} />
+                <WorkingGroupResources resources={workingGroup.resources} />
               </Frame>
             </Route>
           )}

@@ -5,6 +5,7 @@ import {
   screen,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
@@ -147,7 +148,9 @@ describe('WorkingGroupDetail', () => {
           .workingGroup({ workingGroupId: workingGroup.id })
           .resources({}).$,
       });
-      expect(screen.getAllByText(/resources/i)[0]).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', { name: /Resource List/i }),
+      ).toBeInTheDocument();
     });
 
     it('does not render the resources if the user is not in the working group', async () => {
@@ -169,7 +172,58 @@ describe('WorkingGroupDetail', () => {
           .workingGroup({ workingGroupId: workingGroup.id })
           .resources({}).$,
       });
-      expect(screen.queryByText(/resources/i)).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('heading', { name: /Resource List/i }),
+      ).not.toBeInTheDocument();
     });
+  });
+  it('clicking on the resource tab loads the resources', async () => {
+    const workingGroup = gp2Fixtures.createWorkingGroupResponse();
+    workingGroup.members = [
+      {
+        userId: '23',
+        firstName: 'Tony',
+        lastName: 'Stark',
+        role: 'Lead',
+      },
+    ];
+    mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
+    await renderWorkingGroupDetail({
+      id: workingGroup.id,
+      userId: '23',
+    });
+    userEvent.click(screen.getByRole('link', { name: /resources/i }));
+    expect(
+      screen.getByRole('heading', { name: /Resource List/i }),
+    ).toBeInTheDocument();
+  });
+
+  it('clicking on the overview tab loads the resources', async () => {
+    const workingGroup = gp2Fixtures.createWorkingGroupResponse();
+    workingGroup.members = [
+      {
+        userId: '23',
+        firstName: 'Tony',
+        lastName: 'Stark',
+        role: 'Lead',
+      },
+    ];
+    mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
+    await renderWorkingGroupDetail({
+      id: workingGroup.id,
+      userId: '23',
+      route: gp2Routing
+        .workingGroups({})
+        .workingGroup({ workingGroupId: workingGroup.id })
+        .resources({}).$,
+    });
+    expect(
+      screen.queryByRole('heading', { name: /Contact Information/i }),
+    ).not.toBeInTheDocument();
+    userEvent.click(screen.getByRole('link', { name: /overview/i }));
+
+    expect(
+      screen.getByRole('heading', { name: /Contact Information/i }),
+    ).toBeInTheDocument();
   });
 });

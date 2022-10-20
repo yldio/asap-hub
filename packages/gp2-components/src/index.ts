@@ -42,6 +42,7 @@ export {
   Layout,
   ProjectDetailPage,
   ProjectOverview,
+  ProjectResources,
   ProjectsPage,
   Theme,
   UserDetailPage,

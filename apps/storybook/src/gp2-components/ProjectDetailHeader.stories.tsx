@@ -6,9 +6,14 @@ export default {
   component: ProjectDetailHeader,
 };
 
-const item = {
+const props = {
   ...gp2Fixtures.createProjectResponse(),
   backHref: '/',
+  isProjectMember: false,
 };
 
-export const Normal = () => <ProjectDetailHeader {...item} />;
+export const Normal = () => <ProjectDetailHeader {...props} />;
+
+export const WithResources = () => (
+  <ProjectDetailHeader {...props} isProjectMember={true} />
+);

@@ -7,10 +7,14 @@ export default {
   component: WorkingGroupDetailHeader,
 };
 
-const item = {
+const props = {
   ...gp2Fixtures.createWorkingGroupResponse(),
   backHref: '/',
-  isWorkingGroupMember: true,
+  isWorkingGroupMember: false,
 };
 
-export const Normal = () => <WorkingGroupDetailHeader {...item} />;
+export const Normal = () => <WorkingGroupDetailHeader {...props} />;
+
+export const WithResources = () => (
+  <WorkingGroupDetailHeader {...props} isWorkingGroupMember={true} />
+);

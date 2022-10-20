@@ -1,5 +1,20 @@
 #!/usr/bin/env bash
 
+if [[ "$ON_BRANCH_ENV" == "False" ]]; then
+  echo "No branch Environment exists, not deleting Environment."
+  exit 0
+fi
+
+if [[ "$CONTENTFUL_ENV_ID" == "Production" ]]; then
+  echo "Target is Production branch; not deleting."
+  exit 0
+fi
+
+if [[ "$CONTENTFUL_ENV_ID" == "Development" ]]; then
+  echo "Target is Development branch; not deleting."
+  exit 0
+fi
+
 STATUS_CODE=$(curl --silent \
                    --request DELETE \
                    --output /dev/null \

@@ -66,17 +66,13 @@ export class UserSquidexDataProvider implements UserDataProvider {
     id: string,
     userToUpdate: gp2.UserUpdateDataObject,
   ): Promise<void> {
-    const { region, role, degrees, ...userInput } = userToUpdate;
-    const fieldMappedUser = mapUserFields({ region, role, degrees });
-    const cleanedUser = cleanUser({ ...userInput, ...fieldMappedUser });
+    const cleanedUser = getUserSquidexData(userToUpdate);
 
     await this.userSquidexRestClient.patch(id, cleanedUser);
   }
 
   async create(userToCreate: gp2.UserCreateDataObject): Promise<string> {
-    const { region, role, degrees, ...userInput } = userToCreate;
-    const fieldMappedUser = mapUserFields({ region, role, degrees });
-    const cleanedUser = parseToSquidex({ ...userInput, ...fieldMappedUser });
+    const cleanedUser = getUserSquidexData(userToCreate);
 
     const response = await this.userSquidexRestClient.create({
       ...cleanedUser,
@@ -135,16 +131,9 @@ type UserUpdateDataObjectEnumFields = Pick<
   'degrees' | 'region' | 'role'
 >;
 type UserUpdateInputEnumFields = Partial<UserCreateInputEnumFields>;
-
-function mapUserFields(
-  input: UserCreateDataObjectEnumFields,
-): UserCreateInputEnumFields;
-function mapUserFields(
-  input: UserUpdateDataObjectEnumFields,
-): UserUpdateInputEnumFields;
-function mapUserFields(
+const mapUserFields = (
   input: UserCreateDataObjectEnumFields | UserUpdateDataObjectEnumFields,
-): UserCreateInputEnumFields | UserUpdateInputEnumFields {
+): UserCreateInputEnumFields | UserUpdateInputEnumFields => {
   const mappedDegrees = input.degrees?.map((degree) => {
     if (degree === 'MD, PhD') {
       return UsersDataDegreeEnum.MdPhD;
@@ -158,30 +147,25 @@ function mapUserFields(
     ...(input.role && { role: reverseRoleMap[input.role] }),
     ...(input.degrees && { degree: mappedDegrees }),
   };
+};
+
+function getUserSquidexData(
+  input: gp2.UserCreateDataObject,
+): Omit<gp2Squidex.InputUser['data'], 'connections' | 'avatar'>;
+function getUserSquidexData(
+  input: gp2.UserUpdateDataObject,
+): Partial<Omit<gp2Squidex.InputUser['data'], 'connections' | 'avatar'>>;
+function getUserSquidexData(
+  input: gp2.UserUpdateDataObject | gp2.UserCreateDataObject,
+):
+  | Omit<gp2Squidex.InputUser['data'], 'connections' | 'avatar'>
+  | Partial<Omit<gp2Squidex.InputUser['data'], 'connections' | 'avatar'>> {
+  const { region, role, degrees, ...userInput } = input;
+  const fieldMappedUser = mapUserFields({ region, role, degrees });
+  const cleanedUser = parseToSquidex({ ...userInput, ...fieldMappedUser });
+
+  return cleanedUser;
 }
-
-const cleanUser = (
-  userToUpdate: Omit<
-    gp2.UserUpdateDataObject,
-    'region' | 'role' | 'degrees'
-  > & {
-    region?: UsersDataRegionEnum;
-    role?: UsersDataRoleEnum;
-    degrees?: UsersDataDegreeEnum;
-  },
-) =>
-  Object.entries(userToUpdate).reduce((acc, [key, value]) => {
-    const setValue = (item: unknown) => ({ ...acc, [key]: { iv: item } });
-    if (typeof value === 'string' && value.trim() === '') {
-      return setValue(null);
-    }
-
-    // we get an object but squidex expects an array of objects
-    if (key === 'avatar') {
-      return setValue([value]);
-    }
-    return setValue(value);
-  }, {} as { [key: string]: { iv: unknown } });
 
 const generateFetchQueryFilter = ({ search, filter }: FetchUsersOptions) => {
   const searchFilter = [

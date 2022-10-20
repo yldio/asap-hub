@@ -16,7 +16,7 @@ if [[ "$CONTENTFUL_ENV_ID" == "Development" ]]; then
 fi
 
 STATUS_CODE=$(curl --silent \
-                   --request POST \
+                   --request PUT \
                    --output /dev/null \
                    --write-out "%{http_code}" \
                    --header "Authorization: Bearer ${CONTENTFUL_MANAGEMENT_ACCESS_TOKEN}" \

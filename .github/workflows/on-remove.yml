@@ -152,11 +152,12 @@ jobs:
           contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           max-contentful-envs: ${{ steps.setup.outputs.max-contentful-envs }}
       - name: Contentful Teardown
-        if: ${{ steps.contentful-branch-state.outputs.on-branch-env == 'True' }} && ${{ steps.contentful-branch-state.outputs.contentful-env != 'Development' }} && ${{ steps.contentful-branch-state.outputs.contentful-env != 'Production' }}
         id: contentful-teardown
+        if: ${{ steps.contentful-branch-state.outputs.on-branch-env == 'True' && steps.contentful-branch-state.outputs.contentful-env != 'Development' && steps.contentful-branch-state.outputs.contentful-env != 'Production' }}
         shell: bash
         run: bash .github/scripts/contentful/teardown.sh
         env:
+          ON_BRANCH_ENV: ${{ steps.contentful-branch-state.outputs.on-branch-env }}
           CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.contentful-space-id }}
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           CONTENTFUL_ENV_ID: ${{ steps.contentful-branch-state.outputs.contentful-env }}

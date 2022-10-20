@@ -152,13 +152,14 @@ jobs:
           contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           max-contentful-envs: ${{ steps.setup.outputs.max-contentful-envs }}
       - name: Contentful Teardown
-        if: ${{ steps.contentful-branch-state.outputs.on-branch-env == 'True' }}
+        if: ${{ steps.contentful-branch-state.outputs.on-branch-env == 'True' }} && ${{ steps.contentful-branch-state.outputs.contentful-env != 'Development' }} && ${{ steps.contentful-branch-state.outputs.contentful-env != 'Production' }}
         id: contentful-teardown
-        uses: ./.github/actions/contentful-teardown
-        with:
-          contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
-          contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          contentful-env: ${{ steps.contentful-branch-state.outputs.contentful-env }}
+        shell: bash
+        run: bash .github/scripts/contentful/teardown.sh
+        env:
+          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.contentful-space-id }}
+          CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          CONTENTFUL_ENV_ID: ${{ steps.contentful-branch-state.outputs.contentful-env }}
 
   algolia-index:
     if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}

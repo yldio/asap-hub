@@ -20,7 +20,7 @@ describe('Project controller', () => {
       projectDataProviderMock.fetch.mockResolvedValue(
         getListProjectDataObject(),
       );
-      const result = await projectController.fetch();
+      const result = await projectController.fetch('11');
 
       expect(result).toEqual(getListProjectsResponse());
     });
@@ -30,9 +30,48 @@ describe('Project controller', () => {
         total: 0,
         items: [],
       });
-      const result = await projectController.fetch();
+      const result = await projectController.fetch('11');
 
       expect(result).toEqual({ items: [], total: 0 });
+    });
+    test('Should removes the resource if the user is not a member of the project', async () => {
+      const list = getListProjectDataObject();
+
+      const nonMemberProject = {
+        ...getProjectDataObject(),
+        members: [
+          {
+            userId: '7',
+            firstName: 'Peter',
+            lastName: 'Parker',
+            role: 'Contributor' as const,
+          },
+        ],
+      };
+      const listWithNonMemberProject = {
+        total: 2,
+        items: [...list.items, nonMemberProject],
+      };
+      projectDataProviderMock.fetch.mockResolvedValue(listWithNonMemberProject);
+      const result = await projectController.fetch('11');
+
+      const expectedItems = getListProjectsResponse().items;
+      const { resources: _, ...expectedProject } = getProjectResponse();
+
+      expect(result.items).toStrictEqual([
+        ...expectedItems,
+        {
+          ...expectedProject,
+          members: [
+            {
+              userId: '7',
+              firstName: 'Peter',
+              lastName: 'Parker',
+              role: 'Contributor',
+            },
+          ],
+        },
+      ]);
     });
   });
   describe('FetchById', () => {
@@ -43,18 +82,48 @@ describe('Project controller', () => {
     test('Should throw when project is not found', async () => {
       projectDataProviderMock.fetchById.mockResolvedValue(null);
 
-      await expect(projectController.fetchById('not-found')).rejects.toThrow(
-        NotFoundError,
-      );
+      await expect(
+        projectController.fetchById('not-found', '11'),
+      ).rejects.toThrow(NotFoundError);
     });
 
     test('Should return the project when it finds it', async () => {
       projectDataProviderMock.fetchById.mockResolvedValue(
         getProjectDataObject(),
       );
-      const result = await projectController.fetchById('project-id');
+      const result = await projectController.fetchById('project-id', '11');
 
       expect(result).toEqual(getProjectResponse());
+    });
+    test('Should not return the resources when the user is not part of the project', async () => {
+      projectDataProviderMock.fetchById.mockResolvedValue({
+        ...getProjectDataObject(),
+        members: [
+          {
+            userId: '7',
+            firstName: 'Peter',
+            lastName: 'Parker',
+            role: 'Contributor' as const,
+          },
+        ],
+      });
+      const result = await projectController.fetchById(
+        'working-group-id',
+        '11',
+      );
+
+      const { resources: _, ...expectedProject } = getProjectResponse();
+      expect(result).toStrictEqual({
+        ...expectedProject,
+        members: [
+          {
+            userId: '7',
+            firstName: 'Peter',
+            lastName: 'Parker',
+            role: 'Contributor',
+          },
+        ],
+      });
     });
   });
 });

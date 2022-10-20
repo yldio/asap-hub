@@ -98,7 +98,7 @@ export type ProjectDataObject = {
   startDate: string;
   status: ProjectStatus;
   title: string;
-  resources: Resource[];
+  resources?: Resource[];
 };
 
 export type ListProjectDataObject = ListResponse<ProjectDataObject>;

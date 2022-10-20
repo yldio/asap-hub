@@ -4,14 +4,6 @@ import { GraphQLWorkingGroupResource } from '../data-providers/working-group.dat
 
 export function parseResources(
   resourceList: gp2.Resource[],
-  resource: GraphQLWorkingGroupResource,
-): gp2.Resource[];
-export function parseResources(
-  resourceList: gp2.Resource[],
-  resource: GraphQLProjectResource,
-): gp2.Resource[];
-export function parseResources(
-  resourceList: gp2.Resource[],
   resource: GraphQLWorkingGroupResource | GraphQLProjectResource,
 ): gp2.Resource[] {
   if (
@@ -43,4 +35,22 @@ export function parseResources(
       externalLink,
     },
   ];
+}
+
+export function removeNotAllowedResources(
+  workingGroup: gp2.WorkingGroupDataObject,
+  loggedInUserId: string,
+): gp2.WorkingGroupDataObject;
+export function removeNotAllowedResources(
+  project: gp2.ProjectDataObject,
+  loggedInUserId: string,
+): gp2.ProjectDataObject;
+export function removeNotAllowedResources(
+  { resources, ...entity }: gp2.WorkingGroupDataObject | gp2.ProjectDataObject,
+  loggedInUserId: string,
+): gp2.WorkingGroupDataObject | gp2.ProjectDataObject {
+  const isMember = entity.members.some(
+    (member) => member.userId === loggedInUserId,
+  );
+  return isMember ? { ...entity, resources } : entity;
 }

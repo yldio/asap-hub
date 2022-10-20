@@ -10,8 +10,10 @@ export const projectRouteFactory = (
 
   projectRoutes.get<unknown, gp2.ListProjectResponse>(
     '/projects',
-    async (_req, res) => {
-      const projects = await projectController.fetch();
+    async (req, res) => {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const loggedInUserId = req.loggedInUser!.id;
+      const projects = await projectController.fetch(loggedInUserId);
 
       res.json(projects);
     },
@@ -23,7 +25,12 @@ export const projectRouteFactory = (
       const { params } = req;
 
       const { projectId } = validateProjectParameters(params);
-      const project = await projectController.fetchById(projectId);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const loggedInUserId = req.loggedInUser!.id;
+      const project = await projectController.fetchById(
+        projectId,
+        loggedInUserId,
+      );
 
       res.json(project);
     },

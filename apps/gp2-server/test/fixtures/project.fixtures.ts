@@ -22,7 +22,7 @@ export const getProjectDataObject = (): gp2.ProjectDataObject => ({
   projectProposalUrl: 'http://a-proposal',
   members: [
     {
-      userId: '42',
+      userId: '11',
       firstName: 'Tony',
       lastName: 'Stark',
       role: 'Project manager',
@@ -84,7 +84,7 @@ export const getGraphQLProjectMember = (): GraphQLProjectMember => ({
   role: ProjectsDataMembersRoleEnum.ProjectManager,
   user: [
     {
-      id: '42',
+      id: '11',
       created: '2021-01-01T00:00:00Z',
       lastModified: '2021-01-01T00:00:00Z',
       version: 1,

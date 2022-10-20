@@ -11,7 +11,7 @@ import {
   FETCH_WORKING_GROUP,
   FETCH_WORKING_GROUPS,
 } from '../queries/working-groups.queries';
-import { parseResources } from '../utils/parse-resources';
+import { parseResources } from '../utils/resources';
 import { createUrl } from '../utils/urls';
 
 export interface WorkingGroupDataProvider {

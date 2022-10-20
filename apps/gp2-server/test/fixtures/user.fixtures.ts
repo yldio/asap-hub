@@ -1,9 +1,9 @@
 import { gp2 } from '@asap-hub/model';
 import { UserEvent } from '@asap-hub/server-common';
 import {
-  gp2 as gp2Squidex,
   parseToSquidex,
   WebhookPayload,
+  gp2 as gp2squidex,
 } from '@asap-hub/squidex';
 import {
   FetchUserQuery,
@@ -62,7 +62,7 @@ export const fetchExpectation: gp2.ListUserResponse = {
 export const getUserWebhookPayload = (
   id: string,
   type: UserEvent,
-): WebhookPayload<SquidexGp2.User> => ({
+): WebhookPayload<gp2squidex.User> => ({
   type,
   timestamp: '2021-02-15T13:11:25Z',
   payload: {
@@ -84,7 +84,7 @@ export const getUserWebhookPayload = (
   },
 });
 
-export const patchResponse = (): SquidexGp2.InputUser => ({
+export const patchResponse = (): gp2squidex.InputUser => ({
   id: 'userId',
   data: {
     role: { iv: UsersDataRoleEnum.Trainee },
@@ -131,7 +131,7 @@ export const getUserCreateDataObject = (): gp2.UserCreateDataObject => {
   return userCreateDataObject;
 };
 
-export const getUserInput = (): SquidexGp2.InputUser['data'] => {
+export const getUserInput = (): gp2squidex.InputUser['data'] => {
   const { degrees, region, ...input } = getUserCreateDataObject();
   return {
     ...parseToSquidex(input),

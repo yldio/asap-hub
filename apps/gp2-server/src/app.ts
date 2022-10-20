@@ -10,7 +10,7 @@ import {
 } from '@asap-hub/server-common';
 import {
   getAccessTokenFactory,
-  gp2 as gp2Squidex,
+  gp2 as gp2squidex,
   SquidexGraphql,
   SquidexRest,
 } from '@asap-hub/squidex';

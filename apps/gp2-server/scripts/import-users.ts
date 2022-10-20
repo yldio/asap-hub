@@ -4,7 +4,7 @@ import {
   getAccessTokenFactory,
   SquidexGraphql,
   SquidexRest,
-  gp2 as gp2Squidex,
+  gp2 as gp2squidex,
 } from '@asap-hub/squidex';
 import { appName, baseUrl, clientId, clientSecret } from '../src/config';
 import { UserSquidexDataProvider } from '../src/data-providers/user.data-provider';

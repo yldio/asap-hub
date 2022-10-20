@@ -20,6 +20,7 @@ STATUS_CODE=$(curl --silent \
                    --output /dev/null \
                    --write-out "%{http_code}" \
                    --header "Authorization: Bearer ${CONTENTFUL_MANAGEMENT_ACCESS_TOKEN}" \
+                   --header "Content-Type: application/vnd.contentful.management.v1+json" \
                    --header "X-Contentful-Source-Environment: ${CONTENTFUL_SOURCE_ENV}" \
                    --data-binary '{"name": "'"$CONTENTFUL_ENV_ID"'"}' \
                    https://api.contentful.com/spaces/${CONTENTFUL_SPACE_ID}/environments)

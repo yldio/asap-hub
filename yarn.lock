@@ -510,7 +510,7 @@ __metadata:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
     "@babel/runtime-corejs3": 7.19.4
-    "@testing-library/dom": 7.31.2
+    "@testing-library/dom": 8.19.0
     "@testing-library/jest-dom": 5.16.5
     "@testing-library/react": 11.2.7
     "@testing-library/user-event": 12.8.3
@@ -559,7 +559,7 @@ __metadata:
     "@sentry/cli": 1.74.5
     "@sentry/react": 6.11.0
     "@sentry/tracing": 6.11.0
-    "@testing-library/dom": 7.31.2
+    "@testing-library/dom": 8.19.0
     "@testing-library/jest-dom": 5.16.5
     "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": 8.0.1
@@ -903,7 +903,7 @@ __metadata:
     "@asap-hub/gp2-components": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
     "@babel/runtime-corejs3": 7.19.4
-    "@testing-library/dom": 7.31.2
+    "@testing-library/dom": 8.19.0
     "@testing-library/jest-dom": 5.16.5
     "@testing-library/react": 11.2.7
     "@testing-library/user-event": 12.8.3
@@ -948,7 +948,7 @@ __metadata:
     "@emotion/babel-plugin": 11.10.2
     "@emotion/jest": 11.10.0
     "@emotion/react": 11.10.4
-    "@testing-library/dom": 7.31.2
+    "@testing-library/dom": 8.19.0
     "@testing-library/jest-dom": 5.16.5
     "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": 8.0.1
@@ -1013,7 +1013,7 @@ __metadata:
     "@sentry/cli": 1.74.5
     "@sentry/react": 6.11.0
     "@sentry/tracing": 6.11.0
-    "@testing-library/dom": 7.31.2
+    "@testing-library/dom": 8.19.0
     "@testing-library/jest-dom": 5.16.5
     "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": 8.0.1
@@ -1237,7 +1237,7 @@ __metadata:
     "@emotion/jest": 11.10.0
     "@emotion/react": 11.10.4
     "@emotion/serialize": 1.1.0
-    "@testing-library/dom": 7.31.2
+    "@testing-library/dom": 8.19.0
     "@testing-library/jest-dom": 5.16.5
     "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": 8.0.1
@@ -11828,19 +11828,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/dom@npm:7.31.2":
-  version: 7.31.2
-  resolution: "@testing-library/dom@npm:7.31.2"
+"@testing-library/dom@npm:8.19.0":
+  version: 8.19.0
+  resolution: "@testing-library/dom@npm:8.19.0"
   dependencies:
-    "@babel/code-frame": "npm:^7.10.4"
-    "@babel/runtime": "npm:^7.12.5"
-    "@types/aria-query": "npm:^4.2.0"
-    aria-query: "npm:^4.2.2"
-    chalk: "npm:^4.1.0"
-    dom-accessibility-api: "npm:^0.5.6"
-    lz-string: "npm:^1.4.4"
-    pretty-format: "npm:^26.6.2"
-  checksum: 54fbedd1ecdfe1d47be2e592b98d18b2ab9d7e731f57231caf9b152593fe7329fe5ebe219e0e5d1e0df5b1ab803121cb8acd8b73bd1fb292bfdc2c55663eb01d
+    "@babel/code-frame": ^7.10.4
+    "@babel/runtime": ^7.12.5
+    "@types/aria-query": ^4.2.0
+    aria-query: ^5.0.0
+    chalk: ^4.1.0
+    dom-accessibility-api: ^0.5.9
+    lz-string: ^1.4.4
+    pretty-format: ^27.0.2
+  checksum: 6bb93fef96703b6c47cf1b7cc8f71d402a9576084a94ba4e9926f51bd7bb1287fbb4f6942d82bd03fc6f3d998ae97e60f6aea4618f3a1ce6139597d2a4ecb7b9
   languageName: node
   linkType: hard
 
@@ -20177,7 +20177,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dom-accessibility-api@npm:^0.5.6":
+"dom-accessibility-api@npm:^0.5.6, dom-accessibility-api@npm:^0.5.9":
   version: 0.5.14
   resolution: "dom-accessibility-api@npm:0.5.14"
   checksum: 782c813f75a09ba6735ef03b5e1624406a3829444ae49d5bdedd272a49d437ae3354f53e02ffc8c9fd9165880250f41546538f27461f839dd4ea1234e77e8d5e
@@ -32434,7 +32434,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pretty-format@npm:^27.0.0, pretty-format@npm:^27.5.1":
+"pretty-format@npm:^27.0.0, pretty-format@npm:^27.0.2, pretty-format@npm:^27.5.1":
   version: 27.5.1
   resolution: "pretty-format@npm:27.5.1"
   dependencies:

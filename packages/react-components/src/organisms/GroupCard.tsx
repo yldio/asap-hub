@@ -56,8 +56,7 @@ const GroupCard: React.FC<GroupCardProps> = ({
     <TagList min={2} max={3} tags={tags} />
     <Paragraph>
       <span css={iconStyles}>{teamIcon} </span>
-      {numberOfTeams} Team
-      {numberOfTeams === 1 ? '' : 's'}
+      {`${numberOfTeams} Team${numberOfTeams === 1 ? '' : 's'}`}
     </Paragraph>
   </Card>
 );

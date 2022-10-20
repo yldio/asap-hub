@@ -6,6 +6,7 @@ import {
   GroupInformation,
   GroupMembersSection,
   GroupTools,
+  TeamsTabbedCard,
 } from '../organisms';
 import { CtaCard } from '../molecules';
 
@@ -51,7 +52,11 @@ const GroupProfileAbout: React.FC<GroupProfileAboutProps> = ({
         active={active}
       />
       <div id={membersSectionId}>
-        <GroupMembersSection teams={teams} leaders={leaders} />
+        {active ? (
+          <GroupMembersSection teams={teams} leaders={leaders} />
+        ) : (
+          <TeamsTabbedCard title="Interest Group Teams" teams={teams} />
+        )}
       </div>
       {contactEmails.length !== 0 && (
         <CtaCard href={createMailTo(contactEmails)} buttonText="Contact PM">

@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { createGroupResponse, createUserResponse } from '@asap-hub/fixtures';
 
 import GroupProfileAbout from '../GroupProfileAbout';
@@ -112,4 +112,13 @@ it('does not render a call to action button, when a PM is NOT defined on the gro
   );
 
   expect(queryByText(/contact pm/i)).not.toBeInTheDocument();
+});
+
+it('renders the Teams Tabbed card for inactive groups', () => {
+  render(<GroupProfileAbout {...props} active={true} />);
+  expect(screen.getByText('Group Members', { selector: 'h2' })).toBeVisible();
+  render(<GroupProfileAbout {...props} active={false} />);
+  expect(
+    screen.getByText('Interest Group Teams', { selector: 'h3' }),
+  ).toBeVisible();
 });

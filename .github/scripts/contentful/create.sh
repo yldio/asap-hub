@@ -21,7 +21,7 @@ STATUS_CODE=$(curl --silent \
                    --write-out "%{http_code}" \
                    --header "Authorization: Bearer ${CONTENTFUL_MANAGEMENT_ACCESS_TOKEN}" \
                    --header "X-Contentful-Source-Environment: ${CONTENTFUL_SOURCE_ENV}" \
-                   --data-binary "\{\"name\": $CONTENTFUL_ENV_ID\}" \
+                   --data-binary '{"name": "'"$CONTENTFUL_ENV_ID"'"}' \
                    https://api.contentful.com/spaces/${CONTENTFUL_SPACE_ID}/environments)
 
 if [[ "$STATUS_CODE" == "201" ]]; then

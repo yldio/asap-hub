@@ -49,6 +49,7 @@ export const eventContentFragment = gql`
           id
           flatData {
             displayName
+            inactiveSince
           }
         }
         user {

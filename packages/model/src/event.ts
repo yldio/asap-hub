@@ -24,11 +24,11 @@ export interface EventSpeakerExternalUserData {
 }
 
 export type EventSpeakerTeam = {
-  team: Pick<TeamResponse, 'displayName' | 'id'>;
+  team: Pick<TeamResponse, 'displayName' | 'id' | 'inactiveSince'>;
 };
 
 export type EventSpeakerUser = {
-  team: Pick<TeamResponse, 'displayName' | 'id'>;
+  team: Pick<TeamResponse, 'displayName' | 'id' | 'inactiveSince'>;
   user: EventSpeakerUserData;
   role: string;
 };

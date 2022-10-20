@@ -6229,7 +6229,7 @@ export type EventContentFragment = Pick<
         team: Maybe<
           Array<
             Pick<Teams, 'id'> & {
-              flatData: Pick<TeamsFlatDataDto, 'displayName'>;
+              flatData: Pick<TeamsFlatDataDto, 'displayName' | 'inactiveSince'>;
             }
           >
         >;
@@ -6610,7 +6610,10 @@ export type FetchEventsQuery = {
                   team: Maybe<
                     Array<
                       Pick<Teams, 'id'> & {
-                        flatData: Pick<TeamsFlatDataDto, 'displayName'>;
+                        flatData: Pick<
+                          TeamsFlatDataDto,
+                          'displayName' | 'inactiveSince'
+                        >;
                       }
                     >
                   >;
@@ -6959,7 +6962,10 @@ export type FetchEventQuery = {
             team: Maybe<
               Array<
                 Pick<Teams, 'id'> & {
-                  flatData: Pick<TeamsFlatDataDto, 'displayName'>;
+                  flatData: Pick<
+                    TeamsFlatDataDto,
+                    'displayName' | 'inactiveSince'
+                  >;
                 }
               >
             >;
@@ -10126,6 +10132,13 @@ export const EventContentFragmentDoc = {
                                     name: {
                                       kind: 'Name',
                                       value: 'displayName',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'inactiveSince',
                                     },
                                   },
                                 ],

@@ -36,6 +36,7 @@ export const getEventSpeakerUser = (): EventSpeakerUser => ({
   team: {
     id: 'team-id-3',
     displayName: 'The team three',
+    inactiveSince: undefined,
   },
   user: {
     id: 'user-id-3',
@@ -126,6 +127,7 @@ export const getSquidexGraphqlEventSpeakerWithUser = (): NonNullable<
       id: 'team-id-3',
       flatData: {
         displayName: 'The team three',
+        inactiveSince: undefined,
       },
     },
   ],

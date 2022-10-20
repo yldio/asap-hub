@@ -117,9 +117,10 @@ export const parseGraphQLResearchOutput = (
 
 const parseGraphqlTeamLite = (
   graphqlTeam: FetchResearchOutputTeamContents,
-): Pick<TeamResponse, 'id' | 'displayName'> => ({
+): Pick<TeamResponse, 'id' | 'displayName' | 'inactiveSince'> => ({
   id: graphqlTeam.id,
   displayName: graphqlTeam.flatData?.displayName || '',
+  inactiveSince: graphqlTeam.flatData?.inactiveSince,
 });
 
 const isSharingStatus = (

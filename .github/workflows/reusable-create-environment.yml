@@ -59,7 +59,7 @@ jobs:
           max-contentful-envs: ${{ steps.setup.outputs.max-contentful-envs }}
       - name: Create Contentful environment
         id: create-contentful-environment
-        if: ${{ steps.get-contentful-state.outputs.on-branch-env == 'True' && steps.get-contentful-state.outputs.created == 'False' }}
+        if: ${{ steps.get-contentful-state.outputs.on-branch-env == 'True' && steps.get-contentful-state.outputs.contentful-env-exists == 'False' }}
         shell: bash
         run: bash .github/scripts/contentful/create.sh
         env:

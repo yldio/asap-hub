@@ -20,7 +20,6 @@ import { addIcon, editIcon } from '../icons';
 type ResourcesProps = {
   resources?: gp2.Resource[];
   headline: string;
-  hint: string;
 };
 
 const { rem, tabletScreen } = pixels;
@@ -57,7 +56,7 @@ const hideStyles = css({
   [`:nth-of-type(n+4)`]: { display: 'none' },
 });
 
-const Resources: React.FC<ResourcesProps> = ({ resources, headline, hint }) => {
+const Resources: React.FC<ResourcesProps> = ({ resources, headline }) => {
   const minimumResourcesToDisplay = 3;
   const [expanded, setExpanded] = useState(false);
   const getResourcesListStyles = () => {
@@ -79,7 +78,9 @@ const Resources: React.FC<ResourcesProps> = ({ resources, headline, hint }) => {
             </Link>
           </div>
         </div>
-        <div css={css({ paddingBottom: rem(32) })}>{hint}</div>
+        <div css={css({ paddingBottom: rem(32) })}>
+          View and share resources that others may find helpful.
+        </div>
         <div
           css={css({ display: 'flex', flexDirection: 'column', gap: rem(32) })}
         >

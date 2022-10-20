@@ -1,8 +1,8 @@
 import { gp2 } from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
-import WorkingGroupResources from '../WorkingGroupResources';
+import ProjectResources from '../ProjectResources';
 
-describe('WorkingGroupResources', () => {
+describe('ProjectResources', () => {
   const getResources = (length = 1): gp2.Resource[] =>
     Array.from({ length }, (_, itemIndex) => ({
       type: 'Link' as const,
@@ -17,7 +17,7 @@ describe('WorkingGroupResources', () => {
   it('renders a resource', () => {
     const [resource] = getResources();
     resource.description = 'resource description';
-    render(<WorkingGroupResources {...defaultProps} resources={[resource]} />);
+    render(<ProjectResources {...defaultProps} resources={[resource]} />);
     expect(screen.getByText(/resource description/i)).toBeVisible();
   });
 });

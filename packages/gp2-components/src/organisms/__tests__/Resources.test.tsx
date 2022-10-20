@@ -14,7 +14,6 @@ describe('Resources', () => {
   const defaultProps = {
     resources: getResources(),
     headline: 'a headline',
-    hint: 'a hint',
   };
 
   it('renders heading', () => {
@@ -27,10 +26,7 @@ describe('Resources', () => {
     render(<Resources {...defaultProps} />);
     expect(screen.getByText(/a headline/i)).toBeVisible();
   });
-  it('renders the hint', () => {
-    render(<Resources {...defaultProps} />);
-    expect(screen.getByText(/a hint/i)).toBeVisible();
-  });
+
   it('renders a resource title', () => {
     const [resource] = getResources();
     resource.title = 'resource title';

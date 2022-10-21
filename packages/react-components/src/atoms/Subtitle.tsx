@@ -7,7 +7,7 @@ import {
 } from '../text';
 
 interface SubtitleProps {
-  readonly children: TextChildren;
+  // readonly children: TextChildren;
   readonly id?: string;
   readonly styleAsHeading?: keyof typeof headlineStyles;
   readonly accent?: AccentColorName;

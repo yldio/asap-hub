@@ -21,6 +21,7 @@ const mockGetUsers = getUsers as jest.MockedFunction<typeof getUsers>;
 
 const renderUserList = async (
   listGroupResponse: gp2Model.ListUserResponse = gp2Fixtures.createUsersResponse(),
+  displayFilters: boolean = false,
 ) => {
   mockGetUsers.mockResolvedValue(listGroupResponse);
 
@@ -34,7 +35,9 @@ const renderUserList = async (
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/users/']}>
-              <Route path="/users" component={UserList} />
+              <Route path="/users">
+                <UserList displayFilters={displayFilters} />
+              </Route>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -75,4 +78,9 @@ it('renders a list of fetched groups', async () => {
   expect(
     screen.getByRole('heading', { name: /display name 1/i }),
   ).toBeInTheDocument();
+});
+
+it('renders the filters modal', async () => {
+  await renderUserList(undefined, true);
+  expect(screen.getByRole('heading', { name: 'Filters' })).toBeVisible();
 });

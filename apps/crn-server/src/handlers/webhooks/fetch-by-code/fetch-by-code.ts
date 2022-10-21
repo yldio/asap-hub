@@ -1,3 +1,4 @@
+import { UserMetadataResponse } from '@asap-hub/model';
 import { validateAuth0Request } from '@asap-hub/server-common';
 import { framework as lambda } from '@asap-hub/services-common';
 import { SearchClient } from 'algoliasearch';
@@ -15,8 +16,8 @@ export const fetchUserByCodeHandlerFactory = (
   date = new Date(),
   ttl = algoliaApiKeyTtl,
 ): lambda.Handler =>
-  lambda.http(async (request) => {
-    await validateAuth0Request(request, auth0SharedSecret);
+  lambda.http<UserMetadataResponse>(async (request) => {
+    validateAuth0Request(request, auth0SharedSecret);
 
     const { code } = validateParams(request.params as never);
 

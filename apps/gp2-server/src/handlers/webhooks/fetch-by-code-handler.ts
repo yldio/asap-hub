@@ -1,7 +1,11 @@
 import { ValidationError } from '@asap-hub/errors';
 import { validateAuth0Request } from '@asap-hub/server-common';
 import { framework as lambda } from '@asap-hub/services-common';
-import { RestUser, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
+import {
+  gp2 as gp2squidex,
+  SquidexGraphql,
+  SquidexRest,
+} from '@asap-hub/squidex';
 import { appName, auth0SharedSecret, baseUrl } from '../../config';
 import Users, { UserController } from '../../controllers/user.controller';
 import { UserSquidexDataProvider } from '../../data-providers/user.data-provider';
@@ -34,7 +38,10 @@ const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
   appName,
   baseUrl,
 });
-const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
+const userRestClient = new SquidexRest<
+  gp2squidex.RestUser,
+  gp2squidex.InputUser
+>(getAuthToken, 'users', {
   appName,
   baseUrl,
 });

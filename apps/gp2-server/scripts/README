@@ -1,0 +1,17 @@
+## User import
+
+To run the import script use this command from the root of this repository:
+
+```bash
+yarn import:users <file-path>
+```
+
+Where `<file-path>` is a relative path to the CSV file.
+
+To import users into the correct environment make sure to set the following environment variables:
+```
+SQUIDEX_CLIENT_ID
+SQUIDEX_CLIENT_SECRET
+SQUIDEX_APP_NAME
+SQUIDEX_BASE_URL
+```

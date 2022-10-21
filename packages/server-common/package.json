@@ -27,6 +27,7 @@
     "apr-intercept": "3.0.4",
     "aws-lambda": "1.0.7",
     "aws-sdk": "2.1220.0",
+    "csv-parse": "4.16.3",
     "express": "4.18.2",
     "got": "11.8.5",
     "jsonwebtoken": "8.5.1",
@@ -34,6 +35,8 @@
     "pino-http": "6.6.0",
     "pino-lambda": "3.0.1",
     "pino-noir": "2.2.1",
+    "pump": "3.0.0",
+    "through2-concurrent": "2.0.0",
     "uuid": "8.3.2"
   },
   "devDependencies": {
@@ -46,7 +49,9 @@
     "@types/express": "4.17.14",
     "@types/jest": "27.5.2",
     "@types/jsonwebtoken": "8.5.9",
+    "@types/pump": "1.1.1",
     "@types/supertest": "2.0.12",
+    "@types/through2-concurrent": "2.0.1",
     "@types/uuid": "8.3.4",
     "express-async-errors": "3.1.1",
     "jwt-encode": "1.0.1",

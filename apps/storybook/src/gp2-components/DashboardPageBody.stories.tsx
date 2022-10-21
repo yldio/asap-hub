@@ -30,5 +30,4 @@ const props = {
   userId: 'u42',
 };
 
-// WIP
 export const Normal = () => <DashboardPageBody {...props} />;

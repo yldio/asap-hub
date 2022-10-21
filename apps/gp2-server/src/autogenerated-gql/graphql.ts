@@ -1602,6 +1602,7 @@ export type UsersDataDto = {
   email: Maybe<UsersDataEmailDto>;
   firstName: Maybe<UsersDataFirstNameDto>;
   lastName: Maybe<UsersDataLastNameDto>;
+  onboarded: Maybe<UsersDataOnboardedDto>;
   positions: Maybe<UsersDataPositionsDto>;
   region: Maybe<UsersDataRegionDto>;
   role: Maybe<UsersDataRoleDto>;
@@ -1637,6 +1638,7 @@ export type UsersDataInputDto = {
   email: InputMaybe<UsersDataEmailInputDto>;
   firstName: InputMaybe<UsersDataFirstNameInputDto>;
   lastName: InputMaybe<UsersDataLastNameInputDto>;
+  onboarded: InputMaybe<UsersDataOnboardedInputDto>;
   positions: InputMaybe<UsersDataPositionsInputDto>;
   region: InputMaybe<UsersDataRegionInputDto>;
   role: InputMaybe<UsersDataRoleInputDto>;
@@ -1650,6 +1652,18 @@ export type UsersDataLastNameDto = {
 /** The structure of the Last Name field of the Users content input type. */
 export type UsersDataLastNameInputDto = {
   iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Onboarding complete field of the Users content type. */
+export type UsersDataOnboardedDto = {
+  /** Use this to allow the user to see the full Hub and skip profile completion */
+  iv: Maybe<Scalars['Boolean']>;
+};
+
+/** The structure of the Onboarding complete field of the Users content input type. */
+export type UsersDataOnboardedInputDto = {
+  /** Use this to allow the user to see the full Hub and skip profile completion */
+  iv: InputMaybe<Scalars['Boolean']>;
 };
 
 /** The structure of the Positions nested schema. */
@@ -1738,6 +1752,8 @@ export type UsersFlatDataDto = {
   email: Maybe<Scalars['String']>;
   firstName: Maybe<Scalars['String']>;
   lastName: Maybe<Scalars['String']>;
+  /** Use this to allow the user to see the full Hub and skip profile completion */
+  onboarded: Maybe<Scalars['Boolean']>;
   positions: Maybe<Array<UsersDataPositionsChildDto>>;
   region: Maybe<UsersDataRegionEnum>;
   /** Role on the GP2 Hub */
@@ -2356,6 +2372,7 @@ export type UsersContentFragment = Pick<
     | 'role'
     | 'country'
     | 'city'
+    | 'onboarded'
   > & {
     avatar: Maybe<Array<Pick<Asset, 'id'>>>;
     positions: Maybe<
@@ -2383,6 +2400,7 @@ export type FetchUserQuery = {
         | 'role'
         | 'country'
         | 'city'
+        | 'onboarded'
       > & {
         avatar: Maybe<Array<Pick<Asset, 'id'>>>;
         positions: Maybe<
@@ -2420,6 +2438,7 @@ export type FetchUsersQuery = {
               | 'role'
               | 'country'
               | 'city'
+              | 'onboarded'
             > & {
               avatar: Maybe<Array<Pick<Asset, 'id'>>>;
               positions: Maybe<
@@ -3140,6 +3159,7 @@ export const UsersContentFragmentDoc = {
                     ],
                   },
                 },
+                { kind: 'Field', name: { kind: 'Name', value: 'onboarded' } },
               ],
             },
           },

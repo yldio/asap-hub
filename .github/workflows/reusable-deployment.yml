@@ -261,3 +261,39 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           SES_REGION: ${{ steps.setup.outputs.ses-region }}
+
+  crn-contentful-branch:
+    if: ${{ inputs.environment-name=='Branch'}}
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment-name }}
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:be0ebbcbd0ff209d56070f09590c5d9622e8a6dc
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Determine whether we need to run migrations
+        id: get-contentful-state
+        uses: ./.github/actions/contentful-checks
+        with:
+          pr-number: ${{ steps.setup.outputs.pr-number }}
+          contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
+          contentful-master-env: ${{ steps.setup.outputs.contentful-environment }}
+          contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          max-contentful-envs: ${{ steps.setup.outputs.max-contentful-envs }}
+      - name: Determine whether the Contentful environment has been migrated
+        id: check-contentful-migrated
+        if: ${{ steps.get-contentful-state.outputs.on-branch-env == 'True' && steps.get-contentful-state.outputs.contentful-env-exists == 'True' && steps.get-contentful-state.outputs.contentful-env-migrations-up-to-date == 'False' }}
+        run: |
+          yarn workspace @asap-hub/contentful space:migrate:crn
+        env:
+          CONTENTFUL_ENV_ID: ${{ steps.get-contentful-state.outputs.env-id }}
+          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.contentful-space-id }}
+          CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{  secrets.CONTENTFUL_MANAGEMENT_TOKEN }}

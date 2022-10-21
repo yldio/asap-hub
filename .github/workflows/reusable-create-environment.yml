@@ -48,8 +48,8 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Contentful Checks
-        id: determine-contentful-environment
+      - name: Determine whether we need to create a Contentful environment
+        id: get-contentful-state
         uses: ./.github/actions/contentful-checks
         with:
           pr-number: ${{ steps.setup.outputs.pr-number }}
@@ -57,6 +57,23 @@ jobs:
           contentful-master-env: ${{ steps.setup.outputs.contentful-environment }}
           contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           max-contentful-envs: ${{ steps.setup.outputs.max-contentful-envs }}
+      - name: Ensure that we are not at Contentful environment limit
+        id: ensure-limit-not-reached
+        if: ${{ steps.get-contentful-state.outputs.on-branch-env == 'True' && steps.get-contentful-state.outputs.contentful-env-exists == 'False' && steps.get-contentful-state.outputs.contentful-limit-reached == 'True' }}
+        shell: bash
+        run: |
+          echo "Contentful Environment required but all available slots are in use."
+          exit 1
+      - name: Create Contentful environment
+        id: create-contentful-environment
+        if: ${{ steps.get-contentful-state.outputs.on-branch-env == 'True' && steps.get-contentful-state.outputs.contentful-env-exists == 'False' && steps.get-contentful-state.outputs.contentful-limit-reached == 'False' }}
+        shell: bash
+        run: bash .github/scripts/contentful/create.sh
+        env:
+          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.contentful-space-id }}
+          CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          CONTENTFUL_ENV_ID: ${{ steps.get-contentful-state.outputs.contentful-env }}
+          CONTENTFUL_SOURCE_ENV: ${{ steps.setup.outputs.contentful-environment }}
 
   crn-squidex:
     runs-on: ubuntu-latest

@@ -263,6 +263,7 @@ jobs:
           SES_REGION: ${{ steps.setup.outputs.ses-region }}
 
   crn-contentful-branch:
+    needs: [crn-sls-deploy]
     if: ${{ inputs.environment-name=='Branch'}}
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}

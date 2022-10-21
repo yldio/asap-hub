@@ -1,3 +1,4 @@
+import { GenericError } from '@asap-hub/errors';
 import { gp2 } from '@asap-hub/model';
 import { parse } from '@asap-hub/server-common';
 import {
@@ -86,6 +87,25 @@ const app = async () => {
         }
 
         usersFailed++;
+        if (e instanceof GenericError) {
+          if (
+            typeof e.httpResponseBody === 'string' &&
+            e.httpResponseBody.includes('Validation error')
+          ) {
+            console.log(
+              `Validation error(s):\n` +
+                `- ${(e as any).details.join('\n- ')}\n` +
+                `Input: ${Object.entries(input)
+                  .map(
+                    ([k, v]) =>
+                      `${k}: ${typeof v === 'object' ? JSON.stringify(v) : v}`,
+                  )
+                  .join(', ')}\n\n`,
+            );
+            return;
+          }
+          console.log(JSON.stringify(e, null, 2));
+        }
         console.log({ input, e });
       }
     },

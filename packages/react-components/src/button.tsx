@@ -38,9 +38,9 @@ const styles = css({
   lineHeight: 'unset',
   fontWeight: 'bold',
 
-  // '+ button': {
-  //   marginTop: 0,
-  // },
+  '+ button': {
+    marginTop: 0,
+  },
 
   transition: '200ms',
 

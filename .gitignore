@@ -45,5 +45,15 @@ yarn-error.log*
 .vim
 .idea
 
+# emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
 # squidex
 .configuration

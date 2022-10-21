@@ -12,6 +12,7 @@ if (NODE_ENV === 'production') {
     'CRN_AUTH0_CLIENT_ID',
     'CRN_SENTRY_DSN_API',
     'CRN_SENTRY_DSN_HANDLERS',
+    'CRN_CONTENTFUL_ENV',
   ].forEach((env) => {
     assert.ok(process.env[env], `${env} not defined`);
   });
@@ -34,6 +35,7 @@ const {
   CRN_SQUIDEX_API_CLIENT_ID,
   CRN_SQUIDEX_API_CLIENT_SECRET,
   CRN_SQUIDEX_SHARED_SECRET,
+  CRN_CONTENTFUL_ENV,
 } = process.env;
 
 const region = process.env.AWS_REGION as AWS['provider']['region'];
@@ -53,6 +55,7 @@ const squidexBaseUrl = SQUIDEX_BASE_URL!;
 const squidexClientId = CRN_SQUIDEX_API_CLIENT_ID!;
 const squidexClientSecret = CRN_SQUIDEX_API_CLIENT_SECRET!;
 const squidexSharedSecret = CRN_SQUIDEX_SHARED_SECRET!;
+const contentfulEnvironment = CRN_CONTENTFUL_ENV!;
 
 const algoliaIndex = ALGOLIA_INDEX
   ? '${env:ALGOLIA_INDEX}'
@@ -121,6 +124,7 @@ const serverlessConfig: AWS = {
       CURRENT_REVISION: CI_COMMIT_SHA
         ? '${env:CI_COMMIT_SHA}'
         : '${env:CURRENT_REVISION}',
+      CONTENTFUL_ENV: contentfulEnvironment,
     },
     iam: {
       role: {

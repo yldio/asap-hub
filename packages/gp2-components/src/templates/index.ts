@@ -1,6 +1,7 @@
 export { default as BasicLayout } from './BasicLayout';
 export { default as DashboardPage } from './DashboardPage';
 export { default as DashboardPageBody } from './DashboardPageBody';
+export { default as DashboardPageHeader } from './DashboardPageHeader';
 export { default as Layout } from './Layout';
 export { default as ProjectDetailPage } from './ProjectDetailPage';
 export { default as ProjectOverview } from './ProjectOverview';

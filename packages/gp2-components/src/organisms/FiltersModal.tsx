@@ -1,8 +1,6 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 import {
   Modal,
-  Headline3,
-  Subtitle,
   LabeledMultiSelect,
   Divider,
   pixels,

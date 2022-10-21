@@ -37,6 +37,7 @@ export {
   BasicLayout,
   DashboardPage,
   DashboardPageBody,
+  DashboardPageHeader,
   Layout,
   ProjectDetailPage,
   ProjectOverview,

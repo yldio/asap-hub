@@ -48,18 +48,19 @@ type UserPosition = {
 
 export type UserDataObject = {
   avatarUrl?: string;
+  city?: string;
   connections?: Connection[];
+  country: string;
   createdDate: string;
   degrees?: UserDegree[];
   email: string;
   firstName: string;
   id: string;
   lastName: string;
+  onboarded: boolean;
+  positions: UserPosition[];
   region: UserRegion;
   role: UserRole;
-  positions: UserPosition[];
-  country: string;
-  city?: string;
 };
 
 export type UserUpdateDataObject = Partial<

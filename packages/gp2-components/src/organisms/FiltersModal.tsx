@@ -4,15 +4,16 @@ import {
   Headline3,
   Subtitle,
   LabeledMultiSelect,
-  Button,
   Divider,
   pixels,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 
 import { useState } from 'react';
+import FilterModalFooter from '../molecules/FilterModalFooter';
+import FilterModalHeader from '../molecules/FilterModalHeader';
 
-const { rem, tabletScreen } = pixels;
+const { rem } = pixels;
 
 const { userRegions } = gp2Model;
 
@@ -35,14 +36,12 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
   const resetFilters = () => {
     setSelectedRegions([]);
   };
+
+  const numberOfFilter = seletedRegions.length;
   return (
     <Modal padding={false}>
       <div css={containerStyles}>
-        <Headline3>Filters</Headline3>
-        <Subtitle accent="lead" styleAsHeading={6}>
-          Apply filters to narrow down your search results. You currently have
-          three filters selected.
-        </Subtitle>
+        <FilterModalHeader numberOfFilter={numberOfFilter} />
         <LabeledMultiSelect
           title="Expertise / Interests"
           placeholder="Start typing…"
@@ -77,60 +76,13 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
           suggestions={[]}
         />
         <Divider />
-        <div
-          css={css({
-            display: 'inline-flex',
-            gap: rem(24),
-            width: '100%',
-            [`@media (max-width: ${tabletScreen.max - 1}px)`]: {
-              display: 'flex',
-              flexDirection: 'column-reverse',
-            },
-          })}
-        >
-          <Button
-            overrideStyles={css({
-              margin: 0,
-              maxWidth: 'fit-content',
-              [`@media (max-width: ${tabletScreen.max - 1}px)`]: {
-                maxWidth: '100%',
-              },
-            })}
-            onClick={() => onBackClick()}
-          >
-            Close
-          </Button>
-          <div
-            css={css({
-              display: 'inline-flex',
-              gap: rem(24),
-              marginLeft: 'auto',
-              [`@media (max-width: ${tabletScreen.max - 1}px)`]: {
-                marginLeft: 'unset',
-                display: 'flex',
-                flexDirection: 'column-reverse',
-              },
-            })}
-          >
-            <Button
-              overrideStyles={css({
-                margin: 0,
-              })}
-              onClick={() => resetFilters()}
-            >
-              Reset
-            </Button>
-            <Button
-              overrideStyles={css({
-                margin: 0,
-              })}
-              primary
-              onClick={() => onApplyClick({ region: seletedRegions })}
-            >
-              Apply
-            </Button>
-          </div>
-        </div>
+        <FilterModalFooter
+          onApply={() => {
+            onApplyClick({ region: seletedRegions });
+          }}
+          onClose={onBackClick}
+          onReset={resetFilters}
+        />
       </div>
     </Modal>
   );

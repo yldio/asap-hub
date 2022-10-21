@@ -1,6 +1,5 @@
 import { useHistory, useLocation } from 'react-router-dom';
 import { gp2 } from '@asap-hub/model';
-import { searchQueryParam } from '@asap-hub/routing';
 import { usePaginationParams } from './pagination';
 
 export const useSearch = () => {
@@ -10,7 +9,6 @@ export const useSearch = () => {
   const { resetPagination } = usePaginationParams();
 
   const selectedRegions = currentUrlParams.getAll('region') as gp2.UserRegion[];
-  const searchQuery = currentUrlParams.get(searchQueryParam) || '';
 
   const updateRegions = (
     newUrlParams: URLSearchParams,
@@ -35,7 +33,6 @@ export const useSearch = () => {
   };
 
   return {
-    searchQuery,
     changeLocation,
     filters: { region: selectedRegions },
     updateFilters,

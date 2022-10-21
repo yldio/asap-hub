@@ -12,9 +12,9 @@ export const createUserApiUrl = ({
   if (search) url.searchParams.set('search', search);
   if (take !== null) {
     url.searchParams.set('take', String(take));
-    if (skip !== null) {
-      url.searchParams.set('skip', String(skip));
-    }
+  }
+  if (skip !== null) {
+    url.searchParams.set('skip', String(skip));
   }
   filter?.region?.forEach((r) => url.searchParams.append('filter[region]', r));
 

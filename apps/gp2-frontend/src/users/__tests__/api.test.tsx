@@ -2,7 +2,7 @@ import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import nock from 'nock';
 import { API_BASE_URL } from '../../config';
-import { getUser, getUsers } from '../api';
+import { createUserApiUrl, getUser, getUsers } from '../api';
 
 jest.mock('../../config');
 
@@ -92,5 +92,31 @@ describe('getUsers', () => {
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch the users. Expected status 2xx. Received status 500."`,
     );
+  });
+});
+
+describe('createUserApiUrl', () => {
+  it('uses the values for take and skip params', async () => {
+    const url = createUserApiUrl({
+      take: 10,
+      skip: 0,
+    });
+    expect(url.search).toMatchInlineSnapshot(`"?take=10&skip=0"`);
+  });
+
+  it('handles requests with a search query', async () => {
+    const url = createUserApiUrl({
+      search: 'test123',
+    });
+    expect(url.searchParams.get('search')).toEqual('test123');
+  });
+  it('handles requests with filters', async () => {
+    const url = createUserApiUrl({
+      filter: { region: ['Africa', 'Asia'] },
+    });
+    expect(url.searchParams.getAll('filter[region]')).toEqual([
+      'Africa',
+      'Asia',
+    ]);
   });
 });

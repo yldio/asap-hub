@@ -34,7 +34,7 @@ describe('Project controller', () => {
 
       expect(result).toEqual({ items: [], total: 0 });
     });
-    test('Should removes the resource if the user is not a member of the project', async () => {
+    test('Should remove the resource if the user is not a member of the project', async () => {
       const list = getListProjectDataObject();
 
       const nonMemberProject = {
@@ -95,7 +95,8 @@ describe('Project controller', () => {
 
       expect(result).toEqual(getProjectResponse());
     });
-    test('Should not return the resources when the user is not part of the project', async () => {
+
+    test('Should not return the resource when the user is not part of the project', async () => {
       projectDataProviderMock.fetchById.mockResolvedValue({
         ...getProjectDataObject(),
         members: [
@@ -107,10 +108,7 @@ describe('Project controller', () => {
           },
         ],
       });
-      const result = await projectController.fetchById(
-        'working-group-id',
-        '11',
-      );
+      const result = await projectController.fetchById('project-id', '11');
 
       const { resources: _, ...expectedProject } = getProjectResponse();
       expect(result).toStrictEqual({

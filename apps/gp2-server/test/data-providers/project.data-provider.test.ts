@@ -169,29 +169,29 @@ describe('Project Data Provider', () => {
       });
       describe('resources', () => {
         test('should map a resource note', () => {
-          const workingGroup = getGraphQLProject();
-          const { resources } = parseProjectToDataObject(workingGroup);
+          const project = getGraphQLProject();
+          const { resources } = parseProjectToDataObject(project);
           const { resources: expectedResources } = getProjectDataObject();
           expect(resources).toStrictEqual(expectedResources);
         });
         test('should ignore an external link for a resource note', () => {
-          const workingGroup = getGraphQLProject();
+          const project = getGraphQLProject();
           const resource = getGraphQLProjectResource();
           resource.type = ProjectsDataResourcesTypeEnum.Note;
           resource.externalLink = 'some external link';
-          workingGroup.flatData.resources = [resource];
-          const { resources } = parseProjectToDataObject(workingGroup);
+          project.flatData.resources = [resource];
+          const { resources } = parseProjectToDataObject(project);
           const { resources: expectedResources } = getProjectDataObject();
           expect(resources).toStrictEqual(expectedResources);
         });
         test('should map a resource link', () => {
-          const workingGroup = getGraphQLProject();
+          const project = getGraphQLProject();
           const externalLink = 'this is an external link';
           const resource = getGraphQLProjectResource();
           resource.type = ProjectsDataResourcesTypeEnum.Link;
           resource.externalLink = externalLink;
-          workingGroup.flatData.resources = [resource];
-          const { resources } = parseProjectToDataObject(workingGroup);
+          project.flatData.resources = [resource];
+          const { resources } = parseProjectToDataObject(project);
           const { resources: expectedResources } = getProjectDataObject();
           expect(resources).toEqual([
             {
@@ -202,36 +202,36 @@ describe('Project Data Provider', () => {
           ]);
         });
         test('should ignore a resource if title is undefined.', () => {
-          const workingGroup = getGraphQLProject();
+          const project = getGraphQLProject();
           const resource = getGraphQLProjectResource();
           resource.title = null;
-          workingGroup.flatData.resources = [resource];
-          const { resources } = parseProjectToDataObject(workingGroup);
+          project.flatData.resources = [resource];
+          const { resources } = parseProjectToDataObject(project);
           expect(resources).toEqual([]);
         });
         test('should return a resource if description is undefined.', () => {
-          const workingGroup = getGraphQLProject();
+          const project = getGraphQLProject();
           const resource = getGraphQLProjectResource();
           resource.description = null;
-          workingGroup.flatData.resources = [resource];
-          const { resources } = parseProjectToDataObject(workingGroup);
+          project.flatData.resources = [resource];
+          const { resources } = parseProjectToDataObject(project);
           const description = resources![0]?.description;
           expect(description).toBeUndefined();
         });
         test('should ignore a resource if external Link is undefined for a Link.', () => {
-          const workingGroup = getGraphQLProject();
+          const project = getGraphQLProject();
           const externalLink = null;
           const resource = getGraphQLProjectResource();
           resource.type = ProjectsDataResourcesTypeEnum.Link;
           resource.externalLink = externalLink;
-          workingGroup.flatData.resources = [resource];
-          const { resources } = parseProjectToDataObject(workingGroup);
+          project.flatData.resources = [resource];
+          const { resources } = parseProjectToDataObject(project);
           expect(resources).toEqual([]);
         });
         test('undefined resources returns empty array', () => {
-          const workingGroup = getGraphQLProject();
-          workingGroup.flatData.resources = null;
-          const { resources } = parseProjectToDataObject(workingGroup);
+          const project = getGraphQLProject();
+          project.flatData.resources = null;
+          const { resources } = parseProjectToDataObject(project);
           expect(resources).toEqual([]);
         });
       });

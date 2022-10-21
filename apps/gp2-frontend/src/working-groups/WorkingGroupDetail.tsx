@@ -47,7 +47,7 @@ const WorkingGroupDetail = () => {
               }
             >
               <Frame title="Resources">
-                <WorkingGroupResources resources={workingGroup.resources} />
+                <WorkingGroupResources {...workingGroup} />
               </Frame>
             </Route>
           )}

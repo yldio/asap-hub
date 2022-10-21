@@ -7,9 +7,9 @@ export default {
   component: WorkingGroupNetwork,
 };
 
-const item = {
+const props = {
   workingGroupNetwork: gp2Fixtures.createWorkingGroupNetworkResponse(),
   role: 'operational' as const,
 };
 
-export const Normal = () => <WorkingGroupNetwork {...item} />;
+export const Normal = () => <WorkingGroupNetwork {...props} />;

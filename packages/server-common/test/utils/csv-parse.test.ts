@@ -37,6 +37,6 @@ describe('CSV Parser', () => {
     mockedStream.emit('error', new Error('some-error'));
     mockedStream.emit('end');
 
-    expect(promise).rejects.toThrow('some-error');
+    await expect(promise).rejects.toThrow('some-error');
   });
 });

@@ -1,0 +1,45 @@
+{
+  "$schema": "./../__json/schema.json",
+  "schema": {
+    "noFieldDeletion": false,
+    "noFieldRecreation": false,
+    "properties": {
+      "label": "Migrations",
+      "validateOnPublish": false
+    },
+    "scripts": {},
+    "fieldsInReferences": [],
+    "fieldsInLists": [],
+    "fields": [
+      {
+        "name": "name",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": true,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": true,
+          "isEmbeddable": false,
+          "inlineEditable": false,
+          "createEnum": false,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "Name",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      }
+    ],
+    "previewUrls": {},
+    "fieldRules": [],
+    "category": "Content",
+    "isPublished": true
+  },
+  "name": "migrations",
+  "isSingleton": false,
+  "schemaType": "Default"
+}

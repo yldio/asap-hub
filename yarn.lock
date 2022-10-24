@@ -360,7 +360,7 @@ __metadata:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/fixtures": "workspace:*"
     "@asap-hub/model": "workspace:*"
-    "@babel/runtime-corejs3": 7.19.4
+    "@babel/runtime-corejs3": 7.19.6
     "@types/node": 14.18.31
     "@types/prettier": 2.7.1
     algoliasearch: 4.14.2
@@ -378,10 +378,10 @@ __metadata:
     "@asap-hub/model": "workspace:*"
     "@asap-hub/services-common": "workspace:*"
     "@asap-hub/squidex": "workspace:*"
-    "@babel/core": 7.19.3
-    "@babel/plugin-transform-modules-commonjs": 7.18.6
-    "@babel/plugin-transform-runtime": 7.19.1
-    "@babel/runtime-corejs3": 7.19.4
+    "@babel/core": 7.19.6
+    "@babel/plugin-transform-modules-commonjs": 7.19.6
+    "@babel/plugin-transform-runtime": 7.19.6
+    "@babel/runtime-corejs3": 7.19.6
     "@hapi/boom": 9.1.4
     "@types/apr-intercept": "workspace:*"
     "@types/babel__core": 7.1.19
@@ -420,8 +420,8 @@ __metadata:
   resolution: "@asap-hub/auth-frontend-scripts@workspace:packages/auth-frontend-scripts"
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
-    "@babel/core": 7.19.3
-    "@babel/runtime-corejs3": 7.19.4
+    "@babel/core": 7.19.6
+    "@babel/runtime-corejs3": 7.19.6
     "@types/jest": 27.5.2
     "@types/jsdom": 16.2.3
     "@types/node": 14.18.31
@@ -437,9 +437,9 @@ __metadata:
     "@asap-hub/dom-test-utils": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/model": "workspace:*"
-    "@babel/core": 7.19.3
+    "@babel/core": 7.19.6
     "@babel/preset-react": 7.18.6
-    "@babel/runtime-corejs3": 7.19.4
+    "@babel/runtime-corejs3": 7.19.6
     "@types/auth0-js": 9.14.6
     "@types/jest": 27.5.2
     "@types/node": 14.18.31
@@ -458,10 +458,10 @@ __metadata:
     "@asap-hub/auth": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/model": "workspace:*"
-    "@babel/core": 7.19.3
+    "@babel/core": 7.19.6
     "@babel/preset-env": 7.19.4
     "@babel/preset-typescript": 7.18.6
-    "@babel/runtime-corejs3": 7.19.4
+    "@babel/runtime-corejs3": 7.19.6
     "@types/jest": 27.5.2
     got: 11.8.5
     nock: 13.0.11
@@ -475,7 +475,7 @@ __metadata:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@auth0/auth0-spa-js": 1.22.5
-    "@babel/runtime-corejs3": 7.19.4
+    "@babel/runtime-corejs3": 7.19.6
     "@types/jest": 27.5.2
     "@types/node": 14.18.31
   languageName: unknown
@@ -509,7 +509,7 @@ __metadata:
     "@asap-hub/dom-test-utils": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
-    "@babel/runtime-corejs3": 7.19.4
+    "@babel/runtime-corejs3": 7.19.6
     "@testing-library/dom": 8.19.0
     "@testing-library/jest-dom": 5.16.5
     "@testing-library/react": 11.2.7
@@ -555,7 +555,7 @@ __metadata:
     "@asap-hub/unsupported-browser-page": "workspace:*"
     "@asap-hub/validation": "workspace:*"
     "@auth0/auth0-spa-js": 1.22.5
-    "@babel/runtime-corejs3": 7.19.4
+    "@babel/runtime-corejs3": 7.19.6
     "@sentry/cli": 1.74.5
     "@sentry/react": 6.11.0
     "@sentry/tracing": 6.11.0
@@ -619,9 +619,9 @@ __metadata:
     "@asap-hub/message-templates": "workspace:*"
     "@asap-hub/messages-common": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
-    "@babel/core": 7.19.3
+    "@babel/core": 7.19.6
     "@babel/preset-react": 7.18.6
-    "@babel/runtime-corejs3": 7.19.4
+    "@babel/runtime-corejs3": 7.19.6
     "@emotion/cache": 11.10.3
     "@emotion/react": 11.10.4
     "@emotion/server": 11.10.0
@@ -659,11 +659,11 @@ __metadata:
     "@asap-hub/squidex": "workspace:*"
     "@asap-hub/validation": "workspace:*"
     "@aws-sdk/client-cloudfront": 3.171.0
-    "@babel/core": 7.19.3
+    "@babel/core": 7.19.6
     "@babel/preset-env": 7.19.4
     "@babel/preset-typescript": 7.18.6
     "@babel/register": 7.18.9
-    "@babel/runtime-corejs3": 7.19.4
+    "@babel/runtime-corejs3": 7.19.6
     "@graphql-codegen/cli": 2.12.1
     "@graphql-codegen/gql-tag-operations-preset": 1.5.5
     "@graphql-codegen/introspection": 2.2.1
@@ -777,7 +777,7 @@ __metadata:
   resolution: "@asap-hub/dom-test-utils@workspace:packages/dom-test-utils"
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
-    "@babel/runtime-corejs3": 7.19.4
+    "@babel/runtime-corejs3": 7.19.6
     "@types/jest": 27.5.2
   languageName: unknown
   linkType: soft
@@ -786,7 +786,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/e2e-tests@workspace:apps/e2e-tests"
   dependencies:
-    "@babel/runtime-corejs3": 7.19.4
+    "@babel/runtime-corejs3": 7.19.6
     "@playwright/test": 1.25.2
     "@types/node-fetch": 2.5.10
     node-fetch: 3.0.0-beta.9
@@ -798,7 +798,7 @@ __metadata:
   resolution: "@asap-hub/errors@workspace:packages/errors"
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
-    "@babel/runtime-corejs3": 7.19.4
+    "@babel/runtime-corejs3": 7.19.6
     got: 11.8.5
   languageName: unknown
   linkType: soft
@@ -834,7 +834,7 @@ __metadata:
     "@algolia/client-search": "*"
     "@asap-hub/auth": "workspace:*"
     "@asap-hub/model": "workspace:*"
-    "@babel/runtime-corejs3": 7.19.4
+    "@babel/runtime-corejs3": 7.19.6
     "@types/jsonwebtoken": 8.5.9
     core-js: 3.24.1
     date-fns: 2.29.3
@@ -848,7 +848,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/flags@workspace:packages/flags"
   dependencies:
-    "@babel/runtime-corejs3": 7.19.4
+    "@babel/runtime-corejs3": 7.19.6
     "@types/asap-hub__inline-environment": "workspace:*"
     "@types/jest": 27.5.2
     core-js: 3.24.1
@@ -863,9 +863,9 @@ __metadata:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
-    "@babel/core": 7.19.3
+    "@babel/core": 7.19.6
     "@babel/preset-react": 7.18.6
-    "@babel/runtime-corejs3": 7.19.4
+    "@babel/runtime-corejs3": 7.19.6
     "@sentry/react": 6.11.0
     "@testing-library/react": 11.2.7
     "@types/history": 4.7.11
@@ -902,7 +902,7 @@ __metadata:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/gp2-components": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
-    "@babel/runtime-corejs3": 7.19.4
+    "@babel/runtime-corejs3": 7.19.6
     "@testing-library/dom": 8.19.0
     "@testing-library/jest-dom": 5.16.5
     "@testing-library/react": 11.2.7
@@ -942,9 +942,9 @@ __metadata:
     "@asap-hub/react-components": "workspace:*"
     "@asap-hub/react-context": "workspace:*"
     "@asap-hub/routing": "workspace:*"
-    "@babel/core": 7.19.3
+    "@babel/core": 7.19.6
     "@babel/preset-react": 7.18.6
-    "@babel/runtime-corejs3": 7.19.4
+    "@babel/runtime-corejs3": 7.19.6
     "@emotion/babel-plugin": 11.10.2
     "@emotion/jest": 11.10.0
     "@emotion/react": 11.10.4
@@ -1009,7 +1009,7 @@ __metadata:
     "@asap-hub/unsupported-browser-page": "workspace:*"
     "@asap-hub/validation": "workspace:*"
     "@auth0/auth0-spa-js": 1.22.5
-    "@babel/runtime-corejs3": 7.19.4
+    "@babel/runtime-corejs3": 7.19.6
     "@sentry/cli": 1.74.5
     "@sentry/react": 6.11.0
     "@sentry/tracing": 6.11.0
@@ -1066,9 +1066,9 @@ __metadata:
     "@asap-hub/message-templates": "workspace:*"
     "@asap-hub/messages-common": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
-    "@babel/core": 7.19.3
+    "@babel/core": 7.19.6
     "@babel/preset-react": 7.18.6
-    "@babel/runtime-corejs3": 7.19.4
+    "@babel/runtime-corejs3": 7.19.6
     "@emotion/cache": 11.10.3
     "@emotion/react": 11.10.4
     "@emotion/server": 11.10.0
@@ -1103,7 +1103,7 @@ __metadata:
     "@asap-hub/squidex": "workspace:*"
     "@babel/preset-env": 7.19.4
     "@babel/preset-typescript": 7.18.6
-    "@babel/runtime-corejs3": 7.19.4
+    "@babel/runtime-corejs3": 7.19.6
     "@graphql-codegen/cli": 2.12.1
     "@graphql-codegen/gql-tag-operations-preset": 1.5.5
     "@graphql-codegen/introspection": 2.2.1
@@ -1160,7 +1160,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/message-templates@workspace:packages/message-templates"
   dependencies:
-    "@babel/runtime-corejs3": 7.19.4
+    "@babel/runtime-corejs3": 7.19.6
   languageName: unknown
   linkType: soft
 
@@ -1169,9 +1169,9 @@ __metadata:
   resolution: "@asap-hub/messages-common@workspace:packages/messages-common"
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
-    "@babel/core": 7.19.3
+    "@babel/core": 7.19.6
     "@babel/preset-react": 7.18.6
-    "@babel/runtime-corejs3": 7.19.4
+    "@babel/runtime-corejs3": 7.19.6
     "@emotion/cache": 11.10.3
     "@emotion/react": 11.10.4
     "@emotion/server": 11.10.0
@@ -1195,7 +1195,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/model@workspace:packages/model"
   dependencies:
-    "@babel/runtime-corejs3": 7.19.4
+    "@babel/runtime-corejs3": 7.19.6
     ajv: 8.11.0
   languageName: unknown
   linkType: soft
@@ -1206,10 +1206,10 @@ __metadata:
   dependencies:
     "@asap-hub/auth": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
-    "@babel/core": 7.19.3
+    "@babel/core": 7.19.6
     "@babel/preset-env": 7.19.4
     "@babel/preset-typescript": 7.18.6
-    "@babel/runtime-corejs3": 7.19.4
+    "@babel/runtime-corejs3": 7.19.6
     "@types/jest": 27.5.2
     "@types/jsonwebtoken": 8.5.9
     jsonwebtoken: 8.5.1
@@ -1230,9 +1230,9 @@ __metadata:
     "@asap-hub/routing": "workspace:*"
     "@asap-hub/validation": "workspace:*"
     "@auth0/auth0-spa-js": 1.22.5
-    "@babel/core": 7.19.3
+    "@babel/core": 7.19.6
     "@babel/preset-react": 7.18.6
-    "@babel/runtime-corejs3": 7.19.4
+    "@babel/runtime-corejs3": 7.19.6
     "@emotion/babel-plugin": 11.10.2
     "@emotion/jest": 11.10.0
     "@emotion/react": 11.10.4
@@ -1308,9 +1308,9 @@ __metadata:
     "@asap-hub/dom-test-utils": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/flags": "workspace:*"
-    "@babel/core": 7.19.3
+    "@babel/core": 7.19.6
     "@babel/preset-react": 7.18.6
-    "@babel/runtime-corejs3": 7.19.4
+    "@babel/runtime-corejs3": 7.19.6
     "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": 8.0.1
     "@types/jest": 27.5.2
@@ -1332,7 +1332,7 @@ __metadata:
   resolution: "@asap-hub/routing@workspace:packages/routing"
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
-    "@babel/runtime-corejs3": 7.19.4
+    "@babel/runtime-corejs3": 7.19.6
     "@types/qs": 6.9.7
     "@types/react-router-dom": 5.3.3
     qs: 6.11.0
@@ -1355,9 +1355,9 @@ __metadata:
     "@asap-hub/model": "workspace:*"
     "@asap-hub/services-common": "workspace:*"
     "@asap-hub/squidex": "workspace:*"
-    "@babel/core": 7.19.3
-    "@babel/parser": 7.19.4
-    "@babel/runtime-corejs3": 7.19.4
+    "@babel/core": 7.19.6
+    "@babel/parser": 7.19.6
+    "@babel/runtime-corejs3": 7.19.6
     "@hapi/boom": 9.1.4
     "@sentry/serverless": 6.19.7
     "@types/apr-intercept": "workspace:*"
@@ -1398,7 +1398,7 @@ __metadata:
   dependencies:
     "@asap-hub/errors": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
-    "@babel/runtime-corejs3": 7.19.4
+    "@babel/runtime-corejs3": 7.19.6
     "@hapi/boom": 9.1.4
     "@hapi/bourne": 2.1.0
     "@hapi/joi": 17.1.1
@@ -1433,7 +1433,7 @@ __metadata:
     "@asap-hub/errors": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/model": "workspace:*"
-    "@babel/runtime-corejs3": 7.19.4
+    "@babel/runtime-corejs3": 7.19.6
     "@hapi/boom": 9.1.4
     "@hapi/bourne": 2.1.0
     "@hapi/joi": 17.1.1
@@ -1474,7 +1474,7 @@ __metadata:
     "@asap-hub/react-components": "workspace:*"
     "@asap-hub/react-context": "workspace:*"
     "@asap-hub/routing": "workspace:*"
-    "@babel/core": 7.19.3
+    "@babel/core": 7.19.6
     "@storybook/addon-actions": 6.5.12
     "@storybook/addon-knobs": 6.4.0
     "@storybook/addon-viewport": 6.5.12
@@ -1501,9 +1501,9 @@ __metadata:
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
-    "@babel/core": 7.19.3
+    "@babel/core": 7.19.6
     "@babel/preset-react": 7.18.6
-    "@babel/runtime-corejs3": 7.19.4
+    "@babel/runtime-corejs3": 7.19.6
     "@types/node": 14.18.31
     "@types/react": 17.0.49
     "@types/react-dom": 17.0.17
@@ -1520,7 +1520,7 @@ __metadata:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/fixtures": "workspace:*"
     "@asap-hub/model": "workspace:*"
-    "@babel/runtime-corejs3": 7.19.4
+    "@babel/runtime-corejs3": 7.19.6
   languageName: unknown
   linkType: soft
 
@@ -2515,26 +2515,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:7.19.3":
-  version: 7.19.3
-  resolution: "@babel/core@npm:7.19.3"
+"@babel/core@npm:7.19.6":
+  version: 7.19.6
+  resolution: "@babel/core@npm:7.19.6"
   dependencies:
     "@ampproject/remapping": ^2.1.0
     "@babel/code-frame": ^7.18.6
-    "@babel/generator": ^7.19.3
+    "@babel/generator": ^7.19.6
     "@babel/helper-compilation-targets": ^7.19.3
-    "@babel/helper-module-transforms": ^7.19.0
-    "@babel/helpers": ^7.19.0
-    "@babel/parser": ^7.19.3
+    "@babel/helper-module-transforms": ^7.19.6
+    "@babel/helpers": ^7.19.4
+    "@babel/parser": ^7.19.6
     "@babel/template": ^7.18.10
-    "@babel/traverse": ^7.19.3
-    "@babel/types": ^7.19.3
+    "@babel/traverse": ^7.19.6
+    "@babel/types": ^7.19.4
     convert-source-map: ^1.7.0
     debug: ^4.1.0
     gensync: ^1.0.0-beta.2
     json5: ^2.2.1
     semver: ^6.3.0
-  checksum: dd883311209ad5a2c65b227daeb7247d90a382c50f4c6ad60c5ee40927eb39c34f0690d93b775c0427794261b72fa8f9296589a2dbda0782366a9f1c6de00c08
+  checksum: 85c0bd38d0ef180aa2d23c3db6840a0baec88d2e05c30e7ffc3dfeb6b2b89d6e4864922f04997a1f4ce55f9dd469bf2e76518d5c7ae744b98516709d32769b73
   languageName: node
   linkType: hard
 
@@ -2742,14 +2742,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/generator@npm:^7.19.3":
-  version: 7.19.3
-  resolution: "@babel/generator@npm:7.19.3"
+"@babel/generator@npm:^7.19.6":
+  version: 7.19.6
+  resolution: "@babel/generator@npm:7.19.6"
   dependencies:
-    "@babel/types": ^7.19.3
+    "@babel/types": ^7.19.4
     "@jridgewell/gen-mapping": ^0.3.2
     jsesc: ^2.5.1
-  checksum: b1585e398f6c37f442a2fdac964a326b348fbc8fb99a6aaf4f72bbe993adb0ca792bc0a9c65e59930b2a2e55eb5aa3aab360ceb678d3d40692eb0cda2b7b6aa6
+  checksum: 734fcb1fbef182e7b8967459cb39b81edd2701dd13170c154b368d4e086842f72ef214798c5a37e67e0a695dfb34b13143277bedcd9795b3b1b83da8e1d236c6
   languageName: node
   linkType: hard
 
@@ -3575,6 +3575,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/helper-module-transforms@npm:^7.19.6":
+  version: 7.19.6
+  resolution: "@babel/helper-module-transforms@npm:7.19.6"
+  dependencies:
+    "@babel/helper-environment-visitor": ^7.18.9
+    "@babel/helper-module-imports": ^7.18.6
+    "@babel/helper-simple-access": ^7.19.4
+    "@babel/helper-split-export-declaration": ^7.18.6
+    "@babel/helper-validator-identifier": ^7.19.1
+    "@babel/template": ^7.18.10
+    "@babel/traverse": ^7.19.6
+    "@babel/types": ^7.19.4
+  checksum: c28692b37d4b5abacc775bcab52a74f44a493f38c58cb72b56a6c6d67a97485dd8aff6f26905abd1a924d3261a171d0214a9fb76f48d8598f1e35b8b29284792
+  languageName: node
+  linkType: hard
+
 "@babel/helper-optimise-call-expression@npm:^7.10.4":
   version: 7.10.4
   resolution: "@babel/helper-optimise-call-expression@npm:7.10.4"
@@ -3875,6 +3891,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/helper-simple-access@npm:^7.19.4":
+  version: 7.19.4
+  resolution: "@babel/helper-simple-access@npm:7.19.4"
+  dependencies:
+    "@babel/types": ^7.19.4
+  checksum: 964cb1ec36b69aabbb02f8d5ee1d680ebbb628611a6740958d9b05107ab16c0492044e430618ae42b1f8ea73e4e1bafe3750e8ebc959d6f3277d9cfbe1a94880
+  languageName: node
+  linkType: hard
+
 "@babel/helper-skip-transparent-expression-wrappers@npm:^7.12.1":
   version: 7.12.1
   resolution: "@babel/helper-skip-transparent-expression-wrappers@npm:7.12.1"
@@ -4140,6 +4165,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/helpers@npm:^7.19.4":
+  version: 7.19.4
+  resolution: "@babel/helpers@npm:7.19.4"
+  dependencies:
+    "@babel/template": ^7.18.10
+    "@babel/traverse": ^7.19.4
+    "@babel/types": ^7.19.4
+  checksum: e2684e9a79d45b95db05c7e14628e8dd1d91ad59433a3afd715bdf19d4683d9e9f84382bcc82316b678aa609ecfc41b07be0b9c49eed07c444f82a6b9e501186
+  languageName: node
+  linkType: hard
+
 "@babel/highlight@npm:^7.10.4":
   version: 7.10.4
   resolution: "@babel/highlight@npm:7.10.4"
@@ -4213,12 +4249,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/parser@npm:7.19.4":
-  version: 7.19.4
-  resolution: "@babel/parser@npm:7.19.4"
+"@babel/parser@npm:7.19.6, @babel/parser@npm:^7.19.6":
+  version: 7.19.6
+  resolution: "@babel/parser@npm:7.19.6"
   bin:
     parser: ./bin/babel-parser.js
-  checksum: 5ef97da97915085ff3b9c562b04fb6316074ece52d20de95f44c47b46abf87fd754cbcae769a69570a84652b736afe5bb2cb7dc117aa7ad6d81ab40eed0c613b
+  checksum: 9a3dca4ee3acd7e4fc3b58e1e1526a11fa334acbfe437f8ebf91dfaf48e943c147ef64b1733ba0a55af57d1eccafbf4e4a4afc46a15becd921971fe2ddf309bf
   languageName: node
   linkType: hard
 
@@ -4264,15 +4300,6 @@ __metadata:
   bin:
     parser: ./bin/babel-parser.js
   checksum: 533ffc26667b7e2e0d87ae11368d90b6a3a468734d6dfe9c4697c24f48373cf9cc35ee08e416728f087fc56531b68022f752097941feddc60e0223d69a4d4cad
-  languageName: node
-  linkType: hard
-
-"@babel/parser@npm:^7.19.3":
-  version: 7.19.3
-  resolution: "@babel/parser@npm:7.19.3"
-  bin:
-    parser: ./bin/babel-parser.js
-  checksum: 854f1390328a8cea5d95ed2a8655a8976cdb41e72393845df0f86088dc777817a5e015a1a61739d312accccf1a22358fb70707a013d25596251cceba2c8985ee
   languageName: node
   linkType: hard
 
@@ -6125,17 +6152,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-modules-commonjs@npm:7.18.6, @babel/plugin-transform-modules-commonjs@npm:^7.18.6":
-  version: 7.18.6
-  resolution: "@babel/plugin-transform-modules-commonjs@npm:7.18.6"
+"@babel/plugin-transform-modules-commonjs@npm:7.19.6":
+  version: 7.19.6
+  resolution: "@babel/plugin-transform-modules-commonjs@npm:7.19.6"
   dependencies:
-    "@babel/helper-module-transforms": "npm:^7.18.6"
-    "@babel/helper-plugin-utils": "npm:^7.18.6"
-    "@babel/helper-simple-access": "npm:^7.18.6"
-    babel-plugin-dynamic-import-node: "npm:^2.3.3"
+    "@babel/helper-module-transforms": ^7.19.6
+    "@babel/helper-plugin-utils": ^7.19.0
+    "@babel/helper-simple-access": ^7.19.4
   peerDependencies:
     "@babel/core": ^7.0.0-0
-  checksum: 7e356e3df8a6a8542cced7491ec5b1cc1093a88d216a59e63a5d2b9fe9d193cbea864f680a41429e41a4f9ecec930aa5b0b8f57e2b17b3b4d27923bb12ba5d14
+  checksum: 85d46945ab5ba3fff89e962d560a5d40253f228b9659a697683db3de07c0236e8cd60e5eb41958007359951a42bc268bf32350fcdb5b4a86f58dff1e032c096e
   languageName: node
   linkType: hard
 
@@ -6178,6 +6204,20 @@ __metadata:
   peerDependencies:
     "@babel/core": ^7.0.0-0
   checksum: 99c1c5ce9c353e29eb680ebb5bdf27c076c6403e133a066999298de642423cc7f38cfbac02372d33ed73278da13be23c4be7d60169c3e27bd900a373e61a599a
+  languageName: node
+  linkType: hard
+
+"@babel/plugin-transform-modules-commonjs@npm:^7.18.6":
+  version: 7.18.6
+  resolution: "@babel/plugin-transform-modules-commonjs@npm:7.18.6"
+  dependencies:
+    "@babel/helper-module-transforms": "npm:^7.18.6"
+    "@babel/helper-plugin-utils": "npm:^7.18.6"
+    "@babel/helper-simple-access": "npm:^7.18.6"
+    babel-plugin-dynamic-import-node: "npm:^2.3.3"
+  peerDependencies:
+    "@babel/core": ^7.0.0-0
+  checksum: 7e356e3df8a6a8542cced7491ec5b1cc1093a88d216a59e63a5d2b9fe9d193cbea864f680a41429e41a4f9ecec930aa5b0b8f57e2b17b3b4d27923bb12ba5d14
   languageName: node
   linkType: hard
 
@@ -6755,9 +6795,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-runtime@npm:7.19.1":
-  version: 7.19.1
-  resolution: "@babel/plugin-transform-runtime@npm:7.19.1"
+"@babel/plugin-transform-runtime@npm:7.19.6":
+  version: 7.19.6
+  resolution: "@babel/plugin-transform-runtime@npm:7.19.6"
   dependencies:
     "@babel/helper-module-imports": ^7.18.6
     "@babel/helper-plugin-utils": ^7.19.0
@@ -6767,7 +6807,7 @@ __metadata:
     semver: ^6.3.0
   peerDependencies:
     "@babel/core": ^7.0.0-0
-  checksum: d9f693003a546b380a7322087490a51e8c6cd47b44e654f5030f96088cf7888b6c746d6335f723581154aaceed4ef0877acfa642f054ce3beb6ba9bb970987f4
+  checksum: ef93efbcbb00dcf4da6dcc55bda698a2a57fca3fb05a6a13e932ecfdb7c1c5d2f0b5b245c1c4faca0318853937caba0d82442f58b7653249f64275d08052fbd8
   languageName: node
   linkType: hard
 
@@ -7601,13 +7641,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime-corejs3@npm:7.19.4":
-  version: 7.19.4
-  resolution: "@babel/runtime-corejs3@npm:7.19.4"
+"@babel/runtime-corejs3@npm:7.19.6":
+  version: 7.19.6
+  resolution: "@babel/runtime-corejs3@npm:7.19.6"
   dependencies:
     core-js-pure: ^3.25.1
     regenerator-runtime: ^0.13.4
-  checksum: 3418534964d0d334da46b21bbe50510630101fd4a5afe632077d261656a715868e3f0f304ac7c9d608dc2aa72cbea49e31a5bc5cb9f7b5cb23ce01cb917acaef
+  checksum: 610012057190dc3a325beaa4a62fc467bab6fa5c2c7ecfddb7b78a3e759a759922cd0f9485ca4b9c12703e25671f0af007ce0a910f767d1cdeeab3c54630216a
   languageName: node
   linkType: hard
 
@@ -7954,21 +7994,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/traverse@npm:^7.19.3":
-  version: 7.19.3
-  resolution: "@babel/traverse@npm:7.19.3"
+"@babel/traverse@npm:^7.19.4, @babel/traverse@npm:^7.19.6":
+  version: 7.19.6
+  resolution: "@babel/traverse@npm:7.19.6"
   dependencies:
     "@babel/code-frame": ^7.18.6
-    "@babel/generator": ^7.19.3
+    "@babel/generator": ^7.19.6
     "@babel/helper-environment-visitor": ^7.18.9
     "@babel/helper-function-name": ^7.19.0
     "@babel/helper-hoist-variables": ^7.18.6
     "@babel/helper-split-export-declaration": ^7.18.6
-    "@babel/parser": ^7.19.3
-    "@babel/types": ^7.19.3
+    "@babel/parser": ^7.19.6
+    "@babel/types": ^7.19.4
     debug: ^4.1.0
     globals: ^11.1.0
-  checksum: ef16c98fca7f2c347febd06737c13230ea103d619a0d6c142445bc8eff6359d2fce026f27dece02b4838f614cda8a9330bc4a576ccc6cd0ce21844d1d0205769
+  checksum: 3fafa244f7d0b696a9d38f5da016a8f8db4b08ac60a067b299a8f54d91fb7c70c3edf06f921221d333137e65ffb64392526e68fdcf596ec91e95720037789d66
   languageName: node
   linkType: hard
 
@@ -8094,17 +8134,6 @@ __metadata:
     "@babel/helper-validator-identifier": ^7.18.6
     to-fast-properties: ^2.0.0
   checksum: 9b346715a68aeede70ba9c685a144b0b26c53bcd595d448e24c8fa8df4d5956a5712e56ebadb7c85dcc32f218ee42788e37b93d50d3295c992072224cb3ef3fe
-  languageName: node
-  linkType: hard
-
-"@babel/types@npm:^7.19.3":
-  version: 7.19.3
-  resolution: "@babel/types@npm:7.19.3"
-  dependencies:
-    "@babel/helper-string-parser": ^7.18.10
-    "@babel/helper-validator-identifier": ^7.19.1
-    to-fast-properties: ^2.0.0
-  checksum: 34a5b3db3b99a1a80ec2a784c2bb0e48769a38f1526dc377a5753a3ac5e5704663c405a393117ecc7a9df9da07b01625be7c4c3fee43ae46aba23b0c40928d77
   languageName: node
   linkType: hard
 
@@ -15326,16 +15355,16 @@ __metadata:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/flags": "workspace:*"
     "@babel/cli": 7.19.3
-    "@babel/core": 7.19.3
+    "@babel/core": 7.19.6
     "@babel/node": 7.19.1
     "@babel/plugin-proposal-nullish-coalescing-operator": 7.18.6
     "@babel/plugin-proposal-optional-chaining": 7.18.9
-    "@babel/plugin-transform-modules-commonjs": 7.18.6
-    "@babel/plugin-transform-runtime": 7.19.1
+    "@babel/plugin-transform-modules-commonjs": 7.19.6
+    "@babel/plugin-transform-runtime": 7.19.6
     "@babel/preset-env": 7.19.4
     "@babel/preset-react": 7.18.6
     "@babel/preset-typescript": 7.18.6
-    "@babel/runtime-corejs3": 7.19.4
+    "@babel/runtime-corejs3": 7.19.6
     "@emotion/jest": 11.10.0
     "@jeysal/babel-plugin-ramda": 2.0.1
     "@peculiar/webcrypto": 1.4.0

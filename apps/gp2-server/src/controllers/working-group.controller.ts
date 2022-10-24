@@ -1,6 +1,7 @@
 import { NotFoundError } from '@asap-hub/errors';
 import { gp2 } from '@asap-hub/model';
 import { WorkingGroupDataProvider } from '../data-providers/working-group.data-provider';
+import { removeNotAllowedResources } from '../utils/resources';
 
 export interface WorkingGroupController {
   fetchById(
@@ -36,12 +37,3 @@ export default class WorkingGroups implements WorkingGroupController {
     return removeNotAllowedResources(workingGroup, loggedInUserId);
   }
 }
-const removeNotAllowedResources = (
-  workingGroup: gp2.WorkingGroupDataObject,
-  loggedInUserId: string,
-) => {
-  const isMember = workingGroup.members.some(
-    (member) => member.userId === loggedInUserId,
-  );
-  return isMember ? workingGroup : { ...workingGroup, resources: undefined };
-};

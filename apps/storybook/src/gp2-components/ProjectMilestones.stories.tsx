@@ -2,7 +2,7 @@ import { ProjectMilestones } from '@asap-hub/gp2-components';
 import { number } from '@storybook/addon-knobs';
 
 export default {
-  title: 'GP2 / Organisms / Project Milestones',
+  title: 'GP2 / Organisms / Project / Milestones',
   component: ProjectMilestones,
 };
 

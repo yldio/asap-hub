@@ -3,13 +3,13 @@ import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { WorkingGroupNetwork } from '@asap-hub/gp2-components';
 
 export default {
-  title: 'GP2 / Organisms /Working Group Network ',
+  title: 'GP2 / Organisms /Working Group / Network ',
   component: WorkingGroupNetwork,
 };
 
-const item = {
+const props = {
   workingGroupNetwork: gp2Fixtures.createWorkingGroupNetworkResponse(),
   role: 'operational' as const,
 };
 
-export const Normal = () => <WorkingGroupNetwork {...item} />;
+export const Normal = () => <WorkingGroupNetwork {...props} />;

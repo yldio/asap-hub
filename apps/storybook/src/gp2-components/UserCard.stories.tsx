@@ -3,7 +3,7 @@ import { gp2 } from '@asap-hub/model';
 import { array, number, select, text } from '@storybook/addon-knobs';
 
 export default {
-  title: 'GP2 / Organisms / User Directory / User Card',
+  title: 'GP2 / Organisms / User Directory / Card',
 };
 
 export const Normal = () => {

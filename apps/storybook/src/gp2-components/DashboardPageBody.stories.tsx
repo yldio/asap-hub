@@ -2,7 +2,7 @@ import { DashboardPageBody } from '@asap-hub/gp2-components';
 import { text } from '@storybook/addon-knobs';
 
 export default {
-  title: 'GP2 / Templates / Dashboard Page Body',
+  title: 'GP2 / Templates / Dashboard / Dashboard Page Body',
   component: DashboardPageBody,
 };
 

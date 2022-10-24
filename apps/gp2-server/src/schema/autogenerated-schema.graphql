@@ -1165,6 +1165,7 @@ type ProjectsDataDto {
   milestones: ProjectsDataMilestonesDto
   pmEmail: ProjectsDataPmEmailDto
   projectProposal: ProjectsDataProjectProposalDto
+  resources: ProjectsDataResourcesDto
   startDate: ProjectsDataStartDateDto
   status: ProjectsDataStatusDto
   title: ProjectsDataTitleDto
@@ -1190,6 +1191,7 @@ input ProjectsDataInputDto {
   milestones: ProjectsDataMilestonesInputDto
   pmEmail: ProjectsDataPmEmailInputDto
   projectProposal: ProjectsDataProjectProposalInputDto
+  resources: ProjectsDataResourcesInputDto
   startDate: ProjectsDataStartDateInputDto
   status: ProjectsDataStatusInputDto
   title: ProjectsDataTitleInputDto
@@ -1307,6 +1309,41 @@ input ProjectsDataProjectProposalInputDto {
   iv: String
 }
 
+"""The structure of the Resources nested schema."""
+type ProjectsDataResourcesChildDto {
+  description: String
+  """External link for a resource"""
+  externalLink: String
+  title: String
+  type: ProjectsDataResourcesTypeEnum
+}
+
+"""The structure of the Resources nested schema."""
+input ProjectsDataResourcesChildInputDto {
+  description: String
+  """External link for a resource"""
+  externalLink: String
+  title: String
+  type: ProjectsDataResourcesTypeEnum
+}
+
+"""The structure of the Resources field of the Projects content type."""
+type ProjectsDataResourcesDto {
+  iv: [ProjectsDataResourcesChildDto!]
+}
+
+"""The structure of the Resources field of the Projects content input type."""
+input ProjectsDataResourcesInputDto {
+  iv: [ProjectsDataResourcesChildInputDto!]
+}
+
+enum ProjectsDataResourcesTypeEnum {
+  """Link"""
+  Link
+  """Note"""
+  Note
+}
+
 """The structure of the Start Date field of the Projects content type."""
 type ProjectsDataStartDateDto {
   iv: Instant
@@ -1357,6 +1394,7 @@ type ProjectsFlatDataDto {
   pmEmail: String
   """External link for a project proposal"""
   projectProposal: String
+  resources: [ProjectsDataResourcesChildDto!]
   startDate: Instant
   status: ProjectsDataStatusEnum
   title: String

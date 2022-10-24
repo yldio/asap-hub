@@ -1,3 +1,4 @@
+export { default as Resources } from '../organisms/Resources';
 export { default as BasicLayout } from './BasicLayout';
 export { default as DashboardPage } from './DashboardPage';
 export { default as DashboardPageBody } from './DashboardPageBody';
@@ -5,6 +6,7 @@ export { default as DashboardPageHeader } from './DashboardPageHeader';
 export { default as Layout } from './Layout';
 export { default as ProjectDetailPage } from './ProjectDetailPage';
 export { default as ProjectOverview } from './ProjectOverview';
+export { default as ProjectResources } from './ProjectResources';
 export { default as ProjectsPage } from './ProjectsPage';
 export { default as Theme } from './Theme';
 export { default as UserDetailPage } from './UserDetailPage';

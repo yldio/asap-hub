@@ -31,4 +31,24 @@ describe('WorkingGroupDetailHeader', () => {
     render(<WorkingGroupDetailHeader {...defaultProps} />);
     expect(screen.getByRole('link', { name: 'Overview' })).toBeVisible();
   });
+  it('renders resources tab if you are a member', () => {
+    render(
+      <WorkingGroupDetailHeader
+        {...defaultProps}
+        isWorkingGroupMember={true}
+      />,
+    );
+    expect(screen.getByRole('link', { name: 'Resources' })).toBeVisible();
+  });
+  it('does not render resources tab if you are not a member', () => {
+    render(
+      <WorkingGroupDetailHeader
+        {...defaultProps}
+        isWorkingGroupMember={false}
+      />,
+    );
+    expect(
+      screen.queryByRole('link', { name: 'Resources' }),
+    ).not.toBeInTheDocument();
+  });
 });

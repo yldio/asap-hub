@@ -37,7 +37,7 @@ describe('Working Group controller', () => {
       expect(result).toEqual({ items: [], total: 0 });
     });
 
-    test('Should removes the resource if the user is not a member of the working group', async () => {
+    test('Should remove the resource if the user is not a member of the working group', async () => {
       const list = getListWorkingGroupDataObject();
 
       const nonMemberWorkingGroup = {
@@ -61,10 +61,13 @@ describe('Working Group controller', () => {
       const result = await workingGroupController.fetch('11');
 
       const expectedItems = getListWorkingGroupsResponse().items;
-      expect(result.items).toEqual([
+      const { resources: _, ...expectedWorkingGroup } =
+        getWorkingGroupResponse();
+
+      expect(result.items).toStrictEqual([
         ...expectedItems,
         {
-          ...getWorkingGroupResponse(),
+          ...expectedWorkingGroup,
           members: [
             {
               userId: '7',
@@ -73,7 +76,6 @@ describe('Working Group controller', () => {
               role: 'Lead',
             },
           ],
-          resources: undefined,
         },
       ]);
     });
@@ -103,7 +105,7 @@ describe('Working Group controller', () => {
       expect(result).toEqual(getWorkingGroupResponse());
     });
 
-    test('Should not return the resources when the user is not part of the team', async () => {
+    test('Should not return the resource when the user is not part of the working group', async () => {
       workingGroupDataProviderMock.fetchById.mockResolvedValue({
         ...getWorkingGroupDataObject(),
         members: [
@@ -120,8 +122,10 @@ describe('Working Group controller', () => {
         '11',
       );
 
-      expect(result).toEqual({
-        ...getWorkingGroupResponse(),
+      const { resources: _, ...expectedWorkingGroup } =
+        getWorkingGroupResponse();
+      expect(result).toStrictEqual({
+        ...expectedWorkingGroup,
         members: [
           {
             userId: '7',
@@ -130,7 +134,6 @@ describe('Working Group controller', () => {
             role: 'Lead',
           },
         ],
-        resources: undefined,
       });
     });
   });

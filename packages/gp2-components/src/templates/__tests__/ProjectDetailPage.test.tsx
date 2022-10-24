@@ -10,6 +10,8 @@ describe('ProjectDetailPage', () => {
     startDate: '2022-09-22T00:00:00Z',
     endDate: '2022-09-30T00:00:00Z',
     projectProposalUrl: '',
+    id: '42',
+    isProjectMember: true,
   };
   it('renders header', () => {
     render(<ProjectDetailPage {...defaultProps}></ProjectDetailPage>);

@@ -6,7 +6,7 @@ describe('WorkingGroupDetailPage', () => {
     backHref: '/back',
     title: 'Underrepresented Populations',
     members: [],
-    id: '1',
+    id: '42',
     isWorkingGroupMember: true,
   };
   it('renders header', () => {

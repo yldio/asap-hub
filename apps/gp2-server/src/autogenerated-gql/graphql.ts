@@ -1148,6 +1148,7 @@ export type ProjectsDataDto = {
   milestones: Maybe<ProjectsDataMilestonesDto>;
   pmEmail: Maybe<ProjectsDataPmEmailDto>;
   projectProposal: Maybe<ProjectsDataProjectProposalDto>;
+  resources: Maybe<ProjectsDataResourcesDto>;
   startDate: Maybe<ProjectsDataStartDateDto>;
   status: Maybe<ProjectsDataStatusDto>;
   title: Maybe<ProjectsDataTitleDto>;
@@ -1173,6 +1174,7 @@ export type ProjectsDataInputDto = {
   milestones: InputMaybe<ProjectsDataMilestonesInputDto>;
   pmEmail: InputMaybe<ProjectsDataPmEmailInputDto>;
   projectProposal: InputMaybe<ProjectsDataProjectProposalInputDto>;
+  resources: InputMaybe<ProjectsDataResourcesInputDto>;
   startDate: InputMaybe<ProjectsDataStartDateInputDto>;
   status: InputMaybe<ProjectsDataStatusInputDto>;
   title: InputMaybe<ProjectsDataTitleInputDto>;
@@ -1290,6 +1292,41 @@ export type ProjectsDataProjectProposalInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
+/** The structure of the Resources nested schema. */
+export type ProjectsDataResourcesChildDto = {
+  description: Maybe<Scalars['String']>;
+  /** External link for a resource */
+  externalLink: Maybe<Scalars['String']>;
+  title: Maybe<Scalars['String']>;
+  type: Maybe<ProjectsDataResourcesTypeEnum>;
+};
+
+/** The structure of the Resources nested schema. */
+export type ProjectsDataResourcesChildInputDto = {
+  description: InputMaybe<Scalars['String']>;
+  /** External link for a resource */
+  externalLink: InputMaybe<Scalars['String']>;
+  title: InputMaybe<Scalars['String']>;
+  type: InputMaybe<ProjectsDataResourcesTypeEnum>;
+};
+
+/** The structure of the Resources field of the Projects content type. */
+export type ProjectsDataResourcesDto = {
+  iv: Maybe<Array<ProjectsDataResourcesChildDto>>;
+};
+
+/** The structure of the Resources field of the Projects content input type. */
+export type ProjectsDataResourcesInputDto = {
+  iv: InputMaybe<Array<ProjectsDataResourcesChildInputDto>>;
+};
+
+export enum ProjectsDataResourcesTypeEnum {
+  /** Link */
+  Link = 'Link',
+  /** Note */
+  Note = 'Note',
+}
+
 /** The structure of the Start Date field of the Projects content type. */
 export type ProjectsDataStartDateDto = {
   iv: Maybe<Scalars['Instant']>;
@@ -1340,6 +1377,7 @@ export type ProjectsFlatDataDto = {
   pmEmail: Maybe<Scalars['String']>;
   /** External link for a project proposal */
   projectProposal: Maybe<Scalars['String']>;
+  resources: Maybe<Array<ProjectsDataResourcesChildDto>>;
   startDate: Maybe<Scalars['Instant']>;
   status: Maybe<ProjectsDataStatusEnum>;
   title: Maybe<Scalars['String']>;
@@ -2174,6 +2212,14 @@ export type ProjectContentFragment = Pick<Projects, 'id'> & {
         >
       >
     >;
+    resources: Maybe<
+      Array<
+        Pick<
+          ProjectsDataResourcesChildDto,
+          'type' | 'title' | 'description' | 'externalLink'
+        >
+      >
+    >;
   };
 };
 
@@ -2217,6 +2263,14 @@ export type FetchProjectQuery = {
             Pick<
               ProjectsDataMilestonesChildDto,
               'title' | 'description' | 'status' | 'link'
+            >
+          >
+        >;
+        resources: Maybe<
+          Array<
+            Pick<
+              ProjectsDataResourcesChildDto,
+              'type' | 'title' | 'description' | 'externalLink'
             >
           >
         >;
@@ -2269,6 +2323,14 @@ export type FetchProjectsQuery = {
                   Pick<
                     ProjectsDataMilestonesChildDto,
                     'title' | 'description' | 'status' | 'link'
+                  >
+                >
+              >;
+              resources: Maybe<
+                Array<
+                  Pick<
+                    ProjectsDataResourcesChildDto,
+                    'type' | 'title' | 'description' | 'externalLink'
                   >
                 >
               >;
@@ -2989,6 +3051,25 @@ export const ProjectContentFragmentDoc = {
                         name: { kind: 'Name', value: 'status' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'link' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'resources' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'externalLink' },
+                      },
                     ],
                   },
                 },

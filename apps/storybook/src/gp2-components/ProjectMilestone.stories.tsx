@@ -1,7 +1,7 @@
 import { ProjectMilestone } from '@asap-hub/gp2-components';
 
 export default {
-  title: 'GP2 / Organisms / Project Milestone',
+  title: 'GP2 / Organisms / Project / Milestone',
   component: ProjectMilestone,
 };
 

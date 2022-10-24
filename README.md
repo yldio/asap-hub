@@ -107,7 +107,8 @@ Then commit the changed files.
 Create a migration script with the following command:
 
 ```sh
-yarn workspace @asap-hub/(crn|gp2)-server migration:create <give-the-script-a-name>```
+yarn workspace @asap-hub/(crn|gp2)-server migration:create <give-the-script-a-name>
+```
 
 This should create a new script in:
 

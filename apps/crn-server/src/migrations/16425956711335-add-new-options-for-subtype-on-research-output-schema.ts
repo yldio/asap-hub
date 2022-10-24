@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 import { researchOutputMapType } from '@asap-hub/model';
-import { RestResearchOutput } from '@asap-hub/squidex';
 import { Migration } from '@asap-hub/server-common';
+import { RestResearchOutput } from '@asap-hub/squidex';
 import { applyToAllItemsInCollection } from '../utils/migrations';
 
 export default class MapResearchOutputDeprecatedSubtype extends Migration {

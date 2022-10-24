@@ -2,10 +2,17 @@
 // It was run on prod on 19/08/2021 and the results (invalid ORCIDs) were passed on to product
 // TS_NODE_COMPILER_OPTIONS='{"module": "commonjs"}' yarn ts-node apps/crn-server/validate-orcids-script/validate-orcids.ts
 
-import { applyToAllItemsInCollection } from '@asap-hub/server-common/src/utils/migrations';
+import { applyToAllItemsInCollectionFactory } from '@asap-hub/server-common';
 
 import { RestUser } from '@asap-hub/squidex';
 import { VALID_ORCID } from '@asap-hub/validation';
+import { appName, baseUrl } from '../src/config';
+import { getAuthToken } from '../src/utils/auth';
+export const applyToAllItemsInCollection = applyToAllItemsInCollectionFactory(
+  appName,
+  baseUrl,
+  getAuthToken,
+);
 
 const validateOrcids = async (): Promise<void> => {
   let noInvalidOrcids = true;

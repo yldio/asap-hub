@@ -1,6 +1,6 @@
 /* istanbul ignore file */
-import { Rest, RestTeam, RestUser, User } from '@asap-hub/squidex';
 import { Migration } from '@asap-hub/server-common';
+import { Rest, RestTeam, RestUser, User } from '@asap-hub/squidex';
 import { applyToAllItemsInCollection } from '../utils/migrations';
 
 export default class MoveRepurposedFields extends Migration {

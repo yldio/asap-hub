@@ -1,8 +1,8 @@
 /* istanbul ignore file */
-import { ResearchOutputSharingStatus, DecisionOption } from '@asap-hub/model';
+import { DecisionOption, ResearchOutputSharingStatus } from '@asap-hub/model';
+import { Migration } from '@asap-hub/server-common';
 import { RestResearchOutput, Results, SquidexRest } from '@asap-hub/squidex';
 import { appName, baseUrl } from '../config';
-import { Migration } from '@asap-hub/server-common';
 import { getAuthToken } from '../utils/auth';
 
 // The results we get from the squidex might not have the default values yet

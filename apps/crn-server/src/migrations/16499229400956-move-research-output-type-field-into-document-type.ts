@@ -1,6 +1,6 @@
 /* istanbul ignore file */
-import { RestResearchOutput } from '@asap-hub/squidex';
 import { Migration } from '@asap-hub/server-common';
+import { RestResearchOutput } from '@asap-hub/squidex';
 import { applyToAllItemsInCollection } from '../utils/migrations';
 
 export default class MoveResearchOutputTypeFieldIntoDocumentType extends Migration {

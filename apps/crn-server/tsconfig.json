@@ -17,7 +17,7 @@
     "test/**/*.json",
     "@types/**/*.d.ts",
     "serverless.ts"
-, "../../packages/server-common/test/utils/migrations.test.ts", "../../packages/server-common/src/utils/migrations.ts"  ],
+  ],
   "references": [
     { "path": "../../packages/auth" },
     { "path": "../../packages/algolia" },

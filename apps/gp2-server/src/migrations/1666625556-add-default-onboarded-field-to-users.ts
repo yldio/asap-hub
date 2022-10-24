@@ -4,6 +4,7 @@ import { RestUser } from '@asap-hub/squidex';
 import { applyToAllItemsInCollection } from '../utils/migrations';
 
 export default class MoveResearchOutputTextToDescription extends Migration {
+  // eslint-disable-next-line class-methods-use-this
   up = async (): Promise<void> => {
     await applyToAllItemsInCollection<RestUser>(
       'users',
@@ -12,6 +13,7 @@ export default class MoveResearchOutputTextToDescription extends Migration {
       },
     );
   };
+  // eslint-disable-next-line class-methods-use-this
   down = async (): Promise<void> => {
     await applyToAllItemsInCollection<RestUser>(
       'users',

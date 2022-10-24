@@ -1,6 +1,6 @@
 /* istanbul ignore file */
-import { RestEvent } from '@asap-hub/squidex';
 import { Migration } from '@asap-hub/server-common';
+import { RestEvent } from '@asap-hub/squidex';
 import { applyToAllItemsInCollection } from '../utils/migrations';
 
 export default class SetEventHideMeetingLinkDefault extends Migration {

@@ -35,16 +35,13 @@ const LeadersTabbedCard: React.FC<LeadersTabbedCardProps> = ({
       {
         tabTitle: 'Active Leaders (0)',
         items: [],
-        truncateFrom: 4,
         disabled: true,
       },
       {
         tabTitle: `Past Leaders (${leaders.length})`,
         items: leaders,
-        truncateFrom: 8,
       },
     ]}
-    getShowMoreText={(showMore) => `View ${showMore ? 'Less' : 'More'} Leaders`}
   >
     {({ data }) => (
       <div css={containerStyles}>

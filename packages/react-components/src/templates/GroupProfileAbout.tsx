@@ -58,17 +58,17 @@ const GroupProfileAbout: React.FC<GroupProfileAboutProps> = ({
         tools={tools}
         active={active}
       />
-      <div id={membersSectionId} css={[!active && membersSectionStyles]}>
+      <div id={membersSectionId}>
         {active ? (
           <GroupMembersSection teams={teams} leaders={leaders} />
         ) : (
-          <>
+          <div css={membersSectionStyles}>
             <LeadersTabbedCard
               title="Interest Group Leaders"
               leaders={leaders}
             />
             <TeamsTabbedCard title="Interest Group Teams" teams={teams} />
-          </>
+          </div>
         )}
       </div>
       {contactEmails.length !== 0 && (

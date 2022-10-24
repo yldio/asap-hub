@@ -31,7 +31,7 @@ type TabbedCardProps<T> = {
   description?: string;
   tabs: TabProps<T>[];
   activeTabIndex?: number;
-  getShowMoreText: (showMore: boolean) => string;
+  getShowMoreText?: (showMore: boolean) => string;
   children: (state: { data: T[] }) => ReactNode;
 };
 
@@ -80,7 +80,7 @@ const TabbedCard = <T extends object>({
       {showShowMoreButton && (
         <div css={showMoreStyles}>
           <Button linkStyle onClick={() => setShowMore(!showMore)}>
-            {getShowMoreText(showMore)}
+            {!!getShowMoreText && getShowMoreText(showMore)}
           </Button>
         </div>
       )}

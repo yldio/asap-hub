@@ -45,15 +45,21 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Cache Jest cache
         uses: actions/cache@v3
         with:
           path: |
             .jest-cache/
           key: jest-cache
+      - name: Debug
+        run: |
+          ls -la
+          ls -la .jest-cache
       - name: Test
         run: |
-          yarn test --coverage --maxWorkers=2
+          yarn test --coverage --maxWorkers=2 --changedSince ${{ github.event.pull_request.base.sha }}
       - uses: codecov/codecov-action@v3
         with:
           fail_ci_if_error: true

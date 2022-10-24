@@ -239,6 +239,5 @@ export const parseGraphQLUserToDataObject = ({
     country: item.country || '',
     city: item.city || undefined,
     positions,
-    onboarded: item.onboarded || false,
   };
 };

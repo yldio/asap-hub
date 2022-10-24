@@ -23,7 +23,6 @@ export const usersContentQueryFragment = gql`
         department
         institution
       }
-      onboarded
     }
   }
 `;

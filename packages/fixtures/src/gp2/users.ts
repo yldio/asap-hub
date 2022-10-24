@@ -18,7 +18,6 @@ const mockedUser = {
       institution: 'Stark Industries',
     },
   ],
-  onboarded: true,
 };
 
 export const createUserResponse = (

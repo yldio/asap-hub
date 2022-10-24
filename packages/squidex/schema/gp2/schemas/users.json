@@ -90,24 +90,6 @@
         }
       },
       {
-        "name": "onboarded",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "Boolean",
-          "defaultValue": false,
-          "inlineEditable": true,
-          "editor": "Toggle",
-          "label": "Onboarding complete",
-          "hints": "Use this to allow the user to see the full Hub and skip profile completion",
-          "isRequired": true,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
         "name": "avatar",
         "isHidden": false,
         "isLocked": false,

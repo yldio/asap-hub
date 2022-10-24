@@ -3,7 +3,7 @@ import { UsersPageBody } from '@asap-hub/gp2-components';
 import { number } from '@storybook/addon-knobs';
 
 export default {
-  title: 'GP2 / Organisms / User Directory / UsersPageBody',
+  title: 'GP2 / Organisms / User Directory / Page Body',
   component: UsersPageBody,
 };
 

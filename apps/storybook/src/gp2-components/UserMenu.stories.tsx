@@ -1,7 +1,7 @@
 import { UserMenu } from '@asap-hub/gp2-components';
 
 export default {
-  title: 'GP2 / Molecules / User Menu',
+  title: 'GP2 / Molecules / User Directory / Menu',
   component: UserMenu,
 };
 

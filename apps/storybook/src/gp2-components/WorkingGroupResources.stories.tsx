@@ -2,7 +2,7 @@ import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { WorkingGroupResources } from '@asap-hub/gp2-components';
 
 export default {
-  title: 'GP2 / Templates / Working Group Resources',
+  title: 'GP2 / Templates / Working Groups / Resources',
   component: WorkingGroupResources,
 };
 

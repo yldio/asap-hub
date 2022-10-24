@@ -1,7 +1,7 @@
 import { UserNavigation } from '@asap-hub/gp2-components';
 
 export default {
-  title: 'GP2 / Organisms / User Navigation',
+  title: 'GP2 / Organisms / User Directory / User Navigation',
   component: UserNavigation,
 };
 

@@ -1,8 +1,8 @@
-import { UserDetailHeader } from '@asap-hub/gp2-components';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
+import { UserDetailHeader } from '@asap-hub/gp2-components';
 
 export default {
-  title: 'GP2 / Organisms / User Detail Header',
+  title: 'GP2 / Organisms / User Directory / Detail Header',
   component: UserDetailHeader,
 };
 

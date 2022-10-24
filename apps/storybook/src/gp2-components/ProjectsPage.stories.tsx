@@ -1,7 +1,7 @@
 import { ProjectsPage } from '@asap-hub/gp2-components';
 
 export default {
-  title: 'GP2 / Templates / Projects Page',
+  title: 'GP2 / Templates / Projects / Page',
   component: ProjectsPage,
 };
 

@@ -3,7 +3,7 @@ import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { WorkingGroupNetwork } from '@asap-hub/gp2-components';
 
 export default {
-  title: 'GP2 / Organisms /Working Group Network ',
+  title: 'GP2 / Organisms /Working Group / Network ',
   component: WorkingGroupNetwork,
 };
 

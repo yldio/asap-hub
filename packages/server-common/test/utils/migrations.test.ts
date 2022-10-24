@@ -4,7 +4,7 @@ import {
   SquidexRest,
   SquidexRestClient,
 } from '@asap-hub/squidex';
-import { applyToAllItemsInCollection } from '../../src/utils/migrations';
+import { applyToAllItemsInCollectionFactory } from '../../src/utils/migrations';
 import { restUserMock } from '../fixtures/users.fixtures';
 
 const mockFetch: jest.MockedFunction<SquidexRestClient<RestUser>['fetch']> =
@@ -22,6 +22,11 @@ jest.mock('@asap-hub/squidex', () => ({
 }));
 
 describe('Migration utils', () => {
+  const applyToAllItemsInCollection = applyToAllItemsInCollectionFactory(
+    'app-name',
+    'http://base.url',
+    jest.fn(),
+  );
   describe('applyToAllItemsInCollection helper method', () => {
     beforeEach(() => {
       jest.clearAllMocks();

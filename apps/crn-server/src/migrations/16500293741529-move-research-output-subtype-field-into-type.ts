@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 import { RestResearchOutput } from '@asap-hub/squidex';
 import { ResearchOutputType } from '@asap-hub/model';
-import { Migration } from '../handlers/webhooks/webhook-run-migrations';
+import { Migration } from '@asap-hub/server-common';
 import { applyToAllItemsInCollection } from '../utils/migrations';
 
 export default class MoveResearchOutputSubTypeFieldIntoType extends Migration {

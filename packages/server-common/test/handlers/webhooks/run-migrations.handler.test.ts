@@ -1,21 +1,21 @@
+import { NotFoundError } from '@asap-hub/errors';
+import { RestMigration } from '@asap-hub/squidex';
 import {
+  GetMigrationPaths,
   ImportModuleFromPath,
   Migration,
-  rollbackFactory,
-  runFactory,
-} from '../../../src/handlers/webhooks/webhook-run-migrations';
+  rollbackMigrationFactory,
+  runMigrationFactory,
+} from '../../../src/handlers/webhooks/run-migrations.handler';
 import { loggerMock } from '../../mocks/logger.mock';
 import { getSquidexClientMock } from '../../mocks/squidex-client.mock';
-import { promises as fsPromise } from 'fs';
-import { identity } from '../../helpers/squidex';
-import { RestMigration } from '@asap-hub/squidex';
-import { NotFoundError } from '@asap-hub/errors';
 
 describe('Run-migrations Webhook', () => {
   const squidexClientMock = getSquidexClientMock<RestMigration>();
-  const mockReadDir: jest.MockedFunction<typeof fsPromise.readdir> = jest.fn();
-  const mockHandlerArguments = [{}, {}, undefined] as [any, any, any];
-  const mockImportModule: jest.MockedFunction<ImportModuleFromPath> = jest.fn();
+  const getMigrationPaths: jest.MockedFunction<GetMigrationPaths> = jest.fn();
+  const mockEvent = [{}, {}, undefined] as [any, any, any];
+  const mockImportModuleFromPath: jest.MockedFunction<ImportModuleFromPath> =
+    jest.fn();
   const mockUp = jest.fn();
   const mockDown = jest.fn();
   class MockModule extends Migration {
@@ -23,21 +23,17 @@ describe('Run-migrations Webhook', () => {
     down = mockDown;
   }
 
-  const run = runFactory(
+  const run = runMigrationFactory(
     loggerMock,
     squidexClientMock,
-    mockReadDir,
-    mockImportModule,
+    getMigrationPaths,
+    mockImportModuleFromPath,
   );
-  const rollback = rollbackFactory(
+  const rollback = rollbackMigrationFactory(
     loggerMock,
     squidexClientMock,
-    mockImportModule,
+    mockImportModuleFromPath,
   );
-
-  beforeAll(() => {
-    identity();
-  });
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -45,32 +41,40 @@ describe('Run-migrations Webhook', () => {
 
   describe('Run action', () => {
     test('Should not run anything if no migration files are present', async () => {
-      mockReadDir.mockResolvedValueOnce([]);
+      getMigrationPaths.mockResolvedValueOnce([]);
 
-      await run(...mockHandlerArguments);
+      await run(...mockEvent);
 
       expect(loggerMock.info).toBeCalledWith(`Executed and saved 0 migrations`);
     });
 
     test('Should not run anything if migration files are present in the directory but also inside the Migrations schema', async () => {
-      mockReadDir.mockResolvedValueOnce(['test-migration.ts'] as any);
+      getMigrationPaths.mockResolvedValueOnce(['test-migration.ts'] as any);
       squidexClientMock.fetchOne.mockResolvedValueOnce({} as any);
 
-      await run(...mockHandlerArguments);
+      await run(...mockEvent);
 
       expect(loggerMock.info).toBeCalledWith(`Executed and saved 0 migrations`);
     });
 
     test('Should run the outstanding migration if it is not inside the Migrations schema, then save it in the schema', async () => {
-      mockReadDir.mockResolvedValueOnce(['test-migration.ts'] as any);
+      getMigrationPaths.mockResolvedValueOnce(['test-migration.ts'] as any);
       squidexClientMock.fetchOne.mockRejectedValueOnce(
         new NotFoundError(undefined),
       );
 
-      const mockDefaultModule = { default: MockModule };
-      mockImportModule.mockResolvedValueOnce(mockDefaultModule);
+      const mockModule = jest.fn().mockImplementation(() => {
+        return {
+          getPath: () => 'test-migration',
+          up: mockUp,
+          down: mockDown,
+        };
+      });
 
-      await run(...mockHandlerArguments);
+      const mockDefaultModule = { default: mockModule };
+      mockImportModuleFromPath.mockResolvedValueOnce(mockDefaultModule);
+
+      await run(...mockEvent);
 
       expect(mockUp).toHaveBeenCalled();
       expect(squidexClientMock.create).toHaveBeenCalledWith({
@@ -82,7 +86,7 @@ describe('Run-migrations Webhook', () => {
     });
 
     test('Should sort the migrations and execute them in the name order', async () => {
-      mockReadDir.mockResolvedValueOnce([
+      getMigrationPaths.mockResolvedValueOnce([
         '2-test-migration.ts',
         '3-test-migration.ts',
         '1-test-migration.ts',
@@ -92,7 +96,7 @@ describe('Run-migrations Webhook', () => {
       );
 
       const mockDefaultModule = { default: MockModule };
-      mockImportModule.mockResolvedValue(mockDefaultModule);
+      mockImportModuleFromPath.mockResolvedValue(mockDefaultModule);
 
       const executionPaths: string[] = [];
       mockUp.mockImplementation(function (this: Migration) {
@@ -101,7 +105,7 @@ describe('Run-migrations Webhook', () => {
         return Promise.resolve(null);
       });
 
-      await run(...mockHandlerArguments);
+      await run(...mockEvent);
 
       expect(mockUp).toHaveBeenCalledTimes(3);
       expect(executionPaths).toEqual([
@@ -112,7 +116,7 @@ describe('Run-migrations Webhook', () => {
     });
 
     test('Should save progress after each successful migration run', async () => {
-      mockReadDir.mockResolvedValueOnce([
+      getMigrationPaths.mockResolvedValueOnce([
         '1-test-migration.ts',
         '2-test-migration.ts',
       ] as any);
@@ -121,7 +125,7 @@ describe('Run-migrations Webhook', () => {
       );
 
       const mockDefaultModule = { default: MockModule };
-      mockImportModule.mockResolvedValue(mockDefaultModule);
+      mockImportModuleFromPath.mockResolvedValue(mockDefaultModule);
 
       const executionOrder: string[] = [];
       mockUp.mockImplementation(function (this: Migration) {
@@ -135,7 +139,7 @@ describe('Run-migrations Webhook', () => {
         return Promise.resolve({} as any);
       });
 
-      await run(...mockHandlerArguments);
+      await run(...mockEvent);
 
       expect(mockUp).toHaveBeenCalledTimes(2);
       expect(squidexClientMock.create).toHaveBeenCalledTimes(2);
@@ -148,17 +152,17 @@ describe('Run-migrations Webhook', () => {
     });
 
     test('Should not insert the migration into Migrations schema if it fails to run and throw after logging execution progress', async () => {
-      mockReadDir.mockResolvedValueOnce(['test-migration.ts'] as any);
+      getMigrationPaths.mockResolvedValueOnce(['test-migration.ts'] as any);
       squidexClientMock.fetchOne.mockRejectedValueOnce(
         new NotFoundError(undefined),
       );
 
       const mockDefaultModule = { default: MockModule };
-      mockImportModule.mockResolvedValueOnce(mockDefaultModule);
+      mockImportModuleFromPath.mockResolvedValueOnce(mockDefaultModule);
 
       mockUp.mockRejectedValueOnce(new Error('some error'));
 
-      await expect(run(...mockHandlerArguments)).rejects.toThrow('some error');
+      await expect(run(...mockEvent)).rejects.toThrow('some error');
 
       expect(mockUp).toHaveBeenCalled();
       expect(squidexClientMock.create).not.toHaveBeenCalled();
@@ -166,7 +170,7 @@ describe('Run-migrations Webhook', () => {
     });
 
     test('Should not run the consecutive migrations after one fails to run and only save the ones that have', async () => {
-      mockReadDir.mockResolvedValueOnce([
+      getMigrationPaths.mockResolvedValueOnce([
         '1-test-migration.ts',
         '2-test-migration.ts',
         '3-test-migration.ts',
@@ -176,13 +180,13 @@ describe('Run-migrations Webhook', () => {
       );
 
       const mockDefaultModule = { default: MockModule };
-      mockImportModule.mockResolvedValue(mockDefaultModule);
+      mockImportModuleFromPath.mockResolvedValue(mockDefaultModule);
 
       mockUp.mockResolvedValueOnce(null);
       mockUp.mockRejectedValueOnce(new Error());
       mockUp.mockResolvedValueOnce(null);
 
-      await expect(run(...mockHandlerArguments)).rejects.toThrow();
+      await expect(run(...mockEvent)).rejects.toThrow();
       expect(mockUp).toHaveBeenCalledTimes(2);
       expect(squidexClientMock.create).toHaveBeenCalledWith({
         name: {
@@ -204,7 +208,7 @@ describe('Run-migrations Webhook', () => {
         items: [],
       });
 
-      await rollback(...mockHandlerArguments);
+      await rollback(...mockEvent);
 
       expect(mockDown).not.toHaveBeenCalled();
     });
@@ -224,11 +228,11 @@ describe('Run-migrations Webhook', () => {
           },
         ],
       });
-      mockImportModule.mockRejectedValueOnce(new Error('File not found'));
-
-      await expect(rollback(...mockHandlerArguments)).rejects.toThrow(
-        'File not found',
+      mockImportModuleFromPath.mockRejectedValueOnce(
+        new Error('File not found'),
       );
+
+      await expect(rollback(...mockEvent)).rejects.toThrow('File not found');
       expect(mockDown).not.toHaveBeenCalled();
       expect(loggerMock.error).toHaveBeenCalledWith(
         expect.any(Error),
@@ -261,7 +265,7 @@ describe('Run-migrations Webhook', () => {
         ],
       });
       const mockDefaultModule = { default: MockModule };
-      mockImportModule.mockResolvedValueOnce(mockDefaultModule);
+      mockImportModuleFromPath.mockResolvedValueOnce(mockDefaultModule);
       squidexClientMock.fetchOne.mockResolvedValueOnce({
         created: '',
         lastModified: '',
@@ -272,7 +276,7 @@ describe('Run-migrations Webhook', () => {
         },
       });
 
-      await rollback(...mockHandlerArguments);
+      await rollback(...mockEvent);
 
       expect(mockDown).toHaveBeenCalled();
       expect(squidexClientMock.delete).toHaveBeenCalledWith('test-ID-2');
@@ -297,10 +301,10 @@ describe('Run-migrations Webhook', () => {
         ],
       });
       const mockDefaultModule = { default: MockModule };
-      mockImportModule.mockResolvedValueOnce(mockDefaultModule);
+      mockImportModuleFromPath.mockResolvedValueOnce(mockDefaultModule);
       mockDown.mockRejectedValueOnce(new Error());
 
-      await expect(rollback(...mockHandlerArguments)).rejects.toThrow();
+      await expect(rollback(...mockEvent)).rejects.toThrow();
 
       expect(squidexClientMock.delete).not.toHaveBeenCalled();
       expect(loggerMock.error).toHaveBeenCalledWith(
@@ -325,7 +329,7 @@ describe('Run-migrations Webhook', () => {
         ],
       });
       const mockDefaultModule = { default: MockModule };
-      mockImportModule.mockResolvedValueOnce(mockDefaultModule);
+      mockImportModuleFromPath.mockResolvedValueOnce(mockDefaultModule);
       squidexClientMock.fetchOne.mockResolvedValueOnce({
         created: '',
         lastModified: '',
@@ -337,9 +341,7 @@ describe('Run-migrations Webhook', () => {
       });
       squidexClientMock.delete.mockRejectedValueOnce(new Error('some error'));
 
-      await expect(rollback(...mockHandlerArguments)).rejects.toThrow(
-        'some error',
-      );
+      await expect(rollback(...mockEvent)).rejects.toThrow('some error');
 
       expect(mockDown).toHaveBeenCalled();
       expect(squidexClientMock.delete).toHaveBeenCalledWith('test-ID-2');

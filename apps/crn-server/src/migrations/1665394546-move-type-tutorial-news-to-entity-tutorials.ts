@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 import { RestNews, SquidexRest, RestTutorials } from '@asap-hub/squidex';
 import { appName, baseUrl } from '../config';
-import { Migration } from '../handlers/webhooks/webhook-run-migrations';
+import { Migration } from '@asap-hub/server-common';
 import { getAuthToken } from '../utils/auth';
 import { applyToAllItemsInCollection } from '../utils/migrations';
 

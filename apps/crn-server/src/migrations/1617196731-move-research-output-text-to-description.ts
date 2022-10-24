@@ -1,7 +1,7 @@
 /* istanbul ignore file */
+import { Migration } from '@asap-hub/server-common';
 import { RestResearchOutput, Results, SquidexRest } from '@asap-hub/squidex';
 import { appName, baseUrl } from '../config';
-import { Migration } from '../handlers/webhooks/webhook-run-migrations';
 import { getAuthToken } from '../utils/auth';
 
 export default class MoveResearchOutputTextToDescription extends Migration {

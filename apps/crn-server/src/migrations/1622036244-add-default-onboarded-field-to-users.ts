@@ -1,6 +1,6 @@
 /* istanbul ignore file */
+import { Migration } from '@asap-hub/server-common';
 import { RestUser } from '@asap-hub/squidex';
-import { Migration } from '../handlers/webhooks/webhook-run-migrations';
 import { applyToAllItemsInCollection } from '../utils/migrations';
 
 export default class AddDefaultOnboardedFieldsToUser extends Migration {

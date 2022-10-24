@@ -5,7 +5,7 @@ import {
   ResearchOutputDocumentType,
 } from '@asap-hub/model';
 
-import { Migration } from '../handlers/webhooks/webhook-run-migrations';
+import { Migration } from '@asap-hub/server-common';
 import { applyToAllItemsInCollection } from '../utils/migrations';
 
 export default class MoveResearchOutputTextToDescription extends Migration {

@@ -104,6 +104,7 @@ const apiUser: UserMetadataResponse = {
 };
 
 const gp2ApiUser: gp2.UserResponse = {
+  onboarded: true,
   displayName: 'Joao Tiago',
   firstName: 'Joao',
   lastName: 'Tiago',

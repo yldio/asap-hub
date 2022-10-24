@@ -1631,6 +1631,7 @@ type UsersDataDto {
   email: UsersDataEmailDto
   firstName: UsersDataFirstNameDto
   lastName: UsersDataLastNameDto
+  onboarded: UsersDataOnboardedDto
   positions: UsersDataPositionsDto
   region: UsersDataRegionDto
   role: UsersDataRoleDto
@@ -1666,6 +1667,7 @@ input UsersDataInputDto {
   email: UsersDataEmailInputDto
   firstName: UsersDataFirstNameInputDto
   lastName: UsersDataLastNameInputDto
+  onboarded: UsersDataOnboardedInputDto
   positions: UsersDataPositionsInputDto
   region: UsersDataRegionInputDto
   role: UsersDataRoleInputDto
@@ -1679,6 +1681,18 @@ type UsersDataLastNameDto {
 """The structure of the Last Name field of the Users content input type."""
 input UsersDataLastNameInputDto {
   iv: String
+}
+
+"""The structure of the Onboarding complete field of the Users content type."""
+type UsersDataOnboardedDto {
+  """Use this to allow the user to see the full Hub and skip profile completion"""
+  iv: Boolean
+}
+
+"""The structure of the Onboarding complete field of the Users content input type."""
+input UsersDataOnboardedInputDto {
+  """Use this to allow the user to see the full Hub and skip profile completion"""
+  iv: Boolean
 }
 
 """The structure of the Positions nested schema."""
@@ -1767,6 +1781,8 @@ type UsersFlatDataDto {
   email: String
   firstName: String
   lastName: String
+  """Use this to allow the user to see the full Hub and skip profile completion"""
+  onboarded: Boolean
   positions: [UsersDataPositionsChildDto!]
   region: UsersDataRegionEnum
   """Role on the GP2 Hub"""

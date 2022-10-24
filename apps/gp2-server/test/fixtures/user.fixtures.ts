@@ -32,6 +32,7 @@ export const getUserResponse = (): gp2.UserResponse => ({
       institution: 'Stark Industries',
     },
   ],
+  onboarded: true,
 });
 
 export const fetchExpectation: gp2.ListUserResponse = {
@@ -56,6 +57,7 @@ export const fetchExpectation: gp2.ListUserResponse = {
           institution: 'Stark Industries',
         },
       ],
+      onboarded: true,
     },
   ],
 };
@@ -119,6 +121,7 @@ export const getUserDataObject = (): gp2.UserDataObject => ({
       institution: 'Stark Industries',
     },
   ],
+  onboarded: true,
 });
 
 export const getUserCreateDataObject = (): gp2.UserCreateDataObject => {
@@ -160,6 +163,7 @@ export const fetchUserResponseDataObject = (): gp2.UserDataObject => ({
       institution: 'Daily Bugle',
     },
   ],
+  onboarded: true,
 });
 
 export const getGraphQLUser = (
@@ -187,6 +191,7 @@ export const getGraphQLUser = (
       },
     ],
     city: 'Madrid',
+    onboarded: true,
     ...user?.flatData,
   },
 });

@@ -13,7 +13,7 @@
     "watch:babel": "../../scripts/build-babel.sh watch"
   },
   "dependencies": {
-    "@algolia/client-search": "*",
+    "@algolia/client-search": "4.10.3",
     "@asap-hub/auth": "workspace:*",
     "@asap-hub/model": "workspace:*",
     "@babel/runtime-corejs3": "7.19.4",

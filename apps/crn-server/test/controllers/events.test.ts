@@ -7,9 +7,9 @@ import {
   getEventResponse,
   getEventRestResponse,
   getRestEvent,
-  getEventSpeakerUser,
   getSquidexEventsGraphqlResponse,
   getSquidexEventGraphqlResponse,
+  getSquidexGraphqlEvents,
 } from '../fixtures/events.fixtures';
 import {
   getSquidexGraphqlGroup,
@@ -52,23 +52,7 @@ describe('Event controller', () => {
         before: 'before',
       });
 
-      expect(result).toMatchObject({
-        items: [
-          {
-            ...getEventResponse(),
-            speakers: [
-              {
-                ...getEventSpeakerUser(),
-                team: {
-                  ...getEventSpeakerUser().team,
-                  inactiveSince: '2021-10-12T15:42:05Z',
-                },
-              },
-            ],
-          },
-        ],
-        total: 1,
-      });
+      expect(result).toMatchObject(getSquidexGraphqlEvents());
     });
 
     test('Should return an empty result when the client returns an empty array of data', async () => {
@@ -591,19 +575,7 @@ describe('Event controller', () => {
 
     test('Should fetch the event from squidex graphql', async () => {
       const result = await eventsControllerMockGraphql.fetchById(eventId);
-
-      expect(result).toMatchObject({
-        ...getEventResponse(),
-        speakers: [
-          {
-            ...getEventSpeakerUser(),
-            team: {
-              ...getEventSpeakerUser().team,
-              inactiveSince: '2021-10-12T15:42:05Z',
-            },
-          },
-        ],
-      });
+      expect(result).toMatchObject(getEventResponse());
     });
 
     test('Should throw a Not Found error when the event is not found', async () => {

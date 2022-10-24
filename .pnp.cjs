@@ -11015,21 +11015,26 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],\
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],\
             ["@asap-hub/model", "workspace:packages/model"],\
-            ["@asap-hub/react-components", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#workspace:packages/react-components"],\
+            ["@asap-hub/react-components", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#workspace:packages/react-components"],\
             ["@babel/core", "npm:7.19.6"],\
             ["@babel/preset-react", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.18.6"],\
             ["@babel/runtime-corejs3", "npm:7.19.6"],\
             ["@sentry/react", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:6.11.0"],\
             ["@testing-library/react", "virtual:62c7ec58dd69955f8ac9a6b533186c9c2adfe613fbc53211111199550b42e49684cf8582ccf253607db2a5e90990a1492b1a6d2645fd102ea82501f845583321#npm:11.2.7"],\
+            ["@types/asap-hub__model", null],\
+            ["@types/asap-hub__react-components", null],\
+            ["@types/core-js", null],\
             ["@types/history", "npm:4.7.11"],\
             ["@types/jest", "npm:27.5.2"],\
             ["@types/node", "npm:14.18.31"],\
             ["@types/react", "npm:17.0.49"],\
+            ["@types/react-error-boundary", null],\
             ["@types/react-router-dom", "npm:5.3.3"],\
             ["@types/react-router-last-location", null],\
+            ["@types/sentry__react", null],\
             ["@types/testing-library__jest-dom", "npm:5.14.5"],\
             ["@types/testing-library__react", "npm:10.0.1"],\
-            ["core-js", "npm:3.24.1"],\
+            ["core-js", null],\
             ["history", "npm:4.10.1"],\
             ["react", "npm:17.0.2"],\
             ["react-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:17.0.2"],\
@@ -11040,9 +11045,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-titled", "virtual:2f63a6d2333195503897af3f2f19d47f4fab778ddb146e6a2231a54df7a11e4e8ad1eef336738c8db0d4a827d11c58a2d304489e5d0e3bdc9ab3cd3313e9270f#npm:1.0.1"]\
           ],\
           "packagePeers": [\
+            "@asap-hub/model",\
+            "@asap-hub/react-components",\
+            "@sentry/react",\
+            "@types/asap-hub__model",\
+            "@types/asap-hub__react-components",\
+            "@types/core-js",\
+            "@types/react-error-boundary",\
             "@types/react-router-dom",\
             "@types/react-router-last-location",\
             "@types/react",\
+            "@types/sentry__react",\
+            "core-js",\
+            "react-error-boundary",\
             "react-router-dom",\
             "react-router-last-location",\
             "react"\
@@ -11069,7 +11084,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react-router-dom", "npm:5.3.3"],\
             ["@types/testing-library__jest-dom", "npm:5.14.5"],\
             ["@types/testing-library__react", "npm:10.0.1"],\
-            ["core-js", "npm:3.24.1"],\
             ["history", "npm:4.10.1"],\
             ["react", "npm:17.0.2"],\
             ["react-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:17.0.2"],\

@@ -875,7 +875,6 @@ __metadata:
     "@types/react-router-dom": 5.3.3
     "@types/testing-library__jest-dom": 5.14.5
     "@types/testing-library__react": 10.0.1
-    core-js: 3.24.1
     history: 4.10.1
     react: 17.0.2
     react-dom: 17.0.2
@@ -885,7 +884,12 @@ __metadata:
     react-test-renderer: 17.0.2
     react-titled: 1.0.1
   peerDependencies:
+    "@asap-hub/model": "workspace:*"
+    "@asap-hub/react-components": "workspace:*"
+    "@sentry/react": 6.11.0
+    core-js: 3.24.1
     react: ^17.0.2
+    react-error-boundary: 3.1.4
     react-router-dom: 5.3.4
     react-router-last-location: 2.0.1
   languageName: unknown
@@ -33479,7 +33483,7 @@ __metadata:
   version: 1.0.1
   resolution: "react-titled@npm:1.0.1"
   dependencies:
-    prop-types: "npm:^15.5.8"
+    prop-types: ^15.5.8
   peerDependencies:
     react: ^16.3.0-0 || ^17.0.0-0
   checksum: 9f22ce07f74678bffb1031f0f14d432e6cf5e9c2486f350693d5900ad934895c6b08b9ede235864bdee1da3c601b068e46f37abded75ea23ed85bf59d32ca204

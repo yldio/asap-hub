@@ -5,7 +5,7 @@ import { useAuth0, useCurrentUser } from '@asap-hub/react-context';
 import { gp2 } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
-import { useRecoilState, useResetRecoilState } from 'recoil';
+import { RecoilRoot, useRecoilState, useResetRecoilState } from 'recoil';
 import { auth0State } from './auth/state';
 
 const { workingGroups, users, projects } = gp2;
@@ -80,4 +80,10 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
   );
 };
 
-export default AuthenticatedApp;
+const AuthenticatedAppWithRecoil: FC<Record<string, never>> = () => (
+  <RecoilRoot>
+    <AuthenticatedApp />
+  </RecoilRoot>
+);
+
+export default AuthenticatedAppWithRecoil;

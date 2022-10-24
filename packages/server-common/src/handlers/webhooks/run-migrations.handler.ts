@@ -137,7 +137,7 @@ export type ImportModuleFromPath = (filePath: string) => Promise<Module>;
 const getMigrationsFromPathsFactory =
   (importModule: ImportModuleFromPath, logger: Logger) =>
   async (migrationPaths: string[]): Promise<Migration[]> => {
-    const migrations = Promise.all(
+    return Promise.all(
       migrationPaths.map(async (file) => {
         logger.debug({ file });
         const { default: ImportedModule } = await importModule(`${file}`);
@@ -155,8 +155,6 @@ const getMigrationsFromPathsFactory =
         return migration;
       }),
     );
-
-    return migrations;
   };
 
 const getLatestMigrationPathFromDbFactory =

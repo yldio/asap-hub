@@ -36,7 +36,7 @@ describe('LoopOverCustomCollection', () => {
   test('should iterate over small collection', async () => {
     const fetcher = jest.fn().mockReturnValueOnce({
       items: Array(8).fill({}),
-      total: 8,
+      total: 7,
     } as ListResponse<{}>);
     const processEntities = jest.fn();
 
@@ -47,8 +47,8 @@ describe('LoopOverCustomCollection', () => {
 
     expect(processEntities).toHaveBeenCalledTimes(1);
     expect(processEntities).toBeCalledWith({
-      items: Array(8).fill({}),
-      total: 8,
+      items: Array(7).fill({}),
+      total: 7,
     });
   });
 

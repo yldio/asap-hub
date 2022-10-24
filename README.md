@@ -26,7 +26,7 @@ IDEs require special configuration for TypeScript to work when using Plug'n'Play
 
 The `.dir-locals.el` configuration file has already been created in the repository, so you just need to run the following command in the root directory of the project:
 
-```
+```sh
 yarn dlx @yarnpkg/sdks base
 ```
 
@@ -96,7 +96,9 @@ First of all, make the schema changes you want on your PR branch via [the Squide
 
 After you've made and published the changes, you can regenerate the local schemas and queries by running this command (if you need to add anything to queries, you'll need to make those changes before running the command):
 
-`yarn schema:update`
+```sh
+yarn schema:update
+```
 
 Then commit the changed files.
 
@@ -104,7 +106,8 @@ Then commit the changed files.
 
 Create a migration script with the following command:
 
-`yarn workspace @asap-hub/crn-server migration:create <give-the-script-a-name>`
+```sh
+yarn workspace @asap-hub/(crn|gp2)-server migration:create <give-the-script-a-name>```
 
 This should create a new script in:
 
@@ -128,10 +131,12 @@ The down function is triggered by `asap-hub-{env}-rollbackMigrations`
 
 - Install python 3
 - From the root run
+
   ```sh
   pip3 install -r .github/scripts/squidex/requirements.txt
   ```
-- Install Squidex CLI https://github.com/Squidex/squidex-samples/releases
+
+- Install Squidex CLI <https://github.com/Squidex/squidex-samples/releases>
 
   - For macOS + zsh users:
 
@@ -145,13 +150,13 @@ The down function is triggered by `asap-hub-{env}-rollbackMigrations`
 
     For z shell users, edit ~/.zshrc and add the following line:
 
-    ```
+    ```sh
     alias sq=./sq
     ```
 
     Apply the changes running in the terminal:
 
-    ```
+    ```sh
     source ~/.zshrc
     ```
 
@@ -160,7 +165,7 @@ The down function is triggered by `asap-hub-{env}-rollbackMigrations`
   - For zsh users:
     Open `~/.zshenv` and add:
 
-    ```
+    ```sh
     export SQUIDEX_CLIENT_ID=*****
     export SQUIDEX_CLIENT_SECRET=*****
     export SQUIDEX_BASE_URL=https://cloud.squidex.io
@@ -196,13 +201,13 @@ If you don't understand these concepts, you will need to familiarise yourself wi
 
 Once you've completed the steps above, you can create a new migration file with:
 
-```
+```sh
 yarn workspace @asap-hub/contentful ctf-migrate create <name> -c <content_type>
 ```
 
 So if you wanted to add a `foo` field to the `bar` content type:
 
-```
+```sh
 yarn workspace @asap-hub/contentful ctf-migrate create add-foo-field -c bar
 ```
 
@@ -214,7 +219,7 @@ _Note: This is not something you will need to do regularly, I have documented it
 
 The following command will create the migration content schema:
 
-```
+```sh
 yarn workspace @asap-hub/contentful ctf-migrate init
 ```
 
@@ -222,7 +227,7 @@ yarn workspace @asap-hub/contentful ctf-migrate init
 
 If you want to know the number of migrations which have not yet been applied to the target environment:
 
-```
+```sh
 yarn workspace @asap-hub/contentful space:migrate:crn:count
 ```
 
@@ -230,7 +235,7 @@ yarn workspace @asap-hub/contentful space:migrate:crn:count
 
 To run outstanding migrations, first do a dry run:
 
-```
+```sh
 yarn workspace @asap-hub/contentful ctf-migrate up --all --dry-run
 ```
 
@@ -245,7 +250,7 @@ There are also convenience methods for this:
 
 Rollbacks are per-content type, and can be used like this:
 
-```
+```sh
 yarn ctf-migrate down -c <content_type> --dry-run
 ```
 
@@ -280,7 +285,7 @@ To build new images:
 
 To change the image tag, run:
 
-```shell
+```sh
   gsed -i s/be0ebbcbd0ff209d56070f09590c5d9622e8a6dc/some-new-tag/g .github/**/*.yml README.md
 ```
 
@@ -290,7 +295,7 @@ To remove logs:
 
 - List the workflow runs:
 
-```shell
+```sh
 sh .github/scripts/manage-workflows/list-workflows.sh
 ```
 
@@ -304,7 +309,7 @@ sh .github/scripts/manage-workflows/list-workflows.sh
 
 - use the Id to delete the workflow runs:
 
-```shell
+```sh
   sh .github/scripts/manage-workflows/delete-workflow-runs.sh 21969391
 ```
 

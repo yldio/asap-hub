@@ -122,3 +122,15 @@ it('renders the Teams Tabbed card for inactive groups', () => {
     screen.getByText('Interest Group Teams', { selector: 'h3' }),
   ).toBeVisible();
 });
+
+it('renders the Leaders Tabbed card for inactive groups', () => {
+  render(<GroupProfileAbout {...props} active={true} />);
+  expect(screen.getByText('Group Leaders', { selector: 'h3' })).toBeVisible();
+  expect(
+    screen.queryByText('Interest Group Leaders', { selector: 'h3' }),
+  ).not.toBeInTheDocument();
+  render(<GroupProfileAbout {...props} active={false} />);
+  expect(
+    screen.getByText('Interest Group Leaders', { selector: 'h3' }),
+  ).toBeVisible();
+});

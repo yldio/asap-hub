@@ -6,6 +6,7 @@ import {
   GroupInformation,
   GroupMembersSection,
   GroupTools,
+  LeadersTabbedCard,
   TeamsTabbedCard,
 } from '../organisms';
 import { CtaCard } from '../molecules';
@@ -16,6 +17,12 @@ import { perRem } from '../pixels';
 const styles = css({
   display: 'grid',
   gridRowGap: `${36 / perRem}em`,
+});
+
+const membersSectionStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: `${36 / perRem}em`,
 });
 
 type GroupProfileAboutProps = Pick<
@@ -51,11 +58,17 @@ const GroupProfileAbout: React.FC<GroupProfileAboutProps> = ({
         tools={tools}
         active={active}
       />
-      <div id={membersSectionId}>
+      <div id={membersSectionId} css={[!active && membersSectionStyles]}>
         {active ? (
           <GroupMembersSection teams={teams} leaders={leaders} />
         ) : (
-          <TeamsTabbedCard title="Interest Group Teams" teams={teams} />
+          <>
+            <LeadersTabbedCard
+              title="Interest Group Leaders"
+              leaders={leaders}
+            />
+            <TeamsTabbedCard title="Interest Group Teams" teams={teams} />
+          </>
         )}
       </div>
       {contactEmails.length !== 0 && (

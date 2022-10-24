@@ -22,6 +22,7 @@ export { default as GroupMembersSection } from './GroupMembersSection';
 export { default as GroupTools } from './GroupTools';
 export { default as HelpSection } from './HelpSection';
 export { default as JoinEvent } from './JoinEvent';
+export { default as LeadersTabbedCard } from './LeadersTabbedCard';
 export { default as MainNavigation } from './MainNavigation';
 export { default as MenuHeader } from './MenuHeader';
 export { default as NewsCard } from './NewsCard';

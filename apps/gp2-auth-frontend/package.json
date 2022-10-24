@@ -17,7 +17,7 @@
     "@asap-hub/auth-frontend-utils": "workspace:*",
     "@asap-hub/gp2-components": "workspace:*",
     "@asap-hub/react-components": "workspace:*",
-    "@babel/runtime-corejs3": "7.19.4",
+    "@babel/runtime-corejs3": "7.19.6",
     "history": "4.10.1",
     "path": "npm:path-browserify@1.0.1",
     "react": "17.0.2",

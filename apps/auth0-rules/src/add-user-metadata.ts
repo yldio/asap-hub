@@ -8,7 +8,7 @@ type Auth0UserResponse = UserMetadataResponse | gp2.UserResponse;
 
 const isUserMetadataResponse = (
   response: UserMetadataResponse | gp2.UserResponse,
-): response is UserMetadataResponse => 'algoliaApiKey' in response;
+): response is UserMetadataResponse => 'onboarded' in response;
 
 const handleError = (err: unknown): Error => {
   if (err instanceof Error) {

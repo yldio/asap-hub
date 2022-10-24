@@ -106,16 +106,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@algolia/client-common@npm:*":
-  version: 4.12.0
-  resolution: "@algolia/client-common@npm:4.12.0"
-  dependencies:
-    "@algolia/requester-common": "npm:4.12.0"
-    "@algolia/transporter": "npm:4.12.0"
-  checksum: dee730abd94f57e73b1c2a921405927b0dc2c5e61978dac58df758fa6d64238b85866458efffe925c7461a543f6d3e5faef92f3cd07237f4f44d027d30305bc9
-  languageName: node
-  linkType: hard
-
 "@algolia/client-common@npm:4.10.3":
   version: 4.10.3
   resolution: "@algolia/client-common@npm:4.10.3"
@@ -123,6 +113,16 @@ __metadata:
     "@algolia/requester-common": "npm:4.10.3"
     "@algolia/transporter": "npm:4.10.3"
   checksum: ba37c9532df4be4a07413e6e8aa92df3cd17f25282a6f3160b94f62f63b6d68fd0dd383708aa42551b948c103dee877e37c01c0ca9fdb77839eed811b4cc2658
+  languageName: node
+  linkType: hard
+
+"@algolia/client-common@npm:4.12.0":
+  version: 4.12.0
+  resolution: "@algolia/client-common@npm:4.12.0"
+  dependencies:
+    "@algolia/requester-common": "npm:4.12.0"
+    "@algolia/transporter": "npm:4.12.0"
+  checksum: dee730abd94f57e73b1c2a921405927b0dc2c5e61978dac58df758fa6d64238b85866458efffe925c7461a543f6d3e5faef92f3cd07237f4f44d027d30305bc9
   languageName: node
   linkType: hard
 
@@ -147,7 +147,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@algolia/client-search@npm:*":
+"@algolia/client-search@npm:4.10.3":
   version: 4.10.3
   resolution: "@algolia/client-search@npm:4.10.3"
   dependencies:
@@ -355,8 +355,8 @@ __metadata:
   resolution: "@asap-hub/algolia@workspace:packages/algolia"
   dependencies:
     "@algolia/cli": 4.0.8
-    "@algolia/client-common": "*"
-    "@algolia/client-search": "*"
+    "@algolia/client-common": 4.12.0
+    "@algolia/client-search": 4.10.3
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/fixtures": "workspace:*"
     "@asap-hub/model": "workspace:*"
@@ -831,7 +831,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/fixtures@workspace:packages/fixtures"
   dependencies:
-    "@algolia/client-search": "*"
+    "@algolia/client-search": 4.10.3
     "@asap-hub/auth": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@babel/runtime-corejs3": 7.19.4

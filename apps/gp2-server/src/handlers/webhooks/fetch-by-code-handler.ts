@@ -1,4 +1,5 @@
 import { ValidationError } from '@asap-hub/errors';
+import { gp2 } from '@asap-hub/model';
 import { validateAuth0Request } from '@asap-hub/server-common';
 import { framework as lambda } from '@asap-hub/services-common';
 import {
@@ -15,7 +16,7 @@ import { sentryWrapper } from '../../utils/sentry-wrapper';
 export const fetchUserByCodeHandlerFactory = (
   userController: UserController,
 ): lambda.Handler =>
-  lambda.http(async (request) => {
+  lambda.http<gp2.UserResponse>(async (request) => {
     validateAuth0Request(request, auth0SharedSecret);
 
     const { code } = validateParams(request.params);

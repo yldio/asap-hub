@@ -39,6 +39,7 @@ export interface TeamMember {
   role: TeamRole;
   avatarUrl?: string;
   labs?: LabResponse[];
+  alumniSinceDate?: string;
 }
 
 export type TeamDataObject = Omit<TeamCreateRequest, 'applicationNumber'> & {

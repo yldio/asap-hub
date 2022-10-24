@@ -7,6 +7,7 @@ import {
   TeamMembersSection,
   ProfileExpertiseAndResources,
   TeamProfileOverview,
+  TeamMembersTabbedCard,
 } from '../organisms';
 import { CtaCard } from '../molecules';
 import { createMailTo } from '../mail';
@@ -19,12 +20,13 @@ const styles = css({
 
 type TeamProfileAboutProps = ComponentProps<typeof TeamProfileOverview> &
   ComponentProps<typeof ProfileExpertiseAndResources> &
-  Pick<TeamResponse, 'pointOfContact' | 'members'> & {
+  Pick<TeamResponse, 'pointOfContact' | 'members' | 'inactiveSince'> & {
     teamGroupsCard?: React.ReactNode;
     readonly teamListElementId: string;
   };
 
 const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
+  inactiveSince,
   projectTitle,
   projectSummary,
   expertiseAndResourceTags,
@@ -48,32 +50,36 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
       />
     ) : null}
     {members.length ? (
-      <section id={teamListElementId}>
-        <TeamMembersSection
-          members={members.map(
-            ({
-              displayName,
-              role,
-              firstName,
-              lastName,
-              avatarUrl,
-              id,
-              labs = [],
-            }) => ({
-              firstLine: displayName,
-              secondLine: role,
-              thirdLine: getUniqueCommaStringWithSuffix(
-                labs.map((lab) => lab.name),
-                'Lab',
-              ),
-              avatarUrl,
-              firstName,
-              lastName,
-              id,
-            }),
-          )}
-        />
-      </section>
+      inactiveSince ? (
+        <TeamMembersTabbedCard title="Team Members" members={members} />
+      ) : (
+        <section id={teamListElementId}>
+          <TeamMembersSection
+            members={members.map(
+              ({
+                displayName,
+                role,
+                firstName,
+                lastName,
+                avatarUrl,
+                id,
+                labs = [],
+              }) => ({
+                firstLine: displayName,
+                secondLine: role,
+                thirdLine: getUniqueCommaStringWithSuffix(
+                  labs.map((lab) => lab.name),
+                  'Lab',
+                ),
+                avatarUrl,
+                firstName,
+                lastName,
+                id,
+              }),
+            )}
+          />
+        </section>
+      )
     ) : null}
     {teamGroupsCard}
     {pointOfContact && (

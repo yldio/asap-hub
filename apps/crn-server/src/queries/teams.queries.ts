@@ -36,6 +36,7 @@ export const teamsContentQueryFragment = gql`
         }
         biography
         degree
+        alumniSinceDate
         email
         contactEmail
         firstName

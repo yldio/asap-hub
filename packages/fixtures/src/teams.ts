@@ -5,7 +5,10 @@ import {
   TeamResponse,
 } from '@asap-hub/model';
 
-const teamMember: Omit<ListTeamResponse['items'][0]['members'][0], 'id'> = {
+export const teamMember: Omit<
+  ListTeamResponse['items'][0]['members'][0],
+  'id'
+> = {
   firstName: 'Mason',
   lastName: 'Carpenter',
   email: 'mason@car.com',

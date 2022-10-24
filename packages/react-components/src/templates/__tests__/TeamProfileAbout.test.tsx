@@ -109,3 +109,44 @@ it('renders the expertise and resources list', () => {
   expect(getByText(/example expertise/i)).toBeVisible();
   expect(getByText(/expertise and resources/i)).toBeVisible();
 });
+
+it('renders the Teams Tabbed card for inactive groups', () => {
+  const { getByText } = render(
+    <TeamProfileAbout
+      {...props}
+      members={[
+        {
+          id: 'uuid',
+          displayName: 'John Doe',
+          firstName: 'John',
+          lastName: 'Doe',
+          role: 'Project Manager',
+          email: 'johndoe@asap.com',
+        },
+      ]}
+      inactiveSince={undefined}
+    />,
+  );
+
+  expect(getByText('Team Members (1)', { selector: 'h2' })).toBeVisible();
+
+  render(
+    <TeamProfileAbout
+      {...props}
+      members={[
+        {
+          id: 'uuid',
+          displayName: 'John Doe',
+          firstName: 'John',
+          lastName: 'Doe',
+          role: 'Project Manager',
+          email: 'johndoe@asap.com',
+        },
+      ]}
+      inactiveSince="2022-10-25"
+    />,
+  );
+
+  expect(getByText('Team Members', { selector: 'h3' })).toBeVisible();
+  expect(getByText('Past Team Members (1)', { selector: 'p' })).toBeVisible();
+});

@@ -6017,6 +6017,7 @@ export type EventContentFragment = Pick<
                               UsersFlatDataDto,
                               | 'biography'
                               | 'degree'
+                              | 'alumniSinceDate'
                               | 'email'
                               | 'contactEmail'
                               | 'firstName'
@@ -6367,6 +6368,7 @@ export type FetchEventsQuery = {
                                         UsersFlatDataDto,
                                         | 'biography'
                                         | 'degree'
+                                        | 'alumniSinceDate'
                                         | 'email'
                                         | 'contactEmail'
                                         | 'firstName'
@@ -6737,6 +6739,7 @@ export type FetchEventQuery = {
                                   UsersFlatDataDto,
                                   | 'biography'
                                   | 'degree'
+                                  | 'alumniSinceDate'
                                   | 'email'
                                   | 'contactEmail'
                                   | 'firstName'
@@ -7081,6 +7084,7 @@ export type GroupsContentFragment = Pick<
                   UsersFlatDataDto,
                   | 'biography'
                   | 'degree'
+                  | 'alumniSinceDate'
                   | 'email'
                   | 'contactEmail'
                   | 'firstName'
@@ -7329,6 +7333,7 @@ export type FetchGroupsQuery = {
                             UsersFlatDataDto,
                             | 'biography'
                             | 'degree'
+                            | 'alumniSinceDate'
                             | 'email'
                             | 'contactEmail'
                             | 'firstName'
@@ -7578,6 +7583,7 @@ export type FetchGroupQuery = {
                       UsersFlatDataDto,
                       | 'biography'
                       | 'degree'
+                      | 'alumniSinceDate'
                       | 'email'
                       | 'contactEmail'
                       | 'firstName'
@@ -8407,6 +8413,7 @@ export type TeamsContentFragment = Pick<
           UsersFlatDataDto,
           | 'biography'
           | 'degree'
+          | 'alumniSinceDate'
           | 'email'
           | 'contactEmail'
           | 'firstName'
@@ -8512,6 +8519,7 @@ export type FetchTeamQuery = {
               UsersFlatDataDto,
               | 'biography'
               | 'degree'
+              | 'alumniSinceDate'
               | 'email'
               | 'contactEmail'
               | 'firstName'
@@ -8628,6 +8636,7 @@ export type FetchTeamsQuery = {
                     UsersFlatDataDto,
                     | 'biography'
                     | 'degree'
+                    | 'alumniSinceDate'
                     | 'email'
                     | 'contactEmail'
                     | 'firstName'
@@ -9205,6 +9214,10 @@ export const TeamsContentFragmentDoc = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'degree' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'alumniSinceDate' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'email' } },
                       {

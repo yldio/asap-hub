@@ -104,6 +104,7 @@ export {
   GroupTools,
   HelpSection,
   JoinEvent,
+  LeadersTabbedCard,
   MainNavigation,
   MenuHeader,
   NewsCard,

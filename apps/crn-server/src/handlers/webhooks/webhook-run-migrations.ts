@@ -16,22 +16,25 @@ const squidexClient = new SquidexRest<RestMigration>(
   { appName, baseUrl },
 );
 
-export { runFactory, rollbackFactory };
-
 const importModuleFromPath: ImportModuleFromPath = (filePath: string) =>
   import(`../../migrations/${filePath}`);
 
-const getMigrationPaths = async () => fsPromise.readdir(`./migrations`);
+const getMigrationPaths = async () => await fsPromise.readdir(`./migrations`);
 
-export const run = sentryWrapper(
-  runFactory(
-    pinoLogger,
-    squidexClient,
-    getMigrationPaths,
-    importModuleFromPath,
-  ),
+export const runHandler = runFactory(
+  pinoLogger,
+  squidexClient,
+  getMigrationPaths,
+  importModuleFromPath,
+);
+export const rollbackHandler = rollbackFactory(
+  pinoLogger,
+  squidexClient,
+  importModuleFromPath,
 );
 
-export const rollback = sentryWrapper(
-  rollbackFactory(pinoLogger, squidexClient, importModuleFromPath),
-);
+/* istanbul ignore next */
+export const run = sentryWrapper(runHandler);
+
+/* istanbul ignore next */
+export const rollback = sentryWrapper(rollbackHandler);

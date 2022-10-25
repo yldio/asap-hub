@@ -23,6 +23,7 @@ const importModuleFromPath: ImportModuleFromPath = (filePath: string) =>
 
 const getMigrationPaths = async () => fsPromise.readdir(`./migrations`);
 
+/* istanbul ignore next */
 export const run = sentryWrapper(
   runFactory(
     pinoLogger,
@@ -32,6 +33,7 @@ export const run = sentryWrapper(
   ),
 );
 
+/* istanbul ignore next */
 export const rollback = sentryWrapper(
   rollbackFactory(pinoLogger, squidexClient, importModuleFromPath),
 );

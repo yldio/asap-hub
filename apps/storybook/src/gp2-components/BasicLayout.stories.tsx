@@ -1,4 +1,4 @@
-import { BasicLayout } from '@asap-hub/react-components';
+import { BasicLayout } from '@asap-hub/gp2-components';
 
 export default {
   title: 'GP2 / Templates / Basic Layout',

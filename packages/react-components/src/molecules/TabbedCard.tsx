@@ -47,7 +47,8 @@ const TabbedCard = <T extends object>({
   const [active, setActive] = React.useState(activeTabIndex);
   const [showMore, setShowMore] = React.useState(false);
   const { items, truncateFrom } = tabs[active];
-  const showShowMoreButton = truncateFrom && items.length > truncateFrom;
+  const displayShowMoreButton =
+    getShowMoreText && truncateFrom && items.length > truncateFrom;
 
   return (
     <Card padding={false}>
@@ -77,10 +78,10 @@ const TabbedCard = <T extends object>({
           data: items.slice(0, showMore ? undefined : truncateFrom),
         })}
       </div>
-      {showShowMoreButton && (
+      {displayShowMoreButton && (
         <div css={showMoreStyles}>
           <Button linkStyle onClick={() => setShowMore(!showMore)}>
-            {!!getShowMoreText && getShowMoreText(showMore)}
+            {getShowMoreText(showMore)}
           </Button>
         </div>
       )}

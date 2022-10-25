@@ -686,6 +686,26 @@ describe('Event controller', () => {
         });
       });
     });
+
+    describe('Event speakers', () => {
+      test('Should return team inactiveSince as undefined when it comes as undefined from graphql response', async () => {
+        const eventGraphqlResponse = getSquidexEventGraphqlResponse();
+        eventGraphqlResponse.findEventsContent!.flatData.speakers![0]!.team![0]!.flatData.inactiveSince =
+          undefined;
+
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          eventGraphqlResponse,
+        );
+
+        const expectedResponse = getEventResponse();
+        if ('team' in expectedResponse.speakers[0]!) {
+          expectedResponse.speakers[0]!.team.inactiveSince = undefined;
+        }
+
+        const result = await eventsController.fetchById(eventId);
+        expect(result).toMatchObject(expectedResponse);
+      });
+    });
   });
   describe('Create method', () => {
     afterEach(() => {

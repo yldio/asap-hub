@@ -28,6 +28,13 @@ describe('FiltersModal', () => {
       expect(screen.getByRole('textbox', { name: fieldName })).toBeVisible();
     },
   );
+  it('renders the no options message for regions', () => {
+    render(<FiltersModal {...defaultProps} />);
+    userEvent.type(screen.getByRole('textbox', { name: 'Regions' }), 'LT');
+    expect(
+      screen.getByText(/sorry, no current regions match "lt"/i),
+    ).toBeVisible();
+  });
   it('calls the onBackClick function on close', () => {
     render(<FiltersModal {...defaultProps} />);
     const closeButton = screen.getAllByRole('button', { name: 'Close' })[1];

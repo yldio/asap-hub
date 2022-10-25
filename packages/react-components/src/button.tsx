@@ -205,7 +205,15 @@ export const getButtonStyles = ({
   active = false,
   children = [] as React.ReactNode,
   noMargin = false,
-  colors = {},
+  colors,
+}: {
+  colors?: Theme['colors'];
+  primary?: boolean;
+  small?: boolean;
+  enabled?: boolean;
+  active?: boolean;
+  noMargin?: boolean;
+  children?: React.ReactNode;
 }) =>
   css([
     styles,

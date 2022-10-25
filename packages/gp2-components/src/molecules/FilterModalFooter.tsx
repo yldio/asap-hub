@@ -2,7 +2,7 @@ import { Button, pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { mobileQuery } from '../layout';
 
-const { rem, tabletScreen } = pixels;
+const { rem } = pixels;
 
 type FilterModalFooterProps = {
   onReset: () => void;

@@ -33,8 +33,6 @@ export {
   WorkingGroupDetailHeader,
   WorkingGroupNetwork,
   WorkingGroupsBody,
-  ProjectSummaryFooter,
-  ProjectSummaryHeader,
   FiltersModal,
 } from './organisms';
 export {

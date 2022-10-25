@@ -6,6 +6,7 @@ import {
   waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
@@ -13,6 +14,7 @@ import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getUsers } from '../api';
 import { refreshUsersState } from '../state';
 import UserList from '../UserList';
+import * as search from '../../hooks/search';
 
 jest.mock('../api');
 jest.mock('../../users/api');
@@ -83,4 +85,15 @@ it('renders a list of fetched groups', async () => {
 it('renders the filters modal', async () => {
   await renderUserList(undefined, true);
   expect(screen.getByRole('heading', { name: 'Filters' })).toBeVisible();
+});
+it('calls the updateFilters with the right arguments', async () => {
+  const mockUpdateFilter = jest.fn();
+  jest.spyOn(search, 'useSearch').mockImplementation(() => ({
+    changeLocation: jest.fn(),
+    filters: { region: [] },
+    updateFilters: mockUpdateFilter,
+  }));
+  await renderUserList(undefined, true);
+  userEvent.click(screen.getByRole('button', { name: 'Apply' }));
+  expect(mockUpdateFilter).toHaveBeenCalledWith('/users', { region: [] });
 });

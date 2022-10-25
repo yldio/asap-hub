@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { ThemeProvider } from '@emotion/react';
 
-import { silver, fern, charcoal } from '../../colors';
+import { silver, fern, charcoal, color } from '../../colors';
 import { orcidIcon } from '../../icons';
 import { activePrimaryBackgroundColorDefault } from '../../button';
 
@@ -58,15 +59,38 @@ it('renders a button without margin', () => {
 
   expect(iconOnlyPaddingLeft).toBeLessThan(normalPaddingLeft);
 });
+describe('primary button', () => {
+  it('renders a primary button', () => {
+    const { getByRole, rerender } = render(<Button />);
+    expect(getComputedStyle(getByRole('button')).backgroundColor).not.toBe(
+      fern.rgb,
+    );
+    rerender(<Button primary />);
+    expect(getComputedStyle(getByRole('button')).backgroundColor).toBe(
+      fern.rgb,
+    );
+  });
 
-it('renders a primary button', () => {
-  const { getByRole, rerender } = render(<Button />);
-  expect(getComputedStyle(getByRole('button')).backgroundColor).not.toBe(
-    fern.rgb,
-  );
-
-  rerender(<Button primary />);
-  expect(getComputedStyle(getByRole('button')).backgroundColor).toBe(fern.rgb);
+  it('uses ThemeProvider theme primaryColor', () => {
+    const testBorderColor = color(12, 141, 195);
+    const testBackgroundColor = color(0, 106, 146);
+    const theme = {
+      colors: {
+        primary500: testBackgroundColor,
+        primary900: testBorderColor,
+      },
+    };
+    const { getByRole } = render(
+      <ThemeProvider theme={theme}>
+        <Button primary />
+      </ThemeProvider>,
+    );
+    const { backgroundColor, borderColor } = getComputedStyle(
+      getByRole('button'),
+    );
+    expect(borderColor).toBe(testBorderColor.rgba);
+    expect(backgroundColor).toBe(testBackgroundColor.rgb);
+  });
 });
 
 it('renders an active secondary button', () => {
@@ -144,8 +168,8 @@ describe('the type', () => {
 
 it('renders a link-styled button', () => {
   const { getByRole } = render(<Button linkStyle />);
-  const { color, padding } = getComputedStyle(getByRole('button'));
-  expect(color).toBe(fern.rgb);
+  const { color: buttonColor, padding } = getComputedStyle(getByRole('button'));
+  expect(buttonColor).toBe(fern.rgb);
   expect(padding).toMatchInlineSnapshot(`"0px"`);
 });
 

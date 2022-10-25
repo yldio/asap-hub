@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react-hooks';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, useHistory } from 'react-router-dom';
 import { usePagination, usePaginationParams } from '../pagination';
 import { useSearch } from '../search';
 
@@ -82,6 +82,27 @@ describe('useSearch', () => {
       expect(result.current.usePaginationParams.currentPage).toBe(2);
       result.current.useSearch.updateFilters('/test', { region: [] });
       expect(result.current.usePaginationParams.currentPage).toBe(0);
+    });
+  });
+  describe('changeLocation', () => {
+    it('changes location without clearing the filters', () => {
+      const { result } = renderHook(
+        () => ({ useSearch: useSearch(), useHistory: useHistory() }),
+        {
+          wrapper: MemoryRouter,
+          initialProps: {
+            initialEntries: ['/test?region=Europe'],
+          },
+        },
+      );
+      jest.spyOn(result.current.useHistory, 'push');
+      expect(result.current.useSearch.filters).toEqual({ region: ['Europe'] });
+      result.current.useSearch.changeLocation('/test2');
+      expect(result.current.useSearch.filters).toEqual({ region: ['Europe'] });
+      expect(result.current.useHistory.push).toHaveBeenCalledWith({
+        pathname: '/test2',
+        search: 'region=Europe',
+      });
     });
   });
 });

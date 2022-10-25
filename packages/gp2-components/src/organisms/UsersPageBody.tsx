@@ -28,7 +28,7 @@ const UsersPageBody: React.FC<UsersPageBodyProps> = ({
   ...pageProps
 }) => (
   <article css={containerStyles}>
-    <Button onClick={() => onFiltersClick()}>
+    <Button onClick={onFiltersClick}>
       {filterIcon}
       Filters
     </Button>

@@ -19,7 +19,7 @@ const squidexClient = new SquidexRest<RestMigration>(
 const importModuleFromPath: ImportModuleFromPath = (filePath: string) =>
   import(`../../migrations/${filePath}`);
 
-const getMigrationPaths = async () => await fsPromise.readdir(`./migrations`);
+const getMigrationPaths = async () => fsPromise.readdir(`./migrations`);
 
 export const runHandler = runFactory(
   pinoLogger,

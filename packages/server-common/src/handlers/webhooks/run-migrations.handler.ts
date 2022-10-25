@@ -64,6 +64,7 @@ const getMigrationsFromPathsFactory =
     Promise.all(
       migrationPaths.map(async (file) => {
         logger.debug({ file });
+
         const { default: ImportedModule } = await importModule(`${file}`);
 
         if (typeof ImportedModule !== 'function') {

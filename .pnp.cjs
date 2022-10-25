@@ -10850,6 +10850,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/lodash.uniqby", "npm:4.7.7"],\
             ["@types/luxon", "npm:1.26.4"],\
             ["@types/mime-types", "npm:2.1.1"],\
+            ["@types/node", "npm:14.18.31"],\
             ["@types/parse-data-url", "npm:3.0.0"],\
             ["@types/pump", "npm:1.1.1"],\
             ["@types/serverless", "npm:3.12.8"],\

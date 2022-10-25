@@ -4,7 +4,7 @@ import {
   runMigrationFactory as runFactory,
 } from '@asap-hub/server-common';
 import { RestMigration, SquidexRest } from '@asap-hub/squidex';
-import { promises as fsPromise } from 'fs';
+import fsPromise from 'fs/promises';
 import { appName, baseUrl } from '../../config';
 import { getAuthToken } from '../../utils/auth';
 import pinoLogger from '../../utils/logger';
@@ -13,7 +13,10 @@ import { sentryWrapper } from '../../utils/sentry-wrapper';
 const squidexClient = new SquidexRest<RestMigration>(
   getAuthToken,
   'migrations',
-  { appName, baseUrl },
+  {
+    appName,
+    baseUrl,
+  },
 );
 
 const importModuleFromPath: ImportModuleFromPath = (filePath: string) =>

@@ -4,7 +4,7 @@ import {
   runMigrationFactory as runFactory,
 } from '@asap-hub/server-common';
 import { RestMigration, SquidexRest } from '@asap-hub/squidex';
-import { promises as fsPromise } from 'fs';
+import fsPromise from 'fs/promises';
 import { appName, baseUrl } from '../../config';
 import { getAuthToken } from '../../utils/auth';
 import pinoLogger from '../../utils/logger';
@@ -23,17 +23,19 @@ const importModuleFromPath: ImportModuleFromPath = (filePath: string) =>
 
 const getMigrationPaths = async () => fsPromise.readdir(`./migrations`);
 
-/* istanbul ignore next */
-export const run = sentryWrapper(
-  runFactory(
-    pinoLogger,
-    squidexClient,
-    getMigrationPaths,
-    importModuleFromPath,
-  ),
+export const runHandler = runFactory(
+  pinoLogger,
+  squidexClient,
+  getMigrationPaths,
+  importModuleFromPath,
 );
+export const rollbackHandler = rollbackFactory(
+  pinoLogger,
+  squidexClient,
+  importModuleFromPath,
+);
+/* istanbul ignore next */
+export const run = sentryWrapper(runHandler);
 
 /* istanbul ignore next */
-export const rollback = sentryWrapper(
-  rollbackFactory(pinoLogger, squidexClient, importModuleFromPath),
-);
+export const rollback = sentryWrapper(rollbackHandler);

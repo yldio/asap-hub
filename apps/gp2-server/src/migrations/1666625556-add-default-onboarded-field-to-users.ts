@@ -9,7 +9,7 @@ export default class MoveResearchOutputTextToDescription extends Migration {
     await applyToAllItemsInCollection<RestUser>(
       'users',
       async (user, squidexClient) => {
-        await squidexClient.patch(user.id, { onboarded: { iv: true } });
+        await squidexClient.patch(user.id, { onboarded: { iv: false } });
       },
     );
   };

@@ -2,6 +2,7 @@ import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router-dom';
 
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { UserProfileContext } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
@@ -75,17 +76,20 @@ describe('an edit button', () => {
       '/edit-contact-info',
     );
   });
-});
 
-it('is rendered for avatar', () => {
-  const { getByLabelText } = render(
-    <UserProfileHeader
-      {...boilerplateProps}
-      onImageSelect={(file: File) => {}}
-    />,
-  );
-  expect(getByLabelText(/edit.+avatar/i)).toBeVisible();
-  expect(getByLabelText(/upload.+avatar/i)).not.toHaveAttribute('disabled');
+  it('is rendered for avatar', () => {
+    const onImageSelect = jest.fn((file: File) => {});
+    const testFile = new File(['foo'], 'foo.png', { type: 'image/png' });
+    const { getByLabelText } = render(
+      <UserProfileHeader {...boilerplateProps} onImageSelect={onImageSelect} />,
+    );
+    const editButton = getByLabelText(/edit.+avatar/i);
+    const uploadInput = getByLabelText(/upload.+avatar/i);
+    expect(editButton).toBeVisible();
+    expect(uploadInput).not.toHaveAttribute('disabled');
+    userEvent.upload(uploadInput, testFile);
+    expect(onImageSelect).toBeCalledWith(testFile);
+  });
 });
 
 it('shows placeholder text for degree on own profile when omitted', () => {
@@ -109,27 +113,66 @@ it('shows placeholder text for degree on own profile when omitted', () => {
   expect(queryByText(/, BA/i)).toBeVisible();
 });
 
-it('shows the alumni badge when user is alumni', () => {
-  const { queryByText, queryByTitle, rerender } = render(
-    <UserProfileContext.Provider value={{ isOwnProfile: false }}>
-      <UserProfileHeader
-        {...boilerplateProps}
-        alumniSinceDate={new Date().toISOString()}
-        degree={undefined}
-      />
-      ,
-    </UserProfileContext.Provider>,
-  );
-  expect(queryByText('Alumni')).toBeInTheDocument();
-  expect(queryByTitle('Alumni Badge')).toBeInTheDocument();
+describe('alumni', () => {
+  it('shows the alumni badge when user is alumni', () => {
+    const { queryByText, queryByTitle, rerender } = render(
+      <UserProfileContext.Provider value={{ isOwnProfile: false }}>
+        <UserProfileHeader
+          {...boilerplateProps}
+          alumniSinceDate={new Date().toISOString()}
+          degree={undefined}
+        />
+        ,
+      </UserProfileContext.Provider>,
+    );
+    expect(queryByText('Alumni')).toBeInTheDocument();
+    expect(queryByTitle('Alumni Badge')).toBeInTheDocument();
 
-  rerender(
-    <UserProfileContext.Provider value={{ isOwnProfile: false }}>
-      <UserProfileHeader {...boilerplateProps} degree={undefined} />,
-    </UserProfileContext.Provider>,
-  );
-  expect(queryByText('Alumni')).not.toBeInTheDocument();
-  expect(queryByTitle('Alumni Badge')).not.toBeInTheDocument();
+    rerender(
+      <UserProfileContext.Provider value={{ isOwnProfile: false }}>
+        <UserProfileHeader {...boilerplateProps} degree={undefined} />,
+      </UserProfileContext.Provider>,
+    );
+    expect(queryByText('Alumni')).not.toBeInTheDocument();
+    expect(queryByTitle('Alumni Badge')).not.toBeInTheDocument();
+  });
+
+  it('shows the proper alumni toast message when user is alumni', () => {
+    const { queryByText, rerender } = render(
+      <UserProfileContext.Provider value={{ isOwnProfile: false }}>
+        <UserProfileHeader
+          {...boilerplateProps}
+          alumniSinceDate={new Date('2022-09-12T12:00:00').toISOString()}
+          lastModifiedDate={new Date('2021-09-01T12:00:00').toISOString()}
+          degree={undefined}
+        />
+        ,
+      </UserProfileContext.Provider>,
+    );
+    expect(
+      queryByText(
+        'This alumni might not have all content updated or available.',
+        { exact: false },
+      ),
+    ).toBeInTheDocument();
+    rerender(
+      <UserProfileContext.Provider value={{ isOwnProfile: false }}>
+        <UserProfileHeader
+          {...boilerplateProps}
+          alumniSinceDate={new Date('2022-09-12T12:00:00').toISOString()}
+          lastModifiedDate={new Date('2021-09-01T12:00:00').toISOString()}
+          alumniLocation={'Some University'}
+          degree={undefined}
+        />
+        ,
+      </UserProfileContext.Provider>,
+    );
+    expect(
+      queryByText('and their role is now at', {
+        exact: false,
+      }),
+    ).toBeInTheDocument();
+  });
 });
 
 it('shows lab information if the user is in a lab', async () => {

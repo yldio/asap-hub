@@ -9,6 +9,7 @@ import { editIcon, uploadIcon, alumniBadge } from '../icons';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { createMailTo } from '../mail';
 import { SocialIcons, TabNav, UserProfilePersonalText } from '../molecules';
+import { Toast } from '../organisms';
 import {
   largeDesktopScreen,
   mobileScreen,
@@ -16,6 +17,7 @@ import {
   tabletScreen,
   vminLinearCalc,
 } from '../pixels';
+import { formatDateToTimezone } from '../date';
 
 const middleSizeQuery = '@media (min-width: 620px)';
 const bigSizeQuery = `@media (min-width: ${tabletScreen.width}px)`;
@@ -138,7 +140,9 @@ const editButtonContainer = css({
 type UserProfileHeaderProps = Pick<
   UserResponse,
   | 'id'
+  | 'lastModifiedDate'
   | 'alumniSinceDate'
+  | 'alumniLocation'
   | 'avatarUrl'
   | 'contactEmail'
   | 'email'
@@ -167,7 +171,9 @@ type UserProfileHeaderProps = Pick<
 
 const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
   id,
+  lastModifiedDate,
   alumniSinceDate,
+  alumniLocation,
   displayName,
   country,
   city,
@@ -196,127 +202,154 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
   const { isOwnProfile } = useContext(UserProfileContext);
 
   return (
-    <header css={[containerStyles]}>
-      <section css={personalInfoStyles}>
-        <div>
-          <div css={nameHeaderStyles}>
-            <div css={{ display: 'flex' }}>
-              <Display styleAsHeading={2}>{displayName}</Display>
-              {degree ? (
-                <Display styleAsHeading={2}>, {degree}</Display>
-              ) : isOwnProfile ? (
-                <div css={{ color: tin.rgb }}>
-                  <Display styleAsHeading={2}>, Degree</Display>
-                </div>
-              ) : null}
+    <>
+      {alumniSinceDate && (
+        <Toast accent="info">
+          This alumni might not have all content updated or available. This user
+          became alumni on the{' '}
+          <strong>
+            {formatDateToTimezone(alumniSinceDate, 'do MMMM yyyy')}
+          </strong>
+          , their contact details were last updated on the{' '}
+          <strong>
+            {formatDateToTimezone(lastModifiedDate, 'do MMMM yyyy')}
+          </strong>
+          {alumniLocation && (
+            <span>
+              {' '}
+              and their role is now at <strong>{alumniLocation}</strong>
+            </span>
+          )}
+          .
+        </Toast>
+      )}
+      <header css={[containerStyles]}>
+        <section css={personalInfoStyles}>
+          <div>
+            <div css={nameHeaderStyles}>
+              <div css={{ display: 'flex' }}>
+                <Display styleAsHeading={2}>{displayName}</Display>
+                {degree ? (
+                  <Display styleAsHeading={2}>, {degree}</Display>
+                ) : isOwnProfile ? (
+                  <div css={{ color: tin.rgb }}>
+                    <Display styleAsHeading={2}>, Degree</Display>
+                  </div>
+                ) : null}
+              </div>
+              {alumniSinceDate && (
+                <StateTag icon={alumniBadge} label="Alumni" />
+              )}
             </div>
-            {alumniSinceDate && <StateTag icon={alumniBadge} label="Alumni" />}
-          </div>
-          <UserProfilePersonalText
-            institution={institution}
-            country={country}
-            city={city}
-            jobTitle={jobTitle}
-            teams={teams}
-            role={role}
-            labs={labs}
-          />
-        </div>
-        <div css={avatarContainer}>
-          <div css={imageContainer}>
-            <Avatar
-              imageUrl={avatarUrl}
-              firstName={firstName}
-              lastName={lastName}
+            <UserProfilePersonalText
+              institution={institution}
+              country={country}
+              city={city}
+              jobTitle={jobTitle}
+              teams={teams}
+              role={role}
+              labs={labs}
             />
           </div>
-          {onImageSelect && (
-            <div css={editButtonContainer}>
-              <label>
-                <Link
-                  buttonStyle
-                  small
-                  primary
-                  href={undefined}
-                  label="Edit Avatar"
-                  enabled={!avatarSaving}
-                >
-                  {uploadIcon}
-                  <input
-                    disabled={avatarSaving}
-                    type="file"
-                    accept="image/x-png,image/jpeg"
-                    aria-label="Upload Avatar"
-                    onChange={(event) =>
-                      event.target.files?.length &&
-                      onImageSelect(event.target.files[0])
-                    }
-                    css={{ display: 'none' }}
-                  />
-                </Link>
-              </label>
+          <div css={avatarContainer}>
+            <div css={imageContainer}>
+              <Avatar
+                imageUrl={avatarUrl}
+                firstName={firstName}
+                lastName={lastName}
+              />
             </div>
-          )}
-        </div>
-      </section>
-      {editPersonalInfoHref && (
-        <div css={editPersonalInfoStyles}>
-          <Link
-            buttonStyle
-            small
-            primary
-            href={editPersonalInfoHref}
-            label="Edit personal information"
-          >
-            {editIcon}
-          </Link>
-        </div>
-      )}
-      <section
-        css={[contactStyles, editContactInfoHref ? null : contactNoEditStyles]}
-      >
-        <Link
-          small
-          buttonStyle
-          primary
-          href={createMailTo(contactEmail || email)}
+            {onImageSelect && (
+              <div css={editButtonContainer}>
+                <label>
+                  <Link
+                    buttonStyle
+                    small
+                    primary
+                    href={undefined}
+                    label="Edit Avatar"
+                    enabled={!avatarSaving}
+                  >
+                    {uploadIcon}
+                    <input
+                      disabled={avatarSaving}
+                      type="file"
+                      accept="image/x-png,image/jpeg"
+                      aria-label="Upload Avatar"
+                      onChange={(event) =>
+                        event.target.files?.length &&
+                        onImageSelect(event.target.files[0])
+                      }
+                      css={{ display: 'none' }}
+                    />
+                  </Link>
+                </label>
+              </div>
+            )}
+          </div>
+        </section>
+        {editPersonalInfoHref && (
+          <div css={editPersonalInfoStyles}>
+            <Link
+              buttonStyle
+              small
+              primary
+              href={editPersonalInfoHref}
+              label="Edit personal information"
+            >
+              {editIcon}
+            </Link>
+          </div>
+        )}
+        <section
+          css={[
+            contactStyles,
+            editContactInfoHref ? null : contactNoEditStyles,
+          ]}
         >
-          Contact
-        </Link>
-      </section>
-      {editContactInfoHref && (
-        <div css={editContactStyles}>
           <Link
-            buttonStyle
             small
+            buttonStyle
             primary
-            href={editContactInfoHref}
-            label="Edit contact information"
+            href={createMailTo(contactEmail || email)}
           >
-            {editIcon}
+            Contact
           </Link>
+        </section>
+        {editContactInfoHref && (
+          <div css={editContactStyles}>
+            <Link
+              buttonStyle
+              small
+              primary
+              href={editContactInfoHref}
+              label="Edit contact information"
+            >
+              {editIcon}
+            </Link>
+          </div>
+        )}
+        <div css={[socialIconStyles]}>
+          <SocialIcons {...social} />
         </div>
-      )}
-      <div css={[socialIconStyles]}>
-        <SocialIcons {...social} />
-      </div>
-      <div css={tabNavStyles}>
-        <TabNav>
-          <TabLink href={tabRoutes.research({}).$}>Research</TabLink>
-          <TabLink href={tabRoutes.about({}).$}>Background</TabLink>
-          <TabLink href={tabRoutes.outputs({}).$}>
-            Shared Outputs
-            {` (${sharedOutputsCount})`}
-          </TabLink>
-          <TabLink href={tabRoutes.upcoming({}).$}>
-            Upcoming Events ({upcomingEventsCount})
-          </TabLink>
-          <TabLink href={tabRoutes.past({}).$}>
-            Past Events ({pastEventsCount})
-          </TabLink>
-        </TabNav>
-      </div>
-    </header>
+        <div css={tabNavStyles}>
+          <TabNav>
+            <TabLink href={tabRoutes.research({}).$}>Research</TabLink>
+            <TabLink href={tabRoutes.about({}).$}>Background</TabLink>
+            <TabLink href={tabRoutes.outputs({}).$}>
+              Shared Outputs
+              {` (${sharedOutputsCount})`}
+            </TabLink>
+            <TabLink href={tabRoutes.upcoming({}).$}>
+              Upcoming Events ({upcomingEventsCount})
+            </TabLink>
+            <TabLink href={tabRoutes.past({}).$}>
+              Past Events ({pastEventsCount})
+            </TabLink>
+          </TabNav>
+        </div>
+      </header>
+    </>
   );
 };
 

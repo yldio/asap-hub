@@ -52,7 +52,7 @@ const alertStyles = css({
 const infoStyles = css({
   backgroundColor: apricot.rgb,
   color: warning900.rgb,
-  height: `${56 / perRem}em`,
+  minHeight: `${56 / perRem}em`,
   display: 'flex',
   alignItems: 'center',
   paddingLeft: `${16 / perRem}em`,

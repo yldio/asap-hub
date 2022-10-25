@@ -12,13 +12,13 @@ describe('FilterModalFooter', () => {
     jest.clearAllMocks();
   });
   it('renders the close, reset and apply buttons', () => {
-    render(<FilterModalFooter {...defaultProps}></FilterModalFooter>);
+    render(<FilterModalFooter {...defaultProps} />);
     expect(
       screen.getAllByRole('button').map((button) => button.textContent),
     ).toMatchObject(['Close', 'Reset', 'Apply']);
   });
   it('applies the function to the buttons', () => {
-    render(<FilterModalFooter {...defaultProps}></FilterModalFooter>);
+    render(<FilterModalFooter {...defaultProps} />);
     screen.getAllByRole('button').map((button) => userEvent.click(button));
     expect(defaultProps.onApply).toBeCalledTimes(1);
     expect(defaultProps.onReset).toBeCalledTimes(1);

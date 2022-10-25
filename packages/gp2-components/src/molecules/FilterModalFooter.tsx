@@ -1,5 +1,6 @@
 import { Button, pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
+import { mobileQuery } from '../layout';
 
 const { rem, tabletScreen } = pixels;
 
@@ -13,7 +14,7 @@ const buttonContainerStyles = css({
   display: 'inline-flex',
   gap: rem(24),
   width: '100%',
-  [`@media (max-width: ${tabletScreen.max - 1}px)`]: {
+  [mobileQuery]: {
     display: 'flex',
     flexDirection: 'column-reverse',
   },
@@ -22,7 +23,7 @@ const buttonContainerStyles = css({
 const floatButtonContainerStyles = css({
   marginLeft: 'auto',
   width: 'unset',
-  [`@media (max-width: ${tabletScreen.max - 1}px)`]: {
+  [mobileQuery]: {
     marginLeft: 'unset',
   },
 });
@@ -30,7 +31,7 @@ const floatButtonContainerStyles = css({
 const overrideButtonStyles = css({
   margin: 0,
   maxWidth: 'fit-content',
-  [`@media (max-width: ${tabletScreen.max - 1}px)`]: {
+  [mobileQuery]: {
     maxWidth: '100%',
   },
 });

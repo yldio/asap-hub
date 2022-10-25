@@ -34,16 +34,6 @@ const regionMap: Record<UsersDataRegionEnum, gp2.UserRegion> = {
   [UsersDataRegionEnum.NorthAmerica]: 'North America',
   [UsersDataRegionEnum.SouthAmerica]: 'South America',
 } as const;
-
-const regionReverseMap: Record<gp2.UserRegion, UsersDataRegionEnum> = {
-  Africa: UsersDataRegionEnum.Africa,
-  Asia: UsersDataRegionEnum.Asia,
-  'Australia/Australiasia': UsersDataRegionEnum.AustraliaAustraliasia,
-  Europe: UsersDataRegionEnum.Europe,
-  'Latin America': UsersDataRegionEnum.LatinAmerica,
-  'North America': UsersDataRegionEnum.NorthAmerica,
-  'South America': UsersDataRegionEnum.SouthAmerica,
-} as const;
 const roleMap: Record<UsersDataRoleEnum, gp2.UserRole> = {
   [UsersDataRoleEnum.Administrator]: 'Administrator',
   [UsersDataRoleEnum.NetworkCollaborator]: 'Network Collaborator',
@@ -178,7 +168,7 @@ function getUserSquidexData(
 const generateFetchQueryFilter = ({ filter }: gp2.FetchUsersOptions) => {
   const { region, code } = filter || {};
   const filterRegions = region
-    ?.map((r) => `data/region/iv eq '${regionReverseMap[r]}'`)
+    ?.map((r) => `data/region/iv eq '${reverseRegionMap[r]}'`)
     .join(' or ');
 
   const filterCode = code && `data/connections/iv/code eq '${code}'`;

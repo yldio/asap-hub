@@ -16,6 +16,7 @@ const userProps = () => {
   return {
     numberOfPages: Math.max(1, Math.ceil(numberOfItems / 10)),
     currentPageIndex,
+    onFiltersClick: () => {},
     renderPageHref: (index: number) => `#${index}`,
     users: {
       total: numberOfItems,

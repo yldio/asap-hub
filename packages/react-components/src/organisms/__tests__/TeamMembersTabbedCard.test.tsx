@@ -9,7 +9,7 @@ const props: ComponentProps<typeof TeamMembersTabbedCard> = {
   title: '',
 };
 it('renders the members tabbed card', () => {
-  const labName = 'Amazing Lab';
+  const labName = 'Olsen';
   const members: TeamMember[] = [
     {
       ...teamMember,
@@ -43,7 +43,7 @@ it('renders the members tabbed card', () => {
   });
 
   expect(screen.getAllByTitle(/Alumni Badge/i)).toHaveLength(1);
-  expect(screen.getByText(labName)).toBeInTheDocument();
+  expect(screen.getByText(`${labName} Lab`)).toBeInTheDocument();
 });
 
 it('shows the correct more and less button text', () => {

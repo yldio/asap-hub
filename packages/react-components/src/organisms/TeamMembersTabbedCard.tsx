@@ -8,6 +8,7 @@ import { TabbedCard, ImageLink } from '../molecules';
 import { perRem, rem, tabletScreen } from '../pixels';
 import { fern, lead } from '../colors';
 import { alumniBadge } from '../icons';
+import { getUniqueCommaStringWithSuffix } from '../utils/text';
 
 const containerStyles = css({
   listStyle: 'none',
@@ -43,6 +44,7 @@ const nameStyles = css({
 });
 
 const badgeStyles = css({
+  lineHeight: `${8 / perRem}em`,
   marginLeft: `${8 / perRem}em`,
 });
 
@@ -124,13 +126,17 @@ const TeamMembersTabbedCard: React.FC<TeamMembersTabbedCardProps> = ({
                       <Ellipsis>{role}</Ellipsis>
                     </div>
                   </Anchor>
-                  <div css={textStyles}>
-                    <Ellipsis>
-                      <Anchor href={href} css={{ display: 'contents' }}>
-                        {labs?.map((lab) => lab.name).join(',')}
-                      </Anchor>
-                    </Ellipsis>
-                  </div>
+                  <Anchor href={href} css={{ display: 'contents' }}>
+                    <div css={textStyles}>
+                      <Ellipsis>
+                        {labs &&
+                          getUniqueCommaStringWithSuffix(
+                            labs.map((lab) => lab.name),
+                            'Lab',
+                          )}
+                      </Ellipsis>
+                    </div>
+                  </Anchor>
                 </div>
               </li>
             );

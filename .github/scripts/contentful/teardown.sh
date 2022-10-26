@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 if [[ "$ON_BRANCH_ENV" == "false" ]]; then
-  echo "No branch Environment exists, not deleting Environment."
+  echo "Branch does not have its own Contentful environment; nothing to do."
   exit 0
 fi
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [[ "$ON_BRANCH_ENV" == "False" ]]; then
+if [[ "$ON_BRANCH_ENV" == "false" ]]; then
   echo "No branch Environment exists, not deleting Environment."
   exit 0
 fi

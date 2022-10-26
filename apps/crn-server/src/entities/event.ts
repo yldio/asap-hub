@@ -98,7 +98,7 @@ export const parseGraphQLSpeakers = (
           displayName: team.flatData.displayName ?? '',
           inactiveSince: team.flatData.inactiveSince ?? undefined,
         },
-      } as EventSpeakerTeam;
+      };
     }
 
     return {
@@ -109,7 +109,7 @@ export const parseGraphQLSpeakers = (
       },
       user: parseEventSpeakerUser(user),
       role,
-    } as EventSpeakerUser;
+    };
   });
 
 export const parseGraphQLEvent = (

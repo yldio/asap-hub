@@ -1,10 +1,8 @@
-import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 import { GroupResponse } from '@asap-hub/model';
 
 import {
   GroupInformation,
-  GroupMembersSection,
   GroupTools,
   LeadersTabbedCard,
   TeamsTabbedCard,
@@ -29,7 +27,7 @@ type GroupProfileAboutProps = Pick<
   GroupResponse,
   'tags' | 'description' | 'tools' | 'calendars' | 'active'
 > &
-  Pick<ComponentProps<typeof GroupMembersSection>, 'teams' | 'leaders'> & {
+  Pick<GroupResponse, 'teams' | 'leaders'> & {
     membersSectionId?: string;
   };
 const GroupProfileAbout: React.FC<GroupProfileAboutProps> = ({
@@ -59,9 +57,7 @@ const GroupProfileAbout: React.FC<GroupProfileAboutProps> = ({
         active={active}
       />
       <div id={membersSectionId}>
-        {active ? (
-          <GroupMembersSection teams={teams} leaders={leaders} />
-        ) : (
+        {!active && (
           <div css={membersSectionStyles}>
             <LeadersTabbedCard
               title="Interest Group Leaders"

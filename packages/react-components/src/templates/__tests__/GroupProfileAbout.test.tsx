@@ -30,7 +30,9 @@ it('renders group tools', () => {
   );
 });
 
-it('renders group members', () => {
+// [CRN-1106] Remove skip when adding new Group Members component
+// eslint-disable-next-line jest/no-disabled-tests
+it.skip('renders group members', () => {
   const { getByText } = render(
     <GroupProfileAbout
       {...props}
@@ -49,7 +51,9 @@ it('renders group members', () => {
   expect(getByText('John')).toBeVisible();
 });
 
-it('assigns given id to the members section for deep linking', () => {
+// [CRN-1106] Remove skip when adding new Group Members component
+// eslint-disable-next-line jest/no-disabled-tests
+it.skip('assigns given id to the members section for deep linking', () => {
   const { container } = render(
     <GroupProfileAbout {...props} membersSectionId="members-section" />,
   );
@@ -114,7 +118,9 @@ it('does not render a call to action button, when a PM is NOT defined on the gro
   expect(queryByText(/contact pm/i)).not.toBeInTheDocument();
 });
 
-it('renders the Teams Tabbed card for inactive groups', () => {
+// [CRN-1106] Remove skip when adding new Group Members component
+// eslint-disable-next-line jest/no-disabled-tests
+it.skip('renders the Teams Tabbed card for inactive groups', () => {
   render(<GroupProfileAbout {...props} active={true} />);
   expect(screen.getByText('Group Members', { selector: 'h2' })).toBeVisible();
   render(<GroupProfileAbout {...props} active={false} />);
@@ -123,7 +129,9 @@ it('renders the Teams Tabbed card for inactive groups', () => {
   ).toBeVisible();
 });
 
-it('renders the Leaders Tabbed card for inactive groups', () => {
+// [CRN-1106] Remove skip when adding new Group Members component
+// eslint-disable-next-line jest/no-disabled-tests
+it.skip('renders the Leaders Tabbed card for inactive groups', () => {
   render(<GroupProfileAbout {...props} active={true} />);
   expect(screen.getByText('Group Leaders', { selector: 'h3' })).toBeVisible();
   expect(

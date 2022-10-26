@@ -71,7 +71,9 @@ it('renders the about group information by default', async () => {
   expect(await findAllByText(/description/i)).not.toHaveLength(0);
 });
 
-it('deep links to the teams section', async () => {
+// [CRN-1106] Remove skip when adding new Group Members component
+// eslint-disable-next-line jest/no-disabled-tests
+it.skip('deep links to the teams section', async () => {
   const { findByText, container } = await renderGroupProfile(
     createGroupResponse({ teamsCount: 1 }),
   );

@@ -1,9 +1,9 @@
 import { gp2 } from '@asap-hub/model';
 import { UserEvent } from '@asap-hub/server-common';
 import {
+  gp2 as gp2squidex,
   parseToSquidex,
   WebhookPayload,
-  gp2 as gp2squidex,
 } from '@asap-hub/squidex';
 import {
   FetchUserQuery,
@@ -86,7 +86,7 @@ export const getUserWebhookPayload = (
   },
 });
 
-export const patchResponse = (): gp2squidex.InputUser => ({
+export const patchResponse = (): gp2squidex.RestUser => ({
   id: 'userId',
   data: {
     role: { iv: UsersDataRoleEnum.Trainee },
@@ -212,3 +212,4 @@ export const getSquidexUserGraphqlResponse = (
 ): FetchUserQuery => ({
   findUsersContent,
 });
+export const restUserMock = patchResponse;

@@ -51,6 +51,7 @@ export const parseEventSpeakerUser = (
 
   return {
     id: user.id,
+    alumniSinceDate: user.flatData.alumniSinceDate ?? undefined,
     firstName: user.flatData.firstName ?? undefined,
     lastName: user.flatData.lastName ?? undefined,
     displayName: `${user.flatData.firstName} ${user.flatData.lastName}`,

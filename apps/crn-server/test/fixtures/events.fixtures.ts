@@ -42,6 +42,7 @@ export const getEventSpeakerUser = (): EventSpeakerUser => ({
     firstName: 'Adam',
     lastName: 'Brown',
     displayName: 'Adam Brown',
+    alumniSinceDate: undefined,
     avatarUrl: undefined,
   },
   role: 'Lead PI (Core Leadership)',
@@ -134,6 +135,7 @@ export const getSquidexGraphqlEventSpeakerWithUser = (): NonNullable<
       __typename: 'Users',
       id: 'user-id-3',
       flatData: {
+        alumniSinceDate: null,
         avatar: [],
         firstName: 'Adam',
         lastName: 'Brown',

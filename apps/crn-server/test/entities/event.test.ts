@@ -182,6 +182,7 @@ describe('events entity', () => {
         __typename: 'Users',
         id: 'user-id-3',
         flatData: {
+          alumniSinceDate: undefined,
           avatar: [
             {
               id: 'avatar-id',

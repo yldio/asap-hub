@@ -1,5 +1,8 @@
 {
   "$schema": "./../__json/schema.json",
+  "name": "discover",
+  "isSingleton": true,
+  "isPublished": false,
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
@@ -32,22 +35,22 @@
       },
       {
         "name": "training",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
         "properties": {
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false,
           "fieldType": "References",
-          "editor": "List",
           "allowDuplicates": false,
           "resolveReference": false,
           "mustBePublished": false,
+          "editor": "List",
           "schemaIds": ["tutorials"],
-          "label": "Training"
-        },
-        "isLocked": false,
-        "isHidden": false,
-        "isDisabled": false,
-        "partitioning": "invariant"
+          "label": "Training",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
       },
       {
         "name": "workingGroups",
@@ -61,7 +64,7 @@
           "resolveReference": false,
           "mustBePublished": false,
           "editor": "List",
-          "schemaIds": ["news-and-events"],
+          "schemaIds": ["working-groups"],
           "label": "Working Groups",
           "isRequired": false,
           "isRequiredOnPublish": false,
@@ -77,9 +80,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "isEmbeddable": false,
           "inlineEditable": false,
-          "createEnum": false,
           "contentType": "Unspecified",
           "editor": "RichText",
           "label": "About Us",
@@ -149,11 +150,7 @@
       }
     ],
     "previewUrls": {},
-    "fieldRules": [],
     "category": "Content",
     "isPublished": true
-  },
-  "name": "discover",
-  "isSingleton": true,
-  "schemaType": "Singleton"
+  }
 }

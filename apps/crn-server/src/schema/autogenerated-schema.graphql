@@ -177,6 +177,17 @@ type ApplicationMutations {
     """The status for the content."""
     status: String!
   ): Users!
+  """Change a Working Groups content."""
+  changeWorkingGroupsContent(
+    """The timestamp when the status should be changed."""
+    dueTime: Instant
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The status for the content."""
+    status: String!
+  ): WorkingGroups!
   """Creates an Calendars content."""
   createCalendarsContent(
     """The data for the content."""
@@ -342,6 +353,17 @@ type ApplicationMutations {
     """The initial status."""
     status: String
   ): Users!
+  """Creates an Working Groups content."""
+  createWorkingGroupsContent(
+    """The data for the content."""
+    data: WorkingGroupsDataInputDto!
+    """The optional custom content ID."""
+    id: String
+    """Set to true to autopublish content on create."""
+    publish: Boolean = false
+    """The initial status."""
+    status: String
+  ): WorkingGroups!
   """Delete an Calendars content."""
   deleteCalendarsContent(
     """The expected version."""
@@ -442,6 +464,13 @@ type ApplicationMutations {
   ): EntitySavedResultDto!
   """Delete an Users content."""
   deleteUsersContent(
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the content (usually GUID)."""
+    id: String!
+  ): EntitySavedResultDto!
+  """Delete an Working Groups content."""
+  deleteWorkingGroupsContent(
     """The expected version."""
     expectedVersion: Int = -2
     """The ID of the content (usually GUID)."""
@@ -582,6 +611,15 @@ type ApplicationMutations {
     """The ID of the object (usually GUID)."""
     id: String
   ): Users!
+  """Patch an Working Groups content by id."""
+  patchWorkingGroupsContent(
+    """The data for the content."""
+    data: WorkingGroupsDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String
+  ): WorkingGroups!
   """Publish a Calendars content."""
   publishCalendarsContent(
     """The timestamp when the status should be changed."""
@@ -747,6 +785,17 @@ type ApplicationMutations {
     """The status for the content."""
     status: String!
   ): Users! @deprecated(reason: "Use 'changeUsersContent' instead")
+  """Publish a Working Groups content."""
+  publishWorkingGroupsContent(
+    """The timestamp when the status should be changed."""
+    dueTime: Instant
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The status for the content."""
+    status: String!
+  ): WorkingGroups! @deprecated(reason: "Use 'changeWorkingGroupsContent' instead")
   """Update an Calendars content by id."""
   updateCalendarsContent(
     """The data for the content."""
@@ -882,6 +931,15 @@ type ApplicationMutations {
     """The ID of the object (usually GUID)."""
     id: String
   ): Users!
+  """Update an Working Groups content by id."""
+  updateWorkingGroupsContent(
+    """The data for the content."""
+    data: WorkingGroupsDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String
+  ): WorkingGroups!
   """Upsert an Calendars content by id."""
   upsertCalendarsContent(
     """The data for the content."""
@@ -1107,6 +1165,21 @@ type ApplicationMutations {
     """The initial status."""
     status: String
   ): Users!
+  """Upsert an Working Groups content by id."""
+  upsertWorkingGroupsContent(
+    """The data for the content."""
+    data: WorkingGroupsDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """Makes the update as patch."""
+    patch: Boolean = false
+    """Set to true to autopublish content on create."""
+    publish: Boolean = false
+    """The initial status."""
+    status: String
+  ): WorkingGroups!
 }
 
 """The app queries."""
@@ -1221,6 +1294,13 @@ type ApplicationQueries {
     """The optional version of the content to retrieve an older instance (not cached)."""
     version: Int
   ): Users
+  """Find an Working Groups content by id."""
+  findWorkingGroupsContent(
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The optional version of the content to retrieve an older instance (not cached)."""
+    version: Int
+  ): WorkingGroups
   """Get assets."""
   queryAssets(
     """Optional OData filter."""
@@ -1633,6 +1713,32 @@ type ApplicationQueries {
     """Optional number of items to take."""
     top: Int
   ): UsersResultDto
+  """Query Working Groups content items."""
+  queryWorkingGroupsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [WorkingGroups!]
+  """Query Working Groups content items with total count."""
+  queryWorkingGroupsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): WorkingGroupsResultDto
 }
 
 type ApplicationSubscriptions {
@@ -2107,32 +2213,6 @@ type Discover implements Content {
   newStatus: String
   """The status color of the content."""
   newStatusColor: String
-  """Query News content items."""
-  referencesNewsAndEventsContents(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): [NewsAndEvents!]
-  """Query News content items with total count."""
-  referencesNewsAndEventsContentsWithTotal(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): NewsAndEventsResultDto
   """Query Pages content items."""
   referencesPagesContents(
     """Optional OData filter."""
@@ -2237,6 +2317,32 @@ type Discover implements Content {
     """Optional number of items to take."""
     top: Int
   ): UsersResultDto
+  """Query Working Groups content items."""
+  referencesWorkingGroupsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [WorkingGroups!]
+  """Query Working Groups content items with total count."""
+  referencesWorkingGroupsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): WorkingGroupsResultDto
   """The status of the content."""
   status: String!
   """The status color of the content."""
@@ -2331,7 +2437,7 @@ input DiscoverDataTrainingInputDto {
 
 """The structure of the Working Groups field of the Discover ASAP content type."""
 type DiscoverDataWorkingGroupsDto {
-  iv: [NewsAndEvents!]
+  iv: [WorkingGroups!]
 }
 
 """The structure of the Working Groups field of the Discover ASAP content input type."""
@@ -2347,7 +2453,7 @@ type DiscoverFlatDataDto {
   pages: [Pages!]
   scientificAdvisoryBoard: [Users!]
   training: [Tutorials!]
-  workingGroups: [NewsAndEvents!]
+  workingGroups: [WorkingGroups!]
 }
 
 """List of Discover ASAP items and total count."""
@@ -3683,32 +3789,6 @@ type NewsAndEvents implements Content {
     """Optional number of items to take."""
     top: Int
   ): DashboardResultDto
-  """Query Discover ASAP content items."""
-  referencingDiscoverContents(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): [Discover!]
-  """Query Discover ASAP content items with total count."""
-  referencingDiscoverContentsWithTotal(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): DiscoverResultDto
   """The status of the content."""
   status: String!
   """The status color of the content."""
@@ -5974,6 +6054,140 @@ type UsersFlatDataDto {
 type UsersResultDto {
   """The contents."""
   items: [Users!]
+  """The total count of  contents."""
+  total: Int!
+}
+
+"""The structure of a Working Groups content type."""
+type WorkingGroups implements Content {
+  """The timestamp when the object was created."""
+  created: Instant!
+  """The user who created the object."""
+  createdBy: String!
+  """The user who created the object."""
+  createdByUser: User!
+  """The data of the content."""
+  data: WorkingGroupsDataDto!
+  """The edit token."""
+  editToken: String
+  """The flat data of the content."""
+  flatData: WorkingGroupsFlatDataDto!
+  """The ID of the object (usually GUID)."""
+  id: String!
+  """The timestamp when the object was updated the last time."""
+  lastModified: Instant!
+  """The user who updated the object the last time."""
+  lastModifiedBy: String!
+  """The user who updated the object the last time."""
+  lastModifiedByUser: User!
+  """The new status of the content."""
+  newStatus: String
+  """The status color of the content."""
+  newStatusColor: String
+  """Query Discover ASAP content items."""
+  referencingDiscoverContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [Discover!]
+  """Query Discover ASAP content items with total count."""
+  referencingDiscoverContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): DiscoverResultDto
+  """The status of the content."""
+  status: String!
+  """The status color of the content."""
+  statusColor: String!
+  """The URL to the content."""
+  url: String!
+  """The version of the objec."""
+  version: Int!
+}
+
+"""The structure of the Description field of the Working Groups content type."""
+type WorkingGroupsDataDescriptionDto {
+  iv: String
+}
+
+"""The structure of the Description field of the Working Groups content input type."""
+input WorkingGroupsDataDescriptionInputDto {
+  iv: String
+}
+
+"""The structure of the Working Groups data type."""
+type WorkingGroupsDataDto {
+  description: WorkingGroupsDataDescriptionDto
+  externalLink: WorkingGroupsDataExternalLinkDto
+  externalLinkText: WorkingGroupsDataExternalLinkTextDto
+  title: WorkingGroupsDataTitleDto
+}
+
+"""The structure of the External Link field of the Working Groups content type."""
+type WorkingGroupsDataExternalLinkDto {
+  iv: String
+}
+
+"""The structure of the External Link field of the Working Groups content input type."""
+input WorkingGroupsDataExternalLinkInputDto {
+  iv: String
+}
+
+"""The structure of the External Link Text field of the Working Groups content type."""
+type WorkingGroupsDataExternalLinkTextDto {
+  iv: String
+}
+
+"""The structure of the External Link Text field of the Working Groups content input type."""
+input WorkingGroupsDataExternalLinkTextInputDto {
+  iv: String
+}
+
+"""The structure of the Working Groups data input type."""
+input WorkingGroupsDataInputDto {
+  description: WorkingGroupsDataDescriptionInputDto
+  externalLink: WorkingGroupsDataExternalLinkInputDto
+  externalLinkText: WorkingGroupsDataExternalLinkTextInputDto
+  title: WorkingGroupsDataTitleInputDto
+}
+
+"""The structure of the Title field of the Working Groups content type."""
+type WorkingGroupsDataTitleDto {
+  iv: String
+}
+
+"""The structure of the Title field of the Working Groups content input type."""
+input WorkingGroupsDataTitleInputDto {
+  iv: String
+}
+
+"""The structure of the flat Working Groups data type."""
+type WorkingGroupsFlatDataDto {
+  description: String
+  externalLink: String
+  externalLinkText: String
+  title: String
+}
+
+"""List of Working Groups items and total count."""
+type WorkingGroupsResultDto {
+  """The contents."""
+  items: [WorkingGroups!]
   """The total count of  contents."""
   total: Int!
 }

@@ -35,9 +35,7 @@ describe('Run-migrations Webhook', () => {
     mockImportModuleFromPath,
   );
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
+  beforeEach(jest.resetAllMocks);
 
   describe('Run action', () => {
     test('Should not run anything if no migration files are present', async () => {
@@ -63,13 +61,11 @@ describe('Run-migrations Webhook', () => {
         new NotFoundError(undefined),
       );
 
-      const mockModule = jest.fn().mockImplementation(() => {
-        return {
-          getPath: () => 'test-migration',
-          up: mockUp,
-          down: mockDown,
-        };
-      });
+      const mockModule = jest.fn().mockImplementation(() => ({
+        getPath: () => 'test-migration',
+        up: mockUp,
+        down: mockDown,
+      }));
 
       const mockDefaultModule = { default: mockModule };
       mockImportModuleFromPath.mockResolvedValueOnce(mockDefaultModule);
@@ -83,6 +79,22 @@ describe('Run-migrations Webhook', () => {
         },
       });
       expect(loggerMock.info).toBeCalledWith(`Executed and saved 1 migrations`);
+    });
+
+    test('should throw if fetch fails', async () => {
+      getMigrationPaths.mockResolvedValueOnce(['test-migration.ts'] as any);
+      squidexClientMock.fetchOne.mockRejectedValueOnce(new Error());
+
+      const mockModule = jest.fn().mockImplementation(() => ({
+        getPath: () => 'test-migration',
+        up: mockUp,
+        down: mockDown,
+      }));
+
+      const mockDefaultModule = { default: mockModule };
+      mockImportModuleFromPath.mockResolvedValueOnce(mockDefaultModule);
+
+      return expect(run(...mockEvent)).rejects.toThrow();
     });
 
     test('Should sort the migrations and execute them in the name order', async () => {
@@ -198,6 +210,35 @@ describe('Run-migrations Webhook', () => {
         expect.stringMatching(/2-test-migration/),
       );
       expect(loggerMock.info).toBeCalledWith(`Executed and saved 1 migrations`);
+    });
+
+    test('throws if module is not a migration', async () => {
+      getMigrationPaths.mockResolvedValueOnce(['test-migration.ts'] as any);
+      squidexClientMock.fetchOne.mockRejectedValueOnce(
+        new NotFoundError(undefined),
+      );
+
+      class MockNonMigrationModule {}
+      const mockDefaultModule = { default: MockNonMigrationModule };
+      mockImportModuleFromPath.mockResolvedValueOnce(mockDefaultModule);
+
+      return expect(run(...mockEvent)).rejects.toThrow(
+        /does not contain a valid migration/i,
+      );
+    });
+
+    test('throws if module is invalid', async () => {
+      getMigrationPaths.mockResolvedValueOnce(['test-migration.ts'] as any);
+      squidexClientMock.fetchOne.mockRejectedValueOnce(
+        new NotFoundError(undefined),
+      );
+
+      const mockDefaultModule = { default: {} };
+      mockImportModuleFromPath.mockResolvedValueOnce(mockDefaultModule);
+
+      return expect(run(...mockEvent)).rejects.toThrow(
+        /does not export a valid module/i,
+      );
     });
   });
 

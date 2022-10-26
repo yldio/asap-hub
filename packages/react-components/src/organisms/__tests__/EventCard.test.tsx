@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
 import { render, screen } from '@testing-library/react';
-import { createEventResponse } from '@asap-hub/fixtures';
+import { createEventResponse, createGroupResponse } from '@asap-hub/fixtures';
 import { addMinutes, subDays, subMinutes, addDays } from 'date-fns';
 
 import EventCard from '../EventCard';
@@ -178,6 +178,88 @@ describe('past events', () => {
     );
     expect(screen.getByText(/no meeting materials/i)).toBeVisible();
     expect(screen.getByTitle(/paper/i)).toBeInTheDocument();
+  });
+
+  it('displays inactive badge when a team is inactive', () => {
+    render(
+      <EventCard
+        {...props}
+        speakers={[
+          {
+            team: {
+              displayName: 'Team',
+              id: '123',
+              inactiveSince: '2022-10-20T09:00:00Z',
+            },
+            user: {
+              displayName: 'User',
+              id: '123',
+            },
+          },
+        ]}
+      />,
+    );
+
+    expect(screen.getByTitle('Inactive')).toBeInTheDocument();
+  });
+
+  it('displays inactive badge when a group is inactive', () => {
+    render(
+      <EventCard
+        {...props}
+        group={{ ...createGroupResponse(), active: false }}
+      />,
+    );
+
+    expect(screen.getByTitle('Inactive')).toBeInTheDocument();
+  });
+
+  it('displays inactive badge when a group and team are inactive', () => {
+    render(
+      <EventCard
+        {...props}
+        group={{ ...createGroupResponse(), active: false }}
+        speakers={[
+          {
+            team: {
+              displayName: 'Team',
+              id: '123',
+              inactiveSince: '2022-10-20T09:00:00Z',
+            },
+            user: {
+              displayName: 'User',
+              id: '123',
+            },
+          },
+        ]}
+      />,
+    );
+
+    expect(screen.getAllByTitle('Inactive')).toHaveLength(2);
+  });
+
+  it('does not display inactive badge when a group and team are active', () => {
+    render(
+      <EventCard
+        {...props}
+        group={{ ...createGroupResponse(), active: true }}
+        speakers={[
+          {
+            team: {
+              displayName: 'Team',
+              id: '123',
+              inactiveSince: undefined,
+            },
+            user: {
+              displayName: 'User',
+              id: '123',
+            },
+          },
+        ]}
+      />,
+    );
+
+    expect(screen.queryByTitle('Inactive')).not.toBeInTheDocument();
   });
 
   it("doesn't display toast if none of the conditions are match", () => {

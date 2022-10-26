@@ -94,6 +94,7 @@ export const parseGraphQLSpeakers = (
         team: {
           id: team.id,
           displayName: team.flatData.displayName ?? '',
+          inactiveSince: team.flatData.inactiveSince ?? undefined,
         },
       };
     }
@@ -102,6 +103,7 @@ export const parseGraphQLSpeakers = (
       team: {
         id: team.id,
         displayName: team.flatData.displayName ?? '',
+        inactiveSince: team.flatData.inactiveSince ?? undefined,
       },
       user: parseEventSpeakerUser(user),
       role,

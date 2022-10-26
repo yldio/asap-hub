@@ -6,7 +6,12 @@ import { events, network } from '@asap-hub/routing';
 import { Link } from '../atoms';
 import { lead } from '../colors';
 import { perRem, largeDesktopScreen } from '../pixels';
-import { groupsIcon, eventPlaceholderIcon, speakerIcon } from '../icons';
+import {
+  groupsIcon,
+  eventPlaceholderIcon,
+  speakerIcon,
+  inactiveBadgeIcon,
+} from '../icons';
 import {
   AssociationList,
   EventTime,
@@ -62,6 +67,12 @@ const iconStyles = css({
   height: `${24 / perRem}em`,
   paddingRight: `${9 / perRem}em`,
 });
+
+const inactiveBadgeStyles = {
+  lineHeight: `${18 / perRem}em`,
+  verticalAlign: 'middle',
+  marginLeft: `${8 / perRem}em`,
+};
 
 type EventInfoProps = ComponentProps<typeof EventTime> &
   Pick<
@@ -163,6 +174,9 @@ const EventInfo: React.FC<EventInfoProps> = ({
               >
                 <span css={iconStyles}>{groupsIcon}</span>
                 {group.name}
+                {!group.active && (
+                  <span css={inactiveBadgeStyles}>{inactiveBadgeIcon}</span>
+                )}
               </Link>
             ) : (
               <>

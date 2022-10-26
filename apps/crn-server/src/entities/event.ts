@@ -6,8 +6,6 @@ import {
   isEventStatus,
   EventSpeakerUserData,
   EventSpeakerExternalUserData,
-  EventSpeakerTeam,
-  EventSpeakerUser,
 } from '@asap-hub/model';
 import { parseDate } from '@asap-hub/squidex';
 

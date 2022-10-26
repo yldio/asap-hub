@@ -29,6 +29,8 @@ export type Scalars = {
 export type ApplicationMutations = {
   /** Change a Dashboard content. */
   changeDashboardContent: Dashboard;
+  /** Change a Migrations content. */
+  changeMigrationsContent: Migrations;
   /** Change a Projects content. */
   changeProjectsContent: Projects;
   /** Change a Users content. */
@@ -39,6 +41,8 @@ export type ApplicationMutations = {
   changeWorkingGroupsContent: WorkingGroups;
   /** Creates an Dashboard content. */
   createDashboardContent: Dashboard;
+  /** Creates an Migrations content. */
+  createMigrationsContent: Migrations;
   /** Creates an Projects content. */
   createProjectsContent: Projects;
   /** Creates an Users content. */
@@ -49,6 +53,8 @@ export type ApplicationMutations = {
   createWorkingGroupsContent: WorkingGroups;
   /** Delete an Dashboard content. */
   deleteDashboardContent: EntitySavedResultDto;
+  /** Delete an Migrations content. */
+  deleteMigrationsContent: EntitySavedResultDto;
   /** Delete an Projects content. */
   deleteProjectsContent: EntitySavedResultDto;
   /** Delete an Users content. */
@@ -59,6 +65,8 @@ export type ApplicationMutations = {
   deleteWorkingGroupsContent: EntitySavedResultDto;
   /** Patch an Dashboard content by id. */
   patchDashboardContent: Dashboard;
+  /** Patch an Migrations content by id. */
+  patchMigrationsContent: Migrations;
   /** Patch an Projects content by id. */
   patchProjectsContent: Projects;
   /** Patch an Users content by id. */
@@ -72,6 +80,11 @@ export type ApplicationMutations = {
    * @deprecated Use 'changeDashboardContent' instead
    */
   publishDashboardContent: Dashboard;
+  /**
+   * Publish a Migrations content.
+   * @deprecated Use 'changeMigrationsContent' instead
+   */
+  publishMigrationsContent: Migrations;
   /**
    * Publish a Projects content.
    * @deprecated Use 'changeProjectsContent' instead
@@ -94,6 +107,8 @@ export type ApplicationMutations = {
   publishWorkingGroupsContent: WorkingGroups;
   /** Update an Dashboard content by id. */
   updateDashboardContent: Dashboard;
+  /** Update an Migrations content by id. */
+  updateMigrationsContent: Migrations;
   /** Update an Projects content by id. */
   updateProjectsContent: Projects;
   /** Update an Users content by id. */
@@ -104,6 +119,8 @@ export type ApplicationMutations = {
   updateWorkingGroupsContent: WorkingGroups;
   /** Upsert an Dashboard content by id. */
   upsertDashboardContent: Dashboard;
+  /** Upsert an Migrations content by id. */
+  upsertMigrationsContent: Migrations;
   /** Upsert an Projects content by id. */
   upsertProjectsContent: Projects;
   /** Upsert an Users content by id. */
@@ -116,6 +133,14 @@ export type ApplicationMutations = {
 
 /** The app mutations. */
 export type ApplicationMutationsChangeDashboardContentArgs = {
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  status: Scalars['String'];
+};
+
+/** The app mutations. */
+export type ApplicationMutationsChangeMigrationsContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -163,6 +188,14 @@ export type ApplicationMutationsCreateDashboardContentArgs = {
 };
 
 /** The app mutations. */
+export type ApplicationMutationsCreateMigrationsContentArgs = {
+  data: MigrationsDataInputDto;
+  id: InputMaybe<Scalars['String']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
 export type ApplicationMutationsCreateProjectsContentArgs = {
   data: ProjectsDataInputDto;
   id: InputMaybe<Scalars['String']>;
@@ -201,6 +234,12 @@ export type ApplicationMutationsDeleteDashboardContentArgs = {
 };
 
 /** The app mutations. */
+export type ApplicationMutationsDeleteMigrationsContentArgs = {
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+};
+
+/** The app mutations. */
 export type ApplicationMutationsDeleteProjectsContentArgs = {
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -227,6 +266,13 @@ export type ApplicationMutationsDeleteWorkingGroupsContentArgs = {
 /** The app mutations. */
 export type ApplicationMutationsPatchDashboardContentArgs = {
   data: DashboardDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
+export type ApplicationMutationsPatchMigrationsContentArgs = {
+  data: MigrationsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
@@ -261,6 +307,14 @@ export type ApplicationMutationsPatchWorkingGroupsContentArgs = {
 
 /** The app mutations. */
 export type ApplicationMutationsPublishDashboardContentArgs = {
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  status: Scalars['String'];
+};
+
+/** The app mutations. */
+export type ApplicationMutationsPublishMigrationsContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -307,6 +361,13 @@ export type ApplicationMutationsUpdateDashboardContentArgs = {
 };
 
 /** The app mutations. */
+export type ApplicationMutationsUpdateMigrationsContentArgs = {
+  data: MigrationsDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
 export type ApplicationMutationsUpdateProjectsContentArgs = {
   data: ProjectsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
@@ -337,6 +398,16 @@ export type ApplicationMutationsUpdateWorkingGroupsContentArgs = {
 /** The app mutations. */
 export type ApplicationMutationsUpsertDashboardContentArgs = {
   data: DashboardDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  patch?: InputMaybe<Scalars['Boolean']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
+export type ApplicationMutationsUpsertMigrationsContentArgs = {
+  data: MigrationsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   patch?: InputMaybe<Scalars['Boolean']>;
@@ -390,6 +461,8 @@ export type ApplicationQueries = {
   findAsset: Maybe<Asset>;
   /** Find an Dashboard content by id. */
   findDashboardContent: Maybe<Dashboard>;
+  /** Find an Migrations content by id. */
+  findMigrationsContent: Maybe<Migrations>;
   /** Find an Projects content by id. */
   findProjectsContent: Maybe<Projects>;
   /** Find an Users content by id. */
@@ -406,6 +479,10 @@ export type ApplicationQueries = {
   queryDashboardContents: Maybe<Array<Dashboard>>;
   /** Query Dashboard content items with total count. */
   queryDashboardContentsWithTotal: Maybe<DashboardResultDto>;
+  /** Query Migrations content items. */
+  queryMigrationsContents: Maybe<Array<Migrations>>;
+  /** Query Migrations content items with total count. */
+  queryMigrationsContentsWithTotal: Maybe<MigrationsResultDto>;
   /** Query Projects content items. */
   queryProjectsContents: Maybe<Array<Projects>>;
   /** Query Projects content items with total count. */
@@ -431,6 +508,12 @@ export type ApplicationQueriesFindAssetArgs = {
 
 /** The app queries. */
 export type ApplicationQueriesFindDashboardContentArgs = {
+  id: Scalars['String'];
+  version: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type ApplicationQueriesFindMigrationsContentArgs = {
   id: Scalars['String'];
   version: InputMaybe<Scalars['Int']>;
 };
@@ -486,6 +569,24 @@ export type ApplicationQueriesQueryDashboardContentsArgs = {
 
 /** The app queries. */
 export type ApplicationQueriesQueryDashboardContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type ApplicationQueriesQueryMigrationsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type ApplicationQueriesQueryMigrationsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -730,6 +831,10 @@ export type Dashboard = Content & {
   referencesDashboardContents: Maybe<Array<Dashboard>>;
   /** Query Dashboard content items with total count. */
   referencesDashboardContentsWithTotal: Maybe<DashboardResultDto>;
+  /** Query Migrations content items. */
+  referencesMigrationsContents: Maybe<Array<Migrations>>;
+  /** Query Migrations content items with total count. */
+  referencesMigrationsContentsWithTotal: Maybe<MigrationsResultDto>;
   /** Query Projects content items. */
   referencesProjectsContents: Maybe<Array<Projects>>;
   /** Query Projects content items with total count. */
@@ -771,6 +876,24 @@ export type DashboardReferencesDashboardContentsArgs = {
 
 /** The structure of a Dashboard content type. */
 export type DashboardReferencesDashboardContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Dashboard content type. */
+export type DashboardReferencesMigrationsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Dashboard content type. */
+export type DashboardReferencesMigrationsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -892,6 +1015,7 @@ export type DashboardDataNewsInputDto = {
 
 export type DashboardDataNewsUnionDto =
   | Dashboard
+  | Migrations
   | Projects
   | Users
   | WorkingGroupNetwork
@@ -909,6 +1033,7 @@ export type DashboardDataPagesInputDto = {
 
 export type DashboardDataPagesUnionDto =
   | Dashboard
+  | Migrations
   | Projects
   | Users
   | WorkingGroupNetwork
@@ -1046,6 +1171,97 @@ export enum EnrichedContentEventType {
 export type EntitySavedResultDto = {
   /** The new version of the item. */
   version: Scalars['Long'];
+};
+
+/** The structure of a Migrations content type. */
+export type Migrations = Content & {
+  /** The timestamp when the object was created. */
+  created: Scalars['Instant'];
+  /** The user who created the object. */
+  createdBy: Scalars['String'];
+  /** The user who created the object. */
+  createdByUser: User;
+  /** The data of the content. */
+  data: MigrationsDataDto;
+  /** The edit token. */
+  editToken: Maybe<Scalars['String']>;
+  /** The flat data of the content. */
+  flatData: MigrationsFlatDataDto;
+  /** The ID of the object (usually GUID). */
+  id: Scalars['String'];
+  /** The timestamp when the object was updated the last time. */
+  lastModified: Scalars['Instant'];
+  /** The user who updated the object the last time. */
+  lastModifiedBy: Scalars['String'];
+  /** The user who updated the object the last time. */
+  lastModifiedByUser: User;
+  /** The new status of the content. */
+  newStatus: Maybe<Scalars['String']>;
+  /** The status color of the content. */
+  newStatusColor: Maybe<Scalars['String']>;
+  /** Query Dashboard content items. */
+  referencingDashboardContents: Maybe<Array<Dashboard>>;
+  /** Query Dashboard content items with total count. */
+  referencingDashboardContentsWithTotal: Maybe<DashboardResultDto>;
+  /** The status of the content. */
+  status: Scalars['String'];
+  /** The status color of the content. */
+  statusColor: Scalars['String'];
+  /** The URL to the content. */
+  url: Scalars['String'];
+  /** The version of the objec. */
+  version: Scalars['Int'];
+};
+
+/** The structure of a Migrations content type. */
+export type MigrationsReferencingDashboardContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Migrations content type. */
+export type MigrationsReferencingDashboardContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of the Migrations data type. */
+export type MigrationsDataDto = {
+  name: Maybe<MigrationsDataNameDto>;
+};
+
+/** The structure of the Migrations data input type. */
+export type MigrationsDataInputDto = {
+  name: InputMaybe<MigrationsDataNameInputDto>;
+};
+
+/** The structure of the Name field of the Migrations content type. */
+export type MigrationsDataNameDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Name field of the Migrations content input type. */
+export type MigrationsDataNameInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the flat Migrations data type. */
+export type MigrationsFlatDataDto = {
+  name: Maybe<Scalars['String']>;
+};
+
+/** List of Migrations items and total count. */
+export type MigrationsResultDto = {
+  /** The contents. */
+  items: Maybe<Array<Migrations>>;
+  /** The total count of  contents. */
+  total: Scalars['Int'];
 };
 
 /** The structure of a Projects content type. */

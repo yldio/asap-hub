@@ -23,6 +23,17 @@ type ApplicationMutations {
     """The status for the content."""
     status: String!
   ): Dashboard!
+  """Change a Migrations content."""
+  changeMigrationsContent(
+    """The timestamp when the status should be changed."""
+    dueTime: Instant
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The status for the content."""
+    status: String!
+  ): Migrations!
   """Change a Projects content."""
   changeProjectsContent(
     """The timestamp when the status should be changed."""
@@ -78,6 +89,17 @@ type ApplicationMutations {
     """The initial status."""
     status: String
   ): Dashboard!
+  """Creates an Migrations content."""
+  createMigrationsContent(
+    """The data for the content."""
+    data: MigrationsDataInputDto!
+    """The optional custom content ID."""
+    id: String
+    """Set to true to autopublish content on create."""
+    publish: Boolean = false
+    """The initial status."""
+    status: String
+  ): Migrations!
   """Creates an Projects content."""
   createProjectsContent(
     """The data for the content."""
@@ -129,6 +151,13 @@ type ApplicationMutations {
     """The ID of the content (usually GUID)."""
     id: String!
   ): EntitySavedResultDto!
+  """Delete an Migrations content."""
+  deleteMigrationsContent(
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the content (usually GUID)."""
+    id: String!
+  ): EntitySavedResultDto!
   """Delete an Projects content."""
   deleteProjectsContent(
     """The expected version."""
@@ -166,6 +195,15 @@ type ApplicationMutations {
     """The ID of the object (usually GUID)."""
     id: String
   ): Dashboard!
+  """Patch an Migrations content by id."""
+  patchMigrationsContent(
+    """The data for the content."""
+    data: MigrationsDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String
+  ): Migrations!
   """Patch an Projects content by id."""
   patchProjectsContent(
     """The data for the content."""
@@ -213,6 +251,17 @@ type ApplicationMutations {
     """The status for the content."""
     status: String!
   ): Dashboard! @deprecated(reason: "Use 'changeDashboardContent' instead")
+  """Publish a Migrations content."""
+  publishMigrationsContent(
+    """The timestamp when the status should be changed."""
+    dueTime: Instant
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The status for the content."""
+    status: String!
+  ): Migrations! @deprecated(reason: "Use 'changeMigrationsContent' instead")
   """Publish a Projects content."""
   publishProjectsContent(
     """The timestamp when the status should be changed."""
@@ -266,6 +315,15 @@ type ApplicationMutations {
     """The ID of the object (usually GUID)."""
     id: String
   ): Dashboard!
+  """Update an Migrations content by id."""
+  updateMigrationsContent(
+    """The data for the content."""
+    data: MigrationsDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String
+  ): Migrations!
   """Update an Projects content by id."""
   updateProjectsContent(
     """The data for the content."""
@@ -317,6 +375,21 @@ type ApplicationMutations {
     """The initial status."""
     status: String
   ): Dashboard!
+  """Upsert an Migrations content by id."""
+  upsertMigrationsContent(
+    """The data for the content."""
+    data: MigrationsDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """Makes the update as patch."""
+    patch: Boolean = false
+    """Set to true to autopublish content on create."""
+    publish: Boolean = false
+    """The initial status."""
+    status: String
+  ): Migrations!
   """Upsert an Projects content by id."""
   upsertProjectsContent(
     """The data for the content."""
@@ -393,6 +466,13 @@ type ApplicationQueries {
     """The optional version of the content to retrieve an older instance (not cached)."""
     version: Int
   ): Dashboard
+  """Find an Migrations content by id."""
+  findMigrationsContent(
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The optional version of the content to retrieve an older instance (not cached)."""
+    version: Int
+  ): Migrations
   """Find an Projects content by id."""
   findProjectsContent(
     """The ID of the object (usually GUID)."""
@@ -469,6 +549,32 @@ type ApplicationQueries {
     """Optional number of items to take."""
     top: Int
   ): DashboardResultDto
+  """Query Migrations content items."""
+  queryMigrationsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [Migrations!]
+  """Query Migrations content items with total count."""
+  queryMigrationsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): MigrationsResultDto
   """Query Projects content items."""
   queryProjectsContents(
     """Optional OData filter."""
@@ -750,6 +856,32 @@ type Dashboard implements Content {
     """Optional number of items to take."""
     top: Int
   ): DashboardResultDto
+  """Query Migrations content items."""
+  referencesMigrationsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [Migrations!]
+  """Query Migrations content items with total count."""
+  referencesMigrationsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): MigrationsResultDto
   """Query Projects content items."""
   referencesProjectsContents(
     """Optional OData filter."""
@@ -912,7 +1044,7 @@ input DashboardDataNewsInputDto {
   iv: [String!]
 }
 
-union DashboardDataNewsUnionDto = Dashboard | Projects | Users | WorkingGroupNetwork | WorkingGroups
+union DashboardDataNewsUnionDto = Dashboard | Migrations | Projects | Users | WorkingGroupNetwork | WorkingGroups
 
 """The structure of the Where to Start field of the Dashboard content type."""
 type DashboardDataPagesDto {
@@ -924,7 +1056,7 @@ input DashboardDataPagesInputDto {
   iv: [String!]
 }
 
-union DashboardDataPagesUnionDto = Dashboard | Projects | Users | WorkingGroupNetwork | WorkingGroups
+union DashboardDataPagesUnionDto = Dashboard | Migrations | Projects | Users | WorkingGroupNetwork | WorkingGroups
 
 """The structure of the flat Dashboard data type."""
 type DashboardFlatDataDto {
@@ -1056,6 +1188,101 @@ scalar Instant
 scalar JsonScalar
 
 scalar Long
+
+"""The structure of a Migrations content type."""
+type Migrations implements Content {
+  """The timestamp when the object was created."""
+  created: Instant!
+  """The user who created the object."""
+  createdBy: String!
+  """The user who created the object."""
+  createdByUser: User!
+  """The data of the content."""
+  data: MigrationsDataDto!
+  """The edit token."""
+  editToken: String
+  """The flat data of the content."""
+  flatData: MigrationsFlatDataDto!
+  """The ID of the object (usually GUID)."""
+  id: String!
+  """The timestamp when the object was updated the last time."""
+  lastModified: Instant!
+  """The user who updated the object the last time."""
+  lastModifiedBy: String!
+  """The user who updated the object the last time."""
+  lastModifiedByUser: User!
+  """The new status of the content."""
+  newStatus: String
+  """The status color of the content."""
+  newStatusColor: String
+  """Query Dashboard content items."""
+  referencingDashboardContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [Dashboard!]
+  """Query Dashboard content items with total count."""
+  referencingDashboardContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): DashboardResultDto
+  """The status of the content."""
+  status: String!
+  """The status color of the content."""
+  statusColor: String!
+  """The URL to the content."""
+  url: String!
+  """The version of the objec."""
+  version: Int!
+}
+
+"""The structure of the Migrations data type."""
+type MigrationsDataDto {
+  name: MigrationsDataNameDto
+}
+
+"""The structure of the Migrations data input type."""
+input MigrationsDataInputDto {
+  name: MigrationsDataNameInputDto
+}
+
+"""The structure of the Name field of the Migrations content type."""
+type MigrationsDataNameDto {
+  iv: String
+}
+
+"""The structure of the Name field of the Migrations content input type."""
+input MigrationsDataNameInputDto {
+  iv: String
+}
+
+"""The structure of the flat Migrations data type."""
+type MigrationsFlatDataDto {
+  name: String
+}
+
+"""List of Migrations items and total count."""
+type MigrationsResultDto {
+  """The contents."""
+  items: [Migrations!]
+  """The total count of  contents."""
+  total: Int!
+}
 
 """The structure of a Projects content type."""
 type Projects implements Content {

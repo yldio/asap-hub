@@ -16,6 +16,10 @@ const user = {
   lastName: 'Brown',
   displayName: 'Adam Brown',
 };
+const alumniUser = {
+  ...user,
+  alumniSinceDate: new Date('2020-06-10').toISOString(),
+};
 const announcedSpeaker: EventSpeaker = {
   team: { ...team },
   user: { ...user },
@@ -23,7 +27,10 @@ const announcedSpeaker: EventSpeaker = {
 const unnanouncedSpeaker: EventSpeaker = {
   team: { ...team },
 };
-
+const alumniSpeaker: EventSpeaker = {
+  team: { ...team },
+  user: alumniUser,
+};
 const externalSpeaker: EventSpeaker = {
   externalUser: {
     name: 'Jhonny External',
@@ -62,6 +69,16 @@ describe('When rendering the speaker list', () => {
         expect.stringContaining('team-id-1'),
         expect.stringContaining('user-id-1'),
       ]);
+    });
+
+    it('Renders an alumni badge for alumni user', async () => {
+      const event = {
+        ...createEventResponse(),
+        speakers: [alumniSpeaker],
+      };
+
+      render(<SpeakersList {...event} />);
+      expect(screen.getByTitle('Alumni Badge')).toBeInTheDocument();
     });
 
     it('Renders an announced user and checks the grid labels and role', async () => {

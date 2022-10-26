@@ -82,6 +82,7 @@ export const getUserWebhookPayload = (
       lastName: { iv: 'Stark' },
       region: { iv: 'Europe' },
       role: { iv: UsersDataRoleEnum.Trainee },
+      onboarded: { iv: true },
     },
   },
 });
@@ -97,6 +98,7 @@ export const patchResponse = (): gp2squidex.RestUser => ({
     avatar: { iv: ['squidex-asset-id'] },
     connections: { iv: [] },
     degree: { iv: [UsersDataDegreeEnum.Mph] },
+    onboarded: { iv: true },
   },
   created: '2020-09-25T09:42:51Z',
   lastModified: '2020-09-25T09:42:51Z',

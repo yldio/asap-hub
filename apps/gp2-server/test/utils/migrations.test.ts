@@ -24,9 +24,7 @@ jest.mock('@asap-hub/squidex', () => ({
 
 describe('Migration utils', () => {
   describe('applyToAllItemsInCollection helper method', () => {
-    beforeEach(() => {
-      jest.clearAllMocks();
-    });
+    beforeEach(jest.resetAllMocks);
 
     test('Should invoke the client as expected', async () => {
       const mockFetchResult: Results<gp2squidex.RestUser> = {
@@ -66,13 +64,13 @@ describe('Migration utils', () => {
         total: 11,
       };
       const mockFetchSecondResult: Results<gp2squidex.RestUser> = {
-        items: Array(1).fill(restUserMock()),
-        total: 11,
+        items: [restUserMock()],
+        total: 1,
       };
 
-      // resolve twice
-      mockFetch.mockResolvedValueOnce(mockFetchFirstResult);
-      mockFetch.mockResolvedValueOnce(mockFetchSecondResult);
+      mockFetch
+        .mockResolvedValueOnce(mockFetchFirstResult)
+        .mockResolvedValueOnce(mockFetchSecondResult);
 
       const processingFunction = jest.fn();
 
@@ -83,6 +81,7 @@ describe('Migration utils', () => {
         restUserMock(),
         expect.any(SquidexRest),
       );
+      expect(mockFetch).toBeCalledTimes(2);
     });
   });
 });

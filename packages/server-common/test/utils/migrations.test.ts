@@ -70,8 +70,8 @@ describe('Migration utils', () => {
         total: 11,
       };
       const mockFetchSecondResult: Results<RestUser> = {
-        items: Array(1).fill(restUserMock()),
-        total: 11,
+        items: [restUserMock()],
+        total: 1,
       };
 
       // resolve twice

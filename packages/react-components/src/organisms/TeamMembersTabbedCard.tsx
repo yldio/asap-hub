@@ -1,14 +1,10 @@
-import { network } from '@asap-hub/routing';
 import { TeamMember } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import React, { ComponentProps } from 'react';
-import { Avatar, Anchor, Ellipsis } from '../atoms';
-import { styles } from '../atoms/Link';
-import { TabbedCard, ImageLink } from '../molecules';
-import { perRem, rem, tabletScreen } from '../pixels';
-import { fern, lead } from '../colors';
-import { alumniBadge } from '../icons';
+import { rem, tabletScreen } from '../pixels';
+import { MembersList, TabbedCard } from '../molecules';
 import { getUniqueCommaStringWithSuffix } from '../utils/text';
+import { fern } from '../colors';
 
 const containerStyles = css({
   listStyle: 'none',
@@ -17,40 +13,18 @@ const containerStyles = css({
   display: 'grid',
   rowGap: rem(24),
   [`@media (min-width: ${tabletScreen.min}px)`]: {
-    gridTemplateColumns: '1fr 1fr',
     columnGap: rem(15),
   },
 });
 
-const listItemStyle = css({
-  display: 'grid',
-  gridTemplateColumns: 'min-content 1fr',
-  gridColumnGap: `${15 / perRem}em`,
-});
-
-const avatarStyles = css({
-  gridRowEnd: 'span 3',
-  width: `${48 / perRem}em`,
-  height: `${48 / perRem}em`,
-});
-
-const memberInfoContainerStyles = css({
-  marginLeft: `${16 / perRem}em`,
-});
-
 const nameStyles = css({
   color: fern.rgb,
-  display: 'inline-flex',
+  fontWeight: 'normal',
 });
 
-const badgeStyles = css({
-  lineHeight: `${8 / perRem}em`,
-  marginLeft: `${8 / perRem}em`,
-});
-
-const textStyles = css({
-  color: lead.rgb,
-  minHeight: `${24 / perRem}em`,
+const paragraphStyles = css({
+  margin: 0,
+  paddingBottom: `${rem(32)}`,
 });
 
 type TeamMembersTabbedCardProps = Pick<
@@ -86,63 +60,39 @@ const TeamMembersTabbedCard: React.FC<TeamMembersTabbedCardProps> = ({
     getShowMoreText={(showMore) => `View ${showMore ? 'Less' : 'More'} Members`}
   >
     {({ data }) => (
-      <ul css={containerStyles}>
-        {data.map(
-          ({
-            id,
-            displayName,
-            firstName,
-            lastName,
-            avatarUrl,
-            role,
-            labs,
-            alumniSinceDate,
-          }) => {
-            const href = network({}).users({}).user({ userId: id }).$;
-            const userAvatar = (
-              <Avatar
-                firstName={firstName}
-                lastName={lastName}
-                imageUrl={avatarUrl}
-              />
-            );
-
-            return (
-              <li key={`member-${id}`} css={listItemStyle}>
-                <Anchor href={href} css={{ display: 'contents' }}>
-                  <div css={avatarStyles}>
-                    <ImageLink link={href}>{userAvatar}</ImageLink>
-                  </div>
-                </Anchor>
-                <div css={memberInfoContainerStyles}>
-                  <Anchor href={href} css={[styles, nameStyles]}>
-                    {displayName}
-                    {alumniSinceDate && (
-                      <span css={badgeStyles}>{alumniBadge}</span>
-                    )}
-                  </Anchor>
-                  <Anchor href={href} css={{ display: 'contents' }}>
-                    <div css={textStyles}>
-                      <Ellipsis>{role}</Ellipsis>
-                    </div>
-                  </Anchor>
-                  <Anchor href={href} css={{ display: 'contents' }}>
-                    <div css={textStyles}>
-                      <Ellipsis>
-                        {labs &&
-                          getUniqueCommaStringWithSuffix(
-                            labs.map((lab) => lab.name),
-                            'Lab',
-                          )}
-                      </Ellipsis>
-                    </div>
-                  </Anchor>
-                </div>
-              </li>
-            );
-          },
+      <div css={containerStyles}>
+        {data.length > 0 ? (
+          <MembersList
+            members={data.map(
+              ({
+                displayName,
+                role,
+                labs = [],
+                avatarUrl,
+                firstName,
+                lastName,
+                id,
+                alumniSinceDate,
+              }) => ({
+                firstLine: displayName,
+                secondLine: role,
+                thirdLine: getUniqueCommaStringWithSuffix(
+                  labs.map((lab) => lab.name),
+                  'Lab',
+                ),
+                avatarUrl,
+                firstName,
+                lastName,
+                id,
+                alumniSinceDate,
+              }),
+            )}
+            overrideNameStyles={nameStyles}
+          />
+        ) : (
+          <p css={paragraphStyles}>There are no past team members.</p>
         )}
-      </ul>
+      </div>
     )}
   </TabbedCard>
 );

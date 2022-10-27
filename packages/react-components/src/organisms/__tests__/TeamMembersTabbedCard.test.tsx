@@ -46,6 +46,12 @@ it('renders the members tabbed card', () => {
   expect(screen.getByText(`${labName} Lab`)).toBeInTheDocument();
 });
 
+it('renders the no past members message', () => {
+  render(<TeamMembersTabbedCard {...props} title="Team Members" />);
+
+  expect(screen.getByText('There are no past team members.')).toBeVisible();
+});
+
 it('shows the correct more and less button text', () => {
   render(
     <TeamMembersTabbedCard

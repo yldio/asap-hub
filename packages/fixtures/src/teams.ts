@@ -4,6 +4,7 @@ import {
   TeamTool,
   TeamResponse,
 } from '@asap-hub/model';
+import { createLabs } from './labs';
 
 export const teamMember: Omit<
   ListTeamResponse['items'][0]['members'][0],
@@ -39,12 +40,15 @@ type FixtureOptions = {
 
 export const createTeamResponseMembers = ({
   teamMembers = 0,
+  hasLabs = false,
 }: {
   teamMembers?: number;
+  hasLabs?: boolean;
 }): TeamMember[] =>
   Array.from({ length: teamMembers }, (__, memberIndex) => ({
     ...teamMember,
     id: `tm${memberIndex}`,
+    labs: createLabs({ labs: hasLabs ? 1 : 0 }),
   }));
 
 export const createTeamResponse = (

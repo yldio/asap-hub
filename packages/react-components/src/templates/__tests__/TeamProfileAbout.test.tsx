@@ -109,3 +109,34 @@ it('renders the expertise and resources list', () => {
   expect(getByText(/example expertise/i)).toBeVisible();
   expect(getByText(/expertise and resources/i)).toBeVisible();
 });
+
+describe('when the team is inactive', () => {
+  it('renders the past team list', () => {
+    const { getByText } = render(
+      <TeamProfileAbout
+        {...props}
+        inactiveSince={new Date().toISOString()}
+        members={[
+          {
+            id: 'uuid',
+            displayName: 'John Doe',
+            firstName: 'John',
+            lastName: 'Doe',
+            role: 'Project Manager',
+            email: 'johndoe@asap.com',
+          },
+        ]}
+      />,
+    );
+
+    expect(getByText('Team Members')).toBeVisible();
+    expect(getByText('Past Team Members (1)')).toBeVisible();
+    const avatar = getByText(/john doe/i);
+    expect(avatar).toBeVisible();
+    expect(avatar.closest('a')).toHaveAttribute(
+      'href',
+      expect.stringMatching(/uuid/i),
+    );
+    expect(getByText('Project Manager')).toBeInTheDocument();
+  });
+});

@@ -47,13 +47,25 @@ it('requests groups for the given team id', async () => {
   );
 });
 
-it('render nothing when there are no groups', async () => {
+it('render nothing when there are no groups and the group is active', async () => {
   mockGetTeamGroups.mockResolvedValue({ total: 0, items: [] });
   const { container, queryByText } = render(<GroupsCard id={id} />, {
     wrapper,
   });
   await waitFor(() => expect(container).not.toHaveTextContent(/loading/i));
   expect(queryByText(/team groups/i)).not.toBeInTheDocument();
+});
+
+it('render the team groups tabbed component when isInactive has a value', async () => {
+  mockGetTeamGroups.mockResolvedValue({
+    total: 0,
+    items: [],
+  });
+  const { findByText } = render(
+    <GroupsCard id={id} isInactive={new Date().toISOString()} />,
+    { wrapper },
+  );
+  expect(await findByText(/Team Interest Groups/i)).toBeVisible();
 });
 
 it('renders the card when there are groups', async () => {

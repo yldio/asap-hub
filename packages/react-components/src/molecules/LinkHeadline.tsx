@@ -47,6 +47,7 @@ export type LinkHeadlineProps = (
 ) &
   ComponentProps<typeof Anchor> & {
     level: keyof typeof headlineMap;
+    noMargin?: boolean;
   };
 
 const LinkHeadline: React.FC<LinkHeadlineProps> = ({
@@ -54,11 +55,12 @@ const LinkHeadline: React.FC<LinkHeadlineProps> = ({
   children,
   styleAsHeading,
   id,
+  noMargin,
   ...anchorProps
 }) => {
   const Heading = headlineMap[level];
   return (
-    <Heading styleAsHeading={styleAsHeading} id={id}>
+    <Heading noMargin={noMargin} styleAsHeading={styleAsHeading} id={id}>
       <Anchor {...anchorProps} css={({ colors }) => [styles, hover(colors)]}>
         {children}
       </Anchor>

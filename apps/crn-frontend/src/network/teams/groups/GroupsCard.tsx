@@ -1,8 +1,14 @@
-import { TeamGroupsCard } from '@asap-hub/react-components';
+import {
+  TeamGroupsCard,
+  TeamTabbedGroupsCard,
+} from '@asap-hub/react-components';
 
 import { useTeamGroupsById } from './state';
 
-const GroupsCard: React.FC<{ id: string }> = ({ id }) => {
+const GroupsCard: React.FC<{ id: string; isInactive?: string }> = ({
+  id,
+  isInactive,
+}) => {
   const groups = useTeamGroupsById(id);
 
   if (groups === 'noSuchTeam') {
@@ -11,7 +17,16 @@ const GroupsCard: React.FC<{ id: string }> = ({ id }) => {
     );
   }
 
-  return groups.total > 0 ? <TeamGroupsCard groups={groups.items} /> : null;
+  return !isInactive ? (
+    groups.total > 0 ? (
+      <TeamGroupsCard groups={groups.items} />
+    ) : null
+  ) : (
+    <TeamTabbedGroupsCard
+      title={'Team Interest Groups'}
+      groups={groups.items}
+    />
+  );
 };
 
 export default GroupsCard;

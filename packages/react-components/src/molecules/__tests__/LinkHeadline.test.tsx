@@ -32,6 +32,19 @@ describe.each<ComponentProps<typeof LinkHeadline>['level']>([1, 2, 3, 4, 5, 6])(
       );
     });
 
+    it('removes the text margin', () => {
+      const { getByRole } = render(
+        <LinkHeadline {...props} level={3} noMargin>
+          Title
+        </LinkHeadline>,
+      );
+      const { marginTop, marginBottom } = getComputedStyle(
+        getByRole('heading'),
+      );
+      expect(marginTop).toMatchInlineSnapshot(`"0px"`);
+      expect(marginBottom).toMatchInlineSnapshot(`"0px"`);
+    });
+
     const headingFontSizeVariations = {
       1: '41.5px',
       2: '33.2px',

@@ -54,10 +54,12 @@ const GroupCard: React.FC<GroupCardProps> = ({
       <Paragraph accent="lead">{description}</Paragraph>
     </Anchor>
     <TagList min={2} max={3} tags={tags} />
-    <Paragraph>
-      <span css={iconStyles}>{teamIcon} </span>
-      {`${numberOfTeams} Team${numberOfTeams === 1 ? '' : 's'}`}
-    </Paragraph>
+    {active && (
+      <Paragraph>
+        <span css={iconStyles}>{teamIcon} </span>
+        {`${numberOfTeams} Team${numberOfTeams === 1 ? '' : 's'}`}
+      </Paragraph>
+    )}
   </Card>
 );
 export default GroupCard;

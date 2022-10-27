@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
-import { newsQueryFragment } from './news.queries';
 import { tutorialsContentQueryFragment } from './tutorials.queries';
+import { workingGroupsContentQueryFragment } from './working-groups.queries';
 
 export const FETCH_DISCOVER = gql`
   query FetchDiscover {
@@ -11,7 +11,7 @@ export const FETCH_DISCOVER = gql`
           ...TutorialsContent
         }
         workingGroups {
-          ...News
+          ...WorkingGroupsContent
         }
         pages {
           id
@@ -66,6 +66,6 @@ export const FETCH_DISCOVER = gql`
       }
     }
   }
-  ${newsQueryFragment}
+  ${workingGroupsContentQueryFragment}
   ${tutorialsContentQueryFragment}
 `;

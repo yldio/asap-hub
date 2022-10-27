@@ -1,3 +1,4 @@
+import { DiscoverResponse } from '@asap-hub/model';
 import { Router } from 'express';
 import { DiscoverController } from '../controllers/discover';
 
@@ -6,11 +7,14 @@ export const discoverRouteFactory = (
 ): Router => {
   const discoverRoutes = Router();
 
-  discoverRoutes.get('/discover', async (_req, res) => {
-    const result = await discoverController.fetch();
+  discoverRoutes.get<unknown, DiscoverResponse>(
+    '/discover',
+    async (_req, res) => {
+      const result = await discoverController.fetch();
 
-    res.json(result);
-  });
+      res.json(result);
+    },
+  );
 
   return discoverRoutes;
 };

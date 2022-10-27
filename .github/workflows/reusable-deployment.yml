@@ -7,6 +7,9 @@ on:
         description: 'The environment name'
         required: true
         type: string
+      crn-contentful-env:
+        description: 'CRN Contentful environment name'
+        type: string
     secrets:
       AWS_ACCESS_KEY_ID:
         description: 'AWS Access Key ID'
@@ -65,6 +68,7 @@ jobs:
           app: crn-server
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          crn-contentful-env: ${{ inputs.crn-contentful-env }}
           crn-squidex-api-client-secret: ${{ secrets.CRN_SQUIDEX_API_CLIENT_SECRET }}
           crn-squidex-shared-secret: ${{ secrets.CRN_SQUIDEX_SHARED_SECRET }}
           environment-name: ${{ inputs.environment-name }}

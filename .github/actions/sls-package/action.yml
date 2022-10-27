@@ -11,6 +11,9 @@ inputs:
   aws-secret-access-key:
     description: 'AWS Secret Access Key'
     required: true
+  crn-contentful-env:
+    description: 'CRN Contentful Environment'
+    required: false
   crn-squidex-api-client-secret:
     description: 'Squidex Client Secret'
     required: false
@@ -69,6 +72,7 @@ runs:
         CRN_AUTH0_AUDIENCE: ${{ steps.setup.outputs.crn-auth0-audience }}
         CRN_AUTH0_CLIENT_ID: ${{ steps.setup.outputs.crn-auth0-client-id }}
         CRN_AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.crn-aws-acm-certificate-arn }}
+        CRN_CONTENTFUL_ENV: ${{  inputs.crn-contentful-env }}
         CRN_SQUIDEX_APP_NAME: ${{ steps.setup.outputs.crn-squidex-app-name }}
         CRN_SQUIDEX_API_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-api-client-id }}
         CRN_SQUIDEX_API_CLIENT_SECRET: ${{ inputs.crn-squidex-api-client-secret }}

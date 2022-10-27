@@ -7,6 +7,17 @@ on:
         description: 'The environment name'
         required: true
         type: string
+      crn-contentful-env:
+        description: 'CRN Contentful environment name'
+        type: string
+      on-branch-env:
+        description: 'Is branch environment required'
+        required: true
+        type: string
+      contentful-env-exists:
+        description: 'Does contentful environment already exist'
+        required: true
+        type: string
     secrets:
       AWS_ACCESS_KEY_ID:
         description: 'AWS Access Key ID'
@@ -32,7 +43,7 @@ on:
 
 jobs:
   crn-contentful:
-    if: ${{ inputs.environment-name=='Branch'}}
+    if: ${{ inputs.environment-name=='Branch' && inputs.on-branch-env == 'true' && inputs.contentful-env-exists == 'false'}}
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
@@ -48,31 +59,30 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Determine whether we need to create a Contentful environment
-        id: get-contentful-state
-        uses: ./.github/actions/contentful-checks
-        with:
-          pr-number: ${{ steps.setup.outputs.pr-number }}
-          contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
-          contentful-master-env: ${{ steps.setup.outputs.contentful-environment }}
-          contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          max-contentful-envs: ${{ steps.setup.outputs.max-contentful-envs }}
-      - name: Ensure that we are not at Contentful environment limit
-        id: ensure-limit-not-reached
-        if: ${{ steps.get-contentful-state.outputs.on-branch-env == 'True' && steps.get-contentful-state.outputs.contentful-env-exists == 'False' && steps.get-contentful-state.outputs.contentful-limit-reached == 'True' }}
+      - name: Determine whether we have reached the environment limit for our Contentful space
         shell: bash
         run: |
-          echo "Contentful Environment required but all available slots are in use."
-          exit 1
+          ENVIRONMENTS=$(curl --silent \
+                              --request GET \
+                              --header "Authorization: Bearer ${CONTENTFUL_MANAGEMENT_ACCESS_TOKEN}" \
+                              https://api.contentful.com/spaces/${CONTENTFUL_SPACE_ID}/environments \
+                              | jq '.total' -r)
+
+          if [[ "$ENVIRONMENTS" == "$MAX_CONTENTFUL_ENVIRONMENTS" ]]; then
+            echo "Max Contentful environments reached. Cannot create more."
+            exit 1;
+          fi
+        env:
+          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.contentful-space-id }}
+          CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          MAX_CONTENTFUL_ENVIRONMENTS: ${{ steps.setup.outputs.max-contentful-envs }}
       - name: Create Contentful environment
-        id: create-contentful-environment
-        if: ${{ steps.get-contentful-state.outputs.on-branch-env == 'True' && steps.get-contentful-state.outputs.contentful-env-exists == 'False' && steps.get-contentful-state.outputs.contentful-limit-reached == 'False' }}
         shell: bash
         run: bash .github/scripts/contentful/create.sh
         env:
           CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.contentful-space-id }}
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          CONTENTFUL_ENV_ID: ${{ steps.get-contentful-state.outputs.contentful-env }}
+          CONTENTFUL_ENV_ID: ${{ inputs.crn-contentful-env }}
           CONTENTFUL_SOURCE_ENV: ${{ steps.setup.outputs.contentful-environment }}
 
   crn-squidex:

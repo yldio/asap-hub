@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-if [[ "ON_BRANCH_ENV" == "False" ]]; then
-  echo "No branch Environment required; not deleting environment."
+if [[ "$ON_BRANCH_ENV" == "false" ]]; then
+  echo "No branch Environment required; not creating environment."
   exit 0
 fi
 

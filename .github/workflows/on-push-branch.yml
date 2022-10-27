@@ -6,6 +6,32 @@ on:
     branches:
       - master
 jobs:
+  setup:
+    runs-on: ubuntu-latest
+    environment: Branch
+    outputs:
+      crn-contentful-env: ${{ steps.get-contentful-state.outputs.contentful-env }}
+      on-branch-env: ${{ steps.get-contentful-state.outputs.on-branch-env }}
+      contentful-env-exists: ${{ steps.get-contentful-state.outputs.contentful-env-exists }}
+      contentful-limit-reached: ${{ steps.get-contentful-state.outputs.contentful-limit-reached }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: Branch
+      - name: Get Contentful Environment state
+        id: get-contentful-state
+        uses: ./.github/actions/contentful-checks
+        with:
+          pr-number: ${{ steps.setup.outputs.pr-number }}
+          contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
+          contentful-master-env: ${{ steps.setup.outputs.contentful-environment }}
+          contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          max-contentful-envs: ${{ steps.setup.outputs.max-contentful-envs }}
+
   test:
     uses: ./.github/workflows/reusable-test.yml
     with:
@@ -15,9 +41,11 @@ jobs:
       CRN_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
 
   build:
+    needs: [setup]
     uses: ./.github/workflows/reusable-build.yml
     with:
       environment-name: Branch
+      crn-contentful-env: ${{ needs.setup.outputs.crn-contentful-env }}
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -37,9 +65,13 @@ jobs:
       BUNDLEWATCH_GITHUB_TOKEN: ${{ secrets.BUNDLEWATCH_GITHUB_TOKEN }}
 
   create-environment:
+    needs: [setup]
     uses: ./.github/workflows/reusable-create-environment.yml
     with:
       environment-name: Branch
+      on-branch-env: ${{ needs.setup.outputs.on-branch-env }}
+      contentful-env-exists: ${{ needs.setup.outputs.contentful-env-exists }}
+      crn-contentful-env: ${{ needs.setup.outputs.crn-contentful-env }}
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -50,10 +82,11 @@ jobs:
       CONTENTFUL_MANAGEMENT_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
 
   deployment:
-    needs: [test, build-analysis, create-environment]
+    needs: [setup, test, build-analysis, create-environment]
     uses: ./.github/workflows/reusable-deployment.yml
     with:
       environment-name: Branch
+      crn-contentful-env: ${{ needs.setup.outputs.crn-contentful-env }}
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

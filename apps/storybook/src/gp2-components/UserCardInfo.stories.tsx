@@ -5,7 +5,7 @@ import { UserCardInfo } from '@asap-hub/gp2-components';
 const { createUserResponse } = gp2Fixtures;
 
 export default {
-  title: 'GP2 / Molecules / User Card Info',
+  title: 'GP2 / Molecules / User Directory / Card Info',
   component: UserCardInfo,
 };
 

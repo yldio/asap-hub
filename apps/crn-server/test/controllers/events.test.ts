@@ -7,9 +7,9 @@ import {
   getEventResponse,
   getEventRestResponse,
   getRestEvent,
-  getSquidexGraphqlEvents,
   getSquidexEventsGraphqlResponse,
   getSquidexEventGraphqlResponse,
+  getSquidexGraphqlEvents,
 } from '../fixtures/events.fixtures';
 import {
   getSquidexGraphqlGroup,
@@ -22,6 +22,7 @@ import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.moc
 import Boom from '@hapi/boom';
 import { getAuthToken } from '../../src/utils/auth';
 import { appName, baseUrl } from '../../src/config';
+import { EventSpeakerTeam } from '@asap-hub/model';
 
 describe('Event controller', () => {
   const eventRestClient = new SquidexRest<RestEvent>(getAuthToken, 'events', {
@@ -684,6 +685,26 @@ describe('Event controller', () => {
           ...getEventResponse(),
           group: undefined,
         });
+      });
+    });
+
+    describe('Event speakers', () => {
+      test('Should return team inactiveSince as undefined when it comes as null from graphql response', async () => {
+        const eventGraphqlResponse = getSquidexEventGraphqlResponse();
+        eventGraphqlResponse.findEventsContent!.flatData.speakers![0]!.team![0]!.flatData.inactiveSince =
+          null;
+
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          eventGraphqlResponse,
+        );
+
+        const expectedResponse = getEventResponse();
+        const speaker = expectedResponse.speakers[0]! as EventSpeakerTeam;
+        speaker.team!.inactiveSince = undefined;
+
+        const result = await eventsController.fetchById(eventId);
+        const speakerResult = result.speakers[0]! as EventSpeakerTeam;
+        expect(speakerResult.team.inactiveSince).toBeUndefined();
       });
     });
   });

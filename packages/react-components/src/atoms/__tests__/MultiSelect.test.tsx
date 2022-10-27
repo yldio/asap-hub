@@ -246,7 +246,7 @@ describe('invalidity', () => {
 
     expect(queryByText('Nope.')).toBeNull();
     expect(findParentWithStyle(input, 'borderColor')?.borderColor).toBe(
-      fern.rgb,
+      fern.rgba,
     );
   });
 
@@ -266,7 +266,7 @@ describe('invalidity', () => {
 
     expect(queryByText('Nope.')).toBeNull();
     expect(findParentWithStyle(input, 'borderColor')?.borderColor).toBe(
-      fern.rgb,
+      fern.rgba,
     );
 
     const parent = findParentWithStyle(input, 'flexBasis')?.element;

@@ -1,6 +1,6 @@
-import { NotFoundError } from '@asap-hub/errors';
-import { FetchUsersOptions } from '@asap-hub/model';
-import { RestUser, SquidexRest } from '@asap-hub/squidex';
+import { GenericError, NotFoundError } from '@asap-hub/errors';
+import { SquidexRest, gp2 as gp2Squidex } from '@asap-hub/squidex';
+import { FetchUsersOptions, gp2 as gp2Model } from '@asap-hub/model';
 import nock from 'nock';
 import {
   UsersDataDegreeEnum,
@@ -15,14 +15,19 @@ import {
   getGraphQLUser,
   getSquidexUserGraphqlResponse,
   getSquidexUsersGraphqlResponse,
+  getUserCreateDataObject,
   getUserDataObject,
+  getUserInput,
 } from '../fixtures/user.fixtures';
 import { identity } from '../helpers/squidex';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
 
 describe('User data provider', () => {
-  const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
+  const userRestClient = new SquidexRest<
+    gp2Squidex.RestUser,
+    gp2Squidex.InputUser
+  >(getAuthToken, 'users', {
     appName,
     baseUrl,
   });
@@ -37,12 +42,14 @@ describe('User data provider', () => {
     squidexGraphqlClientMockServer,
     userRestClient,
   );
+
   beforeAll(() => {
     identity();
   });
   beforeEach(() => {
     jest.resetAllMocks();
   });
+
   describe('FetchById', () => {
     test('Should fetch the users from squidex graphql', async () => {
       const result = await usersMockGraphqlServer.fetchById('user-id');
@@ -180,13 +187,14 @@ describe('User data provider', () => {
     });
   });
 
-  describe('update', () => {
+  describe('Update', () => {
     afterEach(() => {
       nock.cleanAll();
     });
 
     const userId = 'user-id';
-    test('Should throw when sync asset fails', async () => {
+
+    test('Should throw when the PATCH request to squidex fails', async () => {
       nock(baseUrl)
         .patch(`/api/content/${appName}/users/${userId}`, {
           firstName: { iv: 'Tony' },
@@ -198,6 +206,7 @@ describe('User data provider', () => {
       ).rejects.toThrow(NotFoundError);
       expect(nock.isDone()).toBe(true);
     });
+
     test('Should update first name', async () => {
       nock(baseUrl)
         .patch(`/api/content/${appName}/users/${userId}`, {
@@ -210,6 +219,7 @@ describe('User data provider', () => {
       ).not.toBeDefined();
       expect(nock.isDone()).toBe(true);
     });
+
     test('Should update last name', async () => {
       nock(baseUrl)
         .patch(`/api/content/${appName}/users/${userId}`, {
@@ -290,6 +300,114 @@ describe('User data provider', () => {
     );
   });
 
+  describe('Create', () => {
+    afterEach(() => {
+      expect(nock.isDone()).toBe(true);
+    });
+
+    afterEach(() => {
+      nock.cleanAll();
+    });
+
+    test('Should throw when the POST request to squidex fails', async () => {
+      nock(baseUrl)
+        .post(`/api/content/${appName}/users?publish=true`)
+        .reply(500);
+
+      await expect(
+        userDataProvider.create(getUserCreateDataObject()),
+      ).rejects.toThrow(GenericError);
+    });
+
+    test('Should create the user', async () => {
+      const userResponse = fetchUserResponse();
+      const userCreateDataObject = getUserCreateDataObject();
+
+      nock(baseUrl)
+        .post(`/api/content/${appName}/users?publish=true`, getUserInput())
+        .reply(200, userResponse);
+
+      const response = await userDataProvider.create(userCreateDataObject);
+
+      expect(response).toEqual(userResponse.id);
+    });
+
+    test.each`
+      region                      | expected
+      ${'Africa'}                 | ${UsersDataRegionEnum.Africa}
+      ${'Asia'}                   | ${UsersDataRegionEnum.Asia}
+      ${'Australia/Australiasia'} | ${UsersDataRegionEnum.AustraliaAustraliasia}
+      ${'Europe'}                 | ${UsersDataRegionEnum.Europe}
+      ${'North America'}          | ${UsersDataRegionEnum.NorthAmerica}
+      ${'South America'}          | ${UsersDataRegionEnum.SouthAmerica}
+      ${'Latin America'}          | ${UsersDataRegionEnum.LatinAmerica}
+    `(
+      'Should create a user with the region $region => $expected',
+      async ({ region, expected }) => {
+        const userCreateDataObject = getUserCreateDataObject();
+
+        nock(baseUrl)
+          .post(`/api/content/${appName}/users?publish=true`, {
+            ...getUserInput(),
+            region: { iv: expected },
+          })
+          .reply(200, fetchUserResponse());
+
+        await userDataProvider.create({
+          ...userCreateDataObject,
+          region,
+        });
+      },
+    );
+
+    test.each`
+      role                           | expected
+      ${'Working Group Participant'} | ${UsersDataRoleEnum.WorkingGroupParticipant}
+      ${'Network Investigator'}      | ${UsersDataRoleEnum.NetworkInvestigator}
+      ${'Network Collaborator'}      | ${UsersDataRoleEnum.NetworkCollaborator}
+      ${'Administrator'}             | ${UsersDataRoleEnum.Administrator}
+      ${'Trainee'}                   | ${UsersDataRoleEnum.Trainee}
+    `(
+      'Should create a user with the role $role => $expected',
+      async ({ role, expected }) => {
+        const userCreateDataObject = getUserCreateDataObject();
+
+        nock(baseUrl)
+          .post(`/api/content/${appName}/users?publish=true`, {
+            ...getUserInput(),
+            role: { iv: expected },
+          })
+          .reply(200, fetchUserResponse());
+
+        await userDataProvider.create({
+          ...userCreateDataObject,
+          role,
+        });
+      },
+    );
+
+    test.each(Object.values(UsersDataDegreeEnum))(
+      'Should create a user with the degree %s',
+      async (degree) => {
+        const userCreateDataObject = getUserCreateDataObject();
+        const expected =
+          degree === UsersDataDegreeEnum.MdPhD ? 'MD, PhD' : degree;
+
+        nock(baseUrl)
+          .post(`/api/content/${appName}/users?publish=true`, {
+            ...getUserInput(),
+            degree: { iv: [degree] },
+          })
+          .reply(200, fetchUserResponse());
+
+        await userDataProvider.create({
+          ...userCreateDataObject,
+          degrees: [expected],
+        });
+      },
+    );
+  });
+
   describe('Fetch', () => {
     beforeEach(() => {
       jest.clearAllMocks();
@@ -329,22 +447,18 @@ describe('User data provider', () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexUsersGraphqlResponse(),
       );
-      const fetchOptions: FetchUsersOptions = {
+      const fetchOptions: gp2Model.FetchUsersOptions = {
         take: 12,
         skip: 2,
-        search: 'first last',
+        search: '',
         filter: {
-          role: ['role', 'Staff'],
+          region: ['Europe', 'Asia'],
         },
       };
       const users = await userDataProvider.fetch(fetchOptions);
 
       const filterQuery =
-        "((contains(data/firstName/iv, 'first')" +
-        " or contains(data/lastName/iv, 'first'))" +
-        ' and' +
-        " (contains(data/firstName/iv, 'last')" +
-        " or contains(data/lastName/iv, 'last')))";
+        "data/region/iv eq 'Europe'" + " or data/region/iv eq 'Asia'";
       expect(squidexGraphqlClientMock.request).toBeCalledWith(
         expect.anything(),
         {
@@ -354,78 +468,6 @@ describe('User data provider', () => {
         },
       );
       expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
-    });
-    test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        getSquidexUsersGraphqlResponse(),
-      );
-      const fetchOptions: FetchUsersOptions = {
-        take: 12,
-        skip: 2,
-        search: "'",
-      };
-      await userDataProvider.fetch(fetchOptions);
-
-      const expectedFilter =
-        "((contains(data/firstName/iv, '%27%27')" +
-        " or contains(data/lastName/iv, '%27%27')))";
-
-      expect(squidexGraphqlClientMock.request).toBeCalledWith(
-        expect.anything(),
-        {
-          top: 12,
-          skip: 2,
-          filter: expectedFilter,
-        },
-      );
-    });
-    test('Should sanitise double quotation mark by encoding to hex', async () => {
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        getSquidexUsersGraphqlResponse(),
-      );
-      const fetchOptions: FetchUsersOptions = {
-        take: 12,
-        skip: 2,
-        search: '"',
-      };
-      await userDataProvider.fetch(fetchOptions);
-
-      const expectedFilter =
-        "((contains(data/firstName/iv, '%22')" +
-        " or contains(data/lastName/iv, '%22')))";
-
-      expect(squidexGraphqlClientMock.request).toBeCalledWith(
-        expect.anything(),
-        {
-          top: 12,
-          skip: 2,
-          filter: expectedFilter,
-        },
-      );
-    });
-    test('Should search with special characters', async () => {
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        getSquidexUsersGraphqlResponse(),
-      );
-      const fetchOptions: FetchUsersOptions = {
-        take: 12,
-        skip: 2,
-        search: 'Solène',
-      };
-      await userDataProvider.fetch(fetchOptions);
-
-      const expectedFilter =
-        "((contains(data/firstName/iv, 'Solène')" +
-        " or contains(data/lastName/iv, 'Solène')))";
-
-      expect(squidexGraphqlClientMock.request).toBeCalledWith(
-        expect.anything(),
-        {
-          top: 12,
-          skip: 2,
-          filter: expectedFilter,
-        },
-      );
     });
     test('Should query with code filters and return the users', async () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(

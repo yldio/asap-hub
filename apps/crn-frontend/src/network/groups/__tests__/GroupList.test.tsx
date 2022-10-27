@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
-import { render, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { createListGroupResponse } from '@asap-hub/fixtures';
 import { ListGroupResponse } from '@asap-hub/model';
@@ -78,4 +78,33 @@ it('renders a list of fetched groups', async () => {
   });
   expect(container.textContent).toContain('Group 0');
   expect(container.textContent).toContain('Group 1');
+});
+
+it('filters inactive group teams from team count', async () => {
+  await renderGroupList({
+    ...createListGroupResponse(1),
+    items: createListGroupResponse(1).items.map((group) => ({
+      ...group,
+      teams: [
+        { ...group.teams[0], id: '1', inactiveSince: undefined },
+        { ...group.teams[0], id: '2', inactiveSince: undefined },
+        { ...group.teams[0], id: '3', inactiveSince: undefined },
+        { ...group.teams[0], id: '4', inactiveSince: undefined },
+      ],
+    })),
+  });
+  expect(screen.getByText(/4 Teams/i)).toBeVisible();
+  await renderGroupList({
+    ...createListGroupResponse(1),
+    items: createListGroupResponse(1).items.map((group) => ({
+      ...group,
+      teams: [
+        { ...group.teams[0], id: '1', inactiveSince: undefined },
+        { ...group.teams[0], id: '2', inactiveSince: new Date().toISOString() },
+        { ...group.teams[0], id: '3', inactiveSince: undefined },
+        { ...group.teams[0], id: '4', inactiveSince: new Date().toISOString() },
+      ],
+    })),
+  });
+  expect(screen.getByText(/2 Teams/i)).toBeVisible();
 });

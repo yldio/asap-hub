@@ -15,6 +15,8 @@ module.exports = {
     'no-dupe-class-members': 'off',
     '@typescript-eslint/no-dupe-class-members': ['error'],
     'no-empty-function': 'off',
+    'no-redeclare': 'off',
     '@typescript-eslint/no-empty-function': ['error'],
+    '@typescript-eslint/no-redeclare': ['error'],
   },
 };

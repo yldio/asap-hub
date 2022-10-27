@@ -1,4 +1,4 @@
-import { WorkingGroupResponse } from '@asap-hub/model/src/gp2';
+import { gp2 } from '@asap-hub/model';
 import {
   Card,
   Headline3,
@@ -11,7 +11,7 @@ import ExpandableText from '../molecules/ExpandableText';
 import EmailSection from '../organisms/EmailSection';
 
 type WorkingGroupOverviewProps = Pick<
-  WorkingGroupResponse,
+  gp2.WorkingGroupResponse,
   'members' | 'description' | 'primaryEmail' | 'secondaryEmail'
 >;
 

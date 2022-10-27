@@ -1,23 +1,34 @@
-import { useRouteParams, gp2 } from '@asap-hub/routing';
+import { gp2, useRouteParams } from '@asap-hub/routing';
 
 import { Frame, useBackHref } from '@asap-hub/frontend-utils';
-import { Redirect, Route, Switch } from 'react-router-dom';
 import {
   WorkingGroupDetailPage,
   WorkingGroupOverview,
+  WorkingGroupResources,
 } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
-
+import { useCurrentUser } from '@asap-hub/react-context';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { useWorkingGroupById } from './state';
 
 const { workingGroups } = gp2;
+
 const WorkingGroupDetail = () => {
   const { workingGroupId } = useRouteParams(workingGroups({}).workingGroup);
-  const workingGroupData = useWorkingGroupById(workingGroupId);
+  const workingGroup = useWorkingGroupById(workingGroupId);
   const backHref = useBackHref() ?? workingGroups({}).$;
-  if (workingGroupData) {
+  const currentUser = useCurrentUser();
+  const isWorkingGroupMember =
+    workingGroup?.members.some(({ userId }) => userId === currentUser?.id) ||
+    false;
+
+  if (workingGroup) {
     return (
-      <WorkingGroupDetailPage backHref={backHref} {...workingGroupData}>
+      <WorkingGroupDetailPage
+        backHref={backHref}
+        {...workingGroup}
+        isWorkingGroupMember={isWorkingGroupMember}
+      >
         <Switch>
           <Route
             path={
@@ -25,9 +36,21 @@ const WorkingGroupDetail = () => {
             }
           >
             <Frame title="Overview">
-              <WorkingGroupOverview {...workingGroupData} />
+              <WorkingGroupOverview {...workingGroup} />
             </Frame>
           </Route>
+          {isWorkingGroupMember && (
+            <Route
+              path={
+                workingGroups({}).workingGroup({ workingGroupId }).resources({})
+                  .$
+              }
+            >
+              <Frame title="Resources">
+                <WorkingGroupResources {...workingGroup} />
+              </Frame>
+            </Route>
+          )}
           <Redirect
             to={
               workingGroups({}).workingGroup({ workingGroupId }).overview({}).$

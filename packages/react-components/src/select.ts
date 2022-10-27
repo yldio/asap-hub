@@ -1,3 +1,4 @@
+import { Theme } from '@emotion/react';
 import { CSSObject } from '@emotion/serialize';
 import { ComponentProps } from 'react';
 import Select, { StylesConfig } from 'react-select';
@@ -6,6 +7,7 @@ import { MultiSelectOptionsType } from './atoms/MultiSelect';
 import {
   charcoal,
   ember,
+  fern,
   lead,
   mint,
   paper,
@@ -131,6 +133,9 @@ export const reactSelectStyles = (
 });
 
 export const reactMultiSelectStyles = <T extends MultiSelectOptionsType>(
+  {
+    colors: { primary100 = mint, primary500 = fern, primary900 = pine } = {},
+  }: Theme,
   isInvalid: boolean,
 ): StylesConfig<T, true> => ({
   ...baseSelectStyles,
@@ -139,8 +144,8 @@ export const reactMultiSelectStyles = <T extends MultiSelectOptionsType>(
 
     padding: `${12 / perRem}em ${paddingLeftRight / perRem}em`,
 
-    backgroundColor: isFocused ? mint.rgb : 'unset',
-    color: isFocused ? pine.rgb : 'unset',
+    backgroundColor: isFocused ? primary100.rgba : 'unset',
+    color: isFocused ? primary900.rgba : 'unset',
     ':active': undefined,
   }),
   control: (_provided, { isFocused, isDisabled }) => ({
@@ -151,10 +156,10 @@ export const reactMultiSelectStyles = <T extends MultiSelectOptionsType>(
     justifyContent: 'space-between',
     alignItems: 'center',
 
-    ...(isFocused ? focusStyles : {}),
+    ...(isFocused ? { borderColor: primary500.rgba } : {}),
     ...(isInvalid
       ? {
-          borderColor: isFocused ? pine.rgb : ember.rgb,
+          borderColor: isFocused ? primary900.rgba : ember.rgb,
           backgroundColor: isFocused ? paper.rgb : rose.rgb,
           svg: { fill: 'unset' },
         }

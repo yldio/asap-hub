@@ -1,6 +1,10 @@
 import { gp2 } from '@asap-hub/model';
 import { UserEvent } from '@asap-hub/server-common';
-import { gp2 as SquidexGp2, WebhookPayload } from '@asap-hub/squidex';
+import {
+  parseToSquidex,
+  WebhookPayload,
+  gp2 as gp2squidex,
+} from '@asap-hub/squidex';
 import {
   FetchUserQuery,
   FetchUsersQuery,
@@ -58,7 +62,7 @@ export const fetchExpectation: gp2.ListUserResponse = {
 export const getUserWebhookPayload = (
   id: string,
   type: UserEvent,
-): WebhookPayload<SquidexGp2.User> => ({
+): WebhookPayload<gp2squidex.User> => ({
   type,
   timestamp: '2021-02-15T13:11:25Z',
   payload: {
@@ -74,12 +78,13 @@ export const getUserWebhookPayload = (
       email: { iv: 'test@test.com' },
       firstName: { iv: 'Tony' },
       lastName: { iv: 'Stark' },
+      region: { iv: 'Europe' },
       role: { iv: UsersDataRoleEnum.Trainee },
     },
   },
 });
 
-export const patchResponse = (): SquidexGp2.InputUser => ({
+export const patchResponse = (): gp2squidex.InputUser => ({
   id: 'userId',
   data: {
     role: { iv: UsersDataRoleEnum.Trainee },
@@ -115,6 +120,28 @@ export const getUserDataObject = (): gp2.UserDataObject => ({
     },
   ],
 });
+
+export const getUserCreateDataObject = (): gp2.UserCreateDataObject => {
+  const {
+    id: _id,
+    createdDate: _createdDate,
+    ...userCreateDataObject
+  } = getUserDataObject();
+
+  return userCreateDataObject;
+};
+
+export const getUserInput = (): gp2squidex.InputUser['data'] => {
+  const { degrees, region, ...input } = getUserCreateDataObject();
+  return {
+    ...parseToSquidex(input),
+    region: { iv: 'Europe' },
+    degree: { iv: ['MPH'] },
+    role: { iv: 'Trainee' },
+    avatar: { iv: [] },
+    connections: { iv: [] },
+  };
+};
 
 export const fetchUserResponse = () => patchResponse();
 export const fetchUserResponseDataObject = (): gp2.UserDataObject => ({

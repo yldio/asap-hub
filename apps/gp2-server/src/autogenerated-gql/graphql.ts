@@ -1148,6 +1148,7 @@ export type ProjectsDataDto = {
   milestones: Maybe<ProjectsDataMilestonesDto>;
   pmEmail: Maybe<ProjectsDataPmEmailDto>;
   projectProposal: Maybe<ProjectsDataProjectProposalDto>;
+  resources: Maybe<ProjectsDataResourcesDto>;
   startDate: Maybe<ProjectsDataStartDateDto>;
   status: Maybe<ProjectsDataStatusDto>;
   title: Maybe<ProjectsDataTitleDto>;
@@ -1173,6 +1174,7 @@ export type ProjectsDataInputDto = {
   milestones: InputMaybe<ProjectsDataMilestonesInputDto>;
   pmEmail: InputMaybe<ProjectsDataPmEmailInputDto>;
   projectProposal: InputMaybe<ProjectsDataProjectProposalInputDto>;
+  resources: InputMaybe<ProjectsDataResourcesInputDto>;
   startDate: InputMaybe<ProjectsDataStartDateInputDto>;
   status: InputMaybe<ProjectsDataStatusInputDto>;
   title: InputMaybe<ProjectsDataTitleInputDto>;
@@ -1290,6 +1292,41 @@ export type ProjectsDataProjectProposalInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
+/** The structure of the Resources nested schema. */
+export type ProjectsDataResourcesChildDto = {
+  description: Maybe<Scalars['String']>;
+  /** External link for a resource */
+  externalLink: Maybe<Scalars['String']>;
+  title: Maybe<Scalars['String']>;
+  type: Maybe<ProjectsDataResourcesTypeEnum>;
+};
+
+/** The structure of the Resources nested schema. */
+export type ProjectsDataResourcesChildInputDto = {
+  description: InputMaybe<Scalars['String']>;
+  /** External link for a resource */
+  externalLink: InputMaybe<Scalars['String']>;
+  title: InputMaybe<Scalars['String']>;
+  type: InputMaybe<ProjectsDataResourcesTypeEnum>;
+};
+
+/** The structure of the Resources field of the Projects content type. */
+export type ProjectsDataResourcesDto = {
+  iv: Maybe<Array<ProjectsDataResourcesChildDto>>;
+};
+
+/** The structure of the Resources field of the Projects content input type. */
+export type ProjectsDataResourcesInputDto = {
+  iv: InputMaybe<Array<ProjectsDataResourcesChildInputDto>>;
+};
+
+export enum ProjectsDataResourcesTypeEnum {
+  /** Link */
+  Link = 'Link',
+  /** Note */
+  Note = 'Note',
+}
+
 /** The structure of the Start Date field of the Projects content type. */
 export type ProjectsDataStartDateDto = {
   iv: Maybe<Scalars['Instant']>;
@@ -1340,6 +1377,7 @@ export type ProjectsFlatDataDto = {
   pmEmail: Maybe<Scalars['String']>;
   /** External link for a project proposal */
   projectProposal: Maybe<Scalars['String']>;
+  resources: Maybe<Array<ProjectsDataResourcesChildDto>>;
   startDate: Maybe<Scalars['Instant']>;
   status: Maybe<ProjectsDataStatusEnum>;
   title: Maybe<Scalars['String']>;
@@ -1984,6 +2022,7 @@ export type WorkingGroupsDataDto = {
   leadingMembers: Maybe<WorkingGroupsDataLeadingMembersDto>;
   members: Maybe<WorkingGroupsDataMembersDto>;
   primaryEmail: Maybe<WorkingGroupsDataPrimaryEmailDto>;
+  resources: Maybe<WorkingGroupsDataResourcesDto>;
   secondaryEmail: Maybe<WorkingGroupsDataSecondaryEmailDto>;
   shortDescription: Maybe<WorkingGroupsDataShortDescriptionDto>;
   title: Maybe<WorkingGroupsDataTitleDto>;
@@ -1995,6 +2034,7 @@ export type WorkingGroupsDataInputDto = {
   leadingMembers: InputMaybe<WorkingGroupsDataLeadingMembersInputDto>;
   members: InputMaybe<WorkingGroupsDataMembersInputDto>;
   primaryEmail: InputMaybe<WorkingGroupsDataPrimaryEmailInputDto>;
+  resources: InputMaybe<WorkingGroupsDataResourcesInputDto>;
   secondaryEmail: InputMaybe<WorkingGroupsDataSecondaryEmailInputDto>;
   shortDescription: InputMaybe<WorkingGroupsDataShortDescriptionInputDto>;
   title: InputMaybe<WorkingGroupsDataTitleInputDto>;
@@ -2051,6 +2091,41 @@ export type WorkingGroupsDataPrimaryEmailInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
+/** The structure of the Resources nested schema. */
+export type WorkingGroupsDataResourcesChildDto = {
+  description: Maybe<Scalars['String']>;
+  /** External link for a resource */
+  externalLink: Maybe<Scalars['String']>;
+  title: Maybe<Scalars['String']>;
+  type: Maybe<WorkingGroupsDataResourcesTypeEnum>;
+};
+
+/** The structure of the Resources nested schema. */
+export type WorkingGroupsDataResourcesChildInputDto = {
+  description: InputMaybe<Scalars['String']>;
+  /** External link for a resource */
+  externalLink: InputMaybe<Scalars['String']>;
+  title: InputMaybe<Scalars['String']>;
+  type: InputMaybe<WorkingGroupsDataResourcesTypeEnum>;
+};
+
+/** The structure of the Resources field of the Working Groups content type. */
+export type WorkingGroupsDataResourcesDto = {
+  iv: Maybe<Array<WorkingGroupsDataResourcesChildDto>>;
+};
+
+/** The structure of the Resources field of the Working Groups content input type. */
+export type WorkingGroupsDataResourcesInputDto = {
+  iv: InputMaybe<Array<WorkingGroupsDataResourcesChildInputDto>>;
+};
+
+export enum WorkingGroupsDataResourcesTypeEnum {
+  /** Link */
+  Link = 'Link',
+  /** Note */
+  Note = 'Note',
+}
+
 /** The structure of the WG's Lead Email field of the Working Groups content type. */
 export type WorkingGroupsDataSecondaryEmailDto = {
   iv: Maybe<Scalars['String']>;
@@ -2087,6 +2162,7 @@ export type WorkingGroupsFlatDataDto = {
   leadingMembers: Maybe<Scalars['String']>;
   members: Maybe<Array<WorkingGroupsDataMembersChildDto>>;
   primaryEmail: Maybe<Scalars['String']>;
+  resources: Maybe<Array<WorkingGroupsDataResourcesChildDto>>;
   secondaryEmail: Maybe<Scalars['String']>;
   shortDescription: Maybe<Scalars['String']>;
   title: Maybe<Scalars['String']>;
@@ -2136,6 +2212,14 @@ export type ProjectContentFragment = Pick<Projects, 'id'> & {
         >
       >
     >;
+    resources: Maybe<
+      Array<
+        Pick<
+          ProjectsDataResourcesChildDto,
+          'type' | 'title' | 'description' | 'externalLink'
+        >
+      >
+    >;
   };
 };
 
@@ -2179,6 +2263,14 @@ export type FetchProjectQuery = {
             Pick<
               ProjectsDataMilestonesChildDto,
               'title' | 'description' | 'status' | 'link'
+            >
+          >
+        >;
+        resources: Maybe<
+          Array<
+            Pick<
+              ProjectsDataResourcesChildDto,
+              'type' | 'title' | 'description' | 'externalLink'
             >
           >
         >;
@@ -2231,6 +2323,14 @@ export type FetchProjectsQuery = {
                   Pick<
                     ProjectsDataMilestonesChildDto,
                     'title' | 'description' | 'status' | 'link'
+                  >
+                >
+              >;
+              resources: Maybe<
+                Array<
+                  Pick<
+                    ProjectsDataResourcesChildDto,
+                    'type' | 'title' | 'description' | 'externalLink'
                   >
                 >
               >;
@@ -2374,6 +2474,14 @@ export type WorkingGroupNetworkContentFragment = Pick<
                 }
               >
             >;
+            resources: Maybe<
+              Array<
+                Pick<
+                  WorkingGroupsDataResourcesChildDto,
+                  'type' | 'title' | 'description' | 'externalLink'
+                >
+              >
+            >;
           };
         }
       >
@@ -2407,6 +2515,14 @@ export type WorkingGroupNetworkContentFragment = Pick<
                     >
                   >;
                 }
+              >
+            >;
+            resources: Maybe<
+              Array<
+                Pick<
+                  WorkingGroupsDataResourcesChildDto,
+                  'type' | 'title' | 'description' | 'externalLink'
+                >
               >
             >;
           };
@@ -2444,6 +2560,14 @@ export type WorkingGroupNetworkContentFragment = Pick<
                 }
               >
             >;
+            resources: Maybe<
+              Array<
+                Pick<
+                  WorkingGroupsDataResourcesChildDto,
+                  'type' | 'title' | 'description' | 'externalLink'
+                >
+              >
+            >;
           };
         }
       >
@@ -2477,6 +2601,14 @@ export type WorkingGroupNetworkContentFragment = Pick<
                     >
                   >;
                 }
+              >
+            >;
+            resources: Maybe<
+              Array<
+                Pick<
+                  WorkingGroupsDataResourcesChildDto,
+                  'type' | 'title' | 'description' | 'externalLink'
+                >
               >
             >;
           };
@@ -2526,6 +2658,14 @@ export type FetchWorkingGroupNetworkQuery = {
                       }
                     >
                   >;
+                  resources: Maybe<
+                    Array<
+                      Pick<
+                        WorkingGroupsDataResourcesChildDto,
+                        'type' | 'title' | 'description' | 'externalLink'
+                      >
+                    >
+                  >;
                 };
               }
             >
@@ -2559,6 +2699,14 @@ export type FetchWorkingGroupNetworkQuery = {
                           >
                         >;
                       }
+                    >
+                  >;
+                  resources: Maybe<
+                    Array<
+                      Pick<
+                        WorkingGroupsDataResourcesChildDto,
+                        'type' | 'title' | 'description' | 'externalLink'
+                      >
                     >
                   >;
                 };
@@ -2596,6 +2744,14 @@ export type FetchWorkingGroupNetworkQuery = {
                       }
                     >
                   >;
+                  resources: Maybe<
+                    Array<
+                      Pick<
+                        WorkingGroupsDataResourcesChildDto,
+                        'type' | 'title' | 'description' | 'externalLink'
+                      >
+                    >
+                  >;
                 };
               }
             >
@@ -2629,6 +2785,14 @@ export type FetchWorkingGroupNetworkQuery = {
                           >
                         >;
                       }
+                    >
+                  >;
+                  resources: Maybe<
+                    Array<
+                      Pick<
+                        WorkingGroupsDataResourcesChildDto,
+                        'type' | 'title' | 'description' | 'externalLink'
+                      >
                     >
                   >;
                 };
@@ -2666,6 +2830,14 @@ export type WorkingGroupContentFragment = Pick<WorkingGroups, 'id'> & {
         }
       >
     >;
+    resources: Maybe<
+      Array<
+        Pick<
+          WorkingGroupsDataResourcesChildDto,
+          'type' | 'title' | 'description' | 'externalLink'
+        >
+      >
+    >;
   };
 };
 
@@ -2699,6 +2871,14 @@ export type FetchWorkingGroupQuery = {
                 >
               >;
             }
+          >
+        >;
+        resources: Maybe<
+          Array<
+            Pick<
+              WorkingGroupsDataResourcesChildDto,
+              'type' | 'title' | 'description' | 'externalLink'
+            >
           >
         >;
       };
@@ -2740,6 +2920,14 @@ export type FetchWorkingGroupsQuery = {
                       >
                     >;
                   }
+                >
+              >;
+              resources: Maybe<
+                Array<
+                  Pick<
+                    WorkingGroupsDataResourcesChildDto,
+                    'type' | 'title' | 'description' | 'externalLink'
+                  >
                 >
               >;
             };
@@ -2863,6 +3051,25 @@ export const ProjectContentFragmentDoc = {
                         name: { kind: 'Name', value: 'status' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'link' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'resources' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'externalLink' },
+                      },
                     ],
                   },
                 },
@@ -3040,6 +3247,25 @@ export const WorkingGroupContentFragmentDoc = {
                             },
                           ],
                         },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'resources' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'externalLink' },
                       },
                     ],
                   },

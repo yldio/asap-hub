@@ -166,14 +166,13 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
 }) => {
   const route = network({}).teams({}).team({ teamId: id });
   const { canCreateUpdate } = useContext(ResearchOutputPermissionsContext);
+  const isActive = !inactiveSince;
 
   return (
     <header css={containerStyles}>
       <div css={titleStyle}>
         <Display styleAsHeading={2}>Team {displayName}</Display>
-        {!!inactiveSince && (
-          <StateTag icon={inactiveBadgeIcon} label="Inactive" />
-        )}
+        {!isActive && <StateTag icon={inactiveBadgeIcon} label="Inactive" />}
       </div>
 
       <section
@@ -273,9 +272,11 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
         <TabLink href={route.outputs({}).$}>
           Team Outputs ({teamOutputsCount})
         </TabLink>
-        <TabLink href={route.upcoming({}).$}>
-          Upcoming Events {`(${upcomingEventsCount})`}
-        </TabLink>
+        {isActive && (
+          <TabLink href={route.upcoming({}).$}>
+            Upcoming Events {`(${upcomingEventsCount})`}
+          </TabLink>
+        )}
         <TabLink href={route.past({}).$}>
           Past Events {`(${pastEventsCount})`}
         </TabLink>

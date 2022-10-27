@@ -1,3 +1,6 @@
+import { User } from '@asap-hub/auth';
+import { userMock } from '@asap-hub/fixtures';
+import { AuthHandler } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
@@ -48,9 +51,24 @@ describe('/working-groups/ route', () => {
     });
 
     test('Should call the controller fetch method', async () => {
-      await supertest(app).get('/working-groups');
+      const loggedInUserId = '11';
+      const loggedUser: User = {
+        ...userMock,
+        id: loggedInUserId,
+      };
+      const getLoggedUser = jest.fn().mockReturnValue(loggedUser);
+      const authHandlerMock: AuthHandler = (req, _res, next) => {
+        req.loggedInUser = getLoggedUser();
+        next();
+      };
+      const appWithUser = appFactory({
+        workingGroupController: workingGroupControllerMock,
+        authHandler: authHandlerMock,
+        logger: loggerMock,
+      });
+      await supertest(appWithUser).get('/working-groups');
 
-      expect(workingGroupControllerMock.fetch).toBeCalled();
+      expect(workingGroupControllerMock.fetch).toBeCalledWith(loggedInUserId);
     });
   });
   describe('GET /working-group/{working_group_id}', () => {
@@ -78,10 +96,27 @@ describe('/working-groups/ route', () => {
     test('Should call the controller with the right parameter', async () => {
       const workingGroupId = 'abc123';
 
-      await supertest(app).get(`/working-group/${workingGroupId}`);
+      const loggedInUserId = '11';
+      const loggedUser: User = {
+        ...userMock,
+        id: loggedInUserId,
+      };
+      const getLoggedUser = jest.fn().mockReturnValue(loggedUser);
+      const authHandlerMock: AuthHandler = (req, _res, next) => {
+        req.loggedInUser = getLoggedUser();
+        next();
+      };
+      const appWithUser = appFactory({
+        workingGroupController: workingGroupControllerMock,
+        authHandler: authHandlerMock,
+        logger: loggerMock,
+      });
+
+      await supertest(appWithUser).get(`/working-group/${workingGroupId}`);
 
       expect(workingGroupControllerMock.fetchById).toBeCalledWith(
         workingGroupId,
+        loggedInUserId,
       );
     });
   });

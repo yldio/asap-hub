@@ -1,4 +1,4 @@
-import { ListResponse } from '../common';
+import { FetchOptions, ListResponse } from '../common';
 import { Connection } from '../user';
 
 export const userRoles = [
@@ -62,9 +62,9 @@ export type UserDataObject = {
   city?: string;
 };
 
-export type UserUpdateDataObject = Partial<
-  Omit<UserDataObject, 'id' | 'createdDate'>
->;
+export type UserCreateDataObject = Omit<UserDataObject, 'id' | 'createdDate'>;
+
+export type UserUpdateDataObject = Partial<UserCreateDataObject>;
 
 export type ListUserDataObject = ListResponse<UserDataObject>;
 
@@ -73,3 +73,10 @@ export interface UserResponse extends Omit<UserDataObject, 'connections'> {
 }
 export type ListUserResponse = ListResponse<UserResponse>;
 export type UserUpdateRequest = UserUpdateDataObject;
+
+export type FetchUsersFilter = {
+  region?: UserRegion[];
+  code?: string;
+};
+
+export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;

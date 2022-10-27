@@ -7,7 +7,6 @@ import {
   NewsFrequency,
 } from '@asap-hub/model';
 import {
-  Filter,
   parseDate,
   Query,
   RestNews,
@@ -70,12 +69,6 @@ const parseRestNews = (item: RestNews): NewsDataObject => ({
   type: item.data.type.iv,
 });
 
-const notTutorialFilter: Filter = {
-  path: 'data.type.iv',
-  op: 'ne',
-  value: 'Tutorial',
-};
-
 const getFrequencyFilter = (frequencyFilter: NewsFrequency[]) => {
   const selectByFrequencyFilter = {
     path: 'data.frequency.iv',
@@ -93,17 +86,12 @@ const getFrequencyFilter = (frequencyFilter: NewsFrequency[]) => {
 
   if (frequencyFilter.includes('News Articles')) {
     return {
-      and: [
-        notTutorialFilter,
-        {
-          or: [selectNewsArticlesFilter, selectByFrequencyFilter],
-        },
-      ],
+      or: [selectNewsArticlesFilter, selectByFrequencyFilter],
     };
   }
 
   return {
-    and: [notTutorialFilter, selectByFrequencyFilter],
+    ...selectByFrequencyFilter,
   };
 };
 
@@ -118,10 +106,8 @@ const getFiltersQuery = (options?: FetchNewsProviderOptions) => {
     const filterQuery = getFrequencyFilter(options.filter.frequency);
 
     return options?.filter?.title
-      ? { and: [...filterQuery.and, textSearchFilter] }
+      ? { and: [filterQuery, textSearchFilter] }
       : filterQuery;
   }
-  return options?.filter?.title
-    ? { and: [notTutorialFilter, textSearchFilter] }
-    : notTutorialFilter;
+  return options?.filter?.title && textSearchFilter;
 };

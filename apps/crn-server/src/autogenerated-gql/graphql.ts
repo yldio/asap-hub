@@ -6229,7 +6229,7 @@ export type EventContentFragment = Pick<
         team: Maybe<
           Array<
             Pick<Teams, 'id'> & {
-              flatData: Pick<TeamsFlatDataDto, 'displayName'>;
+              flatData: Pick<TeamsFlatDataDto, 'displayName' | 'inactiveSince'>;
             }
           >
         >;
@@ -6610,7 +6610,10 @@ export type FetchEventsQuery = {
                   team: Maybe<
                     Array<
                       Pick<Teams, 'id'> & {
-                        flatData: Pick<TeamsFlatDataDto, 'displayName'>;
+                        flatData: Pick<
+                          TeamsFlatDataDto,
+                          'displayName' | 'inactiveSince'
+                        >;
                       }
                     >
                   >;
@@ -6962,7 +6965,10 @@ export type FetchEventQuery = {
             team: Maybe<
               Array<
                 Pick<Teams, 'id'> & {
-                  flatData: Pick<TeamsFlatDataDto, 'displayName'>;
+                  flatData: Pick<
+                    TeamsFlatDataDto,
+                    'displayName' | 'inactiveSince'
+                  >;
                 }
               >
             >;
@@ -7983,7 +7989,7 @@ export type ResearchOutputContentFragment = Pick<
   referencingTeamsContents?: Maybe<
     Array<
       Pick<Teams, 'id' | 'created' | 'lastModified' | 'version'> & {
-        flatData: Pick<TeamsFlatDataDto, 'displayName'>;
+        flatData: Pick<TeamsFlatDataDto, 'displayName' | 'inactiveSince'>;
         referencingUsersContents: Maybe<
           Array<{
             flatData: Pick<UsersFlatDataDto, 'email'> & {
@@ -8149,7 +8155,7 @@ export type FetchResearchOutputQuery = {
       referencingTeamsContents?: Maybe<
         Array<
           Pick<Teams, 'id' | 'created' | 'lastModified' | 'version'> & {
-            flatData: Pick<TeamsFlatDataDto, 'displayName'>;
+            flatData: Pick<TeamsFlatDataDto, 'displayName' | 'inactiveSince'>;
             referencingUsersContents: Maybe<
               Array<{
                 flatData: Pick<UsersFlatDataDto, 'email'> & {
@@ -8330,7 +8336,10 @@ export type FetchResearchOutputsQuery = {
             referencingTeamsContents?: Maybe<
               Array<
                 Pick<Teams, 'id' | 'created' | 'lastModified' | 'version'> & {
-                  flatData: Pick<TeamsFlatDataDto, 'displayName'>;
+                  flatData: Pick<
+                    TeamsFlatDataDto,
+                    'displayName' | 'inactiveSince'
+                  >;
                   referencingUsersContents: Maybe<
                     Array<{
                       flatData: Pick<UsersFlatDataDto, 'email'> & {
@@ -10131,6 +10140,13 @@ export const EventContentFragmentDoc = {
                                       value: 'displayName',
                                     },
                                   },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'inactiveSince',
+                                    },
+                                  },
                                 ],
                               },
                             },
@@ -11076,6 +11092,10 @@ export const ResearchOutputContentFragmentDoc = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'displayName' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'inactiveSince' },
                       },
                     ],
                   },

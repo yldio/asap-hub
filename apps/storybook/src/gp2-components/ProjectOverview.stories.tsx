@@ -4,7 +4,7 @@ import { number, text } from '@storybook/addon-knobs';
 
 const { createProjectResponse } = gp2Fixtures;
 export default {
-  title: 'GP2 / Templates / Project Overview',
+  title: 'GP2 / Templates / Projects / Overview',
   component: ProjectOverview,
 };
 const milestone = (id: number) => ({

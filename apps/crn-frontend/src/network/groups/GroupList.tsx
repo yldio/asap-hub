@@ -38,7 +38,8 @@ const NetworkGroupList: React.FC<NetworkGroupListProps> = ({
   const groups: ComponentProps<typeof NetworkGroups>['groups'] =
     result.items.map((group) => ({
       ...group,
-      numberOfTeams: group.teams.length,
+      numberOfTeams: group.teams.filter(({ inactiveSince }) => !inactiveSince)
+        .length,
     }));
 
   return (

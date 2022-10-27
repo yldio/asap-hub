@@ -75,27 +75,34 @@ const GroupProfileHeader: React.FC<GroupProfileHeaderProps> = ({
           <Display styleAsHeading={2}>{name}</Display>
           {!active && <StateTag icon={inactiveBadgeIcon} label="Inactive" />}
         </div>
-        <div css={belowHeadlineStyles}>
-          <div
-            css={{
-              paddingRight: `${15 / perRem}em`,
-              paddingTop: `${24 / perRem}em`,
-              display: 'grid',
-            }}
-          >
-            {teamIcon}
-          </div>
-          <div
-            css={{
-              flexGrow: 1,
-              paddingRight: `${30 / perRem}em`,
-              paddingTop: `${24 / perRem}em`,
-            }}
-          >
-            <Link href={groupTeamsHref}>
-              {numberOfTeams} Team{numberOfTeams === 1 ? '' : 's'}
-            </Link>
-          </div>
+
+        <div
+          css={[belowHeadlineStyles, !active && { flexFlow: 'row-reverse' }]}
+        >
+          {active && (
+            <>
+              <div
+                css={{
+                  paddingRight: `${15 / perRem}em`,
+                  paddingTop: `${24 / perRem}em`,
+                  display: 'grid',
+                }}
+              >
+                {teamIcon}
+              </div>
+              <div
+                css={{
+                  flexGrow: 1,
+                  paddingRight: `${30 / perRem}em`,
+                  paddingTop: `${24 / perRem}em`,
+                }}
+              >
+                <Link href={groupTeamsHref}>
+                  {numberOfTeams} Team{numberOfTeams === 1 ? '' : 's'}
+                </Link>
+              </div>
+            </>
+          )}
           <div
             css={{
               paddingTop: `${24 / (13.6 / perRem) / perRem}em`,

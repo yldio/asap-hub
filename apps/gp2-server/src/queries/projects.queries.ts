@@ -35,6 +35,12 @@ export const projectContentQueryFragment = gql`
         status
         link
       }
+      resources {
+        type
+        title
+        description
+        externalLink
+      }
     }
   }
 `;

@@ -100,7 +100,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
                 description:
                   'Explore a series of short videos that highlight the many different aspects of the Hub.',
                 hrefText: 'Explore videos',
-                href: 'https://hub.asap.science/news/f247813e-a64c-4909-8071-11ae9896c52a',
+                href: 'https://hub.asap.science/discover/tutorials/d9c82f68-3f43-4dd8-83c0-179592fc8e42',
               },
               {
                 icon: giftIcon,

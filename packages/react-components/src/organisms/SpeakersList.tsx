@@ -9,6 +9,7 @@ import {
   chevronCircleDownIcon,
   chevronCircleUpIcon,
   alumniBadge,
+  inactiveBadgeIcon,
 } from '../icons';
 import { useDateHasPassed } from '../date';
 import { considerEndedAfter } from '../utils';
@@ -113,6 +114,12 @@ const speakerListStyles = {
   },
 };
 
+const inactiveBadgeStyles = {
+  lineHeight: `${18 / perRem}em`,
+  verticalAlign: 'middle',
+  marginLeft: `${8 / perRem}em`,
+};
+
 const hideStyles = css({
   ...gridMixin,
   [`:nth-of-type(4)`]: { ...previewStyle, borderBottom: 'transparent' },
@@ -189,7 +196,12 @@ const SpeakerList: React.FC<SpeakerListProps> = ({ speakers, endDate }) => {
                     network({}).teams({}).team({ teamId: speaker.team.id }).$
                   }
                 >
-                  {speaker.team.displayName}
+                  <>
+                    {speaker.team.displayName}
+                    {speaker.team.inactiveSince && (
+                      <span css={inactiveBadgeStyles}>{inactiveBadgeIcon}</span>
+                    )}
+                  </>
                 </Link>
               )}
             </div>

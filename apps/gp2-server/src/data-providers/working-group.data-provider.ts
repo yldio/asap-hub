@@ -1,5 +1,4 @@
 import { gp2 } from '@asap-hub/model';
-import { WorkingGroupDataObject } from '@asap-hub/model/src/gp2';
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import {
   FetchWorkingGroupQuery,
@@ -12,10 +11,11 @@ import {
   FETCH_WORKING_GROUP,
   FETCH_WORKING_GROUPS,
 } from '../queries/working-groups.queries';
+import { parseResources } from '../utils/resources';
 import { createUrl } from '../utils/urls';
 
 export interface WorkingGroupDataProvider {
-  fetchById(id: string): Promise<WorkingGroupDataObject | null>;
+  fetchById(id: string): Promise<gp2.WorkingGroupDataObject | null>;
   fetch(): Promise<gp2.ListWorkingGroupDataObject>;
 }
 export class WorkingGroupSquidexDataProvider
@@ -23,7 +23,7 @@ export class WorkingGroupSquidexDataProvider
 {
   constructor(private squidexGraphlClient: SquidexGraphqlClient) {}
 
-  async fetchById(id: string): Promise<WorkingGroupDataObject | null> {
+  async fetchById(id: string): Promise<gp2.WorkingGroupDataObject | null> {
     const { findWorkingGroupsContent } = await this.queryFetchByIdData(id);
     if (!findWorkingGroupsContent) {
       return null;
@@ -80,6 +80,10 @@ type GraphQLWorkingGroupMemberRole = NonNullable<
   GraphQLWorkingGroupMember['role']
 >;
 
+export type GraphQLWorkingGroupResource = NonNullable<
+  NonNullable<GraphQLWorkingGroup['flatData']>['resources']
+>[number];
+
 const parseWorkingGroupMembers = (
   user: GraphQLWorkingGroupMemberUser,
   role: GraphQLWorkingGroupMemberRole,
@@ -106,11 +110,12 @@ const parseWorkingGroupMembers = (
   };
 };
 
-export function parseWorkingGroupToDataObject(
-  workingGroup: GraphQLWorkingGroup,
-): gp2.WorkingGroupDataObject {
+export function parseWorkingGroupToDataObject({
+  id,
+  flatData: workingGroup,
+}: GraphQLWorkingGroup): gp2.WorkingGroupDataObject {
   const members =
-    workingGroup.flatData.members?.reduce(
+    workingGroup.members?.reduce(
       (
         membersList: gp2.WorkingGroupMember[],
         member: GraphQLWorkingGroupMember,
@@ -125,14 +130,17 @@ export function parseWorkingGroupToDataObject(
       [],
     ) || [];
 
+  const resources = workingGroup.resources?.reduce(parseResources, []) || [];
+
   return {
-    id: workingGroup.id,
-    title: workingGroup.flatData.title || '',
-    shortDescription: workingGroup.flatData.shortDescription || '',
-    description: workingGroup.flatData.description || '',
-    primaryEmail: workingGroup.flatData.primaryEmail || undefined,
-    secondaryEmail: workingGroup.flatData.secondaryEmail || undefined,
-    leadingMembers: workingGroup.flatData.leadingMembers || '',
+    id,
+    title: workingGroup.title || '',
+    shortDescription: workingGroup.shortDescription || '',
+    description: workingGroup.description || '',
+    primaryEmail: workingGroup.primaryEmail || undefined,
+    secondaryEmail: workingGroup.secondaryEmail || undefined,
+    leadingMembers: workingGroup.leadingMembers || '',
     members,
+    resources,
   };
 }

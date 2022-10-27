@@ -92,12 +92,23 @@ it('deep links to the teams list', async () => {
 
   expect(container.querySelector(hash)).toHaveTextContent(/team members/i);
 });
-it('renders number of upcoming events', async () => {
+it('renders number of upcoming events for active teams', async () => {
   const response = createListEventResponse(7);
   mockGetEventsFromAlgolia.mockResolvedValue(response);
   await renderPage(createTeamResponse());
 
   expect(await screen.findByText(/Upcoming Events \(7\)/i)).toBeVisible();
+});
+
+it('does not allow navigating to the upcoming events tab when team is inactive', async () => {
+  await renderPage({
+    ...createTeamResponse(),
+    inactiveSince: '2022-09-30T09:00:00Z',
+  });
+
+  expect(
+    screen.queryByText(/Upcoming Events/i, { selector: 'nav *' }),
+  ).not.toBeInTheDocument();
 });
 
 it('renders number of past events', async () => {

@@ -13,7 +13,7 @@
     "watch:babel": "../../scripts/build-babel.sh watch"
   },
   "dependencies": {
-    "@babel/runtime-corejs3": "7.19.4",
+    "@babel/runtime-corejs3": "7.19.6",
     "qs": "6.11.0",
     "typesafe-routes": "9.0.1",
     "typescript": "4.8.4"

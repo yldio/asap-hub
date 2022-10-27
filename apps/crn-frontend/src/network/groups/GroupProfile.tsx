@@ -60,13 +60,15 @@ const GroupProfile: FC<GroupProfileProps> = ({ currentTime }) => {
     }),
   );
 
+  const isActive = group?.active;
   if (group) {
     const props: ComponentProps<typeof GroupProfilePage> = {
       id: group.id,
       active: group.active,
       name: group.name,
       lastModifiedDate: group.lastModifiedDate,
-      numberOfTeams: group.teams.length,
+      numberOfTeams: group.teams.filter(({ inactiveSince }) => !inactiveSince)
+        .length,
       groupTeamsHref: `${
         route({ groupId }).about({}).$
       }#${groupTeamsElementId}`,
@@ -87,31 +89,35 @@ const GroupProfile: FC<GroupProfileProps> = ({ currentTime }) => {
               </Frame>
             </GroupProfilePage>
           </Route>
-          <Route path={path + route({ groupId }).calendar.template}>
-            <GroupProfilePage {...props}>
-              <Frame title="Calendar">
-                <Calendar calendars={group.calendars} />
-              </Frame>
-            </GroupProfilePage>
-          </Route>
-          <Route path={path + route({ groupId }).upcoming.template}>
-            <GroupProfilePage {...props}>
-              <Frame title="Upcoming Events">
-                <EventsList
-                  constraint={{ groupId }}
-                  currentTime={currentTime}
-                  past={false}
-                  noEventsComponent={
-                    <NoEvents
-                      displayName={group.name}
-                      link={events({}).upcoming({}).$}
-                      type="group"
-                    />
-                  }
-                />
-              </Frame>
-            </GroupProfilePage>
-          </Route>
+          {isActive && (
+            <Route path={path + route({ groupId }).calendar.template}>
+              <GroupProfilePage {...props}>
+                <Frame title="Calendar">
+                  <Calendar calendars={group.calendars} />
+                </Frame>
+              </GroupProfilePage>
+            </Route>
+          )}
+          {isActive && (
+            <Route path={path + route({ groupId }).upcoming.template}>
+              <GroupProfilePage {...props}>
+                <Frame title="Upcoming Events">
+                  <EventsList
+                    constraint={{ groupId }}
+                    currentTime={currentTime}
+                    past={false}
+                    noEventsComponent={
+                      <NoEvents
+                        displayName={group.name}
+                        link={events({}).upcoming({}).$}
+                        type="group"
+                      />
+                    }
+                  />
+                </Frame>
+              </GroupProfilePage>
+            </Route>
+          )}
           <Route path={path + route({ groupId }).past.template}>
             <GroupProfilePage {...props}>
               <Frame title="Past Events">

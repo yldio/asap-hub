@@ -10,7 +10,7 @@ import {
 } from '@asap-hub/server-common';
 import {
   getAccessTokenFactory,
-  RestUser,
+  gp2 as gp2squidex,
   SquidexGraphql,
   SquidexRest,
 } from '@asap-hub/squidex';
@@ -82,7 +82,10 @@ export const appFactory = (libs: Libs = {}): Express => {
     baseUrl,
   });
 
-  const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
+  const userRestClient = new SquidexRest<
+    gp2squidex.RestUser,
+    gp2squidex.InputUser
+  >(getAuthToken, 'users', {
     appName,
     baseUrl,
   });

@@ -8,6 +8,7 @@ describe('WorkingGroupDetailHeader', () => {
     members: [],
     projects: [],
     id: '1',
+    isWorkingGroupMember: true,
   };
 
   it('renders title, number of members and number of projects', () => {
@@ -29,5 +30,25 @@ describe('WorkingGroupDetailHeader', () => {
   it('renders overview tab', () => {
     render(<WorkingGroupDetailHeader {...defaultProps} />);
     expect(screen.getByRole('link', { name: 'Overview' })).toBeVisible();
+  });
+  it('renders resources tab if you are a member', () => {
+    render(
+      <WorkingGroupDetailHeader
+        {...defaultProps}
+        isWorkingGroupMember={true}
+      />,
+    );
+    expect(screen.getByRole('link', { name: 'Resources' })).toBeVisible();
+  });
+  it('does not render resources tab if you are not a member', () => {
+    render(
+      <WorkingGroupDetailHeader
+        {...defaultProps}
+        isWorkingGroupMember={false}
+      />,
+    );
+    expect(
+      screen.queryByRole('link', { name: 'Resources' }),
+    ).not.toBeInTheDocument();
   });
 });

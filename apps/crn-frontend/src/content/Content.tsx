@@ -1,3 +1,4 @@
+import { RecoilRoot } from 'recoil';
 import { ContentPage, NotFoundPage } from '@asap-hub/react-components';
 import { Frame } from '@asap-hub/frontend-utils';
 
@@ -20,4 +21,10 @@ const Content: React.FC<ContentProps> = ({ pageId }) => {
   return <NotFoundPage />;
 };
 
-export default Content;
+const ContentWithRecoil: React.FC<ContentProps> = (props) => (
+  <RecoilRoot>
+    <Content {...props} />
+  </RecoilRoot>
+);
+
+export default ContentWithRecoil;

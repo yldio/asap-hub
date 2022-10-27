@@ -37,6 +37,7 @@ export * from './hooks';
 export * from './icons';
 export * from './images';
 export * from './layout';
+export * from './routing';
 export { MessageLayout, WelcomeMessage } from './messages';
 export {
   Accordion,
@@ -89,13 +90,13 @@ export {
   CheckboxGroup,
   ComingSoon,
   ConfirmModal,
+  DashboardUpcomingEvents,
   EmailPasswordSignin,
   EventAbout,
   EventCard,
   EventConversation,
   EventMaterials,
   EventSearch,
-  DashboardUpcomingEvents,
   GoogleCalendar,
   GroupCard,
   GroupInformation,
@@ -104,6 +105,7 @@ export {
   GroupTools,
   HelpSection,
   JoinEvent,
+  LeadersTabbedCard,
   MainNavigation,
   MenuHeader,
   NewsCard,
@@ -117,13 +119,13 @@ export {
   ProfileCardList,
   ProfileExpertiseAndResources,
   QuestionsSection,
+  RecentSharedOutputs,
   RemindersCard,
   ResearchOutputExtraInformationCard,
   ResearchOutputForm,
   ResearchOutputHeader,
   RichText,
   RichTextCard,
-  RecentSharedOutputs,
   SearchAndFilter,
   SharedResearchCard,
   SharedResearchListCard,
@@ -132,6 +134,7 @@ export {
   TeamCard,
   TeamGroupsCard,
   TeamMembersSection,
+  TeamsTabbedCard,
   Toast,
   ToastStack,
   ToolCard,

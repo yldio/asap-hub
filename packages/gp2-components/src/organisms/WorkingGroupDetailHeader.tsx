@@ -26,6 +26,7 @@ type WorkingGroupDetailHeaderProps = Pick<
 > & {
   projects?: unknown[];
   backHref: string;
+  isWorkingGroupMember: boolean;
 };
 
 const infoContainerStyles = css({
@@ -45,6 +46,7 @@ const WorkingGroupDetailHeader: React.FC<WorkingGroupDetailHeaderProps> = ({
   members,
   projects,
   id,
+  isWorkingGroupMember,
 }) => (
   <header>
     <BackLink href={backHref} />
@@ -71,6 +73,18 @@ const WorkingGroupDetailHeader: React.FC<WorkingGroupDetailHeaderProps> = ({
       >
         Overview
       </TabLink>
+      {isWorkingGroupMember && (
+        <TabLink
+          href={
+            gp2Routing
+              .workingGroups({})
+              .workingGroup({ workingGroupId: id })
+              .resources({}).$
+          }
+        >
+          Resources
+        </TabLink>
+      )}
     </TabNav>
   </header>
 );

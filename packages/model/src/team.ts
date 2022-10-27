@@ -49,6 +49,7 @@ export type TeamDataObject = Omit<TeamCreateRequest, 'applicationNumber'> & {
   pointOfContact?: TeamMember;
   tools?: TeamTool[];
   labCount: number;
+  inactiveSince?: string;
 };
 
 export type TeamCreateDataObject = {

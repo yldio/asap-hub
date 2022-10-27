@@ -28,7 +28,6 @@ beforeEach(jest.clearAllMocks);
 const renderGroupProfile = async (
   groupResponse = createGroupResponse(),
   { groupId = groupResponse.id } = {},
-  getEventsFromSquidex = async () => createListEventResponse(1),
 ) => {
   mockGetGroup.mockImplementation(async (id) =>
     id === groupResponse.id ? groupResponse : undefined,
@@ -83,6 +82,35 @@ it('deep links to the teams section', async () => {
 
   expect(container.querySelector(hash)).toHaveTextContent(/teams/i);
 });
+
+it('does not count inactive teams in the count', async () => {
+  const response = createGroupResponse({ teamsCount: 1 });
+  await renderGroupProfile({
+    ...response,
+    teams: [
+      { ...response.teams[0], id: '1', inactiveSince: undefined },
+      { ...response.teams[0], id: '2', inactiveSince: undefined },
+      { ...response.teams[0], id: '3', inactiveSince: undefined },
+    ],
+  });
+  expect(await screen.findByText(/3 team/i)).toBeVisible();
+
+  await renderGroupProfile({
+    ...response,
+    teams: [
+      { ...response.teams[0], id: '1', inactiveSince: undefined },
+      { ...response.teams[0], id: '2', inactiveSince: undefined },
+      {
+        ...response.teams[0],
+        id: '3',
+        inactiveSince: new Date().toISOString(),
+      },
+    ],
+  });
+
+  expect(await screen.findByText(/2 team/i)).toBeVisible();
+});
+
 it('generates a different deep link every time to avoid conflicts', async () => {
   const result1 = await renderGroupProfile(
     createGroupResponse({ teamsCount: 1 }),
@@ -106,6 +134,13 @@ describe('the calendar tab', () => {
     userEvent.click(await findByText(/calendar/i, { selector: 'nav a *' }));
     expect(await findAllByText(/subscribe/i)).not.toHaveLength(0);
   });
+  it('cannot be switched to if the group is inactive', async () => {
+    const { queryByText } = await renderGroupProfile({
+      ...createGroupResponse(),
+      active: false,
+    });
+    expect(await queryByText('Calendar')).not.toBeInTheDocument();
+  });
 });
 
 describe('the upcoming events tab', () => {
@@ -113,6 +148,13 @@ describe('the upcoming events tab', () => {
     const { findByText } = await renderGroupProfile();
     userEvent.click(await findByText(/upcoming/i, { selector: 'nav a *' }));
     expect(await findByText(/results/i)).toBeVisible();
+  });
+  it('cannot be switched to if the group is inactive', async () => {
+    const { queryByText } = await renderGroupProfile({
+      ...createGroupResponse(),
+      active: false,
+    });
+    expect(await queryByText('Upcoming Events')).not.toBeInTheDocument();
   });
 });
 

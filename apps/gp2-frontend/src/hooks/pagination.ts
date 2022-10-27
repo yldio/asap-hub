@@ -4,13 +4,22 @@ import { useHistory, useLocation } from 'react-router-dom';
 export const PAGE_SIZE = 10;
 
 export const usePaginationParams = () => {
+  const history = useHistory();
   const searchParams = new URLSearchParams(useLocation().search);
   const currentPage = Number(searchParams.get('currentPage')) ?? 0;
   const pageSize = PAGE_SIZE;
 
+  const resetPaginationSearchParams = new URLSearchParams(searchParams);
+  resetPaginationSearchParams.delete('currentPage');
+
+  const resetPagination = () => {
+    history.replace({ search: resetPaginationSearchParams.toString() });
+  };
+
   return {
     currentPage,
     pageSize,
+    resetPagination,
   };
 };
 

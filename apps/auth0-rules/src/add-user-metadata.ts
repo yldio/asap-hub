@@ -6,7 +6,7 @@ import type { Rule } from './types';
 
 type Auth0UserResponse = UserMetadataResponse | gp2.UserResponse;
 
-const isUserResponse = (
+const isUserMetadataResponse = (
   response: UserMetadataResponse | gp2.UserResponse,
 ): response is UserMetadataResponse => 'onboarded' in response;
 
@@ -18,7 +18,7 @@ const handleError = (err: unknown): Error => {
 };
 
 const extractUser = (response: Auth0UserResponse): User => {
-  if (isUserResponse(response)) {
+  if (isUserMetadataResponse(response)) {
     const {
       id,
       onboarded,
@@ -94,7 +94,7 @@ const addUserMetadata: Rule<{ invitationCode: string }> = async (
       timeout: 10000,
     }).json<Auth0UserResponse>();
 
-    if (isUserResponse(response) && response.alumniSinceDate) {
+    if (isUserMetadataResponse(response) && response.alumniSinceDate) {
       return callback(new UnauthorizedError('alumni-user-access-denied'));
     }
 

@@ -23,6 +23,26 @@ describe('usePaginationParams', () => {
     });
     expect(result.current.currentPage).toBe(1);
   });
+
+  it('removes pagination parameters from url after reset', () => {
+    const { result } = renderHook(
+      () => ({
+        usePaginationParamsResult: usePaginationParams(),
+        useLocationResult: useLocation(),
+      }),
+      {
+        wrapper: MemoryRouter,
+        initialProps: { initialEntries: [{ search: '?currentPage=2' }] },
+      },
+    );
+    expect(
+      urlSearchParamsToObject(result.current.useLocationResult.search),
+    ).toEqual({ currentPage: '2' });
+    result.current.usePaginationParamsResult.resetPagination();
+    expect(
+      urlSearchParamsToObject(result.current.useLocationResult.search),
+    ).toEqual({});
+  });
 });
 
 describe('usePagination', () => {

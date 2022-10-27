@@ -19,6 +19,7 @@
     "serverless.ts"
   ],
   "references": [
+    { "path": "../../packages/auth" },
     { "path": "../../packages/errors" },
     { "path": "../../packages/fixtures" },
     { "path": "../../packages/message-templates" },

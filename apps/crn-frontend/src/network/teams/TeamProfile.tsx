@@ -81,6 +81,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
     pageSize,
     teamId,
   });
+  const isActive = !team?.inactiveSince;
 
   if (team) {
     return (
@@ -117,24 +118,26 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
                     </Frame>
                   </Route>
                 )}
-                <Route path={path + route({ teamId }).upcoming.template}>
-                  <Frame title="Upcoming Events">
-                    <EventsList
-                      constraint={{ teamId }}
-                      currentTime={currentTime}
-                      past={false}
-                      events={upcomingEventsResult}
-                      noEventsComponent={
-                        <NoEvents
-                          displayName={team.displayName}
-                          type="team"
-                          past={false}
-                          link={events({}).upcoming({}).$}
-                        />
-                      }
-                    />
-                  </Frame>
-                </Route>
+                {isActive && (
+                  <Route path={path + route({ teamId }).upcoming.template}>
+                    <Frame title="Upcoming Events">
+                      <EventsList
+                        constraint={{ teamId }}
+                        currentTime={currentTime}
+                        past={false}
+                        events={upcomingEventsResult}
+                        noEventsComponent={
+                          <NoEvents
+                            displayName={team.displayName}
+                            type="team"
+                            past={false}
+                            link={events({}).upcoming({}).$}
+                          />
+                        }
+                      />
+                    </Frame>
+                  </Route>
+                )}
                 <Route path={path + route({ teamId }).past.template}>
                   <Frame title="Past Events">
                     <EventsList

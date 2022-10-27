@@ -41,7 +41,7 @@ const GroupTools: React.FC<GroupToolsProps> = ({
       Use these tools to connect with your group.
     </Paragraph>
     <ul css={buttons}>
-      {slack && (
+      {slack && active && (
         <li css={button}>
           <Link href={slack} buttonStyle small>
             {slackIcon} Join Slack Channel

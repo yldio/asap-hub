@@ -11,7 +11,6 @@ import { Integrations } from '@sentry/tracing';
 import { FC, lazy, useEffect } from 'react';
 import { Route, Router, Switch } from 'react-router-dom';
 import { LastLocationProvider } from 'react-router-last-location';
-import { RecoilRoot } from 'recoil';
 import CheckAuth from './auth/CheckAuth';
 import Logout from './auth/Logout';
 import SentryAuth0 from './auth/SentryAuth0';
@@ -74,49 +73,47 @@ const App: FC<Record<string, never>> = () => {
   }, [setCurrentOverrides]);
 
   return (
-    <RecoilRoot>
-      <Frame title="GP2 Hub">
-        <GoogleTagManager containerId={GTM_CONTAINER_ID} />
-        <AuthProvider>
-          <SentryAuth0 />
-          <Router history={history}>
-            <LastLocationProvider>
-              <Frame title={null}>
-                <Switch>
-                  <Route path={welcome.template}>
-                    <UtilityBar>
-                      <ToastStack>
-                        <Welcome />
-                      </ToastStack>
-                    </UtilityBar>
-                  </Route>
-                  <Route path={logout.template}>
-                    <Frame title="Logout">
-                      <Logout />
-                    </Frame>
-                  </Route>
-                  <Route>
-                    <CheckAuth>
-                      {({ isAuthenticated }) =>
-                        !isAuthenticated ? (
-                          <Frame title={null}>
-                            <Signin />
-                          </Frame>
-                        ) : (
-                          <Frame title={null}>
-                            <AuthenticatedApp />
-                          </Frame>
-                        )
-                      }
-                    </CheckAuth>
-                  </Route>
-                </Switch>
-              </Frame>
-            </LastLocationProvider>
-          </Router>
-        </AuthProvider>
-      </Frame>
-    </RecoilRoot>
+    <Frame title="GP2 Hub">
+      <GoogleTagManager containerId={GTM_CONTAINER_ID} />
+      <AuthProvider>
+        <SentryAuth0 />
+        <Router history={history}>
+          <LastLocationProvider>
+            <Frame title={null}>
+              <Switch>
+                <Route path={welcome.template}>
+                  <UtilityBar>
+                    <ToastStack>
+                      <Welcome />
+                    </ToastStack>
+                  </UtilityBar>
+                </Route>
+                <Route path={logout.template}>
+                  <Frame title="Logout">
+                    <Logout />
+                  </Frame>
+                </Route>
+                <Route>
+                  <CheckAuth>
+                    {({ isAuthenticated }) =>
+                      !isAuthenticated ? (
+                        <Frame title={null}>
+                          <Signin />
+                        </Frame>
+                      ) : (
+                        <Frame title={null}>
+                          <AuthenticatedApp />
+                        </Frame>
+                      )
+                    }
+                  </CheckAuth>
+                </Route>
+              </Switch>
+            </Frame>
+          </LastLocationProvider>
+        </Router>
+      </AuthProvider>
+    </Frame>
   );
 };
 

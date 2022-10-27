@@ -1,8 +1,3 @@
-import {
-  createGroupResponse,
-  createListGroupResponse,
-} from '@asap-hub/fixtures';
-import { GroupDataObject } from '@asap-hub/model';
 import { TabbedCard } from '@asap-hub/react-components';
 import { number, text } from '@storybook/addon-knobs';
 
@@ -10,39 +5,42 @@ export default {
   title: 'Molecules / Tabbed Card',
 };
 
-export const Normal = () => {
-  const groups = createListGroupResponse(number('Number of groups', 10)).items;
-
-  const firstTab = {
-    tabTitle: text('First tab title', 'First Tab'),
-    items: groups,
-    createItem: (group: GroupDataObject) => (
-      <div key={`group-${group.id}`}>{group.name}</div>
-    ),
-    truncateFrom: number('Truncate tabs from', 5),
-  };
-
-  const secondTab = {
-    ...firstTab,
-    tabTitle: text('Second Tab Title', 'Second Tab'),
-    items: [
+export const Normal = () => (
+  <TabbedCard
+    title={text('Title', 'Tabbed Card')}
+    description={text('Description', 'Description')}
+    getShowMoreText={(showMore) => `Show ${showMore ? 'Less' : 'More'}`}
+    activeTabIndex={number('Selected Tab', 0, { max: 3 })}
+    tabs={[
       {
-        ...createGroupResponse(),
-        name: 'Second tab group',
-        id: '3',
+        tabTitle: text('First tab title', 'First Tab'),
+        items: Array.from({ length: number('Number of items', 5) }).map(
+          (_, index) => ({ name: `item ${index + 1}` }),
+        ),
+        truncateFrom: number('Truncate tabs from', 5),
       },
-    ],
-  };
-
-  return (
-    <TabbedCard
-      title={text('Title', 'Tabbed Card')}
-      description={text('Description', 'Description')}
-      tabs={[
-        firstTab,
-        secondTab,
-        { ...firstTab, tabTitle: text('Third tab title', 'Third Tab') },
-      ]}
-    />
-  );
-};
+      {
+        tabTitle: text('Second tab title', 'Second Tab'),
+        items: Array.from({ length: number('Number of items', 5) }).map(
+          (_, index) => ({ name: `item ${index + 1}` }),
+        ),
+        truncateFrom: number('Truncate tabs from', 5),
+      },
+      {
+        tabTitle: text('Third tab title', 'Third Tab'),
+        items: Array.from({ length: number('Number of items', 5) }).map(
+          (_, index) => ({ name: `item ${index + 1}` }),
+        ),
+        truncateFrom: number('Truncate tabs from', 5),
+      },
+    ]}
+  >
+    {({ data }) => (
+      <ul>
+        {data.map((group, index) => (
+          <li key={`group-${index}`}>{group.name}</li>
+        ))}
+      </ul>
+    )}
+  </TabbedCard>
+);

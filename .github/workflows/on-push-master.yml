@@ -22,6 +22,7 @@ jobs:
     uses: ./.github/workflows/reusable-build.yml
     with:
       environment-name: Development
+      crn-contentful-env: Development
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -44,6 +45,7 @@ jobs:
     uses: ./.github/workflows/reusable-build.yml
     with:
       environment-name: Production
+      crn-contentful-env: Production
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -67,6 +69,7 @@ jobs:
     uses: ./.github/workflows/reusable-deployment.yml
     with:
       environment-name: Development
+      crn-contentful-env: Development
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -106,6 +109,7 @@ jobs:
     uses: ./.github/workflows/reusable-deployment.yml
     with:
       environment-name: Production
+      crn-contentful-env: Production
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

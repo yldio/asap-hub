@@ -9,6 +9,7 @@ on:
         type: string
       crn-contentful-env:
         description: 'CRN Contentful environment name'
+        required: true
         type: string
     secrets:
       AWS_ACCESS_KEY_ID:

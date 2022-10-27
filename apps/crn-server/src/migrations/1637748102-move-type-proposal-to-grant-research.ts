@@ -1,11 +1,11 @@
 /* istanbul ignore file */
-import { RestResearchOutput } from '@asap-hub/squidex';
 import {
-  ResearchOutputType,
   ResearchOutputDocumentType,
+  ResearchOutputType,
 } from '@asap-hub/model';
+import { RestResearchOutput } from '@asap-hub/squidex';
 
-import { Migration } from '../handlers/webhooks/webhook-run-migrations';
+import { Migration } from '@asap-hub/server-common';
 import { applyToAllItemsInCollection } from '../utils/migrations';
 
 export default class MoveResearchOutputTextToDescription extends Migration {

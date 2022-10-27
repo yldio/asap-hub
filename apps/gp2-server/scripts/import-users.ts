@@ -3,9 +3,9 @@ import { gp2 } from '@asap-hub/model';
 import { parse } from '@asap-hub/server-common';
 import {
   getAccessTokenFactory,
+  gp2 as gp2squidex,
   SquidexGraphql,
   SquidexRest,
-  gp2 as gp2squidex,
 } from '@asap-hub/squidex';
 import { appName, baseUrl, clientId, clientSecret } from '../src/config';
 import { UserSquidexDataProvider } from '../src/data-providers/user.data-provider';
@@ -63,6 +63,7 @@ const app = async () => {
           },
         ],
         role: 'Network Collaborator',
+        onboarded: false,
       };
     },
     async (input) => {

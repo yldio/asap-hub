@@ -9,7 +9,7 @@ const documents = {
     graphql.FetchProjectDocument,
   '\n  query FetchProjects {\n    queryProjectsContentsWithTotal(orderby: "created desc") {\n      total\n      items {\n        ...ProjectContent\n      }\n    }\n  }\n  \n':
     graphql.FetchProjectsDocument,
-  '\n  fragment UsersContent on Users {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      avatar {\n        id\n      }\n      degree\n      email\n      firstName\n      lastName\n      region\n      role\n      country\n      city\n      positions {\n        role\n        department\n        institution\n      }\n    }\n  }\n':
+  '\n  fragment UsersContent on Users {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      avatar {\n        id\n      }\n      degree\n      email\n      firstName\n      lastName\n      region\n      role\n      country\n      city\n      positions {\n        role\n        department\n        institution\n      }\n      onboarded\n    }\n  }\n':
     graphql.UsersContentFragmentDoc,
   '\n  query FetchUser($id: String!) {\n    findUsersContent(id: $id) {\n      ...UsersContent\n    }\n  }\n  \n':
     graphql.FetchUserDocument,
@@ -37,8 +37,8 @@ export function gql(
   source: '\n  query FetchProjects {\n    queryProjectsContentsWithTotal(orderby: "created desc") {\n      total\n      items {\n        ...ProjectContent\n      }\n    }\n  }\n  \n',
 ): typeof documents['\n  query FetchProjects {\n    queryProjectsContentsWithTotal(orderby: "created desc") {\n      total\n      items {\n        ...ProjectContent\n      }\n    }\n  }\n  \n'];
 export function gql(
-  source: '\n  fragment UsersContent on Users {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      avatar {\n        id\n      }\n      degree\n      email\n      firstName\n      lastName\n      region\n      role\n      country\n      city\n      positions {\n        role\n        department\n        institution\n      }\n    }\n  }\n',
-): typeof documents['\n  fragment UsersContent on Users {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      avatar {\n        id\n      }\n      degree\n      email\n      firstName\n      lastName\n      region\n      role\n      country\n      city\n      positions {\n        role\n        department\n        institution\n      }\n    }\n  }\n'];
+  source: '\n  fragment UsersContent on Users {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      avatar {\n        id\n      }\n      degree\n      email\n      firstName\n      lastName\n      region\n      role\n      country\n      city\n      positions {\n        role\n        department\n        institution\n      }\n      onboarded\n    }\n  }\n',
+): typeof documents['\n  fragment UsersContent on Users {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      avatar {\n        id\n      }\n      degree\n      email\n      firstName\n      lastName\n      region\n      role\n      country\n      city\n      positions {\n        role\n        department\n        institution\n      }\n      onboarded\n    }\n  }\n'];
 export function gql(
   source: '\n  query FetchUser($id: String!) {\n    findUsersContent(id: $id) {\n      ...UsersContent\n    }\n  }\n  \n',
 ): typeof documents['\n  query FetchUser($id: String!) {\n    findUsersContent(id: $id) {\n      ...UsersContent\n    }\n  }\n  \n'];

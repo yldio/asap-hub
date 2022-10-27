@@ -1,14 +1,15 @@
 import {
-  RestUser,
+  gp2 as gp2squidex,
   Results,
   SquidexRest,
   SquidexRestClient,
 } from '@asap-hub/squidex';
 import { applyToAllItemsInCollection } from '../../src/utils/migrations';
-import { restUserMock } from '../fixtures/users.fixtures';
+import { restUserMock } from '../fixtures/user.fixtures';
 
-const mockFetch: jest.MockedFunction<SquidexRestClient<RestUser>['fetch']> =
-  jest.fn();
+const mockFetch: jest.MockedFunction<
+  SquidexRestClient<gp2squidex.RestUser>['fetch']
+> = jest.fn();
 const mockConstructor = jest.fn();
 
 jest.mock('@asap-hub/squidex', () => ({
@@ -26,7 +27,7 @@ describe('Migration utils', () => {
     beforeEach(jest.resetAllMocks);
 
     test('Should invoke the client as expected', async () => {
-      const mockFetchResult: Results<RestUser> = {
+      const mockFetchResult: Results<gp2squidex.RestUser> = {
         items: [],
         total: 0,
       };
@@ -39,7 +40,7 @@ describe('Migration utils', () => {
     });
 
     test('Should invoke the given processing function for every item in the result', async () => {
-      const mockFetchResult: Results<RestUser> = {
+      const mockFetchResult: Results<gp2squidex.RestUser> = {
         items: [restUserMock(), restUserMock()],
         total: 2,
       };
@@ -58,11 +59,11 @@ describe('Migration utils', () => {
     });
 
     test('Should invoke the given processing function with the results from each iteration', async () => {
-      const mockFetchFirstResult: Results<RestUser> = {
+      const mockFetchFirstResult: Results<gp2squidex.RestUser> = {
         items: Array(10).fill(restUserMock()),
         total: 11,
       };
-      const mockFetchSecondResult: Results<RestUser> = {
+      const mockFetchSecondResult: Results<gp2squidex.RestUser> = {
         items: [restUserMock()],
         total: 1,
       };

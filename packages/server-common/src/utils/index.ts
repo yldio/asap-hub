@@ -1,5 +1,6 @@
 export * from './csv-parse';
 export * from './logger';
+export * from './migrations';
 export * from './send-email';
 export * from './sentry-wrapper';
 export * from './types';

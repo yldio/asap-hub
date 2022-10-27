@@ -260,6 +260,20 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
+    runMigrations: {
+      handler: './src/handlers/webhooks/webhook-run-migrations.run',
+      timeout: 900,
+      environment: {
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
+    rollbackMigrations: {
+      handler: './src/handlers/webhooks/webhook-run-migrations.rollback',
+      timeout: 900,
+      environment: {
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
   },
   resources: {
     Conditions: {

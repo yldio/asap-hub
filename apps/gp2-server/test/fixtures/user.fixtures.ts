@@ -1,9 +1,9 @@
 import { gp2 } from '@asap-hub/model';
 import { UserEvent } from '@asap-hub/server-common';
 import {
+  gp2 as gp2squidex,
   parseToSquidex,
   WebhookPayload,
-  gp2 as gp2squidex,
 } from '@asap-hub/squidex';
 import {
   FetchUserQuery,
@@ -32,6 +32,7 @@ export const getUserResponse = (): gp2.UserResponse => ({
       institution: 'Stark Industries',
     },
   ],
+  onboarded: true,
 });
 
 export const fetchExpectation: gp2.ListUserResponse = {
@@ -56,6 +57,7 @@ export const fetchExpectation: gp2.ListUserResponse = {
           institution: 'Stark Industries',
         },
       ],
+      onboarded: true,
     },
   ],
 };
@@ -80,11 +82,12 @@ export const getUserWebhookPayload = (
       lastName: { iv: 'Stark' },
       region: { iv: 'Europe' },
       role: { iv: UsersDataRoleEnum.Trainee },
+      onboarded: { iv: true },
     },
   },
 });
 
-export const patchResponse = (): gp2squidex.InputUser => ({
+export const patchResponse = (): gp2squidex.RestUser => ({
   id: 'userId',
   data: {
     role: { iv: UsersDataRoleEnum.Trainee },
@@ -95,6 +98,7 @@ export const patchResponse = (): gp2squidex.InputUser => ({
     avatar: { iv: ['squidex-asset-id'] },
     connections: { iv: [] },
     degree: { iv: [UsersDataDegreeEnum.Mph] },
+    onboarded: { iv: true },
   },
   created: '2020-09-25T09:42:51Z',
   lastModified: '2020-09-25T09:42:51Z',
@@ -119,6 +123,7 @@ export const getUserDataObject = (): gp2.UserDataObject => ({
       institution: 'Stark Industries',
     },
   ],
+  onboarded: true,
 });
 
 export const getUserCreateDataObject = (): gp2.UserCreateDataObject => {
@@ -160,6 +165,7 @@ export const fetchUserResponseDataObject = (): gp2.UserDataObject => ({
       institution: 'Daily Bugle',
     },
   ],
+  onboarded: true,
 });
 
 export const getGraphQLUser = (
@@ -187,6 +193,7 @@ export const getGraphQLUser = (
       },
     ],
     city: 'Madrid',
+    onboarded: true,
     ...user?.flatData,
   },
 });
@@ -207,3 +214,4 @@ export const getSquidexUserGraphqlResponse = (
 ): FetchUserQuery => ({
   findUsersContent,
 });
+export const restUserMock = patchResponse;

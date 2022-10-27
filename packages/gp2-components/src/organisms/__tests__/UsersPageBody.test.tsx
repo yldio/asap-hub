@@ -25,6 +25,7 @@ const users: gp2.ListUserResponse = {
           institution: 'Stark Industries',
         },
       ],
+      onboarded: true,
     },
     {
       id: 'u59',
@@ -45,6 +46,7 @@ const users: gp2.ListUserResponse = {
           institution: 'Daily Bugle',
         },
       ],
+      onboarded: true,
     },
   ],
   total: 2,

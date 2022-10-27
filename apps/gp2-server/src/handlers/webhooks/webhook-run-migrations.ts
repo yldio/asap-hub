@@ -13,11 +13,10 @@ import { sentryWrapper } from '../../utils/sentry-wrapper';
 const squidexClient = new SquidexRest<RestMigration>(
   getAuthToken,
   'migrations',
-  {
-    appName,
-    baseUrl,
-  },
+  { appName, baseUrl },
 );
+
+export { runFactory, rollbackFactory };
 
 const importModuleFromPath: ImportModuleFromPath = (filePath: string) =>
   import(`../../migrations/${filePath}`);
@@ -35,7 +34,6 @@ export const rollbackHandler = rollbackFactory(
   squidexClient,
   importModuleFromPath,
 );
-
 /* istanbul ignore next */
 export const run = sentryWrapper(runHandler);
 

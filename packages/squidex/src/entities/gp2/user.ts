@@ -40,6 +40,7 @@ export interface User<TAvatar = string> {
   lastName: string;
   region: RestUsersRegion;
   role: RestUsersRole;
+  onboarded: boolean;
 }
 
 export interface RestUser extends Entity, Rest<User> {}

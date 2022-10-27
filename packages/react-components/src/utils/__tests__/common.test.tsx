@@ -1,11 +1,11 @@
 import { render } from '@testing-library/react';
 
 import {
+  equals,
+  getIconFromUrl,
   getSvgAspectRatio,
   isInternalLink,
-  getIconFromUrl,
   isLink,
-  equals,
 } from '../index';
 
 describe('getSvgAspectRatio', () => {

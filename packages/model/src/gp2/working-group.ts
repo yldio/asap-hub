@@ -33,3 +33,8 @@ export type ListWorkingGroupDataObject = ListResponse<WorkingGroupDataObject>;
 export type WorkingGroupResponse = WorkingGroupDataObject;
 
 export type ListWorkingGroupResponse = ListResponse<WorkingGroupResponse>;
+
+export type WorkingGroupUpdateDataObject = Pick<
+  WorkingGroupDataObject,
+  'resources'
+>;

@@ -1,4 +1,4 @@
-import { gp2 } from '@asap-hub/model';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import {
   parseDate,
   parseToSquidex,
@@ -20,12 +20,12 @@ import { FETCH_USER, FETCH_USERS } from '../queries/users.queries';
 import { reverseMap } from '../utils/reverse-map';
 
 export interface UserDataProvider {
-  fetchById(id: string): Promise<gp2.UserDataObject | null>;
-  update(id: string, update: gp2.UserUpdateDataObject): Promise<void>;
-  create(update: gp2.UserCreateDataObject): Promise<string>;
-  fetch(options: gp2.FetchUsersOptions): Promise<gp2.ListUserDataObject>;
+  fetchById(id: string): Promise<gp2Model.UserDataObject | null>;
+  update(id: string, update: gp2Model.UserUpdateDataObject): Promise<void>;
+  create(update: gp2Model.UserCreateDataObject): Promise<string>;
+  fetch(options: gp2Model.FetchUsersOptions): Promise<gp2Model.ListUserDataObject>;
 }
-const regionMap: Record<UsersDataRegionEnum, gp2.UserRegion> = {
+const regionMap: Record<UsersDataRegionEnum, gp2Model.UserRegion> = {
   [UsersDataRegionEnum.Africa]: 'Africa',
   [UsersDataRegionEnum.Asia]: 'Asia',
   [UsersDataRegionEnum.AustraliaAustraliasia]: 'Australia/Australiasia',
@@ -34,7 +34,7 @@ const regionMap: Record<UsersDataRegionEnum, gp2.UserRegion> = {
   [UsersDataRegionEnum.NorthAmerica]: 'North America',
   [UsersDataRegionEnum.SouthAmerica]: 'South America',
 } as const;
-const roleMap: Record<UsersDataRoleEnum, gp2.UserRole> = {
+const roleMap: Record<UsersDataRoleEnum, gp2Model.UserRole> = {
   [UsersDataRoleEnum.Administrator]: 'Administrator',
   [UsersDataRoleEnum.NetworkCollaborator]: 'Network Collaborator',
   [UsersDataRoleEnum.NetworkInvestigator]: 'Network Investigator',
@@ -53,7 +53,7 @@ export class UserSquidexDataProvider implements UserDataProvider {
     >,
   ) {}
 
-  async fetchById(id: string): Promise<gp2.UserDataObject | null> {
+  async fetchById(id: string): Promise<gp2Model.UserDataObject | null> {
     const { findUsersContent } = await this.queryFetchByIdData(id);
     if (!findUsersContent) {
       return null;
@@ -63,14 +63,14 @@ export class UserSquidexDataProvider implements UserDataProvider {
 
   async update(
     id: string,
-    userToUpdate: gp2.UserUpdateDataObject,
+    userToUpdate: gp2Model.UserUpdateDataObject,
   ): Promise<void> {
     const cleanedUser = getUserSquidexData(userToUpdate);
 
     await this.userSquidexRestClient.patch(id, cleanedUser);
   }
 
-  async create(userToCreate: gp2.UserCreateDataObject): Promise<string> {
+  async create(userToCreate: gp2Model.UserCreateDataObject): Promise<string> {
     const cleanedUser = getUserSquidexData(userToCreate);
 
     const response = await this.userSquidexRestClient.create({
@@ -82,6 +82,7 @@ export class UserSquidexDataProvider implements UserDataProvider {
     return response.id;
   }
   async fetch(options: gp2.FetchUsersOptions): Promise<gp2.ListUserDataObject> {
+
     const queryFilter = generateFetchQueryFilter(options);
     const { take = 8, skip = 0 } = options;
     return this.queryForUsers(queryFilter, take, skip);
@@ -116,7 +117,7 @@ export class UserSquidexDataProvider implements UserDataProvider {
 }
 
 type UserCreateDataObjectEnumFields = Pick<
-  gp2.UserCreateDataObject,
+  gp2Model.UserCreateDataObject,
   'degrees' | 'region' | 'role'
 >;
 type UserCreateInputEnumFields = {
@@ -125,7 +126,7 @@ type UserCreateInputEnumFields = {
   role: UsersDataRoleEnum;
 };
 type UserUpdateDataObjectEnumFields = Pick<
-  gp2.UserUpdateDataObject,
+  gp2Model.UserUpdateDataObject,
   'degrees' | 'region' | 'role'
 >;
 type UserUpdateInputEnumFields = Partial<UserCreateInputEnumFields>;
@@ -148,13 +149,13 @@ const mapUserFields = (
 };
 
 function getUserSquidexData(
-  input: gp2.UserCreateDataObject,
+  input: gp2Model.UserCreateDataObject,
 ): Omit<gp2Squidex.InputUser['data'], 'connections' | 'avatar'>;
 function getUserSquidexData(
-  input: gp2.UserUpdateDataObject,
+  input: gp2Model.UserUpdateDataObject,
 ): Partial<Omit<gp2Squidex.InputUser['data'], 'connections' | 'avatar'>>;
 function getUserSquidexData(
-  input: gp2.UserUpdateDataObject | gp2.UserCreateDataObject,
+  input: gp2Model.UserUpdateDataObject | gp2Model.UserCreateDataObject,
 ):
   | Omit<gp2Squidex.InputUser['data'], 'connections' | 'avatar'>
   | Partial<Omit<gp2Squidex.InputUser['data'], 'connections' | 'avatar'>> {
@@ -165,7 +166,7 @@ function getUserSquidexData(
   return cleanedUser;
 }
 
-const generateFetchQueryFilter = ({ filter }: gp2.FetchUsersOptions) => {
+const generateFetchQueryFilter = ({ filter }: gp2Model.FetchUsersOptions) => {
   const { region, code } = filter || {};
   const filterRegions = region
     ?.map((r) => `data/region/iv eq '${reverseRegionMap[r]}'`)
@@ -184,7 +185,9 @@ export const parseGraphQLUserToDataObject = ({
   id,
   created,
   flatData: item,
-}: NonNullable<FetchUserQuery['findUsersContent']>): gp2.UserDataObject => {
+}: NonNullable<
+  FetchUserQuery['findUsersContent']
+>): gp2Model.UserDataObject => {
   if (!item.region) {
     throw new Error(`Region not defined: ${item.region}`);
   }
@@ -193,8 +196,8 @@ export const parseGraphQLUserToDataObject = ({
   }
   const createdDate = parseDate(created).toISOString();
 
-  const degrees: gp2.UserDegree[] | undefined =
-    item.degree?.map<gp2.UserDegree>((degree) => {
+  const degrees: gp2Model.UserDegree[] | undefined =
+    item.degree?.map<gp2Model.UserDegree>((degree) => {
       if (degree === 'MD_PhD') {
         return 'MD, PhD';
       }

@@ -1,4 +1,5 @@
-import type { gp2 } from '@asap-hub/model';
+import type { gp2 as gp2Model } from '@asap-hub/model';
+import type { gp2 as gp2Squidex } from '@asap-hub/squidex';
 import {
   FetchWorkingGroupQuery,
   FetchWorkingGroupsQuery,
@@ -11,37 +12,62 @@ import {
   GraphQLWorkingGroupResource,
 } from '../../src/data-providers/working-group.data-provider';
 
-export const getWorkingGroupDataObject = (): gp2.WorkingGroupDataObject => ({
-  id: '42',
-  title: 'Working Group',
-  shortDescription: 'Short description',
-  description: 'longer description',
-  primaryEmail: 'primary.email@example.com',
-  secondaryEmail: 'secondary.email@example.com',
-  leadingMembers: 'Leading members',
-  members: [
-    { userId: '11', firstName: 'Tony', lastName: 'Stark', role: 'Lead' },
-  ],
-  resources: [
-    {
-      type: 'Note',
-      description: 'Working group resource description',
-      title: 'Working group resource title',
+export const getWorkingGroupDataObject =
+  (): gp2Model.WorkingGroupDataObject => ({
+    id: '42',
+    title: 'Working Group',
+    shortDescription: 'Short description',
+    description: 'longer description',
+    primaryEmail: 'primary.email@example.com',
+    secondaryEmail: 'secondary.email@example.com',
+    leadingMembers: 'Leading members',
+    members: [
+      { userId: '11', firstName: 'Tony', lastName: 'Stark', role: 'Lead' },
+    ],
+    resources: [
+      {
+        type: 'Note',
+        description: 'Working group resource description',
+        title: 'Working group resource title',
+      },
+    ],
+  });
+
+export const getWorkingGroupUpdateDataObject =
+  (): gp2Model.WorkingGroupUpdateDataObject => ({
+    resources: [
+      {
+        type: 'Note',
+        description: 'Working group resource description',
+        title: 'Working group resource title',
+      },
+    ],
+  });
+
+export const getRestWorkingGroupUpdateData =
+  (): gp2Squidex.InputWorkingGroup['data'] => ({
+    resources: {
+      iv: [
+        {
+          type: 'Note',
+          description: 'Working group resource description',
+          title: 'Working group resource title',
+        },
+      ],
     },
-  ],
-});
+  });
 
 export const getListWorkingGroupDataObject =
-  (): gp2.ListWorkingGroupResponse => ({
+  (): gp2Model.ListWorkingGroupResponse => ({
     total: 1,
     items: [getWorkingGroupDataObject()],
   });
 
-export const getWorkingGroupResponse = (): gp2.WorkingGroupResponse =>
+export const getWorkingGroupResponse = (): gp2Model.WorkingGroupResponse =>
   getWorkingGroupDataObject();
 
 export const getListWorkingGroupsResponse =
-  (): gp2.ListWorkingGroupResponse => ({
+  (): gp2Model.ListWorkingGroupResponse => ({
     total: 1,
     items: [getWorkingGroupResponse()],
   });

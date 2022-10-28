@@ -272,7 +272,7 @@ jobs:
 
   crn-contentful-schema-branch:
     needs: [crn-sls-deploy]
-    if: ${{ inputs.environment-name=='Branch'}
+    if: ${{ inputs.environment-name=='Branch' }}
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
@@ -291,4 +291,4 @@ jobs:
         env:
           CONTENTFUL_ENV_ID: ${{ inputs.crn-contentful-env }}
           CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
-          CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{  secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}

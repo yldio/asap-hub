@@ -214,9 +214,28 @@ yarn workspace @asap-hub/contentful ctf-migrate create add-foo-field -c bar
 
 Note: the `content_type` is the slug, not the display name, so `externalAuthors` not `External Authors`.
 
-### Creating a New Schema
+### Generating a migration script from content model
 
-It's possible to make changes in Contentful UI content type, adding or changing fields and create the
+It's possible to make changes in Contentful UI content type, adding or changing fields and then generate the migration.
+
+To do that you need to follow these steps below:
+
+1. Create an empty migration with the command from the section above
+
+   ```sh
+   yarn workspace @asap-hub/contentful ctf-migrate create <name> -c <content_type>
+   ```
+
+   :warning: Copy the path of the generated file, you will use that in step 5.
+
+2. Add the generated file, create a commit and push to remote and create a draft PR. In the pipeline there's a step called `create-environment/crn-contentful` that will create a PR env in Contentful if there's room for it (max of 6 envs).
+3. Access the PR env and make the changes you want to.
+4. In `.env` fill `CONTENTFUL_SPACE_ID`, `CONTENTFUL_ACCESS_TOKEN` and `CONTENTFUL_ENV_ID`. This field `CONTENTFUL_ENV_ID` should be the PR env that was created and you made changes to it in step 3, something like `crn-2227`.
+5. Generate the migration with the command
+   ```sh
+   yarn workspace @asap-hub/contentful schema:update:crn <content_type> <migration_file_path_from_step_1>
+   ```
+6. The script generated in step 6 is the "up" script. You might need to adapt depending on the previous migrations.
 
 ### Initiating an Environment
 

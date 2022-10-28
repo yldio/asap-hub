@@ -1,9 +1,8 @@
-module.exports = function (migration) {
-  const news = migration
-    .createContentType('news')
-    .name('News')
-    .description('ASAP Hub News')
-    .displayField('title');
+module.exports.description = 'Adds fields in news content type.';
+
+module.exports.up = function (migration) {
+  const news = migration.editContentType('news');
+  news.deleteField('id');
   news
     .createField('title')
     .name('Title')
@@ -13,6 +12,7 @@ module.exports = function (migration) {
     .validations([])
     .disabled(false)
     .omitted(false);
+  news.displayField('title');
   news
     .createField('shortText')
     .name('Short Text')
@@ -135,4 +135,20 @@ module.exports = function (migration) {
   });
 
   news.changeFieldControl('text', 'builtin', 'richTextEditor', {});
+};
+
+module.exports.down = (migration) => {
+  const news = migration.createContentType('news');
+  news.displayField('id');
+  [
+    'title',
+    'shortText',
+    'thumbnail',
+    'frequency',
+    'externalLink',
+    'externalLinkText',
+    'text',
+  ].forEach((field) => {
+    news.deleteField(field);
+  });
 };

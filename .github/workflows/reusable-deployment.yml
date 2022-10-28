@@ -11,6 +11,14 @@ on:
         description: 'CRN Contentful environment name'
         required: true
         type: string
+      contentful-on-branch:
+        description: 'Whether we are on a branch-specific Contentful environment'
+        required: true
+        type: string
+      contentful-up-to-date:
+        description: 'Whether all Contentful migrations have been run'
+        required: true
+        type: string
     secrets:
       AWS_ACCESS_KEY_ID:
         description: 'AWS Access Key ID'
@@ -223,8 +231,8 @@ jobs:
           yarn workspace @asap-hub/contentful space:migrate:crn
         env:
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.contentful-space-id }}
-          CONTENTFUL_ENV_ID: ${{ steps.setup.outputs.contentful-environment }}
+          CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
+          CONTENTFUL_ENV_ID: ${{ inputs.crn-contentful-env }}
   ses:
     needs: [crn-sls-deploy]
     runs-on: ubuntu-latest
@@ -262,9 +270,9 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           SES_REGION: ${{ steps.setup.outputs.ses-region }}
 
-  crn-contentful-branch:
+  crn-contentful-schema-branch:
     needs: [crn-sls-deploy]
-    if: ${{ inputs.environment-name=='Branch'}}
+    if: ${{ inputs.environment-name=='Branch'}
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
@@ -275,26 +283,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup
-        id: setup
-        uses: ./.github/actions/setup-environment
-        with:
-          environment-name: ${{ inputs.environment-name }}
-      - name: Determine whether we need to run migrations
-        id: get-contentful-state
-        uses: ./.github/actions/contentful-checks
-        with:
-          pr-number: ${{ steps.setup.outputs.pr-number }}
-          contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
-          contentful-master-env: ${{ steps.setup.outputs.contentful-environment }}
-          contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          max-contentful-envs: ${{ steps.setup.outputs.max-contentful-envs }}
-      - name: Determine whether the Contentful environment has been migrated
+      - name: Migrate Contentful
         id: check-contentful-migrated
-        if: ${{ steps.get-contentful-state.outputs.on-branch-env == 'True' && steps.get-contentful-state.outputs.contentful-env-exists == 'True' && steps.get-contentful-state.outputs.contentful-env-migrations-up-to-date == 'False' }}
+        if: ${{ inputs.contentful-on-branch=='true' && inputs.contentful-up-to-date=='false' }}
         run: |
           yarn workspace @asap-hub/contentful space:migrate:crn
         env:
-          CONTENTFUL_ENV_ID: ${{ steps.get-contentful-state.outputs.contentful-env }}
-          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.contentful-space-id }}
+          CONTENTFUL_ENV_ID: ${{ inputs.crn-contentful-env }}
+          CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{  secrets.CONTENTFUL_MANAGEMENT_TOKEN }}

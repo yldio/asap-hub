@@ -12,7 +12,9 @@ jobs:
     outputs:
       crn-contentful-env: ${{ steps.get-contentful-state.outputs.contentful-env }}
       on-branch-env: ${{ steps.get-contentful-state.outputs.on-branch-env }}
+      contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
       contentful-env-exists: ${{ steps.get-contentful-state.outputs.contentful-env-exists }}
+      contentful-up-to-date: ${{ steps.get-contentful-state.outputs.contentful-env-migrations-up-to-date }}
       contentful-limit-reached: ${{ steps.get-contentful-state.outputs.contentful-limit-reached }}
     steps:
       - name: Checkout
@@ -86,7 +88,10 @@ jobs:
     uses: ./.github/workflows/reusable-deployment.yml
     with:
       environment-name: Branch
+      contentful-space-id: ${{ needs.setup.outputs.contentful-space-id }}
       crn-contentful-env: ${{ needs.setup.outputs.crn-contentful-env }}
+      contentful-on-branch: ${{ needs.setup.outputs.on-branch-env }}
+      contentful-up-to-date: ${{ needs.setup.outputs.contentful-up-to-date }}
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

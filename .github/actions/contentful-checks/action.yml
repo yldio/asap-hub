@@ -96,7 +96,7 @@ runs:
           echo "::set-output name=migrations-up-to-date::true"
         elif [[ "$CONTENTFUL_ENV_EXISTS" == "false" ]]; then
           echo "New Contentful environment required but has not yet been created."
-          echo "::set-output name=migrations-up-to-date::true"
+          echo "::set-output name=migrations-up-to-date::false"
         else
           OUTSTANDING_MIGRATIONS=$(yarn workspace @asap-hub/contentful space:migrate:crn:count)
 

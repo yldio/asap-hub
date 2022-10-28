@@ -214,6 +214,10 @@ yarn workspace @asap-hub/contentful ctf-migrate create add-foo-field -c bar
 
 Note: the `content_type` is the slug, not the display name, so `externalAuthors` not `External Authors`.
 
+### Creating a New Schema
+
+It's possible to make changes in Contentful UI, adding or changing fields and create the
+
 ### Initiating an Environment
 
 _Note: This is not something you will need to do regularly, I have documented it for the rare case where you are creating a new environment from scratch and not cloning one which is already using migrations._

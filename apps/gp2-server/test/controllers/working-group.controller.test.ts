@@ -13,9 +13,7 @@ describe('Working Group controller', () => {
     workingGroupDataProviderMock,
   );
 
-  beforeEach(() => {
-    jest.resetAllMocks();
-  });
+  beforeEach(jest.resetAllMocks);
 
   describe('Fetch', () => {
     test('Should return the working group', async () => {
@@ -81,9 +79,7 @@ describe('Working Group controller', () => {
     });
   });
   describe('FetchById', () => {
-    beforeEach(() => {
-      jest.resetAllMocks();
-    });
+    beforeEach(jest.resetAllMocks);
 
     test('Should throw when working group is not found', async () => {
       workingGroupDataProviderMock.fetchById.mockResolvedValue(null);
@@ -134,6 +130,25 @@ describe('Working Group controller', () => {
             role: 'Lead',
           },
         ],
+      });
+    });
+  });
+
+  describe('update', () => {
+    beforeEach(jest.resetAllMocks);
+
+    test('Should return the newly updated user', async () => {
+      const mockResponse = getWorkingGroupDataObject();
+      workingGroupDataProviderMock.fetchById.mockResolvedValue(mockResponse);
+      const result = await workingGroupController.update(
+        '7',
+        { resources: [] },
+        '11',
+      );
+
+      expect(result).toEqual(getWorkingGroupResponse());
+      expect(workingGroupDataProviderMock.update).toHaveBeenCalledWith('7', {
+        resources: [],
       });
     });
   });

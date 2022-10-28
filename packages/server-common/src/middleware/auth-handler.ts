@@ -19,6 +19,7 @@ export const authHandlerFactory =
     assignUserToContext: AssignUserToContext<TUserResponse>,
   ): RequestHandler =>
   async (req, _res, next) => {
+    console.log('in the auth middleware');
     const { headers } = req;
 
     if (!headers.authorization) {

@@ -1,5 +1,6 @@
 import { User } from '@asap-hub/auth';
 import { userMock } from '@asap-hub/fixtures';
+import { gp2 } from '@asap-hub/model';
 import { AuthHandler } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
 import supertest from 'supertest';
@@ -94,6 +95,63 @@ describe('/working-groups/ route', () => {
     });
 
     test('Should call the controller with the right parameter', async () => {
+      const workingGroupId = 'abc123';
+
+      const loggedInUserId = '11';
+      const loggedUser: User = {
+        ...userMock,
+        id: loggedInUserId,
+      };
+      const getLoggedUser = jest.fn().mockReturnValue(loggedUser);
+      const authHandlerMock: AuthHandler = (req, _res, next) => {
+        req.loggedInUser = getLoggedUser();
+        next();
+      };
+      const appWithUser = appFactory({
+        workingGroupController: workingGroupControllerMock,
+        authHandler: authHandlerMock,
+        logger: loggerMock,
+      });
+
+      await supertest(appWithUser).get(`/working-group/${workingGroupId}`);
+
+      expect(workingGroupControllerMock.fetchById).toBeCalledWith(
+        workingGroupId,
+        loggedInUserId,
+      );
+    });
+  });
+  describe('PUT /working-group/{working_group_id}/resources', () => {
+    test.skip('Should return 404 when working group doesnt exist', async () => {
+      workingGroupControllerMock.fetchById.mockRejectedValueOnce(
+        Boom.notFound(),
+      );
+
+      const response = await supertest(app).get('/working-group/123');
+
+      expect(response.status).toBe(404);
+    });
+
+    test.only('Should return the results correctly', async () => {
+      workingGroupControllerMock.fetchById.mockResolvedValueOnce(
+        getWorkingGroupResponse(),
+      );
+
+      const resources: gp2.Resource[] = [{ title: 'a resource', type: 'Note' }];
+      const response = await supertest(app)
+        .put('/working-group/11/resources')
+        .send(resources);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(getWorkingGroupResponse());
+      expect(workingGroupControllerMock.update).toBeCalledWith(
+        11,
+        { resources },
+        7,
+      );
+    });
+
+    test.skip('Should call the controller with the right parameter', async () => {
       const workingGroupId = 'abc123';
 
       const loggedInUserId = '11';

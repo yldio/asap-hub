@@ -71,10 +71,11 @@ export class WorkingGroupSquidexDataProvider
 
   async update(
     id: string,
-    workingGroupToUpdate: gp2Model.WorkingGroupUpdateDataObject,
+    workingGroup: gp2Model.WorkingGroupUpdateDataObject,
   ): Promise<void> {
-    const cleanedWorkingGroup = cleanWorkingGroup(workingGroupToUpdate);
-    await this.squidexRestClient.patch(id, cleanedWorkingGroup);
+    const squidexWorkingGroup = convertToSquidexWorkingGroup(workingGroup);
+
+    await this.squidexRestClient.patch(id, squidexWorkingGroup);
   }
   private async queryFetchByIdData(id: string) {
     return this.squidexGraphlClient.request<
@@ -84,12 +85,13 @@ export class WorkingGroupSquidexDataProvider
   }
 }
 
-const cleanWorkingGroup = (
+const convertToSquidexWorkingGroup = (
   workingGroup: gp2Model.WorkingGroupUpdateDataObject,
 ) =>
-  Object.entries(workingGroup).reduce((acc, [key, value]) => {
-    return { ...acc, [key]: { iv: value } };
-  }, {} as { [key: string]: { iv: unknown } });
+  Object.entries(workingGroup).reduce(
+    (acc, [key, value]) => ({ ...acc, [key]: { iv: value } }),
+    {} as { [key: string]: { iv: unknown } },
+  );
 
 export type GraphQLWorkingGroup = NonNullable<
   NonNullable<

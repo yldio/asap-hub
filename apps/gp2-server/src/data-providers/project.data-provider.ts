@@ -27,27 +27,33 @@ export class ProjectSquidexDataProvider implements ProjectDataProvider {
   }
 
   async fetch(): Promise<gp2.ListProjectDataObject> {
-    const result = await this.squidexGraphlClient.request<
-      FetchProjectsQuery,
-      FetchProjectsQueryVariables
-    >(FETCH_PROJECTS);
+    console.log('in the fetch method');
+    try {
+      const result = await this.squidexGraphlClient.request<
+        FetchProjectsQuery,
+        FetchProjectsQueryVariables
+      >(FETCH_PROJECTS);
 
-    if (
-      !result.queryProjectsContentsWithTotal ||
-      !result.queryProjectsContentsWithTotal.items
-    ) {
+      if (
+        !result.queryProjectsContentsWithTotal ||
+        !result.queryProjectsContentsWithTotal.items
+      ) {
+        return {
+          total: 0,
+          items: [],
+        };
+      }
+
       return {
-        total: 0,
-        items: [],
+        total: result.queryProjectsContentsWithTotal.total,
+        items: result.queryProjectsContentsWithTotal.items.map(
+          parseProjectToDataObject,
+        ),
       };
+    } catch (err) {
+      console.error(err);
+      throw err;
     }
-
-    return {
-      total: result.queryProjectsContentsWithTotal.total,
-      items: result.queryProjectsContentsWithTotal.items.map(
-        parseProjectToDataObject,
-      ),
-    };
   }
 
   private async queryFetchByIdData(id: string) {

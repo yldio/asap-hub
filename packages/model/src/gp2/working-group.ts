@@ -38,3 +38,8 @@ export type WorkingGroupUpdateDataObject = Pick<
   WorkingGroupDataObject,
   'resources'
 >;
+
+export type WorkingGroupUpdateRequest = WorkingGroupUpdateDataObject;
+
+export type WorkingGroupResourcesPutRequest =
+  WorkingGroupDataObject['resources'];

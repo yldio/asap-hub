@@ -35,5 +35,37 @@ export const workingGroupRouteFactory = (
       res.json(workingGroup);
     },
   );
+
+  type WorkingGroupResourceRequest = NonNullable<
+    gp2.WorkingGroupResponse['resources']
+  >;
+  workingGroupRoutes.put<
+    { workingGroupId: string },
+    gp2.WorkingGroupResponse,
+    WorkingGroupResourceRequest
+  >('/working-group/:workingGroupId/resources', async (req, res) => {
+    const { params } = req;
+
+    console.log(params);
+    const { workingGroupId } = validateWorkingGroupParameters(params);
+    console.log(workingGroupId);
+    const resources = validateWorkingGroupPatchRequest(req.body);
+    const resources = req.body;
+
+    console.log(req);
+    // check resources are resources
+
+    // check user is admin
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const loggedInUserId = req.loggedInUser!.id;
+    const workingGroup = await workingGroupController.update(
+      workingGroupId,
+      { resources },
+      loggedInUserId,
+    );
+
+    res.json(workingGroup);
+  });
   return workingGroupRoutes;
 };

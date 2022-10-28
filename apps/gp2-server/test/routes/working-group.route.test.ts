@@ -1,10 +1,9 @@
-import { User } from '@asap-hub/auth';
-import { userMock } from '@asap-hub/fixtures';
 import { gp2 } from '@asap-hub/model';
 import { AuthHandler } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
+import { getUserResponse } from '../fixtures/user.fixtures';
 import {
   getListWorkingGroupsResponse,
   getWorkingGroupResponse,
@@ -20,9 +19,7 @@ describe('/working-groups/ route', () => {
     logger: loggerMock,
   });
 
-  afterEach(() => {
-    jest.resetAllMocks();
-  });
+  afterEach(jest.resetAllMocks);
 
   describe('GET /working-groups', () => {
     test('Should return 200 when no working groups are found', async () => {
@@ -53,8 +50,8 @@ describe('/working-groups/ route', () => {
 
     test('Should call the controller fetch method', async () => {
       const loggedInUserId = '11';
-      const loggedUser: User = {
-        ...userMock,
+      const loggedUser: gp2.UserResponse = {
+        ...getUserResponse(),
         id: loggedInUserId,
       };
       const getLoggedUser = jest.fn().mockReturnValue(loggedUser);
@@ -98,8 +95,8 @@ describe('/working-groups/ route', () => {
       const workingGroupId = 'abc123';
 
       const loggedInUserId = '11';
-      const loggedUser: User = {
-        ...userMock,
+      const loggedUser: gp2.UserResponse = {
+        ...getUserResponse(),
         id: loggedInUserId,
       };
       const getLoggedUser = jest.fn().mockReturnValue(loggedUser);
@@ -122,21 +119,12 @@ describe('/working-groups/ route', () => {
     });
   });
   describe('PUT /working-group/{working_group_id}/resources', () => {
-    test.skip('Should return 404 when working group doesnt exist', async () => {
-      workingGroupControllerMock.fetchById.mockRejectedValueOnce(
-        Boom.notFound(),
-      );
-
-      const response = await supertest(app).get('/working-group/123');
-
-      expect(response.status).toBe(404);
-    });
-
-    test.only('Should return the results correctly', async () => {
+    test('Should return the results correctly', async () => {
       const loggedInUserId = '11';
-      const loggedUser: User = {
-        ...userMock,
+      const loggedUser: gp2.UserResponse = {
+        ...getUserResponse(),
         id: loggedInUserId,
+        role: 'Administrator',
       };
       const getLoggedUser = jest.fn().mockReturnValue(loggedUser);
       const authHandlerMock: AuthHandler = (req, _res, next) => {
@@ -151,11 +139,11 @@ describe('/working-groups/ route', () => {
       workingGroupControllerMock.update.mockResolvedValueOnce(
         getWorkingGroupResponse(),
       );
+      workingGroupControllerMock.fetchById.mockResolvedValueOnce(
+        getWorkingGroupResponse(),
+      );
 
-      const resources: gp2.Resource[] = [
-        { title: 'a resource', type: 'Note' },
-        { title: 'a resource 2', type: 'Note' },
-      ];
+      const resources: gp2.Resource[] = [{ title: 'a resource', type: 'Note' }];
       const response = await supertest(appWithUser)
         .put('/working-group/23/resources')
         .send(resources);
@@ -168,14 +156,12 @@ describe('/working-groups/ route', () => {
         '11',
       );
     });
-
-    test.skip('Should call the controller with the right parameter', async () => {
-      const workingGroupId = 'abc123';
-
+    test('Should return 404 when working group doesnt exist', async () => {
       const loggedInUserId = '11';
-      const loggedUser: User = {
-        ...userMock,
+      const loggedUser: gp2.UserResponse = {
+        ...getUserResponse(),
         id: loggedInUserId,
+        role: 'Administrator',
       };
       const getLoggedUser = jest.fn().mockReturnValue(loggedUser);
       const authHandlerMock: AuthHandler = (req, _res, next) => {
@@ -187,13 +173,82 @@ describe('/working-groups/ route', () => {
         authHandler: authHandlerMock,
         logger: loggerMock,
       });
-
-      await supertest(appWithUser).get(`/working-group/${workingGroupId}`);
-
-      expect(workingGroupControllerMock.fetchById).toBeCalledWith(
-        workingGroupId,
-        loggedInUserId,
+      workingGroupControllerMock.update.mockRejectedValueOnce(Boom.notFound());
+      workingGroupControllerMock.fetchById.mockResolvedValueOnce(
+        getWorkingGroupResponse(),
       );
+
+      const response = await supertest(appWithUser)
+        .put('/working-group/123/resources')
+        .send([]);
+
+      expect(response.status).toBe(404);
+    });
+
+    test.each(gp2.userRoles.filter((role) => role !== 'Administrator'))(
+      'Should return 403 if the user is not in the Administrator role - %s',
+      async (role) => {
+        const loggedInUserId = '11';
+        const loggedUser: gp2.UserResponse = {
+          ...getUserResponse(),
+          id: loggedInUserId,
+          role,
+        };
+        const getLoggedUser = jest.fn().mockReturnValue(loggedUser);
+        const authHandlerMock: AuthHandler = (req, _res, next) => {
+          req.loggedInUser = getLoggedUser();
+          next();
+        };
+        const appWithUser = appFactory({
+          workingGroupController: workingGroupControllerMock,
+          authHandler: authHandlerMock,
+          logger: loggerMock,
+        });
+        workingGroupControllerMock.update.mockResolvedValueOnce(
+          getWorkingGroupResponse(),
+        );
+        workingGroupControllerMock.fetchById.mockResolvedValueOnce(
+          getWorkingGroupResponse(),
+        );
+
+        const response = await supertest(appWithUser)
+          .put('/working-group/23/resources')
+          .send([]);
+
+        expect(response.status).toBe(403);
+        expect(workingGroupControllerMock.update).not.toBeCalledWith();
+      },
+    );
+    test('Should return 403 if the user is not in part of the working group', async () => {
+      const loggedInUserId = 'not-in-working-group';
+      const loggedUser: gp2.UserResponse = {
+        ...getUserResponse(),
+        id: loggedInUserId,
+        role: 'Administrator',
+      };
+      const getLoggedUser = jest.fn().mockReturnValue(loggedUser);
+      const authHandlerMock: AuthHandler = (req, _res, next) => {
+        req.loggedInUser = getLoggedUser();
+        next();
+      };
+      const appWithUser = appFactory({
+        workingGroupController: workingGroupControllerMock,
+        authHandler: authHandlerMock,
+        logger: loggerMock,
+      });
+      workingGroupControllerMock.update.mockResolvedValueOnce(
+        getWorkingGroupResponse(),
+      );
+      workingGroupControllerMock.fetchById.mockResolvedValueOnce(
+        getWorkingGroupResponse(),
+      );
+
+      const response = await supertest(appWithUser)
+        .put('/working-group/23/resources')
+        .send([]);
+
+      expect(response.status).toBe(403);
+      expect(workingGroupControllerMock.update).not.toBeCalledWith();
     });
   });
 });

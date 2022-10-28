@@ -1,4 +1,5 @@
 import type { gp2 } from '@asap-hub/model';
+import Boom from '@hapi/boom';
 import { Router } from 'express';
 import { WorkingGroupController } from '../controllers/working-group.controller';
 import {
@@ -55,12 +56,21 @@ export const workingGroupRouteFactory = (
       resources as Record<string, any>,
     );
 
-    // check resources are resources
-
-    // check user is admin
-
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const loggedInUserId = req.loggedInUser!.id;
+    const { id: loggedInUserId, role } = req.loggedInUser!;
+    const currentWorkingGroup = await workingGroupController.fetchById(
+      workingGroupId,
+      loggedInUserId,
+    );
+    if (
+      role !== 'Administrator' ||
+      !currentWorkingGroup.members.some(
+        ({ userId }) => userId === loggedInUserId,
+      )
+    ) {
+      throw Boom.forbidden();
+    }
+
     const workingGroup = await workingGroupController.update(
       workingGroupId,
       { resources },

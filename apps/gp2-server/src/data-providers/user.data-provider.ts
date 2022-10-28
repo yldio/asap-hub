@@ -1,10 +1,10 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 import {
+  gp2 as gp2Squidex,
   parseDate,
   parseToSquidex,
   SquidexGraphqlClient,
   SquidexRestClient,
-  gp2 as gp2Squidex,
 } from '@asap-hub/squidex';
 import {
   FetchUserQuery,
@@ -23,7 +23,9 @@ export interface UserDataProvider {
   fetchById(id: string): Promise<gp2Model.UserDataObject | null>;
   update(id: string, update: gp2Model.UserUpdateDataObject): Promise<void>;
   create(update: gp2Model.UserCreateDataObject): Promise<string>;
-  fetch(options: gp2Model.FetchUsersOptions): Promise<gp2Model.ListUserDataObject>;
+  fetch(
+    options: gp2Model.FetchUsersOptions,
+  ): Promise<gp2Model.ListUserDataObject>;
 }
 const regionMap: Record<UsersDataRegionEnum, gp2Model.UserRegion> = {
   [UsersDataRegionEnum.Africa]: 'Africa',
@@ -81,8 +83,9 @@ export class UserSquidexDataProvider implements UserDataProvider {
 
     return response.id;
   }
-  async fetch(options: gp2.FetchUsersOptions): Promise<gp2.ListUserDataObject> {
-
+  async fetch(
+    options: gp2Model.FetchUsersOptions,
+  ): Promise<gp2Model.ListUserDataObject> {
     const queryFilter = generateFetchQueryFilter(options);
     const { take = 8, skip = 0 } = options;
     return this.queryForUsers(queryFilter, take, skip);
@@ -161,9 +164,7 @@ function getUserSquidexData(
   | Partial<Omit<gp2Squidex.InputUser['data'], 'connections' | 'avatar'>> {
   const { region, role, degrees, ...userInput } = input;
   const fieldMappedUser = mapUserFields({ region, role, degrees });
-  const cleanedUser = parseToSquidex({ ...userInput, ...fieldMappedUser });
-
-  return cleanedUser;
+  return parseToSquidex({ ...userInput, ...fieldMappedUser });
 }
 
 const generateFetchQueryFilter = ({ filter }: gp2Model.FetchUsersOptions) => {
@@ -174,11 +175,7 @@ const generateFetchQueryFilter = ({ filter }: gp2Model.FetchUsersOptions) => {
 
   const filterCode = code && `data/connections/iv/code eq '${code}'`;
 
-  const queryFilter = [filterRegions, filterCode]
-    .filter(Boolean)
-    .join(' and ')
-    .trim();
-  return queryFilter;
+  return [filterRegions, filterCode].filter(Boolean).join(' and ').trim();
 };
 
 export const parseGraphQLUserToDataObject = ({

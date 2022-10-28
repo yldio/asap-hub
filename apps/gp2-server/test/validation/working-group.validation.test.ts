@@ -45,7 +45,7 @@ describe('Working Group validation', () => {
     const resource = getLink();
 
     // @ts-ignore
-    resource!.externalLink = undefined;
+    resource.externalLink = undefined;
     expect(() =>
       validateWorkingGroupPatchRequest([resource] as Record<string, any>),
     ).toThrow();
@@ -55,7 +55,7 @@ describe('Working Group validation', () => {
     const resource = getLink();
 
     // @ts-ignore
-    resource!.externalLink = 'some-string';
+    resource.externalLink = 'some-string';
     expect(() =>
       validateWorkingGroupPatchRequest([resource] as Record<string, any>),
     ).toThrow();
@@ -89,5 +89,14 @@ describe('Working Group validation', () => {
     expect(() =>
       validateWorkingGroupPatchRequest([resource] as Record<string, any>),
     ).toThrow();
+  });
+  test('should allow an empty array', () => {
+    expect(() =>
+      validateWorkingGroupPatchRequest([] as Record<string, any>),
+    ).not.toThrow();
+  });
+  test('should throw when undefined', () => {
+    // @ts-ignore
+    expect(() => validateWorkingGroupPatchRequest(undefined)).toThrow();
   });
 });

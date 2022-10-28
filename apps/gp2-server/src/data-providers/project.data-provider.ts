@@ -27,33 +27,27 @@ export class ProjectSquidexDataProvider implements ProjectDataProvider {
   }
 
   async fetch(): Promise<gp2.ListProjectDataObject> {
-    console.log('in the fetch method');
-    try {
-      const result = await this.squidexGraphlClient.request<
-        FetchProjectsQuery,
-        FetchProjectsQueryVariables
-      >(FETCH_PROJECTS);
+    const result = await this.squidexGraphlClient.request<
+      FetchProjectsQuery,
+      FetchProjectsQueryVariables
+    >(FETCH_PROJECTS);
 
-      if (
-        !result.queryProjectsContentsWithTotal ||
-        !result.queryProjectsContentsWithTotal.items
-      ) {
-        return {
-          total: 0,
-          items: [],
-        };
-      }
-
+    if (
+      !result.queryProjectsContentsWithTotal ||
+      !result.queryProjectsContentsWithTotal.items
+    ) {
       return {
-        total: result.queryProjectsContentsWithTotal.total,
-        items: result.queryProjectsContentsWithTotal.items.map(
-          parseProjectToDataObject,
-        ),
+        total: 0,
+        items: [],
       };
-    } catch (err) {
-      console.error(err);
-      throw err;
     }
+
+    return {
+      total: result.queryProjectsContentsWithTotal.total,
+      items: result.queryProjectsContentsWithTotal.items.map(
+        parseProjectToDataObject,
+      ),
+    };
   }
 
   private async queryFetchByIdData(id: string) {
@@ -100,13 +94,13 @@ const parseProjectMembers = (
       ? createUrl(flatAvatar.map((a) => a.id))[0]
       : undefined;
 
-  const roleMap = {
+  const roleMap: Record<ProjectsDataMembersRoleEnum, gp2.ProjectMemberRole> = {
     [ProjectsDataMembersRoleEnum.ProjectManager]: 'Project manager',
     [ProjectsDataMembersRoleEnum.ProjectLead]: 'Project lead',
     [ProjectsDataMembersRoleEnum.ProjectCoLead]: 'Project co-lead',
     [ProjectsDataMembersRoleEnum.Contributor]: 'Contributor',
     [ProjectsDataMembersRoleEnum.Investigator]: 'Investigator',
-  } as const;
+  };
 
   return {
     userId: user.id,

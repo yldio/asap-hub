@@ -1,5 +1,4 @@
-import { User } from '@asap-hub/auth';
-import { userMock } from '@asap-hub/fixtures';
+import { gp2 } from '@asap-hub/model';
 import { AuthHandler } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
 import supertest from 'supertest';
@@ -8,6 +7,7 @@ import {
   getListProjectsResponse,
   getProjectResponse,
 } from '../fixtures/project.fixtures';
+import { getUserResponse } from '../fixtures/user.fixtures';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { loggerMock } from '../mocks/logger.mock';
 import { projectControllerMock } from '../mocks/project-controller.mock';
@@ -51,8 +51,8 @@ describe('/projects/ route', () => {
 
     test('Should call the controller fetch method', async () => {
       const loggedInUserId = '11';
-      const loggedUser: User = {
-        ...userMock,
+      const loggedUser: gp2.UserResponse = {
+        ...getUserResponse(),
         id: loggedInUserId,
       };
       const getLoggedUser = jest.fn().mockReturnValue(loggedUser);
@@ -93,8 +93,8 @@ describe('/projects/ route', () => {
     test('Should call the controller with the right parameter', async () => {
       const ProjectId = 'abc123';
       const loggedInUserId = '11';
-      const loggedUser: User = {
-        ...userMock,
+      const loggedUser: gp2.UserResponse = {
+        ...getUserResponse(),
         id: loggedInUserId,
       };
       const getLoggedUser = jest.fn().mockReturnValue(loggedUser);

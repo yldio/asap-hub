@@ -57,6 +57,8 @@ export type ApplicationMutations = {
   changeTutorialsContent: Tutorials;
   /** Change a Users content. */
   changeUsersContent: Users;
+  /** Change a Working Groups content. */
+  changeWorkingGroupsContent: WorkingGroups;
   /** Creates an Calendars content. */
   createCalendarsContent: Calendars;
   /** Creates an Dashboard content. */
@@ -87,6 +89,8 @@ export type ApplicationMutations = {
   createTutorialsContent: Tutorials;
   /** Creates an Users content. */
   createUsersContent: Users;
+  /** Creates an Working Groups content. */
+  createWorkingGroupsContent: WorkingGroups;
   /** Delete an Calendars content. */
   deleteCalendarsContent: EntitySavedResultDto;
   /** Delete an Dashboard content. */
@@ -117,6 +121,8 @@ export type ApplicationMutations = {
   deleteTutorialsContent: EntitySavedResultDto;
   /** Delete an Users content. */
   deleteUsersContent: EntitySavedResultDto;
+  /** Delete an Working Groups content. */
+  deleteWorkingGroupsContent: EntitySavedResultDto;
   /** Patch an Calendars content by id. */
   patchCalendarsContent: Calendars;
   /** Patch an Dashboard content by id. */
@@ -147,6 +153,8 @@ export type ApplicationMutations = {
   patchTutorialsContent: Tutorials;
   /** Patch an Users content by id. */
   patchUsersContent: Users;
+  /** Patch an Working Groups content by id. */
+  patchWorkingGroupsContent: WorkingGroups;
   /**
    * Publish a Calendars content.
    * @deprecated Use 'changeCalendarsContent' instead
@@ -222,6 +230,11 @@ export type ApplicationMutations = {
    * @deprecated Use 'changeUsersContent' instead
    */
   publishUsersContent: Users;
+  /**
+   * Publish a Working Groups content.
+   * @deprecated Use 'changeWorkingGroupsContent' instead
+   */
+  publishWorkingGroupsContent: WorkingGroups;
   /** Update an Calendars content by id. */
   updateCalendarsContent: Calendars;
   /** Update an Dashboard content by id. */
@@ -252,6 +265,8 @@ export type ApplicationMutations = {
   updateTutorialsContent: Tutorials;
   /** Update an Users content by id. */
   updateUsersContent: Users;
+  /** Update an Working Groups content by id. */
+  updateWorkingGroupsContent: WorkingGroups;
   /** Upsert an Calendars content by id. */
   upsertCalendarsContent: Calendars;
   /** Upsert an Dashboard content by id. */
@@ -282,6 +297,8 @@ export type ApplicationMutations = {
   upsertTutorialsContent: Tutorials;
   /** Upsert an Users content by id. */
   upsertUsersContent: Users;
+  /** Upsert an Working Groups content by id. */
+  upsertWorkingGroupsContent: WorkingGroups;
 };
 
 /** The app mutations. */
@@ -398,6 +415,14 @@ export type ApplicationMutationsChangeTutorialsContentArgs = {
 
 /** The app mutations. */
 export type ApplicationMutationsChangeUsersContentArgs = {
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  status: Scalars['String'];
+};
+
+/** The app mutations. */
+export type ApplicationMutationsChangeWorkingGroupsContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -525,6 +550,14 @@ export type ApplicationMutationsCreateUsersContentArgs = {
 };
 
 /** The app mutations. */
+export type ApplicationMutationsCreateWorkingGroupsContentArgs = {
+  data: WorkingGroupsDataInputDto;
+  id: InputMaybe<Scalars['String']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
 export type ApplicationMutationsDeleteCalendarsContentArgs = {
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -610,6 +643,12 @@ export type ApplicationMutationsDeleteTutorialsContentArgs = {
 
 /** The app mutations. */
 export type ApplicationMutationsDeleteUsersContentArgs = {
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+};
+
+/** The app mutations. */
+export type ApplicationMutationsDeleteWorkingGroupsContentArgs = {
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
@@ -715,6 +754,13 @@ export type ApplicationMutationsPatchTutorialsContentArgs = {
 /** The app mutations. */
 export type ApplicationMutationsPatchUsersContentArgs = {
   data: UsersDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
+export type ApplicationMutationsPatchWorkingGroupsContentArgs = {
+  data: WorkingGroupsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
@@ -840,6 +886,14 @@ export type ApplicationMutationsPublishUsersContentArgs = {
 };
 
 /** The app mutations. */
+export type ApplicationMutationsPublishWorkingGroupsContentArgs = {
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  status: Scalars['String'];
+};
+
+/** The app mutations. */
 export type ApplicationMutationsUpdateCalendarsContentArgs = {
   data: CalendarsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
@@ -940,6 +994,13 @@ export type ApplicationMutationsUpdateTutorialsContentArgs = {
 /** The app mutations. */
 export type ApplicationMutationsUpdateUsersContentArgs = {
   data: UsersDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
+export type ApplicationMutationsUpdateWorkingGroupsContentArgs = {
+  data: WorkingGroupsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
@@ -1094,6 +1155,16 @@ export type ApplicationMutationsUpsertUsersContentArgs = {
   status: InputMaybe<Scalars['String']>;
 };
 
+/** The app mutations. */
+export type ApplicationMutationsUpsertWorkingGroupsContentArgs = {
+  data: WorkingGroupsDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  patch?: InputMaybe<Scalars['Boolean']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
+};
+
 /** The app queries. */
 export type ApplicationQueries = {
   /** Find an asset by id. */
@@ -1128,6 +1199,8 @@ export type ApplicationQueries = {
   findTutorialsContent: Maybe<Tutorials>;
   /** Find an Users content by id. */
   findUsersContent: Maybe<Users>;
+  /** Find an Working Groups content by id. */
+  findWorkingGroupsContent: Maybe<WorkingGroups>;
   /** Get assets. */
   queryAssets: Array<Asset>;
   /** Get assets and total count. */
@@ -1192,6 +1265,10 @@ export type ApplicationQueries = {
   queryUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
   queryUsersContentsWithTotal: Maybe<UsersResultDto>;
+  /** Query Working Groups content items. */
+  queryWorkingGroupsContents: Maybe<Array<WorkingGroups>>;
+  /** Query Working Groups content items with total count. */
+  queryWorkingGroupsContentsWithTotal: Maybe<WorkingGroupsResultDto>;
 };
 
 /** The app queries. */
@@ -1285,6 +1362,12 @@ export type ApplicationQueriesFindTutorialsContentArgs = {
 
 /** The app queries. */
 export type ApplicationQueriesFindUsersContentArgs = {
+  id: Scalars['String'];
+  version: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type ApplicationQueriesFindWorkingGroupsContentArgs = {
   id: Scalars['String'];
   version: InputMaybe<Scalars['Int']>;
 };
@@ -1568,6 +1651,24 @@ export type ApplicationQueriesQueryUsersContentsArgs = {
 
 /** The app queries. */
 export type ApplicationQueriesQueryUsersContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type ApplicationQueriesQueryWorkingGroupsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type ApplicationQueriesQueryWorkingGroupsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -5739,6 +5840,114 @@ export type UsersFlatDataDto = {
 export type UsersResultDto = {
   /** The contents. */
   items: Maybe<Array<Users>>;
+  /** The total count of  contents. */
+  total: Scalars['Int'];
+};
+
+/** The structure of a Working Groups content type. */
+export type WorkingGroups = Content & {
+  /** The timestamp when the object was created. */
+  created: Scalars['Instant'];
+  /** The user who created the object. */
+  createdBy: Scalars['String'];
+  /** The user who created the object. */
+  createdByUser: User;
+  /** The data of the content. */
+  data: WorkingGroupsDataDto;
+  /** The edit token. */
+  editToken: Maybe<Scalars['String']>;
+  /** The flat data of the content. */
+  flatData: WorkingGroupsFlatDataDto;
+  /** The ID of the object (usually GUID). */
+  id: Scalars['String'];
+  /** The timestamp when the object was updated the last time. */
+  lastModified: Scalars['Instant'];
+  /** The user who updated the object the last time. */
+  lastModifiedBy: Scalars['String'];
+  /** The user who updated the object the last time. */
+  lastModifiedByUser: User;
+  /** The new status of the content. */
+  newStatus: Maybe<Scalars['String']>;
+  /** The status color of the content. */
+  newStatusColor: Maybe<Scalars['String']>;
+  /** The status of the content. */
+  status: Scalars['String'];
+  /** The status color of the content. */
+  statusColor: Scalars['String'];
+  /** The URL to the content. */
+  url: Scalars['String'];
+  /** The version of the objec. */
+  version: Scalars['Int'];
+};
+
+/** The structure of the Description field of the Working Groups content type. */
+export type WorkingGroupsDataDescriptionDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Description field of the Working Groups content input type. */
+export type WorkingGroupsDataDescriptionInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Working Groups data type. */
+export type WorkingGroupsDataDto = {
+  description: Maybe<WorkingGroupsDataDescriptionDto>;
+  externalLink: Maybe<WorkingGroupsDataExternalLinkDto>;
+  externalLinkText: Maybe<WorkingGroupsDataExternalLinkTextDto>;
+  title: Maybe<WorkingGroupsDataTitleDto>;
+};
+
+/** The structure of the External Link field of the Working Groups content type. */
+export type WorkingGroupsDataExternalLinkDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the External Link field of the Working Groups content input type. */
+export type WorkingGroupsDataExternalLinkInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the External Link Text field of the Working Groups content type. */
+export type WorkingGroupsDataExternalLinkTextDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the External Link Text field of the Working Groups content input type. */
+export type WorkingGroupsDataExternalLinkTextInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Working Groups data input type. */
+export type WorkingGroupsDataInputDto = {
+  description: InputMaybe<WorkingGroupsDataDescriptionInputDto>;
+  externalLink: InputMaybe<WorkingGroupsDataExternalLinkInputDto>;
+  externalLinkText: InputMaybe<WorkingGroupsDataExternalLinkTextInputDto>;
+  title: InputMaybe<WorkingGroupsDataTitleInputDto>;
+};
+
+/** The structure of the Title field of the Working Groups content type. */
+export type WorkingGroupsDataTitleDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Title field of the Working Groups content input type. */
+export type WorkingGroupsDataTitleInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the flat Working Groups data type. */
+export type WorkingGroupsFlatDataDto = {
+  description: Maybe<Scalars['String']>;
+  externalLink: Maybe<Scalars['String']>;
+  externalLinkText: Maybe<Scalars['String']>;
+  title: Maybe<Scalars['String']>;
+};
+
+/** List of Working Groups items and total count. */
+export type WorkingGroupsResultDto = {
+  /** The contents. */
+  items: Maybe<Array<WorkingGroups>>;
   /** The total count of  contents. */
   total: Scalars['Int'];
 };

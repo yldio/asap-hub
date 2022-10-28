@@ -32,6 +32,13 @@ it('renders the state tag for a inactive group', () => {
   expect(queryByText('Inactive')).not.toBeInTheDocument();
 });
 
+it('does not render team count when group is inactive', () => {
+  const { queryByText } = render(
+    <GroupCard {...props} active={false} numberOfTeams={3} />,
+  );
+  expect(queryByText(/3 teams/i)).toBeNull();
+});
+
 it('generates a singular team count', () => {
   const { getByText } = render(<GroupCard {...props} numberOfTeams={1} />);
   expect(getByText(/1 team(\s|$)/i)).toBeVisible();

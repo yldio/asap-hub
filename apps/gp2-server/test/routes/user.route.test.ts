@@ -19,9 +19,7 @@ describe('/users/ route', () => {
     logger: loggerMock,
   });
 
-  afterEach(() => {
-    jest.resetAllMocks();
-  });
+  afterEach(jest.resetAllMocks);
 
   describe('GET /users', () => {
     test('Should return 200 when no users exist', async () => {

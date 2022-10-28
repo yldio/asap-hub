@@ -12,9 +12,7 @@ describe('/working-groups-network/ route', () => {
     logger: loggerMock,
   });
 
-  afterEach(() => {
-    jest.resetAllMocks();
-  });
+  afterEach(jest.resetAllMocks);
 
   describe('GET /working-group-network', () => {
     test('Should return 200 when no working groups are found', async () => {

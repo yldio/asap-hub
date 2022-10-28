@@ -30,7 +30,7 @@ export class WorkingGroupSquidexDataProvider
   implements WorkingGroupDataProvider
 {
   constructor(
-    private squidexGraphlClient: SquidexGraphqlClient,
+    private squidexGraphqlClient: SquidexGraphqlClient,
     private squidexRestClient: SquidexRestClient<
       gp2Squidex.RestWorkingGroup,
       gp2Squidex.InputWorkingGroup
@@ -46,7 +46,7 @@ export class WorkingGroupSquidexDataProvider
   }
 
   async fetch(): Promise<gp2Model.ListWorkingGroupDataObject> {
-    const result = await this.squidexGraphlClient.request<
+    const result = await this.squidexGraphqlClient.request<
       FetchWorkingGroupsQuery,
       FetchWorkingGroupsQueryVariables
     >(FETCH_WORKING_GROUPS);
@@ -78,7 +78,7 @@ export class WorkingGroupSquidexDataProvider
     await this.squidexRestClient.patch(id, squidexWorkingGroup);
   }
   private async queryFetchByIdData(id: string) {
-    return this.squidexGraphlClient.request<
+    return this.squidexGraphqlClient.request<
       FetchWorkingGroupQuery,
       FetchWorkingGroupQueryVariables
     >(FETCH_WORKING_GROUP, { id });

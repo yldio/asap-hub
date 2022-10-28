@@ -40,44 +40,37 @@ export const workingGroupRouteFactory = (
     },
   );
 
-  type WorkingGroupResourceRequest = NonNullable<
-    gp2.WorkingGroupResponse['resources']
-  >;
-  workingGroupRoutes.put<
-    { workingGroupId: string },
-    gp2.WorkingGroupResponse,
-    WorkingGroupResourceRequest
-  >('/working-group/:workingGroupId/resources', async (req, res) => {
-    const { params, body: resources } = req;
+  workingGroupRoutes.put<{ workingGroupId: string }, gp2.WorkingGroupResponse>(
+    '/working-group/:workingGroupId/resources',
+    async (req, res) => {
+      const { params, body } = req;
 
-    const { workingGroupId } = validateWorkingGroupParameters(params);
-    validateWorkingGroupPatchRequest(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      resources as Record<string, any>,
-    );
+      const { workingGroupId } = validateWorkingGroupParameters(params);
+      const resources = validateWorkingGroupPatchRequest(body);
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const { id: loggedInUserId, role } = req.loggedInUser!;
-    const currentWorkingGroup = await workingGroupController.fetchById(
-      workingGroupId,
-      loggedInUserId,
-    );
-    if (
-      role !== 'Administrator' ||
-      !currentWorkingGroup.members.some(
-        ({ userId }) => userId === loggedInUserId,
-      )
-    ) {
-      throw Boom.forbidden();
-    }
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const { id: loggedInUserId, role } = req.loggedInUser!;
+      const { members } = await workingGroupController.fetchById(
+        workingGroupId,
+        loggedInUserId,
+      );
+      if (
+        !(
+          role === 'Administrator' &&
+          members.some(({ userId }) => userId === loggedInUserId)
+        )
+      ) {
+        throw Boom.forbidden();
+      }
 
-    const workingGroup = await workingGroupController.update(
-      workingGroupId,
-      { resources },
-      loggedInUserId,
-    );
+      const workingGroup = await workingGroupController.update(
+        workingGroupId,
+        { resources },
+        loggedInUserId,
+      );
 
-    res.json(workingGroup);
-  });
+      res.json(workingGroup);
+    },
+  );
   return workingGroupRoutes;
 };

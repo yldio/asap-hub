@@ -60,7 +60,7 @@ const workingGroupPatchRequestValidationSchema: JSONSchemaType<gp2.WorkingGroupR
 export const validateWorkingGroupPatchRequest = validateInput(
   workingGroupPatchRequestValidationSchema,
   {
-    skipNull: true,
+    skipNull: false,
     coerce: true,
   },
 );

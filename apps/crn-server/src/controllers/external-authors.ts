@@ -23,17 +23,13 @@ export interface ExternalAuthorsController {
 }
 
 export default class ExternalAuthors implements ExternalAuthorsController {
-  squidexGraphlClient: SquidexGraphqlClient;
-
-  constructor(squidexGraphlClient: SquidexGraphqlClient) {
-    this.squidexGraphlClient = squidexGraphlClient;
-  }
+  constructor(private squidexGraphqlClient: SquidexGraphqlClient) {}
 
   async fetch(options: FetchOptions): Promise<ListExternalAuthorResponse> {
     const { take = 8, skip = 0 } = options;
 
     const { queryExternalAuthorsContentsWithTotal } =
-      await this.squidexGraphlClient.request<
+      await this.squidexGraphqlClient.request<
         FetchExternalAuthorsQuery,
         FetchExternalAuthorsQueryVariables
       >(FETCH_EXTERNAL_AUTHORS, { top: take, skip });
@@ -62,7 +58,7 @@ export default class ExternalAuthors implements ExternalAuthorsController {
 
   async fetchById(id: string): Promise<ExternalAuthorResponse> {
     const { findExternalAuthorsContent } =
-      await this.squidexGraphlClient.request<
+      await this.squidexGraphqlClient.request<
         FetchExternalAuthorQuery,
         FetchExternalAuthorQueryVariables
       >(FETCH_EXTERNAL_AUTHOR, { id });

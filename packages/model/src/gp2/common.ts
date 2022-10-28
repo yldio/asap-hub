@@ -1,12 +1,12 @@
-export type Resource = {
+type ResourceBase = {
   title: string;
   description?: string;
-} & (
-  | {
-      type: 'Note';
-    }
-  | {
-      type: 'Link';
-      externalLink: string;
-    }
-);
+};
+export type ResourceLink = ResourceBase & {
+  type: 'Link';
+  externalLink: string;
+};
+export type ResourceNote = ResourceBase & {
+  type: 'Note';
+};
+export type Resource = ResourceNote | ResourceLink;

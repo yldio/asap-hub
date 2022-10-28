@@ -48,7 +48,7 @@ const reverseRoleMap = reverseMap(roleMap);
 
 export class UserSquidexDataProvider implements UserDataProvider {
   constructor(
-    private squidexGraphlClient: SquidexGraphqlClient,
+    private squidexGraphqlClient: SquidexGraphqlClient,
     private userSquidexRestClient: SquidexRestClient<
       gp2Squidex.RestUser,
       gp2Squidex.InputUser
@@ -75,13 +75,13 @@ export class UserSquidexDataProvider implements UserDataProvider {
   async create(userToCreate: gp2Model.UserCreateDataObject): Promise<string> {
     const cleanedUser = getUserSquidexData(userToCreate);
 
-    const response = await this.userSquidexRestClient.create({
+    const { id } = await this.userSquidexRestClient.create({
       ...cleanedUser,
       avatar: { iv: [] },
       connections: { iv: [] },
     });
 
-    return response.id;
+    return id;
   }
   async fetch(
     options: gp2Model.FetchUsersOptions,
@@ -106,13 +106,13 @@ export class UserSquidexDataProvider implements UserDataProvider {
     };
   }
   private async queryFetchData(filter: string, top: number, skip: number) {
-    return this.squidexGraphlClient.request<
+    return this.squidexGraphqlClient.request<
       FetchUsersQuery,
       FetchUsersQueryVariables
     >(FETCH_USERS, { filter, top, skip });
   }
   private async queryFetchByIdData(id: string) {
-    return this.squidexGraphlClient.request<
+    return this.squidexGraphqlClient.request<
       FetchUserQuery,
       FetchUserQueryVariables
     >(FETCH_USER, { id });

@@ -18,9 +18,7 @@ describe('/projects/ route', () => {
     authHandler: authHandlerMock,
   });
 
-  afterEach(() => {
-    jest.resetAllMocks();
-  });
+  afterEach(jest.resetAllMocks);
 
   describe('GET /projects', () => {
     test('Should return 200 when no projects are found', async () => {

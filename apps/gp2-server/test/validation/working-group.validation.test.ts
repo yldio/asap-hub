@@ -2,26 +2,28 @@ import { gp2 } from '@asap-hub/model';
 import { validateWorkingGroupPatchRequest } from '../../src/validation/working-group.validation';
 
 describe('Working Group validation', () => {
-  const getLink = (): gp2.Resource => ({
-    type: 'Link',
+  const getLink = (): gp2.ResourceLink => ({
+    type: 'Link' as const,
     title: 'a title',
     description: 'some description',
     externalLink: 'http://example.com',
   });
-  const getNote = (): gp2.Resource => ({
+  const getNote = (): gp2.ResourceNote => ({
     type: 'Note',
     title: 'a title',
     description: 'some description',
   });
+  const toResources = (resource: gp2.Resource): Record<string, unknown> =>
+    [resource] as unknown as Record<string, unknown>;
   describe.each`
     type      | getFixture
     ${'Note'} | ${getNote}
     ${'Link'} | ${getLink}
   `('Resource of $type', ({ getFixture }) => {
     test('validates', () => {
-      const resources: gp2.Resource[] = [getFixture()];
+      const resource = getFixture();
       expect(() =>
-        validateWorkingGroupPatchRequest(resources as Record<string, any>),
+        validateWorkingGroupPatchRequest(toResources(resource)),
       ).not.toThrow();
     });
     test('description is optional', () => {
@@ -29,7 +31,7 @@ describe('Working Group validation', () => {
       resource.description = undefined;
 
       expect(() =>
-        validateWorkingGroupPatchRequest([resource] as Record<string, any>),
+        validateWorkingGroupPatchRequest(toResources(resource)),
       ).not.toThrow();
     });
     test('title is required', () => {
@@ -37,27 +39,28 @@ describe('Working Group validation', () => {
       resource.title = undefined;
 
       expect(() =>
-        validateWorkingGroupPatchRequest([resource] as Record<string, any>),
+        validateWorkingGroupPatchRequest(toResources(resource)),
       ).toThrow();
     });
   });
+
   test('externalLink is required on Link', () => {
     const resource = getLink();
 
     // @ts-ignore
     resource.externalLink = undefined;
+
     expect(() =>
-      validateWorkingGroupPatchRequest([resource] as Record<string, any>),
+      validateWorkingGroupPatchRequest(toResources(resource)),
     ).toThrow();
   });
 
   test('externalLink is a valid url on Link', () => {
     const resource = getLink();
 
-    // @ts-ignore
     resource.externalLink = 'some-string';
     expect(() =>
-      validateWorkingGroupPatchRequest([resource] as Record<string, any>),
+      validateWorkingGroupPatchRequest(toResources(resource)),
     ).toThrow();
   });
   test('externalLink is not allowed on a Note', () => {
@@ -66,7 +69,7 @@ describe('Working Group validation', () => {
     // @ts-ignore
     resource.externalLink = 'http://example.com';
     expect(() =>
-      validateWorkingGroupPatchRequest([resource] as Record<string, any>),
+      validateWorkingGroupPatchRequest(toResources(resource)),
     ).toThrow();
   });
   test.each(['invalid-type', 'Note2'])(
@@ -77,7 +80,7 @@ describe('Working Group validation', () => {
       resource.type = type;
 
       expect(() =>
-        validateWorkingGroupPatchRequest([resource] as Record<string, any>),
+        validateWorkingGroupPatchRequest(toResources(resource)),
       ).toThrow();
     },
   );
@@ -87,12 +90,14 @@ describe('Working Group validation', () => {
     resource.type = 'Link2';
 
     expect(() =>
-      validateWorkingGroupPatchRequest([resource] as Record<string, any>),
+      validateWorkingGroupPatchRequest(toResources(resource)),
     ).toThrow();
   });
   test('should allow an empty array', () => {
     expect(() =>
-      validateWorkingGroupPatchRequest([] as Record<string, any>),
+      validateWorkingGroupPatchRequest(
+        [] as unknown as Record<string, unknown>,
+      ),
     ).not.toThrow();
   });
   test('should throw when undefined', () => {

@@ -156,6 +156,7 @@ describe('/working-groups/ route', () => {
         '11',
       );
     });
+
     test('Should return 404 when working group doesnt exist', async () => {
       const loggedInUserId = '11';
       const loggedUser: gp2.UserResponse = {
@@ -173,10 +174,10 @@ describe('/working-groups/ route', () => {
         authHandler: authHandlerMock,
         logger: loggerMock,
       });
-      workingGroupControllerMock.update.mockRejectedValueOnce(Boom.notFound());
       workingGroupControllerMock.fetchById.mockResolvedValueOnce(
         getWorkingGroupResponse(),
       );
+      workingGroupControllerMock.update.mockRejectedValueOnce(Boom.notFound());
 
       const response = await supertest(appWithUser)
         .put('/working-group/123/resources')

@@ -216,7 +216,7 @@ Note: the `content_type` is the slug, not the display name, so `externalAuthors`
 
 ### Creating a New Schema
 
-It's possible to make changes in Contentful UI, adding or changing fields and create the
+It's possible to make changes in Contentful UI content type, adding or changing fields and create the
 
 ### Initiating an Environment
 

@@ -11511,6 +11511,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/server-common", "workspace:packages/server-common"],\
             ["@asap-hub/services-common", "workspace:packages/services-common"],\
             ["@asap-hub/squidex", "workspace:packages/squidex"],\
+            ["@asap-hub/validation", "workspace:packages/validation"],\
             ["@babel/preset-env", "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:7.19.4"],\
             ["@babel/preset-typescript", "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:7.18.6"],\
             ["@babel/runtime-corejs3", "npm:7.19.6"],\

@@ -1,7 +1,10 @@
 import type { gp2 } from '@asap-hub/model';
 import { Router } from 'express';
 import { WorkingGroupController } from '../controllers/working-group.controller';
-import { validateWorkingGroupParameters } from '../validation/working-group.validation';
+import {
+  validateWorkingGroupParameters,
+  validateWorkingGroupPatchRequest,
+} from '../validation/working-group.validation';
 
 export const workingGroupRouteFactory = (
   workingGroupController: WorkingGroupController,
@@ -44,15 +47,14 @@ export const workingGroupRouteFactory = (
     gp2.WorkingGroupResponse,
     WorkingGroupResourceRequest
   >('/working-group/:workingGroupId/resources', async (req, res) => {
-    const { params } = req;
+    const { params, body: resources } = req;
 
-    console.log(params);
     const { workingGroupId } = validateWorkingGroupParameters(params);
-    console.log(workingGroupId);
-    const resources = validateWorkingGroupPatchRequest(req.body);
-    const resources = req.body;
+    validateWorkingGroupPatchRequest(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      resources as Record<string, any>,
+    );
 
-    console.log(req);
     // check resources are resources
 
     // check user is admin

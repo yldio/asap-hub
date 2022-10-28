@@ -3,10 +3,10 @@ export type Resource = {
   description?: string;
 } & (
   | {
-      type: 'Link';
-      externalLink: string;
+      type: 'Note';
     }
   | {
-      type: 'Note';
+      type: 'Link';
+      externalLink: string;
     }
 );

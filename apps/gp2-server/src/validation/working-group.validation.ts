@@ -1,5 +1,6 @@
 import { gp2 } from '@asap-hub/model';
 import { validateInput } from '@asap-hub/server-common';
+import { UrlExpression } from '@asap-hub/validation';
 import { JSONSchemaType } from 'ajv';
 
 type WorkingGroupParameters = {
@@ -28,21 +29,38 @@ const workingGroupPatchRequestValidationSchema: JSONSchemaType<gp2.WorkingGroupR
   {
     type: 'array',
     items: {
-      type: 'object',
-      properties: {
-        title: { type: 'string' },
-        type: { type: 'string', enum: [] },
-        description: { type: 'string' },
-        externalLink: { type: 'string' },
-      },
-      required: ['title', 'type'],
-      additionalProperties: false,
+      anyOf: [
+        {
+          type: 'object',
+          properties: {
+            title: { type: 'string' },
+            type: { type: 'string', const: 'Link' },
+            description: { type: 'string', nullable: true },
+            externalLink: {
+              type: 'string',
+              pattern: UrlExpression,
+            },
+          },
+          required: ['title', 'type', 'externalLink'],
+          additionalProperties: false,
+        },
+        {
+          type: 'object',
+          properties: {
+            title: { type: 'string' },
+            type: { type: 'string', const: 'Note' },
+            description: { type: 'string', nullable: true },
+          },
+          required: ['title', 'type'],
+          additionalProperties: false,
+        },
+      ],
     },
-    required: true,
   };
 export const validateWorkingGroupPatchRequest = validateInput(
   workingGroupPatchRequestValidationSchema,
   {
     skipNull: true,
+    coerce: true,
   },
 );

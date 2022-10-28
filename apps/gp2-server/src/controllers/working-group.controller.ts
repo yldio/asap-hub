@@ -43,10 +43,10 @@ export default class WorkingGroups implements WorkingGroupController {
   }
   async update(
     id: string,
-    update: gp2.WorkingGroupUpdateRequest,
+    workingGroupUpdate: gp2.WorkingGroupUpdateRequest,
     loggedInUserId: string,
   ): Promise<gp2.WorkingGroupResponse> {
-    await this.workingGroupDataProvider.update(id, update);
+    await this.workingGroupDataProvider.update(id, workingGroupUpdate);
     return this.fetchById(id, loggedInUserId);
   }
 }

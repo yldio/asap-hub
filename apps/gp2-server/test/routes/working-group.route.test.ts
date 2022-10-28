@@ -133,21 +133,39 @@ describe('/working-groups/ route', () => {
     });
 
     test.only('Should return the results correctly', async () => {
-      workingGroupControllerMock.fetchById.mockResolvedValueOnce(
+      const loggedInUserId = '11';
+      const loggedUser: User = {
+        ...userMock,
+        id: loggedInUserId,
+      };
+      const getLoggedUser = jest.fn().mockReturnValue(loggedUser);
+      const authHandlerMock: AuthHandler = (req, _res, next) => {
+        req.loggedInUser = getLoggedUser();
+        next();
+      };
+      const appWithUser = appFactory({
+        workingGroupController: workingGroupControllerMock,
+        authHandler: authHandlerMock,
+        logger: loggerMock,
+      });
+      workingGroupControllerMock.update.mockResolvedValueOnce(
         getWorkingGroupResponse(),
       );
 
-      const resources: gp2.Resource[] = [{ title: 'a resource', type: 'Note' }];
-      const response = await supertest(app)
-        .put('/working-group/11/resources')
+      const resources: gp2.Resource[] = [
+        { title: 'a resource', type: 'Note' },
+        { title: 'a resource 2', type: 'Note' },
+      ];
+      const response = await supertest(appWithUser)
+        .put('/working-group/23/resources')
         .send(resources);
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual(getWorkingGroupResponse());
       expect(workingGroupControllerMock.update).toBeCalledWith(
-        11,
+        '23',
         { resources },
-        7,
+        '11',
       );
     });
 

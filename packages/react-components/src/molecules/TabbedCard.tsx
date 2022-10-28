@@ -6,6 +6,10 @@ import { perRem } from '../pixels';
 import { TabNav } from '.';
 import { paddingStyles } from '../card';
 
+const cardStyles = css({
+  overflow: 'hidden',
+});
+
 const headerStyles = css({
   paddingBottom: 0,
   borderBottom: `1px solid ${steel.rgb}`,
@@ -51,7 +55,7 @@ const TabbedCard = <T extends object>({
     getShowMoreText && truncateFrom && items.length > truncateFrom;
 
   return (
-    <Card padding={false}>
+    <Card padding={false} overrideStyles={cardStyles}>
       <div css={[paddingStyles, headerStyles]}>
         <Headline3>{title}</Headline3>
         <Paragraph hasMargin={false} accent="lead">

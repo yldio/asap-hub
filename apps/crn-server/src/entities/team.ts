@@ -50,6 +50,7 @@ export const parseGraphQLTeamMember = (
   return {
     id: user.id,
     email: user.flatData.email,
+    alumniSinceDate: user.flatData.alumniSinceDate ?? undefined,
     firstName: user.flatData.firstName ?? undefined,
     lastName: user.flatData.lastName ?? undefined,
     displayName: `${user.flatData.firstName} ${user.flatData.lastName}`,

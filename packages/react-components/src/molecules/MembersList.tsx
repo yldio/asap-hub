@@ -1,11 +1,12 @@
 import { Fragment } from 'react';
-import { css } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
 import { UserResponse, UserTeam } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
 import { perRem, tabletScreen } from '../pixels';
 import { lead } from '../colors';
 import { Link, Avatar, Anchor, Ellipsis } from '../atoms';
+import { alumniBadge } from '../icons';
 import { ImageLink } from '.';
 import { styles } from '../atoms/Link';
 import { hover } from './LinkHeadline';
@@ -32,6 +33,12 @@ const avatarStyles = css({
 
 const nameStyles = css({
   fontWeight: 'bold',
+  display: 'inline-flex',
+});
+
+const badgeStyles = css({
+  lineHeight: `${8 / perRem}em`,
+  marginLeft: `${8 / perRem}em`,
 });
 
 const addToColumnStyles = css({
@@ -60,77 +67,99 @@ interface MembersListProps {
       secondLine?: string;
       thirdLine?: string | ReadonlyArray<Pick<UserTeam, 'id' | 'displayName'>>;
     } & Pick<UserResponse, 'id'> &
-      Partial<Pick<UserResponse, 'firstName' | 'lastName' | 'avatarUrl'>>
+      Partial<
+        Pick<
+          UserResponse,
+          'firstName' | 'lastName' | 'avatarUrl' | 'alumniSinceDate'
+        >
+      >
   >;
   singleColumn?: boolean;
+  readonly overrideNameStyles?: SerializedStyles;
 }
 const MembersList: React.FC<MembersListProps> = ({
   members,
   singleColumn = false,
+  overrideNameStyles,
 }) => (
   <ul css={[containerStyles, singleColumn || multiColumnContainerStyles]}>
-    {members.map(({ id, firstLine, secondLine, thirdLine, ...member }) => {
-      const href = network({}).users({}).user({ userId: id }).$;
-      const userAvatar = (
-        <Avatar
-          firstName={member.firstName}
-          lastName={member.lastName}
-          imageUrl={member.avatarUrl}
-        />
-      );
-      return (
-        <li key={id} css={{ display: 'contents' }}>
-          <Anchor href={href} css={{ display: 'contents' }}>
-            <div css={avatarStyles}>
-              <ImageLink link={href}>{userAvatar}</ImageLink>
-            </div>
-          </Anchor>
-          <Anchor
-            href={href}
-            css={({ colors }) => [styles, hover(colors), nameStyles]}
-          >
-            {firstLine}
-          </Anchor>
-          <Anchor href={href} css={{ display: 'contents' }}>
+    {members.map(
+      ({
+        id,
+        firstLine,
+        secondLine,
+        thirdLine,
+        alumniSinceDate,
+        ...member
+      }) => {
+        const href = network({}).users({}).user({ userId: id }).$;
+        const userAvatar = (
+          <Avatar
+            firstName={member.firstName}
+            lastName={member.lastName}
+            imageUrl={member.avatarUrl}
+          />
+        );
+        return (
+          <li key={id} css={{ display: 'contents' }}>
+            <Anchor href={href} css={{ display: 'contents' }}>
+              <div css={avatarStyles}>
+                <ImageLink link={href}>{userAvatar}</ImageLink>
+              </div>
+            </Anchor>
+            <Anchor
+              href={href}
+              css={({ colors }) => [
+                styles,
+                hover(colors),
+                nameStyles,
+                overrideNameStyles,
+              ]}
+            >
+              {firstLine}
+              {alumniSinceDate && <span css={badgeStyles}>{alumniBadge}</span>}
+            </Anchor>
+            <Anchor href={href} css={{ display: 'contents' }}>
+              <div
+                css={[
+                  addToColumnStyles,
+                  singleColumn || multiColumnAddToColumnStyles,
+                  textStyles,
+                ]}
+              >
+                <Ellipsis>{secondLine}</Ellipsis>
+              </div>
+            </Anchor>
             <div
               css={[
                 addToColumnStyles,
                 singleColumn || multiColumnAddToColumnStyles,
                 textStyles,
+                labStyles,
               ]}
             >
-              <Ellipsis>{secondLine}</Ellipsis>
+              <Ellipsis>
+                {thirdLine instanceof Array ? (
+                  thirdLine.map((team) => (
+                    <Fragment key={team.id}>
+                      <Link
+                        href={network({}).teams({}).team({ teamId: team.id }).$}
+                      >
+                        Team {team.displayName}
+                      </Link>{' '}
+                    </Fragment>
+                  ))
+                ) : (
+                  <Anchor href={href} css={{ display: 'contents' }}>
+                    {thirdLine}
+                  </Anchor>
+                )}
+              </Ellipsis>
             </div>
-          </Anchor>
-          <div
-            css={[
-              addToColumnStyles,
-              singleColumn || multiColumnAddToColumnStyles,
-              textStyles,
-              labStyles,
-            ]}
-          >
-            <Ellipsis>
-              {thirdLine instanceof Array ? (
-                thirdLine.map((team) => (
-                  <Fragment key={team.id}>
-                    <Link
-                      href={network({}).teams({}).team({ teamId: team.id }).$}
-                    >
-                      Team {team.displayName}
-                    </Link>{' '}
-                  </Fragment>
-                ))
-              ) : (
-                <Anchor href={href} css={{ display: 'contents' }}>
-                  {thirdLine}
-                </Anchor>
-              )}
-            </Ellipsis>
-          </div>
-        </li>
-      );
-    })}
+          </li>
+        );
+      },
+    )}
   </ul>
 );
 

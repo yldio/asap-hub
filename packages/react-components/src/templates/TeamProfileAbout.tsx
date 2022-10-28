@@ -7,6 +7,7 @@ import {
   TeamMembersSection,
   ProfileExpertiseAndResources,
   TeamProfileOverview,
+  TeamMembersTabbedCard,
 } from '../organisms';
 import { CtaCard } from '../molecules';
 import { createMailTo } from '../mail';
@@ -19,12 +20,13 @@ const styles = css({
 
 type TeamProfileAboutProps = ComponentProps<typeof TeamProfileOverview> &
   ComponentProps<typeof ProfileExpertiseAndResources> &
-  Pick<TeamResponse, 'pointOfContact' | 'members'> & {
+  Pick<TeamResponse, 'pointOfContact' | 'members' | 'inactiveSince'> & {
     teamGroupsCard?: React.ReactNode;
     readonly teamListElementId: string;
   };
 
 const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
+  inactiveSince,
   projectTitle,
   projectSummary,
   expertiseAndResourceTags,
@@ -47,7 +49,9 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
         expertiseAndResourceTags={expertiseAndResourceTags}
       />
     ) : null}
-    {members.length ? (
+    {inactiveSince ? (
+      <TeamMembersTabbedCard title="Team Members" members={members} />
+    ) : members.length ? (
       <section id={teamListElementId}>
         <TeamMembersSection
           members={members.map(

@@ -100,3 +100,33 @@ it('accepts undefined value for second and third line', async () => {
   const [user] = items;
   expect(user).toHaveTextContent('AK');
 });
+
+it('renders alumni badge when there is an alumni member', async () => {
+  const { queryByTitle, rerender } = render(
+    <MembersList
+      members={[
+        {
+          ...createListUserResponse(1).items[0],
+          firstLine: 'example',
+          alumniSinceDate: '2022-10-27',
+        },
+      ]}
+    />,
+  );
+
+  expect(queryByTitle('Alumni Badge')).toBeInTheDocument();
+
+  rerender(
+    <MembersList
+      members={[
+        {
+          ...createListUserResponse(1).items[0],
+          firstLine: 'example',
+          alumniSinceDate: undefined,
+        },
+      ]}
+    />,
+  );
+
+  expect(queryByTitle('Alumni Badge')).not.toBeInTheDocument();
+});

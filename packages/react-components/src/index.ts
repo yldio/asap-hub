@@ -134,6 +134,7 @@ export {
   TeamCard,
   TeamGroupsCard,
   TeamMembersSection,
+  TeamMembersTabbedCard,
   TeamsTabbedCard,
   Toast,
   ToastStack,

@@ -18,7 +18,6 @@ export { default as GoogleCalendar } from './GoogleCalendar';
 export { default as GroupCard } from './GroupCard';
 export { default as GroupInformation } from './GroupInformation';
 export { default as GroupList } from './GroupList';
-export { default as GroupMembersSection } from './GroupMembersSection';
 export { default as GroupTools } from './GroupTools';
 export { default as HelpSection } from './HelpSection';
 export { default as JoinEvent } from './JoinEvent';

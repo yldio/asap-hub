@@ -102,7 +102,6 @@ export {
   GroupCard,
   GroupInformation,
   GroupList,
-  GroupMembersSection,
   GroupTools,
   HelpSection,
   JoinEvent,

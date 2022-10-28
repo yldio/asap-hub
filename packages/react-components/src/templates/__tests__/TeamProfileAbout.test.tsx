@@ -110,27 +110,8 @@ it('renders the expertise and resources list', () => {
   expect(getByText(/expertise and resources/i)).toBeVisible();
 });
 
-it('renders the Teams Tabbed card for inactive groups', () => {
+it('renders the Teams Tabbed card when team is inactive and there are members', () => {
   const { getByText } = render(
-    <TeamProfileAbout
-      {...props}
-      members={[
-        {
-          id: 'uuid',
-          displayName: 'John Doe',
-          firstName: 'John',
-          lastName: 'Doe',
-          role: 'Project Manager',
-          email: 'johndoe@asap.com',
-        },
-      ]}
-      inactiveSince={undefined}
-    />,
-  );
-
-  expect(getByText('Team Members (1)', { selector: 'h2' })).toBeVisible();
-
-  render(
     <TeamProfileAbout
       {...props}
       members={[
@@ -149,4 +130,44 @@ it('renders the Teams Tabbed card for inactive groups', () => {
 
   expect(getByText('Team Members', { selector: 'h3' })).toBeVisible();
   expect(getByText('Past Team Members (1)', { selector: 'p' })).toBeVisible();
+});
+
+it('renders the Teams Tabbed card when team is inactive and there isnt any members', () => {
+  const { getByText } = render(
+    <TeamProfileAbout {...props} members={[]} inactiveSince="2022-10-25" />,
+  );
+
+  expect(getByText('Team Members', { selector: 'h3' })).toBeVisible();
+  expect(
+    getByText('There are no past team members.', { selector: 'p' }),
+  ).toBeVisible();
+});
+
+it('renders team members section when team is active and there are members', () => {
+  const { getByText } = render(
+    <TeamProfileAbout
+      {...props}
+      members={[
+        {
+          id: 'uuid',
+          displayName: 'John Doe',
+          firstName: 'John',
+          lastName: 'Doe',
+          role: 'Project Manager',
+          email: 'johndoe@asap.com',
+        },
+      ]}
+      inactiveSince={undefined}
+    />,
+  );
+
+  expect(getByText('Team Members (1)', { selector: 'h2' })).toBeVisible();
+});
+
+it('renders team members section when team is active and there isnt any members', () => {
+  const { queryByText } = render(
+    <TeamProfileAbout {...props} members={[]} inactiveSince={undefined} />,
+  );
+
+  expect(queryByText('Team Members')).toBeNull();
 });

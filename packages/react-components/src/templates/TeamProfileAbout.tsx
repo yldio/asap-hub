@@ -49,37 +49,35 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
         expertiseAndResourceTags={expertiseAndResourceTags}
       />
     ) : null}
-    {members.length ? (
-      inactiveSince ? (
-        <TeamMembersTabbedCard title="Team Members" members={members} />
-      ) : (
-        <section id={teamListElementId}>
-          <TeamMembersSection
-            members={members.map(
-              ({
-                displayName,
-                role,
-                firstName,
-                lastName,
-                avatarUrl,
-                id,
-                labs = [],
-              }) => ({
-                firstLine: displayName,
-                secondLine: role,
-                thirdLine: getUniqueCommaStringWithSuffix(
-                  labs.map((lab) => lab.name),
-                  'Lab',
-                ),
-                avatarUrl,
-                firstName,
-                lastName,
-                id,
-              }),
-            )}
-          />
-        </section>
-      )
+    {inactiveSince ? (
+      <TeamMembersTabbedCard title="Team Members" members={members} />
+    ) : members.length ? (
+      <section id={teamListElementId}>
+        <TeamMembersSection
+          members={members.map(
+            ({
+              displayName,
+              role,
+              firstName,
+              lastName,
+              avatarUrl,
+              id,
+              labs = [],
+            }) => ({
+              firstLine: displayName,
+              secondLine: role,
+              thirdLine: getUniqueCommaStringWithSuffix(
+                labs.map((lab) => lab.name),
+                'Lab',
+              ),
+              avatarUrl,
+              firstName,
+              lastName,
+              id,
+            }),
+          )}
+        />
+      </section>
     ) : null}
     {teamGroupsCard}
     {pointOfContact && (

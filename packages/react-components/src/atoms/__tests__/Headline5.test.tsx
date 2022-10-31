@@ -18,3 +18,10 @@ it('renders the text in bold', () => {
   const { fontWeight } = getComputedStyle(getByText('text'));
   expect(fontWeight).toMatchInlineSnapshot(`"bold"`);
 });
+
+it('removes the text margin', () => {
+  const { getByText } = render(<Headline5 noMargin>text</Headline5>);
+  const { marginTop, marginBottom } = getComputedStyle(getByText('text'));
+  expect(marginTop).toMatchInlineSnapshot(`"0px"`);
+  expect(marginBottom).toMatchInlineSnapshot(`"0px"`);
+});

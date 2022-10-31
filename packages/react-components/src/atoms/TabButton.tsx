@@ -6,7 +6,7 @@ import { fern, lead, charcoal } from '../colors';
 
 const styles = css({
   display: 'inline-block',
-  paddingTop: `${24 / perRem}em`,
+  paddingTop: `${12 / perRem}em`,
   paddingBottom: `${12 / perRem}em`,
 
   color: lead.rgb,

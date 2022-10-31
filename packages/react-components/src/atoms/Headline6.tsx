@@ -4,13 +4,22 @@ interface Headline6Props {
   readonly children: AllowedChildren;
   readonly id?: string;
   readonly styleAsHeading?: keyof typeof headlineStyles;
+  readonly noMargin?: boolean;
 }
 const Headline6: React.FC<Headline6Props> = ({
   children,
   styleAsHeading = 6,
   id,
+  noMargin = false,
 }) => (
-  <h6 css={[layoutStyles, headlineStyles[styleAsHeading]]} id={id}>
+  <h6
+    css={[
+      layoutStyles,
+      headlineStyles[styleAsHeading],
+      noMargin && { margin: 0 },
+    ]}
+    id={id}
+  >
     {children}
   </h6>
 );

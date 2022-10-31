@@ -49,21 +49,7 @@ describe('/working-groups/ route', () => {
     });
 
     test('Should call the controller fetch method', async () => {
-      const loggedInUserId = '11';
-      const loggedUser: gp2.UserResponse = {
-        ...getUserResponse(),
-        id: loggedInUserId,
-      };
-      const getLoggedUser = jest.fn().mockReturnValue(loggedUser);
-      const authHandlerMock: AuthHandler = (req, _res, next) => {
-        req.loggedInUser = getLoggedUser();
-        next();
-      };
-      const appWithUser = appFactory({
-        workingGroupController: workingGroupControllerMock,
-        authHandler: authHandlerMock,
-        logger: loggerMock,
-      });
+      const { appWithUser, loggedInUserId } = getApp();
       await supertest(appWithUser).get('/working-groups');
 
       expect(workingGroupControllerMock.fetch).toBeCalledWith(loggedInUserId);
@@ -94,22 +80,7 @@ describe('/working-groups/ route', () => {
     test('Should call the controller with the right parameter', async () => {
       const workingGroupId = 'abc123';
 
-      const loggedInUserId = '11';
-      const loggedUser: gp2.UserResponse = {
-        ...getUserResponse(),
-        id: loggedInUserId,
-      };
-      const getLoggedUser = jest.fn().mockReturnValue(loggedUser);
-      const authHandlerMock: AuthHandler = (req, _res, next) => {
-        req.loggedInUser = getLoggedUser();
-        next();
-      };
-      const appWithUser = appFactory({
-        workingGroupController: workingGroupControllerMock,
-        authHandler: authHandlerMock,
-        logger: loggerMock,
-      });
-
+      const { appWithUser, loggedInUserId } = getApp();
       await supertest(appWithUser).get(`/working-group/${workingGroupId}`);
 
       expect(workingGroupControllerMock.fetchById).toBeCalledWith(
@@ -120,22 +91,7 @@ describe('/working-groups/ route', () => {
   });
   describe('PUT /working-group/{working_group_id}/resources', () => {
     test('Should return the results correctly', async () => {
-      const loggedInUserId = '11';
-      const loggedUser: gp2.UserResponse = {
-        ...getUserResponse(),
-        id: loggedInUserId,
-        role: 'Administrator',
-      };
-      const getLoggedUser = jest.fn().mockReturnValue(loggedUser);
-      const authHandlerMock: AuthHandler = (req, _res, next) => {
-        req.loggedInUser = getLoggedUser();
-        next();
-      };
-      const appWithUser = appFactory({
-        workingGroupController: workingGroupControllerMock,
-        authHandler: authHandlerMock,
-        logger: loggerMock,
-      });
+      const { appWithUser } = getApp({ role: 'Administrator' });
       workingGroupControllerMock.update.mockResolvedValueOnce(
         getWorkingGroupResponse(),
       );
@@ -158,22 +114,7 @@ describe('/working-groups/ route', () => {
     });
 
     test('Should return 404 when working group doesnt exist', async () => {
-      const loggedInUserId = '11';
-      const loggedUser: gp2.UserResponse = {
-        ...getUserResponse(),
-        id: loggedInUserId,
-        role: 'Administrator',
-      };
-      const getLoggedUser = jest.fn().mockReturnValue(loggedUser);
-      const authHandlerMock: AuthHandler = (req, _res, next) => {
-        req.loggedInUser = getLoggedUser();
-        next();
-      };
-      const appWithUser = appFactory({
-        workingGroupController: workingGroupControllerMock,
-        authHandler: authHandlerMock,
-        logger: loggerMock,
-      });
+      const { appWithUser } = getApp({ role: 'Administrator' });
       workingGroupControllerMock.fetchById.mockResolvedValueOnce(
         getWorkingGroupResponse(),
       );
@@ -189,22 +130,7 @@ describe('/working-groups/ route', () => {
     test.each(gp2.userRoles.filter((role) => role !== 'Administrator'))(
       'Should return 403 if the user is not in the Administrator role - %s',
       async (role) => {
-        const loggedInUserId = '11';
-        const loggedUser: gp2.UserResponse = {
-          ...getUserResponse(),
-          id: loggedInUserId,
-          role,
-        };
-        const getLoggedUser = jest.fn().mockReturnValue(loggedUser);
-        const authHandlerMock: AuthHandler = (req, _res, next) => {
-          req.loggedInUser = getLoggedUser();
-          next();
-        };
-        const appWithUser = appFactory({
-          workingGroupController: workingGroupControllerMock,
-          authHandler: authHandlerMock,
-          logger: loggerMock,
-        });
+        const { appWithUser } = getApp({ role });
         workingGroupControllerMock.update.mockResolvedValueOnce(
           getWorkingGroupResponse(),
         );
@@ -221,28 +147,14 @@ describe('/working-groups/ route', () => {
       },
     );
     test('Should return 403 if the user is not in part of the working group', async () => {
-      const loggedInUserId = 'not-in-working-group';
-      const loggedUser: gp2.UserResponse = {
-        ...getUserResponse(),
-        id: loggedInUserId,
-        role: 'Administrator',
-      };
-      const getLoggedUser = jest.fn().mockReturnValue(loggedUser);
-      const authHandlerMock: AuthHandler = (req, _res, next) => {
-        req.loggedInUser = getLoggedUser();
-        next();
-      };
-      const appWithUser = appFactory({
-        workingGroupController: workingGroupControllerMock,
-        authHandler: authHandlerMock,
-        logger: loggerMock,
-      });
+      const { appWithUser } = getApp({ role: 'Administrator' });
       workingGroupControllerMock.update.mockResolvedValueOnce(
         getWorkingGroupResponse(),
       );
-      workingGroupControllerMock.fetchById.mockResolvedValueOnce(
-        getWorkingGroupResponse(),
-      );
+      workingGroupControllerMock.fetchById.mockResolvedValueOnce({
+        ...getWorkingGroupResponse(),
+        members: [],
+      });
 
       const response = await supertest(appWithUser)
         .put('/working-group/23/resources')
@@ -253,3 +165,22 @@ describe('/working-groups/ route', () => {
     });
   });
 });
+const getApp = ({ role }: { role?: gp2.UserResponse['role'] } = {}) => {
+  const loggedInUserId = '11';
+  const loggedUser: gp2.UserResponse = {
+    ...getUserResponse(),
+    id: loggedInUserId,
+    ...(role && { role }),
+  };
+  const getLoggedUser = jest.fn().mockReturnValue(loggedUser);
+  const authHandlerMock: AuthHandler = (req, _res, next) => {
+    req.loggedInUser = getLoggedUser();
+    next();
+  };
+  const appWithUser = appFactory({
+    workingGroupController: workingGroupControllerMock,
+    authHandler: authHandlerMock,
+    logger: loggerMock,
+  });
+  return { appWithUser, loggedInUserId };
+};

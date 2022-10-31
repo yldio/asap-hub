@@ -85,13 +85,11 @@ export class WorkingGroupSquidexDataProvider
   }
 }
 
-const convertToSquidexWorkingGroup = (
-  workingGroup: gp2Model.WorkingGroupUpdateDataObject,
-) =>
-  Object.entries(workingGroup).reduce(
-    (acc, [key, value]) => ({ ...acc, [key]: { iv: value } }),
-    {} as { [key: string]: { iv: unknown } },
-  );
+const convertToSquidexWorkingGroup = ({
+  resources = [],
+}: gp2Model.WorkingGroupUpdateDataObject): gp2Squidex.InputWorkingGroup['data'] => ({
+  resources: { iv: resources },
+});
 
 export type GraphQLWorkingGroup = NonNullable<
   NonNullable<

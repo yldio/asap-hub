@@ -137,18 +137,18 @@ describe('Working Group controller', () => {
   describe('update', () => {
     beforeEach(jest.resetAllMocks);
 
-    test('Should return the newly updated user', async () => {
+    test('Should return the newly updated working group', async () => {
       const mockResponse = getWorkingGroupDataObject();
       workingGroupDataProviderMock.fetchById.mockResolvedValue(mockResponse);
       const result = await workingGroupController.update(
         '7',
-        { resources: [] },
+        { resources: [{ type: 'Note', title: 'a title to update' }] },
         '11',
       );
 
       expect(result).toEqual(getWorkingGroupResponse());
       expect(workingGroupDataProviderMock.update).toHaveBeenCalledWith('7', {
-        resources: [],
+        resources: [{ type: 'Note', title: 'a title to update' }],
       });
     });
   });

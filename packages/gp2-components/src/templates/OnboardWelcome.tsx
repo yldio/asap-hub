@@ -51,7 +51,7 @@ const OnboardWelcome: React.FC<Record<string, never>> = () => (
             top: '52px',
           })}
         >
-          <img css={imageContainerStyle} src={projectsImage} />
+          <img alt={''} css={imageContainerStyle} src={projectsImage} />
         </div>
         <div
           css={css({

@@ -40,8 +40,6 @@ jobs:
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    env:
-      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -50,15 +48,22 @@ jobs:
         with:
           path: |
             .jest-cache/
-          key: jest-cache
+          key: jest-cache-${{ github.sha }}
+          restore-keys: |
+            jest-cache-
+      - name: Get number of CPU cores
+        id: cpu-cores
+        uses: SimenB/github-actions-cpu-cores@v1
       - name: Test
         run: |
-          yarn test --coverage --maxWorkers=2
+          yarn test --coverage --maxWorkers ${{ steps.cpu-cores.outputs.count }} --ci
       - uses: codecov/codecov-action@v3
         with:
           fail_ci_if_error: true
           directory: coverage
           verbose: true
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   integration:
     if: ${{ inputs.environment-name=='Branch' }}

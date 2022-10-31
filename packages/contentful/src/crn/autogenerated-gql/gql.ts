@@ -3,13 +3,13 @@ import * as graphql from './graphql';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
 const documents = {
-  '\n  query FetchNews {\n    newsCollection {\n      items {\n        title\n        shortText\n        frequency\n        externalLink\n        externalLinkText\n      }\n    }\n  }\n':
-    graphql.FetchNewsDocument,
+  '\n  query FetchUsers {\n    usersCollection {\n      items {\n        id\n      }\n    }\n  }\n':
+    graphql.FetchUsersDocument,
 };
 
 export function gql(
-  source: '\n  query FetchNews {\n    newsCollection {\n      items {\n        title\n        shortText\n        frequency\n        externalLink\n        externalLinkText\n      }\n    }\n  }\n',
-): typeof documents['\n  query FetchNews {\n    newsCollection {\n      items {\n        title\n        shortText\n        frequency\n        externalLink\n        externalLinkText\n      }\n    }\n  }\n'];
+  source: '\n  query FetchUsers {\n    usersCollection {\n      items {\n        id\n      }\n    }\n  }\n',
+): typeof documents['\n  query FetchUsers {\n    usersCollection {\n      items {\n        id\n      }\n    }\n  }\n'];
 
 export function gql(source: string): unknown;
 export function gql(source: string) {

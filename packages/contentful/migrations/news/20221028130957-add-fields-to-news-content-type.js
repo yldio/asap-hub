@@ -2,7 +2,7 @@ module.exports.description = 'Adds fields in news content type.';
 
 module.exports.up = function (migration) {
   const news = migration.editContentType('news');
-  news.deleteField('id');
+
   news
     .createField('title')
     .name('Title')
@@ -53,7 +53,7 @@ module.exports.up = function (migration) {
     .omitted(false);
 
   news
-    .createField('externalLink')
+    .createField('link')
     .name('External Link')
     .type('Symbol')
     .localized(false)
@@ -73,7 +73,7 @@ module.exports.up = function (migration) {
     .omitted(false);
 
   news
-    .createField('externalLinkText')
+    .createField('linkText')
     .name('External Link Text')
     .type('Symbol')
     .localized(false)
@@ -128,9 +128,9 @@ module.exports.up = function (migration) {
 
   news.changeFieldControl('thumbnail', 'builtin', 'assetLinkEditor', {});
   news.changeFieldControl('frequency', 'builtin', 'dropdown', {});
-  news.changeFieldControl('externalLink', 'builtin', 'singleLine', {});
+  news.changeFieldControl('link', 'builtin', 'singleLine', {});
 
-  news.changeFieldControl('externalLinkText', 'builtin', 'singleLine', {
+  news.changeFieldControl('linkText', 'builtin', 'singleLine', {
     helpText: 'Leave this empty to show "Open External Link"',
   });
 
@@ -145,8 +145,8 @@ module.exports.down = (migration) => {
     'shortText',
     'thumbnail',
     'frequency',
-    'externalLink',
-    'externalLinkText',
+    'link',
+    'linkText',
     'text',
   ].forEach((field) => {
     news.deleteField(field);

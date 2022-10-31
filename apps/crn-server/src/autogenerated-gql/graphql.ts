@@ -6454,7 +6454,7 @@ export type EventContentFragment = Pick<
             | ({ __typename: 'Users' } & Pick<Users, 'id'> & {
                   flatData: Pick<
                     UsersFlatDataDto,
-                    'firstName' | 'lastName' | 'onboarded'
+                    'alumniSinceDate' | 'firstName' | 'lastName' | 'onboarded'
                   > & {
                     avatar: Maybe<Array<Pick<Asset, 'id'>>>;
                     teams: Maybe<
@@ -6842,7 +6842,10 @@ export type FetchEventsQuery = {
                       | ({ __typename: 'Users' } & Pick<Users, 'id'> & {
                             flatData: Pick<
                               UsersFlatDataDto,
-                              'firstName' | 'lastName' | 'onboarded'
+                              | 'alumniSinceDate'
+                              | 'firstName'
+                              | 'lastName'
+                              | 'onboarded'
                             > & {
                               avatar: Maybe<Array<Pick<Asset, 'id'>>>;
                               teams: Maybe<
@@ -7195,7 +7198,10 @@ export type FetchEventQuery = {
                 | ({ __typename: 'Users' } & Pick<Users, 'id'> & {
                       flatData: Pick<
                         UsersFlatDataDto,
-                        'firstName' | 'lastName' | 'onboarded'
+                        | 'alumniSinceDate'
+                        | 'firstName'
+                        | 'lastName'
+                        | 'onboarded'
                       > & {
                         avatar: Maybe<Array<Pick<Asset, 'id'>>>;
                         teams: Maybe<
@@ -10398,6 +10404,13 @@ export const EventContentFragmentDoc = {
                                     selectionSet: {
                                       kind: 'SelectionSet',
                                       selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'alumniSinceDate',
+                                          },
+                                        },
                                         {
                                           kind: 'Field',
                                           name: {

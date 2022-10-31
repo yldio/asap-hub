@@ -8,6 +8,7 @@ import {
   userPlaceholderIcon,
   chevronCircleDownIcon,
   chevronCircleUpIcon,
+  alumniBadge,
   inactiveBadgeIcon,
 } from '../icons';
 import { useDateHasPassed } from '../date';
@@ -95,6 +96,15 @@ const speakerListMobileMixin = {
   paddingBottom: `${12 / perRem}em`,
   paddingTop: `${12 / perRem}em`,
 };
+
+const iconStyles = css({
+  display: 'inline-flex',
+});
+
+const internalSpeakerStyle = css({
+  display: 'inline-flex',
+  gap: `${8 / perRem}em`,
+});
 
 const speakerListStyles = {
   ...gridMixin,
@@ -211,7 +221,12 @@ const SpeakerList: React.FC<SpeakerListProps> = ({ speakers, endDate }) => {
                       network({}).users({}).user({ userId: speaker.user.id }).$
                     }
                   >
-                    {speaker.user.displayName}
+                    <span css={internalSpeakerStyle}>
+                      <span>{speaker.user.displayName}</span>
+                      {speaker.user.alumniSinceDate && (
+                        <span css={iconStyles}>{alumniBadge}</span>
+                      )}
+                    </span>
                   </Link>
                 )) ||
                   ('externalUser' in speaker && (

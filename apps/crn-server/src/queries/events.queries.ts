@@ -57,6 +57,7 @@ export const eventContentFragment = gql`
           ... on Users {
             id
             flatData {
+              alumniSinceDate
               firstName
               lastName
               onboarded

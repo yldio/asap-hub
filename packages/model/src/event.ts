@@ -11,6 +11,7 @@ export const eventStatus = ['Confirmed', 'Tentative', 'Cancelled'] as const;
 export type EventStatus = typeof eventStatus[number];
 
 export interface EventSpeakerUserData {
+  alumniSinceDate?: string;
   id: string;
   firstName?: string;
   lastName?: string;

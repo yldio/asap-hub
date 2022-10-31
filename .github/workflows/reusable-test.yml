@@ -40,8 +40,6 @@ jobs:
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    env:
-      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -64,6 +62,8 @@ jobs:
           fail_ci_if_error: true
           directory: coverage
           verbose: true
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   integration:
     if: ${{ inputs.environment-name=='Branch' }}

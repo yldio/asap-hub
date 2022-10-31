@@ -5,6 +5,7 @@ import {
   WorkingGroupDetailPage,
   WorkingGroupOverview,
   WorkingGroupResources,
+  ResourceModal,
 } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUser } from '@asap-hub/react-context';
@@ -47,7 +48,30 @@ const WorkingGroupDetail = () => {
               }
             >
               <Frame title="Resources">
-                <WorkingGroupResources {...workingGroup} />
+                <WorkingGroupResources
+                  {...workingGroup}
+                  resourcesRoute={
+                    workingGroups({})
+                      .workingGroup({ workingGroupId })
+                      .resources({}).$
+                  }
+                />
+                <Route
+                  path={
+                    workingGroups({})
+                      .workingGroup({ workingGroupId })
+                      .resources({})
+                      .add({}).$
+                  }
+                >
+                  <ResourceModal
+                    backHref={
+                      workingGroups({})
+                        .workingGroup({ workingGroupId })
+                        .resources({}).$
+                    }
+                  />
+                </Route>
               </Frame>
             </Route>
           )}

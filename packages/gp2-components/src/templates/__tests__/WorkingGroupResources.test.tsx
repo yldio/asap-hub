@@ -11,6 +11,7 @@ describe('WorkingGroupResources', () => {
       externalLink: 'http://a-link-some-where',
     }));
   const defaultProps = {
+    workingGroupId: '1',
     resources: getResources(),
   };
 

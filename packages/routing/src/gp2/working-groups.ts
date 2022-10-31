@@ -1,8 +1,10 @@
 import { route, stringParser } from 'typesafe-routes';
 
 const workingGroup = (() => {
+  const edit = route('/edit', {}, {});
+  const add = route('/add', {}, {});
   const overview = route('/overview', {}, {});
-  const resources = route('/resources', {}, {});
+  const resources = route('/resources', {}, { add, edit });
   return route(
     '/:workingGroupId',
     { workingGroupId: stringParser },

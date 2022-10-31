@@ -179,7 +179,7 @@ const TextField: React.FC<TextFieldProps> = ({
         onChange={({ currentTarget: { value: newValue } }) =>
           onChange(newValue)
         }
-        css={[
+        css={({ colors }) => [
           styles,
           textFieldStyles,
           enabled || disabledStyles,
@@ -193,6 +193,9 @@ const TextField: React.FC<TextFieldProps> = ({
 
           rightIndicator && {
             paddingRight: getIndicatorPadding(rightIndicator),
+          },
+          colors?.primary500 && {
+            ':focus': { borderColor: colors.primary500.rgba },
           },
         ]}
       />

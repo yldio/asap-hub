@@ -30,7 +30,11 @@ type EditModalProps = Pick<
 > & {
   validate?: () => boolean;
   dirty: boolean; // mandatory so that it cannot be forgotten
-  children: (state: { isSaving: boolean }) => ReactNode;
+  children: (
+    state: { isSaving: boolean },
+    asyncOnSave: () => void,
+  ) => ReactNode;
+  noHeader?: boolean;
 };
 const EditModal: React.FC<EditModalProps> = ({
   dirty,
@@ -39,6 +43,7 @@ const EditModal: React.FC<EditModalProps> = ({
   backHref,
   validate = () => true,
   onSave = noop,
+  noHeader = false,
 }) => {
   const formRef = useRef<HTMLFormElement>(null);
   const [status, setStatus] = useState<
@@ -51,6 +56,22 @@ const EditModal: React.FC<EditModalProps> = ({
   }, [status, dirty]);
 
   const historyPush = usePushFromHere();
+  const asyncOnSave = async () => {
+    const parentValidation = validate();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    if (formRef.current!.reportValidity() && parentValidation) {
+      setStatus('isSaving');
+      try {
+        await onSave();
+        if (!formRef.current) return;
+        setStatus('hasSaved');
+        historyPush(backHref);
+      } catch {
+        if (!formRef.current) return;
+        setStatus('hasError');
+      }
+    }
+  };
 
   return (
     <Modal padding={false}>
@@ -68,29 +89,16 @@ const EditModal: React.FC<EditModalProps> = ({
         </Toast>
       )}
       <form ref={formRef} css={styles}>
-        <ModalEditHeader
-          title={title}
-          backHref={backHref}
-          saveEnabled={status !== 'isSaving'}
-          onSave={async () => {
-            const parentValidation = validate();
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            if (formRef.current!.reportValidity() && parentValidation) {
-              setStatus('isSaving');
-              try {
-                await onSave();
-                if (!formRef.current) return;
-                setStatus('hasSaved');
-                historyPush(backHref);
-              } catch {
-                if (!formRef.current) return;
-                setStatus('hasError');
-              }
-            }
-          }}
-        />
+        {!noHeader && (
+          <ModalEditHeader
+            title={title}
+            backHref={backHref}
+            saveEnabled={status !== 'isSaving'}
+            onSave={asyncOnSave}
+          />
+        )}
         <main css={bodyStyles}>
-          {children({ isSaving: status === 'isSaving' })}
+          {children({ isSaving: status === 'isSaving' }, asyncOnSave)}
         </main>
       </form>
     </Modal>

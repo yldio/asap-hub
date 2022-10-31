@@ -13,6 +13,7 @@ import {
   pixels,
   Subtitle,
 } from '@asap-hub/react-components';
+
 import { css } from '@emotion/react';
 import { useState } from 'react';
 import { addIcon, editIcon } from '../icons';
@@ -20,6 +21,7 @@ import { addIcon, editIcon } from '../icons';
 type ResourcesProps = {
   resources?: gp2.Resource[];
   headline: string;
+  resourcesRoute: string;
 };
 
 const { rem, tabletScreen } = pixels;
@@ -56,7 +58,11 @@ const hideStyles = css({
   [`:nth-of-type(n+4)`]: { display: 'none' },
 });
 
-const Resources: React.FC<ResourcesProps> = ({ resources, headline }) => {
+const Resources: React.FC<ResourcesProps> = ({
+  resources,
+  headline,
+  resourcesRoute,
+}) => {
   const minimumResourcesToDisplay = 3;
   const [expanded, setExpanded] = useState(false);
   const getResourcesListStyles = () => {
@@ -66,6 +72,7 @@ const Resources: React.FC<ResourcesProps> = ({ resources, headline }) => {
 
     return [hideStyles];
   };
+
   return (
     <div css={containerStyles}>
       <Card>{headline}</Card>
@@ -73,7 +80,7 @@ const Resources: React.FC<ResourcesProps> = ({ resources, headline }) => {
         <div css={[rowStyles, buttonStyles]}>
           <Headline3 noMargin>Resource List</Headline3>
           <div css={editButtonStyles}>
-            <Link href={''} buttonStyle noMargin small>
+            <Link href={resourcesRoute + '/add'} buttonStyle noMargin small>
               Add {addIcon}
             </Link>
           </div>

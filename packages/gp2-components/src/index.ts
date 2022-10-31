@@ -34,6 +34,7 @@ export {
   WorkingGroupNetwork,
   WorkingGroupsBody,
   FiltersModal,
+  ResourceModal,
 } from './organisms';
 export {
   BasicLayout,

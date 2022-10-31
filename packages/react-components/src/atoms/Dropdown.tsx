@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
 import { FC, useCallback, useEffect, useMemo, useRef } from 'react';
 import Select, { ControlProps, OptionTypeBase } from 'react-select';
 import { v4 as uuidV4 } from 'uuid';
@@ -78,6 +78,7 @@ export default function Dropdown<V extends string>({
     [options],
   );
   const selectValue = validOptions.find((option) => option.value === value);
+  const theme = useTheme();
   return (
     <div css={containerStyles}>
       <Select<OptionTypeBase>
@@ -91,7 +92,7 @@ export default function Dropdown<V extends string>({
         }}
         value={selectValue || null}
         components={{ DropdownIndicator, ClearIndicator }}
-        styles={reactSelectStyles(!!validationMessage)}
+        styles={reactSelectStyles(theme, !!validationMessage)}
         noOptionsMessage={noOptionsMessage}
         tabSelectsValue={false}
         autoComplete={uuidV4()}

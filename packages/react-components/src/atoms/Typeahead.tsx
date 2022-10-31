@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
 import {
   ComponentProps,
   createContext,
@@ -112,6 +112,7 @@ const Typeahead: FC<TypeaheadProps> = ({
     // Hack to re-validate once the selected value has been put in the state of the input field
     setTimeout(validationTargetProps.onBlur, 0);
   };
+  const theme = useTheme();
 
   const commonProps = {
     inputId: id,
@@ -124,7 +125,7 @@ const Typeahead: FC<TypeaheadProps> = ({
     tabSelectsValue: false,
     controlShouldRenderValue: false,
     components: { DropdownIndicator, Input, LoadingIndicator },
-    styles: reactSelectStyles(!!validationMessage),
+    styles: reactSelectStyles(theme, !!validationMessage),
     onChange: (option: OptionTypeBase | null) => {
       const newValue = option?.value || '';
       onNewValue(newValue);

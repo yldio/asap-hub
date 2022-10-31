@@ -11,6 +11,11 @@ const {
   ENVIRONMENT,
   REGION,
   GOOGLE_API_CREDENTIALS_SECRET_ID,
+  IS_CONTENTFUL_ENABLED,
+  CONTENTFUL_SPACE_ID,
+  CONTENTFUL_ACCESS_TOKEN,
+  CONTENTFUL_ENV_ID,
+  CONTENTFUL_HOST,
   CRN_API_URL,
   GOOGLE_API_TOKEN,
   LOG_LEVEL,
@@ -71,3 +76,9 @@ export const clientId = SQUIDEX_CLIENT_ID || 'squidex-client-id';
 export const clientSecret = SQUIDEX_CLIENT_SECRET || 'squidex-client-secret';
 export const appName = SQUIDEX_APP_NAME || 'asap-local';
 export const sentryTraceSampleRate = 1.0;
+export const contentfulSpaceId = CONTENTFUL_SPACE_ID || 'contentful-space-id';
+export const contentfulAccessToken =
+  CONTENTFUL_ACCESS_TOKEN || 'contentful-access-token';
+export const contentfulEnvId = CONTENTFUL_ENV_ID || 'contentful-environment-id';
+export const contentfulHost = CONTENTFUL_HOST || 'https://cdn.contentful.com';
+export const isContentfulEnabled = IS_CONTENTFUL_ENABLED || false;

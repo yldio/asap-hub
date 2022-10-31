@@ -481,10 +481,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@asap-hub/contentful@workspace:packages/contentful":
+"@asap-hub/contentful@workspace:*, @asap-hub/contentful@workspace:packages/contentful":
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful@workspace:packages/contentful"
   dependencies:
+    "@asap-hub/errors": "workspace:*"
+    "@asap-hub/model": "workspace:*"
+    "@babel/runtime-corejs3": 7.19.6
+    "@contentful/rich-text-html-renderer": ^15.13.1
+    "@contentful/rich-text-types": ^15.13.2
     "@graphql-codegen/cli": 2.12.1
     "@graphql-codegen/gql-tag-operations-preset": 1.5.5
     "@graphql-codegen/introspection": 2.2.1
@@ -492,6 +497,7 @@ __metadata:
     "@graphql-codegen/typescript": 2.7.3
     "@graphql-codegen/typescript-operations": 2.5.3
     "@graphql-typed-document-node/core": 3.1.1
+    contentful: beta-v10
     contentful-cli: 1.15.19
     contentful-migrate: 0.17.0
     graphql-tag: 2.12.6
@@ -649,6 +655,7 @@ __metadata:
     "@algolia/cli": 4.0.8
     "@asap-hub/algolia": "workspace:*"
     "@asap-hub/auth": "workspace:*"
+    "@asap-hub/contentful": "workspace:*"
     "@asap-hub/errors": "workspace:*"
     "@asap-hub/fixtures": "workspace:*"
     "@asap-hub/message-templates": "workspace:*"
@@ -8187,6 +8194,23 @@ __metadata:
   version: 1.5.0
   resolution: "@colors/colors@npm:1.5.0"
   checksum: d64d5260bed1d5012ae3fc617d38d1afc0329fec05342f4e6b838f46998855ba56e0a73833f4a80fa8378c84810da254f76a8a19c39d038260dc06dc4e007425
+  languageName: node
+  linkType: hard
+
+"@contentful/rich-text-html-renderer@npm:^15.13.1":
+  version: 15.13.1
+  resolution: "@contentful/rich-text-html-renderer@npm:15.13.1"
+  dependencies:
+    "@contentful/rich-text-types": ^15.12.1
+    escape-html: ^1.0.3
+  checksum: 431c673ff4966cbd48377ed2104739fbb218979a4fc259018a146368ec81f9aba62caba33e13c73a3240f355b54018cbf4b79576f8952af86070c5a8009c62b2
+  languageName: node
+  linkType: hard
+
+"@contentful/rich-text-types@npm:^15.12.1, @contentful/rich-text-types@npm:^15.13.2, @contentful/rich-text-types@npm:^15.3.6":
+  version: 15.13.2
+  resolution: "@contentful/rich-text-types@npm:15.13.2"
+  checksum: cf27fa7d3459e7fb67488e71dfc39a92f9bd9aefb493bce4d6ba5fcb9e37f92c512c1d06a2134dea4798541b267a06a87100a422d612c5185bd71764eea5b4f7
   languageName: node
   linkType: hard
 
@@ -15895,6 +15919,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"axios@npm:^0.26.0":
+  version: 0.26.1
+  resolution: "axios@npm:0.26.1"
+  dependencies:
+    follow-redirects: ^1.14.8
+  checksum: d9eb58ff4bc0b36a04783fc9ff760e9245c829a5a1052ee7ca6013410d427036b1d10d04e7380c02f3508c5eaf3485b1ae67bd2adbfec3683704745c8d7a6e1a
+  languageName: node
+  linkType: hard
+
 "axios@npm:^0.27.0, axios@npm:^0.27.1":
   version: 0.27.2
   resolution: "axios@npm:0.27.2"
@@ -18587,6 +18620,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"contentful-resolve-response@npm:^1.3.6":
+  version: 1.3.12
+  resolution: "contentful-resolve-response@npm:1.3.12"
+  dependencies:
+    fast-copy: ^2.1.7
+  checksum: 399ed85531f00b2eb7e65893d811c8a0d9cab970a9cef559c206f1d7c6d5fc95eb973afe3f6c7c0f06d6f56d30cdd965784fe4c861c22fbaadf538862e46d8b2
+  languageName: node
+  linkType: hard
+
 "contentful-sdk-core@npm:^6.10.4":
   version: 6.11.0
   resolution: "contentful-sdk-core@npm:6.11.0"
@@ -18613,6 +18655,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"contentful-sdk-core@npm:^7.0.2":
+  version: 7.0.4
+  resolution: "contentful-sdk-core@npm:7.0.4"
+  dependencies:
+    fast-copy: ^2.1.7
+    lodash.isplainobject: ^4.0.6
+    lodash.isstring: ^4.0.1
+    p-throttle: ^4.1.1
+    qs: ^6.9.4
+  checksum: f332e001d92bcf03d462a6d6144fb0328089db53df98d5956111fb25862bee30a770b649f2b5857beebe4c345299a3474cc575be9929d31ebd4e849c51657f09
+  languageName: node
+  linkType: hard
+
 "contentful@npm:^9.0.0":
   version: 9.2.4
   resolution: "contentful@npm:9.2.4"
@@ -18623,6 +18678,20 @@ __metadata:
     fast-copy: ^2.1.0
     json-stringify-safe: ^5.0.1
   checksum: 65abfe5e6f9ef5c0a725a7ede340cb424629dd7e2a5f90608b44e1cff6365a432508d622a50800b954651bfdcd64713515b673580072fa0b095e52d26fcfdd21
+  languageName: node
+  linkType: hard
+
+"contentful@npm:beta-v10":
+  version: 10.0.0-beta-v10.8
+  resolution: "contentful@npm:10.0.0-beta-v10.8"
+  dependencies:
+    "@contentful/rich-text-types": ^15.3.6
+    axios: ^0.26.0
+    contentful-resolve-response: ^1.3.6
+    contentful-sdk-core: ^7.0.2
+    json-stringify-safe: ^5.0.1
+    type-fest: ^2.12.0
+  checksum: 8812b51e659544cd4d25c65ca84f38ac84c50c08bf207ac455afb1e889674f5654415091f736a1b1e32fc8f9935dcc062f1a56288c1f1f57273073d60d3ee9ae
   languageName: node
   linkType: hard
 
@@ -22273,6 +22342,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fast-copy@npm:^2.1.7":
+  version: 2.1.7
+  resolution: "fast-copy@npm:2.1.7"
+  checksum: af8016c174b02bd4f706ffdf9f138511b17b748665b291fec6c5ca1922cb55da35cf86ded46b31890930bcf9b1c2481c03c793a47110ab81ec385e14972b9d7e
+  languageName: node
+  linkType: hard
+
 "fast-deep-equal@npm:3.1.3, fast-deep-equal@npm:^3.1.3":
   version: 3.1.3
   resolution: "fast-deep-equal@npm:3.1.3"
@@ -22941,7 +23017,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.14.0, follow-redirects@npm:^1.14.9":
+"follow-redirects@npm:^1.14.0, follow-redirects@npm:^1.14.8, follow-redirects@npm:^1.14.9":
   version: 1.15.2
   resolution: "follow-redirects@npm:1.15.2"
   peerDependenciesMeta:
@@ -37869,7 +37945,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"type-fest@npm:^2.5.3":
+"type-fest@npm:^2.12.0, type-fest@npm:^2.5.3":
   version: 2.19.0
   resolution: "type-fest@npm:2.19.0"
   checksum: a4ef07ece297c9fba78fc1bd6d85dff4472fe043ede98bd4710d2615d15776902b595abf62bd78339ed6278f021235fb28a96361f8be86ed754f778973a0d278

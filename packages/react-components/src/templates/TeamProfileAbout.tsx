@@ -16,6 +16,10 @@ const styles = css({
   gridRowGap: `${36 / perRem}em`,
 });
 
+const membersCardStyles = css({
+  overflow: 'hidden',
+});
+
 type TeamProfileAboutProps = ComponentProps<typeof TeamProfileOverview> &
   ComponentProps<typeof ProfileExpertiseAndResources> &
   Pick<TeamResponse, 'pointOfContact' | 'members' | 'inactiveSince'> & {
@@ -47,7 +51,7 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
         expertiseAndResourceTags={expertiseAndResourceTags}
       />
     ) : null}
-    <section id={teamListElementId}>
+    <section id={teamListElementId} css={membersCardStyles}>
       <TeamMembersTabbedCard
         title="Team Members"
         members={members}

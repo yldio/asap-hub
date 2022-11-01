@@ -3594,7 +3594,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "chance",\
-        "npm:1.1.8"\
+        "npm:1.1.9"\
       ],\
       [\
         "change-case",\
@@ -10868,7 +10868,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["aws-sdk", "npm:2.1220.0"],\
             ["aws-xray-sdk", "npm:3.3.8"],\
             ["babel-loader", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:8.2.5"],\
-            ["chance", "npm:1.1.8"],\
+            ["chance", "npm:1.1.9"],\
             ["copy-webpack-plugin", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:9.1.0"],\
             ["cors", "npm:2.8.5"],\
             ["csv-parse", "npm:4.16.3"],\
@@ -12166,7 +12166,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jwt-encode", "workspace:@types/jwt-encode"],\
             ["apr-intercept", "npm:3.0.4"],\
             ["aws-lambda", "npm:1.0.7"],\
-            ["chance", "npm:1.1.8"],\
+            ["chance", "npm:1.1.9"],\
             ["cross-fetch", "npm:3.1.4"],\
             ["debug", "virtual:fd8de37609258cc0a542fd94a84d3a92a7a50fe97add0d0ad2eb2de7df7a01a41d03004536a361279c31772f9825e9f1c1db0cf143d0ea8269bb824c9db84c63#npm:4.3.4"],\
             ["got", "npm:11.8.5"],\
@@ -12202,7 +12202,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jwt-encode", "workspace:@types/jwt-encode"],\
             ["@types/luxon", "npm:1.26.4"],\
             ["apr-intercept", "npm:3.0.4"],\
-            ["chance", "npm:1.1.8"],\
+            ["chance", "npm:1.1.9"],\
             ["cross-fetch", "npm:3.1.4"],\
             ["debug", "virtual:fd8de37609258cc0a542fd94a84d3a92a7a50fe97add0d0ad2eb2de7df7a01a41d03004536a361279c31772f9825e9f1c1db0cf143d0ea8269bb824c9db84c63#npm:4.3.4"],\
             ["got", "npm:11.8.5"],\
@@ -40617,10 +40617,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["chance", [\
-        ["npm:1.1.8", {\
-          "packageLocation": "./.yarn/cache/chance-npm-1.1.8-47e2e1db1e-e733f51e10.zip/node_modules/chance/",\
+        ["npm:1.1.9", {\
+          "packageLocation": "./.yarn/cache/chance-npm-1.1.9-bb256fadf6-57d09fd404.zip/node_modules/chance/",\
           "packageDependencies": [\
-            ["chance", "npm:1.1.8"]\
+            ["chance", "npm:1.1.9"]\
           ],\
           "linkType": "HARD"\
         }]\

@@ -1,6 +1,6 @@
 import { Auth0, gp2 as gp2Auth } from '@asap-hub/auth';
 import { Frame } from '@asap-hub/frontend-utils';
-import { Layout } from '@asap-hub/gp2-components';
+import { Layout, OnboardWelcome } from '@asap-hub/gp2-components';
 import { Loading, NotFoundPage } from '@asap-hub/react-components';
 import { useAuth0GP2, useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Route } from '@asap-hub/routing';
@@ -48,6 +48,10 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
 
   if (!user || !recoilAuth0) {
     return <Loading />;
+  }
+
+  if (!user.onboarded) {
+    return <OnboardWelcome />;
   }
 
   return (

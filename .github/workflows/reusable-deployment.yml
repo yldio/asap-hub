@@ -196,9 +196,10 @@ jobs:
           squidex-ci-client-secret: ${{ secrets.GP2_SQUIDEX_CI_CLIENT_SECRET }}
           squidex-shared-secret: ${{ secrets.GP2_SQUIDEX_SHARED_SECRET }}
 
-  crn-contentful-schema:
+  crn-contentful-migrate:
     needs: [crn-sls-deploy]
-    if: ${{ inputs.environment-name=='Development' || inputs.environment-name=='Production' }}
+    # Run for branch-workflow only if the environment name is not that of dev or prod
+    if: ${{ (inputs.environment-name == 'Branch' && inputs.crn-contentful-env != 'Development' &&  inputs.crn-contentful-env !='Production') || inputs.environment-name != 'Branch' }}
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
@@ -214,17 +215,13 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Cache rebuild output
-        uses: ./.github/actions/cache-unplugged
-        with:
-          environment-name: ${{ inputs.environment-name }}
-      - name: Synchronize Contentful
+      - name: Run Contentful migrations
         run: |
           yarn workspace @asap-hub/contentful space:migrate:crn
         env:
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.contentful-space-id }}
-          CONTENTFUL_ENV_ID: ${{ steps.setup.outputs.contentful-environment }}
+          CONTENTFUL_ENV_ID: ${{ inputs.crn-contentful-env }}
   ses:
     needs: [crn-sls-deploy]
     runs-on: ubuntu-latest

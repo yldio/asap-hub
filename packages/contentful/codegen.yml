@@ -1,6 +1,6 @@
 overwrite: true
 schema:
-  - https://graphql.contentful.com/content/v1/spaces/${CONTENTFUL_SPACE_ID}/environments/${CONTENTFUL_ENVIRONMENT}:
+  - https://graphql.contentful.com/content/v1/spaces/${CONTENTFUL_SPACE_ID}/environments/${CONTENTFUL_ENV_ID}:
       headers:
         Authorization: Bearer ${CONTENTFUL_ACCESS_TOKEN}
 documents:

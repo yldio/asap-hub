@@ -43,7 +43,7 @@ module.exports.up = function (migration) {
     .name('Frequency')
     .type('Symbol')
     .localized(false)
-    .required(false)
+    .required(true)
     .validations([
       {
         in: ['Biweekly Newsletter', 'CRN Quarterly', 'News Articles'],

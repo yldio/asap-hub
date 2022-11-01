@@ -138,7 +138,7 @@ module.exports.up = function (migration) {
 };
 
 module.exports.down = (migration) => {
-  const news = migration.createContentType('news');
+  const news = migration.editContentType('news');
   news.displayField('id');
   [
     'title',

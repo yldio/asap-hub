@@ -1106,6 +1106,7 @@ __metadata:
     "@asap-hub/server-common": "workspace:*"
     "@asap-hub/services-common": "workspace:*"
     "@asap-hub/squidex": "workspace:*"
+    "@asap-hub/validation": "workspace:*"
     "@babel/preset-env": 7.19.4
     "@babel/preset-typescript": 7.18.6
     "@babel/runtime-corejs3": 7.19.6

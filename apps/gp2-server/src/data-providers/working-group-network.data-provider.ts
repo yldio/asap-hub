@@ -14,11 +14,11 @@ export interface WorkingGroupNetworkDataProvider {
 export class WorkingGroupNetworkSquidexDataProvider
   implements WorkingGroupNetworkDataProvider
 {
-  constructor(private squidexGraphlClient: SquidexGraphqlClient) {}
+  constructor(private squidexGraphqlClient: SquidexGraphqlClient) {}
 
   async fetch(): Promise<gp2.ListWorkingGroupNetworkDataObject> {
     const { queryWorkingGroupNetworkContents: networks } =
-      await this.squidexGraphlClient.request<
+      await this.squidexGraphqlClient.request<
         FetchWorkingGroupNetworkQuery,
         FetchWorkingGroupNetworkQueryVariables
       >(FETCH_WORKING_GROUP_NETWORK);

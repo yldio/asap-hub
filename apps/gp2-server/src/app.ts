@@ -68,6 +68,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   // Middleware
   app.use(getHttpLogger({ logger }));
   app.use(cors());
+  app.use(express.json({ limit: '10MB' }));
 
   const errorHandler = errorHandlerFactory();
 
@@ -89,6 +90,13 @@ export const appFactory = (libs: Libs = {}): Express => {
     appName,
     baseUrl,
   });
+  const workingGroupRestClient = new SquidexRest<
+    gp2squidex.RestWorkingGroup,
+    gp2squidex.InputWorkingGroup
+  >(getAuthToken, 'working-groups', {
+    appName,
+    baseUrl,
+  });
   const decodeToken = decodeTokenFactory(auth0Audience);
   const userResponseCacheClient = new MemoryCacheClient<gp2.UserResponse>();
 
@@ -99,7 +107,10 @@ export const appFactory = (libs: Libs = {}): Express => {
     new UserSquidexDataProvider(squidexGraphqlClient, userRestClient);
   const workingGroupDataProvider =
     libs.workingGroupDataProvider ||
-    new WorkingGroupSquidexDataProvider(squidexGraphqlClient);
+    new WorkingGroupSquidexDataProvider(
+      squidexGraphqlClient,
+      workingGroupRestClient,
+    );
   const workingGroupNetworkDataProvider =
     libs.workingGroupNetworkDataProvider ||
     new WorkingGroupNetworkSquidexDataProvider(squidexGraphqlClient);

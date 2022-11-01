@@ -11,9 +11,9 @@ export interface TutorialsDataProvider {
   fetchById(id: string): Promise<TutorialsDataObject | null>;
 }
 export class TutorialsSquidexDataProvider implements TutorialsDataProvider {
-  constructor(private squidexGraphlClient: SquidexGraphqlClient) {}
+  constructor(private squidexGraphqlClient: SquidexGraphqlClient) {}
   async fetchById(id: string): Promise<TutorialsDataObject | null> {
-    const { findTutorialsContent } = await this.squidexGraphlClient.request<
+    const { findTutorialsContent } = await this.squidexGraphqlClient.request<
       FetchTutorialsQuery,
       FetchTutorialsQueryVariables
     >(FETCH_TUTORIAL, { id });

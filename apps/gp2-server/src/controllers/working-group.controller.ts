@@ -9,6 +9,11 @@ export interface WorkingGroupController {
     loggedInUserId: string,
   ): Promise<gp2.WorkingGroupResponse>;
   fetch(loggedInUserId: string): Promise<gp2.ListWorkingGroupResponse>;
+  update(
+    id: string,
+    update: gp2.WorkingGroupUpdateRequest,
+    loggedInUserId: string,
+  ): Promise<gp2.WorkingGroupResponse>;
 }
 
 export default class WorkingGroups implements WorkingGroupController {
@@ -35,5 +40,13 @@ export default class WorkingGroups implements WorkingGroupController {
       );
     }
     return removeNotAllowedResources(workingGroup, loggedInUserId);
+  }
+  async update(
+    id: string,
+    workingGroupUpdate: gp2.WorkingGroupUpdateRequest,
+    loggedInUserId: string,
+  ): Promise<gp2.WorkingGroupResponse> {
+    await this.workingGroupDataProvider.update(id, workingGroupUpdate);
+    return this.fetchById(id, loggedInUserId);
   }
 }

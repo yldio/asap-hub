@@ -47,7 +47,8 @@ const extractUser = (response: Auth0UserResponse): User => {
       algoliaApiKey,
     };
   }
-  const { id, email, displayName, firstName, lastName, avatarUrl } = response;
+  const { id, email, displayName, firstName, lastName, avatarUrl, onboarded } =
+    response;
 
   return {
     id,
@@ -57,7 +58,7 @@ const extractUser = (response: Auth0UserResponse): User => {
     lastName,
     avatarUrl,
     teams: [],
-    onboarded: true,
+    onboarded,
     algoliaApiKey: '',
   };
 };

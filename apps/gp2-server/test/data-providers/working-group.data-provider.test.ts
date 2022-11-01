@@ -1,3 +1,6 @@
+import { GenericError, NotFoundError } from '@asap-hub/errors';
+import { gp2 as gp2Squidex, SquidexRest } from '@asap-hub/squidex';
+import nock from 'nock';
 import {
   WorkingGroupsDataMembersRoleEnum,
   WorkingGroupsDataResourcesTypeEnum,
@@ -7,31 +10,45 @@ import {
   parseWorkingGroupToDataObject,
   WorkingGroupSquidexDataProvider,
 } from '../../src/data-providers/working-group.data-provider';
+import { getAuthToken } from '../../src/utils/auth';
 import {
   getGraphQLWorkingGroup,
   getGraphQLWorkingGroupMember,
   getGraphQLWorkingGroupResource,
   getListWorkingGroupDataObject,
+  getRestWorkingGroupUpdateData,
   getSquidexWorkingGroupGraphqlResponse,
   getSquidexWorkingGroupsGraphqlResponse,
   getWorkingGroupDataObject,
+  getWorkingGroupUpdateDataObject,
 } from '../fixtures/working-group.fixtures';
+import { identity } from '../helpers/squidex';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
 
 describe('Working Group Data Provider', () => {
+  const workingGroupRestClient = new SquidexRest<
+    gp2Squidex.RestWorkingGroup,
+    gp2Squidex.InputWorkingGroup
+  >(getAuthToken, 'working-groups', {
+    appName,
+    baseUrl,
+  });
   const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
   const workingGroupDataProvider = new WorkingGroupSquidexDataProvider(
     squidexGraphqlClientMock,
+    workingGroupRestClient,
   );
 
   const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
   const workingGroupDataProviderMockGraphqlServer =
-    new WorkingGroupSquidexDataProvider(squidexGraphqlClientMockServer);
+    new WorkingGroupSquidexDataProvider(
+      squidexGraphqlClientMockServer,
+      workingGroupRestClient,
+    );
 
-  beforeEach(() => {
-    jest.resetAllMocks();
-  });
+  beforeAll(identity);
+  beforeEach(jest.resetAllMocks);
 
   describe('Fetch', () => {
     test('Should fetch the working group from squidex graphql', async () => {
@@ -99,6 +116,59 @@ describe('Working Group Data Provider', () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
       expect(await workingGroupDataProvider.fetchById('not-found')).toBeNull();
+    });
+  });
+
+  describe('Update', () => {
+    afterEach(nock.cleanAll);
+    const workingGroupId = '11';
+
+    test('Should update the existing working group', async () => {
+      const workingGroupUpdateData = getWorkingGroupUpdateDataObject();
+
+      const restWorkingGroupUpdateData = getRestWorkingGroupUpdateData();
+      nock(baseUrl)
+        .patch(
+          `/api/content/${appName}/working-groups/${workingGroupId}`,
+          restWorkingGroupUpdateData,
+        )
+        .reply(201, { id: workingGroupId });
+
+      await workingGroupDataProvider.update(
+        workingGroupId,
+        workingGroupUpdateData,
+      );
+      expect(nock.isDone()).toBe(true);
+    });
+
+    test.each([400, 500])(
+      'Should throw when fails to update the working group - %s',
+      async (status) => {
+        const workingGroupUpdateData = getWorkingGroupUpdateDataObject();
+
+        nock(baseUrl)
+          .patch(`/api/content/${appName}/working-groups/${workingGroupId}`)
+          .reply(status);
+
+        await expect(
+          workingGroupDataProvider.update(
+            workingGroupId,
+            workingGroupUpdateData,
+          ),
+        ).rejects.toThrow(GenericError);
+      },
+    );
+
+    test('Should throw when the working group cannot be found', async () => {
+      const workingGroupUpdateData = getWorkingGroupUpdateDataObject();
+
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/working-groups/${workingGroupId}`)
+        .reply(404);
+
+      await expect(
+        workingGroupDataProvider.update(workingGroupId, workingGroupUpdateData),
+      ).rejects.toThrow(NotFoundError);
     });
   });
 

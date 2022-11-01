@@ -33,3 +33,13 @@ export type ListWorkingGroupDataObject = ListResponse<WorkingGroupDataObject>;
 export type WorkingGroupResponse = WorkingGroupDataObject;
 
 export type ListWorkingGroupResponse = ListResponse<WorkingGroupResponse>;
+
+export type WorkingGroupUpdateDataObject = Required<
+  Pick<WorkingGroupDataObject, 'resources'>
+>;
+
+export type WorkingGroupUpdateRequest = WorkingGroupUpdateDataObject;
+
+export type WorkingGroupResourcesPutRequest = NonNullable<
+  WorkingGroupDataObject['resources']
+>;

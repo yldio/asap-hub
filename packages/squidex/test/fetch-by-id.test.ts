@@ -1,5 +1,5 @@
-import nock from 'nock';
 import { GenericError, NotFoundError } from '@asap-hub/errors';
+import nock from 'nock';
 import { Squidex } from '../src/rest';
 import { getAccessTokenMock } from './mocks/access-token.mock';
 

@@ -1,5 +1,9 @@
-import { gp2 } from '@asap-hub/model';
-import { SquidexGraphqlClient } from '@asap-hub/squidex';
+import { gp2 as gp2Model } from '@asap-hub/model';
+import {
+  gp2 as gp2Squidex,
+  SquidexGraphqlClient,
+  SquidexRestClient,
+} from '@asap-hub/squidex';
 import {
   FetchWorkingGroupQuery,
   FetchWorkingGroupQueryVariables,
@@ -15,15 +19,25 @@ import { parseResources } from '../utils/resources';
 import { createUrl } from '../utils/urls';
 
 export interface WorkingGroupDataProvider {
-  fetchById(id: string): Promise<gp2.WorkingGroupDataObject | null>;
-  fetch(): Promise<gp2.ListWorkingGroupDataObject>;
+  fetchById(id: string): Promise<gp2Model.WorkingGroupDataObject | null>;
+  fetch(): Promise<gp2Model.ListWorkingGroupDataObject>;
+  update(
+    id: string,
+    workingGroupToUpdate: gp2Model.WorkingGroupUpdateDataObject,
+  ): Promise<void>;
 }
 export class WorkingGroupSquidexDataProvider
   implements WorkingGroupDataProvider
 {
-  constructor(private squidexGraphlClient: SquidexGraphqlClient) {}
+  constructor(
+    private squidexGraphqlClient: SquidexGraphqlClient,
+    private squidexRestClient: SquidexRestClient<
+      gp2Squidex.RestWorkingGroup,
+      gp2Squidex.InputWorkingGroup
+    >,
+  ) {}
 
-  async fetchById(id: string): Promise<gp2.WorkingGroupDataObject | null> {
+  async fetchById(id: string): Promise<gp2Model.WorkingGroupDataObject | null> {
     const { findWorkingGroupsContent } = await this.queryFetchByIdData(id);
     if (!findWorkingGroupsContent) {
       return null;
@@ -31,8 +45,8 @@ export class WorkingGroupSquidexDataProvider
     return parseWorkingGroupToDataObject(findWorkingGroupsContent);
   }
 
-  async fetch(): Promise<gp2.ListWorkingGroupDataObject> {
-    const result = await this.squidexGraphlClient.request<
+  async fetch(): Promise<gp2Model.ListWorkingGroupDataObject> {
+    const result = await this.squidexGraphqlClient.request<
       FetchWorkingGroupsQuery,
       FetchWorkingGroupsQueryVariables
     >(FETCH_WORKING_GROUPS);
@@ -55,13 +69,27 @@ export class WorkingGroupSquidexDataProvider
     };
   }
 
+  async update(
+    id: string,
+    workingGroup: gp2Model.WorkingGroupUpdateDataObject,
+  ): Promise<void> {
+    const squidexWorkingGroup = convertToSquidexWorkingGroup(workingGroup);
+
+    await this.squidexRestClient.patch(id, squidexWorkingGroup);
+  }
   private async queryFetchByIdData(id: string) {
-    return this.squidexGraphlClient.request<
+    return this.squidexGraphqlClient.request<
       FetchWorkingGroupQuery,
       FetchWorkingGroupQueryVariables
     >(FETCH_WORKING_GROUP, { id });
   }
 }
+
+const convertToSquidexWorkingGroup = ({
+  resources,
+}: gp2Model.WorkingGroupUpdateDataObject): gp2Squidex.InputWorkingGroup['data'] => ({
+  resources: { iv: resources },
+});
 
 export type GraphQLWorkingGroup = NonNullable<
   NonNullable<
@@ -94,12 +122,15 @@ const parseWorkingGroupMembers = (
       ? createUrl(flatAvatar.map((a) => a.id))[0]
       : undefined;
 
-  const roleMap = {
+  const roleMap: Record<
+    WorkingGroupsDataMembersRoleEnum,
+    gp2Model.WorkingGroupMemberRole
+  > = {
     [WorkingGroupsDataMembersRoleEnum.Lead]: 'Lead',
     [WorkingGroupsDataMembersRoleEnum.CoLead]: 'Co-lead',
     [WorkingGroupsDataMembersRoleEnum.WorkingGroupMember]:
       'Working group member',
-  } as const;
+  };
 
   return {
     userId: user.id,
@@ -113,11 +144,11 @@ const parseWorkingGroupMembers = (
 export function parseWorkingGroupToDataObject({
   id,
   flatData: workingGroup,
-}: GraphQLWorkingGroup): gp2.WorkingGroupDataObject {
+}: GraphQLWorkingGroup): gp2Model.WorkingGroupDataObject {
   const members =
     workingGroup.members?.reduce(
       (
-        membersList: gp2.WorkingGroupMember[],
+        membersList: gp2Model.WorkingGroupMember[],
         member: GraphQLWorkingGroupMember,
       ) => {
         const user = member.user && member.user[0];

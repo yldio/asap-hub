@@ -1,7 +1,11 @@
 import type { gp2 } from '@asap-hub/model';
+import Boom from '@hapi/boom';
 import { Router } from 'express';
 import { WorkingGroupController } from '../controllers/working-group.controller';
-import { validateWorkingGroupParameters } from '../validation/working-group.validation';
+import {
+  validateWorkingGroupParameters,
+  validateWorkingGroupPatchRequest,
+} from '../validation/working-group.validation';
 
 export const workingGroupRouteFactory = (
   workingGroupController: WorkingGroupController,
@@ -29,6 +33,39 @@ export const workingGroupRouteFactory = (
       const loggedInUserId = req.loggedInUser!.id;
       const workingGroup = await workingGroupController.fetchById(
         workingGroupId,
+        loggedInUserId,
+      );
+
+      res.json(workingGroup);
+    },
+  );
+
+  workingGroupRoutes.put<{ workingGroupId: string }, gp2.WorkingGroupResponse>(
+    '/working-group/:workingGroupId/resources',
+    async (req, res) => {
+      const { params, body } = req;
+
+      const { workingGroupId } = validateWorkingGroupParameters(params);
+      const resources = validateWorkingGroupPatchRequest(body);
+
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const { id: loggedInUserId, role } = req.loggedInUser!;
+      const { members } = await workingGroupController.fetchById(
+        workingGroupId,
+        loggedInUserId,
+      );
+      if (
+        !(
+          role === 'Administrator' &&
+          members.some(({ userId }) => userId === loggedInUserId)
+        )
+      ) {
+        throw Boom.forbidden();
+      }
+
+      const workingGroup = await workingGroupController.update(
+        workingGroupId,
+        { resources },
         loggedInUserId,
       );
 

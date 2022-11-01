@@ -44,7 +44,7 @@ export interface UserDataProvider {
 }
 export class UserSquidexDataProvider implements UserDataProvider {
   constructor(
-    private squidexGraphlClient: SquidexGraphqlClient,
+    private squidexGraphqlClient: SquidexGraphqlClient,
     private userSquidexRestClient: SquidexRestClient<RestUser, InputUser>,
   ) {}
   async fetchById(id: string): Promise<UserDataObject | null> {
@@ -144,13 +144,13 @@ export class UserSquidexDataProvider implements UserDataProvider {
     };
   }
   private async queryFetchData(filter: string, top: number, skip: number) {
-    return this.squidexGraphlClient.request<
+    return this.squidexGraphqlClient.request<
       FetchUsersQuery,
       FetchUsersQueryVariables
     >(FETCH_USERS, { filter, top, skip });
   }
   private async queryFetchByIdData(id: string) {
-    return this.squidexGraphlClient.request<
+    return this.squidexGraphqlClient.request<
       FetchUserQuery,
       FetchUserQueryVariables
     >(FETCH_USER, { id });

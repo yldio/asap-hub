@@ -161,7 +161,7 @@ it('renders team members section when team is active and there are members', () 
     />,
   );
 
-  expect(getByText('Team Members (1)', { selector: 'h2' })).toBeVisible();
+  expect(getByText('Active Team Members (1)', { selector: 'p' })).toBeVisible();
 });
 
 it('renders team members section when team is active and there isnt any members', () => {
@@ -169,5 +169,5 @@ it('renders team members section when team is active and there isnt any members'
     <TeamProfileAbout {...props} members={[]} inactiveSince={undefined} />,
   );
 
-  expect(queryByText('Team Members')).toBeNull();
+  expect(queryByText('Active Team Members (0)')).toBeVisible();
 });

@@ -13,24 +13,34 @@ const props: ComponentProps<typeof TeamTabbedGroupsCard> = {
   title: '',
 };
 it('renders the team groups tabbed card', () => {
-  render(
+  const groups = [
+    {
+      ...createGroupResponse(),
+      name: 'Group 1',
+      description: 'Group 1 description',
+    },
+  ];
+  const { rerender } = render(
     <TeamTabbedGroupsCard
       {...props}
-      groups={[
-        {
-          ...createGroupResponse(),
-          name: 'Group 1',
-          description: 'Group 1 description',
-        },
-      ]}
+      groups={groups}
       title="Team Interest Groups"
+      inactive="2020-01-02"
     />,
   );
   expect(screen.getByText('Team Interest Groups')).toBeVisible();
-  expect(screen.getByText('Active Memberships (0)')).toBeVisible();
-  expect(screen.getByText('Past Memberships (1)')).toBeVisible();
+
   expect(screen.getByText('Group 1')).toBeVisible();
   expect(screen.getByText('Group 1 description')).toBeVisible();
+  rerender(
+    <TeamTabbedGroupsCard
+      {...props}
+      groups={groups}
+      title="Team Interest Groups"
+    />,
+  );
+  expect(screen.getByText('Active Memberships (1)')).toBeVisible();
+  expect(screen.getByText('Past Memberships (0)')).toBeVisible();
 });
 
 it('renders a group with 1 team in a singular form', () => {
@@ -67,10 +77,14 @@ it('renders a group with multiple teams in a plurar form', () => {
   expect(screen.getByText('2 Teams')).toBeInTheDocument();
 });
 
-it('renders the no past members message', () => {
-  render(<TeamTabbedGroupsCard {...props} />);
+it('renders the no members message', () => {
+  const { rerender } = render(<TeamTabbedGroupsCard {...props} />);
 
   expect(screen.getByText('There are no active memberships.')).toBeVisible();
+  rerender(
+    <TeamTabbedGroupsCard {...props} inactive={new Date().toISOString()} />,
+  );
+  expect(screen.getByText('There are no past memberships.')).toBeVisible();
 });
 
 it('shows the correct more and less button text', () => {

@@ -46,10 +46,18 @@ it('renders the members tabbed card', () => {
   expect(screen.getByText(`${labName} Lab`)).toBeInTheDocument();
 });
 
-it('renders the no past members message', () => {
-  render(<TeamMembersTabbedCard {...props} title="Team Members" />);
+it('renders the no members message', () => {
+  const { rerender } = render(
+    <TeamMembersTabbedCard
+      {...props}
+      title="Team Members"
+      inactive={new Date().toISOString()}
+    />,
+  );
 
   expect(screen.getByText('There are no past team members.')).toBeVisible();
+  rerender(<TeamMembersTabbedCard {...props} title="Team Members" />);
+  expect(screen.getByText('There are no active team members.')).toBeVisible();
 });
 
 it('shows the correct more and less button text', () => {

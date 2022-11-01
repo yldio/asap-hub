@@ -14,5 +14,6 @@ export const Normal = () => (
       hasLabs: true,
     })}
     title={text('Title', 'Team Members')}
+    inactive={text('Inactive date', '')}
   />
 );

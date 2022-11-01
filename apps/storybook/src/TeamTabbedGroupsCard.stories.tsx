@@ -11,5 +11,6 @@ export const Normal = () => (
   <TeamTabbedGroupsCard
     groups={createListGroupResponse(number('Groups', 3)).items}
     title={text('Title', 'Team Groups')}
+    inactive={text('Inactive date', '')}
   />
 );

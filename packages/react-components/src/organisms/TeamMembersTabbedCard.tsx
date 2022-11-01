@@ -32,29 +32,31 @@ type TeamMembersTabbedCardProps = Pick<
   'title' | 'description'
 > & {
   readonly members: ReadonlyArray<TeamMember>;
+  readonly inactive?: string;
 };
 
 const TeamMembersTabbedCard: React.FC<TeamMembersTabbedCardProps> = ({
   title,
   description,
   members,
+  inactive,
 }) => (
   <TabbedCard
     title={title}
     description={description}
-    activeTabIndex={1}
+    activeTabIndex={inactive ? 1 : 0}
     tabs={[
       {
-        tabTitle: 'Active Team Members (0)',
-        items: [],
-        truncateFrom: 8,
-        disabled: true,
-      },
-      {
-        tabTitle: `Past Team Members (${members.length})`,
+        tabTitle: `Active Team Members (${inactive ? 0 : members.length})`,
         items: members,
         truncateFrom: 8,
-        disabled: false,
+        disabled: !!inactive,
+      },
+      {
+        tabTitle: `Past Team Members (${inactive ? members.length : 0})`,
+        items: members,
+        truncateFrom: 8,
+        disabled: !inactive,
       },
     ]}
     getShowMoreText={(showMore) => `View ${showMore ? 'Less' : 'More'} Members`}
@@ -90,7 +92,9 @@ const TeamMembersTabbedCard: React.FC<TeamMembersTabbedCardProps> = ({
             overrideNameStyles={nameStyles}
           />
         ) : (
-          <p css={paragraphStyles}>There are no past team members.</p>
+          <p css={paragraphStyles}>{`There are no ${
+            inactive ? 'past' : 'active'
+          } team members.`}</p>
         )}
       </div>
     )}

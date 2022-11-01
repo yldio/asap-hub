@@ -74,7 +74,7 @@ it('renders the card when there are groups', async () => {
     items: [{ ...createGroupResponse() }],
   });
   const { findByText } = render(<GroupsCard id={id} />, { wrapper });
-  expect(await findByText(/team groups/i)).toBeVisible();
+  expect(await findByText(/Team Interest Groups/i)).toBeVisible();
 });
 
 it('links to the group', async () => {
@@ -83,7 +83,7 @@ it('links to the group', async () => {
     items: [{ ...createGroupResponse(), id: 'g1', name: 'Group 1' }],
   });
   const { findByText, getByText } = render(<GroupsCard id={id} />, { wrapper });
-  expect(await findByText(/team groups/i)).toBeVisible();
+  expect(await findByText(/Team Interest Groups/i)).toBeVisible();
   expect(getByText('Group 1').closest('a')).toHaveAttribute(
     'href',
     expect.stringMatching(/g1$/),

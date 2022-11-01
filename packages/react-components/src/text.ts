@@ -149,6 +149,7 @@ export type AccentColorName =
   | 'sandstone'
   | 'clay'
   | 'pine'
+  | 'mint'
   | 'fern'
   | 'cerulean'
   | 'denim'

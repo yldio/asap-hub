@@ -8,7 +8,7 @@ import { Link, Display, StateTag, TabLink, Caption } from '../atoms';
 import { paper } from '../colors';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { MembersAvatars, TabNav } from '../molecules';
-import { validTickIcon, externalLinkIcon } from '../icons';
+import { checkmarkInCircle, externalLinkIcon } from '../icons';
 import { createMailTo } from '../mail';
 
 const containerStyles = css({
@@ -101,7 +101,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
           <StateTag
             backgroundColor="mint"
             textColor="fern"
-            icon={validTickIcon}
+            icon={checkmarkInCircle}
             label="Complete"
           />
         )}

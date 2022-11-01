@@ -3,7 +3,7 @@ import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useContext } from 'react';
-import { Anchor, Avatar, Display, Link, StateTag, TabLink } from '../atoms';
+import { Display, Link, StateTag, TabLink } from '../atoms';
 import { lead, paper, pine } from '../colors';
 import {
   article,
@@ -17,12 +17,9 @@ import {
 } from '../icons';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { createMailTo } from '../mail';
-import { DropdownButton, TabNav } from '../molecules';
+import { DropdownButton, MembersAvatars, TabNav } from '../molecules';
 import { mobileScreen, perRem } from '../pixels';
 import { getCounterString } from '../utils';
-
-const MAX_MEMBER_AVATARS = 5;
-const MEMBER_AVATAR_BORDER_WIDTH = 1;
 
 const containerStyles = css({
   backgroundColor: paper.rgb,
@@ -88,21 +85,6 @@ const pointOfContactStyles = css({
   },
 });
 
-const membersContainerStyles = css({
-  gridArea: 'members',
-  padding: `${12 / perRem}em 0`,
-
-  display: 'grid',
-  gridAutoFlow: 'column',
-  gridTemplateColumns: `
-    repeat(
-      ${MAX_MEMBER_AVATARS},
-      minmax(auto, ${36 + MEMBER_AVATAR_BORDER_WIDTH * 2}px)
-    )
-    ${6 / perRem}em
-    minmax(auto, ${36 + MEMBER_AVATAR_BORDER_WIDTH * 2}px)
-  `,
-});
 const labCountStyles = css({
   gridArea: 'lab',
   display: 'flex',
@@ -117,19 +99,7 @@ const createStyles = css({
     display: 'block',
   },
 });
-const membersListStyles = css({
-  display: 'contents',
-  listStyle: 'none',
-});
-const extraUsersStyles = css({
-  display: 'block',
-  gridColumnEnd: '-1',
-});
-const listItemStyles = css({
-  border: '1px solid white',
-  borderRadius: '50%',
-  position: 'relative',
-});
+
 const dropdownButtonStyling = css({
   display: 'flex',
   columnGap: `${9 / perRem}em`,
@@ -178,37 +148,10 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
       <section
         css={canCreateUpdate ? createSectionStyles : contactSectionStyles}
       >
-        <div css={membersContainerStyles}>
-          <ul css={membersListStyles}>
-            {members
-              .slice(0, MAX_MEMBER_AVATARS)
-              .map(({ id: memberId, avatarUrl, firstName, lastName }, i) => (
-                <li
-                  key={memberId}
-                  css={[listItemStyles, { left: `-${i * 3}px` }]}
-                >
-                  <Anchor
-                    href={network({}).users({}).user({ userId: memberId }).$}
-                  >
-                    <Avatar
-                      firstName={firstName}
-                      lastName={lastName}
-                      imageUrl={avatarUrl}
-                    />
-                  </Anchor>
-                </li>
-              ))}
-            <li css={extraUsersStyles}>
-              {members.length > MAX_MEMBER_AVATARS && (
-                <Anchor href={`${route.about({}).$}#${teamListElementId}`}>
-                  <Avatar
-                    placeholder={`+${members.length - MAX_MEMBER_AVATARS}`}
-                  />
-                </Anchor>
-              )}
-            </li>
-          </ul>
-        </div>
+        <MembersAvatars
+          members={members}
+          fullListRoute={`${route.about({}).$}#${teamListElementId}`}
+        />
         {pointOfContact && !canCreateUpdate && (
           <div css={pointOfContactStyles}>
             <Link

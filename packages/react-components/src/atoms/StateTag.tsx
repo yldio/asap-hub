@@ -1,14 +1,15 @@
 import { css } from '@emotion/react';
-import { apricot, clay } from '../colors';
+import * as colors from '../colors';
 import { lineHeight, perRem } from '../pixels';
+import { AccentColorName } from '../text';
 
 const styles = css({
   display: 'inline-flex',
   boxSizing: 'border-box',
   padding: `${3 / perRem}em 0`,
   height: `calc(${lineHeight}px + ${6 / perRem}em)`,
-  backgroundColor: apricot.rgb,
-  color: clay.rgb,
+  backgroundColor: colors.apricot.rgb,
+  color: colors.clay.rgb,
   borderRadius: `${18 / perRem}em`,
 });
 
@@ -28,10 +29,23 @@ const labelStyles = (withIcon: boolean) =>
 type StateTagProps = {
   label: string;
   icon?: JSX.Element;
+  textColor?: AccentColorName;
+  backgroundColor?: AccentColorName;
 };
 
-const StateTag: React.FC<StateTagProps> = ({ label, icon }) => (
-  <span css={styles}>
+const StateTag: React.FC<StateTagProps> = ({
+  label,
+  icon,
+  textColor,
+  backgroundColor,
+}) => (
+  <span
+    css={[
+      styles,
+      textColor ? { color: colors[textColor].rgb } : null,
+      backgroundColor ? { backgroundColor: colors[backgroundColor].rgb } : null,
+    ]}
+  >
     {icon && <span css={iconStyles}>{icon}</span>}
     <span css={labelStyles(!!icon)}>{label}</span>
   </span>

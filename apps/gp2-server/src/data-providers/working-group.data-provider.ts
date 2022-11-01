@@ -86,7 +86,7 @@ export class WorkingGroupSquidexDataProvider
 }
 
 const convertToSquidexWorkingGroup = ({
-  resources = [],
+  resources,
 }: gp2Model.WorkingGroupUpdateDataObject): gp2Squidex.InputWorkingGroup['data'] => ({
   resources: { iv: resources },
 });

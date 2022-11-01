@@ -720,7 +720,7 @@ __metadata:
     aws-sdk: 2.1220.0
     aws-xray-sdk: 3.3.8
     babel-loader: 8.2.5
-    chance: 1.1.8
+    chance: 1.1.9
     copy-webpack-plugin: 9.1.0
     cors: 2.8.5
     csv-parse: 4.16.3
@@ -1420,7 +1420,7 @@ __metadata:
     "@types/jwt-encode": "workspace:*"
     apr-intercept: 3.0.4
     aws-lambda: 1.0.7
-    chance: 1.1.8
+    chance: 1.1.9
     cross-fetch: ^3.1.4
     debug: 4.3.4
     got: 11.8.5
@@ -1454,7 +1454,7 @@ __metadata:
     "@types/jwt-encode": "workspace:*"
     "@types/luxon": 1.26.4
     apr-intercept: 3.0.4
-    chance: 1.1.8
+    chance: 1.1.9
     cross-fetch: ^3.1.4
     debug: 4.3.4
     got: 11.8.5
@@ -17427,10 +17427,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chance@npm:1.1.8":
-  version: 1.1.8
-  resolution: "chance@npm:1.1.8"
-  checksum: e733f51e1094d7b0343a9e79f38599086442e6284fc2789cf9e072c71a0070874a1b340f9fffe4e66260899733f768cf113434be466ecb0016e3afcb60add3ee
+"chance@npm:1.1.9":
+  version: 1.1.9
+  resolution: "chance@npm:1.1.9"
+  checksum: 57d09fd404ffb87f5e106705c28c38a77cb0a6d96f3828d63052947a12d62d65f40a100d74b123bea3d5ebce3b53333a93d3b81783c64d8473788a0ce6b6e8db
   languageName: node
   linkType: hard
 

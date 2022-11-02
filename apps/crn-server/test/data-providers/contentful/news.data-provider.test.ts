@@ -14,15 +14,12 @@ import { NewsContentfulDataProvider } from '../../../src/data-providers/contentf
 
 const isContentfulResponse = true;
 
-jest.setTimeout(30000);
-
 describe('News data provider', () => {
   const newsRestClient = getClient({
     space: contentfulSpaceId,
     accessToken: contentfulAccessToken,
     environment: contentfulEnvId,
     retryOnError: false,
-    retryLimit: 0,
   });
   const newsDataProvider = new NewsContentfulDataProvider(newsRestClient);
 
@@ -85,15 +82,11 @@ describe('News data provider', () => {
         )
         .query({
           content_type: 'news',
-          limit: 8,
-          skip: 5,
           order: '-sys.createdAt',
         })
         .reply(500);
 
-      await expect(
-        newsDataProvider.fetch({ take: 8, skip: 5 }),
-      ).rejects.toThrow();
+      await expect(newsDataProvider.fetch()).rejects.toThrow();
     });
 
     test('Should return news', async () => {

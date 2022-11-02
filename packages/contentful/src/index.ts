@@ -5,11 +5,13 @@ export const getClient = ({
   space,
   accessToken,
   environment,
+  ...rest
 }: CreateClientParams) =>
   contentful.createClient({
     space,
     accessToken,
     environment,
+    ...rest,
   });
 
 export * from './entities';

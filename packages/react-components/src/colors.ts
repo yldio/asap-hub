@@ -93,9 +93,15 @@ export const mauve = color(105, 59, 119);
 export const lavender = color(242, 237, 245);
 
 export const neutral200 = color(246, 249, 251);
+export const neutral300 = color(237, 241, 243);
+export const neutral500 = color(12, 141, 195);
+export const neutral800 = color(146, 153, 158);
 
+export const informationInfo100 = color(230, 243, 249);
 export const informationInfo500 = color(12, 141, 195);
 
 export const semanticInformationInfo100 = color(230, 243, 249);
 
+export const warning100 = color(248, 237, 222);
+export const warning500 = color(206, 128, 26);
 export const warning900 = color(181, 107, 11);

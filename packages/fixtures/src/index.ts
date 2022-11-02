@@ -14,3 +14,4 @@ export * from './research-tags';
 export * from './teams';
 export * from './tutorials';
 export * from './users';
+export * from './working-groups';

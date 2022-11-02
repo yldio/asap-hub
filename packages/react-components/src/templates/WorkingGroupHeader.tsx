@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { formatDistance } from 'date-fns';
-import { network } from '@asap-hub/routing';
+import { workingGroups } from '@asap-hub/routing';
 import { TeamResponse } from '@asap-hub/model';
 
 import { mobileScreen, perRem } from '../pixels';
@@ -76,6 +76,7 @@ type WorkingGroupPageHeaderProps = Pick<
   TeamResponse,
   'members' | 'pointOfContact'
 > & {
+  id: string;
   name: string;
   complete: boolean;
   description: string;
@@ -85,6 +86,7 @@ type WorkingGroupPageHeaderProps = Pick<
 };
 
 const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
+  id,
   name,
   complete,
   lastUpdated,
@@ -106,7 +108,10 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
       )}
     </div>
     <section css={contactSectionStyles}>
-      <MembersAvatars members={members} fullListRoute="fullRoute" />
+      <MembersAvatars
+        members={members}
+        fullListRoute={workingGroups({}).workingGroup({ workingGroupId: id }).$}
+      />
       {pointOfContact && (
         <div css={pointOfContactStyles}>
           <Link
@@ -132,7 +137,13 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
       </div>
     </div>
     <TabNav>
-      <TabLink href={network({}).users({}).$}>About</TabLink>
+      <TabLink
+        href={
+          workingGroups({}).workingGroup({ workingGroupId: id }).about({}).$
+        }
+      >
+        About
+      </TabLink>
     </TabNav>
   </header>
 );

@@ -2,7 +2,11 @@ import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import nock from 'nock';
 import { API_BASE_URL } from '../../config';
-import { getWorkingGroup, getWorkingGroups } from '../api';
+import {
+  getWorkingGroup,
+  getWorkingGroups,
+  putWorkingGroupResources,
+} from '../api';
 
 jest.mock('../../config');
 
@@ -69,6 +73,30 @@ describe('getWorkingGroups', () => {
       getWorkingGroups('Bearer x'),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch the working groups. Expected status 2xx. Received status 500."`,
+    );
+  });
+});
+
+describe('putWorkingGroupsResources', () => {
+  afterEach(nock.cleanAll);
+  const payload = gp2Fixtures.workingGroupResources;
+
+  it('makes an authorized PUT request to update a working group resources', async () => {
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .put('/working-group/11/resources', payload)
+      .reply(200, { id: 123 });
+
+    await putWorkingGroupResources('11', payload, 'Bearer x');
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('errors for an error status', async () => {
+    nock(API_BASE_URL).put('/working-group/11/resources').reply(500, {});
+
+    await expect(
+      putWorkingGroupResources('11', payload, 'Bearer x'),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Failed to update working group resources for id 11 Expected status 200. Received status 500."`,
     );
   });
 });

@@ -1,5 +1,12 @@
 import { gp2 } from '@asap-hub/model';
 
+export const workingGroupResources: gp2.Resource[] = [
+  {
+    type: 'Note',
+    title: 'This is a resource title',
+    description: 'This is a resource description',
+  },
+];
 const mockedWorkingGroup: gp2.WorkingGroupResponse = {
   id: '42',
   title: 'Working Group Title',
@@ -14,13 +21,7 @@ const mockedWorkingGroup: gp2.WorkingGroupResponse = {
   shortDescription: 'This is a short description',
   description: 'This is a long description',
   leadingMembers: 'This is a list of leading members',
-  resources: [
-    {
-      type: 'Note',
-      title: 'This is a resource title',
-      description: 'This is a resource description',
-    },
-  ],
+  resources: workingGroupResources,
 };
 
 export const createWorkingGroupResponse = (

@@ -92,52 +92,49 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
   externalLinkText,
   pointOfContact,
   members,
-}) => {
-  return (
-    <header css={containerStyles}>
-      <div css={titleStyle}>
-        <Display styleAsHeading={2}>{name}</Display>
-        {complete && (
-          <StateTag
-            backgroundColor="mint"
-            textColor="fern"
-            icon={checkmarkInCircle}
-            label="Complete"
-          />
-        )}
-      </div>
-      <section css={contactSectionStyles}>
-        <MembersAvatars members={members} fullListRoute="fullRoute" />
-        {pointOfContact && (
-          <div css={pointOfContactStyles}>
-            <Link
-              buttonStyle
-              small
-              primary
-              href={`${createMailTo(pointOfContact.email)}`}
-            >
-              Contact PM
-            </Link>
-          </div>
-        )}
-      </section>
-      <div css={rowStyles}>
-        <Link buttonStyle small href={externalLink}>
-          {externalLinkIcon}
-          {externalLinkText}
-        </Link>
-        <div css={lastUpdatedStyles}>
-          <Caption asParagraph accent="lead">
-            Last updated: {formatDistance(new Date(), new Date(lastUpdated))}{' '}
-            ago
-          </Caption>
+}) => (
+  <header css={containerStyles}>
+    <div css={titleStyle}>
+      <Display styleAsHeading={2}>{name}</Display>
+      {complete && (
+        <StateTag
+          backgroundColor="mint"
+          textColor="fern"
+          icon={checkmarkInCircle}
+          label="Complete"
+        />
+      )}
+    </div>
+    <section css={contactSectionStyles}>
+      <MembersAvatars members={members} fullListRoute="fullRoute" />
+      {pointOfContact && (
+        <div css={pointOfContactStyles}>
+          <Link
+            buttonStyle
+            small
+            primary
+            href={`${createMailTo(pointOfContact.email)}`}
+          >
+            Contact PM
+          </Link>
         </div>
+      )}
+    </section>
+    <div css={rowStyles}>
+      <Link buttonStyle small href={externalLink}>
+        {externalLinkIcon}
+        {externalLinkText}
+      </Link>
+      <div css={lastUpdatedStyles}>
+        <Caption asParagraph accent="lead">
+          Last updated: {formatDistance(new Date(), new Date(lastUpdated))} ago
+        </Caption>
       </div>
-      <TabNav>
-        <TabLink href={network({}).users({}).$}>About</TabLink>
-      </TabNav>
-    </header>
-  );
-};
+    </div>
+    <TabNav>
+      <TabLink href={network({}).users({}).$}>About</TabLink>
+    </TabNav>
+  </header>
+);
 
 export default WorkingGroupPageHeader;

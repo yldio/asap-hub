@@ -1,4 +1,4 @@
-import { createSentryHeaders } from '@asap-hub/frontend-utils';
+import { BackendError, createSentryHeaders } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
 import { API_BASE_URL } from '../config';
 
@@ -32,4 +32,29 @@ export const getWorkingGroup = async (
     );
   }
   return resp.json();
+};
+
+export const putWorkingGroupResources = async (
+  id: string,
+  payload: gp2.WorkingGroupResourcesPutRequest,
+  authorization: string,
+): Promise<gp2.WorkingGroupResponse> => {
+  const resp = await fetch(`${API_BASE_URL}/working-group/${id}/resources`, {
+    method: 'PUT',
+    headers: {
+      authorization,
+      'content-type': 'application/json',
+      ...createSentryHeaders(),
+    },
+    body: JSON.stringify(payload),
+  });
+  const response = await resp.json();
+  if (!resp.ok) {
+    throw new BackendError(
+      `Failed to update working group resources for id ${id} Expected status 200. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      response,
+      resp.status,
+    );
+  }
+  return response;
 };

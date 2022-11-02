@@ -64,12 +64,22 @@ const ResourceModal: React.FC<ResourceModalProps> = (props) => {
           throw new Error('There is no type provided.');
         }
 
-        return onSave({
-          type: newType,
+        const resourceBase = {
           title: newTitle,
-          description: newDescription,
-          externalLink: newExternalLink,
-        });
+          description: newDescription || undefined,
+        };
+        const resource =
+          newType === 'Link'
+            ? {
+                type: newType,
+                ...resourceBase,
+                externalLink: newExternalLink,
+              }
+            : {
+                type: newType,
+                ...resourceBase,
+              };
+        return onSave(resource);
       }}
     >
       {({ isSaving }, asyncOnSave) => (

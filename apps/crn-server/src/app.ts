@@ -198,6 +198,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.newsSquidexDataProvider || new NewsSquidexDataProvider(newsRestClient);
   const newsContentfulDataProvider =
     libs.newsDataProvider || new NewsContentfulDataProvider(contentfulClient);
+  /* istanbul ignore next */
   const newsDataProvider = isContentfulEnabled
     ? newsContentfulDataProvider
     : newsSquidexDataProvider;

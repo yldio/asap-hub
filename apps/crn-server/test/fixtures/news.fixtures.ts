@@ -6,7 +6,7 @@ import {
   NewsDataObject,
   NewsResponse,
 } from '@asap-hub/model';
-import { appName, baseUrl, contentfulSpaceId } from '../../src/config';
+import { appName, baseUrl } from '../../src/config';
 
 const metadata = {
   tags: [],

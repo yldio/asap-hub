@@ -195,10 +195,9 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.groupDataProvider ||
     new GroupSquidexDataProvider(squidexGraphqlClient);
   const newsSquidexDataProvider =
-    libs.newsSquidexDataProvider || new NewsSquidexDataProvider(newsRestClient);
+    libs.newsDataProvider || new NewsSquidexDataProvider(newsRestClient);
   const newsContentfulDataProvider =
     libs.newsDataProvider || new NewsContentfulDataProvider(contentfulClient);
-  /* istanbul ignore next */
   const newsDataProvider = isContentfulEnabled
     ? newsContentfulDataProvider
     : newsSquidexDataProvider;

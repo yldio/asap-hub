@@ -44,7 +44,7 @@ const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
       )}
     </Card>
     <Card>
-      <div>Working Group Description</div>
+      <Headline3>Working Group Description</Headline3>
       <Collapsible>{description}</Collapsible>
     </Card>
     <Card accent="green">

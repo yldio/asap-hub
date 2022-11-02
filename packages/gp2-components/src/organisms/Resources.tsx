@@ -21,7 +21,7 @@ import { addIcon, editIcon } from '../icons';
 type ResourcesProps = {
   resources?: gp2.Resource[];
   headline: string;
-  resourcesRoute: string;
+  add: string;
 };
 
 const { rem, tabletScreen } = pixels;
@@ -58,11 +58,7 @@ const hideStyles = css({
   [`:nth-of-type(n+4)`]: { display: 'none' },
 });
 
-const Resources: React.FC<ResourcesProps> = ({
-  resources,
-  headline,
-  resourcesRoute,
-}) => {
+const Resources: React.FC<ResourcesProps> = ({ resources, headline, add }) => {
   const minimumResourcesToDisplay = 3;
   const [expanded, setExpanded] = useState(false);
   const getResourcesListStyles = () => {
@@ -80,7 +76,7 @@ const Resources: React.FC<ResourcesProps> = ({
         <div css={[rowStyles, buttonStyles]}>
           <Headline3 noMargin>Resource List</Headline3>
           <div css={editButtonStyles}>
-            <Link href={resourcesRoute + '/add'} buttonStyle noMargin small>
+            <Link href={add} buttonStyle noMargin small>
               Add {addIcon}
             </Link>
           </div>

@@ -35,7 +35,12 @@ const ProjectDetail = () => {
           {isProjectMember && (
             <Route path={projects({}).project({ projectId }).resources({}).$}>
               <Frame title="Resources">
-                <ProjectResources {...project} />
+                <ProjectResources
+                  {...project}
+                  add={
+                    projects({}).project({ projectId }).resources({}).add({}).$
+                  }
+                />
               </Frame>
             </Route>
           )}

@@ -15,6 +15,7 @@ describe('Resources', () => {
     workingGroupId: '1',
     resources: getResources(),
     headline: 'a headline',
+    add: '/add',
   };
 
   it('renders heading', () => {

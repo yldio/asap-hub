@@ -8,14 +8,17 @@ import {
   Link,
   Paragraph,
   pixels,
+  utils,
 } from '@asap-hub/react-components';
+import { UrlExpression } from '@asap-hub/validation';
 import { css } from '@emotion/react';
 import { useState } from 'react';
 import { mobileQuery } from '../layout';
 
-const types = ['Link', 'Note'];
+const types = ['Link' as const, 'Note' as const];
 
 const { rem } = pixels;
+const { noop } = utils;
 
 const buttonContainerStyles = css({
   display: 'inline-flex',
@@ -36,24 +39,39 @@ const overrideButtonStyles = css({
   },
 });
 
-type ResourceModalProps = gp2.Resource & {
+type ResourceModalProps = Partial<gp2.Resource> & {
   backHref: string;
+  onSave?: (data: gp2.Resource) => void | Promise<void>;
 };
 
-const ResourceModal: React.FC<ResourceModalProps> = ({
-  type,
-  title,
-  description,
-  externalLink,
-  backHref,
-}) => {
-  const [newType, setNewType] = useState(type);
+const ResourceModal: React.FC<ResourceModalProps> = (props) => {
+  const { type, title, description, backHref, onSave = noop } = props;
+  const externalLink = type === 'Link' && props.externalLink;
+  const [newType, setNewType] = useState<'Link' | 'Note' | ''>(type || '');
   const [newTitle, setNewTitle] = useState(title || '');
   const [newDescription, setNewDescription] = useState(description || '');
   const [newExternalLink, setNewExternalLink] = useState(externalLink || '');
 
   return (
-    <EditModal title="Add Resource" backHref={backHref} dirty={false} noHeader>
+    <EditModal
+      title="Add Resource"
+      backHref={backHref}
+      dirty={type !== type}
+      noHeader
+      onSave={() => {
+        /* istanbul ignore next */
+        if (!newType) {
+          throw new Error('There is no type provided.');
+        }
+
+        return onSave({
+          type: newType,
+          title: newTitle,
+          description: newDescription,
+          externalLink: newExternalLink,
+        });
+      }}
+    >
       {({ isSaving }, asyncOnSave) => (
         <div css={css({ width: '100%' })}>
           <header>
@@ -68,20 +86,24 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
             subtitle="(required)"
             options={types.map((type) => ({ value: type, label: type }))}
             value={newType}
+            required
             onChange={setNewType}
           />
-          {newType !== 'Note' && (
+          {newType === 'Link' && (
             <LabeledTextField
               title="URL"
               subtitle="(required)"
               value={newExternalLink}
               onChange={setNewExternalLink}
-              enabled={newType !== '' && !isSaving}
+              required
+              pattern={UrlExpression}
+              enabled={!isSaving}
             />
           )}
           <LabeledTextField
             title="Title"
             subtitle="(required)"
+            required
             value={newTitle}
             onChange={setNewTitle}
             enabled={newType !== '' && !isSaving}

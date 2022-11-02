@@ -2,10 +2,10 @@ import { gp2, useRouteParams } from '@asap-hub/routing';
 
 import { Frame, useBackHref } from '@asap-hub/frontend-utils';
 import {
+  ResourceModal,
   WorkingGroupDetailPage,
   WorkingGroupOverview,
   WorkingGroupResources,
-  ResourceModal,
 } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUser } from '@asap-hub/react-context';
@@ -50,10 +50,11 @@ const WorkingGroupDetail = () => {
               <Frame title="Resources">
                 <WorkingGroupResources
                   {...workingGroup}
-                  resourcesRoute={
+                  add={
                     workingGroups({})
                       .workingGroup({ workingGroupId })
-                      .resources({}).$
+                      .resources({})
+                      .add({}).$
                   }
                 />
                 <Route

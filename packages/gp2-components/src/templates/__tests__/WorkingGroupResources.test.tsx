@@ -13,6 +13,7 @@ describe('WorkingGroupResources', () => {
   const defaultProps = {
     workingGroupId: '1',
     resources: getResources(),
+    add: '/add',
   };
 
   it('renders a resource', () => {

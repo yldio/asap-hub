@@ -7,6 +7,7 @@ import TeamMembersTabbedCard from '../TeamMembersTabbedCard';
 const props: ComponentProps<typeof TeamMembersTabbedCard> = {
   members: [],
   title: '',
+  isTeamInactive: false,
 };
 it('renders the members tabbed card', () => {
   const labName = 'Olsen';
@@ -37,7 +38,7 @@ it('renders the members tabbed card', () => {
       {...props}
       members={members}
       title="Example"
-      inactive="2020-01-01"
+      isTeamInactive={true}
     />,
   );
   expect(screen.getByRole('heading').textContent).toEqual('Example');
@@ -56,7 +57,7 @@ it('renders the no members message', () => {
     <TeamMembersTabbedCard
       {...props}
       title="Team Members"
-      inactive={new Date().toISOString()}
+      isTeamInactive={true}
     />,
   );
 
@@ -111,7 +112,7 @@ it('shows the correct number of members', () => {
       {...props}
       members={members}
       title="Example"
-      inactive="2020-01-01"
+      isTeamInactive={true}
     />,
   );
 

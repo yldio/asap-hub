@@ -32,14 +32,14 @@ type TeamMembersTabbedCardProps = Pick<
   'title' | 'description'
 > & {
   readonly members: ReadonlyArray<TeamMember>;
-  readonly inactive?: string;
+  readonly isTeamInactive: boolean;
 };
 
 const TeamMembersTabbedCard: React.FC<TeamMembersTabbedCardProps> = ({
   title,
   description,
   members,
-  inactive,
+  isTeamInactive,
 }) => {
   const alumniMembers = members.filter((member) => member.alumniSinceDate);
   const activeMembers = members.filter((member) => !member.alumniSinceDate);
@@ -48,21 +48,21 @@ const TeamMembersTabbedCard: React.FC<TeamMembersTabbedCardProps> = ({
     <TabbedCard
       title={title}
       description={description}
-      activeTabIndex={inactive ? 1 : 0}
+      activeTabIndex={isTeamInactive ? 1 : 0}
       tabs={[
         {
           tabTitle: `Active Team Members (${
-            inactive ? 0 : activeMembers.length
+            isTeamInactive ? 0 : activeMembers.length
           })`,
-          items: inactive ? [] : activeMembers,
+          items: isTeamInactive ? [] : activeMembers,
           truncateFrom: 8,
-          disabled: !!inactive,
+          disabled: isTeamInactive,
         },
         {
           tabTitle: `Past Team Members (${
-            inactive ? members.length : alumniMembers.length
+            isTeamInactive ? members.length : alumniMembers.length
           })`,
-          items: inactive ? members : alumniMembers,
+          items: isTeamInactive ? members : alumniMembers,
           truncateFrom: 8,
           disabled: alumniMembers.length === 0,
         },
@@ -103,7 +103,7 @@ const TeamMembersTabbedCard: React.FC<TeamMembersTabbedCardProps> = ({
             />
           ) : (
             <p css={paragraphStyles}>{`There are no ${
-              inactive ? 'past' : 'active'
+              isTeamInactive ? 'past' : 'active'
             } team members.`}</p>
           )}
         </div>

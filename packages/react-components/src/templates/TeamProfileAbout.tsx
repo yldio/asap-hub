@@ -55,7 +55,7 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
       <TeamMembersTabbedCard
         title="Team Members"
         members={members}
-        inactive={inactiveSince}
+        isTeamInactive={!!inactiveSince}
       />
     </section>
     {teamGroupsCard}

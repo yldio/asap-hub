@@ -11,6 +11,7 @@ import TeamTabbedGroupsCard from '../TeamGroupsTabbedCard';
 const props: ComponentProps<typeof TeamTabbedGroupsCard> = {
   groups: [],
   title: '',
+  isTeamInactive: false,
 };
 it('renders the team groups tabbed card', () => {
   const groups = [
@@ -72,9 +73,7 @@ it('renders the no members message', () => {
   const { rerender } = render(<TeamTabbedGroupsCard {...props} />);
 
   expect(screen.getByText('There are no active memberships.')).toBeVisible();
-  rerender(
-    <TeamTabbedGroupsCard {...props} inactive={new Date().toISOString()} />,
-  );
+  rerender(<TeamTabbedGroupsCard {...props} isTeamInactive={true} />);
   expect(screen.getByText('There are no past memberships.')).toBeVisible();
 });
 
@@ -117,11 +116,7 @@ it('shows the correct tab numbers based on group active state', () => {
   expect(screen.getByText('Past Memberships (1)')).toBeVisible();
 
   rerender(
-    <TeamTabbedGroupsCard
-      {...props}
-      groups={groups}
-      inactive={new Date().toISOString()}
-    />,
+    <TeamTabbedGroupsCard {...props} groups={groups} isTeamInactive={true} />,
   );
   expect(screen.getByText('Active Memberships (0)')).toBeVisible();
   expect(screen.getByText('Past Memberships (2)')).toBeVisible();

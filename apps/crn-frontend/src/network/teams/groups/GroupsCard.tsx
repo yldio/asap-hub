@@ -18,7 +18,7 @@ const GroupsCard: React.FC<{ id: string; isInactive?: string }> = ({
     <TeamGroupsTabbedCard
       title={'Team Interest Groups'}
       groups={groups.items}
-      inactive={isInactive}
+      isTeamInactive={!!isInactive}
     />
   );
 };

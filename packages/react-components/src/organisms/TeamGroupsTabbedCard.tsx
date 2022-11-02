@@ -60,13 +60,13 @@ type TeamGroupsTabbedCardProps = Pick<
   'title'
 > & {
   groups: GroupResponse[];
-  inactive?: string;
+  isTeamInactive: boolean;
 };
 
 const TeamGroupsTabbedCard: React.FC<TeamGroupsTabbedCardProps> = ({
   title,
   groups,
-  inactive,
+  isTeamInactive,
 }) => {
   const inactiveGroups = groups.filter((group) => !group.active);
   const activeGroups = groups.filter((group) => group.active);
@@ -74,24 +74,24 @@ const TeamGroupsTabbedCard: React.FC<TeamGroupsTabbedCardProps> = ({
   return (
     <TabbedCard
       title={title}
-      activeTabIndex={inactive ? 1 : 0}
+      activeTabIndex={isTeamInactive ? 1 : 0}
       getShowMoreText={(showMore) =>
         `View ${showMore ? 'Less' : 'More'} Groups`
       }
       tabs={[
         {
           tabTitle: `Active Memberships (${
-            inactive ? 0 : activeGroups.length
+            isTeamInactive ? 0 : activeGroups.length
           })`,
           items: activeGroups,
           truncateFrom: 2,
-          disabled: !!inactive,
+          disabled: isTeamInactive,
         },
         {
           tabTitle: `Past Memberships (${
-            inactive ? groups.length : inactiveGroups.length
+            isTeamInactive ? groups.length : inactiveGroups.length
           })`,
-          items: inactive ? groups : inactiveGroups,
+          items: isTeamInactive ? groups : inactiveGroups,
           truncateFrom: 2,
           disabled: inactiveGroups.length === 0,
         },
@@ -122,7 +122,7 @@ const TeamGroupsTabbedCard: React.FC<TeamGroupsTabbedCardProps> = ({
             </ul>
           ) : (
             <p css={paragraphStyles}>{`There are no ${
-              inactive ? 'past' : 'active'
+              isTeamInactive ? 'past' : 'active'
             } memberships.`}</p>
           )}
         </div>

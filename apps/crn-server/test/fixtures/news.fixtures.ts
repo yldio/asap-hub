@@ -6,7 +6,7 @@ import {
   NewsDataObject,
   NewsResponse,
 } from '@asap-hub/model';
-import { appName, baseUrl } from '../../src/config';
+import { appName, baseUrl, contentfulSpaceId } from '../../src/config';
 
 const metadata = {
   tags: [],
@@ -88,7 +88,7 @@ export const newsContentfulApiResponse: {
             title: 'asap',
             description: '',
             file: {
-              url: 'https://cloud.squidex.io/api/assets/asap-local/thumbnail-uuid1',
+              url: 'http://images.ctfassets.net/thumbnail-id.png',
               fileName: 'asap.png',
               contentType: 'image/png',
               details: { size: 15860, image: { width: 451, height: 192 } },
@@ -135,20 +135,26 @@ export const newsSquidexApiResponse: {
   ],
 };
 
-export const getNewsDataObject = (): NewsDataObject => ({
+export const getNewsDataObject = (
+  isContentfulResponse = false,
+): NewsDataObject => ({
   id: 'news-1',
   title: 'News 1',
   type: 'News',
   frequency: 'News Articles',
   shortText: 'Short text of news 1',
   text: '<p>text</p>',
-  thumbnail: `${baseUrl}/api/assets/${appName}/thumbnail-uuid1`,
+  thumbnail: isContentfulResponse
+    ? `http://images.ctfassets.net/thumbnail-id.png`
+    : `${baseUrl}/api/assets/${appName}/thumbnail-uuid1`,
   created: '2020-09-08T16:35:28.000Z',
 });
 
-export const getListNewsDataObject = (): ListNewsDataObject => ({
+export const getListNewsDataObject = (
+  isContentfulResponse = false,
+): ListNewsDataObject => ({
   total: 1,
-  items: [getNewsDataObject()],
+  items: [getNewsDataObject(isContentfulResponse)],
 });
 
 export const getNewsResponse = (): NewsResponse => getNewsDataObject();

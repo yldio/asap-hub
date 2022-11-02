@@ -196,6 +196,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     new GroupSquidexDataProvider(squidexGraphqlClient);
   const newsSquidexDataProvider =
     libs.newsDataProvider || new NewsSquidexDataProvider(newsRestClient);
+  /* istanbul ignore next */
   const newsContentfulDataProvider =
     libs.newsDataProvider || new NewsContentfulDataProvider(contentfulClient);
   const newsDataProvider = isContentfulEnabled

@@ -5,12 +5,15 @@ import {
   Divider,
   pixels,
   informationInfo500,
+  Headline2,
+  Subtitle,
   Paragraph,
+  Link,
 } from '@asap-hub/react-components';
+import { logout } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { projectsImage } from '../images';
 import BasicLayout from './BasicLayout';
-// import colors from './colors';
 
 const { rem } = pixels;
 
@@ -33,15 +36,20 @@ const OnboardWelcome: React.FC<Record<string, never>> = () => (
         justifyContent: 'left',
       })}
     >
-      <h2>Welcome to the GP2 Hub</h2>
-      <Paragraph accent="lead">
-        The closed private network for the Global Parkinson's Genetics Program.
-      </Paragraph>
+      <header>
+        <Headline2 noMargin>Welcome to the GP2 Hub</Headline2>
+        <Subtitle accent="lead" hasMargin>
+          The closed private network for the Global Parkinson's Genetics
+          Program.
+        </Subtitle>
+      </header>
+
       <div
         css={css({
           position: 'relative',
           width: '748px',
           height: '374px',
+          paddingTop: '32px',
         })}
       >
         <div
@@ -62,31 +70,27 @@ const OnboardWelcome: React.FC<Record<string, never>> = () => (
           })}
         >
           <Card>
-            <div>
-              <p>
-                As one of the program's valuable members, you have been invited
-                to this network to:
-              </p>
-              <ul>
-                <li>
-                  <i>Learn and connect</i> with like minded members
-                </li>
-                <li>
-                  <i>Track and manage group activities</i> within both your
-                  projects and working groups
-                </li>
-                <li>
-                  <i>Keep informed and updated</i> with what's happening all
-                  around the GP2 program
-                </li>
-              </ul>
-            </div>
+            As one of the program's valuable members, you have been invited to
+            this network to:
+            <ul>
+              <li>
+                <i>Learn and connect</i> with like minded members
+              </li>
+              <li>
+                <i>Track and manage group activities</i> within both your
+                projects and working groups
+              </li>
+              <li>
+                <i>Keep informed and updated</i> with what's happening all
+                around the GP2 program
+              </li>
+            </ul>
             <Divider />
-            <div>
+            <Paragraph hasMargin={false}>
               Before you begin exploring, please take a small amount of time to
               fill in your profile so that others have a good idea about who you
               are and what to do.
-            </div>
+            </Paragraph>
           </Card>
         </div>
       </div>
@@ -100,14 +104,23 @@ const OnboardWelcome: React.FC<Record<string, never>> = () => (
           justifyContent: 'space-between',
         }}
       >
-        <Button
-          overrideStyles={css({
+        <div
+          css={css({
             maxWidth: 'fit-content',
             blockSize: 'fit-content',
           })}
         >
-          Sign Out
-        </Button>
+          <Link
+            buttonStyle
+            href={logout({}).$}
+            // overrideStyles={css({
+            //   maxWidth: 'fit-content',
+            //   blockSize: 'fit-content',
+            // })}
+          >
+            Sign Out
+          </Link>
+        </div>
         <Button
           primary
           overrideStyles={css({

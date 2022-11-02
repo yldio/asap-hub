@@ -14,11 +14,15 @@ import { NewsContentfulDataProvider } from '../../../src/data-providers/contentf
 
 const isContentfulResponse = true;
 
+jest.setTimeout(30000);
+
 describe('News data provider', () => {
   const newsRestClient = getClient({
     space: contentfulSpaceId,
     accessToken: contentfulAccessToken,
     environment: contentfulEnvId,
+    retryOnError: false,
+    retryLimit: 0,
   });
   const newsDataProvider = new NewsContentfulDataProvider(newsRestClient);
 
@@ -53,13 +57,17 @@ describe('News data provider', () => {
       });
     });
 
-    test.skip('Should return an empty result when resource does not exist', async () => {
-      const query = 'content_type=news&limit=8&skip=5&order=-sys.createdAt';
-
+    test('Should return an empty result when resource does not exist', async () => {
       nock(contentfulHost)
         .get(
-          `/spaces/${contentfulSpaceId}/environments/${contentfulEnvId}/entries?${query}`,
+          `/spaces/${contentfulSpaceId}/environments/${contentfulEnvId}/entries`,
         )
+        .query({
+          content_type: 'news',
+          limit: 8,
+          skip: 5,
+          order: '-sys.createdAt',
+        })
         .reply(404);
 
       const result = await newsDataProvider.fetch({ take: 8, skip: 5 });
@@ -68,6 +76,24 @@ describe('News data provider', () => {
         items: [],
         total: 0,
       });
+    });
+
+    test('Should throw when the server responds with an error', async () => {
+      nock(contentfulHost)
+        .get(
+          `/spaces/${contentfulSpaceId}/environments/${contentfulEnvId}/entries`,
+        )
+        .query({
+          content_type: 'news',
+          limit: 8,
+          skip: 5,
+          order: '-sys.createdAt',
+        })
+        .reply(500);
+
+      await expect(
+        newsDataProvider.fetch({ take: 8, skip: 5 }),
+      ).rejects.toThrow();
     });
 
     test('Should return news', async () => {
@@ -239,7 +265,7 @@ describe('News data provider', () => {
   });
 
   describe('Fetch-by-id method', () => {
-    test.skip('Should return null when the news is not found', async () => {
+    test('Should return null when the news is not found', async () => {
       const id = 'some-id';
 
       nock(contentfulHost)
@@ -257,7 +283,7 @@ describe('News data provider', () => {
       expect(await newsDataProvider.fetchById(id)).toBeNull();
     });
 
-    test.skip('Should throw when the server responds with an error', async () => {
+    test('Should throw when the server responds with an error', async () => {
       const id = 'some-id';
 
       nock(contentfulHost)

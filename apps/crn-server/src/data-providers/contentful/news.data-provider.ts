@@ -4,7 +4,6 @@ import {
   FetchNewsFilter,
   FetchPaginationOptions,
 } from '@asap-hub/model';
-import { NotFoundError } from '@asap-hub/errors';
 
 import {
   getClient,
@@ -22,33 +21,45 @@ export class NewsContentfulDataProvider {
   constructor(private contentfulClient: ReturnType<typeof getClient>) {}
 
   async fetch(options?: FetchNewsProviderOptions) {
-    const { total, items } = await this.contentfulClient.getEntries<News>({
-      content_type: 'news',
-      'fields.title[match]': options?.filter?.title,
-      'fields.frequency[in]': options?.filter?.frequency?.join(','),
-      limit: options?.take,
-      skip: options?.skip,
-      order: '-sys.createdAt',
-    });
+    try {
+      const { total, items } = await this.contentfulClient.getEntries<News>({
+        content_type: 'news',
+        'fields.title[match]': options?.filter?.title,
+        'fields.frequency[in]': options?.filter?.frequency?.join(','),
+        limit: options?.take,
+        skip: options?.skip,
+        order: '-sys.createdAt',
+      });
 
-    return {
-      total,
-      items: items.map(parsetNews),
-    };
+      return {
+        total,
+        items: items.map(parsetNews),
+      };
+    } catch (error) {
+      if (JSON.parse((error as Error).message)?.status === 404) {
+        return {
+          total: 0,
+          items: [],
+        };
+      }
+
+      throw error;
+    }
   }
 
   async fetchById(id: string) {
     try {
-      const res = await this.contentfulClient.getEntries<News>({
+      const entries = await this.contentfulClient.getEntries<News>({
         content_type: 'news',
         'fields.id': id,
       });
 
-      return res.items[0] ? parsetNews(res.items[0]) : null;
+      return entries.items[0] ? parsetNews(entries.items[0]) : null;
     } catch (error) {
-      if (error instanceof NotFoundError) {
+      if (JSON.parse((error as Error).message)?.status === 404) {
         return null;
       }
+
       throw error;
     }
   }

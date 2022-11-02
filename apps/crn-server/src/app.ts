@@ -400,7 +400,6 @@ export type Libs = {
   assetDataProvider?: AssetDataProvider;
   groupDataProvider?: GroupDataProvider;
   newsDataProvider?: NewsDataProvider;
-  newsSquidexDataProvider?: NewsDataProvider;
   reminderDataProvider?: ReminderDataProvider;
   teamDataProvider?: TeamDataProvider;
   tutorialsDataProvider?: TutorialsDataProvider;

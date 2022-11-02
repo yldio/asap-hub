@@ -1,4 +1,4 @@
-import { TeamTabbedGroupsCard } from '@asap-hub/react-components';
+import { TeamGroupsTabbedCard } from '@asap-hub/react-components';
 
 import { useTeamGroupsById } from './state';
 
@@ -15,7 +15,7 @@ const GroupsCard: React.FC<{ id: string; isInactive?: string }> = ({
   }
 
   return (
-    <TeamTabbedGroupsCard
+    <TeamGroupsTabbedCard
       title={'Team Interest Groups'}
       groups={groups.items}
       inactive={isInactive}

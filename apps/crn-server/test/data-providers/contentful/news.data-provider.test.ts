@@ -12,6 +12,8 @@ import {
 } from '../../fixtures/news.fixtures';
 import { NewsContentfulDataProvider } from '../../../src/data-providers/contentful/news.data-provider';
 
+const isContentfulResponse = true;
+
 describe('News data provider', () => {
   const newsRestClient = getClient({
     space: contentfulSpaceId,
@@ -83,7 +85,7 @@ describe('News data provider', () => {
 
       const result = await newsDataProvider.fetch({ take: 8, skip: 5 });
 
-      expect(result).toEqual(getListNewsDataObject());
+      expect(result).toEqual(getListNewsDataObject(isContentfulResponse));
     });
 
     test('Should return news when the thumbnail is null', async () => {
@@ -130,7 +132,7 @@ describe('News data provider', () => {
 
       const result = await newsDataProvider.fetch();
 
-      expect(result).toEqual(getListNewsDataObject());
+      expect(result).toEqual(getListNewsDataObject(isContentfulResponse));
     });
 
     describe('Frequency Filter', () => {
@@ -156,7 +158,7 @@ describe('News data provider', () => {
           },
         });
 
-        expect(result).toEqual(getListNewsDataObject());
+        expect(result).toEqual(getListNewsDataObject(isContentfulResponse));
       });
 
       test('Should query data properly when CRN Quarterly and News Articles frequency are selected', async () => {
@@ -181,7 +183,7 @@ describe('News data provider', () => {
           },
         });
 
-        expect(result).toEqual(getListNewsDataObject());
+        expect(result).toEqual(getListNewsDataObject(isContentfulResponse));
       });
     });
 
@@ -202,7 +204,7 @@ describe('News data provider', () => {
           filter: { title: 'hey' },
         });
 
-        expect(result).toEqual(getListNewsDataObject());
+        expect(result).toEqual(getListNewsDataObject(isContentfulResponse));
       });
 
       test('Should query data properly when passing search param and frequency is selected', async () => {
@@ -231,7 +233,7 @@ describe('News data provider', () => {
           },
         });
 
-        expect(result).toEqual(getListNewsDataObject());
+        expect(result).toEqual(getListNewsDataObject(isContentfulResponse));
       });
     });
   });
@@ -290,7 +292,9 @@ describe('News data provider', () => {
 
       const result = await newsDataProvider.fetchById(id);
 
-      expect(result).toEqual(getListNewsDataObject().items[0]);
+      expect(result).toEqual(
+        getListNewsDataObject(isContentfulResponse).items[0],
+      );
     });
   });
 });

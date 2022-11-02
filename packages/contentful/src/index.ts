@@ -5,13 +5,12 @@ export const getClient = ({
   space,
   accessToken,
   environment,
-}: CreateClientParams) => {
-  return contentful.createClient({
+}: CreateClientParams) =>
+  contentful.createClient({
     space,
     accessToken,
     environment,
   });
-};
 
 export * from './entities';
 export * from './utils';

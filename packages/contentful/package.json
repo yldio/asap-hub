@@ -21,12 +21,12 @@
     "@asap-hub/model": "workspace:*",
     "@babel/runtime-corejs3": "7.19.6",
     "@contentful/rich-text-html-renderer": "^15.13.1",
+    "@contentful/rich-text-types": "^15.13.2",
     "contentful": "beta-v10",
     "contentful-migrate": "0.17.0",
     "graphql-tag": "2.12.6"
   },
   "devDependencies": {
-    "@contentful/rich-text-types": "^15.13.2",
     "@graphql-codegen/cli": "2.12.1",
     "@graphql-codegen/gql-tag-operations-preset": "1.5.5",
     "@graphql-codegen/introspection": "2.2.1",

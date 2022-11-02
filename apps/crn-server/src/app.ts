@@ -23,7 +23,7 @@ import {
   SquidexGraphql,
   SquidexRest,
 } from '@asap-hub/squidex';
-import { getClient } from '@asap-hub/contentful';
+import { graphQLClient } from '@asap-hub/contentful';
 
 import * as Sentry from '@sentry/serverless';
 import AWSXray from 'aws-xray-sdk';
@@ -125,12 +125,11 @@ import {
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
 
-  const contentfulClient = getClient({
+  const contentfulGraphQLClient = graphQLClient({
     space: contentfulSpaceId,
     accessToken: contentfulAccessToken,
     environment: contentfulEnvId,
   });
-
   /**
    * Dependency Injection -->
    */
@@ -198,7 +197,8 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.newsDataProvider || new NewsSquidexDataProvider(newsRestClient);
   /* istanbul ignore next */
   const newsContentfulDataProvider =
-    libs.newsDataProvider || new NewsContentfulDataProvider(contentfulClient);
+    libs.newsDataProvider ||
+    new NewsContentfulDataProvider(contentfulGraphQLClient);
   const newsDataProvider = isContentfulEnabled
     ? newsContentfulDataProvider
     : newsSquidexDataProvider;

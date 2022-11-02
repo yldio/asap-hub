@@ -5,7 +5,7 @@ import {
   EntryWithLinkResolutionAndWithUnresolvableLinks,
 } from 'contentful';
 
-export interface News {
+export interface NewsEntity {
   id: string;
   title: string;
   shortText?: string;
@@ -17,4 +17,4 @@ export interface News {
 }
 
 export type ContentfulRestNews =
-  EntryWithLinkResolutionAndWithUnresolvableLinks<News>;
+  EntryWithLinkResolutionAndWithUnresolvableLinks<NewsEntity>;

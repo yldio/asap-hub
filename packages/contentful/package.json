@@ -24,6 +24,8 @@
     "@contentful/rich-text-types": "^15.13.2",
     "contentful": "beta-v10",
     "contentful-migrate": "0.17.0",
+    "graphql": "^16.6.0",
+    "graphql-request": "^5.0.0",
     "graphql-tag": "2.12.6"
   },
   "devDependencies": {

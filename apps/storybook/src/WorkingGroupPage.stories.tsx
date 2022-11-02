@@ -1,3 +1,4 @@
+import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router-dom';
 import {
   WorkingGroupAbout,
@@ -25,7 +26,8 @@ export const Normal = () => {
     teams: network({}).teams({}).$,
     groups: network({}).groups({}).$,
   };
-  const props = {
+  const props: ComponentProps<typeof WorkingGroupPage> = {
+    id: 'id',
     pointOfContact: {
       id: '2',
       displayName: 'Peter Venkman',
@@ -52,6 +54,7 @@ export const Normal = () => {
     <StaticRouter key={activeTab} location={routes[activeTab]}>
       <WorkingGroupPage {...props}>
         <WorkingGroupAbout
+          members={props.members}
           description={props.description}
           pointOfContact={props.pointOfContact}
         />

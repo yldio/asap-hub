@@ -37,3 +37,13 @@ it('renders CTA when pointOfContact is provided', () => {
   rerender(<WorkingGroupHeader {...baseProps} />);
   expect(queryAllByText('Contact PM')).toHaveLength(0);
 });
+
+it('renders a complete tag when complete is true', () => {
+  const { queryByText, getByText, getByTitle, rerender } = render(
+    <WorkingGroupHeader {...baseProps} />,
+  );
+  expect(queryByText('Complete')).toBeNull();
+  rerender(<WorkingGroupHeader {...baseProps} complete />);
+  expect(getByTitle('checkmark in circle')).toBeInTheDocument();
+  expect(getByText('Complete')).toBeVisible();
+});

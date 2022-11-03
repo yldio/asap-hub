@@ -56,6 +56,7 @@ interface CardProps {
   readonly accent?: AccentVariant;
   readonly padding?: boolean;
   readonly stroke?: boolean;
+  readonly noShadow?: boolean;
   readonly strokeColor?: string;
   readonly strokeSize?: number;
   readonly overrideStyles?: SerializedStyles;
@@ -67,6 +68,7 @@ const Card: React.FC<CardProps> = ({
   accent = 'default',
   padding = true,
   stroke = false,
+  noShadow = false,
   strokeColor = colors.cerulean.rgb,
   strokeSize = borderRadius,
   overrideStyles,
@@ -78,6 +80,7 @@ const Card: React.FC<CardProps> = ({
       stroke && strokeStyles(strokeColor, strokeSize),
       padding && paddingStyles,
       accents[accent],
+      noShadow && { boxShadow: 'none' },
       overrideStyles,
     ]}
   >

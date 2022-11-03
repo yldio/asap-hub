@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
 import { createUserResponse, createUserTeams } from '@asap-hub/fixtures';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import LeadersTabbedCard from '../LeadersTabbedCard';
 
 const props: ComponentProps<typeof LeadersTabbedCard> = {
@@ -8,23 +8,56 @@ const props: ComponentProps<typeof LeadersTabbedCard> = {
   title: '',
   disableActiveTab: true,
 };
-it('renders the leaders tabbed card', () => {
-  render(
-    <LeadersTabbedCard
-      {...props}
-      leaders={[
-        {
-          user: { ...createUserResponse(), displayName: 'Octavian' },
-          role: 'Project Manager',
-        },
-      ]}
-      title="Leaders title"
-    />,
-  );
-  expect(screen.getByRole('heading').textContent).toEqual('Leaders title');
-  expect(screen.getByText('Past Leaders (1)')).toBeVisible();
-  expect(screen.getByText(/Octavian/)).toBeVisible();
-  expect(screen.getByText(/Project Manager/)).toBeVisible();
+
+describe('renders the leaders tabbed card', () => {
+  const renderTabbedCard = (disableActiveTab: boolean) =>
+    render(
+      <LeadersTabbedCard
+        {...props}
+        leaders={[
+          {
+            user: {
+              ...createUserResponse(),
+              displayName: 'Active Leader Name',
+            },
+            role: 'Chair',
+          },
+          {
+            user: {
+              ...createUserResponse(),
+              displayName: 'Alumni Leader Name',
+              alumniSinceDate: '2021-01-01',
+            },
+            role: 'Project Manager',
+          },
+        ]}
+        title="Leaders title"
+        disableActiveTab={disableActiveTab}
+      />,
+    );
+
+  it('renders for an Active Group', () => {
+    renderTabbedCard(false);
+    expect(screen.getByRole('heading').textContent).toEqual('Leaders title');
+    expect(screen.getByText('Past Leaders (1)')).toBeVisible();
+    expect(screen.getByText('Active Leaders (1)')).toBeVisible();
+    expect(screen.getByText(/Active Leader Name/)).toBeVisible();
+    expect(screen.getByText(/Chair/)).toBeVisible();
+
+    fireEvent.click(screen.getByText('Past Leaders (1)'));
+    expect(screen.getByText(/Alumni Leader Name/)).toBeVisible();
+    expect(screen.getByText(/Project Manager/)).toBeVisible();
+  });
+
+  it('renders for an Inactive Group', () => {
+    renderTabbedCard(true);
+    expect(screen.getByText('Past Leaders (2)')).toBeVisible();
+    expect(screen.getByText('Active Leaders (0)')).toBeVisible();
+    expect(screen.getByText(/Active Leader Name/)).toBeVisible();
+    expect(screen.getByText(/Chair/)).toBeVisible();
+    expect(screen.getByText(/Alumni Leader Name/)).toBeVisible();
+    expect(screen.getByText(/Project Manager/)).toBeVisible();
+  });
 });
 
 it('renders a leader with multiple teams', () => {

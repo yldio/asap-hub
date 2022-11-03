@@ -1,8 +1,13 @@
 import { gql } from 'graphql-tag';
 
 export const FETCH_NEWS = gql`
-  query FetchNews {
-    newsCollection {
+  query FetchNews($limit: Int, $skip: Int, $frequency: [String]) {
+    newsCollection(
+      limit: $limit
+      skip: $skip
+      where: { frequency_in: $frequency }
+      order: sys_firstPublishedAt_DESC
+    ) {
       items {
         sys {
           firstPublishedAt

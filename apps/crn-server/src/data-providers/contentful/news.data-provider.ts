@@ -27,6 +27,8 @@ export class NewsContentfulDataProvider {
         FetchNewsQueryVariables
       >(FETCH_NEWS, {
         limit: options?.take!,
+        skip: options?.skip!,
+        frequency: options?.filter?.frequency!,
       });
       console.log('\n\n\n***', newsCollection?.items, '\n\n\n');
 

@@ -8,4 +8,9 @@ export default {
 
 const item = gp2Fixtures.createWorkingGroupResponse();
 
-export const Normal = () => <WorkingGroupResources {...item} />;
+export const Normal = () => (
+  <WorkingGroupResources {...item} add={'/add'} isAdministrator={false} />
+);
+export const Administrator = () => (
+  <WorkingGroupResources {...item} add={'/add'} isAdministrator={true} />
+);

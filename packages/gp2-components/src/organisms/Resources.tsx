@@ -22,6 +22,7 @@ type ResourcesProps = {
   resources?: gp2.Resource[];
   headline: string;
   add: string;
+  isAdministrator: boolean;
 };
 
 const { rem, tabletScreen } = pixels;
@@ -58,7 +59,12 @@ const hideStyles = css({
   [`:nth-of-type(n+4)`]: { display: 'none' },
 });
 
-const Resources: React.FC<ResourcesProps> = ({ resources, headline, add }) => {
+const Resources: React.FC<ResourcesProps> = ({
+  resources,
+  headline,
+  add,
+  isAdministrator,
+}) => {
   const minimumResourcesToDisplay = 3;
   const [expanded, setExpanded] = useState(false);
   const getResourcesListStyles = () => {
@@ -75,11 +81,13 @@ const Resources: React.FC<ResourcesProps> = ({ resources, headline, add }) => {
       <Card>
         <div css={[rowStyles, buttonStyles]}>
           <Headline3 noMargin>Resource List</Headline3>
-          <div css={editButtonStyles}>
-            <Link href={add} buttonStyle noMargin small>
-              Add {addIcon}
-            </Link>
-          </div>
+          {isAdministrator && (
+            <div css={editButtonStyles}>
+              <Link href={add} buttonStyle noMargin small>
+                Add {addIcon}
+              </Link>
+            </div>
+          )}
         </div>
         <div css={css({ paddingBottom: rem(32) })}>
           View and share resources that others may find helpful.
@@ -103,11 +111,13 @@ const Resources: React.FC<ResourcesProps> = ({ resources, headline, add }) => {
                   >
                     {resource.type === 'Link' ? 'Link' : 'Note'}
                   </Pill>
-                  <div css={editButtonStyles}>
-                    <Link href={''} buttonStyle noMargin small>
-                      Edit {editIcon}
-                    </Link>
-                  </div>
+                  {isAdministrator && (
+                    <div css={editButtonStyles}>
+                      <Link href={'/edit'} buttonStyle noMargin small>
+                        Edit {editIcon}
+                      </Link>
+                    </div>
+                  )}
                 </div>
                 <div
                   css={css({

@@ -22,4 +22,9 @@ const props = {
   hint: 'View and share resources that others may find helpful.',
   resources,
 };
-export const Normal = () => <Resources {...props} />;
+export const Normal = () => (
+  <Resources {...props} add={'/add'} isAdministrator={false} />
+);
+export const Administrator = () => (
+  <Resources {...props} add={'/add'} isAdministrator={true} />
+);

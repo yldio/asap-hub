@@ -22,6 +22,7 @@ const WorkingGroupDetail = () => {
   const isWorkingGroupMember =
     workingGroup?.members.some(({ userId }) => userId === currentUser?.id) ||
     false;
+  const isAdministrator = currentUser?.role === 'Administrator';
   const updateWorkingGroupResources =
     usePutWorkingGroupResources(workingGroupId);
 
@@ -58,6 +59,7 @@ const WorkingGroupDetail = () => {
                       .resources({})
                       .add({}).$
                   }
+                  isAdministrator={isAdministrator}
                 />
                 <Route
                   path={

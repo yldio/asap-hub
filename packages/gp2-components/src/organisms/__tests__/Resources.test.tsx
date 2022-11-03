@@ -16,6 +16,7 @@ describe('Resources', () => {
     resources: getResources(),
     headline: 'a headline',
     add: '/add',
+    isAdministrator: false,
   };
 
   it('renders heading', () => {
@@ -27,6 +28,21 @@ describe('Resources', () => {
   it('renders the headline', () => {
     render(<Resources {...defaultProps} />);
     expect(screen.getByText(/a headline/i)).toBeVisible();
+  });
+
+  it('does not render the add or edit buttons', () => {
+    render(<Resources {...defaultProps} />);
+    expect(
+      screen.queryByRole('link', { name: /add/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('link', { name: /edit/i }),
+    ).not.toBeInTheDocument();
+  });
+  it('if is administrator then should render the add or edit buttons', () => {
+    render(<Resources {...defaultProps} isAdministrator={true} />);
+    expect(screen.getByRole('link', { name: /add/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /edit/i })).toBeInTheDocument();
   });
 
   it('renders a resource title', () => {
@@ -127,5 +143,4 @@ describe('Resources', () => {
     userEvent.click(button);
     expect(screen.getByText('resource title 3')).toBeVisible();
   });
-  it.todo('add and edit are only shown to administrators');
 });

@@ -44,6 +44,6 @@ it('renders a complete tag when complete is true', () => {
   );
   expect(queryByText('Complete')).toBeNull();
   rerender(<WorkingGroupHeader {...baseProps} complete />);
-  expect(getByTitle('checkmark in circle')).toBeInTheDocument();
+  expect(getByTitle('Success')).toBeInTheDocument();
   expect(getByText('Complete')).toBeVisible();
 });

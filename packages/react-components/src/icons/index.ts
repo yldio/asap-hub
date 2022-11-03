@@ -6,7 +6,6 @@ export { default as bioinformatics } from './bioinformatics';
 export { default as budgetIcon } from './budget';
 export { default as calendarIcon } from './calendar';
 export { default as cardViewIcon } from './card-view';
-export { default as checkmarkInCircle } from './checkmark-in-circle';
 export { default as chevronCircleDownIcon } from './chevron-circle-down';
 export { default as chevronCircleLeftIcon } from './chevron-circle-left';
 export { default as chevronCircleUpIcon } from './chevron-circle-up';

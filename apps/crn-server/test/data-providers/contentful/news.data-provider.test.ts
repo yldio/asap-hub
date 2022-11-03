@@ -1,15 +1,21 @@
-import { GraphQLClient } from '@asap-hub/contentful';
+import { getGraphQLClient, GraphQLClient } from '@asap-hub/contentful';
 import {
   getListNewsDataObject,
   getContentfulNewsGraphqlResponse,
 } from '../../fixtures/news.fixtures';
 import { NewsContentfulDataProvider } from '../../../src/data-providers/contentful/news.data-provider';
-import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 
 const isContentfulResponse = true;
 
 describe('News data provider', () => {
-  const newsGraphQLClientMock = getContentfulGraphqlClientMock();
+  let newsGraphQLClientMock = getGraphQLClient({
+    space: 'space-id',
+    accessToken: 'token',
+    environment: 'env-is',
+  }) as jest.Mocked<GraphQLClient>;
+
+  jest.spyOn(newsGraphQLClientMock, 'request');
+
   const newsDataProvider = new NewsContentfulDataProvider(
     newsGraphQLClientMock,
   );
@@ -87,10 +93,10 @@ describe('News data provider', () => {
       expect(newsGraphQLClientMock.request).toHaveBeenCalledWith(
         expect.anything(),
         expect.objectContaining({
-          frequency: undefined,
-          limit: undefined,
-          skip: undefined,
-          title: undefined,
+          frequency: null,
+          limit: null,
+          skip: null,
+          title: null,
         }),
       );
     });
@@ -116,7 +122,7 @@ describe('News data provider', () => {
             frequency: ['CRN Quarterly'],
             limit: 8,
             skip: 5,
-            title: undefined,
+            title: null,
           }),
         );
       });
@@ -136,9 +142,9 @@ describe('News data provider', () => {
         expect(newsGraphQLClientMock.request).toHaveBeenCalledWith(
           expect.anything(),
           expect.objectContaining({
-            frequency: undefined,
-            limit: undefined,
-            skip: undefined,
+            frequency: null,
+            limit: null,
+            skip: null,
             title: 'hey',
           }),
         );

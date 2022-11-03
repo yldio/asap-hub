@@ -4,6 +4,7 @@ import {
   getContentfulNewsGraphqlResponse,
 } from '../../fixtures/news.fixtures';
 import { NewsContentfulDataProvider } from '../../../src/data-providers/contentful/news.data-provider';
+import { GraphQLError } from 'graphql';
 
 const isContentfulResponse = true;
 
@@ -40,6 +41,16 @@ describe('News data provider', () => {
         items: [],
         total: 0,
       });
+    });
+
+    test('Should throw an error with a specific error message when the graphql client throws one', async () => {
+      newsGraphQLClientMock.request.mockRejectedValueOnce(
+        new GraphQLError('some error message'),
+      );
+
+      await expect(newsDataProvider.fetch()).rejects.toThrow(
+        'some error message',
+      );
     });
 
     test('Should return an empty result when the query is returned as null', async () => {
@@ -189,6 +200,17 @@ describe('News data provider', () => {
       );
 
       expect(await newsDataProvider.fetchById(id)).toBeNull();
+    });
+
+    test('Should throw an error with a specific error message when the graphql client throws one', async () => {
+      const id = 'some-id';
+      newsGraphQLClientMock.request.mockRejectedValueOnce(
+        new GraphQLError('some error message'),
+      );
+
+      await expect(newsDataProvider.fetchById(id)).rejects.toThrow(
+        'some error message',
+      );
     });
 
     test('Should return the result when the news exists', async () => {

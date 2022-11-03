@@ -4,18 +4,20 @@ import { TeamResponse } from '@asap-hub/model';
 
 import { perRem } from '../pixels';
 import {
-  TeamMembersSection,
   ProfileExpertiseAndResources,
   TeamProfileOverview,
   TeamMembersTabbedCard,
 } from '../organisms';
 import { CtaCard } from '../molecules';
 import { createMailTo } from '../mail';
-import { getUniqueCommaStringWithSuffix } from '../utils/text';
 
 const styles = css({
   display: 'grid',
   gridRowGap: `${36 / perRem}em`,
+});
+
+const membersCardStyles = css({
+  overflow: 'hidden',
 });
 
 type TeamProfileAboutProps = ComponentProps<typeof TeamProfileOverview> &
@@ -49,36 +51,13 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
         expertiseAndResourceTags={expertiseAndResourceTags}
       />
     ) : null}
-    {inactiveSince ? (
-      <TeamMembersTabbedCard title="Team Members" members={members} />
-    ) : members.length ? (
-      <section id={teamListElementId}>
-        <TeamMembersSection
-          members={members.map(
-            ({
-              displayName,
-              role,
-              firstName,
-              lastName,
-              avatarUrl,
-              id,
-              labs = [],
-            }) => ({
-              firstLine: displayName,
-              secondLine: role,
-              thirdLine: getUniqueCommaStringWithSuffix(
-                labs.map((lab) => lab.name),
-                'Lab',
-              ),
-              avatarUrl,
-              firstName,
-              lastName,
-              id,
-            }),
-          )}
-        />
-      </section>
-    ) : null}
+    <section id={teamListElementId} css={membersCardStyles}>
+      <TeamMembersTabbedCard
+        title="Team Members"
+        members={members}
+        isTeamInactive={!!inactiveSince}
+      />
+    </section>
     {teamGroupsCard}
     {pointOfContact && (
       <CtaCard

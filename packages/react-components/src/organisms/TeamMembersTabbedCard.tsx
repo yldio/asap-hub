@@ -9,7 +9,7 @@ import { fern } from '../colors';
 const containerStyles = css({
   listStyle: 'none',
   margin: 0,
-  padding: `${rem(32)} 0`,
+  paddingTop: `${rem(32)}`,
   display: 'grid',
   rowGap: rem(24),
   [`@media (min-width: ${tabletScreen.min}px)`]: {
@@ -32,69 +32,84 @@ type TeamMembersTabbedCardProps = Pick<
   'title' | 'description'
 > & {
   readonly members: ReadonlyArray<TeamMember>;
+  readonly isTeamInactive: boolean;
 };
 
 const TeamMembersTabbedCard: React.FC<TeamMembersTabbedCardProps> = ({
   title,
   description,
   members,
-}) => (
-  <TabbedCard
-    title={title}
-    description={description}
-    activeTabIndex={1}
-    tabs={[
-      {
-        tabTitle: 'Active Team Members (0)',
-        items: [],
-        truncateFrom: 8,
-        disabled: true,
-      },
-      {
-        tabTitle: `Past Team Members (${members.length})`,
-        items: members,
-        truncateFrom: 8,
-        disabled: false,
-      },
-    ]}
-    getShowMoreText={(showMore) => `View ${showMore ? 'Less' : 'More'} Members`}
-  >
-    {({ data }) => (
-      <div css={containerStyles}>
-        {data.length > 0 ? (
-          <MembersList
-            members={data.map(
-              ({
-                displayName,
-                role,
-                labs = [],
-                avatarUrl,
-                firstName,
-                lastName,
-                id,
-                alumniSinceDate,
-              }) => ({
-                firstLine: displayName,
-                secondLine: role,
-                thirdLine: getUniqueCommaStringWithSuffix(
-                  labs.map((lab) => lab.name),
-                  'Lab',
-                ),
-                avatarUrl,
-                firstName,
-                lastName,
-                id,
-                alumniSinceDate,
-              }),
-            )}
-            overrideNameStyles={nameStyles}
-          />
-        ) : (
-          <p css={paragraphStyles}>There are no past team members.</p>
-        )}
-      </div>
-    )}
-  </TabbedCard>
-);
+  isTeamInactive,
+}) => {
+  const alumniMembers = members.filter((member) => member.alumniSinceDate);
+  const activeMembers = members.filter((member) => !member.alumniSinceDate);
+
+  return (
+    <TabbedCard
+      title={title}
+      description={description}
+      activeTabIndex={isTeamInactive ? 1 : 0}
+      tabs={[
+        {
+          tabTitle: `Active Team Members (${
+            isTeamInactive ? 0 : activeMembers.length
+          })`,
+          items: isTeamInactive ? [] : activeMembers,
+          truncateFrom: 8,
+          disabled: isTeamInactive,
+        },
+        {
+          tabTitle: `Past Team Members (${
+            isTeamInactive ? members.length : alumniMembers.length
+          })`,
+          items: isTeamInactive ? members : alumniMembers,
+          truncateFrom: 8,
+          disabled: alumniMembers.length === 0,
+        },
+      ]}
+      getShowMoreText={(showMore) =>
+        `View ${showMore ? 'Less' : 'More'} Members`
+      }
+    >
+      {({ data }) => (
+        <div css={containerStyles}>
+          {data.length > 0 ? (
+            <MembersList
+              members={data.map(
+                ({
+                  displayName,
+                  role,
+                  labs = [],
+                  avatarUrl,
+                  firstName,
+                  lastName,
+                  id,
+                  alumniSinceDate,
+                }) => ({
+                  firstLine: displayName,
+                  secondLine: role,
+                  thirdLine: getUniqueCommaStringWithSuffix(
+                    labs.map((lab) => lab.name),
+                    'Lab',
+                  ),
+                  avatarUrl,
+                  firstName,
+                  lastName,
+                  id,
+                  alumniSinceDate,
+                }),
+              )}
+              overrideNameStyles={nameStyles}
+            />
+          ) : (
+            <p css={paragraphStyles}>{`There are no ${
+              isTeamInactive ? 'past' : 'active'
+            } team members.`}</p>
+          )}
+        </div>
+      )}
+    </TabbedCard>
+  );
+};
 
 export default TeamMembersTabbedCard;

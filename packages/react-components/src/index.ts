@@ -133,7 +133,7 @@ export {
   SsoButtons,
   TeamCard,
   TeamGroupsCard,
-  TeamTabbedGroupsCard,
+  TeamGroupsTabbedCard,
   TeamMembersSection,
   TeamMembersTabbedCard,
   TeamsTabbedCard,

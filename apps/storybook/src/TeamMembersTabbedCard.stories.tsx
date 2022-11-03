@@ -1,6 +1,6 @@
 import { TeamMembersTabbedCard } from '@asap-hub/react-components';
 import { createTeamResponseMembers } from '@asap-hub/fixtures';
-import { number, text } from '@storybook/addon-knobs';
+import { number, text, boolean } from '@storybook/addon-knobs';
 
 export default {
   title: 'Organisms / Team Members Tabbed Card',
@@ -14,5 +14,6 @@ export const Normal = () => (
       hasLabs: true,
     })}
     title={text('Title', 'Team Members')}
+    isTeamInactive={boolean('Inactive date', false)}
   />
 );

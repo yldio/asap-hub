@@ -6,6 +6,7 @@ import TeamsTabbedCard from '../TeamsTabbedCard';
 const props: ComponentProps<typeof TeamsTabbedCard> = {
   teams: [],
   title: '',
+  disableActiveTab: false,
 };
 it('renders the teams tabbed card', () => {
   render(

@@ -1,11 +1,16 @@
 import { render } from '@testing-library/react';
 
+import { createUserResponse } from '@asap-hub/fixtures';
+import { GroupLeader, TeamResponse } from '@asap-hub/model';
+
 import {
   equals,
   getIconFromUrl,
   getSvgAspectRatio,
   isInternalLink,
   isLink,
+  splitListBy,
+  buildTabsConfig,
 } from '../index';
 
 describe('getSvgAspectRatio', () => {
@@ -110,5 +115,129 @@ describe('equals', () => {
   });
   it('returns false when arrays differ', () => {
     expect(equals(testArray, testArray.slice(0, 1))).toBeFalsy();
+  });
+});
+
+describe('tabbed card utils', () => {
+  const leaders: ReadonlyArray<Pick<GroupLeader, 'user' | 'role'>> = [
+    {
+      user: {
+        ...createUserResponse(),
+        displayName: 'Alumni Leader 1',
+        alumniSinceDate: '2021-01-01',
+      },
+      role: 'Chair',
+    },
+    {
+      user: {
+        ...createUserResponse(),
+        displayName: 'Alumni Leader 2',
+        alumniSinceDate: '2021-01-01',
+      },
+      role: 'Project Manager',
+    },
+    {
+      user: { ...createUserResponse(), displayName: 'Active Leader 1' },
+      role: 'Project Manager',
+    },
+  ];
+
+  const teams: ReadonlyArray<
+    Pick<TeamResponse, 'id' | 'displayName' | 'inactiveSince'>
+  > = [
+    { displayName: 'Inactive Team 1', id: '1', inactiveSince: '2021-01-01' },
+    { displayName: 'Active Team 1', id: '2' },
+    { displayName: 'Inactive Team 2', id: '3', inactiveSince: '2021-01-01' },
+  ];
+
+  describe('splitListBy', () => {
+    it('splits a group leaders between alumni/not alumni', () => {
+      const [alumni, notAlumni] = splitListBy(
+        ['user', 'alumniSinceDate'],
+        leaders,
+      );
+      expect(alumni.length).toBe(2);
+      expect(notAlumni.length).toBe(1);
+    });
+
+    it('splits a team list between active/inactive', () => {
+      const [inactive, active] = splitListBy(['inactiveSince'], teams);
+      expect(inactive.length).toBe(2);
+      expect(active.length).toBe(1);
+    });
+  });
+
+  describe('buildTabsConfig', () => {
+    describe('Leaders Tabs', () => {
+      const buildLeaderTabs = (disableActiveTab: boolean = false) =>
+        buildTabsConfig({
+          disableActiveTab,
+          items: leaders,
+          label: 'Leaders',
+          lookupProps: ['user', 'alumniSinceDate'],
+        });
+
+      it('creates tabbed card config for leaders of an inactive group', () => {
+        const [activeTab, inactiveTab] = buildLeaderTabs(true);
+
+        expect(activeTab.tabTitle).toBe('Active Leaders (0)');
+        expect(activeTab.items.length).toBe(0);
+        expect(activeTab.disabled).toBeTruthy();
+
+        expect(inactiveTab.tabTitle).toBe('Past Leaders (3)');
+        expect(inactiveTab.items.length).toBe(3);
+        expect(inactiveTab.disabled).toBeFalsy();
+      });
+
+      it('creates tabbed card config for leaders of an active group', () => {
+        const [activeTab, inactiveTab] = buildLeaderTabs();
+
+        expect(activeTab.tabTitle).toBe('Active Leaders (1)');
+        expect(activeTab.items.length).toBe(1);
+        expect(activeTab.disabled).toBeFalsy();
+
+        expect(inactiveTab.tabTitle).toBe('Past Leaders (2)');
+        expect(inactiveTab.items.length).toBe(2);
+        expect(inactiveTab.disabled).toBeFalsy();
+      });
+    });
+
+    describe('Teams Tabs', () => {
+      const buildTeamsTabs = (disableActiveTab: boolean = false) =>
+        buildTabsConfig({
+          disableActiveTab,
+          items: teams,
+          label: 'Teams',
+          lookupProps: ['inactiveSince'],
+          truncateFrom: 8,
+        });
+
+      it('creates tabbed card config for teams of an inactive group', () => {
+        const [activeTab, inactiveTab] = buildTeamsTabs(true);
+
+        expect(activeTab.tabTitle).toBe('Active Teams (0)');
+        expect(activeTab.items.length).toBe(0);
+        expect(activeTab.disabled).toBeTruthy();
+
+        expect(inactiveTab.tabTitle).toBe('Past Teams (3)');
+        expect(inactiveTab.items.length).toBe(3);
+        expect(inactiveTab.disabled).toBeFalsy();
+        expect(activeTab.truncateFrom).toBe(8);
+      });
+
+      it('creates tabbed card config for teams of an active group', () => {
+        const [activeTab, inactiveTab] = buildTeamsTabs();
+
+        expect(activeTab.tabTitle).toBe('Active Teams (1)');
+        expect(activeTab.items.length).toBe(1);
+        expect(activeTab.disabled).toBeFalsy();
+        expect(activeTab.truncateFrom).toBe(8);
+
+        expect(inactiveTab.tabTitle).toBe('Past Teams (2)');
+        expect(inactiveTab.items.length).toBe(2);
+        expect(inactiveTab.disabled).toBeFalsy();
+        expect(activeTab.truncateFrom).toBe(8);
+      });
+    });
   });
 });

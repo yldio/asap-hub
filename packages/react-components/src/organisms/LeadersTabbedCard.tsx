@@ -3,6 +3,7 @@ import { css } from '@emotion/react';
 import React, { ComponentProps } from 'react';
 import { MembersList, TabbedCard } from '../molecules';
 import { rem, tabletScreen } from '../pixels';
+import { buildTabsConfig } from '../utils';
 
 const containerStyles = css({
   listStyle: 'none',
@@ -20,28 +21,25 @@ type LeadersTabbedCardProps = Pick<
   'title' | 'description'
 > & {
   leaders: ReadonlyArray<Pick<GroupLeader, 'user' | 'role'>>;
+  disableActiveTab?: boolean;
 };
 
 const LeadersTabbedCard: React.FC<LeadersTabbedCardProps> = ({
   title,
   description,
   leaders,
+  disableActiveTab = false,
 }) => (
   <TabbedCard
     title={title}
     description={description}
-    activeTabIndex={1}
-    tabs={[
-      {
-        tabTitle: 'Active Leaders (0)',
-        items: [],
-        disabled: true,
-      },
-      {
-        tabTitle: `Past Leaders (${leaders.length})`,
-        items: leaders,
-      },
-    ]}
+    activeTabIndex={disableActiveTab ? 1 : 0}
+    tabs={buildTabsConfig<Pick<GroupLeader, 'user' | 'role'>>({
+      disableActiveTab,
+      items: leaders,
+      label: 'Leaders',
+      lookupProps: ['user', 'alumniSinceDate'],
+    })}
   >
     {({ data }) => (
       <div css={containerStyles}>

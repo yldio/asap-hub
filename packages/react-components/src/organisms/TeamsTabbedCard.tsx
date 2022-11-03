@@ -6,6 +6,7 @@ import { Link } from '../atoms';
 import { teamIcon } from '../icons';
 import { TabbedCard } from '../molecules';
 import { perRem, rem, tabletScreen } from '../pixels';
+import { buildTabsConfig } from '../utils';
 
 const listItemStyle = css({
   display: 'grid',
@@ -29,32 +30,31 @@ type TeamsTabbedCardProps = Pick<
   ComponentProps<typeof TabbedCard>,
   'title' | 'description'
 > & {
-  teams: ReadonlyArray<Pick<TeamResponse, 'id' | 'displayName'>>;
+  teams: ReadonlyArray<
+    Pick<TeamResponse, 'id' | 'displayName' | 'inactiveSince'>
+  >;
+  disableActiveTab?: boolean;
 };
 
 const TeamsTabbedCard: React.FC<TeamsTabbedCardProps> = ({
   title,
   description,
   teams,
+  disableActiveTab = false,
 }) => (
   <TabbedCard
     title={title}
     description={description}
-    activeTabIndex={1}
-    tabs={[
-      {
-        tabTitle: 'Active Teams (0)',
-        items: [],
-        truncateFrom: 8,
-        disabled: true,
-      },
-      {
-        tabTitle: `Past Teams (${teams.length})`,
-        items: teams,
-        truncateFrom: 8,
-        disabled: false,
-      },
-    ]}
+    activeTabIndex={disableActiveTab ? 1 : 0}
+    tabs={buildTabsConfig<
+      Pick<TeamResponse, 'id' | 'displayName' | 'inactiveSince'>
+    >({
+      disableActiveTab,
+      items: teams,
+      label: 'Teams',
+      lookupProps: ['inactiveSince'],
+      truncateFrom: 8,
+    })}
     getShowMoreText={(showMore) => `View ${showMore ? 'Less' : 'More'} Teams`}
   >
     {({ data }) => (

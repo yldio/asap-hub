@@ -6,6 +6,7 @@ import LeadersTabbedCard from '../LeadersTabbedCard';
 const props: ComponentProps<typeof LeadersTabbedCard> = {
   leaders: [],
   title: '',
+  disableActiveTab: true,
 };
 it('renders the leaders tabbed card', () => {
   render(

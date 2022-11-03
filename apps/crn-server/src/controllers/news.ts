@@ -21,7 +21,7 @@ export default class News implements NewsController {
       ...paginationOptions,
       filter: { frequency: filter?.frequency, title: search },
     });
-
+    console.log('\n\n\n\nitems', items, '\n\n\n');
     return {
       total,
       items,

@@ -78,7 +78,7 @@ export type FetchNewsProviderOptions = FetchPaginationOptions & {
 
 const parseNews = (item: NewsItem): NewsDataObject => ({
   // this case where id and title are null
-  // should not happen but it TS moans about it
+  // should not happen but TS moans about it
   // because even required fields can be nullable
   // Read more in the link below
   // https://www.contentfulcommunity.com/t/why-do-required-fields-appear-as-nullable-in-the-graphql-graph/4079/4

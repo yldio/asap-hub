@@ -2,15 +2,9 @@
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>;
-};
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>;
-};
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -50,46 +44,55 @@ export type Asset = {
   width: Maybe<Scalars['Int']>;
 };
 
+
 /** Represents a binary file in a space. An asset can be any file type. */
 export type AssetContentTypeArgs = {
   locale: InputMaybe<Scalars['String']>;
 };
+
 
 /** Represents a binary file in a space. An asset can be any file type. */
 export type AssetDescriptionArgs = {
   locale: InputMaybe<Scalars['String']>;
 };
 
+
 /** Represents a binary file in a space. An asset can be any file type. */
 export type AssetFileNameArgs = {
   locale: InputMaybe<Scalars['String']>;
 };
+
 
 /** Represents a binary file in a space. An asset can be any file type. */
 export type AssetHeightArgs = {
   locale: InputMaybe<Scalars['String']>;
 };
 
+
 /** Represents a binary file in a space. An asset can be any file type. */
 export type AssetLinkedFromArgs = {
   allowedLocales: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
+
 
 /** Represents a binary file in a space. An asset can be any file type. */
 export type AssetSizeArgs = {
   locale: InputMaybe<Scalars['String']>;
 };
 
+
 /** Represents a binary file in a space. An asset can be any file type. */
 export type AssetTitleArgs = {
   locale: InputMaybe<Scalars['String']>;
 };
+
 
 /** Represents a binary file in a space. An asset can be any file type. */
 export type AssetUrlArgs = {
   locale: InputMaybe<Scalars['String']>;
   transform: InputMaybe<ImageTransformOptions>;
 };
+
 
 /** Represents a binary file in a space. An asset can be any file type. */
 export type AssetWidthArgs = {
@@ -177,12 +180,14 @@ export type AssetLinkingCollections = {
   newsCollection: Maybe<NewsCollection>;
 };
 
+
 export type AssetLinkingCollectionsEntryCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale: InputMaybe<Scalars['String']>;
   preview: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
+
 
 export type AssetLinkingCollectionsNewsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
@@ -211,7 +216,7 @@ export enum AssetOrder {
   UrlAsc = 'url_ASC',
   UrlDesc = 'url_DESC',
   WidthAsc = 'width_ASC',
-  WidthDesc = 'width_DESC',
+  WidthDesc = 'width_DESC'
 }
 
 export type ContentfulMetadata = {
@@ -265,7 +270,7 @@ export enum EntryOrder {
   SysPublishedAtAsc = 'sys_publishedAt_ASC',
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
-  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC'
 }
 
 export enum ImageFormat {
@@ -287,7 +292,7 @@ export enum ImageFormat {
    */
   Png8 = 'PNG8',
   /** WebP image format. */
-  Webp = 'WEBP',
+  Webp = 'WEBP'
 }
 
 export enum ImageResizeFocus {
@@ -312,7 +317,7 @@ export enum ImageResizeFocus {
   /** Focus the resizing on the top left. */
   TopLeft = 'TOP_LEFT',
   /** Focus the resizing on the top right. */
-  TopRight = 'TOP_RIGHT',
+  TopRight = 'TOP_RIGHT'
 }
 
 export enum ImageResizeStrategy {
@@ -330,7 +335,7 @@ export enum ImageResizeStrategy {
   /** Resizes the image to the specified dimensions, changing the original aspect ratio if needed. */
   Scale = 'SCALE',
   /** Creates a thumbnail from the image. */
-  Thumb = 'THUMB',
+  Thumb = 'THUMB'
 }
 
 export type ImageTransformOptions = {
@@ -372,15 +377,18 @@ export type Migration = Entry & {
   sys: Sys;
 };
 
+
 /** Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/migration) */
 export type MigrationContentTypeIdArgs = {
   locale: InputMaybe<Scalars['String']>;
 };
 
+
 /** Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/migration) */
 export type MigrationLinkedFromArgs = {
   allowedLocales: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
+
 
 /** Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/migration) */
 export type MigrationStateArgs = {
@@ -413,6 +421,7 @@ export type MigrationLinkingCollections = {
   entryCollection: Maybe<EntryCollection>;
 };
 
+
 export type MigrationLinkingCollectionsEntryCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale: InputMaybe<Scalars['String']>;
@@ -430,7 +439,7 @@ export enum MigrationOrder {
   SysPublishedAtAsc = 'sys_publishedAt_ASC',
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
-  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC'
 }
 
 /** ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
@@ -448,46 +457,55 @@ export type News = Entry & {
   title: Maybe<Scalars['String']>;
 };
 
+
 /** ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
 export type NewsFrequencyArgs = {
   locale: InputMaybe<Scalars['String']>;
 };
+
 
 /** ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
 export type NewsIdArgs = {
   locale: InputMaybe<Scalars['String']>;
 };
 
+
 /** ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
 export type NewsLinkArgs = {
   locale: InputMaybe<Scalars['String']>;
 };
+
 
 /** ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
 export type NewsLinkTextArgs = {
   locale: InputMaybe<Scalars['String']>;
 };
 
+
 /** ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
 export type NewsLinkedFromArgs = {
   allowedLocales: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
+
 
 /** ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
 export type NewsShortTextArgs = {
   locale: InputMaybe<Scalars['String']>;
 };
 
+
 /** ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
 export type NewsTextArgs = {
   locale: InputMaybe<Scalars['String']>;
 };
+
 
 /** ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
 export type NewsThumbnailArgs = {
   locale: InputMaybe<Scalars['String']>;
   preview: InputMaybe<Scalars['Boolean']>;
 };
+
 
 /** ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
 export type NewsTitleArgs = {
@@ -558,6 +576,7 @@ export type NewsLinkingCollections = {
   entryCollection: Maybe<EntryCollection>;
 };
 
+
 export type NewsLinkingCollectionsEntryCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale: InputMaybe<Scalars['String']>;
@@ -581,7 +600,7 @@ export enum NewsOrder {
   SysPublishedAtAsc = 'sys_publishedAt_ASC',
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
-  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC'
 }
 
 export type NewsText = {
@@ -615,11 +634,13 @@ export type Query = {
   newsCollection: Maybe<NewsCollection>;
 };
 
+
 export type QueryAssetArgs = {
   id: Scalars['String'];
   locale: InputMaybe<Scalars['String']>;
   preview: InputMaybe<Scalars['Boolean']>;
 };
+
 
 export type QueryAssetCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
@@ -630,6 +651,7 @@ export type QueryAssetCollectionArgs = {
   where: InputMaybe<AssetFilter>;
 };
 
+
 export type QueryEntryCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale: InputMaybe<Scalars['String']>;
@@ -639,11 +661,13 @@ export type QueryEntryCollectionArgs = {
   where: InputMaybe<EntryFilter>;
 };
 
+
 export type QueryMigrationArgs = {
   id: Scalars['String'];
   locale: InputMaybe<Scalars['String']>;
   preview: InputMaybe<Scalars['Boolean']>;
 };
+
 
 export type QueryMigrationCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
@@ -654,11 +678,13 @@ export type QueryMigrationCollectionArgs = {
   where: InputMaybe<MigrationFilter>;
 };
 
+
 export type QueryNewsArgs = {
   id: Scalars['String'];
   locale: InputMaybe<Scalars['String']>;
   preview: InputMaybe<Scalars['Boolean']>;
 };
+
 
 export type QueryNewsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
@@ -715,66 +741,13 @@ export type SysFilter = {
   publishedVersion_not_in: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
 };
 
-export type FetchNewsQueryVariables = Exact<{ [key: string]: never }>;
+export type FetchNewsQueryVariables = Exact<{ [key: string]: never; }>;
 
-export type FetchNewsQuery = {
-  newsCollection: Maybe<{
-    items: Array<
-      Maybe<
-        Pick<
-          News,
-          'id' | 'title' | 'shortText' | 'frequency' | 'link' | 'linkText'
-        >
-      >
-    >;
-  }>;
-};
 
-export const FetchNewsDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'FetchNews' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'newsCollection' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'items' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'shortText' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'frequency' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'link' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'linkText' },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<FetchNewsQuery, FetchNewsQueryVariables>;
+export type FetchNewsQuery = { newsCollection: Maybe<{ items: Array<Maybe<(
+      Pick<News, 'id' | 'title' | 'shortText' | 'frequency' | 'link' | 'linkText'>
+      & { sys: Pick<Sys, 'firstPublishedAt'>, thumbnail: Maybe<Pick<Asset, 'url'>>, text: Maybe<Pick<NewsText, 'json'>> }
+    )>> }> };
+
+
+export const FetchNewsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"FetchNews"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"newsCollection"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sys"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"firstPublishedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"shortText"}},{"kind":"Field","name":{"kind":"Name","value":"frequency"}},{"kind":"Field","name":{"kind":"Name","value":"link"}},{"kind":"Field","name":{"kind":"Name","value":"linkText"}},{"kind":"Field","name":{"kind":"Name","value":"thumbnail"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}}]}},{"kind":"Field","name":{"kind":"Name","value":"text"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"json"}}]}}]}}]}}]}}]} as unknown as DocumentNode<FetchNewsQuery, FetchNewsQueryVariables>;

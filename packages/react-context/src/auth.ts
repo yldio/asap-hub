@@ -4,8 +4,8 @@ import { useAuth0 } from './auth0';
 
 export const getUserClaimKey = (): string =>
   new URL('/user', window.location.href).toString();
-export const useCurrentUser = (): User | null => {
-  const { user: auth0User } = useAuth0();
+export const useCurrentUser = <T = User>(): T | null => {
+  const { user: auth0User } = useAuth0<T>();
   if (!auth0User) return null;
 
   const claimKey = getUserClaimKey();

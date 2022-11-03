@@ -1,10 +1,10 @@
+import { Auth0, User } from '@asap-hub/auth';
 import { createContext, useContext } from 'react';
-import { Auth0 } from '@asap-hub/auth';
 
 const auth0ClientNotProvided = (): never => {
   throw new Error('Auth0 client not provided');
 };
-export const Auth0Context = createContext<Auth0>({
+const auth0Context = {
   loading: true,
   popupOpen: false,
   handleRedirectCallback: auth0ClientNotProvided,
@@ -15,5 +15,8 @@ export const Auth0Context = createContext<Auth0>({
   getTokenWithPopup: auth0ClientNotProvided,
   logout: auth0ClientNotProvided,
   refreshUser: auth0ClientNotProvided,
-});
-export const useAuth0 = (): Auth0 => useContext(Auth0Context);
+};
+export const tAuth0Context = <T = User>() =>
+  createContext<Auth0<T>>(auth0Context);
+export const useAuth0 = <T = User>(): Auth0<T> =>
+  useContext(getAuth0Context<T>());

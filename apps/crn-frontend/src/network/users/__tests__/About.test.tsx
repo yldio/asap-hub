@@ -1,11 +1,11 @@
+import { Auth0Provider } from '@asap-hub/crn-frontend/src/auth/test-utils';
+import { createUserResponse } from '@asap-hub/fixtures';
+import { network } from '@asap-hub/routing';
+import { render, RenderResult, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { FC, Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import { render, RenderResult, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { createUserResponse } from '@asap-hub/fixtures';
-import { Auth0Provider } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import { network } from '@asap-hub/routing';
 
 import About from '../About';
 import { patchUser } from '../api';

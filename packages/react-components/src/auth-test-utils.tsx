@@ -1,14 +1,15 @@
 /* istanbul ignore file */
 
-import { useState, useEffect } from 'react';
-import createAuth0Client, { Auth0Client } from '@auth0/auth0-spa-js';
-import type { User, Auth0User } from '@asap-hub/auth';
+import type { Auth0User, User } from '@asap-hub/auth';
 import {
-  useAuth0,
-  Auth0Context,
+  getAuth0Context,
   getUserClaimKey,
+  useAuth0,
 } from '@asap-hub/react-context';
+import createAuth0Client, { Auth0Client } from '@auth0/auth0-spa-js';
+import { useEffect, useState } from 'react';
 
+const Auth0Context = getAuth0Context();
 const notImplemented = (method: string) => () => {
   throw new Error(`${method} not implemented by the Auth0 test fixture`);
 };

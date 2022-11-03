@@ -1,12 +1,13 @@
 /* istanbul ignore file */
 
-import { useEffect } from 'react';
+import type { Auth0, Auth0User, gp2 } from '@asap-hub/auth';
+import { getAuth0Context, getUserClaimKey } from '@asap-hub/react-context';
 import createAuth0Client, { Auth0Client } from '@auth0/auth0-spa-js';
-import type { User, Auth0User, Auth0 } from '@asap-hub/auth';
-import { Auth0Context, getUserClaimKey } from '@asap-hub/react-context';
-import { useRecoilState, useResetRecoilState, useRecoilValue } from 'recoil';
+import { useEffect } from 'react';
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 import { auth0State } from './state';
 
+const Auth0Context = getAuth0Context<gp2.User>();
 const notImplemented = (method: string) => () => {
   throw new Error(`${method} not implemented by the Auth0 test fixture`);
 };
@@ -16,29 +17,22 @@ const notReady = (method: string) => () => {
 
 const createAuth0 = (
   auth0Client?: Auth0Client,
-  user?: Partial<User>,
+  user?: Partial<gp2.User>,
   auth0Overrides?: (
     auth0ClientOverride?: Auth0Client,
-    auth0UserOverride?: Auth0User,
-  ) => Partial<Auth0>,
-): Auth0 => {
-  let auth0User: Auth0User | undefined;
+    auth0UserOverride?: Auth0User<gp2.User>,
+  ) => Partial<Auth0<gp2.User>>,
+): Auth0<gp2.User> => {
+  let auth0User: Auth0User<gp2.User> | undefined;
   if (user) {
-    const completeUser: User = {
+    const completeUser: gp2.User = {
       id: 'testuserid',
       onboarded: true,
       email: 'john.doe@example.com',
       displayName: 'John Doe',
       firstName: 'John',
       lastName: 'Doe',
-      teams: [
-        {
-          id: 'team-1',
-          displayName: 'Team 1',
-          role: 'Lead PI (Core Leadership)',
-        },
-      ],
-      algoliaApiKey: 'test-api-key',
+      role: 'Network Collaborator',
       ...user,
     };
     auth0User = {
@@ -85,12 +79,12 @@ const createAuth0 = (
 
 export const Auth0Provider: React.FC<{
   // no property ommission, only explicit undefined allowed if you really want the 'user-not-yet-fetched' state
-  readonly user: Partial<User> | undefined;
+  readonly user: Partial<gp2.User> | undefined;
   readonly children: React.ReactNode;
   readonly auth0Overrides?: (
     auth0Client?: Auth0Client,
-    auth0User?: Auth0User,
-  ) => Partial<Auth0>;
+    auth0User?: Auth0User<gp2.User>,
+  ) => Partial<Auth0<gp2.User>>;
 }> = ({ user, children, auth0Overrides }) => {
   const [auth0, setAuth0] = useRecoilState(auth0State);
   const resetAuth0 = useResetRecoilState(auth0State);

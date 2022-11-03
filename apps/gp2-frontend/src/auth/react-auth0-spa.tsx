@@ -4,15 +4,16 @@
 /* istanbul ignore file */
 /* eslint-disable no-shadow */
 
-import { useState, useEffect } from 'react';
-import { Auth0User, Auth0 } from '@asap-hub/auth';
-import { Auth0Context } from '@asap-hub/react-context';
+import { Auth0, Auth0User, gp2 } from '@asap-hub/auth';
+import { getAuth0Context } from '@asap-hub/react-context';
 import {
-  Auth0ClientOptions,
   Auth0Client,
+  Auth0ClientOptions,
   RedirectLoginResult,
 } from '@auth0/auth0-spa-js';
+import { useEffect, useState } from 'react';
 
+const Auth0Context = getAuth0Context<gp2.User>();
 const DEFAULT_REDIRECT_CALLBACK = () =>
   window.history.replaceState({}, document.title, window.location.pathname);
 
@@ -26,7 +27,7 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
   ...initOptions
 }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>();
-  const [user, setUser] = useState<Auth0User>();
+  const [user, setUser] = useState<Auth0User<gp2.User>>();
   const [auth0Client, setAuth0Client] = useState<Auth0Client>();
   const [loading, setLoading] = useState(true);
   const [popupOpen, setPopupOpen] = useState(false);
@@ -52,7 +53,7 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
       setIsAuthenticated(isAuthenticated);
 
       if (isAuthenticated) {
-        const user = await auth0FromHook.getUser<Auth0User>();
+        const user = await auth0FromHook.getUser<Auth0User<gp2.User>>();
         setUser(user);
       }
 
@@ -74,7 +75,7 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
     } finally {
       setPopupOpen(false);
     }
-    const user = await auth0Client.getUser<Auth0User>();
+    const user = await auth0Client.getUser<Auth0User<gp2.User>>();
     setUser(user);
     setIsAuthenticated(true);
   };
@@ -85,7 +86,7 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
     }
     setLoading(true);
     const result = await auth0Client.handleRedirectCallback();
-    const user = await auth0Client.getUser<Auth0User>();
+    const user = await auth0Client.getUser<Auth0User<gp2.User>>();
     setLoading(false);
     setIsAuthenticated(true);
     setUser(user);
@@ -120,7 +121,7 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
     setUser(await auth0Client.getUser());
   };
 
-  const auth0: Auth0 = {
+  const auth0: Auth0<gp2.User> = {
     isAuthenticated,
     user,
     loading,

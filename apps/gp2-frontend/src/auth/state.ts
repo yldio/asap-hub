@@ -1,7 +1,7 @@
+import { Auth0, gp2 } from '@asap-hub/auth';
 import { atom, selector } from 'recoil';
-import { Auth0 } from '@asap-hub/auth';
 
-export const auth0State = atom<Auth0 | undefined>({
+export const auth0State = atom<Auth0<gp2.User> | undefined>({
   key: 'auth0',
   default: undefined,
 });

@@ -1,5 +1,5 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
-import { createUserResponse } from '@asap-hub/fixtures';
+import { gp2 } from '@asap-hub/fixtures';
 import { network, sharedResearch, staticPages } from '@asap-hub/routing';
 import { render } from '@testing-library/react';
 import { createBrowserHistory, History } from 'history';
@@ -9,10 +9,11 @@ import { RecoilRoot } from 'recoil';
 import CheckOnboarded, { navigationPromptHandler } from '../CheckOnboarded';
 import { Auth0Provider, WhenReady } from '../test-utils';
 
+const { createUserResponse } = gp2;
 let history: History;
 
 const user = {
-  ...createUserResponse({}, 1),
+  ...createUserResponse({}),
   onboarded: false,
   algoliaApiKey: 'algolia-mock-key',
 };
@@ -21,11 +22,6 @@ const ownProfilePath = network({})
   .users({})
   .user({ userId: user.id })
   .research({}).$;
-
-const teamPage = network({})
-  .teams({})
-  .team({ teamId: user.teams[0].id })
-  .about({}).$;
 
 const outputs = network({}).users({}).user({ userId: user.id }).outputs({}).$;
 const privacy = staticPages({}).privacyPolicy({}).$;
@@ -75,7 +71,6 @@ describe('an authenticated and onboarded user', () => {
           <Router history={history}>
             <CheckOnboarded>
               <Route path={ownProfilePath}>profile page</Route>
-              <Route path={teamPage}>team page</Route>
               <Route path={outputs}>outputs page</Route>
             </CheckOnboarded>
           </Router>
@@ -86,9 +81,6 @@ describe('an authenticated and onboarded user', () => {
 
     history.push(ownProfilePath);
     expect(await findByText('profile page')).toBeVisible();
-
-    history.push(teamPage);
-    expect(await findByText('team page')).toBeVisible();
 
     history.push(outputs);
     expect(await findByText('outputs page')).toBeVisible();
@@ -165,7 +157,6 @@ describe('an authenticated user in onboarding', () => {
         <WhenReady>
           <Router history={history}>
             <CheckOnboarded>
-              <Route path={teamPage}>team page</Route>
               <Route path={ownProfilePath}>profile page</Route>
             </CheckOnboarded>
           </Router>
@@ -178,7 +169,6 @@ describe('an authenticated user in onboarding', () => {
     expect(await findByText('profile page')).toBeVisible();
     expect(window.alert).not.toHaveBeenCalled();
 
-    history.push(teamPage);
     expect(await findByText('profile page')).toBeVisible();
     expect(window.alert).toHaveBeenCalled();
   });
@@ -196,7 +186,7 @@ describe('navigationPromptHandler', () => {
       expect(window.alert).not.toHaveBeenCalled();
     });
 
-    [teamPage, outputs].forEach((protectedRoute) => {
+    [outputs].forEach((protectedRoute) => {
       const result = navigationPromptHandler(nonOnboardedUser, protectedRoute);
       expect(result).toBe(false);
       expect(window.alert).toHaveBeenCalled();
@@ -208,7 +198,7 @@ describe('navigationPromptHandler', () => {
 
     const onboardedUser = { ...user, onboarded: true };
 
-    [teamPage, outputs, privacy, tos, ownProfilePath, '/'].forEach((route) => {
+    [outputs, privacy, tos, ownProfilePath, '/'].forEach((route) => {
       const result = navigationPromptHandler(onboardedUser, route);
       expect(result).toBeUndefined();
       expect(window.alert).not.toHaveBeenCalled();

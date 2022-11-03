@@ -123,7 +123,7 @@ describe('ProjectDetail', () => {
         screen.queryByRole('link', { name: /resources/i }),
       ).not.toBeInTheDocument();
     });
-    it('renders the resources if the user is in the project', async () => {
+    it.only('renders the resources if the user is in the project', async () => {
       const project = gp2Fixtures.createProjectResponse();
       project.members = [
         {

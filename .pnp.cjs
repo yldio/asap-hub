@@ -3906,7 +3906,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "contentful",\
-        "npm:10.0.0-beta-v10.8"\
+        "npm:9.2.4"\
       ],\
       [\
         "contentful-batch-libs",\
@@ -3938,7 +3938,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "contentful-resolve-response",\
-        "npm:1.3.12"\
+        "npm:1.3.8"\
       ],\
       [\
         "contentful-sdk-core",\
@@ -10665,7 +10665,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@graphql-codegen/typescript", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:2.7.3"],\
             ["@graphql-codegen/typescript-operations", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:2.5.3"],\
             ["@graphql-typed-document-node/core", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:3.1.1"],\
-            ["contentful", "npm:10.0.0-beta-v10.8"],\
             ["contentful-cli", "npm:1.15.19"],\
             ["contentful-migrate", "npm:0.17.0"],\
             ["graphql", "npm:16.6.0"],\
@@ -39109,14 +39108,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:0.26.1", {\
-          "packageLocation": "./.yarn/cache/axios-npm-0.26.1-a6641ce4e3-d9eb58ff4b.zip/node_modules/axios/",\
-          "packageDependencies": [\
-            ["axios", "npm:0.26.1"],\
-            ["follow-redirects", "virtual:dbe3a48aea1dd5649e16abaf23d4ae05582d2149e16141955113766a0f84f681baf358c77ddccfc82eb23e4ccc66c6c912df62a9c01f2a83f1842bf86cc297b1#npm:1.15.2"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
         ["npm:0.27.2", {\
           "packageLocation": "./.yarn/cache/axios-npm-0.27.2-dbe3a48aea-38cb754046.zip/node_modules/axios/",\
           "packageDependencies": [\
@@ -42420,19 +42411,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["contentful", [\
-        ["npm:10.0.0-beta-v10.8", {\
-          "packageLocation": "./.yarn/cache/contentful-npm-10.0.0-beta-v10.8-a2cd1515f1-8812b51e65.zip/node_modules/contentful/",\
-          "packageDependencies": [\
-            ["contentful", "npm:10.0.0-beta-v10.8"],\
-            ["@contentful/rich-text-types", "npm:15.13.2"],\
-            ["axios", "npm:0.26.1"],\
-            ["contentful-resolve-response", "npm:1.3.12"],\
-            ["contentful-sdk-core", "npm:7.0.4"],\
-            ["json-stringify-safe", "npm:5.0.1"],\
-            ["type-fest", "npm:2.19.0"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
         ["npm:9.2.4", {\
           "packageLocation": "./.yarn/unplugged/contentful-npm-9.2.4-5518e0abe4/node_modules/contentful/",\
           "packageDependencies": [\
@@ -42654,14 +42632,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["contentful-resolve-response", [\
-        ["npm:1.3.12", {\
-          "packageLocation": "./.yarn/cache/contentful-resolve-response-npm-1.3.12-271866c3ae-399ed85531.zip/node_modules/contentful-resolve-response/",\
-          "packageDependencies": [\
-            ["contentful-resolve-response", "npm:1.3.12"],\
-            ["fast-copy", "npm:2.1.7"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
         ["npm:1.3.8", {\
           "packageLocation": "./.yarn/cache/contentful-resolve-response-npm-1.3.8-5376ac1308-e75942e9d0.zip/node_modules/contentful-resolve-response/",\
           "packageDependencies": [\
@@ -42689,18 +42659,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["contentful-sdk-core", "npm:7.0.2"],\
             ["fast-copy", "npm:2.1.3"],\
-            ["lodash.isplainobject", "npm:4.0.6"],\
-            ["lodash.isstring", "npm:4.0.1"],\
-            ["p-throttle", "npm:4.1.1"],\
-            ["qs", "npm:6.9.6"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
-        ["npm:7.0.4", {\
-          "packageLocation": "./.yarn/cache/contentful-sdk-core-npm-7.0.4-8b17cb9fb2-f332e001d9.zip/node_modules/contentful-sdk-core/",\
-          "packageDependencies": [\
-            ["contentful-sdk-core", "npm:7.0.4"],\
-            ["fast-copy", "npm:2.1.7"],\
             ["lodash.isplainobject", "npm:4.0.6"],\
             ["lodash.isstring", "npm:4.0.1"],\
             ["p-throttle", "npm:4.1.1"],\
@@ -47409,13 +47367,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/fast-copy-npm-2.1.3-90618f7412-5d1a4a2183.zip/node_modules/fast-copy/",\
           "packageDependencies": [\
             ["fast-copy", "npm:2.1.3"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
-        ["npm:2.1.7", {\
-          "packageLocation": "./.yarn/cache/fast-copy-npm-2.1.7-b95a8375c3-af8016c174.zip/node_modules/fast-copy/",\
-          "packageDependencies": [\
-            ["fast-copy", "npm:2.1.7"]\
           ],\
           "linkType": "HARD"\
         }]\

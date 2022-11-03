@@ -29,8 +29,8 @@ export class NewsContentfulDataProvider {
         limit: options?.take!,
         skip: options?.skip!,
         frequency: options?.filter?.frequency!,
+        title: options?.filter?.title!,
       });
-      console.log('\n\n\n***', newsCollection?.items, '\n\n\n');
 
       return {
         total: newsCollection?.items.length,

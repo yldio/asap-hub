@@ -56,7 +56,7 @@ const ResourceModal: React.FC<ResourceModalProps> = (props) => {
     <EditModal
       title="Add Resource"
       backHref={backHref}
-      dirty={type !== type}
+      dirty={type !== newType}
       noHeader
       onSave={() => {
         /* istanbul ignore next */
@@ -94,10 +94,12 @@ const ResourceModal: React.FC<ResourceModalProps> = (props) => {
           <LabeledDropdown
             title="Resource Type"
             subtitle="(required)"
-            options={types.map((type) => ({ value: type, label: type }))}
+            options={types.map((value) => ({ value, label: value }))}
             value={newType}
             required
+            getValidationMessage={() => 'Please enter a valid type'}
             onChange={setNewType}
+            enabled={!isSaving}
           />
           {newType === 'Link' && (
             <LabeledTextField
@@ -105,6 +107,7 @@ const ResourceModal: React.FC<ResourceModalProps> = (props) => {
               subtitle="(required)"
               value={newExternalLink}
               onChange={setNewExternalLink}
+              getValidationMessage={() => 'Please enter a valid link'}
               required
               pattern={UrlExpression}
               enabled={!isSaving}
@@ -115,6 +118,7 @@ const ResourceModal: React.FC<ResourceModalProps> = (props) => {
             subtitle="(required)"
             required
             value={newTitle}
+            getValidationMessage={() => 'Please enter a title'}
             onChange={setNewTitle}
             enabled={newType !== '' && !isSaving}
           />
@@ -140,6 +144,7 @@ const ResourceModal: React.FC<ResourceModalProps> = (props) => {
               overrideStyles={overrideButtonStyles}
               primary
               onClick={asyncOnSave}
+              enabled={!isSaving}
             >
               Save
             </Button>

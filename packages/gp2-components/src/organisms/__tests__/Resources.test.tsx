@@ -127,4 +127,5 @@ describe('Resources', () => {
     userEvent.click(button);
     expect(screen.getByText('resource title 3')).toBeVisible();
   });
+  it.todo('add and edit are only shown to administrators');
 });

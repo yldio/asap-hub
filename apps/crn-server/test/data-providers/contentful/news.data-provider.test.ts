@@ -1,319 +1,209 @@
-// import nock from 'nock';
-// import { getClient } from '@asap-hub/contentful';
-// import {
-//   contentfulSpaceId,
-//   contentfulAccessToken,
-//   contentfulEnvId,
-//   contentfulHost,
-// } from '../../../src/config';
-// import {
-//   getListNewsDataObject,
-//   newsContentfulApiResponse,
-// } from '../../fixtures/news.fixtures';
-// import { NewsContentfulDataProvider } from '../../../src/data-providers/contentful/news.data-provider';
+import { GraphQLClient } from '@asap-hub/contentful';
+import {
+  getListNewsDataObject,
+  getContentfulNewsGraphqlResponse,
+} from '../../fixtures/news.fixtures';
+import { NewsContentfulDataProvider } from '../../../src/data-providers/contentful/news.data-provider';
+import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 
-// const isContentfulResponse = true;
+const isContentfulResponse = true;
 
-// describe('News data provider', () => {
-//   const newsRestClient = getClient({
-//     space: contentfulSpaceId,
-//     accessToken: contentfulAccessToken,
-//     environment: contentfulEnvId,
-//     retryOnError: false,
-//   });
-//   const newsDataProvider = new NewsContentfulDataProvider(newsRestClient);
+describe('News data provider', () => {
+  const newsGraphQLClientMock = getContentfulGraphqlClientMock();
+  const newsDataProvider = new NewsContentfulDataProvider(
+    newsGraphQLClientMock,
+  );
 
-//   afterEach(() => {
-//     expect(nock.isDone()).toBe(true);
-//   });
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
 
-//   afterEach(() => {
-//     nock.cleanAll();
-//     jest.clearAllMocks();
-//   });
+  describe('Fetch method', () => {
+    test('Should return an empty result when no news exist', async () => {
+      const contentfulGraphQLResponse = getContentfulNewsGraphqlResponse();
+      contentfulGraphQLResponse.newsCollection!.total = 0;
+      contentfulGraphQLResponse.newsCollection!.items = [];
 
-//   describe('Fetch method', () => {
-//     test('Should return an empty result when no news exist', async () => {
-//       nock(contentfulHost)
-//         .get(
-//           `/spaces/${contentfulSpaceId}/environments/${contentfulEnvId}/entries`,
-//         )
-//         .query({
-//           content_type: 'news',
-//           limit: 8,
-//           skip: 5,
-//           order: '-sys.createdAt',
-//         })
-//         .reply(200, { total: 0, items: [] });
+      newsGraphQLClientMock.request.mockResolvedValueOnce(
+        contentfulGraphQLResponse,
+      );
 
-//       const result = await newsDataProvider.fetch({ take: 8, skip: 5 });
+      const result = await newsDataProvider.fetch();
 
-//       expect(result).toEqual({
-//         items: [],
-//         total: 0,
-//       });
-//     });
+      expect(result).toEqual({
+        items: [],
+        total: 0,
+      });
+    });
 
-//     test('Should return an empty result when resource does not exist', async () => {
-//       nock(contentfulHost)
-//         .get(
-//           `/spaces/${contentfulSpaceId}/environments/${contentfulEnvId}/entries`,
-//         )
-//         .query({
-//           content_type: 'news',
-//           limit: 8,
-//           skip: 5,
-//           order: '-sys.createdAt',
-//         })
-//         .reply(404);
+    test('Should return an empty result when the query is returned as null', async () => {
+      const contentfulGraphQLResponse = getContentfulNewsGraphqlResponse();
+      contentfulGraphQLResponse.newsCollection = null;
 
-//       const result = await newsDataProvider.fetch({ take: 8, skip: 5 });
+      newsGraphQLClientMock.request.mockResolvedValueOnce(
+        contentfulGraphQLResponse,
+      );
 
-//       expect(result).toEqual({
-//         items: [],
-//         total: 0,
-//       });
-//     });
+      const result = await newsDataProvider.fetch();
 
-//     test('Should throw when the server responds with an error', async () => {
-//       nock(contentfulHost)
-//         .get(
-//           `/spaces/${contentfulSpaceId}/environments/${contentfulEnvId}/entries`,
-//         )
-//         .query({
-//           content_type: 'news',
-//           order: '-sys.createdAt',
-//         })
-//         .reply(500);
+      expect(result).toEqual({
+        items: [],
+        total: 0,
+      });
+    });
 
-//       await expect(newsDataProvider.fetch()).rejects.toThrow();
-//     });
+    test('Should return news', async () => {
+      newsGraphQLClientMock.request.mockResolvedValueOnce(
+        getContentfulNewsGraphqlResponse(),
+      );
+      const result = await newsDataProvider.fetch({ take: 8, skip: 5 });
 
-//     test('Should return news', async () => {
-//       nock(contentfulHost)
-//         .get(
-//           `/spaces/${contentfulSpaceId}/environments/${contentfulEnvId}/entries`,
-//         )
-//         .query({
-//           content_type: 'news',
-//           limit: 8,
-//           skip: 5,
-//           order: '-sys.createdAt',
-//         })
-//         .reply(200, newsContentfulApiResponse);
+      expect(result).toEqual(getListNewsDataObject(isContentfulResponse));
+    });
 
-//       const result = await newsDataProvider.fetch({ take: 8, skip: 5 });
+    test('Should return news when the thumbnail is null', async () => {
+      const contentfulGraphQLResponse = getContentfulNewsGraphqlResponse();
+      contentfulGraphQLResponse.newsCollection!.total = 0;
+      contentfulGraphQLResponse.newsCollection!.items[0]!.thumbnail!.url = null;
 
-//       expect(result).toEqual(getListNewsDataObject(isContentfulResponse));
-//     });
+      newsGraphQLClientMock.request.mockResolvedValueOnce(
+        contentfulGraphQLResponse,
+      );
 
-//     test('Should return news when the thumbnail is null', async () => {
-//       const contentfulResponse = {
-//         total: 1,
-//         items: [
-//           {
-//             ...newsContentfulApiResponse.items[0],
-//             fields: {
-//               ...newsContentfulApiResponse.items[0]?.fields,
-//               thumbnail: undefined,
-//             },
-//           },
-//         ],
-//       };
+      const result = await newsDataProvider.fetch({ take: 8, skip: 5 });
 
-//       nock(contentfulHost)
-//         .get(
-//           `/spaces/${contentfulSpaceId}/environments/${contentfulEnvId}/entries`,
-//         )
-//         .query({
-//           content_type: 'news',
-//           limit: 8,
-//           skip: 5,
-//           order: '-sys.createdAt',
-//         })
-//         .reply(200, contentfulResponse);
+      expect(result.items![0]!.thumbnail).toBeUndefined();
+    });
 
-//       const result = await newsDataProvider.fetch({ take: 8, skip: 5 });
+    test('Should query data properly when request does not have options', async () => {
+      const contentfulGraphQLResponse = getContentfulNewsGraphqlResponse();
+      newsGraphQLClientMock.request.mockResolvedValueOnce(
+        contentfulGraphQLResponse,
+      );
 
-//       expect(result.items[0]!.thumbnail).toBeUndefined();
-//     });
+      const result = await newsDataProvider.fetch();
 
-//     test('Should query data properly when request does not have options', async () => {
-//       nock(contentfulHost)
-//         .get(
-//           `/spaces/${contentfulSpaceId}/environments/${contentfulEnvId}/entries`,
-//         )
-//         .query({
-//           content_type: 'news',
-//           order: '-sys.createdAt',
-//         })
-//         .reply(200, newsContentfulApiResponse);
+      expect(result).toEqual(getListNewsDataObject(isContentfulResponse));
+      expect(newsGraphQLClientMock.request).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          frequency: undefined,
+          limit: undefined,
+          skip: undefined,
+          title: undefined,
+        }),
+      );
+    });
 
-//       const result = await newsDataProvider.fetch();
+    describe('Frequency Filter', () => {
+      test('Should query data properly when only CRN Quarterly frequency is selected', async () => {
+        newsGraphQLClientMock.request.mockResolvedValueOnce(
+          getContentfulNewsGraphqlResponse(),
+        );
 
-//       expect(result).toEqual(getListNewsDataObject(isContentfulResponse));
-//     });
+        const result = await newsDataProvider.fetch({
+          take: 8,
+          skip: 5,
+          filter: {
+            frequency: ['CRN Quarterly'],
+          },
+        });
 
-//     describe('Frequency Filter', () => {
-//       test('Should query data properly when only CRN Quarterly frequency is selected', async () => {
-//         nock(contentfulHost)
-//           .get(
-//             `/spaces/${contentfulSpaceId}/environments/${contentfulEnvId}/entries`,
-//           )
-//           .query({
-//             content_type: 'news',
-//             fields: { frequency: { in: 'CRN Quarterly' } },
-//             limit: '8',
-//             skip: '5',
-//             order: '-sys.createdAt',
-//           })
-//           .reply(200, newsContentfulApiResponse);
+        expect(result).toEqual(getListNewsDataObject(isContentfulResponse));
+        expect(newsGraphQLClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            frequency: ['CRN Quarterly'],
+            limit: 8,
+            skip: 5,
+            title: undefined,
+          }),
+        );
+      });
+    });
 
-//         const result = await newsDataProvider.fetch({
-//           take: 8,
-//           skip: 5,
-//           filter: {
-//             frequency: ['CRN Quarterly'],
-//           },
-//         });
+    describe('Text Filter', () => {
+      test('Should query data properly when passing search param and no frequency is selected', async () => {
+        newsGraphQLClientMock.request.mockResolvedValueOnce(
+          getContentfulNewsGraphqlResponse(),
+        );
 
-//         expect(result).toEqual(getListNewsDataObject(isContentfulResponse));
-//       });
+        const result = await newsDataProvider.fetch({
+          filter: { title: 'hey' },
+        });
 
-//       test('Should query data properly when CRN Quarterly and News Articles frequency are selected', async () => {
-//         nock(contentfulHost)
-//           .get(
-//             `/spaces/${contentfulSpaceId}/environments/${contentfulEnvId}/entries`,
-//           )
-//           .query({
-//             content_type: 'news',
-//             fields: { frequency: { in: 'CRN Quarterly,News Articles' } },
-//             limit: '8',
-//             skip: '5',
-//             order: '-sys.createdAt',
-//           })
-//           .reply(200, newsContentfulApiResponse);
+        expect(result).toEqual(getListNewsDataObject(isContentfulResponse));
+        expect(newsGraphQLClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            frequency: undefined,
+            limit: undefined,
+            skip: undefined,
+            title: 'hey',
+          }),
+        );
+      });
 
-//         const result = await newsDataProvider.fetch({
-//           take: 8,
-//           skip: 5,
-//           filter: {
-//             frequency: ['CRN Quarterly', 'News Articles'],
-//           },
-//         });
+      test('Should query data properly when passing search param and frequency is selected', async () => {
+        newsGraphQLClientMock.request.mockResolvedValueOnce(
+          getContentfulNewsGraphqlResponse(),
+        );
 
-//         expect(result).toEqual(getListNewsDataObject(isContentfulResponse));
-//       });
-//     });
+        const result = await newsDataProvider.fetch({
+          take: 8,
+          skip: 5,
+          filter: {
+            frequency: ['CRN Quarterly', 'News Articles'],
+            title: 'hey',
+          },
+        });
 
-//     describe('Text Filter', () => {
-//       test('Should query data properly when passing search param and no frequency is selected', async () => {
-//         nock(contentfulHost)
-//           .get(
-//             `/spaces/${contentfulSpaceId}/environments/${contentfulEnvId}/entries`,
-//           )
-//           .query({
-//             content_type: 'news',
-//             fields: { title: { match: 'hey' } },
-//             order: '-sys.createdAt',
-//           })
-//           .reply(200, newsContentfulApiResponse);
+        expect(result).toEqual(getListNewsDataObject(isContentfulResponse));
+        expect(newsGraphQLClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            frequency: ['CRN Quarterly', 'News Articles'],
+            limit: 8,
+            skip: 5,
+            title: 'hey',
+          }),
+        );
+      });
+    });
+  });
 
-//         const result = await newsDataProvider.fetch({
-//           filter: { title: 'hey' },
-//         });
+  describe('Fetch-by-id method', () => {
+    test('Should return null when the news is not found', async () => {
+      const id = 'some-id';
+      const contentfulGraphQLResponse = getContentfulNewsGraphqlResponse();
+      contentfulGraphQLResponse.newsCollection = null;
 
-//         expect(result).toEqual(getListNewsDataObject(isContentfulResponse));
-//       });
+      newsGraphQLClientMock.request.mockResolvedValueOnce(
+        contentfulGraphQLResponse,
+      );
 
-//       test('Should query data properly when passing search param and frequency is selected', async () => {
-//         nock(contentfulHost)
-//           .get(
-//             `/spaces/${contentfulSpaceId}/environments/${contentfulEnvId}/entries`,
-//           )
-//           .query({
-//             content_type: 'news',
-//             fields: {
-//               title: { match: 'hey' },
-//               frequency: { in: 'CRN Quarterly,News Articles' },
-//             },
-//             limit: '8',
-//             skip: '5',
-//             order: '-sys.createdAt',
-//           })
-//           .reply(200, newsContentfulApiResponse);
+      expect(await newsDataProvider.fetchById(id)).toBeNull();
+    });
 
-//         const result = await newsDataProvider.fetch({
-//           take: 8,
-//           skip: 5,
-//           filter: {
-//             frequency: ['CRN Quarterly', 'News Articles'],
-//             title: 'hey',
-//           },
-//         });
+    test('Should return the result when the news exists', async () => {
+      const id = 'some-id';
+      const contentfulGraphQLResponse = getContentfulNewsGraphqlResponse();
 
-//         expect(result).toEqual(getListNewsDataObject(isContentfulResponse));
-//       });
-//     });
-//   });
+      newsGraphQLClientMock.request.mockResolvedValueOnce(
+        contentfulGraphQLResponse,
+      );
 
-//   describe('Fetch-by-id method', () => {
-//     test('Should return null when the news is not found', async () => {
-//       const id = 'some-id';
+      const result = await newsDataProvider.fetchById(id);
 
-//       nock(contentfulHost)
-//         .get(
-//           `/spaces/${contentfulSpaceId}/environments/${contentfulEnvId}/entries`,
-//         )
-//         .query({
-//           content_type: 'news',
-//           fields: {
-//             id,
-//           },
-//         })
-//         .reply(404);
-
-//       expect(await newsDataProvider.fetchById(id)).toBeNull();
-//     });
-
-//     test('Should throw when the server responds with an error', async () => {
-//       const id = 'some-id';
-
-//       nock(contentfulHost)
-//         .get(
-//           `/spaces/${contentfulSpaceId}/environments/${contentfulEnvId}/entries`,
-//         )
-//         .query({
-//           content_type: 'news',
-//           fields: {
-//             id,
-//           },
-//         })
-//         .reply(500);
-
-//       await expect(newsDataProvider.fetchById(id)).rejects.toThrow();
-//     });
-
-//     test('Should return the result when the news exists', async () => {
-//       const id = 'some-id';
-
-//       nock(contentfulHost)
-//         .get(
-//           `/spaces/${contentfulSpaceId}/environments/${contentfulEnvId}/entries`,
-//         )
-//         .query({
-//           content_type: 'news',
-//           fields: {
-//             id,
-//           },
-//         })
-//         .reply(200, newsContentfulApiResponse);
-
-//       const result = await newsDataProvider.fetchById(id);
-
-//       expect(result).toEqual(
-//         getListNewsDataObject(isContentfulResponse).items[0],
-//       );
-//     });
-//   });
-// });
+      expect(result).toEqual(
+        getListNewsDataObject(isContentfulResponse).items[0],
+      );
+      expect(newsGraphQLClientMock.request).toBeCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          id,
+        }),
+      );
+    });
+  });
+});

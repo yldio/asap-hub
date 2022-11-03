@@ -23,7 +23,7 @@ import {
   SquidexGraphql,
   SquidexRest,
 } from '@asap-hub/squidex';
-import { graphQLClient } from '@asap-hub/contentful';
+import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/contentful';
 
 import * as Sentry from '@sentry/serverless';
 import AWSXray from 'aws-xray-sdk';
@@ -125,7 +125,7 @@ import {
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
 
-  const contentfulGraphQLClient = graphQLClient({
+  const contentfulGraphQLClient = getContentfulGraphQLClient({
     space: contentfulSpaceId,
     accessToken: contentfulAccessToken,
     environment: contentfulEnvId,

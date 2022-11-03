@@ -39,6 +39,13 @@ export class NewsContentfulDataProvider {
         title: options?.filter?.title!,
       });
 
+      if (!newsCollection?.items) {
+        return {
+          total: 0,
+          items: [],
+        };
+      }
+
       return {
         total: newsCollection?.total,
         items: newsCollection?.items.map((item) => {

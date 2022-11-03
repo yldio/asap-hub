@@ -1,7 +1,7 @@
 import { CreateClientParams, ContentfulClientApi } from 'contentful';
 import { GraphQLClient } from 'graphql-request';
 
-export const graphQLClient = ({
+export const getGraphQLClient = ({
   space,
   accessToken,
   environment,

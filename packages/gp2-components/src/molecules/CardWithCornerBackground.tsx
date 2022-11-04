@@ -3,7 +3,10 @@ import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { projectsImage } from '../images';
 
-type CardWithCornerBackgroundProps = ComponentProps<typeof Card>;
+type CardWithCornerBackgroundProps = Omit<
+  ComponentProps<typeof Card>,
+  'shadow'
+>;
 
 const { rem } = pixels;
 
@@ -26,11 +29,12 @@ const contentCardStyle = css({
 
 const CardWithCornerBackground: React.FC<CardWithCornerBackgroundProps> = ({
   children,
+  ...props
 }) => (
   <div css={containerStyles}>
     <div css={backgroundStyle}></div>
     <div css={contentCardStyle}>
-      <Card shadow={false} accent="default">
+      <Card shadow={false} {...props}>
         {children}
       </Card>
     </div>

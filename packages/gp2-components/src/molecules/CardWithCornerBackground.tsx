@@ -30,7 +30,7 @@ const CardWithCornerBackground: React.FC<CardWithCornerBackgroundProps> = ({
 }) => (
   <div css={containerStyles}>
     <div css={contentCardStyle}>
-      <Card noShadow accent="default">
+      <Card shadow={false} accent="default">
         {children}
       </Card>
     </div>

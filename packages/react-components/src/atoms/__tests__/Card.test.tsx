@@ -43,6 +43,6 @@ it('omits the shadow if requested', () => {
   const { getByText, rerender } = render(<Card>text</Card>);
   expect(getByText('text')).toHaveStyleRule('box-shadow', /px/);
 
-  rerender(<Card noShadow>text</Card>);
+  rerender(<Card shadow={false}>text</Card>);
   expect(getByText('text')).toHaveStyleRule('box-shadow', 'none');
 });

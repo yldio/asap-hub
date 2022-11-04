@@ -4,9 +4,10 @@ import { renderHook } from '@testing-library/react-hooks';
 import {
   getUserClaimKey,
   useCurrentUser,
+  useCurrentUserGP2,
   useCurrentUserTeamRoles,
 } from '../auth';
-import { Auth0Context, useAuth0 } from '../auth0';
+import { Auth0Context, useAuth0, Auth0ContextGP2, useAuth0GP2 } from '../auth0';
 
 const userProvider =
   (user: Auth0User | undefined): React.FC =>
@@ -89,6 +90,75 @@ describe('useCurrentUser', () => {
   });
 });
 
+describe('useCurrentUserGP2', () => {
+  const userProviderGP2 =
+    (user: Auth0User | undefined): React.FC =>
+    ({ children }) => {
+      const ctx = useAuth0GP2();
+
+      return (
+        <Auth0ContextGP2.Provider
+          value={{
+            ...ctx,
+            loading: false,
+            isAuthenticated: true,
+            user,
+          }}
+        >
+          {children}
+        </Auth0ContextGP2.Provider>
+      );
+    };
+  it('returns null when there is no Auth0 user', async () => {
+    const { result } = renderHook(useCurrentUserGP2);
+    expect(result.current).toBe(null);
+  });
+
+  it('throws if the Auth0 user is missing the user claim', async () => {
+    const { result } = renderHook(useCurrentUserGP2, {
+      wrapper: userProviderGP2({
+        sub: '42',
+        aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
+      }),
+    });
+    expect(result.error).toMatchInlineSnapshot(
+      `[Error: Auth0 user is missing user claim - expected claim key http://localhost/user, got keys [sub, aud]]`,
+    );
+  });
+
+  it('throws if the user claim is not an object', async () => {
+    const { result } = renderHook(useCurrentUserGP2, {
+      wrapper: userProviderGP2({
+        sub: '42',
+        aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
+        [`${window.location.origin}/user`]: 'testuser',
+      }),
+    });
+    expect(result.error).toMatchInlineSnapshot(
+      `[Error: Invalid user claim - expected object, got testuser]`,
+    );
+  });
+
+  it('returns the user claim', async () => {
+    const { result } = renderHook(useCurrentUserGP2, {
+      wrapper: userProviderGP2({
+        sub: '42',
+        aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
+        [`${window.location.origin}/user`]: {
+          id: 'testuser',
+          onboarded: true,
+          email: 'john.doe@example.com',
+          firstName: 'John',
+          lastName: 'Doe',
+          displayName: 'John Doe',
+          teams: [],
+          algoliaApiKey: 'asdasda',
+        },
+      }),
+    });
+    expect(result.current).toHaveProperty('id', 'testuser');
+  });
+});
 describe('useCurrentUserTeamRoles', () => {
   const userTeam: User['teams'][number] = {
     displayName: 'Jakobsson, J',

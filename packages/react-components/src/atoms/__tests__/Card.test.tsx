@@ -38,3 +38,11 @@ it('omits the padding if requested', () => {
   rerender(<Card padding={false}>text</Card>);
   expect(getByText('text')).not.toHaveStyleRule('padding-top', /.*/);
 });
+
+it('omits the shadow if requested', () => {
+  const { getByText, rerender } = render(<Card>text</Card>);
+  expect(getByText('text')).toHaveStyleRule('box-shadow', /px/);
+
+  rerender(<Card noShadow>text</Card>);
+  expect(getByText('text')).toHaveStyleRule('box-shadow', 'none');
+});

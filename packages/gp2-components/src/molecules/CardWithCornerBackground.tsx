@@ -9,9 +9,9 @@ const { rem } = pixels;
 
 const containerStyles = css({
   display: 'grid',
-  gridTemplateRows: '52px 1fr 22px',
-  gridTemplateColumns: '58px 1fr 28px',
-  margin: '12px 0',
+  gridTemplateRows: `${rem(52)} 1fr ${rem(22)}`,
+  gridTemplateColumns: `${rem(58)} 1fr ${rem(28)}`,
+  margin: `${rem(12)} 0`,
 });
 
 const backgroundStyle = css({

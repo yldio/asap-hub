@@ -8,3 +8,9 @@ it('renders the header', () => {
     `"Welcome to the GP2 Hub"`,
   );
 });
+
+it('Sign out button takes you to the logout', () => {
+  render(<OnboardWelcome />);
+  const signOutButton = screen.getByRole('link', { name: /Sign Out/i });
+  expect(signOutButton.closest('a')).toHaveAttribute('href', '/logout');
+});

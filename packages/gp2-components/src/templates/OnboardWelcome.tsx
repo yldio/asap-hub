@@ -1,27 +1,44 @@
 import {
-  Button,
   Caption,
   Divider,
-  informationInfo500,
   Headline2,
   Subtitle,
   Paragraph,
   Link,
+  pixels,
+  Button,
+  informationInfo500,
 } from '@asap-hub/react-components';
 import { logout } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import CardWithCornerBackground from '../molecules/CardWithCornerBackground';
 import BasicLayout from './BasicLayout';
 
+const { mobileScreen } = pixels;
+
+const containerStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'left',
+});
+
+const footerStyles = css({
+  justifyContent: 'space-between',
+  [`@media (min-width: ${mobileScreen.max}px)`]: {
+    display: 'flex',
+    flexDirection: 'row-reverse',
+    button: {
+      maxWidth: 'fit-content',
+    },
+    a: {
+      maxWidth: 'fit-content',
+    },
+  },
+});
+
 const OnboardWelcome: React.FC<Record<string, never>> = () => (
   <BasicLayout>
-    <div
-      css={css({
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'left',
-      })}
-    >
+    <div css={containerStyles}>
       <header>
         <Headline2 noMargin>Welcome to the GP2 Hub</Headline2>
         <Subtitle accent="lead" hasMargin>
@@ -58,34 +75,19 @@ const OnboardWelcome: React.FC<Record<string, never>> = () => (
         <b>Please note,</b> all information provided can only be viewed by other
         GP2 members that have also registered.
       </Caption>
-
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-        }}
-      >
-        <div
-          css={css({
-            maxWidth: 'fit-content',
-            blockSize: 'fit-content',
-          })}
-        >
-          <Link buttonStyle href={logout({}).$}>
-            Sign Out
-          </Link>
-        </div>
+      <footer css={footerStyles}>
         <Button
           primary
           overrideStyles={css({
             background: informationInfo500.rgb,
-            maxWidth: 'fit-content',
-            blockSize: 'fit-content',
           })}
         >
           Get Started
         </Button>
-      </div>
+        <Link buttonStyle href={logout({}).$}>
+          Sign Out
+        </Link>
+      </footer>
     </div>
   </BasicLayout>
 );

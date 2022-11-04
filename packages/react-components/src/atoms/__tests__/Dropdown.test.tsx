@@ -142,7 +142,7 @@ it('gets a green border when focused', () => {
   userEvent.click(screen.getByText('Select'));
   expect(
     findParentWithStyle(screen.getByText('Select'), 'borderColor')?.borderColor,
-  ).toBe(fern.rgb);
+  ).toBe(fern.rgba);
 
   userEvent.tab();
   expect(

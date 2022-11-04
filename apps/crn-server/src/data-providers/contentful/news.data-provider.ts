@@ -1,10 +1,4 @@
-import {
-  ListNewsDataObject,
-  NewsDataObject,
-  FetchNewsFilter,
-  FetchPaginationOptions,
-  NewsFrequency,
-} from '@asap-hub/model';
+import { NewsDataObject, NewsFrequency } from '@asap-hub/model';
 
 import {
   GraphQLClient,
@@ -17,10 +11,7 @@ import {
   FetchNewsQueryVariables,
 } from '@asap-hub/contentful';
 
-export interface NewsDataProvider {
-  fetchById(id: string): Promise<NewsDataObject | null>;
-  fetch: (options?: FetchNewsProviderOptions) => Promise<ListNewsDataObject>;
-}
+import { FetchNewsProviderOptions } from '../types';
 
 type NewsItem = NonNullable<
   NonNullable<FetchNewsQuery['newsCollection']>['items'][number]
@@ -69,12 +60,6 @@ export class NewsContentfulDataProvider {
     return parseNews(news[0]);
   }
 }
-
-export type FetchNewsProviderOptions = FetchPaginationOptions & {
-  filter?: FetchNewsFilter & {
-    title?: string;
-  };
-};
 
 const parseNews = (item: NewsItem): NewsDataObject => ({
   // this case where id and title are null

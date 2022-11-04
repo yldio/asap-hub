@@ -58,6 +58,8 @@ import ResearchTags, {
 import Teams, { TeamController } from './controllers/teams';
 import Tutorials, { TutorialsController } from './controllers/tutorials';
 import Users, { UserController } from './controllers/users';
+import { NewsDataProvider } from './data-providers/types';
+import { NewsSquidexDataProvider } from './data-providers/news.data-provider';
 import { NewsContentfulDataProvider } from './data-providers/contentful/news.data-provider';
 import {
   AssetDataProvider,
@@ -117,10 +119,6 @@ import { userPublicRouteFactory, userRouteFactory } from './routes/user.route';
 import assignUserToContext from './utils/assign-user-to-context';
 import { getAuthToken } from './utils/auth';
 import pinoLogger from './utils/logger';
-import {
-  NewsDataProvider,
-  NewsSquidexDataProvider,
-} from './data-providers/news.data-provider';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();

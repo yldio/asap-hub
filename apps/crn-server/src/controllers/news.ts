@@ -4,8 +4,7 @@ import {
   NewsResponse,
   FetchNewsOptions,
 } from '@asap-hub/model';
-import { NewsContentfulDataProvider } from '../data-providers/contentful/news.data-provider';
-import { NewsDataProvider } from '../data-providers/news.data-provider';
+import { NewsDataProvider } from '../data-providers/types';
 
 export interface NewsController {
   fetch: (options?: FetchNewsOptions) => Promise<ListNewsResponse>;
@@ -13,9 +12,7 @@ export interface NewsController {
 }
 
 export default class News implements NewsController {
-  constructor(
-    private newsDataProvider: NewsDataProvider | NewsContentfulDataProvider,
-  ) {}
+  constructor(private newsDataProvider: NewsDataProvider) {}
 
   async fetch(options?: FetchNewsOptions): Promise<ListNewsResponse> {
     const { search, filter, ...paginationOptions } = options || {};

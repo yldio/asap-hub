@@ -3,7 +3,7 @@ import { WorkingGroupResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 
 import { Button, Card, Headline3, Headline5, Paragraph, Pill } from '../atoms';
-import { rem } from '../pixels';
+import { rem, tabletScreen } from '../pixels';
 import { steel } from '../colors';
 import { paddingStyles } from '../card';
 
@@ -17,9 +17,13 @@ const statusToAccent: Record<
   Pending: 'neutral',
 };
 
-const deliverablesContainerStyles = css({
+const deliverablesRowStyles = css({
   borderBottom: `1px solid ${steel.rgb}`,
   [`:nth-last-of-type(1)`]: { borderBottom: 'none' },
+  [`@media (min-width: ${tabletScreen.width}px)`]: {
+    display: 'grid',
+    gridTemplateColumns: `1fr ${rem(128)}`,
+  },
 });
 
 const showMoreStyles = css({
@@ -29,6 +33,15 @@ const showMoreStyles = css({
   paddingBottom: rem(16),
   borderTop: `1px solid ${steel.rgb}`,
 });
+
+const mobileTitle = {
+  [`@media (min-width: ${tabletScreen.width}px)`]: {
+    display: 'none',
+  },
+};
+const desktopTitles = {
+  display: 'none',
+};
 
 type DeliverablesCardProps = {
   deliverables: WorkingGroupResponse['deliverables'];
@@ -46,25 +59,26 @@ const DeliverablesCard: React.FC<DeliverablesCardProps> = ({
         <Paragraph accent="lead">
           The deliverables of this working group are:
         </Paragraph>
-        <div>
-          {deliverables
-            .slice(0, expanded ? undefined : limit)
-            .map(({ description, status }, index) => (
-              <div
-                key={`deliverable-${index}`}
-                css={deliverablesContainerStyles}
-              >
-                <div>
-                  <Headline5>Deliverables</Headline5>
-                </div>
-                <Paragraph accent="lead">{description}</Paragraph>
-                <div>
-                  <Headline5>Status</Headline5>
-                </div>
+        <div css={[deliverablesRowStyles, desktopTitles]}>
+          <Headline5>Deliverables</Headline5>
+          <Headline5>Status</Headline5>
+        </div>
+        {deliverables
+          .slice(0, expanded ? undefined : limit)
+          .map(({ description, status }, index) => (
+            <div css={deliverablesRowStyles} key={`deliverable-${index}`}>
+              <div css={mobileTitle}>
+                <Headline5>Deliverables</Headline5>
+              </div>
+              <Paragraph accent="lead">{description}</Paragraph>
+              <div css={mobileTitle}>
+                <Headline5>Status</Headline5>
+              </div>
+              <div css={{ display: 'inline-block' }}>
                 <Pill accent={statusToAccent[status]}>{status}</Pill>
               </div>
-            ))}
-        </div>
+            </div>
+          ))}
       </div>
       {deliverables.length > limit && (
         <div css={showMoreStyles}>

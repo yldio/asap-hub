@@ -1,25 +1,25 @@
 import { ComponentProps } from 'react';
 import { createListTeamResponse } from '@asap-hub/fixtures';
 import { fireEvent, render, screen } from '@testing-library/react';
-import TeamsTabbedCard from '../TeamsTabbedCard';
+import GroupTeamsTabbedCard from '../GroupTeamsTabbedCard';
 
-const props: ComponentProps<typeof TeamsTabbedCard> = {
+const props: ComponentProps<typeof GroupTeamsTabbedCard> = {
   teams: [],
   title: '',
-  disableActiveTab: false,
+  isGroupInactive: false,
 };
 
 describe('renders the teams tabbed card', () => {
-  const renderTabbedCard = (disableActiveTab: boolean) =>
+  const renderTabbedCard = (isGroupInactive: boolean) =>
     render(
-      <TeamsTabbedCard
+      <GroupTeamsTabbedCard
         {...props}
         teams={[
           { displayName: 'team 1', id: '123' },
           { displayName: 'team 2', id: '123', inactiveSince: '2021-01-01' },
         ]}
         title="Example"
-        disableActiveTab={disableActiveTab}
+        isGroupInactive={isGroupInactive}
       />,
     );
 
@@ -45,7 +45,7 @@ describe('renders the teams tabbed card', () => {
 
 it('shows the correct more and less button text', () => {
   render(
-    <TeamsTabbedCard
+    <GroupTeamsTabbedCard
       {...props}
       teams={createListTeamResponse(20).items}
       title="Example"

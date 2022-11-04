@@ -4,8 +4,8 @@ import { GroupResponse } from '@asap-hub/model';
 import {
   GroupInformation,
   GroupTools,
-  LeadersTabbedCard,
-  TeamsTabbedCard,
+  GroupLeadersTabbedCard,
+  GroupTeamsTabbedCard,
 } from '../organisms';
 import { CtaCard } from '../molecules';
 
@@ -58,15 +58,15 @@ const GroupProfileAbout: React.FC<GroupProfileAboutProps> = ({
       />
       <div id={membersSectionId}>
         <div css={membersSectionStyles}>
-          <LeadersTabbedCard
+          <GroupLeadersTabbedCard
             title="Interest Group Leaders"
             leaders={leaders}
-            disableActiveTab={!active}
+            isGroupInactive={!active}
           />
-          <TeamsTabbedCard
+          <GroupTeamsTabbedCard
             title="Interest Group Teams"
             teams={teams}
-            disableActiveTab={!active}
+            isGroupInactive={!active}
           />
         </div>
       </div>

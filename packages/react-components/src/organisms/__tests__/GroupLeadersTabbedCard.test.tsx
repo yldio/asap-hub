@@ -1,18 +1,18 @@
 import { ComponentProps } from 'react';
 import { createUserResponse, createUserTeams } from '@asap-hub/fixtures';
 import { render, screen, fireEvent } from '@testing-library/react';
-import LeadersTabbedCard from '../LeadersTabbedCard';
+import GroupLeadersTabbedCard from '../GroupLeadersTabbedCard';
 
-const props: ComponentProps<typeof LeadersTabbedCard> = {
+const props: ComponentProps<typeof GroupLeadersTabbedCard> = {
   leaders: [],
   title: '',
-  disableActiveTab: true,
+  isGroupInactive: false,
 };
 
 describe('renders the leaders tabbed card', () => {
-  const renderTabbedCard = (disableActiveTab: boolean) =>
+  const renderTabbedCard = (isGroupInactive: boolean) =>
     render(
-      <LeadersTabbedCard
+      <GroupLeadersTabbedCard
         {...props}
         leaders={[
           {
@@ -32,7 +32,7 @@ describe('renders the leaders tabbed card', () => {
           },
         ]}
         title="Leaders title"
-        disableActiveTab={disableActiveTab}
+        isGroupInactive={isGroupInactive}
       />,
     );
 
@@ -62,7 +62,7 @@ describe('renders the leaders tabbed card', () => {
 
 it('renders a leader with multiple teams', () => {
   render(
-    <LeadersTabbedCard
+    <GroupLeadersTabbedCard
       {...props}
       leaders={[
         {
@@ -83,7 +83,7 @@ it('renders a leader with multiple teams', () => {
 
 it('renders a leader with a single team', () => {
   render(
-    <LeadersTabbedCard
+    <GroupLeadersTabbedCard
       {...props}
       leaders={[
         {

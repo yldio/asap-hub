@@ -6,7 +6,6 @@ import {
   slackIcon,
   googleCalendarIcon,
 } from '../icons';
-import { TabProps } from '../molecules/TabbedCard';
 
 /* istanbul ignore next */
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -80,62 +79,17 @@ export function equals(a: Array<string>, b: Array<string>): boolean {
 export function splitListBy<T>(
   properties: string[],
   list: ReadonlyArray<T>,
+  isItemParentInactive: boolean,
 ): ReadonlyArray<T>[] {
+  if (isItemParentInactive) {
+    return [[], list];
+  }
   const firstPart = list.filter(
-    (item: T) =>
-      !!properties.reduce((i: T, p, idx) => i[p as keyof T] as T, item),
+    (item: T) => !properties.reduce((i: T, p) => i[p as keyof T] as T, item),
   );
   const secondPart = list.filter(
-    (item: T) => !properties.reduce((i, p) => i[p as keyof T] as T, item),
+    (item: T) => !!properties.reduce((i, p) => i[p as keyof T] as T, item),
   );
 
   return [firstPart, secondPart];
-}
-
-export function buildTabsConfig<T>({
-  disableActiveTab,
-  items,
-  label,
-  lookupProps,
-  truncateFrom,
-}: {
-  disableActiveTab: boolean;
-  items: ReadonlyArray<T>;
-  label: string;
-  lookupProps: string[];
-  truncateFrom?: number;
-}): TabProps<T>[] {
-  if (disableActiveTab) {
-    return [
-      {
-        tabTitle: `Active ${label} (0)`,
-        items: [],
-        disabled: true,
-        truncateFrom,
-      },
-      {
-        tabTitle: `Past ${label} (${items.length})`,
-        items,
-        disabled: items.length === 0,
-        truncateFrom,
-      },
-    ];
-  }
-
-  const [inactive, active] = splitListBy(lookupProps, items);
-
-  return [
-    {
-      tabTitle: `Active ${label} (${active.length})`,
-      items: active,
-      disabled: active.length === 0,
-      truncateFrom,
-    },
-    {
-      tabTitle: `Past ${label} (${inactive.length})`,
-      items: inactive,
-      disabled: inactive.length === 0,
-      truncateFrom,
-    },
-  ];
 }

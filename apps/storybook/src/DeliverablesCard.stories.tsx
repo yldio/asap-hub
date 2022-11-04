@@ -7,6 +7,7 @@ export default {
 };
 export const Normal = () => (
   <DeliverablesCard
+    limit={number('Limit', 4)}
     {...createWorkingGroupResponse({ deliverables: number('Deliverables', 6) })}
   />
 );

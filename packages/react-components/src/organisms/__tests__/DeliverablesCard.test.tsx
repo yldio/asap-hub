@@ -73,7 +73,7 @@ describe('view more and less', () => {
 it.each`
   status           | textColor
   ${'Complete'}    | ${colors.pine.rgb}
-  ${'In Progress'} | ${colors.informationInfo500.rgb}
+  ${'In Progress'} | ${colors.info500.rgb}
   ${'Not Started'} | ${colors.neutral800.rgb}
   ${'Pending'}     | ${colors.neutral800.rgb}
 `(

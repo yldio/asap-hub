@@ -1,4 +1,4 @@
-import { Auth0User, User } from '@asap-hub/auth';
+import { Auth0User, gp2, User } from '@asap-hub/auth';
 import { renderHook } from '@testing-library/react-hooks';
 
 import {
@@ -7,7 +7,7 @@ import {
   useCurrentUserGP2,
   useCurrentUserTeamRoles,
 } from '../auth';
-import { Auth0Context, useAuth0, Auth0ContextGP2, useAuth0GP2 } from '../auth0';
+import { Auth0Context, Auth0ContextGP2, useAuth0, useAuth0GP2 } from '../auth0';
 
 const userProvider =
   (user: Auth0User | undefined): React.FC =>
@@ -92,7 +92,7 @@ describe('useCurrentUser', () => {
 
 describe('useCurrentUserGP2', () => {
   const userProviderGP2 =
-    (user: Auth0User | undefined): React.FC =>
+    (user: Auth0User<gp2.User> | undefined): React.FC =>
     ({ children }) => {
       const ctx = useAuth0GP2();
 
@@ -151,8 +151,7 @@ describe('useCurrentUserGP2', () => {
           firstName: 'John',
           lastName: 'Doe',
           displayName: 'John Doe',
-          teams: [],
-          algoliaApiKey: 'asdasda',
+          role: 'Network Collaborator',
         },
       }),
     });

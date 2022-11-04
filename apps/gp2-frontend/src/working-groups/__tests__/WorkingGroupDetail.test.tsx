@@ -246,6 +246,7 @@ describe('WorkingGroupDetail', () => {
         },
       ];
       mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
+      mockPutWorkingGroupResources.mockResolvedValueOnce(workingGroup);
       await renderWorkingGroupDetail({
         id: workingGroup.id,
         userId: '23',

@@ -191,11 +191,10 @@ export const appFactory = (libs: Libs = {}): Express => {
   const groupDataProvider =
     libs.groupDataProvider ||
     new GroupSquidexDataProvider(squidexGraphqlClient);
-  const newsSquidexDataProvider =
-    libs.newsDataProvider || new NewsSquidexDataProvider(newsRestClient);
-  const newsContentfulDataProvider =
-    libs.newsDataProvider ||
-    new NewsContentfulDataProvider(contentfulGraphQLClient);
+  const newsSquidexDataProvider = new NewsSquidexDataProvider(newsRestClient);
+  const newsContentfulDataProvider = new NewsContentfulDataProvider(
+    contentfulGraphQLClient,
+  );
   const newsDataProvider =
     isContentfulEnabled === 'true'
       ? newsContentfulDataProvider

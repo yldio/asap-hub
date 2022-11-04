@@ -4,6 +4,9 @@ module.exports = {
   stories: ['../src/**/*.stories.tsx'],
   core: {
     builder: '@storybook/builder-webpack5',
+    options: {
+      fsCache: true,
+    },
   },
   addons: [
     '@storybook/addon-knobs',

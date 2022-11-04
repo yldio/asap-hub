@@ -1,11 +1,11 @@
-import { selector, atom, useRecoilValue } from 'recoil';
 import { DashboardResponse } from '@asap-hub/model';
+import { atom, selector, useRecoilValue } from 'recoil';
 import { authorizationState } from '../auth/state';
 import { getDashboard } from './api';
 
 export const fetchDashboardState = selector<DashboardResponse>({
   key: 'fetchDashboardState',
-  get: ({ get }) => {
+  get: async ({ get }) => {
     get(refreshDashboardState);
     return getDashboard(get(authorizationState));
   },

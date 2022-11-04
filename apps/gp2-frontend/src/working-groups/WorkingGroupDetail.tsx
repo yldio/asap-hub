@@ -7,7 +7,7 @@ import {
 } from '@asap-hub/gp2-components';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { NotFoundPage } from '@asap-hub/react-components';
-import { useCurrentUser } from '@asap-hub/react-context';
+import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { usePutWorkingGroupResources, useWorkingGroupById } from './state';
@@ -18,7 +18,7 @@ const WorkingGroupDetail = () => {
   const { workingGroupId } = useRouteParams(workingGroups({}).workingGroup);
   const workingGroup = useWorkingGroupById(workingGroupId);
   const backHref = useBackHref() ?? workingGroups({}).$;
-  const currentUser = useCurrentUser();
+  const currentUser = useCurrentUserGP2();
   const isWorkingGroupMember =
     workingGroup?.members.some(({ userId }) => userId === currentUser?.id) ||
     false;

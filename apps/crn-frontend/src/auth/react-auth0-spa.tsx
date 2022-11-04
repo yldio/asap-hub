@@ -5,7 +5,7 @@
 /* eslint-disable no-shadow */
 
 import { Auth0, Auth0User } from '@asap-hub/auth';
-import { getAuth0Context } from '@asap-hub/react-context';
+import { Auth0Context } from '@asap-hub/react-context';
 import {
   Auth0Client,
   Auth0ClientOptions,
@@ -13,7 +13,6 @@ import {
 } from '@auth0/auth0-spa-js';
 import { useEffect, useState } from 'react';
 
-const Auth0Context = getAuth0Context();
 const DEFAULT_REDIRECT_CALLBACK = () =>
   window.history.replaceState({}, document.title, window.location.pathname);
 

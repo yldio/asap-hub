@@ -5,7 +5,7 @@
 /* eslint-disable no-shadow */
 
 import { Auth0, Auth0User, gp2 } from '@asap-hub/auth';
-import { getAuth0Context } from '@asap-hub/react-context';
+import { Auth0ContextGP2 } from '@asap-hub/react-context';
 import {
   Auth0Client,
   Auth0ClientOptions,
@@ -13,7 +13,6 @@ import {
 } from '@auth0/auth0-spa-js';
 import { useEffect, useState } from 'react';
 
-const Auth0Context = getAuth0Context<gp2.User>();
 const DEFAULT_REDIRECT_CALLBACK = () =>
   window.history.replaceState({}, document.title, window.location.pathname);
 
@@ -142,6 +141,8 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
   };
 
   return (
-    <Auth0Context.Provider value={auth0}>{children}</Auth0Context.Provider>
+    <Auth0ContextGP2.Provider value={auth0}>
+      {children}
+    </Auth0ContextGP2.Provider>
   );
 };

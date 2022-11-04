@@ -6,7 +6,7 @@ import {
   useCurrentUser,
   useCurrentUserTeamRoles,
 } from '../auth';
-import { getAuth0Context, useAuth0 } from '../auth0';
+import { Auth0Context, useAuth0 } from '../auth0';
 
 const userProvider =
   (user: Auth0User | undefined): React.FC =>
@@ -27,7 +27,6 @@ const userProvider =
     );
   };
 
-const Auth0Context = getAuth0Context();
 describe('getUserClaimKey', () => {
   it('returns a URL on the current origin', () => {
     expect(new URL(getUserClaimKey()).origin).toBe(window.location.origin);

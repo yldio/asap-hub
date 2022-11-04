@@ -31,13 +31,13 @@ describe('the welcome page', () => {
 
   const renderWelcome = async (): Promise<RenderResult> =>
     render(
-      <authTestUtils.Auth0Provider>
+      <authTestUtils.Auth0ProviderGP2>
         <ToastContext.Provider value={mockToast}>
           <MemoryRouter initialEntries={['/42/']}>
             <Route exact path="/:code/" component={Welcome} />
           </MemoryRouter>
         </ToastContext.Provider>
-      </authTestUtils.Auth0Provider>,
+      </authTestUtils.Auth0ProviderGP2>,
     );
 
   it('renders a headline', async () => {

@@ -1,7 +1,7 @@
 import type { UserMetadataResponse, UserResponse } from '@asap-hub/model';
 import type { Auth0Client, GetTokenSilentlyOptions } from '@auth0/auth0-spa-js';
-
 import auth0PubKeys from './pubKeys';
+
 export * as gp2 from './gp2';
 export { auth0PubKeys };
 

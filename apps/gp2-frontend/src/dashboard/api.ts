@@ -1,6 +1,5 @@
 import { createSentryHeaders } from '@asap-hub/frontend-utils';
 import { DashboardResponse } from '@asap-hub/model';
-
 import { API_BASE_URL } from '../config';
 
 export const getDashboard = async (

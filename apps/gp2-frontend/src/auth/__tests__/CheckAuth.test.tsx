@@ -1,16 +1,16 @@
+import { authTestUtils } from '@asap-hub/react-components';
+import { render, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { render, waitFor } from '@testing-library/react';
-import { authTestUtils } from '@asap-hub/react-components';
 
 import CheckAuth from '../CheckAuth';
 
 it('renders a loading indicator while Auth0 is initializing', async () => {
   const { getByText, queryByText } = render(
     <Suspense fallback="suspended">
-      <authTestUtils.Auth0Provider>
+      <authTestUtils.Auth0ProviderGP2>
         <CheckAuth>{() => 'content'}</CheckAuth>
-      </authTestUtils.Auth0Provider>
+      </authTestUtils.Auth0ProviderGP2>
     </Suspense>,
     { wrapper: MemoryRouter },
   );
@@ -21,11 +21,11 @@ it('renders a loading indicator while Auth0 is initializing', async () => {
 
 it('renders a sign in page if the user is not authenticated', async () => {
   const { findByText } = render(
-    <authTestUtils.Auth0Provider>
+    <authTestUtils.Auth0ProviderGP2>
       <CheckAuth>
         {({ isAuthenticated }) => (isAuthenticated ? 'secure' : 'Sign in')}
       </CheckAuth>
-    </authTestUtils.Auth0Provider>,
+    </authTestUtils.Auth0ProviderGP2>,
     { wrapper: MemoryRouter },
   );
   expect(await findByText('Sign in')).toBeVisible();
@@ -33,13 +33,13 @@ it('renders a sign in page if the user is not authenticated', async () => {
 
 it('renders the children if the user is authenticated', async () => {
   const { findByText } = render(
-    <authTestUtils.Auth0Provider>
-      <authTestUtils.LoggedIn user={{}}>
+    <authTestUtils.Auth0ProviderGP2>
+      <authTestUtils.LoggedInGP2 user={{}}>
         <CheckAuth>
           {({ isAuthenticated }) => (isAuthenticated ? 'secure' : 'Sign in')}
         </CheckAuth>
-      </authTestUtils.LoggedIn>
-    </authTestUtils.Auth0Provider>,
+      </authTestUtils.LoggedInGP2>
+    </authTestUtils.Auth0ProviderGP2>,
     { wrapper: MemoryRouter },
   );
   expect(await findByText('secure')).toBeVisible();

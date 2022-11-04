@@ -1,4 +1,3 @@
-import { gp2 as gp2Auth } from '@asap-hub/auth';
 import { Frame, useBackHref } from '@asap-hub/frontend-utils';
 import {
   ProjectDetailPage,
@@ -6,17 +5,17 @@ import {
   ProjectResources,
 } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
-import { useCurrentUser } from '@asap-hub/react-context';
+import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2, useRouteParams } from '@asap-hub/routing';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { useProjectById } from './state';
+
 const { projects } = gp2;
 const ProjectDetail = () => {
   const { projectId } = useRouteParams(projects({}).project);
   const project = useProjectById(projectId);
   const backHref = useBackHref() ?? projects({}).$;
-  const currentUser = useCurrentUser<gp2Auth.User>();
-  console.log(currentUser);
+  const currentUser = useCurrentUserGP2();
   const isProjectMember =
     project?.members.some(({ userId }) => userId === currentUser?.id) || false;
 

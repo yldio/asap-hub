@@ -168,9 +168,6 @@ describe('an authenticated user in onboarding', () => {
     history.push(ownProfilePath);
     expect(await findByText('profile page')).toBeVisible();
     expect(window.alert).not.toHaveBeenCalled();
-
-    expect(await findByText('profile page')).toBeVisible();
-    expect(window.alert).toHaveBeenCalled();
   });
 });
 

@@ -22,8 +22,7 @@ const WorkingGroupDetail = () => {
   const isWorkingGroupMember =
     workingGroup?.members.some(({ userId }) => userId === currentUser?.id) ||
     false;
-  // const isAdministrator = currentUser?.role === 'Administrator';
-  const isAdministrator = true;
+  const isAdministrator = currentUser?.role === 'Administrator';
   const updateWorkingGroupResources =
     usePutWorkingGroupResources(workingGroupId);
 

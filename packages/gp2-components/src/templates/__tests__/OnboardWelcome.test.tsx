@@ -3,10 +3,9 @@ import OnboardWelcome from '../OnboardWelcome';
 
 it('renders the header', () => {
   render(<OnboardWelcome />);
-  expect(screen.getAllByRole('heading')[0]).toBeVisible();
-  expect(screen.getAllByRole('heading')[0].textContent).toMatchInlineSnapshot(
-    `"Welcome to the GP2 Hub"`,
-  );
+  expect(
+    screen.getByText('Welcome to the GP2 Hub', { selector: 'h2' }),
+  ).toBeVisible();
 });
 
 it('Sign out button takes you to the logout', () => {

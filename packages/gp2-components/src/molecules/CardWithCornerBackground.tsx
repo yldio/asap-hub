@@ -16,7 +16,6 @@ const containerStyles = css({
 
 const backgroundStyle = css({
   gridArea: '2 / 2 / 4 / 4',
-  order: -1,
   backgroundImage: `url(${projectsImage})`,
   borderRadius: rem(8),
 });
@@ -29,12 +28,12 @@ const CardWithCornerBackground: React.FC<CardWithCornerBackgroundProps> = ({
   children,
 }) => (
   <div css={containerStyles}>
+    <div css={backgroundStyle}></div>
     <div css={contentCardStyle}>
       <Card shadow={false} accent="default">
         {children}
       </Card>
     </div>
-    <div css={backgroundStyle}></div>
   </div>
 );
 

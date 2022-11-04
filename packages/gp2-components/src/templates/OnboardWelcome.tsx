@@ -7,7 +7,6 @@ import {
   Link,
   pixels,
   Button,
-  informationInfo500,
 } from '@asap-hub/react-components';
 import { logout } from '@asap-hub/routing';
 import { css } from '@emotion/react';
@@ -76,14 +75,7 @@ const OnboardWelcome: React.FC<Record<string, never>> = () => (
         GP2 members that have also registered.
       </Caption>
       <footer css={footerStyles}>
-        <Button
-          primary
-          overrideStyles={css({
-            background: informationInfo500.rgb,
-          })}
-        >
-          Get Started
-        </Button>
+        <Button primary>Get Started</Button>
         <Link buttonStyle href={logout({}).$}>
           Sign Out
         </Link>

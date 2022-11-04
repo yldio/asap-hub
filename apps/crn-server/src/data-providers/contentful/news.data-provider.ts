@@ -11,13 +11,13 @@ import {
   FetchNewsQueryVariables,
 } from '@asap-hub/contentful';
 
-import { FetchNewsProviderOptions } from '../types';
+import { NewsDataProvider, FetchNewsProviderOptions } from '../types';
 
 type NewsItem = NonNullable<
   NonNullable<FetchNewsQuery['newsCollection']>['items'][number]
 >;
 
-export class NewsContentfulDataProvider {
+export class NewsContentfulDataProvider implements NewsDataProvider {
   constructor(private contentfulClient: GraphQLClient) {}
 
   async fetch(options?: FetchNewsProviderOptions) {

@@ -11,9 +11,9 @@ import {
   SquidexRestClient,
 } from '@asap-hub/squidex';
 import { createUrl } from '../utils/urls';
-import { FetchNewsProviderOptions } from './types';
+import { NewsDataProvider, FetchNewsProviderOptions } from './types';
 
-export class NewsSquidexDataProvider {
+export class NewsSquidexDataProvider implements NewsDataProvider {
   constructor(private newsSquidexRestClient: SquidexRestClient<RestNews>) {}
 
   async fetchById(id: string): Promise<NewsDataObject | null> {

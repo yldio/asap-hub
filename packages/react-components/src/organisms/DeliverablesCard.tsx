@@ -18,11 +18,21 @@ const statusToAccent: Record<
 };
 
 const deliverablesRowStyles = css({
-  borderBottom: `1px solid ${steel.rgb}`,
-  [`:nth-last-of-type(1)`]: { borderBottom: 'none' },
   [`@media (min-width: ${tabletScreen.width}px)`]: {
     display: 'grid',
+    columnGap: rem(24),
     gridTemplateColumns: `1fr ${rem(128)}`,
+  },
+});
+
+const deliverablesRowSeperatorStyles = css({
+  paddingBottom: rem(9),
+  marginBottom: rem(9),
+  borderBottom: `1px solid ${steel.rgb}`,
+  [`:nth-last-of-type(1)`]: {
+    borderBottom: 'none',
+    paddingBottom: 0,
+    marginBottom: 0,
   },
 });
 
@@ -66,7 +76,10 @@ const DeliverablesCard: React.FC<DeliverablesCardProps> = ({
         {deliverables
           .slice(0, expanded ? undefined : limit)
           .map(({ description, status }, index) => (
-            <div css={deliverablesRowStyles} key={`deliverable-${index}`}>
+            <div
+              css={[deliverablesRowStyles, deliverablesRowSeperatorStyles]}
+              key={`deliverable-${index}`}
+            >
               <div css={mobileTitle}>
                 <Headline5>Deliverables</Headline5>
               </div>

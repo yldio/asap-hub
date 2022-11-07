@@ -34,7 +34,7 @@ export const getContentfulGraphqlNews = (): NonNullable<
     firstPublishedAt: '2020-09-08T16:35:28.000Z',
   },
   thumbnail: {
-    url: 'http://images.ctfassets.net/thumbnail-id.png',
+    url: `${baseUrl}/api/assets/${appName}/thumbnail-uuid1`,
   },
 });
 
@@ -80,26 +80,20 @@ export const newsSquidexApiResponse: {
   ],
 };
 
-export const getNewsDataObject = (
-  isContentfulResponse = false,
-): NewsDataObject => ({
+export const getNewsDataObject = (): NewsDataObject => ({
   id: 'news-1',
   title: 'News 1',
   type: 'News',
   frequency: 'News Articles',
   shortText: 'Short text of news 1',
   text: '<p>text</p>',
-  thumbnail: isContentfulResponse
-    ? `http://images.ctfassets.net/thumbnail-id.png`
-    : `${baseUrl}/api/assets/${appName}/thumbnail-uuid1`,
+  thumbnail: `${baseUrl}/api/assets/${appName}/thumbnail-uuid1`,
   created: '2020-09-08T16:35:28.000Z',
 });
 
-export const getListNewsDataObject = (
-  isContentfulResponse = false,
-): ListNewsDataObject => ({
+export const getListNewsDataObject = (): ListNewsDataObject => ({
   total: 1,
-  items: [getNewsDataObject(isContentfulResponse)],
+  items: [getNewsDataObject()],
 });
 
 export const getNewsResponse = (): NewsResponse => getNewsDataObject();

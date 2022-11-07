@@ -6,8 +6,6 @@ import {
 import { NewsContentfulDataProvider } from '../../../src/data-providers/contentful/news.data-provider';
 import { GraphQLError } from 'graphql';
 
-const isContentfulResponse = true;
-
 describe('News data provider', () => {
   let newsGraphQLClientMock = getGraphQLClient({
     space: 'space-id',
@@ -75,7 +73,7 @@ describe('News data provider', () => {
       );
       const result = await newsDataProvider.fetch({ take: 8, skip: 5 });
 
-      expect(result).toEqual(getListNewsDataObject(isContentfulResponse));
+      expect(result).toEqual(getListNewsDataObject());
     });
 
     test('Should return news when the thumbnail is null', async () => {
@@ -100,7 +98,7 @@ describe('News data provider', () => {
 
       const result = await newsDataProvider.fetch();
 
-      expect(result).toEqual(getListNewsDataObject(isContentfulResponse));
+      expect(result).toEqual(getListNewsDataObject());
       expect(newsGraphQLClientMock.request).toHaveBeenCalledWith(
         expect.anything(),
         expect.objectContaining({
@@ -126,7 +124,7 @@ describe('News data provider', () => {
           },
         });
 
-        expect(result).toEqual(getListNewsDataObject(isContentfulResponse));
+        expect(result).toEqual(getListNewsDataObject());
         expect(newsGraphQLClientMock.request).toHaveBeenCalledWith(
           expect.anything(),
           expect.objectContaining({
@@ -149,7 +147,7 @@ describe('News data provider', () => {
           filter: { title: 'hey' },
         });
 
-        expect(result).toEqual(getListNewsDataObject(isContentfulResponse));
+        expect(result).toEqual(getListNewsDataObject());
         expect(newsGraphQLClientMock.request).toHaveBeenCalledWith(
           expect.anything(),
           expect.objectContaining({
@@ -175,7 +173,7 @@ describe('News data provider', () => {
           },
         });
 
-        expect(result).toEqual(getListNewsDataObject(isContentfulResponse));
+        expect(result).toEqual(getListNewsDataObject());
         expect(newsGraphQLClientMock.request).toHaveBeenCalledWith(
           expect.anything(),
           expect.objectContaining({
@@ -226,9 +224,7 @@ describe('News data provider', () => {
 
       const result = await newsDataProvider.fetchById(id);
 
-      expect(result).toEqual(
-        getListNewsDataObject(isContentfulResponse).items[0],
-      );
+      expect(result).toEqual(getListNewsDataObject().items[0]);
       expect(newsGraphQLClientMock.request).toBeCalledWith(
         expect.anything(),
         expect.objectContaining({

@@ -39,11 +39,11 @@ const listItemStyles = css({
   position: 'relative',
 });
 
-type UsersAvatarsProps = Pick<TeamResponse, 'members'> & {
+type UserAvatarListProps = Pick<TeamResponse, 'members'> & {
   fullListRoute: string;
 };
 
-const UsersAvatars: React.FC<UsersAvatarsProps> = ({
+const UserAvatarList: React.FC<UserAvatarListProps> = ({
   members,
   fullListRoute,
 }) => (
@@ -73,4 +73,4 @@ const UsersAvatars: React.FC<UsersAvatarsProps> = ({
   </div>
 );
 
-export default UsersAvatars;
+export default UserAvatarList;

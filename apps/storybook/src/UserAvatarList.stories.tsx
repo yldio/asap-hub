@@ -1,14 +1,14 @@
 import { number, text } from '@storybook/addon-knobs';
-import { UsersAvatars } from '@asap-hub/react-components';
+import { UserAvatarList } from '@asap-hub/react-components';
 import { createTeamResponseMembers } from '@asap-hub/fixtures';
 
 export default {
-  title: 'Molecules / Members Avatars',
-  component: UsersAvatars,
+  title: 'Molecules / User Avatar List',
+  component: UserAvatarList,
 };
 
 export const Normal = () => (
-  <UsersAvatars
+  <UserAvatarList
     members={createTeamResponseMembers({
       teamMembers: number('Number of members', 6),
     })}

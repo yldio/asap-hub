@@ -7,7 +7,7 @@ import { mobileScreen, perRem, rem } from '../pixels';
 import { Link, Display, StateTag, TabLink, Caption } from '../atoms';
 import { paper } from '../colors';
 import { contentSidePaddingWithNavigation } from '../layout';
-import { UsersAvatars, TabNav } from '../molecules';
+import { UserAvatarList, TabNav } from '../molecules';
 import { successIcon, externalLinkIcon } from '../icons';
 import { createMailTo } from '../mail';
 
@@ -103,7 +103,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
       )}
     </div>
     <section css={contactSectionStyles}>
-      <UsersAvatars
+      <UserAvatarList
         members={members}
         fullListRoute={workingGroups({}).workingGroup({ workingGroupId: id }).$}
       />

@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
-import { useCurrentUser } from '@asap-hub/react-context';
 import {
-  algoliaSearchClientFactory,
   AlgoliaSearchClient,
+  algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
 import { User } from '@asap-hub/auth';
+import { useCurrentUserCRN } from '@asap-hub/react-context';
+import { useEffect, useState } from 'react';
 import { ALGOLIA_APP_ID, ALGOLIA_INDEX } from '../config';
 
 export type AlgoliaHook = {
@@ -27,7 +27,7 @@ export const useAlgolia = () => {
       client,
     };
   };
-  const user = useCurrentUser();
+  const user = useCurrentUserCRN();
   const [algolia, setAlgolia] = useState(initAlgolia(user));
 
   useEffect(() => {

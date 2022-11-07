@@ -1,10 +1,10 @@
+import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
-import { useCurrentUser } from '@asap-hub/react-context';
 
-import { noop } from '../utils';
-import { perRem } from '../pixels';
-import { Paragraph, Avatar } from '../atoms';
+import { Avatar, Paragraph } from '../atoms';
 import { chevronDownIcon, chevronUpIcon, verticalDividerIcon } from '../icons';
+import { perRem } from '../pixels';
+import { noop } from '../utils';
 
 const buttonResetStyles = css({
   padding: 0,
@@ -35,7 +35,7 @@ const UserMenuButton: React.FC<UserMenuButtonProps> = ({
     firstName = 'Unknown',
     lastName = 'User',
     avatarUrl,
-  } = useCurrentUser() ?? {};
+  } = useCurrentUserCRN() ?? {};
 
   return (
     <button

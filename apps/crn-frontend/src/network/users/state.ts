@@ -5,7 +5,7 @@ import {
   UserPatchRequest,
   UserResponse,
 } from '@asap-hub/model';
-import { useAuth0 } from '@asap-hub/react-context';
+import { useAuth0CRN } from '@asap-hub/react-context';
 import {
   atomFamily,
   DefaultValue,
@@ -108,7 +108,7 @@ export const useUsers = (options: GetListOptions) => {
 export const useUserById = (id: string) => useRecoilValue(userState(id));
 
 export const usePatchUserById = (id: string) => {
-  const { getTokenSilently, refreshUser } = useAuth0();
+  const { getTokenSilently, refreshUser } = useAuth0CRN();
   const authorization = useRecoilValue(authorizationState);
   const setPatchedUser = useSetRecoilState(patchedUserState(id));
   return async (patch: UserPatchRequest) => {
@@ -123,7 +123,7 @@ export const usePatchUserById = (id: string) => {
 };
 
 export const usePatchUserAvatarById = (id: string) => {
-  const { getTokenSilently, refreshUser } = useAuth0();
+  const { getTokenSilently, refreshUser } = useAuth0CRN();
   const authorization = useRecoilValue(authorizationState);
   const setSetPatchedUserState = useSetRecoilState(patchedUserState(id));
   return async (avatar: string) => {

@@ -1,8 +1,8 @@
-import { useCurrentUser } from '@asap-hub/react-context';
-import { network, logout, staticPages } from '@asap-hub/routing';
+import { User } from '@asap-hub/auth';
+import { useCurrentUserCRN } from '@asap-hub/react-context';
+import { logout, network, staticPages } from '@asap-hub/routing';
 import { ReactNode, useEffect } from 'react';
 import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
-import { User } from '@asap-hub/auth';
 
 interface CheckOnboardedProps {
   children: ReactNode;
@@ -31,7 +31,7 @@ export const navigationPromptHandler = (
 };
 
 const CheckOnboarded: React.FC<CheckOnboardedProps> = ({ children }) => {
-  const user = useCurrentUser();
+  const user = useCurrentUserCRN();
   const history = useHistory();
 
   useEffect(

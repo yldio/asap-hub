@@ -1,8 +1,8 @@
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import UserMenuButton from '../UserMenuButton';
 import { authTestUtils } from '../..';
+import UserMenuButton from '../UserMenuButton';
 
 it('renders a button', () => {
   const { getByRole } = render(<UserMenuButton />);
@@ -11,22 +11,22 @@ it('renders a button', () => {
 
 it('renders the display name when no children is provided', async () => {
   const { findByText } = render(
-    <authTestUtils.Auth0Provider>
-      <authTestUtils.LoggedIn user={{ displayName: 'John Doe' }}>
+    <authTestUtils.Auth0ProviderCRN>
+      <authTestUtils.LoggedInCRN user={{ displayName: 'John Doe' }}>
         <UserMenuButton />
-      </authTestUtils.LoggedIn>
-    </authTestUtils.Auth0Provider>,
+      </authTestUtils.LoggedInCRN>
+    </authTestUtils.Auth0ProviderCRN>,
   );
   expect(await findByText('John Doe')).toBeVisible();
 });
 
 it('renders the children when is provided', async () => {
   const { findByText } = render(
-    <authTestUtils.Auth0Provider>
-      <authTestUtils.LoggedIn user={{ displayName: 'John Doe' }}>
+    <authTestUtils.Auth0ProviderCRN>
+      <authTestUtils.LoggedInCRN user={{ displayName: 'John Doe' }}>
         <UserMenuButton>Hi, Jimi</UserMenuButton>
-      </authTestUtils.LoggedIn>
-    </authTestUtils.Auth0Provider>,
+      </authTestUtils.LoggedInCRN>
+    </authTestUtils.Auth0ProviderCRN>,
   );
   expect(await findByText('Hi, Jimi')).toBeVisible();
 });
@@ -38,13 +38,13 @@ it('renders a fallback instead of the display name', async () => {
 
 it('renders the user avatar', async () => {
   const { findByLabelText } = render(
-    <authTestUtils.Auth0Provider>
-      <authTestUtils.LoggedIn
+    <authTestUtils.Auth0ProviderCRN>
+      <authTestUtils.LoggedInCRN
         user={{ avatarUrl: '/pic.jpg', firstName: 'John', lastName: 'Doe' }}
       >
         <UserMenuButton />
-      </authTestUtils.LoggedIn>
-    </authTestUtils.Auth0Provider>,
+      </authTestUtils.LoggedInCRN>
+    </authTestUtils.Auth0ProviderCRN>,
   );
   expect(await findByLabelText(/pic.+John Doe/i)).toBeVisible();
 });

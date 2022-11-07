@@ -1,5 +1,5 @@
 import { FC, ReactNode } from 'react';
-import { useCurrentUser } from '@asap-hub/react-context';
+import { useCurrentUserCRN } from '@asap-hub/react-context';
 
 import { useOnboarding, UserOnboardingResult } from './hooks';
 
@@ -19,7 +19,7 @@ type OnboardableProps = {
   children: (state?: UserOnboardingResult) => ReactNode;
 };
 export const Onboardable: FC<OnboardableProps> = ({ children }) => {
-  const auth0user = useCurrentUser();
+  const auth0user = useCurrentUserCRN();
   if (auth0user && !auth0user.onboarded) {
     return (
       <OnboardableLoadUser id={auth0user.id}>

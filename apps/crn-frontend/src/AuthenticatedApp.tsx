@@ -1,22 +1,22 @@
-import { FC, lazy, useEffect } from 'react';
-import { Switch, Route } from 'react-router-dom';
-import { useResetRecoilState, useRecoilState, RecoilRoot } from 'recoil';
-import { NotFoundPage, Layout, Loading } from '@asap-hub/react-components';
-import { useAuth0, useCurrentUser } from '@asap-hub/react-context';
-import {
-  network,
-  discover,
-  sharedResearch,
-  news,
-  events,
-  dashboard,
-} from '@asap-hub/routing';
 import { Frame } from '@asap-hub/frontend-utils';
+import { Layout, Loading, NotFoundPage } from '@asap-hub/react-components';
+import { useAuth0CRN, useCurrentUserCRN } from '@asap-hub/react-context';
+import {
+  dashboard,
+  discover,
+  events,
+  network,
+  news,
+  sharedResearch,
+} from '@asap-hub/routing';
+import { FC, lazy, useEffect } from 'react';
+import { Route, Switch } from 'react-router-dom';
+import { RecoilRoot, useRecoilState, useResetRecoilState } from 'recoil';
 
-import { auth0State } from './auth/state';
 import CheckOnboarded from './auth/CheckOnboarded';
-import Onboardable from './Onboardable';
+import { auth0State } from './auth/state';
 import { useCurrentUserProfileTabRoute } from './hooks';
+import Onboardable from './Onboardable';
 
 const loadNews = () => import(/* webpackChunkName: "news" */ './news/Routes');
 const loadNetwork = () =>
@@ -37,7 +37,7 @@ const Discover = lazy(loadDiscover);
 const Events = lazy(loadEvents);
 
 const AuthenticatedApp: FC<Record<string, never>> = () => {
-  const auth0 = useAuth0();
+  const auth0 = useAuth0CRN();
   const [recoilAuth0, setAuth0] = useRecoilState(auth0State);
   const resetAuth0 = useResetRecoilState(auth0State);
   useEffect(() => {
@@ -55,7 +55,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
       .then(loadEvents);
   }, []);
 
-  const user = useCurrentUser();
+  const user = useCurrentUserCRN();
   const tabRoute = useCurrentUserProfileTabRoute();
   if (!user || !recoilAuth0) {
     return <Loading />;

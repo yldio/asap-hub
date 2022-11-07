@@ -1,7 +1,7 @@
 import { Frame } from '@asap-hub/frontend-utils';
 import { UserResponse } from '@asap-hub/model';
 import { BiographyModal, UserProfileAbout } from '@asap-hub/react-components';
-import { useCurrentUser } from '@asap-hub/react-context';
+import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { Route, useRouteMatch } from 'react-router-dom';
 
@@ -11,7 +11,7 @@ type AboutProps = {
   user: UserResponse;
 };
 const About: React.FC<AboutProps> = ({ user }) => {
-  const { id } = useCurrentUser() ?? {};
+  const { id } = useCurrentUserCRN() ?? {};
 
   const { path } = useRouteMatch();
   const route = network({}).users({}).user({ userId: user.id }).about({});

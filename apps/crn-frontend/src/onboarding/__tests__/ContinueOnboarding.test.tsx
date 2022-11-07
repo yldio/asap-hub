@@ -5,9 +5,9 @@ import ContinueOnboarding from '../ContinueOnboarding';
 
 it('renders its children once Auth0 is loaded', async () => {
   const { getByText } = render(
-    <authTestUtils.Auth0Provider>
+    <authTestUtils.Auth0ProviderCRN>
       <ContinueOnboarding>content</ContinueOnboarding>
-    </authTestUtils.Auth0Provider>,
+    </authTestUtils.Auth0ProviderCRN>,
   );
   await waitFor(() => expect(getByText('content')).toBeVisible());
 });

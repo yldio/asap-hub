@@ -5,7 +5,7 @@
 /* eslint-disable no-shadow */
 
 import { Auth0, Auth0User } from '@asap-hub/auth';
-import { Auth0Context } from '@asap-hub/react-context';
+import { Auth0ContextCRN } from '@asap-hub/react-context';
 import {
   Auth0Client,
   Auth0ClientOptions,
@@ -141,6 +141,8 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
   };
 
   return (
-    <Auth0Context.Provider value={auth0}>{children}</Auth0Context.Provider>
+    <Auth0ContextCRN.Provider value={auth0}>
+      {children}
+    </Auth0ContextCRN.Provider>
   );
 };

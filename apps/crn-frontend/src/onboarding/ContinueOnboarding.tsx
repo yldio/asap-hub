@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useAuth0 } from '@asap-hub/react-context';
+import { useAuth0CRN } from '@asap-hub/react-context';
 
 const ContinueOnboarding: React.FC<{
   readonly children: React.ReactNode;
@@ -9,7 +9,7 @@ const ContinueOnboarding: React.FC<{
     isAuthenticated,
     loading: auth0Loading,
     getTokenSilently,
-  } = useAuth0();
+  } = useAuth0CRN();
   const history = useHistory();
   const [loading, setLoading] = useState(true);
 

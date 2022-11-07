@@ -1,13 +1,13 @@
 import { useContext, useEffect, useRef } from 'react';
 import { WelcomePage } from '@asap-hub/react-components';
-import { ToastContext, useAuth0 } from '@asap-hub/react-context';
+import { ToastContext, useAuth0CRN } from '@asap-hub/react-context';
 import { useRouteParams, welcome } from '@asap-hub/routing';
 import { API_BASE_URL } from '../config';
 
 const Welcome: React.FC<Record<string, never>> = () => {
   const { code } = useRouteParams(welcome({}).invited);
 
-  const { loginWithRedirect } = useAuth0();
+  const { loginWithRedirect } = useAuth0CRN();
 
   const toast = useContext(ToastContext);
 

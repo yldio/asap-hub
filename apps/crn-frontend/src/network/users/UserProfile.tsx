@@ -6,7 +6,7 @@ import {
 } from '@asap-hub/react-components';
 import {
   ToastContext,
-  useCurrentUser,
+  useCurrentUserCRN,
   UserProfileContext,
 } from '@asap-hub/react-context';
 import { events, network, useRouteParams } from '@asap-hub/routing';
@@ -51,7 +51,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
   const tabRoute = useCurrentUserProfileTabRoute();
 
   const user = useUserById(userId);
-  const currentUser = useCurrentUser();
+  const currentUser = useCurrentUserCRN();
 
   const patchUserAvatar = usePatchUserAvatarById(userId);
   const [avatarSaving, setAvatarSaving] = useState(false);

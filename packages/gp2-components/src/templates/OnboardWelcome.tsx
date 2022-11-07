@@ -11,7 +11,6 @@ import {
 import { logout } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import CardWithOffsetBackground from '../molecules/CardWithOffsetBackground';
-import BasicLayout from './BasicLayout';
 
 const { mobileScreen } = pixels;
 

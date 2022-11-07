@@ -196,7 +196,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     contentfulGraphQLClient,
   );
   const newsDataProvider =
-    libs.newsDataProvider || isContentfulEnabled === 'true'
+    libs.newsDataProvider || isContentfulEnabled
       ? newsContentfulDataProvider
       : newsSquidexDataProvider;
   const teamDataProvider =

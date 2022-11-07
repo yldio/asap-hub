@@ -81,4 +81,4 @@ export const contentfulAccessToken =
   CONTENTFUL_ACCESS_TOKEN || 'contentful-access-token';
 export const contentfulEnvId = CONTENTFUL_ENV_ID || 'contentful-environment-id';
 export const contentfulHost = CONTENTFUL_HOST || 'https://cdn.contentful.com';
-export const isContentfulEnabled = IS_CONTENTFUL_ENABLED || false;
+export const isContentfulEnabled = IS_CONTENTFUL_ENABLED === 'true' || false;

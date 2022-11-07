@@ -4,7 +4,7 @@ import WorkingGroupPage from '../WorkingGroupPage';
 
 const baseProps = {
   id: 'id',
-  name: 'A test group',
+  name: '',
   complete: false,
   description: 'Text content',
   externalLink: 'link',
@@ -15,7 +15,9 @@ const baseProps = {
 };
 it('renders the header', () => {
   const { getByText } = render(
-    <WorkingGroupPage {...baseProps}>Tab Content</WorkingGroupPage>,
+    <WorkingGroupPage {...baseProps} name="A test group">
+      Tab Content
+    </WorkingGroupPage>,
   );
   expect(getByText('A test group')).toBeVisible();
 });

@@ -104,10 +104,10 @@ describe('News data provider', () => {
       expect(newsGraphQLClientMock.request).toHaveBeenCalledWith(
         expect.anything(),
         expect.objectContaining({
-          frequency: null,
-          limit: null,
-          skip: null,
-          title: null,
+          limit: undefined,
+          skip: undefined,
+          order: ['sys_firstPublishedAt_DESC'],
+          where: { frequency_in: undefined, title_contains: undefined },
         }),
       );
     });
@@ -130,10 +130,13 @@ describe('News data provider', () => {
         expect(newsGraphQLClientMock.request).toHaveBeenCalledWith(
           expect.anything(),
           expect.objectContaining({
-            frequency: ['CRN Quarterly'],
             limit: 8,
             skip: 5,
-            title: null,
+            order: ['sys_firstPublishedAt_DESC'],
+            where: {
+              frequency_in: ['CRN Quarterly'],
+              title_contains: undefined,
+            },
           }),
         );
       });
@@ -153,10 +156,10 @@ describe('News data provider', () => {
         expect(newsGraphQLClientMock.request).toHaveBeenCalledWith(
           expect.anything(),
           expect.objectContaining({
-            frequency: null,
-            limit: null,
-            skip: null,
-            title: 'hey',
+            limit: undefined,
+            skip: undefined,
+            order: ['sys_firstPublishedAt_DESC'],
+            where: { frequency_in: undefined, title_contains: 'hey' },
           }),
         );
       });
@@ -179,10 +182,13 @@ describe('News data provider', () => {
         expect(newsGraphQLClientMock.request).toHaveBeenCalledWith(
           expect.anything(),
           expect.objectContaining({
-            frequency: ['CRN Quarterly', 'News Articles'],
             limit: 8,
             skip: 5,
-            title: 'hey',
+            order: ['sys_firstPublishedAt_DESC'],
+            where: {
+              frequency_in: ['CRN Quarterly', 'News Articles'],
+              title_contains: 'hey',
+            },
           }),
         );
       });

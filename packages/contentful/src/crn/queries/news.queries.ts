@@ -35,15 +35,10 @@ export const FETCH_NEWS = gql`
   query FetchNews(
     $limit: Int
     $skip: Int
-    $frequency: [String]
-    $title: String
+    $order: [NewsOrder]
+    $where: NewsFilter
   ) {
-    newsCollection(
-      limit: $limit
-      skip: $skip
-      where: { frequency_in: $frequency, title_contains: $title }
-      order: sys_firstPublishedAt_DESC
-    ) {
+    newsCollection(limit: $limit, skip: $skip, order: $order, where: $where) {
       total
       ...NewsContent
     }

@@ -3,13 +3,15 @@ import { render } from '@testing-library/react';
 import WorkingGroupAbout from '../WorkingGroupAbout';
 
 const baseProps = {
-  description: 'Text content',
+  description: '',
   pointOfContact: undefined,
   members: [],
 };
 
 it('renders the description', () => {
-  const { getByText } = render(<WorkingGroupAbout {...baseProps} />);
+  const { getByText } = render(
+    <WorkingGroupAbout {...baseProps} description="Text content" />,
+  );
   expect(getByText('Working Group Description')).toBeVisible();
   expect(getByText('Text content')).toBeVisible();
 });

@@ -19,7 +19,6 @@ const ProjectDetail = () => {
   const isProjectMember =
     project?.members.some(({ userId }) => userId === currentUser?.id) || false;
 
-  const isAdministrator = false;
   if (project) {
     return (
       <ProjectDetailPage
@@ -41,7 +40,6 @@ const ProjectDetail = () => {
                   add={
                     projects({}).project({ projectId }).resources({}).add({}).$
                   }
-                  isAdministrator={isAdministrator}
                 />
               </Frame>
             </Route>

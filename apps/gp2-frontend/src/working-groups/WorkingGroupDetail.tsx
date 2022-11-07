@@ -23,6 +23,14 @@ const WorkingGroupDetail = () => {
     workingGroup?.members.some(({ userId }) => userId === currentUser?.id) ||
     false;
   const isAdministrator = currentUser?.role === 'Administrator';
+  const add = isAdministrator
+    ? workingGroups({}).workingGroup({ workingGroupId }).resources({}).add({}).$
+    : undefined;
+
+  const edit = isAdministrator
+    ? workingGroups({}).workingGroup({ workingGroupId }).resources({}).edit({})
+        .$
+    : undefined;
   const updateWorkingGroupResources =
     usePutWorkingGroupResources(workingGroupId);
 
@@ -53,13 +61,8 @@ const WorkingGroupDetail = () => {
               <Frame title="Resources">
                 <WorkingGroupResources
                   {...workingGroup}
-                  add={
-                    workingGroups({})
-                      .workingGroup({ workingGroupId })
-                      .resources({})
-                      .add({}).$
-                  }
-                  isAdministrator={isAdministrator}
+                  add={add}
+                  edit={edit}
                 />
                 <Route
                   path={
@@ -75,10 +78,10 @@ const WorkingGroupDetail = () => {
                         .workingGroup({ workingGroupId })
                         .resources({}).$
                     }
-                    onSave={(resources: gp2Model.Resource) =>
+                    onSave={(resource: gp2Model.Resource) =>
                       updateWorkingGroupResources([
                         ...(workingGroup.resources || []),
-                        resources,
+                        resource,
                       ])
                     }
                   />

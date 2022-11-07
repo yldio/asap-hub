@@ -18,12 +18,7 @@ describe('ProjectResources', () => {
     const [resource] = getResources();
     resource.description = 'resource description';
     render(
-      <ProjectResources
-        {...defaultProps}
-        resources={[resource]}
-        add={''}
-        isAdministrator={false}
-      />,
+      <ProjectResources {...defaultProps} resources={[resource]} add={''} />,
     );
     expect(screen.getByText(/resource description/i)).toBeVisible();
   });

@@ -18,11 +18,11 @@ import { css } from '@emotion/react';
 import { useState } from 'react';
 import { addIcon, editIcon } from '../icons';
 
-type ResourcesProps = {
+export type ResourcesProps = {
   resources?: gp2.Resource[];
   headline: string;
-  add: string;
-  isAdministrator: boolean;
+  add?: string;
+  edit?: string;
 };
 
 const { rem, tabletScreen } = pixels;
@@ -63,7 +63,7 @@ const Resources: React.FC<ResourcesProps> = ({
   resources,
   headline,
   add,
-  isAdministrator,
+  edit,
 }) => {
   const minimumResourcesToDisplay = 3;
   const [expanded, setExpanded] = useState(false);
@@ -81,7 +81,7 @@ const Resources: React.FC<ResourcesProps> = ({
       <Card>
         <div css={[rowStyles, buttonStyles]}>
           <Headline3 noMargin>Resource List</Headline3>
-          {isAdministrator && (
+          {add && (
             <div css={editButtonStyles}>
               <Link href={add} buttonStyle noMargin small>
                 Add {addIcon}
@@ -111,7 +111,7 @@ const Resources: React.FC<ResourcesProps> = ({
                   >
                     {resource.type === 'Link' ? 'Link' : 'Note'}
                   </Pill>
-                  {isAdministrator && (
+                  {edit && (
                     <div css={editButtonStyles}>
                       <Link href={'/edit'} buttonStyle noMargin small>
                         Edit {editIcon}

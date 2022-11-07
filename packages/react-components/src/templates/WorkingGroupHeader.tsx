@@ -99,12 +99,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
     <div css={titleStyle}>
       <Display styleAsHeading={2}>{name}</Display>
       {complete && (
-        <StateTag
-          backgroundColor="mint"
-          textColor="fern"
-          icon={successIcon}
-          label="Complete"
-        />
+        <StateTag accent="green" icon={successIcon} label="Complete" />
       )}
     </div>
     <section css={contactSectionStyles}>

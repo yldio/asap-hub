@@ -1,7 +1,19 @@
-import { css } from '@emotion/react';
+import { css, CSSObject } from '@emotion/react';
 import * as colors from '../colors';
 import { lineHeight, perRem } from '../pixels';
-import { AccentColorName } from '../text';
+
+export type AccentVariant = 'default' | 'green';
+
+export const accents: Record<AccentVariant, CSSObject> = {
+  default: {
+    backgroundColor: colors.apricot.rgb,
+    color: colors.clay.rgb,
+  },
+  green: {
+    backgroundColor: colors.mint.rgb,
+    color: colors.fern.rgb,
+  },
+};
 
 const styles = css({
   display: 'inline-flex',
@@ -29,23 +41,15 @@ const labelStyles = (withIcon: boolean) =>
 type StateTagProps = {
   label: string;
   icon?: JSX.Element;
-  textColor?: AccentColorName;
-  backgroundColor?: AccentColorName;
+  accent?: AccentVariant;
 };
 
 const StateTag: React.FC<StateTagProps> = ({
+  accent = 'default',
   label,
   icon,
-  textColor,
-  backgroundColor,
 }) => (
-  <span
-    css={[
-      styles,
-      textColor ? { color: colors[textColor].rgb } : null,
-      backgroundColor ? { backgroundColor: colors[backgroundColor].rgb } : null,
-    ]}
-  >
+  <span css={[styles, accents[accent]]}>
     {icon && <span css={iconStyles}>{icon}</span>}
     <span css={labelStyles(!!icon)}>{label}</span>
   </span>

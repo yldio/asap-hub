@@ -53,7 +53,7 @@ const UsersAvatars: React.FC<UsersAvatarsProps> = ({
         .slice(0, MAX_USER_AVATARS)
         .map(({ id: userId, avatarUrl, firstName, lastName }, i) => (
           <li key={userId} css={[listItemStyles, { left: `-${i * 3}px` }]}>
-            <Anchor href={network({}).users({}).user({ userId: userId }).$}>
+            <Anchor href={network({}).users({}).user({ userId }).$}>
               <Avatar
                 firstName={firstName}
                 lastName={lastName}

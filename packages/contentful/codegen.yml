@@ -13,7 +13,6 @@ generates:
     plugins:
       - graphql-typescript-integration/empty
     config:
-      avoidOptionals: true
       preResolveTypes: false
       skipTypename: true
       exportFragmentSpreadSubTypes: true

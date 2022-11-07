@@ -10,7 +10,6 @@ import {
   FetchNewsQuery,
   NewsOrder,
   FetchNewsQueryVariables,
-  NewsFilter,
 } from '@asap-hub/contentful';
 
 import { NewsDataProvider, FetchNewsProviderOptions } from '../types';
@@ -25,7 +24,7 @@ export class NewsContentfulDataProvider implements NewsDataProvider {
   async fetch(options?: FetchNewsProviderOptions) {
     const { newsCollection } = await this.contentfulClient.request<
       FetchNewsQuery,
-      Omit<FetchNewsQueryVariables, 'where'> & { where: Partial<NewsFilter> }
+      FetchNewsQueryVariables
     >(FETCH_NEWS, {
       limit: options?.take || null,
       skip: options?.skip || null,

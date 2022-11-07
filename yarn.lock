@@ -10296,6 +10296,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@peculiar/asn1-schema@npm:^2.3.0":
+  version: 2.3.0
+  resolution: "@peculiar/asn1-schema@npm:2.3.0"
+  dependencies:
+    asn1js: ^3.0.5
+    pvtsutils: ^1.3.2
+    tslib: ^2.4.0
+  checksum: aa510c68de83be94a8d0e96ca1f7c92d2bd790867eed887c0db32d6b2fc49c5dd9d8269648e9665686ba9b2fd8469324c61e04fed50f7aad3f68a0ca0e1cde4b
+  languageName: node
+  linkType: hard
+
 "@peculiar/json-schema@npm:^1.1.12":
   version: 1.1.12
   resolution: "@peculiar/json-schema@npm:1.1.12"
@@ -10305,7 +10316,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@peculiar/webcrypto@npm:1.4.0, @peculiar/webcrypto@npm:^1.4.0":
+"@peculiar/webcrypto@npm:1.4.1":
+  version: 1.4.1
+  resolution: "@peculiar/webcrypto@npm:1.4.1"
+  dependencies:
+    "@peculiar/asn1-schema": ^2.3.0
+    "@peculiar/json-schema": ^1.1.12
+    pvtsutils: ^1.3.2
+    tslib: ^2.4.1
+    webcrypto-core: ^1.7.4
+  checksum: cfcd49f6bd199016de83445f1786b17c49d02aee74b400e7e03ba3bc3707457bdebd23bbaba0e2ff3becdcd769d71b79ec64ae35e0acb80b4ab3ed6326ab111c
+  languageName: node
+  linkType: hard
+
+"@peculiar/webcrypto@npm:^1.4.0":
   version: 1.4.0
   resolution: "@peculiar/webcrypto@npm:1.4.0"
   dependencies:
@@ -15853,7 +15877,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.19.6
     "@emotion/jest": 11.10.0
     "@jeysal/babel-plugin-ramda": 2.0.1
-    "@peculiar/webcrypto": 1.4.0
+    "@peculiar/webcrypto": 1.4.1
     "@testing-library/jest-dom": 5.16.5
     "@types/jest": 27.5.2
     "@types/react-test-renderer": 17.0.2
@@ -15938,7 +15962,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"asn1js@npm:^3.0.1, asn1js@npm:^3.0.4":
+"asn1js@npm:^3.0.1, asn1js@npm:^3.0.4, asn1js@npm:^3.0.5":
   version: 3.0.5
   resolution: "asn1js@npm:3.0.5"
   dependencies:
@@ -38329,6 +38353,13 @@ __metadata:
   version: 2.4.0
   resolution: "tslib@npm:2.4.0"
   checksum: 8c4aa6a3c5a754bf76aefc38026134180c053b7bd2f81338cb5e5ebf96fefa0f417bff221592bf801077f5bf990562f6264fecbc42cd3309b33872cb6fc3b113
+  languageName: node
+  linkType: hard
+
+"tslib@npm:^2.4.1":
+  version: 2.4.1
+  resolution: "tslib@npm:2.4.1"
+  checksum: 19480d6e0313292bd6505d4efe096a6b31c70e21cf08b5febf4da62e95c265c8f571f7b36fcc3d1a17e068032f59c269fab3459d6cd3ed6949eafecf64315fca
   languageName: node
   linkType: hard
 

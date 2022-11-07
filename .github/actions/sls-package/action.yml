@@ -75,6 +75,7 @@ runs:
         CRN_AUTH0_AUDIENCE: ${{ steps.setup.outputs.crn-auth0-audience }}
         CRN_AUTH0_CLIENT_ID: ${{ steps.setup.outputs.crn-auth0-client-id }}
         CRN_AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.crn-aws-acm-certificate-arn }}
+        CRN_CONTENTFUL_ACCESS_TOKEN: ${{ inputs.crn-contentful-access-token }}
         CRN_CONTENTFUL_ENV: ${{  inputs.crn-contentful-env }}
         CRN_SQUIDEX_APP_NAME: ${{ steps.setup.outputs.crn-squidex-app-name }}
         CRN_SQUIDEX_API_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-api-client-id }}

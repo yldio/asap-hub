@@ -191,10 +191,11 @@ export const appFactory = (libs: Libs = {}): Express => {
   const groupDataProvider =
     libs.groupDataProvider ||
     new GroupSquidexDataProvider(squidexGraphqlClient);
-  const newsSquidexDataProvider = new NewsSquidexDataProvider(newsRestClient);
-  const newsContentfulDataProvider = new NewsContentfulDataProvider(
-    contentfulGraphQLClient,
-  );
+  const newsSquidexDataProvider =
+    libs.newsSquidexDataProvider || new NewsSquidexDataProvider(newsRestClient);
+  const newsContentfulDataProvider =
+    libs.newsContentfulDataProvider ||
+    new NewsContentfulDataProvider(contentfulGraphQLClient);
   const newsDataProvider =
     libs.newsDataProvider || isContentfulEnabled
       ? newsContentfulDataProvider
@@ -397,6 +398,8 @@ export type Libs = {
   assetDataProvider?: AssetDataProvider;
   groupDataProvider?: GroupDataProvider;
   newsDataProvider?: NewsDataProvider;
+  newsSquidexDataProvider?: NewsDataProvider;
+  newsContentfulDataProvider?: NewsDataProvider;
   reminderDataProvider?: ReminderDataProvider;
   teamDataProvider?: TeamDataProvider;
   tutorialsDataProvider?: TutorialsDataProvider;

@@ -1,11 +1,9 @@
 import {
   crossQuery,
-  drawerQuery,
   Loading,
   navigationGrey,
   Overlay,
   paper,
-  pixels,
   ToastStack,
   usePrevious,
 } from '@asap-hub/react-components';
@@ -21,6 +19,7 @@ import {
   useState,
 } from 'react';
 import { useLocation } from 'react-router-dom';
+import { layoutContentStyles } from '../layout';
 import UserMenu from '../molecules/UserMenu';
 import { NavigationHeader } from '../organisms';
 import Theme from './Theme';
@@ -31,7 +30,6 @@ const MainNavigation = lazy(
       /* webpackChunkName: "main-navigation" */ '../organisms/MainNavigation'
     ),
 );
-const { mobileScreen, tabletScreen, vminLinearCalcClamped } = pixels;
 
 const styles = css({
   height: '100%',
@@ -64,29 +62,6 @@ const overlayStyles = css({
 });
 const overlayMenuShownStyles = css({
   visibility: 'visible',
-});
-
-const contentStyles = css({
-  width: '748px',
-  padding: `${vminLinearCalcClamped(
-    mobileScreen,
-    33,
-    tabletScreen,
-    48,
-    'px',
-  )} 0`,
-  margin: `0 auto`,
-  [drawerQuery]: {
-    maxWidth: '748px',
-    width: 'auto',
-    margin: `0 ${vminLinearCalcClamped(
-      mobileScreen,
-      24,
-      tabletScreen,
-      72,
-      'px',
-    )}`,
-  },
 });
 
 const menuStyles = css({
@@ -167,7 +142,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
               overflowY: 'auto',
             })}
           >
-            <main ref={mainRef} css={contentStyles}>
+            <main ref={mainRef} css={layoutContentStyles}>
               {children}
             </main>
           </div>

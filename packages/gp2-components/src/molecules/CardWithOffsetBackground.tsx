@@ -1,9 +1,9 @@
 import { Card, pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
-import { projectsImage } from '../images';
+import { workingGroupsImage } from '../images';
 
-type CardWithCornerBackgroundProps = Omit<
+type CardWithOffsetBackgroundProps = Omit<
   ComponentProps<typeof Card>,
   'shadow'
 >;
@@ -19,7 +19,9 @@ const containerStyles = css({
 
 const backgroundStyle = css({
   gridArea: '2 / 2 / 4 / 4',
-  backgroundImage: `url(${projectsImage})`,
+  backgroundImage: `url(${workingGroupsImage})`,
+  backgroundPosition: 'center',
+  backgroundSize: 'cover',
   borderRadius: rem(8),
 });
 
@@ -27,7 +29,7 @@ const contentCardStyle = css({
   gridArea: '1 / 3 / 3 / 1',
 });
 
-const CardWithCornerBackground: React.FC<CardWithCornerBackgroundProps> = ({
+const CardWithOffsetBackground: React.FC<CardWithOffsetBackgroundProps> = ({
   children,
   ...props
 }) => (
@@ -41,4 +43,4 @@ const CardWithCornerBackground: React.FC<CardWithCornerBackgroundProps> = ({
   </div>
 );
 
-export default CardWithCornerBackground;
+export default CardWithOffsetBackground;

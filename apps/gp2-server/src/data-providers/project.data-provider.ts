@@ -1,5 +1,9 @@
-import { gp2 } from '@asap-hub/model';
-import { SquidexGraphqlClient } from '@asap-hub/squidex';
+import { gp2 as gp2Model } from '@asap-hub/model';
+import {
+  gp2 as gp2Squidex,
+  SquidexGraphqlClient,
+  SquidexRestClient,
+} from '@asap-hub/squidex';
 import {
   FetchProjectQuery,
   FetchProjectQueryVariables,
@@ -12,13 +16,23 @@ import { parseResources } from '../utils/resources';
 import { createUrl } from '../utils/urls';
 
 export interface ProjectDataProvider {
-  fetchById(id: string): Promise<gp2.ProjectDataObject | null>;
-  fetch(): Promise<gp2.ListProjectDataObject>;
+  fetchById(id: string): Promise<gp2Model.ProjectDataObject | null>;
+  fetch(): Promise<gp2Model.ListProjectDataObject>;
+  update(
+    id: string,
+    projectToUpdate: gp2Model.ProjectUpdateDataObject,
+  ): Promise<void>;
 }
 export class ProjectSquidexDataProvider implements ProjectDataProvider {
-  constructor(private squidexGraphqlClient: SquidexGraphqlClient) {}
+  constructor(
+    private squidexGraphqlClient: SquidexGraphqlClient,
+    private squidexRestClient: SquidexRestClient<
+      gp2Squidex.RestProject,
+      gp2Squidex.InputProject
+    >,
+  ) {}
 
-  async fetchById(id: string): Promise<gp2.ProjectDataObject | null> {
+  async fetchById(id: string): Promise<gp2Model.ProjectDataObject | null> {
     const { findProjectsContent } = await this.queryFetchByIdData(id);
     if (!findProjectsContent) {
       return null;
@@ -26,15 +40,16 @@ export class ProjectSquidexDataProvider implements ProjectDataProvider {
     return parseProjectToDataObject(findProjectsContent);
   }
 
-  async fetch(): Promise<gp2.ListProjectDataObject> {
-    const result = await this.squidexGraphqlClient.request<
-      FetchProjectsQuery,
-      FetchProjectsQueryVariables
-    >(FETCH_PROJECTS);
+  async fetch(): Promise<gp2Model.ListProjectDataObject> {
+    const { queryProjectsContentsWithTotal } =
+      await this.squidexGraphqlClient.request<
+        FetchProjectsQuery,
+        FetchProjectsQueryVariables
+      >(FETCH_PROJECTS);
 
     if (
-      !result.queryProjectsContentsWithTotal ||
-      !result.queryProjectsContentsWithTotal.items
+      !queryProjectsContentsWithTotal ||
+      !queryProjectsContentsWithTotal.items
     ) {
       return {
         total: 0,
@@ -43,11 +58,18 @@ export class ProjectSquidexDataProvider implements ProjectDataProvider {
     }
 
     return {
-      total: result.queryProjectsContentsWithTotal.total,
-      items: result.queryProjectsContentsWithTotal.items.map(
-        parseProjectToDataObject,
-      ),
+      total: queryProjectsContentsWithTotal.total,
+      items: queryProjectsContentsWithTotal.items.map(parseProjectToDataObject),
     };
+  }
+
+  async update(
+    id: string,
+    project: gp2Model.ProjectUpdateDataObject,
+  ): Promise<void> {
+    const squidexProject = convertToSquidexProject(project);
+
+    await this.squidexRestClient.patch(id, squidexProject);
   }
 
   private async queryFetchByIdData(id: string) {
@@ -57,6 +79,11 @@ export class ProjectSquidexDataProvider implements ProjectDataProvider {
     >(FETCH_PROJECT, { id });
   }
 }
+const convertToSquidexProject = ({
+  resources,
+}: gp2Model.ProjectUpdateDataObject): gp2Squidex.InputProject['data'] => ({
+  resources: { iv: resources },
+});
 
 export type GraphQLProject = NonNullable<
   NonNullable<
@@ -94,7 +121,10 @@ const parseProjectMembers = (
       ? createUrl(flatAvatar.map((a) => a.id))[0]
       : undefined;
 
-  const roleMap: Record<ProjectsDataMembersRoleEnum, gp2.ProjectMemberRole> = {
+  const roleMap: Record<
+    ProjectsDataMembersRoleEnum,
+    gp2Model.ProjectMemberRole
+  > = {
     [ProjectsDataMembersRoleEnum.ProjectManager]: 'Project manager',
     [ProjectsDataMembersRoleEnum.ProjectLead]: 'Project lead',
     [ProjectsDataMembersRoleEnum.ProjectCoLead]: 'Project co-lead',
@@ -114,13 +144,13 @@ const parseProjectMembers = (
 export function parseProjectToDataObject({
   id,
   flatData: project,
-}: GraphQLProject): gp2.ProjectDataObject {
+}: GraphQLProject): gp2Model.ProjectDataObject {
   if (!project.status) {
     throw new TypeError('status is unknown');
   }
   const members =
     project.members?.reduce(
-      (membersList: gp2.ProjectMember[], member: GraphQLProjectMember) => {
+      (membersList: gp2Model.ProjectMember[], member: GraphQLProjectMember) => {
         const user = member.user && member.user[0];
         if (!(user && member.role)) {
           return membersList;
@@ -132,7 +162,7 @@ export function parseProjectToDataObject({
       [],
     ) || [];
 
-  if (project.keywords && !project.keywords.every(gp2.isProjectKeyword)) {
+  if (project.keywords && !project.keywords.every(gp2Model.isProjectKeyword)) {
     throw new TypeError('Invalid keyword received from Squidex');
   }
   const milestones =
@@ -140,7 +170,7 @@ export function parseProjectToDataObject({
       if (!milestone.status) {
         throw new TypeError('milestone status is unknown');
       }
-      const status: gp2.ProjectMilestoneStatus =
+      const status: gp2Model.ProjectMilestoneStatus =
         milestone.status === 'Not_Started' ? 'Not Started' : milestone.status;
 
       return {

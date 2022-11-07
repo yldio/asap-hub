@@ -1,7 +1,11 @@
 import type { gp2 } from '@asap-hub/model';
+import Boom from '@hapi/boom';
 import { Router } from 'express';
 import { ProjectController } from '../controllers/project.controller';
-import { validateProjectParameters } from '../validation/project.validation';
+import {
+  validateProjectParameters,
+  validateProjectPutRequest,
+} from '../validation/project.validation';
 
 export const projectRouteFactory = (
   projectController: ProjectController,
@@ -19,7 +23,7 @@ export const projectRouteFactory = (
     },
   );
 
-  projectRoutes.get<{ ProjectId: string }, gp2.ProjectResponse>(
+  projectRoutes.get<{ projectId: string }, gp2.ProjectResponse>(
     '/project/:projectId',
     async (req, res) => {
       const { params } = req;
@@ -29,6 +33,38 @@ export const projectRouteFactory = (
       const loggedInUserId = req.loggedInUser!.id;
       const project = await projectController.fetchById(
         projectId,
+        loggedInUserId,
+      );
+
+      res.json(project);
+    },
+  );
+  projectRoutes.put<{ projectId: string }, gp2.ProjectResponse>(
+    '/project/:projectId/resources',
+    async (req, res) => {
+      const { params, body } = req;
+
+      const { projectId } = validateProjectParameters(params);
+      const resources = validateProjectPutRequest(body);
+
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const { id: loggedInUserId, role } = req.loggedInUser!;
+      const { members } = await projectController.fetchById(
+        projectId,
+        loggedInUserId,
+      );
+      if (
+        !(
+          role === 'Administrator' &&
+          members.some(({ userId }) => userId === loggedInUserId)
+        )
+      ) {
+        throw Boom.forbidden();
+      }
+
+      const project = await projectController.update(
+        projectId,
+        { resources },
         loggedInUserId,
       );
 

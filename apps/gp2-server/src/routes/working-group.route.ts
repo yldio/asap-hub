@@ -4,7 +4,7 @@ import { Router } from 'express';
 import { WorkingGroupController } from '../controllers/working-group.controller';
 import {
   validateWorkingGroupParameters,
-  validateWorkingGroupPatchRequest,
+  validateWorkingGroupPutRequest,
 } from '../validation/working-group.validation';
 
 export const workingGroupRouteFactory = (
@@ -46,7 +46,7 @@ export const workingGroupRouteFactory = (
       const { params, body } = req;
 
       const { workingGroupId } = validateWorkingGroupParameters(params);
-      const resources = validateWorkingGroupPatchRequest(body);
+      const resources = validateWorkingGroupPutRequest(body);
 
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const { id: loggedInUserId, role } = req.loggedInUser!;

@@ -11,9 +11,7 @@ import { projectDataProviderMock } from '../mocks/project-data-provider.mock';
 describe('Project controller', () => {
   const projectController = new Projects(projectDataProviderMock);
 
-  beforeEach(() => {
-    jest.resetAllMocks();
-  });
+  beforeEach(jest.resetAllMocks);
 
   describe('Fetch', () => {
     test('Should return the project', async () => {
@@ -75,9 +73,7 @@ describe('Project controller', () => {
     });
   });
   describe('FetchById', () => {
-    beforeEach(() => {
-      jest.resetAllMocks();
-    });
+    beforeEach(jest.resetAllMocks);
 
     test('Should throw when project is not found', async () => {
       projectDataProviderMock.fetchById.mockResolvedValue(null);
@@ -121,6 +117,24 @@ describe('Project controller', () => {
             role: 'Contributor',
           },
         ],
+      });
+    });
+  });
+  describe('update', () => {
+    beforeEach(jest.resetAllMocks);
+
+    test('Should return the newly updated project', async () => {
+      const mockResponse = getProjectDataObject();
+      projectDataProviderMock.fetchById.mockResolvedValue(mockResponse);
+      const result = await projectController.update(
+        '7',
+        { resources: [{ type: 'Note', title: 'a title to update' }] },
+        '11',
+      );
+
+      expect(result).toEqual(getProjectResponse());
+      expect(projectDataProviderMock.update).toHaveBeenCalledWith('7', {
+        resources: [{ type: 'Note', title: 'a title to update' }],
       });
     });
   });

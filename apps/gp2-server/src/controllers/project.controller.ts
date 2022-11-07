@@ -6,6 +6,11 @@ import { removeNotAllowedResources } from '../utils/resources';
 export interface ProjectController {
   fetchById(id: string, loggedInUserId: string): Promise<gp2.ProjectResponse>;
   fetch(loggedInUserId: string): Promise<gp2.ListProjectResponse>;
+  update(
+    id: string,
+    update: gp2.ProjectUpdateRequest,
+    loggedInUserId: string,
+  ): Promise<gp2.ProjectResponse>;
 }
 
 export default class Projects implements ProjectController {
@@ -30,5 +35,13 @@ export default class Projects implements ProjectController {
     }
 
     return removeNotAllowedResources(project, loggedInUserId);
+  }
+  async update(
+    id: string,
+    update: gp2.ProjectUpdateRequest,
+    loggedInUserId: string,
+  ): Promise<gp2.ProjectResponse> {
+    await this.projectDataProvider.update(id, update);
+    return this.fetchById(id, loggedInUserId);
   }
 }

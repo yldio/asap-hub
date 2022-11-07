@@ -97,11 +97,17 @@ export const appFactory = (libs: Libs = {}): Express => {
     appName,
     baseUrl,
   });
+  const projectRestClient = new SquidexRest<
+    gp2squidex.RestProject,
+    gp2squidex.InputProject
+  >(getAuthToken, 'projects', {
+    appName,
+    baseUrl,
+  });
   const decodeToken = decodeTokenFactory(auth0Audience);
   const userResponseCacheClient = new MemoryCacheClient<gp2.UserResponse>();
 
   // Data Providers
-
   const userDataProvider =
     libs.userDataProvider ||
     new UserSquidexDataProvider(squidexGraphqlClient, userRestClient);
@@ -116,7 +122,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     new WorkingGroupNetworkSquidexDataProvider(squidexGraphqlClient);
   const projectDataProvider =
     libs.projectDataProvider ||
-    new ProjectSquidexDataProvider(squidexGraphqlClient);
+    new ProjectSquidexDataProvider(squidexGraphqlClient, projectRestClient);
 
   // Controllers
   const dashboardController =

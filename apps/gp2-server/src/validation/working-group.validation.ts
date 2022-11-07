@@ -25,7 +25,7 @@ export const validateWorkingGroupParameters = validateInput(
   },
 );
 
-const workingGroupPatchRequestValidationSchema: JSONSchemaType<gp2.WorkingGroupResourcesPutRequest> =
+const workingGroupPutRequestValidationSchema: JSONSchemaType<gp2.WorkingGroupResourcesPutRequest> =
   {
     type: 'array',
     items: {
@@ -57,8 +57,8 @@ const workingGroupPatchRequestValidationSchema: JSONSchemaType<gp2.WorkingGroupR
       ],
     },
   };
-export const validateWorkingGroupPatchRequest = validateInput(
-  workingGroupPatchRequestValidationSchema,
+export const validateWorkingGroupPutRequest = validateInput(
+  workingGroupPutRequestValidationSchema,
   {
     skipNull: false,
     coerce: true,

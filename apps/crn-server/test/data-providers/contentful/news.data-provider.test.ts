@@ -104,10 +104,10 @@ describe('News data provider', () => {
       expect(newsGraphQLClientMock.request).toHaveBeenCalledWith(
         expect.anything(),
         expect.objectContaining({
-          limit: undefined,
-          skip: undefined,
+          limit: null,
           order: ['sys_firstPublishedAt_DESC'],
-          where: { frequency_in: undefined, title_contains: undefined },
+          skip: null,
+          where: { frequency_in: undefined, title_contains: null },
         }),
       );
     });
@@ -131,12 +131,9 @@ describe('News data provider', () => {
           expect.anything(),
           expect.objectContaining({
             limit: 8,
-            skip: 5,
             order: ['sys_firstPublishedAt_DESC'],
-            where: {
-              frequency_in: ['CRN Quarterly'],
-              title_contains: undefined,
-            },
+            skip: 5,
+            where: { frequency_in: ['CRN Quarterly'], title_contains: null },
           }),
         );
       });
@@ -156,9 +153,9 @@ describe('News data provider', () => {
         expect(newsGraphQLClientMock.request).toHaveBeenCalledWith(
           expect.anything(),
           expect.objectContaining({
-            limit: undefined,
-            skip: undefined,
+            limit: null,
             order: ['sys_firstPublishedAt_DESC'],
+            skip: null,
             where: { frequency_in: undefined, title_contains: 'hey' },
           }),
         );

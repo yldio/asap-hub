@@ -3,7 +3,7 @@ import { UsersAvatars } from '@asap-hub/react-components';
 import { createTeamResponseMembers } from '@asap-hub/fixtures';
 
 export default {
-  title: 'Molecules / Members Avatars',
+  title: 'Molecules / User Avatars',
   component: UsersAvatars,
 };
 

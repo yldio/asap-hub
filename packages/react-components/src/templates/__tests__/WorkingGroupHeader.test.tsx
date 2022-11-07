@@ -4,18 +4,20 @@ import WorkingGroupHeader from '../WorkingGroupHeader';
 
 const baseProps = {
   id: 'id',
-  name: 'A test group',
+  name: '',
   complete: false,
-  description: 'Text content',
-  externalLink: 'link',
-  externalLinkText: 'link text',
+  description: '',
+  externalLink: '',
+  externalLinkText: '',
   lastUpdated: new Date('2021-01-01').toISOString(),
   pointOfContact: undefined,
   members: [],
 };
 
 it('renders the title', () => {
-  const { getByText } = render(<WorkingGroupHeader {...baseProps} />);
+  const { getByText } = render(
+    <WorkingGroupHeader {...baseProps} name="A test group" />,
+  );
   expect(getByText('A test group')).toBeVisible();
 });
 

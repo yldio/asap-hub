@@ -4,8 +4,8 @@ import { TeamResponse } from '@asap-hub/model';
 import { perRem } from '../pixels';
 import { Anchor, Avatar } from '../atoms';
 
-const MAX_MEMBER_AVATARS = 5;
-const MEMBER_AVATAR_BORDER_WIDTH = 1;
+const MAX_USER_AVATARS = 5;
+const USER_AVATAR_BORDER_WIDTH = 1;
 
 const membersContainerStyles = css({
   gridArea: 'members',
@@ -15,11 +15,11 @@ const membersContainerStyles = css({
   gridAutoFlow: 'column',
   gridTemplateColumns: `
     repeat(
-      ${MAX_MEMBER_AVATARS},
-      minmax(auto, ${36 + MEMBER_AVATAR_BORDER_WIDTH * 2}px)
+      ${MAX_USER_AVATARS},
+      minmax(auto, ${36 + USER_AVATAR_BORDER_WIDTH * 2}px)
     )
     ${6 / perRem}em
-    minmax(auto, ${36 + MEMBER_AVATAR_BORDER_WIDTH * 2}px)
+    minmax(auto, ${36 + USER_AVATAR_BORDER_WIDTH * 2}px)
   `,
 });
 
@@ -39,21 +39,21 @@ const listItemStyles = css({
   position: 'relative',
 });
 
-type MembersAvatarsProps = Pick<TeamResponse, 'members'> & {
+type UsersAvatarsProps = Pick<TeamResponse, 'members'> & {
   fullListRoute: string;
 };
 
-const MembersAvatars: React.FC<MembersAvatarsProps> = ({
+const UsersAvatars: React.FC<UsersAvatarsProps> = ({
   members,
   fullListRoute,
 }) => (
   <div css={membersContainerStyles}>
     <ul css={membersListStyles}>
       {members
-        .slice(0, MAX_MEMBER_AVATARS)
-        .map(({ id: memberId, avatarUrl, firstName, lastName }, i) => (
-          <li key={memberId} css={[listItemStyles, { left: `-${i * 3}px` }]}>
-            <Anchor href={network({}).users({}).user({ userId: memberId }).$}>
+        .slice(0, MAX_USER_AVATARS)
+        .map(({ id: userId, avatarUrl, firstName, lastName }, i) => (
+          <li key={userId} css={[listItemStyles, { left: `-${i * 3}px` }]}>
+            <Anchor href={network({}).users({}).user({ userId: userId }).$}>
               <Avatar
                 firstName={firstName}
                 lastName={lastName}
@@ -63,9 +63,9 @@ const MembersAvatars: React.FC<MembersAvatarsProps> = ({
           </li>
         ))}
       <li css={extraUsersStyles}>
-        {members.length > MAX_MEMBER_AVATARS && (
+        {members.length > MAX_USER_AVATARS && (
           <Anchor href={fullListRoute}>
-            <Avatar placeholder={`+${members.length - MAX_MEMBER_AVATARS}`} />
+            <Avatar placeholder={`+${members.length - MAX_USER_AVATARS}`} />
           </Anchor>
         )}
       </li>
@@ -73,4 +73,4 @@ const MembersAvatars: React.FC<MembersAvatarsProps> = ({
   </div>
 );
 
-export default MembersAvatars;
+export default UsersAvatars;

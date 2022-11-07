@@ -1,11 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import { createTeamResponseMembers } from '@asap-hub/fixtures';
 
-import MembersAvatars from '../MembersAvatars';
+import UsersAvatars from '../UsersAvatars';
 
 it('renders a list of members', () => {
   render(
-    <MembersAvatars
+    <UsersAvatars
       fullListRoute="route"
       members={[
         {
@@ -23,7 +23,7 @@ it('renders a list of members', () => {
 
 it('renders no more than 5 members', () => {
   render(
-    <MembersAvatars
+    <UsersAvatars
       fullListRoute="route"
       members={createTeamResponseMembers({ teamMembers: 6 })}
     />,

@@ -69,7 +69,7 @@ export {
   LinkHeadline,
   Loading,
   MembersList,
-  MembersAvatars,
+  UsersAvatars,
   MenuButton,
   Modal,
   OrcidSigninButton,

@@ -17,7 +17,7 @@ import {
 } from '../icons';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { createMailTo } from '../mail';
-import { DropdownButton, MembersAvatars, TabNav } from '../molecules';
+import { DropdownButton, UsersAvatars, TabNav } from '../molecules';
 import { mobileScreen, perRem } from '../pixels';
 import { getCounterString } from '../utils';
 
@@ -148,7 +148,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
       <section
         css={canCreateUpdate ? createSectionStyles : contactSectionStyles}
       >
-        <MembersAvatars
+        <UsersAvatars
           members={members}
           fullListRoute={`${route.about({}).$}#${teamListElementId}`}
         />

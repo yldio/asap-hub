@@ -3,11 +3,11 @@ import { formatDistance } from 'date-fns';
 import { workingGroups } from '@asap-hub/routing';
 import { TeamResponse } from '@asap-hub/model';
 
-import { mobileScreen, perRem } from '../pixels';
+import { mobileScreen, perRem, rem } from '../pixels';
 import { Link, Display, StateTag, TabLink, Caption } from '../atoms';
 import { paper } from '../colors';
 import { contentSidePaddingWithNavigation } from '../layout';
-import { MembersAvatars, TabNav } from '../molecules';
+import { UsersAvatars, TabNav } from '../molecules';
 import { successIcon, externalLinkIcon } from '../icons';
 import { createMailTo } from '../mail';
 
@@ -19,7 +19,7 @@ const containerStyles = css({
 const titleStyle = css({
   display: 'flex',
   flexFlow: 'column',
-  gap: 3,
+  gap: rem(3),
   alignItems: 'flex-start',
   paddingBottom: `${12 / perRem}em`,
   [`@media (min-width: ${mobileScreen.max}px)`]: {
@@ -108,7 +108,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
       )}
     </div>
     <section css={contactSectionStyles}>
-      <MembersAvatars
+      <UsersAvatars
         members={members}
         fullListRoute={workingGroups({}).workingGroup({ workingGroupId: id }).$}
       />

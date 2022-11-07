@@ -680,10 +680,7 @@ describe('Team Data Provider', () => {
 
     test('Should create a team', async () => {
       nock(baseUrl)
-        .post(
-          `/api/content/${appName}/teams?publish=true`,
-          getInputTeam() as any,
-        )
+        .post(`/api/content/${appName}/teams?publish=true`, getInputTeam())
         .reply(201, { id: teamId });
 
       const result = await teamDataProvider.create(getTeamCreateDataObject());

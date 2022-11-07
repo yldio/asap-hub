@@ -15,8 +15,6 @@ import { css } from '@emotion/react';
 import { useState } from 'react';
 import { mobileQuery } from '../layout';
 
-const types = ['Link' as const, 'Note' as const];
-
 const { rem } = pixels;
 const { noop } = utils;
 
@@ -94,7 +92,10 @@ const ResourceModal: React.FC<ResourceModalProps> = (props) => {
           <LabeledDropdown
             title="Resource Type"
             subtitle="(required)"
-            options={types.map((value) => ({ value, label: value }))}
+            options={gp2.resourceTypes.map((value) => ({
+              value,
+              label: value,
+            }))}
             value={newType}
             required
             getValidationMessage={() => 'Please enter a valid type'}

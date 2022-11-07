@@ -1,6 +1,6 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 as gp2Model } from '@asap-hub/model';
-import nock from 'nock';
+import nock, { DataMatcherMap } from 'nock';
 import { API_BASE_URL } from '../../config';
 import {
   getWorkingGroup,
@@ -83,7 +83,7 @@ describe('putWorkingGroupsResources', () => {
 
   it('makes an authorized PUT request to update a working group resources', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-      .put('/working-group/11/resources', payload)
+      .put('/working-group/11/resources', payload as unknown as DataMatcherMap)
       .reply(200, { id: 123 });
 
     await putWorkingGroupResources('11', payload, 'Bearer x');

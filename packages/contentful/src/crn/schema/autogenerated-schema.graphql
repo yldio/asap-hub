@@ -153,9 +153,7 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z,
 """
 scalar DateTime
 
-"""
-The 'Dimension' type represents dimensions as whole numeric values between `1` and `4000`.
-"""
+"""The 'Dimension' type represents dimensions as whole numeric values between `1` and `4000`."""
 scalar Dimension
 
 interface Entry {
@@ -239,13 +237,9 @@ enum ImageResizeFocus {
 }
 
 enum ImageResizeStrategy {
-  """
-  Crops a part of the original image to fit into the specified dimensions.
-  """
+  """Crops a part of the original image to fit into the specified dimensions."""
   CROP
-  """
-  Resizes the image to the specified dimensions, cropping the image if needed.
-  """
+  """Resizes the image to the specified dimensions, cropping the image if needed."""
   FILL
   """Resizes the image to fit into the specified dimensions."""
   FIT
@@ -254,9 +248,7 @@ enum ImageResizeStrategy {
           Uses desired background color as padding color.
   """
   PAD
-  """
-  Resizes the image to the specified dimensions, changing the original aspect ratio if needed.
-  """
+  """Resizes the image to the specified dimensions, changing the original aspect ratio if needed."""
   SCALE
   """Creates a thumbnail from the image."""
   THUMB
@@ -292,14 +284,10 @@ input ImageTransformOptions {
   width: Dimension
 }
 
-"""
-The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-"""
+"""The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf)."""
 scalar JSON
 
-"""
-Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/migration)
-"""
+"""Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/migration)"""
 type Migration implements Entry {
   contentTypeId(locale: String): String
   contentfulMetadata: ContentfulMetadata!
@@ -347,9 +335,7 @@ enum MigrationOrder {
   sys_publishedVersion_DESC
 }
 
-"""
-ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news)
-"""
+"""ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news)"""
 type News implements Entry {
   contentfulMetadata: ContentfulMetadata!
   frequency(locale: String): String
@@ -468,9 +454,7 @@ type NewsTextLinks {
   entries: NewsTextEntries!
 }
 
-"""
-The 'Quality' type represents quality as whole numeric values between `1` and `100`.
-"""
+"""The 'Quality' type represents quality as whole numeric values between `1` and `100`."""
 scalar Quality
 
 type Query {

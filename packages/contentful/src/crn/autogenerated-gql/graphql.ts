@@ -754,10 +754,8 @@ export type FetchNewsByIdQuery = {
 export type FetchNewsQueryVariables = Exact<{
   limit: InputMaybe<Scalars['Int']>;
   skip: InputMaybe<Scalars['Int']>;
-  frequency: InputMaybe<
-    Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>
-  >;
-  title: InputMaybe<Scalars['String']>;
+  order: InputMaybe<Array<InputMaybe<NewsOrder>> | InputMaybe<NewsOrder>>;
+  where: InputMaybe<NewsFilter>;
 }>;
 
 export type FetchNewsQuery = {
@@ -931,13 +929,13 @@ export const FetchNewsDocument = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
-            name: { kind: 'Name', value: 'frequency' },
+            name: { kind: 'Name', value: 'order' },
           },
           type: {
             kind: 'ListType',
             type: {
               kind: 'NamedType',
-              name: { kind: 'Name', value: 'String' },
+              name: { kind: 'Name', value: 'NewsOrder' },
             },
           },
         },
@@ -945,9 +943,12 @@ export const FetchNewsDocument = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
-            name: { kind: 'Name', value: 'title' },
+            name: { kind: 'Name', value: 'where' },
           },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'NewsFilter' },
+          },
         },
       ],
       selectionSet: {
@@ -975,35 +976,18 @@ export const FetchNewsDocument = {
               },
               {
                 kind: 'Argument',
-                name: { kind: 'Name', value: 'where' },
+                name: { kind: 'Name', value: 'order' },
                 value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'frequency_in' },
-                      value: {
-                        kind: 'Variable',
-                        name: { kind: 'Name', value: 'frequency' },
-                      },
-                    },
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'title_contains' },
-                      value: {
-                        kind: 'Variable',
-                        name: { kind: 'Name', value: 'title' },
-                      },
-                    },
-                  ],
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'order' },
                 },
               },
               {
                 kind: 'Argument',
-                name: { kind: 'Name', value: 'order' },
+                name: { kind: 'Name', value: 'where' },
                 value: {
-                  kind: 'EnumValue',
-                  value: 'sys_firstPublishedAt_DESC',
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'where' },
                 },
               },
             ],

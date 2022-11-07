@@ -8,9 +8,9 @@ import {
   FetchNewsByIdQuery,
   FetchNewsByIdQueryVariables,
   FetchNewsQuery,
-  NewsFilter,
   NewsOrder,
-  QueryNewsCollectionArgs,
+  FetchNewsQueryVariables,
+  NewsFilter,
 } from '@asap-hub/contentful';
 
 import { NewsDataProvider, FetchNewsProviderOptions } from '../types';
@@ -25,16 +25,14 @@ export class NewsContentfulDataProvider implements NewsDataProvider {
   async fetch(options?: FetchNewsProviderOptions) {
     const { newsCollection } = await this.contentfulClient.request<
       FetchNewsQuery,
-      Pick<QueryNewsCollectionArgs, 'limit' | 'skip' | 'order'> & {
-        where?: Partial<NewsFilter>;
-      }
+      Omit<FetchNewsQueryVariables, 'where'> & { where: Partial<NewsFilter> }
     >(FETCH_NEWS, {
-      limit: options?.take,
-      skip: options?.skip,
+      limit: options?.take || null,
+      skip: options?.skip || null,
       order: [NewsOrder.SysFirstPublishedAtDesc],
       where: {
         frequency_in: options?.filter?.frequency as string[],
-        title_contains: options?.filter?.title,
+        title_contains: options?.filter?.title || null,
       },
     });
 

@@ -3906,7 +3906,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "contentful-cli",\
-        "npm:1.15.19"\
+        "npm:1.15.36"\
       ],\
       [\
         "contentful-export",\
@@ -10652,7 +10652,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@graphql-codegen/typescript", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:2.7.3"],\
             ["@graphql-codegen/typescript-operations", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:2.5.3"],\
             ["@graphql-typed-document-node/core", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:3.1.1"],\
-            ["contentful-cli", "npm:1.15.19"],\
+            ["contentful-cli", "npm:1.15.36"],\
             ["contentful-migrate", "npm:0.17.0"],\
             ["graphql-tag", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:2.12.6"],\
             ["graphql-typescript-integration", "npm:1.2.1"]\
@@ -42430,10 +42430,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["contentful-cli", [\
-        ["npm:1.15.19", {\
-          "packageLocation": "./.yarn/cache/contentful-cli-npm-1.15.19-04001b3074-93cb81784d.zip/node_modules/contentful-cli/",\
+        ["npm:1.15.36", {\
+          "packageLocation": "./.yarn/cache/contentful-cli-npm-1.15.36-4a932e6fa9-30fac79bfb.zip/node_modules/contentful-cli/",\
           "packageDependencies": [\
-            ["contentful-cli", "npm:1.15.19"],\
+            ["contentful-cli", "npm:1.15.36"],\
             ["ast-types", "npm:0.14.2"],\
             ["bfj", "npm:7.0.2"],\
             ["blessed", "npm:0.1.81"],\

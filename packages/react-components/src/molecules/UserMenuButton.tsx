@@ -1,4 +1,4 @@
-import { useCurrentUserCRN } from '@asap-hub/react-context';
+import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
 
 import { Avatar, Paragraph } from '../atoms';
@@ -35,7 +35,7 @@ const UserMenuButton: React.FC<UserMenuButtonProps> = ({
     firstName = 'Unknown',
     lastName = 'User',
     avatarUrl,
-  } = useCurrentUserCRN() ?? {};
+  } = useCurrentUserGP2() ?? {};
 
   return (
     <button

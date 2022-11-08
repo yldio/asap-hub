@@ -4,7 +4,7 @@ import { number, boolean } from '@storybook/addon-knobs';
 import { GroupRole } from '@asap-hub/model';
 
 export default {
-  title: 'Organisms /Group Leaders Tabbed Card',
+  title: 'Organisms / Group Leaders Tabbed Card',
   component: GroupLeadersTabbedCard,
 };
 

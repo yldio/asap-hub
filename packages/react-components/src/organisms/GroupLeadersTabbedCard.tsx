@@ -6,8 +6,6 @@ import { rem, tabletScreen } from '../pixels';
 import { splitListBy } from '../utils';
 
 const containerStyles = css({
-  listStyle: 'none',
-  margin: 0,
   padding: `${rem(32)} 0`,
   display: 'grid',
   rowGap: rem(12),

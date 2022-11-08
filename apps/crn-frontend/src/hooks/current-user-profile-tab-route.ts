@@ -1,10 +1,10 @@
+import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
-import { useLocation } from 'react-router-dom';
 import { relative } from 'path';
-import { useCurrentUser } from '@asap-hub/react-context';
+import { useLocation } from 'react-router-dom';
 
 export const useCurrentUserProfileTabRoute = () => {
-  const user = useCurrentUser();
+  const user = useCurrentUserCRN();
   const { pathname } = useLocation();
   if (!user) {
     return undefined;

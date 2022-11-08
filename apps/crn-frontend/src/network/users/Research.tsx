@@ -1,25 +1,25 @@
-import { useRouteMatch, Route } from 'react-router-dom';
-import {
-  UserProfileResearch,
-  RoleModal,
-  OpenQuestionsModal,
-  ExpertiseAndResourcesModal,
-} from '@asap-hub/react-components';
-import { UserResponse } from '@asap-hub/model';
-import { useCurrentUser } from '@asap-hub/react-context';
-import { network } from '@asap-hub/routing';
 import { Frame } from '@asap-hub/frontend-utils';
+import { UserResponse } from '@asap-hub/model';
+import {
+  ExpertiseAndResourcesModal,
+  OpenQuestionsModal,
+  RoleModal,
+  UserProfileResearch,
+} from '@asap-hub/react-components';
+import { useCurrentUserCRN } from '@asap-hub/react-context';
+import { network } from '@asap-hub/routing';
+import { Route, useRouteMatch } from 'react-router-dom';
 
 import { usePatchUserById } from './state';
 
-import GroupsCard from './groups/GroupsCard';
 import expertiseAndResourceSuggestions from './expertise-and-resource-suggestions';
+import GroupsCard from './groups/GroupsCard';
 
 type ResearchProps = {
   user: UserResponse;
 };
 const Research: React.FC<ResearchProps> = ({ user }) => {
-  const { id } = useCurrentUser() ?? {};
+  const { id } = useCurrentUserCRN() ?? {};
   const { path } = useRouteMatch();
   const route = network({}).users({}).user({ userId: user.id }).research({});
 

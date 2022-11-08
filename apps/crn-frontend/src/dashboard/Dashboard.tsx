@@ -1,18 +1,18 @@
-import { FC, lazy, useState } from 'react';
-import { DashboardPage, ConfirmModal } from '@asap-hub/react-components';
-import { dashboard as dashboardRoute } from '@asap-hub/routing';
-import {
-  useCurrentUser,
-  useCurrentUserTeamRoles,
-} from '@asap-hub/react-context';
-import { usePrefetchTeams } from '@asap-hub/crn-frontend/src/network/teams/state';
-import { CARD_VIEW_PAGE_SIZE } from '@asap-hub/crn-frontend/src/hooks';
 import { usePrefetchCalendars } from '@asap-hub/crn-frontend/src/events/calendar/state';
+import { CARD_VIEW_PAGE_SIZE } from '@asap-hub/crn-frontend/src/hooks';
+import { usePrefetchTeams } from '@asap-hub/crn-frontend/src/network/teams/state';
 import { Frame } from '@asap-hub/frontend-utils';
+import { ConfirmModal, DashboardPage } from '@asap-hub/react-components';
+import {
+  useCurrentUserCRN,
+  useCurrentUserTeamRolesCRN,
+} from '@asap-hub/react-context';
+import { dashboard as dashboardRoute } from '@asap-hub/routing';
+import { FC, lazy, useState } from 'react';
 import { useRouteMatch } from 'react-router-dom';
 
-import { useDashboardState, useReminderState } from './state';
 import { usePatchUserById, useUserById } from '../network/users/state';
+import { useDashboardState, useReminderState } from './state';
 
 const loadBody = () =>
   import(/* webpackChunkName: "dashboard-body" */ './Body');
@@ -22,7 +22,7 @@ loadBody();
 const Dashboard: FC<Record<string, never>> = () => {
   const [date] = useState(new Date());
 
-  const currentUser = useCurrentUser();
+  const currentUser = useCurrentUserCRN();
   if (!currentUser) {
     throw new Error('Failed to find out who is currently logged in');
   }
@@ -34,7 +34,7 @@ const Dashboard: FC<Record<string, never>> = () => {
   const dashboard = useDashboardState();
   const { items } = useReminderState();
 
-  const roles = useCurrentUserTeamRoles();
+  const roles = useCurrentUserTeamRolesCRN();
   usePrefetchTeams({
     currentPage: 0,
     pageSize: CARD_VIEW_PAGE_SIZE,

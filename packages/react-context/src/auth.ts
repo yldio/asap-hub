@@ -1,12 +1,12 @@
 import { Auth0User, gp2, User } from '@asap-hub/auth';
 
-import { useAuth0, useAuth0GP2 } from './auth0';
+import { useAuth0CRN, useAuth0GP2 } from './auth0';
 
 export const getUserClaimKey = (): string =>
   new URL('/user', window.location.href).toString();
 
-export const useCurrentUser = (): User | null => {
-  const { user: auth0User } = useAuth0();
+export const useCurrentUserCRN = (): User | null => {
+  const { user: auth0User } = useAuth0CRN();
 
   return parseUser(auth0User);
 };
@@ -17,10 +17,10 @@ export const useCurrentUserGP2 = (): gp2.User | null => {
   return parseUser(auth0User);
 };
 
-export const useCurrentUserTeamRoles = (): Array<
+export const useCurrentUserTeamRolesCRN = (): Array<
   User['teams'][number]['role']
 > => {
-  const user = useCurrentUser();
+  const user = useCurrentUserCRN();
   return user ? user.teams.map(({ role }) => role) : [];
 };
 

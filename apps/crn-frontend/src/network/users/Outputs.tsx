@@ -6,7 +6,7 @@ import {
 import { network } from '@asap-hub/routing';
 import format from 'date-fns/format';
 import { ComponentProps, FC } from 'react';
-import { useCurrentUser } from '@asap-hub/react-context';
+import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { UserResponse } from '@asap-hub/model';
 import { RESEARCH_OUTPUT_ENTITY_TYPE } from '@asap-hub/algolia';
 import { SearchFrame } from '@asap-hub/frontend-utils';
@@ -116,7 +116,7 @@ const Outputs: FC<OutputsProps> = ({ userId }) => {
     pageSize,
     userId,
   }).total;
-  const ownUser = useCurrentUser()?.id === userId;
+  const ownUser = useCurrentUserCRN()?.id === userId;
   const user = useUserById(userId);
   return (
     <article>

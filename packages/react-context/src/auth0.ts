@@ -16,7 +16,7 @@ export const auth0Context = {
   logout: auth0ClientNotProvided,
   refreshUser: auth0ClientNotProvided,
 };
-export const Auth0Context = createContext<Auth0<User>>(auth0Context);
-export const useAuth0 = (): Auth0<User> => useContext(Auth0Context);
+export const Auth0ContextCRN = createContext<Auth0<User>>(auth0Context);
+export const useAuth0CRN = (): Auth0<User> => useContext(Auth0ContextCRN);
 export const Auth0ContextGP2 = createContext<Auth0<gp2.User>>(auth0Context);
 export const useAuth0GP2 = (): Auth0<gp2.User> => useContext(Auth0ContextGP2);

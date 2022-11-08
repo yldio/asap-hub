@@ -1,6 +1,6 @@
-import { render, waitFor } from '@testing-library/react';
-import { authTestUtils } from '@asap-hub/react-components';
 import { mockLocation } from '@asap-hub/dom-test-utils';
+import { authTestUtils } from '@asap-hub/react-components';
+import { render, waitFor } from '@testing-library/react';
 
 import Logout from '../Logout';
 
@@ -8,13 +8,13 @@ const { mockAssign } = mockLocation();
 
 it('redirects to the logout URL', async () => {
   render(
-    <authTestUtils.Auth0Provider>
-      <authTestUtils.WhenReady>
-        <authTestUtils.LoggedIn user={undefined}>
+    <authTestUtils.Auth0ProviderCRN>
+      <authTestUtils.WhenReadyCRN>
+        <authTestUtils.LoggedInCRN user={undefined}>
           <Logout />
-        </authTestUtils.LoggedIn>
-      </authTestUtils.WhenReady>
-    </authTestUtils.Auth0Provider>,
+        </authTestUtils.LoggedInCRN>
+      </authTestUtils.WhenReadyCRN>
+    </authTestUtils.Auth0ProviderCRN>,
   );
   await waitFor(() => expect(mockAssign).toHaveBeenCalled());
 

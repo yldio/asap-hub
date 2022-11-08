@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 import type { Auth0, Auth0User, User } from '@asap-hub/auth';
-import { Auth0Context, getUserClaimKey } from '@asap-hub/react-context';
+import { Auth0ContextCRN, getUserClaimKey } from '@asap-hub/react-context';
 import createAuth0Client, { Auth0Client } from '@auth0/auth0-spa-js';
 import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
@@ -110,11 +110,11 @@ export const Auth0Provider: React.FC<{
   }, [user, setAuth0, resetAuth0, auth0Overrides]);
 
   return (
-    <Auth0Context.Provider
+    <Auth0ContextCRN.Provider
       value={auth0 ?? createAuth0(undefined, undefined, auth0Overrides)}
     >
       {children}
-    </Auth0Context.Provider>
+    </Auth0ContextCRN.Provider>
   );
 };
 

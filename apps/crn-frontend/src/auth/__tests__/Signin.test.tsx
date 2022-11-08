@@ -1,23 +1,23 @@
-import { useEffect } from 'react';
-import { StaticRouter, Router } from 'react-router-dom';
-import { History, createMemoryHistory } from 'history';
 import { render, RenderResult, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { createMemoryHistory, History } from 'history';
 import { JWK, JWT } from 'jose';
+import { useEffect } from 'react';
+import { Router, StaticRouter } from 'react-router-dom';
 
 import nock from 'nock';
 
 import { Auth0 } from '@asap-hub/auth';
-import { useAuth0 } from '@asap-hub/react-context';
-import { authTestUtils } from '@asap-hub/react-components';
 import { mockLocation } from '@asap-hub/dom-test-utils';
+import { authTestUtils } from '@asap-hub/react-components';
+import { useAuth0CRN } from '@asap-hub/react-context';
 
 import Signin from '../Signin';
 
 let handleRedirectCallback: undefined | Auth0['handleRedirectCallback'];
 const renderSignin = async (): Promise<RenderResult> => {
   const GrabHandleRedirectCallback: React.FC = () => {
-    const auth0 = useAuth0();
+    const auth0 = useAuth0CRN();
     useEffect(() => {
       ({ handleRedirectCallback } = auth0);
       return () => {
@@ -29,10 +29,10 @@ const renderSignin = async (): Promise<RenderResult> => {
 
   const result = render(
     <StaticRouter location="/page?search#hash">
-      <authTestUtils.Auth0Provider>
+      <authTestUtils.Auth0ProviderCRN>
         <GrabHandleRedirectCallback />
         <Signin />
-      </authTestUtils.Auth0Provider>
+      </authTestUtils.Auth0ProviderCRN>
     </StaticRouter>,
   );
   await waitFor(() => !!result.container.textContent);

@@ -1,8 +1,8 @@
+import { useAuth0CRN } from '@asap-hub/react-context';
 import { useEffect } from 'react';
-import { useAuth0 } from '@asap-hub/react-context';
 
 const Logout: React.FC<Record<string, never>> = () => {
-  const { loading, logout } = useAuth0();
+  const { loading, logout } = useAuth0CRN();
 
   useEffect(() => {
     if (!loading) {

@@ -7,7 +7,7 @@ import {
   tin,
   UserMenuButton,
 } from '@asap-hub/react-components';
-import { useCurrentUser } from '@asap-hub/react-context';
+import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
 import { useState } from 'react';
 import { smallDesktopQuery } from '../layout';
@@ -40,7 +40,7 @@ const UserNavigation: React.FC = () => {
     <div>
       <UserMenuButton onClick={() => setMenuShown(!menuShown)} open={menuShown}>
         <span css={buttonTextStyles}>{`Hi, ${
-          useCurrentUser()?.firstName ?? 'Unknown User'
+          useCurrentUserCRN()?.firstName ?? 'Unknown User'
         }`}</span>
       </UserMenuButton>
       <div css={css([userMenuStyles, menuShown && userMenuShownStyles])}>

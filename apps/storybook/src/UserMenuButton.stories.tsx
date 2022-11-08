@@ -1,4 +1,4 @@
-import { UserMenuButton, authTestUtils } from '@asap-hub/react-components';
+import { authTestUtils, UserMenuButton } from '@asap-hub/react-components';
 import { boolean, text } from '@storybook/addon-knobs';
 
 export default {
@@ -7,8 +7,8 @@ export default {
 };
 
 export const Normal = () => (
-  <authTestUtils.Auth0Provider>
-    <authTestUtils.LoggedIn
+  <authTestUtils.Auth0ProviderCRN>
+    <authTestUtils.LoggedInCRN
       user={{
         displayName: text('Display Name', 'Randy Schekman'),
         firstName: text('First Name', 'Randy'),
@@ -20,8 +20,8 @@ export const Normal = () => (
       }}
     >
       <UserMenuButton open={boolean('Open', false)} />
-    </authTestUtils.LoggedIn>
-  </authTestUtils.Auth0Provider>
+    </authTestUtils.LoggedInCRN>
+  </authTestUtils.Auth0ProviderCRN>
 );
 export const UserUnknown = () => (
   <UserMenuButton open={boolean('Open', false)} />

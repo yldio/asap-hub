@@ -1,25 +1,25 @@
+import { RESEARCH_OUTPUT_ENTITY_TYPE } from '@asap-hub/algolia';
+import { SearchFrame } from '@asap-hub/frontend-utils';
 import {
-  TeamProfileOutputs,
   ResearchOutputsSearch,
+  TeamProfileOutputs,
   utils,
 } from '@asap-hub/react-components';
+import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
-import { RESEARCH_OUTPUT_ENTITY_TYPE } from '@asap-hub/algolia';
 import format from 'date-fns/format';
-import { useCurrentUser } from '@asap-hub/react-context';
 import { ComponentProps } from 'react';
-import { SearchFrame } from '@asap-hub/frontend-utils';
 
 import { usePagination, usePaginationParams, useSearch } from '../../hooks';
 import { useResearchOutputs } from '../../shared-research/state';
 
+import { useAlgolia } from '../../hooks/algolia';
+import { getResearchOutputs } from '../../shared-research/api';
 import {
   algoliaResultsToStream,
   createCsvFileStream,
   researchOutputToCSV,
 } from '../../shared-research/export';
-import { getResearchOutputs } from '../../shared-research/api';
-import { useAlgolia } from '../../hooks/algolia';
 import { useTeamById } from './state';
 
 type OutputsListProps = Pick<
@@ -116,7 +116,7 @@ const Outputs: React.FC<OutputsProps> = ({ teamId }) => {
   }).total;
   const team = useTeamById(teamId);
 
-  const ownTeam = !!(useCurrentUser()?.teams ?? []).filter(
+  const ownTeam = !!(useCurrentUserCRN()?.teams ?? []).filter(
     ({ id }) => id === teamId,
   ).length;
   return (

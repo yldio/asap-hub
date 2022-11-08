@@ -71,6 +71,10 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
             tabRoute ? tabRoute({}).editOnboarded({}).$ : undefined
           }
           userProfileHref={network({}).users({}).user({ userId: user.id }).$}
+          firstName={user.firstName}
+          lastName={user.lastName}
+          displayName={user.displayName}
+          avatarUrl={user.avatarUrl}
           teams={user.teams.map(({ id, displayName = '' }) => ({
             name: displayName,
             href: network({}).teams({}).team({ teamId: id }).$,

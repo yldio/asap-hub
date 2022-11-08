@@ -1,5 +1,5 @@
-import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
+import { ComponentProps } from 'react';
 
 import { Avatar, Paragraph } from '../atoms';
 import { chevronDownIcon, chevronUpIcon, verticalDividerIcon } from '../icons';
@@ -21,48 +21,49 @@ const styles = css({
   alignItems: 'center',
 });
 
-interface UserMenuButtonProps {
+type AvatarProps = ComponentProps<typeof Avatar>;
+type UserMenuButtonProps = {
   onClick?: () => void;
   open?: boolean;
-}
+  displayName?: string;
+} & {
+  [K in keyof AvatarProps as K extends 'imageUrl'
+    ? 'avatarUrl'
+    : K]: AvatarProps[K];
+};
 const UserMenuButton: React.FC<UserMenuButtonProps> = ({
   onClick = noop,
   open = false,
+  displayName = 'Unknown User',
+  firstName = 'Unknown',
+  lastName = 'User',
+  avatarUrl,
   children,
-}) => {
-  const {
-    displayName = 'Unknown User',
-    firstName = 'Unknown',
-    lastName = 'User',
-    avatarUrl,
-  } = useCurrentUserGP2() ?? {};
-
-  return (
-    <button
-      aria-label="Toggle User Menu"
-      css={[buttonResetStyles, styles]}
-      onClick={(event) => {
-        onClick();
-        event.preventDefault();
+}) => (
+  <button
+    aria-label="Toggle User Menu"
+    css={[buttonResetStyles, styles]}
+    onClick={(event) => {
+      onClick();
+      event.preventDefault();
+    }}
+  >
+    <Paragraph>
+      <strong css={{ paddingRight: `${15 / perRem}em` }}>
+        {children || displayName}
+      </strong>
+    </Paragraph>
+    <Avatar imageUrl={avatarUrl} firstName={firstName} lastName={lastName} />
+    <div
+      css={{
+        paddingLeft: `${12 / perRem}em`,
+        paddingRight: `${9 / perRem}em`,
       }}
     >
-      <Paragraph>
-        <strong css={{ paddingRight: `${15 / perRem}em` }}>
-          {children || displayName}
-        </strong>
-      </Paragraph>
-      <Avatar imageUrl={avatarUrl} firstName={firstName} lastName={lastName} />
-      <div
-        css={{
-          paddingLeft: `${12 / perRem}em`,
-          paddingRight: `${9 / perRem}em`,
-        }}
-      >
-        {verticalDividerIcon}
-      </div>
-      {open ? chevronUpIcon : chevronDownIcon}
-    </button>
-  );
-};
+      {verticalDividerIcon}
+    </div>
+    {open ? chevronUpIcon : chevronDownIcon}
+  </button>
+);
 
 export default UserMenuButton;

@@ -36,11 +36,20 @@ const buttonTextStyles = css({
 
 const UserNavigation: React.FC = () => {
   const [menuShown, setMenuShown] = useState(false);
+  const { firstName, lastName, displayName, avatarUrl } =
+    useCurrentUserGP2() || {};
   return (
     <div>
-      <UserMenuButton onClick={() => setMenuShown(!menuShown)} open={menuShown}>
+      <UserMenuButton
+        onClick={() => setMenuShown(!menuShown)}
+        open={menuShown}
+        firstName={firstName}
+        lastName={lastName}
+        displayName={displayName}
+        avatarUrl={avatarUrl}
+      >
         <span css={buttonTextStyles}>{`Hi, ${
-          useCurrentUserGP2()?.firstName ?? 'Unknown User'
+          firstName ?? 'Unknown User'
         }`}</span>
       </UserMenuButton>
       <div css={css([userMenuStyles, menuShown && userMenuShownStyles])}>

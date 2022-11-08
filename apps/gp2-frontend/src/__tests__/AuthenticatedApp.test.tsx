@@ -1,12 +1,8 @@
 import { authTestUtils } from '@asap-hub/react-components';
-<<<<<<< HEAD
 import { render, waitFor } from '@testing-library/react';
 import { FC, Suspense } from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { RecoilRoot, useRecoilValue } from 'recoil';
-=======
-import { User } from '@asap-hub/auth';
->>>>>>> 20e726b6 (fixing imports)
 
 import { authorizationState } from '../auth/state';
 import AuthenticatedApp from '../AuthenticatedApp';

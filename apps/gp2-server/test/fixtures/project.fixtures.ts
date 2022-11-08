@@ -1,4 +1,5 @@
-import type { gp2 } from '@asap-hub/model';
+import type { gp2 as gp2Model } from '@asap-hub/model';
+import type { gp2 as gp2Squidex } from '@asap-hub/squidex';
 import {
   FetchProjectQuery,
   FetchProjectsQuery,
@@ -13,7 +14,7 @@ import {
   GraphQLProjectResource,
 } from '../../src/data-providers/project.data-provider';
 
-export const getProjectDataObject = (): gp2.ProjectDataObject => ({
+export const getProjectDataObject = (): gp2Model.ProjectDataObject => ({
   id: '42',
   title: 'A Project',
   startDate: '2020-07-06',
@@ -46,16 +47,38 @@ export const getProjectDataObject = (): gp2.ProjectDataObject => ({
     },
   ],
 });
+export const getProjectUpdateDataObject =
+  (): gp2Model.ProjectUpdateDataObject => ({
+    resources: [
+      {
+        type: 'Note',
+        description: 'Project resource description',
+        title: 'Project resource title',
+      },
+    ],
+  });
 
-export const getListProjectDataObject = (): gp2.ListProjectResponse => ({
+export const getRestProjectUpdateData =
+  (): gp2Squidex.InputProject['data'] => ({
+    resources: {
+      iv: [
+        {
+          type: 'Note',
+          description: 'Project resource description',
+          title: 'Project resource title',
+        },
+      ],
+    },
+  });
+export const getListProjectDataObject = (): gp2Model.ListProjectResponse => ({
   total: 1,
   items: [getProjectDataObject()],
 });
 
-export const getProjectResponse = (): gp2.ProjectResponse =>
+export const getProjectResponse = (): gp2Model.ProjectResponse =>
   getProjectDataObject();
 
-export const getListProjectsResponse = (): gp2.ListProjectResponse => ({
+export const getListProjectsResponse = (): gp2Model.ListProjectResponse => ({
   total: 1,
   items: [getProjectResponse()],
 });

@@ -106,3 +106,12 @@ export type ListProjectDataObject = ListResponse<ProjectDataObject>;
 export type ProjectResponse = ProjectDataObject;
 
 export type ListProjectResponse = ListResponse<ProjectResponse>;
+export type ProjectUpdateDataObject = Required<
+  Pick<ProjectDataObject, 'resources'>
+>;
+
+export type ProjectUpdateRequest = ProjectUpdateDataObject;
+
+export type ProjectResourcesPutRequest = NonNullable<
+  ProjectDataObject['resources']
+>;

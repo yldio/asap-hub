@@ -1,3 +1,6 @@
+import { GenericError, NotFoundError } from '@asap-hub/errors';
+import { gp2 as gp2Squidex, SquidexRest } from '@asap-hub/squidex';
+import nock, { DataMatcherMap } from 'nock';
 import {
   ProjectsDataMembersRoleEnum,
   ProjectsDataResourcesTypeEnum,
@@ -7,6 +10,7 @@ import {
   parseProjectToDataObject,
   ProjectSquidexDataProvider,
 } from '../../src/data-providers/project.data-provider';
+import { getAuthToken } from '../../src/utils/auth';
 import {
   getGraphQLProject,
   getGraphQLProjectMember,
@@ -14,26 +18,38 @@ import {
   getGraphQLProjectResource,
   getListProjectDataObject,
   getProjectDataObject,
+  getProjectUpdateDataObject,
+  getRestProjectUpdateData,
   getSquidexProjectGraphqlResponse,
   getSquidexProjectsGraphqlResponse,
 } from '../fixtures/project.fixtures';
+import { identity } from '../helpers/squidex';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
 
 describe('Project Data Provider', () => {
+  const projectRestClient = new SquidexRest<
+    gp2Squidex.RestProject,
+    gp2Squidex.InputProject
+  >(getAuthToken, 'projects', {
+    appName,
+    baseUrl,
+  });
+
   const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
   const projectDataProvider = new ProjectSquidexDataProvider(
     squidexGraphqlClientMock,
+    projectRestClient,
   );
 
   const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
   const projectDataProviderMockGraphqlServer = new ProjectSquidexDataProvider(
     squidexGraphqlClientMockServer,
+    projectRestClient,
   );
 
-  beforeEach(() => {
-    jest.resetAllMocks();
-  });
+  beforeAll(identity);
+  beforeEach(jest.resetAllMocks);
 
   describe('Fetch', () => {
     test('Should fetch the project from squidex graphql', async () => {
@@ -299,6 +315,52 @@ describe('Project Data Provider', () => {
         const { milestones } = parseProjectToDataObject(project);
         expect(milestones[0]?.description).toEqual(description);
       });
+    });
+  });
+  describe('Update', () => {
+    afterEach(nock.cleanAll);
+    const projectId = '11';
+
+    test('Should update the existing project', async () => {
+      const projectUpdateData = getProjectUpdateDataObject();
+
+      const restProjectUpdateData = getRestProjectUpdateData();
+      nock(baseUrl)
+        .patch(
+          `/api/content/${appName}/projects/${projectId}`,
+          restProjectUpdateData as DataMatcherMap,
+        )
+        .reply(201, { id: projectId });
+
+      await projectDataProvider.update(projectId, projectUpdateData);
+      expect(nock.isDone()).toBe(true);
+    });
+
+    test.each([400, 500])(
+      'Should throw when fails to update the project - %s',
+      async (status) => {
+        const projectUpdateData = getProjectUpdateDataObject();
+
+        nock(baseUrl)
+          .patch(`/api/content/${appName}/projects/${projectId}`)
+          .reply(status);
+
+        await expect(
+          projectDataProvider.update(projectId, projectUpdateData),
+        ).rejects.toThrow(GenericError);
+      },
+    );
+
+    test('Should throw when the project cannot be found', async () => {
+      const projectUpdateData = getProjectUpdateDataObject();
+
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/projects/${projectId}`)
+        .reply(404);
+
+      await expect(
+        projectDataProvider.update(projectId, projectUpdateData),
+      ).rejects.toThrow(NotFoundError);
     });
   });
 });

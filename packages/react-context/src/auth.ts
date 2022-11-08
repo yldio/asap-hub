@@ -1,13 +1,31 @@
-import { User } from '@asap-hub/auth';
+import { Auth0User, gp2, User } from '@asap-hub/auth';
 
-import { useAuth0 } from './auth0';
+import { useAuth0, useAuth0GP2 } from './auth0';
 
 export const getUserClaimKey = (): string =>
   new URL('/user', window.location.href).toString();
+
 export const useCurrentUser = (): User | null => {
   const { user: auth0User } = useAuth0();
-  if (!auth0User) return null;
 
+  return parseUser(auth0User);
+};
+
+export const useCurrentUserGP2 = (): gp2.User | null => {
+  const { user: auth0User } = useAuth0GP2();
+
+  return parseUser(auth0User);
+};
+
+export const useCurrentUserTeamRoles = (): Array<
+  User['teams'][number]['role']
+> => {
+  const user = useCurrentUser();
+  return user ? user.teams.map(({ role }) => role) : [];
+};
+
+function parseUser<T>(auth0User: Auth0User<T> | undefined) {
+  if (!auth0User) return null;
   const claimKey = getUserClaimKey();
   const user = auth0User[claimKey];
   if (!user) {
@@ -22,11 +40,4 @@ export const useCurrentUser = (): User | null => {
   }
 
   return user;
-};
-
-export const useCurrentUserTeamRoles = (): Array<
-  User['teams'][number]['role']
-> => {
-  const user = useCurrentUser();
-  return user ? user.teams.map(({ role }) => role) : [];
-};
+}

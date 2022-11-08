@@ -1,13 +1,13 @@
-import type { User } from '@asap-hub/auth';
-import type { gp2, UserMetadataResponse } from '@asap-hub/model';
+import type { gp2 as gp2Auth, User } from '@asap-hub/auth';
+import type { gp2 as gp2Model, UserMetadataResponse } from '@asap-hub/model';
 import got from 'got';
 import { URL, URLSearchParams } from 'url';
 import type { Rule } from './types';
 
-type Auth0UserResponse = UserMetadataResponse | gp2.UserResponse;
+type Auth0UserResponse = UserMetadataResponse | gp2Model.UserResponse;
 
 const isUserMetadataResponse = (
-  response: UserMetadataResponse | gp2.UserResponse,
+  response: UserMetadataResponse | gp2Model.UserResponse,
 ): response is UserMetadataResponse => 'algoliaApiKey' in response;
 
 const handleError = (err: unknown): Error => {
@@ -17,7 +17,7 @@ const handleError = (err: unknown): Error => {
   return new Error('Unexpected Error');
 };
 
-const extractUser = (response: Auth0UserResponse): User => {
+const extractUser = (response: Auth0UserResponse): User | gp2Auth.User => {
   if (isUserMetadataResponse(response)) {
     const {
       id,
@@ -47,8 +47,16 @@ const extractUser = (response: Auth0UserResponse): User => {
       algoliaApiKey,
     };
   }
-  const { id, email, displayName, firstName, lastName, avatarUrl, onboarded } =
-    response;
+  const {
+    id,
+    email,
+    displayName,
+    firstName,
+    lastName,
+    avatarUrl,
+    onboarded,
+    role,
+  } = response;
 
   return {
     id,
@@ -57,9 +65,8 @@ const extractUser = (response: Auth0UserResponse): User => {
     firstName,
     lastName,
     avatarUrl,
-    teams: [],
     onboarded,
-    algoliaApiKey: '',
+    role,
   };
 };
 
@@ -99,7 +106,7 @@ const addUserMetadata: Rule<{ invitationCode: string }> = async (
       return callback(new UnauthorizedError('alumni-user-access-denied'));
     }
 
-    const user: User = extractUser(response);
+    const user = extractUser(response);
 
     context.idToken[new URL('/user', redirect_uri).toString()] = user;
     // Uncomment for dev auth0. This allows pointing to dev api from local FE

@@ -23,3 +23,6 @@ const props = {
   resources,
 };
 export const Normal = () => <Resources {...props} />;
+export const Administrator = () => (
+  <Resources {...props} add={'/add'} edit={'/edit'} />
+);

@@ -25,6 +25,7 @@
     "@asap-hub/model": "workspace:*",
     "@asap-hub/react-components": "workspace:*",
     "@asap-hub/routing": "workspace:*",
+    "@asap-hub/validation": "workspace:*",
     "@babel/runtime-corejs3": "7.19.6",
     "core-js": "3.24.1",
     "date-fns": "2.29.3",

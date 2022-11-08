@@ -1,9 +1,9 @@
-import { useRouteMatch, Route } from 'react-router-dom';
-import { UserProfileAbout, BiographyModal } from '@asap-hub/react-components';
+import { Frame } from '@asap-hub/frontend-utils';
 import { UserResponse } from '@asap-hub/model';
+import { BiographyModal, UserProfileAbout } from '@asap-hub/react-components';
 import { useCurrentUser } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
-import { Frame } from '@asap-hub/frontend-utils';
+import { Route, useRouteMatch } from 'react-router-dom';
 
 import { usePatchUserById } from './state';
 

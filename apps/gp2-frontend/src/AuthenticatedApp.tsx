@@ -1,14 +1,15 @@
+import { Auth0, gp2 as gp2Auth } from '@asap-hub/auth';
 import { Frame } from '@asap-hub/frontend-utils';
 import { Layout } from '@asap-hub/gp2-components';
 import { Loading, NotFoundPage } from '@asap-hub/react-components';
-import { useAuth0, useCurrentUser } from '@asap-hub/react-context';
-import { gp2 } from '@asap-hub/routing';
+import { useAuth0GP2, useCurrentUserGP2 } from '@asap-hub/react-context';
+import { gp2 as gp2Route } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { RecoilRoot, useRecoilState, useResetRecoilState } from 'recoil';
 import { auth0State } from './auth/state';
 
-const { workingGroups, users, projects } = gp2;
+const { workingGroups, users, projects } = gp2Route;
 const loadDashboard = () =>
   import(/* webpackChunkName: "dashboard" */ './dashboard/Dashboard');
 
@@ -27,8 +28,10 @@ const Projects = lazy(loadProjects);
 const Users = lazy(loadUsers);
 
 const AuthenticatedApp: FC<Record<string, never>> = () => {
-  const auth0 = useAuth0();
-  const [recoilAuth0, setAuth0] = useRecoilState(auth0State);
+  const auth0 = useAuth0GP2();
+  const [recoilAuth0, setAuth0] = useRecoilState<
+    Auth0<gp2Auth.User> | undefined
+  >(auth0State);
   const resetAuth0 = useResetRecoilState(auth0State);
   const { path } = useRouteMatch();
 
@@ -36,7 +39,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
     setAuth0(auth0);
     return () => resetAuth0();
   }, [auth0, setAuth0, resetAuth0]);
-  const user = useCurrentUser();
+  const user = useCurrentUserGP2();
 
   useEffect(() => {
     // order by the likelyhood of user navigating there

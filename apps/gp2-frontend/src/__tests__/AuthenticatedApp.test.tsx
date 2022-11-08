@@ -1,11 +1,11 @@
-import { FC, Suspense } from 'react';
-import { RecoilRoot, useRecoilValue } from 'recoil';
-import { StaticRouter } from 'react-router-dom';
-import { render, waitFor } from '@testing-library/react';
 import { authTestUtils } from '@asap-hub/react-components';
+import { render, waitFor } from '@testing-library/react';
+import { FC, Suspense } from 'react';
+import { StaticRouter } from 'react-router-dom';
+import { RecoilRoot, useRecoilValue } from 'recoil';
 
-import AuthenticatedApp from '../AuthenticatedApp';
 import { authorizationState } from '../auth/state';
+import AuthenticatedApp from '../AuthenticatedApp';
 import Dashboard from '../dashboard/Dashboard';
 
 // We're not actually interested in testing what's rendered since it's all
@@ -19,13 +19,13 @@ beforeEach(() => {
 
 const wrapper: FC<Record<string, never>> = ({ children }) => (
   <RecoilRoot>
-    <authTestUtils.Auth0Provider>
-      <authTestUtils.LoggedIn user={{}}>
+    <authTestUtils.Auth0ProviderGP2>
+      <authTestUtils.LoggedInGP2 user={{}}>
         <StaticRouter>
           <Suspense fallback="loading">{children}</Suspense>
         </StaticRouter>
-      </authTestUtils.LoggedIn>
-    </authTestUtils.Auth0Provider>
+      </authTestUtils.LoggedInGP2>
+    </authTestUtils.Auth0ProviderGP2>
   </RecoilRoot>
 );
 

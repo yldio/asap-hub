@@ -1,26 +1,38 @@
-import { gp2, useRouteParams } from '@asap-hub/routing';
-
 import { Frame, useBackHref } from '@asap-hub/frontend-utils';
 import {
+  ResourceModal,
   WorkingGroupDetailPage,
   WorkingGroupOverview,
   WorkingGroupResources,
 } from '@asap-hub/gp2-components';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import { NotFoundPage } from '@asap-hub/react-components';
-import { useCurrentUser } from '@asap-hub/react-context';
+import { useCurrentUserGP2 } from '@asap-hub/react-context';
+import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { useWorkingGroupById } from './state';
+import { usePutWorkingGroupResources, useWorkingGroupById } from './state';
 
-const { workingGroups } = gp2;
+const { workingGroups } = gp2Routing;
 
 const WorkingGroupDetail = () => {
   const { workingGroupId } = useRouteParams(workingGroups({}).workingGroup);
   const workingGroup = useWorkingGroupById(workingGroupId);
   const backHref = useBackHref() ?? workingGroups({}).$;
-  const currentUser = useCurrentUser();
+  const currentUser = useCurrentUserGP2();
   const isWorkingGroupMember =
     workingGroup?.members.some(({ userId }) => userId === currentUser?.id) ||
     false;
+  const isAdministrator = currentUser?.role === 'Administrator';
+  const add = isAdministrator
+    ? workingGroups({}).workingGroup({ workingGroupId }).resources({}).add({}).$
+    : undefined;
+
+  const edit = isAdministrator
+    ? workingGroups({}).workingGroup({ workingGroupId }).resources({}).edit({})
+        .$
+    : undefined;
+  const updateWorkingGroupResources =
+    usePutWorkingGroupResources(workingGroupId);
 
   if (workingGroup) {
     return (
@@ -47,7 +59,33 @@ const WorkingGroupDetail = () => {
               }
             >
               <Frame title="Resources">
-                <WorkingGroupResources {...workingGroup} />
+                <WorkingGroupResources
+                  {...workingGroup}
+                  add={add}
+                  edit={edit}
+                />
+                <Route
+                  path={
+                    workingGroups({})
+                      .workingGroup({ workingGroupId })
+                      .resources({})
+                      .add({}).$
+                  }
+                >
+                  <ResourceModal
+                    backHref={
+                      workingGroups({})
+                        .workingGroup({ workingGroupId })
+                        .resources({}).$
+                    }
+                    onSave={(resource: gp2Model.Resource) =>
+                      updateWorkingGroupResources([
+                        ...(workingGroup.resources || []),
+                        resource,
+                      ])
+                    }
+                  />
+                </Route>
               </Frame>
             </Route>
           )}

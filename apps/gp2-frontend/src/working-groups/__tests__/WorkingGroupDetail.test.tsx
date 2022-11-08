@@ -1,8 +1,10 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
   render,
   screen,
+  waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -10,7 +12,7 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getWorkingGroup } from '../api';
+import { getWorkingGroup, putWorkingGroupResources } from '../api';
 import { refreshWorkingGroupState } from '../state';
 import WorkingGroupDetail from '../WorkingGroupDetail';
 
@@ -20,10 +22,12 @@ const renderWorkingGroupDetail = async ({
   id,
   userId = '11',
   route,
+  role = 'Trainee',
 }: {
   id: string;
   userId?: string;
   route?: string;
+  role?: gp2Model.UserRole;
 }) => {
   render(
     <RecoilRoot
@@ -32,7 +36,7 @@ const renderWorkingGroupDetail = async ({
       }}
     >
       <Suspense fallback="loading">
-        <Auth0Provider user={{ id: userId }}>
+        <Auth0Provider user={{ id: userId, role }}>
           <WhenReady>
             <MemoryRouter
               initialEntries={[
@@ -59,13 +63,15 @@ const renderWorkingGroupDetail = async ({
 
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };
-beforeEach(() => {
-  jest.resetAllMocks();
-});
+beforeEach(jest.resetAllMocks);
 describe('WorkingGroupDetail', () => {
   const mockGetWorkingGroup = getWorkingGroup as jest.MockedFunction<
     typeof getWorkingGroup
   >;
+  const mockPutWorkingGroupResources =
+    putWorkingGroupResources as jest.MockedFunction<
+      typeof putWorkingGroupResources
+    >;
 
   it('renders header with title', async () => {
     const workingGroup = gp2Fixtures.createWorkingGroupResponse();
@@ -198,7 +204,7 @@ describe('WorkingGroupDetail', () => {
     ).toBeInTheDocument();
   });
 
-  it('clicking on the overview tab loads the resources', async () => {
+  it('clicking on the overview tab loads the overview', async () => {
     const workingGroup = gp2Fixtures.createWorkingGroupResponse();
     workingGroup.members = [
       {
@@ -225,5 +231,85 @@ describe('WorkingGroupDetail', () => {
     expect(
       screen.getByRole('heading', { name: /Contact Information/i }),
     ).toBeInTheDocument();
+  });
+  describe('Resources Modal', () => {
+    const workingGroup = gp2Fixtures.createWorkingGroupResponse();
+    workingGroup.members = [
+      {
+        userId: '23',
+        firstName: 'Tony',
+        lastName: 'Stark',
+        role: 'Lead',
+      },
+    ];
+    it('does render the add and edit button to Administrators', async () => {
+      mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
+      await renderWorkingGroupDetail({
+        id: workingGroup.id,
+        userId: '23',
+        role: 'Administrator',
+        route: gp2Routing
+          .workingGroups({})
+          .workingGroup({ workingGroupId: workingGroup.id })
+          .resources({}).$,
+      });
+
+      expect(screen.getByRole('link', { name: /add/i })).toBeVisible();
+      expect(screen.getByRole('link', { name: /edit/i })).toBeVisible();
+    });
+    it.each(gp2Model.userRoles.filter((role) => role !== 'Administrator'))(
+      'does not render the add and edit button to non Administrators - %s',
+      async (role) => {
+        mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
+        await renderWorkingGroupDetail({
+          id: workingGroup.id,
+          userId: '23',
+          role,
+          route: gp2Routing
+            .workingGroups({})
+            .workingGroup({ workingGroupId: workingGroup.id })
+            .resources({}).$,
+        });
+
+        expect(
+          screen.queryByRole('link', { name: /add/i }),
+        ).not.toBeInTheDocument();
+        expect(
+          screen.queryByRole('link', { name: /edit/i }),
+        ).not.toBeInTheDocument();
+      },
+    );
+    it('can submit a form when form data is valid', async () => {
+      const title = 'example42 title';
+      const type = 'Note';
+
+      mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
+      mockPutWorkingGroupResources.mockResolvedValueOnce(workingGroup);
+      await renderWorkingGroupDetail({
+        id: workingGroup.id,
+        userId: '23',
+        role: 'Administrator',
+        route: gp2Routing
+          .workingGroups({})
+          .workingGroup({ workingGroupId: workingGroup.id })
+          .resources({}).$,
+      });
+
+      const addButton = screen.getByRole('link', { name: /add/i });
+      userEvent.click(addButton);
+      const typeBox = await screen.findByRole('textbox', { name: /type/i });
+      userEvent.type(typeBox, `${type}{enter}`);
+      const titleBox = screen.getByRole('textbox', { name: /title/i });
+      userEvent.type(titleBox, title);
+      const saveButton = screen.getByRole('button', { name: /save/i });
+      userEvent.click(saveButton);
+
+      expect(mockPutWorkingGroupResources).toHaveBeenCalledWith(
+        workingGroup.id,
+        [...workingGroup.resources!, { title, type }],
+        expect.anything(),
+      );
+      await waitFor(() => expect(saveButton).toBeEnabled());
+    });
   });
 });

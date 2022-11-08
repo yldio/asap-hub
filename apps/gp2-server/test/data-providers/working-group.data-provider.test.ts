@@ -1,6 +1,6 @@
 import { GenericError, NotFoundError } from '@asap-hub/errors';
 import { gp2 as gp2Squidex, SquidexRest } from '@asap-hub/squidex';
-import nock from 'nock';
+import nock, { DataMatcherMap } from 'nock';
 import {
   WorkingGroupsDataMembersRoleEnum,
   WorkingGroupsDataResourcesTypeEnum,
@@ -130,7 +130,7 @@ describe('Working Group Data Provider', () => {
       nock(baseUrl)
         .patch(
           `/api/content/${appName}/working-groups/${workingGroupId}`,
-          restWorkingGroupUpdateData,
+          restWorkingGroupUpdateData as DataMatcherMap,
         )
         .reply(201, { id: workingGroupId });
 

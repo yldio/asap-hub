@@ -10,7 +10,7 @@ import { refreshDashboardState } from '../state';
 jest.mock('../api');
 
 afterEach(() => {
-  jest.clearAllMocks();
+  jest.resetAllMocks();
 });
 const mockGetDashboard = getDashboard as jest.MockedFunction<
   typeof getDashboard

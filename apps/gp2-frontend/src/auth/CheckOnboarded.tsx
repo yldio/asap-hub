@@ -1,15 +1,15 @@
-import { useCurrentUser } from '@asap-hub/react-context';
-import { network, logout, staticPages } from '@asap-hub/routing';
+import { gp2 } from '@asap-hub/auth';
+import { useCurrentUserGP2 } from '@asap-hub/react-context';
+import { logout, network, staticPages } from '@asap-hub/routing';
 import { ReactNode, useEffect } from 'react';
 import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
-import { User } from '@asap-hub/auth';
 
 interface CheckOnboardedProps {
   children: ReactNode;
 }
 
 export const navigationPromptHandler = (
-  user: User | null,
+  user: gp2.User | null,
   pathname: string,
 ) => {
   const isNavigationBlocked =
@@ -31,7 +31,7 @@ export const navigationPromptHandler = (
 };
 
 const CheckOnboarded: React.FC<CheckOnboardedProps> = ({ children }) => {
-  const user = useCurrentUser();
+  const user = useCurrentUserGP2();
   const history = useHistory();
 
   useEffect(

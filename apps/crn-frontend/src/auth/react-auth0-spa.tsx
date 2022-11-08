@@ -4,14 +4,14 @@
 /* istanbul ignore file */
 /* eslint-disable no-shadow */
 
-import { useState, useEffect } from 'react';
-import { Auth0User, Auth0 } from '@asap-hub/auth';
+import { Auth0, Auth0User } from '@asap-hub/auth';
 import { Auth0Context } from '@asap-hub/react-context';
 import {
-  Auth0ClientOptions,
   Auth0Client,
+  Auth0ClientOptions,
   RedirectLoginResult,
 } from '@auth0/auth0-spa-js';
+import { useEffect, useState } from 'react';
 
 const DEFAULT_REDIRECT_CALLBACK = () =>
   window.history.replaceState({}, document.title, window.location.pathname);

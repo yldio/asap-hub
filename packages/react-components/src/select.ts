@@ -30,7 +30,7 @@ export interface Option<V extends string> {
   label: string;
 }
 
-const { ':focus': focusStyles, ...baseStyles } = styles;
+const { ...baseStyles } = styles;
 
 const disabledStyles = {
   color: lead.rgb,
@@ -85,6 +85,9 @@ const baseSelectStyles = {
 };
 
 export const reactSelectStyles = (
+  {
+    colors: { primary100 = mint, primary500 = fern, primary900 = pine } = {},
+  }: Theme,
   isInvalid: boolean,
 ): ComponentProps<typeof Select>['styles'] => ({
   ...baseSelectStyles,
@@ -93,8 +96,8 @@ export const reactSelectStyles = (
 
     padding: `${12 / perRem}em ${paddingLeftRight / perRem}em`,
 
-    backgroundColor: isFocused ? mint.rgb : 'unset',
-    color: isFocused ? pine.rgb : 'unset',
+    backgroundColor: isFocused ? primary100.rgba : 'unset',
+    color: isFocused ? primary900.rgba : 'unset',
     ':active': undefined,
   }),
   control: (_provided, { isFocused, isDisabled }) => ({
@@ -104,7 +107,7 @@ export const reactSelectStyles = (
     justifyContent: 'space-between',
     alignItems: 'center',
 
-    ...(isFocused ? focusStyles : {}),
+    ...(isFocused ? { borderColor: primary500.rgba } : {}),
     ...(isInvalid
       ? {
           color: ember.rgb,

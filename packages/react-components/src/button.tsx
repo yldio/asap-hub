@@ -62,15 +62,16 @@ const largeStyles = css({
     marginLeft: `${10 / perRem}em`,
   },
 
-  marginTop: `${18 / perRem}em`,
-  marginBottom: `${18 / perRem}em`,
-
   paddingTop: `${(15 - borderWidth) / perRem}em`,
   paddingBottom: `${(15 - borderWidth) / perRem}em`,
   paddingLeft: `${(20 - borderWidth) / perRem}em`,
   paddingRight: `${(20 - borderWidth) / perRem}em`,
 });
 
+const largeWithSpaceStyles = css({
+  marginTop: `${18 / perRem}em`,
+  marginBottom: `${18 / perRem}em`,
+});
 const smallWithSpaceStyles = css({
   marginTop: `${12 / perRem}em`,
   marginBottom: `${12 / perRem}em`,
@@ -219,6 +220,7 @@ export const getButtonStyles = ({
     styles,
     small ? smallStyles : largeStyles,
     !noMargin && small && smallWithSpaceStyles,
+    !noMargin && !small && largeWithSpaceStyles,
     enabled
       ? active
         ? primary

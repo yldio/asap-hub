@@ -1,5 +1,5 @@
-import type { User as Auth0User } from '@asap-hub/auth';
-import { gp2, UserMetadataResponse } from '@asap-hub/model';
+import type { gp2 as gp2Auth, User as Auth0User } from '@asap-hub/auth';
+import { gp2 as gp2Model, UserMetadataResponse } from '@asap-hub/model';
 import nock from 'nock';
 import addUserMetadata from '../add-user-metadata';
 import type { RuleContext, User } from '../types';
@@ -103,7 +103,7 @@ const apiUser: UserMetadataResponse = {
   algoliaApiKey: 'test-api-key',
 };
 
-const gp2ApiUser: gp2.UserResponse = {
+const gp2ApiUser: gp2Model.UserResponse = {
   onboarded: true,
   displayName: 'Joao Tiago',
   firstName: 'Joao',
@@ -233,7 +233,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
     expect(err).toBeFalsy();
     expect(resUser).not.toBeNull();
     expect(resContext).not.toBeNull();
-    const expectedUser: Auth0User = {
+    const expectedUser: gp2Auth.User = {
       displayName: 'Joao Tiago',
       email: 'joao.tiago@yld.io',
       id: 'myRandomId123',
@@ -241,8 +241,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
       firstName: 'Joao',
       lastName: 'Tiago',
       avatarUrl: undefined,
-      algoliaApiKey: '',
-      teams: [],
+      role: 'Trainee',
     };
     expect(resContext.idToken['https://gp2.asap.science/user']).toStrictEqual(
       expectedUser,

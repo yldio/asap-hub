@@ -13,13 +13,16 @@ import {
   pixels,
   Subtitle,
 } from '@asap-hub/react-components';
+
 import { css } from '@emotion/react';
 import { useState } from 'react';
 import { addIcon, editIcon } from '../icons';
 
-type ResourcesProps = {
+export type ResourcesProps = {
   resources?: gp2.Resource[];
   headline: string;
+  add?: string;
+  edit?: string;
 };
 
 const { rem, tabletScreen } = pixels;
@@ -56,7 +59,12 @@ const hideStyles = css({
   [`:nth-of-type(n+4)`]: { display: 'none' },
 });
 
-const Resources: React.FC<ResourcesProps> = ({ resources, headline }) => {
+const Resources: React.FC<ResourcesProps> = ({
+  resources,
+  headline,
+  add,
+  edit,
+}) => {
   const minimumResourcesToDisplay = 3;
   const [expanded, setExpanded] = useState(false);
   const getResourcesListStyles = () => {
@@ -66,17 +74,20 @@ const Resources: React.FC<ResourcesProps> = ({ resources, headline }) => {
 
     return [hideStyles];
   };
+
   return (
     <div css={containerStyles}>
       <Card>{headline}</Card>
       <Card>
         <div css={[rowStyles, buttonStyles]}>
           <Headline3 noMargin>Resource List</Headline3>
-          <div css={editButtonStyles}>
-            <Link href={''} buttonStyle noMargin small>
-              Add {addIcon}
-            </Link>
-          </div>
+          {add && (
+            <div css={editButtonStyles}>
+              <Link href={add} buttonStyle noMargin small>
+                Add {addIcon}
+              </Link>
+            </div>
+          )}
         </div>
         <div css={css({ paddingBottom: rem(32) })}>
           View and share resources that others may find helpful.
@@ -100,11 +111,13 @@ const Resources: React.FC<ResourcesProps> = ({ resources, headline }) => {
                   >
                     {resource.type === 'Link' ? 'Link' : 'Note'}
                   </Pill>
-                  <div css={editButtonStyles}>
-                    <Link href={''} buttonStyle noMargin small>
-                      Edit {editIcon}
-                    </Link>
-                  </div>
+                  {edit && (
+                    <div css={editButtonStyles}>
+                      <Link href={'/edit'} buttonStyle noMargin small>
+                        Edit {editIcon}
+                      </Link>
+                    </div>
+                  )}
                 </div>
                 <div
                   css={css({

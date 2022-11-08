@@ -1,12 +1,16 @@
-type ResourceBase = {
+export const resourceTypes = ['Link', 'Note'] as const;
+type ResourceTypes = typeof resourceTypes[number];
+
+interface ResourceBase {
   title: string;
   description?: string;
-};
-export type ResourceLink = ResourceBase & {
+  type: ResourceTypes;
+}
+export interface ResourceLink extends ResourceBase {
   type: 'Link';
   externalLink: string;
-};
-export type ResourceNote = ResourceBase & {
+}
+export interface ResourceNote extends ResourceBase {
   type: 'Note';
-};
+}
 export type Resource = ResourceNote | ResourceLink;

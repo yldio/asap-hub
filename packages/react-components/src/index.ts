@@ -91,6 +91,7 @@ export {
   ComingSoon,
   ConfirmModal,
   DashboardUpcomingEvents,
+  EditModal,
   EmailPasswordSignin,
   EventAbout,
   EventCard,

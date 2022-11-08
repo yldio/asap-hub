@@ -16,34 +16,29 @@ const containerStyles = css({
   },
 });
 
-type GroupLeadersTabbedCardProps = Pick<
-  ComponentProps<typeof TabbedCard>,
-  'title' | 'description'
-> & {
+type GroupLeadersTabbedCardProps = {
   leaders: ReadonlyArray<Pick<GroupLeader, 'user' | 'role'>>;
-  isGroupInactive: boolean;
+  isGroupActive: boolean;
 };
 
 const GroupLeadersTabbedCard: React.FC<GroupLeadersTabbedCardProps> = ({
-  title,
-  description,
   leaders,
-  isGroupInactive,
+  isGroupActive,
 }) => {
-  const [activeLeaders, inactiveLeaders] = splitListBy<
-    Pick<GroupLeader, 'user' | 'role'>
-  >(['user', 'alumniSinceDate'], leaders, isGroupInactive);
+  const [inactiveLeaders, activeLeaders] = splitListBy(
+    leaders,
+    (leader) => !isGroupActive || !!leader?.user?.alumniSinceDate,
+  );
 
   return (
     <TabbedCard
-      title={title}
-      description={description}
-      activeTabIndex={isGroupInactive ? 1 : 0}
+      title={'Interest Group Leaders'}
+      activeTabIndex={isGroupActive ? 0 : 1}
       tabs={[
         {
           tabTitle: `Active Leaders (${activeLeaders.length})`,
           items: activeLeaders,
-          disabled: isGroupInactive,
+          disabled: !isGroupActive,
         },
         {
           tabTitle: `Past Leaders (${inactiveLeaders.length})`,

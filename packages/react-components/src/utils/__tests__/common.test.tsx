@@ -125,16 +125,13 @@ describe('tabbed card utils', () => {
   ];
 
   describe('splitListBy', () => {
-    it('splits a team list between active/inactive if the parent is not inactive', () => {
-      const [active, inactive] = splitListBy(['inactiveSince'], teams, false);
-      expect(active.length).toBe(1);
-      expect(inactive.length).toBe(2);
-    });
-
-    it('returns every team in the inactive array', () => {
-      const [active, inactive] = splitListBy(['inactiveSince'], teams, true);
-      expect(active.length).toBe(0);
-      expect(inactive.length).toBe(3);
+    it('splits a team list between active/inactive based on the passed condition', () => {
+      const [inactiveTeams, activeTeams] = splitListBy(
+        teams,
+        (team) => !!team?.inactiveSince,
+      );
+      expect(inactiveTeams.length).toBe(2);
+      expect(activeTeams.length).toBe(1);
     });
   });
 });

@@ -33,35 +33,33 @@ const containerStyles = css({
 
 type GroupTeamsTabbedCardProps = Pick<
   ComponentProps<typeof TabbedCard>,
-  'title' | 'description'
+  'description'
 > & {
   teams: ReadonlyArray<
     Pick<TeamResponse, 'id' | 'displayName' | 'inactiveSince'>
   >;
-  isGroupInactive: boolean;
+  isGroupActive: boolean;
 };
 
 const GroupTeamsTabbedCard: React.FC<GroupTeamsTabbedCardProps> = ({
-  title,
-  description,
   teams,
-  isGroupInactive,
+  isGroupActive,
 }) => {
-  const [activeTeams, inactiveTeams] = splitListBy<
-    Pick<TeamResponse, 'id' | 'displayName' | 'inactiveSince'>
-  >(['inactiveSince'], teams, isGroupInactive);
+  const [inactiveTeams, activeTeams] = splitListBy(
+    teams,
+    (team) => isGroupActive || !!team?.inactiveSince,
+  );
 
   return (
     <TabbedCard
-      title={title}
-      description={description}
-      activeTabIndex={isGroupInactive ? 1 : 0}
+      title={"Interest Group Teams"}
+      activeTabIndex={isGroupActive ? 0 : 1}
       tabs={[
         {
           tabTitle: `Active Teams (${activeTeams.length})`,
           items: activeTeams,
           truncateFrom: 8,
-          disabled: isGroupInactive,
+          disabled: isGroupActive,
         },
         {
           tabTitle: `Past Teams (${inactiveTeams.length})`,

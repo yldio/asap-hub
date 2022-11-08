@@ -101,7 +101,6 @@ it('renders a leader with a single team', () => {
           role: 'Project Manager',
         },
       ]}
-      title="Leaders title"
     />,
   );
   expect(screen.getByText(/Joe/)).toBeVisible();

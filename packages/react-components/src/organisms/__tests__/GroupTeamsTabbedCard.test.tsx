@@ -9,7 +9,6 @@ const props: ComponentProps<typeof GroupTeamsTabbedCard> = {
   isGroupInactive: false,
 };
 
-describe('renders the teams tabbed card', () => {
   const renderTabbedCard = (isGroupInactive: boolean) =>
     render(
       <GroupTeamsTabbedCard
@@ -18,7 +17,6 @@ describe('renders the teams tabbed card', () => {
           { displayName: 'team 1', id: '123' },
           { displayName: 'team 2', id: '123', inactiveSince: '2021-01-01' },
         ]}
-        title="Example"
         isGroupInactive={isGroupInactive}
       />,
     );
@@ -34,7 +32,7 @@ describe('renders the teams tabbed card', () => {
     expect(screen.getByText(/team 2/)).toBeVisible();
   });
 
-  it('renders for an Inactive Group', () => {
+  it('shows all teams as past when group is inactive', () => {
     renderTabbedCard(true);
     expect(screen.getByText('Past Teams (2)')).toBeVisible();
     expect(screen.getByText('Active Teams (0)')).toBeVisible();

@@ -76,20 +76,14 @@ export function equals(a: Array<string>, b: Array<string>): boolean {
   );
 }
 
-export function splitListBy<T>(
-  properties: string[],
-  list: ReadonlyArray<T>,
-  isItemParentInactive: boolean,
-): ReadonlyArray<T>[] {
-  if (isItemParentInactive) {
-    return [[], list];
-  }
-  const firstPart = list.filter(
-    (item: T) => !properties.reduce((i: T, p) => i[p as keyof T] as T, item),
+export const splitListBy = <T>(
+  items: ReadonlyArray<T>,
+  splitBy: (item: T) => boolean,
+) =>
+  items.reduce<[T[], T[]]>(
+    (split, item) => {
+      splitBy(item) ? split[0].push(item) : split[1].push(item);
+      return split;
+    },
+    [[], []],
   );
-  const secondPart = list.filter(
-    (item: T) => !!properties.reduce((i, p) => i[p as keyof T] as T, item),
-  );
-
-  return [firstPart, secondPart];
-}

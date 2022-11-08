@@ -5,6 +5,7 @@ import { rem, tabletScreen } from '../pixels';
 import { MembersList, TabbedCard } from '../molecules';
 import { getUniqueCommaStringWithSuffix } from '../utils/text';
 import { fern } from '../colors';
+import { splitListBy } from '../utils';
 
 const containerStyles = css({
   listStyle: 'none',
@@ -41,8 +42,10 @@ const TeamMembersTabbedCard: React.FC<TeamMembersTabbedCardProps> = ({
   members,
   isTeamInactive,
 }) => {
-  const alumniMembers = members.filter((member) => member.alumniSinceDate);
-  const activeMembers = members.filter((member) => !member.alumniSinceDate);
+  const [alumniMembers, activeMembers] = splitListBy(
+    members,
+    (member) => isTeamInactive || !!member?.alumniSinceDate,
+  );
 
   return (
     <TabbedCard

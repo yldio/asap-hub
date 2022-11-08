@@ -61,12 +61,12 @@ const GroupProfileAbout: React.FC<GroupProfileAboutProps> = ({
           <GroupLeadersTabbedCard
             title="Interest Group Leaders"
             leaders={leaders}
-            isGroupInactive={!active}
+            isGroupActive={active}
           />
           <GroupTeamsTabbedCard
             title="Interest Group Teams"
             teams={teams}
-            isGroupInactive={!active}
+            isGroupActive={active}
           />
         </div>
       </div>

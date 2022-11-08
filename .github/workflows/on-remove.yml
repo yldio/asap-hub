@@ -142,25 +142,42 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: Branch
-      - name: Get Contentful Branch State
-        id: contentful-branch-state
-        uses: ./.github/actions/contentful-checks
-        with:
-          pr-number: ${{ github.event.inputs.pr-number }}
-          contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
-          contentful-master-env: ${{ steps.setup.outputs.contentful-environment }}
-          contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          max-contentful-envs: ${{ steps.setup.outputs.max-contentful-envs }}
+      - name: Determine whether the Contentful environment exists
+        id: check-contentful-exists
+        shell: bash
+        run: |
+          ENVIRONMENT_TYPE=$(curl --silent \
+                                  --request GET \
+                                  --header "Authorization: Bearer ${CONTENTFUL_MANAGEMENT_ACCESS_TOKEN}" \
+                                  https://api.contentful.com/spaces/${CONTENTFUL_SPACE_ID}/environments/${CONTENTFUL_ENV_ID} \
+                                  | jq '.sys.type' -r)
+
+          if [[ "$ENVIRONMENT_TYPE" == "Environment" ]]; then
+            echo "Environment found, setting exists flag to true."
+            echo "::set-output name=exists::true"
+          else
+            echo "Environment not found, setting exists flag to false."
+            echo "::set-output name=exists::false"
+          fi
+        env:
+          CONTENTFUL_ENV_ID: ${{ steps.determine-environment.outputs.env-id }}
+          CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
+          CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.contentful-token }}
       - name: Contentful Teardown
         id: contentful-teardown
-        if: ${{ steps.contentful-branch-state.outputs.on-branch-env == 'true' && steps.contentful-branch-state.outputs.contentful-env != 'Development' && steps.contentful-branch-state.outputs.contentful-env != 'Production' }}
+        if: ${{ steps.check-contentful-exists.outputs.exists == 'true' }}
         shell: bash
-        run: bash .github/scripts/contentful/teardown.sh
-        env:
-          ON_BRANCH_ENV: ${{ steps.contentful-branch-state.outputs.on-branch-env }}
-          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.contentful-space-id }}
-          CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          CONTENTFUL_ENV_ID: ${{ steps.contentful-branch-state.outputs.contentful-env }}
+        run: echo "hi"
+      # - name: Contentful Teardown
+      #   id: contentful-teardown
+      #   if: ${{ steps.contentful-branch-state.outputs.on-branch-env == 'true' && steps.contentful-branch-state.outputs.contentful-env != 'Development' && steps.contentful-branch-state.outputs.contentful-env != 'Production' }}
+      #   shell: bash
+      #   run: bash .github/scripts/contentful/teardown.sh
+      #   env:
+      #     ON_BRANCH_ENV: ${{ steps.contentful-branch-state.outputs.on-branch-env }}
+      #     CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.contentful-space-id }}
+      #     CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+      #     CONTENTFUL_ENV_ID: ${{ steps.contentful-branch-state.outputs.contentful-env }}
 
   algolia-index:
     if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}

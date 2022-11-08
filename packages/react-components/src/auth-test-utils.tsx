@@ -75,13 +75,7 @@ export const Auth0ProviderGP2: React.FC<{
   const [auth0Client, setAuth0] = useState<Auth0Client>();
   useEffect(() => {
     const initAuth0 = async () => {
-      setAuth0(
-        await createAuth0Client({
-          domain: 'auth.example.com',
-          client_id: 'client_id',
-          redirect_uri: 'http://localhost',
-        }),
-      );
+      setAuth0(await createAuth0Client(createAuth0ClientParams));
     };
     initAuth0();
   }, []);
@@ -113,9 +107,7 @@ export const LoggedInCRN: React.FC<{
   readonly user: Partial<User> | undefined;
 }> = ({ children, user }) => {
   const ctx = useAuth0CRN();
-
-  let auth0User: Auth0User<User> | undefined;
-  if (user) {
+  const getAuth0User = (): Auth0User<User> => {
     const completeUser: User = {
       id: 'testuserid',
       onboarded: true,
@@ -133,15 +125,10 @@ export const LoggedInCRN: React.FC<{
       algoliaApiKey: 'algolia-mock-key',
       ...user,
     };
-    auth0User = {
-      sub: 'testuser',
-      name: completeUser.displayName,
-      given_name: completeUser.firstName,
-      family_name: completeUser.lastName,
-      aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
-      [getUserClaimKey()]: completeUser,
-    };
-  }
+    return getAuth0UserFromUser(completeUser);
+  };
+
+  const auth0User = user ? getAuth0User() : undefined;
 
   return (
     <Auth0ContextCRN.Provider
@@ -165,9 +152,7 @@ export const LoggedInGP2: React.FC<{
   readonly user: Partial<gp2.User> | undefined;
 }> = ({ children, user }) => {
   const ctx = useAuth0GP2();
-
-  let auth0User: Auth0User<gp2.User> | undefined;
-  if (user) {
+  const getAuth0User = (): Auth0User<gp2.User> => {
     const completeUser: gp2.User = {
       id: 'testuserid',
       onboarded: true,
@@ -175,18 +160,13 @@ export const LoggedInGP2: React.FC<{
       displayName: 'John Doe',
       firstName: 'John',
       lastName: 'Doe',
-      role: 'Administrator',
+      role: 'Trainee',
       ...user,
     };
-    auth0User = {
-      sub: 'testuser',
-      name: completeUser.displayName,
-      given_name: completeUser.firstName,
-      family_name: completeUser.lastName,
-      aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
-      [getUserClaimKey()]: completeUser,
-    };
-  }
+    return getAuth0UserFromUser(completeUser);
+  };
+
+  const auth0User = user ? getAuth0User() : undefined;
 
   return (
     <Auth0ContextGP2.Provider
@@ -202,3 +182,16 @@ export const LoggedInGP2: React.FC<{
     </Auth0ContextGP2.Provider>
   );
 };
+
+const getAuth0UserFromUser = <
+  T extends { displayName: string; firstName: string; lastName: string },
+>(
+  completeUser: T,
+) => ({
+  sub: 'testuser',
+  name: completeUser.displayName,
+  given_name: completeUser.firstName,
+  family_name: completeUser.lastName,
+  aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
+  [getUserClaimKey()]: completeUser,
+});

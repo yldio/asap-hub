@@ -1,6 +1,6 @@
 import { GroupLeader } from '@asap-hub/model';
 import { css } from '@emotion/react';
-import React, { ComponentProps } from 'react';
+import React from 'react';
 import { MembersList, TabbedCard } from '../molecules';
 import { rem, tabletScreen } from '../pixels';
 import { splitListBy } from '../utils';

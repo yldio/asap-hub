@@ -5,12 +5,11 @@ import GroupLeadersTabbedCard from '../GroupLeadersTabbedCard';
 
 const props: ComponentProps<typeof GroupLeadersTabbedCard> = {
   leaders: [],
-  title: '',
-  isGroupInactive: false,
+  isGroupActive: false,
 };
 
 describe('renders the leaders tabbed card', () => {
-  const renderTabbedCard = (isGroupInactive: boolean) =>
+  const renderTabbedCard = (isGroupActive: boolean) =>
     render(
       <GroupLeadersTabbedCard
         {...props}
@@ -31,14 +30,15 @@ describe('renders the leaders tabbed card', () => {
             role: 'Project Manager',
           },
         ]}
-        title="Leaders title"
-        isGroupInactive={isGroupInactive}
+        isGroupActive={isGroupActive}
       />,
     );
 
   it('renders for an Active Group', () => {
-    renderTabbedCard(false);
-    expect(screen.getByRole('heading').textContent).toEqual('Leaders title');
+    renderTabbedCard(true);
+    expect(screen.getByRole('heading').textContent).toEqual(
+      'Interest Group Leaders',
+    );
     expect(screen.getByText('Past Leaders (1)')).toBeVisible();
     expect(screen.getByText('Active Leaders (1)')).toBeVisible();
     expect(screen.getByText(/Active Leader Name/)).toBeVisible();
@@ -50,7 +50,7 @@ describe('renders the leaders tabbed card', () => {
   });
 
   it('renders for an Inactive Group', () => {
-    renderTabbedCard(true);
+    renderTabbedCard(false);
     expect(screen.getByText('Past Leaders (2)')).toBeVisible();
     expect(screen.getByText('Active Leaders (0)')).toBeVisible();
     expect(screen.getByText(/Active Leader Name/)).toBeVisible();
@@ -74,7 +74,6 @@ it('renders a leader with multiple teams', () => {
           role: 'Chair',
         },
       ]}
-      title="Leaders title"
     />,
   );
   expect(screen.getByText(/Joe/)).toBeVisible();

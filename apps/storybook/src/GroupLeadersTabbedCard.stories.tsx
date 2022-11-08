@@ -1,6 +1,6 @@
 import { GroupLeadersTabbedCard } from '@asap-hub/react-components';
 import { createUserResponse } from '@asap-hub/fixtures';
-import { number, text, boolean } from '@storybook/addon-knobs';
+import { number, boolean } from '@storybook/addon-knobs';
 import { GroupRole } from '@asap-hub/model';
 
 export default {
@@ -22,7 +22,6 @@ export const Normal = () => (
         }),
       ),
     ]}
-    title={text('Title', 'Interest Group Teams')}
-    isGroupInactive={boolean('Is Group Inactive?', false)}
+    isGroupActive={boolean('Is Group Active?', false)}
   />
 );

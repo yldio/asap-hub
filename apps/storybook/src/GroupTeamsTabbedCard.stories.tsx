@@ -1,6 +1,6 @@
 import { GroupTeamsTabbedCard } from '@asap-hub/react-components';
 import { createListTeamResponse } from '@asap-hub/fixtures';
-import { number, text, boolean } from '@storybook/addon-knobs';
+import { number, boolean } from '@storybook/addon-knobs';
 
 export default {
   title: 'Organisms / Group Teams Tabbed Card',
@@ -15,7 +15,6 @@ export const Normal = () => (
         inactiveSince: index === 2 ? '2021-01-01' : undefined,
       }),
     )}
-    title={text('Title', 'Interest Group Teams')}
-    isGroupInactive={boolean('Is Group Inactive?', false)}
+    isGroupActive={boolean('Is Group Inactive?', false)}
   />
 );

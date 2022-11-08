@@ -58,16 +58,8 @@ const GroupProfileAbout: React.FC<GroupProfileAboutProps> = ({
       />
       <div id={membersSectionId}>
         <div css={membersSectionStyles}>
-          <GroupLeadersTabbedCard
-            title="Interest Group Leaders"
-            leaders={leaders}
-            isGroupActive={active}
-          />
-          <GroupTeamsTabbedCard
-            title="Interest Group Teams"
-            teams={teams}
-            isGroupActive={active}
-          />
+          <GroupLeadersTabbedCard leaders={leaders} isGroupActive={active} />
+          <GroupTeamsTabbedCard teams={teams} isGroupActive={active} />
         </div>
       </div>
       {contactEmails.length !== 0 && (

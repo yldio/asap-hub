@@ -115,7 +115,7 @@ describe('equals', () => {
   });
 });
 
-describe('tabbed card utils', () => {
+describe('splitListBy', () => {
   const teams: ReadonlyArray<
     Pick<TeamResponse, 'id' | 'displayName' | 'inactiveSince'>
   > = [
@@ -123,15 +123,12 @@ describe('tabbed card utils', () => {
     { displayName: 'Active Team 1', id: '2' },
     { displayName: 'Inactive Team 2', id: '3', inactiveSince: '2021-01-01' },
   ];
-
-  describe('splitListBy', () => {
-    it('splits a team list between active/inactive based on the passed condition', () => {
-      const [inactiveTeams, activeTeams] = splitListBy(
-        teams,
-        (team) => !!team?.inactiveSince,
-      );
-      expect(inactiveTeams.length).toBe(2);
-      expect(activeTeams.length).toBe(1);
-    });
+  it('splits a team list between active/inactive based on the passed condition', () => {
+    const [inactiveTeams, activeTeams] = splitListBy(
+      teams,
+      (team) => !!team?.inactiveSince,
+    );
+    expect(inactiveTeams.length).toBe(2);
+    expect(activeTeams.length).toBe(1);
   });
 });

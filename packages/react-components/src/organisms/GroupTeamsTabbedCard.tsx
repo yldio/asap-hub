@@ -47,19 +47,19 @@ const GroupTeamsTabbedCard: React.FC<GroupTeamsTabbedCardProps> = ({
 }) => {
   const [inactiveTeams, activeTeams] = splitListBy(
     teams,
-    (team) => isGroupActive || !!team?.inactiveSince,
+    (team) => !isGroupActive || !!team?.inactiveSince,
   );
 
   return (
     <TabbedCard
-      title={"Interest Group Teams"}
+      title={'Interest Group Teams'}
       activeTabIndex={isGroupActive ? 0 : 1}
       tabs={[
         {
           tabTitle: `Active Teams (${activeTeams.length})`,
           items: activeTeams,
           truncateFrom: 8,
-          disabled: isGroupActive,
+          disabled: !isGroupActive,
         },
         {
           tabTitle: `Past Teams (${inactiveTeams.length})`,

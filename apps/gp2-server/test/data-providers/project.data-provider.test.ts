@@ -1,6 +1,6 @@
 import { GenericError, NotFoundError } from '@asap-hub/errors';
 import { gp2 as gp2Squidex, SquidexRest } from '@asap-hub/squidex';
-import nock from 'nock';
+import nock, { DataMatcherMap } from 'nock';
 import {
   ProjectsDataMembersRoleEnum,
   ProjectsDataResourcesTypeEnum,
@@ -328,7 +328,7 @@ describe('Project Data Provider', () => {
       nock(baseUrl)
         .patch(
           `/api/content/${appName}/projects/${projectId}`,
-          restProjectUpdateData,
+          restProjectUpdateData as DataMatcherMap,
         )
         .reply(201, { id: projectId });
 

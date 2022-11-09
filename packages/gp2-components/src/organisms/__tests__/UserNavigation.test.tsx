@@ -6,13 +6,13 @@ import UserNavigation from '../UserNavigation';
 describe('UserNavigation', () => {
   it('renders the text with first name', async () => {
     render(
-      <authTestUtils.Auth0ProviderCRN>
-        <authTestUtils.LoggedInCRN user={{ displayName: 'John Doe' }}>
+      <authTestUtils.Auth0ProviderGP2>
+        <authTestUtils.LoggedInGP2 user={{ firstName: 'Tony' }}>
           <UserNavigation />
-        </authTestUtils.LoggedInCRN>
-      </authTestUtils.Auth0ProviderCRN>,
+        </authTestUtils.LoggedInGP2>
+      </authTestUtils.Auth0ProviderGP2>,
     );
-    expect(await screen.findByText(/hi, john/i)).toBeVisible();
+    expect(await screen.findByText(/hi, tony/i)).toBeVisible();
   });
 
   it('renders a fallback instead of the display name', async () => {

@@ -170,7 +170,8 @@ type LayoutProps = {
   readonly children: ReactNode;
 } & Partial<ComponentProps<typeof OnboardingFooter>> &
   ComponentProps<typeof MainNavigation> &
-  ComponentProps<typeof UserNavigation>;
+  ComponentProps<typeof UserNavigation> &
+  ComponentProps<typeof UserMenuButton>;
 const Layout: FC<LayoutProps> = ({
   children,
   onboardable,
@@ -217,6 +218,7 @@ const Layout: FC<LayoutProps> = ({
             <UserMenuButton
               onClick={() => setMenuShown(!menuShown)}
               open={menuShown}
+              {...userNavProps}
             />
           </Suspense>
         </div>

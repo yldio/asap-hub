@@ -21,11 +21,14 @@ const loadProjects = () =>
 
 const loadUsers = () =>
   import(/* webpackChunkName: "users" */ './users/Routes');
+const loadOnboarding = () =>
+  import(/* webpackChunkName: "onboarding" */ './onboarding/Routes');
 
 const Dashboard = lazy(loadDashboard);
 const WorkingGroups = lazy(loadWorkingGroups);
 const Projects = lazy(loadProjects);
 const Users = lazy(loadUsers);
+const Onboarding = lazy(loadOnboarding);
 
 const AuthenticatedApp: FC<Record<string, never>> = () => {
   const auth0 = useAuth0GP2();
@@ -43,13 +46,21 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
 
   useEffect(() => {
     // order by the likelyhood of user navigating there
-    loadDashboard().then(loadUsers).then(loadWorkingGroups).then(loadProjects);
-  }, []);
+    user?.onboarded
+      ? loadDashboard()
+          .then(loadUsers)
+          .then(loadWorkingGroups)
+          .then(loadProjects)
+      : loadOnboarding();
+  }, [user?.onboarded]);
 
   if (!user || !recoilAuth0) {
     return <Loading />;
   }
 
+  if (!user.onboarded) {
+    return <Onboarding />;
+  }
   return (
     <Layout>
       <Switch>

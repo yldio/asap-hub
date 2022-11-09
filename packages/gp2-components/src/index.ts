@@ -46,6 +46,7 @@ export {
   ProjectOverview,
   ProjectResources,
   ProjectsPage,
+  OnboardWelcome,
   Theme,
   UserDetailPage,
   UsersPage,

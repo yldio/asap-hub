@@ -1,6 +1,6 @@
 import { authTestUtils } from '@asap-hub/react-components';
 import { render, waitFor } from '@testing-library/react';
-import { FC, Suspense } from 'react';
+import { Suspense } from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { RecoilRoot, useRecoilValue } from 'recoil';
 
@@ -17,31 +17,47 @@ beforeEach(() => {
   MockDashboard.mockReset().mockReturnValue(null);
 });
 
-const wrapper: FC<Record<string, never>> = ({ children }) => (
-  <RecoilRoot>
-    <authTestUtils.Auth0ProviderGP2>
-      <authTestUtils.LoggedInGP2 user={{}}>
-        <StaticRouter>
-          <Suspense fallback="loading">{children}</Suspense>
-        </StaticRouter>
-      </authTestUtils.LoggedInGP2>
-    </authTestUtils.Auth0ProviderGP2>
-  </RecoilRoot>
-);
+const renderAuthenticatedApp = (onboarded: boolean) =>
+  render(
+    <RecoilRoot>
+      <authTestUtils.Auth0ProviderGP2>
+        <authTestUtils.LoggedInGP2 user={{}} onboarded={onboarded}>
+          <StaticRouter>
+            <Suspense fallback="loading">
+              <AuthenticatedApp />
+            </Suspense>
+          </StaticRouter>
+        </authTestUtils.LoggedInGP2>
+      </authTestUtils.Auth0ProviderGP2>
+    </RecoilRoot>,
+  );
 
-it('syncs the auth state to recoil', async () => {
+it('syncs the auth state to recoil for the onboarded user', async () => {
   MockDashboard.mockImplementation(() => {
     const authorization = useRecoilValue(authorizationState);
     return <>{authorization}</>;
   });
-  const { queryByText, getByText } = render(<AuthenticatedApp />, {
-    wrapper,
-  });
+  const { queryByText, getByText } = renderAuthenticatedApp(true);
   await waitFor(
     () => {
       expect(queryByText(/loading/i)).not.toBeInTheDocument();
       expect(getByText(/Bearer token/i)).toBeVisible();
     },
     { timeout: 2000 },
+  );
+});
+
+it('syncs the auth state to recoil for the non-onboarded user', async () => {
+  MockDashboard.mockImplementation(() => {
+    const authorization = useRecoilValue(authorizationState);
+    return <>{authorization}</>;
+  });
+  const { queryByText, getByText } = renderAuthenticatedApp(false);
+  await waitFor(
+    () => {
+      expect(queryByText(/loading/i)).not.toBeInTheDocument();
+      expect(getByText(/Welcome to the GP2 Hub/i)).toBeVisible();
+    },
+    { timeout: 4000 },
   );
 });

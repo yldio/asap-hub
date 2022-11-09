@@ -6,6 +6,7 @@ import {
 } from '@asap-hub/react-components';
 
 import { css } from '@emotion/react';
+import { layoutContentStyles } from '../layout';
 
 import HeaderLogo from '../molecules/HeaderLogo';
 import Theme from './Theme';
@@ -13,12 +14,14 @@ import Theme from './Theme';
 const { rem } = pixels;
 
 const contentStyles = css({
+  ...layoutContentStyles,
   borderTop: `1px solid ${steel.rgb}`,
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
   overflowY: 'auto',
 });
+
 const logoStyles = css({ padding: `0 ${rem(24)}` });
 const desktopNavigationStyles = css({
   [drawerQuery]: {

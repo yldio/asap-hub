@@ -80,6 +80,7 @@ jobs:
       GP2_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.GP2_SQUIDEX_CI_CLIENT_SECRET }}
       GP2_SQUIDEX_SHARED_SECRET: ${{ secrets.GP2_SQUIDEX_SHARED_SECRET }}
       CONTENTFUL_MANAGEMENT_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+      CRN_CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
 
   deployment:
     needs: [setup, test, build-analysis, create-environment]

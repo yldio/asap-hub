@@ -485,6 +485,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful@workspace:packages/contentful"
   dependencies:
+    "@asap-hub/errors": "workspace:*"
+    "@asap-hub/model": "workspace:*"
+    "@babel/runtime-corejs3": 7.19.6
+    "@contentful/rich-text-html-renderer": ^15.13.1
+    "@contentful/rich-text-types": ^15.13.2
     "@graphql-codegen/cli": 2.12.1
     "@graphql-codegen/gql-tag-operations-preset": 1.5.5
     "@graphql-codegen/introspection": 2.2.1
@@ -492,10 +497,13 @@ __metadata:
     "@graphql-codegen/typescript": 2.7.3
     "@graphql-codegen/typescript-operations": 2.5.3
     "@graphql-typed-document-node/core": 3.1.1
+    "@types/node": 14.18.33
     contentful-cli: 1.15.36
+    contentful-management: ^10.19.3
     contentful-migrate: 0.17.0
     graphql-tag: 2.12.6
     graphql-typescript-integration: 1.2.1
+    ts-node: 10.9.1
   languageName: unknown
   linkType: soft
 
@@ -8190,6 +8198,23 @@ __metadata:
   version: 1.5.0
   resolution: "@colors/colors@npm:1.5.0"
   checksum: d64d5260bed1d5012ae3fc617d38d1afc0329fec05342f4e6b838f46998855ba56e0a73833f4a80fa8378c84810da254f76a8a19c39d038260dc06dc4e007425
+  languageName: node
+  linkType: hard
+
+"@contentful/rich-text-html-renderer@npm:^15.13.1":
+  version: 15.13.1
+  resolution: "@contentful/rich-text-html-renderer@npm:15.13.1"
+  dependencies:
+    "@contentful/rich-text-types": ^15.12.1
+    escape-html: ^1.0.3
+  checksum: 431c673ff4966cbd48377ed2104739fbb218979a4fc259018a146368ec81f9aba62caba33e13c73a3240f355b54018cbf4b79576f8952af86070c5a8009c62b2
+  languageName: node
+  linkType: hard
+
+"@contentful/rich-text-types@npm:^15.12.1, @contentful/rich-text-types@npm:^15.13.2":
+  version: 15.13.2
+  resolution: "@contentful/rich-text-types@npm:15.13.2"
+  checksum: cf27fa7d3459e7fb67488e71dfc39a92f9bd9aefb493bce4d6ba5fcb9e37f92c512c1d06a2134dea4798541b267a06a87100a422d612c5185bd71764eea5b4f7
   languageName: node
   linkType: hard
 
@@ -18999,6 +19024,19 @@ __metadata:
     fast-copy: ^2.1.1
     lodash.isplainobject: ^4.0.6
   checksum: b72f79948c2cb4f4cecef906221cfc413f2bed4fbcb55992a6c8963660a293942e6deda3903686906ce51aecdf59ef42d5bff8697d256f8a1f9479fc9e88e8c2
+  languageName: node
+  linkType: hard
+
+"contentful-management@npm:^10.19.3":
+  version: 10.19.3
+  resolution: "contentful-management@npm:10.19.3"
+  dependencies:
+    "@types/json-patch": 0.0.30
+    axios: ^0.27.1
+    contentful-sdk-core: ^7.0.1
+    fast-copy: ^2.1.1
+    lodash.isplainobject: ^4.0.6
+  checksum: 8275b15acf3d9c30b8534378f07548b98579085f97b5aa7b221cc6049cad70232665f4b7013fe0129e727a729aeac0b7f1de728120d0bb4489d4eb8ca1444c4a
   languageName: node
   linkType: hard
 

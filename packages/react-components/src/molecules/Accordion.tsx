@@ -4,12 +4,7 @@ import { Card, Headline5, Paragraph, Link } from '..';
 import { lineHeight, perRem, tabletScreen } from '../pixels';
 import { chevronDownIcon, externalLinkIcon, infoInfoIcon } from '../icons';
 import { isInternalLink } from '../utils';
-import {
-  informationInfo500,
-  semanticInformationInfo100,
-  silver,
-  steel,
-} from '../colors';
+import { info500, info100, silver, steel } from '../colors';
 
 const containerStyles = css({
   padding: `0 ${9 / perRem}em`,
@@ -80,8 +75,8 @@ const infoItem = css({
   display: 'grid',
   gridColumnGap: `${15 / perRem}em`,
   gridTemplateColumns: 'min-content 1fr auto',
-  color: informationInfo500.rgb,
-  background: semanticInformationInfo100.rgb,
+  color: info500.rgb,
+  background: info100.rgb,
   alignItems: 'center',
   alignContent: 'center',
   rowGap: `${9 / perRem}em`,

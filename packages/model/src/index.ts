@@ -16,3 +16,4 @@ export * from './research-output';
 export * from './research-tag';
 export * from './team';
 export * from './user';
+export * from './working-group';

@@ -25,9 +25,7 @@ const renderRoutes = async () => {
       </Suspense>
     </RecoilRoot>,
   );
-  return waitForElementToBeRemoved(() => screen.queryByText(/loading/i), {
-    timeout: 30_000,
-  });
+  return waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };
 beforeEach(() => {
   jest.resetAllMocks();
@@ -45,5 +43,5 @@ describe('Routes', () => {
     ).toBeInTheDocument();
 
     expect(screen.getByRole('link', { name: 'Sign Out' })).toBeInTheDocument();
-  }, 30_000);
+  });
 });

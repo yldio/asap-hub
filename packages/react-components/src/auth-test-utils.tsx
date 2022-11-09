@@ -171,7 +171,7 @@ export const LoggedInGP2: React.FC<{
   if (user) {
     const completeUser: gp2.User = {
       id: 'testuserid',
-      onboarded: onboarded,
+      onboarded,
       email: 'john.doe@example.com',
       displayName: 'John Doe',
       firstName: 'John',

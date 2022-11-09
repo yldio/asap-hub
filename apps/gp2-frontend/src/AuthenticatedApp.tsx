@@ -51,11 +51,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
           .then(loadUsers)
           .then(loadWorkingGroups)
           .then(loadProjects)
-      : loadOnboarding()
-          .then(loadDashboard)
-          .then(loadUsers)
-          .then(loadWorkingGroups)
-          .then(loadProjects);
+      : loadOnboarding();
   }, [user?.onboarded]);
 
   if (!user || !recoilAuth0) {

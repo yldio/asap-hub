@@ -3,7 +3,6 @@ import {
   Loading,
   navigationGrey,
   Overlay,
-  paper,
   ToastStack,
   usePrevious,
 } from '@asap-hub/react-components';
@@ -22,7 +21,10 @@ import { useLocation } from 'react-router-dom';
 import { layoutContentStyles } from '../layout';
 import UserMenu from '../molecules/UserMenu';
 import { NavigationHeader } from '../organisms';
+import colors from './colors';
 import Theme from './Theme';
+
+const { neutral000 } = colors;
 
 const MainNavigation = lazy(
   () =>
@@ -65,7 +67,7 @@ const overlayMenuShownStyles = css({
 });
 
 const menuStyles = css({
-  backgroundColor: paper.rgb,
+  backgroundColor: neutral000.rgb,
   gridColumnStart: '1',
   overflowY: 'auto',
   display: 'flex',

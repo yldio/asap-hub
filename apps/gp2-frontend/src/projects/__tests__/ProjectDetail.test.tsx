@@ -1,8 +1,10 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
   render,
   screen,
+  waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -10,7 +12,7 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getProject } from '../api';
+import { getProject, putProjectResources } from '../api';
 import ProjectDetail from '../ProjectDetail';
 import { refreshProjectState } from '../state';
 
@@ -20,10 +22,12 @@ const renderProjectDetail = async ({
   id,
   userId,
   route,
+  role = 'Trainee',
 }: {
   id: string;
   userId?: string;
   route?: string;
+  role?: gp2Model.UserRole;
 }) => {
   render(
     <RecoilRoot
@@ -32,7 +36,7 @@ const renderProjectDetail = async ({
       }}
     >
       <Suspense fallback="loading">
-        <Auth0Provider user={{ id: userId }}>
+        <Auth0Provider user={{ id: userId, role }}>
           <WhenReady>
             <MemoryRouter
               initialEntries={[
@@ -56,11 +60,14 @@ const renderProjectDetail = async ({
 
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };
-beforeEach(() => {
-  jest.resetAllMocks();
-});
+
+beforeEach(jest.resetAllMocks);
+
 describe('ProjectDetail', () => {
   const mockGetProject = getProject as jest.MockedFunction<typeof getProject>;
+  const mockPutProjectResources = putProjectResources as jest.MockedFunction<
+    typeof putProjectResources
+  >;
 
   it('renders header with title', async () => {
     const project = gp2Fixtures.createProjectResponse();
@@ -219,5 +226,138 @@ describe('ProjectDetail', () => {
     expect(
       screen.getByRole('heading', { name: /Contact Information/i }),
     ).toBeInTheDocument();
+  });
+  it.each(gp2Model.userRoles.filter((role) => role !== 'Administrator'))(
+    'does not render the add modal when the user is not an Administrator',
+    async (role) => {
+      const project = gp2Fixtures.createProjectResponse();
+      project.members = [
+        {
+          userId: '23',
+          firstName: 'Tony',
+          lastName: 'Stark',
+          role: 'Project lead',
+        },
+      ];
+      mockGetProject.mockResolvedValueOnce(project);
+      await renderProjectDetail({
+        id: project.id,
+        userId: '23',
+        role,
+        route: gp2Routing
+          .projects({})
+          .project({ projectId: project.id })
+          .resources({})
+          .add({}).$,
+      });
+      expect(
+        screen.queryByRole('heading', { name: /Add resource/i }),
+      ).not.toBeInTheDocument();
+    },
+  );
+  it('renders the add modal when the user is an Administrator', async () => {
+    const project = gp2Fixtures.createProjectResponse();
+    project.members = [
+      {
+        userId: '23',
+        firstName: 'Tony',
+        lastName: 'Stark',
+        role: 'Project lead',
+      },
+    ];
+    mockGetProject.mockResolvedValueOnce(project);
+    await renderProjectDetail({
+      id: project.id,
+      userId: '23',
+      role: 'Administrator',
+      route: gp2Routing
+        .projects({})
+        .project({ projectId: project.id })
+        .resources({})
+        .add({}).$,
+    });
+    expect(
+      screen.getByRole('heading', { name: /Add resource/i }),
+    ).toBeInTheDocument();
+  });
+  describe('Resources Modal', () => {
+    const project = gp2Fixtures.createProjectResponse();
+    project.members = [
+      {
+        userId: '23',
+        firstName: 'Tony',
+        lastName: 'Stark',
+        role: 'Project lead',
+      },
+    ];
+    it('does render the add and edit button to Administrators', async () => {
+      mockGetProject.mockResolvedValueOnce(project);
+      await renderProjectDetail({
+        id: project.id,
+        userId: '23',
+        role: 'Administrator',
+        route: gp2Routing
+          .projects({})
+          .project({ projectId: project.id })
+          .resources({}).$,
+      });
+
+      expect(screen.getByRole('link', { name: /add/i })).toBeVisible();
+      expect(screen.getByRole('link', { name: /edit/i })).toBeVisible();
+    });
+    it.each(gp2Model.userRoles.filter((role) => role !== 'Administrator'))(
+      'does not render the add and edit button to non Administrators - %s',
+      async (role) => {
+        mockGetProject.mockResolvedValueOnce(project);
+        await renderProjectDetail({
+          id: project.id,
+          userId: '23',
+          role,
+          route: gp2Routing
+            .projects({})
+            .project({ projectId: project.id })
+            .resources({}).$,
+        });
+
+        expect(
+          screen.queryByRole('link', { name: /add/i }),
+        ).not.toBeInTheDocument();
+        expect(
+          screen.queryByRole('link', { name: /edit/i }),
+        ).not.toBeInTheDocument();
+      },
+    );
+    it('can submit a form when form data is valid', async () => {
+      const title = 'example42 title';
+      const type = 'Note';
+
+      mockGetProject.mockResolvedValueOnce(project);
+      mockPutProjectResources.mockResolvedValueOnce(project);
+      await renderProjectDetail({
+        id: project.id,
+        userId: '23',
+        role: 'Administrator',
+        route: gp2Routing
+          .projects({})
+          .project({ projectId: project.id })
+          .resources({}).$,
+      });
+
+      const addButton = screen.getByRole('link', { name: /add/i });
+      userEvent.click(addButton);
+      const typeBox = await screen.findByRole('textbox', { name: /type/i });
+      userEvent.type(typeBox, `${type}{enter}`);
+      const titleBox = screen.getByRole('textbox', { name: /title/i });
+      userEvent.type(titleBox, title);
+      const saveButton = screen.getByRole('button', { name: /save/i });
+      userEvent.click(saveButton);
+
+      expect(mockPutProjectResources).toHaveBeenCalledWith(
+        project.id,
+        [...project.resources!, { title, type }],
+        expect.anything(),
+      );
+      await waitFor(() => expect(saveButton).toBeEnabled());
+    });
   });
 });

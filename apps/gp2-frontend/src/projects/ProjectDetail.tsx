@@ -3,14 +3,16 @@ import {
   ProjectDetailPage,
   ProjectOverview,
   ProjectResources,
+  ResourceModal,
 } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
-import { gp2, useRouteParams } from '@asap-hub/routing';
+import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { useProjectById } from './state';
+import { gp2 as gp2Model } from '@asap-hub/model';
+import { usePutProjectResources, useProjectById } from './state';
 
-const { projects } = gp2;
+const { projects } = gp2Routing;
 const ProjectDetail = () => {
   const { projectId } = useRouteParams(projects({}).project);
   const project = useProjectById(projectId);
@@ -18,6 +20,18 @@ const ProjectDetail = () => {
   const currentUser = useCurrentUserGP2();
   const isProjectMember =
     project?.members.some(({ userId }) => userId === currentUser?.id) || false;
+  const isAdministrator = currentUser?.role === 'Administrator';
+  const add = isAdministrator
+    ? projects({}).project({ projectId }).resources({}).add({}).$
+    : undefined;
+
+  const edit = isAdministrator
+    ? projects({}).project({ projectId }).resources({}).edit({}).$
+    : undefined;
+
+  const overview = projects({}).project({ projectId }).overview({}).$;
+  const resources = projects({}).project({ projectId }).resources({}).$;
+  const updateProjectResources = usePutProjectResources(projectId);
 
   if (project) {
     return (
@@ -27,24 +41,32 @@ const ProjectDetail = () => {
         {...project}
       >
         <Switch>
-          <Route path={projects({}).project({ projectId }).overview({}).$}>
+          <Route path={overview}>
             <Frame title="Overview">
               <ProjectOverview {...project} />
             </Frame>
           </Route>
           {isProjectMember && (
-            <Route path={projects({}).project({ projectId }).resources({}).$}>
+            <Route path={resources}>
               <Frame title="Resources">
-                <ProjectResources
-                  {...project}
-                  add={
-                    projects({}).project({ projectId }).resources({}).add({}).$
-                  }
-                />
+                <ProjectResources {...project} add={add} edit={edit} />
+                {isAdministrator && (
+                  <Route path={add}>
+                    <ResourceModal
+                      backHref={resources}
+                      onSave={(resource: gp2Model.Resource) =>
+                        updateProjectResources([
+                          ...(project.resources || []),
+                          resource,
+                        ])
+                      }
+                    />
+                  </Route>
+                )}
               </Frame>
             </Route>
           )}
-          <Redirect to={projects({}).project({ projectId }).overview({}).$} />
+          <Redirect to={overview} />
         </Switch>
       </ProjectDetailPage>
     );

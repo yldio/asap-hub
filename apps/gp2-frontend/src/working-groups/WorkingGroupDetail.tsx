@@ -31,6 +31,12 @@ const WorkingGroupDetail = () => {
     ? workingGroups({}).workingGroup({ workingGroupId }).resources({}).edit({})
         .$
     : undefined;
+  const overview = workingGroups({})
+    .workingGroup({ workingGroupId })
+    .overview({}).$;
+  const resources = workingGroups({})
+    .workingGroup({ workingGroupId })
+    .resources({}).$;
   const updateWorkingGroupResources =
     usePutWorkingGroupResources(workingGroupId);
 
@@ -42,22 +48,13 @@ const WorkingGroupDetail = () => {
         isWorkingGroupMember={isWorkingGroupMember}
       >
         <Switch>
-          <Route
-            path={
-              workingGroups({}).workingGroup({ workingGroupId }).overview({}).$
-            }
-          >
+          <Route path={overview}>
             <Frame title="Overview">
               <WorkingGroupOverview {...workingGroup} />
             </Frame>
           </Route>
           {isWorkingGroupMember && (
-            <Route
-              path={
-                workingGroups({}).workingGroup({ workingGroupId }).resources({})
-                  .$
-              }
-            >
+            <Route path={resources}>
               <Frame title="Resources">
                 <WorkingGroupResources
                   {...workingGroup}
@@ -65,20 +62,9 @@ const WorkingGroupDetail = () => {
                   edit={edit}
                 />
                 {isAdministrator && (
-                  <Route
-                    path={
-                      workingGroups({})
-                        .workingGroup({ workingGroupId })
-                        .resources({})
-                        .add({}).$
-                    }
-                  >
+                  <Route path={add}>
                     <ResourceModal
-                      backHref={
-                        workingGroups({})
-                          .workingGroup({ workingGroupId })
-                          .resources({}).$
-                      }
+                      backHref={resources}
                       onSave={(resource: gp2Model.Resource) =>
                         updateWorkingGroupResources([
                           ...(workingGroup.resources || []),
@@ -91,11 +77,7 @@ const WorkingGroupDetail = () => {
               </Frame>
             </Route>
           )}
-          <Redirect
-            to={
-              workingGroups({}).workingGroup({ workingGroupId }).overview({}).$
-            }
-          />
+          <Redirect to={overview} />
         </Switch>
       </WorkingGroupDetailPage>
     );

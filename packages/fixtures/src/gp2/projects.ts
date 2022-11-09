@@ -1,5 +1,13 @@
 import { gp2 } from '@asap-hub/model';
 
+export const projectResources: gp2.Resource[] = [
+  {
+    type: 'Note',
+    title: 'This is a resource title',
+    description: 'This is a resource description',
+  },
+];
+
 const mockedProject: gp2.ProjectResponse = {
   id: '42',
   title: 'Project Title',
@@ -20,6 +28,7 @@ const mockedProject: gp2.ProjectResponse = {
       status: 'Active',
     },
   ],
+  resources: projectResources,
 };
 
 export const createProjectResponse = (

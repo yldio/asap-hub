@@ -34,7 +34,7 @@ it('renders a sign in page if the user is not authenticated', async () => {
 it('renders the children if the user is authenticated', async () => {
   const { findByText } = render(
     <authTestUtils.Auth0ProviderGP2>
-      <authTestUtils.LoggedInGP2 user={{}} onboarded={true}>
+      <authTestUtils.LoggedInGP2 user={{}}>
         <CheckAuth>
           {({ isAuthenticated }) => (isAuthenticated ? 'secure' : 'Sign in')}
         </CheckAuth>

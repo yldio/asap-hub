@@ -4,7 +4,7 @@ import OnboardWelcome from '../OnboardWelcome';
 it('renders the header', () => {
   render(<OnboardWelcome />);
   expect(
-    screen.getByText('Welcome to the GP2 Hub', { selector: 'h2' }),
+    screen.getByRole('heading', { name: /Welcome to the GP2 Hub/i }),
   ).toBeVisible();
 });
 

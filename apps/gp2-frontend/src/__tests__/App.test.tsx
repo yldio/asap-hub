@@ -37,7 +37,7 @@ it('changes routing for logged in users', async () => {
   expect(container).toHaveTextContent(/Signin/i);
   rerender(
     <authTestUtils.Auth0ProviderGP2>
-      <authTestUtils.LoggedInGP2 user={{}} onboarded={true}>
+      <authTestUtils.LoggedInGP2 user={{}}>
         <App />
       </authTestUtils.LoggedInGP2>
     </authTestUtils.Auth0ProviderGP2>,
@@ -53,7 +53,7 @@ it('loads overrides for feature flags', async () => {
 
   const { container } = render(
     <authTestUtils.Auth0ProviderGP2>
-      <authTestUtils.LoggedInGP2 user={{}} onboarded={true}>
+      <authTestUtils.LoggedInGP2 user={{}}>
         <App />
       </authTestUtils.LoggedInGP2>
     </authTestUtils.Auth0ProviderGP2>,

@@ -10,7 +10,7 @@ it('redirects to the logout URL', async () => {
   render(
     <authTestUtils.Auth0ProviderGP2>
       <authTestUtils.WhenReadyGP2>
-        <authTestUtils.LoggedInGP2 user={undefined} onboarded={true}>
+        <authTestUtils.LoggedInGP2 user={undefined}>
           <Logout />
         </authTestUtils.LoggedInGP2>
       </authTestUtils.WhenReadyGP2>

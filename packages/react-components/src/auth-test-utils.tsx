@@ -163,8 +163,8 @@ export const LoggedInGP2: React.FC<{
   // undefined user should be explicit, this is for the intermediate state
   // where the getUser() promise is pending.
   readonly user: Partial<gp2.User> | undefined;
-  readonly onboarded: boolean;
-}> = ({ children, user, onboarded }) => {
+  readonly onboarded?: boolean;
+}> = ({ children, user, onboarded = true }) => {
   const ctx = useAuth0GP2();
 
   let auth0User: Auth0User<gp2.User> | undefined;

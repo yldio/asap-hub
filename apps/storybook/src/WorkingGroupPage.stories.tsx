@@ -6,7 +6,7 @@ import {
 } from '@asap-hub/react-components';
 import { createTeamResponseMembers } from '@asap-hub/fixtures';
 import { boolean, select, number, text } from '@storybook/addon-knobs';
-import { network } from '@asap-hub/routing';
+import { workingGroups } from '@asap-hub/routing';
 
 import { LayoutDecorator } from './layout';
 
@@ -16,16 +16,11 @@ export default {
 };
 
 export const Normal = () => {
-  const activeTab = select(
-    'Active Tab',
-    { Users: 'users', Teams: 'teams', Groups: 'groups' },
-    'users',
-  );
+  const activeTab = select('Active Tab', { about: 'about' }, 'about');
   const routes = {
-    users: network({}).users({}).$,
-    teams: network({}).teams({}).$,
-    groups: network({}).groups({}).$,
+    about: workingGroups({}).workingGroup({ workingGroupId: 'id' }).about({}).$,
   };
+
   const props: ComponentProps<typeof WorkingGroupPage> = {
     id: 'id',
     pointOfContact: {

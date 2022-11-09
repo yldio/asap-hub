@@ -5,15 +5,17 @@ import { TeamResponse } from '@asap-hub/model';
 
 import { mobileScreen, perRem, rem } from '../pixels';
 import { Link, Display, StateTag, TabLink, Caption } from '../atoms';
-import { paper } from '../colors';
+import { paper, steel } from '../colors';
 import { contentSidePaddingWithNavigation } from '../layout';
-import { UserAvatarList, TabNav } from '../molecules';
-import { successIcon, externalLinkIcon } from '../icons';
+import { UserAvatarList, TabNav, ExternalLink } from '../molecules';
+import { successIcon } from '../icons';
 import { createMailTo } from '../mail';
 
 const containerStyles = css({
   backgroundColor: paper.rgb,
-  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(10)} 0`,
+  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)} 0`,
+  marginBottom: `${30 / perRem}em`,
+  boxShadow: `0 2px 4px -2px ${steel.rgb}`,
 });
 
 const titleStyle = css({
@@ -32,7 +34,6 @@ const titleStyle = css({
 const rowStyles = css({
   display: 'flex',
   flexFlow: 'column',
-  alignItems: 'center',
   [`@media (min-width: ${mobileScreen.max}px)`]: {
     flexFlow: 'row',
     justifyContent: 'space-between',
@@ -72,6 +73,7 @@ const pointOfContactStyles = css({
     display: 'block',
   },
 });
+
 type WorkingGroupPageHeaderProps = Pick<
   TeamResponse,
   'members' | 'pointOfContact'
@@ -121,10 +123,14 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
       )}
     </section>
     <div css={rowStyles}>
-      <Link buttonStyle small href={externalLink}>
-        {externalLinkIcon}
-        {externalLinkText}
-      </Link>
+      {externalLink && (
+        <ExternalLink
+          full
+          label={externalLinkText}
+          href={externalLink}
+          size="large"
+        />
+      )}
       <div css={lastUpdatedStyles}>
         <Caption asParagraph accent="lead">
           Last updated: {formatDistance(new Date(), new Date(lastUpdated))} ago

@@ -34,6 +34,7 @@ const titleStyle = css({
 const rowStyles = css({
   display: 'flex',
   flexFlow: 'column',
+  gap: `${16 / perRem}em`,
   [`@media (min-width: ${mobileScreen.max}px)`]: {
     flexFlow: 'row',
     justifyContent: 'space-between',

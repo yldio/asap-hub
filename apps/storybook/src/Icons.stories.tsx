@@ -2,7 +2,6 @@ import * as components from '@asap-hub/react-components';
 
 export default { title: 'Atoms / Icons' };
 
-export const Alert = () => <components.AlertIcon />;
 export const AlumniBadge = () => components.alumniBadge;
 export const Budget = () => components.budgetIcon;
 export const Calendar = () => components.calendarIcon;
@@ -38,6 +37,7 @@ export const GoogleSigninLightNormal = () =>
   components.googleSigninLightNormalIcon;
 export const Groups = () => components.groupsIcon;
 export const HidePassword = () => components.hidePasswordIcon;
+export const Information = () => components.informationIcon;
 export const Info = () => components.infoIcon;
 export const InfoCircle = () => components.infoCircleIcon;
 export const InfoCircleYellow = () => components.infoCircleYellow;
@@ -87,4 +87,5 @@ export const User = () => components.userIcon;
 export const UserPlaceholder = () => components.userPlaceholderIcon;
 export const ValidTick = () => components.validTickIcon;
 export const VerticalDivider = () => components.verticalDividerIcon;
-export const Warning = () => components.warningIcon;
+export const WarningTransparent = () => components.warningTransparentIcon;
+export const Warning = () => <components.WarningIcon />;

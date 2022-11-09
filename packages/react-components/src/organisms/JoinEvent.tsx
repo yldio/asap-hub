@@ -7,7 +7,7 @@ import { subHours, parseISO, addSeconds, subMinutes } from 'date-fns';
 
 import { noop, considerEndedAfter } from '../utils';
 import { Headline2, Paragraph, Anchor, Link } from '../atoms';
-import { AlertIcon } from '../icons';
+import { WarningIcon } from '../icons';
 import { clay } from '../colors';
 import { layoutStyles } from '../text';
 import { perRem, mobileScreen } from '../pixels';
@@ -95,7 +95,7 @@ const JoinEvent: React.FC<JoinEventProps> = ({
           }}
         >
           <div css={layoutStyles}>
-            <AlertIcon color={clay.rgb} />
+            <WarningIcon color={clay.rgb} />
           </div>
           <Paragraph accent="ember">
             We’re sorry but we couldn’t find the link to this event.{' '}

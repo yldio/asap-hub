@@ -1,21 +1,88 @@
 /* istanbul ignore file */
+import { FC } from 'react';
+import { steel } from '../colors';
 
-const warning = (
+interface WarningProps {
+  readonly color?: string;
+}
+
+const Warning: FC<WarningProps> = ({ color }) => (
   <svg
-    width="42"
-    height="42"
-    viewBox="0 0 42 42"
+    width="24px"
+    height="24px"
+    viewBox="0 0 24 24"
+    version="1.1"
     xmlns="http://www.w3.org/2000/svg"
-    stroke="black"
+    xmlnsXlink="http://www.w3.org/1999/xlink"
   >
-    <title>Warning</title>
-    <rect x="0.5" y="0.5" width="41" height="41" rx="20.5" fill="none" />
-    <circle cx="21" cy="29.625" r="2.625" />
-    <path
+    <title>Alert</title>
+    <g
+      id="Error-States"
+      stroke="none"
+      strokeWidth="1"
+      fill="none"
       fillRule="evenodd"
-      clipRule="evenodd"
-      d="M18.375 9.5H23.625L22.625 23.5H19.375L18.375 9.5Z"
-    />
+    >
+      <g
+        id="1.3.1-Create-Account-Issue-/-Large-Desktop"
+        transform="translate(-388.000000, -18.000000)"
+      >
+        <g id="Group-23">
+          <g id="Group-7" transform="translate(388.000000, 6.000000)">
+            <g
+              id="1.3.1-Create-Account-/-Large-Desktop"
+              transform="translate(0.000000, 12.000000)"
+            >
+              <g id="Group-3">
+                <g id="Group-16">
+                  <g id="Group-15">
+                    <g id="Group-10">
+                      <g id="Group-4"></g>
+                      <rect
+                        fill={color || steel.rgb}
+                        id="Rectangle"
+                        x="0"
+                        y="0"
+                        width="24"
+                        height="24"
+                        rx="12"
+                      ></rect>
+                      <g
+                        id="Group-9"
+                        transform="translate(10.000000, 4.000000)"
+                        fill="#FFFFFF"
+                      >
+                        <g
+                          id="Group-8"
+                          transform="translate(0.500000, 0.000000)"
+                        >
+                          <g
+                            id="Group-9"
+                            transform="translate(0.241071, 0.000000)"
+                          >
+                            <circle
+                              id="Oval"
+                              cx="1.6875"
+                              cy="13.2589286"
+                              r="1.6875"
+                            ></circle>
+                            <polygon
+                              id="Rectangle"
+                              points="0 0.321428571 3.375 0.321428571 2.73214286 9.32142857 0.642857143 9.32142857"
+                            ></polygon>
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                </g>
+              </g>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
   </svg>
 );
-export default warning;
+
+export default Warning;

@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-if [[ "$ON_BRANCH_ENV" == "false" ]]; then
-  echo "Branch does not have its own Contentful environment; nothing to do."
-  exit 0
-fi
-
 if [[ "$CONTENTFUL_ENV_ID" == "Production" ]]; then
   echo "Target is Production branch; not deleting."
   exit 0

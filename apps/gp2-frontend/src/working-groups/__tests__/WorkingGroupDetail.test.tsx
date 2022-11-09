@@ -232,6 +232,59 @@ describe('WorkingGroupDetail', () => {
       screen.getByRole('heading', { name: /Contact Information/i }),
     ).toBeInTheDocument();
   });
+  it.each(gp2Model.userRoles.filter((role) => role !== 'Administrator'))(
+    'does not render the add modal when the user is not an Administrator',
+    async (role) => {
+      const workingGroup = gp2Fixtures.createWorkingGroupResponse();
+      workingGroup.members = [
+        {
+          userId: '23',
+          firstName: 'Tony',
+          lastName: 'Stark',
+          role: 'Lead',
+        },
+      ];
+      mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
+      await renderWorkingGroupDetail({
+        id: workingGroup.id,
+        userId: '23',
+        role,
+        route: gp2Routing
+          .workingGroups({})
+          .workingGroup({ workingGroupId: workingGroup.id })
+          .resources({})
+          .add({}).$,
+      });
+      expect(
+        screen.queryByRole('heading', { name: /Add resource/i }),
+      ).not.toBeInTheDocument();
+    },
+  );
+  it('renders the add modal when the user is an Administrator', async () => {
+    const workingGroup = gp2Fixtures.createWorkingGroupResponse();
+    workingGroup.members = [
+      {
+        userId: '23',
+        firstName: 'Tony',
+        lastName: 'Stark',
+        role: 'Lead',
+      },
+    ];
+    mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
+    await renderWorkingGroupDetail({
+      id: workingGroup.id,
+      userId: '23',
+      role: 'Administrator',
+      route: gp2Routing
+        .workingGroups({})
+        .workingGroup({ workingGroupId: workingGroup.id })
+        .resources({})
+        .add({}).$,
+    });
+    expect(
+      screen.getByRole('heading', { name: /Add resource/i }),
+    ).toBeInTheDocument();
+  });
   describe('Resources Modal', () => {
     const workingGroup = gp2Fixtures.createWorkingGroupResponse();
     workingGroup.members = [

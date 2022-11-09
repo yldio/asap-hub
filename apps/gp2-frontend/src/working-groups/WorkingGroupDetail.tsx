@@ -64,28 +64,30 @@ const WorkingGroupDetail = () => {
                   add={add}
                   edit={edit}
                 />
-                <Route
-                  path={
-                    workingGroups({})
-                      .workingGroup({ workingGroupId })
-                      .resources({})
-                      .add({}).$
-                  }
-                >
-                  <ResourceModal
-                    backHref={
+                {isAdministrator && (
+                  <Route
+                    path={
                       workingGroups({})
                         .workingGroup({ workingGroupId })
-                        .resources({}).$
+                        .resources({})
+                        .add({}).$
                     }
-                    onSave={(resource: gp2Model.Resource) =>
-                      updateWorkingGroupResources([
-                        ...(workingGroup.resources || []),
-                        resource,
-                      ])
-                    }
-                  />
-                </Route>
+                  >
+                    <ResourceModal
+                      backHref={
+                        workingGroups({})
+                          .workingGroup({ workingGroupId })
+                          .resources({}).$
+                      }
+                      onSave={(resource: gp2Model.Resource) =>
+                        updateWorkingGroupResources([
+                          ...(workingGroup.resources || []),
+                          resource,
+                        ])
+                      }
+                    />
+                  </Route>
+                )}
               </Frame>
             </Route>
           )}

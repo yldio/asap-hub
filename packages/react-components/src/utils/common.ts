@@ -75,3 +75,15 @@ export function equals(a: Array<string>, b: Array<string>): boolean {
     a.length === b.length && a.every((element, index) => element === b[index])
   );
 }
+
+export const splitListBy = <T>(
+  items: ReadonlyArray<T>,
+  splitBy: (item: T) => boolean,
+) =>
+  items.reduce<[T[], T[]]>(
+    (split, item) => {
+      splitBy(item) ? split[0].push(item) : split[1].push(item);
+      return split;
+    },
+    [[], []],
+  );

@@ -53,9 +53,9 @@ it('assigns given id to the members section for deep linking', () => {
   const { container } = render(
     <GroupProfileAbout {...props} membersSectionId="members-section" />,
   );
-  expect(container.querySelector('#members-section')).toHaveTextContent(
-    /members/i,
-  );
+  const membersSection = container.querySelector('#members-section');
+  expect(membersSection).toHaveTextContent(/leaders/i);
+  expect(membersSection).toHaveTextContent(/teams/i);
 });
 
 it('renders a call to action button, when PMs are defined on the group', () => {
@@ -114,22 +114,15 @@ it('does not render a call to action button, when a PM is NOT defined on the gro
   expect(queryByText(/contact pm/i)).not.toBeInTheDocument();
 });
 
-it('renders the Teams Tabbed card for inactive groups', () => {
+it('renders the Teams Tabbed card', () => {
   render(<GroupProfileAbout {...props} active={true} />);
-  expect(screen.getByText('Group Members', { selector: 'h2' })).toBeVisible();
-  render(<GroupProfileAbout {...props} active={false} />);
   expect(
     screen.getByText('Interest Group Teams', { selector: 'h3' }),
   ).toBeVisible();
 });
 
-it('renders the Leaders Tabbed card for inactive groups', () => {
+it('renders the Leaders Tabbed card', () => {
   render(<GroupProfileAbout {...props} active={true} />);
-  expect(screen.getByText('Group Leaders', { selector: 'h3' })).toBeVisible();
-  expect(
-    screen.queryByText('Interest Group Leaders', { selector: 'h3' }),
-  ).not.toBeInTheDocument();
-  render(<GroupProfileAbout {...props} active={false} />);
   expect(
     screen.getByText('Interest Group Leaders', { selector: 'h3' }),
   ).toBeVisible();

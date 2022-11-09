@@ -90,6 +90,7 @@ export const groupContentQueryFragment = gql`
                 name
               }
             }
+            alumniSinceDate
           }
         }
       }

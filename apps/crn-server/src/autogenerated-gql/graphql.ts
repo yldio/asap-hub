@@ -6347,6 +6347,7 @@ export type EventContentFragment = Pick<
                               | 'responsibilities'
                               | 'researchInterests'
                               | 'reachOut'
+                              | 'alumniSinceDate'
                             > & {
                               avatar: Maybe<Array<Pick<Asset, 'id'>>>;
                               orcidWorks: Maybe<
@@ -6715,6 +6716,7 @@ export type FetchEventsQuery = {
                                         | 'responsibilities'
                                         | 'researchInterests'
                                         | 'reachOut'
+                                        | 'alumniSinceDate'
                                       > & {
                                         avatar: Maybe<Array<Pick<Asset, 'id'>>>;
                                         orcidWorks: Maybe<
@@ -7080,6 +7082,7 @@ export type FetchEventQuery = {
                                   | 'responsibilities'
                                   | 'researchInterests'
                                   | 'reachOut'
+                                  | 'alumniSinceDate'
                                 > & {
                                   avatar: Maybe<Array<Pick<Asset, 'id'>>>;
                                   orcidWorks: Maybe<
@@ -7421,6 +7424,7 @@ export type GroupsContentFragment = Pick<
                   | 'responsibilities'
                   | 'researchInterests'
                   | 'reachOut'
+                  | 'alumniSinceDate'
                 > & {
                   avatar: Maybe<Array<Pick<Asset, 'id'>>>;
                   orcidWorks: Maybe<
@@ -7675,6 +7679,7 @@ export type FetchGroupsQuery = {
                             | 'responsibilities'
                             | 'researchInterests'
                             | 'reachOut'
+                            | 'alumniSinceDate'
                           > & {
                             avatar: Maybe<Array<Pick<Asset, 'id'>>>;
                             orcidWorks: Maybe<
@@ -7920,6 +7925,7 @@ export type FetchGroupQuery = {
                       | 'responsibilities'
                       | 'researchInterests'
                       | 'reachOut'
+                      | 'alumniSinceDate'
                     > & {
                       avatar: Maybe<Array<Pick<Asset, 'id'>>>;
                       orcidWorks: Maybe<
@@ -10128,6 +10134,13 @@ export const GroupsContentFragmentDoc = {
                                           },
                                         },
                                       ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'alumniSinceDate',
                                     },
                                   },
                                 ],

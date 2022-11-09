@@ -7,6 +7,7 @@ import { charcoal, steel } from '../colors';
 import { teamIcon } from '../icons';
 import { LinkHeadline, TabbedCard } from '../molecules';
 import { perRem, rem, tabletScreen } from '../pixels';
+import { splitListBy } from '../utils';
 
 const itemsListWrapper = css({
   listStyle: 'none',
@@ -68,8 +69,10 @@ const TeamGroupsTabbedCard: React.FC<TeamGroupsTabbedCardProps> = ({
   groups,
   isTeamInactive,
 }) => {
-  const inactiveGroups = groups.filter((group) => !group.active);
-  const activeGroups = groups.filter((group) => group.active);
+  const [activeGroups, inactiveGroups] = splitListBy(
+    groups,
+    (group) => isTeamInactive || !!group?.active,
+  );
 
   return (
     <TabbedCard

@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react';
+import { TeamResponse } from '@asap-hub/model';
 
 import {
   equals,
@@ -6,6 +7,7 @@ import {
   getSvgAspectRatio,
   isInternalLink,
   isLink,
+  splitListBy,
 } from '../index';
 
 describe('getSvgAspectRatio', () => {
@@ -110,5 +112,23 @@ describe('equals', () => {
   });
   it('returns false when arrays differ', () => {
     expect(equals(testArray, testArray.slice(0, 1))).toBeFalsy();
+  });
+});
+
+describe('splitListBy', () => {
+  const teams: ReadonlyArray<
+    Pick<TeamResponse, 'id' | 'displayName' | 'inactiveSince'>
+  > = [
+    { displayName: 'Inactive Team 1', id: '1', inactiveSince: '2021-01-01' },
+    { displayName: 'Active Team 1', id: '2' },
+    { displayName: 'Inactive Team 2', id: '3', inactiveSince: '2021-01-01' },
+  ];
+  it('splits a team list between active/inactive based on the passed condition', () => {
+    const [inactiveTeams, activeTeams] = splitListBy(
+      teams,
+      (team) => !!team?.inactiveSince,
+    );
+    expect(inactiveTeams.length).toBe(2);
+    expect(activeTeams.length).toBe(1);
   });
 });

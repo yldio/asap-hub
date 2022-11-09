@@ -1,13 +1,11 @@
-import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 import { GroupResponse } from '@asap-hub/model';
 
 import {
   GroupInformation,
-  GroupMembersSection,
   GroupTools,
-  LeadersTabbedCard,
-  TeamsTabbedCard,
+  GroupLeadersTabbedCard,
+  GroupTeamsTabbedCard,
 } from '../organisms';
 import { CtaCard } from '../molecules';
 
@@ -29,7 +27,7 @@ type GroupProfileAboutProps = Pick<
   GroupResponse,
   'tags' | 'description' | 'tools' | 'calendars' | 'active'
 > &
-  Pick<ComponentProps<typeof GroupMembersSection>, 'teams' | 'leaders'> & {
+  Pick<GroupResponse, 'teams' | 'leaders'> & {
     membersSectionId?: string;
   };
 const GroupProfileAbout: React.FC<GroupProfileAboutProps> = ({
@@ -59,17 +57,10 @@ const GroupProfileAbout: React.FC<GroupProfileAboutProps> = ({
         active={active}
       />
       <div id={membersSectionId}>
-        {active ? (
-          <GroupMembersSection teams={teams} leaders={leaders} />
-        ) : (
-          <div css={membersSectionStyles}>
-            <LeadersTabbedCard
-              title="Interest Group Leaders"
-              leaders={leaders}
-            />
-            <TeamsTabbedCard title="Interest Group Teams" teams={teams} />
-          </div>
-        )}
+        <div css={membersSectionStyles}>
+          <GroupLeadersTabbedCard leaders={leaders} isGroupActive={active} />
+          <GroupTeamsTabbedCard teams={teams} isGroupActive={active} />
+        </div>
       </div>
       {contactEmails.length !== 0 && (
         <CtaCard href={createMailTo(contactEmails)} buttonText="Contact PM">

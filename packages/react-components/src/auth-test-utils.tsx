@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 
-import type { Auth0User, gp2, User } from '@asap-hub/auth';
+import type { Auth0, Auth0User, gp2, User } from '@asap-hub/auth';
 import {
   Auth0ContextCRN,
   Auth0ContextGP2,
@@ -9,7 +9,7 @@ import {
   useAuth0GP2,
 } from '@asap-hub/react-context';
 import createAuth0Client, { Auth0Client } from '@auth0/auth0-spa-js';
-import { useEffect, useState } from 'react';
+import { Context, useEffect, useState } from 'react';
 
 const notImplemented = (method: string) => () => {
   throw new Error(`${method} not implemented by the Auth0 test fixture`);
@@ -52,9 +52,12 @@ const createAuth0ClientParams = {
  * You probably don't want to use this in the frontend,
  * which has its own recoil-integrated auth test utils.
  */
-export const Auth0ProviderCRN: React.FC<{
+interface Auth0ProviderProps<T> {
   readonly children: React.ReactNode;
-}> = ({ children }) => {
+  readonly AuthContext: Context<Auth0<T>>;
+}
+export const Auth0ProviderCRN = <T = User,>(props: Auth0ProviderProps<T>) => {
+  const { AuthContext = Auth0ContextCRN, children } = props;
   const [auth0Client, setAuth0] = useState<Auth0Client>();
   useEffect(() => {
     const initAuth0 = async () => {
@@ -64,28 +67,16 @@ export const Auth0ProviderCRN: React.FC<{
   }, []);
 
   return (
-    <Auth0ContextCRN.Provider value={auth0Context(auth0Client)}>
+    <AuthContext.Provider value={auth0Context(auth0Client)}>
       {children}
-    </Auth0ContextCRN.Provider>
+    </AuthContext.Provider>
   );
 };
-export const Auth0ProviderGP2: React.FC<{
-  readonly children: React.ReactNode;
-}> = ({ children }) => {
-  const [auth0Client, setAuth0] = useState<Auth0Client>();
-  useEffect(() => {
-    const initAuth0 = async () => {
-      setAuth0(await createAuth0Client(createAuth0ClientParams));
-    };
-    initAuth0();
-  }, []);
-
-  return (
-    <Auth0ContextGP2.Provider value={auth0Context(auth0Client)}>
-      {children}
-    </Auth0ContextGP2.Provider>
-  );
-};
+export const Auth0ProviderGP2 = (props: Auth0ProviderProps<gp2.User>) => (
+  <Auth0ProviderCRN<gp2.User> AuthContext={Auth0ContextGP2}>
+    {props.children}
+  </Auth0ProviderCRN>
+);
 
 export const WhenReadyCRN: React.FC<{ children: React.ReactNode }> = ({
   children,

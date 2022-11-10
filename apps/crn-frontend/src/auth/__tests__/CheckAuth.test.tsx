@@ -8,9 +8,9 @@ import CheckAuth from '../CheckAuth';
 it('renders a loading indicator while Auth0 is initializing', async () => {
   const { getByText, queryByText } = render(
     <Suspense fallback="suspended">
-      <authTestUtils.Auth0Provider>
+      <authTestUtils.UserAuth0Provider>
         <CheckAuth>{() => 'content'}</CheckAuth>
-      </authTestUtils.Auth0Provider>
+      </authTestUtils.UserAuth0Provider>
     </Suspense>,
     { wrapper: MemoryRouter },
   );
@@ -21,11 +21,11 @@ it('renders a loading indicator while Auth0 is initializing', async () => {
 
 it('renders a sign in page if the user is not authenticated', async () => {
   const { findByText } = render(
-    <authTestUtils.Auth0Provider>
+    <authTestUtils.UserAuth0Provider>
       <CheckAuth>
         {({ isAuthenticated }) => (isAuthenticated ? 'secure' : 'Sign in')}
       </CheckAuth>
-    </authTestUtils.Auth0Provider>,
+    </authTestUtils.UserAuth0Provider>,
     { wrapper: MemoryRouter },
   );
   expect(await findByText('Sign in')).toBeVisible();
@@ -33,13 +33,13 @@ it('renders a sign in page if the user is not authenticated', async () => {
 
 it('renders the children if the user is authenticated', async () => {
   const { findByText } = render(
-    <authTestUtils.Auth0Provider>
-      <authTestUtils.LoggedIn user={{}}>
+    <authTestUtils.UserAuth0Provider>
+      <authTestUtils.UserLoggedIn user={{}}>
         <CheckAuth>
           {({ isAuthenticated }) => (isAuthenticated ? 'secure' : 'Sign in')}
         </CheckAuth>
-      </authTestUtils.LoggedIn>
-    </authTestUtils.Auth0Provider>,
+      </authTestUtils.UserLoggedIn>
+    </authTestUtils.UserAuth0Provider>,
     { wrapper: MemoryRouter },
   );
   expect(await findByText('secure')).toBeVisible();

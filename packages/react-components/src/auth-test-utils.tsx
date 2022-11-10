@@ -1,14 +1,13 @@
 /* istanbul ignore file */
-
 import type { Auth0, Auth0User, User } from '@asap-hub/auth';
-import { createAuthUser } from '@asap-hub/fixtures';
+import { createAuthUser as createAuthUserFixture } from '@asap-hub/fixtures';
 import {
   Auth0ContextCRN,
   getUserClaimKey,
   useAuth0CRN,
 } from '@asap-hub/react-context';
 import createAuth0Client, { Auth0Client } from '@auth0/auth0-spa-js';
-import { Context, useEffect, useState } from 'react';
+import { ComponentProps, Context, useEffect, useState } from 'react';
 
 const notImplemented = (method: string) => () => {
   throw new Error(`${method} not implemented by the Auth0 test fixture`);
@@ -53,10 +52,10 @@ const createAuth0ClientParams = {
  */
 interface Auth0ProviderProps<T> {
   readonly children: React.ReactNode;
-  readonly AuthContext?: Context<Auth0<T>>;
+  readonly AuthContext: Context<Auth0<T>>;
 }
-export const Auth0Provider = <T = User,>(props: Auth0ProviderProps<T>) => {
-  const { AuthContext = Auth0ContextCRN, children } = props;
+export const Auth0Provider = <T,>(props: Auth0ProviderProps<T>) => {
+  const { AuthContext, children } = props;
   const [auth0Client, setAuth0] = useState<Auth0Client>();
   useEffect(() => {
     const initAuth0 = async () => {
@@ -76,37 +75,45 @@ interface WhenReadyProps<T> {
   readonly children: React.ReactNode;
   readonly useAuth0?: () => Auth0<T>;
 }
-export const WhenReady = <T = User,>(props: WhenReadyProps<T>) => {
+export const WhenReady = <T,>(props: WhenReadyProps<T>) => {
   const { children, useAuth0 = useAuth0CRN } = props;
   const { loading } = useAuth0();
   return loading ? <p>Auth0 loading...</p> : <>{children}</>;
 };
 
-interface LoggedInBaseProps<T> {
+interface LoggedInProps<T> {
   readonly children: React.ReactNode;
   // undefined user should be explicit, this is for the intermediate state
   // where the getUser() promise is pending.
   readonly user: Partial<T> | undefined;
-  readonly mockUser: () => T;
+  readonly createAuthUser: () => T;
   readonly useAuth0: () => Auth0<T>;
   readonly AuthContext: Context<Auth0<T>>;
 }
-type Auth0UserBase = {
+type Auth0BaseUser = {
   displayName: string;
   firstName: string;
   lastName: string;
 };
-export const LoggedInBase = <T extends Auth0UserBase>({
+const getAuth0UserFromUser = <T extends Auth0BaseUser>(completeUser: T) => ({
+  sub: 'testuser',
+  name: completeUser.displayName,
+  given_name: completeUser.firstName,
+  family_name: completeUser.lastName,
+  aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
+  [getUserClaimKey()]: completeUser,
+});
+export const LoggedIn = <T extends Auth0BaseUser>({
   children,
   user,
   useAuth0,
-  mockUser,
+  createAuthUser,
   AuthContext,
-}: LoggedInBaseProps<T>) => {
+}: LoggedInProps<T>) => {
   const ctx = useAuth0();
   const getAuth0User = (): Auth0User<T> => {
     const completeUser = {
-      ...mockUser(),
+      ...createAuthUser(),
       ...user,
     };
     return getAuth0UserFromUser<T>(completeUser);
@@ -129,23 +136,30 @@ export const LoggedInBase = <T extends Auth0UserBase>({
   );
 };
 
-type LoggedInProps = Pick<LoggedInBaseProps<User>, 'children' | 'user'>;
-export const LoggedIn = ({ children, user }: LoggedInProps) => (
-  <LoggedInBase
+type UserAuth0ProviderProps = Pick<
+  ComponentProps<typeof Auth0Provider<User>>,
+  'children'
+>;
+export const UserAuth0Provider = ({ children }: UserAuth0ProviderProps) => (
+  <Auth0Provider<User> AuthContext={Auth0ContextCRN}>{children}</Auth0Provider>
+);
+
+type UserWhenReadyProps = Pick<
+  ComponentProps<typeof WhenReady<User>>,
+  'children'
+>;
+export const UserWhenReady = ({ children }: UserWhenReadyProps) => (
+  <WhenReady<User> useAuth0={useAuth0CRN}>{children}</WhenReady>
+);
+
+type UserLoggedInProps = Pick<LoggedInProps<User>, 'children' | 'user'>;
+export const UserLoggedIn = ({ children, user }: UserLoggedInProps) => (
+  <LoggedIn
     user={user}
     useAuth0={useAuth0CRN}
-    mockUser={createAuthUser}
+    createAuthUser={createAuthUserFixture}
     AuthContext={Auth0ContextCRN}
   >
     {children}
-  </LoggedInBase>
+  </LoggedIn>
 );
-
-const getAuth0UserFromUser = <T extends Auth0UserBase>(completeUser: T) => ({
-  sub: 'testuser',
-  name: completeUser.displayName,
-  given_name: completeUser.firstName,
-  family_name: completeUser.lastName,
-  aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
-  [getUserClaimKey()]: completeUser,
-});

@@ -6,11 +6,11 @@ import UserNavigation from '../UserNavigation';
 describe('UserNavigation', () => {
   it('renders the text with first name', async () => {
     render(
-      <authTestUtils.Auth0Provider>
-        <authTestUtils.LoggedIn user={{ firstName: 'Tony' }}>
+      <authTestUtils.UserAuth0Provider>
+        <authTestUtils.UserLoggedIn user={{ firstName: 'Tony' }}>
           <UserNavigation />
-        </authTestUtils.LoggedIn>
-      </authTestUtils.Auth0Provider>,
+        </authTestUtils.UserLoggedIn>
+      </authTestUtils.UserAuth0Provider>,
     );
     expect(await screen.findByText(/hi, tony/i)).toBeVisible();
   });

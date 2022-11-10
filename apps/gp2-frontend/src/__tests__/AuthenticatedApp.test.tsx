@@ -20,15 +20,15 @@ beforeEach(() => {
 const renderAuthenticatedApp = (onboarded: boolean) =>
   render(
     <RecoilRoot>
-      <authTestUtils.Auth0Provider>
-        <authTestUtils.LoggedIn user={{ onboarded }}>
+      <authTestUtils.UserAuth0Provider>
+        <authTestUtils.UserLoggedIn user={{ onboarded }}>
           <StaticRouter>
             <Suspense fallback="loading">
               <AuthenticatedApp />
             </Suspense>
           </StaticRouter>
-        </authTestUtils.LoggedIn>
-      </authTestUtils.Auth0Provider>
+        </authTestUtils.UserLoggedIn>
+      </authTestUtils.UserAuth0Provider>
     </RecoilRoot>,
   );
 

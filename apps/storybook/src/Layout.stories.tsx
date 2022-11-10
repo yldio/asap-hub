@@ -48,8 +48,8 @@ export const Onboardable = () => {
   ) as unknown as string[]; // The typings for this are wrong. We should upgrade.
 
   return (
-    <authTestUtils.Auth0Provider>
-      <authTestUtils.LoggedIn
+    <authTestUtils.UserAuth0Provider>
+      <authTestUtils.UserLoggedIn
         user={{
           onboarded: false,
         }}
@@ -68,7 +68,7 @@ export const Onboardable = () => {
         >
           Content
         </Layout>
-      </authTestUtils.LoggedIn>
-    </authTestUtils.Auth0Provider>
+      </authTestUtils.UserLoggedIn>
+    </authTestUtils.UserAuth0Provider>
   );
 };

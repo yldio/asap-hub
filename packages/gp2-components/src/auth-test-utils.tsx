@@ -5,41 +5,37 @@ import { authTestUtils } from '@asap-hub/react-components';
 import { Auth0ContextGP2, useAuth0GP2 } from '@asap-hub/react-context';
 import { ComponentProps } from 'react';
 
-const {
-  Auth0Provider: Auth0ProviderBase,
-  WhenReady: WhenReadyBase,
-  LoggedInBase,
-} = authTestUtils;
+const { Auth0Provider, WhenReady, LoggedIn } = authTestUtils;
 
-type Auth0ProviderProps = Pick<
+type UserAuth0ProviderProps = Pick<
   ComponentProps<typeof authTestUtils.Auth0Provider<gp2Auth.User>>,
   'children'
 >;
-export const Auth0Provider = ({ children }: Auth0ProviderProps) => (
-  <Auth0ProviderBase<gp2Auth.User> AuthContext={Auth0ContextGP2}>
+export const UserAuth0Provider = ({ children }: UserAuth0ProviderProps) => (
+  <Auth0Provider<gp2Auth.User> AuthContext={Auth0ContextGP2}>
     {children}
-  </Auth0ProviderBase>
+  </Auth0Provider>
 );
 
-type WhenReadyProps = Pick<
+type UserWhenReadyProps = Pick<
   ComponentProps<typeof authTestUtils.WhenReady<gp2Auth.User>>,
   'children'
 >;
-export const WhenReady = ({ children }: WhenReadyProps) => (
-  <WhenReadyBase<gp2Auth.User> useAuth0={useAuth0GP2}>{children}</WhenReadyBase>
+export const UserWhenReady = ({ children }: UserWhenReadyProps) => (
+  <WhenReady<gp2Auth.User> useAuth0={useAuth0GP2}>{children}</WhenReady>
 );
 
-type LoggedInProps = Pick<
-  ComponentProps<typeof authTestUtils.LoggedInBase<gp2Auth.User>>,
+type UserLoggedInProps = Pick<
+  ComponentProps<typeof authTestUtils.LoggedIn<gp2Auth.User>>,
   'children' | 'user'
 >;
-export const LoggedIn = ({ children, user }: LoggedInProps) => (
-  <LoggedInBase
+export const UserLoggedIn = ({ children, user }: UserLoggedInProps) => (
+  <LoggedIn
     user={user}
     useAuth0={useAuth0GP2}
-    mockUser={gp2Fixtures.createAuthUser}
+    createAuthUser={gp2Fixtures.createAuthUser}
     AuthContext={Auth0ContextGP2}
   >
     {children}
-  </LoggedInBase>
+  </LoggedIn>
 );

@@ -8,7 +8,7 @@ const warning = (
     xmlns="http://www.w3.org/2000/svg"
     stroke="black"
   >
-    <title>Warning</title>
+    <title>warning</title>
     <rect x="0.5" y="0.5" width="41" height="41" rx="20.5" fill="none" />
     <circle cx="21" cy="29.625" r="2.625" />
     <path

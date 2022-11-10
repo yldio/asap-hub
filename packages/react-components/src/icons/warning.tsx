@@ -15,7 +15,7 @@ const Warning: FC<WarningProps> = ({ color }) => (
     xmlns="http://www.w3.org/2000/svg"
     xmlnsXlink="http://www.w3.org/1999/xlink"
   >
-    <title>Alert</title>
+    <title>Warning</title>
     <g
       id="Error-States"
       stroke="none"

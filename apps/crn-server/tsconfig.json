@@ -21,6 +21,7 @@
   "references": [
     { "path": "../../packages/auth" },
     { "path": "../../packages/algolia" },
+    { "path": "../../packages/contentful" },
     { "path": "../../packages/errors" },
     { "path": "../../packages/fixtures" },
     { "path": "../../packages/model" },

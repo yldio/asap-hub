@@ -1,7 +1,5 @@
 import { NotFoundError } from '@asap-hub/errors';
 import {
-  FetchNewsFilter,
-  FetchPaginationOptions,
   ListNewsDataObject,
   NewsDataObject,
   NewsFrequency,
@@ -13,13 +11,9 @@ import {
   SquidexRestClient,
 } from '@asap-hub/squidex';
 import { createUrl } from '../utils/urls';
+import { NewsDataProvider, FetchNewsProviderOptions } from './types';
 
-export interface NewsDataProvider {
-  fetchById(id: string): Promise<NewsDataObject | null>;
-  fetch: (options?: FetchNewsProviderOptions) => Promise<ListNewsDataObject>;
-}
-
-export class NewsSquidexDataProvider {
+export class NewsSquidexDataProvider implements NewsDataProvider {
   constructor(private newsSquidexRestClient: SquidexRestClient<RestNews>) {}
 
   async fetchById(id: string): Promise<NewsDataObject | null> {
@@ -47,12 +41,6 @@ export class NewsSquidexDataProvider {
     };
   }
 }
-
-export type FetchNewsProviderOptions = FetchPaginationOptions & {
-  filter?: FetchNewsFilter & {
-    title?: string;
-  };
-};
 
 const parseRestNews = (item: RestNews): NewsDataObject => ({
   id: item.id,

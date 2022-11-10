@@ -13,6 +13,8 @@ if (NODE_ENV === 'production') {
     'CRN_SENTRY_DSN_API',
     'CRN_SENTRY_DSN_HANDLERS',
     'CRN_CONTENTFUL_ENV',
+    'CRN_CONTENTFUL_ACCESS_TOKEN',
+    'CRN_CONTENTFUL_SPACE_ID',
   ].forEach((env) => {
     assert.ok(process.env[env], `${env} not defined`);
   });
@@ -36,6 +38,9 @@ const {
   CRN_SQUIDEX_API_CLIENT_SECRET,
   CRN_SQUIDEX_SHARED_SECRET,
   CRN_CONTENTFUL_ENV,
+  CRN_CONTENTFUL_ACCESS_TOKEN,
+  CRN_CONTENTFUL_SPACE_ID,
+  IS_CONTENTFUL_ENABLED = 'false',
 } = process.env;
 
 const region = process.env.AWS_REGION as AWS['provider']['region'];
@@ -56,6 +61,9 @@ const squidexClientId = CRN_SQUIDEX_API_CLIENT_ID!;
 const squidexClientSecret = CRN_SQUIDEX_API_CLIENT_SECRET!;
 const squidexSharedSecret = CRN_SQUIDEX_SHARED_SECRET!;
 const contentfulEnvironment = CRN_CONTENTFUL_ENV!;
+const contentfulAccessToken = CRN_CONTENTFUL_ACCESS_TOKEN!;
+const contentfulSpaceId = CRN_CONTENTFUL_SPACE_ID!;
+const isContentfulEnabled = IS_CONTENTFUL_ENABLED;
 
 const algoliaIndex = ALGOLIA_INDEX
   ? '${env:ALGOLIA_INDEX}'
@@ -124,7 +132,10 @@ const serverlessConfig: AWS = {
       CURRENT_REVISION: CI_COMMIT_SHA
         ? '${env:CI_COMMIT_SHA}'
         : '${env:CURRENT_REVISION}',
-      CONTENTFUL_ENV: contentfulEnvironment,
+      IS_CONTENTFUL_ENABLED: isContentfulEnabled,
+      CONTENTFUL_ENV_ID: contentfulEnvironment,
+      CONTENTFUL_ACCESS_TOKEN: contentfulAccessToken,
+      CONTENTFUL_SPACE_ID: contentfulSpaceId,
     },
     iam: {
       role: {

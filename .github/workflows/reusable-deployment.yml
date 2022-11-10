@@ -21,6 +21,9 @@ on:
       LIGHTSTEP_TOKEN:
         description: 'Lightstep Token'
         required: true
+      CRN_CONTENTFUL_ACCESS_TOKEN:
+        description: 'CRN Contentful Access Token'
+        required: true
       CRN_SQUIDEX_API_CLIENT_SECRET:
         description: 'CRN API Squidex Client Secret'
         required: true
@@ -70,6 +73,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           crn-contentful-env: ${{ inputs.crn-contentful-env }}
+          crn-contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
           crn-squidex-api-client-secret: ${{ secrets.CRN_SQUIDEX_API_CLIENT_SECRET }}
           crn-squidex-shared-secret: ${{ secrets.CRN_SQUIDEX_SHARED_SECRET }}
           environment-name: ${{ inputs.environment-name }}

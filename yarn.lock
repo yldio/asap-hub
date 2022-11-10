@@ -481,7 +481,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@asap-hub/contentful@workspace:packages/contentful":
+"@asap-hub/contentful@workspace:*, @asap-hub/contentful@workspace:packages/contentful":
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful@workspace:packages/contentful"
   dependencies:
@@ -501,6 +501,8 @@ __metadata:
     contentful-cli: 1.15.36
     contentful-management: ^10.19.3
     contentful-migrate: 0.17.0
+    graphql: 15.8.0
+    graphql-request: 3.4.0
     graphql-tag: 2.12.6
     graphql-typescript-integration: 1.2.1
     ts-node: 10.9.1
@@ -657,6 +659,7 @@ __metadata:
     "@algolia/cli": 4.0.8
     "@asap-hub/algolia": "workspace:*"
     "@asap-hub/auth": "workspace:*"
+    "@asap-hub/contentful": "workspace:*"
     "@asap-hub/errors": "workspace:*"
     "@asap-hub/fixtures": "workspace:*"
     "@asap-hub/message-templates": "workspace:*"

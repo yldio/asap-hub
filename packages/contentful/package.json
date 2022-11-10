@@ -14,9 +14,16 @@
     "space:migrate:crn": "yarn ctf-migrate up --all",
     "space:migrate:crn:dryrun": "yarn ctf-migrate up --all --dry-run",
     "space:migrate:crn:count": "yarn ctf-migrate list --all | grep \\\\[pending\\\\] | wc -l",
+    "space:create-environment:crn": "ts-node ./scripts/create-environment.ts",
     "schema:update:crn": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
+    "@asap-hub/errors": "workspace:*",
+    "@asap-hub/model": "workspace:*",
+    "@babel/runtime-corejs3": "7.19.6",
+    "@contentful/rich-text-html-renderer": "^15.13.1",
+    "@contentful/rich-text-types": "^15.13.2",
+    "contentful-management": "^10.19.3",
     "contentful-migrate": "0.17.0",
     "graphql-tag": "2.12.6"
   },
@@ -28,7 +35,9 @@
     "@graphql-codegen/typescript": "2.7.3",
     "@graphql-codegen/typescript-operations": "2.5.3",
     "@graphql-typed-document-node/core": "3.1.1",
+    "@types/node": "14.18.33",
     "contentful-cli": "1.15.36",
-    "graphql-typescript-integration": "1.2.1"
+    "graphql-typescript-integration": "1.2.1",
+    "ts-node": "10.9.1"
   }
 }

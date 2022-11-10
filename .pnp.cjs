@@ -1238,6 +1238,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.5.0"\
       ],\
       [\
+        "@contentful/rich-text-html-renderer",\
+        "npm:15.13.1"\
+      ],\
+      [\
+        "@contentful/rich-text-types",\
+        "npm:15.13.2"\
+      ],\
+      [\
         "@cspotcode/source-map-support",\
         "npm:0.8.1"\
       ],\
@@ -3206,7 +3214,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "axios",\
-        "npm:0.21.4"\
+        "npm:0.27.2"\
       ],\
       [\
         "axobject-query",\
@@ -3918,7 +3926,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "contentful-management",\
-        "npm:7.54.2"\
+        "npm:10.19.3"\
       ],\
       [\
         "contentful-migrate",\
@@ -10645,6 +10653,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/contentful/",\
           "packageDependencies": [\
             ["@asap-hub/contentful", "workspace:packages/contentful"],\
+            ["@asap-hub/errors", "workspace:packages/errors"],\
+            ["@asap-hub/model", "workspace:packages/model"],\
+            ["@babel/runtime-corejs3", "npm:7.19.6"],\
+            ["@contentful/rich-text-html-renderer", "npm:15.13.1"],\
+            ["@contentful/rich-text-types", "npm:15.13.2"],\
             ["@graphql-codegen/cli", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:2.12.1"],\
             ["@graphql-codegen/gql-tag-operations-preset", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:1.5.5"],\
             ["@graphql-codegen/introspection", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:2.2.1"],\
@@ -10652,10 +10665,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@graphql-codegen/typescript", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:2.7.3"],\
             ["@graphql-codegen/typescript-operations", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:2.5.3"],\
             ["@graphql-typed-document-node/core", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:3.1.1"],\
+            ["@types/node", "npm:14.18.33"],\
             ["contentful-cli", "npm:1.15.36"],\
+            ["contentful-management", "npm:10.19.3"],\
             ["contentful-migrate", "npm:0.17.0"],\
             ["graphql-tag", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:2.12.6"],\
-            ["graphql-typescript-integration", "npm:1.2.1"]\
+            ["graphql-typescript-integration", "npm:1.2.1"],\
+            ["ts-node", "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:10.9.1"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -26814,6 +26830,26 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@contentful/rich-text-html-renderer", [\
+        ["npm:15.13.1", {\
+          "packageLocation": "./.yarn/cache/@contentful-rich-text-html-renderer-npm-15.13.1-0195c8fd45-431c673ff4.zip/node_modules/@contentful/rich-text-html-renderer/",\
+          "packageDependencies": [\
+            ["@contentful/rich-text-html-renderer", "npm:15.13.1"],\
+            ["@contentful/rich-text-types", "npm:15.13.2"],\
+            ["escape-html", "npm:1.0.3"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@contentful/rich-text-types", [\
+        ["npm:15.13.2", {\
+          "packageLocation": "./.yarn/cache/@contentful-rich-text-types-npm-15.13.2-75467a28ec-cf27fa7d34.zip/node_modules/@contentful/rich-text-types/",\
+          "packageDependencies": [\
+            ["@contentful/rich-text-types", "npm:15.13.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@cspotcode/source-map-support", [\
         ["npm:0.8.1", {\
           "packageLocation": "./.yarn/cache/@cspotcode-source-map-support-npm-0.8.1-964f2de99d-5718f26708.zip/node_modules/@cspotcode/source-map-support/",\
@@ -42524,6 +42560,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/contentful-management-npm-10.14.0-c7fb9522be-b72f79948c.zip/node_modules/contentful-management/",\
           "packageDependencies": [\
             ["contentful-management", "npm:10.14.0"],\
+            ["@types/json-patch", "npm:0.0.30"],\
+            ["axios", "npm:0.27.2"],\
+            ["contentful-sdk-core", "npm:7.0.2"],\
+            ["fast-copy", "npm:2.1.3"],\
+            ["lodash.isplainobject", "npm:4.0.6"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:10.19.3", {\
+          "packageLocation": "./.yarn/cache/contentful-management-npm-10.19.3-12cc99380c-8275b15acf.zip/node_modules/contentful-management/",\
+          "packageDependencies": [\
+            ["contentful-management", "npm:10.19.3"],\
             ["@types/json-patch", "npm:0.0.30"],\
             ["axios", "npm:0.27.2"],\
             ["contentful-sdk-core", "npm:7.0.2"],\

@@ -25,6 +25,18 @@ export const usersContentQueryFragment = gql`
       }
       onboarded
     }
+    referencingProjectsContents {
+      id
+      flatData {
+        title
+      }
+    }
+    referencingWorkingGroupsContents {
+      id
+      flatData {
+        title
+      }
+    }
   }
 `;
 

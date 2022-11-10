@@ -69,6 +69,7 @@ export {
   LinkHeadline,
   Loading,
   MembersList,
+  UserAvatarList,
   MenuButton,
   Modal,
   OrcidSigninButton,
@@ -205,6 +206,9 @@ export {
   UserProfileResearchOutputs,
   UserProfileSearchAndFilter,
   WelcomePage,
+  WorkingGroupHeader,
+  WorkingGroupPage,
+  WorkingGroupAbout,
 } from './templates';
 export * from './theme';
 export { noop } from './utils';

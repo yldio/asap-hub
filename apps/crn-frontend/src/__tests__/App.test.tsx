@@ -28,19 +28,19 @@ beforeEach(() => {
 
 it('changes routing for logged in users', async () => {
   const { container, rerender } = render(
-    <authTestUtils.Auth0ProviderCRN>
+    <authTestUtils.Auth0Provider>
       <App />
-    </authTestUtils.Auth0ProviderCRN>,
+    </authTestUtils.Auth0Provider>,
   );
 
   await waitFor(() => expect(container).not.toHaveTextContent(/loading/i));
   expect(container).toHaveTextContent(/Signin/i);
   rerender(
-    <authTestUtils.Auth0ProviderCRN>
-      <authTestUtils.LoggedInCRN user={{}}>
+    <authTestUtils.Auth0Provider>
+      <authTestUtils.LoggedIn user={{}}>
         <App />
-      </authTestUtils.LoggedInCRN>
-    </authTestUtils.Auth0ProviderCRN>,
+      </authTestUtils.LoggedIn>
+    </authTestUtils.Auth0Provider>,
   );
   await waitFor(() => expect(container).not.toHaveTextContent(/loading/i));
   expect(container).toHaveTextContent(/Authenticated/i);
@@ -52,11 +52,11 @@ it('loads overrides for feature flags', async () => {
   } = renderHook(useFlags);
 
   const { container } = render(
-    <authTestUtils.Auth0ProviderCRN>
-      <authTestUtils.LoggedInCRN user={{}}>
+    <authTestUtils.Auth0Provider>
+      <authTestUtils.LoggedIn user={{}}>
         <App />
-      </authTestUtils.LoggedInCRN>
-    </authTestUtils.Auth0ProviderCRN>,
+      </authTestUtils.LoggedIn>
+    </authTestUtils.Auth0Provider>,
   );
   await waitFor(() => expect(container).not.toHaveTextContent(/loading/i));
   current.setCurrentOverrides({ ASAP_PERSISTENT_EXAMPLE: false });

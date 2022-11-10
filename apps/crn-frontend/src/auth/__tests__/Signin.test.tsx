@@ -29,10 +29,10 @@ const renderSignin = async (): Promise<RenderResult> => {
 
   const result = render(
     <StaticRouter location="/page?search#hash">
-      <authTestUtils.Auth0ProviderCRN>
+      <authTestUtils.Auth0Provider>
         <GrabHandleRedirectCallback />
         <Signin />
-      </authTestUtils.Auth0ProviderCRN>
+      </authTestUtils.Auth0Provider>
     </StaticRouter>,
   );
   await waitFor(() => !!result.container.textContent);

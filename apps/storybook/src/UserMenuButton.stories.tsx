@@ -7,8 +7,8 @@ export default {
 };
 
 export const Normal = () => (
-  <authTestUtils.Auth0ProviderCRN>
-    <authTestUtils.LoggedInCRN
+  <authTestUtils.Auth0Provider>
+    <authTestUtils.LoggedIn
       user={{
         displayName: text('Display Name', 'Randy Schekman'),
         firstName: text('First Name', 'Randy'),
@@ -20,8 +20,8 @@ export const Normal = () => (
       }}
     >
       <UserMenuButton open={boolean('Open', false)} />
-    </authTestUtils.LoggedInCRN>
-  </authTestUtils.Auth0ProviderCRN>
+    </authTestUtils.LoggedIn>
+  </authTestUtils.Auth0Provider>
 );
 export const UserUnknown = () => (
   <UserMenuButton open={boolean('Open', false)} />

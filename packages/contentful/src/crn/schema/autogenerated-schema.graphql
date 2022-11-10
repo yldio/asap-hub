@@ -339,7 +339,6 @@ enum MigrationOrder {
 type News implements Entry {
   contentfulMetadata: ContentfulMetadata!
   frequency(locale: String): String
-  id(locale: String): String
   link(locale: String): String
   linkText(locale: String): String
   linkedFrom(allowedLocales: [String]): NewsLinkingCollections
@@ -368,13 +367,6 @@ input NewsFilter {
   frequency_not: String
   frequency_not_contains: String
   frequency_not_in: [String]
-  id: String
-  id_contains: String
-  id_exists: Boolean
-  id_in: [String]
-  id_not: String
-  id_not_contains: String
-  id_not_in: [String]
   link: String
   linkText: String
   linkText_contains: String
@@ -417,8 +409,6 @@ type NewsLinkingCollections {
 enum NewsOrder {
   frequency_ASC
   frequency_DESC
-  id_ASC
-  id_DESC
   linkText_ASC
   linkText_DESC
   link_ASC

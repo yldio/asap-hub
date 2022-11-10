@@ -437,7 +437,6 @@ export enum MigrationOrder {
 export type News = Entry & {
   contentfulMetadata: ContentfulMetadata;
   frequency?: Maybe<Scalars['String']>;
-  id?: Maybe<Scalars['String']>;
   link?: Maybe<Scalars['String']>;
   linkText?: Maybe<Scalars['String']>;
   linkedFrom?: Maybe<NewsLinkingCollections>;
@@ -450,11 +449,6 @@ export type News = Entry & {
 
 /** ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
 export type NewsFrequencyArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-};
-
-/** ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
-export type NewsIdArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -512,13 +506,6 @@ export type NewsFilter = {
   frequency_not?: InputMaybe<Scalars['String']>;
   frequency_not_contains?: InputMaybe<Scalars['String']>;
   frequency_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  id?: InputMaybe<Scalars['String']>;
-  id_contains?: InputMaybe<Scalars['String']>;
-  id_exists?: InputMaybe<Scalars['Boolean']>;
-  id_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  id_not?: InputMaybe<Scalars['String']>;
-  id_not_contains?: InputMaybe<Scalars['String']>;
-  id_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   link?: InputMaybe<Scalars['String']>;
   linkText?: InputMaybe<Scalars['String']>;
   linkText_contains?: InputMaybe<Scalars['String']>;
@@ -568,8 +555,6 @@ export type NewsLinkingCollectionsEntryCollectionArgs = {
 export enum NewsOrder {
   FrequencyAsc = 'frequency_ASC',
   FrequencyDesc = 'frequency_DESC',
-  IdAsc = 'id_ASC',
-  IdDesc = 'id_DESC',
   LinkTextAsc = 'linkText_ASC',
   LinkTextDesc = 'linkText_DESC',
   LinkAsc = 'link_ASC',

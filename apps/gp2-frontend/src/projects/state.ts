@@ -2,12 +2,16 @@ import { gp2 } from '@asap-hub/model';
 import {
   atom,
   atomFamily,
+  ReadWriteSelectorOptions,
   selector,
   selectorFamily,
+  SetRecoilState,
+  useRecoilState,
   useRecoilValue,
+  useSetRecoilState,
 } from 'recoil';
 import { authorizationState } from '../auth/state';
-import { getProject, getProjects } from './api';
+import { getProject, getProjects, putProjectResources } from './api';
 
 export const fetchProjectsState = selector<gp2.ListProjectResponse>({
   key: 'fetchProjectsState',
@@ -54,3 +58,28 @@ const projectState = atomFamily<gp2.ProjectResponse | undefined, string>({
 });
 
 export const useProjectById = (id: string) => useRecoilValue(projectState(id));
+
+export const usePutProjectResources = (id: string) => {
+  const authorization = useRecoilValue(authorizationState);
+  const setProjectItem = useSetProjectItem();
+  return async (payload: gp2.ProjectResourcesPutRequest) => {
+    const project = await putProjectResources(id, payload, authorization);
+    setProjectItem(project);
+  };
+};
+
+export const useSetProjectItem = () => {
+  const [refresh, setRefresh] = useRecoilState(refreshProjectsState);
+  const setProjectItem = useSetRecoilState(setProject);
+  return (project: gp2.ProjectResponse) => {
+    setProjectItem(project);
+    setRefresh(refresh + 1);
+  };
+};
+
+const setProject = selector<gp2.ProjectResponse>({
+  key: 'setProject',
+  set: ({ set }: { set: SetRecoilState }, project: gp2.ProjectResponse) => {
+    set(projectState(project.id), project);
+  },
+} as unknown as ReadWriteSelectorOptions<gp2.ProjectResponse>);

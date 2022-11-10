@@ -1,4 +1,4 @@
-import { createSentryHeaders } from '@asap-hub/frontend-utils';
+import { BackendError, createSentryHeaders } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
 import { API_BASE_URL } from '../config';
 
@@ -32,4 +32,29 @@ export const getProject = async (
     );
   }
   return resp.json();
+};
+
+export const putProjectResources = async (
+  id: string,
+  payload: gp2.ProjectResourcesPutRequest,
+  authorization: string,
+): Promise<gp2.ProjectResponse> => {
+  const resp = await fetch(`${API_BASE_URL}/project/${id}/resources`, {
+    method: 'PUT',
+    headers: {
+      authorization,
+      'content-type': 'application/json',
+      ...createSentryHeaders(),
+    },
+    body: JSON.stringify(payload),
+  });
+  const response = await resp.json();
+  if (!resp.ok) {
+    throw new BackendError(
+      `Failed to update project resources for id ${id} Expected status 200. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      response,
+      resp.status,
+    );
+  }
+  return response;
 };

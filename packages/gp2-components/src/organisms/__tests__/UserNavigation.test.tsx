@@ -1,16 +1,16 @@
-import { authTestUtils } from '@asap-hub/react-components';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { authTestUtils } from '../..';
 import UserNavigation from '../UserNavigation';
 
 describe('UserNavigation', () => {
   it('renders the text with first name', async () => {
     render(
-      <authTestUtils.Auth0ProviderGP2>
-        <authTestUtils.LoggedInGP2 user={{ firstName: 'Tony' }}>
+      <authTestUtils.Auth0Provider>
+        <authTestUtils.LoggedIn user={{ firstName: 'Tony' }}>
           <UserNavigation />
-        </authTestUtils.LoggedInGP2>
-      </authTestUtils.Auth0ProviderGP2>,
+        </authTestUtils.LoggedIn>
+      </authTestUtils.Auth0Provider>,
     );
     expect(await screen.findByText(/hi, tony/i)).toBeVisible();
   });

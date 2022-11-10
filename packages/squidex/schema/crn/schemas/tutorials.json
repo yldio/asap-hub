@@ -134,7 +134,7 @@
           "isHalfWidth": false,
           "fieldType": "String",
           "createEnum": false,
-          "editor": "Input",
+          "editor": "RichText",
           "inlineEditable": false,
           "isEmbeddable": false,
           "isUnique": false,

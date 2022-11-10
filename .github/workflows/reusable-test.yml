@@ -56,7 +56,11 @@ jobs:
         uses: SimenB/github-actions-cpu-cores@v1
       - name: Test
         run: |
-          yarn test --coverage --maxWorkers ${{ steps.cpu-cores.outputs.count }} --ci
+          chown -R root /__w/asap-hub/asap-hub
+          git fetch --no-tags --depth=1 origin master
+          git checkout -b master origin/master
+          git checkout -
+          yarn test --coverage --maxWorkers ${{ steps.cpu-cores.outputs.count }} --ci --changedSince=master
       - uses: codecov/codecov-action@v3
         with:
           fail_ci_if_error: true

@@ -1,5 +1,5 @@
 import { mockLocation } from '@asap-hub/dom-test-utils';
-import { authTestUtils } from '@asap-hub/react-components';
+import { authTestUtils } from '@asap-hub/gp2-components';
 import { ToastContext } from '@asap-hub/react-context';
 import { render, RenderResult, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -31,13 +31,13 @@ describe('the welcome page', () => {
 
   const renderWelcome = async (): Promise<RenderResult> =>
     render(
-      <authTestUtils.Auth0ProviderGP2>
+      <authTestUtils.UserAuth0Provider>
         <ToastContext.Provider value={mockToast}>
           <MemoryRouter initialEntries={['/42/']}>
             <Route exact path="/:code/" component={Welcome} />
           </MemoryRouter>
         </ToastContext.Provider>
-      </authTestUtils.Auth0ProviderGP2>,
+      </authTestUtils.UserAuth0Provider>,
     );
 
   it('renders a headline', async () => {

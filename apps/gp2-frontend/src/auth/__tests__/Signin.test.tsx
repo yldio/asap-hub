@@ -9,7 +9,7 @@ import nock from 'nock';
 
 import { Auth0 } from '@asap-hub/auth';
 import { mockLocation } from '@asap-hub/dom-test-utils';
-import { authTestUtils } from '@asap-hub/react-components';
+import { authTestUtils } from '@asap-hub/gp2-components';
 import { useAuth0GP2 } from '@asap-hub/react-context';
 
 import Signin from '../Signin';
@@ -29,10 +29,10 @@ const renderSignin = async (): Promise<RenderResult> => {
 
   const result = render(
     <StaticRouter location="/page?search#hash">
-      <authTestUtils.Auth0ProviderGP2>
+      <authTestUtils.UserAuth0Provider>
         <GrabHandleRedirectCallback />
         <Signin />
-      </authTestUtils.Auth0ProviderGP2>
+      </authTestUtils.UserAuth0Provider>
     </StaticRouter>,
   );
   await waitFor(() => !!result.container.textContent);

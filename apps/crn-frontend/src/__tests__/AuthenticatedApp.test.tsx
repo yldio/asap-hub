@@ -19,13 +19,13 @@ beforeEach(() => {
 
 const wrapper: FC<Record<string, never>> = ({ children }) => (
   <RecoilRoot>
-    <authTestUtils.Auth0ProviderCRN>
-      <authTestUtils.LoggedInCRN user={{}}>
+    <authTestUtils.UserAuth0Provider>
+      <authTestUtils.UserLoggedIn user={{}}>
         <StaticRouter>
           <Suspense fallback="loading">{children}</Suspense>
         </StaticRouter>
-      </authTestUtils.LoggedInCRN>
-    </authTestUtils.Auth0ProviderCRN>
+      </authTestUtils.UserLoggedIn>
+    </authTestUtils.UserAuth0Provider>
   </RecoilRoot>
 );
 

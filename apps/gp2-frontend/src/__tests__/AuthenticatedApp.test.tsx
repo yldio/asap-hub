@@ -1,4 +1,4 @@
-import { authTestUtils } from '@asap-hub/react-components';
+import { authTestUtils } from '@asap-hub/gp2-components';
 import { render, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import { StaticRouter } from 'react-router-dom';
@@ -20,15 +20,15 @@ beforeEach(() => {
 const renderAuthenticatedApp = (onboarded: boolean) =>
   render(
     <RecoilRoot>
-      <authTestUtils.Auth0ProviderGP2>
-        <authTestUtils.LoggedInGP2 user={{}} onboarded={onboarded}>
+      <authTestUtils.UserAuth0Provider>
+        <authTestUtils.UserLoggedIn user={{ onboarded }}>
           <StaticRouter>
             <Suspense fallback="loading">
               <AuthenticatedApp />
             </Suspense>
           </StaticRouter>
-        </authTestUtils.LoggedInGP2>
-      </authTestUtils.Auth0ProviderGP2>
+        </authTestUtils.UserLoggedIn>
+      </authTestUtils.UserAuth0Provider>
     </RecoilRoot>,
   );
 

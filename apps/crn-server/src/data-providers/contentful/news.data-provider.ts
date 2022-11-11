@@ -45,7 +45,7 @@ export class NewsContentfulDataProvider implements NewsDataProvider {
     return {
       total: newsCollection?.total,
       items: newsCollection?.items
-        .filter((x: NewsItem) => x !== null)
+        .filter((x): x is NewsItem => x !== null)
         .map(parseNews),
     };
   }

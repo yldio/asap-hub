@@ -2,6 +2,7 @@ import { crossQuery, Link, pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ComponentProps, Fragment } from 'react';
 import { gp2 as gp2Model } from '@asap-hub/model';
+import { gp2 as gp2Routing } from '@asap-hub/routing';
 import projectIcon from '../icons/project-icon';
 import roleIcon from '../icons/role-icon';
 import workingGroupIcon from '../icons/working-group-icon';
@@ -75,7 +76,13 @@ const UserCardInfo: React.FC<UserCardInfoProps> = ({
             workingGroups.map(({ id, title }, idx) => (
               <Fragment key={id}>
                 {idx === 0 || <span css={dotDivider}>·</span>}
-                <Link href={`/${id}`}>
+                <Link
+                  href={
+                    gp2Routing
+                      .workingGroups({})
+                      .workingGroup({ workingGroupId: id }).$
+                  }
+                >
                   <span css={workingGroupsLinkStyles}>{title}</span>
                 </Link>
               </Fragment>
@@ -93,7 +100,10 @@ const UserCardInfo: React.FC<UserCardInfoProps> = ({
         <div css={listLabelStyles}>
           {projects?.length ? (
             projects.map(({ id, title }) => (
-              <Link key={id} href={`/${id}`}>
+              <Link
+                key={id}
+                href={gp2Routing.projects({}).project({ projectId: id }).$}
+              >
                 {title}
               </Link>
             ))

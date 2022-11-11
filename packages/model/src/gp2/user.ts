@@ -74,8 +74,8 @@ export type UserDataObject = {
   role: UserRole;
   projects: UserProject[];
   workingGroups: UserWorkingGroup[];
-  // fundingStreams: string | undefined;
-  // contributingCohorts: Cohorts[]
+  fundingStreams: unknown | undefined;
+  contributingCohorts: unknown[];
 };
 
 export type UserCreateDataObject = Omit<UserDataObject, 'id' | 'createdDate'>;

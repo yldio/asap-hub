@@ -251,6 +251,8 @@ export const parseGraphQLUserToDataObject = ({
     onboarded: item.onboarded || false,
     projects,
     workingGroups,
+    fundingStreams: undefined,
+    contributingCohorts: [],
   };
 };
 

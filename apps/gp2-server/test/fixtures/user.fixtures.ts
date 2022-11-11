@@ -58,6 +58,8 @@ export const getUserResponse = (): gp2.UserResponse => ({
       title: 'Steering Committee',
     },
   ],
+  fundingStreams: undefined,
+  contributingCohorts: [],
 });
 
 export const fetchExpectation: gp2.ListUserResponse = {
@@ -85,6 +87,8 @@ export const fetchExpectation: gp2.ListUserResponse = {
       onboarded: true,
       projects: [],
       workingGroups: [],
+      fundingStreams: undefined,
+      contributingCohorts: [],
     },
   ],
 };
@@ -173,6 +177,8 @@ export const getUserDataObject = (): gp2.UserDataObject => ({
       title: 'Steering Committee',
     },
   ],
+  fundingStreams: undefined,
+  contributingCohorts: [],
 });
 export const getUserCreateDataObject = (): gp2.UserCreateDataObject => {
   const {
@@ -236,6 +242,8 @@ export const fetchUserResponseDataObject = (): gp2.UserDataObject => ({
       title: 'Steering Committee',
     },
   ],
+  fundingStreams: undefined,
+  contributingCohorts: [],
 });
 export const getGraphQLUser = (
   user: Partial<NonNullable<FetchUserQuery['findUsersContent']>> = {},

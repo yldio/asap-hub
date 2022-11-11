@@ -1,10 +1,10 @@
-import { APIGatewayProxyResult } from 'aws-lambda';
 import Boom from '@hapi/boom';
+import { APIGatewayProxyResult } from 'aws-lambda';
 import { auth0SharedSecret as secret } from '../../../src/config';
 import { fetchUserByCodeHandlerFactory } from '../../../src/handlers/webhooks/fetch-by-code-handler';
-import { userControllerMock } from '../../mocks/user-controller.mock';
-import { getUserResponse } from '../../fixtures/user.fixtures';
 import { getApiGatewayEvent } from '../../fixtures/lambda.fixtures';
+import { getUserResponse } from '../../fixtures/user.fixtures';
+import { userControllerMock } from '../../mocks/user-controller.mock';
 
 const successfulApiGatewayEvent = getApiGatewayEvent({
   pathParameters: {
@@ -18,9 +18,7 @@ const successfulApiGatewayEvent = getApiGatewayEvent({
 describe('Fetch-user-by-code handler', () => {
   const handler = fetchUserByCodeHandlerFactory(userControllerMock);
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+  afterEach(jest.resetAllMocks);
 
   describe('Validation', () => {
     test("return 400 when code isn't present", async () => {
@@ -104,7 +102,7 @@ describe('Fetch-user-by-code handler', () => {
       )) as APIGatewayProxyResult;
 
       expect(result.statusCode).toStrictEqual(200);
-      expect(JSON.parse(result.body)).toMatchObject(getUserResponse());
+      expect(JSON.parse(result.body)).toEqual(getUserResponse());
     });
   });
 });

@@ -115,6 +115,10 @@ const gp2ApiUser: gp2Model.UserResponse = {
   region: 'Europe',
   country: 'Portugal',
   positions: [],
+  projects: [],
+  workingGroups: [],
+  contributingCohorts: [],
+  fundingStreams: undefined,
 };
 
 describe('Auth0 Rule - Add User Metadata', () => {

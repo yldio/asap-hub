@@ -78,7 +78,15 @@ export type UserDataObject = {
   contributingCohorts: unknown[];
 };
 
-export type UserCreateDataObject = Omit<UserDataObject, 'id' | 'createdDate'>;
+export type UserCreateDataObject = Omit<
+  UserDataObject,
+  | 'id'
+  | 'createdDate'
+  | 'projects'
+  | 'workingGroups'
+  | 'fundingStreams'
+  | 'contributingCohorts'
+>;
 
 export type UserUpdateDataObject = Partial<UserCreateDataObject>;
 

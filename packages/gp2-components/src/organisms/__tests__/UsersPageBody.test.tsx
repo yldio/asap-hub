@@ -1,53 +1,22 @@
-import { gp2 } from '@asap-hub/model';
+import { gp2 as gp2Model } from '@asap-hub/model';
+import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { PageControls } from '@asap-hub/react-components';
 import { render, screen } from '@testing-library/react';
 import { ComponentProps } from 'react';
 import UsersPageBody from '../UsersPageBody';
 
-const users: gp2.ListUserResponse = {
+const users: gp2Model.ListUserResponse = {
   items: [
-    {
+    gp2Fixtures.createUserResponse({
       id: 'u42',
-      createdDate: '',
-      email: '',
       displayName: 'Tony Stark',
       degrees: ['PhD' as const],
-      firstName: 'Tony',
-      lastName: 'Stark',
-      avatarUrl: '',
-      role: 'Administrator' as const,
-      region: 'Europe' as const,
-      country: 'Spain',
-      positions: [
-        {
-          role: 'CEO',
-          department: 'Research',
-          institution: 'Stark Industries',
-        },
-      ],
-      onboarded: true,
-    },
-    {
+    }),
+    gp2Fixtures.createUserResponse({
       id: 'u59',
-      createdDate: '',
-      email: '',
       displayName: 'Peter Parker',
-      degrees: ['BSc' as const],
-      firstName: 'Peter',
-      lastName: 'Parket',
-      avatarUrl: '',
-      role: 'Administrator' as const,
-      region: 'North America' as const,
-      country: 'Canada',
-      positions: [
-        {
-          role: 'Photographer',
-          department: 'Newsroom',
-          institution: 'Daily Bugle',
-        },
-      ],
-      onboarded: true,
-    },
+      degrees: ['BSc'],
+    }),
   ],
   total: 2,
 };
@@ -55,7 +24,7 @@ const users: gp2.ListUserResponse = {
 const pageProps: ComponentProps<typeof PageControls> = {
   currentPageIndex: 1,
   numberOfPages: 10,
-  renderPageHref: (page) => `some-page`,
+  renderPageHref: jest.fn(),
 };
 
 const defaultProps = {

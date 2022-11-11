@@ -1,5 +1,6 @@
 import { ValidationErrorResponse } from '@asap-hub/model';
 import {
+  BackendError,
   createListApiUrlFactory,
   createSentryHeaders,
   validationErrorsAreSupported,
@@ -14,6 +15,20 @@ jest.mock('@sentry/react', () => ({
 const baseUrl = `https://example.com`;
 
 const createListApiUrl = createListApiUrlFactory(baseUrl);
+
+describe('BackendError()', () => {
+  it('creates a well formed error', () => {
+    const response = {
+      error: 'not found',
+      message: 'page not found',
+      statusCode: 404,
+    };
+    const error = new BackendError('message', response, 404);
+    expect(error.message).toBe('message');
+    expect(error.statusCode).toBe(404);
+    expect(error.response).toBe(response);
+  });
+});
 
 describe('createListApiUrl', () => {
   it('uses defaults for take and skip params', async () => {

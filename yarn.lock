@@ -481,7 +481,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@asap-hub/contentful@workspace:*, @asap-hub/contentful@workspace:packages/contentful":
+"@asap-hub/contentful@workspace:^, @asap-hub/contentful@workspace:packages/contentful":
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful@workspace:packages/contentful"
   dependencies:
@@ -659,7 +659,7 @@ __metadata:
     "@algolia/cli": 4.0.8
     "@asap-hub/algolia": "workspace:*"
     "@asap-hub/auth": "workspace:*"
-    "@asap-hub/contentful": "workspace:*"
+    "@asap-hub/contentful": "workspace:^"
     "@asap-hub/errors": "workspace:*"
     "@asap-hub/fixtures": "workspace:*"
     "@asap-hub/message-templates": "workspace:*"

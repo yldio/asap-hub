@@ -1,6 +1,6 @@
 import { GenericError, NotFoundError } from '@asap-hub/errors';
-import { SquidexRest, gp2 as gp2Squidex } from '@asap-hub/squidex';
 import { FetchUsersOptions, gp2 as gp2Model } from '@asap-hub/model';
+import { gp2 as gp2Squidex, SquidexRest } from '@asap-hub/squidex';
 import nock from 'nock';
 import {
   UsersDataDegreeEnum,

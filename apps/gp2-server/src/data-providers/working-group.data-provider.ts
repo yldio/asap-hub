@@ -122,16 +122,6 @@ const parseWorkingGroupMembers = (
       ? createUrl(flatAvatar.map((a) => a.id))[0]
       : undefined;
 
-  const roleMap: Record<
-    WorkingGroupsDataMembersRoleEnum,
-    gp2Model.WorkingGroupMemberRole
-  > = {
-    [WorkingGroupsDataMembersRoleEnum.Lead]: 'Lead',
-    [WorkingGroupsDataMembersRoleEnum.CoLead]: 'Co-lead',
-    [WorkingGroupsDataMembersRoleEnum.WorkingGroupMember]:
-      'Working group member',
-  };
-
   return {
     userId: user.id,
     role: roleMap[role],
@@ -175,3 +165,12 @@ export function parseWorkingGroupToDataObject({
     resources,
   };
 }
+
+export const roleMap: Record<
+  WorkingGroupsDataMembersRoleEnum,
+  gp2Model.WorkingGroupMemberRole
+> = {
+  [WorkingGroupsDataMembersRoleEnum.Lead]: 'Lead',
+  [WorkingGroupsDataMembersRoleEnum.CoLead]: 'Co-lead',
+  [WorkingGroupsDataMembersRoleEnum.WorkingGroupMember]: 'Working group member',
+};

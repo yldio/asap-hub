@@ -28,12 +28,25 @@ export const usersContentQueryFragment = gql`
     referencingProjectsContents {
       id
       flatData {
+        members {
+          role
+          user {
+            id
+          }
+        }
+        status
         title
       }
     }
     referencingWorkingGroupsContents {
       id
       flatData {
+        members {
+          role
+          user {
+            id
+          }
+        }
         title
       }
     }

@@ -1,5 +1,7 @@
 import { FetchOptions, ListResponse } from '../common';
 import { Connection } from '../user';
+import { ProjectDataObject, ProjectMember } from './project';
+import { WorkingGroupDataObject, WorkingGroupMember } from './working-group';
 
 export const userRoles = [
   'Working Group Participant',
@@ -46,6 +48,15 @@ type UserPosition = {
   institution: string;
 };
 
+type UserProjectMember = Pick<ProjectMember, 'userId' | 'role'>;
+type UserProject = Pick<ProjectDataObject, 'id' | 'title' | 'status'> & {
+  members: UserProjectMember[];
+};
+type UserWorkingGroupMember = Pick<WorkingGroupMember, 'userId' | 'role'>;
+type UserWorkingGroup = Pick<WorkingGroupDataObject, 'id' | 'title'> & {
+  members: UserWorkingGroupMember[];
+};
+
 export type UserDataObject = {
   avatarUrl?: string;
   city?: string;
@@ -61,6 +72,10 @@ export type UserDataObject = {
   positions: UserPosition[];
   region: UserRegion;
   role: UserRole;
+  projects: UserProject[];
+  workingGroups: UserWorkingGroup[];
+  // fundingStreams: string | undefined;
+  // contributingCohorts: Cohorts[]
 };
 
 export type UserCreateDataObject = Omit<UserDataObject, 'id' | 'createdDate'>;

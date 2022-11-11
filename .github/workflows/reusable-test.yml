@@ -7,6 +7,11 @@ on:
         description: 'The environment name'
         required: true
         type: string
+      sinceMaster:
+        description: 'Whether to run tests since master'
+        required: false
+        type: boolean
+        default: false
     secrets:
       CODECOV_TOKEN:
         description: 'Codecov Token'
@@ -54,14 +59,21 @@ jobs:
       - name: Get number of CPU cores
         id: cpu-cores
         uses: SimenB/github-actions-cpu-cores@v1
-      - name: Test
+      - name: Fetch master branch
+        if: ${{ inputs.sinceMaster == true }}
         run: |
           chown -R root /__w/asap-hub/asap-hub
           git fetch --no-tags --depth=1 origin master
           git checkout -b master origin/master
           git checkout -
-          yarn test --coverage --maxWorkers ${{ steps.cpu-cores.outputs.count }} --ci --changedSince=master
+      - name: Run tests from diff with master
+        if: ${{ inputs.sinceMaster == true }}
+        run: yarn test --coverage --maxWorkers ${{ steps.cpu-cores.outputs.count }} --ci --changedSince=master
+      - name: Run all tests
+        if: ${{ inputs.sinceMaster == false }}
+        run: yarn test --coverage --maxWorkers ${{ steps.cpu-cores.outputs.count }} --ci
       - uses: codecov/codecov-action@v3
+        if: ${{ inputs.sinceMaster == false }}
         with:
           fail_ci_if_error: true
           directory: coverage

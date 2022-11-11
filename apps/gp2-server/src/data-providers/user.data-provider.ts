@@ -203,7 +203,7 @@ export const parseGraphQLUserToDataObject = ({
   const projects =
     projectItems?.map(({ id: projectId, flatData: project }) => {
       if (!project.status) {
-        throw new TypeError('status is unknown');
+        throw new TypeError('Status not defined');
       }
       return {
         id: projectId,
@@ -222,19 +222,21 @@ export const parseGraphQLUserToDataObject = ({
     }) || [];
 
   const workingGroups =
-    workingGroupItems?.map(({ id: workingGroupId, flatData }) => ({
-      id: workingGroupId,
-      title: flatData.title || '',
-      members:
-        flatData.members?.map((member) => {
-          const user = member.user && member.user[0];
+    workingGroupItems?.map(
+      ({ id: workingGroupId, flatData: workingGroup }) => ({
+        id: workingGroupId,
+        title: workingGroup.title || '',
+        members:
+          workingGroup.members?.map((member) => {
+            const user = member.user && member.user[0];
 
-          if (!(member.role && user)) {
-            throw new Error('Invalid project members');
-          }
-          return { role: workingGroupRoleMap[member.role], userId: user.id };
-        }) || [],
-    })) || [];
+            if (!(member.role && user)) {
+              throw new Error('Invalid working group members');
+            }
+            return { role: workingGroupRoleMap[member.role], userId: user.id };
+          }) || [],
+      }),
+    ) || [];
 
   return {
     id,

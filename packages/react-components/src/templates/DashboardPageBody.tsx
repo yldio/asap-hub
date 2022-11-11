@@ -1,8 +1,6 @@
 import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 import {
-  discover,
-  network,
   news as newsRoute,
   sharedResearch,
   dashboard,
@@ -23,7 +21,7 @@ import {
   RecentSharedOutputs,
 } from '../organisms';
 import { rem } from '../pixels';
-import { Card, Paragraph, Link, Headline2 } from '../atoms';
+import { Link, Headline2 } from '../atoms';
 import { lead } from '..';
 import { Accordion } from '../molecules';
 import { confidentialIcon, giftIcon, learnIcon } from '../icons';
@@ -32,14 +30,6 @@ const styles = css({
   display: 'grid',
   gridRowGap: rem(56),
   marginBottom: rem(25),
-});
-
-const containerStyles = css({
-  marginTop: rem(24),
-});
-
-const listStyles = css({
-  paddingLeft: rem(18),
 });
 
 const infoStyles = css({
@@ -182,60 +172,6 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           </p>
         </div>
       ) : null}
-      <section>
-        <Headline2 styleAsHeading={3}>You may want to try</Headline2>
-        <div css={containerStyles}>
-          <Card>
-            <ul css={listStyles}>
-              <li>
-                <Paragraph primary accent="lead">
-                  Check out grantee profiles and team pages in the{' '}
-                  <Link href={network({}).users({}).$}>Network</Link>
-                </Paragraph>
-              </li>
-              <li>
-                <Paragraph primary accent="lead">
-                  Read team proposals in{' '}
-                  <Link href={sharedResearch({}).$}>Shared Research</Link>
-                </Paragraph>
-              </li>
-              <li>
-                <Paragraph primary accent="lead">
-                  Meet the ASAP team in{' '}
-                  <Link href={discover({}).$}>Discover ASAP</Link>
-                </Paragraph>
-              </li>
-              <li>
-                <Paragraph primary accent="lead">
-                  Stay up date with <Link href={newsRoute({}).$}>News</Link>
-                </Paragraph>
-              </li>
-              {teamId ? (
-                <li>
-                  <Paragraph primary accent="lead">
-                    Add important links to your private{' '}
-                    <Link
-                      href={
-                        network({}).teams({}).team({ teamId }).workspace({}).$
-                      }
-                    >
-                      Team Workspace
-                    </Link>
-                  </Paragraph>
-                </li>
-              ) : null}
-              <li>
-                <Paragraph primary accent="lead">
-                  View and edit your own{' '}
-                  <Link href={network({}).users({}).user({ userId }).$}>
-                    Profile
-                  </Link>
-                </Paragraph>
-              </li>
-            </ul>
-          </Card>
-        </div>
-      </section>
       <HelpSection />
     </div>
   );

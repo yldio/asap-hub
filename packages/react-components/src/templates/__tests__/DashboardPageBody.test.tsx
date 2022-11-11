@@ -77,13 +77,6 @@ it('renders news section', () => {
   ).toEqual(expect.arrayContaining(['View All →', 'View All →']));
 });
 
-it('hides add links to your work space section when user is not a member of a team', () => {
-  const { rerender } = render(<DashboardPageBody {...props} teamId="12345" />);
-  expect(screen.queryByText(/Add important links/i)).toBeVisible();
-  rerender(<DashboardPageBody {...props} teamId={undefined} />);
-  expect(screen.queryByText(/Add important links/i)).toBeNull();
-});
-
 it('displays events cards or placeholder if there are no events', () => {
   const { rerender } = render(
     <DashboardPageBody

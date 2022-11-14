@@ -1,6 +1,6 @@
 import { gp2 } from '@asap-hub/model';
 
-const mockedUser = {
+const mockedUser: gp2.UserResponse = {
   id: 'user-id-1',
   createdDate: '2020-09-23T20:45:22.000Z',
   displayName: 'Tony Stark',
@@ -19,6 +19,23 @@ const mockedUser = {
     },
   ],
   onboarded: true,
+  projects: [
+    {
+      id: 'project-id',
+      title: 'a project title',
+      status: 'Active',
+      members: [{ userId: 'user-id-1', role: 'Project lead' }],
+    },
+  ],
+  workingGroups: [
+    {
+      id: 'working-group-id',
+      title: 'a working group title',
+      members: [{ userId: 'user-id-1', role: 'Co-lead' }],
+    },
+  ],
+  contributingCohorts: [],
+  fundingStreams: undefined,
 };
 
 export const createUserResponse = (

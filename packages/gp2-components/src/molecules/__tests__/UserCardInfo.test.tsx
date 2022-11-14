@@ -5,7 +5,7 @@ import UserCardInfo from '../UserCardInfo';
 const defaultProps: ComponentProps<typeof UserCardInfo> = {
   projects: [],
   workingGroups: [],
-  role: 'GP2 Admin',
+  role: 'Network Investigator',
   region: 'Europe',
 };
 
@@ -13,7 +13,7 @@ describe('UserCardInfo', () => {
   it('renders role', () => {
     render(<UserCardInfo {...defaultProps} />);
     expect(screen.getByTitle('Role').closest('div')).toHaveTextContent(
-      'GP2 Admin',
+      'Network Investigator',
     );
   });
   it('renders region', () => {
@@ -39,8 +39,8 @@ describe('UserCardInfo', () => {
       <UserCardInfo
         {...defaultProps}
         workingGroups={[
-          { id: '1', name: 'Working Group 1' },
-          { id: '2', name: 'Working Group 2' },
+          { id: '1', title: 'Working Group 1', members: [] },
+          { id: '2', title: 'Working Group 2', members: [] },
         ]}
       />,
     );
@@ -53,8 +53,8 @@ describe('UserCardInfo', () => {
       <UserCardInfo
         {...defaultProps}
         projects={[
-          { id: '1', name: 'Project 1' },
-          { id: '2', name: 'Project 2' },
+          { id: '1', title: 'Project 1', status: 'Inactive', members: [] },
+          { id: '2', title: 'Project 2', status: 'Active', members: [] },
         ]}
       />,
     );

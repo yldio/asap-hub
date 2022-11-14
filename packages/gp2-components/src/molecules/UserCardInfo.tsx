@@ -1,6 +1,8 @@
 import { crossQuery, Link, pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ComponentProps, Fragment } from 'react';
+import { gp2 as gp2Model } from '@asap-hub/model';
+import { gp2 as gp2Routing } from '@asap-hub/routing';
 import projectIcon from '../icons/project-icon';
 import roleIcon from '../icons/role-icon';
 import workingGroupIcon from '../icons/working-group-icon';
@@ -10,11 +12,8 @@ import UserRegion from './UserRegion';
 
 const { rem } = pixels;
 
-type UserCardInfoProps = Pick<ComponentProps<typeof UserRegion>, 'region'> & {
-  workingGroups: { id: string; name: string }[];
-  projects: { id: string; name: string }[];
-  role: string;
-};
+type UserCardInfoProps = Pick<ComponentProps<typeof UserRegion>, 'region'> &
+  Pick<gp2Model.UserResponse, 'workingGroups' | 'projects' | 'role'>;
 
 const containerStyles = css({
   marginBottom: rem(12),
@@ -74,11 +73,17 @@ const UserCardInfo: React.FC<UserCardInfoProps> = ({
       <IconWithLabel icon={workingGroupIcon}>
         <div css={[listLabelStyles, workingGroupsStyles]}>
           {workingGroups?.length ? (
-            workingGroups.map(({ id, name }, idx) => (
+            workingGroups.map(({ id, title }, idx) => (
               <Fragment key={id}>
                 {idx === 0 || <span css={dotDivider}>·</span>}
-                <Link href={`/${id}`}>
-                  <span css={workingGroupsLinkStyles}>{name}</span>
+                <Link
+                  href={
+                    gp2Routing
+                      .workingGroups({})
+                      .workingGroup({ workingGroupId: id }).$
+                  }
+                >
+                  <span css={workingGroupsLinkStyles}>{title}</span>
                 </Link>
               </Fragment>
             ))
@@ -94,9 +99,12 @@ const UserCardInfo: React.FC<UserCardInfoProps> = ({
       <IconWithLabel icon={projectIcon}>
         <div css={listLabelStyles}>
           {projects?.length ? (
-            projects.map(({ id, name }) => (
-              <Link key={id} href={`/${id}`}>
-                {name}
+            projects.map(({ id, title }) => (
+              <Link
+                key={id}
+                href={gp2Routing.projects({}).project({ projectId: id }).$}
+              >
+                {title}
               </Link>
             ))
           ) : (

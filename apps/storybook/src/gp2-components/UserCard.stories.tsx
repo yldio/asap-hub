@@ -18,18 +18,7 @@ export const Normal = () => {
     'Neurodegenerative Diseases',
     'Neurological Diseases',
   ]);
-  const region = select(
-    'Region',
-    [
-      'Africa',
-      'Asia',
-      'Europe',
-      'North America',
-      'Latin America',
-      'South America',
-    ],
-    'Africa',
-  );
+  const region = select('Region', gp2.userRegions, 'Africa');
   return (
     <Theme>
       <UserCard
@@ -43,17 +32,26 @@ export const Normal = () => {
         region={region}
         workingGroups={Array(number('Number of Working Groups', 1))
           .fill({
-            name: text('Working Group Name', 'Underrepresented Populations'),
+            title: text('Working Group Name', 'Underrepresented Populations'),
           })
-          .map(({ name }, index) => ({ id: index.toString(), name }))}
+          .map(({ title }, index) => ({
+            id: index.toString(),
+            title,
+            members: [],
+          }))}
         projects={Array(number('Number of Projects', 1))
           .fill({
-            name: text(
+            title: text(
               'Project Name',
               'Genetic determinants of progression in PD',
             ),
           })
-          .map(({ name }, index) => ({ id: index.toString(), name }))}
+          .map(({ title }, index) => ({
+            id: index.toString(),
+            title,
+            members: [],
+            status: 'Active',
+          }))}
         tags={tags}
       />
     </Theme>

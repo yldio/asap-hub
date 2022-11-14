@@ -1,7 +1,7 @@
 name: 'Run unit tests'
 description: 'Check if a string is a number'
 inputs:
-  sinceMaster:
+  since-master:
     description: 'Whether to run tests since master'
     required: false
     type: boolean
@@ -25,7 +25,7 @@ runs:
       uses: SimenB/github-actions-cpu-cores@v1
     - name: Fetch master branch
       shell: bash
-      if: ${{ inputs.sinceMaster == 'true' }}
+      if: ${{ inputs.since-master == 'true' }}
       run: |
         chown -R root /__w/asap-hub/asap-hub
         git fetch --no-tags --depth=1 origin master
@@ -33,14 +33,14 @@ runs:
         git checkout -
     - name: Run tests from diff with master
       shell: bash
-      if: ${{ inputs.sinceMaster == 'true' }}
+      if: ${{ inputs.since-master == 'true' }}
       run: yarn test --coverage --maxWorkers ${{ steps.cpu-cores.outputs.count }} --ci --changedSince=master
     - name: Run all tests
       shell: bash
-      if: ${{ inputs.sinceMaster == 'false' }}
+      if: ${{ inputs.since-master == 'false' }}
       run: yarn test --coverage --maxWorkers ${{ steps.cpu-cores.outputs.count }} --ci
     - uses: codecov/codecov-action@v3
-      if: ${{ inputs.sinceMaster == 'false' }}
+      if: ${{ inputs.since-master == 'false' }}
       with:
         fail_ci_if_error: true
         directory: coverage

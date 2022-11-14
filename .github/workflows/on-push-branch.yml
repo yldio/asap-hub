@@ -36,7 +36,7 @@ jobs:
     uses: ./.github/workflows/reusable-test.yml
     with:
       environment-name: Branch
-      sinceMaster: true
+      since-master: true
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       CRN_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
@@ -56,7 +56,7 @@ jobs:
         uses: ./.github/actions/test-unit
         with:
           codecov-token: ${{ secrets.CODECOV_TOKEN }}
-          sinceMaster: false
+          since-master: false
 
   build:
     needs: [setup]

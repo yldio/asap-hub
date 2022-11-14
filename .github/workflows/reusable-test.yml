@@ -7,7 +7,7 @@ on:
         description: 'The environment name'
         required: true
         type: string
-      sinceMaster:
+      since-master:
         description: 'Whether to run tests since master'
         required: false
         type: boolean
@@ -53,7 +53,7 @@ jobs:
         uses: ./.github/actions/test-unit
         with:
           codecov-token: ${{ secrets.CODECOV_TOKEN }}
-          sinceMaster: ${{ inputs.sinceMaster }}
+          since-master: ${{ inputs.since-master }}
 
   integration:
     if: ${{ inputs.environment-name=='Branch' }}

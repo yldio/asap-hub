@@ -1,7 +1,7 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
-import { workingGroups } from '@asap-hub/routing/build/gp2';
+import { workingGroups } from '@asap-hub/routing/src/gp2';
 import {
   render,
   screen,

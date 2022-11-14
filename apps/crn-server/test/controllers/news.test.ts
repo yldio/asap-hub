@@ -1,6 +1,6 @@
 import { NotFoundError } from '@asap-hub/errors';
 import News from '../../src/controllers/news';
-import { NewsDataProvider } from '../../src/data-providers/news.data-provider';
+import { NewsDataProvider } from '../../src/data-providers/types';
 import {
   getNewsDataObject,
   getNewsResponse,

@@ -177,66 +177,12 @@ export const parseGraphQLUserToDataObject = ({
   if (!item.role) {
     throw new Error(`Role not defined: ${item.role}`);
   }
+
   const createdDate = parseDate(created).toISOString();
-
-  const degrees: gp2Model.UserDegree[] | undefined =
-    item.degree?.map<gp2Model.UserDegree>((degree) => {
-      if (degree === 'MD_PhD') {
-        return 'MD, PhD';
-      }
-
-      return degree;
-    });
-
-  const positions =
-    item.positions?.map(({ role, department, institution }) => {
-      if (!(role && department && institution)) {
-        throw new Error('Position not defined');
-      }
-      return {
-        role,
-        department,
-        institution,
-      };
-    }) || [];
-
-  const projects =
-    projectItems?.map(({ id: projectId, flatData: project }) => {
-      if (!project.status) {
-        throw new TypeError('Status not defined');
-      }
-      return {
-        id: projectId,
-        status: project.status,
-        title: project.title || '',
-        members:
-          project.members?.map((member) => {
-            const user = member.user && member.user[0];
-
-            if (!(member.role && user)) {
-              throw new Error('Invalid project members');
-            }
-            return { role: projectRoleMap[member.role], userId: user.id };
-          }) || [],
-      };
-    }) || [];
-
-  const workingGroups =
-    workingGroupItems?.map(
-      ({ id: workingGroupId, flatData: workingGroup }) => ({
-        id: workingGroupId,
-        title: workingGroup.title || '',
-        members:
-          workingGroup.members?.map((member) => {
-            const user = member.user && member.user[0];
-
-            if (!(member.role && user)) {
-              throw new Error('Invalid working group members');
-            }
-            return { role: workingGroupRoleMap[member.role], userId: user.id };
-          }) || [],
-      }),
-    ) || [];
+  const degrees = parseDegrees(item.degree);
+  const positions = parsePositions(item.positions);
+  const projects = parseProjects(projectItems);
+  const workingGroups = parseWorkingGroups(workingGroupItems);
 
   return {
     id,
@@ -266,13 +212,86 @@ const regionMap: Record<UsersDataRegionEnum, gp2Model.UserRegion> = {
   [UsersDataRegionEnum.LatinAmerica]: 'Latin America',
   [UsersDataRegionEnum.NorthAmerica]: 'North America',
   [UsersDataRegionEnum.SouthAmerica]: 'South America',
-} as const;
+};
 const roleMap: Record<UsersDataRoleEnum, gp2Model.UserRole> = {
   [UsersDataRoleEnum.Administrator]: 'Administrator',
   [UsersDataRoleEnum.NetworkCollaborator]: 'Network Collaborator',
   [UsersDataRoleEnum.NetworkInvestigator]: 'Network Investigator',
   [UsersDataRoleEnum.Trainee]: 'Trainee',
   [UsersDataRoleEnum.WorkingGroupParticipant]: 'Working Group Participant',
-} as const;
+};
 const reverseRegionMap = reverseMap(regionMap);
 const reverseRoleMap = reverseMap(roleMap);
+
+const parseProjects = (
+  projects: NonNullable<
+    FetchUserQuery['findUsersContent']
+  >['referencingProjectsContents'],
+): gp2Model.UserDataObject['projects'] =>
+  projects?.map(({ id: projectId, flatData: project }) => {
+    if (!project.status) {
+      throw new TypeError('Status not defined');
+    }
+    return {
+      id: projectId,
+      status: project.status,
+      title: project.title || '',
+      members:
+        project.members?.map((member) => {
+          const user = member.user && member.user[0];
+
+          if (!(member.role && user)) {
+            throw new Error('Invalid project members');
+          }
+          return { role: projectRoleMap[member.role], userId: user.id };
+        }) || [],
+    };
+  }) || [];
+
+const parseWorkingGroups = (
+  workingGroupItems: NonNullable<
+    FetchUserQuery['findUsersContent']
+  >['referencingWorkingGroupsContents'],
+): gp2Model.UserDataObject['workingGroups'] =>
+  workingGroupItems?.map(({ id: workingGroupId, flatData: workingGroup }) => ({
+    id: workingGroupId,
+    title: workingGroup.title || '',
+    members:
+      workingGroup.members?.map((member) => {
+        const user = member.user && member.user[0];
+
+        if (!(member.role && user)) {
+          throw new Error('Invalid working group members');
+        }
+        return { role: workingGroupRoleMap[member.role], userId: user.id };
+      }) || [],
+  })) || [];
+
+const parseDegrees = (
+  degrees: NonNullable<
+    FetchUserQuery['findUsersContent']
+  >['flatData']['degree'],
+): gp2Model.UserDataObject['degrees'] =>
+  degrees?.map<gp2Model.UserDegree>((degree) => {
+    if (degree === UsersDataDegreeEnum.MdPhD) {
+      return 'MD, PhD';
+    }
+
+    return degree;
+  });
+
+const parsePositions = (
+  positions: NonNullable<
+    FetchUserQuery['findUsersContent']
+  >['flatData']['positions'],
+): gp2Model.UserDataObject['positions'] =>
+  positions?.map(({ role, department, institution }) => {
+    if (!(role && department && institution)) {
+      throw new Error('Position not defined');
+    }
+    return {
+      role,
+      department,
+      institution,
+    };
+  }) || [];

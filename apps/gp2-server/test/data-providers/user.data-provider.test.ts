@@ -1,5 +1,9 @@
 import { GenericError, NotFoundError } from '@asap-hub/errors';
-import { FetchUsersOptions, gp2 as gp2Model } from '@asap-hub/model';
+import {
+  FetchUsersOptions,
+  gp2 as gp2Model,
+  userDegree,
+} from '@asap-hub/model';
 import { gp2 as gp2Squidex, SquidexRest } from '@asap-hub/squidex';
 import nock from 'nock';
 import {
@@ -331,9 +335,78 @@ describe('User data provider', () => {
           ).rejects.toThrowError('Invalid working group members');
         },
       );
-      test.todo('check mapping of members role');
-      test.todo('check multiple members');
-      test.todo('members undefined');
+      test.each`
+        role                                                   | expectedRole
+        ${WorkingGroupsDataMembersRoleEnum.Lead}               | ${'Lead'}
+        ${WorkingGroupsDataMembersRoleEnum.CoLead}             | ${'Co-lead'}
+        ${WorkingGroupsDataMembersRoleEnum.WorkingGroupMember} | ${'Working group member'}
+      `(
+        'should parse the role $role => $expectedRole',
+        async ({ role, expectedRole }) => {
+          const user = getGraphQLUser();
+          user.referencingWorkingGroupsContents = [
+            {
+              id: '7',
+              flatData: {
+                ...workingGroup,
+                members: [{ role, user: [{ id: '23' }] }],
+              },
+            },
+          ];
+          const mockResponse = getSquidexUserGraphqlResponse(user);
+          squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+          const result = await userDataProvider.fetchById('user-id');
+          expect(result?.workingGroups[0]?.members[0]!.role).toEqual(
+            expectedRole,
+          );
+        },
+      );
+      test('check multiple members', async () => {
+        const user = getGraphQLUser();
+        user.referencingWorkingGroupsContents = [
+          {
+            id: '7',
+            flatData: {
+              ...workingGroup,
+              members: [
+                {
+                  role: WorkingGroupsDataMembersRoleEnum.CoLead,
+                  user: [{ id: '23' }],
+                },
+                {
+                  role: WorkingGroupsDataMembersRoleEnum.Lead,
+                  user: [{ id: '27' }],
+                },
+              ],
+            },
+          },
+        ];
+        const mockResponse = getSquidexUserGraphqlResponse(user);
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.workingGroups[0]?.members).toHaveLength(2);
+        expect(result?.workingGroups[0]?.members).toEqual([
+          { role: 'Co-lead', userId: '23' },
+          { role: 'Lead', userId: '27' },
+        ]);
+      });
+      test('members undefined', async () => {
+        const user = getGraphQLUser();
+        user.referencingWorkingGroupsContents = [
+          {
+            id: '7',
+            flatData: {
+              ...workingGroup,
+              members: null,
+            },
+          },
+        ];
+        const mockResponse = getSquidexUserGraphqlResponse(user);
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.workingGroups[0]?.members).toHaveLength(0);
+      });
     });
   });
 

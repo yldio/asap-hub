@@ -2,17 +2,17 @@ import {
   Caption,
   Divider,
   Headline2,
-  Subtitle,
-  Paragraph,
   Link,
+  Paragraph,
   pixels,
-  Button,
+  Subtitle,
 } from '@asap-hub/react-components';
-import { logout } from '@asap-hub/routing';
+import { gp2, logout } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import CardWithOffsetBackground from '../molecules/CardWithOffsetBackground';
 
 const { mobileScreen } = pixels;
+const { onboarding } = gp2;
 
 const containerStyles = css({
   display: 'flex',
@@ -70,7 +70,9 @@ const OnboardWelcome: React.FC<Record<string, never>> = () => (
       GP2 members that have also registered.
     </Caption>
     <footer css={footerStyles}>
-      <Button primary>Get Started</Button>
+      <Link buttonStyle primary href={onboarding({}).coreDetails({}).$}>
+        Get Started
+      </Link>
       <Link buttonStyle href={logout({}).$}>
         Sign Out
       </Link>

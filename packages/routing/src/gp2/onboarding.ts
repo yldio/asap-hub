@@ -1,8 +1,7 @@
 import { route } from 'typesafe-routes';
 
-const welcome = route('/welcome', {}, {});
 const coreDetails = route('/core-details', {}, {});
 
-const onboarding = route('/onboarding', {}, { welcome, coreDetails });
+const onboarding = route('/', {}, { coreDetails });
 
 export default onboarding;

@@ -3,8 +3,16 @@ import userEvent from '@testing-library/user-event';
 import { StaticRouter } from 'react-router-dom';
 import ResourceModal from '../ResourceModal';
 
+const modalInfo = {
+  title: 'Add Resource',
+  description:
+    'Select a resource type and provide the neccessary information required to share a resource privately with your group.',
+};
+
 const onSave = jest.fn();
 const defaultProps = {
+  modalTitle: modalInfo.title,
+  modalDescription: modalInfo.description,
   backHref: '/back',
   onSave,
 };

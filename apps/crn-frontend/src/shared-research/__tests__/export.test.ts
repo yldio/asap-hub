@@ -9,12 +9,7 @@ import { Stringifier } from 'csv-stringify';
 import streamSaver from 'streamsaver';
 
 import { createAlgoliaResponse } from '../../__fixtures__/algolia';
-import {
-  researchOutputToCSV,
-  createCsvFileStream,
-  algoliaResultsToStream,
-  EXCEL_CELL_CHARACTER_LIMIT,
-} from '../export';
+import { researchOutputToCSV, algoliaResultsToStream } from '../export';
 
 const mockWriteStream = {
   write: jest.fn(),

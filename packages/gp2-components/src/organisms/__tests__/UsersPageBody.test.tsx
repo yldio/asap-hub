@@ -31,6 +31,7 @@ const defaultProps = {
   ...pageProps,
   users,
   onFiltersClick: jest.fn,
+  onExportClick: jest.fn,
 };
 
 describe('UsersPageBody', () => {

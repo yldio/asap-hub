@@ -24,7 +24,10 @@
   },
   "dependencies": {
     "@babel/runtime-corejs3": "7.19.6",
-    "react-titled": "1.0.1"
+    "csv-stringify": "6.2.0",
+    "react-titled": "1.0.1",
+    "streamsaver": "2.0.6",
+    "web-streams-polyfill": "3.2.1"
   },
   "devDependencies": {
     "@asap-hub/dom-test-utils": "workspace:*",
@@ -40,6 +43,7 @@
     "@types/node": "14.18.33",
     "@types/react": "17.0.49",
     "@types/react-router-dom": "5.3.3",
+    "@types/streamsaver": "2.0.1",
     "@types/testing-library__jest-dom": "5.14.5",
     "@types/testing-library__react": "10.0.1",
     "history": "4.10.1",

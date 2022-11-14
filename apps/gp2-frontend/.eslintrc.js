@@ -3,5 +3,16 @@ module.exports = {
   rules: {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     'no-console': 'off',
+    'import/no-extraneous-dependencies': [
+      'error',
+      {
+        devDependencies: [
+          '**/*test.ts',
+          '**/*test.tsx',
+          '**/*__mocks__/*.ts',
+          'src/typings/*.d.ts',
+        ],
+      },
+    ],
   },
 };

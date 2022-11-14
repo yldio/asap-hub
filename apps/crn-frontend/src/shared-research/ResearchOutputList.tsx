@@ -7,11 +7,8 @@ import { useResearchOutputs } from './state';
 import { usePaginationParams, usePagination } from '../hooks';
 import { useAlgolia } from '../hooks/algolia';
 import { getResearchOutputs } from './api';
-import {
-  createCsvFileStream,
-  algoliaResultsToStream,
-  researchOutputToCSV,
-} from './export';
+import { algoliaResultsToStream, researchOutputToCSV } from './export';
+import { createCsvFileStream } from '@asap-hub/frontend-utils';
 
 interface ResearchOutputListProps {
   searchQuery?: string;

@@ -37,14 +37,16 @@ type TagProps = {
   readonly enabled?: boolean;
   readonly highlight?: boolean;
   readonly children?: React.ReactNode;
+  readonly title?: string;
 };
 
 const Tag: React.FC<TagProps> = ({
   children,
   highlight = false,
   enabled = true,
+  title,
 }) => (
-  <div css={containerStyles}>
+  <div css={containerStyles} title={title}>
     <div
       css={[styles, highlight && highlightStyles, !enabled && disabledStyles]}
     >

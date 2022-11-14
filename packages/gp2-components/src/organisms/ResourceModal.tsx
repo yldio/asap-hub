@@ -4,6 +4,7 @@ import {
   EditModal,
   Headline3,
   LabeledDropdown,
+  LabeledTextArea,
   LabeledTextField,
   Link,
   Paragraph,
@@ -38,12 +39,22 @@ const overrideButtonStyles = css({
 });
 
 type ResourceModalProps = Partial<gp2.Resource> & {
+  modalTitle: string;
+  modalDescription: string;
   backHref: string;
   onSave?: (data: gp2.Resource) => void | Promise<void>;
 };
 
 const ResourceModal: React.FC<ResourceModalProps> = (props) => {
-  const { type, title, description, backHref, onSave = noop } = props;
+  const {
+    type,
+    title,
+    description,
+    backHref,
+    modalTitle,
+    modalDescription,
+    onSave = noop,
+  } = props;
   const externalLink = type === 'Link' && props.externalLink;
   const [newType, setNewType] = useState<'Link' | 'Note' | ''>(type || '');
   const [newTitle, setNewTitle] = useState(title || '');
@@ -52,7 +63,7 @@ const ResourceModal: React.FC<ResourceModalProps> = (props) => {
 
   return (
     <EditModal
-      title="Add Resource"
+      title={modalTitle}
       backHref={backHref}
       dirty={type !== newType}
       noHeader
@@ -83,11 +94,8 @@ const ResourceModal: React.FC<ResourceModalProps> = (props) => {
       {({ isSaving }, asyncOnSave) => (
         <div css={css({ width: '100%' })}>
           <header>
-            <Headline3>Add resource</Headline3>
-            <Paragraph accent="lead">
-              Select a resource type and provide the neccessary information
-              required to share a resource privately with your group.
-            </Paragraph>
+            <Headline3>{modalTitle}</Headline3>
+            <Paragraph accent="lead">{modalDescription}</Paragraph>
           </header>
           <LabeledDropdown
             title="Resource Type"
@@ -123,7 +131,7 @@ const ResourceModal: React.FC<ResourceModalProps> = (props) => {
             onChange={setNewTitle}
             enabled={newType !== '' && !isSaving}
           />
-          <LabeledTextField
+          <LabeledTextArea
             title="Description"
             value={newDescription}
             onChange={setNewDescription}

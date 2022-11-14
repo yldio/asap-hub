@@ -114,7 +114,12 @@ const Resources: React.FC<ResourcesProps> = ({
                   </Pill>
                   {edit && (
                     <div css={editButtonStyles}>
-                      <Link href={'/edit'} buttonStyle fullWidth noMargin small>
+                      <Link
+                        href={edit + '/' + index}
+                        buttonStyle
+                        noMargin
+                        small
+                      >
                         Edit {editIcon}
                       </Link>
                     </div>

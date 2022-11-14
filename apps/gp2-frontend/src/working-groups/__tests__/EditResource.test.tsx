@@ -107,4 +107,44 @@ describe('edit resources', () => {
 
     expect(screen.getByRole('button', { name: /Save/i })).toBeInTheDocument();
   });
+
+  it('see if content is empty', async () => {
+    const workingGroup = gp2Fixtures.createWorkingGroupResponse();
+    workingGroup.members = [
+      {
+        userId: '23',
+        firstName: 'Tony',
+        lastName: 'Stark',
+        role: 'Lead',
+      },
+    ];
+    delete workingGroup.resources;
+    mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
+
+    const resources = workingGroups({})
+      .workingGroup({ workingGroupId: workingGroup.id })
+      .resources({}).$;
+
+    const props = {
+      workingGroupId: workingGroup.id,
+      workingGroup,
+      backHref: resources,
+      updateWorkingGroupResources: jest.fn(),
+    };
+
+    await renderWorkingGroupDetail({
+      id: workingGroup.id,
+      userId: '23',
+      role: 'Administrator',
+      route: gp2Routing
+        .workingGroups({})
+        .workingGroup({ workingGroupId: workingGroup.id })
+        .resources({}).$,
+      children: <EditResource {...props} />,
+    });
+
+    expect(
+      screen.getByRole('textbox', { name: 'Resource Type (required)' }),
+    ).toHaveValue('');
+  });
 });

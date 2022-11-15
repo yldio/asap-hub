@@ -42,9 +42,9 @@ const EditResource: React.FC<EditWorkingGroupResponseProps> = ({
       backHref={backHref}
       onSave={(resource: gp2Model.Resource) => {
         updateWorkingGroupResources([
-          ...(Object.assign([], workingGroup.resources, {
+          ...Object.assign([], workingGroup.resources, {
             [routeIndex]: resource,
-          }) || []),
+          }),
         ]);
       }}
     />

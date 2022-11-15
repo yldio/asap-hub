@@ -263,7 +263,7 @@ There is a GitHub Actions workflow to sync data from Squidex to Contentful.
 
 You can specify the source Squidex app and the destination Contentful env.
 
-Check [on-demand-cms-migration.yml](./.github/workflows/on-demand-cms-migration.yml) for details.
+Check [on-demand-cms-sync.yml](./.github/workflows/on-demand-cms-sync.yml) for details.
 
 ## Docker Images
 

@@ -2654,6 +2654,7 @@ export type EventsDataDto = {
   meetingMaterialsPermanentlyUnavailable: Maybe<EventsDataMeetingMaterialsPermanentlyUnavailableDto>;
   notes: Maybe<EventsDataNotesDto>;
   notesPermanentlyUnavailable: Maybe<EventsDataNotesPermanentlyUnavailableDto>;
+  notesUpdatedAt: Maybe<EventsDataNotesUpdatedAtDto>;
   presentation: Maybe<EventsDataPresentationDto>;
   presentationPermanentlyUnavailable: Maybe<EventsDataPresentationPermanentlyUnavailableDto>;
   presentationUpdatedAt: Maybe<EventsDataPresentationUpdatedAtDto>;
@@ -2746,6 +2747,7 @@ export type EventsDataInputDto = {
   meetingMaterialsPermanentlyUnavailable: InputMaybe<EventsDataMeetingMaterialsPermanentlyUnavailableInputDto>;
   notes: InputMaybe<EventsDataNotesInputDto>;
   notesPermanentlyUnavailable: InputMaybe<EventsDataNotesPermanentlyUnavailableInputDto>;
+  notesUpdatedAt: InputMaybe<EventsDataNotesUpdatedAtInputDto>;
   presentation: InputMaybe<EventsDataPresentationInputDto>;
   presentationPermanentlyUnavailable: InputMaybe<EventsDataPresentationPermanentlyUnavailableInputDto>;
   presentationUpdatedAt: InputMaybe<EventsDataPresentationUpdatedAtInputDto>;
@@ -2829,6 +2831,16 @@ export type EventsDataNotesPermanentlyUnavailableDto = {
 export type EventsDataNotesPermanentlyUnavailableInputDto = {
   /** This box is automatically ticked if no output is added after 14 days from the event's end date. */
   iv: InputMaybe<Scalars['Boolean']>;
+};
+
+/** The structure of the Notes Updated At field of the Events content type. */
+export type EventsDataNotesUpdatedAtDto = {
+  iv: Maybe<Scalars['Instant']>;
+};
+
+/** The structure of the Notes Updated At field of the Events content input type. */
+export type EventsDataNotesUpdatedAtInputDto = {
+  iv: InputMaybe<Scalars['Instant']>;
 };
 
 /** The structure of the Presentation field of the Events content type. */
@@ -3003,6 +3015,7 @@ export type EventsFlatDataDto = {
   notes: Maybe<Scalars['String']>;
   /** This box is automatically ticked if no output is added after 14 days from the event's end date. */
   notesPermanentlyUnavailable: Maybe<Scalars['Boolean']>;
+  notesUpdatedAt: Maybe<Scalars['Instant']>;
   /** If permanently unavailable box is ticked, any content you put here will be ignored. */
   presentation: Maybe<Scalars['String']>;
   /** This box is automatically ticked if no output is added after 14 days from the event's end date. */
@@ -8070,6 +8083,7 @@ export type FetchReminderDataQuery = {
           | 'title'
           | 'videoRecordingUpdatedAt'
           | 'presentationUpdatedAt'
+          | 'notesUpdatedAt'
         >;
       }
     >
@@ -13078,6 +13092,10 @@ export const FetchReminderDataDocument = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'presentationUpdatedAt' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'notesUpdatedAt' },
                       },
                     ],
                   },

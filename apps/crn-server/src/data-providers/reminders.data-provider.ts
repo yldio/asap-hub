@@ -103,7 +103,7 @@ export const getEventFilter = (zone: string): string => {
     .minus({ day: 1 })
     .toUTC();
 
-  return `data/videoRecordingUpdatedAt/iv ge ${lastDayISO} or data/presentationUpdatedAt/iv ge ${lastDayISO} or (data/startDate/iv ge ${lastMidnightISO} and data/startDate/iv le ${todayMidnightISO})`;
+  return `data/videoRecordingUpdatedAt/iv ge ${lastDayISO} or data/presentationUpdatedAt/iv ge ${lastDayISO} or data/notesUpdatedAt/iv ge ${lastDayISO} or (data/startDate/iv ge ${lastMidnightISO} and data/startDate/iv le ${todayMidnightISO})`;
 };
 
 const getUserTeamIds = (
@@ -272,7 +272,7 @@ const getEventMaterialsRemindersFromQuery = (
       });
     }
 
-    if (inLast24Hours(presentationUpdatedAt)) {
+    if (inLast24Hours(notesUpdatedAt)) {
       events.push({
         id: `notes-event-updated-${eventId}`,
         entity: 'Event',
@@ -302,6 +302,10 @@ const getSortDate = (reminder: ReminderDataObject): DateTime => {
 
   if (reminder.type === 'Presentation Updated') {
     return DateTime.fromISO(reminder.data.presentationUpdatedAt);
+  }
+
+  if (reminder.type === 'Notes Updated') {
+    return DateTime.fromISO(reminder.data.notesUpdatedAt);
   }
 
   return DateTime.fromISO(reminder.data.endDate);

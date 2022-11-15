@@ -55,7 +55,7 @@ jobs:
       - name: Run CMS sync for news
         if: ${{ inputs.entity == 'news' || inputs.entity == 'all' }}
         run: |
-          yarn workspace @asap-hub/cms-migration migrate:news
+          yarn workspace @asap-hub/cms-data-sync migrate:news
         env:
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.contentful-space }}

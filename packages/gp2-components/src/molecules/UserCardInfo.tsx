@@ -57,6 +57,8 @@ const workingGroupsLinkStyles = css({
 });
 
 const subduedText = css({ color: colors.neutral800.rgba });
+const caseInsensitiveTitle = <T extends { title: string }>(a: T, b: T) =>
+  a.title.localeCompare(b.title, undefined, { sensitivity: 'base' });
 
 const UserCardInfo: React.FC<UserCardInfoProps> = ({
   role,
@@ -73,20 +75,22 @@ const UserCardInfo: React.FC<UserCardInfoProps> = ({
       <IconWithLabel icon={workingGroupIcon}>
         <div css={[listLabelStyles, workingGroupsStyles]}>
           {workingGroups?.length ? (
-            workingGroups.map(({ id, title }, idx) => (
-              <Fragment key={id}>
-                {idx === 0 || <span css={dotDivider}>·</span>}
-                <Link
-                  href={
-                    gp2Routing
-                      .workingGroups({})
-                      .workingGroup({ workingGroupId: id }).$
-                  }
-                >
-                  <span css={workingGroupsLinkStyles}>{title}</span>
-                </Link>
-              </Fragment>
-            ))
+            workingGroups
+              .sort(caseInsensitiveTitle)
+              .map(({ id, title }, idx) => (
+                <Fragment key={id}>
+                  {idx === 0 || <span css={dotDivider}>·</span>}
+                  <Link
+                    href={
+                      gp2Routing
+                        .workingGroups({})
+                        .workingGroup({ workingGroupId: id }).$
+                    }
+                  >
+                    <span css={workingGroupsLinkStyles}>{title}</span>
+                  </Link>
+                </Fragment>
+              ))
           ) : (
             <span css={subduedText}>
               This member isn’t part of any working groups
@@ -99,7 +103,7 @@ const UserCardInfo: React.FC<UserCardInfoProps> = ({
       <IconWithLabel icon={projectIcon}>
         <div css={listLabelStyles}>
           {projects?.length ? (
-            projects.map(({ id, title }) => (
+            projects.sort(caseInsensitiveTitle).map(({ id, title }) => (
               <Link
                 key={id}
                 href={gp2Routing.projects({}).project({ projectId: id }).$}

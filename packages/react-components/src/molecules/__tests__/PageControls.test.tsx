@@ -50,7 +50,7 @@ describe('the arrow controls', () => {
         / /g,
         '',
       ),
-    ).toBe(fern.rgb.replace(/ /g, ''));
+    ).toBe(fern.rgba.replace(/ /g, ''));
     expect(getByTitle(/first page/i).closest('a')).toHaveAttribute(
       'href',
       '#0',
@@ -86,7 +86,7 @@ describe('the arrow controls', () => {
         getByTitle(/previous page/i),
         'stroke',
       )?.stroke?.replace(/ /g, ''),
-    ).toBe(fern.rgb.replace(/ /g, ''));
+    ).toBe(fern.rgba.replace(/ /g, ''));
     expect(getByTitle(/previous page/i).closest('a')).toHaveAttribute(
       'href',
       '#1',
@@ -124,7 +124,7 @@ describe('the arrow controls', () => {
         / /g,
         '',
       ),
-    ).toBe(fern.rgb.replace(/ /g, ''));
+    ).toBe(fern.rgba.replace(/ /g, ''));
     expect(getByTitle(/next page/i).closest('a')).toHaveAttribute('href', '#1');
   });
   it('disable the link to the next page on the last page', () => {
@@ -157,7 +157,7 @@ describe('the arrow controls', () => {
         / /g,
         '',
       ),
-    ).toBe(fern.rgb.replace(/ /g, ''));
+    ).toBe(fern.rgba.replace(/ /g, ''));
     expect(getByTitle(/last page/i).closest('a')).toHaveAttribute('href', '#2');
   });
   it('disable the link to the last page on the last page', () => {

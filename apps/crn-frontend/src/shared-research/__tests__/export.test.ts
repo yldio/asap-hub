@@ -9,16 +9,6 @@ import { Stringifier } from 'csv-stringify';
 import { createAlgoliaResponse } from '../../__fixtures__/algolia';
 import { researchOutputToCSV, algoliaResultsToStream } from '../export';
 
-const mockWriteStream = {
-  write: jest.fn(),
-  close: jest.fn(),
-};
-jest.mock('streamsaver', () => ({
-  createWriteStream: jest.fn(() => ({
-    getWriter: jest.fn(() => mockWriteStream),
-  })),
-}));
-
 afterEach(() => {
   jest.clearAllMocks();
 });

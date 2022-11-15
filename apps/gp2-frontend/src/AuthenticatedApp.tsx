@@ -63,7 +63,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
       <BasicLayout>
         <Switch>
           <Route path={path}>
-            <Onboarding />;
+            <Onboarding />
           </Route>
           <Route>
             <Frame title="Not Found">

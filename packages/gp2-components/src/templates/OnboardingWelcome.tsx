@@ -34,7 +34,7 @@ const footerStyles = css({
   },
 });
 
-const OnboardWelcome: React.FC<Record<string, never>> = () => (
+const OnboardingWelcome: React.FC<Record<string, never>> = () => (
   <div css={containerStyles}>
     <header>
       <Headline2 noMargin>Welcome to the GP2 Hub</Headline2>
@@ -80,4 +80,4 @@ const OnboardWelcome: React.FC<Record<string, never>> = () => (
   </div>
 );
 
-export default OnboardWelcome;
+export default OnboardingWelcome;

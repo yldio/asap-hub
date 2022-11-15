@@ -1,7 +1,5 @@
-import { OnboardWelcome } from '@asap-hub/gp2-components';
-import { gp2 } from '@asap-hub/routing';
+import { OnboardingWelcome } from '@asap-hub/gp2-components';
 
-const { onboarding } = gp2;
-const Welcome = OnboardWelcome;
+const Welcome = OnboardingWelcome;
 
 export default Welcome;

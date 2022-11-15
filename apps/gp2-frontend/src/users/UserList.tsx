@@ -7,7 +7,7 @@ import { authorizationState } from '../auth/state';
 import { usePagination, usePaginationParams } from '../hooks/pagination';
 import { useSearch } from '../hooks/search';
 import { getUsers } from './api';
-import { squidexResultsToStream, userToCSV } from './export';
+import { squidexUsersResponseToStream, userToCSV } from './export';
 import { useUsersState } from './state';
 
 type UserListProps = {
@@ -36,7 +36,7 @@ const UserList: React.FC<UserListProps> = ({ displayFilters = false }) => {
   const onFiltersClick = () => changeLocation(filtersHref);
   const autorization = useRecoilValue(authorizationState);
   const exportUsers = () =>
-    squidexResultsToStream(
+    squidexUsersResponseToStream(
       createCsvFileStream('user_export.csv'),
       (paginationParams) =>
         getUsers(

@@ -5,7 +5,7 @@ import { Stringifier } from 'csv-stringify';
 
 import {
   MAX_SQUIDEX_RESULTS,
-  squidexResultsToStream,
+  squidexUsersResponseToStream,
   userFields,
   userToCSV,
 } from '../export';
@@ -179,13 +179,13 @@ describe('userToCSV', () => {
   });
 });
 
-describe('squidexResultsToStream', () => {
+describe('squidexUsersResponseToStream', () => {
   const mockCsvStream = {
     write: jest.fn(),
     end: jest.fn(),
   };
   it('writtes the header', async () => {
-    await squidexResultsToStream(
+    await squidexUsersResponseToStream(
       mockCsvStream as unknown as Stringifier,
       () => Promise.resolve({ total: 0, items: [] }),
       (a) => a,
@@ -195,7 +195,7 @@ describe('squidexResultsToStream', () => {
     expect(mockCsvStream.end).toHaveBeenCalledTimes(1);
   });
   it('streams one page of results', async () => {
-    await squidexResultsToStream(
+    await squidexUsersResponseToStream(
       mockCsvStream as unknown as Stringifier,
       () => Promise.resolve(gp2Fixtures.createUsersResponse(1)),
       (a) => a,
@@ -209,7 +209,7 @@ describe('squidexResultsToStream', () => {
   });
 
   it('streams multiple pages of results', async () => {
-    await squidexResultsToStream(
+    await squidexUsersResponseToStream(
       mockCsvStream as unknown as Stringifier,
       () =>
         Promise.resolve({
@@ -230,7 +230,7 @@ describe('squidexResultsToStream', () => {
   });
 
   it('streams transformed results', async () => {
-    await squidexResultsToStream(
+    await squidexUsersResponseToStream(
       mockCsvStream as unknown as Stringifier,
       () => Promise.resolve(gp2Fixtures.createUsersResponse(1)),
       (a: gp2Model.UserResponse) => ({ name: a.firstName }),

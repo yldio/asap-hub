@@ -61,7 +61,7 @@ export const userToCSV = (output: gp2.UserResponse): UserCSV => ({
   createdDate: formatDate(new Date(output.createdDate)),
 });
 
-export const squidexResultsToStream = async (
+export const squidexUsersResponseToStream = async (
   csvStream: Stringifier,
   getResults: ({
     take,

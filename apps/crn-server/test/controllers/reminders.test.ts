@@ -12,6 +12,7 @@ import {
   getEventHappeningNowReminder,
   getVideoEventUpdatedReminder,
   getPresentationUpdatedReminder,
+  getNotesUpdatedReminder,
 } from '../fixtures/reminders.fixtures';
 import { reminderDataProviderMock } from '../mocks/reminder-data-provider.mock';
 
@@ -159,6 +160,7 @@ describe('Reminder Controller', () => {
         reminderType      | reminderDataObject                  | expectedDescription
         ${'Video'}        | ${getVideoEventUpdatedReminder()}   | ${'Video(s) for Some Test Event Title event has been shared.'}
         ${'Presentation'} | ${getPresentationUpdatedReminder()} | ${'Presentation(s) for Some Test Event Title event has been shared.'}
+        ${'Notes'}        | ${getNotesUpdatedReminder()}        | ${'Notes for Some Test Event Title event has been shared.'}
       `(
         'Should return the correct description and href for the $reminderType reminder',
         async ({ reminderDataObject, expectedDescription }) => {

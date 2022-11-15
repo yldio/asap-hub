@@ -2,6 +2,7 @@ import {
   FetchRemindersOptions,
   PresentationUpdatedReminder,
   VideoEventReminder,
+  EventNotesReminder,
 } from '@asap-hub/model';
 import { DateTime } from 'luxon';
 import {
@@ -572,14 +573,15 @@ describe('Reminder Data Provider', () => {
     });
 
     interface TestProps {
-      material: 'Video' | 'Presentation';
+      material: 'Video' | 'Presentation' | 'Notes';
       materialUpdatedAtName:
         | 'videoRecordingUpdatedAt'
         | 'presentationUpdatedAt'
         | 'notesUpdatedAt';
       expectedMaterialReminder:
         | PresentationUpdatedReminder
-        | VideoEventReminder;
+        | VideoEventReminder
+        | EventNotesReminder;
     }
 
     describe.each`

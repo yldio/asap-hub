@@ -10,6 +10,9 @@ const EXCEL_CELL_SAFE_CHARACTER_LIMIT = Math.floor(
   (EXCEL_CELL_CHARACTER_LIMIT - 2) / 2, // Cell likely wrapped with ""; " escapes to ""
 );
 
+export const caseInsensitive = (a: string, b: string) =>
+  a.localeCompare(b, undefined, { sensitivity: 'base' });
+
 export const htmlToCsvText = (html: string = '') => {
   const doc = document.createElement('DIV');
   doc.innerHTML = html;

@@ -4,6 +4,7 @@ import { isInternalUser } from '@asap-hub/validation';
 /* eslint-disable-next-line import/no-unresolved */
 import { Stringifier } from 'csv-stringify/browser/esm';
 import {
+  caseInsensitive,
   CSVValue,
   GetListOptions,
   htmlToCsvText,
@@ -15,9 +16,6 @@ type ResearchOutputCSV = Record<
   keyof Omit<ResearchOutputResponse, 'team'>,
   CSVValue
 >;
-
-const caseInsensitive = (a: string, b: string) =>
-  a.localeCompare(b, undefined, { sensitivity: 'base' });
 
 export const researchOutputToCSV = (
   output: ResearchOutputResponse,

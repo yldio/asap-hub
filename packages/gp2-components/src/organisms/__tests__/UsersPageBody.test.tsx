@@ -30,6 +30,7 @@ const pageProps: ComponentProps<typeof PageControls> = {
 const defaultProps = {
   ...pageProps,
   users,
+  isAdministrator: false,
   onFiltersClick: jest.fn,
   onExportClick: jest.fn,
 };

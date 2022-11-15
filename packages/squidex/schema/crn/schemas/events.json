@@ -686,6 +686,21 @@
         "isHidden": false,
         "isDisabled": true,
         "partitioning": "invariant"
+      },
+      {
+        "name": "notesUpdatedAt",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "DateTime",
+          "editor": "DateTime",
+          "label": "Notes Updated At"
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": true,
+        "partitioning": "invariant"
       }
     ],
     "previewUrls": {},

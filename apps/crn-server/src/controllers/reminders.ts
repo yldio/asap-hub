@@ -50,10 +50,14 @@ export default class Reminders implements ReminderController {
 
         if (
           reminder.entity === 'Event' &&
-          ['Video Updated', 'Presentation Updated'].includes(reminder.type)
+          ['Video Updated', 'Presentation Updated', 'Notes Updated'].includes(
+            reminder.type,
+          )
         ) {
           const material =
-            reminder.type === 'Video Updated' ? 'Video(s)' : 'Presentation(s)';
+            reminder.type === 'Notes Updated'
+              ? 'Notes'
+              : `${reminder.type.split(' ')[0]}(s)`;
           return {
             id: reminder.id,
             entity: reminder.entity,

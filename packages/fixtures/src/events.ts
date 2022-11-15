@@ -108,6 +108,7 @@ export const createEventResponse = (
   meetingLink: 'https://example.com/meeting',
   hideMeetingLink: false,
   notes: 'Meeting notes go here',
+  notesUpdatedAt: new Date().toISOString(),
   presentation: 'Presentation',
   videoRecording: 'Video Recording',
   videoRecordingUpdatedAt: new Date().toISOString(),

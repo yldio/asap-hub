@@ -8,6 +8,7 @@ import {
   ReminderDataObject,
   ResearchOutputPublishedReminder,
   PresentationUpdatedReminder,
+  EventNotesReminder,
 } from '@asap-hub/model';
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import { DateTime } from 'luxon';
@@ -220,7 +221,7 @@ const getEventRemindersFromQuery = (
   return eventReminders;
 };
 
-const wasMaterialUpdatedInLast24Hours = (date: string) => {
+const inLast24Hours = (date: string) => {
   const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
 
   const msBetweenNowAndMaterialUpdatedAt = DateTime.now().diff(
@@ -235,16 +236,25 @@ const wasMaterialUpdatedInLast24Hours = (date: string) => {
 
 const getEventMaterialsRemindersFromQuery = (
   queryEventsContents: FetchReminderDataQuery['queryEventsContents'],
-): (VideoEventReminder | PresentationUpdatedReminder)[] => {
+): (
+  | VideoEventReminder
+  | PresentationUpdatedReminder
+  | EventNotesReminder
+)[] => {
   const eventReminders = (queryEventsContents || []).reduce<
-    (VideoEventReminder | PresentationUpdatedReminder)[]
+    (VideoEventReminder | PresentationUpdatedReminder | EventNotesReminder)[]
   >((events, event) => {
     const {
       id: eventId,
-      flatData: { title, videoRecordingUpdatedAt, presentationUpdatedAt },
+      flatData: {
+        title,
+        videoRecordingUpdatedAt,
+        presentationUpdatedAt,
+        notesUpdatedAt,
+      },
     } = event;
 
-    if (wasMaterialUpdatedInLast24Hours(videoRecordingUpdatedAt)) {
+    if (inLast24Hours(videoRecordingUpdatedAt)) {
       events.push({
         id: `video-event-updated-${eventId}`,
         entity: 'Event',
@@ -253,12 +263,21 @@ const getEventMaterialsRemindersFromQuery = (
       });
     }
 
-    if (wasMaterialUpdatedInLast24Hours(presentationUpdatedAt)) {
+    if (inLast24Hours(presentationUpdatedAt)) {
       events.push({
         id: `presentation-event-updated-${eventId}`,
         entity: 'Event',
         type: 'Presentation Updated',
         data: { eventId, title: title || '', presentationUpdatedAt },
+      });
+    }
+
+    if (inLast24Hours(presentationUpdatedAt)) {
+      events.push({
+        id: `notes-event-updated-${eventId}`,
+        entity: 'Event',
+        type: 'Notes Updated',
+        data: { eventId, title: title || '', notesUpdatedAt },
       });
     }
 

@@ -1,6 +1,7 @@
 import {
   VideoEventReminder,
   PresentationUpdatedReminder,
+  EventNotesReminder,
   EventHappeningNowReminder,
   EventHappeningTodayReminder,
   ListReminderDataObject,
@@ -96,6 +97,22 @@ export const getPresentationUpdatedReminder =
     };
   };
 
+export const getNotesUpdatedReminder = (): EventNotesReminder => {
+  const eventResponse = getEventResponse() as ReminderEventResponse;
+  eventResponse.notesUpdatedAt = '2010-08-01T08:00:04.000Z';
+
+  return {
+    id: `notes-event-updated-${eventResponse.id}`,
+    entity: 'Event',
+    type: 'Notes Updated',
+    data: {
+      eventId: eventResponse.id,
+      title: eventResponse.title,
+      notesUpdatedAt: eventResponse.notesUpdatedAt,
+    },
+  };
+};
+
 export const getListReminderDataObject = (): ListReminderDataObject => ({
   total: 1,
   items: [getResearchOutputPublishedReminder()],
@@ -158,6 +175,7 @@ export const getSquidexReminderEventsContents = (): NonNullable<
       title: event.flatData.title,
       videoRecordingUpdatedAt: event.flatData.videoRecordingUpdatedAt,
       presentationUpdatedAt: event.flatData.presentationUpdatedAt,
+      notesUpdatedAt: event.flatData.notesUpdatedAt,
     },
   };
 };

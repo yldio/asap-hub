@@ -5,16 +5,17 @@ import { workingGroups } from '@asap-hub/routing/src/gp2';
 import {
   render,
   screen,
+  waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
-
+import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import EditResource from '../EditResource';
 import { refreshWorkingGroupState } from '../state';
-import { getWorkingGroup } from '../api';
+import { getWorkingGroup, putWorkingGroupResources } from '../api';
 
 jest.mock('../api');
 
@@ -70,6 +71,11 @@ describe('edit resources', () => {
   const mockGetWorkingGroup = getWorkingGroup as jest.MockedFunction<
     typeof getWorkingGroup
   >;
+
+  const mockPutWorkingGroupResources =
+    putWorkingGroupResources as jest.MockedFunction<
+      typeof putWorkingGroupResources
+    >;
 
   it('see if modal appears', async () => {
     const workingGroup = gp2Fixtures.createWorkingGroupResponse();
@@ -146,5 +152,53 @@ describe('edit resources', () => {
     expect(
       screen.getByRole('textbox', { name: 'Resource Type (required)' }),
     ).toHaveValue('');
+  });
+
+  it('can submit a form when form data is valid for editing', async () => {
+    const workingGroup = gp2Fixtures.createWorkingGroupResponse();
+    workingGroup.members = [
+      {
+        userId: '23',
+        firstName: 'Tony',
+        lastName: 'Stark',
+        role: 'Lead',
+      },
+    ];
+
+    const title = 'example42 title';
+    const type = 'Note';
+
+    const resources = workingGroups({})
+      .workingGroup({ workingGroupId: workingGroup.id })
+      .resources({}).$;
+
+    const props = {
+      workingGroupId: workingGroup.id,
+      workingGroup,
+      backHref: resources,
+      updateWorkingGroupResources: jest.fn(),
+    };
+
+    mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
+    mockPutWorkingGroupResources.mockResolvedValueOnce(workingGroup);
+    await renderWorkingGroupDetail({
+      id: workingGroup.id,
+      userId: '23',
+      role: 'Administrator',
+      route: gp2Routing
+        .workingGroups({})
+        .workingGroup({ workingGroupId: workingGroup.id })
+        .resources({}).$,
+      children: <EditResource {...props} />,
+    });
+
+    const typeBox = await screen.findByRole('textbox', { name: /type/i });
+    userEvent.type(typeBox, `${type}{enter}`);
+    const titleBox = screen.getByRole('textbox', { name: /title/i });
+    userEvent.type(titleBox, title);
+    const saveButton = screen.getByRole('button', { name: /save/i });
+    userEvent.click(saveButton);
+
+    await waitFor(() => expect(saveButton).toBeEnabled());
   });
 });

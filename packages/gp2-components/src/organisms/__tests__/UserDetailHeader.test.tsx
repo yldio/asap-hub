@@ -45,6 +45,12 @@ describe('UserDetailHeader', () => {
       screen.getByRole('link', { name: 'Chevron Left Back' }),
     ).toHaveAttribute('href', '/back');
   });
+  it('does not render back link if href is undefined', () => {
+    render(<UserDetailHeader {...defaultProps} backHref={undefined} />);
+    expect(
+      screen.queryByRole('link', { name: 'Chevron Left Back' }),
+    ).not.toBeInTheDocument();
+  });
   it('renders user info', () => {
     render(<UserDetailHeader {...defaultProps} />);
     expect(screen.getByText('Administrator')).toBeInTheDocument();

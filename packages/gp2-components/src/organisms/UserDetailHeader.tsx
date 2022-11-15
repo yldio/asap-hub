@@ -4,9 +4,12 @@ import {
   BackLink,
   crossQuery,
   drawerQuery,
+  Headline3,
+  Link,
   pixels,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
+import { addIcon } from '../icons';
 import locationIcon from '../icons/location-icon';
 import roleIcon from '../icons/role-icon';
 import { usersHeaderImage } from '../images';
@@ -30,7 +33,8 @@ type UserDetailHeaderProps = Pick<
   | 'country'
   | 'positions'
 > & {
-  backHref: string;
+  edit?: string;
+  backHref?: string;
 };
 
 const avatarSize = 132;
@@ -53,13 +57,6 @@ const textContainerStyles = css({
   flexDirection: 'column',
 });
 
-const titleStyles = css({
-  margin: `8px 0`,
-  fontWeight: 'bold',
-  fontSize: '26px',
-  lineHeight: '32px',
-});
-
 const avatarStyles = css({
   width: rem(avatarSize),
   height: rem(avatarSize),
@@ -70,6 +67,7 @@ const avatarStyles = css({
 const rowStyles = css({
   display: 'flex',
   flexDirection: 'column',
+  width: '100%',
   [crossQuery]: {
     flexDirection: 'row',
     gap: rem(24),
@@ -77,6 +75,17 @@ const rowStyles = css({
 });
 const rowContainerStyles = css({
   marginBottom: rem(12),
+});
+const editButtonStyles = css({
+  [crossQuery]: {
+    marginLeft: 'auto',
+  },
+});
+const buttonStyles = css({
+  [drawerQuery]: {
+    flexDirection: 'column-reverse',
+    gap: rem(24),
+  },
 });
 
 const UserDetailHeader: React.FC<UserDetailHeaderProps> = ({
@@ -91,9 +100,10 @@ const UserDetailHeader: React.FC<UserDetailHeaderProps> = ({
   city,
   country,
   positions,
+  edit,
 }) => (
   <header>
-    <BackLink href={backHref} />
+    {backHref && <BackLink href={backHref} />}
     <CardWithBackground image={usersHeaderImage}>
       <div css={containerStyles}>
         <Avatar
@@ -104,10 +114,19 @@ const UserDetailHeader: React.FC<UserDetailHeaderProps> = ({
         />
 
         <div css={textContainerStyles}>
-          <h3 css={titleStyles}>
-            {displayName}
-            {degrees && !!degrees.length && `, ${degrees.join(', ')}`}
-          </h3>
+          <div css={[rowStyles, buttonStyles]}>
+            <Headline3 noMargin>
+              {displayName}
+              {degrees && !!degrees.length && `, ${degrees.join(', ')}`}
+            </Headline3>
+            {edit && (
+              <div css={editButtonStyles}>
+                <Link href={edit} buttonStyle noMargin small>
+                  Required {addIcon}
+                </Link>
+              </div>
+            )}
+          </div>
           <div css={rowContainerStyles}>
             <div css={rowStyles}>
               <IconWithLabel icon={roleIcon}>{role}</IconWithLabel>

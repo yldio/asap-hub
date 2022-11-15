@@ -39,7 +39,7 @@ describe('Routes', () => {
     ).toBeInTheDocument();
 
     expect(
-      screen.getByRole('button', { name: 'Get Started' }),
+      screen.getByRole('link', { name: 'Get Started' }),
     ).toBeInTheDocument();
 
     expect(screen.getByRole('link', { name: 'Sign Out' })).toBeInTheDocument();

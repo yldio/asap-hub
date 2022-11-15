@@ -10,13 +10,10 @@ export const ellipsisStyles = css({
 
 type EllipsisProps = {
   readonly children?: React.ReactNode;
-  readonly title?: string;
 };
 
-const Ellipsis: React.FC<EllipsisProps> = ({ children, title }) => (
-  <span title={title} css={ellipsisStyles}>
-    {children}
-  </span>
+const Ellipsis: React.FC<EllipsisProps> = ({ children }) => (
+  <span css={ellipsisStyles}>{children}</span>
 );
 
 export default Ellipsis;

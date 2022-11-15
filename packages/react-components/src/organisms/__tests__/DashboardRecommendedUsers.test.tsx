@@ -25,3 +25,34 @@ it('renders the dashboard recommended users', () => {
   expect(getByRole('link', { name: 'Octavian Ratiu' })).toBeVisible();
   expect(getByRole('link', { name: 'User 3' })).toBeVisible();
 });
+
+it('renders the recommended user', () => {
+  const { getByText, getByRole } = render(
+    <DashboardRecommendedUsers
+      recommendedUsers={[
+        {
+          ...createUserResponse(),
+          id: 'user-1',
+          firstName: 'Test',
+          lastName: 'User',
+          displayName: 'Test User',
+          expertiseAndResourceTags: ['Tag 1'],
+          avatarUrl:
+            'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?f=y',
+          teams: [
+            { id: 'team-1', displayName: 'Team 1', role: 'Key Personnel' },
+          ],
+        },
+        createUserResponse(),
+        createUserResponse(),
+      ]}
+    />,
+  );
+  expect(getByRole('link', { name: 'Test User' })).toBeVisible();
+  expect(
+    getByRole('link', { name: 'Profile picture of Test User' }),
+  ).toBeVisible();
+  expect(getByText(/Key Personnel/)).toBeVisible();
+  expect(getByText('Team 1')).toBeVisible();
+  expect(getByText('Tag 1')).toBeVisible();
+});

@@ -1,4 +1,4 @@
-import { userMock } from '@asap-hub/fixtures';
+import { createAuthUser } from '@asap-hub/fixtures';
 import { AuthHandler } from '@asap-hub/server-common';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
@@ -7,7 +7,7 @@ import { loggerMock } from '../mocks/logger.mock';
 import { reminderControllerMock } from '../mocks/reminder-controller.mock';
 
 describe('/reminders/ route', () => {
-  const getLoggedUser = jest.fn().mockReturnValue(userMock);
+  const getLoggedUser = jest.fn().mockReturnValue(createAuthUser());
   const authHandlerMock: AuthHandler = (req, _res, next) => {
     req.loggedInUser = getLoggedUser();
     next();
@@ -43,7 +43,7 @@ describe('/reminders/ route', () => {
     test('Should call the controller with the logged-in user ID and requested timezone', async () => {
       const userId = 'some-user-id';
       const someUser = {
-        ...userMock,
+        ...createAuthUser(),
         id: userId,
       };
       const timezone = 'Europe/London';

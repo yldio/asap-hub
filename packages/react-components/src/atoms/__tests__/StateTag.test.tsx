@@ -16,3 +16,27 @@ it('renders an icon if provided', () => {
   render(<StateTag label="Text" icon={testSvg} />);
   expect(screen.getByTitle('Icon')).toBeInTheDocument();
 });
+
+it('applies default colors (apricot/clay)', () => {
+  const { container } = render(<StateTag label="Text" />);
+
+  expect(container.firstElementChild).toBeDefined();
+  const { backgroundColor, color } = getComputedStyle(
+    container.firstElementChild as Element,
+  );
+
+  expect(backgroundColor).toMatchInlineSnapshot(`"rgb(248, 237, 222)"`);
+  expect(color).toMatchInlineSnapshot(`"rgb(206, 128, 26)"`);
+});
+
+it('applies green variant colors (mint/fern)', () => {
+  const { container } = render(<StateTag label="Text" accent="green" />);
+
+  expect(container.firstElementChild).toBeDefined();
+  const { backgroundColor, color } = getComputedStyle(
+    container.firstElementChild as Element,
+  );
+
+  expect(backgroundColor).toMatchInlineSnapshot(`"rgb(228, 245, 238)"`);
+  expect(color).toMatchInlineSnapshot(`"rgb(52, 162, 112)"`);
+});

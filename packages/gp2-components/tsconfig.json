@@ -10,6 +10,7 @@
   },
   "include": ["src"],
   "references": [
+    { "path": "../auth" },
     { "path": "../react-components" },
     { "path": "../dom-test-utils" },
     { "path": "../react-context" },

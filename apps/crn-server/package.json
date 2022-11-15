@@ -30,6 +30,7 @@
     "@algolia/cli": "4.0.8",
     "@asap-hub/algolia": "workspace:*",
     "@asap-hub/auth": "workspace:*",
+    "@asap-hub/contentful": "workspace:^",
     "@asap-hub/errors": "workspace:*",
     "@asap-hub/message-templates": "workspace:*",
     "@asap-hub/model": "workspace:*",

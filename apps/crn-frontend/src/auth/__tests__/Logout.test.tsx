@@ -8,13 +8,13 @@ const { mockAssign } = mockLocation();
 
 it('redirects to the logout URL', async () => {
   render(
-    <authTestUtils.Auth0ProviderCRN>
-      <authTestUtils.WhenReadyCRN>
-        <authTestUtils.LoggedInCRN user={undefined}>
+    <authTestUtils.UserAuth0Provider>
+      <authTestUtils.UserWhenReady>
+        <authTestUtils.UserLoggedIn user={undefined}>
           <Logout />
-        </authTestUtils.LoggedInCRN>
-      </authTestUtils.WhenReadyCRN>
-    </authTestUtils.Auth0ProviderCRN>,
+        </authTestUtils.UserLoggedIn>
+      </authTestUtils.UserWhenReady>
+    </authTestUtils.UserAuth0Provider>,
   );
   await waitFor(() => expect(mockAssign).toHaveBeenCalled());
 

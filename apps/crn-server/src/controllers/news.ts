@@ -4,7 +4,7 @@ import {
   NewsResponse,
   FetchNewsOptions,
 } from '@asap-hub/model';
-import { NewsDataProvider } from '../data-providers/news.data-provider';
+import { NewsDataProvider } from '../data-providers/types';
 
 export interface NewsController {
   fetch: (options?: FetchNewsOptions) => Promise<ListNewsResponse>;

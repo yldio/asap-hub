@@ -76,6 +76,7 @@ export const SharedResearch = () => components.libraryIcon;
 export const Share = () => components.shareIcon;
 export const ShowPassword = () => components.showPasswordIcon;
 export const Slack = () => components.slackIcon;
+export const Success = () => components.successIcon;
 export const SystemCalendar = () => components.systemCalendar;
 export const TeamMembers = () => components.teamIcon;
 export const Tick = () => components.tickIcon;

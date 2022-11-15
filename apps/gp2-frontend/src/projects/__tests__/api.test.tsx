@@ -1,8 +1,8 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 as gp2Model } from '@asap-hub/model';
-import nock from 'nock';
+import nock, { DataMatcherMap } from 'nock';
 import { API_BASE_URL } from '../../config';
-import { getProject, getProjects } from '../api';
+import { getProject, getProjects, putProjectResources } from '../api';
 
 jest.mock('../../config');
 
@@ -71,6 +71,30 @@ describe('getProjects', () => {
       getProjects('Bearer x'),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch the projects. Expected status 2xx. Received status 500."`,
+    );
+  });
+});
+
+describe('putProjectsResources', () => {
+  afterEach(nock.cleanAll);
+  const payload = gp2Fixtures.projectResources;
+
+  it('makes an authorized PUT request to update a project resources', async () => {
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .put('/project/11/resources', payload as unknown as DataMatcherMap)
+      .reply(200, { id: 123 });
+
+    await putProjectResources('11', payload, 'Bearer x');
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('errors for an error status', async () => {
+    nock(API_BASE_URL).put('/project/11/resources').reply(500, {});
+
+    await expect(
+      putProjectResources('11', payload, 'Bearer x'),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Failed to update project resources for id 11 Expected status 200. Received status 500."`,
     );
   });
 });

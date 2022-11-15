@@ -1,15 +1,13 @@
 /* istanbul ignore file */
-
-import type { Auth0User, gp2, User } from '@asap-hub/auth';
+import type { Auth0, Auth0User, User } from '@asap-hub/auth';
+import { createAuthUser as createAuthUserFixture } from '@asap-hub/fixtures';
 import {
   Auth0ContextCRN,
-  Auth0ContextGP2,
   getUserClaimKey,
   useAuth0CRN,
-  useAuth0GP2,
 } from '@asap-hub/react-context';
 import createAuth0Client, { Auth0Client } from '@auth0/auth0-spa-js';
-import { useEffect, useState } from 'react';
+import { ComponentProps, Context, useEffect, useState } from 'react';
 
 const notImplemented = (method: string) => () => {
   throw new Error(`${method} not implemented by the Auth0 test fixture`);
@@ -52,9 +50,12 @@ const createAuth0ClientParams = {
  * You probably don't want to use this in the frontend,
  * which has its own recoil-integrated auth test utils.
  */
-export const Auth0ProviderCRN: React.FC<{
+interface Auth0ProviderProps<T> {
   readonly children: React.ReactNode;
-}> = ({ children }) => {
+  readonly AuthContext: Context<Auth0<T>>;
+}
+export const Auth0Provider = <T,>(props: Auth0ProviderProps<T>) => {
+  const { AuthContext, children } = props;
   const [auth0Client, setAuth0] = useState<Auth0Client>();
   useEffect(() => {
     const initAuth0 = async () => {
@@ -64,130 +65,37 @@ export const Auth0ProviderCRN: React.FC<{
   }, []);
 
   return (
-    <Auth0ContextCRN.Provider value={auth0Context(auth0Client)}>
+    <AuthContext.Provider value={auth0Context(auth0Client)}>
       {children}
-    </Auth0ContextCRN.Provider>
+    </AuthContext.Provider>
   );
 };
-export const Auth0ProviderGP2: React.FC<{
+
+interface WhenReadyProps<T> {
   readonly children: React.ReactNode;
-}> = ({ children }) => {
-  const [auth0Client, setAuth0] = useState<Auth0Client>();
-  useEffect(() => {
-    const initAuth0 = async () => {
-      setAuth0(await createAuth0Client(createAuth0ClientParams));
-    };
-    initAuth0();
-  }, []);
-
-  return (
-    <Auth0ContextGP2.Provider value={auth0Context(auth0Client)}>
-      {children}
-    </Auth0ContextGP2.Provider>
-  );
-};
-
-export const WhenReadyCRN: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  const { loading } = useAuth0CRN();
-  return loading ? <p>Auth0 loading...</p> : <>{children}</>;
-};
-export const WhenReadyGP2: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  const { loading } = useAuth0GP2();
+  readonly useAuth0?: () => Auth0<T>;
+}
+export const WhenReady = <T,>(props: WhenReadyProps<T>) => {
+  const { children, useAuth0 = useAuth0CRN } = props;
+  const { loading } = useAuth0();
   return loading ? <p>Auth0 loading...</p> : <>{children}</>;
 };
 
-export const LoggedInCRN: React.FC<{
+interface LoggedInProps<T> {
   readonly children: React.ReactNode;
   // undefined user should be explicit, this is for the intermediate state
   // where the getUser() promise is pending.
-  readonly user: Partial<User> | undefined;
-}> = ({ children, user }) => {
-  const ctx = useAuth0CRN();
-  const getAuth0User = (): Auth0User<User> => {
-    const completeUser: User = {
-      id: 'testuserid',
-      onboarded: true,
-      email: 'john.doe@example.com',
-      displayName: 'John Doe',
-      firstName: 'John',
-      lastName: 'Doe',
-      teams: [
-        {
-          id: 'team-1',
-          displayName: 'Team 1',
-          role: 'Lead PI (Core Leadership)',
-        },
-      ],
-      algoliaApiKey: 'algolia-mock-key',
-      ...user,
-    };
-    return getAuth0UserFromUser(completeUser);
-  };
-
-  const auth0User = user ? getAuth0User() : undefined;
-
-  return (
-    <Auth0ContextCRN.Provider
-      value={{
-        ...ctx,
-        isAuthenticated: true,
-        user: auth0User,
-        getTokenSilently: jest.fn().mockResolvedValue('token'),
-        getIdTokenClaims: async () => ({ __raw: 'token' }),
-      }}
-    >
-      {children}
-    </Auth0ContextCRN.Provider>
-  );
+  readonly user: Partial<T> | undefined;
+  readonly createAuthUser: () => T;
+  readonly useAuth0: () => Auth0<T>;
+  readonly AuthContext: Context<Auth0<T>>;
+}
+type Auth0BaseUser = {
+  displayName: string;
+  firstName: string;
+  lastName: string;
 };
-
-export const LoggedInGP2: React.FC<{
-  readonly children: React.ReactNode;
-  // undefined user should be explicit, this is for the intermediate state
-  // where the getUser() promise is pending.
-  readonly user: Partial<gp2.User> | undefined;
-}> = ({ children, user }) => {
-  const ctx = useAuth0GP2();
-  const getAuth0User = (): Auth0User<gp2.User> => {
-    const completeUser: gp2.User = {
-      id: 'testuserid',
-      onboarded: true,
-      email: 'john.doe@example.com',
-      displayName: 'John Doe',
-      firstName: 'John',
-      lastName: 'Doe',
-      role: 'Trainee',
-      ...user,
-    };
-    return getAuth0UserFromUser(completeUser);
-  };
-
-  const auth0User = user ? getAuth0User() : undefined;
-
-  return (
-    <Auth0ContextGP2.Provider
-      value={{
-        ...ctx,
-        isAuthenticated: true,
-        user: auth0User,
-        getTokenSilently: jest.fn().mockResolvedValue('token'),
-        getIdTokenClaims: async () => ({ __raw: 'token' }),
-      }}
-    >
-      {children}
-    </Auth0ContextGP2.Provider>
-  );
-};
-
-const getAuth0UserFromUser = <
-  T extends { displayName: string; firstName: string; lastName: string },
->(
-  completeUser: T,
-) => ({
+const getAuth0UserFromUser = <T extends Auth0BaseUser>(completeUser: T) => ({
   sub: 'testuser',
   name: completeUser.displayName,
   given_name: completeUser.firstName,
@@ -195,3 +103,63 @@ const getAuth0UserFromUser = <
   aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
   [getUserClaimKey()]: completeUser,
 });
+export const LoggedIn = <T extends Auth0BaseUser>({
+  children,
+  user,
+  useAuth0,
+  createAuthUser,
+  AuthContext,
+}: LoggedInProps<T>) => {
+  const ctx = useAuth0();
+  const getAuth0User = (): Auth0User<T> => {
+    const completeUser = {
+      ...createAuthUser(),
+      ...user,
+    };
+    return getAuth0UserFromUser<T>(completeUser);
+  };
+
+  const auth0User = user ? getAuth0User() : undefined;
+
+  return (
+    <AuthContext.Provider
+      value={{
+        ...ctx,
+        isAuthenticated: true,
+        user: auth0User,
+        getTokenSilently: jest.fn().mockResolvedValue('token'),
+        getIdTokenClaims: async () => ({ __raw: 'token' }),
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+type UserAuth0ProviderProps = Pick<
+  ComponentProps<typeof Auth0Provider<User>>,
+  'children'
+>;
+export const UserAuth0Provider = ({ children }: UserAuth0ProviderProps) => (
+  <Auth0Provider<User> AuthContext={Auth0ContextCRN}>{children}</Auth0Provider>
+);
+
+type UserWhenReadyProps = Pick<
+  ComponentProps<typeof WhenReady<User>>,
+  'children'
+>;
+export const UserWhenReady = ({ children }: UserWhenReadyProps) => (
+  <WhenReady<User> useAuth0={useAuth0CRN}>{children}</WhenReady>
+);
+
+type UserLoggedInProps = Pick<LoggedInProps<User>, 'children' | 'user'>;
+export const UserLoggedIn = ({ children, user }: UserLoggedInProps) => (
+  <LoggedIn
+    user={user}
+    useAuth0={useAuth0CRN}
+    createAuthUser={createAuthUserFixture}
+    AuthContext={Auth0ContextCRN}
+  >
+    {children}
+  </LoggedIn>
+);

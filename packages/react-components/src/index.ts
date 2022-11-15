@@ -130,7 +130,6 @@ export {
   ResearchOutputHeader,
   RichText,
   RichTextCard,
-  RecommendedUser,
   SearchAndFilter,
   SharedResearchCard,
   SharedResearchListCard,

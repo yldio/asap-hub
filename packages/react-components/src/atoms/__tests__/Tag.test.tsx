@@ -35,3 +35,8 @@ it('renders a tag with different border and text color when disabled', () => {
     findParentWithStyle(getByText('Text'), 'borderColor')?.borderColor,
   ).toEqual(tin.rgb);
 });
+
+it('renders a tag with a title', () => {
+  const { getByTitle } = render(<Tag title="Text"></Tag>);
+  expect(getByTitle('Text')).toBeVisible();
+});

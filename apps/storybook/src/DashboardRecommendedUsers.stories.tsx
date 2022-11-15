@@ -1,6 +1,6 @@
 import { DashboardRecommendedUsers } from '@asap-hub/react-components';
 import { createListUserResponse } from '@asap-hub/fixtures';
-import { number } from '@storybook/addon-knobs';
+import { number, text } from '@storybook/addon-knobs';
 
 export default {
   title: 'Templates / Dashboard Recommended Users',
@@ -13,7 +13,7 @@ export const Normal = () => (
       ...user,
       expertiseAndResourceTags: Array.from(
         new Array(number('Number of tags', 8)),
-        (x, i) => `Long tag name goes here${i}`,
+        (x, i) => text('Tags text', 'Long tag name goes here'),
       ),
     }))}
   />

@@ -195,12 +195,5 @@ describe('the recommended users card', () => {
         'Explore information about the latest users on the hub and learn more about them.',
       ),
     ).toBeVisible();
-
-    expect(
-      screen.getByTestId('view-all-users').querySelector('a'),
-    ).toHaveTextContent('View All');
-    expect(
-      screen.getByTestId('view-all-users').querySelector('a'),
-    ).toHaveAttribute('href', '/network/users');
   });
 });

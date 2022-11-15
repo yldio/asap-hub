@@ -169,7 +169,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           about them.
         </div>
         <DashboardRecommendedUsers recommendedUsers={recommendedUsers} />
-        <p css={viewAllStyles} data-testid="view-all-users">
+        <p css={viewAllStyles}>
           <Link href={network({}).users({}).$}>View All →</Link>
         </p>
       </div>

@@ -1,87 +1,23 @@
 /* istanbul ignore file */
 import { FC } from 'react';
-import { steel } from '../colors';
 
 interface WarningProps {
   readonly color?: string;
 }
 
-const Warning: FC<WarningProps> = ({ color }) => (
+const Warning: FC<WarningProps> = ({ color = '#CE801A' }) => (
   <svg
-    width="24px"
-    height="24px"
+    width="24"
+    height="24"
     viewBox="0 0 24 24"
-    version="1.1"
+    fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    xmlnsXlink="http://www.w3.org/1999/xlink"
   >
     <title>Warning</title>
-    <g
-      id="Error-States"
-      stroke="none"
-      strokeWidth="1"
-      fill="none"
-      fillRule="evenodd"
-    >
-      <g
-        id="1.3.1-Create-Account-Issue-/-Large-Desktop"
-        transform="translate(-388.000000, -18.000000)"
-      >
-        <g id="Group-23">
-          <g id="Group-7" transform="translate(388.000000, 6.000000)">
-            <g
-              id="1.3.1-Create-Account-/-Large-Desktop"
-              transform="translate(0.000000, 12.000000)"
-            >
-              <g id="Group-3">
-                <g id="Group-16">
-                  <g id="Group-15">
-                    <g id="Group-10">
-                      <g id="Group-4"></g>
-                      <rect
-                        fill={color || steel.rgb}
-                        id="Rectangle"
-                        x="0"
-                        y="0"
-                        width="24"
-                        height="24"
-                        rx="12"
-                      ></rect>
-                      <g
-                        id="Group-9"
-                        transform="translate(10.000000, 4.000000)"
-                        fill="#FFFFFF"
-                      >
-                        <g
-                          id="Group-8"
-                          transform="translate(0.500000, 0.000000)"
-                        >
-                          <g
-                            id="Group-9"
-                            transform="translate(0.241071, 0.000000)"
-                          >
-                            <circle
-                              id="Oval"
-                              cx="1.6875"
-                              cy="13.2589286"
-                              r="1.6875"
-                            ></circle>
-                            <polygon
-                              id="Rectangle"
-                              points="0 0.321428571 3.375 0.321428571 2.73214286 9.32142857 0.642857143 9.32142857"
-                            ></polygon>
-                          </g>
-                        </g>
-                      </g>
-                    </g>
-                  </g>
-                </g>
-              </g>
-            </g>
-          </g>
-        </g>
-      </g>
-    </g>
+    <path
+      d="M12 24C18.6272 24 24 18.6272 24 12C24 5.3728 18.6272 -1.90735e-06 12 -1.90735e-06C5.3728 -1.90735e-06 -1.90735e-06 5.3728 -1.90735e-06 12C-1.90735e-06 18.6272 5.3728 24 12 24ZM10.5 4.5H13.5V13.5H10.5V4.5ZM12 15.9C12.5304 15.9 13.0391 16.1107 13.4142 16.4858C13.7893 16.8609 14 17.3696 14 17.9C14 18.4304 13.7893 18.9391 13.4142 19.3142C13.0391 19.6893 12.5304 19.9 12 19.9C11.4696 19.9 10.9609 19.6893 10.5858 19.3142C10.2107 18.9391 10 18.4304 10 17.9C10 17.3696 10.2107 16.8609 10.5858 16.4858C10.9609 16.1107 11.4696 15.9 12 15.9Z"
+      fill={color}
+    />
   </svg>
 );
 

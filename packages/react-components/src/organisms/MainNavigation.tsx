@@ -51,6 +51,9 @@ const listStyles = css({
     12 / perRem,
     'em',
   )})`,
+  li: {
+    marginBottom: '3px',
+  },
 });
 
 export interface MainNavigationProps {

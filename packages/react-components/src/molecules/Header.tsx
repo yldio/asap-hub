@@ -11,7 +11,6 @@ const containerStyles = (enabled: boolean) =>
     height,
     flexGrow: 1,
     boxSizing: 'border-box',
-    padding: '0 24px',
     display: 'flex',
     justifyContent: 'center',
   });
@@ -21,6 +20,11 @@ const containerOpaqueStyles = css({
 
 const logoStyles = css({
   height,
+  display: 'flex',
+  alignItems: 'center',
+  svg: {
+    height: '32px',
+  },
 });
 
 type HeaderProps = {
@@ -38,11 +42,9 @@ const Header: React.FC<HeaderProps> = ({
     css={[containerStyles(enabled), transparent || containerOpaqueStyles]}
   >
     <Link href={enabled ? logoHref : undefined}>
-      <img
-        alt="ASAP logo"
-        src={transparent ? asapPaddedWhiteImage : asapPaddedImage}
-        css={logoStyles}
-      />
+      <span css={logoStyles}>
+        {transparent ? asapPaddedWhiteImage : asapPaddedImage}
+      </span>
     </Link>
   </header>
 );

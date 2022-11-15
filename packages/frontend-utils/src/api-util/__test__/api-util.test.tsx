@@ -16,7 +16,7 @@ const baseUrl = `https://example.com`;
 
 const createListApiUrl = createListApiUrlFactory(baseUrl);
 
-describe('BackendError()', () => {
+describe('BackendError', () => {
   it('creates a well formed error', () => {
     const response = {
       error: 'not found',

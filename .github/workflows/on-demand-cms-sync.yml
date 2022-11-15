@@ -52,7 +52,7 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Run CMS sync
+      - name: Run CMS sync for news
         if: ${{ inputs.entity == 'news' || inputs.entity == 'all' }}
         run: |
           yarn workspace @asap-hub/cms-migration migrate:news

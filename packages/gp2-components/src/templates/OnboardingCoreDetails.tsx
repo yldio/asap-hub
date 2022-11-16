@@ -102,7 +102,13 @@ const OnboardingCoreDetails: React.FC<OnboardingCoreDetailProps> = ({
     </div>
     <footer css={footerStyles}>
       <div css={css(footerEditStyles)}>
-        <Link tabletFullWidth buttonStyle noMargin href={onboarding({}).$}>
+        <Link
+          enabled={false}
+          tabletFullWidth
+          buttonStyle
+          noMargin
+          href={onboarding({}).$}
+        >
           Previous
         </Link>
         <Link

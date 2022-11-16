@@ -1,4 +1,5 @@
 import { gp2 } from '@asap-hub/fixtures';
+import { logout } from '@asap-hub/routing';
 import { render, screen } from '@testing-library/react';
 import OnboardingCoreDetails from '../OnboardingCoreDetails';
 
@@ -64,4 +65,22 @@ it('renders the positions', () => {
   expect(
     screen.getByText('CEO in Research at Stark Enterprises'),
   ).toBeInTheDocument();
+});
+it('Previous button is disabled', () => {
+  const user = createUserResponse();
+  render(<OnboardingCoreDetails {...user} />);
+  expect(screen.getByText('Previous').closest('a')).not.toHaveAttribute('href');
+});
+it('Continue button is disabled by default', () => {
+  const user = createUserResponse();
+  render(<OnboardingCoreDetails {...user} />);
+  expect(screen.getByText('Continue').closest('a')).not.toHaveAttribute('href');
+});
+it('Logout button', () => {
+  const user = createUserResponse();
+  render(<OnboardingCoreDetails {...user} />);
+  expect(screen.getByText('Sign Out').closest('a')).toHaveAttribute(
+    'href',
+    logout({}).$,
+  );
 });

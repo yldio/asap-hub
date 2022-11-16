@@ -13,8 +13,16 @@ import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 import { researchOutputsState } from '../state';
 import { MAX_ALGOLIA_RESULTS } from '../export';
 
+jest.mock('@asap-hub/frontend-utils', () => {
+  const original = jest.requireActual('@asap-hub/frontend-utils');
+  return {
+    ...original,
+    createCsvFileStream: jest
+      .fn()
+      .mockImplementation(() => ({ write: jest.fn(), end: jest.fn() })),
+  };
+});
 jest.mock('../api');
-jest.mock('@asap-hub/frontend-utils');
 
 const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
   typeof createCsvFileStream

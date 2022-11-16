@@ -83,7 +83,7 @@ const DashboardRecommendedUsers: React.FC<DashboardRecommendedUsersProps> = ({
             </div>
           )}
           <TagList
-            isVertical
+            singleColumn
             tags={user.expertiseAndResourceTags}
             max={NUMBER_OF_TAGS_TO_DISPLAY}
           />

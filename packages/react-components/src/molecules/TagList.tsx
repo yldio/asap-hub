@@ -73,7 +73,7 @@ interface TagListProps {
   enabled?: boolean;
   min?: number;
   max?: number;
-  isVertical?: boolean;
+  singleColumn?: boolean;
 }
 
 const TagList: React.FC<TagListProps> = ({
@@ -81,14 +81,14 @@ const TagList: React.FC<TagListProps> = ({
   min = SAFARI_MAX_SAFE_INTEGER,
   max = SAFARI_MAX_SAFE_INTEGER,
   enabled = true,
-  isVertical = false,
+  singleColumn = false,
 }) =>
   tags.length ? (
     <ul
       css={[
         listStyles,
         { counterReset: `tags ${tags.length}` },
-        isVertical && verticalList,
+        singleColumn && verticalList,
       ]}
     >
       {tags.map((tag, index) => (
@@ -97,7 +97,7 @@ const TagList: React.FC<TagListProps> = ({
           css={[
             normalListItemStyles,
             summarizedListItemStyles(min, max),
-            isVertical && verticalListItemStyles,
+            singleColumn && verticalListItemStyles,
           ]}
         >
           <Tag title={tag} enabled={enabled}>

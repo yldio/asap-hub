@@ -163,10 +163,9 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         )}
       </div>
       <div>
-        <Headline2 styleAsHeading={3}>Recommended for You</Headline2>
+        <Headline2 styleAsHeading={3}>Latest Users</Headline2>
         <div css={infoStyles}>
-          Explore information about the latest users on the hub and learn more
-          about them.
+          Explore and learn more about the latest users on the hub.
         </div>
         <DashboardRecommendedUsers recommendedUsers={recommendedUsers} />
         <p css={viewAllStyles}>

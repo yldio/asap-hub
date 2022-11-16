@@ -189,10 +189,10 @@ describe('the reminders card', () => {
 describe('the recommended users card', () => {
   it('shows the recommended users card', () => {
     render(<DashboardPageBody {...props} />);
-    expect(screen.getByText('Recommended for You')).toBeVisible();
+    expect(screen.getByText('Latest Users')).toBeVisible();
     expect(
       screen.getByText(
-        'Explore information about the latest users on the hub and learn more about them.',
+        'Explore and learn more about the latest users on the hub.',
       ),
     ).toBeVisible();
   });

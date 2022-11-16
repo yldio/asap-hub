@@ -6,16 +6,14 @@ import { createTeamResponse } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
 
 import { RecoilRoot } from 'recoil';
+import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import Outputs from '../Outputs';
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { getResearchOutputs } from '../../../shared-research/api';
 import { researchOutputsState } from '../../../shared-research/state';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
-import {
-  createCsvFileStream,
-  MAX_ALGOLIA_RESULTS,
-} from '../../../shared-research/export';
+import { MAX_ALGOLIA_RESULTS } from '../../../shared-research/export';
 import { getTeam } from '../api';
 
 jest.mock('../../../shared-research/api');

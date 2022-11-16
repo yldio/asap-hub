@@ -1,5 +1,5 @@
 import { RESEARCH_OUTPUT_ENTITY_TYPE } from '@asap-hub/algolia';
-import { SearchFrame } from '@asap-hub/frontend-utils';
+import { createCsvFileStream, SearchFrame } from '@asap-hub/frontend-utils';
 import {
   ResearchOutputsSearch,
   TeamProfileOutputs,
@@ -17,7 +17,6 @@ import { useAlgolia } from '../../hooks/algolia';
 import { getResearchOutputs } from '../../shared-research/api';
 import {
   algoliaResultsToStream,
-  createCsvFileStream,
   researchOutputToCSV,
 } from '../../shared-research/export';
 import { useTeamById } from './state';

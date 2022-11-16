@@ -6,7 +6,6 @@ import { Stringifier } from 'csv-stringify';
 import {
   MAX_SQUIDEX_RESULTS,
   squidexUsersResponseToStream,
-  userFields,
   userToCSV,
 } from '../export';
 
@@ -184,27 +183,17 @@ describe('squidexUsersResponseToStream', () => {
     write: jest.fn(),
     end: jest.fn(),
   };
-  it('writtes the header', async () => {
-    await squidexUsersResponseToStream(
-      mockCsvStream as unknown as Stringifier,
-      () => Promise.resolve({ total: 0, items: [] }),
-      (a) => a,
-    );
-    expect(mockCsvStream.write).toHaveBeenCalledWith(userFields);
-    expect(mockCsvStream.write).toHaveBeenCalledTimes(1);
-    expect(mockCsvStream.end).toHaveBeenCalledTimes(1);
-  });
+
   it('streams one page of results', async () => {
     await squidexUsersResponseToStream(
       mockCsvStream as unknown as Stringifier,
       () => Promise.resolve(gp2Fixtures.createUsersResponse(1)),
       (a) => a,
     );
-    expect(mockCsvStream.write).toHaveBeenCalledWith(userFields);
     expect(mockCsvStream.write).toHaveBeenCalledWith(
       gp2Fixtures.createUserResponse({ id: String(0) }),
     );
-    expect(mockCsvStream.write).toHaveBeenCalledTimes(2);
+    expect(mockCsvStream.write).toHaveBeenCalledTimes(1);
     expect(mockCsvStream.end).toHaveBeenCalledTimes(1);
   });
 
@@ -218,14 +207,13 @@ describe('squidexUsersResponseToStream', () => {
         }),
       (a) => a,
     );
-    expect(mockCsvStream.write).toHaveBeenCalledWith(userFields);
     expect(mockCsvStream.write).toHaveBeenCalledWith(
       gp2Fixtures.createUserResponse({ id: String(0) }),
     );
     expect(mockCsvStream.write).toHaveBeenCalledWith(
       gp2Fixtures.createUserResponse({ id: String(0) }),
     );
-    expect(mockCsvStream.write).toHaveBeenCalledTimes(3);
+    expect(mockCsvStream.write).toHaveBeenCalledTimes(2);
     expect(mockCsvStream.end).toHaveBeenCalledTimes(1);
   });
 
@@ -240,6 +228,6 @@ describe('squidexUsersResponseToStream', () => {
         name: 'Tony',
       }),
     );
-    expect(mockCsvStream.write).toHaveBeenCalledTimes(2);
+    expect(mockCsvStream.write).toHaveBeenCalledTimes(1);
   });
 });

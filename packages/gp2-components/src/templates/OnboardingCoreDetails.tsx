@@ -2,6 +2,8 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing, logout } from '@asap-hub/routing';
 import {
   Card,
+  crossQuery,
+  drawerQuery,
   Headline3,
   Link,
   Paragraph,
@@ -11,6 +13,7 @@ import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { UserDetailHeader } from '../organisms';
 import EmailSection from '../organisms/EmailSection';
+import { addIcon } from '../icons';
 
 const { onboarding } = gp2Routing;
 type OnboardingCoreDetailProps = Pick<gp2Model.UserResponse, 'email'> &
@@ -35,6 +38,27 @@ const footerStyles = css({
   },
 });
 
+const buttonStyles = css({
+  [drawerQuery]: {
+    flexDirection: 'column-reverse',
+    gap: rem(24),
+  },
+});
+
+const rowStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  width: '100%',
+  [crossQuery]: {
+    flexDirection: 'row',
+    gap: rem(24),
+  },
+});
+const editButtonStyles = css({
+  [crossQuery]: {
+    marginLeft: 'auto',
+  },
+});
 const descriptionStyles = css({ paddingBottom: rem(32) });
 const cardStyles = css({ padding: `${rem(32)} 0` });
 const OnboardingCoreDetails: React.FC<OnboardingCoreDetailProps> = ({
@@ -49,7 +73,14 @@ const OnboardingCoreDetails: React.FC<OnboardingCoreDetailProps> = ({
     <UserDetailHeader {...headerProps} edit={'/edit'} />
     <div css={cardStyles}>
       <Card>
-        <Headline3 noMargin>Contact Information</Headline3>
+        <div css={[rowStyles, buttonStyles]}>
+          <Headline3 noMargin>Contact Information</Headline3>
+          <div css={editButtonStyles}>
+            <Link href={''} buttonStyle noMargin small>
+              Optional {addIcon}
+            </Link>
+          </div>
+        </div>
         <Paragraph accent="lead">
           Provide alternative contact details to your institutional email used
           to sign up.

@@ -17,8 +17,11 @@ import { MAX_ALGOLIA_RESULTS } from '../../../shared-research/export';
 import { getUser } from '../api';
 import { refreshUserState } from '../state';
 
+jest.mock('@asap-hub/frontend-utils', () => {
+  const original = jest.requireActual('@asap-hub/frontend-utils');
+  return { ...original, createCsvFileStream: jest.fn() };
+});
 jest.mock('../../../shared-research/api');
-jest.mock('../../../shared-research/export');
 jest.mock('../api');
 
 afterEach(() => {

@@ -43,6 +43,7 @@ const FilterSearchExport: React.FC<FilterSearchExportProps> = ({
     <div css={css({ gridArea: 'search' })}>
       <SearchField
         value=""
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         onChange={() => {}}
         placeholder="Enter name or keyword..."
         padding={false}

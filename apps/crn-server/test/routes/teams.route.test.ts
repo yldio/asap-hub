@@ -1,5 +1,5 @@
 import { User } from '@asap-hub/auth';
-import { userMock } from '@asap-hub/fixtures';
+import { createAuthUser } from '@asap-hub/fixtures';
 import { FetchOptions, FetchTeamsOptions } from '@asap-hub/model';
 import { AuthHandler } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
@@ -16,7 +16,7 @@ import { teamControllerMock } from '../mocks/team-controller.mock';
 
 describe('/teams/ route', () => {
   const loggedUser: User = {
-    ...userMock,
+    ...createAuthUser(),
     teams: [
       {
         id: 'team-id-1',
@@ -158,7 +158,7 @@ describe('/teams/ route', () => {
       test('Should select the team tools for the teams the user is a member of', async () => {
         teamControllerMock.fetch.mockResolvedValueOnce(getListTeamResponse());
         getLoggedUser.mockReturnValueOnce({
-          ...userMock,
+          ...createAuthUser(),
           teams: [
             {
               id: 'team-id-1',

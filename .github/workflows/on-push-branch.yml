@@ -36,9 +36,27 @@ jobs:
     uses: ./.github/workflows/reusable-test.yml
     with:
       environment-name: Branch
+      since-master: true
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       CRN_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
+
+  unit-all:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:be0ebbcbd0ff209d56070f09590c5d9622e8a6dc
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Run unit tests
+        id: test
+        uses: ./.github/actions/test-unit
+        with:
+          codecov-token: ${{ secrets.CODECOV_TOKEN }}
+          since-master: false
 
   build:
     needs: [setup]
@@ -50,6 +68,7 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
+      CRN_CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
       CRN_SQUIDEX_API_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_API_CLIENT_SECRET }}
       CRN_SQUIDEX_SHARED_SECRET: ${{ secrets.CRN_SQUIDEX_SHARED_SECRET }}
       GP2_SQUIDEX_API_CLIENT_SECRET: ${{ secrets.GP2_SQUIDEX_API_CLIENT_SECRET }}
@@ -93,6 +112,7 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
       CONTENTFUL_MANAGEMENT_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+      CRN_CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
       CRN_SQUIDEX_API_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_API_CLIENT_SECRET }}
       CRN_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
       CRN_SQUIDEX_SHARED_SECRET: ${{ secrets.CRN_SQUIDEX_SHARED_SECRET }}
@@ -115,7 +135,16 @@ jobs:
     environment:
       name: Branch
       url: ${{ steps.setup.outputs.crn-app-url }}
-    needs: [test, build, build-analysis, create-environment, deployment, verify]
+    needs:
+      [
+        test,
+        unit-all,
+        build,
+        build-analysis,
+        create-environment,
+        deployment,
+        verify,
+      ]
     if: ${{ always() }}
     steps:
       - name: Checkout

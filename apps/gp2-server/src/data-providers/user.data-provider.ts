@@ -18,6 +18,8 @@ import {
 
 import { FETCH_USER, FETCH_USERS } from '../queries/users.queries';
 import { reverseMap } from '../utils/reverse-map';
+import { roleMap as projectRoleMap } from './project.data-provider';
+import { roleMap as workingGroupRoleMap } from './working-group.data-provider';
 
 export interface UserDataProvider {
   fetchById(id: string): Promise<gp2Model.UserDataObject | null>;
@@ -27,24 +29,6 @@ export interface UserDataProvider {
     options: gp2Model.FetchUsersOptions,
   ): Promise<gp2Model.ListUserDataObject>;
 }
-const regionMap: Record<UsersDataRegionEnum, gp2Model.UserRegion> = {
-  [UsersDataRegionEnum.Africa]: 'Africa',
-  [UsersDataRegionEnum.Asia]: 'Asia',
-  [UsersDataRegionEnum.AustraliaAustraliasia]: 'Australia/Australiasia',
-  [UsersDataRegionEnum.Europe]: 'Europe',
-  [UsersDataRegionEnum.LatinAmerica]: 'Latin America',
-  [UsersDataRegionEnum.NorthAmerica]: 'North America',
-  [UsersDataRegionEnum.SouthAmerica]: 'South America',
-} as const;
-const roleMap: Record<UsersDataRoleEnum, gp2Model.UserRole> = {
-  [UsersDataRoleEnum.Administrator]: 'Administrator',
-  [UsersDataRoleEnum.NetworkCollaborator]: 'Network Collaborator',
-  [UsersDataRoleEnum.NetworkInvestigator]: 'Network Investigator',
-  [UsersDataRoleEnum.Trainee]: 'Trainee',
-  [UsersDataRoleEnum.WorkingGroupParticipant]: 'Working Group Participant',
-} as const;
-const reverseRegionMap = reverseMap(regionMap);
-const reverseRoleMap = reverseMap(roleMap);
 
 export class UserSquidexDataProvider implements UserDataProvider {
   constructor(
@@ -181,6 +165,8 @@ const generateFetchQueryFilter = ({ filter }: gp2Model.FetchUsersOptions) => {
 export const parseGraphQLUserToDataObject = ({
   id,
   created,
+  referencingProjectsContents: projectItems,
+  referencingWorkingGroupsContents: workingGroupItems,
   flatData: item,
 }: NonNullable<
   FetchUserQuery['findUsersContent']
@@ -191,28 +177,13 @@ export const parseGraphQLUserToDataObject = ({
   if (!item.role) {
     throw new Error(`Role not defined: ${item.role}`);
   }
+
   const createdDate = parseDate(created).toISOString();
+  const degrees = parseDegrees(item.degree);
+  const positions = parsePositions(item.positions);
+  const projects = parseProjects(projectItems);
+  const workingGroups = parseWorkingGroups(workingGroupItems);
 
-  const degrees: gp2Model.UserDegree[] | undefined =
-    item.degree?.map<gp2Model.UserDegree>((degree) => {
-      if (degree === 'MD_PhD') {
-        return 'MD, PhD';
-      }
-
-      return degree;
-    });
-
-  const positions =
-    item.positions?.map(({ role, department, institution }) => {
-      if (!(role && department && institution)) {
-        throw new Error('Position not defined');
-      }
-      return {
-        role,
-        department,
-        institution,
-      };
-    }) || [];
   return {
     id,
     createdDate,
@@ -226,5 +197,101 @@ export const parseGraphQLUserToDataObject = ({
     city: item.city || undefined,
     positions,
     onboarded: item.onboarded || false,
+    projects,
+    workingGroups,
+    fundingStreams: undefined,
+    contributingCohorts: [],
   };
 };
+
+const regionMap: Record<UsersDataRegionEnum, gp2Model.UserRegion> = {
+  [UsersDataRegionEnum.Africa]: 'Africa',
+  [UsersDataRegionEnum.Asia]: 'Asia',
+  [UsersDataRegionEnum.AustraliaAustraliasia]: 'Australia/Australiasia',
+  [UsersDataRegionEnum.Europe]: 'Europe',
+  [UsersDataRegionEnum.LatinAmerica]: 'Latin America',
+  [UsersDataRegionEnum.NorthAmerica]: 'North America',
+  [UsersDataRegionEnum.SouthAmerica]: 'South America',
+};
+const roleMap: Record<UsersDataRoleEnum, gp2Model.UserRole> = {
+  [UsersDataRoleEnum.Administrator]: 'Administrator',
+  [UsersDataRoleEnum.NetworkCollaborator]: 'Network Collaborator',
+  [UsersDataRoleEnum.NetworkInvestigator]: 'Network Investigator',
+  [UsersDataRoleEnum.Trainee]: 'Trainee',
+  [UsersDataRoleEnum.WorkingGroupParticipant]: 'Working Group Participant',
+};
+const reverseRegionMap = reverseMap(regionMap);
+const reverseRoleMap = reverseMap(roleMap);
+
+const parseProjects = (
+  projects: NonNullable<
+    FetchUserQuery['findUsersContent']
+  >['referencingProjectsContents'],
+): gp2Model.UserDataObject['projects'] =>
+  projects?.map(({ id: projectId, flatData: project }) => {
+    if (!project.status) {
+      throw new TypeError('Status not defined');
+    }
+    return {
+      id: projectId,
+      status: project.status,
+      title: project.title || '',
+      members:
+        project.members?.map((member) => {
+          const user = member.user && member.user[0];
+
+          if (!(member.role && user)) {
+            throw new Error('Invalid project members');
+          }
+          return { role: projectRoleMap[member.role], userId: user.id };
+        }) || [],
+    };
+  }) || [];
+
+const parseWorkingGroups = (
+  workingGroupItems: NonNullable<
+    FetchUserQuery['findUsersContent']
+  >['referencingWorkingGroupsContents'],
+): gp2Model.UserDataObject['workingGroups'] =>
+  workingGroupItems?.map(({ id: workingGroupId, flatData: workingGroup }) => ({
+    id: workingGroupId,
+    title: workingGroup.title || '',
+    members:
+      workingGroup.members?.map((member) => {
+        const user = member.user && member.user[0];
+
+        if (!(member.role && user)) {
+          throw new Error('Invalid working group members');
+        }
+        return { role: workingGroupRoleMap[member.role], userId: user.id };
+      }) || [],
+  })) || [];
+
+const parseDegrees = (
+  degrees: NonNullable<
+    FetchUserQuery['findUsersContent']
+  >['flatData']['degree'],
+): gp2Model.UserDataObject['degrees'] =>
+  degrees?.map<gp2Model.UserDegree>((degree) => {
+    if (degree === UsersDataDegreeEnum.MdPhD) {
+      return 'MD, PhD';
+    }
+
+    return degree;
+  });
+
+const parsePositions = (
+  positions: NonNullable<
+    FetchUserQuery['findUsersContent']
+  >['flatData']['positions'],
+): gp2Model.UserDataObject['positions'] =>
+  positions?.map(({ role, department, institution }) => {
+    if (!(role && department && institution)) {
+      throw new Error('Position not defined');
+    }
+    return {
+      role,
+      department,
+      institution,
+    };
+  }) || [];

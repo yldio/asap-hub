@@ -17,6 +17,7 @@ import {
 import { css } from '@emotion/react';
 import { useState } from 'react';
 import { addIcon, editIcon } from '../icons';
+import { mobileQuery, nonMobileQuery } from '../layout';
 
 export type ResourcesProps = {
   resources?: gp2.Resource[];
@@ -25,7 +26,7 @@ export type ResourcesProps = {
   edit?: string;
 };
 
-const { rem, tabletScreen } = pixels;
+const { rem } = pixels;
 const containerStyles = css({
   display: 'flex',
   flexDirection: 'column',
@@ -45,13 +46,13 @@ const buttonWrapperStyles = css({
   borderBottom: `transparent`,
 });
 const buttonStyles = css({
-  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
+  [mobileQuery]: {
     flexDirection: 'column-reverse',
     gap: rem(24),
   },
 });
 const editButtonStyles = css({
-  [`@media (min-width: ${tabletScreen.width}px)`]: {
+  [nonMobileQuery]: {
     marginLeft: 'auto',
   },
 });

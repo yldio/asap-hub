@@ -2,8 +2,6 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import {
   Avatar,
   BackLink,
-  crossQuery,
-  drawerQuery,
   Headline3,
   Link,
   pixels,
@@ -13,6 +11,7 @@ import { addIcon } from '../icons';
 import locationIcon from '../icons/location-icon';
 import roleIcon from '../icons/role-icon';
 import { usersHeaderImage } from '../images';
+import { nonMobileQuery, mobileQuery } from '../layout';
 import CardWithBackground from '../molecules/CardWithBackground';
 import IconWithLabel from '../molecules/IconWithLabel';
 import UserRegion from '../molecules/UserRegion';
@@ -43,7 +42,7 @@ const containerStyles = css({
   display: 'grid',
   columnGap: rem(32),
   rowGap: rem(12),
-  [crossQuery]: {
+  [nonMobileQuery]: {
     gridTemplateColumns: `${rem(avatarSize)} auto`,
   },
 });
@@ -60,7 +59,7 @@ const textContainerStyles = css({
 const avatarStyles = css({
   width: rem(avatarSize),
   height: rem(avatarSize),
-  [drawerQuery]: {
+  [mobileQuery]: {
     margin: 'auto',
   },
 });
@@ -68,7 +67,7 @@ const rowStyles = css({
   display: 'flex',
   flexDirection: 'column',
   width: '100%',
-  [crossQuery]: {
+  [nonMobileQuery]: {
     flexDirection: 'row',
     gap: rem(24),
   },
@@ -77,14 +76,15 @@ const rowContainerStyles = css({
   marginBottom: rem(12),
 });
 const editButtonStyles = css({
-  [crossQuery]: {
+  [nonMobileQuery]: {
     marginLeft: 'auto',
   },
 });
 const buttonStyles = css({
-  [drawerQuery]: {
+  [mobileQuery]: {
     flexDirection: 'column-reverse',
     gap: rem(24),
+    a: { minWidth: '100%' },
   },
 });
 

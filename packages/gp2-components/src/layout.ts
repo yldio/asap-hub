@@ -13,6 +13,7 @@ export const smallDesktopQuery = `@media (min-width: ${
 }px) and (max-width: ${largeDesktopScreen.width - 1}px)`;
 
 export const mobileQuery = `@media (max-width: ${tabletScreen.width - 1}px)`;
+export const nonMobileQuery = `@media (min-width: ${tabletScreen.width}px)`;
 
 export const layoutContentStyles = {
   width: '748px',

@@ -14,8 +14,8 @@ const props: ComponentProps<typeof Layout> = {
 };
 
 it('renders an ASAP logo', () => {
-  const { getByAltText } = render(<Layout {...props} />);
-  expect(getByAltText(/asap.+logo/i)).toBeVisible();
+  const { getByTitle } = render(<Layout {...props} />);
+  expect(getByTitle('ASAP Logo')).toBeInTheDocument();
 });
 
 it('renders the main navigation', async () => {

@@ -6,6 +6,7 @@ const logo = (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
+    <title>ASAP Logo</title>
     <path
       d="M36.837 19.4295L33.8775 22.2632C32.7244 22.5948 31.5359 22.7873 30.3371 22.8366C25.5501 22.8366 24 19.607 24 16.6845C24 15.3601 24.3108 13.0553 26.301 11.816C27.274 11.2426 29.5491 10.0921 36.837 9.73697V8.05373C36.837 5.61951 35.9047 4.91292 33.2042 4.91292C30.9899 4.96815 28.7908 5.29491 26.6562 5.88587L25.6832 2.4787C28.5886 0.949192 31.8152 0.130192 35.0983 0.0888728C40.1443 0.0888728 43.0631 2.03477 43.0631 7.30275V17.9238H46.474V21.1127C44.6715 22.1511 42.6348 22.715 40.5549 22.7515C39.0049 22.7515 37.2772 22.5296 36.9665 19.4221L36.837 19.4295ZM36.837 17.0396V12.6003C30.9475 13.2181 30.5961 15.0789 30.5961 16.0963C30.5961 17.576 31.3027 18.5305 32.8971 18.5305C34.3307 18.4425 35.7042 17.9227 36.837 17.0396Z"
       fill="url(#paint0_linear_2232_101928)"
@@ -192,9 +193,9 @@ const logo = (
         y2="31.9026"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#8C4E9F" />
-        <stop offset="0.484375" stop-color="#0C8DC3" />
-        <stop offset="1" stop-color="#34A270" />
+        <stop stopColor="#8C4E9F" />
+        <stop offset="0.484375" stopColor="#0C8DC3" />
+        <stop offset="1" stopColor="#34A270" />
       </linearGradient>
       <linearGradient
         id="paint1_linear_2232_101928"
@@ -204,9 +205,9 @@ const logo = (
         y2="31.9026"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#8C4E9F" />
-        <stop offset="0.484375" stop-color="#0C8DC3" />
-        <stop offset="1" stop-color="#34A270" />
+        <stop stopColor="#8C4E9F" />
+        <stop offset="0.484375" stopColor="#0C8DC3" />
+        <stop offset="1" stopColor="#34A270" />
       </linearGradient>
       <linearGradient
         id="paint2_linear_2232_101928"
@@ -216,9 +217,9 @@ const logo = (
         y2="31.9026"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#8C4E9F" />
-        <stop offset="0.484375" stop-color="#0C8DC3" />
-        <stop offset="1" stop-color="#34A270" />
+        <stop stopColor="#8C4E9F" />
+        <stop offset="0.484375" stopColor="#0C8DC3" />
+        <stop offset="1" stopColor="#34A270" />
       </linearGradient>
       <linearGradient
         id="paint3_linear_2232_101928"
@@ -228,9 +229,9 @@ const logo = (
         y2="31.9026"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#8C4E9F" />
-        <stop offset="0.484375" stop-color="#0C8DC3" />
-        <stop offset="1" stop-color="#34A270" />
+        <stop stopColor="#8C4E9F" />
+        <stop offset="0.484375" stopColor="#0C8DC3" />
+        <stop offset="1" stopColor="#34A270" />
       </linearGradient>
       <linearGradient
         id="paint4_linear_2232_101928"
@@ -240,9 +241,9 @@ const logo = (
         y2="31.9026"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#8C4E9F" />
-        <stop offset="0.484375" stop-color="#0C8DC3" />
-        <stop offset="1" stop-color="#34A270" />
+        <stop stopColor="#8C4E9F" />
+        <stop offset="0.484375" stopColor="#0C8DC3" />
+        <stop offset="1" stopColor="#34A270" />
       </linearGradient>
       <linearGradient
         id="paint5_linear_2232_101928"
@@ -252,9 +253,9 @@ const logo = (
         y2="31.9026"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#8C4E9F" />
-        <stop offset="0.484375" stop-color="#0C8DC3" />
-        <stop offset="1" stop-color="#34A270" />
+        <stop stopColor="#8C4E9F" />
+        <stop offset="0.484375" stopColor="#0C8DC3" />
+        <stop offset="1" stopColor="#34A270" />
       </linearGradient>
       <linearGradient
         id="paint6_linear_2232_101928"
@@ -264,9 +265,9 @@ const logo = (
         y2="31.9026"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#8C4E9F" />
-        <stop offset="0.484375" stop-color="#0C8DC3" />
-        <stop offset="1" stop-color="#34A270" />
+        <stop stopColor="#8C4E9F" />
+        <stop offset="0.484375" stopColor="#0C8DC3" />
+        <stop offset="1" stopColor="#34A270" />
       </linearGradient>
       <linearGradient
         id="paint7_linear_2232_101928"
@@ -276,9 +277,9 @@ const logo = (
         y2="31.9026"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#8C4E9F" />
-        <stop offset="0.484375" stop-color="#0C8DC3" />
-        <stop offset="1" stop-color="#34A270" />
+        <stop stopColor="#8C4E9F" />
+        <stop offset="0.484375" stopColor="#0C8DC3" />
+        <stop offset="1" stopColor="#34A270" />
       </linearGradient>
       <linearGradient
         id="paint8_linear_2232_101928"
@@ -288,9 +289,9 @@ const logo = (
         y2="31.9026"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#8C4E9F" />
-        <stop offset="0.484375" stop-color="#0C8DC3" />
-        <stop offset="1" stop-color="#34A270" />
+        <stop stopColor="#8C4E9F" />
+        <stop offset="0.484375" stopColor="#0C8DC3" />
+        <stop offset="1" stopColor="#34A270" />
       </linearGradient>
       <linearGradient
         id="paint9_linear_2232_101928"
@@ -300,9 +301,9 @@ const logo = (
         y2="31.9026"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#8C4E9F" />
-        <stop offset="0.484375" stop-color="#0C8DC3" />
-        <stop offset="1" stop-color="#34A270" />
+        <stop stopColor="#8C4E9F" />
+        <stop offset="0.484375" stopColor="#0C8DC3" />
+        <stop offset="1" stopColor="#34A270" />
       </linearGradient>
       <linearGradient
         id="paint10_linear_2232_101928"
@@ -312,9 +313,9 @@ const logo = (
         y2="31.9026"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#8C4E9F" />
-        <stop offset="0.484375" stop-color="#0C8DC3" />
-        <stop offset="1" stop-color="#34A270" />
+        <stop stopColor="#8C4E9F" />
+        <stop offset="0.484375" stopColor="#0C8DC3" />
+        <stop offset="1" stopColor="#34A270" />
       </linearGradient>
       <linearGradient
         id="paint11_linear_2232_101928"
@@ -324,9 +325,9 @@ const logo = (
         y2="31.9026"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#8C4E9F" />
-        <stop offset="0.484375" stop-color="#0C8DC3" />
-        <stop offset="1" stop-color="#34A270" />
+        <stop stopColor="#8C4E9F" />
+        <stop offset="0.484375" stopColor="#0C8DC3" />
+        <stop offset="1" stopColor="#34A270" />
       </linearGradient>
       <linearGradient
         id="paint12_linear_2232_101928"
@@ -336,9 +337,9 @@ const logo = (
         y2="-nan"
         gradientUnits="userSpaceOnUse"
       >
-        <stop offset="0.01" stop-color="#8C4F9E" />
-        <stop offset="0.51" stop-color="#008DC2" />
-        <stop offset="1" stop-color="#41A03F" />
+        <stop offset="0.01" stopColor="#8C4F9E" />
+        <stop offset="0.51" stopColor="#008DC2" />
+        <stop offset="1" stopColor="#41A03F" />
       </linearGradient>
     </defs>
   </svg>

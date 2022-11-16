@@ -92,7 +92,6 @@ export {
   ComingSoon,
   ConfirmModal,
   DashboardUpcomingEvents,
-  DashboardRecommendedUsers,
   DeliverablesCard,
   EditModal,
   EmailPasswordSignin,

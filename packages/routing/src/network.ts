@@ -121,4 +121,12 @@ const group = (() => {
 })();
 const groups = route('/groups', {}, { group });
 
-export default route('/network', {}, { users, teams, groups });
+const workingGroup = (() => {
+  const about = route('/about', {}, {});
+
+  return route('/:workingGroupId', { workingGroupId: stringParser }, { about });
+})();
+
+const workingGroups = route('/working-groups', {}, { workingGroup });
+
+export default route('/network', {}, { users, teams, groups, workingGroups });

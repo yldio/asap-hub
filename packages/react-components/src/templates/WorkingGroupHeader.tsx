@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
 import { formatDistance } from 'date-fns';
-import { workingGroups } from '@asap-hub/routing';
 import { TeamResponse } from '@asap-hub/model';
 
 import { mobileScreen, perRem, rem } from '../pixels';
@@ -10,6 +9,7 @@ import { contentSidePaddingWithNavigation } from '../layout';
 import { UserAvatarList, TabNav, ExternalLink } from '../molecules';
 import { successIcon } from '../icons';
 import { createMailTo } from '../mail';
+import { network } from '@asap-hub/routing';
 
 const containerStyles = css({
   backgroundColor: paper.rgb,
@@ -83,8 +83,8 @@ type WorkingGroupPageHeaderProps = Pick<
   name: string;
   complete: boolean;
   description: string;
-  externalLink: string;
-  externalLinkText: string;
+  externalLink?: string;
+  externalLinkText?: string;
   lastUpdated: string;
 };
 
@@ -108,7 +108,9 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
     <section css={contactSectionStyles}>
       <UserAvatarList
         members={members}
-        fullListRoute={workingGroups({}).workingGroup({ workingGroupId: id }).$}
+        fullListRoute={
+          network({}).workingGroups({}).workingGroup({ workingGroupId: id }).$
+        }
       />
       {pointOfContact && (
         <div css={pointOfContactStyles}>
@@ -141,7 +143,10 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
     <TabNav>
       <TabLink
         href={
-          workingGroups({}).workingGroup({ workingGroupId: id }).about({}).$
+          network({})
+            .workingGroups({})
+            .workingGroup({ workingGroupId: id })
+            .about({}).$
         }
       >
         About

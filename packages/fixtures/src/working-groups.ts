@@ -21,6 +21,11 @@ export const createWorkingGroupResponse = (
   itemIndex = 0,
 ): WorkingGroupResponse => ({
   id: `working-group-id-${itemIndex}`,
+  title: `Working Group ${itemIndex}`,
+  description: `Working Group ${itemIndex} Description`,
+  lastModifiedDate: '2020-11-09T20:36:54Z',
+  externalLink: `https://www.example.com/working-group-${itemIndex}`,
+  externalLinkText: `Working Group ${itemIndex} External Link Text`,
   deliverables: createDeliverables(options?.deliverables ?? 0),
 });
 

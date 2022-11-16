@@ -40,20 +40,20 @@ const avatarSize = 132;
 
 const containerStyles = css({
   display: 'grid',
+  grid: `
+    "avatar headline edit" max-content
+    "avatar details details" auto
+    /min-content auto min-content
+    `,
   columnGap: rem(32),
   rowGap: rem(12),
-  [nonMobileQuery]: {
-    gridTemplateColumns: `${rem(avatarSize)} auto`,
+  [mobileQuery]: {
+    grid: `
+    "edit" auto
+    "avatar" ${rem(avatarSize)}
+    "headline" auto
+    "details" auto`,
   },
-});
-
-const textContainerStyles = css({
-  flexGrow: 1,
-  display: 'flex',
-  flexWrap: 'wrap',
-  justifyContent: 'space-between',
-  alignItems: 'start',
-  flexDirection: 'column',
 });
 
 const avatarStyles = css({
@@ -80,13 +80,6 @@ const editButtonStyles = css({
     marginLeft: 'auto',
   },
 });
-const buttonStyles = css({
-  [mobileQuery]: {
-    flexDirection: 'column-reverse',
-    gap: rem(24),
-    a: { minWidth: '100%' },
-  },
-});
 
 const UserDetailHeader: React.FC<UserDetailHeaderProps> = ({
   displayName,
@@ -106,49 +99,49 @@ const UserDetailHeader: React.FC<UserDetailHeaderProps> = ({
     {backHref && <BackLink href={backHref} />}
     <CardWithBackground image={usersHeaderImage}>
       <div css={containerStyles}>
-        <Avatar
-          imageUrl={avatarUrl}
-          firstName={firstName}
-          lastName={lastName}
-          overrideStyles={avatarStyles}
-        />
+        <div css={css({ gridArea: 'avatar' })}>
+          <Avatar
+            imageUrl={avatarUrl}
+            firstName={firstName}
+            lastName={lastName}
+            overrideStyles={avatarStyles}
+          />
+        </div>
 
-        <div css={textContainerStyles}>
-          <div css={[rowStyles, buttonStyles]}>
-            <Headline3 noMargin>
-              {displayName}
-              {degrees && !!degrees.length && `, ${degrees.join(', ')}`}
-            </Headline3>
-            {edit && (
-              <div css={editButtonStyles}>
-                <Link href={edit} buttonStyle noMargin small>
-                  Required {addIcon}
-                </Link>
-              </div>
-            )}
+        <div css={[rowStyles, { gridArea: 'headline' }]}>
+          <Headline3 noMargin>
+            {displayName}
+            {degrees && !!degrees.length && `, ${degrees.join(', ')}`}
+          </Headline3>
+        </div>
+        <div css={[rowContainerStyles, { gridArea: 'details' }]}>
+          <div css={rowStyles}>
+            <IconWithLabel icon={roleIcon}>{role}</IconWithLabel>
+            <UserRegion region={region} />
           </div>
           <div css={rowContainerStyles}>
-            <div css={rowStyles}>
-              <IconWithLabel icon={roleIcon}>{role}</IconWithLabel>
-              <UserRegion region={region} />
-            </div>
-            <div css={rowContainerStyles}>
-              <IconWithLabel icon={locationIcon}>
-                <span>
-                  {city && `${city}, `}
-                  {country}
-                </span>
-              </IconWithLabel>
-            </div>
-            {positions.map(
-              ({ role: positionRole, department, institution }, idx) => (
-                <div css={rowContainerStyles} key={idx}>
-                  {positionRole} in {department} at {institution}
-                </div>
-              ),
-            )}
+            <IconWithLabel icon={locationIcon}>
+              <span>
+                {city && `${city}, `}
+                {country}
+              </span>
+            </IconWithLabel>
           </div>
+          {positions.map(
+            ({ role: positionRole, department, institution }, idx) => (
+              <div css={rowContainerStyles} key={idx}>
+                {positionRole} in {department} at {institution}
+              </div>
+            ),
+          )}
         </div>
+        {edit && (
+          <div css={[{ gridArea: 'edit' }, editButtonStyles]}>
+            <Link href={edit} buttonStyle noMargin small tabletFullWidth>
+              Required {addIcon}
+            </Link>
+          </div>
+        )}
       </div>
     </CardWithBackground>
   </header>

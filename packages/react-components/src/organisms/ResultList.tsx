@@ -85,13 +85,7 @@ const ResultList: React.FC<ResultListProps> = ({
               <span css={exportStyles}>
                 <Button
                   linkStyle
-                  onClick={() =>
-                    exportResults().catch(() =>
-                      toast(
-                        'There was an issue exporting to CSV. Please try again.',
-                      ),
-                    )
-                  }
+                  onClick={() => exportResults().catch((error) => toast(error))}
                 >
                   Export as CSV
                 </Button>

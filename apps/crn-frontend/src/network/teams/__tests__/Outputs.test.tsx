@@ -1,9 +1,10 @@
-import { Suspense } from 'react';
+import { ContextType, Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createTeamResponse } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
+import { ToastContext } from '@asap-hub/react-context';
 
 import { RecoilRoot } from 'recoil';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
@@ -16,8 +17,18 @@ import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
 import { MAX_ALGOLIA_RESULTS } from '../../../shared-research/export';
 import { getTeam } from '../api';
 
-jest.mock('../../../shared-research/api');
+jest.mock('@asap-hub/frontend-utils', () => {
+  const original = jest.requireActual('@asap-hub/frontend-utils');
+  return {
+    ...original,
+    createCsvFileStream: jest
+      .fn()
+      .mockImplementation(() => ({ write: jest.fn(), end: jest.fn() })),
+  };
+});
+
 jest.mock('../../../shared-research/export');
+jest.mock('../../../shared-research/api');
 jest.mock('../api');
 
 afterEach(() => {
@@ -172,7 +183,9 @@ it('triggers export with the same parameters and custom file name', async () => 
       pageSize: CARD_VIEW_PAGE_SIZE,
     }),
   );
-
+  mockGetResearchOutputs.mockResolvedValue({
+    ...createResearchOutputListAlgoliaResponse(2),
+  });
   userEvent.click(getByText(/export/i));
   expect(mockCreateCsvFileStream).toHaveBeenLastCalledWith(
     expect.stringMatching(/SharedOutputs_TeamExampleTeam123_\d+\.csv/),

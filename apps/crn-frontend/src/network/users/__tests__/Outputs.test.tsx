@@ -19,9 +19,15 @@ import { refreshUserState } from '../state';
 
 jest.mock('@asap-hub/frontend-utils', () => {
   const original = jest.requireActual('@asap-hub/frontend-utils');
-  return { ...original, createCsvFileStream: jest.fn() };
+  return {
+    ...original,
+    createCsvFileStream: jest
+      .fn()
+      .mockImplementation(() => ({ write: jest.fn(), end: jest.fn() })),
+  };
 });
 jest.mock('../../../shared-research/api');
+
 jest.mock('../api');
 
 afterEach(() => {

@@ -18,7 +18,7 @@ import { addIcon } from '../icons';
 const { onboarding } = gp2Routing;
 type OnboardingCoreDetailProps = Pick<gp2Model.UserResponse, 'email'> &
   ComponentProps<typeof UserDetailHeader>;
-const { rem, mobileScreen } = pixels;
+const { rem } = pixels;
 
 const contentStyles = css({
   paddingTop: rem(32),
@@ -26,7 +26,7 @@ const contentStyles = css({
 
 const footerStyles = css({
   justifyContent: 'space-between',
-  [`@media (min-width: ${mobileScreen.max}px)`]: {
+  [crossQuery]: {
     display: 'flex',
     flexDirection: 'row-reverse',
     button: {
@@ -35,6 +35,15 @@ const footerStyles = css({
     a: {
       maxWidth: 'fit-content',
     },
+  },
+});
+const footerEditStyles = css({
+  display: 'flex',
+  gap: rem(32),
+  [drawerQuery]: {
+    flexDirection: 'column-reverse',
+    gap: rem(24),
+    paddingBottom: rem(24),
   },
 });
 
@@ -93,19 +102,20 @@ const OnboardingCoreDetails: React.FC<OnboardingCoreDetailProps> = ({
       </Card>
     </div>
     <footer css={footerStyles}>
-      <div css={css({ display: 'flex', gap: rem(32) })}>
-        <Link buttonStyle href={onboarding({}).$}>
+      <div css={css(footerEditStyles)}>
+        <Link buttonStyle noMargin href={onboarding({}).$}>
           Previous
         </Link>
         <Link
           buttonStyle
           enabled={false}
+          noMargin
           href={onboarding({}).coreDetails({}).$}
         >
           Continue
         </Link>
       </div>
-      <Link buttonStyle href={logout({}).$}>
+      <Link buttonStyle noMargin href={logout({}).$}>
         Sign Out
       </Link>
     </footer>

@@ -1,6 +1,6 @@
 import { css, Theme } from '@emotion/react';
 
-import { formTargetWidth, perRem, mobileScreen } from './pixels';
+import { formTargetWidth, perRem, mobileScreen, tabletScreen } from './pixels';
 import {
   OpaqueColor,
   paper,
@@ -46,10 +46,16 @@ const styles = css({
 
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     flexGrow: 1,
-    width: '100%',
+    minWidth: '100%',
   },
 });
 
+const tabletFullWidthStyles = css({
+  [`@media (max-width: ${tabletScreen.max}px)`]: {
+    flexGrow: 1,
+    minWidth: '100%',
+  },
+});
 const largeStyles = css({
   '> svg': {
     height: `${24 / perRem}em`,
@@ -206,6 +212,7 @@ export const getButtonStyles = ({
   active = false,
   children = [] as React.ReactNode,
   noMargin = false,
+  tabletFullWidth = false,
   colors,
 }: {
   colors?: Theme['colors'];
@@ -214,6 +221,7 @@ export const getButtonStyles = ({
   enabled?: boolean;
   active?: boolean;
   noMargin?: boolean;
+  tabletFullWidth?: boolean;
   children?: React.ReactNode;
 }) =>
   css([
@@ -238,6 +246,7 @@ export const getButtonStyles = ({
       ? children.some((child) => typeof child === 'string')
       : typeof children === 'string') ||
       (small ? smallIconOnlyStyles : largeIconOnlyStyles),
+    tabletFullWidth && tabletFullWidthStyles,
   ]);
 
 export const getButtonChildren = (children = [] as React.ReactNode) =>

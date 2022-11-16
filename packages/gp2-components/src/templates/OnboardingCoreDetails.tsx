@@ -84,7 +84,7 @@ const OnboardingCoreDetails: React.FC<OnboardingCoreDetailProps> = ({
         <div css={[rowStyles, buttonStyles]}>
           <Headline3 noMargin>Contact Information</Headline3>
           <div css={editButtonStyles}>
-            <Link href={''} buttonStyle noMargin small>
+            <Link tabletFullWidth href={''} buttonStyle noMargin small>
               Optional {addIcon}
             </Link>
           </div>
@@ -102,10 +102,11 @@ const OnboardingCoreDetails: React.FC<OnboardingCoreDetailProps> = ({
     </div>
     <footer css={footerStyles}>
       <div css={css(footerEditStyles)}>
-        <Link buttonStyle noMargin href={onboarding({}).$}>
+        <Link tabletFullWidth buttonStyle noMargin href={onboarding({}).$}>
           Previous
         </Link>
         <Link
+          tabletFullWidth
           buttonStyle
           enabled={false}
           noMargin
@@ -114,7 +115,7 @@ const OnboardingCoreDetails: React.FC<OnboardingCoreDetailProps> = ({
           Continue
         </Link>
       </div>
-      <Link buttonStyle noMargin href={logout({}).$}>
+      <Link tabletFullWidth buttonStyle noMargin href={logout({}).$}>
         Sign Out
       </Link>
     </footer>

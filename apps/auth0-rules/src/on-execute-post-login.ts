@@ -1,21 +1,18 @@
+import {
+  Auth0PostLoginApi,
+  Auth0PostLoginEvent,
+} from '@vedicium/auth0-actions-sdk';
 import type { gp2 as gp2Auth, User } from '@asap-hub/auth';
 import type { gp2 as gp2Model, UserMetadataResponse } from '@asap-hub/model';
 import got from 'got';
 import { URL, URLSearchParams } from 'url';
-import type { Rule } from './types';
+import { Auth0PostLoginEventWithSecrets } from './types';
 
 type Auth0UserResponse = UserMetadataResponse | gp2Model.UserResponse;
 
 const isUserMetadataResponse = (
   response: UserMetadataResponse | gp2Model.UserResponse,
 ): response is UserMetadataResponse => 'algoliaApiKey' in response;
-
-const handleError = (err: unknown): Error => {
-  if (err instanceof Error) {
-    return err;
-  }
-  return new Error('Unexpected Error');
-};
 
 const extractUser = (response: Auth0UserResponse): User | gp2Auth.User => {
   if (isUserMetadataResponse(response)) {
@@ -70,53 +67,52 @@ const extractUser = (response: Auth0UserResponse): User | gp2Auth.User => {
   };
 };
 
-const addUserMetadata: Rule<{ invitationCode: string }> = async (
-  auth0User,
-  context,
-  callback,
+export const onExecutePostLogin = async (
+  event: Auth0PostLoginEventWithSecrets,
+  api: Auth0PostLoginApi,
 ) => {
-  const redirect_uri = new URLSearchParams(context.request.query).get(
+  const redirect_uri = new URLSearchParams(event.request.query).get(
     'redirect_uri',
   )
-    ? new URLSearchParams(context.request.query).get('redirect_uri')
-    : context.request.body.redirect_uri;
+    ? new URLSearchParams(event.request.query).get('redirect_uri')
+    : event.request.body.redirect_uri;
   if (!redirect_uri) {
-    return callback(new Error('Missing redirect_uri'));
+    return api.access.deny('Missing redirect_uri');
   }
 
   const prUrlRegex = new RegExp(
-    `https://(?<pr_number>[0-9]+).${configuration.APP_DOMAIN}`,
+    `https://(?<pr_number>[0-9]+).${event.secrets.PR_APP_DOMAIN}`,
   );
   const matches = prUrlRegex.exec(redirect_uri);
 
   const apiURL = matches?.groups?.pr_number
-    ? `https://api-${matches.groups.pr_number}.${configuration.APP_DOMAIN}`
-    : configuration?.APP_ORIGIN;
-  const apiSharedSecret = configuration?.API_SHARED_SECRET;
+    ? `https://api-${matches.groups.pr_number}.${event.secrets.PR_APP_DOMAIN}`
+    : event.secrets.ASAP_API_URL;
 
   try {
-    const response = await got(`${apiURL}/webhook/users/${auth0User.user_id}`, {
-      headers: {
-        Authorization: `Basic ${apiSharedSecret}`,
+    const response = await got(
+      `${apiURL}/webhook/users/${event.user.user_id}`,
+      {
+        headers: {
+          Authorization: `Basic ${event.secrets.AUTH0_SHARED_SECRET}`,
+        },
+        timeout: 10000,
       },
-      timeout: 10000,
-    }).json<Auth0UserResponse>();
+    ).json<Auth0UserResponse>();
 
     if (isUserMetadataResponse(response) && response.alumniSinceDate) {
-      return callback(new UnauthorizedError('alumni-user-access-denied'));
+      return api.access.deny('alumni-user-access-denied');
     }
 
     const user = extractUser(response);
-
-    context.idToken[new URL('/user', redirect_uri).toString()] = user;
+    api.idToken.setCustomClaim(new URL('/user', redirect_uri).toString(), user);
     // Uncomment for dev auth0. This allows pointing to dev api from local FE
     // context.idToken[new URL('/user', 'https://dev.hub.asap.science').toString()] = user;
-
-    return callback(null, auth0User, context);
   } catch (err) {
-    const error = handleError(err);
-    return callback(error);
+    if (err instanceof Error) {
+      return api.access.deny(err.message);
+    }
+    return api.access.deny('Unexpected Error');
   }
+  return;
 };
-
-export default addUserMetadata;

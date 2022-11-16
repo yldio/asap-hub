@@ -82,3 +82,13 @@ export type Rule<
   context: RuleContext<CustomContext>,
   callback: RuleCallback<CustomContext>,
 ) => void | Promise<void>;
+
+// Extended Action Types
+
+export type Auth0PostLoginEventWithSecrets = Auth0PostLoginEvent & {
+  secrets: {
+    PR_APP_DOMAIN: string; // hub.asap.science
+    AUTH0_SHARED_SECRET: string;
+    ASAP_API_URL: string; // https://api-dev.hub.asap.science
+  };
+};

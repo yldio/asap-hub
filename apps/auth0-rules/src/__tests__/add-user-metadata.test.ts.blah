@@ -1,7 +1,7 @@
 import type { gp2 as gp2Auth, User as Auth0User } from '@asap-hub/auth';
 import { gp2 as gp2Model, UserMetadataResponse } from '@asap-hub/model';
 import nock from 'nock';
-import addUserMetadata from '../add-user-metadata';
+import { onExecutePostLogin } from '../on-execute-post-login';
 import type { RuleContext, User } from '../types';
 
 class UnauthorizedError {}
@@ -126,7 +126,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
   const appDomain = 'hub.asap.science';
   const apiSharedSecret = 'auth0_shared_secret';
 
-  const cb: jest.MockedFunction<Parameters<typeof addUserMetadata>[2]> =
+  const cb: jest.MockedFunction<Parameters<typeof onExecutePostLogin>[2]> =
     jest.fn();
 
   beforeEach(() => {
@@ -144,7 +144,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
   });
 
   it('errors if the redirect_uri is missing', async () => {
-    await addUserMetadata(
+    await onExecutePostLogin(
       user,
       { ...context, request: { query: {}, body: {} } },
       cb,
@@ -164,7 +164,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
       .get(`/webhook/users/${user.user_id}`)
       .reply(404);
 
-    await addUserMetadata(user, context, cb);
+    await onExecutePostLogin(user, context, cb);
 
     expect(cb).toHaveBeenCalledWith(expect.any(Error));
     const [err, resUser, resContext] = cb.mock.calls[0];
@@ -182,7 +182,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
       .get(`/webhook/users/${user.user_id}`)
       .reply(200, apiUser);
 
-    await addUserMetadata(user, context, cb);
+    await onExecutePostLogin(user, context, cb);
 
     expect(cb).toHaveBeenCalled();
     const [err, resUser, resContext] = cb.mock.calls[0];
@@ -220,7 +220,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
       .get(`/webhook/users/${user.user_id}`)
       .reply(200, gp2ApiUser);
 
-    await addUserMetadata(
+    await onExecutePostLogin(
       user,
       {
         ...context,
@@ -261,7 +261,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
       .get(`/webhook/users/${user.user_id}`)
       .reply(200, apiUser);
 
-    await addUserMetadata(
+    await onExecutePostLogin(
       user,
       {
         ...context,
@@ -315,7 +315,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
         .get(`/webhook/users/${user.user_id}`)
         .reply(200, alumniMetadata);
 
-      await addUserMetadata(user, context, cb);
+      await onExecutePostLogin(user, context, cb);
 
       expect(cb).toHaveBeenCalledWith(expect.any(UnauthorizedError));
       expect(unauthorizedErrorMock).toHaveBeenCalledWith(
@@ -335,7 +335,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
         .get(`/webhook/users/${user.user_id}`)
         .reply(200, apiUser);
 
-      await addUserMetadata(
+      await onExecutePostLogin(
         user,
         {
           ...context,
@@ -383,7 +383,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
         .get(`/webhook/users/${user.user_id}`)
         .reply(200, apiUser);
 
-      await addUserMetadata(
+      await onExecutePostLogin(
         user,
         {
           ...context,
@@ -437,7 +437,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
         throw error;
       });
 
-      await addUserMetadata(user, context, cb);
+      await onExecutePostLogin(user, context, cb);
 
       expect(cb).toBeCalledWith(error);
     });
@@ -453,7 +453,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
       cb.mockImplementationOnce(() => {
         throw literal;
       });
-      await addUserMetadata(user, context, cb);
+      await onExecutePostLogin(user, context, cb);
 
       expect(cb).toBeCalledWith(expect.any(Error));
     });

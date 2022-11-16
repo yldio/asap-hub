@@ -21,7 +21,7 @@ const listStyles = css({
 
 const verticalList = css({
   flexDirection: 'column',
-  alignItems: 'flex-start',
+  alignSelf: 'flex-start',
   gap: `${15 / perRem}em`,
 });
 

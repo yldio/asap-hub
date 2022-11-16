@@ -8,10 +8,8 @@ import {
 } from '../analytics';
 import { Button, TextField } from '../atoms';
 import { crossIcon, searchIcon } from '../icons';
-import { perRem } from '../pixels';
 
 const clearButtonStyles = css({
-  padding: `${18 / perRem}em 0`,
   // removing input's clear/cancel pseudo-element
   // from webkit based browsers
   'input[type="search"]::-webkit-search-cancel-button': {

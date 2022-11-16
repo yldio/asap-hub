@@ -34,11 +34,12 @@ describe('UserCardInfo', () => {
       `This member isn’t part of any projects`,
     );
   });
-  it('renders working groups links', () => {
+  it('renders working groups links in alphabetical order', () => {
     render(
       <UserCardInfo
         {...defaultProps}
         workingGroups={[
+          { id: '3', title: 'Working Group 3', members: [] },
           { id: '1', title: 'Working Group 1', members: [] },
           { id: '2', title: 'Working Group 2', members: [] },
         ]}
@@ -46,13 +47,14 @@ describe('UserCardInfo', () => {
     );
     expect(
       screen.getAllByRole('link').map(({ textContent }) => textContent),
-    ).toMatchObject(['Working Group 1', 'Working Group 2']);
+    ).toMatchObject(['Working Group 1', 'Working Group 2', 'Working Group 3']);
   });
-  it('renders Projects links', () => {
+  it('renders Projects links in alphabetical order', () => {
     render(
       <UserCardInfo
         {...defaultProps}
         projects={[
+          { id: '3', title: 'Project 3', status: 'Active', members: [] },
           { id: '1', title: 'Project 1', status: 'Inactive', members: [] },
           { id: '2', title: 'Project 2', status: 'Active', members: [] },
         ]}
@@ -60,6 +62,6 @@ describe('UserCardInfo', () => {
     );
     expect(
       screen.getAllByRole('link').map(({ textContent }) => textContent),
-    ).toMatchObject(['Project 1', 'Project 2']);
+    ).toMatchObject(['Project 1', 'Project 2', 'Project 3']);
   });
 });

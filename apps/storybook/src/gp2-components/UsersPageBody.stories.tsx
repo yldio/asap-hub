@@ -1,6 +1,6 @@
 import { gp2 } from '@asap-hub/fixtures';
 import { UsersPageBody } from '@asap-hub/gp2-components';
-import { number } from '@storybook/addon-knobs';
+import { boolean, number } from '@storybook/addon-knobs';
 
 export default {
   title: 'GP2 / Organisms / User Directory / Page Body',
@@ -17,6 +17,8 @@ const userProps = () => {
     numberOfPages: Math.max(1, Math.ceil(numberOfItems / 10)),
     currentPageIndex,
     onFiltersClick: () => {},
+    onExportClick: () => {},
+    isAdministrator: boolean('Administrator', true),
     renderPageHref: (index: number) => `#${index}`,
     users: {
       total: numberOfItems,

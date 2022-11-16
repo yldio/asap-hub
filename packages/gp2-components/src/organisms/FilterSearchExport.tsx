@@ -15,21 +15,24 @@ const FilterSearchExport: React.FC<FilterSearchExportProps> = ({
   onExportClick,
 }) => (
   <div
-    css={css({
-      width: '100%',
-      display: 'grid',
-      grid: '"filter search export" /min-content auto min-content',
-      gridColumnGap: `32px`,
-      alignItems: 'center',
-      [mobileQuery]: {
-        gap: '24px',
-        grid: `
+    css={[
+      css({
+        width: '100%',
+        display: 'grid',
+        grid: '"filter search export" /min-content auto min-content',
+        gridColumnGap: `32px`,
+        alignItems: 'center',
+        [mobileQuery]: {
+          gap: '24px',
+          grid: `
           "search search" max-content
           "filter export" max-content
           / 1fr 1fr
           `,
-      },
-    })}
+        },
+      }),
+      !isAdministrator && css({ grid: '"filter search" /min-content auto' }),
+    ]}
   >
     <div css={css({ gridArea: 'filter' })}>
       <Button noMargin onClick={onFiltersClick}>

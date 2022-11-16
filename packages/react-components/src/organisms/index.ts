@@ -6,6 +6,7 @@ export { default as CheckboxGroup } from './CheckboxGroup';
 export { default as ComingSoon } from './ComingSoon';
 export { default as ConfirmModal } from './ConfirmModal';
 export { default as DashboardUpcomingEvents } from './DashboardUpcomingEvents';
+export { default as DashboardRecommendedUsers } from './DashboardRecommendedUsers';
 export { default as DeliverablesCard } from './DeliverablesCard';
 export { default as EditModal } from './EditModal';
 export { default as EventAbout } from './EventAbout';

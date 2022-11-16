@@ -19,11 +19,22 @@ const listStyles = css({
   },
 });
 
+const verticalList = css({
+  flexDirection: 'column',
+  alignSelf: 'flex-start',
+  gap: `${15 / perRem}em`,
+});
+
 const normalListItemStyles = css({
   marginBottom: `${12 / perRem}em`,
   ':not(:nth-last-of-type(1))': {
     paddingRight: `${12 / perRem}em`,
   },
+});
+
+const verticalListItemStyles = css({
+  marginBottom: 0,
+  alignSelf: 'flex-start',
 });
 
 const summarizedListItemStyles = (min: number, max: number) =>
@@ -62,6 +73,7 @@ interface TagListProps {
   enabled?: boolean;
   min?: number;
   max?: number;
+  singleColumn?: boolean;
 }
 
 const TagList: React.FC<TagListProps> = ({
@@ -69,15 +81,28 @@ const TagList: React.FC<TagListProps> = ({
   min = SAFARI_MAX_SAFE_INTEGER,
   max = SAFARI_MAX_SAFE_INTEGER,
   enabled = true,
+  singleColumn = false,
 }) =>
   tags.length ? (
-    <ul css={[listStyles, { counterReset: `tags ${tags.length}` }]}>
+    <ul
+      css={[
+        listStyles,
+        { counterReset: `tags ${tags.length}` },
+        singleColumn && verticalList,
+      ]}
+    >
       {tags.map((tag, index) => (
         <li
           key={index}
-          css={[normalListItemStyles, summarizedListItemStyles(min, max)]}
+          css={[
+            normalListItemStyles,
+            summarizedListItemStyles(min, max),
+            singleColumn && verticalListItemStyles,
+          ]}
         >
-          <Tag enabled={enabled}>{tag}</Tag>
+          <Tag title={tag} enabled={enabled}>
+            {tag}
+          </Tag>
         </li>
       ))}
       <li key="overflow" className="overflow" css={overflowStyles}>

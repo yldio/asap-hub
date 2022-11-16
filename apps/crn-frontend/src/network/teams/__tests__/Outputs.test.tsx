@@ -25,8 +25,6 @@ jest.mock('@asap-hub/frontend-utils', () => {
       .mockImplementation(() => ({ write: jest.fn(), end: jest.fn() })),
   };
 });
-
-jest.mock('../../../shared-research/export');
 jest.mock('../../../shared-research/api');
 jest.mock('../api');
 

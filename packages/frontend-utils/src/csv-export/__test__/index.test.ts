@@ -1,7 +1,12 @@
 import { waitFor } from '@testing-library/dom';
 
 import streamSaver from 'streamsaver';
-import { createCsvFileStream } from '..';
+import {
+  caseInsensitive,
+  createCsvFileStream,
+  EXCEL_CELL_CHARACTER_LIMIT,
+  htmlToCsvText,
+} from '..';
 
 const mockWriteStream = {
   write: jest.fn(),
@@ -37,5 +42,27 @@ describe('createCsvFileStream', () => {
       test,test2
       "
     `);
+  });
+});
+
+describe('caseInsensitive', () => {
+  it('orders an string array alphabetically', () => {
+    expect(['c', 'a', 'b', 'd'].sort(caseInsensitive)).toStrictEqual([
+      'a',
+      'b',
+      'c',
+      'd',
+    ]);
+  });
+});
+
+describe('htmlToCsvText', () => {
+  it('Limits RTF fields to maximum safe excel cell character limit after escaping', () => {
+    expect(
+      htmlToCsvText('"'.repeat(EXCEL_CELL_CHARACTER_LIMIT * 2)).length,
+    ).toBeLessThanOrEqual(EXCEL_CELL_CHARACTER_LIMIT);
+  });
+  it('Removes HTML from RTF fields', () => {
+    expect(htmlToCsvText('<a>example</a> <p>123</p>')).toBe('example 123');
   });
 });

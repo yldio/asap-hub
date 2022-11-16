@@ -4,15 +4,16 @@ import {
   Headline2,
   Link,
   Paragraph,
-  pixels,
   Subtitle,
+  pixels,
 } from '@asap-hub/react-components';
 import { gp2, logout } from '@asap-hub/routing';
 import { css } from '@emotion/react';
+import { mobileQuery, nonMobileQuery } from '../layout';
 import CardWithOffsetBackground from '../molecules/CardWithOffsetBackground';
 
-const { mobileScreen } = pixels;
 const { onboarding } = gp2;
+const { rem } = pixels;
 
 const containerStyles = css({
   display: 'flex',
@@ -21,16 +22,22 @@ const containerStyles = css({
 });
 
 const footerStyles = css({
+  display: 'flex',
   justifyContent: 'space-between',
-  [`@media (min-width: ${mobileScreen.max}px)`]: {
+  flexDirection: 'column-reverse',
+  [nonMobileQuery]: {
     display: 'flex',
-    flexDirection: 'row-reverse',
-    button: {
-      maxWidth: 'fit-content',
-    },
-    a: {
-      maxWidth: 'fit-content',
-    },
+    flexDirection: 'row',
+  },
+});
+const signOutStyles = css({
+  [mobileQuery]: {
+    paddingTop: rem(12),
+  },
+});
+const continueStyles = css({
+  [mobileQuery]: {
+    paddingBottom: rem(12),
   },
 });
 
@@ -70,12 +77,22 @@ const OnboardingWelcome: React.FC<Record<string, never>> = () => (
       GP2 members that have also registered.
     </Caption>
     <footer css={footerStyles}>
-      <Link buttonStyle primary href={onboarding({}).coreDetails({}).$}>
-        Get Started
-      </Link>
-      <Link buttonStyle href={logout({}).$}>
-        Sign Out
-      </Link>
+      <div css={signOutStyles}>
+        <Link tabletFullWidth noMargin buttonStyle href={logout({}).$}>
+          Sign Out
+        </Link>
+      </div>
+      <div css={continueStyles}>
+        <Link
+          tabletFullWidth
+          noMargin
+          buttonStyle
+          primary
+          href={onboarding({}).coreDetails({}).$}
+        >
+          Get Started
+        </Link>
+      </div>
     </footer>
   </div>
 );

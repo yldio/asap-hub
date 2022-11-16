@@ -24,16 +24,11 @@ const contentStyles = css({
 });
 
 const footerStyles = css({
+  display: 'flex',
   justifyContent: 'space-between',
+  flexDirection: 'column-reverse',
   [nonMobileQuery]: {
-    display: 'flex',
-    flexDirection: 'row-reverse',
-    button: {
-      maxWidth: 'fit-content',
-    },
-    a: {
-      maxWidth: 'fit-content',
-    },
+    flexDirection: 'row',
   },
 });
 const footerEditStyles = css({
@@ -42,7 +37,11 @@ const footerEditStyles = css({
   [mobileQuery]: {
     flexDirection: 'column-reverse',
     gap: rem(24),
-    paddingBottom: rem(24),
+  },
+});
+const signOutStyles = css({
+  [mobileQuery]: {
+    paddingTop: rem(24),
   },
 });
 
@@ -100,30 +99,34 @@ const OnboardingCoreDetails: React.FC<OnboardingCoreDetailProps> = ({
         </div>
       </Card>
     </div>
-    <footer css={footerStyles}>
-      <div css={css(footerEditStyles)}>
-        <Link
-          enabled={false}
-          tabletFullWidth
-          buttonStyle
-          noMargin
-          href={onboarding({}).$}
-        >
-          Previous
-        </Link>
-        <Link
-          tabletFullWidth
-          buttonStyle
-          enabled={false}
-          noMargin
-          href={onboarding({}).coreDetails({}).$}
-        >
-          Continue
-        </Link>
+    <footer>
+      <div css={footerStyles}>
+        <div css={signOutStyles}>
+          <Link tabletFullWidth buttonStyle noMargin href={logout({}).$}>
+            Sign Out
+          </Link>
+        </div>
+        <div css={css(footerEditStyles)}>
+          <Link
+            enabled={false}
+            tabletFullWidth
+            buttonStyle
+            noMargin
+            href={onboarding({}).$}
+          >
+            Previous
+          </Link>
+          <Link
+            tabletFullWidth
+            buttonStyle
+            enabled={false}
+            noMargin
+            href={onboarding({}).coreDetails({}).$}
+          >
+            Continue
+          </Link>
+        </div>
       </div>
-      <Link tabletFullWidth buttonStyle noMargin href={logout({}).$}>
-        Sign Out
-      </Link>
     </footer>
   </div>
 );

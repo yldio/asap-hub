@@ -19,12 +19,6 @@ const listStyles = css({
   },
 });
 
-const verticalList = css({
-  flexDirection: 'column',
-  alignSelf: 'flex-start',
-  gap: `${15 / perRem}em`,
-});
-
 const normalListItemStyles = css({
   marginBottom: `${12 / perRem}em`,
   ':not(:nth-last-of-type(1))': {
@@ -32,9 +26,16 @@ const normalListItemStyles = css({
   },
 });
 
-const verticalListItemStyles = css({
+const centerListStyles = css({
+  justifyContent: 'center',
+  gap: `${15 / perRem}em`,
+});
+
+const centeredItemStyles = css({
   marginBottom: 0,
-  alignSelf: 'flex-start',
+  ':not(:nth-last-of-type(1))': {
+    paddingRight: 0,
+  },
 });
 
 const summarizedListItemStyles = (min: number, max: number) =>
@@ -73,7 +74,7 @@ interface TagListProps {
   enabled?: boolean;
   min?: number;
   max?: number;
-  singleColumn?: boolean;
+  centerContent?: boolean;
 }
 
 const TagList: React.FC<TagListProps> = ({
@@ -81,14 +82,14 @@ const TagList: React.FC<TagListProps> = ({
   min = SAFARI_MAX_SAFE_INTEGER,
   max = SAFARI_MAX_SAFE_INTEGER,
   enabled = true,
-  singleColumn = false,
+  centerContent = false,
 }) =>
   tags.length ? (
     <ul
       css={[
         listStyles,
         { counterReset: `tags ${tags.length}` },
-        singleColumn && verticalList,
+        centerContent && centerListStyles,
       ]}
     >
       {tags.map((tag, index) => (
@@ -97,7 +98,7 @@ const TagList: React.FC<TagListProps> = ({
           css={[
             normalListItemStyles,
             summarizedListItemStyles(min, max),
-            singleColumn && verticalListItemStyles,
+            centerContent && centeredItemStyles,
           ]}
         >
           <Tag title={tag} enabled={enabled}>

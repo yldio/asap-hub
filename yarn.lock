@@ -487,7 +487,7 @@ __metadata:
   dependencies:
     "@asap-hub/model": "workspace:*"
     "@asap-hub/squidex": "workspace:*"
-    "@contentful/rich-text-types": ^15.14.0
+    "@contentful/rich-text-types": ^15.13.2
     "@graphql-codegen/cli": 2.12.1
     "@graphql-codegen/gql-tag-operations-preset": 1.5.5
     "@graphql-codegen/introspection": 2.2.1
@@ -499,6 +499,7 @@ __metadata:
     "@graphql-tools/mock": 8.7.6
     "@graphql-tools/schema": 8.5.1
     "@graphql-typed-document-node/core": 3.1.1
+    "@types/contentful-html-rich-text-converter": "workspace:*"
     "@types/node": 14.18.33
     contentful-html-rich-text-converter: ^1.0.9
     contentful-management: ^10.19.3
@@ -8250,13 +8251,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/rich-text-types@npm:^15.14.0":
-  version: 15.14.0
-  resolution: "@contentful/rich-text-types@npm:15.14.0"
-  checksum: 96319b0b4db616a061686fb36906ce0be83d9a6a884fdeaf96e39a8f9ea78179eb249d5e254a033b97e149b48d58e69c5ee432b2bfd3b5557e46bf516d6360f6
-  languageName: node
-  linkType: hard
-
 "@cspotcode/source-map-support@npm:^0.8.0":
   version: 0.8.1
   resolution: "@cspotcode/source-map-support@npm:0.8.1"
@@ -12805,7 +12799,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/contentful-html-rich-text-converter@workspace:@types/contentful-html-rich-text-converter":
+"@types/contentful-html-rich-text-converter@workspace:*, @types/contentful-html-rich-text-converter@workspace:@types/contentful-html-rich-text-converter":
   version: 0.0.0-use.local
   resolution: "@types/contentful-html-rich-text-converter@workspace:@types/contentful-html-rich-text-converter"
   languageName: unknown

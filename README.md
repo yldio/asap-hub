@@ -257,6 +257,14 @@ yarn ctf-migrate down -c <content_type> --dry-run
 
 Then repeat the command without `--dry-run` if all looks good.
 
+### Syncing Squidex data to Contentful
+
+There is a GitHub Actions workflow to sync data from Squidex to Contentful.
+
+You can specify the source Squidex app and the destination Contentful env.
+
+Check [on-demand-cms-sync.yml](./.github/workflows/on-demand-cms-sync.yml) for details.
+
 ## Docker Images
 
 ### Image name

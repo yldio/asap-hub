@@ -6,7 +6,6 @@ import { appName, baseUrl } from '../../src/config';
 import {
   GraphqlUserTeam,
   parseGraphQLUserTeamConnections,
-  parseUserToDataObject,
   parseUserToResponse,
   UserSquidexDataProvider,
 } from '../../src/data-providers/users.data-provider';
@@ -660,53 +659,6 @@ describe('User data provider', () => {
     });
   });
   describe('parsing', () => {
-    describe('parseUserToDataObject', () => {
-      test('user is parsed', () => {
-        const user = fetchUserResponse();
-        const userDataObject = parseUserToDataObject(user);
-        expect(userDataObject).toEqual(fetchUserResponseDataObject());
-      });
-      test('empty teams is parsed', () => {
-        const user = fetchUserResponse();
-        user.data.teams.iv = null;
-        const userDataObject = parseUserToDataObject(user);
-        const expected = {
-          ...fetchUserResponseDataObject(),
-          teams: [],
-        };
-        expect(userDataObject).toEqual(expected);
-      });
-      test('parsing of labs', () => {
-        const user = fetchUserResponse();
-        user.data.labs.iv = [
-          {
-            id: 'labs/1',
-            flatData: { name: 'lab1' },
-          },
-        ];
-        const userDataObject = parseUserToDataObject(user);
-        const expected = {
-          ...fetchUserResponseDataObject(),
-          labs: [{ id: 'labs/1', name: 'lab1' }],
-        };
-        expect(userDataObject).toEqual(expected);
-      });
-      test('parsing of labs with no name sets blank', () => {
-        const user = fetchUserResponse();
-        user.data.labs.iv = [
-          {
-            id: 'labs/1',
-            flatData: {},
-          },
-        ];
-        const userDataObject = parseUserToDataObject(user);
-        const expected = {
-          ...fetchUserResponseDataObject(),
-          labs: [{ id: 'labs/1', name: '' }],
-        };
-        expect(userDataObject).toEqual(expected);
-      });
-    });
     describe('parseGraphQLUserTeamConnections', () => {
       afterEach(() => {
         jest.clearAllMocks();

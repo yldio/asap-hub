@@ -310,68 +310,6 @@ const getOrcidWorkPublicationDate = (
   return date;
 };
 
-export const parseUserToDataObject = (user: RestUser): UserDataObject => {
-  const teams: UserTeam[] =
-    user.data.teams?.iv?.reduce((acc: UserTeam[], team) => {
-      const { id, ...t } = team;
-      if (!id[0]) {
-        logger.warn(`Team id is undefined on user: ${user.id}`);
-        return acc;
-      }
-      return [
-        ...acc,
-        {
-          id: id[0],
-          displayName: 'Unknown',
-          ...t,
-        },
-      ];
-    }, []) || [];
-
-  const orcid = user.data.orcid?.iv;
-  const social = {
-    ...((user.data.social?.iv && user.data.social?.iv[0]) || {}),
-    orcid,
-  };
-
-  return {
-    id: user.id,
-    onboarded: user.data.onboarded.iv,
-    dismissedGettingStarted: user.data.dismissedGettingStarted.iv,
-    createdDate: parseDate(user.created).toISOString(),
-    lastModifiedDate: user.data.lastModifiedDate?.iv ?? user.created,
-    email: user.data.email.iv,
-    contactEmail: user.data?.contactEmail?.iv,
-    degree: user.data.degree?.iv,
-    firstName: user.data.firstName?.iv,
-    lastName: user.data.lastName?.iv,
-    biography: user.data.biography?.iv,
-    jobTitle: user.data.jobTitle?.iv,
-    institution: user.data.institution?.iv,
-    teams,
-    social,
-    orcid: user.data.orcid?.iv,
-    orcidLastModifiedDate: user.data.orcidLastModifiedDate?.iv,
-    orcidLastSyncDate: user.data.orcidLastSyncDate?.iv,
-    orcidWorks: user.data.orcidWorks?.iv,
-    expertiseAndResourceTags: user.data.expertiseAndResourceTags?.iv || [],
-    expertiseAndResourceDescription:
-      user.data.expertiseAndResourceDescription?.iv,
-    questions: user.data.questions?.iv?.map(({ question }) => question) || [],
-    avatarUrl:
-      (user.data.avatar?.iv && createUrl(user.data.avatar.iv)[0]) ?? undefined,
-    role: user.data.role.iv === 'Hidden' ? 'Guest' : user.data.role.iv,
-    responsibilities: user.data.responsibilities?.iv,
-    researchInterests: user.data.researchInterests?.iv ?? undefined,
-    reachOut: user.data.reachOut?.iv,
-    labs: (user.data.labs?.iv || []).map((lab) => ({
-      id: lab.id,
-      name: lab.flatData?.name ?? '',
-    })),
-    connections: user.data.connections?.iv ?? undefined,
-  };
-};
-
 const isOrcidWorkType = (data: string): data is OrcidWorkType =>
   (orcidWorkType as ReadonlyArray<string>).includes(data);
 

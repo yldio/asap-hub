@@ -10656,7 +10656,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/cms-data-sync", "workspace:packages/cms-data-sync"],\
             ["@asap-hub/model", "workspace:packages/model"],\
             ["@asap-hub/squidex", "workspace:packages/squidex"],\
-            ["@contentful/rich-text-types", "npm:15.14.0"],\
+            ["@contentful/rich-text-types", "npm:15.13.2"],\
             ["@types/contentful-html-rich-text-converter", "workspace:@types/contentful-html-rich-text-converter"],\
             ["@types/node", "npm:14.18.33"],\
             ["contentful-html-rich-text-converter", "npm:1.0.9"],\
@@ -26871,13 +26871,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@contentful-rich-text-types-npm-15.13.2-75467a28ec-cf27fa7d34.zip/node_modules/@contentful/rich-text-types/",\
           "packageDependencies": [\
             ["@contentful/rich-text-types", "npm:15.13.2"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
-        ["npm:15.14.0", {\
-          "packageLocation": "./.yarn/cache/@contentful-rich-text-types-npm-15.14.0-0fe2018574-96319b0b4d.zip/node_modules/@contentful/rich-text-types/",\
-          "packageDependencies": [\
-            ["@contentful/rich-text-types", "npm:15.14.0"]\
           ],\
           "linkType": "HARD"\
         }]\

@@ -70,6 +70,7 @@ const serverlessConfig: AWS = {
     memorySize: 512,
     region,
     stage,
+    versionFunctions: false,
     httpApi: {
       payload: '2.0',
       cors: {

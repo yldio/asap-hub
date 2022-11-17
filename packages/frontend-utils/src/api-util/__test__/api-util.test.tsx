@@ -41,7 +41,7 @@ describe('createListApiUrl', () => {
     expect(url.search).toMatchInlineSnapshot(`"?take=10&skip=0"`);
   });
   it('calculates take and skip from params', async () => {
-    const url = createListApiUrl('test', {
+    let url = createListApiUrl('test', {
       currentPage: 2,
       pageSize: 10,
       filters: new Set(),
@@ -49,6 +49,24 @@ describe('createListApiUrl', () => {
     });
     expect(url.searchParams.get('take')).toEqual('10');
     expect(url.searchParams.get('skip')).toEqual('20');
+
+    url = createListApiUrl('test', {
+      currentPage: null,
+      pageSize: null,
+      filters: new Set(),
+      searchQuery: '',
+    });
+    expect(url.searchParams.get('take')).toEqual(null);
+    expect(url.searchParams.get('skip')).toEqual(null);
+
+    url = createListApiUrl('test', {
+      currentPage: null,
+      pageSize: 10,
+      filters: new Set(),
+      searchQuery: '',
+    });
+    expect(url.searchParams.get('take')).toEqual('10');
+    expect(url.searchParams.get('skip')).toEqual(null);
   });
 
   it('handles requests with a search query', async () => {

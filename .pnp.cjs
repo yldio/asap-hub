@@ -10657,6 +10657,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/model", "workspace:packages/model"],\
             ["@asap-hub/squidex", "workspace:packages/squidex"],\
             ["@contentful/rich-text-types", "npm:15.14.0"],\
+            ["@types/contentful-html-rich-text-converter", "workspace:@types/contentful-html-rich-text-converter"],\
             ["@types/node", "npm:14.18.33"],\
             ["contentful-html-rich-text-converter", "npm:1.0.9"],\
             ["contentful-management", "npm:10.19.3"],\

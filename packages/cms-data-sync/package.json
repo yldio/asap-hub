@@ -21,8 +21,8 @@
     "contentful-management": "^10.19.3"
   },
   "devDependencies": {
+    "@types/contentful-html-rich-text-converter": "workspace:*",
     "@types/node": "14.18.33",
-    "@types/contentful-html-rich-text-converter": "0.1.0",
     "ts-node": "10.9.1"
   }
 }

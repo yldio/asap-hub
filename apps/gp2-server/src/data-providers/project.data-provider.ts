@@ -121,17 +121,6 @@ const parseProjectMembers = (
       ? createUrl(flatAvatar.map((a) => a.id))[0]
       : undefined;
 
-  const roleMap: Record<
-    ProjectsDataMembersRoleEnum,
-    gp2Model.ProjectMemberRole
-  > = {
-    [ProjectsDataMembersRoleEnum.ProjectManager]: 'Project manager',
-    [ProjectsDataMembersRoleEnum.ProjectLead]: 'Project lead',
-    [ProjectsDataMembersRoleEnum.ProjectCoLead]: 'Project co-lead',
-    [ProjectsDataMembersRoleEnum.Contributor]: 'Contributor',
-    [ProjectsDataMembersRoleEnum.Investigator]: 'Investigator',
-  };
-
   return {
     userId: user.id,
     firstName: user.flatData.firstName || '',
@@ -198,3 +187,14 @@ export function parseProjectToDataObject({
     resources,
   };
 }
+
+export const roleMap: Record<
+  ProjectsDataMembersRoleEnum,
+  gp2Model.ProjectMemberRole
+> = {
+  [ProjectsDataMembersRoleEnum.ProjectManager]: 'Project manager',
+  [ProjectsDataMembersRoleEnum.ProjectLead]: 'Project lead',
+  [ProjectsDataMembersRoleEnum.ProjectCoLead]: 'Project co-lead',
+  [ProjectsDataMembersRoleEnum.Contributor]: 'Contributor',
+  [ProjectsDataMembersRoleEnum.Investigator]: 'Investigator',
+};

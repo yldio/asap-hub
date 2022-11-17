@@ -21,6 +21,9 @@ on:
       LIGHTSTEP_TOKEN:
         description: 'Lightstep Token'
         required: true
+      CRN_CONTENTFUL_ACCESS_TOKEN:
+        description: 'CRN Contentful Access Token'
+        required: true
       CRN_SQUIDEX_API_CLIENT_SECRET:
         description: 'CRN Squidex Client Secret'
         required: true
@@ -227,7 +230,9 @@ jobs:
           app: crn-server
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          is-contentful-enabled: ${{ steps.setup.outputs.is-contentful-enabled }}
           crn-contentful-env: ${{ inputs.crn-contentful-env }}
+          crn-contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
           crn-squidex-api-client-secret: ${{ secrets.CRN_SQUIDEX_API_CLIENT_SECRET }}
           crn-squidex-shared-secret: ${{ secrets.CRN_SQUIDEX_SHARED_SECRET }}
           environment-name: ${{ inputs.environment-name }}
@@ -251,6 +256,7 @@ jobs:
           app: gp2-server
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          crn-contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
           environment-name: ${{ inputs.environment-name }}
           gp2-auth0-shared-secret: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}
           gp2-squidex-api-client-secret: ${{ secrets.GP2_SQUIDEX_API_CLIENT_SECRET }}

@@ -1,4 +1,4 @@
-import { authTestUtils } from '@asap-hub/react-components';
+import { authTestUtils } from '@asap-hub/gp2-components';
 import { useFlags } from '@asap-hub/react-context';
 import { render, waitFor } from '@testing-library/react';
 import { renderHook } from '@testing-library/react-hooks';
@@ -28,19 +28,19 @@ beforeEach(() => {
 
 it('changes routing for logged in users', async () => {
   const { container, rerender } = render(
-    <authTestUtils.Auth0ProviderGP2>
+    <authTestUtils.UserAuth0Provider>
       <App />
-    </authTestUtils.Auth0ProviderGP2>,
+    </authTestUtils.UserAuth0Provider>,
   );
 
   await waitFor(() => expect(container).not.toHaveTextContent(/loading/i));
   expect(container).toHaveTextContent(/Signin/i);
   rerender(
-    <authTestUtils.Auth0ProviderGP2>
-      <authTestUtils.LoggedInGP2 user={{}}>
+    <authTestUtils.UserAuth0Provider>
+      <authTestUtils.UserLoggedIn user={{}}>
         <App />
-      </authTestUtils.LoggedInGP2>
-    </authTestUtils.Auth0ProviderGP2>,
+      </authTestUtils.UserLoggedIn>
+    </authTestUtils.UserAuth0Provider>,
   );
   await waitFor(() => expect(container).not.toHaveTextContent(/loading/i));
   expect(container).toHaveTextContent(/Authenticated/i);
@@ -52,11 +52,11 @@ it('loads overrides for feature flags', async () => {
   } = renderHook(useFlags);
 
   const { container } = render(
-    <authTestUtils.Auth0ProviderGP2>
-      <authTestUtils.LoggedInGP2 user={{}}>
+    <authTestUtils.UserAuth0Provider>
+      <authTestUtils.UserLoggedIn user={{}}>
         <App />
-      </authTestUtils.LoggedInGP2>
-    </authTestUtils.Auth0ProviderGP2>,
+      </authTestUtils.UserLoggedIn>
+    </authTestUtils.UserAuth0Provider>,
   );
   await waitFor(() => expect(container).not.toHaveTextContent(/loading/i));
   current.setCurrentOverrides({ ASAP_PERSISTENT_EXAMPLE: false });

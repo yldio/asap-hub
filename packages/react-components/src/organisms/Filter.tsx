@@ -86,7 +86,11 @@ export default function Filter<V extends string>({
 
   return (
     <div>
-      <Button active={menuShown} onClick={() => setMenuShown(!menuShown)}>
+      <Button
+        noMargin
+        active={menuShown}
+        onClick={() => setMenuShown(!menuShown)}
+      >
         {filterIcon}
         <span css={buttonTextStyles}>Filters</span>
       </Button>

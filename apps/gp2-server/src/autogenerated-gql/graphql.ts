@@ -2597,6 +2597,36 @@ export type UsersContentFragment = Pick<
       >
     >;
   };
+  referencingProjectsContents: Maybe<
+    Array<
+      Pick<Projects, 'id'> & {
+        flatData: Pick<ProjectsFlatDataDto, 'status' | 'title'> & {
+          members: Maybe<
+            Array<
+              Pick<ProjectsDataMembersChildDto, 'role'> & {
+                user: Maybe<Array<Pick<Users, 'id'>>>;
+              }
+            >
+          >;
+        };
+      }
+    >
+  >;
+  referencingWorkingGroupsContents: Maybe<
+    Array<
+      Pick<WorkingGroups, 'id'> & {
+        flatData: Pick<WorkingGroupsFlatDataDto, 'title'> & {
+          members: Maybe<
+            Array<
+              Pick<WorkingGroupsDataMembersChildDto, 'role'> & {
+                user: Maybe<Array<Pick<Users, 'id'>>>;
+              }
+            >
+          >;
+        };
+      }
+    >
+  >;
 };
 
 export type FetchUserQueryVariables = Exact<{
@@ -2628,6 +2658,36 @@ export type FetchUserQuery = {
           >
         >;
       };
+      referencingProjectsContents: Maybe<
+        Array<
+          Pick<Projects, 'id'> & {
+            flatData: Pick<ProjectsFlatDataDto, 'status' | 'title'> & {
+              members: Maybe<
+                Array<
+                  Pick<ProjectsDataMembersChildDto, 'role'> & {
+                    user: Maybe<Array<Pick<Users, 'id'>>>;
+                  }
+                >
+              >;
+            };
+          }
+        >
+      >;
+      referencingWorkingGroupsContents: Maybe<
+        Array<
+          Pick<WorkingGroups, 'id'> & {
+            flatData: Pick<WorkingGroupsFlatDataDto, 'title'> & {
+              members: Maybe<
+                Array<
+                  Pick<WorkingGroupsDataMembersChildDto, 'role'> & {
+                    user: Maybe<Array<Pick<Users, 'id'>>>;
+                  }
+                >
+              >;
+            };
+          }
+        >
+      >;
     }
   >;
 };
@@ -2666,6 +2726,36 @@ export type FetchUsersQuery = {
                 >
               >;
             };
+            referencingProjectsContents: Maybe<
+              Array<
+                Pick<Projects, 'id'> & {
+                  flatData: Pick<ProjectsFlatDataDto, 'status' | 'title'> & {
+                    members: Maybe<
+                      Array<
+                        Pick<ProjectsDataMembersChildDto, 'role'> & {
+                          user: Maybe<Array<Pick<Users, 'id'>>>;
+                        }
+                      >
+                    >;
+                  };
+                }
+              >
+            >;
+            referencingWorkingGroupsContents: Maybe<
+              Array<
+                Pick<WorkingGroups, 'id'> & {
+                  flatData: Pick<WorkingGroupsFlatDataDto, 'title'> & {
+                    members: Maybe<
+                      Array<
+                        Pick<WorkingGroupsDataMembersChildDto, 'role'> & {
+                          user: Maybe<Array<Pick<Users, 'id'>>>;
+                        }
+                      >
+                    >;
+                  };
+                }
+              >
+            >;
           }
         >
       >;
@@ -3376,6 +3466,102 @@ export const UsersContentFragmentDoc = {
                   },
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'onboarded' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'referencingProjectsContents' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'flatData' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'members' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'role' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'user' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'status' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'referencingWorkingGroupsContents' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'flatData' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'members' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'role' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'user' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                    ],
+                  },
+                },
               ],
             },
           },

@@ -1,3 +1,4 @@
+export * as authTestUtils from './auth-test-utils';
 export * from './icons';
 export * from './images';
 export * from './messages';
@@ -14,6 +15,7 @@ export {
 } from './molecules';
 export {
   EmailSection,
+  FiltersModal,
   MainNavigation,
   NavigationHeader,
   PageBanner,
@@ -24,6 +26,7 @@ export {
   ProjectsBody,
   ProjectSummaryFooter,
   ProjectSummaryHeader,
+  ResourceModal,
   Resources,
   UserCard,
   UserDetailHeader,
@@ -33,8 +36,6 @@ export {
   WorkingGroupDetailHeader,
   WorkingGroupNetwork,
   WorkingGroupsBody,
-  FiltersModal,
-  ResourceModal,
 } from './organisms';
 export {
   BasicLayout,
@@ -42,11 +43,11 @@ export {
   DashboardPageBody,
   DashboardPageHeader,
   Layout,
+  OnboardWelcome,
   ProjectDetailPage,
   ProjectOverview,
   ProjectResources,
   ProjectsPage,
-  OnboardWelcome,
   Theme,
   UserDetailPage,
   UsersPage,

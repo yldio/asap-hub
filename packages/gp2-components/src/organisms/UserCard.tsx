@@ -6,7 +6,7 @@ import {
   pixels,
   TagList,
 } from '@asap-hub/react-components';
-import { gp2 } from '@asap-hub/routing';
+import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import UserCardInfo from '../molecules/UserCardInfo';
@@ -25,11 +25,10 @@ type UserCardProps = Pick<
   | 'degrees'
   | 'region'
   | 'role'
-> & {
-  tags?: string[];
-} & Partial<
-    Pick<ComponentProps<typeof UserCardInfo>, 'projects' | 'workingGroups'>
-  >;
+> &
+  Pick<ComponentProps<typeof UserCardInfo>, 'projects' | 'workingGroups'> & {
+    tags?: string[];
+  };
 
 const containerStyles = css({
   display: 'grid',
@@ -69,11 +68,11 @@ const UserCard: React.FC<UserCardProps> = ({
   degrees,
   role,
   region,
-  workingGroups = [],
-  projects = [],
+  workingGroups,
+  projects,
   tags = [],
 }) => {
-  const userHref = gp2.users({}).user({ userId: id }).$;
+  const userHref = gp2Routing.users({}).user({ userId: id }).$;
 
   return (
     <Card>

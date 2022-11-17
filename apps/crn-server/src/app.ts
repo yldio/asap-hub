@@ -23,13 +23,23 @@ import {
   SquidexGraphql,
   SquidexRest,
 } from '@asap-hub/squidex';
+import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/contentful';
+
 import * as Sentry from '@sentry/serverless';
 import AWSXray from 'aws-xray-sdk';
 import cors from 'cors';
 import express, { Express, RequestHandler } from 'express';
 import 'express-async-errors';
 import { Tracer } from 'opentracing';
-import { appName, auth0Audience, baseUrl } from './config';
+import {
+  appName,
+  auth0Audience,
+  baseUrl,
+  contentfulSpaceId,
+  contentfulAccessToken,
+  contentfulEnvId,
+  isContentfulEnabled,
+} from './config';
 import Calendars, { CalendarController } from './controllers/calendars';
 import Dashboard, { DashboardController } from './controllers/dashboard';
 import Discover, { DiscoverController } from './controllers/discover';
@@ -48,6 +58,9 @@ import ResearchTags, {
 import Teams, { TeamController } from './controllers/teams';
 import Tutorials, { TutorialsController } from './controllers/tutorials';
 import Users, { UserController } from './controllers/users';
+import { NewsDataProvider } from './data-providers/types';
+import { NewsSquidexDataProvider } from './data-providers/news.data-provider';
+import { NewsContentfulDataProvider } from './data-providers/contentful/news.data-provider';
 import {
   AssetDataProvider,
   AssetSquidexDataProvider,
@@ -106,14 +119,15 @@ import { userPublicRouteFactory, userRouteFactory } from './routes/user.route';
 import assignUserToContext from './utils/assign-user-to-context';
 import { getAuthToken } from './utils/auth';
 import pinoLogger from './utils/logger';
-import {
-  NewsDataProvider,
-  NewsSquidexDataProvider,
-} from './data-providers/news.data-provider';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
 
+  const contentfulGraphQLClient = getContentfulGraphQLClient({
+    space: contentfulSpaceId,
+    accessToken: contentfulAccessToken,
+    environment: contentfulEnvId,
+  });
   /**
    * Dependency Injection -->
    */
@@ -177,8 +191,15 @@ export const appFactory = (libs: Libs = {}): Express => {
   const groupDataProvider =
     libs.groupDataProvider ||
     new GroupSquidexDataProvider(squidexGraphqlClient);
+  const newsSquidexDataProvider =
+    libs.newsSquidexDataProvider || new NewsSquidexDataProvider(newsRestClient);
+  const newsContentfulDataProvider =
+    libs.newsContentfulDataProvider ||
+    new NewsContentfulDataProvider(contentfulGraphQLClient);
   const newsDataProvider =
-    libs.newsDataProvider || new NewsSquidexDataProvider(newsRestClient);
+    libs.newsDataProvider || isContentfulEnabled
+      ? newsContentfulDataProvider
+      : newsSquidexDataProvider;
   const teamDataProvider =
     libs.teamDataProvider ||
     new TeamSquidexDataProvider(squidexGraphqlClient, teamRestClient);
@@ -377,6 +398,8 @@ export type Libs = {
   assetDataProvider?: AssetDataProvider;
   groupDataProvider?: GroupDataProvider;
   newsDataProvider?: NewsDataProvider;
+  newsSquidexDataProvider?: NewsDataProvider;
+  newsContentfulDataProvider?: NewsDataProvider;
   reminderDataProvider?: ReminderDataProvider;
   teamDataProvider?: TeamDataProvider;
   tutorialsDataProvider?: TutorialsDataProvider;

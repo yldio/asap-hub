@@ -8,26 +8,17 @@ on:
         type: string
       entity:
         required: true
-        type: choice
+        type: string
         description: Choose which Contentful entity (or entities) to sync
         default: all
-        options:
-          - news
-          - all
       contentful-env:
         required: true
-        type: choice
+        type: string
         description: Choose which Contentful environment to sync to
-        options:
-          - Development
-          - Production
       squidex-app:
         required: true
-        type: choice
+        type: string
         description: Choose which Squidex app to sync from
-        options:
-          - asap-hub
-          - asap-hub-dev
     secrets:
       CONTENTFUL_MANAGEMENT_TOKEN:
         description: Contentful Management Token

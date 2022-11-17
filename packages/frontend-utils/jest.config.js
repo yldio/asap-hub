@@ -16,5 +16,9 @@ module.exports = {
     ...moduleNameMapper,
     '^csv-stringify/browser/esm': require.resolve('csv-stringify'),
   },
+  transform: {
+    ...baseConfig.transform,
+    '^.+\\.(gif|jpg|png)$': require.resolve('../../jest/filename-transform.js'),
+  },
   displayName: 'test-frontend-utils',
 };

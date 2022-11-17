@@ -1,7 +1,4 @@
-import {
-  Auth0PostLoginApi,
-  Auth0PostLoginEvent,
-} from '@vedicium/auth0-actions-sdk';
+import { Auth0PostLoginApi } from '@vedicium/auth0-actions-sdk';
 import type { gp2 as gp2Auth, User } from '@asap-hub/auth';
 import type { gp2 as gp2Model, UserMetadataResponse } from '@asap-hub/model';
 import got from 'got';
@@ -84,11 +81,9 @@ export const onExecutePostLogin = async (
     `https://(?<pr_number>[0-9]+).${event.secrets.PR_APP_DOMAIN}`,
   );
   const matches = prUrlRegex.exec(redirect_uri);
-
   const apiURL = matches?.groups?.pr_number
     ? `https://api-${matches.groups.pr_number}.${event.secrets.PR_APP_DOMAIN}`
     : event.secrets.ASAP_API_URL;
-
   try {
     const response = await got(
       `${apiURL}/webhook/users/${event.user.user_id}`,
@@ -99,20 +94,26 @@ export const onExecutePostLogin = async (
         timeout: 10000,
       },
     ).json<Auth0UserResponse>();
-
     if (isUserMetadataResponse(response) && response.alumniSinceDate) {
       return api.access.deny('alumni-user-access-denied');
     }
-
     const user = extractUser(response);
     api.idToken.setCustomClaim(new URL('/user', redirect_uri).toString(), user);
-    // Uncomment for dev auth0. This allows pointing to dev api from local FE
-    // context.idToken[new URL('/user', 'https://dev.hub.asap.science').toString()] = user;
-  } catch (err) {
-    if (err instanceof Error) {
-      return api.access.deny(err.message);
+    if (event.secrets.AUTH0_ADDITIONAL_CLAIM_DOMAIN) {
+      api.idToken.setCustomClaim(
+        new URL(
+          '/user',
+          event.secrets.AUTH0_ADDITIONAL_CLAIM_DOMAIN,
+        ).toString(),
+        user,
+      );
     }
-    return api.access.deny('Unexpected Error');
+  } catch (err) {
+    let errorMessage;
+    if (err instanceof Error) {
+      errorMessage = err.message;
+    }
+    return api.access.deny(errorMessage ?? 'Unexpected Error');
   }
-  return;
+  return true;
 };

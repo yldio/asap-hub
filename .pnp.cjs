@@ -120,10 +120,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/cms-data-sync"\
       },\
       {\
-        "name": "@asap-hub/cms-migration",\
-        "reference": "workspace:packages/cms-migration"\
-      },\
-      {\
         "name": "@asap-hub/contentful",\
         "reference": "workspace:packages/contentful"\
       },\
@@ -210,7 +206,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@asap-hub/auth-frontend-utils", ["workspace:packages/auth-frontend-utils"]],\
       ["@asap-hub/auth0-rules", ["workspace:apps/auth0-rules"]],\
       ["@asap-hub/cms-data-sync", ["workspace:packages/cms-data-sync"]],\
-      ["@asap-hub/cms-migration", ["workspace:packages/cms-migration"]],\
       ["@asap-hub/contentful", ["workspace:packages/contentful"]],\
       ["@asap-hub/crn-auth-frontend", ["workspace:apps/crn-auth-frontend"]],\
       ["@asap-hub/crn-frontend", ["workspace:apps/crn-frontend"]],\
@@ -371,10 +366,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [\
         "@asap-hub/cms-data-sync",\
         "workspace:packages/cms-data-sync"\
-      ],\
-      [\
-        "@asap-hub/cms-migration",\
-        "workspace:packages/cms-migration"\
       ],\
       [\
         "@asap-hub/contentful",\
@@ -10666,22 +10657,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/model", "workspace:packages/model"],\
             ["@asap-hub/squidex", "workspace:packages/squidex"],\
             ["@contentful/rich-text-types", "npm:15.14.0"],\
-            ["@types/node", "npm:14.18.33"],\
-            ["contentful-html-rich-text-converter", "npm:1.0.9"],\
-            ["contentful-management", "npm:10.19.3"],\
-            ["ts-node", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:10.9.1"]\
-          ],\
-          "linkType": "SOFT"\
-        }]\
-      ]],\
-      ["@asap-hub/cms-migration", [\
-        ["workspace:packages/cms-migration", {\
-          "packageLocation": "./packages/cms-migration/",\
-          "packageDependencies": [\
-            ["@asap-hub/cms-migration", "workspace:packages/cms-migration"],\
-            ["@asap-hub/model", "workspace:packages/model"],\
-            ["@asap-hub/squidex", "workspace:packages/squidex"],\
-            ["@types/contentful-html-rich-text-converter", "workspace:@types/contentful-html-rich-text-converter"],\
             ["@types/node", "npm:14.18.33"],\
             ["contentful-html-rich-text-converter", "npm:1.0.9"],\
             ["contentful-management", "npm:10.19.3"],\

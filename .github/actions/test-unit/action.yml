@@ -34,7 +34,7 @@ runs:
     - name: Run tests from diff with master
       shell: bash
       if: ${{ inputs.since-master == 'true' }}
-      run: yarn test --coverage --maxWorkers ${{ steps.cpu-cores.outputs.count }} --ci --changedSince=master
+      run: yarn test --maxWorkers ${{ steps.cpu-cores.outputs.count }} --ci --changedSince=master
     - name: Run all tests
       shell: bash
       if: ${{ inputs.since-master == 'false' }}

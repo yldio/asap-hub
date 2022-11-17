@@ -31,8 +31,10 @@ const defaultProps = {
   ...pageProps,
   users,
   isAdministrator: false,
+  searchQuery: '',
   onFiltersClick: jest.fn,
   onExportClick: jest.fn,
+  onSearchQueryChange: jest.fn,
 };
 
 describe('UsersPageBody', () => {

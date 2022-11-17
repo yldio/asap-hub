@@ -62,6 +62,9 @@ const UserList: React.FC<UserListProps> = ({ displayFilters = false }) => {
         onFiltersClick={onFiltersClick}
         onExportClick={exportUsers}
         isAdministrator={isAdministrator}
+        searchQuery=""
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        onSearchQueryChange={() => {}}
       />
       {displayFilters && (
         <FiltersModal

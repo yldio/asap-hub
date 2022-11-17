@@ -14,9 +14,10 @@ import { mobileQuery, nonMobileQuery } from '../layout';
 import { UserDetailHeader } from '../organisms';
 import EmailSection from '../organisms/EmailSection';
 
-const { onboarding } = gp2Routing;
 type OnboardingCoreDetailProps = Pick<gp2Model.UserResponse, 'email'> &
   ComponentProps<typeof UserDetailHeader>;
+
+const { onboarding } = gp2Routing;
 const { rem } = pixels;
 
 const contentStyles = css({
@@ -44,14 +45,12 @@ const signOutStyles = css({
     paddingTop: rem(24),
   },
 });
-
 const buttonStyles = css({
   [mobileQuery]: {
     flexDirection: 'column-reverse',
     gap: rem(24),
   },
 });
-
 const rowStyles = css({
   display: 'flex',
   flexDirection: 'column',
@@ -67,15 +66,24 @@ const editButtonStyles = css({
   },
 });
 const descriptionStyles = css({ paddingBottom: rem(32) });
-const cardStyles = css({ padding: `${rem(32)} 0` });
+const cardStyles = css({ gap: rem(32) });
+const buttonWrapperStyle = css({
+  width: 'fit-content',
+  [mobileQuery]: {
+    width: '100%',
+  },
+});
+
 const OnboardingCoreDetails: React.FC<OnboardingCoreDetailProps> = ({
   email,
   ...headerProps
 }) => (
   <div css={contentStyles}>
     <div css={descriptionStyles}>
-      In order to join the platform, we need to capture some core information
-      before you start exploring.
+      <Paragraph>
+        In order to join the platform, we need to capture some core information
+        before you start exploring.
+      </Paragraph>
     </div>
     <UserDetailHeader {...headerProps} edit={'/edit'} />
     <div css={cardStyles}>
@@ -83,7 +91,7 @@ const OnboardingCoreDetails: React.FC<OnboardingCoreDetailProps> = ({
         <div css={[rowStyles, buttonStyles]}>
           <Headline3 noMargin>Contact Information</Headline3>
           <div css={editButtonStyles}>
-            <Link tabletFullWidth href={''} buttonStyle noMargin small>
+            <Link fullWidth href={''} buttonStyle noMargin small>
               Optional {addIcon}
             </Link>
           </div>
@@ -102,29 +110,33 @@ const OnboardingCoreDetails: React.FC<OnboardingCoreDetailProps> = ({
     <footer>
       <div css={footerStyles}>
         <div css={signOutStyles}>
-          <Link tabletFullWidth buttonStyle noMargin href={logout({}).$}>
+          <Link fullWidth buttonStyle noMargin href={logout({}).$}>
             Sign Out
           </Link>
         </div>
         <div css={css(footerEditStyles)}>
-          <Link
-            enabled={false}
-            tabletFullWidth
-            buttonStyle
-            noMargin
-            href={onboarding({}).$}
-          >
-            Previous
-          </Link>
-          <Link
-            tabletFullWidth
-            buttonStyle
-            enabled={false}
-            noMargin
-            href={onboarding({}).coreDetails({}).$}
-          >
-            Continue
-          </Link>
+          <div css={buttonWrapperStyle}>
+            <Link
+              enabled={false}
+              fullWidth
+              buttonStyle
+              noMargin
+              href={onboarding({}).$}
+            >
+              Previous
+            </Link>
+          </div>
+          <div css={buttonWrapperStyle}>
+            <Link
+              fullWidth
+              buttonStyle
+              enabled={false}
+              noMargin
+              href={onboarding({}).coreDetails({}).$}
+            >
+              Continue
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

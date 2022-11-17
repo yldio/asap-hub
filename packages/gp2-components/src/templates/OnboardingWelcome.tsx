@@ -4,8 +4,8 @@ import {
   Headline2,
   Link,
   Paragraph,
-  Subtitle,
   pixels,
+  Subtitle,
 } from '@asap-hub/react-components';
 import { gp2, logout } from '@asap-hub/routing';
 import { css } from '@emotion/react';
@@ -25,19 +25,16 @@ const footerStyles = css({
   display: 'flex',
   justifyContent: 'space-between',
   flexDirection: 'column-reverse',
+  gap: rem(24),
   [nonMobileQuery]: {
     display: 'flex',
     flexDirection: 'row',
   },
 });
-const signOutStyles = css({
+const buttonWrapperStyle = css({
+  width: 'fit-content',
   [mobileQuery]: {
-    paddingTop: rem(12),
-  },
-});
-const continueStyles = css({
-  [mobileQuery]: {
-    paddingBottom: rem(12),
+    width: '100%',
   },
 });
 
@@ -77,14 +74,14 @@ const OnboardingWelcome: React.FC<Record<string, never>> = () => (
       GP2 members that have also registered.
     </Caption>
     <footer css={footerStyles}>
-      <div css={signOutStyles}>
-        <Link tabletFullWidth noMargin buttonStyle href={logout({}).$}>
+      <div css={buttonWrapperStyle}>
+        <Link fullWidth noMargin buttonStyle href={logout({}).$}>
           Sign Out
         </Link>
       </div>
-      <div css={continueStyles}>
+      <div css={buttonWrapperStyle}>
         <Link
-          tabletFullWidth
+          fullWidth
           noMargin
           buttonStyle
           primary

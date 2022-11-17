@@ -129,7 +129,7 @@ const UserDetailHeader: React.FC<UserDetailHeaderProps> = ({
           </div>
           {positions.map(
             ({ role: positionRole, department, institution }, idx) => (
-              <div css={rowContainerStyles} key={idx}>
+              <div css={rowContainerStyles} key={`position-${idx}`}>
                 {positionRole} in {department} at {institution}
               </div>
             ),
@@ -137,7 +137,7 @@ const UserDetailHeader: React.FC<UserDetailHeaderProps> = ({
         </div>
         {edit && (
           <div css={[{ gridArea: 'edit' }, editButtonStyles]}>
-            <Link href={edit} buttonStyle noMargin small tabletFullWidth>
+            <Link href={edit} buttonStyle noMargin small fullWidth>
               Required {addIcon}
             </Link>
           </div>

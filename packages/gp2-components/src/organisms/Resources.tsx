@@ -84,7 +84,7 @@ const Resources: React.FC<ResourcesProps> = ({
           <Headline3 noMargin>Resource List</Headline3>
           {add && (
             <div css={editButtonStyles}>
-              <Link href={add} tabletFullWidth buttonStyle noMargin small>
+              <Link href={add} fullWidth buttonStyle noMargin small>
                 Add {addIcon}
               </Link>
             </div>
@@ -117,7 +117,7 @@ const Resources: React.FC<ResourcesProps> = ({
                       <Link
                         href={'/edit'}
                         buttonStyle
-                        tabletFullWidth
+                        fullWidth
                         noMargin
                         small
                       >

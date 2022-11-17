@@ -5,6 +5,8 @@ import FilterSearchExport from '../FilterSearchExport';
 describe('FilterSearchExport', () => {
   const defaultProps = {
     isAdministrator: false,
+    searchQuery: '',
+    onSearchQueryChange: jest.fn(),
     onFiltersClick: jest.fn(),
     onExportClick: jest.fn(),
   };
@@ -52,5 +54,22 @@ describe('FilterSearchExport', () => {
     );
     userEvent.click(screen.getByRole('button', { name: 'Export Export' }));
     expect(mockedOnExportClick).toHaveBeenCalledTimes(1);
+  });
+  it('uses the searchQueary on the searchbox', () => {
+    render(<FilterSearchExport {...defaultProps} searchQuery="query" />);
+    expect((screen.getByRole('searchbox') as HTMLInputElement).value).toBe(
+      'query',
+    );
+  });
+  it('calls the onSearchQueryChange when input changes', () => {
+    const mockedSearchQueryChange = jest.fn();
+    render(
+      <FilterSearchExport
+        {...defaultProps}
+        onSearchQueryChange={mockedSearchQueryChange}
+      />,
+    );
+    userEvent.type(screen.getByRole('searchbox'), 'a');
+    expect(mockedSearchQueryChange).toHaveBeenCalledWith('a');
   });
 });

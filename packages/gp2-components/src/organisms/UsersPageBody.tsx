@@ -27,6 +27,9 @@ const UsersPageBody: React.FC<UsersPageBodyProps> = ({
 }) => (
   <article css={containerStyles}>
     <FilterSearchExport
+      searchQuery=""
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      onSearchQueryChange={() => {}}
       onFiltersClick={onFiltersClick}
       onExportClick={onExportClick}
       isAdministrator={isAdministrator}

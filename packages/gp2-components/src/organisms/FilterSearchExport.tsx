@@ -10,12 +10,6 @@ import { mobileQuery } from '../layout';
 
 const { rem } = pixels;
 
-type FilterSearchExportProps = {
-  isAdministrator: boolean;
-  onFiltersClick: () => void;
-  onExportClick: () => void;
-};
-
 const containerStyles = css({
   width: '100%',
   display: 'grid',
@@ -36,8 +30,18 @@ const buttonTextStyles = css({ [mobileQuery]: { display: 'none' } });
 
 const notAdminStyles = css({ grid: '"filter search" /min-content auto' });
 
+type FilterSearchExportProps = {
+  searchQuery: string;
+  onSearchQueryChange: () => void;
+  isAdministrator: boolean;
+  onFiltersClick: () => void;
+  onExportClick: () => void;
+};
+
 const FilterSearchExport: React.FC<FilterSearchExportProps> = ({
   isAdministrator,
+  searchQuery,
+  onSearchQueryChange,
   onFiltersClick,
   onExportClick,
 }) => (
@@ -50,9 +54,8 @@ const FilterSearchExport: React.FC<FilterSearchExportProps> = ({
     </div>
     <div css={css({ gridArea: 'search' })}>
       <SearchField
-        value=""
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        onChange={() => {}}
+        value={searchQuery}
+        onChange={onSearchQueryChange}
         placeholder="Enter name or keyword..."
         padding={false}
       />

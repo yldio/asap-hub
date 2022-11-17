@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 import { perRem, mobileScreen } from '../pixels';
 import { Card } from '../atoms';
 import { lead, silver, apricot, clay, info500, info100 } from '../colors';
-import { AlertIcon, clockIcon, paperClipIcon, errorIcon } from '../icons';
+import { WarningIcon, clockIcon, paperClipIcon, errorIcon } from '../icons';
 import { borderRadius, paddingStyles } from '../card';
 
 const toastStyles = css({
@@ -60,7 +60,7 @@ const iconMap: Record<Type, ReactNode | Component> = {
   alert: errorIcon,
   attachment: paperClipIcon,
   live: clockIcon,
-  info: <AlertIcon color={info500.rgb} />,
+  info: <WarningIcon color={info500.rgb} />,
 };
 
 const accentMap = {

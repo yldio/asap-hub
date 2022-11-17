@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import { FC } from 'react';
 import { steel } from '../colors';
 

@@ -9,7 +9,7 @@ import { perRem } from '../pixels';
 import { paper } from '../colors';
 import { paddingStyles, borderRadius } from '../card';
 import { Card } from '../atoms';
-import { validTickIcon, warningIcon } from '../icons';
+import { validTickIcon, warningTransparentIcon } from '../icons';
 
 const gradientStyles: Record<BannerCardProps['type'], CSSObject> = {
   success: ceruleanFernGradientStyles,
@@ -37,7 +37,7 @@ const contentStyles = css({
 
 const icons: Record<BannerCardProps['type'], ReactElement> = {
   success: validTickIcon,
-  warning: warningIcon,
+  warning: warningTransparentIcon,
 };
 
 interface BannerCardProps {

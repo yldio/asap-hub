@@ -486,7 +486,7 @@ __metadata:
   resolution: "@asap-hub/cms-data-sync@workspace:packages/cms-data-sync"
   dependencies:
     "@asap-hub/model": "workspace:*"
-    "@asap-hub/squidex": "workspace:packages/squidex"
+    "@asap-hub/squidex": "workspace:*"
     "@contentful/rich-text-types": ^15.14.0
     "@types/contentful-html-rich-text-converter": "workspace:*"
     "@types/node": 14.18.33

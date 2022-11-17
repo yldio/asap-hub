@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@asap-hub/model": "workspace:*",
-    "@asap-hub/squidex": "workspace:*",
+    "@asap-hub/squidex": "workspace:packages/squidex",
     "@contentful/rich-text-types": "^15.14.0",
     "contentful-html-rich-text-converter": "^1.0.9",
     "contentful-management": "^10.19.3"

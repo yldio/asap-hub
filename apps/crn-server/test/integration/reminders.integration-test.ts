@@ -615,22 +615,19 @@ describe('Reminders', () => {
           items: [expectedReminder],
         });
 
-        // This edge case will be addressed for video in a separate ticket
-        if (material !== 'Video') {
-          // user erases material
-          await eventController.update(event.id, {
-            [materialContentName]: '',
-          });
+        // user erases material
+        await eventController.update(event.id, {
+          [materialContentName]: '',
+        });
 
-          const remindersAfterUpdate = await reminderDataProvider.fetch(
-            fetchRemindersOptions,
-          );
+        const remindersAfterUpdate = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
 
-          expect(remindersAfterUpdate).toEqual({
-            total: 0,
-            items: [],
-          });
-        }
+        expect(remindersAfterUpdate).toEqual({
+          total: 0,
+          items: [],
+        });
       });
     },
   );

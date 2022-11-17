@@ -9,7 +9,6 @@ import { css } from '@emotion/react';
 import { layoutContentStyles } from '../layout';
 
 import HeaderLogo from '../molecules/HeaderLogo';
-import Theme from './Theme';
 
 const { rem } = pixels;
 
@@ -40,17 +39,15 @@ type BasicLayoutProps = {
   logoHref?: string;
 };
 const BasicLayout: React.FC<BasicLayoutProps> = ({ children, logoHref }) => (
-  <Theme>
-    <article>
-      <header css={css({ width: '100%' })}>
-        <div css={logoStyles}>
-          <HeaderLogo logoHref={logoHref} />
-        </div>
-        <div css={[bottomBorderStyles, desktopNavigationStyles]} />
-      </header>
-      <main css={contentStyles}>{children}</main>
-    </article>
-  </Theme>
+  <article>
+    <header css={css({ width: '100%' })}>
+      <div css={logoStyles}>
+        <HeaderLogo logoHref={logoHref} />
+      </div>
+      <div css={[bottomBorderStyles, desktopNavigationStyles]} />
+    </header>
+    <main css={contentStyles}>{children}</main>
+  </article>
 );
 
 export default BasicLayout;

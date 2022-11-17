@@ -22,7 +22,6 @@ import { layoutContentStyles } from '../layout';
 import UserMenu from '../molecules/UserMenu';
 import { NavigationHeader } from '../organisms';
 import colors from './colors';
-import Theme from './Theme';
 
 const { neutral000 } = colors;
 
@@ -125,45 +124,43 @@ const Layout: FC<LayoutProps> = ({ children }) => {
   }, [location, prevLocation, mainRef]);
 
   return (
-    <Theme>
-      <ToastStack>
-        <article css={styles}>
-          <div css={headerStyles}>
-            <NavigationHeader
-              menuOpen={menuShown}
-              onToggleMenu={() => {
-                setMenuShown(!menuShown);
-              }}
-            />
-          </div>
+    <ToastStack>
+      <article css={styles}>
+        <div css={headerStyles}>
+          <NavigationHeader
+            menuOpen={menuShown}
+            onToggleMenu={() => {
+              setMenuShown(!menuShown);
+            }}
+          />
+        </div>
 
-          <div
-            css={css({
-              gridRow: 'header-end / -1',
-              gridColumn: '1 / -1',
-              overflowY: 'auto',
-            })}
-          >
-            <main ref={mainRef} css={layoutContentStyles}>
-              {children}
-            </main>
+        <div
+          css={css({
+            gridRow: 'header-end / -1',
+            gridColumn: '1 / -1',
+            overflowY: 'auto',
+          })}
+        >
+          <main ref={mainRef} css={layoutContentStyles}>
+            {children}
+          </main>
+        </div>
+        <div css={[overlayStyles, menuShown && overlayMenuShownStyles]}>
+          <Overlay shown={menuShown} onClick={() => setMenuShown(false)} />
+        </div>
+        <div css={[menuStyles, menuShown && menuMenuShownStyles]}>
+          <div css={[mainMenuStyles]}>
+            <Suspense fallback={<Loading />}>
+              <MainNavigation />
+            </Suspense>
           </div>
-          <div css={[overlayStyles, menuShown && overlayMenuShownStyles]}>
-            <Overlay shown={menuShown} onClick={() => setMenuShown(false)} />
+          <div css={[userMenuStyles]}>
+            <UserMenu />
           </div>
-          <div css={[menuStyles, menuShown && menuMenuShownStyles]}>
-            <div css={[mainMenuStyles]}>
-              <Suspense fallback={<Loading />}>
-                <MainNavigation />
-              </Suspense>
-            </div>
-            <div css={[userMenuStyles]}>
-              <UserMenu />
-            </div>
-          </div>
-        </article>
-      </ToastStack>
-    </Theme>
+        </div>
+      </article>
+    </ToastStack>
   );
 };
 

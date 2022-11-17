@@ -21,8 +21,13 @@ const listStyles = css({
 
 const verticalList = css({
   flexDirection: 'column',
-  alignSelf: 'flex-start',
   gap: `${15 / perRem}em`,
+  alignSelf: 'center',
+  alignItems: 'center',
+  [`@media (min-width: ${tabletScreen.min - 1}px)`]: {
+    alignSelf: 'flex-start',
+    alignItems: 'flex-start',
+  },
 });
 
 const normalListItemStyles = css({

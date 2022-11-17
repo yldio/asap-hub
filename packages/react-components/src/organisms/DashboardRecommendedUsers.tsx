@@ -18,10 +18,6 @@ const recommendedUsersStyles = css({
   },
 });
 
-const cardStyles = css({
-  minHeight: `${600 / perRem}em`,
-});
-
 const containerStyles = css({
   display: 'flex',
   flexDirection: 'column',
@@ -49,7 +45,7 @@ const DashboardRecommendedUsers: React.FC<DashboardRecommendedUsersProps> = ({
 }) => (
   <div css={recommendedUsersStyles}>
     {recommendedUsers.map((user) => (
-      <Card key={user.id} overrideStyles={cardStyles}>
+      <Card key={user.id}>
         <div css={containerStyles}>
           <ImageLink link={network({}).users({}).user({ userId: user.id }).$}>
             <Avatar

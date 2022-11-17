@@ -49,6 +49,9 @@ describe('ResourceModal', () => {
       screen.queryByRole('textbox', { name: /url/i }),
     ).not.toBeInTheDocument();
   });
+  it('see if the modal is for adding resource', () => {
+    expect(screen.queryByText('Add Resource')).toBeInTheDocument();
+  });
   it('a note should not display a Url', () => {
     enterType('Note');
     expect(descriptionBox()).toBeEnabled();

@@ -17,6 +17,12 @@ const defaultProps = {
   onSave,
 };
 
+const defaultPropsWithoutSave = {
+  modalTitle: modalInfo.title,
+  modalDescription: modalInfo.description,
+  backHref: '/back',
+};
+
 const save = () => {
   const saveButton = screen.getByRole('button', { name: /save/i });
   userEvent.click(saveButton);
@@ -40,7 +46,20 @@ beforeEach(jest.resetAllMocks);
 
 describe('ResourceModal', () => {
   beforeEach(() => {
+    if (
+      expect.getState().currentTestName ===
+      'see if resource modal works without onSave function'
+    ) {
+      render(<ResourceModal {...defaultPropsWithoutSave} />, {
+        wrapper: StaticRouter,
+      });
+      return;
+    }
+
     render(<ResourceModal {...defaultProps} />, { wrapper: StaticRouter });
+  });
+  afterEach(() => {
+    jest.clearAllMocks();
   });
   test('title and description should be disabled and url is hidden', () => {
     expect(descriptionBox()).toBeDisabled();
@@ -139,5 +158,17 @@ describe('ResourceModal', () => {
     save();
     expect(screen.getByText(/please enter a title/i)).toBeVisible();
     expect(screen.getByText(/please enter a valid link/i)).toBeVisible();
+  });
+  it('see if resource modal works without onSave function', async () => {
+    enterType('Note');
+    enterTitle('a title');
+    enterDescription('a description');
+    const saveButton = save();
+    await waitFor(() => expect(saveButton).toBeEnabled());
+    expect(onSave).toBeCalledWith({
+      type: 'Note',
+      title: 'a title',
+      description: 'a description',
+    });
   });
 });

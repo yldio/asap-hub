@@ -1,6 +1,6 @@
 export { default as appleCalendarIconImage } from './apple-calendar.png';
-export { default as asapPaddedWhiteImage } from './asap-padded-white.png';
-export { default as asapPaddedImage } from './asap-padded.png';
+export { default as asapPaddedWhiteImage } from './asap-padded-white';
+export { default as asapPaddedImage } from './asap-padded';
 export { default as asapImage } from './asap.png';
 export { default as backgroundBrainsImage } from './background-brains.png';
 export { default as backgroundNeuronsImage } from './background-neurons.png';

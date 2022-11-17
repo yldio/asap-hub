@@ -3,10 +3,8 @@ import { render } from '@testing-library/react';
 import BasicLayout from '../BasicLayout';
 
 it('renders an ASAP logo', () => {
-  const { getByAltText, getByRole } = render(
-    <BasicLayout>Content</BasicLayout>,
-  );
-  expect(getByAltText(/asap.+logo/i)).toBeVisible();
+  const { getByTitle, getByRole } = render(<BasicLayout>Content</BasicLayout>);
+  expect(getByTitle('ASAP Logo')).toBeInTheDocument();
   expect(getByRole('link')).toHaveAttribute('href', '/');
 });
 

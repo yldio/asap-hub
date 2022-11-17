@@ -4,8 +4,8 @@ import userEvent from '@testing-library/user-event';
 import MenuHeader from '../MenuHeader';
 
 it('renders the header', () => {
-  const { getByAltText } = render(<MenuHeader />);
-  expect(getByAltText(/asap.+logo/i)).toBeVisible();
+  const { getByTitle } = render(<MenuHeader />);
+  expect(getByTitle('ASAP Logo')).toBeInTheDocument();
 });
 
 it('triggers the menu toggle event', () => {

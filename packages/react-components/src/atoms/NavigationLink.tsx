@@ -1,8 +1,7 @@
 import { css } from '@emotion/react';
 import { NavHashLink } from 'react-router-hash-link';
 import { activePrimaryStyles } from '../button';
-import { lead } from '../colors';
-import { navigationGrey } from '../layout';
+import { charcoal, lead, silver } from '../colors';
 import {
   largeDesktopScreen,
   lineHeight,
@@ -38,8 +37,12 @@ const styles = css({
   outline: 'none',
   stroke: lead.rgb,
   borderRadius: `${6 / perRem}em`,
+  transition: 'background-color 100ms ease-in-out, color 100ms ease-in-out',
   ':hover, :focus': {
-    backgroundColor: navigationGrey.rgb,
+    backgroundColor: silver.rgb,
+  },
+  svg: {
+    stroke: charcoal.rgb,
   },
 });
 

@@ -13,8 +13,8 @@ import {
 export default { title: 'Atoms / Images' };
 
 export const Asap = () => <img alt="ASAP" src={asapImage} />;
-export const AsapPadded = () => <img alt="ASAP" src={asapPaddedImage} />;
-export const AsapWhite = () => <img alt="ASAP" src={asapPaddedWhiteImage} />;
+export const AsapPadded = () => asapPaddedImage;
+export const AsapWhite = () => asapPaddedWhiteImage;
 export const Loading = () => <img alt="Loading" src={loadingImage} />;
 export const BackgroundBrains = () => (
   <img alt="Background Brains" src={backgroundBrainsImage} />

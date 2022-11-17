@@ -47,19 +47,21 @@ const OnboardingWelcome: React.FC<Record<string, never>> = () => (
       </Subtitle>
     </header>
     <CardWithOffsetBackground>
-      As one of the program's valuable members, you have been invited to this
-      network to:
+      <Paragraph hasMargin={false}>
+        As one of the program's valuable members, you have been invited to this
+        network to:
+      </Paragraph>
       <ul>
         <li>
-          <i>Learn and connect</i> with like minded members
+          <em>Learn and connect</em> with like minded members
         </li>
         <li>
-          <i>Track and manage group activities</i> within both your projects and
-          working groups
+          <em>Track and manage group activities</em> within both your projects
+          and working groups
         </li>
         <li>
-          <i>Keep informed and updated</i> with what's happening all around the
-          GP2 program
+          <em>Keep informed and updated</em> with what's happening all around
+          the GP2 program
         </li>
       </ul>
       <Divider />
@@ -70,8 +72,8 @@ const OnboardingWelcome: React.FC<Record<string, never>> = () => (
       </Paragraph>
     </CardWithOffsetBackground>
     <Caption accent="lead">
-      <b>Please note,</b> all information provided can only be viewed by other
-      GP2 members that have also registered.
+      <strong>Please note,</strong> all information provided can only be viewed
+      by other GP2 members that have also registered.
     </Caption>
     <footer css={footerStyles}>
       <div css={buttonWrapperStyle}>

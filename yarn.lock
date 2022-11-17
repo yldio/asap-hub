@@ -495,6 +495,20 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@asap-hub/cms-migration@workspace:packages/cms-migration":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/cms-migration@workspace:packages/cms-migration"
+  dependencies:
+    "@asap-hub/model": "workspace:*"
+    "@asap-hub/squidex": "workspace:*"
+    "@types/contentful-html-rich-text-converter": "workspace:*"
+    "@types/node": 14.18.33
+    contentful-html-rich-text-converter: ^1.0.9
+    contentful-management: ^10.19.3
+    ts-node: 10.9.1
+  languageName: unknown
+  linkType: soft
+
 "@asap-hub/contentful@workspace:^, @asap-hub/contentful@workspace:packages/contentful":
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful@workspace:packages/contentful"
@@ -12791,7 +12805,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/contentful-html-rich-text-converter@workspace:@types/contentful-html-rich-text-converter":
+"@types/contentful-html-rich-text-converter@workspace:*, @types/contentful-html-rich-text-converter@workspace:@types/contentful-html-rich-text-converter":
   version: 0.0.0-use.local
   resolution: "@types/contentful-html-rich-text-converter@workspace:@types/contentful-html-rich-text-converter"
   languageName: unknown

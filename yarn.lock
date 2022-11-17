@@ -487,7 +487,7 @@ __metadata:
   dependencies:
     "@asap-hub/model": "workspace:*"
     "@asap-hub/squidex": "workspace:*"
-    "@contentful/rich-text-types": ^15.14.0
+    "@contentful/rich-text-types": ^15.13.2
     "@types/contentful-html-rich-text-converter": "workspace:*"
     "@types/node": 14.18.33
     contentful-html-rich-text-converter: ^1.0.9
@@ -8234,13 +8234,6 @@ __metadata:
   version: 15.13.2
   resolution: "@contentful/rich-text-types@npm:15.13.2"
   checksum: cf27fa7d3459e7fb67488e71dfc39a92f9bd9aefb493bce4d6ba5fcb9e37f92c512c1d06a2134dea4798541b267a06a87100a422d612c5185bd71764eea5b4f7
-  languageName: node
-  linkType: hard
-
-"@contentful/rich-text-types@npm:^15.14.0":
-  version: 15.14.0
-  resolution: "@contentful/rich-text-types@npm:15.14.0"
-  checksum: 96319b0b4db616a061686fb36906ce0be83d9a6a884fdeaf96e39a8f9ea78179eb249d5e254a033b97e149b48d58e69c5ee432b2bfd3b5557e46bf516d6360f6
   languageName: node
   linkType: hard
 

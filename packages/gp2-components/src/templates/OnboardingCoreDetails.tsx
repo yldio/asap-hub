@@ -11,17 +11,19 @@ import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { addIcon } from '../icons';
 import { mobileQuery, nonMobileQuery } from '../layout';
-import { UserDetailHeader } from '../organisms';
+import { UserDetailHeaderCard } from '../organisms';
 import EmailSection from '../organisms/EmailSection';
 
 type OnboardingCoreDetailProps = Pick<gp2Model.UserResponse, 'email'> &
-  ComponentProps<typeof UserDetailHeader>;
+  ComponentProps<typeof UserDetailHeaderCard>;
 
 const { onboarding } = gp2Routing;
 const { rem } = pixels;
 
 const contentStyles = css({
-  paddingTop: rem(32),
+  display: 'flex',
+  flexDirection: 'column',
+  gap: rem(24),
 });
 
 const footerStyles = css({
@@ -45,19 +47,13 @@ const signOutStyles = css({
     paddingTop: rem(24),
   },
 });
-const buttonStyles = css({
-  [mobileQuery]: {
-    flexDirection: 'column-reverse',
-    gap: rem(24),
-  },
-});
 const rowStyles = css({
   display: 'flex',
-  flexDirection: 'column',
   width: '100%',
+  flexDirection: 'column-reverse',
+  gap: rem(24),
   [nonMobileQuery]: {
     flexDirection: 'row',
-    gap: rem(24),
   },
 });
 const editButtonStyles = css({
@@ -65,7 +61,6 @@ const editButtonStyles = css({
     marginLeft: 'auto',
   },
 });
-const descriptionStyles = css({ paddingBottom: rem(32) });
 const cardStyles = css({ gap: rem(32) });
 const buttonWrapperStyle = css({
   width: 'fit-content',
@@ -79,16 +74,14 @@ const OnboardingCoreDetails: React.FC<OnboardingCoreDetailProps> = ({
   ...headerProps
 }) => (
   <div css={contentStyles}>
-    <div css={descriptionStyles}>
-      <Paragraph>
-        In order to join the platform, we need to capture some core information
-        before you start exploring.
-      </Paragraph>
-    </div>
-    <UserDetailHeader {...headerProps} edit={'/edit'} />
+    <Paragraph>
+      In order to join the platform, we need to capture some core information
+      before you start exploring.
+    </Paragraph>
+    <UserDetailHeaderCard {...headerProps} edit={'/edit'} />
     <div css={cardStyles}>
       <Card>
-        <div css={[rowStyles, buttonStyles]}>
+        <div css={[rowStyles]}>
           <Headline3 noMargin>Contact Information</Headline3>
           <div css={editButtonStyles}>
             <Link fullWidth href={''} buttonStyle noMargin small>

@@ -30,6 +30,7 @@ export {
   Resources,
   UserCard,
   UserDetailHeader,
+  UserDetailHeaderCard,
   UserNavigation,
   UsersPageBody,
   WorkingGroupCard,

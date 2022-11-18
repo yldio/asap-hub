@@ -1,14 +1,15 @@
+/* eslint-disable no-console */
 import { Environment, Entry } from 'contentful-management';
 
 export const clearContentfulEntries = async (
   contentfulEnvironment: Environment,
-  content_type: string,
+  contentType: string,
 ) => {
   const entries = await contentfulEnvironment.getEntries({
-    content_type,
+    contentType,
   });
   console.log(
-    `Cleaning Contentful Entries from content-type ${content_type}...`,
+    `Cleaning Contentful Entries from content-type ${contentType}...`,
   );
 
   const unpublishPromises: Promise<Entry>[] = [];

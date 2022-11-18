@@ -23,5 +23,8 @@ generates:
       - schema-ast
     config:
       includeDirectives: true
+hooks:
+  afterOneFileWrite:
+    - prettier --write
 pluckConfig:
   skipIndent: true

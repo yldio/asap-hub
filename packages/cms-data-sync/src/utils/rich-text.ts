@@ -1,3 +1,6 @@
+/* eslint-disable no-console */
+/* eslint-disable no-param-reassign */
+
 import { Document } from '@contentful/rich-text-types';
 import { parseHtml } from 'contentful-html-rich-text-converter';
 

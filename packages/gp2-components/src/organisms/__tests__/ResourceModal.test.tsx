@@ -1,5 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router-dom';
 import ResourceModal from '../ResourceModal';
 
@@ -9,12 +10,10 @@ const modalInfo = {
     'Select a resource type and provide the neccessary information required to share a resource privately with your group.',
 };
 
-const onSave = jest.fn();
-const defaultProps = {
+const defaultProps: ComponentProps<typeof ResourceModal> = {
   modalTitle: modalInfo.title,
   modalDescription: modalInfo.description,
   backHref: '/back',
-  onSave,
 };
 
 const save = () => {
@@ -39,10 +38,15 @@ const enterLink = (link: string) => userEvent.type(linkBox(), link);
 beforeEach(jest.resetAllMocks);
 
 describe('ResourceModal', () => {
-  beforeEach(() => {
-    render(<ResourceModal {...defaultProps} />, { wrapper: StaticRouter });
-  });
+  const renderResourseModal = (
+    props: Partial<ComponentProps<typeof ResourceModal>> = {},
+  ) => {
+    render(<ResourceModal {...defaultProps} {...props} />, {
+      wrapper: StaticRouter,
+    });
+  };
   test('title and description should be disabled and url is hidden', () => {
+    renderResourseModal();
     expect(descriptionBox()).toBeDisabled();
     expect(titleBox()).toBeDisabled();
     expect(
@@ -50,11 +54,13 @@ describe('ResourceModal', () => {
     ).not.toBeInTheDocument();
   });
   it('see if the modal is for adding resource', () => {
+    renderResourseModal();
     expect(
       screen.getByRole('heading', { name: /Add Resource/i }),
     ).toBeInTheDocument();
   });
   it('a note should not display a Url', () => {
+    renderResourseModal();
     enterType('Note');
     expect(descriptionBox()).toBeEnabled();
     expect(titleBox()).toBeEnabled();
@@ -63,6 +69,7 @@ describe('ResourceModal', () => {
     ).not.toBeInTheDocument();
   });
   it('a link should display a Url', async () => {
+    renderResourseModal();
     enterType('Link');
     expect(descriptionBox()).toBeEnabled();
     expect(titleBox()).toBeEnabled();
@@ -70,6 +77,8 @@ describe('ResourceModal', () => {
   });
 
   it('allows a note to be saved', async () => {
+    const onSave = jest.fn();
+    renderResourseModal({ onSave });
     enterType('Note');
     enterTitle('a title');
     const saveButton = save();
@@ -80,6 +89,8 @@ describe('ResourceModal', () => {
     });
   });
   it('allows a note with a description to be saved', async () => {
+    const onSave = jest.fn();
+    renderResourseModal({ onSave });
     enterType('Note');
     enterTitle('a title');
     enterDescription('a description');
@@ -92,6 +103,8 @@ describe('ResourceModal', () => {
     });
   });
   it('allows a link to be saved', async () => {
+    const onSave = jest.fn();
+    renderResourseModal({ onSave });
     enterType('Link');
     enterTitle('a title');
     enterLink('http://example.com');
@@ -104,6 +117,8 @@ describe('ResourceModal', () => {
     });
   });
   it('allows a link to be saved with a description', async () => {
+    const onSave = jest.fn();
+    renderResourseModal({ onSave });
     enterType('Link');
     enterTitle('a title');
     enterLink('http://example.com');
@@ -118,10 +133,12 @@ describe('ResourceModal', () => {
     });
   });
   it('cancel button takes you back', () => {
+    renderResourseModal();
     const cancelButton = screen.getByRole('link', { name: /Cancel/i });
     expect(cancelButton.closest('a')).toHaveAttribute('href', '/back');
   });
   it('disables on save', async () => {
+    renderResourseModal();
     enterType('Note');
     enterTitle('a title');
     enterDescription('a description');
@@ -132,11 +149,13 @@ describe('ResourceModal', () => {
     await waitFor(() => expect(saveButton).toBeEnabled());
   });
   it('selecting a type is required', () => {
+    renderResourseModal();
     save();
     expect(screen.getByText(/please enter a valid type/i)).toBeVisible();
   });
 
   it('a title and link is required', () => {
+    renderResourseModal();
     enterType('Link');
     save();
     expect(screen.getByText(/please enter a title/i)).toBeVisible();

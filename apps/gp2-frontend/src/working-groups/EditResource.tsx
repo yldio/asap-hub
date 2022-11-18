@@ -23,14 +23,13 @@ const EditResource: React.FC<EditWorkingGroupResponseProps> = ({
   backHref,
   updateWorkingGroupResources,
 }) => {
-  let resourceOutput = {};
   const { resourceIndex } = useRouteParams(
     workingGroups({}).workingGroup({ workingGroupId }).resources({}).edit({})
       .resource,
   );
   const routeIndex = parseInt(resourceIndex, 10);
 
-  resourceOutput = workingGroup.resources
+  const resourceOutput = workingGroup.resources
     ? workingGroup.resources[routeIndex]
     : {};
 

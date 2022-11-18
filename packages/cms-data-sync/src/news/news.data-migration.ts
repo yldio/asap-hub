@@ -114,5 +114,5 @@ const migrateNews = async () => {
   await publishContentfulEntries(entries);
 };
 
-migrateNews();
+await migrateNews();
 process.exit(0);

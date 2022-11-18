@@ -43,8 +43,6 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Rebuild dependencies
-        run: yarn build:babel
       - name: Run CMS sync for news
         if: ${{ inputs.entity == 'news' || inputs.entity == 'all' }}
         run: yarn workspace @asap-hub/cms-data-sync migrate:news

@@ -6,7 +6,7 @@ export const clearContentfulEntries = async (
   contentType: string,
 ) => {
   const entries = await contentfulEnvironment.getEntries({
-    contentType,
+    content_type: contentType,
   });
   console.log(
     `Cleaning Contentful Entries from content-type ${contentType}...`,

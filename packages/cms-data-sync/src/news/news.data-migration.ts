@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-restricted-syntax */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 import { Entry, SysLink } from 'contentful-management';
 import { Document } from '@contentful/rich-text-types';
@@ -76,11 +77,11 @@ const migrateNews = async () => {
       squidexNewsItem;
 
     const newsPayload: NewsPayload = {
-      title: { 'en-US': title },
+      title: { 'en-US': title! },
       shortText: { 'en-US': shortText },
       frequency: { 'en-US': frequency || 'News Articles' },
-      link: { 'en-US': link },
-      linkText: { 'en-US': linkText },
+      link: { 'en-US': link! },
+      linkText: { 'en-US': linkText! },
       text: { 'en-US': null },
       thumbnail: { 'en-US': null },
     };

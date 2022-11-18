@@ -1,24 +1,11 @@
 {
   "extends": "../../tsconfig.json",
-  "composite": true,
-  "rootDir": ".",
-  "resolveJsonModule": true,
-  "outDir": "build",
-  "lib": ["es2021"],
-  "module": "commonjs",
-  "target": "es2021",
-  "noUncheckedIndexedAccess": true,
   "compilerOptions": {
-    "composite": true,
-    "rootDir": ".",
-    "resolveJsonModule": true,
-    "outDir": "build",
-    "lib": ["es2021"],
-    "module": "commonjs",
-    "target": "es2021",
-    "noUncheckedIndexedAccess": true
+    "rootDir": "src",
+    "outDir": "build"
   },
   "include": ["src", "types"],
+  "filesGlob": ["**/*.ts", "../scripts/**/*.ts"],
   "references": [
     { "path": "../../packages/errors" },
     { "path": "../../packages/model" },

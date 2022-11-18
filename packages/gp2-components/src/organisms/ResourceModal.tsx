@@ -45,18 +45,19 @@ type ResourceModalProps = Partial<gp2.Resource> & {
   onSave?: (data: gp2.Resource) => void | Promise<void>;
 };
 
-const ResourceModal: React.FC<ResourceModalProps> = (props) => {
-  const {
-    type,
-    title,
-    description,
-    backHref,
-    modalTitle,
-    modalDescription,
-    onSave = noop,
-  } = props;
-  const externalLink = type === 'Link' && props.externalLink;
-  const [newType, setNewType] = useState<'Link' | 'Note' | ''>(type || '');
+const ResourceModal: React.FC<ResourceModalProps> = ({
+  title,
+  description,
+  backHref,
+  modalTitle,
+  modalDescription,
+  onSave = noop,
+  ...props
+}) => {
+  const externalLink = props.type === 'Link' && props.externalLink;
+  const [newType, setNewType] = useState<'Link' | 'Note' | ''>(
+    props.type || '',
+  );
   const [newTitle, setNewTitle] = useState(title || '');
   const [newDescription, setNewDescription] = useState(description || '');
   const [newExternalLink, setNewExternalLink] = useState(externalLink || '');
@@ -65,7 +66,7 @@ const ResourceModal: React.FC<ResourceModalProps> = (props) => {
     <EditModal
       title={modalTitle}
       backHref={backHref}
-      dirty={type !== newType}
+      dirty={props.type !== newType}
       noHeader
       onSave={() => {
         /* istanbul ignore next */

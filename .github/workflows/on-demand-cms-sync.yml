@@ -46,6 +46,8 @@ jobs:
       - name: Run CMS sync for news
         if: ${{ inputs.entity == 'news' || inputs.entity == 'all' }}
         run: |
+          yarn install
+          yarn build:babel
           yarn workspace @asap-hub/cms-data-sync migrate:news
         env:
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}

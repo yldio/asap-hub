@@ -63,7 +63,6 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
   const [newExternalLink, setNewExternalLink] = useState(externalLink || '');
 
   const verifyDirty = () => {
-    console.log(props.type === undefined && newType === '');
     if (props.type === undefined && newType === '') {
       return false;
     }

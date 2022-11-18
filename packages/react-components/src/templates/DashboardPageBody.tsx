@@ -1,6 +1,7 @@
 import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 import {
+  network,
   news as newsRoute,
   sharedResearch,
   dashboard,
@@ -22,7 +23,7 @@ import {
 } from '../organisms';
 import { rem } from '../pixels';
 import { Link, Headline2 } from '../atoms';
-import { lead } from '..';
+import { DashboardRecommendedUsers, lead } from '..';
 import { Accordion } from '../molecules';
 import { confidentialIcon, giftIcon, learnIcon } from '../icons';
 
@@ -57,6 +58,7 @@ type DashboardPageBodyProps = Pick<
   } & {
     upcomingEvents?: ListEventResponse;
     recentSharedOutputs?: ListResearchOutputResponse;
+    recommendedUsers: UserResponse[];
   };
 
 const publishRoles: TeamRole[] = ['ASAP Staff', 'Project Manager'];
@@ -71,6 +73,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   dismissedGettingStarted,
   upcomingEvents,
   recentSharedOutputs,
+  recommendedUsers,
 }) => {
   const canPublish = roles.some((role) => publishRoles.includes(role));
 
@@ -159,6 +162,16 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
             <Link href={sharedResearch({}).$}>View All →</Link>
           </p>
         )}
+      </div>
+      <div>
+        <Headline2 styleAsHeading={3}>Latest Users</Headline2>
+        <div css={infoStyles}>
+          Explore and learn more about the latest users on the hub.
+        </div>
+        <DashboardRecommendedUsers recommendedUsers={recommendedUsers} />
+        <p css={viewAllStyles}>
+          <Link href={network({}).users({}).$}>View All →</Link>
+        </p>
       </div>
       {news.length ? (
         <div>

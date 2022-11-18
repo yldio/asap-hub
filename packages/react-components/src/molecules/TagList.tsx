@@ -26,6 +26,18 @@ const normalListItemStyles = css({
   },
 });
 
+const centerListStyles = css({
+  justifyContent: 'center',
+  gap: `${15 / perRem}em`,
+});
+
+const centeredItemStyles = css({
+  marginBottom: 0,
+  ':not(:nth-last-of-type(1))': {
+    paddingRight: 0,
+  },
+});
+
 const summarizedListItemStyles = (min: number, max: number) =>
   css({
     counterIncrement: 'tags -1',
@@ -62,6 +74,7 @@ interface TagListProps {
   enabled?: boolean;
   min?: number;
   max?: number;
+  centerContent?: boolean;
 }
 
 const TagList: React.FC<TagListProps> = ({
@@ -69,15 +82,28 @@ const TagList: React.FC<TagListProps> = ({
   min = SAFARI_MAX_SAFE_INTEGER,
   max = SAFARI_MAX_SAFE_INTEGER,
   enabled = true,
+  centerContent = false,
 }) =>
   tags.length ? (
-    <ul css={[listStyles, { counterReset: `tags ${tags.length}` }]}>
+    <ul
+      css={[
+        listStyles,
+        { counterReset: `tags ${tags.length}` },
+        centerContent && centerListStyles,
+      ]}
+    >
       {tags.map((tag, index) => (
         <li
           key={index}
-          css={[normalListItemStyles, summarizedListItemStyles(min, max)]}
+          css={[
+            normalListItemStyles,
+            summarizedListItemStyles(min, max),
+            centerContent && centeredItemStyles,
+          ]}
         >
-          <Tag enabled={enabled}>{tag}</Tag>
+          <Tag title={tag} enabled={enabled}>
+            {tag}
+          </Tag>
         </li>
       ))}
       <li key="overflow" className="overflow" css={overflowStyles}>

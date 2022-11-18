@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react';
 import {
   createListEventResponse,
   createListResearchOutputResponse,
+  createListUserResponse,
   createResearchOutputResponse,
 } from '@asap-hub/fixtures';
 import DashboardPageBody from '../DashboardPageBody';
@@ -30,6 +31,7 @@ const props: ComponentProps<typeof DashboardPageBody> = {
   dismissedGettingStarted: false,
   upcomingEvents: undefined,
   recentSharedOutputs: createListResearchOutputResponse(5),
+  recommendedUsers: createListUserResponse(3).items,
 };
 it('renders multiple news cards', () => {
   render(
@@ -181,5 +183,17 @@ describe('the reminders card', () => {
   `('$description', ({ roles, selector }) => {
     render(<DashboardPageBody {...props} roles={roles} />);
     expect(screen.getByText(selector)).toBeVisible();
+  });
+});
+
+describe('the recommended users card', () => {
+  it('shows the recommended users card', () => {
+    render(<DashboardPageBody {...props} />);
+    expect(screen.getByText('Latest Users')).toBeVisible();
+    expect(
+      screen.getByText(
+        'Explore and learn more about the latest users on the hub.',
+      ),
+    ).toBeVisible();
   });
 });

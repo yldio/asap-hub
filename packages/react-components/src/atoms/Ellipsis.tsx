@@ -8,7 +8,11 @@ export const ellipsisStyles = css({
   textOverflow: 'ellipsis',
 });
 
-const Ellipsis: React.FC = ({ children }) => (
+type EllipsisProps = {
+  readonly children?: React.ReactNode;
+};
+
+const Ellipsis: React.FC<EllipsisProps> = ({ children }) => (
   <span css={ellipsisStyles}>{children}</span>
 );
 

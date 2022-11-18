@@ -11,7 +11,7 @@
   "scripts": {
     "build:babel": "../../scripts/build-babel.sh build",
     "watch:babel": "../../scripts/build-babel.sh watch",
-    "migrate:news": "ts-TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\"}' ts-node ./src/news/news.data-migration.ts",
+    "migrate:news": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\"}' ts-node ./src/news/news.data-migration.ts",
     "schema:update": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {

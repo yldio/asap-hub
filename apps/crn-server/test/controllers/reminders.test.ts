@@ -4,7 +4,9 @@ import {
   FetchRemindersOptions,
   ResearchOutputPublishedReminder,
 } from '@asap-hub/model';
-import Reminders from '../../src/controllers/reminders';
+import Reminders, {
+  formattedMaterialByEventType,
+} from '../../src/controllers/reminders';
 import {
   getResearchOutputPublishedReminder,
   getReminderResponse,
@@ -180,6 +182,19 @@ describe('Reminder Controller', () => {
           });
         },
       );
+    });
+  });
+
+  describe('formattedMaterialByEventType', () => {
+    test('Should return formatted Material by reminder event type', () => {
+      let material = formattedMaterialByEventType('Notes Updated');
+      expect(material).toBe('Notes');
+
+      material = formattedMaterialByEventType('Video Updated');
+      expect(material).toBe('Video(s)');
+
+      material = formattedMaterialByEventType('Presentation Updated');
+      expect(material).toBe('Presentation(s)');
     });
   });
 });

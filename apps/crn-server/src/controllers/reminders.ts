@@ -1,11 +1,30 @@
 import { DateTime } from 'luxon';
 import { sharedResearch, events } from '@asap-hub/routing';
-import { FetchRemindersOptions, ListReminderResponse } from '@asap-hub/model';
+import {
+  EventReminderType,
+  FetchRemindersOptions,
+  ListReminderResponse,
+} from '@asap-hub/model';
 import { ReminderDataProvider } from '../data-providers/reminders.data-provider';
 
 export interface ReminderController {
   fetch: (options: FetchRemindersOptions) => Promise<ListReminderResponse>;
 }
+
+export const formattedMaterialByEventType = (
+  type: EventReminderType,
+): string => {
+  switch (type) {
+    case 'Notes Updated':
+      return 'Notes';
+    case 'Video Updated':
+      return 'Video(s)';
+    case 'Presentation Updated':
+      return 'Presentation(s)';
+    default:
+      return `${type.split(' ')[0]}(s)`;
+  }
+};
 
 export default class Reminders implements ReminderController {
   constructor(private reminderDataProvider: ReminderDataProvider) {}
@@ -54,17 +73,16 @@ export default class Reminders implements ReminderController {
             reminder.type,
           )
         ) {
-          const material =
-            reminder.type === 'Notes Updated'
-              ? 'Notes'
-              : `${reminder.type.split(' ')[0]}(s)`;
+          const description = `${formattedMaterialByEventType(
+            reminder.type,
+          )} for ${reminder.data.title} event has been shared.`;
           return {
             id: reminder.id,
             entity: reminder.entity,
             href: events({}).event({
               eventId: reminder.data.eventId,
             }).$,
-            description: `${material} for ${reminder.data.title} event has been shared.`,
+            description,
           };
         }
 

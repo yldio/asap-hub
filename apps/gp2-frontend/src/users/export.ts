@@ -74,7 +74,6 @@ export const squidexUsersResponseToStream = async (
 ) => {
   let morePages = true;
   let currentPage = 0;
-  // csvStream.write(userFields);
   while (morePages) {
     // We are doing this in chunks and streams to avoid blob/ram limits.
     // eslint-disable-next-line no-await-in-loop

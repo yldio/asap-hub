@@ -128,9 +128,9 @@ describe('userToCSV', () => {
     const output: gp2Model.UserResponse = {
       ...gp2Fixtures.createUserResponse(),
       projects: [
-        { id: '1', title: 'project 1', status: 'Active' as const, members: [] },
-        { id: '2', title: 'project 2', status: 'Active' as const, members: [] },
-        { id: '3', title: 'project 3', status: 'Active' as const, members: [] },
+        { id: '1', title: 'project 1', status: 'Active', members: [] },
+        { id: '2', title: 'project 2', status: 'Active', members: [] },
+        { id: '3', title: 'project 3', status: 'Active', members: [] },
       ],
     };
     expect(userToCSV(output).projects).toMatchInlineSnapshot(`

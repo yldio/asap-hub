@@ -35,7 +35,7 @@ type SearchProps = Pick<
   Required<Pick<ComponentProps<typeof TextField>, 'placeholder'>> & {
     padding?: boolean;
   };
-const SearchField: React.FC<SearchProps> = ({ padding = 'true', ...props }) => {
+const SearchField: React.FC<SearchProps> = ({ padding = true, ...props }) => {
   const [debouncedValue] = useDebounce(props.value, 5000);
 
   useEffect(() => {

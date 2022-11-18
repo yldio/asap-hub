@@ -115,3 +115,4 @@ const migrateNews = async () => {
 };
 
 migrateNews();
+process.exit(0);

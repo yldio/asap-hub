@@ -52,7 +52,7 @@ jobs:
           yarn workspace @asap-hub/cms-data-sync migrate:news
         env:
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.contentful-space }}
+          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.contentful-space-id }}
           CONTENTFUL_ENV_ID: ${{ inputs.contentful-env }}
           CRN_SQUIDEX_APP_NAME: ${{ inputs.squidex-app }}
           CRN_SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}

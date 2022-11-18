@@ -10,10 +10,15 @@ export type DeliverableStatus = typeof deliverableStatus[number];
 
 export type WorkingGroupDataObject = {
   id: string;
+  title: string;
+  description: string;
+  externalLink?: string;
+  externalLinkText?: string;
   deliverables: {
     description: string;
     status: DeliverableStatus;
   }[];
+  readonly lastModifiedDate: string;
 };
 
 export type WorkingGroupListDataObject = ListResponse<WorkingGroupDataObject>;

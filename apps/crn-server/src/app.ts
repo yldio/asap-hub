@@ -119,6 +119,8 @@ import { userPublicRouteFactory, userRouteFactory } from './routes/user.route';
 import assignUserToContext from './utils/assign-user-to-context';
 import { getAuthToken } from './utils/auth';
 import pinoLogger from './utils/logger';
+import WorkingGroups, { WorkingGroupController } from './controllers/working-groups';
+import { workingGroupRouteFactory } from './routes/working-groups.route';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -259,6 +261,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const userController =
     libs.userController || new Users(userDataProvider, assetDataProvider);
   const labsController = libs.labsController || new Labs(squidexGraphqlClient);
+  const workingGroupsController = libs.workingGroupsController || new WorkingGroups();
 
   // Handlers
   const authHandler =
@@ -292,6 +295,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const tutorialsRoutes = tutorialsRouteFactory(tutorialsController);
   const userPublicRoutes = userPublicRouteFactory(userController);
   const userRoutes = userRouteFactory(userController, groupController);
+  const workingGroupRoutes = workingGroupRouteFactory(workingGroupsController);
 
   /**
    * --- end of dependency inection
@@ -354,6 +358,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(researchTagsRoutes);
   app.use(teamRoutes);
   app.use(tutorialsRoutes);
+  app.use(workingGroupRoutes);
 
   app.get('*', async (_req, res) => {
     res.status(404).json({
@@ -395,6 +400,7 @@ export type Libs = {
   teamController?: TeamController;
   tutorialsController?: TutorialsController;
   userController?: UserController;
+  workingGroupsController?: WorkingGroupController;
   assetDataProvider?: AssetDataProvider;
   groupDataProvider?: GroupDataProvider;
   newsDataProvider?: NewsDataProvider;

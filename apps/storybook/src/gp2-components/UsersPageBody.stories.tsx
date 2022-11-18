@@ -1,6 +1,6 @@
 import { gp2 } from '@asap-hub/fixtures';
 import { UsersPageBody } from '@asap-hub/gp2-components';
-import { boolean, number } from '@storybook/addon-knobs';
+import { boolean, number, text } from '@storybook/addon-knobs';
 
 export default {
   title: 'GP2 / Organisms / User Directory / Page Body',
@@ -18,6 +18,8 @@ const userProps = () => {
     currentPageIndex,
     onFiltersClick: () => {},
     onExportClick: () => {},
+    searchQuery: text('query', ''),
+    onSearchQueryChange: () => {},
     isAdministrator: boolean('Administrator', true),
     renderPageHref: (index: number) => `#${index}`,
     users: {

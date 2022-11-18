@@ -111,6 +111,7 @@ const Link: React.FC<LinkProps> = ({
             children,
             noMargin,
             fullWidth,
+            colors,
           }),
           overrideStyles,
         ]

@@ -119,7 +119,9 @@ import { userPublicRouteFactory, userRouteFactory } from './routes/user.route';
 import assignUserToContext from './utils/assign-user-to-context';
 import { getAuthToken } from './utils/auth';
 import pinoLogger from './utils/logger';
-import WorkingGroups, { WorkingGroupController } from './controllers/working-groups';
+import WorkingGroups, {
+  WorkingGroupController,
+} from './controllers/working-groups';
 import { workingGroupRouteFactory } from './routes/working-groups.route';
 
 export const appFactory = (libs: Libs = {}): Express => {
@@ -261,7 +263,8 @@ export const appFactory = (libs: Libs = {}): Express => {
   const userController =
     libs.userController || new Users(userDataProvider, assetDataProvider);
   const labsController = libs.labsController || new Labs(squidexGraphqlClient);
-  const workingGroupsController = libs.workingGroupsController || new WorkingGroups();
+  const workingGroupsController =
+    libs.workingGroupsController || new WorkingGroups();
 
   // Handlers
   const authHandler =

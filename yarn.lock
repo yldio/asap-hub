@@ -504,7 +504,7 @@ __metadata:
     contentful-html-rich-text-converter: ^1.0.9
     contentful-management: ^10.19.3
     graphql: 15.8.0
-    graphql-tag: ^2.12.6
+    graphql-tag: 2.12.6
     graphql-typescript-integration: 1.2.1
     ts-node: 10.9.1
   languageName: unknown
@@ -24713,7 +24713,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphql-tag@npm:2.12.6, graphql-tag@npm:^2.12.6":
+"graphql-tag@npm:2.12.6":
   version: 2.12.6
   resolution: "graphql-tag@npm:2.12.6"
   dependencies:

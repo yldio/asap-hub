@@ -33,6 +33,7 @@
     "release:frontend": "yarn workspace @asap-hub/crn-frontend release:frontend",
     "schema:update:crn": "./apps/crn-server/scripts/schema-update.sh",
     "schema:update:gp2": "./apps/gp2-server/scripts/schema-update.sh",
+    "schema:update:cms-data-sync": "./packages/cms-data-sync/scripts/schema-update.sh",
     "schema:update": "yarn schema:update:crn && yarn schema:update:gp2",
     "start": "yarn watch & yarn start:crn & yarn start:gp2 & yarn start:storybook",
     "start:crn": "yarn start:frontend:crn & yarn start:backend:crn",
@@ -153,6 +154,7 @@
     "typescript": "4.8.4"
   },
   "dependencies": {
+    "node-html-parser": "^6.1.3",
     "ts-node": "10.9.1",
     "uuid": "8.3.2"
   },

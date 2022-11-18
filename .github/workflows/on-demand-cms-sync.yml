@@ -19,6 +19,13 @@ on:
         required: true
         type: string
         description: Choose which Squidex app to sync from
+    secrets:
+      CONTENTFUL_MANAGEMENT_TOKEN:
+        description: Contentful Management Token
+        required: true
+      CRN_SQUIDEX_CI_CLIENT_SECRET:
+        description: CRN CI Squidex Client Secret
+        required: true
 
 jobs:
   sync_cms_data:

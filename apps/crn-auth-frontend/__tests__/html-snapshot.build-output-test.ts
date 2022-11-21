@@ -46,6 +46,10 @@ describe('the built index.html', () => {
             rel="stylesheet"
           />
           <link
+            href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap"
+            rel="stylesheet"
+          />
+          <link
             href="https://dev.hub.asap.science/.auth/manifest.json"
             rel="manifest"
           />

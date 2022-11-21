@@ -118,7 +118,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
-          "pattern": "^\\(*\\+*[1-9]{0,3}\\)$",
+          "pattern": "^\\+*[1-9]{0,3}$",
           "isUnique": true,
           "isEmbeddable": false,
           "inlineEditable": true,
@@ -139,7 +139,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
-          "pattern": "^[1-9]{0,3}[-. /]*\\(*[2-9]\\d{2}\\)*[-. /]*\\d{3}[-. /]*\\d{4} *e*x*t*\\.* *\\d{0,4}$",
+          "pattern": "^\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{3,4}$",
           "isUnique": true,
           "isEmbeddable": false,
           "inlineEditable": true,

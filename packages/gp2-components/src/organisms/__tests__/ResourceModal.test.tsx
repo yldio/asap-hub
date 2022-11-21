@@ -225,4 +225,26 @@ describe('ResourceModal', () => {
     userEvent.click(cancelButton);
     expect(getUserConfirmation).not.toHaveBeenCalled();
   });
+  it('the dialog shows when the user changes type of resource', () => {
+    getUserConfirmation = jest.fn((_message, cb) => cb(true));
+    history = createMemoryHistory({ getUserConfirmation });
+
+    const props = {
+      modalTitle: editModalInfo.title,
+      modalDescription: editModalInfo.description,
+      type: 'Note' as const,
+      title: 'A title',
+      description: 'A description',
+    };
+
+    render(
+      <Router history={history}>
+        <ResourceModal {...defaultProps} {...props} />
+      </Router>,
+    );
+    enterType('Link');
+    const cancelButton = screen.getByRole('link', { name: /cancel/i });
+    userEvent.click(cancelButton);
+    expect(getUserConfirmation).toHaveBeenCalledTimes(1);
+  });
 });

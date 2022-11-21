@@ -4120,7 +4120,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "css-select",\
-        "npm:5.1.0"\
+        "npm:4.3.0"\
       ],\
       [\
         "css-select-base-adapter",\
@@ -7088,10 +7088,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [\
         "node-gyp",\
         "npm:6.1.0"\
-      ],\
-      [\
-        "node-html-parser",\
-        "npm:6.1.3"\
       ],\
       [\
         "node-int64",\
@@ -10082,7 +10078,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-watch-typeahead", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:0.6.5"],\
             ["nock", "npm:13.0.11"],\
             ["node-fetch", "npm:3.0.0-beta.9"],\
-            ["node-html-parser", "npm:6.1.3"],\
             ["prettier", "npm:2.7.1"],\
             ["react-test-renderer", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:17.0.2"],\
             ["rimraf", "npm:3.0.2"],\
@@ -38042,7 +38037,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-watch-typeahead", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:0.6.5"],\
             ["nock", "npm:13.0.11"],\
             ["node-fetch", "npm:3.0.0-beta.9"],\
-            ["node-html-parser", "npm:6.1.3"],\
             ["prettier", "npm:2.7.1"],\
             ["react-test-renderer", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:17.0.2"],\
             ["rimraf", "npm:3.0.2"],\
@@ -55594,17 +55588,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["semver", "npm:5.7.1"],\
             ["tar", "npm:4.4.13"],\
             ["which", "npm:1.3.1"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["node-html-parser", [\
-        ["npm:6.1.3", {\
-          "packageLocation": "./.yarn/cache/node-html-parser-npm-6.1.3-6dd7d9a486-62e145ce6a.zip/node_modules/node-html-parser/",\
-          "packageDependencies": [\
-            ["node-html-parser", "npm:6.1.3"],\
-            ["css-select", "npm:5.1.0"],\
-            ["he", "npm:1.2.0"]\
           ],\
           "linkType": "HARD"\
         }]\

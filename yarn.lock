@@ -15970,7 +15970,6 @@ __metadata:
     jest-watch-typeahead: 0.6.5
     nock: 13.0.11
     node-fetch: 3.0.0-beta.9
-    node-html-parser: ^6.1.3
     prettier: 2.7.1
     react-test-renderer: 17.0.2
     rimraf: 3.0.2
@@ -25128,7 +25127,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"he@npm:1.2.0, he@npm:^1.2.0":
+"he@npm:^1.2.0":
   version: 1.2.0
   resolution: "he@npm:1.2.0"
   bin:
@@ -30419,16 +30418,6 @@ __metadata:
   bin:
     node-gyp: bin/node-gyp.js
   checksum: b953b4b27890f426b2d71f7e2c15678bd8261a0cbd8990add3a39d3f5ff045752fd94f4e823ed2f8cbc5ed737768c3fa62d329396eafb2879c451392a102d849
-  languageName: node
-  linkType: hard
-
-"node-html-parser@npm:^6.1.3":
-  version: 6.1.3
-  resolution: "node-html-parser@npm:6.1.3"
-  dependencies:
-    css-select: ^5.1.0
-    he: 1.2.0
-  checksum: 62e145ce6ac6dba18afbc350521449430d40227bf9c264cbaec6bf065647f92d511290a4c3bcd2bcc79ea9a4ac6067ece99f667d5ba8eb9d0a7e6a0edf717e46
   languageName: node
   linkType: hard
 

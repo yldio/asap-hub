@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "build"
+  },
+  "include": ["src", "types"],
+  "filesGlob": ["**/*.ts", "../scripts/**/*.ts"],
+  "references": [
+    { "path": "../../packages/errors" },
+    { "path": "../../packages/model" },
+    { "path": "../../packages/squidex" }
+  ]
+}

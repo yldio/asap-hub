@@ -1,0 +1,9 @@
+#!/bin/bash -e
+
+SQUIDEX_CLIENT_ID=${SQUIDEX_CLIENT_ID:-$CRN_SQUIDEX_CLIENT_ID}
+SQUIDEX_CLIENT_SECRET=${SQUIDEX_CLIENT_SECRET:-$CRN_SQUIDEX_CLIENT_SECRET}
+export SQUIDEX_APP_NAME=${SQUIDEX_APP_NAME:-$CRN_SQUIDEX_APP_NAME}
+
+source ./packages/server-common/scripts/schema-update.sh
+
+schema_update cms-data-sync

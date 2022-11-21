@@ -481,6 +481,35 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@asap-hub/cms-data-sync@workspace:packages/cms-data-sync":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/cms-data-sync@workspace:packages/cms-data-sync"
+  dependencies:
+    "@asap-hub/model": "workspace:*"
+    "@asap-hub/squidex": "workspace:*"
+    "@contentful/rich-text-types": ^15.13.2
+    "@graphql-codegen/cli": 2.12.1
+    "@graphql-codegen/gql-tag-operations-preset": 1.5.5
+    "@graphql-codegen/introspection": 2.2.1
+    "@graphql-codegen/schema-ast": 2.5.1
+    "@graphql-codegen/typescript": 2.7.3
+    "@graphql-codegen/typescript-operations": 2.5.3
+    "@graphql-tools/graphql-file-loader": 7.5.5
+    "@graphql-tools/load": 7.7.7
+    "@graphql-tools/mock": 8.7.6
+    "@graphql-tools/schema": 8.5.1
+    "@graphql-typed-document-node/core": 3.1.1
+    "@types/contentful-html-rich-text-converter": "workspace:*"
+    "@types/node": 14.18.33
+    contentful-html-rich-text-converter: ^1.0.9
+    contentful-management: ^10.19.3
+    graphql: 15.8.0
+    graphql-tag: 2.12.6
+    graphql-typescript-integration: 1.2.1
+    ts-node: 10.9.1
+  languageName: unknown
+  linkType: soft
+
 "@asap-hub/contentful@workspace:^, @asap-hub/contentful@workspace:packages/contentful":
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful@workspace:packages/contentful"
@@ -12770,6 +12799,12 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/contentful-html-rich-text-converter@workspace:*, @types/contentful-html-rich-text-converter@workspace:@types/contentful-html-rich-text-converter":
+  version: 0.0.0-use.local
+  resolution: "@types/contentful-html-rich-text-converter@workspace:@types/contentful-html-rich-text-converter"
+  languageName: unknown
+  linkType: soft
+
 "@types/cookiejar@npm:*":
   version: 2.1.2
   resolution: "@types/cookiejar@npm:2.1.2"
@@ -15933,6 +15968,7 @@ __metadata:
     jest-watch-typeahead: 0.6.5
     nock: 13.0.11
     node-fetch: 3.0.0-beta.9
+    node-html-parser: ^6.1.3
     prettier: 2.7.1
     react-test-renderer: 17.0.2
     rimraf: 3.0.2
@@ -18993,6 +19029,17 @@ __metadata:
   bin:
     contentful-export: bin/contentful-export
   checksum: 76b4715cf196a74b76f5145ec99dae6fcd54931d31adc72adbc1c21d79bf26a39422513331cfd96f89b47d7bc63e0af4439d83df67d48a1390295ea1d861c765
+  languageName: node
+  linkType: hard
+
+"contentful-html-rich-text-converter@npm:^1.0.9":
+  version: 1.0.9
+  resolution: "contentful-html-rich-text-converter@npm:1.0.9"
+  dependencies:
+    html-entities: ^1.2.1
+    htmlparser: ^1.7.7
+    ramda: ^0.26.1
+  checksum: 4b17479b32918a1acf4268fc5bb57db93274babc4680c727ac81cca9a3c440b2420cd924469682844c3394e5f20dbb4fb973c86019bf9a83688b28658439fd96
   languageName: node
   linkType: hard
 
@@ -25079,7 +25126,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"he@npm:^1.2.0":
+"he@npm:1.2.0, he@npm:^1.2.0":
   version: 1.2.0
   resolution: "he@npm:1.2.0"
   bin:
@@ -25187,6 +25234,13 @@ __metadata:
   dependencies:
     whatwg-encoding: "npm:^1.0.5"
   checksum: bf30cce461015ed7e365736fcd6a3063c7bc016a91f74398ef6158886970a96333938f7c02417ab3c12aa82e3e53b40822145facccb9ddfbcdc15a879ae4d7ba
+  languageName: node
+  linkType: hard
+
+"html-entities@npm:^1.2.1":
+  version: 1.4.0
+  resolution: "html-entities@npm:1.4.0"
+  checksum: 4b73ffb9eead200f99146e4fbe70acb0af2fea136901a131fc3a782e9ef876a7cbb07dec303ca1f8804232b812249dbf3643a270c9c524852065d9224a8dcdd0
   languageName: node
   linkType: hard
 
@@ -25348,6 +25402,13 @@ __metadata:
     domutils: ^3.0.1
     entities: ^4.3.0
   checksum: 06d5c71e8313597722bc429ae2a7a8333d77bd3ab07ccb916628384b37332027b047f8619448d8f4a3312b6609c6ea3302a4e77435d859e9e686999e6699ca39
+  languageName: node
+  linkType: hard
+
+"htmlparser@npm:^1.7.7":
+  version: 1.7.7
+  resolution: "htmlparser@npm:1.7.7"
+  checksum: 9611fa46f3a73fc9f62e837f1790f2cba9e9b0c387f6570f4f9d499fd4f64c4926280fae4ebbc07e92556bb44d8f835b15d5d26f38a43a64b5ee509121e87d24
   languageName: node
   linkType: hard
 
@@ -30359,6 +30420,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"node-html-parser@npm:^6.1.3":
+  version: 6.1.3
+  resolution: "node-html-parser@npm:6.1.3"
+  dependencies:
+    css-select: ^5.1.0
+    he: 1.2.0
+  checksum: 62e145ce6ac6dba18afbc350521449430d40227bf9c264cbaec6bf065647f92d511290a4c3bcd2bcc79ea9a4ac6067ece99f667d5ba8eb9d0a7e6a0edf717e46
+  languageName: node
+  linkType: hard
+
 "node-int64@npm:^0.4.0":
   version: 0.4.0
   resolution: "node-int64@npm:0.4.0"
@@ -33644,6 +33715,13 @@ __metadata:
   version: 0.21.0
   resolution: "ramda@npm:0.21.0"
   checksum: e08d63c12ed4bab70bfd700a843901d9fa340d1a88c50085a6ef0ecf25f528e5ac7c71848481270923491e7315a34301bb35905d45861cb13cc75b8ca05add32
+  languageName: node
+  linkType: hard
+
+"ramda@npm:^0.26.1":
+  version: 0.26.1
+  resolution: "ramda@npm:0.26.1"
+  checksum: 19c2730e44c129538151ae034c89be9b2c6a4ccc7c65cff57497418bc532ce09282f98cd927c39b0b03c6bc3f1d1a12d822b7b07f96a1634f4958a6c05b7b384
   languageName: node
   linkType: hard
 

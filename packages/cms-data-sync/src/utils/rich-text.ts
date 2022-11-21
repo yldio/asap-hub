@@ -35,7 +35,6 @@ export const convertText = async <T extends { 'en-US': Document | null }>(
 
     try {
       const parsedHtml = parseHtml(textWithoutDivTag) as Document;
-
       payload['en-US'] = clearParsedHtmlOutput(parsedHtml);
     } catch {
       console.log(`There is a problem converting rich text from entry ${id}`);

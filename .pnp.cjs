@@ -10656,6 +10656,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/cms-data-sync", "workspace:packages/cms-data-sync"],\
             ["@asap-hub/model", "workspace:packages/model"],\
             ["@asap-hub/squidex", "workspace:packages/squidex"],\
+            ["@babel/runtime-corejs3", "npm:7.19.6"],\
             ["@contentful/rich-text-types", "npm:15.13.2"],\
             ["@graphql-codegen/cli", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:2.12.1"],\
             ["@graphql-codegen/gql-tag-operations-preset", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:1.5.5"],\
@@ -10669,6 +10670,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@graphql-tools/schema", "virtual:e16f37a799865bc33535534ae1ec9fb3d85b6d11bcce269aa3d07b5ecff5c900246805c0f4138e5375f5a0c606a589165c4a11bc351a724ddc6bf993bffad8f1#npm:8.5.1"],\
             ["@graphql-typed-document-node/core", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:3.1.1"],\
             ["@types/contentful-html-rich-text-converter", "workspace:@types/contentful-html-rich-text-converter"],\
+            ["@types/jest", "npm:27.5.2"],\
             ["@types/node", "npm:14.18.33"],\
             ["contentful-html-rich-text-converter", "npm:1.0.9"],\
             ["contentful-management", "npm:10.19.3"],\

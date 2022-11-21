@@ -17,6 +17,7 @@
   "dependencies": {
     "@asap-hub/model": "workspace:*",
     "@asap-hub/squidex": "workspace:*",
+    "@babel/runtime-corejs3": "7.19.6",
     "@contentful/rich-text-types": "^15.13.2",
     "contentful-html-rich-text-converter": "^1.0.9",
     "contentful-management": "^10.19.3",
@@ -36,6 +37,7 @@
     "@graphql-tools/schema": "8.5.1",
     "@graphql-typed-document-node/core": "3.1.1",
     "@types/contentful-html-rich-text-converter": "workspace:*",
+    "@types/jest": "27.5.2",
     "@types/node": "14.18.33",
     "graphql-typescript-integration": "1.2.1",
     "ts-node": "10.9.1"

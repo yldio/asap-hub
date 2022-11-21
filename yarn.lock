@@ -487,6 +487,7 @@ __metadata:
   dependencies:
     "@asap-hub/model": "workspace:*"
     "@asap-hub/squidex": "workspace:*"
+    "@babel/runtime-corejs3": 7.19.6
     "@contentful/rich-text-types": ^15.13.2
     "@graphql-codegen/cli": 2.12.1
     "@graphql-codegen/gql-tag-operations-preset": 1.5.5
@@ -500,6 +501,7 @@ __metadata:
     "@graphql-tools/schema": 8.5.1
     "@graphql-typed-document-node/core": 3.1.1
     "@types/contentful-html-rich-text-converter": "workspace:*"
+    "@types/jest": 27.5.2
     "@types/node": 14.18.33
     contentful-html-rich-text-converter: ^1.0.9
     contentful-management: ^10.19.3

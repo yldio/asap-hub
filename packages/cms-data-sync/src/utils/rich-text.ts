@@ -31,7 +31,7 @@ export const clearParsedHtmlOutput = (htmlDocument: Document) => ({
     .filter((node: any) => node?.nodeType !== 'text'),
 });
 
-export const convertHtmlToContentfulFormat = async (html: string) => {
+export const convertHtmlToContentfulFormat = (html: string) => {
   // parsedHtml from contentful-html-rich-text-converter
   // does not know how to deal with div, but they are not
   // an important part of rich text input anyway, so we

@@ -67,7 +67,7 @@ const migrateNews = async () => {
 
     if (text) {
       try {
-        newsPayload.text['en-US'] = await convertHtmlToContentfulFormat(text);
+        newsPayload.text['en-US'] = convertHtmlToContentfulFormat(text);
       } catch {
         console.log(`There is a problem converting rich text from entry ${id}`);
       }

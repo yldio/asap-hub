@@ -68,7 +68,7 @@ export const isAllowedChildren = (
 
 export const fontStyles = {
   fontFamily:
-    "Calibri, Mukta, Candara, Segoe, 'Segoe UI', Optima, Arial, sans-serif",
+    "Roboto, 'Roboto Slab', Calibri, Mukta, Candara, Segoe, 'Segoe UI', Optima, Arial, sans-serif",
   WebkitFontSmoothing: 'antialiased',
   MozOsxFontSmoothing: 'auto',
 
@@ -76,7 +76,7 @@ export const fontStyles = {
   lineHeight: `${lineHeight / perRem}em`,
 } as const;
 export const captionStyles = {
-  fontSize: `${13.6 / perRem}em`,
+  fontSize: `${14 / perRem}em`,
 };
 export const layoutStyles = {
   marginTop: '12px',
@@ -89,6 +89,7 @@ export const layoutStyles = {
 export const headlineStyles = {
   1: {
     fontWeight: 'bold',
+    fontFamily: 'Roboto Slab',
     fontSize: vminLinearCalc(
       mobileScreen,
       35.25,
@@ -100,6 +101,7 @@ export const headlineStyles = {
   } as CSSObject,
   2: {
     fontWeight: 'bold',
+    fontFamily: 'Roboto Slab',
     fontSize: vminLinearCalc(
       mobileScreen,
       29.38,
@@ -111,6 +113,7 @@ export const headlineStyles = {
   } as CSSObject,
   3: {
     fontWeight: 'bold',
+    fontFamily: 'Roboto Slab',
     fontSize: vminLinearCalc(
       mobileScreen,
       24.48,
@@ -122,6 +125,7 @@ export const headlineStyles = {
   } as CSSObject,
   4: {
     fontWeight: 'bold',
+    fontFamily: 'Roboto Slab',
     fontSize: vminLinearCalc(
       mobileScreen,
       20.4,
@@ -133,6 +137,7 @@ export const headlineStyles = {
   } as CSSObject,
   5: {
     ...fontStyles,
+    fontFamily: 'Roboto Slab',
     fontWeight: 'bold',
   } as CSSObject,
   6: {

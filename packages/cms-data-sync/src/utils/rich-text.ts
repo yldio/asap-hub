@@ -8,6 +8,12 @@ export const clearParsedHtmlOutput = (htmlDocument: Document) => ({
   ...htmlDocument,
   content: htmlDocument?.content
     .map((node) =>
+      // parseHtml from contentful-html-rich-text-converter
+      // sometimes returns elements inside content that are
+      // not of type list-item, this causes an error
+      // when we try to create an entry in Contentful
+      // This function filters the content of ul and ol to
+      // be only li
       node.nodeType === 'unordered-list' || node.nodeType === 'ordered-list'
         ? {
             ...node,

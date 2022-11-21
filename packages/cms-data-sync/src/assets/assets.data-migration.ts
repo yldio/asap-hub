@@ -33,7 +33,7 @@ export const migrateAsset = async (
   if (thumbnail.length) {
     const assetPromises: Promise<ContentfulAsset>[] = [];
 
-    for await (const thumb of thumbnail) {
+    for (const thumb of thumbnail) {
       const { id, fileName, thumbnailUrl, mimeType, fileType } = thumb;
       const isAssetAlreadyInContentful =
         await checkIfAssetAlreadyExistsInContentful(contentfulEnvironment, id);
@@ -62,16 +62,11 @@ export const migrateAsset = async (
 
     const assets = await Promise.all(assetPromises);
 
-    const createdAssetsPromises: Promise<ContentfulAsset>[] = [];
-    assets.forEach((asset) =>
-      createdAssetsPromises.push(asset.processForAllLocales()),
+    await Promise.all(
+      assets.map(async (asset) => {
+        const processedAsset = await asset.processForAllLocales();
+        processedAsset.publish();
+      }),
     );
-    const processedAssets = await Promise.all(createdAssetsPromises);
-
-    const processedAssetsPromises: Promise<ContentfulAsset>[] = [];
-    processedAssets.forEach((asset) =>
-      processedAssetsPromises.push(asset.publish()),
-    );
-    await Promise.all(processedAssetsPromises);
   }
 };

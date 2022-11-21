@@ -42,7 +42,7 @@ jobs:
       squidex-app: asap-hub-dev
     secrets:
       CONTENTFUL_MANAGEMENT_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-      CRN_SQUIDEX_API_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_API_CLIENT_SECRET }}
+      CRN_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
 
   test:
     uses: ./.github/workflows/reusable-test.yml

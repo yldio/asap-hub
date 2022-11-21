@@ -23,8 +23,8 @@ on:
       CONTENTFUL_MANAGEMENT_TOKEN:
         description: Contentful Management Token
         required: true
-      CRN_SQUIDEX_API_CLIENT_SECRET:
-        description: 'CRN API Squidex Client Secret'
+      CRN_SQUIDEX_CI_CLIENT_SECRET:
+        description: 'CRN Squidex Client Secret'
         required: true
 
 jobs:
@@ -56,7 +56,7 @@ jobs:
           CONTENTFUL_ENV_ID: ${{ inputs.contentful-env }}
           CRN_SQUIDEX_APP_NAME: ${{ inputs.squidex-app }}
           CRN_SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
-          CRN_SQUIDEX_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_API_CLIENT_SECRET }}
+          CRN_SQUIDEX_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
           SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
 
   notify_failure:

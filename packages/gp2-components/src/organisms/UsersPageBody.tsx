@@ -1,19 +1,15 @@
 import { gp2 } from '@asap-hub/model';
-import {
-  Button,
-  filterIcon,
-  PageControls,
-  pixels,
-} from '@asap-hub/react-components';
+import { PageControls, pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
+import FilterSearchExport from './FilterSearchExport';
 import UserCard from './UserCard';
 
 const { rem } = pixels;
 type UsersPageBodyProps = {
   users: gp2.ListUserResponse;
-  onFiltersClick: () => void;
-} & ComponentProps<typeof PageControls>;
+} & ComponentProps<typeof PageControls> &
+  ComponentProps<typeof FilterSearchExport>;
 
 const containerStyles = css({
   display: 'flex',
@@ -25,16 +21,20 @@ const containerStyles = css({
 const UsersPageBody: React.FC<UsersPageBodyProps> = ({
   users,
   onFiltersClick,
+  onExportClick,
+  isAdministrator,
+  searchQuery,
+  onSearchQueryChange,
   ...pageProps
 }) => (
   <article css={containerStyles}>
-    <Button
-      onClick={onFiltersClick}
-      overrideStyles={css({ maxWidth: 'fit-content' })}
-    >
-      {filterIcon}
-      Filters
-    </Button>
+    <FilterSearchExport
+      searchQuery={searchQuery}
+      onSearchQueryChange={onSearchQueryChange}
+      onFiltersClick={onFiltersClick}
+      onExportClick={onExportClick}
+      isAdministrator={isAdministrator}
+    />
     {users.items.map((user) => (
       <UserCard key={user.id} {...user} />
     ))}

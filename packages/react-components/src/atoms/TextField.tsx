@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css, Theme } from '@emotion/react';
 import { InputHTMLAttributes } from 'react';
 import { ember, lead, paper, pine, rose, silver, steel, tin } from '../colors';
 import {
@@ -66,28 +66,29 @@ const invalidStyles = css({
   },
 });
 
-const textFieldStyles = css({
-  backgroundPosition: `right ${paddingLeftRight / perRem}em top ${
-    paddingTopBottom / perRem
-  }em`,
-  backgroundRepeat: 'no-repeat',
-  backgroundSize: `auto ${indicatorSize / perRem}em`,
+const textFieldStyles = ({ primary900 = pine }: Theme['colors'] = {}) =>
+  css({
+    backgroundPosition: `right ${paddingLeftRight / perRem}em top ${
+      paddingTopBottom / perRem
+    }em`,
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: `auto ${indicatorSize / perRem}em`,
 
-  '::placeholder': {
-    color: tin.rgb,
-  },
+    '::placeholder': {
+      color: tin.rgb,
+    },
 
-  // see invalid
-  '~ div:last-of-type': {
-    display: 'none',
-  },
-  '~ div svg': {
-    stroke: lead.rgb,
-  },
-  ':focus ~ div svg': {
-    stroke: pine.rgb,
-  },
-});
+    // see invalid
+    '~ div:last-of-type': {
+      display: 'none',
+    },
+    '~ div svg': {
+      stroke: lead.rgb,
+    },
+    ':focus ~ div svg': {
+      stroke: primary900.rgba,
+    },
+  });
 
 const containerStyles = css({
   flexBasis: '100%',
@@ -181,7 +182,7 @@ const TextField: React.FC<TextFieldProps> = ({
         }
         css={({ colors }) => [
           styles,
-          textFieldStyles,
+          textFieldStyles(colors),
           enabled || disabledStyles,
 
           validationMessage && invalidStyles,

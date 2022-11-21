@@ -20,8 +20,18 @@ apps.forEach((app) => {
     appsWithDefaultConfig.push(app);
   }
 });
+const packagesWithCustomConfig = [];
+const packagesWithDefaultConfig = [];
+packages.forEach((app) => {
+  const appDir = resolve(packagesDir, app);
+  if (readdirSync(appDir).includes('jest.config.js')) {
+    packagesWithCustomConfig.push(app);
+  } else {
+    packagesWithDefaultConfig.push(app);
+  }
+});
 
-const packageTestConfigs = packages.map((package) =>
+const packageTestConfigs = packagesWithDefaultConfig.map((package) =>
   makeDefaultConfig(packagesDir, package),
 );
 const appTestConfigs = appsWithDefaultConfig.map((app) =>
@@ -29,6 +39,9 @@ const appTestConfigs = appsWithDefaultConfig.map((app) =>
 );
 // For apps with a custom config in their directory, we just have to give Jest the path to them
 const appPaths = appsWithCustomConfig.map((app) => resolve(appsDir, app));
+const packagePaths = packagesWithCustomConfig.map((package) =>
+  resolve(packagesDir, package),
+);
 
 const lintConfigs = [
   ...packages.map((package) => [packagesDir, package]),
@@ -49,6 +62,7 @@ module.exports = {
     ...packageTestConfigs,
     ...appTestConfigs,
     ...appPaths,
+    ...packagePaths,
     ...lintConfigs,
   ],
   testRegex: '^$', // root project does not have tests itself

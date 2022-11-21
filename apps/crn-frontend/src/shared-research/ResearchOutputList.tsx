@@ -2,16 +2,13 @@ import { format } from 'date-fns';
 import { SharedResearchList } from '@asap-hub/react-components';
 import { sharedResearch } from '@asap-hub/routing';
 import { RESEARCH_OUTPUT_ENTITY_TYPE } from '@asap-hub/algolia';
+import { createCsvFileStream } from '@asap-hub/frontend-utils';
 
 import { useResearchOutputs } from './state';
 import { usePaginationParams, usePagination } from '../hooks';
 import { useAlgolia } from '../hooks/algolia';
 import { getResearchOutputs } from './api';
-import {
-  createCsvFileStream,
-  algoliaResultsToStream,
-  researchOutputToCSV,
-} from './export';
+import { algoliaResultsToStream, researchOutputToCSV } from './export';
 
 interface ResearchOutputListProps {
   searchQuery?: string;

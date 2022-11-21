@@ -38,6 +38,7 @@ export * from './icons';
 export * from './images';
 export * from './layout';
 export * from './routing';
+export * from './date';
 export { MessageLayout, WelcomeMessage } from './messages';
 export {
   Accordion,

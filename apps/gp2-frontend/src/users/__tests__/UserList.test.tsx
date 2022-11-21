@@ -7,6 +7,7 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
@@ -15,15 +16,30 @@ import { getUsers } from '../api';
 import { refreshUsersState } from '../state';
 import UserList from '../UserList';
 import * as search from '../../hooks/search';
+import { MAX_SQUIDEX_RESULTS } from '../export';
 
+jest.mock('@asap-hub/frontend-utils', () => {
+  const original = jest.requireActual('@asap-hub/frontend-utils');
+  return {
+    ...original,
+    createCsvFileStream: jest
+      .fn()
+      .mockImplementation(() => ({ write: jest.fn(), end: jest.fn() })),
+  };
+});
 jest.mock('../api');
 jest.mock('../../users/api');
 
 const mockGetUsers = getUsers as jest.MockedFunction<typeof getUsers>;
 
+const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
+  typeof createCsvFileStream
+>;
+
 const renderUserList = async (
   listGroupResponse: gp2Model.ListUserResponse = gp2Fixtures.createUsersResponse(),
   displayFilters: boolean = false,
+  isAdministrator: boolean = false,
 ) => {
   mockGetUsers.mockResolvedValue(listGroupResponse);
 
@@ -34,7 +50,9 @@ const renderUserList = async (
       }}
     >
       <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
+        <Auth0Provider
+          user={{ role: isAdministrator ? 'Administrator' : undefined }}
+        >
           <WhenReady>
             <MemoryRouter initialEntries={['/users/']}>
               <Route path="/users">
@@ -48,7 +66,9 @@ const renderUserList = async (
   );
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };
-
+afterEach(() => {
+  jest.clearAllMocks();
+});
 it('fetches the user information', async () => {
   await renderUserList();
 
@@ -96,4 +116,36 @@ it('calls the updateFilters with the right arguments', async () => {
   await renderUserList(undefined, true);
   userEvent.click(screen.getByRole('button', { name: 'Apply' }));
   expect(mockUpdateFilter).toHaveBeenCalledWith('/users', { region: [] });
+});
+
+it('triggers export with the same parameters', async () => {
+  await renderUserList(undefined, undefined, true);
+
+  await waitFor(() =>
+    expect(mockGetUsers).toHaveBeenCalledWith(
+      expect.objectContaining({
+        filter: { region: [] },
+        search: '',
+        skip: 0,
+        take: 10,
+      }),
+      expect.anything(),
+    ),
+  );
+  userEvent.click(screen.getByRole('button', { name: 'Export Export' }));
+  expect(mockCreateCsvFileStream).toHaveBeenLastCalledWith(
+    expect.stringMatching('user_export.csv'),
+    expect.anything(),
+  );
+  await waitFor(() =>
+    expect(mockGetUsers).toHaveBeenCalledWith(
+      expect.objectContaining({
+        filter: { region: [] },
+        search: '',
+        skip: 0,
+        take: MAX_SQUIDEX_RESULTS,
+      }),
+      expect.anything(),
+    ),
+  );
 });

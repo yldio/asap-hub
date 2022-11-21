@@ -35,27 +35,32 @@ export const getLinkColors = (
     ? css({ color: colors.primary500.rgba })
     : themeStyles[themeVariant];
 
-const iconThemeStyles: Record<ThemeVariant, SerializedStyles> = {
+const iconThemeStyles: (
+  colors: Theme['colors'],
+) => Record<ThemeVariant, SerializedStyles> = ({
+  primary500 = fern,
+  primary900 = pine,
+}: Theme['colors'] = {}) => ({
   light: css({
     svg: {
-      stroke: fern.rgb,
+      stroke: primary500.rgba,
     },
     ':hover': {
       svg: {
-        stroke: pine.rgb,
+        stroke: primary900.rgba,
       },
     },
-    ':active': { svg: { stroke: fern.rgb } },
+    ':active': { svg: { stroke: primary500.rgba } },
   }),
   grey: css({
-    svg: { stroke: fern.rgb },
-    ':active': { svg: { stroke: pine.rgb } },
+    svg: { stroke: primary500.rgba },
+    ':active': { svg: { stroke: primary900.rgba } },
   }),
   dark: css({
     svg: { stroke: paper.rgb },
     ':active': { svg: { stroke: paper.rgb } },
   }),
-};
+});
 
 interface NormalLinkProps {
   readonly themeVariant?: ThemeVariant;
@@ -118,7 +123,7 @@ const Link: React.FC<LinkProps> = ({
       : [
           styles,
           getLinkColors(colors, themeVariant),
-          applyIconTheme && iconThemeStyles[themeVariant],
+          applyIconTheme && iconThemeStyles(colors)[themeVariant],
           overrideStyles,
         ];
   const linkChildren = buttonStyle ? getButtonChildren(children) : children;

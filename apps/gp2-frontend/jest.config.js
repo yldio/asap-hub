@@ -32,6 +32,7 @@ module.exports = {
   moduleNameMapper: {
     ...moduleNameMapper,
     '^.+\\.module\\.(css|sass|scss)$': require.resolve('identity-obj-proxy'),
+    '^csv-stringify/browser/esm': require.resolve('csv-stringify'),
   },
   modulePathIgnorePatterns: ['<rootDir>/.*/__mocks__'],
 

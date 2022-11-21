@@ -32,8 +32,10 @@ type SearchProps = Pick<
   ComponentProps<typeof TextField>,
   'value' | 'onChange'
 > &
-  Required<Pick<ComponentProps<typeof TextField>, 'placeholder'>>;
-const SearchField: React.FC<SearchProps> = (props) => {
+  Required<Pick<ComponentProps<typeof TextField>, 'placeholder'>> & {
+    padding?: boolean;
+  };
+const SearchField: React.FC<SearchProps> = ({ padding = true, ...props }) => {
   const [debouncedValue] = useDebounce(props.value, 5000);
 
   useEffect(() => {
@@ -54,7 +56,7 @@ const SearchField: React.FC<SearchProps> = (props) => {
   }, [debouncedValue, props.placeholder, props.value]);
 
   return (
-    <div css={clearButtonStyles}>
+    <div css={[clearButtonStyles, !padding && { padding: 0 }]}>
       <TextField
         {...props}
         maxLength={MAX_ALGOLIA_QUERY_LENGTH}

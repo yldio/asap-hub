@@ -3,6 +3,7 @@ import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import userEvent from '@testing-library/user-event';
+import { createCsvFileStream } from '@asap-hub/frontend-utils';
 
 import { createResearchOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
 import ResearchOutputList from '../ResearchOutputList';
@@ -10,10 +11,18 @@ import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getResearchOutputs } from '../api';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 import { researchOutputsState } from '../state';
-import { createCsvFileStream, MAX_ALGOLIA_RESULTS } from '../export';
+import { MAX_ALGOLIA_RESULTS } from '../export';
 
+jest.mock('@asap-hub/frontend-utils', () => {
+  const original = jest.requireActual('@asap-hub/frontend-utils');
+  return {
+    ...original,
+    createCsvFileStream: jest
+      .fn()
+      .mockImplementation(() => ({ write: jest.fn(), end: jest.fn() })),
+  };
+});
 jest.mock('../api');
-jest.mock('../export');
 
 const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
   typeof createCsvFileStream

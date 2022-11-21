@@ -1,5 +1,5 @@
 import { aperture, filter, uniqBy, sortWith, pipe, ascend } from 'ramda';
-import { css } from '@emotion/react';
+import { css, Theme } from '@emotion/react';
 
 import {
   perRem,
@@ -60,22 +60,27 @@ const itemStyles = css({
   },
 });
 
-const textStyles = css({
-  height: '100%',
-  display: 'grid',
-  justifyContent: 'center',
-  alignContent: 'center',
+const textStyles = ({ primary500 = fern }: Theme['colors'] = {}) =>
+  css({
+    height: '100%',
+    display: 'grid',
+    justifyContent: 'center',
+    alignContent: 'center',
 
-  color: lead.rgb,
-  svg: {
-    stroke: fern.rgb,
-    verticalAlign: 'middle',
-  },
-});
-const activeTextStyles = css({
-  backgroundColor: mint.rgb,
-  color: fern.rgb,
-});
+    color: lead.rgb,
+    svg: {
+      stroke: primary500.rgba,
+      verticalAlign: 'middle',
+    },
+  });
+const activeTextStyles = ({
+  primary500 = fern,
+  primary100 = mint,
+}: Theme['colors'] = {}) =>
+  css({
+    backgroundColor: primary100.rgba,
+    color: primary500.rgba,
+  });
 const disabledTextStyles = css({
   svg: {
     stroke: tin.rgb,
@@ -194,14 +199,24 @@ const PageControls: React.FC<PageControlsProps> = ({
       <ol css={listStyles}>
         <li css={itemStyles}>
           <Anchor href={firstPageHref}>
-            <span css={[textStyles, firstPageHref ?? disabledTextStyles]}>
+            <span
+              css={({ colors }) => [
+                textStyles(colors),
+                firstPageHref ?? disabledTextStyles,
+              ]}
+            >
               {firstPageIcon}
             </span>
           </Anchor>
         </li>
         <li css={itemStyles}>
           <Anchor href={previousPageHref}>
-            <span css={[textStyles, previousPageHref ?? disabledTextStyles]}>
+            <span
+              css={({ colors }) => [
+                textStyles(colors),
+                previousPageHref ?? disabledTextStyles,
+              ]}
+            >
               {previousPageIcon}
             </span>
           </Anchor>
@@ -218,7 +233,12 @@ const PageControls: React.FC<PageControlsProps> = ({
               ].join(' ')}
             >
               <Anchor href={renderPageHref(index)}>
-                <span css={[textStyles, active && activeTextStyles]}>
+                <span
+                  css={({ colors }) => [
+                    textStyles(colors),
+                    active && activeTextStyles(colors),
+                  ]}
+                >
                   {index + 1}
                 </span>
               </Anchor>
@@ -227,14 +247,24 @@ const PageControls: React.FC<PageControlsProps> = ({
         })}
         <li css={itemStyles}>
           <Anchor href={nextPageHref}>
-            <span css={[textStyles, nextPageHref ?? disabledTextStyles]}>
+            <span
+              css={({ colors }) => [
+                textStyles(colors),
+                nextPageHref ?? disabledTextStyles,
+              ]}
+            >
               {nextPageIcon}
             </span>
           </Anchor>
         </li>
         <li css={itemStyles}>
           <Anchor href={lastPageHref}>
-            <span css={[textStyles, lastPageHref ?? disabledTextStyles]}>
+            <span
+              css={({ colors }) => [
+                textStyles(colors),
+                lastPageHref ?? disabledTextStyles,
+              ]}
+            >
               {lastPageIcon}
             </span>
           </Anchor>

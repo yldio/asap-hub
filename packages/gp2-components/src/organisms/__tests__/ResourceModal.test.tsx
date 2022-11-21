@@ -1,13 +1,20 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { Router, StaticRouter } from 'react-router-dom';
+import { History, createMemoryHistory } from 'history';
 import ResourceModal from '../ResourceModal';
 
 const modalInfo = {
   title: 'Add Resource',
   description:
     'Select a resource type and provide the neccessary information required to share a resource privately with your group.',
+};
+
+const editModalInfo = {
+  title: 'Edit Resource',
+  description:
+    'Edit or delete an existing resource that is being shared privately with your group.',
 };
 
 const defaultProps: ComponentProps<typeof ResourceModal> = {
@@ -34,7 +41,16 @@ const enterDescription = (description: string) =>
   userEvent.type(descriptionBox(), description);
 
 const linkBox = () => screen.getByRole('textbox', { name: /url/i });
-const enterLink = (link: string) => userEvent.type(linkBox(), link);
+const enterLink = (link: string) => {
+  userEvent.clear(linkBox());
+  userEvent.type(linkBox(), link);
+};
+
+let getUserConfirmation!: jest.MockedFunction<
+  (message: string, callback: (confirmed: boolean) => void) => void
+>;
+let history!: History;
+
 beforeEach(jest.resetAllMocks);
 
 describe('ResourceModal', () => {
@@ -160,5 +176,53 @@ describe('ResourceModal', () => {
     save();
     expect(screen.getByText(/please enter a title/i)).toBeVisible();
     expect(screen.getByText(/please enter a valid link/i)).toBeVisible();
+  });
+
+  it('the dialog shows when the user changes the resource information and cancels the action', () => {
+    getUserConfirmation = jest.fn((_message, cb) => cb(true));
+    history = createMemoryHistory({ getUserConfirmation });
+
+    const props = {
+      modalTitle: editModalInfo.title,
+      modalDescription: editModalInfo.description,
+      type: 'Note' as const,
+      title: 'A title',
+      description: 'A description',
+    };
+
+    render(
+      <Router history={history}>
+        <ResourceModal {...defaultProps} {...props} />
+      </Router>,
+    );
+    enterType('Link');
+    enterLink('http://example.com');
+    enterTitle('A new title');
+    enterDescription('A new description');
+    const cancelButton = screen.getByRole('link', { name: /cancel/i });
+    userEvent.click(cancelButton);
+    expect(getUserConfirmation).toHaveBeenCalledTimes(1);
+  });
+
+  it("the dialog doesn't show when the user doesn't add new changes", () => {
+    getUserConfirmation = jest.fn((_message, cb) => cb(true));
+    history = createMemoryHistory({ getUserConfirmation });
+
+    const props = {
+      modalTitle: editModalInfo.title,
+      modalDescription: editModalInfo.description,
+      type: 'Note' as const,
+      title: 'A title',
+      description: 'A description',
+    };
+
+    render(
+      <Router history={history}>
+        <ResourceModal {...defaultProps} {...props} />
+      </Router>,
+    );
+    const cancelButton = screen.getByRole('link', { name: /cancel/i });
+    userEvent.click(cancelButton);
+    expect(getUserConfirmation).not.toHaveBeenCalled();
   });
 });

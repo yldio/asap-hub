@@ -84,7 +84,7 @@ describe('userToCSV', () => {
       expect(userToCSV(output).onboarded).toBe(valueOutput);
     },
   );
-  it('flattens the first three positions into primaryPosition, secondaryPosition and terciaryPosition', () => {
+  it('flattens the first three positions into primaryPosition, secondaryPosition and tertiaryPosition', () => {
     const output: gp2Model.UserResponse = {
       ...gp2Fixtures.createUserResponse(),
       positions: [
@@ -111,7 +111,7 @@ describe('userToCSV', () => {
     expect(userToCSV(output).secondaryPosition).toMatchInlineSnapshot(
       `"CTO in Technology at YLD"`,
     );
-    expect(userToCSV(output).terciaryPosition).toMatchInlineSnapshot(
+    expect(userToCSV(output).tertiaryPosition).toMatchInlineSnapshot(
       `"CFO in Finance at Bank of America"`,
     );
   });
@@ -122,7 +122,7 @@ describe('userToCSV', () => {
     };
     expect(userToCSV(output).primaryPosition).toBeUndefined();
     expect(userToCSV(output).secondaryPosition).toBeUndefined();
-    expect(userToCSV(output).terciaryPosition).toBeUndefined();
+    expect(userToCSV(output).tertiaryPosition).toBeUndefined();
   });
   it('flattens and orders projects', () => {
     const output: gp2Model.UserResponse = {

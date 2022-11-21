@@ -15,7 +15,7 @@ export const userFields = {
   onboarded: 'Onboarded',
   primaryPosition: 'Primary position',
   secondaryPosition: 'Secondary position',
-  terciaryPosition: 'Terciary position',
+  tertiaryPosition: 'Tertiary position',
   projects: 'Projects',
   workingGroups: 'Working groups',
   fundingStreams: 'Funding streams',
@@ -27,6 +27,11 @@ type UserCSV = Record<keyof typeof userFields, CSVValue>;
 
 export const MAX_SQUIDEX_RESULTS = 200;
 
+const getPositionString = (position?: gp2.UserPosition) =>
+  position
+    ? `${position.role} in ${position.department} at ${position.institution}`
+    : undefined;
+
 export const userToCSV = (output: gp2.UserResponse): UserCSV => ({
   firstName: output.firstName,
   lastName: output.lastName,
@@ -36,15 +41,9 @@ export const userToCSV = (output: gp2.UserResponse): UserCSV => ({
   role: output.role,
   degrees: output.degrees?.sort(caseInsensitive).join(',\n'),
   onboarded: output.onboarded ? 'Yes' : 'No',
-  primaryPosition: output.positions[0]
-    ? `${output.positions[0].role} in ${output.positions[0].department} at ${output.positions[0].institution}`
-    : undefined,
-  secondaryPosition: output.positions[1]
-    ? `${output.positions[1].role} in ${output.positions[1].department} at ${output.positions[1].institution}`
-    : undefined,
-  terciaryPosition: output.positions[2]
-    ? `${output.positions[2].role} in ${output.positions[2].department} at ${output.positions[2].institution}`
-    : undefined,
+  primaryPosition: getPositionString(output.positions[0]),
+  secondaryPosition: getPositionString(output.positions[1]),
+  tertiaryPosition: getPositionString(output.positions[2]),
   projects: output.projects
     .map(({ title }) => title)
     .sort(caseInsensitive)

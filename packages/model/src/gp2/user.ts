@@ -42,7 +42,7 @@ export const userRegions = [
 
 export type UserRegion = typeof userRegions[number];
 
-type UserPosition = {
+export type UserPosition = {
   role: string;
   department: string;
   institution: string;

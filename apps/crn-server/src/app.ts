@@ -123,6 +123,10 @@ import WorkingGroups, {
   WorkingGroupController,
 } from './controllers/working-groups';
 import { workingGroupRouteFactory } from './routes/working-groups.route';
+import {
+  WorkingGroupDataProvider,
+  WorkingGroupSquidexDataProvider,
+} from './data-providers/working-groups.data-provider';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -232,6 +236,9 @@ export const appFactory = (libs: Libs = {}): Express => {
   const calendarDataProvider =
     libs.calendarDataProvider ||
     new CalendarSquidexDataProvider(calendarRestClient, squidexGraphqlClient);
+  const workingGroupDataProvider =
+    libs.workingGroupDataProvider ||
+    new WorkingGroupSquidexDataProvider(squidexGraphqlClient);
 
   // Controllers
   const calendarController =
@@ -264,7 +271,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.userController || new Users(userDataProvider, assetDataProvider);
   const labsController = libs.labsController || new Labs(squidexGraphqlClient);
   const workingGroupsController =
-    libs.workingGroupsController || new WorkingGroups();
+    libs.workingGroupsController || new WorkingGroups(workingGroupDataProvider);
 
   // Handlers
   const authHandler =
@@ -416,6 +423,7 @@ export type Libs = {
   researchOutputDataProvider?: ResearchOutputDataProvider;
   researchTagDataProvider?: ResearchTagDataProvider;
   externalAuthorDataProvider?: ExternalAuthorDataProvider;
+  workingGroupDataProvider?: WorkingGroupDataProvider;
   authHandler?: AuthHandler;
   tracer?: Tracer;
   httpLogger?: HttpLogger;

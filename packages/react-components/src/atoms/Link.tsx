@@ -64,6 +64,7 @@ interface NormalLinkProps {
   readonly small?: undefined;
   readonly enabled?: undefined;
   readonly noMargin?: undefined;
+  readonly fullWidth?: undefined;
 }
 
 interface ButtonStyleLinkProps {
@@ -73,6 +74,7 @@ interface ButtonStyleLinkProps {
   readonly small?: boolean;
   readonly enabled?: boolean;
   readonly noMargin?: boolean;
+  readonly fullWidth?: boolean;
 }
 
 type LinkProps = {
@@ -95,6 +97,7 @@ const Link: React.FC<LinkProps> = ({
   enabled = true,
   applyIconTheme = false,
   noMargin,
+  fullWidth = false,
   ellipsed = false,
   overrideStyles,
 }) => {
@@ -107,6 +110,8 @@ const Link: React.FC<LinkProps> = ({
             enabled,
             children,
             noMargin,
+            fullWidth,
+            colors,
           }),
           overrideStyles,
         ]

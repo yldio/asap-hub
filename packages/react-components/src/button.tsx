@@ -1,19 +1,19 @@
 import { css, Theme } from '@emotion/react';
 
-import { formTargetWidth, perRem, mobileScreen } from './pixels';
 import {
+  charcoal,
+  color,
+  fern,
+  lead,
   OpaqueColor,
   paper,
-  fern,
   pine,
-  lead,
-  steel,
-  charcoal,
-  tin,
   silver,
-  color,
+  steel,
+  tin,
   TransparentColor,
 } from './colors';
+import { formTargetWidth, mobileScreen, perRem } from './pixels';
 
 export const activePrimaryBackgroundColorDefault = color(122, 210, 169, 0.18);
 
@@ -46,8 +46,13 @@ const styles = css({
 
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     flexGrow: 1,
-    width: '100%',
+    minWidth: '100%',
   },
+});
+
+const fullWidthStyles = css({
+  flexGrow: 1,
+  minWidth: '100%',
 });
 
 const largeStyles = css({
@@ -206,6 +211,7 @@ export const getButtonStyles = ({
   active = false,
   children = [] as React.ReactNode,
   noMargin = false,
+  fullWidth = false,
   colors,
 }: {
   colors?: Theme['colors'];
@@ -214,6 +220,7 @@ export const getButtonStyles = ({
   enabled?: boolean;
   active?: boolean;
   noMargin?: boolean;
+  fullWidth?: boolean;
   children?: React.ReactNode;
 }) =>
   css([
@@ -238,6 +245,7 @@ export const getButtonStyles = ({
       ? children.some((child) => typeof child === 'string')
       : typeof children === 'string') ||
       (small ? smallIconOnlyStyles : largeIconOnlyStyles),
+    fullWidth && fullWidthStyles,
   ]);
 
 export const getButtonChildren = (children = [] as React.ReactNode) =>

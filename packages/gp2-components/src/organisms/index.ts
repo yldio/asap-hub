@@ -12,6 +12,7 @@ export { default as ProjectSummaryHeader } from './ProjectSummaryHeader';
 export { default as Resources } from './Resources';
 export { default as UserCard } from './UserCard';
 export { default as UserDetailHeader } from './UserDetailHeader';
+export { default as UserDetailHeaderCard } from './UserDetailHeaderCard';
 export { default as UserNavigation } from './UserNavigation';
 export { default as UsersPageBody } from './UsersPageBody';
 export { default as WorkingGroupCard } from './WorkingGroupCard';

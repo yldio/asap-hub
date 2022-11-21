@@ -5,11 +5,11 @@ import { UserDataProvider } from '../data-providers/user.data-provider';
 export interface UserController {
   fetch(options: gp2.FetchUsersOptions): Promise<gp2.ListUserResponse>;
   fetchByCode(code: string): Promise<gp2.UserResponse>;
-  fetchById(id: string, currentUserId: string): Promise<gp2.UserResponse>;
+  fetchById(id: string, loggedInUserId: string): Promise<gp2.UserResponse>;
   update(
     id: string,
     update: gp2.UserUpdateRequest,
-    currentUserId: string,
+    loggedInUserId: string,
   ): Promise<gp2.UserResponse>;
   connectByCode(
     welcomeCode: string,
@@ -27,10 +27,10 @@ export default class Users implements UserController {
   async update(
     id: string,
     update: gp2.UserUpdateRequest,
-    currentUserId: string,
+    loggedInUserId: string,
   ): Promise<gp2.UserResponse> {
     await this.userDataProvider.update(id, update);
-    return this.fetchById(id, currentUserId);
+    return this.fetchById(id, loggedInUserId);
   }
 
   async fetch(options: gp2.FetchUsersOptions): Promise<gp2.ListUserResponse> {
@@ -44,14 +44,14 @@ export default class Users implements UserController {
 
   async fetchById(
     id: string,
-    currentUserId: string,
+    loggedInUserId: string,
   ): Promise<gp2.UserResponse> {
     const user = await this.userDataProvider.fetchById(id);
     if (!user) {
       throw new NotFoundError(undefined, `user with id ${id} not found`);
     }
 
-    return parseUserToResponse(user, currentUserId);
+    return parseUserToResponse(user, loggedInUserId);
   }
 
   async fetchByCode(code: string): Promise<gp2.UserResponse> {
@@ -106,12 +106,12 @@ export default class Users implements UserController {
 
 export const parseUserToResponse = (
   { connections: _, telephone, ...user }: gp2.UserDataObject,
-  currentUserId?: string,
+  loggedInUserId?: string,
 ): gp2.UserResponse => {
   const displayName = `${user.firstName} ${user.lastName}`;
   return {
     ...user,
     displayName,
-    ...(user.id === currentUserId && { telephone }),
+    ...(user.id === loggedInUserId && { telephone }),
   };
 };

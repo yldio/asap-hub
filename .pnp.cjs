@@ -10667,11 +10667,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/contentful-html-rich-text-converter", "workspace:@types/contentful-html-rich-text-converter"],\
             ["@types/jest", "npm:27.5.2"],\
             ["@types/node", "npm:14.18.33"],\
+            ["@types/prettier", "npm:2.7.1"],\
             ["contentful-html-rich-text-converter", "npm:1.0.9"],\
             ["contentful-management", "npm:10.19.3"],\
             ["graphql", "npm:15.8.0"],\
             ["graphql-tag", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:2.12.6"],\
             ["graphql-typescript-integration", "npm:1.2.1"],\
+            ["prettier", "npm:2.7.1"],\
             ["ts-node", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:10.9.1"]\
           ],\
           "linkType": "SOFT"\

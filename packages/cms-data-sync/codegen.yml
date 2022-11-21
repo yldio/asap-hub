@@ -1,6 +1,6 @@
 overwrite: true
 schema:
-  - ${SQUIDEX_BASE_URL}/api/content/${CRN_SQUIDEX_APP_NAME}/graphql:
+  - ${SQUIDEX_BASE_URL}/api/content/${SQUIDEX_APP_NAME}/graphql:
       headers:
         Authorization: Bearer ${SQUIDEX_TOKEN}
 documents:

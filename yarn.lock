@@ -503,11 +503,13 @@ __metadata:
     "@types/contentful-html-rich-text-converter": "workspace:*"
     "@types/jest": 27.5.2
     "@types/node": 14.18.33
+    "@types/prettier": 2.7.1
     contentful-html-rich-text-converter: ^1.0.9
     contentful-management: ^10.19.3
     graphql: 15.8.0
     graphql-tag: 2.12.6
     graphql-typescript-integration: 1.2.1
+    prettier: 2.7.1
     ts-node: 10.9.1
   languageName: unknown
   linkType: soft

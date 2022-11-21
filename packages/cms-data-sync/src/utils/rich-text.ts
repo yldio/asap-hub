@@ -25,19 +25,13 @@ export const clearParsedHtmlOutput = (htmlDocument: Document) => ({
     .filter((node: any) => node?.nodeType !== 'text'),
 });
 
-export const convertText = async <T extends { 'en-US': Document | null }>(
-  payload: T,
-  text: string | null,
-  id: string,
-) => {
-  if (text) {
-    const textWithoutDivTag = text.replace(/<[\\/]{0,1}(div)[^><]*>/g, '');
+export const convertHtmlToContentfulFormat = async (html: string) => {
+  const htmlWithoutDivTag = html.replace(/<[\\/]{0,1}(div)[^><]*>/g, '');
 
-    try {
-      const parsedHtml = parseHtml(textWithoutDivTag) as Document;
-      payload['en-US'] = clearParsedHtmlOutput(parsedHtml);
-    } catch {
-      console.log(`There is a problem converting rich text from entry ${id}`);
-    }
+  try {
+    const parsedHtml = parseHtml(htmlWithoutDivTag) as Document;
+    return clearParsedHtmlOutput(parsedHtml);
+  } catch (err) {
+    throw err;
   }
 };

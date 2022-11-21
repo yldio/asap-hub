@@ -30,6 +30,7 @@ on:
 jobs:
   sync_cms_data:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment-name }}
     container:
       image: ghcr.io/yldio/asap-hub/node-python-sq:7b77d99657ab3718ed548ba366ffbcbb15315fd8
       credentials:

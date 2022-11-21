@@ -12,22 +12,20 @@ export const clearContentfulEntries = async (
     `Cleaning Contentful Entries from content-type ${contentType}...`,
   );
 
-  const unpublishPromises: Promise<Entry>[] = [];
-  entries.items.forEach(async (entry) => {
-    if (entry.isPublished()) {
-      unpublishPromises.push(entry.unpublish());
-    }
-  });
+  await Promise.all(
+    entries.items.map(async (entry) => {
+      if (entry.isPublished()) {
+        await entry.unpublish();
+      }
+    }),
+  );
 
-  await Promise.all(unpublishPromises);
-
-  const deletePromises: Promise<Entry>[] = [];
-  entries.items.forEach(async (entry) => {
-    deletePromises.push(entry.delete());
-    console.log('entry', entry.sys.id, 'deleted');
-  });
-
-  await Promise.all(deletePromises);
+  await Promise.all(
+    entries.items.map(async (entry) => {
+      await entry.delete();
+      console.log('entry', entry.sys.id, 'deleted');
+    }),
+  );
 };
 
 export const publishContentfulEntries = async (entries: Entry[]) => {

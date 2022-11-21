@@ -32,7 +32,7 @@ jobs:
           contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           max-contentful-envs: ${{ steps.setup.outputs.max-contentful-envs }}
 
-  cms_sync:
+  cms-sync:
     uses: ./.github/workflows/on-demand-cms-sync.yml
     with:
       environment-name: Branch

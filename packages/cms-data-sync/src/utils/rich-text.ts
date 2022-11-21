@@ -32,6 +32,10 @@ export const clearParsedHtmlOutput = (htmlDocument: Document) => ({
 });
 
 export const convertHtmlToContentfulFormat = async (html: string) => {
+  // parsedHtml from contentful-html-rich-text-converter
+  // does not know how to deal with div, but they are not
+  // an important part of rich text input anyway, so we
+  // can just remove them here
   const htmlWithoutDivTag = html.replace(/<[\\/]{0,1}(div)[^><]*>/g, '');
 
   try {

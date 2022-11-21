@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import { formatDistance } from 'date-fns';
 import { TeamResponse } from '@asap-hub/model';
+import { network } from '@asap-hub/routing';
 
 import { mobileScreen, perRem, rem } from '../pixels';
 import { Link, Display, StateTag, TabLink, Caption } from '../atoms';
@@ -9,7 +10,6 @@ import { contentSidePaddingWithNavigation } from '../layout';
 import { UserAvatarList, TabNav, ExternalLink } from '../molecules';
 import { successIcon } from '../icons';
 import { createMailTo } from '../mail';
-import { network } from '@asap-hub/routing';
 
 const containerStyles = css({
   backgroundColor: paper.rgb,

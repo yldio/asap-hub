@@ -4,7 +4,7 @@ import {
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import { createListUserResponse } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import { fireEvent, render, waitFor, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
@@ -20,6 +20,7 @@ jest.mock('../users/state', () => ({
 
 jest.mock('../teams/api');
 jest.mock('../groups/api');
+jest.mock('../working-groups/api');
 
 const mockUseUsers = useUsers as jest.MockedFunction<typeof useUsers>;
 const mockGetTeams = getTeams as jest.MockedFunction<typeof getTeams>;
@@ -222,4 +223,12 @@ it('reads filters from url', async () => {
       }),
     ),
   );
+});
+
+it('renders working-group profile page', async () => {
+  await renderNetworkPage(
+    network({}).workingGroups({}).workingGroup({ workingGroupId: '123' }).$,
+  );
+
+  expect(await screen.findByText(/Working Group Description/i)).toBeVisible();
 });

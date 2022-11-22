@@ -59,10 +59,12 @@ const migrateNews = async () => {
       thumbnail: { 'en-US': null },
     };
 
-    newsPayload.thumbnail['en-US'] = await createAssetLink(
-      contentfulEnvironment,
-      thumbnail,
-    );
+    if (thumbnail?.length) {
+      newsPayload.thumbnail['en-US'] = await createAssetLink(
+        contentfulEnvironment,
+        thumbnail,
+      );
+    }
 
     if (text) {
       try {

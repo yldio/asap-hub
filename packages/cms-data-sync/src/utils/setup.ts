@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import assert from 'assert';
 import { createClient } from 'contentful-management';

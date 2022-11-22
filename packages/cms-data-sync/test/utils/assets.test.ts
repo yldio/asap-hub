@@ -1,6 +1,112 @@
 import { Environment } from 'contentful-management';
-import { createAssetLink } from '../../src/utils';
-import { asset, entry, getContentfulEnvironmentMock } from '../fixtures';
+import {
+  checkIfAssetAlreadyExistsInContentful,
+  createAssetLink,
+  migrateAsset,
+} from '../../src/utils';
+import {
+  squidexAsset,
+  contenfulAsset,
+  getContentfulEnvironmentMock,
+} from '../fixtures';
+
+describe('checkIfAssetAlreadyExistsInContentful', () => {
+  let envMock: Environment;
+
+  beforeEach(async () => {
+    jest.clearAllMocks();
+
+    envMock = await getContentfulEnvironmentMock();
+  });
+
+  it('returns true if contentful getAsset returns an asset', async () => {
+    jest.spyOn(envMock, 'getAsset').mockResolvedValueOnce(contenfulAsset);
+
+    const isAssetInContentful = await checkIfAssetAlreadyExistsInContentful(
+      envMock,
+      squidexAsset.id,
+    );
+    expect(envMock.getAsset).toHaveBeenCalledWith(squidexAsset.id);
+    expect(isAssetInContentful).toBe(true);
+  });
+
+  it('returns false if contentful getAsset returns a 404 error', async () => {
+    const contenfulErrorResponse = new Error();
+    contenfulErrorResponse.message = '{"status":404}';
+    jest
+      .spyOn(envMock, 'getAsset')
+      .mockRejectedValueOnce(contenfulErrorResponse);
+
+    const isAssetInContentful = await checkIfAssetAlreadyExistsInContentful(
+      envMock,
+      squidexAsset.id,
+    );
+    expect(isAssetInContentful).toBe(false);
+  });
+
+  it('throws if contentful getAsset returns a 500 error', async () => {
+    const contenfulErrorResponse = new Error();
+    contenfulErrorResponse.message = '{"status":500}';
+    jest
+      .spyOn(envMock, 'getAsset')
+      .mockRejectedValueOnce(contenfulErrorResponse);
+
+    await expect(
+      checkIfAssetAlreadyExistsInContentful(envMock, squidexAsset.id),
+    ).rejects.toThrowError();
+  });
+
+  it('throws if contentful getAsset returns an unknown error', async () => {
+    jest.spyOn(envMock, 'getAsset').mockRejectedValueOnce('unknown error');
+
+    await expect(
+      checkIfAssetAlreadyExistsInContentful(envMock, squidexAsset.id),
+    ).rejects.toEqual('unknown error');
+  });
+});
+
+describe('migrateAsset', () => {
+  let envMock: Environment;
+
+  beforeEach(async () => {
+    jest.clearAllMocks();
+
+    envMock = await getContentfulEnvironmentMock();
+  });
+
+  it('calls createAssetWithId with correct payload', async () => {
+    const contenfulErrorResponse = new Error();
+    contenfulErrorResponse.message = '{"status":404}';
+    jest
+      .spyOn(envMock, 'getAsset')
+      .mockRejectedValueOnce(contenfulErrorResponse);
+
+    jest
+      .spyOn(envMock, 'createAssetWithId')
+      .mockResolvedValueOnce(contenfulAsset);
+
+    jest
+      .spyOn(contenfulAsset, 'processForAllLocales')
+      .mockResolvedValueOnce(contenfulAsset);
+
+    await migrateAsset(envMock, [squidexAsset]);
+    expect(envMock.createAssetWithId).toHaveBeenCalledWith('asset-id', {
+      fields: {
+        file: {
+          'en-US': {
+            contentType: 'image/png',
+            fileName: 'asset.png',
+            upload: 'www.thumb.com/asset.png',
+          },
+        },
+        title: { 'en-US': 'asset' },
+      },
+    });
+
+    expect(contenfulAsset.processForAllLocales).toHaveBeenCalled();
+    expect(contenfulAsset.publish).toHaveBeenCalled();
+  });
+});
 
 describe('createAssetLink', () => {
   let envMock: Environment;
@@ -11,9 +117,12 @@ describe('createAssetLink', () => {
     envMock = await getContentfulEnvironmentMock();
   });
 
-  it('calls getEntries with the given contentModel', async () => {
-    await createAssetLink(envMock, asset);
+  it('returns asset link payload properly', async () => {
+    jest.spyOn(envMock, 'getAsset').mockResolvedValueOnce(contenfulAsset);
 
-    expect(envMock.getEntries).toHaveBeenCalledWith({ content_type: 'news' });
+    const assetLinkPayload = await createAssetLink(envMock, [squidexAsset]);
+    expect(assetLinkPayload).toEqual({
+      sys: { id: 'asset-id', linkType: 'Asset', type: 'Link' },
+    });
   });
 });

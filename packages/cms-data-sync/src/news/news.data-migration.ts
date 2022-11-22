@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-/* eslint-disable no-param-reassign */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 

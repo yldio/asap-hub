@@ -1,6 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable no-param-reassign */
-
 import { Document } from '@contentful/rich-text-types';
 import { parseHtml } from 'contentful-html-rich-text-converter';
 
@@ -38,10 +35,6 @@ export const convertHtmlToContentfulFormat = (html: string) => {
   // can just remove them here
   const htmlWithoutDivTag = html.replace(/<[\\/]{0,1}(div)[^><]*>/g, '');
 
-  try {
-    const parsedHtml = parseHtml(htmlWithoutDivTag) as Document;
-    return clearParsedHtmlOutput(parsedHtml);
-  } catch (err) {
-    throw err;
-  }
+  const parsedHtml = parseHtml(htmlWithoutDivTag) as Document;
+  return clearParsedHtmlOutput(parsedHtml);
 };

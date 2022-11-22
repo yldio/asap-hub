@@ -8,7 +8,7 @@ describe('Status', () => {
     },
   );
 
-  it('should not recognize incorrect role', () => {
+  it('should not recognize incorrect status', () => {
     expect(isEventStatus('not-a-status')).toEqual(false);
   });
 });

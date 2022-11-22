@@ -354,3 +354,9 @@ export const getSquidexUserGraphqlResponse = (
   findUsersContent,
 });
 export const restUserMock = patchResponse;
+
+export const userPatchRequest: gp2.UserPatchRequest = {
+  onboarded: true,
+  country: 'United Kingdom',
+  city: 'Manchester',
+};

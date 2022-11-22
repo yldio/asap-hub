@@ -93,6 +93,10 @@ export type UserCreateDataObject = Omit<
 >;
 
 export type UserUpdateDataObject = Partial<UserCreateDataObject>;
+export type UserPatchRequest = Omit<
+  UserUpdateDataObject,
+  'avatarUrl' | 'connections' | 'email' | 'role'
+>;
 
 export type ListUserDataObject = ListResponse<UserDataObject>;
 

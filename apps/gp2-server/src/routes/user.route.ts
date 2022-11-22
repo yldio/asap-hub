@@ -1,4 +1,5 @@
-import { UserResponse } from '@asap-hub/model';
+import { gp2 as gp2Model } from '@asap-hub/model';
+import { gp2 as gp2Validation } from '@asap-hub/validation';
 import {
   validateFetchUsersOptions,
   validateUserInviteParameters,
@@ -6,14 +7,16 @@ import {
 import Boom, { isBoom } from '@hapi/boom';
 import { Response, Router } from 'express';
 import { UserController } from '../controllers/user.controller';
-import { validateUserParameters } from '../validation/user.validation';
+import {
+  validateUserParameters,
+  validateUserPatchRequest,
+} from '../validation/user.validation';
 
+const { isUserOnboardable } = gp2Validation;
 export const userPublicRouteFactory = (
   userController: UserController,
-): Router => {
-  const userPublicRoutes = Router();
-
-  userPublicRoutes.get<{ code: string }>(
+): Router =>
+  Router().get<{ code: string }>(
     '/users/invites/:code',
     async (req, res: Response<UserPublicResponse>) => {
       const { code } = validateUserInviteParameters(req.params);
@@ -35,34 +38,62 @@ export const userPublicRouteFactory = (
     },
   );
 
-  return userPublicRoutes;
-};
+export const userRouteFactory = (userController: UserController): Router =>
+  Router()
+    .get('/users', async (req, res) => {
+      const options = validateFetchUsersOptions(req.query);
+      const userFetchOptions = {
+        ...options,
+        filter: options.filter,
+      };
 
-export const userRouteFactory = (userController: UserController): Router => {
-  const userRoutes = Router();
+      const users = await userController.fetch(userFetchOptions);
 
-  userRoutes.get('/users', async (req, res) => {
-    const options = validateFetchUsersOptions(req.query);
-    const userFetchOptions = {
-      ...options,
-      filter: options.filter,
-    };
+      res.json(users);
+    })
+    .get<{ userId: string }>('/users/:userId', async (req, res) => {
+      const { userId } = validateUserParameters(req.params);
 
-    const users = await userController.fetch(userFetchOptions);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const loggedInUserId = req.loggedInUser!.id;
+      const user = await userController.fetchById(userId, loggedInUserId);
 
-    res.json(users);
-  });
+      res.json(user);
+    })
+    .patch('/users/:userId', async (req, res) => {
+      const { userId } = validateUserParameters(req.params);
 
-  userRoutes.get<{ userId: string }>('/users/:userId', async (req, res) => {
-    const { userId } = validateUserParameters(req.params);
+      const payload = validateUserPatchRequest(req.body);
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const loggedInUserId = req.loggedInUser!.id;
-    const user = await userController.fetchById(userId, loggedInUserId);
+      // user is trying to update someone else
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      if (req.loggedInUser!.id !== userId) {
+        throw Boom.forbidden();
+      }
 
-    res.json(user);
-  });
+      const { onboarded, ...userProfileUpdate } = payload;
 
-  return userRoutes;
-};
-type UserPublicResponse = Pick<UserResponse, 'id' | 'displayName'>;
+      const result = await userController.update(
+        userId,
+        userProfileUpdate,
+        userId,
+      );
+
+      if (onboarded === true) {
+        if (!isUserOnboardable(result).isOnboardable) {
+          throw Boom.badData('User profile is not complete');
+        }
+
+        await userController.update(userId, { onboarded }, userId);
+
+        res.json({
+          ...result,
+          onboarded,
+        });
+
+        return;
+      }
+
+      res.json(result);
+    });
+type UserPublicResponse = Pick<gp2Model.UserResponse, 'id' | 'displayName'>;

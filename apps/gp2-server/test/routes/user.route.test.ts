@@ -1,9 +1,14 @@
 import { FetchOptions, gp2 } from '@asap-hub/model';
+import { userDegrees, userRegions } from '@asap-hub/model/src/gp2';
 import { AuthHandler } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
-import { fetchExpectation, getUserResponse } from '../fixtures/user.fixtures';
+import {
+  fetchExpectation,
+  getUserResponse,
+  userPatchRequest,
+} from '../fixtures/user.fixtures';
 import { loggerMock } from '../mocks/logger.mock';
 import { userControllerMock } from '../mocks/user-controller.mock';
 
@@ -170,6 +175,270 @@ describe('/users/ route', () => {
       await supertest(app).get(`/users/invites/${code}`);
 
       expect(userControllerMock.fetchByCode).toBeCalledWith(code);
+    });
+  });
+  describe('PATCH /users/{user_id}', () => {
+    test('Should return the results correctly', async () => {
+      userControllerMock.update.mockResolvedValueOnce(getUserResponse());
+
+      const { app, loggedInUserId } = getApp();
+      const response = await supertest(app)
+        .patch(`/users/${loggedInUserId}`)
+        .send({ firstName: 'Peter' });
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(getUserResponse());
+    });
+
+    test('Should return 500 when it fails to update the user', async () => {
+      userControllerMock.update.mockRejectedValueOnce(
+        Boom.badImplementation('squidex', {
+          data: 'Squidex Error Message',
+        }),
+      );
+
+      const { app, loggedInUserId } = getApp();
+      const response = await supertest(app)
+        .patch(`/users/${loggedInUserId}`)
+        .send({ firstName: 'Peter' });
+
+      expect(response.status).toBe(500);
+    });
+
+    test('Returns 403 when user is changing other user', async () => {
+      const { app } = getApp();
+      const response = await supertest(app)
+        .patch('/users/not-me')
+        .send({ firstName: 'Peter' });
+      expect(response.status).toBe(403);
+    });
+
+    test('Should return 404 when user doesnt exist', async () => {
+      userControllerMock.update.mockRejectedValueOnce(Boom.notFound());
+
+      const { app, loggedInUserId } = getApp();
+      const response = await supertest(app)
+        .patch(`/users/${loggedInUserId}`)
+        .send({ firstName: 'Peter' });
+      expect(response.status).toBe(404);
+    });
+
+    test('Should call the controller method with the correct parameters and remove ignored nulls and undefined parameters', async () => {
+      userControllerMock.update.mockResolvedValueOnce(getUserResponse());
+
+      const requestParams = {
+        ...userPatchRequest,
+        firstName: undefined, // should be ignored
+        lastName: null, // should be ignored
+      };
+      const { app, loggedInUserId } = getApp();
+      await supertest(app)
+        .patch(`/users/${loggedInUserId}`)
+        .send(requestParams);
+      const { onboarded, ...remainingParams } = userPatchRequest;
+
+      expect(userControllerMock.update).toBeCalledWith(
+        loggedInUserId,
+        remainingParams,
+        loggedInUserId,
+      );
+      expect(userControllerMock.update).toBeCalledWith(
+        loggedInUserId,
+        {
+          onboarded,
+        },
+        loggedInUserId,
+      );
+    });
+
+    describe('Parameter validation', () => {
+      test('Should return a validation error when the arguments are not valid', async () => {
+        const { app, loggedInUserId } = getApp();
+        const response = await supertest(app)
+          .patch(`/users/${loggedInUserId}`)
+          .send({ firstName: 666 });
+
+        expect(response.status).toBe(400);
+      });
+      describe.each`
+        description        | input
+        ${'empty string'}  | ${''}
+        ${'null'}          | ${null}
+        ${'random string'} | ${'random string'}
+      `('accepts $description as an input', ({ input }) => {
+        test.each([
+          'secondaryEmail',
+          'firstName',
+          'lastName',
+          'country',
+          'city',
+        ])(
+          'Should be able to provide for the %s parameter ',
+          async (parameter) => {
+            const { app, loggedInUserId } = getApp();
+            const response = await supertest(app)
+              .patch(`/users/${loggedInUserId}`)
+              .send({ [parameter]: input });
+
+            expect(response.status).toBe(200);
+          },
+        );
+      });
+
+      describe('telephone', () => {
+        test('allow valid inputs', async () => {
+          const { app, loggedInUserId } = getApp();
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({
+              telephone: {
+                countryCode: '+1',
+                number: '212-970-4133',
+              },
+            });
+          expect(response.status).toBe(200);
+        });
+        test('allows only country code', async () => {
+          const { app, loggedInUserId } = getApp();
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({
+              telephone: {
+                countryCode: '+1',
+              },
+            });
+          expect(response.status).toBe(200);
+        });
+        test('allows only number', async () => {
+          const { app, loggedInUserId } = getApp();
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({
+              telephone: {
+                number: '212-970-4133',
+              },
+            });
+          expect(response.status).toBe(200);
+        });
+        test('allows undefined telephone', async () => {
+          const { app, loggedInUserId } = getApp();
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({
+              telephone: undefined,
+            });
+          expect(response.status).toBe(200);
+        });
+      });
+      describe('positions', () => {
+        test('allows valid positions', async () => {
+          const { app, loggedInUserId } = getApp();
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({
+              positions: [
+                {
+                  role: 'CEO',
+                  department: 'Research',
+                  institution: 'Stark Enterprises',
+                },
+              ],
+            });
+          expect(response.status).toBe(200);
+        });
+        test('does not allows invalid positions', async () => {
+          const { app, loggedInUserId } = getApp();
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({
+              positions: [
+                {
+                  role: 'CEO',
+                  department: 'Research',
+                  institution: 'Stark Enterprises',
+                  invalidField: 'An invalid field',
+                },
+              ],
+            });
+          expect(response.status).toBe(400);
+        });
+        test.each(['role', 'department', 'institution'])(
+          'does not allows invalid %s',
+          async (invalidProperty) => {
+            const { app, loggedInUserId } = getApp();
+            const response = await supertest(app)
+              .patch(`/users/${loggedInUserId}`)
+              .send({
+                positions: [
+                  {
+                    role: 'CEO',
+                    department: 'Research',
+                    institution: 'Stark Enterprises',
+                    [invalidProperty]: undefined,
+                  },
+                ],
+              });
+            expect(response.status).toBe(400);
+          },
+        );
+      });
+      describe('degrees', () => {
+        test.each(userDegrees)('allows valid degrees', async (degree) => {
+          const { app, loggedInUserId } = getApp();
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({ degrees: [degree] });
+          expect(response.status).toBe(200);
+        });
+        test('does not allow invalid degrees', async () => {
+          const { app, loggedInUserId } = getApp();
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({ degrees: ['invalid degree'] });
+          expect(response.status).toBe(400);
+        });
+      });
+      describe('regions', () => {
+        test.each(userRegions)('allows valid regions', async (region) => {
+          const { app, loggedInUserId } = getApp();
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({ region });
+          expect(response.status).toBe(200);
+        });
+        test('does not allow invalid regions', async () => {
+          const { app, loggedInUserId } = getApp();
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({ region: 'invalid region' });
+          expect(response.status).toBe(400);
+        });
+      });
+    });
+
+    describe('Profile completeness validation', () => {
+      test('Should update and onboard the user', async () => {
+        const nonOnboardedUserResponse: gp2.UserResponse = {
+          ...getUserResponse(),
+          onboarded: false,
+        };
+        userControllerMock.update.mockResolvedValueOnce(
+          nonOnboardedUserResponse,
+        );
+
+        const onboardedUserResponse: gp2.UserResponse = {
+          ...getUserResponse(),
+          onboarded: true,
+        };
+        userControllerMock.update.mockResolvedValueOnce(onboardedUserResponse);
+
+        const { app, loggedInUserId } = getApp();
+        const response = await supertest(app)
+          .patch(`/users/${loggedInUserId}`)
+          .send({ onboarded: true, firstName: 'Peter' });
+
+        expect(response.body).toEqual(onboardedUserResponse);
+      });
     });
   });
   const getApp = () => {

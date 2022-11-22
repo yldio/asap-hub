@@ -82,28 +82,21 @@ export const userRouteFactory = (userController: UserController): Router =>
 
         const { onboarded, ...userProfileUpdate } = payload;
 
-        const result = await userController.update(
+        const updatedUser = await userController.update(
           userId,
           userProfileUpdate,
           userId,
         );
 
-        if (onboarded) {
-          if (!isUserOnboardable(result).isOnboardable) {
+        const saveOnboarded = (): Promise<gp2Model.UserResponse> => {
+          if (!isUserOnboardable(updatedUser).isOnboardable) {
             throw Boom.badData('User profile is not complete');
           }
 
-          await userController.update(userId, { onboarded }, userId);
+          return userController.update(userId, { onboarded: true }, userId);
+        };
+        const userResponse = onboarded ? await saveOnboarded() : updatedUser;
 
-          res.json({
-            ...result,
-            onboarded,
-          });
-
-          return;
-        }
-
-        res.json(result);
+        res.json(userResponse);
       },
     );
-type UserPublicResponse = Pick<gp2Model.UserResponse, 'id' | 'displayName'>;

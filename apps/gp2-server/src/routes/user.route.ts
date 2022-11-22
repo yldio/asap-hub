@@ -16,9 +16,9 @@ const { isUserOnboardable } = gp2Validation;
 export const userPublicRouteFactory = (
   userController: UserController,
 ): Router =>
-  Router().get<{ code: string }>(
+  Router().get<{ code: string }, UserPublicResponse>(
     '/users/invites/:code',
-    async (req, res: Response<UserPublicResponse>) => {
+    async (req, res) => {
       const { code } = validateUserInviteParameters(req.params);
 
       try {
@@ -40,60 +40,70 @@ export const userPublicRouteFactory = (
 
 export const userRouteFactory = (userController: UserController): Router =>
   Router()
-    .get('/users', async (req, res) => {
-      const options = validateFetchUsersOptions(req.query);
-      const userFetchOptions = {
-        ...options,
-        filter: options.filter,
-      };
+    .get<gp2Model.FetchUsersOptions, gp2Model.ListUserResponse>(
+      '/users',
+      async (req, res) => {
+        const options = validateFetchUsersOptions(req.query);
+        const userFetchOptions = {
+          ...options,
+          filter: options.filter,
+        };
 
-      const users = await userController.fetch(userFetchOptions);
+        const users = await userController.fetch(userFetchOptions);
 
-      res.json(users);
-    })
-    .get<{ userId: string }>('/users/:userId', async (req, res) => {
-      const { userId } = validateUserParameters(req.params);
+        res.json(users);
+      },
+    )
+    .get<{ userId: string }, gp2Model.UserResponse>(
+      '/users/:userId',
+      async (req, res) => {
+        const { userId } = validateUserParameters(req.params);
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const loggedInUserId = req.loggedInUser!.id;
-      const user = await userController.fetchById(userId, loggedInUserId);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const loggedInUserId = req.loggedInUser!.id;
+        const user = await userController.fetchById(userId, loggedInUserId);
 
-      res.json(user);
-    })
-    .patch('/users/:userId', async (req, res) => {
-      const { userId } = validateUserParameters(req.params);
+        res.json(user);
+      },
+    )
+    .patch<gp2Model.UserPatchRequest, gp2Model.UserResponse>(
+      '/users/:userId',
+      async (req, res) => {
+        const { params, body, loggedInUser } = req;
+        const { userId } = validateUserParameters(params);
 
-      const payload = validateUserPatchRequest(req.body);
+        const payload = validateUserPatchRequest(body);
 
-      // user is trying to update someone else
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      if (req.loggedInUser!.id !== userId) {
-        throw Boom.forbidden();
-      }
-
-      const { onboarded, ...userProfileUpdate } = payload;
-
-      const result = await userController.update(
-        userId,
-        userProfileUpdate,
-        userId,
-      );
-
-      if (onboarded === true) {
-        if (!isUserOnboardable(result).isOnboardable) {
-          throw Boom.badData('User profile is not complete');
+        // user is trying to update someone else
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        if (loggedInUser!.id !== userId) {
+          throw Boom.forbidden();
         }
 
-        await userController.update(userId, { onboarded }, userId);
+        const { onboarded, ...userProfileUpdate } = payload;
 
-        res.json({
-          ...result,
-          onboarded,
-        });
+        const result = await userController.update(
+          userId,
+          userProfileUpdate,
+          userId,
+        );
 
-        return;
-      }
+        if (onboarded) {
+          if (!isUserOnboardable(result).isOnboardable) {
+            throw Boom.badData('User profile is not complete');
+          }
 
-      res.json(result);
-    });
+          await userController.update(userId, { onboarded }, userId);
+
+          res.json({
+            ...result,
+            onboarded,
+          });
+
+          return;
+        }
+
+        res.json(result);
+      },
+    );
 type UserPublicResponse = Pick<gp2Model.UserResponse, 'id' | 'displayName'>;

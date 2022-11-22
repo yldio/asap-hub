@@ -383,7 +383,7 @@ describe('/users/ route', () => {
         );
       });
       describe('degrees', () => {
-        test.each(userDegrees)('allows valid degrees', async (degree) => {
+        test.each(userDegrees)('allows valid degree: %s', async (degree) => {
           const { app, loggedInUserId } = getApp();
           const response = await supertest(app)
             .patch(`/users/${loggedInUserId}`)
@@ -399,7 +399,7 @@ describe('/users/ route', () => {
         });
       });
       describe('regions', () => {
-        test.each(userRegions)('allows valid regions', async (region) => {
+        test.each(userRegions)('allows valid region: %s', async (region) => {
           const { app, loggedInUserId } = getApp();
           const response = await supertest(app)
             .patch(`/users/${loggedInUserId}`)
@@ -417,6 +417,40 @@ describe('/users/ route', () => {
     });
 
     describe('Profile completeness validation', () => {
+      test('Should return an error when attempting to onboard the user with incomplete profile (missing questions)', async () => {
+        const incompleteUserResponse: gp2.UserResponse = {
+          ...getUserResponse(),
+          positions: [],
+        };
+        userControllerMock.update.mockResolvedValueOnce(incompleteUserResponse);
+
+        const { app, loggedInUserId } = getApp();
+        const response = await supertest(app)
+          .patch(`/users/${loggedInUserId}`)
+          .send({ onboarded: true });
+
+        expect(response.status).toBe(422);
+        expect(response.body).toMatchObject({
+          message: 'User profile is not complete',
+        });
+      });
+
+      test('Should not return an error when updating a user with incomplete profile while sending onboarded flag set to false', async () => {
+        const incompleteUserResponse: gp2.UserResponse = {
+          ...getUserResponse(),
+          onboarded: false,
+          positions: [],
+        };
+        userControllerMock.update.mockResolvedValueOnce(incompleteUserResponse);
+
+        const { app, loggedInUserId } = getApp();
+        const response = await supertest(app)
+          .patch(`/users/${loggedInUserId}`)
+          .send({ onboarded: false });
+
+        expect(response.status).toBe(200);
+        expect(response.body).toEqual(incompleteUserResponse);
+      });
       test('Should update and onboard the user', async () => {
         const nonOnboardedUserResponse: gp2.UserResponse = {
           ...getUserResponse(),

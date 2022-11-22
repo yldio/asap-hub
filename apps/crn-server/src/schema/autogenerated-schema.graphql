@@ -2748,6 +2748,7 @@ type EventsDataDto {
   meetingMaterialsPermanentlyUnavailable: EventsDataMeetingMaterialsPermanentlyUnavailableDto
   notes: EventsDataNotesDto
   notesPermanentlyUnavailable: EventsDataNotesPermanentlyUnavailableDto
+  notesUpdatedAt: EventsDataNotesUpdatedAtDto
   presentation: EventsDataPresentationDto
   presentationPermanentlyUnavailable: EventsDataPresentationPermanentlyUnavailableDto
   presentationUpdatedAt: EventsDataPresentationUpdatedAtDto
@@ -2840,6 +2841,7 @@ input EventsDataInputDto {
   meetingMaterialsPermanentlyUnavailable: EventsDataMeetingMaterialsPermanentlyUnavailableInputDto
   notes: EventsDataNotesInputDto
   notesPermanentlyUnavailable: EventsDataNotesPermanentlyUnavailableInputDto
+  notesUpdatedAt: EventsDataNotesUpdatedAtInputDto
   presentation: EventsDataPresentationInputDto
   presentationPermanentlyUnavailable: EventsDataPresentationPermanentlyUnavailableInputDto
   presentationUpdatedAt: EventsDataPresentationUpdatedAtInputDto
@@ -2923,6 +2925,16 @@ type EventsDataNotesPermanentlyUnavailableDto {
 input EventsDataNotesPermanentlyUnavailableInputDto {
   """This box is automatically ticked if no output is added after 14 days from the event's end date."""
   iv: Boolean
+}
+
+"""The structure of the Notes Updated At field of the Events content type."""
+type EventsDataNotesUpdatedAtDto {
+  iv: Instant
+}
+
+"""The structure of the Notes Updated At field of the Events content input type."""
+input EventsDataNotesUpdatedAtInputDto {
+  iv: Instant
 }
 
 """The structure of the Presentation field of the Events content type."""
@@ -3097,6 +3109,7 @@ type EventsFlatDataDto {
   notes: String
   """This box is automatically ticked if no output is added after 14 days from the event's end date."""
   notesPermanentlyUnavailable: Boolean
+  notesUpdatedAt: Instant
   """If permanently unavailable box is ticked, any content you put here will be ignored."""
   presentation: String
   """This box is automatically ticked if no output is added after 14 days from the event's end date."""

@@ -19,6 +19,7 @@ export interface Event<TCalendar = string, TThumbnail = string> {
   // Past event details
   notesPermanentlyUnavailable?: boolean;
   notes?: string;
+  notesUpdatedAt?: string;
   videoRecordingPermanentlyUnavailable?: boolean;
   videoRecording?: string;
   videoRecordingUpdatedAt?: string;

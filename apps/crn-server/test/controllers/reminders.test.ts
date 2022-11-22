@@ -4,7 +4,9 @@ import {
   FetchRemindersOptions,
   ResearchOutputPublishedReminder,
 } from '@asap-hub/model';
-import Reminders from '../../src/controllers/reminders';
+import Reminders, {
+  formattedMaterialByEventType,
+} from '../../src/controllers/reminders';
 import {
   getResearchOutputPublishedReminder,
   getReminderResponse,
@@ -12,6 +14,7 @@ import {
   getEventHappeningNowReminder,
   getVideoEventUpdatedReminder,
   getPresentationUpdatedReminder,
+  getNotesUpdatedReminder,
 } from '../fixtures/reminders.fixtures';
 import { reminderDataProviderMock } from '../mocks/reminder-data-provider.mock';
 
@@ -159,6 +162,7 @@ describe('Reminder Controller', () => {
         reminderType      | reminderDataObject                  | expectedDescription
         ${'Video'}        | ${getVideoEventUpdatedReminder()}   | ${'Video(s) for Some Test Event Title event has been shared.'}
         ${'Presentation'} | ${getPresentationUpdatedReminder()} | ${'Presentation(s) for Some Test Event Title event has been shared.'}
+        ${'Notes'}        | ${getNotesUpdatedReminder()}        | ${'Notes for Some Test Event Title event has been shared.'}
       `(
         'Should return the correct description and href for the $reminderType reminder',
         async ({ reminderDataObject, expectedDescription }) => {
@@ -178,6 +182,23 @@ describe('Reminder Controller', () => {
           });
         },
       );
+    });
+  });
+
+  describe('formattedMaterialByEventType', () => {
+    test('Should return formatted Material by reminder event type', () => {
+      let material = formattedMaterialByEventType('Notes Updated');
+      expect(material).toBe('Notes');
+
+      material = formattedMaterialByEventType('Video Updated');
+      expect(material).toBe('Video(s)');
+
+      material = formattedMaterialByEventType('Presentation Updated');
+      expect(material).toBe('Presentation(s)');
+
+      expect(() =>
+        formattedMaterialByEventType('Happening Today'),
+      ).toThrowError(`Unknown Material Event`);
     });
   });
 });

@@ -434,7 +434,10 @@ describe('Reminders', () => {
 
   interface TestProps {
     material: 'Video' | 'Presentation';
-    materialUpdatedAtName: 'videoRecordingUpdatedAt' | 'presentationUpdatedAt';
+    materialUpdatedAtName:
+      | 'videoRecordingUpdatedAt'
+      | 'presentationUpdatedAt'
+      | 'notesUpdatedAt';
     materialContentName: 'videoRecording' | 'presentation';
   }
 
@@ -442,6 +445,7 @@ describe('Reminders', () => {
     material          | materialUpdatedAtName        | materialContentName
     ${'Video'}        | ${'videoRecordingUpdatedAt'} | ${'videoRecording'}
     ${'Presentation'} | ${'presentationUpdatedAt'}   | ${'presentation'}
+    ${'Notes'}        | ${'notesUpdatedAt'}          | ${'notes'}
   `(
     'Event - $material Updated Reminder',
     ({ material, materialUpdatedAtName, materialContentName }: TestProps) => {

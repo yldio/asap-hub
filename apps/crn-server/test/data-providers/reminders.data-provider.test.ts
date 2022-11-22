@@ -2,6 +2,7 @@ import {
   FetchRemindersOptions,
   PresentationUpdatedReminder,
   VideoEventReminder,
+  EventNotesReminder,
 } from '@asap-hub/model';
 import { DateTime } from 'luxon';
 import {
@@ -17,6 +18,7 @@ import {
   getEventHappeningNowReminder,
   getVideoEventUpdatedReminder,
   getPresentationUpdatedReminder,
+  getNotesUpdatedReminder,
 } from '../fixtures/reminders.fixtures';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
@@ -487,7 +489,7 @@ describe('Reminder Data Provider', () => {
           jest.setSystemTime(new Date('2022-08-10T12:00:00.0Z'));
 
           expect(getEventFilter('Europe/London')).toEqual(
-            `data/videoRecordingUpdatedAt/iv ge 2022-08-09T12:00:00.000Z or data/presentationUpdatedAt/iv ge 2022-08-09T12:00:00.000Z or (data/startDate/iv ge 2022-08-09T23:00:00.000Z and data/startDate/iv le 2022-08-10T23:00:00.000Z)`,
+            `data/videoRecordingUpdatedAt/iv ge 2022-08-09T12:00:00.000Z or data/presentationUpdatedAt/iv ge 2022-08-09T12:00:00.000Z or data/notesUpdatedAt/iv ge 2022-08-09T12:00:00.000Z or (data/startDate/iv ge 2022-08-09T23:00:00.000Z and data/startDate/iv le 2022-08-10T23:00:00.000Z)`,
           );
         });
 
@@ -496,7 +498,7 @@ describe('Reminder Data Provider', () => {
           jest.setSystemTime(new Date('2022-08-10T12:00:00.0Z'));
 
           expect(getEventFilter('America/Los_Angeles')).toEqual(
-            `data/videoRecordingUpdatedAt/iv ge 2022-08-09T12:00:00.000Z or data/presentationUpdatedAt/iv ge 2022-08-09T12:00:00.000Z or (data/startDate/iv ge 2022-08-10T07:00:00.000Z and data/startDate/iv le 2022-08-11T07:00:00.000Z)`,
+            `data/videoRecordingUpdatedAt/iv ge 2022-08-09T12:00:00.000Z or data/presentationUpdatedAt/iv ge 2022-08-09T12:00:00.000Z or data/notesUpdatedAt/iv ge 2022-08-09T12:00:00.000Z or (data/startDate/iv ge 2022-08-10T07:00:00.000Z and data/startDate/iv le 2022-08-11T07:00:00.000Z)`,
           );
         });
 
@@ -505,7 +507,7 @@ describe('Reminder Data Provider', () => {
           jest.setSystemTime(new Date('2022-08-10T02:00:00.0Z'));
 
           expect(getEventFilter('America/Los_Angeles')).toEqual(
-            `data/videoRecordingUpdatedAt/iv ge 2022-08-09T02:00:00.000Z or data/presentationUpdatedAt/iv ge 2022-08-09T02:00:00.000Z or (data/startDate/iv ge 2022-08-09T07:00:00.000Z and data/startDate/iv le 2022-08-10T07:00:00.000Z)`,
+            `data/videoRecordingUpdatedAt/iv ge 2022-08-09T02:00:00.000Z or data/presentationUpdatedAt/iv ge 2022-08-09T02:00:00.000Z or data/notesUpdatedAt/iv ge 2022-08-09T02:00:00.000Z or (data/startDate/iv ge 2022-08-09T07:00:00.000Z and data/startDate/iv le 2022-08-10T07:00:00.000Z)`,
           );
         });
       });
@@ -571,19 +573,22 @@ describe('Reminder Data Provider', () => {
     });
 
     interface TestProps {
-      material: 'Video' | 'Presentation';
+      material: 'Video' | 'Presentation' | 'Notes';
       materialUpdatedAtName:
         | 'videoRecordingUpdatedAt'
-        | 'presentationUpdatedAt';
+        | 'presentationUpdatedAt'
+        | 'notesUpdatedAt';
       expectedMaterialReminder:
         | PresentationUpdatedReminder
-        | VideoEventReminder;
+        | VideoEventReminder
+        | EventNotesReminder;
     }
 
     describe.each`
       material          | materialUpdatedAtName        | expectedMaterialReminder
       ${'Video'}        | ${'videoRecordingUpdatedAt'} | ${getVideoEventUpdatedReminder()}
       ${'Presentation'} | ${'presentationUpdatedAt'}   | ${getPresentationUpdatedReminder()}
+      ${'Notes'}        | ${'notesUpdatedAt'}          | ${getNotesUpdatedReminder()}
     `(
       '$material Updated Reminder',
       ({
@@ -712,6 +717,8 @@ describe('Reminder Data Provider', () => {
           materialsUpdatedAt;
         squidexGraphqlResponse.queryEventsContents![0]!.flatData.videoRecordingUpdatedAt =
           materialsUpdatedAt;
+        squidexGraphqlResponse.queryEventsContents![0]!.flatData.notesUpdatedAt =
+          materialsUpdatedAt;
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
         );
@@ -726,9 +733,16 @@ describe('Reminder Data Provider', () => {
         videoEventUpdatedReminder.data.videoRecordingUpdatedAt =
           materialsUpdatedAt;
 
+        const notesEventUpdatedReminder = getNotesUpdatedReminder();
+        notesEventUpdatedReminder.data.notesUpdatedAt = materialsUpdatedAt;
+
         expect(result).toEqual({
-          total: 2,
-          items: [videoEventUpdatedReminder, presentationUpdatedReminder],
+          total: 3,
+          items: [
+            videoEventUpdatedReminder,
+            presentationUpdatedReminder,
+            notesEventUpdatedReminder,
+          ],
         });
       });
     });

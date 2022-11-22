@@ -16,7 +16,7 @@ describe('checkIfAssetAlreadyExistsInContentful', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
 
-    envMock = await getContentfulEnvironmentMock();
+    envMock = getContentfulEnvironmentMock();
   });
 
   it('returns true if contentful getAsset returns an asset', async () => {
@@ -71,7 +71,7 @@ describe('migrateAsset', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
 
-    envMock = await getContentfulEnvironmentMock();
+    envMock = getContentfulEnvironmentMock();
   });
 
   it('calls createAssetWithId with correct payload', async () => {
@@ -114,7 +114,7 @@ describe('createAssetLink', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
 
-    envMock = await getContentfulEnvironmentMock();
+    envMock = getContentfulEnvironmentMock();
   });
 
   it('returns asset link payload properly', async () => {

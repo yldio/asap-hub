@@ -11,7 +11,7 @@ describe('clearContentfulEntries', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
 
-    envMock = await getContentfulEnvironmentMock();
+    envMock = getContentfulEnvironmentMock();
     jest.spyOn(envMock, 'getEntries').mockResolvedValueOnce({
       total: 1,
       items: [entry],

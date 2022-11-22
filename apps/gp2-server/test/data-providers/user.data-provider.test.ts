@@ -473,6 +473,38 @@ describe('User data provider', () => {
         expect(result?.workingGroups[0]?.members).toHaveLength(0);
       });
     });
+    describe('telephone', () => {
+      test('Should return undefined telephone if both the number and country code have not been defined', async () => {
+        const invalidUser = getGraphQLUser();
+        invalidUser.flatData.telephoneNumber = null;
+        invalidUser.flatData.telephoneCountryCode = null;
+        const mockResponse = getSquidexUserGraphqlResponse(invalidUser);
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.telephone).toBeUndefined();
+      });
+      test('Should return undefined telephone number if the number has not been defined', async () => {
+        const invalidUser = getGraphQLUser();
+        invalidUser.flatData.telephoneNumber = null;
+        const mockResponse = getSquidexUserGraphqlResponse(invalidUser);
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.telephone?.number).toBeUndefined();
+        expect(result?.telephone?.countryCode).toEqual('+1');
+      });
+      test('Should return undefined telephone country code if the country code has not been defined', async () => {
+        const invalidUser = getGraphQLUser();
+        invalidUser.flatData.telephoneCountryCode = null;
+        const mockResponse = getSquidexUserGraphqlResponse(invalidUser);
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.telephone?.countryCode).toBeUndefined();
+        expect(result?.telephone?.number).toEqual('212-970-4133');
+      });
+    });
   });
 
   describe('Update', () => {

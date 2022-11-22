@@ -1862,6 +1862,9 @@ type UsersDataDto {
   positions: UsersDataPositionsDto
   region: UsersDataRegionDto
   role: UsersDataRoleDto
+  secondaryEmail: UsersDataSecondaryEmailDto
+  telephoneCountryCode: UsersDataTelephoneCountryCodeDto
+  telephoneNumber: UsersDataTelephoneNumberDto
 }
 
 """The structure of the Email field of the Users content type."""
@@ -1898,6 +1901,9 @@ input UsersDataInputDto {
   positions: UsersDataPositionsInputDto
   region: UsersDataRegionInputDto
   role: UsersDataRoleInputDto
+  secondaryEmail: UsersDataSecondaryEmailInputDto
+  telephoneCountryCode: UsersDataTelephoneCountryCodeInputDto
+  telephoneNumber: UsersDataTelephoneNumberInputDto
 }
 
 """The structure of the Last Name field of the Users content type."""
@@ -1998,6 +2004,36 @@ input UsersDataRoleInputDto {
   iv: UsersDataRoleEnum
 }
 
+"""The structure of the Alternative Email field of the Users content type."""
+type UsersDataSecondaryEmailDto {
+  iv: String
+}
+
+"""The structure of the Alternative Email field of the Users content input type."""
+input UsersDataSecondaryEmailInputDto {
+  iv: String
+}
+
+"""The structure of the Country code field of the Users content type."""
+type UsersDataTelephoneCountryCodeDto {
+  iv: String
+}
+
+"""The structure of the Country code field of the Users content input type."""
+input UsersDataTelephoneCountryCodeInputDto {
+  iv: String
+}
+
+"""The structure of the Telephone number field of the Users content type."""
+type UsersDataTelephoneNumberDto {
+  iv: String
+}
+
+"""The structure of the Telephone number field of the Users content input type."""
+input UsersDataTelephoneNumberInputDto {
+  iv: String
+}
+
 """The structure of the flat Users data type."""
 type UsersFlatDataDto {
   avatar: [Asset!]
@@ -2014,6 +2050,9 @@ type UsersFlatDataDto {
   region: UsersDataRegionEnum
   """Role on the GP2 Hub"""
   role: UsersDataRoleEnum
+  secondaryEmail: String
+  telephoneCountryCode: String
+  telephoneNumber: String
 }
 
 """List of Users items and total count."""

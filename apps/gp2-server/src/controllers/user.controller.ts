@@ -5,9 +5,16 @@ import { UserDataProvider } from '../data-providers/user.data-provider';
 export interface UserController {
   fetch(options: gp2.FetchUsersOptions): Promise<gp2.ListUserResponse>;
   fetchByCode(code: string): Promise<gp2.UserResponse>;
-  fetchById(id: string): Promise<gp2.UserResponse>;
-  update(id: string, update: gp2.UserUpdateRequest): Promise<gp2.UserResponse>;
-  connectByCode(welcomeCode: string, userId: string): Promise<gp2.UserResponse>;
+  fetchById(id: string, loggedInUserId: string): Promise<gp2.UserResponse>;
+  update(
+    id: string,
+    update: gp2.UserUpdateRequest,
+    loggedInUserId: string,
+  ): Promise<gp2.UserResponse>;
+  connectByCode(
+    welcomeCode: string,
+    authUserId: string,
+  ): Promise<gp2.UserResponse>;
 }
 
 export default class Users implements UserController {
@@ -20,26 +27,31 @@ export default class Users implements UserController {
   async update(
     id: string,
     update: gp2.UserUpdateRequest,
+    loggedInUserId: string,
   ): Promise<gp2.UserResponse> {
     await this.userDataProvider.update(id, update);
-    return this.fetchById(id);
+    return this.fetchById(id, loggedInUserId);
   }
 
   async fetch(options: gp2.FetchUsersOptions): Promise<gp2.ListUserResponse> {
     const { total, items: users } = await this.userDataProvider.fetch(options);
 
-    const items = total > 0 ? users.map(parseUserToResponse) : [];
+    const items =
+      total > 0 ? users.map((user) => parseUserToResponse(user)) : [];
 
     return { total, items };
   }
 
-  async fetchById(id: string): Promise<gp2.UserResponse> {
+  async fetchById(
+    id: string,
+    loggedInUserId: string,
+  ): Promise<gp2.UserResponse> {
     const user = await this.userDataProvider.fetchById(id);
     if (!user) {
       throw new NotFoundError(undefined, `user with id ${id} not found`);
     }
 
-    return parseUserToResponse(user);
+    return parseUserToResponse(user, loggedInUserId);
   }
 
   async fetchByCode(code: string): Promise<gp2.UserResponse> {
@@ -52,12 +64,13 @@ export default class Users implements UserController {
       throw new GenericError(undefined, 'too many users found');
     }
 
-    return parseUserToResponse(users[0]);
+    const user = users[0];
+    return parseUserToResponse(user, user.id);
   }
 
   async connectByCode(
     welcomeCode: string,
-    userId: string,
+    authUserId: string,
   ): Promise<gp2.UserResponse> {
     const { items } = await this.queryByCode(welcomeCode);
 
@@ -69,13 +82,17 @@ export default class Users implements UserController {
     }
 
     const user = items[0];
-    if (user.connections?.find(({ code }) => code === userId)) {
-      return parseUserToResponse(user);
+    if (user.connections?.find(({ code }) => code === authUserId)) {
+      return parseUserToResponse(user, user.id);
     }
-    return this.update(user.id, {
-      email: user.email,
-      connections: [...(user.connections || []), { code: userId }],
-    });
+    return this.update(
+      user.id,
+      {
+        email: user.email,
+        connections: [...(user.connections || []), { code: authUserId }],
+      },
+      user.id,
+    );
   }
 
   private async queryByCode(code: string) {
@@ -87,14 +104,14 @@ export default class Users implements UserController {
   }
 }
 
-export const parseUserToResponse = ({
-  connections: _,
-  ...user
-}: gp2.UserDataObject): gp2.UserResponse => {
+export const parseUserToResponse = (
+  { connections: _, telephone, ...user }: gp2.UserDataObject,
+  loggedInUserId?: string,
+): gp2.UserResponse => {
   const displayName = `${user.firstName} ${user.lastName}`;
-  const response = {
+  return {
     ...user,
     displayName,
+    ...(user.id === loggedInUserId && { telephone }),
   };
-  return response;
 };

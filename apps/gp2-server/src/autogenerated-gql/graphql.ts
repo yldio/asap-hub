@@ -1822,6 +1822,9 @@ export type UsersDataDto = {
   positions: Maybe<UsersDataPositionsDto>;
   region: Maybe<UsersDataRegionDto>;
   role: Maybe<UsersDataRoleDto>;
+  secondaryEmail: Maybe<UsersDataSecondaryEmailDto>;
+  telephoneCountryCode: Maybe<UsersDataTelephoneCountryCodeDto>;
+  telephoneNumber: Maybe<UsersDataTelephoneNumberDto>;
 };
 
 /** The structure of the Email field of the Users content type. */
@@ -1858,6 +1861,9 @@ export type UsersDataInputDto = {
   positions: InputMaybe<UsersDataPositionsInputDto>;
   region: InputMaybe<UsersDataRegionInputDto>;
   role: InputMaybe<UsersDataRoleInputDto>;
+  secondaryEmail: InputMaybe<UsersDataSecondaryEmailInputDto>;
+  telephoneCountryCode: InputMaybe<UsersDataTelephoneCountryCodeInputDto>;
+  telephoneNumber: InputMaybe<UsersDataTelephoneNumberInputDto>;
 };
 
 /** The structure of the Last Name field of the Users content type. */
@@ -1958,6 +1964,36 @@ export type UsersDataRoleInputDto = {
   iv: InputMaybe<UsersDataRoleEnum>;
 };
 
+/** The structure of the Alternative Email field of the Users content type. */
+export type UsersDataSecondaryEmailDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Alternative Email field of the Users content input type. */
+export type UsersDataSecondaryEmailInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Country code field of the Users content type. */
+export type UsersDataTelephoneCountryCodeDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Country code field of the Users content input type. */
+export type UsersDataTelephoneCountryCodeInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Telephone number field of the Users content type. */
+export type UsersDataTelephoneNumberDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Telephone number field of the Users content input type. */
+export type UsersDataTelephoneNumberInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
 /** The structure of the flat Users data type. */
 export type UsersFlatDataDto = {
   avatar: Maybe<Array<Asset>>;
@@ -1974,6 +2010,9 @@ export type UsersFlatDataDto = {
   region: Maybe<UsersDataRegionEnum>;
   /** Role on the GP2 Hub */
   role: Maybe<UsersDataRoleEnum>;
+  secondaryEmail: Maybe<Scalars['String']>;
+  telephoneCountryCode: Maybe<Scalars['String']>;
+  telephoneNumber: Maybe<Scalars['String']>;
 };
 
 /** List of Users items and total count. */
@@ -2589,6 +2628,9 @@ export type UsersContentFragment = Pick<
     | 'country'
     | 'city'
     | 'onboarded'
+    | 'secondaryEmail'
+    | 'telephoneCountryCode'
+    | 'telephoneNumber'
   > & {
     avatar: Maybe<Array<Pick<Asset, 'id'>>>;
     positions: Maybe<
@@ -2647,6 +2689,9 @@ export type FetchUserQuery = {
         | 'country'
         | 'city'
         | 'onboarded'
+        | 'secondaryEmail'
+        | 'telephoneCountryCode'
+        | 'telephoneNumber'
       > & {
         avatar: Maybe<Array<Pick<Asset, 'id'>>>;
         positions: Maybe<
@@ -2715,6 +2760,9 @@ export type FetchUsersQuery = {
               | 'country'
               | 'city'
               | 'onboarded'
+              | 'secondaryEmail'
+              | 'telephoneCountryCode'
+              | 'telephoneNumber'
             > & {
               avatar: Maybe<Array<Pick<Asset, 'id'>>>;
               positions: Maybe<
@@ -3466,6 +3514,18 @@ export const UsersContentFragmentDoc = {
                   },
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'onboarded' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'secondaryEmail' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'telephoneCountryCode' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'telephoneNumber' },
+                },
               ],
             },
           },

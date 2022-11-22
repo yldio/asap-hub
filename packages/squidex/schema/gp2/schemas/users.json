@@ -90,6 +90,69 @@
         }
       },
       {
+        "name": "secondaryEmail",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "pattern": "^[a-zA-Z0-9.!#$%&’*+\\/=?^_`'{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$",
+          "isUnique": true,
+          "isEmbeddable": false,
+          "inlineEditable": true,
+          "createEnum": false,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "Alternative Email",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": true
+        }
+      },
+      {
+        "name": "telephoneCountryCode",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "pattern": "^\\+*[1-9]{0,3}$",
+          "isUnique": true,
+          "isEmbeddable": false,
+          "inlineEditable": true,
+          "createEnum": false,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "Country code",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": true
+        }
+      },
+      {
+        "name": "telephoneNumber",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "pattern": "^\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{3,4}$",
+          "isUnique": true,
+          "isEmbeddable": false,
+          "inlineEditable": true,
+          "createEnum": false,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "Telephone number",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": true
+        }
+      },
+      {
         "name": "onboarded",
         "isHidden": false,
         "isLocked": false,

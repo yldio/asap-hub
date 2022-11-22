@@ -57,6 +57,8 @@ type UserWorkingGroup = Pick<WorkingGroupDataObject, 'id' | 'title'> & {
   members: UserWorkingGroupMember[];
 };
 
+type Telephone = { countryCode?: string; number?: string };
+
 export type UserDataObject = {
   avatarUrl?: string;
   city?: string;
@@ -76,6 +78,8 @@ export type UserDataObject = {
   workingGroups: UserWorkingGroup[];
   fundingStreams: unknown | undefined;
   contributingCohorts: unknown[];
+  secondaryEmail?: string;
+  telephone?: Telephone;
 };
 
 export type UserCreateDataObject = Omit<

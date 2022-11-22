@@ -56,7 +56,9 @@ export const userRouteFactory = (userController: UserController): Router => {
   userRoutes.get<{ userId: string }>('/users/:userId', async (req, res) => {
     const { userId } = validateUserParameters(req.params);
 
-    const user = await userController.fetchById(userId);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const loggedInUserId = req.loggedInUser!.id;
+    const user = await userController.fetchById(userId, loggedInUserId);
 
     res.json(user);
   });

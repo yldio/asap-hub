@@ -183,6 +183,13 @@ export const parseGraphQLUserToDataObject = ({
   const positions = parsePositions(item.positions);
   const projects = parseProjects(projectItems);
   const workingGroups = parseWorkingGroups(workingGroupItems);
+  const telephone =
+    item.telephoneNumber || item.telephoneCountryCode
+      ? {
+          countryCode: item.telephoneCountryCode || undefined,
+          number: item.telephoneNumber || undefined,
+        }
+      : undefined;
 
   return {
     id,
@@ -201,6 +208,8 @@ export const parseGraphQLUserToDataObject = ({
     workingGroups,
     fundingStreams: undefined,
     contributingCohorts: [],
+    secondaryEmail: item.secondaryEmail || undefined,
+    telephone,
   };
 };
 

@@ -60,6 +60,8 @@ export const getUserResponse = (): gp2.UserResponse => ({
   ],
   fundingStreams: undefined,
   contributingCohorts: [],
+  secondaryEmail: 'tony@stark.com',
+  telephone: { countryCode: '+1', number: '212-970-4133' },
 });
 
 export const fetchExpectation: gp2.ListUserResponse = {
@@ -143,7 +145,7 @@ export const getUserDataObject = (): gp2.UserDataObject => ({
   firstName: 'Tony',
   lastName: 'Stark',
   region: 'Europe',
-  degrees: ['MPH' as const],
+  degrees: ['MPH'],
   role: 'Trainee',
   country: 'Spain',
   city: 'Madrid',
@@ -179,6 +181,8 @@ export const getUserDataObject = (): gp2.UserDataObject => ({
   ],
   fundingStreams: undefined,
   contributingCohorts: [],
+  secondaryEmail: 'tony@stark.com',
+  telephone: { countryCode: '+1', number: '212-970-4133' },
 });
 export const getUserCreateDataObject = (): gp2.UserCreateDataObject => {
   const {
@@ -244,6 +248,8 @@ export const fetchUserResponseDataObject = (): gp2.UserDataObject => ({
   ],
   fundingStreams: undefined,
   contributingCohorts: [],
+  secondaryEmail: 'tony@stark.com',
+  telephone: { countryCode: '+1', number: '212-970-4133' },
 });
 export const getGraphQLUser = (
   user: Partial<NonNullable<FetchUserQuery['findUsersContent']>> = {},
@@ -271,6 +277,9 @@ export const getGraphQLUser = (
     ],
     city: 'Madrid',
     onboarded: true,
+    secondaryEmail: 'tony@stark.com',
+    telephoneCountryCode: '+1',
+    telephoneNumber: '212-970-4133',
     ...user?.flatData,
   },
   referencingProjectsContents: [

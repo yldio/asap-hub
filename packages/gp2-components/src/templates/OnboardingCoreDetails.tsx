@@ -14,7 +14,10 @@ import { mobileQuery, nonMobileQuery } from '../layout';
 import { UserDetailHeaderCard } from '../organisms';
 import EmailSection from '../organisms/EmailSection';
 
-type OnboardingCoreDetailProps = Pick<gp2Model.UserResponse, 'email'> &
+type OnboardingCoreDetailProps = Pick<
+  gp2Model.UserResponse,
+  'email' | 'secondaryEmail'
+> &
   ComponentProps<typeof UserDetailHeaderCard>;
 
 const { onboarding } = gp2Routing;
@@ -71,6 +74,7 @@ const buttonWrapperStyle = css({
 
 const OnboardingCoreDetails: React.FC<OnboardingCoreDetailProps> = ({
   email,
+  secondaryEmail,
   ...headerProps
 }) => (
   <div css={contentStyles}>
@@ -95,7 +99,10 @@ const OnboardingCoreDetails: React.FC<OnboardingCoreDetailProps> = ({
         </Paragraph>
         <div css={contentStyles}>
           <EmailSection
-            contactEmails={[{ email, contact: 'Institutional Email' }]}
+            contactEmails={[
+              { email, contact: 'Institutional Email' },
+              { email: secondaryEmail, contact: 'Alternative Email' },
+            ]}
           />
         </div>
       </Card>

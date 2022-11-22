@@ -24,6 +24,9 @@ export const usersContentQueryFragment = gql`
         institution
       }
       onboarded
+      secondaryEmail
+      telephoneCountryCode
+      telephoneNumber
     }
     referencingProjectsContents {
       id

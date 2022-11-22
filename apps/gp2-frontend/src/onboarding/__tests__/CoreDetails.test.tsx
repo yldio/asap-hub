@@ -61,4 +61,21 @@ describe('CoreDetails', () => {
       }),
     ).toBeVisible();
   });
+  it('renders the primary email', async () => {
+    const user = gp2Fixtures.createUserResponse();
+    mockGetUser.mockResolvedValueOnce(user);
+    await renderCoreDetails(user.id);
+    expect(screen.getByRole('link', { name: /T@ark.io/i })).toBeVisible();
+  });
+  it('renders the secondary email', async () => {
+    const user = gp2Fixtures.createUserResponse();
+    mockGetUser.mockResolvedValueOnce({
+      ...user,
+      secondaryEmail: 'secondary@stark.com',
+    });
+    await renderCoreDetails(user.id);
+    expect(
+      screen.getByRole('link', { name: /secondary@stark.com/i }),
+    ).toBeVisible();
+  });
 });

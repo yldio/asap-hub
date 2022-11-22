@@ -20,7 +20,7 @@ export const userFields = {
   workingGroups: 'Working groups',
   fundingStreams: 'Funding streams',
   contributingCohorts: 'Contributing cohorts',
-  createdDate: 'Ativated account',
+  createdDate: 'Activated account',
 };
 
 type UserCSV = Record<keyof typeof userFields, CSVValue>;

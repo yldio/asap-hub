@@ -1,6 +1,5 @@
 import { FetchOptions, gp2 } from '@asap-hub/model';
 import { userDegrees, userRegions } from '@asap-hub/model/src/gp2';
-import { AuthHandler } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
@@ -49,16 +48,27 @@ describe('/users/ route', () => {
         total: 0,
       });
 
-      await supertest(app).get('/users').query({
+      const params: gp2.FetchUsersOptions = {
         take: 15,
         skip: 5,
         search: 'something',
-      });
+        filter: {
+          code: '123',
+          onlyOnboarded: false,
+          region: ['Europe'],
+        },
+      };
+      await supertest(app).get('/users').query(params);
 
-      const expectedParams: FetchOptions = {
+      const expectedParams: gp2.FetchUsersOptions = {
         take: 15,
         skip: 5,
         search: 'something',
+        filter: {
+          code: '123',
+          onlyOnboarded: false,
+          region: ['Europe'],
+        },
       };
 
       expect(userControllerMock.fetch).toBeCalledWith(expectedParams);
@@ -104,6 +114,19 @@ describe('/users/ route', () => {
           .get('/users')
           .query({
             filter: { region: ['Europe', 'Asia'] },
+          });
+
+        expect(response.status).toBe(200);
+      });
+
+      test('Should return the results correctly when the nonOnboarded filter is used', async () => {
+        userControllerMock.fetch.mockResolvedValueOnce(fetchExpectation);
+
+        const { app } = getApp();
+        const response = await supertest(app)
+          .get('/users')
+          .query({
+            filter: { nonOnboarded: true },
           });
 
         expect(response.status).toBe(200);

@@ -67,6 +67,8 @@ const documents = {
     graphql.FetchUserDocument,
   '\n  query FetchUsers($top: Int, $skip: Int, $filter: String) {\n    queryUsersContentsWithTotal(\n      top: $top\n      skip: $skip\n      filter: $filter\n      orderby: "data/firstName/iv,data/lastName/iv"\n    ) {\n      total\n      items {\n        ...UsersContent\n      }\n    }\n  }\n  \n':
     graphql.FetchUsersDocument,
+  '\n  query FetchWorkingGroup($id: String!) {\n    findWorkingGroupsContent(id: $id) {\n      id\n      lastModified\n      flatData {\n        title\n        description\n        externalLink\n        externalLinkText\n      }\n    }\n  }\n':
+    graphql.FetchWorkingGroupDocument,
 };
 
 export function gql(
@@ -165,6 +167,9 @@ export function gql(
 export function gql(
   source: '\n  query FetchUsers($top: Int, $skip: Int, $filter: String) {\n    queryUsersContentsWithTotal(\n      top: $top\n      skip: $skip\n      filter: $filter\n      orderby: "data/firstName/iv,data/lastName/iv"\n    ) {\n      total\n      items {\n        ...UsersContent\n      }\n    }\n  }\n  \n',
 ): typeof documents['\n  query FetchUsers($top: Int, $skip: Int, $filter: String) {\n    queryUsersContentsWithTotal(\n      top: $top\n      skip: $skip\n      filter: $filter\n      orderby: "data/firstName/iv,data/lastName/iv"\n    ) {\n      total\n      items {\n        ...UsersContent\n      }\n    }\n  }\n  \n'];
+export function gql(
+  source: '\n  query FetchWorkingGroup($id: String!) {\n    findWorkingGroupsContent(id: $id) {\n      id\n      lastModified\n      flatData {\n        title\n        description\n        externalLink\n        externalLinkText\n      }\n    }\n  }\n',
+): typeof documents['\n  query FetchWorkingGroup($id: String!) {\n    findWorkingGroupsContent(id: $id) {\n      id\n      lastModified\n      flatData {\n        title\n        description\n        externalLink\n        externalLinkText\n      }\n    }\n  }\n'];
 
 export function gql(source: string): unknown;
 export function gql(source: string) {

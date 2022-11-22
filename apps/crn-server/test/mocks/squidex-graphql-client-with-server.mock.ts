@@ -21,6 +21,7 @@ import { getSquidexGraphqlResearchTags } from '../fixtures/research-tag.fixtures
 import { getSquidexGraphqlTeam } from '../fixtures/teams.fixtures';
 import { getSquidexGraphqlTutorial } from '../fixtures/tutorials.fixtures';
 import { getGraphQLUser } from '../fixtures/users.fixtures';
+import { getSquidexGraphqlWorkingGroup } from '../fixtures/working-groups.fixtures';
 
 export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
   const schema = loadSchemaSync(
@@ -62,6 +63,8 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
     EventsResultDto: resultDto,
     Labs: () => getSquidexGraphqlLab(),
     LabsResultDto: resultDto,
+    WorkingGroups: () => getSquidexGraphqlWorkingGroup(),
+    WorkingGroupsResultDto: resultDto,
     ApplicationQueries: () => ({
       queryResearchOutputsContents: [...new Array(1)],
     }),

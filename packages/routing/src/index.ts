@@ -13,7 +13,6 @@ export { default as sharedResearch } from './shared-research';
 export { default as staticPages } from './static-pages';
 export { default as welcome } from './welcome';
 export { default as dashboard } from './dashboard';
-export { default as workingGroups } from './working-groups';
 
 export type { RouteNode };
 export { gp2 };

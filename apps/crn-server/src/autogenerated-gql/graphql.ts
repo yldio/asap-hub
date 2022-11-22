@@ -9244,6 +9244,21 @@ export type FetchUsersQuery = {
   >;
 };
 
+export type FetchWorkingGroupQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchWorkingGroupQuery = {
+  findWorkingGroupsContent: Maybe<
+    Pick<WorkingGroups, 'id' | 'lastModified'> & {
+      flatData: Pick<
+        WorkingGroupsFlatDataDto,
+        'title' | 'description' | 'externalLink' | 'externalLinkText'
+      >;
+    }
+  >;
+};
+
 export const CalendarsContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -13702,3 +13717,80 @@ export const FetchUsersDocument = {
     ...UsersContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchUsersQuery, FetchUsersQueryVariables>;
+export const FetchWorkingGroupDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchWorkingGroup' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'findWorkingGroupsContent' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'lastModified' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'flatData' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'externalLink' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'externalLinkText' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  FetchWorkingGroupQuery,
+  FetchWorkingGroupQueryVariables
+>;

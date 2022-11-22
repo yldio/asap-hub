@@ -5,6 +5,7 @@ import { FC, lazy, useEffect, useState } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { useSearch } from '../hooks';
 import GroupProfile from './groups/GroupProfile';
+import WorkingGroupProfile from './working-groups/WorkingGroupProfile';
 
 const loadUserList = () =>
   import(/* webpackChunkName: "network-user-list" */ './users/UserList');
@@ -19,6 +20,10 @@ const loadGroupList = () =>
 const loadGroupProfile = () =>
   import(
     /* webpackChunkName: "network-group-profile" */ './groups/GroupProfile'
+  );
+const loadWorkingGroupProfile = () =>
+  import(
+    /* webpackChunkName: "network-working-group-profile" */ './working-groups/WorkingGroupProfile'
   );
 const UserList = lazy(loadUserList);
 const UserProfile = lazy(loadUserProfile);
@@ -36,7 +41,9 @@ const Network: FC<Record<string, never>> = () => {
       .then(loadTeamProfile)
       // Can be clicked only after changing tabs and the list has been fetched
       .then(loadUserProfile)
-      .then(loadGroupProfile);
+      .then(loadGroupProfile)
+      // Can only be loaded by navigating to the URL
+      .then(loadWorkingGroupProfile);
   }, []);
 
   const { path } = useRouteMatch();
@@ -121,6 +128,17 @@ const Network: FC<Record<string, never>> = () => {
       >
         <Frame title="Group Profile">
           <GroupProfile currentTime={currentTime} />
+        </Frame>
+      </Route>
+      <Route
+        path={
+          path +
+          network({}).workingGroups.template +
+          network({}).workingGroups({}).workingGroup.template
+        }
+      >
+        <Frame title="Working Group Profile">
+          <WorkingGroupProfile />
         </Frame>
       </Route>
       <Redirect to={network({}).users({}).$} />

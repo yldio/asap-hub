@@ -33,7 +33,7 @@ export const publishContentfulEntries = async (entries: Entry[]) => {
     try {
       const published = await entry.publish();
       console.log(`Published entry ${published.sys.id}.`);
-    } catch {
+    } catch (err) {
       console.log(`Entry with id ${entry.sys.id} could not be published.`);
     }
   });

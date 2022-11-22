@@ -102,13 +102,7 @@ export const headlineStyles = {
   2: {
     fontWeight: 'bold',
     fontFamily: 'Roboto Slab',
-    fontSize: vminLinearCalc(
-      mobileScreen,
-      29.38,
-      largeDesktopScreen,
-      33.2,
-      'px',
-    ),
+    fontSize: vminLinearCalc(mobileScreen, 30, largeDesktopScreen, 30, 'px'),
     lineHeight: vminLinearCalc(mobileScreen, 30, largeDesktopScreen, 42, 'px'),
   } as CSSObject,
   3: {

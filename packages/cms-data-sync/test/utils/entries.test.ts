@@ -1,3 +1,4 @@
+import { Environment } from 'contentful-management';
 import {
   clearContentfulEntries,
   publishContentfulEntries,
@@ -5,14 +6,19 @@ import {
 import { entry, getContentfulEnvironmentMock } from '../fixtures';
 
 describe('clearContentfulEntries', () => {
-  let envMock;
+  let envMock: Environment;
 
   beforeEach(async () => {
     jest.clearAllMocks();
 
     envMock = await getContentfulEnvironmentMock();
     jest.spyOn(envMock, 'getEntries').mockResolvedValueOnce({
+      total: 1,
       items: [entry],
+      skip: 0,
+      limit: 10,
+      toPlainObject: jest.fn(),
+      sys: { type: 'Array' },
     });
   });
 

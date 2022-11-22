@@ -247,4 +247,27 @@ describe('ResourceModal', () => {
     userEvent.click(cancelButton);
     expect(getUserConfirmation).toHaveBeenCalledTimes(1);
   });
+  it('the dialog shows when the user changes the link', () => {
+    getUserConfirmation = jest.fn((_message, cb) => cb(true));
+    history = createMemoryHistory({ getUserConfirmation });
+
+    const props = {
+      modalTitle: editModalInfo.title,
+      modalDescription: editModalInfo.description,
+      type: 'Link' as const,
+      externalLink: 'http://example.com',
+      title: 'A title',
+      description: 'A description',
+    };
+
+    render(
+      <Router history={history}>
+        <ResourceModal {...defaultProps} {...props} />
+      </Router>,
+    );
+    enterLink('http://example2.com');
+    const cancelButton = screen.getByRole('link', { name: /cancel/i });
+    userEvent.click(cancelButton);
+    expect(getUserConfirmation).toHaveBeenCalledTimes(1);
+  });
 });

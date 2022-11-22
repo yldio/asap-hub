@@ -77,8 +77,8 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
     return (
       title !== newTitle ||
       description !== newDescription ||
-      (externalLink !== undefined && externalLink !== newExternalLink) ||
-      props.type !== newType
+      props.type !== newType ||
+      (externalLink !== undefined && externalLink !== newExternalLink)
     );
   };
 

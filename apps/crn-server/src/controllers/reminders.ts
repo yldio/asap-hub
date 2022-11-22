@@ -22,7 +22,7 @@ export const formattedMaterialByEventType = (
     case 'Presentation Updated':
       return 'Presentation(s)';
     default:
-      return `${type.split(' ')[0]}(s)`;
+      throw new Error('Unknown Material Event');
   }
 };
 

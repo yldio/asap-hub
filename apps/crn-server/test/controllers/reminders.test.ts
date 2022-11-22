@@ -195,6 +195,10 @@ describe('Reminder Controller', () => {
 
       material = formattedMaterialByEventType('Presentation Updated');
       expect(material).toBe('Presentation(s)');
+
+      expect(() =>
+        formattedMaterialByEventType('Happening Today'),
+      ).toThrowError(`Unknown Material Event`);
     });
   });
 });

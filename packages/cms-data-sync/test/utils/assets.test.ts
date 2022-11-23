@@ -12,6 +12,7 @@ import {
 
 describe('checkIfAssetAlreadyExistsInContentful', () => {
   let envMock: Environment;
+  console.log = jest.fn();
 
   beforeEach(async () => {
     jest.clearAllMocks();

@@ -1,4 +1,5 @@
 module.exports = {
+  ignorePatterns: ['working-groups.data-provider.ts'],
   rules: {
     'no-use-before-define': 'off',
     'no-unused-vars': 'off',

@@ -21,15 +21,21 @@ const loadGroupProfile = () =>
   import(
     /* webpackChunkName: "network-group-profile" */ './groups/GroupProfile'
   );
+const loadWorkingGroupList = () =>
+  import(
+    /* webpackChunkName: "network-working-group-profile" */ './working-groups/WorkingGroupList'
+  );
 const loadWorkingGroupProfile = () =>
   import(
     /* webpackChunkName: "network-working-group-profile" */ './working-groups/WorkingGroupProfile'
   );
+
 const UserList = lazy(loadUserList);
 const UserProfile = lazy(loadUserProfile);
 const TeamList = lazy(loadTeamList);
 const TeamProfile = lazy(loadTeamProfile);
 const GroupList = lazy(loadGroupList);
+const WorkingGroupList = lazy(loadWorkingGroupList);
 
 const Network: FC<Record<string, never>> = () => {
   useEffect(() => {
@@ -43,6 +49,7 @@ const Network: FC<Record<string, never>> = () => {
       .then(loadUserProfile)
       .then(loadGroupProfile)
       // Can only be loaded by navigating to the URL
+      .then(loadWorkingGroupList)
       .then(loadWorkingGroupProfile);
   }, []);
 
@@ -130,6 +137,22 @@ const Network: FC<Record<string, never>> = () => {
           <GroupProfile currentTime={currentTime} />
         </Frame>
       </Route>
+      <Route exact path={path + network({}).workingGroups.template}>
+        <NetworkPage
+          page="working-groups"
+          searchQuery={searchQuery}
+          onChangeSearchQuery={setSearchQuery}
+          filters={filters}
+          onChangeFilter={toggleFilter}
+        >
+          <SearchFrame title="Working Groups">
+            <WorkingGroupList
+              filters={filters}
+              searchQuery={debouncedSearchQuery}
+            />
+          </SearchFrame>
+        </NetworkPage>
+      </Route>
       <Route
         path={
           path +
@@ -137,7 +160,7 @@ const Network: FC<Record<string, never>> = () => {
           network({}).workingGroups({}).workingGroup.template
         }
       >
-        <Frame title="Working Group Profile">
+        <Frame title="Working Groups">
           <WorkingGroupProfile />
         </Frame>
       </Route>

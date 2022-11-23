@@ -1,4 +1,8 @@
-import { WorkingGroupDataObject } from '@asap-hub/model';
+import {
+  FetchOptions,
+  WorkingGroupDataObject,
+  WorkingGroupListDataObject,
+} from '@asap-hub/model';
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import {
   FetchWorkingGroupQuery,
@@ -8,6 +12,7 @@ import { FETCH_WORKING_GROUP } from '../queries/working-groups.queries';
 
 export interface WorkingGroupDataProvider {
   fetchById(id: string): Promise<WorkingGroupDataObject | null>;
+  fetch(options: FetchOptions): Promise<WorkingGroupListDataObject>;
 }
 
 export class WorkingGroupSquidexDataProvider
@@ -27,6 +32,13 @@ export class WorkingGroupSquidexDataProvider
     }
 
     return parseGraphQlWorkingGroup(workingGroup);
+  }
+
+  async fetch(): Promise<WorkingGroupListDataObject> {
+    return {
+      items: [],
+      total: 0,
+    };
   }
 }
 

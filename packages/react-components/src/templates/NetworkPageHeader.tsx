@@ -9,7 +9,7 @@ import { contentSidePaddingWithNavigation } from '../layout';
 import { SearchAndFilter } from '../organisms';
 import { Option, Title } from '../organisms/CheckboxGroup';
 import { TabNav } from '../molecules';
-import { teamIcon, userIcon, interestGroupsIcon } from '../icons';
+import { teamIcon, userIcon, interestGroupsIcon, crossIcon } from '../icons';
 import { queryParamString } from '../routing';
 
 const visualHeaderStyles = css({
@@ -31,7 +31,7 @@ const controlsStyles = css({
   padding: `0 ${contentSidePaddingWithNavigation(8)}`,
 });
 
-type Page = 'users' | 'groups' | 'teams';
+type Page = 'users' | 'groups' | 'teams' | 'working-groups';
 
 type NetworkPageHeaderProps = {
   page: Page;
@@ -61,6 +61,14 @@ const groupFilters: ReadonlyArray<Option<'Active' | 'Inactive'> | Title> = [
   { label: 'Inactive', value: 'Inactive' },
 ];
 
+const workingGroupFilters: ReadonlyArray<
+  Option<'Active' | 'Inactive'> | Title
+> = [
+  { title: 'WORKING GROUP STATUS' },
+  { label: 'Active', value: 'Active' },
+  { label: 'Inactive', value: 'Inactive' },
+];
+
 const teamFilters: ReadonlyArray<Option<'Active' | 'Inactive'> | Title> = [
   { title: 'TEAM STATUS' },
   { label: 'Active', value: 'Active' },
@@ -79,6 +87,12 @@ const getFilterOptionsAndPlaceholder = (page: Page) => {
       return {
         filterOptions: groupFilters,
         searchPlaceholder: 'Enter an interest group, keyword, …',
+      };
+
+    case 'working-groups':
+      return {
+        filterOptions: workingGroupFilters,
+        searchPlaceholder: 'Enter a working group, keyword, …',
       };
 
     case 'teams':
@@ -118,6 +132,11 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
           href={network({}).groups({}).$ + queryParamString(searchQuery)}
         >
           <span css={iconStyles}>{interestGroupsIcon}</span>Interest Groups
+        </TabLink>
+        <TabLink
+          href={network({}).workingGroups({}).$ + queryParamString(searchQuery)}
+        >
+          <span css={iconStyles}>{crossIcon}</span>Working Groups
         </TabLink>
       </TabNav>
     </div>

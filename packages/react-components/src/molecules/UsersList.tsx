@@ -8,7 +8,7 @@ import { isInternalUser } from '@asap-hub/validation';
 import { Avatar, Link } from '../atoms';
 import { ImageLink } from '.';
 import { perRem } from '../pixels';
-import { alumniBadge, userPlaceholderIcon } from '../icons';
+import { alumniBadgeIcon, userPlaceholderIcon } from '../icons';
 import { lead } from '../colors';
 
 const getPlaceholderAvatarUrl = () =>
@@ -89,7 +89,7 @@ const UsersList: FC<UsersListProps> = ({
                 <span css={nameStyles}>{user.displayName}</span>
               </Link>
               {user.alumniSinceDate && (
-                <span css={iconStyles}>{alumniBadge}</span>
+                <span css={iconStyles}>{alumniBadgeIcon}</span>
               )}
             </div>
           ) : (

@@ -8,7 +8,7 @@ import {
   userPlaceholderIcon,
   chevronCircleDownIcon,
   chevronCircleUpIcon,
-  alumniBadge,
+  alumniBadgeIcon,
   inactiveBadgeIcon,
 } from '../icons';
 import { useDateHasPassed } from '../date';
@@ -224,7 +224,7 @@ const SpeakerList: React.FC<SpeakerListProps> = ({ speakers, endDate }) => {
                     <span css={internalSpeakerStyle}>
                       <span>{speaker.user.displayName}</span>
                       {speaker.user.alumniSinceDate && (
-                        <span css={iconStyles}>{alumniBadge}</span>
+                        <span css={iconStyles}>{alumniBadgeIcon}</span>
                       )}
                     </span>
                   </Link>

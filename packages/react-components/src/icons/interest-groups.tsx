@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 
-const groups = (
+const interestGroups = (
   <svg
     width="24"
     height="24"
@@ -165,4 +165,4 @@ const groups = (
   </svg>
 );
 
-export default groups;
+export default interestGroups;

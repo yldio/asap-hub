@@ -111,7 +111,7 @@ it('renders tab links preserving the search query', async () => {
     <NetworkPageHeader {...props} searchQuery="searchterm" />,
   );
   expect(
-    new URL(getByText(/groups/i, { selector: 'nav a *' }).closest('a')!.href),
+    new URL(getByText('Groups', { selector: 'nav a *' }).closest('a')!.href),
   ).toMatchObject({
     pathname: expect.stringMatching(/groups$/),
     searchParams: new URLSearchParams({ searchQuery: 'searchterm' }),

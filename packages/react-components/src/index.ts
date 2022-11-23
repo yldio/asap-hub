@@ -180,6 +180,7 @@ export {
   NetworkPage,
   NetworkPeople,
   NetworkTeams,
+  NetworkWorkingGroups,
   NewsDetailsPage,
   NewsPage,
   NewsPageBody,

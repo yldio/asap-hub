@@ -7,7 +7,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { ComponentProps } from 'react';
 import EditResource from '../EditResource';
 
-const renderWorkingGroupDetail = async ({
+const renderWorkingGroupDetail = ({
   workingGroup = gp2Fixtures.createWorkingGroupResponse(),
   updateWorkingGroupResources = jest.fn(),
 }: Partial<ComponentProps<typeof EditResource>> = {}) => {
@@ -55,8 +55,9 @@ const renderWorkingGroupDetail = async ({
 };
 
 describe('EditResource', () => {
+  beforeEach(jest.restoreAllMocks);
   it('see if modal appears', async () => {
-    await renderWorkingGroupDetail();
+    renderWorkingGroupDetail();
 
     expect(screen.getByRole('button', { name: /Save/i })).toBeInTheDocument();
     expect(
@@ -76,7 +77,7 @@ describe('EditResource', () => {
     const title = 'a changed title';
     const updateWorkingGroupResources = jest.fn();
 
-    await renderWorkingGroupDetail({
+    renderWorkingGroupDetail({
       updateWorkingGroupResources,
       workingGroup,
     });
@@ -94,5 +95,21 @@ describe('EditResource', () => {
         title,
       },
     ]);
+  });
+  it.todo('updates the correct resource when multiple resources exist');
+  it.only('throws (Not Found) if we cannot find the correct working resource', () => {
+    const resources: gp2Model.Resource[] = [];
+    const workingGroup = gp2Fixtures.createWorkingGroupResponse();
+    workingGroup.resources = resources;
+    const updateWorkingGroupResources = jest.fn();
+
+    expect(() =>
+      renderWorkingGroupDetail({
+        updateWorkingGroupResources,
+        workingGroup,
+      }),
+    ).toThrow();
+
+    expect(updateWorkingGroupResources).not.toBeCalled();
   });
 });

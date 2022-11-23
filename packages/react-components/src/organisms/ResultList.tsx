@@ -77,7 +77,7 @@ const ResultList: React.FC<ResultListProps> = ({
         css={[headerStyles, numberOfItems === 0 && headerNoResultsStyles]}
       >
         {numberOfItems > 0 && (
-          <Paragraph primary>
+          <Paragraph>
             <strong>
               {numberOfItems} result{numberOfItems === 1 || 's'} found
             </strong>
@@ -117,7 +117,7 @@ const ResultList: React.FC<ResultListProps> = ({
       ) : (
         noEventsComponent ?? (
           <main css={{ textAlign: 'center' }}>
-            <Paragraph primary>
+            <Paragraph>
               <strong>No matches found!</strong>
               <br />
               <span css={{ color: lead.rgb }}>

@@ -47,7 +47,7 @@ describe.each<ComponentProps<typeof LinkHeadline>['level']>([1, 2, 3, 4, 5, 6])(
 
     const headingFontSizeVariations = {
       1: '41.5px',
-      2: '33.2px',
+      2: '30px',
       3: '26.56px',
       4: '21.25px',
       5: 'default',

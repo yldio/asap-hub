@@ -19,7 +19,7 @@ it('renders the text in large font', () => {
   const { getByText } = render(<Headline2>text</Headline2>);
   const { fontSize } = getComputedStyle(getByText('text'));
   expect(viewportCalc(fontSize, largeDesktopScreen)).toMatchInlineSnapshot(
-    `"33.2px"`,
+    `"30px"`,
   );
 });
 

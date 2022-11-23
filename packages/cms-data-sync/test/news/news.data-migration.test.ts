@@ -1,6 +1,10 @@
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import { migrateNews } from '../../src/news/news.data-migration';
-import { entry, getContentfulEnvironmentMock, squidexAsset } from '../fixtures';
+import {
+  newsEntry,
+  getContentfulEnvironmentMock,
+  squidexAsset,
+} from '../fixtures';
 import {
   clearContentfulEntries,
   createAssetLink,
@@ -67,7 +71,7 @@ describe('migrateNews', () => {
 
     jest.spyOn(contenfulEnv, 'getEntries').mockResolvedValueOnce({
       total: 1,
-      items: [entry],
+      items: [newsEntry],
       skip: 0,
       limit: 10,
       toPlainObject: jest.fn(),
@@ -75,8 +79,8 @@ describe('migrateNews', () => {
     });
 
     jest
-      .spyOn(entry, 'publish')
-      .mockImplementationOnce(() => Promise.resolve(entry));
+      .spyOn(newsEntry, 'publish')
+      .mockImplementationOnce(() => Promise.resolve(newsEntry));
   });
 
   afterEach(() => {

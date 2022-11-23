@@ -1,4 +1,16 @@
-import { Environment } from 'contentful-management';
+import { Environment, Link, SysLink } from 'contentful-management';
+
+export const contenfulSpaceLink: SysLink = {
+  sys: { type: 'Link', linkType: 'Space', id: 'space-id' },
+};
+
+export const contentfulEnvironmentLink: SysLink = {
+  sys: { id: 'env-id', type: 'Link', linkType: 'Environment' },
+};
+
+export const contenfulUserLink: Link<'User'> = {
+  sys: { type: 'Link', linkType: 'User', id: 'user-id' },
+};
 
 const baseEnvironment: Environment = {
   sys: {

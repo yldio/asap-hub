@@ -3,7 +3,7 @@ import {
   clearContentfulEntries,
   publishContentfulEntries,
 } from '../../src/utils';
-import { entry, getContentfulEnvironmentMock } from '../fixtures';
+import { newsEntry, getContentfulEnvironmentMock } from '../fixtures';
 
 describe('clearContentfulEntries', () => {
   let envMock: Environment;
@@ -14,7 +14,7 @@ describe('clearContentfulEntries', () => {
     envMock = getContentfulEnvironmentMock();
     jest.spyOn(envMock, 'getEntries').mockResolvedValueOnce({
       total: 1,
-      items: [entry],
+      items: [newsEntry],
       skip: 0,
       limit: 10,
       toPlainObject: jest.fn(),
@@ -30,26 +30,26 @@ describe('clearContentfulEntries', () => {
 
   describe('verifies if entry is publish', () => {
     it('and calls unpublish if entry is published', async () => {
-      jest.spyOn(entry, 'isPublished').mockImplementationOnce(() => true);
+      jest.spyOn(newsEntry, 'isPublished').mockImplementationOnce(() => true);
 
       await clearContentfulEntries(envMock, 'news');
 
-      expect(entry.isPublished).toHaveBeenCalledTimes(1);
-      expect(entry.unpublish).toHaveBeenCalledTimes(1);
+      expect(newsEntry.isPublished).toHaveBeenCalledTimes(1);
+      expect(newsEntry.unpublish).toHaveBeenCalledTimes(1);
     });
 
     it('and does not call unpublish if entry is not published', async () => {
-      jest.spyOn(entry, 'isPublished').mockImplementationOnce(() => false);
+      jest.spyOn(newsEntry, 'isPublished').mockImplementationOnce(() => false);
 
       await clearContentfulEntries(envMock, 'news');
 
-      expect(entry.isPublished).toHaveBeenCalledTimes(1);
-      expect(entry.unpublish).not.toHaveBeenCalled();
+      expect(newsEntry.isPublished).toHaveBeenCalledTimes(1);
+      expect(newsEntry.unpublish).not.toHaveBeenCalled();
     });
 
     it('calls delete', async () => {
       await clearContentfulEntries(envMock, 'news');
-      expect(entry.delete).toHaveBeenCalledTimes(1);
+      expect(newsEntry.delete).toHaveBeenCalledTimes(1);
     });
   });
 });
@@ -58,24 +58,24 @@ describe('publishContentfulEntries', () => {
   console.log = jest.fn();
 
   it('calls entry publish function', async () => {
-    await publishContentfulEntries([entry]);
-    expect(entry.publish).toHaveBeenCalledTimes(1);
+    await publishContentfulEntries([newsEntry]);
+    expect(newsEntry.publish).toHaveBeenCalledTimes(1);
   });
 
   it('outputs a message when publish fails', async () => {
-    await publishContentfulEntries([entry]);
+    await publishContentfulEntries([newsEntry]);
     expect(console.log).toHaveBeenCalledWith(
-      `Entry with id ${entry.sys.id} could not be published.`,
+      `Entry with id ${newsEntry.sys.id} could not be published.`,
     );
   });
 
   it('outputs a message when publish is successful', async () => {
     jest
-      .spyOn(entry, 'publish')
-      .mockImplementationOnce(() => Promise.resolve(entry));
-    await publishContentfulEntries([entry]);
+      .spyOn(newsEntry, 'publish')
+      .mockImplementationOnce(() => Promise.resolve(newsEntry));
+    await publishContentfulEntries([newsEntry]);
     expect(console.log).toHaveBeenCalledWith(
-      `Published entry ${entry.sys.id}.`,
+      `Published entry ${newsEntry.sys.id}.`,
     );
   });
 });

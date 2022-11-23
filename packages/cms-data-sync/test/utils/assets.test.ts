@@ -8,6 +8,7 @@ import {
   squidexAsset,
   contenfulAsset,
   getContentfulEnvironmentMock,
+  contenfulUploadAssetFields,
 } from '../fixtures';
 
 describe('checkIfAssetAlreadyExistsInContentful', () => {
@@ -92,16 +93,7 @@ describe('migrateAsset', () => {
 
     await migrateAsset(envMock, [squidexAsset]);
     expect(envMock.createAssetWithId).toHaveBeenCalledWith('asset-id', {
-      fields: {
-        file: {
-          'en-US': {
-            contentType: 'image/png',
-            fileName: 'asset.png',
-            upload: 'www.thumb.com/asset.png',
-          },
-        },
-        title: { 'en-US': 'asset' },
-      },
+      fields: contenfulUploadAssetFields,
     });
 
     expect(contenfulAsset.processForAllLocales).toHaveBeenCalled();

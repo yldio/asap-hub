@@ -1,4 +1,4 @@
-import { Asset as ContenfulAsset } from 'contentful-management';
+import { Asset as ContenfulAsset, AssetProps } from 'contentful-management';
 
 import {
   contenfulSpaceLink,
@@ -12,10 +12,32 @@ export const squidexAsset: Pick<
   'id' | 'fileName' | 'thumbnailUrl' | 'mimeType' | 'fileType'
 > = {
   id: 'asset-id',
-  fileName: 'asset.png',
-  thumbnailUrl: 'www.squidex.com/asset.png',
-  mimeType: 'image/png',
-  fileType: 'png',
+  fileName: 'ASAP Network thumbnail.jpg',
+  thumbnailUrl: 'www.thumbnail.com/asset.png',
+  mimeType: 'image/jpeg',
+  fileType: 'jpeg',
+};
+
+export const contenfulUploadAssetFields: AssetProps['fields'] = {
+  title: { 'en-US': 'ASAP Network thumbnail.jpg' },
+  file: {
+    'en-US': {
+      upload: 'www.thumbnail.com/asset.png',
+      fileName: 'ASAP Network thumbnail.jpg',
+      contentType: 'image/jpeg',
+    },
+  },
+};
+
+export const contenfulAssetFields: AssetProps['fields'] = {
+  ...contenfulUploadAssetFields,
+  file: {
+    'en-US': {
+      ...contenfulUploadAssetFields['file']['en-US'],
+      url: 'www.thumbnail.com/asset.png',
+      details: undefined,
+    },
+  },
 };
 
 export const contenfulAsset: ContenfulAsset = {
@@ -39,17 +61,7 @@ export const contenfulAsset: ContenfulAsset = {
       sys: { type: 'Link', linkType: 'ContentType', id: 'asset' },
     },
   },
-  fields: {
-    title: { 'en-US': 'ASAP Network thumbnail' },
-    file: {
-      'en-US': {
-        url: '//images.ctfassets.net/ASAP_Network_thumbnail.jpg',
-        details: undefined,
-        fileName: 'ASAP Network thumbnail.jpg',
-        contentType: 'image/jpeg',
-      },
-    },
-  },
+  fields: contenfulAssetFields,
   toPlainObject: jest.fn(),
   processForAllLocales: jest.fn(),
   processForLocale: jest.fn(),

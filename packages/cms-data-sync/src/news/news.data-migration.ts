@@ -43,7 +43,7 @@ export const migrateNews = async () => {
     const entries: Entry[] = [];
 
     const newsItems = gqlNews.queryNewsAndEventsContents || [];
-    for await (const news of newsItems) {
+    for (const news of newsItems) {
       const { flatData: squidexNewsItem, id } = news;
 
       const { title, shortText, frequency, link, linkText, thumbnail, text } =

@@ -85,7 +85,8 @@ export const migrateNews = async () => {
           },
         );
         entries.push(entry);
-      } catch {
+      } catch (err) {
+        console.log(`\n\nError details of entry ${id}:`, err, '\n\n');
         try {
           // Most probably it failed because the rich text could not be
           // processed, so here we will try to create the entry

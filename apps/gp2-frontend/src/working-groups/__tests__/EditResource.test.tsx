@@ -81,10 +81,6 @@ describe('EditResource', () => {
       workingGroup,
     });
 
-    // Why do we need to do this?
-    const typeBox = await screen.findByRole('textbox', { name: /type/i });
-    userEvent.type(typeBox, `${'Note'}{enter}`);
-
     const titleBox = screen.getByRole('textbox', { name: /title/i });
     userEvent.clear(titleBox);
     userEvent.type(titleBox, title);

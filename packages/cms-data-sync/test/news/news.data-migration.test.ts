@@ -168,13 +168,50 @@ describe('migrateNews', () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         squidexResponseWithText,
       );
+
+      const textDocument = {
+        content: [
+          {
+            content: [
+              {
+                data: {},
+                marks: [],
+                value: 'Hello world',
+                nodeType: 'text',
+              },
+            ],
+            data: {},
+            nodeType: 'paragraph',
+          },
+        ],
+        data: {},
+        nodeType: 'document',
+      };
+
       const convertHtmlToContentfulFormatMock =
         convertHtmlToContentfulFormat as jest.Mock;
+      convertHtmlToContentfulFormatMock.mockReturnValueOnce(textDocument);
 
       await migrateNews();
 
       expect(convertHtmlToContentfulFormatMock).toHaveBeenCalledWith(
         '<p>Hello world</p>',
+      );
+
+      expect(contenfulEnv.createEntryWithId).toHaveBeenCalledWith(
+        'news',
+        'news-1',
+        {
+          fields: {
+            frequency: { 'en-US': 'News Articles' },
+            link: { 'en-US': undefined },
+            linkText: { 'en-US': undefined },
+            shortText: { 'en-US': undefined },
+            text: { 'en-US': textDocument },
+            thumbnail: { 'en-US': null },
+            title: { 'en-US': 'news' },
+          },
+        },
       );
     });
   });

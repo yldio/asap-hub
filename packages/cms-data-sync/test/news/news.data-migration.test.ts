@@ -4,6 +4,7 @@ import {
   newsEntry,
   getContentfulEnvironmentMock,
   squidexAsset,
+  contenfulUploadAssetFields,
 } from '../fixtures';
 import {
   clearContentfulEntries,
@@ -129,11 +130,38 @@ describe('migrateNews', () => {
         squidexResponseWithThumb,
       );
 
+      const createAssetMock = createAsset as jest.Mock;
+      createAssetMock.mockResolvedValueOnce(
+        contenfulUploadAssetFields['file']['en-US'],
+      );
+
       await migrateNews();
 
-      const createAssetMock = createAsset as jest.Mock;
+      expect(createAssetMock).toHaveBeenCalledWith(expect.anything(), [
+        {
+          fileName: 'ASAP Network thumbnail.jpg',
+          fileType: 'jpeg',
+          id: 'asset-id',
+          mimeType: 'image/jpeg',
+          thumbnailUrl: 'www.thumbnail.com/asset.png',
+        },
+      ]);
 
-      expect(createAssetMock).toHaveBeenCalled();
+      expect(contenfulEnv.createEntryWithId).toHaveBeenCalledWith(
+        'news',
+        'news-1',
+        {
+          fields: {
+            frequency: { 'en-US': 'News Articles' },
+            link: { 'en-US': undefined },
+            linkText: { 'en-US': undefined },
+            shortText: { 'en-US': undefined },
+            text: { 'en-US': null },
+            thumbnail: { 'en-US': contenfulUploadAssetFields['file']['en-US'] },
+            title: { 'en-US': 'news' },
+          },
+        },
+      );
     });
 
     it('for a news that contains text', async () => {
@@ -145,7 +173,9 @@ describe('migrateNews', () => {
 
       await migrateNews();
 
-      expect(convertHtmlToContentfulFormatMock).toHaveBeenCalled();
+      expect(convertHtmlToContentfulFormatMock).toHaveBeenCalledWith(
+        '<p>Hello world</p>',
+      );
     });
   });
 

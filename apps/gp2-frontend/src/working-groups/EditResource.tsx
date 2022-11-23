@@ -1,6 +1,7 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { ResourceModal } from '@asap-hub/gp2-components';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
+import { ComponentProps } from 'react';
 
 const { workingGroups } = gp2Routing;
 
@@ -13,9 +14,9 @@ const modalInfo = {
 type EditWorkingGroupResponseProps = {
   workingGroupId: string;
   workingGroup: gp2Model.WorkingGroupResponse;
-  backHref: string;
+  // backHref: string;
   updateWorkingGroupResources: (payload: gp2Model.Resource[]) => Promise<void>;
-};
+} & Pick<ComponentProps<typeof ResourceModal>, 'backHref'>;
 
 const EditResource: React.FC<EditWorkingGroupResponseProps> = ({
   workingGroupId,

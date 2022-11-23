@@ -95,6 +95,8 @@ export const migrateNews = async () => {
             await contentfulEnvironment.createEntryWithId('news', id, {
               fields: newsPayload,
             });
+          console.log(`Entry with ${id} was uploaded without rich text`);
+
           entries.push(entryWithoutRichText);
         } catch {
           console.log(`There is a problem creating entry ${id}`);

@@ -55,8 +55,6 @@ describe('migrateNews', () => {
   let squidexGraphqlClientMock: jest.Mocked<SquidexGraphqlClient>;
 
   beforeEach(() => {
-    jest.clearAllMocks();
-
     contenfulEnv = getContentfulEnvironmentMock();
     squidexGraphqlClientMock = {
       request: jest.fn(),
@@ -76,11 +74,14 @@ describe('migrateNews', () => {
       sys: { type: 'Array' },
     });
 
-    jest.spyOn(contenfulEnv, 'createEntryWithId').mockResolvedValueOnce(entry);
-
     jest
       .spyOn(entry, 'publish')
       .mockImplementationOnce(() => Promise.resolve(entry));
+  });
+
+  afterEach(() => {
+    jest.resetModules();
+    jest.clearAllMocks();
   });
 
   it('clears contentful entries', async () => {
@@ -135,13 +136,82 @@ describe('migrateNews', () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         squidexResponseWithText,
       );
-
-      await migrateNews();
-
       const convertHtmlToContentfulFormatMock =
         convertHtmlToContentfulFormat as jest.Mock;
 
+      await migrateNews();
+
       expect(convertHtmlToContentfulFormatMock).toHaveBeenCalled();
+    });
+  });
+
+  describe('error handling', () => {
+    it('outputs a message when converting from html to contenful format gives an error', async () => {
+      console.log = jest.fn();
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexResponseWithText,
+      );
+
+      const convertHtmlToContentfulFormatMock =
+        convertHtmlToContentfulFormat as jest.Mock;
+      convertHtmlToContentfulFormatMock.mockImplementationOnce(() => {
+        throw new Error();
+      });
+
+      await migrateNews();
+
+      expect(console.log).toHaveBeenCalledWith(
+        'There is a problem converting rich text from entry news-1',
+      );
+    });
+
+    it('tries to create the entry again if it fails the first time', async () => {
+      console.log = jest.fn();
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexResponseWithText,
+      );
+
+      jest
+        .spyOn(contenfulEnv, 'createEntryWithId')
+        .mockImplementationOnce(() => {
+          throw new Error();
+        });
+
+      await migrateNews();
+
+      expect(console.log).toHaveBeenCalledWith(
+        'Entry with news-1 was uploaded without rich text',
+      );
+      expect(contenfulEnv.createEntryWithId).toHaveBeenCalledTimes(2);
+    });
+
+    it('outputs a message create entry fails for the second time', async () => {
+      console.log = jest.fn();
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexResponseWithText,
+      );
+
+      jest.spyOn(contenfulEnv, 'createEntryWithId').mockImplementation(() => {
+        throw new Error();
+      });
+
+      await migrateNews();
+
+      expect(contenfulEnv.createEntryWithId).toHaveBeenCalledTimes(2);
+      expect(console.log).toHaveBeenCalledWith(
+        'There is a problem creating entry news-1',
+      );
+    });
+
+    it('does not fail if squidex does not return anything', async () => {
+      squidexGraphqlClientMock.request.mockResolvedValueOnce({});
+      const publishContentfulEntriesMock =
+        publishContentfulEntries as jest.Mock;
+
+      await migrateNews();
+
+      expect(contenfulEnv.createEntryWithId).not.toHaveBeenCalled();
+      expect(publishContentfulEntriesMock).toHaveBeenCalled();
     });
   });
 

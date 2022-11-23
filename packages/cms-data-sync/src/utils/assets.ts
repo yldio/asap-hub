@@ -75,7 +75,7 @@ export const migrateAsset = async (
   );
 };
 
-export const createAssetLink = async (
+export const createAsset = async (
   contentfulEnvironment: Environment,
   asset: Pick<
     Asset,

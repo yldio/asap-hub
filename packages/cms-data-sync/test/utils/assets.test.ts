@@ -1,7 +1,7 @@
 import { Environment } from 'contentful-management';
 import {
   checkIfAssetAlreadyExistsInContentful,
-  createAssetLink,
+  createAsset,
   migrateAsset,
 } from '../../src/utils';
 import {
@@ -101,7 +101,7 @@ describe('migrateAsset', () => {
   });
 });
 
-describe('createAssetLink', () => {
+describe('createAsset', () => {
   let envMock: Environment;
 
   beforeEach(async () => {
@@ -113,7 +113,7 @@ describe('createAssetLink', () => {
   it('returns asset link payload properly', async () => {
     jest.spyOn(envMock, 'getAsset').mockResolvedValueOnce(contenfulAsset);
 
-    const assetLinkPayload = await createAssetLink(envMock, [squidexAsset]);
+    const assetLinkPayload = await createAsset(envMock, [squidexAsset]);
     expect(assetLinkPayload).toEqual({
       sys: { id: 'asset-id', linkType: 'Asset', type: 'Link' },
     });

@@ -7,7 +7,7 @@ import {
 } from '../fixtures';
 import {
   clearContentfulEntries,
-  createAssetLink,
+  createAsset,
   convertHtmlToContentfulFormat,
   publishContentfulEntries,
   getSquidexAndContentfulClients,
@@ -131,9 +131,9 @@ describe('migrateNews', () => {
 
       await migrateNews();
 
-      const createAssetLinkMock = createAssetLink as jest.Mock;
+      const createAssetMock = createAsset as jest.Mock;
 
-      expect(createAssetLinkMock).toHaveBeenCalled();
+      expect(createAssetMock).toHaveBeenCalled();
     });
 
     it('for a news that contains text', async () => {

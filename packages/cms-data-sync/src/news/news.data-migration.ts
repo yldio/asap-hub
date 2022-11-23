@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+/* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
@@ -14,7 +15,7 @@ import {
 import {
   clearContentfulEntries,
   convertHtmlToContentfulFormat,
-  createAssetLink,
+  createAsset,
   getSquidexAndContentfulClients,
   publishContentfulEntries,
 } from '../utils';
@@ -60,7 +61,7 @@ export const migrateNews = async () => {
       };
 
       if (thumbnail?.length) {
-        newsPayload.thumbnail['en-US'] = await createAssetLink(
+        newsPayload.thumbnail['en-US'] = await createAsset(
           contentfulEnvironment,
           thumbnail,
         );

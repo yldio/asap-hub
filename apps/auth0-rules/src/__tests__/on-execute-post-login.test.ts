@@ -183,7 +183,7 @@ it('passes the AUTH0_SHARED_SECRET as a bearer token', async () => {
   expect(nock.isDone()).toBe(true);
 });
 
-describe('CRN', () => {
+describe('For a CRN login', () => {
   const baseUser: UserMetadataResponse = {
     onboarded: true,
     displayName: 'Joao Tiago',
@@ -253,7 +253,7 @@ describe('CRN', () => {
     );
   });
 });
-describe('GP2', () => {
+describe('For a GP2 login', () => {
   const baseUser: gp2Model.UserResponse = {
     onboarded: true,
     displayName: 'Joao Tiago',

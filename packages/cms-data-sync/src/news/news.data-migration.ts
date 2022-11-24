@@ -31,82 +31,74 @@ type NewsPayload = {
 };
 
 export const migrateNews = async () => {
-  const clients = await getSquidexAndContentfulClients();
-  if (clients) {
-    const { contentfulEnvironment, squidexGraphqlClient } = clients;
-    const gqlNews = await squidexGraphqlClient.request<
-      FetchNewsQuery,
-      FetchNewsQueryVariables
-    >(newsQuery);
+  const { contentfulEnvironment, squidexGraphqlClient } =
+    await getSquidexAndContentfulClients();
+  const gqlNews = await squidexGraphqlClient.request<
+    FetchNewsQuery,
+    FetchNewsQueryVariables
+  >(newsQuery);
 
-    await clearContentfulEntries(contentfulEnvironment, 'news');
+  await clearContentfulEntries(contentfulEnvironment, 'news');
 
-    const entries: Entry[] = [];
+  const entries: Entry[] = [];
 
-    const newsItems = gqlNews.queryNewsAndEventsContents || [];
-    for (const news of newsItems) {
-      const { flatData: squidexNewsItem, id } = news;
+  const newsItems = gqlNews.queryNewsAndEventsContents || [];
+  for (const news of newsItems) {
+    const { flatData: squidexNewsItem, id } = news;
 
-      const { title, shortText, frequency, link, linkText, thumbnail, text } =
-        squidexNewsItem;
+    const { title, shortText, frequency, link, linkText, thumbnail, text } =
+      squidexNewsItem;
 
-      const newsPayload: NewsPayload = {
-        title: { 'en-US': title! },
-        shortText: { 'en-US': shortText },
-        frequency: { 'en-US': frequency || 'News Articles' },
-        link: { 'en-US': link! },
-        linkText: { 'en-US': linkText! },
-        text: { 'en-US': null },
-        thumbnail: { 'en-US': null },
-      };
+    const newsPayload: NewsPayload = {
+      title: { 'en-US': title! },
+      shortText: { 'en-US': shortText },
+      frequency: { 'en-US': frequency || 'News Articles' },
+      link: { 'en-US': link! },
+      linkText: { 'en-US': linkText! },
+      text: { 'en-US': null },
+      thumbnail: { 'en-US': null },
+    };
 
-      if (thumbnail?.length) {
-        newsPayload.thumbnail['en-US'] = await createAsset(
-          contentfulEnvironment,
-          thumbnail,
-        );
-      }
+    if (thumbnail?.length) {
+      newsPayload.thumbnail['en-US'] = await createAsset(
+        contentfulEnvironment,
+        thumbnail,
+      );
+    }
 
-      if (text) {
-        try {
-          newsPayload.text['en-US'] = convertHtmlToContentfulFormat(text);
-        } catch {
-          console.log(
-            `There is a problem converting rich text from entry ${id}`,
-          );
-        }
-      }
-
+    if (text) {
       try {
-        const entry = await contentfulEnvironment.createEntryWithId(
-          'news',
-          id,
-          {
-            fields: newsPayload,
-          },
-        );
-        entries.push(entry);
-      } catch (err) {
-        console.log(`\n\nError details of entry ${id}:`, err, '\n\n');
-        try {
-          // Most probably it failed because the rich text could not be
-          // processed, so here we will try to create the entry
-          // without the rich text
-          newsPayload.text = { 'en-US': null };
-          const entryWithoutRichText =
-            await contentfulEnvironment.createEntryWithId('news', id, {
-              fields: newsPayload,
-            });
-          console.log(`Entry with ${id} was uploaded without rich text`);
-
-          entries.push(entryWithoutRichText);
-        } catch {
-          console.log(`There is a problem creating entry ${id}`);
-        }
+        newsPayload.text['en-US'] = convertHtmlToContentfulFormat(text);
+      } catch {
+        console.log(`There is a problem converting rich text from entry ${id}`);
       }
     }
-    await publishContentfulEntries(entries);
+
+    try {
+      const entry = await contentfulEnvironment.createEntryWithId('news', id, {
+        fields: newsPayload,
+      });
+      entries.push(entry);
+    } catch (err) {
+      // console.log(`\n\nError details of entry ${id}:`, err, '\n\n');
+      try {
+        // Most probably it failed because the rich text could not be
+        // processed, so here we will try to create the entry
+        // without the rich text
+        newsPayload.text = { 'en-US': null };
+        const entryWithoutRichText =
+          await contentfulEnvironment.createEntryWithId('news', id, {
+            fields: newsPayload,
+          });
+        console.log(`Entry with ${id} was uploaded without rich text`);
+
+        entries.push(entryWithoutRichText);
+      } catch {
+        console.log(`There is a problem creating entry ${id}`);
+      }
+    }
   }
+  await publishContentfulEntries(entries);
 };
 
 migrateNews();

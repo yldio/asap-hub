@@ -39,7 +39,7 @@ jobs:
       environment-name: Branch
       entity: all
       contentful-env: Development
-      squidex-app: asap-hub-dev
+      squidex-app: crn-2238
     secrets:
       CONTENTFUL_MANAGEMENT_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
       CRN_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}

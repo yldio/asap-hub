@@ -34,9 +34,8 @@ const enterLink = (link: string) => {
   userEvent.type(linkBox(), link);
 };
 
-beforeEach(jest.resetAllMocks);
-
 describe('ResourceModal', () => {
+  beforeEach(jest.resetAllMocks);
   const renderResourseModal = (
     props: Partial<ComponentProps<typeof ResourceModal>> = {},
   ) => {
@@ -44,6 +43,96 @@ describe('ResourceModal', () => {
       wrapper: StaticRouter,
     });
   };
+  describe('dialog', () => {
+    beforeEach(jest.resetAllMocks);
+    const renderResourseModalWithDialog = (
+      props: Partial<ComponentProps<typeof ResourceModal>> = {
+        type: 'Note',
+        title: 'a title',
+        description: 'a description',
+      },
+    ) => {
+      const getUserConfirmation = jest.fn((_message, cb) => cb(true));
+      const history = createMemoryHistory({ getUserConfirmation });
+      render(
+        <Router history={history}>
+          <ResourceModal {...defaultProps} {...props} />
+        </Router>,
+      );
+      return {
+        getUserConfirmation,
+      };
+    };
+    it('shows the dialog when the user adds a new type', () => {
+      const { getUserConfirmation } = renderResourseModalWithDialog();
+      enterType('Link');
+      const cancelButton = screen.getByRole('link', { name: /cancel/i });
+      userEvent.click(cancelButton);
+      expect(getUserConfirmation).toHaveBeenCalledTimes(1);
+    });
+
+    it('the dialog shows when the user changes the resource information and cancels the action', () => {
+      const { getUserConfirmation } = renderResourseModalWithDialog();
+      enterType('Link');
+      enterLink('http://example.com');
+      enterTitle('A new title');
+      enterDescription('A new description');
+      const cancelButton = screen.getByRole('link', { name: /cancel/i });
+      userEvent.click(cancelButton);
+      expect(getUserConfirmation).toHaveBeenCalledTimes(1);
+    });
+
+    it(`the dialog doesn't show when the user doesn't add new changes`, () => {
+      const { getUserConfirmation } = renderResourseModalWithDialog();
+      const cancelButton = screen.getByRole('link', { name: /cancel/i });
+      userEvent.click(cancelButton);
+      expect(getUserConfirmation).not.toHaveBeenCalled();
+    });
+
+    it('the dialog shows when the user changes type of resource', () => {
+      const { getUserConfirmation } = renderResourseModalWithDialog();
+      enterType('Link');
+      const cancelButton = screen.getByRole('link', { name: /cancel/i });
+      userEvent.click(cancelButton);
+      expect(getUserConfirmation).toHaveBeenCalledTimes(1);
+    });
+    it('the dialog shows when the user changes the link', () => {
+      const { getUserConfirmation } = renderResourseModalWithDialog({
+        type: 'Link',
+      });
+
+      enterLink('http://example2.com');
+      const cancelButton = screen.getByRole('link', { name: /cancel/i });
+      userEvent.click(cancelButton);
+      expect(getUserConfirmation).toHaveBeenCalledTimes(1);
+    });
+  });
+  describe('edit modal', () => {
+    it('renders the type of the resource', async () => {
+      renderResourseModal({ type: 'Link', title: 'test' });
+      await waitFor(() => expect(titleBox()).toBeEnabled());
+      return expect(await screen.findByText('Link')).toBeVisible();
+    });
+    it('renders the title of the resource', () => {
+      renderResourseModal({ title: 'This is the new test' });
+      expect(screen.getByRole('textbox', { name: /Title/i })).toHaveValue(
+        'This is the new test',
+      );
+    });
+    it('renders the description of the resource', () => {
+      renderResourseModal({ description: 'This is the new description' });
+      expect(screen.getByText('This is the new description')).toBeVisible();
+    });
+    it('renders the link of the resource', () => {
+      renderResourseModal({
+        type: 'Link',
+        externalLink: 'https://www.google.com/',
+      });
+      expect(screen.getByRole('textbox', { name: /URL/i })).toHaveValue(
+        'https://www.google.com/',
+      );
+    });
+  });
   it('title and description should be disabled and url is hidden', () => {
     renderResourseModal();
     expect(descriptionBox()).toBeDisabled();
@@ -163,95 +252,5 @@ describe('ResourceModal', () => {
     save();
     expect(screen.getByText(/please enter a title/i)).toBeVisible();
     expect(screen.getByText(/please enter a valid link/i)).toBeVisible();
-  });
-  describe('edit modal', () => {
-    it('renders the type of the resource', () => {
-      renderResourseModal({ type: 'Link' });
-      expect(screen.getByText('Link')).toBeVisible();
-    });
-    it('renders the title of the resource', () => {
-      renderResourseModal({ title: 'This is the new test' });
-      expect(screen.getByRole('textbox', { name: /Title/i })).toHaveValue(
-        'This is the new test',
-      );
-    });
-    it('renders the description of the resource', () => {
-      renderResourseModal({ description: 'This is the new description' });
-      expect(screen.getByText('This is the new description')).toBeVisible();
-    });
-    it('renders the link of the resource', () => {
-      renderResourseModal({
-        type: 'Link',
-        externalLink: 'https://www.google.com/',
-      });
-      expect(screen.getByRole('textbox', { name: /URL/i })).toHaveValue(
-        'https://www.google.com/',
-      );
-    });
-  });
-
-  describe('dialog', () => {
-    beforeEach(jest.resetAllMocks);
-    const renderResourseModalWithDialog = (
-      props: Partial<ComponentProps<typeof ResourceModal>> = {
-        type: 'Note',
-        title: 'a title',
-        description: 'a description',
-      },
-    ) => {
-      const getUserConfirmation = jest.fn((_message, cb) => cb(true));
-      const history = createMemoryHistory({ getUserConfirmation });
-      render(
-        <Router history={history}>
-          <ResourceModal {...defaultProps} {...props} />
-        </Router>,
-      );
-      return {
-        getUserConfirmation,
-      };
-    };
-    it('shows the dialog when the user adds a new type', () => {
-      const { getUserConfirmation } = renderResourseModalWithDialog();
-      enterType('Link');
-      const cancelButton = screen.getByRole('link', { name: /cancel/i });
-      userEvent.click(cancelButton);
-      expect(getUserConfirmation).toHaveBeenCalledTimes(1);
-    });
-
-    it('the dialog shows when the user changes the resource information and cancels the action', () => {
-      const { getUserConfirmation } = renderResourseModalWithDialog();
-      enterType('Link');
-      enterLink('http://example.com');
-      enterTitle('A new title');
-      enterDescription('A new description');
-      const cancelButton = screen.getByRole('link', { name: /cancel/i });
-      userEvent.click(cancelButton);
-      expect(getUserConfirmation).toHaveBeenCalledTimes(1);
-    });
-
-    it(`the dialog doesn't show when the user doesn't add new changes`, () => {
-      const { getUserConfirmation } = renderResourseModalWithDialog();
-      const cancelButton = screen.getByRole('link', { name: /cancel/i });
-      userEvent.click(cancelButton);
-      expect(getUserConfirmation).not.toHaveBeenCalled();
-    });
-
-    it('the dialog shows when the user changes type of resource', () => {
-      const { getUserConfirmation } = renderResourseModalWithDialog();
-      enterType('Link');
-      const cancelButton = screen.getByRole('link', { name: /cancel/i });
-      userEvent.click(cancelButton);
-      expect(getUserConfirmation).toHaveBeenCalledTimes(1);
-    });
-    it('the dialog shows when the user changes the link', () => {
-      const { getUserConfirmation } = renderResourseModalWithDialog({
-        type: 'Link',
-      });
-
-      enterLink('http://example2.com');
-      const cancelButton = screen.getByRole('link', { name: /cancel/i });
-      userEvent.click(cancelButton);
-      expect(getUserConfirmation).toHaveBeenCalledTimes(1);
-    });
   });
 });

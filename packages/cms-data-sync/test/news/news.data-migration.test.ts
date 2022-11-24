@@ -59,7 +59,11 @@ describe('migrateNews', () => {
   let contenfulEnv: Environment;
   let squidexGraphqlClientMock: jest.Mocked<SquidexGraphqlClient>;
 
+  const consoleLogRef = console.log;
+
   beforeEach(() => {
+    console.log = jest.fn();
+
     contenfulEnv = getContentfulEnvironmentMock();
     squidexGraphqlClientMock = {
       request: jest.fn(),
@@ -87,6 +91,10 @@ describe('migrateNews', () => {
   afterEach(() => {
     jest.resetModules();
     jest.clearAllMocks();
+  });
+
+  afterAll(() => {
+    console.log = consoleLogRef;
   });
 
   it('clears contentful entries', async () => {
@@ -218,7 +226,6 @@ describe('migrateNews', () => {
 
   describe('error handling', () => {
     it('outputs a message when converting from html to contenful format gives an error', async () => {
-      console.log = jest.fn();
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         squidexResponseWithText,
       );
@@ -237,7 +244,6 @@ describe('migrateNews', () => {
     });
 
     it('tries to create the entry again if it fails the first time', async () => {
-      console.log = jest.fn();
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         squidexResponseWithText,
       );
@@ -257,7 +263,6 @@ describe('migrateNews', () => {
     });
 
     it('outputs a message create entry fails for the second time', async () => {
-      console.log = jest.fn();
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         squidexResponseWithText,
       );

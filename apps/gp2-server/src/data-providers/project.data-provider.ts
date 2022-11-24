@@ -145,6 +145,10 @@ export function parseProjectToDataObject({
           return membersList;
         }
 
+        if (user.flatData.onboarded === false) {
+          return membersList;
+        }
+
         const groupMember = parseProjectMembers(user, member.role);
         return [...membersList, groupMember];
       },

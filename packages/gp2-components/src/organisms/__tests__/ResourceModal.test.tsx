@@ -49,7 +49,7 @@ describe('ResourceModal', () => {
       wrapper: StaticRouter,
     });
   };
-  test('title and description should be disabled and url is hidden', () => {
+  it('title and description should be disabled and url is hidden', () => {
     renderResourseModal();
     expect(descriptionBox()).toBeDisabled();
     expect(titleBox()).toBeDisabled();
@@ -169,104 +169,112 @@ describe('ResourceModal', () => {
     expect(screen.getByText(/please enter a title/i)).toBeVisible();
     expect(screen.getByText(/please enter a valid link/i)).toBeVisible();
   });
-
-  it('shows the dialog when the user adds a new type', () => {
-    getUserConfirmation = jest.fn((_message, cb) => cb(true));
-    history = createMemoryHistory({ getUserConfirmation });
-
-    render(
-      <Router history={history}>
-        <ResourceModal {...defaultProps} />
-      </Router>,
-    );
-    enterType('Link');
-    const cancelButton = screen.getByRole('link', { name: /cancel/i });
-    userEvent.click(cancelButton);
-    expect(getUserConfirmation).toHaveBeenCalledTimes(1);
+  describe('edit modal', () => {
+    it('renders the type of the resource', () => {
+      renderResourseModal({ type: 'Link' });
+      expect(screen.getByText('Link')).toBeVisible();
+    });
   });
 
-  it('the dialog shows when the user changes the resource information and cancels the action', () => {
-    getUserConfirmation = jest.fn((_message, cb) => cb(true));
-    history = createMemoryHistory({ getUserConfirmation });
+  describe('dialog', () => {
+    it('shows the dialog when the user adds a new type', () => {
+      getUserConfirmation = jest.fn((_message, cb) => cb(true));
+      history = createMemoryHistory({ getUserConfirmation });
 
-    const props = {
-      type: 'Note' as const,
-      title: 'A title',
-      description: 'A description',
-    };
+      render(
+        <Router history={history}>
+          <ResourceModal {...defaultProps} />
+        </Router>,
+      );
+      enterType('Link');
+      const cancelButton = screen.getByRole('link', { name: /cancel/i });
+      userEvent.click(cancelButton);
+      expect(getUserConfirmation).toHaveBeenCalledTimes(1);
+    });
 
-    render(
-      <Router history={history}>
-        <ResourceModal {...defaultProps} {...props} />
-      </Router>,
-    );
-    enterType('Link');
-    enterLink('http://example.com');
-    enterTitle('A new title');
-    enterDescription('A new description');
-    const cancelButton = screen.getByRole('link', { name: /cancel/i });
-    userEvent.click(cancelButton);
-    expect(getUserConfirmation).toHaveBeenCalledTimes(1);
-  });
+    it('the dialog shows when the user changes the resource information and cancels the action', () => {
+      getUserConfirmation = jest.fn((_message, cb) => cb(true));
+      history = createMemoryHistory({ getUserConfirmation });
 
-  it("the dialog doesn't show when the user doesn't add new changes", () => {
-    getUserConfirmation = jest.fn((_message, cb) => cb(true));
-    history = createMemoryHistory({ getUserConfirmation });
+      const props = {
+        type: 'Note' as const,
+        title: 'A title',
+        description: 'A description',
+      };
 
-    const props = {
-      type: 'Note' as const,
-      title: 'A title',
-      description: 'A description',
-    };
+      render(
+        <Router history={history}>
+          <ResourceModal {...defaultProps} {...props} />
+        </Router>,
+      );
+      enterType('Link');
+      enterLink('http://example.com');
+      enterTitle('A new title');
+      enterDescription('A new description');
+      const cancelButton = screen.getByRole('link', { name: /cancel/i });
+      userEvent.click(cancelButton);
+      expect(getUserConfirmation).toHaveBeenCalledTimes(1);
+    });
 
-    render(
-      <Router history={history}>
-        <ResourceModal {...defaultProps} {...props} />
-      </Router>,
-    );
-    const cancelButton = screen.getByRole('link', { name: /cancel/i });
-    userEvent.click(cancelButton);
-    expect(getUserConfirmation).not.toHaveBeenCalled();
-  });
-  it('the dialog shows when the user changes type of resource', () => {
-    getUserConfirmation = jest.fn((_message, cb) => cb(true));
-    history = createMemoryHistory({ getUserConfirmation });
+    it("the dialog doesn't show when the user doesn't add new changes", () => {
+      getUserConfirmation = jest.fn((_message, cb) => cb(true));
+      history = createMemoryHistory({ getUserConfirmation });
 
-    const props = {
-      type: 'Note' as const,
-      title: 'A title',
-      description: 'A description',
-    };
+      const props = {
+        type: 'Note' as const,
+        title: 'A title',
+        description: 'A description',
+      };
 
-    render(
-      <Router history={history}>
-        <ResourceModal {...defaultProps} {...props} />
-      </Router>,
-    );
-    enterType('Link');
-    const cancelButton = screen.getByRole('link', { name: /cancel/i });
-    userEvent.click(cancelButton);
-    expect(getUserConfirmation).toHaveBeenCalledTimes(1);
-  });
-  it('the dialog shows when the user changes the link', () => {
-    getUserConfirmation = jest.fn((_message, cb) => cb(true));
-    history = createMemoryHistory({ getUserConfirmation });
+      render(
+        <Router history={history}>
+          <ResourceModal {...defaultProps} {...props} />
+        </Router>,
+      );
+      const cancelButton = screen.getByRole('link', { name: /cancel/i });
+      userEvent.click(cancelButton);
+      expect(getUserConfirmation).not.toHaveBeenCalled();
+    });
+    it('the dialog shows when the user changes type of resource', () => {
+      getUserConfirmation = jest.fn((_message, cb) => cb(true));
+      history = createMemoryHistory({ getUserConfirmation });
 
-    const props = {
-      type: 'Link' as const,
-      externalLink: 'http://example.com',
-      title: 'A title',
-      description: 'A description',
-    };
+      const props = {
+        type: 'Note' as const,
+        title: 'A title',
+        description: 'A description',
+      };
 
-    render(
-      <Router history={history}>
-        <ResourceModal {...defaultProps} {...props} />
-      </Router>,
-    );
-    enterLink('http://example2.com');
-    const cancelButton = screen.getByRole('link', { name: /cancel/i });
-    userEvent.click(cancelButton);
-    expect(getUserConfirmation).toHaveBeenCalledTimes(1);
+      render(
+        <Router history={history}>
+          <ResourceModal {...defaultProps} {...props} />
+        </Router>,
+      );
+      enterType('Link');
+      const cancelButton = screen.getByRole('link', { name: /cancel/i });
+      userEvent.click(cancelButton);
+      expect(getUserConfirmation).toHaveBeenCalledTimes(1);
+    });
+    it('the dialog shows when the user changes the link', () => {
+      getUserConfirmation = jest.fn((_message, cb) => cb(true));
+      history = createMemoryHistory({ getUserConfirmation });
+
+      const props = {
+        type: 'Link' as const,
+        externalLink: 'http://example.com',
+        title: 'A title',
+        description: 'A description',
+      };
+
+      render(
+        <Router history={history}>
+          <ResourceModal {...defaultProps} {...props} />
+        </Router>,
+      );
+      enterLink('http://example2.com');
+      const cancelButton = screen.getByRole('link', { name: /cancel/i });
+      userEvent.click(cancelButton);
+      expect(getUserConfirmation).toHaveBeenCalledTimes(1);
+    });
   });
 });

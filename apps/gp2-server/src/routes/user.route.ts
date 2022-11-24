@@ -44,11 +44,20 @@ export const userRouteFactory = (userController: UserController): Router =>
       '/users',
       async (req, res) => {
         const options = validateFetchUsersOptions(req.query);
+
+        if (
+          options.filter?.onlyOnboarded === false &&
+          req.loggedInUser?.role !== 'Administrator'
+        ) {
+          throw Boom.forbidden(
+            'Only administrators can list unonboarded users',
+          );
+        }
+
         const userFetchOptions = {
           ...options,
           filter: options.filter,
         };
-
         const users = await userController.fetch(userFetchOptions);
 
         res.json(users);

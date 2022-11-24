@@ -11,7 +11,9 @@ type EditResponseModalProps = Pick<
   'resources'
 > & {
   workingGroupId: string;
-  updateWorkingGroupResources: (payload: gp2Model.Resource[]) => Promise<void>;
+  updateWorkingGroupResources: (
+    payload: gp2Model.WorkingGroupResourcesPutRequest,
+  ) => Promise<void>;
 } & Pick<ComponentProps<typeof ResourceModal>, 'backHref'>;
 
 const EditResourceModal: React.FC<EditResponseModalProps> = ({

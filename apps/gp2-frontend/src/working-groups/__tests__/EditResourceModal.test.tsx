@@ -7,15 +7,15 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { ComponentProps } from 'react';
 import EditResourceModal from '../EditResourceModal';
 
-type renderWorkingGroupDetailProps = Partial<
+type renderEditResourceModalProps = Partial<
   ComponentProps<typeof EditResourceModal>
 > & { resourceIndex?: string };
 
-const renderWorkingGroupDetail = ({
+const renderEditResourceModal = ({
   resourceIndex = '0',
   resources = gp2Fixtures.createWorkingGroupResponse().resources,
   updateWorkingGroupResources = jest.fn(),
-}: renderWorkingGroupDetailProps = {}) => {
+}: renderEditResourceModalProps = {}) => {
   const workingGroupId = '7';
   render(
     <MemoryRouter
@@ -59,7 +59,7 @@ const renderWorkingGroupDetail = ({
 describe('EditResource', () => {
   beforeEach(jest.restoreAllMocks);
   it('see if modal appears', async () => {
-    renderWorkingGroupDetail();
+    renderEditResourceModal();
 
     expect(screen.getByRole('button', { name: /Save/i })).toBeInTheDocument();
     expect(
@@ -77,7 +77,7 @@ describe('EditResource', () => {
     const title = 'a changed title';
     const updateWorkingGroupResources = jest.fn();
 
-    renderWorkingGroupDetail({
+    renderEditResourceModal({
       updateWorkingGroupResources,
       resources,
     });
@@ -101,7 +101,7 @@ describe('EditResource', () => {
     const updateWorkingGroupResources = jest.fn();
     const resourceIndex = '0';
 
-    renderWorkingGroupDetail({
+    renderEditResourceModal({
       updateWorkingGroupResources,
       resources,
       resourceIndex,
@@ -125,7 +125,7 @@ describe('EditResource', () => {
     const updateWorkingGroupResources = jest.fn();
     const resourceIndex = '1';
 
-    renderWorkingGroupDetail({
+    renderEditResourceModal({
       updateWorkingGroupResources,
       resources,
       resourceIndex,
@@ -157,7 +157,7 @@ describe('EditResource', () => {
     const updateWorkingGroupResources = jest.fn();
     const resourceIndex = '1';
 
-    renderWorkingGroupDetail({
+    renderEditResourceModal({
       updateWorkingGroupResources,
       resources,
       resourceIndex,

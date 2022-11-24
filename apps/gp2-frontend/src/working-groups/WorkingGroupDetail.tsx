@@ -15,12 +15,6 @@ import { usePutWorkingGroupResources, useWorkingGroupById } from './state';
 
 const { workingGroups } = gp2Routing;
 
-const modalInfo = {
-  title: 'Add Resource',
-  description:
-    'Select a resource type and provide the neccessary information required to share a resource privately with your group.',
-};
-
 const WorkingGroupDetail = () => {
   const { workingGroupId } = useRouteParams(workingGroups({}).workingGroup);
   const workingGroup = useWorkingGroupById(workingGroupId);
@@ -76,8 +70,10 @@ const WorkingGroupDetail = () => {
                   <>
                     <Route path={add}>
                       <ResourceModal
-                        modalTitle={modalInfo.title}
-                        modalDescription={modalInfo.description}
+                        modalTitle={'Add Resource'}
+                        modalDescription={
+                          'Select a resource type and provide the neccessary information required to share a resource privately with your group.'
+                        }
                         backHref={resources}
                         onSave={(resource: gp2Model.Resource) =>
                           updateWorkingGroupResources([

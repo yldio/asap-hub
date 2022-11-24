@@ -6,12 +6,6 @@ import { NotFoundPage } from '@asap-hub/react-components';
 
 const { workingGroups } = gp2Routing;
 
-const modalInfo = {
-  title: 'Edit Resource',
-  description:
-    'Edit or delete an existing resource that is being shared privately with your group.',
-};
-
 type EditResponseModalProps = {
   workingGroupId: string;
   workingGroup: gp2Model.WorkingGroupResponse;
@@ -38,8 +32,10 @@ const EditResourceModal: React.FC<EditResponseModalProps> = ({
   return (
     <ResourceModal
       {...resourceOutput}
-      modalTitle={modalInfo.title}
-      modalDescription={modalInfo.description}
+      modalTitle={'Edit Resource'}
+      modalDescription={
+        'Edit or delete an existing resource that is being shared privately with your group.'
+      }
       backHref={backHref}
       onSave={(resource: gp2Model.Resource) => {
         updateWorkingGroupResources([

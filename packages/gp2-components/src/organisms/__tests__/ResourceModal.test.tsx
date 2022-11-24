@@ -5,21 +5,9 @@ import { Router, StaticRouter } from 'react-router-dom';
 import { History, createMemoryHistory } from 'history';
 import ResourceModal from '../ResourceModal';
 
-const modalInfo = {
-  title: 'Add Resource',
-  description:
-    'Select a resource type and provide the neccessary information required to share a resource privately with your group.',
-};
-
-const editModalInfo = {
-  title: 'Edit Resource',
-  description:
-    'Edit or delete an existing resource that is being shared privately with your group.',
-};
-
 const defaultProps: ComponentProps<typeof ResourceModal> = {
-  modalTitle: modalInfo.title,
-  modalDescription: modalInfo.description,
+  modalTitle: 'A title',
+  modalDescription: 'A description',
   backHref: '/back',
 };
 
@@ -183,8 +171,6 @@ describe('ResourceModal', () => {
     history = createMemoryHistory({ getUserConfirmation });
 
     const props = {
-      modalTitle: editModalInfo.title,
-      modalDescription: editModalInfo.description,
       type: 'Note' as const,
       title: 'A title',
       description: 'A description',
@@ -209,8 +195,6 @@ describe('ResourceModal', () => {
     history = createMemoryHistory({ getUserConfirmation });
 
     const props = {
-      modalTitle: editModalInfo.title,
-      modalDescription: editModalInfo.description,
       type: 'Note' as const,
       title: 'A title',
       description: 'A description',
@@ -230,8 +214,6 @@ describe('ResourceModal', () => {
     history = createMemoryHistory({ getUserConfirmation });
 
     const props = {
-      modalTitle: editModalInfo.title,
-      modalDescription: editModalInfo.description,
       type: 'Note' as const,
       title: 'A title',
       description: 'A description',
@@ -252,8 +234,6 @@ describe('ResourceModal', () => {
     history = createMemoryHistory({ getUserConfirmation });
 
     const props = {
-      modalTitle: editModalInfo.title,
-      modalDescription: editModalInfo.description,
       type: 'Link' as const,
       externalLink: 'http://example.com',
       title: 'A title',

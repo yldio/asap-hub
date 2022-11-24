@@ -14,12 +14,6 @@ import { usePutProjectResources, useProjectById } from './state';
 
 const { projects } = gp2Routing;
 
-const modalInfo = {
-  title: 'Add Resource',
-  description:
-    'Select a resource type and provide the neccessary information required to share a resource privately with your group.',
-};
-
 const ProjectDetail = () => {
   const { projectId } = useRouteParams(projects({}).project);
   const project = useProjectById(projectId);
@@ -60,8 +54,10 @@ const ProjectDetail = () => {
                 {isAdministrator && (
                   <Route path={add}>
                     <ResourceModal
-                      modalTitle={modalInfo.title}
-                      modalDescription={modalInfo.description}
+                      modalTitle={'Add Resource'}
+                      modalDescription={
+                        'Select a resource type and provide the neccessary information required to share a resource privately with your group.'
+                      }
                       backHref={resources}
                       onSave={(resource: gp2Model.Resource) =>
                         updateProjectResources([

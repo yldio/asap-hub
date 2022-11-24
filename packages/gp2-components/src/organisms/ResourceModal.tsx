@@ -62,15 +62,13 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
   const [newDescription, setNewDescription] = useState(description || '');
   const [newExternalLink, setNewExternalLink] = useState(externalLink || '');
 
-  const verifyDirty = () => {
-    if (props.type === undefined && newType === '') {
+  const isDirty = () => {
+    if (!props.type && newType === '') {
       return false;
     }
 
-    if (props.type === 'Link' && props.type === newType) {
-      if (externalLink && externalLink !== newExternalLink) {
-        return true;
-      }
+    if (props.type === 'Link' && externalLink !== newExternalLink) {
+      return true;
     }
 
     return (
@@ -84,7 +82,7 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
     <EditModal
       title={modalTitle}
       backHref={backHref}
-      dirty={verifyDirty()}
+      dirty={isDirty()}
       noHeader
       onSave={() => {
         /* istanbul ignore next */

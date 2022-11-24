@@ -167,6 +167,21 @@ describe('ResourceModal', () => {
     expect(screen.getByText(/please enter a valid link/i)).toBeVisible();
   });
 
+  it('shows the dialog when the user adds a new type', () => {
+    getUserConfirmation = jest.fn((_message, cb) => cb(true));
+    history = createMemoryHistory({ getUserConfirmation });
+
+    render(
+      <Router history={history}>
+        <ResourceModal {...defaultProps} />
+      </Router>,
+    );
+    enterType('Link');
+    const cancelButton = screen.getByRole('link', { name: /cancel/i });
+    userEvent.click(cancelButton);
+    expect(getUserConfirmation).toHaveBeenCalledTimes(1);
+  });
+
   it('the dialog shows when the user changes the resource information and cancels the action', () => {
     getUserConfirmation = jest.fn((_message, cb) => cb(true));
     history = createMemoryHistory({ getUserConfirmation });

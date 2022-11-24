@@ -1,4 +1,4 @@
-import { SquidexGraphql } from '@asap-hub/squidex';
+import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import { migrateNews } from '../../src/news/news.data-migration';
 import {
   newsEntry,
@@ -11,10 +11,11 @@ import {
   createAsset,
   convertHtmlToContentfulFormat,
   publishContentfulEntries,
+  getSquidexAndContentfulClients,
 } from '../../src/utils';
 import { Environment } from 'contentful-management';
 
-import * as utils from '../../src/utils/setup';
+jest.mock('../../src/utils/setup');
 jest.mock('../../src/utils/entries');
 jest.mock('../../src/utils/assets');
 jest.mock('../../src/utils/rich-text');
@@ -56,7 +57,7 @@ const squidexResponseWithText = {
 
 describe('migrateNews', () => {
   let contenfulEnv: Environment;
-  let squidexGraphqlClientMock: jest.Mocked<SquidexGraphql>;
+  let squidexGraphqlClientMock: jest.Mocked<SquidexGraphqlClient>;
 
   const consoleLogRef = console.log;
 
@@ -66,16 +67,14 @@ describe('migrateNews', () => {
     contenfulEnv = getContentfulEnvironmentMock();
     squidexGraphqlClientMock = {
       request: jest.fn(),
-      getAccessToken: jest.fn(),
-      client: {} as unknown as SquidexGraphql['client'],
     };
 
-    jest.spyOn(utils, 'getSquidexAndContentfulClients').mockResolvedValue({
+    (getSquidexAndContentfulClients as jest.Mock).mockResolvedValueOnce({
       contentfulEnvironment: contenfulEnv,
       squidexGraphqlClient: squidexGraphqlClientMock,
     });
 
-    jest.spyOn(contenfulEnv, 'getEntries').mockResolvedValue({
+    jest.spyOn(contenfulEnv, 'getEntries').mockResolvedValueOnce({
       total: 1,
       items: [newsEntry],
       skip: 0,
@@ -84,7 +83,9 @@ describe('migrateNews', () => {
       sys: { type: 'Array' },
     });
 
-    jest.spyOn(newsEntry, 'publish').mockResolvedValue(newsEntry);
+    jest
+      .spyOn(newsEntry, 'publish')
+      .mockImplementationOnce(() => Promise.resolve(newsEntry));
   });
 
   afterEach(() => {
@@ -100,9 +101,9 @@ describe('migrateNews', () => {
     squidexGraphqlClientMock.request.mockResolvedValueOnce(
       squidexResponseWithTitleOnly,
     );
-    const clearContentfulEntriesMock = clearContentfulEntries as jest.Mock;
 
     await migrateNews();
+    const clearContentfulEntriesMock = clearContentfulEntries as jest.Mock;
 
     expect(clearContentfulEntriesMock).toHaveBeenCalled();
   });

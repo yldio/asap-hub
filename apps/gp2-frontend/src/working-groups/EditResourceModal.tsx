@@ -12,14 +12,13 @@ const modalInfo = {
     'Edit or delete an existing resource that is being shared privately with your group.',
 };
 
-type EditWorkingGroupResponseProps = {
+type EditResponseModalProps = {
   workingGroupId: string;
   workingGroup: gp2Model.WorkingGroupResponse;
-  // backHref: string;
   updateWorkingGroupResources: (payload: gp2Model.Resource[]) => Promise<void>;
 } & Pick<ComponentProps<typeof ResourceModal>, 'backHref'>;
 
-const EditResource: React.FC<EditWorkingGroupResponseProps> = ({
+const EditResourceModal: React.FC<EditResponseModalProps> = ({
   workingGroupId,
   workingGroup,
   backHref,
@@ -52,4 +51,4 @@ const EditResource: React.FC<EditWorkingGroupResponseProps> = ({
     />
   );
 };
-export default EditResource;
+export default EditResourceModal;

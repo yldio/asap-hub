@@ -10,7 +10,7 @@ import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import EditResource from './EditResource';
+import EditResourceModal from './EditResourceModal';
 import { usePutWorkingGroupResources, useWorkingGroupById } from './state';
 
 const { workingGroups } = gp2Routing;
@@ -88,7 +88,7 @@ const WorkingGroupDetail = () => {
                       />
                     </Route>
                     <Route exact path={edit + editRoute.resource.template}>
-                      <EditResource
+                      <EditResourceModal
                         workingGroupId={workingGroupId}
                         workingGroup={workingGroup}
                         backHref={resources}

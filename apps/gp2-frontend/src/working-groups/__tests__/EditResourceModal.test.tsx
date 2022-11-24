@@ -5,10 +5,10 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { ComponentProps } from 'react';
-import EditResource from '../EditResource';
+import EditResourceModal from '../EditResourceModal';
 
 type renderWorkingGroupDetailProps = Partial<
-  ComponentProps<typeof EditResource>
+  ComponentProps<typeof EditResourceModal>
 > & { resourceIndex?: string };
 
 const renderWorkingGroupDetail = ({
@@ -45,7 +45,7 @@ const renderWorkingGroupDetail = ({
             .edit({}).resource.template
         }
       >
-        <EditResource
+        <EditResourceModal
           backHref={'/back'}
           workingGroupId={workingGroupId}
           workingGroup={workingGroup}
@@ -145,7 +145,7 @@ describe('EditResource', () => {
       }),
     ).toBeVisible();
   });
-  it.only('updates the correct resource when multiple resources exist', async () => {
+  it('updates the correct resource when multiple resources exist', async () => {
     const resources: gp2Model.Resource[] = [
       {
         type: 'Note',

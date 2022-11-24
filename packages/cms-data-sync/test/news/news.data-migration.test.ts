@@ -236,11 +236,36 @@ describe('migrateNews', () => {
         throw new Error();
       });
 
+      jest
+        .spyOn(contenfulEnv, 'createEntryWithId')
+        .mockResolvedValueOnce(newsEntry);
+
+      const publishContentfulEntriesMock =
+        publishContentfulEntries as jest.Mock;
+
       await migrateNews();
 
       expect(console.log).toHaveBeenCalledWith(
         'There is a problem converting rich text from entry news-1',
       );
+
+      expect(contenfulEnv.createEntryWithId).toHaveBeenCalledWith(
+        'news',
+        'news-1',
+        {
+          fields: {
+            frequency: { 'en-US': 'News Articles' },
+            link: { 'en-US': undefined },
+            linkText: { 'en-US': undefined },
+            shortText: { 'en-US': undefined },
+            text: { 'en-US': null },
+            thumbnail: { 'en-US': null },
+            title: { 'en-US': 'news' },
+          },
+        },
+      );
+
+      expect(publishContentfulEntriesMock).toHaveBeenCalledWith([newsEntry]);
     });
 
     it('tries to create the entry again if it fails the first time', async () => {
@@ -248,10 +273,16 @@ describe('migrateNews', () => {
         squidexResponseWithText,
       );
 
+      const publishContentfulEntriesMock =
+        publishContentfulEntries as jest.Mock;
+
       jest
         .spyOn(contenfulEnv, 'createEntryWithId')
         .mockImplementationOnce(() => {
           throw new Error();
+        })
+        .mockImplementationOnce(() => {
+          return Promise.resolve(newsEntry);
         });
 
       await migrateNews();
@@ -260,12 +291,16 @@ describe('migrateNews', () => {
         'Entry with news-1 was uploaded without rich text',
       );
       expect(contenfulEnv.createEntryWithId).toHaveBeenCalledTimes(2);
+      expect(publishContentfulEntriesMock).toHaveBeenCalledWith([newsEntry]);
     });
 
     it('outputs a message create entry fails for the second time', async () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         squidexResponseWithText,
       );
+
+      const publishContentfulEntriesMock =
+        publishContentfulEntries as jest.Mock;
 
       jest.spyOn(contenfulEnv, 'createEntryWithId').mockImplementation(() => {
         throw new Error();
@@ -277,6 +312,8 @@ describe('migrateNews', () => {
       expect(console.log).toHaveBeenCalledWith(
         'There is a problem creating entry news-1',
       );
+
+      expect(publishContentfulEntriesMock).toHaveBeenCalledWith([]);
     });
 
     it('does not fail if squidex does not return anything', async () => {

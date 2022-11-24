@@ -57,11 +57,12 @@ describe('ResourceModal', () => {
       screen.queryByRole('textbox', { name: /url/i }),
     ).not.toBeInTheDocument();
   });
-  it('see if the modal is for adding resource', () => {
+  it('shows the title and the description', () => {
     renderResourseModal();
     expect(
-      screen.getByRole('heading', { name: /Add Resource/i }),
+      screen.getByRole('heading', { name: /a title/i }),
     ).toBeInTheDocument();
+    expect(screen.getByText('A description')).toBeInTheDocument();
   });
   it('a note should not display a Url', () => {
     renderResourseModal();

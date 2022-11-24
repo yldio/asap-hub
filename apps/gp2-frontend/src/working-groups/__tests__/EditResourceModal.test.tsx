@@ -46,8 +46,8 @@ const renderWorkingGroupDetail = ({
         }
       >
         <EditResourceModal
-          backHref={'/back'}
           workingGroupId={workingGroupId}
+          backHref={'/back'}
           workingGroup={workingGroup}
           updateWorkingGroupResources={updateWorkingGroupResources}
         />

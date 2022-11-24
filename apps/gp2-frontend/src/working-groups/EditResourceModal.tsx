@@ -13,8 +13,8 @@ type EditResponseModalProps = {
 } & Pick<ComponentProps<typeof ResourceModal>, 'backHref'>;
 
 const EditResourceModal: React.FC<EditResponseModalProps> = ({
-  workingGroupId,
   workingGroup,
+  workingGroupId,
   backHref,
   updateWorkingGroupResources,
 }) => {

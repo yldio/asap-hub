@@ -278,6 +278,7 @@ To fetch data from squidex if you might need to run the command to auto generate
 ```sh
 yarn workspace @asap-hub/cms-data-sync schema:update:crn
 ```
+
 ### Syncing Squidex data to Contentful
 
 There is a GitHub Actions workflow to sync data from Squidex to Contentful.

@@ -13,12 +13,18 @@ import { getContentfulEnvironmentMock } from '../mocks';
 
 describe('checkIfAssetAlreadyExistsInContentful', () => {
   let envMock: Environment;
-  console.log = jest.fn();
+
+  const consoleLogRef = console.log;
 
   beforeEach(async () => {
     jest.clearAllMocks();
+    console.log = jest.fn();
 
     envMock = getContentfulEnvironmentMock();
+  });
+
+  afterAll(() => {
+    console.log = consoleLogRef;
   });
 
   it('returns true if contentful getAsset returns an asset', async () => {
@@ -70,10 +76,17 @@ describe('checkIfAssetAlreadyExistsInContentful', () => {
 describe('migrateAsset', () => {
   let envMock: Environment;
 
+  const consoleLogRef = console.log;
+
   beforeEach(async () => {
     jest.clearAllMocks();
+    console.log = jest.fn();
 
     envMock = getContentfulEnvironmentMock();
+  });
+
+  afterAll(() => {
+    console.log = consoleLogRef;
   });
 
   it('calls createAssetWithId with correct payload', async () => {

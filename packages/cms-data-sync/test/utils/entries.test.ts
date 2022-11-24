@@ -9,7 +9,10 @@ import { getContentfulEnvironmentMock } from '../mocks';
 describe('clearContentfulEntries', () => {
   let envMock: Environment;
 
+  const consoleLogRef = console.log;
+
   beforeEach(async () => {
+    console.log = jest.fn();
     jest.clearAllMocks();
 
     envMock = getContentfulEnvironmentMock();
@@ -21,6 +24,10 @@ describe('clearContentfulEntries', () => {
       toPlainObject: jest.fn(),
       sys: { type: 'Array' },
     });
+  });
+
+  afterAll(() => {
+    console.log = consoleLogRef;
   });
 
   it('calls getEntries with the given contentModel', async () => {
@@ -56,7 +63,15 @@ describe('clearContentfulEntries', () => {
 });
 
 describe('publishContentfulEntries', () => {
-  console.log = jest.fn();
+  const consoleLogRef = console.log;
+
+  beforeEach(async () => {
+    console.log = jest.fn();
+  });
+
+  afterAll(() => {
+    console.log = consoleLogRef;
+  });
 
   it('calls entry publish function', async () => {
     await publishContentfulEntries([newsEntry]);

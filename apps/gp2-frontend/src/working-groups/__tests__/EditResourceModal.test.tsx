@@ -13,10 +13,10 @@ type renderWorkingGroupDetailProps = Partial<
 
 const renderWorkingGroupDetail = ({
   resourceIndex = '0',
-  workingGroup = gp2Fixtures.createWorkingGroupResponse(),
+  resources = gp2Fixtures.createWorkingGroupResponse().resources,
   updateWorkingGroupResources = jest.fn(),
 }: renderWorkingGroupDetailProps = {}) => {
-  const { id: workingGroupId } = workingGroup;
+  const workingGroupId = '7';
   render(
     <MemoryRouter
       initialEntries={[
@@ -48,7 +48,7 @@ const renderWorkingGroupDetail = ({
         <EditResourceModal
           workingGroupId={workingGroupId}
           backHref={'/back'}
-          workingGroup={workingGroup}
+          resources={resources}
           updateWorkingGroupResources={updateWorkingGroupResources}
         />
       </Route>
@@ -74,14 +74,12 @@ describe('EditResource', () => {
         title: 'first resource',
       },
     ];
-    const workingGroup = gp2Fixtures.createWorkingGroupResponse();
-    workingGroup.resources = resources;
     const title = 'a changed title';
     const updateWorkingGroupResources = jest.fn();
 
     renderWorkingGroupDetail({
       updateWorkingGroupResources,
-      workingGroup,
+      resources,
     });
 
     const titleBox = screen.getByRole('textbox', { name: /title/i });
@@ -100,14 +98,12 @@ describe('EditResource', () => {
   });
   it('throws (Not Found) if there are no resources', () => {
     const resources: gp2Model.Resource[] = [];
-    const workingGroup = gp2Fixtures.createWorkingGroupResponse();
-    workingGroup.resources = resources;
     const updateWorkingGroupResources = jest.fn();
     const resourceIndex = '0';
 
     renderWorkingGroupDetail({
       updateWorkingGroupResources,
-      workingGroup,
+      resources,
       resourceIndex,
     });
 
@@ -126,14 +122,12 @@ describe('EditResource', () => {
         title: 'first resource',
       },
     ];
-    const workingGroup = gp2Fixtures.createWorkingGroupResponse();
-    workingGroup.resources = resources;
     const updateWorkingGroupResources = jest.fn();
     const resourceIndex = '1';
 
     renderWorkingGroupDetail({
       updateWorkingGroupResources,
-      workingGroup,
+      resources,
       resourceIndex,
     });
 
@@ -160,14 +154,12 @@ describe('EditResource', () => {
         title: 'third resource',
       },
     ];
-    const workingGroup = gp2Fixtures.createWorkingGroupResponse();
-    workingGroup.resources = resources;
     const updateWorkingGroupResources = jest.fn();
     const resourceIndex = '1';
 
     renderWorkingGroupDetail({
       updateWorkingGroupResources,
-      workingGroup,
+      resources,
       resourceIndex,
     });
 

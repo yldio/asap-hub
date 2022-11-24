@@ -6,14 +6,16 @@ import { NotFoundPage } from '@asap-hub/react-components';
 
 const { workingGroups } = gp2Routing;
 
-type EditResponseModalProps = {
+type EditResponseModalProps = Pick<
+  gp2Model.WorkingGroupResponse,
+  'resources'
+> & {
   workingGroupId: string;
-  workingGroup: gp2Model.WorkingGroupResponse;
   updateWorkingGroupResources: (payload: gp2Model.Resource[]) => Promise<void>;
 } & Pick<ComponentProps<typeof ResourceModal>, 'backHref'>;
 
 const EditResourceModal: React.FC<EditResponseModalProps> = ({
-  workingGroup,
+  resources,
   workingGroupId,
   backHref,
   updateWorkingGroupResources,
@@ -23,8 +25,7 @@ const EditResourceModal: React.FC<EditResponseModalProps> = ({
       .resource,
   );
   const routeIndex = parseInt(resourceIndex, 10);
-  const resourceOutput =
-    workingGroup.resources && workingGroup.resources[routeIndex];
+  const resourceOutput = resources && resources[routeIndex];
   if (!resourceOutput) {
     return <NotFoundPage />;
   }
@@ -39,7 +40,7 @@ const EditResourceModal: React.FC<EditResponseModalProps> = ({
       backHref={backHref}
       onSave={(resource: gp2Model.Resource) => {
         updateWorkingGroupResources([
-          ...Object.assign([], workingGroup.resources, {
+          ...Object.assign([], resources, {
             [routeIndex]: resource,
           }),
         ]);

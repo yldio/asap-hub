@@ -86,7 +86,7 @@ const WorkingGroupDetail = () => {
                     <Route exact path={edit + editRoute.resource.template}>
                       <EditResourceModal
                         workingGroupId={workingGroupId}
-                        workingGroup={workingGroup}
+                        resources={workingGroup.resources}
                         backHref={resources}
                         updateWorkingGroupResources={
                           updateWorkingGroupResources

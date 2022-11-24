@@ -257,6 +257,28 @@ yarn ctf-migrate down -c <content_type> --dry-run
 
 Then repeat the command without `--dry-run` if all looks good.
 
+## CMS data migration
+
+The scripts to migrate data from Squidex to Contentful live in `packages/cms-data-sync`.
+
+There will be actions to run the migration scripts on demand, but if you need to run them locally, you just need to set these variables `CONTENTFUL_MANAGEMENT_ACCESS_TOKEN`, `CONTENTFUL_SPACE_ID`, `CONTENTFUL_ENV_ID`, `CRN_SQUIDEX_APP_NAME`, `CRN_SQUIDEX_CLIENT_ID`, `CRN_SQUIDEX_CLIENT_SECRET`, `SQUIDEX_BASE_URL` in your `.env` file and run from the root
+
+```sh
+yarn workspace @asap-hub/cms-data-sync [name-of-package.json-script]
+```
+
+For example:
+
+```sh
+yarn workspace @asap-hub/cms-data-sync migrate:news
+```
+
+To fetch data from squidex if you might need to run the command to auto generate the types from graphql queries depending on if you are using graphql. To do that, set these variables `SQUIDEX_BASE_URL`, `CRN_SQUIDEX_APP_NAME`, `CRN_SQUIDEX_CLIENT_ID`, `CRN_SQUIDEX_CLIENT_SECRET` in your in your `.env` file and run from the root:
+
+```sh
+yarn workspace @asap-hub/cms-data-sync schema:update:crn
+```
+
 ## Docker Images
 
 ### Image name

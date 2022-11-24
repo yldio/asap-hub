@@ -482,6 +482,39 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@asap-hub/cms-data-sync@workspace:packages/cms-data-sync":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/cms-data-sync@workspace:packages/cms-data-sync"
+  dependencies:
+    "@asap-hub/model": "workspace:*"
+    "@asap-hub/squidex": "workspace:*"
+    "@babel/runtime-corejs3": 7.19.6
+    "@contentful/rich-text-types": ^15.13.2
+    "@graphql-codegen/cli": 2.12.1
+    "@graphql-codegen/gql-tag-operations-preset": 1.5.5
+    "@graphql-codegen/introspection": 2.2.1
+    "@graphql-codegen/schema-ast": 2.5.1
+    "@graphql-codegen/typescript": 2.7.3
+    "@graphql-codegen/typescript-operations": 2.5.3
+    "@graphql-tools/graphql-file-loader": 7.5.5
+    "@graphql-tools/load": 7.7.7
+    "@graphql-tools/mock": 8.7.6
+    "@graphql-tools/schema": 8.5.1
+    "@graphql-typed-document-node/core": 3.1.1
+    "@types/contentful-html-rich-text-converter": "workspace:*"
+    "@types/jest": 27.5.2
+    "@types/node": 14.18.33
+    "@types/prettier": 2.7.1
+    contentful-html-rich-text-converter: ^1.0.9
+    contentful-management: ^10.19.3
+    graphql: 15.8.0
+    graphql-tag: 2.12.6
+    graphql-typescript-integration: 1.2.1
+    prettier: 2.7.1
+    ts-node: 10.9.1
+  languageName: unknown
+  linkType: soft
+
 "@asap-hub/contentful@workspace:^, @asap-hub/contentful@workspace:packages/contentful":
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful@workspace:packages/contentful"
@@ -12775,6 +12808,12 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/contentful-html-rich-text-converter@workspace:*, @types/contentful-html-rich-text-converter@workspace:@types/contentful-html-rich-text-converter":
+  version: 0.0.0-use.local
+  resolution: "@types/contentful-html-rich-text-converter@workspace:@types/contentful-html-rich-text-converter"
+  languageName: unknown
+  linkType: soft
+
 "@types/cookiejar@npm:*":
   version: 2.1.2
   resolution: "@types/cookiejar@npm:2.1.2"
@@ -19088,6 +19127,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"contentful-html-rich-text-converter@npm:^1.0.9":
+  version: 1.0.9
+  resolution: "contentful-html-rich-text-converter@npm:1.0.9"
+  dependencies:
+    html-entities: ^1.2.1
+    htmlparser: ^1.7.7
+    ramda: ^0.26.1
+  checksum: 4b17479b32918a1acf4268fc5bb57db93274babc4680c727ac81cca9a3c440b2420cd924469682844c3394e5f20dbb4fb973c86019bf9a83688b28658439fd96
+  languageName: node
+  linkType: hard
+
 "contentful-import@npm:^8.3.2":
   version: 8.3.2
   resolution: "contentful-import@npm:8.3.2"
@@ -25298,6 +25348,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"html-entities@npm:^1.2.1":
+  version: 1.4.0
+  resolution: "html-entities@npm:1.4.0"
+  checksum: 4b73ffb9eead200f99146e4fbe70acb0af2fea136901a131fc3a782e9ef876a7cbb07dec303ca1f8804232b812249dbf3643a270c9c524852065d9224a8dcdd0
+  languageName: node
+  linkType: hard
+
 "html-entities@npm:^2.1.0, html-entities@npm:^2.3.2":
   version: 2.3.3
   resolution: "html-entities@npm:2.3.3"
@@ -25456,6 +25513,13 @@ __metadata:
     domutils: ^3.0.1
     entities: ^4.3.0
   checksum: 06d5c71e8313597722bc429ae2a7a8333d77bd3ab07ccb916628384b37332027b047f8619448d8f4a3312b6609c6ea3302a4e77435d859e9e686999e6699ca39
+  languageName: node
+  linkType: hard
+
+"htmlparser@npm:^1.7.7":
+  version: 1.7.7
+  resolution: "htmlparser@npm:1.7.7"
+  checksum: 9611fa46f3a73fc9f62e837f1790f2cba9e9b0c387f6570f4f9d499fd4f64c4926280fae4ebbc07e92556bb44d8f835b15d5d26f38a43a64b5ee509121e87d24
   languageName: node
   linkType: hard
 
@@ -33859,6 +33923,13 @@ __metadata:
   version: 0.21.0
   resolution: "ramda@npm:0.21.0"
   checksum: e08d63c12ed4bab70bfd700a843901d9fa340d1a88c50085a6ef0ecf25f528e5ac7c71848481270923491e7315a34301bb35905d45861cb13cc75b8ca05add32
+  languageName: node
+  linkType: hard
+
+"ramda@npm:^0.26.1":
+  version: 0.26.1
+  resolution: "ramda@npm:0.26.1"
+  checksum: 19c2730e44c129538151ae034c89be9b2c6a4ccc7c65cff57497418bc532ce09282f98cd927c39b0b03c6bc3f1d1a12d822b7b07f96a1634f4958a6c05b7b384
   languageName: node
   linkType: hard
 

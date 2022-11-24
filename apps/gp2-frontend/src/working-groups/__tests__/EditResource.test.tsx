@@ -7,15 +7,16 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { ComponentProps } from 'react';
 import EditResource from '../EditResource';
 
+type renderWorkingGroupDetailProps = Partial<
+  ComponentProps<typeof EditResource>
+> & { resourceIndex?: string };
+
 const renderWorkingGroupDetail = ({
+  resourceIndex = '0',
   workingGroup = gp2Fixtures.createWorkingGroupResponse(),
   updateWorkingGroupResources = jest.fn(),
-}: Partial<ComponentProps<typeof EditResource>> = {}) => {
+}: renderWorkingGroupDetailProps = {}) => {
   const { id: workingGroupId } = workingGroup;
-  const props = {
-    workingGroupId,
-    backHref: '/back',
-  };
   render(
     <MemoryRouter
       initialEntries={[
@@ -24,7 +25,7 @@ const renderWorkingGroupDetail = ({
           .workingGroup({ workingGroupId })
           .resources({})
           .edit({})
-          .resource({ resourceIndex: '0' }).$,
+          .resource({ resourceIndex }).$,
       ]}
     >
       <Route
@@ -45,7 +46,8 @@ const renderWorkingGroupDetail = ({
         }
       >
         <EditResource
-          {...props}
+          backHref={'/back'}
+          workingGroupId={workingGroupId}
           workingGroup={workingGroup}
           updateWorkingGroupResources={updateWorkingGroupResources}
         />
@@ -96,20 +98,95 @@ describe('EditResource', () => {
       },
     ]);
   });
-  it.todo('updates the correct resource when multiple resources exist');
-  it.only('throws (Not Found) if we cannot find the correct working resource', () => {
+  it('throws (Not Found) if there are no resources', () => {
     const resources: gp2Model.Resource[] = [];
     const workingGroup = gp2Fixtures.createWorkingGroupResponse();
     workingGroup.resources = resources;
     const updateWorkingGroupResources = jest.fn();
+    const resourceIndex = '0';
 
-    expect(() =>
-      renderWorkingGroupDetail({
-        updateWorkingGroupResources,
-        workingGroup,
-      }),
-    ).toThrow();
+    renderWorkingGroupDetail({
+      updateWorkingGroupResources,
+      workingGroup,
+      resourceIndex,
+    });
 
     expect(updateWorkingGroupResources).not.toBeCalled();
+
+    expect(
+      screen.getByRole('heading', {
+        name: /Sorry! We can’t seem to find that page/i,
+      }),
+    ).toBeVisible();
+  });
+  it('throws (Not Found) if we cannot find the correct working resource', async () => {
+    const resources: gp2Model.Resource[] = [
+      {
+        type: 'Note',
+        title: 'first resource',
+      },
+    ];
+    const workingGroup = gp2Fixtures.createWorkingGroupResponse();
+    workingGroup.resources = resources;
+    const updateWorkingGroupResources = jest.fn();
+    const resourceIndex = '1';
+
+    renderWorkingGroupDetail({
+      updateWorkingGroupResources,
+      workingGroup,
+      resourceIndex,
+    });
+
+    expect(updateWorkingGroupResources).not.toBeCalled();
+
+    expect(
+      screen.getByRole('heading', {
+        name: /Sorry! We can’t seem to find that page/i,
+      }),
+    ).toBeVisible();
+  });
+  it.only('updates the correct resource when multiple resources exist', async () => {
+    const resources: gp2Model.Resource[] = [
+      {
+        type: 'Note',
+        title: 'first resource',
+      },
+      {
+        type: 'Note',
+        title: 'second resource',
+      },
+      {
+        type: 'Note',
+        title: 'third resource',
+      },
+    ];
+    const workingGroup = gp2Fixtures.createWorkingGroupResponse();
+    workingGroup.resources = resources;
+    const updateWorkingGroupResources = jest.fn();
+    const resourceIndex = '1';
+
+    renderWorkingGroupDetail({
+      updateWorkingGroupResources,
+      workingGroup,
+      resourceIndex,
+    });
+
+    const title = 'a changed title';
+
+    const titleBox = screen.getByRole('textbox', { name: /title/i });
+    userEvent.clear(titleBox);
+    userEvent.type(titleBox, title);
+    const saveButton = screen.getByRole('button', { name: /save/i });
+    userEvent.click(saveButton);
+
+    await waitFor(() => expect(saveButton).toBeEnabled());
+    expect(updateWorkingGroupResources).toBeCalledWith([
+      resources[0],
+      {
+        ...resources[1],
+        title,
+      },
+      resources[2],
+    ]);
   });
 });

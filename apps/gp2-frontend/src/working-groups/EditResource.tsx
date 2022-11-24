@@ -2,6 +2,7 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import { ResourceModal } from '@asap-hub/gp2-components';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { ComponentProps } from 'react';
+import { NotFoundPage } from '@asap-hub/react-components';
 
 const { workingGroups } = gp2Routing;
 
@@ -29,10 +30,11 @@ const EditResource: React.FC<EditWorkingGroupResponseProps> = ({
       .resource,
   );
   const routeIndex = parseInt(resourceIndex, 10);
-
-  const resourceOutput = workingGroup.resources
-    ? workingGroup.resources[routeIndex]
-    : {};
+  const resourceOutput =
+    workingGroup.resources && workingGroup.resources[routeIndex];
+  if (!resourceOutput) {
+    return <NotFoundPage />;
+  }
 
   return (
     <ResourceModal

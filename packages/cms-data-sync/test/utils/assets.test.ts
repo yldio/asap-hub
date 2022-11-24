@@ -7,9 +7,9 @@ import {
 import {
   squidexAsset,
   contenfulAsset,
-  getContentfulEnvironmentMock,
   contenfulUploadAssetFields,
 } from '../fixtures';
+import { getContentfulEnvironmentMock } from '../mocks';
 
 describe('checkIfAssetAlreadyExistsInContentful', () => {
   let envMock: Environment;

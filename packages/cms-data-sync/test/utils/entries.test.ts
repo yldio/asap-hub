@@ -3,7 +3,8 @@ import {
   clearContentfulEntries,
   publishContentfulEntries,
 } from '../../src/utils';
-import { newsEntry, getContentfulEnvironmentMock } from '../fixtures';
+import { newsEntry } from '../fixtures';
+import { getContentfulEnvironmentMock } from '../mocks';
 
 describe('clearContentfulEntries', () => {
   let envMock: Environment;

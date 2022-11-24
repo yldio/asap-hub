@@ -2,10 +2,10 @@ import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import { migrateNews } from '../../src/news/news.data-migration';
 import {
   newsEntry,
-  getContentfulEnvironmentMock,
   squidexAsset,
   contenfulUploadAssetFields,
 } from '../fixtures';
+import { getContentfulEnvironmentMock } from '../mocks';
 import {
   clearContentfulEntries,
   createAsset,

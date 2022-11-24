@@ -30,14 +30,11 @@ const renderEditResourceModal = ({
     >
       <Route
         path={
-          gp2Routing.workingGroups.template +
-          gp2Routing.workingGroups({}).workingGroup.template +
-          gp2Routing.workingGroups({}).workingGroup({ workingGroupId })
-            .resources.template +
           gp2Routing
             .workingGroups({})
             .workingGroup({ workingGroupId })
-            .resources({}).edit.template +
+            .resources({})
+            .edit({}).$ +
           gp2Routing
             .workingGroups({})
             .workingGroup({ workingGroupId })

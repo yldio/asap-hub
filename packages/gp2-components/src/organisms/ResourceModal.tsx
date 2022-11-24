@@ -58,9 +58,9 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
   const [newType, setNewType] = useState<'Link' | 'Note' | ''>(
     props.type || '',
   );
-  const [newTitle, setNewTitle] = useState('');
-  const [newDescription, setNewDescription] = useState('');
-  const [newExternalLink, setNewExternalLink] = useState('');
+  const [newTitle, setNewTitle] = useState(title || '');
+  const [newDescription, setNewDescription] = useState(description || '');
+  const [newExternalLink, setNewExternalLink] = useState(externalLink || '');
 
   const isDirty = () => {
     if (!props.type && newType === '') {

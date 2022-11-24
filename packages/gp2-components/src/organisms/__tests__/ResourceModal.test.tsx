@@ -174,6 +174,25 @@ describe('ResourceModal', () => {
       renderResourseModal({ type: 'Link' });
       expect(screen.getByText('Link')).toBeVisible();
     });
+    it('renders the title of the resource', () => {
+      renderResourseModal({ title: 'This is the new test' });
+      expect(screen.getByRole('textbox', { name: /Title/i })).toHaveValue(
+        'This is the new test',
+      );
+    });
+    it('renders the description of the resource', () => {
+      renderResourseModal({ description: 'This is the new description' });
+      expect(screen.getByText('This is the new description')).toBeVisible();
+    });
+    it('renders the link of the resource', () => {
+      renderResourseModal({
+        type: 'Link',
+        externalLink: 'https://www.google.com/',
+      });
+      expect(screen.getByRole('textbox', { name: /URL/i })).toHaveValue(
+        'https://www.google.com/',
+      );
+    });
   });
 
   describe('dialog', () => {

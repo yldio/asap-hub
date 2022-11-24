@@ -58,11 +58,14 @@ describe('ResourceModal', () => {
     ).not.toBeInTheDocument();
   });
   it('shows the title and the description', () => {
-    renderResourseModal();
+    renderResourseModal({
+      modalTitle: 'This is the modal title',
+      modalDescription: 'This is the modal description',
+    });
     expect(
-      screen.getByRole('heading', { name: /a title/i }),
-    ).toBeInTheDocument();
-    expect(screen.getByText('A description')).toBeInTheDocument();
+      screen.getByRole('heading', { name: /this is the modal title/i }),
+    ).toBeVisible();
+    expect(screen.getByText('This is the modal description')).toBeVisible();
   });
   it('a note should not display a Url', () => {
     renderResourseModal();

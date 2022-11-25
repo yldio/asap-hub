@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { network } from '@asap-hub/routing';
-import { TeamResponse } from '@asap-hub/model';
+import { UserResponse } from '@asap-hub/model';
 import { perRem } from '../pixels';
 import { Anchor, Avatar } from '../atoms';
 
@@ -39,7 +39,10 @@ const listItemStyles = css({
   position: 'relative',
 });
 
-type UserAvatarListProps = Pick<TeamResponse, 'members'> & {
+type UserAvatarListProps = {
+  members: Array<
+    Pick<UserResponse, 'id' | 'avatarUrl' | 'firstName' | 'lastName'>
+  >;
   fullListRoute: string;
 };
 

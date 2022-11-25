@@ -39,7 +39,18 @@ export const parseGraphQlWorkingGroup = (
     id: workingGroupGraphQl.id,
     title: workingGroupGraphQl.flatData.title || '',
     description: workingGroupGraphQl.flatData.description || '',
-    deliverables: [],
+    members: [],
+    pointOfContact: undefined,
+    complete: false,
+    deliverables: workingGroupGraphQl.flatData.deliverables
+      ? workingGroupGraphQl.flatData.deliverables.map(
+          (deliverable) =>
+            ({
+              status: deliverable.status ?? 'Not Started',
+              description: deliverable.description ?? '',
+            } as WorkingGroupDataObject['deliverables'][number]),
+        )
+      : [],
     lastModifiedDate: workingGroupGraphQl.lastModified,
   };
 

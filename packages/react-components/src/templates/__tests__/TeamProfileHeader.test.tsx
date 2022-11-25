@@ -49,6 +49,8 @@ it('renders a list of members', () => {
       members={[
         {
           id: '42',
+          firstName: 'Unknown',
+          lastName: 'Unknown',
           displayName: 'Unknown',
           email: 'foo@bar.com',
           avatarUrl: 'https://example.com',

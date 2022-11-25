@@ -1,11 +1,12 @@
 import { render } from '@testing-library/react';
+import { ComponentProps } from 'react';
 
 import WorkingGroupAbout from '../WorkingGroupAbout';
 
-const baseProps = {
+const baseProps: ComponentProps<typeof WorkingGroupAbout> = {
   description: '',
   pointOfContact: undefined,
-  members: [],
+  deliverables: [],
 };
 
 it('renders the description', () => {
@@ -26,7 +27,7 @@ it('renders CTA when pointOfContact is provided', () => {
         firstName: 'Peter',
         lastName: 'Venkman',
         email: 'peter@ven.com',
-        role: 'Project Manager',
+        workingGroupRole: 'Project Manager',
       }}
     />,
   );

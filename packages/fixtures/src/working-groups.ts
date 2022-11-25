@@ -6,14 +6,27 @@ import {
 
 type FixtureOptions = {
   deliverables?: number;
+  members?: number;
 };
 
-const createDeliverables = (
+export const createDeliverables = (
   deliverables: number,
 ): WorkingGroupResponse['deliverables'] =>
   Array.from({ length: deliverables }, (_, itemIndex) => ({
     description: `Deliverable ${itemIndex}`,
     status: deliverableStatus[itemIndex % deliverableStatus.length],
+  }));
+
+export const createWorkingGroupMembers = (
+  members: number,
+): WorkingGroupResponse['members'] =>
+  Array.from({ length: members }, (_, itemIndex) => ({
+    displayName: 'Example',
+    email: 'test@example.com',
+    firstName: 'Mr',
+    lastName: 'Example',
+    id: `member-${itemIndex}`,
+    workingGroupRole: 'Project Manager' as const,
   }));
 
 export const createWorkingGroupResponse = (
@@ -26,7 +39,9 @@ export const createWorkingGroupResponse = (
   lastModifiedDate: '2020-11-09T20:36:54Z',
   externalLink: `https://www.example.com/working-group-${itemIndex}`,
   externalLinkText: `Working Group ${itemIndex} External Link Text`,
-  deliverables: createDeliverables(options?.deliverables ?? 0),
+  deliverables: createDeliverables(options?.deliverables ?? 1),
+  complete: false,
+  members: createWorkingGroupMembers(options?.members ?? 1),
 });
 
 export const createWorkingGroupListResponse = (

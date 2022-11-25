@@ -9293,7 +9293,16 @@ export type FetchWorkingGroupQuery = {
       flatData: Pick<
         WorkingGroupsFlatDataDto,
         'title' | 'description' | 'externalLink' | 'externalLinkText'
-      >;
+      > & {
+        deliverables: Maybe<
+          Array<
+            Pick<
+              WorkingGroupsDataDeliverablesChildDto,
+              'status' | 'description'
+            >
+          >
+        >;
+      };
     }
   >;
 };
@@ -13822,6 +13831,23 @@ export const FetchWorkingGroupDocument = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'externalLinkText' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'deliverables' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'status' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'description' },
+                            },
+                          ],
+                        },
                       },
                     ],
                   },

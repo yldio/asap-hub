@@ -527,6 +527,34 @@ describe('User data provider', () => {
       expect(nock.isDone()).toBe(true);
     });
 
+    test('Should update telephone fields', async () => {
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/users/${userId}`, {
+          telephoneCountryCode: { iv: '+1' },
+          telephoneNumber: { iv: '212-970-4133' },
+        })
+        .reply(200, fetchUserResponse());
+
+      await userDataProvider.update(userId, {
+        telephone: { countryCode: '+1', number: '212-970-4133' },
+      });
+      expect(nock.isDone()).toBe(true);
+    });
+    test('Should update first name', async () => {
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/users/${userId}`, {
+          secondaryEmail: { iv: 'tony@example.com' },
+        })
+        .reply(200, fetchUserResponse());
+
+      expect(
+        await userDataProvider.update(userId, {
+          secondaryEmail: 'tony@example.com',
+        }),
+      ).not.toBeDefined();
+      expect(nock.isDone()).toBe(true);
+    });
+
     test('Should update first name', async () => {
       nock(baseUrl)
         .patch(`/api/content/${appName}/users/${userId}`, {

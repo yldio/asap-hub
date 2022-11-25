@@ -5,7 +5,7 @@ import {
   validateUserInviteParameters,
 } from '@asap-hub/server-common';
 import Boom, { isBoom } from '@hapi/boom';
-import { Response, Router } from 'express';
+import { Router } from 'express';
 import { UserController } from '../controllers/user.controller';
 import {
   validateUserParameters,
@@ -100,3 +100,4 @@ export const userRouteFactory = (userController: UserController): Router =>
         res.json(userResponse);
       },
     );
+type UserPublicResponse = Pick<gp2Model.UserResponse, 'id' | 'displayName'>;

@@ -195,7 +195,8 @@ export const getUserCreateDataObject = (): gp2.UserCreateDataObject => {
 };
 
 export const getUserInput = (): gp2squidex.InputUser['data'] => {
-  const { degrees, region, ...input } = getUserCreateDataObject();
+  const { degrees, region, telephone, ...input } = getUserCreateDataObject();
+
   return {
     ...parseToSquidex(input),
     region: { iv: 'Europe' },
@@ -203,6 +204,8 @@ export const getUserInput = (): gp2squidex.InputUser['data'] => {
     role: { iv: 'Trainee' },
     avatar: { iv: [] },
     connections: { iv: [] },
+    telephoneCountryCode: { iv: telephone?.countryCode || '' },
+    telephoneNumber: { iv: telephone?.number || '' },
   };
 };
 

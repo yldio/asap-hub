@@ -540,7 +540,47 @@ describe('User data provider', () => {
       });
       expect(nock.isDone()).toBe(true);
     });
-    test('Should update first name', async () => {
+    test('Should update allow empty telephone country code', async () => {
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/users/${userId}`, {
+          telephoneCountryCode: { iv: '' },
+          telephoneNumber: { iv: '212-970-4133' },
+        })
+        .reply(200, fetchUserResponse());
+
+      await userDataProvider.update(userId, {
+        telephone: { countryCode: '', number: '212-970-4133' },
+      });
+      expect(nock.isDone()).toBe(true);
+    });
+    test('Should update allow empty telephone number', async () => {
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/users/${userId}`, {
+          telephoneCountryCode: { iv: '+1' },
+          telephoneNumber: { iv: '' },
+        })
+        .reply(200, fetchUserResponse());
+
+      await userDataProvider.update(userId, {
+        telephone: { countryCode: '+1', number: '' },
+      });
+      expect(nock.isDone()).toBe(true);
+    });
+    test('Should update secondary email', async () => {
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/users/${userId}`, {
+          secondaryEmail: { iv: '' },
+        })
+        .reply(200, fetchUserResponse());
+
+      expect(
+        await userDataProvider.update(userId, {
+          secondaryEmail: '',
+        }),
+      ).not.toBeDefined();
+      expect(nock.isDone()).toBe(true);
+    });
+    test('Should update secondary email', async () => {
       nock(baseUrl)
         .patch(`/api/content/${appName}/users/${userId}`, {
           secondaryEmail: { iv: 'tony@example.com' },

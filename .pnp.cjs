@@ -3956,7 +3956,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "contentful-html-rich-text-converter",\
-        "npm:1.0.9"\
+        "https://github.com/yldio/contentful-html-rich-text-converter.git#commit=d7b9c7be97913e0302c83ebff24940105f05d5e0"\
       ],\
       [\
         "contentful-import",\
@@ -10701,7 +10701,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jest", "npm:27.5.2"],\
             ["@types/node", "npm:14.18.33"],\
             ["@types/prettier", "npm:2.7.1"],\
-            ["contentful-html-rich-text-converter", "npm:1.0.9"],\
+            ["contentful-html-rich-text-converter", "https://github.com/yldio/contentful-html-rich-text-converter.git#commit=d7b9c7be97913e0302c83ebff24940105f05d5e0"],\
             ["contentful-management", "npm:10.19.3"],\
             ["graphql", "npm:15.8.0"],\
             ["graphql-tag", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:2.12.6"],\
@@ -42114,10 +42114,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["contentful-html-rich-text-converter", [\
-        ["npm:1.0.9", {\
-          "packageLocation": "./.yarn/cache/contentful-html-rich-text-converter-npm-1.0.9-266e5d952f-4b17479b32.zip/node_modules/contentful-html-rich-text-converter/",\
+        ["https://github.com/yldio/contentful-html-rich-text-converter.git#commit=d7b9c7be97913e0302c83ebff24940105f05d5e0", {\
+          "packageLocation": "./.yarn/cache/contentful-html-rich-text-converter-https-ce0605a754-07a7d4a2ed.zip/node_modules/contentful-html-rich-text-converter/",\
           "packageDependencies": [\
-            ["contentful-html-rich-text-converter", "npm:1.0.9"],\
+            ["contentful-html-rich-text-converter", "https://github.com/yldio/contentful-html-rich-text-converter.git#commit=d7b9c7be97913e0302c83ebff24940105f05d5e0"],\
             ["html-entities", "npm:1.4.0"],\
             ["htmlparser", "npm:1.7.7"],\
             ["ramda", "npm:0.26.1"]\

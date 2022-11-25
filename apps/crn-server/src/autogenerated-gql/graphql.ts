@@ -5199,6 +5199,10 @@ export type Users = Content & {
   referencingResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
   /** Query Research Outputs content items with total count. */
   referencingResearchOutputsContentsWithTotal: Maybe<ResearchOutputsResultDto>;
+  /** Query Working Groups content items. */
+  referencingWorkingGroupsContents: Maybe<Array<WorkingGroups>>;
+  /** Query Working Groups content items with total count. */
+  referencingWorkingGroupsContentsWithTotal: Maybe<WorkingGroupsResultDto>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
@@ -5310,6 +5314,24 @@ export type UsersReferencingResearchOutputsContentsArgs = {
 
 /** The structure of a Users content type. */
 export type UsersReferencingResearchOutputsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Users content type. */
+export type UsersReferencingWorkingGroupsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Users content type. */
+export type UsersReferencingWorkingGroupsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -5883,6 +5905,10 @@ export type WorkingGroups = Content & {
   newStatus: Maybe<Scalars['String']>;
   /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
+  /** Query Users content items. */
+  referencesUsersContents: Maybe<Array<Users>>;
+  /** Query Users content items with total count. */
+  referencesUsersContentsWithTotal: Maybe<UsersResultDto>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
@@ -5891,6 +5917,24 @@ export type WorkingGroups = Content & {
   url: Scalars['String'];
   /** The version of the objec. */
   version: Scalars['Int'];
+};
+
+/** The structure of a Working Groups content type. */
+export type WorkingGroupsReferencesUsersContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Working Groups content type. */
+export type WorkingGroupsReferencesUsersContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of the Description field of the Working Groups content type. */
@@ -5908,6 +5952,8 @@ export type WorkingGroupsDataDto = {
   description: Maybe<WorkingGroupsDataDescriptionDto>;
   externalLink: Maybe<WorkingGroupsDataExternalLinkDto>;
   externalLinkText: Maybe<WorkingGroupsDataExternalLinkTextDto>;
+  leaders: Maybe<WorkingGroupsDataLeadersDto>;
+  members: Maybe<WorkingGroupsDataMembersDto>;
   title: Maybe<WorkingGroupsDataTitleDto>;
 };
 
@@ -5936,7 +5982,51 @@ export type WorkingGroupsDataInputDto = {
   description: InputMaybe<WorkingGroupsDataDescriptionInputDto>;
   externalLink: InputMaybe<WorkingGroupsDataExternalLinkInputDto>;
   externalLinkText: InputMaybe<WorkingGroupsDataExternalLinkTextInputDto>;
+  leaders: InputMaybe<WorkingGroupsDataLeadersInputDto>;
+  members: InputMaybe<WorkingGroupsDataMembersInputDto>;
   title: InputMaybe<WorkingGroupsDataTitleInputDto>;
+};
+
+/** The structure of the Leaders nested schema. */
+export type WorkingGroupsDataLeadersChildDto = {
+  role: Maybe<Scalars['String']>;
+  user: Maybe<Array<Users>>;
+};
+
+/** The structure of the Leaders nested schema. */
+export type WorkingGroupsDataLeadersChildInputDto = {
+  role: InputMaybe<Scalars['String']>;
+  user: InputMaybe<Array<Scalars['String']>>;
+};
+
+/** The structure of the Leaders field of the Working Groups content type. */
+export type WorkingGroupsDataLeadersDto = {
+  iv: Maybe<Array<WorkingGroupsDataLeadersChildDto>>;
+};
+
+/** The structure of the Leaders field of the Working Groups content input type. */
+export type WorkingGroupsDataLeadersInputDto = {
+  iv: InputMaybe<Array<WorkingGroupsDataLeadersChildInputDto>>;
+};
+
+/** The structure of the Members nested schema. */
+export type WorkingGroupsDataMembersChildDto = {
+  user: Maybe<Array<Users>>;
+};
+
+/** The structure of the Members nested schema. */
+export type WorkingGroupsDataMembersChildInputDto = {
+  user: InputMaybe<Array<Scalars['String']>>;
+};
+
+/** The structure of the Members field of the Working Groups content type. */
+export type WorkingGroupsDataMembersDto = {
+  iv: Maybe<Array<WorkingGroupsDataMembersChildDto>>;
+};
+
+/** The structure of the Members field of the Working Groups content input type. */
+export type WorkingGroupsDataMembersInputDto = {
+  iv: InputMaybe<Array<WorkingGroupsDataMembersChildInputDto>>;
 };
 
 /** The structure of the Title field of the Working Groups content type. */
@@ -5954,6 +6044,8 @@ export type WorkingGroupsFlatDataDto = {
   description: Maybe<Scalars['String']>;
   externalLink: Maybe<Scalars['String']>;
   externalLinkText: Maybe<Scalars['String']>;
+  leaders: Maybe<Array<WorkingGroupsDataLeadersChildDto>>;
+  members: Maybe<Array<WorkingGroupsDataMembersChildDto>>;
   title: Maybe<Scalars['String']>;
 };
 

@@ -45,111 +45,6 @@ on:
         required: true
 
 jobs:
-  crn-contentful:
-    if: ${{ inputs.environment-name=='Branch' && inputs.on-branch-env == 'true' && inputs.contentful-env-exists == 'false'}}
-    runs-on: ubuntu-latest
-    environment: ${{ inputs.environment-name }}
-    container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:be0ebbcbd0ff209d56070f09590c5d9622e8a6dc
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup
-        id: setup
-        uses: ./.github/actions/setup-environment
-        with:
-          environment-name: ${{ inputs.environment-name }}
-      - name: Determine whether we have reached the environment limit for our Contentful space
-        shell: bash
-        run: |
-          ENVIRONMENTS=$(curl --silent \
-                              --request GET \
-                              --header "Authorization: Bearer ${CONTENTFUL_MANAGEMENT_ACCESS_TOKEN}" \
-                              https://api.contentful.com/spaces/${CONTENTFUL_SPACE_ID}/environments \
-                              | jq '.total' -r)
-
-          if [[ "$ENVIRONMENTS" == "$MAX_CONTENTFUL_ENVIRONMENTS" ]]; then
-            echo "Max Contentful environments reached. Cannot create more."
-            exit 1;
-          fi
-        env:
-          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.contentful-space-id }}
-          CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          MAX_CONTENTFUL_ENVIRONMENTS: ${{ steps.setup.outputs.max-contentful-envs }}
-      - name: Create Contentful environment
-        run: yarn workspace @asap-hub/contentful space:create-environment:crn
-        env:
-          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.contentful-space-id }}
-          CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          CONTENTFUL_ENV_ID: ${{ inputs.crn-contentful-env }}
-          CONTENTFUL_SOURCE_ENV: ${{ steps.setup.outputs.contentful-environment }}
-          CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
-
-  crn-squidex:
-    runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:be0ebbcbd0ff209d56070f09590c5d9622e8a6dc
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    environment: Branch
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup
-        id: setup
-        uses: ./.github/actions/setup-environment
-        with:
-          environment-name: ${{ inputs.environment-name }}
-      - name: Create Squidex App
-        if: ${{ inputs.environment-name=='Branch' }}
-        uses: ./.github/actions/squidex-create
-        with:
-          environment-name: ${{ inputs.environment-name }}
-          app: crn
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-region: ${{ steps.setup.outputs.aws-region }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          bucket-name: ${{ steps.setup.outputs.crn-squidex-backup-bucket-name }}
-          squidex-app-name: ${{ steps.setup.outputs.crn-squidex-app-name }}
-          squidex-ci-client-id: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
-          squidex-ci-client-secret: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
-          squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
-
-  gp2-squidex:
-    runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:be0ebbcbd0ff209d56070f09590c5d9622e8a6dc
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    environment: Branch
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup
-        id: setup
-        uses: ./.github/actions/setup-environment
-        with:
-          environment-name: ${{ inputs.environment-name }}
-      - name: Create Squidex App
-        if: ${{ inputs.environment-name=='Branch' }}
-        uses: ./.github/actions/squidex-create
-        with:
-          environment-name: ${{ inputs.environment-name }}
-          app: gp2
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-region: ${{ steps.setup.outputs.aws-region }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          bucket-name: ${{ steps.setup.outputs.gp2-squidex-backup-bucket-name }}
-          squidex-app-name: ${{ steps.setup.outputs.gp2-squidex-app-name }}
-          squidex-ci-client-id: ${{ steps.setup.outputs.gp2-squidex-ci-client-id }}
-          squidex-ci-client-secret: ${{ secrets.GP2_SQUIDEX_CI_CLIENT_SECRET }}
-          squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
-
   algolia-index:
     runs-on: ubuntu-latest
     environment: Branch
@@ -176,12 +71,15 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
+      - uses: actions/checkout@v2
+      - uses: algolia/setup-algolia-cli@master
       - name: Test Index exists
         if: ${{ inputs.environment-name=='Branch' }}
         id: index-exists
         shell: bash
         run: |
-          OUTPUT=$(yarn workspace @asap-hub/crn-server run algolia getsettings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX) || true
+          OUTPUT=$(algolia settings get $ALGOLIA_INDEX) || true
+          echo "$OUTPUT"
           if [[ "$OUTPUT" == *"Index does not exist"*  ]]; then
             echo "::set-output name=index-exists::false"
             echo "Index does not exist"
@@ -190,8 +88,8 @@ jobs:
             echo "Index exists"
           fi
         env:
-          ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
-          ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          ALGOLIA_ADMIN_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
+          ALGOLIA_APPLICATION_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
       - name: Get the latest backup directory name
         if: ${{ inputs.environment-name=='Branch' &&  steps.index-exists.outputs.index-exists == 'false' }}

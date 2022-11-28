@@ -9,7 +9,7 @@ import { contentSidePaddingWithNavigation } from '../layout';
 import { SearchAndFilter } from '../organisms';
 import { Option, Title } from '../organisms/CheckboxGroup';
 import { TabNav } from '../molecules';
-import { teamIcon, userIcon, groupsIcon } from '../icons';
+import { teamIcon, userIcon, interestGroupsIcon } from '../icons';
 import { queryParamString } from '../routing';
 
 const visualHeaderStyles = css({
@@ -78,7 +78,7 @@ const getFilterOptionsAndPlaceholder = (page: Page) => {
     case 'groups':
       return {
         filterOptions: groupFilters,
-        searchPlaceholder: 'Enter a group, keyword, …',
+        searchPlaceholder: 'Enter an interest group, keyword, …',
       };
 
     case 'teams':
@@ -117,7 +117,7 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
         <TabLink
           href={network({}).groups({}).$ + queryParamString(searchQuery)}
         >
-          <span css={iconStyles}>{groupsIcon}</span>Groups
+          <span css={iconStyles}>{interestGroupsIcon}</span>Interest Groups
         </TabLink>
       </TabNav>
     </div>

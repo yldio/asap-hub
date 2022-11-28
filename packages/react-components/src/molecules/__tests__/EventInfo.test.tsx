@@ -75,7 +75,7 @@ it('renders the group name linking to the group and icon', () => {
     'href',
     expect.stringMatching(/grp$/),
   );
-  expect(screen.getByTitle('Group')).toBeInTheDocument();
+  expect(screen.getByTitle('Interest Group')).toBeInTheDocument();
 });
 
 it('shows that the event is run by ASAP when there is no group', () => {

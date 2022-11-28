@@ -6,7 +6,7 @@ import { network } from '@asap-hub/routing';
 import { perRem, tabletScreen } from '../pixels';
 import { lead } from '../colors';
 import { Link, Avatar, Anchor, Ellipsis } from '../atoms';
-import { alumniBadge } from '../icons';
+import { alumniBadgeIcon } from '../icons';
 import { ImageLink } from '.';
 import { styles } from '../atoms/Link';
 import { hover } from './LinkHeadline';
@@ -117,7 +117,9 @@ const MembersList: React.FC<MembersListProps> = ({
               ]}
             >
               {firstLine}
-              {alumniSinceDate && <span css={badgeStyles}>{alumniBadge}</span>}
+              {alumniSinceDate && (
+                <span css={badgeStyles}>{alumniBadgeIcon}</span>
+              )}
             </Anchor>
             <Anchor href={href} css={{ display: 'contents' }}>
               <div

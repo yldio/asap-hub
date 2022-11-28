@@ -4,7 +4,7 @@ import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 
 import { layoutStyles } from '../text';
 import { Paragraph } from '../atoms';
-import { crossIcon, errorIcon, infoCircleYellow } from '../icons';
+import { crossIcon, errorIcon, infoCircleYellowIcon } from '../icons';
 import {
   perRem,
   vminLinearCalcClamped,
@@ -93,7 +93,7 @@ type ToastAccents = 'alert' | 'info';
 
 export const getIcon = (accent: ToastAccents): EmotionJSX.Element => {
   if (accent === 'info') {
-    return infoCircleYellow;
+    return infoCircleYellowIcon;
   }
   return errorIcon;
 };

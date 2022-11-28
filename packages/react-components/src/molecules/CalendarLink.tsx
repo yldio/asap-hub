@@ -3,7 +3,7 @@ import {
   chevronDownIcon,
   linkIcon,
   googleCalendarIcon,
-  systemCalendar,
+  systemCalendarIcon,
 } from '../icons';
 import { TextChildren } from '../text';
 import DropdownButton from './DropdownButton';
@@ -39,7 +39,7 @@ const CalendarLink: React.FC<CalendarLinkProps> = ({
         href: url.toString(),
       }}
       {{
-        item: <>{systemCalendar} Add to Default System Calendar</>,
+        item: <>{systemCalendarIcon} Add to Default System Calendar</>,
         href: webcal.toString(),
       }}
       {{

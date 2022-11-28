@@ -135,6 +135,19 @@ const mapUserFields = (
   };
 };
 
+type UserUpdateTelephone = gp2Model.UserUpdateDataObject['telephone'];
+type UserCreateTelephone = gp2Model.UserCreateDataObject['telephone'];
+type MappedTelephone = {
+  telephoneCountryCode?: string;
+  telephoneNumber?: string;
+};
+const mapTelephone = (
+  telephone?: UserCreateTelephone | UserUpdateTelephone,
+): MappedTelephone => ({
+  telephoneCountryCode: telephone?.countryCode,
+  telephoneNumber: telephone?.number,
+});
+
 function getUserSquidexData(
   input: gp2Model.UserCreateDataObject,
 ): Omit<gp2Squidex.InputUser['data'], 'connections' | 'avatar'>;
@@ -146,9 +159,14 @@ function getUserSquidexData(
 ):
   | Omit<gp2Squidex.InputUser['data'], 'connections' | 'avatar'>
   | Partial<Omit<gp2Squidex.InputUser['data'], 'connections' | 'avatar'>> {
-  const { region, role, degrees, ...userInput } = input;
+  const { region, role, degrees, telephone, ...userInput } = input;
   const fieldMappedUser = mapUserFields({ region, role, degrees });
-  return parseToSquidex({ ...userInput, ...fieldMappedUser });
+  const mappedTelephone = mapTelephone(telephone);
+  return parseToSquidex({
+    ...userInput,
+    ...fieldMappedUser,
+    ...mappedTelephone,
+  });
 }
 
 const generateFetchQueryFilter = ({ filter }: gp2Model.FetchUsersOptions) => {

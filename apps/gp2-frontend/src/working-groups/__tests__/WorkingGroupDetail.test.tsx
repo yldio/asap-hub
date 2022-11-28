@@ -332,7 +332,7 @@ describe('WorkingGroupDetail', () => {
         ).not.toBeInTheDocument();
       },
     );
-    it('can submit a add modal when form data is valid', async () => {
+    it('can submit an add modal when form data is valid', async () => {
       const title = 'example42 title';
       const type = 'Note';
 
@@ -364,7 +364,8 @@ describe('WorkingGroupDetail', () => {
       );
       await waitFor(() => expect(saveButton).toBeEnabled());
     });
-    it('can submit a edit modal when form data is valid', async () => {
+
+    it('can submit an edit modal when form data is valid', async () => {
       const resources: gp2Model.Resource[] = [
         {
           type: 'Note',

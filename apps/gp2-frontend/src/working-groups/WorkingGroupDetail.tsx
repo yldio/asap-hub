@@ -24,24 +24,14 @@ const WorkingGroupDetail = () => {
     workingGroup?.members.some(({ userId }) => userId === currentUser?.id) ||
     false;
   const isAdministrator = currentUser?.role === 'Administrator';
-  const add = isAdministrator
-    ? workingGroups({}).workingGroup({ workingGroupId }).resources({}).add({}).$
-    : undefined;
+  const workingGroupRoute = workingGroups({}).workingGroup({ workingGroupId });
+  const resourcesRoute = workingGroupRoute.resources({});
+  const editRoute = resourcesRoute.edit({});
+  const add = isAdministrator ? resourcesRoute.add({}).$ : undefined;
+  const edit = isAdministrator ? editRoute.$ : undefined;
+  const overview = workingGroupRoute.overview({}).$;
+  const resources = resourcesRoute.$;
 
-  const edit = isAdministrator
-    ? workingGroups({}).workingGroup({ workingGroupId }).resources({}).edit({})
-        .$
-    : undefined;
-  const editRoute = workingGroups({})
-    .workingGroup({ workingGroupId })
-    .resources({})
-    .edit({});
-  const overview = workingGroups({})
-    .workingGroup({ workingGroupId })
-    .overview({}).$;
-  const resources = workingGroups({})
-    .workingGroup({ workingGroupId })
-    .resources({}).$;
   const updateWorkingGroupResources =
     usePutWorkingGroupResources(workingGroupId);
 
@@ -85,12 +75,7 @@ const WorkingGroupDetail = () => {
                     </Route>
                     <Route exact path={edit + editRoute.resource.template}>
                       <EditResourceModal
-                        route={
-                          workingGroups({})
-                            .workingGroup({ workingGroupId })
-                            .resources({})
-                            .edit({}).resource
-                        }
+                        route={editRoute.resource}
                         resources={workingGroup.resources || []}
                         backHref={resources}
                         updateResources={updateWorkingGroupResources}

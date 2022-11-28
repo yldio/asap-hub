@@ -1,5 +1,6 @@
 import { gp2 } from '@asap-hub/model';
 import { userDegrees, userRegions } from '@asap-hub/model/src/gp2';
+import { AuthHandler } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
@@ -177,7 +178,7 @@ describe('/users/ route', () => {
       userControllerMock.fetchById.mockResolvedValueOnce(getUserResponse());
 
       const response = await supertest(app).get('/users/123');
-      response.body; //?
+
       expect(response.status).toBe(200);
       expect(response.body).toEqual(getUserResponse());
     });

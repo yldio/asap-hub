@@ -109,4 +109,5 @@ export const userRouteFactory = (userController: UserController): Router =>
         res.json(userResponse);
       },
     );
+
 type UserPublicResponse = Pick<gp2Model.UserResponse, 'id' | 'displayName'>;

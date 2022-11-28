@@ -1,4 +1,4 @@
-import { FetchOptions, gp2 } from '@asap-hub/model';
+import { gp2 } from '@asap-hub/model';
 import { userDegrees, userRegions } from '@asap-hub/model/src/gp2';
 import { AuthHandler } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
@@ -13,11 +13,30 @@ import { loggerMock } from '../mocks/logger.mock';
 import { userControllerMock } from '../mocks/user-controller.mock';
 
 describe('/users/ route', () => {
+  const loggedInUserId = '11';
+  const loggedUser: gp2.UserResponse = {
+    ...getUserResponse(),
+    id: loggedInUserId,
+  };
+  const getLoggedUser = jest.fn().mockReturnValue(loggedUser);
+  const authHandlerMock: AuthHandler = (req, _res, next) => {
+    req.loggedInUser = getLoggedUser();
+    next();
+  };
+  const app = appFactory({
+    userController: userControllerMock,
+    authHandler: authHandlerMock,
+    logger: loggerMock,
+  });
+
+  beforeEach(() => {
+    getLoggedUser.mockReturnValue(loggedUser);
+  });
+
   afterEach(jest.resetAllMocks);
 
   describe('GET /users', () => {
     test('Should return 200 when no users exist', async () => {
-      const { app } = getApp();
       userControllerMock.fetch.mockResolvedValueOnce({
         items: [],
         total: 0,
@@ -33,7 +52,6 @@ describe('/users/ route', () => {
     });
 
     test('Should return the results correctly', async () => {
-      const { app } = getApp();
       userControllerMock.fetch.mockResolvedValueOnce(fetchExpectation);
 
       const response = await supertest(app).get('/users');
@@ -43,22 +61,32 @@ describe('/users/ route', () => {
     });
 
     test('Should call the controller method with the correct parameters', async () => {
-      const { app } = getApp();
       userControllerMock.fetch.mockResolvedValueOnce({
         items: [],
         total: 0,
       });
 
-      await supertest(app).get('/users').query({
+      const params: gp2.FetchUsersOptions = {
         take: 15,
         skip: 5,
         search: 'something',
-      });
+        filter: {
+          code: '123',
+          onlyOnboarded: true,
+          region: ['Europe'],
+        },
+      };
+      await supertest(app).get('/users').query(params);
 
-      const expectedParams: FetchOptions = {
+      const expectedParams: gp2.FetchUsersOptions = {
         take: 15,
         skip: 5,
         search: 'something',
+        filter: {
+          code: '123',
+          onlyOnboarded: true,
+          region: ['Europe'],
+        },
       };
 
       expect(userControllerMock.fetch).toBeCalledWith(expectedParams);
@@ -66,7 +94,6 @@ describe('/users/ route', () => {
 
     describe('Parameter validation', () => {
       test('Should return a 400 error when additional properties exist', async () => {
-        const { app } = getApp();
         const response = await supertest(app).get('/users').query({
           additionalField: 'some-data',
         });
@@ -75,7 +102,6 @@ describe('/users/ route', () => {
       });
 
       test('Should return a validation error when the arguments are not valid', async () => {
-        const { app } = getApp();
         const response = await supertest(app).get('/users').query({
           take: 'invalid param',
         });
@@ -86,7 +112,6 @@ describe('/users/ route', () => {
       test('Should return the results correctly when a filter is used', async () => {
         userControllerMock.fetch.mockResolvedValueOnce(fetchExpectation);
 
-        const { app } = getApp();
         const response = await supertest(app)
           .get('/users')
           .query({
@@ -99,7 +124,6 @@ describe('/users/ route', () => {
       test('Should return the results correctly when multiple filters are used', async () => {
         userControllerMock.fetch.mockResolvedValueOnce(fetchExpectation);
 
-        const { app } = getApp();
         const response = await supertest(app)
           .get('/users')
           .query({
@@ -108,6 +132,36 @@ describe('/users/ route', () => {
 
         expect(response.status).toBe(200);
       });
+
+      test('Should return 200 when an administrator asks for non-onboarded users', async () => {
+        userControllerMock.fetch.mockResolvedValueOnce(fetchExpectation);
+        getLoggedUser.mockReturnValue({
+          ...loggedUser,
+          role: 'Administrator',
+        });
+        const response = await supertest(app)
+          .get('/users')
+          .query({
+            filter: { onlyOnboarded: false },
+          });
+
+        expect(response.status).toBe(200);
+      });
+
+      test('Should return a 403 when a non-administrator asks for non-onboarded users', async () => {
+        userControllerMock.fetch.mockResolvedValueOnce(fetchExpectation);
+        getLoggedUser.mockReturnValue({
+          ...loggedUser,
+          role: 'Trainee',
+        });
+        const response = await supertest(app)
+          .get('/users')
+          .query({
+            filter: { onlyOnboarded: false },
+          });
+
+        expect(response.status).toBe(403);
+      });
     });
   });
 
@@ -115,7 +169,6 @@ describe('/users/ route', () => {
     test('Should return 404 when user doesnt exist', async () => {
       userControllerMock.fetchById.mockRejectedValueOnce(Boom.notFound());
 
-      const { app } = getApp();
       const response = await supertest(app).get('/users/123');
 
       expect(response.status).toBe(404);
@@ -124,7 +177,6 @@ describe('/users/ route', () => {
     test('Should return the results correctly', async () => {
       userControllerMock.fetchById.mockResolvedValueOnce(getUserResponse());
 
-      const { app } = getApp();
       const response = await supertest(app).get('/users/123');
 
       expect(response.status).toBe(200);
@@ -134,7 +186,6 @@ describe('/users/ route', () => {
     test('Should call the controller with the right parameter', async () => {
       const userId = 'abc123';
 
-      const { app, loggedInUserId } = getApp();
       await supertest(app).get(`/users/${userId}`);
 
       expect(userControllerMock.fetchById).toBeCalledWith(
@@ -148,7 +199,6 @@ describe('/users/ route', () => {
     test('Should return 404 when user doesnt exist', async () => {
       userControllerMock.fetchByCode.mockRejectedValueOnce(Boom.forbidden());
 
-      const { app } = getApp();
       const response = await supertest(app).get('/users/invites/123');
 
       expect(response.status).toBe(404);
@@ -157,7 +207,6 @@ describe('/users/ route', () => {
     test('Should return the results correctly', async () => {
       userControllerMock.fetchByCode.mockResolvedValueOnce(getUserResponse());
 
-      const { app } = getApp();
       const response = await supertest(app).get('/users/invites/123');
 
       expect(response.status).toBe(200);
@@ -171,7 +220,6 @@ describe('/users/ route', () => {
     test('Should call the controller with the right parameter', async () => {
       const code = 'abc123';
 
-      const { app } = getApp();
       await supertest(app).get(`/users/invites/${code}`);
 
       expect(userControllerMock.fetchByCode).toBeCalledWith(code);
@@ -181,7 +229,6 @@ describe('/users/ route', () => {
     test('Should return the results correctly', async () => {
       userControllerMock.update.mockResolvedValueOnce(getUserResponse());
 
-      const { app, loggedInUserId } = getApp();
       const response = await supertest(app)
         .patch(`/users/${loggedInUserId}`)
         .send({ firstName: 'Peter' });
@@ -197,7 +244,6 @@ describe('/users/ route', () => {
         }),
       );
 
-      const { app, loggedInUserId } = getApp();
       const response = await supertest(app)
         .patch(`/users/${loggedInUserId}`)
         .send({ firstName: 'Peter' });
@@ -206,7 +252,6 @@ describe('/users/ route', () => {
     });
 
     test('Returns 403 when user is changing other user', async () => {
-      const { app } = getApp();
       const response = await supertest(app)
         .patch('/users/not-me')
         .send({ firstName: 'Peter' });
@@ -216,7 +261,6 @@ describe('/users/ route', () => {
     test('Should return 404 when user doesnt exist', async () => {
       userControllerMock.update.mockRejectedValueOnce(Boom.notFound());
 
-      const { app, loggedInUserId } = getApp();
       const response = await supertest(app)
         .patch(`/users/${loggedInUserId}`)
         .send({ firstName: 'Peter' });
@@ -231,7 +275,6 @@ describe('/users/ route', () => {
         firstName: undefined, // should be ignored
         lastName: null, // should be ignored
       };
-      const { app, loggedInUserId } = getApp();
       await supertest(app)
         .patch(`/users/${loggedInUserId}`)
         .send(requestParams);
@@ -253,7 +296,6 @@ describe('/users/ route', () => {
 
     describe('Parameter validation', () => {
       test('Should return a validation error when the arguments are not valid', async () => {
-        const { app, loggedInUserId } = getApp();
         const response = await supertest(app)
           .patch(`/users/${loggedInUserId}`)
           .send({ firstName: 666 });
@@ -275,7 +317,6 @@ describe('/users/ route', () => {
         ])(
           'Should be able to provide for the %s parameter ',
           async (parameter) => {
-            const { app, loggedInUserId } = getApp();
             const response = await supertest(app)
               .patch(`/users/${loggedInUserId}`)
               .send({ [parameter]: input });
@@ -287,7 +328,6 @@ describe('/users/ route', () => {
 
       describe('telephone', () => {
         test('allow valid inputs', async () => {
-          const { app, loggedInUserId } = getApp();
           const response = await supertest(app)
             .patch(`/users/${loggedInUserId}`)
             .send({
@@ -299,7 +339,6 @@ describe('/users/ route', () => {
           expect(response.status).toBe(200);
         });
         test('allows only country code', async () => {
-          const { app, loggedInUserId } = getApp();
           const response = await supertest(app)
             .patch(`/users/${loggedInUserId}`)
             .send({
@@ -310,7 +349,6 @@ describe('/users/ route', () => {
           expect(response.status).toBe(200);
         });
         test('allows only number', async () => {
-          const { app, loggedInUserId } = getApp();
           const response = await supertest(app)
             .patch(`/users/${loggedInUserId}`)
             .send({
@@ -321,7 +359,6 @@ describe('/users/ route', () => {
           expect(response.status).toBe(200);
         });
         test('allows undefined telephone', async () => {
-          const { app, loggedInUserId } = getApp();
           const response = await supertest(app)
             .patch(`/users/${loggedInUserId}`)
             .send({
@@ -332,7 +369,6 @@ describe('/users/ route', () => {
       });
       describe('positions', () => {
         test('allows valid positions', async () => {
-          const { app, loggedInUserId } = getApp();
           const response = await supertest(app)
             .patch(`/users/${loggedInUserId}`)
             .send({
@@ -347,7 +383,6 @@ describe('/users/ route', () => {
           expect(response.status).toBe(200);
         });
         test('does not allows invalid positions', async () => {
-          const { app, loggedInUserId } = getApp();
           const response = await supertest(app)
             .patch(`/users/${loggedInUserId}`)
             .send({
@@ -365,7 +400,6 @@ describe('/users/ route', () => {
         test.each(['role', 'department', 'institution'])(
           'does not allows invalid %s',
           async (invalidProperty) => {
-            const { app, loggedInUserId } = getApp();
             const response = await supertest(app)
               .patch(`/users/${loggedInUserId}`)
               .send({
@@ -384,14 +418,12 @@ describe('/users/ route', () => {
       });
       describe('degrees', () => {
         test.each(userDegrees)('allows valid degree: %s', async (degree) => {
-          const { app, loggedInUserId } = getApp();
           const response = await supertest(app)
             .patch(`/users/${loggedInUserId}`)
             .send({ degrees: [degree] });
           expect(response.status).toBe(200);
         });
         test('does not allow invalid degrees', async () => {
-          const { app, loggedInUserId } = getApp();
           const response = await supertest(app)
             .patch(`/users/${loggedInUserId}`)
             .send({ degrees: ['invalid degree'] });
@@ -400,14 +432,12 @@ describe('/users/ route', () => {
       });
       describe('regions', () => {
         test.each(userRegions)('allows valid region: %s', async (region) => {
-          const { app, loggedInUserId } = getApp();
           const response = await supertest(app)
             .patch(`/users/${loggedInUserId}`)
             .send({ region });
           expect(response.status).toBe(200);
         });
         test('does not allow invalid regions', async () => {
-          const { app, loggedInUserId } = getApp();
           const response = await supertest(app)
             .patch(`/users/${loggedInUserId}`)
             .send({ region: 'invalid region' });
@@ -424,7 +454,6 @@ describe('/users/ route', () => {
         };
         userControllerMock.update.mockResolvedValueOnce(incompleteUserResponse);
 
-        const { app, loggedInUserId } = getApp();
         const response = await supertest(app)
           .patch(`/users/${loggedInUserId}`)
           .send({ onboarded: true });
@@ -443,7 +472,6 @@ describe('/users/ route', () => {
         };
         userControllerMock.update.mockResolvedValueOnce(incompleteUserResponse);
 
-        const { app, loggedInUserId } = getApp();
         const response = await supertest(app)
           .patch(`/users/${loggedInUserId}`)
           .send({ onboarded: false });
@@ -466,7 +494,6 @@ describe('/users/ route', () => {
         };
         userControllerMock.update.mockResolvedValueOnce(onboardedUserResponse);
 
-        const { app, loggedInUserId } = getApp();
         const response = await supertest(app)
           .patch(`/users/${loggedInUserId}`)
           .send({ onboarded: true, firstName: 'Peter' });
@@ -475,22 +502,4 @@ describe('/users/ route', () => {
       });
     });
   });
-  const getApp = () => {
-    const loggedInUserId = '11';
-    const loggedUser: gp2.UserResponse = {
-      ...getUserResponse(),
-      id: loggedInUserId,
-    };
-    const getLoggedUser = jest.fn().mockReturnValue(loggedUser);
-    const authHandlerMock: AuthHandler = (req, _res, next) => {
-      req.loggedInUser = getLoggedUser();
-      next();
-    };
-    const app = appFactory({
-      userController: userControllerMock,
-      authHandler: authHandlerMock,
-      logger: loggerMock,
-    });
-    return { app, loggedInUserId };
-  };
 });

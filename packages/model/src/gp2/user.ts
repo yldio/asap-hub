@@ -109,6 +109,7 @@ export type UserUpdateRequest = UserUpdateDataObject;
 export type FetchUsersFilter = {
   region?: UserRegion[];
   code?: string;
+  onlyOnboarded?: boolean;
 };
 
 export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;

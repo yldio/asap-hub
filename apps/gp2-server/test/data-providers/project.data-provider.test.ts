@@ -167,6 +167,15 @@ describe('Project Data Provider', () => {
           const { members } = parseProjectToDataObject(project);
           expect(members).toEqual([]);
         });
+
+        test('should skip the user from the result if the user is not onboarded', () => {
+          const project = getGraphQLProject();
+          const member = getGraphQLProjectMember();
+          member!.user![0]!.flatData.onboarded = false;
+          project.flatData.members = [member];
+          const { members } = parseProjectToDataObject(project);
+          expect(members).toEqual([]);
+        });
         test.each`
           role                                          | expectedRole
           ${ProjectsDataMembersRoleEnum.ProjectManager} | ${'Project manager'}

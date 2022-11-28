@@ -110,13 +110,15 @@ describe('createUserApiUrl', () => {
     });
     expect(url.searchParams.get('search')).toEqual('test123');
   });
+
   it('handles requests with filters', async () => {
     const url = createUserApiUrl({
-      filter: { region: ['Africa', 'Asia'] },
+      filter: { region: ['Africa', 'Asia'], onlyOnboarded: false },
     });
     expect(url.searchParams.getAll('filter[region]')).toEqual([
       'Africa',
       'Asia',
     ]);
+    expect(url.searchParams.get('filter[onlyOnboarded]')).toEqual('false');
   });
 });

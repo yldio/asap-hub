@@ -45,7 +45,10 @@ const UserList: React.FC<UserListProps> = ({ displayFilters = false }) => {
         getUsers(
           {
             ...paginationParams,
-            filter: filters,
+            filter: {
+              ...filters,
+              onlyOnboarded: false,
+            },
             search: '',
           },
           autorization,

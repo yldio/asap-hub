@@ -98,6 +98,7 @@ export const getGraphQLWorkingGroupMember = (): GraphQLWorkingGroupMember => ({
         firstName: 'Tony',
         lastName: 'Stark',
         avatar: null,
+        onboarded: true,
       },
     },
   ],

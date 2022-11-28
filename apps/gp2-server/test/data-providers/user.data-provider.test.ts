@@ -831,19 +831,43 @@ describe('User data provider', () => {
       expect(result).toEqual({ total: 0, items: [] });
     });
 
-    test('Should query with filters and return the users', async () => {
+    test('Should query with onboarded filter', async () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexUsersGraphqlResponse(),
       );
       const fetchOptions: gp2Model.FetchUsersOptions = {
         take: 12,
         skip: 2,
-        search: '',
+        filter: {
+          onlyOnboarded: true,
+        },
+      };
+      const users = await userDataProvider.fetch(fetchOptions);
+
+      const filterQuery = 'data/onboarded/iv eq true';
+      expect(squidexGraphqlClientMock.request).toBeCalledWith(
+        expect.anything(),
+        {
+          top: 12,
+          skip: 2,
+          filter: filterQuery,
+        },
+      );
+      expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
+    });
+
+    test('Should query with region filters', async () => {
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        getSquidexUsersGraphqlResponse(),
+      );
+      const fetchOptions: gp2Model.FetchUsersOptions = {
+        take: 12,
+        skip: 2,
         filter: {
           region: ['Europe', 'Asia'],
         },
       };
-      const users = await userDataProvider.fetch(fetchOptions);
+      await userDataProvider.fetch(fetchOptions);
 
       const filterQuery =
         "data/region/iv eq 'Europe'" + " or data/region/iv eq 'Asia'";
@@ -855,9 +879,8 @@ describe('User data provider', () => {
           filter: filterQuery,
         },
       );
-      expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
     });
-    test('Should query with code filters and return the users', async () => {
+    test('Should query with code filters', async () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexUsersGraphqlResponse(),
       );
@@ -870,7 +893,7 @@ describe('User data provider', () => {
           code: 'a-code',
         },
       };
-      const users = await userDataProvider.fetch(fetchOptions);
+      await userDataProvider.fetch(fetchOptions);
 
       const filterQuery = "data/connections/iv/code eq 'a-code'";
       expect(squidexGraphqlClientMock.request).toBeCalledWith(
@@ -881,7 +904,6 @@ describe('User data provider', () => {
           filter: filterQuery,
         },
       );
-      expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
     });
   });
 });

@@ -145,6 +145,9 @@ export function parseWorkingGroupToDataObject({
         if (!(user && member.role)) {
           return membersList;
         }
+        if (user.flatData.onboarded === false) {
+          return membersList;
+        }
         const groupMember = parseWorkingGroupMembers(user, member.role);
         return [...membersList, groupMember];
       },

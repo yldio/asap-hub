@@ -1,29 +1,33 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
+import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { Route, StaticRouter } from 'react-router-dom';
 import EditResourceModal from '../EditResourceModal';
+
+const { resource: resourceRoute } = gp2Routing;
 
 type renderEditResourceModalProps = Partial<
   ComponentProps<typeof EditResourceModal>
 > & { resourceIndex?: string };
 
 const renderEditResourceModal = ({
-  resourceIndex = '0',
   resources = [{ type: 'Note', title: 'a title' }],
+  resourceIndex = '0',
   updateResources = jest.fn(),
 }: renderEditResourceModalProps = {}) => {
   render(
-    <EditResourceModal
-      resourceIndex={resourceIndex}
-      backHref={'/back'}
-      resources={resources}
-      updateResources={updateResources}
-    />,
-    {
-      wrapper: StaticRouter,
-    },
+    <StaticRouter location={resourceRoute({ resourceIndex }).$}>
+      <Route path={resourceRoute.template}>
+        <EditResourceModal
+          backHref={'/back'}
+          resources={resources}
+          updateResources={updateResources}
+          route={resourceRoute}
+        />
+      </Route>
+    </StaticRouter>,
   );
 };
 describe('EditResource', () => {
@@ -148,6 +152,40 @@ describe('EditResource', () => {
         ...resources[1],
         title,
       },
+      resources[2],
+    ]);
+  });
+
+  it('deletes the correct resource when multiple resources exist', async () => {
+    const resources: gp2Model.Resource[] = [
+      {
+        type: 'Note',
+        title: 'first resource',
+      },
+      {
+        type: 'Note',
+        title: 'second resource',
+      },
+      {
+        type: 'Note',
+        title: 'third resource',
+      },
+    ];
+    const updateWorkingGroupResources = jest.fn();
+    const resourceIndex = '1';
+
+    renderEditResourceModal({
+      updateWorkingGroupResources,
+      resources,
+      resourceIndex,
+    });
+
+    const deleteButton = screen.getByRole('button', { name: /delete/i });
+    userEvent.click(deleteButton);
+
+    await waitFor(() => expect(deleteButton).toBeEnabled());
+    expect(updateWorkingGroupResources).toBeCalledWith([
+      resources[0],
       resources[2],
     ]);
   });

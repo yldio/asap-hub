@@ -32,18 +32,6 @@ jobs:
           contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           max-contentful-envs: ${{ steps.setup.outputs.max-contentful-envs }}
 
-  cms-sync:
-    needs: [setup]
-    uses: ./.github/workflows/on-demand-cms-sync.yml
-    with:
-      environment-name: Branch
-      entity: all
-      contentful-env: Development
-      squidex-app: crn-2238
-    secrets:
-      CONTENTFUL_MANAGEMENT_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-      CRN_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
-
   test:
     uses: ./.github/workflows/reusable-test.yml
     with:

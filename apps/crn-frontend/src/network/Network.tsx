@@ -161,7 +161,7 @@ const Network: FC<Record<string, never>> = () => {
           network({}).workingGroups({}).workingGroup.template
         }
       >
-        <Frame title="Working Groups">
+        <Frame title="Working Group Profile">
           <WorkingGroupProfile />
         </Frame>
       </Route>

@@ -3,6 +3,7 @@ import {
   WorkingGroupDataObject,
   WorkingGroupListDataObject,
 } from '@asap-hub/model';
+import { Filter } from 'odata-query';
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import {
   FetchWorkingGroupQuery,
@@ -15,7 +16,6 @@ import {
   FETCH_WORKING_GROUPS,
 } from '../queries/working-groups.queries';
 import { buildODataFilter } from '../utils/odata';
-import { Filter } from 'odata-query';
 
 export interface WorkingGroupDataProvider {
   fetchById(id: string): Promise<WorkingGroupDataObject | null>;

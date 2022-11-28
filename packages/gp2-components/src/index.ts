@@ -14,6 +14,7 @@ export {
   UserRegion,
 } from './molecules';
 export {
+  EditResourceModal,
   EmailSection,
   FiltersModal,
   MainNavigation,
@@ -44,8 +45,8 @@ export {
   DashboardPageBody,
   DashboardPageHeader,
   Layout,
-  OnboardingWelcome,
   OnboardingCoreDetails,
+  OnboardingWelcome,
   ProjectDetailPage,
   ProjectOverview,
   ProjectResources,

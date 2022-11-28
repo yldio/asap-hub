@@ -1,0 +1,154 @@
+import { gp2 as gp2Model } from '@asap-hub/model';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { ComponentProps } from 'react';
+import { StaticRouter } from 'react-router-dom';
+import EditResourceModal from '../EditResourceModal';
+
+type renderEditResourceModalProps = Partial<
+  ComponentProps<typeof EditResourceModal>
+> & { resourceIndex?: string };
+
+const renderEditResourceModal = ({
+  resourceIndex = '0',
+  resources = [{ type: 'Note', title: 'a title' }],
+  updateResources = jest.fn(),
+}: renderEditResourceModalProps = {}) => {
+  render(
+    <EditResourceModal
+      resourceIndex={resourceIndex}
+      backHref={'/back'}
+      resources={resources}
+      updateResources={updateResources}
+    />,
+    {
+      wrapper: StaticRouter,
+    },
+  );
+};
+describe('EditResource', () => {
+  beforeEach(jest.restoreAllMocks);
+  it('see if modal appears', () => {
+    renderEditResourceModal();
+
+    expect(screen.getByRole('button', { name: /Save/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: /Edit Resource/ }),
+    ).toBeVisible();
+  });
+
+  it('can submit a form when form data is valid for editing', async () => {
+    const resources: gp2Model.Resource[] = [
+      {
+        type: 'Note',
+        title: 'first resource',
+      },
+    ];
+    const title = 'a changed title';
+    const updateResources = jest.fn();
+
+    renderEditResourceModal({
+      updateResources,
+      resources,
+    });
+
+    const titleBox = screen.getByRole('textbox', { name: /title/i });
+    userEvent.clear(titleBox);
+    userEvent.type(titleBox, title);
+    const saveButton = screen.getByRole('button', { name: /save/i });
+    userEvent.click(saveButton);
+
+    await waitFor(() => expect(saveButton).toBeEnabled());
+    expect(updateResources).toBeCalledWith([
+      {
+        ...resources[0],
+        title,
+      },
+    ]);
+  });
+  it('throws (Not Found) if there are no resources', () => {
+    const resources: gp2Model.Resource[] = [];
+    const updateResources = jest.fn();
+    const resourceIndex = '0';
+
+    renderEditResourceModal({
+      updateResources,
+      resources,
+      resourceIndex,
+    });
+
+    expect(updateResources).not.toBeCalled();
+
+    expect(
+      screen.getByRole('heading', {
+        name: /Sorry! We can’t seem to find that page/i,
+      }),
+    ).toBeVisible();
+  });
+  it('throws (Not Found) if we cannot find the correct working resource', () => {
+    const resources: gp2Model.Resource[] = [
+      {
+        type: 'Note',
+        title: 'first resource',
+      },
+    ];
+    const updateResources = jest.fn();
+    const resourceIndex = '1';
+
+    renderEditResourceModal({
+      updateResources,
+      resources,
+      resourceIndex,
+    });
+
+    expect(updateResources).not.toBeCalled();
+
+    expect(
+      screen.getByRole('heading', {
+        name: /Sorry! We can’t seem to find that page/i,
+      }),
+    ).toBeVisible();
+  });
+  it('updates the correct resource when multiple resources exist', async () => {
+    const resources: gp2Model.Resource[] = [
+      {
+        type: 'Note',
+        title: 'first resource',
+      },
+      {
+        type: 'Note',
+        title: 'second resource',
+      },
+      {
+        type: 'Note',
+        title: 'third resource',
+      },
+    ];
+    const updateResources = jest.fn();
+    const resourceIndex = '1';
+
+    renderEditResourceModal({
+      updateResources,
+      resources,
+      resourceIndex,
+    });
+
+    const title = 'a changed title';
+
+    const titleBox = screen.getByRole('textbox', { name: /title/i });
+    userEvent.clear(titleBox);
+    userEvent.type(titleBox, title);
+    const saveButton = screen.getByRole('button', { name: /save/i });
+    userEvent.click(saveButton);
+
+    await waitFor(() => expect(saveButton).toBeEnabled());
+    expect(updateResources).toBeCalledWith([
+      resources[0],
+      {
+        ...resources[1],
+        title,
+      },
+      resources[2],
+    ]);
+  });
+});

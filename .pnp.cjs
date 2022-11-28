@@ -2133,7 +2133,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@types/aws-lambda",\
-        "npm:8.10.108"\
+        "npm:8.10.109"\
       ],\
       [\
         "@types/babel__core",\
@@ -10926,7 +10926,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@sentry/serverless", "npm:6.19.7"],\
             ["@serverless/typescript", "npm:3.19.0"],\
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],\
-            ["@types/aws-lambda", "npm:8.10.108"],\
+            ["@types/aws-lambda", "npm:8.10.109"],\
             ["@types/babel__preset-env", "npm:7.9.2"],\
             ["@types/chance", "npm:1.1.3"],\
             ["@types/cors", "npm:2.8.12"],\
@@ -11645,7 +11645,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@sentry/serverless", "npm:6.19.7"],\
             ["@serverless/typescript", "npm:3.19.0"],\
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],\
-            ["@types/aws-lambda", "npm:8.10.108"],\
+            ["@types/aws-lambda", "npm:8.10.109"],\
             ["@types/cors", "npm:2.8.12"],\
             ["@types/express", "npm:4.17.14"],\
             ["@types/jest", "npm:27.5.2"],\
@@ -12228,7 +12228,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@hapi/boom", "npm:9.1.4"],\
             ["@sentry/serverless", "npm:6.19.7"],\
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],\
-            ["@types/aws-lambda", "npm:8.10.108"],\
+            ["@types/aws-lambda", "npm:8.10.109"],\
             ["@types/express", "npm:4.17.14"],\
             ["@types/jest", "npm:27.5.2"],\
             ["@types/jsonwebtoken", "npm:8.5.9"],\
@@ -12272,7 +12272,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@hapi/bourne", "npm:2.1.0"],\
             ["@hapi/joi", "npm:17.1.1"],\
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],\
-            ["@types/aws-lambda", "npm:8.10.108"],\
+            ["@types/aws-lambda", "npm:8.10.109"],\
             ["@types/debug", "npm:4.1.7"],\
             ["@types/hapi", "npm:18.0.7"],\
             ["@types/hapi__boom", "npm:9.0.1"],\
@@ -34182,10 +34182,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/aws-lambda", [\
-        ["npm:8.10.108", {\
-          "packageLocation": "./.yarn/cache/@types-aws-lambda-npm-8.10.108-2a3e10a968-648a6cc8e6.zip/node_modules/@types/aws-lambda/",\
+        ["npm:8.10.109", {\
+          "packageLocation": "./.yarn/cache/@types-aws-lambda-npm-8.10.109-89bb4891fa-879dd30806.zip/node_modules/@types/aws-lambda/",\
           "packageDependencies": [\
-            ["@types/aws-lambda", "npm:8.10.108"]\
+            ["@types/aws-lambda", "npm:8.10.109"]\
           ],\
           "linkType": "HARD"\
         }],\

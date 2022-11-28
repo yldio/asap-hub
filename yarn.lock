@@ -384,7 +384,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.19.6
     "@hapi/boom": 9.1.4
     "@types/apr-intercept": "workspace:*"
-    "@types/babel__core": 7.1.19
+    "@types/babel__core": 7.1.20
     "@types/hapi__boom": 9.0.1
     "@types/jest": 27.5.2
     "@types/jwt-decode": 2.2.1
@@ -667,7 +667,7 @@ __metadata:
     "@emotion/cache": 11.10.3
     "@emotion/react": 11.10.4
     "@emotion/server": 11.10.0
-    "@types/babel__core": 7.1.19
+    "@types/babel__core": 7.1.20
     "@types/node": 14.18.33
     "@types/react": 17.0.49
     "@types/react-dom": 17.0.18
@@ -1128,7 +1128,7 @@ __metadata:
     "@emotion/cache": 11.10.3
     "@emotion/react": 11.10.4
     "@emotion/server": 11.10.0
-    "@types/babel__core": 7.1.19
+    "@types/babel__core": 7.1.20
     "@types/node": 14.18.33
     "@types/react": 17.0.49
     "@types/react-dom": 17.0.18
@@ -1233,7 +1233,7 @@ __metadata:
     "@emotion/cache": 11.10.3
     "@emotion/react": 11.10.4
     "@emotion/server": 11.10.0
-    "@types/babel__core": 7.1.19
+    "@types/babel__core": 7.1.20
     "@types/react": 17.0.49
     "@types/react-dom": 17.0.18
     aws-sdk: 2.1220.0
@@ -12651,16 +12651,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/babel__core@npm:7.1.19, @types/babel__core@npm:^7.1.14":
-  version: 7.1.19
-  resolution: "@types/babel__core@npm:7.1.19"
+"@types/babel__core@npm:7.1.20":
+  version: 7.1.20
+  resolution: "@types/babel__core@npm:7.1.20"
   dependencies:
-    "@babel/parser": "npm:^7.1.0"
-    "@babel/types": "npm:^7.0.0"
-    "@types/babel__generator": "npm:*"
-    "@types/babel__template": "npm:*"
-    "@types/babel__traverse": "npm:*"
-  checksum: 8c9fa87a1c2224cbec251683a58bebb0d74c497118034166aaa0491a4e2627998a6621fc71f8a60ffd27d9c0c52097defedf7637adc6618d0331c15adb302338
+    "@babel/parser": ^7.1.0
+    "@babel/types": ^7.0.0
+    "@types/babel__generator": "*"
+    "@types/babel__template": "*"
+    "@types/babel__traverse": "*"
+  checksum: a09c4f0456552547a5b8a5a009a3daec4d362f622168f8e08bda0ded2da0a65ab0b1642e23c433b3616721f5701dc34a996c5bde5baeaea53eda98f438043f2c
   languageName: node
   linkType: hard
 
@@ -12674,6 +12674,19 @@ __metadata:
     "@types/babel__template": "npm:*"
     "@types/babel__traverse": "npm:*"
   checksum: d92c530efc3e50147f7956fc2aa49162508d2c5abffea7818051dfa9a9c9bc263b7d3da7d6fa826669ff8c68d733bbaced2dfdd486282b8bd013ccc3a0a3b7f6
+  languageName: node
+  linkType: hard
+
+"@types/babel__core@npm:^7.1.14":
+  version: 7.1.19
+  resolution: "@types/babel__core@npm:7.1.19"
+  dependencies:
+    "@babel/parser": "npm:^7.1.0"
+    "@babel/types": "npm:^7.0.0"
+    "@types/babel__generator": "npm:*"
+    "@types/babel__template": "npm:*"
+    "@types/babel__traverse": "npm:*"
+  checksum: 8c9fa87a1c2224cbec251683a58bebb0d74c497118034166aaa0491a4e2627998a6621fc71f8a60ffd27d9c0c52097defedf7637adc6618d0331c15adb302338
   languageName: node
   linkType: hard
 

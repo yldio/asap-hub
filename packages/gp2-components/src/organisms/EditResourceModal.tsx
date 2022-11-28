@@ -33,13 +33,13 @@ const EditResourceModal: React.FC<EditResponseModalProps> = ({
         'Edit or delete an existing resource that is being shared privately with your group.'
       }
       backHref={backHref}
-      onSave={(resource: gp2Model.Resource) => {
+      onSave={(resource: gp2Model.Resource) =>
         updateResources([
           ...Object.assign([], resources, {
             [routeIndex]: resource,
           }),
-        ]);
-      }}
+        ])
+      }
       onDelete={() => {
         const newResources = [...resources];
         newResources.splice(routeIndex, 1);

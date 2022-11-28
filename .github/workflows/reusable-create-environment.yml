@@ -80,7 +80,7 @@ jobs:
         run: |
           OUTPUT=$(algolia settings get $ALGOLIA_INDEX) || true
           echo "$OUTPUT"
-          if [[ "$OUTPUT" == *"Index does not exist"*  ]]; then
+          if [[ "$OUTPUT" == *"Algolia API error [404] Index does not exist"*  ]]; then
             echo "::set-output name=index-exists::false"
             echo "Index does not exist"
           else

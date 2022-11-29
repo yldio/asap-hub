@@ -5893,6 +5893,16 @@ export type WorkingGroups = Content & {
   version: Scalars['Int'];
 };
 
+/** The structure of the This group is complete field of the Working Groups content type. */
+export type WorkingGroupsDataCompleteDto = {
+  iv: Maybe<Scalars['Boolean']>;
+};
+
+/** The structure of the This group is complete field of the Working Groups content input type. */
+export type WorkingGroupsDataCompleteInputDto = {
+  iv: InputMaybe<Scalars['Boolean']>;
+};
+
 /** The structure of the Description field of the Working Groups content type. */
 export type WorkingGroupsDataDescriptionDto = {
   iv: Maybe<Scalars['String']>;
@@ -5905,6 +5915,7 @@ export type WorkingGroupsDataDescriptionInputDto = {
 
 /** The structure of the Working Groups data type. */
 export type WorkingGroupsDataDto = {
+  complete: Maybe<WorkingGroupsDataCompleteDto>;
   description: Maybe<WorkingGroupsDataDescriptionDto>;
   externalLink: Maybe<WorkingGroupsDataExternalLinkDto>;
   externalLinkText: Maybe<WorkingGroupsDataExternalLinkTextDto>;
@@ -5933,6 +5944,7 @@ export type WorkingGroupsDataExternalLinkTextInputDto = {
 
 /** The structure of the Working Groups data input type. */
 export type WorkingGroupsDataInputDto = {
+  complete: InputMaybe<WorkingGroupsDataCompleteInputDto>;
   description: InputMaybe<WorkingGroupsDataDescriptionInputDto>;
   externalLink: InputMaybe<WorkingGroupsDataExternalLinkInputDto>;
   externalLinkText: InputMaybe<WorkingGroupsDataExternalLinkTextInputDto>;
@@ -5951,6 +5963,7 @@ export type WorkingGroupsDataTitleInputDto = {
 
 /** The structure of the flat Working Groups data type. */
 export type WorkingGroupsFlatDataDto = {
+  complete: Maybe<Scalars['Boolean']>;
   description: Maybe<Scalars['String']>;
   externalLink: Maybe<Scalars['String']>;
   externalLinkText: Maybe<Scalars['String']>;
@@ -9267,7 +9280,11 @@ export type FetchWorkingGroupQuery = {
     Pick<WorkingGroups, 'id' | 'lastModified'> & {
       flatData: Pick<
         WorkingGroupsFlatDataDto,
-        'title' | 'description' | 'externalLink' | 'externalLinkText'
+        | 'title'
+        | 'description'
+        | 'externalLink'
+        | 'externalLinkText'
+        | 'complete'
       >;
     }
   >;
@@ -13797,6 +13814,10 @@ export const FetchWorkingGroupDocument = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'externalLinkText' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'complete' },
                       },
                     ],
                   },

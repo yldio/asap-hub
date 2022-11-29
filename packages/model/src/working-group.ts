@@ -14,6 +14,7 @@ export type WorkingGroupDataObject = {
   description: string;
   externalLink?: string;
   externalLinkText?: string;
+  complete?: boolean;
   deliverables: {
     description: string;
     status: DeliverableStatus;

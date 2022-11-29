@@ -10,6 +10,7 @@ export const FETCH_WORKING_GROUP = gql`
         description
         externalLink
         externalLinkText
+        complete
       }
     }
   }

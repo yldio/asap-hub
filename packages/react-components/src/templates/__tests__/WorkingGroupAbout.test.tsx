@@ -17,6 +17,22 @@ it('renders the description', () => {
   expect(getByText('Text content')).toBeVisible();
 });
 
+it('renders a list of deliverables', () => {
+  const { getByText } = render(
+    <WorkingGroupAbout
+      {...baseProps}
+      deliverables={[
+        { description: 'Deliverable 1', status: 'Complete' },
+        { description: 'Deliverable 2', status: 'In Progress' },
+      ]}
+    />,
+  );
+  expect(getByText('Deliverable 1')).toBeVisible();
+  expect(getByText('Complete')).toBeVisible();
+  expect(getByText('Deliverable 2')).toBeVisible();
+  expect(getByText('In Progress')).toBeVisible();
+});
+
 it('renders CTA when pointOfContact is provided', () => {
   const { queryAllByText, rerender } = render(
     <WorkingGroupAbout

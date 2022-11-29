@@ -1,7 +1,19 @@
-import { createWorkingGroupResponse } from '@asap-hub/fixtures';
+import {
+  createWorkingGroupListResponse,
+  createWorkingGroupResponse,
+} from '@asap-hub/fixtures';
+import { GetListOptions } from '@asap-hub/frontend-utils';
 import nock from 'nock';
 import { API_BASE_URL } from '../../../config';
-import { getWorkingGroup } from '../api';
+import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
+import { getWorkingGroup, getWorkingGroups } from '../api';
+
+const options: GetListOptions = {
+  filters: new Set(),
+  pageSize: CARD_VIEW_PAGE_SIZE,
+  currentPage: 0,
+  searchQuery: '',
+};
 
 describe('getWorkingGroup', () => {
   it('makes an authorized GET request for the working group id', async () => {
@@ -28,7 +40,39 @@ describe('getWorkingGroup', () => {
     await expect(
       getWorkingGroup('42', ''),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Failed to fetch working-group with id 42. Expected status 2xx or 404. Received status 500."`,
+      `"Failed to fetch working group with id 42. Expected status 2xx or 404. Received status 500."`,
+    );
+  });
+});
+
+describe('getWorkingGroups', () => {
+  it('makes an authorized GET request for working groups', async () => {
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .get('/working-groups')
+      .query({ take: '10', skip: '0' })
+      .reply(200, {});
+    await getWorkingGroups(options, 'Bearer x');
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('returns successfully fetched groups', async () => {
+    const groups = createWorkingGroupListResponse(1);
+    nock(API_BASE_URL)
+      .get('/working-groups')
+      .query({ take: '10', skip: '0' })
+      .reply(200, groups);
+    expect(await getWorkingGroups(options, '')).toEqual(groups);
+  });
+
+  it('errors for error status', async () => {
+    nock(API_BASE_URL)
+      .get('/working-groups')
+      .query({ take: '10', skip: '0' })
+      .reply(500);
+    await expect(
+      getWorkingGroups(options, ''),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Failed to fetch working group list. Expected status 2xx. Received status 500."`,
     );
   });
 });

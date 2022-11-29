@@ -18,7 +18,7 @@ export const getWorkingGroup = async (
       return undefined;
     }
     throw new Error(
-      `Failed to fetch working-group with id ${id}. Expected status 2xx or 404. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      `Failed to fetch working group with id ${id}. Expected status 2xx or 404. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
     );
   }
   return resp.json();

@@ -3,7 +3,6 @@ import {
   WorkingGroupDataObject,
   WorkingGroupListDataObject,
 } from '@asap-hub/model';
-import { Filter } from 'odata-query';
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import {
   FetchWorkingGroupQuery,
@@ -15,7 +14,6 @@ import {
   FETCH_WORKING_GROUP,
   FETCH_WORKING_GROUPS,
 } from '../queries/working-groups.queries';
-import { buildODataFilter } from '../utils/odata';
 
 export interface WorkingGroupDataProvider {
   fetchById(id: string): Promise<WorkingGroupDataObject | null>;
@@ -42,25 +40,14 @@ export class WorkingGroupSquidexDataProvider
   }
 
   async fetch(options: FetchOptions): Promise<WorkingGroupListDataObject> {
-    const { search, take = 10, skip = 0 } = options;
-
-    const filterList = (search || '')
-      .split(' ')
-      .filter(Boolean) // removes whitespaces
-      .reduce(
-        (acc: Filter[], word: string) =>
-          acc.concat({
-            or: [{ 'data/title/iv': { contains: word } }],
-          }),
-        [],
-      );
+    const { take = 10, skip = 0 } = options;
 
     const { queryWorkingGroupsContentsWithTotal } =
       await this.squidexGraphqlClient.request<
         FetchWorkingGroupsQuery,
         FetchWorkingGroupsQueryVariables
       >(FETCH_WORKING_GROUPS, {
-        filter: buildODataFilter(filterList),
+        filter: '',
         top: take,
         skip,
       });

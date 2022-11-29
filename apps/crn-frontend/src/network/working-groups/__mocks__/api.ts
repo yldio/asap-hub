@@ -15,6 +15,6 @@ export const getWorkingGroup = jest.fn(
 );
 
 export const getWorkingGroups = jest.fn(
-  async (): Promise<WorkingGroupListResponse> =>
-    createWorkingGroupListResponse(1),
+  async (pageSize): Promise<WorkingGroupListResponse> =>
+    createWorkingGroupListResponse(pageSize ?? 10),
 );

@@ -4,7 +4,8 @@ import { network } from '@asap-hub/routing';
 
 import { Card, Paragraph, Anchor, Caption, Ellipsis } from '../atoms';
 import { ExternalLink, LinkHeadline } from '../molecules';
-import { perRem } from '../pixels';
+import { perRem, tabletScreen } from '../pixels';
+import { formatDate } from '../date';
 
 const wrapperStyle = css({
   display: 'flex',
@@ -25,6 +26,9 @@ const linkStyle = css({
 
 const descriptionStyle = css({
   marginBottom: `${24 / perRem}em`,
+  [`@media (min-width: ${tabletScreen.min}px)`]: {
+    marginBottom: `${36 / perRem}em`,
+  },
 });
 
 type WorkingGroupCardProps = Pick<
@@ -82,7 +86,9 @@ const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
         </Ellipsis>
       </Anchor>
     </div>
-    <Caption noMargin>{lastModifiedDate}</Caption>
+    <Caption noMargin>{`Last updated: ${formatDate(
+      new Date(lastModifiedDate),
+    )}`}</Caption>
   </Card>
 );
 export default WorkingGroupCard;

@@ -23,7 +23,7 @@ const loadGroupProfile = () =>
   );
 const loadWorkingGroupList = () =>
   import(
-    /* webpackChunkName: "network-working-group-profile" */ './working-groups/WorkingGroupList'
+    /* webpackChunkName: "network-working-group-list" */ './working-groups/WorkingGroupList'
   );
 const loadWorkingGroupProfile = () =>
   import(
@@ -43,13 +43,13 @@ const Network: FC<Record<string, never>> = () => {
       // Tab can be changed very quickly
       .then(loadUserList)
       .then(loadGroupList)
+      .then(loadWorkingGroupList)
       // Can be clicked only after the list has been fetched
       .then(loadTeamProfile)
       // Can be clicked only after changing tabs and the list has been fetched
       .then(loadUserProfile)
       .then(loadGroupProfile)
       // Can only be loaded by navigating to the URL
-      .then(loadWorkingGroupList)
       .then(loadWorkingGroupProfile);
   }, []);
 

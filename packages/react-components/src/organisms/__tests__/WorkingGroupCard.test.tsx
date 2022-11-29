@@ -2,6 +2,7 @@ import { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 
 import WorkingGroupCard from '../WorkingGroupCard';
+import { formatDate } from '../../date';
 
 const props: ComponentProps<typeof WorkingGroupCard> = {
   id: '42',
@@ -26,7 +27,9 @@ it('renders the working group card', () => {
   expect(getByText('My Working Group')).toBeVisible();
   expect(getByText('test description')).toBeVisible();
   expect(getByText('Link text')).toBeVisible();
-  expect(getByText('2020-01-01')).toBeVisible();
+  expect(
+    getByText(`Last updated: ${formatDate(new Date('2020-01-01'))}`),
+  ).toBeVisible();
 });
 
 it('renders the working group name linking to the working group', () => {

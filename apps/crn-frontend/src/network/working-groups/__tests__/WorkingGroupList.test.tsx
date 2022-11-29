@@ -20,7 +20,7 @@ const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
   typeof getWorkingGroups
 >;
 
-const renderGroupList = async (
+const renderWorkingGroupList = async (
   listWorkingGroupResponse: WorkingGroupListResponse = createWorkingGroupListResponse(
     1,
   ),
@@ -58,7 +58,7 @@ const renderGroupList = async (
 };
 
 it('fetches the group information', async () => {
-  await renderGroupList();
+  await renderWorkingGroupList();
 
   await waitFor(() =>
     expect(mockGetWorkingGroups).toHaveBeenCalledWith(
@@ -71,7 +71,7 @@ it('fetches the group information', async () => {
 });
 
 it('renders a list of fetched working groups', async () => {
-  const { container } = await renderGroupList({
+  const { container } = await renderWorkingGroupList({
     ...createWorkingGroupListResponse(2),
     items: createWorkingGroupListResponse(2).items.map((group, i) => ({
       ...group,

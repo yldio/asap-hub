@@ -11,6 +11,7 @@ const wrapperStyle = css({
   flexFlow: 'column',
   paddingTop: `${33 / perRem}em`,
   paddingBottom: `${33 / perRem}em`,
+  overflow: 'hidden',
 });
 
 const titleStyle = css({

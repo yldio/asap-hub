@@ -10,9 +10,7 @@ import {
   useRecoilState,
   useRecoilValue,
 } from 'recoil';
-import useDeepCompareEffect from 'use-deep-compare-effect';
 import { authorizationState } from '../../auth/state';
-import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 import { getWorkingGroup, getWorkingGroups } from './api';
 
 const workingGroupIndexState = atomFamily<

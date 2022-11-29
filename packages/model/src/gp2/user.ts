@@ -87,12 +87,7 @@ export type UserDataObject = {
 
 export type UserCreateDataObject = Omit<
   UserDataObject,
-  | 'id'
-  | 'createdDate'
-  | 'projects'
-  | 'workingGroups'
-  | 'fundingStreams'
-  | 'contributingCohorts'
+  'id' | 'createdDate' | 'projects' | 'workingGroups' | 'contributingCohorts'
 >;
 
 export type UserUpdateDataObject = Partial<UserCreateDataObject>;

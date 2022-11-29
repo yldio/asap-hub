@@ -233,7 +233,7 @@ export const parseGraphQLUserToDataObject = ({
     onboarded: user.onboarded || false,
     projects,
     workingGroups,
-    fundingStreams: user.fundingStreams || '',
+    fundingStreams: user.fundingStreams || undefined,
     contributingCohorts: [],
     secondaryEmail: user.secondaryEmail || undefined,
     telephone,

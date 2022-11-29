@@ -16,7 +16,6 @@ export interface ResourceNote extends ResourceBase {
 export type Resource = ResourceNote | ResourceLink;
 
 export const keywords = [
-  'Movement Disorders',
   'Epidemiology',
   'Neurology',
   'Genetics',
@@ -24,13 +23,11 @@ export const keywords = [
   'Data Science',
   'GP2 PhD',
   'Neurodegeneration',
-  'Neurogenetics',
   'Pharmacogenomics',
   'Movement Disorders',
   'Communications',
   'Patient Advocate',
   'Machine Learning',
-  'Program Management',
   'Research Communications',
   'Patient Engagement',
   'R',

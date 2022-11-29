@@ -270,6 +270,7 @@ describe('For a GP2 login', () => {
     workingGroups: [],
     contributingCohorts: [],
     fundingStreams: undefined,
+    keywords: [],
   };
   it('adds the user metadata on successful fetch for crn', async () => {
     nock(apiUrl)

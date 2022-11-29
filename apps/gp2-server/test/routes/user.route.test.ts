@@ -1,5 +1,4 @@
 import { gp2 } from '@asap-hub/model';
-import { userDegrees, userRegions } from '@asap-hub/model/src/gp2';
 import { AuthHandler } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
 import supertest from 'supertest';
@@ -11,6 +10,8 @@ import {
 } from '../fixtures/user.fixtures';
 import { loggerMock } from '../mocks/logger.mock';
 import { userControllerMock } from '../mocks/user-controller.mock';
+
+const { userDegrees, userRegions, keywords } = gp2;
 
 describe('/users/ route', () => {
   const loggedInUserId = '11';
@@ -314,6 +315,8 @@ describe('/users/ route', () => {
           'lastName',
           'country',
           'city',
+          'biography',
+          'fundingStreams',
         ])(
           'Should be able to provide for the %s parameter ',
           async (parameter) => {
@@ -441,6 +444,20 @@ describe('/users/ route', () => {
           const response = await supertest(app)
             .patch(`/users/${loggedInUserId}`)
             .send({ region: 'invalid region' });
+          expect(response.status).toBe(400);
+        });
+      });
+      describe('keywords', () => {
+        test.each(keywords)('allows valid keywords: %s', async (keyword) => {
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({ keywords: [keyword] });
+          expect(response.status).toBe(200);
+        });
+        test('does not allow invalid keywords', async () => {
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({ keywords: ['invalid keyword'] });
           expect(response.status).toBe(400);
         });
       });

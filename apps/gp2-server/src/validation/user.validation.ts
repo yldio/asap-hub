@@ -2,7 +2,7 @@ import { validateInput } from '@asap-hub/server-common';
 import { JSONSchemaType } from 'ajv';
 import { gp2 } from '@asap-hub/model';
 
-const { userDegrees, userRegions } = gp2;
+const { userDegrees, userRegions, keywords } = gp2;
 type UserParameters = {
   userId: string;
 };
@@ -69,6 +69,16 @@ const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
         number: { type: 'string', nullable: true },
       },
     },
+    keywords: {
+      type: 'array',
+      items: {
+        type: 'string',
+        enum: [...keywords, '', null],
+      },
+      nullable: true,
+    },
+    biography: { type: 'string', nullable: true },
+    fundingStreams: { type: 'string', nullable: true },
   },
   additionalProperties: false,
 };

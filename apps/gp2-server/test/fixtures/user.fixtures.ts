@@ -93,6 +93,7 @@ export const fetchExpectation: gp2.ListUserResponse = {
       workingGroups: [],
       fundingStreams: undefined,
       contributingCohorts: [],
+      keywords: [],
     },
   ],
 };
@@ -257,6 +258,7 @@ export const fetchUserResponseDataObject = (): gp2.UserDataObject => ({
   contributingCohorts: [],
   secondaryEmail: 'tony@stark.com',
   telephone: { countryCode: '+1', number: '212-970-4133' },
+  keywords: [],
 });
 export const getGraphQLUser = (
   user: Partial<NonNullable<FetchUserQuery['findUsersContent']>> = {},

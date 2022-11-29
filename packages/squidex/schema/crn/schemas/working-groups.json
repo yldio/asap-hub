@@ -15,19 +15,21 @@
     "fieldsInLists": [],
     "fields": [
       {
-        "name": "completeSince",
-        "isLocked": false,
-        "isHidden": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
+        "name": "complete",
         "properties": {
           "isRequired": false,
           "isRequiredOnPublish": false,
-          "isHalfWidth": false,
-          "fieldType": "DateTime",
-          "editor": "Date",
-          "label": "Group is complete since"
-        }
+          "isHalfWidth": true,
+          "fieldType": "Boolean",
+          "editor": "Toggle",
+          "inlineEditable": true,
+          "defaultValue": false,
+          "label": "This group is complete"
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
       },
       {
         "name": "title",

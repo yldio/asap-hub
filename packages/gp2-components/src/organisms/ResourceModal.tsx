@@ -51,7 +51,6 @@ const overrideButtonStyles = css({
 type ResourceModalProps = Partial<gp2.Resource> & {
   modalTitle: string;
   modalDescription: string;
-  hideDelete?: boolean;
   backHref: string;
   onSave?: (data: gp2.Resource) => Promise<void>;
   onDelete?: () => void | Promise<void>;
@@ -65,7 +64,6 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
   modalDescription,
   onSave = noop,
   onDelete = noop,
-  hideDelete = true,
   ...props
 }) => {
   const externalLink = props.type === 'Link' && props.externalLink;
@@ -182,7 +180,7 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
               Cancel
             </Link>
             <div css={css(divWithActionsStyle)}>
-              <div hidden={hideDelete}>
+              <div hidden={onDelete === noop}>
                 <Button
                   overrideStyles={overrideButtonStyles}
                   onClick={() => asyncFunctionWrapper(onDelete)}

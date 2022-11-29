@@ -14,7 +14,7 @@
     "space:migrate:crn": "yarn ctf-migrate up --all",
     "space:migrate:crn:dryrun": "yarn ctf-migrate up --all --dry-run",
     "space:migrate:crn:count": "yarn ctf-migrate list --all | grep \\\\[pending\\\\] | wc -l",
-    "space:create-environment:crn": "ts-node ./scripts/create-environment.ts",
+    "space:create-environment:crn": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\"}' ts-node ./scripts/create-environment.ts",
     "schema:update:crn": "graphql-codegen --config codegen.yml",
     "generate:migration:crn": "contentful space generate migration -s $CONTENTFUL_SPACE_ID -e $CONTENTFUL_ENV_ID"
   },

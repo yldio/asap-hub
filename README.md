@@ -305,6 +305,14 @@ To fetch data from squidex if you might need to run the command to auto generate
 yarn workspace @asap-hub/cms-data-sync schema:update:crn
 ```
 
+### Syncing Squidex data to Contentful
+
+There is a GitHub Actions workflow to sync data from Squidex to Contentful.
+
+You can specify the source Squidex app and the destination Contentful env.
+
+Check [on-demand-cms-sync.yml](./.github/workflows/on-demand-cms-sync.yml) for details.
+
 ## Docker Images
 
 ### Image name

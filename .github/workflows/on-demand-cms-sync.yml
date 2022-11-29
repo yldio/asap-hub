@@ -1,0 +1,68 @@
+name: Sync Squidex data to Contentful
+on:
+  workflow_dispatch:
+    inputs:
+      environment-name:
+        required: true
+        description: The environment name
+        type: string
+      entity:
+        required: true
+        type: string
+        description: Choose which Contentful entity (or entities) to sync
+        default: all
+      contentful-env:
+        required: true
+        type: string
+        description: Choose which Contentful environment to sync to
+      squidex-app:
+        required: true
+        type: string
+        description: Choose which Squidex app to sync from
+
+jobs:
+  sync_cms_data:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment-name }}
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:7b77d99657ab3718ed548ba366ffbcbb15315fd8
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Rebuild
+        uses: ./.github/actions/build-rebuild
+      - name: Run CMS sync for news
+        if: ${{ inputs.entity == 'news' || inputs.entity == 'all' }}
+        run: |
+          yarn build:babel
+          yarn build:typecheck
+          yarn workspace @asap-hub/cms-data-sync migrate:news
+        env:
+          CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.contentful-space-id }}
+          CONTENTFUL_ENV_ID: ${{ inputs.contentful-env }}
+          CRN_SQUIDEX_APP_NAME: ${{ inputs.squidex-app }}
+          CRN_SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
+          CRN_SQUIDEX_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
+          SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
+
+  notify_failure:
+    runs-on: ubuntu-latest
+    needs: [sync_cms_data]
+    if: ${{ failure() && inputs.environment-name=='Production' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: ./.github/actions/slack/
+        with:
+          message: Syncing data from Squidex to Contentful failed
+          webhook: ${{ env.SLACK_WEBHOOK }}
+          status: failure

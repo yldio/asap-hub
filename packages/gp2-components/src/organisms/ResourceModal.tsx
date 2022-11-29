@@ -30,6 +30,16 @@ const buttonContainerStyles = css({
   },
 });
 
+const divWithActionsStyle = css({
+  display: 'inline-flex',
+  gap: rem(14),
+  justifyContent: 'space-between',
+  [mobileQuery]: {
+    display: 'flex',
+    flexDirection: 'column-reverse',
+  },
+});
+
 const overrideButtonStyles = css({
   margin: 0,
   maxWidth: 'fit-content',
@@ -41,8 +51,10 @@ const overrideButtonStyles = css({
 type ResourceModalProps = Partial<gp2.Resource> & {
   modalTitle: string;
   modalDescription: string;
+  hideDelete?: boolean;
   backHref: string;
-  onSave?: (data: gp2.Resource) => void | Promise<void>;
+  onSave?: (data: gp2.Resource) => Promise<void>;
+  onDelete?: () => void | Promise<void>;
 };
 
 const ResourceModal: React.FC<ResourceModalProps> = ({
@@ -52,6 +64,8 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
   modalTitle,
   modalDescription,
   onSave = noop,
+  onDelete = noop,
+  hideDelete = true,
   ...props
 }) => {
   const externalLink = props.type === 'Link' && props.externalLink;
@@ -78,37 +92,39 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
     );
   };
 
+  const onSaveFunction = () => {
+    /* istanbul ignore next */
+    if (!newType) {
+      throw new Error('There is no type provided.');
+    }
+
+    const resourceBase = {
+      title: newTitle,
+      description: newDescription || undefined,
+    };
+    const resource =
+      newType === 'Link'
+        ? {
+            type: newType,
+            ...resourceBase,
+            externalLink: newExternalLink,
+          }
+        : {
+            type: newType,
+            ...resourceBase,
+          };
+    return onSave(resource);
+  };
+
   return (
     <EditModal
       title={modalTitle}
       backHref={backHref}
       dirty={isDirty()}
       noHeader
-      onSave={() => {
-        /* istanbul ignore next */
-        if (!newType) {
-          throw new Error('There is no type provided.');
-        }
-
-        const resourceBase = {
-          title: newTitle,
-          description: newDescription || undefined,
-        };
-        const resource =
-          newType === 'Link'
-            ? {
-                type: newType,
-                ...resourceBase,
-                externalLink: newExternalLink,
-              }
-            : {
-                type: newType,
-                ...resourceBase,
-              };
-        return onSave(resource);
-      }}
+      onSave={noop}
     >
-      {({ isSaving }, asyncOnSave) => (
+      {({ isSaving }, asyncFunctionWrapper) => (
         <div css={css({ width: '100%' })}>
           <header>
             <Headline3>{modalTitle}</Headline3>
@@ -165,15 +181,24 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
             >
               Cancel
             </Link>
-
-            <Button
-              overrideStyles={overrideButtonStyles}
-              primary
-              onClick={asyncOnSave}
-              enabled={!isSaving}
-            >
-              Save
-            </Button>
+            <div css={css(divWithActionsStyle)}>
+              <div hidden={hideDelete}>
+                <Button
+                  overrideStyles={overrideButtonStyles}
+                  onClick={() => asyncFunctionWrapper(onDelete)}
+                >
+                  Delete
+                </Button>
+              </div>
+              <Button
+                overrideStyles={overrideButtonStyles}
+                primary
+                onClick={() => asyncFunctionWrapper(onSaveFunction)}
+                enabled={!isSaving}
+              >
+                Save
+              </Button>
+            </div>
           </div>
         </div>
       )}

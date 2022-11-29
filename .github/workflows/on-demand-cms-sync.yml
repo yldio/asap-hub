@@ -1,6 +1,6 @@
 name: Sync Squidex data to Contentful
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
       environment-name:
         required: true

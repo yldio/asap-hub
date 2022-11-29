@@ -58,10 +58,12 @@ export const getUserResponse = (): gp2.UserResponse => ({
       title: 'Steering Committee',
     },
   ],
-  fundingStreams: undefined,
+  fundingStreams: 'A funding stream',
   contributingCohorts: [],
   secondaryEmail: 'tony@stark.com',
   telephone: { countryCode: '+1', number: '212-970-4133' },
+  biography: 'a biography of Tony Stark',
+  keywords: ['R', 'Bash'],
 });
 
 export const fetchExpectation: gp2.ListUserResponse = {
@@ -179,7 +181,9 @@ export const getUserDataObject = (): gp2.UserDataObject => ({
       title: 'Steering Committee',
     },
   ],
-  fundingStreams: undefined,
+  keywords: ['R', 'Bash'],
+  fundingStreams: 'A funding stream',
+  biography: 'a biography of Tony Stark',
   contributingCohorts: [],
   secondaryEmail: 'tony@stark.com',
   telephone: { countryCode: '+1', number: '212-970-4133' },
@@ -283,6 +287,9 @@ export const getGraphQLUser = (
     secondaryEmail: 'tony@stark.com',
     telephoneCountryCode: '+1',
     telephoneNumber: '212-970-4133',
+    keywords: ['R', 'Bash'],
+    fundingStreams: 'A funding stream',
+    biography: 'a biography of Tony Stark',
     ...user?.flatData,
   },
   referencingProjectsContents: [

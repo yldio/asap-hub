@@ -14,3 +14,52 @@ export interface ResourceNote extends ResourceBase {
   type: 'Note';
 }
 export type Resource = ResourceNote | ResourceLink;
+
+export const keywords = [
+  'Movement Disorders',
+  'Epidemiology',
+  'Neurology',
+  'Genetics',
+  'Genomics',
+  'Data Science',
+  'GP2 PhD',
+  'Neurodegeneration',
+  'Neurogenetics',
+  'Pharmacogenomics',
+  'Movement Disorders',
+  'Communications',
+  'Patient Advocate',
+  'Machine Learning',
+  'Program Management',
+  'Research Communications',
+  'Patient Engagement',
+  'R',
+  'Bash',
+  'Diversity',
+  'Laboratory Science',
+  'Operations',
+  'Project Management',
+  'Molecular Biology',
+  'Research Grants',
+  'Neurogenetics',
+  'Python',
+  'Biostatistics',
+  'Stata',
+  'Education',
+  'Program Management',
+  'Course Management',
+  'Training',
+  'Biobanking',
+  'Career Development',
+  'Administrative Support',
+  'GP2 Opportunities',
+  "GP2 Master's",
+  'Computer Science',
+  'Outreach',
+  'Neuroimaging',
+  'Parkinson disease',
+] as const;
+
+export type Keywords = typeof keywords[number];
+export const isKeyword = (data: string | null): data is Keywords =>
+  keywords.includes(data as Keywords);

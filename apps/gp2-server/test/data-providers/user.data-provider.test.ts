@@ -150,6 +150,26 @@ describe('User data provider', () => {
         expect(result?.role).toEqual(expected);
       },
     );
+
+    test.each(gp2Model.keywords)('keywords are added - %s', async (keyword) => {
+      const expectedKeywords = [keyword];
+      const user = getGraphQLUser();
+      user.flatData.keywords = expectedKeywords;
+      const mockResponse = getSquidexUserGraphqlResponse(user);
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+      const result = await userDataProvider.fetchById('user-id');
+      expect(result?.keywords).toEqual(expectedKeywords);
+    });
+
+    test('keywords are valid', async () => {
+      const expectedKeywords = ['invalid-keyword'];
+      const user = getGraphQLUser();
+      user.flatData.keywords = expectedKeywords;
+      const mockResponse = getSquidexUserGraphqlResponse(user);
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+      expect(() => userDataProvider.fetchById('user-id')).rejects.toThrow();
+    });
+
     describe('positions', () => {
       const position = {
         role: 'CEO',

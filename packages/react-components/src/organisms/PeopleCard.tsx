@@ -6,7 +6,7 @@ import { Card, Avatar, Caption, StateTag } from '../atoms';
 import { LinkHeadline, UserProfilePersonalText, ImageLink } from '../molecules';
 import { tabletScreen, perRem } from '../pixels';
 import { formatDate } from '../date';
-import { alumniBadge } from '../icons';
+import { alumniBadgeIcon } from '../icons';
 
 const containerStyles = css({
   display: 'grid',
@@ -87,7 +87,7 @@ const PeopleCard: React.FC<PeopleCardProps> = ({
             </LinkHeadline>
             {alumniSinceDate && (
               <span css={alumniBadgeStyles}>
-                <StateTag icon={alumniBadge} label="Alumni" />
+                <StateTag icon={alumniBadgeIcon} label="Alumni" />
               </span>
             )}
           </div>

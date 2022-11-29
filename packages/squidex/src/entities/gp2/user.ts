@@ -41,6 +41,9 @@ export interface User<TAvatar = string> {
   region: RestUsersRegion;
   role: RestUsersRole;
   onboarded: boolean;
+  secondaryEmail?: string;
+  telephoneCountryCode?: string;
+  telephoneNumber?: string;
 }
 
 export interface RestUser extends Entity, Rest<User> {}

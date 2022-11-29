@@ -93,6 +93,10 @@ export type UserCreateDataObject = Omit<
 >;
 
 export type UserUpdateDataObject = Partial<UserCreateDataObject>;
+export type UserPatchRequest = Omit<
+  UserUpdateDataObject,
+  'avatarUrl' | 'connections' | 'email' | 'role'
+>;
 
 export type ListUserDataObject = ListResponse<UserDataObject>;
 
@@ -105,6 +109,7 @@ export type UserUpdateRequest = UserUpdateDataObject;
 export type FetchUsersFilter = {
   region?: UserRegion[];
   code?: string;
+  onlyOnboarded?: boolean;
 };
 
 export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;

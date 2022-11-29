@@ -7,7 +7,7 @@ import { Link } from '../atoms';
 import { lead } from '../colors';
 import { perRem, largeDesktopScreen } from '../pixels';
 import {
-  groupsIcon,
+  interestGroupsIcon,
   eventPlaceholderIcon,
   speakerIcon,
   inactiveBadgeIcon,
@@ -172,7 +172,7 @@ const EventInfo: React.FC<EventInfoProps> = ({
               <Link
                 href={network({}).groups({}).group({ groupId: group.id }).$}
               >
-                <span css={iconStyles}>{groupsIcon}</span>
+                <span css={iconStyles}>{interestGroupsIcon}</span>
                 {group.name}
                 {!group.active && (
                   <span css={inactiveBadgeStyles}>{inactiveBadgeIcon}</span>
@@ -180,7 +180,7 @@ const EventInfo: React.FC<EventInfoProps> = ({
               </Link>
             ) : (
               <>
-                <span css={iconStyles}>{groupsIcon}</span>ASAP Event
+                <span css={iconStyles}>{interestGroupsIcon}</span>ASAP Event
               </>
             )}
           </div>

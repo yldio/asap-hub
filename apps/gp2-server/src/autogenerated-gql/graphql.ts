@@ -2466,9 +2466,10 @@ export type ProjectContentFragment = Pick<Projects, 'id'> & {
           user: Maybe<
             Array<
               Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
-                flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'> & {
-                  avatar: Maybe<Array<Pick<Asset, 'id'>>>;
-                };
+                flatData: Pick<
+                  UsersFlatDataDto,
+                  'firstName' | 'lastName' | 'onboarded'
+                > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
               }
             >
           >;
@@ -2521,7 +2522,7 @@ export type FetchProjectQuery = {
                   Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
                     flatData: Pick<
                       UsersFlatDataDto,
-                      'firstName' | 'lastName'
+                      'firstName' | 'lastName' | 'onboarded'
                     > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
                   }
                 >
@@ -2581,7 +2582,7 @@ export type FetchProjectsQuery = {
                         > & {
                           flatData: Pick<
                             UsersFlatDataDto,
-                            'firstName' | 'lastName'
+                            'firstName' | 'lastName' | 'onboarded'
                           > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
                         }
                       >
@@ -2839,7 +2840,7 @@ export type WorkingGroupNetworkContentFragment = Pick<
                       > & {
                         flatData: Pick<
                           UsersFlatDataDto,
-                          'firstName' | 'lastName'
+                          'firstName' | 'lastName' | 'onboarded'
                         > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
                       }
                     >
@@ -2882,7 +2883,7 @@ export type WorkingGroupNetworkContentFragment = Pick<
                       > & {
                         flatData: Pick<
                           UsersFlatDataDto,
-                          'firstName' | 'lastName'
+                          'firstName' | 'lastName' | 'onboarded'
                         > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
                       }
                     >
@@ -2925,7 +2926,7 @@ export type WorkingGroupNetworkContentFragment = Pick<
                       > & {
                         flatData: Pick<
                           UsersFlatDataDto,
-                          'firstName' | 'lastName'
+                          'firstName' | 'lastName' | 'onboarded'
                         > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
                       }
                     >
@@ -2968,7 +2969,7 @@ export type WorkingGroupNetworkContentFragment = Pick<
                       > & {
                         flatData: Pick<
                           UsersFlatDataDto,
-                          'firstName' | 'lastName'
+                          'firstName' | 'lastName' | 'onboarded'
                         > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
                       }
                     >
@@ -3023,7 +3024,7 @@ export type FetchWorkingGroupNetworkQuery = {
                             > & {
                               flatData: Pick<
                                 UsersFlatDataDto,
-                                'firstName' | 'lastName'
+                                'firstName' | 'lastName' | 'onboarded'
                               > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
                             }
                           >
@@ -3066,7 +3067,7 @@ export type FetchWorkingGroupNetworkQuery = {
                             > & {
                               flatData: Pick<
                                 UsersFlatDataDto,
-                                'firstName' | 'lastName'
+                                'firstName' | 'lastName' | 'onboarded'
                               > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
                             }
                           >
@@ -3109,7 +3110,7 @@ export type FetchWorkingGroupNetworkQuery = {
                             > & {
                               flatData: Pick<
                                 UsersFlatDataDto,
-                                'firstName' | 'lastName'
+                                'firstName' | 'lastName' | 'onboarded'
                               > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
                             }
                           >
@@ -3152,7 +3153,7 @@ export type FetchWorkingGroupNetworkQuery = {
                             > & {
                               flatData: Pick<
                                 UsersFlatDataDto,
-                                'firstName' | 'lastName'
+                                'firstName' | 'lastName' | 'onboarded'
                               > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
                             }
                           >
@@ -3194,9 +3195,10 @@ export type WorkingGroupContentFragment = Pick<WorkingGroups, 'id'> & {
           user: Maybe<
             Array<
               Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
-                flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'> & {
-                  avatar: Maybe<Array<Pick<Asset, 'id'>>>;
-                };
+                flatData: Pick<
+                  UsersFlatDataDto,
+                  'firstName' | 'lastName' | 'onboarded'
+                > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
               }
             >
           >;
@@ -3238,7 +3240,7 @@ export type FetchWorkingGroupQuery = {
                   Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
                     flatData: Pick<
                       UsersFlatDataDto,
-                      'firstName' | 'lastName'
+                      'firstName' | 'lastName' | 'onboarded'
                     > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
                   }
                 >
@@ -3287,7 +3289,7 @@ export type FetchWorkingGroupsQuery = {
                         > & {
                           flatData: Pick<
                             UsersFlatDataDto,
-                            'firstName' | 'lastName'
+                            'firstName' | 'lastName' | 'onboarded'
                           > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
                         }
                       >
@@ -3398,6 +3400,10 @@ export const ProjectContentFragmentDoc = {
                                   {
                                     kind: 'Field',
                                     name: { kind: 'Name', value: 'lastName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'onboarded' },
                                   },
                                 ],
                               },
@@ -3723,6 +3729,10 @@ export const WorkingGroupContentFragmentDoc = {
                                   {
                                     kind: 'Field',
                                     name: { kind: 'Name', value: 'lastName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'onboarded' },
                                   },
                                 ],
                               },

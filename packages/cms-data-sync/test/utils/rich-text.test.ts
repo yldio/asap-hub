@@ -88,12 +88,4 @@ describe('convertHtmlToContentfulFormat', () => {
       nodeType: 'document',
     });
   });
-
-  it('throws an error when html cannot be parsed', () => {
-    const html =
-      '<p><strong>Generating research-enabling resources through the expansion of PPMI</strong> |&nbsp;<u></u></p>';
-    expect(() => {
-      convertHtmlToContentfulFormat(html);
-    }).toThrowError();
-  });
 });

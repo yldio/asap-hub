@@ -34,7 +34,13 @@ export default class Users implements UserController {
   }
 
   async fetch(options: gp2.FetchUsersOptions): Promise<gp2.ListUserResponse> {
-    const { total, items: users } = await this.userDataProvider.fetch(options);
+    const { total, items: users } = await this.userDataProvider.fetch({
+      ...options,
+      filter: {
+        ...options.filter,
+        onlyOnboarded: options.filter?.onlyOnboarded ?? true,
+      },
+    });
 
     const items =
       total > 0 ? users.map((user) => parseUserToResponse(user)) : [];

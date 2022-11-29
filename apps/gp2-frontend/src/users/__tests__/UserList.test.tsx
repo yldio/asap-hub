@@ -118,7 +118,7 @@ it('calls the updateFilters with the right arguments', async () => {
   expect(mockUpdateFilter).toHaveBeenCalledWith('/users', { region: [] });
 });
 
-it('triggers export with the same parameters', async () => {
+it('triggers export with the same parameters but overrides onlyOnboarded with false', async () => {
   await renderUserList(undefined, undefined, true);
 
   await waitFor(() =>
@@ -140,7 +140,7 @@ it('triggers export with the same parameters', async () => {
   await waitFor(() =>
     expect(mockGetUsers).toHaveBeenCalledWith(
       expect.objectContaining({
-        filter: { region: [] },
+        filter: { region: [], onlyOnboarded: false },
         search: '',
         skip: 0,
         take: MAX_SQUIDEX_RESULTS,

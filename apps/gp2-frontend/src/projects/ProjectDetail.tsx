@@ -13,6 +13,7 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import { usePutProjectResources, useProjectById } from './state';
 
 const { projects } = gp2Routing;
+
 const ProjectDetail = () => {
   const { projectId } = useRouteParams(projects({}).project);
   const project = useProjectById(projectId);
@@ -53,6 +54,10 @@ const ProjectDetail = () => {
                 {isAdministrator && (
                   <Route path={add}>
                     <ResourceModal
+                      modalTitle={'Add Resource'}
+                      modalDescription={
+                        'Select a resource type and provide the neccessary information required to share a resource privately with your group.'
+                      }
                       backHref={resources}
                       onSave={(resource: gp2Model.Resource) =>
                         updateProjectResources([

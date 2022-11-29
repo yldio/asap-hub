@@ -115,6 +115,7 @@ export const getGraphQLProjectMember = (): GraphQLProjectMember => ({
         firstName: 'Tony',
         lastName: 'Stark',
         avatar: null,
+        onboarded: true,
       },
     },
   ],

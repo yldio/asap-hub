@@ -155,7 +155,7 @@ export function parseProjectToDataObject({
       [],
     ) || [];
 
-  if (project.keywords && !project.keywords.every(gp2Model.isProjectKeyword)) {
+  if (project.keywords && !project.keywords.every(gp2Model.isKeyword)) {
     throw new TypeError('Invalid keyword received from Squidex');
   }
   const milestones =

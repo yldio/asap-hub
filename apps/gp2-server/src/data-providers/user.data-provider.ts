@@ -191,49 +191,54 @@ export const parseGraphQLUserToDataObject = ({
   created,
   referencingProjectsContents: projectItems,
   referencingWorkingGroupsContents: workingGroupItems,
-  flatData: item,
+  flatData: user,
 }: NonNullable<
   FetchUserQuery['findUsersContent']
 >): gp2Model.UserDataObject => {
-  if (!item.region) {
-    throw new Error(`Region not defined: ${item.region}`);
+  if (!user.region) {
+    throw new Error(`Region not defined: ${user.region}`);
   }
-  if (!item.role) {
-    throw new Error(`Role not defined: ${item.role}`);
+  if (!user.role) {
+    throw new Error(`Role not defined: ${user.role}`);
   }
 
   const createdDate = parseDate(created).toISOString();
-  const degrees = parseDegrees(item.degree);
-  const positions = parsePositions(item.positions);
+  const degrees = parseDegrees(user.degree);
+  const positions = parsePositions(user.positions);
   const projects = parseProjects(projectItems);
   const workingGroups = parseWorkingGroups(workingGroupItems);
   const telephone =
-    item.telephoneNumber || item.telephoneCountryCode
+    user.telephoneNumber || user.telephoneCountryCode
       ? {
-          countryCode: item.telephoneCountryCode || undefined,
-          number: item.telephoneNumber || undefined,
+          countryCode: user.telephoneCountryCode || undefined,
+          number: user.telephoneNumber || undefined,
         }
       : undefined;
 
+  if (user.keywords && !user.keywords.every(gp2Model.isKeyword)) {
+    throw new TypeError('Invalid keyword received from Squidex');
+  }
   return {
     id,
     createdDate,
-    firstName: item.firstName || '',
-    lastName: item.lastName || '',
+    firstName: user.firstName || '',
+    lastName: user.lastName || '',
     degrees,
-    email: item.email || '',
-    region: regionMap[item.region],
-    role: roleMap[item.role],
-    country: item.country || '',
-    city: item.city || undefined,
+    email: user.email || '',
+    region: regionMap[user.region],
+    role: roleMap[user.role],
+    country: user.country || '',
+    city: user.city || undefined,
     positions,
-    onboarded: item.onboarded || false,
+    onboarded: user.onboarded || false,
     projects,
     workingGroups,
-    fundingStreams: undefined,
+    fundingStreams: user.fundingStreams || undefined,
     contributingCohorts: [],
-    secondaryEmail: item.secondaryEmail || undefined,
+    secondaryEmail: user.secondaryEmail || undefined,
     telephone,
+    keywords: user.keywords || [],
+    biography: user.biography || undefined,
   };
 };
 

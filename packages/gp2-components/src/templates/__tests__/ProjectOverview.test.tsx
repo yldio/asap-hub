@@ -76,7 +76,7 @@ describe('ProjectOverview', () => {
       screen.getByRole('link', { name: 'tony@stark.com' }),
     ).toBeInTheDocument();
   });
-  it.each(gp2.projectKeywords)('renders the keyword: %s', (keyword) => {
+  it.each(gp2.keywords)('renders the keyword: %s', (keyword) => {
     render(
       <ProjectOverview {...defaultProps} keywords={[keyword]}>
         Body

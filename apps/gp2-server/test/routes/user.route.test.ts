@@ -1,5 +1,4 @@
 import { gp2 } from '@asap-hub/model';
-import { userDegrees, userRegions } from '@asap-hub/model/src/gp2';
 import { AuthHandler } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
 import supertest from 'supertest';
@@ -11,6 +10,8 @@ import {
 } from '../fixtures/user.fixtures';
 import { loggerMock } from '../mocks/logger.mock';
 import { userControllerMock } from '../mocks/user-controller.mock';
+
+const { userDegrees, userRegions, keywords } = gp2;
 
 describe('/users/ route', () => {
   const loggedInUserId = '11';
@@ -304,7 +305,6 @@ describe('/users/ route', () => {
       });
       describe.each`
         description        | input
-        ${'empty string'}  | ${''}
         ${'null'}          | ${null}
         ${'random string'} | ${'random string'}
       `('accepts $description as an input', ({ input }) => {
@@ -314,6 +314,8 @@ describe('/users/ route', () => {
           'lastName',
           'country',
           'city',
+          'biography',
+          'fundingStreams',
         ])(
           'Should be able to provide for the %s parameter ',
           async (parameter) => {
@@ -325,6 +327,26 @@ describe('/users/ route', () => {
           },
         );
       });
+
+      test.each`
+        field               | status | optional
+        ${'secondaryEmail'} | ${200} | ${true}
+        ${'firstName'}      | ${400} | ${false}
+        ${'lastName'}       | ${400} | ${false}
+        ${'country'}        | ${400} | ${false}
+        ${'city'}           | ${200} | ${true}
+        ${'biography'}      | ${400} | ${false}
+        ${'fundingStreams'} | ${200} | ${true}
+      `(
+        'the parameter $field should allow for an empty string $optional',
+        async ({ field, status }) => {
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({ [field]: '' });
+
+          expect(response.status).toBe(status);
+        },
+      );
 
       describe('telephone', () => {
         test('allow valid inputs', async () => {
@@ -423,6 +445,12 @@ describe('/users/ route', () => {
             .send({ degrees: [degree] });
           expect(response.status).toBe(200);
         });
+        test('allows empty degrees', async () => {
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({ degrees: [] });
+          expect(response.status).toBe(200);
+        });
         test('does not allow invalid degrees', async () => {
           const response = await supertest(app)
             .patch(`/users/${loggedInUserId}`)
@@ -441,6 +469,63 @@ describe('/users/ route', () => {
           const response = await supertest(app)
             .patch(`/users/${loggedInUserId}`)
             .send({ region: 'invalid region' });
+          expect(response.status).toBe(400);
+        });
+      });
+      describe('keywords', () => {
+        test.each(keywords)('allows valid keywords: %s', async (keyword) => {
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({ keywords: [keyword] });
+          expect(response.status).toBe(200);
+        });
+        test('does not allow invalid keywords', async () => {
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({ keywords: ['invalid keyword'] });
+          expect(response.status).toBe(400);
+        });
+        test('not allows empty keywords', async () => {
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({ keywords: [] });
+          expect(response.status).toBe(400);
+        });
+        test('allows 10 keywords', async () => {
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({ keywords: keywords.slice(0, 10) });
+          expect(response.status).toBe(200);
+        });
+        test('allows no more than 10 keywords', async () => {
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({ keywords: keywords.slice(0, 11) });
+          expect(response.status).toBe(400);
+        });
+      });
+      describe.each`
+        field               | length
+        ${'fundingStreams'} | ${1000}
+        ${'biography'}      | ${2500}
+      `('maximum lenght for $field should be $length', ({ field, length }) => {
+        test('Should be able to provide a string of characters', async () => {
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({
+              [field]: 'x'.repeat(length),
+            });
+
+          expect(response.status).toBe(200);
+        });
+
+        test('Should not accept a string over the maximum', async () => {
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({
+              [field]: 'x'.repeat(length + 1),
+            });
+
           expect(response.status).toBe(400);
         });
       });

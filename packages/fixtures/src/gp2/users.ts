@@ -7,9 +7,9 @@ const mockedUser: gp2.UserResponse = {
   email: 'T@ark.io',
   firstName: 'Tony',
   lastName: 'Stark',
-  region: 'Europe' as const,
-  degrees: ['PhD' as const],
-  role: 'Trainee' as const,
+  region: 'Europe',
+  degrees: ['PhD'],
+  role: 'Trainee',
   country: 'Spain',
   positions: [
     {
@@ -36,6 +36,7 @@ const mockedUser: gp2.UserResponse = {
   ],
   contributingCohorts: [],
   fundingStreams: undefined,
+  keywords: ['Bash'],
 };
 
 export const createUserResponse = (

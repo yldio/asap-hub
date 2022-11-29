@@ -231,7 +231,7 @@ So, if you want to create or modify a content type using the approach above, you
 4. Run the script to generate the migration
 
    ```sh
-   yarn workspace @asap-hub/contentful generate:migration:crn -c <content_type>
+   yarn generate:migration:crn -c <content_type>
    ```
 
    If you don't pass `-c <content_type>` flag, it will generate the migration for all the changes you made, not only a specific content type.

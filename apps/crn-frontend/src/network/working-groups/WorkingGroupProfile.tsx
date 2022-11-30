@@ -17,7 +17,7 @@ const WorkingGroupProfile: FC = () => {
       id: workingGroup.id,
       name: workingGroup.title,
       members: [],
-      complete: false,
+      complete: !!workingGroup.complete,
       description: workingGroup.description,
       externalLink: workingGroup.externalLink,
       externalLinkText: workingGroup.externalLinkText,

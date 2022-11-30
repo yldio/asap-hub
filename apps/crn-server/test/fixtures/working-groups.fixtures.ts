@@ -28,5 +28,6 @@ export const getSquidexGraphqlWorkingGroup =
       description: 'Working Group Description',
       externalLink: 'https://example.com',
       externalLinkText: 'External Link Text',
+      complete: false,
     },
   });

@@ -13,8 +13,9 @@ const workingGroupsProps = (): ComponentProps<typeof NetworkWorkingGroups> => {
     workingGroups: Array.from({ length: numberOfItems }, (_, i) => ({
       id: `p${i}`,
       title: `My Working Group ${i + 1}`,
-      description:
+      shortText:
         'Working Group long Description that should be getting trimmed to 2 lines',
+      description: 'Test description',
       externalLink: 'https://www.google.com',
       externalLinkText: 'Working Group Folder',
       lastModifiedDate: '2020-01-1',

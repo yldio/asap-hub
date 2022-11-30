@@ -10,7 +10,7 @@ const props: ComponentProps<typeof NetworkWorkingGroups> = {
       title: 'My Working Group',
       externalLink: 'https://www.google.com',
       externalLinkText: 'Working Group Folder',
-      description: 'My Working Group Description',
+      shortText: 'My Working Group Description',
       lastModifiedDate: '2020-01-1',
     },
     {
@@ -18,7 +18,7 @@ const props: ComponentProps<typeof NetworkWorkingGroups> = {
       title: 'My Working Group',
       externalLink: 'https://www.google.com',
       externalLinkText: 'Working Group Folder',
-      description: 'My Working Group Description',
+      shortText: 'My Working Group Description',
       lastModifiedDate: '2020-01-1',
     },
   ],

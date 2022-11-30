@@ -9,7 +9,7 @@ const props: ComponentProps<typeof WorkingGroupCard> = {
   title: 'My Working Group',
   externalLink: 'https://www.google.com',
   externalLinkText: 'Working Group Folder',
-  description: 'My Working Group Description',
+  shortText: 'My Working Group Description',
   lastModifiedDate: '2020-01-1',
 };
 
@@ -19,7 +19,7 @@ it('renders the working group card', () => {
       {...props}
       id="42"
       title="My Working Group"
-      description="test description"
+      shortText="test description"
       externalLinkText="Link text"
       lastModifiedDate="2020-01-01"
     />,
@@ -42,9 +42,9 @@ it('renders the working group name linking to the working group', () => {
   );
 });
 
-it('renders the working group description linking to the working group', () => {
+it('renders the working group shortText linking to the working group', () => {
   const { getByText } = render(
-    <WorkingGroupCard {...props} id="42" description="test description" />,
+    <WorkingGroupCard {...props} id="42" shortText="test description" />,
   );
   expect(getByText('test description').closest('a')).toHaveAttribute(
     'href',

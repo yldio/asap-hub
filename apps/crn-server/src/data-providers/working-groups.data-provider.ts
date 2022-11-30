@@ -84,6 +84,7 @@ export const parseGraphQlWorkingGroup = (
     id: workingGroupGraphQl.id,
     title: workingGroupGraphQl.flatData.title || '',
     description: workingGroupGraphQl.flatData.description || '',
+    shortText: workingGroupGraphQl.flatData.shortText || '',
     members: [],
     pointOfContact: undefined,
     complete: false,

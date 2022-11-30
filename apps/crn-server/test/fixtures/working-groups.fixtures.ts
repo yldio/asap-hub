@@ -18,6 +18,7 @@ export const getListWorkingGroupsDataObject =
         id: '124',
         title: 'Working Group Title 2',
         description: 'Second working gorup description',
+        shortText: 'Second working group short text',
         deliverables: [],
         lastModifiedDate: '2021-01-01T00:00:00.000Z',
         externalLink: 'https://www.example.com',
@@ -31,6 +32,7 @@ export const getWorkingGroupDataObject = (): WorkingGroupDataObject => ({
   id: '123',
   title: 'Working Group Title',
   description: 'Working Group Description',
+  shortText: 'Working Group Short Text',
   deliverables: [],
   members: [],
   complete: false,
@@ -58,6 +60,7 @@ export const getSquidexWorkingGroupsGraphqlResponse =
           flatData: {
             title: 'Working Group Title',
             description: 'Working Group Description',
+            shortText: 'Working Group Short Text',
             externalLink: 'https://example.com',
             externalLinkText: 'External Link Text',
             deliverables: [],
@@ -74,6 +77,7 @@ export const getSquidexGraphqlWorkingGroup =
     flatData: {
       title: 'Working Group Title',
       description: 'Working Group Description',
+      shortText: 'Working Group Short Text',
       externalLink: 'https://example.com',
       externalLinkText: 'External Link Text',
       deliverables: [],

@@ -41,7 +41,7 @@ type EditUserModalProps = Partial<gp2.UserResponse> & {
   onSave?: () => void | Promise<void>;
   children: (
     state: { isSaving: boolean },
-    asyncOnSave: () => void,
+    asyncWrapper: (cb: () => void | Promise<void>) => void,
   ) => ReactNode;
 };
 
@@ -61,14 +61,14 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
       noHeader
       onSave={onSave}
     >
-      {({ isSaving }, asyncOnSave) => (
+      {({ isSaving }, asyncWrapper) => (
         <div css={css({ width: '100%' })}>
           <header>
             <Headline3>{title}</Headline3>
             <Paragraph accent="lead">{description}</Paragraph>
           </header>
 
-          {children({ isSaving }, asyncOnSave)}
+          {children({ isSaving }, asyncWrapper)}
 
           <div css={buttonContainerStyles}>
             <div css={buttonStyles}>
@@ -79,7 +79,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
             <div css={buttonStyles}>
               <Button
                 primary
-                onClick={asyncOnSave}
+                onClick={() => asyncWrapper(onSave)}
                 enabled={!isSaving}
                 noMargin
               >

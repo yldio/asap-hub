@@ -180,14 +180,15 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
               Cancel
             </Link>
             <div css={css(divWithActionsStyle)}>
-              <div hidden={onDelete === noop}>
+              {onDelete !== noop && (
                 <Button
                   overrideStyles={overrideButtonStyles}
                   onClick={() => asyncFunctionWrapper(onDelete)}
                 >
                   Delete
                 </Button>
-              </div>
+              )}
+
               <Button
                 overrideStyles={overrideButtonStyles}
                 primary

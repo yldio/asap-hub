@@ -179,4 +179,38 @@ describe('EditResource', () => {
       resources[2],
     ]);
   });
+
+  it('erases the correct resource when multiple resources exist', async () => {
+    const resources: gp2Model.Resource[] = [
+      {
+        type: 'Note',
+        title: 'first resource',
+      },
+      {
+        type: 'Note',
+        title: 'second resource',
+      },
+      {
+        type: 'Note',
+        title: 'third resource',
+      },
+    ];
+    const updateWorkingGroupResources = jest.fn();
+    const resourceIndex = '1';
+
+    renderEditResourceModal({
+      updateWorkingGroupResources,
+      resources,
+      resourceIndex,
+    });
+
+    const deleteButton = screen.getByRole('button', { name: /delete/i });
+    userEvent.click(deleteButton);
+
+    await waitFor(() => expect(deleteButton).toBeEnabled());
+    expect(updateWorkingGroupResources).toBeCalledWith([
+      resources[0],
+      resources[2],
+    ]);
+  });
 });

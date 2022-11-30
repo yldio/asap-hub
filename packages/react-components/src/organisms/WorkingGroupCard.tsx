@@ -24,7 +24,7 @@ const linkStyle = css({
   marginBottom: `${15 / perRem}em`,
 });
 
-const descriptionStyle = css({
+const shortTextStyle = css({
   marginBottom: `${24 / perRem}em`,
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     marginBottom: `${36 / perRem}em`,
@@ -35,7 +35,7 @@ type WorkingGroupCardProps = Pick<
   WorkingGroupResponse,
   | 'id'
   | 'title'
-  | 'description'
+  | 'shortText'
   | 'externalLink'
   | 'externalLinkText'
   | 'lastModifiedDate'
@@ -44,7 +44,7 @@ type WorkingGroupCardProps = Pick<
 const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
   id,
   title,
-  description,
+  shortText,
   externalLink,
   externalLinkText,
   lastModifiedDate,
@@ -73,7 +73,7 @@ const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
         />
       )}
     </div>
-    <div css={descriptionStyle}>
+    <div css={shortTextStyle}>
       <Anchor
         href={
           network({}).workingGroups({}).workingGroup({ workingGroupId: id }).$
@@ -81,7 +81,7 @@ const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
       >
         <Ellipsis numberOfLines={2}>
           <Paragraph accent="lead" hasMargin={false}>
-            {description}
+            {shortText}
           </Paragraph>
         </Ellipsis>
       </Anchor>

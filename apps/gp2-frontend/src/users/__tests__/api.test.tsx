@@ -2,7 +2,7 @@ import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import nock from 'nock';
 import { API_BASE_URL } from '../../config';
-import { createUserApiUrl, getUser, getUsers } from '../api';
+import { createUserApiUrl, getUser, getUsers, patchUser } from '../api';
 
 jest.mock('../../config');
 
@@ -91,6 +91,48 @@ describe('getUsers', () => {
       getUsers(options, 'Bearer x'),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch the users. Expected status 2xx. Received status 500."`,
+    );
+  });
+});
+
+describe('patchUser', () => {
+  it('makes an authorized PATCH request for the user id', async () => {
+    const patch = { firstName: 'New Name' };
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .patch('/users/42')
+      .reply(200, {});
+
+    await patchUser('42', patch, 'Bearer x');
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('passes the patch object in the body', async () => {
+    const patch = { firstName: 'New Name' };
+    nock(API_BASE_URL).patch('/users/42', patch).reply(200, {});
+
+    await patchUser('42', patch, '');
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('returns a successfully updated user', async () => {
+    const patch = { firstName: 'New Name' };
+    const updated = {
+      email: 'someone@example.com',
+      firstName: 'New Name',
+    };
+    nock(API_BASE_URL).patch('/users/42', patch).reply(200, updated);
+
+    expect(await patchUser('42', patch, '')).toEqual(updated);
+  });
+
+  it('errors for an error status', async () => {
+    const patch = { firstName: 'New Name' };
+    nock(API_BASE_URL).patch('/users/42', patch).reply(500, {});
+
+    await expect(
+      patchUser('42', patch, ''),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Failed to update user with id 42. Expected status 2xx. Received status 500."`,
     );
   });
 });

@@ -1,7 +1,14 @@
 import { gp2 } from '@asap-hub/model';
-import { atom, atomFamily, selectorFamily, useRecoilValue } from 'recoil';
+import { useAuth0GP2 } from '@asap-hub/react-context';
+import {
+  atom,
+  atomFamily,
+  selectorFamily,
+  useRecoilValue,
+  useSetRecoilState,
+} from 'recoil';
 import { authorizationState } from '../auth/state';
-import { getUser, getUsers } from './api';
+import { getUser, getUsers, patchUser } from './api';
 
 export const usersState = selectorFamily<
   gp2.ListUserResponse,
@@ -37,12 +44,35 @@ const fetchUserState = selectorFamily<gp2.UserResponse | undefined, string>({
     },
 });
 
-const userState = atomFamily<gp2.UserResponse | undefined, string>({
+const userState = selectorFamily<gp2.UserResponse | undefined, string>({
   key: 'user',
-  default: fetchUserState,
+  get:
+    (id) =>
+    ({ get }) =>
+      get(patchedUserState(id)) ?? get(fetchUserState(id)),
 });
 
 export const useUsersState = (options: gp2.FetchUsersOptions) =>
   useRecoilValue(usersState(options));
 
 export const useUserById = (id: string) => useRecoilValue(userState(id));
+
+const patchedUserState = atomFamily<gp2.UserResponse | undefined, string>({
+  key: 'patchedUser',
+  default: undefined,
+});
+
+export const usePatchUserById = (id: string) => {
+  const { getTokenSilently, refreshUser } = useAuth0GP2();
+  const authorization = useRecoilValue(authorizationState);
+  const setPatchedUser = useSetRecoilState(patchedUserState(id));
+  return async (patch: gp2.UserPatchRequest) => {
+    setPatchedUser(await patchUser(id, patch, authorization));
+    await getTokenSilently({
+      redirect_uri: window.location.origin,
+      ignoreCache: true,
+    });
+
+    await refreshUser();
+  };
+};

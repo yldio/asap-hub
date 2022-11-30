@@ -1,15 +1,15 @@
 import { gp2 } from '@asap-hub/model';
 import { LabeledTextField } from '@asap-hub/react-components';
-import { useState } from 'react';
+import { ComponentProps, useState } from 'react';
 import EditUserModal from './EditUserModal';
 
 type KeyInformationModalProps = Pick<
   gp2.UserResponse,
   'firstName' | 'lastName'
-> & {
-  backHref: string;
-  onSave?: () => void | Promise<void>;
-};
+> &
+  Pick<ComponentProps<typeof EditUserModal>, 'backHref'> & {
+    onSave: (userData: gp2.UserPatchRequest) => Promise<void>;
+  };
 
 const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
   onSave,
@@ -23,9 +23,9 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
     <EditUserModal
       title="Key Information"
       description="Tell us a little more about yourself. This will help others to be able to connect with you or credit you in the right way."
-      onSave={onSave}
+      onSave={() => onSave({ firstName: newFirstName, lastName: newLastName })}
       backHref={backHref}
-      dirty={newFirstName !== firstName}
+      dirty={newFirstName !== firstName || newLastName !== lastName}
     >
       {({ isSaving }) => (
         <>

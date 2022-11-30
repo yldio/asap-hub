@@ -26,6 +26,13 @@ const buttonContainerStyles = css({
   },
 });
 
+const buttonStyles = css({
+  width: 'fit-content',
+  [mobileQuery]: {
+    width: '100%',
+  },
+});
+
 type EditUserModalProps = Partial<gp2.UserResponse> & {
   title: string;
   description: string;
@@ -64,12 +71,21 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
           {children({ isSaving }, asyncOnSave)}
 
           <div css={buttonContainerStyles}>
-            <Link href={backHref} buttonStyle noMargin>
-              Close
-            </Link>
-            <Button primary onClick={asyncOnSave} enabled={!isSaving}>
-              Save
-            </Button>
+            <div css={buttonStyles}>
+              <Link href={backHref} buttonStyle noMargin>
+                Close
+              </Link>
+            </div>
+            <div css={buttonStyles}>
+              <Button
+                primary
+                onClick={asyncOnSave}
+                enabled={!isSaving}
+                noMargin
+              >
+                Save
+              </Button>
+            </div>
           </div>
         </div>
       )}

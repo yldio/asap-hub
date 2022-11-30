@@ -800,7 +800,7 @@ __metadata:
     serverless-s3-sync: 3.1.0
     serverless-webpack: 5.9.1
     source-map-support: 0.5.21
-    stream-json: 1.7.4
+    stream-json: 1.7.5
     supertest: 6.2.4
     uuid: 8.3.2
     yargs: 17.3.1
@@ -37056,12 +37056,12 @@ contentful-html-rich-text-converter@yldio/contentful-html-rich-text-converter:
   languageName: node
   linkType: hard
 
-"stream-json@npm:1.7.4":
-  version: 1.7.4
-  resolution: "stream-json@npm:1.7.4"
+"stream-json@npm:1.7.5":
+  version: 1.7.5
+  resolution: "stream-json@npm:1.7.5"
   dependencies:
-    stream-chain: "npm:^2.2.5"
-  checksum: 50aca250cedde7b35fcc12b3f4936d28431f351392f25f1baa7898b618d363368f8049af07c486ce7c47ee19ea15fd31642df0819e62e514c6193f1e2b05d85e
+    stream-chain: ^2.2.5
+  checksum: d6229cd0342cbfb2f0d4be2b289cd2fe283aaa808329ec5c925b9840fc694fa91400f10bbf3275ac39c039f314fe6ab844d380341e738654ce224482f266ad2b
   languageName: node
   linkType: hard
 

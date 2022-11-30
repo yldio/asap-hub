@@ -12,7 +12,7 @@ import EmailSection from '../organisms/EmailSection';
 
 type UserOverviewProps = Pick<
   gp2.UserResponse,
-  'email' | 'secondaryEmail' | 'biography' | 'keywords'
+  'email' | 'secondaryEmail' | 'biography' | 'keywords' | 'fundingStreams'
 >;
 
 const { rem } = pixels;
@@ -43,14 +43,9 @@ const UserOverview: React.FC<UserOverviewProps> = ({
   email,
   secondaryEmail,
   keywords,
+  fundingStreams,
 }) => (
   <div css={containerStyles}>
-    <Card overrideStyles={cardStyles}>
-      <Headline3 noMargin>Biography</Headline3>
-      <div css={contentStyles}>
-        <ExpandableText>{biography}</ExpandableText>
-      </div>
-    </Card>
     <div css={columnStyles}>
       <Card overrideStyles={cardStyles}>
         <Headline3 noMargin>Contact Information</Headline3>
@@ -70,6 +65,20 @@ const UserOverview: React.FC<UserOverviewProps> = ({
         </div>
       </Card>
     </div>
+    <Card overrideStyles={cardStyles}>
+      <Headline3 noMargin>Biography</Headline3>
+      <div css={contentStyles}>
+        <ExpandableText>{biography}</ExpandableText>
+      </div>
+    </Card>
+    {fundingStreams && (
+      <Card overrideStyles={cardStyles}>
+        <Headline3 noMargin>Funding Streams</Headline3>
+        <div css={contentStyles}>
+          <ExpandableText>{fundingStreams}</ExpandableText>
+        </div>
+      </Card>
+    )}
   </div>
 );
 

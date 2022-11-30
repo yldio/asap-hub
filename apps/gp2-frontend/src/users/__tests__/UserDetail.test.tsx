@@ -44,9 +44,8 @@ const renderUserDetail = async (id: string) => {
 
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };
-beforeEach(() => {
-  jest.resetAllMocks();
-});
+
+beforeEach(jest.resetAllMocks);
 describe('UserDetail', () => {
   const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
 
@@ -65,5 +64,30 @@ describe('UserDetail', () => {
         name: 'Sorry! We can’t seem to find that page.',
       }),
     ).toBeVisible();
+  });
+
+  describe('Details section', () => {
+    it('renders the biography', async () => {
+      const user = gp2Fixtures.createUserResponse();
+      mockGetUser.mockResolvedValueOnce(user);
+      await renderUserDetail(user.id);
+      expect(screen.getByRole('heading', { name: /biography/i })).toBeVisible();
+    });
+    it('renders the keywords', async () => {
+      const user = gp2Fixtures.createUserResponse();
+      mockGetUser.mockResolvedValueOnce(user);
+      await renderUserDetail(user.id);
+      expect(
+        screen.getByRole('heading', { name: /Expertise and Interests/i }),
+      ).toBeVisible();
+    });
+    it('renders the contact information', async () => {
+      const user = gp2Fixtures.createUserResponse();
+      mockGetUser.mockResolvedValueOnce(user);
+      await renderUserDetail(user.id);
+      expect(
+        screen.getByRole('heading', { name: /Contact information/i }),
+      ).toBeVisible();
+    });
   });
 });

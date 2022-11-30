@@ -1,24 +1,24 @@
 import { FC, Fragment, ComponentProps } from 'react';
 
-import { ResultList, GroupCard } from '../organisms';
+import { ResultList, WorkingGroupCard } from '../organisms';
 
 type NetworkWorkingGroupsProps = Omit<
   ComponentProps<typeof ResultList>,
   'children'
 > & {
-  readonly groups: ReadonlyArray<
-    { readonly id: string } & ComponentProps<typeof GroupCard>
+  readonly workingGroups: ReadonlyArray<
+    { readonly id: string } & ComponentProps<typeof WorkingGroupCard>
   >;
 };
 
 const NetworkWorkingGroups: FC<NetworkWorkingGroupsProps> = ({
-  groups,
+  workingGroups,
   ...cardListProps
 }) => (
   <ResultList {...cardListProps}>
-    {groups.map((group) => (
-      <Fragment key={group.id}>
-        <GroupCard {...group} />
+    {workingGroups.map((workingGroup) => (
+      <Fragment key={workingGroup.id}>
+        <WorkingGroupCard {...workingGroup} />
       </Fragment>
     ))}
   </ResultList>

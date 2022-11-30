@@ -15,6 +15,32 @@ describe('Working Group controller', () => {
     jest.resetAllMocks();
   });
 
+  describe('Fetch', () => {
+    test('Should return the working groups', async () => {
+      workingGroupDataProviderMock.fetch.mockResolvedValueOnce({
+        total: 1,
+        items: [getWorkingGroupDataObject()],
+      });
+
+      const result = await workingGroupController.fetch({});
+
+      expect(result).toEqual({
+        items: [getWorkingGroupDataObject()],
+        total: 1,
+      });
+    });
+
+    test('Should return an empty list when there are no working groups', async () => {
+      workingGroupDataProviderMock.fetch.mockResolvedValueOnce({
+        total: 0,
+        items: [],
+      });
+      const result = await workingGroupController.fetch({});
+
+      expect(result).toEqual({ items: [], total: 0 });
+    });
+  });
+
   describe('Fetch-by-ID method', () => {
     test('Should throw when working-group is not found', async () => {
       workingGroupDataProviderMock.fetchById.mockResolvedValueOnce(null);

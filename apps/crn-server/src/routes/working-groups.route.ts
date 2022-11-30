@@ -20,11 +20,9 @@ export const workingGroupRouteFactory = (
   );
 
   workingGroupRoutes.get('/working-groups', async (req, res) => {
-    const { params } = req;
-
-    const query = validateFetchOptions(params);
-
-    const result = await workingGroupsController.fetch(query);
+    const { query } = req;
+    const options = validateFetchOptions(query);
+    const result = await workingGroupsController.fetch(options);
 
     res.json(result);
   });

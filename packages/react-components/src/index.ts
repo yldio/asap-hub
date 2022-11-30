@@ -151,6 +151,7 @@ export {
   UserProfilePlaceholderCard,
   UserProfileRecentWorks,
   UserProfileRole,
+  WorkingGroupCard,
 } from './organisms';
 export {
   BasicLayout,

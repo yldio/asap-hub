@@ -9,7 +9,12 @@ import { contentSidePaddingWithNavigation } from '../layout';
 import { SearchAndFilter } from '../organisms';
 import { Option, Title } from '../organisms/CheckboxGroup';
 import { TabNav } from '../molecules';
-import { teamIcon, userIcon, interestGroupsIcon, crossIcon } from '../icons';
+import {
+  teamIcon,
+  userIcon,
+  interestGroupsIcon,
+  workingGroupsIcon,
+} from '../icons';
 import { queryParamString } from '../routing';
 
 const visualHeaderStyles = css({
@@ -39,6 +44,7 @@ type NetworkPageHeaderProps = {
   onChangeFilter?: (filter: string) => void;
   searchQuery: string;
   onChangeSearchQuery?: (newSearchQuery: string) => void;
+  showSearch?: boolean;
 };
 
 const userFilters: ReadonlyArray<Option<TeamRole | Role | UserTag> | Title> = [
@@ -57,14 +63,6 @@ const userFilters: ReadonlyArray<Option<TeamRole | Role | UserTag> | Title> = [
 
 const groupFilters: ReadonlyArray<Option<'Active' | 'Inactive'> | Title> = [
   { title: 'INTEREST GROUP STATUS' },
-  { label: 'Active', value: 'Active' },
-  { label: 'Inactive', value: 'Inactive' },
-];
-
-const workingGroupFilters: ReadonlyArray<
-  Option<'Active' | 'Inactive'> | Title
-> = [
-  { title: 'WORKING GROUP STATUS' },
   { label: 'Active', value: 'Active' },
   { label: 'Inactive', value: 'Inactive' },
 ];
@@ -89,12 +87,6 @@ const getFilterOptionsAndPlaceholder = (page: Page) => {
         searchPlaceholder: 'Enter an interest group, keyword, …',
       };
 
-    case 'working-groups':
-      return {
-        filterOptions: workingGroupFilters,
-        searchPlaceholder: 'Enter a working group, keyword, …',
-      };
-
     case 'teams':
     default:
       return {
@@ -112,6 +104,7 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
 
   filters,
   onChangeFilter,
+  showSearch = true,
 }) => (
   <header>
     <div css={visualHeaderStyles}>
@@ -136,19 +129,21 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
         <TabLink
           href={network({}).workingGroups({}).$ + queryParamString(searchQuery)}
         >
-          <span css={iconStyles}>{crossIcon}</span>Working Groups
+          <span css={iconStyles}>{workingGroupsIcon}</span>Working Groups
         </TabLink>
       </TabNav>
     </div>
-    <div css={controlsStyles}>
-      <SearchAndFilter
-        onChangeSearch={onChangeSearchQuery}
-        searchQuery={searchQuery}
-        onChangeFilter={onChangeFilter}
-        filters={filters}
-        {...getFilterOptionsAndPlaceholder(page)}
-      />
-    </div>
+    {showSearch && (
+      <div css={controlsStyles}>
+        <SearchAndFilter
+          onChangeSearch={onChangeSearchQuery}
+          searchQuery={searchQuery}
+          onChangeFilter={onChangeFilter}
+          filters={filters}
+          {...getFilterOptionsAndPlaceholder(page)}
+        />
+      </div>
+    )}
   </header>
 );
 

@@ -99,3 +99,4 @@ export { default as validTickIcon } from './valid-tick-icon';
 export { default as verticalDividerIcon } from './vertical-divider';
 export { default as WarningIcon } from './warning';
 export { default as warningTransparentIcon } from './warning-transparent';
+export { default as workingGroupsIcon } from './working-groups';

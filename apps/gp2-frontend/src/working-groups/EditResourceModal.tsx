@@ -48,8 +48,7 @@ const EditResourceModal: React.FC<EditResponseModalProps> = ({
         )
       }
       onDelete={() => {
-        const newResources = [...resources];
-        newResources.splice(routeIndex, 1);
+        const newResources = [...resources].splice(routeIndex, 1);
         return updateWorkingGroupResources([...newResources]);
       }}
     />

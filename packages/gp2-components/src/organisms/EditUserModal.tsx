@@ -52,45 +52,42 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
   backHref,
   dirty,
   onSave = noop,
-}) => {
-  return (
-    <EditModal
-      title={title}
-      backHref={backHref}
-      dirty={dirty}
-      noHeader
-      onSave={onSave}
-    >
-      {({ isSaving }, asyncWrapper) => (
-        <div css={css({ width: '100%' })}>
-          <header>
-            <Headline3>{title}</Headline3>
-            <Paragraph accent="lead">{description}</Paragraph>
-          </header>
+}) => (
+  <EditModal
+    title={title}
+    backHref={backHref}
+    dirty={dirty}
+    noHeader
+    onSave={onSave}
+  >
+    {({ isSaving }, asyncWrapper) => (
+      <div css={css({ width: '100%' })}>
+        <header>
+          <Headline3>{title}</Headline3>
+          <Paragraph accent="lead">{description}</Paragraph>
+        </header>
 
-          {children({ isSaving }, asyncWrapper)}
+        {children({ isSaving }, asyncWrapper)}
 
-          <div css={buttonContainerStyles}>
-            <div css={buttonStyles}>
-              <Link href={backHref} buttonStyle noMargin>
-                Close
-              </Link>
-            </div>
-            <div css={buttonStyles}>
-              <Button
-                primary
-                onClick={() => asyncWrapper(onSave)}
-                enabled={!isSaving}
-                noMargin
-              >
-                Save
-              </Button>
-            </div>
+        <div css={buttonContainerStyles}>
+          <div css={buttonStyles}>
+            <Link href={backHref} buttonStyle noMargin>
+              Close
+            </Link>
+          </div>
+          <div css={buttonStyles}>
+            <Button
+              primary
+              onClick={() => asyncWrapper(onSave)}
+              enabled={!isSaving}
+              noMargin
+            >
+              Save
+            </Button>
           </div>
         </div>
-      )}
-    </EditModal>
-  );
-};
-
+      </div>
+    )}
+  </EditModal>
+);
 export default EditUserModal;

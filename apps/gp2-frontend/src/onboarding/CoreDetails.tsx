@@ -13,7 +13,7 @@ const CoreDetails: React.FC<Record<string, never>> = () => {
   const { onboarding } = gp2;
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const userData = useUserById(currentUser!.id);
-
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const patchUser = usePatchUserById(currentUser!.id);
 
   if (userData) {

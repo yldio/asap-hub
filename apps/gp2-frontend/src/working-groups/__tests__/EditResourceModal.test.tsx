@@ -59,6 +59,7 @@ describe('EditResource', () => {
     renderEditResourceModal();
 
     expect(screen.getByRole('button', { name: /Save/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Delete/i })).toBeInTheDocument();
     expect(
       screen.getByRole('heading', { name: /Edit Resource/ }),
     ).toBeVisible();

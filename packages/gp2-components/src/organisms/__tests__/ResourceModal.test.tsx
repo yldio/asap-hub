@@ -132,6 +132,14 @@ describe('ResourceModal', () => {
         'https://www.google.com/',
       );
     });
+    it('renders the delete button if onDelete function is provided', () => {
+      renderResourseModal({
+        type: 'Link',
+        externalLink: 'https://www.google.com/',
+        onDelete: jest.fn(),
+      });
+      expect(screen.getByRole('button', { name: /delete/i })).toBeVisible();
+    });
   });
   it('title and description should be disabled and url is hidden', () => {
     renderResourseModal();

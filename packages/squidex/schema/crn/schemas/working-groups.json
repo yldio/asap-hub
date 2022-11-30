@@ -105,12 +105,12 @@
           {
             "name": "description",
             "properties": {
-              "isRequired": false,
+              "isRequired": true,
               "isRequiredOnPublish": false,
               "isHalfWidth": false,
               "fieldType": "String",
               "createEnum": false,
-              "editor": "Input",
+              "editor": "TextArea",
               "inlineEditable": false,
               "isEmbeddable": false,
               "isUnique": false,
@@ -124,7 +124,7 @@
           {
             "name": "status",
             "properties": {
-              "isRequired": false,
+              "isRequired": true,
               "isRequiredOnPublish": false,
               "isHalfWidth": false,
               "fieldType": "String",

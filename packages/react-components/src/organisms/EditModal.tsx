@@ -32,7 +32,7 @@ type EditModalProps = Pick<
   dirty: boolean; // mandatory so that it cannot be forgotten
   children: (
     state: { isSaving: boolean },
-    asyncOnSave: () => void,
+    asyncFunctionWrapper: (cb: () => void | Promise<void>) => void,
   ) => ReactNode;
   noHeader?: boolean;
 };
@@ -56,14 +56,14 @@ const EditModal: React.FC<EditModalProps> = ({
   }, [status, dirty]);
 
   const historyPush = usePushFromHere();
-  const asyncOnSave = async () => {
+
+  const asyncFunctionWrapper = async (cb: () => void | Promise<void>) => {
     const parentValidation = validate();
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (formRef.current!.reportValidity() && parentValidation) {
       setStatus('isSaving');
       try {
-        await onSave();
-        if (!formRef.current) return;
+        await cb();
         setStatus('hasSaved');
         historyPush(backHref);
       } catch {
@@ -94,11 +94,11 @@ const EditModal: React.FC<EditModalProps> = ({
             title={title}
             backHref={backHref}
             saveEnabled={status !== 'isSaving'}
-            onSave={asyncOnSave}
+            onSave={() => asyncFunctionWrapper(onSave)}
           />
         )}
         <main css={bodyStyles}>
-          {children({ isSaving: status === 'isSaving' }, asyncOnSave)}
+          {children({ isSaving: status === 'isSaving' }, asyncFunctionWrapper)}
         </main>
       </form>
     </Modal>

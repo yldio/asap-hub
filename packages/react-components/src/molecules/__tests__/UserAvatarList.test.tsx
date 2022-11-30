@@ -10,10 +10,9 @@ it('renders a list of members', () => {
       members={[
         {
           id: '42',
-          displayName: 'Unknown',
-          email: 'foo@bar.com',
+          firstName: 'unknown',
+          lastName: 'unknown',
           avatarUrl: 'https://example.com',
-          role: 'Collaborating PI',
         },
       ]}
     />,

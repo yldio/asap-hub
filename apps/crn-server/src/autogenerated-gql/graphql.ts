@@ -5893,6 +5893,28 @@ export type WorkingGroups = Content & {
   version: Scalars['Int'];
 };
 
+/** The structure of the Deliverables nested schema. */
+export type WorkingGroupsDataDeliverablesChildDto = {
+  description: Maybe<Scalars['String']>;
+  status: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Deliverables nested schema. */
+export type WorkingGroupsDataDeliverablesChildInputDto = {
+  description: InputMaybe<Scalars['String']>;
+  status: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Deliverables field of the Working Groups content type. */
+export type WorkingGroupsDataDeliverablesDto = {
+  iv: Maybe<Array<WorkingGroupsDataDeliverablesChildDto>>;
+};
+
+/** The structure of the Deliverables field of the Working Groups content input type. */
+export type WorkingGroupsDataDeliverablesInputDto = {
+  iv: InputMaybe<Array<WorkingGroupsDataDeliverablesChildInputDto>>;
+};
+
 /** The structure of the Description field of the Working Groups content type. */
 export type WorkingGroupsDataDescriptionDto = {
   iv: Maybe<Scalars['String']>;
@@ -5905,6 +5927,7 @@ export type WorkingGroupsDataDescriptionInputDto = {
 
 /** The structure of the Working Groups data type. */
 export type WorkingGroupsDataDto = {
+  deliverables: Maybe<WorkingGroupsDataDeliverablesDto>;
   description: Maybe<WorkingGroupsDataDescriptionDto>;
   externalLink: Maybe<WorkingGroupsDataExternalLinkDto>;
   externalLinkText: Maybe<WorkingGroupsDataExternalLinkTextDto>;
@@ -5933,6 +5956,7 @@ export type WorkingGroupsDataExternalLinkTextInputDto = {
 
 /** The structure of the Working Groups data input type. */
 export type WorkingGroupsDataInputDto = {
+  deliverables: InputMaybe<WorkingGroupsDataDeliverablesInputDto>;
   description: InputMaybe<WorkingGroupsDataDescriptionInputDto>;
   externalLink: InputMaybe<WorkingGroupsDataExternalLinkInputDto>;
   externalLinkText: InputMaybe<WorkingGroupsDataExternalLinkTextInputDto>;
@@ -5951,6 +5975,7 @@ export type WorkingGroupsDataTitleInputDto = {
 
 /** The structure of the flat Working Groups data type. */
 export type WorkingGroupsFlatDataDto = {
+  deliverables: Maybe<Array<WorkingGroupsDataDeliverablesChildDto>>;
   description: Maybe<Scalars['String']>;
   externalLink: Maybe<Scalars['String']>;
   externalLinkText: Maybe<Scalars['String']>;
@@ -9265,7 +9290,13 @@ export type WorkingGroupContentFragment = Pick<
   flatData: Pick<
     WorkingGroupsFlatDataDto,
     'title' | 'description' | 'externalLink' | 'externalLinkText'
-  >;
+  > & {
+    deliverables: Maybe<
+      Array<
+        Pick<WorkingGroupsDataDeliverablesChildDto, 'status' | 'description'>
+      >
+    >;
+  };
 };
 
 export type FetchWorkingGroupQueryVariables = Exact<{
@@ -9278,6 +9309,47 @@ export type FetchWorkingGroupQuery = {
       flatData: Pick<
         WorkingGroupsFlatDataDto,
         'title' | 'description' | 'externalLink' | 'externalLinkText'
+      > & {
+        deliverables: Maybe<
+          Array<
+            Pick<
+              WorkingGroupsDataDeliverablesChildDto,
+              'status' | 'description'
+            >
+          >
+        >;
+      };
+    }
+  >;
+};
+
+export type FetchWorkingGroupsQueryVariables = Exact<{
+  top: InputMaybe<Scalars['Int']>;
+  skip: InputMaybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+}>;
+
+export type FetchWorkingGroupsQuery = {
+  queryWorkingGroupsContentsWithTotal: Maybe<
+    Pick<WorkingGroupsResultDto, 'total'> & {
+      items: Maybe<
+        Array<
+          Pick<WorkingGroups, 'id' | 'lastModified'> & {
+            flatData: Pick<
+              WorkingGroupsFlatDataDto,
+              'title' | 'description' | 'externalLink' | 'externalLinkText'
+            > & {
+              deliverables: Maybe<
+                Array<
+                  Pick<
+                    WorkingGroupsDataDeliverablesChildDto,
+                    'status' | 'description'
+                  >
+                >
+              >;
+            };
+          }
+        >
       >;
     }
   >;
@@ -11788,6 +11860,23 @@ export const WorkingGroupContentFragmentDoc = {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'externalLinkText' },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'deliverables' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'status' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -13823,29 +13912,106 @@ export const FetchWorkingGroupDocument = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'lastModified' },
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'WorkingGroupContent' },
                 },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...WorkingGroupContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchWorkingGroupQuery,
+  FetchWorkingGroupQueryVariables
+>;
+export const FetchWorkingGroupsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchWorkingGroups' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'top' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'filter' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: {
+              kind: 'Name',
+              value: 'queryWorkingGroupsContentsWithTotal',
+            },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'top' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'top' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'filter' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'filter' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'orderby' },
+                value: {
+                  kind: 'StringValue',
+                  value: 'data/title/iv',
+                  block: false,
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'flatData' },
+                  name: { kind: 'Name', value: 'items' },
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
                       {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'description' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'externalLink' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'externalLinkText' },
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'WorkingGroupContent' },
                       },
                     ],
                   },
@@ -13856,8 +14022,9 @@ export const FetchWorkingGroupDocument = {
         ],
       },
     },
+    ...WorkingGroupContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<
-  FetchWorkingGroupQuery,
-  FetchWorkingGroupQueryVariables
+  FetchWorkingGroupsQuery,
+  FetchWorkingGroupsQueryVariables
 >;

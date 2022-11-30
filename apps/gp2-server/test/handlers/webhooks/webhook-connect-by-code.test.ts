@@ -157,7 +157,7 @@ describe('POST /webhook/users/connections - success', () => {
     expect(squidexGraphqlMocks).toHaveBeenNthCalledWith(1, expect.anything(), {
       top: 1,
       skip: 0,
-      filter: "data/connections/iv/code eq 'asapWelcomeCode'",
+      filter: "(data/connections/iv/code eq 'asapWelcomeCode')",
     });
     expect(nock.isDone()).toBe(true);
   });

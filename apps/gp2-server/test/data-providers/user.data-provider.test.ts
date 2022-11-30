@@ -864,13 +864,37 @@ describe('User data provider', () => {
       };
       const users = await userDataProvider.fetch(fetchOptions);
 
-      const filterQuery = 'data/onboarded/iv eq true';
+      const filter = '(data/onboarded/iv eq true)';
       expect(squidexGraphqlClientMock.request).toBeCalledWith(
         expect.anything(),
         {
           top: 12,
           skip: 2,
-          filter: filterQuery,
+          filter,
+        },
+      );
+      expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
+    });
+
+    test('Should return all users when the onlyOnboard flag is false', async () => {
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        getSquidexUsersGraphqlResponse(),
+      );
+      const fetchOptions: gp2Model.FetchUsersOptions = {
+        take: 12,
+        skip: 2,
+        filter: {
+          onlyOnboarded: false,
+        },
+      };
+      const users = await userDataProvider.fetch(fetchOptions);
+
+      expect(squidexGraphqlClientMock.request).toBeCalledWith(
+        expect.anything(),
+        {
+          top: 12,
+          skip: 2,
+          filter: '',
         },
       );
       expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
@@ -889,14 +913,13 @@ describe('User data provider', () => {
       };
       await userDataProvider.fetch(fetchOptions);
 
-      const filterQuery =
-        "data/region/iv eq 'Europe'" + " or data/region/iv eq 'Asia'";
+      const filter = `(data/region/iv eq 'Europe' or data/region/iv eq 'Asia')`;
       expect(squidexGraphqlClientMock.request).toBeCalledWith(
         expect.anything(),
         {
           top: 12,
           skip: 2,
-          filter: filterQuery,
+          filter,
         },
       );
     });
@@ -915,13 +938,13 @@ describe('User data provider', () => {
       };
       await userDataProvider.fetch(fetchOptions);
 
-      const filterQuery = "data/connections/iv/code eq 'a-code'";
+      const filter = "(data/connections/iv/code eq 'a-code')";
       expect(squidexGraphqlClientMock.request).toBeCalledWith(
         expect.anything(),
         {
           top: 1,
           skip: 0,
-          filter: filterQuery,
+          filter,
         },
       );
     });

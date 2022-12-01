@@ -52,5 +52,5 @@ export const getSquidexAndContentfulClients = async () => {
     CONTENTFUL_ENV_ID!,
   );
 
-  return { isVerbose, contentfulEnvironment, squidexGraphqlClient };
+  return { contentfulEnvironment, squidexGraphqlClient };
 };

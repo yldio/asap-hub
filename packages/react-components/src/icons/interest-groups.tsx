@@ -1,5 +1,6 @@
 /* istanbul ignore file */
 import { FC } from 'react';
+
 interface InterestGroupsIconProps {
   readonly color?: string;
 }

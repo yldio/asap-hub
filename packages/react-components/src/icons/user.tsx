@@ -1,5 +1,6 @@
 /* istanbul ignore file */
 import { FC } from 'react';
+
 interface UserIconProps {
   readonly color?: string;
 }

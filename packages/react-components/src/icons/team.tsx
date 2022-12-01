@@ -1,6 +1,6 @@
 /* istanbul ignore file */
-
 import { FC } from 'react';
+
 interface TeamIconProps {
   readonly color?: string;
 }

@@ -90,118 +90,156 @@
       },
       {
         "name": "membersSection",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
         "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
           "fieldType": "UI",
           "editor": "Separator",
           "label": "Members Section",
           "hints": "",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
+          "placeholder": ""
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
       },
       {
         "name": "leaders",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
         "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
           "fieldType": "Array",
           "label": "Leaders",
           "hints": "",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
+          "placeholder": ""
         },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
         "nested": [
           {
             "name": "user",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
             "properties": {
+              "isRequired": true,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": true,
               "fieldType": "References",
+              "editor": "List",
               "minItems": 1,
               "maxItems": 1,
               "allowDuplicates": false,
               "resolveReference": false,
               "mustBePublished": false,
-              "editor": "List",
-              "schemaIds": ["users"],
+              "schemaIds": ["7186cbbc-685d-4930-9755-10c2b0fdd2c8"],
               "label": "User",
               "hints": "",
-              "placeholder": "",
-              "isRequired": true,
-              "isRequiredOnPublish": false,
-              "isHalfWidth": true
-            }
+              "placeholder": ""
+            },
+            "isLocked": false,
+            "isHidden": false,
+            "isDisabled": false
           },
           {
             "name": "role",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
             "properties": {
-              "fieldType": "String",
-              "allowedValues": ["Project Manager", "Chair"],
-              "isUnique": false,
-              "isEmbeddable": false,
-              "inlineEditable": true,
-              "createEnum": false,
-              "contentType": "Unspecified",
-              "editor": "Dropdown",
-              "label": "Role",
               "isRequired": true,
               "isRequiredOnPublish": false,
-              "isHalfWidth": true
-            }
+              "isHalfWidth": true,
+              "fieldType": "String",
+              "createEnum": false,
+              "editor": "Dropdown",
+              "inlineEditable": true,
+              "isEmbeddable": false,
+              "isUnique": false,
+              "allowedValues": ["Project Manager", "Chair"],
+              "contentType": "Unspecified",
+              "label": "Role"
+            },
+            "isLocked": false,
+            "isHidden": false,
+            "isDisabled": false
+          },
+          {
+            "name": "workstreamRole",
+            "properties": {
+              "isRequired": true,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false,
+              "fieldType": "String",
+              "createEnum": false,
+              "editor": "Input",
+              "inlineEditable": false,
+              "isEmbeddable": false,
+              "isUnique": false,
+              "contentType": "Unspecified",
+              "label": "Workstream Role"
+            },
+            "isLocked": false,
+            "isHidden": false,
+            "isDisabled": false
           }
         ]
       },
       {
         "name": "members",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
         "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
           "fieldType": "Array",
           "label": "Members",
           "hints": "",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
+          "placeholder": ""
         },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
         "nested": [
           {
             "name": "user",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
             "properties": {
+              "isRequired": true,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": true,
               "fieldType": "References",
+              "editor": "List",
               "minItems": 1,
               "maxItems": 1,
               "allowDuplicates": false,
               "resolveReference": false,
               "mustBePublished": false,
-              "editor": "List",
-              "schemaIds": ["users"],
+              "schemaIds": ["7186cbbc-685d-4930-9755-10c2b0fdd2c8"],
               "label": "User",
               "hints": "",
-              "placeholder": "",
-              "isRequired": true,
+              "placeholder": ""
+            },
+            "isLocked": false,
+            "isHidden": false,
+            "isDisabled": false
+          },
+          {
+            "name": "workstreamRole",
+            "properties": {
+              "isRequired": false,
               "isRequiredOnPublish": false,
-              "isHalfWidth": true
-            }
+              "isHalfWidth": false,
+              "fieldType": "String",
+              "createEnum": false,
+              "editor": "Input",
+              "inlineEditable": false,
+              "isEmbeddable": false,
+              "isUnique": false,
+              "contentType": "Unspecified",
+              "label": "Workstream Role"
+            },
+            "isLocked": false,
+            "isHidden": false,
+            "isDisabled": false
           }
         ]
       }

@@ -30,14 +30,9 @@ export const getSquidexAndContentfulClients = async () => {
   } = process.env;
 
   const isVerbose = () => {
-    if (
-      process.env.VERBOSE_DATA_SYNC &&
-      process.env.VERBOSE_DATA_SYNC == 'true'
-    ) {
-      return true;
-    }
-
-    return false;
+    return (
+      process.env.VERBOSE_DATA_SYNC && process.env.VERBOSE_DATA_SYNC == 'true'
+    );
   };
 
   const getAuthToken = getAccessTokenFactory({

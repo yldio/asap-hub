@@ -1,7 +1,8 @@
 import { route, stringParser } from 'typesafe-routes';
+import resource from './resource';
 
 const project = (() => {
-  const edit = route('/edit', {}, {});
+  const edit = route('/edit', {}, { resource });
   const add = route('/add', {}, {});
   const overview = route('/overview', {}, {});
   const resources = route('/resources', {}, { add, edit });

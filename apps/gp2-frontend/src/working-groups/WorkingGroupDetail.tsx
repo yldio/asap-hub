@@ -1,5 +1,6 @@
 import { Frame, useBackHref } from '@asap-hub/frontend-utils';
 import {
+  EditResourceModal,
   ResourceModal,
   WorkingGroupDetailPage,
   WorkingGroupOverview,
@@ -10,7 +11,6 @@ import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import EditResourceModal from './EditResourceModal';
 import { usePutWorkingGroupResources, useWorkingGroupById } from './state';
 
 const { workingGroups } = gp2Routing;
@@ -24,24 +24,14 @@ const WorkingGroupDetail = () => {
     workingGroup?.members.some(({ userId }) => userId === currentUser?.id) ||
     false;
   const isAdministrator = currentUser?.role === 'Administrator';
-  const add = isAdministrator
-    ? workingGroups({}).workingGroup({ workingGroupId }).resources({}).add({}).$
-    : undefined;
+  const workingGroupRoute = workingGroups({}).workingGroup({ workingGroupId });
+  const resourcesRoute = workingGroupRoute.resources({});
+  const editRoute = resourcesRoute.edit({});
+  const add = isAdministrator ? resourcesRoute.add({}).$ : undefined;
+  const edit = isAdministrator ? editRoute.$ : undefined;
+  const overview = workingGroupRoute.overview({}).$;
+  const resources = resourcesRoute.$;
 
-  const edit = isAdministrator
-    ? workingGroups({}).workingGroup({ workingGroupId }).resources({}).edit({})
-        .$
-    : undefined;
-  const editRoute = workingGroups({})
-    .workingGroup({ workingGroupId })
-    .resources({})
-    .edit({});
-  const overview = workingGroups({})
-    .workingGroup({ workingGroupId })
-    .overview({}).$;
-  const resources = workingGroups({})
-    .workingGroup({ workingGroupId })
-    .resources({}).$;
   const updateWorkingGroupResources =
     usePutWorkingGroupResources(workingGroupId);
 
@@ -85,12 +75,10 @@ const WorkingGroupDetail = () => {
                     </Route>
                     <Route exact path={edit + editRoute.resource.template}>
                       <EditResourceModal
-                        workingGroupId={workingGroupId}
-                        resources={workingGroup.resources}
+                        route={editRoute.resource}
+                        resources={workingGroup.resources || []}
                         backHref={resources}
-                        updateWorkingGroupResources={
-                          updateWorkingGroupResources
-                        }
+                        updateResources={updateWorkingGroupResources}
                       />
                     </Route>
                   </>

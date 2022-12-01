@@ -7,7 +7,7 @@ import { createClient } from 'contentful-management';
 import { getAccessTokenFactory, SquidexGraphql } from '@asap-hub/squidex';
 
 export const isVerbose = () =>
-  process.env.VERBOSE_DATA_SYNC && process.env.VERBOSE_DATA_SYNC == 'true';
+  process.env.VERBOSE_DATA_SYNC && process.env.VERBOSE_DATA_SYNC === 'true';
 
 export const getSquidexAndContentfulClients = async () => {
   [

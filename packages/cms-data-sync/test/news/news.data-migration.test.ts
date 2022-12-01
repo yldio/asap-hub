@@ -290,7 +290,7 @@ describe('migrateNews', () => {
 
       expect(console.log).toHaveBeenCalledWith(
         '\x1b[31m',
-        '[ERROR] Entry with news-1 was uploaded without rich text',
+        '[ERROR] Entry with ID news-1 was uploaded without rich text',
       );
       expect(contenfulEnv.createEntryWithId).toHaveBeenCalledTimes(2);
       expect(publishContentfulEntriesMock).toHaveBeenCalledWith([newsEntry]);

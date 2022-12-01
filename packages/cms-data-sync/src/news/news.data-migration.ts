@@ -17,6 +17,7 @@ import {
   convertHtmlToContentfulFormat,
   createAsset,
   getSquidexAndContentfulClients,
+  logger,
   publishContentfulEntries,
 } from '../utils';
 
@@ -71,8 +72,9 @@ export const migrateNews = async () => {
         try {
           newsPayload.text['en-US'] = convertHtmlToContentfulFormat(text);
         } catch {
-          console.log(
+          logger(
             `There is a problem converting rich text from entry ${id}`,
+            'ERROR',
           );
         }
       }
@@ -87,7 +89,7 @@ export const migrateNews = async () => {
         );
         entries.push(entry);
       } catch (err) {
-        console.log("\x1b[31m", `[ERROR] Error details of entry ${id}:\n`, err);
+        logger(`Error details of entry ${id}:\n${err}`, 'ERROR-DEBUG');
         try {
           // Most probably it failed because the rich text could not be
           // processed, so here we will try to create the entry
@@ -97,11 +99,11 @@ export const migrateNews = async () => {
             await contentfulEnvironment.createEntryWithId('news', id, {
               fields: newsPayload,
             });
-          console.log(`Entry with ${id} was uploaded without rich text`);
+          logger(`Entry with ${id} was uploaded without rich text`, 'ERROR');
 
           entries.push(entryWithoutRichText);
         } catch {
-          console.log(`There is a problem creating entry ${id}`);
+          logger(`There is a problem creating entry ${id}`, 'ERROR');
         }
       }
     }

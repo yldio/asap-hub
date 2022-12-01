@@ -1,6 +1,6 @@
 import { Document } from '@contentful/rich-text-types';
 import { parseHtml } from 'contentful-html-rich-text-converter';
-import { verboseLog } from './verbose';
+import { logger } from './logs';
 
 export const clearParsedHtmlOutput = (htmlDocument: Document) => ({
   ...htmlDocument,
@@ -35,25 +35,27 @@ export const convertHtmlToContentfulFormat = (html: string) => {
   // an important part of rich text input anyway, so we
   // can just remove them here
   const htmlWithoutDivTag = html.replace(/<[\\/]{0,1}(div)[^><]*>/g, '');
-  verboseLog(`HTML pre-parsed:\n${html}`);
-  verboseLog(`HTML post-parsed:\n${htmlWithoutDivTag}`);
+  logger(`HTML pre-parsed:\n${html}`, 'DEBUG');
+  logger(`HTML post-parsed:\n${htmlWithoutDivTag}`, 'DEBUG');
 
   const parsedHtml = parseHtml(htmlWithoutDivTag) as Document;
-  verboseLog(
+  logger(
     `Parsed HTML in Contentful format:\n${JSON.stringify(
       parsedHtml,
       undefined,
       2,
     )}`,
+    'DEBUG',
   );
 
   const cleanedDocument = clearParsedHtmlOutput(parsedHtml);
-  verboseLog(
+  logger(
     `Cleaned Contentful Document:\n${JSON.stringify(
       cleanedDocument,
       undefined,
       2,
     )}`,
+    'DEBUG',
   );
 
   return cleanedDocument;

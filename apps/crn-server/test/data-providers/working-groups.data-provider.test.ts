@@ -1,6 +1,7 @@
 import { WorkingGroupSquidexDataProvider } from '../../src/data-providers/working-groups.data-provider';
 import {
   getSquidexWorkingGroupGraphqlResponse,
+  getSquidexWorkingGroupsGraphqlResponse,
   getWorkingGroupDataObject,
 } from '../fixtures/working-groups.fixtures';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
@@ -18,6 +19,51 @@ describe('Working Group Data Provider', () => {
 
   afterEach(() => {
     jest.resetAllMocks();
+  });
+
+  describe('Fetch method', () => {
+    test('Should fetch the working groups from squidex graphql', async () => {
+      const result = await workingGroupDataProviderMockGraphql.fetch({});
+
+      expect(result).toMatchObject({
+        total: 1,
+        items: [getWorkingGroupDataObject()],
+      });
+    });
+
+    test('Should return an empty result when the client returns an empty list', async () => {
+      const squidexGraphqlResponse = getSquidexWorkingGroupsGraphqlResponse();
+      squidexGraphqlResponse.queryWorkingGroupsContentsWithTotal!.total = 0;
+      squidexGraphqlResponse.queryWorkingGroupsContentsWithTotal!.items = [];
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
+
+      const result = await workingGroupDataProvider.fetch({});
+      expect(result).toEqual({ items: [], total: 0 });
+    });
+
+    test('Should return an empty result when the client returns a response with queryWorkingGroupsContentsWithTotal property set to null', async () => {
+      const squidexGraphqlResponse = getSquidexWorkingGroupsGraphqlResponse();
+      squidexGraphqlResponse.queryWorkingGroupsContentsWithTotal = null;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
+
+      const result = await workingGroupDataProvider.fetch({});
+      expect(result).toEqual({ items: [], total: 0 });
+    });
+
+    test('Should return an empty result when the client returns a response with items property set to null', async () => {
+      const squidexGraphqlResponse = getSquidexWorkingGroupsGraphqlResponse();
+      squidexGraphqlResponse.queryWorkingGroupsContentsWithTotal!.items = null;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
+
+      const result = await workingGroupDataProvider.fetch({});
+      expect(result).toEqual({ items: [], total: 0 });
+    });
   });
 
   describe('Fetch-by-id method', () => {

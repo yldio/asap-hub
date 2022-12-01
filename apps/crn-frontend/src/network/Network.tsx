@@ -21,15 +21,21 @@ const loadGroupProfile = () =>
   import(
     /* webpackChunkName: "network-group-profile" */ './groups/GroupProfile'
   );
+const loadWorkingGroupList = () =>
+  import(
+    /* webpackChunkName: "network-working-group-list" */ './working-groups/WorkingGroupList'
+  );
 const loadWorkingGroupProfile = () =>
   import(
     /* webpackChunkName: "network-working-group-profile" */ './working-groups/WorkingGroupProfile'
   );
+
 const UserList = lazy(loadUserList);
 const UserProfile = lazy(loadUserProfile);
 const TeamList = lazy(loadTeamList);
 const TeamProfile = lazy(loadTeamProfile);
 const GroupList = lazy(loadGroupList);
+const WorkingGroupList = lazy(loadWorkingGroupList);
 
 const Network: FC<Record<string, never>> = () => {
   useEffect(() => {
@@ -37,6 +43,7 @@ const Network: FC<Record<string, never>> = () => {
       // Tab can be changed very quickly
       .then(loadUserList)
       .then(loadGroupList)
+      .then(loadWorkingGroupList)
       // Can be clicked only after the list has been fetched
       .then(loadTeamProfile)
       // Can be clicked only after changing tabs and the list has been fetched
@@ -129,6 +136,23 @@ const Network: FC<Record<string, never>> = () => {
         <Frame title="Group Profile">
           <GroupProfile currentTime={currentTime} />
         </Frame>
+      </Route>
+      <Route exact path={path + network({}).workingGroups.template}>
+        <NetworkPage
+          page="working-groups"
+          searchQuery={searchQuery}
+          onChangeSearchQuery={setSearchQuery}
+          filters={filters}
+          onChangeFilter={toggleFilter}
+          showSearch={false}
+        >
+          <SearchFrame title="Working Groups">
+            <WorkingGroupList
+              filters={filters}
+              searchQuery={debouncedSearchQuery}
+            />
+          </SearchFrame>
+        </NetworkPage>
       </Route>
       <Route
         path={

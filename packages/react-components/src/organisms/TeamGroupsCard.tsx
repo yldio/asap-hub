@@ -11,7 +11,7 @@ import {
   smallDesktopScreen,
   vminLinearCalcClamped,
 } from '../pixels';
-import { teamIcon } from '../icons';
+import { TeamIcon } from '../icons';
 import { charcoal } from '../colors';
 
 const LESS_GROUP_LIMIT = 2;
@@ -94,7 +94,9 @@ const TeamGroupsCard: React.FC<TeamGroupsCardProps> = ({ groups }) => {
               </LinkHeadline>
               <Paragraph accent="lead">{description}</Paragraph>
               <span css={teamsStyles}>
-                <span css={iconStyles}>{teamIcon} </span>
+                <span css={iconStyles}>
+                  <TeamIcon />{' '}
+                </span>
                 {teams.length} Team{teams.length !== 1 ? 's' : ''}
               </span>
               {(index === groups.length - 1 &&

@@ -151,6 +151,7 @@ export {
   UserProfilePlaceholderCard,
   UserProfileRecentWorks,
   UserProfileRole,
+  WorkingGroupCard,
 } from './organisms';
 export {
   BasicLayout,
@@ -180,6 +181,7 @@ export {
   NetworkPage,
   NetworkPeople,
   NetworkTeams,
+  NetworkWorkingGroups,
   NewsDetailsPage,
   NewsPage,
   NewsPageBody,

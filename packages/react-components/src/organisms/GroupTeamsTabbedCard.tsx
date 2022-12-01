@@ -3,7 +3,7 @@ import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React, { ComponentProps } from 'react';
 import { Link } from '../atoms';
-import { inactiveBadgeIcon, teamIcon } from '../icons';
+import { inactiveBadgeIcon, TeamIcon } from '../icons';
 import { TabbedCard } from '../molecules';
 import { perRem, rem, tabletScreen } from '../pixels';
 import { splitListBy } from '../utils';
@@ -74,7 +74,7 @@ const GroupTeamsTabbedCard: React.FC<GroupTeamsTabbedCardProps> = ({
         <ul css={containerStyles}>
           {data.map(({ id, displayName, inactiveSince }) => (
             <li key={`team-${id}`} css={listItemStyle}>
-              {teamIcon}
+              <TeamIcon />
               <Link
                 ellipsed
                 href={network({}).teams({}).team({ teamId: id }).$}

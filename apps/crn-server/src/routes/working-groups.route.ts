@@ -1,3 +1,4 @@
+import { validateFetchOptions } from '@asap-hub/server-common';
 import { Router } from 'express';
 import { WorkingGroupController } from '../controllers/working-groups';
 import { validateWorkingGroupParameters } from '../validation/working-group.validation';
@@ -17,6 +18,14 @@ export const workingGroupRouteFactory = (
       res.json(result);
     },
   );
+
+  workingGroupRoutes.get('/working-groups', async (req, res) => {
+    const { query } = req;
+    const options = validateFetchOptions(query);
+    const result = await workingGroupsController.fetch(options);
+
+    res.json(result);
+  });
 
   return workingGroupRoutes;
 };

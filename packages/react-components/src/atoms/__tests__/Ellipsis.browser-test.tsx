@@ -43,4 +43,32 @@ describe('When using Ellipsis', () => {
     );
     expect(containerHeight).toEqual(LINE_HEIGHT);
   });
+  it('should have height equals to 2 lines height for long texts based on props', async () => {
+    const NUMBER_OF_LINES = 2;
+    await page.setViewportSize(mobileScreen);
+    const { container, rerender } = render(
+      <div css={containerStyle}>
+        <span>{longText}</span>,
+      </div>,
+    );
+    const { select, update } = await domToPlaywright(page, document);
+    let containerHeight = await page.$eval(
+      select(container),
+      ({ offsetHeight }: HTMLElement) => offsetHeight,
+    );
+    expect(containerHeight).toBeGreaterThan(LINE_HEIGHT);
+
+    rerender(
+      <div css={containerStyle}>
+        <Ellipsis numberOfLines={NUMBER_OF_LINES}>{longText}</Ellipsis>
+      </div>,
+    );
+    update(document);
+
+    containerHeight = await page.$eval(
+      select(container),
+      ({ offsetHeight }: HTMLElement) => offsetHeight,
+    );
+    expect(containerHeight).toEqual(LINE_HEIGHT * NUMBER_OF_LINES);
+  });
 });

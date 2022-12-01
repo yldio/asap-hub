@@ -111,7 +111,9 @@ it('renders tab links preserving the search query', async () => {
     <NetworkPageHeader {...props} searchQuery="searchterm" />,
   );
   expect(
-    new URL(getByText(/groups/i, { selector: 'nav a *' }).closest('a')!.href),
+    new URL(
+      getByText('Interest Groups', { selector: 'nav a *' }).closest('a')!.href,
+    ),
   ).toMatchObject({
     pathname: expect.stringMatching(/groups$/),
     searchParams: new URLSearchParams({ searchQuery: 'searchterm' }),
@@ -123,4 +125,11 @@ it('renders a search box with the search query', () => {
     <NetworkPageHeader {...props} searchQuery={'test123'} />,
   );
   expect((getByRole('searchbox') as HTMLInputElement).value).toEqual('test123');
+});
+
+it('does not render the search box based on props', () => {
+  const { queryByRole } = render(
+    <NetworkPageHeader {...props} showSearch={false} />,
+  );
+  expect(queryByRole('searchbox')).not.toBeInTheDocument();
 });

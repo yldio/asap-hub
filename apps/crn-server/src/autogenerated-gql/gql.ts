@@ -67,8 +67,12 @@ const documents = {
     graphql.FetchUserDocument,
   '\n  query FetchUsers($top: Int, $skip: Int, $filter: String) {\n    queryUsersContentsWithTotal(\n      top: $top\n      skip: $skip\n      filter: $filter\n      orderby: "data/firstName/iv,data/lastName/iv"\n    ) {\n      total\n      items {\n        ...UsersContent\n      }\n    }\n  }\n  \n':
     graphql.FetchUsersDocument,
-  '\n  query FetchWorkingGroup($id: String!) {\n    findWorkingGroupsContent(id: $id) {\n      id\n      lastModified\n      flatData {\n        title\n        description\n        externalLink\n        externalLinkText\n        deliverables {\n          status\n          description\n        }\n      }\n    }\n  }\n':
+  '\n  fragment WorkingGroupContent on WorkingGroups {\n    id\n    lastModified\n    flatData {\n      title\n      description\n      externalLink\n      shortText\n      externalLinkText\n      deliverables {\n        status\n        description\n      }\n    }\n  }\n':
+    graphql.WorkingGroupContentFragmentDoc,
+  '\n  query FetchWorkingGroup($id: String!) {\n    findWorkingGroupsContent(id: $id) {\n      ...WorkingGroupContent\n    }\n  }\n  \n':
     graphql.FetchWorkingGroupDocument,
+  '\n  query FetchWorkingGroups($top: Int, $skip: Int, $filter: String) {\n    queryWorkingGroupsContentsWithTotal(\n      top: $top\n      skip: $skip\n      filter: $filter\n      orderby: "data/title/iv"\n    ) {\n      total\n      items {\n        ...WorkingGroupContent\n      }\n    }\n  }\n  \n':
+    graphql.FetchWorkingGroupsDocument,
 };
 
 export function gql(
@@ -168,8 +172,14 @@ export function gql(
   source: '\n  query FetchUsers($top: Int, $skip: Int, $filter: String) {\n    queryUsersContentsWithTotal(\n      top: $top\n      skip: $skip\n      filter: $filter\n      orderby: "data/firstName/iv,data/lastName/iv"\n    ) {\n      total\n      items {\n        ...UsersContent\n      }\n    }\n  }\n  \n',
 ): typeof documents['\n  query FetchUsers($top: Int, $skip: Int, $filter: String) {\n    queryUsersContentsWithTotal(\n      top: $top\n      skip: $skip\n      filter: $filter\n      orderby: "data/firstName/iv,data/lastName/iv"\n    ) {\n      total\n      items {\n        ...UsersContent\n      }\n    }\n  }\n  \n'];
 export function gql(
-  source: '\n  query FetchWorkingGroup($id: String!) {\n    findWorkingGroupsContent(id: $id) {\n      id\n      lastModified\n      flatData {\n        title\n        description\n        externalLink\n        externalLinkText\n        deliverables {\n          status\n          description\n        }\n      }\n    }\n  }\n',
-): typeof documents['\n  query FetchWorkingGroup($id: String!) {\n    findWorkingGroupsContent(id: $id) {\n      id\n      lastModified\n      flatData {\n        title\n        description\n        externalLink\n        externalLinkText\n        deliverables {\n          status\n          description\n        }\n      }\n    }\n  }\n'];
+  source: '\n  fragment WorkingGroupContent on WorkingGroups {\n    id\n    lastModified\n    flatData {\n      title\n      description\n      externalLink\n      shortText\n      externalLinkText\n      deliverables {\n        status\n        description\n      }\n    }\n  }\n',
+): typeof documents['\n  fragment WorkingGroupContent on WorkingGroups {\n    id\n    lastModified\n    flatData {\n      title\n      description\n      externalLink\n      shortText\n      externalLinkText\n      deliverables {\n        status\n        description\n      }\n    }\n  }\n'];
+export function gql(
+  source: '\n  query FetchWorkingGroup($id: String!) {\n    findWorkingGroupsContent(id: $id) {\n      ...WorkingGroupContent\n    }\n  }\n  \n',
+): typeof documents['\n  query FetchWorkingGroup($id: String!) {\n    findWorkingGroupsContent(id: $id) {\n      ...WorkingGroupContent\n    }\n  }\n  \n'];
+export function gql(
+  source: '\n  query FetchWorkingGroups($top: Int, $skip: Int, $filter: String) {\n    queryWorkingGroupsContentsWithTotal(\n      top: $top\n      skip: $skip\n      filter: $filter\n      orderby: "data/title/iv"\n    ) {\n      total\n      items {\n        ...WorkingGroupContent\n      }\n    }\n  }\n  \n',
+): typeof documents['\n  query FetchWorkingGroups($top: Int, $skip: Int, $filter: String) {\n    queryWorkingGroupsContentsWithTotal(\n      top: $top\n      skip: $skip\n      filter: $filter\n      orderby: "data/title/iv"\n    ) {\n      total\n      items {\n        ...WorkingGroupContent\n      }\n    }\n  }\n  \n'];
 
 export function gql(source: string): unknown;
 export function gql(source: string) {

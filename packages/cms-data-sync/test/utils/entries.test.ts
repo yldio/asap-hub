@@ -82,7 +82,7 @@ describe('publishContentfulEntries', () => {
     await publishContentfulEntries([newsEntry]);
     expect(console.log).toHaveBeenCalledWith(
       '\x1b[31m',
-      `Entry with ID ${newsEntry.sys.id} could not be published.`,
+      `[ERROR] Entry with ID ${newsEntry.sys.id} could not be published.`,
     );
   });
 

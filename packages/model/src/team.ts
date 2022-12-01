@@ -32,8 +32,8 @@ export type TeamPatchRequest = TeamUpdateDataObject;
 
 export interface TeamMember {
   id: string;
-  firstName?: string;
-  lastName?: string;
+  firstName: string;
+  lastName: string;
   displayName: string;
   email: string;
   role: TeamRole;

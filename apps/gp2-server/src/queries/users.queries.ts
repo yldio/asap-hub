@@ -27,6 +27,9 @@ export const usersContentQueryFragment = gql`
       secondaryEmail
       telephoneCountryCode
       telephoneNumber
+      keywords
+      fundingStreams
+      biography
     }
     referencingProjectsContents {
       id

@@ -1729,6 +1729,16 @@ export type UsersDataAvatarInputDto = {
   iv: InputMaybe<Array<Scalars['String']>>;
 };
 
+/** The structure of the Biography field of the Users content type. */
+export type UsersDataBiographyDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Biography field of the Users content input type. */
+export type UsersDataBiographyInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
 /** The structure of the City field of the Users content type. */
 export type UsersDataCityDto = {
   iv: Maybe<Scalars['String']>;
@@ -1811,12 +1821,15 @@ export type UsersDataDegreeInputDto = {
 /** The structure of the Users data type. */
 export type UsersDataDto = {
   avatar: Maybe<UsersDataAvatarDto>;
+  biography: Maybe<UsersDataBiographyDto>;
   city: Maybe<UsersDataCityDto>;
   connections: Maybe<UsersDataConnectionsDto>;
   country: Maybe<UsersDataCountryDto>;
   degree: Maybe<UsersDataDegreeDto>;
   email: Maybe<UsersDataEmailDto>;
   firstName: Maybe<UsersDataFirstNameDto>;
+  fundingStreams: Maybe<UsersDataFundingStreamsDto>;
+  keywords: Maybe<UsersDataKeywordsDto>;
   lastName: Maybe<UsersDataLastNameDto>;
   onboarded: Maybe<UsersDataOnboardedDto>;
   positions: Maybe<UsersDataPositionsDto>;
@@ -1847,15 +1860,30 @@ export type UsersDataFirstNameInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
+/** The structure of the Funding Streams field of the Users content type. */
+export type UsersDataFundingStreamsDto = {
+  /** This information will be pulled for when GP2 publications arise to share financial conflicts of interests for publications. Please make sure this is up to date! */
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Funding Streams field of the Users content input type. */
+export type UsersDataFundingStreamsInputDto = {
+  /** This information will be pulled for when GP2 publications arise to share financial conflicts of interests for publications. Please make sure this is up to date! */
+  iv: InputMaybe<Scalars['String']>;
+};
+
 /** The structure of the Users data input type. */
 export type UsersDataInputDto = {
   avatar: InputMaybe<UsersDataAvatarInputDto>;
+  biography: InputMaybe<UsersDataBiographyInputDto>;
   city: InputMaybe<UsersDataCityInputDto>;
   connections: InputMaybe<UsersDataConnectionsInputDto>;
   country: InputMaybe<UsersDataCountryInputDto>;
   degree: InputMaybe<UsersDataDegreeInputDto>;
   email: InputMaybe<UsersDataEmailInputDto>;
   firstName: InputMaybe<UsersDataFirstNameInputDto>;
+  fundingStreams: InputMaybe<UsersDataFundingStreamsInputDto>;
+  keywords: InputMaybe<UsersDataKeywordsInputDto>;
   lastName: InputMaybe<UsersDataLastNameInputDto>;
   onboarded: InputMaybe<UsersDataOnboardedInputDto>;
   positions: InputMaybe<UsersDataPositionsInputDto>;
@@ -1864,6 +1892,16 @@ export type UsersDataInputDto = {
   secondaryEmail: InputMaybe<UsersDataSecondaryEmailInputDto>;
   telephoneCountryCode: InputMaybe<UsersDataTelephoneCountryCodeInputDto>;
   telephoneNumber: InputMaybe<UsersDataTelephoneNumberInputDto>;
+};
+
+/** The structure of the Keywords field of the Users content type. */
+export type UsersDataKeywordsDto = {
+  iv: Maybe<Array<Scalars['String']>>;
+};
+
+/** The structure of the Keywords field of the Users content input type. */
+export type UsersDataKeywordsInputDto = {
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Last Name field of the Users content type. */
@@ -1997,12 +2035,16 @@ export type UsersDataTelephoneNumberInputDto = {
 /** The structure of the flat Users data type. */
 export type UsersFlatDataDto = {
   avatar: Maybe<Array<Asset>>;
+  biography: Maybe<Scalars['String']>;
   city: Maybe<Scalars['String']>;
   connections: Maybe<Array<UsersDataConnectionsChildDto>>;
   country: Maybe<Scalars['String']>;
   degree: Maybe<Array<UsersDataDegreeEnum>>;
   email: Maybe<Scalars['String']>;
   firstName: Maybe<Scalars['String']>;
+  /** This information will be pulled for when GP2 publications arise to share financial conflicts of interests for publications. Please make sure this is up to date! */
+  fundingStreams: Maybe<Scalars['String']>;
+  keywords: Maybe<Array<Scalars['String']>>;
   lastName: Maybe<Scalars['String']>;
   /** Use this to allow the user to see the full Hub and skip profile completion */
   onboarded: Maybe<Scalars['Boolean']>;
@@ -2466,9 +2508,10 @@ export type ProjectContentFragment = Pick<Projects, 'id'> & {
           user: Maybe<
             Array<
               Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
-                flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'> & {
-                  avatar: Maybe<Array<Pick<Asset, 'id'>>>;
-                };
+                flatData: Pick<
+                  UsersFlatDataDto,
+                  'firstName' | 'lastName' | 'onboarded'
+                > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
               }
             >
           >;
@@ -2521,7 +2564,7 @@ export type FetchProjectQuery = {
                   Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
                     flatData: Pick<
                       UsersFlatDataDto,
-                      'firstName' | 'lastName'
+                      'firstName' | 'lastName' | 'onboarded'
                     > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
                   }
                 >
@@ -2581,7 +2624,7 @@ export type FetchProjectsQuery = {
                         > & {
                           flatData: Pick<
                             UsersFlatDataDto,
-                            'firstName' | 'lastName'
+                            'firstName' | 'lastName' | 'onboarded'
                           > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
                         }
                       >
@@ -2631,6 +2674,9 @@ export type UsersContentFragment = Pick<
     | 'secondaryEmail'
     | 'telephoneCountryCode'
     | 'telephoneNumber'
+    | 'keywords'
+    | 'fundingStreams'
+    | 'biography'
   > & {
     avatar: Maybe<Array<Pick<Asset, 'id'>>>;
     positions: Maybe<
@@ -2692,6 +2738,9 @@ export type FetchUserQuery = {
         | 'secondaryEmail'
         | 'telephoneCountryCode'
         | 'telephoneNumber'
+        | 'keywords'
+        | 'fundingStreams'
+        | 'biography'
       > & {
         avatar: Maybe<Array<Pick<Asset, 'id'>>>;
         positions: Maybe<
@@ -2763,6 +2812,9 @@ export type FetchUsersQuery = {
               | 'secondaryEmail'
               | 'telephoneCountryCode'
               | 'telephoneNumber'
+              | 'keywords'
+              | 'fundingStreams'
+              | 'biography'
             > & {
               avatar: Maybe<Array<Pick<Asset, 'id'>>>;
               positions: Maybe<
@@ -2839,7 +2891,7 @@ export type WorkingGroupNetworkContentFragment = Pick<
                       > & {
                         flatData: Pick<
                           UsersFlatDataDto,
-                          'firstName' | 'lastName'
+                          'firstName' | 'lastName' | 'onboarded'
                         > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
                       }
                     >
@@ -2882,7 +2934,7 @@ export type WorkingGroupNetworkContentFragment = Pick<
                       > & {
                         flatData: Pick<
                           UsersFlatDataDto,
-                          'firstName' | 'lastName'
+                          'firstName' | 'lastName' | 'onboarded'
                         > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
                       }
                     >
@@ -2925,7 +2977,7 @@ export type WorkingGroupNetworkContentFragment = Pick<
                       > & {
                         flatData: Pick<
                           UsersFlatDataDto,
-                          'firstName' | 'lastName'
+                          'firstName' | 'lastName' | 'onboarded'
                         > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
                       }
                     >
@@ -2968,7 +3020,7 @@ export type WorkingGroupNetworkContentFragment = Pick<
                       > & {
                         flatData: Pick<
                           UsersFlatDataDto,
-                          'firstName' | 'lastName'
+                          'firstName' | 'lastName' | 'onboarded'
                         > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
                       }
                     >
@@ -3023,7 +3075,7 @@ export type FetchWorkingGroupNetworkQuery = {
                             > & {
                               flatData: Pick<
                                 UsersFlatDataDto,
-                                'firstName' | 'lastName'
+                                'firstName' | 'lastName' | 'onboarded'
                               > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
                             }
                           >
@@ -3066,7 +3118,7 @@ export type FetchWorkingGroupNetworkQuery = {
                             > & {
                               flatData: Pick<
                                 UsersFlatDataDto,
-                                'firstName' | 'lastName'
+                                'firstName' | 'lastName' | 'onboarded'
                               > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
                             }
                           >
@@ -3109,7 +3161,7 @@ export type FetchWorkingGroupNetworkQuery = {
                             > & {
                               flatData: Pick<
                                 UsersFlatDataDto,
-                                'firstName' | 'lastName'
+                                'firstName' | 'lastName' | 'onboarded'
                               > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
                             }
                           >
@@ -3152,7 +3204,7 @@ export type FetchWorkingGroupNetworkQuery = {
                             > & {
                               flatData: Pick<
                                 UsersFlatDataDto,
-                                'firstName' | 'lastName'
+                                'firstName' | 'lastName' | 'onboarded'
                               > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
                             }
                           >
@@ -3194,9 +3246,10 @@ export type WorkingGroupContentFragment = Pick<WorkingGroups, 'id'> & {
           user: Maybe<
             Array<
               Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
-                flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'> & {
-                  avatar: Maybe<Array<Pick<Asset, 'id'>>>;
-                };
+                flatData: Pick<
+                  UsersFlatDataDto,
+                  'firstName' | 'lastName' | 'onboarded'
+                > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
               }
             >
           >;
@@ -3238,7 +3291,7 @@ export type FetchWorkingGroupQuery = {
                   Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
                     flatData: Pick<
                       UsersFlatDataDto,
-                      'firstName' | 'lastName'
+                      'firstName' | 'lastName' | 'onboarded'
                     > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
                   }
                 >
@@ -3287,7 +3340,7 @@ export type FetchWorkingGroupsQuery = {
                         > & {
                           flatData: Pick<
                             UsersFlatDataDto,
-                            'firstName' | 'lastName'
+                            'firstName' | 'lastName' | 'onboarded'
                           > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
                         }
                       >
@@ -3398,6 +3451,10 @@ export const ProjectContentFragmentDoc = {
                                   {
                                     kind: 'Field',
                                     name: { kind: 'Name', value: 'lastName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'onboarded' },
                                   },
                                 ],
                               },
@@ -3526,6 +3583,12 @@ export const UsersContentFragmentDoc = {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'telephoneNumber' },
                 },
+                { kind: 'Field', name: { kind: 'Name', value: 'keywords' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'fundingStreams' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'biography' } },
               ],
             },
           },
@@ -3723,6 +3786,10 @@ export const WorkingGroupContentFragmentDoc = {
                                   {
                                     kind: 'Field',
                                     name: { kind: 'Name', value: 'lastName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'onboarded' },
                                   },
                                 ],
                               },

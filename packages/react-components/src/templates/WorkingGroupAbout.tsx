@@ -1,18 +1,16 @@
-import { TeamResponse } from '@asap-hub/model';
+import { WorkingGroupResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 
 import { Card, Headline3, Link, Subtitle } from '../atoms';
 import { createMailTo } from '../mail';
 import { Collapsible } from '../molecules';
+import { DeliverablesCard } from '../organisms';
 import { perRem } from '../pixels';
 
 type WorkingGroupAboutProps = Pick<
-  TeamResponse,
-  'members' | 'pointOfContact'
-> & {
-  description: string;
-};
-
+  WorkingGroupResponse,
+  'description' | 'deliverables' | 'pointOfContact'
+>;
 const containerStyles = css({
   display: 'flex',
   flexFlow: 'column',
@@ -21,9 +19,11 @@ const containerStyles = css({
 
 const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
   description,
+  deliverables,
   pointOfContact,
 }) => (
   <div css={containerStyles}>
+    <DeliverablesCard deliverables={deliverables} />
     <Card accent="green">
       <Headline3>
         Would you like to collaborate with this Working Group?

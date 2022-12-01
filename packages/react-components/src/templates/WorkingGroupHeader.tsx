@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { formatDistance } from 'date-fns';
-import { TeamResponse } from '@asap-hub/model';
+import { WorkingGroupResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
 import { mobileScreen, perRem, rem } from '../pixels';
@@ -76,23 +76,22 @@ const pointOfContactStyles = css({
 });
 
 type WorkingGroupPageHeaderProps = Pick<
-  TeamResponse,
-  'members' | 'pointOfContact'
-> & {
-  id: string;
-  name: string;
-  complete: boolean;
-  description: string;
-  externalLink?: string;
-  externalLinkText?: string;
-  lastUpdated: string;
-};
+  WorkingGroupResponse,
+  | 'id'
+  | 'title'
+  | 'complete'
+  | 'lastModifiedDate'
+  | 'members'
+  | 'externalLink'
+  | 'externalLinkText'
+  | 'pointOfContact'
+>;
 
 const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
   id,
-  name,
+  title,
   complete,
-  lastUpdated,
+  lastModifiedDate,
   externalLink,
   externalLinkText,
   pointOfContact,
@@ -100,7 +99,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
 }) => (
   <header css={containerStyles}>
     <div css={titleStyle}>
-      <Display styleAsHeading={2}>{name}</Display>
+      <Display styleAsHeading={2}>{title}</Display>
       {complete && (
         <StateTag accent="green" icon={successIcon} label="Complete" />
       )}
@@ -136,7 +135,8 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
       )}
       <div css={lastUpdatedStyles}>
         <Caption asParagraph accent="lead">
-          Last updated: {formatDistance(new Date(), new Date(lastUpdated))} ago
+          Last updated: {formatDistance(new Date(), new Date(lastModifiedDate))}{' '}
+          ago
         </Caption>
       </div>
     </div>

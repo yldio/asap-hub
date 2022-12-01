@@ -6143,6 +6143,28 @@ input WorkingGroupsDataCompleteInputDto {
   iv: Boolean
 }
 
+"""The structure of the Deliverables nested schema."""
+type WorkingGroupsDataDeliverablesChildDto {
+  description: String
+  status: String
+}
+
+"""The structure of the Deliverables nested schema."""
+input WorkingGroupsDataDeliverablesChildInputDto {
+  description: String
+  status: String
+}
+
+"""The structure of the Deliverables field of the Working Groups content type."""
+type WorkingGroupsDataDeliverablesDto {
+  iv: [WorkingGroupsDataDeliverablesChildDto!]
+}
+
+"""The structure of the Deliverables field of the Working Groups content input type."""
+input WorkingGroupsDataDeliverablesInputDto {
+  iv: [WorkingGroupsDataDeliverablesChildInputDto!]
+}
+
 """The structure of the Description field of the Working Groups content type."""
 type WorkingGroupsDataDescriptionDto {
   iv: String
@@ -6156,6 +6178,7 @@ input WorkingGroupsDataDescriptionInputDto {
 """The structure of the Working Groups data type."""
 type WorkingGroupsDataDto {
   complete: WorkingGroupsDataCompleteDto
+  deliverables: WorkingGroupsDataDeliverablesDto
   description: WorkingGroupsDataDescriptionDto
   externalLink: WorkingGroupsDataExternalLinkDto
   externalLinkText: WorkingGroupsDataExternalLinkTextDto
@@ -6185,6 +6208,7 @@ input WorkingGroupsDataExternalLinkTextInputDto {
 """The structure of the Working Groups data input type."""
 input WorkingGroupsDataInputDto {
   complete: WorkingGroupsDataCompleteInputDto
+  deliverables: WorkingGroupsDataDeliverablesInputDto
   description: WorkingGroupsDataDescriptionInputDto
   externalLink: WorkingGroupsDataExternalLinkInputDto
   externalLinkText: WorkingGroupsDataExternalLinkTextInputDto
@@ -6204,6 +6228,7 @@ input WorkingGroupsDataTitleInputDto {
 """The structure of the flat Working Groups data type."""
 type WorkingGroupsFlatDataDto {
   complete: Boolean
+  deliverables: [WorkingGroupsDataDeliverablesChildDto!]
   description: String
   externalLink: String
   externalLinkText: String

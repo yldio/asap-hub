@@ -17,6 +17,12 @@ const save = () => {
   return saveButton;
 };
 
+const deleteClick = () => {
+  const deleteButton = screen.getByRole('button', { name: /delete/i });
+  userEvent.click(deleteButton);
+  return deleteButton;
+};
+
 const typeBox = () => screen.getByRole('textbox', { name: /type/i });
 const enterType = (type: string) => {
   userEvent.type(typeBox(), `${type}{enter}`);
@@ -131,6 +137,24 @@ describe('ResourceModal', () => {
       expect(screen.getByRole('textbox', { name: /URL/i })).toHaveValue(
         'https://www.google.com/',
       );
+    });
+    it('renders the delete button if onDelete function is provided', () => {
+      renderResourseModal({
+        type: 'Link',
+        externalLink: 'https://www.google.com/',
+        onDelete: jest.fn(),
+      });
+      expect(screen.getByRole('button', { name: /delete/i })).toBeVisible();
+    });
+    it('allows a resource to be deleted', async () => {
+      const onDelete = jest.fn();
+      renderResourseModal({ onDelete });
+      enterType('Link');
+      enterTitle('a title');
+      enterLink('http://example.com');
+      const deleteButton = deleteClick();
+      await waitFor(() => expect(deleteButton).toBeEnabled());
+      expect(onDelete).toBeCalledWith();
     });
   });
   it('title and description should be disabled and url is hidden', () => {

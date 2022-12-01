@@ -2,7 +2,7 @@ import { validateInput } from '@asap-hub/server-common';
 import { JSONSchemaType } from 'ajv';
 import { gp2 } from '@asap-hub/model';
 
-const { userDegrees, userRegions } = gp2;
+const { userDegrees, userRegions, keywords } = gp2;
 type UserParameters = {
   userId: string;
 };
@@ -27,22 +27,22 @@ export const validateUserParameters = validateInput(
 const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
   type: 'object',
   properties: {
-    firstName: { type: 'string', nullable: true },
-    lastName: { type: 'string', nullable: true },
+    firstName: { type: 'string', nullable: true, minLength: 1 },
+    lastName: { type: 'string', nullable: true, minLength: 1 },
     degrees: {
       type: 'array',
       items: {
         type: 'string',
-        enum: [...userDegrees, '', null],
+        enum: [...userDegrees],
       },
       nullable: true,
     },
     region: {
       type: 'string',
-      enum: [...userRegions, null],
+      enum: [...userRegions],
       nullable: true,
     },
-    country: { type: 'string', nullable: true },
+    country: { type: 'string', nullable: true, minLength: 1 },
     city: { type: 'string', nullable: true },
     positions: {
       type: 'array',
@@ -50,9 +50,9 @@ const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
         type: 'object',
         additionalProperties: false,
         properties: {
-          role: { type: 'string', nullable: true },
-          department: { type: 'string', nullable: true },
-          institution: { type: 'string', nullable: true },
+          role: { type: 'string' },
+          department: { type: 'string' },
+          institution: { type: 'string' },
         },
         required: ['role', 'department', 'institution'],
       },
@@ -69,6 +69,23 @@ const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
         number: { type: 'string', nullable: true },
       },
     },
+    keywords: {
+      type: 'array',
+      minItems: 1,
+      maxItems: 10,
+      items: {
+        type: 'string',
+        enum: [...keywords],
+      },
+      nullable: true,
+    },
+    biography: {
+      type: 'string',
+      nullable: true,
+      minLength: 1,
+      maxLength: 2500,
+    },
+    fundingStreams: { type: 'string', nullable: true, maxLength: 1000 },
   },
   additionalProperties: false,
 };

@@ -18,6 +18,13 @@ export const createUserApiUrl = ({
   }
   filter?.region?.forEach((r) => url.searchParams.append('filter[region]', r));
 
+  if (typeof filter?.onlyOnboarded === 'boolean') {
+    url.searchParams.set(
+      'filter[onlyOnboarded]',
+      filter.onlyOnboarded.toString(),
+    );
+  }
+
   return url;
 };
 

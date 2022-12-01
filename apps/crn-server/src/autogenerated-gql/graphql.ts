@@ -5903,6 +5903,28 @@ export type WorkingGroupsDataCompleteInputDto = {
   iv: InputMaybe<Scalars['Boolean']>;
 };
 
+/** The structure of the Deliverables nested schema. */
+export type WorkingGroupsDataDeliverablesChildDto = {
+  description: Maybe<Scalars['String']>;
+  status: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Deliverables nested schema. */
+export type WorkingGroupsDataDeliverablesChildInputDto = {
+  description: InputMaybe<Scalars['String']>;
+  status: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Deliverables field of the Working Groups content type. */
+export type WorkingGroupsDataDeliverablesDto = {
+  iv: Maybe<Array<WorkingGroupsDataDeliverablesChildDto>>;
+};
+
+/** The structure of the Deliverables field of the Working Groups content input type. */
+export type WorkingGroupsDataDeliverablesInputDto = {
+  iv: InputMaybe<Array<WorkingGroupsDataDeliverablesChildInputDto>>;
+};
+
 /** The structure of the Description field of the Working Groups content type. */
 export type WorkingGroupsDataDescriptionDto = {
   iv: Maybe<Scalars['String']>;
@@ -5916,6 +5938,7 @@ export type WorkingGroupsDataDescriptionInputDto = {
 /** The structure of the Working Groups data type. */
 export type WorkingGroupsDataDto = {
   complete: Maybe<WorkingGroupsDataCompleteDto>;
+  deliverables: Maybe<WorkingGroupsDataDeliverablesDto>;
   description: Maybe<WorkingGroupsDataDescriptionDto>;
   externalLink: Maybe<WorkingGroupsDataExternalLinkDto>;
   externalLinkText: Maybe<WorkingGroupsDataExternalLinkTextDto>;
@@ -5945,6 +5968,7 @@ export type WorkingGroupsDataExternalLinkTextInputDto = {
 /** The structure of the Working Groups data input type. */
 export type WorkingGroupsDataInputDto = {
   complete: InputMaybe<WorkingGroupsDataCompleteInputDto>;
+  deliverables: InputMaybe<WorkingGroupsDataDeliverablesInputDto>;
   description: InputMaybe<WorkingGroupsDataDescriptionInputDto>;
   externalLink: InputMaybe<WorkingGroupsDataExternalLinkInputDto>;
   externalLinkText: InputMaybe<WorkingGroupsDataExternalLinkTextInputDto>;
@@ -5964,6 +5988,7 @@ export type WorkingGroupsDataTitleInputDto = {
 /** The structure of the flat Working Groups data type. */
 export type WorkingGroupsFlatDataDto = {
   complete: Maybe<Scalars['Boolean']>;
+  deliverables: Maybe<Array<WorkingGroupsDataDeliverablesChildDto>>;
   description: Maybe<Scalars['String']>;
   externalLink: Maybe<Scalars['String']>;
   externalLinkText: Maybe<Scalars['String']>;
@@ -9280,12 +9305,17 @@ export type FetchWorkingGroupQuery = {
     Pick<WorkingGroups, 'id' | 'lastModified'> & {
       flatData: Pick<
         WorkingGroupsFlatDataDto,
-        | 'title'
-        | 'description'
-        | 'externalLink'
-        | 'externalLinkText'
-        | 'complete'
-      >;
+        'title' | 'description' | 'externalLink' | 'externalLinkText' | 'complete'
+      > & {
+        deliverables: Maybe<
+          Array<
+            Pick<
+              WorkingGroupsDataDeliverablesChildDto,
+              'status' | 'description'
+            >
+          >
+        >;
+      };
     }
   >;
 };
@@ -13818,6 +13848,23 @@ export const FetchWorkingGroupDocument = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'complete' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'deliverables' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'status' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'description' },
+                            },
+                          ],
+                        },
                       },
                     ],
                   },

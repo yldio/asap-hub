@@ -223,6 +223,16 @@ describe('Working Group Data Provider', () => {
         const { members } = parseWorkingGroupToDataObject(workingGroup);
         expect(members).toEqual([]);
       });
+
+      test('should skip the user from the result if the user is not onboarded', () => {
+        const workingGroup = getGraphQLWorkingGroup();
+        const member = getGraphQLWorkingGroupMember();
+        member!.user![0]!.flatData.onboarded = false;
+        workingGroup.flatData.members = [member];
+        const { members } = parseWorkingGroupToDataObject(workingGroup);
+        expect(members).toEqual([]);
+      });
+
       test.each`
         role                                                   | expectedRole
         ${WorkingGroupsDataMembersRoleEnum.Lead}               | ${'Lead'}

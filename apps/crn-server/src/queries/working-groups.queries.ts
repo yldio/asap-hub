@@ -11,6 +11,10 @@ export const FETCH_WORKING_GROUP = gql`
         externalLink
         externalLinkText
         complete
+        deliverables {
+          status
+          description
+        }
       }
     }
   }

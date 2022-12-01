@@ -214,6 +214,32 @@ yarn workspace @asap-hub/contentful ctf-migrate create add-foo-field -c bar
 
 Note: the `content_type` is the slug, not the display name, so `externalAuthors` not `External Authors`.
 
+### Generating the migration with a script
+
+The same way we can make changes in Squidex UI and sync them with our local schemas, it's possible to create a new content type or modify an existing one and generate the migration, so you don't need to type all fields you want to include or remove from the content type.
+
+This is possible using the `space generate migration` command from Contentful CLI. Reference: https://github.com/contentful/contentful-cli/tree/master/docs/space/generate/migration.
+
+So, if you want to create or modify a content type using the approach above, you need to follow these steps:
+
+1. Create manually a new environment
+   1. Access https://app.contentful.com/spaces/5v6w5j61tndm/environments/master/settings/environments
+   2. Click Add environment button
+   3. Give it a name and clone the new environment from Production
+2. Access the environment you created in step 1 and make the changes you want in the content type
+3. Adjust your `.env` file with `CONTENTFUL_SPACE_ID` being `5v6w5j61tndm` and `CONTENTFUL_ENV_ID` being the name you gave to your environment in step `1.3`.
+4. Run the script to generate the migration
+
+   ```sh
+   yarn generate:migration:crn -c <content_type>
+   ```
+
+   If you don't pass `-c <content_type>` flag, it will generate the migration for all the changes you made, not only a specific content type.
+
+   This will generate a file with the `up` part of the migration. Be aware that you might need to edit a few things. For example, if you are editing an existing content model, you will have to change `createContentType` to `editContentType` in the generated migration.
+
+5. Remember to delete this environment after you finish your PR.
+
 ### Initiating an Environment
 
 _Note: This is not something you will need to do regularly, I have documented it for the rare case where you are creating a new environment from scratch and not cloning one which is already using migrations._
@@ -278,6 +304,14 @@ To fetch data from squidex if you might need to run the command to auto generate
 ```sh
 yarn workspace @asap-hub/cms-data-sync schema:update:crn
 ```
+
+### Syncing Squidex data to Contentful
+
+There is a GitHub Actions workflow to sync data from Squidex to Contentful.
+
+You can specify the source Squidex app and the destination Contentful env.
+
+Check [on-demand-cms-sync.yml](./.github/workflows/on-demand-cms-sync.yml) for details.
 
 ## Docker Images
 

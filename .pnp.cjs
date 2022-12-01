@@ -8945,7 +8945,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "stream-json",\
-        "npm:1.7.4"\
+        "npm:1.7.5"\
       ],\
       [\
         "stream-promise",\
@@ -11002,7 +11002,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["serverless-s3-sync", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:3.1.0"],\
             ["serverless-webpack", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:5.9.1"],\
             ["source-map-support", "npm:0.5.21"],\
-            ["stream-json", "npm:1.7.4"],\
+            ["stream-json", "npm:1.7.5"],\
             ["supertest", "npm:6.2.4"],\
             ["uuid", "npm:8.3.2"],\
             ["yargs", "npm:17.3.1"]\
@@ -64047,10 +64047,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["stream-json", [\
-        ["npm:1.7.4", {\
-          "packageLocation": "./.yarn/cache/stream-json-npm-1.7.4-e158c367fa-50aca250ce.zip/node_modules/stream-json/",\
+        ["npm:1.7.5", {\
+          "packageLocation": "./.yarn/cache/stream-json-npm-1.7.5-47509e8de8-d6229cd034.zip/node_modules/stream-json/",\
           "packageDependencies": [\
-            ["stream-json", "npm:1.7.4"],\
+            ["stream-json", "npm:1.7.5"],\
             ["stream-chain", "npm:2.2.5"]\
           ],\
           "linkType": "HARD"\

@@ -27,6 +27,8 @@ it('renders contact project manager when point of contact provided', () => {
       {...team}
       pointOfContact={{
         displayName: 'Mr PM',
+        firstName: 'Mr',
+        lastName: 'PM',
         email: 'test@example.com',
         id: '123',
         role: 'Project Manager',

@@ -6239,12 +6239,14 @@ input WorkingGroupsDataInputDto {
 type WorkingGroupsDataLeadersChildDto {
   role: String
   user: [Users!]
+  workstreamRole: String
 }
 
 """The structure of the Leaders nested schema."""
 input WorkingGroupsDataLeadersChildInputDto {
   role: String
   user: [String!]
+  workstreamRole: String
 }
 
 """The structure of the Leaders field of the Working Groups content type."""
@@ -6260,11 +6262,13 @@ input WorkingGroupsDataLeadersInputDto {
 """The structure of the Members nested schema."""
 type WorkingGroupsDataMembersChildDto {
   user: [Users!]
+  workstreamRole: String
 }
 
 """The structure of the Members nested schema."""
 input WorkingGroupsDataMembersChildInputDto {
   user: [String!]
+  workstreamRole: String
 }
 
 """The structure of the Members field of the Working Groups content type."""

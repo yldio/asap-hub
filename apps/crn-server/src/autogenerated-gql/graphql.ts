@@ -5991,12 +5991,14 @@ export type WorkingGroupsDataInputDto = {
 export type WorkingGroupsDataLeadersChildDto = {
   role: Maybe<Scalars['String']>;
   user: Maybe<Array<Users>>;
+  workstreamRole: Maybe<Scalars['String']>;
 };
 
 /** The structure of the Leaders nested schema. */
 export type WorkingGroupsDataLeadersChildInputDto = {
   role: InputMaybe<Scalars['String']>;
   user: InputMaybe<Array<Scalars['String']>>;
+  workstreamRole: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Leaders field of the Working Groups content type. */
@@ -6012,11 +6014,13 @@ export type WorkingGroupsDataLeadersInputDto = {
 /** The structure of the Members nested schema. */
 export type WorkingGroupsDataMembersChildDto = {
   user: Maybe<Array<Users>>;
+  workstreamRole: Maybe<Scalars['String']>;
 };
 
 /** The structure of the Members nested schema. */
 export type WorkingGroupsDataMembersChildInputDto = {
   user: InputMaybe<Array<Scalars['String']>>;
+  workstreamRole: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Members field of the Working Groups content type. */

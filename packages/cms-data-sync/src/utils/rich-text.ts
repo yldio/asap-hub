@@ -36,7 +36,7 @@ export const convertHtmlToContentfulFormat = (html: string) => {
   // can just remove them here
   const htmlWithoutDivTag = html.replace(/<[\\/]{0,1}(div)[^><]*>/g, '');
   verboseLog(`HTML pre-parsed:\n${html}`);
-  verboseLog(`HTML post-parsed:\n${html}`);
+  verboseLog(`HTML post-parsed:\n${htmlWithoutDivTag}`);
 
   const parsedHtml = parseHtml(htmlWithoutDivTag) as Document;
   verboseLog(

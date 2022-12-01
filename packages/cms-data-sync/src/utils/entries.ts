@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { Environment, Entry } from 'contentful-management';
 import { logger } from './logs';
 

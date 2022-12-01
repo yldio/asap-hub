@@ -29,7 +29,7 @@ const levelRequiresVerbose = (level: string): boolean => {
 };
 
 const printLog = (log: string, level: string): void => {
-  /** eslint-disable no-console **/
+  /* eslint-disable no-console */
   console.log(getBashColor(level), `[${level}] ${log}`);
 };
 
@@ -39,6 +39,4 @@ export const logger = (log: string, level: string = 'DEBUG'): void => {
   }
 
   printLog(log, level);
-
-  return;
 };

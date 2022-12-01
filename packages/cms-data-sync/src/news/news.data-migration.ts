@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */

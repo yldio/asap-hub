@@ -1,22 +1,22 @@
 import { render } from '@testing-library/react';
+import { ComponentProps } from 'react';
 
 import WorkingGroupHeader from '../WorkingGroupHeader';
 
-const baseProps = {
+const baseProps: ComponentProps<typeof WorkingGroupHeader> = {
   id: 'id',
-  name: '',
+  title: '',
   complete: false,
-  description: '',
   externalLink: '',
   externalLinkText: '',
-  lastUpdated: new Date('2021-01-01').toISOString(),
+  lastModifiedDate: new Date('2021-01-01').toISOString(),
   pointOfContact: undefined,
   members: [],
 };
 
 it('renders the title', () => {
   const { getByText } = render(
-    <WorkingGroupHeader {...baseProps} name="A test group" />,
+    <WorkingGroupHeader {...baseProps} title="A test group" />,
   );
   expect(getByText('A test group')).toBeVisible();
 });
@@ -31,7 +31,7 @@ it('renders CTA when pointOfContact is provided', () => {
         firstName: 'Peter',
         lastName: 'Venkman',
         email: 'peter@ven.com',
-        role: 'Project Manager',
+        workingGroupRole: 'Project Manager',
       }}
     />,
   );

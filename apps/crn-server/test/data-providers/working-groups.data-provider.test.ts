@@ -115,5 +115,35 @@ describe('Working Group Data Provider', () => {
 
       expect(response!.title).toBe('');
     });
+
+    test('Should return deliverables', async () => {
+      const squidexGraphqlResponse = getSquidexWorkingGroupGraphqlResponse();
+      squidexGraphqlResponse.findWorkingGroupsContent!.flatData.deliverables = [
+        { description: 'Deliverable 1', status: 'Complete' },
+      ];
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
+
+      const response = await workingGroupDataProvider.fetchById(workingGroupId);
+
+      expect(response?.deliverables).toEqual([
+        { description: 'Deliverable 1', status: 'Complete' },
+      ]);
+    });
+
+    test('Should provide default values if squidex data is missing', async () => {
+      const squidexGraphqlResponse = getSquidexWorkingGroupGraphqlResponse();
+      squidexGraphqlResponse.findWorkingGroupsContent!.flatData.deliverables =
+        null;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
+
+      expect(
+        (await workingGroupDataProvider.fetchById(workingGroupId))
+          ?.deliverables,
+      ).toEqual([]);
+    });
   });
 });

@@ -1,4 +1,5 @@
 import { GenericError, NotFoundError } from '@asap-hub/errors';
+import { gp2 } from '@asap-hub/model';
 import Users from '../../src/controllers/user.controller';
 import { getUserDataObject, getUserResponse } from '../fixtures/user.fixtures';
 import { userDataProviderMock } from '../mocks/user-data-provider.mock';
@@ -31,6 +32,43 @@ describe('Users controller', () => {
       const result = await userController.fetch({});
 
       expect(result).toEqual({ items: [], total: 0 });
+    });
+
+    test('Should call the data-provider with correct parameters', async () => {
+      userDataProviderMock.fetch.mockResolvedValue({
+        total: 0,
+        items: [],
+      });
+
+      const params: gp2.FetchUsersOptions = {
+        take: 15,
+        skip: 5,
+        search: 'something',
+        filter: {
+          code: '123',
+          onlyOnboarded: false,
+          region: ['Europe'],
+        },
+      };
+      await userController.fetch(params);
+
+      expect(userDataProviderMock.fetch).toHaveBeenCalledWith(params);
+    });
+
+    test('Should default to onboarded users only', async () => {
+      userDataProviderMock.fetch.mockResolvedValue({
+        total: 0,
+        items: [],
+      });
+
+      await userController.fetch({});
+
+      const params: gp2.FetchUsersOptions = {
+        filter: {
+          onlyOnboarded: true,
+        },
+      };
+      expect(userDataProviderMock.fetch).toHaveBeenCalledWith(params);
     });
   });
 

@@ -1,5 +1,6 @@
 import { FetchOptions, ListResponse } from '../common';
 import { Connection } from '../user';
+import { Keywords } from './common';
 import { ProjectDataObject, ProjectMember } from './project';
 import { WorkingGroupDataObject, WorkingGroupMember } from './working-group';
 
@@ -76,23 +77,24 @@ export type UserDataObject = {
   role: UserRole;
   projects: UserProject[];
   workingGroups: UserWorkingGroup[];
-  fundingStreams: unknown | undefined;
+  fundingStreams?: string;
   contributingCohorts: unknown[];
   secondaryEmail?: string;
   telephone?: Telephone;
+  keywords: Keywords[];
+  biography?: string;
 };
 
 export type UserCreateDataObject = Omit<
   UserDataObject,
-  | 'id'
-  | 'createdDate'
-  | 'projects'
-  | 'workingGroups'
-  | 'fundingStreams'
-  | 'contributingCohorts'
+  'id' | 'createdDate' | 'projects' | 'workingGroups' | 'contributingCohorts'
 >;
 
 export type UserUpdateDataObject = Partial<UserCreateDataObject>;
+export type UserPatchRequest = Omit<
+  UserUpdateDataObject,
+  'avatarUrl' | 'connections' | 'email' | 'role'
+>;
 
 export type ListUserDataObject = ListResponse<UserDataObject>;
 
@@ -105,6 +107,7 @@ export type UserUpdateRequest = UserUpdateDataObject;
 export type FetchUsersFilter = {
   region?: UserRegion[];
   code?: string;
+  onlyOnboarded?: boolean;
 };
 
 export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;

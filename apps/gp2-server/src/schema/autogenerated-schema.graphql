@@ -1769,6 +1769,16 @@ input UsersDataAvatarInputDto {
   iv: [String!]
 }
 
+"""The structure of the Biography field of the Users content type."""
+type UsersDataBiographyDto {
+  iv: String
+}
+
+"""The structure of the Biography field of the Users content input type."""
+input UsersDataBiographyInputDto {
+  iv: String
+}
+
 """The structure of the City field of the Users content type."""
 type UsersDataCityDto {
   iv: String
@@ -1851,12 +1861,15 @@ input UsersDataDegreeInputDto {
 """The structure of the Users data type."""
 type UsersDataDto {
   avatar: UsersDataAvatarDto
+  biography: UsersDataBiographyDto
   city: UsersDataCityDto
   connections: UsersDataConnectionsDto
   country: UsersDataCountryDto
   degree: UsersDataDegreeDto
   email: UsersDataEmailDto
   firstName: UsersDataFirstNameDto
+  fundingStreams: UsersDataFundingStreamsDto
+  keywords: UsersDataKeywordsDto
   lastName: UsersDataLastNameDto
   onboarded: UsersDataOnboardedDto
   positions: UsersDataPositionsDto
@@ -1887,15 +1900,30 @@ input UsersDataFirstNameInputDto {
   iv: String
 }
 
+"""The structure of the Funding Streams field of the Users content type."""
+type UsersDataFundingStreamsDto {
+  """This information will be pulled for when GP2 publications arise to share financial conflicts of interests for publications. Please make sure this is up to date!"""
+  iv: String
+}
+
+"""The structure of the Funding Streams field of the Users content input type."""
+input UsersDataFundingStreamsInputDto {
+  """This information will be pulled for when GP2 publications arise to share financial conflicts of interests for publications. Please make sure this is up to date!"""
+  iv: String
+}
+
 """The structure of the Users data input type."""
 input UsersDataInputDto {
   avatar: UsersDataAvatarInputDto
+  biography: UsersDataBiographyInputDto
   city: UsersDataCityInputDto
   connections: UsersDataConnectionsInputDto
   country: UsersDataCountryInputDto
   degree: UsersDataDegreeInputDto
   email: UsersDataEmailInputDto
   firstName: UsersDataFirstNameInputDto
+  fundingStreams: UsersDataFundingStreamsInputDto
+  keywords: UsersDataKeywordsInputDto
   lastName: UsersDataLastNameInputDto
   onboarded: UsersDataOnboardedInputDto
   positions: UsersDataPositionsInputDto
@@ -1904,6 +1932,16 @@ input UsersDataInputDto {
   secondaryEmail: UsersDataSecondaryEmailInputDto
   telephoneCountryCode: UsersDataTelephoneCountryCodeInputDto
   telephoneNumber: UsersDataTelephoneNumberInputDto
+}
+
+"""The structure of the Keywords field of the Users content type."""
+type UsersDataKeywordsDto {
+  iv: [String!]
+}
+
+"""The structure of the Keywords field of the Users content input type."""
+input UsersDataKeywordsInputDto {
+  iv: [String!]
 }
 
 """The structure of the Last Name field of the Users content type."""
@@ -2037,12 +2075,16 @@ input UsersDataTelephoneNumberInputDto {
 """The structure of the flat Users data type."""
 type UsersFlatDataDto {
   avatar: [Asset!]
+  biography: String
   city: String
   connections: [UsersDataConnectionsChildDto!]
   country: String
   degree: [UsersDataDegreeEnum!]
   email: String
   firstName: String
+  """This information will be pulled for when GP2 publications arise to share financial conflicts of interests for publications. Please make sure this is up to date!"""
+  fundingStreams: String
+  keywords: [String!]
   lastName: String
   """Use this to allow the user to see the full Hub and skip profile completion"""
   onboarded: Boolean

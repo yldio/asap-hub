@@ -1,5 +1,6 @@
 import { GenericError, NotFoundError } from '@asap-hub/errors';
 import { gp2 as gp2Squidex, SquidexRest } from '@asap-hub/squidex';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import nock, { DataMatcherMap } from 'nock';
 import {
   ProjectsDataMembersRoleEnum,
@@ -167,6 +168,15 @@ describe('Project Data Provider', () => {
           const { members } = parseProjectToDataObject(project);
           expect(members).toEqual([]);
         });
+
+        test('should skip the user from the result if the user is not onboarded', () => {
+          const project = getGraphQLProject();
+          const member = getGraphQLProjectMember();
+          member!.user![0]!.flatData.onboarded = false;
+          project.flatData.members = [member];
+          const { members } = parseProjectToDataObject(project);
+          expect(members).toEqual([]);
+        });
         test.each`
           role                                          | expectedRole
           ${ProjectsDataMembersRoleEnum.ProjectManager} | ${'Project manager'}
@@ -274,8 +284,8 @@ describe('Project Data Provider', () => {
         const { description } = parseProjectToDataObject(project);
         expect(description).toEqual(expectedDescription);
       });
-      test('keywords are added', () => {
-        const expectedKeywords = ['Outreach'];
+      test.each(gp2Model.keywords)('keywords are added - %s', (keyword) => {
+        const expectedKeywords = [keyword];
         const project = getGraphQLProject();
         project.flatData.keywords = expectedKeywords;
         const { keywords } = parseProjectToDataObject(project);

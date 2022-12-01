@@ -1,3 +1,5 @@
+import { Auth0PostLoginEvent } from '@vedicium/auth0-actions-sdk';
+
 declare global {
   const configuration: {
     APP_ORIGIN: string;
@@ -82,3 +84,18 @@ export type Rule<
   context: RuleContext<CustomContext>,
   callback: RuleCallback<CustomContext>,
 ) => void | Promise<void>;
+
+// Extended Action Types
+
+export type DeepPartial<T> = {
+  [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K];
+};
+
+export type Auth0PostLoginEventWithSecrets = Auth0PostLoginEvent & {
+  secrets: {
+    PR_APP_DOMAIN: string; // hub.asap.science
+    ASAP_API_URL: string; // https://api-dev.hub.asap.science
+    AUTH0_SHARED_SECRET: string;
+    AUTH0_ADDITIONAL_CLAIM_DOMAIN?: string; // 'https://dev.hub.asap.science' in development to allow local login
+  };
+};

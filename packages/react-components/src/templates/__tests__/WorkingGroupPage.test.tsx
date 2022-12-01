@@ -1,21 +1,21 @@
 import { render } from '@testing-library/react';
+import { ComponentProps } from 'react';
 
 import WorkingGroupPage from '../WorkingGroupPage';
 
-const baseProps = {
+const baseProps: ComponentProps<typeof WorkingGroupPage> = {
   id: 'id',
-  name: '',
+  title: '',
   complete: false,
-  description: 'Text content',
   externalLink: 'link',
   externalLinkText: 'link text',
-  lastUpdated: new Date('2021-01-01').toISOString(),
+  lastModifiedDate: new Date('2021-01-01').toISOString(),
   pointOfContact: undefined,
   members: [],
 };
 it('renders the header', () => {
   const { getByText } = render(
-    <WorkingGroupPage {...baseProps} name="A test group">
+    <WorkingGroupPage {...baseProps} title="A test group">
       Tab Content
     </WorkingGroupPage>,
   );

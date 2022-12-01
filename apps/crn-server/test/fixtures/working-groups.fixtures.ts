@@ -6,6 +6,8 @@ export const getWorkingGroupDataObject = (): WorkingGroupDataObject => ({
   title: 'Working Group Title',
   description: 'Working Group Description',
   deliverables: [],
+  members: [],
+  complete: false,
   lastModifiedDate: '2021-01-01T00:00:00.000Z',
   externalLink: 'https://example.com',
   externalLinkText: 'External Link Text',
@@ -28,5 +30,6 @@ export const getSquidexGraphqlWorkingGroup =
       description: 'Working Group Description',
       externalLink: 'https://example.com',
       externalLinkText: 'External Link Text',
+      deliverables: [],
     },
   });

@@ -145,13 +145,17 @@ export function parseProjectToDataObject({
           return membersList;
         }
 
+        if (user.flatData.onboarded === false) {
+          return membersList;
+        }
+
         const groupMember = parseProjectMembers(user, member.role);
         return [...membersList, groupMember];
       },
       [],
     ) || [];
 
-  if (project.keywords && !project.keywords.every(gp2Model.isProjectKeyword)) {
+  if (project.keywords && !project.keywords.every(gp2Model.isKeyword)) {
     throw new TypeError('Invalid keyword received from Squidex');
   }
   const milestones =

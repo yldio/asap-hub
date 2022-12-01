@@ -1,5 +1,5 @@
 import { ListResponse } from '../common';
-import { Resource } from './common';
+import { Keywords, Resource } from './common';
 
 const projectStatus = ['Active', 'Inactive', 'Completed'] as const;
 export type ProjectStatus = typeof projectStatus[number];
@@ -28,56 +28,6 @@ export type ProjectMember = {
   userId: string;
 };
 
-export const projectKeywords = [
-  'Movement Disorders',
-  'Epidemiology',
-  'Neurology',
-  'Genetics',
-  'Genomics',
-  'Data Science',
-  'GP2 PhD',
-  'Neurodegeneration',
-  'Neurogenetics',
-  'Pharmacogenomics',
-  'Movement Disorders',
-  'Communications',
-  'Patient Advocate',
-  'Machine Learning',
-  'Program Management',
-  'Research Communications',
-  'Patient Engagement',
-  'R',
-  'Bash',
-  'Diversity',
-  'Laboratory Science',
-  'Operations',
-  'Project Management',
-  'Molecular Biology',
-  'Research Grants',
-  'Neurogenetics',
-  'Python',
-  'Biostatistics',
-  'Stata',
-  'Education',
-  'Program Management',
-  'Course Management',
-  'Training',
-  'Biobanking',
-  'Career Development',
-  'Administrative Support',
-  'GP2 Opportunities',
-  "GP2 Master's",
-  'Computer Science',
-  'Outreach',
-  'Neuroimaging',
-  'Parkinson disease',
-] as const;
-
-export type ProjectKeywords = typeof projectKeywords[number];
-export const isProjectKeyword = (
-  data: string | null,
-): data is ProjectKeywords => projectKeywords.includes(data as ProjectKeywords);
-
 export type ProjectMilestone = {
   description?: string;
   link?: string;
@@ -89,7 +39,7 @@ export type ProjectDataObject = {
   description?: string;
   endDate?: string;
   id: string;
-  keywords: ProjectKeywords[];
+  keywords: Keywords[];
   leadEmail?: string;
   members: ProjectMember[];
   milestones: ProjectMilestone[];

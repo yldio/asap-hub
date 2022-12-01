@@ -1,11 +1,12 @@
 import { render } from '@testing-library/react';
+import { ComponentProps } from 'react';
 
 import WorkingGroupAbout from '../WorkingGroupAbout';
 
-const baseProps = {
+const baseProps: ComponentProps<typeof WorkingGroupAbout> = {
   description: '',
   pointOfContact: undefined,
-  members: [],
+  deliverables: [],
 };
 
 it('renders the description', () => {
@@ -14,6 +15,22 @@ it('renders the description', () => {
   );
   expect(getByText('Working Group Description')).toBeVisible();
   expect(getByText('Text content')).toBeVisible();
+});
+
+it('renders a list of deliverables', () => {
+  const { getByText } = render(
+    <WorkingGroupAbout
+      {...baseProps}
+      deliverables={[
+        { description: 'Deliverable 1', status: 'Complete' },
+        { description: 'Deliverable 2', status: 'In Progress' },
+      ]}
+    />,
+  );
+  expect(getByText('Deliverable 1')).toBeVisible();
+  expect(getByText('Complete')).toBeVisible();
+  expect(getByText('Deliverable 2')).toBeVisible();
+  expect(getByText('In Progress')).toBeVisible();
 });
 
 it('renders CTA when pointOfContact is provided', () => {
@@ -26,7 +43,7 @@ it('renders CTA when pointOfContact is provided', () => {
         firstName: 'Peter',
         lastName: 'Venkman',
         email: 'peter@ven.com',
-        role: 'Project Manager',
+        workingGroupRole: 'Project Manager',
       }}
     />,
   );

@@ -58,10 +58,12 @@ export const getUserResponse = (): gp2.UserResponse => ({
       title: 'Steering Committee',
     },
   ],
-  fundingStreams: undefined,
+  fundingStreams: 'A funding stream',
   contributingCohorts: [],
   secondaryEmail: 'tony@stark.com',
   telephone: { countryCode: '+1', number: '212-970-4133' },
+  biography: 'a biography of Tony Stark',
+  keywords: ['R', 'Bash'],
 });
 
 export const fetchExpectation: gp2.ListUserResponse = {
@@ -91,6 +93,7 @@ export const fetchExpectation: gp2.ListUserResponse = {
       workingGroups: [],
       fundingStreams: undefined,
       contributingCohorts: [],
+      keywords: [],
     },
   ],
 };
@@ -179,7 +182,9 @@ export const getUserDataObject = (): gp2.UserDataObject => ({
       title: 'Steering Committee',
     },
   ],
-  fundingStreams: undefined,
+  keywords: ['R', 'Bash'],
+  fundingStreams: 'A funding stream',
+  biography: 'a biography of Tony Stark',
   contributingCohorts: [],
   secondaryEmail: 'tony@stark.com',
   telephone: { countryCode: '+1', number: '212-970-4133' },
@@ -195,7 +200,8 @@ export const getUserCreateDataObject = (): gp2.UserCreateDataObject => {
 };
 
 export const getUserInput = (): gp2squidex.InputUser['data'] => {
-  const { degrees, region, ...input } = getUserCreateDataObject();
+  const { degrees, region, telephone, ...input } = getUserCreateDataObject();
+
   return {
     ...parseToSquidex(input),
     region: { iv: 'Europe' },
@@ -203,6 +209,8 @@ export const getUserInput = (): gp2squidex.InputUser['data'] => {
     role: { iv: 'Trainee' },
     avatar: { iv: [] },
     connections: { iv: [] },
+    telephoneCountryCode: { iv: telephone?.countryCode || '' },
+    telephoneNumber: { iv: telephone?.number || '' },
   };
 };
 
@@ -250,6 +258,7 @@ export const fetchUserResponseDataObject = (): gp2.UserDataObject => ({
   contributingCohorts: [],
   secondaryEmail: 'tony@stark.com',
   telephone: { countryCode: '+1', number: '212-970-4133' },
+  keywords: [],
 });
 export const getGraphQLUser = (
   user: Partial<NonNullable<FetchUserQuery['findUsersContent']>> = {},
@@ -280,6 +289,9 @@ export const getGraphQLUser = (
     secondaryEmail: 'tony@stark.com',
     telephoneCountryCode: '+1',
     telephoneNumber: '212-970-4133',
+    keywords: ['R', 'Bash'],
+    fundingStreams: 'A funding stream',
+    biography: 'a biography of Tony Stark',
     ...user?.flatData,
   },
   referencingProjectsContents: [
@@ -354,3 +366,9 @@ export const getSquidexUserGraphqlResponse = (
   findUsersContent,
 });
 export const restUserMock = patchResponse;
+
+export const userPatchRequest: gp2.UserPatchRequest = {
+  onboarded: true,
+  country: 'United Kingdom',
+  city: 'Manchester',
+};

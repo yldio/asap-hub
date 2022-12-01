@@ -10,6 +10,7 @@ import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { Redirect, Route, Switch } from 'react-router-dom';
+import EditResourceModal from './EditResourceModal';
 import { usePutWorkingGroupResources, useWorkingGroupById } from './state';
 
 const { workingGroups } = gp2Routing;
@@ -31,6 +32,10 @@ const WorkingGroupDetail = () => {
     ? workingGroups({}).workingGroup({ workingGroupId }).resources({}).edit({})
         .$
     : undefined;
+  const editRoute = workingGroups({})
+    .workingGroup({ workingGroupId })
+    .resources({})
+    .edit({});
   const overview = workingGroups({})
     .workingGroup({ workingGroupId })
     .overview({}).$;
@@ -62,17 +67,33 @@ const WorkingGroupDetail = () => {
                   edit={edit}
                 />
                 {isAdministrator && (
-                  <Route path={add}>
-                    <ResourceModal
-                      backHref={resources}
-                      onSave={(resource: gp2Model.Resource) =>
-                        updateWorkingGroupResources([
-                          ...(workingGroup.resources || []),
-                          resource,
-                        ])
-                      }
-                    />
-                  </Route>
+                  <>
+                    <Route path={add}>
+                      <ResourceModal
+                        modalTitle={'Add Resource'}
+                        modalDescription={
+                          'Select a resource type and provide the neccessary information required to share a resource privately with your group.'
+                        }
+                        backHref={resources}
+                        onSave={(resource: gp2Model.Resource) =>
+                          updateWorkingGroupResources([
+                            ...(workingGroup.resources || []),
+                            resource,
+                          ])
+                        }
+                      />
+                    </Route>
+                    <Route exact path={edit + editRoute.resource.template}>
+                      <EditResourceModal
+                        workingGroupId={workingGroupId}
+                        resources={workingGroup.resources}
+                        backHref={resources}
+                        updateWorkingGroupResources={
+                          updateWorkingGroupResources
+                        }
+                      />
+                    </Route>
+                  </>
                 )}
               </Frame>
             </Route>

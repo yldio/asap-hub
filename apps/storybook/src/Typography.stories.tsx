@@ -41,7 +41,7 @@ export const Headline6 = () => (
 export const Paragraph = () => {
   const Importance = boolean('Bold', false) ? 'strong' : Fragment;
   return (
-    <ParagraphText primary={boolean('Primary', true)} accent={accentColor()}>
+    <ParagraphText accent={accentColor()}>
       <Importance>{text('Text', 'Paragraph')}</Importance>
     </ParagraphText>
   );

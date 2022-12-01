@@ -26,6 +26,7 @@ export const projectContentQueryFragment = gql`
             }
             firstName
             lastName
+            onboarded
           }
         }
       }

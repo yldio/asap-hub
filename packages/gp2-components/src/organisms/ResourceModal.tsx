@@ -4,6 +4,7 @@ import {
   EditModal,
   Headline3,
   LabeledDropdown,
+  LabeledTextArea,
   LabeledTextField,
   Link,
   Paragraph,
@@ -29,6 +30,16 @@ const buttonContainerStyles = css({
   },
 });
 
+const divWithActionsStyle = css({
+  display: 'inline-flex',
+  gap: rem(14),
+  justifyContent: 'space-between',
+  [mobileQuery]: {
+    display: 'flex',
+    flexDirection: 'column-reverse',
+  },
+});
+
 const overrideButtonStyles = css({
   margin: 0,
   maxWidth: 'fit-content',
@@ -38,56 +49,84 @@ const overrideButtonStyles = css({
 });
 
 type ResourceModalProps = Partial<gp2.Resource> & {
+  modalTitle: string;
+  modalDescription: string;
   backHref: string;
-  onSave?: (data: gp2.Resource) => void | Promise<void>;
+  onSave?: (data: gp2.Resource) => Promise<void>;
+  onDelete?: () => void | Promise<void>;
 };
 
-const ResourceModal: React.FC<ResourceModalProps> = (props) => {
-  const { type, title, description, backHref, onSave = noop } = props;
-  const externalLink = type === 'Link' && props.externalLink;
-  const [newType, setNewType] = useState<'Link' | 'Note' | ''>(type || '');
+const ResourceModal: React.FC<ResourceModalProps> = ({
+  title,
+  description,
+  backHref,
+  modalTitle,
+  modalDescription,
+  onSave = noop,
+  onDelete = noop,
+  ...props
+}) => {
+  const externalLink = props.type === 'Link' && props.externalLink;
+  const [newType, setNewType] = useState<'Link' | 'Note' | ''>(
+    props.type || '',
+  );
   const [newTitle, setNewTitle] = useState(title || '');
   const [newDescription, setNewDescription] = useState(description || '');
   const [newExternalLink, setNewExternalLink] = useState(externalLink || '');
 
+  const isDirty = () => {
+    if (!props.type && newType === '') {
+      return false;
+    }
+
+    if (props.type === 'Link' && externalLink !== newExternalLink) {
+      return true;
+    }
+
+    return (
+      props.type !== newType ||
+      title !== newTitle ||
+      description !== newDescription
+    );
+  };
+
+  const onSaveFunction = () => {
+    /* istanbul ignore next */
+    if (!newType) {
+      throw new Error('There is no type provided.');
+    }
+
+    const resourceBase = {
+      title: newTitle,
+      description: newDescription || undefined,
+    };
+    const resource =
+      newType === 'Link'
+        ? {
+            type: newType,
+            ...resourceBase,
+            externalLink: newExternalLink,
+          }
+        : {
+            type: newType,
+            ...resourceBase,
+          };
+    return onSave(resource);
+  };
+
   return (
     <EditModal
-      title="Add Resource"
+      title={modalTitle}
       backHref={backHref}
-      dirty={type !== newType}
+      dirty={isDirty()}
       noHeader
-      onSave={() => {
-        /* istanbul ignore next */
-        if (!newType) {
-          throw new Error('There is no type provided.');
-        }
-
-        const resourceBase = {
-          title: newTitle,
-          description: newDescription || undefined,
-        };
-        const resource =
-          newType === 'Link'
-            ? {
-                type: newType,
-                ...resourceBase,
-                externalLink: newExternalLink,
-              }
-            : {
-                type: newType,
-                ...resourceBase,
-              };
-        return onSave(resource);
-      }}
+      onSave={noop}
     >
-      {({ isSaving }, asyncOnSave) => (
+      {({ isSaving }, asyncFunctionWrapper) => (
         <div css={css({ width: '100%' })}>
           <header>
-            <Headline3>Add resource</Headline3>
-            <Paragraph accent="lead">
-              Select a resource type and provide the neccessary information
-              required to share a resource privately with your group.
-            </Paragraph>
+            <Headline3>{modalTitle}</Headline3>
+            <Paragraph accent="lead">{modalDescription}</Paragraph>
           </header>
           <LabeledDropdown
             title="Resource Type"
@@ -123,7 +162,7 @@ const ResourceModal: React.FC<ResourceModalProps> = (props) => {
             onChange={setNewTitle}
             enabled={newType !== '' && !isSaving}
           />
-          <LabeledTextField
+          <LabeledTextArea
             title="Description"
             value={newDescription}
             onChange={setNewDescription}
@@ -140,15 +179,25 @@ const ResourceModal: React.FC<ResourceModalProps> = (props) => {
             >
               Cancel
             </Link>
+            <div css={css(divWithActionsStyle)}>
+              {onDelete !== noop && (
+                <Button
+                  overrideStyles={overrideButtonStyles}
+                  onClick={() => asyncFunctionWrapper(onDelete)}
+                >
+                  Delete
+                </Button>
+              )}
 
-            <Button
-              overrideStyles={overrideButtonStyles}
-              primary
-              onClick={asyncOnSave}
-              enabled={!isSaving}
-            >
-              Save
-            </Button>
+              <Button
+                overrideStyles={overrideButtonStyles}
+                primary
+                onClick={() => asyncFunctionWrapper(onSaveFunction)}
+                enabled={!isSaving}
+              >
+                Save
+              </Button>
+            </div>
           </div>
         </div>
       )}

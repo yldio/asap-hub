@@ -150,6 +150,26 @@ describe('User data provider', () => {
         expect(result?.role).toEqual(expected);
       },
     );
+
+    test.each(gp2Model.keywords)('keywords are added - %s', async (keyword) => {
+      const expectedKeywords = [keyword];
+      const user = getGraphQLUser();
+      user.flatData.keywords = expectedKeywords;
+      const mockResponse = getSquidexUserGraphqlResponse(user);
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+      const result = await userDataProvider.fetchById('user-id');
+      expect(result?.keywords).toEqual(expectedKeywords);
+    });
+
+    test('keywords are valid', async () => {
+      const expectedKeywords = ['invalid-keyword'];
+      const user = getGraphQLUser();
+      user.flatData.keywords = expectedKeywords;
+      const mockResponse = getSquidexUserGraphqlResponse(user);
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+      expect(() => userDataProvider.fetchById('user-id')).rejects.toThrow();
+    });
+
     describe('positions', () => {
       const position = {
         role: 'CEO',
@@ -527,6 +547,74 @@ describe('User data provider', () => {
       expect(nock.isDone()).toBe(true);
     });
 
+    test('Should update telephone fields', async () => {
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/users/${userId}`, {
+          telephoneCountryCode: { iv: '+1' },
+          telephoneNumber: { iv: '212-970-4133' },
+        })
+        .reply(200, fetchUserResponse());
+
+      await userDataProvider.update(userId, {
+        telephone: { countryCode: '+1', number: '212-970-4133' },
+      });
+      expect(nock.isDone()).toBe(true);
+    });
+    test('Should update allow empty telephone country code', async () => {
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/users/${userId}`, {
+          telephoneCountryCode: { iv: '' },
+          telephoneNumber: { iv: '212-970-4133' },
+        })
+        .reply(200, fetchUserResponse());
+
+      await userDataProvider.update(userId, {
+        telephone: { countryCode: '', number: '212-970-4133' },
+      });
+      expect(nock.isDone()).toBe(true);
+    });
+    test('Should update allow empty telephone number', async () => {
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/users/${userId}`, {
+          telephoneCountryCode: { iv: '+1' },
+          telephoneNumber: { iv: '' },
+        })
+        .reply(200, fetchUserResponse());
+
+      await userDataProvider.update(userId, {
+        telephone: { countryCode: '+1', number: '' },
+      });
+      expect(nock.isDone()).toBe(true);
+    });
+    test('Should update secondary email', async () => {
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/users/${userId}`, {
+          secondaryEmail: { iv: '' },
+        })
+        .reply(200, fetchUserResponse());
+
+      expect(
+        await userDataProvider.update(userId, {
+          secondaryEmail: '',
+        }),
+      ).not.toBeDefined();
+      expect(nock.isDone()).toBe(true);
+    });
+    test('Should update secondary email', async () => {
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/users/${userId}`, {
+          secondaryEmail: { iv: 'tony@example.com' },
+        })
+        .reply(200, fetchUserResponse());
+
+      expect(
+        await userDataProvider.update(userId, {
+          secondaryEmail: 'tony@example.com',
+        }),
+      ).not.toBeDefined();
+      expect(nock.isDone()).toBe(true);
+    });
+
     test('Should update first name', async () => {
       nock(baseUrl)
         .patch(`/api/content/${appName}/users/${userId}`, {
@@ -763,19 +851,43 @@ describe('User data provider', () => {
       expect(result).toEqual({ total: 0, items: [] });
     });
 
-    test('Should query with filters and return the users', async () => {
+    test('Should query with onboarded filter', async () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexUsersGraphqlResponse(),
       );
       const fetchOptions: gp2Model.FetchUsersOptions = {
         take: 12,
         skip: 2,
-        search: '',
+        filter: {
+          onlyOnboarded: true,
+        },
+      };
+      const users = await userDataProvider.fetch(fetchOptions);
+
+      const filterQuery = 'data/onboarded/iv eq true';
+      expect(squidexGraphqlClientMock.request).toBeCalledWith(
+        expect.anything(),
+        {
+          top: 12,
+          skip: 2,
+          filter: filterQuery,
+        },
+      );
+      expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
+    });
+
+    test('Should query with region filters', async () => {
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        getSquidexUsersGraphqlResponse(),
+      );
+      const fetchOptions: gp2Model.FetchUsersOptions = {
+        take: 12,
+        skip: 2,
         filter: {
           region: ['Europe', 'Asia'],
         },
       };
-      const users = await userDataProvider.fetch(fetchOptions);
+      await userDataProvider.fetch(fetchOptions);
 
       const filterQuery =
         "data/region/iv eq 'Europe'" + " or data/region/iv eq 'Asia'";
@@ -787,9 +899,8 @@ describe('User data provider', () => {
           filter: filterQuery,
         },
       );
-      expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
     });
-    test('Should query with code filters and return the users', async () => {
+    test('Should query with code filters', async () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexUsersGraphqlResponse(),
       );
@@ -802,7 +913,7 @@ describe('User data provider', () => {
           code: 'a-code',
         },
       };
-      const users = await userDataProvider.fetch(fetchOptions);
+      await userDataProvider.fetch(fetchOptions);
 
       const filterQuery = "data/connections/iv/code eq 'a-code'";
       expect(squidexGraphqlClientMock.request).toBeCalledWith(
@@ -813,7 +924,6 @@ describe('User data provider', () => {
           filter: filterQuery,
         },
       );
-      expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
     });
   });
 });

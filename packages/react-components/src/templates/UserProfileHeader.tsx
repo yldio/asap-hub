@@ -5,7 +5,7 @@ import { css } from '@emotion/react';
 import { useContext } from 'react';
 import { Avatar, Display, Link, TabLink, StateTag } from '../atoms';
 import { paper, tin } from '../colors';
-import { editIcon, uploadIcon, alumniBadge } from '../icons';
+import { editIcon, uploadIcon, alumniBadgeIcon } from '../icons';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { createMailTo } from '../mail';
 import { SocialIcons, TabNav, UserProfilePersonalText } from '../molecules';
@@ -238,7 +238,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
                 ) : null}
               </div>
               {alumniSinceDate && (
-                <StateTag icon={alumniBadge} label="Alumni" />
+                <StateTag icon={alumniBadgeIcon} label="Alumni" />
               )}
             </div>
             <UserProfilePersonalText

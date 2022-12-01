@@ -14,10 +14,10 @@ on:
         default: false
     secrets:
       CODECOV_TOKEN:
-        description: 'Codecov Token'
+        description: Codecov Token
         required: true
       CRN_SQUIDEX_CI_CLIENT_SECRET:
-        description: 'CRN Squidex Client Secret'
+        description: CRN Squidex CI Client Secret
         required: true
 jobs:
   check:
@@ -121,6 +121,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Validate
-        uses: rinchsan/renovate-config-validator@v0.0.11
+        uses: rinchsan/renovate-config-validator@v0.0.12
         with:
           pattern: '.github/renovate.json'

@@ -24,7 +24,7 @@ const ProjectDetail = () => {
     project?.members.some(({ userId }) => userId === currentUser?.id) || false;
   const isAdministrator = currentUser?.role === 'Administrator';
   const projectRoute = projects({}).project({ projectId });
-  const resourcesRoute = projects({}).project({ projectId }).resources({});
+  const resourcesRoute = projectRoute.resources({});
   const editRoute = resourcesRoute.edit({});
   const add = isAdministrator ? resourcesRoute.add({}).$ : undefined;
   const edit = isAdministrator ? editRoute.$ : undefined;

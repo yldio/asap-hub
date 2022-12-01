@@ -19,33 +19,31 @@ const EditResourceModal: React.FC<EditResponseModalProps> = ({
   updateResources,
 }) => {
   const { resourceIndex } = useRouteParams(route);
-  const routeIndex = parseInt(resourceIndex, 10);
-  const resourceOutput = resources[routeIndex];
-  if (!resourceOutput) {
-    return <NotFoundPage />;
-  }
+  const index = parseInt(resourceIndex, 10);
+  const resource = resources[index];
 
-  return (
-    <ResourceModal
-      {...resourceOutput}
-      modalTitle={'Edit Resource'}
-      modalDescription={
-        'Edit or delete an existing resource that is being shared privately with your group.'
-      }
-      backHref={backHref}
-      onSave={(resource: gp2Model.Resource) =>
-        updateResources([
-          ...Object.assign([], resources, {
-            [routeIndex]: resource,
-          }),
-        ])
-      }
-      onDelete={() => {
-        const newResources = [...resources];
-        newResources.splice(routeIndex, 1);
-        return updateResources([...newResources]);
-      }}
-    />
-  );
+  if (resource) {
+    return (
+      <ResourceModal
+        {...resource}
+        modalTitle={'Edit Resource'}
+        modalDescription={
+          'Edit or delete an existing resource that is being shared privately with your group.'
+        }
+        backHref={backHref}
+        onSave={(updated: gp2Model.Resource) => {
+          const updatedResources = resources.map((item, idx) =>
+            idx === index ? updated : item,
+          );
+          return updateResources(updatedResources);
+        }}
+        onDelete={() => {
+          const updatedResources = resources.filter((_, idx) => idx !== index);
+          return updateResources(updatedResources);
+        }}
+      />
+    );
+  }
+  return <NotFoundPage />;
 };
 export default EditResourceModal;

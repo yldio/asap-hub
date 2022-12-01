@@ -41,7 +41,6 @@ export const createWorkingGroupResponse = (
   externalLink: `https://www.example.com/working-group-${itemIndex}`,
   externalLinkText: `Working Group ${itemIndex} External Link Text`,
   deliverables: createDeliverables(options?.deliverables ?? 1),
-  complete: false,
   members: createWorkingGroupMembers(options?.members ?? 1),
 });
 

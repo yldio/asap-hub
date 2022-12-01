@@ -59,7 +59,6 @@ const workingGroupsLinkStyles = css({
 const subduedText = css({ color: colors.neutral800.rgba });
 const caseInsensitiveTitle = <T extends { title: string }>(a: T, b: T) =>
   a.title.localeCompare(b.title, undefined, { sensitivity: 'base' });
-
 const UserCardInfo: React.FC<UserCardInfoProps> = ({
   role,
   region,
@@ -74,8 +73,8 @@ const UserCardInfo: React.FC<UserCardInfoProps> = ({
     <div css={rowStyles}>
       <IconWithLabel icon={workingGroupIcon}>
         <div css={[listLabelStyles, workingGroupsStyles]}>
-          {workingGroups?.length ? (
-            workingGroups
+          {workingGroups?.length > 0 ? (
+            [...workingGroups]
               .sort(caseInsensitiveTitle)
               .map(({ id, title }, idx) => (
                 <Fragment key={id}>
@@ -103,7 +102,7 @@ const UserCardInfo: React.FC<UserCardInfoProps> = ({
       <IconWithLabel icon={projectIcon}>
         <div css={listLabelStyles}>
           {projects?.length ? (
-            projects.sort(caseInsensitiveTitle).map(({ id, title }) => (
+            [...projects].sort(caseInsensitiveTitle).map(({ id, title }) => (
               <Link
                 key={id}
                 href={gp2Routing.projects({}).project({ projectId: id }).$}

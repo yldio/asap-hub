@@ -171,11 +171,11 @@ describe('EditResource', () => {
         title: 'third resource',
       },
     ];
-    const updateWorkingGroupResources = jest.fn();
+    const updateResources = jest.fn();
     const resourceIndex = '1';
 
     renderEditResourceModal({
-      updateWorkingGroupResources,
+      updateResources,
       resources,
       resourceIndex,
     });
@@ -184,9 +184,6 @@ describe('EditResource', () => {
     userEvent.click(deleteButton);
 
     await waitFor(() => expect(deleteButton).toBeEnabled());
-    expect(updateWorkingGroupResources).toBeCalledWith([
-      resources[0],
-      resources[2],
-    ]);
+    expect(updateResources).toBeCalledWith([resources[0], resources[2]]);
   });
 });

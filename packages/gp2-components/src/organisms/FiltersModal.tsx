@@ -39,7 +39,7 @@ const FilterSelector = <T extends string>({
   suggestions,
   setValue,
   noOptionsMessage,
-}: FilterSelectorProps<T>) => (
+}: FilterSelectorProps<T>): ReturnType<React.FC> => (
   <LabeledMultiSelect
     title={title}
     placeholder="Start typing…"
@@ -69,6 +69,7 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
   );
   const resetFilters = () => {
     setSelectedRegions([]);
+    setSelectedExpertise([]);
   };
 
   const numberOfFilter = selectedRegions.length + selectedExpertise.length;
@@ -103,7 +104,10 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
         <Divider />
         <FilterModalFooter
           onApply={() => {
-            onApplyClick({ region: selectedRegions });
+            onApplyClick({
+              region: selectedRegions,
+              keyword: selectedExpertise,
+            });
           }}
           onClose={onBackClick}
           onReset={resetFilters}

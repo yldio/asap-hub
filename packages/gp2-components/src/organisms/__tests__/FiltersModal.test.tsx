@@ -15,6 +15,7 @@ describe('FiltersModal', () => {
     screen.getByRole('textbox', { name: 'Regions' });
   const getExpertiseField = () =>
     screen.getByRole('textbox', { name: 'Expertise / Interests' });
+  const getApplyButton = () => screen.getByRole('button', { name: 'Apply' });
   beforeEach(jest.resetAllMocks);
   it('renders the header', () => {
     render(<FiltersModal {...defaultProps} />);
@@ -82,10 +83,30 @@ describe('FiltersModal', () => {
   });
   it('calls the onApplyClick function on apply', () => {
     render(<FiltersModal {...defaultProps} />);
-    const applyButton = screen.getByRole('button', { name: 'Apply' });
+    const applyButton = getApplyButton();
     expect(applyButton).toBeVisible();
     userEvent.click(applyButton);
     expect(defaultProps.onApplyClick).toHaveBeenCalledTimes(1);
+  });
+  it('calls the onApplyClick function with correct region filters', () => {
+    render(<FiltersModal {...defaultProps} />);
+    userEvent.click(getRegionsField());
+    userEvent.click(screen.getByText('Asia'));
+    userEvent.click(getApplyButton());
+    expect(defaultProps.onApplyClick).toHaveBeenCalledWith({
+      region: ['Asia'],
+      keyword: [],
+    });
+  });
+  it('calls the onApplyClick function with correct expertise filters', () => {
+    render(<FiltersModal {...defaultProps} />);
+    userEvent.click(getExpertiseField());
+    userEvent.click(screen.getByText('R'));
+    userEvent.click(getApplyButton());
+    expect(defaultProps.onApplyClick).toHaveBeenCalledWith({
+      region: [],
+      keyword: ['R'],
+    });
   });
   it('resets selected filters on Reset', () => {
     render(<FiltersModal {...defaultProps} />);
@@ -97,10 +118,12 @@ describe('FiltersModal', () => {
     expect(resetButton).toBeVisible();
     userEvent.click(getRegionsField());
     userEvent.click(screen.getByText('Asia'));
+    userEvent.click(getExpertiseField());
+    userEvent.click(screen.getByText('Bash'));
     expect(
       screen.getByText(/Apply filters to narrow down your search results.*/i)
         .textContent,
-    ).toContain(`1 filter`);
+    ).toContain(`2 filter`);
     userEvent.click(resetButton);
     expect(
       screen.getByText(/Apply filters to narrow down your search results.*/i)

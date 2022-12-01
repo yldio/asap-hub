@@ -29,6 +29,17 @@ export const getSquidexAndContentfulClients = async () => {
     SQUIDEX_BASE_URL,
   } = process.env;
 
+  const isVerbose = () => {
+    if (
+      process.env.VERBOSE_DATA_SYNC &&
+      process.env.VERBOSE_DATA_SYNC == 'true'
+    ) {
+      return true;
+    }
+
+    return false;
+  };
+
   const getAuthToken = getAccessTokenFactory({
     clientId: CRN_SQUIDEX_CLIENT_ID!,
     clientSecret: CRN_SQUIDEX_CLIENT_SECRET!,
@@ -49,5 +60,5 @@ export const getSquidexAndContentfulClients = async () => {
     CONTENTFUL_ENV_ID!,
   );
 
-  return { contentfulEnvironment, squidexGraphqlClient };
+  return { isVerbose, contentfulEnvironment, squidexGraphqlClient };
 };

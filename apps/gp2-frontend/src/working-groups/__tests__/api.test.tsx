@@ -4,7 +4,7 @@ import nock, { DataMatcherMap } from 'nock';
 import { API_BASE_URL } from '../../config';
 import {
   getWorkingGroup,
-  getWorkingGroups,
+  getWorkingGroupNetwork,
   putWorkingGroupResources,
 } from '../api';
 
@@ -60,7 +60,7 @@ describe('getWorkingGroups', () => {
       .get('/working-group-network')
       .reply(200, workingGroupResponse);
 
-    const result = await getWorkingGroups('Bearer x');
+    const result = await getWorkingGroupNetwork('Bearer x');
     expect(result).toEqual(workingGroupResponse);
   });
 
@@ -70,7 +70,7 @@ describe('getWorkingGroups', () => {
       .reply(500);
 
     await expect(
-      getWorkingGroups('Bearer x'),
+      getWorkingGroupNetwork('Bearer x'),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch the working groups. Expected status 2xx. Received status 500."`,
     );

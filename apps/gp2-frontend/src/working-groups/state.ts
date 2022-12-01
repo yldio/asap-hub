@@ -13,26 +13,27 @@ import {
 import { authorizationState } from '../auth/state';
 import {
   getWorkingGroup,
-  getWorkingGroups,
+  getWorkingGroupNetwork,
   putWorkingGroupResources,
 } from './api';
 
-export const fetchWorkingGroupsState =
+export const fetchWorkingGroupNetworkState =
   selector<gp2.ListWorkingGroupNetworkResponse>({
-    key: 'fetchWorkingGroupsState',
+    key: 'fetchWorkingGroupNetworkState',
     get: ({ get }) => {
-      get(refreshWorkingGroupsState);
-      return getWorkingGroups(get(authorizationState));
+      get(refreshWorkingGroupNetworkState);
+      return getWorkingGroupNetwork(get(authorizationState));
     },
   });
 
-export const workingGroupsState = atom<gp2.ListWorkingGroupNetworkResponse>({
-  key: 'workingGroupState',
-  default: fetchWorkingGroupsState,
-});
+export const workingGroupNetworkState =
+  atom<gp2.ListWorkingGroupNetworkResponse>({
+    key: 'workingGroupNetworkState',
+    default: fetchWorkingGroupNetworkState,
+  });
 
-export const refreshWorkingGroupsState = atom<number>({
-  key: 'refreshWorkingGroupsState',
+export const refreshWorkingGroupNetworkState = atom<number>({
+  key: 'refreshWorkingGroupNetworkState',
   default: 0,
 });
 
@@ -62,7 +63,8 @@ const workingGroupState = atomFamily<
   default: fetchWorkingGroupState,
 });
 
-export const useWorkingGroupsState = () => useRecoilValue(workingGroupsState);
+export const useWorkingGroupNetworkState = () =>
+  useRecoilValue(workingGroupNetworkState);
 
 export const useWorkingGroupById = (id: string) =>
   useRecoilValue(workingGroupState(id));
@@ -81,7 +83,7 @@ export const usePutWorkingGroupResources = (id: string) => {
 };
 
 export const useSetWorkingGroupItem = () => {
-  const [refresh, setRefresh] = useRecoilState(refreshWorkingGroupsState);
+  const [refresh, setRefresh] = useRecoilState(refreshWorkingGroupNetworkState);
   const setWorkingGroupItem = useSetRecoilState(setWorkingGroup);
   return (workingGroup: gp2.WorkingGroupResponse) => {
     setWorkingGroupItem(workingGroup);

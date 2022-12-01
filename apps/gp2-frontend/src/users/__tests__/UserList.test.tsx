@@ -115,7 +115,10 @@ it('calls the updateFilters with the right arguments', async () => {
   }));
   await renderUserList(undefined, true);
   userEvent.click(screen.getByRole('button', { name: 'Apply' }));
-  expect(mockUpdateFilter).toHaveBeenCalledWith('/users', { region: [] });
+  expect(mockUpdateFilter).toHaveBeenCalledWith('/users', {
+    region: [],
+    keyword: [],
+  });
 });
 
 it('triggers export with the same parameters but overrides onlyOnboarded with false', async () => {

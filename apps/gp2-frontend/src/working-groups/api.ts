@@ -2,7 +2,7 @@ import { BackendError, createSentryHeaders } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
 import { API_BASE_URL } from '../config';
 
-export const getWorkingGroups = async (
+export const getWorkingGroupNetwork = async (
   authorization: string,
 ): Promise<gp2.ListWorkingGroupNetworkResponse> => {
   const resp = await fetch(`${API_BASE_URL}/working-group-network`, {

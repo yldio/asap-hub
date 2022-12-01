@@ -1,5 +1,5 @@
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
-import { UsersPageBody, FiltersModal } from '@asap-hub/gp2-components';
+import { FiltersModal, UsersPageBody } from '@asap-hub/gp2-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 } from '@asap-hub/routing';
 import { useRecoilValue } from 'recoil';
@@ -55,6 +55,7 @@ const UserList: React.FC<UserListProps> = ({ displayFilters = false }) => {
         ),
       userToCSV,
     );
+  // const projects = useProjectsState();
   return (
     <>
       <UsersPageBody

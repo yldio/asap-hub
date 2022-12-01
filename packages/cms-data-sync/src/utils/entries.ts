@@ -24,7 +24,7 @@ export const clearContentfulEntries = async (
   await Promise.all(
     entries.items.map(async (entry) => {
       await entry.delete();
-      logger(`Entry ${entry.sys.id} deleted`, 'INFO');
+      logger(`Entry with ID ${entry.sys.id} deleted`, 'INFO');
     }),
   );
 };
@@ -35,7 +35,7 @@ export const publishContentfulEntries = async (entries: Entry[]) => {
       const published = await entry.publish();
       logger(`Published entry ${published.sys.id}.`, 'INFO');
     } catch (err) {
-      logger(`Entry with id ${entry.sys.id} could not be published.`, 'ERROR');
+      logger(`Entry with ID ${entry.sys.id} could not be published.`, 'ERROR');
     }
   });
 };

@@ -442,7 +442,6 @@ describe('User data provider', () => {
       nock(baseUrl)
         .post(`/api/content/${appName}/users?publish=true`, {
           ...(getInputUser() as any),
-          // _tags: { iv: ['CRN Member'] },
         })
         .reply(201, { id: userId });
 

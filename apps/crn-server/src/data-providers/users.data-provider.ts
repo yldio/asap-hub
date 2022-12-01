@@ -1,5 +1,7 @@
 import {
+  activeUserTag,
   FetchUsersOptions,
+  inactiveUserTag,
   isUserDegree,
   isUserRole,
   LabResponse,
@@ -444,6 +446,6 @@ export const parseGraphQLUserToDataObject = (
     reachOut: item.flatData.reachOut || undefined,
     labs: flatLabs || [],
     orcidLastSyncDate: item.flatData.orcidLastSyncDate || undefined,
-    _tags: [item.flatData.alumniSinceDate ? 'Alumni Member' : 'CRN Member'],
+    _tags: [item.flatData.alumniSinceDate ? inactiveUserTag : activeUserTag],
   };
 };

@@ -1,5 +1,11 @@
 import { css } from '@emotion/react';
-import { TeamRole, Role, UserTag } from '@asap-hub/model';
+import {
+  TeamRole,
+  Role,
+  UserTag,
+  activeUserTag,
+  inactiveUserTag,
+} from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
 import { Display, Paragraph, TabLink } from '../atoms';
@@ -57,8 +63,8 @@ const userFilters: ReadonlyArray<Option<TeamRole | Role | UserTag> | Title> = [
   { label: 'ASAP Staff', value: 'ASAP Staff' },
   { label: 'SAB', value: 'Scientific Advisory Board' },
   { title: 'TYPE OF USERS' },
-  { label: 'CRN Member', value: 'CRN Member' },
-  { label: 'Alumni Member', value: 'Alumni Member' },
+  { label: activeUserTag, value: activeUserTag },
+  { label: inactiveUserTag, value: inactiveUserTag },
 ];
 
 const groupFilters: ReadonlyArray<Option<'Active' | 'Inactive'> | Title> = [

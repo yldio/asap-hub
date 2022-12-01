@@ -29,6 +29,7 @@ const levelRequiresVerbose = (level: string): boolean => {
 };
 
 const printLog = (log: string, level: string): void => {
+  /** eslint-disable no-console **/
   console.log(getBashColor(level), `[${level}] ${log}`);
 };
 

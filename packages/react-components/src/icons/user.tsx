@@ -1,7 +1,11 @@
 /* istanbul ignore file */
+import { FC } from 'react';
+interface UserIconProps {
+  readonly color?: string;
+}
 
-const userIcon = (
-  <svg width={24} height={24} viewBox="0 0 24 24" stroke="#4D646B">
+const UserIcon: FC<UserIconProps> = ({ color = '#4D646B' }) => (
+  <svg width={24} height={24} viewBox="0 0 24 24" stroke={color}>
     <title>Profile</title>
     <g fill="none" fillRule="evenodd" strokeWidth={1.3}>
       <g strokeLinecap="round" strokeLinejoin="round">
@@ -12,4 +16,4 @@ const userIcon = (
   </svg>
 );
 
-export default userIcon;
+export default UserIcon;

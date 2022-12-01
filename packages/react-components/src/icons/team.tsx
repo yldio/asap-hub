@@ -1,7 +1,12 @@
 /* istanbul ignore file */
 
-const team = (
-  <svg width={24} height={24} viewBox="0 0 24 24" stroke="#4D646B">
+import { FC } from 'react';
+interface TeamIconProps {
+  readonly color?: string;
+}
+
+const TeamIcon: FC<TeamIconProps> = ({ color = '#4D646B' }) => (
+  <svg width={24} height={24} viewBox="0 0 24 24" stroke={color}>
     <title>Team</title>
     <g
       strokeWidth={1.3}
@@ -14,4 +19,4 @@ const team = (
     </g>
   </svg>
 );
-export default team;
+export default TeamIcon;

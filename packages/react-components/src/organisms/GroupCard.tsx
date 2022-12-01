@@ -4,7 +4,7 @@ import { network } from '@asap-hub/routing';
 
 import { Card, Paragraph, Anchor, StateTag } from '../atoms';
 import { LinkHeadline, TagList } from '../molecules';
-import { inactiveBadgeIcon, teamIcon } from '../icons';
+import { inactiveBadgeIcon, TeamIcon } from '../icons';
 import { perRem, tabletScreen } from '../pixels';
 
 const iconStyles = css({
@@ -56,8 +56,10 @@ const GroupCard: React.FC<GroupCardProps> = ({
     <TagList min={2} max={3} tags={tags} />
     {active && (
       <Paragraph>
-        <span css={iconStyles}>{teamIcon} </span>
-        {`${numberOfTeams} Team${numberOfTeams === 1 ? '' : 's'}`}
+        <span css={iconStyles}>
+          <TeamIcon />
+        </span>
+        {` ${numberOfTeams} Team${numberOfTeams === 1 ? '' : 's'}`}
       </Paragraph>
     )}
   </Card>

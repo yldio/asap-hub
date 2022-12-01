@@ -1,6 +1,6 @@
 import { FetchOptions, ListResponse } from '../common';
 import { Connection } from '../user';
-import { Keywords } from './common';
+import { Keyword } from './common';
 import { ProjectDataObject, ProjectMember } from './project';
 import { WorkingGroupDataObject, WorkingGroupMember } from './working-group';
 
@@ -81,7 +81,7 @@ export type UserDataObject = {
   contributingCohorts: unknown[];
   secondaryEmail?: string;
   telephone?: Telephone;
-  keywords: Keywords[];
+  keywords: Keyword[];
   biography?: string;
 };
 
@@ -106,6 +106,7 @@ export type UserUpdateRequest = UserUpdateDataObject;
 
 export type FetchUsersFilter = {
   region?: UserRegion[];
+  keyword?: Keyword[];
   code?: string;
   onlyOnboarded?: boolean;
 };

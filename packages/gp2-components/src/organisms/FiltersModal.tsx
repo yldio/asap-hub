@@ -1,8 +1,8 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 import {
-  Modal,
-  LabeledMultiSelect,
   Divider,
+  LabeledMultiSelect,
+  Modal,
   pixels,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
@@ -13,7 +13,7 @@ import FilterModalHeader from '../molecules/FilterModalHeader';
 
 const { rem } = pixels;
 
-const { userRegions } = gp2Model;
+const { userRegions, keywords } = gp2Model;
 
 const containerStyles = css({
   padding: `${rem(32)} ${rem(24)}`,
@@ -25,43 +25,70 @@ type FiltersModalProps = {
   onApplyClick: (filters: gp2Model.FetchUsersFilter) => void;
 };
 
+type FilterSelectorProps<T extends string> = {
+  title: string;
+  selected: T[];
+  readonly suggestions: T[];
+  setValue: (item: T[]) => void;
+  noOptionsMessage: string;
+};
+
+const FilterSelector = <T extends string>({
+  title,
+  selected,
+  suggestions,
+  setValue,
+  noOptionsMessage,
+}: FilterSelectorProps<T>) => (
+  <LabeledMultiSelect
+    title={title}
+    placeholder="Start typing…"
+    values={selected.map((item) => ({
+      label: item,
+      value: item,
+    }))}
+    suggestions={suggestions.map((suggestion) => ({
+      label: suggestion,
+      value: suggestion,
+    }))}
+    onChange={(newValues) => {
+      setValue(newValues.map(({ value }) => value));
+    }}
+    noOptionsMessage={({ inputValue }) => `${noOptionsMessage} "${inputValue}"`}
+  />
+);
+
 const FiltersModal: React.FC<FiltersModalProps> = ({
   onBackClick,
   onApplyClick,
   filters,
 }) => {
-  const [seletedRegions, setSelectedRegions] = useState(filters.region || []);
+  const [selectedRegions, setSelectedRegions] = useState(filters.region || []);
+  const [selectedExpertise, setSelectedExpertise] = useState(
+    filters.keyword || [],
+  );
   const resetFilters = () => {
     setSelectedRegions([]);
   };
 
-  const numberOfFilter = seletedRegions.length;
+  const numberOfFilter = selectedRegions.length + selectedExpertise.length;
   return (
     <Modal padding={false}>
       <div css={containerStyles}>
         <FilterModalHeader numberOfFilter={numberOfFilter} />
-        <LabeledMultiSelect
+        <FilterSelector<gp2Model.Keyword>
           title="Expertise / Interests"
-          placeholder="Start typing…"
-          suggestions={[]}
+          selected={selectedExpertise}
+          suggestions={[...keywords]}
+          setValue={setSelectedExpertise}
+          noOptionsMessage={'Sorry, no current expertise / interests match'}
         />
-        <LabeledMultiSelect
+        <FilterSelector<gp2Model.UserRegion>
           title="Regions"
-          placeholder="Start typing…"
-          values={seletedRegions.map((region) => ({
-            label: region,
-            value: region,
-          }))}
-          onChange={(newValues) => {
-            setSelectedRegions(newValues.map(({ value }) => value));
-          }}
-          suggestions={userRegions.map((suggestion) => ({
-            label: suggestion,
-            value: suggestion,
-          }))}
-          noOptionsMessage={({ inputValue }) =>
-            `Sorry, No current regions match "${inputValue}"`
-          }
+          selected={selectedRegions}
+          suggestions={[...userRegions]}
+          setValue={setSelectedRegions}
+          noOptionsMessage={'Sorry, no current regions match'}
         />
         <LabeledMultiSelect
           title="Working Groups"
@@ -76,7 +103,7 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
         <Divider />
         <FilterModalFooter
           onApply={() => {
-            onApplyClick({ region: seletedRegions });
+            onApplyClick({ region: selectedRegions });
           }}
           onClose={onBackClick}
           onReset={resetFilters}

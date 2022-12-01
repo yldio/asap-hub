@@ -1,6 +1,6 @@
 import { isVerbose } from './setup';
 
-const verboseLog = async (log: string): Promise<null> => {
+export const verboseLog = (log: string): null => {
   if (!isVerbose()) {
     return null;
   }

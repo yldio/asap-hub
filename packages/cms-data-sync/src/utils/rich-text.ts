@@ -35,11 +35,11 @@ export const convertHtmlToContentfulFormat = (html: string) => {
   // an important part of rich text input anyway, so we
   // can just remove them here
   const htmlWithoutDivTag = html.replace(/<[\\/]{0,1}(div)[^><]*>/g, '');
-  await verboseLog(`HTML pre-parsed:\n${html}`);
-  await verboseLog(`HTML post-parsed:\n${html}`);
+  verboseLog(`HTML pre-parsed:\n${html}`);
+  verboseLog(`HTML post-parsed:\n${html}`);
 
   const parsedHtml = parseHtml(htmlWithoutDivTag) as Document;
-  await verboseLog(
+  verboseLog(
     `Parsed HTML in Contentful format:\n${JSON.stringify(
       parsedHtml,
       undefined,
@@ -48,7 +48,7 @@ export const convertHtmlToContentfulFormat = (html: string) => {
   );
 
   const cleanedDocument = clearParsedHtmlOutput(parsedHtml);
-  await verboseLog(
+  verboseLog(
     `Cleaned Contentful Document:\n${JSON.stringify(
       cleanedDocument,
       undefined,

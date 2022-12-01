@@ -6,6 +6,9 @@ import { createClient } from 'contentful-management';
 
 import { getAccessTokenFactory, SquidexGraphql } from '@asap-hub/squidex';
 
+export const isVerbose = () =>
+  process.env.VERBOSE_DATA_SYNC && process.env.VERBOSE_DATA_SYNC == 'true';
+
 export const getSquidexAndContentfulClients = async () => {
   [
     'CONTENTFUL_MANAGEMENT_ACCESS_TOKEN',
@@ -28,12 +31,6 @@ export const getSquidexAndContentfulClients = async () => {
     CRN_SQUIDEX_CLIENT_SECRET,
     SQUIDEX_BASE_URL,
   } = process.env;
-
-  const isVerbose = () => {
-    return (
-      process.env.VERBOSE_DATA_SYNC && process.env.VERBOSE_DATA_SYNC == 'true'
-    );
-  };
 
   const getAuthToken = getAccessTokenFactory({
     clientId: CRN_SQUIDEX_CLIENT_ID!,

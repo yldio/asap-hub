@@ -9305,7 +9305,11 @@ export type FetchWorkingGroupQuery = {
     Pick<WorkingGroups, 'id' | 'lastModified'> & {
       flatData: Pick<
         WorkingGroupsFlatDataDto,
-        'title' | 'description' | 'externalLink' | 'externalLinkText' | 'complete'
+        | 'title'
+        | 'description'
+        | 'externalLink'
+        | 'externalLinkText'
+        | 'complete'
       > & {
         deliverables: Maybe<
           Array<

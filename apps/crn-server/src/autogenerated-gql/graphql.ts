@@ -5893,12 +5893,12 @@ export type WorkingGroups = Content & {
   version: Scalars['Int'];
 };
 
-/** The structure of the This group is complete field of the Working Groups content type. */
+/** The structure of the This working group is complete field of the Working Groups content type. */
 export type WorkingGroupsDataCompleteDto = {
   iv: Maybe<Scalars['Boolean']>;
 };
 
-/** The structure of the This group is complete field of the Working Groups content input type. */
+/** The structure of the This working group is complete field of the Working Groups content input type. */
 export type WorkingGroupsDataCompleteInputDto = {
   iv: InputMaybe<Scalars['Boolean']>;
 };
@@ -11902,6 +11902,7 @@ export const WorkingGroupContentFragmentDoc = {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'externalLinkText' },
                 },
+                { kind: 'Field', name: { kind: 'Name', value: 'complete' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'deliverables' },

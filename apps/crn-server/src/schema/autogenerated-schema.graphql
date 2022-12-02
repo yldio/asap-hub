@@ -6133,12 +6133,12 @@ type WorkingGroups implements Content {
   version: Int!
 }
 
-"""The structure of the This group is complete field of the Working Groups content type."""
+"""The structure of the This working group is complete field of the Working Groups content type."""
 type WorkingGroupsDataCompleteDto {
   iv: Boolean
 }
 
-"""The structure of the This group is complete field of the Working Groups content input type."""
+"""The structure of the This working group is complete field of the Working Groups content input type."""
 input WorkingGroupsDataCompleteInputDto {
   iv: Boolean
 }

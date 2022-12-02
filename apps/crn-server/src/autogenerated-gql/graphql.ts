@@ -9315,7 +9315,12 @@ export type WorkingGroupContentFragment = Pick<
 > & {
   flatData: Pick<
     WorkingGroupsFlatDataDto,
-    'title' | 'description' | 'externalLink' | 'shortText' | 'externalLinkText' | 'complete'
+    | 'title'
+    | 'description'
+    | 'externalLink'
+    | 'shortText'
+    | 'externalLinkText'
+    | 'complete'
   > & {
     deliverables: Maybe<
       Array<

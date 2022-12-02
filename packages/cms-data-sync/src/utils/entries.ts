@@ -1,5 +1,5 @@
-/* eslint-disable no-console */
 import { Environment, Entry } from 'contentful-management';
+import { logger } from './logs';
 
 export const clearContentfulEntries = async (
   contentfulEnvironment: Environment,
@@ -8,8 +8,9 @@ export const clearContentfulEntries = async (
   const entries = await contentfulEnvironment.getEntries({
     content_type: contentType,
   });
-  console.log(
+  logger(
     `Cleaning Contentful Entries from content-type ${contentType}...`,
+    'INFO',
   );
 
   await Promise.all(
@@ -23,7 +24,7 @@ export const clearContentfulEntries = async (
   await Promise.all(
     entries.items.map(async (entry) => {
       await entry.delete();
-      console.log('entry', entry.sys.id, 'deleted');
+      logger(`Entry with ID ${entry.sys.id} deleted`, 'INFO');
     }),
   );
 };
@@ -32,9 +33,9 @@ export const publishContentfulEntries = async (entries: Entry[]) => {
   entries.forEach(async (entry) => {
     try {
       const published = await entry.publish();
-      console.log(`Published entry ${published.sys.id}.`);
+      logger(`Published entry ${published.sys.id}.`, 'INFO');
     } catch (err) {
-      console.log(`Entry with id ${entry.sys.id} could not be published.`);
+      logger(`Entry with ID ${entry.sys.id} could not be published.`, 'ERROR');
     }
   });
 };

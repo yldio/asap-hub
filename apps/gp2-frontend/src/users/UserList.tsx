@@ -7,6 +7,7 @@ import { authorizationState } from '../auth/state';
 import { usePagination, usePaginationParams } from '../hooks/pagination';
 import { useSearch } from '../hooks/search';
 import { useProjectsState } from '../projects/state';
+import { useWorkingGroupsState } from '../working-groups/state';
 import { getUsers } from './api';
 import { squidexUsersResponseToStream, userFields, userToCSV } from './export';
 import { useUsersState } from './state';
@@ -57,6 +58,7 @@ const UserList: React.FC<UserListProps> = ({ displayFilters = false }) => {
       userToCSV,
     );
   const { items: projects } = useProjectsState();
+  const { items: workingGroups } = useWorkingGroupsState();
   return (
     <>
       <UsersPageBody
@@ -77,6 +79,7 @@ const UserList: React.FC<UserListProps> = ({ displayFilters = false }) => {
           filters={filters}
           onApplyClick={(f) => updateFilters(backHref, f)}
           projects={projects}
+          workingGroups={workingGroups}
         />
       )}
     </>

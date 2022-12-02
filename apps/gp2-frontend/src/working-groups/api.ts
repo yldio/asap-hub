@@ -34,6 +34,20 @@ export const getWorkingGroup = async (
   return resp.json();
 };
 
+export const getWorkingGroups = async (
+  authorization: string,
+): Promise<gp2.ListWorkingGroupResponse> => {
+  const resp = await fetch(`${API_BASE_URL}/working-groups`, {
+    headers: { authorization, ...createSentryHeaders() },
+  });
+  if (!resp.ok) {
+    throw new Error(
+      `Failed to fetch the working groups. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+    );
+  }
+  return resp.json();
+};
+
 export const putWorkingGroupResources = async (
   id: string,
   payload: gp2.WorkingGroupResourcesPutRequest,

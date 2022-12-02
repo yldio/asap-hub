@@ -14,10 +14,11 @@ import { authorizationState } from '../auth/state';
 import {
   getWorkingGroup,
   getWorkingGroupNetwork,
+  getWorkingGroups,
   putWorkingGroupResources,
 } from './api';
 
-export const fetchWorkingGroupNetworkState =
+const fetchWorkingGroupNetworkState =
   selector<gp2.ListWorkingGroupNetworkResponse>({
     key: 'fetchWorkingGroupNetworkState',
     get: ({ get }) => {
@@ -26,11 +27,10 @@ export const fetchWorkingGroupNetworkState =
     },
   });
 
-export const workingGroupNetworkState =
-  atom<gp2.ListWorkingGroupNetworkResponse>({
-    key: 'workingGroupNetworkState',
-    default: fetchWorkingGroupNetworkState,
-  });
+const workingGroupNetworkState = atom<gp2.ListWorkingGroupNetworkResponse>({
+  key: 'workingGroupNetworkState',
+  default: fetchWorkingGroupNetworkState,
+});
 
 export const refreshWorkingGroupNetworkState = atom<number>({
   key: 'refreshWorkingGroupNetworkState',
@@ -100,3 +100,22 @@ const setWorkingGroup = selector<gp2.WorkingGroupResponse>({
     set(workingGroupState(workingGroup.id), workingGroup);
   },
 } as unknown as ReadWriteSelectorOptions<gp2.WorkingGroupResponse>);
+
+export const refreshWorkingGroupsState = atom<number>({
+  key: 'refreshWorkingGroupsState',
+  default: 0,
+});
+
+const fetchWorkingGroupsState = selector<gp2.ListWorkingGroupResponse>({
+  key: 'fetchProjectsState',
+  get: ({ get }) => {
+    get(refreshWorkingGroupsState);
+    return getWorkingGroups(get(authorizationState));
+  },
+});
+
+const workingGroupsState = atom<gp2.ListWorkingGroupResponse>({
+  key: 'workingGroups',
+  default: fetchWorkingGroupsState,
+});
+export const useWorkingGroupsState = () => useRecoilValue(workingGroupsState);

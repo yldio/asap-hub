@@ -22,7 +22,7 @@ const fetchProjectsState = selector<gp2.ListProjectResponse>({
 });
 
 const projectsState = atom<gp2.ListProjectResponse>({
-  key: 'projectState',
+  key: 'projects',
   default: fetchProjectsState,
 });
 

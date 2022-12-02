@@ -207,12 +207,12 @@
               "isHalfWidth": true,
               "fieldType": "References",
               "editor": "List",
+              "schemaIds": ["users"],
               "minItems": 1,
               "maxItems": 1,
               "allowDuplicates": false,
               "resolveReference": false,
               "mustBePublished": false,
-              "schemaIds": ["7186cbbc-685d-4930-9755-10c2b0fdd2c8"],
               "label": "User",
               "hints": "",
               "placeholder": ""
@@ -291,7 +291,7 @@
               "allowDuplicates": false,
               "resolveReference": false,
               "mustBePublished": false,
-              "schemaIds": ["7186cbbc-685d-4930-9755-10c2b0fdd2c8"],
+              "schemaIds": ["users"],
               "label": "User",
               "hints": "",
               "placeholder": ""

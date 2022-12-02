@@ -110,6 +110,7 @@ export type FetchUsersFilter = {
   code?: string;
   onlyOnboarded?: boolean;
   project?: string[];
+  workingGroup?: string[];
 };
 
 export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;

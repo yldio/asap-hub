@@ -24,6 +24,7 @@ type FiltersModalProps = {
   filters: gp2Model.FetchUsersFilter;
   onApplyClick: (filters: gp2Model.FetchUsersFilter) => void;
   projects: gp2Model.ProjectResponse[];
+  workingGroups: gp2Model.WorkingGroupResponse[];
 };
 
 const getValues = <T extends string>(selected: T[]) =>
@@ -45,6 +46,7 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
   onApplyClick,
   filters,
   projects,
+  workingGroups,
 }) => {
   const [selectedRegions, setSelectedRegions] = useState(filters.region || []);
   const [selectedExpertise, setSelectedExpertise] = useState(
@@ -55,14 +57,23 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
       .filter(({ id }) => filters.project?.includes(id))
       .map(({ id, title }) => ({ label: title, value: id })) || [],
   );
+  const [selectedWorkingGroups, setSelectedWorkingGroups] = useState(
+    workingGroups
+      .filter(({ id }) => filters.workingGroup?.includes(id))
+      .map(({ id, title }) => ({ label: title, value: id })) || [],
+  );
   const resetFilters = () => {
     setSelectedRegions([]);
     setSelectedExpertise([]);
     setSelectedProjects([]);
+    setSelectedWorkingGroups([]);
   };
 
   const numberOfFilter =
-    selectedRegions.length + selectedExpertise.length + selectedProjects.length;
+    selectedRegions.length +
+    selectedExpertise.length +
+    selectedProjects.length +
+    selectedWorkingGroups.length;
   return (
     <Modal padding={false}>
       <div css={containerStyles}>
@@ -90,7 +101,19 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
         <LabeledMultiSelect
           title="Working Groups"
           placeholder="Start typing…"
-          suggestions={[]}
+          suggestions={workingGroups.map(({ id, title }) => ({
+            label: title,
+            value: id,
+          }))}
+          values={selectedWorkingGroups}
+          noOptionsMessage={getNoOptionsMessage(
+            'Sorry, no current working groups match',
+          )}
+          onChange={(newValues) => {
+            setSelectedWorkingGroups(
+              newValues.map(({ value, label }) => ({ value, label })),
+            );
+          }}
         />
         <LabeledMultiSelect
           title="Projects"
@@ -116,6 +139,7 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
               region: selectedRegions,
               keyword: selectedExpertise,
               project: selectedProjects.map(({ value }) => value),
+              workingGroup: selectedWorkingGroups.map(({ value }) => value),
             });
           }}
           onClose={onBackClick}

@@ -11,6 +11,7 @@ describe('FiltersModal', () => {
     onApplyClick: jest.fn(),
     filters: {},
     projects: [],
+    workingGroups: [],
   };
   const projects: gp2Model.ProjectResponse[] = [
     {
@@ -23,12 +24,23 @@ describe('FiltersModal', () => {
       status: 'Inactive',
     },
   ];
+  const workingGroups: gp2Model.WorkingGroupResponse[] = [
+    {
+      id: '11',
+      title: 'a working group',
+      members: [],
+      shortDescription: '',
+      description: '',
+    },
+  ];
   const getRegionsField = () =>
     screen.getByRole('textbox', { name: 'Regions' });
   const getExpertiseField = () =>
     screen.getByRole('textbox', { name: 'Expertise / Interests' });
   const getProjectsField = () =>
     screen.getByRole('textbox', { name: 'Projects' });
+  const getWorkingGroupsField = () =>
+    screen.getByRole('textbox', { name: 'Working Groups' });
   const getApplyButton = () => screen.getByRole('button', { name: 'Apply' });
   beforeEach(jest.resetAllMocks);
   it('renders the header', () => {
@@ -95,7 +107,7 @@ describe('FiltersModal', () => {
         .textContent,
     ).toContain(`0 filters`);
     userEvent.click(getProjectsField());
-    userEvent.click(screen.getByText('The HHG Project'));
+    userEvent.click(screen.getByText(projects[0].title));
     expect(
       screen.getByText(/Apply filters to narrow down your search results.*/i)
         .textContent,
@@ -106,6 +118,26 @@ describe('FiltersModal', () => {
     userEvent.type(getProjectsField(), 'LT');
     expect(
       screen.getByText(/sorry, no current projects match "lt"/i),
+    ).toBeVisible();
+  });
+  it('working groups are selectable', () => {
+    render(<FiltersModal {...defaultProps} workingGroups={workingGroups} />);
+    expect(
+      screen.getByText(/Apply filters to narrow down your search results.*/i)
+        .textContent,
+    ).toContain(`0 filters`);
+    userEvent.click(getWorkingGroupsField());
+    userEvent.click(screen.getByText(workingGroups[0].title));
+    expect(
+      screen.getByText(/Apply filters to narrow down your search results.*/i)
+        .textContent,
+    ).toContain(`1 filter`);
+  });
+  it('renders the no options message for working groups', () => {
+    render(<FiltersModal {...defaultProps} />);
+    userEvent.type(getWorkingGroupsField(), 'LT');
+    expect(
+      screen.getByText(/sorry, no current working groups match "lt"/i),
     ).toBeVisible();
   });
   it('calls the onBackClick function on close', () => {
@@ -131,6 +163,7 @@ describe('FiltersModal', () => {
       region: ['Asia'],
       keyword: [],
       project: [],
+      workingGroup: [],
     });
   });
   it('calls the onApplyClick function with correct expertise filters', () => {
@@ -142,58 +175,89 @@ describe('FiltersModal', () => {
       region: [],
       keyword: ['R'],
       project: [],
+      workingGroup: [],
     });
   });
   it('calls the onApplyClick function with correct project filters', () => {
     render(<FiltersModal {...defaultProps} projects={projects} />);
     userEvent.click(getProjectsField());
-    userEvent.click(screen.getByText('The HHG Project'));
+    userEvent.click(screen.getByText(projects[0].title));
     userEvent.click(getApplyButton());
     expect(defaultProps.onApplyClick).toHaveBeenCalledWith({
       region: [],
       keyword: [],
-      project: ['42'],
+      project: [projects[0].id],
+      workingGroup: [],
     });
   });
-  it('resets selected filters on Reset', () => {
-    render(<FiltersModal {...defaultProps} projects={projects} />);
+  it('calls the onApplyClick function with correct working group filters', () => {
+    render(<FiltersModal {...defaultProps} workingGroups={workingGroups} />);
+    userEvent.click(getWorkingGroupsField());
+    userEvent.click(screen.getByText(workingGroups[0].title));
+    userEvent.click(getApplyButton());
+    expect(defaultProps.onApplyClick).toHaveBeenCalledWith({
+      region: [],
+      keyword: [],
+      project: [],
+      workingGroup: [workingGroups[0].id],
+    });
+  });
+
+  it.each`
+    name               | getField                 | value
+    ${'region'}        | ${getRegionsField}       | ${'Asia'}
+    ${'expertise'}     | ${getExpertiseField}     | ${'Bash'}
+    ${'project'}       | ${getProjectsField}      | ${projects[0].title}
+    ${'working group'} | ${getWorkingGroupsField} | ${workingGroups[0].title}
+  `('resets selected filter, $name, on Reset', ({ getField, value }) => {
+    render(
+      <FiltersModal
+        {...defaultProps}
+        projects={projects}
+        workingGroups={workingGroups}
+      />,
+    );
     const resetButton = screen.getByRole('button', { name: 'Reset' });
     expect(
       screen.getByText(/Apply filters to narrow down your search results.*/i)
         .textContent,
     ).toContain(`0 filters`);
     expect(resetButton).toBeVisible();
-    userEvent.click(getRegionsField());
-    userEvent.click(screen.getByText('Asia'));
-    userEvent.click(getExpertiseField());
-    userEvent.click(screen.getByText('Bash'));
-    userEvent.click(getProjectsField());
-    userEvent.click(screen.getByText('The HHG Project'));
+    userEvent.click(getField());
+    userEvent.click(screen.getByText(value));
     expect(
       screen.getByText(/Apply filters to narrow down your search results.*/i)
         .textContent,
-    ).toContain('3 filter');
+    ).toContain('1 filter');
     userEvent.click(resetButton);
     expect(
       screen.getByText(/Apply filters to narrow down your search results.*/i)
         .textContent,
     ).toContain(`0 filters`);
   });
-  it('displays current filter', () => {
+
+  it.each`
+    name              | value                  | expected
+    ${'keyword'}      | ${'Bash'}              | ${'Bash'}
+    ${'region'}       | ${'Asia'}              | ${'Asia'}
+    ${'project'}      | ${projects[0].id}      | ${projects[0].title}
+    ${'workingGroup'} | ${workingGroups[0].id} | ${workingGroups[0].title}
+  `('displays current filter $name', ({ name, value, expected }) => {
     const filters: gp2Model.FetchUsersFilter = {
-      keyword: ['Bash'],
-      region: ['Asia'],
-      project: ['42'],
+      [name]: [value],
     };
     render(
-      <FiltersModal {...defaultProps} projects={projects} filters={filters} />,
+      <FiltersModal
+        {...defaultProps}
+        projects={projects}
+        workingGroups={workingGroups}
+        filters={filters}
+      />,
     );
     expect(
       screen.getByText(/Apply filters to narrow down your search results.*/i)
         .textContent,
-    ).toContain('3 filter');
-    expect(screen.getByText('Bash')).toBeVisible();
-    expect(screen.getByText('Asia')).toBeVisible();
-    expect(screen.getByText('The HHG Project')).toBeVisible();
+    ).toContain('1 filter');
+    expect(screen.getByText(expected)).toBeVisible();
   });
 });

@@ -24,7 +24,7 @@
           "editor": "Toggle",
           "inlineEditable": true,
           "defaultValue": false,
-          "label": "This group is complete"
+          "label": "This working group is complete"
         },
         "isLocked": false,
         "isHidden": false,

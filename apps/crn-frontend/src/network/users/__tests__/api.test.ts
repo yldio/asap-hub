@@ -3,6 +3,7 @@ import {
   UserAvatarPostRequest,
   UserPatchRequest,
   UserResponse,
+  inactiveUserTag,
 } from '@asap-hub/model';
 import { createListUserResponse, createUserResponse } from '@asap-hub/fixtures';
 
@@ -118,20 +119,20 @@ describe('getUsers', () => {
   it('can filter the users by tag', async () => {
     await getUsers(algoliaSearchClient, {
       ...defaultOptions,
-      filters: new Set(['Alumni Member']),
+      filters: new Set([inactiveUserTag]),
     });
     expect(search).toHaveBeenCalledWith(['user'], '', {
-      filters: '_tags:"Alumni Member"',
+      filters: `_tags:"${inactiveUserTag}"`,
     });
   });
 
   it('can filter the users by tag and role', async () => {
     await getUsers(algoliaSearchClient, {
       ...defaultOptions,
-      filters: new Set(['Alumni Member', 'Project Manager']),
+      filters: new Set([inactiveUserTag, 'Project Manager']),
     });
     expect(search).toHaveBeenCalledWith(['user'], '', {
-      filters: '(_tags:"Alumni Member") AND (teams.role:"Project Manager")',
+      filters: `(_tags:"${inactiveUserTag}") AND (teams.role:"Project Manager")`,
     });
   });
 

@@ -9,22 +9,29 @@ export const useSearch = () => {
   const { resetPagination } = usePaginationParams();
 
   const selectedRegions = currentUrlParams.getAll('region') as gp2.UserRegion[];
+  const selectedKeywords = currentUrlParams.getAll('keyword') as gp2.Keyword[];
+  const selectedProjects = currentUrlParams.getAll('project');
+  const selectedWorkingGroups = currentUrlParams.getAll('working-group');
 
-  const updateRegions = (
+  const updateParams = (
+    name: string,
     newUrlParams: URLSearchParams,
-    regions?: gp2.UserRegion[],
+    items?: string[],
   ) => {
-    newUrlParams.delete('region');
-    regions?.forEach((region) => newUrlParams.append('region', region));
+    newUrlParams.delete(name);
+    items?.forEach((item) => newUrlParams.append(name, item));
   };
 
   const updateFilters = (
     pathname: string,
-    { region }: gp2.FetchUsersFilter,
+    { region, keyword, project, workingGroup }: gp2.FetchUsersFilter,
   ) => {
     resetPagination();
     const newUrlParams = new URLSearchParams(history.location.search);
-    updateRegions(newUrlParams, region);
+    updateParams('region', newUrlParams, region);
+    updateParams('keyword', newUrlParams, keyword);
+    updateParams('project', newUrlParams, project);
+    updateParams('working-group', newUrlParams, workingGroup);
 
     history.push({ pathname, search: newUrlParams.toString() });
   };
@@ -32,9 +39,15 @@ export const useSearch = () => {
     history.push({ pathname, search: currentUrlParams.toString() });
   };
 
+  const filters = {
+    region: selectedRegions,
+    keyword: selectedKeywords,
+    project: selectedProjects,
+    workingGroup: selectedWorkingGroups,
+  };
   return {
     changeLocation,
-    filters: { region: selectedRegions },
+    filters,
     updateFilters,
   };
 };

@@ -9,99 +9,170 @@ describe('useSearch', () => {
       const { result } = renderHook(() => useSearch(), {
         wrapper: MemoryRouter,
       });
-      expect(result.current.filters).toEqual({ region: [] });
-    });
-
-    it('is taken from the query param', () => {
-      const { result } = renderHook(() => useSearch(), {
-        wrapper: MemoryRouter,
-        initialProps: {
-          initialEntries: ['/test?region=Asia'],
-        },
+      expect(result.current.filters).toEqual({
+        keyword: [],
+        region: [],
+        project: [],
+        workingGroup: [],
       });
-      expect(result.current.filters).toEqual({ region: ['Asia'] });
     });
 
-    it('can handle multiple filters', () => {
-      const { result } = renderHook(() => useSearch(), {
-        wrapper: MemoryRouter,
-        initialProps: {
-          initialEntries: ['/test?region=Asia&region=Europe'],
-        },
-      });
-      expect(result.current.filters).toEqual({ region: ['Asia', 'Europe'] });
-    });
-
-    it('can add a filter', () => {
-      const { result } = renderHook(() => useSearch(), {
-        wrapper: MemoryRouter,
-        initialProps: {
-          initialEntries: ['/test'],
-        },
-      });
-      result.current.updateFilters('/test', { region: ['Europe'] });
-      expect(result.current.filters).toEqual({ region: ['Europe'] });
-    });
-
-    it('can add multiple filters', () => {
-      const { result } = renderHook(() => useSearch(), {
-        wrapper: MemoryRouter,
-        initialProps: {
-          initialEntries: ['/test'],
-        },
-      });
-      result.current.updateFilters('/test', { region: ['Europe', 'Asia'] });
-      expect(result.current.filters).toEqual({ region: ['Europe', 'Asia'] });
-    });
-
-    it('can remove a filter', () => {
-      const { result } = renderHook(() => useSearch(), {
-        wrapper: MemoryRouter,
-        initialProps: {
-          initialEntries: ['/test?region=Europe'],
-        },
-      });
-      result.current.updateFilters('/test', { region: ['Europe', 'Asia'] });
-      expect(result.current.filters).toEqual({ region: ['Europe', 'Asia'] });
-    });
-
-    it('resets the pagination when changed', () => {
-      const { result } = renderHook(
-        () => ({
-          useSearch: useSearch(),
-          usePaginationParams: usePaginationParams(),
-          usePagination: usePagination(50, 1),
-        }),
-        {
+    describe.each`
+      name              | value                | queryParam
+      ${'region'}       | ${'Asia'}            | ${'region'}
+      ${'keyword'}      | ${'Bash'}            | ${'keyword'}
+      ${'project'}      | ${'project 1'}       | ${'project'}
+      ${'workingGroup'} | ${'working group 1'} | ${'working-group'}
+    `('single filters for $name', ({ name, value, queryParam }) => {
+      it('is taken from the query param', () => {
+        const { result } = renderHook(() => useSearch(), {
           wrapper: MemoryRouter,
           initialProps: {
-            initialEntries: ['/test?region=Europe&currentPage=2'],
+            initialEntries: [`/test?${queryParam}=${value}`],
           },
-        },
-      );
-      expect(result.current.usePaginationParams.currentPage).toBe(2);
-      result.current.useSearch.updateFilters('/test', { region: [] });
-      expect(result.current.usePaginationParams.currentPage).toBe(0);
+        });
+        expect(result.current.filters).toEqual({
+          region: [],
+          keyword: [],
+          project: [],
+          workingGroup: [],
+          [name]: [value],
+        });
+      });
+      it('can add a filter', () => {
+        const { result } = renderHook(() => useSearch(), {
+          wrapper: MemoryRouter,
+          initialProps: {
+            initialEntries: ['/test'],
+          },
+        });
+        result.current.updateFilters('/test', { [name]: [value] });
+        expect(result.current.filters).toEqual({
+          keyword: [],
+          region: [],
+          project: [],
+          workingGroup: [],
+          [name]: [value],
+        });
+      });
+      it('resets the pagination when changed', () => {
+        const { result } = renderHook(
+          () => ({
+            useSearch: useSearch(),
+            usePaginationParams: usePaginationParams(),
+            usePagination: usePagination(50, 1),
+          }),
+          {
+            wrapper: MemoryRouter,
+            initialProps: {
+              initialEntries: [`/test?${queryParam}=${value}&currentPage=2`],
+            },
+          },
+        );
+        expect(result.current.usePaginationParams.currentPage).toBe(2);
+        result.current.useSearch.updateFilters('/test', {});
+        expect(result.current.usePaginationParams.currentPage).toBe(0);
+      });
+    });
+
+    describe.each`
+      name              | firstValue           | secondValue          | queryParam
+      ${'keyword'}      | ${'Bash'}            | ${'R'}               | ${'keyword'}
+      ${'region'}       | ${'Asia'}            | ${'Europe'}          | ${'region'}
+      ${'project'}      | ${'project 1'}       | ${'project 2'}       | ${'project'}
+      ${'workingGroup'} | ${'working group 1'} | ${'working group 2'} | ${'working-group'}
+    `('multiple filters', ({ name, firstValue, secondValue, queryParam }) => {
+      it('can handle multiple filters', () => {
+        const { result } = renderHook(() => useSearch(), {
+          wrapper: MemoryRouter,
+          initialProps: {
+            initialEntries: [
+              `/test?${queryParam}=${firstValue}&${queryParam}=${secondValue}`,
+            ],
+          },
+        });
+        expect(result.current.filters).toEqual({
+          keyword: [],
+          region: [],
+          project: [],
+          workingGroup: [],
+          [name]: [firstValue, secondValue],
+        });
+      });
+      it('can add multiple filters', () => {
+        const { result } = renderHook(() => useSearch(), {
+          wrapper: MemoryRouter,
+          initialProps: {
+            initialEntries: ['/test'],
+          },
+        });
+        result.current.updateFilters('/test', {
+          [name]: [firstValue, secondValue],
+        });
+        expect(result.current.filters).toEqual({
+          keyword: [],
+          region: [],
+          project: [],
+          workingGroup: [],
+          [name]: [firstValue, secondValue],
+        });
+      });
+      it('can add a filter', () => {
+        const { result } = renderHook(() => useSearch(), {
+          wrapper: MemoryRouter,
+          initialProps: {
+            initialEntries: [`/test?${queryParam}=${firstValue}`],
+          },
+        });
+        result.current.updateFilters('/test', {
+          [name]: [firstValue, secondValue],
+        });
+        expect(result.current.filters).toEqual({
+          keyword: [],
+          region: [],
+          project: [],
+          workingGroup: [],
+          [name]: [firstValue, secondValue],
+        });
+      });
     });
   });
-  describe('changeLocation', () => {
+  describe.each`
+    name              | value                | queryParam
+    ${'region'}       | ${'Asia'}            | ${'region'}
+    ${'keyword'}      | ${'Bash'}            | ${'keyword'}
+    ${'project'}      | ${'a-project'}       | ${'project'}
+    ${'workingGroup'} | ${'a-working-group'} | ${'working-group'}
+  `('changeLocation for $name', ({ name, value, queryParam }) => {
     it('changes location without clearing the filters', () => {
       const { result } = renderHook(
         () => ({ useSearch: useSearch(), useHistory: useHistory() }),
         {
           wrapper: MemoryRouter,
           initialProps: {
-            initialEntries: ['/test?region=Europe'],
+            initialEntries: [`/test?${queryParam}=${value}`],
           },
         },
       );
       jest.spyOn(result.current.useHistory, 'push');
-      expect(result.current.useSearch.filters).toEqual({ region: ['Europe'] });
+      expect(result.current.useSearch.filters).toEqual({
+        keyword: [],
+        region: [],
+        project: [],
+        workingGroup: [],
+        [name]: [value],
+      });
       result.current.useSearch.changeLocation('/test2');
-      expect(result.current.useSearch.filters).toEqual({ region: ['Europe'] });
+      expect(result.current.useSearch.filters).toEqual({
+        keyword: [],
+        region: [],
+        project: [],
+        workingGroup: [],
+        [name]: [value],
+      });
       expect(result.current.useHistory.push).toHaveBeenCalledWith({
         pathname: '/test2',
-        search: 'region=Europe',
+        search: `${queryParam}=${value}`,
       });
     });
   });

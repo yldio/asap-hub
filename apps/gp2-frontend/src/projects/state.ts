@@ -27,7 +27,7 @@ const projectsState = atom<gp2.ListProjectResponse>({
 });
 
 export const refreshProjectsState = atom<number>({
-  key: 'refreshProjectsState',
+  key: 'refreshProjects',
   default: 0,
 });
 

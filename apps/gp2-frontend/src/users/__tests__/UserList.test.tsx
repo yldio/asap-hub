@@ -13,6 +13,8 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getUsers } from '../api';
+import { getWorkingGroups } from '../../working-groups/api';
+import { getProjects } from '../../projects/api';
 import { refreshUsersState } from '../state';
 import UserList from '../UserList';
 import * as search from '../../hooks/search';
@@ -28,20 +30,35 @@ jest.mock('@asap-hub/frontend-utils', () => {
   };
 });
 jest.mock('../api');
-jest.mock('../../users/api');
+jest.mock('../../projects/api');
+jest.mock('../../working-groups/api');
 
 const mockGetUsers = getUsers as jest.MockedFunction<typeof getUsers>;
+const mockGetProjects = getProjects as jest.MockedFunction<typeof getProjects>;
+const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
+  typeof getWorkingGroups
+>;
 
 const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
   typeof createCsvFileStream
 >;
 
-const renderUserList = async (
-  listGroupResponse: gp2Model.ListUserResponse = gp2Fixtures.createUsersResponse(),
-  displayFilters: boolean = false,
-  isAdministrator: boolean = false,
-) => {
-  mockGetUsers.mockResolvedValue(listGroupResponse);
+const renderUserList = async ({
+  listUserResponse = gp2Fixtures.createUsersResponse(),
+  listProjectResponse = gp2Fixtures.createProjectsResponse(),
+  listWorkingGroupResponse = gp2Fixtures.createWorkingGroupsResponse(),
+  displayFilters = false,
+  isAdministrator = false,
+}: {
+  listUserResponse?: gp2Model.ListUserResponse;
+  listProjectResponse?: gp2Model.ListProjectResponse;
+  listWorkingGroupResponse?: gp2Model.ListWorkingGroupResponse;
+  displayFilters?: boolean;
+  isAdministrator?: boolean;
+} = {}) => {
+  mockGetUsers.mockResolvedValue(listUserResponse);
+  mockGetProjects.mockResolvedValue(listProjectResponse);
+  mockGetWorkingGroups.mockResolvedValue(listWorkingGroupResponse);
 
   render(
     <RecoilRoot
@@ -86,14 +103,15 @@ it('fetches the user information', async () => {
 });
 
 it('renders a list of fetched groups', async () => {
-  await renderUserList({
+  const listUserResponse = {
     total: 2,
     items: gp2Fixtures.createUsersResponse(2).items.map((user, i) => ({
       ...user,
       id: `${i}`,
       displayName: `Display Name ${i}`,
     })),
-  });
+  };
+  await renderUserList({ listUserResponse });
   expect(
     screen.getByRole('heading', { name: /display name 0/i }),
   ).toBeInTheDocument();
@@ -103,26 +121,28 @@ it('renders a list of fetched groups', async () => {
 });
 
 it('renders the filters modal', async () => {
-  await renderUserList(undefined, true);
+  await renderUserList({ displayFilters: true });
   expect(screen.getByRole('heading', { name: 'Filters' })).toBeVisible();
 });
 it('calls the updateFilters with the right arguments', async () => {
   const mockUpdateFilter = jest.fn();
   jest.spyOn(search, 'useSearch').mockImplementation(() => ({
     changeLocation: jest.fn(),
-    filters: { region: [] },
+    filters: { region: ['Asia'] },
     updateFilters: mockUpdateFilter,
   }));
-  await renderUserList(undefined, true);
+  await renderUserList({ displayFilters: true });
   userEvent.click(screen.getByRole('button', { name: 'Apply' }));
   expect(mockUpdateFilter).toHaveBeenCalledWith('/users', {
-    region: [],
+    region: ['Asia'],
     keyword: [],
+    project: [],
+    workingGroup: [],
   });
 });
 
 it('triggers export with the same parameters but overrides onlyOnboarded with false', async () => {
-  await renderUserList(undefined, undefined, true);
+  await renderUserList({ isAdministrator: true });
 
   await waitFor(() =>
     expect(mockGetUsers).toHaveBeenCalledWith(

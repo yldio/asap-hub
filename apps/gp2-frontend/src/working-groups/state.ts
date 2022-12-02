@@ -20,7 +20,7 @@ import {
 
 const fetchWorkingGroupNetworkState =
   selector<gp2.ListWorkingGroupNetworkResponse>({
-    key: 'fetchWorkingGroupNetworkState',
+    key: 'fetchWorkingGroupNetwork',
     get: ({ get }) => {
       get(refreshWorkingGroupNetworkState);
       return getWorkingGroupNetwork(get(authorizationState));
@@ -28,12 +28,12 @@ const fetchWorkingGroupNetworkState =
   });
 
 const workingGroupNetworkState = atom<gp2.ListWorkingGroupNetworkResponse>({
-  key: 'workingGroupNetworkState',
+  key: 'workingGroupNetwork',
   default: fetchWorkingGroupNetworkState,
 });
 
 export const refreshWorkingGroupNetworkState = atom<number>({
-  key: 'refreshWorkingGroupNetworkState',
+  key: 'refreshWorkingGroupNetwork',
   default: 0,
 });
 
@@ -102,12 +102,12 @@ const setWorkingGroup = selector<gp2.WorkingGroupResponse>({
 } as unknown as ReadWriteSelectorOptions<gp2.WorkingGroupResponse>);
 
 export const refreshWorkingGroupsState = atom<number>({
-  key: 'refreshWorkingGroupsState',
+  key: 'refreshWorkingGroups',
   default: 0,
 });
 
 const fetchWorkingGroupsState = selector<gp2.ListWorkingGroupResponse>({
-  key: 'fetchProjectsState',
+  key: 'fetchWorkingGroups',
   get: ({ get }) => {
     get(refreshWorkingGroupsState);
     return getWorkingGroups(get(authorizationState));

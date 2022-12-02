@@ -9,14 +9,14 @@ const getBashColor = (level: string): string => {
   switch (level) {
     case 'ERROR':
     case 'ERROR-DEBUG':
-      return '\x1b[31m';
+      return RED_COLOR;
     case 'WARNING':
-      return '\x1b[33m';
+      return YELLOW_COLOR;
     case 'INFO':
-      return '\x1b[32m';
+      return GREEN_COLOR;
     case 'DEBUG':
     default:
-      return '\x1b[34m';
+      return BLUE_COLOR;
   }
 };
 

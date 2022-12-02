@@ -9408,12 +9408,196 @@ export type WorkingGroupContentFragment = Pick<
     leaders: Maybe<
       Array<
         Pick<WorkingGroupsDataLeadersChildDto, 'workstreamRole' | 'role'> & {
-          user: Maybe<Array<Pick<Users, 'id'>>>;
+          user: Maybe<
+            Array<
+              Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
+                flatData: Pick<
+                  UsersFlatDataDto,
+                  | 'biography'
+                  | 'degree'
+                  | 'email'
+                  | 'contactEmail'
+                  | 'firstName'
+                  | 'institution'
+                  | 'jobTitle'
+                  | 'lastModifiedDate'
+                  | 'lastName'
+                  | 'country'
+                  | 'city'
+                  | 'onboarded'
+                  | 'orcid'
+                  | 'orcidLastModifiedDate'
+                  | 'orcidLastSyncDate'
+                  | 'expertiseAndResourceTags'
+                  | 'expertiseAndResourceDescription'
+                  | 'role'
+                  | 'responsibilities'
+                  | 'researchInterests'
+                  | 'reachOut'
+                  | 'alumniSinceDate'
+                > & {
+                  avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+                  orcidWorks: Maybe<
+                    Array<
+                      Pick<
+                        UsersDataOrcidWorksChildDto,
+                        | 'doi'
+                        | 'id'
+                        | 'lastModifiedDate'
+                        | 'publicationDate'
+                        | 'title'
+                        | 'type'
+                      >
+                    >
+                  >;
+                  questions: Maybe<
+                    Array<Pick<UsersDataQuestionsChildDto, 'question'>>
+                  >;
+                  teams: Maybe<
+                    Array<
+                      Pick<UsersDataTeamsChildDto, 'role'> & {
+                        id: Maybe<
+                          Array<
+                            Pick<Teams, 'id'> & {
+                              flatData: Pick<
+                                TeamsFlatDataDto,
+                                'displayName'
+                              > & {
+                                proposal: Maybe<
+                                  Array<Pick<ResearchOutputs, 'id'>>
+                                >;
+                              };
+                            }
+                          >
+                        >;
+                      }
+                    >
+                  >;
+                  social: Maybe<
+                    Array<
+                      Pick<
+                        UsersDataSocialChildDto,
+                        | 'github'
+                        | 'googleScholar'
+                        | 'linkedIn'
+                        | 'researcherId'
+                        | 'researchGate'
+                        | 'twitter'
+                        | 'website1'
+                        | 'website2'
+                      >
+                    >
+                  >;
+                  labs: Maybe<
+                    Array<
+                      Pick<Labs, 'id'> & {
+                        flatData: Pick<LabsFlatDataDto, 'name'>;
+                      }
+                    >
+                  >;
+                };
+              }
+            >
+          >;
         }
       >
     >;
     members: Maybe<
-      Array<Pick<WorkingGroupsDataMembersChildDto, 'workstreamRole'>>
+      Array<
+        Pick<WorkingGroupsDataMembersChildDto, 'workstreamRole'> & {
+          user: Maybe<
+            Array<
+              Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
+                flatData: Pick<
+                  UsersFlatDataDto,
+                  | 'biography'
+                  | 'degree'
+                  | 'email'
+                  | 'contactEmail'
+                  | 'firstName'
+                  | 'institution'
+                  | 'jobTitle'
+                  | 'lastModifiedDate'
+                  | 'lastName'
+                  | 'country'
+                  | 'city'
+                  | 'onboarded'
+                  | 'orcid'
+                  | 'orcidLastModifiedDate'
+                  | 'orcidLastSyncDate'
+                  | 'expertiseAndResourceTags'
+                  | 'expertiseAndResourceDescription'
+                  | 'role'
+                  | 'responsibilities'
+                  | 'researchInterests'
+                  | 'reachOut'
+                  | 'alumniSinceDate'
+                > & {
+                  avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+                  orcidWorks: Maybe<
+                    Array<
+                      Pick<
+                        UsersDataOrcidWorksChildDto,
+                        | 'doi'
+                        | 'id'
+                        | 'lastModifiedDate'
+                        | 'publicationDate'
+                        | 'title'
+                        | 'type'
+                      >
+                    >
+                  >;
+                  questions: Maybe<
+                    Array<Pick<UsersDataQuestionsChildDto, 'question'>>
+                  >;
+                  teams: Maybe<
+                    Array<
+                      Pick<UsersDataTeamsChildDto, 'role'> & {
+                        id: Maybe<
+                          Array<
+                            Pick<Teams, 'id'> & {
+                              flatData: Pick<
+                                TeamsFlatDataDto,
+                                'displayName'
+                              > & {
+                                proposal: Maybe<
+                                  Array<Pick<ResearchOutputs, 'id'>>
+                                >;
+                              };
+                            }
+                          >
+                        >;
+                      }
+                    >
+                  >;
+                  social: Maybe<
+                    Array<
+                      Pick<
+                        UsersDataSocialChildDto,
+                        | 'github'
+                        | 'googleScholar'
+                        | 'linkedIn'
+                        | 'researcherId'
+                        | 'researchGate'
+                        | 'twitter'
+                        | 'website1'
+                        | 'website2'
+                      >
+                    >
+                  >;
+                  labs: Maybe<
+                    Array<
+                      Pick<Labs, 'id'> & {
+                        flatData: Pick<LabsFlatDataDto, 'name'>;
+                      }
+                    >
+                  >;
+                };
+              }
+            >
+          >;
+        }
+      >
     >;
   };
 };
@@ -9446,11 +9630,197 @@ export type FetchWorkingGroupQuery = {
             Pick<
               WorkingGroupsDataLeadersChildDto,
               'workstreamRole' | 'role'
-            > & { user: Maybe<Array<Pick<Users, 'id'>>> }
+            > & {
+              user: Maybe<
+                Array<
+                  Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
+                    flatData: Pick<
+                      UsersFlatDataDto,
+                      | 'biography'
+                      | 'degree'
+                      | 'email'
+                      | 'contactEmail'
+                      | 'firstName'
+                      | 'institution'
+                      | 'jobTitle'
+                      | 'lastModifiedDate'
+                      | 'lastName'
+                      | 'country'
+                      | 'city'
+                      | 'onboarded'
+                      | 'orcid'
+                      | 'orcidLastModifiedDate'
+                      | 'orcidLastSyncDate'
+                      | 'expertiseAndResourceTags'
+                      | 'expertiseAndResourceDescription'
+                      | 'role'
+                      | 'responsibilities'
+                      | 'researchInterests'
+                      | 'reachOut'
+                      | 'alumniSinceDate'
+                    > & {
+                      avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+                      orcidWorks: Maybe<
+                        Array<
+                          Pick<
+                            UsersDataOrcidWorksChildDto,
+                            | 'doi'
+                            | 'id'
+                            | 'lastModifiedDate'
+                            | 'publicationDate'
+                            | 'title'
+                            | 'type'
+                          >
+                        >
+                      >;
+                      questions: Maybe<
+                        Array<Pick<UsersDataQuestionsChildDto, 'question'>>
+                      >;
+                      teams: Maybe<
+                        Array<
+                          Pick<UsersDataTeamsChildDto, 'role'> & {
+                            id: Maybe<
+                              Array<
+                                Pick<Teams, 'id'> & {
+                                  flatData: Pick<
+                                    TeamsFlatDataDto,
+                                    'displayName'
+                                  > & {
+                                    proposal: Maybe<
+                                      Array<Pick<ResearchOutputs, 'id'>>
+                                    >;
+                                  };
+                                }
+                              >
+                            >;
+                          }
+                        >
+                      >;
+                      social: Maybe<
+                        Array<
+                          Pick<
+                            UsersDataSocialChildDto,
+                            | 'github'
+                            | 'googleScholar'
+                            | 'linkedIn'
+                            | 'researcherId'
+                            | 'researchGate'
+                            | 'twitter'
+                            | 'website1'
+                            | 'website2'
+                          >
+                        >
+                      >;
+                      labs: Maybe<
+                        Array<
+                          Pick<Labs, 'id'> & {
+                            flatData: Pick<LabsFlatDataDto, 'name'>;
+                          }
+                        >
+                      >;
+                    };
+                  }
+                >
+              >;
+            }
           >
         >;
         members: Maybe<
-          Array<Pick<WorkingGroupsDataMembersChildDto, 'workstreamRole'>>
+          Array<
+            Pick<WorkingGroupsDataMembersChildDto, 'workstreamRole'> & {
+              user: Maybe<
+                Array<
+                  Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
+                    flatData: Pick<
+                      UsersFlatDataDto,
+                      | 'biography'
+                      | 'degree'
+                      | 'email'
+                      | 'contactEmail'
+                      | 'firstName'
+                      | 'institution'
+                      | 'jobTitle'
+                      | 'lastModifiedDate'
+                      | 'lastName'
+                      | 'country'
+                      | 'city'
+                      | 'onboarded'
+                      | 'orcid'
+                      | 'orcidLastModifiedDate'
+                      | 'orcidLastSyncDate'
+                      | 'expertiseAndResourceTags'
+                      | 'expertiseAndResourceDescription'
+                      | 'role'
+                      | 'responsibilities'
+                      | 'researchInterests'
+                      | 'reachOut'
+                      | 'alumniSinceDate'
+                    > & {
+                      avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+                      orcidWorks: Maybe<
+                        Array<
+                          Pick<
+                            UsersDataOrcidWorksChildDto,
+                            | 'doi'
+                            | 'id'
+                            | 'lastModifiedDate'
+                            | 'publicationDate'
+                            | 'title'
+                            | 'type'
+                          >
+                        >
+                      >;
+                      questions: Maybe<
+                        Array<Pick<UsersDataQuestionsChildDto, 'question'>>
+                      >;
+                      teams: Maybe<
+                        Array<
+                          Pick<UsersDataTeamsChildDto, 'role'> & {
+                            id: Maybe<
+                              Array<
+                                Pick<Teams, 'id'> & {
+                                  flatData: Pick<
+                                    TeamsFlatDataDto,
+                                    'displayName'
+                                  > & {
+                                    proposal: Maybe<
+                                      Array<Pick<ResearchOutputs, 'id'>>
+                                    >;
+                                  };
+                                }
+                              >
+                            >;
+                          }
+                        >
+                      >;
+                      social: Maybe<
+                        Array<
+                          Pick<
+                            UsersDataSocialChildDto,
+                            | 'github'
+                            | 'googleScholar'
+                            | 'linkedIn'
+                            | 'researcherId'
+                            | 'researchGate'
+                            | 'twitter'
+                            | 'website1'
+                            | 'website2'
+                          >
+                        >
+                      >;
+                      labs: Maybe<
+                        Array<
+                          Pick<Labs, 'id'> & {
+                            flatData: Pick<LabsFlatDataDto, 'name'>;
+                          }
+                        >
+                      >;
+                    };
+                  }
+                >
+              >;
+            }
+          >
         >;
       };
     }
@@ -9490,11 +9860,207 @@ export type FetchWorkingGroupsQuery = {
                   Pick<
                     WorkingGroupsDataLeadersChildDto,
                     'workstreamRole' | 'role'
-                  > & { user: Maybe<Array<Pick<Users, 'id'>>> }
+                  > & {
+                    user: Maybe<
+                      Array<
+                        Pick<
+                          Users,
+                          'id' | 'created' | 'lastModified' | 'version'
+                        > & {
+                          flatData: Pick<
+                            UsersFlatDataDto,
+                            | 'biography'
+                            | 'degree'
+                            | 'email'
+                            | 'contactEmail'
+                            | 'firstName'
+                            | 'institution'
+                            | 'jobTitle'
+                            | 'lastModifiedDate'
+                            | 'lastName'
+                            | 'country'
+                            | 'city'
+                            | 'onboarded'
+                            | 'orcid'
+                            | 'orcidLastModifiedDate'
+                            | 'orcidLastSyncDate'
+                            | 'expertiseAndResourceTags'
+                            | 'expertiseAndResourceDescription'
+                            | 'role'
+                            | 'responsibilities'
+                            | 'researchInterests'
+                            | 'reachOut'
+                            | 'alumniSinceDate'
+                          > & {
+                            avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+                            orcidWorks: Maybe<
+                              Array<
+                                Pick<
+                                  UsersDataOrcidWorksChildDto,
+                                  | 'doi'
+                                  | 'id'
+                                  | 'lastModifiedDate'
+                                  | 'publicationDate'
+                                  | 'title'
+                                  | 'type'
+                                >
+                              >
+                            >;
+                            questions: Maybe<
+                              Array<
+                                Pick<UsersDataQuestionsChildDto, 'question'>
+                              >
+                            >;
+                            teams: Maybe<
+                              Array<
+                                Pick<UsersDataTeamsChildDto, 'role'> & {
+                                  id: Maybe<
+                                    Array<
+                                      Pick<Teams, 'id'> & {
+                                        flatData: Pick<
+                                          TeamsFlatDataDto,
+                                          'displayName'
+                                        > & {
+                                          proposal: Maybe<
+                                            Array<Pick<ResearchOutputs, 'id'>>
+                                          >;
+                                        };
+                                      }
+                                    >
+                                  >;
+                                }
+                              >
+                            >;
+                            social: Maybe<
+                              Array<
+                                Pick<
+                                  UsersDataSocialChildDto,
+                                  | 'github'
+                                  | 'googleScholar'
+                                  | 'linkedIn'
+                                  | 'researcherId'
+                                  | 'researchGate'
+                                  | 'twitter'
+                                  | 'website1'
+                                  | 'website2'
+                                >
+                              >
+                            >;
+                            labs: Maybe<
+                              Array<
+                                Pick<Labs, 'id'> & {
+                                  flatData: Pick<LabsFlatDataDto, 'name'>;
+                                }
+                              >
+                            >;
+                          };
+                        }
+                      >
+                    >;
+                  }
                 >
               >;
               members: Maybe<
-                Array<Pick<WorkingGroupsDataMembersChildDto, 'workstreamRole'>>
+                Array<
+                  Pick<WorkingGroupsDataMembersChildDto, 'workstreamRole'> & {
+                    user: Maybe<
+                      Array<
+                        Pick<
+                          Users,
+                          'id' | 'created' | 'lastModified' | 'version'
+                        > & {
+                          flatData: Pick<
+                            UsersFlatDataDto,
+                            | 'biography'
+                            | 'degree'
+                            | 'email'
+                            | 'contactEmail'
+                            | 'firstName'
+                            | 'institution'
+                            | 'jobTitle'
+                            | 'lastModifiedDate'
+                            | 'lastName'
+                            | 'country'
+                            | 'city'
+                            | 'onboarded'
+                            | 'orcid'
+                            | 'orcidLastModifiedDate'
+                            | 'orcidLastSyncDate'
+                            | 'expertiseAndResourceTags'
+                            | 'expertiseAndResourceDescription'
+                            | 'role'
+                            | 'responsibilities'
+                            | 'researchInterests'
+                            | 'reachOut'
+                            | 'alumniSinceDate'
+                          > & {
+                            avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+                            orcidWorks: Maybe<
+                              Array<
+                                Pick<
+                                  UsersDataOrcidWorksChildDto,
+                                  | 'doi'
+                                  | 'id'
+                                  | 'lastModifiedDate'
+                                  | 'publicationDate'
+                                  | 'title'
+                                  | 'type'
+                                >
+                              >
+                            >;
+                            questions: Maybe<
+                              Array<
+                                Pick<UsersDataQuestionsChildDto, 'question'>
+                              >
+                            >;
+                            teams: Maybe<
+                              Array<
+                                Pick<UsersDataTeamsChildDto, 'role'> & {
+                                  id: Maybe<
+                                    Array<
+                                      Pick<Teams, 'id'> & {
+                                        flatData: Pick<
+                                          TeamsFlatDataDto,
+                                          'displayName'
+                                        > & {
+                                          proposal: Maybe<
+                                            Array<Pick<ResearchOutputs, 'id'>>
+                                          >;
+                                        };
+                                      }
+                                    >
+                                  >;
+                                }
+                              >
+                            >;
+                            social: Maybe<
+                              Array<
+                                Pick<
+                                  UsersDataSocialChildDto,
+                                  | 'github'
+                                  | 'googleScholar'
+                                  | 'linkedIn'
+                                  | 'researcherId'
+                                  | 'researchGate'
+                                  | 'twitter'
+                                  | 'website1'
+                                  | 'website2'
+                                >
+                              >
+                            >;
+                            labs: Maybe<
+                              Array<
+                                Pick<Labs, 'id'> & {
+                                  flatData: Pick<LabsFlatDataDto, 'name'>;
+                                }
+                              >
+                            >;
+                          };
+                        }
+                      >
+                    >;
+                  }
+                >
               >;
             };
           }
@@ -12048,6 +12614,380 @@ export const WorkingGroupContentFragmentDoc = {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'id' },
                             },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'created' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lastModified' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'version' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'flatData' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'avatar' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'biography' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'degree' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'email' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'contactEmail',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'firstName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'institution',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'jobTitle' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'lastModifiedDate',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'lastName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'country' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'city' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'onboarded' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'orcid' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'orcidLastModifiedDate',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'orcidLastSyncDate',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'orcidWorks' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'doi' },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'lastModifiedDate',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'publicationDate',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'title',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'type' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'questions' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'question',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'expertiseAndResourceTags',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'expertiseAndResourceDescription',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'teams' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'role' },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'id',
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'flatData',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'displayName',
+                                                      },
+                                                    },
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'proposal',
+                                                      },
+                                                      selectionSet: {
+                                                        kind: 'SelectionSet',
+                                                        selections: [
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value: 'id',
+                                                            },
+                                                          },
+                                                        ],
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'social' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'github',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'googleScholar',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'linkedIn',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'researcherId',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'researchGate',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'twitter',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'website1',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'website2',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'role' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'responsibilities',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'researchInterests',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'reachOut' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'labs' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'flatData',
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'name',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'alumniSinceDate',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
                           ],
                         },
                       },
@@ -12063,6 +13003,393 @@ export const WorkingGroupContentFragmentDoc = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'workstreamRole' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'user' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'created' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lastModified' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'version' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'flatData' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'avatar' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'biography' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'degree' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'email' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'contactEmail',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'firstName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'institution',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'jobTitle' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'lastModifiedDate',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'lastName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'country' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'city' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'onboarded' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'orcid' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'orcidLastModifiedDate',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'orcidLastSyncDate',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'orcidWorks' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'doi' },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'lastModifiedDate',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'publicationDate',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'title',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'type' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'questions' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'question',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'expertiseAndResourceTags',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'expertiseAndResourceDescription',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'teams' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'role' },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'id',
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'flatData',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'displayName',
+                                                      },
+                                                    },
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'proposal',
+                                                      },
+                                                      selectionSet: {
+                                                        kind: 'SelectionSet',
+                                                        selections: [
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value: 'id',
+                                                            },
+                                                          },
+                                                        ],
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'social' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'github',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'googleScholar',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'linkedIn',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'researcherId',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'researchGate',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'twitter',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'website1',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'website2',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'role' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'responsibilities',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'researchInterests',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'reachOut' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'labs' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'flatData',
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'name',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'alumniSinceDate',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
                       },
                     ],
                   },

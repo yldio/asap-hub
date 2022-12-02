@@ -1,4 +1,4 @@
-import { GroupLeader } from '@asap-hub/model';
+import { WorkingGroupLeader, WorkingGroupMember } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import React, { useEffect } from 'react';
 import { Card, Headline3, Subtitle, TabButton } from '../atoms';
@@ -16,8 +16,10 @@ const containerStyles = css({
 });
 
 type GroupLeadersTabbedCardProps = {
-  leaders: ReadonlyArray<Pick<GroupLeader, 'user' | 'role'>>;
-  members: ReadonlyArray<Pick<GroupLeader, 'user' | 'role'>>;
+  leaders: ReadonlyArray<
+    Pick<WorkingGroupLeader, 'user' | 'role' | 'workstreamRole'>
+  >;
+  members: ReadonlyArray<Pick<WorkingGroupMember, 'user' | 'workstreamRole'>>;
   isGroupActive: boolean;
 };
 
@@ -48,7 +50,7 @@ const GroupLeadersTabbedCard: React.FC<GroupLeadersTabbedCardProps> = ({
 
   const currentMembers =
     memberActiveTab === 0 ? activeMembers : inactiveMembers;
-
+  console.log(members);
   return (
     <Card>
       <Headline3>Working Group Members</Headline3>
@@ -63,11 +65,15 @@ const GroupLeadersTabbedCard: React.FC<GroupLeadersTabbedCardProps> = ({
       </TabNav>
       <div css={containerStyles}>
         <MembersList
-          members={currentLeaders.map(({ user, role }) => ({
+          members={currentLeaders.map(({ user, workstreamRole }) => ({
             ...user,
-            firstLine: user.displayName,
-            secondLine: role,
-            thirdLine: user.teams.length <= 1 ? user.teams : 'Multiple Teams',
+            id: user?.id || '',
+            firstLine: user.displayName || '',
+            secondLine: workstreamRole,
+            thirdLine:
+              user?.teams && user?.teams?.length <= 1
+                ? user?.teams
+                : 'Multiple Teams',
           }))}
         />
       </div>
@@ -82,12 +88,18 @@ const GroupLeadersTabbedCard: React.FC<GroupLeadersTabbedCardProps> = ({
       </TabNav>
       <div css={containerStyles}>
         <MembersList
-          members={currentMembers.map(({ user, role }) => ({
-            ...user,
-            firstLine: user.displayName,
-            secondLine: role,
-            thirdLine: user.teams.length <= 1 ? user.teams : 'Multiple Teams',
-          }))}
+          members={currentMembers
+            .filter((member) => member.user !== undefined)
+            .map(({ user, workstreamRole }) => ({
+              ...user,
+              id: user?.id || '',
+              firstLine: user.displayName || '',
+              secondLine: workstreamRole,
+              thirdLine:
+                user?.teams && user?.teams?.length <= 1
+                  ? user.teams
+                  : 'Multiple Teams',
+            }))}
         />
       </div>
     </Card>

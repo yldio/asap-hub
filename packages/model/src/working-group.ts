@@ -13,13 +13,13 @@ export const workingGroupRole = ['Chair', 'Project Manager'] as const;
 export type WorkingGroupRole = typeof workingGroupRole[number];
 
 export type WorkingGroupLeader = {
-  readonly user: Pick<UserResponse, 'id'> | undefined;
+  readonly user: UserResponse;
   readonly role: WorkingGroupRole;
   readonly workstreamRole: string;
 };
 
 export type WorkingGroupMember = {
-  readonly user: Pick<UserResponse, 'id'> | undefined;
+  readonly user: UserResponse;
   readonly workstreamRole: string;
 };
 

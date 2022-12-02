@@ -9,7 +9,7 @@ import { perRem } from '../pixels';
 
 type WorkingGroupAboutProps = Pick<
   WorkingGroupResponse,
-  'description' | 'deliverables' | 'pointOfContact'
+  'description' | 'deliverables' | 'pointOfContact' | 'members' | 'leaders'
 >;
 const containerStyles = css({
   display: 'flex',
@@ -21,6 +21,8 @@ const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
   description,
   deliverables,
   pointOfContact,
+  members,
+  leaders,
 }) => (
   <div css={containerStyles}>
     <DeliverablesCard deliverables={deliverables} />
@@ -61,7 +63,7 @@ const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
         </Link>
       )}
     </Card>
-    <WorkingGroupMembers leaders={[]} members={[]} isGroupActive />
+    <WorkingGroupMembers leaders={leaders} members={members} isGroupActive />
   </div>
 );
 

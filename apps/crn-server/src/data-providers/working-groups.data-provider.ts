@@ -1,7 +1,9 @@
 import {
   FetchOptions,
   WorkingGroupDataObject,
+  WorkingGroupLeader,
   WorkingGroupListDataObject,
+  WorkingGroupMember,
 } from '@asap-hub/model';
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import {
@@ -86,16 +88,33 @@ export const parseGraphQlWorkingGroup = (
     description: workingGroupGraphQl.flatData.description || '',
     shortText: workingGroupGraphQl.flatData.shortText || '',
     members:
-      workingGroupGraphQl.flatData.members?.map((member) => ({
-        user: member.user?.[0] || undefined,
-        workstreamRole: member.workstreamRole || '',
-      })) || [],
+      (workingGroupGraphQl.flatData.members?.flatMap((member) =>
+        member.user?.[0]
+          ? [
+              {
+                ...member,
+                user: {
+                  ...member.user[0],
+                  displayName: `${member.user[0].flatData.firstName} ${member.user[0].flatData.lastName}`,
+                },
+              },
+            ]
+          : [],
+      ) as unknown as WorkingGroupMember[]) || [],
     leaders:
-      workingGroupGraphQl.flatData.leaders?.map((leader) => ({
-        user: leader.user?.[0] || undefined,
-        workstreamRole: leader.workstreamRole || '',
-        role: leader.role === 'Project Manager' ? 'Project Manager' : 'Chair',
-      })) || [],
+      (workingGroupGraphQl.flatData.leaders?.flatMap((leader) =>
+        leader.user?.[0]
+          ? [
+              {
+                ...leader,
+                user: {
+                  ...leader.user[0],
+                  displayName: `${leader.user[0].flatData.firstName} ${leader.user[0].flatData.lastName}`,
+                },
+              },
+            ]
+          : [],
+      ) as unknown as WorkingGroupLeader[]) || [],
     pointOfContact: undefined,
     complete: false,
     deliverables: workingGroupGraphQl.flatData.deliverables

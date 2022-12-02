@@ -24,7 +24,9 @@ describe('Logging', () => {
   });
 
   describe('without verbose mode', () => {
-    process.env.VERBOSE_DATA_SYNC = 'false';
+    beforeEach(() => {
+      process.env.VERBOSE_DATA_SYNC = 'false';
+    });
 
     it('logs ERROR in red', () => {
       logger('Test', 'ERROR');
@@ -58,7 +60,9 @@ describe('Logging', () => {
   });
 
   describe('with verbose mode', () => {
-    process.env.VERBOSE_DATA_SYNC = 'true';
+    beforeEach(() => {
+      process.env.VERBOSE_DATA_SYNC = 'true';
+    });
 
     it('logs ERROR in red', () => {
       logger('Test', 'ERROR');

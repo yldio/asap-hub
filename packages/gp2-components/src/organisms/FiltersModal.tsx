@@ -33,30 +33,19 @@ type FilterSelectorProps<T extends string> = {
   noOptionsMessage: string;
 };
 
-const FilterSelector = <T extends string>({
-  title,
-  selected,
-  suggestions,
-  setValue,
-  noOptionsMessage,
-}: FilterSelectorProps<T>): ReturnType<React.FC> => (
-  <LabeledMultiSelect
-    title={title}
-    placeholder="Start typing…"
-    values={selected.map((item) => ({
-      label: item,
-      value: item,
-    }))}
-    suggestions={suggestions.map((suggestion) => ({
-      label: suggestion,
-      value: suggestion,
-    }))}
-    onChange={(newValues) => {
-      setValue(newValues.map(({ value }) => value));
-    }}
-    noOptionsMessage={({ inputValue }) => `${noOptionsMessage} "${inputValue}"`}
-  />
-);
+const getValues = <T extends string>(selected: T[]) =>
+  selected.map((item) => ({ label: item, value: item }));
+
+const onChange =
+  <T extends string>(setValue: (items: T[]) => void) =>
+  (newValues: Readonly<{ value: T; label: T }[]>) => {
+    setValue(newValues.map(({ value }) => value));
+  };
+
+const getNoOptionsMessage =
+  (message: string) =>
+  ({ inputValue }: { inputValue: string }) =>
+    `${message} "${inputValue}"`;
 
 const FiltersModal: React.FC<FiltersModalProps> = ({
   onBackClick,
@@ -77,19 +66,25 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
     <Modal padding={false}>
       <div css={containerStyles}>
         <FilterModalHeader numberOfFilter={numberOfFilter} />
-        <FilterSelector<gp2Model.Keyword>
-          title="Expertise / Interests"
-          selected={selectedExpertise}
-          suggestions={[...keywords]}
-          setValue={setSelectedExpertise}
-          noOptionsMessage={'Sorry, no current expertise / interests match'}
+        <LabeledMultiSelect
+          title={'Expertise / Interests'}
+          placeholder="Start typing…"
+          values={getValues(selectedExpertise)}
+          suggestions={getValues([...keywords])}
+          onChange={onChange(setSelectedExpertise)}
+          noOptionsMessage={getNoOptionsMessage(
+            'Sorry, no current expertise / interests match',
+          )}
         />
-        <FilterSelector<gp2Model.UserRegion>
-          title="Regions"
-          selected={selectedRegions}
-          suggestions={[...userRegions]}
-          setValue={setSelectedRegions}
-          noOptionsMessage={'Sorry, no current regions match'}
+        <LabeledMultiSelect
+          title={'Regions'}
+          placeholder="Start typing…"
+          values={getValues(selectedRegions)}
+          suggestions={getValues([...userRegions])}
+          onChange={onChange(setSelectedRegions)}
+          noOptionsMessage={getNoOptionsMessage(
+            'Sorry, no current regions match',
+          )}
         />
         <LabeledMultiSelect
           title="Working Groups"

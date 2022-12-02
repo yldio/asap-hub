@@ -3,6 +3,7 @@ import {
   WorkingGroupListResponse,
   deliverableStatus,
 } from '@asap-hub/model';
+import { createUserResponse } from './users';
 
 type FixtureOptions = {
   deliverables?: number;
@@ -21,12 +22,17 @@ export const createWorkingGroupMembers = (
   members: number,
 ): WorkingGroupResponse['members'] =>
   Array.from({ length: members }, (_, itemIndex) => ({
-    displayName: 'Example',
-    email: 'test@example.com',
-    firstName: 'Mr',
-    lastName: 'Example',
-    id: `member-${itemIndex}`,
-    workingGroupRole: 'Project Manager' as const,
+    user: createUserResponse({}, itemIndex),
+    workstreamRole: `member role - ${itemIndex}`,
+  }));
+
+export const createWorkingGroupLeaders = (
+  members: number,
+): WorkingGroupResponse['leaders'] =>
+  Array.from({ length: members }, (_, itemIndex) => ({
+    user: createUserResponse({}, itemIndex),
+    role: 'Project Manager' as const,
+    workstreamRole: `leader role - ${itemIndex}`,
   }));
 
 export const createWorkingGroupResponse = (
@@ -43,6 +49,7 @@ export const createWorkingGroupResponse = (
   deliverables: createDeliverables(options?.deliverables ?? 1),
   complete: false,
   members: createWorkingGroupMembers(options?.members ?? 1),
+  leaders: createWorkingGroupLeaders(options?.members ?? 1),
 });
 
 export const createWorkingGroupListResponse = (

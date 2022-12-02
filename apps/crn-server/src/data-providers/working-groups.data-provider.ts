@@ -85,7 +85,17 @@ export const parseGraphQlWorkingGroup = (
     title: workingGroupGraphQl.flatData.title || '',
     description: workingGroupGraphQl.flatData.description || '',
     shortText: workingGroupGraphQl.flatData.shortText || '',
-    members: [],
+    members:
+      workingGroupGraphQl.flatData.members?.map((member) => ({
+        user: member.user?.[0] || undefined,
+        workstreamRole: member.workstreamRole || '',
+      })) || [],
+    leaders:
+      workingGroupGraphQl.flatData.leaders?.map((leader) => ({
+        user: leader.user?.[0] || undefined,
+        workstreamRole: leader.workstreamRole || '',
+        role: leader.role === 'Project Manager' ? 'Project Manager' : 'Chair',
+      })) || [],
     pointOfContact: undefined,
     complete: false,
     deliverables: workingGroupGraphQl.flatData.deliverables

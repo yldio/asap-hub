@@ -1,5 +1,10 @@
 import { isVerbose } from './setup';
 
+export const RED_COLOR = '\x1b[31m';
+export const YELLOW_COLOR = '\x1b[33m';
+export const GREEN_COLOR = '\x1b[32m';
+export const BLUE_COLOR = '\x1b[34m';
+
 const getBashColor = (level: string): string => {
   switch (level) {
     case 'ERROR':

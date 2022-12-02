@@ -6182,6 +6182,7 @@ type WorkingGroupsDataDto {
   description: WorkingGroupsDataDescriptionDto
   externalLink: WorkingGroupsDataExternalLinkDto
   externalLinkText: WorkingGroupsDataExternalLinkTextDto
+  shortText: WorkingGroupsDataShortTextDto
   title: WorkingGroupsDataTitleDto
 }
 
@@ -6212,7 +6213,18 @@ input WorkingGroupsDataInputDto {
   description: WorkingGroupsDataDescriptionInputDto
   externalLink: WorkingGroupsDataExternalLinkInputDto
   externalLinkText: WorkingGroupsDataExternalLinkTextInputDto
+  shortText: WorkingGroupsDataShortTextInputDto
   title: WorkingGroupsDataTitleInputDto
+}
+
+"""The structure of the Short Text field of the Working Groups content type."""
+type WorkingGroupsDataShortTextDto {
+  iv: String
+}
+
+"""The structure of the Short Text field of the Working Groups content input type."""
+input WorkingGroupsDataShortTextInputDto {
+  iv: String
 }
 
 """The structure of the Title field of the Working Groups content type."""
@@ -6232,6 +6244,7 @@ type WorkingGroupsFlatDataDto {
   description: String
   externalLink: String
   externalLinkText: String
+  shortText: String
   title: String
 }
 

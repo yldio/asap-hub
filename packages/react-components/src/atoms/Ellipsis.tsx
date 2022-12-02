@@ -8,12 +8,20 @@ export const ellipsisStyles = css({
   textOverflow: 'ellipsis',
 });
 
+const lineClamp = (lines: number) =>
+  css({
+    WebkitLineClamp: lines,
+  });
+
 type EllipsisProps = {
   readonly children?: React.ReactNode;
+  readonly numberOfLines?: number;
 };
 
-const Ellipsis: React.FC<EllipsisProps> = ({ children }) => (
-  <span css={ellipsisStyles}>{children}</span>
+const Ellipsis: React.FC<EllipsisProps> = ({ children, numberOfLines }) => (
+  <span css={[ellipsisStyles, numberOfLines && lineClamp(numberOfLines)]}>
+    {children}
+  </span>
 );
 
 export default Ellipsis;

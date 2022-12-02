@@ -68,6 +68,24 @@
         }
       },
       {
+        "name": "shortText",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "contentType": "Unspecified",
+          "editor": "TextArea",
+          "label": "Short Text",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
         "name": "external-link",
         "isHidden": false,
         "isLocked": false,

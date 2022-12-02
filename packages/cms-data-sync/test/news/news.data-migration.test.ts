@@ -246,7 +246,8 @@ describe('migrateNews', () => {
       await migrateNews();
 
       expect(console.log).toHaveBeenCalledWith(
-        'There is a problem converting rich text from entry news-1',
+        '\x1b[31m',
+        '[ERROR] There is a problem converting rich text from entry news-1',
       );
 
       expect(contenfulEnv.createEntryWithId).toHaveBeenCalledWith(
@@ -288,7 +289,8 @@ describe('migrateNews', () => {
       await migrateNews();
 
       expect(console.log).toHaveBeenCalledWith(
-        'Entry with news-1 was uploaded without rich text',
+        '\x1b[31m',
+        '[ERROR] Entry with ID news-1 was uploaded without rich text',
       );
       expect(contenfulEnv.createEntryWithId).toHaveBeenCalledTimes(2);
       expect(publishContentfulEntriesMock).toHaveBeenCalledWith([newsEntry]);
@@ -310,7 +312,8 @@ describe('migrateNews', () => {
 
       expect(contenfulEnv.createEntryWithId).toHaveBeenCalledTimes(2);
       expect(console.log).toHaveBeenCalledWith(
-        'There is a problem creating entry news-1',
+        '\x1b[31m',
+        '[ERROR] There is a problem creating entry news-1',
       );
 
       expect(publishContentfulEntriesMock).toHaveBeenCalledWith([]);

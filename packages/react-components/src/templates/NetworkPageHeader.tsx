@@ -4,12 +4,17 @@ import { network } from '@asap-hub/routing';
 
 import { Display, Paragraph, TabLink } from '../atoms';
 import { perRem } from '../pixels';
-import { paper, steel } from '../colors';
+import { charcoal, lead, paper, steel } from '../colors';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { SearchAndFilter } from '../organisms';
 import { Option, Title } from '../organisms/CheckboxGroup';
 import { TabNav } from '../molecules';
-import { teamIcon, userIcon, interestGroupsIcon } from '../icons';
+import {
+  TeamIcon,
+  UserIcon,
+  InterestGroupsIcon,
+  WorkingGroupsIcon,
+} from '../icons';
 import { queryParamString } from '../routing';
 
 const visualHeaderStyles = css({
@@ -31,7 +36,7 @@ const controlsStyles = css({
   padding: `0 ${contentSidePaddingWithNavigation(8)}`,
 });
 
-type Page = 'users' | 'groups' | 'teams';
+type Page = 'users' | 'groups' | 'teams' | 'working-groups';
 
 type NetworkPageHeaderProps = {
   page: Page;
@@ -39,6 +44,7 @@ type NetworkPageHeaderProps = {
   onChangeFilter?: (filter: string) => void;
   searchQuery: string;
   onChangeSearchQuery?: (newSearchQuery: string) => void;
+  showSearch?: boolean;
 };
 
 const userFilters: ReadonlyArray<Option<TeamRole | Role | UserTag> | Title> = [
@@ -98,6 +104,7 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
 
   filters,
   onChangeFilter,
+  showSearch = true,
 }) => (
   <header>
     <div css={visualHeaderStyles}>
@@ -109,27 +116,50 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
       </div>
       <TabNav>
         <TabLink href={network({}).users({}).$ + queryParamString(searchQuery)}>
-          <span css={iconStyles}>{userIcon}</span>People
+          <span css={iconStyles}>
+            <UserIcon color={page === 'users' ? charcoal.rgb : lead.rgb} />
+          </span>
+          People
         </TabLink>
         <TabLink href={network({}).teams({}).$ + queryParamString(searchQuery)}>
-          <span css={iconStyles}>{teamIcon}</span>Teams
+          <span css={iconStyles}>
+            <TeamIcon color={page === 'teams' ? charcoal.rgb : lead.rgb} />
+          </span>
+          Teams
         </TabLink>
         <TabLink
           href={network({}).groups({}).$ + queryParamString(searchQuery)}
         >
-          <span css={iconStyles}>{interestGroupsIcon}</span>Interest Groups
+          <span css={iconStyles}>
+            <InterestGroupsIcon
+              color={page === 'groups' ? charcoal.rgb : lead.rgb}
+            />
+          </span>
+          Interest Groups
+        </TabLink>
+        <TabLink
+          href={network({}).workingGroups({}).$ + queryParamString(searchQuery)}
+        >
+          <span css={iconStyles}>
+            <WorkingGroupsIcon
+              color={page === 'working-groups' ? charcoal.rgb : lead.rgb}
+            />
+          </span>
+          Working Groups
         </TabLink>
       </TabNav>
     </div>
-    <div css={controlsStyles}>
-      <SearchAndFilter
-        onChangeSearch={onChangeSearchQuery}
-        searchQuery={searchQuery}
-        onChangeFilter={onChangeFilter}
-        filters={filters}
-        {...getFilterOptionsAndPlaceholder(page)}
-      />
-    </div>
+    {showSearch && (
+      <div css={controlsStyles}>
+        <SearchAndFilter
+          onChangeSearch={onChangeSearchQuery}
+          searchQuery={searchQuery}
+          onChangeFilter={onChangeFilter}
+          filters={filters}
+          {...getFilterOptionsAndPlaceholder(page)}
+        />
+      </div>
+    )}
   </header>
 );
 

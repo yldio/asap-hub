@@ -1,13 +1,24 @@
 import { NotFoundError } from '@asap-hub/errors';
-import { WorkingGroupResponse } from '@asap-hub/model';
+import {
+  FetchOptions,
+  WorkingGroupListResponse,
+  WorkingGroupResponse,
+} from '@asap-hub/model';
 import { WorkingGroupDataProvider } from '../data-providers/working-groups.data-provider';
 
 export interface WorkingGroupController {
+  fetch: (options: FetchOptions) => Promise<WorkingGroupListResponse>;
   fetchById: (groupId: string) => Promise<WorkingGroupResponse>;
 }
 
 export default class WorkingGroups implements WorkingGroupController {
   constructor(private workingGroupDataProvider: WorkingGroupDataProvider) {}
+
+  async fetch(options: FetchOptions): Promise<WorkingGroupListResponse> {
+    const { total, items } = await this.workingGroupDataProvider.fetch(options);
+
+    return { total, items };
+  }
 
   async fetchById(groupId: string): Promise<WorkingGroupResponse> {
     const workingGroup = await this.workingGroupDataProvider.fetchById(groupId);

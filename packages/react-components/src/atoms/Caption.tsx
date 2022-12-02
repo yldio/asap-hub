@@ -16,18 +16,21 @@ interface CaptionProps {
   readonly accent?: AccentColorName;
   readonly asParagraph?: boolean;
   readonly bold?: boolean;
+  readonly noMargin?: boolean;
 }
 const Caption: React.FC<CaptionProps> = ({
   children,
   accent,
   asParagraph = false,
   bold,
+  noMargin = false,
 }) => {
   const styles = [
     layoutStyles,
     captionStyles,
     accent ? { color: colors[accent].rgb } : null,
     bold ? boldStyles : null,
+    noMargin ? { margin: 0 } : null,
   ];
 
   return asParagraph ? (

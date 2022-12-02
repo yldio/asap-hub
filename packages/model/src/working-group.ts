@@ -33,7 +33,8 @@ export type WorkingGroupDataObject = {
   externalLinkText?: string;
   members: WorkingGroupMember[];
   pointOfContact?: WorkingGroupMember;
-  complete?: boolean;
+  complete: boolean;
+  shortText: string;
   deliverables: {
     description: string;
     status: DeliverableStatus;

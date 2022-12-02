@@ -7,7 +7,7 @@ import { paper, lead, steel } from '../colors';
 import { perRem, tabletScreen } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { Display, Link, StateTag, TabLink } from '../atoms';
-import { inactiveBadgeIcon, teamIcon } from '../icons';
+import { inactiveBadgeIcon, TeamIcon } from '../icons';
 import { TabNav } from '../molecules';
 import { EventSearch } from '../organisms';
 import { queryParamString } from '../routing';
@@ -88,7 +88,7 @@ const GroupProfileHeader: React.FC<GroupProfileHeaderProps> = ({
                   display: 'grid',
                 }}
               >
-                {teamIcon}
+                <TeamIcon />
               </div>
               <div
                 css={{

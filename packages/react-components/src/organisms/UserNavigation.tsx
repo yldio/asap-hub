@@ -8,7 +8,7 @@ import {
   largeDesktopScreen,
 } from '../pixels';
 import { Divider, NavigationLink, Caption, Anchor } from '../atoms';
-import { teamIcon, userIcon, feedbackIcon, logoutIcon } from '../icons';
+import { TeamIcon, UserIcon, feedbackIcon, logoutIcon } from '../icons';
 import { mailToFeedback } from '../mail';
 
 const containerStyles = css({
@@ -57,13 +57,17 @@ const UserNavigation: React.FC<UserNavigationProps> = ({
   <nav css={containerStyles}>
     <ul css={listStyles}>
       <li>
-        <NavigationLink href={userProfileHref} icon={userIcon}>
+        <NavigationLink href={userProfileHref} icon={<UserIcon />}>
           My Profile
         </NavigationLink>
       </li>
       {teams.map(({ name, href }) => (
         <li key={href}>
-          <NavigationLink href={href} icon={teamIcon} enabled={userOnboarded}>
+          <NavigationLink
+            href={href}
+            icon={<TeamIcon />}
+            enabled={userOnboarded}
+          >
             My Team: {name}
           </NavigationLink>
         </li>

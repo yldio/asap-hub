@@ -1,6 +1,6 @@
 import { boolean, text } from '@storybook/addon-knobs';
 import { action } from '@storybook/addon-actions';
-import { Toggle, userIcon, teamIcon } from '@asap-hub/react-components';
+import { Toggle, UserIcon, TeamIcon } from '@asap-hub/react-components';
 
 export default {
   title: 'Atoms / Toggle',
@@ -9,9 +9,9 @@ export default {
 export const Normal = () => (
   <Toggle
     leftButtonText={text('Left Text', 'People')}
-    leftButtonIcon={userIcon}
+    leftButtonIcon={<UserIcon />}
     rightButtonText={text('Right Text', 'Teams')}
-    rightButtonIcon={teamIcon}
+    rightButtonIcon={<TeamIcon />}
     position={boolean('Toggled', false) ? 'right' : 'left'}
     onChange={() => action('Toggle Changed')}
   />

@@ -13,6 +13,7 @@ import Network from '../Network';
 import { getTeams } from '../teams/api';
 import { getGroups } from '../groups/api';
 import { useUsers } from '../users/state';
+import { getWorkingGroups } from '../working-groups/api';
 
 jest.mock('../users/state', () => ({
   useUsers: jest.fn().mockReturnValue({ items: [], total: 0 }),
@@ -25,6 +26,9 @@ jest.mock('../working-groups/api');
 const mockUseUsers = useUsers as jest.MockedFunction<typeof useUsers>;
 const mockGetTeams = getTeams as jest.MockedFunction<typeof getTeams>;
 const mockGetGroups = getGroups as jest.MockedFunction<typeof getGroups>;
+const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
+  typeof getWorkingGroups
+>;
 
 mockUseUsers.mockReturnValue(createListUserResponse(1));
 
@@ -231,4 +235,16 @@ it('renders working-group profile page', async () => {
   );
 
   expect(await screen.findByText(/Working Group Description/i)).toBeVisible();
+});
+
+it('handles server error nicely for working groups tab', async () => {
+  mockGetWorkingGroups.mockRejectedValueOnce(new Error('Failed to fetch'));
+  const { getByText } = await renderNetworkPage(
+    network({}).workingGroups({}).$,
+  );
+
+  await waitFor(() => {
+    expect(mockGetWorkingGroups).toHaveBeenCalled();
+    expect(getByText(/Something went wrong/i)).toBeVisible();
+  });
 });

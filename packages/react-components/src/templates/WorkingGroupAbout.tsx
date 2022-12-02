@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 import { Card, Headline3, Link, Subtitle } from '../atoms';
 import { createMailTo } from '../mail';
 import { Collapsible } from '../molecules';
-import { DeliverablesCard } from '../organisms';
+import { DeliverablesCard, WorkingGroupMembers } from '../organisms';
 import { perRem } from '../pixels';
 
 type WorkingGroupAboutProps = Pick<
@@ -61,6 +61,7 @@ const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
         </Link>
       )}
     </Card>
+    <WorkingGroupMembers leaders={[]} members={[]} isGroupActive />
   </div>
 );
 

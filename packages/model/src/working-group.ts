@@ -9,20 +9,18 @@ export const deliverableStatus = [
 ] as const;
 export type DeliverableStatus = typeof deliverableStatus[number];
 
-export const workingGroupRole = ['Project Manager'] as const;
+export const workingGroupRole = ['Chair', 'Project Manager'] as const;
 export type WorkingGroupRole = typeof workingGroupRole[number];
 
-type WorkingGroupMember = Pick<
-  UserResponse,
-  | 'id'
-  | 'firstName'
-  | 'lastName'
-  | 'displayName'
-  | 'email'
-  | 'avatarUrl'
-  | 'alumniSinceDate'
-> & {
-  workingGroupRole: WorkingGroupRole;
+export type WorkingGroupLeader = {
+  readonly user: UserResponse;
+  readonly role: WorkingGroupRole;
+  readonly workstreamRole: string;
+};
+
+export type WorkingGroupMember = {
+  readonly user: UserResponse;
+  readonly workstreamRole: string;
 };
 
 export type WorkingGroupDataObject = {
@@ -31,7 +29,8 @@ export type WorkingGroupDataObject = {
   description: string;
   externalLink?: string;
   externalLinkText?: string;
-  members: WorkingGroupMember[];
+  leaders: ReadonlyArray<WorkingGroupLeader>;
+  members: ReadonlyArray<WorkingGroupMember>;
   pointOfContact?: WorkingGroupMember;
   complete: boolean;
   shortText: string;

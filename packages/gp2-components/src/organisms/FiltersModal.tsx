@@ -23,14 +23,7 @@ type FiltersModalProps = {
   onBackClick: () => void;
   filters: gp2Model.FetchUsersFilter;
   onApplyClick: (filters: gp2Model.FetchUsersFilter) => void;
-};
-
-type FilterSelectorProps<T extends string> = {
-  title: string;
-  selected: T[];
-  readonly suggestions: T[];
-  setValue: (item: T[]) => void;
-  noOptionsMessage: string;
+  projects: gp2Model.ProjectResponse[];
 };
 
 const getValues = <T extends string>(selected: T[]) =>
@@ -51,17 +44,25 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
   onBackClick,
   onApplyClick,
   filters,
+  projects,
 }) => {
   const [selectedRegions, setSelectedRegions] = useState(filters.region || []);
   const [selectedExpertise, setSelectedExpertise] = useState(
     filters.keyword || [],
   );
+  const [selectedProjects, setSelectedProjects] = useState(
+    projects
+      .filter(({ id }) => filters.project?.includes(id))
+      .map(({ id, title }) => ({ label: title, value: id })) || [],
+  );
   const resetFilters = () => {
     setSelectedRegions([]);
     setSelectedExpertise([]);
+    setSelectedProjects([]);
   };
 
-  const numberOfFilter = selectedRegions.length + selectedExpertise.length;
+  const numberOfFilter =
+    selectedRegions.length + selectedExpertise.length + selectedProjects.length;
   return (
     <Modal padding={false}>
       <div css={containerStyles}>
@@ -94,7 +95,19 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
         <LabeledMultiSelect
           title="Projects"
           placeholder="Start typing…"
-          suggestions={[]}
+          suggestions={projects.map(({ id, title }) => ({
+            label: title,
+            value: id,
+          }))}
+          values={selectedProjects}
+          noOptionsMessage={getNoOptionsMessage(
+            'Sorry, no current projects match',
+          )}
+          onChange={(newValues) => {
+            setSelectedProjects(
+              newValues.map(({ value, label }) => ({ value, label })),
+            );
+          }}
         />
         <Divider />
         <FilterModalFooter
@@ -102,6 +115,7 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
             onApplyClick({
               region: selectedRegions,
               keyword: selectedExpertise,
+              project: selectedProjects.map(({ value }) => value),
             });
           }}
           onClose={onBackClick}

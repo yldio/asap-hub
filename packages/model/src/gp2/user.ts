@@ -109,6 +109,7 @@ export type FetchUsersFilter = {
   keyword?: Keyword[];
   code?: string;
   onlyOnboarded?: boolean;
+  project?: string[];
 };
 
 export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;

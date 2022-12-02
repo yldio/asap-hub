@@ -10,11 +10,25 @@ describe('FiltersModal', () => {
     onBackClick: jest.fn(),
     onApplyClick: jest.fn(),
     filters: {},
+    projects: [],
   };
+  const projects: gp2Model.ProjectResponse[] = [
+    {
+      id: '42',
+      title: 'The HHG Project',
+      keywords: [],
+      milestones: [],
+      members: [],
+      startDate: '2021-12-28',
+      status: 'Inactive',
+    },
+  ];
   const getRegionsField = () =>
     screen.getByRole('textbox', { name: 'Regions' });
   const getExpertiseField = () =>
     screen.getByRole('textbox', { name: 'Expertise / Interests' });
+  const getProjectsField = () =>
+    screen.getByRole('textbox', { name: 'Projects' });
   const getApplyButton = () => screen.getByRole('button', { name: 'Apply' });
   beforeEach(jest.resetAllMocks);
   it('renders the header', () => {
@@ -74,6 +88,26 @@ describe('FiltersModal', () => {
       screen.getByText(/sorry, no current expertise \/ interests match "lt"/i),
     ).toBeVisible();
   });
+  it('projects are selectable', () => {
+    render(<FiltersModal {...defaultProps} projects={projects} />);
+    expect(
+      screen.getByText(/Apply filters to narrow down your search results.*/i)
+        .textContent,
+    ).toContain(`0 filters`);
+    userEvent.click(getProjectsField());
+    userEvent.click(screen.getByText('The HHG Project'));
+    expect(
+      screen.getByText(/Apply filters to narrow down your search results.*/i)
+        .textContent,
+    ).toContain(`1 filter`);
+  });
+  it('renders the no options message for projects', () => {
+    render(<FiltersModal {...defaultProps} />);
+    userEvent.type(getProjectsField(), 'LT');
+    expect(
+      screen.getByText(/sorry, no current projects match "lt"/i),
+    ).toBeVisible();
+  });
   it('calls the onBackClick function on close', () => {
     render(<FiltersModal {...defaultProps} />);
     const closeButton = screen.getAllByRole('button', { name: 'Close' })[1];
@@ -96,6 +130,7 @@ describe('FiltersModal', () => {
     expect(defaultProps.onApplyClick).toHaveBeenCalledWith({
       region: ['Asia'],
       keyword: [],
+      project: [],
     });
   });
   it('calls the onApplyClick function with correct expertise filters', () => {
@@ -106,10 +141,22 @@ describe('FiltersModal', () => {
     expect(defaultProps.onApplyClick).toHaveBeenCalledWith({
       region: [],
       keyword: ['R'],
+      project: [],
+    });
+  });
+  it('calls the onApplyClick function with correct project filters', () => {
+    render(<FiltersModal {...defaultProps} projects={projects} />);
+    userEvent.click(getProjectsField());
+    userEvent.click(screen.getByText('The HHG Project'));
+    userEvent.click(getApplyButton());
+    expect(defaultProps.onApplyClick).toHaveBeenCalledWith({
+      region: [],
+      keyword: [],
+      project: ['42'],
     });
   });
   it('resets selected filters on Reset', () => {
-    render(<FiltersModal {...defaultProps} />);
+    render(<FiltersModal {...defaultProps} projects={projects} />);
     const resetButton = screen.getByRole('button', { name: 'Reset' });
     expect(
       screen.getByText(/Apply filters to narrow down your search results.*/i)
@@ -120,14 +167,33 @@ describe('FiltersModal', () => {
     userEvent.click(screen.getByText('Asia'));
     userEvent.click(getExpertiseField());
     userEvent.click(screen.getByText('Bash'));
+    userEvent.click(getProjectsField());
+    userEvent.click(screen.getByText('The HHG Project'));
     expect(
       screen.getByText(/Apply filters to narrow down your search results.*/i)
         .textContent,
-    ).toContain(`2 filter`);
+    ).toContain('3 filter');
     userEvent.click(resetButton);
     expect(
       screen.getByText(/Apply filters to narrow down your search results.*/i)
         .textContent,
     ).toContain(`0 filters`);
+  });
+  it('displays current filter', () => {
+    const filters: gp2Model.FetchUsersFilter = {
+      keyword: ['Bash'],
+      region: ['Asia'],
+      project: ['42'],
+    };
+    render(
+      <FiltersModal {...defaultProps} projects={projects} filters={filters} />,
+    );
+    expect(
+      screen.getByText(/Apply filters to narrow down your search results.*/i)
+        .textContent,
+    ).toContain('3 filter');
+    expect(screen.getByText('Bash')).toBeVisible();
+    expect(screen.getByText('Asia')).toBeVisible();
+    expect(screen.getByText('The HHG Project')).toBeVisible();
   });
 });

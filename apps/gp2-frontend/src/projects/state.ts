@@ -13,7 +13,7 @@ import {
 import { authorizationState } from '../auth/state';
 import { getProject, getProjects, putProjectResources } from './api';
 
-export const fetchProjectsState = selector<gp2.ListProjectResponse>({
+const fetchProjectsState = selector<gp2.ListProjectResponse>({
   key: 'fetchProjectsState',
   get: ({ get }) => {
     get(refreshProjectsState);
@@ -21,7 +21,7 @@ export const fetchProjectsState = selector<gp2.ListProjectResponse>({
   },
 });
 
-export const projectsState = atom<gp2.ListProjectResponse>({
+const projectsState = atom<gp2.ListProjectResponse>({
   key: 'projectState',
   default: fetchProjectsState,
 });
@@ -68,7 +68,7 @@ export const usePutProjectResources = (id: string) => {
   };
 };
 
-export const useSetProjectItem = () => {
+const useSetProjectItem = () => {
   const [refresh, setRefresh] = useRecoilState(refreshProjectsState);
   const setProjectItem = useSetRecoilState(setProject);
   return (project: gp2.ProjectResponse) => {

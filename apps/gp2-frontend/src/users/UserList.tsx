@@ -6,6 +6,7 @@ import { useRecoilValue } from 'recoil';
 import { authorizationState } from '../auth/state';
 import { usePagination, usePaginationParams } from '../hooks/pagination';
 import { useSearch } from '../hooks/search';
+import { useProjectsState } from '../projects/state';
 import { getUsers } from './api';
 import { squidexUsersResponseToStream, userFields, userToCSV } from './export';
 import { useUsersState } from './state';
@@ -55,7 +56,7 @@ const UserList: React.FC<UserListProps> = ({ displayFilters = false }) => {
         ),
       userToCSV,
     );
-  // const projects = useProjectsState();
+  const { items: projects } = useProjectsState();
   return (
     <>
       <UsersPageBody
@@ -75,6 +76,7 @@ const UserList: React.FC<UserListProps> = ({ displayFilters = false }) => {
           onBackClick={onBackClick}
           filters={filters}
           onApplyClick={(f) => updateFilters(backHref, f)}
+          projects={projects}
         />
       )}
     </>

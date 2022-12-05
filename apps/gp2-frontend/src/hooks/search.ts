@@ -1,5 +1,5 @@
-import { useHistory, useLocation } from 'react-router-dom';
 import { gp2 } from '@asap-hub/model';
+import { useHistory, useLocation } from 'react-router-dom';
 import { usePaginationParams } from './pagination';
 
 export const useSearch = () => {
@@ -13,13 +13,16 @@ export const useSearch = () => {
   const selectedProjects = currentUrlParams.getAll('project');
   const selectedWorkingGroups = currentUrlParams.getAll('working-group');
 
-  const updateParams = (
-    name: string,
-    newUrlParams: URLSearchParams,
-    items?: string[],
-  ) => {
-    newUrlParams.delete(name);
-    items?.forEach((item) => newUrlParams.append(name, item));
+  const updateParams = (search: string) => {
+    const newUrlParams = new URLSearchParams(search);
+    return {
+      newUrlParams,
+      updateParams: function update(name: string, items?: string[]) {
+        newUrlParams.delete(name);
+        items?.forEach((item) => newUrlParams.append(name, item));
+        return this;
+      },
+    };
   };
 
   const updateFilters = (
@@ -27,11 +30,12 @@ export const useSearch = () => {
     { region, keyword, project, workingGroup }: gp2.FetchUsersFilter,
   ) => {
     resetPagination();
-    const newUrlParams = new URLSearchParams(history.location.search);
-    updateParams('region', newUrlParams, region);
-    updateParams('keyword', newUrlParams, keyword);
-    updateParams('project', newUrlParams, project);
-    updateParams('working-group', newUrlParams, workingGroup);
+
+    const { newUrlParams } = updateParams(history.location.search)
+      .updateParams('region', region)
+      .updateParams('keyword', keyword)
+      .updateParams('project', project)
+      .updateParams('working-group', workingGroup);
 
     history.push({ pathname, search: newUrlParams.toString() });
   };

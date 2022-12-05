@@ -10,7 +10,7 @@ export const getWorkingGroupNetwork = async (
   });
   if (!resp.ok) {
     throw new Error(
-      `Failed to fetch the working groups. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      `Failed to fetch the working group network. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
     );
   }
   return resp.json();

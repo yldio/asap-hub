@@ -900,7 +900,13 @@ describe('User data provider', () => {
       expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
     });
 
-    test('Should query with region filters', async () => {
+    // ${'projects'}      | ${['a project', 'another project']}
+    // ${'workingGroups'} | ${['a working group', 'another working group']}
+    test.each`
+      name          | value                 | fieldName
+      ${'regions'}  | ${['Africa', 'Asia']} | ${'region'}
+      ${'keywords'} | ${['Bash', 'R']}      | ${'keywords'}
+    `('Should query with $name filters', async ({ name, value, fieldName }) => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexUsersGraphqlResponse(),
       );
@@ -908,12 +914,12 @@ describe('User data provider', () => {
         take: 12,
         skip: 2,
         filter: {
-          regions: ['Europe', 'Asia'],
+          [name]: value,
         },
       };
       await userDataProvider.fetch(fetchOptions);
 
-      const filter = `(data/region/iv eq 'Europe' or data/region/iv eq 'Asia')`;
+      const filter = `(data/${fieldName}/iv eq '${value[0]}' or data/${fieldName}/iv eq '${value[1]}')`;
       expect(squidexGraphqlClientMock.request).toBeCalledWith(
         expect.anything(),
         {

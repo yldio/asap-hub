@@ -16,7 +16,12 @@ export const createUserApiUrl = ({
   if (skip !== null) {
     url.searchParams.set('skip', String(skip));
   }
-  filter?.regions?.forEach((r) => url.searchParams.append('filter[region]', r));
+  const addFilter = (name: string, items?: string[]) =>
+    items?.forEach((item) => url.searchParams.append(`filter[${name}]`, item));
+  addFilter('regions', filter?.regions);
+  addFilter('keywords', filter?.keywords);
+  addFilter('projects', filter?.projects);
+  addFilter('workingGroups', filter?.workingGroups);
 
   if (typeof filter?.onlyOnboarded === 'boolean') {
     url.searchParams.set(

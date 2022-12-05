@@ -4,6 +4,7 @@ import {
   UserDataObject,
   UserPatchRequest,
   UserResponse,
+  activeUserTag,
 } from '@asap-hub/model';
 import { UserEvent, UserPayload } from '@asap-hub/server-common';
 import { InputUser, RestUser, User, WebhookPayload } from '@asap-hub/squidex';
@@ -251,7 +252,7 @@ export const updateAvatarBody: { avatar: string } = {
 };
 
 export const getUserResponse = (): UserResponse => ({
-  _tags: ['CRN Member'],
+  _tags: [activeUserTag],
   id: 'user-id-1',
   biography: 'some bio',
   onboarded: true,
@@ -313,7 +314,7 @@ export const fetchExpectation: ListUserResponse = {
   items: [
     getUserResponse(),
     {
-      _tags: ['CRN Member'],
+      _tags: [activeUserTag],
       id: 'user-id-2',
       biography: 'some biography',
       city: 'some city',
@@ -541,7 +542,7 @@ export const getUserEvent = (id: string, eventType: UserEvent) =>
   );
 
 export const getUserDataObject = (): UserDataObject => ({
-  _tags: ['CRN Member'],
+  _tags: [activeUserTag],
   id: 'user-id-1',
   biography: 'some bio',
   onboarded: true,

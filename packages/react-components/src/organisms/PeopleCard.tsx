@@ -96,7 +96,9 @@ const PeopleCard: React.FC<PeopleCardProps> = ({
             <UserProfilePersonalText {...props} />
           </div>
           <Caption accent={'lead'} asParagraph>
-            Joined: {formatDate(new Date(createdDate))}
+            {alumniSinceDate
+              ? `Alumni since: ${formatDate(new Date(alumniSinceDate))}`
+              : `Joined: ${formatDate(new Date(createdDate))}`}
           </Caption>
         </div>
       </div>

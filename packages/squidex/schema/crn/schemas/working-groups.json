@@ -17,13 +17,13 @@
       {
         "name": "complete",
         "properties": {
-          "isRequired": false,
-          "isRequiredOnPublish": false,
+          "isRequired": true,
+          "isRequiredOnPublish": true,
           "isHalfWidth": true,
           "fieldType": "Boolean",
           "editor": "Toggle",
           "inlineEditable": true,
-          "defaultValue": false,
+          "defaultValue": true,
           "label": "This working group is complete"
         },
         "isLocked": false,

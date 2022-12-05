@@ -1,5 +1,9 @@
 import { WorkingGroupSquidexDataProvider } from '../../src/data-providers/working-groups.data-provider';
 import {
+  getGraphQLUser,
+  getSquidexUserGraphqlResponse,
+} from '../fixtures/users.fixtures';
+import {
   getSquidexWorkingGroupGraphqlResponse,
   getSquidexWorkingGroupsGraphqlResponse,
   getWorkingGroupDataObject,
@@ -175,6 +179,56 @@ describe('Working Group Data Provider', () => {
 
       expect(response?.deliverables).toEqual([
         { description: 'Deliverable 1', status: 'Complete' },
+      ]);
+    });
+
+    test('Should return leaders', async () => {
+      const squidexGraphqlResponse = getSquidexWorkingGroupGraphqlResponse();
+      squidexGraphqlResponse.findWorkingGroupsContent!.flatData.leaders = [
+        {
+          user: [getGraphQLUser()],
+          workstreamRole: 'Some role',
+          role: 'Chair',
+        },
+      ];
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
+
+      const response = await workingGroupDataProvider.fetchById(workingGroupId);
+      expect(response?.leaders).toStrictEqual([
+        {
+          user: {
+            ...getSquidexUserGraphqlResponse().findUsersContent,
+            displayName: 'Tom Hardy',
+          },
+          workstreamRole: 'Some role',
+          role: 'Chair',
+        },
+      ]);
+    });
+
+    test('Should return members', async () => {
+      const squidexGraphqlResponse = getSquidexWorkingGroupGraphqlResponse();
+      squidexGraphqlResponse.findWorkingGroupsContent!.flatData.members = [
+        {
+          user: [getGraphQLUser()],
+          workstreamRole: 'Some role',
+        },
+      ];
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
+
+      const response = await workingGroupDataProvider.fetchById(workingGroupId);
+      expect(response?.members).toStrictEqual([
+        {
+          user: {
+            ...getSquidexUserGraphqlResponse().findUsersContent,
+            displayName: 'Tom Hardy',
+          },
+          workstreamRole: 'Some role',
+        },
       ]);
     });
 

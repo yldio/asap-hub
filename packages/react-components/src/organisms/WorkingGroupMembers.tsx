@@ -50,7 +50,7 @@ const GroupLeadersTabbedCard: React.FC<GroupLeadersTabbedCardProps> = ({
 
   const currentMembers =
     memberActiveTab === 0 ? activeMembers : inactiveMembers;
-  console.log(members);
+
   return (
     <Card>
       <Headline3>Working Group Members</Headline3>

@@ -110,29 +110,30 @@ describe('/users/ route', () => {
         expect(response.status).toBe(400);
       });
 
-      test('Should return the results correctly when a filter is used', async () => {
-        userControllerMock.fetch.mockResolvedValueOnce(fetchExpectation);
+      test.each`
+        name               | value
+        ${'regions'}       | ${['Africa']}
+        ${'keywords'}      | ${['Bash']}
+        ${'projects'}      | ${['a project']}
+        ${'workingGroups'} | ${['a working group']}
+        ${'regions'}       | ${['Africa', 'Asia']}
+        ${'keywords'}      | ${['Bash', 'R']}
+        ${'projects'}      | ${['a project', 'another project']}
+        ${'workingGroups'} | ${['a working group', 'another working group']}
+      `(
+        'Should return the results correctly when a filter is used for $name',
+        async ({ name, value }) => {
+          userControllerMock.fetch.mockResolvedValueOnce(fetchExpectation);
 
-        const response = await supertest(app)
-          .get('/users')
-          .query({
-            filter: { region: ['Europe'] },
-          });
+          const response = await supertest(app)
+            .get('/users')
+            .query({
+              filter: { [name]: value },
+            });
 
-        expect(response.status).toBe(200);
-      });
-
-      test('Should return the results correctly when multiple filters are used', async () => {
-        userControllerMock.fetch.mockResolvedValueOnce(fetchExpectation);
-
-        const response = await supertest(app)
-          .get('/users')
-          .query({
-            filter: { region: ['Europe', 'Asia'] },
-          });
-
-        expect(response.status).toBe(200);
-      });
+          expect(response.status).toBe(200);
+        },
+      );
 
       test('Should return 200 when an administrator asks for non-onboarded users', async () => {
         userControllerMock.fetch.mockResolvedValueOnce(fetchExpectation);

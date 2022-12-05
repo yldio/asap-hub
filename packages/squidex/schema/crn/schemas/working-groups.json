@@ -15,6 +15,26 @@
     "fieldsInLists": [],
     "fields": [
       {
+        "name": "title",
+        "properties": {
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": true,
+          "fieldType": "String",
+          "createEnum": false,
+          "editor": "Input",
+          "inlineEditable": true,
+          "isEmbeddable": false,
+          "isUnique": false,
+          "contentType": "Unspecified",
+          "label": "Title"
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
+      },
+      {
         "name": "complete",
         "properties": {
           "isRequired": true,
@@ -30,24 +50,6 @@
         "isHidden": false,
         "isDisabled": false,
         "partitioning": "invariant"
-      },
-      {
-        "name": "title",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": false,
-          "contentType": "Unspecified",
-          "editor": "Input",
-          "label": "Title",
-          "isRequired": true,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
       },
       {
         "name": "description",

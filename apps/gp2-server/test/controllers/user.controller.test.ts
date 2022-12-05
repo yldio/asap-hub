@@ -48,6 +48,9 @@ describe('Users controller', () => {
           code: '123',
           onlyOnboarded: false,
           regions: ['Europe'],
+          keywords: ['Bash', 'R'],
+          projects: ['a project'],
+          workingGroups: ['a working group'],
         },
       };
       await userController.fetch(params);

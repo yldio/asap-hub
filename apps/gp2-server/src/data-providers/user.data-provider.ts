@@ -170,9 +170,9 @@ function getUserSquidexData(
 }
 
 const generateFetchQueryFilter = ({ filter }: gp2Model.FetchUsersOptions) => {
-  const { region, code, onlyOnboarded } = filter || {};
+  const { regions, code, onlyOnboarded } = filter || {};
   const filterOnboarded = onlyOnboarded === true && 'data/onboarded/iv eq true';
-  const filterRegions = region
+  const filterRegions = regions
     ?.map((r) => `data/region/iv eq '${reverseRegionMap[r]}'`)
     .join(' or ');
 

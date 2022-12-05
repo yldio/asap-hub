@@ -66,10 +66,10 @@ const renderUserList = async ({
   mockUseSearch.mockImplementation(() => ({
     changeLocation: jest.fn(),
     filters: {
-      region: [],
-      keyword: [],
-      project: [],
-      workingGroup: [],
+      regions: [],
+      keywords: [],
+      projects: [],
+      workingGroups: [],
       ...filters,
     },
     updateFilters: mockUpdateFilter,
@@ -108,7 +108,7 @@ it('fetches the user information', async () => {
   await waitFor(() =>
     expect(mockGetUsers).toHaveBeenCalledWith(
       expect.objectContaining({
-        filter: { region: [], keyword: [], project: [], workingGroup: [] },
+        filter: { regions: [], keywords: [], projects: [], workingGroups: [] },
         search: '',
         skip: 0,
         take: 10,
@@ -141,11 +141,11 @@ it('renders the filters modal', async () => {
   expect(screen.getByRole('heading', { name: 'Filters' })).toBeVisible();
 });
 it.each`
-  name              | value
-  ${'region'}       | ${'Asia'}
-  ${'keyword'}      | ${'Bash'}
-  ${'project'}      | ${'42'}
-  ${'workingGroup'} | ${'42'}
+  name               | value
+  ${'regions'}       | ${'Asia'}
+  ${'keywords'}      | ${'Bash'}
+  ${'projects'}      | ${'42'}
+  ${'workingGroups'} | ${'42'}
 `(
   'calls the updateFilters with the right arguments for $name',
   async ({ name, value }) => {
@@ -155,10 +155,10 @@ it.each`
     });
     userEvent.click(screen.getByRole('button', { name: 'Apply' }));
     expect(mockUpdateFilter).toHaveBeenCalledWith('/users', {
-      region: [],
-      keyword: [],
-      project: [],
-      workingGroup: [],
+      regions: [],
+      keywords: [],
+      projects: [],
+      workingGroups: [],
       [name]: [value],
     });
   },
@@ -168,7 +168,7 @@ it('triggers export with the same parameters but overrides onlyOnboarded with fa
   await waitFor(() =>
     expect(mockGetUsers).toHaveBeenCalledWith(
       expect.objectContaining({
-        filter: { region: [], keyword: [], project: [], workingGroup: [] },
+        filter: { regions: [], keywords: [], projects: [], workingGroups: [] },
         search: '',
         skip: 0,
         take: 10,
@@ -185,10 +185,10 @@ it('triggers export with the same parameters but overrides onlyOnboarded with fa
     expect(mockGetUsers).toHaveBeenCalledWith(
       expect.objectContaining({
         filter: {
-          region: [],
-          keyword: [],
-          project: [],
-          workingGroup: [],
+          regions: [],
+          keywords: [],
+          projects: [],
+          workingGroups: [],
           onlyOnboarded: false,
         },
         search: '',

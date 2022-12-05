@@ -160,10 +160,10 @@ describe('FiltersModal', () => {
     userEvent.click(screen.getByText('Asia'));
     userEvent.click(getApplyButton());
     expect(defaultProps.onApplyClick).toHaveBeenCalledWith({
-      region: ['Asia'],
-      keyword: [],
-      project: [],
-      workingGroup: [],
+      regions: ['Asia'],
+      keywords: [],
+      projects: [],
+      workingGroups: [],
     });
   });
   it('calls the onApplyClick function with correct expertise filters', () => {
@@ -172,10 +172,10 @@ describe('FiltersModal', () => {
     userEvent.click(screen.getByText('R'));
     userEvent.click(getApplyButton());
     expect(defaultProps.onApplyClick).toHaveBeenCalledWith({
-      region: [],
-      keyword: ['R'],
-      project: [],
-      workingGroup: [],
+      regions: [],
+      keywords: ['R'],
+      projects: [],
+      workingGroups: [],
     });
   });
   it('calls the onApplyClick function with correct project filters', () => {
@@ -184,10 +184,10 @@ describe('FiltersModal', () => {
     userEvent.click(screen.getByText(projects[0].title));
     userEvent.click(getApplyButton());
     expect(defaultProps.onApplyClick).toHaveBeenCalledWith({
-      region: [],
-      keyword: [],
-      project: [projects[0].id],
-      workingGroup: [],
+      regions: [],
+      keywords: [],
+      projects: [projects[0].id],
+      workingGroups: [],
     });
   });
   it('calls the onApplyClick function with correct working group filters', () => {
@@ -196,10 +196,10 @@ describe('FiltersModal', () => {
     userEvent.click(screen.getByText(workingGroups[0].title));
     userEvent.click(getApplyButton());
     expect(defaultProps.onApplyClick).toHaveBeenCalledWith({
-      region: [],
-      keyword: [],
-      project: [],
-      workingGroup: [workingGroups[0].id],
+      regions: [],
+      keywords: [],
+      projects: [],
+      workingGroups: [workingGroups[0].id],
     });
   });
 
@@ -237,11 +237,11 @@ describe('FiltersModal', () => {
   });
 
   it.each`
-    name              | value                  | expected
-    ${'keyword'}      | ${'Bash'}              | ${'Bash'}
-    ${'region'}       | ${'Asia'}              | ${'Asia'}
-    ${'project'}      | ${projects[0].id}      | ${projects[0].title}
-    ${'workingGroup'} | ${workingGroups[0].id} | ${workingGroups[0].title}
+    name               | value                  | expected
+    ${'keywords'}      | ${'Bash'}              | ${'Bash'}
+    ${'regions'}       | ${'Asia'}              | ${'Asia'}
+    ${'projects'}      | ${projects[0].id}      | ${projects[0].title}
+    ${'workingGroups'} | ${workingGroups[0].id} | ${workingGroups[0].title}
   `('displays current filter $name', ({ name, value, expected }) => {
     const filters: gp2Model.FetchUsersFilter = {
       [name]: [value],

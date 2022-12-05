@@ -74,7 +74,7 @@ describe('/users/ route', () => {
         filter: {
           code: '123',
           onlyOnboarded: true,
-          region: ['Europe'],
+          regions: ['Europe'],
         },
       };
       await supertest(app).get('/users').query(params);
@@ -86,7 +86,7 @@ describe('/users/ route', () => {
         filter: {
           code: '123',
           onlyOnboarded: true,
-          region: ['Europe'],
+          regions: ['Europe'],
         },
       };
 

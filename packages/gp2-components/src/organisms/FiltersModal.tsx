@@ -48,18 +48,18 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
   projects,
   workingGroups,
 }) => {
-  const [selectedRegions, setSelectedRegions] = useState(filters.region || []);
+  const [selectedRegions, setSelectedRegions] = useState(filters.regions || []);
   const [selectedExpertise, setSelectedExpertise] = useState(
-    filters.keyword || [],
+    filters.keywords || [],
   );
   const [selectedProjects, setSelectedProjects] = useState(
     projects
-      .filter(({ id }) => filters.project?.includes(id))
+      .filter(({ id }) => filters.projects?.includes(id))
       .map(({ id, title }) => ({ label: title, value: id })) || [],
   );
   const [selectedWorkingGroups, setSelectedWorkingGroups] = useState(
     workingGroups
-      .filter(({ id }) => filters.workingGroup?.includes(id))
+      .filter(({ id }) => filters.workingGroups?.includes(id))
       .map(({ id, title }) => ({ label: title, value: id })) || [],
   );
   const resetFilters = () => {
@@ -136,10 +136,10 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
         <FilterModalFooter
           onApply={() => {
             onApplyClick({
-              region: selectedRegions,
-              keyword: selectedExpertise,
-              project: selectedProjects.map(({ value }) => value),
-              workingGroup: selectedWorkingGroups.map(({ value }) => value),
+              regions: selectedRegions,
+              keywords: selectedExpertise,
+              projects: selectedProjects.map(({ value }) => value),
+              workingGroups: selectedWorkingGroups.map(({ value }) => value),
             });
           }}
           onClose={onBackClick}

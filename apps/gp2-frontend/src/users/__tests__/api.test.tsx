@@ -113,7 +113,7 @@ describe('createUserApiUrl', () => {
 
   it('handles requests with filters', async () => {
     const url = createUserApiUrl({
-      filter: { region: ['Africa', 'Asia'], onlyOnboarded: false },
+      filter: { regions: ['Africa', 'Asia'], onlyOnboarded: false },
     });
     expect(url.searchParams.getAll('filter[region]')).toEqual([
       'Africa',

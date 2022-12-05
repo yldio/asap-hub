@@ -10,19 +10,19 @@ describe('useSearch', () => {
         wrapper: MemoryRouter,
       });
       expect(result.current.filters).toEqual({
-        keyword: [],
-        region: [],
-        project: [],
-        workingGroup: [],
+        keywords: [],
+        regions: [],
+        projects: [],
+        workingGroups: [],
       });
     });
 
     describe.each`
-      name              | value                | queryParam
-      ${'region'}       | ${'Asia'}            | ${'region'}
-      ${'keyword'}      | ${'Bash'}            | ${'keyword'}
-      ${'project'}      | ${'project 1'}       | ${'project'}
-      ${'workingGroup'} | ${'working group 1'} | ${'working-group'}
+      name               | value                | queryParam
+      ${'regions'}       | ${'Asia'}            | ${'region'}
+      ${'keywords'}      | ${'Bash'}            | ${'keyword'}
+      ${'projects'}      | ${'project 1'}       | ${'project'}
+      ${'workingGroups'} | ${'working group 1'} | ${'working-group'}
     `('single filters for $name', ({ name, value, queryParam }) => {
       it('is taken from the query param', () => {
         const { result } = renderHook(() => useSearch(), {
@@ -32,10 +32,10 @@ describe('useSearch', () => {
           },
         });
         expect(result.current.filters).toEqual({
-          region: [],
-          keyword: [],
-          project: [],
-          workingGroup: [],
+          regions: [],
+          keywords: [],
+          projects: [],
+          workingGroups: [],
           [name]: [value],
         });
       });
@@ -48,10 +48,10 @@ describe('useSearch', () => {
         });
         result.current.updateFilters('/test', { [name]: [value] });
         expect(result.current.filters).toEqual({
-          keyword: [],
-          region: [],
-          project: [],
-          workingGroup: [],
+          keywords: [],
+          regions: [],
+          projects: [],
+          workingGroups: [],
           [name]: [value],
         });
       });
@@ -76,11 +76,11 @@ describe('useSearch', () => {
     });
 
     describe.each`
-      name              | firstValue           | secondValue          | queryParam
-      ${'keyword'}      | ${'Bash'}            | ${'R'}               | ${'keyword'}
-      ${'region'}       | ${'Asia'}            | ${'Europe'}          | ${'region'}
-      ${'project'}      | ${'project 1'}       | ${'project 2'}       | ${'project'}
-      ${'workingGroup'} | ${'working group 1'} | ${'working group 2'} | ${'working-group'}
+      name               | firstValue           | secondValue          | queryParam
+      ${'keywords'}      | ${'Bash'}            | ${'R'}               | ${'keyword'}
+      ${'regions'}       | ${'Asia'}            | ${'Europe'}          | ${'region'}
+      ${'projects'}      | ${'project 1'}       | ${'project 2'}       | ${'project'}
+      ${'workingGroups'} | ${'working group 1'} | ${'working group 2'} | ${'working-group'}
     `('multiple filters', ({ name, firstValue, secondValue, queryParam }) => {
       it('can handle multiple filters', () => {
         const { result } = renderHook(() => useSearch(), {
@@ -92,10 +92,10 @@ describe('useSearch', () => {
           },
         });
         expect(result.current.filters).toEqual({
-          keyword: [],
-          region: [],
-          project: [],
-          workingGroup: [],
+          keywords: [],
+          regions: [],
+          projects: [],
+          workingGroups: [],
           [name]: [firstValue, secondValue],
         });
       });
@@ -110,10 +110,10 @@ describe('useSearch', () => {
           [name]: [firstValue, secondValue],
         });
         expect(result.current.filters).toEqual({
-          keyword: [],
-          region: [],
-          project: [],
-          workingGroup: [],
+          keywords: [],
+          regions: [],
+          projects: [],
+          workingGroups: [],
           [name]: [firstValue, secondValue],
         });
       });
@@ -128,21 +128,21 @@ describe('useSearch', () => {
           [name]: [firstValue, secondValue],
         });
         expect(result.current.filters).toEqual({
-          keyword: [],
-          region: [],
-          project: [],
-          workingGroup: [],
+          keywords: [],
+          regions: [],
+          projects: [],
+          workingGroups: [],
           [name]: [firstValue, secondValue],
         });
       });
     });
   });
   describe.each`
-    name              | value                | queryParam
-    ${'region'}       | ${'Asia'}            | ${'region'}
-    ${'keyword'}      | ${'Bash'}            | ${'keyword'}
-    ${'project'}      | ${'a-project'}       | ${'project'}
-    ${'workingGroup'} | ${'a-working-group'} | ${'working-group'}
+    name               | value                | queryParam
+    ${'regions'}       | ${'Asia'}            | ${'region'}
+    ${'keywords'}      | ${'Bash'}            | ${'keyword'}
+    ${'projects'}      | ${'a-project'}       | ${'project'}
+    ${'workingGroups'} | ${'a-working-group'} | ${'working-group'}
   `('changeLocation for $name', ({ name, value, queryParam }) => {
     it('changes location without clearing the filters', () => {
       const { result } = renderHook(
@@ -156,18 +156,18 @@ describe('useSearch', () => {
       );
       jest.spyOn(result.current.useHistory, 'push');
       expect(result.current.useSearch.filters).toEqual({
-        keyword: [],
-        region: [],
-        project: [],
-        workingGroup: [],
+        keywords: [],
+        regions: [],
+        projects: [],
+        workingGroups: [],
         [name]: [value],
       });
       result.current.useSearch.changeLocation('/test2');
       expect(result.current.useSearch.filters).toEqual({
-        keyword: [],
-        region: [],
-        project: [],
-        workingGroup: [],
+        keywords: [],
+        regions: [],
+        projects: [],
+        workingGroups: [],
         [name]: [value],
       });
       expect(result.current.useHistory.push).toHaveBeenCalledWith({

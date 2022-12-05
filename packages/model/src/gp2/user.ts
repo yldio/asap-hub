@@ -105,12 +105,12 @@ export type ListUserResponse = ListResponse<UserResponse>;
 export type UserUpdateRequest = UserUpdateDataObject;
 
 export type FetchUsersFilter = {
-  region?: UserRegion[];
-  keyword?: Keyword[];
+  regions?: UserRegion[];
+  keywords?: Keyword[];
   code?: string;
   onlyOnboarded?: boolean;
-  project?: string[];
-  workingGroup?: string[];
+  projects?: string[];
+  workingGroups?: string[];
 };
 
 export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;

@@ -16,7 +16,7 @@ export const createUserApiUrl = ({
   if (skip !== null) {
     url.searchParams.set('skip', String(skip));
   }
-  filter?.region?.forEach((r) => url.searchParams.append('filter[region]', r));
+  filter?.regions?.forEach((r) => url.searchParams.append('filter[region]', r));
 
   if (typeof filter?.onlyOnboarded === 'boolean') {
     url.searchParams.set(

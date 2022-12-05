@@ -908,7 +908,7 @@ describe('User data provider', () => {
         take: 12,
         skip: 2,
         filter: {
-          region: ['Europe', 'Asia'],
+          regions: ['Europe', 'Asia'],
         },
       };
       await userDataProvider.fetch(fetchOptions);

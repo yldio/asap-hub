@@ -84,22 +84,22 @@ export const fetchUsersOptionsValidationSchema: JSONSchemaType<gp2.FetchUsersOpt
       filter: {
         type: 'object',
         properties: {
-          region: {
+          regions: {
             type: 'array',
             items: { type: 'string', enum: gp2.userRegions },
             nullable: true,
           },
-          keyword: {
+          keywords: {
             type: 'array',
             items: { type: 'string', enum: gp2.keywords },
             nullable: true,
           },
-          project: {
+          projects: {
             type: 'array',
             items: { type: 'string' },
             nullable: true,
           },
-          workingGroup: {
+          workingGroups: {
             type: 'array',
             items: { type: 'string' },
             nullable: true,

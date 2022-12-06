@@ -50,3 +50,18 @@ it('renders a complete tag when complete is true', () => {
   expect(getByTitle('Success')).toBeInTheDocument();
   expect(getByText('Complete')).toBeVisible();
 });
+
+it('renders the member avatars', () => {
+  const { getByLabelText } = render(
+    <WorkingGroupHeader
+      {...baseProps}
+      members={[
+        {
+          user: { ...createUserResponse(), firstName: 'John', lastName: 'Doe' },
+          workstreamRole: 'foo',
+        },
+      ]}
+    />,
+  );
+  expect(getByLabelText(/pic.+John Doe/i)).toBeVisible();
+});

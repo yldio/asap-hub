@@ -232,6 +232,31 @@ describe('Working Group Data Provider', () => {
       ]);
     });
 
+    test('should return empty leaders and members if they are not set properly', async () => {
+      const squidexGraphqlResponse = getSquidexWorkingGroupGraphqlResponse();
+      squidexGraphqlResponse.findWorkingGroupsContent!.flatData.members = [
+        {
+          user: [],
+          workstreamRole: 'Some role',
+        },
+      ];
+      squidexGraphqlResponse.findWorkingGroupsContent!.flatData.leaders = [
+        {
+          user: [],
+          role: 'Chair',
+          workstreamRole: 'Some role',
+        },
+      ];
+
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
+
+      const response = await workingGroupDataProvider.fetchById(workingGroupId);
+      expect(response?.members).toStrictEqual([]);
+      expect(response?.leaders).toStrictEqual([]);
+    });
+
     test('Should provide default values if squidex data is missing', async () => {
       const squidexGraphqlResponse = getSquidexWorkingGroupGraphqlResponse();
       squidexGraphqlResponse.findWorkingGroupsContent!.flatData.deliverables =

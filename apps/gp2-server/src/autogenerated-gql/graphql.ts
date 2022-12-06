@@ -2863,6 +2863,26 @@ export type FetchUsersQuery = {
   >;
 };
 
+export type ProjectMembersContentFragment = {
+  flatData: {
+    members: Maybe<Array<{ user: Maybe<Array<Pick<Users, 'id'>>> }>>;
+  };
+};
+
+export type FetchProjectsMembersQueryVariables = Exact<{
+  filter: InputMaybe<Scalars['String']>;
+}>;
+
+export type FetchProjectsMembersQuery = {
+  queryProjectsContents: Maybe<
+    Array<{
+      flatData: {
+        members: Maybe<Array<{ user: Maybe<Array<Pick<Users, 'id'>>> }>>;
+      };
+    }>
+  >;
+};
+
 export type WorkingGroupNetworkContentFragment = Pick<
   WorkingGroupNetwork,
   'id'
@@ -3693,6 +3713,55 @@ export const UsersContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<UsersContentFragment, unknown>;
+export const ProjectMembersContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProjectMembersContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Projects' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'flatData' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'members' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'user' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ProjectMembersContentFragment, unknown>;
 export const WorkingGroupContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -4156,6 +4225,58 @@ export const FetchUsersDocument = {
     ...UsersContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchUsersQuery, FetchUsersQueryVariables>;
+export const FetchProjectsMembersDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchProjectsMembers' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'filter' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'queryProjectsContents' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'filter' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'filter' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'ProjectMembersContent' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...ProjectMembersContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchProjectsMembersQuery,
+  FetchProjectsMembersQueryVariables
+>;
 export const FetchWorkingGroupNetworkDocument = {
   kind: 'Document',
   definitions: [

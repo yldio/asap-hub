@@ -84,3 +84,24 @@ export const FETCH_USERS = gql`
   }
   ${usersContentQueryFragment}
 `;
+
+export const projectMembersContentQueryFragment = gql`
+  fragment ProjectMembersContent on Projects {
+    flatData {
+      members {
+        user {
+          id
+        }
+      }
+    }
+  }
+`;
+
+export const FETCH_PROJECTS_MEMBERS = gql`
+  query FetchProjectsMembers($filter: String) {
+    queryProjectsContents(filter: $filter) {
+      ...ProjectMembersContent
+    }
+  }
+  ${projectMembersContentQueryFragment}
+`;

@@ -6,6 +6,7 @@ import {
   WebhookPayload,
 } from '@asap-hub/squidex';
 import {
+  FetchProjectsMembersQuery,
   FetchUserQuery,
   FetchUsersQuery,
   ProjectsDataMembersRoleEnum,
@@ -372,3 +373,32 @@ export const userPatchRequest: gp2.UserPatchRequest = {
   country: 'United Kingdom',
   city: 'Manchester',
 };
+
+export const generateGraphqlFetchProjectsMembersResponse = (
+  items: NonNullable<FetchProjectsMembersQuery['queryProjectsContents']>,
+): FetchProjectsMembersQuery => ({
+  queryProjectsContents: items,
+});
+
+type ProjectMember = NonNullable<
+  FetchProjectsMembersQuery['queryProjectsContents']
+>[number];
+
+export const getGraphQLProjectMembers = (
+  members: Partial<ProjectMember['flatData']> = {},
+): ProjectMember => ({
+  flatData: {
+    members: [{ user: [{ id: '42' }] }],
+    ...members,
+  },
+});
+
+export const getGraphQLProjectsMembers = (
+  projects: NonNullable<FetchProjectsMembersQuery['queryProjectsContents']> = [
+    getGraphQLProjectMembers(),
+  ],
+): NonNullable<FetchProjectsMembersQuery['queryProjectsContents']> => projects;
+
+export const getSquidexProjectsMembersGraphqlResponse =
+  (): FetchProjectsMembersQuery =>
+    generateGraphqlFetchProjectsMembersResponse(getGraphQLProjectsMembers());

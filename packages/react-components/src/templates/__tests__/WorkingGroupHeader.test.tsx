@@ -48,3 +48,14 @@ it('renders a complete tag when complete is true', () => {
   expect(getByTitle('Success')).toBeInTheDocument();
   expect(getByText('Complete')).toBeVisible();
 });
+
+it('renders a Working Group Folder when externalLink is provided', () => {
+  const { queryByText, getByText, rerender } = render(
+    <WorkingGroupHeader {...baseProps} />,
+  );
+  expect(queryByText('Working Group Folder')).toBeNull();
+  rerender(
+    <WorkingGroupHeader {...baseProps} externalLink="http://www.hub.com" />,
+  );
+  expect(getByText('Working Group Folder')).toBeVisible();
+});

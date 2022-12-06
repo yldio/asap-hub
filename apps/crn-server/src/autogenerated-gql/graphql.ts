@@ -9315,12 +9315,7 @@ export type WorkingGroupContentFragment = Pick<
 > & {
   flatData: Pick<
     WorkingGroupsFlatDataDto,
-    | 'title'
-    | 'description'
-    | 'externalLink'
-    | 'shortText'
-    | 'externalLinkText'
-    | 'complete'
+    'title' | 'description' | 'externalLink' | 'shortText' | 'complete'
   > & {
     deliverables: Maybe<
       Array<
@@ -9339,12 +9334,7 @@ export type FetchWorkingGroupQuery = {
     Pick<WorkingGroups, 'id' | 'lastModified'> & {
       flatData: Pick<
         WorkingGroupsFlatDataDto,
-        | 'title'
-        | 'description'
-        | 'externalLink'
-        | 'shortText'
-        | 'externalLinkText'
-        | 'complete'
+        'title' | 'description' | 'externalLink' | 'shortText' | 'complete'
       > & {
         deliverables: Maybe<
           Array<
@@ -9377,7 +9367,6 @@ export type FetchWorkingGroupsQuery = {
               | 'description'
               | 'externalLink'
               | 'shortText'
-              | 'externalLinkText'
               | 'complete'
             > & {
               deliverables: Maybe<
@@ -11898,10 +11887,6 @@ export const WorkingGroupContentFragmentDoc = {
                   name: { kind: 'Name', value: 'externalLink' },
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'shortText' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'externalLinkText' },
-                },
                 { kind: 'Field', name: { kind: 'Name', value: 'complete' } },
                 {
                   kind: 'Field',

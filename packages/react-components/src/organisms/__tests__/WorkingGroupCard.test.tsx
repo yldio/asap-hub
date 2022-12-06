@@ -8,7 +8,6 @@ const props: ComponentProps<typeof WorkingGroupCard> = {
   id: '42',
   title: 'My Working Group',
   externalLink: 'https://www.google.com',
-  externalLinkText: 'Working Group Folder',
   shortText: 'My Working Group Description',
   lastModifiedDate: '2020-01-1',
 };
@@ -20,13 +19,12 @@ it('renders the working group card', () => {
       id="42"
       title="My Working Group"
       shortText="test description"
-      externalLinkText="Link text"
       lastModifiedDate="2020-01-01"
     />,
   );
   expect(getByText('My Working Group')).toBeVisible();
   expect(getByText('test description')).toBeVisible();
-  expect(getByText('Link text')).toBeVisible();
+  expect(getByText('Working Group Folder')).toBeVisible();
   expect(
     getByText(`Last updated: ${formatDate(new Date('2020-01-01'))}`),
   ).toBeVisible();

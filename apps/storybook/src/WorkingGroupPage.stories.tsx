@@ -44,7 +44,6 @@ export const Normal = () => {
     members: createWorkingGroupMembers(number('Number of members', 6)),
     complete: boolean('Complete', false),
     externalLink: text('External link', 'link//'),
-    externalLinkText: text('External link text', 'Working Group Folder'),
     lastModifiedDate: new Date(
       text('Last updated', '2022-01-01'),
     ).toISOString(),

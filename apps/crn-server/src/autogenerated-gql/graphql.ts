@@ -57,7 +57,7 @@ export type ApplicationMutations = {
   changeTutorialsContent: Tutorials;
   /** Change a Users content. */
   changeUsersContent: Users;
-  /** Change a WorkingGroups content. */
+  /** Change a Working Groups content. */
   changeWorkingGroupsContent: WorkingGroups;
   /** Creates an Calendars content. */
   createCalendarsContent: Calendars;
@@ -89,7 +89,7 @@ export type ApplicationMutations = {
   createTutorialsContent: Tutorials;
   /** Creates an Users content. */
   createUsersContent: Users;
-  /** Creates an WorkingGroups content. */
+  /** Creates an Working Groups content. */
   createWorkingGroupsContent: WorkingGroups;
   /** Delete an Calendars content. */
   deleteCalendarsContent: EntitySavedResultDto;
@@ -121,7 +121,7 @@ export type ApplicationMutations = {
   deleteTutorialsContent: EntitySavedResultDto;
   /** Delete an Users content. */
   deleteUsersContent: EntitySavedResultDto;
-  /** Delete an WorkingGroups content. */
+  /** Delete an Working Groups content. */
   deleteWorkingGroupsContent: EntitySavedResultDto;
   /** Patch an Calendars content by id. */
   patchCalendarsContent: Calendars;
@@ -153,7 +153,7 @@ export type ApplicationMutations = {
   patchTutorialsContent: Tutorials;
   /** Patch an Users content by id. */
   patchUsersContent: Users;
-  /** Patch an WorkingGroups content by id. */
+  /** Patch an Working Groups content by id. */
   patchWorkingGroupsContent: WorkingGroups;
   /**
    * Publish a Calendars content.
@@ -231,7 +231,7 @@ export type ApplicationMutations = {
    */
   publishUsersContent: Users;
   /**
-   * Publish a WorkingGroups content.
+   * Publish a Working Groups content.
    * @deprecated Use 'changeWorkingGroupsContent' instead
    */
   publishWorkingGroupsContent: WorkingGroups;
@@ -265,7 +265,7 @@ export type ApplicationMutations = {
   updateTutorialsContent: Tutorials;
   /** Update an Users content by id. */
   updateUsersContent: Users;
-  /** Update an WorkingGroups content by id. */
+  /** Update an Working Groups content by id. */
   updateWorkingGroupsContent: WorkingGroups;
   /** Upsert an Calendars content by id. */
   upsertCalendarsContent: Calendars;
@@ -297,7 +297,7 @@ export type ApplicationMutations = {
   upsertTutorialsContent: Tutorials;
   /** Upsert an Users content by id. */
   upsertUsersContent: Users;
-  /** Upsert an WorkingGroups content by id. */
+  /** Upsert an Working Groups content by id. */
   upsertWorkingGroupsContent: WorkingGroups;
 };
 
@@ -1199,7 +1199,7 @@ export type ApplicationQueries = {
   findTutorialsContent: Maybe<Tutorials>;
   /** Find an Users content by id. */
   findUsersContent: Maybe<Users>;
-  /** Find an WorkingGroups content by id. */
+  /** Find an Working Groups content by id. */
   findWorkingGroupsContent: Maybe<WorkingGroups>;
   /** Get assets. */
   queryAssets: Array<Asset>;
@@ -1265,9 +1265,9 @@ export type ApplicationQueries = {
   queryUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
   queryUsersContentsWithTotal: Maybe<UsersResultDto>;
-  /** Query WorkingGroups content items. */
+  /** Query Working Groups content items. */
   queryWorkingGroupsContents: Maybe<Array<WorkingGroups>>;
-  /** Query WorkingGroups content items with total count. */
+  /** Query Working Groups content items with total count. */
   queryWorkingGroupsContentsWithTotal: Maybe<WorkingGroupsResultDto>;
 };
 
@@ -5199,9 +5199,9 @@ export type Users = Content & {
   referencingResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
   /** Query Research Outputs content items with total count. */
   referencingResearchOutputsContentsWithTotal: Maybe<ResearchOutputsResultDto>;
-  /** Query WorkingGroups content items. */
+  /** Query Working Groups content items. */
   referencingWorkingGroupsContents: Maybe<Array<WorkingGroups>>;
-  /** Query WorkingGroups content items with total count. */
+  /** Query Working Groups content items with total count. */
   referencingWorkingGroupsContentsWithTotal: Maybe<WorkingGroupsResultDto>;
   /** The status of the content. */
   status: Scalars['String'];
@@ -5879,7 +5879,7 @@ export type UsersResultDto = {
   total: Scalars['Int'];
 };
 
-/** The structure of a WorkingGroups content type. */
+/** The structure of a Working Groups content type. */
 export type WorkingGroups = Content & {
   /** The timestamp when the object was created. */
   created: Scalars['Instant'];
@@ -5919,7 +5919,7 @@ export type WorkingGroups = Content & {
   version: Scalars['Int'];
 };
 
-/** The structure of a WorkingGroups content type. */
+/** The structure of a Working Groups content type. */
 export type WorkingGroupsReferencesUsersContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
@@ -5928,7 +5928,7 @@ export type WorkingGroupsReferencesUsersContentsArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-/** The structure of a WorkingGroups content type. */
+/** The structure of a Working Groups content type. */
 export type WorkingGroupsReferencesUsersContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
@@ -5937,12 +5937,12 @@ export type WorkingGroupsReferencesUsersContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-/** The structure of the This working group is complete field of the WorkingGroups content type. */
+/** The structure of the This working group is complete field of the Working Groups content type. */
 export type WorkingGroupsDataCompleteDto = {
   iv: Maybe<Scalars['Boolean']>;
 };
 
-/** The structure of the This working group is complete field of the WorkingGroups content input type. */
+/** The structure of the This working group is complete field of the Working Groups content input type. */
 export type WorkingGroupsDataCompleteInputDto = {
   iv: InputMaybe<Scalars['Boolean']>;
 };
@@ -5959,27 +5959,27 @@ export type WorkingGroupsDataDeliverablesChildInputDto = {
   status: InputMaybe<Scalars['String']>;
 };
 
-/** The structure of the Deliverables field of the WorkingGroups content type. */
+/** The structure of the Deliverables field of the Working Groups content type. */
 export type WorkingGroupsDataDeliverablesDto = {
   iv: Maybe<Array<WorkingGroupsDataDeliverablesChildDto>>;
 };
 
-/** The structure of the Deliverables field of the WorkingGroups content input type. */
+/** The structure of the Deliverables field of the Working Groups content input type. */
 export type WorkingGroupsDataDeliverablesInputDto = {
   iv: InputMaybe<Array<WorkingGroupsDataDeliverablesChildInputDto>>;
 };
 
-/** The structure of the Description field of the WorkingGroups content type. */
+/** The structure of the Description field of the Working Groups content type. */
 export type WorkingGroupsDataDescriptionDto = {
   iv: Maybe<Scalars['String']>;
 };
 
-/** The structure of the Description field of the WorkingGroups content input type. */
+/** The structure of the Description field of the Working Groups content input type. */
 export type WorkingGroupsDataDescriptionInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
-/** The structure of the WorkingGroups data type. */
+/** The structure of the Working Groups data type. */
 export type WorkingGroupsDataDto = {
   complete: Maybe<WorkingGroupsDataCompleteDto>;
   deliverables: Maybe<WorkingGroupsDataDeliverablesDto>;
@@ -5992,27 +5992,27 @@ export type WorkingGroupsDataDto = {
   title: Maybe<WorkingGroupsDataTitleDto>;
 };
 
-/** The structure of the External Link field of the WorkingGroups content type. */
+/** The structure of the External Link field of the Working Groups content type. */
 export type WorkingGroupsDataExternalLinkDto = {
   iv: Maybe<Scalars['String']>;
 };
 
-/** The structure of the External Link field of the WorkingGroups content input type. */
+/** The structure of the External Link field of the Working Groups content input type. */
 export type WorkingGroupsDataExternalLinkInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
-/** The structure of the External Link Text field of the WorkingGroups content type. */
+/** The structure of the External Link Text field of the Working Groups content type. */
 export type WorkingGroupsDataExternalLinkTextDto = {
   iv: Maybe<Scalars['String']>;
 };
 
-/** The structure of the External Link Text field of the WorkingGroups content input type. */
+/** The structure of the External Link Text field of the Working Groups content input type. */
 export type WorkingGroupsDataExternalLinkTextInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
-/** The structure of the WorkingGroups data input type. */
+/** The structure of the Working Groups data input type. */
 export type WorkingGroupsDataInputDto = {
   complete: InputMaybe<WorkingGroupsDataCompleteInputDto>;
   deliverables: InputMaybe<WorkingGroupsDataDeliverablesInputDto>;
@@ -6039,12 +6039,12 @@ export type WorkingGroupsDataLeadersChildInputDto = {
   workstreamRole: InputMaybe<Scalars['String']>;
 };
 
-/** The structure of the Leaders field of the WorkingGroups content type. */
+/** The structure of the Leaders field of the Working Groups content type. */
 export type WorkingGroupsDataLeadersDto = {
   iv: Maybe<Array<WorkingGroupsDataLeadersChildDto>>;
 };
 
-/** The structure of the Leaders field of the WorkingGroups content input type. */
+/** The structure of the Leaders field of the Working Groups content input type. */
 export type WorkingGroupsDataLeadersInputDto = {
   iv: InputMaybe<Array<WorkingGroupsDataLeadersChildInputDto>>;
 };
@@ -6061,37 +6061,37 @@ export type WorkingGroupsDataMembersChildInputDto = {
   workstreamRole: InputMaybe<Scalars['String']>;
 };
 
-/** The structure of the Members field of the WorkingGroups content type. */
+/** The structure of the Members field of the Working Groups content type. */
 export type WorkingGroupsDataMembersDto = {
   iv: Maybe<Array<WorkingGroupsDataMembersChildDto>>;
 };
 
-/** The structure of the Members field of the WorkingGroups content input type. */
+/** The structure of the Members field of the Working Groups content input type. */
 export type WorkingGroupsDataMembersInputDto = {
   iv: InputMaybe<Array<WorkingGroupsDataMembersChildInputDto>>;
 };
 
-/** The structure of the Short Text field of the WorkingGroups content type. */
+/** The structure of the Short Text field of the Working Groups content type. */
 export type WorkingGroupsDataShortTextDto = {
   iv: Maybe<Scalars['String']>;
 };
 
-/** The structure of the Short Text field of the WorkingGroups content input type. */
+/** The structure of the Short Text field of the Working Groups content input type. */
 export type WorkingGroupsDataShortTextInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
-/** The structure of the Title field of the WorkingGroups content type. */
+/** The structure of the Title field of the Working Groups content type. */
 export type WorkingGroupsDataTitleDto = {
   iv: Maybe<Scalars['String']>;
 };
 
-/** The structure of the Title field of the WorkingGroups content input type. */
+/** The structure of the Title field of the Working Groups content input type. */
 export type WorkingGroupsDataTitleInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
-/** The structure of the flat WorkingGroups data type. */
+/** The structure of the flat Working Groups data type. */
 export type WorkingGroupsFlatDataDto = {
   complete: Maybe<Scalars['Boolean']>;
   deliverables: Maybe<Array<WorkingGroupsDataDeliverablesChildDto>>;
@@ -6104,7 +6104,7 @@ export type WorkingGroupsFlatDataDto = {
   title: Maybe<Scalars['String']>;
 };
 
-/** List of WorkingGroups items and total count. */
+/** List of Working Groups items and total count. */
 export type WorkingGroupsResultDto = {
   /** The contents. */
   items: Maybe<Array<WorkingGroups>>;

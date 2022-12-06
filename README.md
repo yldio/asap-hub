@@ -370,6 +370,27 @@ sh .github/scripts/manage-workflows/list-workflows.sh
   sh .github/scripts/manage-workflows/delete-workflow-runs.sh 21969391
 ```
 
+## How to handle times when you don't have an ticket
+
+PROPOSAL:
+I'm trying to provide a template for how we should handle times when we don't have something actual to work on. 
+This could be achieved by having a priority list and maybe a couple of links that point to certain bug buckets or small tickets.
+
+I would love to see comments and discussions around this topic.
+
+There are times when we don't have an ticket and there isn't enough time to pick-up something big until the sprint is done.
+The order of priority should be:
+  1. Helping with reviews #link-should-go-here
+  2. Helping with pair-programming ?
+  3. Looking for small tickets (Does jira allow us to make a bucket of low priority stuff?) #link-should-go-here
+  4. We should also have a bucket of small bugs (i.e sidenav not having the font size 17px) #link-should-go-here
+  5. Sentry issues?
+  6. Rennovate 
+
+One of the issues that will certainly happen is picking something "small" and then finding out it's not really that small.
+In this case we should discuss it and update the jira description and leave it for some other time.
+
+
 ## License
 
 The source code of this project is licensed under the MIT License.

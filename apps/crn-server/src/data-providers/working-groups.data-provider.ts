@@ -87,7 +87,7 @@ export const parseGraphQlWorkingGroup = (
     shortText: workingGroupGraphQl.flatData.shortText || '',
     members: [],
     pointOfContact: undefined,
-    complete: false,
+    complete: !!workingGroupGraphQl.flatData.complete,
     deliverables: workingGroupGraphQl.flatData.deliverables
       ? workingGroupGraphQl.flatData.deliverables.map(
           (deliverable) =>

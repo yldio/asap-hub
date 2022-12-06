@@ -64,6 +64,7 @@ export const getSquidexWorkingGroupsGraphqlResponse =
             externalLink: 'https://example.com',
             externalLinkText: 'External Link Text',
             deliverables: [],
+            complete: false,
           },
         },
       ],
@@ -81,5 +82,6 @@ export const getSquidexGraphqlWorkingGroup =
       externalLink: 'https://example.com',
       externalLinkText: 'External Link Text',
       deliverables: [],
+      complete: false,
     },
   });

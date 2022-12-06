@@ -2,6 +2,7 @@ import { NotFoundPage } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/routing';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { lazy, useEffect } from 'react';
+import Onboarding from './Onboarding';
 
 const loadWelcome = () =>
   import(/* webpackChunkName: "onboarding-welcome" */ './Welcome');
@@ -24,8 +25,30 @@ const Routes: React.FC<Record<string, never>> = () => {
       <Route exact path={path}>
         <Welcome />
       </Route>
-      <Route path={onboarding({}).coreDetails({}).$}>
-        <CoreDetails />
+      <Route exact path={onboarding({}).coreDetails({}).$}>
+        <Onboarding>
+          <CoreDetails />
+        </Onboarding>
+      </Route>
+      <Route exact path={onboarding({}).background({}).$}>
+        <Onboarding>
+          <div>Background</div>
+        </Onboarding>
+      </Route>
+      <Route exact path={onboarding({}).groups({}).$}>
+        <Onboarding>
+          <div>GP2 Groups</div>
+        </Onboarding>
+      </Route>
+      <Route exact path={onboarding({}).additionalDetails({}).$}>
+        <Onboarding>
+          <div>Additional Details</div>
+        </Onboarding>
+      </Route>
+      <Route exact path={onboarding({}).preview({}).$}>
+        <Onboarding>
+          <div>Preview</div>
+        </Onboarding>
       </Route>
       <Route component={NotFoundPage} />
     </Switch>

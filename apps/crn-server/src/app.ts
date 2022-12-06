@@ -127,6 +127,10 @@ import {
   WorkingGroupDataProvider,
   WorkingGroupSquidexDataProvider,
 } from './data-providers/working-groups.data-provider';
+import {
+  PageDataProvider,
+  PageSquidexDataProvider,
+} from './data-providers/pages.data-provider';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -208,6 +212,8 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.newsDataProvider || isContentfulEnabled
       ? newsContentfulDataProvider
       : newsSquidexDataProvider;
+  const pageDataProvider =
+    libs.pageDataProvider || new PageSquidexDataProvider(pageRestClient);
   const teamDataProvider =
     libs.teamDataProvider ||
     new TeamSquidexDataProvider(squidexGraphqlClient, teamRestClient);
@@ -252,7 +258,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.eventController || new Events(squidexGraphqlClient, eventRestClient);
   const groupController =
     libs.groupController || new Groups(groupDataProvider, userDataProvider);
-  const pageController = libs.pageController || new Pages(pageRestClient);
+  const pageController = libs.pageController || new Pages(pageDataProvider);
   const reminderController =
     libs.reminderController || new Reminders(reminderDataProvider);
   const researchOutputController =
@@ -416,6 +422,7 @@ export type Libs = {
   newsDataProvider?: NewsDataProvider;
   newsSquidexDataProvider?: NewsDataProvider;
   newsContentfulDataProvider?: NewsDataProvider;
+  pageDataProvider?: PageDataProvider;
   reminderDataProvider?: ReminderDataProvider;
   teamDataProvider?: TeamDataProvider;
   tutorialsDataProvider?: TutorialsDataProvider;

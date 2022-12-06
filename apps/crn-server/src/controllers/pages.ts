@@ -1,21 +1,26 @@
-import { RestPage, SquidexRestClient } from '@asap-hub/squidex';
 import { PageResponse } from '@asap-hub/model';
+import { GenericError, NotFoundError } from '@asap-hub/errors';
 
-import { parsePage } from '../entities';
+import {} from '../entities';
+import { PageDataProvider } from '../data-providers/pages.data-provider';
 
 export default class Pages implements PageController {
-  pageSquidexRestClient: SquidexRestClient<RestPage>;
-
-  constructor(pageSquidexRestClient: SquidexRestClient<RestPage>) {
-    this.pageSquidexRestClient = pageSquidexRestClient;
-  }
+  constructor(private pageDataProvider: PageDataProvider) {}
 
   async fetchByPath(path: string): Promise<PageResponse> {
-    const page = await this.pageSquidexRestClient.fetchOne({
-      filter: { path: 'data.path.iv', op: 'eq', value: path },
+    const result = await this.pageDataProvider.fetch({
+      filter: { path },
     });
 
-    return parsePage(page);
+    if (!result.items[0]) {
+      throw new NotFoundError(undefined, `Page with path ${path} not found`);
+    }
+
+    if (result.items.length > 1) {
+      throw new GenericError(undefined, 'More than one page was returned');
+    }
+
+    return result.items[0];
   }
 }
 

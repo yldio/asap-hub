@@ -16,21 +16,40 @@
     "fields": [
       {
         "name": "title",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
         "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": false,
-          "contentType": "Unspecified",
-          "editor": "Input",
-          "label": "Title",
           "isRequired": true,
           "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
+          "isHalfWidth": true,
+          "fieldType": "String",
+          "createEnum": false,
+          "editor": "Input",
+          "inlineEditable": true,
+          "isEmbeddable": false,
+          "isUnique": false,
+          "contentType": "Unspecified",
+          "label": "Title"
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
+      },
+      {
+        "name": "complete",
+        "properties": {
+          "isRequired": true,
+          "isRequiredOnPublish": true,
+          "isHalfWidth": true,
+          "fieldType": "Boolean",
+          "editor": "Toggle",
+          "inlineEditable": true,
+          "defaultValue": true,
+          "label": "This working group is complete"
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
       },
       {
         "name": "description",

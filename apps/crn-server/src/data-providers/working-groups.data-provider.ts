@@ -116,7 +116,7 @@ export const parseGraphQlWorkingGroup = (
           : [],
       ) as unknown as WorkingGroupLeader[]) || [],
     pointOfContact: undefined,
-    complete: false,
+    complete: !!workingGroupGraphQl.flatData.complete,
     deliverables: workingGroupGraphQl.flatData.deliverables
       ? workingGroupGraphQl.flatData.deliverables.map(
           (deliverable) =>

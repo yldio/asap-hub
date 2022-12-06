@@ -5,7 +5,9 @@ import { TeamRole } from './team';
 export const userRole = ['Staff', 'Grantee', 'Guest', 'Hidden'] as const;
 export type Role = typeof userRole[number];
 
-export const userTags = ['CRN Member', 'Alumni Member'] as const;
+export const activeUserTag = 'CRN Member';
+export const inactiveUserTag = 'Alumni Member';
+export const userTags = [activeUserTag, inactiveUserTag] as const;
 export type UserTag = typeof userTags[number];
 
 export const userDegree = [

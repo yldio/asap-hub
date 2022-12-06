@@ -50,7 +50,6 @@ const textStyles = css({
   margin: 0,
   display: 'flex',
   alignItems: 'center',
-  fontSize: `${18 / perRem}em`,
 });
 const iconStyles = css({
   display: 'inline-block',

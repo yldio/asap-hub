@@ -1,3 +1,4 @@
+import { createUserResponse } from '@asap-hub/fixtures';
 import { render } from '@testing-library/react';
 import { ComponentProps } from 'react';
 
@@ -26,12 +27,12 @@ it('renders CTA when pointOfContact is provided', () => {
     <WorkingGroupHeader
       {...baseProps}
       pointOfContact={{
+        ...createUserResponse(),
         id: '2',
         displayName: 'Peter Venkman',
         firstName: 'Peter',
         lastName: 'Venkman',
         email: 'peter@ven.com',
-        workingGroupRole: 'Project Manager',
       }}
     />,
   );

@@ -63,7 +63,7 @@ const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
         </Link>
       )}
     </Card>
-    <WorkingGroupMembers leaders={leaders} members={members} isGroupActive />
+    <WorkingGroupMembers leaders={leaders} members={members} />
   </div>
 );
 

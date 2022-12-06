@@ -1,6 +1,6 @@
 import { WorkingGroupLeader, WorkingGroupMember } from '@asap-hub/model';
 import { css } from '@emotion/react';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Card, Headline3, Subtitle, TabButton } from '../atoms';
 import { MembersList, TabNav } from '../molecules';
 import { rem, tabletScreen } from '../pixels';
@@ -20,31 +20,25 @@ type GroupLeadersTabbedCardProps = {
     Pick<WorkingGroupLeader, 'user' | 'role' | 'workstreamRole'>
   >;
   members: ReadonlyArray<Pick<WorkingGroupMember, 'user' | 'workstreamRole'>>;
-  isGroupActive: boolean;
 };
 
 const GroupLeadersTabbedCard: React.FC<GroupLeadersTabbedCardProps> = ({
   leaders,
   members,
-  isGroupActive,
 }) => {
-  useEffect(() => {
-    setLeaderActiveTab(isGroupActive ? 0 : 1);
-    setMemberActiveTab(isGroupActive ? 0 : 1);
-  }, [isGroupActive]);
-
   const [leaderActiveTab, setLeaderActiveTab] = React.useState(0);
   const [memberActiveTab, setMemberActiveTab] = React.useState(0);
 
   const [inactiveLeaders, activeLeaders] = splitListBy(
     leaders,
-    (leader) => !isGroupActive || !!leader?.user?.alumniSinceDate,
+    (leader) => !!leader?.user?.alumniSinceDate,
   );
 
   const [inactiveMembers, activeMembers] = splitListBy(
     members,
-    (member) => !isGroupActive || !!member?.user?.alumniSinceDate,
+    (member) => !!member?.user?.alumniSinceDate,
   );
+
   const currentLeaders =
     leaderActiveTab === 0 ? activeLeaders : inactiveLeaders;
 
@@ -56,10 +50,21 @@ const GroupLeadersTabbedCard: React.FC<GroupLeadersTabbedCardProps> = ({
       <Headline3>Working Group Members</Headline3>
       <Subtitle>Leaders</Subtitle>
       <TabNav>
-        <TabButton disabled={!isGroupActive}>
+        <TabButton
+          active={leaderActiveTab === 0}
+          onClick={() => {
+            setLeaderActiveTab(0);
+          }}
+        >
           Active Leaders ({activeLeaders.length})
         </TabButton>
-        <TabButton disabled={inactiveLeaders.length === 0}>
+        <TabButton
+          active={leaderActiveTab === 1}
+          onClick={() => {
+            setLeaderActiveTab(1);
+          }}
+          disabled={inactiveLeaders.length === 0}
+        >
           Past Leaders ({inactiveLeaders.length})
         </TabButton>
       </TabNav>
@@ -79,10 +84,21 @@ const GroupLeadersTabbedCard: React.FC<GroupLeadersTabbedCardProps> = ({
       </div>
       <Subtitle>Members</Subtitle>
       <TabNav>
-        <TabButton disabled={!isGroupActive}>
+        <TabButton
+          active={memberActiveTab === 0}
+          onClick={() => {
+            setMemberActiveTab(0);
+          }}
+        >
           Active Members ({activeMembers.length})
         </TabButton>
-        <TabButton disabled={inactiveLeaders.length === 0}>
+        <TabButton
+          active={memberActiveTab === 1}
+          onClick={() => {
+            setMemberActiveTab(1);
+          }}
+          disabled={inactiveMembers.length === 0}
+        >
           Past Members ({inactiveMembers.length})
         </TabButton>
       </TabNav>

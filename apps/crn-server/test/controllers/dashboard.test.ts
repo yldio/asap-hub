@@ -23,7 +23,7 @@ describe('Dashboard controller', () => {
       });
     });
 
-    test('Should return the dashboard news', async () => {
+    test('Should return the dashboard news and pages', async () => {
       dashboardDataProviderMock.fetch.mockResolvedValue(
         getDashboardDataObject(),
       );

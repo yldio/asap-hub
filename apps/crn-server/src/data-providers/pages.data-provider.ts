@@ -21,14 +21,15 @@ export class PageSquidexDataProvider implements PageDataProvider {
     options?: FetchPagesProviderOptions,
   ): Promise<ListPageDataObject> {
     const { total, items } = await this.pageSquidexRestClient.fetch({
-      ...((options?.filter?.path && {
-        filter: {
-          path: 'data.path.iv',
-          op: 'eq',
-          value: options?.filter?.path,
-        },
-      }) ||
-        undefined),
+      ...(options?.filter?.path
+        ? {
+            filter: {
+              path: 'data.path.iv',
+              op: 'eq',
+              value: options?.filter?.path,
+            },
+          }
+        : undefined),
     });
 
     return {

@@ -32,7 +32,7 @@ describe('Dashboard Data Provider', () => {
 
   describe('Fetch method', () => {
     describe('with mock-server', () => {
-      test('Should fetch the discover from squidex graphql', async () => {
+      test('Should fetch the dashboard from squidex graphql', async () => {
         const result = await dashboardMockGraphql.fetch();
 
         const expected = getDashboardResponse();
@@ -47,7 +47,7 @@ describe('Dashboard Data Provider', () => {
       afterEach(() => {
         nock.cleanAll();
       });
-      test('Should return an empty result when the client returns an empty array of data', async () => {
+      test('Should return an empty result when the client returns an empty array for news and pages', async () => {
         nock(baseUrl)
           .post(`/api/content/${appName}/graphql`, {
             query: print(FETCH_DASHBOARD),
@@ -66,7 +66,7 @@ describe('Dashboard Data Provider', () => {
         });
       });
 
-      test('Should return an empty result when the client returns an empty array of data', async () => {
+      test('Should return an empty result when the client returns an empty array for queryDashboardContents', async () => {
         nock(baseUrl)
           .post(`/api/content/${appName}/graphql`, {
             query: print(FETCH_DASHBOARD),

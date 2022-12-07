@@ -24,7 +24,7 @@ const Routes: React.FC<Record<string, never>> = () => {
       <Route exact path={path}>
         <Welcome />
       </Route>
-      <Route exact path={onboarding({}).coreDetails({}).$}>
+      <Route path={onboarding({}).coreDetails({}).$}>
         <CoreDetails />
       </Route>
       <Route component={NotFoundPage} />

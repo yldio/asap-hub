@@ -34,8 +34,8 @@ describe('KeyInformatiomModal', () => {
     render(
       <KeyInformationModal
         {...defaultProps}
-        firstName="Cristiano"
-        lastName="Ronaldo"
+        firstName="Gonçalo"
+        lastName="Ramos"
         onSave={onSave}
       />,
       {
@@ -44,8 +44,8 @@ describe('KeyInformatiomModal', () => {
     );
     userEvent.click(screen.getByRole('button', { name: 'Save' }));
     expect(onSave).toHaveBeenCalledWith({
-      firstName: 'Cristiano',
-      lastName: 'Ronaldo',
+      firstName: 'Gonçalo',
+      lastName: 'Ramos',
     });
   });
   it('calls onSave with the updated fields', async () => {
@@ -53,8 +53,8 @@ describe('KeyInformatiomModal', () => {
     render(
       <KeyInformationModal
         {...defaultProps}
-        firstName="Cristiano"
-        lastName="Ronaldo"
+        firstName="Gonçalo"
+        lastName="Ramos"
         onSave={onSave}
       />,
       {
@@ -71,8 +71,8 @@ describe('KeyInformatiomModal', () => {
     );
     userEvent.click(screen.getByRole('button', { name: 'Save' }));
     expect(onSave).toHaveBeenCalledWith({
-      firstName: 'Cristianos',
-      lastName: 'Ronaldos',
+      firstName: 'Gonçalos',
+      lastName: 'Ramoss',
     });
   });
 });

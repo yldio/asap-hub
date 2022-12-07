@@ -4,6 +4,7 @@ import nock, { DataMatcherMap } from 'nock';
 import { API_BASE_URL } from '../../config';
 import {
   getWorkingGroup,
+  getWorkingGroupNetwork,
   getWorkingGroups,
   putWorkingGroupResources,
 } from '../api';
@@ -47,7 +48,7 @@ describe('getWorkingGroup', () => {
   });
 });
 
-describe('getWorkingGroups', () => {
+describe('getWorkingGroupNetwork', () => {
   afterEach(() => {
     expect(nock.isDone()).toBe(true);
     nock.cleanAll();
@@ -60,13 +61,42 @@ describe('getWorkingGroups', () => {
       .get('/working-group-network')
       .reply(200, workingGroupResponse);
 
-    const result = await getWorkingGroups('Bearer x');
+    const result = await getWorkingGroupNetwork('Bearer x');
     expect(result).toEqual(workingGroupResponse);
   });
 
   it('errors for error status', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
       .get('/working-group-network')
+      .reply(500);
+
+    await expect(
+      getWorkingGroupNetwork('Bearer x'),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Failed to fetch the working group network. Expected status 2xx. Received status 500."`,
+    );
+  });
+});
+describe('getWorkingGroups', () => {
+  afterEach(() => {
+    expect(nock.isDone()).toBe(true);
+    nock.cleanAll();
+  });
+
+  it('returns a successfully fetched working groups', async () => {
+    const workingGroupResponse: gp2Model.ListWorkingGroupResponse =
+      gp2Fixtures.createWorkingGroupsResponse();
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .get('/working-groups')
+      .reply(200, workingGroupResponse);
+
+    const result = await getWorkingGroups('Bearer x');
+    expect(result).toEqual(workingGroupResponse);
+  });
+
+  it('errors for error status', async () => {
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .get('/working-groups')
       .reply(500);
 
     await expect(

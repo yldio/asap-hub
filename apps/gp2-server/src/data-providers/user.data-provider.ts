@@ -170,15 +170,18 @@ function getUserSquidexData(
 }
 
 const generateFetchQueryFilter = ({ filter }: gp2Model.FetchUsersOptions) => {
-  const { region, code, onlyOnboarded } = filter || {};
+  const { regions, keywords, code, onlyOnboarded } = filter || {};
   const filterOnboarded = onlyOnboarded === true && 'data/onboarded/iv eq true';
-  const filterRegions = region
+  const filterRegions = regions
     ?.map((r) => `data/region/iv eq '${reverseRegionMap[r]}'`)
+    .join(' or ');
+  const filterKeywords = keywords
+    ?.map((r) => `data/keywords/iv eq '${r}'`)
     .join(' or ');
 
   const filterCode = code && `data/connections/iv/code eq '${code}'`;
 
-  return [filterOnboarded, filterRegions, filterCode]
+  return [filterOnboarded, filterRegions, filterCode, filterKeywords]
     .filter(Boolean)
     .map((group) => `(${group})`)
     .join(' and ')

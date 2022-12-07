@@ -9,7 +9,6 @@ describe('EditUserModal', () => {
     description: 'description',
     backHref: '',
     dirty: false,
-    onSave: jest.fn(),
     children: () => null,
   };
   it('renders a dialog with the given title and description', () => {

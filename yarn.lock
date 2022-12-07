@@ -14071,17 +14071,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/webpack@npm:4.41.32":
-  version: 4.41.32
-  resolution: "@types/webpack@npm:4.41.32"
+"@types/webpack@npm:4.41.33":
+  version: 4.41.33
+  resolution: "@types/webpack@npm:4.41.33"
   dependencies:
-    "@types/node": "npm:*"
-    "@types/tapable": "npm:^1"
-    "@types/uglify-js": "npm:*"
-    "@types/webpack-sources": "npm:*"
-    anymatch: "npm:^3.0.0"
-    source-map: "npm:^0.6.0"
-  checksum: e594a1357cbbc2f7c6ca47785c5a11adb5591a774a69afaeab07cd6f6bff6c6aea2030bd37b32bdd19d0ec2336a346db754e8d8d236ba8effeab542716fb32b7
+    "@types/node": "*"
+    "@types/tapable": ^1
+    "@types/uglify-js": "*"
+    "@types/webpack-sources": "*"
+    anymatch: ^3.0.0
+    source-map: ^0.6.0
+  checksum: 5f64818128c94026be0e43e77d687e2d90f0da526a3a7c308c6a0bb12e93a35c9243be427bbf6865f64fd71dc5b32715af9b9da0cd6ae8335081b6db995bad2b
   languageName: node
   linkType: hard
 
@@ -15997,7 +15997,7 @@ __metadata:
     "@types/jest": 27.5.2
     "@types/react-test-renderer": 17.0.2
     "@types/uuid": 8.3.4
-    "@types/webpack": 4.41.32
+    "@types/webpack": 4.41.33
     "@yarnpkg/pnpify": 3.1.6
     babel-eslint: 10.1.0
     babel-jest: 27.5.1

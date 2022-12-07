@@ -2661,7 +2661,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@types/webpack",\
-        "npm:4.41.32"\
+        "npm:4.41.33"\
       ],\
       [\
         "@types/webpack-env",\
@@ -10073,7 +10073,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jest", "npm:27.5.2"],\
             ["@types/react-test-renderer", "npm:17.0.2"],\
             ["@types/uuid", "npm:8.3.4"],\
-            ["@types/webpack", "npm:4.41.32"],\
+            ["@types/webpack", "npm:4.41.33"],\
             ["@yarnpkg/pnpify", "npm:3.1.6"],\
             ["babel-eslint", "virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:10.1.0"],\
             ["babel-jest", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:27.5.1"],\
@@ -35779,10 +35779,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:4.41.32", {\
-          "packageLocation": "./.yarn/cache/@types-webpack-npm-4.41.32-34a78d0b36-e594a1357c.zip/node_modules/@types/webpack/",\
+        ["npm:4.41.33", {\
+          "packageLocation": "./.yarn/cache/@types-webpack-npm-4.41.33-c3bc165381-5f64818128.zip/node_modules/@types/webpack/",\
           "packageDependencies": [\
-            ["@types/webpack", "npm:4.41.32"],\
+            ["@types/webpack", "npm:4.41.33"],\
             ["@types/node", "npm:13.11.1"],\
             ["@types/tapable", "npm:1.0.7"],\
             ["@types/uglify-js", "npm:3.9.2"],\
@@ -38087,7 +38087,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jest", "npm:27.5.2"],\
             ["@types/react-test-renderer", "npm:17.0.2"],\
             ["@types/uuid", "npm:8.3.4"],\
-            ["@types/webpack", "npm:4.41.32"],\
+            ["@types/webpack", "npm:4.41.33"],\
             ["@yarnpkg/pnpify", "npm:3.1.6"],\
             ["babel-eslint", "virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:10.1.0"],\
             ["babel-jest", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:27.5.1"],\

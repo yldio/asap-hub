@@ -1324,6 +1324,67 @@ describe('User data provider', () => {
         );
       });
     });
+    test('it should be able to filter out duplicate user Ids when both the project and working group filters are defined', async () => {
+      const projectId = '140f5e15-922d-4cbf-9d39-35dd39225b03';
+      const workingGroupId = '3ec68d44-82c1-4855-b6a0-ba44b9e313bb';
+      const user1Id = '11';
+      const user2Id = '11';
+      const projectMembers = getGraphQLProjectMembers({
+        members: [{ user: [{ id: user1Id }] }],
+      });
+      const workingGroupMembers = getGraphQLWorkingGroupMembers({
+        members: [{ user: [{ id: user2Id }] }],
+      });
+      const projectMembersResponse = getSquidexProjectsMembersGraphqlResponse();
+      const workingGroupMembersResponse =
+        getSquidexWorkingGroupsMembersGraphqlResponse();
+
+      projectMembersResponse.queryProjectsContents![0] = projectMembers;
+      workingGroupMembersResponse.queryWorkingGroupsContents![0] =
+        workingGroupMembers;
+
+      squidexGraphqlClientMock.request
+        .mockResolvedValueOnce(projectMembersResponse)
+        .mockResolvedValueOnce(workingGroupMembersResponse)
+        .mockResolvedValueOnce(getSquidexUsersGraphqlResponse());
+      const fetchOptions: gp2Model.FetchUsersOptions = {
+        take: 12,
+        skip: 2,
+        filter: {
+          projects: [projectId],
+          workingGroups: [workingGroupId],
+        },
+      };
+      await userDataProvider.fetch(fetchOptions);
+
+      expect(squidexGraphqlClientMock.request).toBeCalledTimes(3);
+      const projectFilter = `id eq '${projectId}'`;
+      expect(squidexGraphqlClientMock.request).toHaveBeenNthCalledWith(
+        1,
+        expect.anything(),
+        {
+          filter: projectFilter,
+        },
+      );
+      const workingGroupFilter = `id eq '${workingGroupId}'`;
+      expect(squidexGraphqlClientMock.request).toHaveBeenNthCalledWith(
+        2,
+        expect.anything(),
+        {
+          filter: workingGroupFilter,
+        },
+      );
+      const userFilter = `(id eq '${user1Id}')`;
+      expect(squidexGraphqlClientMock.request).toHaveBeenNthCalledWith(
+        3,
+        expect.anything(),
+        {
+          top: 12,
+          skip: 2,
+          filter: userFilter,
+        },
+      );
+    });
 
     test('Should query with code filters', async () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(

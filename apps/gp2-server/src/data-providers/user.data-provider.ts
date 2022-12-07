@@ -125,61 +125,67 @@ export class UserSquidexDataProvider implements UserDataProvider {
   private getFetchQueryFilter = async ({
     filter,
   }: gp2Model.FetchUsersOptions) => {
+    const userIdFilter = await this.getUserIdFilter({ filter });
+    return generateFetchQueryFilter({ filter }, userIdFilter);
+  };
+
+  private getUserIdFilter = async ({ filter }: gp2Model.FetchUsersOptions) => {
     const { projects, workingGroups } = filter || {};
 
-    const projectUserFilter = await this.getFetchProjectQueryFilter(projects);
-    const workingGroupUserFilter = await this.getFetchWorkingGroupQueryFilter(
-      workingGroups,
-    );
-    return generateFetchQueryFilter(
-      { filter },
-      projectUserFilter,
-      workingGroupUserFilter,
-    );
+    const members = await Promise.all([
+      this.getFetchProjectQueryFilter(projects),
+      this.getFetchWorkingGroupQueryFilter(workingGroups),
+    ]);
+
+    return members
+      .flat()
+      .filter((id, index, arr) => arr.indexOf(id) === index)
+      .map((id) => `id eq '${id}'`)
+      .join(' or ');
   };
 
   private getFetchProjectQueryFilter = async (
     projects: string[] | undefined,
   ) => {
     if (!projects) {
-      return undefined;
+      return [];
     }
     const projectFilter = projects.map((p) => `id eq '${p}'`).join(' or ');
     const { queryProjectsContents } = await this.queryFetchProjectData(
       projectFilter,
     );
-    return queryProjectsContents
-      ?.flatMap((project) =>
-        project.flatData.members?.map((member) => {
-          const user = member.user && member.user[0];
-          return user?.id;
-        }),
-      )
-      .filter((id, index, arr) => arr.indexOf(id) === index)
-      .map((id) => `id eq '${id}'`)
-      .join(' or ');
+    return (
+      queryProjectsContents
+        ?.flatMap((project) =>
+          project.flatData.members?.map((member) => {
+            const user = member.user && member.user[0];
+            return user?.id;
+          }),
+        )
+        .filter(Boolean) || []
+    );
   };
   private getFetchWorkingGroupQueryFilter = async (
     workingGroups: string[] | undefined,
   ) => {
     if (!workingGroups) {
-      return undefined;
+      return [];
     }
     const workingGroupFilter = workingGroups
       .map((p) => `id eq '${p}'`)
       .join(' or ');
     const { queryWorkingGroupsContents } =
       await this.queryFetchWorkingGroupData(workingGroupFilter);
-    return queryWorkingGroupsContents
-      ?.flatMap((workingGroup) =>
-        workingGroup.flatData.members?.map((member) => {
-          const user = member.user && member.user[0];
-          return user?.id;
-        }),
-      )
-      .filter((id, index, arr) => arr.indexOf(id) === index)
-      .map((id) => `id eq '${id}'`)
-      .join(' or ');
+    return (
+      queryWorkingGroupsContents
+        ?.flatMap((workingGroup) =>
+          workingGroup.flatData.members?.map((member) => {
+            const user = member.user && member.user[0];
+            return user?.id;
+          }),
+        )
+        .filter(Boolean) || []
+    );
   };
 }
 
@@ -251,8 +257,7 @@ function getUserSquidexData(
 
 const generateFetchQueryFilter = (
   { filter }: gp2Model.FetchUsersOptions,
-  projectFilter?: string,
-  workingGroupFilter?: string,
+  userIdFilter: string,
 ) => {
   const { regions, keywords, code, onlyOnboarded } = filter || {};
   const filterOnboarded = onlyOnboarded === true && 'data/onboarded/iv eq true';
@@ -270,14 +275,14 @@ const generateFetchQueryFilter = (
     filterRegions,
     filterCode,
     filterKeywords,
-    projectFilter,
-    workingGroupFilter,
+    userIdFilter,
   ]
     .filter(Boolean)
     .map((group) => `(${group})`)
     .join(' and ')
     .trim();
 };
+
 export const parseGraphQLUserToDataObject = ({
   id,
   created,

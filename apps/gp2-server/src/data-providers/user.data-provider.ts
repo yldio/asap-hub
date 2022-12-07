@@ -81,7 +81,11 @@ export class UserSquidexDataProvider implements UserDataProvider {
     skip = 0,
     filter,
   }: gp2Model.FetchUsersOptions): Promise<gp2Model.ListUserDataObject> {
+    const { projects, workingGroups } = filter || {};
     const userIdFilter = await this.getUserIdFilter(filter);
+    if (userIdFilter === '' && (projects?.length || workingGroups?.length)) {
+      return { total: 0, items: [] };
+    }
     const queryFilter = generateFetchQueryFilter(filter, userIdFilter);
     return this.queryForUsers(queryFilter, take, skip);
   }

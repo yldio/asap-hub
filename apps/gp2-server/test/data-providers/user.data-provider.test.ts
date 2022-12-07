@@ -1386,6 +1386,80 @@ describe('User data provider', () => {
       );
     });
 
+    describe('if there is a working group or a project filter and no users are found - we should return an empty list', () => {
+      test('we have a projects filter and no working group filter', async () => {
+        const projectId = '140f5e15-922d-4cbf-9d39-35dd39225b03';
+        const projectMembersResponse =
+          getSquidexProjectsMembersGraphqlResponse();
+        projectMembersResponse.queryProjectsContents = [];
+
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          projectMembersResponse,
+        );
+
+        const fetchOptions: gp2Model.FetchUsersOptions = {
+          take: 12,
+          skip: 2,
+          filter: {
+            projects: [projectId],
+          },
+        };
+        const result = await userDataProvider.fetch(fetchOptions);
+
+        expect(squidexGraphqlClientMock.request).toBeCalledTimes(1);
+        expect(result).toEqual({ total: 0, items: [] });
+      });
+      test('we have a working groups filter and no projects filter', async () => {
+        const workingGroupId = '3ec68d44-82c1-4855-b6a0-ba44b9e313bb';
+        const workingGroupMembersResponse =
+          getSquidexWorkingGroupsMembersGraphqlResponse();
+
+        workingGroupMembersResponse.queryWorkingGroupsContents = [];
+
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          workingGroupMembersResponse,
+        );
+        const fetchOptions: gp2Model.FetchUsersOptions = {
+          take: 12,
+          skip: 2,
+          filter: {
+            workingGroups: [workingGroupId],
+          },
+        };
+        const result = await userDataProvider.fetch(fetchOptions);
+
+        expect(squidexGraphqlClientMock.request).toBeCalledTimes(1);
+        expect(result).toEqual({ total: 0, items: [] });
+      });
+      test('if both are defined', async () => {
+        const projectId = '140f5e15-922d-4cbf-9d39-35dd39225b03';
+        const workingGroupId = '3ec68d44-82c1-4855-b6a0-ba44b9e313bb';
+        const projectMembersResponse =
+          getSquidexProjectsMembersGraphqlResponse();
+        const workingGroupMembersResponse =
+          getSquidexWorkingGroupsMembersGraphqlResponse();
+
+        projectMembersResponse.queryProjectsContents = [];
+        workingGroupMembersResponse.queryWorkingGroupsContents = [];
+
+        squidexGraphqlClientMock.request
+          .mockResolvedValueOnce(projectMembersResponse)
+          .mockResolvedValueOnce(workingGroupMembersResponse);
+        const fetchOptions: gp2Model.FetchUsersOptions = {
+          take: 12,
+          skip: 2,
+          filter: {
+            projects: [projectId],
+            workingGroups: [workingGroupId],
+          },
+        };
+        const result = await userDataProvider.fetch(fetchOptions);
+
+        expect(squidexGraphqlClientMock.request).toBeCalledTimes(2);
+        expect(result).toEqual({ total: 0, items: [] });
+      });
+    });
+
     test('Should query with code filters', async () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexUsersGraphqlResponse(),

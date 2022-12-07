@@ -13,6 +13,8 @@ import {
   FetchUserQueryVariables,
   FetchUsersQuery,
   FetchUsersQueryVariables,
+  FetchWorkingGroupsMembersQuery,
+  FetchWorkingGroupsMembersQueryVariables,
   UsersDataDegreeEnum,
   UsersDataRegionEnum,
   UsersDataRoleEnum,
@@ -22,6 +24,7 @@ import {
   FETCH_PROJECTS_MEMBERS,
   FETCH_USER,
   FETCH_USERS,
+  FETCH_WORKINGGROUPS_MEMBERS,
 } from '../queries/users.queries';
 import { reverseMap } from '../utils/reverse-map';
 import { roleMap as projectRoleMap } from './project.data-provider';
@@ -101,6 +104,12 @@ export class UserSquidexDataProvider implements UserDataProvider {
       FetchProjectsMembersQueryVariables
     >(FETCH_PROJECTS_MEMBERS, { filter });
   }
+  private async queryFetchWorkingGroupData(filter: string) {
+    return this.squidexGraphqlClient.request<
+      FetchWorkingGroupsMembersQuery,
+      FetchWorkingGroupsMembersQueryVariables
+    >(FETCH_WORKINGGROUPS_MEMBERS, { filter });
+  }
   private async queryFetchData(filter: string, top: number, skip: number) {
     return this.squidexGraphqlClient.request<
       FetchUsersQuery,
@@ -116,10 +125,17 @@ export class UserSquidexDataProvider implements UserDataProvider {
   private getFetchQueryFilter = async ({
     filter,
   }: gp2Model.FetchUsersOptions) => {
-    const { projects } = filter || {};
+    const { projects, workingGroups } = filter || {};
 
     const projectUserFilter = await this.getFetchProjectQueryFilter(projects);
-    return generateFetchQueryFilter({ filter }, projectUserFilter);
+    const workingGroupUserFilter = await this.getFetchWorkingGroupQueryFilter(
+      workingGroups,
+    );
+    return generateFetchQueryFilter(
+      { filter },
+      projectUserFilter,
+      workingGroupUserFilter,
+    );
   };
 
   private getFetchProjectQueryFilter = async (
@@ -135,6 +151,28 @@ export class UserSquidexDataProvider implements UserDataProvider {
     return queryProjectsContents
       ?.flatMap((project) =>
         project.flatData.members?.map((member) => {
+          const user = member.user && member.user[0];
+          return user?.id;
+        }),
+      )
+      .filter((id, index, arr) => arr.indexOf(id) === index)
+      .map((id) => `id eq '${id}'`)
+      .join(' or ');
+  };
+  private getFetchWorkingGroupQueryFilter = async (
+    workingGroups: string[] | undefined,
+  ) => {
+    if (!workingGroups) {
+      return undefined;
+    }
+    const workingGroupFilter = workingGroups
+      .map((p) => `id eq '${p}'`)
+      .join(' or ');
+    const { queryWorkingGroupsContents } =
+      await this.queryFetchWorkingGroupData(workingGroupFilter);
+    return queryWorkingGroupsContents
+      ?.flatMap((workingGroup) =>
+        workingGroup.flatData.members?.map((member) => {
           const user = member.user && member.user[0];
           return user?.id;
         }),
@@ -214,6 +252,7 @@ function getUserSquidexData(
 const generateFetchQueryFilter = (
   { filter }: gp2Model.FetchUsersOptions,
   projectFilter?: string,
+  workingGroupFilter?: string,
 ) => {
   const { regions, keywords, code, onlyOnboarded } = filter || {};
   const filterOnboarded = onlyOnboarded === true && 'data/onboarded/iv eq true';
@@ -232,6 +271,7 @@ const generateFetchQueryFilter = (
     filterCode,
     filterKeywords,
     projectFilter,
+    workingGroupFilter,
   ]
     .filter(Boolean)
     .map((group) => `(${group})`)

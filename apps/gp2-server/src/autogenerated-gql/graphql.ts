@@ -2883,6 +2883,26 @@ export type FetchProjectsMembersQuery = {
   >;
 };
 
+export type WorkingGroupMembersContentFragment = {
+  flatData: {
+    members: Maybe<Array<{ user: Maybe<Array<Pick<Users, 'id'>>> }>>;
+  };
+};
+
+export type FetchWorkingGroupsMembersQueryVariables = Exact<{
+  filter: InputMaybe<Scalars['String']>;
+}>;
+
+export type FetchWorkingGroupsMembersQuery = {
+  queryWorkingGroupsContents: Maybe<
+    Array<{
+      flatData: {
+        members: Maybe<Array<{ user: Maybe<Array<Pick<Users, 'id'>>> }>>;
+      };
+    }>
+  >;
+};
+
 export type WorkingGroupNetworkContentFragment = Pick<
   WorkingGroupNetwork,
   'id'
@@ -3762,6 +3782,55 @@ export const ProjectMembersContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<ProjectMembersContentFragment, unknown>;
+export const WorkingGroupMembersContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'WorkingGroupMembersContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'WorkingGroups' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'flatData' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'members' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'user' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<WorkingGroupMembersContentFragment, unknown>;
 export const WorkingGroupContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -4276,6 +4345,58 @@ export const FetchProjectsMembersDocument = {
 } as unknown as DocumentNode<
   FetchProjectsMembersQuery,
   FetchProjectsMembersQueryVariables
+>;
+export const FetchWorkingGroupsMembersDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchWorkingGroupsMembers' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'filter' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'queryWorkingGroupsContents' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'filter' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'filter' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'WorkingGroupMembersContent' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...WorkingGroupMembersContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchWorkingGroupsMembersQuery,
+  FetchWorkingGroupsMembersQueryVariables
 >;
 export const FetchWorkingGroupNetworkDocument = {
   kind: 'Document',

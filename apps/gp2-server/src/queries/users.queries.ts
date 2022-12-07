@@ -105,3 +105,24 @@ export const FETCH_PROJECTS_MEMBERS = gql`
   }
   ${projectMembersContentQueryFragment}
 `;
+
+export const workingGroupMembersContentQueryFragment = gql`
+  fragment WorkingGroupMembersContent on WorkingGroups {
+    flatData {
+      members {
+        user {
+          id
+        }
+      }
+    }
+  }
+`;
+
+export const FETCH_WORKINGGROUPS_MEMBERS = gql`
+  query FetchWorkingGroupsMembers($filter: String) {
+    queryWorkingGroupsContents(filter: $filter) {
+      ...WorkingGroupMembersContent
+    }
+  }
+  ${workingGroupMembersContentQueryFragment}
+`;

@@ -9,6 +9,7 @@ import {
   FetchProjectsMembersQuery,
   FetchUserQuery,
   FetchUsersQuery,
+  FetchWorkingGroupsMembersQuery,
   ProjectsDataMembersRoleEnum,
   ProjectsDataStatusEnum,
   UsersDataDegreeEnum,
@@ -402,3 +403,37 @@ export const getGraphQLProjectsMembers = (
 export const getSquidexProjectsMembersGraphqlResponse =
   (): FetchProjectsMembersQuery =>
     generateGraphqlFetchProjectsMembersResponse(getGraphQLProjectsMembers());
+
+export const generateGraphqlFetchWorkingGroupsMembersResponse = (
+  items: NonNullable<
+    FetchWorkingGroupsMembersQuery['queryWorkingGroupsContents']
+  >,
+): FetchWorkingGroupsMembersQuery => ({
+  queryWorkingGroupsContents: items,
+});
+
+type WorkingGroupMember = NonNullable<
+  FetchWorkingGroupsMembersQuery['queryWorkingGroupsContents']
+>[number];
+
+export const getGraphQLWorkingGroupMembers = (
+  members: Partial<WorkingGroupMember['flatData']> = {},
+): WorkingGroupMember => ({
+  flatData: {
+    members: [{ user: [{ id: '42' }] }],
+    ...members,
+  },
+});
+
+export const getGraphQLWorkingGroupsMembers = (
+  workingGroups: NonNullable<
+    FetchWorkingGroupsMembersQuery['queryWorkingGroupsContents']
+  > = [getGraphQLWorkingGroupMembers()],
+): NonNullable<FetchWorkingGroupsMembersQuery['queryWorkingGroupsContents']> =>
+  workingGroups;
+
+export const getSquidexWorkingGroupsMembersGraphqlResponse =
+  (): FetchWorkingGroupsMembersQuery =>
+    generateGraphqlFetchWorkingGroupsMembersResponse(
+      getGraphQLWorkingGroupsMembers(),
+    );

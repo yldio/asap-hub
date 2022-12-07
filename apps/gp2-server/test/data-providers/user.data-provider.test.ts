@@ -17,9 +17,11 @@ import {
   fetchUserResponse,
   getGraphQLProjectMembers,
   getGraphQLUser,
+  getGraphQLWorkingGroupMembers,
   getSquidexProjectsMembersGraphqlResponse,
   getSquidexUserGraphqlResponse,
   getSquidexUsersGraphqlResponse,
+  getSquidexWorkingGroupsMembersGraphqlResponse,
   getUserCreateDataObject,
   getUserDataObject,
   getUserInput,
@@ -1107,6 +1109,207 @@ describe('User data provider', () => {
           expect.anything(),
           {
             filter: projectFilter,
+          },
+        );
+        const userFilter = `(id eq '${user1Id}')`;
+        expect(squidexGraphqlClientMock.request).toHaveBeenNthCalledWith(
+          2,
+          expect.anything(),
+          {
+            top: 12,
+            skip: 2,
+            filter: userFilter,
+          },
+        );
+      });
+    });
+
+    describe('working groups filter', () => {
+      test('it should be able to filter by working group', async () => {
+        const workingGroupId = '3ec68d44-82c1-4855-b6a0-ba44b9e313ba';
+        const userId = '11';
+        const workingGroupMembers = getGraphQLWorkingGroupMembers({
+          members: [{ user: [{ id: userId }] }],
+        });
+        const workingGroupMembersResponse =
+          getSquidexWorkingGroupsMembersGraphqlResponse();
+
+        workingGroupMembersResponse.queryWorkingGroupsContents![0] =
+          workingGroupMembers;
+
+        squidexGraphqlClientMock.request
+          .mockResolvedValueOnce(workingGroupMembersResponse)
+          .mockResolvedValueOnce(getSquidexUsersGraphqlResponse());
+        const fetchOptions: gp2Model.FetchUsersOptions = {
+          take: 12,
+          skip: 2,
+          filter: {
+            workingGroups: [workingGroupId],
+          },
+        };
+        await userDataProvider.fetch(fetchOptions);
+
+        expect(squidexGraphqlClientMock.request).toBeCalledTimes(2);
+        const workingGroupFilter = `id eq '${workingGroupId}'`;
+        expect(squidexGraphqlClientMock.request).toHaveBeenNthCalledWith(
+          1,
+          expect.anything(),
+          {
+            filter: workingGroupFilter,
+          },
+        );
+        const userFilter = `(id eq '${userId}')`;
+        expect(squidexGraphqlClientMock.request).toHaveBeenNthCalledWith(
+          2,
+          expect.anything(),
+          {
+            top: 12,
+            skip: 2,
+            filter: userFilter,
+          },
+        );
+      });
+      test('it should be able to filter by workingGroups', async () => {
+        const workingGroup1Id = '3ec68d44-82c1-4855-b6a0-ba44b9e313ba';
+        const workingGroup2Id = '3ec68d44-82c1-4855-b6a0-ba44b9e313bb';
+        const user1Id = '11';
+        const user2Id = '7';
+        const workingGroup1Members = getGraphQLWorkingGroupMembers({
+          members: [{ user: [{ id: user1Id }] }],
+        });
+        const workingGroup2Members = getGraphQLWorkingGroupMembers({
+          members: [{ user: [{ id: user2Id }] }],
+        });
+        const workingGroupMembersResponse =
+          getSquidexWorkingGroupsMembersGraphqlResponse();
+
+        workingGroupMembersResponse.queryWorkingGroupsContents![0] =
+          workingGroup1Members;
+        workingGroupMembersResponse.queryWorkingGroupsContents![1] =
+          workingGroup2Members;
+
+        squidexGraphqlClientMock.request
+          .mockResolvedValueOnce(workingGroupMembersResponse)
+          .mockResolvedValueOnce(getSquidexUsersGraphqlResponse());
+        const fetchOptions: gp2Model.FetchUsersOptions = {
+          take: 12,
+          skip: 2,
+          filter: {
+            workingGroups: [workingGroup1Id, workingGroup2Id],
+          },
+        };
+        await userDataProvider.fetch(fetchOptions);
+
+        expect(squidexGraphqlClientMock.request).toBeCalledTimes(2);
+        const workingGroupFilter = `id eq '${workingGroup1Id}' or id eq '${workingGroup2Id}'`;
+        expect(squidexGraphqlClientMock.request).toHaveBeenNthCalledWith(
+          1,
+          expect.anything(),
+          {
+            filter: workingGroupFilter,
+          },
+        );
+        const userFilter = `(id eq '${user1Id}' or id eq '${user2Id}')`;
+        expect(squidexGraphqlClientMock.request).toHaveBeenNthCalledWith(
+          2,
+          expect.anything(),
+          {
+            top: 12,
+            skip: 2,
+            filter: userFilter,
+          },
+        );
+      });
+      test('it should be able to filter by workingGroups and users', async () => {
+        const workingGroup1Id = '3ec68d44-82c1-4855-b6a0-ba44b9e313ba';
+        const workingGroup2Id = '3ec68d44-82c1-4855-b6a0-ba44b9e313bb';
+        const user1Id = '11';
+        const user2Id = '7';
+        const user3Id = '23';
+        const workingGroup1Members = getGraphQLWorkingGroupMembers({
+          members: [{ user: [{ id: user1Id }] }],
+        });
+        const workingGroup2Members = getGraphQLWorkingGroupMembers({
+          members: [{ user: [{ id: user2Id }] }, { user: [{ id: user3Id }] }],
+        });
+        const workingGroupMembersResponse =
+          getSquidexWorkingGroupsMembersGraphqlResponse();
+
+        workingGroupMembersResponse.queryWorkingGroupsContents![0] =
+          workingGroup1Members;
+        workingGroupMembersResponse.queryWorkingGroupsContents![1] =
+          workingGroup2Members;
+
+        squidexGraphqlClientMock.request
+          .mockResolvedValueOnce(workingGroupMembersResponse)
+          .mockResolvedValueOnce(getSquidexUsersGraphqlResponse());
+        const fetchOptions: gp2Model.FetchUsersOptions = {
+          take: 12,
+          skip: 2,
+          filter: {
+            workingGroups: [workingGroup1Id, workingGroup2Id],
+          },
+        };
+        await userDataProvider.fetch(fetchOptions);
+
+        expect(squidexGraphqlClientMock.request).toBeCalledTimes(2);
+        const workingGroupFilter = `id eq '${workingGroup1Id}' or id eq '${workingGroup2Id}'`;
+        expect(squidexGraphqlClientMock.request).toHaveBeenNthCalledWith(
+          1,
+          expect.anything(),
+          {
+            filter: workingGroupFilter,
+          },
+        );
+        const userFilter = `(id eq '${user1Id}' or id eq '${user2Id}' or id eq '${user3Id}')`;
+        expect(squidexGraphqlClientMock.request).toHaveBeenNthCalledWith(
+          2,
+          expect.anything(),
+          {
+            top: 12,
+            skip: 2,
+            filter: userFilter,
+          },
+        );
+      });
+      test('it should be able to filter out duplicate user Ids', async () => {
+        const workingGroup1Id = '3ec68d44-82c1-4855-b6a0-ba44b9e313ba';
+        const workingGroup2Id = '3ec68d44-82c1-4855-b6a0-ba44b9e313bb';
+        const user1Id = '11';
+        const user2Id = '11';
+        const workingGroup1Members = getGraphQLWorkingGroupMembers({
+          members: [{ user: [{ id: user1Id }] }],
+        });
+        const workingGroup2Members = getGraphQLWorkingGroupMembers({
+          members: [{ user: [{ id: user2Id }] }],
+        });
+        const workingGroupMembersResponse =
+          getSquidexWorkingGroupsMembersGraphqlResponse();
+
+        workingGroupMembersResponse.queryWorkingGroupsContents![0] =
+          workingGroup1Members;
+        workingGroupMembersResponse.queryWorkingGroupsContents![1] =
+          workingGroup2Members;
+
+        squidexGraphqlClientMock.request
+          .mockResolvedValueOnce(workingGroupMembersResponse)
+          .mockResolvedValueOnce(getSquidexUsersGraphqlResponse());
+        const fetchOptions: gp2Model.FetchUsersOptions = {
+          take: 12,
+          skip: 2,
+          filter: {
+            workingGroups: [workingGroup1Id, workingGroup2Id],
+          },
+        };
+        await userDataProvider.fetch(fetchOptions);
+
+        expect(squidexGraphqlClientMock.request).toBeCalledTimes(2);
+        const workingGroupFilter = `id eq '${workingGroup1Id}' or id eq '${workingGroup2Id}'`;
+        expect(squidexGraphqlClientMock.request).toHaveBeenNthCalledWith(
+          1,
+          expect.anything(),
+          {
+            filter: workingGroupFilter,
           },
         );
         const userFilter = `(id eq '${user1Id}')`;

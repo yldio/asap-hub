@@ -47,7 +47,7 @@ const renderCoreDetails = async (id: string) => {
 };
 
 describe('CoreDetails', () => {
-  beforeEach(jest.clearAllMocks);
+  beforeEach(jest.resetAllMocks);
   const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
   const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
   it('renders header with title', async () => {

@@ -2,7 +2,7 @@ import { gp2 as gp2Model, UserMetadataResponse } from '@asap-hub/model';
 import { Auth0PostLoginApi } from '@vedicium/auth0-actions-sdk';
 import nock from 'nock';
 
-import { onExecutePostLogin } from '../on-execute-post-login';
+import { onExecutePostLogin } from '../post-login-add-metadata';
 import type {
   Auth0PostLoginEventWithSecrets,
   DeepPartial,

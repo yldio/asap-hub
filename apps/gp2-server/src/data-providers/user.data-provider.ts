@@ -76,11 +76,13 @@ export class UserSquidexDataProvider implements UserDataProvider {
 
     return id;
   }
-  async fetch(
-    options: gp2Model.FetchUsersOptions,
-  ): Promise<gp2Model.ListUserDataObject> {
-    const queryFilter = await this.getFetchQueryFilter(options);
-    const { take = 8, skip = 0 } = options;
+  async fetch({
+    take = 8,
+    skip = 0,
+    filter,
+  }: gp2Model.FetchUsersOptions): Promise<gp2Model.ListUserDataObject> {
+    const userIdFilter = await this.getUserIdFilter(filter);
+    const queryFilter = generateFetchQueryFilter(filter, userIdFilter);
     return this.queryForUsers(queryFilter, take, skip);
   }
 
@@ -99,16 +101,19 @@ export class UserSquidexDataProvider implements UserDataProvider {
     };
   }
   private async queryFetchProjectData(filter: string) {
-    return this.squidexGraphqlClient.request<
+    const { queryProjectsContents } = await this.squidexGraphqlClient.request<
       FetchProjectsMembersQuery,
       FetchProjectsMembersQueryVariables
     >(FETCH_PROJECTS_MEMBERS, { filter });
+    return queryProjectsContents;
   }
   private async queryFetchWorkingGroupData(filter: string) {
-    return this.squidexGraphqlClient.request<
-      FetchWorkingGroupsMembersQuery,
-      FetchWorkingGroupsMembersQueryVariables
-    >(FETCH_WORKINGGROUPS_MEMBERS, { filter });
+    const { queryWorkingGroupsContents } =
+      await this.squidexGraphqlClient.request<
+        FetchWorkingGroupsMembersQuery,
+        FetchWorkingGroupsMembersQueryVariables
+      >(FETCH_WORKINGGROUPS_MEMBERS, { filter });
+    return queryWorkingGroupsContents;
   }
   private async queryFetchData(filter: string, top: number, skip: number) {
     return this.squidexGraphqlClient.request<
@@ -122,70 +127,25 @@ export class UserSquidexDataProvider implements UserDataProvider {
       FetchUserQueryVariables
     >(FETCH_USER, { id });
   }
-  private getFetchQueryFilter = async ({
-    filter,
-  }: gp2Model.FetchUsersOptions) => {
-    const userIdFilter = await this.getUserIdFilter({ filter });
-    return generateFetchQueryFilter({ filter }, userIdFilter);
-  };
 
-  private getUserIdFilter = async ({ filter }: gp2Model.FetchUsersOptions) => {
-    const { projects, workingGroups } = filter || {};
-
+  private getUserIdFilter = async ({
+    projects,
+    workingGroups,
+  }: gp2Model.FetchUsersOptions['filter'] = {}) => {
     const members = await Promise.all([
-      this.getFetchProjectQueryFilter(projects),
-      this.getFetchWorkingGroupQueryFilter(workingGroups),
+      getFetchMembers(projects, this.queryFetchProjectData.bind(this)),
+      getFetchMembers(
+        workingGroups,
+        this.queryFetchWorkingGroupData.bind(this),
+      ),
     ]);
 
     return members
       .flat()
+      .filter(Boolean)
       .filter((id, index, arr) => arr.indexOf(id) === index)
       .map((id) => `id eq '${id}'`)
       .join(' or ');
-  };
-
-  private getFetchProjectQueryFilter = async (
-    projects: string[] | undefined,
-  ) => {
-    if (!projects) {
-      return [];
-    }
-    const projectFilter = projects.map((p) => `id eq '${p}'`).join(' or ');
-    const { queryProjectsContents } = await this.queryFetchProjectData(
-      projectFilter,
-    );
-    return (
-      queryProjectsContents
-        ?.flatMap((project) =>
-          project.flatData.members?.map((member) => {
-            const user = member.user && member.user[0];
-            return user?.id;
-          }),
-        )
-        .filter(Boolean) || []
-    );
-  };
-  private getFetchWorkingGroupQueryFilter = async (
-    workingGroups: string[] | undefined,
-  ) => {
-    if (!workingGroups) {
-      return [];
-    }
-    const workingGroupFilter = workingGroups
-      .map((p) => `id eq '${p}'`)
-      .join(' or ');
-    const { queryWorkingGroupsContents } =
-      await this.queryFetchWorkingGroupData(workingGroupFilter);
-    return (
-      queryWorkingGroupsContents
-        ?.flatMap((workingGroup) =>
-          workingGroup.flatData.members?.map((member) => {
-            const user = member.user && member.user[0];
-            return user?.id;
-          }),
-        )
-        .filter(Boolean) || []
-    );
   };
 }
 
@@ -256,10 +216,14 @@ function getUserSquidexData(
 }
 
 const generateFetchQueryFilter = (
-  { filter }: gp2Model.FetchUsersOptions,
+  {
+    regions,
+    keywords,
+    code,
+    onlyOnboarded,
+  }: gp2Model.FetchUsersOptions['filter'] = {},
   userIdFilter: string,
 ) => {
-  const { regions, keywords, code, onlyOnboarded } = filter || {};
   const filterOnboarded = onlyOnboarded === true && 'data/onboarded/iv eq true';
   const filterRegions = regions
     ?.map((r) => `data/region/iv eq '${reverseRegionMap[r]}'`)
@@ -430,3 +394,23 @@ const parsePositions = (
       institution,
     };
   }) || [];
+
+const getFetchMembers = async (
+  ids: string[] | undefined,
+  queryFetchMemberData: (
+    filter: string,
+  ) => Promise<
+    | FetchWorkingGroupsMembersQuery['queryWorkingGroupsContents']
+    | FetchProjectsMembersQuery['queryProjectsContents']
+  >,
+) => {
+  if (!ids) {
+    return [];
+  }
+  const membersFilter = ids.map((id) => `id eq '${id}'`).join(' or ');
+  const entities = await queryFetchMemberData(membersFilter);
+  return entities?.flatMap(
+    ({ flatData }) =>
+      flatData.members?.map(({ user }) => user && user[0]?.id) || [],
+  );
+};

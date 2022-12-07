@@ -1,125 +1,36 @@
-import nock from 'nock';
 import Dashboard from '../../src/controllers/dashboard';
-import { SquidexGraphql } from '@asap-hub/squidex';
-import { identity } from '../helpers/squidex';
 import {
-  squidexGraphqlDashboardFlatData,
-  squidexGraphqlDashboardResponse,
+  getDashboardResponse,
+  getDashboardDataObject,
 } from '../fixtures/dashboard.fixtures';
-import { FETCH_DASHBOARD } from '../../src/queries/dashboard.queries';
-import { print } from 'graphql';
-import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
-import { getAuthToken } from '../../src/utils/auth';
-import { appName, baseUrl } from '../../src/config';
+import { dashboardDataProviderMock } from '../mocks/dashboard-data-provider.mock';
 
 describe('Dashboard controller', () => {
-  const squidexGraphqlClientMock = new SquidexGraphql(getAuthToken, {
-    appName,
-    baseUrl,
-  });
-  const dashboard = new Dashboard(squidexGraphqlClientMock);
-
-  const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
-  const dashboardMockGraphql = new Dashboard(squidexGraphqlClientMockServer);
-
-  beforeAll(() => {
-    identity();
-  });
+  const dashboardController = new Dashboard(dashboardDataProviderMock);
 
   describe('Fetch method', () => {
-    describe('with mock-server', () => {
-      test('Should fetch the discover from squidex graphql', async () => {
-        const result = await dashboardMockGraphql.fetch();
+    test('Should return an empty result when the data provider returns an empty list', async () => {
+      dashboardDataProviderMock.fetch.mockResolvedValue({
+        news: [],
+        pages: [],
+      });
 
-        const expected = squidexGraphqlDashboardResponse();
-        expect(result).toMatchObject(expected);
+      const result = await dashboardController.fetch();
+
+      expect(result).toEqual({
+        news: [],
+        pages: [],
       });
     });
-    describe('with intercepted http layer', () => {
-      afterEach(() => {
-        expect(nock.isDone()).toBe(true);
-      });
-      afterEach(() => {
-        nock.cleanAll();
-      });
-      test('Should return an empty result when the client returns an empty array of data', async () => {
-        nock(baseUrl)
-          .post(`/api/content/${appName}/graphql`, {
-            query: print(FETCH_DASHBOARD),
-          })
-          .reply(200, {
-            data: {
-              queryDashboardContents: [{ flatData: { news: [], pages: [] } }],
-            },
-          });
 
-        const result = await dashboard.fetch();
+    test('Should return the dashboard news', async () => {
+      dashboardDataProviderMock.fetch.mockResolvedValue(
+        getDashboardDataObject(),
+      );
 
-        expect(result).toEqual({
-          news: [],
-          pages: [],
-        });
-      });
+      const result = await dashboardController.fetch();
 
-      test('Should return an empty result when the client returns an empty array of data', async () => {
-        nock(baseUrl)
-          .post(`/api/content/${appName}/graphql`, {
-            query: print(FETCH_DASHBOARD),
-          })
-          .reply(200, {
-            data: {
-              queryDashboardContents: [],
-            },
-          });
-
-        const result = await dashboard.fetch();
-
-        expect(result).toEqual({
-          news: [],
-          pages: [],
-        });
-      });
-
-      test('Should return an empty result when the client returns nulls', async () => {
-        nock(baseUrl)
-          .post(`/api/content/${appName}/graphql`, {
-            query: print(FETCH_DASHBOARD),
-          })
-          .reply(200, {
-            data: {
-              queryDashboardContents: [
-                { flatData: { news: null, pages: null } },
-              ],
-            },
-          });
-
-        const result = await dashboard.fetch();
-
-        expect(result).toEqual({
-          news: [],
-          pages: [],
-        });
-      });
-
-      test('Should return the dashboard news', async () => {
-        nock(baseUrl)
-          .post(`/api/content/${appName}/graphql`, {
-            query: print(FETCH_DASHBOARD),
-          })
-          .reply(200, {
-            data: {
-              queryDashboardContents: [
-                {
-                  flatData: squidexGraphqlDashboardFlatData(),
-                },
-              ],
-            },
-          });
-
-        const result = await dashboard.fetch();
-
-        expect(result).toEqual(squidexGraphqlDashboardResponse());
-      });
+      expect(result).toEqual(getDashboardResponse());
     });
   });
 });

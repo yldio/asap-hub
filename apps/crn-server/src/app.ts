@@ -131,6 +131,9 @@ import {
   PageDataProvider,
   PageSquidexDataProvider,
 } from './data-providers/pages.data-provider';
+import DashboardSquidexDataProvider, {
+  DashboardDataProvider,
+} from './data-providers/dashboard.data-provider';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -200,6 +203,9 @@ export const appFactory = (libs: Libs = {}): Express => {
   // Data Providers
   const assetDataProvider =
     libs.assetDataProvider || new AssetSquidexDataProvider(userRestClient);
+  const dashboardDataProvider =
+    libs.dashboardDataProvider ||
+    new DashboardSquidexDataProvider(squidexGraphqlClient);
   const groupDataProvider =
     libs.groupDataProvider ||
     new GroupSquidexDataProvider(squidexGraphqlClient);
@@ -250,7 +256,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const calendarController =
     libs.calendarController || new Calendars(calendarDataProvider);
   const dashboardController =
-    libs.dashboardController || new Dashboard(squidexGraphqlClient);
+    libs.dashboardController || new Dashboard(dashboardDataProvider);
   const newsController = libs.newsController || new News(newsDataProvider);
   const discoverController =
     libs.discoverController || new Discover(squidexGraphqlClient);
@@ -402,7 +408,6 @@ export const appFactory = (libs: Libs = {}): Express => {
 
 export type Libs = {
   calendarController?: CalendarController;
-  calendarDataProvider?: CalendarSquidexDataProvider;
   dashboardController?: DashboardController;
   discoverController?: DiscoverController;
   eventController?: EventController;
@@ -418,18 +423,20 @@ export type Libs = {
   userController?: UserController;
   workingGroupsController?: WorkingGroupController;
   assetDataProvider?: AssetDataProvider;
+  calendarDataProvider?: CalendarSquidexDataProvider;
+  dashboardDataProvider?: DashboardDataProvider;
+  externalAuthorDataProvider?: ExternalAuthorDataProvider;
   groupDataProvider?: GroupDataProvider;
+  newsContentfulDataProvider?: NewsDataProvider;
   newsDataProvider?: NewsDataProvider;
   newsSquidexDataProvider?: NewsDataProvider;
-  newsContentfulDataProvider?: NewsDataProvider;
   pageDataProvider?: PageDataProvider;
   reminderDataProvider?: ReminderDataProvider;
+  researchOutputDataProvider?: ResearchOutputDataProvider;
+  researchTagDataProvider?: ResearchTagDataProvider;
   teamDataProvider?: TeamDataProvider;
   tutorialsDataProvider?: TutorialsDataProvider;
   userDataProvider?: UserDataProvider;
-  researchOutputDataProvider?: ResearchOutputDataProvider;
-  researchTagDataProvider?: ResearchTagDataProvider;
-  externalAuthorDataProvider?: ExternalAuthorDataProvider;
   workingGroupDataProvider?: WorkingGroupDataProvider;
   authHandler?: AuthHandler;
   tracer?: Tracer;

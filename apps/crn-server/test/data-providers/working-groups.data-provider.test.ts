@@ -207,7 +207,6 @@ describe('Working Group Data Provider', () => {
         squidexGraphqlResponse.findWorkingGroupsContent!.flatData.members = [
           {
             user: [getGraphQLUser()],
-            workstreamRole: 'Some role',
           },
         ];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
@@ -250,7 +249,6 @@ describe('Working Group Data Provider', () => {
         squidexGraphqlResponse.findWorkingGroupsContent!.flatData.members = [
           {
             user: [],
-            workstreamRole: 'Some role',
           },
         ];
         squidexGraphqlResponse.findWorkingGroupsContent!.flatData.leaders = [

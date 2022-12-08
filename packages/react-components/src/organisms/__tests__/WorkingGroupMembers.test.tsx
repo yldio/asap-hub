@@ -46,15 +46,19 @@ describe('leaders section', () => {
       />,
     );
 
-    expect(getByText('Active Leaders (0)')).toBeVisible();
+    const pastTabButton = getByText('Past Leaders (1)');
+    const activeTabButton = getByText('Active Leaders (0)');
 
-    const tabButton = getByText('Past Leaders (1)');
-    expect(tabButton).toBeVisible();
+    expect(pastTabButton).toBeVisible();
+    expect(activeTabButton).toBeVisible();
     expect(queryByText('Test User 1')).toBeNull();
 
-    tabButton.click();
+    pastTabButton.click();
     expect(getByText('Test User 1')).toBeVisible();
     expect(getByText('A test role')).toBeVisible();
+
+    activeTabButton.click();
+    expect(queryByText('Test User 1')).toBeNull();
   });
 });
 
@@ -90,13 +94,18 @@ describe('member section', () => {
         ]}
       />,
     );
-    expect(getByText('Active Members (0)')).toBeVisible();
 
-    const tabButton = getByText('Past Members (1)');
-    expect(tabButton).toBeVisible();
+    const pastTabButton = getByText('Past Members (1)');
+    const activeTabButton = getByText('Active Members (0)');
+
+    expect(pastTabButton).toBeVisible();
+    expect(activeTabButton).toBeVisible();
     expect(queryByText('Test User 1')).toBeNull();
 
-    tabButton.click();
+    pastTabButton.click();
     expect(getByText('Test User 1')).toBeVisible();
+
+    activeTabButton.click();
+    expect(queryByText('Test User 1')).toBeNull();
   });
 });

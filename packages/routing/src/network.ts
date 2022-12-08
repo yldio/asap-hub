@@ -123,8 +123,17 @@ const groups = route('/groups', {}, { group });
 
 const workingGroup = (() => {
   const about = route('/about', {}, {});
+  const createOutput = route(
+    '/create-output/:outputDocumentType',
+    { outputDocumentType: outputDocumentTypeParser },
+    {},
+  );
 
-  return route('/:workingGroupId', { workingGroupId: stringParser }, { about });
+  return route(
+    '/:workingGroupId',
+    { workingGroupId: stringParser },
+    { about, createOutput },
+  );
 })();
 
 const workingGroups = route('/working-groups', {}, { workingGroup });

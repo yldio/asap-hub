@@ -231,7 +231,6 @@ describe('Working Group Data Provider', () => {
         const squidexGraphqlResponse = getSquidexWorkingGroupGraphqlResponse();
         squidexGraphqlResponse.findWorkingGroupsContent!.flatData.members =
           null;
-
         squidexGraphqlResponse.findWorkingGroupsContent!.flatData.leaders =
           null;
 

@@ -10721,6 +10721,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["graphql-request", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:3.4.0"],\
             ["graphql-tag", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:2.12.6"],\
             ["graphql-typescript-integration", "npm:1.2.1"],\
+            ["prettier", "npm:2.7.1"],\
             ["ts-node", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:10.9.1"]\
           ],\
           "linkType": "SOFT"\

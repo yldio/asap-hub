@@ -539,6 +539,7 @@ __metadata:
     graphql-request: 3.4.0
     graphql-tag: 2.12.6
     graphql-typescript-integration: 1.2.1
+    prettier: 2.7.1
     ts-node: 10.9.1
   languageName: unknown
   linkType: soft

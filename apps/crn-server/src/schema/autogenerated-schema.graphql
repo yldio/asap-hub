@@ -6233,12 +6233,9 @@ type WorkingGroupsDataDto {
   deliverables: WorkingGroupsDataDeliverablesDto
   description: WorkingGroupsDataDescriptionDto
   externalLink: WorkingGroupsDataExternalLinkDto
-<<<<<<< HEAD
   externalLinkText: WorkingGroupsDataExternalLinkTextDto
   leaders: WorkingGroupsDataLeadersDto
   members: WorkingGroupsDataMembersDto
-=======
->>>>>>> master
   shortText: WorkingGroupsDataShortTextDto
   title: WorkingGroupsDataTitleDto
 }
@@ -6250,6 +6247,16 @@ type WorkingGroupsDataExternalLinkDto {
 
 """The structure of the External Link field of the Working Groups content input type."""
 input WorkingGroupsDataExternalLinkInputDto {
+  iv: String
+}
+
+"""The structure of the External Link Text field of the Working Groups content type."""
+type WorkingGroupsDataExternalLinkTextDto {
+  iv: String
+}
+
+"""The structure of the External Link Text field of the Working Groups content input type."""
+input WorkingGroupsDataExternalLinkTextInputDto {
   iv: String
 }
 
@@ -6293,13 +6300,11 @@ input WorkingGroupsDataLeadersInputDto {
 """The structure of the Members nested schema."""
 type WorkingGroupsDataMembersChildDto {
   user: [Users!]
-  workstreamRole: String
 }
 
 """The structure of the Members nested schema."""
 input WorkingGroupsDataMembersChildInputDto {
   user: [String!]
-  workstreamRole: String
 }
 
 """The structure of the Members field of the Working Groups content type."""

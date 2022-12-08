@@ -91,7 +91,6 @@ export const workingGroupContentQueryFragment = gql`
         }
       }
       members {
-        workstreamRole
         user {
           id
           created

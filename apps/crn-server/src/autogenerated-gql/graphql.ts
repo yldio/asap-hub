@@ -5985,12 +5985,9 @@ export type WorkingGroupsDataDto = {
   deliverables: Maybe<WorkingGroupsDataDeliverablesDto>;
   description: Maybe<WorkingGroupsDataDescriptionDto>;
   externalLink: Maybe<WorkingGroupsDataExternalLinkDto>;
-<<<<<<< HEAD
   externalLinkText: Maybe<WorkingGroupsDataExternalLinkTextDto>;
   leaders: Maybe<WorkingGroupsDataLeadersDto>;
   members: Maybe<WorkingGroupsDataMembersDto>;
-=======
->>>>>>> master
   shortText: Maybe<WorkingGroupsDataShortTextDto>;
   title: Maybe<WorkingGroupsDataTitleDto>;
 };
@@ -6005,15 +6002,26 @@ export type WorkingGroupsDataExternalLinkInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
+/** The structure of the External Link Text field of the Working Groups content type. */
+export type WorkingGroupsDataExternalLinkTextDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the External Link Text field of the Working Groups content input type. */
+export type WorkingGroupsDataExternalLinkTextInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
 /** The structure of the Working Groups data input type. */
 export type WorkingGroupsDataInputDto = {
   complete: InputMaybe<WorkingGroupsDataCompleteInputDto>;
   deliverables: InputMaybe<WorkingGroupsDataDeliverablesInputDto>;
   description: InputMaybe<WorkingGroupsDataDescriptionInputDto>;
   externalLink: InputMaybe<WorkingGroupsDataExternalLinkInputDto>;
+  externalLinkText: InputMaybe<WorkingGroupsDataExternalLinkTextInputDto>;
   leaders: InputMaybe<WorkingGroupsDataLeadersInputDto>;
   members: InputMaybe<WorkingGroupsDataMembersInputDto>;
-=======
+  shortText: InputMaybe<WorkingGroupsDataShortTextInputDto>;
   title: InputMaybe<WorkingGroupsDataTitleInputDto>;
 };
 
@@ -6044,13 +6052,11 @@ export type WorkingGroupsDataLeadersInputDto = {
 /** The structure of the Members nested schema. */
 export type WorkingGroupsDataMembersChildDto = {
   user: Maybe<Array<Users>>;
-  workstreamRole: Maybe<Scalars['String']>;
 };
 
 /** The structure of the Members nested schema. */
 export type WorkingGroupsDataMembersChildInputDto = {
   user: InputMaybe<Array<Scalars['String']>>;
-  workstreamRole: InputMaybe<Scalars['String']>;
 };
 
 /** The structure of the Members field of the Working Groups content type. */
@@ -6089,6 +6095,7 @@ export type WorkingGroupsFlatDataDto = {
   deliverables: Maybe<Array<WorkingGroupsDataDeliverablesChildDto>>;
   description: Maybe<Scalars['String']>;
   externalLink: Maybe<Scalars['String']>;
+  externalLinkText: Maybe<Scalars['String']>;
   leaders: Maybe<Array<WorkingGroupsDataLeadersChildDto>>;
   members: Maybe<Array<WorkingGroupsDataMembersChildDto>>;
   shortText: Maybe<Scalars['String']>;
@@ -9507,101 +9514,96 @@ export type WorkingGroupContentFragment = Pick<
       >
     >;
     members: Maybe<
-      Array<
-        Pick<WorkingGroupsDataMembersChildDto, 'workstreamRole'> & {
-          user: Maybe<
-            Array<
-              Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
-                flatData: Pick<
-                  UsersFlatDataDto,
-                  | 'biography'
-                  | 'degree'
-                  | 'email'
-                  | 'contactEmail'
-                  | 'firstName'
-                  | 'institution'
-                  | 'jobTitle'
-                  | 'lastModifiedDate'
-                  | 'lastName'
-                  | 'country'
-                  | 'city'
-                  | 'onboarded'
-                  | 'orcid'
-                  | 'orcidLastModifiedDate'
-                  | 'orcidLastSyncDate'
-                  | 'expertiseAndResourceTags'
-                  | 'expertiseAndResourceDescription'
-                  | 'role'
-                  | 'responsibilities'
-                  | 'researchInterests'
-                  | 'reachOut'
-                  | 'alumniSinceDate'
-                > & {
-                  avatar: Maybe<Array<Pick<Asset, 'id'>>>;
-                  orcidWorks: Maybe<
-                    Array<
-                      Pick<
-                        UsersDataOrcidWorksChildDto,
-                        | 'doi'
-                        | 'id'
-                        | 'lastModifiedDate'
-                        | 'publicationDate'
-                        | 'title'
-                        | 'type'
-                      >
+      Array<{
+        user: Maybe<
+          Array<
+            Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
+              flatData: Pick<
+                UsersFlatDataDto,
+                | 'biography'
+                | 'degree'
+                | 'email'
+                | 'contactEmail'
+                | 'firstName'
+                | 'institution'
+                | 'jobTitle'
+                | 'lastModifiedDate'
+                | 'lastName'
+                | 'country'
+                | 'city'
+                | 'onboarded'
+                | 'orcid'
+                | 'orcidLastModifiedDate'
+                | 'orcidLastSyncDate'
+                | 'expertiseAndResourceTags'
+                | 'expertiseAndResourceDescription'
+                | 'role'
+                | 'responsibilities'
+                | 'researchInterests'
+                | 'reachOut'
+                | 'alumniSinceDate'
+              > & {
+                avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+                orcidWorks: Maybe<
+                  Array<
+                    Pick<
+                      UsersDataOrcidWorksChildDto,
+                      | 'doi'
+                      | 'id'
+                      | 'lastModifiedDate'
+                      | 'publicationDate'
+                      | 'title'
+                      | 'type'
                     >
-                  >;
-                  questions: Maybe<
-                    Array<Pick<UsersDataQuestionsChildDto, 'question'>>
-                  >;
-                  teams: Maybe<
-                    Array<
-                      Pick<UsersDataTeamsChildDto, 'role'> & {
-                        id: Maybe<
-                          Array<
-                            Pick<Teams, 'id'> & {
-                              flatData: Pick<
-                                TeamsFlatDataDto,
-                                'displayName'
-                              > & {
-                                proposal: Maybe<
-                                  Array<Pick<ResearchOutputs, 'id'>>
-                                >;
-                              };
-                            }
-                          >
-                        >;
-                      }
+                  >
+                >;
+                questions: Maybe<
+                  Array<Pick<UsersDataQuestionsChildDto, 'question'>>
+                >;
+                teams: Maybe<
+                  Array<
+                    Pick<UsersDataTeamsChildDto, 'role'> & {
+                      id: Maybe<
+                        Array<
+                          Pick<Teams, 'id'> & {
+                            flatData: Pick<TeamsFlatDataDto, 'displayName'> & {
+                              proposal: Maybe<
+                                Array<Pick<ResearchOutputs, 'id'>>
+                              >;
+                            };
+                          }
+                        >
+                      >;
+                    }
+                  >
+                >;
+                social: Maybe<
+                  Array<
+                    Pick<
+                      UsersDataSocialChildDto,
+                      | 'github'
+                      | 'googleScholar'
+                      | 'linkedIn'
+                      | 'researcherId'
+                      | 'researchGate'
+                      | 'twitter'
+                      | 'website1'
+                      | 'website2'
                     >
-                  >;
-                  social: Maybe<
-                    Array<
-                      Pick<
-                        UsersDataSocialChildDto,
-                        | 'github'
-                        | 'googleScholar'
-                        | 'linkedIn'
-                        | 'researcherId'
-                        | 'researchGate'
-                        | 'twitter'
-                        | 'website1'
-                        | 'website2'
-                      >
-                    >
-                  >;
-                  labs: Maybe<
-                    Array<
-                      Pick<Labs, 'id'> & {
-                        flatData: Pick<LabsFlatDataDto, 'name'>;
-                      }
-                    >
-                  >;
-                };
-              }
-            >
-          >;
-        }
-      >
+                  >
+                >;
+                labs: Maybe<
+                  Array<
+                    Pick<Labs, 'id'> & {
+                      flatData: Pick<LabsFlatDataDto, 'name'>;
+                    }
+                  >
+                >;
+              };
+            }
+          >
+        >;
+      }>
     >;
   };
 };
@@ -9726,101 +9728,99 @@ export type FetchWorkingGroupQuery = {
           >
         >;
         members: Maybe<
-          Array<
-            Pick<WorkingGroupsDataMembersChildDto, 'workstreamRole'> & {
-              user: Maybe<
-                Array<
-                  Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
-                    flatData: Pick<
-                      UsersFlatDataDto,
-                      | 'biography'
-                      | 'degree'
-                      | 'email'
-                      | 'contactEmail'
-                      | 'firstName'
-                      | 'institution'
-                      | 'jobTitle'
-                      | 'lastModifiedDate'
-                      | 'lastName'
-                      | 'country'
-                      | 'city'
-                      | 'onboarded'
-                      | 'orcid'
-                      | 'orcidLastModifiedDate'
-                      | 'orcidLastSyncDate'
-                      | 'expertiseAndResourceTags'
-                      | 'expertiseAndResourceDescription'
-                      | 'role'
-                      | 'responsibilities'
-                      | 'researchInterests'
-                      | 'reachOut'
-                      | 'alumniSinceDate'
-                    > & {
-                      avatar: Maybe<Array<Pick<Asset, 'id'>>>;
-                      orcidWorks: Maybe<
-                        Array<
-                          Pick<
-                            UsersDataOrcidWorksChildDto,
-                            | 'doi'
-                            | 'id'
-                            | 'lastModifiedDate'
-                            | 'publicationDate'
-                            | 'title'
-                            | 'type'
-                          >
+          Array<{
+            user: Maybe<
+              Array<
+                Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
+                  flatData: Pick<
+                    UsersFlatDataDto,
+                    | 'biography'
+                    | 'degree'
+                    | 'email'
+                    | 'contactEmail'
+                    | 'firstName'
+                    | 'institution'
+                    | 'jobTitle'
+                    | 'lastModifiedDate'
+                    | 'lastName'
+                    | 'country'
+                    | 'city'
+                    | 'onboarded'
+                    | 'orcid'
+                    | 'orcidLastModifiedDate'
+                    | 'orcidLastSyncDate'
+                    | 'expertiseAndResourceTags'
+                    | 'expertiseAndResourceDescription'
+                    | 'role'
+                    | 'responsibilities'
+                    | 'researchInterests'
+                    | 'reachOut'
+                    | 'alumniSinceDate'
+                  > & {
+                    avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+                    orcidWorks: Maybe<
+                      Array<
+                        Pick<
+                          UsersDataOrcidWorksChildDto,
+                          | 'doi'
+                          | 'id'
+                          | 'lastModifiedDate'
+                          | 'publicationDate'
+                          | 'title'
+                          | 'type'
                         >
-                      >;
-                      questions: Maybe<
-                        Array<Pick<UsersDataQuestionsChildDto, 'question'>>
-                      >;
-                      teams: Maybe<
-                        Array<
-                          Pick<UsersDataTeamsChildDto, 'role'> & {
-                            id: Maybe<
-                              Array<
-                                Pick<Teams, 'id'> & {
-                                  flatData: Pick<
-                                    TeamsFlatDataDto,
-                                    'displayName'
-                                  > & {
-                                    proposal: Maybe<
-                                      Array<Pick<ResearchOutputs, 'id'>>
-                                    >;
-                                  };
-                                }
-                              >
-                            >;
-                          }
+                      >
+                    >;
+                    questions: Maybe<
+                      Array<Pick<UsersDataQuestionsChildDto, 'question'>>
+                    >;
+                    teams: Maybe<
+                      Array<
+                        Pick<UsersDataTeamsChildDto, 'role'> & {
+                          id: Maybe<
+                            Array<
+                              Pick<Teams, 'id'> & {
+                                flatData: Pick<
+                                  TeamsFlatDataDto,
+                                  'displayName'
+                                > & {
+                                  proposal: Maybe<
+                                    Array<Pick<ResearchOutputs, 'id'>>
+                                  >;
+                                };
+                              }
+                            >
+                          >;
+                        }
+                      >
+                    >;
+                    social: Maybe<
+                      Array<
+                        Pick<
+                          UsersDataSocialChildDto,
+                          | 'github'
+                          | 'googleScholar'
+                          | 'linkedIn'
+                          | 'researcherId'
+                          | 'researchGate'
+                          | 'twitter'
+                          | 'website1'
+                          | 'website2'
                         >
-                      >;
-                      social: Maybe<
-                        Array<
-                          Pick<
-                            UsersDataSocialChildDto,
-                            | 'github'
-                            | 'googleScholar'
-                            | 'linkedIn'
-                            | 'researcherId'
-                            | 'researchGate'
-                            | 'twitter'
-                            | 'website1'
-                            | 'website2'
-                          >
-                        >
-                      >;
-                      labs: Maybe<
-                        Array<
-                          Pick<Labs, 'id'> & {
-                            flatData: Pick<LabsFlatDataDto, 'name'>;
-                          }
-                        >
-                      >;
-                    };
-                  }
-                >
-              >;
-            }
-          >
+                      >
+                    >;
+                    labs: Maybe<
+                      Array<
+                        Pick<Labs, 'id'> & {
+                          flatData: Pick<LabsFlatDataDto, 'name'>;
+                        }
+                      >
+                    >;
+                  };
+                }
+              >
+            >;
+          }>
         >;
       };
     }
@@ -9961,106 +9961,102 @@ export type FetchWorkingGroupsQuery = {
                 >
               >;
               members: Maybe<
-                Array<
-                  Pick<WorkingGroupsDataMembersChildDto, 'workstreamRole'> & {
-                    user: Maybe<
-                      Array<
-                        Pick<
-                          Users,
-                          'id' | 'created' | 'lastModified' | 'version'
+                Array<{
+                  user: Maybe<
+                    Array<
+                      Pick<
+                        Users,
+                        'id' | 'created' | 'lastModified' | 'version'
+                      > & {
+                        flatData: Pick<
+                          UsersFlatDataDto,
+                          | 'biography'
+                          | 'degree'
+                          | 'email'
+                          | 'contactEmail'
+                          | 'firstName'
+                          | 'institution'
+                          | 'jobTitle'
+                          | 'lastModifiedDate'
+                          | 'lastName'
+                          | 'country'
+                          | 'city'
+                          | 'onboarded'
+                          | 'orcid'
+                          | 'orcidLastModifiedDate'
+                          | 'orcidLastSyncDate'
+                          | 'expertiseAndResourceTags'
+                          | 'expertiseAndResourceDescription'
+                          | 'role'
+                          | 'responsibilities'
+                          | 'researchInterests'
+                          | 'reachOut'
+                          | 'alumniSinceDate'
                         > & {
-                          flatData: Pick<
-                            UsersFlatDataDto,
-                            | 'biography'
-                            | 'degree'
-                            | 'email'
-                            | 'contactEmail'
-                            | 'firstName'
-                            | 'institution'
-                            | 'jobTitle'
-                            | 'lastModifiedDate'
-                            | 'lastName'
-                            | 'country'
-                            | 'city'
-                            | 'onboarded'
-                            | 'orcid'
-                            | 'orcidLastModifiedDate'
-                            | 'orcidLastSyncDate'
-                            | 'expertiseAndResourceTags'
-                            | 'expertiseAndResourceDescription'
-                            | 'role'
-                            | 'responsibilities'
-                            | 'researchInterests'
-                            | 'reachOut'
-                            | 'alumniSinceDate'
-                          > & {
-                            avatar: Maybe<Array<Pick<Asset, 'id'>>>;
-                            orcidWorks: Maybe<
-                              Array<
-                                Pick<
-                                  UsersDataOrcidWorksChildDto,
-                                  | 'doi'
-                                  | 'id'
-                                  | 'lastModifiedDate'
-                                  | 'publicationDate'
-                                  | 'title'
-                                  | 'type'
-                                >
+                          avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+                          orcidWorks: Maybe<
+                            Array<
+                              Pick<
+                                UsersDataOrcidWorksChildDto,
+                                | 'doi'
+                                | 'id'
+                                | 'lastModifiedDate'
+                                | 'publicationDate'
+                                | 'title'
+                                | 'type'
                               >
-                            >;
-                            questions: Maybe<
-                              Array<
-                                Pick<UsersDataQuestionsChildDto, 'question'>
+                            >
+                          >;
+                          questions: Maybe<
+                            Array<Pick<UsersDataQuestionsChildDto, 'question'>>
+                          >;
+                          teams: Maybe<
+                            Array<
+                              Pick<UsersDataTeamsChildDto, 'role'> & {
+                                id: Maybe<
+                                  Array<
+                                    Pick<Teams, 'id'> & {
+                                      flatData: Pick<
+                                        TeamsFlatDataDto,
+                                        'displayName'
+                                      > & {
+                                        proposal: Maybe<
+                                          Array<Pick<ResearchOutputs, 'id'>>
+                                        >;
+                                      };
+                                    }
+                                  >
+                                >;
+                              }
+                            >
+                          >;
+                          social: Maybe<
+                            Array<
+                              Pick<
+                                UsersDataSocialChildDto,
+                                | 'github'
+                                | 'googleScholar'
+                                | 'linkedIn'
+                                | 'researcherId'
+                                | 'researchGate'
+                                | 'twitter'
+                                | 'website1'
+                                | 'website2'
                               >
-                            >;
-                            teams: Maybe<
-                              Array<
-                                Pick<UsersDataTeamsChildDto, 'role'> & {
-                                  id: Maybe<
-                                    Array<
-                                      Pick<Teams, 'id'> & {
-                                        flatData: Pick<
-                                          TeamsFlatDataDto,
-                                          'displayName'
-                                        > & {
-                                          proposal: Maybe<
-                                            Array<Pick<ResearchOutputs, 'id'>>
-                                          >;
-                                        };
-                                      }
-                                    >
-                                  >;
-                                }
-                              >
-                            >;
-                            social: Maybe<
-                              Array<
-                                Pick<
-                                  UsersDataSocialChildDto,
-                                  | 'github'
-                                  | 'googleScholar'
-                                  | 'linkedIn'
-                                  | 'researcherId'
-                                  | 'researchGate'
-                                  | 'twitter'
-                                  | 'website1'
-                                  | 'website2'
-                                >
-                              >
-                            >;
-                            labs: Maybe<
-                              Array<
-                                Pick<Labs, 'id'> & {
-                                  flatData: Pick<LabsFlatDataDto, 'name'>;
-                                }
-                              >
-                            >;
-                          };
-                        }
-                      >
-                    >;
-                  }
-                >
+                            >
+                          >;
+                          labs: Maybe<
+                            Array<
+                              Pick<Labs, 'id'> & {
+                                flatData: Pick<LabsFlatDataDto, 'name'>;
+                              }
+                            >
+                          >;
+                        };
+                      }
+                    >
+                  >;
+                }>
               >;
             };
           }
@@ -12997,10 +12993,6 @@ export const WorkingGroupContentFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'workstreamRole' },
-                      },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'user' },

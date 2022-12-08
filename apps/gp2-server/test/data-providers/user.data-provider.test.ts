@@ -1485,5 +1485,107 @@ describe('User data provider', () => {
         },
       );
     });
+    describe('search', () => {
+      test('Should query with filters and return the users', async () => {
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          getSquidexUsersGraphqlResponse(),
+        );
+        const fetchOptions: FetchUsersOptions = {
+          take: 12,
+          skip: 2,
+          search: 'tony stark',
+          filter: {},
+        };
+        const users = await userDataProvider.fetch(fetchOptions);
+
+        const filterQuery =
+          "((contains(data/firstName/iv, 'tony')" +
+          " or contains(data/lastName/iv, 'tony'))" +
+          ' and' +
+          " (contains(data/firstName/iv, 'stark')" +
+          " or contains(data/lastName/iv, 'stark')))";
+        expect(squidexGraphqlClientMock.request).toBeCalledWith(
+          expect.anything(),
+          {
+            top: 12,
+            skip: 2,
+            filter: filterQuery,
+          },
+        );
+        expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
+      });
+      test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          getSquidexUsersGraphqlResponse(),
+        );
+        const fetchOptions: FetchUsersOptions = {
+          take: 12,
+          skip: 2,
+          search: "'",
+        };
+        await userDataProvider.fetch(fetchOptions);
+
+        const expectedFilter =
+          "((contains(data/firstName/iv, '%27%27')" +
+          " or contains(data/lastName/iv, '%27%27')))";
+
+        expect(squidexGraphqlClientMock.request).toBeCalledWith(
+          expect.anything(),
+          {
+            top: 12,
+            skip: 2,
+            filter: expectedFilter,
+          },
+        );
+      });
+      test('Should sanitise double quotation mark by encoding to hex', async () => {
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          getSquidexUsersGraphqlResponse(),
+        );
+        const fetchOptions: FetchUsersOptions = {
+          take: 12,
+          skip: 2,
+          search: '"',
+        };
+        await userDataProvider.fetch(fetchOptions);
+
+        const expectedFilter =
+          "((contains(data/firstName/iv, '%22')" +
+          " or contains(data/lastName/iv, '%22')))";
+
+        expect(squidexGraphqlClientMock.request).toBeCalledWith(
+          expect.anything(),
+          {
+            top: 12,
+            skip: 2,
+            filter: expectedFilter,
+          },
+        );
+      });
+      test('Should search with special characters', async () => {
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          getSquidexUsersGraphqlResponse(),
+        );
+        const fetchOptions: FetchUsersOptions = {
+          take: 12,
+          skip: 2,
+          search: 'Solène',
+        };
+        await userDataProvider.fetch(fetchOptions);
+
+        const expectedFilter =
+          "((contains(data/firstName/iv, 'Solène')" +
+          " or contains(data/lastName/iv, 'Solène')))";
+
+        expect(squidexGraphqlClientMock.request).toBeCalledWith(
+          expect.anything(),
+          {
+            top: 12,
+            skip: 2,
+            filter: expectedFilter,
+          },
+        );
+      });
+    });
   });
 });

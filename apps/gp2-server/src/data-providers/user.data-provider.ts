@@ -3,6 +3,7 @@ import {
   gp2 as gp2Squidex,
   parseDate,
   parseToSquidex,
+  sanitiseForSquidex,
   SquidexGraphqlClient,
   SquidexRestClient,
 } from '@asap-hub/squidex';
@@ -80,13 +81,19 @@ export class UserSquidexDataProvider implements UserDataProvider {
     take = 8,
     skip = 0,
     filter,
+    search,
   }: gp2Model.FetchUsersOptions): Promise<gp2Model.ListUserDataObject> {
     const { projects, workingGroups } = filter || {};
     const userIdFilter = await this.getUserIdFilter(filter);
     if (userIdFilter === '' && (projects?.length || workingGroups?.length)) {
       return { total: 0, items: [] };
     }
-    const queryFilter = generateFetchQueryFilter(filter, userIdFilter);
+    const searchFilter = getSearchFilter(search);
+    const queryFilter = generateFetchQueryFilter(
+      filter,
+      userIdFilter,
+      searchFilter,
+    );
     return this.queryForUsers(queryFilter, take, skip);
   }
 
@@ -227,6 +234,7 @@ const generateFetchQueryFilter = (
     onlyOnboarded,
   }: gp2Model.FetchUsersOptions['filter'] = {},
   userIdFilter: string,
+  searchFilter: string,
 ) => {
   const filterOnboarded = onlyOnboarded === true && 'data/onboarded/iv eq true';
   const filterRegions = regions
@@ -244,6 +252,7 @@ const generateFetchQueryFilter = (
     filterCode,
     filterKeywords,
     userIdFilter,
+    searchFilter,
   ]
     .filter(Boolean)
     .map((group) => `(${group})`)
@@ -418,3 +427,21 @@ const getEntityMembers = async (
       flatData.members?.map(({ user }) => user && user[0]?.id) || [],
   );
 };
+
+const getSearchFilter = (search?: string) =>
+  [
+    ...(search || '')
+      .split(' ')
+      .filter(Boolean) // removes whitespaces
+      .map(sanitiseForSquidex)
+      .reduce(
+        (acc: string[], word: string) =>
+          acc.concat(
+            `(${[
+              [`contains(data/firstName/iv, '${word}')`],
+              [`contains(data/lastName/iv, '${word}')`],
+            ].join(' or ')})`,
+          ),
+        [],
+      ),
+  ].join(' and ');

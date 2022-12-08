@@ -229,8 +229,10 @@ describe('Working Group Data Provider', () => {
 
       test('should return empty leaders and members if they do not exist', async () => {
         const squidexGraphqlResponse = getSquidexWorkingGroupGraphqlResponse();
-        squidexGraphqlResponse.findWorkingGroupsContent!.flatData.members = [];
-        squidexGraphqlResponse.findWorkingGroupsContent!.flatData.leaders = [];
+        squidexGraphqlResponse.findWorkingGroupsContent!.flatData.members =
+          null;
+        squidexGraphqlResponse.findWorkingGroupsContent!.flatData.leaders =
+          null;
 
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,

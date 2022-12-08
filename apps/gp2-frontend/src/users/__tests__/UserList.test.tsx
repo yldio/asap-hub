@@ -73,6 +73,9 @@ const renderUserList = async ({
       ...filters,
     },
     updateFilters: mockUpdateFilter,
+    searchQuery: '',
+    debouncedSearchQuery: '',
+    setSearchQuery: jest.fn(),
   }));
 
   render(

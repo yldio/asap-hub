@@ -21,11 +21,18 @@ const UserList: React.FC<UserListProps> = ({ displayFilters = false }) => {
   const currentUser = useCurrentUserGP2();
   const isAdministrator = currentUser?.role === 'Administrator';
   const { currentPage, pageSize } = usePaginationParams();
-  const { filters, updateFilters, changeLocation } = useSearch();
+  const {
+    changeLocation,
+    debouncedSearchQuery,
+    filters,
+    searchQuery,
+    setSearchQuery,
+    updateFilters,
+  } = useSearch();
   const userList = useUsersState({
     skip: currentPage * pageSize,
     take: pageSize,
-    search: '',
+    search: debouncedSearchQuery,
     filter: filters,
   });
   const { numberOfPages, renderPageHref } = usePagination(
@@ -69,15 +76,16 @@ const UserList: React.FC<UserListProps> = ({ displayFilters = false }) => {
         onFiltersClick={onFiltersClick}
         onExportClick={exportUsers}
         isAdministrator={isAdministrator}
-        searchQuery=""
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        onSearchQueryChange={() => {}}
+        searchQuery={searchQuery}
+        onSearchQueryChange={(value) => {
+          setSearchQuery(value);
+        }}
       />
       {displayFilters && (
         <FiltersModal
           onBackClick={onBackClick}
           filters={filters}
-          onApplyClick={(f) => updateFilters(backHref, f)}
+          onApplyClick={(filter) => updateFilters(backHref, filter)}
           projects={projects}
           workingGroups={workingGroups}
         />

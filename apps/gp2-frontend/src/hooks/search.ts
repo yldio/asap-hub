@@ -1,11 +1,16 @@
 import { gp2 } from '@asap-hub/model';
 import { useHistory, useLocation } from 'react-router-dom';
+import { searchQueryParam } from '@asap-hub/routing';
+import { useDebounce } from 'use-debounce';
 import { usePaginationParams } from './pagination';
 
 export const useSearch = (): {
   changeLocation: (pathname: string) => void;
   filters: gp2.FetchUsersFilter;
   updateFilters: (pathname: string, filters: gp2.FetchUsersFilter) => void;
+  searchQuery: string;
+  debouncedSearchQuery: string;
+  setSearchQuery: (value: string) => void;
 } => {
   const currentUrlParams = new URLSearchParams(useLocation().search);
   const history = useHistory();
@@ -53,9 +58,26 @@ export const useSearch = (): {
     projects: selectedProjects,
     workingGroups: selectedWorkingGroups,
   };
+  const searchQuery = currentUrlParams.get(searchQueryParam) || '';
+  const setSearchQuery = (newSearchQuery: string) => {
+    console.log('set search');
+    resetPagination();
+
+    const newUrlParams = new URLSearchParams(history.location.search);
+    newSearchQuery
+      ? newUrlParams.set(searchQueryParam, newSearchQuery)
+      : newUrlParams.delete(searchQueryParam);
+
+    history.replace({ search: newUrlParams.toString() });
+  };
+
+  const [debouncedSearchQuery] = useDebounce(searchQuery, 400);
   return {
     changeLocation,
     filters,
     updateFilters,
+    searchQuery,
+    setSearchQuery,
+    debouncedSearchQuery,
   };
 };

@@ -223,7 +223,6 @@ describe('Working Group Data Provider', () => {
               ...getSquidexUserGraphqlResponse().findUsersContent?.flatData,
               displayName: 'Tom Hardy',
             },
-            workstreamRole: 'Some role',
           },
         ]);
       });

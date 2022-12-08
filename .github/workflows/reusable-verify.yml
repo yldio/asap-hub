@@ -7,6 +7,10 @@ on:
         description: 'The environment name'
         required: true
         type: string
+      crn-contentful-env:
+        description: 'CRN Contentful environment name'
+        type: string
+        required: false
     secrets:
       CRN_SQUIDEX_CI_CLIENT_SECRET:
         description: 'CRN Squidex Client Secret'
@@ -120,7 +124,7 @@ jobs:
         env:
           CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
           CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.contentful-space-id }}
-          CONTENTFUL_ENV_ID: Development
+          CONTENTFUL_ENV_ID: ${{ inputs.crn-contentful-env }}
 
   gp2-schema:
     runs-on: ubuntu-latest

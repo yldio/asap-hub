@@ -83,7 +83,6 @@ type WorkingGroupPageHeaderProps = Pick<
   | 'lastModifiedDate'
   | 'members'
   | 'externalLink'
-  | 'externalLinkText'
   | 'pointOfContact'
 >;
 
@@ -93,7 +92,6 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
   complete,
   lastModifiedDate,
   externalLink,
-  externalLinkText,
   pointOfContact,
   members,
 }) => (
@@ -128,7 +126,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
       {externalLink && (
         <ExternalLink
           full
-          label={externalLinkText}
+          label="Working Group Folder"
           href={externalLink}
           size="large"
         />

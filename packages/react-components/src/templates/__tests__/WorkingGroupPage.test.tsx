@@ -8,7 +8,6 @@ const baseProps: ComponentProps<typeof WorkingGroupPage> = {
   title: '',
   complete: false,
   externalLink: 'link',
-  externalLinkText: 'link text',
   lastModifiedDate: new Date('2021-01-01').toISOString(),
   pointOfContact: undefined,
   members: [],

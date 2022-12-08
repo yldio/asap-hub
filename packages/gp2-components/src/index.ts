@@ -17,6 +17,7 @@ export {
   EditResourceModal,
   EmailSection,
   FiltersModal,
+  KeyInformationModal,
   MainNavigation,
   NavigationHeader,
   PageBanner,

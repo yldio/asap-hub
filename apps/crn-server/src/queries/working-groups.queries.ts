@@ -9,7 +9,6 @@ export const workingGroupContentQueryFragment = gql`
       description
       externalLink
       shortText
-      externalLinkText
       complete
       deliverables {
         status

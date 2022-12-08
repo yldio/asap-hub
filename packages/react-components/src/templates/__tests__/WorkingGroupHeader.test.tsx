@@ -9,7 +9,6 @@ const baseProps: ComponentProps<typeof WorkingGroupHeader> = {
   title: '',
   complete: false,
   externalLink: '',
-  externalLinkText: '',
   lastModifiedDate: new Date('2021-01-01').toISOString(),
   pointOfContact: undefined,
   members: [],
@@ -63,4 +62,15 @@ it('renders the member avatars', () => {
     />,
   );
   expect(getByLabelText(/pic.+John Doe/i)).toBeVisible();
+});
+
+it('renders a Working Group Folder when externalLink is provided', () => {
+  const { queryByText, getByText, rerender } = render(
+    <WorkingGroupHeader {...baseProps} />,
+  );
+  expect(queryByText('Working Group Folder')).toBeNull();
+  rerender(
+    <WorkingGroupHeader {...baseProps} externalLink="http://www.hub.com" />,
+  );
+  expect(getByText('Working Group Folder')).toBeVisible();
 });

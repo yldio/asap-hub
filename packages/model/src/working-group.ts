@@ -27,7 +27,6 @@ export type WorkingGroupDataObject = {
   title: string;
   description: string;
   externalLink?: string;
-  externalLinkText?: string;
   leaders: WorkingGroupLeader[];
   members: WorkingGroupMember[];
   pointOfContact?: UserResponse;

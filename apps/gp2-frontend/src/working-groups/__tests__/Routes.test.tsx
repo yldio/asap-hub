@@ -8,15 +8,15 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getWorkingGroups } from '../api';
+import { getWorkingGroupNetwork } from '../api';
 import Routes from '../Routes';
-import { refreshWorkingGroupsState } from '../state';
+import { refreshWorkingGroupNetworkState } from '../state';
 
 const renderRoutes = async () => {
   render(
     <RecoilRoot
       initializeState={({ set }) => {
-        set(refreshWorkingGroupsState, Math.random());
+        set(refreshWorkingGroupNetworkState, Math.random());
       }}
     >
       <Suspense fallback="loading">
@@ -36,15 +36,13 @@ const renderRoutes = async () => {
     timeout: 30_000,
   });
 };
-beforeEach(() => {
-  jest.resetAllMocks();
-});
 
 jest.mock('../api');
 describe('Routes', () => {
+  beforeEach(jest.resetAllMocks);
   it('renders a list of working groups', async () => {
-    const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
-      typeof getWorkingGroups
+    const mockGetWorkingGroups = getWorkingGroupNetwork as jest.MockedFunction<
+      typeof getWorkingGroupNetwork
     >;
     const firstGroup = gp2.createWorkingGroupResponse({
       id: '42',

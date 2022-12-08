@@ -135,16 +135,8 @@ export const parseGraphQlWorkingGroup = (
     return workingGroup;
   }
 
-  if (!workingGroupGraphQl.flatData.externalLinkText) {
-    return {
-      ...workingGroup,
-      externalLink: workingGroupGraphQl.flatData.externalLink,
-    };
-  }
-
   return {
     ...workingGroup,
     externalLink: workingGroupGraphQl.flatData.externalLink,
-    externalLinkText: workingGroupGraphQl.flatData.externalLinkText,
   };
 };

@@ -45,7 +45,6 @@ export const createWorkingGroupResponse = (
   shortText: `Working Group ${itemIndex} Short Text`,
   lastModifiedDate: '2020-11-09T20:36:54Z',
   externalLink: `https://www.example.com/working-group-${itemIndex}`,
-  externalLinkText: `Working Group ${itemIndex} External Link Text`,
   deliverables: createDeliverables(options?.deliverables ?? 1),
   complete: false,
   members: createWorkingGroupMembers(options?.members ?? 1),

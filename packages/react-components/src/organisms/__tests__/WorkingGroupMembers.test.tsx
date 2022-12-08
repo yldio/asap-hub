@@ -66,7 +66,6 @@ describe('member section', () => {
         members={[
           {
             user: { ...createUserResponse(), displayName: 'Test User 1' },
-            workstreamRole: 'A test role',
           },
         ]}
       />,
@@ -74,7 +73,6 @@ describe('member section', () => {
     expect(getByText('Active Members (1)')).toBeVisible();
     expect(getByText('Past Members (0)')).toBeVisible();
     expect(getByText('Test User 1')).toBeVisible();
-    expect(getByText('A test role')).toBeVisible();
   });
 
   it('renders past members', () => {
@@ -88,7 +86,6 @@ describe('member section', () => {
               displayName: 'Test User 1',
               alumniSinceDate: new Date().toISOString(),
             },
-            workstreamRole: 'A test role',
           },
         ]}
       />,
@@ -101,6 +98,5 @@ describe('member section', () => {
 
     tabButton.click();
     expect(getByText('Test User 1')).toBeVisible();
-    expect(getByText('A test role')).toBeVisible();
   });
 });

@@ -95,6 +95,7 @@ export const parseGraphQlWorkingGroup = (
                 ...member,
                 user: {
                   ...member.user[0],
+                  ...member.user[0].flatData,
                   displayName: `${member.user[0].flatData.firstName} ${member.user[0].flatData.lastName}`,
                 },
               },
@@ -109,6 +110,7 @@ export const parseGraphQlWorkingGroup = (
                 ...leader,
                 user: {
                   ...leader.user[0],
+                  ...leader.user[0].flatData,
                   displayName: `${leader.user[0].flatData.firstName} ${leader.user[0].flatData.lastName}`,
                 },
               },

@@ -20,7 +20,6 @@ export type WorkingGroupLeader = {
 
 export type WorkingGroupMember = {
   readonly user: UserResponse;
-  readonly workstreamRole: string;
 };
 
 export type WorkingGroupDataObject = {

@@ -3,6 +3,7 @@ import { NetworkTeams } from '@asap-hub/react-components';
 import { useTeams } from './state';
 import { usePaginationParams, usePagination } from '../../hooks';
 import { usePrefetchGroups } from '../groups/state';
+import { usePrefetchWorkingGroups } from '../working-groups/state';
 
 interface NetworkTeamListProps {
   filters: Set<string>;
@@ -22,6 +23,12 @@ const NetworkTeamList: React.FC<NetworkTeamListProps> = ({
     filters,
   });
   usePrefetchGroups({
+    currentPage: 0,
+    pageSize,
+    searchQuery,
+    filters,
+  });
+  usePrefetchWorkingGroups({
     currentPage: 0,
     pageSize,
     searchQuery,

@@ -1,11 +1,12 @@
 import {
-  FetchOptions,
+  FetchWorkingGroupOptions,
   WorkingGroupDataObject,
   WorkingGroupLeader,
   WorkingGroupListDataObject,
   WorkingGroupMember,
 } from '@asap-hub/model';
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
+import { Filter } from 'odata-query';
 import {
   FetchWorkingGroupQuery,
   FetchWorkingGroupQueryVariables,
@@ -16,10 +17,11 @@ import {
   FETCH_WORKING_GROUP,
   FETCH_WORKING_GROUPS,
 } from '../queries/working-groups.queries';
+import { buildODataFilter } from '../utils/odata';
 
 export interface WorkingGroupDataProvider {
   fetchById(id: string): Promise<WorkingGroupDataObject | null>;
-  fetch(options: FetchOptions): Promise<WorkingGroupListDataObject>;
+  fetch(options: FetchWorkingGroupOptions): Promise<WorkingGroupListDataObject>;
 }
 
 export class WorkingGroupSquidexDataProvider
@@ -41,15 +43,40 @@ export class WorkingGroupSquidexDataProvider
     return parseGraphQlWorkingGroup(workingGroup);
   }
 
-  async fetch(options: FetchOptions): Promise<WorkingGroupListDataObject> {
-    const { take = 10, skip = 0 } = options;
+  async fetch(
+    options: FetchWorkingGroupOptions,
+  ): Promise<WorkingGroupListDataObject> {
+    const { search, take = 10, skip = 0 } = options;
+    const filterList = (search || '')
+      .split(' ')
+      .filter(Boolean) // removes whitespaces
+      .reduce(
+        (acc: Filter[], word: string) =>
+          acc.concat({
+            or: [
+              { 'data/title/iv': { contains: word } },
+              { 'data/description/iv': { contains: word } },
+              { 'data/shortText/iv': { contains: word } },
+            ],
+          }),
+        [],
+      );
+
+    if (options.filter) {
+      if ('active' in options.filter) {
+        filterList.push({ 'data/complete/iv': !options.filter.active });
+      }
+      if ('complete' in options.filter) {
+        filterList.push({ 'data/complete/iv': options.filter.complete });
+      }
+    }
 
     const { queryWorkingGroupsContentsWithTotal } =
       await this.squidexGraphqlClient.request<
         FetchWorkingGroupsQuery,
         FetchWorkingGroupsQueryVariables
       >(FETCH_WORKING_GROUPS, {
-        filter: '',
+        filter: buildODataFilter(filterList),
         top: take,
         skip,
       });

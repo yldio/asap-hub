@@ -39,6 +39,26 @@ describe('Working Group controller', () => {
 
       expect(result).toEqual({ items: [], total: 0 });
     });
+
+    test.each`
+      filter                    | filterValue
+      ${['Active']}             | ${{ filter: { complete: false } }}
+      ${['Complete']}           | ${{ filter: { complete: true } }}
+      ${[]}                     | ${{}}
+      ${['Active', 'Complete']} | ${{}}
+    `(
+      `Should call data provider with correct filter when filter is $filter`,
+      async ({ filter, filterValue }) => {
+        workingGroupDataProviderMock.fetch.mockResolvedValueOnce({
+          total: 1,
+          items: [getWorkingGroupDataObject()],
+        });
+
+        await workingGroupController.fetch({ filter });
+
+        expect(workingGroupDataProviderMock.fetch).toBeCalledWith(filterValue);
+      },
+    );
   });
 
   describe('Fetch-by-ID method', () => {

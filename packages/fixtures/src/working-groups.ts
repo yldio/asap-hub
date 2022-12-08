@@ -52,7 +52,7 @@ export const createWorkingGroupResponse = (
 });
 
 export const createWorkingGroupListResponse = (
-  items: number,
+  items = 1,
   options: FixtureOptions = {},
 ): WorkingGroupListResponse => ({
   total: items,

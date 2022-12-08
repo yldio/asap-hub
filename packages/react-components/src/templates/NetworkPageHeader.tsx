@@ -74,6 +74,14 @@ const groupFilters: ReadonlyArray<Option<'Active' | 'Inactive'> | Title> = [
   { label: 'Inactive', value: 'Inactive' },
 ];
 
+const workingGroupFilters: ReadonlyArray<
+  Option<'Active' | 'Complete'> | Title
+> = [
+  { title: 'INTEREST GROUP STATUS' },
+  { label: 'Active', value: 'Active' },
+  { label: 'Complete', value: 'Complete' },
+];
+
 const teamFilters: ReadonlyArray<Option<'Active' | 'Inactive'> | Title> = [
   { title: 'TEAM STATUS' },
   { label: 'Active', value: 'Active' },
@@ -92,6 +100,12 @@ const getFilterOptionsAndPlaceholder = (page: Page) => {
       return {
         filterOptions: groupFilters,
         searchPlaceholder: 'Enter an interest group, keyword, …',
+      };
+
+    case 'working-groups':
+      return {
+        filterOptions: workingGroupFilters,
+        searchPlaceholder: 'Enter name, members, keyword, …',
       };
 
     case 'teams':

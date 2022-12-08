@@ -10,6 +10,7 @@ import {
 } from '../fixtures/working-groups.fixtures';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
+import { FetchWorkingGroupOptions } from '@asap-hub/model';
 
 describe('Working Group Data Provider', () => {
   const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
@@ -68,6 +69,165 @@ describe('Working Group Data Provider', () => {
       const result = await workingGroupDataProvider.fetch({});
       expect(result).toEqual({ items: [], total: 0 });
     });
+
+    test('Should query with filters and return the working groups', async () => {
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        getSquidexWorkingGroupsGraphqlResponse(),
+      );
+
+      const fetchOptions: FetchWorkingGroupOptions = {
+        take: 12,
+        skip: 2,
+        search: 'first last',
+      };
+      const expectedFilter =
+        "((contains(data/title/iv,'first'))" +
+        " or (contains(data/description/iv,'first'))" +
+        " or (contains(data/shortText/iv,'first')))" +
+        ' and' +
+        " ((contains(data/title/iv,'last'))" +
+        " or (contains(data/description/iv,'last'))" +
+        " or (contains(data/shortText/iv,'last')))";
+
+      const result = await workingGroupDataProvider.fetch(fetchOptions);
+
+      expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+        expect.anything(),
+        {
+          filter: expectedFilter,
+          top: 12,
+          skip: 2,
+        },
+      );
+      expect(result).toEqual({
+        total: 1,
+        items: [getWorkingGroupDataObject()],
+      });
+    });
+  });
+
+  test('Should sanitise single quotes by doubling them', async () => {
+    squidexGraphqlClientMock.request.mockResolvedValueOnce(
+      getSquidexWorkingGroupsGraphqlResponse(),
+    );
+
+    const fetchOptions: FetchWorkingGroupOptions = {
+      take: 12,
+      skip: 2,
+      search: "'",
+    };
+    const expectedFilter =
+      "((contains(data/title/iv,''''))" +
+      " or (contains(data/description/iv,''''))" +
+      " or (contains(data/shortText/iv,'''')))";
+
+    await workingGroupDataProvider.fetch(fetchOptions);
+
+    expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+      expect.anything(),
+      {
+        filter: expectedFilter,
+        top: 12,
+        skip: 2,
+      },
+    );
+  });
+
+  test('Should sanitise double quotation mark by escaping it', async () => {
+    squidexGraphqlClientMock.request.mockResolvedValueOnce(
+      getSquidexWorkingGroupsGraphqlResponse(),
+    );
+
+    const fetchOptions: FetchWorkingGroupOptions = {
+      take: 12,
+      skip: 2,
+      search: '"',
+    };
+    const expectedFilter =
+      "((contains(data/title/iv,'\"'))" +
+      " or (contains(data/description/iv,'\"'))" +
+      " or (contains(data/shortText/iv,'\"')))";
+
+    await workingGroupDataProvider.fetch(fetchOptions);
+
+    expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+      expect.anything(),
+      {
+        filter: expectedFilter,
+        top: 12,
+        skip: 2,
+      },
+    );
+  });
+
+  test.each`
+    active
+    ${true} | ${false}
+  `(
+    'Should filter by complete field when its value is $active',
+    async ({ active }) => {
+      squidexGraphqlClientMock.request.mockResolvedValue(
+        getSquidexWorkingGroupsGraphqlResponse(),
+      );
+
+      await workingGroupDataProvider.fetch({ filter: { active } });
+
+      expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+        expect.anything(),
+        {
+          filter: `data/complete/iv eq ${!active}`,
+          top: 10,
+          skip: 0,
+        },
+      );
+    },
+  );
+
+  test.each`
+    complete
+    ${true}  | ${false}
+  `(
+    'Should filter by complete field when its value is $complete',
+    async ({ complete }) => {
+      squidexGraphqlClientMock.request.mockResolvedValue(
+        getSquidexWorkingGroupsGraphqlResponse(),
+      );
+
+      await workingGroupDataProvider.fetch({ filter: { complete } });
+
+      expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+        expect.anything(),
+        {
+          filter: `data/complete/iv eq ${complete}`,
+          top: 10,
+          skip: 0,
+        },
+      );
+    },
+  );
+
+  test('Should apply the active and complete filters', async () => {
+    const active = true;
+    const complete = true;
+
+    squidexGraphqlClientMock.request.mockResolvedValue(
+      getSquidexWorkingGroupsGraphqlResponse(),
+    );
+
+    await workingGroupDataProvider.fetch({
+      filter: { active, complete },
+    });
+
+    const activeFilter = `data/complete/iv eq ${!active}`;
+    const completeFilter = `data/complete/iv eq ${complete}`;
+    expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+      expect.anything(),
+      {
+        filter: [activeFilter, completeFilter].join(' and '),
+        top: 10,
+        skip: 0,
+      },
+    );
   });
 
   describe('Fetch-by-id method', () => {

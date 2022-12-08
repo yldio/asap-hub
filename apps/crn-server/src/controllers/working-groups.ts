@@ -15,7 +15,21 @@ export default class WorkingGroups implements WorkingGroupController {
   constructor(private workingGroupDataProvider: WorkingGroupDataProvider) {}
 
   async fetch(options: FetchOptions): Promise<WorkingGroupListResponse> {
-    const { total, items } = await this.workingGroupDataProvider.fetch(options);
+    const { filter, ...fetchOptions } = options;
+
+    const groupFilter =
+      filter?.length === 1
+        ? {
+            filter: {
+              complete: filter[0] === 'Complete',
+            },
+          }
+        : {};
+
+    const { total, items } = await this.workingGroupDataProvider.fetch({
+      ...fetchOptions,
+      ...groupFilter,
+    });
 
     return { total, items };
   }

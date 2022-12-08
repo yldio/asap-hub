@@ -10,8 +10,10 @@ import {
   useRecoilState,
   useRecoilValue,
 } from 'recoil';
+import useDeepCompareEffect from 'use-deep-compare-effect';
 import { authorizationState } from '../../auth/state';
 import { getWorkingGroup, getWorkingGroups } from './api';
+import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 
 const workingGroupIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
@@ -93,6 +95,25 @@ export const workingGroupState = atomFamily<
 
 export const useWorkingGroupById = (id: string) =>
   useRecoilValue(workingGroupState(id));
+
+export const usePrefetchWorkingGroups = (
+  options: GetListOptions = {
+    filters: new Set(),
+    searchQuery: '',
+    pageSize: CARD_VIEW_PAGE_SIZE,
+    currentPage: 0,
+  },
+) => {
+  const authorization = useRecoilValue(authorizationState);
+  const [workingGroups, setWorkingGroups] = useRecoilState(
+    workingGroupsState(options),
+  );
+  useDeepCompareEffect(() => {
+    if (workingGroups === undefined) {
+      getWorkingGroups(options, authorization).then(setWorkingGroups).catch();
+    }
+  }, [authorization, workingGroups, options, setWorkingGroups]);
+};
 
 export const useWorkingGroups = (options: GetListOptions) => {
   const authorization = useRecoilValue(authorizationState);

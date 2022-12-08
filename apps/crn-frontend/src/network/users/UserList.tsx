@@ -4,6 +4,7 @@ import { useUsers } from './state';
 import { usePaginationParams, usePagination } from '../../hooks';
 import { usePrefetchTeams } from '../teams/state';
 import { usePrefetchGroups } from '../groups/state';
+import { usePrefetchWorkingGroups } from '../working-groups/state';
 
 interface UserListProps {
   searchQuery?: string;
@@ -29,6 +30,12 @@ const UserList: React.FC<UserListProps> = ({
     filters: new Set(),
   });
   usePrefetchGroups({
+    currentPage: 0,
+    pageSize,
+    searchQuery,
+    filters: new Set(),
+  });
+  usePrefetchWorkingGroups({
     currentPage: 0,
     pageSize,
     searchQuery,

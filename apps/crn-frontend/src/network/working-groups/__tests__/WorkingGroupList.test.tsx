@@ -15,15 +15,15 @@ import { workingGroupsState } from '../state';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
 
 jest.mock('../api');
+jest.mock('../../teams/api');
+jest.mock('../../groups/api');
 
 const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
   typeof getWorkingGroups
 >;
 
 const renderWorkingGroupList = async (
-  listWorkingGroupResponse: WorkingGroupListResponse = createWorkingGroupListResponse(
-    1,
-  ),
+  listWorkingGroupResponse: WorkingGroupListResponse = createWorkingGroupListResponse(),
 ) => {
   mockGetWorkingGroups.mockResolvedValue(listWorkingGroupResponse);
 
@@ -57,7 +57,7 @@ const renderWorkingGroupList = async (
   return result;
 };
 
-it('fetches the group information', async () => {
+it('fetches the working group information', async () => {
   await renderWorkingGroupList();
 
   await waitFor(() =>

@@ -144,7 +144,6 @@ const Network: FC<Record<string, never>> = () => {
           onChangeSearchQuery={setSearchQuery}
           filters={filters}
           onChangeFilter={toggleFilter}
-          showSearch={false}
         >
           <SearchFrame title="Working Groups">
             <WorkingGroupList

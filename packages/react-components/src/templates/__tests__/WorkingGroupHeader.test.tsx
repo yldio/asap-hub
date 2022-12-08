@@ -58,7 +58,6 @@ it('renders the member avatars', () => {
       members={[
         {
           user: { ...createUserResponse(), firstName: 'John', lastName: 'Doe' },
-          workstreamRole: 'foo',
         },
       ]}
     />,

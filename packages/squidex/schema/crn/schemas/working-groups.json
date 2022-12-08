@@ -318,25 +318,6 @@
             "isLocked": false,
             "isHidden": false,
             "isDisabled": false
-          },
-          {
-            "name": "workstreamRole",
-            "properties": {
-              "isRequired": false,
-              "isRequiredOnPublish": false,
-              "isHalfWidth": false,
-              "fieldType": "String",
-              "createEnum": false,
-              "editor": "Input",
-              "inlineEditable": false,
-              "isEmbeddable": false,
-              "isUnique": false,
-              "contentType": "Unspecified",
-              "label": "Workstream Role"
-            },
-            "isLocked": false,
-            "isHidden": false,
-            "isDisabled": false
           }
         ]
       }

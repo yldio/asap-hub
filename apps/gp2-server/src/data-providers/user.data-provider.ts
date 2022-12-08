@@ -137,8 +137,8 @@ export class UserSquidexDataProvider implements UserDataProvider {
     workingGroups,
   }: gp2Model.FetchUsersOptions['filter'] = {}) => {
     const members = await Promise.all([
-      getFetchMembers(projects, this.queryFetchProjectData.bind(this)),
-      getFetchMembers(
+      getEntityMembers(projects, this.queryFetchProjectData.bind(this)),
+      getEntityMembers(
         workingGroups,
         this.queryFetchWorkingGroupData.bind(this),
       ),
@@ -399,7 +399,7 @@ const parsePositions = (
     };
   }) || [];
 
-const getFetchMembers = async (
+const getEntityMembers = async (
   ids: string[] | undefined,
   queryFetchMemberData: (
     filter: string,

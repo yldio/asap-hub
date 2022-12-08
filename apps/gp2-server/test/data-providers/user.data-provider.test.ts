@@ -1023,7 +1023,7 @@ describe('User data provider', () => {
           },
         );
       });
-      test('it should be able to filter by projects and users', async () => {
+      test('it should be able to filter by projects and multiple users', async () => {
         const project1Id = '140f5e15-922d-4cbf-9d39-35dd39225b03';
         const project2Id = '140f5e15-922d-4cbf-9d39-35dd39225b04';
         const user1Id = '11';
@@ -1220,7 +1220,7 @@ describe('User data provider', () => {
           },
         );
       });
-      test('it should be able to filter by workingGroups and users', async () => {
+      test('it should be able to filter by workingGroups and multiple users', async () => {
         const workingGroup1Id = '3ec68d44-82c1-4855-b6a0-ba44b9e313ba';
         const workingGroup2Id = '3ec68d44-82c1-4855-b6a0-ba44b9e313bb';
         const user1Id = '11';

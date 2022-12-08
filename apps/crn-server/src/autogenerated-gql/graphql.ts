@@ -5985,7 +5985,6 @@ export type WorkingGroupsDataDto = {
   deliverables: Maybe<WorkingGroupsDataDeliverablesDto>;
   description: Maybe<WorkingGroupsDataDescriptionDto>;
   externalLink: Maybe<WorkingGroupsDataExternalLinkDto>;
-  externalLinkText: Maybe<WorkingGroupsDataExternalLinkTextDto>;
   leaders: Maybe<WorkingGroupsDataLeadersDto>;
   members: Maybe<WorkingGroupsDataMembersDto>;
   shortText: Maybe<WorkingGroupsDataShortTextDto>;
@@ -6002,23 +6001,12 @@ export type WorkingGroupsDataExternalLinkInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
-/** The structure of the External Link Text field of the Working Groups content type. */
-export type WorkingGroupsDataExternalLinkTextDto = {
-  iv: Maybe<Scalars['String']>;
-};
-
-/** The structure of the External Link Text field of the Working Groups content input type. */
-export type WorkingGroupsDataExternalLinkTextInputDto = {
-  iv: InputMaybe<Scalars['String']>;
-};
-
 /** The structure of the Working Groups data input type. */
 export type WorkingGroupsDataInputDto = {
   complete: InputMaybe<WorkingGroupsDataCompleteInputDto>;
   deliverables: InputMaybe<WorkingGroupsDataDeliverablesInputDto>;
   description: InputMaybe<WorkingGroupsDataDescriptionInputDto>;
   externalLink: InputMaybe<WorkingGroupsDataExternalLinkInputDto>;
-  externalLinkText: InputMaybe<WorkingGroupsDataExternalLinkTextInputDto>;
   leaders: InputMaybe<WorkingGroupsDataLeadersInputDto>;
   members: InputMaybe<WorkingGroupsDataMembersInputDto>;
   shortText: InputMaybe<WorkingGroupsDataShortTextInputDto>;
@@ -6095,7 +6083,6 @@ export type WorkingGroupsFlatDataDto = {
   deliverables: Maybe<Array<WorkingGroupsDataDeliverablesChildDto>>;
   description: Maybe<Scalars['String']>;
   externalLink: Maybe<Scalars['String']>;
-  externalLinkText: Maybe<Scalars['String']>;
   leaders: Maybe<Array<WorkingGroupsDataLeadersChildDto>>;
   members: Maybe<Array<WorkingGroupsDataMembersChildDto>>;
   shortText: Maybe<Scalars['String']>;

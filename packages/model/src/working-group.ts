@@ -30,7 +30,6 @@ export type WorkingGroupDataObject = {
   title: string;
   description: string;
   externalLink?: string;
-  externalLinkText?: string;
   members: WorkingGroupMember[];
   pointOfContact?: WorkingGroupMember;
   complete: boolean;

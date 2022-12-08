@@ -2654,6 +2654,7 @@ export type EventsDataDto = {
   meetingMaterialsPermanentlyUnavailable: Maybe<EventsDataMeetingMaterialsPermanentlyUnavailableDto>;
   notes: Maybe<EventsDataNotesDto>;
   notesPermanentlyUnavailable: Maybe<EventsDataNotesPermanentlyUnavailableDto>;
+  notesUpdatedAt: Maybe<EventsDataNotesUpdatedAtDto>;
   presentation: Maybe<EventsDataPresentationDto>;
   presentationPermanentlyUnavailable: Maybe<EventsDataPresentationPermanentlyUnavailableDto>;
   presentationUpdatedAt: Maybe<EventsDataPresentationUpdatedAtDto>;
@@ -2746,6 +2747,7 @@ export type EventsDataInputDto = {
   meetingMaterialsPermanentlyUnavailable: InputMaybe<EventsDataMeetingMaterialsPermanentlyUnavailableInputDto>;
   notes: InputMaybe<EventsDataNotesInputDto>;
   notesPermanentlyUnavailable: InputMaybe<EventsDataNotesPermanentlyUnavailableInputDto>;
+  notesUpdatedAt: InputMaybe<EventsDataNotesUpdatedAtInputDto>;
   presentation: InputMaybe<EventsDataPresentationInputDto>;
   presentationPermanentlyUnavailable: InputMaybe<EventsDataPresentationPermanentlyUnavailableInputDto>;
   presentationUpdatedAt: InputMaybe<EventsDataPresentationUpdatedAtInputDto>;
@@ -2829,6 +2831,16 @@ export type EventsDataNotesPermanentlyUnavailableDto = {
 export type EventsDataNotesPermanentlyUnavailableInputDto = {
   /** This box is automatically ticked if no output is added after 14 days from the event's end date. */
   iv: InputMaybe<Scalars['Boolean']>;
+};
+
+/** The structure of the Notes Updated At field of the Events content type. */
+export type EventsDataNotesUpdatedAtDto = {
+  iv: Maybe<Scalars['Instant']>;
+};
+
+/** The structure of the Notes Updated At field of the Events content input type. */
+export type EventsDataNotesUpdatedAtInputDto = {
+  iv: InputMaybe<Scalars['Instant']>;
 };
 
 /** The structure of the Presentation field of the Events content type. */
@@ -3003,6 +3015,7 @@ export type EventsFlatDataDto = {
   notes: Maybe<Scalars['String']>;
   /** This box is automatically ticked if no output is added after 14 days from the event's end date. */
   notesPermanentlyUnavailable: Maybe<Scalars['Boolean']>;
+  notesUpdatedAt: Maybe<Scalars['Instant']>;
   /** If permanently unavailable box is ticked, any content you put here will be ignored. */
   presentation: Maybe<Scalars['String']>;
   /** This box is automatically ticked if no output is added after 14 days from the event's end date. */
@@ -5880,6 +5893,28 @@ export type WorkingGroups = Content & {
   version: Scalars['Int'];
 };
 
+/** The structure of the Deliverables nested schema. */
+export type WorkingGroupsDataDeliverablesChildDto = {
+  description: Maybe<Scalars['String']>;
+  status: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Deliverables nested schema. */
+export type WorkingGroupsDataDeliverablesChildInputDto = {
+  description: InputMaybe<Scalars['String']>;
+  status: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Deliverables field of the Working Groups content type. */
+export type WorkingGroupsDataDeliverablesDto = {
+  iv: Maybe<Array<WorkingGroupsDataDeliverablesChildDto>>;
+};
+
+/** The structure of the Deliverables field of the Working Groups content input type. */
+export type WorkingGroupsDataDeliverablesInputDto = {
+  iv: InputMaybe<Array<WorkingGroupsDataDeliverablesChildInputDto>>;
+};
+
 /** The structure of the Description field of the Working Groups content type. */
 export type WorkingGroupsDataDescriptionDto = {
   iv: Maybe<Scalars['String']>;
@@ -5892,9 +5927,10 @@ export type WorkingGroupsDataDescriptionInputDto = {
 
 /** The structure of the Working Groups data type. */
 export type WorkingGroupsDataDto = {
+  deliverables: Maybe<WorkingGroupsDataDeliverablesDto>;
   description: Maybe<WorkingGroupsDataDescriptionDto>;
   externalLink: Maybe<WorkingGroupsDataExternalLinkDto>;
-  externalLinkText: Maybe<WorkingGroupsDataExternalLinkTextDto>;
+  shortText: Maybe<WorkingGroupsDataShortTextDto>;
   title: Maybe<WorkingGroupsDataTitleDto>;
 };
 
@@ -5908,22 +5944,23 @@ export type WorkingGroupsDataExternalLinkInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
-/** The structure of the External Link Text field of the Working Groups content type. */
-export type WorkingGroupsDataExternalLinkTextDto = {
+/** The structure of the Working Groups data input type. */
+export type WorkingGroupsDataInputDto = {
+  deliverables: InputMaybe<WorkingGroupsDataDeliverablesInputDto>;
+  description: InputMaybe<WorkingGroupsDataDescriptionInputDto>;
+  externalLink: InputMaybe<WorkingGroupsDataExternalLinkInputDto>;
+  shortText: InputMaybe<WorkingGroupsDataShortTextInputDto>;
+  title: InputMaybe<WorkingGroupsDataTitleInputDto>;
+};
+
+/** The structure of the Short Text field of the Working Groups content type. */
+export type WorkingGroupsDataShortTextDto = {
   iv: Maybe<Scalars['String']>;
 };
 
-/** The structure of the External Link Text field of the Working Groups content input type. */
-export type WorkingGroupsDataExternalLinkTextInputDto = {
+/** The structure of the Short Text field of the Working Groups content input type. */
+export type WorkingGroupsDataShortTextInputDto = {
   iv: InputMaybe<Scalars['String']>;
-};
-
-/** The structure of the Working Groups data input type. */
-export type WorkingGroupsDataInputDto = {
-  description: InputMaybe<WorkingGroupsDataDescriptionInputDto>;
-  externalLink: InputMaybe<WorkingGroupsDataExternalLinkInputDto>;
-  externalLinkText: InputMaybe<WorkingGroupsDataExternalLinkTextInputDto>;
-  title: InputMaybe<WorkingGroupsDataTitleInputDto>;
 };
 
 /** The structure of the Title field of the Working Groups content type. */
@@ -5938,9 +5975,10 @@ export type WorkingGroupsDataTitleInputDto = {
 
 /** The structure of the flat Working Groups data type. */
 export type WorkingGroupsFlatDataDto = {
+  deliverables: Maybe<Array<WorkingGroupsDataDeliverablesChildDto>>;
   description: Maybe<Scalars['String']>;
   externalLink: Maybe<Scalars['String']>;
-  externalLinkText: Maybe<Scalars['String']>;
+  shortText: Maybe<Scalars['String']>;
   title: Maybe<Scalars['String']>;
 };
 

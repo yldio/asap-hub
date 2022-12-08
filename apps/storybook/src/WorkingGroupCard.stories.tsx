@@ -14,7 +14,6 @@ export const Normal = () => (
       'Group Short text that should be below the title and quite long to test the wrapping',
     )}
     externalLink={text('Link', 'https://www.google.com')}
-    externalLinkText={text('Link text', 'Working Group Folder')}
     lastModifiedDate={text('Last modified date', '2020-01-1')}
   />
 );

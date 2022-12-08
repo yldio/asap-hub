@@ -89,11 +89,20 @@ describe('Working Group Data Provider', () => {
       ).toBeNull();
     });
 
-    test('Should skip externalLinkText and externalLink when they are both null', async () => {
+    test('Should return externalLink when it is not null', async () => {
+      const squidexGraphqlResponse = getSquidexWorkingGroupGraphqlResponse();
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
+
+      const response = await workingGroupDataProvider.fetchById(workingGroupId);
+
+      expect(response).toHaveProperty('externalLink');
+    });
+
+    test('Should not return externalLink when it is null', async () => {
       const squidexGraphqlResponse = getSquidexWorkingGroupGraphqlResponse();
       squidexGraphqlResponse.findWorkingGroupsContent!.flatData.externalLink =
-        null;
-      squidexGraphqlResponse.findWorkingGroupsContent!.flatData.externalLinkText =
         null;
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         squidexGraphqlResponse,
@@ -102,39 +111,6 @@ describe('Working Group Data Provider', () => {
       const response = await workingGroupDataProvider.fetchById(workingGroupId);
 
       expect(response).not.toHaveProperty('externalLink');
-      expect(response).not.toHaveProperty('externalLinkText');
-    });
-
-    test('Should skip externalLinkText when it is null', async () => {
-      const squidexGraphqlResponse = getSquidexWorkingGroupGraphqlResponse();
-      squidexGraphqlResponse.findWorkingGroupsContent!.flatData.externalLink =
-        'https://www.example.com';
-      squidexGraphqlResponse.findWorkingGroupsContent!.flatData.externalLinkText =
-        null;
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        squidexGraphqlResponse,
-      );
-
-      const response = await workingGroupDataProvider.fetchById(workingGroupId);
-
-      expect(response?.externalLink).toBe('https://www.example.com');
-      expect(response).not.toHaveProperty('externalLinkText');
-    });
-
-    test('Should skip externalLinkText when externalLink is not present', async () => {
-      const squidexGraphqlResponse = getSquidexWorkingGroupGraphqlResponse();
-      squidexGraphqlResponse.findWorkingGroupsContent!.flatData.externalLink =
-        null;
-      squidexGraphqlResponse.findWorkingGroupsContent!.flatData.externalLinkText =
-        'some text';
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        squidexGraphqlResponse,
-      );
-
-      const response = await workingGroupDataProvider.fetchById(workingGroupId);
-
-      expect(response).not.toHaveProperty('externalLink');
-      expect(response).not.toHaveProperty('externalLinkText');
     });
 
     test('Should default description to an empty string', async () => {

@@ -5941,7 +5941,6 @@ export type WorkingGroupsDataDto = {
   deliverables: Maybe<WorkingGroupsDataDeliverablesDto>;
   description: Maybe<WorkingGroupsDataDescriptionDto>;
   externalLink: Maybe<WorkingGroupsDataExternalLinkDto>;
-  externalLinkText: Maybe<WorkingGroupsDataExternalLinkTextDto>;
   shortText: Maybe<WorkingGroupsDataShortTextDto>;
   title: Maybe<WorkingGroupsDataTitleDto>;
 };
@@ -5956,23 +5955,12 @@ export type WorkingGroupsDataExternalLinkInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
-/** The structure of the External Link Text field of the Working Groups content type. */
-export type WorkingGroupsDataExternalLinkTextDto = {
-  iv: Maybe<Scalars['String']>;
-};
-
-/** The structure of the External Link Text field of the Working Groups content input type. */
-export type WorkingGroupsDataExternalLinkTextInputDto = {
-  iv: InputMaybe<Scalars['String']>;
-};
-
 /** The structure of the Working Groups data input type. */
 export type WorkingGroupsDataInputDto = {
   complete: InputMaybe<WorkingGroupsDataCompleteInputDto>;
   deliverables: InputMaybe<WorkingGroupsDataDeliverablesInputDto>;
   description: InputMaybe<WorkingGroupsDataDescriptionInputDto>;
   externalLink: InputMaybe<WorkingGroupsDataExternalLinkInputDto>;
-  externalLinkText: InputMaybe<WorkingGroupsDataExternalLinkTextInputDto>;
   shortText: InputMaybe<WorkingGroupsDataShortTextInputDto>;
   title: InputMaybe<WorkingGroupsDataTitleInputDto>;
 };
@@ -6003,7 +5991,6 @@ export type WorkingGroupsFlatDataDto = {
   deliverables: Maybe<Array<WorkingGroupsDataDeliverablesChildDto>>;
   description: Maybe<Scalars['String']>;
   externalLink: Maybe<Scalars['String']>;
-  externalLinkText: Maybe<Scalars['String']>;
   shortText: Maybe<Scalars['String']>;
   title: Maybe<Scalars['String']>;
 };
@@ -9315,12 +9302,7 @@ export type WorkingGroupContentFragment = Pick<
 > & {
   flatData: Pick<
     WorkingGroupsFlatDataDto,
-    | 'title'
-    | 'description'
-    | 'externalLink'
-    | 'shortText'
-    | 'externalLinkText'
-    | 'complete'
+    'title' | 'description' | 'externalLink' | 'shortText' | 'complete'
   > & {
     deliverables: Maybe<
       Array<
@@ -9339,12 +9321,7 @@ export type FetchWorkingGroupQuery = {
     Pick<WorkingGroups, 'id' | 'lastModified'> & {
       flatData: Pick<
         WorkingGroupsFlatDataDto,
-        | 'title'
-        | 'description'
-        | 'externalLink'
-        | 'shortText'
-        | 'externalLinkText'
-        | 'complete'
+        'title' | 'description' | 'externalLink' | 'shortText' | 'complete'
       > & {
         deliverables: Maybe<
           Array<
@@ -9377,7 +9354,6 @@ export type FetchWorkingGroupsQuery = {
               | 'description'
               | 'externalLink'
               | 'shortText'
-              | 'externalLinkText'
               | 'complete'
             > & {
               deliverables: Maybe<
@@ -11898,10 +11874,6 @@ export const WorkingGroupContentFragmentDoc = {
                   name: { kind: 'Name', value: 'externalLink' },
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'shortText' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'externalLinkText' },
-                },
                 { kind: 'Field', name: { kind: 'Name', value: 'complete' } },
                 {
                   kind: 'Field',

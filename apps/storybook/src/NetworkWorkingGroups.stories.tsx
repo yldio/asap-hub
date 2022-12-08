@@ -17,7 +17,6 @@ const workingGroupsProps = (): ComponentProps<typeof NetworkWorkingGroups> => {
         'Working Group long Description that should be getting trimmed to 2 lines',
       description: 'Test description',
       externalLink: 'https://www.google.com',
-      externalLinkText: 'Working Group Folder',
       lastModifiedDate: '2020-01-1',
     })).slice(currentPageIndex * 10, currentPageIndex * 10 + 10),
     numberOfItems,

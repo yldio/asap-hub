@@ -22,7 +22,6 @@ export const getListWorkingGroupsDataObject =
         deliverables: [],
         lastModifiedDate: '2021-01-01T00:00:00.000Z',
         externalLink: 'https://www.example.com',
-        externalLinkText: 'External Link Text 2',
         complete: true,
       },
     ],
@@ -38,7 +37,6 @@ export const getWorkingGroupDataObject = (): WorkingGroupDataObject => ({
   complete: false,
   lastModifiedDate: '2021-01-01T00:00:00.000Z',
   externalLink: 'https://example.com',
-  externalLinkText: 'External Link Text',
 });
 
 export const getWorkingGroupResponse = (): WorkingGroupResponse =>
@@ -62,7 +60,6 @@ export const getSquidexWorkingGroupsGraphqlResponse =
             description: 'Working Group Description',
             shortText: 'Working Group Short Text',
             externalLink: 'https://example.com',
-            externalLinkText: 'External Link Text',
             deliverables: [],
             complete: false,
           },
@@ -80,7 +77,6 @@ export const getSquidexGraphqlWorkingGroup =
       description: 'Working Group Description',
       shortText: 'Working Group Short Text',
       externalLink: 'https://example.com',
-      externalLinkText: 'External Link Text',
       deliverables: [],
       complete: false,
     },

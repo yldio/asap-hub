@@ -134,6 +134,7 @@ import {
 import DashboardSquidexDataProvider, {
   DashboardDataProvider,
 } from './data-providers/dashboard.data-provider';
+import { PageContentfulDataProvider } from './data-providers/contentful/pages.data-provider';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -218,8 +219,14 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.newsDataProvider || isContentfulEnabled
       ? newsContentfulDataProvider
       : newsSquidexDataProvider;
-  const pageDataProvider =
-    libs.pageDataProvider || new PageSquidexDataProvider(pageRestClient);
+  const pageSquidexDataProvider =
+    libs.pageSquidexDataProvider || new PageSquidexDataProvider(pageRestClient);
+  const pageContentfulDataProvider =
+    libs.pageContentfulDataProvider ||
+    new PageContentfulDataProvider(contentfulGraphQLClient);
+  const pageDataProvider = isContentfulEnabled
+    ? pageContentfulDataProvider
+    : pageSquidexDataProvider;
   const teamDataProvider =
     libs.teamDataProvider ||
     new TeamSquidexDataProvider(squidexGraphqlClient, teamRestClient);
@@ -430,7 +437,8 @@ export type Libs = {
   newsContentfulDataProvider?: NewsDataProvider;
   newsDataProvider?: NewsDataProvider;
   newsSquidexDataProvider?: NewsDataProvider;
-  pageDataProvider?: PageDataProvider;
+  pageSquidexDataProvider?: PageDataProvider;
+  pageContentfulDataProvider?: PageDataProvider;
   reminderDataProvider?: ReminderDataProvider;
   researchOutputDataProvider?: ResearchOutputDataProvider;
   researchTagDataProvider?: ResearchTagDataProvider;

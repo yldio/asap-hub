@@ -2,8 +2,9 @@ import supertest from 'supertest';
 import { authHandlerMock } from './mocks/auth-handler.mock';
 
 import { NewsDataProvider } from '../src/data-providers/types';
+import { PageDataProvider } from '../src/data-providers/pages.data-provider';
 
-describe('app is set with correct data provider for news', () => {
+describe('Contentful feature flag', () => {
   const OLD_ENV = process.env;
 
   beforeEach(() => {
@@ -16,64 +17,127 @@ describe('app is set with correct data provider for news', () => {
     process.env = OLD_ENV;
   });
 
-  const newsSquidexDataProviderMock: jest.Mocked<NewsDataProvider> = {
-    fetch: jest.fn(),
-    fetchById: jest.fn(),
-  };
+  describe('News Data Provider', () => {
+    const newsSquidexDataProviderMock: jest.Mocked<NewsDataProvider> = {
+      fetch: jest.fn(),
+      fetchById: jest.fn(),
+    };
 
-  const newsContentfulDataProviderMock: jest.Mocked<NewsDataProvider> = {
-    fetch: jest.fn(),
-    fetchById: jest.fn(),
-  };
+    const newsContentfulDataProviderMock: jest.Mocked<NewsDataProvider> = {
+      fetch: jest.fn(),
+      fetchById: jest.fn(),
+    };
 
-  test('news controller uses squidex data provider when IS_CONTENTFUL_ENABLED is false', async () => {
-    process.env.IS_CONTENTFUL_ENABLED = 'false';
+    test('news controller uses squidex data provider when IS_CONTENTFUL_ENABLED is false', async () => {
+      process.env.IS_CONTENTFUL_ENABLED = 'false';
 
-    const { appFactory } = require('../src/app');
+      const { appFactory } = require('../src/app');
 
-    const app = appFactory({
-      newsSquidexDataProvider: newsSquidexDataProviderMock,
-      newsContentfulDataProvider: newsContentfulDataProviderMock,
-      authHandler: authHandlerMock,
+      const app = appFactory({
+        newsSquidexDataProvider: newsSquidexDataProviderMock,
+        newsContentfulDataProvider: newsContentfulDataProviderMock,
+        authHandler: authHandlerMock,
+      });
+      await supertest(app).get('/news');
+
+      expect(newsSquidexDataProviderMock.fetch).toHaveBeenCalledTimes(1);
+
+      expect(newsContentfulDataProviderMock.fetch).not.toHaveBeenCalled();
     });
-    await supertest(app).get('/news');
 
-    expect(newsSquidexDataProviderMock.fetch).toHaveBeenCalledTimes(1);
+    test('news controller uses squidex data provider when IS_CONTENTFUL_ENABLED undefined', async () => {
+      process.env.IS_CONTENTFUL_ENABLED = undefined;
 
-    expect(newsContentfulDataProviderMock.fetch).not.toHaveBeenCalled();
+      const { appFactory } = require('../src/app');
+
+      const app = appFactory({
+        newsSquidexDataProvider: newsSquidexDataProviderMock,
+        newsContentfulDataProvider: newsContentfulDataProviderMock,
+        authHandler: authHandlerMock,
+      });
+      await supertest(app).get('/news');
+
+      expect(newsSquidexDataProviderMock.fetch).toHaveBeenCalledTimes(1);
+
+      expect(newsContentfulDataProviderMock.fetch).not.toHaveBeenCalled();
+    });
+
+    test('news controller uses contentful data provider when IS_CONTENTFUL_ENABLED is true', async () => {
+      process.env.IS_CONTENTFUL_ENABLED = 'true';
+
+      const { appFactory } = require('../src/app');
+
+      const app = appFactory({
+        authHandler: authHandlerMock,
+        newsSquidexDataProvider: newsSquidexDataProviderMock,
+        newsContentfulDataProvider: newsContentfulDataProviderMock,
+      });
+      await supertest(app).get('/news');
+
+      expect(newsSquidexDataProviderMock.fetch).not.toHaveBeenCalled();
+
+      expect(newsContentfulDataProviderMock.fetch).toHaveBeenCalledTimes(1);
+    });
   });
 
-  test('news controller uses squidex data provider when IS_CONTENTFUL_ENABLED undefined', async () => {
-    process.env.IS_CONTENTFUL_ENABLED = undefined;
+  describe('Page Data Provider', () => {
+    const pageSquidexDataProviderMock: jest.Mocked<PageDataProvider> = {
+      fetch: jest.fn(),
+    };
 
-    const { appFactory } = require('../src/app');
+    const pageContentfulDataProviderMock: jest.Mocked<PageDataProvider> = {
+      fetch: jest.fn(),
+    };
 
-    const app = appFactory({
-      newsSquidexDataProvider: newsSquidexDataProviderMock,
-      newsContentfulDataProvider: newsContentfulDataProviderMock,
-      authHandler: authHandlerMock,
+    test('news controller uses squidex data provider when IS_CONTENTFUL_ENABLED is false', async () => {
+      process.env.IS_CONTENTFUL_ENABLED = 'false';
+
+      const { appFactory } = require('../src/app');
+
+      const app = appFactory({
+        pageSquidexDataProvider: pageSquidexDataProviderMock,
+        pageContentfulDataProvider: pageContentfulDataProviderMock,
+        authHandler: authHandlerMock,
+      });
+      await supertest(app).get('/pages/privacy-policyi');
+
+      expect(pageSquidexDataProviderMock.fetch).toHaveBeenCalledTimes(1);
+
+      expect(pageContentfulDataProviderMock.fetch).not.toHaveBeenCalled();
     });
-    await supertest(app).get('/news');
 
-    expect(newsSquidexDataProviderMock.fetch).toHaveBeenCalledTimes(1);
+    test('news controller uses squidex data provider when IS_CONTENTFUL_ENABLED undefined', async () => {
+      process.env.IS_CONTENTFUL_ENABLED = undefined;
 
-    expect(newsContentfulDataProviderMock.fetch).not.toHaveBeenCalled();
-  });
+      const { appFactory } = require('../src/app');
 
-  test('news controller uses contentful data provider when IS_CONTENTFUL_ENABLED is true', async () => {
-    process.env.IS_CONTENTFUL_ENABLED = 'true';
+      const app = appFactory({
+        newsSquidexDataProvider: pageSquidexDataProviderMock,
+        newsContentfulDataProvider: pageContentfulDataProviderMock,
+        authHandler: authHandlerMock,
+      });
+      await supertest(app).get('/news');
 
-    const { appFactory } = require('../src/app');
+      expect(pageSquidexDataProviderMock.fetch).toHaveBeenCalledTimes(1);
 
-    const app = appFactory({
-      authHandler: authHandlerMock,
-      newsSquidexDataProvider: newsSquidexDataProviderMock,
-      newsContentfulDataProvider: newsContentfulDataProviderMock,
+      expect(pageContentfulDataProviderMock.fetch).not.toHaveBeenCalled();
     });
-    await supertest(app).get('/news');
 
-    expect(newsSquidexDataProviderMock.fetch).not.toHaveBeenCalled();
+    test('news controller uses contentful data provider when IS_CONTENTFUL_ENABLED is true', async () => {
+      process.env.IS_CONTENTFUL_ENABLED = 'true';
 
-    expect(newsContentfulDataProviderMock.fetch).toHaveBeenCalledTimes(1);
+      const { appFactory } = require('../src/app');
+
+      const app = appFactory({
+        authHandler: authHandlerMock,
+        newsSquidexDataProvider: pageSquidexDataProviderMock,
+        newsContentfulDataProvider: pageContentfulDataProviderMock,
+      });
+      await supertest(app).get('/news');
+
+      expect(pageSquidexDataProviderMock.fetch).not.toHaveBeenCalled();
+
+      expect(pageContentfulDataProviderMock.fetch).toHaveBeenCalledTimes(1);
+    });
   });
 });

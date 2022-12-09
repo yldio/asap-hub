@@ -512,12 +512,7 @@ describe('Reminders', () => {
       // the event starts at 10AM and ends at 11AM in UTC
       eventInput.startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
       eventInput.endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
-      eventInput.speakers = [
-        {
-          user: ['063d8a56-faf5-443b-86a0-3ec4cb861da7'], // random uuid
-          team: [teamId],
-        },
-      ];
+      eventInput.speakers = [];
       const event = await eventController.create(eventInput);
       eventIdsForDeletion = [event.id];
 

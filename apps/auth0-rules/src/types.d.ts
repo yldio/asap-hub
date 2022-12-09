@@ -1,14 +1,5 @@
 import { Auth0PostLoginEvent } from '@vedicium/auth0-actions-sdk';
 
-declare global {
-  const configuration: {
-    APP_ORIGIN: string;
-    APP_DOMAIN: string;
-    API_SHARED_SECRET: string;
-  };
-  class UnauthorizedError extends Error {}
-}
-
 export type User = {
   created_at: unknown;
   email: string;
@@ -25,73 +16,13 @@ export type User = {
   [customClaimName: string]: unknown;
 };
 
-export type RuleContext<
-  CustomContext extends Record<string, unknown> = Record<string, unknown>,
-> = Partial<CustomContext> & {
-  tenant: string;
-  clientID: string;
-  clientName: string;
-  clientMetadata: Record<string, string>;
-  connectionID: string;
-  connection: string;
-  connectionStrategy: string;
-  connectionOptions: {
-    tenant_domain?: string;
-    domain_aliases?: string[];
-  };
-  connectionMetadata: Record<string, string>;
-  samlConfiguration?: Record<string, unknown>;
-  request: {
-    query: Record<string, string>;
-    body: {
-      redirect_uri?: string;
-    };
-  };
-  protocol:
-    | 'oidc-basic-profile'
-    | 'oidc-implicit-profile'
-    | 'oauth2-device-code'
-    | 'oauth2-resource-owner'
-    | 'oauth2-resource-owner-jwt-bearer'
-    | 'oauth2-password'
-    | 'oauth2-refresh-token'
-    | 'samlp'
-    | 'wsfed'
-    | 'wstrust-usernamemixed'
-    | 'delegation'
-    | 'redirect-callback';
-  stats: Record<string, number>;
-  sso?: Record<string, unknown>;
-  accessToken: Record<string, unknown>;
-  idToken: User;
-  sessionID: string;
-  authorization: {
-    roles: string[];
-  };
-};
-
-export interface RuleCallback<
-  CustomContext extends Record<string, unknown> = Record<string, unknown>,
-> {
-  (error: Error): void;
-  (error: null, user: User, context: RuleContext<CustomContext>): void;
-}
-
-export type Rule<
-  CustomContext extends Record<string, unknown> = Record<string, unknown>,
-> = (
-  user: User,
-  context: RuleContext<CustomContext>,
-  callback: RuleCallback<CustomContext>,
-) => void | Promise<void>;
-
 // Extended Action Types
 
 export type DeepPartial<T> = {
   [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K];
 };
 
-export type Auth0PostLoginEventWithSecrets = Auth0PostLoginEvent & {
+type Auth0Secrets = {
   secrets: {
     PR_APP_DOMAIN: string; // hub.asap.science
     ASAP_API_URL: string; // https://api-dev.hub.asap.science
@@ -99,3 +30,5 @@ export type Auth0PostLoginEventWithSecrets = Auth0PostLoginEvent & {
     AUTH0_ADDITIONAL_CLAIM_DOMAIN?: string; // 'https://dev.hub.asap.science' in development to allow local login
   };
 };
+
+export type Auth0PostLoginEventWithSecrets = Auth0PostLoginEvent & Auth0Secrets;

@@ -32,6 +32,27 @@ export const FETCH_REMINDER_DATA = gql`
         startDate
         endDate
         title
+        speakers {
+          team {
+            ... on Teams {
+              id
+            }
+          }
+          user {
+            ... on Users {
+              id
+              flatData {
+                role
+                teams {
+                  id {
+                    id
+                  }
+                  role
+                }
+              }
+            }
+          }
+        }
         videoRecordingUpdatedAt
         presentationUpdatedAt
         notesUpdatedAt

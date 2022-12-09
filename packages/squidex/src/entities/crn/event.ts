@@ -16,6 +16,8 @@ export interface Event<TCalendar = string, TThumbnail = string> {
 
   hidden?: boolean;
 
+  speakers?: { team: string[]; user: string[] }[];
+
   // Past event details
   notesPermanentlyUnavailable?: boolean;
   notes?: string;

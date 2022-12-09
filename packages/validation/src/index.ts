@@ -1,4 +1,5 @@
 export * from './permissions';
+export * from './roles';
 export * from './research-output';
 export * from './teams';
 export * from './url';

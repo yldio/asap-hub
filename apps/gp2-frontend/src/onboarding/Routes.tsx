@@ -1,4 +1,5 @@
 import { NotFoundPage } from '@asap-hub/react-components';
+import { Frame } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/routing';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { lazy, useEffect } from 'react';
@@ -26,9 +27,11 @@ const Routes: React.FC<Record<string, never>> = () => {
         <Welcome />
       </Route>
       <Route exact path={onboarding({}).coreDetails({}).$}>
-        <Onboarding>
-          <CoreDetails />
-        </Onboarding>
+        <Frame title="Core Details">
+          <Onboarding>
+            <CoreDetails />
+          </Onboarding>
+        </Frame>
       </Route>
       <Route exact path={onboarding({}).background({}).$}>
         <Onboarding>

@@ -1,9 +1,9 @@
 import { OnboardingPageHeader } from '@asap-hub/gp2-components';
 
 const Onboarding: React.FC = ({ children }) => (
-  <div>
+  <article>
     <OnboardingPageHeader />
-    {children}
-  </div>
+    <main>{children}</main>
+  </article>
 );
 export default Onboarding;

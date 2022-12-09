@@ -1,4 +1,3 @@
-import { getGraphQLClient, GraphQLClient } from '@asap-hub/contentful';
 import {
   getListNewsDataObject,
   getContentfulNewsGraphqlResponse,
@@ -6,18 +5,23 @@ import {
 } from '../../fixtures/news.fixtures';
 import { NewsContentfulDataProvider } from '../../../src/data-providers/contentful/news.data-provider';
 import { GraphQLError } from 'graphql';
+import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
+import { getContentfulGraphqlClientMockServer } from '@asap-hub/contentful';
 
 describe('News data provider', () => {
-  let newsGraphQLClientMock = getGraphQLClient({
-    space: 'space-id',
-    accessToken: 'token',
-    environment: 'env-is',
-  }) as jest.Mocked<GraphQLClient>;
-
-  jest.spyOn(newsGraphQLClientMock, 'request');
+  const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
 
   const newsDataProvider = new NewsContentfulDataProvider(
-    newsGraphQLClientMock,
+    contentfulGraphqlClientMock,
+  );
+
+  const contentfulGraphqlClientMockServer =
+    getContentfulGraphqlClientMockServer({
+      News: () => getContentfulGraphqlNews(),
+    });
+
+  const newsDataProviderMockGraphql = new NewsContentfulDataProvider(
+    contentfulGraphqlClientMockServer,
   );
 
   afterEach(() => {
@@ -25,12 +29,18 @@ describe('News data provider', () => {
   });
 
   describe('Fetch method', () => {
+    test('Should fetch the list of news from Contentful GraphQl', async () => {
+      const result = await newsDataProviderMockGraphql.fetch({});
+
+      expect(result).toMatchObject(getListNewsDataObject());
+    });
+
     test('Should return an empty result when no news exist', async () => {
       const contentfulGraphQLResponse = getContentfulNewsGraphqlResponse();
       contentfulGraphQLResponse.newsCollection!.total = 0;
       contentfulGraphQLResponse.newsCollection!.items = [];
 
-      newsGraphQLClientMock.request.mockResolvedValueOnce(
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
         contentfulGraphQLResponse,
       );
 
@@ -43,7 +53,7 @@ describe('News data provider', () => {
     });
 
     test('Should throw an error with a specific error message when the graphql client throws one', async () => {
-      newsGraphQLClientMock.request.mockRejectedValueOnce(
+      contentfulGraphqlClientMock.request.mockRejectedValueOnce(
         new GraphQLError('some error message'),
       );
 
@@ -56,7 +66,7 @@ describe('News data provider', () => {
       const contentfulGraphQLResponse = getContentfulNewsGraphqlResponse();
       contentfulGraphQLResponse.newsCollection = null;
 
-      newsGraphQLClientMock.request.mockResolvedValueOnce(
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
         contentfulGraphQLResponse,
       );
 
@@ -69,7 +79,7 @@ describe('News data provider', () => {
     });
 
     test('Should return news', async () => {
-      newsGraphQLClientMock.request.mockResolvedValueOnce(
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
         getContentfulNewsGraphqlResponse(),
       );
       const result = await newsDataProvider.fetch({ take: 8, skip: 5 });
@@ -82,7 +92,7 @@ describe('News data provider', () => {
       contentfulGraphQLResponse.newsCollection!.total = 0;
       contentfulGraphQLResponse.newsCollection!.items[0]!.thumbnail!.url = null;
 
-      newsGraphQLClientMock.request.mockResolvedValueOnce(
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
         contentfulGraphQLResponse,
       );
 
@@ -93,14 +103,14 @@ describe('News data provider', () => {
 
     test('Should query data properly when request does not have options', async () => {
       const contentfulGraphQLResponse = getContentfulNewsGraphqlResponse();
-      newsGraphQLClientMock.request.mockResolvedValueOnce(
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
         contentfulGraphQLResponse,
       );
 
       const result = await newsDataProvider.fetch();
 
       expect(result).toEqual(getListNewsDataObject());
-      expect(newsGraphQLClientMock.request).toHaveBeenCalledWith(
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
         expect.anything(),
         expect.objectContaining({
           limit: null,
@@ -113,7 +123,7 @@ describe('News data provider', () => {
 
     describe('Frequency Filter', () => {
       test('Should query data properly when only CRN Quarterly frequency is selected', async () => {
-        newsGraphQLClientMock.request.mockResolvedValueOnce(
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
           getContentfulNewsGraphqlResponse(),
         );
 
@@ -126,7 +136,7 @@ describe('News data provider', () => {
         });
 
         expect(result).toEqual(getListNewsDataObject());
-        expect(newsGraphQLClientMock.request).toHaveBeenCalledWith(
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
           expect.anything(),
           expect.objectContaining({
             limit: 8,
@@ -140,7 +150,7 @@ describe('News data provider', () => {
 
     describe('Text Filter', () => {
       test('Should query data properly when passing search param and no frequency is selected', async () => {
-        newsGraphQLClientMock.request.mockResolvedValueOnce(
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
           getContentfulNewsGraphqlResponse(),
         );
 
@@ -149,7 +159,7 @@ describe('News data provider', () => {
         });
 
         expect(result).toEqual(getListNewsDataObject());
-        expect(newsGraphQLClientMock.request).toHaveBeenCalledWith(
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
           expect.anything(),
           expect.objectContaining({
             limit: null,
@@ -161,7 +171,7 @@ describe('News data provider', () => {
       });
 
       test('Should query data properly when passing search param and frequency is selected', async () => {
-        newsGraphQLClientMock.request.mockResolvedValueOnce(
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
           getContentfulNewsGraphqlResponse(),
         );
 
@@ -175,7 +185,7 @@ describe('News data provider', () => {
         });
 
         expect(result).toEqual(getListNewsDataObject());
-        expect(newsGraphQLClientMock.request).toHaveBeenCalledWith(
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
           expect.anything(),
           expect.objectContaining({
             limit: 8,
@@ -197,7 +207,7 @@ describe('News data provider', () => {
       const contentfulGraphQLResponse = getContentfulNewsGraphqlResponse();
       contentfulGraphQLResponse.newsCollection = null;
 
-      newsGraphQLClientMock.request.mockResolvedValueOnce(
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
         contentfulGraphQLResponse,
       );
 
@@ -206,7 +216,7 @@ describe('News data provider', () => {
 
     test('Should throw an error with a specific error message when the graphql client throws one', async () => {
       const id = 'some-id';
-      newsGraphQLClientMock.request.mockRejectedValueOnce(
+      contentfulGraphqlClientMock.request.mockRejectedValueOnce(
         new GraphQLError('some error message'),
       );
 
@@ -219,14 +229,14 @@ describe('News data provider', () => {
       const id = 'some-id';
       const contentfulGraphQLResponse = { news: getContentfulGraphqlNews() };
 
-      newsGraphQLClientMock.request.mockResolvedValueOnce(
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
         contentfulGraphQLResponse,
       );
 
       const result = await newsDataProvider.fetchById(id);
 
       expect(result).toEqual(getListNewsDataObject().items[0]);
-      expect(newsGraphQLClientMock.request).toBeCalledWith(
+      expect(contentfulGraphqlClientMock.request).toBeCalledWith(
         expect.anything(),
         expect.objectContaining({
           id,

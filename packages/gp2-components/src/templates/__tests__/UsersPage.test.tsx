@@ -51,4 +51,14 @@ describe('UsersPage', () => {
     render(<UsersPage {...props} />);
     expect(screen.getByRole('banner')).toBeVisible();
   });
+  it('does not render the filters', () => {
+    render(<UsersPage {...props} />);
+    expect(
+      screen.queryByRole('heading', { name: 'Filters' }),
+    ).not.toBeInTheDocument();
+  });
+  it('renders the filters', () => {
+    render(<UsersPage {...props} displayFilters />);
+    expect(screen.getByRole('heading', { name: 'Filters' })).toBeVisible();
+  });
 });

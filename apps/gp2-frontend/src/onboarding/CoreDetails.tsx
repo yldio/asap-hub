@@ -25,7 +25,9 @@ const CoreDetails: React.FC<Record<string, never>> = () => {
         <Route path={onboarding({}).coreDetails({}).editKeyInfo({}).$}>
           <KeyInformationModal
             {...userData}
-            locationSuggestions={locationSuggestions}
+            locationSuggestions={locationSuggestions.map(
+              ({ shortName }) => shortName,
+            )}
             loadInstitutionOptions={(searchQuery: string) =>
               getInstitutions({ searchQuery }).then((data) =>
                 data.items.map(({ name }) => name),

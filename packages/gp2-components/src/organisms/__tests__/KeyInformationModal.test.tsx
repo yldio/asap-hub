@@ -1,3 +1,4 @@
+import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
@@ -5,8 +6,9 @@ import KeyInformationModal from '../KeyInformationModal';
 
 describe('KeyInformatiomModal', () => {
   const defaultProps = {
-    firstName: 'Tony',
-    lastName: 'Stark',
+    ...gp2Fixtures.createUserResponse(),
+    locationSuggestions: [],
+    loadInstitutionOptions: () => Promise.resolve([]),
     backHref: '',
     onSave: jest.fn(),
   };

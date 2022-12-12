@@ -25,11 +25,7 @@ type KeyInformationModalProps = Pick<
   Pick<ComponentProps<typeof EditUserModal>, 'backHref'> & {
     loadInstitutionOptions: (newValue?: string) => Promise<string[]>;
     onSave: (userData: gp2.UserPatchRequest) => Promise<void>;
-    locationSuggestions: {
-      shortName: string;
-      longName?: string;
-      capital?: string;
-    }[];
+    locationSuggestions: string[];
   };
 
 const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
@@ -53,7 +49,7 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
   const [newRegion, setNewRegion] = useState(region);
   const [newCountry, setNewCountry] = useState(country);
   const [newCity, setNewCity] = useState(city || '');
-  const [primaryPosition, ...otherPositions] = positions;
+  const [primaryPosition, ...otherPositions] = positions || [];
   const [newPrimaryInstitution, setNewPrimaryInstitution] = useState(
     primaryPosition?.institution || '',
   );
@@ -159,9 +155,9 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
             title="Location"
             subtitle="(required)"
             description="Select the location you are based in."
-            options={locationSuggestions.map(({ shortName }) => ({
-              value: shortName,
-              label: shortName,
+            options={locationSuggestions.map((value) => ({
+              value: value,
+              label: value,
             }))}
             value={newCountry}
             required

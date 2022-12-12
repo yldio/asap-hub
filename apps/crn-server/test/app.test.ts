@@ -89,7 +89,7 @@ describe('Contentful feature flag', () => {
       fetch: jest.fn(),
     };
 
-    test('news controller uses squidex data provider when IS_CONTENTFUL_ENABLED is false', async () => {
+    test('page controller uses squidex data provider when IS_CONTENTFUL_ENABLED is false', async () => {
       process.env.IS_CONTENTFUL_ENABLED = 'false';
 
       const { appFactory } = require('../src/app');
@@ -99,44 +99,41 @@ describe('Contentful feature flag', () => {
         pageContentfulDataProvider: pageContentfulDataProviderMock,
         authHandler: authHandlerMock,
       });
-      await supertest(app).get('/pages/privacy-policyi');
+      await supertest(app).get('/pages/privacy-policy');
 
       expect(pageSquidexDataProviderMock.fetch).toHaveBeenCalledTimes(1);
-
       expect(pageContentfulDataProviderMock.fetch).not.toHaveBeenCalled();
     });
 
-    test('news controller uses squidex data provider when IS_CONTENTFUL_ENABLED undefined', async () => {
+    test('page controller uses squidex data provider when IS_CONTENTFUL_ENABLED undefined', async () => {
       process.env.IS_CONTENTFUL_ENABLED = undefined;
 
       const { appFactory } = require('../src/app');
 
       const app = appFactory({
-        newsSquidexDataProvider: pageSquidexDataProviderMock,
-        newsContentfulDataProvider: pageContentfulDataProviderMock,
+        pageSquidexDataProvider: pageSquidexDataProviderMock,
+        pageContentfulDataProvider: pageContentfulDataProviderMock,
         authHandler: authHandlerMock,
       });
-      await supertest(app).get('/news');
+      await supertest(app).get('/pages/privacy-policy');
 
       expect(pageSquidexDataProviderMock.fetch).toHaveBeenCalledTimes(1);
-
       expect(pageContentfulDataProviderMock.fetch).not.toHaveBeenCalled();
     });
 
-    test('news controller uses contentful data provider when IS_CONTENTFUL_ENABLED is true', async () => {
+    test('page controller uses contentful data provider when IS_CONTENTFUL_ENABLED is true', async () => {
       process.env.IS_CONTENTFUL_ENABLED = 'true';
 
       const { appFactory } = require('../src/app');
 
       const app = appFactory({
         authHandler: authHandlerMock,
-        newsSquidexDataProvider: pageSquidexDataProviderMock,
-        newsContentfulDataProvider: pageContentfulDataProviderMock,
+        pageSquidexDataProvider: pageSquidexDataProviderMock,
+        pageContentfulDataProvider: pageContentfulDataProviderMock,
       });
-      await supertest(app).get('/news');
+      await supertest(app).get('/pages/privacy-policy');
 
       expect(pageSquidexDataProviderMock.fetch).not.toHaveBeenCalled();
-
       expect(pageContentfulDataProviderMock.fetch).toHaveBeenCalledTimes(1);
     });
   });

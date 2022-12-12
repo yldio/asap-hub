@@ -112,8 +112,6 @@ module.exports.up = (migration) => {
   pages.changeFieldControl('text', 'builtin', 'richTextEditor', {});
   pages.changeFieldControl('link', 'builtin', 'urlEditor', {});
   pages.changeFieldControl('linkText', 'builtin', 'singleLine', {});
-
-  // const migration = migration;
 };
 
 module.exports.down = (migration) => migration.deleteContentType('pages');

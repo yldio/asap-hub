@@ -11,6 +11,18 @@ import EditUserModal from './EditUserModal';
 
 const { mailToSupport } = mail;
 
+const getValues = <T extends string>(selected: T[]) =>
+  selected.map((item) => ({ label: item, value: item }));
+
+const onChange =
+  <T extends string>(setValue: (items: T[]) => void) =>
+  (newValues: Readonly<{ value: T; label: T }[]>) => {
+    setValue(newValues.map(({ value }) => value));
+  };
+
+const required = '(required)';
+const optional = '(optional)';
+
 type KeyInformationModalProps = Pick<
   gp2.UserResponse,
   | 'firstName'
@@ -89,7 +101,7 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
         <>
           <LabeledTextField
             title="First Name"
-            subtitle="(Required)"
+            subtitle={required}
             required
             enabled={!isSaving}
             value={newFirstName}
@@ -97,7 +109,7 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
           />
           <LabeledTextField
             title="Last Name"
-            subtitle="(Required)"
+            subtitle={required}
             required
             enabled={!isSaving}
             value={newLastName}
@@ -105,19 +117,11 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
           />
           <LabeledMultiSelect
             title="Degree"
-            subtitle="(optional)"
+            subtitle={optional}
             enabled={!isSaving}
-            values={newDegrees.map((suggestion) => ({
-              label: suggestion,
-              value: suggestion,
-            }))}
-            onChange={(newValues) => {
-              setNewDegrees(newValues.map(({ value }) => value));
-            }}
-            suggestions={gp2.userDegrees.map((suggestion) => ({
-              label: suggestion,
-              value: suggestion,
-            }))}
+            values={getValues(newDegrees)}
+            onChange={onChange(setNewDegrees)}
+            suggestions={getValues([...gp2.userDegrees])}
             placeholder="Start typing to choose your highest clinical and/or academic degrees"
           />
           <LabeledDropdown
@@ -128,10 +132,7 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
                 <a href={mailToSupport()}>example@email.com</a>
               </span>
             }
-            options={gp2.userRoles.map((value) => ({
-              value,
-              label: value,
-            }))}
+            options={getValues([...gp2.userRoles])}
             value={newRole}
             required
             onChange={setNewRole}
@@ -139,12 +140,9 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
           />
           <LabeledDropdown
             title="Region"
-            subtitle="(required)"
+            subtitle={required}
             description="Select the region you are based in."
-            options={gp2.userRegions.map((value) => ({
-              value,
-              label: value,
-            }))}
+            options={getValues([...gp2.userRegions])}
             value={newRegion}
             required
             onChange={setNewRegion}
@@ -153,12 +151,9 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
           />
           <LabeledDropdown
             title="Location"
-            subtitle="(required)"
+            subtitle={required}
             description="Select the location you are based in."
-            options={locationSuggestions.map((value) => ({
-              value: value,
-              label: value,
-            }))}
+            options={getValues(locationSuggestions)}
             value={newCountry}
             required
             onChange={setNewCountry}
@@ -167,14 +162,14 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
           />
           <LabeledTextField
             title="City"
-            subtitle="(optional)"
+            subtitle={optional}
             enabled={!isSaving}
             value={newCity}
             onChange={setNewCity}
           />
           <LabeledTypeahead
             title="Primary Institution"
-            subtitle="(required)"
+            subtitle={required}
             required
             getValidationMessage={() => 'Please add your institution'}
             maxLength={44}
@@ -185,7 +180,7 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
           />
           <LabeledTextField
             title="Primary Department"
-            subtitle="(required)"
+            subtitle={required}
             enabled={!isSaving}
             value={newPrimaryDepartment}
             onChange={setNewPrimaryDepartment}
@@ -193,7 +188,7 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
           />
           <LabeledTextField
             title="Primary Role"
-            subtitle="(required)"
+            subtitle={required}
             enabled={!isSaving}
             value={newPrimaryRole}
             onChange={setNewPrimaryRole}

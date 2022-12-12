@@ -82,3 +82,37 @@ export const patchUser = async (
   }
   return resp.json();
 };
+
+// Partial response type
+export interface InstitutionsResponse {
+  readonly number_of_results: number;
+  readonly time_taken: number;
+  readonly items: ReadonlyArray<{
+    readonly id: string;
+    readonly name: string;
+    readonly email_address: string;
+    readonly established: number;
+    readonly types: string[];
+    readonly links: string[];
+    readonly aliases: string[];
+    readonly acronyms: string[];
+    readonly status: string;
+    readonly wikipedia_url: string;
+  }>;
+}
+
+export const getInstitutions = async ({
+  searchQuery,
+}: {
+  searchQuery?: string;
+} = {}): Promise<InstitutionsResponse> => {
+  const url = new URL('https://api.ror.org/organizations');
+  searchQuery && url.searchParams.set('query', searchQuery);
+  const resp = await fetch(url.toString());
+  if (!resp.ok) {
+    throw new Error(
+      `Failed to fetch institutions. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+    );
+  }
+  return resp.json();
+};

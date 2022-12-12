@@ -85,11 +85,11 @@ describe('KeyInformatiomModal', () => {
       },
     );
     await userEvent.type(
-      screen.getByRole('textbox', { name: 'First Name (Required)' }),
+      screen.getByRole('textbox', { name: 'First Name (required)' }),
       'Gonçalo',
     );
     await userEvent.type(
-      screen.getByRole('textbox', { name: 'Last Name (Required)' }),
+      screen.getByRole('textbox', { name: 'Last Name (required)' }),
       'Ramos',
     );
     userEvent.click(screen.getByRole('textbox', { name: 'Degree (optional)' }));

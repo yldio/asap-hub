@@ -4,6 +4,7 @@ import {
   UserPatchRequest,
   UserResponse,
   inactiveUserTag,
+  InstitutionsResponse,
 } from '@asap-hub/model';
 import { createListUserResponse, createUserResponse } from '@asap-hub/fixtures';
 
@@ -15,7 +16,6 @@ import {
   getUser,
   getUsers,
   getUsersAndExternalAuthors,
-  InstitutionsResponse,
   patchUser,
   postUserAvatar,
 } from '../api';

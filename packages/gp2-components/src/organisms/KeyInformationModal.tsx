@@ -9,7 +9,7 @@ import {
 import { ComponentProps, useState } from 'react';
 import EditUserModal from './EditUserModal';
 
-const { mailToSupport } = mail;
+const { createMailTo } = mail;
 
 const getValues = <T extends string>(selected: T[]) =>
   selected.map((item) => ({ label: item, value: item }));
@@ -72,6 +72,18 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
     primaryPosition?.department || '',
   );
 
+  const checkDirty = () =>
+    newFirstName !== firstName ||
+    newLastName !== lastName ||
+    newDegrees !== degrees ||
+    newRole !== role ||
+    newRegion !== region ||
+    newCountry !== country ||
+    newCity !== city ||
+    newPrimaryDepartment !== primaryPosition.department ||
+    newPrimaryRole !== primaryPosition.role ||
+    newPrimaryInstitution !== primaryPosition.institution;
+
   return (
     <EditUserModal
       title="Key Information"
@@ -95,7 +107,7 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
         })
       }
       backHref={backHref}
-      dirty={newFirstName !== firstName || newLastName !== lastName}
+      dirty={checkDirty()}
     >
       {({ isSaving }) => (
         <>
@@ -129,7 +141,13 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
             description={
               <span>
                 Need to change something? Contact{' '}
-                <a href={mailToSupport()}>example@email.com</a>
+                <a
+                  href={createMailTo('techsupport@gp2.org', {
+                    subject: 'GP2 Hub: Tech support',
+                  })}
+                >
+                  techsupport@gp2.org
+                </a>
               </span>
             }
             options={getValues([...gp2.userRoles])}

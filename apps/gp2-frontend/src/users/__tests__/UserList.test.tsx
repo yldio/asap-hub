@@ -12,11 +12,13 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import { useSearch } from '../../hooks/search';
+import { getProjects } from '../../projects/api';
+import { getWorkingGroups } from '../../working-groups/api';
 import { getUsers } from '../api';
+import { MAX_SQUIDEX_RESULTS } from '../export';
 import { refreshUsersState } from '../state';
 import UserList from '../UserList';
-import * as search from '../../hooks/search';
-import { MAX_SQUIDEX_RESULTS } from '../export';
 
 jest.mock('@asap-hub/frontend-utils', () => {
   const original = jest.requireActual('@asap-hub/frontend-utils');
@@ -28,20 +30,50 @@ jest.mock('@asap-hub/frontend-utils', () => {
   };
 });
 jest.mock('../api');
-jest.mock('../../users/api');
-
+jest.mock('../../projects/api');
+jest.mock('../../working-groups/api');
+jest.mock('../../hooks/search');
 const mockGetUsers = getUsers as jest.MockedFunction<typeof getUsers>;
-
+const mockGetProjects = getProjects as jest.MockedFunction<typeof getProjects>;
+const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
+  typeof getWorkingGroups
+>;
 const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
   typeof createCsvFileStream
 >;
+const mockUseSearch = useSearch as jest.MockedFunction<typeof useSearch>;
 
-const renderUserList = async (
-  listGroupResponse: gp2Model.ListUserResponse = gp2Fixtures.createUsersResponse(),
-  displayFilters: boolean = false,
-  isAdministrator: boolean = false,
-) => {
-  mockGetUsers.mockResolvedValue(listGroupResponse);
+const renderUserList = async ({
+  listUserResponse = gp2Fixtures.createUsersResponse(),
+  listProjectResponse = gp2Fixtures.createProjectsResponse(),
+  listWorkingGroupResponse = gp2Fixtures.createWorkingGroupsResponse(),
+  displayFilters = false,
+  isAdministrator = false,
+  filters = {},
+}: {
+  listUserResponse?: gp2Model.ListUserResponse;
+  listProjectResponse?: gp2Model.ListProjectResponse;
+  listWorkingGroupResponse?: gp2Model.ListWorkingGroupResponse;
+  displayFilters?: boolean;
+  isAdministrator?: boolean;
+  filters?: Partial<ReturnType<typeof useSearch>['filters']>;
+} = {}) => {
+  mockGetUsers.mockResolvedValue(listUserResponse);
+  mockGetProjects.mockResolvedValue(listProjectResponse);
+  mockGetWorkingGroups.mockResolvedValue(listWorkingGroupResponse);
+
+  const mockUpdateFilter = jest.fn();
+  mockUseSearch.mockImplementation(() => ({
+    changeLocation: jest.fn(),
+    filters: {
+      regions: [],
+      keywords: [],
+      projects: [],
+      workingGroups: [],
+      ...filters,
+    },
+    updateFilters: mockUpdateFilter,
+  }));
 
   render(
     <RecoilRoot
@@ -65,6 +97,7 @@ const renderUserList = async (
     </RecoilRoot>,
   );
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  return { mockUpdateFilter };
 };
 afterEach(() => {
   jest.clearAllMocks();
@@ -75,7 +108,7 @@ it('fetches the user information', async () => {
   await waitFor(() =>
     expect(mockGetUsers).toHaveBeenCalledWith(
       expect.objectContaining({
-        filter: { region: [] },
+        filter: { regions: [], keywords: [], projects: [], workingGroups: [] },
         search: '',
         skip: 0,
         take: 10,
@@ -86,14 +119,15 @@ it('fetches the user information', async () => {
 });
 
 it('renders a list of fetched groups', async () => {
-  await renderUserList({
+  const listUserResponse = {
     total: 2,
     items: gp2Fixtures.createUsersResponse(2).items.map((user, i) => ({
       ...user,
       id: `${i}`,
       displayName: `Display Name ${i}`,
     })),
-  });
+  };
+  await renderUserList({ listUserResponse });
   expect(
     screen.getByRole('heading', { name: /display name 0/i }),
   ).toBeInTheDocument();
@@ -103,28 +137,38 @@ it('renders a list of fetched groups', async () => {
 });
 
 it('renders the filters modal', async () => {
-  await renderUserList(undefined, true);
+  await renderUserList({ displayFilters: true });
   expect(screen.getByRole('heading', { name: 'Filters' })).toBeVisible();
 });
-it('calls the updateFilters with the right arguments', async () => {
-  const mockUpdateFilter = jest.fn();
-  jest.spyOn(search, 'useSearch').mockImplementation(() => ({
-    changeLocation: jest.fn(),
-    filters: { region: [] },
-    updateFilters: mockUpdateFilter,
-  }));
-  await renderUserList(undefined, true);
-  userEvent.click(screen.getByRole('button', { name: 'Apply' }));
-  expect(mockUpdateFilter).toHaveBeenCalledWith('/users', { region: [] });
-});
-
+it.each`
+  name               | value
+  ${'regions'}       | ${'Asia'}
+  ${'keywords'}      | ${'Bash'}
+  ${'projects'}      | ${'42'}
+  ${'workingGroups'} | ${'42'}
+`(
+  'calls the updateFilters with the right arguments for $name',
+  async ({ name, value }) => {
+    const { mockUpdateFilter } = await renderUserList({
+      displayFilters: true,
+      filters: { [name]: [value] },
+    });
+    userEvent.click(screen.getByRole('button', { name: 'Apply' }));
+    expect(mockUpdateFilter).toHaveBeenCalledWith('/users', {
+      regions: [],
+      keywords: [],
+      projects: [],
+      workingGroups: [],
+      [name]: [value],
+    });
+  },
+);
 it('triggers export with the same parameters but overrides onlyOnboarded with false', async () => {
-  await renderUserList(undefined, undefined, true);
-
+  await renderUserList({ isAdministrator: true });
   await waitFor(() =>
     expect(mockGetUsers).toHaveBeenCalledWith(
       expect.objectContaining({
-        filter: { region: [] },
+        filter: { regions: [], keywords: [], projects: [], workingGroups: [] },
         search: '',
         skip: 0,
         take: 10,
@@ -140,7 +184,13 @@ it('triggers export with the same parameters but overrides onlyOnboarded with fa
   await waitFor(() =>
     expect(mockGetUsers).toHaveBeenCalledWith(
       expect.objectContaining({
-        filter: { region: [], onlyOnboarded: false },
+        filter: {
+          regions: [],
+          keywords: [],
+          projects: [],
+          workingGroups: [],
+          onlyOnboarded: false,
+        },
         search: '',
         skip: 0,
         take: MAX_SQUIDEX_RESULTS,

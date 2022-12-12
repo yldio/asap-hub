@@ -1,4 +1,4 @@
-import { DashboardResponse } from '@asap-hub/model';
+import { DashboardDataObject, DashboardResponse } from '@asap-hub/model';
 import { appName, baseUrl } from '../../src/config';
 
 export const squidexGraphqlDashboardFlatData = () => ({
@@ -50,7 +50,8 @@ export const getSquidexGraphqlDashboard = () => ({
   version: 42,
   flatData: squidexGraphqlDashboardFlatData(),
 });
-export const squidexGraphqlDashboardResponse = (): DashboardResponse => ({
+
+export const getDashboardDataObject = (): DashboardDataObject => ({
   news: [
     {
       created: '2020-09-24T11:06:27.164Z',
@@ -73,3 +74,7 @@ export const squidexGraphqlDashboardResponse = (): DashboardResponse => ({
   ],
   pages: [],
 });
+``;
+
+export const getDashboardResponse = (): DashboardResponse =>
+  getDashboardDataObject();

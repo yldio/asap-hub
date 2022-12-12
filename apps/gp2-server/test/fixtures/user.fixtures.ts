@@ -6,8 +6,10 @@ import {
   WebhookPayload,
 } from '@asap-hub/squidex';
 import {
+  FetchProjectsMembersQuery,
   FetchUserQuery,
   FetchUsersQuery,
+  FetchWorkingGroupsMembersQuery,
   ProjectsDataMembersRoleEnum,
   ProjectsDataStatusEnum,
   UsersDataDegreeEnum,
@@ -372,3 +374,66 @@ export const userPatchRequest: gp2.UserPatchRequest = {
   country: 'United Kingdom',
   city: 'Manchester',
 };
+
+export const generateGraphqlFetchProjectsMembersResponse = (
+  items: NonNullable<FetchProjectsMembersQuery['queryProjectsContents']>,
+): FetchProjectsMembersQuery => ({
+  queryProjectsContents: items,
+});
+
+type ProjectMember = NonNullable<
+  FetchProjectsMembersQuery['queryProjectsContents']
+>[number];
+
+export const getGraphQLProjectMembers = (
+  members: Partial<ProjectMember['flatData']> = {},
+): ProjectMember => ({
+  flatData: {
+    members: [{ user: [{ id: '42' }] }],
+    ...members,
+  },
+});
+
+export const getGraphQLProjectsMembers = (
+  projects: NonNullable<FetchProjectsMembersQuery['queryProjectsContents']> = [
+    getGraphQLProjectMembers(),
+  ],
+): NonNullable<FetchProjectsMembersQuery['queryProjectsContents']> => projects;
+
+export const getSquidexProjectsMembersGraphqlResponse =
+  (): FetchProjectsMembersQuery =>
+    generateGraphqlFetchProjectsMembersResponse(getGraphQLProjectsMembers());
+
+export const generateGraphqlFetchWorkingGroupsMembersResponse = (
+  items: NonNullable<
+    FetchWorkingGroupsMembersQuery['queryWorkingGroupsContents']
+  >,
+): FetchWorkingGroupsMembersQuery => ({
+  queryWorkingGroupsContents: items,
+});
+
+type WorkingGroupMember = NonNullable<
+  FetchWorkingGroupsMembersQuery['queryWorkingGroupsContents']
+>[number];
+
+export const getGraphQLWorkingGroupMembers = (
+  members: Partial<WorkingGroupMember['flatData']> = {},
+): WorkingGroupMember => ({
+  flatData: {
+    members: [{ user: [{ id: '42' }] }],
+    ...members,
+  },
+});
+
+export const getGraphQLWorkingGroupsMembers = (
+  workingGroups: NonNullable<
+    FetchWorkingGroupsMembersQuery['queryWorkingGroupsContents']
+  > = [getGraphQLWorkingGroupMembers()],
+): NonNullable<FetchWorkingGroupsMembersQuery['queryWorkingGroupsContents']> =>
+  workingGroups;
+
+export const getSquidexWorkingGroupsMembersGraphqlResponse =
+  (): FetchWorkingGroupsMembersQuery =>
+    generateGraphqlFetchWorkingGroupsMembersResponse(
+      getGraphQLWorkingGroupsMembers(),
+    );

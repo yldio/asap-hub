@@ -1,7 +1,7 @@
-import { PageResponse } from '@asap-hub/model';
+import { PageDataObject } from '@asap-hub/model';
 import { GraphqlPage, RestPage } from '@asap-hub/squidex';
 
-export const parsePage = (item: RestPage): PageResponse => ({
+export const parsePage = (item: RestPage): PageDataObject => ({
   id: item.id,
   path: item.data.path.iv,
   title: item.data.title.iv,
@@ -11,7 +11,7 @@ export const parsePage = (item: RestPage): PageResponse => ({
   linkText: item.data.linkText?.iv,
 });
 
-export const parseGraphQLPage = (item: GraphqlPage): PageResponse => ({
+export const parseGraphQLPage = (item: GraphqlPage): PageDataObject => ({
   id: item.id,
   path: item.flatData?.path || '',
   title: item.flatData?.title || '',

@@ -1,11 +1,13 @@
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
-import { UsersPageBody, FiltersModal } from '@asap-hub/gp2-components';
+import { FiltersModal, UsersPageBody } from '@asap-hub/gp2-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 } from '@asap-hub/routing';
 import { useRecoilValue } from 'recoil';
 import { authorizationState } from '../auth/state';
 import { usePagination, usePaginationParams } from '../hooks/pagination';
 import { useSearch } from '../hooks/search';
+import { useProjectsState } from '../projects/state';
+import { useWorkingGroupsState } from '../working-groups/state';
 import { getUsers } from './api';
 import { squidexUsersResponseToStream, userFields, userToCSV } from './export';
 import { useUsersState } from './state';
@@ -55,6 +57,8 @@ const UserList: React.FC<UserListProps> = ({ displayFilters = false }) => {
         ),
       userToCSV,
     );
+  const { items: projects } = useProjectsState();
+  const { items: workingGroups } = useWorkingGroupsState();
   return (
     <>
       <UsersPageBody
@@ -74,6 +78,8 @@ const UserList: React.FC<UserListProps> = ({ displayFilters = false }) => {
           onBackClick={onBackClick}
           filters={filters}
           onApplyClick={(f) => updateFilters(backHref, f)}
+          projects={projects}
+          workingGroups={workingGroups}
         />
       )}
     </>

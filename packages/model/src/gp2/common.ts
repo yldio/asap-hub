@@ -57,6 +57,6 @@ export const keywords = [
   'Parkinson disease',
 ] as const;
 
-export type Keywords = typeof keywords[number];
-export const isKeyword = (data: string | null): data is Keywords =>
-  keywords.includes(data as Keywords);
+export type Keyword = typeof keywords[number];
+export const isKeyword = (data: string | null): data is Keyword =>
+  keywords.includes(data as Keyword);

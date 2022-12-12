@@ -65,9 +65,8 @@ export class NewsContentfulDataProvider implements NewsDataProvider {
 }
 
 const parseNews = (item: NewsItem): NewsDataObject => ({
-  // this case where id and title are null
-  // should not happen but TS moans about it
-  // because even required fields can be nullable
+  // Every field in Contentful is marked as nullable even when its required
+  // this is because Contentful use the same schema for preview and production
   // Read more in the link below
   // https://www.contentfulcommunity.com/t/why-do-required-fields-appear-as-nullable-in-the-graphql-graph/4079/4
   id: item.sys.id ?? '',

@@ -8,7 +8,6 @@ const baseProps: ComponentProps<typeof WorkingGroupHeader> = {
   title: '',
   complete: false,
   externalLink: '',
-  externalLinkText: '',
   lastModifiedDate: new Date('2021-01-01').toISOString(),
   pointOfContact: undefined,
   members: [],
@@ -48,4 +47,15 @@ it('renders a complete tag when complete is true', () => {
   rerender(<WorkingGroupHeader {...baseProps} complete />);
   expect(getByTitle('Success')).toBeInTheDocument();
   expect(getByText('Complete')).toBeVisible();
+});
+
+it('renders a Working Group Folder when externalLink is provided', () => {
+  const { queryByText, getByText, rerender } = render(
+    <WorkingGroupHeader {...baseProps} />,
+  );
+  expect(queryByText('Working Group Folder')).toBeNull();
+  rerender(
+    <WorkingGroupHeader {...baseProps} externalLink="http://www.hub.com" />,
+  );
+  expect(getByText('Working Group Folder')).toBeVisible();
 });

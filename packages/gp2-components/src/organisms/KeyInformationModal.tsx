@@ -80,9 +80,9 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
     newRegion !== region ||
     newCountry !== country ||
     newCity !== city ||
-    newPrimaryDepartment !== primaryPosition.department ||
-    newPrimaryRole !== primaryPosition.role ||
-    newPrimaryInstitution !== primaryPosition.institution;
+    newPrimaryDepartment !== (primaryPosition?.department || '') ||
+    newPrimaryRole !== (primaryPosition?.role || '') ||
+    newPrimaryInstitution !== (primaryPosition?.institution || '');
 
   return (
     <EditUserModal

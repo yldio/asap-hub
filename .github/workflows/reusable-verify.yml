@@ -23,7 +23,7 @@ on:
         required: true
       CRN_CONTENTFUL_ACCESS_TOKEN:
         description: 'CRN Contentful Access Token'
-        required: true
+        required: false
 
 jobs:
   sls:

@@ -13,7 +13,7 @@ const containerStyles = css({
   display: 'flex',
   flexDirection: 'column',
   gap: rem(24),
-  marginTop: rem(48),
+  marginTop: rem(24),
 });
 
 const UsersPageBody: React.FC<UsersPageBodyProps> = ({

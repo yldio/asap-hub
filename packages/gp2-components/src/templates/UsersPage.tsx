@@ -1,11 +1,14 @@
 import { FetchUsersFilter } from '@asap-hub/model';
+import { pixels } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/routing';
+import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { usersHeaderImage } from '../images';
 import { FiltersModal } from '../organisms';
 import FilterSearchExport from '../organisms/FilterSearchExport';
 import PageBanner from '../organisms/PageBanner';
 
+const { rem } = pixels;
 const bannerProps = {
   image: usersHeaderImage,
   position: 'top',
@@ -22,6 +25,9 @@ type UsersPageProps = ComponentProps<typeof FilterSearchExport> & {
     ComponentProps<typeof FiltersModal>,
     'filters' | 'projects' | 'workingGroups'
   >;
+const containerStyles = css({
+  marginTop: rem(48),
+});
 const UsersPage: React.FC<UsersPageProps> = ({
   children,
   searchQuery,
@@ -42,13 +48,15 @@ const UsersPage: React.FC<UsersPageProps> = ({
   return (
     <article>
       <PageBanner {...bannerProps} />
-      <FilterSearchExport
-        searchQuery={searchQuery}
-        onSearchQueryChange={onSearchQueryChange}
-        onFiltersClick={onFiltersClick}
-        onExportClick={onExportClick}
-        isAdministrator={isAdministrator}
-      />
+      <div css={containerStyles}>
+        <FilterSearchExport
+          searchQuery={searchQuery}
+          onSearchQueryChange={onSearchQueryChange}
+          onFiltersClick={onFiltersClick}
+          onExportClick={onExportClick}
+          isAdministrator={isAdministrator}
+        />
+      </div>
       <main>{children}</main>
       {displayFilters && (
         <FiltersModal

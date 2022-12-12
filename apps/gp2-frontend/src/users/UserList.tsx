@@ -1,96 +1,31 @@
-import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import { FiltersModal, UsersPageBody } from '@asap-hub/gp2-components';
-import { useCurrentUserGP2 } from '@asap-hub/react-context';
-import { gp2 } from '@asap-hub/routing';
-import { useRecoilValue } from 'recoil';
-import { authorizationState } from '../auth/state';
+import { ComponentProps } from 'react';
 import { usePagination, usePaginationParams } from '../hooks/pagination';
-import { useSearch } from '../hooks/search';
-import { useProjectsState } from '../projects/state';
-import { useWorkingGroupsState } from '../working-groups/state';
-import { getUsers } from './api';
-import { squidexUsersResponseToStream, userFields, userToCSV } from './export';
 import { useUsersState } from './state';
 
 type UserListProps = {
-  displayFilters?: boolean;
-};
+  searchQuery: string;
+} & Pick<ComponentProps<typeof FiltersModal>, 'filters'>;
 
-const UserList: React.FC<UserListProps> = ({ displayFilters = false }) => {
-  const { users } = gp2;
-  const currentUser = useCurrentUserGP2();
-  const isAdministrator = currentUser?.role === 'Administrator';
+const UserList: React.FC<UserListProps> = ({ searchQuery, filters }) => {
   const { currentPage, pageSize } = usePaginationParams();
-  const {
-    changeLocation,
-    debouncedSearchQuery,
-    filters,
-    searchQuery,
-    setSearchQuery,
-    updateFilters,
-  } = useSearch();
   const userList = useUsersState({
     skip: currentPage * pageSize,
     take: pageSize,
-    search: debouncedSearchQuery,
+    search: searchQuery,
     filter: filters,
   });
   const { numberOfPages, renderPageHref } = usePagination(
     userList.total,
     pageSize,
   );
-  const backHref = users({}).$;
-  const filtersHref = users({}).filters({}).$;
-  const onBackClick = () => changeLocation(backHref);
-  const onFiltersClick = () => changeLocation(filtersHref);
-  const autorization = useRecoilValue(authorizationState);
-  const exportUsers = () =>
-    squidexUsersResponseToStream(
-      createCsvFileStream('user_export.csv', {
-        columns: userFields,
-        header: true,
-      }),
-      (paginationParams) =>
-        getUsers(
-          {
-            ...paginationParams,
-            filter: {
-              ...filters,
-              onlyOnboarded: false,
-            },
-            search: '',
-          },
-          autorization,
-        ),
-      userToCSV,
-    );
-  const { items: projects } = useProjectsState();
-  const { items: workingGroups } = useWorkingGroupsState();
   return (
-    <>
-      <UsersPageBody
-        users={userList}
-        numberOfPages={numberOfPages}
-        currentPageIndex={currentPage}
-        renderPageHref={renderPageHref}
-        onFiltersClick={onFiltersClick}
-        onExportClick={exportUsers}
-        isAdministrator={isAdministrator}
-        searchQuery={searchQuery}
-        onSearchQueryChange={(value) => {
-          setSearchQuery(value);
-        }}
-      />
-      {displayFilters && (
-        <FiltersModal
-          onBackClick={onBackClick}
-          filters={filters}
-          onApplyClick={(filter) => updateFilters(backHref, filter)}
-          projects={projects}
-          workingGroups={workingGroups}
-        />
-      )}
-    </>
+    <UsersPageBody
+      users={userList}
+      numberOfPages={numberOfPages}
+      currentPageIndex={currentPage}
+      renderPageHref={renderPageHref}
+    />
   );
 };
 export default UserList;

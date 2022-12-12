@@ -1,8 +1,14 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
-import { gp2 as gp2Model } from '@asap-hub/model';
+import { gp2 as gp2Model, InstitutionsResponse } from '@asap-hub/model';
 import nock from 'nock';
 import { API_BASE_URL } from '../../config';
-import { createUserApiUrl, getUser, getUsers, patchUser } from '../api';
+import {
+  createUserApiUrl,
+  getInstitutions,
+  getUser,
+  getUsers,
+  patchUser,
+} from '../api';
 
 jest.mock('../../config');
 
@@ -169,4 +175,51 @@ describe('createUserApiUrl', () => {
       expect(url.searchParams.get('filter[onlyOnboarded]')).toEqual('false');
     },
   );
+});
+
+describe('getInstitutions', () => {
+  const validResponse: InstitutionsResponse = {
+    number_of_results: 1,
+    time_taken: 0,
+    items: [
+      {
+        name: 'Institution 1',
+        id: 'id-1',
+        email_address: 'example@example.com',
+        status: '',
+        wikipedia_url: '',
+        established: 1999,
+        aliases: [],
+        acronyms: [],
+        links: [],
+        types: [],
+      },
+    ],
+  };
+  it('returns successfully fetched institutions', async () => {
+    nock('https://api.ror.org')
+      .get('/organizations')
+      .query({})
+      .reply(200, validResponse);
+    expect(await getInstitutions()).toEqual(validResponse);
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('returns queried institutions', async () => {
+    nock('https://api.ror.org')
+      .get('/organizations')
+      .query({ query: 'abc' })
+      .reply(200, validResponse);
+    expect(await getInstitutions({ searchQuery: 'abc' })).toEqual(
+      validResponse,
+    );
+    expect(nock.isDone()).toBe(true);
+  });
+  it('errors for an error status', async () => {
+    nock('https://api.ror.org').get('/organizations').reply(500, {});
+
+    await expect(getInstitutions()).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Failed to fetch institutions. Expected status 2xx. Received status 500."`,
+    );
+  });
 });

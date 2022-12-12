@@ -12,7 +12,7 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getUser, patchUser } from '../../users/api';
+import { getUser, patchUser, getInstitutions } from '../../users/api';
 import { refreshUserState } from '../../users/state';
 import CoreDetails from '../CoreDetails';
 
@@ -50,6 +50,9 @@ describe('CoreDetails', () => {
   beforeEach(jest.resetAllMocks);
   const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
   const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
+  const mockGetInstitutions = getInstitutions as jest.MockedFunction<
+    typeof getInstitutions
+  >;
   it('renders header with title', async () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
@@ -90,6 +93,37 @@ describe('CoreDetails', () => {
     await renderCoreDetails(user.id);
     userEvent.click(screen.getByRole('link', { name: 'Required Add' }));
     expect(screen.getByRole('dialog')).toBeVisible();
+  });
+
+  it('searches and displays results from organisations api', async () => {
+    mockGetInstitutions.mockResolvedValue({
+      number_of_results: 1,
+      time_taken: 0,
+      items: [
+        {
+          name: 'ExampleInst',
+          id: 'id-1',
+          email_address: 'example@example.com',
+          status: '',
+          wikipedia_url: '',
+          established: 1999,
+          aliases: [],
+          acronyms: [],
+          links: [],
+          types: [],
+        },
+      ],
+    });
+    const user = gp2Fixtures.createUserResponse();
+    mockGetUser.mockResolvedValueOnce(user);
+    await renderCoreDetails(user.id);
+    userEvent.click(screen.getByRole('link', { name: 'Required Add' }));
+
+    userEvent.type(await screen.findByDisplayValue('Stark Industries'), ' 1');
+    expect(await screen.findByText('ExampleInst')).toBeVisible();
+    expect(mockGetInstitutions).toHaveBeenCalledWith({
+      searchQuery: 'Stark Industries 1',
+    });
   });
 
   it('saves the key information modal', async () => {

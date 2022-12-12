@@ -60,7 +60,6 @@ export const useSearch = (): {
   };
   const searchQuery = currentUrlParams.get(searchQueryParam) || '';
   const setSearchQuery = (newSearchQuery: string) => {
-    console.log('set search');
     resetPagination();
 
     const newUrlParams = new URLSearchParams(history.location.search);

@@ -176,4 +176,22 @@ describe('useSearch', () => {
       });
     });
   });
+  it('resets pagination when changed', () => {
+    const { result } = renderHook(
+      () => ({
+        useSearch: useSearch(),
+        usePaginationParams: usePaginationParams(),
+        usePagination: usePagination(50, 1),
+      }),
+      {
+        wrapper: MemoryRouter,
+        initialProps: {
+          initialEntries: ['/test?currentPage=2'],
+        },
+      },
+    );
+    expect(result.current.usePaginationParams.currentPage).toBe(2);
+    result.current.useSearch.setSearchQuery('test123');
+    expect(result.current.usePaginationParams.currentPage).toBe(0);
+  });
 });

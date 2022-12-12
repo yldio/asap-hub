@@ -28,7 +28,7 @@ const CoreDetails: React.FC<Record<string, never>> = () => {
             locationSuggestions={locationSuggestions.map(
               ({ shortName }) => shortName,
             )}
-            loadInstitutionOptions={(searchQuery: string) =>
+            loadInstitutionOptions={(searchQuery) =>
               getInstitutions({ searchQuery }).then((data) =>
                 data.items.map(({ name }) => name),
               )

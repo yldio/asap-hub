@@ -38,6 +38,9 @@ outputs:
   crn-auth0-domain:
     description: 'CRN Auth0 Domain'
     value: ${{ steps.vars.outputs.crn-auth0-domain }}
+  crn-ci-auth0-client-id:
+    description: 'CRN CI Auth0 Client Id'
+    value: ${{ steps.vars.outputs.crn-ci-auth0-client-id }}
   aws-acm-asap-science-certificate-arn:
     description: 'AWS ACM ASAP Science Certificate ARN'
     value: ${{ steps.vars.outputs.aws-acm-asap-science-certificate-arn }}

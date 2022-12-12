@@ -11,6 +11,10 @@ on:
         description: 'CRN Contentful environment name'
         required: true
         type: string
+      crn-ci-auth0-client-id:
+        description: 'CRN CI Auth0 Client Id'
+        required: true
+        type: string
     secrets:
       AWS_ACCESS_KEY_ID:
         description: 'AWS Access Key ID'
@@ -20,6 +24,9 @@ on:
         required: true
       LIGHTSTEP_TOKEN:
         description: 'Lightstep Token'
+        required: true
+      CRN_CI_AUTH0_CLIENT_SECRET:
+        description: 'CRN CI Auth0 Client Secret'
         required: true
       CRN_CONTENTFUL_ACCESS_TOKEN:
         description: 'CRN Contentful Access Token'
@@ -262,3 +269,29 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           SES_REGION: ${{ steps.setup.outputs.ses-region }}
+
+  auth0:
+    needs: [crn-sls-deploy]
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment-name }}
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:be0ebbcbd0ff209d56070f09590c5d9622e8a6dc
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Deploy
+        if: ${{ inputs.environment-name=='Development' || inputs.environment-name=='Production' }}
+        run: |
+          yarn workspace @asap-hub/auth0-rules deploy
+        env:
+          AUTH0_CLIENT_ID: ${{ steps.setup.outputs.crn-ci-auth0-client-id }}
+          AUTH0_CLIENT_SECRET: ${{ secrets.crn-ci-auth0-client-secret }}
+          AUTH0_DOMAIN: ${{ steps.setup.outputs.crn-auth0-domain }}

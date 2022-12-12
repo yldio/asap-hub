@@ -1,4 +1,6 @@
+import { gp2 } from '@asap-hub/fixtures';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import UsersPage from '../UsersPage';
 
 const props = {
@@ -61,4 +63,39 @@ describe('UsersPage', () => {
     render(<UsersPage {...props} displayFilters />);
     expect(screen.getByRole('heading', { name: 'Filters' })).toBeVisible();
   });
+  it.each`
+    name               | value
+    ${'regions'}       | ${'Asia'}
+    ${'keywords'}      | ${'Bash'}
+    ${'projects'}      | ${'42'}
+    ${'workingGroups'} | ${'42'}
+  `(
+    'calls the updateFilters with the right arguments for $name',
+    async ({ name, value }) => {
+      const filters = { [name]: [value] };
+      const updateFilterSpy = jest.fn();
+
+      const { items: projects } = gp2.createProjectsResponse();
+      const { items: workingGroups } = gp2.createWorkingGroupsResponse();
+      render(
+        <UsersPage
+          {...props}
+          displayFilters
+          filters={filters}
+          updateFilters={updateFilterSpy}
+          projects={projects}
+          workingGroups={workingGroups}
+        />,
+      );
+
+      userEvent.click(screen.getByRole('button', { name: 'Apply' }));
+      expect(updateFilterSpy).toHaveBeenCalledWith('/users', {
+        regions: [],
+        keywords: [],
+        projects: [],
+        workingGroups: [],
+        [name]: [value],
+      });
+    },
+  );
 });

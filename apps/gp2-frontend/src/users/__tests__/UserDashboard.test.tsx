@@ -1,4 +1,5 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
+import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import {
   render,
@@ -7,7 +8,6 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';

@@ -58,9 +58,7 @@ const UserDashboard: FC<UserDashboardProps> = ({ displayFilters = false }) => {
   return (
     <UsersPage
       searchQuery={searchQuery}
-      onSearchQueryChange={(value) => {
-        setSearchQuery(value);
-      }}
+      onSearchQueryChange={setSearchQuery}
       onFiltersClick={onFiltersClick}
       onExportClick={exportUsers}
       isAdministrator={isAdministrator}

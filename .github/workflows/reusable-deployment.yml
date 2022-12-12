@@ -11,10 +11,7 @@ on:
         description: 'CRN Contentful environment name'
         required: true
         type: string
-      crn-ci-auth0-client-id:
-        description: 'CRN CI Auth0 Client Id'
-        required: true
-        type: string
+
     secrets:
       AWS_ACCESS_KEY_ID:
         description: 'AWS Access Key ID'
@@ -271,7 +268,6 @@ jobs:
           SES_REGION: ${{ steps.setup.outputs.ses-region }}
 
   auth0:
-    needs: [crn-sls-deploy]
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
@@ -287,11 +283,16 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
+      - name: Cache build typecheck output
+        uses: ./.github/actions/cache-build
+        with:
+          cache-prefix: ${{ steps.setup.outputs.cache-prefix-definitions }}
+          environment-name: ${{ inputs.environment-name }}
       - name: Deploy
-        if: ${{ inputs.environment-name=='Development' || inputs.environment-name=='Production' }}
+        # if: ${{ inputs.environment-name=='Development' || inputs.environment-name=='Production' }}
         run: |
           yarn workspace @asap-hub/auth0-rules deploy
         env:
           AUTH0_CLIENT_ID: ${{ steps.setup.outputs.crn-ci-auth0-client-id }}
-          AUTH0_CLIENT_SECRET: ${{ secrets.crn-ci-auth0-client-secret }}
+          AUTH0_CLIENT_SECRET: ${{ secrets.CRN_CI_AUTH0_CLIENT_SECRET }}
           AUTH0_DOMAIN: ${{ steps.setup.outputs.crn-auth0-domain }}

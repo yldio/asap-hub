@@ -16,3 +16,4 @@ gp2-squidex-ci-client-id=6058c1ce6d296b4d1681c3ad
 react-app-environment=development
 contentful-environment=Development
 is-contentful-enabled=true
+crn-ci-auth0-client-id=jeg4r0tHTyZC3N17gfTWNbtxmBZfjkAJ

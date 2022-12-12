@@ -582,7 +582,7 @@ describe('Reminder Data Provider', () => {
         jest.useRealTimers();
       });
 
-      describe('When user is one of the speakers and it passed until 72 hours of the end of the event', () => {
+      describe('When the user is one of the speakers and less than 72 hours have passed since the event ended', () => {
         it.each`
           asapRole     | teamRole                       | expected
           ${`Grantee`} | ${`Lead PI (Core Leadership)`} | ${`fetch`}

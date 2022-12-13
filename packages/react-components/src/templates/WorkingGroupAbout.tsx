@@ -39,7 +39,7 @@ const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
           buttonStyle
           small
           primary
-          href={`${createMailTo(pointOfContact.email)}`}
+          href={`${createMailTo(pointOfContact.user.email)}`}
         >
           Contact PM
         </Link>
@@ -57,7 +57,7 @@ const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
           buttonStyle
           small
           primary
-          href={`${createMailTo(pointOfContact.email)}`}
+          href={`${createMailTo(pointOfContact.user.email)}`}
         >
           Contact PM
         </Link>

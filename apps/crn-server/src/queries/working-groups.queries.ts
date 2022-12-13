@@ -19,73 +19,13 @@ export const workingGroupContentQueryFragment = gql`
         role
         user {
           id
-          created
-          lastModified
-          version
           flatData {
             avatar {
               id
             }
-            biography
-            degree
             email
-            contactEmail
             firstName
-            institution
-            jobTitle
-            lastModifiedDate
             lastName
-            country
-            city
-            onboarded
-            orcid
-            orcidLastModifiedDate
-            orcidLastSyncDate
-            orcidWorks {
-              doi
-              id
-              lastModifiedDate
-              publicationDate
-              title
-              type
-            }
-            questions {
-              question
-            }
-            expertiseAndResourceTags
-            expertiseAndResourceDescription
-            teams {
-              role
-              id {
-                id
-                flatData {
-                  displayName
-                  proposal {
-                    id
-                  }
-                }
-              }
-            }
-            social {
-              github
-              googleScholar
-              linkedIn
-              researcherId
-              researchGate
-              twitter
-              website1
-              website2
-            }
-            role
-            responsibilities
-            researchInterests
-            reachOut
-            labs {
-              id
-              flatData {
-                name
-              }
-            }
             alumniSinceDate
           }
         }
@@ -93,73 +33,13 @@ export const workingGroupContentQueryFragment = gql`
       members {
         user {
           id
-          created
-          lastModified
-          version
           flatData {
             avatar {
               id
             }
-            biography
-            degree
             email
-            contactEmail
             firstName
-            institution
-            jobTitle
-            lastModifiedDate
             lastName
-            country
-            city
-            onboarded
-            orcid
-            orcidLastModifiedDate
-            orcidLastSyncDate
-            orcidWorks {
-              doi
-              id
-              lastModifiedDate
-              publicationDate
-              title
-              type
-            }
-            questions {
-              question
-            }
-            expertiseAndResourceTags
-            expertiseAndResourceDescription
-            teams {
-              role
-              id {
-                id
-                flatData {
-                  displayName
-                  proposal {
-                    id
-                  }
-                }
-              }
-            }
-            social {
-              github
-              googleScholar
-              linkedIn
-              researcherId
-              researchGate
-              twitter
-              website1
-              website2
-            }
-            role
-            responsibilities
-            researchInterests
-            reachOut
-            labs {
-              id
-              flatData {
-                name
-              }
-            }
             alumniSinceDate
           }
         }

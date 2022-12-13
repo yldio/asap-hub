@@ -81,6 +81,7 @@ type WorkingGroupPageHeaderProps = Pick<
   | 'title'
   | 'complete'
   | 'lastModifiedDate'
+  | 'leaders'
   | 'members'
   | 'externalLink'
   | 'pointOfContact'
@@ -93,6 +94,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
   lastModifiedDate,
   externalLink,
   pointOfContact,
+  leaders,
   members,
 }) => (
   <header css={containerStyles}>
@@ -104,7 +106,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
     </div>
     <section css={contactSectionStyles}>
       <UserAvatarList
-        members={members.map((member) => member.user)}
+        members={[...leaders, ...members].map((member) => member.user)}
         fullListRoute={
           network({}).workingGroups({}).workingGroup({ workingGroupId: id }).$
         }
@@ -115,7 +117,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
             buttonStyle
             small
             primary
-            href={`${createMailTo(pointOfContact.email)}`}
+            href={`${createMailTo(pointOfContact.user.email)}`}
           >
             Contact PM
           </Link>

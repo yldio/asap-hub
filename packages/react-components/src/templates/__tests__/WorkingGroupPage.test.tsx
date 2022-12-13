@@ -10,6 +10,7 @@ const baseProps: ComponentProps<typeof WorkingGroupPage> = {
   externalLink: 'link',
   lastModifiedDate: new Date('2021-01-01').toISOString(),
   pointOfContact: undefined,
+  leaders: [],
   members: [],
 };
 it('renders the header', () => {

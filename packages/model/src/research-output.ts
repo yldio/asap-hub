@@ -191,6 +191,8 @@ export type ResearchOutputCoreObject = {
   usedInPublication?: boolean;
 };
 
+export type ResearchOutputPublishingEntities = 'Team' | 'Working Group';
+
 export type ResearchOutputDataObject = ResearchOutputCoreObject & {
   authors: (UserResponse | ExternalAuthorResponse)[];
   contactEmails: string[];
@@ -203,6 +205,7 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
   organisms: string[];
   subtype?: string;
   teams: Pick<TeamResponse, 'id' | 'displayName'>[];
+  publishingEntity?: ResearchOutputPublishingEntities;
 };
 
 export type ListResearchOutputDataObject =
@@ -269,6 +272,7 @@ export type ResearchOutputPostRequest = {
   type: ResearchOutputType;
   usageNotes?: string;
   usedInPublication?: boolean;
+  publishingEntity?: ResearchOutputPublishingEntities;
 };
 
 export type ResearchOutputPutRequest = ResearchOutputPostRequest;

@@ -4,6 +4,7 @@ import {
   ResearchOutputDocumentType,
   ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
+  ResearchOutputPublishingEntities,
   ResearchOutputPutRequest,
   ResearchOutputResponse,
   ResearchTagResponse,
@@ -82,9 +83,10 @@ type ResearchOutputFormProps = Pick<
     ) => Promise<ResearchOutputResponse | void>;
     researchTags: ResearchTagResponse[];
     documentType: ResearchOutputDocumentType;
-    team: TeamResponse;
+    team?: TeamResponse;
     researchOutputData?: ResearchOutputResponse;
     isEditMode: boolean;
+    publishingEntity?: ResearchOutputPublishingEntities;
   };
 
 const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
@@ -100,6 +102,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   clearServerValidationError,
   researchOutputData,
   isEditMode,
+  publishingEntity = 'Team',
 }) => {
   const historyPush = usePushFromHere();
   const [tags, setTags] = useState<ResearchOutputPostRequest['tags']>(
@@ -137,11 +140,19 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   const [teams, setTeams] = useState<
     NonNullable<ComponentProps<typeof ResearchOutputContributorsCard>['teams']>
   >(
-    researchOutputData?.teams.map((element, index) => ({
-      label: element.displayName,
-      value: element.id,
-      isFixed: true,
-    })) || [{ label: team.displayName, value: team.id, isFixed: true }],
+    publishingEntity === 'Working Group'
+      ? []
+      : researchOutputData?.teams.map((element) => ({
+          label: element.displayName,
+          value: element.id,
+          isFixed: true,
+        })) || [
+          {
+            label: team?.displayName || '',
+            value: team?.id || '',
+            isFixed: true,
+          },
+        ],
   );
 
   const [description, setDescription] = useState<
@@ -298,6 +309,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
             onChangePublishDate={(date) =>
               setPublishDate(date ? new Date(date) : undefined)
             }
+            publishingEntity={publishingEntity}
           />
           <ResearchOutputExtraInformationCard
             documentType={documentType}
@@ -335,6 +347,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
             onChangeTeams={setTeams}
             getTeamSuggestions={getTeamSuggestions}
             isEditMode={isEditMode}
+            publishingEntity={publishingEntity}
           />
           <div css={formControlsContainerStyles}>
             <div css={formControlsStyles}>

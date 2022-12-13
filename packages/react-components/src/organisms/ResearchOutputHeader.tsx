@@ -1,6 +1,9 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { ResearchOutputDocumentType } from '@asap-hub/model';
+import {
+  ResearchOutputDocumentType,
+  ResearchOutputPublishingEntities,
+} from '@asap-hub/model';
 
 import { news } from '@asap-hub/routing';
 import { Display, Link, Paragraph } from '../atoms';
@@ -17,20 +20,31 @@ const visualHeaderStyles = css({
   boxShadow: `0 2px 4px -2px ${steel.rgb}`,
 });
 
-const headerCopy = (outputDocumentType: ResearchOutputDocumentType) => {
+const headerCopy = (
+  outputDocumentType: ResearchOutputDocumentType,
+  publishingEntity: ResearchOutputPublishingEntities,
+) => {
+  if (publishingEntity === 'Team') {
+    switch (outputDocumentType) {
+      case 'Protocol':
+        return 'Share a protocol';
+      case 'Dataset':
+        return 'Share a dataset';
+      case 'Bioinformatics':
+        return 'Share bioinformatics';
+      case 'Lab Resource':
+        return 'Share a lab resource';
+      case 'Article':
+        return 'Share an article';
+      default:
+        return 'Share a resource';
+    }
+  }
   switch (outputDocumentType) {
-    case 'Protocol':
-      return 'Share a protocol';
-    case 'Dataset':
-      return 'Share a dataset';
-    case 'Bioinformatics':
-      return 'Share bioinformatics';
-    case 'Lab Resource':
-      return 'Share a lab resource';
     case 'Article':
-      return 'Share an article';
+      return 'Share a Working Group Article';
     default:
-      return 'Share a resource';
+      return 'Share a Working Group Resource';
   }
 };
 
@@ -92,14 +106,18 @@ const SubheaderCopy: React.FC<{
 
 type ResearchOutputHeaderProps = {
   documentType: ResearchOutputDocumentType;
+  publishingEntity?: ResearchOutputPublishingEntities;
 };
 
 const ResearchOutputHeader: React.FC<ResearchOutputHeaderProps> = ({
   documentType,
+  publishingEntity = 'Team',
 }) => (
   <header>
     <div css={visualHeaderStyles}>
-      <Display styleAsHeading={2}>{headerCopy(documentType)}</Display>
+      <Display styleAsHeading={2}>
+        {headerCopy(documentType, publishingEntity)}
+      </Display>
       <div>
         <Paragraph accent="lead">
           <SubheaderCopy outputDocumentType={documentType} />

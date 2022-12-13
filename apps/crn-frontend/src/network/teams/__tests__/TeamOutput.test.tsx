@@ -151,6 +151,7 @@ describe('TeamOutput', () => {
         usageNotes: '',
         asapFunded: undefined,
         usedInPublication: undefined,
+        publishingEntity: 'Team',
       },
       expect.anything(),
     );

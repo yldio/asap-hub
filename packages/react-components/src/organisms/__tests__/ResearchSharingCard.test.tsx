@@ -50,6 +50,34 @@ it.each`
   expect(await screen.findByText(error)).toBeVisible();
 });
 
+describe('it renders the correct labels for', () => {
+  it('a research output published by a team', () => {
+    render(
+      <ResearchOutputFormSharingCard {...props} publishingEntity="Team" />,
+    );
+    expect(
+      screen.getByText('Select the option that applies to this article.'),
+    ).toBeVisible();
+  });
+
+  it('a research output published by a working group', () => {
+    render(
+      <ResearchOutputFormSharingCard
+        {...props}
+        publishingEntity="Working Group"
+      />,
+    );
+    expect(
+      screen.getByText(
+        'Add an abstract or a summary that describes this work.',
+      ),
+    ).toBeVisible();
+    expect(
+      screen.getByText('Select the type that matches your output the best.'),
+    ).toBeVisible();
+  });
+});
+
 it('lab resource does not require an url', async () => {
   render(
     <ResearchOutputFormSharingCard {...props} documentType="Lab Resource" />,

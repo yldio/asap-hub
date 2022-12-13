@@ -76,6 +76,7 @@ export const researchOutputToCSV = (
   id: output.id,
   created: output.created,
   lastModifiedDate: output.lastModifiedDate,
+  publishingEntity: output.publishingEntity,
 });
 
 export const algoliaResultsToStream = async <T extends keyof EntityResponses>(

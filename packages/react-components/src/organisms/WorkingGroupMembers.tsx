@@ -80,16 +80,14 @@ const GroupLeadersTabbedCard: React.FC<GroupLeadersTabbedCardProps> = ({
         </div>
       </div>
       <div css={containerStyles}>
-        <div css={withBottomBorderStyles}>
-          <MembersList
-            members={currentLeaders.map(({ user, workstreamRole }) => ({
-              ...user,
-              id: user?.id || '',
-              firstLine: user.displayName || '',
-              secondLine: workstreamRole,
-            }))}
-          />
-        </div>
+        <MembersList
+          members={currentLeaders.map(({ user, workstreamRole }) => ({
+            ...user,
+            id: user?.id || '',
+            firstLine: user.displayName || '',
+            secondLine: workstreamRole,
+          }))}
+        />
       </div>
       <div css={withBottomBorderStyles}>
         <div css={containerStyles}>

@@ -1,5 +1,5 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
-import { act, render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import KeyInformationModal from '../KeyInformationModal';
@@ -32,8 +32,7 @@ describe('KeyInformatiomModal', () => {
     ).toBeVisible();
   });
   it('calls onSave with the right arguments', async () => {
-    const promise = Promise.resolve();
-    const onSave = jest.fn(() => promise);
+    const onSave = jest.fn();
     render(
       <KeyInformationModal
         {...defaultProps}
@@ -52,7 +51,8 @@ describe('KeyInformatiomModal', () => {
         wrapper: MemoryRouter,
       },
     );
-    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    const saveButton = screen.getByRole('button', { name: 'Save' });
+    userEvent.click(saveButton);
     expect(onSave).toHaveBeenCalledWith({
       firstName: 'Gonçalo',
       lastName: 'Ramos',
@@ -64,13 +64,10 @@ describe('KeyInformatiomModal', () => {
       city: 'Lisbon',
       region: 'Europe',
     });
-    await act(async () => {
-      await promise;
-    });
+    await waitFor(() => expect(saveButton).toBeEnabled());
   });
   it('calls onSave with the updated fields', async () => {
-    const promise = Promise.resolve();
-    const onSave = jest.fn(() => promise);
+    const onSave = jest.fn();
     render(
       <KeyInformationModal
         {...defaultProps}
@@ -118,7 +115,8 @@ describe('KeyInformatiomModal', () => {
     userEvent.click(
       screen.getByRole('textbox', { name: 'Primary Institution (required)' }),
     );
-    userEvent.click(await screen.findByText('FPF'));
+    const institution = await screen.findByText('FPF');
+    userEvent.click(institution);
     userEvent.type(
       screen.getByRole('textbox', { name: 'Primary Department (required)' }),
       "Men's Team",
@@ -127,7 +125,8 @@ describe('KeyInformatiomModal', () => {
       screen.getByRole('textbox', { name: 'Primary Role (required)' }),
       'Striker',
     );
-    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    const saveButton = screen.getByRole('button', { name: 'Save' });
+    userEvent.click(saveButton);
     expect(onSave).toHaveBeenCalledWith({
       firstName: 'Gonçalo',
       lastName: 'Ramos',
@@ -139,8 +138,6 @@ describe('KeyInformatiomModal', () => {
       city: 'Lisbon',
       region: 'Europe',
     });
-    await act(async () => {
-      await promise;
-    });
-  });
+    await waitFor(() => expect(saveButton).toBeEnabled());
+  }, 10000);
 });

@@ -138,8 +138,14 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
             output: ResearchOutputPostRequest | ResearchOutputPutRequest,
           ) =>
             isEditMode
-              ? updateResearchOutput(output).catch(handleError)
-              : createResearchOutput(output).catch(handleError)
+              ? updateResearchOutput({
+                  ...output,
+                  publishingEntity: 'Team',
+                }).catch(handleError)
+              : createResearchOutput({
+                  ...output,
+                  publishingEntity: 'Team',
+                }).catch(handleError)
           }
         />
       </Frame>

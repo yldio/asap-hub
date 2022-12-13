@@ -3,10 +3,12 @@ import {
   ResearchOutputDocumentType,
   ValidationErrorResponse,
   ResearchOutputResponse,
+  ResearchOutputPublishingEntities,
+  ResearchOutputPostRequest,
+  ResearchOutputPutRequest,
 } from '@asap-hub/model';
 import { NotFoundPage, ResearchOutputPage } from '@asap-hub/react-components';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
-import { createTeamResponse } from '@asap-hub/fixtures';
 import {
   network,
   OutputDocumentTypeParameter,
@@ -14,10 +16,6 @@ import {
 } from '@asap-hub/routing';
 import React, { useContext, useState } from 'react';
 import researchSuggestions from '../teams/research-suggestions';
-import {
-  ResearchOutputPostRequest,
-  ResearchOutputPutRequest,
-} from '../../../../../packages/model/src/research-output';
 import {
   useAuthorSuggestions,
   useLabSuggestions,
@@ -64,7 +62,6 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   researchOutputData,
 }) => {
   const paramOutputDocumentType = useParamOutputDocumentType(workingGroupId);
-  const isEditMode = !!researchOutputData;
   // const { researchOutputId } = useRouteParams(
   //   sharedResearch({}).researchOutput,
   // );
@@ -82,14 +79,12 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   const getAuthorSuggestions = useAuthorSuggestions();
   const getTeamSuggestions = useTeamSuggestions();
   const researchTags = useResearchTags();
-
-  const team = createTeamResponse();
+  const publishingEntity: ResearchOutputPublishingEntities = 'Working Group';
 
   if (canCreateUpdate && workingGroup) {
     return (
       <Frame title="Share Working Group Research Output">
         <ResearchOutputPage
-          team={team}
           tagSuggestions={researchSuggestions.map((suggestion) => ({
             label: suggestion,
             value: suggestion,
@@ -112,7 +107,8 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
             setErrors(clearAjvErrorForPath(errors, instancePath))
           }
           researchOutputData={researchOutputData}
-          isEditMode={isEditMode}
+          isEditMode={false}
+          publishingEntity={publishingEntity}
           onSave={(
             output: ResearchOutputPostRequest | ResearchOutputPutRequest,
           ) => {

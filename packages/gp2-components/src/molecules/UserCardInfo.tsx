@@ -1,8 +1,8 @@
+import { gp2 as gp2Model } from '@asap-hub/model';
 import { crossQuery, Link, pixels } from '@asap-hub/react-components';
+import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps, Fragment } from 'react';
-import { gp2 as gp2Model } from '@asap-hub/model';
-import { gp2 as gp2Routing } from '@asap-hub/routing';
 import projectIcon from '../icons/project-icon';
 import roleIcon from '../icons/role-icon';
 import workingGroupIcon from '../icons/working-group-icon';

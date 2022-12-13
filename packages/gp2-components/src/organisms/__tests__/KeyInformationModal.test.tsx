@@ -1,5 +1,5 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import KeyInformationModal from '../KeyInformationModal';
@@ -32,7 +32,8 @@ describe('KeyInformatiomModal', () => {
     ).toBeVisible();
   });
   it('calls onSave with the right arguments', async () => {
-    const onSave = jest.fn();
+    const promise = Promise.resolve();
+    const onSave = jest.fn(() => promise);
     render(
       <KeyInformationModal
         {...defaultProps}
@@ -63,9 +64,13 @@ describe('KeyInformatiomModal', () => {
       city: 'Lisbon',
       region: 'Europe',
     });
+    await act(async () => {
+      await promise;
+    });
   });
   it('calls onSave with the updated fields', async () => {
-    const onSave = jest.fn();
+    const promise = Promise.resolve();
+    const onSave = jest.fn(() => promise);
     render(
       <KeyInformationModal
         {...defaultProps}
@@ -84,11 +89,11 @@ describe('KeyInformatiomModal', () => {
         wrapper: MemoryRouter,
       },
     );
-    await userEvent.type(
+    userEvent.type(
       screen.getByRole('textbox', { name: 'First Name (required)' }),
       'Gonçalo',
     );
-    await userEvent.type(
+    userEvent.type(
       screen.getByRole('textbox', { name: 'Last Name (required)' }),
       'Ramos',
     );
@@ -106,19 +111,19 @@ describe('KeyInformatiomModal', () => {
       }),
     );
     userEvent.click(screen.getByText('Portugal'));
-    await userEvent.type(
+    userEvent.type(
       screen.getByRole('textbox', { name: 'City (optional)' }),
       'Lisbon',
     );
     userEvent.click(
       screen.getByRole('textbox', { name: 'Primary Institution (required)' }),
     );
-    userEvent.click(screen.getByText('FPF'));
-    await userEvent.type(
+    userEvent.click(await screen.findByText('FPF'));
+    userEvent.type(
       screen.getByRole('textbox', { name: 'Primary Department (required)' }),
       "Men's Team",
     );
-    await userEvent.type(
+    userEvent.type(
       screen.getByRole('textbox', { name: 'Primary Role (required)' }),
       'Striker',
     );
@@ -133,6 +138,9 @@ describe('KeyInformatiomModal', () => {
       country: 'Portugal',
       city: 'Lisbon',
       region: 'Europe',
+    });
+    await act(async () => {
+      await promise;
     });
   });
 });

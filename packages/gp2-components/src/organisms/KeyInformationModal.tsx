@@ -14,7 +14,7 @@ const { createMailTo } = mail;
 const getValues = <T extends string>(selected: T[]) =>
   selected.map((item) => ({ label: item, value: item }));
 
-const onChange =
+const onChangeSelect =
   <T extends string>(setValue: (items: T[]) => void) =>
   (newValues: Readonly<{ value: T; label: T }[]>) => {
     setValue(newValues.map(({ value }) => value));
@@ -61,15 +61,19 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
   const [newRegion, setNewRegion] = useState(region);
   const [newCountry, setNewCountry] = useState(country);
   const [newCity, setNewCity] = useState(city || '');
-  const [primaryPosition, ...otherPositions] = positions || [];
-  const [newPrimaryInstitution, setNewPrimaryInstitution] = useState(
-    primaryPosition?.institution || '',
-  );
-  const [newPrimaryRole, setNewPrimaryRole] = useState(
-    primaryPosition?.role || '',
-  );
-  const [newPrimaryDepartment, setNewPrimaryDepartment] = useState(
-    primaryPosition?.department || '',
+
+  const updatePositions: ComponentProps<
+    typeof UserPosition
+  >['updatePositions'] = (position, index) => {
+    setPositions((previousState) =>
+      Object.assign([], previousState, { [index]: position }),
+    );
+  };
+
+  const [newPositions, setPositions] = useState(
+    positions.length
+      ? positions
+      : [{ institution: '', role: '', department: '' }],
   );
 
   const checkDirty = () =>
@@ -80,9 +84,10 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
     newRegion !== region ||
     newCountry !== country ||
     newCity !== city ||
-    newPrimaryDepartment !== (primaryPosition?.department || '') ||
-    newPrimaryRole !== (primaryPosition?.role || '') ||
-    newPrimaryInstitution !== (primaryPosition?.institution || '');
+    (newPositions.length > 0 &&
+      newPositions[0].department !== positions[0]?.department &&
+      newPositions[0].role !== positions[0]?.role &&
+      newPositions[0].institution !== positions[0]?.institution);
 
   return (
     <EditUserModal
@@ -96,14 +101,7 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
           region: newRegion,
           country: newCountry,
           city: newCity,
-          positions: [
-            {
-              role: newPrimaryRole,
-              department: newPrimaryDepartment,
-              institution: newPrimaryInstitution,
-            },
-            ...otherPositions,
-          ],
+          positions: newPositions,
         })
       }
       backHref={backHref}
@@ -132,7 +130,7 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
             subtitle={optional}
             enabled={!isSaving}
             values={getValues(newDegrees)}
-            onChange={onChange(setNewDegrees)}
+            onChange={onChangeSelect(setNewDegrees)}
             suggestions={getValues([...gp2.userDegrees])}
             placeholder="Start typing to choose your highest clinical and/or academic degrees"
           />
@@ -185,32 +183,12 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
             value={newCity}
             onChange={setNewCity}
           />
-          <LabeledTypeahead
-            title="Primary Institution"
-            subtitle={required}
-            required
-            getValidationMessage={() => 'Please add your institution'}
-            maxLength={44}
-            onChange={setNewPrimaryInstitution}
-            value={newPrimaryInstitution}
-            enabled={!isSaving}
-            loadOptions={loadInstitutionOptions}
-          />
-          <LabeledTextField
-            title="Primary Department"
-            subtitle={required}
-            enabled={!isSaving}
-            value={newPrimaryDepartment}
-            onChange={setNewPrimaryDepartment}
-            required
-          />
-          <LabeledTextField
-            title="Primary Role"
-            subtitle={required}
-            enabled={!isSaving}
-            value={newPrimaryRole}
-            onChange={setNewPrimaryRole}
-            required
+          <UserPosition
+            updatePositions={updatePositions}
+            isSaving={isSaving}
+            loadInstitutionOptions={loadInstitutionOptions}
+            position={newPositions[0]}
+            index={0}
           />
         </>
       )}
@@ -219,3 +197,55 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
 };
 
 export default KeyInformationModal;
+
+type UserPositionProps = {
+  index: number;
+  updatePositions: (
+    payload: gp2.UserResponse['positions'][number],
+    index: number,
+  ) => void;
+  isSaving: boolean;
+  loadInstitutionOptions: (newValue?: string) => Promise<string[]>;
+  position: gp2.UserPosition;
+};
+const UserPosition: React.FC<UserPositionProps> = ({
+  updatePositions,
+  isSaving,
+  loadInstitutionOptions,
+  position,
+}) => {
+  const { institution = '', department = '', role = '' } = position;
+  const onChange = (property: keyof gp2.UserPosition) => (value: string) =>
+    updatePositions({ ...position, [property]: value }, 0);
+  return (
+    <>
+      <LabeledTypeahead
+        title="Primary Institution"
+        subtitle={required}
+        required
+        getValidationMessage={() => 'Please add your institution'}
+        maxLength={44}
+        onChange={onChange('institution')}
+        value={institution}
+        enabled={!isSaving}
+        loadOptions={loadInstitutionOptions}
+      />
+      <LabeledTextField
+        title="Primary Department"
+        subtitle={required}
+        enabled={!isSaving}
+        onChange={onChange('department')}
+        value={department}
+        required
+      />
+      <LabeledTextField
+        title="Primary Role"
+        subtitle={required}
+        enabled={!isSaving}
+        onChange={onChange('role')}
+        value={role}
+        required
+      />
+    </>
+  );
+};

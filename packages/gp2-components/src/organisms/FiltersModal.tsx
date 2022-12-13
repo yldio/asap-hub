@@ -61,12 +61,12 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
   const [selectedProjects, setSelectedProjects] = useState(
     projects
       .filter(({ id }) => filters.projects?.includes(id))
-      .map(entityToSelect) || [],
+      .map(entityToSelect),
   );
   const [selectedWorkingGroups, setSelectedWorkingGroups] = useState(
     workingGroups
       .filter(({ id }) => filters.workingGroups?.includes(id))
-      .map(entityToSelect) || [],
+      .map(entityToSelect),
   );
   const resetFilters = () => {
     setSelectedRegions([]);

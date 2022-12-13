@@ -1,4 +1,7 @@
-import { createUserResponse } from '@asap-hub/fixtures';
+import {
+  createWorkingGroupMembers,
+  createWorkingGroupPointOfContact,
+} from '@asap-hub/fixtures';
 import { render } from '@testing-library/react';
 import { ComponentProps } from 'react';
 
@@ -11,6 +14,7 @@ const baseProps: ComponentProps<typeof WorkingGroupHeader> = {
   externalLink: '',
   lastModifiedDate: new Date('2021-01-01').toISOString(),
   pointOfContact: undefined,
+  leaders: [],
   members: [],
 };
 
@@ -25,14 +29,7 @@ it('renders CTA when pointOfContact is provided', () => {
   const { queryAllByText, rerender } = render(
     <WorkingGroupHeader
       {...baseProps}
-      pointOfContact={{
-        ...createUserResponse(),
-        id: '2',
-        displayName: 'Peter Venkman',
-        firstName: 'Peter',
-        lastName: 'Venkman',
-        email: 'peter@ven.com',
-      }}
+      pointOfContact={createWorkingGroupPointOfContact()}
     />,
   );
   expect(queryAllByText('Contact PM')).toHaveLength(1);
@@ -54,14 +51,10 @@ it('renders the member avatars', () => {
   const { getByLabelText } = render(
     <WorkingGroupHeader
       {...baseProps}
-      members={[
-        {
-          user: { ...createUserResponse(), firstName: 'John', lastName: 'Doe' },
-        },
-      ]}
+      members={createWorkingGroupMembers(1)}
     />,
   );
-  expect(getByLabelText(/pic.+John Doe/i)).toBeVisible();
+  expect(getByLabelText(/pic.+Agnete Kirkeby/i)).toBeVisible();
 });
 
 it('renders a Working Group Folder when externalLink is provided', () => {

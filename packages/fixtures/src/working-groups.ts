@@ -35,6 +35,19 @@ export const createWorkingGroupLeaders = (
     workstreamRole: `leader role - ${itemIndex}`,
   }));
 
+export const createWorkingGroupPointOfContact =
+  (): WorkingGroupResponse['pointOfContact'] => ({
+    role: 'Project Manager',
+    workstreamRole: 'PM',
+    user: {
+      id: '2',
+      displayName: 'Peter Venkman',
+      firstName: 'Peter',
+      lastName: 'Venkman',
+      email: 'peter@ven.com',
+    },
+  });
+
 export const createWorkingGroupResponse = (
   options: FixtureOptions,
   itemIndex = 0,

@@ -104,7 +104,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
     </div>
     <section css={contactSectionStyles}>
       <UserAvatarList
-        members={members}
+        members={members.map((member) => member.user)}
         fullListRoute={
           network({}).workingGroups({}).workingGroup({ workingGroupId: id }).$
         }

@@ -7,6 +7,7 @@ import {
 import {
   createWorkingGroupMembers,
   createDeliverables,
+  createWorkingGroupLeaders,
 } from '@asap-hub/fixtures';
 import { boolean, select, number, text } from '@storybook/addon-knobs';
 import { network } from '@asap-hub/routing';
@@ -30,18 +31,12 @@ export const Normal = () => {
   const props: ComponentProps<typeof WorkingGroupPage> &
     ComponentProps<typeof WorkingGroupAbout> = {
     id: 'id',
-    pointOfContact: {
-      id: '2',
-      displayName: 'Peter Venkman',
-      firstName: 'Peter',
-      lastName: 'Venkman',
-      email: 'peter@ven.com',
-      workingGroupRole: 'Project Manager' as const,
-    },
+    pointOfContact: undefined,
     title: text('Working Group name', 'Working group name'),
     description: text('Description', 'A description about the working group.'),
     deliverables: createDeliverables(number('Deliverables', 4)),
     members: createWorkingGroupMembers(number('Number of members', 6)),
+    leaders: createWorkingGroupLeaders(number('Number of leaders', 6)),
     complete: boolean('Complete', false),
     externalLink: text('External link', 'link//'),
     lastModifiedDate: new Date(

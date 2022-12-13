@@ -1,5 +1,9 @@
 import { WorkingGroupSquidexDataProvider } from '../../src/data-providers/working-groups.data-provider';
 import {
+  getGraphQLUser,
+  getSquidexUserGraphqlResponse,
+} from '../fixtures/users.fixtures';
+import {
   getSquidexWorkingGroupGraphqlResponse,
   getSquidexWorkingGroupsGraphqlResponse,
   getWorkingGroupDataObject,
@@ -166,6 +170,106 @@ describe('Working Group Data Provider', () => {
         (await workingGroupDataProvider.fetchById(workingGroupId))
           ?.deliverables,
       ).toEqual([]);
+    });
+
+    describe('leaders and members', () => {
+      test('Should return leaders', async () => {
+        const squidexGraphqlResponse = getSquidexWorkingGroupGraphqlResponse();
+        squidexGraphqlResponse.findWorkingGroupsContent!.flatData.leaders = [
+          {
+            user: [getGraphQLUser()],
+            workstreamRole: 'Some role',
+            role: 'Chair',
+          },
+        ];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const response = await workingGroupDataProvider.fetchById(
+          workingGroupId,
+        );
+        expect(response?.leaders).toStrictEqual([
+          {
+            user: {
+              ...getSquidexUserGraphqlResponse().findUsersContent,
+              ...getSquidexUserGraphqlResponse().findUsersContent?.flatData,
+              displayName: 'Tom Hardy',
+            },
+            workstreamRole: 'Some role',
+            role: 'Chair',
+          },
+        ]);
+      });
+
+      test('Should return members', async () => {
+        const squidexGraphqlResponse = getSquidexWorkingGroupGraphqlResponse();
+        squidexGraphqlResponse.findWorkingGroupsContent!.flatData.members = [
+          {
+            user: [getGraphQLUser()],
+          },
+        ];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const response = await workingGroupDataProvider.fetchById(
+          workingGroupId,
+        );
+        expect(response?.members).toStrictEqual([
+          {
+            user: {
+              ...getSquidexUserGraphqlResponse().findUsersContent,
+              ...getSquidexUserGraphqlResponse().findUsersContent?.flatData,
+              displayName: 'Tom Hardy',
+            },
+          },
+        ]);
+      });
+
+      test('should return empty leaders and members if they do not exist', async () => {
+        const squidexGraphqlResponse = getSquidexWorkingGroupGraphqlResponse();
+        squidexGraphqlResponse.findWorkingGroupsContent!.flatData.members =
+          null;
+        squidexGraphqlResponse.findWorkingGroupsContent!.flatData.leaders =
+          null;
+
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const response = await workingGroupDataProvider.fetchById(
+          workingGroupId,
+        );
+        expect(response?.members).toStrictEqual([]);
+        expect(response?.leaders).toStrictEqual([]);
+      });
+
+      test('should return empty leaders and members if they are not set properly', async () => {
+        const squidexGraphqlResponse = getSquidexWorkingGroupGraphqlResponse();
+        squidexGraphqlResponse.findWorkingGroupsContent!.flatData.members = [
+          {
+            user: [],
+          },
+        ];
+        squidexGraphqlResponse.findWorkingGroupsContent!.flatData.leaders = [
+          {
+            user: [],
+            role: 'Chair',
+            workstreamRole: 'Some role',
+          },
+        ];
+
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const response = await workingGroupDataProvider.fetchById(
+          workingGroupId,
+        );
+        expect(response?.members).toStrictEqual([]);
+        expect(response?.leaders).toStrictEqual([]);
+      });
     });
   });
 });

@@ -4,12 +4,12 @@ import { css } from '@emotion/react';
 import { Card, Headline3, Link, Subtitle } from '../atoms';
 import { createMailTo } from '../mail';
 import { Collapsible } from '../molecules';
-import { DeliverablesCard } from '../organisms';
+import { DeliverablesCard, WorkingGroupMembers } from '../organisms';
 import { perRem } from '../pixels';
 
 type WorkingGroupAboutProps = Pick<
   WorkingGroupResponse,
-  'description' | 'deliverables' | 'pointOfContact'
+  'description' | 'deliverables' | 'pointOfContact' | 'members' | 'leaders'
 >;
 const containerStyles = css({
   display: 'flex',
@@ -21,6 +21,8 @@ const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
   description,
   deliverables,
   pointOfContact,
+  members,
+  leaders,
 }) => (
   <div css={containerStyles}>
     <DeliverablesCard deliverables={deliverables} />
@@ -61,6 +63,7 @@ const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
         </Link>
       )}
     </Card>
+    <WorkingGroupMembers leaders={leaders} members={members} />
   </div>
 );
 

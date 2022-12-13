@@ -1,7 +1,9 @@
 import {
   FetchOptions,
   WorkingGroupDataObject,
+  WorkingGroupLeader,
   WorkingGroupListDataObject,
+  WorkingGroupMember,
 } from '@asap-hub/model';
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import {
@@ -85,7 +87,36 @@ export const parseGraphQlWorkingGroup = (
     title: workingGroupGraphQl.flatData.title || '',
     description: workingGroupGraphQl.flatData.description || '',
     shortText: workingGroupGraphQl.flatData.shortText || '',
-    members: [],
+    members:
+      (workingGroupGraphQl.flatData.members?.flatMap((member) =>
+        member.user?.[0]
+          ? [
+              {
+                ...member,
+                user: {
+                  ...member.user[0],
+                  ...member.user[0].flatData,
+                  displayName: `${member.user[0].flatData.firstName} ${member.user[0].flatData.lastName}`,
+                },
+              },
+            ]
+          : [],
+      ) as unknown as WorkingGroupMember[]) || [],
+    leaders:
+      (workingGroupGraphQl.flatData.leaders?.flatMap((leader) =>
+        leader.user?.[0]
+          ? [
+              {
+                ...leader,
+                user: {
+                  ...leader.user[0],
+                  ...leader.user[0].flatData,
+                  displayName: `${leader.user[0].flatData.firstName} ${leader.user[0].flatData.lastName}`,
+                },
+              },
+            ]
+          : [],
+      ) as unknown as WorkingGroupLeader[]) || [],
     pointOfContact: undefined,
     complete: !!workingGroupGraphQl.flatData.complete,
     deliverables: workingGroupGraphQl.flatData.deliverables

@@ -28,7 +28,6 @@ const multiColumnContainerStyles = css({
 
 const avatarStyles = css({
   gridRowEnd: 'span 3',
-  paddingTop: `${12 / perRem}em`,
 });
 
 const nameStyles = css({

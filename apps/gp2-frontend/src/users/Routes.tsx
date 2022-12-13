@@ -2,7 +2,7 @@ import { NotFoundPage } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/routing';
 import { lazy, useEffect } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
-import UserDashboard from './UserDashboard';
+import UserDirectory from './UserDirectory';
 
 const loadUserDetail = () =>
   import(/* webpackChunkName: "user-detail" */ './UserDetail');
@@ -19,10 +19,10 @@ const Routes: React.FC<Record<string, never>> = () => {
   return (
     <Switch>
       <Route exact path={path}>
-        <UserDashboard />
+        <UserDirectory />
       </Route>
       <Route exact path={users({}).filters({}).$}>
-        <UserDashboard displayFilters />
+        <UserDirectory displayFilters />
       </Route>
       <Route path={path + users({}).user.template}>
         <UserDetail />

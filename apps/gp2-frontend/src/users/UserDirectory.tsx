@@ -12,11 +12,11 @@ import { getUsers } from './api';
 import { squidexUsersResponseToStream, userFields, userToCSV } from './export';
 import UserList from './UserList';
 
-type UserDashboardProps = Pick<
+type UserDirectoryProps = Pick<
   ComponentProps<typeof UsersPage>,
   'displayFilters'
 >;
-const UserDashboard: FC<UserDashboardProps> = ({ displayFilters = false }) => {
+const UserDirectory: FC<UserDirectoryProps> = ({ displayFilters = false }) => {
   const { users } = gp2;
   const {
     changeLocation,
@@ -76,4 +76,4 @@ const UserDashboard: FC<UserDashboardProps> = ({ displayFilters = false }) => {
   );
 };
 
-export default UserDashboard;
+export default UserDirectory;

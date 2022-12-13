@@ -18,7 +18,7 @@ import { getWorkingGroups } from '../../working-groups/api';
 import { getUsers } from '../api';
 import { MAX_SQUIDEX_RESULTS } from '../export';
 import { refreshUsersState } from '../state';
-import UserDashboard from '../UserDashboard';
+import UserDirectory from '../UserDirectory';
 
 jest.mock('@asap-hub/frontend-utils', () => {
   const original = jest.requireActual('@asap-hub/frontend-utils');
@@ -43,7 +43,7 @@ const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
 >;
 const mockUseSearch = useSearch as jest.MockedFunction<typeof useSearch>;
 
-const renderUserDashboard = async ({
+const renderUserDirectory = async ({
   listUserResponse = gp2Fixtures.createUsersResponse(),
   listProjectResponse = gp2Fixtures.createProjectsResponse(),
   listWorkingGroupResponse = gp2Fixtures.createWorkingGroupsResponse(),
@@ -91,7 +91,7 @@ const renderUserDashboard = async ({
           <WhenReady>
             <MemoryRouter initialEntries={['/users/']}>
               <Route path="/users">
-                <UserDashboard displayFilters={displayFilters} />
+                <UserDirectory displayFilters={displayFilters} />
               </Route>
             </MemoryRouter>
           </WhenReady>
@@ -105,7 +105,7 @@ const renderUserDashboard = async ({
 afterEach(jest.clearAllMocks);
 
 it('renders the filters modal', async () => {
-  await renderUserDashboard({ displayFilters: true });
+  await renderUserDirectory({ displayFilters: true });
   expect(screen.getByRole('heading', { name: 'Filters' })).toBeVisible();
 });
 
@@ -118,7 +118,7 @@ it.each`
 `(
   'calls the updateFilters with the right arguments for $name',
   async ({ name, value }) => {
-    const { mockUpdateFilter } = await renderUserDashboard({
+    const { mockUpdateFilter } = await renderUserDirectory({
       displayFilters: true,
       filters: { [name]: [value] },
     });
@@ -133,7 +133,7 @@ it.each`
   },
 );
 it('triggers export with the same parameters but overrides onlyOnboarded with false', async () => {
-  await renderUserDashboard({ isAdministrator: true });
+  await renderUserDirectory({ isAdministrator: true });
   await waitFor(() =>
     expect(mockGetUsers).toHaveBeenCalledWith(
       expect.objectContaining({

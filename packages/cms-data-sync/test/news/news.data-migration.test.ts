@@ -1,11 +1,11 @@
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
+import { Environment } from 'contentful-management';
 import { migrateNews } from '../../src/news/news.data-migration';
 import {
   newsEntry,
   squidexAsset,
   contenfulUploadAssetFields,
 } from '../fixtures';
-import { getContentfulEnvironmentMock } from '../mocks';
 import {
   clearContentfulEntries,
   createAsset,
@@ -13,7 +13,7 @@ import {
   publishContentfulEntries,
   getSquidexAndContentfulClients,
 } from '../../src/utils';
-import { Environment } from 'contentful-management';
+import { getContentfulEnvironmentMock } from '../mocks/contentful.mocks';
 
 jest.mock('../../src/utils/setup');
 jest.mock('../../src/utils/entries');
@@ -55,7 +55,7 @@ const squidexResponseWithText = {
   ],
 };
 
-describe('migrateNews', () => {
+describe('Migrate news', () => {
   let contenfulEnv: Environment;
   let squidexGraphqlClientMock: jest.Mocked<SquidexGraphqlClient>;
 
@@ -290,7 +290,7 @@ describe('migrateNews', () => {
 
       expect(console.log).toHaveBeenCalledWith(
         '\x1b[31m',
-        '[ERROR] Entry with ID news-1 was uploaded without rich text',
+        '[ERROR] Entry with ID news-1 was uploaded with fallback data',
       );
       expect(contenfulEnv.createEntryWithId).toHaveBeenCalledTimes(2);
       expect(publishContentfulEntriesMock).toHaveBeenCalledWith([newsEntry]);

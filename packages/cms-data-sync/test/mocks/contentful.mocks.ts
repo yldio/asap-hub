@@ -95,7 +95,8 @@ const baseEnvironment: Environment = {
 
 export const getContentfulEnvironmentMock = (
   overrideProps: Partial<Environment> = {},
-): Environment => ({
-  ...baseEnvironment,
-  ...overrideProps,
-});
+): jest.Mocked<Environment> =>
+  ({
+    ...baseEnvironment,
+    ...overrideProps,
+  } as unknown as jest.Mocked<Environment>);

@@ -6,6 +6,8 @@ import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 } from '@asap-hub/routing';
 import { Route } from 'react-router-dom';
+import { getInstitutions } from '../users/api';
+import locationSuggestions from '../users/location-suggestions';
 import { usePatchUserById, useUserById } from '../users/state';
 
 const CoreDetails: React.FC<Record<string, never>> = () => {
@@ -23,10 +25,16 @@ const CoreDetails: React.FC<Record<string, never>> = () => {
         <Route path={onboarding({}).coreDetails({}).editKeyInfo({}).$}>
           <KeyInformationModal
             {...userData}
-            backHref={onboarding({}).coreDetails({}).$}
-            onSave={({ firstName, lastName }) =>
-              patchUser({ firstName, lastName })
+            locationSuggestions={locationSuggestions.map(
+              ({ shortName }) => shortName,
+            )}
+            loadInstitutionOptions={(searchQuery) =>
+              getInstitutions({ searchQuery }).then((data) =>
+                data.items.map(({ name }) => name),
+              )
             }
+            backHref={onboarding({}).coreDetails({}).$}
+            onSave={(patchedUser) => patchUser(patchedUser)}
           />
         </Route>
       </>

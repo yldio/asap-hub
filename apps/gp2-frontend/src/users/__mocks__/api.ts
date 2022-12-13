@@ -1,6 +1,6 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { GetListOptions } from '@asap-hub/frontend-utils';
-import { gp2 } from '@asap-hub/model';
+import { gp2, InstitutionsResponse } from '@asap-hub/model';
 
 export const getUsers = jest.fn(
   async ({ pageSize }: GetListOptions): Promise<gp2.ListUserResponse> =>
@@ -22,5 +22,24 @@ export const patchUser = jest.fn(
     ...gp2Fixtures.createUserResponse(),
     ...patch,
     id,
+  }),
+);
+
+export const getInstitutions = jest.fn(
+  async (): Promise<InstitutionsResponse> => ({
+    number_of_results: 20,
+    time_taken: 0,
+    items: Array.from({ length: 20 }).map((_, i) => ({
+      name: `Institution ${i + 1}`,
+      id: `id-${i}`,
+      email_address: 'example@example.com',
+      status: '',
+      wikipedia_url: '',
+      established: 1999,
+      aliases: [],
+      acronyms: [],
+      links: [],
+      types: [],
+    })),
   }),
 );

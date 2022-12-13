@@ -1,5 +1,5 @@
 import { createSentryHeaders } from '@asap-hub/frontend-utils';
-import { gp2 } from '@asap-hub/model';
+import { gp2, InstitutionsResponse } from '@asap-hub/model';
 import { API_BASE_URL } from '../config';
 
 export const createUserApiUrl = ({
@@ -83,6 +83,22 @@ export const patchUser = async (
   if (!resp.ok) {
     throw new Error(
       `Failed to update user with id ${id}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+    );
+  }
+  return resp.json();
+};
+
+export const getInstitutions = async ({
+  searchQuery,
+}: {
+  searchQuery?: string;
+} = {}): Promise<InstitutionsResponse> => {
+  const url = new URL('https://api.ror.org/organizations');
+  searchQuery && url.searchParams.set('query', searchQuery);
+  const resp = await fetch(url.toString());
+  if (!resp.ok) {
+    throw new Error(
+      `Failed to fetch institutions. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
     );
   }
   return resp.json();

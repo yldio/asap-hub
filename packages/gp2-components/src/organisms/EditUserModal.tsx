@@ -1,6 +1,7 @@
 import { gp2 } from '@asap-hub/model';
 import {
   Button,
+  Divider,
   EditModal,
   Headline3,
   Link,
@@ -24,6 +25,13 @@ const buttonContainerStyles = css({
     display: 'flex',
     flexDirection: 'column-reverse',
   },
+  paddingTop: rem(12),
+});
+
+const formContainer = css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: rem(18),
 });
 
 const buttonStyles = css({
@@ -66,9 +74,8 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
           <Headline3>{title}</Headline3>
           <Paragraph accent="lead">{description}</Paragraph>
         </header>
-
-        {children({ isSaving }, asyncWrapper)}
-
+        <div css={formContainer}>{children({ isSaving }, asyncWrapper)}</div>
+        <Divider />
         <div css={buttonContainerStyles}>
           <div css={buttonStyles}>
             <Link href={backHref} buttonStyle noMargin>

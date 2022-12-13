@@ -161,29 +161,6 @@ describe('Working Group Data Provider', () => {
   });
 
   test.each`
-    active
-    ${true} | ${false}
-  `(
-    'Should filter by complete field when its value is $active',
-    async ({ active }) => {
-      squidexGraphqlClientMock.request.mockResolvedValue(
-        getSquidexWorkingGroupsGraphqlResponse(),
-      );
-
-      await workingGroupDataProvider.fetch({ filter: { active } });
-
-      expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
-        expect.anything(),
-        {
-          filter: `data/complete/iv eq ${!active}`,
-          top: 10,
-          skip: 0,
-        },
-      );
-    },
-  );
-
-  test.each`
     complete
     ${true}  | ${false}
   `(
@@ -206,8 +183,7 @@ describe('Working Group Data Provider', () => {
     },
   );
 
-  test('Should apply the active and complete filters', async () => {
-    const active = true;
+  test('Should apply the complete filter', async () => {
     const complete = true;
 
     squidexGraphqlClientMock.request.mockResolvedValue(
@@ -215,15 +191,14 @@ describe('Working Group Data Provider', () => {
     );
 
     await workingGroupDataProvider.fetch({
-      filter: { active, complete },
+      filter: { complete },
     });
 
-    const activeFilter = `data/complete/iv eq ${!active}`;
     const completeFilter = `data/complete/iv eq ${complete}`;
     expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
       expect.anything(),
       {
-        filter: [activeFilter, completeFilter].join(' and '),
+        filter: completeFilter,
         top: 10,
         skip: 0,
       },

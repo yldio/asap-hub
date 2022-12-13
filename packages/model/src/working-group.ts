@@ -46,7 +46,6 @@ export type WorkingGroupResponse = WorkingGroupDataObject;
 export type WorkingGroupListResponse = ListResponse<WorkingGroupResponse>;
 
 type WorkingGroupFilter = {
-  active?: boolean;
   complete?: boolean;
 };
 

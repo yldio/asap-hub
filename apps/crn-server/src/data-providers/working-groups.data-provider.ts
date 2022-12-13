@@ -63,9 +63,6 @@ export class WorkingGroupSquidexDataProvider
       );
 
     if (options.filter) {
-      if ('active' in options.filter) {
-        filterList.push({ 'data/complete/iv': !options.filter.active });
-      }
       if ('complete' in options.filter) {
         filterList.push({ 'data/complete/iv': options.filter.complete });
       }

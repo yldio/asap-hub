@@ -9,20 +9,20 @@ describe('Migration from Squidex to Contentful', () => {
     contentfulEnvironmentMock,
     loggerMock,
   );
+  const entry = {
+    isPublished: jest.fn().mockReturnValue(true),
+    unpublish: jest.fn(),
+    delete: jest.fn(),
+    sys: {
+      id: 'entry-id',
+    },
+  } as unknown as jest.Mocked<Entry>;
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
   describe("Cleaning up Contentful's entries", () => {
-    const entry = {
-      isPublished: jest.fn().mockReturnValue(true),
-      unpublish: jest.fn(),
-      delete: jest.fn(),
-      sys: {
-        id: 'entry-id',
-      },
-    } as unknown as jest.Mocked<Entry>;
     const fetchData = jest.fn().mockResolvedValue([]);
     const parseData = jest.fn();
 
@@ -79,6 +79,7 @@ describe('Migration from Squidex to Contentful', () => {
     test('Should parse the item and create a new record in Contentful', async () => {
       fetchData.mockResolvedValueOnce([squidexRecord]);
       parseData.mockResolvedValueOnce(item);
+      contentfulEnvironmentMock.createEntryWithId.mockResolvedValueOnce(entry);
 
       await migrateFromSquidexToContentful('entity', fetchData, parseData);
 
@@ -100,6 +101,8 @@ describe('Migration from Squidex to Contentful', () => {
       contentfulEnvironmentMock.createEntryWithId.mockRejectedValueOnce(
         new Error(),
       );
+      contentfulEnvironmentMock.createEntryWithId.mockResolvedValueOnce(entry);
+
       const itemWithoutDescription = {
         ...item,
         description: undefined,

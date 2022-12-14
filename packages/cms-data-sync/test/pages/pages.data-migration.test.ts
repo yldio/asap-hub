@@ -1,5 +1,5 @@
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
-import { Environment } from 'contentful-management';
+import { Entry, Environment } from 'contentful-management';
 import { getSquidexAndContentfulClients } from '../../src/utils/setup';
 import { getContentfulEnvironmentMock } from '../mocks/contentful.mocks';
 import { migratePages } from '../../src/pages/pages.data-migration';
@@ -13,6 +13,11 @@ describe('Migrate Pages', () => {
   };
   const contentfulEnv: jest.Mocked<Environment> =
     getContentfulEnvironmentMock();
+  const entry = {
+    sys: {
+      id: 'entry-id',
+    },
+  } as unknown as Entry;
 
   beforeEach(() => {
     (getSquidexAndContentfulClients as jest.Mock).mockResolvedValueOnce({
@@ -38,6 +43,7 @@ describe('Migrate Pages', () => {
     squidexGraphqlClientMock.request.mockResolvedValueOnce(
       pagesSquidexGraphqlResponse,
     );
+    contentfulEnv.createEntryWithId.mockResolvedValueOnce(entry);
 
     await migratePages();
 
@@ -62,6 +68,7 @@ describe('Migrate Pages', () => {
       pagesSquidexGraphqlResponse,
     );
     contentfulEnv.createEntryWithId.mockRejectedValueOnce(new Error('Error'));
+    contentfulEnv.createEntryWithId.mockResolvedValueOnce(entry);
 
     await migratePages();
 

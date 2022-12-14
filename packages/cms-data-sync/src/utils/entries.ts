@@ -30,14 +30,14 @@ export const clearContentfulEntries = async (
 };
 
 export const publishContentfulEntries = async (entries: Entry[]) => {
-  entries.forEach(async (entry) => {
+  for (const entry of entries) {
     try {
       const published = await entry.publish();
       logger(`Published entry ${published.sys.id}.`, 'INFO');
     } catch (err) {
       logger(`Entry with ID ${entry.sys.id} could not be published.`, 'ERROR');
     }
-  });
+  }
 };
 
 // Leaving it here because we could use

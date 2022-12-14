@@ -1,5 +1,3 @@
-/* eslint-disable no-await-in-loop */
-
 import { Environment } from 'contentful-management';
 import { clearContentfulEntries, publishContentfulEntries } from './entries';
 import { logger as loggerFunc } from './logs';
@@ -30,7 +28,6 @@ export const migrateFromSquidexToContentfulFactory =
     await clearContentfulEntries(contentfulEnvironment, contentTypeId);
 
     const entries = [];
-    // eslint-disable-next-line no-restricted-syntax
     for (const item of data) {
       const parsed = await parseData(item);
 

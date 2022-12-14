@@ -75,7 +75,9 @@ const pointOfContactStyles = css({
   },
 });
 
-type WorkingGroupPageHeaderProps = Pick<
+type WorkingGroupPageHeaderProps = {
+  readonly membersListElementId: string;
+} & Pick<
   WorkingGroupResponse,
   | 'id'
   | 'title'
@@ -96,6 +98,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
   pointOfContact,
   leaders,
   members,
+  membersListElementId,
 }) => (
   <header css={containerStyles}>
     <div css={titleStyle}>
@@ -107,9 +110,9 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
     <section css={contactSectionStyles}>
       <UserAvatarList
         members={[...leaders, ...members].map((member) => member.user)}
-        fullListRoute={
+        fullListRoute={`${
           network({}).workingGroups({}).workingGroup({ workingGroupId: id }).$
-        }
+        }#${membersListElementId}`}
       />
       {pointOfContact && (
         <div css={pointOfContactStyles}>

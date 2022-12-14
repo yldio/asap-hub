@@ -8,6 +8,7 @@ import { ComponentProps } from 'react';
 import WorkingGroupHeader from '../WorkingGroupHeader';
 
 const baseProps: ComponentProps<typeof WorkingGroupHeader> = {
+  membersListElementId: 'members-list-elem-id',
   id: 'id',
   title: '',
   complete: false,
@@ -54,7 +55,23 @@ it('renders the member avatars', () => {
       members={createWorkingGroupMembers(1)}
     />,
   );
-  expect(getByLabelText(/pic.+Agnete Kirkeby/i)).toBeVisible();
+  expect(getByLabelText(/pic.+ of .+/)).toBeVisible();
+});
+
+it('renders number of members exceeding the limit of 5 and anchors it to the right place', () => {
+  const { getAllByLabelText, getByLabelText, getByRole } = render(
+    <WorkingGroupHeader
+      {...baseProps}
+      members={createWorkingGroupMembers(6)}
+    />,
+  );
+  expect(getAllByLabelText(/pic.+ of .+/)).toHaveLength(5);
+  expect(getByLabelText(/\+1/)).toBeVisible();
+
+  expect(getByRole('link', { name: /\+1/ })).toHaveAttribute(
+    'href',
+    `/network/working-groups/id#${baseProps.membersListElementId}`,
+  );
 });
 
 it('renders a Working Group Folder when externalLink is provided', () => {

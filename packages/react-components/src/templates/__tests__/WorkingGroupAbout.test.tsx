@@ -5,6 +5,7 @@ import { ComponentProps } from 'react';
 import WorkingGroupAbout from '../WorkingGroupAbout';
 
 const baseProps: ComponentProps<typeof WorkingGroupAbout> = {
+  membersListElementId: '',
   description: '',
   pointOfContact: undefined,
   deliverables: [],

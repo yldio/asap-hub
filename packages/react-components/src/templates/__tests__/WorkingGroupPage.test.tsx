@@ -4,6 +4,7 @@ import { ComponentProps } from 'react';
 import WorkingGroupPage from '../WorkingGroupPage';
 
 const baseProps: ComponentProps<typeof WorkingGroupPage> = {
+  membersListElementId: '',
   id: 'id',
   title: '',
   complete: false,

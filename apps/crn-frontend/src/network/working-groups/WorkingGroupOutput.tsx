@@ -62,9 +62,6 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   researchOutputData,
 }) => {
   const paramOutputDocumentType = useParamOutputDocumentType(workingGroupId);
-  // const { researchOutputId } = useRouteParams(
-  //   sharedResearch({}).researchOutput,
-  // );
   const documentType =
     researchOutputData?.documentType ||
     paramOutputDocumentTypeToResearchOutputDocumentType(

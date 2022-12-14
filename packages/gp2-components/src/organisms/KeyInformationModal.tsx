@@ -1,11 +1,13 @@
 import { gp2 } from '@asap-hub/model';
 import {
+  Button,
   LabeledDropdown,
   LabeledMultiSelect,
   LabeledTextField,
   LabeledTypeahead,
   mail,
 } from '@asap-hub/react-components';
+import { css } from '@emotion/react';
 import { ComponentProps, useState } from 'react';
 import EditUserModal from './EditUserModal';
 
@@ -61,14 +63,6 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
   const [newRegion, setNewRegion] = useState(region);
   const [newCountry, setNewCountry] = useState(country);
   const [newCity, setNewCity] = useState(city || '');
-
-  const updatePositions: ComponentProps<
-    typeof UserPosition
-  >['updatePositions'] = (position, index) => {
-    setPositions((previousState) =>
-      Object.assign([], previousState, { [index]: position }),
-    );
-  };
 
   const [newPositions, setPositions] = useState(
     positions.length
@@ -183,12 +177,11 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
             value={newCity}
             onChange={setNewCity}
           />
-          <UserPosition
-            updatePositions={updatePositions}
+          <UserPositions
+            setPositions={setPositions}
             isSaving={isSaving}
             loadInstitutionOptions={loadInstitutionOptions}
-            position={newPositions[0]}
-            index={0}
+            positions={newPositions}
           />
         </>
       )}
@@ -197,6 +190,60 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
 };
 
 export default KeyInformationModal;
+
+const buttonStyles = css({
+  width: '100%',
+  // [mobileQuery]: {
+  //   width: '100%',
+  // },
+});
+
+type UserPositionsProps = {
+  setPositions: (value: React.SetStateAction<gp2.UserPosition[]>) => void;
+  isSaving: boolean;
+  loadInstitutionOptions: (newValue?: string) => Promise<string[]>;
+  positions: gp2.UserResponse['positions'];
+};
+const UserPositions: React.FC<UserPositionsProps> = ({
+  setPositions,
+  isSaving,
+  loadInstitutionOptions,
+  positions,
+}) => {
+  const updatePositions: ComponentProps<
+    typeof UserPosition
+  >['updatePositions'] = (position, index) => {
+    setPositions((previousState) =>
+      Object.assign([], previousState, { [index]: position }),
+    );
+  };
+
+  const addPosition = () => {
+    setPositions((previousState) => [
+      ...previousState,
+      { institution: '', department: '', role: '' },
+    ]);
+  };
+  return (
+    <>
+      {positions.map((position, index) => (
+        <UserPosition
+          updatePositions={updatePositions}
+          isSaving={isSaving}
+          loadInstitutionOptions={loadInstitutionOptions}
+          position={position}
+          index={index}
+          key={`position-${index}`}
+        />
+      ))}
+      <div css={buttonStyles}>
+        <Button onClick={addPosition} enabled={!isSaving} noMargin>
+          Add Another Institution
+        </Button>
+      </div>
+    </>
+  );
+};
 
 type UserPositionProps = {
   index: number;
@@ -213,14 +260,17 @@ const UserPosition: React.FC<UserPositionProps> = ({
   isSaving,
   loadInstitutionOptions,
   position,
+  index,
 }) => {
   const { institution = '', department = '', role = '' } = position;
   const onChange = (property: keyof gp2.UserPosition) => (value: string) =>
     updatePositions({ ...position, [property]: value }, 0);
+
+  const prefix = index === 0 ? 'Primary' : index === 1 ? 'Secondary' : 'Other';
   return (
     <>
       <LabeledTypeahead
-        title="Primary Institution"
+        title={`${prefix} Institution`}
         subtitle={required}
         required
         getValidationMessage={() => 'Please add your institution'}
@@ -231,7 +281,7 @@ const UserPosition: React.FC<UserPositionProps> = ({
         loadOptions={loadInstitutionOptions}
       />
       <LabeledTextField
-        title="Primary Department"
+        title={`${prefix} Department`}
         subtitle={required}
         enabled={!isSaving}
         onChange={onChange('department')}
@@ -239,7 +289,7 @@ const UserPosition: React.FC<UserPositionProps> = ({
         required
       />
       <LabeledTextField
-        title="Primary Role"
+        title={`${prefix} Role`}
         subtitle={required}
         enabled={!isSaving}
         onChange={onChange('role')}

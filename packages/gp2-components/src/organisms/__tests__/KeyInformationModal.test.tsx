@@ -140,4 +140,51 @@ describe('KeyInformatiomModal', () => {
     });
     await waitFor(() => expect(saveButton).toBeEnabled());
   }, 10000);
+  test('can click add an extra position', () => {
+    render(
+      <KeyInformationModal
+        {...defaultProps}
+        firstName="Gonçalo"
+        lastName="Ramos"
+        degrees={['PhD']}
+        positions={[
+          { institution: 'FPF', department: "Men's Team", role: 'Striker' },
+        ]}
+        country="Portugal"
+        city="Lisbon"
+        region="Europe"
+        onSave={jest.fn()}
+      />,
+      {
+        wrapper: MemoryRouter,
+      },
+    );
+    const addButton = screen.getByRole('button', {
+      name: /add another institution/i,
+    });
+    userEvent.click(addButton);
+    expect(
+      screen.getByRole('textbox', { name: 'Secondary Institution (required)' }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole('textbox', { name: 'Secondary Department (required)' }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole('textbox', { name: 'Secondary Role (required)' }),
+    ).toBeVisible();
+    userEvent.click(addButton);
+    expect(
+      screen.getByRole('textbox', { name: 'Other Institution (required)' }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole('textbox', { name: 'Other Department (required)' }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole('textbox', { name: 'Other Role (required)' }),
+    ).toBeVisible();
+  });
+  test.todo('can save an extra position');
+  test.todo('can delete an extra position');
+  test.todo('there can be only 3 positions');
+  test.todo('there is a minimum of one');
 });

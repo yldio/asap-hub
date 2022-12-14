@@ -1,13 +1,12 @@
 import { gp2 } from '@asap-hub/model';
 import {
-  Button,
   LabeledDropdown,
   LabeledMultiSelect,
   LabeledTextField,
-  LabeledTypeahead,
   mail,
 } from '@asap-hub/react-components';
 import { ComponentProps, useState } from 'react';
+import { UserPositions } from '../molecules';
 import EditUserModal from './EditUserModal';
 
 const { createMailTo } = mail;
@@ -178,7 +177,7 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
             onChange={setNewCity}
           />
           <UserPositions
-            setPositions={setPositions}
+            onChange={setPositions}
             isSaving={isSaving}
             loadInstitutionOptions={loadInstitutionOptions}
             positions={newPositions}
@@ -190,105 +189,3 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
 };
 
 export default KeyInformationModal;
-
-type UserPositionsProps = {
-  setPositions: (value: React.SetStateAction<gp2.UserPosition[]>) => void;
-  isSaving: boolean;
-  loadInstitutionOptions: (newValue?: string) => Promise<string[]>;
-  positions: gp2.UserResponse['positions'];
-};
-const UserPositions: React.FC<UserPositionsProps> = ({
-  setPositions,
-  isSaving,
-  loadInstitutionOptions,
-  positions,
-}) => {
-  const updatePositions: ComponentProps<
-    typeof UserPosition
-  >['updatePositions'] = (position, index) => {
-    setPositions((previousState) =>
-      Object.assign([], previousState, { [index]: position }),
-    );
-  };
-
-  const addPosition = () => {
-    setPositions((previousState) => [
-      ...previousState,
-      { institution: '', department: '', role: '' },
-    ]);
-  };
-  return (
-    <>
-      {positions.map((position, index) => (
-        <UserPosition
-          updatePositions={updatePositions}
-          isSaving={isSaving}
-          loadInstitutionOptions={loadInstitutionOptions}
-          position={position}
-          index={index}
-          key={`position-${index}`}
-        />
-      ))}
-      {positions.length < 3 && (
-        <Button onClick={addPosition} enabled={!isSaving} noMargin fullWidth>
-          Add Another Institution
-        </Button>
-      )}
-    </>
-  );
-};
-
-type UserPositionProps = {
-  index: number;
-  updatePositions: (
-    payload: gp2.UserResponse['positions'][number],
-    index: number,
-  ) => void;
-  isSaving: boolean;
-  loadInstitutionOptions: (newValue?: string) => Promise<string[]>;
-  position: gp2.UserPosition;
-};
-const UserPosition: React.FC<UserPositionProps> = ({
-  updatePositions,
-  isSaving,
-  loadInstitutionOptions,
-  position,
-  index,
-}) => {
-  const { institution = '', department = '', role = '' } = position;
-  const onChange = (property: keyof gp2.UserPosition) => (value: string) =>
-    updatePositions({ ...position, [property]: value }, index);
-
-  const prefix = index === 0 ? 'Primary' : index === 1 ? 'Secondary' : 'Other';
-  return (
-    <>
-      <LabeledTypeahead
-        title={`${prefix} Institution`}
-        subtitle={required}
-        required
-        getValidationMessage={() => 'Please add your institution'}
-        maxLength={44}
-        onChange={onChange('institution')}
-        value={institution}
-        enabled={!isSaving}
-        loadOptions={loadInstitutionOptions}
-      />
-      <LabeledTextField
-        title={`${prefix} Department`}
-        subtitle={required}
-        enabled={!isSaving}
-        onChange={onChange('department')}
-        value={department}
-        required
-      />
-      <LabeledTextField
-        title={`${prefix} Role`}
-        subtitle={required}
-        enabled={!isSaving}
-        onChange={onChange('role')}
-        value={role}
-        required
-      />
-    </>
-  );
-};

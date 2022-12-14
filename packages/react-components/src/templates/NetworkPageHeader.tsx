@@ -105,7 +105,7 @@ const getFilterOptionsAndPlaceholder = (page: Page) => {
     case 'working-groups':
       return {
         filterOptions: workingGroupFilters,
-        searchPlaceholder: 'Enter name, members, keyword, …',
+        searchPlaceholder: 'Enter name, keyword, …',
       };
 
     case 'teams':

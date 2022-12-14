@@ -17,7 +17,7 @@ export default class WorkingGroups implements WorkingGroupController {
   async fetch(options: FetchOptions): Promise<WorkingGroupListResponse> {
     const { filter, ...fetchOptions } = options;
 
-    const groupFilter =
+    const workingGroupFilter =
       filter?.length === 1
         ? {
             filter: {
@@ -28,7 +28,7 @@ export default class WorkingGroups implements WorkingGroupController {
 
     const { total, items } = await this.workingGroupDataProvider.fetch({
       ...fetchOptions,
-      ...groupFilter,
+      ...workingGroupFilter,
     });
 
     return { total, items };

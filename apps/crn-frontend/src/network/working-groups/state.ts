@@ -13,7 +13,6 @@ import {
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { authorizationState } from '../../auth/state';
 import { getWorkingGroup, getWorkingGroups } from './api';
-import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 
 const workingGroupIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,

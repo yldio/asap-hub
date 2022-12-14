@@ -96,14 +96,7 @@ export const workingGroupState = atomFamily<
 export const useWorkingGroupById = (id: string) =>
   useRecoilValue(workingGroupState(id));
 
-export const usePrefetchWorkingGroups = (
-  options: GetListOptions = {
-    filters: new Set(),
-    searchQuery: '',
-    pageSize: CARD_VIEW_PAGE_SIZE,
-    currentPage: 0,
-  },
-) => {
+export const usePrefetchWorkingGroups = (options: GetListOptions) => {
   const authorization = useRecoilValue(authorizationState);
   const [workingGroups, setWorkingGroups] = useRecoilState(
     workingGroupsState(options),

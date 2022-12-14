@@ -1,3 +1,7 @@
 import { migrateNews } from './news/news.data-migration';
+import { migratePages } from './pages/pages.data-migration';
 
-migrateNews();
+(async () => {
+  await migrateNews();
+  await migratePages();
+})();

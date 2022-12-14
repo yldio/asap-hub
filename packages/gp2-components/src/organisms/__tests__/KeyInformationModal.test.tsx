@@ -6,6 +6,12 @@ import { MemoryRouter } from 'react-router-dom';
 import KeyInformationModal from '../KeyInformationModal';
 
 describe('KeyInformatiomModal', () => {
+  const getSaveButton = () => screen.getByRole('button', { name: 'Save' });
+  const getAddButton = () =>
+    screen.getByRole('button', {
+      name: /add another institution/i,
+    });
+  beforeEach(jest.resetAllMocks);
   type KeyInformationModalProps = ComponentProps<typeof KeyInformationModal>;
   const defaultProps: KeyInformationModalProps = {
     ...gp2Fixtures.createUserResponse(),
@@ -14,18 +20,21 @@ describe('KeyInformatiomModal', () => {
     backHref: '',
     onSave: jest.fn(),
   };
+
   const renderKeyInformation = (
     overrides: Partial<KeyInformationModalProps> = {},
   ) =>
     render(<KeyInformationModal {...defaultProps} {...overrides} />, {
       wrapper: MemoryRouter,
     });
+
   it('renders a dialog with the right title', () => {
     renderKeyInformation();
     expect(screen.getByRole('dialog')).toContainElement(
       screen.getByRole('heading', { name: 'Key Information' }),
     );
   });
+
   it('renders the firstName and lastName fields', () => {
     renderKeyInformation();
     expect(
@@ -35,6 +44,7 @@ describe('KeyInformatiomModal', () => {
       screen.getByRole('textbox', { name: 'Last Name (required)' }),
     ).toBeVisible();
   });
+
   it('calls onSave with the right arguments', async () => {
     const onSave = jest.fn();
     const firstName = 'Gonçalo';
@@ -56,8 +66,7 @@ describe('KeyInformatiomModal', () => {
       region,
       onSave,
     });
-    const saveButton = screen.getByRole('button', { name: 'Save' });
-    userEvent.click(saveButton);
+    userEvent.click(getSaveButton());
     expect(onSave).toHaveBeenCalledWith({
       firstName,
       lastName,
@@ -67,8 +76,9 @@ describe('KeyInformatiomModal', () => {
       city,
       region,
     });
-    await waitFor(() => expect(saveButton).toBeEnabled());
+    await waitFor(() => expect(getSaveButton()).toBeEnabled());
   });
+
   it('calls onSave with the updated fields', async () => {
     const firstName = 'Gonçalo';
     const lastName = 'Ramos';
@@ -90,7 +100,7 @@ describe('KeyInformatiomModal', () => {
       region: 'Asia',
       onSave,
       locationSuggestions: ['Portugal'],
-      loadInstitutionOptions: () => Promise.resolve(['FPF']),
+      loadInstitutionOptions: () => Promise.resolve([positions[0].institution]),
     });
     userEvent.type(
       screen.getByRole('textbox', { name: 'First Name (required)' }),
@@ -131,7 +141,7 @@ describe('KeyInformatiomModal', () => {
       screen.getByRole('textbox', { name: 'Primary Role (required)' }),
       positions[0].role,
     );
-    const saveButton = screen.getByRole('button', { name: 'Save' });
+    const saveButton = getSaveButton();
     userEvent.click(saveButton);
     expect(onSave).toHaveBeenCalledWith({
       firstName,
@@ -144,11 +154,10 @@ describe('KeyInformatiomModal', () => {
     });
     await waitFor(() => expect(saveButton).toBeEnabled());
   }, 10000);
+
   test('can click add an extra position', () => {
     renderKeyInformation();
-    const addButton = screen.getByRole('button', {
-      name: /add another institution/i,
-    });
+    const addButton = getAddButton();
     userEvent.click(addButton);
     expect(
       screen.getByRole('textbox', { name: 'Secondary Institution (required)' }),
@@ -170,9 +179,64 @@ describe('KeyInformatiomModal', () => {
       screen.getByRole('textbox', { name: 'Other Role (required)' }),
     ).toBeVisible();
   });
-  test.todo('there can be only 3 positions');
-  test.todo('can save an extra position');
+
+  test('there can be only 3 positions', () => {
+    const positions = [
+      { institution: 'FPF', department: "Men's Team", role: 'Striker' },
+      { institution: 'Benfica', department: 'First Team', role: 'Forward' },
+      { institution: 'Olhanense', department: 'Youth Team', role: 'Attacker' },
+    ];
+    renderKeyInformation({
+      positions,
+    });
+    expect(
+      screen.queryByRole('button', {
+        name: /add another institution/i,
+      }),
+    ).not.toBeInTheDocument();
+  });
+
+  test('can save an extra position', async () => {
+    const onSave = jest.fn();
+    const position = {
+      institution: 'Olhanense',
+      department: 'Youth Team',
+      role: 'Attacker',
+    };
+    const positions = [
+      { institution: 'FPF', department: "Men's Team", role: 'Striker' },
+      { institution: 'Benfica', department: 'First Team', role: 'Forward' },
+    ];
+    renderKeyInformation({
+      positions,
+      onSave,
+      loadInstitutionOptions: () => Promise.resolve([position.institution]),
+    });
+    userEvent.click(getAddButton());
+
+    userEvent.click(
+      screen.getByRole('textbox', { name: /Other Institution/i }),
+    );
+    const institution = await screen.findByText(position.institution);
+    userEvent.click(institution);
+    userEvent.type(
+      screen.getByRole('textbox', { name: /Other Department/i }),
+      position.department,
+    );
+    userEvent.type(
+      screen.getByRole('textbox', { name: /Other Role/i }),
+      position.role,
+    );
+    const saveButton = getSaveButton();
+    userEvent.click(saveButton);
+    expect(onSave).toBeCalledWith(
+      expect.objectContaining({ positions: [...positions, position] }),
+    );
+    await waitFor(() => expect(saveButton).toBeEnabled());
+  });
+
   test.todo('can delete an extra position');
   test.todo('there is a minimum of one');
+  test.todo('all the information has been entered');
   test.todo('is there an add icon');
 });

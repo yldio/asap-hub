@@ -7,7 +7,6 @@ import {
   LabeledTypeahead,
   mail,
 } from '@asap-hub/react-components';
-import { css } from '@emotion/react';
 import { ComponentProps, useState } from 'react';
 import EditUserModal from './EditUserModal';
 
@@ -62,7 +61,7 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
   const [newRole, setNewRole] = useState(role);
   const [newRegion, setNewRegion] = useState(region);
   const [newCountry, setNewCountry] = useState(country);
-  const [newCity, setNewCity] = useState(city || '');
+  const [newCity, setNewCity] = useState(city);
 
   const [newPositions, setPositions] = useState(
     positions.length
@@ -78,11 +77,12 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
     newRegion !== region ||
     newCountry !== country ||
     newCity !== city ||
-    (newPositions.length > 0 &&
-      newPositions[0].department !== positions[0]?.department &&
-      newPositions[0].role !== positions[0]?.role &&
-      newPositions[0].institution !== positions[0]?.institution);
-
+    newPositions.some(
+      (newPosition, index) =>
+        newPosition.department !== positions[index]?.department ||
+        newPosition.role !== positions[index]?.role ||
+        newPosition.institution !== positions[index]?.institution,
+    );
   return (
     <EditUserModal
       title="Key Information"
@@ -174,7 +174,7 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
             title="City"
             subtitle={optional}
             enabled={!isSaving}
-            value={newCity}
+            value={newCity || ''}
             onChange={setNewCity}
           />
           <UserPositions
@@ -190,13 +190,6 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
 };
 
 export default KeyInformationModal;
-
-const buttonStyles = css({
-  width: '100%',
-  // [mobileQuery]: {
-  //   width: '100%',
-  // },
-});
 
 type UserPositionsProps = {
   setPositions: (value: React.SetStateAction<gp2.UserPosition[]>) => void;
@@ -236,11 +229,11 @@ const UserPositions: React.FC<UserPositionsProps> = ({
           key={`position-${index}`}
         />
       ))}
-      <div css={buttonStyles}>
+      {positions.length < 3 && (
         <Button onClick={addPosition} enabled={!isSaving} noMargin fullWidth>
           Add Another Institution
         </Button>
-      </div>
+      )}
     </>
   );
 };
@@ -264,7 +257,7 @@ const UserPosition: React.FC<UserPositionProps> = ({
 }) => {
   const { institution = '', department = '', role = '' } = position;
   const onChange = (property: keyof gp2.UserPosition) => (value: string) =>
-    updatePositions({ ...position, [property]: value }, 0);
+    updatePositions({ ...position, [property]: value }, index);
 
   const prefix = index === 0 ? 'Primary' : index === 1 ? 'Secondary' : 'Other';
   return (

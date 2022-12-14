@@ -237,7 +237,7 @@ const UserPositions: React.FC<UserPositionsProps> = ({
         />
       ))}
       <div css={buttonStyles}>
-        <Button onClick={addPosition} enabled={!isSaving} noMargin>
+        <Button onClick={addPosition} enabled={!isSaving} noMargin fullWidth>
           Add Another Institution
         </Button>
       </div>

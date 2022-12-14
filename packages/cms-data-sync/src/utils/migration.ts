@@ -1,6 +1,17 @@
+/* eslint-disable no-await-in-loop */
+
 import { Environment } from 'contentful-management';
 import { clearContentfulEntries, publishContentfulEntries } from './entries';
 import { logger as loggerFunc } from './logs';
+
+const addLocaleToFields = (payload: Record<string, unknown>) =>
+  Object.entries(payload).reduce(
+    (acc, [key, value]) => ({
+      ...acc,
+      [key]: { 'en-US': value },
+    }),
+    {},
+  );
 
 export const migrateFromSquidexToContentfulFactory =
   (contentfulEnvironment: Environment, logger: typeof loggerFunc) =>
@@ -19,6 +30,7 @@ export const migrateFromSquidexToContentfulFactory =
     await clearContentfulEntries(contentfulEnvironment, contentTypeId);
 
     const entries = [];
+    // eslint-disable-next-line no-restricted-syntax
     for (const item of data) {
       const parsed = await parseData(item);
 
@@ -61,12 +73,3 @@ export const migrateFromSquidexToContentfulFactory =
 
     await publishContentfulEntries(entries);
   };
-
-const addLocaleToFields = (payload: Record<string, unknown>) =>
-  Object.entries(payload).reduce(
-    (acc, [key, value]) => ({
-      ...acc,
-      [key]: { 'en-US': value },
-    }),
-    {},
-  );

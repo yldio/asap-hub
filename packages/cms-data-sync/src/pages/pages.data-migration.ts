@@ -35,11 +35,11 @@ export const migratePages = async () => {
     const { title, shortText, link, linkText, text, path } = squidexPageItem;
 
     const pagePayload = {
-      title: title!,
-      path: path!,
-      shortText: shortText,
-      link: link!,
-      linkText: linkText!,
+      title,
+      path,
+      shortText,
+      link,
+      linkText,
       text: null as Document | null,
     };
 
@@ -63,6 +63,7 @@ export const migratePages = async () => {
     // Most probably it failed because the rich text could not be
     // processed, so here we will try to create the entry
     // without the rich text
+    // eslint-disable-next-line no-param-reassign
     page.text = null;
 
     return page;

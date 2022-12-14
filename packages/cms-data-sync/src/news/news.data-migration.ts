@@ -1,5 +1,3 @@
-/* eslint-disable no-await-in-loop */
-/* eslint-disable no-restricted-syntax */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 import { Document } from '@contentful/rich-text-types';
@@ -46,7 +44,7 @@ export const migrateNews = async () => {
 
     const newsPayload = {
       title: title!,
-      shortText: shortText,
+      shortText,
       frequency: frequency || 'News Articles',
       link: link!,
       linkText: linkText!,
@@ -76,6 +74,7 @@ export const migrateNews = async () => {
     // Most probably it failed because the rich text could not be
     // processed, so here we will try to create the entry
     // without the rich text
+    // eslint-disable-next-line no-param-reassign
     news.text = null;
 
     return news;

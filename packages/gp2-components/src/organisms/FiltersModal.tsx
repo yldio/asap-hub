@@ -23,8 +23,8 @@ type FiltersModalProps = {
   onBackClick: () => void;
   filters: gp2Model.FetchUsersFilter;
   onApplyClick: (filters: gp2Model.FetchUsersFilter) => void;
-  projects: gp2Model.ProjectResponse[];
-  workingGroups: gp2Model.WorkingGroupResponse[];
+  projects: Pick<gp2Model.ProjectResponse, 'id' | 'title'>[];
+  workingGroups: Pick<gp2Model.WorkingGroupResponse, 'id' | 'title'>[];
 };
 
 const getValues = <T extends string>(selected: T[]) =>
@@ -48,6 +48,12 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
   projects,
   workingGroups,
 }) => {
+  const entityToSelect = <T extends { title: string; id: string }>({
+    title,
+    id,
+  }: T) => ({ label: title, value: id });
+  const sortByLabel = <T extends { label: string }>(a: T, b: T) =>
+    a.label.localeCompare(b.label);
   const [selectedRegions, setSelectedRegions] = useState(filters.regions || []);
   const [selectedExpertise, setSelectedExpertise] = useState(
     filters.keywords || [],
@@ -55,12 +61,12 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
   const [selectedProjects, setSelectedProjects] = useState(
     projects
       .filter(({ id }) => filters.projects?.includes(id))
-      .map(({ id, title }) => ({ label: title, value: id })) || [],
+      .map(entityToSelect),
   );
   const [selectedWorkingGroups, setSelectedWorkingGroups] = useState(
     workingGroups
       .filter(({ id }) => filters.workingGroups?.includes(id))
-      .map(({ id, title }) => ({ label: title, value: id })) || [],
+      .map(entityToSelect),
   );
   const resetFilters = () => {
     setSelectedRegions([]);
@@ -101,35 +107,25 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
         <LabeledMultiSelect
           title="Working Groups"
           placeholder="Start typing…"
-          suggestions={workingGroups.map(({ id, title }) => ({
-            label: title,
-            value: id,
-          }))}
+          suggestions={workingGroups.map(entityToSelect).sort(sortByLabel)}
           values={selectedWorkingGroups}
           noOptionsMessage={getNoOptionsMessage(
             'Sorry, no current working groups match',
           )}
           onChange={(newValues) => {
-            setSelectedWorkingGroups(
-              newValues.map(({ value, label }) => ({ value, label })),
-            );
+            setSelectedWorkingGroups([...newValues]);
           }}
         />
         <LabeledMultiSelect
           title="Projects"
           placeholder="Start typing…"
-          suggestions={projects.map(({ id, title }) => ({
-            label: title,
-            value: id,
-          }))}
+          suggestions={projects.map(entityToSelect).sort(sortByLabel)}
           values={selectedProjects}
           noOptionsMessage={getNoOptionsMessage(
             'Sorry, no current projects match',
           )}
           onChange={(newValues) => {
-            setSelectedProjects(
-              newValues.map(({ value, label }) => ({ value, label })),
-            );
+            setSelectedProjects([...newValues]);
           }}
         />
         <Divider />

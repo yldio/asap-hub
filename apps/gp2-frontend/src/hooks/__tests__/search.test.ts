@@ -1,3 +1,4 @@
+import { searchQueryParam } from '@asap-hub/routing';
 import { renderHook } from '@testing-library/react-hooks';
 import { MemoryRouter, useHistory } from 'react-router-dom';
 import { usePagination, usePaginationParams } from '../pagination';
@@ -174,6 +175,65 @@ describe('useSearch', () => {
         pathname: '/test2',
         search: `${queryParam}=${value}`,
       });
+    });
+  });
+  describe('property searchQuery', () => {
+    it('defaults to empty', () => {
+      const { result } = renderHook(() => useSearch(), {
+        wrapper: MemoryRouter,
+      });
+      expect(result.current.searchQuery).toEqual('');
+    });
+
+    it('is taken from the query param', () => {
+      const { result } = renderHook(() => useSearch(), {
+        wrapper: MemoryRouter,
+        initialProps: {
+          initialEntries: [`/test?${searchQueryParam}=test123`],
+        },
+      });
+      expect(result.current.searchQuery).toEqual('test123');
+    });
+
+    it('can be changed', () => {
+      const { result } = renderHook(() => useSearch(), {
+        wrapper: MemoryRouter,
+        initialProps: {
+          initialEntries: ['/test'],
+        },
+      });
+      result.current.setSearchQuery('test123');
+      expect(result.current.searchQuery).toEqual('test123');
+    });
+
+    it('can be removed', () => {
+      const { result } = renderHook(() => useSearch(), {
+        wrapper: MemoryRouter,
+        initialProps: {
+          initialEntries: ['/test?searchQuery=test123'],
+        },
+      });
+      result.current.setSearchQuery('');
+      expect(result.current.searchQuery).toEqual('');
+    });
+
+    it('resets pagination when changed', () => {
+      const { result } = renderHook(
+        () => ({
+          useSearch: useSearch(),
+          usePaginationParams: usePaginationParams(),
+          usePagination: usePagination(50, 1),
+        }),
+        {
+          wrapper: MemoryRouter,
+          initialProps: {
+            initialEntries: ['/test?currentPage=2'],
+          },
+        },
+      );
+      expect(result.current.usePaginationParams.currentPage).toBe(2);
+      result.current.useSearch.setSearchQuery('test123');
+      expect(result.current.usePaginationParams.currentPage).toBe(0);
     });
   });
 });

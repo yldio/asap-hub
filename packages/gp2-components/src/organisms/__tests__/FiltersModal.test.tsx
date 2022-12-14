@@ -1,7 +1,8 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { FiltersModal } from '../..';
+import { ComponentProps } from 'react';
+import FiltersModal from '../FiltersModal';
 
 const { userRegions, keywords } = gp2Model;
 
@@ -13,24 +14,16 @@ describe('FiltersModal', () => {
     projects: [],
     workingGroups: [],
   };
-  const projects: gp2Model.ProjectResponse[] = [
+  const projects: ComponentProps<typeof FiltersModal>['projects'] = [
     {
       id: '42',
       title: 'The HHG Project',
-      keywords: [],
-      milestones: [],
-      members: [],
-      startDate: '2021-12-28',
-      status: 'Inactive',
     },
   ];
-  const workingGroups: gp2Model.WorkingGroupResponse[] = [
+  const workingGroups: ComponentProps<typeof FiltersModal>['workingGroups'] = [
     {
       id: '11',
       title: 'a working group',
-      members: [],
-      shortDescription: '',
-      description: '',
     },
   ];
   const getRegionsField = () =>
@@ -259,5 +252,80 @@ describe('FiltersModal', () => {
         .textContent,
     ).toContain('1 filter');
     expect(screen.getByText(expected)).toBeVisible();
+  });
+  describe('sorting', () => {
+    it('sorts projects', () => {
+      const projectsList = [
+        {
+          id: '42',
+          title: 'ProjectB',
+        },
+        {
+          id: '27',
+          title: 'ProjectC',
+        },
+        {
+          id: '11',
+          title: 'ProjectA',
+        },
+      ];
+      render(<FiltersModal {...defaultProps} projects={projectsList} />);
+      userEvent.click(getProjectsField());
+      const options =
+        screen.getByText('ProjectA').parentElement?.childNodes || [];
+      expect(options[0]).toHaveTextContent('ProjectA');
+      expect(options[1]).toHaveTextContent('ProjectB');
+      expect(options[2]).toHaveTextContent('ProjectC');
+    });
+    it('sorts working groups', () => {
+      const workingGroupList = [
+        {
+          id: '42',
+          title: 'GroupB',
+        },
+        {
+          id: '27',
+          title: 'GroupC',
+        },
+        {
+          id: '11',
+          title: 'GroupA',
+        },
+      ];
+      render(
+        <FiltersModal {...defaultProps} workingGroups={workingGroupList} />,
+      );
+      userEvent.click(getWorkingGroupsField());
+      const options =
+        screen.getByText('GroupA').parentElement?.childNodes || [];
+      expect(options[0]).toHaveTextContent('GroupA');
+      expect(options[1]).toHaveTextContent('GroupB');
+      expect(options[2]).toHaveTextContent('GroupC');
+    });
+    it('sorts expertise', () => {
+      const workingGroupList = [
+        {
+          id: '42',
+          title: 'GroupB',
+        },
+        {
+          id: '27',
+          title: 'GroupC',
+        },
+        {
+          id: '11',
+          title: 'GroupA',
+        },
+      ];
+      render(
+        <FiltersModal {...defaultProps} workingGroups={workingGroupList} />,
+      );
+      userEvent.click(getWorkingGroupsField());
+      const options =
+        screen.getByText('GroupA').parentElement?.childNodes || [];
+      expect(options[0]).toHaveTextContent('GroupA');
+      expect(options[1]).toHaveTextContent('GroupB');
+      expect(options[2]).toHaveTextContent('GroupC');
+    });
   });
 });

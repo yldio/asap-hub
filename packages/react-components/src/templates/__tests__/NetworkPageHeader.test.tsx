@@ -52,7 +52,7 @@ it('alters the search placeholder based on the tab', () => {
   );
   expect(
     (getByRole('searchbox') as HTMLInputElement).placeholder,
-  ).toMatchInlineSnapshot(`"Enter name, members, keyword, …"`);
+  ).toMatchInlineSnapshot(`"Enter name, keyword, …"`);
 });
 
 it('shows the filter in all the tabs (teams, groups, working-groups and users)', () => {

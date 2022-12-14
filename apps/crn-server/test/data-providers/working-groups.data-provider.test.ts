@@ -1,5 +1,6 @@
 import { appName, baseUrl } from '../../src/config';
 import { WorkingGroupSquidexDataProvider } from '../../src/data-providers/working-groups.data-provider';
+import { createUrl } from '../../src/utils/urls';
 import { getGraphQLUser } from '../fixtures/users.fixtures';
 import {
   getSquidexWorkingGroupGraphqlResponse,
@@ -205,10 +206,12 @@ describe('Working Group Data Provider', () => {
       });
 
       test('Should return members', async () => {
+        const graphqlUser = getGraphQLUser();
+
         const squidexGraphqlResponse = getSquidexWorkingGroupGraphqlResponse();
         squidexGraphqlResponse.findWorkingGroupsContent!.flatData.members = [
           {
-            user: [getGraphQLUser()],
+            user: [graphqlUser],
           },
         ];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
@@ -221,13 +224,15 @@ describe('Working Group Data Provider', () => {
         expect(response?.members).toStrictEqual([
           {
             user: {
-              id: 'user-id-1',
-              displayName: 'Tom Hardy',
-              firstName: 'Tom',
-              lastName: 'Hardy',
-              email: 'H@rdy.io',
-              alumniSinceDate: null,
-              avatarUrl: undefined,
+              id: graphqlUser.id,
+              displayName: `${graphqlUser.flatData.firstName} ${graphqlUser.flatData.lastName}`,
+              firstName: graphqlUser.flatData.firstName,
+              lastName: graphqlUser.flatData.lastName,
+              email: graphqlUser.flatData.email,
+              alumniSinceDate: graphqlUser.flatData.alumniSinceDate,
+              avatarUrl: graphqlUser.flatData.avatar?.length
+                ? createUrl(graphqlUser.flatData.avatar.map((a) => a.id))[0]
+                : undefined,
             },
           },
         ]);

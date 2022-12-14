@@ -327,7 +327,7 @@ describe('Working Group Data Provider', () => {
             workingGroupId,
           );
 
-          expect(response?.[user][0]?.user?.avatarUrl).toEqual(expectedValue);
+          expect(response![user][0]!.user!.avatarUrl).toEqual(expectedValue);
         },
       );
     });

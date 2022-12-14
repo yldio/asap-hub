@@ -19,7 +19,7 @@ const UserPosition: React.FC<UserPositionProps> = ({
   position,
   index,
 }) => {
-  const { institution = '', department = '', role = '' } = position;
+  const { institution, department, role } = position;
   const onChangeValue = (property: keyof gp2.UserPosition) => (value: string) =>
     onChange({ ...position, [property]: value }, index);
 

@@ -18,6 +18,7 @@ const workingGroupsProps = (): ComponentProps<typeof NetworkWorkingGroups> => {
       description: 'Test description',
       externalLink: 'https://www.google.com',
       lastModifiedDate: '2020-01-1',
+      complete: false,
     })).slice(currentPageIndex * 10, currentPageIndex * 10 + 10),
     numberOfItems,
     numberOfPages: Math.max(1, Math.ceil(numberOfItems / 10)),

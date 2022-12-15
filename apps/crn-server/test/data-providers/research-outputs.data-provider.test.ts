@@ -847,7 +847,7 @@ describe('ResearchOutputs data provider', () => {
         const researchOutputRequest = getResearchOutputCreateDataObject();
         const teamId = researchOutputRequest.teamIds[0];
         const researchOutputId = 'created-output-id';
-
+        console.log(researchOutputRequest);
         nock(baseUrl)
           // Create the ResearchOutput
           .post(

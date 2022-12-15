@@ -39,6 +39,7 @@ const TabLink: React.FC<TabLinkProps> = (props) => {
         if (!props.visited) {
           return e.preventDefault();
         }
+        return e;
       };
       const disabledStep = !props.visited ? { color: tin.rgb } : {};
       return (

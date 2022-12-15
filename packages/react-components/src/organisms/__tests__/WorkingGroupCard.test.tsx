@@ -10,6 +10,7 @@ const props: ComponentProps<typeof WorkingGroupCard> = {
   externalLink: 'https://www.google.com',
   shortText: 'My Working Group Description',
   lastModifiedDate: '2020-01-1',
+  complete: false,
 };
 
 it('renders the working group card', () => {
@@ -48,4 +49,13 @@ it('renders the working group shortText linking to the working group', () => {
     'href',
     expect.stringMatching(/42$/),
   );
+});
+
+it('renders the state tag for a complete working group', () => {
+  const { getByText, rerender, queryByText } = render(
+    <WorkingGroupCard {...props} complete={true} />,
+  );
+  expect(getByText('Complete', { selector: 'span' })).toBeVisible();
+  rerender(<WorkingGroupCard {...props} complete={false} />);
+  expect(queryByText('Complete')).not.toBeInTheDocument();
 });

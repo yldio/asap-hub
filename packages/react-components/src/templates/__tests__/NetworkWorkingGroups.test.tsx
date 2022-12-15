@@ -11,6 +11,7 @@ const props: ComponentProps<typeof NetworkWorkingGroups> = {
       externalLink: 'https://www.google.com',
       shortText: 'My Working Group Description',
       lastModifiedDate: '2020-01-1',
+      complete: false,
     },
     {
       id: '42',
@@ -18,6 +19,7 @@ const props: ComponentProps<typeof NetworkWorkingGroups> = {
       externalLink: 'https://www.google.com',
       shortText: 'My Working Group Description',
       lastModifiedDate: '2020-01-1',
+      complete: false,
     },
   ],
   numberOfItems: 2,

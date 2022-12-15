@@ -2,7 +2,8 @@ import { css } from '@emotion/react';
 import { WorkingGroupResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
-import { Card, Paragraph, Anchor, Caption, Ellipsis } from '../atoms';
+import { Card, Paragraph, Anchor, Caption, Ellipsis, StateTag } from '../atoms';
+import { successIcon } from '../icons';
 import { ExternalLink, LinkHeadline } from '../molecules';
 import { perRem, tabletScreen } from '../pixels';
 import { formatDate } from '../date';
@@ -21,7 +22,15 @@ const titleStyle = css({
 });
 
 const linkStyle = css({
-  marginBottom: `${15 / perRem}em`,
+  display: 'flex',
+  marginBottom: `${16 / perRem}em`,
+  flexFlow: 'column',
+  gap: `${12 / perRem}em`,
+
+  [`@media (min-width: ${tabletScreen.min}px)`]: {
+    flexFlow: 'row',
+    gap: `${16 / perRem}em`,
+  },
 });
 
 const shortTextStyle = css({
@@ -33,7 +42,12 @@ const shortTextStyle = css({
 
 type WorkingGroupCardProps = Pick<
   WorkingGroupResponse,
-  'id' | 'title' | 'shortText' | 'externalLink' | 'lastModifiedDate'
+  | 'id'
+  | 'title'
+  | 'shortText'
+  | 'externalLink'
+  | 'lastModifiedDate'
+  | 'complete'
 >;
 
 const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
@@ -42,8 +56,12 @@ const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
   shortText,
   externalLink,
   lastModifiedDate,
+  complete,
 }) => (
-  <Card overrideStyles={wrapperStyle}>
+  <Card
+    overrideStyles={wrapperStyle}
+    accent={complete ? 'neutral200' : 'default'}
+  >
     <div css={titleStyle}>
       <LinkHeadline
         href={
@@ -65,6 +83,11 @@ const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
           noMargin
           size="large"
         />
+      )}
+      {complete && (
+        <div>
+          <StateTag accent="green" icon={successIcon} label="Complete" />
+        </div>
       )}
     </div>
     <div css={shortTextStyle}>

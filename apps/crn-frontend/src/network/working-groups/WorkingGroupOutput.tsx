@@ -1,20 +1,18 @@
-import { clearAjvErrorForPath, Frame } from '@asap-hub/frontend-utils';
+import { Frame } from '@asap-hub/frontend-utils';
 import {
   ResearchOutputDocumentType,
-  ValidationErrorResponse,
   ResearchOutputResponse,
   ResearchOutputPublishingEntities,
   ResearchOutputPostRequest,
   ResearchOutputPutRequest,
 } from '@asap-hub/model';
 import { NotFoundPage, ResearchOutputPage } from '@asap-hub/react-components';
-import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import {
   network,
   OutputDocumentTypeParameter,
   useRouteParams,
 } from '@asap-hub/routing';
-import React, { useContext, useState } from 'react';
+import React from 'react';
 import researchSuggestions from '../teams/research-suggestions';
 import {
   useAuthorSuggestions,
@@ -40,14 +38,6 @@ export function paramOutputDocumentTypeToResearchOutputDocumentType(
   switch (data) {
     case 'article':
       return 'Article';
-    case 'bioinformatics':
-      return 'Bioinformatics';
-    case 'dataset':
-      return 'Dataset';
-    case 'lab-resource':
-      return 'Lab Resource';
-    case 'protocol':
-      return 'Protocol';
     default:
       return 'Article';
   }
@@ -62,15 +52,10 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   researchOutputData,
 }) => {
   const paramOutputDocumentType = useParamOutputDocumentType(workingGroupId);
-  const documentType =
-    researchOutputData?.documentType ||
-    paramOutputDocumentTypeToResearchOutputDocumentType(
-      paramOutputDocumentType,
-    );
+  const documentType = paramOutputDocumentTypeToResearchOutputDocumentType(
+    paramOutputDocumentType,
+  );
   const workingGroup = useWorkingGroupById(workingGroupId);
-  const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
-
-  const { canCreateUpdate } = useContext(ResearchOutputPermissionsContext);
 
   const getLabSuggestions = useLabSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();
@@ -78,7 +63,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   const researchTags = useResearchTags();
   const publishingEntity: ResearchOutputPublishingEntities = 'Working Group';
 
-  if (canCreateUpdate && workingGroup) {
+  if (workingGroup) {
     return (
       <Frame title="Share Working Group Research Output">
         <ResearchOutputPage
@@ -99,10 +84,6 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
           }
           getTeamSuggestions={getTeamSuggestions}
           researchTags={researchTags}
-          serverValidationErrors={errors}
-          clearServerValidationError={(instancePath: string) =>
-            setErrors(clearAjvErrorForPath(errors, instancePath))
-          }
           researchOutputData={researchOutputData}
           isEditMode={false}
           publishingEntity={publishingEntity}

@@ -56,13 +56,10 @@ describe('UserPosition', () => {
     const institutionBox = await screen.findByText(institution);
     userEvent.click(institutionBox);
 
-    expect(onChange).toHaveBeenCalledWith(
-      {
-        ...defaultProps.position,
-        institution,
-      },
-      1,
-    );
+    expect(onChange).toHaveBeenCalledWith({
+      ...defaultProps.position,
+      institution,
+    });
   });
   it('can save a position department', async () => {
     const onChange = jest.fn();
@@ -76,13 +73,10 @@ describe('UserPosition', () => {
       department,
     );
 
-    expect(onChange).toHaveBeenCalledWith(
-      {
-        ...defaultProps.position,
-        department,
-      },
-      1,
-    );
+    expect(onChange).toHaveBeenCalledWith({
+      ...defaultProps.position,
+      department,
+    });
   });
   test('can save a position role', async () => {
     const onChange = jest.fn();
@@ -93,10 +87,7 @@ describe('UserPosition', () => {
     });
     userEvent.type(screen.getByRole('textbox', { name: /Role/i }), role);
 
-    expect(onChange).toHaveBeenCalledWith(
-      { ...defaultProps.position, role },
-      1,
-    );
+    expect(onChange).toHaveBeenCalledWith({ ...defaultProps.position, role });
   });
   test.each`
     index | prefix

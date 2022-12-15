@@ -20,10 +20,7 @@ const buttonStyles = css({ margin: 0 });
 
 type UserPositionProps = {
   index: number;
-  onChange: (
-    payload: gp2.UserResponse['positions'][number],
-    index: number,
-  ) => void;
+  onChange: (payload: gp2.UserResponse['positions'][number]) => void;
   isSaving: boolean;
   loadInstitutionOptions: (newValue?: string) => Promise<string[]>;
   position: gp2.UserPosition;
@@ -39,7 +36,7 @@ const UserPosition: React.FC<UserPositionProps> = ({
 }) => {
   const { institution, department, role } = position;
   const onChangeValue = (property: keyof gp2.UserPosition) => (value: string) =>
-    onChange({ ...position, [property]: value }, index);
+    onChange({ ...position, [property]: value });
 
   const prefix =
     index === 0 ? 'Primary' : index === 1 ? 'Secondary' : 'Tertiary';

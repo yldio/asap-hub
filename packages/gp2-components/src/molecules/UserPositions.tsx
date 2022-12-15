@@ -25,12 +25,12 @@ const UserPositions: React.FC<UserPositionsProps> = ({
   loadInstitutionOptions,
   positions,
 }) => {
-  const update: ComponentProps<typeof UserPosition>['onChange'] = (
-    position,
-    index,
-  ) => {
-    onChange(Object.assign([], positions, { [index]: position }));
-  };
+  const update: (
+    index: number,
+  ) => ComponentProps<typeof UserPosition>['onChange'] =
+    (index: number) => (position) => {
+      onChange(Object.assign([], positions, { [index]: position }));
+    };
 
   const add = () => {
     onChange([...positions, { institution: '', department: '', role: '' }]);
@@ -49,7 +49,7 @@ const UserPositions: React.FC<UserPositionsProps> = ({
       {positions.map((position, index) => (
         <UserPosition
           onRemove={remove(index)}
-          onChange={update}
+          onChange={update(index)}
           isSaving={isSaving}
           loadInstitutionOptions={loadInstitutionOptions}
           position={position}

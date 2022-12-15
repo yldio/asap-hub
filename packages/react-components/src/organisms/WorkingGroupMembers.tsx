@@ -15,6 +15,14 @@ const containerStyles = css({
   },
 });
 
+type LeaderListProps = {
+  data: WorkingGroupLeader[];
+};
+
+type MemberListProps = {
+  data: WorkingGroupMember[];
+};
+
 type GroupLeadersTabbedCardProps = {
   leaders: ReadonlyArray<
     Pick<WorkingGroupLeader, 'user' | 'role' | 'workstreamRole'>
@@ -55,7 +63,7 @@ const GroupLeadersTabbedCard: React.FC<GroupLeadersTabbedCardProps> = ({
           },
         ]}
       >
-        {({ data }) => (
+        {({ data }: LeaderListProps) => (
           <div css={containerStyles}>
             <MembersList
               members={data
@@ -87,11 +95,11 @@ const GroupLeadersTabbedCard: React.FC<GroupLeadersTabbedCardProps> = ({
             truncateFrom: 8,
           },
         ]}
-        getShowMoreText={(showMore) =>
+        getShowMoreText={(showMore: boolean) =>
           `View ${showMore ? 'Less' : 'More'} Members`
         }
       >
-        {({ data }) => (
+        {({ data }: MemberListProps) => (
           <div css={containerStyles}>
             <MembersList
               members={data

@@ -7,7 +7,7 @@ import UserPositions from '../UserPositions';
 describe('UserPositions', () => {
   const getAddButton = () =>
     screen.getByRole('button', {
-      name: /add another institution/i,
+      name: /add more/i,
     });
   beforeEach(jest.resetAllMocks);
   type UserPositionsProps = ComponentProps<typeof UserPositions>;
@@ -68,7 +68,7 @@ describe('UserPositions', () => {
     });
     expect(
       screen.queryByRole('button', {
-        name: /add another institution/i,
+        name: /add more/i,
       }),
     ).not.toBeInTheDocument();
   });

@@ -1,8 +1,18 @@
 import { gp2 } from '@asap-hub/model';
 import { Button } from '@asap-hub/react-components';
 import { ComponentProps } from 'react';
+import { css } from '@emotion/react';
 import UserPosition from './UserPosition';
+import { addIcon } from '../icons';
+import { mobileQuery } from '../layout';
 
+const buttonStyles = css({
+  width: 'fit-content',
+  margin: 'auto',
+  [mobileQuery]: {
+    width: '100%',
+  },
+});
 type UserPositionsProps = {
   onChange: (value: gp2.UserPosition[]) => void;
   isSaving: boolean;
@@ -38,9 +48,11 @@ const UserPositions: React.FC<UserPositionsProps> = ({
         />
       ))}
       {positions.length < 3 && (
-        <Button onClick={addPosition} enabled={!isSaving} noMargin fullWidth>
-          Add Another Institution
-        </Button>
+        <div css={buttonStyles}>
+          <Button onClick={addPosition} enabled={!isSaving}>
+            Add More {addIcon}
+          </Button>
+        </div>
       )}
     </>
   );

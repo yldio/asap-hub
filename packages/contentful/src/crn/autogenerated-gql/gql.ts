@@ -9,6 +9,8 @@ const documents = {
     graphql.FetchNewsByIdDocument,
   '\n  query FetchNews(\n    $limit: Int\n    $skip: Int\n    $order: [NewsOrder]\n    $where: NewsFilter\n  ) {\n    newsCollection(limit: $limit, skip: $skip, order: $order, where: $where) {\n      total\n      items {\n        ...NewsContent\n      }\n    }\n  }\n  \n':
     graphql.FetchNewsDocument,
+  '\n  query FetchPages($where: PagesFilter) {\n    pagesCollection(limit: 100, where: $where) {\n      total\n      items {\n        sys {\n          id\n        }\n        title\n        path\n        shortText\n        text {\n          json\n        }\n        link\n        linkText\n      }\n    }\n  }\n':
+    graphql.FetchPagesDocument,
 };
 
 export function gql(
@@ -20,6 +22,9 @@ export function gql(
 export function gql(
   source: '\n  query FetchNews(\n    $limit: Int\n    $skip: Int\n    $order: [NewsOrder]\n    $where: NewsFilter\n  ) {\n    newsCollection(limit: $limit, skip: $skip, order: $order, where: $where) {\n      total\n      items {\n        ...NewsContent\n      }\n    }\n  }\n  \n',
 ): typeof documents['\n  query FetchNews(\n    $limit: Int\n    $skip: Int\n    $order: [NewsOrder]\n    $where: NewsFilter\n  ) {\n    newsCollection(limit: $limit, skip: $skip, order: $order, where: $where) {\n      total\n      items {\n        ...NewsContent\n      }\n    }\n  }\n  \n'];
+export function gql(
+  source: '\n  query FetchPages($where: PagesFilter) {\n    pagesCollection(limit: 100, where: $where) {\n      total\n      items {\n        sys {\n          id\n        }\n        title\n        path\n        shortText\n        text {\n          json\n        }\n        link\n        linkText\n      }\n    }\n  }\n',
+): typeof documents['\n  query FetchPages($where: PagesFilter) {\n    pagesCollection(limit: 100, where: $where) {\n      total\n      items {\n        sys {\n          id\n        }\n        title\n        path\n        shortText\n        text {\n          json\n        }\n        link\n        linkText\n      }\n    }\n  }\n'];
 
 export function gql(source: string): unknown;
 export function gql(source: string) {

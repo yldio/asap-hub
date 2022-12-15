@@ -3,6 +3,7 @@ import {
   EventHappeningTodayReminder,
   FetchRemindersOptions,
   ResearchOutputPublishedReminder,
+  SharePresentationReminder,
 } from '@asap-hub/model';
 import Reminders, {
   formattedMaterialByEventType,
@@ -15,6 +16,7 @@ import {
   getVideoEventUpdatedReminder,
   getPresentationUpdatedReminder,
   getNotesUpdatedReminder,
+  getSharePresentationReminder,
 } from '../fixtures/reminders.fixtures';
 import { reminderDataProviderMock } from '../mocks/reminder-data-provider.mock';
 
@@ -154,6 +156,26 @@ describe('Reminder Controller', () => {
 
         expect(items[0]).toMatchObject({
           description: `Some Test Event Title event is happening now! Click here to join the meeting!`,
+          href: `/events/some-event-id`,
+        });
+      });
+
+      test('Should return the correct description and href for the share presentation reminder', async () => {
+        const reminderDataObject: SharePresentationReminder =
+          getSharePresentationReminder();
+        reminderDataObject.data.title = 'Some Test Event Title';
+        reminderDataObject.data.eventId = 'some-event-id';
+
+        reminderDataProviderMock.fetch.mockResolvedValueOnce({
+          total: 1,
+          items: [reminderDataObject],
+        });
+
+        const { items } = await reminderController.fetch(options);
+
+        expect(items[0]).toMatchObject({
+          description:
+            "Don't forget to share your presentation for the Some Test Event Title event with your Project Manager.",
           href: `/events/some-event-id`,
         });
       });

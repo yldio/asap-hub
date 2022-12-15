@@ -54,11 +54,7 @@ export const userRouteFactory = (userController: UserController): Router =>
           );
         }
 
-        const userFetchOptions = {
-          ...options,
-          filter: options.filter,
-        };
-        const users = await userController.fetch(userFetchOptions);
+        const users = await userController.fetch(options);
 
         res.json(users);
       },

@@ -1,8 +1,14 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
-import { gp2 as gp2Model } from '@asap-hub/model';
+import { gp2 as gp2Model, InstitutionsResponse } from '@asap-hub/model';
 import nock from 'nock';
 import { API_BASE_URL } from '../../config';
-import { createUserApiUrl, getUser, getUsers } from '../api';
+import {
+  createUserApiUrl,
+  getInstitutions,
+  getUser,
+  getUsers,
+  patchUser,
+} from '../api';
 
 jest.mock('../../config');
 
@@ -95,6 +101,48 @@ describe('getUsers', () => {
   });
 });
 
+describe('patchUser', () => {
+  it('makes an authorized PATCH request for the user id', async () => {
+    const patch = { firstName: 'New Name' };
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .patch('/users/42')
+      .reply(200, {});
+
+    await patchUser('42', patch, 'Bearer x');
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('passes the patch object in the body', async () => {
+    const patch = { firstName: 'New Name' };
+    nock(API_BASE_URL).patch('/users/42', patch).reply(200, {});
+
+    await patchUser('42', patch, '');
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('returns a successfully updated user', async () => {
+    const patch = { firstName: 'New Name' };
+    const updated = {
+      email: 'someone@example.com',
+      firstName: 'New Name',
+    };
+    nock(API_BASE_URL).patch('/users/42', patch).reply(200, updated);
+
+    expect(await patchUser('42', patch, '')).toEqual(updated);
+  });
+
+  it('errors for an error status', async () => {
+    const patch = { firstName: 'New Name' };
+    nock(API_BASE_URL).patch('/users/42', patch).reply(500, {});
+
+    await expect(
+      patchUser('42', patch, ''),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Failed to update user with id 42. Expected status 2xx. Received status 500."`,
+    );
+  });
+});
+
 describe('createUserApiUrl', () => {
   it('uses the values for take and skip params', async () => {
     const url = createUserApiUrl({
@@ -111,14 +159,67 @@ describe('createUserApiUrl', () => {
     expect(url.searchParams.get('search')).toEqual('test123');
   });
 
-  it('handles requests with filters', async () => {
-    const url = createUserApiUrl({
-      filter: { region: ['Africa', 'Asia'], onlyOnboarded: false },
-    });
-    expect(url.searchParams.getAll('filter[region]')).toEqual([
-      'Africa',
-      'Asia',
-    ]);
-    expect(url.searchParams.get('filter[onlyOnboarded]')).toEqual('false');
+  it.each`
+    name               | value
+    ${'regions'}       | ${['Africa', 'Asia']}
+    ${'keywords'}      | ${['Bash', 'R']}
+    ${'projects'}      | ${['a project', 'another project']}
+    ${'workingGroups'} | ${['a working group', 'another working group']}
+  `(
+    'handles requests with filters for $name - new',
+    async ({ name, value }) => {
+      const url = createUserApiUrl({
+        filter: { [name]: value, onlyOnboarded: false },
+      });
+      expect(url.searchParams.getAll(`filter[${name}]`)).toEqual(value);
+      expect(url.searchParams.get('filter[onlyOnboarded]')).toEqual('false');
+    },
+  );
+});
+
+describe('getInstitutions', () => {
+  const validResponse: InstitutionsResponse = {
+    number_of_results: 1,
+    time_taken: 0,
+    items: [
+      {
+        name: 'Institution 1',
+        id: 'id-1',
+        email_address: 'example@example.com',
+        status: '',
+        wikipedia_url: '',
+        established: 1999,
+        aliases: [],
+        acronyms: [],
+        links: [],
+        types: [],
+      },
+    ],
+  };
+  it('returns successfully fetched institutions', async () => {
+    nock('https://api.ror.org')
+      .get('/organizations')
+      .query({})
+      .reply(200, validResponse);
+    expect(await getInstitutions()).toEqual(validResponse);
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('returns queried institutions', async () => {
+    nock('https://api.ror.org')
+      .get('/organizations')
+      .query({ query: 'abc' })
+      .reply(200, validResponse);
+    expect(await getInstitutions({ searchQuery: 'abc' })).toEqual(
+      validResponse,
+    );
+    expect(nock.isDone()).toBe(true);
+  });
+  it('errors for an error status', async () => {
+    nock('https://api.ror.org').get('/organizations').reply(500, {});
+
+    await expect(getInstitutions()).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Failed to fetch institutions. Expected status 2xx. Received status 500."`,
+    );
   });
 });

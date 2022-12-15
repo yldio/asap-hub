@@ -149,8 +149,8 @@ describe('with ThemeProvider', () => {
     const activePrimaryColor = color(0, 106, 146);
     const theme = {
       colors: {
-        info100: activePrimaryBackgroundColor,
-        info900: activePrimaryColor,
+        primary100: activePrimaryBackgroundColor,
+        primary900: activePrimaryColor,
       },
     };
     render(

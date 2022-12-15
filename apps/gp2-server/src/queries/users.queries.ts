@@ -84,3 +84,45 @@ export const FETCH_USERS = gql`
   }
   ${usersContentQueryFragment}
 `;
+
+export const projectMembersContentQueryFragment = gql`
+  fragment ProjectMembersContent on Projects {
+    flatData {
+      members {
+        user {
+          id
+        }
+      }
+    }
+  }
+`;
+
+export const FETCH_PROJECTS_MEMBERS = gql`
+  query FetchProjectsMembers($filter: String) {
+    queryProjectsContents(filter: $filter) {
+      ...ProjectMembersContent
+    }
+  }
+  ${projectMembersContentQueryFragment}
+`;
+
+export const workingGroupMembersContentQueryFragment = gql`
+  fragment WorkingGroupMembersContent on WorkingGroups {
+    flatData {
+      members {
+        user {
+          id
+        }
+      }
+    }
+  }
+`;
+
+export const FETCH_WORKINGGROUPS_MEMBERS = gql`
+  query FetchWorkingGroupsMembers($filter: String) {
+    queryWorkingGroupsContents(filter: $filter) {
+      ...WorkingGroupMembersContent
+    }
+  }
+  ${workingGroupMembersContentQueryFragment}
+`;

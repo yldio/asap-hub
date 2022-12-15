@@ -9,8 +9,12 @@ import {
   ResearchOutputPublishedReminder,
   PresentationUpdatedReminder,
   EventNotesReminder,
+  SharePresentationReminder,
+  Role,
+  TeamRole,
 } from '@asap-hub/model';
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
+import { isCMSAdministrator } from '@asap-hub/validation';
 import { DateTime } from 'luxon';
 import {
   FetchReminderDataQuery,
@@ -51,12 +55,19 @@ export class ReminderSquidexDataProvider implements ReminderDataProvider {
     );
 
     const eventReminders = getEventRemindersFromQuery(queryEventsContents);
+
+    const sharePresentationReminders = getSharePresentationRemindersFromQuery(
+      queryEventsContents,
+      options.userId,
+    );
+
     const eventMaterialsReminders =
       getEventMaterialsRemindersFromQuery(queryEventsContents);
 
     const reminders = [
       ...researchOutputReminders,
       ...eventReminders,
+      ...sharePresentationReminders,
       ...eventMaterialsReminders,
     ];
 
@@ -103,7 +114,13 @@ export const getEventFilter = (zone: string): string => {
     .minus({ day: 1 })
     .toUTC();
 
-  return `data/videoRecordingUpdatedAt/iv ge ${lastDayISO} or data/presentationUpdatedAt/iv ge ${lastDayISO} or data/notesUpdatedAt/iv ge ${lastDayISO} or (data/startDate/iv ge ${lastMidnightISO} and data/startDate/iv le ${todayMidnightISO})`;
+  const last72HoursISO = DateTime.fromObject({
+    zone,
+  })
+    .minus({ hours: 72 })
+    .toUTC();
+
+  return `data/videoRecordingUpdatedAt/iv ge ${lastDayISO} or data/presentationUpdatedAt/iv ge ${lastDayISO} or data/notesUpdatedAt/iv ge ${lastDayISO} or (data/startDate/iv ge ${lastMidnightISO} and data/startDate/iv le ${todayMidnightISO}) or data/endDate/iv ge ${last72HoursISO}`;
 };
 
 const getUserTeamIds = (
@@ -220,18 +237,71 @@ const getEventRemindersFromQuery = (
 
   return eventReminders;
 };
+const inLastNHours = (n: number, date: string) => {
+  const ONE_DAY_IN_MS = n * 60 * 60 * 1000;
 
-const inLast24Hours = (date: string) => {
-  const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
-
-  const msBetweenNowAndMaterialUpdatedAt = DateTime.now().diff(
+  const msBetweenNowAndDate = DateTime.now().diff(
     DateTime.fromISO(date),
   ).milliseconds;
 
-  return (
-    msBetweenNowAndMaterialUpdatedAt <= ONE_DAY_IN_MS &&
-    msBetweenNowAndMaterialUpdatedAt > 0
-  );
+  return msBetweenNowAndDate <= ONE_DAY_IN_MS && msBetweenNowAndDate > 0;
+};
+
+const inLast24Hours = (date: string) => inLastNHours(24, date);
+
+const inLast72Hours = (date: string) => inLastNHours(72, date);
+
+const getSharePresentationRemindersFromQuery = (
+  queryEventsContents: FetchReminderDataQuery['queryEventsContents'],
+  userId: string,
+): SharePresentationReminder[] => {
+  const eventReminders = (queryEventsContents || []).reduce<
+    SharePresentationReminder[]
+  >((events, event) => {
+    const shouldShowSharePresentation = event.flatData.speakers?.some(
+      (speaker) => {
+        const { user: speakerUserList, team: speakerTeamList } = speaker;
+
+        const speakerUser = speakerUserList?.[0];
+        const speakerTeam = speakerTeamList?.[0];
+        if (speakerUser && speakerTeam && 'id' in speakerUser) {
+          const speakerUserTeam = speakerUser.flatData.teams?.find(
+            (team) => team.id?.[0]?.id === speakerTeam?.id,
+          );
+
+          return (
+            speakerUser.id === userId &&
+            !isCMSAdministrator(
+              speakerUser.flatData.role as Role,
+              speakerUserTeam?.role as TeamRole,
+            ) &&
+            speakerUserTeam?.role !== 'Project Manager'
+          );
+        }
+
+        return false;
+      },
+    );
+
+    if (shouldShowSharePresentation && inLast72Hours(event.flatData.endDate)) {
+      return [
+        ...events,
+        {
+          id: `share-presentation-${event.id}`,
+          entity: 'Event',
+          type: 'Share Presentation',
+          data: {
+            eventId: event.id,
+            title: event.flatData.title || '',
+            endDate: event.flatData.endDate,
+          },
+        },
+      ];
+    }
+    return events;
+  }, []);
+
+  return eventReminders;
 };
 
 const getEventMaterialsRemindersFromQuery = (

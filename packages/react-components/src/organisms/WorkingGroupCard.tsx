@@ -33,12 +33,7 @@ const shortTextStyle = css({
 
 type WorkingGroupCardProps = Pick<
   WorkingGroupResponse,
-  | 'id'
-  | 'title'
-  | 'shortText'
-  | 'externalLink'
-  | 'externalLinkText'
-  | 'lastModifiedDate'
+  'id' | 'title' | 'shortText' | 'externalLink' | 'lastModifiedDate'
 >;
 
 const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
@@ -46,7 +41,6 @@ const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
   title,
   shortText,
   externalLink,
-  externalLinkText,
   lastModifiedDate,
 }) => (
   <Card overrideStyles={wrapperStyle}>
@@ -66,7 +60,7 @@ const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
       {externalLink && (
         <ExternalLink
           href={externalLink}
-          label={externalLinkText}
+          label="Working Group Folder"
           full
           noMargin
           size="large"

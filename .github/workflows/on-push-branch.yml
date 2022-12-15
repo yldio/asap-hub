@@ -122,13 +122,15 @@ jobs:
       GP2_AUTH0_SHARED_SECRET: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}
 
   verify:
-    needs: [deployment]
+    needs: [setup, deployment]
     uses: ./.github/workflows/reusable-verify.yml
     with:
       environment-name: Branch
+      crn-contentful-env: ${{ needs.setup.outputs.crn-contentful-env }}
     secrets:
       CRN_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
       GP2_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.GP2_SQUIDEX_CI_CLIENT_SECRET }}
+      CRN_CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
 
   branch-pipeline-success:
     runs-on: ubuntu-latest

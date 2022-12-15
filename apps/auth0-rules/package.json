@@ -8,10 +8,12 @@
   "scripts": {
     "build:babel": "../../scripts/build-babel.sh build",
     "watch:babel": "../../scripts/build-babel.sh watch",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "deploy": "a0deploy import --input_file ./auth0.yaml"
   },
   "dependencies": {
     "@vedicium/auth0-actions-sdk": "^0.1.3",
+    "auth0-deploy-cli": "^7.15.1",
     "got": "11.8.5"
   },
   "devDependencies": {

@@ -83,7 +83,6 @@ type WorkingGroupPageHeaderProps = Pick<
   | 'lastModifiedDate'
   | 'members'
   | 'externalLink'
-  | 'externalLinkText'
   | 'pointOfContact'
 >;
 
@@ -93,7 +92,6 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
   complete,
   lastModifiedDate,
   externalLink,
-  externalLinkText,
   pointOfContact,
   members,
 }) => (
@@ -106,7 +104,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
     </div>
     <section css={contactSectionStyles}>
       <UserAvatarList
-        members={members}
+        members={members.map((member) => member.user)}
         fullListRoute={
           network({}).workingGroups({}).workingGroup({ workingGroupId: id }).$
         }
@@ -128,7 +126,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
       {externalLink && (
         <ExternalLink
           full
-          label={externalLinkText}
+          label="Working Group Folder"
           href={externalLink}
           size="large"
         />

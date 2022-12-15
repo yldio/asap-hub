@@ -296,7 +296,7 @@ yarn workspace @asap-hub/cms-data-sync [name-of-package.json-script]
 For example:
 
 ```sh
-yarn workspace @asap-hub/cms-data-sync migrate:news
+yarn workspace @asap-hub/cms-data-sync migrate
 ```
 
 To fetch data from squidex if you might need to run the command to auto generate the types from graphql queries depending on if you are using graphql. To do that, set these variables `SQUIDEX_BASE_URL`, `CRN_SQUIDEX_APP_NAME`, `CRN_SQUIDEX_CLIENT_ID`, `CRN_SQUIDEX_CLIENT_SECRET` in your in your `.env` file and run from the root:

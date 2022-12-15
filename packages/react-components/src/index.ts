@@ -152,6 +152,7 @@ export {
   UserProfileRecentWorks,
   UserProfileRole,
   WorkingGroupCard,
+  WorkingGroupMembers,
 } from './organisms';
 export {
   BasicLayout,

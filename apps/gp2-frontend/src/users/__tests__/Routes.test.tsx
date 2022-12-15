@@ -9,6 +9,8 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getUsers } from '../api';
+import { getProjects } from '../../projects/api';
+import { getWorkingGroups } from '../../working-groups/api';
 import Routes from '../Routes';
 import { refreshUsersState } from '../state';
 
@@ -36,15 +38,23 @@ const renderRoutes = async () => {
     timeout: 30_000,
   });
 };
-beforeEach(() => {
-  jest.resetAllMocks();
-});
+beforeEach(jest.resetAllMocks);
 
 jest.mock('../api');
+jest.mock('../../projects/api');
+jest.mock('../../working-groups/api');
 describe('Routes', () => {
   it('renders a list of users', async () => {
     const mockGetUsers = getUsers as jest.MockedFunction<typeof getUsers>;
     mockGetUsers.mockResolvedValue(gp2.createUsersResponse(1));
+    const mockGetProjects = getProjects as jest.MockedFunction<
+      typeof getProjects
+    >;
+    mockGetProjects.mockResolvedValue(gp2.createProjectsResponse());
+    const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
+      typeof getWorkingGroups
+    >;
+    mockGetWorkingGroups.mockResolvedValue(gp2.createWorkingGroupsResponse());
     await renderRoutes();
     expect(
       screen.getByRole('heading', { name: 'Tony Stark, PhD' }),

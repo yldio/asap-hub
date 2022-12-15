@@ -10,7 +10,8 @@ export type EventReminderType =
   | 'Happening Now'
   | 'Video Updated'
   | 'Presentation Updated'
-  | 'Notes Updated';
+  | 'Notes Updated'
+  | 'Share Presentation';
 type ReminderType = ResearchOutputReminderType | EventReminderType;
 interface Reminder {
   id: string;
@@ -68,6 +69,16 @@ export interface EventHappeningNowReminder extends EventReminder {
   };
 }
 
+export interface SharePresentationReminder extends EventReminder {
+  entity: 'Event';
+  type: 'Share Presentation';
+  data: {
+    eventId: ReminderEventResponse['id'];
+    title: ReminderEventResponse['title'];
+    endDate: ReminderEventResponse['endDate'];
+  };
+}
+
 export interface VideoEventReminder extends EventReminder {
   entity: 'Event';
   type: 'Video Updated';
@@ -104,7 +115,8 @@ export type ReminderDataObject =
   | EventHappeningNowReminder
   | VideoEventReminder
   | PresentationUpdatedReminder
-  | EventNotesReminder;
+  | EventNotesReminder
+  | SharePresentationReminder;
 
 export type ListReminderDataObject = ListResponse<ReminderDataObject>;
 

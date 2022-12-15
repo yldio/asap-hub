@@ -1,0 +1,47 @@
+pages:
+  - name: login
+    enabled: true
+    html: ../crn-auth-frontend/build/index.html
+actions:
+  - name: Add Metadata
+    code: ./build/post-login-add-metadata.js
+    dependencies:
+      - name: got
+        version: 11.8.5
+      - name: '@babel/runtime-corejs3'
+        version: 7.20.1
+    deployed: true
+    runtime: node16
+    secrets:
+      - name: PR_APP_DOMAIN
+      - name: ASAP_API_URL
+      - name: AUTH0_ADDITIONAL_CLAIM_DOMAIN
+      - name: AUTH0_SHARED_SECRET
+    status: built
+    supported_triggers:
+      - id: post-login
+        version: v3
+  - name: Connect User
+    code: ./build/post-login-connect-user.js
+    dependencies:
+      - name: got
+        version: 11.8.5
+      - name: '@babel/runtime-corejs3'
+        version: 7.20.1
+    deployed: true
+    runtime: node16
+    secrets:
+      - name: PR_APP_DOMAIN
+      - name: ASAP_API_URL
+      - name: AUTH0_ADDITIONAL_CLAIM_DOMAIN
+      - name: AUTH0_SHARED_SECRET
+    status: built
+    supported_triggers:
+      - id: post-login
+        version: v3
+triggers:
+  post-login:
+    - action_name: Connect User
+      display_name: Connect User
+    - action_name: Add Metadata
+      display_name: Add Metadata

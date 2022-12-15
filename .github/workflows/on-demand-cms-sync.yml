@@ -44,7 +44,7 @@ jobs:
         run: |
           yarn build:babel
           yarn build:typecheck
-          yarn workspace @asap-hub/cms-data-sync migrate:news
+          yarn workspace @asap-hub/cms-data-sync migrate
         env:
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.contentful-space-id }}

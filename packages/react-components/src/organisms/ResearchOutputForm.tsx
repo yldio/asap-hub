@@ -272,6 +272,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
           organisms,
           environments,
           subtype,
+          publishingEntity,
         });
       }}
     >

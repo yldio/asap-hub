@@ -38,17 +38,19 @@ const UserPosition: React.FC<UserPositionProps> = ({
   const onChangeValue = (property: keyof gp2.UserPosition) => (value: string) =>
     onChange({ ...position, [property]: value });
 
-  const prefix =
-    index === 0 ? 'Primary' : index === 1 ? 'Secondary' : 'Tertiary';
+  const prefixes = ['Primary', 'Secondary', 'Tertiary'];
+  const prefix = prefixes[index];
   return (
     <article>
       <div css={headerStyles}>
         <Headline5>{prefix} Position</Headline5>
-        <div css={buttonStyles}>
-          <Button onClick={onRemove} small>
-            {binIcon}
-          </Button>
-        </div>
+        {index !== 0 && (
+          <div css={buttonStyles} data-testid={`delete-${index}`}>
+            <Button onClick={onRemove} small>
+              {binIcon}
+            </Button>
+          </div>
+        )}
       </div>
       <LabeledTypeahead
         title="Institution"

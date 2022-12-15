@@ -78,7 +78,7 @@ describe('UserPosition', () => {
       department,
     });
   });
-  test('can save a position role', async () => {
+  it('can save a position role', async () => {
     const onChange = jest.fn();
     const role = 'A';
     renderUserPosition({
@@ -89,7 +89,7 @@ describe('UserPosition', () => {
 
     expect(onChange).toHaveBeenCalledWith({ ...defaultProps.position, role });
   });
-  test.each`
+  it.each`
     index | prefix
     ${0}  | ${'Primary'}
     ${1}  | ${'Secondary'}
@@ -112,9 +112,19 @@ describe('UserPosition', () => {
       screen.getByRole('textbox', { name: `Role (required)` }),
     ).toBeVisible();
   });
-  test('can delete a position', () => {
+  it('should not have a delete button if the index is 0', () => {
     const onRemove = jest.fn();
-    renderUserPosition({ onRemove });
+    renderUserPosition({ onRemove, index: 0 });
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+  });
+  it('should have a delete button if the index is not 0', () => {
+    const onRemove = jest.fn();
+    renderUserPosition({ onRemove, index: 1 });
+    expect(screen.queryByRole('button')).toBeVisible();
+  });
+  it('can delete a position', () => {
+    const onRemove = jest.fn();
+    renderUserPosition({ onRemove, index: 2 });
     const removeButton = screen.getByRole('button');
     userEvent.click(removeButton);
     expect(onRemove).toBeCalled();

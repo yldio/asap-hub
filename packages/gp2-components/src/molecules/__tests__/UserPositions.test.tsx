@@ -156,8 +156,20 @@ describe('UserPositions', () => {
 
     expect(onChange).toHaveBeenCalledWith([positions[0], position]);
   });
-  it.todo('can delete an extra position');
-  it.todo('there is a minimum of one');
+
+  it('can delete a position', () => {
+    const onChange = jest.fn();
+    const positions = [
+      { institution: 'FPF', department: "Men's Team", role: 'Striker' },
+      { institution: 'Benfica', department: 'First Team', role: 'Forward' },
+    ];
+    renderUserPositions({
+      positions,
+      onChange,
+    });
+    const container = screen.getByTestId('delete-1');
+    userEvent.click(within(container).getByRole('button'));
+    expect(onChange).toBeCalledWith([positions[0]]);
+  });
   it.todo('all the information has been entered');
-  it.todo('is there an add icon');
 });

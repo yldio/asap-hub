@@ -36,7 +36,7 @@ const UserPositions: React.FC<UserPositionsProps> = ({
     onChange([...positions, { institution: '', department: '', role: '' }]);
   };
   const remove = (index: number) => () => {
-    onChange(positions.slice(index, 1));
+    onChange(positions.filter((_, idx) => idx !== index));
   };
   return (
     <>

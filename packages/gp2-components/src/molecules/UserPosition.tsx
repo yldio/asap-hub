@@ -1,5 +1,6 @@
 import { gp2 } from '@asap-hub/model';
 import { LabeledTextField, LabeledTypeahead } from '@asap-hub/react-components';
+
 const required = '(required)';
 
 type UserPositionProps = {

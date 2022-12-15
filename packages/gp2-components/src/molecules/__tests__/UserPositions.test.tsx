@@ -40,7 +40,7 @@ describe('UserPositions', () => {
     ).toBeVisible();
   });
 
-  test('can click add an extra position', () => {
+  it('can click add an extra position', () => {
     const positions = [
       { institution: 'FPF', department: "Men's Team", role: 'Striker' },
     ];
@@ -57,7 +57,7 @@ describe('UserPositions', () => {
     ]);
   });
 
-  test('there can be only 3 positions', () => {
+  it('there can be only 3 positions', () => {
     const positions = [
       { institution: 'FPF', department: "Men's Team", role: 'Striker' },
       { institution: 'Benfica', department: 'First Team', role: 'Forward' },
@@ -73,7 +73,7 @@ describe('UserPositions', () => {
     ).not.toBeInTheDocument();
   });
 
-  test('can save a position institution', async () => {
+  it('can save a position institution', async () => {
     const onChange = jest.fn();
     const position = {
       institution: 'A',
@@ -97,7 +97,7 @@ describe('UserPositions', () => {
 
     expect(onChange).toHaveBeenCalledWith([positions[0], position]);
   });
-  test('can save a position department', async () => {
+  it('can save a position department', async () => {
     const onChange = jest.fn();
     const position = {
       institution: '',
@@ -119,7 +119,7 @@ describe('UserPositions', () => {
 
     expect(onChange).toHaveBeenCalledWith([positions[0], position]);
   });
-  test('can save a position role', async () => {
+  it('can save a position role', async () => {
     const onChange = jest.fn();
     const position = {
       institution: '',
@@ -141,8 +141,4 @@ describe('UserPositions', () => {
 
     expect(onChange).toHaveBeenCalledWith([positions[0], position]);
   });
-  test.todo('can delete an extra position');
-  test.todo('there is a minimum of one');
-  test.todo('all the information has been entered');
-  test.todo('is there an add icon');
 });

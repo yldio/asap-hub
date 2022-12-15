@@ -43,7 +43,7 @@ describe('UserPosition', () => {
       screen.getByRole('textbox', { name: 'Primary Role (required)' }),
     ).toHaveValue(position.role);
   });
-  test('can save a position institution', async () => {
+  it('can save a position institution', async () => {
     const onChange = jest.fn();
     const institution = 'A';
     renderUserPosition({
@@ -65,7 +65,7 @@ describe('UserPosition', () => {
       1,
     );
   });
-  test('can save a position department', async () => {
+  it('can save a position department', async () => {
     const onChange = jest.fn();
     const department = 'A';
     renderUserPosition({

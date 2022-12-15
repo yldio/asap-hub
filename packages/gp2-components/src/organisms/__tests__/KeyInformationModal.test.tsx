@@ -234,9 +234,4 @@ describe('KeyInformatiomModal', () => {
     );
     await waitFor(() => expect(saveButton).toBeEnabled());
   });
-
-  test.todo('can delete an extra position');
-  test.todo('there is a minimum of one');
-  test.todo('all the information has been entered');
-  test.todo('is there an add icon');
 });

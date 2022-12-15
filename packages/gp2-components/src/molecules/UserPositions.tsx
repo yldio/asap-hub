@@ -43,7 +43,8 @@ const UserPositions: React.FC<UserPositionsProps> = ({
       <header>
         <Headline4>Positions</Headline4>
         <Paragraph accent="lead">
-          Share the institutions where you are working (up to three).
+          Share the positions inside the institutions where you are working (up
+          to three).
         </Paragraph>
       </header>
       {positions.map((position, index) => (
@@ -60,7 +61,7 @@ const UserPositions: React.FC<UserPositionsProps> = ({
       {positions.length < 3 && (
         <div css={buttonStyles}>
           <Button onClick={add} enabled={!isSaving}>
-            Add More {addIcon}
+            Add Another Position {addIcon}
           </Button>
         </div>
       )}

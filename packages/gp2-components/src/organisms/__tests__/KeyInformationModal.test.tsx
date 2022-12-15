@@ -9,7 +9,7 @@ describe('KeyInformatiomModal', () => {
   const getSaveButton = () => screen.getByRole('button', { name: 'Save' });
   const getAddButton = () =>
     screen.getByRole('button', {
-      name: /add more/i,
+      name: /add another position/i,
     });
   beforeEach(jest.resetAllMocks);
   type KeyInformationModalProps = ComponentProps<typeof KeyInformationModal>;
@@ -207,7 +207,7 @@ describe('KeyInformatiomModal', () => {
     });
     expect(
       screen.queryByRole('button', {
-        name: /add more/i,
+        name: /add another position/i,
       }),
     ).not.toBeInTheDocument();
   });

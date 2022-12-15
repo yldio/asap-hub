@@ -1,7 +1,6 @@
 import {
   ceruleanFernGradientStyles,
   drawerQuery,
-  steel,
   pixels,
 } from '@asap-hub/react-components';
 
@@ -11,15 +10,6 @@ import { layoutContentStyles } from '../layout';
 import HeaderLogo from '../molecules/HeaderLogo';
 
 const { rem } = pixels;
-
-const contentStyles = css({
-  ...layoutContentStyles,
-  borderTop: `1px solid ${steel.rgb}`,
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  overflowY: 'auto',
-});
 
 const logoStyles = css({ padding: `0 ${rem(24)}` });
 const desktopNavigationStyles = css({
@@ -37,17 +27,27 @@ const bottomBorderStyles = css({
 type BasicLayoutProps = {
   children: React.ReactNode;
   logoHref?: string;
+  noPadding?: boolean;
 };
-const BasicLayout: React.FC<BasicLayoutProps> = ({ children, logoHref }) => (
-  <article>
-    <header css={css({ width: '100%' })}>
-      <div css={logoStyles}>
-        <HeaderLogo logoHref={logoHref} />
-      </div>
-      <div css={[bottomBorderStyles, desktopNavigationStyles]} />
-    </header>
-    <main css={contentStyles}>{children}</main>
-  </article>
-);
+const BasicLayout: React.FC<BasicLayoutProps> = ({
+  noPadding = false,
+  children,
+  logoHref,
+}) => {
+  const mainStyles = noPadding
+    ? [layoutContentStyles, css({ ...{ padding: 0 } })]
+    : layoutContentStyles;
+  return (
+    <article css={css({ position: 'relative' })}>
+      <header css={css({ width: '100%' })}>
+        <div css={logoStyles}>
+          <HeaderLogo logoHref={logoHref} />
+        </div>
+        <div css={[bottomBorderStyles, desktopNavigationStyles]} />
+      </header>
+      <main css={mainStyles}>{children}</main>
+    </article>
+  );
+};
 
 export default BasicLayout;

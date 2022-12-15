@@ -1,9 +1,9 @@
 import { NotFoundPage } from '@asap-hub/react-components';
-import { Frame } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/routing';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { lazy, useEffect } from 'react';
-import Onboarding from './Onboarding';
+import { BasicLayout } from '@asap-hub/gp2-components';
+import OnboardingPage from './OnboardingPage';
 
 const loadWelcome = () =>
   import(/* webpackChunkName: "onboarding-welcome" */ './Welcome');
@@ -24,35 +24,30 @@ const Routes: React.FC<Record<string, never>> = () => {
   return (
     <Switch>
       <Route exact path={path}>
-        <Welcome />
+        <BasicLayout>
+          <Welcome />
+        </BasicLayout>
       </Route>
-      <Route exact path={onboarding({}).coreDetails({}).$}>
-        <Frame title="Core Details">
-          <Onboarding>
+      <BasicLayout noPadding>
+        <OnboardingPage>
+          <Route exact path={onboarding({}).coreDetails({}).$}>
             <CoreDetails />
-          </Onboarding>
-        </Frame>
-      </Route>
-      <Route exact path={onboarding({}).background({}).$}>
-        <Onboarding>
-          <div>Background</div>
-        </Onboarding>
-      </Route>
-      <Route exact path={onboarding({}).groups({}).$}>
-        <Onboarding>
-          <div>GP2 Groups</div>
-        </Onboarding>
-      </Route>
-      <Route exact path={onboarding({}).additionalDetails({}).$}>
-        <Onboarding>
-          <div>Additional Details</div>
-        </Onboarding>
-      </Route>
-      <Route exact path={onboarding({}).preview({}).$}>
-        <Onboarding>
-          <div>Preview</div>
-        </Onboarding>
-      </Route>
+          </Route>
+          <Route exact path={onboarding({}).background({}).$}>
+            <div>Background</div>
+          </Route>
+          <Route exact path={onboarding({}).groups({}).$}>
+            <div>GP2 Groups</div>
+          </Route>
+          <Route exact path={onboarding({}).additionalDetails({}).$}>
+            <div>Additional Details</div>
+          </Route>
+          <Route exact path={onboarding({}).preview({}).$}>
+            <div>Preview</div>
+          </Route>
+        </OnboardingPage>
+      </BasicLayout>
+
       <Route component={NotFoundPage} />
     </Switch>
   );

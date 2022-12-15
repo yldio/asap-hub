@@ -20,7 +20,7 @@ const OnboardingPageHeader: React.FC = () => {
     const { pathname } = location;
     const currentIndex = routerList.findIndex((x) => pathname.includes(x));
     setIndex(currentIndex);
-  }, [location]);
+  }, [routerList, location]);
 
   return (
     <PageBanner title={'Registration'} noMarginBottom>

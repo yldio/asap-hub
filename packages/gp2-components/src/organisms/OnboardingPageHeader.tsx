@@ -8,19 +8,18 @@ const OnboardingPageHeader: React.FC = () => {
   const location = useLocation();
   const [index, setIndex] = useState(0);
 
-  const routerList = [
-    '/core-details',
-    '/background',
-    '/groups',
-    '/additional-details',
-    '/preview',
-  ];
-
   useEffect(() => {
+    const routerList = [
+      '/core-details',
+      '/background',
+      '/groups',
+      '/additional-details',
+      '/preview',
+    ];
     const { pathname } = location;
     const currentIndex = routerList.findIndex((x) => pathname.includes(x));
     setIndex(currentIndex);
-  }, [routerList, location]);
+  }, [location]);
 
   return (
     <PageBanner title={'Registration'} noMarginBottom>

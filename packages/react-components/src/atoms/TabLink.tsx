@@ -35,7 +35,7 @@ const TabLink: React.FC<TabLinkProps> = (props) => {
   const { href, children } = props;
   if (useHasRouter()) {
     if ('visited' in props) {
-      const disableLink = (e: any) => {
+      const disableLink = (e: React.MouseEvent<HTMLElement>) => {
         if (!props.visited) {
           return e.preventDefault();
         }

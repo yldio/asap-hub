@@ -18,8 +18,8 @@ const OnboardingPageHeader: React.FC = () => {
 
   useEffect(() => {
     const { pathname } = location;
-    const index = routerList.findIndex((x) => pathname.includes(x));
-    setIndex(index);
+    const currentIndex = routerList.findIndex((x) => pathname.includes(x));
+    setIndex(currentIndex);
   }, [location]);
 
   return (

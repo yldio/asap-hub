@@ -14,6 +14,7 @@ export const researchOutputContentQueryFragment = gql`
       link
       addedDate
       publishDate
+      publishingEntity
       doi
       labCatalogNumber
       accession

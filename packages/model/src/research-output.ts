@@ -55,6 +55,8 @@ export const researchOutputTypes = [
   'Viral Vector',
 ] as const;
 
+export type ResearchOutputPublishingEntities = 'Team' | 'Working Group';
+
 export type ResearchOutputType = typeof researchOutputTypes[number];
 
 export const researchOutputDocumentTypeToType: Record<
@@ -118,11 +120,26 @@ export const isResearchOutputType = (
 ): type is ResearchOutputType =>
   (researchOutputTypes as ReadonlyArray<string>).includes(type);
 
+export const isResearchOutputPublishingEntity = (
+  publishingEntity: string,
+): publishingEntity is ResearchOutputPublishingEntities =>
+  publishingEntity === 'Team' || publishingEntity === 'Working Group';
+
 export const researchOutputMapType = (
   type?: string | null,
 ): ResearchOutputType | null => {
   if (type && isResearchOutputType(type)) {
     return type;
+  }
+
+  return null;
+};
+
+export const researchOutputMapPublishingEntity = (
+  publishingEntity?: string | null,
+): ResearchOutputPublishingEntities | null => {
+  if (publishingEntity && isResearchOutputPublishingEntity(publishingEntity)) {
+    return publishingEntity;
   }
 
   return null;
@@ -189,9 +206,8 @@ export type ResearchOutputCoreObject = {
   type?: ResearchOutputType;
   usageNotes?: string;
   usedInPublication?: boolean;
+  publishingEntity: ResearchOutputPublishingEntities;
 };
-
-export type ResearchOutputPublishingEntities = 'Team' | 'Working Group';
 
 export type ResearchOutputDataObject = ResearchOutputCoreObject & {
   authors: (UserResponse | ExternalAuthorResponse)[];
@@ -205,7 +221,6 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
   organisms: string[];
   subtype?: string;
   teams: Pick<TeamResponse, 'id' | 'displayName'>[];
-  publishingEntity?: ResearchOutputPublishingEntities;
 };
 
 export type ListResearchOutputDataObject =
@@ -272,7 +287,7 @@ export type ResearchOutputPostRequest = {
   type: ResearchOutputType;
   usageNotes?: string;
   usedInPublication?: boolean;
-  publishingEntity?: ResearchOutputPublishingEntities;
+  publishingEntity: ResearchOutputPublishingEntities;
 };
 
 export type ResearchOutputPutRequest = ResearchOutputPostRequest;

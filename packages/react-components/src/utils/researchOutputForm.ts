@@ -51,7 +51,12 @@ export function isDirty(
     identifier,
   }: ResearchOutputState,
   researchOutputData?: ResearchOutputResponse,
+  publishingEntity?: string,
 ): boolean {
+  let defaultTeamsLength = 1;
+  if (publishingEntity === 'Working Group') {
+    defaultTeamsLength = 0;
+  }
   if (researchOutputData) {
     return (
       title !== researchOutputData.title ||
@@ -93,7 +98,7 @@ export function isDirty(
     environments.length !== 0 ||
     labCatalogNumber !== '' ||
     subtype !== undefined ||
-    teams?.length !== 1 ||
+    teams?.length !== defaultTeamsLength ||
     identifier !== '' ||
     identifierType !== ResearchOutputIdentifierType.Empty
   );

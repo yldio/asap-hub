@@ -2,7 +2,9 @@ import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
   WorkingGroupListResponse,
   WorkingGroupResponse,
+  WorkingGroupDataObject,
 } from '@asap-hub/model';
+import { useCurrentUserCRN } from '@asap-hub/react-context';
 import {
   atomFamily,
   DefaultValue,
@@ -161,4 +163,21 @@ export const useAuthorSuggestions = () => {
       pageSize: 100,
       filters: new Set(),
     }).then(({ items }) => items);
+};
+
+export const useCanCreateUpdateResearchOutput = (
+  workingGroup: WorkingGroupDataObject | undefined,
+): boolean => {
+  const user = useCurrentUserCRN();
+  if (workingGroup === undefined || user === null) return false;
+
+  const { leaders } = workingGroup;
+
+  const hasPermissions = leaders.some((leader) => {
+    if (leader.user.id === user.id && leader.role === 'Project Manager') {
+      return true;
+    }
+    return false;
+  });
+  return hasPermissions;
 };

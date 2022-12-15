@@ -1,7 +1,22 @@
 import { gp2 } from '@asap-hub/model';
-import { LabeledTextField, LabeledTypeahead } from '@asap-hub/react-components';
+import {
+  Button,
+  Headline5,
+  LabeledTextField,
+  LabeledTypeahead,
+} from '@asap-hub/react-components';
+import { css } from '@emotion/react';
+import binIcon from '../icons/bin-icon';
 
 const required = '(required)';
+
+const headerStyles = css({
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+});
+const buttonStyles = css({ margin: 0 });
 
 type UserPositionProps = {
   index: number;
@@ -12,9 +27,11 @@ type UserPositionProps = {
   isSaving: boolean;
   loadInstitutionOptions: (newValue?: string) => Promise<string[]>;
   position: gp2.UserPosition;
+  onRemove: () => void;
 };
 const UserPosition: React.FC<UserPositionProps> = ({
   onChange,
+  onRemove,
   isSaving,
   loadInstitutionOptions,
   position,
@@ -24,11 +41,20 @@ const UserPosition: React.FC<UserPositionProps> = ({
   const onChangeValue = (property: keyof gp2.UserPosition) => (value: string) =>
     onChange({ ...position, [property]: value }, index);
 
-  const prefix = index === 0 ? 'Primary' : index === 1 ? 'Secondary' : 'Other';
+  const prefix =
+    index === 0 ? 'Primary' : index === 1 ? 'Secondary' : 'Tertiary';
   return (
-    <>
+    <article>
+      <div css={headerStyles}>
+        <Headline5>{prefix} Position</Headline5>
+        <div css={buttonStyles}>
+          <Button onClick={onRemove} small>
+            {binIcon}
+          </Button>
+        </div>
+      </div>
       <LabeledTypeahead
-        title={`${prefix} Institution`}
+        title="Institution"
         subtitle={required}
         required
         getValidationMessage={() => 'Please add your institution'}
@@ -39,7 +65,7 @@ const UserPosition: React.FC<UserPositionProps> = ({
         loadOptions={loadInstitutionOptions}
       />
       <LabeledTextField
-        title={`${prefix} Department`}
+        title="Department"
         subtitle={required}
         enabled={!isSaving}
         onChange={onChangeValue('department')}
@@ -47,14 +73,14 @@ const UserPosition: React.FC<UserPositionProps> = ({
         required
       />
       <LabeledTextField
-        title={`${prefix} Role`}
+        title="Role"
         subtitle={required}
         enabled={!isSaving}
         onChange={onChangeValue('role')}
         value={role}
         required
       />
-    </>
+    </article>
   );
 };
 

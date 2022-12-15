@@ -1,5 +1,5 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { MemoryRouter } from 'react-router-dom';
@@ -129,16 +129,16 @@ describe('KeyInformatiomModal', () => {
       city,
     );
     userEvent.click(
-      screen.getByRole('textbox', { name: 'Primary Institution (required)' }),
+      screen.getByRole('textbox', { name: 'Institution (required)' }),
     );
     const institution = await screen.findByText(positions[0].institution);
     userEvent.click(institution);
     userEvent.type(
-      screen.getByRole('textbox', { name: 'Primary Department (required)' }),
+      screen.getByRole('textbox', { name: 'Department (required)' }),
       positions[0].department,
     );
     userEvent.type(
-      screen.getByRole('textbox', { name: 'Primary Role (required)' }),
+      screen.getByRole('textbox', { name: 'Role (required)' }),
       positions[0].role,
     );
     const saveButton = getSaveButton();
@@ -159,24 +159,40 @@ describe('KeyInformatiomModal', () => {
     renderKeyInformation();
     const addButton = getAddButton();
     userEvent.click(addButton);
+    const secondary = screen.getByRole('heading', {
+      name: /Secondary Position/i,
+    }).parentElement?.parentElement as HTMLElement;
     expect(
-      screen.getByRole('textbox', { name: 'Secondary Institution (required)' }),
+      within(secondary).getByRole('textbox', {
+        name: 'Institution (required)',
+      }),
     ).toBeVisible();
     expect(
-      screen.getByRole('textbox', { name: 'Secondary Department (required)' }),
+      within(secondary).getByRole('textbox', {
+        name: 'Department (required)',
+      }),
     ).toBeVisible();
     expect(
-      screen.getByRole('textbox', { name: 'Secondary Role (required)' }),
+      within(secondary).getByRole('textbox', {
+        name: 'Role (required)',
+      }),
     ).toBeVisible();
     userEvent.click(addButton);
+    const tertiary = screen.getByRole('heading', {
+      name: /Tertiary Position/i,
+    }).parentElement?.parentElement as HTMLElement;
     expect(
-      screen.getByRole('textbox', { name: 'Other Institution (required)' }),
+      within(tertiary).getByRole('textbox', {
+        name: 'Institution (required)',
+      }),
     ).toBeVisible();
     expect(
-      screen.getByRole('textbox', { name: 'Other Department (required)' }),
+      within(tertiary).getByRole('textbox', {
+        name: 'Department (required)',
+      }),
     ).toBeVisible();
     expect(
-      screen.getByRole('textbox', { name: 'Other Role (required)' }),
+      within(tertiary).getByRole('textbox', { name: 'Role (required)' }),
     ).toBeVisible();
   });
 
@@ -214,17 +230,21 @@ describe('KeyInformatiomModal', () => {
     });
     userEvent.click(getAddButton());
 
+    const tertiary = screen.getByRole('heading', {
+      name: /Tertiary Position/i,
+    }).parentElement?.parentElement as HTMLElement;
+
     userEvent.click(
-      screen.getByRole('textbox', { name: /Other Institution/i }),
+      within(tertiary).getByRole('textbox', { name: /Institution/i }),
     );
     const institution = await screen.findByText(position.institution);
     userEvent.click(institution);
     userEvent.type(
-      screen.getByRole('textbox', { name: /Other Department/i }),
+      within(tertiary).getByRole('textbox', { name: /Department/i }),
       position.department,
     );
     userEvent.type(
-      screen.getByRole('textbox', { name: /Other Role/i }),
+      within(tertiary).getByRole('textbox', { name: /Role/i }),
       position.role,
     );
     const saveButton = getSaveButton();

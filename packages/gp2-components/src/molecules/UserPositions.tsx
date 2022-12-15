@@ -1,5 +1,5 @@
 import { gp2 } from '@asap-hub/model';
-import { Button } from '@asap-hub/react-components';
+import { Button, Headline4, Paragraph } from '@asap-hub/react-components';
 import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 import UserPosition from './UserPosition';
@@ -25,21 +25,31 @@ const UserPositions: React.FC<UserPositionsProps> = ({
   loadInstitutionOptions,
   positions,
 }) => {
-  const updatePositions: ComponentProps<typeof UserPosition>['onChange'] = (
+  const update: ComponentProps<typeof UserPosition>['onChange'] = (
     position,
     index,
   ) => {
     onChange(Object.assign([], positions, { [index]: position }));
   };
 
-  const addPosition = () => {
+  const add = () => {
     onChange([...positions, { institution: '', department: '', role: '' }]);
+  };
+  const remove = (index: number) => () => {
+    onChange(positions.slice(index, 1));
   };
   return (
     <>
+      <header>
+        <Headline4>Positions</Headline4>
+        <Paragraph accent="lead">
+          Share the institutions where you are working (up to three).
+        </Paragraph>
+      </header>
       {positions.map((position, index) => (
         <UserPosition
-          onChange={updatePositions}
+          onRemove={remove(index)}
+          onChange={update}
           isSaving={isSaving}
           loadInstitutionOptions={loadInstitutionOptions}
           position={position}
@@ -49,7 +59,7 @@ const UserPositions: React.FC<UserPositionsProps> = ({
       ))}
       {positions.length < 3 && (
         <div css={buttonStyles}>
-          <Button onClick={addPosition} enabled={!isSaving}>
+          <Button onClick={add} enabled={!isSaving}>
             Add More {addIcon}
           </Button>
         </div>

@@ -8,6 +8,7 @@ describe('UserPosition', () => {
   beforeEach(jest.resetAllMocks);
   type UserPositionProps = ComponentProps<typeof UserPosition>;
   const defaultProps: UserPositionProps = {
+    onRemove: jest.fn(),
     onChange: jest.fn(),
     loadInstitutionOptions: () => Promise.resolve([]),
     isSaving: false,
@@ -34,13 +35,13 @@ describe('UserPosition', () => {
       position,
     });
     expect(
-      screen.getByRole('textbox', { name: 'Primary Institution (required)' }),
+      screen.getByRole('textbox', { name: 'Institution (required)' }),
     ).toHaveValue(position.institution);
     expect(
-      screen.getByRole('textbox', { name: 'Primary Department (required)' }),
+      screen.getByRole('textbox', { name: 'Department (required)' }),
     ).toHaveValue(position.department);
     expect(
-      screen.getByRole('textbox', { name: 'Primary Role (required)' }),
+      screen.getByRole('textbox', { name: 'Role (required)' }),
     ).toHaveValue(position.role);
   });
   it('can save a position institution', async () => {
@@ -51,9 +52,7 @@ describe('UserPosition', () => {
       loadInstitutionOptions: () => Promise.resolve([institution]),
       index: 1,
     });
-    userEvent.click(
-      screen.getByRole('textbox', { name: /Secondary Institution/i }),
-    );
+    userEvent.click(screen.getByRole('textbox', { name: /Institution/i }));
     const institutionBox = await screen.findByText(institution);
     userEvent.click(institutionBox);
 
@@ -73,7 +72,7 @@ describe('UserPosition', () => {
       index: 1,
     });
     userEvent.type(
-      screen.getByRole('textbox', { name: /Secondary Department/i }),
+      screen.getByRole('textbox', { name: /Department/i }),
       department,
     );
 
@@ -92,10 +91,7 @@ describe('UserPosition', () => {
       onChange,
       index: 1,
     });
-    userEvent.type(
-      screen.getByRole('textbox', { name: /Secondary Role/i }),
-      role,
-    );
+    userEvent.type(screen.getByRole('textbox', { name: /Role/i }), role);
 
     expect(onChange).toHaveBeenCalledWith(
       { ...defaultProps.position, role },
@@ -106,20 +102,30 @@ describe('UserPosition', () => {
     index | prefix
     ${0}  | ${'Primary'}
     ${1}  | ${'Secondary'}
-    ${2}  | ${'Other'}
+    ${2}  | ${'Tertiary'}
   `('renders with the correct prefix for $index', ({ prefix, index }) => {
     renderUserPosition({
       index,
     });
 
     expect(
-      screen.getByRole('textbox', { name: `${prefix} Institution (required)` }),
+      screen.getByRole('heading', { name: `${prefix} Position` }),
     ).toBeVisible();
     expect(
-      screen.getByRole('textbox', { name: `${prefix} Department (required)` }),
+      screen.getByRole('textbox', { name: `Institution (required)` }),
     ).toBeVisible();
     expect(
-      screen.getByRole('textbox', { name: `${prefix} Role (required)` }),
+      screen.getByRole('textbox', { name: `Department (required)` }),
     ).toBeVisible();
+    expect(
+      screen.getByRole('textbox', { name: `Role (required)` }),
+    ).toBeVisible();
+  });
+  test('can delete a position', () => {
+    const onRemove = jest.fn();
+    renderUserPosition({ onRemove });
+    const removeButton = screen.getByRole('button');
+    userEvent.click(removeButton);
+    expect(onRemove).toBeCalled();
   });
 });

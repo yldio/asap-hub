@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { MemoryRouter } from 'react-router-dom';
@@ -30,13 +30,16 @@ describe('UserPositions', () => {
       ],
     });
     expect(
-      screen.getByRole('textbox', { name: 'Primary Institution (required)' }),
+      screen.getByRole('heading', { name: 'Primary Position' }),
     ).toBeVisible();
     expect(
-      screen.getByRole('textbox', { name: 'Primary Department (required)' }),
+      screen.getByRole('textbox', { name: 'Institution (required)' }),
     ).toBeVisible();
     expect(
-      screen.getByRole('textbox', { name: 'Primary Role (required)' }),
+      screen.getByRole('textbox', { name: 'Department (required)' }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole('textbox', { name: 'Role (required)' }),
     ).toBeVisible();
   });
 
@@ -89,8 +92,14 @@ describe('UserPositions', () => {
       onChange,
       loadInstitutionOptions: () => Promise.resolve([position.institution]),
     });
+    const secondary = screen.getByRole('heading', {
+      name: /Secondary Position/i,
+    }).parentElement?.parentElement as HTMLElement;
+
     userEvent.click(
-      screen.getByRole('textbox', { name: /Secondary Institution/i }),
+      within(secondary).getByRole('textbox', {
+        name: /Institution/i,
+      }),
     );
     const institution = await screen.findByText(position.institution);
     userEvent.click(institution);
@@ -112,8 +121,11 @@ describe('UserPositions', () => {
       positions,
       onChange,
     });
+    const secondary = screen.getByRole('heading', {
+      name: /Secondary Position/i,
+    }).parentElement?.parentElement as HTMLElement;
     userEvent.type(
-      screen.getByRole('textbox', { name: /Secondary Department/i }),
+      within(secondary).getByRole('textbox', { name: /Department/i }),
       position.department,
     );
 
@@ -134,11 +146,18 @@ describe('UserPositions', () => {
       positions,
       onChange,
     });
+    const secondary = screen.getByRole('heading', {
+      name: /Secondary Position/i,
+    }).parentElement?.parentElement as HTMLElement;
     userEvent.type(
-      screen.getByRole('textbox', { name: /Secondary Role/i }),
+      within(secondary).getByRole('textbox', { name: /Role/i }),
       position.role,
     );
 
     expect(onChange).toHaveBeenCalledWith([positions[0], position]);
   });
+  it.todo('can delete an extra position');
+  it.todo('there is a minimum of one');
+  it.todo('all the information has been entered');
+  it.todo('is there an add icon');
 });

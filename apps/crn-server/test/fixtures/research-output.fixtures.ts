@@ -83,6 +83,7 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
     sharingStatus: 'Network Only',
     asapFunded: 'Yes',
     usedInAPublication: 'No',
+    publishingEntity: 'Team',
     type: '3D Printing',
     labs: [
       {
@@ -158,6 +159,7 @@ export const getResearchOutputDataObject = (): ResearchOutputDataObject => ({
   organisms: ['Rat'],
   environments: ['In Vitro'],
   subtype: 'Metabolite',
+  publishingEntity: 'Team',
 });
 
 export const getListResearchOutputDataObject =
@@ -238,6 +240,7 @@ export const getResearchOutputPostRequest = (): ResearchOutputPostRequest => {
     labs: labs.map(({ id }) => id),
     authors: authors.map(({ id }) => ({ userId: id })),
     teams: teams.map(({ id }) => id),
+    publishingEntity: 'Team',
   };
 };
 
@@ -335,6 +338,7 @@ export const getRestResearchOutputCreateData =
     usageNotes: {
       iv: 'some access instructions',
     },
+    publishingEntity: { iv: 'Team' },
   });
 
 export const getResearchOutputUpdateData = (): ResearchOutputUpdateData => ({

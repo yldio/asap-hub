@@ -694,6 +694,29 @@ describe('isDirty', () => {
     identifierType: ResearchOutputIdentifierType.Empty,
   };
 
+  const teamsEmptyState = {
+    title: '',
+    description: '',
+    link: '',
+    type: '',
+    tags: [],
+    methods: [],
+    organisms: [],
+    environments: [],
+    teams: [{ value: '12', label: 'Team ASAP' }],
+    labs: [],
+    authors: [],
+    subtype: undefined,
+    labCatalogNumber: '',
+    identifier: '',
+    identifierType: ResearchOutputIdentifierType.Empty,
+  };
+
+  const workingGroupsEmptyState = {
+    ...teamsEmptyState,
+    teams: [],
+  };
+
   it('returns true for edit mode when teams are in diff order', () => {
     expect(
       isDirty(
@@ -731,25 +754,27 @@ describe('isDirty', () => {
     expect(isDirty(researchOutputState)).toBeTruthy();
   });
 
-  it('returns true when the initial values are unchanged', () => {
+  it('returns false when the initial values are unchanged for publishing entity team', () => {
     expect(
-      isDirty({
-        title: '',
-        description: '',
-        link: '',
-        type: '',
-        tags: [],
-        methods: [],
-        organisms: [],
-        environments: [],
-        teams: [{ value: '12', label: 'Team ASAP' }],
-        labs: [],
-        authors: [],
-        subtype: undefined,
-        labCatalogNumber: '',
-        identifier: '',
-        identifierType: ResearchOutputIdentifierType.Empty,
-      }),
+      isDirty(
+        {
+          ...teamsEmptyState,
+        },
+        undefined,
+        'Team',
+      ),
+    ).toBeFalsy();
+  });
+
+  it('returns false when the initial values are unchanged for publishing entity working group', () => {
+    expect(
+      isDirty(
+        {
+          ...workingGroupsEmptyState,
+        },
+        undefined,
+        'Working Group',
+      ),
     ).toBeFalsy();
   });
 

@@ -230,6 +230,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
           identifier,
         },
         researchOutputData,
+        publishingEntity,
       )}
       onSave={() => {
         const identifierField = createIdentifierField(

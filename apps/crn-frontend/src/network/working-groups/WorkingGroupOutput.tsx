@@ -3,8 +3,6 @@ import {
   ResearchOutputDocumentType,
   ResearchOutputResponse,
   ResearchOutputPublishingEntities,
-  ResearchOutputPostRequest,
-  ResearchOutputPutRequest,
 } from '@asap-hub/model';
 import { NotFoundPage, ResearchOutputPage } from '@asap-hub/react-components';
 import {
@@ -12,7 +10,8 @@ import {
   OutputDocumentTypeParameter,
   useRouteParams,
 } from '@asap-hub/routing';
-import React from 'react';
+import React, { useContext } from 'react';
+import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import researchSuggestions from '../teams/research-suggestions';
 import {
   useAuthorSuggestions,
@@ -56,6 +55,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
     paramOutputDocumentType,
   );
   const workingGroup = useWorkingGroupById(workingGroupId);
+  const { canCreateUpdate } = useContext(ResearchOutputPermissionsContext);
 
   const getLabSuggestions = useLabSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();
@@ -63,7 +63,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   const researchTags = useResearchTags();
   const publishingEntity: ResearchOutputPublishingEntities = 'Working Group';
 
-  if (workingGroup) {
+  if (canCreateUpdate && workingGroup) {
     return (
       <Frame title="Share Working Group Research Output">
         <ResearchOutputPage
@@ -87,12 +87,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
           researchOutputData={researchOutputData}
           isEditMode={false}
           publishingEntity={publishingEntity}
-          onSave={(
-            output: ResearchOutputPostRequest | ResearchOutputPutRequest,
-          ) => {
-            console.log(output);
-            return Promise.resolve();
-          }}
+          onSave={() => Promise.resolve()}
         />
       </Frame>
     );

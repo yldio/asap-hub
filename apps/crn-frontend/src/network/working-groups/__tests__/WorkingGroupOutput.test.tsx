@@ -51,18 +51,6 @@ describe('WorkingGroupOutput', () => {
     ).toBeInTheDocument();
   });
 
-  it('Shows NotFoundPage when canCreate in ResearchOutputPermissions is false', async () => {
-    await renderPage({ workingGroupId: '42', canCreateUpdate: false });
-    expect(
-      screen.queryByRole('heading', { name: /Share/i }),
-    ).not.toBeInTheDocument();
-    expect(
-      screen.getByRole('heading', {
-        name: /Sorry! We can’t seem to find that page/i,
-      }),
-    ).toBeInTheDocument();
-  });
-
   it.each<{
     param: OutputDocumentTypeParameter;
     outputType: ResearchOutputDocumentType;

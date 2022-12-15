@@ -9619,6 +9619,56 @@ type Users implements Content {
     top: Int
   ): ResearchOutputsResultDto
   """
+  Query Working Groups content items.
+  """
+  referencingWorkingGroupsContents(
+    """
+    Optional OData filter.
+    """
+    filter: String
+    """
+    Optional OData order definition.
+    """
+    orderby: String
+    """
+    Optional OData full text search.
+    """
+    search: String
+    """
+    Optional number of items to skip.
+    """
+    skip: Int = 0
+    """
+    Optional number of items to take.
+    """
+    top: Int
+  ): [WorkingGroups!]
+  """
+  Query Working Groups content items with total count.
+  """
+  referencingWorkingGroupsContentsWithTotal(
+    """
+    Optional OData filter.
+    """
+    filter: String
+    """
+    Optional OData order definition.
+    """
+    orderby: String
+    """
+    Optional OData full text search.
+    """
+    search: String
+    """
+    Optional number of items to skip.
+    """
+    skip: Int = 0
+    """
+    Optional number of items to take.
+    """
+    top: Int
+  ): WorkingGroupsResultDto
+  """
   The status of the content.
   """
   status: String!
@@ -10435,6 +10485,56 @@ type WorkingGroups implements Content {
   """
   newStatusColor: String
   """
+  Query Users content items.
+  """
+  referencesUsersContents(
+    """
+    Optional OData filter.
+    """
+    filter: String
+    """
+    Optional OData order definition.
+    """
+    orderby: String
+    """
+    Optional OData full text search.
+    """
+    search: String
+    """
+    Optional number of items to skip.
+    """
+    skip: Int = 0
+    """
+    Optional number of items to take.
+    """
+    top: Int
+  ): [Users!]
+  """
+  Query Users content items with total count.
+  """
+  referencesUsersContentsWithTotal(
+    """
+    Optional OData filter.
+    """
+    filter: String
+    """
+    Optional OData order definition.
+    """
+    orderby: String
+    """
+    Optional OData full text search.
+    """
+    search: String
+    """
+    Optional number of items to skip.
+    """
+    skip: Int = 0
+    """
+    Optional number of items to take.
+    """
+    top: Int
+  ): UsersResultDto
+  """
   The status of the content.
   """
   status: String!
@@ -10450,6 +10550,20 @@ type WorkingGroups implements Content {
   The version of the objec.
   """
   version: Int!
+}
+
+"""
+The structure of the This working group is complete field of the Working Groups content type.
+"""
+type WorkingGroupsDataCompleteDto {
+  iv: Boolean
+}
+
+"""
+The structure of the This working group is complete field of the Working Groups content input type.
+"""
+input WorkingGroupsDataCompleteInputDto {
+  iv: Boolean
 }
 
 """
@@ -10500,9 +10614,12 @@ input WorkingGroupsDataDescriptionInputDto {
 The structure of the Working Groups data type.
 """
 type WorkingGroupsDataDto {
+  complete: WorkingGroupsDataCompleteDto
   deliverables: WorkingGroupsDataDeliverablesDto
   description: WorkingGroupsDataDescriptionDto
   externalLink: WorkingGroupsDataExternalLinkDto
+  leaders: WorkingGroupsDataLeadersDto
+  members: WorkingGroupsDataMembersDto
   shortText: WorkingGroupsDataShortTextDto
   title: WorkingGroupsDataTitleDto
 }
@@ -10525,11 +10642,74 @@ input WorkingGroupsDataExternalLinkInputDto {
 The structure of the Working Groups data input type.
 """
 input WorkingGroupsDataInputDto {
+  complete: WorkingGroupsDataCompleteInputDto
   deliverables: WorkingGroupsDataDeliverablesInputDto
   description: WorkingGroupsDataDescriptionInputDto
   externalLink: WorkingGroupsDataExternalLinkInputDto
+  leaders: WorkingGroupsDataLeadersInputDto
+  members: WorkingGroupsDataMembersInputDto
   shortText: WorkingGroupsDataShortTextInputDto
   title: WorkingGroupsDataTitleInputDto
+}
+
+"""
+The structure of the Leaders nested schema.
+"""
+type WorkingGroupsDataLeadersChildDto {
+  role: String
+  user: [Users!]
+  workstreamRole: String
+}
+
+"""
+The structure of the Leaders nested schema.
+"""
+input WorkingGroupsDataLeadersChildInputDto {
+  role: String
+  user: [String!]
+  workstreamRole: String
+}
+
+"""
+The structure of the Leaders field of the Working Groups content type.
+"""
+type WorkingGroupsDataLeadersDto {
+  iv: [WorkingGroupsDataLeadersChildDto!]
+}
+
+"""
+The structure of the Leaders field of the Working Groups content input type.
+"""
+input WorkingGroupsDataLeadersInputDto {
+  iv: [WorkingGroupsDataLeadersChildInputDto!]
+}
+
+"""
+The structure of the Members nested schema.
+"""
+type WorkingGroupsDataMembersChildDto {
+  user: [Users!]
+}
+
+"""
+The structure of the Members nested schema.
+"""
+input WorkingGroupsDataMembersChildInputDto {
+  user: [String!]
+}
+
+"""
+The structure of the Members field of the Working Groups content type.
+"""
+type WorkingGroupsDataMembersDto {
+  iv: [WorkingGroupsDataMembersChildDto!]
+}
+
+"""
+The structure of the Members field of the Working Groups content input type.
+"""
+input WorkingGroupsDataMembersInputDto {
+  iv: [WorkingGroupsDataMembersChildInputDto!]
 }
 
 """
@@ -10564,9 +10744,12 @@ input WorkingGroupsDataTitleInputDto {
 The structure of the flat Working Groups data type.
 """
 type WorkingGroupsFlatDataDto {
+  complete: Boolean
   deliverables: [WorkingGroupsDataDeliverablesChildDto!]
   description: String
   externalLink: String
+  leaders: [WorkingGroupsDataLeadersChildDto!]
+  members: [WorkingGroupsDataMembersChildDto!]
   shortText: String
   title: String
 }

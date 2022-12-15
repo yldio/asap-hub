@@ -11,7 +11,7 @@
   "scripts": {
     "build:babel": "../../scripts/build-babel.sh build",
     "watch:babel": "../../scripts/build-babel.sh watch",
-    "migrate:news": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\"}' ts-node ./src/news/news.data-migration.ts",
+    "migrate": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\"}' ts-node ./src/index.ts",
     "schema:update:crn": "SQUIDEX_BASE_URL=$SQUIDEX_BASE_URL SQUIDEX_APP_NAME=$CRN_SQUIDEX_APP_NAME SQUIDEX_CLIENT_ID=$CRN_SQUIDEX_CLIENT_ID SQUIDEX_CLIENT_SECRET=$CRN_SQUIDEX_CLIENT_SECRET ./scripts/schema-update.sh"
   },
   "dependencies": {

@@ -2,7 +2,7 @@ import { gql } from 'graphql-tag';
 
 export const newsQuery = gql`
   query FetchNews {
-    queryNewsAndEventsContents {
+    queryNewsAndEventsContents(top: 100) {
       id
       flatData {
         title

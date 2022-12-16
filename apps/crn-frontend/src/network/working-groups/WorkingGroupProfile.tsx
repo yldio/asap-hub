@@ -1,6 +1,8 @@
-import { FC } from 'react';
+
 import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
 import { Frame } from '@asap-hub/frontend-utils';
+import { FC, useState } from 'react';
+import { v4 as uuid } from 'uuid';
 import {
   NotFoundPage,
   WorkingGroupAbout,
@@ -14,17 +16,24 @@ const WorkingGroupProfile: FC = () => {
   const { workingGroupId } = useRouteParams(route);
   const { path } = useRouteMatch();
   const workingGroup = useWorkingGroupById(workingGroupId);
+  const [membersListElementId] = useState(`wg-members-${uuid()}`);
 
   if (workingGroup) {
     return (
       <Frame title={workingGroup.title}>
         <Switch>
           <Route path={path + route({ workingGroupId }).about.template}>
-            <WorkingGroupPage {...workingGroup}>
+            <WorkingGroupPage
+              membersListElementId={membersListElementId}
+              {...workingGroup}
+            >
               <Frame title="About">
-                <WorkingGroupAbout {...workingGroup} />
+                <WorkingGroupAbout
+                  membersListElementId={membersListElementId}
+                  {...workingGroup}
+                />
               </Frame>
-            </WorkingGroupPage>
+           </WorkingGroupPage>
           </Route>
           <Redirect to={route({ workingGroupId }).about({}).$} />
         </Switch>

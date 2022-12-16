@@ -4,12 +4,14 @@ import { css } from '@emotion/react';
 import { Card, Headline3, Link, Subtitle } from '../atoms';
 import { createMailTo } from '../mail';
 import { Collapsible } from '../molecules';
-import { DeliverablesCard } from '../organisms';
+import { DeliverablesCard, WorkingGroupMembers } from '../organisms';
 import { perRem } from '../pixels';
 
-type WorkingGroupAboutProps = Pick<
+type WorkingGroupAboutProps = {
+  readonly membersListElementId: string;
+} & Pick<
   WorkingGroupResponse,
-  'description' | 'deliverables' | 'pointOfContact'
+  'description' | 'deliverables' | 'pointOfContact' | 'members' | 'leaders'
 >;
 const containerStyles = css({
   display: 'flex',
@@ -18,9 +20,12 @@ const containerStyles = css({
 });
 
 const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
+  membersListElementId,
   description,
   deliverables,
   pointOfContact,
+  members,
+  leaders,
 }) => (
   <div css={containerStyles}>
     <DeliverablesCard deliverables={deliverables} />
@@ -37,7 +42,7 @@ const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
           buttonStyle
           small
           primary
-          href={`${createMailTo(pointOfContact.email)}`}
+          href={`${createMailTo(pointOfContact.user.email)}`}
         >
           Contact PM
         </Link>
@@ -55,12 +60,15 @@ const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
           buttonStyle
           small
           primary
-          href={`${createMailTo(pointOfContact.email)}`}
+          href={`${createMailTo(pointOfContact.user.email)}`}
         >
           Contact PM
         </Link>
       )}
     </Card>
+    <section id={membersListElementId}>
+      <WorkingGroupMembers leaders={leaders} members={members} />
+    </section>
   </div>
 );
 

@@ -332,7 +332,7 @@ describe('WorkingGroupDetail', () => {
         ).not.toBeInTheDocument();
       },
     );
-    it('can submit a form when form data is valid', async () => {
+    it('can submit an add modal when form data is valid', async () => {
       const title = 'example42 title';
       const type = 'Note';
 
@@ -360,6 +360,52 @@ describe('WorkingGroupDetail', () => {
       expect(mockPutWorkingGroupResources).toHaveBeenCalledWith(
         workingGroup.id,
         [...workingGroup.resources!, { title, type }],
+        expect.anything(),
+      );
+      await waitFor(() => expect(saveButton).toBeEnabled());
+    });
+
+    it('can submit an edit modal when form data is valid', async () => {
+      const resources: gp2Model.Resource[] = [
+        {
+          type: 'Note',
+          title: 'first resource',
+        },
+        {
+          type: 'Note',
+          title: 'second resource',
+        },
+        {
+          type: 'Note',
+          title: 'third resource',
+        },
+      ];
+      const title = 'example42 title';
+
+      const workingGroupResources = { ...workingGroup, resources };
+      mockGetWorkingGroup.mockResolvedValueOnce(workingGroupResources);
+      mockPutWorkingGroupResources.mockResolvedValueOnce(workingGroupResources);
+      await renderWorkingGroupDetail({
+        id: workingGroupResources.id,
+        userId: '23',
+        role: 'Administrator',
+        route: gp2Routing
+          .workingGroups({})
+          .workingGroup({ workingGroupId: workingGroupResources.id })
+          .resources({}).$,
+      });
+
+      const editButton = screen.getAllByRole('link', { name: /edit/i })[1];
+      userEvent.click(editButton);
+      const titleBox = screen.getByRole('textbox', { name: /title/i });
+      userEvent.clear(titleBox);
+      userEvent.type(titleBox, title);
+      const saveButton = screen.getByRole('button', { name: /save/i });
+      userEvent.click(saveButton);
+
+      expect(mockPutWorkingGroupResources).toHaveBeenCalledWith(
+        workingGroup.id,
+        [resources[0], { ...resources[1], title }, resources[2]],
         expect.anything(),
       );
       await waitFor(() => expect(saveButton).toBeEnabled());

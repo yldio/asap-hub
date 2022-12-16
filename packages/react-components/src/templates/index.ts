@@ -29,6 +29,7 @@ export { default as NetworkPage } from './NetworkPage';
 export { default as NetworkPageHeader } from './NetworkPageHeader';
 export { default as NetworkPeople } from './NetworkPeople';
 export { default as NetworkTeams } from './NetworkTeams';
+export { default as NetworkWorkingGroups } from './NetworkWorkingGroups';
 export { default as NewsDetailsPage } from './NewsDetailsPage';
 export { default as NewsPage } from './NewsPage';
 export { default as NewsPageBody } from './NewsPageBody';

@@ -1,8 +1,8 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 import {
-  Modal,
-  LabeledMultiSelect,
   Divider,
+  LabeledMultiSelect,
+  Modal,
   pixels,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
@@ -13,7 +13,7 @@ import FilterModalHeader from '../molecules/FilterModalHeader';
 
 const { rem } = pixels;
 
-const { userRegions } = gp2Model;
+const { userRegions, keywords } = gp2Model;
 
 const containerStyles = css({
   padding: `${rem(32)} ${rem(24)}`,
@@ -23,60 +23,120 @@ type FiltersModalProps = {
   onBackClick: () => void;
   filters: gp2Model.FetchUsersFilter;
   onApplyClick: (filters: gp2Model.FetchUsersFilter) => void;
+  projects: Pick<gp2Model.ProjectResponse, 'id' | 'title'>[];
+  workingGroups: Pick<gp2Model.WorkingGroupResponse, 'id' | 'title'>[];
 };
+
+const getValues = <T extends string>(selected: T[]) =>
+  selected.map((item) => ({ label: item, value: item }));
+
+const onChange =
+  <T extends string>(setValue: (items: T[]) => void) =>
+  (newValues: Readonly<{ value: T; label: T }[]>) => {
+    setValue(newValues.map(({ value }) => value));
+  };
+
+const getNoOptionsMessage =
+  (message: string) =>
+  ({ inputValue }: { inputValue: string }) =>
+    `${message} "${inputValue}"`;
 
 const FiltersModal: React.FC<FiltersModalProps> = ({
   onBackClick,
   onApplyClick,
   filters,
+  projects,
+  workingGroups,
 }) => {
-  const [seletedRegions, setSelectedRegions] = useState(filters.region || []);
+  const entityToSelect = <T extends { title: string; id: string }>({
+    title,
+    id,
+  }: T) => ({ label: title, value: id });
+  const sortByLabel = <T extends { label: string }>(a: T, b: T) =>
+    a.label.localeCompare(b.label);
+  const [selectedRegions, setSelectedRegions] = useState(filters.regions || []);
+  const [selectedExpertise, setSelectedExpertise] = useState(
+    filters.keywords || [],
+  );
+  const [selectedProjects, setSelectedProjects] = useState(
+    projects
+      .filter(({ id }) => filters.projects?.includes(id))
+      .map(entityToSelect),
+  );
+  const [selectedWorkingGroups, setSelectedWorkingGroups] = useState(
+    workingGroups
+      .filter(({ id }) => filters.workingGroups?.includes(id))
+      .map(entityToSelect),
+  );
   const resetFilters = () => {
     setSelectedRegions([]);
+    setSelectedExpertise([]);
+    setSelectedProjects([]);
+    setSelectedWorkingGroups([]);
   };
 
-  const numberOfFilter = seletedRegions.length;
+  const numberOfFilter =
+    selectedRegions.length +
+    selectedExpertise.length +
+    selectedProjects.length +
+    selectedWorkingGroups.length;
   return (
     <Modal padding={false}>
       <div css={containerStyles}>
         <FilterModalHeader numberOfFilter={numberOfFilter} />
         <LabeledMultiSelect
-          title="Expertise / Interests"
+          title={'Expertise / Interests'}
           placeholder="Start typing…"
-          suggestions={[]}
+          values={getValues(selectedExpertise)}
+          suggestions={getValues([...keywords])}
+          onChange={onChange(setSelectedExpertise)}
+          noOptionsMessage={getNoOptionsMessage(
+            'Sorry, no current expertise / interests match',
+          )}
         />
         <LabeledMultiSelect
-          title="Regions"
+          title={'Regions'}
           placeholder="Start typing…"
-          values={seletedRegions.map((region) => ({
-            label: region,
-            value: region,
-          }))}
-          onChange={(newValues) => {
-            setSelectedRegions(newValues.map(({ value }) => value));
-          }}
-          suggestions={userRegions.map((suggestion) => ({
-            label: suggestion,
-            value: suggestion,
-          }))}
-          noOptionsMessage={({ inputValue }) =>
-            `Sorry, No current regions match "${inputValue}"`
-          }
+          values={getValues(selectedRegions)}
+          suggestions={getValues([...userRegions])}
+          onChange={onChange(setSelectedRegions)}
+          noOptionsMessage={getNoOptionsMessage(
+            'Sorry, no current regions match',
+          )}
         />
         <LabeledMultiSelect
           title="Working Groups"
           placeholder="Start typing…"
-          suggestions={[]}
+          suggestions={workingGroups.map(entityToSelect).sort(sortByLabel)}
+          values={selectedWorkingGroups}
+          noOptionsMessage={getNoOptionsMessage(
+            'Sorry, no current working groups match',
+          )}
+          onChange={(newValues) => {
+            setSelectedWorkingGroups([...newValues]);
+          }}
         />
         <LabeledMultiSelect
           title="Projects"
           placeholder="Start typing…"
-          suggestions={[]}
+          suggestions={projects.map(entityToSelect).sort(sortByLabel)}
+          values={selectedProjects}
+          noOptionsMessage={getNoOptionsMessage(
+            'Sorry, no current projects match',
+          )}
+          onChange={(newValues) => {
+            setSelectedProjects([...newValues]);
+          }}
         />
         <Divider />
         <FilterModalFooter
           onApply={() => {
-            onApplyClick({ region: seletedRegions });
+            onApplyClick({
+              regions: selectedRegions,
+              keywords: selectedExpertise,
+              projects: selectedProjects.map(({ value }) => value),
+              workingGroups: selectedWorkingGroups.map(({ value }) => value),
+            });
           }}
           onClose={onBackClick}
           onReset={resetFilters}

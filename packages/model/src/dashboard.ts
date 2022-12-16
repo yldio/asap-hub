@@ -1,7 +1,12 @@
-import { NewsResponse } from './news';
-import { PageResponse } from './page';
+import { NewsDataObject, NewsResponse } from './news';
+import { PageDataObject, PageResponse } from './page';
 
-export interface DashboardResponse {
-  news: ReadonlyArray<NewsResponse>;
-  pages: ReadonlyArray<PageResponse>;
-}
+export type DashboardDataObject = {
+  news: NewsDataObject[];
+  pages: PageDataObject[];
+};
+
+export type DashboardResponse = {
+  news: NewsResponse[];
+  pages: PageResponse[];
+};

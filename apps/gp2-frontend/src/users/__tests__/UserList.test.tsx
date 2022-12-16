@@ -6,17 +6,14 @@ import {
   waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { createCsvFileStream } from '@asap-hub/frontend-utils';
-import { Suspense } from 'react';
+import { ComponentProps, Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import { useSearch } from '../../hooks/search';
 import { getUsers } from '../api';
 import { refreshUsersState } from '../state';
 import UserList from '../UserList';
-import * as search from '../../hooks/search';
-import { MAX_SQUIDEX_RESULTS } from '../export';
 
 jest.mock('@asap-hub/frontend-utils', () => {
   const original = jest.requireActual('@asap-hub/frontend-utils');
@@ -28,20 +25,33 @@ jest.mock('@asap-hub/frontend-utils', () => {
   };
 });
 jest.mock('../api');
-jest.mock('../../users/api');
-
+jest.mock('../../hooks/search');
 const mockGetUsers = getUsers as jest.MockedFunction<typeof getUsers>;
+const mockUseSearch = useSearch as jest.MockedFunction<typeof useSearch>;
 
-const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
-  typeof createCsvFileStream
->;
-
-const renderUserList = async (
-  listGroupResponse: gp2Model.ListUserResponse = gp2Fixtures.createUsersResponse(),
-  displayFilters: boolean = false,
-  isAdministrator: boolean = false,
-) => {
-  mockGetUsers.mockResolvedValue(listGroupResponse);
+const renderUserList = async ({
+  searchQuery = '',
+  filters = {},
+  listUserResponse = gp2Fixtures.createUsersResponse(),
+}: Partial<ComponentProps<typeof UserList>> & {
+  listUserResponse?: gp2Model.ListUserResponse;
+} = {}) => {
+  mockGetUsers.mockResolvedValue(listUserResponse);
+  const mockUpdateFilter = jest.fn();
+  mockUseSearch.mockImplementation(() => ({
+    changeLocation: jest.fn(),
+    filters: {
+      regions: [],
+      keywords: [],
+      projects: [],
+      workingGroups: [],
+      ...filters,
+    },
+    updateFilters: mockUpdateFilter,
+    searchQuery: '',
+    debouncedSearchQuery: '',
+    setSearchQuery: jest.fn(),
+  }));
 
   render(
     <RecoilRoot
@@ -50,13 +60,11 @@ const renderUserList = async (
       }}
     >
       <Suspense fallback="loading">
-        <Auth0Provider
-          user={{ role: isAdministrator ? 'Administrator' : undefined }}
-        >
+        <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/users/']}>
               <Route path="/users">
-                <UserList displayFilters={displayFilters} />
+                <UserList searchQuery={searchQuery} filters={filters} />
               </Route>
             </MemoryRouter>
           </WhenReady>
@@ -65,17 +73,18 @@ const renderUserList = async (
     </RecoilRoot>,
   );
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  return { mockUpdateFilter };
 };
-afterEach(() => {
-  jest.clearAllMocks();
-});
+afterEach(jest.resetAllMocks);
 it('fetches the user information', async () => {
-  await renderUserList();
+  await renderUserList({
+    filters: { regions: [], keywords: [], projects: [], workingGroups: [] },
+  });
 
   await waitFor(() =>
     expect(mockGetUsers).toHaveBeenCalledWith(
       expect.objectContaining({
-        filter: { region: [] },
+        filter: { regions: [], keywords: [], projects: [], workingGroups: [] },
         search: '',
         skip: 0,
         take: 10,
@@ -86,66 +95,19 @@ it('fetches the user information', async () => {
 });
 
 it('renders a list of fetched groups', async () => {
-  await renderUserList({
+  const listUserResponse = {
     total: 2,
     items: gp2Fixtures.createUsersResponse(2).items.map((user, i) => ({
       ...user,
       id: `${i}`,
       displayName: `Display Name ${i}`,
     })),
-  });
+  };
+  await renderUserList({ listUserResponse });
   expect(
     screen.getByRole('heading', { name: /display name 0/i }),
   ).toBeInTheDocument();
   expect(
     screen.getByRole('heading', { name: /display name 1/i }),
   ).toBeInTheDocument();
-});
-
-it('renders the filters modal', async () => {
-  await renderUserList(undefined, true);
-  expect(screen.getByRole('heading', { name: 'Filters' })).toBeVisible();
-});
-it('calls the updateFilters with the right arguments', async () => {
-  const mockUpdateFilter = jest.fn();
-  jest.spyOn(search, 'useSearch').mockImplementation(() => ({
-    changeLocation: jest.fn(),
-    filters: { region: [] },
-    updateFilters: mockUpdateFilter,
-  }));
-  await renderUserList(undefined, true);
-  userEvent.click(screen.getByRole('button', { name: 'Apply' }));
-  expect(mockUpdateFilter).toHaveBeenCalledWith('/users', { region: [] });
-});
-
-it('triggers export with the same parameters but overrides onlyOnboarded with false', async () => {
-  await renderUserList(undefined, undefined, true);
-
-  await waitFor(() =>
-    expect(mockGetUsers).toHaveBeenCalledWith(
-      expect.objectContaining({
-        filter: { region: [] },
-        search: '',
-        skip: 0,
-        take: 10,
-      }),
-      expect.anything(),
-    ),
-  );
-  userEvent.click(screen.getByRole('button', { name: 'Export Export' }));
-  expect(mockCreateCsvFileStream).toHaveBeenLastCalledWith(
-    expect.stringMatching('user_export.csv'),
-    expect.anything(),
-  );
-  await waitFor(() =>
-    expect(mockGetUsers).toHaveBeenCalledWith(
-      expect.objectContaining({
-        filter: { region: [], onlyOnboarded: false },
-        search: '',
-        skip: 0,
-        take: MAX_SQUIDEX_RESULTS,
-      }),
-      expect.anything(),
-    ),
-  );
 });

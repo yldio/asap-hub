@@ -3,6 +3,7 @@ import {
   WorkingGroupListResponse,
   deliverableStatus,
 } from '@asap-hub/model';
+import { createUserResponse } from './users';
 
 type FixtureOptions = {
   deliverables?: number;
@@ -21,13 +22,31 @@ export const createWorkingGroupMembers = (
   members: number,
 ): WorkingGroupResponse['members'] =>
   Array.from({ length: members }, (_, itemIndex) => ({
-    displayName: 'Example',
-    email: 'test@example.com',
-    firstName: 'Mr',
-    lastName: 'Example',
-    id: `member-${itemIndex}`,
-    workingGroupRole: 'Project Manager' as const,
+    user: createUserResponse({}, itemIndex),
+    workstreamRole: `member role - ${itemIndex}`,
   }));
+
+export const createWorkingGroupLeaders = (
+  members: number,
+): WorkingGroupResponse['leaders'] =>
+  Array.from({ length: members }, (_, itemIndex) => ({
+    user: createUserResponse({}, itemIndex),
+    role: 'Project Manager' as const,
+    workstreamRole: `leader role - ${itemIndex}`,
+  }));
+
+export const createWorkingGroupPointOfContact =
+  (): WorkingGroupResponse['pointOfContact'] => ({
+    role: 'Project Manager',
+    workstreamRole: 'PM',
+    user: {
+      id: '2',
+      displayName: 'Peter Venkman',
+      firstName: 'Peter',
+      lastName: 'Venkman',
+      email: 'peter@ven.com',
+    },
+  });
 
 export const createWorkingGroupResponse = (
   options: FixtureOptions,
@@ -36,12 +55,13 @@ export const createWorkingGroupResponse = (
   id: `working-group-id-${itemIndex}`,
   title: `Working Group ${itemIndex}`,
   description: `Working Group ${itemIndex} Description`,
+  shortText: `Working Group ${itemIndex} Short Text`,
   lastModifiedDate: '2020-11-09T20:36:54Z',
   externalLink: `https://www.example.com/working-group-${itemIndex}`,
-  externalLinkText: `Working Group ${itemIndex} External Link Text`,
   deliverables: createDeliverables(options?.deliverables ?? 1),
   complete: false,
   members: createWorkingGroupMembers(options?.members ?? 1),
+  leaders: createWorkingGroupLeaders(options?.members ?? 1),
 });
 
 export const createWorkingGroupListResponse = (

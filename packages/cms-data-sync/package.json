@@ -11,7 +11,7 @@
   "scripts": {
     "build:babel": "../../scripts/build-babel.sh build",
     "watch:babel": "../../scripts/build-babel.sh watch",
-    "migrate:news": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\"}' ts-node ./src/news/news.data-migration.ts",
+    "migrate": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\"}' ts-node ./src/index.ts",
     "schema:update:crn": "SQUIDEX_BASE_URL=$SQUIDEX_BASE_URL SQUIDEX_APP_NAME=$CRN_SQUIDEX_APP_NAME SQUIDEX_CLIENT_ID=$CRN_SQUIDEX_CLIENT_ID SQUIDEX_CLIENT_SECRET=$CRN_SQUIDEX_CLIENT_SECRET ./scripts/schema-update.sh"
   },
   "dependencies": {
@@ -19,7 +19,7 @@
     "@asap-hub/squidex": "workspace:*",
     "@babel/runtime-corejs3": "7.19.6",
     "@contentful/rich-text-types": "^15.13.2",
-    "contentful-html-rich-text-converter": "yldio/contentful-html-rich-text-converter",
+    "contentful-html-rich-text-converter": "yldio/contentful-html-rich-text-converter#v1.0.11",
     "contentful-management": "^10.19.3",
     "graphql": "15.8.0",
     "graphql-tag": "2.12.6"

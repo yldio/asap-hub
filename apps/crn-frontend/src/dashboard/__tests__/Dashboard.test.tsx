@@ -4,8 +4,10 @@ import { render, waitFor, screen } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import {
   createListReminderResponse,
+  createListUserResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
+import { activeUserTag } from '@asap-hub/model';
 import { MemoryRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 
@@ -13,7 +15,7 @@ import Dashboard from '../Dashboard';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { refreshDashboardState } from '../state';
 import { getDashboard, getReminders } from '../api';
-import { getUser, patchUser } from '../../network/users/api';
+import { getUser, getUsers, patchUser } from '../../network/users/api';
 import { refreshUserState } from '../../network/users/state';
 
 jest.mock('../api');
@@ -33,6 +35,7 @@ const mockGetReminders = getReminders as jest.MockedFunction<
   typeof getReminders
 >;
 const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
+const mockGetUsers = getUsers as jest.MockedFunction<typeof getUsers>;
 const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
 
 const renderDashboard = async (user: Partial<User>) => {
@@ -180,4 +183,22 @@ describe('dismissing the getting started option', () => {
       screen.getByText(/The ASAP Hub is the private meeting point for/),
     ).toBeVisible();
   });
+});
+
+it('renders latest users filtered by active users', async () => {
+  mockGetUsers.mockResolvedValueOnce(createListUserResponse(3));
+  const { container } = await renderDashboard({});
+
+  expect(mockGetUsers).toBeCalledWith(
+    expect.anything(),
+    expect.objectContaining({
+      filters: new Set([activeUserTag]),
+      pageSize: 3,
+    }),
+  );
+
+  expect(container.textContent).toContain('Latest Users');
+  expect(container.textContent).toContain('Person A 1');
+  expect(container.textContent).toContain('Person A 2');
+  expect(container.textContent).toContain('Person A 3');
 });

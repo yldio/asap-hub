@@ -4,8 +4,8 @@ import {
   UserResponse,
   UserAvatarPostRequest,
   ListUserResponse,
+  InstitutionsResponse,
 } from '@asap-hub/model';
-import { InstitutionsResponse } from '../api';
 
 export const getUser = jest.fn(
   async (id: string): Promise<UserResponse> => ({

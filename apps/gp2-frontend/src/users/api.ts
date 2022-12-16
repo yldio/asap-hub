@@ -1,5 +1,5 @@
 import { createSentryHeaders } from '@asap-hub/frontend-utils';
-import { gp2 } from '@asap-hub/model';
+import { gp2, InstitutionsResponse } from '@asap-hub/model';
 import { API_BASE_URL } from '../config';
 
 export const createUserApiUrl = ({
@@ -16,7 +16,12 @@ export const createUserApiUrl = ({
   if (skip !== null) {
     url.searchParams.set('skip', String(skip));
   }
-  filter?.region?.forEach((r) => url.searchParams.append('filter[region]', r));
+  const addFilter = (name: string, items?: string[]) =>
+    items?.forEach((item) => url.searchParams.append(`filter[${name}]`, item));
+  addFilter('regions', filter?.regions);
+  addFilter('keywords', filter?.keywords);
+  addFilter('projects', filter?.projects);
+  addFilter('workingGroups', filter?.workingGroups);
 
   if (typeof filter?.onlyOnboarded === 'boolean') {
     url.searchParams.set(
@@ -56,6 +61,44 @@ export const getUser = async (
     }
     throw new Error(
       `Failed to fetch user with id ${id}. Expected status 2xx or 404. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+    );
+  }
+  return resp.json();
+};
+
+export const patchUser = async (
+  id: string,
+  patch: gp2.UserPatchRequest,
+  authorization: string,
+): Promise<gp2.UserResponse> => {
+  const resp = await fetch(`${API_BASE_URL}/users/${id}`, {
+    method: 'PATCH',
+    headers: {
+      authorization,
+      'content-type': 'application/json',
+      ...createSentryHeaders(),
+    },
+    body: JSON.stringify(patch),
+  });
+  if (!resp.ok) {
+    throw new Error(
+      `Failed to update user with id ${id}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+    );
+  }
+  return resp.json();
+};
+
+export const getInstitutions = async ({
+  searchQuery,
+}: {
+  searchQuery?: string;
+} = {}): Promise<InstitutionsResponse> => {
+  const url = new URL('https://api.ror.org/organizations');
+  searchQuery && url.searchParams.set('query', searchQuery);
+  const resp = await fetch(url.toString());
+  if (!resp.ok) {
+    throw new Error(
+      `Failed to fetch institutions. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
     );
   }
   return resp.json();

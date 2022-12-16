@@ -2654,6 +2654,7 @@ export type EventsDataDto = {
   meetingMaterialsPermanentlyUnavailable: Maybe<EventsDataMeetingMaterialsPermanentlyUnavailableDto>;
   notes: Maybe<EventsDataNotesDto>;
   notesPermanentlyUnavailable: Maybe<EventsDataNotesPermanentlyUnavailableDto>;
+  notesUpdatedAt: Maybe<EventsDataNotesUpdatedAtDto>;
   presentation: Maybe<EventsDataPresentationDto>;
   presentationPermanentlyUnavailable: Maybe<EventsDataPresentationPermanentlyUnavailableDto>;
   presentationUpdatedAt: Maybe<EventsDataPresentationUpdatedAtDto>;
@@ -2746,6 +2747,7 @@ export type EventsDataInputDto = {
   meetingMaterialsPermanentlyUnavailable: InputMaybe<EventsDataMeetingMaterialsPermanentlyUnavailableInputDto>;
   notes: InputMaybe<EventsDataNotesInputDto>;
   notesPermanentlyUnavailable: InputMaybe<EventsDataNotesPermanentlyUnavailableInputDto>;
+  notesUpdatedAt: InputMaybe<EventsDataNotesUpdatedAtInputDto>;
   presentation: InputMaybe<EventsDataPresentationInputDto>;
   presentationPermanentlyUnavailable: InputMaybe<EventsDataPresentationPermanentlyUnavailableInputDto>;
   presentationUpdatedAt: InputMaybe<EventsDataPresentationUpdatedAtInputDto>;
@@ -2829,6 +2831,16 @@ export type EventsDataNotesPermanentlyUnavailableDto = {
 export type EventsDataNotesPermanentlyUnavailableInputDto = {
   /** This box is automatically ticked if no output is added after 14 days from the event's end date. */
   iv: InputMaybe<Scalars['Boolean']>;
+};
+
+/** The structure of the Notes Updated At field of the Events content type. */
+export type EventsDataNotesUpdatedAtDto = {
+  iv: Maybe<Scalars['Instant']>;
+};
+
+/** The structure of the Notes Updated At field of the Events content input type. */
+export type EventsDataNotesUpdatedAtInputDto = {
+  iv: InputMaybe<Scalars['Instant']>;
 };
 
 /** The structure of the Presentation field of the Events content type. */
@@ -3003,6 +3015,7 @@ export type EventsFlatDataDto = {
   notes: Maybe<Scalars['String']>;
   /** This box is automatically ticked if no output is added after 14 days from the event's end date. */
   notesPermanentlyUnavailable: Maybe<Scalars['Boolean']>;
+  notesUpdatedAt: Maybe<Scalars['Instant']>;
   /** If permanently unavailable box is ticked, any content you put here will be ignored. */
   presentation: Maybe<Scalars['String']>;
   /** This box is automatically ticked if no output is added after 14 days from the event's end date. */
@@ -5186,6 +5199,10 @@ export type Users = Content & {
   referencingResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
   /** Query Research Outputs content items with total count. */
   referencingResearchOutputsContentsWithTotal: Maybe<ResearchOutputsResultDto>;
+  /** Query Working Groups content items. */
+  referencingWorkingGroupsContents: Maybe<Array<WorkingGroups>>;
+  /** Query Working Groups content items with total count. */
+  referencingWorkingGroupsContentsWithTotal: Maybe<WorkingGroupsResultDto>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
@@ -5297,6 +5314,24 @@ export type UsersReferencingResearchOutputsContentsArgs = {
 
 /** The structure of a Users content type. */
 export type UsersReferencingResearchOutputsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Users content type. */
+export type UsersReferencingWorkingGroupsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Users content type. */
+export type UsersReferencingWorkingGroupsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -5870,6 +5905,10 @@ export type WorkingGroups = Content & {
   newStatus: Maybe<Scalars['String']>;
   /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
+  /** Query Users content items. */
+  referencesUsersContents: Maybe<Array<Users>>;
+  /** Query Users content items with total count. */
+  referencesUsersContentsWithTotal: Maybe<UsersResultDto>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
@@ -5878,6 +5917,56 @@ export type WorkingGroups = Content & {
   url: Scalars['String'];
   /** The version of the objec. */
   version: Scalars['Int'];
+};
+
+/** The structure of a Working Groups content type. */
+export type WorkingGroupsReferencesUsersContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Working Groups content type. */
+export type WorkingGroupsReferencesUsersContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of the This working group is complete field of the Working Groups content type. */
+export type WorkingGroupsDataCompleteDto = {
+  iv: Maybe<Scalars['Boolean']>;
+};
+
+/** The structure of the This working group is complete field of the Working Groups content input type. */
+export type WorkingGroupsDataCompleteInputDto = {
+  iv: InputMaybe<Scalars['Boolean']>;
+};
+
+/** The structure of the Deliverables nested schema. */
+export type WorkingGroupsDataDeliverablesChildDto = {
+  description: Maybe<Scalars['String']>;
+  status: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Deliverables nested schema. */
+export type WorkingGroupsDataDeliverablesChildInputDto = {
+  description: InputMaybe<Scalars['String']>;
+  status: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Deliverables field of the Working Groups content type. */
+export type WorkingGroupsDataDeliverablesDto = {
+  iv: Maybe<Array<WorkingGroupsDataDeliverablesChildDto>>;
+};
+
+/** The structure of the Deliverables field of the Working Groups content input type. */
+export type WorkingGroupsDataDeliverablesInputDto = {
+  iv: InputMaybe<Array<WorkingGroupsDataDeliverablesChildInputDto>>;
 };
 
 /** The structure of the Description field of the Working Groups content type. */
@@ -5892,9 +5981,13 @@ export type WorkingGroupsDataDescriptionInputDto = {
 
 /** The structure of the Working Groups data type. */
 export type WorkingGroupsDataDto = {
+  complete: Maybe<WorkingGroupsDataCompleteDto>;
+  deliverables: Maybe<WorkingGroupsDataDeliverablesDto>;
   description: Maybe<WorkingGroupsDataDescriptionDto>;
   externalLink: Maybe<WorkingGroupsDataExternalLinkDto>;
-  externalLinkText: Maybe<WorkingGroupsDataExternalLinkTextDto>;
+  leaders: Maybe<WorkingGroupsDataLeadersDto>;
+  members: Maybe<WorkingGroupsDataMembersDto>;
+  shortText: Maybe<WorkingGroupsDataShortTextDto>;
   title: Maybe<WorkingGroupsDataTitleDto>;
 };
 
@@ -5908,22 +6001,70 @@ export type WorkingGroupsDataExternalLinkInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
-/** The structure of the External Link Text field of the Working Groups content type. */
-export type WorkingGroupsDataExternalLinkTextDto = {
+/** The structure of the Working Groups data input type. */
+export type WorkingGroupsDataInputDto = {
+  complete: InputMaybe<WorkingGroupsDataCompleteInputDto>;
+  deliverables: InputMaybe<WorkingGroupsDataDeliverablesInputDto>;
+  description: InputMaybe<WorkingGroupsDataDescriptionInputDto>;
+  externalLink: InputMaybe<WorkingGroupsDataExternalLinkInputDto>;
+  leaders: InputMaybe<WorkingGroupsDataLeadersInputDto>;
+  members: InputMaybe<WorkingGroupsDataMembersInputDto>;
+  shortText: InputMaybe<WorkingGroupsDataShortTextInputDto>;
+  title: InputMaybe<WorkingGroupsDataTitleInputDto>;
+};
+
+/** The structure of the Leaders nested schema. */
+export type WorkingGroupsDataLeadersChildDto = {
+  role: Maybe<Scalars['String']>;
+  user: Maybe<Array<Users>>;
+  workstreamRole: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Leaders nested schema. */
+export type WorkingGroupsDataLeadersChildInputDto = {
+  role: InputMaybe<Scalars['String']>;
+  user: InputMaybe<Array<Scalars['String']>>;
+  workstreamRole: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Leaders field of the Working Groups content type. */
+export type WorkingGroupsDataLeadersDto = {
+  iv: Maybe<Array<WorkingGroupsDataLeadersChildDto>>;
+};
+
+/** The structure of the Leaders field of the Working Groups content input type. */
+export type WorkingGroupsDataLeadersInputDto = {
+  iv: InputMaybe<Array<WorkingGroupsDataLeadersChildInputDto>>;
+};
+
+/** The structure of the Members nested schema. */
+export type WorkingGroupsDataMembersChildDto = {
+  user: Maybe<Array<Users>>;
+};
+
+/** The structure of the Members nested schema. */
+export type WorkingGroupsDataMembersChildInputDto = {
+  user: InputMaybe<Array<Scalars['String']>>;
+};
+
+/** The structure of the Members field of the Working Groups content type. */
+export type WorkingGroupsDataMembersDto = {
+  iv: Maybe<Array<WorkingGroupsDataMembersChildDto>>;
+};
+
+/** The structure of the Members field of the Working Groups content input type. */
+export type WorkingGroupsDataMembersInputDto = {
+  iv: InputMaybe<Array<WorkingGroupsDataMembersChildInputDto>>;
+};
+
+/** The structure of the Short Text field of the Working Groups content type. */
+export type WorkingGroupsDataShortTextDto = {
   iv: Maybe<Scalars['String']>;
 };
 
-/** The structure of the External Link Text field of the Working Groups content input type. */
-export type WorkingGroupsDataExternalLinkTextInputDto = {
+/** The structure of the Short Text field of the Working Groups content input type. */
+export type WorkingGroupsDataShortTextInputDto = {
   iv: InputMaybe<Scalars['String']>;
-};
-
-/** The structure of the Working Groups data input type. */
-export type WorkingGroupsDataInputDto = {
-  description: InputMaybe<WorkingGroupsDataDescriptionInputDto>;
-  externalLink: InputMaybe<WorkingGroupsDataExternalLinkInputDto>;
-  externalLinkText: InputMaybe<WorkingGroupsDataExternalLinkTextInputDto>;
-  title: InputMaybe<WorkingGroupsDataTitleInputDto>;
 };
 
 /** The structure of the Title field of the Working Groups content type. */
@@ -5938,9 +6079,13 @@ export type WorkingGroupsDataTitleInputDto = {
 
 /** The structure of the flat Working Groups data type. */
 export type WorkingGroupsFlatDataDto = {
+  complete: Maybe<Scalars['Boolean']>;
+  deliverables: Maybe<Array<WorkingGroupsDataDeliverablesChildDto>>;
   description: Maybe<Scalars['String']>;
   externalLink: Maybe<Scalars['String']>;
-  externalLinkText: Maybe<Scalars['String']>;
+  leaders: Maybe<Array<WorkingGroupsDataLeadersChildDto>>;
+  members: Maybe<Array<WorkingGroupsDataMembersChildDto>>;
+  shortText: Maybe<Scalars['String']>;
   title: Maybe<Scalars['String']>;
 };
 
@@ -5976,6 +6121,21 @@ export type FetchNewsQuery = {
   >;
 };
 
+export type FetchPagesQueryVariables = Exact<{ [key: string]: never }>;
+
+export type FetchPagesQuery = {
+  queryPagesContents: Maybe<
+    Array<
+      Pick<Pages, 'id'> & {
+        flatData: Pick<
+          PagesFlatDataDto,
+          'title' | 'path' | 'shortText' | 'text' | 'link' | 'linkText'
+        >;
+      }
+    >
+  >;
+};
+
 export const FetchNewsDocument = {
   kind: 'Document',
   definitions: [
@@ -5989,6 +6149,13 @@ export const FetchNewsDocument = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'queryNewsAndEventsContents' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'top' },
+                value: { kind: 'IntValue', value: '100' },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
@@ -6054,3 +6221,56 @@ export const FetchNewsDocument = {
     },
   ],
 } as unknown as DocumentNode<FetchNewsQuery, FetchNewsQueryVariables>;
+export const FetchPagesDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchPages' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'queryPagesContents' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'top' },
+                value: { kind: 'IntValue', value: '100' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'flatData' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'path' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'shortText' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'text' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'link' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'linkText' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<FetchPagesQuery, FetchPagesQueryVariables>;

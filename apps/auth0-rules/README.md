@@ -1,4 +1,10 @@
-# Auth0 Connect User Rule
+# Deployment
+
+To deploy actions and the login page html you will need to provide the CI Application's AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET and AUTH0_DOMAIN and run the following command:
+
+`AUTH0_CLIENT_ID=XXXX AUTH0_CLIENT_SECRET=XXXX AUTH0_DOMAIN=XXXX yarn deploy`
+
+# Auth0 Connect User Action
 
 > Connects user's auth0 profile to an ASAP user using invitationCode.
 

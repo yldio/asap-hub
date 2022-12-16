@@ -1,10 +1,28 @@
+import { appName, baseUrl } from '../../src/config';
 import { WorkingGroupSquidexDataProvider } from '../../src/data-providers/working-groups.data-provider';
+import { createUrl } from '../../src/utils/urls';
+import { getGraphQLUser } from '../fixtures/users.fixtures';
 import {
   getSquidexWorkingGroupGraphqlResponse,
+  getSquidexWorkingGroupsGraphqlResponse,
   getWorkingGroupDataObject,
 } from '../fixtures/working-groups.fixtures';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
+
+const graphqlUser = getGraphQLUser();
+
+const parsedGraphQlWorkingGroupUser = {
+  id: graphqlUser.id,
+  displayName: `${graphqlUser.flatData.firstName} ${graphqlUser.flatData.lastName}`,
+  firstName: graphqlUser.flatData.firstName,
+  lastName: graphqlUser.flatData.lastName,
+  email: graphqlUser.flatData.email,
+  alumniSinceDate: graphqlUser.flatData.alumniSinceDate,
+  avatarUrl: graphqlUser.flatData.avatar?.length
+    ? createUrl(graphqlUser.flatData.avatar.map((a) => a.id))[0]
+    : undefined,
+};
 
 describe('Working Group Data Provider', () => {
   const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
@@ -18,6 +36,51 @@ describe('Working Group Data Provider', () => {
 
   afterEach(() => {
     jest.resetAllMocks();
+  });
+
+  describe('Fetch method', () => {
+    test('Should fetch the working groups from squidex graphql', async () => {
+      const result = await workingGroupDataProviderMockGraphql.fetch({});
+
+      expect(result).toMatchObject({
+        total: 1,
+        items: [getWorkingGroupDataObject()],
+      });
+    });
+
+    test('Should return an empty result when the client returns an empty list', async () => {
+      const squidexGraphqlResponse = getSquidexWorkingGroupsGraphqlResponse();
+      squidexGraphqlResponse.queryWorkingGroupsContentsWithTotal!.total = 0;
+      squidexGraphqlResponse.queryWorkingGroupsContentsWithTotal!.items = [];
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
+
+      const result = await workingGroupDataProvider.fetch({});
+      expect(result).toEqual({ items: [], total: 0 });
+    });
+
+    test('Should return an empty result when the client returns a response with queryWorkingGroupsContentsWithTotal property set to null', async () => {
+      const squidexGraphqlResponse = getSquidexWorkingGroupsGraphqlResponse();
+      squidexGraphqlResponse.queryWorkingGroupsContentsWithTotal = null;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
+
+      const result = await workingGroupDataProvider.fetch({});
+      expect(result).toEqual({ items: [], total: 0 });
+    });
+
+    test('Should return an empty result when the client returns a response with items property set to null', async () => {
+      const squidexGraphqlResponse = getSquidexWorkingGroupsGraphqlResponse();
+      squidexGraphqlResponse.queryWorkingGroupsContentsWithTotal!.items = null;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
+
+      const result = await workingGroupDataProvider.fetch({});
+      expect(result).toEqual({ items: [], total: 0 });
+    });
   });
 
   describe('Fetch-by-id method', () => {
@@ -43,11 +106,20 @@ describe('Working Group Data Provider', () => {
       ).toBeNull();
     });
 
-    test('Should skip externalLinkText and externalLink when they are both null', async () => {
+    test('Should return externalLink when it is not null', async () => {
+      const squidexGraphqlResponse = getSquidexWorkingGroupGraphqlResponse();
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
+
+      const response = await workingGroupDataProvider.fetchById(workingGroupId);
+
+      expect(response).toHaveProperty('externalLink');
+    });
+
+    test('Should not return externalLink when it is null', async () => {
       const squidexGraphqlResponse = getSquidexWorkingGroupGraphqlResponse();
       squidexGraphqlResponse.findWorkingGroupsContent!.flatData.externalLink =
-        null;
-      squidexGraphqlResponse.findWorkingGroupsContent!.flatData.externalLinkText =
         null;
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         squidexGraphqlResponse,
@@ -56,39 +128,6 @@ describe('Working Group Data Provider', () => {
       const response = await workingGroupDataProvider.fetchById(workingGroupId);
 
       expect(response).not.toHaveProperty('externalLink');
-      expect(response).not.toHaveProperty('externalLinkText');
-    });
-
-    test('Should skip externalLinkText when it is null', async () => {
-      const squidexGraphqlResponse = getSquidexWorkingGroupGraphqlResponse();
-      squidexGraphqlResponse.findWorkingGroupsContent!.flatData.externalLink =
-        'https://www.example.com';
-      squidexGraphqlResponse.findWorkingGroupsContent!.flatData.externalLinkText =
-        null;
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        squidexGraphqlResponse,
-      );
-
-      const response = await workingGroupDataProvider.fetchById(workingGroupId);
-
-      expect(response?.externalLink).toBe('https://www.example.com');
-      expect(response).not.toHaveProperty('externalLinkText');
-    });
-
-    test('Should skip externalLinkText when externalLink is not present', async () => {
-      const squidexGraphqlResponse = getSquidexWorkingGroupGraphqlResponse();
-      squidexGraphqlResponse.findWorkingGroupsContent!.flatData.externalLink =
-        null;
-      squidexGraphqlResponse.findWorkingGroupsContent!.flatData.externalLinkText =
-        'some text';
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        squidexGraphqlResponse,
-      );
-
-      const response = await workingGroupDataProvider.fetchById(workingGroupId);
-
-      expect(response).not.toHaveProperty('externalLink');
-      expect(response).not.toHaveProperty('externalLinkText');
     });
 
     test('Should default description to an empty string', async () => {
@@ -144,6 +183,147 @@ describe('Working Group Data Provider', () => {
         (await workingGroupDataProvider.fetchById(workingGroupId))
           ?.deliverables,
       ).toEqual([]);
+    });
+
+    describe('leaders and members', () => {
+      test('Should return leaders', async () => {
+        const squidexGraphqlResponse = getSquidexWorkingGroupGraphqlResponse();
+        squidexGraphqlResponse.findWorkingGroupsContent!.flatData.leaders = [
+          {
+            user: [graphqlUser],
+            workstreamRole: 'Some role',
+            role: 'Chair',
+          },
+        ];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const response = await workingGroupDataProvider.fetchById(
+          workingGroupId,
+        );
+        expect(response?.leaders).toStrictEqual([
+          {
+            user: parsedGraphQlWorkingGroupUser,
+            workstreamRole: 'Some role',
+            role: 'Chair',
+          },
+        ]);
+      });
+
+      test('Should return members', async () => {
+        const squidexGraphqlResponse = getSquidexWorkingGroupGraphqlResponse();
+        squidexGraphqlResponse.findWorkingGroupsContent!.flatData.members = [
+          {
+            user: [graphqlUser],
+          },
+        ];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const response = await workingGroupDataProvider.fetchById(
+          workingGroupId,
+        );
+        expect(response?.members).toStrictEqual([
+          {
+            user: parsedGraphQlWorkingGroupUser,
+          },
+        ]);
+      });
+
+      test('should return empty leaders and members if they do not exist', async () => {
+        const squidexGraphqlResponse = getSquidexWorkingGroupGraphqlResponse();
+        squidexGraphqlResponse.findWorkingGroupsContent!.flatData.members =
+          null;
+        squidexGraphqlResponse.findWorkingGroupsContent!.flatData.leaders =
+          null;
+
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const response = await workingGroupDataProvider.fetchById(
+          workingGroupId,
+        );
+        expect(response?.members).toStrictEqual([]);
+        expect(response?.leaders).toStrictEqual([]);
+      });
+
+      test('should return empty leaders and members if they are not set properly', async () => {
+        const squidexGraphqlResponse = getSquidexWorkingGroupGraphqlResponse();
+        squidexGraphqlResponse.findWorkingGroupsContent!.flatData.members = [
+          {
+            user: [],
+          },
+        ];
+        squidexGraphqlResponse.findWorkingGroupsContent!.flatData.leaders = [
+          {
+            user: [],
+            role: 'Chair',
+            workstreamRole: 'Some role',
+          },
+        ];
+
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const response = await workingGroupDataProvider.fetchById(
+          workingGroupId,
+        );
+        expect(response?.members).toStrictEqual([]);
+        expect(response?.leaders).toStrictEqual([]);
+      });
+    });
+
+    describe('Avatar', () => {
+      test.each`
+        user         | avatarText    | avatarValue              | expectedValue
+        ${`members`} | ${`null`}     | ${null}                  | ${undefined}
+        ${`members`} | ${`not null`} | ${[{ id: 'avatar-id' }]} | ${`${baseUrl}/api/assets/${appName}/avatar-id`}
+        ${`leaders`} | ${`null`}     | ${null}                  | ${undefined}
+        ${`leaders`} | ${`not null`} | ${[{ id: 'avatar-id' }]} | ${`${baseUrl}/api/assets/${appName}/avatar-id`}
+      `(
+        'Should parse the $user avatar correctly when the avatar is $avatarText',
+        async ({
+          user,
+          avatarValue,
+          expectedValue,
+        }: {
+          user: 'members' | 'leaders';
+          avatarValue: { id: string }[] | null;
+          expectedValue: string | undefined;
+        }) => {
+          const squidexGraphqlResponse =
+            getSquidexWorkingGroupGraphqlResponse();
+          const graphqlUser1 = getGraphQLUser();
+          graphqlUser1.flatData!.avatar = avatarValue;
+          if (user === 'leaders') {
+            squidexGraphqlResponse.findWorkingGroupsContent!.flatData.leaders =
+              [
+                {
+                  user: [graphqlUser1],
+                  role: 'Project Manager',
+                  workstreamRole: 'PM',
+                },
+              ];
+          } else {
+            squidexGraphqlResponse.findWorkingGroupsContent!.flatData.members =
+              [{ user: [graphqlUser1] }];
+          }
+
+          squidexGraphqlClientMock.request.mockResolvedValueOnce(
+            squidexGraphqlResponse,
+          );
+
+          const response = await workingGroupDataProvider.fetchById(
+            workingGroupId,
+          );
+
+          expect(response![user][0]!.user!.avatarUrl).toEqual(expectedValue);
+        },
+      );
     });
   });
 });

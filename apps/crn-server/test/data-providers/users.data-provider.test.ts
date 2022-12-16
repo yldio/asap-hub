@@ -1,5 +1,10 @@
 import { GenericError, NotFoundError } from '@asap-hub/errors';
-import { FetchUsersOptions, UserResponse } from '@asap-hub/model';
+import {
+  activeUserTag,
+  FetchUsersOptions,
+  inactiveUserTag,
+  UserResponse,
+} from '@asap-hub/model';
 import { InputUser, RestUser, SquidexRest } from '@asap-hub/squidex';
 import nock, { DataMatcherMap } from 'nock';
 import { appName, baseUrl } from '../../src/config';
@@ -294,10 +299,34 @@ describe('User data provider', () => {
       const expectedResponse = getUserDataObject();
       expectedResponse.alumniSinceDate = '2020-10-26T15:33:18Z';
       expectedResponse.alumniLocation = 'Some University in London';
-      expectedResponse._tags = ['Alumni Member'];
+      expectedResponse._tags = [inactiveUserTag];
       const result = await userDataProvider.fetchById('user-id');
       expect(result).toEqual(expectedResponse);
     });
+    test.each([
+      {
+        userType: 'alumni',
+        alumniSinceDate: '2020-10-26T15:33:18Z',
+        tagValue: inactiveUserTag,
+      },
+      {
+        userType: 'non-alumni',
+        alumniSinceDate: null,
+        tagValue: activeUserTag,
+      },
+    ])(
+      'Should return _tags correctly for $userType user',
+      async ({ alumniSinceDate, tagValue }) => {
+        const mockResponse = getSquidexUserGraphqlResponse();
+        mockResponse.findUsersContent!.flatData.alumniSinceDate =
+          alumniSinceDate;
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        const result = await userDataProvider.fetchById('user-id');
+
+        expect(result?._tags).toEqual([tagValue]);
+      },
+    );
   });
 
   describe('Update', () => {
@@ -442,7 +471,6 @@ describe('User data provider', () => {
       nock(baseUrl)
         .post(`/api/content/${appName}/users?publish=true`, {
           ...(getInputUser() as any),
-          // _tags: { iv: ['CRN Member'] },
         })
         .reply(201, { id: userId });
 

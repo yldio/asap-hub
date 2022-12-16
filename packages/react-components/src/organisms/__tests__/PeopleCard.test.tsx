@@ -31,6 +31,17 @@ it('renders the date in the correct format', () => {
   );
 });
 
+it('renders the date and label in the correct form for alumni users', () => {
+  const { getByText } = render(
+    <PeopleCard
+      {...props}
+      createdDate="2021-01-01"
+      alumniSinceDate="2021-01-02"
+    />,
+  );
+  expect(getByText('Alumni since: 2nd January 2021')).toBeVisible();
+});
+
 it('links to the profile', () => {
   const { getByText } = render(
     <PeopleCard {...props} displayName="John Doe" id="42" />,

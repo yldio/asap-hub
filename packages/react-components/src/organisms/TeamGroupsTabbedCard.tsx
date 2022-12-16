@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 import React, { ComponentProps } from 'react';
 import { Paragraph } from '../atoms';
 import { charcoal, steel } from '../colors';
-import { teamIcon } from '../icons';
+import { TeamIcon } from '../icons';
 import { LinkHeadline, TabbedCard } from '../molecules';
 import { perRem, rem, tabletScreen } from '../pixels';
 import { splitListBy } from '../utils';
@@ -117,7 +117,9 @@ const TeamGroupsTabbedCard: React.FC<TeamGroupsTabbedCardProps> = ({
                     {description}
                   </Paragraph>
                   <span css={teamsStyles}>
-                    <span css={iconStyles}>{teamIcon} </span>
+                    <span css={iconStyles}>
+                      <TeamIcon />{' '}
+                    </span>
                     {teams.length} Team{teams.length !== 1 ? 's' : ''}
                   </span>
                 </li>

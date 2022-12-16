@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { css } from '@emotion/react';
 import { network } from '@asap-hub/routing';
 
-import { labIcon, teamIcon, inactiveBadgeIcon } from '../icons';
+import { labIcon, TeamIcon, inactiveBadgeIcon } from '../icons';
 import { Avatar, Link } from '../atoms';
 import { perRem } from '../pixels';
 import { lead, silver } from '../colors';
@@ -92,7 +92,7 @@ const AssociationList: FC<AssociationListProps> = ({
   inline = false,
   more,
 }) => {
-  const icon = type === 'Team' ? teamIcon : labIcon;
+  const icon = type === 'Team' ? <TeamIcon /> : labIcon;
   const limitExceeded = associations.length > max;
 
   if (!associations.length) {

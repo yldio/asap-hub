@@ -29,6 +29,17 @@ it('applies the text margin', () => {
   expect(marginTop).toMatchInlineSnapshot(`"12px"`);
 });
 
+it('removes the text margin based on prop', () => {
+  const { getByText } = render(
+    <figure>
+      the figure
+      <Caption noMargin>text</Caption>
+    </figure>,
+  );
+  const { marginTop } = getComputedStyle(getByText('text'));
+  expect(marginTop).toMatchInlineSnapshot(`"0px"`);
+});
+
 it('renders text with font-weight bold', () => {
   const { getByText } = render(
     <figure>

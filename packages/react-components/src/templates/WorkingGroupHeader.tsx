@@ -75,15 +75,17 @@ const pointOfContactStyles = css({
   },
 });
 
-type WorkingGroupPageHeaderProps = Pick<
+type WorkingGroupPageHeaderProps = {
+  readonly membersListElementId: string;
+} & Pick<
   WorkingGroupResponse,
   | 'id'
   | 'title'
   | 'complete'
   | 'lastModifiedDate'
+  | 'leaders'
   | 'members'
   | 'externalLink'
-  | 'externalLinkText'
   | 'pointOfContact'
 >;
 
@@ -93,9 +95,10 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
   complete,
   lastModifiedDate,
   externalLink,
-  externalLinkText,
   pointOfContact,
+  leaders,
   members,
+  membersListElementId,
 }) => (
   <header css={containerStyles}>
     <div css={titleStyle}>
@@ -106,10 +109,10 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
     </div>
     <section css={contactSectionStyles}>
       <UserAvatarList
-        members={members}
-        fullListRoute={
+        members={[...leaders, ...members].map((member) => member.user)}
+        fullListRoute={`${
           network({}).workingGroups({}).workingGroup({ workingGroupId: id }).$
-        }
+        }#${membersListElementId}`}
       />
       {pointOfContact && (
         <div css={pointOfContactStyles}>
@@ -117,7 +120,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
             buttonStyle
             small
             primary
-            href={`${createMailTo(pointOfContact.email)}`}
+            href={`${createMailTo(pointOfContact.user.email)}`}
           >
             Contact PM
           </Link>
@@ -128,7 +131,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
       {externalLink && (
         <ExternalLink
           full
-          label={externalLinkText}
+          label="Working Group Folder"
           href={externalLink}
           size="large"
         />

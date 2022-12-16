@@ -4,7 +4,7 @@ import {
   publishContentfulEntries,
 } from '../../src/utils';
 import { newsEntry } from '../fixtures';
-import { getContentfulEnvironmentMock } from '../mocks';
+import { getContentfulEnvironmentMock } from '../mocks/contentful.mocks';
 
 describe('clearContentfulEntries', () => {
   let envMock: Environment;
@@ -81,7 +81,8 @@ describe('publishContentfulEntries', () => {
   it('outputs a message when publish fails', async () => {
     await publishContentfulEntries([newsEntry]);
     expect(console.log).toHaveBeenCalledWith(
-      `Entry with id ${newsEntry.sys.id} could not be published.`,
+      '\x1b[31m',
+      `[ERROR] Entry with ID ${newsEntry.sys.id} could not be published.`,
     );
   });
 
@@ -91,7 +92,8 @@ describe('publishContentfulEntries', () => {
       .mockImplementationOnce(() => Promise.resolve(newsEntry));
     await publishContentfulEntries([newsEntry]);
     expect(console.log).toHaveBeenCalledWith(
-      `Published entry ${newsEntry.sys.id}.`,
+      '\x1b[32m',
+      `[INFO] Published entry ${newsEntry.sys.id}.`,
     );
   });
 });

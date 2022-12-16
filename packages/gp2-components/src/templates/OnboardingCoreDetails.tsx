@@ -82,13 +82,22 @@ const OnboardingCoreDetails: React.FC<OnboardingCoreDetailProps> = ({
       In order to join the platform, we need to capture some core information
       before you start exploring.
     </Paragraph>
-    <UserDetailHeaderCard {...headerProps} edit={'/edit'} />
+    <UserDetailHeaderCard
+      {...headerProps}
+      edit={onboarding({}).coreDetails({}).editKeyInfo({}).$}
+    />
     <div css={cardStyles}>
       <Card>
         <div css={[rowStyles]}>
           <Headline3 noMargin>Contact Information</Headline3>
           <div css={editButtonStyles}>
-            <Link fullWidth href={''} buttonStyle noMargin small>
+            <Link
+              fullWidth
+              href={onboarding({}).coreDetails({}).editContactInfo({}).$}
+              buttonStyle
+              noMargin
+              small
+            >
               Optional {addIcon}
             </Link>
           </div>

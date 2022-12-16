@@ -1,6 +1,6 @@
-import { PageControls } from '@asap-hub/react-components';
+import { gp2 } from '@asap-hub/fixtures';
 import { render, screen } from '@testing-library/react';
-import { ComponentProps } from 'react';
+import userEvent from '@testing-library/user-event';
 import UsersPage from '../UsersPage';
 
 const props = {
@@ -36,16 +36,66 @@ const props = {
     ],
     total: 1,
   },
-};
-const pageProps: ComponentProps<typeof PageControls> = {
-  currentPageIndex: 1,
-  numberOfPages: 10,
-  renderPageHref: (page) => `some-page`,
+  searchQuery: '',
+  onSearchQueryChange: jest.fn(),
+  isAdministrator: true,
+  onFiltersClick: jest.fn(),
+  onExportClick: jest.fn(),
+  changeLocation: jest.fn(),
+  updateFilters: jest.fn(),
+  filters: {},
+  projects: [],
+  workingGroups: [],
 };
 
 describe('UsersPage', () => {
   it('renders a banner', () => {
-    render(<UsersPage {...props} {...pageProps} />);
+    render(<UsersPage {...props} />);
     expect(screen.getByRole('banner')).toBeVisible();
   });
+  it('does not render the filters', () => {
+    render(<UsersPage {...props} />);
+    expect(
+      screen.queryByRole('heading', { name: 'Filters' }),
+    ).not.toBeInTheDocument();
+  });
+  it('renders the filters', () => {
+    render(<UsersPage {...props} displayFilters />);
+    expect(screen.getByRole('heading', { name: 'Filters' })).toBeVisible();
+  });
+  it.each`
+    name               | value
+    ${'regions'}       | ${'Asia'}
+    ${'keywords'}      | ${'Bash'}
+    ${'projects'}      | ${'42'}
+    ${'workingGroups'} | ${'42'}
+  `(
+    'calls the updateFilters with the right arguments for $name',
+    async ({ name, value }) => {
+      const filters = { [name]: [value] };
+      const updateFilterSpy = jest.fn();
+
+      const { items: projects } = gp2.createProjectsResponse();
+      const { items: workingGroups } = gp2.createWorkingGroupsResponse();
+      render(
+        <UsersPage
+          {...props}
+          displayFilters
+          filters={filters}
+          updateFilters={updateFilterSpy}
+          projects={projects}
+          workingGroups={workingGroups}
+        />,
+      );
+
+      userEvent.click(screen.getByRole('button', { name: 'Apply' }));
+      expect(updateFilterSpy).toHaveBeenCalledWith('/users', {
+        regions: [],
+        keywords: [],
+        projects: [],
+        workingGroups: [],
+        [name]: [value],
+      });
+    },
+  );
 });

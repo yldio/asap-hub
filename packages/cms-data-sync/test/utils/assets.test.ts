@@ -9,7 +9,7 @@ import {
   contenfulAsset,
   contenfulUploadAssetFields,
 } from '../fixtures';
-import { getContentfulEnvironmentMock } from '../mocks';
+import { getContentfulEnvironmentMock } from '../mocks/contentful.mocks';
 
 describe('checkIfAssetAlreadyExistsInContentful', () => {
   let envMock: Environment;

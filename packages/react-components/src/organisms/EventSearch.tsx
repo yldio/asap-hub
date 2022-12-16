@@ -1,9 +1,10 @@
+import { ComponentProps } from 'react';
 import { SearchField } from '../molecules';
 
-interface EventSearchProps {
-  searchQuery?: string;
-  onChangeSearchQuery?: (newSearchQuery: string) => void;
-}
+type EventSearchProps = {
+  searchQuery?: ComponentProps<typeof SearchField>['value'];
+  onChangeSearchQuery?: ComponentProps<typeof SearchField>['onChange'];
+};
 const EventSearch: React.FC<EventSearchProps> = ({
   searchQuery,
   onChangeSearchQuery,

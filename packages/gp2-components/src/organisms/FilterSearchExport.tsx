@@ -5,6 +5,7 @@ import {
   SearchField,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
+import { ComponentProps } from 'react';
 import exportIcon from '../icons/export-icon';
 import { mobileQuery } from '../layout';
 
@@ -31,8 +32,8 @@ const buttonTextStyles = css({ [mobileQuery]: { display: 'none' } });
 const notAdminStyles = css({ grid: '"filter search" /min-content auto' });
 
 type FilterSearchExportProps = {
-  searchQuery: string;
-  onSearchQueryChange: () => void;
+  searchQuery: ComponentProps<typeof SearchField>['value'];
+  onSearchQueryChange: ComponentProps<typeof SearchField>['onChange'];
   isAdministrator: boolean;
   onFiltersClick: () => void;
   onExportClick: () => void;

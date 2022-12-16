@@ -1,65 +1,41 @@
-import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
+import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter, Route } from 'react-router-dom';
 import { ComponentProps } from 'react';
+import { Route, StaticRouter } from 'react-router-dom';
 import EditResourceModal from '../EditResourceModal';
+
+const { resource: resourceRoute } = gp2Routing;
 
 type renderEditResourceModalProps = Partial<
   ComponentProps<typeof EditResourceModal>
 > & { resourceIndex?: string };
 
 const renderEditResourceModal = ({
+  resources = [{ type: 'Note', title: 'a title' }],
   resourceIndex = '0',
-  resources = gp2Fixtures.createWorkingGroupResponse().resources,
-  updateWorkingGroupResources = jest.fn(),
+  updateResources = jest.fn(),
 }: renderEditResourceModalProps = {}) => {
-  const workingGroupId = '7';
   render(
-    <MemoryRouter
-      initialEntries={[
-        gp2Routing
-          .workingGroups({})
-          .workingGroup({ workingGroupId })
-          .resources({})
-          .edit({})
-          .resource({ resourceIndex }).$,
-      ]}
-    >
-      <Route
-        path={
-          gp2Routing
-            .workingGroups({})
-            .workingGroup({ workingGroupId })
-            .resources({})
-            .edit({}).$ +
-          gp2Routing
-            .workingGroups({})
-            .workingGroup({ workingGroupId })
-            .resources({})
-            .edit({}).resource.template
-        }
-      >
+    <StaticRouter location={resourceRoute({ resourceIndex }).$}>
+      <Route path={resourceRoute.template}>
         <EditResourceModal
-          workingGroupId={workingGroupId}
           backHref={'/back'}
           resources={resources}
-          updateWorkingGroupResources={updateWorkingGroupResources}
+          updateResources={updateResources}
+          route={resourceRoute}
         />
       </Route>
-    </MemoryRouter>,
+    </StaticRouter>,
   );
 };
-
 describe('EditResource', () => {
   beforeEach(jest.restoreAllMocks);
-  it('see if modal appears', async () => {
+  it('see if modal appears', () => {
     renderEditResourceModal();
 
     expect(screen.getByRole('button', { name: /Save/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Delete/i })).toBeInTheDocument();
     expect(
       screen.getByRole('heading', { name: /Edit Resource/ }),
     ).toBeVisible();
@@ -73,10 +49,10 @@ describe('EditResource', () => {
       },
     ];
     const title = 'a changed title';
-    const updateWorkingGroupResources = jest.fn();
+    const updateResources = jest.fn();
 
     renderEditResourceModal({
-      updateWorkingGroupResources,
+      updateResources,
       resources,
     });
 
@@ -87,7 +63,7 @@ describe('EditResource', () => {
     userEvent.click(saveButton);
 
     await waitFor(() => expect(saveButton).toBeEnabled());
-    expect(updateWorkingGroupResources).toBeCalledWith([
+    expect(updateResources).toBeCalledWith([
       {
         ...resources[0],
         title,
@@ -96,16 +72,16 @@ describe('EditResource', () => {
   });
   it('throws (Not Found) if there are no resources', () => {
     const resources: gp2Model.Resource[] = [];
-    const updateWorkingGroupResources = jest.fn();
+    const updateResources = jest.fn();
     const resourceIndex = '0';
 
     renderEditResourceModal({
-      updateWorkingGroupResources,
+      updateResources,
       resources,
       resourceIndex,
     });
 
-    expect(updateWorkingGroupResources).not.toBeCalled();
+    expect(updateResources).not.toBeCalled();
 
     expect(
       screen.getByRole('heading', {
@@ -113,23 +89,23 @@ describe('EditResource', () => {
       }),
     ).toBeVisible();
   });
-  it('throws (Not Found) if we cannot find the correct working resource', async () => {
+  it('throws (Not Found) if we cannot find the correct working resource', () => {
     const resources: gp2Model.Resource[] = [
       {
         type: 'Note',
         title: 'first resource',
       },
     ];
-    const updateWorkingGroupResources = jest.fn();
+    const updateResources = jest.fn();
     const resourceIndex = '1';
 
     renderEditResourceModal({
-      updateWorkingGroupResources,
+      updateResources,
       resources,
       resourceIndex,
     });
 
-    expect(updateWorkingGroupResources).not.toBeCalled();
+    expect(updateResources).not.toBeCalled();
 
     expect(
       screen.getByRole('heading', {
@@ -152,11 +128,11 @@ describe('EditResource', () => {
         title: 'third resource',
       },
     ];
-    const updateWorkingGroupResources = jest.fn();
+    const updateResources = jest.fn();
     const resourceIndex = '1';
 
     renderEditResourceModal({
-      updateWorkingGroupResources,
+      updateResources,
       resources,
       resourceIndex,
     });
@@ -170,7 +146,7 @@ describe('EditResource', () => {
     userEvent.click(saveButton);
 
     await waitFor(() => expect(saveButton).toBeEnabled());
-    expect(updateWorkingGroupResources).toBeCalledWith([
+    expect(updateResources).toBeCalledWith([
       resources[0],
       {
         ...resources[1],
@@ -180,7 +156,7 @@ describe('EditResource', () => {
     ]);
   });
 
-  it('erases the correct resource when multiple resources exist', async () => {
+  it('deletes the correct resource when multiple resources exist', async () => {
     const resources: gp2Model.Resource[] = [
       {
         type: 'Note',
@@ -195,11 +171,11 @@ describe('EditResource', () => {
         title: 'third resource',
       },
     ];
-    const updateWorkingGroupResources = jest.fn();
+    const updateResources = jest.fn();
     const resourceIndex = '1';
 
     renderEditResourceModal({
-      updateWorkingGroupResources,
+      updateResources,
       resources,
       resourceIndex,
     });
@@ -208,9 +184,6 @@ describe('EditResource', () => {
     userEvent.click(deleteButton);
 
     await waitFor(() => expect(deleteButton).toBeEnabled());
-    expect(updateWorkingGroupResources).toBeCalledWith([
-      resources[0],
-      resources[2],
-    ]);
+    expect(updateResources).toBeCalledWith([resources[0], resources[2]]);
   });
 });

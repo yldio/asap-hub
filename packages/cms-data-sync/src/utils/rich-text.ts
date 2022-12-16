@@ -1,5 +1,6 @@
 import { Document } from '@contentful/rich-text-types';
 import { parseHtml } from 'contentful-html-rich-text-converter';
+import { logger } from './logs';
 
 export const clearParsedHtmlOutput = (htmlDocument: Document) => ({
   ...htmlDocument,
@@ -34,7 +35,28 @@ export const convertHtmlToContentfulFormat = (html: string) => {
   // an important part of rich text input anyway, so we
   // can just remove them here
   const htmlWithoutDivTag = html.replace(/<[\\/]{0,1}(div)[^><]*>/g, '');
+  logger(`HTML pre-parsed:\n${html}`, 'DEBUG');
+  logger(`HTML post-parsed:\n${htmlWithoutDivTag}`, 'DEBUG');
 
   const parsedHtml = parseHtml(htmlWithoutDivTag) as Document;
-  return clearParsedHtmlOutput(parsedHtml);
+  logger(
+    `Parsed HTML in Contentful format:\n${JSON.stringify(
+      parsedHtml,
+      undefined,
+      2,
+    )}`,
+    'DEBUG',
+  );
+
+  const cleanedDocument = clearParsedHtmlOutput(parsedHtml);
+  logger(
+    `Cleaned Contentful Document:\n${JSON.stringify(
+      cleanedDocument,
+      undefined,
+      2,
+    )}`,
+    'DEBUG',
+  );
+
+  return cleanedDocument;
 };

@@ -4,13 +4,14 @@ import { ComponentProps } from 'react';
 import WorkingGroupPage from '../WorkingGroupPage';
 
 const baseProps: ComponentProps<typeof WorkingGroupPage> = {
+  membersListElementId: '',
   id: 'id',
   title: '',
   complete: false,
   externalLink: 'link',
-  externalLinkText: 'link text',
   lastModifiedDate: new Date('2021-01-01').toISOString(),
   pointOfContact: undefined,
+  leaders: [],
   members: [],
 };
 it('renders the header', () => {

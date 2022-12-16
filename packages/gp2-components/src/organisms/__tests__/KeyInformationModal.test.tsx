@@ -153,7 +153,7 @@ describe('KeyInformatiomModal', () => {
       region,
     });
     await waitFor(() => expect(saveButton).toBeEnabled());
-  }, 10000);
+  }, 30000);
 
   it('can click add an extra position', () => {
     renderKeyInformation();
@@ -244,5 +244,5 @@ describe('KeyInformatiomModal', () => {
       expect.objectContaining({ positions: [...positions, position] }),
     );
     await waitFor(() => expect(saveButton).toBeEnabled());
-  });
+  }, 30000);
 });

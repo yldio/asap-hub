@@ -40,7 +40,9 @@ const UserPosition: React.FC<UserPositionProps> = ({
 }) => {
   const { institution, department, role } = position;
   const onChangeValue = (property: keyof gp2.UserPosition) => (value: string) =>
-    onChange({ ...position, [property]: value });
+    property === 'institution' && value === ''
+      ? onChange({ institution: '', department: '', role: '' })
+      : onChange({ ...position, [property]: value });
 
   const prefixes = ['Primary', 'Secondary', 'Tertiary'];
   const prefix = prefixes[index];

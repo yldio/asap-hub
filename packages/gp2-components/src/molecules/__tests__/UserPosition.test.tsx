@@ -243,4 +243,23 @@ describe('UserPosition', () => {
       expect(screen.getByText(/Please add your role/i)).toBeVisible();
     },
   );
+  it('clears the position when the insitition is reset', () => {
+    const onChange = jest.fn();
+    renderUserPosition({
+      onChange,
+      position: {
+        institution: 'FPF',
+        department: "Men's Team",
+        role: 'Striker',
+      },
+    });
+
+    userEvent.clear(screen.getByRole('textbox', { name: /institution/i }));
+    userEvent.tab();
+    expect(onChange).toBeCalledWith({
+      institution: '',
+      department: '',
+      role: '',
+    });
+  });
 });

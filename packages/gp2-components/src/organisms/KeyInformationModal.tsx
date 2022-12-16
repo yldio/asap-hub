@@ -35,7 +35,9 @@ type KeyInformationModalProps = Pick<
   | 'positions'
 > &
   Pick<ComponentProps<typeof EditUserModal>, 'backHref'> & {
-    loadInstitutionOptions: (newValue?: string) => Promise<string[]>;
+    loadInstitutionOptions: ComponentProps<
+      typeof UserPositions
+    >['loadInstitutionOptions'];
     onSave: (userData: gp2.UserPatchRequest) => Promise<void>;
     locationSuggestions: string[];
   };

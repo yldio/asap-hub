@@ -20,16 +20,18 @@ const headerStyles = css({
 });
 const buttonStyles = css({ margin: 0 });
 
+type Position = gp2.UserResponse['positions'][number];
 type UserPositionProps = {
   index: number;
-  onChange: (payload: gp2.UserResponse['positions'][number]) => void;
+  onChange: (payload: Position) => void;
   isSaving: boolean;
   loadInstitutionOptions: NonNullable<
     ComponentProps<typeof LabeledTypeahead>['loadOptions']
   >;
-  position: gp2.UserPosition;
+  position: Position;
   onRemove: () => void;
 };
+
 const UserPosition: React.FC<UserPositionProps> = ({
   onChange,
   onRemove,
@@ -39,7 +41,7 @@ const UserPosition: React.FC<UserPositionProps> = ({
   index,
 }) => {
   const { institution, department, role } = position;
-  const onChangeValue = (property: keyof gp2.UserPosition) => (value: string) =>
+  const onChangeValue = (property: keyof Position) => (value: string) =>
     property === 'institution' && value === ''
       ? onChange({ institution: '', department: '', role: '' })
       : onChange({ ...position, [property]: value });
@@ -69,7 +71,7 @@ const UserPosition: React.FC<UserPositionProps> = ({
         enabled={!isSaving}
         loadOptions={loadInstitutionOptions}
       />
-      {institution.length ? (
+      {institution.length > 0 && (
         <>
           <LabeledTextField
             title="Department"
@@ -90,7 +92,7 @@ const UserPosition: React.FC<UserPositionProps> = ({
             getValidationMessage={() => 'Please add your role'}
           />
         </>
-      ) : null}
+      )}
     </article>
   );
 };

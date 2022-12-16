@@ -1,4 +1,3 @@
-import { gp2 } from '@asap-hub/model';
 import { Button, Headline4, Paragraph } from '@asap-hub/react-components';
 import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
@@ -13,11 +12,13 @@ const buttonStyles = css({
     width: '100%',
   },
 });
-type UserPositionsProps = {
-  onChange: (value: gp2.UserPosition[]) => void;
-  isSaving: boolean;
-  loadInstitutionOptions: (newValue?: string) => Promise<string[]>;
-  positions: gp2.UserResponse['positions'];
+type Positions = ComponentProps<typeof UserPosition>['position'][];
+type UserPositionsProps = Pick<
+  ComponentProps<typeof UserPosition>,
+  'isSaving' | 'loadInstitutionOptions'
+> & {
+  onChange: (value: Positions) => void;
+  positions: Positions;
 };
 const UserPositions: React.FC<UserPositionsProps> = ({
   onChange,

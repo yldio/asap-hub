@@ -89,11 +89,12 @@ const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
     questions: {
       type: 'array',
       minItems: 0,
-      maxItems: 10,
+      maxItems: 5,
       items: {
         type: 'string',
+        minLength: 1,
         maxLength: 250,
-        nullable: true,
+        nullable: false,
       },
       nullable: true,
     },

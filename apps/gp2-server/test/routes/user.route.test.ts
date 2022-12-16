@@ -505,6 +505,52 @@ describe('/users/ route', () => {
           expect(response.status).toBe(400);
         });
       });
+      describe('questions', () => {
+        test('allows valid questions', async () => {
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({ questions: ['a'] });
+          expect(response.status).toBe(200);
+        });
+        test('allows 5 questions', async () => {
+          const questions = Array.from(
+            { length: 5 },
+            (_, index) => `a question ${index}`,
+          );
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({ questions });
+          expect(response.status).toBe(200);
+        });
+        test('allows no more than 5 questions', async () => {
+          const questions = Array.from(
+            { length: 6 },
+            (_, index) => `a question ${index}`,
+          );
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({ questions });
+          expect(response.status).toBe(400);
+        });
+        test('allows a question of 250 chars', async () => {
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({ questions: ['a'.repeat(250)] });
+          expect(response.status).toBe(200);
+        });
+        test('does not allow a question of more than 250 chars', async () => {
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({ questions: ['a'.repeat(251)] });
+          expect(response.status).toBe(400);
+        });
+        test.each([''])('does not allow a empty question', async (question) => {
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({ questions: [question] });
+          expect(response.status).toBe(400);
+        });
+      });
       describe.each`
         field               | length
         ${'fundingStreams'} | ${1000}

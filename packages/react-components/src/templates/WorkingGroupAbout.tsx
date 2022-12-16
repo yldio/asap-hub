@@ -7,7 +7,9 @@ import { Collapsible } from '../molecules';
 import { DeliverablesCard, WorkingGroupMembers } from '../organisms';
 import { perRem } from '../pixels';
 
-type WorkingGroupAboutProps = Pick<
+type WorkingGroupAboutProps = {
+  readonly membersListElementId: string;
+} & Pick<
   WorkingGroupResponse,
   'description' | 'deliverables' | 'pointOfContact' | 'members' | 'leaders'
 >;
@@ -18,6 +20,7 @@ const containerStyles = css({
 });
 
 const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
+  membersListElementId,
   description,
   deliverables,
   pointOfContact,
@@ -39,7 +42,7 @@ const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
           buttonStyle
           small
           primary
-          href={`${createMailTo(pointOfContact.email)}`}
+          href={`${createMailTo(pointOfContact.user.email)}`}
         >
           Contact PM
         </Link>
@@ -57,13 +60,15 @@ const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
           buttonStyle
           small
           primary
-          href={`${createMailTo(pointOfContact.email)}`}
+          href={`${createMailTo(pointOfContact.user.email)}`}
         >
           Contact PM
         </Link>
       )}
     </Card>
-    <WorkingGroupMembers leaders={leaders} members={members} />
+    <section id={membersListElementId}>
+      <WorkingGroupMembers leaders={leaders} members={members} />
+    </section>
   </div>
 );
 

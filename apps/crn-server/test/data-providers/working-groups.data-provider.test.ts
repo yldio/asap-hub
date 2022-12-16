@@ -1,8 +1,7 @@
+import { appName, baseUrl } from '../../src/config';
 import { WorkingGroupSquidexDataProvider } from '../../src/data-providers/working-groups.data-provider';
-import {
-  getGraphQLUser,
-  getSquidexUserGraphqlResponse,
-} from '../fixtures/users.fixtures';
+import { createUrl } from '../../src/utils/urls';
+import { getGraphQLUser } from '../fixtures/users.fixtures';
 import {
   getSquidexWorkingGroupGraphqlResponse,
   getSquidexWorkingGroupsGraphqlResponse,
@@ -10,6 +9,20 @@ import {
 } from '../fixtures/working-groups.fixtures';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
+
+const graphqlUser = getGraphQLUser();
+
+const parsedGraphQlWorkingGroupUser = {
+  id: graphqlUser.id,
+  displayName: `${graphqlUser.flatData.firstName} ${graphqlUser.flatData.lastName}`,
+  firstName: graphqlUser.flatData.firstName,
+  lastName: graphqlUser.flatData.lastName,
+  email: graphqlUser.flatData.email,
+  alumniSinceDate: graphqlUser.flatData.alumniSinceDate,
+  avatarUrl: graphqlUser.flatData.avatar?.length
+    ? createUrl(graphqlUser.flatData.avatar.map((a) => a.id))[0]
+    : undefined,
+};
 
 describe('Working Group Data Provider', () => {
   const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
@@ -177,7 +190,7 @@ describe('Working Group Data Provider', () => {
         const squidexGraphqlResponse = getSquidexWorkingGroupGraphqlResponse();
         squidexGraphqlResponse.findWorkingGroupsContent!.flatData.leaders = [
           {
-            user: [getGraphQLUser()],
+            user: [graphqlUser],
             workstreamRole: 'Some role',
             role: 'Chair',
           },
@@ -191,11 +204,7 @@ describe('Working Group Data Provider', () => {
         );
         expect(response?.leaders).toStrictEqual([
           {
-            user: {
-              ...getSquidexUserGraphqlResponse().findUsersContent,
-              ...getSquidexUserGraphqlResponse().findUsersContent?.flatData,
-              displayName: 'Tom Hardy',
-            },
+            user: parsedGraphQlWorkingGroupUser,
             workstreamRole: 'Some role',
             role: 'Chair',
           },
@@ -206,7 +215,7 @@ describe('Working Group Data Provider', () => {
         const squidexGraphqlResponse = getSquidexWorkingGroupGraphqlResponse();
         squidexGraphqlResponse.findWorkingGroupsContent!.flatData.members = [
           {
-            user: [getGraphQLUser()],
+            user: [graphqlUser],
           },
         ];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
@@ -218,11 +227,7 @@ describe('Working Group Data Provider', () => {
         );
         expect(response?.members).toStrictEqual([
           {
-            user: {
-              ...getSquidexUserGraphqlResponse().findUsersContent,
-              ...getSquidexUserGraphqlResponse().findUsersContent?.flatData,
-              displayName: 'Tom Hardy',
-            },
+            user: parsedGraphQlWorkingGroupUser,
           },
         ]);
       });
@@ -270,6 +275,55 @@ describe('Working Group Data Provider', () => {
         expect(response?.members).toStrictEqual([]);
         expect(response?.leaders).toStrictEqual([]);
       });
+    });
+
+    describe('Avatar', () => {
+      test.each`
+        user         | avatarText    | avatarValue              | expectedValue
+        ${`members`} | ${`null`}     | ${null}                  | ${undefined}
+        ${`members`} | ${`not null`} | ${[{ id: 'avatar-id' }]} | ${`${baseUrl}/api/assets/${appName}/avatar-id`}
+        ${`leaders`} | ${`null`}     | ${null}                  | ${undefined}
+        ${`leaders`} | ${`not null`} | ${[{ id: 'avatar-id' }]} | ${`${baseUrl}/api/assets/${appName}/avatar-id`}
+      `(
+        'Should parse the $user avatar correctly when the avatar is $avatarText',
+        async ({
+          user,
+          avatarValue,
+          expectedValue,
+        }: {
+          user: 'members' | 'leaders';
+          avatarValue: { id: string }[] | null;
+          expectedValue: string | undefined;
+        }) => {
+          const squidexGraphqlResponse =
+            getSquidexWorkingGroupGraphqlResponse();
+          const graphqlUser1 = getGraphQLUser();
+          graphqlUser1.flatData!.avatar = avatarValue;
+          if (user === 'leaders') {
+            squidexGraphqlResponse.findWorkingGroupsContent!.flatData.leaders =
+              [
+                {
+                  user: [graphqlUser1],
+                  role: 'Project Manager',
+                  workstreamRole: 'PM',
+                },
+              ];
+          } else {
+            squidexGraphqlResponse.findWorkingGroupsContent!.flatData.members =
+              [{ user: [graphqlUser1] }];
+          }
+
+          squidexGraphqlClientMock.request.mockResolvedValueOnce(
+            squidexGraphqlResponse,
+          );
+
+          const response = await workingGroupDataProvider.fetchById(
+            workingGroupId,
+          );
+
+          expect(response![user][0]!.user!.avatarUrl).toEqual(expectedValue);
+        },
+      );
     });
   });
 });

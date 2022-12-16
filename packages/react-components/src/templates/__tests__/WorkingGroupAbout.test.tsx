@@ -1,10 +1,11 @@
-import { createUserResponse } from '@asap-hub/fixtures';
+import { createWorkingGroupPointOfContact } from '@asap-hub/fixtures';
 import { render } from '@testing-library/react';
 import { ComponentProps } from 'react';
 
 import WorkingGroupAbout from '../WorkingGroupAbout';
 
 const baseProps: ComponentProps<typeof WorkingGroupAbout> = {
+  membersListElementId: '',
   description: '',
   pointOfContact: undefined,
   deliverables: [],
@@ -40,14 +41,7 @@ it('renders CTA when pointOfContact is provided', () => {
   const { queryAllByText, rerender } = render(
     <WorkingGroupAbout
       {...baseProps}
-      pointOfContact={{
-        ...createUserResponse(),
-        id: '2',
-        displayName: 'Peter Venkman',
-        firstName: 'Peter',
-        lastName: 'Venkman',
-        email: 'peter@ven.com',
-      }}
+      pointOfContact={createWorkingGroupPointOfContact()}
     />,
   );
   expect(queryAllByText('Contact PM')).toHaveLength(2);

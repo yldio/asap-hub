@@ -13,13 +13,31 @@ export const workingGroupRole = ['Chair', 'Project Manager'] as const;
 export type WorkingGroupRole = typeof workingGroupRole[number];
 
 export type WorkingGroupLeader = {
-  readonly user: UserResponse;
+  readonly user: Pick<
+    UserResponse,
+    | 'id'
+    | 'firstName'
+    | 'lastName'
+    | 'displayName'
+    | 'alumniSinceDate'
+    | 'email'
+    | 'avatarUrl'
+  >;
   readonly role: WorkingGroupRole;
   readonly workstreamRole: string;
 };
 
 export type WorkingGroupMember = {
-  readonly user: UserResponse;
+  readonly user: Pick<
+    UserResponse,
+    | 'id'
+    | 'firstName'
+    | 'lastName'
+    | 'displayName'
+    | 'alumniSinceDate'
+    | 'email'
+    | 'avatarUrl'
+  >;
 };
 
 export type WorkingGroupDataObject = {
@@ -29,7 +47,7 @@ export type WorkingGroupDataObject = {
   externalLink?: string;
   leaders: WorkingGroupLeader[];
   members: WorkingGroupMember[];
-  pointOfContact?: UserResponse;
+  pointOfContact?: WorkingGroupLeader;
   complete: boolean;
   shortText: string;
   deliverables: {

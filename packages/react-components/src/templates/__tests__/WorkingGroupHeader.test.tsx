@@ -1,16 +1,21 @@
-import { createUserResponse } from '@asap-hub/fixtures';
+import {
+  createWorkingGroupMembers,
+  createWorkingGroupPointOfContact,
+} from '@asap-hub/fixtures';
 import { render } from '@testing-library/react';
 import { ComponentProps } from 'react';
 
 import WorkingGroupHeader from '../WorkingGroupHeader';
 
 const baseProps: ComponentProps<typeof WorkingGroupHeader> = {
+  membersListElementId: 'members-list-elem-id',
   id: 'id',
   title: '',
   complete: false,
   externalLink: '',
   lastModifiedDate: new Date('2021-01-01').toISOString(),
   pointOfContact: undefined,
+  leaders: [],
   members: [],
 };
 
@@ -25,14 +30,7 @@ it('renders CTA when pointOfContact is provided', () => {
   const { queryAllByText, rerender } = render(
     <WorkingGroupHeader
       {...baseProps}
-      pointOfContact={{
-        ...createUserResponse(),
-        id: '2',
-        displayName: 'Peter Venkman',
-        firstName: 'Peter',
-        lastName: 'Venkman',
-        email: 'peter@ven.com',
-      }}
+      pointOfContact={createWorkingGroupPointOfContact()}
     />,
   );
   expect(queryAllByText('Contact PM')).toHaveLength(1);
@@ -54,14 +52,26 @@ it('renders the member avatars', () => {
   const { getByLabelText } = render(
     <WorkingGroupHeader
       {...baseProps}
-      members={[
-        {
-          user: { ...createUserResponse(), firstName: 'John', lastName: 'Doe' },
-        },
-      ]}
+      members={createWorkingGroupMembers(1)}
     />,
   );
-  expect(getByLabelText(/pic.+John Doe/i)).toBeVisible();
+  expect(getByLabelText(/pic.+ of .+/)).toBeVisible();
+});
+
+it('renders number of members exceeding the limit of 5 and anchors it to the right place', () => {
+  const { getAllByLabelText, getByLabelText, getByRole } = render(
+    <WorkingGroupHeader
+      {...baseProps}
+      members={createWorkingGroupMembers(6)}
+    />,
+  );
+  expect(getAllByLabelText(/pic.+ of .+/)).toHaveLength(5);
+  expect(getByLabelText(/\+1/)).toBeVisible();
+
+  expect(getByRole('link', { name: /\+1/ })).toHaveAttribute(
+    'href',
+    `/network/working-groups/id#${baseProps.membersListElementId}`,
+  );
 });
 
 it('renders a Working Group Folder when externalLink is provided', () => {

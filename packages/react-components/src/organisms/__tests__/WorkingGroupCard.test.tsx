@@ -1,7 +1,9 @@
 import { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
+import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
 import WorkingGroupCard from '../WorkingGroupCard';
+import { accents } from '../../atoms';
 import { formatDate } from '../../date';
 
 const props: ComponentProps<typeof WorkingGroupCard> = {
@@ -51,11 +53,21 @@ it('renders the working group shortText linking to the working group', () => {
   );
 });
 
-it('renders the state tag for a complete working group', () => {
+it('renders the state tag for a complete working group and displays the correct background color', () => {
   const { getByText, rerender, queryByText } = render(
     <WorkingGroupCard {...props} complete={true} />,
   );
   expect(getByText('Complete', { selector: 'span' })).toBeVisible();
+  expect(
+    findParentWithStyle(getByText(props.title), 'backgroundColor')
+      ?.backgroundColor,
+  ).toEqual(accents.neutral200.backgroundColor);
+
   rerender(<WorkingGroupCard {...props} complete={false} />);
+
   expect(queryByText('Complete')).not.toBeInTheDocument();
+  expect(
+    findParentWithStyle(getByText(props.title), 'backgroundColor')
+      ?.backgroundColor,
+  ).toEqual('rgb(255, 255, 255)');
 });

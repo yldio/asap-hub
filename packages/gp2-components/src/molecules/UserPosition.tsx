@@ -6,9 +6,11 @@ import {
   LabeledTypeahead,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
+import { ComponentProps } from 'react';
 import binIcon from '../icons/bin-icon';
 
 const required = '(required)';
+const optional = '(optional)';
 
 const headerStyles = css({
   display: 'flex',
@@ -22,7 +24,9 @@ type UserPositionProps = {
   index: number;
   onChange: (payload: gp2.UserResponse['positions'][number]) => void;
   isSaving: boolean;
-  loadInstitutionOptions: (newValue?: string) => Promise<string[]>;
+  loadInstitutionOptions: NonNullable<
+    ComponentProps<typeof LabeledTypeahead>['loadOptions']
+  >;
   position: gp2.UserPosition;
   onRemove: () => void;
 };
@@ -54,7 +58,7 @@ const UserPosition: React.FC<UserPositionProps> = ({
       </div>
       <LabeledTypeahead
         title="Institution"
-        subtitle={required}
+        subtitle={index === 0 ? required : optional}
         required
         getValidationMessage={() => 'Please add your institution'}
         maxLength={44}
@@ -63,22 +67,26 @@ const UserPosition: React.FC<UserPositionProps> = ({
         enabled={!isSaving}
         loadOptions={loadInstitutionOptions}
       />
-      <LabeledTextField
-        title="Department"
-        subtitle={required}
-        enabled={!isSaving}
-        onChange={onChangeValue('department')}
-        value={department}
-        required
-      />
-      <LabeledTextField
-        title="Role"
-        subtitle={required}
-        enabled={!isSaving}
-        onChange={onChangeValue('role')}
-        value={role}
-        required
-      />
+      {institution.length ? (
+        <>
+          <LabeledTextField
+            title="Department"
+            subtitle={required}
+            enabled={!isSaving}
+            onChange={onChangeValue('department')}
+            value={department}
+            required
+          />
+          <LabeledTextField
+            title="Role"
+            subtitle={required}
+            enabled={!isSaving}
+            onChange={onChangeValue('role')}
+            value={role}
+            required
+          />
+        </>
+      ) : null}
     </article>
   );
 };

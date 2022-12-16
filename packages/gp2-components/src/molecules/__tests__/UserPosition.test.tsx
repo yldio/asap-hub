@@ -67,16 +67,22 @@ describe('UserPosition', () => {
     renderUserPosition({
       onChange,
       index: 1,
+      position: {
+        institution: 'FPF',
+        department: '',
+        role: '',
+      },
     });
     userEvent.type(
       screen.getByRole('textbox', { name: /Department/i }),
       department,
     );
 
-    expect(onChange).toHaveBeenCalledWith({
-      ...defaultProps.position,
-      department,
-    });
+    expect(onChange).toHaveBeenCalledWith(
+      expect.objectContaining({
+        department,
+      }),
+    );
   });
   it('can save a position role', async () => {
     const onChange = jest.fn();
@@ -84,10 +90,15 @@ describe('UserPosition', () => {
     renderUserPosition({
       onChange,
       index: 1,
+      position: {
+        institution: 'FPF',
+        department: '',
+        role: '',
+      },
     });
     userEvent.type(screen.getByRole('textbox', { name: /Role/i }), role);
 
-    expect(onChange).toHaveBeenCalledWith({ ...defaultProps.position, role });
+    expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ role }));
   });
   it.each`
     index | prefix
@@ -101,15 +112,6 @@ describe('UserPosition', () => {
 
     expect(
       screen.getByRole('heading', { name: `${prefix} Position` }),
-    ).toBeVisible();
-    expect(
-      screen.getByRole('textbox', { name: `Institution (required)` }),
-    ).toBeVisible();
-    expect(
-      screen.getByRole('textbox', { name: `Department (required)` }),
-    ).toBeVisible();
-    expect(
-      screen.getByRole('textbox', { name: `Role (required)` }),
     ).toBeVisible();
   });
   it('should not have a delete button if the index is 0', () => {
@@ -128,5 +130,66 @@ describe('UserPosition', () => {
     const removeButton = screen.getByRole('button');
     userEvent.click(removeButton);
     expect(onRemove).toBeCalled();
+  });
+  it('does not show the department and role when then institution is empty', () => {
+    renderUserPosition({
+      position: {
+        institution: '',
+        department: '',
+        role: '',
+      },
+    });
+
+    expect(
+      screen.getByRole('textbox', { name: `Institution (required)` }),
+    ).toBeVisible();
+    expect(
+      screen.queryByRole('textbox', { name: `Department (required)` }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('textbox', { name: `Role (required)` }),
+    ).not.toBeInTheDocument();
+  });
+  it('displays the role and the department when the institution has been selected', () => {
+    renderUserPosition({
+      position: {
+        institution: 'FPF',
+        department: '',
+        role: '',
+      },
+    });
+
+    expect(
+      screen.getByRole('textbox', { name: `Department (required)` }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole('textbox', { name: `Role (required)` }),
+    ).toBeVisible();
+  });
+
+  it.each`
+    index | value
+    ${0}  | ${'required'}
+    ${1}  | ${'optional'}
+    ${2}  | ${'optional'}
+  `('the institution is $value for the %index position', ({ value, index }) => {
+    renderUserPosition({
+      position: {
+        institution: 'FPF',
+        department: '',
+        role: '',
+      },
+      index,
+    });
+
+    expect(
+      screen.getByRole('textbox', { name: `Institution (${value})` }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole('textbox', { name: `Department (required)` }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole('textbox', { name: `Role (required)` }),
+    ).toBeVisible();
   });
 });

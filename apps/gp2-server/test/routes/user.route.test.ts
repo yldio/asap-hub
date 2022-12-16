@@ -544,12 +544,15 @@ describe('/users/ route', () => {
             .send({ questions: ['a'.repeat(251)] });
           expect(response.status).toBe(400);
         });
-        test.each([''])('does not allow a empty question', async (question) => {
-          const response = await supertest(app)
-            .patch(`/users/${loggedInUserId}`)
-            .send({ questions: [question] });
-          expect(response.status).toBe(400);
-        });
+        test.each([null, ''])(
+          'does not allow a empty question',
+          async (question) => {
+            const response = await supertest(app)
+              .patch(`/users/${loggedInUserId}`)
+              .send({ questions: [question] });
+            expect(response.status).toBe(400);
+          },
+        );
       });
       describe.each`
         field               | length

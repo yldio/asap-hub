@@ -126,6 +126,7 @@ export const getUserWebhookPayload = (
       region: { iv: 'Europe' },
       role: { iv: UsersDataRoleEnum.Trainee },
       onboarded: { iv: true },
+      questions: { iv: [{ question: 'some question' }] },
     },
   },
 });
@@ -142,6 +143,7 @@ export const patchResponse = (): gp2squidex.RestUser => ({
     connections: { iv: [] },
     degree: { iv: [UsersDataDegreeEnum.Mph] },
     onboarded: { iv: true },
+    questions: { iv: [{ question: 'some question' }] },
   },
   created: '2020-09-25T09:42:51Z',
   lastModified: '2020-09-25T09:42:51Z',
@@ -211,7 +213,8 @@ export const getUserCreateDataObject = (): gp2.UserCreateDataObject => {
 };
 
 export const getUserInput = (): gp2squidex.InputUser['data'] => {
-  const { degrees, region, telephone, ...input } = getUserCreateDataObject();
+  const { degrees, region, telephone, questions, ...input } =
+    getUserCreateDataObject();
 
   return {
     ...parseToSquidex(input),
@@ -222,6 +225,7 @@ export const getUserInput = (): gp2squidex.InputUser['data'] => {
     connections: { iv: [] },
     telephoneCountryCode: { iv: telephone?.countryCode || '' },
     telephoneNumber: { iv: telephone?.number || '' },
+    questions: { iv: questions.map((question) => ({ question })) },
   };
 };
 

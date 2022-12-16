@@ -44,6 +44,7 @@ export interface User<TAvatar = string> {
   secondaryEmail?: string;
   telephoneCountryCode?: string;
   telephoneNumber?: string;
+  questions: { question: string }[];
 }
 
 export interface RestUser extends Entity, Rest<User> {}

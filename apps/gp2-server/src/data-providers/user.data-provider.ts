@@ -77,6 +77,7 @@ export class UserSquidexDataProvider implements UserDataProvider {
 
     return id;
   }
+
   async fetch({
     take = 8,
     skip = 0,
@@ -216,13 +217,15 @@ function getUserSquidexData(
 ):
   | Omit<gp2Squidex.InputUser['data'], 'connections' | 'avatar'>
   | Partial<Omit<gp2Squidex.InputUser['data'], 'connections' | 'avatar'>> {
-  const { region, role, degrees, telephone, ...userInput } = input;
+  const { region, role, degrees, telephone, questions, ...userInput } = input;
   const fieldMappedUser = mapUserFields({ region, role, degrees });
   const mappedTelephone = mapTelephone(telephone);
+  const mappedQuestions = questions?.map((question) => ({ question }));
   return parseToSquidex({
     ...userInput,
     ...fieldMappedUser,
     ...mappedTelephone,
+    questions: mappedQuestions,
   });
 }
 

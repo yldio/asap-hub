@@ -19,3 +19,8 @@ it('renders the content', async () => {
   render(<BasicLayout>Content</BasicLayout>);
   expect(screen.getByText('Content')).toBeVisible();
 });
+
+it('has padding of zero if noPadding is provided', async () => {
+  render(<BasicLayout noPadding>Content</BasicLayout>);
+  expect(screen.getByRole('main')).toHaveStyle('padding : 0');
+});

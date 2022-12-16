@@ -1,8 +1,9 @@
 import { WorkingGroupLeader, WorkingGroupMember } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import React from 'react';
-import { Card, Headline3, Subtitle } from '../atoms';
-import { MembersList, TabbedContent } from '../molecules';
+import { Card, Headline3, Subtitle, TabButton } from '../atoms';
+import { steel } from '../colors';
+import { MembersList, TabNav } from '../molecules';
 import { rem, tabletScreen } from '../pixels';
 import { splitListBy } from '../utils';
 
@@ -15,13 +16,11 @@ const containerStyles = css({
   },
 });
 
-type LeaderListProps = {
-  data: WorkingGroupLeader[];
-};
-
-type MemberListProps = {
-  data: WorkingGroupMember[];
-};
+const withBottomBorderStyles = css({
+  width: '100%',
+  paddingBottom: 0,
+  borderBottom: `1px solid ${steel.rgb}`,
+});
 
 type GroupLeadersTabbedCardProps = {
   leaders: ReadonlyArray<
@@ -34,6 +33,9 @@ const GroupLeadersTabbedCard: React.FC<GroupLeadersTabbedCardProps> = ({
   leaders,
   members,
 }) => {
+  const [leaderActiveTab, setLeaderActiveTab] = React.useState(0);
+  const [memberActiveTab, setMemberActiveTab] = React.useState(0);
+
   const [inactiveLeaders, activeLeaders] = splitListBy(
     leaders,
     (leader) => !!leader?.user?.alumniSinceDate,
@@ -44,75 +46,84 @@ const GroupLeadersTabbedCard: React.FC<GroupLeadersTabbedCardProps> = ({
     (member) => !!member?.user?.alumniSinceDate,
   );
 
+  const currentLeaders =
+    leaderActiveTab === 0 ? activeLeaders : inactiveLeaders;
+
+  const currentMembers =
+    memberActiveTab === 0 ? activeMembers : inactiveMembers;
+
   return (
     <Card padding={false}>
-      <div css={containerStyles}>
-        <Headline3>Working Group Members</Headline3>
-        <Subtitle>Leaders</Subtitle>
+      <div css={withBottomBorderStyles}>
+        <div css={containerStyles}>
+          <Headline3>Working Group Members</Headline3>
+          <Subtitle>Leaders</Subtitle>
+          <TabNav>
+            <TabButton
+              active={leaderActiveTab === 0}
+              onClick={() => {
+                setLeaderActiveTab(0);
+              }}
+            >
+              Active Leaders ({activeLeaders.length})
+            </TabButton>
+            <TabButton
+              active={leaderActiveTab === 1}
+              onClick={() => {
+                setLeaderActiveTab(1);
+              }}
+              disabled={inactiveLeaders.length === 0}
+            >
+              Past Leaders ({inactiveLeaders.length})
+            </TabButton>
+          </TabNav>
+        </div>
       </div>
-      <TabbedContent
-        activeTabIndex={0}
-        tabs={[
-          {
-            tabTitle: `Active Leaders (${activeLeaders.length})`,
-            items: activeLeaders,
-          },
-          {
-            tabTitle: `Past Leaders (${inactiveLeaders.length})`,
-            items: inactiveLeaders,
-          },
-        ]}
-      >
-        {({ data }: LeaderListProps) => (
-          <div css={containerStyles}>
-            <MembersList
-              members={data
-                .filter((member) => member.user !== undefined)
-                .map(({ user, workstreamRole }) => ({
-                  ...user,
-                  id: user?.id || '',
-                  firstLine: user.displayName || '',
-                  secondLine: workstreamRole,
-                }))}
-            />
-          </div>
-        )}
-      </TabbedContent>
       <div css={containerStyles}>
-        <Subtitle>Members</Subtitle>
+        <MembersList
+          members={currentLeaders.map(({ user, workstreamRole }) => ({
+            ...user,
+            id: user?.id || '',
+            firstLine: user.displayName || '',
+            secondLine: workstreamRole,
+          }))}
+        />
       </div>
-      <TabbedContent
-        activeTabIndex={0}
-        tabs={[
-          {
-            tabTitle: `Active Members (${activeMembers.length})`,
-            items: activeMembers,
-            truncateFrom: 8,
-          },
-          {
-            tabTitle: `Past Members (${inactiveMembers.length})`,
-            items: inactiveMembers,
-            truncateFrom: 8,
-          },
-        ]}
-        getShowMoreText={(showMore: boolean) =>
-          `View ${showMore ? 'Less' : 'More'} Members`
-        }
-      >
-        {({ data }: MemberListProps) => (
-          <div css={containerStyles}>
-            <MembersList
-              members={data
-                .filter((member) => member.user !== undefined)
-                .map(({ user }) => ({
-                  ...user,
-                  id: user?.id || '',
-                  firstLine: user.displayName || '',
-                }))}
-            />
-          </div>
-        )}
-      </TabbedContent>
+      <div css={withBottomBorderStyles}>
+        <div css={containerStyles}>
+          <Subtitle>Members</Subtitle>
+          <TabNav>
+            <TabButton
+              active={memberActiveTab === 0}
+              onClick={() => {
+                setMemberActiveTab(0);
+              }}
+            >
+              Active Members ({activeMembers.length})
+            </TabButton>
+            <TabButton
+              active={memberActiveTab === 1}
+              onClick={() => {
+                setMemberActiveTab(1);
+              }}
+              disabled={inactiveMembers.length === 0}
+            >
+              Past Members ({inactiveMembers.length})
+            </TabButton>
+          </TabNav>
+        </div>
+      </div>
+      <div css={containerStyles}>
+        <MembersList
+          members={currentMembers
+            .filter((member) => member.user !== undefined)
+            .map(({ user }) => ({
+              ...user,
+              id: user?.id || '',
+              firstLine: user.displayName || '',
+            }))}
+        />
+      </div>
     </Card>
   );
 };

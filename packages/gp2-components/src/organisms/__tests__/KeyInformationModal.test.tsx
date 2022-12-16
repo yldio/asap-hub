@@ -16,7 +16,7 @@ describe('KeyInformatiomModal', () => {
   const defaultProps: KeyInformationModalProps = {
     ...gp2Fixtures.createUserResponse(),
     locationSuggestions: [],
-    loadInstitutionOptions: () => Promise.resolve([]),
+    loadInstitutionOptions: jest.fn().mockResolvedValue([]),
     backHref: '',
     onSave: jest.fn(),
   };
@@ -100,7 +100,9 @@ describe('KeyInformatiomModal', () => {
       region: 'Asia',
       onSave,
       locationSuggestions: ['Portugal'],
-      loadInstitutionOptions: () => Promise.resolve([positions[0].institution]),
+      loadInstitutionOptions: jest
+        .fn()
+        .mockResolvedValue([positions[0].institution]),
     });
     userEvent.type(
       screen.getByRole('textbox', { name: 'First Name (required)' }),
@@ -208,7 +210,9 @@ describe('KeyInformatiomModal', () => {
     renderKeyInformation({
       positions,
       onSave,
-      loadInstitutionOptions: () => Promise.resolve([position.institution]),
+      loadInstitutionOptions: jest
+        .fn()
+        .mockResolvedValue([position.institution]),
     });
     userEvent.click(getAddButton());
 

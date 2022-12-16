@@ -13,7 +13,7 @@ describe('UserPositions', () => {
   type UserPositionsProps = ComponentProps<typeof UserPositions>;
   const defaultProps: UserPositionsProps = {
     onChange: jest.fn(),
-    loadInstitutionOptions: () => Promise.resolve([]),
+    loadInstitutionOptions: jest.fn().mockResolvedValue([]),
     isSaving: false,
     positions: [],
   };
@@ -90,7 +90,9 @@ describe('UserPositions', () => {
     renderUserPositions({
       positions,
       onChange,
-      loadInstitutionOptions: () => Promise.resolve([position.institution]),
+      loadInstitutionOptions: jest
+        .fn()
+        .mockResolvedValue([position.institution]),
     });
     const secondary = screen.getByRole('heading', {
       name: /Secondary Position/i,

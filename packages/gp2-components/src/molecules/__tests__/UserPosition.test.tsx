@@ -10,7 +10,7 @@ describe('UserPosition', () => {
   const defaultProps: UserPositionProps = {
     onRemove: jest.fn(),
     onChange: jest.fn(),
-    loadInstitutionOptions: () => Promise.resolve([]),
+    loadInstitutionOptions: jest.fn().mockResolvedValue([]),
     isSaving: false,
     position: {
       institution: '',
@@ -49,7 +49,7 @@ describe('UserPosition', () => {
     const institution = 'A';
     renderUserPosition({
       onChange,
-      loadInstitutionOptions: () => Promise.resolve([institution]),
+      loadInstitutionOptions: jest.fn().mockResolvedValue([institution]),
       index: 1,
     });
     userEvent.click(screen.getByRole('textbox', { name: /Institution/i }));

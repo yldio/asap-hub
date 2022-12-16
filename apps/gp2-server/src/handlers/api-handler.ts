@@ -3,8 +3,8 @@ import 'source-map-support/register';
 import { Request as RequestExpress } from 'express';
 import serverlessHttp from 'serverless-http';
 import { APIGatewayProxyEventV2 } from 'aws-lambda';
+import { withRequest } from '@asap-hub/server-common';
 import { appFactory } from '../app';
-import logger from '../utils/logger';
 import { sentryWrapper } from '../utils/sentry-wrapper';
 
 const app = appFactory({});
@@ -20,7 +20,7 @@ const httpHandler = serverlessHttp(app, {
     context: { awsRequestId: string },
   ) {
     request.context = event.requestContext;
-    logger.withRequest(event, context);
+    withRequest(event, context);
   },
 });
 

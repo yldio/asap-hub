@@ -1,4 +1,3 @@
-
 import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
 import { Frame } from '@asap-hub/frontend-utils';
 import { FC, useState } from 'react';
@@ -33,7 +32,7 @@ const WorkingGroupProfile: FC = () => {
                   {...workingGroup}
                 />
               </Frame>
-           </WorkingGroupPage>
+            </WorkingGroupPage>
           </Route>
           <Redirect to={route({ workingGroupId }).about({}).$} />
         </Switch>

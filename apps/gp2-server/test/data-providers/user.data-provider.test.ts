@@ -166,9 +166,27 @@ describe('User data provider', () => {
     });
 
     test('keywords are valid', async () => {
-      const expectedKeywords = ['invalid-keyword'];
+      const invalidKeywords = ['invalid-keyword'];
       const user = getGraphQLUser();
-      user.flatData.keywords = expectedKeywords;
+      user.flatData.keywords = invalidKeywords;
+      const mockResponse = getSquidexUserGraphqlResponse(user);
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+      expect(() => userDataProvider.fetchById('user-id')).rejects.toThrow();
+    });
+
+    test('questions are added', async () => {
+      const user = getGraphQLUser();
+      user.flatData.questions = [{ question: 'a valid question' }];
+      const mockResponse = getSquidexUserGraphqlResponse(user);
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+      const result = await userDataProvider.fetchById('user-id');
+      expect(result?.questions).toEqual(['a valid question']);
+    });
+
+    test('questions are valid', async () => {
+      const invalidQuestion = [{ question: null }];
+      const user = getGraphQLUser();
+      user.flatData.questions = invalidQuestion;
       const mockResponse = getSquidexUserGraphqlResponse(user);
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
       expect(() => userDataProvider.fetchById('user-id')).rejects.toThrow();

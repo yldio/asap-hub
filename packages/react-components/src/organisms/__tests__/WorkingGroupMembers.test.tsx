@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
-import { render } from '@testing-library/react';
-import { createUserResponse } from '@asap-hub/fixtures';
+import { fireEvent, render } from '@testing-library/react';
+import { createUserResponse, createListUserResponse } from '@asap-hub/fixtures';
 import WorkingGroupMembers from '../WorkingGroupMembers';
 
 const props: ComponentProps<typeof WorkingGroupMembers> = {
@@ -107,5 +107,21 @@ describe('member section', () => {
 
     activeTabButton.click();
     expect(queryByText('Test User 1')).toBeNull();
+  });
+
+  it('shows the correct more and less button text', () => {
+    const { getByText } = render(
+      <WorkingGroupMembers
+        {...props}
+        members={createListUserResponse(10).items.map((item, index) => ({
+          user: {
+            ...item,
+            displayName: `Test User ${index}`,
+          },
+        }))}
+      />,
+    );
+    fireEvent.click(getByText('View More Members'));
+    expect(getByText(/View Less Members/)).toBeVisible();
   });
 });

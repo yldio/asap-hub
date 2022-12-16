@@ -155,7 +155,7 @@ describe('KeyInformatiomModal', () => {
     await waitFor(() => expect(saveButton).toBeEnabled());
   }, 10000);
 
-  test('can click add an extra position', () => {
+  it('can click add an extra position', () => {
     renderKeyInformation();
     const addButton = getAddButton();
     userEvent.click(addButton);
@@ -164,17 +164,7 @@ describe('KeyInformatiomModal', () => {
     }).parentElement?.parentElement as HTMLElement;
     expect(
       within(secondary).getByRole('textbox', {
-        name: 'Institution (required)',
-      }),
-    ).toBeVisible();
-    expect(
-      within(secondary).getByRole('textbox', {
-        name: 'Department (required)',
-      }),
-    ).toBeVisible();
-    expect(
-      within(secondary).getByRole('textbox', {
-        name: 'Role (required)',
+        name: /Institution/i,
       }),
     ).toBeVisible();
     userEvent.click(addButton);
@@ -183,20 +173,12 @@ describe('KeyInformatiomModal', () => {
     }).parentElement?.parentElement as HTMLElement;
     expect(
       within(tertiary).getByRole('textbox', {
-        name: 'Institution (required)',
+        name: /Institution/i,
       }),
-    ).toBeVisible();
-    expect(
-      within(tertiary).getByRole('textbox', {
-        name: 'Department (required)',
-      }),
-    ).toBeVisible();
-    expect(
-      within(tertiary).getByRole('textbox', { name: 'Role (required)' }),
     ).toBeVisible();
   });
 
-  test('there can be only 3 positions', () => {
+  it('there can be only 3 positions', () => {
     const positions = [
       { institution: 'FPF', department: "Men's Team", role: 'Striker' },
       { institution: 'Benfica', department: 'First Team', role: 'Forward' },
@@ -212,7 +194,7 @@ describe('KeyInformatiomModal', () => {
     ).not.toBeInTheDocument();
   });
 
-  test('can save an extra position', async () => {
+  it('can save an extra position', async () => {
     const onSave = jest.fn();
     const position = {
       institution: 'Olhanense',
@@ -233,6 +215,15 @@ describe('KeyInformatiomModal', () => {
     const tertiary = screen.getByRole('heading', {
       name: /Tertiary Position/i,
     }).parentElement?.parentElement as HTMLElement;
+
+    expect(
+      within(tertiary).queryByRole('textbox', {
+        name: /Department/i,
+      }),
+    ).not.toBeInTheDocument();
+    expect(
+      within(tertiary).queryByRole('textbox', { name: /Role/i }),
+    ).not.toBeInTheDocument();
 
     userEvent.click(
       within(tertiary).getByRole('textbox', { name: /Institution/i }),

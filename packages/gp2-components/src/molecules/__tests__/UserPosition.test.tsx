@@ -141,13 +141,13 @@ describe('UserPosition', () => {
     });
 
     expect(
-      screen.getByRole('textbox', { name: `Institution (required)` }),
+      screen.getByRole('textbox', { name: 'Institution (required)' }),
     ).toBeVisible();
     expect(
-      screen.queryByRole('textbox', { name: `Department (required)` }),
+      screen.queryByRole('textbox', { name: 'Department (required)' }),
     ).not.toBeInTheDocument();
     expect(
-      screen.queryByRole('textbox', { name: `Role (required)` }),
+      screen.queryByRole('textbox', { name: 'Role (required)' }),
     ).not.toBeInTheDocument();
   });
   it('displays the role and the department when the institution has been selected', () => {
@@ -160,10 +160,10 @@ describe('UserPosition', () => {
     });
 
     expect(
-      screen.getByRole('textbox', { name: `Department (required)` }),
+      screen.getByRole('textbox', { name: 'Department (required)' }),
     ).toBeVisible();
     expect(
-      screen.getByRole('textbox', { name: `Role (required)` }),
+      screen.getByRole('textbox', { name: 'Role (required)' }),
     ).toBeVisible();
   });
 
@@ -186,10 +186,10 @@ describe('UserPosition', () => {
       screen.getByRole('textbox', { name: `Institution (${value})` }),
     ).toBeVisible();
     expect(
-      screen.getByRole('textbox', { name: `Department (required)` }),
+      screen.getByRole('textbox', { name: 'Department (required)' }),
     ).toBeVisible();
     expect(
-      screen.getByRole('textbox', { name: `Role (required)` }),
+      screen.getByRole('textbox', { name: 'Role (required)' }),
     ).toBeVisible();
   });
 });

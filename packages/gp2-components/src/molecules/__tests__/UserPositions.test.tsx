@@ -109,13 +109,13 @@ describe('UserPositions', () => {
   it('can save a position department', async () => {
     const onChange = jest.fn();
     const position = {
-      institution: '',
+      institution: 'Benfica',
       department: 'A',
       role: '',
     };
     const positions = [
       { institution: 'FPF', department: "Men's Team", role: 'Striker' },
-      { institution: '', department: '', role: '' },
+      { institution: position.institution, department: '', role: '' },
     ];
     renderUserPositions({
       positions,
@@ -134,13 +134,13 @@ describe('UserPositions', () => {
   it('can save a position role', async () => {
     const onChange = jest.fn();
     const position = {
-      institution: '',
+      institution: 'Benfica',
       department: '',
       role: 'A',
     };
     const positions = [
       { institution: 'FPF', department: "Men's Team", role: 'Striker' },
-      { institution: '', department: '', role: '' },
+      { institution: position.institution, department: '', role: '' },
     ];
     renderUserPositions({
       positions,
@@ -171,5 +171,4 @@ describe('UserPositions', () => {
     userEvent.click(within(container).getByRole('button'));
     expect(onChange).toBeCalledWith([positions[0]]);
   });
-  it.todo('all the information has been entered');
 });

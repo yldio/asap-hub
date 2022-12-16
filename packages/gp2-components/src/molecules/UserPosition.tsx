@@ -76,6 +76,7 @@ const UserPosition: React.FC<UserPositionProps> = ({
             onChange={onChangeValue('department')}
             value={department}
             required
+            getValidationMessage={() => 'Please add your department'}
           />
           <LabeledTextField
             title="Role"
@@ -84,6 +85,7 @@ const UserPosition: React.FC<UserPositionProps> = ({
             onChange={onChangeValue('role')}
             value={role}
             required
+            getValidationMessage={() => 'Please add your role'}
           />
         </>
       ) : null}

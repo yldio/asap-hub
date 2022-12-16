@@ -192,4 +192,55 @@ describe('UserPosition', () => {
       screen.getByRole('textbox', { name: 'Role (required)' }),
     ).toBeVisible();
   });
+  it.each([0, 1, 2])(
+    'shows validation message when no institation is selected for the index %d',
+    (index) => {
+      renderUserPosition({
+        position: {
+          institution: '',
+          department: '',
+          role: '',
+        },
+        index,
+      });
+
+      userEvent.click(screen.getByRole('textbox', { name: /Institution/i }));
+      userEvent.tab();
+      expect(screen.getByText(/Please add your institution/i)).toBeVisible();
+    },
+  );
+  it.each([0, 1, 2])(
+    'shows validation message when no department is selected for the index %d',
+    (index) => {
+      renderUserPosition({
+        position: {
+          institution: 'FPF',
+          department: '',
+          role: '',
+        },
+        index,
+      });
+
+      userEvent.click(screen.getByRole('textbox', { name: /department/i }));
+      userEvent.tab();
+      expect(screen.getByText(/Please add your department/i)).toBeVisible();
+    },
+  );
+  it.each([0, 1, 2])(
+    'shows validation message when no role is selected for the index %d',
+    (index) => {
+      renderUserPosition({
+        position: {
+          institution: 'FPF',
+          department: '',
+          role: '',
+        },
+        index,
+      });
+
+      userEvent.click(screen.getByRole('textbox', { name: /role/i }));
+      userEvent.tab();
+      expect(screen.getByText(/Please add your role/i)).toBeVisible();
+    },
+  );
 });

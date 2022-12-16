@@ -76,6 +76,7 @@ export type UserDataObject = {
   region: UserRegion;
   role: UserRole;
   projects: UserProject[];
+  questions: string[];
   workingGroups: UserWorkingGroup[];
   fundingStreams?: string;
   contributingCohorts: unknown[];

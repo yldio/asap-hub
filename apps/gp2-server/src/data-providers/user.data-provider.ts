@@ -281,6 +281,7 @@ export const parseGraphQLUserToDataObject = ({
   const positions = parsePositions(user.positions);
   const projects = parseProjects(projectItems);
   const workingGroups = parseWorkingGroups(workingGroupItems);
+  const questions = parseQuestions(user.questions);
   const telephone =
     user.telephoneNumber || user.telephoneCountryCode
       ? {
@@ -313,6 +314,7 @@ export const parseGraphQLUserToDataObject = ({
     telephone,
     keywords: user.keywords || [],
     biography: user.biography || undefined,
+    questions,
   };
 };
 
@@ -391,6 +393,18 @@ const parseDegrees = (
 
     return degree;
   });
+
+const parseQuestions = (
+  questions: NonNullable<
+    FetchUserQuery['findUsersContent']
+  >['flatData']['questions'],
+): gp2Model.UserDataObject['questions'] =>
+  questions?.map(({ question }) => {
+    if (!question) {
+      throw new Error('Invalid question');
+    }
+    return question;
+  }) || [];
 
 const parsePositions = (
   positions: NonNullable<

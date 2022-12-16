@@ -1833,6 +1833,7 @@ export type UsersDataDto = {
   lastName: Maybe<UsersDataLastNameDto>;
   onboarded: Maybe<UsersDataOnboardedDto>;
   positions: Maybe<UsersDataPositionsDto>;
+  questions: Maybe<UsersDataQuestionsDto>;
   region: Maybe<UsersDataRegionDto>;
   role: Maybe<UsersDataRoleDto>;
   secondaryEmail: Maybe<UsersDataSecondaryEmailDto>;
@@ -1887,6 +1888,7 @@ export type UsersDataInputDto = {
   lastName: InputMaybe<UsersDataLastNameInputDto>;
   onboarded: InputMaybe<UsersDataOnboardedInputDto>;
   positions: InputMaybe<UsersDataPositionsInputDto>;
+  questions: InputMaybe<UsersDataQuestionsInputDto>;
   region: InputMaybe<UsersDataRegionInputDto>;
   role: InputMaybe<UsersDataRoleInputDto>;
   secondaryEmail: InputMaybe<UsersDataSecondaryEmailInputDto>;
@@ -1948,6 +1950,26 @@ export type UsersDataPositionsDto = {
 /** The structure of the Positions field of the Users content input type. */
 export type UsersDataPositionsInputDto = {
   iv: InputMaybe<Array<UsersDataPositionsChildInputDto>>;
+};
+
+/** The structure of the Open Questions nested schema. */
+export type UsersDataQuestionsChildDto = {
+  question: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Open Questions nested schema. */
+export type UsersDataQuestionsChildInputDto = {
+  question: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Open Questions field of the Users content type. */
+export type UsersDataQuestionsDto = {
+  iv: Maybe<Array<UsersDataQuestionsChildDto>>;
+};
+
+/** The structure of the Open Questions field of the Users content input type. */
+export type UsersDataQuestionsInputDto = {
+  iv: InputMaybe<Array<UsersDataQuestionsChildInputDto>>;
 };
 
 /** The structure of the Region field of the Users content type. */
@@ -2049,6 +2071,7 @@ export type UsersFlatDataDto = {
   /** Use this to allow the user to see the full Hub and skip profile completion */
   onboarded: Maybe<Scalars['Boolean']>;
   positions: Maybe<Array<UsersDataPositionsChildDto>>;
+  questions: Maybe<Array<UsersDataQuestionsChildDto>>;
   region: Maybe<UsersDataRegionEnum>;
   /** Role on the GP2 Hub */
   role: Maybe<UsersDataRoleEnum>;
@@ -2684,6 +2707,7 @@ export type UsersContentFragment = Pick<
         Pick<UsersDataPositionsChildDto, 'role' | 'department' | 'institution'>
       >
     >;
+    questions: Maybe<Array<Pick<UsersDataQuestionsChildDto, 'question'>>>;
   };
   referencingProjectsContents: Maybe<
     Array<
@@ -2751,6 +2775,7 @@ export type FetchUserQuery = {
             >
           >
         >;
+        questions: Maybe<Array<Pick<UsersDataQuestionsChildDto, 'question'>>>;
       };
       referencingProjectsContents: Maybe<
         Array<
@@ -2824,6 +2849,9 @@ export type FetchUsersQuery = {
                     'role' | 'department' | 'institution'
                   >
                 >
+              >;
+              questions: Maybe<
+                Array<Pick<UsersDataQuestionsChildDto, 'question'>>
               >;
             };
             referencingProjectsContents: Maybe<
@@ -3606,6 +3634,19 @@ export const UsersContentFragmentDoc = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'institution' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'questions' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'question' },
                       },
                     ],
                   },

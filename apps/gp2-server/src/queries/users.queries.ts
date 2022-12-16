@@ -23,6 +23,9 @@ export const usersContentQueryFragment = gql`
         department
         institution
       }
+      questions {
+        question
+      }
       onboarded
       secondaryEmail
       telephoneCountryCode

@@ -1,16 +1,17 @@
-import { Frame } from '@asap-hub/frontend-utils';
 import {
-  ResearchOutputDocumentType,
+  BackendError,
+  clearAjvErrorForPath,
+  Frame,
+  validationErrorsAreSupported,
+} from '@asap-hub/frontend-utils';
+import {
   ResearchOutputResponse,
   ResearchOutputPublishingEntities,
+  isValidationErrorResponse,
+  ValidationErrorResponse,
 } from '@asap-hub/model';
 import { NotFoundPage, ResearchOutputPage } from '@asap-hub/react-components';
-import {
-  network,
-  OutputDocumentTypeParameter,
-  useRouteParams,
-} from '@asap-hub/routing';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import researchSuggestions from '../teams/research-suggestions';
 import {
@@ -18,29 +19,9 @@ import {
   useLabSuggestions,
   useWorkingGroupById,
   useTeamSuggestions,
+  usePostWorkingGroupResearchOutput,
 } from './state';
 import { useResearchTags } from '../teams/state';
-
-const useParamOutputDocumentType = (
-  workingGroupId: string,
-): OutputDocumentTypeParameter => {
-  const route = network({})
-    .workingGroups({})
-    .workingGroup({ workingGroupId }).createOutput;
-  const { outputDocumentType } = useRouteParams(route);
-  return outputDocumentType;
-};
-
-export function paramOutputDocumentTypeToResearchOutputDocumentType(
-  data: OutputDocumentTypeParameter,
-): ResearchOutputDocumentType {
-  switch (data) {
-    case 'article':
-      return 'Article';
-    default:
-      return 'Article';
-  }
-}
 
 type WorkingGroupOutputProps = {
   workingGroupId: string;
@@ -50,10 +31,9 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   workingGroupId,
   researchOutputData,
 }) => {
-  const paramOutputDocumentType = useParamOutputDocumentType(workingGroupId);
-  const documentType = paramOutputDocumentTypeToResearchOutputDocumentType(
-    paramOutputDocumentType,
-  );
+  const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
+
+  const documentType = 'Article';
   const workingGroup = useWorkingGroupById(workingGroupId);
   const { canCreateUpdate } = useContext(ResearchOutputPermissionsContext);
 
@@ -62,6 +42,21 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   const getTeamSuggestions = useTeamSuggestions();
   const researchTags = useResearchTags();
   const publishingEntity: ResearchOutputPublishingEntities = 'Working Group';
+  const createResearchOutput = usePostWorkingGroupResearchOutput();
+
+  const handleError = (error: unknown) => {
+    if (error instanceof BackendError) {
+      const { response } = error;
+      if (
+        isValidationErrorResponse(response) &&
+        validationErrorsAreSupported(response, ['/link', '/title'])
+      ) {
+        setErrors(response.data);
+        return;
+      }
+    }
+    throw error;
+  };
 
   if (canCreateUpdate && workingGroup) {
     return (
@@ -85,9 +80,13 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
           getTeamSuggestions={getTeamSuggestions}
           researchTags={researchTags}
           researchOutputData={researchOutputData}
+          serverValidationErrors={errors}
+          clearServerValidationError={(instancePath: string) =>
+            setErrors(clearAjvErrorForPath(errors, instancePath))
+          }
           isEditMode={false}
           publishingEntity={publishingEntity}
-          onSave={() => Promise.resolve()}
+          onSave={(output) => createResearchOutput(output).catch(handleError)}
         />
       </Frame>
     );

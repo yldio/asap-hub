@@ -4,6 +4,7 @@ import {
   isResearchOutputDocumentType,
   isResearchOutputPublishingEntity,
   isResearchOutputType,
+  researchOutputMapPublishingEntity,
   researchOutputMapType,
 } from '../src/research-output';
 
@@ -48,6 +49,14 @@ describe('Research Output Model', () => {
       expect(
         isResearchOutputPublishingEntity('not a publishing entity'),
       ).toEqual(false);
+    });
+    it('should map to the correct entity', () => {
+      expect(researchOutputMapPublishingEntity('Team')).toEqual('Team');
+    });
+    it('should map to null', () => {
+      expect(
+        researchOutputMapPublishingEntity('not a publishing entity'),
+      ).toEqual(null);
     });
   });
 });

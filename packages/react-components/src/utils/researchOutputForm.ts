@@ -2,6 +2,8 @@ import {
   ResearchOutputResponse,
   ResearchOutputIdentifierType,
   DecisionOption,
+  ResearchOutputPublishingEntities,
+  TeamResponse,
 } from '@asap-hub/model';
 import { ComponentProps } from 'react';
 import ResearchOutputContributorsCard from '../organisms/ResearchOutputContributorsCard';
@@ -26,9 +28,38 @@ export type ResearchOutputState = {
   identifier?: string;
 };
 
+export type getTeamState = {
+  team: TeamResponse | undefined;
+  publishingEntity: ResearchOutputPublishingEntities;
+  researchOutputData: ResearchOutputResponse | undefined;
+};
+
 function equals(a: Array<string>, b: Array<string>): boolean {
   return (
     a.length === b.length && a.every((element, index) => element === b[index])
+  );
+}
+
+export function getTeamsState({
+  team,
+  publishingEntity,
+  researchOutputData,
+}: getTeamState) {
+  if (publishingEntity === 'Working Group') {
+    return [];
+  }
+  return (
+    researchOutputData?.teams.map((element) => ({
+      label: element.displayName,
+      value: element.id,
+      isFixed: true,
+    })) || [
+      {
+        label: team?.displayName || '',
+        value: team?.id || '',
+        isFixed: true,
+      },
+    ]
   );
 }
 

@@ -48,25 +48,12 @@ describe('OnboardingPage', () => {
   beforeEach(jest.resetAllMocks);
   const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
 
-  it('renders header with title', async () => {
+  it('has core details activated', async () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
     await renderOnboardingPage(user.id);
-    expect(
-      screen.getByRole('heading', { name: /registration/i }),
-    ).toBeVisible();
-  });
-
-  it('renders the progression levels', async () => {
-    const user = gp2Fixtures.createUserResponse();
-    mockGetUser.mockResolvedValueOnce(user);
-    await renderOnboardingPage(user.id);
-    expect(screen.getByRole('link', { name: /core details/i })).toBeVisible();
-    expect(screen.getByRole('link', { name: /background/i })).toBeVisible();
-    expect(screen.getByRole('link', { name: /gp2 groups/i })).toBeVisible();
-    expect(
-      screen.getByRole('link', { name: /additional details/i }),
-    ).toBeVisible();
-    expect(screen.getByRole('link', { name: /preview/i })).toBeVisible();
+    expect(screen.getByRole('link', { name: /core details/i })).toHaveClass(
+      'active-link',
+    );
   });
 });

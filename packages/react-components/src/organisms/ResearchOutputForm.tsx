@@ -29,6 +29,7 @@ import {
   getDecision,
   getIdentifierType,
   getPublishDate,
+  getTeamsState,
   isDirty,
 } from '../utils/researchOutputForm';
 
@@ -139,21 +140,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
 
   const [teams, setTeams] = useState<
     NonNullable<ComponentProps<typeof ResearchOutputContributorsCard>['teams']>
-  >(
-    publishingEntity === 'Working Group'
-      ? []
-      : researchOutputData?.teams.map((element) => ({
-          label: element.displayName,
-          value: element.id,
-          isFixed: true,
-        })) || [
-          {
-            label: team?.displayName || '',
-            value: team?.id || '',
-            isFixed: true,
-          },
-        ],
-  );
+  >(getTeamsState({ team, publishingEntity, researchOutputData }));
 
   const [description, setDescription] = useState<
     ResearchOutputPostRequest['description']

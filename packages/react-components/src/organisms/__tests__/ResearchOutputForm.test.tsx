@@ -36,6 +36,7 @@ import {
   getPublishDate,
   ResearchOutputState,
   isIdentifierModified,
+  getTeamsState,
 } from '../../utils/researchOutputForm';
 
 const props: ComponentProps<typeof ResearchOutputForm> = {
@@ -891,4 +892,57 @@ describe('getIdentifierType', () => {
       ).toEqual(expected);
     },
   );
+});
+
+describe('getTeamsState', () => {
+  it('returns the default team for a publishing entity of type team without RO data', () => {
+    const team = { ...createTeamResponse(), displayName: 'team-1' };
+    expect(
+      getTeamsState({
+        team,
+        publishingEntity: 'Team',
+        researchOutputData: undefined,
+      }),
+    ).toEqual([
+      {
+        label: team.displayName,
+        value: team.id,
+        isFixed: true,
+      },
+    ]);
+  });
+  it('returns an empty array for a publishing entity of type working group', () => {
+    expect(
+      getTeamsState({
+        team: createTeamResponse(),
+        publishingEntity: 'Working Group',
+        researchOutputData: undefined,
+      }),
+    ).toEqual([]);
+  });
+  it('returns an array of teams when there is research output data', () => {
+    const team1 = { ...createTeamResponse(), displayName: 'team1' };
+    const team2 = { ...createTeamResponse(), displayName: 'team2' };
+    expect(
+      getTeamsState({
+        team: createTeamResponse(),
+        publishingEntity: 'Team',
+        researchOutputData: {
+          ...createResearchOutputResponse(),
+          teams: [team1, team2],
+        },
+      }),
+    ).toEqual([
+      {
+        label: team1.displayName,
+        value: team1.id,
+        isFixed: true,
+      },
+      {
+        label: team2.displayName,
+        value: team2.id,
+        isFixed: true,
+      },
+    ]);
+  });
 });

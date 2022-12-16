@@ -10,6 +10,20 @@ import {
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
 
+const graphqlUser = getGraphQLUser();
+
+const parsedGraphQlWorkingGroupUser = {
+  id: graphqlUser.id,
+  displayName: `${graphqlUser.flatData.firstName} ${graphqlUser.flatData.lastName}`,
+  firstName: graphqlUser.flatData.firstName,
+  lastName: graphqlUser.flatData.lastName,
+  email: graphqlUser.flatData.email,
+  alumniSinceDate: graphqlUser.flatData.alumniSinceDate,
+  avatarUrl: graphqlUser.flatData.avatar?.length
+    ? createUrl(graphqlUser.flatData.avatar.map((a) => a.id))[0]
+    : undefined,
+};
+
 describe('Working Group Data Provider', () => {
   const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
   const workingGroupDataProvider = new WorkingGroupSquidexDataProvider(
@@ -176,7 +190,7 @@ describe('Working Group Data Provider', () => {
         const squidexGraphqlResponse = getSquidexWorkingGroupGraphqlResponse();
         squidexGraphqlResponse.findWorkingGroupsContent!.flatData.leaders = [
           {
-            user: [getGraphQLUser()],
+            user: [graphqlUser],
             workstreamRole: 'Some role',
             role: 'Chair',
           },
@@ -190,15 +204,7 @@ describe('Working Group Data Provider', () => {
         );
         expect(response?.leaders).toStrictEqual([
           {
-            user: {
-              id: 'user-id-1',
-              displayName: 'Tom Hardy',
-              firstName: 'Tom',
-              lastName: 'Hardy',
-              email: 'H@rdy.io',
-              alumniSinceDate: null,
-              avatarUrl: undefined,
-            },
+            user: parsedGraphQlWorkingGroupUser,
             workstreamRole: 'Some role',
             role: 'Chair',
           },
@@ -206,8 +212,6 @@ describe('Working Group Data Provider', () => {
       });
 
       test('Should return members', async () => {
-        const graphqlUser = getGraphQLUser();
-
         const squidexGraphqlResponse = getSquidexWorkingGroupGraphqlResponse();
         squidexGraphqlResponse.findWorkingGroupsContent!.flatData.members = [
           {
@@ -223,17 +227,7 @@ describe('Working Group Data Provider', () => {
         );
         expect(response?.members).toStrictEqual([
           {
-            user: {
-              id: graphqlUser.id,
-              displayName: `${graphqlUser.flatData.firstName} ${graphqlUser.flatData.lastName}`,
-              firstName: graphqlUser.flatData.firstName,
-              lastName: graphqlUser.flatData.lastName,
-              email: graphqlUser.flatData.email,
-              alumniSinceDate: graphqlUser.flatData.alumniSinceDate,
-              avatarUrl: graphqlUser.flatData.avatar?.length
-                ? createUrl(graphqlUser.flatData.avatar.map((a) => a.id))[0]
-                : undefined,
-            },
+            user: parsedGraphQlWorkingGroupUser,
           },
         ]);
       });

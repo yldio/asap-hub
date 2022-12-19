@@ -6,7 +6,7 @@ describe('UserQuestions', () => {
     render(<UserQuestions questions={[]} firstName="" />);
     expect(
       screen.getByRole('heading', { name: 'Open Questions' }),
-    ).toBeInTheDocument();
+    ).toBeVisible();
   });
   it('renders the subtitle', () => {
     render(<UserQuestions questions={[]} firstName="Tony" />);
@@ -14,9 +14,9 @@ describe('UserQuestions', () => {
       screen.getByText(
         'Tony is interested in answering the following questions within their work:',
       ),
-    ).toBeInTheDocument();
+    ).toBeVisible();
   });
-  it('render questions', () => {
+  it('renders questions', () => {
     render(
       <UserQuestions
         questions={['this is a question?', 'this is another question?']}

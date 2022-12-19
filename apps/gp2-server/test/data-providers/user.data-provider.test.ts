@@ -191,6 +191,14 @@ describe('User data provider', () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
       expect(() => userDataProvider.fetchById('user-id')).rejects.toThrow();
     });
+    test('questions default to empty array', async () => {
+      const user = getGraphQLUser();
+      user.flatData.questions = null;
+      const mockResponse = getSquidexUserGraphqlResponse(user);
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+      const result = await userDataProvider.fetchById('user-id');
+      expect(result?.questions).toEqual([]);
+    });
 
     describe('positions', () => {
       const position = {

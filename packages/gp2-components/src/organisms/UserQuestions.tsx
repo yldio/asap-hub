@@ -1,6 +1,7 @@
 import { gp2 } from '@asap-hub/model';
 import { Headline3, Paragraph, pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
+import colors from '../templates/colors';
 
 const { rem } = pixels;
 
@@ -10,9 +11,19 @@ type UserQuestionsProps = {
 };
 
 const contentStyles = css({
-  padding: `${rem(16)} 0`,
+  padding: `${rem(16)} 0 ${rem(16)}`,
 });
 
+const rowStyles = css({
+  borderBottom: `1px solid ${colors.neutral500.rgb}`,
+  marginBottom: rem(12),
+  padding: `${rem(16)} 0 ${rem(16)}`,
+  ':last-child': {
+    borderBottom: 'none',
+    marginBottom: 0,
+    paddingBottom: 0,
+  },
+});
 const UserQuestions: React.FC<UserQuestionsProps> = ({
   questions,
   firstName,
@@ -26,7 +37,9 @@ const UserQuestions: React.FC<UserQuestionsProps> = ({
       </Paragraph>
     </div>
     {questions.map((question, index) => (
-      <div key={`user-question-${index}`}>Q: {question}</div>
+      <div key={`user-question-${index}`} css={rowStyles}>
+        <strong>Q:</strong> {question}
+      </div>
     ))}
   </>
 );

@@ -23,7 +23,7 @@ describe('UserQuestions', () => {
         firstName="Tony"
       />,
     );
-    expect(screen.getByText('Q: this is a question?')).toBeVisible();
-    expect(screen.getByText('Q: this is another question?')).toBeVisible();
+    expect(screen.getByText('this is a question?')).toBeVisible();
+    expect(screen.getByText('this is another question?')).toBeVisible();
   });
 });

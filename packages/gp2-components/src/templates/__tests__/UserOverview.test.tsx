@@ -7,6 +7,8 @@ describe('UserOverview', () => {
   const defaultProps: ComponentProps<typeof UserOverview> = {
     email: 'someone@example.com',
     keywords: [],
+    questions: [],
+    firstName: 'Tony',
   };
 
   it('renders the default sections', () => {
@@ -101,6 +103,16 @@ describe('UserOverview', () => {
       expect(
         screen.queryByRole('heading', { name: 'Funding Streams' }),
       ).not.toBeInTheDocument();
+    });
+  });
+  describe('questions', () => {
+    it('renders the questions', () => {
+      const questions = ['this is a funding stream'];
+      render(<UserOverview {...defaultProps} questions={questions} />);
+      expect(
+        screen.getByRole('heading', { name: 'Open Questions' }),
+      ).toBeInTheDocument();
+      expect(screen.getByText(questions[0])).toBeVisible();
     });
   });
 });

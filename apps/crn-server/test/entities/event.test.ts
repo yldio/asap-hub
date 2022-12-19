@@ -11,7 +11,6 @@ import {
   parseGraphQLSpeakers,
 } from '../../src/entities/event';
 import {
-  getEventResponse,
   getEventSpeakerUser,
   getSquidexGraphqlEvent,
   getSquidexGraphqlEventSpeakerWithExternalUser,
@@ -35,20 +34,27 @@ describe('events entity', () => {
       );
     });
     test('remove the speaker from speakers list when it does not have the team assigned', () => {
-      const squidexSpeaker = getSquidexGraphqlEventSpeakerWithUser();
-      squidexSpeaker.team = [];
+      const squidexSpeaker1 = getSquidexGraphqlEventSpeakerWithUser();
+      squidexSpeaker1.team = [];
+      squidexSpeaker1.user![0]!.id = 'user-without-team';
+
+      const squidexSpeaker2 = getSquidexGraphqlEventSpeakerWithUser();
+      squidexSpeaker2.user![0]!.id = 'user-with-team';
 
       const event = {
         ...graphqlEvent,
         flatData: {
           ...graphqlEvent.flatData,
-          speakers: [squidexSpeaker],
+          speakers: [squidexSpeaker1, squidexSpeaker2],
         },
       };
-      expect(parseGraphQLEvent(event)).toEqual({
-        ...getEventResponse(),
-        speakers: [],
-      });
+
+      const parsedEvent = parseGraphQLEvent(event);
+
+      const expectedEventSpeakers = getEventSpeakerUser();
+      expectedEventSpeakers.user.id = 'user-with-team';
+
+      expect(parsedEvent.speakers).toEqual([expectedEventSpeakers]);
     });
     test('throws when provided an invalid event status', () => {
       const event = {

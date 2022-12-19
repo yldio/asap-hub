@@ -53,7 +53,7 @@ const UserPosition: React.FC<UserPositionProps> = ({
       <div css={headerStyles}>
         <Headline5>{prefix} Position</Headline5>
         {index !== 0 && (
-          <div css={buttonStyles} data-testid={`delete-${index}`}>
+          <div css={buttonStyles}>
             <Button onClick={onRemove} small>
               {binIcon}
             </Button>

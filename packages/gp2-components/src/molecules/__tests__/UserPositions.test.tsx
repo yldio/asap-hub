@@ -169,8 +169,8 @@ describe('UserPositions', () => {
       positions,
       onChange,
     });
-    const container = screen.getByTestId('delete-1');
-    userEvent.click(within(container).getByRole('button'));
+    const deleteButton = screen.getByRole('button', { name: /delete/i });
+    userEvent.click(deleteButton);
     expect(onChange).toBeCalledWith([positions[0]]);
   });
 });

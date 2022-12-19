@@ -220,15 +220,6 @@ describe('KeyInformatiomModal', () => {
       name: /Tertiary Position/i,
     }).parentElement?.parentElement as HTMLElement;
 
-    expect(
-      within(tertiary).queryByRole('textbox', {
-        name: /Department/i,
-      }),
-    ).not.toBeInTheDocument();
-    expect(
-      within(tertiary).queryByRole('textbox', { name: /Role/i }),
-    ).not.toBeInTheDocument();
-
     userEvent.click(
       within(tertiary).getByRole('textbox', { name: /Institution/i }),
     );

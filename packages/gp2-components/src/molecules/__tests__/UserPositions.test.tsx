@@ -111,13 +111,13 @@ describe('UserPositions', () => {
   it('can save a position department', async () => {
     const onChange = jest.fn();
     const position = {
-      institution: 'Benfica',
+      institution: '',
       department: 'A',
       role: '',
     };
     const positions = [
       { institution: 'FPF', department: "Men's Team", role: 'Striker' },
-      { institution: position.institution, department: '', role: '' },
+      { institution: '', department: '', role: '' },
     ];
     renderUserPositions({
       positions,
@@ -136,13 +136,13 @@ describe('UserPositions', () => {
   it('can save a position role', async () => {
     const onChange = jest.fn();
     const position = {
-      institution: 'Benfica',
+      institution: '',
       department: '',
       role: 'A',
     };
     const positions = [
       { institution: 'FPF', department: "Men's Team", role: 'Striker' },
-      { institution: position.institution, department: '', role: '' },
+      { institution: '', department: '', role: '' },
     ];
     renderUserPositions({
       positions,

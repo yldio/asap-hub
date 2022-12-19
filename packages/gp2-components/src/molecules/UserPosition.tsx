@@ -10,7 +10,6 @@ import { ComponentProps } from 'react';
 import binIcon from '../icons/bin-icon';
 
 const required = '(required)';
-const optional = '(optional)';
 
 const headerStyles = css({
   display: 'flex',
@@ -41,9 +40,7 @@ const UserPosition: React.FC<UserPositionProps> = ({
 }) => {
   const { institution, department, role } = position;
   const onChangeValue = (property: keyof gp2.UserPosition) => (value: string) =>
-    property === 'institution' && value === ''
-      ? onChange({ institution: '', department: '', role: '' })
-      : onChange({ ...position, [property]: value });
+    onChange({ ...position, [property]: value });
 
   const prefixes = ['Primary', 'Secondary', 'Tertiary'];
   const prefix = prefixes[index];
@@ -61,7 +58,7 @@ const UserPosition: React.FC<UserPositionProps> = ({
       </div>
       <LabeledTypeahead
         title="Institution"
-        subtitle={index === 0 ? required : optional}
+        subtitle={required}
         required
         getValidationMessage={() => 'Please add your institution'}
         maxLength={44}
@@ -70,28 +67,24 @@ const UserPosition: React.FC<UserPositionProps> = ({
         enabled={!isSaving}
         loadOptions={loadInstitutionOptions}
       />
-      {institution.length > 0 && (
-        <>
-          <LabeledTextField
-            title="Department"
-            subtitle={required}
-            enabled={!isSaving}
-            onChange={onChangeValue('department')}
-            value={department}
-            required
-            getValidationMessage={() => 'Please add your department'}
-          />
-          <LabeledTextField
-            title="Role"
-            subtitle={required}
-            enabled={!isSaving}
-            onChange={onChangeValue('role')}
-            value={role}
-            required
-            getValidationMessage={() => 'Please add your role'}
-          />
-        </>
-      )}
+      <LabeledTextField
+        title="Department"
+        subtitle={required}
+        enabled={!isSaving}
+        onChange={onChangeValue('department')}
+        value={department}
+        required
+        getValidationMessage={() => 'Please add your department'}
+      />
+      <LabeledTextField
+        title="Role"
+        subtitle={required}
+        enabled={!isSaving}
+        onChange={onChangeValue('role')}
+        value={role}
+        required
+        getValidationMessage={() => 'Please add your role'}
+      />
     </article>
   );
 };

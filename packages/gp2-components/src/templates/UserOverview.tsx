@@ -47,6 +47,7 @@ const UserOverview: React.FC<UserOverviewProps> = ({
   keywords,
   fundingStreams,
   questions,
+  firstName,
 }) => (
   <div css={containerStyles}>
     <div css={[columnStyles]}>
@@ -82,7 +83,7 @@ const UserOverview: React.FC<UserOverviewProps> = ({
     </Card>
     <Card padding={false}>
       <div css={cardStyles}>
-        <UserQuestions questions={questions} firstName="test" />
+        <UserQuestions questions={questions} firstName={firstName} />
       </div>
     </Card>
     {fundingStreams && (

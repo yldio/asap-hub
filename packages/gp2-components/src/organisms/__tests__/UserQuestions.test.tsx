@@ -1,0 +1,29 @@
+import { render, screen } from '@testing-library/react';
+import UserQuestions from '../UserQuestions';
+
+describe('UserQuestions', () => {
+  it('renders the title', () => {
+    render(<UserQuestions questions={[]} firstName="" />);
+    expect(
+      screen.getByRole('heading', { name: 'Open Questions' }),
+    ).toBeInTheDocument();
+  });
+  it('renders the subtitle', () => {
+    render(<UserQuestions questions={[]} firstName="Tony" />);
+    expect(
+      screen.getByText(
+        'Tony is interested in answering the following questions within their work:',
+      ),
+    ).toBeInTheDocument();
+  });
+  it('render questions', () => {
+    render(
+      <UserQuestions
+        questions={['this is a question?', 'this is another question?']}
+        firstName="Tony"
+      />,
+    );
+    expect(screen.getByText('Q: this is a question?')).toBeVisible();
+    expect(screen.getByText('Q: this is another question?')).toBeVisible();
+  });
+});

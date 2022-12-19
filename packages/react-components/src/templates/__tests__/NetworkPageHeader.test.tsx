@@ -44,9 +44,18 @@ it('alters the search placeholder based on the tab', () => {
   expect(
     (getByRole('searchbox') as HTMLInputElement).placeholder,
   ).toMatchInlineSnapshot(`"Enter an interest group, keyword, …"`);
+
+  rerender(
+    <MemoryRouter initialEntries={[network({}).workingGroups({}).$]}>
+      <NetworkPageHeader {...props} page="working-groups" />
+    </MemoryRouter>,
+  );
+  expect(
+    (getByRole('searchbox') as HTMLInputElement).placeholder,
+  ).toMatchInlineSnapshot(`"Enter name, keyword, …"`);
 });
 
-it('shows the filter in all the tabs (teams, groups and users)', () => {
+it('shows the filter in all the tabs (teams, groups, working-groups and users)', () => {
   const { getByText, queryByText, rerender } = render(
     <MemoryRouter initialEntries={[network({}).teams({}).$]}>
       <NetworkPageHeader {...props} page="teams" />
@@ -57,6 +66,13 @@ it('shows the filter in all the tabs (teams, groups and users)', () => {
   rerender(
     <MemoryRouter initialEntries={[network({}).groups({}).$]}>
       <NetworkPageHeader {...props} page="groups" />
+    </MemoryRouter>,
+  );
+  expect(getByText(/filters/i)).toBeInTheDocument();
+
+  rerender(
+    <MemoryRouter initialEntries={[network({}).workingGroups({}).$]}>
+      <NetworkPageHeader {...props} page="working-groups" />
     </MemoryRouter>,
   );
   expect(getByText(/filters/i)).toBeInTheDocument();

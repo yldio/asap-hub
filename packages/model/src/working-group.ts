@@ -1,4 +1,4 @@
-import { ListResponse } from './common';
+import { FetchOptions, ListResponse } from './common';
 import { UserResponse } from './user';
 
 export const deliverableStatus = [
@@ -62,3 +62,9 @@ export type WorkingGroupListDataObject = ListResponse<WorkingGroupDataObject>;
 export type WorkingGroupResponse = WorkingGroupDataObject;
 
 export type WorkingGroupListResponse = ListResponse<WorkingGroupResponse>;
+
+type WorkingGroupFilter = {
+  complete?: boolean;
+};
+
+export type FetchWorkingGroupOptions = FetchOptions<WorkingGroupFilter>;

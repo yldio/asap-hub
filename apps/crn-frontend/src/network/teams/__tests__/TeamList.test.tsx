@@ -16,6 +16,7 @@ import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
 jest.mock('../api');
 jest.mock('../../users/api');
 jest.mock('../../groups/api');
+jest.mock('../../working-groups/api');
 
 const mockGetTeams = getTeams as jest.MockedFunction<typeof getTeams>;
 

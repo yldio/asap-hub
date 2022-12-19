@@ -190,6 +190,27 @@ it('allows selection of group filters', async () => {
   );
 });
 
+it('allows selection of working group filters', async () => {
+  const { getByText, getByLabelText } = await renderNetworkPage(
+    network({}).workingGroups({}).$,
+  );
+
+  userEvent.click(getByText('Filters'));
+  const checkbox = getByLabelText('Complete');
+  expect(checkbox).not.toBeChecked();
+
+  userEvent.click(checkbox);
+  expect(checkbox).toBeChecked();
+  await waitFor(() =>
+    expect(mockGetWorkingGroups).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        filters: new Set(['Complete']),
+      }),
+      expect.anything(),
+    ),
+  );
+});
+
 it('allows selection of teams filters', async () => {
   const { getByText, getByLabelText } = await renderNetworkPage(
     network({}).teams({}).$,

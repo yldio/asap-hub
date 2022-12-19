@@ -32,7 +32,7 @@ const NetworkTeamList: React.FC<NetworkTeamListProps> = ({
     currentPage: 0,
     pageSize,
     searchQuery,
-    filters,
+    filters: new Set(),
   });
 
   const { numberOfPages, renderPageHref } = usePagination(

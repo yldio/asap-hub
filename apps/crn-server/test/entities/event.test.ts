@@ -12,6 +12,7 @@ import {
   parseGraphQLSpeakers,
 } from '../../src/entities/event';
 import {
+  getEventResponse,
   getEventSpeakerUser,
   getSquidexGraphqlEvent,
   getSquidexGraphqlEventSpeakerWithExternalUser,
@@ -34,21 +35,21 @@ describe('events entity', () => {
         `Event (example) doesn't have a calendar`,
       );
     });
-    test(`throws when no team in speaker list is provided`, () => {
+    test('remove the speaker from speakers list when it does not have the team assigned', () => {
+      const squidexSpeaker = getSquidexGraphqlEventSpeakerWithUser();
+      squidexSpeaker.team = [];
+
       const event = {
         ...graphqlEvent,
         flatData: {
           ...graphqlEvent.flatData,
-          speakers: [
-            {} as NonNullable<
-              EventContentFragment['flatData']['speakers']
-            >[number],
-          ],
+          speakers: [squidexSpeaker],
         },
       };
-      expect(() => parseGraphQLEvent(event)).toThrowError(
-        'Either team or external author is required',
-      );
+      expect(parseGraphQLEvent(event)).toEqual({
+        ...getEventResponse(),
+        speakers: [],
+      });
     });
     test('throws when provided an invalid event status', () => {
       const event = {

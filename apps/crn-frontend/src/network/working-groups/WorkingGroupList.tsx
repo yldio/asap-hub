@@ -26,14 +26,14 @@ const NetworkWorkingGroupList: React.FC<NetworkWorkingGroupListProps> = ({
     currentPage: 0,
     pageSize,
     searchQuery,
-    filters,
+    filters: new Set(),
   });
 
   usePrefetchGroups({
     currentPage: 0,
     pageSize,
     searchQuery,
-    filters,
+    filters: new Set(),
   });
 
   const { numberOfPages, renderPageHref } = usePagination(

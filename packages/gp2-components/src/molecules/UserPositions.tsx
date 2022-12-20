@@ -1,10 +1,14 @@
-import { Button, Headline4, Paragraph } from '@asap-hub/react-components';
+import {
+  Button,
+  Headline4,
+  Paragraph,
+  pixels,
+} from '@asap-hub/react-components';
 import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 import UserPosition from './UserPosition';
 import { addIcon } from '../icons';
 import { mobileQuery } from '../layout';
-import { pixels } from '@asap-hub/react-components';
 
 const { rem } = pixels;
 const containerStyles = css({
@@ -18,6 +22,12 @@ const buttonStyles = css({
     width: '100%',
   },
 });
+const positionsContainer = css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: rem(18),
+});
+
 type Positions = ComponentProps<typeof UserPosition>['position'][];
 type UserPositionsProps = Pick<
   ComponentProps<typeof UserPosition>,
@@ -55,15 +65,16 @@ const UserPositions: React.FC<UserPositionsProps> = ({
         </Paragraph>
       </header>
       {positions.map((position, index) => (
-        <UserPosition
-          onRemove={remove(index)}
-          onChange={update(index)}
-          isSaving={isSaving}
-          loadInstitutionOptions={loadInstitutionOptions}
-          position={position}
-          index={index}
-          key={`position-${index}`}
-        />
+        <div css={positionsContainer} key={`position-${index}`}>
+          <UserPosition
+            onRemove={remove(index)}
+            onChange={update(index)}
+            isSaving={isSaving}
+            loadInstitutionOptions={loadInstitutionOptions}
+            position={position}
+            index={index}
+          />
+        </div>
       ))}
       {positions.length < 3 && (
         <div css={buttonStyles}>

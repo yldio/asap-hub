@@ -45,7 +45,7 @@ const UserPosition: React.FC<UserPositionProps> = ({
   const prefixes = ['Primary', 'Secondary', 'Tertiary'];
   const prefix = prefixes[index];
   return (
-    <article>
+    <>
       <div css={headerStyles}>
         <Subtitle styleAsHeading={4}>{prefix} Position</Subtitle>
         {index !== 0 && (
@@ -85,7 +85,7 @@ const UserPosition: React.FC<UserPositionProps> = ({
         required
         getValidationMessage={() => 'Please add your role'}
       />
-    </article>
+    </>
   );
 };
 

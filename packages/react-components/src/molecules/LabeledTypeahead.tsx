@@ -8,7 +8,7 @@ const subtitleStyles = {
 
 type LabeledTypeaheadProps = {
   readonly title: ReactNode;
-  readonly subtitle?: React.ReactNode;
+  readonly subtitle?: ReactNode;
 } & Exclude<ComponentProps<typeof Typeahead>, 'id'>;
 
 const LabeledTypeahead: React.FC<LabeledTypeaheadProps> = ({

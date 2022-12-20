@@ -49,4 +49,36 @@ describe('with a router', () => {
     );
     expect(fireEvent.click(getByRole('link'))).toBe(false);
   });
+
+  it("shows link with different color if it's visited but is not the current one", () => {
+    const { getByRole } = render(
+      <StaticRouter>
+        <TabLink visited={true} href="/test">
+          Link 1
+        </TabLink>
+        <TabLink visited={true} href="/">
+          Link 2
+        </TabLink>
+      </StaticRouter>,
+    );
+    expect(getByRole('link', { name: /link 1/i })).toHaveStyle({
+      color: 'rgb(77, 100, 107)',
+    });
+  });
+
+  it('shows disabled link if visited attribute is false', () => {
+    const { getByRole } = render(
+      <StaticRouter>
+        <TabLink visited={false} href="/">
+          Link 1
+        </TabLink>
+        <TabLink visited={false} href="/test">
+          Link 2
+        </TabLink>
+      </StaticRouter>,
+    );
+    expect(getByRole('link', { name: /link 2/i })).toHaveStyle({
+      color: 'rgb(194, 201, 206)',
+    });
+  });
 });

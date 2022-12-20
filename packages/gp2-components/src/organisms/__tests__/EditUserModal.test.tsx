@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import EditUserModal from '../EditUserModal';
@@ -36,7 +36,7 @@ describe('EditUserModal', () => {
       screen.getByText('Content'),
     );
   });
-  it('calls the onSave function when the save button is pressed', () => {
+  it('calls the onSave function when the save button is pressed', async () => {
     const handleSave = jest.fn();
     render(
       <EditUserModal {...defaultProps} onSave={handleSave}>
@@ -46,7 +46,9 @@ describe('EditUserModal', () => {
         wrapper: MemoryRouter,
       },
     );
-    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    const saveButton = screen.getByRole('button', { name: 'Save' });
+    userEvent.click(saveButton);
     expect(handleSave).toBeCalledTimes(1);
+    await waitFor(() => expect(saveButton).toBeEnabled());
   });
 });

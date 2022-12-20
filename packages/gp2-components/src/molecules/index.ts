@@ -1,9 +1,10 @@
-export { default as StatusPill } from './StatusPill';
 export { default as CardWithBackground } from './CardWithBackground';
 export { default as ExpandableText } from './ExpandableText';
 export { default as HeaderLogo } from './HeaderLogo';
 export { default as IconWithLabel } from './IconWithLabel';
 export { default as NavigationLink } from './NavigationLink';
-export { default as UserRegion } from './UserRegion';
+export { default as StatusPill } from './StatusPill';
 export { default as UserCardInfo } from './UserCardInfo';
 export { default as UserMenu } from './UserMenu';
+export { default as UserPositions } from './UserPositions';
+export { default as UserRegion } from './UserRegion';

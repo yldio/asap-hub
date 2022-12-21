@@ -117,7 +117,9 @@ const UserProjects: React.FC<UserProjectsProps> = ({
         <div key={`user-project-${index}`} css={getProjectListStyles()}>
           <div css={[listElementStyles, listElementMainStyles]}>
             <h4 css={headingListStyles}>Name:</h4>
-            <Link href="https://google.com">{project.title}</Link>
+            <Link underlined={true} href="https://google.com">
+              {project.title}
+            </Link>
           </div>
           <div css={[listElementStyles, listElementSecondaryStyles]}>
             <h4 css={headingListStyles}>Role:</h4>

@@ -7,13 +7,16 @@ import {
   TagList,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
+import { ComponentProps } from 'react';
 import ExpandableText from '../molecules/ExpandableText';
 import EmailSection from '../organisms/EmailSection';
+import UserQuestions from '../organisms/UserQuestions';
 
 type UserOverviewProps = Pick<
   gp2.UserResponse,
   'email' | 'secondaryEmail' | 'biography' | 'keywords' | 'fundingStreams'
->;
+> &
+  ComponentProps<typeof UserQuestions>;
 
 const { rem } = pixels;
 
@@ -43,6 +46,8 @@ const UserOverview: React.FC<UserOverviewProps> = ({
   secondaryEmail,
   keywords,
   fundingStreams,
+  questions,
+  firstName,
 }) => (
   <div css={containerStyles}>
     <div css={[columnStyles]}>
@@ -74,6 +79,11 @@ const UserOverview: React.FC<UserOverviewProps> = ({
         <div css={contentStyles}>
           <ExpandableText>{biography}</ExpandableText>
         </div>
+      </div>
+    </Card>
+    <Card padding={false}>
+      <div css={cardStyles}>
+        <UserQuestions questions={questions} firstName={firstName} />
       </div>
     </Card>
     {fundingStreams && (

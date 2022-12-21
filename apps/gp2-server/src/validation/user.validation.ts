@@ -86,6 +86,18 @@ const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
       maxLength: 2500,
     },
     fundingStreams: { type: 'string', nullable: true, maxLength: 1000 },
+    questions: {
+      type: 'array',
+      minItems: 0,
+      maxItems: 5,
+      items: {
+        type: 'string',
+        minLength: 1,
+        maxLength: 250,
+        nullable: false,
+      },
+      nullable: true,
+    },
   },
   additionalProperties: false,
 };

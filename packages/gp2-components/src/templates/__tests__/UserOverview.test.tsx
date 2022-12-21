@@ -7,25 +7,25 @@ describe('UserOverview', () => {
   const defaultProps: ComponentProps<typeof UserOverview> = {
     email: 'someone@example.com',
     keywords: [],
+    questions: [],
+    firstName: 'Tony',
   };
 
   it('renders the default sections', () => {
     render(<UserOverview {...defaultProps} />);
-    expect(
-      screen.getByRole('heading', { name: 'Biography' }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Biography' })).toBeVisible();
     expect(
       screen.getByRole('heading', { name: 'Contact Information' }),
-    ).toBeInTheDocument();
+    ).toBeVisible();
     expect(
       screen.getByRole('heading', { name: 'Expertise and Interests' }),
-    ).toBeInTheDocument();
+    ).toBeVisible();
   });
 
   it('renders the biography', () => {
     const biography = 'this is a biography';
     render(<UserOverview {...defaultProps} biography={biography} />);
-    expect(screen.getByText(biography)).toBeInTheDocument();
+    expect(screen.getByText(biography)).toBeVisible();
   });
 
   describe('Contact Information', () => {
@@ -33,10 +33,10 @@ describe('UserOverview', () => {
       render(<UserOverview {...defaultProps} email={'tony@stark.com'} />);
       expect(
         screen.getByRole('link', { name: 'tony@stark.com' }),
-      ).toBeInTheDocument();
+      ).toBeVisible();
       expect(
         screen.getByRole('heading', { name: 'Institutional email' }),
-      ).toBeInTheDocument();
+      ).toBeVisible();
       expect(
         screen.queryByRole('heading', { name: 'Alternative email' }),
       ).not.toBeInTheDocument();
@@ -47,10 +47,10 @@ describe('UserOverview', () => {
       );
       expect(
         screen.getByRole('link', { name: 'peter@parker.com' }),
-      ).toBeInTheDocument();
+      ).toBeVisible();
       expect(
         screen.getByRole('heading', { name: 'Alternative email' }),
-      ).toBeInTheDocument();
+      ).toBeVisible();
     });
     it('renders both the Institutional email and alternative email information', () => {
       render(
@@ -82,7 +82,7 @@ describe('UserOverview', () => {
       </UserOverview>,
     );
 
-    expect(screen.getByText(keyword)).toBeInTheDocument();
+    expect(screen.getByText(keyword)).toBeVisible();
   });
 
   describe('funding streams', () => {
@@ -94,13 +94,23 @@ describe('UserOverview', () => {
       expect(
         screen.getByRole('heading', { name: 'Funding Streams' }),
       ).toBeInTheDocument();
-      expect(screen.getByText(fundingStreams)).toBeInTheDocument();
+      expect(screen.getByText(fundingStreams)).toBeVisible();
     });
     it('does not renders the funding streams if unavailable', () => {
       render(<UserOverview {...defaultProps} />);
       expect(
         screen.queryByRole('heading', { name: 'Funding Streams' }),
       ).not.toBeInTheDocument();
+    });
+  });
+  describe('questions', () => {
+    it('renders the questions', () => {
+      const questions = ['this is a funding stream'];
+      render(<UserOverview {...defaultProps} questions={questions} />);
+      expect(
+        screen.getByRole('heading', { name: 'Open Questions' }),
+      ).toBeVisible();
+      expect(screen.getByText(questions[0])).toBeVisible();
     });
   });
 });

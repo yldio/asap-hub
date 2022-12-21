@@ -77,6 +77,7 @@ export class UserSquidexDataProvider implements UserDataProvider {
 
     return id;
   }
+
   async fetch({
     take = 8,
     skip = 0,
@@ -216,13 +217,15 @@ function getUserSquidexData(
 ):
   | Omit<gp2Squidex.InputUser['data'], 'connections' | 'avatar'>
   | Partial<Omit<gp2Squidex.InputUser['data'], 'connections' | 'avatar'>> {
-  const { region, role, degrees, telephone, ...userInput } = input;
+  const { region, role, degrees, telephone, questions, ...userInput } = input;
   const fieldMappedUser = mapUserFields({ region, role, degrees });
   const mappedTelephone = mapTelephone(telephone);
+  const mappedQuestions = questions?.map((question) => ({ question }));
   return parseToSquidex({
     ...userInput,
     ...fieldMappedUser,
     ...mappedTelephone,
+    questions: mappedQuestions,
   });
 }
 
@@ -281,6 +284,7 @@ export const parseGraphQLUserToDataObject = ({
   const positions = parsePositions(user.positions);
   const projects = parseProjects(projectItems);
   const workingGroups = parseWorkingGroups(workingGroupItems);
+  const questions = parseQuestions(user.questions);
   const telephone =
     user.telephoneNumber || user.telephoneCountryCode
       ? {
@@ -313,6 +317,7 @@ export const parseGraphQLUserToDataObject = ({
     telephone,
     keywords: user.keywords || [],
     biography: user.biography || undefined,
+    questions,
   };
 };
 
@@ -391,6 +396,18 @@ const parseDegrees = (
 
     return degree;
   });
+
+const parseQuestions = (
+  questions: NonNullable<
+    FetchUserQuery['findUsersContent']
+  >['flatData']['questions'],
+): gp2Model.UserDataObject['questions'] =>
+  questions?.map(({ question }) => {
+    if (!question) {
+      throw new Error('Invalid question');
+    }
+    return question;
+  }) || [];
 
 const parsePositions = (
   positions: NonNullable<

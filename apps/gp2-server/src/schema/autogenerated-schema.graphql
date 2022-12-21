@@ -1873,6 +1873,7 @@ type UsersDataDto {
   lastName: UsersDataLastNameDto
   onboarded: UsersDataOnboardedDto
   positions: UsersDataPositionsDto
+  questions: UsersDataQuestionsDto
   region: UsersDataRegionDto
   role: UsersDataRoleDto
   secondaryEmail: UsersDataSecondaryEmailDto
@@ -1927,6 +1928,7 @@ input UsersDataInputDto {
   lastName: UsersDataLastNameInputDto
   onboarded: UsersDataOnboardedInputDto
   positions: UsersDataPositionsInputDto
+  questions: UsersDataQuestionsInputDto
   region: UsersDataRegionInputDto
   role: UsersDataRoleInputDto
   secondaryEmail: UsersDataSecondaryEmailInputDto
@@ -1988,6 +1990,26 @@ type UsersDataPositionsDto {
 """The structure of the Positions field of the Users content input type."""
 input UsersDataPositionsInputDto {
   iv: [UsersDataPositionsChildInputDto!]
+}
+
+"""The structure of the Open Questions nested schema."""
+type UsersDataQuestionsChildDto {
+  question: String
+}
+
+"""The structure of the Open Questions nested schema."""
+input UsersDataQuestionsChildInputDto {
+  question: String
+}
+
+"""The structure of the Open Questions field of the Users content type."""
+type UsersDataQuestionsDto {
+  iv: [UsersDataQuestionsChildDto!]
+}
+
+"""The structure of the Open Questions field of the Users content input type."""
+input UsersDataQuestionsInputDto {
+  iv: [UsersDataQuestionsChildInputDto!]
 }
 
 """The structure of the Region field of the Users content type."""
@@ -2089,6 +2111,7 @@ type UsersFlatDataDto {
   """Use this to allow the user to see the full Hub and skip profile completion"""
   onboarded: Boolean
   positions: [UsersDataPositionsChildDto!]
+  questions: [UsersDataQuestionsChildDto!]
   region: UsersDataRegionEnum
   """Role on the GP2 Hub"""
   role: UsersDataRoleEnum

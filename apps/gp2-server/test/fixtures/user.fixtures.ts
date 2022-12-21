@@ -62,6 +62,10 @@ export const getUserResponse = (): gp2.UserResponse => ({
   ],
   fundingStreams: 'A funding stream',
   contributingCohorts: [],
+  questions: [
+    'What color was Iron Mans original armour?',
+    'Who is the Stark family butler?',
+  ],
   secondaryEmail: 'tony@stark.com',
   telephone: { countryCode: '+1', number: '212-970-4133' },
   biography: 'a biography of Tony Stark',
@@ -96,6 +100,7 @@ export const fetchExpectation: gp2.ListUserResponse = {
       fundingStreams: undefined,
       contributingCohorts: [],
       keywords: [],
+      questions: [],
     },
   ],
 };
@@ -121,6 +126,7 @@ export const getUserWebhookPayload = (
       region: { iv: 'Europe' },
       role: { iv: UsersDataRoleEnum.Trainee },
       onboarded: { iv: true },
+      questions: { iv: [{ question: 'some question' }] },
     },
   },
 });
@@ -137,6 +143,7 @@ export const patchResponse = (): gp2squidex.RestUser => ({
     connections: { iv: [] },
     degree: { iv: [UsersDataDegreeEnum.Mph] },
     onboarded: { iv: true },
+    questions: { iv: [{ question: 'some question' }] },
   },
   created: '2020-09-25T09:42:51Z',
   lastModified: '2020-09-25T09:42:51Z',
@@ -190,6 +197,10 @@ export const getUserDataObject = (): gp2.UserDataObject => ({
   contributingCohorts: [],
   secondaryEmail: 'tony@stark.com',
   telephone: { countryCode: '+1', number: '212-970-4133' },
+  questions: [
+    'What color was Iron Mans original armour?',
+    'Who is the Stark family butler?',
+  ],
 });
 export const getUserCreateDataObject = (): gp2.UserCreateDataObject => {
   const {
@@ -202,7 +213,8 @@ export const getUserCreateDataObject = (): gp2.UserCreateDataObject => {
 };
 
 export const getUserInput = (): gp2squidex.InputUser['data'] => {
-  const { degrees, region, telephone, ...input } = getUserCreateDataObject();
+  const { degrees, region, telephone, questions, ...input } =
+    getUserCreateDataObject();
 
   return {
     ...parseToSquidex(input),
@@ -213,6 +225,7 @@ export const getUserInput = (): gp2squidex.InputUser['data'] => {
     connections: { iv: [] },
     telephoneCountryCode: { iv: telephone?.countryCode || '' },
     telephoneNumber: { iv: telephone?.number || '' },
+    questions: { iv: questions.map((question) => ({ question })) },
   };
 };
 
@@ -261,6 +274,7 @@ export const fetchUserResponseDataObject = (): gp2.UserDataObject => ({
   secondaryEmail: 'tony@stark.com',
   telephone: { countryCode: '+1', number: '212-970-4133' },
   keywords: [],
+  questions: ['What was the name of Peter Parkers uncle?'],
 });
 export const getGraphQLUser = (
   user: Partial<NonNullable<FetchUserQuery['findUsersContent']>> = {},
@@ -294,6 +308,10 @@ export const getGraphQLUser = (
     keywords: ['R', 'Bash'],
     fundingStreams: 'A funding stream',
     biography: 'a biography of Tony Stark',
+    questions: [
+      { question: 'What color was Iron Mans original armour?' },
+      { question: 'Who is the Stark family butler?' },
+    ],
     ...user?.flatData,
   },
   referencingProjectsContents: [

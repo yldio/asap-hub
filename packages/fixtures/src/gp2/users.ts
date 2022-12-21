@@ -27,6 +27,7 @@ const mockedUser: gp2.UserResponse = {
       members: [{ userId: 'user-id-1', role: 'Project lead' }],
     },
   ],
+  questions: ['a first question?', 'a second question?'],
   workingGroups: [
     {
       id: 'working-group-id',

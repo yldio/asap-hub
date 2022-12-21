@@ -65,6 +65,7 @@ const app = async () => {
         role: 'Network Collaborator',
         onboarded: false,
         keywords: [],
+        questions: [],
       };
     },
     async (input) => {

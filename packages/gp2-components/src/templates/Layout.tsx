@@ -143,6 +143,7 @@ const Layout: FC<LayoutProps> = ({ children, projects, workingGroups }) => {
             gridRow: 'header-end / -1',
             gridColumn: '1 / -1',
             overflowY: 'auto',
+            position: 'relative',
           })}
         >
           <main ref={mainRef} css={layoutContentStyles}>

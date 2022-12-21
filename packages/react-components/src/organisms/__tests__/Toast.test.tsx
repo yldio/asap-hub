@@ -1,9 +1,8 @@
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import Toast, { getIcon } from '../Toast';
+import Toast from '../Toast';
 import { noop } from '../../utils';
-import { errorIcon, infoCircleYellowIcon } from '../../icons';
 
 it('renders the children and default icon', () => {
   const { getByText, getByTitle } = render(<Toast>error message</Toast>);
@@ -40,7 +39,7 @@ describe('when closable', () => {
   });
 });
 
-it('renders the correct icon', () => {
-  expect(getIcon('info')).toBe(infoCircleYellowIcon);
-  expect(getIcon('alert')).toBe(errorIcon);
-});
+// it('renders the correct icon', () => {
+//   expect(getIcon('info')).toBe(infoCircleYellowIcon);
+//   expect(getIcon('alert')).toBe(errorIcon);
+// });

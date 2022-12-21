@@ -1,5 +1,5 @@
-import { text } from '@storybook/addon-knobs';
-import { Toast } from '@asap-hub/react-components';
+import { boolean, text } from '@storybook/addon-knobs';
+import { noop, Toast } from '@asap-hub/react-components';
 import { NoPaddingDecorator } from './layout';
 
 export default {
@@ -9,13 +9,21 @@ export default {
 };
 
 export const Normal = () => (
-  <Toast>{text('Message', 'Something happened.')}</Toast>
+  <Toast onClose={boolean('closable', true) ? noop : undefined}>
+    {text('Message', 'Something happened.')}
+  </Toast>
 );
 
 export const Info = () => (
-  <Toast accent="info">{text('Message', 'Something happened.')}</Toast>
+  <Toast onClose={boolean('closable', true) ? noop : undefined} accent="info">
+    {text('Message', 'Something happened.')}
+  </Toast>
 );
-
-export const Closable = () => (
-  <Toast onClose={() => {}}>{text('Message', 'Something happened.')}</Toast>
+export const Warning = () => (
+  <Toast
+    onClose={boolean('closable', true) ? noop : undefined}
+    accent="warning"
+  >
+    {text('Message', 'Something happened.')}
+  </Toast>
 );

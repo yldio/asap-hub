@@ -14,11 +14,3 @@ it('displays welcome mesage', () => {
     `"Welcome to the GP2 Hub!"`,
   );
 });
-
-it('displays user first name in welcome mesage', () => {
-  render(<DashboardPageHeader firstName={'John'} />);
-
-  expect(screen.getByRole('heading').textContent).toMatchInlineSnapshot(
-    `"Welcome to the GP2 Hub, John!"`,
-  );
-});

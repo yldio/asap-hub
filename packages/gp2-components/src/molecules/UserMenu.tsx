@@ -35,6 +35,7 @@ const listStyles = css({
 });
 
 type UserMenuProps = Pick<gp2Model.UserResponse, 'projects' | 'workingGroups'>;
+
 const UserMenu: React.FC<UserMenuProps> = ({ projects, workingGroups }) => (
   <nav css={containerStyles}>
     {(workingGroups.length > 0 || projects.length > 0) && (

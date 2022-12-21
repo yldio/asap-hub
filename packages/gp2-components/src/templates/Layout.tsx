@@ -9,6 +9,7 @@ import {
 import { css } from '@emotion/react';
 import { Location } from 'history';
 import {
+  ComponentProps,
   createRef,
   FC,
   lazy,
@@ -97,8 +98,8 @@ const userMenuStyles = css({
 
 type LayoutProps = {
   readonly children: ReactNode;
-};
-const Layout: FC<LayoutProps> = ({ children }) => {
+} & ComponentProps<typeof UserMenu>;
+const Layout: FC<LayoutProps> = ({ children, projects, workingGroups }) => {
   const [menuShown, setMenuShown] = useState(false);
 
   let location: Location | undefined;
@@ -132,6 +133,8 @@ const Layout: FC<LayoutProps> = ({ children }) => {
             onToggleMenu={() => {
               setMenuShown(!menuShown);
             }}
+            projects={projects}
+            workingGroups={workingGroups}
           />
         </div>
 
@@ -156,7 +159,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
             </Suspense>
           </div>
           <div css={[userMenuStyles]}>
-            <UserMenu />
+            <UserMenu projects={projects} workingGroups={workingGroups} />
           </div>
         </div>
       </article>

@@ -12,7 +12,7 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getUser, patchUser, getInstitutions } from '../../users/api';
+import { getInstitutions, getUser, patchUser } from '../../users/api';
 import { refreshUserState } from '../../users/state';
 import CoreDetails from '../CoreDetails';
 

@@ -8,8 +8,13 @@ import { FC, lazy, useEffect } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { RecoilRoot, useRecoilState, useResetRecoilState } from 'recoil';
 import { auth0State } from './auth/state';
+import { useUserById } from './users/state';
 
-const { workingGroups, users, projects } = gp2Route;
+const {
+  workingGroups: workingGroupsRoute,
+  users: usersRoute,
+  projects: projectsRoute,
+} = gp2Route;
 const loadDashboard = () =>
   import(/* webpackChunkName: "dashboard" */ './dashboard/Dashboard');
 
@@ -54,6 +59,10 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
       : loadOnboarding();
   }, [user?.onboarded]);
 
+  const { projects = [], workingGroups = [] } =
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    useUserById(user!.id) || {};
+
   if (!user || !recoilAuth0) {
     return <Loading />;
   }
@@ -75,24 +84,24 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
     );
   }
   return (
-    <Layout>
+    <Layout projects={projects} workingGroups={workingGroups}>
       <Switch>
         <Route exact path={path}>
           <Frame title="Dashboard">
             <Dashboard />
           </Frame>
         </Route>
-        <Route path={users.template}>
+        <Route path={usersRoute.template}>
           <Frame title="Users">
             <Users />
           </Frame>
         </Route>
-        <Route path={workingGroups.template}>
+        <Route path={workingGroupsRoute.template}>
           <Frame title="Working Groups">
             <WorkingGroups />
           </Frame>
         </Route>
-        <Route path={projects.template}>
+        <Route path={projectsRoute.template}>
           <Frame title="Projects">
             <Projects />
           </Frame>

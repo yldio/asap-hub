@@ -20,19 +20,19 @@ describe('UserProjects', () => {
     renderUserProjects([]);
     expect(
       screen.getByText(`${firstName} has been involved`, { exact: false }),
-    ).toBeInTheDocument();
+    ).toBeVisible();
   });
 
   it('renders project titles', () => {
     renderUserProjects(getProjects(2));
-    expect(screen.getByRole('link', { name: 'a title 0' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'a title 1' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'a title 0' })).toBeVisible();
+    expect(screen.getByRole('link', { name: 'a title 1' })).toBeVisible();
   });
 
   it.each(gp2.projectStatus)('renders the status - %s', (status) => {
     const project = { ...getProjects(1)[0], status };
     render(<UserProjects projects={[project]} firstName={firstName} id={id} />);
-    expect(screen.getByText(status)).toBeInTheDocument();
+    expect(screen.getByText(status)).toBeVisible();
   });
 
   it.each(gp2.projectMemberRole)('renders the role - %s', (role) => {
@@ -41,7 +41,7 @@ describe('UserProjects', () => {
       members: [{ userId: id, role }],
     };
     render(<UserProjects projects={[project]} firstName={firstName} id={id} />);
-    expect(screen.getByText(role)).toBeInTheDocument();
+    expect(screen.getByText(role)).toBeVisible();
   });
 
   it('renders show more button for more than 3 projects', async () => {
@@ -74,7 +74,7 @@ describe('UserProjects', () => {
 
     renderUserProjects(projects);
 
-    expect(screen.getByRole('link', { name: 'a title 2' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'a title 2' })).toBeVisible();
     expect(screen.getByText('a title 3')).not.toBeVisible();
     const button = screen.getByRole('button', { name: /Show more/i });
     userEvent.click(button);

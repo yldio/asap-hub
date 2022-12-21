@@ -1,8 +1,10 @@
 import { gp2 } from '@asap-hub/model';
+import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
   Button,
   chevronCircleDownIcon,
   chevronCircleUpIcon,
+  Headline4,
   lead,
   Link,
   Paragraph,
@@ -10,19 +12,20 @@ import {
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { useState } from 'react';
+import { nonMobileQuery } from '../layout';
 import { StatusPill } from '../molecules';
 import colors from '../templates/colors';
 
-const { rem, tabletScreen } = pixels;
+const { rem } = pixels;
 
 const contentStyles = css({
-  padding: `${rem(16)} 0`,
+  rowGap: `${rem(16)} 0`,
 });
 const rowStyles = css({
   borderBottom: `1px solid ${colors.neutral500.rgb}`,
   marginBottom: rem(12),
   padding: `${rem(16)} 0 ${rem(12)}`,
-  [`@media (min-width: ${tabletScreen.min}px)`]: {
+  [nonMobileQuery]: {
     display: 'flex',
   },
 });
@@ -34,36 +37,36 @@ const hideStyles = css({
 });
 const headingTopStyles = css({
   display: 'none',
-  [`@media (min-width: ${tabletScreen.min}px)`]: {
+  [nonMobileQuery]: {
     display: 'flex',
   },
-});
-const headingTopMainStyles = css({
-  flex: '40% 0 0',
-});
-const headinTopSecondaryStyles = css({
-  flex: '30% 0 0',
+  '*:first-child': {
+    flex: '40% 0 0',
+  },
+  '& > *': {
+    flex: '30% 0 0',
+  },
 });
 const listElementStyles = css({
   display: 'flex',
   alignItems: 'flex-start',
-  gap: '32px',
+  gap: rem(32),
   marginBottom: rem(8),
 });
 const listElementMainStyles = css({
-  [`@media (min-width: ${tabletScreen.min}px)`]: {
+  [nonMobileQuery]: {
     flex: '40% 0 0',
   },
 });
 const listElementSecondaryStyles = css({
-  [`@media (min-width: ${tabletScreen.min}px)`]: {
+  [nonMobileQuery]: {
     flex: '30% 0 0',
   },
 });
 const headingListStyles = css({
   margin: '0',
   flex: '30% 0 0',
-  [`@media (min-width: ${tabletScreen.min}px)`]: {
+  [nonMobileQuery]: {
     display: 'none',
   },
 });
@@ -109,15 +112,22 @@ const UserProjects: React.FC<UserProjectsProps> = ({
         </Paragraph>
       </div>
       <div css={headingTopStyles}>
-        <h4 css={headingTopMainStyles}>Name</h4>
-        <h4 css={headinTopSecondaryStyles}>Role</h4>
-        <h4 css={headinTopSecondaryStyles}>Status</h4>
+        <Headline4>Name</Headline4>
+        <Headline4>Role</Headline4>
+        <Headline4>Status</Headline4>
       </div>
-      {projects.map((project, index) => (
-        <div key={`user-project-${index}`} css={getProjectListStyles()}>
+      {projects.map((project) => (
+        <div key={`user-project-${project.id}`} css={getProjectListStyles()}>
           <div css={[listElementStyles, listElementMainStyles]}>
             <h4 css={headingListStyles}>Name:</h4>
-            <Link underlined={true} href="https://google.com">
+            <Link
+              underlined
+              href={
+                gp2Routing.projects({}).project({
+                  projectId: project.id,
+                }).$
+              }
+            >
               {project.title}
             </Link>
           </div>

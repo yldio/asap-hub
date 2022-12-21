@@ -1,9 +1,9 @@
 import { gp2 } from '@asap-hub/model';
 import {
   Button,
-  Headline5,
   LabeledTextField,
   LabeledTypeahead,
+  Subtitle,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
@@ -45,9 +45,9 @@ const UserPosition: React.FC<UserPositionProps> = ({
   const prefixes = ['Primary', 'Secondary', 'Tertiary'];
   const prefix = prefixes[index];
   return (
-    <article>
+    <>
       <div css={headerStyles}>
-        <Headline5>{prefix} Position</Headline5>
+        <Subtitle styleAsHeading={4}>{prefix} Position</Subtitle>
         {index !== 0 && (
           <div css={buttonStyles}>
             <Button onClick={onRemove} small>
@@ -85,7 +85,7 @@ const UserPosition: React.FC<UserPositionProps> = ({
         required
         getValidationMessage={() => 'Please add your role'}
       />
-    </article>
+    </>
   );
 };
 

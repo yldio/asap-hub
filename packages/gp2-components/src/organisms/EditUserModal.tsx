@@ -25,7 +25,7 @@ const buttonContainerStyles = css({
     display: 'flex',
     flexDirection: 'column-reverse',
   },
-  paddingTop: rem(12),
+  paddingTop: rem(24),
 });
 
 const formContainer = css({

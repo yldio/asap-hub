@@ -1,17 +1,23 @@
 import { Frame } from '@asap-hub/frontend-utils';
 import { DashboardPage } from '@asap-hub/gp2-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
-import { FC, lazy } from 'react';
-import { useUserContext } from '../user-context';
+import { ComponentProps, FC, lazy } from 'react';
 
 const loadBody = () =>
   import(/* webpackChunkName: "dashboard-body" */ './Body');
 const Body = lazy(loadBody);
 loadBody();
 
-const Dashboard: FC<Record<string, never>> = () => {
+type DashboardProps = Pick<
+  ComponentProps<typeof DashboardPage>,
+  'dismissBanner' | 'showWelcomeBackBanner'
+>;
+
+const Dashboard: FC<DashboardProps> = ({
+  showWelcomeBackBanner,
+  dismissBanner,
+}) => {
   const currentUser = useCurrentUserGP2();
-  const { showWelcomeBackBanner, dismissBanner } = useUserContext();
   if (!currentUser) {
     throw new Error('Failed to find out who is currently logged in');
   }

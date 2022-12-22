@@ -4,7 +4,6 @@ import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { UserContext } from '../../user-context';
 import Dashboard from '../Dashboard';
 
 afterEach(() => {
@@ -25,11 +24,7 @@ const renderDashboard = async ({
       <RecoilRoot>
         <Auth0Provider user={user}>
           <WhenReady>
-            <UserContext.Provider
-              value={{ showWelcomeBackBanner, dismissBanner }}
-            >
-              <Dashboard />
-            </UserContext.Provider>
+            <Dashboard {...{ showWelcomeBackBanner, dismissBanner }} />
           </WhenReady>
         </Auth0Provider>
       </RecoilRoot>
@@ -47,7 +42,7 @@ it('renders dashboard header', async () => {
   ).toBeVisible();
 });
 
-it('doesnt render the welcome back banner when its disabled in the userContext', async () => {
+it('doesnt render the welcome back banner when its disabled', async () => {
   await renderDashboard({
     user: { firstName: 'Tony' },
     showWelcomeBackBanner: false,
@@ -56,7 +51,7 @@ it('doesnt render the welcome back banner when its disabled in the userContext',
     screen.queryByText('Welcome back to the GP2 Hub, Tony!'),
   ).not.toBeInTheDocument();
 });
-it('renders the welcome back banner when its enabled in the userContext', async () => {
+it('renders the welcome back banner when its enabled', async () => {
   await renderDashboard({
     user: { firstName: 'Tony' },
     showWelcomeBackBanner: true,
@@ -64,7 +59,7 @@ it('renders the welcome back banner when its enabled in the userContext', async 
   expect(screen.getByText('Welcome back to the GP2 Hub, Tony!')).toBeVisible();
 });
 
-it('calls the dismissBanner function from the context when pressing the close button on the welcome back banner', async () => {
+it('calls the dismissBanner function when pressing the close button on the welcome back banner', async () => {
   const dismissBanner = jest.fn();
   await renderDashboard({
     user: { firstName: 'Tony' },

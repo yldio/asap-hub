@@ -3,16 +3,10 @@ import { Frame } from '@asap-hub/frontend-utils';
 import { BasicLayout } from '@asap-hub/gp2-components';
 import { Loading, NotFoundPage } from '@asap-hub/react-components';
 import { useAuth0GP2, useCurrentUserGP2 } from '@asap-hub/react-context';
-<<<<<<< HEAD
 import { FC, lazy, useEffect } from 'react';
-=======
-import { gp2 as gp2Route } from '@asap-hub/routing';
-import { FC, lazy, useEffect, useState } from 'react';
->>>>>>> 5bcc4b425 (addind dashboard page and welcome back banner)
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { RecoilRoot, useRecoilState, useResetRecoilState } from 'recoil';
 import { auth0State } from './auth/state';
-import { UserContext } from './user-context';
 
 const loadOnboardedApp = () =>
   import(/* webpackChunkName: "onboarded-app" */ './OnboardedApp');
@@ -35,8 +29,6 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
     return () => resetAuth0();
   }, [auth0, setAuth0, resetAuth0]);
   const user = useCurrentUserGP2();
-
-
 
   useEffect(() => {
     // order by the likelyhood of user navigating there

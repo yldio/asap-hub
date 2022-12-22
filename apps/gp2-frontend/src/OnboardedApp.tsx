@@ -52,7 +52,10 @@ const OnboardedApp: FC<Record<string, never>> = () => {
       <Switch>
         <Route exact path={path}>
           <Frame title="Dashboard">
-            <Dashboard />
+            <Dashboard
+              showWelcomeBackBanner={showWelcomeBackBanner}
+              dismissBanner={() => setShowWelcomeBackBanner(false)}
+            />
           </Frame>
         </Route>
         <Route path={usersRoute.template}>

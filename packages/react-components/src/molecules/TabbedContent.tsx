@@ -24,6 +24,7 @@ export type TabProps<T> = {
   items: ReadonlyArray<T>;
   truncateFrom?: number;
   disabled?: boolean;
+  empty: React.ReactNode;
 };
 
 type TabbedCardProps<T> = {
@@ -35,7 +36,7 @@ type TabbedCardProps<T> = {
   children: (state: { data: T[] }) => ReactNode;
 };
 
-const TabbedContent = <T extends object>({
+export const TabbedContent = <T extends object>({
   title,
   description,
   tabs,
@@ -46,7 +47,7 @@ const TabbedContent = <T extends object>({
   useEffect(() => setActive(activeTabIndex), [activeTabIndex]);
   const [active, setActive] = React.useState(activeTabIndex);
   const [showMore, setShowMore] = React.useState(false);
-  const { items, truncateFrom } = tabs[active];
+  const { items, truncateFrom, empty } = tabs[active];
   const displayShowMoreButton =
     getShowMoreText && truncateFrom && items.length > truncateFrom;
 
@@ -74,9 +75,11 @@ const TabbedContent = <T extends object>({
         </TabNav>
       </div>
       <div css={[paddingStyles, { paddingBottom: 0, paddingTop: 0 }]}>
-        {children({
-          data: items.slice(0, showMore ? undefined : truncateFrom),
-        })}
+        {items.length
+          ? children({
+              data: items.slice(0, showMore ? undefined : truncateFrom),
+            })
+          : empty}
       </div>
       {displayShowMoreButton && (
         <div css={showMoreStyles}>

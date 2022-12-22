@@ -1,7 +1,7 @@
 import { WorkingGroupLeader, WorkingGroupMember } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import React from 'react';
-import { Card, Headline3, Subtitle } from '../atoms';
+import { Card, Headline3, Paragraph, Subtitle } from '../atoms';
 import { MembersList, TabbedContent } from '../molecules';
 import { rem, tabletScreen } from '../pixels';
 import { splitListBy } from '../utils';
@@ -56,10 +56,16 @@ const GroupLeadersTabbedCard: React.FC<GroupLeadersTabbedCardProps> = ({
           {
             tabTitle: `Active Leaders (${activeLeaders.length})`,
             items: activeLeaders,
+            empty: (
+              <Paragraph accent="lead">There are no active leaders.</Paragraph>
+            ),
           },
           {
             tabTitle: `Past Leaders (${inactiveLeaders.length})`,
             items: inactiveLeaders,
+            empty: (
+              <Paragraph accent="lead">There are no past leaders.</Paragraph>
+            ),
           },
         ]}
       >
@@ -88,11 +94,17 @@ const GroupLeadersTabbedCard: React.FC<GroupLeadersTabbedCardProps> = ({
             tabTitle: `Active Members (${activeMembers.length})`,
             items: activeMembers,
             truncateFrom: 8,
+            empty: (
+              <Paragraph accent="lead">There are no active members.</Paragraph>
+            ),
           },
           {
             tabTitle: `Past Members (${inactiveMembers.length})`,
             items: inactiveMembers,
             truncateFrom: 8,
+            empty: (
+              <Paragraph accent="lead">There are no past members.</Paragraph>
+            ),
           },
         ]}
         getShowMoreText={(showMore: boolean) =>

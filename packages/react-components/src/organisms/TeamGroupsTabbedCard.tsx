@@ -89,6 +89,11 @@ const TeamGroupsTabbedCard: React.FC<TeamGroupsTabbedCardProps> = ({
           items: activeGroups,
           truncateFrom: 2,
           disabled: isTeamInactive,
+          empty: (
+            <Paragraph accent="lead">
+              There are no active memberships.
+            </Paragraph>
+          ),
         },
         {
           tabTitle: `Past Memberships (${
@@ -97,6 +102,9 @@ const TeamGroupsTabbedCard: React.FC<TeamGroupsTabbedCardProps> = ({
           items: isTeamInactive ? groups : inactiveGroups,
           truncateFrom: 2,
           disabled: inactiveGroups.length === 0,
+          empty: (
+            <Paragraph accent="lead">There are no past memberships.</Paragraph>
+          ),
         },
       ]}
     >

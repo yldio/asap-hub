@@ -2,7 +2,7 @@ import { TeamResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React, { ComponentProps } from 'react';
-import { Link } from '../atoms';
+import { Link, Paragraph } from '../atoms';
 import { inactiveBadgeIcon, TeamIcon } from '../icons';
 import { TabbedCard } from '../molecules';
 import { perRem, rem, tabletScreen } from '../pixels';
@@ -60,12 +60,20 @@ const GroupTeamsTabbedCard: React.FC<GroupTeamsTabbedCardProps> = ({
           items: activeTeams,
           truncateFrom: 8,
           disabled: !isGroupActive,
+          empty: (
+            <Paragraph accent="lead">
+              There are no active team members.
+            </Paragraph>
+          ),
         },
         {
           tabTitle: `Past Teams (${inactiveTeams.length})`,
           items: inactiveTeams,
           truncateFrom: 8,
           disabled: inactiveTeams.length === 0,
+          empty: (
+            <Paragraph accent="lead">There are no past team members.</Paragraph>
+          ),
         },
       ]}
       getShowMoreText={(showMore) => `View ${showMore ? 'Less' : 'More'} Teams`}

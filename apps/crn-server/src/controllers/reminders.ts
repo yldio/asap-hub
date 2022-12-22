@@ -83,6 +83,17 @@ export default class Reminders implements ReminderController {
 
         if (
           reminder.entity === 'Event' &&
+          reminder.type === 'Publish Material'
+        ) {
+          return {
+            id: reminder.id,
+            entity: reminder.entity,
+            description: `It's time to publish the meeting materials for the ${reminder.data.title} event.`,
+          };
+        }
+
+        if (
+          reminder.entity === 'Event' &&
           ['Video Updated', 'Presentation Updated', 'Notes Updated'].includes(
             reminder.type,
           )

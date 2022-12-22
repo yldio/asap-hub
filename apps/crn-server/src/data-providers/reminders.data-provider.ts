@@ -12,6 +12,7 @@ import {
   SharePresentationReminder,
   Role,
   TeamRole,
+  PublishMaterialReminder,
 } from '@asap-hub/model';
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import { isCMSAdministrator } from '@asap-hub/validation';
@@ -61,6 +62,11 @@ export class ReminderSquidexDataProvider implements ReminderDataProvider {
       options.userId,
     );
 
+    const publishPresentationReminders = getPublishMaterialRemindersFromQuery(
+      queryEventsContents,
+      findUsersContent,
+    );
+
     const eventMaterialsReminders =
       getEventMaterialsRemindersFromQuery(queryEventsContents);
 
@@ -69,6 +75,7 @@ export class ReminderSquidexDataProvider implements ReminderDataProvider {
       ...eventReminders,
       ...sharePresentationReminders,
       ...eventMaterialsReminders,
+      ...publishPresentationReminders,
     ];
 
     const sortedReminders = reminders.sort((reminderA, reminderB) => {
@@ -290,6 +297,38 @@ const getSharePresentationRemindersFromQuery = (
           id: `share-presentation-${event.id}`,
           entity: 'Event',
           type: 'Share Presentation',
+          data: {
+            eventId: event.id,
+            title: event.flatData.title || '',
+            endDate: event.flatData.endDate,
+          },
+        },
+      ];
+    }
+    return events;
+  }, []);
+
+  return eventReminders;
+};
+
+const getPublishMaterialRemindersFromQuery = (
+  queryEventsContents: FetchReminderDataQuery['queryEventsContents'],
+  findUsersContent: FetchReminderDataQuery['findUsersContent'],
+): PublishMaterialReminder[] => {
+  const eventReminders = (queryEventsContents || []).reduce<
+    PublishMaterialReminder[]
+  >((events, event) => {
+    const shouldShowPublishMaterial = isCMSAdministrator(
+      findUsersContent?.flatData.role as Role,
+    );
+
+    if (shouldShowPublishMaterial && inLast72Hours(event.flatData.endDate)) {
+      return [
+        ...events,
+        {
+          id: `publish-material-${event.id}`,
+          entity: 'Event',
+          type: 'Publish Material',
           data: {
             eventId: event.id,
             title: event.flatData.title || '',

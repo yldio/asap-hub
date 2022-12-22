@@ -2,6 +2,7 @@ import {
   EventHappeningNowReminder,
   EventHappeningTodayReminder,
   FetchRemindersOptions,
+  PublishMaterialReminder,
   ResearchOutputPublishedReminder,
   SharePresentationReminder,
 } from '@asap-hub/model';
@@ -17,6 +18,7 @@ import {
   getPresentationUpdatedReminder,
   getNotesUpdatedReminder,
   getSharePresentationReminder,
+  getPublishMaterialReminder,
 } from '../fixtures/reminders.fixtures';
 import { reminderDataProviderMock } from '../mocks/reminder-data-provider.mock';
 
@@ -177,6 +179,25 @@ describe('Reminder Controller', () => {
           description:
             "Don't forget to share your presentation for the Some Test Event Title event with your Project Manager.",
           href: `/events/some-event-id`,
+        });
+      });
+
+      test('Should return the correct description for the publish material reminder', async () => {
+        const reminderDataObject: PublishMaterialReminder =
+          getPublishMaterialReminder();
+        reminderDataObject.data.title = 'Some Test Event Title';
+        reminderDataObject.data.eventId = 'some-event-id';
+
+        reminderDataProviderMock.fetch.mockResolvedValueOnce({
+          total: 1,
+          items: [reminderDataObject],
+        });
+
+        const { items } = await reminderController.fetch(options);
+
+        expect(items[0]).toMatchObject({
+          description:
+            "It's time to publish the meeting materials for the Some Test Event Title event.",
         });
       });
 

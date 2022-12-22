@@ -8,6 +8,7 @@ export const FETCH_REMINDER_DATA = gql`
   ) {
     findUsersContent(id: $userId) {
       flatData {
+        role
         teams {
           id {
             id

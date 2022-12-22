@@ -40,6 +40,8 @@ const httpHandler = serverlessHttp(app, {
     event: APIGatewayProxyEventV2,
     context: { awsRequestId: string },
   ) {
+    // eslint-disable-next-line no-console
+    console.log(JSON.stringify(event, null, 2));
     request.context = event.requestContext;
     logger.withRequest(event, context);
   },

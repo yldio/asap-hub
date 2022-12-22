@@ -63,75 +63,75 @@ export function getTeamsState({
   );
 }
 
-export function isDirty(
-  {
-    title,
-    description,
-    link,
-    tags,
-    type,
-    methods,
-    organisms,
-    environments,
-    teams,
-    labs,
-    authors,
-    subtype,
-    labCatalogNumber,
-    identifierType,
-    identifier,
-  }: ResearchOutputState,
-  researchOutputData?: ResearchOutputResponse,
-  publishingEntity?: string,
+export function isDirtyEditMode(
+  state: ResearchOutputState,
+  researchOutputData: ResearchOutputResponse,
 ): boolean {
-  let defaultTeamsLength = 1;
-  if (publishingEntity === 'Working Group') {
-    defaultTeamsLength = 0;
-  }
-  if (researchOutputData) {
-    return (
-      title !== researchOutputData.title ||
-      description !== researchOutputData.description ||
-      link !== researchOutputData.link ||
-      type !== researchOutputData.type ||
-      !equals(methods, researchOutputData.methods) ||
-      !equals(organisms, researchOutputData.organisms) ||
-      !equals(environments, researchOutputData.environments) ||
-      !equals(
-        teams.map((team) => team.value),
-        researchOutputData.teams.map((team) => team.id),
-      ) ||
-      (labs &&
-        !equals(
-          labs.map((lab) => lab.value),
-          researchOutputData.labs.map((lab) => lab.id),
-        )) ||
-      (authors &&
-        !equals(
-          authors.map((author) => author.value),
-          researchOutputData.authors.map((author) => author?.id),
-        )) ||
-      subtype !== researchOutputData.subtype ||
-      identifierType !== getIdentifierType(true, researchOutputData) ||
-      isIdentifierModified(researchOutputData, identifier)
-    );
-  }
   return (
-    tags?.length !== 0 ||
-    title !== '' ||
-    description !== '' ||
-    link !== '' ||
-    type !== '' ||
-    labs?.length !== 0 ||
-    authors?.length !== 0 ||
-    methods.length !== 0 ||
-    organisms.length !== 0 ||
-    environments.length !== 0 ||
-    labCatalogNumber !== '' ||
-    subtype !== undefined ||
-    teams?.length !== defaultTeamsLength ||
-    identifier !== '' ||
-    identifierType !== ResearchOutputIdentifierType.Empty
+    state.title !== researchOutputData.title ||
+    state.description !== researchOutputData.description ||
+    state.link !== researchOutputData.link ||
+    state.type !== researchOutputData.type ||
+    !equals(state.methods, researchOutputData.methods) ||
+    !equals(state.organisms, researchOutputData.organisms) ||
+    !equals(state.environments, researchOutputData.environments) ||
+    !equals(
+      state.teams.map((team) => team.value),
+      researchOutputData.teams.map((team) => team.id),
+    ) ||
+    (state.labs &&
+      !equals(
+        state.labs.map((lab) => lab.value),
+        researchOutputData.labs.map((lab) => lab.id),
+      )) ||
+    (state.authors &&
+      !equals(
+        state.authors.map((author) => author.value),
+        researchOutputData.authors.map((author) => author?.id),
+      )) ||
+    state.subtype !== researchOutputData.subtype ||
+    state.identifierType !== getIdentifierType(true, researchOutputData) ||
+    isIdentifierModified(researchOutputData, state.identifier)
+  );
+}
+
+export function isDirtyTeams(state: ResearchOutputState): boolean {
+  return (
+    state.tags?.length !== 0 ||
+    state.title !== '' ||
+    state.description !== '' ||
+    state.link !== '' ||
+    state.type !== '' ||
+    state.labs?.length !== 0 ||
+    state.authors?.length !== 0 ||
+    state.methods.length !== 0 ||
+    state.organisms.length !== 0 ||
+    state.environments.length !== 0 ||
+    state.labCatalogNumber !== '' ||
+    state.subtype !== undefined ||
+    state.teams?.length !== 1 ||
+    state.identifier !== '' ||
+    state.identifierType !== ResearchOutputIdentifierType.Empty
+  );
+}
+
+export function isDirtyWorkingGroups(state: ResearchOutputState): boolean {
+  return (
+    state.tags?.length !== 0 ||
+    state.title !== '' ||
+    state.description !== '' ||
+    state.link !== '' ||
+    state.type !== '' ||
+    state.labs?.length !== 0 ||
+    state.authors?.length !== 0 ||
+    state.methods.length !== 0 ||
+    state.organisms.length !== 0 ||
+    state.environments.length !== 0 ||
+    state.labCatalogNumber !== '' ||
+    state.subtype !== undefined ||
+    state.teams?.length !== 0 ||
+    state.identifier !== '' ||
+    state.identifierType !== ResearchOutputIdentifierType.Empty
   );
 }
 

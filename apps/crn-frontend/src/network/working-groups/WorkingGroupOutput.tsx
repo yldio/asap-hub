@@ -6,11 +6,15 @@ import {
 } from '@asap-hub/frontend-utils';
 import {
   ResearchOutputResponse,
-  ResearchOutputPublishingEntities,
   isValidationErrorResponse,
   ValidationErrorResponse,
 } from '@asap-hub/model';
-import { NotFoundPage, ResearchOutputPage } from '@asap-hub/react-components';
+import {
+  NotFoundPage,
+  ResearchOutputPage,
+  isDirtyWorkingGroups,
+  isDirtyEditMode,
+} from '@asap-hub/react-components';
 import React, { useContext, useState } from 'react';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import researchSuggestions from '../teams/research-suggestions';
@@ -33,7 +37,6 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
 }) => {
   const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
 
-  const documentType = 'Article';
   const workingGroup = useWorkingGroupById(workingGroupId);
   const { canCreateUpdate } = useContext(ResearchOutputPermissionsContext);
 
@@ -41,7 +44,6 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   const getAuthorSuggestions = useAuthorSuggestions();
   const getTeamSuggestions = useTeamSuggestions();
   const researchTags = useResearchTags();
-  const publishingEntity: ResearchOutputPublishingEntities = 'Working Group';
   const createResearchOutput = usePostWorkingGroupResearchOutput();
 
   const handleError = (error: unknown) => {
@@ -62,11 +64,8 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
     return (
       <Frame title="Share Working Group Research Output">
         <ResearchOutputPage
-          tagSuggestions={researchSuggestions.map((suggestion) => ({
-            label: suggestion,
-            value: suggestion,
-          }))}
-          documentType={documentType}
+          tagSuggestions={researchSuggestions}
+          documentType="Article"
           getLabSuggestions={getLabSuggestions}
           getAuthorSuggestions={(input) =>
             getAuthorSuggestions(input).then((users) =>
@@ -85,8 +84,10 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
             setErrors(clearAjvErrorForPath(errors, instancePath))
           }
           isEditMode={false}
-          publishingEntity={publishingEntity}
+          publishingEntity="Working Group"
           onSave={(output) => createResearchOutput(output).catch(handleError)}
+          isDirty={isDirtyWorkingGroups}
+          isDirtyEditMode={isDirtyEditMode}
         />
       </Frame>
     );

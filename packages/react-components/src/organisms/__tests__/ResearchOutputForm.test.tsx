@@ -29,7 +29,6 @@ import { Router, StaticRouter } from 'react-router-dom';
 import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 import ResearchOutputForm from '../ResearchOutputForm';
 import {
-  isDirty,
   createIdentifierField,
   getDecision,
   getIdentifierType,
@@ -37,6 +36,9 @@ import {
   ResearchOutputState,
   isIdentifierModified,
   getTeamsState,
+  isDirtyEditMode,
+  isDirtyTeams,
+  isDirtyWorkingGroups,
 } from '../../utils/researchOutputForm';
 
 const props: ComponentProps<typeof ResearchOutputForm> = {
@@ -46,6 +48,8 @@ const props: ComponentProps<typeof ResearchOutputForm> = {
   documentType: 'Article',
   team: createTeamResponse(),
   isEditMode: false,
+  isDirty: () => true,
+  isDirtyEditMode: () => true,
 };
 
 jest.setTimeout(60000);
@@ -233,7 +237,7 @@ describe('on submit', () => {
         link: 'http://example.com',
       },
       documentType = 'Article',
-      researchTags = [],
+      researchTags = [{ id: '1', name: 'research tag 1' }],
     }: {
       data?: Data;
       documentType?: ComponentProps<typeof ResearchOutputForm>['documentType'];
@@ -665,8 +669,10 @@ describe('on submit', () => {
 });
 
 describe('isDirty', () => {
-  const researchOutputResponse: ResearchOutputResponse =
-    createResearchOutputResponse();
+  const researchOutputResponse: ResearchOutputResponse = {
+    ...createResearchOutputResponse(),
+    labs: [{ id: '1', name: 'Lab 1' }],
+  };
   const researchOutputState: ResearchOutputState = {
     title: researchOutputResponse.title,
     description: researchOutputResponse.description,
@@ -720,7 +726,7 @@ describe('isDirty', () => {
 
   it('returns true for edit mode when teams are in diff order', () => {
     expect(
-      isDirty(
+      isDirtyEditMode(
         {
           ...researchOutputState,
           teams: [
@@ -741,7 +747,7 @@ describe('isDirty', () => {
 
   it('returns false for edit mode when values equal the initial ones', () => {
     expect(
-      isDirty(
+      isDirtyEditMode(
         {
           ...researchOutputState,
           identifierType: ResearchOutputIdentifierType.None,
@@ -752,31 +758,15 @@ describe('isDirty', () => {
   });
 
   it('returns true when the initial values are changed', () => {
-    expect(isDirty(researchOutputState)).toBeTruthy();
+    expect(isDirtyTeams(researchOutputState)).toBeTruthy();
   });
 
   it('returns false when the initial values are unchanged for publishing entity team', () => {
-    expect(
-      isDirty(
-        {
-          ...teamsEmptyState,
-        },
-        undefined,
-        'Team',
-      ),
-    ).toBeFalsy();
+    expect(isDirtyTeams(teamsEmptyState)).toBeFalsy();
   });
 
   it('returns false when the initial values are unchanged for publishing entity working group', () => {
-    expect(
-      isDirty(
-        {
-          ...workingGroupsEmptyState,
-        },
-        undefined,
-        'Working Group',
-      ),
-    ).toBeFalsy();
+    expect(isDirtyWorkingGroups(workingGroupsEmptyState)).toBeFalsy();
   });
 
   it('returns false when the identifier is absent', () => {
@@ -823,7 +813,9 @@ describe('isDirty', () => {
     async ({ key, value }) => {
       const payloadKey: keyof typeof researchOutputState = key;
       researchOutputState[payloadKey] = value;
-      expect(isDirty(researchOutputState, researchOutputResponse)).toBeTruthy();
+      expect(
+        isDirtyEditMode(researchOutputState, researchOutputResponse),
+      ).toBeTruthy();
     },
   );
 });

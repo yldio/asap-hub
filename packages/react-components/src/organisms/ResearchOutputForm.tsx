@@ -30,7 +30,7 @@ import {
   getIdentifierType,
   getPublishDate,
   getTeamsState,
-  isDirty,
+  ResearchOutputState,
 } from '../utils/researchOutputForm';
 
 const contentStyles = css({
@@ -68,13 +68,9 @@ const formControlsStyles = css({
 });
 
 type ResearchOutputFormProps = Pick<
-  ComponentProps<typeof ResearchOutputExtraInformationCard>,
-  'tagSuggestions'
+  ComponentProps<typeof ResearchOutputFormSharingCard>,
+  'serverValidationErrors' | 'clearServerValidationError'
 > &
-  Pick<
-    ComponentProps<typeof ResearchOutputFormSharingCard>,
-    'serverValidationErrors' | 'clearServerValidationError'
-  > &
   Pick<
     ComponentProps<typeof ResearchOutputContributorsCard>,
     'getLabSuggestions' | 'getAuthorSuggestions' | 'getTeamSuggestions'
@@ -88,6 +84,12 @@ type ResearchOutputFormProps = Pick<
     researchOutputData?: ResearchOutputResponse;
     isEditMode: boolean;
     publishingEntity?: ResearchOutputPublishingEntities;
+    tagSuggestions: string[];
+    isDirty: (state: ResearchOutputState) => boolean;
+    isDirtyEditMode: (
+      state: ResearchOutputState,
+      researchOutputData: ResearchOutputResponse,
+    ) => boolean;
   };
 
 const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
@@ -104,6 +106,8 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   researchOutputData,
   isEditMode,
   publishingEntity = 'Team',
+  isDirty,
+  isDirtyEditMode,
 }) => {
   const historyPush = usePushFromHere();
   const [tags, setTags] = useState<ResearchOutputPostRequest['tags']>(
@@ -195,30 +199,32 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     d.types?.includes(type),
   );
 
+  const state = {
+    title,
+    description,
+    link,
+    tags,
+    type,
+    methods,
+    organisms,
+    environments,
+    teams,
+    labs,
+    authors,
+    subtype,
+    labCatalogNumber,
+    identifierType,
+    identifier,
+  };
+
   return (
     <Form<ResearchOutputResponse>
       serverErrors={serverValidationErrors}
-      dirty={isDirty(
-        {
-          title,
-          description,
-          link,
-          tags,
-          type,
-          methods,
-          organisms,
-          environments,
-          teams,
-          labs,
-          authors,
-          subtype,
-          labCatalogNumber,
-          identifierType,
-          identifier,
-        },
-        researchOutputData,
-        publishingEntity,
-      )}
+      dirty={
+        isEditMode && researchOutputData
+          ? isDirtyEditMode(state, researchOutputData)
+          : isDirty(state)
+      }
       onSave={() => {
         const identifierField = createIdentifierField(
           identifierType,
@@ -304,7 +310,10 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
             documentType={documentType}
             isSaving={isSaving}
             researchTags={filteredResearchTags}
-            tagSuggestions={tagSuggestions}
+            tagSuggestions={tagSuggestions.map((suggestion) => ({
+              label: suggestion,
+              value: suggestion,
+            }))}
             tags={tags}
             onChangeTags={setTags}
             usageNotes={usageNotes}

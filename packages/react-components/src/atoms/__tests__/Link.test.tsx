@@ -23,6 +23,17 @@ describe('the default theme', () => {
     expect(textDecoration).toBe('underline solid transparent');
   });
 });
+
+it('applies an underline when requested', () => {
+  const { getByRole } = render(
+    <Link underlined={true} href="/">
+      text
+    </Link>,
+  );
+  const { textDecoration } = getComputedStyle(getByRole('link'));
+  expect(textDecoration).toBe('underline');
+});
+
 describe('theme with ThemeProvider', () => {
   it('uses ThemeProvider theme primaryColor', () => {
     const testColor = colorConstructor(12, 141, 195);

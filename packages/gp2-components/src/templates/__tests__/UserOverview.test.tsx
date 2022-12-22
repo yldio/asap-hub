@@ -5,9 +5,12 @@ import UserOverview from '../UserOverview';
 
 describe('UserOverview', () => {
   const defaultProps: ComponentProps<typeof UserOverview> = {
+    id: '1',
     email: 'someone@example.com',
     keywords: [],
     questions: [],
+    projects: [],
+    workingGroups: [],
     firstName: 'Tony',
   };
 
@@ -72,6 +75,34 @@ describe('UserOverview', () => {
       expect(
         screen.getByRole('link', { name: 'tony@stark.com' }),
       ).toBeInTheDocument();
+    });
+  });
+
+  describe('Projects', () => {
+    it('renders the projects', () => {
+      const projects: gp2.UserResponse['projects'] = [
+        {
+          id: '1',
+          title: 'Project 1',
+          members: [],
+          status: 'Active',
+        },
+      ];
+      render(<UserOverview {...defaultProps} projects={projects} />);
+      expect(
+        screen.getByRole('heading', { name: 'Projects' }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: /Project 1/ }),
+      ).toBeInTheDocument();
+    });
+
+    it('does not render the projects when there are no projects available', () => {
+      const projects: gp2.UserResponse['projects'] = [];
+      render(<UserOverview {...defaultProps} projects={projects} />);
+      expect(
+        screen.queryByRole('heading', { name: 'Projects' }),
+      ).not.toBeInTheDocument();
     });
   });
 

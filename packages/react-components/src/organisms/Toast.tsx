@@ -79,7 +79,7 @@ const wrapStyles = css({
   flexFlow: 'row',
 });
 
-type ToastAccents = 'error' | 'info' | 'warning';
+export type ToastAccents = 'error' | 'info' | 'warning';
 
 const accentIcons: Record<ToastAccents, EmotionJSX.Element> = {
   error: errorIcon,

@@ -4,13 +4,10 @@ import DashboardHeader from '../DashboardHeader';
 
 it('renders the header', () => {
   render(<DashboardHeader />);
-  expect(screen.getByRole('heading')).toBeVisible();
+  expect(screen.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
 });
 
-it('displays welcome mesage', () => {
+it('renders a banner', () => {
   render(<DashboardHeader />);
-
-  expect(screen.getByRole('heading').textContent).toMatchInlineSnapshot(
-    `"Welcome to the GP2 Hub!"`,
-  );
+  expect(screen.getByRole('banner')).toBeVisible();
 });

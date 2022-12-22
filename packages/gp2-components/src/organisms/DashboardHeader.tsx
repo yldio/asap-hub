@@ -1,5 +1,5 @@
 import { dashboardImage } from '../images';
-import { PageBanner } from '../organisms';
+import PageBanner from './PageBanner';
 
 const props = {
   image: dashboardImage,

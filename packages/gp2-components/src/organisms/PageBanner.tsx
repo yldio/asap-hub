@@ -5,6 +5,7 @@ import {
   pixels,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
+import { mobileQuery, nonMobileQuery } from '../layout';
 
 const { mobileScreen, rem, tabletScreen, vminLinearCalcClamped } = pixels;
 
@@ -76,7 +77,15 @@ const PageBanner: React.FC<PageBannerProp> = ({
   children,
 }) => {
   const overrideTCStyles = noMarginBottom
-    ? [textContainerStyles, css({ ...{ marginBottom: 0 } })]
+    ? [
+        textContainerStyles,
+        css({
+          ...{
+            [nonMobileQuery]: { marginBottom: 0 },
+            [mobileQuery]: { marginBottom: 0 },
+          },
+        }),
+      ]
     : [textContainerStyles];
   return (
     <header css={headerStyles}>

@@ -4,7 +4,7 @@ import { css, Theme } from '@emotion/react';
 
 import { layoutStyles } from '../text';
 import { perRem } from '../pixels';
-import { fern, lead, charcoal, tin } from '../colors';
+import { fern, lead, charcoal } from '../colors';
 import { useHasRouter } from '../routing';
 
 const activeClassName = 'active-link';
@@ -12,7 +12,6 @@ const styles = css({
   display: 'inline-block',
   paddingTop: `${24 / perRem}em`,
   paddingBottom: `${12 / perRem}em`,
-
   color: lead.rgb,
   textDecoration: 'none',
   whiteSpace: 'nowrap',
@@ -28,35 +27,11 @@ const activeStyles = ({ colors: { primary500 = fern } = {} }: Theme) =>
 
 interface TabLinkProps {
   readonly href: string;
-  readonly visited?: boolean;
   readonly children: ReactNode;
 }
 const TabLink: React.FC<TabLinkProps> = (props) => {
   const { href, children } = props;
   if (useHasRouter()) {
-    if ('visited' in props) {
-      const disableLink = (e: React.MouseEvent<HTMLElement>) => {
-        if (!props.visited) {
-          return e.preventDefault();
-        }
-        return e;
-      };
-      const disabledStep = !props.visited ? { color: tin.rgb } : {};
-      return (
-        <NavLink
-          onClick={disableLink}
-          to={href}
-          activeClassName={activeClassName}
-          css={(theme) => [
-            styles,
-            disabledStep,
-            { [`&.${activeClassName}`]: activeStyles(theme) },
-          ]}
-        >
-          <p css={layoutStyles}>{children}</p>
-        </NavLink>
-      );
-    }
     return (
       <NavLink
         to={href}

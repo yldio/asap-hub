@@ -1,13 +1,14 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
+import { gp2 as gp2Routing, logout } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import { logout, gp2 as gp2Routing } from '@asap-hub/routing';
 
 import {
+  Divider,
+  logoutIcon,
   NavigationLink,
   pixels,
-  logoutIcon,
-  Divider,
 } from '@asap-hub/react-components';
+import workingGroupIcon from '../icons/working-group-icon';
 
 const { vminLinearCalc, mobileScreen, largeDesktopScreen, rem } = pixels;
 const { projects: projectsRoute, workingGroups: workingGroupRoute } =
@@ -59,7 +60,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ projects, workingGroups }) => (
                 href={
                   workingGroupRoute({}).workingGroup({ workingGroupId: id }).$
                 }
-                icon={logoutIcon}
+                icon={workingGroupIcon}
               >
                 My working group: {title}
               </NavigationLink>

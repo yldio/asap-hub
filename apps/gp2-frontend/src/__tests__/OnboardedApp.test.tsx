@@ -12,6 +12,7 @@ import { Auth0Provider, WhenReady } from '../auth/test-utils';
 import Dashboard from '../dashboard/Dashboard';
 import OnboardedApp from '../OnboardedApp';
 import { getUser } from '../users/api';
+import { refreshUserState } from '../users/state';
 
 // We're not actually interested in testing what's rendered since it's all
 // declarative routes at this level - get any backend requests out of the way
@@ -28,10 +29,15 @@ beforeEach(() => {
   });
 });
 const renderAuthenticatedApp = async () => {
+  const id = '42';
   render(
-    <RecoilRoot>
+    <RecoilRoot
+      initializeState={({ set }) => {
+        set(refreshUserState(id), Math.random());
+      }}
+    >
       <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
+        <Auth0Provider user={{ id }}>
           <WhenReady>
             <StaticRouter>
               <OnboardedApp />
@@ -51,9 +57,16 @@ it('displays the onboarded page', async () => {
   expect(screen.getByRole('banner')).toBeVisible();
 });
 
-it('handles empty projects and working groups', async () => {
+it('handles empty projects', async () => {
   const user = gp2Fixtures.createUserResponse({
     projects: undefined,
+  });
+  mockGetUser.mockResolvedValueOnce(user);
+  await renderAuthenticatedApp();
+  expect(screen.getByRole('banner')).toBeVisible();
+});
+it('handles empty working groups', async () => {
+  const user = gp2Fixtures.createUserResponse({
     workingGroups: undefined,
   });
   mockGetUser.mockResolvedValueOnce(user);
@@ -62,7 +75,7 @@ it('handles empty projects and working groups', async () => {
 });
 
 it('handles empty user', async () => {
-  mockGetUser.mockRejectedValueOnce(undefined);
+  mockGetUser.mockResolvedValueOnce(undefined);
   await renderAuthenticatedApp();
   expect(screen.getByRole('banner')).toBeVisible();
 });

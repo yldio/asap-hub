@@ -3,7 +3,6 @@ import { UserResponse } from '@asap-hub/model';
 import {
   errorHandlerFactory,
   getHttpLogger,
-  Logger,
   pino,
 } from '@asap-hub/server-common';
 import express, { RequestHandler, Router } from 'express';
@@ -26,7 +25,7 @@ describe('Http Logger', () => {
     {
       write: captureLogs,
     },
-  ) as Logger;
+  );
 
   const router = Router();
   router.get('/error', async (req, res, next) => {

@@ -14,17 +14,16 @@ type IncomingMessageWithUser = IncomingMessage & {
   loggedInUser?: UserResponse;
 };
 
+type Options = {
+  logEnabled: boolean;
+  logLevel: string;
+};
+
 const destination = pinoLambdaDestination();
 
 // we are not testing stdout
 /* istanbul ignore next */
-export const getCloudWatchLogger = ({
-  logEnabled,
-  logLevel,
-}: {
-  logEnabled: boolean;
-  logLevel: string;
-}) =>
+export const getCloudWatchLogger = ({ logEnabled, logLevel }: Options) =>
   pino(
     {
       enabled: logEnabled,
@@ -38,13 +37,7 @@ export const getCloudWatchLogger = ({
 
 // we are not testing stdout
 /* istanbul ignore next */
-export const getPrettyLogger = ({
-  logEnabled,
-  logLevel,
-}: {
-  logEnabled: boolean;
-  logLevel: string;
-}) =>
+export const getPrettyLogger = ({ logEnabled, logLevel }: Options) =>
   pino({
     enabled: logEnabled,
     level: logLevel,

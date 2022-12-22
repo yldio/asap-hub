@@ -10,7 +10,12 @@ import {
   ValidationErrorResponse,
   ResearchOutputResponse,
 } from '@asap-hub/model';
-import { NotFoundPage, ResearchOutputPage } from '@asap-hub/react-components';
+import {
+  isDirtyEditMode,
+  isDirtyTeams,
+  NotFoundPage,
+  ResearchOutputPage,
+} from '@asap-hub/react-components';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import {
   network,
@@ -111,10 +116,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
       <Frame title="Share Research Output">
         <ResearchOutputPage
           team={team}
-          tagSuggestions={researchSuggestions.map((suggestion) => ({
-            label: suggestion,
-            value: suggestion,
-          }))}
+          tagSuggestions={researchSuggestions}
           documentType={documentType}
           getLabSuggestions={getLabSuggestions}
           getAuthorSuggestions={(input) =>
@@ -134,6 +136,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
           }
           researchOutputData={researchOutputData}
           isEditMode={isEditMode}
+          publishingEntity="Team"
           onSave={(
             output: ResearchOutputPostRequest | ResearchOutputPutRequest,
           ) =>
@@ -141,6 +144,8 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
               ? updateResearchOutput(output).catch(handleError)
               : createResearchOutput(output).catch(handleError)
           }
+          isDirty={isDirtyTeams}
+          isDirtyEditMode={isDirtyEditMode}
         />
       </Frame>
     );

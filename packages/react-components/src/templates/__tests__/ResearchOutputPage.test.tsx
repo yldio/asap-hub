@@ -13,6 +13,8 @@ const props: ComponentProps<typeof ResearchOutputPage> = {
   team: createTeamResponse(),
   researchTags: [],
   isEditMode: false,
+  isDirty: () => true,
+  isDirtyEditMode: () => true,
 };
 
 it('renders the research output type in the header', () => {

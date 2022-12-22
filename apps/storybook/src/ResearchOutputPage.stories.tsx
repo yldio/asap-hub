@@ -4,7 +4,11 @@ import {
   createUserResponse,
   researchTagMethodResponse,
 } from '@asap-hub/fixtures';
-import { ResearchOutputPage } from '@asap-hub/react-components';
+import {
+  isDirtyEditMode,
+  isDirtyTeams,
+  ResearchOutputPage,
+} from '@asap-hub/react-components';
 import { StaticRouter } from 'react-router-dom';
 
 export default {
@@ -16,10 +20,7 @@ export const Normal = () => (
   <StaticRouter>
     <ResearchOutputPage
       onSave={() => Promise.resolve()}
-      tagSuggestions={['A53T', 'Activity assay'].map((suggestion) => ({
-        label: suggestion,
-        value: suggestion,
-      }))}
+      tagSuggestions={['A53T', 'Activity assay']}
       documentType="Article"
       getLabSuggestions={() =>
         new Promise((resolve) => {
@@ -47,6 +48,8 @@ export const Normal = () => (
       }
       researchTags={[researchTagMethodResponse]}
       isEditMode={false}
+      isDirty={isDirtyTeams}
+      isDirtyEditMode={isDirtyEditMode}
     />
   </StaticRouter>
 );
@@ -60,10 +63,7 @@ export const EditMode = () => (
     <ResearchOutputPage
       researchOutputData={researchOutputData}
       onSave={() => Promise.resolve()}
-      tagSuggestions={['A53T', 'Activity assay'].map((suggestion) => ({
-        label: suggestion,
-        value: suggestion,
-      }))}
+      tagSuggestions={['A53T', 'Activity assay']}
       documentType="Dataset"
       getLabSuggestions={() =>
         new Promise((resolve) => {
@@ -91,6 +91,8 @@ export const EditMode = () => (
       }
       researchTags={[researchTagMethodResponse]}
       isEditMode={true}
+      isDirty={isDirtyTeams}
+      isDirtyEditMode={isDirtyEditMode}
     />
   </StaticRouter>
 );

@@ -1,14 +1,14 @@
 import { render, screen } from '@testing-library/react';
 
-import DashboardPageHeader from '../DashboardPageHeader';
+import DashboardHeader from '../DashboardHeader';
 
 it('renders the header', () => {
-  render(<DashboardPageHeader />);
+  render(<DashboardHeader />);
   expect(screen.getByRole('heading')).toBeVisible();
 });
 
 it('displays welcome mesage', () => {
-  render(<DashboardPageHeader />);
+  render(<DashboardHeader />);
 
   expect(screen.getByRole('heading').textContent).toMatchInlineSnapshot(
     `"Welcome to the GP2 Hub!"`,

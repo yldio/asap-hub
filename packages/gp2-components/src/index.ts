@@ -16,6 +16,7 @@ export {
 export {
   EditResourceModal,
   EmailSection,
+  DashboardHeader,
   FiltersModal,
   KeyInformationModal,
   MainNavigation,
@@ -44,7 +45,6 @@ export {
   BasicLayout,
   DashboardPage,
   DashboardPageBody,
-  DashboardPageHeader,
   Layout,
   OnboardingCoreDetails,
   OnboardingWelcome,

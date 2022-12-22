@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { pixels, Toast } from '@asap-hub/react-components';
-import DashboardPageHeader from './DashboardPageHeader';
+import DashboardHeader from '../organisms/DashboardHeader';
 
 const { rem } = pixels;
 
@@ -34,7 +34,7 @@ const Dashboard: React.FC<dashboardProps> = ({
         css({ position: 'relative', marginTop: rem(48) })
       }
     >
-      <DashboardPageHeader />
+      <DashboardHeader />
       <main css={mainStyles}>{children}</main>
     </article>
   </>

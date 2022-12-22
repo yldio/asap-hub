@@ -1,7 +1,6 @@
 export { default as BasicLayout } from './BasicLayout';
 export { default as DashboardPage } from './DashboardPage';
 export { default as DashboardPageBody } from './DashboardPageBody';
-export { default as DashboardPageHeader } from './DashboardPageHeader';
 export { default as Layout } from './Layout';
 export { default as OnboardingCoreDetails } from './OnboardingCoreDetails';
 export { default as OnboardingWelcome } from './OnboardingWelcome';

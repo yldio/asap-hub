@@ -34,9 +34,6 @@ const BasicLayout: React.FC<BasicLayoutProps> = ({
   children,
   logoHref,
 }) => {
-  const mainStyles = noPadding
-    ? [layoutContentStyles, css({ ...{ padding: 0 } })]
-    : layoutContentStyles;
   return (
     <article css={css({ position: 'relative' })}>
       <header css={css({ width: '100%' })}>
@@ -45,7 +42,11 @@ const BasicLayout: React.FC<BasicLayoutProps> = ({
         </div>
         <div css={[bottomBorderStyles, desktopNavigationStyles]} />
       </header>
-      <main css={mainStyles}>{children}</main>
+      <main
+        css={[layoutContentStyles, noPadding && css({ ...{ padding: 0 } })]}
+      >
+        {children}
+      </main>
     </article>
   );
 };

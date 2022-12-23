@@ -38,6 +38,9 @@ const OnboardedApp: FC<Record<string, never>> = () => {
     user?.onboarded || false,
   );
 
+  /* istanbul ignore next */
+  const dismissBanner = () => setShowWelcomeBackBanner(false);
+
   useEffect(() => {
     // order by the likelyhood of user navigating there
     loadDashboard().then(loadUsers).then(loadWorkingGroups).then(loadProjects);
@@ -54,8 +57,7 @@ const OnboardedApp: FC<Record<string, never>> = () => {
           <Frame title="Dashboard">
             <Dashboard
               showWelcomeBackBanner={showWelcomeBackBanner}
-              /* istanbul ignore next */
-              dismissBanner={() => setShowWelcomeBackBanner(false)}
+              dismissBanner={dismissBanner}
             />
           </Frame>
         </Route>

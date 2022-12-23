@@ -1,5 +1,7 @@
 import { ComponentProps } from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
 import TabbedContent from '../TabbedContent';
 
 const props: ComponentProps<typeof TabbedContent<{ name: string }>> = {
@@ -154,6 +156,22 @@ describe('tabs', () => {
     );
     expect(screen.getByRole('button', { name: 'First Tab' })).toBeDisabled();
     expect(screen.getByRole('button', { name: 'Second Tab' })).toBeDisabled();
+  });
+
+  it('displays the empty tab state when there are no items on a tab', () => {
+    render(
+      <TabbedContent
+        {...props}
+        activeTabIndex={0}
+        tabs={[
+          { items: [], tabTitle: 'First Tab', empty: 'Empty First Tab' },
+          { items: [], tabTitle: 'Second Tab', empty: 'Empty Second Tab' },
+        ]}
+      />,
+    );
+    expect(screen.getByText('Empty First Tab')).toBeVisible();
+    userEvent.click(screen.getByRole('button', { name: 'Second Tab' }));
+    expect(screen.getByText('Empty Second Tab')).toBeVisible();
   });
 });
 

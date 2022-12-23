@@ -154,7 +154,7 @@ jobs:
         env:
           CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.contentful-space-id }}
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          CONTENTFUL_ENV_ID: ${{ steps.setup.outputs.pr-number }}
+          CONTENTFUL_ENV_ID: ${{ steps.setup.outputs.crn-contentful-env-id }}
 
   algolia-index:
     if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}

@@ -42,18 +42,18 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
   return user.onboarded ? (
     <OnboardedApp />
   ) : (
-    <Switch>
-      <Route path={path}>
-        <Onboarding />
-      </Route>
-      <Route>
-        <Frame title="Not Found">
-          <BasicLayout>
+    <BasicLayout>
+      <Switch>
+        <Route path={path}>
+          <Onboarding />
+        </Route>
+        <Route>
+          <Frame title="Not Found">
             <NotFoundPage />
-          </BasicLayout>
-        </Frame>
-      </Route>
-    </Switch>
+          </Frame>
+        </Route>
+      </Switch>
+    </BasicLayout>
   );
 };
 

@@ -1,5 +1,6 @@
+import { pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
-import { rightArrow } from '../icons';
+import { leftArrow, rightArrow } from '../icons';
 import { mobileQuery, nonMobileQuery } from '../layout';
 import OnboardedTabLink from '../molecules/OnboardedTabLink';
 import PageBanner from './PageBanner';
@@ -14,6 +15,8 @@ type OnboardingStep = {
 type OnboardingPageHeaderProps = {
   steps: OnboardingStep[];
 };
+
+const { rem } = pixels;
 
 const divStyle = css({
   display: 'flex',
@@ -32,29 +35,29 @@ const buttonStyle = css({
 const OnboardingPageHeader: React.FC<OnboardingPageHeaderProps> = ({
   steps,
 }) => (
-  <PageBanner title={'Registration'} noMarginBottom>
-    <div css={divStyle}>
-      <div css={[buttonStyle, { transform: 'rotate(180deg)' }]}>
-        {rightArrow}
+  <div css={css({ marginTop: rem(-48) })}>
+    <PageBanner title={'Registration'} noMarginBottom>
+      <div css={divStyle}>
+        <div css={buttonStyle}>{leftArrow}</div>
+        <nav
+          css={css({
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'space-between',
+            [mobileQuery]: {
+              justifyContent: 'center',
+            },
+          })}
+        >
+          {steps.map(({ disabled, href, name }) => (
+            <OnboardedTabLink key={name} disabled={disabled} href={href}>
+              {name}
+            </OnboardedTabLink>
+          ))}
+        </nav>
+        <div css={buttonStyle}>{rightArrow}</div>
       </div>
-      <nav
-        css={css({
-          width: '100%',
-          display: 'flex',
-          justifyContent: 'space-between',
-          [mobileQuery]: {
-            justifyContent: 'center',
-          },
-        })}
-      >
-        {steps.map(({ disabled, href, name }) => (
-          <OnboardedTabLink key={name} disabled={disabled} href={href}>
-            {name}
-          </OnboardedTabLink>
-        ))}
-      </nav>
-      <div css={buttonStyle}>{rightArrow}</div>
-    </div>
-  </PageBanner>
+    </PageBanner>
+  </div>
 );
 export default OnboardingPageHeader;

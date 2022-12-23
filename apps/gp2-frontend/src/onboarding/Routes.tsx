@@ -2,7 +2,6 @@ import { NotFoundPage } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/routing';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { lazy, useEffect } from 'react';
-import { BasicLayout } from '@asap-hub/gp2-components';
 import OnboardingPage from './OnboardingPage';
 
 const loadWelcome = () =>
@@ -24,29 +23,25 @@ const Routes: React.FC<Record<string, never>> = () => {
   return (
     <Switch>
       <Route exact path={path}>
-        <BasicLayout>
-          <Welcome />
-        </BasicLayout>
+        <Welcome />
       </Route>
-      <BasicLayout noPadding>
-        <OnboardingPage>
-          <Route exact path={onboarding({}).coreDetails({}).$}>
-            <CoreDetails />
-          </Route>
-          <Route exact path={onboarding({}).background({}).$}>
-            <div>Background</div>
-          </Route>
-          <Route exact path={onboarding({}).groups({}).$}>
-            <div>GP2 Groups</div>
-          </Route>
-          <Route exact path={onboarding({}).additionalDetails({}).$}>
-            <div>Additional Details</div>
-          </Route>
-          <Route exact path={onboarding({}).preview({}).$}>
-            <div>Preview</div>
-          </Route>
-        </OnboardingPage>
-      </BasicLayout>
+      <OnboardingPage>
+        <Route exact path={onboarding({}).coreDetails({}).$}>
+          <CoreDetails />
+        </Route>
+        <Route exact path={onboarding({}).background({}).$}>
+          <div>Background</div>
+        </Route>
+        <Route exact path={onboarding({}).groups({}).$}>
+          <div>GP2 Groups</div>
+        </Route>
+        <Route exact path={onboarding({}).additionalDetails({}).$}>
+          <div>Additional Details</div>
+        </Route>
+        <Route exact path={onboarding({}).preview({}).$}>
+          <div>Preview</div>
+        </Route>
+      </OnboardingPage>
 
       <Route component={NotFoundPage} />
     </Switch>

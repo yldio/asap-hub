@@ -17,7 +17,7 @@ STATUS_CODE_CHECK=$(curl --silent \
                          --header "Authorization: Bearer ${CONTENTFUL_MANAGEMENT_ACCESS_TOKEN}" \
                          https://api.contentful.com/spaces/${CONTENTFUL_SPACE_ID}/ENVIRONMENTS/${CONTENTFUL_ENV_ID})
 
-if [[ "$STATUS_CODE" != "200 "]]; then
+if [[ "$STATUS_CODE" != "200" ]]; then
   echo "Environment for this branch not found -- nothing to delete."
   exit 0
 fi

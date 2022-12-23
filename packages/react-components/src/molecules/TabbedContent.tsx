@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import React, { ReactNode, useEffect } from 'react';
 import { Paragraph, Headline3, TabButton, Button } from '../atoms';
 import { steel } from '../colors';
-import { perRem } from '../pixels';
+import { perRem, rem } from '../pixels';
 import { TabNav } from '.';
 import { paddingStyles } from '../card';
 
@@ -17,6 +17,10 @@ const showMoreStyles = css({
   paddingTop: `${16 / perRem}em`,
   paddingBottom: `${16 / perRem}em`,
   borderTop: `1px solid ${steel.rgb}`,
+});
+
+const emptyContainer = css({
+  padding: `${rem(20)} 0`,
 });
 
 export type TabProps<T> = {
@@ -75,11 +79,13 @@ export const TabbedContent = <T extends object>({
         </TabNav>
       </div>
       <div css={[paddingStyles, { paddingBottom: 0, paddingTop: 0 }]}>
-        {items.length
-          ? children({
-              data: items.slice(0, showMore ? undefined : truncateFrom),
-            })
-          : empty}
+        {items.length ? (
+          children({
+            data: items.slice(0, showMore ? undefined : truncateFrom),
+          })
+        ) : (
+          <div css={emptyContainer}>{empty}</div>
+        )}
       </div>
       {displayShowMoreButton && (
         <div css={showMoreStyles}>

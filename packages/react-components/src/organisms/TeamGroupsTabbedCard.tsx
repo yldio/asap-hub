@@ -50,12 +50,6 @@ const iconStyles = css({
   paddingRight: `${15 / perRem}em`,
 });
 
-const paragraphStyles = css({
-  margin: 0,
-  paddingTop: `${rem(32)}`,
-  paddingBottom: `${rem(32)}`,
-});
-
 type TeamGroupsTabbedCardProps = Pick<
   ComponentProps<typeof TabbedCard>,
   'title'
@@ -110,34 +104,28 @@ const TeamGroupsTabbedCard: React.FC<TeamGroupsTabbedCardProps> = ({
     >
       {({ data }) => (
         <div css={itemsListWrapper}>
-          {data.length > 0 ? (
-            <ul css={listStyles}>
-              {data.map(({ id, teams, description, name }, index) => (
-                <li css={listElementStyles} key={`team-group-${index}`}>
-                  <LinkHeadline
-                    href={network({}).groups({}).group({ groupId: id }).$}
-                    level={4}
-                    noMargin={true}
-                  >
-                    {name}
-                  </LinkHeadline>
-                  <Paragraph hasMargin={false} accent="lead">
-                    {description}
-                  </Paragraph>
-                  <span css={teamsStyles}>
-                    <span css={iconStyles}>
-                      <TeamIcon />{' '}
-                    </span>
-                    {teams.length} Team{teams.length !== 1 ? 's' : ''}
+          <ul css={listStyles}>
+            {data.map(({ id, teams, description, name }, index) => (
+              <li css={listElementStyles} key={`team-group-${index}`}>
+                <LinkHeadline
+                  href={network({}).groups({}).group({ groupId: id }).$}
+                  level={4}
+                  noMargin={true}
+                >
+                  {name}
+                </LinkHeadline>
+                <Paragraph hasMargin={false} accent="lead">
+                  {description}
+                </Paragraph>
+                <span css={teamsStyles}>
+                  <span css={iconStyles}>
+                    <TeamIcon />{' '}
                   </span>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p css={paragraphStyles}>{`There are no ${
-              isTeamInactive ? 'past' : 'active'
-            } memberships.`}</p>
-          )}
+                  {teams.length} Team{teams.length !== 1 ? 's' : ''}
+                </span>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </TabbedCard>

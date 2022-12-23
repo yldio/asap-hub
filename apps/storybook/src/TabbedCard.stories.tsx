@@ -18,6 +18,7 @@ export const Normal = () => (
           (_, index) => ({ name: `item ${index + 1}` }),
         ),
         truncateFrom: number('Truncate tabs from', 5),
+        empty: text('Empty', 'Empty'),
       },
       {
         tabTitle: text('Second tab title', 'Second Tab'),
@@ -25,6 +26,7 @@ export const Normal = () => (
           (_, index) => ({ name: `item ${index + 1}` }),
         ),
         truncateFrom: number('Truncate tabs from', 5),
+        empty: text('Empty', 'Empty'),
       },
       {
         tabTitle: text('Third tab title', 'Third Tab'),
@@ -32,6 +34,7 @@ export const Normal = () => (
           (_, index) => ({ name: `item ${index + 1}` }),
         ),
         truncateFrom: number('Truncate tabs from', 5),
+        empty: text('Empty', 'Empty'),
       },
     ]}
   >

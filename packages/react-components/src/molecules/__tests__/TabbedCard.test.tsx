@@ -4,7 +4,7 @@ import TabbedCard from '../TabbedCard';
 
 const props: ComponentProps<typeof TabbedCard<{ name: string }>> = {
   title: '',
-  tabs: [{ tabTitle: '', items: [] }],
+  tabs: [{ tabTitle: '', items: [], empty: '' }],
   getShowMoreText: (showMore) => `View ${showMore ? 'less' : 'more'}`,
   children: ({ data }) => (
     <ul>
@@ -36,10 +36,12 @@ describe('tabs', () => {
           {
             tabTitle: 'First Tab',
             items: [{ name: 'item a' }, { name: 'item b' }, { name: 'item c' }],
+            empty: '',
           },
           {
             tabTitle: 'Second Tab',
             items: [{ name: 'item d' }, { name: 'item e' }, { name: 'item f' }],
+            empty: '',
           },
         ]}
       />,
@@ -64,8 +66,8 @@ describe('tabs', () => {
       <TabbedCard
         {...props}
         tabs={[
-          { items: [], tabTitle: 'First Tab' },
-          { items: [], tabTitle: 'Second Tab', disabled: true },
+          { items: [], tabTitle: 'First Tab', empty: '' },
+          { items: [], tabTitle: 'Second Tab', disabled: true, empty: '' },
         ]}
       />,
     );
@@ -100,8 +102,8 @@ describe('tabs', () => {
         {...props}
         activeTabIndex={1}
         tabs={[
-          { items: [{ name: 'item a' }], tabTitle: 'First Tab' },
-          { items: [{ name: 'item b' }], tabTitle: 'Second Tab' },
+          { items: [{ name: 'item a' }], tabTitle: 'First Tab', empty: '' },
+          { items: [{ name: 'item b' }], tabTitle: 'Second Tab', empty: '' },
         ]}
       />,
     );
@@ -124,8 +126,8 @@ describe('tabs', () => {
       <TabbedCard
         {...props}
         tabs={[
-          { items: [{ name: 'item a' }], tabTitle: 'First Tab' },
-          { items: [{ name: 'item b' }], tabTitle: 'Second Tab' },
+          { items: [{ name: 'item a' }], tabTitle: 'First Tab', empty: '' },
+          { items: [{ name: 'item b' }], tabTitle: 'Second Tab', empty: '' },
         ]}
       />,
     );
@@ -139,11 +141,13 @@ describe('tabs', () => {
             items: [{ name: 'item a' }],
             tabTitle: 'First Tab',
             disabled: true,
+            empty: '',
           },
           {
             items: [{ name: 'item b' }],
             tabTitle: 'Second Tab',
             disabled: true,
+            empty: '',
           },
         ]}
       />,
@@ -168,6 +172,7 @@ describe('the view more functionality', () => {
             ],
             tabTitle: 'First Tab',
             truncateFrom: 2,
+            empty: '',
           },
         ]}
       />,
@@ -205,6 +210,7 @@ describe('the view more functionality', () => {
             ],
             tabTitle: 'First Tab',
             truncateFrom: 2,
+            empty: '',
           },
           {
             items: [
@@ -215,6 +221,7 @@ describe('the view more functionality', () => {
             ],
             tabTitle: 'Second Tab',
             truncateFrom: 2,
+            empty: '',
           },
         ]}
       />,

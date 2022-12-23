@@ -1,6 +1,7 @@
 import { GroupLeader } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import React from 'react';
+import { Paragraph } from '../atoms';
 import { MembersList, TabbedCard } from '../molecules';
 import { rem, tabletScreen } from '../pixels';
 import { splitListBy } from '../utils';
@@ -37,11 +38,18 @@ const GroupLeadersTabbedCard: React.FC<GroupLeadersTabbedCardProps> = ({
           tabTitle: `Active Leaders (${activeLeaders.length})`,
           items: activeLeaders,
           disabled: !isGroupActive,
+          empty: (
+            <Paragraph accent="lead">There are no active leaders.</Paragraph>
+          ),
         },
         {
           tabTitle: `Past Leaders (${inactiveLeaders.length})`,
           items: inactiveLeaders,
           disabled: inactiveLeaders.length === 0,
+
+          empty: (
+            <Paragraph accent="lead">There are no past leaders.</Paragraph>
+          ),
         },
       ]}
     >

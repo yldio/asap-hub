@@ -2,7 +2,7 @@ import { GroupResponse, UserResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React from 'react';
-import { Divider, Link } from '../atoms';
+import { Divider, Link, Paragraph } from '../atoms';
 import { lead } from '../colors';
 import { TabbedCard } from '../molecules';
 import { perRem, tabletScreen } from '../pixels';
@@ -106,15 +106,22 @@ const UserInterestGroupCard: React.FC<UserInterestGroupCardProps> = ({
         items: groups,
         truncateFrom: 5,
         disabled: alumniSinceDate !== undefined,
+        empty: (
+          <Paragraph accent="lead">
+            There are no active collaborations.
+          </Paragraph>
+        ),
       },
       {
         tabTitle: `Past Collaborations (${
           alumniSinceDate ? groups.length : 0
         })`,
         items: groups,
-
         truncateFrom: 5,
         disabled: alumniSinceDate === undefined,
+        empty: (
+          <Paragraph accent="lead">There are no past collaborations.</Paragraph>
+        ),
       },
     ]}
   >

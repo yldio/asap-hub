@@ -70,7 +70,7 @@ it('renders number of members exceeding the limit of 5 and anchors it to the rig
 
   expect(getByRole('link', { name: /\+1/ })).toHaveAttribute(
     'href',
-    `/network/working-groups/id#${baseProps.membersListElementId}`,
+    `/network/working-groups/id/about#${baseProps.membersListElementId}`,
   );
 });
 

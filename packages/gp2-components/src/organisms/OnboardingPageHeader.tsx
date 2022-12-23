@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { leftArrow, rightArrow } from '../icons';
+import { rightArrow } from '../icons';
 import { mobileQuery, nonMobileQuery } from '../layout';
 import OnboardedTabLink from '../molecules/OnboardedTabLink';
 import PageBanner from './PageBanner';
@@ -31,30 +31,30 @@ const buttonStyle = css({
 
 const OnboardingPageHeader: React.FC<OnboardingPageHeaderProps> = ({
   steps,
-}) => {
-  return (
-    <PageBanner title={'Registration'} noMarginBottom>
-      <div css={divStyle}>
-        <div css={buttonStyle}>{leftArrow}</div>
-        <nav
-          css={css({
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'space-between',
-            [mobileQuery]: {
-              justifyContent: 'center',
-            },
-          })}
-        >
-          {steps.map(({ disabled, href, name }) => (
-            <OnboardedTabLink disabled={disabled} href={href}>
-              {name}
-            </OnboardedTabLink>
-          ))}
-        </nav>
-        <div css={buttonStyle}>{rightArrow}</div>
+}) => (
+  <PageBanner title={'Registration'} noMarginBottom>
+    <div css={divStyle}>
+      <div css={[buttonStyle, { transform: 'rotate(180deg)' }]}>
+        {rightArrow}
       </div>
-    </PageBanner>
-  );
-};
+      <nav
+        css={css({
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'space-between',
+          [mobileQuery]: {
+            justifyContent: 'center',
+          },
+        })}
+      >
+        {steps.map(({ disabled, href, name }) => (
+          <OnboardedTabLink key={name} disabled={disabled} href={href}>
+            {name}
+          </OnboardedTabLink>
+        ))}
+      </nav>
+      <div css={buttonStyle}>{rightArrow}</div>
+    </div>
+  </PageBanner>
+);
 export default OnboardingPageHeader;

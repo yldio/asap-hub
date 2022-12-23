@@ -45,8 +45,8 @@ const OnboardedTabLink: React.FC<OnboardedTabLinkProps> = ({
   href,
   children,
   disabled = false,
-}) => {
-  return disabled ? (
+}) =>
+  disabled ? (
     <div css={[styles, mobileStyle, disabledStyles]}>
       <p css={css({ margin: 0 })}>{children}</p>
     </div>
@@ -59,6 +59,5 @@ const OnboardedTabLink: React.FC<OnboardedTabLinkProps> = ({
       <p css={css({ margin: 0 })}>{children}</p>
     </NavLink>
   );
-};
 
 export default OnboardedTabLink;

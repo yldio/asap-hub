@@ -12,6 +12,8 @@ if [[ "$CONTENTFUL_ENV_ID" == "Development" ]]; then
   exit 0
 fi
 
+echo "Contentful env to be deleted is ${CONTENTFUL_ENV_ID}."
+
 STATUS_CODE_CHECK=$(curl --silent \
                          --request GET \
                          --output /dev/null \

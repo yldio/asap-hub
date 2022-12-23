@@ -1,9 +1,11 @@
 /* istanbul ignore file */
 
+import { getPrettyLogger } from '@asap-hub/server-common';
 import { appFactory } from './app';
+import { logLevel, logEnabled } from './config';
 
 const port = 3333;
-const app = appFactory();
+const app = appFactory({ logger: getPrettyLogger({ logLevel, logEnabled }) });
 
 app.listen(port, () => {
   // eslint-disable-next-line no-console

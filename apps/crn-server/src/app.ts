@@ -101,7 +101,6 @@ import {
 import { permissionHandler } from './middleware/permission-handler';
 import { sentryTransactionIdMiddleware } from './middleware/sentry-transaction-id-handler';
 import { tracingHandlerFactory } from './middleware/tracing-handler';
-import { userLoggerHandler } from './middleware/user-logger-handler';
 import { calendarRouteFactory } from './routes/calendars.route';
 import { dashboardRouteFactory } from './routes/dashboard.route';
 import { discoverRouteFactory } from './routes/discover.route';
@@ -358,7 +357,6 @@ export const appFactory = (libs: Libs = {}): Express => {
 
   // Auth
   app.use(authHandler);
-  app.use(userLoggerHandler);
 
   /**
    * Routes requiring authentication below

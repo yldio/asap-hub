@@ -1,14 +1,15 @@
 import { createUserResponse } from '@asap-hub/fixtures';
 import { UserResponse } from '@asap-hub/model';
-import { Logger, pino } from '@asap-hub/server-common';
-import { RequestHandler, Router } from 'express';
+import {
+  errorHandlerFactory,
+  getHttpLogger,
+  pino,
+} from '@asap-hub/server-common';
+import express, { RequestHandler, Router } from 'express';
 import supertest from 'supertest';
-import { appFactory } from '../../src/app';
-import { sentryTransactionIdHandlerMock } from '../mocks/sentry-transaction-id-handler.mock';
 
-describe('User info logging handler', () => {
+describe('Http Logger', () => {
   const mockUser = createUserResponse();
-  // mock auth handler
   const getUser: jest.MockedFunction<() => UserResponse | undefined> =
     jest.fn();
   const authHandlerMock: RequestHandler = async (req, _res, next) => {
@@ -24,41 +25,41 @@ describe('User info logging handler', () => {
     {
       write: captureLogs,
     },
-  ) as Logger;
+  );
 
-  // mock test routes
-  const logRoutes = Router();
-  logRoutes.get('/events/error-route', async () => {
-    throw new Error('error message');
+  const router = Router();
+  router.get('/error', async (req, res, next) => {
+    next(new Error('error message'));
   });
-  logRoutes.get('/events/custom-log', async (req, res) => {
+  router.get('/success', async (req, res) => {
     res.send('foo');
   });
-
-  const app = appFactory({
-    mockRequestHandlers: [logRoutes],
-    authHandler: authHandlerMock,
-    sentryTransactionIdHandler: sentryTransactionIdHandlerMock,
-    logger,
-  });
+  const httpLogger = getHttpLogger({ logger });
+  const app = express();
+  app.use([authHandlerMock, httpLogger, router, errorHandlerFactory()]);
 
   afterEach(() => {
     jest.resetAllMocks();
   });
 
-  test('Should log user ID when the user is logged in', async () => {
+  test('should log every request with request details and logged in user id', async () => {
     getUser.mockReturnValueOnce(mockUser);
-
-    await supertest(app).get('/events/custom-log');
-
+    const response = await supertest(app).get('/success');
+    expect(response.text).toEqual('foo');
     const firstLogCall = JSON.parse(captureLogs.mock.calls[0][0]);
-    expect(firstLogCall).toMatchObject({ userId: mockUser.id });
+    expect(firstLogCall).toMatchObject({
+      userId: mockUser.id,
+      req: {
+        url: '/success',
+      },
+    });
   });
 
   test('Should not log user ID when the user is not logged in', async () => {
     getUser.mockReturnValueOnce(undefined);
 
-    await supertest(app).get('/events/custom-log');
+    const response = await supertest(app).get('/success');
+    expect(response.text).toEqual('foo');
 
     const firstLogCall = JSON.parse(captureLogs.mock.calls[0][0]);
     expect(firstLogCall.userId).not.toBeDefined();
@@ -67,9 +68,14 @@ describe('User info logging handler', () => {
   test('Should add user ID to the error message', async () => {
     getUser.mockReturnValueOnce(mockUser);
 
-    await supertest(app).get('/events/error-route');
+    await supertest(app).get('/error');
 
     const firstLogCall = JSON.parse(captureLogs.mock.calls[0][0]);
-    expect(firstLogCall).toMatchObject({ userId: mockUser.id });
+    expect(firstLogCall).toMatchObject({
+      userId: mockUser.id,
+      req: {
+        url: '/error',
+      },
+    });
   });
 });

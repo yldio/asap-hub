@@ -8,9 +8,9 @@ import AWSXray from 'aws-xray-sdk';
 import http from 'http';
 import https from 'https';
 import * as Sentry from '@sentry/serverless';
+import { withRequest } from '@asap-hub/server-common';
 import { appFactory } from '../app';
 import { lightstepToken, environment } from '../config';
-import logger from '../utils/logger';
 import { sentryWrapper } from '../utils/sentry-wrapper';
 
 const lsTracer = new LightStep.Tracer({
@@ -41,7 +41,7 @@ const httpHandler = serverlessHttp(app, {
     context: { awsRequestId: string },
   ) {
     request.context = event.requestContext;
-    logger.withRequest(event, context);
+    withRequest(event, context);
   },
 });
 

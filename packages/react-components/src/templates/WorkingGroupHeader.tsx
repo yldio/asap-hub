@@ -111,7 +111,10 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
       <UserAvatarList
         members={[...leaders, ...members].map((member) => member.user)}
         fullListRoute={`${
-          network({}).workingGroups({}).workingGroup({ workingGroupId: id }).$
+          network({})
+            .workingGroups({})
+            .workingGroup({ workingGroupId: id })
+            .about({}).$
         }#${membersListElementId}`}
       />
       {pointOfContact && (

@@ -9,7 +9,7 @@ import {
 } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
-import { useState } from 'react';
+import { ComponentProps, useState } from 'react';
 import { smallDesktopQuery } from '../layout';
 
 import UserMenu from '../molecules/UserMenu';
@@ -34,7 +34,9 @@ const buttonTextStyles = css({
   },
 });
 
-const UserNavigation: React.FC = () => {
+type UserNavigationProps = ComponentProps<typeof UserMenu>;
+
+const UserNavigation: React.FC<UserNavigationProps> = (userNavigationProps) => {
   const [menuShown, setMenuShown] = useState(false);
   const { firstName, lastName, displayName, avatarUrl } =
     useCurrentUserGP2() || {};
@@ -53,7 +55,7 @@ const UserNavigation: React.FC = () => {
         }`}</span>
       </UserMenuButton>
       <div css={css([userMenuStyles, menuShown && userMenuShownStyles])}>
-        <UserMenu />
+        <UserMenu {...userNavigationProps} />
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import { Layout } from '@asap-hub/gp2-components';
+import { ComponentProps } from 'react';
 
 import { NoPaddingDecorator } from '../layout';
 
@@ -8,8 +9,15 @@ export default {
   decorators: [NoPaddingDecorator],
 };
 
+const props: Pick<
+  ComponentProps<typeof Layout>,
+  'projects' | 'workingGroups'
+> = {
+  projects: [],
+  workingGroups: [],
+};
 export const Normal = () => (
-  <Layout>
+  <Layout {...props}>
     <div>Content</div>
   </Layout>
 );

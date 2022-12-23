@@ -1,20 +1,28 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { ComponentProps } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { Layout } from '..';
 
 describe('Layout', () => {
+  const props: Pick<
+    ComponentProps<typeof Layout>,
+    'projects' | 'workingGroups'
+  > = {
+    projects: [],
+    workingGroups: [],
+  };
   it('renders the header', () => {
-    render(<Layout>Content</Layout>);
+    render(<Layout {...props}>Content</Layout>);
     expect(screen.getByRole('banner')).toBeVisible();
   });
   it('renders the content', () => {
-    render(<Layout>Content</Layout>);
+    render(<Layout {...props}>Content</Layout>);
     expect(screen.getByText('Content')).toBeVisible();
   });
 
   it('renders and toggles the open and close menu button', () => {
-    render(<Layout>Content</Layout>);
+    render(<Layout {...props}>Content</Layout>);
     expect(screen.queryByTitle(/close/i)).not.toBeInTheDocument();
     expect(screen.getByTitle(/menu/i)).toBeInTheDocument();
 
@@ -28,17 +36,17 @@ describe('Layout', () => {
   });
 
   it('closes the drawer when clicking the overlay', async () => {
-    const { getByLabelText } = render(<Layout>Content</Layout>);
-    userEvent.click(getByLabelText(/toggle menu/i));
+    render(<Layout {...props}>Content</Layout>);
+    userEvent.click(screen.getByLabelText(/toggle menu/i));
 
-    userEvent.click(getByLabelText(/close/i));
-    expect(getByLabelText(/close/i)).not.toBeVisible();
+    userEvent.click(screen.getByLabelText(/close/i));
+    expect(screen.getByLabelText(/close/i)).not.toBeVisible();
   });
 
   it('closes the drawer on navigation', async () => {
     render(
       <MemoryRouter initialEntries={['/']}>
-        <Layout>Content</Layout>
+        <Layout {...props}>Content</Layout>
       </MemoryRouter>,
     );
     userEvent.click(screen.getByLabelText(/toggle menu/i));
@@ -57,7 +65,7 @@ describe('Layout', () => {
   it('scrolls to top between page navigations', async () => {
     render(
       <MemoryRouter initialEntries={['/']}>
-        <Layout>Content</Layout>
+        <Layout {...props}>Content</Layout>
       </MemoryRouter>,
     );
 

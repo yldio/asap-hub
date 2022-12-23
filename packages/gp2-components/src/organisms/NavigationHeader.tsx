@@ -9,6 +9,7 @@ import {
 } from '@asap-hub/react-components';
 
 import { css } from '@emotion/react';
+import { ComponentProps } from 'react';
 import { smallDesktopQuery } from '../layout';
 import HeaderLogo from '../molecules/HeaderLogo';
 import MainNavigation from './MainNavigation';
@@ -64,13 +65,14 @@ const bottomBorderStyles = css({
   ...ceruleanFernGradientStyles,
 });
 
-interface NavigationHeaderProps {
+type NavigationHeaderProps = {
   menuOpen?: boolean;
   onToggleMenu?: () => void;
-}
+} & ComponentProps<typeof UserNavigation>;
 const NavigationHeader: React.FC<NavigationHeaderProps> = ({
   menuOpen = false,
   onToggleMenu = noop,
+  ...userNavigationProps
 }) => (
   <header>
     <div css={[navigationHeaderstyles]}>
@@ -83,7 +85,7 @@ const NavigationHeader: React.FC<NavigationHeaderProps> = ({
       </div>
 
       <div css={desktopNavigationStyles}>
-        <UserNavigation />
+        <UserNavigation {...userNavigationProps} />
       </div>
     </div>
     <div css={[bottomBorderStyles, desktopNavigationStyles]} />

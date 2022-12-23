@@ -26,7 +26,6 @@ const headerStyles = css({
 });
 
 const cardStyles = css({
-  position: 'relative',
   width: '100vw',
   borderWidth: 0,
   borderTopWidth: 1,

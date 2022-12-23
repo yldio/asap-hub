@@ -5,7 +5,6 @@ import {
   pixels,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
-import { mobileQuery, nonMobileQuery } from '../layout';
 
 const { mobileScreen, rem, tabletScreen, vminLinearCalcClamped } = pixels;
 
@@ -75,36 +74,39 @@ const PageBanner: React.FC<PageBannerProp> = ({
   description,
   noMarginBottom = false,
   children,
-}) => {
-  const overrideTCStyles = noMarginBottom
-    ? [
-        textContainerStyles,
-        css({
-          ...{
-            [nonMobileQuery]: { marginBottom: 0 },
-            [mobileQuery]: { marginBottom: 0 },
+}) => (
+  <header css={headerStyles}>
+    {image && <div css={imageBannerStyles(image, position)}></div>}
+    <div css={[cardStyles, accents.default]}>
+      <div
+        css={[
+          textContainerStyles,
+          noMarginBottom && {
+            marginBottom: 0,
+            [drawerQuery]: {
+              margin: `${rem(32)} ${vminLinearCalcClamped(
+                mobileScreen,
+                24,
+                tabletScreen,
+                72,
+                'px',
+              )} 0`,
+            },
           },
-        }),
-      ]
-    : [textContainerStyles];
-  return (
-    <header css={headerStyles}>
-      {image && <div css={imageBannerStyles(image, position)}></div>}
-      <div css={[cardStyles, accents.default]}>
-        <div css={overrideTCStyles}>
-          <h1
-            css={css({
-              fontSize: '39px',
-              lineHeight: '48px',
-            })}
-          >
-            {title}
-          </h1>
-          {description && <Paragraph accent="lead">{description}</Paragraph>}
-          {children}
-        </div>
+        ]}
+      >
+        <h1
+          css={css({
+            fontSize: '39px',
+            lineHeight: '48px',
+          })}
+        >
+          {title}
+        </h1>
+        {description && <Paragraph accent="lead">{description}</Paragraph>}
+        {children}
       </div>
-    </header>
-  );
-};
+    </div>
+  </header>
+);
 export default PageBanner;

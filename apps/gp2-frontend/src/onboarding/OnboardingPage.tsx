@@ -2,7 +2,6 @@ import { OnboardingPageHeader } from '@asap-hub/gp2-components';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { useLocation } from 'react-router-dom';
 
-// (pathname : string) : ComponentProps<typeof OnboardingPageHeader>['steps'] =>
 const orderedSteps = [
   {
     href: gp2Routing.onboarding({}).coreDetails({}).$,

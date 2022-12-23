@@ -12,6 +12,7 @@ const styles = css({
   display: 'inline-block',
   paddingTop: `${24 / perRem}em`,
   paddingBottom: `${12 / perRem}em`,
+
   color: lead.rgb,
   textDecoration: 'none',
   whiteSpace: 'nowrap',
@@ -29,8 +30,7 @@ interface TabLinkProps {
   readonly href: string;
   readonly children: ReactNode;
 }
-const TabLink: React.FC<TabLinkProps> = (props) => {
-  const { href, children } = props;
+const TabLink: React.FC<TabLinkProps> = ({ href, children }) => {
   if (useHasRouter()) {
     return (
       <NavLink

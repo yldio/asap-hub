@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+CONTENTFUL_ENV_ID=crn-${PR_NUMBER}
+
 if [[ "$CONTENTFUL_ENV_ID" == "Production" ]]; then
   echo "Target is Production branch; not deleting."
   exit 0

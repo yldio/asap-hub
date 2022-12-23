@@ -14,7 +14,7 @@ describe('OnboardedTabLink', () => {
 
   it('should not display the link when disabled', () => {
     render(
-      <OnboardedTabLink disabled={true} href={'/test'}>
+      <OnboardedTabLink disabled href={'/test'}>
         Link Test
       </OnboardedTabLink>,
       { wrapper: StaticRouter },

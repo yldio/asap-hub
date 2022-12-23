@@ -54,6 +54,7 @@ const OnboardedApp: FC<Record<string, never>> = () => {
           <Frame title="Dashboard">
             <Dashboard
               showWelcomeBackBanner={showWelcomeBackBanner}
+              /* istanbul ignore next */
               dismissBanner={() => setShowWelcomeBackBanner(false)}
             />
           </Frame>

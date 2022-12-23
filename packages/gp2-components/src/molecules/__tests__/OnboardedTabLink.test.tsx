@@ -4,12 +4,9 @@ import OnboardedTabLink from '../OnboardedTabLink';
 
 describe('OnboardedTabLink', () => {
   it('should display the link when enabled', () => {
-    render(
-      <OnboardedTabLink disabled={false} href={'/test'}>
-        Link Test
-      </OnboardedTabLink>,
-      { wrapper: StaticRouter },
-    );
+    render(<OnboardedTabLink href={'/test'}>Link Test</OnboardedTabLink>, {
+      wrapper: StaticRouter,
+    });
     const link = screen.getByRole('link', { name: /link test/i });
     expect(link).toBeVisible();
     expect(link).toHaveAttribute('href', '/test');

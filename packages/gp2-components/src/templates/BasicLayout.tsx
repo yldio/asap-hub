@@ -33,22 +33,18 @@ const BasicLayout: React.FC<BasicLayoutProps> = ({
   noPadding = false,
   children,
   logoHref,
-}) => {
-  return (
-    <article css={css({ position: 'relative' })}>
-      <header css={css({ width: '100%' })}>
-        <div css={logoStyles}>
-          <HeaderLogo logoHref={logoHref} />
-        </div>
-        <div css={[bottomBorderStyles, desktopNavigationStyles]} />
-      </header>
-      <main
-        css={[layoutContentStyles, noPadding && css({ ...{ padding: 0 } })]}
-      >
-        {children}
-      </main>
-    </article>
-  );
-};
+}) => (
+  <article css={css({ position: 'relative' })}>
+    <header css={css({ width: '100%' })}>
+      <div css={logoStyles}>
+        <HeaderLogo logoHref={logoHref} />
+      </div>
+      <div css={[bottomBorderStyles, desktopNavigationStyles]} />
+    </header>
+    <main css={[layoutContentStyles, noPadding && css({ ...{ padding: 0 } })]}>
+      {children}
+    </main>
+  </article>
+);
 
 export default BasicLayout;

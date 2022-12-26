@@ -9,6 +9,18 @@ const coreDetails = route(
   { editKeyInfo, editContactInfo },
 );
 
-const onboarding = route('/', {}, { coreDetails });
+const background = route('/background', {}, {});
+
+const groups = route('/groups', {}, {});
+
+const additionalDetails = route('/additional-details', {}, {});
+
+const preview = route('/preview', {}, {});
+
+const onboarding = route(
+  '/',
+  {},
+  { coreDetails, background, groups, additionalDetails, preview },
+);
 
 export default onboarding;

@@ -15,10 +15,7 @@ const { rem } = pixels;
 const contentStyles = css({
   ...layoutContentStyles,
   borderTop: `1px solid ${steel.rgb}`,
-  display: 'flex',
-  flexDirection: 'column',
   alignItems: 'center',
-  overflowY: 'auto',
 });
 
 const logoStyles = css({ padding: `0 ${rem(24)}` });

@@ -21,6 +21,7 @@ export {
   KeyInformationModal,
   MainNavigation,
   NavigationHeader,
+  OnboardingPageHeader,
   PageBanner,
   ProjectCard,
   ProjectDetailHeader,

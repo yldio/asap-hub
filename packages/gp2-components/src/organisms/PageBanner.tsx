@@ -9,10 +9,11 @@ import { css } from '@emotion/react';
 const { mobileScreen, rem, tabletScreen, vminLinearCalcClamped } = pixels;
 
 type PageBannerProp = {
-  image: string;
+  image?: string;
   position?: string;
   title: string;
-  description: string;
+  description?: string;
+  noMarginBottom?: boolean;
 };
 
 const headerMaxWidth = 748;
@@ -71,11 +72,29 @@ const PageBanner: React.FC<PageBannerProp> = ({
   position = 'center',
   title,
   description,
+  noMarginBottom = false,
+  children,
 }) => (
   <header css={headerStyles}>
-    <div css={imageBannerStyles(image, position)}></div>
+    {image && <div css={imageBannerStyles(image, position)}></div>}
     <div css={[cardStyles, accents.default]}>
-      <div css={textContainerStyles}>
+      <div
+        css={[
+          textContainerStyles,
+          noMarginBottom && {
+            marginBottom: 0,
+            [drawerQuery]: {
+              margin: `${rem(32)} ${vminLinearCalcClamped(
+                mobileScreen,
+                24,
+                tabletScreen,
+                72,
+                'px',
+              )} 0`,
+            },
+          },
+        ]}
+      >
         <h1
           css={css({
             fontSize: '39px',
@@ -84,7 +103,8 @@ const PageBanner: React.FC<PageBannerProp> = ({
         >
           {title}
         </h1>
-        <Paragraph accent="lead">{description}</Paragraph>
+        {description && <Paragraph accent="lead">{description}</Paragraph>}
+        {children}
       </div>
     </div>
   </header>

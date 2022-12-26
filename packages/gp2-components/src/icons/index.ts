@@ -2,3 +2,5 @@ export { default as addIcon } from './add-icon';
 export { default as editIcon } from './edit-icon';
 export { default as projectIcon } from './project-icon';
 export { default as roleIcon } from './role-icon';
+export { default as rightArrow } from './right-arrow-icon';
+export { default as leftArrow } from './left-arrow-icon';

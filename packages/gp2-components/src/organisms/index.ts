@@ -5,6 +5,7 @@ export { default as DashboardHeader } from './DashboardHeader';
 export { default as KeyInformationModal } from './KeyInformationModal';
 export { default as MainNavigation } from './MainNavigation';
 export { default as NavigationHeader } from './NavigationHeader';
+export { default as OnboardingPageHeader } from './OnboardingPageHeader';
 export { default as PageBanner } from './PageBanner';
 export { default as ProjectCard } from './ProjectCard';
 export { default as ProjectDetailHeader } from './ProjectDetailHeader';

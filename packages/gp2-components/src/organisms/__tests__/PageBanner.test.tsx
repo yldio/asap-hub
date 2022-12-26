@@ -28,4 +28,18 @@ describe('PageBanner', () => {
     expect(imageContainer).toBeVisible();
     expect(getComputedStyle(imageContainer!).backgroundPosition).toBe('top');
   });
+  it('has a value of zero for the bottom margin if noMarginBottom is provided', async () => {
+    render(
+      <PageBanner
+        title=""
+        position="top"
+        description=""
+        image="image.png"
+        noMarginBottom
+      >
+        Content
+      </PageBanner>,
+    );
+    expect(screen.getByText('Content')).toHaveStyle('marginBottom : 0');
+  });
 });

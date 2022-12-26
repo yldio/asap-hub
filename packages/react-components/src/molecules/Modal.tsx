@@ -35,7 +35,6 @@ const modalStyles = css({
   alignSelf: 'center',
   zIndex: 1,
 
-  width: '100%',
   maxWidth: `${850 / perRem}em`,
   maxHeight: '80%',
 

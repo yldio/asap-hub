@@ -20,7 +20,7 @@ const TeamProfilePage: React.FC<TeamProfilePageProps> = ({
 }) => (
   <article>
     {!!profile.inactiveSince && (
-      <Toast accent="info">
+      <Toast accent="warning">
         This team is inactive and might not have all content available.
       </Toast>
     )}

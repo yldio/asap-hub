@@ -33,7 +33,7 @@ it('renders the inactive group header for inactive group', () => {
       'This group is inactive and might not have all content available.',
     ),
   ).toBeVisible();
-  expect(screen.getByTitle('Info Circle Yellow')).toBeInTheDocument();
+  expect(screen.getByTitle('Warning')).toBeInTheDocument();
 });
 
 it('does not render the inactive group header for active group', () => {

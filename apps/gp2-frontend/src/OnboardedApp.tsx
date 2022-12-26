@@ -3,7 +3,7 @@ import { Layout } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Route } from '@asap-hub/routing';
-import { FC, lazy, useEffect } from 'react';
+import { FC, lazy, useEffect, useState } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { useUserById } from './users/state';
 
@@ -34,6 +34,13 @@ const OnboardedApp: FC<Record<string, never>> = () => {
 
   const user = useCurrentUserGP2();
 
+  const [showWelcomeBackBanner, setShowWelcomeBackBanner] = useState(
+    user?.onboarded || false,
+  );
+
+  /* istanbul ignore next */
+  const dismissBanner = () => setShowWelcomeBackBanner(false);
+
   useEffect(() => {
     // order by the likelyhood of user navigating there
     loadDashboard().then(loadUsers).then(loadWorkingGroups).then(loadProjects);
@@ -48,7 +55,10 @@ const OnboardedApp: FC<Record<string, never>> = () => {
       <Switch>
         <Route exact path={path}>
           <Frame title="Dashboard">
-            <Dashboard />
+            <Dashboard
+              showWelcomeBackBanner={showWelcomeBackBanner}
+              dismissBanner={dismissBanner}
+            />
           </Frame>
         </Route>
         <Route path={usersRoute.template}>

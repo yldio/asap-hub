@@ -94,6 +94,7 @@ export const lavender = color(242, 237, 245);
 
 export const info100 = color(230, 243, 249);
 export const info500 = color(12, 141, 195);
+export const info900 = color(0, 106, 146);
 
 export const neutral200 = color(246, 249, 251);
 export const neutral300 = color(237, 241, 243);

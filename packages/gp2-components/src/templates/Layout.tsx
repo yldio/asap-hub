@@ -40,7 +40,7 @@ const styles = css({
   grid: `
     "header     header"  max-content
     "main-menu  content" max-content
-    "user-menu  content" 1fr / max-content 1fr
+    "user-menu  content" 1fr / 70% 1fr
 `,
   [crossQuery]: {
     width: '100%',

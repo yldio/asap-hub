@@ -10,13 +10,13 @@ import {
 } from '@asap-hub/react-components';
 import workingGroupIcon from '../icons/working-group-icon';
 import { projectIcon } from '../icons';
+import { nonMobileQuery } from '../layout';
 
 const { vminLinearCalc, mobileScreen, largeDesktopScreen, rem } = pixels;
 const { projects: projectsRoute, workingGroups: workingGroupRoute } =
   gp2Routing;
 
 const containerStyles = css({
-  minWidth: '312px',
   height: '100%',
   display: 'flex',
   flexDirection: 'column',
@@ -28,6 +28,9 @@ const containerStyles = css({
     12,
     'px',
   )}`,
+  [nonMobileQuery]: {
+    minWidth: '312px',
+  },
 });
 
 const listStyles = css({

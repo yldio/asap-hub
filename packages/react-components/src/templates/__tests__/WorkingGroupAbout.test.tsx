@@ -11,6 +11,7 @@ const baseProps: ComponentProps<typeof WorkingGroupAbout> = {
   deliverables: [],
   members: [],
   leaders: [],
+  complete: false,
 };
 
 it('renders the description', () => {

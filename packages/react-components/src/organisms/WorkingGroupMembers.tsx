@@ -28,20 +28,22 @@ type GroupLeadersTabbedCardProps = {
     Pick<WorkingGroupLeader, 'user' | 'role' | 'workstreamRole'>
   >;
   members: ReadonlyArray<Pick<WorkingGroupMember, 'user'>>;
+  isComplete: boolean;
 };
 
 const GroupLeadersTabbedCard: React.FC<GroupLeadersTabbedCardProps> = ({
   leaders,
   members,
+  isComplete,
 }) => {
   const [inactiveLeaders, activeLeaders] = splitListBy(
     leaders,
-    (leader) => !!leader?.user?.alumniSinceDate,
+    (leader) => isComplete || !!leader?.user?.alumniSinceDate,
   );
 
   const [inactiveMembers, activeMembers] = splitListBy(
     members,
-    (member) => !!member?.user?.alumniSinceDate,
+    (member) => isComplete || !!member?.user?.alumniSinceDate,
   );
 
   return (
@@ -51,11 +53,12 @@ const GroupLeadersTabbedCard: React.FC<GroupLeadersTabbedCardProps> = ({
         <Subtitle>Leaders</Subtitle>
       </div>
       <TabbedContent
-        activeTabIndex={0}
+        activeTabIndex={isComplete ? 1 : 0}
         tabs={[
           {
             tabTitle: `Active Leaders (${activeLeaders.length})`,
             items: activeLeaders,
+            disabled: isComplete,
             empty: (
               <Paragraph accent="lead">There are no active leaders.</Paragraph>
             ),
@@ -88,12 +91,13 @@ const GroupLeadersTabbedCard: React.FC<GroupLeadersTabbedCardProps> = ({
         <Subtitle>Members</Subtitle>
       </div>
       <TabbedContent
-        activeTabIndex={0}
+        activeTabIndex={isComplete ? 1 : 0}
         tabs={[
           {
             tabTitle: `Active Members (${activeMembers.length})`,
             items: activeMembers,
             truncateFrom: 8,
+            disabled: isComplete,
             empty: (
               <Paragraph accent="lead">There are no active members.</Paragraph>
             ),

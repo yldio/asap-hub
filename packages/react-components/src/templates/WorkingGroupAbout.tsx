@@ -11,7 +11,12 @@ type WorkingGroupAboutProps = {
   readonly membersListElementId: string;
 } & Pick<
   WorkingGroupResponse,
-  'description' | 'deliverables' | 'pointOfContact' | 'members' | 'leaders'
+  | 'description'
+  | 'deliverables'
+  | 'pointOfContact'
+  | 'members'
+  | 'leaders'
+  | 'complete'
 >;
 const containerStyles = css({
   display: 'flex',
@@ -26,6 +31,7 @@ const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
   pointOfContact,
   members,
   leaders,
+  complete,
 }) => (
   <div css={containerStyles}>
     <DeliverablesCard deliverables={deliverables} />
@@ -67,7 +73,11 @@ const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
       )}
     </Card>
     <section id={membersListElementId}>
-      <WorkingGroupMembers leaders={leaders} members={members} />
+      <WorkingGroupMembers
+        leaders={leaders}
+        members={members}
+        isComplete={complete}
+      />
     </section>
   </div>
 );

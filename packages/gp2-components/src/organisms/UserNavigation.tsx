@@ -22,6 +22,7 @@ const userMenuStyles = css({
   boxShadow: `0 2px 6px 0 ${colorWithTransparency(tin, 0.34).rgba}`,
 });
 const userMenuShownStyles = css({
+  zIndex: 1,
   [drawerQuery]: {
     backgroundColor: navigationGrey.rgb,
   },
@@ -41,7 +42,7 @@ const UserNavigation: React.FC<UserNavigationProps> = (userNavigationProps) => {
   const { firstName, lastName, displayName, avatarUrl } =
     useCurrentUserGP2() || {};
   return (
-    <div>
+    <div css={css({ position: 'relative' })}>
       <UserMenuButton
         onClick={() => setMenuShown(!menuShown)}
         open={menuShown}

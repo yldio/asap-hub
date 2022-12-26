@@ -12,12 +12,6 @@ import HeaderLogo from '../molecules/HeaderLogo';
 
 const { rem } = pixels;
 
-const contentStyles = css({
-  ...layoutContentStyles,
-  borderTop: `1px solid ${steel.rgb}`,
-  alignItems: 'center',
-});
-
 const logoStyles = css({ padding: `0 ${rem(24)}` });
 const desktopNavigationStyles = css({
   [drawerQuery]: {
@@ -37,13 +31,15 @@ type BasicLayoutProps = {
 };
 const BasicLayout: React.FC<BasicLayoutProps> = ({ children, logoHref }) => (
   <article>
-    <header css={css({ width: '100%' })}>
+    <header
+      css={css({ width: '100%', borderBottom: `1px solid ${steel.rgb}` })}
+    >
       <div css={logoStyles}>
         <HeaderLogo logoHref={logoHref} />
       </div>
       <div css={[bottomBorderStyles, desktopNavigationStyles]} />
     </header>
-    <main css={contentStyles}>{children}</main>
+    <main css={layoutContentStyles}>{children}</main>
   </article>
 );
 

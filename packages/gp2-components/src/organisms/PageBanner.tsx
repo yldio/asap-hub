@@ -5,6 +5,7 @@ import {
   pixels,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
+import { smallerScreenQuery } from '../layout';
 
 const { mobileScreen, rem, tabletScreen, vminLinearCalcClamped } = pixels;
 
@@ -14,10 +15,10 @@ type PageBannerProp = {
   title: string;
   description?: string;
   noMarginBottom?: boolean;
+  noBorderTop?: boolean;
 };
 
 const headerMaxWidth = 748;
-const smallerScreenMaxMargin = 72;
 
 const headerStyles = css({
   width: '100%',
@@ -32,26 +33,22 @@ const cardStyles = css({
   borderTopWidth: 1,
   borderBottomWidth: 1,
   borderStyle: 'solid',
-  [drawerQuery]: {
-    left: `calc(max(100vw - ${
-      headerMaxWidth + smallerScreenMaxMargin * 2
-    }px, 0px) / 2)`,
-  },
 });
 
-const textContainerStyles = css({
-  maxWidth: rem(headerMaxWidth),
-  margin: `${rem(48)} auto ${rem(32)}`,
-  [drawerQuery]: {
-    margin: `${rem(32)} ${vminLinearCalcClamped(
-      mobileScreen,
-      24,
-      tabletScreen,
-      72,
-      'px',
-    )}`,
-  },
-});
+const textContainerStyles = (noMarginBottom: boolean) =>
+  css({
+    maxWidth: rem(headerMaxWidth),
+    margin: `${rem(48)} auto ${noMarginBottom ? 0 : rem(32)}`,
+    [smallerScreenQuery]: {
+      margin: `${rem(32)} ${vminLinearCalcClamped(
+        mobileScreen,
+        24,
+        tabletScreen,
+        72,
+        'px',
+      )} ${noMarginBottom ? 0 : rem(32)}`,
+    },
+  });
 
 const imageBannerStyles = (image: string, position: string) =>
   css({
@@ -73,28 +70,15 @@ const PageBanner: React.FC<PageBannerProp> = ({
   title,
   description,
   noMarginBottom = false,
+  noBorderTop = false,
   children,
 }) => (
   <header css={headerStyles}>
     {image && <div css={imageBannerStyles(image, position)}></div>}
-    <div css={[cardStyles, accents.default]}>
-      <div
-        css={[
-          textContainerStyles,
-          noMarginBottom && {
-            marginBottom: 0,
-            [drawerQuery]: {
-              margin: `${rem(32)} ${vminLinearCalcClamped(
-                mobileScreen,
-                24,
-                tabletScreen,
-                72,
-                'px',
-              )} 0`,
-            },
-          },
-        ]}
-      >
+    <div
+      css={[cardStyles, accents.default, noBorderTop && { borderTopWidth: 0 }]}
+    >
+      <div css={[textContainerStyles(noMarginBottom)]}>
         <h1
           css={css({
             fontSize: '39px',

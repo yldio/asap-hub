@@ -16,7 +16,7 @@ type OnboardingPageHeaderProps = {
   steps: OnboardingStep[];
 };
 
-const { rem } = pixels;
+const { vminLinearCalcClamped, mobileScreen, tabletScreen } = pixels;
 
 const divStyle = css({
   display: 'flex',
@@ -35,8 +35,18 @@ const buttonStyle = css({
 const OnboardingPageHeader: React.FC<OnboardingPageHeaderProps> = ({
   steps,
 }) => (
-  <div css={css({ marginTop: rem(-48) })}>
-    <PageBanner title={'Registration'} noMarginBottom>
+  <div
+    css={css({
+      marginTop: `${vminLinearCalcClamped(
+        mobileScreen,
+        -33,
+        tabletScreen,
+        -48,
+        'px',
+      )}`,
+    })}
+  >
+    <PageBanner title={'Registration'} noMarginBottom noBorderTop>
       <div css={divStyle}>
         <div css={buttonStyle}>{leftArrow}</div>
         <nav

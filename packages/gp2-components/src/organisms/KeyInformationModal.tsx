@@ -3,13 +3,10 @@ import {
   LabeledDropdown,
   LabeledMultiSelect,
   LabeledTextField,
-  mail,
 } from '@asap-hub/react-components';
 import { ComponentProps, useState } from 'react';
-import { UserPositions } from '../molecules';
+import { ContactSupport, UserPositions } from '../molecules';
 import EditUserModal from './EditUserModal';
-
-const { createMailTo } = mail;
 
 const getValues = <T extends string>(selected: T[]) =>
   selected.map((item) => ({ label: item, value: item }));
@@ -131,18 +128,7 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
           />
           <LabeledDropdown
             title="GP2 Role"
-            description={
-              <span>
-                Need to change something? Contact{' '}
-                <a
-                  href={createMailTo('techsupport@gp2.org', {
-                    subject: 'GP2 Hub: Tech support',
-                  })}
-                >
-                  techsupport@gp2.org
-                </a>
-              </span>
-            }
+            description={<ContactSupport />}
             options={getValues([...gp2.userRoles])}
             value={newRole}
             required

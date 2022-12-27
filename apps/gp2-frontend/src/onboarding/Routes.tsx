@@ -26,19 +26,19 @@ const Routes: React.FC<Record<string, never>> = () => {
         <Welcome />
       </Route>
       <OnboardingPage>
-        <Route exact path={onboarding({}).coreDetails({}).$}>
+        <Route path={onboarding({}).coreDetails({}).$}>
           <CoreDetails />
         </Route>
-        <Route exact path={onboarding({}).background({}).$}>
+        <Route path={onboarding({}).background({}).$}>
           <div>Background</div>
         </Route>
-        <Route exact path={onboarding({}).groups({}).$}>
+        <Route path={onboarding({}).groups({}).$}>
           <div>GP2 Groups</div>
         </Route>
-        <Route exact path={onboarding({}).additionalDetails({}).$}>
+        <Route path={onboarding({}).additionalDetails({}).$}>
           <div>Additional Details</div>
         </Route>
-        <Route exact path={onboarding({}).preview({}).$}>
+        <Route path={onboarding({}).preview({}).$}>
           <div>Preview</div>
         </Route>
       </OnboardingPage>

@@ -143,4 +143,28 @@ describe('CoreDetails', () => {
       expect.anything(),
     );
   });
+
+  it('saves the contact information modal', async () => {
+    const user = gp2Fixtures.createUserResponse();
+    mockGetUser.mockResolvedValueOnce(user);
+    await renderCoreDetails(user.id);
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    userEvent.click(screen.getByRole('link', { name: 'Optional Add' }));
+    expect(screen.getByRole('dialog')).toBeVisible();
+    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+    expect(mockPatchUser).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        secondaryEmail: 'tony.stark@avengers.com',
+        telephone: {
+          countryCode: '+1',
+          number: '0123456789',
+        },
+      }),
+      expect.anything(),
+    );
+  });
 });

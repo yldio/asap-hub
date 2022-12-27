@@ -19,6 +19,7 @@ export {
   DashboardHeader,
   FiltersModal,
   KeyInformationModal,
+  ContactInformationModal,
   MainNavigation,
   NavigationHeader,
   OnboardingPageHeader,

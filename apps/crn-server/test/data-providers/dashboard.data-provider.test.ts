@@ -3,7 +3,7 @@ import { SquidexGraphql } from '@asap-hub/squidex';
 import { identity } from '../helpers/squidex';
 import {
   squidexGraphqlDashboardFlatData,
-  getDashboardResponse,
+  getDashboardDataObject,
 } from '../fixtures/dashboard.fixtures';
 import { FETCH_DASHBOARD } from '../../src/queries/dashboard.queries';
 import { print } from 'graphql';
@@ -35,7 +35,7 @@ describe('Dashboard Data Provider', () => {
       test('Should fetch the dashboard from squidex graphql', async () => {
         const result = await dashboardMockGraphql.fetch();
 
-        const expected = getDashboardResponse();
+        const expected = getDashboardDataObject();
         expect(result).toMatchObject(expected);
       });
     });
@@ -123,7 +123,7 @@ describe('Dashboard Data Provider', () => {
 
         const result = await dashboardDataProvider.fetch();
 
-        expect(result).toEqual(getDashboardResponse());
+        expect(result).toEqual(getDashboardDataObject());
       });
     });
   });

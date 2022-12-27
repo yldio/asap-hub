@@ -981,6 +981,44 @@ export type SysFilter = {
   publishedVersion_not_in?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
 };
 
+export type FetchDashboardQueryVariables = Exact<{ [key: string]: never }>;
+
+export type FetchDashboardQuery = {
+  dashboardCollection?: Maybe<{
+    items: Array<
+      Maybe<{
+        newsCollection?: Maybe<{
+          items: Array<
+            Maybe<
+              Pick<
+                News,
+                'title' | 'shortText' | 'frequency' | 'link' | 'linkText'
+              > & {
+                sys: Pick<Sys, 'id' | 'firstPublishedAt'>;
+                thumbnail?: Maybe<Pick<Asset, 'url'>>;
+                text?: Maybe<Pick<NewsText, 'json'>>;
+              }
+            >
+          >;
+        }>;
+        pagesCollection?: Maybe<{
+          items: Array<
+            Maybe<
+              Pick<
+                Pages,
+                'title' | 'path' | 'shortText' | 'link' | 'linkText'
+              > & {
+                sys: Pick<Sys, 'id'>;
+                text?: Maybe<Pick<PagesText, 'json'>>;
+              }
+            >
+          >;
+        }>;
+      }>
+    >;
+  }>;
+};
+
 export type NewsContentFragment = Pick<
   News,
   'title' | 'shortText' | 'frequency' | 'link' | 'linkText'
@@ -1029,6 +1067,11 @@ export type FetchNewsQuery = {
     }
   >;
 };
+
+export type PageContentFragment = Pick<
+  Pages,
+  'title' | 'path' | 'shortText' | 'link' | 'linkText'
+> & { sys: Pick<Sys, 'id'>; text?: Maybe<Pick<PagesText, 'json'>> };
 
 export type FetchPagesQueryVariables = Exact<{
   where?: InputMaybe<PagesFilter>;
@@ -1106,6 +1149,146 @@ export const NewsContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<NewsContentFragment, unknown>;
+export const PageContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'PageContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Pages' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sys' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'path' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'shortText' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'text' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'json' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'link' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'linkText' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<PageContentFragment, unknown>;
+export const FetchDashboardDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchDashboard' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'dashboardCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '1' },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order' },
+                value: { kind: 'EnumValue', value: 'sys_publishedAt_DESC' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'newsCollection' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'FragmentSpread',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'NewsContent',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'pagesCollection' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'FragmentSpread',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'PageContent',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...NewsContentFragmentDoc.definitions,
+    ...PageContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<FetchDashboardQuery, FetchDashboardQueryVariables>;
 export const FetchNewsByIdDocument = {
   kind: 'Document',
   definitions: [
@@ -1323,41 +1506,8 @@ export const FetchPagesDocument = {
                     kind: 'SelectionSet',
                     selections: [
                       {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'sys' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                          ],
-                        },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'path' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'shortText' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'text' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'json' },
-                            },
-                          ],
-                        },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'link' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'linkText' },
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'PageContent' },
                       },
                     ],
                   },
@@ -1368,5 +1518,6 @@ export const FetchPagesDocument = {
         ],
       },
     },
+    ...PageContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchPagesQuery, FetchPagesQueryVariables>;

@@ -134,6 +134,7 @@ import DashboardSquidexDataProvider, {
   DashboardDataProvider,
 } from './data-providers/dashboard.data-provider';
 import { PageContentfulDataProvider } from './data-providers/contentful/pages.data-provider';
+import { DashboardContentfulDataProvider } from './data-providers/contentful/dashboard.data-provider';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -203,9 +204,16 @@ export const appFactory = (libs: Libs = {}): Express => {
   // Data Providers
   const assetDataProvider =
     libs.assetDataProvider || new AssetSquidexDataProvider(userRestClient);
-  const dashboardDataProvider =
-    libs.dashboardDataProvider ||
+  const dashboardSquidexDataProvider =
+    libs.dashboardSquidexDataProvider ||
     new DashboardSquidexDataProvider(squidexGraphqlClient);
+  const dashboardContentfulDataProvider =
+    libs.dashboardContentfulDataProvider ||
+    new DashboardContentfulDataProvider(contentfulGraphQLClient);
+  const dashboardDataProvider =
+    libs.dashboardDataProvider || isContentfulEnabled
+      ? dashboardContentfulDataProvider
+      : dashboardSquidexDataProvider;
   const groupDataProvider =
     libs.groupDataProvider ||
     new GroupSquidexDataProvider(squidexGraphqlClient);
@@ -430,6 +438,8 @@ export type Libs = {
   assetDataProvider?: AssetDataProvider;
   calendarDataProvider?: CalendarSquidexDataProvider;
   dashboardDataProvider?: DashboardDataProvider;
+  dashboardSquidexDataProvider?: DashboardDataProvider;
+  dashboardContentfulDataProvider?: DashboardDataProvider;
   externalAuthorDataProvider?: ExternalAuthorDataProvider;
   groupDataProvider?: GroupDataProvider;
   newsContentfulDataProvider?: NewsDataProvider;

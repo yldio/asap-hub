@@ -14,7 +14,7 @@ import {
 
 import { NewsDataProvider, FetchNewsProviderOptions } from '../types';
 
-type NewsItem = NonNullable<
+export type NewsItem = NonNullable<
   NonNullable<FetchNewsQuery['newsCollection']>['items'][number]
 >;
 
@@ -46,7 +46,7 @@ export class NewsContentfulDataProvider implements NewsDataProvider {
       total: newsCollection?.total,
       items: newsCollection?.items
         .filter((x): x is NewsItem => x !== null)
-        .map(parseNews),
+        .map(parseContentfulGraphQlNews),
     };
   }
 
@@ -60,11 +60,11 @@ export class NewsContentfulDataProvider implements NewsDataProvider {
       return null;
     }
 
-    return parseNews(news);
+    return parseContentfulGraphQlNews(news);
   }
 }
 
-const parseNews = (item: NewsItem): NewsDataObject => ({
+export const parseContentfulGraphQlNews = (item: NewsItem): NewsDataObject => ({
   // Every field in Contentful is marked as nullable even when its required
   // this is because Contentful use the same schema for preview and production
   // Read more in the link below

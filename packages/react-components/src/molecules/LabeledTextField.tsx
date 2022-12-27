@@ -15,7 +15,7 @@ const forceDescriptionStyles = css({
   display: 'inline-block',
   [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
     display: 'unset',
-  }
+  },
 });
 const hintStyles = css({
   ':empty': {

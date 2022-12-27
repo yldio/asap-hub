@@ -1,4 +1,4 @@
-import { Link, mail } from "@asap-hub/react-components";
+import { Link, mail } from '@asap-hub/react-components';
 
 const { createMailTo } = mail;
 const email = 'techsupport@gp2.org';

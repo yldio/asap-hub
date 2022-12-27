@@ -41,8 +41,8 @@ const mockedUser: gp2.UserResponse = {
   keywords: ['Bash'],
   telephone: {
     countryCode: '+1',
-    number: '0123456789'
-  }
+    number: '0123456789',
+  },
 };
 
 export const createUserResponse = (

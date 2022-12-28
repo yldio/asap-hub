@@ -34,17 +34,14 @@ export type getTeamState = {
   researchOutputData: ResearchOutputResponse | undefined;
 };
 
-function equals(a: Array<string>, b: Array<string>): boolean {
-  return (
-    a.length === b.length && a.every((element, index) => element === b[index])
-  );
-}
+const equals = (a: Array<string>, b: Array<string>): boolean =>
+  a.length === b.length && a.every((element, index) => element === b[index]);
 
-export function getTeamsState({
+export const getTeamsState = ({
   team,
   publishingEntity,
   researchOutputData,
-}: getTeamState) {
+}: getTeamState) => {
   if (publishingEntity === 'Working Group') {
     return [];
   }
@@ -61,79 +58,70 @@ export function getTeamsState({
       },
     ]
   );
-}
+};
 
-export function isDirtyEditMode(
+export const isDirtyEditMode = (
   state: ResearchOutputState,
   researchOutputData: ResearchOutputResponse,
-): boolean {
-  return (
-    state.title !== researchOutputData.title ||
-    state.description !== researchOutputData.description ||
-    state.link !== researchOutputData.link ||
-    state.type !== researchOutputData.type ||
-    !equals(state.methods, researchOutputData.methods) ||
-    !equals(state.organisms, researchOutputData.organisms) ||
-    !equals(state.environments, researchOutputData.environments) ||
+): boolean =>
+  state.title !== researchOutputData.title ||
+  state.description !== researchOutputData.description ||
+  state.link !== researchOutputData.link ||
+  state.type !== researchOutputData.type ||
+  !equals(state.methods, researchOutputData.methods) ||
+  !equals(state.organisms, researchOutputData.organisms) ||
+  !equals(state.environments, researchOutputData.environments) ||
+  !equals(
+    state.teams.map((team) => team.value),
+    researchOutputData.teams.map((team) => team.id),
+  ) ||
+  (state.labs &&
     !equals(
-      state.teams.map((team) => team.value),
-      researchOutputData.teams.map((team) => team.id),
-    ) ||
-    (state.labs &&
-      !equals(
-        state.labs.map((lab) => lab.value),
-        researchOutputData.labs.map((lab) => lab.id),
-      )) ||
-    (state.authors &&
-      !equals(
-        state.authors.map((author) => author.value),
-        researchOutputData.authors.map((author) => author?.id),
-      )) ||
-    state.subtype !== researchOutputData.subtype ||
-    state.identifierType !== getIdentifierType(true, researchOutputData) ||
-    isIdentifierModified(researchOutputData, state.identifier)
-  );
-}
+      state.labs.map((lab) => lab.value),
+      researchOutputData.labs.map((lab) => lab.id),
+    )) ||
+  (state.authors &&
+    !equals(
+      state.authors.map((author) => author.value),
+      researchOutputData.authors.map((author) => author?.id),
+    )) ||
+  state.subtype !== researchOutputData.subtype ||
+  state.identifierType !== getIdentifierType(true, researchOutputData) ||
+  isIdentifierModified(researchOutputData, state.identifier);
 
-export function isDirtyTeams(state: ResearchOutputState): boolean {
-  return (
-    state.tags?.length !== 0 ||
-    state.title !== '' ||
-    state.description !== '' ||
-    state.link !== '' ||
-    state.type !== '' ||
-    state.labs?.length !== 0 ||
-    state.authors?.length !== 0 ||
-    state.methods.length !== 0 ||
-    state.organisms.length !== 0 ||
-    state.environments.length !== 0 ||
-    state.labCatalogNumber !== '' ||
-    state.subtype !== undefined ||
-    state.teams?.length !== 1 ||
-    state.identifier !== '' ||
-    state.identifierType !== ResearchOutputIdentifierType.Empty
-  );
-}
+export const isDirtyTeams = (state: ResearchOutputState): boolean =>
+  state.tags?.length !== 0 ||
+  state.title !== '' ||
+  state.description !== '' ||
+  state.link !== '' ||
+  state.type !== '' ||
+  state.labs?.length !== 0 ||
+  state.authors?.length !== 0 ||
+  state.methods.length !== 0 ||
+  state.organisms.length !== 0 ||
+  state.environments.length !== 0 ||
+  state.labCatalogNumber !== '' ||
+  state.subtype !== undefined ||
+  state.teams?.length !== 1 ||
+  state.identifier !== '' ||
+  state.identifierType !== ResearchOutputIdentifierType.Empty;
 
-export function isDirtyWorkingGroups(state: ResearchOutputState): boolean {
-  return (
-    state.tags?.length !== 0 ||
-    state.title !== '' ||
-    state.description !== '' ||
-    state.link !== '' ||
-    state.type !== '' ||
-    state.labs?.length !== 0 ||
-    state.authors?.length !== 0 ||
-    state.methods.length !== 0 ||
-    state.organisms.length !== 0 ||
-    state.environments.length !== 0 ||
-    state.labCatalogNumber !== '' ||
-    state.subtype !== undefined ||
-    state.teams?.length !== 0 ||
-    state.identifier !== '' ||
-    state.identifierType !== ResearchOutputIdentifierType.Empty
-  );
-}
+export const isDirtyWorkingGroups = (state: ResearchOutputState): boolean =>
+  state.tags?.length !== 0 ||
+  state.title !== '' ||
+  state.description !== '' ||
+  state.link !== '' ||
+  state.type !== '' ||
+  state.labs?.length !== 0 ||
+  state.authors?.length !== 0 ||
+  state.methods.length !== 0 ||
+  state.organisms.length !== 0 ||
+  state.environments.length !== 0 ||
+  state.labCatalogNumber !== '' ||
+  state.subtype !== undefined ||
+  state.teams?.length !== 0 ||
+  state.identifier !== '' ||
+  state.identifierType !== ResearchOutputIdentifierType.Empty;
 
 const identifierTypeToFieldName: Record<
   ResearchOutputIdentifierType,
@@ -146,26 +134,26 @@ const identifierTypeToFieldName: Record<
   [ResearchOutputIdentifierType.RRID]: 'rrid',
 };
 
-export function createIdentifierField(
+export const createIdentifierField = (
   identifierType: ResearchOutputIdentifierType,
   rawIdentifier: string,
 ):
   | { rrid: string }
   | { doi: string }
   | { accession: string }
-  | Record<never, never> {
+  | Record<never, never> => {
   const fieldName = identifierTypeToFieldName[identifierType];
   if (fieldName) {
     return { [fieldName]: rawIdentifier };
   }
 
   return {};
-}
+};
 
-export function getIdentifierType(
+export const getIdentifierType = (
   isEditMode: boolean,
   researchOutputData?: ResearchOutputResponse,
-): ResearchOutputIdentifierType {
+): ResearchOutputIdentifierType => {
   if (researchOutputData?.doi) return ResearchOutputIdentifierType.DOI;
 
   if (researchOutputData?.accession)
@@ -176,27 +164,23 @@ export function getIdentifierType(
   return isEditMode
     ? ResearchOutputIdentifierType.None
     : ResearchOutputIdentifierType.Empty;
-}
+};
 
-export function isIdentifierModified(
+export const isIdentifierModified = (
   researchOutputData: ResearchOutputResponse,
   identifier?: string,
-): boolean {
-  return (
-    researchOutputData.doi !== identifier &&
-    researchOutputData.accession !== identifier &&
-    researchOutputData.rrid !== identifier &&
-    identifier !== ''
-  );
-}
+): boolean =>
+  researchOutputData.doi !== identifier &&
+  researchOutputData.accession !== identifier &&
+  researchOutputData.rrid !== identifier &&
+  identifier !== '';
 
-export function getPublishDate(publishDate?: string): Date | undefined {
+export const getPublishDate = (publishDate?: string): Date | undefined => {
   if (publishDate) {
     return new Date(publishDate);
   }
   return undefined;
-}
+};
 
-export function getDecision(decision?: boolean): DecisionOption {
-  return decision === undefined ? 'Not Sure' : decision ? 'Yes' : 'No';
-}
+export const getDecision = (decision?: boolean): DecisionOption =>
+  decision === undefined ? 'Not Sure' : decision ? 'Yes' : 'No';

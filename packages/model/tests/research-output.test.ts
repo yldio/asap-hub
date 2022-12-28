@@ -2,7 +2,6 @@ import {
   convertBooleanToDecision,
   convertDecisionToBoolean,
   isResearchOutputDocumentType,
-  isResearchOutputPublishingEntity,
   isResearchOutputType,
   researchOutputMapPublishingEntity,
   researchOutputMapType,
@@ -38,18 +37,6 @@ describe('Research Output Model', () => {
   });
 
   describe('Publishing Entities', () => {
-    it('should recognize correct type - team', () => {
-      expect(isResearchOutputPublishingEntity('Team')).toEqual(true);
-    });
-    it('should recognize correct type - working group', () => {
-      expect(isResearchOutputPublishingEntity('Working Group')).toEqual(true);
-    });
-
-    it('should not recognize incorrect type and return false', () => {
-      expect(
-        isResearchOutputPublishingEntity('not a publishing entity'),
-      ).toEqual(false);
-    });
     it('should map to the correct entity', () => {
       expect(researchOutputMapPublishingEntity('Team')).toEqual('Team');
     });

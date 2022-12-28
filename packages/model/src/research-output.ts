@@ -55,7 +55,13 @@ export const researchOutputTypes = [
   'Viral Vector',
 ] as const;
 
-export type ResearchOutputPublishingEntities = 'Team' | 'Working Group';
+export const ResearchOutputPublishingEntitiesValues = <const>[
+  'Team',
+  'Working Group',
+];
+
+export type ResearchOutputPublishingEntities =
+  typeof ResearchOutputPublishingEntitiesValues[number];
 
 export type ResearchOutputType = typeof researchOutputTypes[number];
 
@@ -120,11 +126,6 @@ export const isResearchOutputType = (
 ): type is ResearchOutputType =>
   (researchOutputTypes as ReadonlyArray<string>).includes(type);
 
-export const isResearchOutputPublishingEntity = (
-  publishingEntity: string,
-): publishingEntity is ResearchOutputPublishingEntities =>
-  publishingEntity === 'Team' || publishingEntity === 'Working Group';
-
 export const researchOutputMapType = (
   type?: string | null,
 ): ResearchOutputType | null => {
@@ -138,7 +139,10 @@ export const researchOutputMapType = (
 export const researchOutputMapPublishingEntity = (
   publishingEntity?: string | null,
 ): ResearchOutputPublishingEntities | null => {
-  if (publishingEntity && isResearchOutputPublishingEntity(publishingEntity)) {
+  if (
+    publishingEntity &&
+    (publishingEntity === 'Team' || publishingEntity === 'Working Group')
+  ) {
     return publishingEntity;
   }
 

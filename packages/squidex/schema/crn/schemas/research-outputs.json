@@ -84,11 +84,11 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
-          "allowedValues": ["Team", "Working Group"],
+          "allowedValues": ["Team", "Working_Group"],
           "isUnique": false,
           "isEmbeddable": false,
           "inlineEditable": true,
-          "createEnum": false,
+          "createEnum": true,
           "contentType": "Unspecified",
           "editor": "Dropdown",
           "label": "Publishing Entity",

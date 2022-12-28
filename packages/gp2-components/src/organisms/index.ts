@@ -3,6 +3,7 @@ export { default as EmailSection } from './EmailSection';
 export { default as FiltersModal } from './FiltersModal';
 export { default as DashboardHeader } from './DashboardHeader';
 export { default as KeyInformationModal } from './KeyInformationModal';
+export { default as ContactInformationModal } from './ContactInformationModal';
 export { default as MainNavigation } from './MainNavigation';
 export { default as NavigationHeader } from './NavigationHeader';
 export { default as OnboardingPageHeader } from './OnboardingPageHeader';

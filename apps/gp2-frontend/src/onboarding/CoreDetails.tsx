@@ -1,6 +1,7 @@
 import {
   OnboardingCoreDetails,
   KeyInformationModal,
+  ContactInformationModal,
 } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
@@ -33,6 +34,13 @@ const CoreDetails: React.FC<Record<string, never>> = () => {
                 data.items.map(({ name }) => name),
               )
             }
+            backHref={onboarding({}).coreDetails({}).$}
+            onSave={(patchedUser) => patchUser(patchedUser)}
+          />
+        </Route>
+        <Route path={onboarding({}).coreDetails({}).editContactInfo({}).$}>
+          <ContactInformationModal
+            {...userData}
             backHref={onboarding({}).coreDetails({}).$}
             onSave={(patchedUser) => patchUser(patchedUser)}
           />

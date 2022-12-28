@@ -27,15 +27,16 @@ import { createMemoryHistory, History } from 'history';
 import { ComponentProps } from 'react';
 import { Router, StaticRouter } from 'react-router-dom';
 import { ENTER_KEYCODE } from '../../atoms/Dropdown';
-import ResearchOutputForm, {
+import ResearchOutputForm from '../ResearchOutputForm';
+import {
+  isDirty,
   createIdentifierField,
   getDecision,
   getIdentifierType,
   getPublishDate,
-  isDirty,
-  isIdentifierModified,
   ResearchOutputState,
-} from '../ResearchOutputForm';
+  isIdentifierModified,
+} from '../../utils/researchOutputForm';
 
 const props: ComponentProps<typeof ResearchOutputForm> = {
   onSave: jest.fn(() => Promise.resolve()),

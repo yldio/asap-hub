@@ -238,6 +238,88 @@ export type ContentfulTag = {
   name?: Maybe<Scalars['String']>;
 };
 
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/dashboard) */
+export type Dashboard = Entry & {
+  contentfulMetadata: ContentfulMetadata;
+  linkedFrom?: Maybe<DashboardLinkingCollections>;
+  newsCollection?: Maybe<DashboardNewsCollection>;
+  pagesCollection?: Maybe<DashboardPagesCollection>;
+  sys: Sys;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/dashboard) */
+export type DashboardLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/dashboard) */
+export type DashboardNewsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/dashboard) */
+export type DashboardPagesCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type DashboardCollection = {
+  items: Array<Maybe<Dashboard>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type DashboardFilter = {
+  AND?: InputMaybe<Array<InputMaybe<DashboardFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<DashboardFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  newsCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  pagesCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  sys?: InputMaybe<SysFilter>;
+};
+
+export type DashboardLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type DashboardLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type DashboardNewsCollection = {
+  items: Array<Maybe<News>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export enum DashboardOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export type DashboardPagesCollection = {
+  items: Array<Maybe<Pages>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
 export type Entry = {
   contentfulMetadata: ContentfulMetadata;
   sys: Sys;
@@ -542,7 +624,15 @@ export type NewsFilter = {
 };
 
 export type NewsLinkingCollections = {
+  dashboardCollection?: Maybe<DashboardCollection>;
   entryCollection?: Maybe<EntryCollection>;
+};
+
+export type NewsLinkingCollectionsDashboardCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
 };
 
 export type NewsLinkingCollectionsEntryCollectionArgs = {
@@ -691,7 +781,15 @@ export type PagesFilter = {
 };
 
 export type PagesLinkingCollections = {
+  dashboardCollection?: Maybe<DashboardCollection>;
   entryCollection?: Maybe<EntryCollection>;
+};
+
+export type PagesLinkingCollectionsDashboardCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
 };
 
 export type PagesLinkingCollectionsEntryCollectionArgs = {
@@ -742,6 +840,8 @@ export type PagesTextLinks = {
 export type Query = {
   asset?: Maybe<Asset>;
   assetCollection?: Maybe<AssetCollection>;
+  dashboard?: Maybe<Dashboard>;
+  dashboardCollection?: Maybe<DashboardCollection>;
   entryCollection?: Maybe<EntryCollection>;
   migration?: Maybe<Migration>;
   migrationCollection?: Maybe<MigrationCollection>;
@@ -764,6 +864,21 @@ export type QueryAssetCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<AssetFilter>;
+};
+
+export type QueryDashboardArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryDashboardCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<DashboardOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<DashboardFilter>;
 };
 
 export type QueryEntryCollectionArgs = {
@@ -866,6 +981,44 @@ export type SysFilter = {
   publishedVersion_not_in?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
 };
 
+export type FetchDashboardQueryVariables = Exact<{ [key: string]: never }>;
+
+export type FetchDashboardQuery = {
+  dashboardCollection?: Maybe<{
+    items: Array<
+      Maybe<{
+        newsCollection?: Maybe<{
+          items: Array<
+            Maybe<
+              Pick<
+                News,
+                'title' | 'shortText' | 'frequency' | 'link' | 'linkText'
+              > & {
+                sys: Pick<Sys, 'id' | 'firstPublishedAt'>;
+                thumbnail?: Maybe<Pick<Asset, 'url'>>;
+                text?: Maybe<Pick<NewsText, 'json'>>;
+              }
+            >
+          >;
+        }>;
+        pagesCollection?: Maybe<{
+          items: Array<
+            Maybe<
+              Pick<
+                Pages,
+                'title' | 'path' | 'shortText' | 'link' | 'linkText'
+              > & {
+                sys: Pick<Sys, 'id'>;
+                text?: Maybe<Pick<PagesText, 'json'>>;
+              }
+            >
+          >;
+        }>;
+      }>
+    >;
+  }>;
+};
+
 export type NewsContentFragment = Pick<
   News,
   'title' | 'shortText' | 'frequency' | 'link' | 'linkText'
@@ -914,6 +1067,11 @@ export type FetchNewsQuery = {
     }
   >;
 };
+
+export type PageContentFragment = Pick<
+  Pages,
+  'title' | 'path' | 'shortText' | 'link' | 'linkText'
+> & { sys: Pick<Sys, 'id'>; text?: Maybe<Pick<PagesText, 'json'>> };
 
 export type FetchPagesQueryVariables = Exact<{
   where?: InputMaybe<PagesFilter>;
@@ -991,6 +1149,146 @@ export const NewsContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<NewsContentFragment, unknown>;
+export const PageContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'PageContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Pages' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sys' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'path' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'shortText' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'text' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'json' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'link' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'linkText' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<PageContentFragment, unknown>;
+export const FetchDashboardDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchDashboard' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'dashboardCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '1' },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order' },
+                value: { kind: 'EnumValue', value: 'sys_publishedAt_DESC' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'newsCollection' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'FragmentSpread',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'NewsContent',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'pagesCollection' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'FragmentSpread',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'PageContent',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...NewsContentFragmentDoc.definitions,
+    ...PageContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<FetchDashboardQuery, FetchDashboardQueryVariables>;
 export const FetchNewsByIdDocument = {
   kind: 'Document',
   definitions: [
@@ -1208,41 +1506,8 @@ export const FetchPagesDocument = {
                     kind: 'SelectionSet',
                     selections: [
                       {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'sys' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                          ],
-                        },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'path' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'shortText' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'text' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'json' },
-                            },
-                          ],
-                        },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'link' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'linkText' },
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'PageContent' },
                       },
                     ],
                   },
@@ -1253,5 +1518,6 @@ export const FetchPagesDocument = {
         ],
       },
     },
+    ...PageContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchPagesQuery, FetchPagesQueryVariables>;

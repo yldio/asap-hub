@@ -35,16 +35,18 @@ export class PageContentfulDataProvider implements PageDataProvider {
       total: pagesCollection?.total,
       items: pagesCollection?.items
         .filter((x): x is PageItem => x !== null)
-        .map(parsePage),
+        .map(parseContentfulGraphQlPages),
     };
   }
 }
 
-type PageItem = NonNullable<
+export type PageItem = NonNullable<
   NonNullable<FetchPagesQuery['pagesCollection']>['items'][number]
 >;
 
-const parsePage = (item: PageItem): PageDataObject => ({
+export const parseContentfulGraphQlPages = (
+  item: PageItem,
+): PageDataObject => ({
   id: item.sys.id,
   title: item.title || '',
   path: item.path || '',

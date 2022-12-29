@@ -216,10 +216,5 @@ export {
   WorkingGroupAbout,
 } from './templates';
 export * from './theme';
-export {
-  noop,
-  isDirtyEditMode,
-  isDirtyTeams,
-  isDirtyWorkingGroups,
-} from './utils';
+export { noop } from './utils';
 export { pixels, text, authTestUtils, utils, mail };

@@ -10,12 +10,7 @@ import {
   ValidationErrorResponse,
   ResearchOutputResponse,
 } from '@asap-hub/model';
-import {
-  isDirtyEditMode,
-  isDirtyTeams,
-  NotFoundPage,
-  ResearchOutputPage,
-} from '@asap-hub/react-components';
+import { NotFoundPage, ResearchOutputPage } from '@asap-hub/react-components';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import {
   network,
@@ -144,8 +139,6 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
               ? updateResearchOutput(output).catch(handleError)
               : createResearchOutput(output).catch(handleError)
           }
-          isDirty={isDirtyTeams}
-          isDirtyEditMode={isDirtyEditMode}
         />
       </Frame>
     );

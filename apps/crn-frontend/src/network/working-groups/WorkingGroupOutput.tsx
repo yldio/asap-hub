@@ -9,12 +9,7 @@ import {
   isValidationErrorResponse,
   ValidationErrorResponse,
 } from '@asap-hub/model';
-import {
-  NotFoundPage,
-  ResearchOutputPage,
-  isDirtyWorkingGroups,
-  isDirtyEditMode,
-} from '@asap-hub/react-components';
+import { NotFoundPage, ResearchOutputPage } from '@asap-hub/react-components';
 import React, { useContext, useState } from 'react';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import researchSuggestions from '../teams/research-suggestions';
@@ -85,8 +80,6 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
           isEditMode={false}
           publishingEntity="Working Group"
           onSave={(output) => createResearchOutput(output).catch(handleError)}
-          isDirty={isDirtyWorkingGroups}
-          isDirtyEditMode={isDirtyEditMode}
         />
       </Frame>
     );

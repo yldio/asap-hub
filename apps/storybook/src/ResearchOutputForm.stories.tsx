@@ -5,11 +5,7 @@ import {
   researchTagMethodResponse,
 } from '@asap-hub/fixtures';
 import { researchOutputDocumentTypes } from '@asap-hub/model';
-import {
-  isDirtyEditMode,
-  isDirtyTeams,
-  ResearchOutputForm,
-} from '@asap-hub/react-components';
+import { ResearchOutputForm } from '@asap-hub/react-components';
 import { select } from '@storybook/addon-knobs';
 import { StaticRouter } from 'react-router-dom';
 
@@ -50,8 +46,6 @@ export const Normal = () => (
       }
       researchTags={[researchTagMethodResponse]}
       isEditMode={false}
-      isDirty={isDirtyTeams}
-      isDirtyEditMode={isDirtyEditMode}
     />
   </StaticRouter>
 );
@@ -93,8 +87,6 @@ export const EditMode = () => (
       }
       researchTags={[researchTagMethodResponse]}
       isEditMode={true}
-      isDirty={isDirtyTeams}
-      isDirtyEditMode={isDirtyEditMode}
     />
   </StaticRouter>
 );

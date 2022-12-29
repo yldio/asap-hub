@@ -38,10 +38,9 @@ describe('WorkingGroupOutput', () => {
     ContextType<typeof ToastContext>
   >;
 
-  const mockCreateResearchOutput =
-  createResearchOutput as jest.MockedFunction<
-      typeof createResearchOutput
-    >;
+  const mockCreateResearchOutput = createResearchOutput as jest.MockedFunction<
+    typeof createResearchOutput
+  >;
 
   interface RenderPageOptions {
     workingGroupId: string;

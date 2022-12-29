@@ -13,7 +13,7 @@ import {
 import { sharedResearch } from '@asap-hub/routing';
 import { isInternalUser } from '@asap-hub/validation';
 import { css } from '@emotion/react';
-import { ComponentProps, useState } from 'react';
+import { ComponentProps, useEffect, useState } from 'react';
 import { Button } from '../atoms';
 import { mobileScreen, perRem } from '../pixels';
 import { usePushFromHere } from '../routing';
@@ -28,8 +28,10 @@ import {
   createIdentifierField,
   getDecision,
   getIdentifierType,
+  getInitialState,
   getPublishDate,
   getTeamsState,
+  isDirty,
   ResearchOutputState,
 } from '../utils/researchOutputForm';
 
@@ -85,11 +87,6 @@ type ResearchOutputFormProps = Pick<
     isEditMode: boolean;
     publishingEntity?: ResearchOutputPublishingEntities;
     tagSuggestions: string[];
-    isDirty: (state: ResearchOutputState) => boolean;
-    isDirtyEditMode: (
-      state: ResearchOutputState,
-      researchOutputData: ResearchOutputResponse,
-    ) => boolean;
   };
 
 const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
@@ -106,10 +103,18 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   researchOutputData,
   isEditMode,
   publishingEntity = 'Team',
-  isDirty,
-  isDirtyEditMode,
 }) => {
   const historyPush = usePushFromHere();
+  const [initialState, setInitialState] = useState<
+    ResearchOutputState | undefined
+  >();
+
+  useEffect(() => {
+    setInitialState(
+      getInitialState(researchOutputData, team, publishingEntity, isEditMode),
+    );
+  }, []);
+
   const [tags, setTags] = useState<ResearchOutputPostRequest['tags']>(
     (researchOutputData?.tags as string[]) || [],
   );
@@ -199,7 +204,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     d.types?.includes(type),
   );
 
-  const state = {
+  const currentState: ResearchOutputState = {
     title,
     description,
     link,
@@ -215,16 +220,15 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     labCatalogNumber,
     identifierType,
     identifier,
+    publishDate,
+    usedInPublication,
+    asapFunded,
   };
 
   return (
     <Form<ResearchOutputResponse>
       serverErrors={serverValidationErrors}
-      dirty={
-        isEditMode && researchOutputData
-          ? isDirtyEditMode(state, researchOutputData)
-          : isDirty(state)
-      }
+      dirty={isDirty(initialState, currentState)}
       onSave={() => {
         const identifierField = createIdentifierField(
           identifierType,

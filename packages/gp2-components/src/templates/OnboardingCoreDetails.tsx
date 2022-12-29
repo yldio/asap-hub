@@ -6,11 +6,11 @@ import {
   Paragraph,
   pixels,
 } from '@asap-hub/react-components';
-import { gp2 as gp2Routing, logout } from '@asap-hub/routing';
+import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { addIcon } from '../icons';
-import { mobileQuery, nonMobileQuery } from '../layout';
+import { nonMobileQuery } from '../layout';
 import { UserDetailHeaderCard } from '../organisms';
 import EmailSection from '../organisms/EmailSection';
 
@@ -29,27 +29,6 @@ const contentStyles = css({
   gap: rem(24),
 });
 
-const footerStyles = css({
-  display: 'flex',
-  justifyContent: 'space-between',
-  flexDirection: 'column-reverse',
-  [nonMobileQuery]: {
-    flexDirection: 'row',
-  },
-});
-const footerEditStyles = css({
-  display: 'flex',
-  gap: rem(32),
-  [mobileQuery]: {
-    flexDirection: 'column-reverse',
-    gap: rem(24),
-  },
-});
-const signOutStyles = css({
-  [mobileQuery]: {
-    paddingTop: rem(24),
-  },
-});
 const rowStyles = css({
   display: 'flex',
   width: '100%',
@@ -65,12 +44,6 @@ const editButtonStyles = css({
   },
 });
 const cardStyles = css({ gap: rem(32) });
-const buttonWrapperStyle = css({
-  width: 'fit-content',
-  [mobileQuery]: {
-    width: '100%',
-  },
-});
 
 const OnboardingCoreDetails: React.FC<OnboardingCoreDetailProps> = ({
   email,
@@ -116,39 +89,6 @@ const OnboardingCoreDetails: React.FC<OnboardingCoreDetailProps> = ({
         </div>
       </Card>
     </div>
-    <footer>
-      <div css={footerStyles}>
-        <div css={signOutStyles}>
-          <Link fullWidth buttonStyle noMargin href={logout({}).$}>
-            Sign Out
-          </Link>
-        </div>
-        <div css={css(footerEditStyles)}>
-          <div css={buttonWrapperStyle}>
-            <Link
-              enabled={false}
-              fullWidth
-              buttonStyle
-              noMargin
-              href={onboarding({}).$}
-            >
-              Previous
-            </Link>
-          </div>
-          <div css={buttonWrapperStyle}>
-            <Link
-              fullWidth
-              buttonStyle
-              enabled={false}
-              noMargin
-              href={onboarding({}).coreDetails({}).$}
-            >
-              Continue
-            </Link>
-          </div>
-        </div>
-      </div>
-    </footer>
   </div>
 );
 

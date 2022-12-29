@@ -119,7 +119,7 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
           />
           <LabeledMultiSelect
             title="Degree"
-            subtitle={optional}
+            subtitle={required}
             enabled={!isSaving}
             values={getValues(newDegrees)}
             onChange={onChangeSelect(setNewDegrees)}

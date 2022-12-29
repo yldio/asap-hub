@@ -23,6 +23,7 @@ export {
   MainNavigation,
   NavigationHeader,
   OnboardingPageHeader,
+  OnboardingPageFooter,
   PageBanner,
   ProjectCard,
   ProjectDetailHeader,

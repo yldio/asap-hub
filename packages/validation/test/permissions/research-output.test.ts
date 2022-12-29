@@ -1,5 +1,11 @@
-import { hasCreateUpdateResearchOutputPermissions } from '../../src/permissions/research-output';
-import { createUserResponse } from '@asap-hub/fixtures';
+import {
+  hasCreateUpdateResearchOutputPermissions,
+  hasWorkingGroupsCreateUpdateResearchOutputPermissions,
+} from '../../src/permissions/research-output';
+import {
+  createUserResponse,
+  createWorkingGroupResponse,
+} from '@asap-hub/fixtures';
 
 describe('hasCreateUpdateResearchOutputPermissions', () => {
   test('Should not have permissions when there are no teams assigned to the user', () => {
@@ -69,5 +75,67 @@ describe('hasCreateUpdateResearchOutputPermissions', () => {
         ['team-1', 'team-2'],
       ),
     ).toEqual(true);
+  });
+});
+
+describe('hasWorkingGroupsCreateUpdateResearchOutputPermissions', () => {
+  test('Should not have permissions when there is no working group', () => {
+    expect(
+      hasWorkingGroupsCreateUpdateResearchOutputPermissions(
+        {
+          ...createUserResponse(),
+          teams: [],
+        },
+        undefined,
+      ),
+    ).toEqual(false);
+  });
+
+  test('Should have the permission when the user has a Project Manager role inside the working group', () => {
+    expect(
+      hasWorkingGroupsCreateUpdateResearchOutputPermissions(
+        {
+          ...createUserResponse(),
+          id: 'leader-1',
+        },
+        {
+          ...createWorkingGroupResponse({}),
+          leaders: [
+            {
+              user: {
+                ...createUserResponse(),
+                id: 'leader-1',
+              },
+              role: 'Project Manager',
+              workstreamRole: 'Project Manager',
+            },
+          ],
+        },
+      ),
+    ).toEqual(true);
+  });
+
+  test('Should not have the permission when the user has a role that differs from Project Manager', () => {
+    expect(
+      hasWorkingGroupsCreateUpdateResearchOutputPermissions(
+        {
+          ...createUserResponse(),
+          id: 'leader-1',
+        },
+        {
+          ...createWorkingGroupResponse({}),
+          leaders: [
+            {
+              user: {
+                ...createUserResponse(),
+                id: 'not-leader-1',
+              },
+              role: 'Chair',
+              workstreamRole: 'not a project manager',
+            },
+          ],
+        },
+      ),
+    ).toEqual(false);
   });
 });

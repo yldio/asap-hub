@@ -101,7 +101,6 @@ export function getInitialState(
   researchOutputData: ResearchOutputResponse | undefined,
   team: TeamResponse | undefined,
   publishingEntity: ResearchOutputPublishingEntities,
-  isEditMode: boolean,
 ): ResearchOutputState {
   if (researchOutputData) {
     return {
@@ -112,7 +111,7 @@ export function getInitialState(
       methods: researchOutputData.methods,
       organisms: researchOutputData.organisms,
       environments: researchOutputData.environments,
-      identifierType: getIdentifierType(isEditMode, researchOutputData),
+      identifierType: getIdentifierType(researchOutputData),
       labCatalogNumber: researchOutputData.labCatalogNumber || '',
       link: researchOutputData.link,
       subtype: researchOutputData.subtype,
@@ -148,7 +147,7 @@ export function getInitialState(
     methods: [],
     organisms: [],
     environments: [],
-    identifierType: getIdentifierType(isEditMode, researchOutputData),
+    identifierType: getIdentifierType(researchOutputData),
     labCatalogNumber: '',
     labs: [],
     link: '',
@@ -193,7 +192,6 @@ export const createIdentifierField = (
 };
 
 export const getIdentifierType = (
-  isEditMode: boolean,
   researchOutputData?: ResearchOutputResponse,
 ): ResearchOutputIdentifierType => {
   if (researchOutputData?.doi) return ResearchOutputIdentifierType.DOI;
@@ -203,7 +201,7 @@ export const getIdentifierType = (
 
   if (researchOutputData?.rrid) return ResearchOutputIdentifierType.RRID;
 
-  return isEditMode
+  return researchOutputData
     ? ResearchOutputIdentifierType.None
     : ResearchOutputIdentifierType.Empty;
 };

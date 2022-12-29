@@ -5,6 +5,7 @@ import {
   WorkingGroupDataObject,
 } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
+import { hasWorkingGroupsCreateUpdateResearchOutputPermissions } from '@asap-hub/validation';
 import {
   atomFamily,
   DefaultValue,
@@ -169,15 +170,11 @@ export const useCanCreateUpdateResearchOutput = (
   workingGroup: WorkingGroupDataObject | undefined,
 ): boolean => {
   const user = useCurrentUserCRN();
-  if (workingGroup === undefined || user === null) return false;
 
-  const { leaders } = workingGroup;
+  if (user === null) return false;
 
-  const hasPermissions = leaders.some((leader) => {
-    if (leader.user.id === user.id && leader.role === 'Project Manager') {
-      return true;
-    }
-    return false;
-  });
-  return hasPermissions;
+  return hasWorkingGroupsCreateUpdateResearchOutputPermissions(
+    user,
+    workingGroup,
+  );
 };

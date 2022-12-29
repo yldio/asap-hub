@@ -28,7 +28,7 @@ import { ComponentProps } from 'react';
 import { Router, StaticRouter } from 'react-router-dom';
 import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 import ResearchOutputForm from '../ResearchOutputForm';
-import { createIdentifierField } from '../../utils/researchOutputForm';
+import { createIdentifierField } from '../../utils/researchOutputFormCommons';
 
 const props: ComponentProps<typeof ResearchOutputForm> = {
   onSave: jest.fn(() => Promise.resolve()),

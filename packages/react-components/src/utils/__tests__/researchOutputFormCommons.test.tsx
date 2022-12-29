@@ -15,7 +15,7 @@ import {
   isDirty,
   isIdentifierModified,
   ResearchOutputState,
-} from '../researchOutputForm';
+} from '../researchOutputFormCommons';
 
 describe('isDirty', () => {
   const researchOutputResponse: ResearchOutputResponse = {
@@ -53,7 +53,7 @@ describe('isDirty', () => {
     usedInPublication: getDecision(researchOutputResponse.usedInPublication),
   };
 
-  const initialState = { ...researchOutputState };
+  const initialState: ResearchOutputState = { ...researchOutputState };
 
   it('returns true for edit mode when teams are in diff order', () => {
     expect(
@@ -79,12 +79,7 @@ describe('isDirty', () => {
   it('returns false for edit mode when values equal the initial ones', () => {
     expect(
       isDirty(
-        getInitialState(
-          researchOutputResponse,
-          createTeamResponse(),
-          'Team',
-          true,
-        ),
+        getInitialState(researchOutputResponse, createTeamResponse(), 'Team'),
         {
           ...researchOutputState,
           identifierType: ResearchOutputIdentifierType.None,
@@ -147,10 +142,14 @@ describe('isDirty', () => {
     ${'rrid'}             | ${'101994'}
   `(
     'Return true when $key is changed to $value and differs from the initial one',
-    async ({ key, value }) => {
-      const payloadKey: keyof typeof researchOutputState = key;
-      // @ts-ignore
-      researchOutputState[payloadKey] = value;
+    async ({
+      key,
+      value,
+    }: {
+      key: keyof ResearchOutputState;
+      value: never;
+    }) => {
+      researchOutputState[key] = value;
       expect(isDirty(initialState, researchOutputState)).toBeTruthy();
     },
   );
@@ -181,7 +180,7 @@ describe('getDecision', () => {
 describe('getIdentifierType', () => {
   it('returns DOI when doi is present', () => {
     expect(
-      getIdentifierType(true, {
+      getIdentifierType({
         ...createResearchOutputResponse(),
         doi: 'abc',
       }),
@@ -189,7 +188,7 @@ describe('getIdentifierType', () => {
   });
   it('returns RRID when rrid is present', () => {
     expect(
-      getIdentifierType(true, {
+      getIdentifierType({
         ...createResearchOutputResponse(),
         rrid: 'abc',
       }),
@@ -197,29 +196,25 @@ describe('getIdentifierType', () => {
   });
   it('returns Accession Number when accession is present', () => {
     expect(
-      getIdentifierType(true, {
+      getIdentifierType({
         ...createResearchOutputResponse(),
         accession: 'abc',
       }),
     ).toEqual('Accession Number');
   });
-  it.each`
-    isEditMode | description | expected
-    ${false}   | ${'empty'}  | ${ResearchOutputIdentifierType.Empty}
-    ${true}    | ${'none'}   | ${ResearchOutputIdentifierType.None}
-  `(
-    'returns $description when there is no identifier present',
-    ({ isEditMode, expected }) => {
-      expect(
-        getIdentifierType(isEditMode, {
-          ...createResearchOutputResponse(),
-          accession: '',
-          rrid: '',
-          doi: '',
-        }),
-      ).toEqual(expected);
-    },
-  );
+  it('returns empty for create mode', () => {
+    expect(getIdentifierType()).toEqual(ResearchOutputIdentifierType.Empty);
+  });
+  it('return none for edit mode', () => {
+    expect(
+      getIdentifierType({
+        ...createResearchOutputResponse(),
+        accession: '',
+        rrid: '',
+        doi: '',
+      }),
+    ).toEqual(ResearchOutputIdentifierType.None);
+  });
 });
 
 describe('getTeamsState', () => {

@@ -33,7 +33,7 @@ import {
   getTeamsState,
   isDirty,
   ResearchOutputState,
-} from '../utils/researchOutputForm';
+} from '../utils/researchOutputFormCommons';
 
 const contentStyles = css({
   display: 'grid',
@@ -111,9 +111,9 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
 
   useEffect(() => {
     setInitialState(
-      getInitialState(researchOutputData, team, publishingEntity, isEditMode),
+      getInitialState(researchOutputData, team, publishingEntity),
     );
-  }, []);
+  }, [researchOutputData, team, publishingEntity]);
 
   const [tags, setTags] = useState<ResearchOutputPostRequest['tags']>(
     (researchOutputData?.tags as string[]) || [],
@@ -178,7 +178,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
 
   const [identifierType, setIdentifierType] =
     useState<ResearchOutputIdentifierType>(
-      getIdentifierType(isEditMode, researchOutputData),
+      getIdentifierType(researchOutputData),
     );
   const [identifier, setIdentifier] = useState<string>(
     researchOutputData?.doi ||

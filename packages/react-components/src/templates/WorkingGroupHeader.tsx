@@ -3,6 +3,8 @@ import { formatDistance } from 'date-fns';
 import { WorkingGroupLeader, WorkingGroupResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { isEnabled } from '@asap-hub/flags';
+import { useCurrentUserCRN } from '@asap-hub/react-context';
+import { User } from '@asap-hub/auth';
 
 import { mobileScreen, perRem, rem } from '../pixels';
 import { Link, Display, StateTag, TabLink, Caption } from '../atoms';
@@ -25,8 +27,6 @@ import {
   reportIcon,
 } from '../icons';
 import { createMailTo } from '../mail';
-import { useCurrentUserCRN } from '@asap-hub/react-context';
-import { User } from '@asap-hub/auth';
 
 const containerStyles = css({
   backgroundColor: paper.rgb,

@@ -23,9 +23,8 @@ import {
   useLabSuggestions,
   useWorkingGroupById,
   useTeamSuggestions,
-  usePostWorkingGroupResearchOutput,
 } from './state';
-import { useResearchTags } from '../teams/state';
+import { usePostResearchOutput, useResearchTags } from '../teams/state';
 
 type WorkingGroupOutputProps = {
   workingGroupId: string;
@@ -44,7 +43,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   const getAuthorSuggestions = useAuthorSuggestions();
   const getTeamSuggestions = useTeamSuggestions();
   const researchTags = useResearchTags();
-  const createResearchOutput = usePostWorkingGroupResearchOutput();
+  const createResearchOutput = usePostResearchOutput();
 
   const handleError = (error: unknown) => {
     if (error instanceof BackendError) {

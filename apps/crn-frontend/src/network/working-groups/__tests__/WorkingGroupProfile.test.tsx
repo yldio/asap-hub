@@ -1,4 +1,7 @@
-import { createWorkingGroupResponse } from '@asap-hub/fixtures';
+import {
+  createUserResponse,
+  createWorkingGroupResponse,
+} from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
 import { render, waitFor, screen } from '@testing-library/react';
 import { Suspense } from 'react';
@@ -32,7 +35,7 @@ const renderWorkingGroupProfile = async (
       }
     >
       <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
+        <Auth0Provider user={{ ...createUserResponse(), id: 'u1' }}>
           <WhenReady>
             <MemoryRouter
               initialEntries={[

@@ -12,7 +12,7 @@ import {
   getTeam,
   patchTeam,
   getTeams,
-  createTeamResearchOutput,
+  createResearchOutput,
   updateTeamResearchOutput,
   getLabs,
 } from '../api';
@@ -161,7 +161,7 @@ describe('teamResearchOutput', () => {
       .post('/research-outputs', payload)
       .reply(201, { id: 123 });
 
-    await createTeamResearchOutput(payload, 'Bearer x');
+    await createResearchOutput(payload, 'Bearer x');
     expect(nock.isDone()).toBe(true);
   });
 
@@ -178,9 +178,9 @@ describe('teamResearchOutput', () => {
     nock(API_BASE_URL).post('/research-outputs').reply(500, {});
 
     await expect(
-      createTeamResearchOutput(payload, 'Bearer x'),
+      createResearchOutput(payload, 'Bearer x'),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Failed to create research output for teams 90210 Expected status 201. Received status 500."`,
+      `"Failed to create research output for Team. Expected status 201. Received status 500."`,
     );
   });
 

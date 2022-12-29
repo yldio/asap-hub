@@ -138,7 +138,7 @@ export const researchOutputMapType = (
 
 export const researchOutputMapPublishingEntity = (
   publishingEntity?: string | null,
-): ResearchOutputPublishingEntities | null => {
+): ResearchOutputPublishingEntities => {
   if (
     publishingEntity &&
     (publishingEntity === 'Team' || publishingEntity === 'Working Group')
@@ -146,7 +146,7 @@ export const researchOutputMapPublishingEntity = (
     return publishingEntity;
   }
 
-  return null;
+  return 'Team';
 };
 
 export enum ResearchOutputIdentifierType {

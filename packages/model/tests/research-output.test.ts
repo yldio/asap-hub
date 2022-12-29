@@ -38,12 +38,14 @@ describe('Research Output Model', () => {
 
   describe('Publishing Entities', () => {
     it('should map to the correct entity', () => {
-      expect(researchOutputMapPublishingEntity('Team')).toEqual('Team');
+      expect(researchOutputMapPublishingEntity('Working Group')).toEqual(
+        'Working Group',
+      );
     });
-    it('should map to null', () => {
+    it('should map to Team by default', () => {
       expect(
         researchOutputMapPublishingEntity('not a publishing entity'),
-      ).toEqual(null);
+      ).toEqual('Team');
     });
   });
 });

@@ -32,7 +32,7 @@ import {
 import {
   useAuthorSuggestions,
   useLabSuggestions,
-  usePostTeamResearchOutput,
+  usePostResearchOutput,
   useResearchTags,
   useTeamById,
   useTeamSuggestions,
@@ -89,7 +89,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
 
   const { canCreateUpdate } = useContext(ResearchOutputPermissionsContext);
 
-  const createResearchOutput = usePostTeamResearchOutput();
+  const createResearchOutput = usePostResearchOutput();
   const updateResearchOutput = usePutTeamResearchOutput(researchOutputId);
 
   const getLabSuggestions = useLabSuggestions();

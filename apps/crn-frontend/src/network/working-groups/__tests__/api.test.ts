@@ -7,11 +7,8 @@ import { ResearchOutputPostRequest } from '@asap-hub/model';
 import nock from 'nock';
 import { API_BASE_URL } from '../../../config';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
-import {
-  createWorkingGroupResearchOutput,
-  getWorkingGroup,
-  getWorkingGroups,
-} from '../api';
+import { getWorkingGroup, getWorkingGroups } from '../api';
+import { createResearchOutput } from '../../teams/api';
 
 const options: GetListOptions = {
   filters: new Set(),
@@ -106,7 +103,7 @@ describe('teamResearchOutput', () => {
       .post('/research-outputs', payload)
       .reply(201, { id: 123 });
 
-    await createWorkingGroupResearchOutput(payload, 'Bearer x');
+    await createResearchOutput(payload, 'Bearer x');
     expect(nock.isDone()).toBe(true);
   });
 
@@ -114,9 +111,9 @@ describe('teamResearchOutput', () => {
     nock(API_BASE_URL).post('/research-outputs').reply(500, {});
 
     await expect(
-      createWorkingGroupResearchOutput(payload, 'Bearer x'),
+      createResearchOutput(payload, 'Bearer x'),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Failed to create research output for the working group. Expected status 201. Received status 500."`,
+      `"Failed to create research output for Working Group. Expected status 201. Received status 500."`,
     );
   });
 });

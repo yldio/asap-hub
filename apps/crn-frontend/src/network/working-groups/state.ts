@@ -3,7 +3,6 @@ import {
   WorkingGroupListResponse,
   WorkingGroupResponse,
   WorkingGroupDataObject,
-  ResearchOutputPostRequest,
 } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import {
@@ -16,14 +15,9 @@ import {
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { authorizationState } from '../../auth/state';
 import { useAlgolia } from '../../hooks/algolia';
-import { useSetResearchOutputItem } from '../../shared-research/state';
 import { getLabs, getTeams } from '../teams/api';
 import { getUsersAndExternalAuthors } from '../users/api';
-import {
-  createWorkingGroupResearchOutput,
-  getWorkingGroup,
-  getWorkingGroups,
-} from './api';
+import { getWorkingGroup, getWorkingGroups } from './api';
 
 const workingGroupIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
@@ -186,17 +180,4 @@ export const useCanCreateUpdateResearchOutput = (
     return false;
   });
   return hasPermissions;
-};
-
-export const usePostWorkingGroupResearchOutput = () => {
-  const authorization = useRecoilValue(authorizationState);
-  const setResearchOutputItem = useSetResearchOutputItem();
-  return async (payload: ResearchOutputPostRequest) => {
-    const researchOutput = await createWorkingGroupResearchOutput(
-      payload,
-      authorization,
-    );
-    setResearchOutputItem(researchOutput);
-    return researchOutput;
-  };
 };

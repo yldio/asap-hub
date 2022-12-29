@@ -1,11 +1,5 @@
+import { createSentryHeaders, GetListOptions } from '@asap-hub/frontend-utils';
 import {
-  BackendError,
-  createSentryHeaders,
-  GetListOptions,
-} from '@asap-hub/frontend-utils';
-import {
-  ResearchOutputPostRequest,
-  ResearchOutputResponse,
   WorkingGroupListResponse,
   WorkingGroupResponse,
 } from '@asap-hub/model';
@@ -47,28 +41,4 @@ export const getWorkingGroup = async (
     );
   }
   return resp.json();
-};
-
-export const createWorkingGroupResearchOutput = async (
-  researchOutput: ResearchOutputPostRequest,
-  authorization: string,
-): Promise<ResearchOutputResponse> => {
-  const resp = await fetch(`${API_BASE_URL}/research-outputs`, {
-    method: 'POST',
-    headers: {
-      authorization,
-      'content-type': 'application/json',
-      ...createSentryHeaders(),
-    },
-    body: JSON.stringify(researchOutput),
-  });
-  const response = await resp.json();
-  if (!resp.ok) {
-    throw new BackendError(
-      `Failed to create research output for the working group. Expected status 201. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
-      response,
-      resp.status,
-    );
-  }
-  return response;
 };

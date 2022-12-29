@@ -23,7 +23,7 @@ import userEvent, { specialChars } from '@testing-library/user-event';
 import { ContextType, Suspense } from 'react';
 import { Route, StaticRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import { createWorkingGroupResearchOutput } from '../api';
+import { createResearchOutput } from '../../teams/api';
 import { refreshWorkingGroupState } from '../state';
 import WorkingGroupOutput from '../WorkingGroupOutput';
 
@@ -38,9 +38,9 @@ describe('WorkingGroupOutput', () => {
     ContextType<typeof ToastContext>
   >;
 
-  const mockCreateWorkingGroupResearchOutput =
-    createWorkingGroupResearchOutput as jest.MockedFunction<
-      typeof createWorkingGroupResearchOutput
+  const mockCreateResearchOutput =
+  createResearchOutput as jest.MockedFunction<
+      typeof createResearchOutput
     >;
 
   interface RenderPageOptions {
@@ -100,7 +100,7 @@ describe('WorkingGroupOutput', () => {
 
     await publish();
 
-    expect(mockCreateWorkingGroupResearchOutput).toHaveBeenCalledWith(
+    expect(mockCreateResearchOutput).toHaveBeenCalledWith(
       {
         doi,
         documentType: 'Article',
@@ -142,7 +142,7 @@ describe('WorkingGroupOutput', () => {
       ],
     };
 
-    mockCreateWorkingGroupResearchOutput.mockRejectedValue(
+    mockCreateResearchOutput.mockRejectedValue(
       new BackendError('example', validationResponse, 400),
     );
 
@@ -151,7 +151,7 @@ describe('WorkingGroupOutput', () => {
 
     await publish();
 
-    expect(mockCreateWorkingGroupResearchOutput).toHaveBeenCalled();
+    expect(mockCreateResearchOutput).toHaveBeenCalled();
     expect(
       screen.getByText(
         'A Research Output with this URL already exists. Please enter a different URL.',
@@ -171,7 +171,7 @@ describe('WorkingGroupOutput', () => {
   });
 
   it('will toast server side errors for unknown errors', async () => {
-    mockCreateWorkingGroupResearchOutput.mockRejectedValue(
+    mockCreateResearchOutput.mockRejectedValue(
       new Error('Something went wrong'),
     );
 
@@ -181,7 +181,7 @@ describe('WorkingGroupOutput', () => {
 
     await publish();
 
-    expect(mockCreateWorkingGroupResearchOutput).toHaveBeenCalled();
+    expect(mockCreateResearchOutput).toHaveBeenCalled();
     expect(mockToast).toHaveBeenCalledWith(
       'There was an error and we were unable to save your changes. Please try again.',
     );
@@ -194,7 +194,7 @@ describe('WorkingGroupOutput', () => {
     const type = 'Animal Model';
     const doi = '10.0777';
 
-    mockCreateWorkingGroupResearchOutput.mockRejectedValue(
+    mockCreateResearchOutput.mockRejectedValue(
       new Error('Something went wrong'),
     );
 
@@ -217,7 +217,7 @@ describe('WorkingGroupOutput', () => {
 
     await publish();
 
-    expect(mockCreateWorkingGroupResearchOutput).toHaveBeenCalled();
+    expect(mockCreateResearchOutput).toHaveBeenCalled();
     expect(mockToast).toHaveBeenCalledWith(
       'There was an error and we were unable to save your changes. Please try again.',
     );

@@ -4,7 +4,6 @@ import { WorkingGroupLeader, WorkingGroupResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { isEnabled } from '@asap-hub/flags';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
-import { User } from '@asap-hub/auth';
 
 import { mobileScreen, perRem, rem } from '../pixels';
 import { Link, Display, StateTag, TabLink, Caption } from '../atoms';
@@ -110,7 +109,7 @@ const dropdownButtonStyling = css({
 });
 
 const isProjectManager = (
-  user: User | null,
+  user: ReturnType<typeof useCurrentUserCRN>,
   leaders: WorkingGroupLeader[],
 ): boolean =>
   leaders.some((l) => l.user.id === user?.id && l.role === 'Project Manager');

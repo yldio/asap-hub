@@ -127,7 +127,6 @@ export {
   RecentSharedOutputs,
   RemindersCard,
   ResearchOutputExtraInformationCard,
-  ResearchOutputForm,
   ResearchOutputHeader,
   RichText,
   RichTextCard,

@@ -41,25 +41,13 @@ const props: ComponentProps<typeof ResearchOutputTeamForm> = {
 
 jest.setTimeout(60000);
 
-it('renders the research output type in the header', () => {
+it('renders the research output header', () => {
   render(
     <StaticRouter>
       <ResearchOutputTeamForm {...props} />
     </StaticRouter>,
   );
   expect(screen.getByRole('heading', { name: /Share/i })).toBeInTheDocument();
-});
-it('clicking button will trigger the callback', () => {
-  const mockOnCreate = jest.fn();
-
-  render(
-    <StaticRouter>
-      <ResearchOutputTeamForm {...props} onSave={mockOnCreate} />
-    </StaticRouter>,
-  );
-  const button = screen.getByRole('button', { name: /Publish/i });
-  userEvent.click(button);
-  waitFor(() => expect(mockOnCreate).toHaveBeenCalled());
 });
 
 describe('createIdentifierField', () => {

@@ -39,7 +39,7 @@ export { default as NotFoundPage } from './NotFoundPage';
 export { default as OpenQuestionsModal } from './OpenQuestionsModal';
 export { default as PasswordResetEmailSentPage } from './PasswordResetEmailSentPage';
 export { default as PersonalInfoModal } from './PersonalInfoModal';
-export { default as ResearchOutputPage } from './ResearchOutputPage';
+export { default as ResearchOutputTeamForm } from './ResearchOutputTeamForm';
 export { default as ResearchOutputsSearch } from './ResearchOutputsSearch';
 export { default as RoleModal } from './RoleModal';
 export { default as SharedResearchList } from './SharedResearchList';

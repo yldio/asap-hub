@@ -1,3 +1,6 @@
+import userEvent from '@testing-library/user-event';
+import { ComponentProps } from 'react';
+import { StaticRouter, Router } from 'react-router-dom';
 import {
   createResearchOutputResponse,
   createTeamResponse,
@@ -22,15 +25,12 @@ import {
   waitForElementToBeRemoved,
   within,
 } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { createMemoryHistory, History } from 'history';
-import { ComponentProps } from 'react';
-import { Router, StaticRouter } from 'react-router-dom';
+import ResearchOutputTeamForm from '../ResearchOutputTeamForm';
 import { ENTER_KEYCODE } from '../../atoms/Dropdown';
-import ResearchOutputForm from '../ResearchOutputForm';
 import { createIdentifierField } from '../../utils/researchOutputFormCommons';
 
-const props: ComponentProps<typeof ResearchOutputForm> = {
+const props: ComponentProps<typeof ResearchOutputTeamForm> = {
   onSave: jest.fn(() => Promise.resolve()),
   tagSuggestions: [],
   researchTags: [],
@@ -40,6 +40,28 @@ const props: ComponentProps<typeof ResearchOutputForm> = {
 };
 
 jest.setTimeout(60000);
+
+it('renders the research output type in the header', () => {
+  render(
+    <StaticRouter>
+      <ResearchOutputTeamForm {...props} />
+    </StaticRouter>,
+  );
+  expect(screen.getByRole('heading', { name: /Share/i })).toBeInTheDocument();
+});
+it('clicking button will trigger the callback', () => {
+  const mockOnCreate = jest.fn();
+
+  render(
+    <StaticRouter>
+      <ResearchOutputTeamForm {...props} onSave={mockOnCreate} />
+    </StaticRouter>,
+  );
+  const button = screen.getByRole('button', { name: /Publish/i });
+  userEvent.click(button);
+  waitFor(() => expect(mockOnCreate).toHaveBeenCalled());
+});
+
 describe('createIdentifierField', () => {
   it('maps the ResearchOutputIdentifierType to fields including the identifier', () => {
     expect(
@@ -63,7 +85,7 @@ describe('createIdentifierField', () => {
 it('renders the form', async () => {
   render(
     <StaticRouter>
-      <ResearchOutputForm {...props} />
+      <ResearchOutputTeamForm {...props} />
     </StaticRouter>,
   );
   expect(
@@ -75,7 +97,7 @@ it('renders the form', async () => {
 it('renders the edit form button when research output data is present', async () => {
   render(
     <StaticRouter>
-      <ResearchOutputForm
+      <ResearchOutputTeamForm
         {...props}
         researchOutputData={createResearchOutputResponse()}
         isEditMode
@@ -109,7 +131,7 @@ it('renders the edit form with fields from researchOutputData prepopulated', asy
   };
   await render(
     <StaticRouter>
-      <ResearchOutputForm
+      <ResearchOutputTeamForm
         {...props}
         documentType={'Dataset'}
         researchOutputData={researchOutputData}
@@ -138,7 +160,7 @@ it('displays proper message when no author is found', async () => {
   const getAuthorSuggestions = jest.fn().mockResolvedValue([]);
   render(
     <StaticRouter>
-      <ResearchOutputForm
+      <ResearchOutputTeamForm
         {...props}
         getAuthorSuggestions={getAuthorSuggestions}
       />
@@ -154,7 +176,10 @@ it('displays proper message when no lab is found', async () => {
   const getLabSuggestions = jest.fn().mockResolvedValue([]);
   render(
     <StaticRouter>
-      <ResearchOutputForm {...props} getLabSuggestions={getLabSuggestions} />
+      <ResearchOutputTeamForm
+        {...props}
+        getLabSuggestions={getLabSuggestions}
+      />
     </StaticRouter>,
   );
   userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
@@ -165,7 +190,7 @@ it('displays proper message when no lab is found', async () => {
 it('displays current team within the form', async () => {
   render(
     <StaticRouter>
-      <ResearchOutputForm
+      <ResearchOutputTeamForm
         {...props}
         team={{ ...createTeamResponse(), displayName: 'example team' }}
       />
@@ -227,7 +252,9 @@ describe('on submit', () => {
       researchTags = [{ id: '1', name: 'research tag 1' }],
     }: {
       data?: Data;
-      documentType?: ComponentProps<typeof ResearchOutputForm>['documentType'];
+      documentType?: ComponentProps<
+        typeof ResearchOutputTeamForm
+      >['documentType'];
       researchTags?: ResearchTagResponse[];
     } = {
       data: {
@@ -242,7 +269,7 @@ describe('on submit', () => {
   ) => {
     render(
       <Router history={history}>
-        <ResearchOutputForm
+        <ResearchOutputTeamForm
           {...props}
           team={{ ...createTeamResponse(), id: 'TEAMID' }}
           documentType={documentType}

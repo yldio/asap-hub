@@ -191,7 +191,7 @@ export {
   OpenQuestionsModal,
   PasswordResetEmailSentPage,
   PersonalInfoModal,
-  ResearchOutputPage,
+  ResearchOutputTeamForm,
   ResearchOutputsSearch,
   RoleModal,
   SharedResearchList,

@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 import { Card, Headline3, Link, Subtitle } from '../atoms';
 import { createMailTo } from '../mail';
 import { Collapsible } from '../molecules';
-import { DeliverablesCard, WorkingGroupMembers } from '../organisms';
+import { DeliverablesCard, WorkingGroupMembers, RichText } from '../organisms';
 import { perRem } from '../pixels';
 
 type WorkingGroupAboutProps = {
@@ -56,7 +56,9 @@ const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
     </Card>
     <Card>
       <Headline3>Working Group Description</Headline3>
-      <Collapsible>{description}</Collapsible>
+      <Collapsible>
+        <RichText text={description} />
+      </Collapsible>
     </Card>
     <Card accent="green">
       <Subtitle>Do you have any questions?</Subtitle>

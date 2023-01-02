@@ -63,8 +63,6 @@
           "inlineEditable": false,
           "contentType": "Unspecified",
           "editor": "RichText",
-          "createEnum": false,
-          "isEmbeddable": false,
           "label": "Description",
           "isRequired": false,
           "isRequiredOnPublish": false,

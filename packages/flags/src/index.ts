@@ -7,7 +7,7 @@ export type Flags = Partial<Record<Flag, boolean | undefined>>;
 let overrides: Flags = {
   // flags already live in prod:
   // can also be used to manually disable a flag in development:
-  ['WORKING_GROUP_SHARED_OUTPUT_BTN']: false
+  ['WORKING_GROUP_SHARED_OUTPUT_BTN']: false,
 };
 
 const envDefaults: Record<string, boolean> = {

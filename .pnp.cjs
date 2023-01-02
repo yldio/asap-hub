@@ -3964,7 +3964,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "contentful-html-rich-text-converter",\
-        "https://github.com/yldio/contentful-html-rich-text-converter.git#commit=c785c21915c9d37f9b438f5f3ebf5fd67750e791"\
+        "https://github.com/yldio/contentful-html-rich-text-converter.git#commit=8f61574217a3f05c91f219867187a6c71eea5ab2"\
       ],\
       [\
         "contentful-import",\
@@ -10818,7 +10818,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jest", "npm:27.5.2"],\
             ["@types/node", "npm:14.18.33"],\
             ["@types/prettier", "npm:2.7.1"],\
-            ["contentful-html-rich-text-converter", "https://github.com/yldio/contentful-html-rich-text-converter.git#commit=c785c21915c9d37f9b438f5f3ebf5fd67750e791"],\
+            ["contentful-html-rich-text-converter", "https://github.com/yldio/contentful-html-rich-text-converter.git#commit=8f61574217a3f05c91f219867187a6c71eea5ab2"],\
             ["contentful-management", "npm:10.19.3"],\
             ["graphql", "npm:15.8.0"],\
             ["graphql-tag", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:2.12.6"],\
@@ -42334,11 +42334,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["contentful-html-rich-text-converter", [\
-        ["https://github.com/yldio/contentful-html-rich-text-converter.git#commit=c785c21915c9d37f9b438f5f3ebf5fd67750e791", {\
-          "packageLocation": "./.yarn/cache/contentful-html-rich-text-converter-https-0d0873f7df-2edd1ef1fb.zip/node_modules/contentful-html-rich-text-converter/",\
+        ["https://github.com/yldio/contentful-html-rich-text-converter.git#commit=8f61574217a3f05c91f219867187a6c71eea5ab2", {\
+          "packageLocation": "./.yarn/cache/contentful-html-rich-text-converter-https-365ec8fc86-e258d05793.zip/node_modules/contentful-html-rich-text-converter/",\
           "packageDependencies": [\
-            ["contentful-html-rich-text-converter", "https://github.com/yldio/contentful-html-rich-text-converter.git#commit=c785c21915c9d37f9b438f5f3ebf5fd67750e791"],\
-            ["html-entities", "npm:1.4.0"],\
+            ["contentful-html-rich-text-converter", "https://github.com/yldio/contentful-html-rich-text-converter.git#commit=8f61574217a3f05c91f219867187a6c71eea5ab2"],\
+            ["html-entities", "npm:1.2.1"],\
             ["htmlparser", "npm:1.7.7"],\
             ["ramda", "npm:0.26.1"]\
           ],\
@@ -50169,10 +50169,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["html-entities", [\
-        ["npm:1.4.0", {\
-          "packageLocation": "./.yarn/cache/html-entities-npm-1.4.0-39a1121015-4b73ffb9ee.zip/node_modules/html-entities/",\
+        ["npm:1.2.1", {\
+          "packageLocation": "./.yarn/cache/html-entities-npm-1.2.1-a7f05778ef-97df9c2706.zip/node_modules/html-entities/",\
           "packageDependencies": [\
-            ["html-entities", "npm:1.4.0"]\
+            ["html-entities", "npm:1.2.1"]\
           ],\
           "linkType": "HARD"\
         }],\

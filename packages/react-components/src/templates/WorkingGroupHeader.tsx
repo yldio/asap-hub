@@ -23,7 +23,7 @@ import {
   plusIcon,
   protocol,
   successIcon,
-  reportIcon,
+  crnReportIcon,
 } from '../icons';
 import { createMailTo } from '../mail';
 
@@ -208,7 +208,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
                   href: '#',
                 }}
                 {{
-                  item: <>{reportIcon} CRN Report</>,
+                  item: <>{crnReportIcon} CRN Report</>,
                   href: '#',
                 }}
               </DropdownButton>

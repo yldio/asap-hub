@@ -1,7 +1,7 @@
 import { ListResponse } from '../common';
 import { Resource } from './common';
 
-const workingGroupMemberRole = [
+export const workingGroupMemberRole = [
   'Lead',
   'Co-lead',
   'Working group member',

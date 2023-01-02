@@ -12,6 +12,7 @@ import ExpandableText from '../molecules/ExpandableText';
 import EmailSection from '../organisms/EmailSection';
 import UserQuestions from '../organisms/UserQuestions';
 import UserProjects from '../organisms/UserProjects';
+import UserWorkingGroups from '../organisms/UserWorkingGroups';
 
 type UserOverviewProps = Pick<
   gp2.UserResponse,
@@ -58,6 +59,7 @@ const UserOverview: React.FC<UserOverviewProps> = ({
   fundingStreams,
   questions,
   projects,
+  workingGroups,
   firstName,
 }) => (
   <div css={containerStyles}>
@@ -92,11 +94,6 @@ const UserOverview: React.FC<UserOverviewProps> = ({
         </div>
       </div>
     </Card>
-    <Card padding={false}>
-      <div css={cardStyles}>
-        <UserQuestions questions={questions} firstName={firstName} />
-      </div>
-    </Card>
     {projects.length > 0 && (
       <Card padding={false}>
         <div css={cardStyles}>
@@ -111,7 +108,25 @@ const UserOverview: React.FC<UserOverviewProps> = ({
         </div>
       </Card>
     )}
-
+    {workingGroups.length > 0 && (
+      <Card padding={false}>
+        <div css={cardStyles}>
+          <Headline3 noMargin>Working Groups</Headline3>
+          <div css={contentStyles}>
+            <UserWorkingGroups
+              workingGroups={workingGroups}
+              firstName={firstName}
+              id={id}
+            ></UserWorkingGroups>
+          </div>
+        </div>
+      </Card>
+    )}
+    <Card padding={false}>
+      <div css={cardStyles}>
+        <UserQuestions questions={questions} firstName={firstName} />
+      </div>
+    </Card>
     {fundingStreams && (
       <Card padding={false}>
         <div css={cardStyles}>

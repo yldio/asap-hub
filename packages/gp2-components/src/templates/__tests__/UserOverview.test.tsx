@@ -106,6 +106,33 @@ describe('UserOverview', () => {
     });
   });
 
+  describe('Working Groups', () => {
+    it('renders the working-groups', () => {
+      const workingGroups: gp2.UserResponse['workingGroups'] = [
+        {
+          id: '1',
+          title: 'Working Group 1',
+          members: [],
+        },
+      ];
+      render(<UserOverview {...defaultProps} workingGroups={workingGroups} />);
+      expect(
+        screen.getByRole('heading', { name: 'Working Groups' }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: /Working Group 1/ }),
+      ).toBeInTheDocument();
+    });
+
+    it('does not render the working-groups when there are no working-groups available', () => {
+      const workingGroups: gp2.UserResponse['workingGroups'] = [];
+      render(<UserOverview {...defaultProps} workingGroups={workingGroups} />);
+      expect(
+        screen.queryByRole('heading', { name: 'Working Groups' }),
+      ).not.toBeInTheDocument();
+    });
+  });
+
   it.each(gp2.keywords)('renders the keyword: %s', (keyword) => {
     render(
       <UserOverview {...defaultProps} keywords={[keyword]}>

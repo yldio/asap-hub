@@ -1,14 +1,30 @@
 import { css } from '@emotion/react';
 import { formatDistance } from 'date-fns';
-import { WorkingGroupResponse } from '@asap-hub/model';
+import { WorkingGroupLeader, WorkingGroupResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
+import { isEnabled } from '@asap-hub/flags';
+import { useCurrentUserCRN } from '@asap-hub/react-context';
 
 import { mobileScreen, perRem, rem } from '../pixels';
 import { Link, Display, StateTag, TabLink, Caption } from '../atoms';
-import { paper, steel } from '../colors';
+import { paper, pine, steel } from '../colors';
 import { contentSidePaddingWithNavigation } from '../layout';
-import { UserAvatarList, TabNav, ExternalLink } from '../molecules';
-import { successIcon } from '../icons';
+import {
+  UserAvatarList,
+  TabNav,
+  ExternalLink,
+  DropdownButton,
+} from '../molecules';
+import {
+  article,
+  bioinformatics,
+  dataset,
+  labResource,
+  plusIcon,
+  protocol,
+  successIcon,
+  crnReportIcon,
+} from '../icons';
 import { createMailTo } from '../mail';
 
 const containerStyles = css({
@@ -55,14 +71,15 @@ const contactSectionStyles = css({
 
   grid: `
     "members" auto
-    "lab"    auto
+    "lab"     auto
     "contact" auto
+    "create"  auto
   `,
 
   [`@media (min-width: ${mobileScreen.max}px)`]: {
     grid: `
-      "contact members"
-      "lab lab"/ max-content 1fr
+      "contact members create"
+      "lab lab lab"/ max-content 1fr
     `,
   },
 });
@@ -74,6 +91,28 @@ const pointOfContactStyles = css({
     display: 'block',
   },
 });
+
+const createStyles = css({
+  gridArea: 'create',
+  display: 'flex',
+  [`@media (min-width: ${mobileScreen.max}px)`]: {
+    display: 'block',
+  },
+});
+
+const dropdownButtonStyling = css({
+  display: 'flex',
+  columnGap: `${9 / perRem}em`,
+  svg: {
+    color: pine.rgb,
+  },
+});
+
+const isProjectManager = (
+  user: ReturnType<typeof useCurrentUserCRN>,
+  leaders: WorkingGroupLeader[],
+): boolean =>
+  leaders.some((l) => l.user.id === user?.id && l.role === 'Project Manager');
 
 type WorkingGroupPageHeaderProps = {
   readonly membersListElementId: string;
@@ -99,66 +138,113 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
   leaders,
   members,
   membersListElementId,
-}) => (
-  <header css={containerStyles}>
-    <div css={titleStyle}>
-      <Display styleAsHeading={2}>{title}</Display>
-      {complete && (
-        <StateTag accent="green" icon={successIcon} label="Complete" />
-      )}
-    </div>
-    <section css={contactSectionStyles}>
-      <UserAvatarList
-        members={[...leaders, ...members].map((member) => member.user)}
-        fullListRoute={`${
-          network({})
-            .workingGroups({})
-            .workingGroup({ workingGroupId: id })
-            .about({}).$
-        }#${membersListElementId}`}
-      />
-      {pointOfContact && (
-        <div css={pointOfContactStyles}>
-          <Link
-            buttonStyle
-            small
-            primary
-            href={`${createMailTo(pointOfContact.user.email)}`}
-          >
-            Contact PM
-          </Link>
-        </div>
-      )}
-    </section>
-    <div css={rowStyles}>
-      {externalLink && (
-        <ExternalLink
-          full
-          label="Working Group Folder"
-          href={externalLink}
-          size="large"
-        />
-      )}
-      <div css={lastUpdatedStyles}>
-        <Caption asParagraph accent="lead">
-          Last updated: {formatDistance(new Date(), new Date(lastModifiedDate))}{' '}
-          ago
-        </Caption>
+}) => {
+  const currentUserCRN = useCurrentUserCRN();
+  const isWorkingGroupProjectManager = isProjectManager(
+    currentUserCRN,
+    leaders,
+  );
+
+  return (
+    <header css={containerStyles}>
+      <div css={titleStyle}>
+        <Display styleAsHeading={2}>{title}</Display>
+        {complete && (
+          <StateTag accent="green" icon={successIcon} label="Complete" />
+        )}
       </div>
-    </div>
-    <TabNav>
-      <TabLink
-        href={
-          network({})
-            .workingGroups({})
-            .workingGroup({ workingGroupId: id })
-            .about({}).$
-        }
-      >
-        About
-      </TabLink>
-    </TabNav>
-  </header>
-);
+      <section css={contactSectionStyles}>
+        <UserAvatarList
+          members={[...leaders, ...members].map((member) => member.user)}
+          fullListRoute={`${
+            network({})
+              .workingGroups({})
+              .workingGroup({ workingGroupId: id })
+              .about({}).$
+          }#${membersListElementId}`}
+        />
+        {pointOfContact && !isWorkingGroupProjectManager && (
+          <div css={pointOfContactStyles}>
+            <Link
+              buttonStyle
+              small
+              primary
+              href={`${createMailTo(pointOfContact.user.email)}`}
+            >
+              Contact PM
+            </Link>
+          </div>
+        )}
+
+        {isEnabled('WORKING_GROUP_SHARED_OUTPUT_BTN') &&
+          isWorkingGroupProjectManager && (
+            <div css={createStyles}>
+              <DropdownButton
+                buttonChildren={() => (
+                  <span css={dropdownButtonStyling}>
+                    {plusIcon}
+                    Share an output
+                  </span>
+                )}
+              >
+                {{
+                  item: <>{article} Article</>,
+                  href: '#',
+                }}
+                {{
+                  item: <>{bioinformatics} Bioinformatics</>,
+                  href: '#',
+                }}
+                {{
+                  item: <>{dataset} Dataset</>,
+                  href: '#',
+                }}
+                {{
+                  item: <>{labResource} Lab Resource</>,
+                  href: '#',
+                }}
+                {{
+                  item: <>{protocol} Protocol</>,
+                  href: '#',
+                }}
+                {{
+                  item: <>{crnReportIcon} CRN Report</>,
+                  href: '#',
+                }}
+              </DropdownButton>
+            </div>
+          )}
+      </section>
+      <div css={rowStyles}>
+        {externalLink && (
+          <ExternalLink
+            full
+            label="Working Group Folder"
+            href={externalLink}
+            size="large"
+          />
+        )}
+        <div css={lastUpdatedStyles}>
+          <Caption asParagraph accent="lead">
+            Last updated:{' '}
+            {formatDistance(new Date(), new Date(lastModifiedDate))} ago
+          </Caption>
+        </div>
+      </div>
+      <TabNav>
+        <TabLink
+          href={
+            network({})
+              .workingGroups({})
+              .workingGroup({ workingGroupId: id })
+              .about({}).$
+          }
+        >
+          About
+        </TabLink>
+      </TabNav>
+    </header>
+  );
+};
 
 export default WorkingGroupPageHeader;

@@ -85,6 +85,7 @@ export {
   UserProfilePersonalText,
   UsersList,
   UtilityBar,
+  WorkingGroupsList,
 } from './molecules';
 export {
   AdditionalMaterials,
@@ -153,6 +154,7 @@ export {
   UserProfileRole,
   WorkingGroupCard,
   WorkingGroupMembers,
+  WorkingGroupsTabbedCard,
 } from './organisms';
 export {
   BasicLayout,

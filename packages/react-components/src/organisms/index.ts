@@ -73,3 +73,4 @@ export { default as UserProfileRole } from './UserProfileRole';
 export { default as WelcomeCard } from './WelcomeCard';
 export { default as WorkingGroupCard } from './WorkingGroupCard';
 export { default as WorkingGroupMembers } from './WorkingGroupMembers';
+export { default as WorkingGroupsTabbedCard } from './WorkingGroupsTabbedCard';

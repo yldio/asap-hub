@@ -20,6 +20,10 @@ export const getUserResponse = (): gp2.UserResponse => ({
   ],
   avatarUrl: `https://test.com/api/assets/asap-dev/squidex-asset-id`,
   role: 'Network Investigator',
+  keywords: ['Data Science'],
+  biography:
+    'Anthony Edward "Tony" Stark was a billionaire industrialist, a founding member of the Avengers, and the former CEO of Stark Industries.',
+  degrees: ['PhD'],
   projects: [],
   workingGroups: [],
   fundingStreams: null,

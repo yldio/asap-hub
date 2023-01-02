@@ -6,8 +6,8 @@ import {
   pixels,
   usePushFromHere,
 } from '@asap-hub/react-components';
-import { mobileQuery, nonMobileQuery } from '../layout';
 import { useState } from 'react';
+import { mobileQuery, nonMobileQuery } from '../layout';
 
 const { rem, vminLinearCalcClamped, mobileScreen, tabletScreen } = pixels;
 
@@ -41,7 +41,7 @@ const buttonWrapperStyle = css({
 });
 
 type OnboardingPageFooterProps = {
-  continueEnabled: boolean;
+  isContinueEnabled: boolean;
   publishUser: () => Promise<void>;
   previousHref?: string;
   continueHref?: string;
@@ -50,7 +50,7 @@ type OnboardingPageFooterProps = {
 const OnboardingPageFooter: React.FC<OnboardingPageFooterProps> = ({
   previousHref,
   continueHref,
-  continueEnabled,
+  isContinueEnabled,
   publishUser,
 }) => {
   const [status, setStatus] = useState<
@@ -81,7 +81,7 @@ const OnboardingPageFooter: React.FC<OnboardingPageFooterProps> = ({
             <Link
               fullWidth
               buttonStyle
-              enabled={continueEnabled}
+              enabled={isContinueEnabled}
               noMargin
               href={continueHref}
               primary

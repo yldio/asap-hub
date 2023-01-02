@@ -51,3 +51,4 @@ export { default as UserProfilePersonalText } from './UserProfilePersonalText';
 export { default as UsersList } from './UsersList';
 export { default as UtilityBar } from './UtilityBar';
 export { default as TabbedContent } from './TabbedContent';
+export { default as WorkingGroupsList } from './WorkingGroupsList';

@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
 import {
-  convertDecisionToBoolean,
   DecisionOption,
   ResearchOutputDocumentType,
   ResearchOutputIdentifierType,
@@ -12,8 +11,8 @@ import {
   TeamResponse,
 } from '@asap-hub/model';
 import { sharedResearch } from '@asap-hub/routing';
-import { isInternalUser } from '@asap-hub/validation';
-import React, { ComponentProps, useEffect, useState } from 'react';
+import React, { ComponentProps, useState } from 'react';
+import equal from 'fast-deep-equal';
 import { contentSidePaddingWithNavigation } from '../layout';
 import {
   Form,
@@ -27,14 +26,11 @@ import ResearchOutputContributorsCard from '../organisms/ResearchOutputContribut
 import { usePushFromHere } from '../routing';
 import {
   noop,
-  ResearchOutputState,
-  getInitialState,
   getTeamsState,
   getDecision,
   getPublishDate,
   getIdentifierType,
-  isDirty,
-  createIdentifierField,
+  getResearchOutputState,
 } from '../utils';
 
 type ResearchOutputPageProps = Pick<
@@ -113,15 +109,6 @@ const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
   clearServerValidationError,
 }) => {
   const historyPush = usePushFromHere();
-  const [initialState, setInitialState] = useState<
-    ResearchOutputState | undefined
-  >();
-
-  useEffect(() => {
-    setInitialState(
-      getInitialState(researchOutputData, team, publishingEntity),
-    );
-  }, [researchOutputData, team, publishingEntity]);
 
   const [tags, setTags] = useState<ResearchOutputPostRequest['tags']>(
     (researchOutputData?.tags as string[]) || [],
@@ -212,26 +199,32 @@ const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
     d.types?.includes(type),
   );
 
-  const currentState: ResearchOutputState = {
-    title,
-    description,
-    link,
+  const currentState = getResearchOutputState({
+    identifierType,
+    identifier,
+    documentType,
     tags,
+    link,
+    description,
+    title,
     type,
+    authors,
+    labs,
+    teams,
+    usageNotes,
+    asapFunded,
+    usedInPublication,
+    sharingStatus,
+    publishDate,
+    labCatalogNumber,
     methods,
     organisms,
     environments,
-    teams,
-    labs,
-    authors,
     subtype,
-    labCatalogNumber,
-    identifierType,
-    identifier,
-    publishDate,
-    usedInPublication,
-    asapFunded,
-  };
+    publishingEntity,
+  });
+
+  const [initialState] = useState(currentState);
 
   return (
     <>
@@ -242,51 +235,8 @@ const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
       <main css={mainStyles}>
         <Form<ResearchOutputResponse>
           serverErrors={serverValidationErrors}
-          dirty={isDirty(initialState, currentState)}
-          onSave={() => {
-            const identifierField = createIdentifierField(
-              identifierType,
-              identifier,
-            );
-
-            /* istanbul ignore next */
-            if (!type) {
-              throw new Error('There is no type provided.');
-            }
-
-            return onSave({
-              ...identifierField,
-              documentType,
-              tags,
-              link: String(link).trim() === '' ? undefined : link,
-              description,
-              title,
-              type,
-              authors: authors.map(({ value, user }) =>
-                !user
-                  ? { externalAuthorName: value }
-                  : isInternalUser(user)
-                  ? { userId: value }
-                  : { externalAuthorId: value },
-              ),
-              labs: labs.map(({ value }) => value),
-              teams: teams.map(({ value }) => value),
-              usageNotes,
-              asapFunded: convertDecisionToBoolean(asapFunded),
-              usedInPublication: convertDecisionToBoolean(usedInPublication),
-              sharingStatus,
-              publishDate: publishDate?.toISOString(),
-              labCatalogNumber:
-                documentType === 'Lab Resource' && labCatalogNumber !== ''
-                  ? labCatalogNumber
-                  : undefined,
-              methods,
-              organisms,
-              environments,
-              subtype,
-              publishingEntity,
-            });
-          }}
+          dirty={!equal(initialState, currentState)}
+          onSave={() => onSave(currentState)}
         >
           {({ isSaving, onSave: handleSave, onCancel: handleCancel }) => (
             <div css={contentStyles}>
@@ -322,7 +272,16 @@ const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
                 onChangePublishDate={(date) =>
                   setPublishDate(date ? new Date(date) : undefined)
                 }
-                publishingEntity={publishingEntity}
+                typeDescription={
+                  publishingEntity === 'Team'
+                    ? `Select the option that applies to this ${documentType.toLowerCase()}.`
+                    : 'Select the type that matches your output the best.'
+                }
+                descriptionTip={`${
+                  publishingEntity === 'Team'
+                    ? ''
+                    : 'Add an abstract or a summary that describes this work.'
+                }`}
               />
               <ResearchOutputExtraInformationCard
                 documentType={documentType}
@@ -362,7 +321,11 @@ const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
                 onChangeTeams={setTeams}
                 getTeamSuggestions={getTeamSuggestions}
                 isEditMode={isEditMode}
-                publishingEntity={publishingEntity}
+                authorsSubtitle={
+                  publishingEntity === 'Working Group'
+                    ? '(required)'
+                    : '(optional)'
+                }
               />
               <div css={formControlsContainerStyles}>
                 <div css={formControlsStyles}>

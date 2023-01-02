@@ -3,18 +3,20 @@ import {
   createTeamResponse,
 } from '@asap-hub/fixtures';
 import {
+  researchOutputDocumentTypes,
   ResearchOutputIdentifierType,
+  ResearchOutputPostRequest,
   ResearchOutputResponse,
 } from '@asap-hub/model';
 import {
   getDecision,
   getIdentifierType,
-  getInitialState,
   getPublishDate,
+  getResearchOutputState,
   getTeamsState,
   isDirty,
   isIdentifierModified,
-  ResearchOutputState,
+  ResearchOutputTeamState,
 } from '../researchOutputFormCommons';
 
 describe('isDirty', () => {
@@ -22,7 +24,9 @@ describe('isDirty', () => {
     ...createResearchOutputResponse(),
     labs: [{ id: '1', name: 'Lab 1' }],
   };
-  const researchOutputState: ResearchOutputState = {
+
+  const initialState: ResearchOutputPostRequest = {
+    documentType: 'Article',
     title: researchOutputResponse.title,
     description: researchOutputResponse.description,
     link: researchOutputResponse.link,
@@ -31,74 +35,46 @@ describe('isDirty', () => {
     methods: researchOutputResponse.methods,
     organisms: researchOutputResponse.organisms,
     environments: researchOutputResponse.environments,
-    teams: researchOutputResponse?.teams.map((element, index) => ({
-      label: element.displayName,
-      value: element.id,
-      isFixed: index === 0,
-    })),
-    labs: researchOutputResponse?.labs.map((lab) => ({
-      value: lab.id,
-      label: lab.name,
-    })),
-    authors: researchOutputResponse?.authors.map((author) => ({
-      value: author.id,
-      label: author.displayName,
-      user: author,
-    })),
+    teams: ['Team-0', 'Team-1'],
+    labs: ['Lab-0', 'Lab-1'],
+    authors: [{ userId: 'User-0' }],
     subtype: researchOutputResponse.subtype,
     labCatalogNumber: researchOutputResponse.labCatalogNumber,
-    identifierType: ResearchOutputIdentifierType.Empty,
-    publishDate: getPublishDate(researchOutputResponse.publishDate),
-    asapFunded: getDecision(researchOutputResponse.asapFunded),
-    usedInPublication: getDecision(researchOutputResponse.usedInPublication),
+    publishDate: researchOutputResponse.publishDate,
+    asapFunded: researchOutputResponse.asapFunded,
+    usedInPublication: researchOutputResponse.usedInPublication,
+    sharingStatus: 'Network Only',
+    publishingEntity: 'Team',
   };
 
-  const initialState: ResearchOutputState = { ...researchOutputState };
+  const currentState = { ...initialState };
 
   it('returns true for edit mode when teams are in diff order', () => {
     expect(
       isDirty(
         {
-          ...researchOutputState,
-          teams: [
-            { value: 't0', label: 'team-0' },
-            { value: 't1', label: 'team-1' },
-          ],
+          ...initialState,
+          teams: ['Team-0', 'Team-1'],
         },
         {
-          ...researchOutputState,
-          teams: [
-            { value: 't1', label: 'team-1' },
-            { value: 't0', label: 'team-0' },
-          ],
+          ...initialState,
+          teams: ['Team-1', 'Team-0'],
         },
       ),
     ).toBeTruthy();
   });
 
-  it('returns false for edit mode when values equal the initial ones', () => {
-    expect(
-      isDirty(
-        getInitialState(researchOutputResponse, createTeamResponse(), 'Team'),
-        {
-          ...researchOutputState,
-          identifierType: ResearchOutputIdentifierType.None,
-        },
-      ),
-    ).toBeFalsy();
+  it('returns false when values are not changed', () => {
+    expect(isDirty(initialState, initialState)).toBeFalsy();
   });
 
   it('returns true when the initial values are changed', () => {
     expect(
-      isDirty(researchOutputState, {
-        ...researchOutputState,
+      isDirty(initialState, {
+        ...initialState,
         title: 'changed',
       }),
     ).toBeTruthy();
-  });
-
-  it('returns false when the initial values are unchanged for publishing entity team', () => {
-    expect(isDirty(researchOutputState, researchOutputState)).toBeFalsy();
   });
 
   it('returns false when the identifier is absent', () => {
@@ -146,11 +122,11 @@ describe('isDirty', () => {
       key,
       value,
     }: {
-      key: keyof ResearchOutputState;
+      key: keyof ResearchOutputPostRequest;
       value: never;
     }) => {
-      researchOutputState[key] = value;
-      expect(isDirty(initialState, researchOutputState)).toBeTruthy();
+      currentState[key] = value;
+      expect(isDirty(initialState, currentState)).toBeTruthy();
     },
   );
 });
@@ -267,5 +243,49 @@ describe('getTeamsState', () => {
         isFixed: true,
       },
     ]);
+  });
+});
+
+describe('getResearchOutputState', () => {
+  it('returns the correct modified value', () => {
+    const currentState: ResearchOutputTeamState = {
+      identifierType: ResearchOutputIdentifierType.Empty,
+      identifier: '',
+      documentType: researchOutputDocumentTypes[6],
+      tags: [],
+      link: 'https://www.google.com',
+      description: 'description',
+      title: 'title',
+      type: 'Preprint',
+      authors: [{ value: 'a111', label: 'a111' }],
+      labs: [{ value: 'l99', label: 'l99' }],
+      teams: [{ value: 't99', label: 't99' }],
+      usageNotes: 'usage notes',
+      asapFunded: getDecision(true),
+      usedInPublication: getDecision(true),
+      sharingStatus: 'Public',
+      publishDate: new Date('2020-01-01'),
+      labCatalogNumber: undefined,
+      methods: [],
+      organisms: [],
+      environments: [],
+      subtype: 'Preclinical',
+      publishingEntity: 'Team',
+    };
+    expect(
+      getResearchOutputState({
+        ...currentState,
+      }),
+    ).toEqual({
+      ...currentState,
+      teams: ['t99'],
+      labs: ['l99'],
+      authors: [{ externalAuthorName: 'a111' }],
+      asapFunded: true,
+      usedInPublication: true,
+      publishDate: new Date('2020-01-01').toISOString(),
+      identifierType: undefined,
+      identifier: undefined,
+    });
   });
 });

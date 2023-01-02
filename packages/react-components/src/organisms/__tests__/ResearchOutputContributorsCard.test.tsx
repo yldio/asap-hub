@@ -50,29 +50,6 @@ describe('Authors Multiselect', () => {
 
     expect(onChangeAuthors).toBeCalled();
   });
-
-  it('renders the correct subtitle for a teams research output', async () => {
-    const { getAllByText } = render(
-      <StaticRouter>
-        <ResearchOutputContributorsCard {...props} publishingEntity={'Team'} />
-      </StaticRouter>,
-    );
-    expect(getAllByText('(optional)').length).toEqual(2);
-    expect(getAllByText('(required)').length).toEqual(1);
-  });
-
-  it('renders the correct subtitle for a working groups research output', async () => {
-    const { getAllByText } = render(
-      <StaticRouter>
-        <ResearchOutputContributorsCard
-          {...props}
-          publishingEntity={'Working Group'}
-        />
-      </StaticRouter>,
-    );
-    expect(getAllByText('(optional)').length).toEqual(1);
-    expect(getAllByText('(required)').length).toEqual(2);
-  });
 });
 
 describe('Labs Multiselect', () => {

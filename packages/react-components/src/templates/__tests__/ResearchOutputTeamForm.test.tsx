@@ -50,6 +50,47 @@ it('renders the research output header', () => {
   expect(screen.getByRole('heading', { name: /Share/i })).toBeInTheDocument();
 });
 
+it('renders the correct subtitles for publishing entity team', () => {
+  render(
+    <StaticRouter>
+      <ResearchOutputTeamForm
+        {...props}
+        publishingEntity="Team"
+        documentType="Article"
+      />
+    </StaticRouter>,
+  );
+
+  expect(
+    screen.getByText('Select the option that applies to this article.'),
+  ).toBeVisible();
+  expect(
+    screen.getByRole('textbox', { name: 'Authors (optional)' }),
+  ).toBeVisible();
+});
+
+it('renders the correct subtitles for publishing entity working group', () => {
+  render(
+    <StaticRouter>
+      <ResearchOutputTeamForm
+        {...props}
+        publishingEntity="Working Group"
+        documentType="Article"
+      />
+    </StaticRouter>,
+  );
+
+  expect(
+    screen.getByText('Select the type that matches your output the best.'),
+  ).toBeVisible();
+  expect(
+    screen.getByText('Add an abstract or a summary that describes this work.'),
+  ).toBeVisible();
+  expect(
+    screen.getByRole('textbox', { name: 'Authors (required)' }),
+  ).toBeVisible();
+});
+
 describe('createIdentifierField', () => {
   it('maps the ResearchOutputIdentifierType to fields including the identifier', () => {
     expect(

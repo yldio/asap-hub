@@ -1,5 +1,4 @@
 import { ComponentPropsWithRef } from 'react';
-import { ResearchOutputPublishingEntities } from '@asap-hub/model';
 
 import { FormCard, LabeledMultiSelect } from '../molecules';
 import { noop } from '../utils';
@@ -32,7 +31,7 @@ type ResearchOutputContributorsProps = {
 
   readonly isSaving: boolean;
   isEditMode?: boolean;
-  publishingEntity?: ResearchOutputPublishingEntities;
+  authorsSubtitle?: string;
 };
 
 const ResearchOutputContributorsCard: React.FC<
@@ -49,7 +48,7 @@ const ResearchOutputContributorsCard: React.FC<
   onChangeTeams = noop,
   isSaving,
   isEditMode,
-  publishingEntity = 'Team',
+  authorsSubtitle = '(optional)',
 }) => (
   <FormCard title="Who were the contributors?">
     <LabeledMultiSelect
@@ -81,7 +80,7 @@ const ResearchOutputContributorsCard: React.FC<
     <AuthorSelect
       title="Authors"
       description=""
-      subtitle={`${publishingEntity === 'Team' ? '(optional)' : '(required)'}`}
+      subtitle={authorsSubtitle}
       enabled={!isSaving}
       placeholder="Start typing..."
       loadOptions={getAuthorSuggestions}

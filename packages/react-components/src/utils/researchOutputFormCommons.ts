@@ -4,41 +4,20 @@ import {
   DecisionOption,
   ResearchOutputPublishingEntities,
   TeamResponse,
+  ResearchOutputPostRequest,
+  convertDecisionToBoolean,
+  ResearchOutputDocumentType,
 } from '@asap-hub/model';
+import { isInternalUser } from '@asap-hub/validation';
+import equal from 'fast-deep-equal';
 import { ComponentProps } from 'react';
 import ResearchOutputContributorsCard from '../organisms/ResearchOutputContributorsCard';
-
-export type ResearchOutputState = {
-  title: string;
-  description: string;
-  link?: string;
-  type: string | undefined;
-  tags: readonly string[];
-  methods: string[];
-  organisms: string[];
-  environments: string[];
-  subtype?: string;
-  labCatalogNumber?: string;
-  teams: NonNullable<
-    ComponentProps<typeof ResearchOutputContributorsCard>['teams']
-  >;
-  labs: ComponentProps<typeof ResearchOutputContributorsCard>['labs'];
-  authors: ComponentProps<typeof ResearchOutputContributorsCard>['authors'];
-  identifierType: ResearchOutputIdentifierType;
-  identifier?: string;
-  publishDate: Date | undefined;
-  asapFunded: DecisionOption;
-  usedInPublication: DecisionOption;
-};
 
 export type getTeamState = {
   team: TeamResponse | undefined;
   publishingEntity: ResearchOutputPublishingEntities;
   researchOutputData: ResearchOutputResponse | undefined;
 };
-
-const equals = (a: Array<string>, b: Array<string>): boolean =>
-  a.length === b.length && a.every((element, index) => element === b[index]);
 
 export const getTeamsState = ({
   team,
@@ -64,104 +43,10 @@ export const getTeamsState = ({
 };
 
 export function isDirty(
-  initialState: ResearchOutputState | undefined,
-  currentState: ResearchOutputState,
+  initialState: ResearchOutputPostRequest,
+  currentState: ResearchOutputPostRequest,
 ): boolean {
-  if (typeof initialState === 'undefined') return false;
-  return (
-    initialState.title !== currentState.title ||
-    initialState.description !== currentState.description ||
-    initialState.link !== currentState.link ||
-    initialState.type !== currentState.type ||
-    !equals(initialState.methods, currentState.methods) ||
-    !equals(initialState.organisms, currentState.organisms) ||
-    !equals(initialState.environments, currentState.environments) ||
-    !equals(
-      initialState.teams.map((team) => team.value),
-      currentState.teams.map((team) => team.value),
-    ) ||
-    (initialState.labs &&
-      currentState.labs &&
-      !equals(
-        initialState.labs.map((lab) => lab.value),
-        currentState.labs.map((lab) => lab.value),
-      )) ||
-    (initialState.authors &&
-      currentState.authors &&
-      !equals(
-        initialState.authors.map((author) => author.value),
-        currentState.authors.map((author) => author?.value),
-      )) ||
-    initialState.subtype !== currentState.subtype ||
-    initialState.identifierType !== currentState.identifierType
-  );
-}
-
-export function getInitialState(
-  researchOutputData: ResearchOutputResponse | undefined,
-  team: TeamResponse | undefined,
-  publishingEntity: ResearchOutputPublishingEntities,
-): ResearchOutputState {
-  if (researchOutputData) {
-    return {
-      title: researchOutputData.title,
-      type: researchOutputData.type,
-      tags: researchOutputData.tags,
-      description: researchOutputData.description,
-      methods: researchOutputData.methods,
-      organisms: researchOutputData.organisms,
-      environments: researchOutputData.environments,
-      identifierType: getIdentifierType(researchOutputData),
-      labCatalogNumber: researchOutputData.labCatalogNumber || '',
-      link: researchOutputData.link,
-      subtype: researchOutputData.subtype,
-      labs: researchOutputData.labs.map((lab) => ({
-        value: lab.id,
-        label: lab.name,
-      })),
-      authors: researchOutputData.authors.map((author) => ({
-        value: author.id,
-        label: author.displayName,
-        user: author,
-      })),
-      teams: getTeamsState({
-        team,
-        researchOutputData,
-        publishingEntity,
-      }),
-      identifier:
-        researchOutputData?.doi ||
-        researchOutputData?.rrid ||
-        researchOutputData?.accession ||
-        '',
-      publishDate: getPublishDate(researchOutputData.publishDate),
-      asapFunded: getDecision(researchOutputData.asapFunded),
-      usedInPublication: getDecision(researchOutputData.usedInPublication),
-    };
-  }
-  return {
-    title: '',
-    type: '',
-    tags: [],
-    description: '',
-    methods: [],
-    organisms: [],
-    environments: [],
-    identifierType: getIdentifierType(researchOutputData),
-    labCatalogNumber: '',
-    labs: [],
-    link: '',
-    authors: [],
-    teams: getTeamsState({
-      team,
-      researchOutputData,
-      publishingEntity,
-    }),
-    identifier: '',
-    publishDate: undefined,
-    asapFunded: 'Not Sure',
-    usedInPublication: 'Not Sure',
-  };
+  return !equal(initialState, currentState);
 }
 
 const identifierTypeToFieldName: Record<
@@ -224,3 +109,90 @@ export const getPublishDate = (publishDate?: string): Date | undefined => {
 
 export const getDecision = (decision?: boolean): DecisionOption =>
   decision === undefined ? 'Not Sure' : decision ? 'Yes' : 'No';
+
+export type ResearchOutputTeamState = {
+  identifierType: ResearchOutputIdentifierType;
+  identifier: string;
+  documentType: ResearchOutputDocumentType;
+  tags: ResearchOutputPostRequest['tags'];
+  link: ResearchOutputPostRequest['link'];
+  description: ResearchOutputPostRequest['description'];
+  title: ResearchOutputPostRequest['title'];
+  type: ResearchOutputPostRequest['type'] | '';
+  authors: NonNullable<
+    ComponentProps<typeof ResearchOutputContributorsCard>['authors']
+  >;
+  labs: NonNullable<
+    ComponentProps<typeof ResearchOutputContributorsCard>['labs']
+  >;
+  teams: NonNullable<
+    ComponentProps<typeof ResearchOutputContributorsCard>['teams']
+  >;
+  usageNotes: ResearchOutputPostRequest['usageNotes'];
+  asapFunded: DecisionOption;
+  usedInPublication: DecisionOption;
+  sharingStatus: ResearchOutputPostRequest['sharingStatus'];
+  publishDate: Date | undefined;
+  labCatalogNumber: ResearchOutputPostRequest['labCatalogNumber'];
+  methods: string[];
+  organisms: string[];
+  environments: string[];
+  subtype: string | undefined;
+  publishingEntity: ResearchOutputPublishingEntities;
+};
+
+export const getResearchOutputState = ({
+  identifierType,
+  identifier,
+  documentType,
+  tags,
+  link,
+  description,
+  title,
+  type,
+  authors,
+  labs,
+  teams,
+  usageNotes,
+  asapFunded,
+  usedInPublication,
+  sharingStatus,
+  publishDate,
+  labCatalogNumber,
+  methods,
+  organisms,
+  environments,
+  subtype,
+  publishingEntity,
+}: ResearchOutputTeamState): ResearchOutputPostRequest => ({
+  ...createIdentifierField(identifierType, identifier),
+  documentType,
+  tags,
+  link: String(link).trim() === '' ? undefined : link,
+  description,
+  title,
+  type: type as ResearchOutputPostRequest['type'],
+  authors: authors.map(({ value, user }) =>
+    !user
+      ? { externalAuthorName: value }
+      : isInternalUser(user)
+      ? { userId: value }
+      : { externalAuthorId: value },
+  ),
+  labs: labs.map(({ value }) => value),
+  teams: teams.map(({ value }) => value),
+  usageNotes,
+  asapFunded: convertDecisionToBoolean(asapFunded),
+  usedInPublication: convertDecisionToBoolean(usedInPublication),
+  sharingStatus,
+  publishDate: publishDate?.toISOString(),
+  labCatalogNumber:
+    documentType === 'Lab Resource' && labCatalogNumber !== ''
+      ? labCatalogNumber
+      : undefined,
+  methods,
+  organisms,
+  environments,
+  subtype,
+  publishingEntity,
+});

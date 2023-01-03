@@ -2091,14 +2091,14 @@ input UsersDataConnectionsInputDto {
 """The structure of the Contributing Cohorts nested schema."""
 type UsersDataContributingCohortsChildDto {
   id: [ContributingCohorts!]
-  role: String
+  role: UsersDataContributingCohortsRoleEnum
   study: String
 }
 
 """The structure of the Contributing Cohorts nested schema."""
 input UsersDataContributingCohortsChildInputDto {
   id: [String!]
-  role: String
+  role: UsersDataContributingCohortsRoleEnum
   study: String
 }
 
@@ -2110,6 +2110,13 @@ type UsersDataContributingCohortsDto {
 """The structure of the Contributing Cohorts field of the Users content input type."""
 input UsersDataContributingCohortsInputDto {
   iv: [UsersDataContributingCohortsChildInputDto!]
+}
+
+enum UsersDataContributingCohortsRoleEnum {
+  """Contributor"""
+  Contributor
+  """Investigator"""
+  Investigator
 }
 
 """The structure of the Country field of the Users content type."""

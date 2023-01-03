@@ -12,6 +12,7 @@ import {
   FetchWorkingGroupsMembersQuery,
   ProjectsDataMembersRoleEnum,
   ProjectsDataStatusEnum,
+  UsersDataContributingCohortsRoleEnum,
   UsersDataDegreeEnum,
   UsersDataRegionEnum,
   UsersDataRoleEnum,
@@ -61,7 +62,14 @@ export const getUserResponse = (): gp2.UserResponse => ({
     },
   ],
   fundingStreams: 'A funding stream',
-  contributingCohorts: [],
+  contributingCohorts: [
+    {
+      contributingCohortId: 'c1ea5ec1-aac5-47de-a052-0680a0d9b4b9',
+      name: 'CALYPSO',
+      role: 'Contributor',
+      study: 'http://example.com/study',
+    },
+  ],
   questions: [
     'What color was Iron Mans original armour?',
     'Who is the Stark family butler?',
@@ -194,7 +202,14 @@ export const getUserDataObject = (): gp2.UserDataObject => ({
   keywords: ['R', 'Bash'],
   fundingStreams: 'A funding stream',
   biography: 'a biography of Tony Stark',
-  contributingCohorts: [],
+  contributingCohorts: [
+    {
+      role: 'Contributor',
+      study: 'http://example.com/study',
+      contributingCohortId: 'c1ea5ec1-aac5-47de-a052-0680a0d9b4b9',
+      name: 'CALYPSO',
+    },
+  ],
   secondaryEmail: 'tony@stark.com',
   telephone: { countryCode: '+1', number: '212-970-4133' },
   questions: [
@@ -312,7 +327,18 @@ export const getGraphQLUser = (
       { question: 'What color was Iron Mans original armour?' },
       { question: 'Who is the Stark family butler?' },
     ],
-    contributingCohorts: [],
+    contributingCohorts: [
+      {
+        role: UsersDataContributingCohortsRoleEnum.Contributor,
+        study: 'http://example.com/study',
+        id: [
+          {
+            id: 'c1ea5ec1-aac5-47de-a052-0680a0d9b4b9',
+            flatData: { name: 'CALYPSO' },
+          },
+        ],
+      },
+    ],
     ...user?.flatData,
   },
   referencingProjectsContents: [

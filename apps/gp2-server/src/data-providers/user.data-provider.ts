@@ -296,6 +296,9 @@ export const parseGraphQLUserToDataObject = ({
   if (user.keywords && !user.keywords.every(gp2Model.isKeyword)) {
     throw new TypeError('Invalid keyword received from Squidex');
   }
+  const contributingCohorts = parseContributingCohorts(
+    user.contributingCohorts,
+  );
   return {
     id,
     createdDate,
@@ -312,12 +315,12 @@ export const parseGraphQLUserToDataObject = ({
     projects,
     workingGroups,
     fundingStreams: user.fundingStreams || undefined,
-    contributingCohorts: [],
     secondaryEmail: user.secondaryEmail || undefined,
     telephone,
     keywords: user.keywords || [],
     biography: user.biography || undefined,
     questions,
+    contributingCohorts,
   };
 };
 
@@ -422,6 +425,25 @@ const parsePositions = (
       role,
       department,
       institution,
+    };
+  }) || [];
+
+const parseContributingCohorts = (
+  cohorts: NonNullable<
+    FetchUserQuery['findUsersContent']
+  >['flatData']['contributingCohorts'],
+): gp2Model.UserDataObject['contributingCohorts'] =>
+  cohorts?.map(({ id, role, study }) => {
+    const cohort = id && id[0];
+
+    if (!(cohort && cohort.flatData.name && role)) {
+      throw new Error('Invalid Contributing Cohort');
+    }
+    return {
+      contributingCohortId: cohort.id,
+      name: cohort.flatData.name,
+      role,
+      ...(study && { study }),
     };
   }) || [];
 

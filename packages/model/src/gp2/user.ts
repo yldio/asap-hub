@@ -60,6 +60,15 @@ type UserWorkingGroup = Pick<WorkingGroupDataObject, 'id' | 'title'> & {
 
 type Telephone = { countryCode?: string; number?: string };
 
+const userContributingCohortRole = ['Contributor', 'Investigator'] as const;
+type UserContributingCohortRole = typeof userContributingCohortRole[number];
+type UserContributingCohort = {
+  role: UserContributingCohortRole;
+  study?: string;
+  name: string;
+  contributingCohortId: string;
+};
+
 export type UserDataObject = {
   avatarUrl?: string;
   city?: string;
@@ -79,7 +88,7 @@ export type UserDataObject = {
   questions: string[];
   workingGroups: UserWorkingGroup[];
   fundingStreams?: string;
-  contributingCohorts: unknown[];
+  contributingCohorts: UserContributingCohort[];
   secondaryEmail?: string;
   telephone?: Telephone;
   keywords: Keyword[];

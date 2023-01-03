@@ -2032,14 +2032,14 @@ export type UsersDataConnectionsInputDto = {
 /** The structure of the Contributing Cohorts nested schema. */
 export type UsersDataContributingCohortsChildDto = {
   id: Maybe<Array<ContributingCohorts>>;
-  role: Maybe<Scalars['String']>;
+  role: Maybe<UsersDataContributingCohortsRoleEnum>;
   study: Maybe<Scalars['String']>;
 };
 
 /** The structure of the Contributing Cohorts nested schema. */
 export type UsersDataContributingCohortsChildInputDto = {
   id: InputMaybe<Array<Scalars['String']>>;
-  role: InputMaybe<Scalars['String']>;
+  role: InputMaybe<UsersDataContributingCohortsRoleEnum>;
   study: InputMaybe<Scalars['String']>;
 };
 
@@ -2052,6 +2052,13 @@ export type UsersDataContributingCohortsDto = {
 export type UsersDataContributingCohortsInputDto = {
   iv: InputMaybe<Array<UsersDataContributingCohortsChildInputDto>>;
 };
+
+export enum UsersDataContributingCohortsRoleEnum {
+  /** Contributor */
+  Contributor = 'Contributor',
+  /** Investigator */
+  Investigator = 'Investigator',
+}
 
 /** The structure of the Country field of the Users content type. */
 export type UsersDataCountryDto = {

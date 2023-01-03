@@ -847,6 +847,48 @@ describe('Reminder Data Provider', () => {
         });
       });
 
+      it('Should not fetch the reminder when the event is a future event', async () => {
+        jest.setSystemTime(DateTime.fromISO('2023-01-04T10:00:00Z').toJSDate());
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryEventsContents![0]!.flatData.startDate =
+          '2023-01-06T08:00:00Z';
+        squidexGraphqlResponse.queryEventsContents![0]!.flatData.endDate =
+          '2023-01-06T10:00:00Z';
+
+        squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.team![0]! =
+          { id: 'team-id-3' };
+
+        squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.user![0]! =
+          {
+            id: 'user-id',
+            flatData: {
+              role: 'Grantee',
+              teams: [
+                {
+                  id: [
+                    {
+                      id: 'team-id-3',
+                    },
+                  ],
+                  role: 'Lead PI (Core Leadership)',
+                },
+              ],
+            },
+          };
+
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({
+          total: 0,
+          items: [],
+        });
+      });
+
       it('Should fetch the reminder if user is linked to some team that she/he does not belong in the event', async () => {
         // set current time to one minute after the end of the fixture event
         jest.setSystemTime(DateTime.fromISO('2022-01-01T10:01:00Z').toJSDate());
@@ -978,8 +1020,7 @@ describe('Reminder Data Provider', () => {
         });
       });
 
-      it('Should not fetch the reminder when for a future event', async () => {
-        // set current time to 72 hours + 1 minute after the end of the fixture event
+      it('Should not fetch the reminder when the event is a future event', async () => {
         jest.setSystemTime(DateTime.fromISO('2022-01-04T10:01:00Z').toJSDate());
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryEventsContents![0]!.flatData.startDate =

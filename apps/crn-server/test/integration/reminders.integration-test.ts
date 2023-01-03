@@ -547,6 +547,30 @@ describe('Reminders', () => {
         'Happening Now',
       ]);
     });
+
+    test('Should not see the reminder when the event is a future event', async () => {
+      jest.setSystemTime(new Date('2022-08-10T10:59:00.0Z'));
+
+      const eventInput = getEventInput(calendarId);
+      eventInput.startDate = new Date('2023-08-10T10:00:00.0Z').toISOString();
+      eventInput.endDate = new Date('2023-08-10T11:00:00.0Z').toISOString();
+
+      eventInput.speakers = [
+        {
+          user: [userId],
+          team: [teamId],
+        },
+      ];
+      const event = await eventController.create(eventInput);
+      eventIdsForDeletion = [event.id];
+
+      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+      expect(reminders).toEqual({
+        total: 0,
+        items: [],
+      });
+    });
   });
 
   describe('Publish Material Reminder', () => {
@@ -665,6 +689,31 @@ describe('Reminders', () => {
       expect(reminders.items.map((reminder) => reminder.type)).toEqual([
         'Happening Now',
       ]);
+    });
+
+    test('Should not see the reminder when the event is a future event', async () => {
+      jest.setSystemTime(new Date('2022-08-10T10:59:00.0Z'));
+
+      const eventInput = getEventInput(calendarId);
+      eventInput.startDate = new Date('2023-08-10T10:00:00.0Z').toISOString();
+      eventInput.endDate = new Date('2023-08-10T11:00:00.0Z').toISOString();
+
+      const userCreateDataObject = getUserInput(teamId);
+      userId = await userDataProvider.create({
+        ...userCreateDataObject,
+        role: 'Staff',
+      });
+      fetchRemindersOptions = { userId, timezone: 'Europe/London' };
+
+      const event = await eventController.create(eventInput);
+      eventIdsForDeletion = [event.id];
+
+      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+      expect(reminders).toEqual({
+        total: 0,
+        items: [],
+      });
     });
   });
   interface TestProps {

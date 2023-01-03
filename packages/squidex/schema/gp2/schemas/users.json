@@ -616,7 +616,7 @@
               "isUnique": false,
               "isEmbeddable": false,
               "inlineEditable": true,
-              "createEnum": false,
+              "createEnum": true,
               "contentType": "Unspecified",
               "editor": "Dropdown",
               "label": "Role",

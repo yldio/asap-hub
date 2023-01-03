@@ -312,6 +312,7 @@ export const getGraphQLUser = (
       { question: 'What color was Iron Mans original armour?' },
       { question: 'Who is the Stark family butler?' },
     ],
+    contributingCohorts: [],
     ...user?.flatData,
   },
   referencingProjectsContents: [

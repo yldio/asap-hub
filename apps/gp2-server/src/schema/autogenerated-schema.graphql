@@ -12,6 +12,17 @@ directive @cache(
 
 """The app mutations."""
 type ApplicationMutations {
+  """Change a Contributing Cohorts content."""
+  changeContributingCohortsContent(
+    """The timestamp when the status should be changed."""
+    dueTime: Instant
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The status for the content."""
+    status: String!
+  ): ContributingCohorts!
   """Change a Dashboard content."""
   changeDashboardContent(
     """The timestamp when the status should be changed."""
@@ -78,6 +89,17 @@ type ApplicationMutations {
     """The status for the content."""
     status: String!
   ): WorkingGroups!
+  """Creates an Contributing Cohorts content."""
+  createContributingCohortsContent(
+    """The data for the content."""
+    data: ContributingCohortsDataInputDto!
+    """The optional custom content ID."""
+    id: String
+    """Set to true to autopublish content on create."""
+    publish: Boolean = false
+    """The initial status."""
+    status: String
+  ): ContributingCohorts!
   """Creates an Dashboard content."""
   createDashboardContent(
     """The data for the content."""
@@ -144,6 +166,13 @@ type ApplicationMutations {
     """The initial status."""
     status: String
   ): WorkingGroups!
+  """Delete an Contributing Cohorts content."""
+  deleteContributingCohortsContent(
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the content (usually GUID)."""
+    id: String!
+  ): EntitySavedResultDto!
   """Delete an Dashboard content."""
   deleteDashboardContent(
     """The expected version."""
@@ -186,6 +215,15 @@ type ApplicationMutations {
     """The ID of the content (usually GUID)."""
     id: String!
   ): EntitySavedResultDto!
+  """Patch an Contributing Cohorts content by id."""
+  patchContributingCohortsContent(
+    """The data for the content."""
+    data: ContributingCohortsDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String
+  ): ContributingCohorts!
   """Patch an Dashboard content by id."""
   patchDashboardContent(
     """The data for the content."""
@@ -240,6 +278,17 @@ type ApplicationMutations {
     """The ID of the object (usually GUID)."""
     id: String
   ): WorkingGroups!
+  """Publish a Contributing Cohorts content."""
+  publishContributingCohortsContent(
+    """The timestamp when the status should be changed."""
+    dueTime: Instant
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The status for the content."""
+    status: String!
+  ): ContributingCohorts! @deprecated(reason: "Use 'changeContributingCohortsContent' instead")
   """Publish a Dashboard content."""
   publishDashboardContent(
     """The timestamp when the status should be changed."""
@@ -306,6 +355,15 @@ type ApplicationMutations {
     """The status for the content."""
     status: String!
   ): WorkingGroups! @deprecated(reason: "Use 'changeWorkingGroupsContent' instead")
+  """Update an Contributing Cohorts content by id."""
+  updateContributingCohortsContent(
+    """The data for the content."""
+    data: ContributingCohortsDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String
+  ): ContributingCohorts!
   """Update an Dashboard content by id."""
   updateDashboardContent(
     """The data for the content."""
@@ -360,6 +418,21 @@ type ApplicationMutations {
     """The ID of the object (usually GUID)."""
     id: String
   ): WorkingGroups!
+  """Upsert an Contributing Cohorts content by id."""
+  upsertContributingCohortsContent(
+    """The data for the content."""
+    data: ContributingCohortsDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """Makes the update as patch."""
+    patch: Boolean = false
+    """Set to true to autopublish content on create."""
+    publish: Boolean = false
+    """The initial status."""
+    status: String
+  ): ContributingCohorts!
   """Upsert an Dashboard content by id."""
   upsertDashboardContent(
     """The data for the content."""
@@ -459,6 +532,13 @@ type ApplicationQueries {
     """The ID of the asset (usually GUID)."""
     id: String!
   ): Asset
+  """Find an Contributing Cohorts content by id."""
+  findContributingCohortsContent(
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The optional version of the content to retrieve an older instance (not cached)."""
+    version: Int
+  ): ContributingCohorts
   """Find an Dashboard content by id."""
   findDashboardContent(
     """The ID of the object (usually GUID)."""
@@ -523,6 +603,32 @@ type ApplicationQueries {
     """Optional number of items to take."""
     top: Int
   ): AssetResultDto!
+  """Query Contributing Cohorts content items."""
+  queryContributingCohortsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [ContributingCohorts!]
+  """Query Contributing Cohorts content items with total count."""
+  queryContributingCohortsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): ContributingCohortsResultDto
   """Query Dashboard content items."""
   queryDashboardContents(
     """Optional OData filter."""
@@ -804,6 +910,127 @@ interface Content {
   version: Int!
 }
 
+"""The structure of a Contributing Cohorts content type."""
+type ContributingCohorts implements Content {
+  """The timestamp when the object was created."""
+  created: Instant!
+  """The user who created the object."""
+  createdBy: String!
+  """The user who created the object."""
+  createdByUser: User!
+  """The data of the content."""
+  data: ContributingCohortsDataDto!
+  """The edit token."""
+  editToken: String
+  """The flat data of the content."""
+  flatData: ContributingCohortsFlatDataDto!
+  """The ID of the object (usually GUID)."""
+  id: String!
+  """The timestamp when the object was updated the last time."""
+  lastModified: Instant!
+  """The user who updated the object the last time."""
+  lastModifiedBy: String!
+  """The user who updated the object the last time."""
+  lastModifiedByUser: User!
+  """The new status of the content."""
+  newStatus: String
+  """The status color of the content."""
+  newStatusColor: String
+  """Query Dashboard content items."""
+  referencingDashboardContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [Dashboard!]
+  """Query Dashboard content items with total count."""
+  referencingDashboardContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): DashboardResultDto
+  """Query Users content items."""
+  referencingUsersContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [Users!]
+  """Query Users content items with total count."""
+  referencingUsersContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): UsersResultDto
+  """The status of the content."""
+  status: String!
+  """The status color of the content."""
+  statusColor: String!
+  """The URL to the content."""
+  url: String!
+  """The version of the objec."""
+  version: Int!
+}
+
+"""The structure of the Contributing Cohorts data type."""
+type ContributingCohortsDataDto {
+  name: ContributingCohortsDataNameDto
+}
+
+"""The structure of the Contributing Cohorts data input type."""
+input ContributingCohortsDataInputDto {
+  name: ContributingCohortsDataNameInputDto
+}
+
+"""The structure of the Name field of the Contributing Cohorts content type."""
+type ContributingCohortsDataNameDto {
+  iv: String
+}
+
+"""The structure of the Name field of the Contributing Cohorts content input type."""
+input ContributingCohortsDataNameInputDto {
+  iv: String
+}
+
+"""The structure of the flat Contributing Cohorts data type."""
+type ContributingCohortsFlatDataDto {
+  name: String
+}
+
+"""List of Contributing Cohorts items and total count."""
+type ContributingCohortsResultDto {
+  """The contents."""
+  items: [ContributingCohorts!]
+  """The total count of  contents."""
+  total: Int!
+}
+
 """The structure of a Dashboard content type."""
 type Dashboard implements Content {
   """The timestamp when the object was created."""
@@ -830,6 +1057,32 @@ type Dashboard implements Content {
   newStatus: String
   """The status color of the content."""
   newStatusColor: String
+  """Query Contributing Cohorts content items."""
+  referencesContributingCohortsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [ContributingCohorts!]
+  """Query Contributing Cohorts content items with total count."""
+  referencesContributingCohortsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): ContributingCohortsResultDto
   """Query Dashboard content items."""
   referencesDashboardContents(
     """Optional OData filter."""
@@ -1044,7 +1297,7 @@ input DashboardDataNewsInputDto {
   iv: [String!]
 }
 
-union DashboardDataNewsUnionDto = Dashboard | Migrations | Projects | Users | WorkingGroupNetwork | WorkingGroups
+union DashboardDataNewsUnionDto = ContributingCohorts | Dashboard | Migrations | Projects | Users | WorkingGroupNetwork | WorkingGroups
 
 """The structure of the Where to Start field of the Dashboard content type."""
 type DashboardDataPagesDto {
@@ -1056,7 +1309,7 @@ input DashboardDataPagesInputDto {
   iv: [String!]
 }
 
-union DashboardDataPagesUnionDto = Dashboard | Migrations | Projects | Users | WorkingGroupNetwork | WorkingGroups
+union DashboardDataPagesUnionDto = ContributingCohorts | Dashboard | Migrations | Projects | Users | WorkingGroupNetwork | WorkingGroups
 
 """The structure of the flat Dashboard data type."""
 type DashboardFlatDataDto {
@@ -1671,6 +1924,32 @@ type Users implements Content {
   newStatus: String
   """The status color of the content."""
   newStatusColor: String
+  """Query Contributing Cohorts content items."""
+  referencesContributingCohortsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [ContributingCohorts!]
+  """Query Contributing Cohorts content items with total count."""
+  referencesContributingCohortsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): ContributingCohortsResultDto
   """Query Dashboard content items."""
   referencingDashboardContents(
     """Optional OData filter."""
@@ -1809,6 +2088,30 @@ input UsersDataConnectionsInputDto {
   iv: [UsersDataConnectionsChildInputDto!]
 }
 
+"""The structure of the Contributing Cohorts nested schema."""
+type UsersDataContributingCohortsChildDto {
+  id: [ContributingCohorts!]
+  role: String
+  study: String
+}
+
+"""The structure of the Contributing Cohorts nested schema."""
+input UsersDataContributingCohortsChildInputDto {
+  id: [String!]
+  role: String
+  study: String
+}
+
+"""The structure of the Contributing Cohorts field of the Users content type."""
+type UsersDataContributingCohortsDto {
+  iv: [UsersDataContributingCohortsChildDto!]
+}
+
+"""The structure of the Contributing Cohorts field of the Users content input type."""
+input UsersDataContributingCohortsInputDto {
+  iv: [UsersDataContributingCohortsChildInputDto!]
+}
+
 """The structure of the Country field of the Users content type."""
 type UsersDataCountryDto {
   iv: String
@@ -1864,6 +2167,7 @@ type UsersDataDto {
   biography: UsersDataBiographyDto
   city: UsersDataCityDto
   connections: UsersDataConnectionsDto
+  contributingCohorts: UsersDataContributingCohortsDto
   country: UsersDataCountryDto
   degree: UsersDataDegreeDto
   email: UsersDataEmailDto
@@ -1919,6 +2223,7 @@ input UsersDataInputDto {
   biography: UsersDataBiographyInputDto
   city: UsersDataCityInputDto
   connections: UsersDataConnectionsInputDto
+  contributingCohorts: UsersDataContributingCohortsInputDto
   country: UsersDataCountryInputDto
   degree: UsersDataDegreeInputDto
   email: UsersDataEmailInputDto
@@ -2100,6 +2405,7 @@ type UsersFlatDataDto {
   biography: String
   city: String
   connections: [UsersDataConnectionsChildDto!]
+  contributingCohorts: [UsersDataContributingCohortsChildDto!]
   country: String
   degree: [UsersDataDegreeEnum!]
   email: String

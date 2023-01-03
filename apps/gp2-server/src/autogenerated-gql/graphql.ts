@@ -27,6 +27,8 @@ export type Scalars = {
 
 /** The app mutations. */
 export type ApplicationMutations = {
+  /** Change a Contributing Cohorts content. */
+  changeContributingCohortsContent: ContributingCohorts;
   /** Change a Dashboard content. */
   changeDashboardContent: Dashboard;
   /** Change a Migrations content. */
@@ -39,6 +41,8 @@ export type ApplicationMutations = {
   changeWorkingGroupNetworkContent: WorkingGroupNetwork;
   /** Change a Working Groups content. */
   changeWorkingGroupsContent: WorkingGroups;
+  /** Creates an Contributing Cohorts content. */
+  createContributingCohortsContent: ContributingCohorts;
   /** Creates an Dashboard content. */
   createDashboardContent: Dashboard;
   /** Creates an Migrations content. */
@@ -51,6 +55,8 @@ export type ApplicationMutations = {
   createWorkingGroupNetworkContent: WorkingGroupNetwork;
   /** Creates an Working Groups content. */
   createWorkingGroupsContent: WorkingGroups;
+  /** Delete an Contributing Cohorts content. */
+  deleteContributingCohortsContent: EntitySavedResultDto;
   /** Delete an Dashboard content. */
   deleteDashboardContent: EntitySavedResultDto;
   /** Delete an Migrations content. */
@@ -63,6 +69,8 @@ export type ApplicationMutations = {
   deleteWorkingGroupNetworkContent: EntitySavedResultDto;
   /** Delete an Working Groups content. */
   deleteWorkingGroupsContent: EntitySavedResultDto;
+  /** Patch an Contributing Cohorts content by id. */
+  patchContributingCohortsContent: ContributingCohorts;
   /** Patch an Dashboard content by id. */
   patchDashboardContent: Dashboard;
   /** Patch an Migrations content by id. */
@@ -75,6 +83,11 @@ export type ApplicationMutations = {
   patchWorkingGroupNetworkContent: WorkingGroupNetwork;
   /** Patch an Working Groups content by id. */
   patchWorkingGroupsContent: WorkingGroups;
+  /**
+   * Publish a Contributing Cohorts content.
+   * @deprecated Use 'changeContributingCohortsContent' instead
+   */
+  publishContributingCohortsContent: ContributingCohorts;
   /**
    * Publish a Dashboard content.
    * @deprecated Use 'changeDashboardContent' instead
@@ -105,6 +118,8 @@ export type ApplicationMutations = {
    * @deprecated Use 'changeWorkingGroupsContent' instead
    */
   publishWorkingGroupsContent: WorkingGroups;
+  /** Update an Contributing Cohorts content by id. */
+  updateContributingCohortsContent: ContributingCohorts;
   /** Update an Dashboard content by id. */
   updateDashboardContent: Dashboard;
   /** Update an Migrations content by id. */
@@ -117,6 +132,8 @@ export type ApplicationMutations = {
   updateWorkingGroupNetworkContent: WorkingGroupNetwork;
   /** Update an Working Groups content by id. */
   updateWorkingGroupsContent: WorkingGroups;
+  /** Upsert an Contributing Cohorts content by id. */
+  upsertContributingCohortsContent: ContributingCohorts;
   /** Upsert an Dashboard content by id. */
   upsertDashboardContent: Dashboard;
   /** Upsert an Migrations content by id. */
@@ -129,6 +146,14 @@ export type ApplicationMutations = {
   upsertWorkingGroupNetworkContent: WorkingGroupNetwork;
   /** Upsert an Working Groups content by id. */
   upsertWorkingGroupsContent: WorkingGroups;
+};
+
+/** The app mutations. */
+export type ApplicationMutationsChangeContributingCohortsContentArgs = {
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  status: Scalars['String'];
 };
 
 /** The app mutations. */
@@ -180,6 +205,14 @@ export type ApplicationMutationsChangeWorkingGroupsContentArgs = {
 };
 
 /** The app mutations. */
+export type ApplicationMutationsCreateContributingCohortsContentArgs = {
+  data: ContributingCohortsDataInputDto;
+  id: InputMaybe<Scalars['String']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
 export type ApplicationMutationsCreateDashboardContentArgs = {
   data: DashboardDataInputDto;
   id: InputMaybe<Scalars['String']>;
@@ -228,6 +261,12 @@ export type ApplicationMutationsCreateWorkingGroupsContentArgs = {
 };
 
 /** The app mutations. */
+export type ApplicationMutationsDeleteContributingCohortsContentArgs = {
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+};
+
+/** The app mutations. */
 export type ApplicationMutationsDeleteDashboardContentArgs = {
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -261,6 +300,13 @@ export type ApplicationMutationsDeleteWorkingGroupNetworkContentArgs = {
 export type ApplicationMutationsDeleteWorkingGroupsContentArgs = {
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
+};
+
+/** The app mutations. */
+export type ApplicationMutationsPatchContributingCohortsContentArgs = {
+  data: ContributingCohortsDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
@@ -303,6 +349,14 @@ export type ApplicationMutationsPatchWorkingGroupsContentArgs = {
   data: WorkingGroupsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
+export type ApplicationMutationsPublishContributingCohortsContentArgs = {
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  status: Scalars['String'];
 };
 
 /** The app mutations. */
@@ -354,6 +408,13 @@ export type ApplicationMutationsPublishWorkingGroupsContentArgs = {
 };
 
 /** The app mutations. */
+export type ApplicationMutationsUpdateContributingCohortsContentArgs = {
+  data: ContributingCohortsDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
 export type ApplicationMutationsUpdateDashboardContentArgs = {
   data: DashboardDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
@@ -393,6 +454,16 @@ export type ApplicationMutationsUpdateWorkingGroupsContentArgs = {
   data: WorkingGroupsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
+export type ApplicationMutationsUpsertContributingCohortsContentArgs = {
+  data: ContributingCohortsDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  patch?: InputMaybe<Scalars['Boolean']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
 };
 
 /** The app mutations. */
@@ -459,6 +530,8 @@ export type ApplicationMutationsUpsertWorkingGroupsContentArgs = {
 export type ApplicationQueries = {
   /** Find an asset by id. */
   findAsset: Maybe<Asset>;
+  /** Find an Contributing Cohorts content by id. */
+  findContributingCohortsContent: Maybe<ContributingCohorts>;
   /** Find an Dashboard content by id. */
   findDashboardContent: Maybe<Dashboard>;
   /** Find an Migrations content by id. */
@@ -475,6 +548,10 @@ export type ApplicationQueries = {
   queryAssets: Array<Asset>;
   /** Get assets and total count. */
   queryAssetsWithTotal: AssetResultDto;
+  /** Query Contributing Cohorts content items. */
+  queryContributingCohortsContents: Maybe<Array<ContributingCohorts>>;
+  /** Query Contributing Cohorts content items with total count. */
+  queryContributingCohortsContentsWithTotal: Maybe<ContributingCohortsResultDto>;
   /** Query Dashboard content items. */
   queryDashboardContents: Maybe<Array<Dashboard>>;
   /** Query Dashboard content items with total count. */
@@ -504,6 +581,12 @@ export type ApplicationQueries = {
 /** The app queries. */
 export type ApplicationQueriesFindAssetArgs = {
   id: Scalars['String'];
+};
+
+/** The app queries. */
+export type ApplicationQueriesFindContributingCohortsContentArgs = {
+  id: Scalars['String'];
+  version: InputMaybe<Scalars['Int']>;
 };
 
 /** The app queries. */
@@ -554,6 +637,24 @@ export type ApplicationQueriesQueryAssetsArgs = {
 export type ApplicationQueriesQueryAssetsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type ApplicationQueriesQueryContributingCohortsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type ApplicationQueriesQueryContributingCohortsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
@@ -801,6 +902,119 @@ export type Content = {
   version: Scalars['Int'];
 };
 
+/** The structure of a Contributing Cohorts content type. */
+export type ContributingCohorts = Content & {
+  /** The timestamp when the object was created. */
+  created: Scalars['Instant'];
+  /** The user who created the object. */
+  createdBy: Scalars['String'];
+  /** The user who created the object. */
+  createdByUser: User;
+  /** The data of the content. */
+  data: ContributingCohortsDataDto;
+  /** The edit token. */
+  editToken: Maybe<Scalars['String']>;
+  /** The flat data of the content. */
+  flatData: ContributingCohortsFlatDataDto;
+  /** The ID of the object (usually GUID). */
+  id: Scalars['String'];
+  /** The timestamp when the object was updated the last time. */
+  lastModified: Scalars['Instant'];
+  /** The user who updated the object the last time. */
+  lastModifiedBy: Scalars['String'];
+  /** The user who updated the object the last time. */
+  lastModifiedByUser: User;
+  /** The new status of the content. */
+  newStatus: Maybe<Scalars['String']>;
+  /** The status color of the content. */
+  newStatusColor: Maybe<Scalars['String']>;
+  /** Query Dashboard content items. */
+  referencingDashboardContents: Maybe<Array<Dashboard>>;
+  /** Query Dashboard content items with total count. */
+  referencingDashboardContentsWithTotal: Maybe<DashboardResultDto>;
+  /** Query Users content items. */
+  referencingUsersContents: Maybe<Array<Users>>;
+  /** Query Users content items with total count. */
+  referencingUsersContentsWithTotal: Maybe<UsersResultDto>;
+  /** The status of the content. */
+  status: Scalars['String'];
+  /** The status color of the content. */
+  statusColor: Scalars['String'];
+  /** The URL to the content. */
+  url: Scalars['String'];
+  /** The version of the objec. */
+  version: Scalars['Int'];
+};
+
+/** The structure of a Contributing Cohorts content type. */
+export type ContributingCohortsReferencingDashboardContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Contributing Cohorts content type. */
+export type ContributingCohortsReferencingDashboardContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Contributing Cohorts content type. */
+export type ContributingCohortsReferencingUsersContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Contributing Cohorts content type. */
+export type ContributingCohortsReferencingUsersContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of the Contributing Cohorts data type. */
+export type ContributingCohortsDataDto = {
+  name: Maybe<ContributingCohortsDataNameDto>;
+};
+
+/** The structure of the Contributing Cohorts data input type. */
+export type ContributingCohortsDataInputDto = {
+  name: InputMaybe<ContributingCohortsDataNameInputDto>;
+};
+
+/** The structure of the Name field of the Contributing Cohorts content type. */
+export type ContributingCohortsDataNameDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Name field of the Contributing Cohorts content input type. */
+export type ContributingCohortsDataNameInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the flat Contributing Cohorts data type. */
+export type ContributingCohortsFlatDataDto = {
+  name: Maybe<Scalars['String']>;
+};
+
+/** List of Contributing Cohorts items and total count. */
+export type ContributingCohortsResultDto = {
+  /** The contents. */
+  items: Maybe<Array<ContributingCohorts>>;
+  /** The total count of  contents. */
+  total: Scalars['Int'];
+};
+
 /** The structure of a Dashboard content type. */
 export type Dashboard = Content & {
   /** The timestamp when the object was created. */
@@ -827,6 +1041,10 @@ export type Dashboard = Content & {
   newStatus: Maybe<Scalars['String']>;
   /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
+  /** Query Contributing Cohorts content items. */
+  referencesContributingCohortsContents: Maybe<Array<ContributingCohorts>>;
+  /** Query Contributing Cohorts content items with total count. */
+  referencesContributingCohortsContentsWithTotal: Maybe<ContributingCohortsResultDto>;
   /** Query Dashboard content items. */
   referencesDashboardContents: Maybe<Array<Dashboard>>;
   /** Query Dashboard content items with total count. */
@@ -863,6 +1081,24 @@ export type Dashboard = Content & {
   url: Scalars['String'];
   /** The version of the objec. */
   version: Scalars['Int'];
+};
+
+/** The structure of a Dashboard content type. */
+export type DashboardReferencesContributingCohortsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Dashboard content type. */
+export type DashboardReferencesContributingCohortsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Dashboard content type. */
@@ -1014,6 +1250,7 @@ export type DashboardDataNewsInputDto = {
 };
 
 export type DashboardDataNewsUnionDto =
+  | ContributingCohorts
   | Dashboard
   | Migrations
   | Projects
@@ -1032,6 +1269,7 @@ export type DashboardDataPagesInputDto = {
 };
 
 export type DashboardDataPagesUnionDto =
+  | ContributingCohorts
   | Dashboard
   | Migrations
   | Projects
@@ -1643,6 +1881,10 @@ export type Users = Content & {
   newStatus: Maybe<Scalars['String']>;
   /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
+  /** Query Contributing Cohorts content items. */
+  referencesContributingCohortsContents: Maybe<Array<ContributingCohorts>>;
+  /** Query Contributing Cohorts content items with total count. */
+  referencesContributingCohortsContentsWithTotal: Maybe<ContributingCohortsResultDto>;
   /** Query Dashboard content items. */
   referencingDashboardContents: Maybe<Array<Dashboard>>;
   /** Query Dashboard content items with total count. */
@@ -1663,6 +1905,24 @@ export type Users = Content & {
   url: Scalars['String'];
   /** The version of the objec. */
   version: Scalars['Int'];
+};
+
+/** The structure of a Users content type. */
+export type UsersReferencesContributingCohortsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Users content type. */
+export type UsersReferencesContributingCohortsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Users content type. */
@@ -1769,6 +2029,30 @@ export type UsersDataConnectionsInputDto = {
   iv: InputMaybe<Array<UsersDataConnectionsChildInputDto>>;
 };
 
+/** The structure of the Contributing Cohorts nested schema. */
+export type UsersDataContributingCohortsChildDto = {
+  id: Maybe<Array<ContributingCohorts>>;
+  role: Maybe<Scalars['String']>;
+  study: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Contributing Cohorts nested schema. */
+export type UsersDataContributingCohortsChildInputDto = {
+  id: InputMaybe<Array<Scalars['String']>>;
+  role: InputMaybe<Scalars['String']>;
+  study: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Contributing Cohorts field of the Users content type. */
+export type UsersDataContributingCohortsDto = {
+  iv: Maybe<Array<UsersDataContributingCohortsChildDto>>;
+};
+
+/** The structure of the Contributing Cohorts field of the Users content input type. */
+export type UsersDataContributingCohortsInputDto = {
+  iv: InputMaybe<Array<UsersDataContributingCohortsChildInputDto>>;
+};
+
 /** The structure of the Country field of the Users content type. */
 export type UsersDataCountryDto = {
   iv: Maybe<Scalars['String']>;
@@ -1824,6 +2108,7 @@ export type UsersDataDto = {
   biography: Maybe<UsersDataBiographyDto>;
   city: Maybe<UsersDataCityDto>;
   connections: Maybe<UsersDataConnectionsDto>;
+  contributingCohorts: Maybe<UsersDataContributingCohortsDto>;
   country: Maybe<UsersDataCountryDto>;
   degree: Maybe<UsersDataDegreeDto>;
   email: Maybe<UsersDataEmailDto>;
@@ -1879,6 +2164,7 @@ export type UsersDataInputDto = {
   biography: InputMaybe<UsersDataBiographyInputDto>;
   city: InputMaybe<UsersDataCityInputDto>;
   connections: InputMaybe<UsersDataConnectionsInputDto>;
+  contributingCohorts: InputMaybe<UsersDataContributingCohortsInputDto>;
   country: InputMaybe<UsersDataCountryInputDto>;
   degree: InputMaybe<UsersDataDegreeInputDto>;
   email: InputMaybe<UsersDataEmailInputDto>;
@@ -2060,6 +2346,7 @@ export type UsersFlatDataDto = {
   biography: Maybe<Scalars['String']>;
   city: Maybe<Scalars['String']>;
   connections: Maybe<Array<UsersDataConnectionsChildDto>>;
+  contributingCohorts: Maybe<Array<UsersDataContributingCohortsChildDto>>;
   country: Maybe<Scalars['String']>;
   degree: Maybe<Array<UsersDataDegreeEnum>>;
   email: Maybe<Scalars['String']>;
@@ -2708,6 +2995,19 @@ export type UsersContentFragment = Pick<
       >
     >;
     questions: Maybe<Array<Pick<UsersDataQuestionsChildDto, 'question'>>>;
+    contributingCohorts: Maybe<
+      Array<
+        Pick<UsersDataContributingCohortsChildDto, 'role' | 'study'> & {
+          id: Maybe<
+            Array<
+              Pick<ContributingCohorts, 'id'> & {
+                flatData: Pick<ContributingCohortsFlatDataDto, 'name'>;
+              }
+            >
+          >;
+        }
+      >
+    >;
   };
   referencingProjectsContents: Maybe<
     Array<
@@ -2776,6 +3076,19 @@ export type FetchUserQuery = {
           >
         >;
         questions: Maybe<Array<Pick<UsersDataQuestionsChildDto, 'question'>>>;
+        contributingCohorts: Maybe<
+          Array<
+            Pick<UsersDataContributingCohortsChildDto, 'role' | 'study'> & {
+              id: Maybe<
+                Array<
+                  Pick<ContributingCohorts, 'id'> & {
+                    flatData: Pick<ContributingCohortsFlatDataDto, 'name'>;
+                  }
+                >
+              >;
+            }
+          >
+        >;
       };
       referencingProjectsContents: Maybe<
         Array<
@@ -2852,6 +3165,25 @@ export type FetchUsersQuery = {
               >;
               questions: Maybe<
                 Array<Pick<UsersDataQuestionsChildDto, 'question'>>
+              >;
+              contributingCohorts: Maybe<
+                Array<
+                  Pick<
+                    UsersDataContributingCohortsChildDto,
+                    'role' | 'study'
+                  > & {
+                    id: Maybe<
+                      Array<
+                        Pick<ContributingCohorts, 'id'> & {
+                          flatData: Pick<
+                            ContributingCohortsFlatDataDto,
+                            'name'
+                          >;
+                        }
+                      >
+                    >;
+                  }
+                >
               >;
             };
             referencingProjectsContents: Maybe<
@@ -3670,6 +4002,43 @@ export const UsersContentFragmentDoc = {
                   name: { kind: 'Name', value: 'fundingStreams' },
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'biography' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'contributingCohorts' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'role' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'study' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'id' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'flatData' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'name' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },

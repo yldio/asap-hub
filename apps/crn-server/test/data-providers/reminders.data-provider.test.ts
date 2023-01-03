@@ -491,7 +491,7 @@ describe('Reminder Data Provider', () => {
           jest.setSystemTime(new Date('2022-08-10T12:00:00.0Z'));
 
           expect(getEventFilter('Europe/London')).toEqual(
-            `data/videoRecordingUpdatedAt/iv ge 2022-08-09T12:00:00.000Z or data/presentationUpdatedAt/iv ge 2022-08-09T12:00:00.000Z or data/notesUpdatedAt/iv ge 2022-08-09T12:00:00.000Z or (data/startDate/iv ge 2022-08-09T23:00:00.000Z and data/startDate/iv le 2022-08-10T23:00:00.000Z) or data/endDate/iv ge 2022-08-07T12:00:00.000Z`,
+            `data/videoRecordingUpdatedAt/iv ge 2022-08-09T12:00:00.000Z or data/presentationUpdatedAt/iv ge 2022-08-09T12:00:00.000Z or data/notesUpdatedAt/iv ge 2022-08-09T12:00:00.000Z or (data/startDate/iv ge 2022-08-09T23:00:00.000Z and data/startDate/iv le 2022-08-10T23:00:00.000Z) or (data/endDate/iv ge 2022-08-07T12:00:00.000Z and data/endDate/iv le 2022-08-10T12:00:00.000Z)`,
           );
         });
 
@@ -500,7 +500,7 @@ describe('Reminder Data Provider', () => {
           jest.setSystemTime(new Date('2022-08-10T12:00:00.0Z'));
 
           expect(getEventFilter('America/Los_Angeles')).toEqual(
-            `data/videoRecordingUpdatedAt/iv ge 2022-08-09T12:00:00.000Z or data/presentationUpdatedAt/iv ge 2022-08-09T12:00:00.000Z or data/notesUpdatedAt/iv ge 2022-08-09T12:00:00.000Z or (data/startDate/iv ge 2022-08-10T07:00:00.000Z and data/startDate/iv le 2022-08-11T07:00:00.000Z) or data/endDate/iv ge 2022-08-07T12:00:00.000Z`,
+            `data/videoRecordingUpdatedAt/iv ge 2022-08-09T12:00:00.000Z or data/presentationUpdatedAt/iv ge 2022-08-09T12:00:00.000Z or data/notesUpdatedAt/iv ge 2022-08-09T12:00:00.000Z or (data/startDate/iv ge 2022-08-10T07:00:00.000Z and data/startDate/iv le 2022-08-11T07:00:00.000Z) or (data/endDate/iv ge 2022-08-07T12:00:00.000Z and data/endDate/iv le 2022-08-10T12:00:00.000Z)`,
           );
         });
 
@@ -509,7 +509,7 @@ describe('Reminder Data Provider', () => {
           jest.setSystemTime(new Date('2022-08-10T02:00:00.0Z'));
 
           expect(getEventFilter('America/Los_Angeles')).toEqual(
-            `data/videoRecordingUpdatedAt/iv ge 2022-08-09T02:00:00.000Z or data/presentationUpdatedAt/iv ge 2022-08-09T02:00:00.000Z or data/notesUpdatedAt/iv ge 2022-08-09T02:00:00.000Z or (data/startDate/iv ge 2022-08-09T07:00:00.000Z and data/startDate/iv le 2022-08-10T07:00:00.000Z) or data/endDate/iv ge 2022-08-07T02:00:00.000Z`,
+            `data/videoRecordingUpdatedAt/iv ge 2022-08-09T02:00:00.000Z or data/presentationUpdatedAt/iv ge 2022-08-09T02:00:00.000Z or data/notesUpdatedAt/iv ge 2022-08-09T02:00:00.000Z or (data/startDate/iv ge 2022-08-09T07:00:00.000Z and data/startDate/iv le 2022-08-10T07:00:00.000Z) or (data/endDate/iv ge 2022-08-07T02:00:00.000Z and data/endDate/iv le 2022-08-10T02:00:00.000Z)`,
           );
         });
       });

@@ -127,7 +127,11 @@ export const getEventFilter = (zone: string): string => {
     .minus({ hours: 72 })
     .toUTC();
 
-  return `data/videoRecordingUpdatedAt/iv ge ${lastDayISO} or data/presentationUpdatedAt/iv ge ${lastDayISO} or data/notesUpdatedAt/iv ge ${lastDayISO} or (data/startDate/iv ge ${lastMidnightISO} and data/startDate/iv le ${todayMidnightISO}) or data/endDate/iv ge ${last72HoursISO}`;
+  const now = DateTime.fromObject({
+    zone,
+  }).toUTC();
+
+  return `data/videoRecordingUpdatedAt/iv ge ${lastDayISO} or data/presentationUpdatedAt/iv ge ${lastDayISO} or data/notesUpdatedAt/iv ge ${lastDayISO} or (data/startDate/iv ge ${lastMidnightISO} and data/startDate/iv le ${todayMidnightISO}) or (data/endDate/iv ge ${last72HoursISO} and data/endDate/iv le ${now})`;
 };
 
 const getUserTeamIds = (

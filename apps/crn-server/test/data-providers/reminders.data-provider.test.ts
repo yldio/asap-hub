@@ -281,6 +281,25 @@ describe('Reminder Data Provider', () => {
         });
       });
 
+      test('Should not fetch the reminder if is a future event', async () => {
+        jest.setSystemTime(new Date('2021-12-30T09:00:00Z'));
+
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlResponse.queryEventsContents![0]!.flatData.startDate =
+          '2022-01-01T08:00:00Z';
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({
+          total: 0,
+          items: [],
+        });
+      });
+
       test('Should return an empty result when queryEventsContents property is null', async () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = [];
@@ -555,6 +574,26 @@ describe('Reminder Data Provider', () => {
       test('Should not fetch the reminder when it has already ended', async () => {
         // set current time to one minute after the end of the fixture event
         jest.setSystemTime(DateTime.fromISO('2022-01-01T10:01:00Z').toJSDate());
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryEventsContents![0]!.flatData.startDate =
+          '2022-01-01T08:00:00Z';
+        squidexGraphqlResponse.queryEventsContents![0]!.flatData.endDate =
+          '2022-01-01T10:00:00Z';
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({
+          total: 0,
+          items: [],
+        });
+      });
+
+      test('Should not fetch the reminder when it is a future event', async () => {
+        jest.setSystemTime(DateTime.fromISO('2021-12-30T10:01:00Z').toJSDate());
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryEventsContents![0]!.flatData.startDate =
           '2022-01-01T08:00:00Z';

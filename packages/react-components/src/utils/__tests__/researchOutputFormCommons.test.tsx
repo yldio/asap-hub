@@ -12,11 +12,11 @@ import {
   getDecision,
   getIdentifierType,
   getPublishDate,
-  getResearchOutputState,
+  getPayload,
   getTeamsState,
   isDirty,
   isIdentifierModified,
-  ResearchOutputTeamState,
+  ResearchOutputPayload,
 } from '../researchOutputFormCommons';
 
 describe('isDirty', () => {
@@ -246,9 +246,9 @@ describe('getTeamsState', () => {
   });
 });
 
-describe('getResearchOutputState', () => {
+describe('getResearchOutputPayload', () => {
   it('returns the correct modified value', () => {
-    const currentState: ResearchOutputTeamState = {
+    const currentPayload: ResearchOutputPayload = {
       identifierType: ResearchOutputIdentifierType.Empty,
       identifier: '',
       documentType: researchOutputDocumentTypes[6],
@@ -273,11 +273,11 @@ describe('getResearchOutputState', () => {
       publishingEntity: 'Team',
     };
     expect(
-      getResearchOutputState({
-        ...currentState,
+      getPayload({
+        ...currentPayload,
       }),
     ).toEqual({
-      ...currentState,
+      ...currentPayload,
       teams: ['t99'],
       labs: ['l99'],
       authors: [{ externalAuthorName: 'a111' }],

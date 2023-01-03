@@ -30,7 +30,7 @@ import {
   getDecision,
   getPublishDate,
   getIdentifierType,
-  getResearchOutputState,
+  getPayload,
 } from '../utils';
 
 type ResearchOutputPageProps = Pick<
@@ -199,7 +199,7 @@ const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
     d.types?.includes(type),
   );
 
-  const currentState = getResearchOutputState({
+  const currentPayload = getPayload({
     identifierType,
     identifier,
     documentType,
@@ -224,7 +224,7 @@ const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
     publishingEntity,
   });
 
-  const [initialState] = useState(currentState);
+  const [initialPayload] = useState(currentPayload);
 
   return (
     <>
@@ -235,8 +235,8 @@ const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
       <main css={mainStyles}>
         <Form<ResearchOutputResponse>
           serverErrors={serverValidationErrors}
-          dirty={!equal(initialState, currentState)}
-          onSave={() => onSave(currentState)}
+          dirty={!equal(initialPayload, currentPayload)}
+          onSave={() => onSave(currentPayload)}
         >
           {({ isSaving, onSave: handleSave, onCancel: handleCancel }) => (
             <div css={contentStyles}>

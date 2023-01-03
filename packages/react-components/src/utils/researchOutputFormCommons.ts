@@ -110,7 +110,7 @@ export const getPublishDate = (publishDate?: string): Date | undefined => {
 export const getDecision = (decision?: boolean): DecisionOption =>
   decision === undefined ? 'Not Sure' : decision ? 'Yes' : 'No';
 
-export type ResearchOutputTeamState = {
+export type ResearchOutputPayload = {
   identifierType: ResearchOutputIdentifierType;
   identifier: string;
   documentType: ResearchOutputDocumentType;
@@ -141,7 +141,7 @@ export type ResearchOutputTeamState = {
   publishingEntity: ResearchOutputPublishingEntities;
 };
 
-export const getResearchOutputState = ({
+export const getPayload = ({
   identifierType,
   identifier,
   documentType,
@@ -164,7 +164,7 @@ export const getResearchOutputState = ({
   environments,
   subtype,
   publishingEntity,
-}: ResearchOutputTeamState): ResearchOutputPostRequest => ({
+}: ResearchOutputPayload): ResearchOutputPostRequest => ({
   ...createIdentifierField(identifierType, identifier),
   documentType,
   tags,

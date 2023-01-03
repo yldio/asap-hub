@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 const workingGroupIcon = (
   <svg width={24} height={24} fill="none" xmlns="http://www.w3.org/2000/svg">
+    <title>Working Groups</title>
     <path
       d="M11.094 13.093a.575.575 0 0 0 .407.982h5a.575.575 0 0 0 0-1.15h-5a.575.575 0 0 0-.407.168Zm0-4a.575.575 0 0 0 .407.982h5a.575.575 0 0 0 0-1.15h-5a.575.575 0 0 0-.407.168Zm0-4a.575.575 0 0 0 .407.982h5a.575.575 0 0 0 0-1.15h-5a.575.575 0 0 0-.407.168Z"
       fill="#4D646B"

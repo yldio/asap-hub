@@ -97,7 +97,7 @@ const RecentSharedOutputs: React.FC<RecentSharedOutputProp> = ({ outputs }) => (
       <div css={[rowStyles, gridTitleStyles]}>
         <span css={titleStyles}>Shared Output</span>
         <span css={titleStyles}>Type of Output</span>
-        <span css={titleStyles}>Date</span>
+        <span css={titleStyles}>Date Added</span>
       </div>
       {outputs &&
         outputs.map(({ id, documentType, addedDate, title }) => (

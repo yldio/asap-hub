@@ -977,6 +977,30 @@ describe('Reminder Data Provider', () => {
           items: [],
         });
       });
+
+      it('Should not fetch the reminder when for a future event', async () => {
+        // set current time to 72 hours + 1 minute after the end of the fixture event
+        jest.setSystemTime(DateTime.fromISO('2022-01-04T10:01:00Z').toJSDate());
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryEventsContents![0]!.flatData.startDate =
+          '2023-01-01T08:00:00Z';
+        squidexGraphqlResponse.queryEventsContents![0]!.flatData.endDate =
+          '2023-01-01T10:00:00Z';
+
+        squidexGraphqlResponse.findUsersContent!.flatData!.role! = 'Staff';
+
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({
+          total: 0,
+          items: [],
+        });
+      });
     });
 
     interface TestProps {

@@ -210,7 +210,9 @@ const getEventRemindersFromQuery = (
     const startDate = DateTime.fromISO(event.flatData.startDate);
     const endDate = DateTime.fromISO(event.flatData.endDate);
 
-    if (startDate > DateTime.local()) {
+    const endOfToday = DateTime.now().set({ hour: 24 }).set({ minute: 59 });
+
+    if (startDate > DateTime.local() && startDate < endOfToday) {
       return [
         ...events,
         {
@@ -226,7 +228,7 @@ const getEventRemindersFromQuery = (
       ];
     }
 
-    if (endDate > DateTime.local()) {
+    if (endDate > DateTime.local() && startDate < endOfToday) {
       return [
         ...events,
         {
@@ -262,6 +264,9 @@ const inLast24Hours = (date: string) => inLastNHours(24, date);
 
 const inLast72Hours = (date: string) => inLastNHours(72, date);
 
+const eventHasEnded = (date: string) =>
+  DateTime.fromISO(date) <= DateTime.now();
+
 const getSharePresentationRemindersFromQuery = (
   queryEventsContents: FetchReminderDataQuery['queryEventsContents'],
   userId: string,
@@ -294,7 +299,11 @@ const getSharePresentationRemindersFromQuery = (
       },
     );
 
-    if (shouldShowSharePresentation && inLast72Hours(event.flatData.endDate)) {
+    if (
+      shouldShowSharePresentation &&
+      eventHasEnded(event.flatData.endDate) &&
+      inLast72Hours(event.flatData.endDate)
+    ) {
       return [
         ...events,
         {
@@ -326,7 +335,11 @@ const getPublishMaterialRemindersFromQuery = (
       findUsersContent?.flatData.role as Role,
     );
 
-    if (shouldShowPublishMaterial && inLast72Hours(event.flatData.endDate)) {
+    if (
+      shouldShowPublishMaterial &&
+      eventHasEnded(event.flatData.endDate) &&
+      inLast72Hours(event.flatData.endDate)
+    ) {
       return [
         ...events,
         {

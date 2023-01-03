@@ -62,7 +62,7 @@
           "isUnique": false,
           "inlineEditable": false,
           "contentType": "Unspecified",
-          "editor": "TextArea",
+          "editor": "RichText",
           "label": "Description",
           "isRequired": false,
           "isRequiredOnPublish": false,

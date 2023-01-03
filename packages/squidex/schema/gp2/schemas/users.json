@@ -569,6 +569,84 @@
         }
       },
       {
+        "name": "contributing-cohorts",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Array",
+          "label": "Contributing Cohorts",
+          "placeholder": "",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        },
+        "nested": [
+          {
+            "name": "id",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "References",
+              "minItems": 1,
+              "maxItems": 1,
+              "allowDuplicates": false,
+              "resolveReference": false,
+              "mustBePublished": false,
+              "editor": "Dropdown",
+              "schemaIds": ["contributing-cohorts"],
+              "label": "ID",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": true,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": true
+            }
+          },
+          {
+            "name": "role",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "allowedValues": ["Contributor", "Investigator"],
+              "isUnique": false,
+              "isEmbeddable": false,
+              "inlineEditable": true,
+              "createEnum": false,
+              "contentType": "Unspecified",
+              "editor": "Dropdown",
+              "label": "Role",
+              "isRequired": true,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": true
+            }
+          },
+          {
+            "name": "study",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "pattern": "^(?:http(s)?:\\/\\/)[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#%[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
+              "patternMessage": "URL must start with http:// or https://",
+              "isUnique": false,
+              "inlineEditable": false,
+              "contentType": "Unspecified",
+              "editor": "Input",
+              "label": "Study Link",
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false
+            }
+          }
+        ]
+      },
+      {
         "name": "connections",
         "isHidden": false,
         "isLocked": false,

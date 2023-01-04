@@ -10,7 +10,10 @@ import {
   ValidationErrorResponse,
   ResearchOutputResponse,
 } from '@asap-hub/model';
-import { NotFoundPage, ResearchOutputPage } from '@asap-hub/react-components';
+import {
+  NotFoundPage,
+  ResearchOutputTeamForm,
+} from '@asap-hub/react-components';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import {
   network,
@@ -27,7 +30,7 @@ import {
 import {
   useAuthorSuggestions,
   useLabSuggestions,
-  usePostTeamResearchOutput,
+  usePostResearchOutput,
   useResearchTags,
   useTeamById,
   useTeamSuggestions,
@@ -84,7 +87,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
 
   const { canCreateUpdate } = useContext(ResearchOutputPermissionsContext);
 
-  const createResearchOutput = usePostTeamResearchOutput();
+  const createResearchOutput = usePostResearchOutput();
   const updateResearchOutput = usePutTeamResearchOutput(researchOutputId);
 
   const getLabSuggestions = useLabSuggestions();
@@ -109,12 +112,9 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   if (canCreateUpdate && team) {
     return (
       <Frame title="Share Research Output">
-        <ResearchOutputPage
+        <ResearchOutputTeamForm
           team={team}
-          tagSuggestions={researchSuggestions.map((suggestion) => ({
-            label: suggestion,
-            value: suggestion,
-          }))}
+          tagSuggestions={researchSuggestions}
           documentType={documentType}
           getLabSuggestions={getLabSuggestions}
           getAuthorSuggestions={(input) =>
@@ -134,6 +134,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
           }
           researchOutputData={researchOutputData}
           isEditMode={isEditMode}
+          publishingEntity="Team"
           onSave={(
             output: ResearchOutputPostRequest | ResearchOutputPutRequest,
           ) =>

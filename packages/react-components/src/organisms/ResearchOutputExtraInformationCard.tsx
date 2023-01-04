@@ -41,7 +41,6 @@ type ResearchOutputExtraInformationProps = Pick<
   documentType: ResearchOutputDocumentType;
   researchTags: ResearchTagResponse[];
   type: ResearchOutputPostRequest['type'] | '';
-  isEditMode?: boolean;
 } & Omit<ResearchOutputIdentifierProps, 'required'>;
 
 const ResearchOutputExtraInformationCard: React.FC<

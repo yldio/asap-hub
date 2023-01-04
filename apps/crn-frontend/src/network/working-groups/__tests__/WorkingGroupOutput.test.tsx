@@ -5,7 +5,6 @@ import {
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import { BackendError } from '@asap-hub/frontend-utils';
 import {
-  ResearchOutputDocumentType,
   ResearchOutputResponse,
   ValidationErrorResponse,
 } from '@asap-hub/model';
@@ -24,71 +23,45 @@ import userEvent, { specialChars } from '@testing-library/user-event';
 import { ContextType, Suspense } from 'react';
 import { Route, StaticRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import { createResearchOutput } from '../api';
-import { refreshTeamState } from '../state';
-import TeamOutput, {
-  paramOutputDocumentTypeToResearchOutputDocumentType,
-} from '../TeamOutput';
+import { createResearchOutput } from '../../teams/api';
+import { refreshWorkingGroupState } from '../state';
+import WorkingGroupOutput from '../WorkingGroupOutput';
 
 jest.setTimeout(30000);
 jest.mock('../api');
+jest.mock('../../teams/api');
 jest.mock('../../users/api');
 jest.mock('../../../shared-research/api');
 
-describe('TeamOutput', () => {
+describe('WorkingGroupOutput', () => {
   const mockToast = jest.fn() as jest.MockedFunction<
     ContextType<typeof ToastContext>
   >;
+
   const mockCreateResearchOutput = createResearchOutput as jest.MockedFunction<
     typeof createResearchOutput
   >;
 
   interface RenderPageOptions {
-    teamId: string;
+    workingGroupId: string;
     outputDocumentType?: OutputDocumentTypeParameter;
     canCreateUpdate?: boolean;
     researchOutputData?: ResearchOutputResponse;
   }
 
   it('Renders the research output', async () => {
-    await renderPage({ teamId: '42', outputDocumentType: 'bioinformatics' });
-
-    expect(
-      screen.getByRole('heading', { name: /Share bioinformatics/i }),
-    ).toBeInTheDocument();
-  });
-
-  it('Renders the correct button in create mode', async () => {
     await renderPage({
-      teamId: '42',
-      outputDocumentType: 'bioinformatics',
+      workingGroupId: '42',
+      outputDocumentType: 'article',
     });
 
     expect(
-      screen.getByRole('button', { name: /Publish/i }),
-    ).toBeInTheDocument();
-  });
-
-  it('Renders the correct button in edit mode', async () => {
-    await renderPage({
-      teamId: '42',
-      outputDocumentType: 'bioinformatics',
-      researchOutputData: createResearchOutputResponse(),
-    });
-
-    expect(screen.getByRole('button', { name: /Save/i })).toBeInTheDocument();
-  });
-
-  it('switches research output type based on parameter', async () => {
-    await renderPage({ teamId: '42', outputDocumentType: 'article' });
-
-    expect(
-      screen.getByRole('heading', { name: /Share an article/i }),
+      screen.getByRole('heading', { name: /Share a Working Group Article/i }),
     ).toBeInTheDocument();
   });
 
   it('Shows NotFoundPage when canCreate in ResearchOutputPermissions is false', async () => {
-    await renderPage({ teamId: '42', canCreateUpdate: false });
+    await renderPage({ workingGroupId: '42', canCreateUpdate: false });
     expect(
       screen.queryByRole('heading', { name: /Share/i }),
     ).not.toBeInTheDocument();
@@ -100,14 +73,14 @@ describe('TeamOutput', () => {
   });
 
   it('can submit a form when form data is valid', async () => {
-    const teamId = 'team-42';
+    const workingGroupId = 'wg-42';
     const link = 'https://example42.com';
     const title = 'example42 title';
     const description = 'example42 description';
-    const type = 'Animal Model';
+    const type = 'Preprint';
     const doi = '10.0777';
 
-    await renderPage({ teamId, outputDocumentType: 'lab-resource' });
+    await renderPage({ workingGroupId, outputDocumentType: 'article' });
 
     const { publish } = await mandatoryFields({
       link,
@@ -117,6 +90,8 @@ describe('TeamOutput', () => {
       doi,
     });
 
+    userEvent.click(screen.getByRole('textbox', { name: /Teams/i }));
+    userEvent.click(screen.getByText('Abu-Remaileh, M 1'));
     userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
     userEvent.click(screen.getByText('Example 1 Lab'));
     userEvent.click(screen.getByRole('textbox', { name: /Authors/i }));
@@ -127,10 +102,10 @@ describe('TeamOutput', () => {
     expect(mockCreateResearchOutput).toHaveBeenCalledWith(
       {
         doi,
-        documentType: 'Lab Resource',
+        documentType: 'Article',
         tags: [],
         sharingStatus: 'Network Only',
-        teams: [teamId],
+        teams: ['t0'],
         link,
         title,
         description,
@@ -150,7 +125,7 @@ describe('TeamOutput', () => {
         usageNotes: '',
         asapFunded: undefined,
         usedInPublication: undefined,
-        publishingEntity: 'Team',
+        publishingEntity: 'Working Group',
       },
       expect.anything(),
     );
@@ -170,7 +145,7 @@ describe('TeamOutput', () => {
       new BackendError('example', validationResponse, 400),
     );
 
-    await renderPage({ teamId: '42', outputDocumentType: 'article' });
+    await renderPage({ workingGroupId: '42', outputDocumentType: 'article' });
     const { publish } = await mandatoryFields({}, true);
 
     await publish();
@@ -199,7 +174,7 @@ describe('TeamOutput', () => {
       new Error('Something went wrong'),
     );
 
-    await renderPage({ teamId: '42', outputDocumentType: 'article' });
+    await renderPage({ workingGroupId: '42', outputDocumentType: 'article' });
 
     const { publish } = await mandatoryFields({}, true);
 
@@ -223,7 +198,7 @@ describe('TeamOutput', () => {
     );
 
     await renderPage({
-      teamId: '42',
+      workingGroupId: '42',
       outputDocumentType: 'article',
       researchOutputData: { ...createResearchOutputResponse(), doi },
     });
@@ -237,7 +212,6 @@ describe('TeamOutput', () => {
         doi,
       },
       true,
-      true,
     );
 
     await publish();
@@ -248,38 +222,22 @@ describe('TeamOutput', () => {
     );
   });
 
-  it.each<{
-    param: OutputDocumentTypeParameter;
-    outputType: ResearchOutputDocumentType;
-  }>([
-    { param: 'article', outputType: 'Article' },
-    { param: 'bioinformatics', outputType: 'Bioinformatics' },
-    { param: 'dataset', outputType: 'Dataset' },
-    { param: 'lab-resource', outputType: 'Lab Resource' },
-    { param: 'protocol', outputType: 'Protocol' },
-    { param: 'unknown' as OutputDocumentTypeParameter, outputType: 'Article' },
-  ])('maps from $param to $outputType', ({ param, outputType }) => {
-    expect(paramOutputDocumentTypeToResearchOutputDocumentType(param)).toEqual(
-      outputType,
-    );
-  });
-
   async function renderPage({
     canCreateUpdate = true,
-    teamId,
-    outputDocumentType = 'bioinformatics',
-    researchOutputData,
+    workingGroupId = 'wg1',
+    outputDocumentType = 'article',
   }: RenderPageOptions) {
     const path =
       network.template +
-      network({}).teams.template +
-      network({}).teams({}).team.template +
-      network({}).teams({}).team({ teamId }).createOutput.template;
+      network({}).workingGroups.template +
+      network({}).workingGroups({}).workingGroup.template +
+      network({}).workingGroups({}).workingGroup({ workingGroupId })
+        .createOutput.template;
 
     render(
       <RecoilRoot
         initializeState={({ set }) =>
-          set(refreshTeamState(teamId), Math.random())
+          set(refreshWorkingGroupState(workingGroupId), Math.random())
         }
       >
         <Suspense fallback="loading">
@@ -289,8 +247,8 @@ describe('TeamOutput', () => {
                 <StaticRouter
                   location={
                     network({})
-                      .teams({})
-                      .team({ teamId })
+                      .workingGroups({})
+                      .workingGroup({ workingGroupId })
                       .createOutput({ outputDocumentType }).$
                   }
                 >
@@ -298,10 +256,7 @@ describe('TeamOutput', () => {
                     value={{ canCreateUpdate }}
                   >
                     <Route path={path}>
-                      <TeamOutput
-                        teamId={teamId}
-                        researchOutputData={researchOutputData}
-                      />
+                      <WorkingGroupOutput workingGroupId={workingGroupId} />
                     </Route>
                   </ResearchOutputPermissionsContext.Provider>
                 </StaticRouter>
@@ -314,6 +269,7 @@ describe('TeamOutput', () => {
     await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
   }
 });
+
 async function mandatoryFields(
   {
     link = 'http://example.com',
@@ -328,8 +284,7 @@ async function mandatoryFields(
     type?: string;
     doi?: string;
   },
-  isLinkRequired: boolean = false,
-  isEditMode: boolean = false,
+  isLinkRequired: boolean = true,
 ) {
   const url = isLinkRequired ? /url \(required\)/i : /url \(optional\)/i;
 
@@ -340,7 +295,9 @@ async function mandatoryFields(
     description,
   );
 
-  const typeInput = screen.getByRole('textbox', { name: /Select the option/i });
+  const typeInput = screen.getByRole('textbox', {
+    name: /Select the type that matches your output the best./i,
+  });
   userEvent.type(typeInput, type);
   userEvent.type(typeInput, specialChars.enter);
 
@@ -351,9 +308,7 @@ async function mandatoryFields(
     screen.getByPlaceholderText('DOI number e.g. 10.5555/YFRU1371'),
     doi,
   );
-  const button = isEditMode
-    ? screen.getByRole('button', { name: /Save/i })
-    : screen.getByRole('button', { name: /Publish/i });
+  const button = screen.getByRole('button', { name: /Publish/i });
   return {
     publish: async () => {
       userEvent.click(button);

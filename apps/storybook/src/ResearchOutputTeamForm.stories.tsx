@@ -4,22 +4,19 @@ import {
   createUserResponse,
   researchTagMethodResponse,
 } from '@asap-hub/fixtures';
-import { ResearchOutputPage } from '@asap-hub/react-components';
+import { ResearchOutputTeamForm } from '@asap-hub/react-components';
 import { StaticRouter } from 'react-router-dom';
 
 export default {
   title: 'Templates / Team Profile / Team Create Output Page',
-  component: ResearchOutputPage,
+  component: ResearchOutputTeamForm,
 };
 
 export const Normal = () => (
   <StaticRouter>
-    <ResearchOutputPage
+    <ResearchOutputTeamForm
       onSave={() => Promise.resolve()}
-      tagSuggestions={['A53T', 'Activity assay'].map((suggestion) => ({
-        label: suggestion,
-        value: suggestion,
-      }))}
+      tagSuggestions={['A53T', 'Activity assay']}
       documentType="Article"
       getLabSuggestions={() =>
         new Promise((resolve) => {
@@ -57,13 +54,10 @@ const researchOutputData = {
 };
 export const EditMode = () => (
   <StaticRouter>
-    <ResearchOutputPage
+    <ResearchOutputTeamForm
       researchOutputData={researchOutputData}
       onSave={() => Promise.resolve()}
-      tagSuggestions={['A53T', 'Activity assay'].map((suggestion) => ({
-        label: suggestion,
-        value: suggestion,
-      }))}
+      tagSuggestions={['A53T', 'Activity assay']}
       documentType="Dataset"
       getLabSuggestions={() =>
         new Promise((resolve) => {

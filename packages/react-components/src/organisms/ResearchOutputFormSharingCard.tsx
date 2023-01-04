@@ -47,6 +47,8 @@ type ResearchOutputFormSharingCardProps = Pick<
   researchTags: ResearchTagResponse[];
   serverValidationErrors?: ValidationErrorResponse['data'];
   clearServerValidationError?: (instancePath: string) => void;
+  typeDescription?: string;
+  descriptionTip?: string;
 };
 
 export const getPublishDateValidationMessage = (e: ValidityState): string => {
@@ -72,6 +74,8 @@ const ResearchOutputFormSharingCard: React.FC<
   publishDate,
   researchTags,
   serverValidationErrors = [],
+  typeDescription,
+  descriptionTip,
   clearServerValidationError = noop,
   onChangeDescription = noop,
   onChangeLink = noop,
@@ -135,7 +139,7 @@ const ResearchOutputFormSharingCard: React.FC<
       <LabeledDropdown<ResearchOutputType | ''>
         title="Type"
         subtitle="(required)"
-        description={`Select the option that applies to this ${documentType.toLowerCase()}.`}
+        description={typeDescription}
         options={[
           ...researchOutputDocumentTypeToType[documentType].values(),
         ].map((option) => ({
@@ -189,6 +193,7 @@ const ResearchOutputFormSharingCard: React.FC<
       <LabeledTextArea
         title="Description"
         subtitle="(required)"
+        tip={descriptionTip}
         onChange={onChangeDescription}
         getValidationMessage={() => 'Please enter a description'}
         required

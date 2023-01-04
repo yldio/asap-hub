@@ -3,10 +3,12 @@ import {
   createWorkingGroupResponse,
 } from '@asap-hub/fixtures';
 import { GetListOptions } from '@asap-hub/frontend-utils';
+import { ResearchOutputPostRequest } from '@asap-hub/model';
 import nock from 'nock';
 import { API_BASE_URL } from '../../../config';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
 import { getWorkingGroup, getWorkingGroups } from '../api';
+import { createResearchOutput } from '../../teams/api';
 
 const options: GetListOptions = {
   filters: new Set(),
@@ -73,6 +75,45 @@ describe('getWorkingGroups', () => {
       getWorkingGroups(options, ''),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch working group list. Expected status 2xx. Received status 500."`,
+    );
+  });
+});
+describe('teamResearchOutput', () => {
+  const payload: ResearchOutputPostRequest = {
+    teams: ['90210'],
+    documentType: 'Article',
+    link: 'http://a-link',
+    title: 'A title',
+    asapFunded: false,
+    usedInPublication: false,
+    sharingStatus: 'Public',
+    publishDate: undefined,
+    description: '',
+    tags: [],
+    type: 'Preprint',
+    labs: ['lab1'],
+    methods: [],
+    organisms: [],
+    environments: [],
+    authors: [{ userId: 'user-1' }],
+    publishingEntity: 'Working Group',
+  };
+  it('makes an authorized POST request to create a research output', async () => {
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .post('/research-outputs', payload)
+      .reply(201, { id: 123 });
+
+    await createResearchOutput(payload, 'Bearer x');
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('errors for an error status', async () => {
+    nock(API_BASE_URL).post('/research-outputs').reply(500, {});
+
+    await expect(
+      createResearchOutput(payload, 'Bearer x'),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Failed to create research output for Working Group. Expected status 201. Received status 500."`,
     );
   });
 });

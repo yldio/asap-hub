@@ -144,6 +144,9 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
     currentUserCRN,
     leaders,
   );
+  const route = network({})
+    .workingGroups({})
+    .workingGroup({ workingGroupId: id });
 
   return (
     <header css={containerStyles}>
@@ -189,7 +192,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
               >
                 {{
                   item: <>{article} Article</>,
-                  href: '#',
+                  href: route.createOutput({ outputDocumentType: 'article' }).$,
                 }}
                 {{
                   item: <>{bioinformatics} Bioinformatics</>,

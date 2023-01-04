@@ -1,3 +1,6 @@
+import userEvent from '@testing-library/user-event';
+import { ComponentProps } from 'react';
+import { StaticRouter, Router } from 'react-router-dom';
 import {
   createResearchOutputResponse,
   createTeamResponse,
@@ -22,22 +25,12 @@ import {
   waitForElementToBeRemoved,
   within,
 } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { createMemoryHistory, History } from 'history';
-import { ComponentProps } from 'react';
-import { Router, StaticRouter } from 'react-router-dom';
+import ResearchOutputTeamForm from '../ResearchOutputTeamForm';
 import { ENTER_KEYCODE } from '../../atoms/Dropdown';
-import ResearchOutputForm, {
-  createIdentifierField,
-  getDecision,
-  getIdentifierType,
-  getPublishDate,
-  isDirty,
-  isIdentifierModified,
-  ResearchOutputState,
-} from '../ResearchOutputForm';
+import { createIdentifierField } from '../../utils/researchOutputFormCommons';
 
-const props: ComponentProps<typeof ResearchOutputForm> = {
+const props: ComponentProps<typeof ResearchOutputTeamForm> = {
   onSave: jest.fn(() => Promise.resolve()),
   tagSuggestions: [],
   researchTags: [],
@@ -47,6 +40,57 @@ const props: ComponentProps<typeof ResearchOutputForm> = {
 };
 
 jest.setTimeout(60000);
+
+it('renders the research output header', () => {
+  render(
+    <StaticRouter>
+      <ResearchOutputTeamForm {...props} />
+    </StaticRouter>,
+  );
+  expect(screen.getByRole('heading', { name: /Share/i })).toBeInTheDocument();
+});
+
+it('renders the correct subtitles for publishing entity team', () => {
+  render(
+    <StaticRouter>
+      <ResearchOutputTeamForm
+        {...props}
+        publishingEntity="Team"
+        documentType="Article"
+      />
+    </StaticRouter>,
+  );
+
+  expect(
+    screen.getByText('Select the option that applies to this article.'),
+  ).toBeVisible();
+  expect(
+    screen.getByRole('textbox', { name: 'Authors (optional)' }),
+  ).toBeVisible();
+});
+
+it('renders the correct subtitles for publishing entity working group', () => {
+  render(
+    <StaticRouter>
+      <ResearchOutputTeamForm
+        {...props}
+        publishingEntity="Working Group"
+        documentType="Article"
+      />
+    </StaticRouter>,
+  );
+
+  expect(
+    screen.getByText('Select the type that matches your output the best.'),
+  ).toBeVisible();
+  expect(
+    screen.getByText('Add an abstract or a summary that describes this work.'),
+  ).toBeVisible();
+  expect(
+    screen.getByRole('textbox', { name: 'Authors (required)' }),
+  ).toBeVisible();
+});
+
 describe('createIdentifierField', () => {
   it('maps the ResearchOutputIdentifierType to fields including the identifier', () => {
     expect(
@@ -70,7 +114,7 @@ describe('createIdentifierField', () => {
 it('renders the form', async () => {
   render(
     <StaticRouter>
-      <ResearchOutputForm {...props} />
+      <ResearchOutputTeamForm {...props} />
     </StaticRouter>,
   );
   expect(
@@ -82,7 +126,7 @@ it('renders the form', async () => {
 it('renders the edit form button when research output data is present', async () => {
   render(
     <StaticRouter>
-      <ResearchOutputForm
+      <ResearchOutputTeamForm
         {...props}
         researchOutputData={createResearchOutputResponse()}
         isEditMode
@@ -116,7 +160,7 @@ it('renders the edit form with fields from researchOutputData prepopulated', asy
   };
   await render(
     <StaticRouter>
-      <ResearchOutputForm
+      <ResearchOutputTeamForm
         {...props}
         documentType={'Dataset'}
         researchOutputData={researchOutputData}
@@ -145,7 +189,7 @@ it('displays proper message when no author is found', async () => {
   const getAuthorSuggestions = jest.fn().mockResolvedValue([]);
   render(
     <StaticRouter>
-      <ResearchOutputForm
+      <ResearchOutputTeamForm
         {...props}
         getAuthorSuggestions={getAuthorSuggestions}
       />
@@ -161,7 +205,10 @@ it('displays proper message when no lab is found', async () => {
   const getLabSuggestions = jest.fn().mockResolvedValue([]);
   render(
     <StaticRouter>
-      <ResearchOutputForm {...props} getLabSuggestions={getLabSuggestions} />
+      <ResearchOutputTeamForm
+        {...props}
+        getLabSuggestions={getLabSuggestions}
+      />
     </StaticRouter>,
   );
   userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
@@ -172,7 +219,7 @@ it('displays proper message when no lab is found', async () => {
 it('displays current team within the form', async () => {
   render(
     <StaticRouter>
-      <ResearchOutputForm
+      <ResearchOutputTeamForm
         {...props}
         team={{ ...createTeamResponse(), displayName: 'example team' }}
       />
@@ -215,6 +262,7 @@ describe('on submit', () => {
     organisms: [],
     environments: [],
     usageNotes: '',
+    publishingEntity: 'Team',
   };
   type Data = Pick<
     ResearchOutputPostRequest,
@@ -230,10 +278,12 @@ describe('on submit', () => {
         link: 'http://example.com',
       },
       documentType = 'Article',
-      researchTags = [],
+      researchTags = [{ id: '1', name: 'research tag 1' }],
     }: {
       data?: Data;
-      documentType?: ComponentProps<typeof ResearchOutputForm>['documentType'];
+      documentType?: ComponentProps<
+        typeof ResearchOutputTeamForm
+      >['documentType'];
       researchTags?: ResearchTagResponse[];
     } = {
       data: {
@@ -248,7 +298,7 @@ describe('on submit', () => {
   ) => {
     render(
       <Router history={history}>
-        <ResearchOutputForm
+        <ResearchOutputTeamForm
           {...props}
           team={{ ...createTeamResponse(), id: 'TEAMID' }}
           documentType={documentType}
@@ -659,209 +709,4 @@ describe('on submit', () => {
       });
     });
   });
-});
-
-describe('isDirty', () => {
-  const researchOutputResponse: ResearchOutputResponse =
-    createResearchOutputResponse();
-  const researchOutputState: ResearchOutputState = {
-    title: researchOutputResponse.title,
-    description: researchOutputResponse.description,
-    link: researchOutputResponse.link,
-    type: researchOutputResponse.type!,
-    tags: researchOutputResponse.tags,
-    methods: researchOutputResponse.methods,
-    organisms: researchOutputResponse.organisms,
-    environments: researchOutputResponse.environments,
-    teams: researchOutputResponse?.teams.map((element, index) => ({
-      label: element.displayName,
-      value: element.id,
-      isFixed: index === 0,
-    })),
-    labs: researchOutputResponse?.labs.map((lab) => ({
-      value: lab.id,
-      label: lab.name,
-    })),
-    authors: researchOutputResponse?.authors.map((author) => ({
-      value: author.id,
-      label: author.displayName,
-      user: author,
-    })),
-    subtype: researchOutputResponse.subtype,
-    labCatalogNumber: researchOutputResponse.labCatalogNumber,
-    identifierType: ResearchOutputIdentifierType.Empty,
-  };
-
-  it('returns true for edit mode when teams are in diff order', () => {
-    expect(
-      isDirty(
-        {
-          ...researchOutputState,
-          teams: [
-            { value: 't0', label: 'team-0' },
-            { value: 't1', label: 'team-1' },
-          ],
-        },
-        {
-          ...researchOutputResponse,
-          teams: [
-            { id: 't1', displayName: 'team-1' },
-            { id: 't0', displayName: 'team-0' },
-          ],
-        },
-      ),
-    ).toBeTruthy();
-  });
-
-  it('returns false for edit mode when values equal the initial ones', () => {
-    expect(
-      isDirty(
-        {
-          ...researchOutputState,
-          identifierType: ResearchOutputIdentifierType.None,
-        },
-        researchOutputResponse,
-      ),
-    ).toBeFalsy();
-  });
-
-  it('returns true when the initial values are changed', () => {
-    expect(isDirty(researchOutputState)).toBeTruthy();
-  });
-
-  it('returns true when the initial values are unchanged', () => {
-    expect(
-      isDirty({
-        title: '',
-        description: '',
-        link: '',
-        type: '',
-        tags: [],
-        methods: [],
-        organisms: [],
-        environments: [],
-        teams: [{ value: '12', label: 'Team ASAP' }],
-        labs: [],
-        authors: [],
-        subtype: undefined,
-        labCatalogNumber: '',
-        identifier: '',
-        identifierType: ResearchOutputIdentifierType.Empty,
-      }),
-    ).toBeFalsy();
-  });
-
-  it('returns false when the identifier is absent', () => {
-    expect(isIdentifierModified(researchOutputResponse)).toBeFalsy();
-  });
-
-  it('returns false when the identifier is equal to initial identifier', () => {
-    expect(
-      isIdentifierModified(
-        { ...researchOutputResponse, doi: '12.1234' },
-        '12.1234',
-      ),
-    ).toBeFalsy();
-  });
-
-  it('returns true when the identifier is not equal to initial identifier', () => {
-    expect(
-      isIdentifierModified(
-        { ...researchOutputResponse, doi: '12.1234' },
-        '12.5555',
-      ),
-    ).toBeTruthy();
-  });
-
-  it.each`
-    key                   | value
-    ${'title'}            | ${'Output 1 changed'}
-    ${'description'}      | ${'new changed description'}
-    ${'link'}             | ${'https://changed.com'}
-    ${'type'}             | ${'Data set'}
-    ${'tags'}             | ${['changed tag']}
-    ${'methods'}          | ${['Activity Assay']}
-    ${'organisms'}        | ${['Rat']}
-    ${'teams'}            | ${['In Vivo']}
-    ${'environments'}     | ${[{ label: 'team1', value: 't99' }]}
-    ${'authors'}          | ${[{ label: 'author1', value: 'a111' }]}
-    ${'subtype'}          | ${'Postmortem'}
-    ${'labCatalogNumber'} | ${'1'}
-    ${'labs'}             | ${['Asap Lab']}
-    ${'identifierType'}   | ${'RRID'}
-    ${'rrid'}             | ${'101994'}
-  `(
-    'Return true when $key is changed to $value and differs from the initial one',
-    async ({ key, value }) => {
-      const payloadKey: keyof typeof researchOutputState = key;
-      researchOutputState[payloadKey] = value;
-      expect(isDirty(researchOutputState, researchOutputResponse)).toBeTruthy();
-    },
-  );
-});
-
-describe('getPublishDate', () => {
-  const dateString = new Date().toString();
-  it('returns a new date if date string exists', () => {
-    expect(getPublishDate(dateString)).toBeInstanceOf(Date);
-  });
-  it('returns undefined if no date string is present', () => {
-    expect(getPublishDate()).toBeUndefined();
-  });
-});
-
-describe('getDecision', () => {
-  it('returns yes for true', () => {
-    expect(getDecision(true)).toEqual('Yes');
-  });
-  it('returns no for false', () => {
-    expect(getDecision(false)).toEqual('No');
-  });
-  it('returns not sure for undefined', () => {
-    expect(getDecision()).toEqual('Not Sure');
-  });
-});
-
-describe('getIdentifierType', () => {
-  it('returns DOI when doi is present', () => {
-    expect(
-      getIdentifierType(true, {
-        ...createResearchOutputResponse(),
-        doi: 'abc',
-      }),
-    ).toEqual('DOI');
-  });
-  it('returns RRID when rrid is present', () => {
-    expect(
-      getIdentifierType(true, {
-        ...createResearchOutputResponse(),
-        rrid: 'abc',
-      }),
-    ).toEqual('RRID');
-  });
-  it('returns Accession Number when accession is present', () => {
-    expect(
-      getIdentifierType(true, {
-        ...createResearchOutputResponse(),
-        accession: 'abc',
-      }),
-    ).toEqual('Accession Number');
-  });
-  it.each`
-    isEditMode | description | expected
-    ${false}   | ${'empty'}  | ${ResearchOutputIdentifierType.Empty}
-    ${true}    | ${'none'}   | ${ResearchOutputIdentifierType.None}
-  `(
-    'returns $description when there is no identifier present',
-    ({ isEditMode, expected }) => {
-      expect(
-        getIdentifierType(isEditMode, {
-          ...createResearchOutputResponse(),
-          accession: '',
-          rrid: '',
-          doi: '',
-        }),
-      ).toEqual(expected);
-    },
-  );
 });

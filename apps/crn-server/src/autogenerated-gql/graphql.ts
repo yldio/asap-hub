@@ -4277,6 +4277,7 @@ export type ResearchOutputsDataDto = {
   methods: Maybe<ResearchOutputsDataMethodsDto>;
   organisms: Maybe<ResearchOutputsDataOrganismsDto>;
   publishDate: Maybe<ResearchOutputsDataPublishDateDto>;
+  publishingEntity: Maybe<ResearchOutputsDataPublishingEntityDto>;
   rrid: Maybe<ResearchOutputsDataRridDto>;
   sharingStatus: Maybe<ResearchOutputsDataSharingStatusDto>;
   subtype: Maybe<ResearchOutputsDataSubtypeDto>;
@@ -4317,6 +4318,7 @@ export type ResearchOutputsDataInputDto = {
   methods: InputMaybe<ResearchOutputsDataMethodsInputDto>;
   organisms: InputMaybe<ResearchOutputsDataOrganismsInputDto>;
   publishDate: InputMaybe<ResearchOutputsDataPublishDateInputDto>;
+  publishingEntity: InputMaybe<ResearchOutputsDataPublishingEntityInputDto>;
   rrid: InputMaybe<ResearchOutputsDataRridInputDto>;
   sharingStatus: InputMaybe<ResearchOutputsDataSharingStatusInputDto>;
   subtype: InputMaybe<ResearchOutputsDataSubtypeInputDto>;
@@ -4402,6 +4404,23 @@ export type ResearchOutputsDataPublishDateDto = {
 export type ResearchOutputsDataPublishDateInputDto = {
   /** Date of publishing (outside the Hub). Only applies to outputs that have been published. */
   iv: InputMaybe<Scalars['Instant']>;
+};
+
+/** The structure of the Publishing Entity field of the Research Outputs content type. */
+export type ResearchOutputsDataPublishingEntityDto = {
+  iv: Maybe<ResearchOutputsDataPublishingEntityEnum>;
+};
+
+export enum ResearchOutputsDataPublishingEntityEnum {
+  /** Team */
+  Team = 'Team',
+  /** Working_Group */
+  WorkingGroup = 'Working_Group',
+}
+
+/** The structure of the Publishing Entity field of the Research Outputs content input type. */
+export type ResearchOutputsDataPublishingEntityInputDto = {
+  iv: InputMaybe<ResearchOutputsDataPublishingEntityEnum>;
 };
 
 /** The structure of the Identifier (RRID) field of the Research Outputs content type. */
@@ -4528,6 +4547,7 @@ export type ResearchOutputsFlatDataDto = {
   organisms: Maybe<Array<ResearchTags>>;
   /** Date of publishing (outside the Hub). Only applies to outputs that have been published. */
   publishDate: Maybe<Scalars['Instant']>;
+  publishingEntity: Maybe<ResearchOutputsDataPublishingEntityEnum>;
   /** This must start with "RRID:" */
   rrid: Maybe<Scalars['String']>;
   sharingStatus: Maybe<Scalars['String']>;
@@ -8259,6 +8279,7 @@ export type ResearchOutputContentFragment = Pick<
     | 'link'
     | 'addedDate'
     | 'publishDate'
+    | 'publishingEntity'
     | 'doi'
     | 'labCatalogNumber'
     | 'accession'
@@ -8416,6 +8437,7 @@ export type FetchResearchOutputQuery = {
         | 'link'
         | 'addedDate'
         | 'publishDate'
+        | 'publishingEntity'
         | 'doi'
         | 'labCatalogNumber'
         | 'accession'
@@ -8592,6 +8614,7 @@ export type FetchResearchOutputsQuery = {
               | 'link'
               | 'addedDate'
               | 'publishDate'
+              | 'publishingEntity'
               | 'doi'
               | 'labCatalogNumber'
               | 'accession'
@@ -11050,6 +11073,10 @@ export const ResearchOutputContentFragmentDoc = {
                 { kind: 'Field', name: { kind: 'Name', value: 'link' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'addedDate' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'publishDate' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'publishingEntity' },
+                },
                 { kind: 'Field', name: { kind: 'Name', value: 'doi' } },
                 {
                   kind: 'Field',

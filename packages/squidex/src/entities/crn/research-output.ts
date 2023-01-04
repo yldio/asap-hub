@@ -1,6 +1,7 @@
 import {
   DecisionOption,
   ResearchOutputDocumentType,
+  ResearchOutputPublishingEntities,
   ResearchOutputSharingStatus,
   ResearchOutputType,
 } from '@asap-hub/model';
@@ -47,6 +48,7 @@ export interface ResearchOutput<
   updatedBy?: TUserConnection[];
   usageNotes?: string;
   usedInAPublication: DecisionOption;
+  publishingEntity: ResearchOutputPublishingEntities;
 }
 
 export interface RestResearchOutput extends Entity, Rest<ResearchOutput> {}

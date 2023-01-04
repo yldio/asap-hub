@@ -113,6 +113,12 @@ describe('share an output button', () => {
     expect(queryByText(/article/i, { selector: 'span' })).not.toBeVisible();
     fireEvent.click(getByText('Share an output'));
     expect(getByText(/article/i, { selector: 'span' })).toBeVisible();
+    expect(
+      getByText(/article/i, { selector: 'span' }).closest('a'),
+    ).toHaveAttribute(
+      'href',
+      '/network/working-groups/id/create-output/article',
+    );
   });
 });
 

@@ -4449,6 +4449,7 @@ type ResearchOutputsDataDto {
   methods: ResearchOutputsDataMethodsDto
   organisms: ResearchOutputsDataOrganismsDto
   publishDate: ResearchOutputsDataPublishDateDto
+  publishingEntity: ResearchOutputsDataPublishingEntityDto
   rrid: ResearchOutputsDataRridDto
   sharingStatus: ResearchOutputsDataSharingStatusDto
   subtype: ResearchOutputsDataSubtypeDto
@@ -4489,6 +4490,7 @@ input ResearchOutputsDataInputDto {
   methods: ResearchOutputsDataMethodsInputDto
   organisms: ResearchOutputsDataOrganismsInputDto
   publishDate: ResearchOutputsDataPublishDateInputDto
+  publishingEntity: ResearchOutputsDataPublishingEntityInputDto
   rrid: ResearchOutputsDataRridInputDto
   sharingStatus: ResearchOutputsDataSharingStatusInputDto
   subtype: ResearchOutputsDataSubtypeInputDto
@@ -4578,6 +4580,23 @@ type ResearchOutputsDataPublishDateDto {
 input ResearchOutputsDataPublishDateInputDto {
   """Date of publishing (outside the Hub). Only applies to outputs that have been published."""
   iv: Instant
+}
+
+"""The structure of the Publishing Entity field of the Research Outputs content type."""
+type ResearchOutputsDataPublishingEntityDto {
+  iv: ResearchOutputsDataPublishingEntityEnum
+}
+
+enum ResearchOutputsDataPublishingEntityEnum {
+  """Team"""
+  Team
+  """Working_Group"""
+  Working_Group
+}
+
+"""The structure of the Publishing Entity field of the Research Outputs content input type."""
+input ResearchOutputsDataPublishingEntityInputDto {
+  iv: ResearchOutputsDataPublishingEntityEnum
 }
 
 """The structure of the Identifier (RRID) field of the Research Outputs content type."""
@@ -4710,6 +4729,7 @@ type ResearchOutputsFlatDataDto {
   organisms: [ResearchTags!]
   """Date of publishing (outside the Hub). Only applies to outputs that have been published."""
   publishDate: Instant
+  publishingEntity: ResearchOutputsDataPublishingEntityEnum
   """
   This must start with "RRID:"
   """

@@ -53,6 +53,9 @@ export const usersContentQueryFragment = gql`
           }
         }
       }
+      referencingWorkingGroupsContent {
+        id
+      }
       social {
         github
         googleScholar

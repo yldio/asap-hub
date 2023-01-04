@@ -1,8 +1,7 @@
 import { render, fireEvent, screen } from '@testing-library/react';
+import { WorkingGroupMembership } from '@asap-hub/model';
 
-import WorkingGroupsTabbedCard, {
-  GroupMemberShip,
-} from '../WorkingGroupsTabbedCard';
+import WorkingGroupsTabbedCard from '../WorkingGroupsTabbedCard';
 
 const props = {
   userName: 'Foo B',
@@ -26,7 +25,7 @@ it('renders the no memberships message', () => {
 });
 
 it('splits the current and complete groups', () => {
-  const groups: GroupMemberShip[] = [
+  const groups: WorkingGroupMembership[] = [
     { id: 'group-1', name: 'Active WG', role: 'Leader', active: true },
     { id: 'group-2', name: 'Complete WG', role: 'Ex-Leader', active: false },
   ];

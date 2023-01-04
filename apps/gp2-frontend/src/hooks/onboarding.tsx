@@ -13,7 +13,7 @@ const orderedSteps = [
   'Preview',
 ] as const;
 
-const stepToHref: Record<typeof orderedSteps[number], string> = {
+export const stepToHref: Record<typeof orderedSteps[number], string> = {
   'Core Details': gp2Routing.onboarding({}).coreDetails({}).$,
   Background: gp2Routing.onboarding({}).background({}).$,
   'GP2 Groups': gp2Routing.onboarding({}).groups({}).$,
@@ -73,7 +73,6 @@ export const useOnboarding = (id: string) => {
     currentStepIndex < steps.length - 1
       ? steps[currentStepIndex + 1].href
       : undefined;
-
   return {
     isOnboardable,
     steps,

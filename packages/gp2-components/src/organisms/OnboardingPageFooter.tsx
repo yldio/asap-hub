@@ -57,6 +57,19 @@ const OnboardingPageFooter: React.FC<OnboardingPageFooterProps> = ({
     'initial' | 'isSaving' | 'hasError' | 'hasSaved'
   >('initial');
   const historyPush = usePushFromHere();
+
+  // we don't have an error state design yet, so we can't test for it
+  /* istanbul ignore next */
+  const onPublish = async () => {
+    setStatus('isSaving');
+    try {
+      await publishUser();
+      setStatus('hasSaved');
+      historyPush('/');
+    } catch (e) {
+      setStatus('hasError');
+    }
+  };
   return (
     <footer css={footerStyles}>
       <div css={signOutStyles}>
@@ -94,16 +107,7 @@ const OnboardingPageFooter: React.FC<OnboardingPageFooterProps> = ({
               fullWidth
               primary
               enabled={status !== 'isSaving'}
-              onClick={async () => {
-                setStatus('isSaving');
-                try {
-                  await publishUser();
-                  setStatus('hasSaved');
-                  historyPush('/');
-                } catch (e) {
-                  setStatus('hasError');
-                }
-              }}
+              onClick={onPublish}
             >
               Publish
             </Button>

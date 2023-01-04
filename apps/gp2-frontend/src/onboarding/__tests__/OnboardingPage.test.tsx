@@ -1,16 +1,19 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
+import userEvent from '@testing-library/user-event';
 import {
   render,
   screen,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
+import { gp2 } from '@asap-hub/model';
+
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getUser } from '../../users/api';
+import { getUser, patchUser } from '../../users/api';
 import { refreshUserState } from '../../users/state';
 import OnboardingPage from '../OnboardingPage';
 
@@ -31,9 +34,7 @@ const renderOnboardingPage = async (id: string) => {
             <MemoryRouter
               initialEntries={[gp2Routing.onboarding({}).coreDetails({}).$]}
             >
-              <Route path={gp2Routing.onboarding({}).coreDetails.template}>
-                <OnboardingPage />
-              </Route>
+              <OnboardingPage />
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -47,6 +48,7 @@ const renderOnboardingPage = async (id: string) => {
 describe('OnboardingPage', () => {
   beforeEach(jest.resetAllMocks);
   const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
+  const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
 
   it('has core details activated', async () => {
     const user = gp2Fixtures.createUserResponse();
@@ -54,6 +56,26 @@ describe('OnboardingPage', () => {
     await renderOnboardingPage(user.id);
     expect(screen.getByRole('link', { name: /core details/i })).toHaveClass(
       'active-link',
+    );
+  });
+  it('can publish profile if user profile is completed', async () => {
+    const user: gp2.UserResponse = {
+      ...gp2Fixtures.createUserResponse(),
+      onboarded: false,
+      biography: 'bio',
+    };
+    mockGetUser.mockResolvedValueOnce(user);
+
+    await renderOnboardingPage(user.id);
+    userEvent.click(screen.getByRole('link', { name: 'Continue' }));
+    userEvent.click(screen.getByRole('link', { name: 'Continue' }));
+    userEvent.click(screen.getByRole('link', { name: 'Continue' }));
+    userEvent.click(screen.getByRole('link', { name: 'Continue' }));
+    userEvent.click(screen.getByRole('button', { name: 'Publish' }));
+    expect(mockPatchUser).toHaveBeenCalledWith(
+      expect.anything(),
+      { onboarded: true },
+      expect.anything(),
     );
   });
 });

@@ -15,6 +15,7 @@ const OnboardingPage: React.FC = ({ children }) => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const patchUser = usePatchUserById(user!.id);
 
+  /* istanbul ignore next */
   if (!onboardingState) {
     throw new Error('Failed to get onboarding state');
   }

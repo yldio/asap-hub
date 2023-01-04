@@ -302,6 +302,7 @@ export const listGroupsResponse: ListGroupResponse = {
                 displayName: 'Rio, D',
               },
             ],
+            workingGroups: [],
             social: {
               github: 'fampinheiro',
               linkedIn: 'fampinheiro',
@@ -333,6 +334,7 @@ export const listGroupsResponse: ListGroupResponse = {
             teams: [],
             social: { github: 'johnytiago' },
             role: 'Guest',
+            workingGroups: [],
             labs: [
               { id: 'cd7be4902', name: 'Barcelona' },
               { id: 'cd7be4905', name: 'Glasgow' },

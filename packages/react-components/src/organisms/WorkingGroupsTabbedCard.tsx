@@ -13,7 +13,12 @@ const containerStyles = css({
   },
 });
 
-type GroupMemberShip = {
+const paragraphStyles = css({
+  margin: 0,
+  paddingBottom: `${rem(32)}`,
+});
+
+export type GroupMemberShip = {
   id: string;
   name: string;
   role: string;
@@ -55,7 +60,13 @@ const WorkingGroupsTabbedCard: React.FC<WorkingGroupsTabbedCardProps> = ({
     >
       {({ data }) => (
         <div css={containerStyles}>
-          <WorkingGroupsList groups={data} />
+          {data.length > 0 ? (
+            <WorkingGroupsList groups={data} />
+          ) : (
+            <p css={paragraphStyles}>{`There are no ${
+              isUserAlumni ? 'past' : 'active'
+            } memberships.`}</p>
+          )}
         </div>
       )}
     </TabbedCard>

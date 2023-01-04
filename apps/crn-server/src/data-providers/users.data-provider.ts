@@ -347,6 +347,24 @@ export const parseGraphQLUserToDataObject = (
       : 'Guest';
   const teams = parseGraphQLUserTeamConnections(flatTeams || []);
 
+  const workingGroups = item.referencingWorkingGroupsContents
+    ? item.referencingWorkingGroupsContents.map((wg) => {
+        const role = wg.flatData.leaders?.reduce((result, leader) => {
+          if (leader.user?.[0]?.id === item.id) {
+            return leader.workstreamRole || 'Member';
+          }
+          return result;
+        }, 'Member');
+
+        return {
+          id: wg.id,
+          name: wg.flatData.title || '',
+          role: role || '',
+          active: !wg.flatData.complete,
+        };
+      })
+    : [];
+
   const orcid = item.flatData.orcid || undefined;
   // merge both and remove null values
   const social = Object.entries({
@@ -435,6 +453,7 @@ export const parseGraphQLUserToDataObject = (
     lastModifiedDate: item.flatData.lastModifiedDate || createdDate,
     teams,
     social,
+    workingGroups,
     alumniSinceDate: item.flatData.alumniSinceDate || undefined,
     alumniLocation: item.flatData.alumniLocation || undefined,
     avatarUrl: flatAvatar?.length
@@ -445,7 +464,6 @@ export const parseGraphQLUserToDataObject = (
     researchInterests: item.flatData.researchInterests ?? undefined,
     reachOut: item.flatData.reachOut || undefined,
     labs: flatLabs || [],
-    workingGroups: [],
     orcidLastSyncDate: item.flatData.orcidLastSyncDate || undefined,
     _tags: [item.flatData.alumniSinceDate ? inactiveUserTag : activeUserTag],
   };

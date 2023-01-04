@@ -16,6 +16,7 @@ type UserProfileResearchProps = ComponentProps<typeof QuestionsSection> &
   Pick<UserResponse, 'email' | 'contactEmail' | 'displayName'> &
   ComponentProps<typeof UserProfileRole> & {
     userProfileGroupsCard?: ReactNode;
+    userProfileWorkingGroupsCard?: ReactNode;
     editExpertiseAndResourcesHref?: string;
     editQuestionsHref?: string;
     editRoleHref?: string;
@@ -33,6 +34,7 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
   labs,
   displayName,
   userProfileGroupsCard,
+  userProfileWorkingGroupsCard,
   editExpertiseAndResourcesHref,
   editQuestionsHref,
   editRoleHref,
@@ -81,6 +83,9 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
               href: editQuestionsHref,
               label: 'Edit open questions',
             },
+    },
+    userProfileWorkingGroupsCard !== undefined && {
+      card: userProfileWorkingGroupsCard,
     },
     userProfileGroupsCard !== undefined && {
       card: userProfileGroupsCard,

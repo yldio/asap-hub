@@ -445,6 +445,7 @@ export const parseGraphQLUserToDataObject = (
     researchInterests: item.flatData.researchInterests ?? undefined,
     reachOut: item.flatData.reachOut || undefined,
     labs: flatLabs || [],
+    workingGroups: [],
     orcidLastSyncDate: item.flatData.orcidLastSyncDate || undefined,
     _tags: [item.flatData.alumniSinceDate ? inactiveUserTag : activeUserTag],
   };

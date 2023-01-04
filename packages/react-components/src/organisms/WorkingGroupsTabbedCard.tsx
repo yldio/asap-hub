@@ -1,5 +1,7 @@
 import { css } from '@emotion/react';
 import React from 'react';
+
+import { WorkingGroupMembership } from '@asap-hub/model';
 import { TabbedCard, WorkingGroupsList } from '../molecules';
 import { rem, tabletScreen } from '../pixels';
 import { splitListBy } from '../utils';
@@ -18,16 +20,9 @@ const paragraphStyles = css({
   paddingBottom: `${rem(32)}`,
 });
 
-export type GroupMemberShip = {
-  id: string;
-  name: string;
-  role: string;
-  active: boolean;
-};
-
 type WorkingGroupsTabbedCardProps = {
   userName: string;
-  groups: ReadonlyArray<GroupMemberShip>;
+  groups: ReadonlyArray<WorkingGroupMembership>;
   isUserAlumni: boolean;
 };
 

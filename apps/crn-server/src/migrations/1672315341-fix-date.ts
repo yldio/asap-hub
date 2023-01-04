@@ -2,7 +2,6 @@
 import { RestUser } from '@asap-hub/squidex';
 import { Migration } from '@asap-hub/server-common';
 import { applyToAllItemsInCollection } from '../utils/migrations';
-import logger from '../utils/logger';
 
 export default class FixUserDate extends Migration {
   up = async (): Promise<void> => {
@@ -12,14 +11,22 @@ export default class FixUserDate extends Migration {
         if (user.data.lastModifiedDate?.iv) {
           const date = new Date(user.data.lastModifiedDate.iv);
           if (date instanceof Date && !Number.isNaN(date.getTime())) {
+            // eslint-disable-next-line no-console
+            console.log(
+              `Parsed ${user.id} with lastModifiedDate: "${
+                user.data.lastModifiedDate.iv
+              }" to "${date.toISOString()}"`,
+            );
+
             await squidexClient.patch(user.id, {
               lastModifiedDate: {
                 iv: date.toISOString(),
               },
             });
           } else {
-            logger.error(
-              `Could not parse ${user.id} with lastModifiedDate: ${user.data.lastModifiedDate.iv}`,
+            // eslint-disable-next-line no-console
+            console.log(
+              `Could not parse ${user.id} with lastModifiedDate: "${user.data.lastModifiedDate.iv}"`,
             );
           }
         }

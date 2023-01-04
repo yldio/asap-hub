@@ -123,6 +123,8 @@ export default class MoveRepurposedFields extends Migration {
     /* put rollback code here  */
   };
 }
+
+Log into AWS and go to Lambda to find the below function and run "Test". Eg asap-hub-2402-runMigrations would be for PR 2402
 ```
 
 The up function is triggered by `asap-hub-{env}-runMigrations`

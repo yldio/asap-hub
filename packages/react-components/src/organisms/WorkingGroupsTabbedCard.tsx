@@ -38,7 +38,7 @@ const WorkingGroupsTabbedCard: React.FC<WorkingGroupsTabbedCardProps> = ({
 
   return (
     <TabbedCard
-      title={`${userName} Working Groups`}
+      title={`${userName}'s Working Groups`}
       activeTabIndex={isUserAlumni ? 1 : 0}
       tabs={[
         {

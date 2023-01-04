@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 
-import { FC } from "react";
+import { FC } from 'react';
 
 interface GithubIconProps {
   readonly color?: string;

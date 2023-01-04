@@ -60,10 +60,13 @@ type UserWorkingGroup = Pick<WorkingGroupDataObject, 'id' | 'title'> & {
 
 type Telephone = { countryCode?: string; number?: string };
 
-export interface UserSocial extends Omit<
-  UserSocialLinks,
-  'website1' | 'website2' | 'researchGate' | 'researcherId'
-> { blog?: string };
+export interface UserSocial
+  extends Omit<
+    UserSocialLinks,
+    'website1' | 'website2' | 'researchGate' | 'researcherId'
+  > {
+  blog?: string;
+}
 
 export type UserDataObject = {
   avatarUrl?: string;

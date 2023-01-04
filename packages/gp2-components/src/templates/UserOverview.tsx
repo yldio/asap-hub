@@ -102,11 +102,7 @@ const UserOverview: React.FC<UserOverviewProps> = ({
         <div css={cardStyles}>
           <Headline3 noMargin>Projects</Headline3>
           <div css={contentStyles}>
-            <UserProjects
-              projects={projects}
-              firstName={firstName}
-              id={id}
-            />
+            <UserProjects projects={projects} firstName={firstName} id={id} />
           </div>
         </div>
       </Card>

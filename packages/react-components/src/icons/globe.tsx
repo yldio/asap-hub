@@ -5,7 +5,7 @@ interface GlobeIconProps {
   readonly color?: string;
 }
 
-const GlobeIcon: FC<GlobeIconProps> = ({ color = "00222C" }) => (
+const GlobeIcon: FC<GlobeIconProps> = ({ color = '00222C' }) => (
   <svg
     width={24}
     height={24}

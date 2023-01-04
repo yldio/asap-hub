@@ -12,4 +12,6 @@ const item = {
 };
 
 export const Normal = () => <UserOverview {...item} />;
-export const NoSocial = () => <UserOverview {...item} {...{ social: undefined}} />;
+export const NoSocial = () => (
+  <UserOverview {...item} {...{ social: undefined }} />
+);

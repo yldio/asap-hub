@@ -1,12 +1,12 @@
 /* istanbul ignore file */
 
-import { FC } from "react";
+import { FC } from 'react';
 
 interface LinkedInIconProps {
   readonly color?: string;
 }
 
-const LinkedInIcon: FC<LinkedInIconProps> = ({ color = '#00222C'}) => (
+const LinkedInIcon: FC<LinkedInIconProps> = ({ color = '#00222C' }) => (
   <svg
     width={28}
     height={28}

@@ -33,6 +33,14 @@ export const usersContentQueryFragment = gql`
       keywords
       fundingStreams
       biography
+      social {
+        googleScholar
+        orcid
+        blog
+        twitter
+        linkedIn
+        github
+      }
     }
     referencingProjectsContents {
       id

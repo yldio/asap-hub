@@ -312,6 +312,16 @@ export const getGraphQLUser = (
       { question: 'What color was Iron Mans original armour?' },
       { question: 'Who is the Stark family butler?' },
     ],
+    social: [
+      {
+        googleScholar: 'https://scholar.google.com',
+        orcid: 'https://orcid.org',
+        blog: 'https://www.blogger.com',
+        twitter: 'https://twitter.com',
+        linkedIn: 'https://www.linkedin.com',
+        github: 'https://github.com',
+      },
+    ],
     ...user?.flatData,
   },
   referencingProjectsContents: [

@@ -241,57 +241,18 @@ describe('User data provider', () => {
         id: [{ id: '42', flatData: { name: 'a cohort ' } }],
         study: 'http://example.com',
       };
-      test('Should throw when the cohort id is not defined', async () => {
+      test.each`
+        property                                            | description
+        ${{ id: null }}                                     | ${'id is not defined'}
+        ${{ id: [] }}                                       | ${'id is empty'}
+        ${{ role: null }}                                   | ${'role is not defined'}
+        ${{ id: [{ flatData: { name: null }, id: '42' }] }} | ${'name is not defined'}
+      `('Should throw when the cohort $description', async ({ property }) => {
         const invalidRoleUser = getGraphQLUser();
         invalidRoleUser.flatData.contributingCohorts = [
           {
             ...cohort,
-            id: null,
-          },
-        ];
-        const mockResponse = getSquidexUserGraphqlResponse(invalidRoleUser);
-        squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
-
-        expect(() =>
-          userDataProvider.fetchById('user-id'),
-        ).rejects.toThrowError('Invalid Contributing Cohort');
-      });
-      test('Should throw when the cohort role is not defined', async () => {
-        const invalidRoleUser = getGraphQLUser();
-        invalidRoleUser.flatData.contributingCohorts = [
-          {
-            ...cohort,
-            role: null,
-          },
-        ];
-        const mockResponse = getSquidexUserGraphqlResponse(invalidRoleUser);
-        squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
-
-        expect(() =>
-          userDataProvider.fetchById('user-id'),
-        ).rejects.toThrowError('Invalid Contributing Cohort');
-      });
-      test('Should throw when the cohort name is not defined', async () => {
-        const invalidRoleUser = getGraphQLUser();
-        invalidRoleUser.flatData.contributingCohorts = [
-          {
-            ...cohort,
-            id: [{ flatData: { name: null }, id: '42' }],
-          },
-        ];
-        const mockResponse = getSquidexUserGraphqlResponse(invalidRoleUser);
-        squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
-
-        expect(() =>
-          userDataProvider.fetchById('user-id'),
-        ).rejects.toThrowError('Invalid Contributing Cohort');
-      });
-      test('Should throw when the cohort id is empty', async () => {
-        const invalidRoleUser = getGraphQLUser();
-        invalidRoleUser.flatData.contributingCohorts = [
-          {
-            ...cohort,
-            id: [],
+            ...property,
           },
         ];
         const mockResponse = getSquidexUserGraphqlResponse(invalidRoleUser);

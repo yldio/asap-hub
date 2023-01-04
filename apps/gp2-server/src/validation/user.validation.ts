@@ -98,6 +98,19 @@ const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
       },
       nullable: true,
     },
+    social: {
+      type: 'object',
+      nullable: true,
+      additionalProperties: false,
+      properties: {
+        googleScholar: { type: 'string', nullable: true },
+        orcid: { type: 'string', nullable: true },
+        blog: { type: 'string', nullable: true },
+        twitter: { type: 'string', nullable: true },
+        linkedIn: { type: 'string', nullable: true },
+        github: { type: 'string', nullable: true },
+      },
+    },
   },
   additionalProperties: false,
 };

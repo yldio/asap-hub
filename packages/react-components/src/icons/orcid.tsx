@@ -1,6 +1,11 @@
 /* istanbul ignore file */
+import { FC } from 'react';
 
-const orcidIcon = (
+interface OrcidProps {
+  readonly color?: string;
+}
+
+const OrcidIcon: FC<OrcidProps> = ({ color = '#A6CE39' }) => (
   <svg
     version="1.1"
     id="Layer_1"
@@ -10,7 +15,7 @@ const orcidIcon = (
     y="0px"
     viewBox="0 0 256 256"
     style={{ enableBackground: 'new 0 0 256 256' } as React.CSSProperties}
-    fill="#A6CE39"
+    fill={color}
     xmlSpace="preserve"
   >
     <title>ORCID icon</title>
@@ -34,4 +39,4 @@ const orcidIcon = (
   </svg>
 );
 
-export default orcidIcon;
+export default OrcidIcon;

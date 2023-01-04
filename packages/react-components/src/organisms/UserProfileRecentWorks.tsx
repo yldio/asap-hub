@@ -14,7 +14,7 @@ import {
   Link,
 } from '../atoms';
 import { perRem, tabletScreen } from '../pixels';
-import { externalLinkIcon, orcidIcon } from '../icons';
+import { externalLinkIcon, OrcidIcon } from '../icons';
 import { charcoal, lead } from '../colors';
 import { mailToSupport } from '../mail';
 import { LinkHeadline } from '../molecules';
@@ -156,7 +156,7 @@ const UserProfileRecentWorks: React.FC<UserProfileRecentWorksProps> = ({
         </Headline2>
         <Paragraph accent="lead">Via ORCID</Paragraph>
         <span css={{ display: 'grid', svg: { fill: lead.rgb } }}>
-          {orcidIcon}
+          <OrcidIcon />
         </span>
       </div>
       {orcidWorks.length === 0 && isOwnProfile ? (

@@ -1,5 +1,5 @@
 import { FetchOptions, ListResponse } from '../common';
-import { Connection } from '../user';
+import { Connection, UserSocialLinks } from '../user';
 import { Keyword } from './common';
 import { ProjectDataObject, ProjectMember } from './project';
 import { WorkingGroupDataObject, WorkingGroupMember } from './working-group';
@@ -60,6 +60,11 @@ type UserWorkingGroup = Pick<WorkingGroupDataObject, 'id' | 'title'> & {
 
 type Telephone = { countryCode?: string; number?: string };
 
+export interface UserSocial extends Omit<
+  UserSocialLinks,
+  'website1' | 'website2' | 'researchGate' | 'researcherId'
+> { blog?: string };
+
 export type UserDataObject = {
   avatarUrl?: string;
   city?: string;
@@ -82,6 +87,7 @@ export type UserDataObject = {
   contributingCohorts: unknown[];
   secondaryEmail?: string;
   telephone?: Telephone;
+  social?: UserSocial;
   keywords: Keyword[];
   biography?: string;
 };

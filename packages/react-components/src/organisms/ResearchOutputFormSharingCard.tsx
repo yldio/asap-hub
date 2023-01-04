@@ -10,7 +10,7 @@ import {
 import { UrlExpression } from '@asap-hub/validation';
 import { useEffect, useState } from 'react';
 import { getAjvErrorForPath } from '../ajv-errors';
-import { globeIcon } from '../icons';
+import { GlobeIcon } from '../icons';
 import {
   FormCard,
   LabeledDateField,
@@ -133,7 +133,7 @@ const ResearchOutputFormSharingCard: React.FC<
         value={link ?? ''}
         enabled={!isSaving}
         required={urlRequired}
-        labelIndicator={globeIcon}
+        labelIndicator={<GlobeIcon />}
         placeholder="https://example.com"
       />
       <LabeledDropdown<ResearchOutputType | ''>

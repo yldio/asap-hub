@@ -1,6 +1,6 @@
 import { boolean, text } from '@storybook/addon-knobs';
 
-import { orcidIcon, Button } from '@asap-hub/react-components';
+import { OrcidIcon, Button } from '@asap-hub/react-components';
 
 export default {
   title: 'Atoms / Button',
@@ -25,7 +25,7 @@ export const Icon = () => (
     small={boolean('Small', false)}
     active={boolean('Active', false)}
   >
-    {orcidIcon}
+    <OrcidIcon />
   </Button>
 );
 
@@ -36,7 +36,7 @@ export const IconAndText = () => (
     small={boolean('Small', false)}
     active={boolean('Active', false)}
   >
-    {orcidIcon}
+    <OrcidIcon />
     {text('Text', 'Text')}
   </Button>
 );
@@ -44,4 +44,8 @@ export const IconAndText = () => (
 export const LinkStyledText = () => (
   <Button linkStyle>{text('Text', 'Text')}</Button>
 );
-export const LinkStyledIcon = () => <Button linkStyle>{orcidIcon}</Button>;
+export const LinkStyledIcon = () => (
+  <Button linkStyle>
+    <OrcidIcon />
+  </Button>
+);

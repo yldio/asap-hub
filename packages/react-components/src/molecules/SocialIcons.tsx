@@ -5,14 +5,14 @@ import { UserProfileContext } from '@asap-hub/react-context';
 
 import { Link } from '../atoms';
 import {
-  linkedInIcon,
-  githubIcon,
-  twitterIcon,
+  LinkedInIcon,
+  GithubIcon,
+  TwitterIcon,
   researchGateIcon,
   researcherIdIcon,
   orcidSocialIcon,
-  googleScholarIcon,
-  globeIcon,
+  GoogleScholarIcon,
+  GlobeIcon,
 } from '../icons';
 import { perRem } from '../pixels';
 import { tin } from '../colors';
@@ -87,7 +87,7 @@ const SocialIcons: React.FC<SocialIconsProps> = ({
             ? new URL(`https://twitter.com/${twitter}`).toString()
             : undefined
         }
-        icon={twitterIcon}
+        icon={<TwitterIcon />}
         isOwnProfile={isOwnProfile}
       />
       <SocialIconLink
@@ -96,7 +96,7 @@ const SocialIcons: React.FC<SocialIconsProps> = ({
             ? new URL(`https://github.com/${github}`).toString()
             : undefined
         }
-        icon={githubIcon}
+        icon={<GithubIcon />}
         isOwnProfile={isOwnProfile}
       />
       <SocialIconLink
@@ -107,7 +107,7 @@ const SocialIcons: React.FC<SocialIconsProps> = ({
               }).toString()}`
             : undefined
         }
-        icon={googleScholarIcon}
+        icon={<GoogleScholarIcon />}
         isOwnProfile={isOwnProfile}
       />
       <SocialIconLink
@@ -127,17 +127,17 @@ const SocialIcons: React.FC<SocialIconsProps> = ({
             ? new URL(`https://www.linkedin.com/in/${linkedIn}`).toString()
             : undefined
         }
-        icon={linkedInIcon}
+        icon={<LinkedInIcon />}
         isOwnProfile={isOwnProfile}
       />
       <SocialIconLink
         link={website1}
-        icon={globeIcon}
+        icon={<GlobeIcon />}
         isOwnProfile={isOwnProfile}
       />
       <SocialIconLink
         link={website2}
-        icon={globeIcon}
+        icon={<GlobeIcon />}
         isOwnProfile={isOwnProfile}
       />
     </div>

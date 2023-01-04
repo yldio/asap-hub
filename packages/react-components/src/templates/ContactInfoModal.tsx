@@ -12,7 +12,7 @@ import { noop } from '../utils';
 import { charcoal } from '../colors';
 import { EditModal } from '../organisms';
 import { perRem, smallDesktopScreen, tabletScreen } from '../pixels';
-import { globeIcon } from '../icons';
+import { GlobeIcon } from '../icons';
 import { Headline4, Link } from '../atoms';
 import { mailToSupport } from '../mail';
 
@@ -120,7 +120,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
               onChange={setNewWebsite1}
               value={newWebsite1}
               enabled={!isSaving}
-              labelIndicator={globeIcon}
+              labelIndicator={<GlobeIcon />}
               placeholder="https://example.com"
             />
             <LabeledTextField
@@ -133,7 +133,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
               onChange={setNewWebsite2}
               value={newWebsite2}
               enabled={!isSaving}
-              labelIndicator={globeIcon}
+              labelIndicator={<GlobeIcon />}
               placeholder="https://example.com"
             />
           </div>

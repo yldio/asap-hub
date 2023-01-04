@@ -13,6 +13,7 @@ import EmailSection from '../organisms/EmailSection';
 import UserQuestions from '../organisms/UserQuestions';
 import UserProjects from '../organisms/UserProjects';
 import UserWorkingGroups from '../organisms/UserWorkingGroups';
+import UserExternalProfiles from '../organisms/UserExternalProfiles';
 
 type UserOverviewProps = Pick<
   gp2.UserResponse,
@@ -25,6 +26,7 @@ type UserOverviewProps = Pick<
   | 'projects'
   | 'workingGroups'
   | 'firstName'
+  | 'social'
 > &
   ComponentProps<typeof UserQuestions>;
 
@@ -61,6 +63,7 @@ const UserOverview: React.FC<UserOverviewProps> = ({
   projects,
   workingGroups,
   firstName,
+  social,
 }) => (
   <div css={containerStyles}>
     <div css={[columnStyles]}>
@@ -103,7 +106,7 @@ const UserOverview: React.FC<UserOverviewProps> = ({
               projects={projects}
               firstName={firstName}
               id={id}
-            ></UserProjects>
+            />
           </div>
         </div>
       </Card>
@@ -133,6 +136,16 @@ const UserOverview: React.FC<UserOverviewProps> = ({
           <Headline3 noMargin>Funding Streams</Headline3>
           <div css={contentStyles}>
             <ExpandableText>{fundingStreams}</ExpandableText>
+          </div>
+        </div>
+      </Card>
+    )}
+    {social && Object.values(social).filter((value) => !!value) && (
+      <Card padding={false}>
+        <div css={cardStyles}>
+          <Headline3 noMargin>External Profiles</Headline3>
+          <div css={contentStyles}>
+            <UserExternalProfiles social={social} />
           </div>
         </div>
       </Card>

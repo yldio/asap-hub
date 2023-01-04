@@ -60,7 +60,10 @@ type UserWorkingGroup = Pick<WorkingGroupDataObject, 'id' | 'title'> & {
 
 type Telephone = { countryCode?: string; number?: string };
 
-const userContributingCohortRole = ['Contributor', 'Investigator'] as const;
+export const userContributingCohortRole = [
+  'Contributor',
+  'Investigator',
+] as const;
 type UserContributingCohortRole = typeof userContributingCohortRole[number];
 type UserContributingCohort = {
   role: UserContributingCohortRole;

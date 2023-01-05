@@ -123,7 +123,7 @@ const UserContributingCohorts: React.FC<UserContributingCohortsProps> = ({
               {study && (
                 <>
                   <h4 css={headingListStyles}>Link:</h4>
-                  <ExternalLink href={study} label="View study" noMargin full />
+                  <ExternalLink href={study} label="View study" noMargin />
                 </>
               )}
             </div>

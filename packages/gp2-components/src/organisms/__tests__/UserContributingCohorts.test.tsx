@@ -25,8 +25,7 @@ describe('UserContributingCohorts', () => {
     renderUserCohorts([]);
     expect(
       screen.getByText(
-        `${firstName} has contributed to the following cohort studies`,
-        { exact: false },
+        `${firstName} has contributed to the following cohort studies:`,
       ),
     ).toBeVisible();
   });
@@ -81,7 +80,7 @@ describe('UserContributingCohorts', () => {
   it('displays the hidden cohorts if the show more button is clicked', () => {
     renderUserCohorts(getCohorts(4));
 
-    expect(screen.queryByText('a name 3')).not.toBeVisible();
+    expect(screen.getByText('a name 3')).not.toBeVisible();
     const button = screen.getByRole('button', { name: /Show more/i });
     userEvent.click(button);
     expect(screen.getByText('a name 3')).toBeVisible();

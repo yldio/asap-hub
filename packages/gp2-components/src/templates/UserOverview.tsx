@@ -13,6 +13,7 @@ import EmailSection from '../organisms/EmailSection';
 import UserQuestions from '../organisms/UserQuestions';
 import UserProjects from '../organisms/UserProjects';
 import UserWorkingGroups from '../organisms/UserWorkingGroups';
+import { UserContributingCohorts } from '../organisms';
 
 type UserOverviewProps = Pick<
   gp2.UserResponse,
@@ -25,6 +26,7 @@ type UserOverviewProps = Pick<
   | 'projects'
   | 'workingGroups'
   | 'firstName'
+  | 'contributingCohorts'
 > &
   ComponentProps<typeof UserQuestions>;
 
@@ -61,6 +63,7 @@ const UserOverview: React.FC<UserOverviewProps> = ({
   projects,
   workingGroups,
   firstName,
+  contributingCohorts,
 }) => (
   <div css={containerStyles}>
     <div css={[columnStyles]}>
@@ -98,13 +101,7 @@ const UserOverview: React.FC<UserOverviewProps> = ({
       <Card padding={false}>
         <div css={cardStyles}>
           <Headline3 noMargin>Projects</Headline3>
-          <div css={contentStyles}>
-            <UserProjects
-              projects={projects}
-              firstName={firstName}
-              id={id}
-            ></UserProjects>
-          </div>
+          <UserProjects projects={projects} firstName={firstName} id={id} />
         </div>
       </Card>
     )}
@@ -112,21 +109,22 @@ const UserOverview: React.FC<UserOverviewProps> = ({
       <Card padding={false}>
         <div css={cardStyles}>
           <Headline3 noMargin>Working Groups</Headline3>
-          <div css={contentStyles}>
-            <UserWorkingGroups
-              workingGroups={workingGroups}
-              firstName={firstName}
-              id={id}
-            ></UserWorkingGroups>
-          </div>
+          <UserWorkingGroups
+            workingGroups={workingGroups}
+            firstName={firstName}
+            id={id}
+          />
         </div>
       </Card>
     )}
-    <Card padding={false}>
-      <div css={cardStyles}>
-        <UserQuestions questions={questions} firstName={firstName} />
-      </div>
-    </Card>
+    {questions.length > 0 && (
+      <Card padding={false}>
+        <div css={cardStyles}>
+          <Headline3 noMargin>Open Questions</Headline3>
+          <UserQuestions questions={questions} firstName={firstName} />
+        </div>
+      </Card>
+    )}
     {fundingStreams && (
       <Card padding={false}>
         <div css={cardStyles}>
@@ -134,6 +132,17 @@ const UserOverview: React.FC<UserOverviewProps> = ({
           <div css={contentStyles}>
             <ExpandableText>{fundingStreams}</ExpandableText>
           </div>
+        </div>
+      </Card>
+    )}
+    {contributingCohorts.length > 0 && (
+      <Card padding={false}>
+        <div css={cardStyles}>
+          <Headline3 noMargin>Contributing Cohort Studies</Headline3>
+          <UserContributingCohorts
+            contributingCohorts={contributingCohorts}
+            firstName={firstName}
+          />
         </div>
       </Card>
     )}

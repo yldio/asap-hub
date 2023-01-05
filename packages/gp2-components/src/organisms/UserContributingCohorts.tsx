@@ -16,12 +16,17 @@ import colors from '../templates/colors';
 const { rem } = pixels;
 
 const contentStyles = css({
-  rowGap: `${rem(16)} 0`,
+  padding: `${rem(16)} 0 ${rem(20)}`,
 });
 const rowStyles = css({
   borderBottom: `1px solid ${colors.neutral500.rgb}`,
   marginBottom: rem(12),
   padding: `${rem(16)} 0 ${rem(12)}`,
+  ':last-child': {
+    borderBottom: 'none',
+    marginBottom: 0,
+    paddingBottom: 0,
+  },
   [nonMobileQuery]: {
     display: 'flex',
   },
@@ -83,13 +88,10 @@ const UserContributingCohorts: React.FC<UserContributingCohortsProps> = ({
   const minimumToDisplay = 3;
   const [expanded, setExpanded] = useState(false);
 
-  const getListStyles = () => {
-    if (contributingCohorts.length < minimumToDisplay + 1 || expanded) {
-      return rowStyles;
-    }
-
-    return [rowStyles, hideStyles];
-  };
+  const getListStyles = () =>
+    contributingCohorts.length < minimumToDisplay + 1 || expanded
+      ? rowStyles
+      : [rowStyles, hideStyles];
 
   return (
     <>
@@ -103,34 +105,31 @@ const UserContributingCohorts: React.FC<UserContributingCohortsProps> = ({
         <Headline4>Role</Headline4>
         <Headline4>Link</Headline4>
       </div>
-      {contributingCohorts.map((cohort) => (
-        <div
-          key={`user-cohort-${cohort.contributingCohortId}`}
-          css={getListStyles()}
-        >
-          <div css={[listElementStyles, listElementMainStyles]}>
-            <h4 css={headingListStyles}>Name:</h4>
-            {cohort.name}
+      {contributingCohorts.map(
+        ({ contributingCohortId, name, study, role }) => (
+          <div
+            key={`user-cohort-${contributingCohortId}`}
+            css={getListStyles()}
+          >
+            <div css={[listElementStyles, listElementMainStyles]}>
+              <h4 css={headingListStyles}>Name:</h4>
+              {name}
+            </div>
+            <div css={[listElementStyles, listElementSecondaryStyles]}>
+              <h4 css={headingListStyles}>Role:</h4>
+              {role}
+            </div>
+            <div css={[listElementStyles, listElementSecondaryStyles]}>
+              {study && (
+                <>
+                  <h4 css={headingListStyles}>Link:</h4>
+                  <ExternalLink href={study} label="View study" noMargin full />
+                </>
+              )}
+            </div>
           </div>
-          <div css={[listElementStyles, listElementSecondaryStyles]}>
-            <h4 css={headingListStyles}>Role:</h4>
-            {cohort.role}
-          </div>
-          <div css={[listElementStyles, listElementSecondaryStyles]}>
-            {cohort.study && (
-              <>
-                <h4 css={headingListStyles}>Link:</h4>
-                <ExternalLink
-                  href={cohort.study}
-                  label="View study"
-                  noMargin
-                  full
-                />
-              </>
-            )}
-          </div>
-        </div>
-      ))}
+        ),
+      )}
       {contributingCohorts.length > minimumToDisplay && (
         <div css={buttonWrapperStyles}>
           <Button linkStyle onClick={() => setExpanded(!expanded)}>

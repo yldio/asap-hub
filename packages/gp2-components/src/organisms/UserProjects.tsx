@@ -19,12 +19,17 @@ import colors from '../templates/colors';
 const { rem } = pixels;
 
 const contentStyles = css({
-  rowGap: `${rem(16)} 0`,
+  padding: `${rem(16)} 0 ${rem(20)}`,
 });
 const rowStyles = css({
   borderBottom: `1px solid ${colors.neutral500.rgb}`,
   marginBottom: rem(12),
   padding: `${rem(16)} 0 ${rem(12)}`,
+  ':last-child': {
+    borderBottom: 'none',
+    marginBottom: 0,
+    paddingBottom: 0,
+  },
   [nonMobileQuery]: {
     display: 'flex',
   },
@@ -90,13 +95,10 @@ const UserProjects: React.FC<UserProjectsProps> = ({
   const minimumProjectsToDisplay = 3;
   const [expanded, setExpanded] = useState(false);
 
-  const getProjectListStyles = () => {
-    if (projects.length < minimumProjectsToDisplay + 1 || expanded) {
-      return rowStyles;
-    }
-
-    return [rowStyles, hideStyles];
-  };
+  const getProjectListStyles = () =>
+    projects.length < minimumProjectsToDisplay + 1 || expanded
+      ? rowStyles
+      : [rowStyles, hideStyles];
 
   const getUserProjectRole = (
     userId: gp2.UserResponse['id'],

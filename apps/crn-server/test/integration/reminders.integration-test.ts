@@ -719,7 +719,7 @@ describe('Reminders', () => {
     });
   });
 
-  describe.only('Upload Presentation Reminder', () => {
+  describe('Upload Presentation Reminder', () => {
     let userId: string;
     let teamId: string;
     let calendarId: string;

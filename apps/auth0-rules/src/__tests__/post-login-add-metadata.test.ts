@@ -202,6 +202,7 @@ describe('For a CRN login', () => {
     ],
     expertiseAndResourceTags: [],
     questions: [],
+    workingGroups: [],
     role: 'Grantee',
     algoliaApiKey: 'test-api-key',
   };

@@ -280,8 +280,16 @@ type GraphQLUserRequiredFlatData = Pick<
 type GraphQLUserOptionalFlatData = Partial<
   Omit<GraphQLUserFlatData, GraphQLUserRequiredFlatDataProperties>
 >;
-type GraphQLUser = Omit<UsersContentFragment, 'flatData'> & {
+
+type GraphQLUserReferencingWorkingGroupsContents =
+  UsersContentFragment['referencingWorkingGroupsContents'];
+
+type GraphQLUser = Omit<
+  UsersContentFragment,
+  'flatData' | 'referencingWorkingGroupsContents'
+> & {
   flatData: GraphQLUserRequiredFlatData & GraphQLUserOptionalFlatData;
+  referencingWorkingGroupsContents?: GraphQLUserReferencingWorkingGroupsContents;
 };
 
 export const parseGraphQLUser = (user: GraphQLUser): UserResponse => {

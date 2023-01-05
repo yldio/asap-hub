@@ -162,6 +162,7 @@ const getSquidexGraphqlDiscoverMembersResponse = (
     responsibilities: undefined,
     reachOut: undefined,
     labs: [],
+    workingGroups: [],
   },
   {
     id: `${prefix}uuid-members-2`,
@@ -188,6 +189,7 @@ const getSquidexGraphqlDiscoverMembersResponse = (
     responsibilities: undefined,
     reachOut: undefined,
     labs: [],
+    workingGroups: [],
   },
 ];
 

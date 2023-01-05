@@ -15,11 +15,6 @@ const containerStyles = css({
   },
 });
 
-const paragraphStyles = css({
-  margin: 0,
-  paddingBottom: `${rem(32)}`,
-});
-
 type WorkingGroupsTabbedCardProps = {
   userName: string;
   groups: ReadonlyArray<WorkingGroupMembership>;
@@ -45,23 +40,19 @@ const WorkingGroupsTabbedCard: React.FC<WorkingGroupsTabbedCardProps> = ({
           tabTitle: `Active Memberships (${activeMemberships.length})`,
           items: activeMemberships,
           disabled: isUserAlumni,
+          empty: 'There are no active memberships.',
         },
         {
           tabTitle: `Past Memberships (${inactiveMemberships.length})`,
           items: inactiveMemberships,
           disabled: inactiveMemberships.length === 0,
+          empty: 'There are no past memberships.',
         },
       ]}
     >
       {({ data }) => (
         <div css={containerStyles}>
-          {data.length > 0 ? (
-            <WorkingGroupsList groups={data} />
-          ) : (
-            <p css={paragraphStyles}>{`There are no ${
-              isUserAlumni ? 'past' : 'active'
-            } memberships.`}</p>
-          )}
+          <WorkingGroupsList groups={data} />
         </div>
       )}
     </TabbedCard>

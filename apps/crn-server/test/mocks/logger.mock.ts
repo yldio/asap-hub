@@ -6,6 +6,7 @@ export const loggerMock = {
   debug: jest.fn(),
   warn: jest.fn(),
   child: () => loggerMock,
+  levels: [],
 } as unknown as jest.Mocked<Logger>;
 
 export const httpLoggerMock = getHttpLogger({ logger: loggerMock });

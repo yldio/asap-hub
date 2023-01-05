@@ -5,6 +5,7 @@ import {
   researchOutputToIdentifierType,
   researchOutputDocumentTypes,
   ResearchOutputPutRequest,
+  ResearchOutputPublishingEntitiesValues,
 } from '@asap-hub/model';
 import {
   ResearchOutputIdentifierValidationExpression,
@@ -79,6 +80,11 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
       sharingStatus: { type: 'string' },
       usedInPublication: { type: 'boolean', nullable: true },
       publishDate: { type: 'string', format: 'date-time', nullable: true },
+      publishingEntity: {
+        type: 'string',
+        nullable: true,
+        enum: ResearchOutputPublishingEntitiesValues,
+      },
       labs: {
         type: 'array',
         items: { type: 'string' },

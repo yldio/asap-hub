@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import React, { ReactNode, useEffect } from 'react';
 import { Paragraph, Headline3, TabButton, Button } from '../atoms';
 import { steel } from '../colors';
-import { perRem } from '../pixels';
+import { perRem, rem } from '../pixels';
 import { TabNav } from '.';
 import { paddingStyles } from '../card';
 
@@ -19,11 +19,16 @@ const showMoreStyles = css({
   borderTop: `1px solid ${steel.rgb}`,
 });
 
+const emptyContainer = css({
+  padding: `${rem(20)} 0`,
+});
+
 export type TabProps<T> = {
   tabTitle: string;
   items: ReadonlyArray<T>;
   truncateFrom?: number;
   disabled?: boolean;
+  empty: React.ReactNode;
 };
 
 type TabbedCardProps<T> = {
@@ -35,7 +40,7 @@ type TabbedCardProps<T> = {
   children: (state: { data: T[] }) => ReactNode;
 };
 
-const TabbedContent = <T extends object>({
+export const TabbedContent = <T extends object>({
   title,
   description,
   tabs,
@@ -46,7 +51,7 @@ const TabbedContent = <T extends object>({
   useEffect(() => setActive(activeTabIndex), [activeTabIndex]);
   const [active, setActive] = React.useState(activeTabIndex);
   const [showMore, setShowMore] = React.useState(false);
-  const { items, truncateFrom } = tabs[active];
+  const { items, truncateFrom, empty } = tabs[active];
   const displayShowMoreButton =
     getShowMoreText && truncateFrom && items.length > truncateFrom;
 
@@ -74,9 +79,13 @@ const TabbedContent = <T extends object>({
         </TabNav>
       </div>
       <div css={[paddingStyles, { paddingBottom: 0, paddingTop: 0 }]}>
-        {children({
-          data: items.slice(0, showMore ? undefined : truncateFrom),
-        })}
+        {items.length ? (
+          children({
+            data: items.slice(0, showMore ? undefined : truncateFrom),
+          })
+        ) : (
+          <div css={emptyContainer}>{empty}</div>
+        )}
       </div>
       {displayShowMoreButton && (
         <div css={showMoreStyles}>

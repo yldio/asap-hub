@@ -1,6 +1,7 @@
 import { Layout, UsersPage } from '@asap-hub/gp2-components';
 import { action } from '@storybook/addon-actions';
 import { select, text } from '@storybook/addon-knobs';
+import { ComponentProps } from 'react';
 import { NoPaddingDecorator } from '../layout';
 
 export default {
@@ -9,8 +10,15 @@ export default {
   decorators: [NoPaddingDecorator],
 };
 
+const layoutProps: Pick<
+  ComponentProps<typeof Layout>,
+  'projects' | 'workingGroups'
+> = {
+  projects: [],
+  workingGroups: [],
+};
 export const Normal = () => (
-  <Layout>
+  <Layout {...layoutProps}>
     <UsersPage
       onSearchQueryChange={() => action('search')}
       searchQuery={text('Search Query', '')}

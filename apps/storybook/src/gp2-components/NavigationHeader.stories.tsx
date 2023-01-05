@@ -1,8 +1,13 @@
 import { NavigationHeader } from '@asap-hub/gp2-components';
+import { ComponentProps } from 'react';
 
 export default {
   title: 'GP2 / Organisms / Navigation Header',
   component: NavigationHeader,
 };
 
-export const Normal = () => <NavigationHeader />;
+const props: ComponentProps<typeof NavigationHeader> = {
+  projects: [],
+  workingGroups: [],
+};
+export const Normal = () => <NavigationHeader {...props} />;

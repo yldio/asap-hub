@@ -27,7 +27,7 @@ import { getResearchTags } from '../../shared-research/api';
 import { useSetResearchOutputItem } from '../../shared-research/state';
 import { getUsersAndExternalAuthors } from '../users/api';
 import {
-  createTeamResearchOutput,
+  createResearchOutput,
   getLabs,
   getTeam,
   getTeams,
@@ -182,14 +182,11 @@ export const useAuthorSuggestions = () => {
     }).then(({ items }) => items);
 };
 
-export const usePostTeamResearchOutput = () => {
+export const usePostResearchOutput = () => {
   const authorization = useRecoilValue(authorizationState);
   const setResearchOutputItem = useSetResearchOutputItem();
   return async (payload: ResearchOutputPostRequest) => {
-    const researchOutput = await createTeamResearchOutput(
-      payload,
-      authorization,
-    );
+    const researchOutput = await createResearchOutput(payload, authorization);
     setResearchOutputItem(researchOutput);
     return researchOutput;
   };

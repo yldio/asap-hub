@@ -12,7 +12,7 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getUser, patchUser, getInstitutions } from '../../users/api';
+import { getInstitutions, getUser, patchUser } from '../../users/api';
 import { refreshUserState } from '../../users/state';
 import CoreDetails from '../CoreDetails';
 
@@ -140,6 +140,30 @@ describe('CoreDetails', () => {
     expect(mockPatchUser).toHaveBeenCalledWith(
       expect.anything(),
       expect.objectContaining({ firstName: 'Tony', lastName: 'Stark' }),
+      expect.anything(),
+    );
+  });
+
+  it('saves the contact information modal', async () => {
+    const user = gp2Fixtures.createUserResponse();
+    mockGetUser.mockResolvedValueOnce(user);
+    await renderCoreDetails(user.id);
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    userEvent.click(screen.getByRole('link', { name: 'Optional Add' }));
+    expect(screen.getByRole('dialog')).toBeVisible();
+    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+    expect(mockPatchUser).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        secondaryEmail: 'tony.stark@avengers.com',
+        telephone: {
+          countryCode: '+1',
+          number: '0123456789',
+        },
+      }),
       expect.anything(),
     );
   });

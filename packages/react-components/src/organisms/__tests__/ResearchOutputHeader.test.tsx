@@ -39,9 +39,43 @@ it.each([
   },
 );
 
+it.each([
+  {
+    documentType: 'Article',
+    headingName: /Share a Working Group Article/i,
+    text: /published article/,
+  },
+] as const)(
+  'renders the $documentType research output for a working group publishing entity',
+  ({ documentType, headingName, text }) => {
+    render(
+      <ResearchOutputHeader
+        documentType={documentType}
+        publishingEntity={'Working Group'}
+      />,
+    );
+    expect(
+      screen.getByRole('heading', { name: headingName }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(text)).toBeInTheDocument();
+  },
+);
+
 it('falls back to a generic description otherwise', () => {
   render(<ResearchOutputHeader documentType="Presentation" />);
   expect(
     screen.getByRole('heading', { name: /Share a resource/i }),
+  ).toBeInTheDocument();
+});
+
+it('falls back to a generic description for working groups', () => {
+  render(
+    <ResearchOutputHeader
+      documentType="Presentation"
+      publishingEntity="Working Group"
+    />,
+  );
+  expect(
+    screen.getByRole('heading', { name: /Share a working group resource/i }),
   ).toBeInTheDocument();
 });

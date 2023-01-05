@@ -58,7 +58,7 @@ const PastEventsDashboardCard: React.FC<PastEventsDashboardCardProps> = ({
       <div css={[rowStyles, gridTitleStyles]}>
         <span css={titleStyles}>Event</span>
         <span css={titleStyles}>Meeting Materials</span>
-        <span css={titleStyles}>Date</span>
+        <span css={titleStyles}>Event Date</span>
       </div>
       {events.map(
         ({ id, title, startDate, notes, presentation, videoRecording }) => (

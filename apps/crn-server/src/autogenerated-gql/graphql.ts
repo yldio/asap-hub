@@ -8212,7 +8212,9 @@ export type FetchReminderDataQueryVariables = Exact<{
 
 export type FetchReminderDataQuery = {
   findUsersContent: Maybe<{
-    flatData: { teams: Maybe<Array<{ id: Maybe<Array<Pick<Teams, 'id'>>> }>> };
+    flatData: Pick<UsersFlatDataDto, 'role'> & {
+      teams: Maybe<Array<{ id: Maybe<Array<Pick<Teams, 'id'>>> }>>;
+    };
   }>;
   queryResearchOutputsContents: Maybe<
     Array<
@@ -8277,6 +8279,7 @@ export type ResearchOutputContentFragment = Pick<
     | 'link'
     | 'addedDate'
     | 'publishDate'
+    | 'publishingEntity'
     | 'doi'
     | 'labCatalogNumber'
     | 'accession'
@@ -8434,6 +8437,7 @@ export type FetchResearchOutputQuery = {
         | 'link'
         | 'addedDate'
         | 'publishDate'
+        | 'publishingEntity'
         | 'doi'
         | 'labCatalogNumber'
         | 'accession'
@@ -8610,6 +8614,7 @@ export type FetchResearchOutputsQuery = {
               | 'link'
               | 'addedDate'
               | 'publishDate'
+              | 'publishingEntity'
               | 'doi'
               | 'labCatalogNumber'
               | 'accession'
@@ -11122,6 +11127,10 @@ export const ResearchOutputContentFragmentDoc = {
                 { kind: 'Field', name: { kind: 'Name', value: 'link' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'addedDate' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'publishDate' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'publishingEntity' },
+                },
                 { kind: 'Field', name: { kind: 'Name', value: 'doi' } },
                 {
                   kind: 'Field',
@@ -13619,6 +13628,7 @@ export const FetchReminderDataDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'role' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'teams' },

@@ -1,9 +1,10 @@
 import { authTestUtils } from '@asap-hub/gp2-components';
-import { render, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { Suspense } from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { RecoilRoot, useRecoilValue } from 'recoil';
-
+import { getUser } from '../users/api';
 import { authorizationState } from '../auth/state';
 import AuthenticatedApp from '../AuthenticatedApp';
 import Dashboard from '../dashboard/Dashboard';
@@ -12,11 +13,16 @@ import Dashboard from '../dashboard/Dashboard';
 // declarative routes at this level - get any backend requests out of the way
 // so that it just easily renders
 jest.mock('../dashboard/Dashboard', () => jest.fn());
+jest.mock('../users/api');
 const MockDashboard = Dashboard as jest.MockedFunction<typeof Dashboard>;
+const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
+beforeEach(jest.resetAllMocks);
 beforeEach(() => {
-  MockDashboard.mockReset().mockReturnValue(null);
+  MockDashboard.mockImplementation(() => {
+    const authorization = useRecoilValue(authorizationState);
+    return <>{authorization}</>;
+  });
 });
-
 const renderAuthenticatedApp = (onboarded: boolean) =>
   render(
     <RecoilRoot>
@@ -33,31 +39,13 @@ const renderAuthenticatedApp = (onboarded: boolean) =>
   );
 
 it('syncs the auth state to recoil for the onboarded user', async () => {
-  MockDashboard.mockImplementation(() => {
-    const authorization = useRecoilValue(authorizationState);
-    return <>{authorization}</>;
-  });
-  const { queryByText, getByText } = renderAuthenticatedApp(true);
-  await waitFor(
-    () => {
-      expect(queryByText(/loading/i)).not.toBeInTheDocument();
-      expect(getByText(/Bearer token/i)).toBeVisible();
-    },
-    { timeout: 2000 },
-  );
+  const user = gp2Fixtures.createUserResponse();
+  mockGetUser.mockResolvedValueOnce(user);
+  renderAuthenticatedApp(true);
+  expect(await screen.findByText(/Bearer token/i)).toBeVisible();
 });
 
 it('syncs the auth state to recoil for the non-onboarded user', async () => {
-  MockDashboard.mockImplementation(() => {
-    const authorization = useRecoilValue(authorizationState);
-    return <>{authorization}</>;
-  });
-  const { queryByText, getByText } = renderAuthenticatedApp(false);
-  await waitFor(
-    () => {
-      expect(queryByText(/loading/i)).not.toBeInTheDocument();
-      expect(getByText(/Welcome to the GP2 Hub/i)).toBeVisible();
-    },
-    { timeout: 4000 },
-  );
+  renderAuthenticatedApp(false);
+  expect(await screen.findByText(/Welcome to the GP2 Hub/i)).toBeVisible();
 });

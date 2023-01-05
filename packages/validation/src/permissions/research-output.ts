@@ -1,5 +1,8 @@
 import { User } from '@asap-hub/auth';
-import { ResearchOutputPostRequest } from '@asap-hub/model';
+import {
+  ResearchOutputPostRequest,
+  WorkingGroupDataObject,
+} from '@asap-hub/model';
 
 export const hasCreateUpdateResearchOutputPermissions = (
   user: Omit<User, 'algoliaApiKey'>,
@@ -12,3 +15,19 @@ export const hasCreateUpdateResearchOutputPermissions = (
 
     return teams.includes(team.id) && team.role === 'Project Manager';
   });
+
+export const hasWorkingGroupsCreateUpdateResearchOutputPermissions = (
+  user: Omit<User, 'algoliaApiKey'>,
+  workingGroup: WorkingGroupDataObject | undefined,
+): boolean => {
+  if (!workingGroup) return false;
+
+  const { leaders } = workingGroup;
+
+  return leaders.some((leader) => {
+    if (leader.user.id === user.id && leader.role === 'Project Manager') {
+      return true;
+    }
+    return false;
+  });
+};

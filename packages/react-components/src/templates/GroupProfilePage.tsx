@@ -18,7 +18,7 @@ const GroupProfilePage: React.FC<GroupProfilePageProps> = ({
 }) => (
   <article>
     {!active && (
-      <Toast accent="info">
+      <Toast accent="warning">
         This group is inactive and might not have all content available.
       </Toast>
     )}

@@ -36,7 +36,7 @@ it('renders the inactive team header for inactive team', () => {
       'This team is inactive and might not have all content available.',
     ),
   ).toBeVisible();
-  expect(getByTitle('Info Circle Yellow')).toBeInTheDocument();
+  expect(getByTitle('Warning')).toBeInTheDocument();
 });
 
 it('does not render the inactive team header for active team', () => {

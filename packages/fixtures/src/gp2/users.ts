@@ -5,6 +5,7 @@ const mockedUser: gp2.UserResponse = {
   createdDate: '2020-09-23T20:45:22.000Z',
   displayName: 'Tony Stark',
   email: 'T@ark.io',
+  secondaryEmail: 'tony.stark@avengers.com',
   firstName: 'Tony',
   lastName: 'Stark',
   region: 'Europe',
@@ -38,6 +39,10 @@ const mockedUser: gp2.UserResponse = {
   contributingCohorts: [],
   fundingStreams: undefined,
   keywords: ['Bash'],
+  telephone: {
+    countryCode: '+1',
+    number: '0123456789',
+  },
 };
 
 export const createUserResponse = (

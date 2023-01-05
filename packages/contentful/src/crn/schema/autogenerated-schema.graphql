@@ -145,6 +145,60 @@ type ContentfulTag {
   name: String
 }
 
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/dashboard)"""
+type Dashboard implements Entry {
+  contentfulMetadata: ContentfulMetadata!
+  linkedFrom(allowedLocales: [String]): DashboardLinkingCollections
+  newsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): DashboardNewsCollection
+  pagesCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): DashboardPagesCollection
+  sys: Sys!
+}
+
+type DashboardCollection {
+  items: [Dashboard]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input DashboardFilter {
+  AND: [DashboardFilter]
+  OR: [DashboardFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  newsCollection_exists: Boolean
+  pagesCollection_exists: Boolean
+  sys: SysFilter
+}
+
+type DashboardLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+}
+
+type DashboardNewsCollection {
+  items: [News]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum DashboardOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+type DashboardPagesCollection {
+  items: [Pages]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
 """
 A date-time string at UTC, such as 2007-12-03T10:15:30Z,
     compliant with the 'date-time' format outlined in section 5.6 of
@@ -403,6 +457,7 @@ input NewsFilter {
 }
 
 type NewsLinkingCollections {
+  dashboardCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): DashboardCollection
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
 }
 
@@ -510,6 +565,7 @@ input PagesFilter {
 }
 
 type PagesLinkingCollections {
+  dashboardCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): DashboardCollection
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
 }
 
@@ -557,6 +613,8 @@ scalar Quality
 type Query {
   asset(id: String!, locale: String, preview: Boolean): Asset
   assetCollection(limit: Int = 100, locale: String, order: [AssetOrder], preview: Boolean, skip: Int = 0, where: AssetFilter): AssetCollection
+  dashboard(id: String!, locale: String, preview: Boolean): Dashboard
+  dashboardCollection(limit: Int = 100, locale: String, order: [DashboardOrder], preview: Boolean, skip: Int = 0, where: DashboardFilter): DashboardCollection
   entryCollection(limit: Int = 100, locale: String, order: [EntryOrder], preview: Boolean, skip: Int = 0, where: EntryFilter): EntryCollection
   migration(id: String!, locale: String, preview: Boolean): Migration
   migrationCollection(limit: Int = 100, locale: String, order: [MigrationOrder], preview: Boolean, skip: Int = 0, where: MigrationFilter): MigrationCollection

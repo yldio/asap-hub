@@ -6,6 +6,7 @@ import { MembersList, TabbedCard } from '../molecules';
 import { getUniqueCommaStringWithSuffix } from '../utils/text';
 import { fern } from '../colors';
 import { splitListBy } from '../utils';
+import { Paragraph } from '../atoms';
 
 const containerStyles = css({
   listStyle: 'none',
@@ -21,11 +22,6 @@ const containerStyles = css({
 const nameStyles = css({
   color: fern.rgb,
   fontWeight: 'normal',
-});
-
-const paragraphStyles = css({
-  margin: 0,
-  paddingBottom: `${rem(32)}`,
 });
 
 type TeamMembersTabbedCardProps = Pick<
@@ -60,6 +56,11 @@ const TeamMembersTabbedCard: React.FC<TeamMembersTabbedCardProps> = ({
           items: isTeamInactive ? [] : activeMembers,
           truncateFrom: 8,
           disabled: isTeamInactive,
+          empty: (
+            <Paragraph accent="lead">
+              There are no active team members.
+            </Paragraph>
+          ),
         },
         {
           tabTitle: `Past Team Members (${
@@ -68,6 +69,9 @@ const TeamMembersTabbedCard: React.FC<TeamMembersTabbedCardProps> = ({
           items: isTeamInactive ? members : alumniMembers,
           truncateFrom: 8,
           disabled: alumniMembers.length === 0,
+          empty: (
+            <Paragraph accent="lead">There are no past team members.</Paragraph>
+          ),
         },
       ]}
       getShowMoreText={(showMore) =>
@@ -76,39 +80,33 @@ const TeamMembersTabbedCard: React.FC<TeamMembersTabbedCardProps> = ({
     >
       {({ data }) => (
         <div css={containerStyles}>
-          {data.length > 0 ? (
-            <MembersList
-              members={data.map(
-                ({
-                  displayName,
-                  role,
-                  labs = [],
-                  avatarUrl,
-                  firstName,
-                  lastName,
-                  id,
-                  alumniSinceDate,
-                }) => ({
-                  firstLine: displayName,
-                  secondLine: role,
-                  thirdLine: getUniqueCommaStringWithSuffix(
-                    labs.map((lab) => lab.name),
-                    'Lab',
-                  ),
-                  avatarUrl,
-                  firstName,
-                  lastName,
-                  id,
-                  alumniSinceDate,
-                }),
-              )}
-              overrideNameStyles={nameStyles}
-            />
-          ) : (
-            <p css={paragraphStyles}>{`There are no ${
-              isTeamInactive ? 'past' : 'active'
-            } team members.`}</p>
-          )}
+          <MembersList
+            members={data.map(
+              ({
+                displayName,
+                role,
+                labs = [],
+                avatarUrl,
+                firstName,
+                lastName,
+                id,
+                alumniSinceDate,
+              }) => ({
+                firstLine: displayName,
+                secondLine: role,
+                thirdLine: getUniqueCommaStringWithSuffix(
+                  labs.map((lab) => lab.name),
+                  'Lab',
+                ),
+                avatarUrl,
+                firstName,
+                lastName,
+                id,
+                alumniSinceDate,
+              }),
+            )}
+            overrideNameStyles={nameStyles}
+          />
         </div>
       )}
     </TabbedCard>

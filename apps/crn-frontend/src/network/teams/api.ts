@@ -70,7 +70,7 @@ export const patchTeam = async (
   return resp.json();
 };
 
-export const createTeamResearchOutput = async (
+export const createResearchOutput = async (
   researchOutput: ResearchOutputPostRequest,
   authorization: string,
 ): Promise<ResearchOutputResponse> => {
@@ -86,11 +86,9 @@ export const createTeamResearchOutput = async (
   const response = await resp.json();
   if (!resp.ok) {
     throw new BackendError(
-      `Failed to create research output for teams ${researchOutput.teams
-        .map((teamId) => teamId)
-        .join(
-          ', ',
-        )} Expected status 201. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      `Failed to create research output for ${
+        researchOutput.publishingEntity
+      }. Expected status 201. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
       response,
       resp.status,
     );

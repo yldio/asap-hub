@@ -40,7 +40,6 @@ export { default as QuestionsSection } from './QuestionsSection';
 export { default as RecentSharedOutputs } from './RecentSharedOutputs';
 export { default as RemindersCard } from './RemindersCard';
 export { default as ResearchOutputExtraInformationCard } from './ResearchOutputExtraInformationCard';
-export { default as ResearchOutputForm } from './ResearchOutputForm';
 export { default as ResearchOutputFormSharingCard } from './ResearchOutputFormSharingCard';
 export { default as ResearchOutputHeader } from './ResearchOutputHeader';
 export { default as ResultList } from './ResultList';

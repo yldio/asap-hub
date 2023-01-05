@@ -1,4 +1,5 @@
 import { Layout, WorkingGroupDetailPage } from '@asap-hub/gp2-components';
+import { ComponentProps } from 'react';
 import { NoPaddingDecorator } from '../layout';
 
 export default {
@@ -17,14 +18,21 @@ const props = {
   isWorkingGroupMember: false,
 };
 
+const layoutProps: Pick<
+  ComponentProps<typeof Layout>,
+  'projects' | 'workingGroups'
+> = {
+  projects: [],
+  workingGroups: [],
+};
 export const Normal = () => (
-  <Layout>
+  <Layout {...layoutProps}>
     <WorkingGroupDetailPage {...props}></WorkingGroupDetailPage>
   </Layout>
 );
 
 export const WithResources = () => (
-  <Layout>
+  <Layout {...layoutProps}>
     <WorkingGroupDetailPage {...props} isWorkingGroupMember={true} />
   </Layout>
 );

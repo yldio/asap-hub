@@ -55,6 +55,14 @@ export const researchOutputTypes = [
   'Viral Vector',
 ] as const;
 
+export const ResearchOutputPublishingEntitiesValues = <const>[
+  'Team',
+  'Working Group',
+];
+
+export type ResearchOutputPublishingEntities =
+  typeof ResearchOutputPublishingEntitiesValues[number];
+
 export type ResearchOutputType = typeof researchOutputTypes[number];
 
 export const researchOutputDocumentTypeToType: Record<
@@ -128,6 +136,19 @@ export const researchOutputMapType = (
   return null;
 };
 
+export const researchOutputMapPublishingEntity = (
+  publishingEntity?: string | null,
+): ResearchOutputPublishingEntities => {
+  if (
+    publishingEntity &&
+    (publishingEntity === 'Team' || publishingEntity === 'Working Group')
+  ) {
+    return publishingEntity;
+  }
+
+  return 'Team';
+};
+
 export enum ResearchOutputIdentifierType {
   Empty = '',
   None = 'None',
@@ -189,6 +210,7 @@ export type ResearchOutputCoreObject = {
   type?: ResearchOutputType;
   usageNotes?: string;
   usedInPublication?: boolean;
+  publishingEntity: ResearchOutputPublishingEntities;
 };
 
 export type ResearchOutputDataObject = ResearchOutputCoreObject & {
@@ -269,6 +291,7 @@ export type ResearchOutputPostRequest = {
   type: ResearchOutputType;
   usageNotes?: string;
   usedInPublication?: boolean;
+  publishingEntity: ResearchOutputPublishingEntities;
 };
 
 export type ResearchOutputPutRequest = ResearchOutputPostRequest;

@@ -9,6 +9,7 @@ import {
 import { css } from '@emotion/react';
 import { Location } from 'history';
 import {
+  ComponentProps,
   createRef,
   FC,
   lazy,
@@ -39,7 +40,7 @@ const styles = css({
   grid: `
     "header     header"  max-content
     "main-menu  content" max-content
-    "user-menu  content" 1fr / max-content 1fr
+    "user-menu  content" 1fr / 70% 1fr
 `,
   [crossQuery]: {
     width: '100%',
@@ -97,8 +98,8 @@ const userMenuStyles = css({
 
 type LayoutProps = {
   readonly children: ReactNode;
-};
-const Layout: FC<LayoutProps> = ({ children }) => {
+} & ComponentProps<typeof UserMenu>;
+const Layout: FC<LayoutProps> = ({ children, projects, workingGroups }) => {
   const [menuShown, setMenuShown] = useState(false);
 
   let location: Location | undefined;
@@ -132,6 +133,8 @@ const Layout: FC<LayoutProps> = ({ children }) => {
             onToggleMenu={() => {
               setMenuShown(!menuShown);
             }}
+            projects={projects}
+            workingGroups={workingGroups}
           />
         </div>
 
@@ -140,6 +143,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
             gridRow: 'header-end / -1',
             gridColumn: '1 / -1',
             overflowY: 'auto',
+            position: 'relative',
           })}
         >
           <main ref={mainRef} css={layoutContentStyles}>
@@ -156,7 +160,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
             </Suspense>
           </div>
           <div css={[userMenuStyles]}>
-            <UserMenu />
+            <UserMenu projects={projects} workingGroups={workingGroups} />
           </div>
         </div>
       </article>

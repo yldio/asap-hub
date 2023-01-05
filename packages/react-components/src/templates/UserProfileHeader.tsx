@@ -204,7 +204,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
   return (
     <>
       {alumniSinceDate && (
-        <Toast accent="info">
+        <Toast accent="warning">
           This alumni might not have all content updated or available. This user
           became alumni on the{' '}
           <strong>

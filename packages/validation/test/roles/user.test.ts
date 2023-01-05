@@ -11,6 +11,7 @@ describe('isCMSAdministrator', () => {
     ${'Staff'}   | ${'Key Personnel'}             | ${true}
     ${'Staff'}   | ${'Scientific Advisory Board'} | ${true}
     ${'Staff'}   | ${'ASAP Staff'}                | ${true}
+    ${'Staff'}   | ${undefined}                   | ${true}
     ${'Grantee'} | ${'Lead PI (Core Leadership)'} | ${false}
     ${'Grantee'} | ${'Co-PI (Core Leadership)'}   | ${false}
     ${'Grantee'} | ${'Collaborating PI'}          | ${false}
@@ -18,6 +19,7 @@ describe('isCMSAdministrator', () => {
     ${'Grantee'} | ${'Key Personnel'}             | ${false}
     ${'Grantee'} | ${'Scientific Advisory Board'} | ${false}
     ${'Grantee'} | ${'ASAP Staff'}                | ${true}
+    ${'Grantee'} | ${undefined}                   | ${false}
     ${'Guest'}   | ${'Lead PI (Core Leadership)'} | ${false}
     ${'Guest'}   | ${'Co-PI (Core Leadership)'}   | ${false}
     ${'Guest'}   | ${'Collaborating PI'}          | ${false}
@@ -25,6 +27,7 @@ describe('isCMSAdministrator', () => {
     ${'Guest'}   | ${'Key Personnel'}             | ${false}
     ${'Guest'}   | ${'Scientific Advisory Board'} | ${false}
     ${'Guest'}   | ${'ASAP Staff'}                | ${true}
+    ${'Guest'}   | ${undefined}                   | ${false}
     ${'Hidden'}  | ${'Lead PI (Core Leadership)'} | ${false}
     ${'Hidden'}  | ${'Co-PI (Core Leadership)'}   | ${false}
     ${'Hidden'}  | ${'Collaborating PI'}          | ${false}
@@ -32,6 +35,7 @@ describe('isCMSAdministrator', () => {
     ${'Hidden'}  | ${'Key Personnel'}             | ${false}
     ${'Hidden'}  | ${'Scientific Advisory Board'} | ${false}
     ${'Hidden'}  | ${'ASAP Staff'}                | ${true}
+    ${'Hidden'}  | ${undefined}                   | ${false}
   `(
     `gives the correct output for user role $userRole and team role $teamRole`,
     ({

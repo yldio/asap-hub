@@ -1,22 +1,13 @@
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import Toast, { getIcon } from '../Toast';
+import Toast, { ToastAccents } from '../Toast';
 import { noop } from '../../utils';
-import { errorIcon, infoCircleYellowIcon } from '../../icons';
 
 it('renders the children and default icon', () => {
   const { getByText, getByTitle } = render(<Toast>error message</Toast>);
   expect(getByText('error message')).toBeVisible();
   expect(getByTitle('Error Icon')).toBeInTheDocument();
-});
-
-it('renders with the info accent', () => {
-  const { getByText, getByTitle } = render(
-    <Toast accent="info">info message</Toast>,
-  );
-  expect(getByText('info message')).toBeVisible();
-  expect(getByTitle('Info Circle Yellow')).toBeInTheDocument();
 });
 
 it('does not render a close button by default', () => {
@@ -40,7 +31,17 @@ describe('when closable', () => {
   });
 });
 
-it('renders the correct icon', () => {
-  expect(getIcon('info')).toBe(infoCircleYellowIcon);
-  expect(getIcon('alert')).toBe(errorIcon);
-});
+it.each<{
+  accent: ToastAccents;
+  iconTitle: string;
+}>([
+  { accent: 'error', iconTitle: 'Error Icon' },
+  { accent: 'info', iconTitle: 'Information' },
+  { accent: 'warning', iconTitle: 'Warning' },
+])(
+  'render the $iconTitle icon for Toast accent $accent',
+  ({ accent, iconTitle }) => {
+    const { getByTitle } = render(<Toast accent={accent}>Text</Toast>);
+    expect(getByTitle(iconTitle)).toBeInTheDocument();
+  },
+);

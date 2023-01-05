@@ -38,6 +38,9 @@ outputs:
   crn-auth0-domain:
     description: 'CRN Auth0 Domain'
     value: ${{ steps.vars.outputs.crn-auth0-domain }}
+  crn-contentful-env-id:
+    description: 'Environment ID for Contentful'
+    value: ${{ steps.vars.outputs.crn-contentful-env-id }}
   crn-ci-auth0-client-id:
     description: 'CRN CI Auth0 Client Id'
     value: ${{ steps.vars.outputs.crn-ci-auth0-client-id }}
@@ -194,6 +197,7 @@ runs:
           echo "::set-output name=sls-stage::$PR_NUMBER"
           echo "::set-output name=crn-squidex-app-name::crn-$PR_NUMBER"
           echo "::set-output name=crn-squidex-app-name-legacy::$PR_NUMBER"
+          echo "::set-output name=crn-contentful-env-id::crn-$PR_NUMBER"
           echo "::set-output name=gp2-squidex-app-name::gp2-$PR_NUMBER"
         elif [ "$ENVIRONMENT_NAME" = 'Development' ]; then
           echo "::set-output name=app-release::${{ github.run_id }}-dev"

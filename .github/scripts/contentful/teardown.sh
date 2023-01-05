@@ -10,6 +10,20 @@ if [[ "$CONTENTFUL_ENV_ID" == "Development" ]]; then
   exit 0
 fi
 
+echo "Contentful env to be deleted is ${CONTENTFUL_ENV_ID}."
+
+STATUS_CODE_CHECK=$(curl --silent \
+                         --request GET \
+                         --output /dev/null \
+                         --write-out "%{http_code}" \
+                         --header "Authorization: Bearer ${CONTENTFUL_MANAGEMENT_ACCESS_TOKEN}" \
+                         https://api.contentful.com/spaces/${CONTENTFUL_SPACE_ID}/environments/${CONTENTFUL_ENV_ID})
+
+if [[ "$STATUS_CODE_CHECK" == "404" ]]; then
+  echo "Environment for this branch not found -- nothing to delete."
+  exit 0
+fi
+
 STATUS_CODE=$(curl --silent \
                    --request DELETE \
                    --output /dev/null \

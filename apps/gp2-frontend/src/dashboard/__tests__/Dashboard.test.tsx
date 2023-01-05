@@ -1,32 +1,30 @@
 import { User } from '@asap-hub/auth';
 import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getDashboard } from '../api';
 import Dashboard from '../Dashboard';
-import { refreshDashboardState } from '../state';
-
-jest.mock('../api');
 
 afterEach(() => {
   jest.resetAllMocks();
 });
-const mockGetDashboard = getDashboard as jest.MockedFunction<
-  typeof getDashboard
->;
 
-const renderDashboard = async (user: Partial<User>) => {
+const renderDashboard = async ({
+  user = {},
+  showWelcomeBackBanner = false,
+  dismissBanner = jest.fn(),
+}: {
+  user?: Partial<User>;
+  showWelcomeBackBanner?: boolean;
+  dismissBanner?: () => void;
+}) => {
   render(
     <Suspense fallback="loading">
-      <RecoilRoot
-        initializeState={({ set }) => {
-          set(refreshDashboardState, Math.random());
-        }}
-      >
+      <RecoilRoot>
         <Auth0Provider user={user}>
           <WhenReady>
-            <Dashboard />
+            <Dashboard {...{ showWelcomeBackBanner, dismissBanner }} />
           </WhenReady>
         </Auth0Provider>
       </RecoilRoot>
@@ -39,35 +37,35 @@ const renderDashboard = async (user: Partial<User>) => {
 
 it('renders dashboard header', async () => {
   await renderDashboard({});
-  expect(await screen.findByText(/welcome/i, { selector: 'h1' })).toBeVisible();
+  expect(
+    await screen.getByRole('heading', { name: 'Dashboard' }),
+  ).toBeVisible();
 });
 
-it('renders dashboard with news', async () => {
-  mockGetDashboard.mockResolvedValue({
-    news: [
-      {
-        id: '55724942-3408-4ad6-9a73-14b92226ffb6',
-        created: '2020-09-07T17:36:54Z',
-        title: 'News Title',
-        type: 'News',
-      },
-      {
-        id: '55724942-3408-4ad6-9a73-14b92226ffb77',
-        created: '2020-09-07T17:36:54Z',
-        title: 'Tutorial Title',
-        type: 'Tutorial',
-      },
-    ],
-    pages: [],
-  });
-
+it('doesnt render the welcome back banner when its disabled', async () => {
   await renderDashboard({
-    firstName: 'John',
+    user: { firstName: 'Tony' },
+    showWelcomeBackBanner: false,
   });
-
-  expect(await screen.findByText(/john/i, { selector: 'h1' })).toBeVisible();
-  expect(screen.getAllByText(/title/i, { selector: 'h4' }).length).toBe(2);
   expect(
-    screen.getAllByText(/title/i, { selector: 'h4' }).at(0)?.textContent,
-  ).toEqual('News Title');
+    screen.queryByText('Welcome back to the GP2 Hub, Tony!'),
+  ).not.toBeInTheDocument();
+});
+it('renders the welcome back banner when its enabled', async () => {
+  await renderDashboard({
+    user: { firstName: 'Tony' },
+    showWelcomeBackBanner: true,
+  });
+  expect(screen.getByText('Welcome back to the GP2 Hub, Tony!')).toBeVisible();
+});
+
+it('calls the dismissBanner function when pressing the close button on the welcome back banner', async () => {
+  const dismissBanner = jest.fn();
+  await renderDashboard({
+    user: { firstName: 'Tony' },
+    showWelcomeBackBanner: true,
+    dismissBanner,
+  });
+  userEvent.click(screen.getByRole('button', { name: 'Close' }));
+  expect(dismissBanner).toHaveBeenCalled();
 });

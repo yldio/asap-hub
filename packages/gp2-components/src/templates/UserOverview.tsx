@@ -11,10 +11,20 @@ import { ComponentProps } from 'react';
 import ExpandableText from '../molecules/ExpandableText';
 import EmailSection from '../organisms/EmailSection';
 import UserQuestions from '../organisms/UserQuestions';
+import UserProjects from '../organisms/UserProjects';
+import UserWorkingGroups from '../organisms/UserWorkingGroups';
 
 type UserOverviewProps = Pick<
   gp2.UserResponse,
-  'email' | 'secondaryEmail' | 'biography' | 'keywords' | 'fundingStreams'
+  | 'id'
+  | 'email'
+  | 'secondaryEmail'
+  | 'biography'
+  | 'keywords'
+  | 'fundingStreams'
+  | 'projects'
+  | 'workingGroups'
+  | 'firstName'
 > &
   ComponentProps<typeof UserQuestions>;
 
@@ -41,12 +51,15 @@ const columnStyles = css({
 });
 const cardStyles = css({ padding: `${rem(32)} ${rem(24)}` });
 const UserOverview: React.FC<UserOverviewProps> = ({
+  id,
   biography,
   email,
   secondaryEmail,
   keywords,
   fundingStreams,
   questions,
+  projects,
+  workingGroups,
   firstName,
 }) => (
   <div css={containerStyles}>
@@ -81,6 +94,34 @@ const UserOverview: React.FC<UserOverviewProps> = ({
         </div>
       </div>
     </Card>
+    {projects.length > 0 && (
+      <Card padding={false}>
+        <div css={cardStyles}>
+          <Headline3 noMargin>Projects</Headline3>
+          <div css={contentStyles}>
+            <UserProjects
+              projects={projects}
+              firstName={firstName}
+              id={id}
+            ></UserProjects>
+          </div>
+        </div>
+      </Card>
+    )}
+    {workingGroups.length > 0 && (
+      <Card padding={false}>
+        <div css={cardStyles}>
+          <Headline3 noMargin>Working Groups</Headline3>
+          <div css={contentStyles}>
+            <UserWorkingGroups
+              workingGroups={workingGroups}
+              firstName={firstName}
+              id={id}
+            ></UserWorkingGroups>
+          </div>
+        </div>
+      </Card>
+    )}
     <Card padding={false}>
       <div css={cardStyles}>
         <UserQuestions questions={questions} firstName={firstName} />

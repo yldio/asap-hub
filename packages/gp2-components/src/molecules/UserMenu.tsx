@@ -1,12 +1,22 @@
+import { gp2 as gp2Model } from '@asap-hub/model';
+import { gp2 as gp2Routing, logout } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import { logout } from '@asap-hub/routing';
 
-import { NavigationLink, pixels, logoutIcon } from '@asap-hub/react-components';
+import {
+  Divider,
+  logoutIcon,
+  NavigationLink,
+  pixels,
+} from '@asap-hub/react-components';
+import workingGroupIcon from '../icons/working-group-icon';
+import { projectIcon } from '../icons';
+import { nonMobileQuery } from '../layout';
 
 const { vminLinearCalc, mobileScreen, largeDesktopScreen, rem } = pixels;
+const { projects: projectsRoute, workingGroups: workingGroupRoute } =
+  gp2Routing;
 
 const containerStyles = css({
-  minWidth: '312px',
   height: '100%',
   display: 'flex',
   flexDirection: 'column',
@@ -18,6 +28,9 @@ const containerStyles = css({
     12,
     'px',
   )}`,
+  [nonMobileQuery]: {
+    minWidth: '312px',
+  },
 });
 
 const listStyles = css({
@@ -26,8 +39,41 @@ const listStyles = css({
   padding: 0,
 });
 
-const UserMenu: React.FC = () => (
+type UserMenuProps = Pick<gp2Model.UserResponse, 'projects' | 'workingGroups'>;
+
+const UserMenu: React.FC<UserMenuProps> = ({ projects, workingGroups }) => (
   <nav css={containerStyles}>
+    {(workingGroups.length > 0 || projects.length > 0) && (
+      <>
+        <ul css={listStyles}>
+          {projects
+            .filter(({ status }) => status === 'Active')
+            .map(({ id, title }) => (
+              <li key={`user-menu-project-${id}`}>
+                <NavigationLink
+                  href={projectsRoute({}).project({ projectId: id }).$}
+                  icon={projectIcon}
+                >
+                  My project: {title}
+                </NavigationLink>
+              </li>
+            ))}
+          {workingGroups.map(({ id, title }) => (
+            <li key={`user-menu-working-group-${id}`}>
+              <NavigationLink
+                href={
+                  workingGroupRoute({}).workingGroup({ workingGroupId: id }).$
+                }
+                icon={workingGroupIcon}
+              >
+                My working group: {title}
+              </NavigationLink>
+            </li>
+          ))}
+        </ul>
+        <Divider />
+      </>
+    )}
     <ul css={listStyles}>
       <li>
         <NavigationLink href={logout({}).$} icon={logoutIcon}>

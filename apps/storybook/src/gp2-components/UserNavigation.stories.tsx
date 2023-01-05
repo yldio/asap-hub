@@ -1,8 +1,13 @@
 import { UserNavigation } from '@asap-hub/gp2-components';
+import { ComponentProps } from 'react';
 
 export default {
   title: 'GP2 / Organisms / User Directory / User Navigation',
   component: UserNavigation,
 };
 
-export const Normal = () => <UserNavigation />;
+const props: ComponentProps<typeof UserNavigation> = {
+  projects: [],
+  workingGroups: [],
+};
+export const Normal = () => <UserNavigation {...props} />;

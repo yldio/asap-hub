@@ -24,7 +24,7 @@ import userEvent, { specialChars } from '@testing-library/user-event';
 import { ContextType, Suspense } from 'react';
 import { Route, StaticRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import { createTeamResearchOutput } from '../api';
+import { createResearchOutput } from '../api';
 import { refreshTeamState } from '../state';
 import TeamOutput, {
   paramOutputDocumentTypeToResearchOutputDocumentType,
@@ -39,10 +39,9 @@ describe('TeamOutput', () => {
   const mockToast = jest.fn() as jest.MockedFunction<
     ContextType<typeof ToastContext>
   >;
-  const mockCreateTeamResearchOutput =
-    createTeamResearchOutput as jest.MockedFunction<
-      typeof createTeamResearchOutput
-    >;
+  const mockCreateResearchOutput = createResearchOutput as jest.MockedFunction<
+    typeof createResearchOutput
+  >;
 
   interface RenderPageOptions {
     teamId: string;
@@ -125,7 +124,7 @@ describe('TeamOutput', () => {
 
     await publish();
 
-    expect(mockCreateTeamResearchOutput).toHaveBeenCalledWith(
+    expect(mockCreateResearchOutput).toHaveBeenCalledWith(
       {
         doi,
         documentType: 'Lab Resource',
@@ -151,6 +150,7 @@ describe('TeamOutput', () => {
         usageNotes: '',
         asapFunded: undefined,
         usedInPublication: undefined,
+        publishingEntity: 'Team',
       },
       expect.anything(),
     );
@@ -166,7 +166,7 @@ describe('TeamOutput', () => {
       ],
     };
 
-    mockCreateTeamResearchOutput.mockRejectedValue(
+    mockCreateResearchOutput.mockRejectedValue(
       new BackendError('example', validationResponse, 400),
     );
 
@@ -175,7 +175,7 @@ describe('TeamOutput', () => {
 
     await publish();
 
-    expect(mockCreateTeamResearchOutput).toHaveBeenCalled();
+    expect(mockCreateResearchOutput).toHaveBeenCalled();
     expect(
       screen.getByText(
         'A Research Output with this URL already exists. Please enter a different URL.',
@@ -195,7 +195,7 @@ describe('TeamOutput', () => {
   });
 
   it('will toast server side errors for unknown errors', async () => {
-    mockCreateTeamResearchOutput.mockRejectedValue(
+    mockCreateResearchOutput.mockRejectedValue(
       new Error('Something went wrong'),
     );
 
@@ -205,7 +205,7 @@ describe('TeamOutput', () => {
 
     await publish();
 
-    expect(mockCreateTeamResearchOutput).toHaveBeenCalled();
+    expect(mockCreateResearchOutput).toHaveBeenCalled();
     expect(mockToast).toHaveBeenCalledWith(
       'There was an error and we were unable to save your changes. Please try again.',
     );
@@ -218,7 +218,7 @@ describe('TeamOutput', () => {
     const type = 'Animal Model';
     const doi = '10.0777';
 
-    mockCreateTeamResearchOutput.mockRejectedValue(
+    mockCreateResearchOutput.mockRejectedValue(
       new Error('Something went wrong'),
     );
 
@@ -242,7 +242,7 @@ describe('TeamOutput', () => {
 
     await publish();
 
-    expect(mockCreateTeamResearchOutput).toHaveBeenCalled();
+    expect(mockCreateResearchOutput).toHaveBeenCalled();
     expect(mockToast).toHaveBeenCalledWith(
       'There was an error and we were unable to save your changes. Please try again.',
     );

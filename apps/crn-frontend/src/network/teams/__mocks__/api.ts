@@ -12,7 +12,7 @@ import {
 } from '@asap-hub/model';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
-  createTeamResearchOutput as originalCreateTeamResearchOutput,
+  createResearchOutput as originalCreateResearchOutput,
   updateTeamResearchOutput as originalUpdateTeamResearchOutput,
 } from '../api';
 
@@ -38,8 +38,8 @@ export const getTeams = jest.fn(
     createListTeamResponse(pageSize ?? 10),
 );
 
-export const createTeamResearchOutput: jest.Mocked<
-  typeof originalCreateTeamResearchOutput
+export const createResearchOutput: jest.Mocked<
+  typeof originalCreateResearchOutput
 > = jest.fn(async () => ({
   ...createResearchOutputResponse(),
   id: 'research-output-id',

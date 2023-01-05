@@ -1,8 +1,8 @@
-import { DashboardPageHeader } from '@asap-hub/gp2-components';
+import { DashboardHeader } from '@asap-hub/gp2-components';
 
 export default {
-  title: 'GP2 / Templates / Dashboard / Dashboard Page Header',
-  component: DashboardPageHeader,
+  title: 'GP2 / Templates / Dashboard / Dashboard  Header',
+  component: DashboardHeader,
 };
 
-export const Normal = () => <DashboardPageHeader />;
+export const Normal = () => <DashboardHeader />;

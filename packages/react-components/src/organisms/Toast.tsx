@@ -1,17 +1,32 @@
 import { ReactNode } from 'react';
-import { css } from '@emotion/react';
+import { css, CSSObject } from '@emotion/react';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 
 import { layoutStyles } from '../text';
 import { Paragraph } from '../atoms';
-import { crossIcon, errorIcon, infoCircleYellowIcon } from '../icons';
+import {
+  crossIcon,
+  errorIcon,
+  infoCircleYellowIcon,
+  informationIcon,
+} from '../icons';
 import {
   perRem,
   vminLinearCalcClamped,
   mobileScreen,
   largeDesktopScreen,
+  rem,
 } from '../pixels';
-import { rose, ember, apricot, warning900 } from '../colors';
+import {
+  rose,
+  ember,
+  apricot,
+  warning900,
+  info100,
+  info900,
+  info500,
+  warning500,
+} from '../colors';
 
 const SIDE_PADDING = 24;
 
@@ -44,35 +59,10 @@ const styles = css({
   position: 'relative',
 });
 
-const alertStyles = css({
-  backgroundColor: rose.rgb,
-  color: ember.rgb,
-});
-
-const infoStyles = css({
-  backgroundColor: apricot.rgb,
-  color: warning900.rgb,
-  minHeight: `${56 / perRem}em`,
-  display: 'flex',
-  alignItems: 'center',
-  paddingLeft: `${16 / perRem}em`,
-  paddingRight: `${16 / perRem}em`,
-});
-
-const alertIconStyles = css(iconStyles, {
-  marginRight: `${12 / perRem}em`,
-});
-
-const infoIconStyles = css(iconStyles, {
-  marginRight: `${16 / perRem}em`,
-});
-
 const crossIconStyles = css(iconStyles, alignIconWithParagraphStyles, {
   position: 'absolute',
   right: SIDE_PADDING, // right is from border box, not content box
-
   cursor: 'pointer',
-  svg: { stroke: ember.rgb },
 });
 const crossPlaceholderStyles = css(iconStyles, {
   display: 'inline-block',
@@ -89,13 +79,30 @@ const wrapStyles = css({
   flexFlow: 'row',
 });
 
-type ToastAccents = 'alert' | 'info';
+export type ToastAccents = 'error' | 'info' | 'warning';
 
-export const getIcon = (accent: ToastAccents): EmotionJSX.Element => {
-  if (accent === 'info') {
-    return infoCircleYellowIcon;
-  }
-  return errorIcon;
+const accentIcons: Record<ToastAccents, EmotionJSX.Element> = {
+  error: errorIcon,
+  info: informationIcon,
+  warning: infoCircleYellowIcon,
+};
+
+const accentStyles: Record<ToastAccents, CSSObject> = {
+  error: {
+    backgroundColor: rose.rgb,
+    color: ember.rgb,
+    svg: { stroke: ember.rgb },
+  },
+  info: {
+    backgroundColor: info100.rgb,
+    color: info900.rgb,
+    svg: { stroke: info500.rgb },
+  },
+  warning: {
+    backgroundColor: apricot.rgb,
+    color: warning900.rgb,
+    svg: { stroke: warning500.rgb },
+  },
 };
 
 interface ToastProps {
@@ -106,18 +113,16 @@ interface ToastProps {
 const Toast: React.FC<ToastProps> = ({
   children,
   onClose,
-  accent = 'alert',
+  accent = 'error',
 }) => (
-  <section css={[styles, accent === 'alert' ? alertStyles : infoStyles]}>
+  <section css={[styles, accentStyles[accent]]}>
     {onClose && (
       <button onClick={onClose} css={[buttonResetStyles, crossIconStyles]}>
         {crossIcon}
       </button>
     )}
-    <div css={wrapStyles}>
-      <div css={[accent === 'alert' ? alertIconStyles : infoIconStyles]}>
-        {getIcon(accent)}
-      </div>
+    <div css={[wrapStyles, css({ gap: rem(16) })]}>
+      <div css={[iconStyles]}>{accentIcons[accent]}</div>
       <div css={[wrapStyles, !onClose && { justifyContent: 'center' }]}>
         <Paragraph>{children}</Paragraph>
         {onClose && <span css={crossPlaceholderStyles}> </span>}

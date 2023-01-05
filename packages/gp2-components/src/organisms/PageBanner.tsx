@@ -5,18 +5,20 @@ import {
   pixels,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
+import { smallerScreenQuery } from '../layout';
 
 const { mobileScreen, rem, tabletScreen, vminLinearCalcClamped } = pixels;
 
 type PageBannerProp = {
-  image: string;
+  image?: string;
   position?: string;
   title: string;
-  description: string;
+  description?: string;
+  noMarginBottom?: boolean;
+  noBorderTop?: boolean;
 };
 
 const headerMaxWidth = 748;
-const smallerScreenMaxMargin = 72;
 
 const headerStyles = css({
   width: '100%',
@@ -26,32 +28,27 @@ const headerStyles = css({
 });
 
 const cardStyles = css({
-  position: 'relative',
   width: '100vw',
   borderWidth: 0,
   borderTopWidth: 1,
   borderBottomWidth: 1,
   borderStyle: 'solid',
-  [drawerQuery]: {
-    left: `calc(max(100vw - ${
-      headerMaxWidth + smallerScreenMaxMargin * 2
-    }px, 0px) / 2)`,
-  },
 });
 
-const textContainerStyles = css({
-  maxWidth: rem(headerMaxWidth),
-  margin: `${rem(48)} auto ${rem(32)}`,
-  [drawerQuery]: {
-    margin: `${rem(32)} ${vminLinearCalcClamped(
-      mobileScreen,
-      24,
-      tabletScreen,
-      72,
-      'px',
-    )}`,
-  },
-});
+const textContainerStyles = (noMarginBottom: boolean) =>
+  css({
+    maxWidth: rem(headerMaxWidth),
+    margin: `${rem(48)} auto ${noMarginBottom ? 0 : rem(32)}`,
+    [smallerScreenQuery]: {
+      margin: `${rem(32)} ${vminLinearCalcClamped(
+        mobileScreen,
+        24,
+        tabletScreen,
+        72,
+        'px',
+      )} ${noMarginBottom ? 0 : rem(32)}`,
+    },
+  });
 
 const imageBannerStyles = (image: string, position: string) =>
   css({
@@ -72,11 +69,16 @@ const PageBanner: React.FC<PageBannerProp> = ({
   position = 'center',
   title,
   description,
+  noMarginBottom = false,
+  noBorderTop = false,
+  children,
 }) => (
   <header css={headerStyles}>
-    <div css={imageBannerStyles(image, position)}></div>
-    <div css={[cardStyles, accents.default]}>
-      <div css={textContainerStyles}>
+    {image && <div css={imageBannerStyles(image, position)}></div>}
+    <div
+      css={[cardStyles, accents.default, noBorderTop && { borderTopWidth: 0 }]}
+    >
+      <div css={[textContainerStyles(noMarginBottom)]}>
         <h1
           css={css({
             fontSize: '39px',
@@ -85,7 +87,8 @@ const PageBanner: React.FC<PageBannerProp> = ({
         >
           {title}
         </h1>
-        <Paragraph accent="lead">{description}</Paragraph>
+        {description && <Paragraph accent="lead">{description}</Paragraph>}
+        {children}
       </div>
     </div>
   </header>

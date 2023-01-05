@@ -13,6 +13,7 @@ export const ChevronUp = () => components.chevronUpIcon;
 export const Clock = () => components.clockIcon;
 export const Confidential = () => components.confidentialIcon;
 export const Cross = () => components.crossIcon;
+export const CRNReport = () => components.crnReportIcon;
 export const CrossInCircle = () => components.crossInCircleIcon;
 export const Dashboard = () => components.dashboardIcon;
 export const Discover = () => components.discoverIcon;

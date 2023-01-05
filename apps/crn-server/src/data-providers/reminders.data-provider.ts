@@ -12,6 +12,7 @@ import {
   SharePresentationReminder,
   Role,
   TeamRole,
+  PublishMaterialReminder,
 } from '@asap-hub/model';
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import { isCMSAdministrator } from '@asap-hub/validation';
@@ -61,6 +62,11 @@ export class ReminderSquidexDataProvider implements ReminderDataProvider {
       options.userId,
     );
 
+    const publishPresentationReminders = getPublishMaterialRemindersFromQuery(
+      queryEventsContents,
+      findUsersContent,
+    );
+
     const eventMaterialsReminders =
       getEventMaterialsRemindersFromQuery(queryEventsContents);
 
@@ -69,6 +75,7 @@ export class ReminderSquidexDataProvider implements ReminderDataProvider {
       ...eventReminders,
       ...sharePresentationReminders,
       ...eventMaterialsReminders,
+      ...publishPresentationReminders,
     ];
 
     const sortedReminders = reminders.sort((reminderA, reminderB) => {
@@ -120,7 +127,11 @@ export const getEventFilter = (zone: string): string => {
     .minus({ hours: 72 })
     .toUTC();
 
-  return `data/videoRecordingUpdatedAt/iv ge ${lastDayISO} or data/presentationUpdatedAt/iv ge ${lastDayISO} or data/notesUpdatedAt/iv ge ${lastDayISO} or (data/startDate/iv ge ${lastMidnightISO} and data/startDate/iv le ${todayMidnightISO}) or data/endDate/iv ge ${last72HoursISO}`;
+  const now = DateTime.fromObject({
+    zone,
+  }).toUTC();
+
+  return `data/videoRecordingUpdatedAt/iv ge ${lastDayISO} or data/presentationUpdatedAt/iv ge ${lastDayISO} or data/notesUpdatedAt/iv ge ${lastDayISO} or (data/startDate/iv ge ${lastMidnightISO} and data/startDate/iv le ${todayMidnightISO}) or (data/endDate/iv ge ${last72HoursISO} and data/endDate/iv le ${now})`;
 };
 
 const getUserTeamIds = (
@@ -199,7 +210,9 @@ const getEventRemindersFromQuery = (
     const startDate = DateTime.fromISO(event.flatData.startDate);
     const endDate = DateTime.fromISO(event.flatData.endDate);
 
-    if (startDate > DateTime.local()) {
+    const endOfToday = DateTime.now().set({ hour: 24 }).set({ minute: 59 });
+
+    if (startDate > DateTime.local() && startDate < endOfToday) {
       return [
         ...events,
         {
@@ -215,7 +228,7 @@ const getEventRemindersFromQuery = (
       ];
     }
 
-    if (endDate > DateTime.local()) {
+    if (endDate > DateTime.local() && startDate < endOfToday) {
       return [
         ...events,
         {
@@ -251,6 +264,9 @@ const inLast24Hours = (date: string) => inLastNHours(24, date);
 
 const inLast72Hours = (date: string) => inLastNHours(72, date);
 
+const eventHasEnded = (date: string) =>
+  DateTime.fromISO(date) <= DateTime.now();
+
 const getSharePresentationRemindersFromQuery = (
   queryEventsContents: FetchReminderDataQuery['queryEventsContents'],
   userId: string,
@@ -283,13 +299,53 @@ const getSharePresentationRemindersFromQuery = (
       },
     );
 
-    if (shouldShowSharePresentation && inLast72Hours(event.flatData.endDate)) {
+    if (
+      shouldShowSharePresentation &&
+      eventHasEnded(event.flatData.endDate) &&
+      inLast72Hours(event.flatData.endDate)
+    ) {
       return [
         ...events,
         {
           id: `share-presentation-${event.id}`,
           entity: 'Event',
           type: 'Share Presentation',
+          data: {
+            eventId: event.id,
+            title: event.flatData.title || '',
+            endDate: event.flatData.endDate,
+          },
+        },
+      ];
+    }
+    return events;
+  }, []);
+
+  return eventReminders;
+};
+
+const getPublishMaterialRemindersFromQuery = (
+  queryEventsContents: FetchReminderDataQuery['queryEventsContents'],
+  findUsersContent: FetchReminderDataQuery['findUsersContent'],
+): PublishMaterialReminder[] => {
+  const eventReminders = (queryEventsContents || []).reduce<
+    PublishMaterialReminder[]
+  >((events, event) => {
+    const shouldShowPublishMaterial = isCMSAdministrator(
+      findUsersContent?.flatData.role as Role,
+    );
+
+    if (
+      shouldShowPublishMaterial &&
+      eventHasEnded(event.flatData.endDate) &&
+      inLast72Hours(event.flatData.endDate)
+    ) {
+      return [
+        ...events,
+        {
+          id: `publish-material-${event.id}`,
+          entity: 'Event',
+          type: 'Publish Material',
           data: {
             eventId: event.id,
             title: event.flatData.title || '',

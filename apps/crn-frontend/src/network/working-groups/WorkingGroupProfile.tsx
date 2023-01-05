@@ -7,8 +7,10 @@ import {
   WorkingGroupAbout,
   WorkingGroupPage,
 } from '@asap-hub/react-components';
+import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { network, useRouteParams } from '@asap-hub/routing';
-import { useWorkingGroupById } from './state';
+import { useCanCreateUpdateResearchOutput, useWorkingGroupById } from './state';
+import WorkingGroupOutputs from './WorkingGroupOutput';
 
 const WorkingGroupProfile: FC = () => {
   const route = network({}).workingGroups({}).workingGroup;
@@ -17,26 +19,37 @@ const WorkingGroupProfile: FC = () => {
   const workingGroup = useWorkingGroupById(workingGroupId);
   const [membersListElementId] = useState(`wg-members-${uuid()}`);
 
+  const canCreateUpdate = useCanCreateUpdateResearchOutput(workingGroup);
+
   if (workingGroup) {
     return (
-      <Frame title={workingGroup.title}>
-        <Switch>
-          <Route path={path + route({ workingGroupId }).about.template}>
-            <WorkingGroupPage
-              membersListElementId={membersListElementId}
-              {...workingGroup}
+      <ResearchOutputPermissionsContext.Provider value={{ canCreateUpdate }}>
+        <Frame title={workingGroup.title}>
+          <Switch>
+            <Route
+              path={path + route({ workingGroupId }).createOutput.template}
             >
-              <Frame title="About">
-                <WorkingGroupAbout
-                  membersListElementId={membersListElementId}
-                  {...workingGroup}
-                />
+              <Frame title="Share Working Group Output">
+                <WorkingGroupOutputs workingGroupId={workingGroupId} />
               </Frame>
-            </WorkingGroupPage>
-          </Route>
-          <Redirect to={route({ workingGroupId }).about({}).$} />
-        </Switch>
-      </Frame>
+            </Route>
+            <Route path={path + route({ workingGroupId }).about.template}>
+              <WorkingGroupPage
+                membersListElementId={membersListElementId}
+                {...workingGroup}
+              >
+                <Frame title="About">
+                  <WorkingGroupAbout
+                    membersListElementId={membersListElementId}
+                    {...workingGroup}
+                  />
+                </Frame>
+              </WorkingGroupPage>
+            </Route>
+            <Redirect to={route({ workingGroupId }).about({}).$} />
+          </Switch>
+        </Frame>
+      </ResearchOutputPermissionsContext.Provider>
     );
   }
 

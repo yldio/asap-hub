@@ -88,6 +88,7 @@ type LinkProps = {
   readonly label?: string;
   readonly applyIconTheme?: boolean;
   readonly ellipsed?: boolean;
+  readonly underlined?: boolean;
   readonly overrideStyles?: SerializedStyles;
 } & (NormalLinkProps | ButtonStyleLinkProps);
 
@@ -104,6 +105,7 @@ const Link: React.FC<LinkProps> = ({
   noMargin,
   fullWidth = false,
   ellipsed = false,
+  underlined = false,
   overrideStyles,
 }) => {
   const linkStyles = ({ colors }: Theme) =>
@@ -124,6 +126,7 @@ const Link: React.FC<LinkProps> = ({
           styles,
           getLinkColors(colors, themeVariant),
           applyIconTheme && iconThemeStyles(colors)[themeVariant],
+          underlined && { textDecoration: 'underline' },
           overrideStyles,
         ];
   const linkChildren = buttonStyle ? getButtonChildren(children) : children;

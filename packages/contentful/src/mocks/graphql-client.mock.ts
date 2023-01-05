@@ -19,6 +19,8 @@ export const getContentfulGraphqlClientMockServer = (
     JSON: () => '2021-10-12T15:42:05Z',
     PagesCollection: resultDto,
     NewsCollection: resultDto,
+    DashboardNewsCollection: resultDto,
+    DashboardPagesCollection: resultDto,
     ...inputMocks,
   };
   const store = createMockStore({

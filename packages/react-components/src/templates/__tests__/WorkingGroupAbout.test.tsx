@@ -11,11 +11,15 @@ const baseProps: ComponentProps<typeof WorkingGroupAbout> = {
   deliverables: [],
   members: [],
   leaders: [],
+  complete: false,
 };
 
 it('renders the description', () => {
   const { getByText } = render(
-    <WorkingGroupAbout {...baseProps} description="Text content" />,
+    <WorkingGroupAbout
+      {...baseProps}
+      description="<p><strong>Text content</strong></p>"
+    />,
   );
   expect(getByText('Working Group Description')).toBeVisible();
   expect(getByText('Text content')).toBeVisible();

@@ -5627,12 +5627,12 @@ export type UsersDataLabsInputDto = {
 
 /** The structure of the Last Modified Date field of the Users content type. */
 export type UsersDataLastModifiedDateDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: Maybe<Scalars['Instant']>;
 };
 
 /** The structure of the Last Modified Date field of the Users content input type. */
 export type UsersDataLastModifiedDateInputDto = {
-  iv: InputMaybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['Instant']>;
 };
 
 /** The structure of the Last Name field of the Users content type. */
@@ -5870,7 +5870,7 @@ export type UsersFlatDataDto = {
   jobTitle: Maybe<Scalars['String']>;
   /** Mandatory for grantees. They cannot publish profile without a lab. */
   labs: Maybe<Array<Labs>>;
-  lastModifiedDate: Maybe<Scalars['String']>;
+  lastModifiedDate: Maybe<Scalars['Instant']>;
   lastName: Maybe<Scalars['String']>;
   /** Use this to allow the user to see the full Hub and skip profile completion */
   onboarded: Maybe<Scalars['Boolean']>;

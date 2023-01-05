@@ -7,7 +7,6 @@ import {
   inactiveUserTag,
 } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
-import { isEnabled } from '@asap-hub/flags';
 
 import { Display, Paragraph, TabLink } from '../atoms';
 import { perRem } from '../pixels';
@@ -158,20 +157,16 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
           </span>
           Interest Groups
         </TabLink>
-        {isEnabled('WORKING_GROUPS') && (
-          <TabLink
-            href={
-              network({}).workingGroups({}).$ + queryParamString(searchQuery)
-            }
-          >
-            <span css={iconStyles}>
-              <WorkingGroupsIcon
-                color={page === 'working-groups' ? charcoal.rgb : lead.rgb}
-              />
-            </span>
-            Working Groups
-          </TabLink>
-        )}
+        <TabLink
+          href={network({}).workingGroups({}).$ + queryParamString(searchQuery)}
+        >
+          <span css={iconStyles}>
+            <WorkingGroupsIcon
+              color={page === 'working-groups' ? charcoal.rgb : lead.rgb}
+            />
+          </span>
+          Working Groups
+        </TabLink>
       </TabNav>
     </div>
     {showSearch && (

@@ -376,12 +376,12 @@ const getUploadPresentationRemindersFromQuery = (
   >((events, event) => {
     if (!isCMSAdministrator(findUsersContent?.flatData.role as Role)) {
       const userTeamRoleByTeamId = findUsersContent?.flatData?.teams?.reduce(
-        (userTeamRoleByTeamId: { [teamId: string]: string }, team) => {
+        (teamRoleByTeamId: { [teamId: string]: string }, team) => {
           const teamId = team.id?.[0]?.id;
           if (teamId && team.role) {
-            userTeamRoleByTeamId[teamId] = team.role;
+            return { ...teamRoleByTeamId, [teamId]: team.role };
           }
-          return userTeamRoleByTeamId;
+          return teamRoleByTeamId;
         },
         {},
       );

@@ -289,6 +289,48 @@ describe('User data provider', () => {
         expectedOrcidWorksPublicationDate,
       );
     });
+    test('Should provide connected working groups', async () => {
+      const mockResponse = getSquidexUserGraphqlResponse();
+      mockResponse.findUsersContent!.id = 'user-id-1';
+      mockResponse.findUsersContent!.referencingWorkingGroupsContents = [
+        {
+          id: 'wg-1',
+          flatData: {
+            title: 'WG ONE',
+            complete: false,
+            leaders: [{ user: [{ id: 'user-id-1' }], workstreamRole: 'PM' }],
+            members: [],
+          },
+        },
+        {
+          id: 'wg-2',
+          flatData: {
+            title: 'WG TWO',
+            complete: false,
+            leaders: [],
+            members: [{ user: [{ id: 'user-id-1' }] }],
+          },
+        },
+        {
+          id: 'wg-3',
+          flatData: {
+            title: 'WG THREE',
+            complete: true,
+            leaders: [],
+            members: [{ user: [{ id: 'user-id-1' }] }],
+          },
+        },
+      ];
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+      const expectedResponse = getUserDataObject();
+      expectedResponse.workingGroups = [
+        { id: 'wg-1', name: 'WG ONE', role: 'PM', active: true },
+        { id: 'wg-2', name: 'WG TWO', role: 'Member', active: true },
+        { id: 'wg-3', name: 'WG THREE', role: 'Member', active: false },
+      ];
+      const result = await userDataProvider.fetchById('user-1');
+      expect(result).toEqual(expectedResponse);
+    });
     test('Should provide alumni values when they exist', async () => {
       const mockResponse = getSquidexUserGraphqlResponse();
       mockResponse.findUsersContent!.flatData.alumniSinceDate =

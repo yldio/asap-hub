@@ -8213,7 +8213,13 @@ export type FetchReminderDataQueryVariables = Exact<{
 export type FetchReminderDataQuery = {
   findUsersContent: Maybe<{
     flatData: Pick<UsersFlatDataDto, 'role'> & {
-      teams: Maybe<Array<{ id: Maybe<Array<Pick<Teams, 'id'>>> }>>;
+      teams: Maybe<
+        Array<
+          Pick<UsersDataTeamsChildDto, 'role'> & {
+            id: Maybe<Array<Pick<Teams, 'id'>>>;
+          }
+        >
+      >;
     };
   }>;
   queryResearchOutputsContents: Maybe<
@@ -13521,6 +13527,10 @@ export const FetchReminderDataDocument = {
                                   },
                                 ],
                               },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'role' },
                             },
                           ],
                         },

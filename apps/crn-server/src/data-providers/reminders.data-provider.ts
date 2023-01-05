@@ -13,6 +13,7 @@ import {
   Role,
   TeamRole,
   PublishMaterialReminder,
+  UploadPresentationReminder,
 } from '@asap-hub/model';
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import { isCMSAdministrator } from '@asap-hub/validation';
@@ -67,6 +68,11 @@ export class ReminderSquidexDataProvider implements ReminderDataProvider {
       findUsersContent,
     );
 
+    const uploadPresentationReminders = getUploadPresentationRemindersFromQuery(
+      queryEventsContents,
+      findUsersContent,
+    );
+
     const eventMaterialsReminders =
       getEventMaterialsRemindersFromQuery(queryEventsContents);
 
@@ -76,6 +82,7 @@ export class ReminderSquidexDataProvider implements ReminderDataProvider {
       ...sharePresentationReminders,
       ...eventMaterialsReminders,
       ...publishPresentationReminders,
+      ...uploadPresentationReminders,
     ];
 
     const sortedReminders = reminders.sort((reminderA, reminderB) => {
@@ -353,6 +360,67 @@ const getPublishMaterialRemindersFromQuery = (
           },
         },
       ];
+    }
+    return events;
+  }, []);
+
+  return eventReminders;
+};
+
+const getUploadPresentationRemindersFromQuery = (
+  queryEventsContents: FetchReminderDataQuery['queryEventsContents'],
+  findUsersContent: FetchReminderDataQuery['findUsersContent'],
+): UploadPresentationReminder[] => {
+  const eventReminders = (queryEventsContents || []).reduce<
+    UploadPresentationReminder[]
+  >((events, event) => {
+    if (!isCMSAdministrator(findUsersContent?.flatData.role as Role)) {
+      const userTeamRoleByTeamId = findUsersContent?.flatData?.teams?.reduce(
+        (userTeamRoleByTeamId: { [teamId: string]: string }, team) => {
+          const teamId = team.id?.[0]?.id;
+          if (teamId && team.role) {
+            userTeamRoleByTeamId[teamId] = team.role;
+          }
+          return userTeamRoleByTeamId;
+        },
+        {},
+      );
+      const userTeamIds = Object.keys(userTeamRoleByTeamId || {});
+
+      const shouldShowUploadPresentation = event.flatData.speakers?.some(
+        (speaker) => {
+          const { team: speakerTeamList } = speaker;
+
+          const speakerTeam = speakerTeamList?.[0];
+
+          return (
+            userTeamIds &&
+            speakerTeam &&
+            userTeamIds?.includes(speakerTeam.id) &&
+            userTeamRoleByTeamId?.[speakerTeam.id] === 'Project Manager'
+          );
+        },
+      );
+
+      if (
+        shouldShowUploadPresentation &&
+        eventHasEnded(event.flatData.endDate) &&
+        inLast72Hours(event.flatData.endDate)
+      ) {
+        return [
+          ...events,
+          {
+            id: `upload-presentation-${event.id}`,
+            entity: 'Event',
+            type: 'Upload Presentation',
+            data: {
+              eventId: event.id,
+              title: event.flatData.title || '',
+              endDate: event.flatData.endDate,
+            },
+          },
+        ];
+      }
     }
     return events;
   }, []);

@@ -100,7 +100,7 @@ export type UserDataObject = {
 
 export type UserCreateDataObject = Omit<
   UserDataObject,
-  'id' | 'createdDate' | 'projects' | 'workingGroups' | 'contributingCohorts'
+  'id' | 'createdDate' | 'projects' | 'workingGroups'
 >;
 
 export type UserUpdateDataObject = Partial<UserCreateDataObject>;

@@ -45,6 +45,16 @@ export interface User<TAvatar = string> {
   telephoneCountryCode?: string;
   telephoneNumber?: string;
   questions: { question: string }[];
+
+  // fields missing are:
+
+  biography: string;
+  country: string;
+  city?: string;
+  positions: { role: string; department: string; institution: string }[];
+  keywords: string[];
+  fundingStreams: string;
+  contributingCohorts: { id: string[]; role: string; study: string }[];
 }
 
 export interface RestUser extends Entity, Rest<User> {}

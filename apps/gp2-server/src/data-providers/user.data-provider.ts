@@ -33,8 +33,8 @@ import { roleMap as workingGroupRoleMap } from './working-group.data-provider';
 
 export interface UserDataProvider {
   fetchById(id: string): Promise<gp2Model.UserDataObject | null>;
-  update(id: string, update: gp2Model.UserUpdateDataObject): Promise<void>;
-  create(update: gp2Model.UserCreateDataObject): Promise<string>;
+  update(id: string, user: gp2Model.UserUpdateDataObject): Promise<void>;
+  create(user: gp2Model.UserCreateDataObject): Promise<string>;
   fetch(
     options: gp2Model.FetchUsersOptions,
   ): Promise<gp2Model.ListUserDataObject>;
@@ -57,17 +57,14 @@ export class UserSquidexDataProvider implements UserDataProvider {
     return parseGraphQLUserToDataObject(findUsersContent);
   }
 
-  async update(
-    id: string,
-    userToUpdate: gp2Model.UserUpdateDataObject,
-  ): Promise<void> {
-    const cleanedUser = getUserSquidexData(userToUpdate);
+  async update(id: string, user: gp2Model.UserUpdateDataObject): Promise<void> {
+    const cleanedUser = getUserSquidexData(user);
 
     await this.userSquidexRestClient.patch(id, cleanedUser);
   }
 
-  async create(userToCreate: gp2Model.UserCreateDataObject): Promise<string> {
-    const cleanedUser = getUserSquidexData(userToCreate);
+  async create(user: gp2Model.UserCreateDataObject): Promise<string> {
+    const cleanedUser = getUserSquidexData(user);
 
     const { id } = await this.userSquidexRestClient.create({
       ...cleanedUser,
@@ -217,15 +214,30 @@ function getUserSquidexData(
 ):
   | Omit<gp2Squidex.InputUser['data'], 'connections' | 'avatar'>
   | Partial<Omit<gp2Squidex.InputUser['data'], 'connections' | 'avatar'>> {
-  const { region, role, degrees, telephone, questions, ...userInput } = input;
+  const {
+    region,
+    role,
+    degrees,
+    telephone,
+    questions,
+    contributingCohorts,
+    ...userInput
+  } = input;
   const fieldMappedUser = mapUserFields({ region, role, degrees });
   const mappedTelephone = mapTelephone(telephone);
   const mappedQuestions = questions?.map((question) => ({ question }));
+  const mappedCohorts = contributingCohorts?.map((c) => ({
+    id: [c.contributingCohortId],
+    name: c.name,
+    role: c.role,
+    study: c.study || '',
+  }));
   return parseToSquidex({
     ...userInput,
     ...fieldMappedUser,
     ...mappedTelephone,
     questions: mappedQuestions,
+    contributingCohorts: mappedCohorts,
   });
 }
 

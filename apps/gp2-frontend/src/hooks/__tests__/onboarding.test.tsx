@@ -101,6 +101,19 @@ describe('useOnboarding', () => {
     ).toEqual([true, true, true, true, true]);
     expect(result.current?.isOnboardable).toBeTruthy();
   });
+  it('returns the steps that are not completed with completed as false', async () => {
+    mockGetUser.mockResolvedValueOnce(emptyUser);
+    const { result, waitForNextUpdate } = renderHook(
+      () => useOnboarding(emptyUser.id),
+      {
+        wrapper: wrapper({ user: emptyUser }),
+      },
+    );
+    await waitForNextUpdate();
+    expect(
+      (result.current?.steps ?? []).map(({ completed }) => completed),
+    ).toEqual([false, false, true, true, true]);
+  });
   describe('if on the first step', () => {
     it('should return no previous step href and the next step href', async () => {
       const user: gp2Model.UserResponse = {

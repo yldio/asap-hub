@@ -43,17 +43,6 @@ export const useOnboarding = (id: string) => {
   }
   const { isOnboardable, ...onBoardingValidation } = isUserOnboardable(user);
 
-  const incompleteSteps = orderedSteps.reduce<string[]>((acc, stepKey) => {
-    const fieldsToCheck = Object.entries(fieldToStep)
-      .filter(([, step]) => step === stepKey)
-      .map(([field]) => field);
-    return fieldsToCheck.some((field) =>
-      Object.keys(onBoardingValidation).includes(field),
-    )
-      ? [...acc, stepKey]
-      : acc;
-  }, []);
-
   const steps = orderedSteps.map((step, index) => ({
     name: step,
     href: stepToHref[step],
@@ -62,8 +51,14 @@ export const useOnboarding = (id: string) => {
       orderedSteps.findIndex(
         (orderedStep) => stepToHref[orderedStep] === pathname,
       ),
-    completed: !incompleteSteps.some(
-      (incompleteStep) => incompleteStep === step,
+    completed: !Object.keys(onBoardingValidation).some(
+      (incompleteField) =>
+        fieldToStep[
+          incompleteField as keyof Omit<
+            ReturnType<typeof isUserOnboardable>,
+            'isOnboardable'
+          >
+        ] === step,
     ),
   }));
   const currentStepIndex = steps.findIndex((step) =>

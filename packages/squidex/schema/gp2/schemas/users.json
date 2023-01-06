@@ -576,6 +576,8 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "Array",
+          "minItems": 0,
+          "maxItems": 10,
           "label": "Contributing Cohorts",
           "placeholder": "",
           "isRequired": false,

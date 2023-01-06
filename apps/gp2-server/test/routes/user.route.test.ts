@@ -579,6 +579,61 @@ describe('/users/ route', () => {
           expect(response.status).toBe(400);
         });
       });
+      describe('contributing cohorts', () => {
+        const cohort = (id = '41') => ({
+          name: `the name ${id}`,
+          contributingCohortId: id,
+          role: 'Contributor',
+          studyUrl: 'http://example.com',
+        });
+        test('allows valid cohorts', async () => {
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({
+              contributingCohorts: [cohort()],
+            });
+          expect(response.status).toBe(200);
+        });
+        test('studyUrl is optional', async () => {
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({
+              contributingCohorts: [
+                {
+                  ...cohort(),
+                  studyUrl: undefined,
+                },
+              ],
+            });
+          expect(response.status).toBe(200);
+        });
+        test('allows 10 cohorts', async () => {
+          const contributingCohorts = Array.from({ length: 5 }, (_, index) =>
+            cohort(`${index}`),
+          );
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({ contributingCohorts });
+          expect(response.status).toBe(200);
+        });
+        test('allows no more than 10 cohorts', async () => {
+          const contributingCohorts = Array.from({ length: 11 }, (_, index) =>
+            cohort(`${index}`),
+          );
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({ contributingCohorts });
+          expect(response.status).toBe(400);
+        });
+        test('a studyUrl needs to be a Url', async () => {
+          const contributingCohort = cohort();
+          contributingCohort.studyUrl = 'not-a-link';
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({ contributingCohorts: [contributingCohort] });
+          expect(response.status).toBe(400);
+        });
+      });
     });
 
     describe('Profile completeness validation', () => {

@@ -580,7 +580,7 @@ describe('/users/ route', () => {
         });
       });
       describe('contributing cohorts', () => {
-        const cohort = (id = '41') => ({
+        const cohort = (id = '42') => ({
           name: `the name ${id}`,
           contributingCohortId: id,
           role: 'Contributor',
@@ -608,7 +608,7 @@ describe('/users/ route', () => {
           expect(response.status).toBe(200);
         });
         test('allows 10 cohorts', async () => {
-          const contributingCohorts = Array.from({ length: 5 }, (_, index) =>
+          const contributingCohorts = Array.from({ length: 10 }, (_, index) =>
             cohort(`${index}`),
           );
           const response = await supertest(app)

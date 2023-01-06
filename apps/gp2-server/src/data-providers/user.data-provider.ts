@@ -203,6 +203,18 @@ const mapTelephone = (
   telephoneNumber: telephone?.number,
 });
 
+type UserUpdateCohorts = gp2Model.UserUpdateDataObject['contributingCohorts'];
+type UserCreateCohorts = gp2Model.UserCreateDataObject['contributingCohorts'];
+const mapContributingCohorts = (
+  cohorts: UserUpdateCohorts | UserCreateCohorts,
+) =>
+  cohorts?.map(({ contributingCohortId, name, role, studyUrl }) => ({
+    id: [contributingCohortId],
+    name,
+    role,
+    study: studyUrl || '',
+  }));
+
 function getUserSquidexData(
   input: gp2Model.UserCreateDataObject,
 ): Omit<gp2Squidex.InputUser['data'], 'connections' | 'avatar'>;
@@ -226,12 +238,7 @@ function getUserSquidexData(
   const fieldMappedUser = mapUserFields({ region, role, degrees });
   const mappedTelephone = mapTelephone(telephone);
   const mappedQuestions = questions?.map((question) => ({ question }));
-  const mappedCohorts = contributingCohorts?.map((cohort) => ({
-    id: [cohort.contributingCohortId],
-    name: cohort.name,
-    role: cohort.role,
-    study: cohort.studyUrl || '',
-  }));
+  const mappedCohorts = mapContributingCohorts(contributingCohorts);
 
   return parseToSquidex({
     ...userInput,

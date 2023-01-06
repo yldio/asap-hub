@@ -34,13 +34,13 @@ const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
       type: 'array',
       items: {
         type: 'string',
-        enum: [...userDegrees],
+        enum: userDegrees,
       },
       nullable: true,
     },
     region: {
       type: 'string',
-      enum: [...userRegions],
+      enum: userRegions,
       nullable: true,
     },
     country: { type: 'string', nullable: true, minLength: 1 },
@@ -76,7 +76,7 @@ const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
       maxItems: 10,
       items: {
         type: 'string',
-        enum: [...keywords],
+        enum: keywords,
       },
       nullable: true,
     },
@@ -110,7 +110,7 @@ const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
         properties: {
           contributingCohortId: { type: 'string' },
           name: { type: 'string' },
-          role: { type: 'string', enum: [...userContributingCohortRole] },
+          role: { type: 'string', enum: userContributingCohortRole },
           studyUrl: {
             type: 'string',
             pattern: UrlExpression,

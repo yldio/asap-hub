@@ -6,12 +6,15 @@ import UserContributingCohorts from '../UserContributingCohorts';
 describe('UserContributingCohorts', () => {
   type ContributingCohort = gp2.UserResponse['contributingCohorts'][number];
   const getCohorts = (length = 1): ContributingCohort[] =>
-    Array.from({ length }, (_, itemIndex) => ({
-      contributingCohortId: `id-${itemIndex}`,
-      name: `a name ${itemIndex}`,
-      role: 'Contributor',
-      study: `http://a-url-${itemIndex}`,
-    }));
+    Array.from(
+      { length },
+      (_, itemIndex): ContributingCohort => ({
+        contributingCohortId: `id-${itemIndex}`,
+        name: `a name ${itemIndex}`,
+        role: 'Contributor',
+        studyUrl: `http://a-url-${itemIndex}`,
+      }),
+    );
   const firstName: gp2.UserResponse['firstName'] = 'John';
   const renderUserCohorts = (contributingCohorts: ContributingCohort[]) =>
     render(

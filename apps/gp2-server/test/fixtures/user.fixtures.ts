@@ -64,7 +64,7 @@ export const getUserResponse = (): gp2.UserResponse => ({
   fundingStreams: 'A funding stream',
   contributingCohorts: [
     {
-      contributingCohortId: 'c1ea5ec1-aac5-47de-a052-0680a0d9b4b9',
+      contributingCohortId: 'cohort-id',
       name: 'CALYPSO',
       role: 'Contributor',
       studyUrl: 'http://example.com/study',
@@ -218,7 +218,7 @@ export const getUserDataObject = (): gp2.UserDataObject => ({
     {
       role: 'Contributor',
       studyUrl: 'http://example.com/study',
-      contributingCohortId: 'c1ea5ec1-aac5-47de-a052-0680a0d9b4b9',
+      contributingCohortId: 'cohort-id',
       name: 'CALYPSO',
     },
   ],
@@ -370,7 +370,7 @@ export const getGraphQLUser = (
         study: 'http://example.com/study',
         id: [
           {
-            id: 'c1ea5ec1-aac5-47de-a052-0680a0d9b4b9',
+            id: 'cohort-id',
             flatData: { name: 'CALYPSO' },
           },
         ],

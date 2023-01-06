@@ -238,7 +238,7 @@ describe('User data provider', () => {
     describe('contributing cohorts', () => {
       const cohort = {
         role: UsersDataContributingCohortsRoleEnum.Contributor,
-        id: [{ id: '42', flatData: { name: 'a cohort ' } }],
+        id: [{ id: '42', flatData: { name: 'a cohort' } }],
         study: 'http://example.com',
       };
       test.each`

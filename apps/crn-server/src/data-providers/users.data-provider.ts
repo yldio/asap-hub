@@ -367,7 +367,7 @@ export const parseGraphQLUserToDataObject = (
         return {
           id: wg.id,
           name: wg.flatData.title || '',
-          role: wgRole || '',
+          role: wgRole,
           active: !wg.flatData.complete,
         };
       })

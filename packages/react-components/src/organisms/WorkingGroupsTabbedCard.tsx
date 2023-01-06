@@ -41,12 +41,14 @@ const WorkingGroupsTabbedCard: React.FC<WorkingGroupsTabbedCardProps> = ({
           items: activeMemberships,
           disabled: isUserAlumni,
           empty: 'There are no active memberships.',
+          truncateFrom: 6,
         },
         {
           tabTitle: `Past Memberships (${inactiveMemberships.length})`,
           items: inactiveMemberships,
           disabled: inactiveMemberships.length === 0,
           empty: 'There are no past memberships.',
+          truncateFrom: 6,
         },
       ]}
     >

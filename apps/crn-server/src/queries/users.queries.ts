@@ -12,7 +12,7 @@ export const usersContentQueryFragment = gql`
         title
         complete
         leaders {
-          workstreamRole
+          role
           user {
             id
           }

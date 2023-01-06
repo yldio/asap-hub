@@ -108,16 +108,16 @@ it('when empty shows a placeholder message', () => {
 });
 
 it('shows the no option message when there are no options', () => {
-  const { getByDisplayValue, getByText } = render(
+  const { getByRole, getByText } = render(
     <MultiSelect suggestions={[]} noOptionsMessage={() => 'No options'} />,
   );
-  userEvent.type(getByDisplayValue(''), 'LT');
+  userEvent.type(getByRole('textbox'), 'LT');
   expect(getByText(/no options/i)).toBeVisible();
 });
 
 it('opens a menu to select from on click', () => {
   const handleChange = jest.fn();
-  const { getByText, getByDisplayValue } = render(
+  const { getByText, getByRole } = render(
     <MultiSelect
       suggestions={[
         { label: 'LHR', value: 'LHR' },
@@ -127,7 +127,7 @@ it('opens a menu to select from on click', () => {
     />,
   );
 
-  userEvent.click(getByDisplayValue(''));
+  userEvent.click(getByRole('textbox'));
   userEvent.click(getByText('LGW'));
   expect(handleChange).toHaveBeenLastCalledWith([
     { label: 'LGW', value: 'LGW' },
@@ -153,7 +153,7 @@ it('does not open a menu when clicking a value', () => {
 
 it('opens a filtered menu to select from when typing', () => {
   const handleChange = jest.fn();
-  const { getByText, queryByText, getByDisplayValue } = render(
+  const { getByText, queryByText, getByRole } = render(
     <MultiSelect
       suggestions={[
         { label: 'LHR', value: 'LHR' },
@@ -164,7 +164,7 @@ it('opens a filtered menu to select from when typing', () => {
     />,
   );
 
-  userEvent.type(getByDisplayValue(''), 'LT');
+  userEvent.type(getByRole('textbox'), 'LT');
   expect(queryByText('LGW')).not.toBeInTheDocument();
 
   userEvent.click(getByText('LTN'));
@@ -175,7 +175,7 @@ it('opens a filtered menu to select from when typing', () => {
 
 it('does not allow non-suggested input', () => {
   const handleChange = jest.fn();
-  const { getByDisplayValue } = render(
+  const { getByRole } = render(
     <MultiSelect
       suggestions={[
         { label: 'LHR', value: 'LHR' },
@@ -184,13 +184,13 @@ it('does not allow non-suggested input', () => {
       onChange={handleChange}
     />,
   );
-  userEvent.type(getByDisplayValue(''), 'LTN');
+  userEvent.type(getByRole('textbox'), 'LTN');
   userEvent.tab();
   expect(handleChange).not.toHaveBeenCalled();
 });
 
 it('shows the focused suggestion in green', () => {
-  const { getByText, getByDisplayValue } = render(
+  const { getByText, getByRole } = render(
     <MultiSelect
       suggestions={[
         { label: 'LHR', value: 'LHR' },
@@ -198,7 +198,7 @@ it('shows the focused suggestion in green', () => {
       ]}
     />,
   );
-  userEvent.click(getByDisplayValue(''));
+  userEvent.click(getByRole('textbox'));
   expect(
     findParentWithStyle(getByText('LGW'), 'color')?.color.replace(/ /g, ''),
   ).not.toBe(pine.rgb.replace(/ /g, ''));
@@ -238,7 +238,6 @@ describe('invalidity', () => {
           { label: 'LHR', value: 'LHR' },
           { label: 'LGW', value: 'LGW' },
         ]}
-        customValidationMessage="Nope."
       />,
     );
     const input = getByRole('textbox');
@@ -258,7 +257,6 @@ describe('invalidity', () => {
           { label: 'LHR', value: 'LHR' },
           { label: 'LGW', value: 'LGW' },
         ]}
-        customValidationMessage="Nope."
       />,
     );
     const input = getByRole('textbox');
@@ -282,13 +280,13 @@ describe('Async', () => {
   };
   it('shows the no option message when there are no options', async () => {
     const loadOptionsEmpty = jest.fn().mockResolvedValue([]);
-    const { getByDisplayValue, getByText, queryByText } = render(
+    const { getByRole, getByText, queryByText } = render(
       <MultiSelect
         loadOptions={loadOptionsEmpty}
         noOptionsMessage={() => 'No options'}
       />,
     );
-    userEvent.type(getByDisplayValue(''), 'LT');
+    userEvent.type(getByRole('textbox'), 'LT');
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
@@ -300,11 +298,11 @@ describe('Async', () => {
       { label: 'Two', value: '2' },
     ]);
     const handleChange = jest.fn();
-    const { getByText, getByDisplayValue, queryByText } = render(
+    const { getByText, getByRole, queryByText } = render(
       <MultiSelect loadOptions={loadOptions} onChange={handleChange} />,
     );
 
-    userEvent.click(getByDisplayValue(''));
+    userEvent.click(getByRole('textbox'));
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
@@ -364,10 +362,40 @@ describe('Async', () => {
     await waitFor(() => expect(mockOnChange).toHaveBeenCalledWith([]));
   });
 
+  it('shows an error message when required field not filled', () => {
+    const mockOnChange = jest.fn();
+    const { rerender, getByRole, getByText, queryByText } = render(
+      <MultiSelect
+        {...asyncProps}
+        onChange={mockOnChange}
+        getValidationMessage={() => 'Please fill out this field.'}
+        isRequired
+      />,
+    );
+    const input = getByRole('textbox', { hidden: false });
+    userEvent.click(input);
+    userEvent.tab();
+
+    expect(getByText('Please fill out this field.')).toBeVisible();
+
+    rerender(
+      <MultiSelect
+        {...asyncProps}
+        onChange={mockOnChange}
+        values={[{ label: 'Example', value: '123' }]}
+        getValidationMessage={() => 'Please fill out this field.'}
+        isRequired
+      />,
+    );
+
+    userEvent.click(input);
+    expect(queryByText('Please fill out this field.')).not.toBeInTheDocument();
+  });
+
   it('supports adding new options', async () => {
     const mockOnChange = jest.fn();
 
-    const { queryByText, getAllByText, getByDisplayValue, rerender } = render(
+    const { queryByText, getAllByText, rerender, getByRole } = render(
       <MultiSelect
         {...asyncProps}
         placeholder={'type something'}
@@ -378,12 +406,12 @@ describe('Async', () => {
       />,
     );
 
-    userEvent.click(getByDisplayValue(''));
+    userEvent.click(getByRole('textbox'));
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
 
-    userEvent.type(getByDisplayValue(''), 'Test');
+    userEvent.type(getByRole('textbox'), 'Test');
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
@@ -401,12 +429,12 @@ describe('Async', () => {
       />,
     );
 
-    userEvent.click(getByDisplayValue(''));
+    userEvent.click(getByRole('textbox'));
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
 
-    userEvent.type(getByDisplayValue(''), 'Test');
+    userEvent.type(getByRole('textbox'), 'Test');
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );

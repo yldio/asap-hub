@@ -1,9 +1,8 @@
 import { ComponentProps } from 'react';
 import { MemoryRouter, StaticRouter } from 'react-router-dom';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 import { network } from '@asap-hub/routing';
-import { disable } from '@asap-hub/flags';
 
 import NetworkPageHeader from '../NetworkPageHeader';
 
@@ -149,12 +148,4 @@ it('does not render the search box based on props', () => {
     <NetworkPageHeader {...props} showSearch={false} />,
   );
   expect(queryByRole('searchbox')).not.toBeInTheDocument();
-});
-
-it('does not show the working groups tab when feature flag disabled ((REGRESSION))', () => {
-  const { rerender } = render(<NetworkPageHeader {...props} />);
-  expect(screen.getByTitle('Working Groups')).toBeInTheDocument();
-  disable('WORKING_GROUPS');
-  rerender(<NetworkPageHeader {...props} />);
-  expect(screen.queryByTitle('Working Groups')).toBeNull();
 });

@@ -129,3 +129,35 @@ it('renders an author multi select, passing through props for new external autho
 
   expect(getByText('Chris White (Non CRN)')).toBeVisible();
 });
+
+it('renders the warning label correctly for a required author', () => {
+  const { getByText, getByRole, rerender, queryByText } = render(
+    <AuthorSelect
+      title="Title"
+      subtitle="Subtitle"
+      isRequired
+      description="Description"
+      getValidationMessage={() => 'Please select at least one author.'}
+      loadOptions={jest.fn().mockResolvedValue([])}
+    />,
+  );
+
+  userEvent.click(getByRole('textbox'));
+
+  expect(getByText('Please select at least one author.')).toBeVisible();
+
+  rerender(
+    <AuthorSelect
+      title="Title"
+      subtitle="Subtitle"
+      isRequired
+      description="Description"
+      getValidationMessage={() => 'Please select at least one author.'}
+      loadOptions={jest.fn().mockResolvedValue([])}
+      values={[{ label: 'Chris White', value: 'Chris White' }]}
+    />,
+  );
+  expect(
+    queryByText('Please select at least one author.'),
+  ).not.toBeInTheDocument();
+});

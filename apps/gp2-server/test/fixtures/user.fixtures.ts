@@ -273,6 +273,7 @@ export const getUserInput = (): gp2squidex.InputUser['data'] => {
         id: [c.contributingCohortId],
         role: c.role,
         study: c.study || '',
+        name: c.name,
       })),
     },
   };

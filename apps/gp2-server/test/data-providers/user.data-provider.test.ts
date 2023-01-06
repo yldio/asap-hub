@@ -262,7 +262,7 @@ describe('User data provider', () => {
           userDataProvider.fetchById('user-id'),
         ).rejects.toThrowError('Invalid Contributing Cohort');
       });
-      test.todo('study is optional');
+
       test('Should return empty array if cohorts have not been defined', async () => {
         const invalidUser = getGraphQLUser();
         invalidUser.flatData.contributingCohorts = null;

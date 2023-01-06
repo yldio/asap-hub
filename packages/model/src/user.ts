@@ -150,7 +150,7 @@ export interface UserDataObject extends Invitee {
   social?: UserSocialLinks;
   labs: LabResponse[];
   connections?: Connection[];
-  workingGroups: WorkingGroupMembership[];
+  workingGroups?: WorkingGroupMembership[];
   _tags?: UserTag[];
 }
 export type ListUserDataObject = ListResponse<UserDataObject>;

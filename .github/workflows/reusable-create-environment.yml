@@ -161,11 +161,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Install Algolia CLI
+        uses: algolia/setup-algolia-cli@master
       - name: Setup
         id: setup
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
+      - name: Setup Dev Environment
+        id: setup-dev
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: Development
       - name: Get Algolia Keys
         id: algolia-keys
         if: ${{ inputs.environment-name=='Branch' }}
@@ -181,7 +188,7 @@ jobs:
         id: index-exists
         shell: bash
         run: |
-          OUTPUT=$(yarn workspace @asap-hub/crn-server run algolia getsettings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX) || true
+          OUTPUT=$(algolia settings get $ALGOLIA_INDEX 2>&1) || true
           if [[ "$OUTPUT" == *"Index does not exist"*  ]]; then
             echo "::set-output name=index-exists::false"
             echo "Index does not exist"
@@ -190,28 +197,17 @@ jobs:
             echo "Index exists"
           fi
         env:
-          ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
-          ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          ALGOLIA_APPLICATION_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          ALGOLIA_ADMIN_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
-      - name: Get the latest backup directory name
-        if: ${{ inputs.environment-name=='Branch' &&  steps.index-exists.outputs.index-exists == 'false' }}
-        run: echo "MOST_RECENT_BACKUP_DIR=$(aws s3api list-objects-v2 --bucket $BUCKET_NAME --query 'sort_by(Contents, &LastModified)[-1].Key' --output=text | cut -d'/' -f 1)" >> $GITHUB_ENV
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_DEFAULT_REGION: ${{ steps.setup.outputs.aws-default-region }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          BUCKET_NAME: ${{ steps.setup.outputs.algolia-backup-bucket-name }}
-      - name: Download the files and restore the index
-        if: ${{ inputs.environment-name=='Branch' &&  steps.index-exists.outputs.index-exists == 'false' }}
+      - name: Copy index from Dev
+        if: ${{ inputs.environment-name=='Branch' && steps.index-exists.outputs.index-exists == 'false' }}
+        shell: bash
         run: |
-          aws s3 cp s3://$BUCKET_NAME/$MOST_RECENT_BACKUP_DIR $MOST_RECENT_BACKUP_DIR --recursive
-          export ALGOLIA_BACKUP=$(readlink -f $MOST_RECENT_BACKUP_DIR)
-          yarn workspace @asap-hub/crn-server run algolia import -s $ALGOLIA_BACKUP -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -b 100
+          algolia indices copy -y -w $ALGOLIA_INDEX_DEV $ALGOLIA_INDEX
+          algolia indices copy -y -w $ALGOLIA_INDEX_DEV-reverse-timestamp $ALGOLIA_INDEX-reverse-timestamp
         env:
-          ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
-          ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          ALGOLIA_APPLICATION_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          ALGOLIA_ADMIN_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
+          ALGOLIA_INDEX_DEV: ${{ steps.setup-dev.outputs.algolia-index }}
           ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_DEFAULT_REGION: ${{ steps.setup.outputs.aws-default-region }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          BUCKET_NAME: ${{ steps.setup.outputs.algolia-backup-bucket-name }}

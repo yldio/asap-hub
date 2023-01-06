@@ -226,14 +226,13 @@ function getUserSquidexData(
   const fieldMappedUser = mapUserFields({ region, role, degrees });
   const mappedTelephone = mapTelephone(telephone);
   const mappedQuestions = questions?.map((question) => ({ question }));
-  const mappedCohorts = contributingCohorts?.map(
-    ({ contributingCohortId, name, role, studyUrl }) => ({
-      id: [contributingCohortId],
-      name,
-      role,
-      studyUrl: studyUrl || '',
-    }),
-  );
+  const mappedCohorts = contributingCohorts?.map((cohort) => ({
+    id: [cohort.contributingCohortId],
+    name: cohort.name,
+    role: cohort.role,
+    study: cohort.studyUrl || '',
+  }));
+
   return parseToSquidex({
     ...userInput,
     ...fieldMappedUser,
@@ -457,7 +456,7 @@ const parseContributingCohorts = (
       contributingCohortId: cohort.id,
       name: cohort.flatData.name,
       role,
-      ...(study && { study }),
+      ...(study && { studyUrl: study }),
     };
   }) || [];
 

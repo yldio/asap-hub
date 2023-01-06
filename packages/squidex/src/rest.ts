@@ -170,7 +170,6 @@ export class Squidex<
             body = err.response.body;
           }
 
-          console.log(body);
           if (isSquidexError(body) && body?.message === 'Validation error') {
             throw new ValidationError(err, body.details, err.message);
           }

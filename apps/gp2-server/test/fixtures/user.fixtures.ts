@@ -67,7 +67,7 @@ export const getUserResponse = (): gp2.UserResponse => ({
       contributingCohortId: 'c1ea5ec1-aac5-47de-a052-0680a0d9b4b9',
       name: 'CALYPSO',
       role: 'Contributor',
-      study: 'http://example.com/study',
+      studyUrl: 'http://example.com/study',
     },
   ],
   questions: [
@@ -217,7 +217,7 @@ export const getUserDataObject = (): gp2.UserDataObject => ({
   contributingCohorts: [
     {
       role: 'Contributor',
-      study: 'http://example.com/study',
+      studyUrl: 'http://example.com/study',
       contributingCohortId: 'c1ea5ec1-aac5-47de-a052-0680a0d9b4b9',
       name: 'CALYPSO',
     },
@@ -269,12 +269,14 @@ export const getUserInput = (): gp2squidex.InputUser['data'] => {
     keywords: { iv: keywords },
     fundingStreams: { iv: fundingStreams || '' },
     contributingCohorts: {
-      iv: contributingCohorts.map((c) => ({
-        id: [c.contributingCohortId],
-        role: c.role,
-        study: c.study || '',
-        name: c.name,
-      })),
+      iv: contributingCohorts.map(
+        ({ contributingCohortId, role, studyUrl, name }) => ({
+          id: [contributingCohortId],
+          role,
+          studyUrl: studyUrl || '',
+          name,
+        }),
+      ),
     },
   };
 };

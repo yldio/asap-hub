@@ -54,7 +54,7 @@ export const userToCSV = (output: gp2.UserResponse): UserCSV => ({
     .join(',\n'),
   fundingStreams: output.fundingStreams,
   contributingCohorts: output.contributingCohorts
-    .map(({ name, role, study }) => `${name} ${role} ${study}`)
+    .map(({ name, role, studyUrl }) => `${name} ${role} ${studyUrl}`)
     .sort(caseInsensitive)
     .join(', '),
   createdDate: formatDate(new Date(output.createdDate)),

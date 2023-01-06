@@ -106,7 +106,7 @@ const UserContributingCohorts: React.FC<UserContributingCohortsProps> = ({
         <Headline4>Link</Headline4>
       </div>
       {contributingCohorts.map(
-        ({ contributingCohortId, name, study, role }) => (
+        ({ contributingCohortId, name, studyUrl, role }) => (
           <div
             key={`user-cohort-${contributingCohortId}`}
             css={getListStyles()}
@@ -120,10 +120,10 @@ const UserContributingCohorts: React.FC<UserContributingCohortsProps> = ({
               {role}
             </div>
             <div css={[listElementStyles, listElementSecondaryStyles]}>
-              {study && (
+              {studyUrl && (
                 <>
                   <h4 css={headingListStyles}>Link:</h4>
-                  <ExternalLink href={study} label="View study" noMargin />
+                  <ExternalLink href={studyUrl} label="View study" noMargin />
                 </>
               )}
             </div>

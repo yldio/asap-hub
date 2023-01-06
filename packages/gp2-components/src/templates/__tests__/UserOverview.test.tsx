@@ -185,7 +185,7 @@ describe('UserOverview', () => {
           role: 'Contributor',
           name: 'a cohort',
           contributingCohortId: '42',
-          study: 'a-link',
+          studyUrl: 'a-link',
         },
       ];
       render(<UserOverview {...defaultProps} contributingCohorts={cohorts} />);

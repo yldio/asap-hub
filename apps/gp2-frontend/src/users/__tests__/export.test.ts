@@ -161,19 +161,19 @@ describe('userToCSV', () => {
         {
           name: 'CALYPSO',
           role: 'Contributor',
-          study: 'first-study',
+          studyUrl: 'first-study',
           contributingCohortId: '1',
         },
         {
           name: 'DATATOP',
           role: 'Investigator',
-          study: 'second-study',
+          studyUrl: 'second-study',
           contributingCohortId: '2',
         },
         {
           name: 'ICEBERG',
           role: 'Contributor',
-          study: 'third-study',
+          studyUrl: 'third-study',
           contributingCohortId: '3',
         },
       ],

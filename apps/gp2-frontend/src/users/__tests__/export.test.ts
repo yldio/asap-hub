@@ -173,13 +173,12 @@ describe('userToCSV', () => {
         {
           name: 'ICEBERG',
           role: 'Contributor',
-          studyUrl: 'third-study',
           contributingCohortId: '3',
         },
       ],
     };
     expect(userToCSV(output).contributingCohorts).toMatchInlineSnapshot(
-      `"CALYPSO Contributor first-study, DATATOP Investigator second-study, ICEBERG Contributor third-study"`,
+      `"CALYPSO Contributor first-study, DATATOP Investigator second-study, ICEBERG Contributor"`,
     );
   });
   it('formats the createdDate', () => {

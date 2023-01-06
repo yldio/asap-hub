@@ -569,7 +569,7 @@
         }
       },
       {
-        "name": "contributing-cohorts",
+        "name": "contributingCohorts",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,

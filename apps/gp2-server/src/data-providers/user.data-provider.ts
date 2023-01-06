@@ -414,17 +414,14 @@ const parseQuestions = (
 const parseSocial = (
   social: NonNullable<FetchUserQuery['findUsersContent']>['flatData']['social'],
 ): gp2Model.UserDataObject['social'] =>
-  social?.map(
-    ({ googleScholar, orcid, blog, twitter, linkedIn, github }) => {
-      return {
-        ...(googleScholar ? { googleScholar } : undefined),
-        ...(orcid ? { orcid } : undefined),
-        ...(blog ? { blog } : undefined),
-        ...(twitter ? { twitter } : undefined),
-        ...(linkedIn ? { linkedIn } : undefined),
-        ...(github ? { github } : undefined),
-      };
-    }
+  social?.map((item) =>
+    Object.entries(item).reduce(
+      (acc, [key, value]) => ({
+        ...acc,
+        ...(value ? { [`${key}`]: value } : undefined),
+      }),
+      {},
+    ),
   )[0];
 
 const parsePositions = (

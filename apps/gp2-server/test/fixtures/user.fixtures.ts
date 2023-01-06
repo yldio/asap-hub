@@ -70,6 +70,14 @@ export const getUserResponse = (): gp2.UserResponse => ({
   telephone: { countryCode: '+1', number: '212-970-4133' },
   biography: 'a biography of Tony Stark',
   keywords: ['R', 'Bash'],
+  social: {
+    googleScholar: 'https://scholar.google.com',
+    orcid: 'https://orcid.org',
+    blog: 'https://www.blogger.com',
+    twitter: 'https://twitter.com',
+    linkedIn: 'https://www.linkedin.com',
+    github: 'https://github.com',
+  },
 });
 
 export const fetchExpectation: gp2.ListUserResponse = {
@@ -201,6 +209,14 @@ export const getUserDataObject = (): gp2.UserDataObject => ({
     'What color was Iron Mans original armour?',
     'Who is the Stark family butler?',
   ],
+  social: {
+    googleScholar: 'https://scholar.google.com',
+    orcid: 'https://orcid.org',
+    blog: 'https://www.blogger.com',
+    twitter: 'https://twitter.com',
+    linkedIn: 'https://www.linkedin.com',
+    github: 'https://github.com',
+  },
 });
 export const getUserCreateDataObject = (): gp2.UserCreateDataObject => {
   const {

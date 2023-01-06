@@ -7,13 +7,12 @@ import {
   OrcidIcon,
   Divider,
   TwitterIcon,
-  Link,
-  Subtitle,
   pixels,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ReactNode } from 'react';
 import colors from '../templates/colors';
+import SocialSubGroup from './SocialSubGroup';
 
 const { rem } = pixels;
 const iconsColor = colors.neutral900.hex;
@@ -24,99 +23,59 @@ const externalProfilesContainerStyles = css({
   gap: rem(20),
 });
 
-const buttonsContainerStyles = css({
-  marginTop: rem(16),
-  display: 'inline-flex',
-  flexDirection: 'row',
-  gap: rem(16),
-  flexWrap: 'wrap',
-});
-
-const getNetworkInfo = (key: string) => {
-  switch (key) {
-    case 'googleScholar':
-      return {
-        icon: <GoogleScholarIcon color={iconsColor} />,
-        displayName: 'Google Scholar',
-      };
-    case 'orcid':
-      return {
-        icon: <OrcidIcon color={iconsColor} />,
-        displayName: key,
-      };
-    case 'blog':
-      return {
-        icon: <GlobeIcon color={iconsColor} />,
-        displayName: key,
-      };
-    case 'twitter':
-      return {
-        icon: <TwitterIcon color={iconsColor} />,
-        displayName: key,
-      };
-    case 'linkedIn':
-      return {
-        icon: <LinkedInIcon color={iconsColor} />,
-        displayName: key,
-      };
-    case 'github':
-      return {
-        icon: <GithubIcon color={iconsColor} />,
-        displayName: key,
-      };
-    default:
-      return null;
-  }
+const networkInfo: Record<
+  keyof UserSocial,
+  { icon: ReactNode; displayName: string }
+> = {
+  googleScholar: {
+    icon: <GoogleScholarIcon color={iconsColor} />,
+    displayName: 'Google Scholar',
+  },
+  orcid: {
+    icon: <OrcidIcon color={iconsColor} />,
+    displayName: 'Orcid',
+  },
+  blog: {
+    icon: <GlobeIcon color={iconsColor} />,
+    displayName: 'Blog',
+  },
+  twitter: {
+    icon: <TwitterIcon color={iconsColor} />,
+    displayName: 'Twitter',
+  },
+  linkedIn: {
+    icon: <LinkedInIcon color={iconsColor} />,
+    displayName: 'LinkedIn',
+  },
+  github: {
+    icon: <GithubIcon color={iconsColor} />,
+    displayName: 'Github',
+  },
 };
 
-interface SocialLinkProps {
-  readonly key?: string;
-  readonly link?: string;
-  readonly icon?: ReactNode;
-  readonly displayName?: string;
-}
+const researchNetworksKeys: Array<keyof UserSocial> = [
+  'googleScholar',
+  'orcid',
+];
 
-const SocialLink = ({ link, icon, displayName }: SocialLinkProps) => {
-  return (
-    <div css={{ textTransform: 'capitalize' }}>
-      <Link href={link} buttonStyle noMargin small>
-        {icon}
-        {displayName}
-      </Link>
-    </div>
-  );
-};
-
-interface SocialSubGroupProps {
-  readonly list: SocialLinkProps[];
-  readonly title: string;
-}
-
-const SocialSubGroup = ({ list, title }: SocialSubGroupProps) =>
-  list.length ? (
-    <div>
-      <Subtitle styleAsHeading={4} bold hasMargin={false} accent="lead">
-        {title}
-      </Subtitle>
-      <div css={buttonsContainerStyles}>
-        {list.map((link) => (
-          <SocialLink {...link} />
-        ))}
-      </div>
-    </div>
-  ) : null;
+const socialNetworkKeys: Array<keyof UserSocial> = [
+  'blog',
+  'twitter',
+  'linkedIn',
+  'github',
+];
 
 const UserExternalProfiles = ({ social }: Pick<UserResponse, 'social'>) => {
-  const filterSocial = (key: string) => !!social?.[key as keyof UserSocial];
-  const mapSocialInfo = (key: string) => ({
+  const filterSocial = (key: keyof UserSocial) => !!social?.[key];
+  const mapSocialInfo = (key: keyof UserSocial) => ({
     key,
-    link: social?.[key as keyof UserSocial],
-    ...getNetworkInfo(key),
+    link: social?.[key],
+    ...networkInfo[key],
   });
-  const researchNetworks = ['googleScholar', 'orcid']
+  const researchNetworks = researchNetworksKeys
     .filter(filterSocial)
     .map(mapSocialInfo);
-  const socialNetworks = ['blog', 'twitter', 'linkedIn', 'github']
+  const socialNetworks = socialNetworkKeys
     .filter(filterSocial)
     .map(mapSocialInfo);
 

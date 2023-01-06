@@ -1,6 +1,6 @@
 import { boolean, text } from '@storybook/addon-knobs';
 
-import { globeIcon, LabeledTextField } from '@asap-hub/react-components';
+import { GlobeIcon, LabeledTextField } from '@asap-hub/react-components';
 
 export default {
   title: 'Molecules / Labeled Text Field',
@@ -62,7 +62,7 @@ export const LabelIndicator = () => (
         : 'I am a long error message here for example'
     }
     labelIndicator={
-      boolean('Icon', false) ? globeIcon : text('Label Indicator', '@')
+      boolean('Icon', false) ? <GlobeIcon /> : text('Label Indicator', '@')
     }
   />
 );

@@ -369,7 +369,7 @@ describe('Async', () => {
         {...asyncProps}
         onChange={mockOnChange}
         getValidationMessage={() => 'Please fill out this field.'}
-        isRequired
+        required
       />,
     );
     const input = getByRole('textbox', { hidden: false });
@@ -384,7 +384,7 @@ describe('Async', () => {
         onChange={mockOnChange}
         values={[{ label: 'Example', value: '123' }]}
         getValidationMessage={() => 'Please fill out this field.'}
-        isRequired
+        required
       />,
     );
 

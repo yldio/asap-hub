@@ -124,7 +124,7 @@ export type MultiSelectProps<T extends MultiSelectOptionsType> = {
   readonly values?: OptionsType<T>;
   readonly sortable?: boolean;
   readonly creatable?: boolean;
-  readonly isRequired?: boolean;
+  readonly required?: boolean;
   readonly getValidationMessage?: Parameters<typeof useValidation>[1];
 } & (
   | (Pick<Props<T, true>, 'noOptionsMessage' | 'components'> & {
@@ -153,7 +153,7 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
   onChange = noop,
   sortable = true,
   creatable = false,
-  isRequired = false,
+  required = false,
   getValidationMessage,
 }: MultiSelectProps<T>): ReactElement => {
   const theme = useTheme();
@@ -179,12 +179,6 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    if (isRequired === false) {
-      checkValidation();
-    }
-  }, [isRequired, checkValidation]);
 
   useEffect(() => {
     checkValidation();
@@ -269,10 +263,9 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
         tabIndex={-1}
         autoComplete="off"
         value={values.map((value) => value.label).join('')}
-        required={isRequired}
+        required={required}
         disabled={!enabled}
-        hidden={true}
-        onChange={noop}
+        hidden
       />
       <div css={validationMessageStyles}>{validationMessage}</div>
     </div>

@@ -135,7 +135,7 @@ it('renders the warning label correctly for a required author', () => {
     <AuthorSelect
       title="Title"
       subtitle="Subtitle"
-      isRequired
+      required
       description="Description"
       getValidationMessage={() => 'Please select at least one author.'}
       loadOptions={jest.fn().mockResolvedValue([])}
@@ -150,7 +150,7 @@ it('renders the warning label correctly for a required author', () => {
     <AuthorSelect
       title="Title"
       subtitle="Subtitle"
-      isRequired
+      required
       description="Description"
       getValidationMessage={() => 'Please select at least one author.'}
       loadOptions={jest.fn().mockResolvedValue([])}

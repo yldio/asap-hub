@@ -42,6 +42,7 @@ export const useOnboarding = (id: string) => {
     return undefined;
   }
   const { isOnboardable, ...onBoardingValidation } = isUserOnboardable(user);
+
   const incompleteSteps = orderedSteps.reduce<string[]>((acc, stepKey) => {
     const fieldsToCheck = Object.entries(fieldToStep)
       .filter(([, step]) => step === stepKey)
@@ -52,6 +53,7 @@ export const useOnboarding = (id: string) => {
       ? [...acc, stepKey]
       : acc;
   }, []);
+
   const steps = orderedSteps.map((step, index) => ({
     name: step,
     href: stepToHref[step],

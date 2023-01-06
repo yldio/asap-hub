@@ -5,8 +5,6 @@ import OnboardingPageFooter from '../OnboardingPageFooter';
 
 describe('OnboardingPageFooter', () => {
   const defaultProps = {
-    previousHref: '',
-    continueHref: '',
     isContinueEnabled: false,
     publishUser: jest.fn(),
   };

@@ -1,5 +1,4 @@
-import { renderHook, act } from '@testing-library/react-hooks';
-import { waitFor } from '@testing-library/dom';
+import { renderHook } from '@testing-library/react-hooks';
 import { MemoryRouter } from 'react-router-dom';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
@@ -51,35 +50,32 @@ describe('useOnboarding', () => {
   it('handles when a user is not logged in', async () => {
     mockGetUser.mockResolvedValueOnce(undefined);
 
-    const { result } = renderHook(() => useOnboarding(''), {
+    const { result, waitForNextUpdate } = renderHook(() => useOnboarding(''), {
       wrapper: wrapper({ user: undefined }),
     });
 
-    await act(async () => {
-      await waitFor(() => {
-        expect(result.current).toEqual(undefined);
-      });
-    });
+    await waitForNextUpdate();
+    expect(result.current).toEqual(undefined);
   });
 
   it('returns all steps required to complete the profile', async () => {
     const user = { ...emptyUser };
     mockGetUser.mockResolvedValueOnce(user);
 
-    const { result } = renderHook(() => useOnboarding(user.id), {
-      wrapper: wrapper({ user }),
-    });
-    await act(async () => {
-      await waitFor(() => {
-        expect((result.current?.steps ?? []).map(({ name }) => name)).toEqual([
-          'Core Details',
-          'Background',
-          'GP2 Groups',
-          'Additional Details',
-          'Preview',
-        ]);
-      });
-    });
+    const { result, waitForNextUpdate } = renderHook(
+      () => useOnboarding(user.id),
+      {
+        wrapper: wrapper({ user }),
+      },
+    );
+    await waitForNextUpdate();
+    expect((result.current?.steps ?? []).map(({ name }) => name)).toEqual([
+      'Core Details',
+      'Background',
+      'GP2 Groups',
+      'Additional Details',
+      'Preview',
+    ]);
   });
   it('returns the steps as completed and isOnboardable as true when the required fields are filled', async () => {
     const user: gp2Model.UserResponse = {
@@ -93,17 +89,17 @@ describe('useOnboarding', () => {
       degrees: ['AA'],
     };
     mockGetUser.mockResolvedValueOnce(user);
-    const { result } = renderHook(() => useOnboarding(user.id), {
-      wrapper: wrapper({ user }),
-    });
-    await act(async () => {
-      await waitFor(() => {
-        expect(
-          (result.current?.steps ?? []).map(({ completed }) => completed),
-        ).toEqual([true, true, true, true, true]);
-        expect(result.current?.isOnboardable).toBeTruthy();
-      });
-    });
+    const { result, waitForNextUpdate } = renderHook(
+      () => useOnboarding(user.id),
+      {
+        wrapper: wrapper({ user }),
+      },
+    );
+    await waitForNextUpdate();
+    expect(
+      (result.current?.steps ?? []).map(({ completed }) => completed),
+    ).toEqual([true, true, true, true, true]);
+    expect(result.current?.isOnboardable).toBeTruthy();
   });
   describe('if on the first step', () => {
     it('should return no previous step href and the next step href', async () => {
@@ -118,41 +114,39 @@ describe('useOnboarding', () => {
         degrees: ['AA'],
       };
       mockGetUser.mockResolvedValueOnce(user);
-      const { result } = renderHook(() => useOnboarding(user.id), {
-        wrapper: wrapper({ user }, stepToHref['Core Details']),
-      });
-      await act(async () => {
-        await waitFor(() => {
-          expect(result.current?.previousStep).toBeFalsy();
-          expect(result.current?.nextStep).toBe(stepToHref.Background);
-        });
-      });
+      const { result, waitForNextUpdate } = renderHook(
+        () => useOnboarding(user.id),
+        {
+          wrapper: wrapper({ user }, stepToHref['Core Details']),
+        },
+      );
+      await waitForNextUpdate();
+      expect(result.current?.previousStep).toBeFalsy();
+      expect(result.current?.nextStep).toBe(stepToHref.Background);
     });
   });
-  describe('if on the last step', () => {
-    it('should return the previous step href and no next step href', async () => {
-      const user: gp2Model.UserResponse = {
-        ...emptyUser,
-        biography: 'bio',
-        positions: [
-          { institution: 'institution', role: 'cto', department: 'dept' },
-        ],
-        city: 'home',
-        keywords: ['Administrative Support'],
-        degrees: ['AA'],
-      };
-      mockGetUser.mockResolvedValueOnce(user);
-      const { result } = renderHook(() => useOnboarding(user.id), {
+});
+describe('if on the last step', () => {
+  it('should return the previous step href and no next step href', async () => {
+    const user: gp2Model.UserResponse = {
+      ...emptyUser,
+      biography: 'bio',
+      positions: [
+        { institution: 'institution', role: 'cto', department: 'dept' },
+      ],
+      city: 'home',
+      keywords: ['Administrative Support'],
+      degrees: ['AA'],
+    };
+    mockGetUser.mockResolvedValueOnce(user);
+    const { result, waitForNextUpdate } = renderHook(
+      () => useOnboarding(user.id),
+      {
         wrapper: wrapper({ user }, stepToHref.Preview),
-      });
-      await act(async () => {
-        await waitFor(() => {
-          expect(result.current?.previousStep).toBe(
-            stepToHref['Additional Details'],
-          );
-          expect(result.current?.nextStep).toBeFalsy();
-        });
-      });
-    });
+      },
+    );
+    await waitForNextUpdate();
+    expect(result.current?.previousStep).toBe(stepToHref['Additional Details']);
+    expect(result.current?.nextStep).toBeFalsy();
   });
 });

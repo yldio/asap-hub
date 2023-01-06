@@ -298,7 +298,12 @@ describe('User data provider', () => {
           flatData: {
             title: 'WG ONE',
             complete: false,
-            leaders: [{ user: [{ id: 'user-id-1' }], workstreamRole: 'PM' }],
+            leaders: [
+              {
+                user: [{ id: 'user-id-1' }],
+                workstreamRole: 'Project Manager',
+              },
+            ],
             members: [],
           },
         },
@@ -324,7 +329,7 @@ describe('User data provider', () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
       const expectedResponse = getUserDataObject();
       expectedResponse.workingGroups = [
-        { id: 'wg-1', name: 'WG ONE', role: 'PM', active: true },
+        { id: 'wg-1', name: 'WG ONE', role: 'Project Manager', active: true },
         { id: 'wg-2', name: 'WG TWO', role: 'Member', active: true },
         { id: 'wg-3', name: 'WG THREE', role: 'Member', active: false },
       ];

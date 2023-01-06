@@ -572,7 +572,7 @@ export const getUserDataObject = (): UserDataObject => ({
   country: 'United Kingdom',
   city: 'London',
   lastModifiedDate: '2020-09-23T20:45:22.000Z',
-  // workingGroups: [],
+  workingGroups: [],
   orcidWorks: [
     {
       doi: 'test-doi',

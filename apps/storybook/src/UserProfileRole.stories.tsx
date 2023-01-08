@@ -16,7 +16,12 @@ const props = (): ComponentProps<typeof UserProfileRole> => {
   return {
     firstName: text('First Name', 'Daniel'),
     teams: createListTeamResponse(numberOfTeams).items.map(
-      ({ id, displayName }) => ({ id, displayName, role: 'Key Personnel' }),
+      ({ id, displayName }) => ({
+        id,
+        displayName,
+        role: 'Key Personnel',
+        status: 'Active',
+      }),
     ),
     researchInterests: text('Research Interests', 'My research Interests'),
     responsibilities: text('Responsibilities', 'My responsibilities'),

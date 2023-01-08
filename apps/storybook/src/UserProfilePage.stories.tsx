@@ -2,7 +2,7 @@ import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { text, select, boolean, number } from '@storybook/addon-knobs';
 import { UserProfilePage } from '@asap-hub/react-components';
-import { TeamRole } from '@asap-hub/model';
+import { TeamRole, TeamStatus } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
 import { LayoutDecorator } from './layout';
@@ -40,6 +40,7 @@ const propsViewOnly = (): Omit<
       {
         id: 't42',
         role: text('Role', 'Researcher') as TeamRole,
+        status: text('Status', 'Active') as TeamStatus,
         displayName: text('Team Name', 'Ferguson, M'),
       },
     ],

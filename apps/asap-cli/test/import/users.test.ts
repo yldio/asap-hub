@@ -156,6 +156,7 @@ describe('Import user', () => {
             {
               id: ['team-uuid-1'],
               role: 'Lead PI (Core Leadership)',
+              status: 'Active',
             },
           ],
         },

@@ -92,6 +92,7 @@ it('renders a leader with a single team', () => {
                 displayName: 'Test team',
                 role: 'Project Manager',
                 id: 'team-id-1',
+                status: 'Active',
               },
             ],
           },

@@ -29,8 +29,18 @@ it('renders teams and lan names into inputs', async () => {
         { name: 'Lab 2', id: 'lab-2' },
       ]}
       teams={[
-        { displayName: 'Team 1', id: 'team-1', role: 'Collaborating PI' },
-        { displayName: 'Team 2', id: 'team-2', role: 'Collaborating PI' },
+        {
+          displayName: 'Team 1',
+          id: 'team-1',
+          role: 'Collaborating PI',
+          status: 'Active',
+        },
+        {
+          displayName: 'Team 2',
+          id: 'team-2',
+          role: 'Collaborating PI',
+          status: 'Active',
+        },
       ]}
     />,
     { wrapper: StaticRouter },

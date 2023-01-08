@@ -10,6 +10,7 @@ const member = {
   email: 'masoncarpenter@foo.com',
   displayName: 'Birdie Romeo',
   role: 'Lead PI (Core Leadership)' as const,
+  status: 'Active' as const,
 };
 const teamCardProps: ComponentProps<typeof TeamCard> = {
   id: 'ee98d044-79a7-4028-915d-7f88793e3190',

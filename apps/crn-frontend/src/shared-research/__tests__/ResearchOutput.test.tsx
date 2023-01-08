@@ -42,6 +42,7 @@ const teams: UserTeam[] = [
     id: 't0',
     displayName: 'Jakobsson, J',
     role: 'Project Manager',
+    status: 'Active',
   },
 ];
 

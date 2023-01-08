@@ -33,6 +33,7 @@ export const getTeamDataObject = (): TeamDataObject => ({
       lastName: 'Hardy',
       displayName: 'Tom Hardy',
       role: 'Lead PI (Core Leadership)',
+      status: 'Active',
       avatarUrl: undefined,
       labs: [
         { id: 'cd7be4902', name: 'Brighton' },

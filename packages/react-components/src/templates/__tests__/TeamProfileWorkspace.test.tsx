@@ -32,6 +32,7 @@ it('renders contact project manager when point of contact provided', () => {
         email: 'test@example.com',
         id: '123',
         role: 'Project Manager',
+        status: 'Active',
       }}
     />,
   );

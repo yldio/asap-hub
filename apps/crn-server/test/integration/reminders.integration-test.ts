@@ -1179,7 +1179,7 @@ describe('Reminders', () => {
     role = 'Key Personnel' as TeamRole,
   ): UserCreateDataObject => ({
     ...getUserCreateDataObject(),
-    teams: [{ id: teamId, role }],
+    teams: [{ id: teamId, role: 'Key Personnel', status: 'Active' }],
     labIds: [],
     email: chance.email(),
     orcid: createRandomOrcid(),

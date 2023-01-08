@@ -24,6 +24,7 @@ describe('parseGraphQLTeamMember', () => {
       displayName: 'Tom Hardy',
       email: 'H@rdy.io',
       role: 'Lead PI (Core Leadership)',
+      status: 'Active',
       labs: [
         { id: 'cd7be4902', name: 'Brighton' },
         { id: 'cd7be4903', name: 'Liverpool' },
@@ -76,6 +77,23 @@ describe('parseGraphQLTeamMember', () => {
     expect(() =>
       parseGraphQLTeamMember(teamMemberWithInvalidRole, 'team-id-0'),
     ).toThrow('Invalid team role on user user-id-1 : invalid role');
+  });
+
+  test('should throw when teamStatus dont match TeamStatus', () => {
+    const invalidTeamStatus = {
+      ...teamMember.flatData.teams![0]!,
+      status: 'invalid status',
+    };
+    const teamMemberWithInvalidStatus = {
+      ...teamMember,
+      flatData: {
+        ...teamMember.flatData,
+        teams: [invalidTeamStatus],
+      },
+    };
+    expect(() =>
+      parseGraphQLTeamMember(teamMemberWithInvalidStatus, 'team-id-0'),
+    ).toThrow('Invalid team status on user user-id-1 : invalid status');
   });
 
   test('should throw when email is null', () => {

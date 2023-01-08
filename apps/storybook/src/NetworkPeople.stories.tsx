@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { NetworkPeople } from '@asap-hub/react-components';
 import { number } from '@storybook/addon-knobs';
-import { TeamRole } from '@asap-hub/model';
+import { TeamRole, TeamStatus } from '@asap-hub/model';
 
 export default {
   title: 'Templates / Network / People',
@@ -25,6 +25,7 @@ const peopleProps = (): ComponentProps<typeof NetworkPeople> => {
           id: 't1',
           displayName: 'Jakobsson, J',
           role: 'Co-Investigator' as TeamRole,
+          status: 'Active' as TeamStatus,
         },
       ],
       labs: [

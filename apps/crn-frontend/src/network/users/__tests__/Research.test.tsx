@@ -93,6 +93,7 @@ describe('when editing', () => {
         ...createTeamResponse(),
         id: '1',
         role: 'Collaborating PI',
+        status: 'Active',
         displayName: 'Example Team',
       },
     ],

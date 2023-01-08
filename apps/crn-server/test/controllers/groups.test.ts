@@ -153,10 +153,12 @@ describe('Group controller', () => {
         {
           id: teamIds[0]!,
           role: 'Lead PI (Core Leadership)',
+          status: 'Active',
         },
         {
           id: teamIds[1]!,
           role: 'Lead PI (Core Leadership)',
+          status: 'Active',
         },
       ];
       userDataProviderMock.fetchById.mockResolvedValueOnce(userDataObject);

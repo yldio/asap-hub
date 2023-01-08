@@ -21,6 +21,7 @@ describe('/teams/ route', () => {
       {
         id: 'team-id-1',
         role: 'Project Manager',
+        status: 'Active',
       },
     ],
   };
@@ -163,14 +164,17 @@ describe('/teams/ route', () => {
             {
               id: 'team-id-1',
               role: 'Project Manager',
+              status: 'Active',
             },
             {
               id: 'team-id-2',
               role: 'Some role',
+              status: 'Active',
             },
             {
               id: 'team-id-3',
               role: 'Some other role',
+              status: 'Active',
             },
           ],
         });

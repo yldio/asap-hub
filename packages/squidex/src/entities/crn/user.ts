@@ -16,10 +16,12 @@ import { GraphqlTeam } from './team';
 
 export type UserTeamConnection<T = string> = T extends string
   ? {
+      status: string;
       role: TeamRole;
       id: T[];
     }
   : {
+      status: string;
       role: TeamRole;
       id: T[];
     };

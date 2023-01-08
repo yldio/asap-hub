@@ -3,7 +3,9 @@ import {
   TeamDataObject,
   TeamMember,
   TeamRole,
+  TeamStatus,
   teamRole,
+  teamStatus,
   TeamTool,
 } from '@asap-hub/model';
 import { parseDate } from '@asap-hub/squidex';
@@ -39,8 +41,16 @@ export const parseGraphQLTeamMember = (
     ?.filter((t) => t.id && t.id[0]?.id === teamId)
     .filter((s) => s.role)[0]?.role;
 
+  const status = user.flatData.teams
+    ?.filter((t) => t.id && t.id[0]?.id === teamId)
+    .filter((s) => s.status)[0]?.status;
+
   if (typeof role === 'undefined' || !isTeamRole(role)) {
     throw new Error(`Invalid team role on user ${user.id} : ${role}`);
+  }
+
+  if (typeof status === 'undefined' || !isTeamStatus(status)) {
+    throw new Error(`Invalid team status on user ${user.id} : ${status}`);
   }
 
   if (!user.flatData.email) {
@@ -55,6 +65,7 @@ export const parseGraphQLTeamMember = (
     lastName: user.flatData.lastName ?? '',
     displayName: `${user.flatData.firstName} ${user.flatData.lastName}`,
     role,
+    status,
     labs,
     avatarUrl: flatAvatar.length
       ? createUrl(flatAvatar.map((a) => a.id))[0]
@@ -117,3 +128,6 @@ export const parseGraphQLTeam = (
 
 export const isTeamRole = (data: string | null): data is TeamRole =>
   teamRole.includes(data as TeamRole);
+
+export const isTeamStatus = (data: string | null): data is TeamStatus =>
+  teamStatus.includes(data as TeamStatus);

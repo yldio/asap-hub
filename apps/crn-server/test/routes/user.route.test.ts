@@ -27,10 +27,12 @@ describe('/users/ route', () => {
         {
           id: 'team-id-1',
           role: 'Project Manager',
+          status: 'Active',
         },
         {
           id: 'team-id-2',
           role: 'Project Manager',
+          status: 'Active',
         },
       ],
     };
@@ -492,8 +494,8 @@ describe('/users/ route', () => {
           .patch(`/users/${userId}`)
           .send({
             teams: [
-              { id: 'team-id-1', role: 'Project Manager' },
-              { id: 'team-id-2', role: 'Key Personnel' },
+              { id: 'team-id-1', role: 'Project Manager', status: 'Active' },
+              { id: 'team-id-2', role: 'Key Personnel', status: 'Active' },
             ],
           });
 

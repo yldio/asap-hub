@@ -48,11 +48,13 @@ it("generates information about the user's team", async () => {
           id: '42',
           displayName: 'Team',
           role: 'Lead PI (Core Leadership)',
+          status: 'Active',
         },
         {
           id: '1337',
           displayName: 'Meat',
           role: 'Collaborating PI',
+          status: 'Active',
         },
       ]}
     />,

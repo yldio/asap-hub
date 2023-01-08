@@ -65,6 +65,7 @@ export const teamsContentQueryFragment = gql`
         expertiseAndResourceDescription
         teams {
           role
+          status
           id {
             id
             flatData {

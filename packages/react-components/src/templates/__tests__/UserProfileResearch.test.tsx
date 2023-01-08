@@ -41,6 +41,7 @@ it('renders the role on ASAP when labs, teams responsabilites or researchInteres
           id: '42',
           displayName: 'Team',
           role: 'Lead PI (Core Leadership)',
+          status: 'Active',
         },
       ]}
     />,
@@ -81,6 +82,7 @@ it('does not render an edit button by default (REGRESSION)', () => {
           id: '42',
           displayName: 'Team',
           role: 'Lead PI (Core Leadership)',
+          status: 'Active',
         },
       ]}
     />,

@@ -11,7 +11,11 @@ export const teamRole = [
   'ASAP Staff',
 ] as const;
 
+export const teamStatus = ['Active', 'Inactive'] as const;
+
 export type TeamRole = typeof teamRole[number];
+
+export type TeamStatus = typeof teamStatus[number];
 
 export type TeamTool = { name: string; description?: string; url: string };
 
@@ -40,6 +44,7 @@ export interface TeamMember {
   avatarUrl?: string;
   labs?: LabResponse[];
   alumniSinceDate?: string;
+  status: TeamStatus;
 }
 
 export type TeamDataObject = Omit<TeamCreateRequest, 'applicationNumber'> & {

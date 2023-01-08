@@ -30,6 +30,7 @@ const props = (): Omit<ComponentProps<typeof TeamProfilePage>, 'children'> => ({
     lastName: 'Venkman',
     email: 'peter@ven.com',
     role: 'Project Manager',
+    status: 'Active',
   },
   members: [
     {
@@ -39,6 +40,7 @@ const props = (): Omit<ComponentProps<typeof TeamProfilePage>, 'children'> => ({
       lastName: 'Ramirez',
       email: 'd@niel.com',
       role: 'Lead PI (Core Leadership)',
+      status: 'Active',
     },
     {
       id: '2',
@@ -47,6 +49,7 @@ const props = (): Omit<ComponentProps<typeof TeamProfilePage>, 'children'> => ({
       lastName: 'Venkman',
       email: 'peter@ven.com',
       role: 'Project Manager',
+      status: 'Active',
       avatarUrl: text(
         'Member 2 Avatar URL',
         'https://www.hhmi.org/sites/default/files/styles/epsa_250_250/public/Programs/Investigator/Randy-Schekman-400x400.jpg',
@@ -59,6 +62,7 @@ const props = (): Omit<ComponentProps<typeof TeamProfilePage>, 'children'> => ({
       lastName: 'Goetz',
       email: 'tess@goetz.com',
       role: 'Collaborating PI',
+      status: 'Active',
     },
     {
       id: '4',
@@ -67,6 +71,7 @@ const props = (): Omit<ComponentProps<typeof TeamProfilePage>, 'children'> => ({
       lastName: 'Peploe',
       email: 'r@bin.com',
       role: 'Collaborating PI',
+      status: 'Active',
     },
     {
       id: '5',
@@ -75,6 +80,7 @@ const props = (): Omit<ComponentProps<typeof TeamProfilePage>, 'children'> => ({
       lastName: 'Lane',
       email: 'l@ne.com',
       role: 'Collaborating PI',
+      status: 'Active',
     },
     {
       id: '6',
@@ -83,6 +89,7 @@ const props = (): Omit<ComponentProps<typeof TeamProfilePage>, 'children'> => ({
       lastName: 'Mars',
       email: 'm@rs.com',
       role: 'Collaborating PI',
+      status: 'Active',
     },
     {
       id: '7',
@@ -91,6 +98,7 @@ const props = (): Omit<ComponentProps<typeof TeamProfilePage>, 'children'> => ({
       lastName: 'Depay',
       email: 'em@nuel.com',
       role: 'Collaborating PI',
+      status: 'Active',
     },
   ],
 });

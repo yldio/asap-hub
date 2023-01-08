@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { UserProfileResearch } from '@asap-hub/react-components';
 import { array, text, boolean, select } from '@storybook/addon-knobs';
-import { TeamRole } from '@asap-hub/model';
+import { TeamRole, TeamStatus } from '@asap-hub/model';
 
 export default {
   title: 'Templates / User Profile / Research',
@@ -22,6 +22,7 @@ const props = (): ComponentProps<typeof UserProfileResearch> => ({
       id: '42',
       role: text('Role', 'Researcher') as TeamRole,
       displayName: text('Team Name', 'Ferguson, M'),
+      status: text('Status', 'Active') as TeamStatus,
     },
   ],
   expertiseAndResourceTags: array('Expertise and Resources', [

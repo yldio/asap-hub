@@ -251,10 +251,7 @@
             "isDisabled": false,
             "properties": {
               "fieldType": "String",
-              "allowedValues": [
-                "Active",
-                "Inactive"
-              ],
+              "allowedValues": ["Active", "Inactive"],
               "isUnique": false,
               "isEmbeddable": false,
               "inlineEditable": true,

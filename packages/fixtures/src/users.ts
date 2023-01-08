@@ -4,6 +4,7 @@ import { createLabs } from './labs';
 const listUserResponseTeam: Omit<UserTeam, 'id'> = {
   displayName: 'Jakobsson, J',
   role: 'Project Manager',
+  status: 'Active',
 };
 
 export const listUserResponseItem: Omit<ListUserResponse['items'][0], 'id'> = {

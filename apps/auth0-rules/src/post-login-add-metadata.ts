@@ -37,6 +37,7 @@ const extractUser = (response: Auth0UserResponse): User | gp2Auth.User => {
         id: team.id,
         displayName: team.displayName,
         role: team.role,
+        status: 'Active',
       })),
       algoliaApiKey,
     };

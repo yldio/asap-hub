@@ -65,6 +65,7 @@ export const eventContentFragment = gql`
                 id
               }
               teams {
+                status
                 role
                 id {
                   id

@@ -1012,7 +1012,7 @@ describe('Reminders', () => {
 
   const getUserInput = (teamId: string): UserCreateDataObject => ({
     ...getUserCreateDataObject(),
-    teams: [{ id: teamId, role: 'Key Personnel' }],
+    teams: [{ id: teamId, role: 'Key Personnel', status: 'Active' }],
     labIds: [],
     email: chance.email(),
     orcid: createRandomOrcid(),

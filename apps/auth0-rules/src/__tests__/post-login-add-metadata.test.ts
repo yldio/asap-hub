@@ -198,6 +198,7 @@ describe('For a CRN login', () => {
         id: 'team-1',
         displayName: 'Team 1',
         role: 'Lead PI (Core Leadership)',
+        status: 'Active',
       },
     ],
     expertiseAndResourceTags: [],

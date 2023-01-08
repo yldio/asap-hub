@@ -15,6 +15,7 @@ export const teamMember: Omit<
   email: 'mason@car.com',
   displayName: 'Birdie Romeo',
   role: 'Lead PI (Core Leadership)',
+  status: 'Active',
 };
 
 const teamTool = (id: number): TeamTool => ({

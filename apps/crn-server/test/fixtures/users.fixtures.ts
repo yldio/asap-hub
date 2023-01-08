@@ -66,6 +66,7 @@ export const getGraphqlResponseFetchUsers = (): FetchUsersQuery =>
         ],
         teams: [
           {
+            status: 'Active',
             role: 'Project Manager',
             id: [
               {
@@ -142,6 +143,7 @@ export const getGraphQLUser = (
     ],
     teams: user?.flatData?.teams || [
       {
+        status: 'Active',
         role: 'Lead PI (Core Leadership)',
         id: [
           {
@@ -191,10 +193,12 @@ export const patchResponse = (): RestUser => ({
         {
           id: ['team-id-1'],
           role: 'Lead PI (Core Leadership)',
+          status: 'Active',
         },
         {
           id: ['team-id-3'],
           role: 'Collaborating PI',
+          status: 'Active',
         },
       ],
     },
@@ -236,11 +240,13 @@ export const fetchUserResponseDataObject = (): UserDataObject => ({
       displayName: 'Unknown',
       id: 'team-id-1',
       role: 'Lead PI (Core Leadership)',
+      status: 'Active',
     },
     {
       displayName: 'Unknown',
       id: 'team-id-3',
       role: 'Collaborating PI',
+      status: 'Active',
     },
   ],
   connections: [],
@@ -300,6 +306,7 @@ export const getUserResponse = (): UserResponse => ({
       role: 'Lead PI (Core Leadership)',
       displayName: 'Team A',
       proposal: 'proposalId1',
+      status: 'Active',
     },
   ],
   role: 'Grantee',
@@ -357,6 +364,7 @@ export const fetchExpectation: ListUserResponse = {
           role: 'Project Manager',
           displayName: 'Team B',
           proposal: 'proposalId',
+          status: 'Active',
         },
       ],
       role: 'Grantee',
@@ -386,6 +394,7 @@ export const userPatchRequest: UserPatchRequest = {
     {
       id: 'team-id-1',
       role: 'Lead PI (Core Leadership)',
+      status: 'Active',
     },
   ],
 };
@@ -589,6 +598,7 @@ export const getUserDataObject = (): UserDataObject => ({
       role: 'Lead PI (Core Leadership)',
       displayName: 'Team A',
       proposal: 'proposalId1',
+      status: 'Active',
     },
   ],
   role: 'Grantee',
@@ -666,6 +676,7 @@ export const getInputUser = (): InputUser['data'] => ({
       {
         id: ['team-id-0'],
         role: 'Lead PI (Core Leadership)',
+        status: 'Active',
       },
     ],
   },

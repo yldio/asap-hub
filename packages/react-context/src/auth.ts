@@ -24,6 +24,13 @@ export const useCurrentUserTeamRolesCRN = (): Array<
   return user ? user.teams.map(({ role }) => role) : [];
 };
 
+export const useCurrentUserTeamStatusesCRN = (): Array<
+  User['teams'][number]['status']
+> => {
+  const user = useCurrentUserCRN();
+  return user ? user.teams.map(({ status }) => status) : [];
+};
+
 function parseUser<T>(auth0User: Auth0User<T> | undefined) {
   if (!auth0User) return null;
   const claimKey = getUserClaimKey();

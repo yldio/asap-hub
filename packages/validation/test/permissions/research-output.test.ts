@@ -50,6 +50,7 @@ describe('hasCreateUpdateResearchOutputPermissions', () => {
               role: 'Project Manager',
               displayName: 'Team A',
               proposal: 'proposalId1',
+              status: 'Active',
             },
           ],
         },

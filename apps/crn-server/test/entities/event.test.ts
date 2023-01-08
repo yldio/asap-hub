@@ -205,6 +205,7 @@ describe('events entity', () => {
                 },
               ],
               role: 'Lead PI (Core Leadership)',
+              status: 'Active',
             },
           ],
         },

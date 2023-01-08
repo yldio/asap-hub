@@ -29,6 +29,7 @@ it('renders the contact banner', () => {
         lastName: 'Doe',
         email: 'test@test.com',
         role: 'Project Manager',
+        status: 'Active',
       }}
     />,
   );
@@ -50,6 +51,7 @@ it('renders the team list', () => {
           lastName: 'Doe',
           role: 'Project Manager',
           email: 'johndoe@asap.com',
+          status: 'Active',
         },
       ]}
     />,
@@ -75,6 +77,7 @@ it('shows the lab list when present on member list', () => {
           lastName: 'Doe',
           role: 'Project Manager',
           email: 'johndoe@asap.com',
+          status: 'Active',
         },
       ]}
     />,
@@ -92,6 +95,7 @@ it('shows the lab list when present on member list', () => {
           role: 'Project Manager',
           email: 'johndoe@asap.com',
           labs: [{ name: 'Doe', id: '1' }],
+          status: 'Active',
         },
       ]}
     />,
@@ -122,6 +126,7 @@ it('renders the Teams Tabbed card when team is inactive and there are members', 
           lastName: 'Doe',
           role: 'Project Manager',
           email: 'johndoe@asap.com',
+          status: 'Active',
         },
       ]}
       inactiveSince="2022-10-25"
@@ -155,6 +160,7 @@ it('renders team members section when team is active and there are members', () 
           lastName: 'Doe',
           role: 'Project Manager',
           email: 'johndoe@asap.com',
+          status: 'Active',
         },
       ]}
       inactiveSince={undefined}

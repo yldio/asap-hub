@@ -436,7 +436,9 @@ describe('User data provider', () => {
     });
     test('should call put when teams is populated', async () => {
       const mockResponse = getUserDataObject();
-      mockResponse.teams = [{ id: 'team-id', role: 'Key Personnel' }];
+      mockResponse.teams = [
+        { id: 'team-id', role: 'Key Personnel', status: 'Active' },
+      ];
       nock(baseUrl)
         .get(`/api/content/${appName}/users/${userId}`)
         .reply(200, fetchUserResponse())
@@ -447,7 +449,7 @@ describe('User data provider', () => {
         .reply(200, fetchUserResponse()); // this response is ignored
 
       const result = await userDataProvider.update(userId, {
-        teams: [{ id: 'team-id', role: 'Key Personnel' }],
+        teams: [{ id: 'team-id', role: 'Key Personnel', status: 'Active' }],
       });
       expect(nock.isDone()).toBe(true);
       expect(result).not.toBeDefined();

@@ -59,6 +59,7 @@ export const groupContentQueryFragment = gql`
             expertiseAndResourceTags
             expertiseAndResourceDescription
             teams {
+              status
               role
               id {
                 id

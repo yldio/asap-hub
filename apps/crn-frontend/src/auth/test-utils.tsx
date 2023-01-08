@@ -35,6 +35,7 @@ const createAuth0 = (
           id: 'team-1',
           displayName: 'Team 1',
           role: 'Lead PI (Core Leadership)',
+          status: 'Active',
         },
       ],
       algoliaApiKey: 'test-api-key',

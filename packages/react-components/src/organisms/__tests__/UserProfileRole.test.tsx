@@ -29,6 +29,7 @@ it('renders a link to team page', () => {
           id: '42',
           displayName: 'Team',
           role: 'Lead PI (Core Leadership)',
+          status: 'Active',
         },
       ]}
     />,

@@ -50,6 +50,7 @@ export const FETCH_REMINDER_DATA = gql`
                     id
                   }
                   role
+                  status
                 }
               }
             }

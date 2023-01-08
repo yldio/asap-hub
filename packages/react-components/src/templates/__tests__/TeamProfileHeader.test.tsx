@@ -55,6 +55,7 @@ it('renders a list of members', () => {
           email: 'foo@bar.com',
           avatarUrl: 'https://example.com',
           role: 'Collaborating PI',
+          status: 'Active',
         },
       ]}
     />,
@@ -84,6 +85,7 @@ it('renders a contact button when there is a pointOfContact', () => {
         lastName: 'Doe',
         email: 'test@test.com',
         role: 'Project Manager',
+        status: 'Active',
       }}
     />,
   );

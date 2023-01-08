@@ -6,6 +6,7 @@ import {
   useCurrentUserCRN,
   useCurrentUserGP2,
   useCurrentUserTeamRolesCRN,
+  useCurrentUserTeamStatusesCRN,
 } from '../auth';
 import {
   Auth0ContextCRN,
@@ -167,6 +168,7 @@ describe('useCurrentUserTeamRoles', () => {
   const userTeam: User['teams'][number] = {
     displayName: 'Jakobsson, J',
     role: 'Project Manager' as const,
+    status: 'Active' as const,
     id: '1',
   };
   it('returns an empty array when there is no current user', async () => {
@@ -197,5 +199,28 @@ describe('useCurrentUserTeamRoles', () => {
       }),
     });
     expect(result.current).toEqual(['ASAP Staff', 'Collaborating PI']);
+  });
+
+  it('returns an array of team user status when there is a logged in user', async () => {
+    const { result } = renderHook(useCurrentUserTeamStatusesCRN, {
+      wrapper: userProvider({
+        sub: '42',
+        aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
+        [`${window.location.origin}/user`]: {
+          id: 'testuser',
+          onboarded: true,
+          email: 'john.doe@example.com',
+          firstName: 'John',
+          lastName: 'Doe',
+          displayName: 'John Doe',
+          teams: [
+            { ...userTeam, status: 'Active' },
+            { ...userTeam, status: 'Inactive' },
+          ],
+          algoliaApiKey: 'asdasda',
+        },
+      }),
+    });
+    expect(result.current).toEqual(['Active', 'Inactive']);
   });
 });

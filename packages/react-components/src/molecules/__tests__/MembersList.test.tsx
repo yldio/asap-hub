@@ -70,7 +70,6 @@ it('renders a team link if a teamList is provided for thirdLine', async () => {
           secondLine: 'Boss',
           thirdLine: [
             {
-              status: 'Active',
               displayName: 'DC',
               id: 'dc',
             },

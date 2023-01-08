@@ -55,7 +55,9 @@ describe('Users', () => {
     const orcid = createRandomOrcid();
 
     const userCreateDataObject = getUserCreateDataObject();
-    userCreateDataObject.teams = [{ id: teamId, role: 'Key Personnel' }];
+    userCreateDataObject.teams = [
+      { id: teamId, role: 'Key Personnel', status: 'Active' },
+    ];
     userCreateDataObject.labIds = [];
     userCreateDataObject.email = chance.email();
     delete userCreateDataObject.avatar;

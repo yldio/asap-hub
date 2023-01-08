@@ -76,7 +76,12 @@ export class UserSquidexDataProvider implements UserDataProvider {
         iv: input.role,
       },
       teams: {
-        iv: teams?.map((team) => ({ id: [team.id], role: team.role })) || [],
+        iv:
+          teams?.map((team: UserTeam) => ({
+            id: [team.id],
+            role: team.role,
+            status: team.status,
+          })) || [],
       },
       labs: {
         iv: labIds,
@@ -253,6 +258,10 @@ export const parseGraphQLUserTeamConnections = (
       logger.warn(`Invalid team role: ${item.role}`);
       return acc;
     }
+    if (!item.status || !isTeamRole(item.role)) {
+      logger.warn(`Invalid team role: ${item.role}`);
+      return acc;
+    }
     return [
       ...acc,
       {
@@ -260,6 +269,7 @@ export const parseGraphQLUserTeamConnections = (
         role: item.role,
         proposal: proposal?.length ? proposal[0]?.id : undefined,
         displayName: displayName || '',
+        status: item.status,
       },
     ];
   }, []);

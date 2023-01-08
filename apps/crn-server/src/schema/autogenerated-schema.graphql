@@ -6123,6 +6123,8 @@ type UsersDataTeamsChildDto {
   id: [Teams!]
   """Attention: Check if this user needs to be added to Smart Simple"""
   role: String
+  """Attention: Check if this user needs to be added to Smart Simple"""
+  status: String
 }
 
 """The structure of the Teams nested schema."""
@@ -6130,6 +6132,8 @@ input UsersDataTeamsChildInputDto {
   id: [String!]
   """Attention: Check if this user needs to be added to Smart Simple"""
   role: String
+  """Attention: Check if this user needs to be added to Smart Simple"""
+  status: String
 }
 
 """The structure of the Teams field of the Users content type."""

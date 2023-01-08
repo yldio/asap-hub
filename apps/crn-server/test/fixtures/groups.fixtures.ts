@@ -300,6 +300,7 @@ export const listGroupsResponse: ListGroupResponse = {
                 id: 'team-id-2',
                 role: 'Co-PI (Core Leadership)',
                 displayName: 'Rio, D',
+                status: 'Active',
               },
             ],
             workingGroups: [],

@@ -491,7 +491,9 @@ describe('User data provider', () => {
         .reply(200, fetchUserResponse())
         .put(`/api/content/${appName}/users/${userId}`, {
           ...fetchUserResponse().data,
-          teams: { iv: [{ id: 'team-id', role: 'Key Personnel' }] },
+          teams: {
+            iv: [{ id: 'team-id', role: 'Key Personnel', status: 'Active' }],
+          },
         } as { [k: string]: any })
         .reply(200, fetchUserResponse()); // this response is ignored
 
@@ -761,6 +763,7 @@ describe('User data provider', () => {
             id: 'team-id-0',
             proposal: 'proposalId1',
             role: 'Lead PI (Core Leadership)',
+            status: 'Active',
           },
         ]);
       });
@@ -783,6 +786,17 @@ describe('User data provider', () => {
         const parsedTeams = parseGraphQLUserTeamConnections(teams);
         expect(loggerWarnSpy).toHaveBeenCalledWith(
           `Invalid team role: invalid role`,
+        );
+        expect(parsedTeams).toEqual([]);
+      });
+
+      test('should filter out teams when team status is invalid', () => {
+        const teams: GraphqlUserTeam[] = getGraphQLUser().flatData.teams!;
+        teams[0]!.status = 'invalid status';
+        const loggerWarnSpy = jest.spyOn(logger, 'warn');
+        const parsedTeams = parseGraphQLUserTeamConnections(teams);
+        expect(loggerWarnSpy).toHaveBeenCalledWith(
+          `Invalid team status: invalid status`,
         );
         expect(parsedTeams).toEqual([]);
       });

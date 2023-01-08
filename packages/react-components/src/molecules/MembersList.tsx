@@ -64,9 +64,7 @@ interface MembersListProps {
     {
       firstLine: string;
       secondLine?: string;
-      thirdLine?:
-        | string
-        | ReadonlyArray<Pick<UserTeam, 'id' | 'displayName' | 'status'>>;
+      thirdLine?: string | ReadonlyArray<Pick<UserTeam, 'id' | 'displayName'>>;
     } & Pick<UserResponse, 'id'> &
       Partial<
         Pick<

@@ -21,6 +21,7 @@ const props = (): ComponentProps<typeof TeamProfileAbout> => ({
     lastName: 'Venkman',
     email: 'peter@ven.com',
     role: 'Project Manager',
+    status: 'Active',
   },
   teamGroupsCard: boolean('Team Groups placeholder toggle', true)
     ? 'Team Groups Card here'
@@ -34,6 +35,7 @@ const props = (): ComponentProps<typeof TeamProfileAbout> => ({
       lastName: 'Ramirez',
       role: 'Lead PI (Core Leadership)',
       email: 'daniel@asap.com',
+      status: 'Active',
     },
     {
       id: '2',
@@ -41,6 +43,7 @@ const props = (): ComponentProps<typeof TeamProfileAbout> => ({
       firstName: 'Peter',
       lastName: 'Venkman',
       role: 'Project Manager',
+      status: 'Active',
       email: 'peter@asap.com',
       avatarUrl: text(
         'Member 2 Avatar URL',
@@ -53,6 +56,7 @@ const props = (): ComponentProps<typeof TeamProfileAbout> => ({
       firstName: 'Tess',
       lastName: 'Goetz',
       role: 'Collaborating PI',
+      status: 'Active',
       email: 'tess@asap.com',
     },
     {
@@ -61,6 +65,7 @@ const props = (): ComponentProps<typeof TeamProfileAbout> => ({
       firstName: 'Robin',
       lastName: 'Peploe',
       role: 'Collaborating PI',
+      status: 'Active',
       email: 'robin@asap.com',
     },
     {
@@ -69,6 +74,7 @@ const props = (): ComponentProps<typeof TeamProfileAbout> => ({
       firstName: 'Alice',
       lastName: 'Lane',
       role: 'Collaborating PI',
+      status: 'Active',
       email: 'alice@asap.com',
     },
     {
@@ -77,6 +83,7 @@ const props = (): ComponentProps<typeof TeamProfileAbout> => ({
       firstName: 'Philip',
       lastName: 'Mars',
       role: 'Collaborating PI',
+      status: 'Active',
       email: 'philip@asap.com',
     },
     {
@@ -86,6 +93,7 @@ const props = (): ComponentProps<typeof TeamProfileAbout> => ({
       lastName: 'Depay',
       role: 'Collaborating PI',
       email: 'emanuel@asap.com',
+      status: 'Active',
     },
   ],
 });

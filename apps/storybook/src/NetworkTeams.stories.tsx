@@ -16,6 +16,7 @@ const member: Omit<
   email: 'mason@car.com',
   displayName: 'Birdie Romeo',
   role: 'Lead PI (Core Leadership)',
+  status: 'Active',
 };
 
 const teamsProps = (): ComponentProps<typeof NetworkTeams> => {

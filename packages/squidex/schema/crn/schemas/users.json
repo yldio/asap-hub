@@ -243,6 +243,30 @@
               "isRequiredOnPublish": false,
               "isHalfWidth": true
             }
+          },
+          {
+            "name": "status",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "allowedValues": [
+                "Active",
+                "Inactive"
+              ],
+              "isUnique": false,
+              "isEmbeddable": false,
+              "inlineEditable": true,
+              "createEnum": false,
+              "contentType": "Unspecified",
+              "editor": "Dropdown",
+              "label": "Role",
+              "hints": "Attention: Check if this user needs to be added to Smart Simple",
+              "isRequired": true,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": true
+            }
           }
         ]
       },

@@ -30,7 +30,7 @@
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@testing-library/dom": "8.19.0",
     "@testing-library/jest-dom": "5.16.5",
-    "@testing-library/react": "11.2.7",
+    "@testing-library/react": "13.4.0",
     "@testing-library/user-event": "12.8.3",
     "@types/history": "4.7.11",
     "@types/jest": "27.5.2",

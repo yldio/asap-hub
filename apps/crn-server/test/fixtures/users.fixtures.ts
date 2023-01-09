@@ -611,6 +611,7 @@ export const getUserCreateDataObject = (): UserCreateDataObject => {
     lastModifiedDate: _lastModifiedDate,
     createdDate: _createdDate,
     social: _social,
+    workingGroups,
     _tags,
     ...createDataObject
   } = getUserDataObject();

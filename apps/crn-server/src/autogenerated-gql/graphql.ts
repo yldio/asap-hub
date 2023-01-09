@@ -9179,7 +9179,7 @@ export type UsersContentFragment = Pick<
         flatData: Pick<WorkingGroupsFlatDataDto, 'title' | 'complete'> & {
           leaders: Maybe<
             Array<
-              Pick<WorkingGroupsDataLeadersChildDto, 'workstreamRole'> & {
+              Pick<WorkingGroupsDataLeadersChildDto, 'role'> & {
                 user: Maybe<Array<Pick<Users, 'id'>>>;
               }
             >
@@ -9280,7 +9280,7 @@ export type FetchUserQuery = {
             flatData: Pick<WorkingGroupsFlatDataDto, 'title' | 'complete'> & {
               leaders: Maybe<
                 Array<
-                  Pick<WorkingGroupsDataLeadersChildDto, 'workstreamRole'> & {
+                  Pick<WorkingGroupsDataLeadersChildDto, 'role'> & {
                     user: Maybe<Array<Pick<Users, 'id'>>>;
                   }
                 >
@@ -9391,10 +9391,9 @@ export type FetchUsersQuery = {
                   > & {
                     leaders: Maybe<
                       Array<
-                        Pick<
-                          WorkingGroupsDataLeadersChildDto,
-                          'workstreamRole'
-                        > & { user: Maybe<Array<Pick<Users, 'id'>>> }
+                        Pick<WorkingGroupsDataLeadersChildDto, 'role'> & {
+                          user: Maybe<Array<Pick<Users, 'id'>>>;
+                        }
                       >
                     >;
                     members: Maybe<
@@ -11936,7 +11935,7 @@ export const UsersContentFragmentDoc = {
                           selections: [
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'workstreamRole' },
+                              name: { kind: 'Name', value: 'role' },
                             },
                             {
                               kind: 'Field',

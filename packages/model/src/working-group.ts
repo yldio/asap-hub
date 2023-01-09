@@ -43,8 +43,7 @@ export type WorkingGroupMember = {
 export type WorkingGroupMembership = {
   id: string;
   name: string;
-  // role: 'Chair' | 'Project Manager' | 'Member';
-  role?: string;
+  role: 'Chair' | 'Project Manager' | 'Member';
   active: boolean;
 };
 

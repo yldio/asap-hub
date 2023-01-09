@@ -26,8 +26,8 @@ it('renders the no memberships message', () => {
 
 it('splits the current and complete groups', () => {
   const groups: WorkingGroupMembership[] = [
-    { id: 'group-1', name: 'Active WG', role: 'Leader', active: true },
-    { id: 'group-2', name: 'Complete WG', role: 'Ex-Leader', active: false },
+    { id: 'group-1', name: 'Active WG', role: 'Chair', active: true },
+    { id: 'group-2', name: 'Complete WG', role: 'Chair', active: false },
   ];
   render(<WorkingGroupsTabbedCard {...props} groups={groups} />);
 

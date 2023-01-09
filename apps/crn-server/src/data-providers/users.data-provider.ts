@@ -359,7 +359,7 @@ export const parseGraphQLUserToDataObject = (
     ? item.referencingWorkingGroupsContents.map((wg) => {
         const wgRole = wg.flatData.leaders?.reduce((result, leader) => {
           if (leader.user?.[0]?.id === item.id) {
-            return leader.workstreamRole || 'Member';
+            return leader.role || 'Member';
           }
           return result;
         }, 'Member');
@@ -367,7 +367,7 @@ export const parseGraphQLUserToDataObject = (
         return {
           id: wg.id,
           name: wg.flatData.title || '',
-          role: wgRole,
+          role: wgRole as 'Chair' | 'Project Manager' | 'Member',
           active: !wg.flatData.complete,
         };
       })

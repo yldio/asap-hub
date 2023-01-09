@@ -301,7 +301,7 @@ describe('User data provider', () => {
             leaders: [
               {
                 user: [{ id: 'user-id-1' }],
-                workstreamRole: 'Project Manager',
+                role: 'Chair',
               },
             ],
             members: [],

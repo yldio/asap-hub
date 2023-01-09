@@ -28,7 +28,7 @@ import {
 import { createMemoryHistory, History } from 'history';
 import ResearchOutputTeamForm from '../ResearchOutputTeamForm';
 import { ENTER_KEYCODE } from '../../atoms/Dropdown';
-import { createIdentifierField } from '../../utils/researchOutputFormCommons';
+import { createIdentifierField } from '../../utils/research-output-form';
 
 const props: ComponentProps<typeof ResearchOutputTeamForm> = {
   onSave: jest.fn(() => Promise.resolve()),

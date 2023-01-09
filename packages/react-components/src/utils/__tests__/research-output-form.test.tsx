@@ -17,7 +17,7 @@ import {
   isDirty,
   isIdentifierModified,
   ResearchOutputPayload,
-} from '../researchOutputFormCommons';
+} from '../research-output-form';
 
 describe('isDirty', () => {
   const researchOutputResponse: ResearchOutputResponse = {

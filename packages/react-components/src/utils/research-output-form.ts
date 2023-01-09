@@ -132,12 +132,12 @@ export type ResearchOutputPayload = {
   asapFunded: DecisionOption;
   usedInPublication: DecisionOption;
   sharingStatus: ResearchOutputPostRequest['sharingStatus'];
-  publishDate: Date | undefined;
+  publishDate?: Date;
   labCatalogNumber: ResearchOutputPostRequest['labCatalogNumber'];
   methods: string[];
   organisms: string[];
   environments: string[];
-  subtype: string | undefined;
+  subtype?: string;
   publishingEntity: ResearchOutputPublishingEntities;
 };
 

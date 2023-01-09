@@ -281,7 +281,7 @@ export const getUserResponse = (): UserResponse => ({
   country: 'United Kingdom',
   city: 'London',
   lastModifiedDate: '2020-09-23T20:45:22.000Z',
-  // workingGroups: [],
+  workingGroups: [],
   orcidWorks: [
     {
       doi: 'test-doi',
@@ -340,7 +340,7 @@ export const fetchExpectation: ListUserResponse = {
       firstName: 'Arnold',
       lastName: 'Schwatzneger',
       lastModifiedDate: '2020-09-23T20:45:22.000Z',
-      // workingGroups: [],
+      workingGroups: [],
       orcidWorks: [
         {
           doi: 'test-doi',

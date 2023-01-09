@@ -361,7 +361,7 @@ __metadata:
     "@asap-hub/fixtures": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@babel/runtime-corejs3": 7.19.6
-    "@types/node": 14.18.33
+    "@types/node": 14.18.36
     "@types/prettier": 2.7.1
     algoliasearch: 4.14.2
     prettier: 2.7.1
@@ -424,7 +424,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.19.6
     "@types/jest": 27.5.2
     "@types/jsdom": 16.2.3
-    "@types/node": 14.18.33
+    "@types/node": 14.18.36
     core-js: 3.24.1
     jsdom: 16.5.3
   languageName: unknown
@@ -442,7 +442,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.19.6
     "@types/auth0-js": 9.14.6
     "@types/jest": 27.5.2
-    "@types/node": 14.18.33
+    "@types/node": 14.18.36
     "@types/pify": 3.0.2
     auth0-js: 9.19.1
     camelcase: 6.3.0
@@ -479,7 +479,7 @@ __metadata:
     "@auth0/auth0-spa-js": 1.22.5
     "@babel/runtime-corejs3": 7.19.6
     "@types/jest": 27.5.2
-    "@types/node": 14.18.33
+    "@types/node": 14.18.36
   languageName: unknown
   linkType: soft
 
@@ -504,7 +504,7 @@ __metadata:
     "@graphql-typed-document-node/core": 3.1.1
     "@types/contentful-html-rich-text-converter": "workspace:*"
     "@types/jest": 27.5.2
-    "@types/node": 14.18.33
+    "@types/node": 14.18.36
     "@types/prettier": 2.7.1
     contentful-html-rich-text-converter: "yldio/contentful-html-rich-text-converter#v1.0.14"
     contentful-management: ^10.19.3
@@ -536,7 +536,7 @@ __metadata:
     "@graphql-tools/mock": 8.7.6
     "@graphql-tools/schema": 8.5.1
     "@graphql-typed-document-node/core": 3.1.1
-    "@types/node": 14.18.33
+    "@types/node": 14.18.36
     contentful-cli: 1.15.36
     contentful-management: ^10.19.3
     contentful-migrate: 0.17.0
@@ -617,7 +617,7 @@ __metadata:
     "@types/history": 4.7.11
     "@types/jest": 27.5.2
     "@types/nock": 11.1.0
-    "@types/node": 14.18.33
+    "@types/node": 14.18.36
     "@types/qs": 6.9.7
     "@types/react": 17.0.49
     "@types/react-dom": 17.0.18
@@ -674,7 +674,7 @@ __metadata:
     "@emotion/react": 11.10.4
     "@emotion/server": 11.10.0
     "@types/babel__core": 7.1.20
-    "@types/node": 14.18.33
+    "@types/node": 14.18.36
     "@types/react": 17.0.49
     "@types/react-dom": 17.0.18
     aws-sdk: 2.1220.0
@@ -751,7 +751,7 @@ __metadata:
     "@types/lodash.uniqby": 4.7.7
     "@types/luxon": 1.26.4
     "@types/mime-types": 2.1.1
-    "@types/node": 14.18.33
+    "@types/node": 14.18.36
     "@types/parse-data-url": 3.0.0
     "@types/pump": 1.1.1
     "@types/serverless": 3.12.8
@@ -921,7 +921,7 @@ __metadata:
     "@testing-library/react": 11.2.7
     "@types/history": 4.7.11
     "@types/jest": 27.5.2
-    "@types/node": 14.18.33
+    "@types/node": 14.18.36
     "@types/react": 17.0.49
     "@types/react-router-dom": 5.3.3
     "@types/streamsaver": 2.0.1
@@ -1082,7 +1082,7 @@ __metadata:
     "@types/history": 4.7.11
     "@types/jest": 27.5.2
     "@types/nock": 11.1.0
-    "@types/node": 14.18.33
+    "@types/node": 14.18.36
     "@types/react": 17.0.49
     "@types/react-dom": 17.0.18
     "@types/react-router-dom": 5.3.3
@@ -1135,7 +1135,7 @@ __metadata:
     "@emotion/react": 11.10.4
     "@emotion/server": 11.10.0
     "@types/babel__core": 7.1.20
-    "@types/node": 14.18.33
+    "@types/node": 14.18.36
     "@types/react": 17.0.49
     "@types/react-dom": 17.0.18
     aws-sdk: 2.1220.0
@@ -1187,7 +1187,7 @@ __metadata:
     "@types/jest": 27.5.2
     "@types/jsonwebtoken": 8.5.9
     "@types/jwt-encode": "workspace:*"
-    "@types/node": 14.18.33
+    "@types/node": 14.18.36
     "@types/serverless": 3.12.8
     "@types/source-map-support": 0.5.4
     "@types/supertest": 2.0.12
@@ -1571,7 +1571,7 @@ __metadata:
     "@babel/core": 7.19.6
     "@babel/preset-react": 7.18.6
     "@babel/runtime-corejs3": 7.19.6
-    "@types/node": 14.18.33
+    "@types/node": 14.18.36
     "@types/react": 17.0.49
     "@types/react-dom": 17.0.18
     react: 17.0.2
@@ -13463,10 +13463,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:14.18.33":
-  version: 14.18.33
-  resolution: "@types/node@npm:14.18.33"
-  checksum: 4e23f95186d8ae1d38c999bc6b46fe94e790da88744b0a3bfeedcbd0d9ffe2cb0ff39e85f43014f6739e5270292c1a1f6f97a1fc606fd573a0c17fda9a1d42de
+"@types/node@npm:14.18.36":
+  version: 14.18.36
+  resolution: "@types/node@npm:14.18.36"
+  checksum: da7f479b3fc996d585e60b8329987c6e310ddbf051e14f2d900ce04f7768f42fa7b760f0eb376008d3eca130ce9431018fb5c9e44027dcb7bb139c547e44b9c5
   languageName: node
   linkType: hard
 

@@ -9,18 +9,24 @@ describe('isUserOnboardable validation', () => {
     });
   });
 
-  it.each(['firstName', 'lastName', 'region', 'country', 'positions'])(
-    'Should fail if %s is missing from user profile',
-    async (fieldName) => {
-      const userResponse: gp2.UserResponse = getUserResponse();
-      userResponse[fieldName] = null;
+  it.each([
+    'firstName',
+    'lastName',
+    'region',
+    'country',
+    'positions',
+    'biography',
+    'keywords',
+    'degrees',
+  ])('Should fail if %s is missing from user profile', async (fieldName) => {
+    const userResponse: gp2.UserResponse = getUserResponse();
+    userResponse[fieldName] = null;
 
-      expect(isUserOnboardable(userResponse)).toEqual({
-        isOnboardable: false,
-        [fieldName]: { valid: false },
-      });
-    },
-  );
+    expect(isUserOnboardable(userResponse)).toEqual({
+      isOnboardable: false,
+      [fieldName]: { valid: false },
+    });
+  });
 
   it('Should fail if there are no positions', async () => {
     const userIncompleteResponse: gp2.UserResponse = {
@@ -31,6 +37,28 @@ describe('isUserOnboardable validation', () => {
     expect(isUserOnboardable(userIncompleteResponse)).toEqual({
       isOnboardable: false,
       positions: { valid: false },
+    });
+  });
+  it('Should fail if there are no keywords', async () => {
+    const userIncompleteResponse: gp2.UserResponse = {
+      ...getUserResponse(),
+      keywords: [],
+    };
+
+    expect(isUserOnboardable(userIncompleteResponse)).toEqual({
+      isOnboardable: false,
+      keywords: { valid: false },
+    });
+  });
+  it('Should fail if there are no degrees', async () => {
+    const userIncompleteResponse: gp2.UserResponse = {
+      ...getUserResponse(),
+      degrees: [],
+    };
+
+    expect(isUserOnboardable(userIncompleteResponse)).toEqual({
+      isOnboardable: false,
+      degrees: { valid: false },
     });
   });
 });

@@ -112,7 +112,7 @@ describe('KeyInformatiomModal', () => {
       screen.getByRole('textbox', { name: 'Last Name (required)' }),
       lastName,
     );
-    userEvent.click(screen.getByRole('textbox', { name: 'Degree (optional)' }));
+    userEvent.click(screen.getByRole('textbox', { name: 'Degree (required)' }));
     userEvent.click(screen.getByText(degrees[0]));
     userEvent.click(
       screen.getByRole('textbox', {

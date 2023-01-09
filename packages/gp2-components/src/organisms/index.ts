@@ -7,6 +7,7 @@ export { default as ContactInformationModal } from './ContactInformationModal';
 export { default as MainNavigation } from './MainNavigation';
 export { default as NavigationHeader } from './NavigationHeader';
 export { default as OnboardingPageHeader } from './OnboardingPageHeader';
+export { default as OnboardingPageFooter } from './OnboardingPageFooter';
 export { default as PageBanner } from './PageBanner';
 export { default as ProjectCard } from './ProjectCard';
 export { default as ProjectDetailHeader } from './ProjectDetailHeader';

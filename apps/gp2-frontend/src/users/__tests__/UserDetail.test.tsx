@@ -75,9 +75,7 @@ describe('UserDetail', () => {
       await renderUserDetail(user.id);
 
       expect(screen.getByRole('heading', { name: /biography/i })).toBeVisible();
-      expect(
-        screen.getByRole('heading', { name: /Expertise and Interests/i }),
-      ).toBeVisible();
+      expect(screen.getByRole('heading', { name: /Keywords/i })).toBeVisible();
       expect(
         screen.getByRole('heading', { name: /Contact information/i }),
       ).toBeVisible();

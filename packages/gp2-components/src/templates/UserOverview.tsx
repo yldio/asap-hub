@@ -82,7 +82,7 @@ const UserOverview: React.FC<UserOverviewProps> = ({
       </Card>
       <Card padding={false}>
         <div css={cardStyles}>
-          <Headline3 noMargin>Expertise and Interests</Headline3>
+          <Headline3 noMargin>Keywords</Headline3>
           <div css={contentStyles}>
             <TagList tags={keywords} />
           </div>

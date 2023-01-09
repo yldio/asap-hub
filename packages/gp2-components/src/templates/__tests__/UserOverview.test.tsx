@@ -21,9 +21,7 @@ describe('UserOverview', () => {
     expect(
       screen.getByRole('heading', { name: 'Contact Information' }),
     ).toBeVisible();
-    expect(
-      screen.getByRole('heading', { name: 'Expertise and Interests' }),
-    ).toBeVisible();
+    expect(screen.getByRole('heading', { name: 'Keywords' })).toBeVisible();
   });
 
   it('renders the biography', () => {

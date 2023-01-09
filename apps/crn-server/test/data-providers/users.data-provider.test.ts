@@ -329,7 +329,7 @@ describe('User data provider', () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
       const expectedResponse = getUserDataObject();
       expectedResponse.workingGroups = [
-        { id: 'wg-1', name: 'WG ONE', role: 'Project Manager', active: true },
+        { id: 'wg-1', name: 'WG ONE', role: 'Chair', active: true },
         { id: 'wg-2', name: 'WG TWO', role: 'Member', active: true },
         { id: 'wg-3', name: 'WG THREE', role: 'Member', active: false },
       ];

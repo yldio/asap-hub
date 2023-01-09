@@ -35,6 +35,9 @@ const WorkingGroupsTabbedCard: React.FC<WorkingGroupsTabbedCardProps> = ({
     <TabbedCard
       title={`${userName}'s Working Groups`}
       activeTabIndex={isUserAlumni ? 1 : 0}
+      getShowMoreText={(showMore) =>
+        `View ${showMore ? 'Less' : 'More'} Memberships`
+      }
       tabs={[
         {
           tabTitle: `Active Memberships (${activeMemberships.length})`,

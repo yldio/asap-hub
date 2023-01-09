@@ -1,5 +1,6 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { UserOverview } from '@asap-hub/gp2-components';
+import { boolean } from '@storybook/addon-knobs';
 
 export default {
   title: 'GP2 / Templates / Users Directory / User Overview',
@@ -11,7 +12,8 @@ const item = {
   backHref: '/',
 };
 
-export const Normal = () => <UserOverview {...item} />;
-export const NoSocial = () => (
-  <UserOverview {...item} {...{ social: undefined }} />
+export const Normal = () => (
+  <UserOverview
+    {...(boolean('Show social', true) ? item : { ...item, social: undefined })}
+  />
 );

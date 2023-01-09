@@ -555,6 +555,37 @@ describe('User data provider', () => {
         expect(result?.telephone?.number).toEqual('212-970-4133');
       });
     });
+
+    describe('social', () => {
+      test('should return undefined social if it has not been defined', async () => {
+        const invalidUser = getGraphQLUser();
+        invalidUser.flatData.social = null;
+        const mockResponse = getSquidexUserGraphqlResponse(invalidUser);
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.social).toBeUndefined();
+      });
+
+      test('should return social props undefined if they have not been defined', async () => {
+        const invalidUser = getGraphQLUser();
+        invalidUser.flatData.social = [
+          {
+            googleScholar: null,
+            orcid: null,
+            blog: null,
+            twitter: null,
+            linkedIn: null,
+            github: null,
+          },
+        ];
+        const mockResponse = getSquidexUserGraphqlResponse(invalidUser);
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.social).toEqual({});
+      });
+    });
   });
 
   describe('Update', () => {

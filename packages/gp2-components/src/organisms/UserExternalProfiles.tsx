@@ -15,7 +15,7 @@ import colors from '../templates/colors';
 import SocialSubGroup from './SocialSubGroup';
 
 const { rem } = pixels;
-const iconsColor = colors.neutral900.hex;
+const iconsColor = colors.neutral900.rgb;
 
 const externalProfilesContainerStyles = css({
   display: 'flex',

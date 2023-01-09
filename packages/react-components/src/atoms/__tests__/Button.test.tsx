@@ -2,7 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { ThemeProvider } from '@emotion/react';
 
 import { silver, fern, charcoal, color } from '../../colors';
-import { orcidIcon } from '../../icons';
+import { OrcidIcon } from '../../icons';
 import { activePrimaryBackgroundColorDefault } from '../../button';
 
 import Button from '../Button';
@@ -10,7 +10,7 @@ import Button from '../Button';
 it('renders a button with an icon and text', () => {
   const { getByRole } = render(
     <Button>
-      {orcidIcon}
+      <OrcidIcon />
       Text
     </Button>,
   );
@@ -19,7 +19,12 @@ it('renders a button with an icon and text', () => {
 });
 
 it('renders a button with text only with increased horizontal padding', () => {
-  const { getByRole, rerender } = render(<Button>{orcidIcon}Text</Button>);
+  const { getByRole, rerender } = render(
+    <Button>
+      <OrcidIcon />
+      Text
+    </Button>,
+  );
   const normalPaddingLeft = Number(
     getComputedStyle(getByRole('button')).paddingLeft.replace(/em$/, ''),
   );
@@ -33,12 +38,21 @@ it('renders a button with text only with increased horizontal padding', () => {
 });
 
 it('renders a button with an icon only with decreased horizontal padding', () => {
-  const { getByRole, rerender } = render(<Button>{orcidIcon}Text</Button>);
+  const { getByRole, rerender } = render(
+    <Button>
+      <OrcidIcon />
+      Text
+    </Button>,
+  );
   const normalPaddingLeft = Number(
     getComputedStyle(getByRole('button')).paddingLeft.replace(/em$/, ''),
   );
 
-  rerender(<Button>{orcidIcon}</Button>);
+  rerender(
+    <Button>
+      <OrcidIcon />
+    </Button>,
+  );
   const iconOnlyPaddingLeft = Number(
     getComputedStyle(getByRole('button')).paddingLeft.replace(/em$/, ''),
   );
@@ -47,12 +61,21 @@ it('renders a button with an icon only with decreased horizontal padding', () =>
 });
 
 it('renders a button without margin', () => {
-  const { getByRole, rerender } = render(<Button>{orcidIcon}Text</Button>);
+  const { getByRole, rerender } = render(
+    <Button>
+      <OrcidIcon />
+      Text
+    </Button>,
+  );
   const normalPaddingLeft = Number(
     getComputedStyle(getByRole('button')).paddingLeft.replace(/em$/, ''),
   );
 
-  rerender(<Button>{orcidIcon}</Button>);
+  rerender(
+    <Button>
+      <OrcidIcon />
+    </Button>,
+  );
   const iconOnlyPaddingLeft = Number(
     getComputedStyle(getByRole('button')).paddingLeft.replace(/em$/, ''),
   );

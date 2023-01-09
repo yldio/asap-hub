@@ -1,11 +1,16 @@
 /* istanbul ignore file */
+import { FC } from 'react';
 
-const globeIcon = (
+interface GlobeIconProps {
+  readonly color?: string;
+}
+
+const GlobeIcon: FC<GlobeIconProps> = ({ color = '#00222C' }) => (
   <svg
     width={24}
     height={24}
     viewBox="0 0 24 24"
-    stroke="#00222C"
+    stroke={color}
     xmlns="http://www.w3.org/2000/svg"
     style={{
       fill: 'none',
@@ -32,4 +37,4 @@ const globeIcon = (
     />
   </svg>
 );
-export default globeIcon;
+export default GlobeIcon;

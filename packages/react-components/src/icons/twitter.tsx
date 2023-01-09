@@ -1,11 +1,16 @@
 /* istanbul ignore file */
+import { FC } from 'react';
 
-const twitterIcon = (
+interface TwitterIconProps {
+  readonly color?: string;
+}
+
+const TwitterIcon: FC<TwitterIconProps> = ({ color = '#00222C' }) => (
   <svg
     width={28}
     height={28}
     viewBox="0 0 28 28"
-    fill="#00222C"
+    fill={color}
     xmlns="http://www.w3.org/2000/svg"
     style={{
       stroke: 'none',
@@ -17,4 +22,4 @@ const twitterIcon = (
   </svg>
 );
 
-export default twitterIcon;
+export default TwitterIcon;

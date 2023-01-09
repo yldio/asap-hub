@@ -7,7 +7,7 @@ import { LabeledTextField } from '../molecules';
 import { noop } from '../utils';
 import { perRem } from '../pixels';
 import { EditModal } from '../organisms';
-import { globeIcon } from '../icons';
+import { GlobeIcon } from '../icons';
 
 const fieldsContainer = css({
   display: 'grid',
@@ -58,7 +58,7 @@ const ToolModal: React.FC<ToolModalProps> = ({
             onChange={setNewUrl}
             enabled={!isSaving}
             pattern={TEAM_TOOL_URL.source}
-            labelIndicator={globeIcon}
+            labelIndicator={<GlobeIcon />}
             getValidationMessage={() =>
               'Please enter a valid URL, starting with http:// or https://'
             }

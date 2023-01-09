@@ -1,14 +1,17 @@
 import { ComponentProps } from 'react';
 
 import { Button } from '../atoms';
-import { orcidIcon } from '../icons';
+import { OrcidIcon } from '../icons';
 
 type OrcidSigninButtonProps = Pick<
   ComponentProps<typeof Button>,
   'enabled' | 'onClick'
 >;
 const OrcidSigninButton: React.FC<OrcidSigninButtonProps> = (props) => (
-  <Button {...props}>{orcidIcon}Continue with ORCID</Button>
+  <Button {...props}>
+    <OrcidIcon />
+    Continue with ORCID
+  </Button>
 );
 
 export default OrcidSigninButton;

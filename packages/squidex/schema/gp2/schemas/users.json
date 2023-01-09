@@ -686,6 +686,137 @@
             }
           }
         ]
+      },
+      {
+        "name": "social",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Array",
+          "maxItems": 1,
+          "label": "Social Links",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        },
+        "nested": [
+          {
+            "name": "blog",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "isEmbeddable": false,
+              "inlineEditable": true,
+              "createEnum": false,
+              "contentType": "Unspecified",
+              "editor": "Input",
+              "label": "Blog",
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": true
+            }
+          },
+          {
+            "name": "linkedIn",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "isEmbeddable": false,
+              "inlineEditable": true,
+              "createEnum": false,
+              "contentType": "Unspecified",
+              "editor": "Input",
+              "label": "LinkedIn",
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": true
+            }
+          },
+          {
+            "name": "twitter",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "isEmbeddable": false,
+              "inlineEditable": true,
+              "createEnum": false,
+              "contentType": "Unspecified",
+              "editor": "Input",
+              "label": "Twitter",
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": true
+            }
+          },
+          {
+            "name": "github",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "isEmbeddable": false,
+              "inlineEditable": true,
+              "createEnum": false,
+              "contentType": "Unspecified",
+              "editor": "Input",
+              "label": "Github",
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": true
+            }
+          },
+          {
+            "name": "googleScholar",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "isEmbeddable": false,
+              "inlineEditable": true,
+              "createEnum": false,
+              "contentType": "Unspecified",
+              "editor": "Input",
+              "label": "Google Scholar",
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": true
+            }
+          },
+          {
+            "name": "orcid",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "isEmbeddable": false,
+              "inlineEditable": true,
+              "createEnum": false,
+              "contentType": "Unspecified",
+              "editor": "Input",
+              "label": "Orcid",
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": true
+            }
+          }
+        ]
       }
     ],
     "previewUrls": {

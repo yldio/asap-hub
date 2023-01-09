@@ -162,6 +162,7 @@ describe('UserOverview', () => {
       ).not.toBeInTheDocument();
     });
   });
+
   describe('questions', () => {
     it('renders the questions', () => {
       const questions = ['this is a funding stream'];
@@ -197,6 +198,26 @@ describe('UserOverview', () => {
       render(<UserOverview {...defaultProps} />);
       expect(
         screen.queryByRole('heading', { name: 'Contributing Cohort Studies' }),
+      ).not.toBeInTheDocument();
+    });
+  });
+
+  describe('external profiles', () => {
+    it('renders the external profiles section when user has any social defined', () => {
+      const social = {
+        googleScholar: 'googleScholar',
+      };
+
+      render(<UserOverview {...defaultProps} social={social} />);
+      expect(
+        screen.getByRole('heading', { name: 'External Profiles' }),
+      ).toBeVisible();
+    });
+
+    it('does not render the external profiles section when user does not have any social defined', () => {
+      render(<UserOverview {...defaultProps} />);
+      expect(
+        screen.queryByRole('heading', { name: 'External Profiles' }),
       ).not.toBeInTheDocument();
     });
   });

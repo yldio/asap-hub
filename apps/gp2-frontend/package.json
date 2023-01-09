@@ -34,9 +34,9 @@
     "date-fns": "2.29.3",
     "history": "4.10.1",
     "path": "npm:path-browserify@1.0.1",
-    "react": "17.0.2",
+    "react": "18.2.0",
     "react-app-polyfill": "3.0.0",
-    "react-dom": "17.0.2",
+    "react-dom": "18.2.0",
     "react-error-boundary": "3.1.4",
     "react-router-dom": "5.3.4",
     "react-router-last-location": "2.0.1",
@@ -75,7 +75,7 @@
     "nock": "13.0.11",
     "pirates": "4.0.5",
     "react-scripts": "5.0.1",
-    "react-test-renderer": "17.0.2",
+    "react-test-renderer": "18.2.0",
     "typescript": "4.8.4"
   }
 }

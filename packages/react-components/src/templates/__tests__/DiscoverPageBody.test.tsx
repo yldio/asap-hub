@@ -10,7 +10,6 @@ const props: ComponentProps<typeof DiscoverPageBody> = {
   training: [],
   members: [],
   scientificAdvisoryBoard: [],
-  workingGroups: [],
 };
 
 it('renders grantee guidance page cards', () => {

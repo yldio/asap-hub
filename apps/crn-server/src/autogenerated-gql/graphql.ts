@@ -5825,6 +5825,7 @@ export type UsersDataSocialInputDto = {
 /** The structure of the Teams nested schema. */
 export type UsersDataTeamsChildDto = {
   id: Maybe<Array<Teams>>;
+  memberStatus: Maybe<Scalars['String']>;
   /** Attention: Check if this user needs to be added to Smart Simple */
   role: Maybe<Scalars['String']>;
 };
@@ -5832,6 +5833,7 @@ export type UsersDataTeamsChildDto = {
 /** The structure of the Teams nested schema. */
 export type UsersDataTeamsChildInputDto = {
   id: InputMaybe<Array<Scalars['String']>>;
+  memberStatus: InputMaybe<Scalars['String']>;
   /** Attention: Check if this user needs to be added to Smart Simple */
   role: InputMaybe<Scalars['String']>;
 };
@@ -6242,25 +6244,6 @@ export type FetchDiscoverQuery = {
               flatData: Pick<
                 TutorialsFlatDataDto,
                 'title' | 'shortText' | 'text' | 'link' | 'linkText'
-              > & { thumbnail: Maybe<Array<Pick<Asset, 'id'>>> };
-            }
-          >
-        >;
-        workingGroups: Maybe<
-          Array<
-            Pick<
-              NewsAndEvents,
-              'id' | 'created' | 'lastModified' | 'version'
-            > & {
-              flatData: Pick<
-                NewsAndEventsFlatDataDto,
-                | 'title'
-                | 'shortText'
-                | 'text'
-                | 'type'
-                | 'frequency'
-                | 'link'
-                | 'linkText'
               > & { thumbnail: Maybe<Array<Pick<Asset, 'id'>>> };
             }
           >
@@ -12574,19 +12557,6 @@ export const FetchDiscoverDocument = {
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'workingGroups' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'News' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'Field',
                         name: { kind: 'Name', value: 'pages' },
                         selectionSet: {
                           kind: 'SelectionSet',
@@ -12819,7 +12789,6 @@ export const FetchDiscoverDocument = {
       },
     },
     ...TutorialsContentFragmentDoc.definitions,
-    ...NewsFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchDiscoverQuery, FetchDiscoverQueryVariables>;
 export const FetchEventsDocument = {

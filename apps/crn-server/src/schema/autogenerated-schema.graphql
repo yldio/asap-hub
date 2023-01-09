@@ -5873,12 +5873,12 @@ input UsersDataLabsInputDto {
 
 """The structure of the Last Modified Date field of the Users content type."""
 type UsersDataLastModifiedDateDto {
-  iv: String
+  iv: Instant
 }
 
 """The structure of the Last Modified Date field of the Users content input type."""
 input UsersDataLastModifiedDateInputDto {
-  iv: String
+  iv: Instant
 }
 
 """The structure of the Last Name field of the Users content type."""
@@ -6069,6 +6069,7 @@ input UsersDataSocialInputDto {
 """The structure of the Teams nested schema."""
 type UsersDataTeamsChildDto {
   id: [Teams!]
+  memberStatus: String
   """Attention: Check if this user needs to be added to Smart Simple"""
   role: String
 }
@@ -6076,6 +6077,7 @@ type UsersDataTeamsChildDto {
 """The structure of the Teams nested schema."""
 input UsersDataTeamsChildInputDto {
   id: [String!]
+  memberStatus: String
   """Attention: Check if this user needs to be added to Smart Simple"""
   role: String
 }
@@ -6114,7 +6116,7 @@ type UsersFlatDataDto {
   jobTitle: String
   """Mandatory for grantees. They cannot publish profile without a lab."""
   labs: [Labs!]
-  lastModifiedDate: String
+  lastModifiedDate: Instant
   lastName: String
   """Use this to allow the user to see the full Hub and skip profile completion"""
   onboarded: Boolean

@@ -43,7 +43,7 @@
     "@graphql-tools/schema": "8.5.1",
     "@graphql-typed-document-node/core": "3.1.1",
     "@types/node": "14.18.33",
-    "contentful-cli": "1.15.36",
+    "contentful-cli": "1.18.0",
     "graphql-typescript-integration": "1.2.1",
     "prettier": "2.7.1",
     "ts-node": "10.9.1"

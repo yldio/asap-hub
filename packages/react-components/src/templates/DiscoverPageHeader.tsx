@@ -23,7 +23,6 @@ const DashboardPageHeader: React.FC = () => (
     <TabNav>
       <TabLink href={discover({}).guides({}).$}>Guides</TabLink>
       <TabLink href={discover({}).tutorials({}).$}>Tutorials</TabLink>
-      <TabLink href={discover({}).workingGroups({}).$}>Working Groups</TabLink>
       <TabLink href={discover({}).about({}).$}>About ASAP</TabLink>
     </TabNav>
   </header>

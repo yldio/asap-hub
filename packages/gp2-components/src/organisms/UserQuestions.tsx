@@ -1,5 +1,5 @@
 import { gp2 } from '@asap-hub/model';
-import { Headline3, Paragraph, pixels } from '@asap-hub/react-components';
+import { Paragraph, pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import colors from '../templates/colors';
 
@@ -11,13 +11,13 @@ type UserQuestionsProps = {
 };
 
 const contentStyles = css({
-  padding: `${rem(16)} 0 ${rem(16)}`,
+  padding: `${rem(16)} 0`,
 });
 
 const rowStyles = css({
   borderBottom: `1px solid ${colors.neutral500.rgb}`,
   marginBottom: rem(12),
-  padding: `${rem(16)} 0 ${rem(16)}`,
+  padding: `${rem(16)} 0`,
   ':last-child': {
     borderBottom: 'none',
     marginBottom: 0,
@@ -29,7 +29,6 @@ const UserQuestions: React.FC<UserQuestionsProps> = ({
   firstName,
 }) => (
   <>
-    <Headline3 noMargin>Open Questions</Headline3>
     <div css={[contentStyles]}>
       <Paragraph hasMargin={false} accent="lead">
         {firstName} is interested in answering the following questions within

@@ -66,6 +66,7 @@ const app = async () => {
         onboarded: false,
         keywords: [],
         questions: [],
+        contributingCohorts: [],
       };
     },
     async (input) => {

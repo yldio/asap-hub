@@ -60,6 +60,18 @@ type UserWorkingGroup = Pick<WorkingGroupDataObject, 'id' | 'title'> & {
 
 type Telephone = { countryCode?: string; number?: string };
 
+export const userContributingCohortRole = [
+  'Contributor',
+  'Investigator',
+] as const;
+type UserContributingCohortRole = typeof userContributingCohortRole[number];
+type UserContributingCohort = {
+  role: UserContributingCohortRole;
+  studyUrl?: string;
+  name: string;
+  contributingCohortId: string;
+};
+
 export type UserDataObject = {
   avatarUrl?: string;
   city?: string;
@@ -79,7 +91,7 @@ export type UserDataObject = {
   questions: string[];
   workingGroups: UserWorkingGroup[];
   fundingStreams?: string;
-  contributingCohorts: unknown[];
+  contributingCohorts: UserContributingCohort[];
   secondaryEmail?: string;
   telephone?: Telephone;
   keywords: Keyword[];
@@ -88,7 +100,7 @@ export type UserDataObject = {
 
 export type UserCreateDataObject = Omit<
   UserDataObject,
-  'id' | 'createdDate' | 'projects' | 'workingGroups' | 'contributingCohorts'
+  'id' | 'createdDate' | 'projects' | 'workingGroups'
 >;
 
 export type UserUpdateDataObject = Partial<UserCreateDataObject>;

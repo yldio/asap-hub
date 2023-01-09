@@ -5,6 +5,7 @@ import nock from 'nock';
 import {
   ProjectsDataMembersRoleEnum,
   ProjectsDataStatusEnum,
+  UsersDataContributingCohortsRoleEnum,
   UsersDataDegreeEnum,
   UsersDataRegionEnum,
   UsersDataRoleEnum,
@@ -232,6 +233,44 @@ describe('User data provider', () => {
 
         const result = await userDataProvider.fetchById('user-id');
         expect(result?.positions).toEqual([]);
+      });
+    });
+    describe('contributing cohorts', () => {
+      const cohort = {
+        role: UsersDataContributingCohortsRoleEnum.Contributor,
+        id: [{ id: '42', flatData: { name: 'a cohort' } }],
+        study: 'http://example.com',
+      };
+      test.each`
+        property                                            | description
+        ${{ id: null }}                                     | ${'id is not defined'}
+        ${{ id: [] }}                                       | ${'id is empty'}
+        ${{ role: null }}                                   | ${'role is not defined'}
+        ${{ id: [{ flatData: { name: null }, id: '42' }] }} | ${'name is not defined'}
+      `('Should throw when the cohort $description', async ({ property }) => {
+        const invalidRoleUser = getGraphQLUser();
+        invalidRoleUser.flatData.contributingCohorts = [
+          {
+            ...cohort,
+            ...property,
+          },
+        ];
+        const mockResponse = getSquidexUserGraphqlResponse(invalidRoleUser);
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        expect(() =>
+          userDataProvider.fetchById('user-id'),
+        ).rejects.toThrowError('Invalid Contributing Cohort');
+      });
+
+      test('Should return empty array if cohorts have not been defined', async () => {
+        const invalidUser = getGraphQLUser();
+        invalidUser.flatData.contributingCohorts = null;
+        const mockResponse = getSquidexUserGraphqlResponse(invalidUser);
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.contributingCohorts).toEqual([]);
       });
     });
     describe('projects', () => {

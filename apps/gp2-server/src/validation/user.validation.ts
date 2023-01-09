@@ -1,8 +1,9 @@
 import { validateInput } from '@asap-hub/server-common';
 import { JSONSchemaType } from 'ajv';
 import { gp2 } from '@asap-hub/model';
+import { UrlExpression } from '@asap-hub/validation';
 
-const { userDegrees, userRegions, keywords } = gp2;
+const { userDegrees, userRegions, keywords, userContributingCohortRole } = gp2;
 type UserParameters = {
   userId: string;
 };
@@ -33,13 +34,13 @@ const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
       type: 'array',
       items: {
         type: 'string',
-        enum: [...userDegrees],
+        enum: userDegrees,
       },
       nullable: true,
     },
     region: {
       type: 'string',
-      enum: [...userRegions],
+      enum: userRegions,
       nullable: true,
     },
     country: { type: 'string', nullable: true, minLength: 1 },
@@ -75,7 +76,7 @@ const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
       maxItems: 10,
       items: {
         type: 'string',
-        enum: [...keywords],
+        enum: keywords,
       },
       nullable: true,
     },
@@ -97,6 +98,27 @@ const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
         nullable: false,
       },
       nullable: true,
+    },
+    contributingCohorts: {
+      type: 'array',
+      minItems: 0,
+      maxItems: 10,
+      nullable: true,
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          contributingCohortId: { type: 'string' },
+          name: { type: 'string' },
+          role: { type: 'string', enum: userContributingCohortRole },
+          studyUrl: {
+            type: 'string',
+            pattern: UrlExpression,
+            nullable: true,
+          },
+        },
+        required: ['contributingCohortId', 'name', 'role'],
+      },
     },
   },
   additionalProperties: false,

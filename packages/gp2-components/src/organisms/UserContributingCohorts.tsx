@@ -1,19 +1,16 @@
 import { gp2 } from '@asap-hub/model';
-import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
   Button,
   chevronCircleDownIcon,
   chevronCircleUpIcon,
+  ExternalLink,
   Headline4,
-  lead,
-  Link,
   Paragraph,
   pixels,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { useState } from 'react';
 import { nonMobileQuery } from '../layout';
-import { StatusPill } from '../molecules';
 import colors from '../templates/colors';
 
 const { rem } = pixels;
@@ -34,9 +31,6 @@ const rowStyles = css({
     display: 'flex',
   },
 });
-const textStyles = css({
-  color: lead.rgb,
-});
 const hideStyles = css({
   [`:nth-of-type(n+6)`]: { display: 'none' },
 });
@@ -45,7 +39,7 @@ const headingTopStyles = css({
   [nonMobileQuery]: {
     display: 'flex',
   },
-  '*:first-child': {
+  '*:first-of-type': {
     flex: '40% 0 0',
   },
   '& > *': {
@@ -83,67 +77,60 @@ const buttonWrapperStyles = css({
   borderBottom: `transparent`,
 });
 
-type UserProjectsProps = Pick<
+type UserContributingCohortsProps = Pick<
   gp2.UserResponse,
-  'id' | 'firstName' | 'projects'
+  'contributingCohorts' | 'firstName'
 >;
-const UserProjects: React.FC<UserProjectsProps> = ({
-  projects,
+const UserContributingCohorts: React.FC<UserContributingCohortsProps> = ({
+  contributingCohorts,
   firstName,
-  id,
 }) => {
-  const minimumProjectsToDisplay = 3;
+  const minimumToDisplay = 3;
   const [expanded, setExpanded] = useState(false);
 
-  const getProjectListStyles = () =>
-    projects.length < minimumProjectsToDisplay + 1 || expanded
+  const getListStyles = () =>
+    contributingCohorts.length < minimumToDisplay + 1 || expanded
       ? rowStyles
       : [rowStyles, hideStyles];
-
-  const getUserProjectRole = (
-    userId: gp2.UserResponse['id'],
-    project: gp2.UserResponse['projects'][number],
-  ): gp2.ProjectMemberRole | null =>
-    project.members.find((member) => member.userId === userId)?.role || null;
 
   return (
     <>
       <div css={[contentStyles]}>
         <Paragraph hasMargin={false} accent="lead">
-          {firstName} has been involved in the following GP2 projects:
+          {firstName} has contributed to the following cohort studies:
         </Paragraph>
       </div>
       <div css={headingTopStyles}>
         <Headline4>Name</Headline4>
         <Headline4>Role</Headline4>
-        <Headline4>Status</Headline4>
+        <Headline4>Link</Headline4>
       </div>
-      {projects.map((project) => (
-        <div key={`user-project-${project.id}`} css={getProjectListStyles()}>
-          <div css={[listElementStyles, listElementMainStyles]}>
-            <h4 css={headingListStyles}>Name:</h4>
-            <Link
-              underlined
-              href={
-                gp2Routing.projects({}).project({
-                  projectId: project.id,
-                }).$
-              }
-            >
-              {project.title}
-            </Link>
+      {contributingCohorts.map(
+        ({ contributingCohortId, name, studyUrl, role }) => (
+          <div
+            key={`user-cohort-${contributingCohortId}`}
+            css={getListStyles()}
+          >
+            <div css={[listElementStyles, listElementMainStyles]}>
+              <h4 css={headingListStyles}>Name:</h4>
+              {name}
+            </div>
+            <div css={[listElementStyles, listElementSecondaryStyles]}>
+              <h4 css={headingListStyles}>Role:</h4>
+              {role}
+            </div>
+            <div css={[listElementStyles, listElementSecondaryStyles]}>
+              {studyUrl && (
+                <>
+                  <h4 css={headingListStyles}>Link:</h4>
+                  <ExternalLink href={studyUrl} label="View study" noMargin />
+                </>
+              )}
+            </div>
           </div>
-          <div css={[listElementStyles, listElementSecondaryStyles]}>
-            <h4 css={headingListStyles}>Role:</h4>
-            <span css={textStyles}>{getUserProjectRole(id, project)}</span>
-          </div>
-          <div css={[listElementStyles, listElementSecondaryStyles]}>
-            <h4 css={headingListStyles}>Status:</h4>
-            <StatusPill status={project.status} />
-          </div>
-        </div>
-      ))}
-      {projects.length > minimumProjectsToDisplay && (
+        ),
+      )}
+      {contributingCohorts.length > minimumToDisplay && (
         <div css={buttonWrapperStyles}>
           <Button linkStyle onClick={() => setExpanded(!expanded)}>
             <span
@@ -163,4 +150,4 @@ const UserProjects: React.FC<UserProjectsProps> = ({
   );
 };
 
-export default UserProjects;
+export default UserContributingCohorts;

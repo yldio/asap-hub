@@ -34,6 +34,7 @@ export {
   ResourceModal,
   Resources,
   UserCard,
+  UserContributingCohorts,
   UserDetailHeader,
   UserDetailHeaderCard,
   UserNavigation,

@@ -12,6 +12,7 @@ describe('UserOverview', () => {
     projects: [],
     workingGroups: [],
     firstName: 'Tony',
+    contributingCohorts: [],
   };
 
   it('renders the default sections', () => {
@@ -169,6 +170,34 @@ describe('UserOverview', () => {
         screen.getByRole('heading', { name: 'Open Questions' }),
       ).toBeVisible();
       expect(screen.getByText(questions[0])).toBeVisible();
+    });
+    it('does not renders the questions if unavailable', () => {
+      render(<UserOverview {...defaultProps} />);
+      expect(
+        screen.queryByRole('heading', { name: 'Open Questions' }),
+      ).not.toBeInTheDocument();
+    });
+  });
+  describe('Contributing Cohorts', () => {
+    it('renders the cohrots', () => {
+      const cohorts: gp2.UserResponse['contributingCohorts'] = [
+        {
+          role: 'Contributor',
+          name: 'a cohort',
+          contributingCohortId: '42',
+          studyUrl: 'a-link',
+        },
+      ];
+      render(<UserOverview {...defaultProps} contributingCohorts={cohorts} />);
+      expect(
+        screen.getByRole('heading', { name: 'Contributing Cohort Studies' }),
+      ).toBeVisible();
+    });
+    it('does not renders the cohorts if unavailable', () => {
+      render(<UserOverview {...defaultProps} />);
+      expect(
+        screen.queryByRole('heading', { name: 'Contributing Cohort Studies' }),
+      ).not.toBeInTheDocument();
     });
   });
 });

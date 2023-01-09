@@ -33,6 +33,16 @@ export const usersContentQueryFragment = gql`
       keywords
       fundingStreams
       biography
+      contributingCohorts {
+        role
+        study
+        id {
+          id
+          flatData {
+            name
+          }
+        }
+      }
     }
     referencingProjectsContents {
       id

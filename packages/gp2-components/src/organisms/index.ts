@@ -18,6 +18,7 @@ export { default as ProjectSummaryHeader } from './ProjectSummaryHeader';
 export { default as ResourceModal } from './ResourceModal';
 export { default as Resources } from './Resources';
 export { default as UserCard } from './UserCard';
+export { default as UserContributingCohorts } from './UserContributingCohorts';
 export { default as UserDetailHeader } from './UserDetailHeader';
 export { default as UserDetailHeaderCard } from './UserDetailHeaderCard';
 export { default as UserNavigation } from './UserNavigation';

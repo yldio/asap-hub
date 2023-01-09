@@ -11,10 +11,19 @@ import userIcon from '../icons/user-icon';
 const { rem } = pixels;
 const { getCounterString } = utils;
 
+const contentStyles = css({
+  padding: `${rem(16)} 0`,
+});
+
 const rowStyles = css({
   borderBottom: `1px solid ${colors.neutral500.rgb}`,
   marginBottom: rem(12),
   padding: `${rem(16)} 0 ${rem(12)}`,
+  ':last-child': {
+    borderBottom: 'none',
+    marginBottom: 0,
+    paddingBottom: 0,
+  },
   [nonMobileQuery]: {
     display: 'flex',
     alignItems: 'center',
@@ -55,9 +64,11 @@ const UserWorkingGroups: React.FC<UserWorkingGroupsProps> = ({
 
   return (
     <>
-      <Paragraph hasMargin={false} accent="lead">
-        {firstName} is involved in the following GP2 working groups:
-      </Paragraph>
+      <div css={[contentStyles]}>
+        <Paragraph hasMargin={false} accent="lead">
+          {firstName} is involved in the following GP2 working groups:
+        </Paragraph>
+      </div>
       {workingGroups.slice(0, 3).map((workingGroup) => (
         <div key={`user-working-group-${workingGroup.id}`} css={rowStyles}>
           <div css={[listElementStyles, listElementMainStyles]}>

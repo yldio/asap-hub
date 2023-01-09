@@ -2,12 +2,6 @@ import { render, screen } from '@testing-library/react';
 import UserQuestions from '../UserQuestions';
 
 describe('UserQuestions', () => {
-  it('renders the title', () => {
-    render(<UserQuestions questions={[]} firstName="" />);
-    expect(
-      screen.getByRole('heading', { name: 'Open Questions' }),
-    ).toBeVisible();
-  });
   it('renders the subtitle', () => {
     render(<UserQuestions questions={[]} firstName="Tony" />);
     expect(

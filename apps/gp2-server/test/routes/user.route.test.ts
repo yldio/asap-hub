@@ -11,7 +11,7 @@ import {
 import { loggerMock } from '../mocks/logger.mock';
 import { userControllerMock } from '../mocks/user-controller.mock';
 
-const { userDegrees, userRegions, keywords } = gp2;
+const { userDegrees, userRegions, keywords, userContributingCohortRole } = gp2;
 
 describe('/users/ route', () => {
   const loggedInUserId = '11';
@@ -578,6 +578,111 @@ describe('/users/ route', () => {
 
           expect(response.status).toBe(400);
         });
+      });
+      describe('contributing cohorts', () => {
+        const cohort = (id = '42') => ({
+          name: `the name ${id}`,
+          contributingCohortId: id,
+          role: 'Contributor',
+          studyUrl: 'http://example.com',
+        });
+        test('allows valid cohorts', async () => {
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({
+              contributingCohorts: [cohort()],
+            });
+          expect(response.status).toBe(200);
+        });
+        test('studyUrl is optional', async () => {
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({
+              contributingCohorts: [
+                {
+                  ...cohort(),
+                  studyUrl: undefined,
+                },
+              ],
+            });
+          expect(response.status).toBe(200);
+        });
+        test('allows 10 cohorts', async () => {
+          const contributingCohorts = Array.from({ length: 10 }, (_, index) =>
+            cohort(`${index}`),
+          );
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({ contributingCohorts });
+          expect(response.status).toBe(200);
+        });
+        test('allows no more than 10 cohorts', async () => {
+          const contributingCohorts = Array.from({ length: 11 }, (_, index) =>
+            cohort(`${index}`),
+          );
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({ contributingCohorts });
+          expect(response.status).toBe(400);
+        });
+        test('a studyUrl needs to be a Url', async () => {
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({
+              contributingCohorts: [
+                {
+                  ...cohort(),
+                  studyUrl: 'not-a-link',
+                },
+              ],
+            });
+          expect(response.status).toBe(400);
+        });
+        test.each(userContributingCohortRole)(
+          'allows valid role: %s',
+          async (role) => {
+            const response = await supertest(app)
+              .patch(`/users/${loggedInUserId}`)
+              .send({
+                contributingCohorts: [
+                  {
+                    ...cohort(),
+                    role,
+                  },
+                ],
+              });
+            expect(response.status).toBe(200);
+          },
+        );
+        test('does not allow invalid role', async () => {
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({
+              contributingCohorts: [
+                {
+                  ...cohort(),
+                  role: 'not-a-role',
+                },
+              ],
+            });
+          expect(response.status).toBe(400);
+        });
+        test.each(['name', 'contributingCohortId'])(
+          'does not allow invalid %s',
+          async (key) => {
+            const response = await supertest(app)
+              .patch(`/users/${loggedInUserId}`)
+              .send({
+                contributingCohorts: [
+                  {
+                    ...cohort(),
+                    [key]: undefined,
+                  },
+                ],
+              });
+            expect(response.status).toBe(400);
+          },
+        );
       });
     });
 

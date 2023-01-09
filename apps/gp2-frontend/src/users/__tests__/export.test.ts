@@ -158,13 +158,27 @@ describe('userToCSV', () => {
     const output: gp2Model.UserResponse = {
       ...gp2Fixtures.createUserResponse(),
       contributingCohorts: [
-        'contibruting cohort 1',
-        'contibruting cohort 2',
-        'contibruting cohort 3',
+        {
+          name: 'CALYPSO',
+          role: 'Contributor',
+          studyUrl: 'first-study',
+          contributingCohortId: '1',
+        },
+        {
+          name: 'DATATOP',
+          role: 'Investigator',
+          studyUrl: 'second-study',
+          contributingCohortId: '2',
+        },
+        {
+          name: 'ICEBERG',
+          role: 'Contributor',
+          contributingCohortId: '3',
+        },
       ],
     };
     expect(userToCSV(output).contributingCohorts).toMatchInlineSnapshot(
-      `"contibruting cohort 1, contibruting cohort 2, contibruting cohort 3"`,
+      `"CALYPSO Contributor first-study, DATATOP Investigator second-study, ICEBERG Contributor"`,
     );
   });
   it('formats the createdDate', () => {

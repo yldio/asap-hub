@@ -12,6 +12,7 @@ import {
   FetchWorkingGroupsMembersQuery,
   ProjectsDataMembersRoleEnum,
   ProjectsDataStatusEnum,
+  UsersDataContributingCohortsRoleEnum,
   UsersDataDegreeEnum,
   UsersDataRegionEnum,
   UsersDataRoleEnum,
@@ -61,7 +62,14 @@ export const getUserResponse = (): gp2.UserResponse => ({
     },
   ],
   fundingStreams: 'A funding stream',
-  contributingCohorts: [],
+  contributingCohorts: [
+    {
+      contributingCohortId: 'cohort-id',
+      name: 'CALYPSO',
+      role: 'Contributor',
+      studyUrl: 'http://example.com/study',
+    },
+  ],
   questions: [
     'What color was Iron Mans original armour?',
     'Who is the Stark family butler?',
@@ -127,6 +135,12 @@ export const getUserWebhookPayload = (
       role: { iv: UsersDataRoleEnum.Trainee },
       onboarded: { iv: true },
       questions: { iv: [{ question: 'some question' }] },
+      biography: { iv: '' },
+      country: { iv: '' },
+      positions: { iv: [] },
+      keywords: { iv: [] },
+      fundingStreams: { iv: '' },
+      contributingCohorts: { iv: [] },
     },
   },
 });
@@ -144,6 +158,12 @@ export const patchResponse = (): gp2squidex.RestUser => ({
     degree: { iv: [UsersDataDegreeEnum.Mph] },
     onboarded: { iv: true },
     questions: { iv: [{ question: 'some question' }] },
+    biography: { iv: '' },
+    country: { iv: '' },
+    positions: { iv: [] },
+    keywords: { iv: [] },
+    fundingStreams: { iv: '' },
+    contributingCohorts: { iv: [] },
   },
   created: '2020-09-25T09:42:51Z',
   lastModified: '2020-09-25T09:42:51Z',
@@ -194,7 +214,14 @@ export const getUserDataObject = (): gp2.UserDataObject => ({
   keywords: ['R', 'Bash'],
   fundingStreams: 'A funding stream',
   biography: 'a biography of Tony Stark',
-  contributingCohorts: [],
+  contributingCohorts: [
+    {
+      role: 'Contributor',
+      studyUrl: 'http://example.com/study',
+      contributingCohortId: 'cohort-id',
+      name: 'CALYPSO',
+    },
+  ],
   secondaryEmail: 'tony@stark.com',
   telephone: { countryCode: '+1', number: '212-970-4133' },
   questions: [
@@ -213,8 +240,18 @@ export const getUserCreateDataObject = (): gp2.UserCreateDataObject => {
 };
 
 export const getUserInput = (): gp2squidex.InputUser['data'] => {
-  const { degrees, region, telephone, questions, ...input } =
-    getUserCreateDataObject();
+  const {
+    degrees,
+    region,
+    fundingStreams,
+    telephone,
+    contributingCohorts,
+    questions,
+    positions,
+    country,
+    keywords,
+    ...input
+  } = getUserCreateDataObject();
 
   return {
     ...parseToSquidex(input),
@@ -226,6 +263,21 @@ export const getUserInput = (): gp2squidex.InputUser['data'] => {
     telephoneCountryCode: { iv: telephone?.countryCode || '' },
     telephoneNumber: { iv: telephone?.number || '' },
     questions: { iv: questions.map((question) => ({ question })) },
+    biography: { iv: input.biography || '' },
+    country: { iv: country },
+    positions: { iv: positions },
+    keywords: { iv: keywords },
+    fundingStreams: { iv: fundingStreams || '' },
+    contributingCohorts: {
+      iv: contributingCohorts.map(
+        ({ contributingCohortId, role, studyUrl, name }) => ({
+          id: [contributingCohortId],
+          role,
+          study: studyUrl || '',
+          name,
+        }),
+      ),
+    },
   };
 };
 
@@ -311,6 +363,18 @@ export const getGraphQLUser = (
     questions: [
       { question: 'What color was Iron Mans original armour?' },
       { question: 'Who is the Stark family butler?' },
+    ],
+    contributingCohorts: [
+      {
+        role: UsersDataContributingCohortsRoleEnum.Contributor,
+        study: 'http://example.com/study',
+        id: [
+          {
+            id: 'cohort-id',
+            flatData: { name: 'CALYPSO' },
+          },
+        ],
+      },
     ],
     ...user?.flatData,
   },

@@ -3,7 +3,7 @@ import { css, CSSObject, Theme } from '@emotion/react';
 import { Anchor } from '../atoms';
 import { externalLinkIcon } from '../icons';
 import { fern, pine } from '../colors';
-import { mobileScreen, perRem } from '../pixels';
+import { mobileScreen, perRem, rem } from '../pixels';
 import { getLinkColors } from '../atoms/Link';
 
 const containerStyles = css({
@@ -27,9 +27,9 @@ const styles = (
     boxSizing: 'border-box',
     border: `${borderWidth}px solid ${colors?.primary500?.rgba || fern.rgb}`,
     margin: noMargin ? '0' : `${12 / perRem}em 0`,
-    padding: withLabel ? `0 ${(12 - borderWidth) / perRem}em` : 0,
+    padding: withLabel ? `0 ${(12 - borderWidth) / perRem}em` : rem(3),
     [`@media (max-width: ${mobileScreen.max}px)`]: {
-      padding: full ? `0 ${(12 - borderWidth) / perRem}em` : 0,
+      padding: full ? `0 ${(12 - borderWidth) / perRem}em` : rem(3),
     },
     svg: {
       stroke: colors?.primary500?.rgba || fern.rgb,

@@ -33,8 +33,8 @@ import { roleMap as workingGroupRoleMap } from './working-group.data-provider';
 
 export interface UserDataProvider {
   fetchById(id: string): Promise<gp2Model.UserDataObject | null>;
-  update(id: string, update: gp2Model.UserUpdateDataObject): Promise<void>;
-  create(update: gp2Model.UserCreateDataObject): Promise<string>;
+  update(id: string, user: gp2Model.UserUpdateDataObject): Promise<void>;
+  create(user: gp2Model.UserCreateDataObject): Promise<string>;
   fetch(
     options: gp2Model.FetchUsersOptions,
   ): Promise<gp2Model.ListUserDataObject>;
@@ -57,17 +57,14 @@ export class UserSquidexDataProvider implements UserDataProvider {
     return parseGraphQLUserToDataObject(findUsersContent);
   }
 
-  async update(
-    id: string,
-    userToUpdate: gp2Model.UserUpdateDataObject,
-  ): Promise<void> {
-    const cleanedUser = getUserSquidexData(userToUpdate);
+  async update(id: string, user: gp2Model.UserUpdateDataObject): Promise<void> {
+    const cleanedUser = getUserSquidexData(user);
 
     await this.userSquidexRestClient.patch(id, cleanedUser);
   }
 
-  async create(userToCreate: gp2Model.UserCreateDataObject): Promise<string> {
-    const cleanedUser = getUserSquidexData(userToCreate);
+  async create(user: gp2Model.UserCreateDataObject): Promise<string> {
+    const cleanedUser = getUserSquidexData(user);
 
     const { id } = await this.userSquidexRestClient.create({
       ...cleanedUser,
@@ -206,6 +203,18 @@ const mapTelephone = (
   telephoneNumber: telephone?.number,
 });
 
+type UserUpdateCohorts = gp2Model.UserUpdateDataObject['contributingCohorts'];
+type UserCreateCohorts = gp2Model.UserCreateDataObject['contributingCohorts'];
+const mapContributingCohorts = (
+  cohorts: UserUpdateCohorts | UserCreateCohorts,
+) =>
+  cohorts?.map(({ contributingCohortId, name, role, studyUrl }) => ({
+    id: [contributingCohortId],
+    name,
+    role,
+    study: studyUrl || '',
+  }));
+
 function getUserSquidexData(
   input: gp2Model.UserCreateDataObject,
 ): Omit<gp2Squidex.InputUser['data'], 'connections' | 'avatar'>;
@@ -217,15 +226,26 @@ function getUserSquidexData(
 ):
   | Omit<gp2Squidex.InputUser['data'], 'connections' | 'avatar'>
   | Partial<Omit<gp2Squidex.InputUser['data'], 'connections' | 'avatar'>> {
-  const { region, role, degrees, telephone, questions, ...userInput } = input;
+  const {
+    region,
+    role,
+    degrees,
+    telephone,
+    questions,
+    contributingCohorts,
+    ...userInput
+  } = input;
   const fieldMappedUser = mapUserFields({ region, role, degrees });
   const mappedTelephone = mapTelephone(telephone);
   const mappedQuestions = questions?.map((question) => ({ question }));
+  const mappedCohorts = mapContributingCohorts(contributingCohorts);
+
   return parseToSquidex({
     ...userInput,
     ...fieldMappedUser,
     ...mappedTelephone,
     questions: mappedQuestions,
+    contributingCohorts: mappedCohorts,
   });
 }
 
@@ -296,6 +316,9 @@ export const parseGraphQLUserToDataObject = ({
   if (user.keywords && !user.keywords.every(gp2Model.isKeyword)) {
     throw new TypeError('Invalid keyword received from Squidex');
   }
+  const contributingCohorts = parseContributingCohorts(
+    user.contributingCohorts,
+  );
   return {
     id,
     createdDate,
@@ -312,12 +335,12 @@ export const parseGraphQLUserToDataObject = ({
     projects,
     workingGroups,
     fundingStreams: user.fundingStreams || undefined,
-    contributingCohorts: [],
     secondaryEmail: user.secondaryEmail || undefined,
     telephone,
     keywords: user.keywords || [],
     biography: user.biography || undefined,
     questions,
+    contributingCohorts,
   };
 };
 
@@ -422,6 +445,25 @@ const parsePositions = (
       role,
       department,
       institution,
+    };
+  }) || [];
+
+const parseContributingCohorts = (
+  cohorts: NonNullable<
+    FetchUserQuery['findUsersContent']
+  >['flatData']['contributingCohorts'],
+): gp2Model.UserDataObject['contributingCohorts'] =>
+  cohorts?.map(({ id, role, study }) => {
+    const cohort = id && id[0];
+
+    if (!(cohort && cohort.flatData.name && role)) {
+      throw new Error('Invalid Contributing Cohort');
+    }
+    return {
+      contributingCohortId: cohort.id,
+      name: cohort.flatData.name,
+      role,
+      ...(study && { studyUrl: study }),
     };
   }) || [];
 

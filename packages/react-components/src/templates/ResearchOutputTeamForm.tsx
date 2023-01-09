@@ -321,6 +321,7 @@ const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
                 onChangeTeams={setTeams}
                 getTeamSuggestions={getTeamSuggestions}
                 isEditMode={isEditMode}
+                authorsRequired={publishingEntity === 'Working Group'}
                 authorsSubtitle={
                   publishingEntity === 'Working Group'
                     ? '(required)'

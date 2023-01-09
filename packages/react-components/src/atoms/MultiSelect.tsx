@@ -2,8 +2,10 @@ import { css, useTheme } from '@emotion/react';
 import {
   ComponentProps,
   ReactElement,
-  useState,
   MouseEventHandler,
+  useCallback,
+  useEffect,
+  useRef,
 } from 'react';
 import Select, {
   ActionMeta,
@@ -23,7 +25,7 @@ import {
 } from 'react-sortable-hoc';
 import { MultiValueGenericProps } from 'react-select/src/components/MultiValue';
 
-import { validationMessageStyles } from '../form';
+import { useValidation, validationMessageStyles } from '../form';
 import { reactMultiSelectStyles } from '../select';
 import { noop } from '../utils';
 import { crossIcon } from '../icons';
@@ -122,6 +124,8 @@ export type MultiSelectProps<T extends MultiSelectOptionsType> = {
   readonly values?: OptionsType<T>;
   readonly sortable?: boolean;
   readonly creatable?: boolean;
+  readonly required?: boolean;
+  readonly getValidationMessage?: Parameters<typeof useValidation>[1];
 } & (
   | (Pick<Props<T, true>, 'noOptionsMessage' | 'components'> & {
       readonly suggestions: ReadonlyArray<T>;
@@ -149,8 +153,9 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
   onChange = noop,
   sortable = true,
   creatable = false,
+  required = false,
+  getValidationMessage,
 }: MultiSelectProps<T>): ReactElement => {
-  const [validationMsg, setValidationMsg] = useState('');
   const theme = useTheme();
   // This is to handle a bug with Select where the right click would make it impossible to write
   let inputRef: RefType<T> = null;
@@ -158,6 +163,26 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
     inputRef?.blur?.();
     inputRef?.getWrappedInstance?.().blur?.();
   };
+
+  const { validationMessage, validationTargetProps, validate } =
+    useValidation<HTMLInputElement>(
+      customValidationMessage,
+      getValidationMessage,
+    );
+
+  const initialRender = useRef(true);
+  const checkValidation = useCallback(() => {
+    if (initialRender.current) {
+      initialRender.current = false;
+    } else {
+      validate();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    checkValidation();
+  }, [values, checkValidation]);
 
   let sortableProps: SortableContainerProps | undefined;
 
@@ -191,13 +216,12 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
       ...components,
     },
     noOptionsMessage,
-    styles: reactMultiSelectStyles(theme, !!validationMsg),
-
+    styles: reactMultiSelectStyles(theme, !!validationMessage),
     ref: (ref: RefType<T>) => {
       inputRef = ref;
     },
-    onFocus: () => setValidationMsg(''),
-    onBlur: () => setValidationMsg(customValidationMessage),
+    onFocus: checkValidation,
+    onBlur: checkValidation,
     onChange: (options: OptionsType<T>, actionMeta: ActionMeta<T>) => {
       switch (actionMeta.action) {
         case 'remove-value':
@@ -234,7 +258,16 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
           defaultOptions
         />
       )}
-      <div css={validationMessageStyles}>{validationMsg}</div>
+      <input
+        {...validationTargetProps}
+        tabIndex={-1}
+        autoComplete="off"
+        value={values.map((value) => value.label).join('')}
+        required={required}
+        disabled={!enabled}
+        hidden
+      />
+      <div css={validationMessageStyles}>{validationMessage}</div>
     </div>
   );
 };

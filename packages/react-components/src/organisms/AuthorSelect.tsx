@@ -57,6 +57,7 @@ const AuthorSelect: React.FC<AuthorSelectProps> = (props) => (
   <LabeledMultiSelect<AuthorOption>
     {...props}
     creatable={true}
+    getValidationMessage={() => 'Please select at least one author.'}
     components={{
       MultiValueContainer: (multiValueContainerProps) => (
         <div

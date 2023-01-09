@@ -94,8 +94,6 @@ describe('WorkingGroupOutput', () => {
     userEvent.click(screen.getByText('Abu-Remaileh, M 1'));
     userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
     userEvent.click(screen.getByText('Example 1 Lab'));
-    userEvent.click(screen.getByRole('textbox', { name: /Authors/i }));
-    userEvent.click(screen.getByText('Person A 3'));
 
     await publish();
 
@@ -308,6 +306,8 @@ async function mandatoryFields(
     screen.getByPlaceholderText('DOI number e.g. 10.5555/YFRU1371'),
     doi,
   );
+  userEvent.click(screen.getByRole('textbox', { name: /Authors/i }));
+  userEvent.click(screen.getByText('Person A 3'));
   const button = screen.getByRole('button', { name: /Publish/i });
   return {
     publish: async () => {

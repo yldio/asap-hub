@@ -32,6 +32,7 @@ type ResearchOutputContributorsProps = {
   readonly isSaving: boolean;
   isEditMode?: boolean;
   authorsSubtitle?: string;
+  authorsRequired?: boolean;
 };
 
 const ResearchOutputContributorsCard: React.FC<
@@ -49,6 +50,7 @@ const ResearchOutputContributorsCard: React.FC<
   isSaving,
   isEditMode,
   authorsSubtitle = '(optional)',
+  authorsRequired,
 }) => (
   <FormCard title="Who were the contributors?">
     <LabeledMultiSelect
@@ -86,6 +88,7 @@ const ResearchOutputContributorsCard: React.FC<
       loadOptions={getAuthorSuggestions}
       onChange={onChangeAuthors}
       values={authors}
+      required={authorsRequired}
       noOptionsMessage={({ inputValue }) =>
         `Sorry, no authors match ${inputValue}`
       }

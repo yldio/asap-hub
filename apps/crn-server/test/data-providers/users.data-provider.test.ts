@@ -518,7 +518,6 @@ describe('User data provider', () => {
       nock(baseUrl)
         .post(`/api/content/${appName}/users?publish=true`, {
           ...(getInputUser() as any),
-          workingGroups: { iv: [] },
         })
         .reply(201, { id: userId });
 

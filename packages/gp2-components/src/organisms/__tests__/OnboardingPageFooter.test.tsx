@@ -48,7 +48,7 @@ describe('OnboardingPageFooter', () => {
     ).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Publish' })).toBeVisible();
   });
-  it('calls the publishUser function when pressing the publish button', async () => {
+  it('calls the publishUser function when pressing the publish button', () => {
     const publishUser = jest.fn();
     render(
       <OnboardingPageFooter

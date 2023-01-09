@@ -65,7 +65,7 @@
     "@testing-library/jest-dom": "5.16.5",
     "@testing-library/react": "11.2.7",
     "@testing-library/react-hooks": "8.0.1",
-    "@testing-library/user-event": "12.8.3",
+    "@testing-library/user-event": "14.4.3",
     "@types/asap-hub__assets": "workspace:*",
     "@types/hast-util-sanitize": "workspace:*",
     "@types/history": "4.7.11",

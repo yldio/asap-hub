@@ -563,7 +563,7 @@ __metadata:
     "@testing-library/dom": 8.19.0
     "@testing-library/jest-dom": 5.16.5
     "@testing-library/react": 11.2.7
-    "@testing-library/user-event": 12.8.3
+    "@testing-library/user-event": 14.4.3
     "@types/history": 4.7.11
     "@types/jest": 27.5.2
     "@types/jsdom": 16.2.3
@@ -613,7 +613,7 @@ __metadata:
     "@testing-library/jest-dom": 5.16.5
     "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": 8.0.1
-    "@testing-library/user-event": 12.8.3
+    "@testing-library/user-event": 14.4.3
     "@types/history": 4.7.11
     "@types/jest": 27.5.2
     "@types/nock": 11.1.0
@@ -965,7 +965,7 @@ __metadata:
     "@testing-library/dom": 8.19.0
     "@testing-library/jest-dom": 5.16.5
     "@testing-library/react": 11.2.7
-    "@testing-library/user-event": 12.8.3
+    "@testing-library/user-event": 14.4.3
     "@types/history": 4.7.11
     "@types/jest": 27.5.2
     "@types/jsdom": 16.2.3
@@ -1013,7 +1013,7 @@ __metadata:
     "@testing-library/jest-dom": 5.16.5
     "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": 8.0.1
-    "@testing-library/user-event": 12.8.3
+    "@testing-library/user-event": 14.4.3
     "@types/asap-hub__assets": "workspace:*"
     "@types/hast-util-sanitize": "workspace:*"
     "@types/history": 4.7.11
@@ -1078,7 +1078,7 @@ __metadata:
     "@testing-library/jest-dom": 5.16.5
     "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": 8.0.1
-    "@testing-library/user-event": 12.8.3
+    "@testing-library/user-event": 14.4.3
     "@types/history": 4.7.11
     "@types/jest": 27.5.2
     "@types/nock": 11.1.0
@@ -1305,7 +1305,7 @@ __metadata:
     "@testing-library/jest-dom": 5.16.5
     "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": 8.0.1
-    "@testing-library/user-event": 12.8.3
+    "@testing-library/user-event": 14.4.3
     "@types/asap-hub__assets": "workspace:*"
     "@types/hast-util-sanitize": "workspace:*"
     "@types/history": 4.7.11
@@ -12542,14 +12542,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/user-event@npm:12.8.3":
-  version: 12.8.3
-  resolution: "@testing-library/user-event@npm:12.8.3"
-  dependencies:
-    "@babel/runtime": "npm:^7.12.5"
+"@testing-library/user-event@npm:14.4.3":
+  version: 14.4.3
+  resolution: "@testing-library/user-event@npm:14.4.3"
   peerDependencies:
     "@testing-library/dom": ">=7.21.4"
-  checksum: c9fb5ee07cbe79ddf32d81e1a353e556d02a1f1619456ccfad6abcdf1b7db400fdc9d7a8e0be3994f456e7135a0dfb7fa10b29fb98a0f5fc417b99fce0ce8166
+  checksum: 852c48ea6db1c9471b18276617c84fec4320771e466cd58339a732ca3fd73ad35e5a43ae14f51af51a8d0a150dcf60fcaab049ef367871207bea8f92c4b8195e
   languageName: node
   linkType: hard
 

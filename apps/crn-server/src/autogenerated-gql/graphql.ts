@@ -5825,7 +5825,6 @@ export type UsersDataSocialInputDto = {
 /** The structure of the Teams nested schema. */
 export type UsersDataTeamsChildDto = {
   id: Maybe<Array<Teams>>;
-  memberStatus: Maybe<Scalars['String']>;
   /** Attention: Check if this user needs to be added to Smart Simple */
   role: Maybe<Scalars['String']>;
 };
@@ -5833,7 +5832,6 @@ export type UsersDataTeamsChildDto = {
 /** The structure of the Teams nested schema. */
 export type UsersDataTeamsChildInputDto = {
   id: InputMaybe<Array<Scalars['String']>>;
-  memberStatus: InputMaybe<Scalars['String']>;
   /** Attention: Check if this user needs to be added to Smart Simple */
   role: InputMaybe<Scalars['String']>;
 };

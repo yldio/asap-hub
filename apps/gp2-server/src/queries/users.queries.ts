@@ -43,6 +43,14 @@ export const usersContentQueryFragment = gql`
           }
         }
       }
+      social {
+        googleScholar
+        orcid
+        blog
+        twitter
+        linkedIn
+        github
+      }
     }
     referencingProjectsContents {
       id

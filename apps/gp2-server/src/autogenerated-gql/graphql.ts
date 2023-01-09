@@ -2129,6 +2129,7 @@ export type UsersDataDto = {
   region: Maybe<UsersDataRegionDto>;
   role: Maybe<UsersDataRoleDto>;
   secondaryEmail: Maybe<UsersDataSecondaryEmailDto>;
+  social: Maybe<UsersDataSocialDto>;
   telephoneCountryCode: Maybe<UsersDataTelephoneCountryCodeDto>;
   telephoneNumber: Maybe<UsersDataTelephoneNumberDto>;
 };
@@ -2185,6 +2186,7 @@ export type UsersDataInputDto = {
   region: InputMaybe<UsersDataRegionInputDto>;
   role: InputMaybe<UsersDataRoleInputDto>;
   secondaryEmail: InputMaybe<UsersDataSecondaryEmailInputDto>;
+  social: InputMaybe<UsersDataSocialInputDto>;
   telephoneCountryCode: InputMaybe<UsersDataTelephoneCountryCodeInputDto>;
   telephoneNumber: InputMaybe<UsersDataTelephoneNumberInputDto>;
 };
@@ -2327,6 +2329,36 @@ export type UsersDataSecondaryEmailInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
+/** The structure of the Social Links nested schema. */
+export type UsersDataSocialChildDto = {
+  blog: Maybe<Scalars['String']>;
+  github: Maybe<Scalars['String']>;
+  googleScholar: Maybe<Scalars['String']>;
+  linkedIn: Maybe<Scalars['String']>;
+  orcid: Maybe<Scalars['String']>;
+  twitter: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Social Links nested schema. */
+export type UsersDataSocialChildInputDto = {
+  blog: InputMaybe<Scalars['String']>;
+  github: InputMaybe<Scalars['String']>;
+  googleScholar: InputMaybe<Scalars['String']>;
+  linkedIn: InputMaybe<Scalars['String']>;
+  orcid: InputMaybe<Scalars['String']>;
+  twitter: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Social Links field of the Users content type. */
+export type UsersDataSocialDto = {
+  iv: Maybe<Array<UsersDataSocialChildDto>>;
+};
+
+/** The structure of the Social Links field of the Users content input type. */
+export type UsersDataSocialInputDto = {
+  iv: InputMaybe<Array<UsersDataSocialChildInputDto>>;
+};
+
 /** The structure of the Country code field of the Users content type. */
 export type UsersDataTelephoneCountryCodeDto = {
   iv: Maybe<Scalars['String']>;
@@ -2370,6 +2402,7 @@ export type UsersFlatDataDto = {
   /** Role on the GP2 Hub */
   role: Maybe<UsersDataRoleEnum>;
   secondaryEmail: Maybe<Scalars['String']>;
+  social: Maybe<Array<UsersDataSocialChildDto>>;
   telephoneCountryCode: Maybe<Scalars['String']>;
   telephoneNumber: Maybe<Scalars['String']>;
 };
@@ -3015,6 +3048,14 @@ export type UsersContentFragment = Pick<
         }
       >
     >;
+    social: Maybe<
+      Array<
+        Pick<
+          UsersDataSocialChildDto,
+          'googleScholar' | 'orcid' | 'blog' | 'twitter' | 'linkedIn' | 'github'
+        >
+      >
+    >;
   };
   referencingProjectsContents: Maybe<
     Array<
@@ -3094,6 +3135,19 @@ export type FetchUserQuery = {
                 >
               >;
             }
+          >
+        >;
+        social: Maybe<
+          Array<
+            Pick<
+              UsersDataSocialChildDto,
+              | 'googleScholar'
+              | 'orcid'
+              | 'blog'
+              | 'twitter'
+              | 'linkedIn'
+              | 'github'
+            >
           >
         >;
       };
@@ -3190,6 +3244,19 @@ export type FetchUsersQuery = {
                       >
                     >;
                   }
+                >
+              >;
+              social: Maybe<
+                Array<
+                  Pick<
+                    UsersDataSocialChildDto,
+                    | 'googleScholar'
+                    | 'orcid'
+                    | 'blog'
+                    | 'twitter'
+                    | 'linkedIn'
+                    | 'github'
+                  >
                 >
               >;
             };
@@ -4042,6 +4109,33 @@ export const UsersContentFragmentDoc = {
                             },
                           ],
                         },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'social' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'googleScholar' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'orcid' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'blog' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'twitter' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'linkedIn' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'github' },
                       },
                     ],
                   },

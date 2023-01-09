@@ -43,6 +43,14 @@ const mockedUser: gp2.UserResponse = {
     countryCode: '+1',
     number: '0123456789',
   },
+  social: {
+    googleScholar: 'https://scholar.google.com',
+    orcid: 'https://orcid.org',
+    blog: 'https://www.blogger.com',
+    twitter: 'https://twitter.com',
+    linkedIn: 'https://www.linkedin.com',
+    github: 'https://github.com/',
+  },
 };
 
 export const createUserResponse = (

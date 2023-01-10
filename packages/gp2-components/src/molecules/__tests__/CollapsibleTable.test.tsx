@@ -1,21 +1,27 @@
 import { render, screen } from '@testing-library/react';
 import { ComponentProps } from 'react';
-import TableDisplay from '../TableDisplay';
+import CollapsibleTable from '../CollapsibleTable';
 
-describe('TableDisplay', () => {
-  type TableDisplayProps = ComponentProps<typeof TableDisplay>;
-  const renderTableDisplay = (overrides: Partial<TableDisplayProps>) => {
-    const props: TableDisplayProps = {
+describe('CollapsibleTable', () => {
+  type TableDisplayProps = ComponentProps<typeof CollapsibleTable>;
+  const renderTableDisplay = ({
+    children = [
+      {
+        id: '42',
+        values: ['a value'],
+      },
+    ],
+    ...overrides
+  }: Partial<TableDisplayProps>) => {
+    const props: Omit<TableDisplayProps, 'children'> = {
       paragraph: 'a paragraph',
       headings: ['a heading'],
-      rows: [
-        {
-          id: '42',
-          values: ['a value'],
-        },
-      ],
     };
-    render(<TableDisplay {...props} {...overrides} />);
+    render(
+      <CollapsibleTable {...props} {...overrides}>
+        {children}
+      </CollapsibleTable>,
+    );
   };
   it('displays the paragraph', () => {
     const paragraph = 'some paragraph to display';
@@ -29,7 +35,7 @@ describe('TableDisplay', () => {
   });
   it('displays the row', () => {
     const value = 'some row to display';
-    renderTableDisplay({ rows: [{ id: '42', values: [value] }] });
+    renderTableDisplay({ children: [{ id: '42', values: [value] }] });
     expect(screen.getByText(value)).toBeVisible();
   });
   it.todo('multiple rows');

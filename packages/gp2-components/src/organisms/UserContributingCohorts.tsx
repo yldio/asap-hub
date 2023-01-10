@@ -1,6 +1,6 @@
 import { gp2 } from '@asap-hub/model';
 import { ExternalLink } from '@asap-hub/react-components';
-import { TableDisplay } from '../molecules';
+import { CollapsibleTable } from '../molecules';
 
 type UserContributingCohortsProps = Pick<
   gp2.UserResponse,
@@ -10,7 +10,7 @@ const UserContributingCohorts: React.FC<UserContributingCohortsProps> = ({
   contributingCohorts,
   firstName,
 }) => (
-  <TableDisplay
+  <CollapsibleTable
     paragraph={`${firstName} has contributed to the following cohort studies:`}
     headings={['Name', 'Role', 'Link']}
   >
@@ -25,7 +25,7 @@ const UserContributingCohorts: React.FC<UserContributingCohortsProps> = ({
         };
       },
     )}
-  </TableDisplay>
+  </CollapsibleTable>
 );
 
 export default UserContributingCohorts;

@@ -1,7 +1,7 @@
 import { gp2 } from '@asap-hub/model';
 import { Link } from '@asap-hub/react-components';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
-import { StatusPill, TableDisplay } from '../molecules';
+import { CollapsibleTable, StatusPill } from '../molecules';
 
 type UserProjectsProps = Pick<
   gp2.UserResponse,
@@ -19,7 +19,7 @@ const UserProjects: React.FC<UserProjectsProps> = ({
   firstName,
   id,
 }) => (
-  <TableDisplay
+  <CollapsibleTable
     paragraph={`${firstName} has been involved in the following GP2 projects:`}
     headings={['Name', 'Role', 'Status']}
   >
@@ -44,7 +44,7 @@ const UserProjects: React.FC<UserProjectsProps> = ({
         values: [name, role, status],
       };
     })}
-  </TableDisplay>
+  </CollapsibleTable>
 );
 
 export default UserProjects;

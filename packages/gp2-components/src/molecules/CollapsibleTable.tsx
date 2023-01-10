@@ -76,16 +76,16 @@ const buttonWrapperStyles = css({
   borderBottom: `transparent`,
 });
 
-type TableDisplayRow = {
+type CollapsibleTableRow = {
   id: string;
   values: (string | ReactNode | undefined)[];
 };
-type TableDisplayProps = {
+type CollapsibleTableProps = {
   paragraph: string;
   headings: string[];
-  children: TableDisplayRow[];
+  children: CollapsibleTableRow[];
 };
-const TableDisplay: React.FC<TableDisplayProps> = ({
+const CollapsibleTable: React.FC<CollapsibleTableProps> = ({
   paragraph,
   headings,
   children,
@@ -129,7 +129,7 @@ const TableDisplay: React.FC<TableDisplayProps> = ({
           ))}
         </div>
       ))}
-      {rows.length > minimumToDisplay && (
+      {children.length > minimumToDisplay && (
         <div css={buttonWrapperStyles}>
           <Button linkStyle onClick={() => setExpanded(!expanded)}>
             <span
@@ -148,4 +148,4 @@ const TableDisplay: React.FC<TableDisplayProps> = ({
     </>
   );
 };
-export default TableDisplay;
+export default CollapsibleTable;

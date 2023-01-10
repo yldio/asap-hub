@@ -1346,7 +1346,7 @@ describe('Reminder Data Provider', () => {
         });
       });
 
-      it('Should not fetch the reminder when it passed more than 72 hours of the end of the event', async () => {
+      it('Should not fetch the reminder when more than 72 hours have passed since the end of the event', async () => {
         // set current time to 72 hours + 1 minute after the end of the fixture event
         jest.setSystemTime(DateTime.fromISO('2022-01-04T10:01:00Z').toJSDate());
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();

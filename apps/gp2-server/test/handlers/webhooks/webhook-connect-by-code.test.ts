@@ -34,6 +34,12 @@ const user: gp2Squidex.RestUser = {
     onboarded: {
       iv: true,
     },
+    positions: { iv: [] },
+    keywords: { iv: [] },
+    fundingStreams: { iv: 'a stream' },
+    biography: { iv: 'a biography' },
+    country: { iv: 'Spain' },
+    contributingCohorts: { iv: [] },
   },
 };
 

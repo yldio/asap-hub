@@ -15,6 +15,7 @@ const ses = new SES({
   region: sesRegion,
 });
 
+/* istanbul ignore next */
 const restClient = new SquidexRest<gp2Squidex.RestUser>(getAuthToken, 'users', {
   appName,
   baseUrl,

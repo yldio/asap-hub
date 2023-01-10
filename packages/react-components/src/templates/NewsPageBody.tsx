@@ -25,7 +25,7 @@ const NewsPageBody: React.FC<NewsPageBodyProps> = ({
   >
     {news.map((data) => (
       <div key={data.id}>
-        <NewsCard {...data} />
+        <NewsCard {...data} type="News" />
       </div>
     ))}
   </ResultList>

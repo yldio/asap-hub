@@ -58,21 +58,21 @@ const footerStyles = css({
 const placeholders: Record<NewsType, JSX.Element> = {
   News: newsPlaceholder,
   Tutorial: trainingPlaceholderIcon,
-  'Working Groups': trainingPlaceholderIcon,
 };
 
-const NewsCard: React.FC<NewsResponse | TutorialsResponse> = ({
+const NewsCard: React.FC<
+  (NewsResponse & { type: 'News' }) | (TutorialsResponse & { type: 'Tutorial' })
+> = ({
   id,
   title,
+  type,
   thumbnail,
   text,
   link,
   linkText,
   shortText,
   created,
-  ...rest
 }) => {
-  const type = 'type' in rest ? rest.type : 'Tutorial';
   const href =
     type === 'Tutorial'
       ? discover({}).tutorials({}).tutorial({ tutorialId: id }).$

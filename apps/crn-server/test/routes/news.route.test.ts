@@ -113,7 +113,6 @@ describe('/news/ route', () => {
         id: 'uuid',
         text: 'Text',
         title: 'Title',
-        type: 'News',
       };
 
       newsControllerMock.fetchById.mockResolvedValueOnce(newsOrEventResponse);

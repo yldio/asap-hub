@@ -9,7 +9,5 @@ export const createDiscoverResponse = (): DiscoverResponse => ({
   pages: [createPageResponse('demo page')],
   members: [createUserResponse()],
   scientificAdvisoryBoard: [createUserResponse()],
-  workingGroups: [
-    createNewsResponse({ key: 'working group', type: 'Working Groups' }),
-  ],
+  workingGroups: [createNewsResponse({ key: 'working group' })],
 });

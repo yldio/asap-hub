@@ -6,6 +6,7 @@ import NewsSection from '../NewsSection';
 const props: ComponentProps<typeof NewsSection> = {
   news: [],
   title: '',
+  type: 'News',
 };
 
 it('renders a title', () => {

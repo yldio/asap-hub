@@ -1,7 +1,7 @@
 import { FetchOptions, ListResponse } from './common';
 
 /* istanbul ignore next */
-export const newsType = ['News', 'Tutorial', 'Working Groups'] as const;
+export const newsType = ['News', 'Tutorial'] as const;
 export const newsFrequency = [
   'Biweekly Newsletter',
   'CRN Quarterly',
@@ -14,7 +14,6 @@ export type NewsFrequency = typeof newsFrequency[number];
 export type NewsDataObject = {
   id: string;
   title: string;
-  type: NewsType;
   frequency?: NewsFrequency;
   shortText?: string;
   text?: string;

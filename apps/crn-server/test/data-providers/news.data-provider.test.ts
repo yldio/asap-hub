@@ -315,7 +315,6 @@ describe('News data provider', () => {
         id: 'uuid',
         text: 'Text',
         title: 'Title',
-        type: 'News',
       };
 
       expect(result).toEqual(expectedResponse);

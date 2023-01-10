@@ -16,7 +16,6 @@ export const squidexGraphqlDashboardFlatData = (): NonNullable<
       version: 42,
       flatData: {
         title: 'News 1',
-        type: 'News',
         shortText: 'Short text of news 1',
         text: '<p>text</p>',
         frequency: 'News Articles',
@@ -77,7 +76,6 @@ export const getDashboardDataObject = (): DashboardDataObject => ({
       text: '<p>text</p>',
       thumbnail: `${baseUrl}/api/assets/${appName}/thumbnail-uuid1`,
       title: 'News 1',
-      type: 'News',
       frequency: 'News Articles',
     },
   ],

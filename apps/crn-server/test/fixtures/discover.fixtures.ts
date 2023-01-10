@@ -211,7 +211,6 @@ export const getDiscoverResponse = (): DiscoverResponse => ({
       text: 'Content',
       link: 'https://hub.asap.science',
       linkText: 'Working group 1',
-      type: 'Working Groups',
     },
   ],
   members: getSquidexGraphqlDiscoverMembersResponse(),

@@ -22,14 +22,17 @@ const richTextContainer = css({
 });
 
 type NewsDetailsPageProps =
-  | Pick<
-      NewsResponse,
-      'text' | 'title' | 'type' | 'created' | 'link' | 'linkText'
-    >
-  | Pick<TutorialsResponse, 'text' | 'title' | 'created' | 'link' | 'linkText'>;
+  | (Pick<NewsResponse, 'text' | 'title' | 'created' | 'link' | 'linkText'> & {
+      type: 'News';
+    })
+  | (Pick<
+      TutorialsResponse,
+      'text' | 'title' | 'created' | 'link' | 'linkText'
+    > & { type: 'Tutorial' });
 
 const NewsDetailsPage: React.FC<NewsDetailsPageProps> = ({
   text = '',
+  type,
   created,
   title,
   link,
@@ -53,7 +56,7 @@ const NewsDetailsPage: React.FC<NewsDetailsPageProps> = ({
   return (
     <div css={containerStyles}>
       <Card>
-        <Pill>{'type' in rest ? rest.type : 'Tutorial'}</Pill>
+        <Pill>{type}</Pill>
         <Display styleAsHeading={3}>{title}</Display>
         {publishDateComponent}
         <div css={richTextContainer}>

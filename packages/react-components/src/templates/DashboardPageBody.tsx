@@ -177,6 +177,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         <div>
           <NewsSection
             news={news}
+            type="News"
             title="Latest News from ASAP"
             subtitle="Explore the latest shared research and learn more about them."
           />

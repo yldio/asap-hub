@@ -8,7 +8,7 @@ type FixtureOptions = {
 export const createNewsResponse = ({
   key,
   type = 'News',
-}: FixtureOptions): NewsResponse => ({
+}: FixtureOptions): NewsResponse & { type: 'News' | 'Tutorial' } => ({
   id: `uuid-${type}-${key}`,
   type,
   title: `${type} ${key} title`,

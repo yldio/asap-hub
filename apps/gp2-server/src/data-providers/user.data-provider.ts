@@ -305,6 +305,7 @@ export const parseGraphQLUserToDataObject = ({
   const projects = parseProjects(projectItems);
   const workingGroups = parseWorkingGroups(workingGroupItems);
   const questions = parseQuestions(user.questions);
+  const social = parseSocial(user.social);
   const telephone =
     user.telephoneNumber || user.telephoneCountryCode
       ? {
@@ -341,6 +342,7 @@ export const parseGraphQLUserToDataObject = ({
     biography: user.biography || undefined,
     questions,
     contributingCohorts,
+    social,
   };
 };
 
@@ -431,6 +433,19 @@ const parseQuestions = (
     }
     return question;
   }) || [];
+
+const parseSocial = (
+  social: NonNullable<FetchUserQuery['findUsersContent']>['flatData']['social'],
+): gp2Model.UserDataObject['social'] =>
+  social?.map((item) =>
+    Object.entries(item).reduce(
+      (acc, [key, value]) => ({
+        ...acc,
+        ...(value ? { [`${key}`]: value } : undefined),
+      }),
+      {},
+    ),
+  )[0];
 
 const parsePositions = (
   positions: NonNullable<

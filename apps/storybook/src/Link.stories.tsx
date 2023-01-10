@@ -3,7 +3,7 @@ import {
   Link,
   Paragraph,
   ThemeVariant,
-  orcidIcon,
+  OrcidIcon,
 } from '@asap-hub/react-components';
 import { Story } from '@storybook/react';
 
@@ -61,7 +61,7 @@ export const ButtonStyledIcon = () => (
     primary={boolean('Primary', true)}
     small={boolean('Small', false)}
   >
-    {orcidIcon}
+    <OrcidIcon />
   </Link>
 );
 
@@ -72,7 +72,7 @@ export const ButtonStyledIconAndText = () => (
     primary={boolean('Primary', true)}
     small={boolean('Small', false)}
   >
-    {orcidIcon}
+    <OrcidIcon />
     {text('Text', 'Text')}
   </Link>
 );

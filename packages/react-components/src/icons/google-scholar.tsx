@@ -1,11 +1,18 @@
 /* istanbul ignore file */
+import { FC } from 'react';
 
-const googleScholarIcon = (
+interface GoogleScholarIconProps {
+  readonly color?: string;
+}
+
+const GoogleScholarIcon: FC<GoogleScholarIconProps> = ({
+  color = '#00222C',
+}: GoogleScholarIconProps) => (
   <svg
     width={28}
     height={28}
     viewBox="0 0 28 28"
-    fill="#00222C"
+    fill={color}
     xmlns="http://www.w3.org/2000/svg"
     style={{
       stroke: 'none',
@@ -17,4 +24,4 @@ const googleScholarIcon = (
   </svg>
 );
 
-export default googleScholarIcon;
+export default GoogleScholarIcon;

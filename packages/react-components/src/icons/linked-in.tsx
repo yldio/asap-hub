@@ -1,11 +1,17 @@
 /* istanbul ignore file */
 
-const linkedInIcon = (
+import { FC } from 'react';
+
+interface LinkedInIconProps {
+  readonly color?: string;
+}
+
+const LinkedInIcon: FC<LinkedInIconProps> = ({ color = '#00222C' }) => (
   <svg
     width={28}
     height={28}
     viewBox="0 0 28 28"
-    fill="#00222C"
+    fill={color}
     xmlns="http://www.w3.org/2000/svg"
     style={{
       stroke: 'none',
@@ -21,4 +27,4 @@ const linkedInIcon = (
   </svg>
 );
 
-export default linkedInIcon;
+export default LinkedInIcon;

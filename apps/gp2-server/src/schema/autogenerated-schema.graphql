@@ -2188,6 +2188,7 @@ type UsersDataDto {
   region: UsersDataRegionDto
   role: UsersDataRoleDto
   secondaryEmail: UsersDataSecondaryEmailDto
+  social: UsersDataSocialDto
   telephoneCountryCode: UsersDataTelephoneCountryCodeDto
   telephoneNumber: UsersDataTelephoneNumberDto
 }
@@ -2244,6 +2245,7 @@ input UsersDataInputDto {
   region: UsersDataRegionInputDto
   role: UsersDataRoleInputDto
   secondaryEmail: UsersDataSecondaryEmailInputDto
+  social: UsersDataSocialInputDto
   telephoneCountryCode: UsersDataTelephoneCountryCodeInputDto
   telephoneNumber: UsersDataTelephoneNumberInputDto
 }
@@ -2386,6 +2388,36 @@ input UsersDataSecondaryEmailInputDto {
   iv: String
 }
 
+"""The structure of the Social Links nested schema."""
+type UsersDataSocialChildDto {
+  blog: String
+  github: String
+  googleScholar: String
+  linkedIn: String
+  orcid: String
+  twitter: String
+}
+
+"""The structure of the Social Links nested schema."""
+input UsersDataSocialChildInputDto {
+  blog: String
+  github: String
+  googleScholar: String
+  linkedIn: String
+  orcid: String
+  twitter: String
+}
+
+"""The structure of the Social Links field of the Users content type."""
+type UsersDataSocialDto {
+  iv: [UsersDataSocialChildDto!]
+}
+
+"""The structure of the Social Links field of the Users content input type."""
+input UsersDataSocialInputDto {
+  iv: [UsersDataSocialChildInputDto!]
+}
+
 """The structure of the Country code field of the Users content type."""
 type UsersDataTelephoneCountryCodeDto {
   iv: String
@@ -2429,6 +2461,7 @@ type UsersFlatDataDto {
   """Role on the GP2 Hub"""
   role: UsersDataRoleEnum
   secondaryEmail: String
+  social: [UsersDataSocialChildDto!]
   telephoneCountryCode: String
   telephoneNumber: String
 }

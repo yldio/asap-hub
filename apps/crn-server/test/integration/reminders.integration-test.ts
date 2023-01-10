@@ -754,7 +754,7 @@ describe('Reminders', () => {
       eventIdsForDeletion = [];
     });
 
-    test('Should see the reminder when the event has finished and user is a PM from one of the speakers team', async () => {
+    test('Should see the reminder when the event has finished and user is a PM of one of the speaker teams', async () => {
       // setting system time to 10:05AM in UTC
       jest.setSystemTime(new Date('2022-08-10T11:05:00.0Z'));
 

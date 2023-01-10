@@ -14,5 +14,7 @@ export default class RemoveWorkingGroupsFromNews extends Migration {
       },
     );
   };
-  down = async (): Promise<void> => {};
+  down = async (): Promise<void> => {
+    // this is not needed
+  };
 }

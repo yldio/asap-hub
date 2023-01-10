@@ -56,13 +56,15 @@ const listElementMainStyles = css({
   },
 });
 const listElementSecondaryStyles = css({
-  color: colors.greyscale1000.rgb,
   [nonMobileQuery]: {
     flex: '30% 0 0',
   },
 });
+const secondaryTextStyles = css({
+  color: colors.greyscale1000.rgb,
+});
+
 const headingListStyles = css({
-  margin: '0',
   flex: '30% 0 0',
   [nonMobileQuery]: {
     display: 'none',
@@ -98,6 +100,7 @@ const CollapsibleTable: React.FC<CollapsibleTableProps> = ({
       ? rowStyles
       : [rowStyles, hideStyles];
 
+  const getTextStyles = (idx: number) => (idx === 0 ? [] : secondaryTextStyles);
   return (
     <>
       <div css={[contentStyles]}>
@@ -106,14 +109,15 @@ const CollapsibleTable: React.FC<CollapsibleTableProps> = ({
         </Paragraph>
       </div>
       <div css={headingTopStyles}>
-        {headings.map((heading) => (
-          <Headline4>{heading}</Headline4>
+        {headings.map((heading, idx) => (
+          <Headline4 key={`heading-${idx}`}>{heading}</Headline4>
         ))}
       </div>
       {children.map(({ id, values }) => (
-        <div key={`table-display-${id}`} css={getListStyles()}>
+        <div key={`display-row-${id}`} css={getListStyles()}>
           {values.map((value, idx) => (
             <div
+              key={`display-row-value-${idx}`}
               css={[
                 listElementStyles,
                 idx === 0 ? listElementMainStyles : listElementSecondaryStyles,
@@ -121,8 +125,12 @@ const CollapsibleTable: React.FC<CollapsibleTableProps> = ({
             >
               {value && (
                 <>
-                  <h4 css={headingListStyles}>{headings[idx]}:</h4>
-                  {value}
+                  <div css={headingListStyles}>
+                    <Headline4 noMargin styleAsHeading={5}>
+                      {headings[idx]}:
+                    </Headline4>
+                  </div>
+                  <span css={getTextStyles(idx)}>{value}</span>
                 </>
               )}
             </div>

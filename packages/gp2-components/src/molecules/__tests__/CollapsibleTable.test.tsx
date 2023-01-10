@@ -50,7 +50,15 @@ describe('CollapsibleTable', () => {
     expect(screen.getByText(firstValue)).toBeVisible();
     expect(screen.getByText(secondValue)).toBeVisible();
   });
-  it.todo('multiple columns');
+  it('multiple columns in a row', () => {
+    const firstValue = 'first value in a row to display';
+    const secondValue = 'second value in a row to display';
+    renderTableDisplay({
+      children: [{ id: '42', values: [firstValue, secondValue] }],
+    });
+    expect(screen.getByText(firstValue)).toBeVisible();
+    expect(screen.getByText(secondValue)).toBeVisible();
+  });
   it.todo('optional field');
   it.todo('pass in a component');
   it.todo('show more');

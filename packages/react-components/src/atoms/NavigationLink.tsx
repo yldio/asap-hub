@@ -67,11 +67,18 @@ const squareBorderStyles = css({
   borderRadius: 'unset',
 });
 
+const noStrokeStyles = css({
+  stroke: 'initial',
+  svg: { stroke: 'initial' },
+  '&.active-link > p > span > svg': { stroke: 'initial' },
+});
+
 interface NavigationLinkProps {
   readonly href: string;
   readonly enabled?: boolean;
   readonly icon?: JSX.Element;
   readonly squareBorder?: boolean;
+  readonly hasStrokeWidth?: boolean;
 }
 const NavigationLink: React.FC<NavigationLinkProps> = ({
   href,
@@ -79,6 +86,7 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
   icon,
   squareBorder = false,
   children,
+  hasStrokeWidth = true,
 }) => {
   const [internal, url] = isInternalLink(href);
 
@@ -89,6 +97,7 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
         activeClassName={activeClassName}
         css={({ colors }) => [
           styles,
+          !hasStrokeWidth && noStrokeStyles,
           squareBorder && squareBorderStyles,
           { [`&.${activeClassName}`]: activePrimaryStyles(colors) },
           !enabled && disableStyles,
@@ -111,6 +120,7 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
       href={url}
       css={({ colors }) => [
         styles,
+        !hasStrokeWidth && noStrokeStyles,
         squareBorder && squareBorderStyles,
         active && activePrimaryStyles(colors),
         !enabled && disableStyles,

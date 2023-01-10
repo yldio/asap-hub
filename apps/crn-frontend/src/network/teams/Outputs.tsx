@@ -1,8 +1,8 @@
 import { RESEARCH_OUTPUT_ENTITY_TYPE } from '@asap-hub/algolia';
 import { createCsvFileStream, SearchFrame } from '@asap-hub/frontend-utils';
 import {
+  ProfileOutputs,
   ResearchOutputsSearch,
-  TeamProfileOutputs,
   utils,
 } from '@asap-hub/react-components';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
@@ -22,8 +22,8 @@ import {
 import { useTeamById } from './state';
 
 type OutputsListProps = Pick<
-  ComponentProps<typeof TeamProfileOutputs>,
-  'hasOutputs' | 'ownTeam' | 'contactEmail'
+  ComponentProps<typeof ProfileOutputs>,
+  'hasOutputs' | 'ownEntity' | 'contactEmail'
 > & {
   displayName: string;
   searchQuery: string;
@@ -39,7 +39,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
   filters,
   teamId,
   hasOutputs,
-  ownTeam,
+  ownEntity,
   contactEmail,
   displayName,
 }) => {
@@ -76,7 +76,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
       researchOutputToCSV,
     );
   return (
-    <TeamProfileOutputs
+    <ProfileOutputs
       researchOutputs={result.items}
       exportResults={exportResults}
       numberOfItems={result.total}
@@ -91,8 +91,9 @@ const OutputsList: React.FC<OutputsListProps> = ({
         network({}).teams({}).team({ teamId }).outputs({}).$ + listViewParams
       }
       hasOutputs={hasOutputs}
-      ownTeam={ownTeam}
+      ownEntity={ownEntity}
       contactEmail={contactEmail}
+      publishingEntity="Team"
     />
   );
 };
@@ -134,7 +135,7 @@ const Outputs: React.FC<OutputsProps> = ({ teamId }) => {
           searchQuery={debouncedSearchQuery}
           filters={filters}
           hasOutputs={hasOutputs}
-          ownTeam={ownTeam}
+          ownEntity={ownTeam}
           contactEmail={team?.pointOfContact?.email}
           displayName={team?.displayName ?? ''}
         />

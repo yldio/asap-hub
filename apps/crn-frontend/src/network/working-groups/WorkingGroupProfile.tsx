@@ -10,7 +10,8 @@ import {
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { network, useRouteParams } from '@asap-hub/routing';
 import { useCanCreateUpdateResearchOutput, useWorkingGroupById } from './state';
-import WorkingGroupOutputs from './WorkingGroupOutput';
+import Outputs from './Outputs';
+import WorkingGroupOutput from './WorkingGroupOutput';
 
 const WorkingGroupProfile: FC = () => {
   const route = network({}).workingGroups({}).workingGroup;
@@ -30,7 +31,7 @@ const WorkingGroupProfile: FC = () => {
               path={path + route({ workingGroupId }).createOutput.template}
             >
               <Frame title="Share Working Group Output">
-                <WorkingGroupOutputs workingGroupId={workingGroupId} />
+                <WorkingGroupOutput workingGroupId={workingGroupId} />
               </Frame>
             </Route>
             <Route path={path + route({ workingGroupId }).about.template}>
@@ -43,6 +44,16 @@ const WorkingGroupProfile: FC = () => {
                     membersListElementId={membersListElementId}
                     {...workingGroup}
                   />
+                </Frame>
+              </WorkingGroupPage>
+            </Route>
+            <Route path={path + route({ workingGroupId }).outputs.template}>
+              <WorkingGroupPage
+                membersListElementId={membersListElementId}
+                {...workingGroup}
+              >
+                <Frame title="Outputs">
+                  <Outputs workingGroupId={workingGroupId} />
                 </Frame>
               </WorkingGroupPage>
             </Route>

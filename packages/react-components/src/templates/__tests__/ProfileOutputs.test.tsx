@@ -2,9 +2,9 @@ import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import { render } from '@testing-library/react';
 import { ComponentProps } from 'react';
 
-import TeamProfileOutputs from '../TeamProfileOutputs';
+import ProfileOutputs from '../ProfileOutputs';
 
-const baseProps: ComponentProps<typeof TeamProfileOutputs> = {
+const baseProps: ComponentProps<typeof ProfileOutputs> = {
   researchOutputs: [],
   numberOfItems: 0,
   numberOfPages: 1,
@@ -14,12 +14,13 @@ const baseProps: ComponentProps<typeof TeamProfileOutputs> = {
   cardViewHref: '',
   listViewHref: '',
   hasOutputs: true,
-  ownTeam: true,
+  ownEntity: true,
+  publishingEntity: 'Team',
 };
 
 it('renders output cards', () => {
   const { getAllByRole, queryByText } = render(
-    <TeamProfileOutputs
+    <ProfileOutputs
       {...baseProps}
       researchOutputs={[
         {
@@ -57,16 +58,16 @@ it('renders output cards', () => {
 
 it('renders the no output page for your own team', () => {
   const { getByTitle, getByRole, getByText, rerender } = render(
-    <TeamProfileOutputs {...baseProps} hasOutputs={false} ownTeam={true} />,
+    <ProfileOutputs {...baseProps} hasOutputs={false} ownEntity={true} />,
   );
   expect(getByTitle('Research')).toBeInTheDocument();
   expect(getByRole('heading', { level: 1 }).textContent).toMatch(/Your team/i);
   expect(getByText(/contact your PM/i).closest('a')).toBeNull();
   rerender(
-    <TeamProfileOutputs
+    <ProfileOutputs
       {...baseProps}
       hasOutputs={false}
-      ownTeam={true}
+      ownEntity={true}
       contactEmail="example@example.com"
     />,
   );
@@ -78,21 +79,47 @@ it('renders the no output page for your own team', () => {
 
 it('renders the no output page for another team', () => {
   const { getByTitle, getByRole, getByText, rerender } = render(
-    <TeamProfileOutputs {...baseProps} hasOutputs={false} ownTeam={false} />,
+    <ProfileOutputs {...baseProps} hasOutputs={false} ownEntity={false} />,
   );
   expect(getByTitle('Research')).toBeInTheDocument();
   expect(getByRole('heading', { level: 1 }).textContent).toMatch(/This team/i);
   expect(getByText(/contact the PM/i).closest('a')).toBeNull();
   rerender(
-    <TeamProfileOutputs
+    <ProfileOutputs
       {...baseProps}
       hasOutputs={false}
-      ownTeam={false}
+      ownEntity={false}
       contactEmail="example@example.com"
     />,
   );
   expect(getByText(/contact the PM/i).closest('a')).toHaveAttribute(
     'href',
     expect.stringMatching(/example@example/i),
+  );
+});
+
+it('renders the no outputs page for a working group', () => {
+  const { getByRole, rerender } = render(
+    <ProfileOutputs
+      {...baseProps}
+      hasOutputs={false}
+      ownEntity={false}
+      publishingEntity="Working Group"
+    />,
+  );
+
+  expect(getByRole('heading', { level: 1 }).textContent).toMatch(
+    /This working group/i,
+  );
+  rerender(
+    <ProfileOutputs
+      {...baseProps}
+      hasOutputs={false}
+      publishingEntity="Working Group"
+      ownEntity={true}
+    />,
+  );
+  expect(getByRole('heading', { level: 1 }).textContent).toMatch(
+    /Your working group/i,
   );
 });

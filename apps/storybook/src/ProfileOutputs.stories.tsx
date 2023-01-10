@@ -1,16 +1,16 @@
-import { TeamProfileOutputs } from '@asap-hub/react-components';
+import { ProfileOutputs } from '@asap-hub/react-components';
 import { createListResearchOutputResponse } from '@asap-hub/fixtures';
-import { boolean, number, text } from '@storybook/addon-knobs';
+import { boolean, number, select, text } from '@storybook/addon-knobs';
 
 export default {
-  title: 'Templates / Team Profile / Outputs',
-  component: TeamProfileOutputs,
+  title: 'Templates / Profile Outputs',
+  component: ProfileOutputs,
 };
 
 export const Normal = () => {
   const numberOfOutputs = number('Number of outputs', 2);
   return (
-    <TeamProfileOutputs
+    <ProfileOutputs
       researchOutputs={createListResearchOutputResponse(numberOfOutputs).items}
       numberOfItems={2}
       numberOfPages={1}
@@ -19,7 +19,12 @@ export const Normal = () => {
       isListView={false}
       cardViewHref={''}
       listViewHref={''}
-      ownTeam={boolean('Own Team', true)}
+      ownEntity={boolean('Own Entity', true)}
+      publishingEntity={select(
+        'Publishing Entity',
+        ['Team', 'Working Group'],
+        'Team',
+      )}
       hasOutputs={!!numberOfOutputs}
       contactEmail={text('Contact Email', 'test@exmaple.com')}
     />

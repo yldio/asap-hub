@@ -39,13 +39,12 @@ runs:
       shell: bash
       run: |
         yarn export:entity $ENTITY -f $ENTITY.json
-        yarn workspace @asap-hub/algolia run algolia import -s "../../${ENTITY}.json" -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -b 100 -t ./scripts/algolia-transformation.js
+        jq -c '.[]' $ENTITY.json | algolia objects import $ALGOLIA_INDEX -F -
       env:
-        ALGOLIA_API_KEY: ${{ inputs.algolia-api-key }}
-        ALGOLIA_APP_ID: ${{ inputs.algolia-app-id }}
+        ALGOLIA_APPLICATION_ID: ${{ inputs.algolia-app-id }}
+        ALGOLIA_ADMIN_API_KEY: ${{ inputs.algolia-api-key }}
         ALGOLIA_INDEX: ${{ inputs.algolia-index }}
-        ENTITY: '${{ inputs.entity-type }}s'
-        ENTITY_TYPE: ${{ inputs.entity-type }}
+        ENTITY: ${{ inputs.entity-type }}
         SQUIDEX_APP_NAME: ${{ inputs.squidex-app-name }}
         SQUIDEX_BASE_URL: ${{ inputs.squidex-base-url }}
         SQUIDEX_CLIENT_ID: ${{ inputs.squidex-ci-client-id }}

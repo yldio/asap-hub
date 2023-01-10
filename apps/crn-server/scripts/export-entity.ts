@@ -1,3 +1,4 @@
+import { EntityRecord, EntityResponses } from '@asap-hub/algolia';
 import { ListResponse } from '@asap-hub/model';
 import {
   getAccessTokenFactory,
@@ -14,6 +15,7 @@ import { promises as fs } from 'fs';
 import { appName, baseUrl, clientId, clientSecret } from '../src/config';
 import Events from '../src/controllers/events';
 import ExternalAuthors from '../src/controllers/external-authors';
+import Labs from '../src/controllers/labs';
 import ResearchOutputs from '../src/controllers/research-outputs';
 import Users from '../src/controllers/users';
 import { AssetSquidexDataProvider } from '../src/data-providers/assets.data-provider';
@@ -22,9 +24,8 @@ import { ResearchOutputSquidexDataProvider } from '../src/data-providers/researc
 import { ResearchTagSquidexDataProvider } from '../src/data-providers/research-tags.data-provider';
 import { UserSquidexDataProvider } from '../src/data-providers/users.data-provider';
 
-type Entity = 'users' | 'research-outputs' | 'external-authors' | 'events';
 export const exportEntity = async (
-  entity: Entity,
+  entity: keyof EntityResponses,
   filename?: string,
 ): Promise<void> => {
   const controller = getController(entity);
@@ -32,7 +33,7 @@ export const exportEntity = async (
 
   let recordCount = 0;
   let total: number;
-  let records: ListResponse<unknown>;
+  let records: ListResponse<EntityResponses[keyof EntityResponses]>;
   let page = 1;
 
   await file.write('[\n');
@@ -49,7 +50,13 @@ export const exportEntity = async (
       await file.write(',\n');
     }
 
-    await file.write(JSON.stringify(records.items, null, 2).slice(1, -1));
+    await file.write(
+      JSON.stringify(
+        records.items.map((record) => transformRecords(record, entity)),
+        null,
+        2,
+      ).slice(1, -1),
+    );
 
     page++;
     recordCount += records.items.length;
@@ -60,7 +67,7 @@ export const exportEntity = async (
   console.log(`Finished exporting ${recordCount} records`);
 };
 
-function getController(entity: Entity) {
+const getController = (entity: keyof EntityResponses) => {
   const getAuthToken = getAccessTokenFactory({
     clientId,
     clientSecret,
@@ -114,15 +121,27 @@ function getController(entity: Entity) {
   const assetDataProvider = new AssetSquidexDataProvider(userRestClient);
 
   const controllerMap = {
-    users: new Users(userDataProvider, assetDataProvider),
-    'research-outputs': new ResearchOutputs(
+    user: new Users(userDataProvider, assetDataProvider),
+    'research-output': new ResearchOutputs(
       researchOutputDataProvider,
       researchTagDataProvider,
       externalAuthorDataProvider,
     ),
-    'external-authors': new ExternalAuthors(squidexGraphqlClient),
-    events: new Events(squidexGraphqlClient, eventsRestClient),
+    'external-author': new ExternalAuthors(squidexGraphqlClient),
+    event: new Events(squidexGraphqlClient, eventsRestClient),
+    lab: new Labs(squidexGraphqlClient),
   };
 
   return controllerMap[entity];
-}
+};
+
+const transformRecords = <T extends keyof EntityResponses>(
+  record: EntityResponses[T],
+  type: T,
+): EntityRecord<T> => ({
+  ...record,
+  objectID: record.id,
+  __meta: {
+    type,
+  },
+});

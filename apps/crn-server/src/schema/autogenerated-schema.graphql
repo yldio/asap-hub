@@ -3847,7 +3847,6 @@ type NewsAndEventsDataDto {
   text: NewsAndEventsDataTextDto
   thumbnail: NewsAndEventsDataThumbnailDto
   title: NewsAndEventsDataTitleDto
-  type: NewsAndEventsDataTypeDto
 }
 
 """The structure of the Frequency field of the News content type."""
@@ -3869,7 +3868,6 @@ input NewsAndEventsDataInputDto {
   text: NewsAndEventsDataTextInputDto
   thumbnail: NewsAndEventsDataThumbnailInputDto
   title: NewsAndEventsDataTitleInputDto
-  type: NewsAndEventsDataTypeInputDto
 }
 
 """The structure of the External Link field of the News content type."""
@@ -3940,16 +3938,6 @@ input NewsAndEventsDataTitleInputDto {
   iv: String
 }
 
-"""The structure of the Type field of the News content type."""
-type NewsAndEventsDataTypeDto {
-  iv: String
-}
-
-"""The structure of the Type field of the News content input type."""
-input NewsAndEventsDataTypeInputDto {
-  iv: String
-}
-
 """The structure of the flat News data type."""
 type NewsAndEventsFlatDataDto {
   frequency: String
@@ -3963,7 +3951,6 @@ type NewsAndEventsFlatDataDto {
   text: String
   thumbnail: [Asset!]
   title: String
-  type: String
 }
 
 """List of News items and total count."""
@@ -5873,12 +5860,12 @@ input UsersDataLabsInputDto {
 
 """The structure of the Last Modified Date field of the Users content type."""
 type UsersDataLastModifiedDateDto {
-  iv: String
+  iv: Instant
 }
 
 """The structure of the Last Modified Date field of the Users content input type."""
 input UsersDataLastModifiedDateInputDto {
-  iv: String
+  iv: Instant
 }
 
 """The structure of the Last Name field of the Users content type."""
@@ -6114,7 +6101,7 @@ type UsersFlatDataDto {
   jobTitle: String
   """Mandatory for grantees. They cannot publish profile without a lab."""
   labs: [Labs!]
-  lastModifiedDate: String
+  lastModifiedDate: Instant
   lastName: String
   """Use this to allow the user to see the full Hub and skip profile completion"""
   onboarded: Boolean

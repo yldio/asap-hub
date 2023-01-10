@@ -3709,7 +3709,6 @@ export type NewsAndEventsDataDto = {
   text: Maybe<NewsAndEventsDataTextDto>;
   thumbnail: Maybe<NewsAndEventsDataThumbnailDto>;
   title: Maybe<NewsAndEventsDataTitleDto>;
-  type: Maybe<NewsAndEventsDataTypeDto>;
 };
 
 /** The structure of the Frequency field of the News content type. */
@@ -3731,7 +3730,6 @@ export type NewsAndEventsDataInputDto = {
   text: InputMaybe<NewsAndEventsDataTextInputDto>;
   thumbnail: InputMaybe<NewsAndEventsDataThumbnailInputDto>;
   title: InputMaybe<NewsAndEventsDataTitleInputDto>;
-  type: InputMaybe<NewsAndEventsDataTypeInputDto>;
 };
 
 /** The structure of the External Link field of the News content type. */
@@ -3798,16 +3796,6 @@ export type NewsAndEventsDataTitleInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
-/** The structure of the Type field of the News content type. */
-export type NewsAndEventsDataTypeDto = {
-  iv: Maybe<Scalars['String']>;
-};
-
-/** The structure of the Type field of the News content input type. */
-export type NewsAndEventsDataTypeInputDto = {
-  iv: InputMaybe<Scalars['String']>;
-};
-
 /** The structure of the flat News data type. */
 export type NewsAndEventsFlatDataDto = {
   frequency: Maybe<Scalars['String']>;
@@ -3819,7 +3807,6 @@ export type NewsAndEventsFlatDataDto = {
   text: Maybe<Scalars['String']>;
   thumbnail: Maybe<Array<Asset>>;
   title: Maybe<Scalars['String']>;
-  type: Maybe<Scalars['String']>;
 };
 
 /** List of News items and total count. */
@@ -6207,7 +6194,6 @@ export type FetchDashboardQuery = {
                 | 'title'
                 | 'shortText'
                 | 'text'
-                | 'type'
                 | 'frequency'
                 | 'link'
                 | 'linkText'
@@ -6257,7 +6243,6 @@ export type FetchDiscoverQuery = {
                 | 'title'
                 | 'shortText'
                 | 'text'
-                | 'type'
                 | 'frequency'
                 | 'link'
                 | 'linkText'
@@ -8200,7 +8185,7 @@ export type NewsFragment = Pick<
 > & {
   flatData: Pick<
     NewsAndEventsFlatDataDto,
-    'title' | 'shortText' | 'text' | 'type' | 'frequency' | 'link' | 'linkText'
+    'title' | 'shortText' | 'text' | 'frequency' | 'link' | 'linkText'
   > & { thumbnail: Maybe<Array<Pick<Asset, 'id'>>> };
 };
 
@@ -11018,7 +11003,6 @@ export const NewsFragmentDoc = {
                 { kind: 'Field', name: { kind: 'Name', value: 'title' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'shortText' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'text' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'thumbnail' },

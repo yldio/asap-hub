@@ -13,7 +13,8 @@ const UserContributingCohorts: React.FC<UserContributingCohortsProps> = ({
   <TableDisplay
     paragraph={`${firstName} has contributed to the following cohort studies:`}
     headings={['Name', 'Role', 'Link']}
-    rows={contributingCohorts.map(
+  >
+    {contributingCohorts.map(
       ({ contributingCohortId, name, studyUrl, role }) => {
         const study = studyUrl && (
           <ExternalLink href={studyUrl} label="View study" noMargin />
@@ -24,7 +25,7 @@ const UserContributingCohorts: React.FC<UserContributingCohortsProps> = ({
         };
       },
     )}
-  />
+  </TableDisplay>
 );
 
 export default UserContributingCohorts;

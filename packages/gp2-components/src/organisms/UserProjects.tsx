@@ -1,6 +1,6 @@
 import { gp2 } from '@asap-hub/model';
-import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { Link } from '@asap-hub/react-components';
+import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { StatusPill, TableDisplay } from '../molecules';
 
 type UserProjectsProps = Pick<
@@ -22,7 +22,8 @@ const UserProjects: React.FC<UserProjectsProps> = ({
   <TableDisplay
     paragraph={`${firstName} has been involved in the following GP2 projects:`}
     headings={['Name', 'Role', 'Status']}
-    rows={projects.map((project) => {
+  >
+    {projects.map((project) => {
       const name = (
         <Link
           underlined
@@ -43,7 +44,7 @@ const UserProjects: React.FC<UserProjectsProps> = ({
         values: [name, role, status],
       };
     })}
-  />
+  </TableDisplay>
 );
 
 export default UserProjects;

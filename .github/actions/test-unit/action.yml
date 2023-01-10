@@ -17,9 +17,9 @@ runs:
       with:
         path: |
           .jest-cache/
-        key: jest-cache-${{ github.sha }}
+        key: jest-cache-${{ inputs.since-master }}-${{ github.sha }}
         restore-keys: |
-          jest-cache-
+          jest-cache-${{ inputs.since-master }}-
     - name: Get number of CPU cores
       id: cpu-cores
       uses: SimenB/github-actions-cpu-cores@v1

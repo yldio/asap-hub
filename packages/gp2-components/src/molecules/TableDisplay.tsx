@@ -7,8 +7,7 @@ import {
   pixels,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
-import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { nonMobileQuery } from '../layout';
 import colors from '../templates/colors';
 
@@ -79,23 +78,23 @@ const buttonWrapperStyles = css({
 
 type TableDisplayRow = {
   id: string;
-  values: (string | EmotionJSX.Element | undefined)[];
+  values: (string | ReactNode | undefined)[];
 };
 type TableDisplayProps = {
   paragraph: string;
   headings: string[];
-  rows: TableDisplayRow[];
+  children: TableDisplayRow[];
 };
 const TableDisplay: React.FC<TableDisplayProps> = ({
   paragraph,
   headings,
-  rows,
+  children,
 }) => {
   const minimumToDisplay = 3;
   const [expanded, setExpanded] = useState(false);
 
   const getListStyles = () =>
-    rows.length < minimumToDisplay + 1 || expanded
+    children.length < minimumToDisplay + 1 || expanded
       ? rowStyles
       : [rowStyles, hideStyles];
 
@@ -111,7 +110,7 @@ const TableDisplay: React.FC<TableDisplayProps> = ({
           <Headline4>{heading}</Headline4>
         ))}
       </div>
-      {rows.map(({ id, values }) => (
+      {children.map(({ id, values }) => (
         <div key={`table-display-${id}`} css={getListStyles()}>
           {values.map((value, idx) => (
             <div

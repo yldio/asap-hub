@@ -38,7 +38,18 @@ describe('CollapsibleTable', () => {
     renderTableDisplay({ children: [{ id: '42', values: [value] }] });
     expect(screen.getByText(value)).toBeVisible();
   });
-  it.todo('multiple rows');
+  it('multiple rows', () => {
+    const firstValue = 'first row to display';
+    const secondValue = 'second row to display';
+    renderTableDisplay({
+      children: [
+        { id: '42', values: [firstValue] },
+        { id: '11', values: [secondValue] },
+      ],
+    });
+    expect(screen.getByText(firstValue)).toBeVisible();
+    expect(screen.getByText(secondValue)).toBeVisible();
+  });
   it.todo('multiple columns');
   it.todo('optional field');
   it.todo('pass in a component');

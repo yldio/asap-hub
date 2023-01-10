@@ -4,8 +4,7 @@ inputs:
   since-master:
     description: 'Whether to run tests since master'
     required: false
-    type: boolean
-    default: false
+    default: 'false'
   codecov-token:
     description: 'The environment name'
     required: true
@@ -20,9 +19,7 @@ runs:
         key: jest-cache-${{ inputs.since-master }}-${{ github.sha }}
         restore-keys: |
           jest-cache-${{ inputs.since-master }}-
-    - name: Get number of CPU cores
-      id: cpu-cores
-      uses: SimenB/github-actions-cpu-cores@v1
+          jest-cache-
     - name: Fetch master branch
       shell: bash
       if: ${{ inputs.since-master == 'true' }}
@@ -34,11 +31,11 @@ runs:
     - name: Run tests from diff with master
       shell: bash
       if: ${{ inputs.since-master == 'true' }}
-      run: yarn test --maxWorkers ${{ steps.cpu-cores.outputs.count }} --ci --changedSince=master
+      run: yarn test --maxWorkers 2 --ci --changedSince=master
     - name: Run all tests
       shell: bash
       if: ${{ inputs.since-master == 'false' }}
-      run: yarn test --coverage --maxWorkers ${{ steps.cpu-cores.outputs.count }} --ci
+      run: yarn test --coverage --maxWorkers 2 --ci
     - uses: codecov/codecov-action@v3
       if: ${{ inputs.since-master == 'false' }}
       with:

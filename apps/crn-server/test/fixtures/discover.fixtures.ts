@@ -76,7 +76,6 @@ const squidexGraphqlDiscoverFlatData = (): NonNullable<
         frequency: 'Biweekly Newsletter',
         link: 'https://hub.asap.science',
         linkText: 'Working group 1',
-        type: 'Working Groups',
         shortText: 'Short text',
         thumbnail: [
           {

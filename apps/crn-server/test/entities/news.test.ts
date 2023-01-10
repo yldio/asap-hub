@@ -15,7 +15,6 @@ describe('parse GraphQL news entities', () => {
       version: 42,
       data: null,
       flatData: {
-        type: 'News',
         title: 'Title',
         shortText: 'shortText',
         thumbnail,
@@ -29,7 +28,6 @@ describe('parse GraphQL news entities', () => {
     expect(parseGraphQLNews(news)).toMatchObject({
       id: 'uuid',
       created: date,
-      type: 'News',
       title: 'Title',
       shortText: 'shortText',
       text: 'text',

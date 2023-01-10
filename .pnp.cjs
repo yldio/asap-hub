@@ -6827,7 +6827,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "luxon",\
-        "npm:1.26.0"\
+        "npm:1.28.1"\
       ],\
       [\
         "lz-string",\
@@ -10707,7 +10707,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["csv-parse", "npm:4.16.3"],\
             ["got", "npm:11.8.5"],\
             ["jwt-encode", "npm:1.0.1"],\
-            ["luxon", "npm:1.26.0"],\
+            ["luxon", "npm:1.28.1"],\
             ["nock", "npm:13.0.11"],\
             ["prettier", "npm:2.7.1"],\
             ["pump", "npm:3.0.0"],\
@@ -11124,7 +11124,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["lodash.get", "npm:4.4.2"],\
             ["lodash.matches", "npm:4.6.0"],\
             ["lodash.uniqby", "npm:4.7.0"],\
-            ["luxon", "npm:1.26.0"],\
+            ["luxon", "npm:1.28.1"],\
             ["mime-types", "npm:2.1.35"],\
             ["nock", "npm:13.0.11"],\
             ["node-dev", "npm:6.7.0"],\
@@ -12466,7 +12466,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["graphql-request", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:3.4.0"],\
             ["jwt-decode", "npm:2.2.0"],\
             ["jwt-encode", "npm:1.0.1"],\
-            ["luxon", "npm:1.26.0"],\
+            ["luxon", "npm:1.28.1"],\
             ["nock", "npm:13.0.11"],\
             ["opentracing", "npm:0.14.7"]\
           ],\
@@ -54918,10 +54918,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["luxon", [\
-        ["npm:1.26.0", {\
-          "packageLocation": "./.yarn/cache/luxon-npm-1.26.0-09624ad59c-06706c6158.zip/node_modules/luxon/",\
+        ["npm:1.28.1", {\
+          "packageLocation": "./.yarn/cache/luxon-npm-1.28.1-0f675125b8-2c62999ade.zip/node_modules/luxon/",\
           "packageDependencies": [\
-            ["luxon", "npm:1.26.0"]\
+            ["luxon", "npm:1.28.1"]\
           ],\
           "linkType": "HARD"\
         }]\

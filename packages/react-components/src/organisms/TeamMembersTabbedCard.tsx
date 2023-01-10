@@ -40,7 +40,10 @@ const TeamMembersTabbedCard: React.FC<TeamMembersTabbedCardProps> = ({
 }) => {
   const [alumniMembers, activeMembers] = splitListBy(
     members,
-    (member) => isTeamInactive || !!member?.alumniSinceDate,
+    (member: TeamMember) =>
+      isTeamInactive ||
+      !!member?.alumniSinceDate ||
+      member?.status === 'Inactive',
   );
 
   return (

@@ -8,7 +8,6 @@ import {
   UploadPresentationReminder,
 } from '@asap-hub/model';
 import Reminders, {
-  CRN_MEETING_MATERIALS_DRIVE,
   formattedMaterialByEventType,
 } from '../../src/controllers/reminders';
 import {
@@ -24,6 +23,7 @@ import {
   getUploadPresentationReminder,
 } from '../fixtures/reminders.fixtures';
 import { reminderDataProviderMock } from '../mocks/reminder-data-provider.mock';
+import { crnMeetingMaterialsDrive } from '../../src/config';
 
 describe('Reminder Controller', () => {
   const reminderController = new Reminders(reminderDataProviderMock);
@@ -220,7 +220,7 @@ describe('Reminder Controller', () => {
         expect(items[0]).toMatchObject({
           description:
             "Don't forget to upload presentations for the Some Test Event Title event in the ASAP CRN Meeting Materials Drive.",
-          href: CRN_MEETING_MATERIALS_DRIVE,
+          href: crnMeetingMaterialsDrive,
         });
       });
 

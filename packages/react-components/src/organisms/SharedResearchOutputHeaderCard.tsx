@@ -41,6 +41,7 @@ type SharedResearchOutputHeaderCardProps = ComponentProps<
     | 'labs'
     | 'title'
     | 'lastUpdatedPartial'
+    | 'workingGroups'
   >;
 
 const SharedResearchOutputHeaderCard: React.FC<
@@ -53,6 +54,7 @@ const SharedResearchOutputHeaderCard: React.FC<
   title,
   lastUpdatedPartial,
   labs,
+  workingGroups,
   ...props
 }) => (
   <Card>
@@ -69,6 +71,14 @@ const SharedResearchOutputHeaderCard: React.FC<
         }))}
       />
       <AssociationList type="Team" inline associations={teams} />
+      <AssociationList
+        type="Working Group"
+        inline
+        associations={workingGroups.map(({ id, title }) => ({
+          id,
+          displayName: title,
+        }))}
+      />
     </div>
     <div css={[timestampStyles, captionStyles]}>
       <span>Date added: {formatDate(new Date(addedDate || created))} · </span>

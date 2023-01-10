@@ -20,6 +20,9 @@ runs:
         restore-keys: |
           jest-cache-${{ inputs.since-master }}-
           jest-cache-
+    - name: Get number of CPU cores
+      id: cpu-cores
+      uses: SimenB/github-actions-cpu-cores@v1
     - name: Fetch master branch
       shell: bash
       if: ${{ inputs.since-master == 'true' }}
@@ -31,11 +34,11 @@ runs:
     - name: Run tests from diff with master
       shell: bash
       if: ${{ inputs.since-master == 'true' }}
-      run: yarn test --maxWorkers 2 --ci --changedSince=master
+      run: yarn test --maxWorkers ${{ steps.cpu-cores.outputs.count }} --ci --changedSince=master
     - name: Run all tests
       shell: bash
       if: ${{ inputs.since-master == 'false' }}
-      run: yarn test --coverage --maxWorkers 2 --ci
+      run: yarn test --coverage --maxWorkers ${{ steps.cpu-cores.outputs.count }} --ci
     - uses: codecov/codecov-action@v3
       if: ${{ inputs.since-master == 'false' }}
       with:

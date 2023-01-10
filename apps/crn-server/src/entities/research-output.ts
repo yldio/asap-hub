@@ -70,6 +70,7 @@ export const parseGraphQLResearchOutput = (
       output.referencingTeamsContents?.map((team) =>
         parseGraphqlTeamLite(team),
       ) || [],
+    workingGroups: [],
     created: parseDate(output.created).toISOString(),
     link: data.link || undefined,
     documentType:

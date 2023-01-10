@@ -30,6 +30,12 @@ const researchOutputResponse: Omit<
       displayName: 'Jakobsson, J',
     },
   ],
+  workingGroups: [
+    {
+      id: 'wg-123',
+      title: 'Example Working Group',
+    },
+  ],
   sharingStatus: 'Public',
   contactEmails: [],
   labs: [],

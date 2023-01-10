@@ -1,8 +1,13 @@
-import { FC } from 'react';
+import React, { FC } from 'react';
 import { css } from '@emotion/react';
 import { network } from '@asap-hub/routing';
 
-import { labIcon, TeamIcon, inactiveBadgeIcon } from '../icons';
+import {
+  labIcon,
+  TeamIcon,
+  inactiveBadgeIcon,
+  WorkingGroupsIcon,
+} from '../icons';
 import { Avatar, Link } from '../atoms';
 import { perRem } from '../pixels';
 import { lead, silver } from '../colors';
@@ -79,7 +84,7 @@ interface AssociationListProps {
     id: string;
     inactiveSince?: string;
   }>;
-  readonly type: 'Team' | 'Lab';
+  readonly type: 'Team' | 'Lab' | 'Working Group';
   readonly inline?: boolean;
   readonly max?: number;
   readonly more?: number;
@@ -92,7 +97,12 @@ const AssociationList: FC<AssociationListProps> = ({
   inline = false,
   more,
 }) => {
-  const icon = type === 'Team' ? <TeamIcon /> : labIcon;
+  const icon: Record<AssociationListProps['type'], React.ReactElement> = {
+    Lab: labIcon,
+    Team: <TeamIcon />,
+    'Working Group': <WorkingGroupsIcon />,
+  };
+
   const limitExceeded = associations.length > max;
 
   if (!associations.length) {
@@ -116,7 +126,7 @@ const AssociationList: FC<AssociationListProps> = ({
         {associations.map(({ displayName, id, inactiveSince }) => (
           <li key={id} css={[itemStyles, inline && inlineItemStyles]}>
             {inline || <div css={iconStyles}>{icon}</div>}
-            {type === 'Team' ? (
+            {type === 'Team' && (
               <>
                 <Link href={network({}).teams({}).team({ teamId: id }).$}>
                   {type} {displayName}
@@ -125,11 +135,13 @@ const AssociationList: FC<AssociationListProps> = ({
                   <span css={inactiveBadgeStyles}>{inactiveBadgeIcon}</span>
                 )}
               </>
-            ) : (
+            )}
+            {type === 'Lab' && (
               <>
                 {displayName} {type}
               </>
             )}
+            {type === 'Working Group' && displayName}
             {inline && <span css={bulletStyles}>·</span>}
           </li>
         ))}

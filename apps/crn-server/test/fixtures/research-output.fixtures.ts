@@ -156,6 +156,7 @@ export const getResearchOutputDataObject = (): ResearchOutputDataObject => ({
     { id: '99c78dd7-627e-4fbd-aaec-d1977895189e', name: 'Test' },
     { id: 'cd7be402-84d7-4d21-a360-82e2695f2dd9', name: 'mike' },
   ],
+  workingGroups: [],
   methods: ['Activity Assay'],
   organisms: ['Rat'],
   environments: ['In Vitro'],

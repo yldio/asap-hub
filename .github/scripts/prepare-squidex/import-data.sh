@@ -13,7 +13,13 @@ echo 'Importing data...'
 if [ "$RECREATE_APP_ON_EVERY_PR" = true ] || [ "$FIRST_RUN" = true ]; then
     # create-app.py configures sq to new app
     export SQ_SYNC_OUTPUT="$(sq sync in backup)"
-    if echo "$SQ_SYNC_OUTPUT" | grep -q -i -E 'warn|error|fail|exception'; then
+    HAS_ERROR="false";
+    for line in $SQ_SYNC_OUTPUT; do
+        if echo "$line" | grep -q -i -E 'warn|error|fail|exception'; then
+            HAS_ERROR="true";
+        fi
+    done
+    if [ "$HAS_ERROR" = true ] ; then
         echo "Data import failure - sq sync in backup failed:"
         echo $SQ_SYNC_OUTPUT
         unset SQ_SYNC_OUTPUT

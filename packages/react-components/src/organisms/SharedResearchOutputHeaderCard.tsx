@@ -74,9 +74,9 @@ const SharedResearchOutputHeaderCard: React.FC<
       <AssociationList
         type="Working Group"
         inline
-        associations={workingGroups.map(({ id, title }) => ({
+        associations={workingGroups.map(({ id, title: displayName }) => ({
           id,
-          displayName: title,
+          displayName,
         }))}
       />
     </div>

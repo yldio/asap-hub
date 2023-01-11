@@ -137,7 +137,7 @@ describe('patchTeam', () => {
     );
   });
 });
-describe('teamResearchOutput', () => {
+describe('Team Research Output', () => {
   const payload: ResearchOutputPostRequest = {
     teams: ['90210'],
     documentType: 'Bioinformatics',
@@ -155,6 +155,7 @@ describe('teamResearchOutput', () => {
     organisms: [],
     environments: [],
     publishingEntity: 'Team',
+    workingGroups: [],
   };
   it('makes an authorized POST request to create a research output', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })

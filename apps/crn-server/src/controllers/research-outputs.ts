@@ -74,6 +74,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       organisms: __,
       environments: ___,
       subtype: ____,
+      workingGroups: _____, // @TODO send this data to squidex once the schema has changed (1/2)
       ...input
     } = researchOutputCreateData;
 

@@ -58,7 +58,12 @@ it('renders output cards', () => {
 
 it('renders the no output page for your own team', () => {
   const { getByTitle, getByRole, getByText, rerender } = render(
-    <ProfileOutputs {...baseProps} hasOutputs={false} ownEntity={true} />,
+    <ProfileOutputs
+      {...baseProps}
+      hasOutputs={false}
+      ownEntity={true}
+      publishingEntity="Team"
+    />,
   );
   expect(getByTitle('Research')).toBeInTheDocument();
   expect(getByRole('heading', { level: 1 }).textContent).toMatch(/Your team/i);
@@ -69,6 +74,7 @@ it('renders the no output page for your own team', () => {
       hasOutputs={false}
       ownEntity={true}
       contactEmail="example@example.com"
+      publishingEntity="Team"
     />,
   );
   expect(getByText(/contact your PM/i).closest('a')).toHaveAttribute(

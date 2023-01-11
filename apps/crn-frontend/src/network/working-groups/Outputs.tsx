@@ -9,13 +9,12 @@ import { useWorkingGroupById } from './state';
 
 type OutputsListProps = Pick<
   ComponentProps<typeof ProfileOutputs>,
-  'hasOutputs'
+  'hasOutputs' | 'ownEntity'
 > & {
   displayName: string;
   searchQuery: string;
   filters: Set<string>;
   workingGroupId: string;
-  ownWorkingGroup: boolean;
 };
 type OutputsProps = {
   workingGroupId: string;
@@ -24,7 +23,7 @@ type OutputsProps = {
 const OutputsList: React.FC<OutputsListProps> = ({
   workingGroupId,
   hasOutputs,
-  ownWorkingGroup,
+  ownEntity,
 }) => {
   const { currentPage, isListView, cardViewParams, listViewParams } =
     usePaginationParams();
@@ -50,7 +49,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
           .outputs({}).$ + listViewParams
       }
       hasOutputs={hasOutputs}
-      ownEntity={ownWorkingGroup}
+      ownEntity={ownEntity}
       publishingEntity={'Working Group'}
     />
   );
@@ -73,7 +72,7 @@ const Outputs: React.FC<OutputsProps> = ({ workingGroupId }) => {
           filters={new Set()}
           hasOutputs={hasOutputs}
           displayName={workingGroup?.title ?? ''}
-          ownWorkingGroup={ownWorkingGroup}
+          ownEntity={ownWorkingGroup}
         />
       </SearchFrame>
     </article>

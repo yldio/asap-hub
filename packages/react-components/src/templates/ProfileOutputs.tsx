@@ -18,7 +18,7 @@ export type ProfileOutputsProps = Omit<
   ownEntity: boolean;
   hasOutputs: boolean;
   contactEmail?: string;
-  publishingEntity?: ResearchOutputPublishingEntities;
+  publishingEntity: ResearchOutputPublishingEntities;
 };
 
 const ProfileOutputs: React.FC<ProfileOutputsProps> = ({
@@ -34,7 +34,7 @@ const ProfileOutputs: React.FC<ProfileOutputsProps> = ({
   hasOutputs,
   ownEntity,
   contactEmail,
-  publishingEntity = 'Team',
+  publishingEntity,
 }) => (
   <div css={containerStyles}>
     {hasOutputs ? (

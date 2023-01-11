@@ -355,23 +355,21 @@ export const parseGraphQLUserToDataObject = (
       : 'Guest';
   const teams = parseGraphQLUserTeamConnections(flatTeams || []);
 
-  const workingGroups = item.referencingWorkingGroupsContents
-    ? item.referencingWorkingGroupsContents.map((wg) => {
-        const wgRole = wg.flatData.leaders?.reduce((result, leader) => {
-          if (leader.user?.[0]?.id === item.id) {
-            return leader.role || 'Member';
-          }
-          return result;
-        }, 'Member');
+  const workingGroups = (item.referencingWorkingGroupsContents || []).map(
+    (wg) => {
+      const leader = wg.flatData.leaders?.find(
+        (leader) => leader.user?.[0]?.id === item.id,
+      );
+      const wgRole = leader ? leader.role : 'Member';
 
-        return {
-          id: wg.id,
-          name: wg.flatData.title || '',
-          role: wgRole as 'Chair' | 'Project Manager' | 'Member',
-          active: !wg.flatData.complete,
-        };
-      })
-    : [];
+      return {
+        id: wg.id,
+        name: wg.flatData.title || '',
+        role: wgRole as 'Chair' | 'Project Manager' | 'Member',
+        active: !wg.flatData.complete,
+      };
+    },
+  );
 
   const orcid = item.flatData.orcid || undefined;
   // merge both and remove null values

@@ -17,13 +17,13 @@ const containerStyles = css({
 
 type WorkingGroupsTabbedCardProps = {
   userName: string;
-  groups: ReadonlyArray<WorkingGroupMembership>;
+  groups?: ReadonlyArray<WorkingGroupMembership>;
   isUserAlumni: boolean;
 };
 
 const WorkingGroupsTabbedCard: React.FC<WorkingGroupsTabbedCardProps> = ({
   userName,
-  groups,
+  groups = [],
   isUserAlumni,
 }) => {
   const [inactiveMemberships, activeMemberships] = splitListBy(

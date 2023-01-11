@@ -357,10 +357,10 @@ export const parseGraphQLUserToDataObject = (
 
   const workingGroups = (item.referencingWorkingGroupsContents || []).map(
     (wg) => {
-      const leader = wg.flatData.leaders?.find(
+      const leaderData = wg.flatData.leaders?.find(
         (leader) => leader.user?.[0]?.id === item.id,
       );
-      const wgRole = leader ? leader.role : 'Member';
+      const wgRole = leaderData ? leaderData.role : 'Member';
 
       return {
         id: wg.id,

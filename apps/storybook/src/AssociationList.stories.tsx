@@ -1,4 +1,8 @@
-import { createLabs, createListTeamResponse } from '@asap-hub/fixtures';
+import {
+  createLabs,
+  createListTeamResponse,
+  createWorkingGroupListResponse,
+} from '@asap-hub/fixtures';
 import { AssociationList } from '@asap-hub/react-components';
 import { number } from '@storybook/addon-knobs';
 
@@ -51,6 +55,33 @@ export const LabInline = () => (
       ({ name, id }) => ({ displayName: name, id }),
     )}
     type="Lab"
+    max={number('Maximum', 10)}
+  />
+);
+
+export const WorkingGroup = () => (
+  <AssociationList
+    associations={createWorkingGroupListResponse(
+      number('Number of Working Groups', 1),
+    ).items.map(({ title, id }) => ({
+      displayName: title,
+      id,
+    }))}
+    type="Working Group"
+    max={number('Maximum', 10)}
+  />
+);
+
+export const WorkingGroupInline = () => (
+  <AssociationList
+    inline
+    associations={createWorkingGroupListResponse(
+      number('Number of Working Groups', 1),
+    ).items.map(({ title, id }) => ({
+      displayName: title,
+      id,
+    }))}
+    type="Working Group"
     max={number('Maximum', 10)}
   />
 );

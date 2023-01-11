@@ -52,6 +52,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ projects, workingGroups }) => (
                 <NavigationLink
                   href={projectsRoute({}).project({ projectId: id }).$}
                   icon={<ProjectIcon />}
+                  hasStrokeWidth={false}
                 >
                   My project: {title}
                 </NavigationLink>
@@ -64,6 +65,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ projects, workingGroups }) => (
                   workingGroupRoute({}).workingGroup({ workingGroupId: id }).$
                 }
                 icon={<WorkingGroupIcon />}
+                hasStrokeWidth={false}
               >
                 My working group: {title}
               </NavigationLink>

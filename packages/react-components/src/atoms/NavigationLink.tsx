@@ -35,14 +35,10 @@ const styles = css({
   color: 'unset',
   textDecoration: 'none',
   outline: 'none',
-  stroke: lead.rgb,
   borderRadius: `${6 / perRem}em`,
   transition: 'background-color 100ms ease-in-out, color 100ms ease-in-out',
   ':hover, :focus': {
     backgroundColor: silver.rgb,
-  },
-  svg: {
-    stroke: charcoal.rgb,
   },
 });
 
@@ -67,10 +63,11 @@ const squareBorderStyles = css({
   borderRadius: 'unset',
 });
 
-const noStrokeStyles = css({
-  stroke: 'initial',
-  svg: { stroke: 'initial' },
-  '&.active-link > p > span > svg': { stroke: 'initial' },
+const strokeStyles = css({
+  stroke: lead.rgb,
+  svg: {
+    stroke: charcoal.rgb,
+  },
 });
 
 interface NavigationLinkProps {
@@ -78,7 +75,7 @@ interface NavigationLinkProps {
   readonly enabled?: boolean;
   readonly icon?: JSX.Element;
   readonly squareBorder?: boolean;
-  readonly hasStrokeWidth?: boolean;
+  readonly hasStroke?: boolean;
 }
 const NavigationLink: React.FC<NavigationLinkProps> = ({
   href,
@@ -86,7 +83,7 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
   icon,
   squareBorder = false,
   children,
-  hasStrokeWidth = true,
+  hasStroke = true,
 }) => {
   const [internal, url] = isInternalLink(href);
 
@@ -97,9 +94,11 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
         activeClassName={activeClassName}
         css={({ colors }) => [
           styles,
-          !hasStrokeWidth && noStrokeStyles,
+          hasStroke && strokeStyles,
           squareBorder && squareBorderStyles,
-          { [`&.${activeClassName}`]: activePrimaryStyles(colors) },
+          {
+            [`&.${activeClassName}`]: activePrimaryStyles(colors, hasStroke),
+          },
           !enabled && disableStyles,
         ]}
         smooth
@@ -120,9 +119,10 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
       href={url}
       css={({ colors }) => [
         styles,
-        !hasStrokeWidth && noStrokeStyles,
+        hasStroke && strokeStyles,
+        ,
         squareBorder && squareBorderStyles,
-        active && activePrimaryStyles(colors),
+        active && activePrimaryStyles(colors, hasStroke),
         !enabled && disableStyles,
       ]}
     >

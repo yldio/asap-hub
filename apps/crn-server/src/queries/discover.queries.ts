@@ -1,5 +1,4 @@
 import gql from 'graphql-tag';
-import { newsQueryFragment } from './news.queries';
 import { tutorialsContentQueryFragment } from './tutorials.queries';
 
 export const FETCH_DISCOVER = gql`
@@ -9,9 +8,6 @@ export const FETCH_DISCOVER = gql`
         aboutUs
         training {
           ...TutorialsContent
-        }
-        workingGroups {
-          ...News
         }
         pages {
           id
@@ -66,6 +62,5 @@ export const FETCH_DISCOVER = gql`
       }
     }
   }
-  ${newsQueryFragment}
   ${tutorialsContentQueryFragment}
 `;

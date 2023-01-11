@@ -24,7 +24,6 @@ const props: DiscoverResponse = {
   pages: [],
   scientificAdvisoryBoard: [],
   training: [],
-  workingGroups: [],
 };
 
 const renderDiscoverAbout = async (user: Partial<User>) => {

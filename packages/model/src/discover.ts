@@ -1,6 +1,5 @@
 import { PageResponse } from './page';
 import { UserResponse } from './user';
-import { NewsResponse } from './news';
 import { TutorialsResponse } from './tutorials';
 
 export interface DiscoverResponse {
@@ -10,5 +9,4 @@ export interface DiscoverResponse {
   scientificAdvisoryBoard: ReadonlyArray<UserResponse>;
   pages: ReadonlyArray<PageResponse>;
   training: ReadonlyArray<TutorialsResponse>;
-  workingGroups: ReadonlyArray<NewsResponse>;
 }

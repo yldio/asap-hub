@@ -6246,25 +6246,6 @@ export type FetchDiscoverQuery = {
             }
           >
         >;
-        workingGroups: Maybe<
-          Array<
-            Pick<
-              NewsAndEvents,
-              'id' | 'created' | 'lastModified' | 'version'
-            > & {
-              flatData: Pick<
-                NewsAndEventsFlatDataDto,
-                | 'title'
-                | 'shortText'
-                | 'text'
-                | 'type'
-                | 'frequency'
-                | 'link'
-                | 'linkText'
-              > & { thumbnail: Maybe<Array<Pick<Asset, 'id'>>> };
-            }
-          >
-        >;
         pages: Maybe<
           Array<
             Pick<Pages, 'id' | 'created' | 'lastModified' | 'version'> & {
@@ -12580,19 +12561,6 @@ export const FetchDiscoverDocument = {
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'workingGroups' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'News' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'Field',
                         name: { kind: 'Name', value: 'pages' },
                         selectionSet: {
                           kind: 'SelectionSet',
@@ -12825,7 +12793,6 @@ export const FetchDiscoverDocument = {
       },
     },
     ...TutorialsContentFragmentDoc.definitions,
-    ...NewsFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchDiscoverQuery, FetchDiscoverQueryVariables>;
 export const FetchEventsDocument = {

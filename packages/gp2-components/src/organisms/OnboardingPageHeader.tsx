@@ -1,6 +1,6 @@
 import { pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
-import { leftArrow, rightArrow } from '../icons';
+import { leftArrowIcon, rightArrowIcon } from '../icons';
 import { mobileQuery, nonMobileQuery } from '../layout';
 import OnboardedTabLink from '../molecules/OnboardedTabLink';
 import PageBanner from './PageBanner';
@@ -48,7 +48,7 @@ const OnboardingPageHeader: React.FC<OnboardingPageHeaderProps> = ({
   >
     <PageBanner title={'Registration'} noMarginBottom noBorderTop>
       <div css={divStyle}>
-        <div css={buttonStyle}>{leftArrow}</div>
+        <div css={buttonStyle}>{leftArrowIcon}</div>
         <nav
           css={css({
             width: '100%',
@@ -65,7 +65,7 @@ const OnboardingPageHeader: React.FC<OnboardingPageHeaderProps> = ({
             </OnboardedTabLink>
           ))}
         </nav>
-        <div css={buttonStyle}>{rightArrow}</div>
+        <div css={buttonStyle}>{rightArrowIcon}</div>
       </div>
     </PageBanner>
   </div>

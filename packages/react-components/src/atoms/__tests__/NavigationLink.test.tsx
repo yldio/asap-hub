@@ -166,4 +166,18 @@ describe('with ThemeProvider', () => {
     expect(primaryColor).toBe(activePrimaryColor.rgb);
     expect(backgroundColor).toBe(activePrimaryBackgroundColor.rgb);
   });
+
+  it("doesn't have stroke if hasStroke is false", () => {
+    render(
+      <NavigationLink
+        href="http://example.com/"
+        icon={<svg />}
+        hasStroke={false}
+      >
+        Text
+      </NavigationLink>,
+    );
+    const { stroke } = getComputedStyle(screen.getByRole('link'));
+    expect(stroke).toBe('');
+  });
 });

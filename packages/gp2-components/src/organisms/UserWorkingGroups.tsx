@@ -5,8 +5,8 @@ import { css } from '@emotion/react';
 import { nonMobileQuery } from '../layout';
 import colors from '../templates/colors';
 import { IconWithLabel } from '../molecules';
-import usersIcon from '../icons/users-icon';
 import userIcon from '../icons/user-icon';
+import UsersIcon from '../icons/users-icon';
 
 const { rem } = pixels;
 const { getCounterString } = utils;
@@ -89,7 +89,7 @@ const UserWorkingGroups: React.FC<UserWorkingGroupsProps> = ({
             </IconWithLabel>
           </div>
           <div css={[listElementStyles, listElementSecondaryStyles]}>
-            <IconWithLabel icon={usersIcon}>
+            <IconWithLabel icon={<UsersIcon />}>
               {getCounterString(workingGroup.members.length, 'Member')}
             </IconWithLabel>
           </div>

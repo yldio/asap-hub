@@ -11,7 +11,7 @@ import {
 } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import usersIcon from '../icons/users-icon';
+import UsersIcon from '../icons/users-icon';
 import IconWithLabel from '../molecules/IconWithLabel';
 
 const { rem } = pixels;
@@ -69,7 +69,7 @@ const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
         </div>
         <div css={bottomBorderStyles} />
         <span css={textStyles}>
-          <IconWithLabel icon={usersIcon}>
+          <IconWithLabel icon={<UsersIcon />}>
             {getCounterString(members.length, 'Member')}
           </IconWithLabel>
         </span>

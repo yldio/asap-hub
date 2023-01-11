@@ -35,14 +35,10 @@ const styles = css({
   color: 'unset',
   textDecoration: 'none',
   outline: 'none',
-  stroke: lead.rgb,
   borderRadius: `${6 / perRem}em`,
   transition: 'background-color 100ms ease-in-out, color 100ms ease-in-out',
   ':hover, :focus': {
     backgroundColor: silver.rgb,
-  },
-  svg: {
-    stroke: charcoal.rgb,
   },
 });
 
@@ -67,11 +63,19 @@ const squareBorderStyles = css({
   borderRadius: 'unset',
 });
 
+const strokeStyles = css({
+  stroke: lead.rgb,
+  svg: {
+    stroke: charcoal.rgb,
+  },
+});
+
 interface NavigationLinkProps {
   readonly href: string;
   readonly enabled?: boolean;
   readonly icon?: JSX.Element;
   readonly squareBorder?: boolean;
+  readonly hasStroke?: boolean;
 }
 const NavigationLink: React.FC<NavigationLinkProps> = ({
   href,
@@ -79,6 +83,7 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
   icon,
   squareBorder = false,
   children,
+  hasStroke = true,
 }) => {
   const [internal, url] = isInternalLink(href);
 
@@ -89,8 +94,11 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
         activeClassName={activeClassName}
         css={({ colors }) => [
           styles,
+          hasStroke && strokeStyles,
           squareBorder && squareBorderStyles,
-          { [`&.${activeClassName}`]: activePrimaryStyles(colors) },
+          {
+            [`&.${activeClassName}`]: activePrimaryStyles(colors, hasStroke),
+          },
           !enabled && disableStyles,
         ]}
         smooth
@@ -111,8 +119,9 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
       href={url}
       css={({ colors }) => [
         styles,
+        hasStroke && strokeStyles,
         squareBorder && squareBorderStyles,
-        active && activePrimaryStyles(colors),
+        active && activePrimaryStyles(colors, hasStroke),
         !enabled && disableStyles,
       ]}
     >

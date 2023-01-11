@@ -1,4 +1,4 @@
-import { projectIcon, IconWithLabel } from '@asap-hub/gp2-components';
+import { ProjectIcon, IconWithLabel } from '@asap-hub/gp2-components';
 import { text } from '@storybook/addon-knobs';
 
 export default {
@@ -6,5 +6,5 @@ export default {
   component: IconWithLabel,
 };
 export const Normal = () => (
-  <IconWithLabel icon={projectIcon}>{text('label', 'label')}</IconWithLabel>
+  <IconWithLabel icon={<ProjectIcon />}>{text('label', 'label')}</IconWithLabel>
 );

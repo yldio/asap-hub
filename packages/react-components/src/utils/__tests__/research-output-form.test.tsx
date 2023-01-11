@@ -43,6 +43,7 @@ describe('isDirty', () => {
     publishDate: researchOutputResponse.publishDate,
     asapFunded: researchOutputResponse.asapFunded,
     usedInPublication: researchOutputResponse.usedInPublication,
+    workingGroups: [],
     sharingStatus: 'Network Only',
     publishingEntity: 'Team',
   };
@@ -278,6 +279,7 @@ describe('getResearchOutputPayload', () => {
       }),
     ).toEqual({
       ...currentPayload,
+      workingGroups: [],
       teams: ['t99'],
       labs: ['l99'],
       authors: [{ externalAuthorName: 'a111' }],

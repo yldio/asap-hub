@@ -291,6 +291,7 @@ export type ResearchOutputPostRequest = {
   subtype?: string;
   tags: string[];
   teams: string[];
+  workingGroups: string[];
   title: string;
   type: ResearchOutputType;
   usageNotes?: string;

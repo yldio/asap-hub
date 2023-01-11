@@ -6,16 +6,36 @@ import SharedResearchMetadata from '../SharedResearchMetadata';
 const props: ComponentProps<typeof SharedResearchMetadata> = {
   documentType: 'Article',
   type: 'Code',
+  publishingEntity: 'Team',
 };
 
-it('renders all (document)types', () => {
+it('renders Team document types', () => {
   const { getAllByRole } = render(
-    <SharedResearchMetadata {...props} documentType="Article" type={'Code'} />,
+    <SharedResearchMetadata
+      {...props}
+      publishingEntity="Team"
+      documentType="Article"
+      type="Code"
+    />,
   );
-  expect(getAllByRole('listitem')).toHaveLength(2);
-  const [first, second] = getAllByRole('listitem');
-  expect(first).toHaveTextContent(/article/i);
-  expect(second).toHaveTextContent(/code/i);
+
+  expect(
+    getAllByRole('listitem').map(({ textContent }) => textContent),
+  ).toEqual(['Article', 'Code']);
+});
+
+it('renders Working Group document types', () => {
+  const { getAllByRole } = render(
+    <SharedResearchMetadata
+      {...props}
+      publishingEntity="Working Group"
+      documentType="Article"
+      type="Code"
+    />,
+  );
+  expect(
+    getAllByRole('listitem').map(({ textContent }) => textContent),
+  ).toEqual(['Working Group', 'Article', 'Code']);
 });
 
 it('renders a link if available', () => {

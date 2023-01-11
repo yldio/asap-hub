@@ -525,7 +525,7 @@ describe('ResearchOutputs controller', () => {
         getResearchOutputUpdateDataObject();
       expect(researchOutputDataProviderMock.update).toBeCalledWith(
         researchOutputId,
-        researchOutputUpdateDataObject,
+        { ...researchOutputUpdateDataObject, workingGroups: [] },
       );
     });
 

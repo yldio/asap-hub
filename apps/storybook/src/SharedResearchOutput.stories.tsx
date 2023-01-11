@@ -79,6 +79,7 @@ const props = (): ComponentProps<typeof SharedResearchOutput> => ({
     ),
   ],
   labs: createLabs({ labs: number('Number of labs', 2) }),
+  workingGroups: [{ id: 'a', title: 'Working Group' }],
 });
 
 export const Normal = () => (

@@ -9,7 +9,7 @@ import { useWorkingGroupById } from './state';
 
 type OutputsListProps = Pick<
   ComponentProps<typeof ProfileOutputs>,
-  'hasOutputs' | 'ownEntity'
+  'hasOutputs' | 'userAssociationMember'
 > & {
   displayName: string;
   searchQuery: string;
@@ -23,7 +23,7 @@ type OutputsProps = {
 const OutputsList: React.FC<OutputsListProps> = ({
   workingGroupId,
   hasOutputs,
-  ownEntity,
+  userAssociationMember,
 }) => {
   const { currentPage, isListView, cardViewParams, listViewParams } =
     usePaginationParams();
@@ -49,7 +49,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
           .outputs({}).$ + listViewParams
       }
       hasOutputs={hasOutputs}
-      ownEntity={ownEntity}
+      userAssociationMember={userAssociationMember}
       publishingEntity={'Working Group'}
     />
   );
@@ -60,9 +60,9 @@ const Outputs: React.FC<OutputsProps> = ({ workingGroupId }) => {
   const workingGroup = useWorkingGroupById(workingGroupId);
 
   const currentUserId = useCurrentUserCRN()?.id;
-  const ownWorkingGroup = !!useWorkingGroupById(workingGroupId)?.members.filter(
-    (member) => member.user.id === currentUserId,
-  ).length;
+  const userAssociationMember = !!useWorkingGroupById(
+    workingGroupId,
+  )?.members.filter((member) => member.user.id === currentUserId).length;
   return (
     <article>
       <SearchFrame title="">
@@ -72,7 +72,7 @@ const Outputs: React.FC<OutputsProps> = ({ workingGroupId }) => {
           filters={new Set()}
           hasOutputs={hasOutputs}
           displayName={workingGroup?.title ?? ''}
-          ownEntity={ownWorkingGroup}
+          userAssociationMember={userAssociationMember}
         />
       </SearchFrame>
     </article>

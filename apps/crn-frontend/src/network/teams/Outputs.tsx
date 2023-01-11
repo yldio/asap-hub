@@ -23,7 +23,7 @@ import { useTeamById } from './state';
 
 type OutputsListProps = Pick<
   ComponentProps<typeof ProfileOutputs>,
-  'hasOutputs' | 'ownEntity' | 'contactEmail'
+  'hasOutputs' | 'userAssociationMember' | 'contactEmail'
 > & {
   displayName: string;
   searchQuery: string;
@@ -39,7 +39,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
   filters,
   teamId,
   hasOutputs,
-  ownEntity,
+  userAssociationMember,
   contactEmail,
   displayName,
 }) => {
@@ -91,7 +91,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
         network({}).teams({}).team({ teamId }).outputs({}).$ + listViewParams
       }
       hasOutputs={hasOutputs}
-      ownEntity={ownEntity}
+      userAssociationMember={userAssociationMember}
       contactEmail={contactEmail}
       publishingEntity="Team"
     />
@@ -116,7 +116,7 @@ const Outputs: React.FC<OutputsProps> = ({ teamId }) => {
   }).total;
   const team = useTeamById(teamId);
 
-  const ownTeam = !!(useCurrentUserCRN()?.teams ?? []).filter(
+  const userAssociationMember = !!(useCurrentUserCRN()?.teams ?? []).filter(
     ({ id }) => id === teamId,
   ).length;
   return (
@@ -135,7 +135,7 @@ const Outputs: React.FC<OutputsProps> = ({ teamId }) => {
           searchQuery={debouncedSearchQuery}
           filters={filters}
           hasOutputs={hasOutputs}
-          ownEntity={ownTeam}
+          userAssociationMember={userAssociationMember}
           contactEmail={team?.pointOfContact?.email}
           displayName={team?.displayName ?? ''}
         />

@@ -14,7 +14,7 @@ const baseProps: ComponentProps<typeof ProfileOutputs> = {
   cardViewHref: '',
   listViewHref: '',
   hasOutputs: true,
-  ownEntity: true,
+  userAssociationMember: true,
   publishingEntity: 'Team',
 };
 
@@ -61,7 +61,7 @@ it('renders the no output page for your own team', () => {
     <ProfileOutputs
       {...baseProps}
       hasOutputs={false}
-      ownEntity={true}
+      userAssociationMember={true}
       publishingEntity="Team"
     />,
   );
@@ -72,7 +72,7 @@ it('renders the no output page for your own team', () => {
     <ProfileOutputs
       {...baseProps}
       hasOutputs={false}
-      ownEntity={true}
+      userAssociationMember={true}
       contactEmail="example@example.com"
       publishingEntity="Team"
     />,
@@ -85,7 +85,11 @@ it('renders the no output page for your own team', () => {
 
 it('renders the no output page for another team', () => {
   const { getByTitle, getByRole, getByText, rerender } = render(
-    <ProfileOutputs {...baseProps} hasOutputs={false} ownEntity={false} />,
+    <ProfileOutputs
+      {...baseProps}
+      hasOutputs={false}
+      userAssociationMember={false}
+    />,
   );
   expect(getByTitle('Research')).toBeInTheDocument();
   expect(getByRole('heading', { level: 1 }).textContent).toMatch(/This team/i);
@@ -94,7 +98,7 @@ it('renders the no output page for another team', () => {
     <ProfileOutputs
       {...baseProps}
       hasOutputs={false}
-      ownEntity={false}
+      userAssociationMember={false}
       contactEmail="example@example.com"
     />,
   );
@@ -109,7 +113,7 @@ it('renders the no outputs page for a working group', () => {
     <ProfileOutputs
       {...baseProps}
       hasOutputs={false}
-      ownEntity={false}
+      userAssociationMember={false}
       publishingEntity="Working Group"
     />,
   );
@@ -122,7 +126,7 @@ it('renders the no outputs page for a working group', () => {
       {...baseProps}
       hasOutputs={false}
       publishingEntity="Working Group"
-      ownEntity={true}
+      userAssociationMember={true}
     />,
   );
   expect(getByRole('heading', { level: 1 }).textContent).toMatch(

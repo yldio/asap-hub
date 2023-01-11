@@ -15,7 +15,7 @@ export type ProfileOutputsProps = Omit<
   ComponentProps<typeof SharedResearchList>,
   'children'
 > & {
-  ownEntity: boolean;
+  userAssociationMember: boolean;
   hasOutputs: boolean;
   contactEmail?: string;
   publishingEntity: ResearchOutputPublishingEntities;
@@ -32,7 +32,7 @@ const ProfileOutputs: React.FC<ProfileOutputsProps> = ({
   exportResults,
   listViewHref,
   hasOutputs,
-  ownEntity,
+  userAssociationMember,
   contactEmail,
   publishingEntity,
 }) => (
@@ -49,7 +49,7 @@ const ProfileOutputs: React.FC<ProfileOutputsProps> = ({
         cardViewHref={cardViewHref}
         listViewHref={listViewHref}
       />
-    ) : ownEntity ? (
+    ) : userAssociationMember ? (
       <NoOutputsPage
         title={`Your ${publishingEntity?.toLowerCase()} hasn’t shared any research.`}
         description={

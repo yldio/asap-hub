@@ -34,7 +34,7 @@ const ProfileOutputs: React.FC<ProfileOutputsProps> = ({
   hasOutputs,
   ownEntity,
   contactEmail,
-  publishingEntity = 'team',
+  publishingEntity = 'Team',
 }) => (
   <div css={containerStyles}>
     {hasOutputs ? (

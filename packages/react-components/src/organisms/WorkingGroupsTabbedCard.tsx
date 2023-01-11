@@ -23,9 +23,11 @@ type WorkingGroupsTabbedCardProps = {
 
 const WorkingGroupsTabbedCard: React.FC<WorkingGroupsTabbedCardProps> = ({
   userName,
-  groups = [],
+  groups,
   isUserAlumni,
 }) => {
+  if (!groups) return null;
+
   const [inactiveMemberships, activeMemberships] = splitListBy(
     groups,
     (group) => isUserAlumni || !group?.active,

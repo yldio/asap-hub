@@ -22,15 +22,6 @@ it('renders the no memberships message', () => {
   expect(screen.getByText('There are no past memberships.')).toBeVisible();
   rerender(<WorkingGroupsTabbedCard {...props} isUserAlumni={false} />);
   expect(screen.getByText('There are no active memberships.')).toBeVisible();
-
-  rerender(
-    <WorkingGroupsTabbedCard
-      {...props}
-      groups={undefined}
-      isUserAlumni={false}
-    />,
-  );
-  expect(screen.getByText('There are no active memberships.')).toBeVisible();
 });
 
 it('displays the show more message', () => {

@@ -61,8 +61,8 @@ const WorkingGroupNetwork: React.FC<
 
   return (
     <div css={styles}>
-      <Subtitle hasMargin={false}>{descriptions[role].subtitle}</Subtitle>
-      <Paragraph hasMargin={false} accent="lead">
+      <Subtitle margin={false}>{descriptions[role].subtitle}</Subtitle>
+      <Paragraph margin={false} accent="lead">
         {descriptions[role].paragraph}
       </Paragraph>
       <article css={gridContainerStyles}>

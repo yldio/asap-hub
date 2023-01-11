@@ -3,6 +3,8 @@ export { default as DashboardPage } from './DashboardPage';
 export { default as DashboardPageBody } from './DashboardPageBody';
 export { default as Layout } from './Layout';
 export { default as OnboardingCoreDetails } from './OnboardingCoreDetails';
+export { default as OnboardingBackground } from './OnboardingBackground';
+export { default as OnboardingPage } from './OnboardingPage';
 export { default as OnboardingWelcome } from './OnboardingWelcome';
 export { default as ProjectDetailPage } from './ProjectDetailPage';
 export { default as ProjectOverview } from './ProjectOverview';

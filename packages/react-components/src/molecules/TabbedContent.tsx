@@ -59,7 +59,7 @@ export const TabbedContent = <T extends object>({
     <div>
       <div css={[paddingStyles, headerStyles]}>
         <Headline3>{title}</Headline3>
-        <Paragraph hasMargin={false} accent="lead">
+        <Paragraph margin={false} accent="lead">
           {description}
         </Paragraph>
         <TabNav>

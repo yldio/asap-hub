@@ -30,7 +30,7 @@ const UserQuestions: React.FC<UserQuestionsProps> = ({
 }) => (
   <>
     <div css={[contentStyles]}>
-      <Paragraph hasMargin={false} accent="lead">
+      <Paragraph margin={false} accent="lead">
         {firstName} is interested in answering the following questions within
         their work:
       </Paragraph>

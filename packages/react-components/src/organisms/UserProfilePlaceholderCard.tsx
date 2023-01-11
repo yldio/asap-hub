@@ -12,7 +12,7 @@ const containerStyles = css({
 });
 
 type UserProfilePlaceholderCardProps = {
-  title: string;
+  title?: string;
   children: ReactNode;
 };
 
@@ -22,9 +22,11 @@ const UserProfilePlaceholderCard: React.FC<UserProfilePlaceholderCardProps> = ({
 }) => (
   <Card padding={false} accent="placeholder">
     <div css={containerStyles}>
-      <h4 css={(headlineStyles[5], [{ margin: 0, color: charcoal.rgb }])}>
-        {title}
-      </h4>
+      {title && (
+        <h4 css={(headlineStyles[5], [{ margin: 0, color: charcoal.rgb }])}>
+          {title}
+        </h4>
+      )}
       <span>{children}</span>
     </div>
   </Card>

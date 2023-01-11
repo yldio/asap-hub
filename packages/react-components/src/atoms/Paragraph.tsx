@@ -12,20 +12,19 @@ type ParagraphProps = {
   readonly children: React.ReactNode;
   readonly primary?: boolean;
   readonly accent?: AccentColorName;
-  readonly hasMargin?: boolean;
+  readonly margin?: boolean;
 };
 
 const Paragraph: React.FC<ParagraphProps> = ({
   children,
   accent,
-  hasMargin = true,
+  margin = true,
 }) => (
   <p
     css={[
-      layoutStyles,
+      margin ? layoutStyles : { margin: 0 },
       primaryStyles,
       accent ? { color: colors[accent].rgb } : null,
-      !hasMargin ? { margin: 0 } : null,
     ]}
   >
     {children}

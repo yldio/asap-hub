@@ -45,11 +45,11 @@ const ProjectMilestone: React.FC<ProjectMilestoneProps> = ({ milestone }) => (
         </div>
       )}
     </div>
-    <Subtitle styleAsHeading={4} hasMargin={false}>
+    <Subtitle styleAsHeading={4} margin={false}>
       {milestone.title}
     </Subtitle>
     <div css={css({ padding: `${rem(8)} 0` })}>
-      <Paragraph hasMargin={false} accent="lead">
+      <Paragraph margin={false} accent="lead">
         {milestone.description}
       </Paragraph>
     </div>

@@ -73,11 +73,11 @@ const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
             {getCounterString(members.length, 'Member')}
           </IconWithLabel>
         </span>
-        <Subtitle hasMargin={false} accent="lead">
+        <Subtitle margin={false} accent="lead">
           {shortDescription}
         </Subtitle>
         {leadingMembers === undefined || (
-          <Paragraph hasMargin={false} accent="lead">
+          <Paragraph margin={false} accent="lead">
             {leadingMembers}
           </Paragraph>
         )}

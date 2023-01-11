@@ -186,6 +186,7 @@ export const getPayload = ({
   usedInPublication: convertDecisionToBoolean(usedInPublication),
   sharingStatus,
   publishDate: publishDate?.toISOString(),
+  workingGroups: [],
   labCatalogNumber:
     documentType === 'Lab Resource' && labCatalogNumber !== ''
       ? labCatalogNumber

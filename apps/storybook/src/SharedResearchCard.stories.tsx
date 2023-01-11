@@ -3,8 +3,9 @@ import {
   createListTeamResponse,
   createListUserResponse,
 } from '@asap-hub/fixtures';
+import { ResearchOutputPublishingEntities } from '@asap-hub/model';
 import { SharedResearchCard } from '@asap-hub/react-components';
-import { text, date, number } from '@storybook/addon-knobs';
+import { text, date, number, select } from '@storybook/addon-knobs';
 
 export default {
   title: 'Organisms / Shared Research / Card',
@@ -29,5 +30,10 @@ export const Normal = () => (
     teams={createListTeamResponse(number('Number of Teams', 3)).items}
     labs={createLabs({ labs: number('Number of labs', 2) })}
     authors={createListUserResponse(number('Number of Authors', 5)).items}
+    publishingEntity={select<ResearchOutputPublishingEntities>(
+      'Publishing Entity',
+      ['Team', 'Working Group'],
+      'Team',
+    )}
   />
 );

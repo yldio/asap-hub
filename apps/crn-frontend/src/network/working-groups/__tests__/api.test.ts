@@ -97,6 +97,7 @@ describe('teamResearchOutput', () => {
     environments: [],
     authors: [{ userId: 'user-1' }],
     publishingEntity: 'Working Group',
+    workingGroups: [],
   };
   it('makes an authorized POST request to create a research output', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })

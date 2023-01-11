@@ -199,6 +199,7 @@ it('merges different tag types in the correct order', () => {
       teams={[]}
       labs={[]}
       authors={[]}
+      workingGroups={[]}
     />,
   );
   expect(

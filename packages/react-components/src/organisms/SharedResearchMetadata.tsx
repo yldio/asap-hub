@@ -25,8 +25,8 @@ const SharedResearchMetadata: React.FC<SharedResearchMetadataProps> = ({
 }) => {
   const pills: string[] = [
     ...(publishingEntity === 'Working Group' ? [publishingEntity] : []),
-    ...(type ? [type] : []),
     ...(documentType ? [documentType] : []),
+    ...(type ? [type] : []),
   ];
 
   return (

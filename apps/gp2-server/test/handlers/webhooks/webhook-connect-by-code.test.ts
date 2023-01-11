@@ -1,4 +1,4 @@
-import { RestUser, SquidexGraphql } from '@asap-hub/squidex';
+import { gp2 as gp2Squidex, SquidexGraphql } from '@asap-hub/squidex';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import nock from 'nock';
 import {
@@ -15,32 +15,31 @@ import {
 import { getApiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
 
-const user: RestUser = {
+const user: gp2Squidex.RestUser = {
   id: 'userId',
   lastModified: '2020-09-25T11:06:27.164Z',
   version: 42,
   created: '2020-09-24T11:06:27.164Z',
   data: {
     role: {
-      iv: 'Grantee',
+      iv: 'Trainee',
     },
-    lastModifiedDate: { iv: '2020-09-25T11:06:27.164Z' },
     email: { iv: 'me@example.com' },
     firstName: { iv: 'First' },
     lastName: { iv: 'Last' },
-    jobTitle: { iv: 'Title' },
-    institution: { iv: 'Institution' },
+    region: { iv: 'Europe' },
     connections: { iv: [] },
-    biography: { iv: 'Biography' },
     avatar: { iv: [] },
-    expertiseAndResourceTags: { iv: [] },
     questions: { iv: [] },
-    teams: { iv: [] },
     onboarded: {
       iv: true,
     },
-    dismissedGettingStarted: { iv: false },
-    labs: { iv: [] },
+    positions: { iv: [] },
+    keywords: { iv: [] },
+    fundingStreams: { iv: 'a stream' },
+    biography: { iv: 'a biography' },
+    country: { iv: 'Spain' },
+    contributingCohorts: { iv: [] },
   },
 };
 

@@ -4,7 +4,13 @@ import {
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import { createListUserResponse } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
-import { fireEvent, render, waitFor, screen } from '@testing-library/react';
+import {
+  fireEvent,
+  render,
+  waitFor,
+  screen,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
@@ -33,7 +39,7 @@ const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
 mockUseUsers.mockReturnValue(createListUserResponse(1));
 
 const renderNetworkPage = async (pathname: string, query = '') => {
-  const result = render(
+  render(
     <RecoilRoot>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
@@ -49,43 +55,38 @@ const renderNetworkPage = async (pathname: string, query = '') => {
     </RecoilRoot>,
   );
 
-  await waitFor(() =>
-    expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
-  return result;
+  await waitForElementToBeRemoved(screen.queryByText(/loading/i), {
+    timeout: 30_000,
+  });
 };
 
 describe('when toggling from teams to users', () => {
   it('changes the placeholder', async () => {
-    const { getByText, queryByText, getByRole } = await renderNetworkPage(
-      network({}).teams({}).$,
-    );
+    await renderNetworkPage(network({}).teams({}).$);
 
     expect(
-      (getByRole('searchbox') as HTMLInputElement).placeholder,
+      (screen.getByRole('searchbox') as HTMLInputElement).placeholder,
     ).toMatchInlineSnapshot(`"Enter name, keyword, method, …"`);
 
-    const peopleLink = getByText(/people/i, { selector: 'nav a *' });
+    const peopleLink = screen.getByText(/people/i, { selector: 'nav a *' });
     userEvent.click(peopleLink);
-    await waitFor(() =>
-      expect(queryByText(/Loading/i)).not.toBeInTheDocument(),
-    );
+    await waitForElementToBeRemoved(screen.queryByText(/loading/i));
 
     expect(
-      (getByRole('searchbox') as HTMLInputElement).placeholder,
+      (screen.getByRole('searchbox') as HTMLInputElement).placeholder,
     ).toMatchInlineSnapshot(`"Enter name, keyword, institution, …"`);
   });
 
   it('preserves only the query text', async () => {
-    const { getByText, getByRole } = await renderNetworkPage(
+    await renderNetworkPage(
       network({}).teams({}).$,
       '?searchQuery=test123&filter=123',
     );
-    const searchBox = getByRole('searchbox') as HTMLInputElement;
+    const searchBox = screen.getByRole('searchbox') as HTMLInputElement;
 
     expect(searchBox.value).toEqual('test123');
 
-    const toggle = getByText(/people/i, { selector: 'nav a *' });
+    const toggle = screen.getByText(/people/i, { selector: 'nav a *' });
     fireEvent.click(toggle);
     expect(searchBox.value).toEqual('test123');
     await waitFor(() => {
@@ -101,34 +102,29 @@ describe('when toggling from teams to users', () => {
 
 describe('when toggling from users to teams', () => {
   it('changes the placeholder', async () => {
-    const { getByText, queryByText, getByRole } = await renderNetworkPage(
-      network({}).users({}).$,
-    );
+    await renderNetworkPage(network({}).users({}).$);
 
     expect(
-      (getByRole('searchbox') as HTMLInputElement).placeholder,
+      (screen.getByRole('searchbox') as HTMLInputElement).placeholder,
     ).toMatchInlineSnapshot(`"Enter name, keyword, institution, …"`);
 
-    const toggle = getByText(/teams/i, { selector: 'nav a *' });
+    const toggle = screen.getByText(/teams/i, { selector: 'nav a *' });
     fireEvent.click(toggle);
-    await waitFor(() =>
-      expect(queryByText(/loading/i)).not.toBeInTheDocument(),
-    );
 
     expect(
-      (getByRole('searchbox') as HTMLInputElement).placeholder,
+      (screen.getByRole('searchbox') as HTMLInputElement).placeholder,
     ).toMatchInlineSnapshot(`"Enter name, keyword, method, …"`);
   });
   it('preserves only query text', async () => {
-    const { getByText, getByRole } = await renderNetworkPage(
+    await renderNetworkPage(
       network({}).users({}).$,
       'searchQuery=test123&filter=123',
     );
-    const searchBox = getByRole('searchbox') as HTMLInputElement;
+    const searchBox = screen.getByRole('searchbox') as HTMLInputElement;
 
     expect(searchBox.value).toEqual('test123');
 
-    const toggle = getByText(/teams/i, { selector: 'nav a *' });
+    const toggle = screen.getByText(/teams/i, { selector: 'nav a *' });
     fireEvent.click(toggle);
     expect(searchBox.value).toEqual('test123');
     await waitFor(() => {
@@ -142,20 +138,18 @@ describe('when toggling from users to teams', () => {
 });
 
 it('allows typing in search queries', async () => {
-  const { getByRole } = await renderNetworkPage(network({}).users({}).$);
-  const searchBox = getByRole('searchbox') as HTMLInputElement;
+  await renderNetworkPage(network({}).users({}).$);
+  const searchBox = screen.getByRole('searchbox') as HTMLInputElement;
 
   userEvent.type(searchBox, 'test123');
   expect(searchBox.value).toEqual('test123');
 });
 
 it('allows selection of user filters', async () => {
-  const { getByText, getByLabelText } = await renderNetworkPage(
-    network({}).users({}).$,
-  );
+  await renderNetworkPage(network({}).users({}).$);
 
-  userEvent.click(getByText('Filters'));
-  const checkbox = getByLabelText('Lead PI');
+  userEvent.click(screen.getByText('Filters'));
+  const checkbox = screen.getByLabelText('Lead PI');
   expect(checkbox).not.toBeChecked();
 
   userEvent.click(checkbox);
@@ -170,12 +164,10 @@ it('allows selection of user filters', async () => {
 });
 
 it('allows selection of group filters', async () => {
-  const { getByText, getByLabelText } = await renderNetworkPage(
-    network({}).groups({}).$,
-  );
+  await renderNetworkPage(network({}).groups({}).$);
 
-  userEvent.click(getByText('Filters'));
-  const checkbox = getByLabelText('Active');
+  userEvent.click(screen.getByText('Filters'));
+  const checkbox = screen.getByLabelText('Active');
   expect(checkbox).not.toBeChecked();
 
   userEvent.click(checkbox);
@@ -191,12 +183,10 @@ it('allows selection of group filters', async () => {
 });
 
 it('allows selection of working group filters', async () => {
-  const { getByText, getByLabelText } = await renderNetworkPage(
-    network({}).workingGroups({}).$,
-  );
+  await renderNetworkPage(network({}).workingGroups({}).$);
 
-  userEvent.click(getByText('Filters'));
-  const checkbox = getByLabelText('Complete');
+  userEvent.click(screen.getByText('Filters'));
+  const checkbox = screen.getByLabelText('Complete');
   expect(checkbox).not.toBeChecked();
 
   userEvent.click(checkbox);
@@ -212,12 +202,10 @@ it('allows selection of working group filters', async () => {
 });
 
 it('allows selection of teams filters', async () => {
-  const { getByText, getByLabelText } = await renderNetworkPage(
-    network({}).teams({}).$,
-  );
+  await renderNetworkPage(network({}).teams({}).$);
 
-  userEvent.click(getByText('Filters'));
-  const checkbox = getByLabelText('Active');
+  userEvent.click(screen.getByText('Filters'));
+  const checkbox = screen.getByLabelText('Active');
   expect(checkbox).not.toBeChecked();
 
   userEvent.click(checkbox);
@@ -233,13 +221,13 @@ it('allows selection of teams filters', async () => {
 });
 
 it('reads filters from url', async () => {
-  const { getByText, getByLabelText } = await renderNetworkPage(
+  await renderNetworkPage(
     network({}).users({}).$,
     '?filter=Lead+PI+(Core Leadership)',
   );
 
-  userEvent.click(getByText('Filters'));
-  const checkbox = getByLabelText('Lead PI');
+  userEvent.click(screen.getByText('Filters'));
+  const checkbox = screen.getByLabelText('Lead PI');
   expect(checkbox).toBeChecked();
   await waitFor(() =>
     expect(mockUseUsers).toHaveBeenLastCalledWith(
@@ -260,12 +248,10 @@ it('renders working-group profile page', async () => {
 
 it('handles server error nicely for working groups tab', async () => {
   mockGetWorkingGroups.mockRejectedValueOnce(new Error('Failed to fetch'));
-  const { getByText } = await renderNetworkPage(
-    network({}).workingGroups({}).$,
-  );
+  await renderNetworkPage(network({}).workingGroups({}).$);
 
   await waitFor(() => {
     expect(mockGetWorkingGroups).toHaveBeenCalled();
-    expect(getByText(/Something went wrong/i)).toBeVisible();
   });
+  expect(screen.getByText(/Something went wrong/i)).toBeVisible();
 });

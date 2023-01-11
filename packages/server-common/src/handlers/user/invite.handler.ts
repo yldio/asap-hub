@@ -1,4 +1,8 @@
-import { RestUser, SquidexRestClient } from '@asap-hub/squidex';
+import {
+  gp2 as gp2Squidex,
+  RestUser,
+  SquidexRestClient,
+} from '@asap-hub/squidex';
 import { EventBridgeEvent } from 'aws-lambda';
 import path from 'path';
 import url from 'url';
@@ -17,13 +21,13 @@ const uuidMatch =
 export const inviteHandlerFactory =
   (
     sendEmail: SendEmail,
-    userClient: SquidexRestClient<RestUser>,
+    userClient: SquidexRestClient<RestUser | gp2Squidex.RestUser>,
     origin: string,
     logger: Logger,
     template: SendEmailTemplate = 'Crn-Welcome',
   ): EventBridgeHandler<'UsersPublished', UserPayload> =>
   async (event) => {
-    let user: RestUser;
+    let user: RestUser | gp2Squidex.RestUser;
 
     try {
       user = await userClient.fetchById(event.detail.payload.id);

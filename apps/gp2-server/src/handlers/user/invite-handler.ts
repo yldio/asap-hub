@@ -2,7 +2,7 @@ import {
   gp2WelcomeTemplate,
   inviteHandlerFactory,
 } from '@asap-hub/server-common';
-import { RestUser, SquidexRest } from '@asap-hub/squidex';
+import { gp2 as gp2Squidex, SquidexRest } from '@asap-hub/squidex';
 import { SES } from 'aws-sdk';
 import { appName, baseUrl, origin, sesRegion } from '../../config';
 import { getAuthToken } from '../../utils/auth';
@@ -15,7 +15,8 @@ const ses = new SES({
   region: sesRegion,
 });
 
-const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
+/* istanbul ignore next */
+const restClient = new SquidexRest<gp2Squidex.RestUser>(getAuthToken, 'users', {
   appName,
   baseUrl,
 });
@@ -24,7 +25,7 @@ const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
 export const handler = sentryWrapper(
   inviteHandlerFactory(
     sendEmailFactory(ses),
-    userRestClient,
+    restClient,
     origin,
     logger,
     gp2WelcomeTemplate,

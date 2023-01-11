@@ -1,6 +1,6 @@
 import { FetchOptions, ListResponse } from './common';
 import { LabResponse } from './lab';
-import { TeamRole } from './team';
+import { TeamRole, TeamStatus } from './team';
 
 export const userRole = ['Staff', 'Grantee', 'Guest', 'Hidden'] as const;
 export type Role = typeof userRole[number];
@@ -105,7 +105,7 @@ export interface UserTeam {
   displayName?: string;
   proposal?: string;
   role: TeamRole;
-  status: string;
+  status: TeamStatus;
 }
 
 export interface UserSocialLinks {

@@ -15,13 +15,13 @@ const UserKeywords: React.FC<UserKeywordsProps> = ({ keywords, editHref }) => (
     title="Keywords"
     edit={!!keywords && keywords.length > 0}
   >
-    {keywords && keywords.length > 0 ? (
-      <TagList tags={keywords} />
-    ) : (
+    {editHref && !(keywords?.length === 0) ? (
       <UserProfilePlaceholderCard>
         Help others to know more about the work that you do by selecting up to
         ten keywords.
       </UserProfilePlaceholderCard>
+    ) : (
+      <TagList tags={keywords} />
     )}
   </EditableCard>
 );

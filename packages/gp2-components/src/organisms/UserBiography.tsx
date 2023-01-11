@@ -12,13 +12,13 @@ const UserBiography: React.FC<UserBiographyProps> = ({
   editHref,
 }) => (
   <EditableCard editHref={editHref} title="Biography" edit={!!biography}>
-    {biography ? (
-      <ExpandableText>{biography}</ExpandableText>
-    ) : (
+    {editHref && !biography ? (
       <UserProfilePlaceholderCard>
         Summarize your background and highlight any past achievements to give
         members of the platform a better understanding of who you are.
       </UserProfilePlaceholderCard>
+    ) : (
+      <ExpandableText>{biography}</ExpandableText>
     )}
   </EditableCard>
 );

@@ -783,7 +783,7 @@ __metadata:
     graphql-tag: 2.12.6
     graphql-typescript-integration: 1.2.1
     jest-when: 3.5.2
-    jsonwebtoken: 8.5.1
+    jsonwebtoken: 9.0.0
     jwt-decode: 2.2.0
     jwt-encode: 1.0.1
     lightstep-tracer: 0.33.0
@@ -888,7 +888,7 @@ __metadata:
     "@types/jsonwebtoken": 8.5.9
     core-js: 3.24.1
     date-fns: 2.29.3
-    jsonwebtoken: 8.5.1
+    jsonwebtoken: 9.0.0
     ramda: 0.27.1
     uuid: 8.3.2
   languageName: unknown
@@ -1205,7 +1205,7 @@ __metadata:
     graphql: 15.8.0
     graphql-tag: 2.12.6
     graphql-typescript-integration: 1.2.1
-    jsonwebtoken: 8.5.1
+    jsonwebtoken: 9.0.0
     jwt-encode: 1.0.1
     nock: 13.0.11
     node-dev: 6.7.0
@@ -1276,7 +1276,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.19.6
     "@types/jest": 27.5.2
     "@types/jsonwebtoken": 8.5.9
-    jsonwebtoken: 8.5.1
+    jsonwebtoken: 9.0.0
   languageName: unknown
   linkType: soft
 
@@ -1442,7 +1442,7 @@ __metadata:
     express: 4.18.2
     express-async-errors: 3.1.1
     got: 11.8.5
-    jsonwebtoken: 8.5.1
+    jsonwebtoken: 9.0.0
     jwt-encode: 1.0.1
     nock: 13.0.11
     pino: 8.8.0
@@ -28566,7 +28566,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsonwebtoken@npm:8.5.1, jsonwebtoken@npm:^8.5.1":
+"jsonwebtoken@npm:9.0.0":
+  version: 9.0.0
+  resolution: "jsonwebtoken@npm:9.0.0"
+  dependencies:
+    jws: ^3.2.2
+    lodash: ^4.17.21
+    ms: ^2.1.1
+    semver: ^7.3.8
+  checksum: b9181cecf9df99f1dc0253f91ba000a1aa4d91f5816d1608c0dba61a5623726a0bfe200b51df25de18c1a6000825d231ad7ce2788aa54fd48dcb760ad9eb9514
+  languageName: node
+  linkType: hard
+
+"jsonwebtoken@npm:^8.5.1":
   version: 8.5.1
   resolution: "jsonwebtoken@npm:8.5.1"
   dependencies:
@@ -36268,6 +36280,17 @@ __metadata:
   bin:
     semver: bin/semver.js
   checksum: 2fa3e877568cd6ce769c75c211beaed1f9fce80b28338cadd9d0b6c40f2e2862bafd62c19a6cff42f3d54292b7c623277bcab8816a2b5521cf15210d43e75232
+  languageName: node
+  linkType: hard
+
+"semver@npm:^7.3.8":
+  version: 7.3.8
+  resolution: "semver@npm:7.3.8"
+  dependencies:
+    lru-cache: ^6.0.0
+  bin:
+    semver: bin/semver.js
+  checksum: ba9c7cbbf2b7884696523450a61fee1a09930d888b7a8d7579025ad93d459b2d1949ee5bbfeb188b2be5f4ac163544c5e98491ad6152df34154feebc2cc337c1
   languageName: node
   linkType: hard
 

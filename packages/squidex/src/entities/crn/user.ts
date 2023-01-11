@@ -1,5 +1,6 @@
 import {
   TeamRole,
+  TeamStatus,
   OrcidWork,
   UserDegree,
   UserSocialLinks,
@@ -14,17 +15,11 @@ import {
 } from '../common';
 import { GraphqlTeam } from './team';
 
-export type UserTeamConnection<T = string> = T extends string
-  ? {
-      status: string;
-      role: TeamRole;
-      id: T[];
-    }
-  : {
-      status: string;
-      role: TeamRole;
-      id: T[];
-    };
+export type UserTeamConnection<T = string> = {
+  status: TeamStatus;
+  role: TeamRole;
+  id: T[];
+};
 
 export type UserLabConnection = { id: string } & Graphql<{
   name: string;

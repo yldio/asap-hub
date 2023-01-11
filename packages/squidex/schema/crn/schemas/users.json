@@ -260,7 +260,6 @@
               "contentType": "Unspecified",
               "editor": "Dropdown",
               "label": "Status",
-              "hints": "Attention: Check if this user needs to be added to Smart Simple",
               "isRequired": true,
               "isRequiredOnPublish": false,
               "isHalfWidth": true

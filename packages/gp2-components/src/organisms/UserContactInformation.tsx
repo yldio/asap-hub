@@ -21,18 +21,18 @@ const UserContactInformation: React.FC<UserContactInformationProps> = ({
     optional
     edit={!!secondaryEmail}
   >
-    {secondaryEmail ? (
-      <EmailSection
-        contactEmails={[
-          { email, contact: 'Institutional Email' },
-          { email: secondaryEmail, contact: 'Alternative Email' },
-        ]}
-      />
-    ) : (
+    {editHref && !secondaryEmail ? (
       <UserProfilePlaceholderCard>
         Provide alternative contact details to your institutional email used to
         sign up.
       </UserProfilePlaceholderCard>
+    ) : (
+      <EmailSection
+        contactEmails={[
+          { email, contact: 'Institutional email' },
+          { email: secondaryEmail, contact: 'Alternative email' },
+        ]}
+      />
     )}
   </EditableCard>
 );

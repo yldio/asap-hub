@@ -64,7 +64,7 @@ const MainNavigation: React.FC = () => (
         <NavigationLink
           href={'/'}
           icon={<DashboardIcon color={'currentColor'} />}
-          hasStrokeWidth={false}
+          hasStroke={false}
         >
           Dashboard
         </NavigationLink>
@@ -73,7 +73,7 @@ const MainNavigation: React.FC = () => (
         <NavigationLink
           href={users({}).$}
           icon={<UsersIcon color={'currentColor'} />}
-          hasStrokeWidth={false}
+          hasStroke={false}
         >
           Users
         </NavigationLink>
@@ -82,7 +82,7 @@ const MainNavigation: React.FC = () => (
         <NavigationLink
           href={workingGroups({}).$}
           icon={<WorkingGroupIcon color={'currentColor'} />}
-          hasStrokeWidth={false}
+          hasStroke={false}
           enabled={true}
         >
           Groups
@@ -92,7 +92,7 @@ const MainNavigation: React.FC = () => (
         <NavigationLink
           href={projects({}).$}
           icon={<ProjectIcon color={'currentColor'} />}
-          hasStrokeWidth={false}
+          hasStroke={false}
         >
           Projects
         </NavigationLink>

@@ -4,8 +4,7 @@ inputs:
   since-master:
     description: 'Whether to run tests since master'
     required: false
-    type: boolean
-    default: false
+    default: 'false'
   codecov-token:
     description: 'The environment name'
     required: true
@@ -17,8 +16,9 @@ runs:
       with:
         path: |
           .jest-cache/
-        key: jest-cache-${{ github.sha }}
+        key: jest-cache-${{ inputs.since-master }}-${{ github.sha }}
         restore-keys: |
+          jest-cache-${{ inputs.since-master }}-
           jest-cache-
     - name: Get number of CPU cores
       id: cpu-cores

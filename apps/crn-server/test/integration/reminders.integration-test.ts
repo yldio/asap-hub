@@ -21,6 +21,8 @@ import {
   CalendarCreateDataObject,
   SharePresentationReminder,
   PublishMaterialReminder,
+  TeamRole,
+  UploadPresentationReminder,
 } from '@asap-hub/model';
 import { appName, baseUrl } from '../../src/config';
 import { ReminderSquidexDataProvider } from '../../src/data-providers/reminders.data-provider';
@@ -716,6 +718,168 @@ describe('Reminders', () => {
       });
     });
   });
+
+  describe('Upload Presentation Reminder', () => {
+    let userId: string;
+    let teamId: string;
+    let calendarId: string;
+    let eventIdsForDeletion: string[] = [];
+    let fetchRemindersOptions: FetchRemindersOptions;
+
+    beforeAll(async () => {
+      jest.useFakeTimers();
+
+      const teamCreateDataObject = getTeamCreateDataObject();
+      teamCreateDataObject.applicationNumber = chance.name();
+      teamId = await teamDataProvider.create(teamCreateDataObject);
+
+      const userCreateDataObject = getUserInput(teamId, 'Project Manager');
+      userId = await userDataProvider.create(userCreateDataObject);
+      fetchRemindersOptions = { userId, timezone: 'Europe/London' };
+    });
+
+    afterAll(() => {
+      jest.useRealTimers();
+    });
+
+    beforeEach(async () => {
+      const calendarInput = getCalendarInputForReminder();
+      calendarId = await calendarDataProvider.create(calendarInput);
+    });
+
+    afterEach(async () => {
+      await Promise.all(
+        eventIdsForDeletion.map((id) => eventRestClient.delete(id)),
+      );
+      eventIdsForDeletion = [];
+    });
+
+    test('Should see the reminder when the event has finished and user is a PM of one of the speaker teams', async () => {
+      // setting system time to 10:05AM in UTC
+      jest.setSystemTime(new Date('2022-08-10T11:05:00.0Z'));
+
+      const eventInput = getEventInput(calendarId);
+      // the event starts at 10AM and ends at 11AM in UTC
+      eventInput.startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
+      eventInput.endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
+      eventInput.speakers = [
+        {
+          user: [userId],
+          team: [teamId],
+        },
+      ];
+      const event = await eventController.create(eventInput);
+      eventIdsForDeletion = [event.id];
+
+      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+      const expectedReminder: UploadPresentationReminder = {
+        id: `upload-presentation-${event.id}`,
+        entity: 'Event',
+        type: 'Upload Presentation',
+        data: {
+          eventId: event.id,
+          endDate: event.data.endDate.iv,
+          title: event.data.title.iv,
+        },
+      };
+
+      expect(reminders).toEqual({
+        total: 1,
+        items: [expectedReminder],
+      });
+    });
+
+    test('Should not see the reminder when the event has finished and user is not a PM of one of the speaker teams', async () => {
+      // setting system time to 10:05AM in UTC
+      jest.setSystemTime(new Date('2022-08-10T11:05:00.0Z'));
+
+      let anotherTeamId;
+      let speakerUserId;
+
+      const anotherTeamCreateDataObject = getTeamCreateDataObject();
+      anotherTeamId = await teamDataProvider.create(
+        anotherTeamCreateDataObject,
+      );
+
+      const speakerUserCreateDataObject = getUserInput(
+        anotherTeamId,
+        'Project Manager',
+      );
+      speakerUserId = await userDataProvider.create(
+        speakerUserCreateDataObject,
+      );
+
+      const eventInput = getEventInput(calendarId);
+      // the event starts at 10AM and ends at 11AM in UTC
+      eventInput.startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
+      eventInput.endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
+      eventInput.speakers = [
+        {
+          user: [speakerUserId],
+          team: [anotherTeamId],
+        },
+      ];
+
+      const event = await eventController.create(eventInput);
+      eventIdsForDeletion = [event.id];
+
+      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+      expect(reminders).toEqual({
+        total: 0,
+        items: [],
+      });
+    });
+
+    test('Should not see the reminder when the event has not finished', async () => {
+      jest.setSystemTime(new Date('2022-08-10T10:59:00.0Z'));
+
+      const eventInput = getEventInput(calendarId);
+      // the event starts at 10AM and ends at 11AM in UTC
+      eventInput.startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
+      eventInput.endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
+      eventInput.speakers = [
+        {
+          user: [userId],
+          team: [teamId],
+        },
+      ];
+      const event = await eventController.create(eventInput);
+      eventIdsForDeletion = [event.id];
+
+      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+      expect(reminders.items.map((reminder) => reminder.type)).toEqual([
+        'Happening Now',
+      ]);
+    });
+
+    test('Should not see the reminder when the event is a future event', async () => {
+      jest.setSystemTime(new Date('2022-08-10T10:59:00.0Z'));
+
+      const eventInput = getEventInput(calendarId);
+      eventInput.startDate = new Date('2023-08-10T10:00:00.0Z').toISOString();
+      eventInput.endDate = new Date('2023-08-10T11:00:00.0Z').toISOString();
+
+      eventInput.speakers = [
+        {
+          user: [userId],
+          team: [teamId],
+        },
+      ];
+      const event = await eventController.create(eventInput);
+      eventIdsForDeletion = [event.id];
+
+      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+      expect(reminders).toEqual({
+        total: 0,
+        items: [],
+      });
+    });
+  });
+
   interface TestProps {
     material: 'Video' | 'Presentation';
     materialUpdatedAtName:
@@ -1010,9 +1174,12 @@ describe('Reminders', () => {
     });
   });
 
-  const getUserInput = (teamId: string): UserCreateDataObject => ({
+  const getUserInput = (
+    teamId: string,
+    role = 'Key Personnel' as TeamRole,
+  ): UserCreateDataObject => ({
     ...getUserCreateDataObject(),
-    teams: [{ id: teamId, role: 'Key Personnel' }],
+    teams: [{ id: teamId, role }],
     labIds: [],
     email: chance.email(),
     orcid: createRandomOrcid(),

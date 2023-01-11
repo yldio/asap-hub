@@ -6,6 +6,7 @@ import {
   ListReminderResponse,
 } from '@asap-hub/model';
 import { ReminderDataProvider } from '../data-providers/reminders.data-provider';
+import { crnMeetingMaterialsDrive } from '../config';
 
 export interface ReminderController {
   fetch: (options: FetchRemindersOptions) => Promise<ListReminderResponse>;
@@ -89,6 +90,18 @@ export default class Reminders implements ReminderController {
             id: reminder.id,
             entity: reminder.entity,
             description: `It's time to publish the meeting materials for the ${reminder.data.title} event.`,
+          };
+        }
+
+        if (
+          reminder.entity === 'Event' &&
+          reminder.type === 'Upload Presentation'
+        ) {
+          return {
+            id: reminder.id,
+            entity: reminder.entity,
+            href: crnMeetingMaterialsDrive,
+            description: `Don't forget to upload presentations for the ${reminder.data.title} event in the ASAP CRN Meeting Materials Drive.`,
           };
         }
 

@@ -17,6 +17,7 @@ const {
   CONTENTFUL_ENV_ID,
   CONTENTFUL_HOST,
   CRN_API_URL,
+  CRN_MEETING_MATERIALS_DRIVE,
   GOOGLE_API_TOKEN,
   LOG_LEVEL,
   LOG_ENABLED,
@@ -82,3 +83,6 @@ export const contentfulAccessToken =
 export const contentfulEnvId = CONTENTFUL_ENV_ID || 'contentful-environment-id';
 export const contentfulHost = CONTENTFUL_HOST || 'https://cdn.contentful.com';
 export const isContentfulEnabled = IS_CONTENTFUL_ENABLED === 'true' || false;
+export const crnMeetingMaterialsDrive =
+  CRN_MEETING_MATERIALS_DRIVE ||
+  'https://drive.google.com/drive/u/0/folders/0AKtA9ScsuPjTUk9PVA?pli=1';

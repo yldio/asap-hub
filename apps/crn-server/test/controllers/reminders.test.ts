@@ -5,6 +5,7 @@ import {
   PublishMaterialReminder,
   ResearchOutputPublishedReminder,
   SharePresentationReminder,
+  UploadPresentationReminder,
 } from '@asap-hub/model';
 import Reminders, {
   formattedMaterialByEventType,
@@ -19,8 +20,10 @@ import {
   getNotesUpdatedReminder,
   getSharePresentationReminder,
   getPublishMaterialReminder,
+  getUploadPresentationReminder,
 } from '../fixtures/reminders.fixtures';
 import { reminderDataProviderMock } from '../mocks/reminder-data-provider.mock';
+import { crnMeetingMaterialsDrive } from '../../src/config';
 
 describe('Reminder Controller', () => {
   const reminderController = new Reminders(reminderDataProviderMock);
@@ -198,6 +201,26 @@ describe('Reminder Controller', () => {
         expect(items[0]).toMatchObject({
           description:
             "It's time to publish the meeting materials for the Some Test Event Title event.",
+        });
+      });
+
+      test('Should return the correct description and href for the upload presentation reminder', async () => {
+        const reminderDataObject: UploadPresentationReminder =
+          getUploadPresentationReminder();
+        reminderDataObject.data.title = 'Some Test Event Title';
+        reminderDataObject.data.eventId = 'some-event-id';
+
+        reminderDataProviderMock.fetch.mockResolvedValueOnce({
+          total: 1,
+          items: [reminderDataObject],
+        });
+
+        const { items } = await reminderController.fetch(options);
+
+        expect(items[0]).toMatchObject({
+          description:
+            "Don't forget to upload presentations for the Some Test Event Title event in the ASAP CRN Meeting Materials Drive.",
+          href: crnMeetingMaterialsDrive,
         });
       });
 

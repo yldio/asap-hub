@@ -99,7 +99,7 @@
         "properties": {
           "fieldType": "String",
           "pattern": "^[a-zA-Z0-9.!#$%&’*+\\/=?^_`'{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$",
-          "isUnique": true,
+          "isUnique": false,
           "isEmbeddable": false,
           "inlineEditable": true,
           "createEnum": false,
@@ -120,7 +120,7 @@
         "properties": {
           "fieldType": "String",
           "pattern": "^\\+*[1-9]{0,3}$",
-          "isUnique": true,
+          "isUnique": false,
           "isEmbeddable": false,
           "inlineEditable": true,
           "createEnum": false,
@@ -141,7 +141,7 @@
         "properties": {
           "fieldType": "String",
           "pattern": "^\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{3,4}$",
-          "isUnique": true,
+          "isUnique": false,
           "isEmbeddable": false,
           "inlineEditable": true,
           "createEnum": false,

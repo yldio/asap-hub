@@ -120,7 +120,6 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
       css={({ colors }) => [
         styles,
         hasStroke && strokeStyles,
-        ,
         squareBorder && squareBorderStyles,
         active && activePrimaryStyles(colors, hasStroke),
         !enabled && disableStyles,

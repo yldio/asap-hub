@@ -22,6 +22,33 @@ it('renders the no memberships message', () => {
   expect(screen.getByText('There are no past memberships.')).toBeVisible();
   rerender(<WorkingGroupsTabbedCard {...props} isUserAlumni={false} />);
   expect(screen.getByText('There are no active memberships.')).toBeVisible();
+
+  rerender(
+    <WorkingGroupsTabbedCard
+      {...props}
+      groups={undefined}
+      isUserAlumni={false}
+    />,
+  );
+  expect(screen.getByText('There are no active memberships.')).toBeVisible();
+});
+
+it('displays the show more message', () => {
+  const groups = Array.from(Array(7).keys()).map((index) => ({
+    id: `group-${index}`,
+    name: 'Active WG',
+    role: 'Chair' as unknown as 'Chair',
+    active: true,
+  }));
+
+  render(<WorkingGroupsTabbedCard {...props} groups={groups} />);
+
+  const showMore = screen.getByText('View More Memberships');
+  expect(showMore).toBeInTheDocument();
+  fireEvent.click(showMore);
+
+  const showLess = screen.getByText('View Less Memberships');
+  expect(showLess).toBeInTheDocument();
 });
 
 it('splits the current and complete groups', () => {

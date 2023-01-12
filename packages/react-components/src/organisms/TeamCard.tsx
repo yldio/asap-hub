@@ -72,7 +72,7 @@ const TeamCard: React.FC<TeamCardProps> = ({
       )}
     </div>
     <Anchor href={network({}).teams({}).team({ teamId: id }).$}>
-      <Paragraph margin={false} accent="lead">
+      <Paragraph noMargin accent="lead">
         {projectTitle}
       </Paragraph>
     </Anchor>

@@ -18,7 +18,7 @@ const OnboardingBackground: React.FC<OnboardingBackgroundProps> = ({
   editKeywordsHref,
 }) => (
   <>
-    <Paragraph margin={false}>
+    <Paragraph noMargin>
       Next up, we’d like to capture some more information around your skills and
       experiences in order to help others to understand your areas of focus.
     </Paragraph>

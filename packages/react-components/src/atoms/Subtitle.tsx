@@ -12,7 +12,7 @@ interface SubtitleProps {
   readonly styleAsHeading?: keyof typeof headlineStyles;
   readonly bold?: boolean;
   readonly accent?: AccentColorName;
-  readonly margin?: boolean;
+  readonly noMargin?: boolean;
 }
 const Subtitle: React.FC<SubtitleProps> = ({
   children,
@@ -20,11 +20,11 @@ const Subtitle: React.FC<SubtitleProps> = ({
   bold,
   id,
   accent,
-  margin = true,
+  noMargin = false,
 }) => (
   <h5
     css={[
-      margin ? layoutStyles : { margin: 0 },
+      noMargin ? { margin: 0 } : layoutStyles,
       headlineStyles[styleAsHeading],
       bold ? { fontWeight: 'bold' } : null,
       accent ? { color: colors[accent].rgb } : null,

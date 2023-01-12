@@ -42,12 +42,12 @@ const OnboardingWelcome: React.FC<Record<string, never>> = () => (
   <div css={containerStyles}>
     <header>
       <Headline2 noMargin>Welcome to the GP2 Hub</Headline2>
-      <Subtitle accent="lead" margin>
+      <Subtitle accent="lead">
         The closed private network for the Global Parkinson's Genetics Program.
       </Subtitle>
     </header>
     <CardWithOffsetBackground>
-      <Paragraph margin={false}>
+      <Paragraph noMargin>
         As one of the program's valuable members, you have been invited to this
         network to:
       </Paragraph>
@@ -65,7 +65,7 @@ const OnboardingWelcome: React.FC<Record<string, never>> = () => (
         </li>
       </ul>
       <Divider />
-      <Paragraph margin={false}>
+      <Paragraph noMargin>
         Before you begin exploring, please take a small amount of time to fill
         in your profile so that others have a good idea about who you are and
         what to do.

@@ -65,7 +65,7 @@ const UserWorkingGroups: React.FC<UserWorkingGroupsProps> = ({
   return (
     <>
       <div css={[contentStyles]}>
-        <Paragraph margin={false} accent="lead">
+        <Paragraph noMargin accent="lead">
           {firstName} is involved in the following GP2 working groups:
         </Paragraph>
       </div>

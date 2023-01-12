@@ -20,7 +20,7 @@ const OnboardingCoreDetails: React.FC<OnboardingCoreDetailProps> = ({
   ...headerProps
 }) => (
   <>
-    <Paragraph margin={false}>
+    <Paragraph noMargin>
       In order to join the platform, we need to capture some core information
       before you start exploring.
     </Paragraph>

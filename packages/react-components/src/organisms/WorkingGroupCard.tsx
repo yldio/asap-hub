@@ -97,7 +97,7 @@ const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
         }
       >
         <Ellipsis numberOfLines={2}>
-          <Paragraph accent="lead" margin={false}>
+          <Paragraph accent="lead" noMargin>
             {shortText}
           </Paragraph>
         </Ellipsis>

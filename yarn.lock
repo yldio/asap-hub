@@ -756,7 +756,7 @@ __metadata:
     "@types/pump": 1.1.1
     "@types/serverless": 3.12.8
     "@types/source-map-support": 0.5.4
-    "@types/stream-json": 1.7.2
+    "@types/stream-json": 1.7.3
     "@types/supertest": 2.0.12
     "@types/uuid": 8.3.4
     "@types/yargs": 17.0.5
@@ -13906,13 +13906,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/stream-json@npm:1.7.2":
-  version: 1.7.2
-  resolution: "@types/stream-json@npm:1.7.2"
+"@types/stream-json@npm:1.7.3":
+  version: 1.7.3
+  resolution: "@types/stream-json@npm:1.7.3"
   dependencies:
-    "@types/node": "npm:*"
-    "@types/stream-chain": "npm:*"
-  checksum: f11e1332f2f0ec38626890d37d3091303067b5f3c5136811821070a1ce40f848a7745f179913ff20516f92c080082c4db6e3ea66d62549222d50965903030f24
+    "@types/node": "*"
+    "@types/stream-chain": "*"
+  checksum: cafa47c27bbd0cf446d1c90442cf53240a8a8a3828e73ba456720d6612b03d32d04067c9c0e54105b94584f37c7ed2f1a941b0600fbc6c095c25c1b401d184bb
   languageName: node
   linkType: hard
 

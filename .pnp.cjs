@@ -2593,7 +2593,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@types/stream-json",\
-        "npm:1.7.2"\
+        "npm:1.7.3"\
       ],\
       [\
         "@types/streamsaver",\
@@ -11090,7 +11090,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/pump", "npm:1.1.1"],\
             ["@types/serverless", "npm:3.12.8"],\
             ["@types/source-map-support", "npm:0.5.4"],\
-            ["@types/stream-json", "npm:1.7.2"],\
+            ["@types/stream-json", "npm:1.7.3"],\
             ["@types/supertest", "npm:2.0.12"],\
             ["@types/uuid", "npm:8.3.4"],\
             ["@types/yargs", "npm:17.0.5"],\
@@ -35726,10 +35726,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/stream-json", [\
-        ["npm:1.7.2", {\
-          "packageLocation": "./.yarn/cache/@types-stream-json-npm-1.7.2-a0c56652f0-f11e1332f2.zip/node_modules/@types/stream-json/",\
+        ["npm:1.7.3", {\
+          "packageLocation": "./.yarn/cache/@types-stream-json-npm-1.7.3-edd4eb6117-cafa47c27b.zip/node_modules/@types/stream-json/",\
           "packageDependencies": [\
-            ["@types/stream-json", "npm:1.7.2"],\
+            ["@types/stream-json", "npm:1.7.3"],\
             ["@types/node", "npm:13.11.1"],\
             ["@types/stream-chain", "npm:2.0.1"]\
           ],\

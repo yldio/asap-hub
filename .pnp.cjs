@@ -2265,7 +2265,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@types/hapi",\
-        "npm:18.0.7"\
+        "npm:18.0.8"\
       ],\
       [\
         "@types/hapi__boom",\
@@ -11071,7 +11071,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/debug", "npm:4.1.7"],\
             ["@types/express", "npm:4.17.14"],\
             ["@types/graphql", "npm:14.5.0"],\
-            ["@types/hapi", "npm:18.0.7"],\
+            ["@types/hapi", "npm:18.0.8"],\
             ["@types/hapi__boom", "npm:9.0.1"],\
             ["@types/hapi__bourne", "workspace:@types/hapi__bourne"],\
             ["@types/hapi__joi", "npm:17.1.8"],\
@@ -12413,7 +12413,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],\
             ["@types/aws-lambda", "npm:8.10.109"],\
             ["@types/debug", "npm:4.1.7"],\
-            ["@types/hapi", "npm:18.0.7"],\
+            ["@types/hapi", "npm:18.0.8"],\
             ["@types/hapi__boom", "npm:9.0.1"],\
             ["@types/hapi__bourne", "workspace:@types/hapi__bourne"],\
             ["@types/hapi__joi", "npm:17.1.8"],\
@@ -12449,7 +12449,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@hapi/joi", "npm:17.1.1"],\
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],\
             ["@types/debug", "npm:4.1.7"],\
-            ["@types/hapi", "npm:18.0.7"],\
+            ["@types/hapi", "npm:18.0.8"],\
             ["@types/hapi__boom", "npm:9.0.1"],\
             ["@types/hapi__bourne", "workspace:@types/hapi__bourne"],\
             ["@types/hapi__joi", "npm:17.1.8"],\
@@ -34763,10 +34763,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/hapi", [\
-        ["npm:18.0.7", {\
-          "packageLocation": "./.yarn/cache/@types-hapi-npm-18.0.7-d6e0f19078-a10ed6407a.zip/node_modules/@types/hapi/",\
+        ["npm:18.0.8", {\
+          "packageLocation": "./.yarn/cache/@types-hapi-npm-18.0.8-c3061ae24c-1c96e17aab.zip/node_modules/@types/hapi/",\
           "packageDependencies": [\
-            ["@types/hapi", "npm:18.0.7"],\
+            ["@types/hapi", "npm:18.0.8"],\
             ["@types/boom", "npm:7.3.0"],\
             ["@types/catbox", "npm:10.0.6"],\
             ["@types/iron", "npm:5.0.1"],\

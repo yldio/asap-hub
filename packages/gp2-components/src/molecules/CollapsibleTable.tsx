@@ -104,7 +104,7 @@ const CollapsibleTable: React.FC<CollapsibleTableProps> = ({
   return (
     <>
       <div css={[contentStyles]}>
-        <Paragraph hasMargin={false} accent="lead">
+        <Paragraph noMargin accent="lead">
           {paragraph}
         </Paragraph>
       </div>

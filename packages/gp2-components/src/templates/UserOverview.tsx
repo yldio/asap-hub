@@ -4,17 +4,18 @@ import {
   crossQuery,
   Headline3,
   pixels,
-  TagList,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import ExpandableText from '../molecules/ExpandableText';
-import EmailSection from '../organisms/EmailSection';
 import UserQuestions from '../organisms/UserQuestions';
 import UserProjects from '../organisms/UserProjects';
 import UserWorkingGroups from '../organisms/UserWorkingGroups';
 import { UserContributingCohorts } from '../organisms';
 import UserExternalProfiles from '../organisms/UserExternalProfiles';
+import UserBiography from '../organisms/UserBiography';
+import UserKeywords from '../organisms/UserKeywords';
+import UserContactInformation from '../organisms/UserContactInformation';
 
 type UserOverviewProps = Pick<
   gp2.UserResponse,
@@ -70,36 +71,10 @@ const UserOverview: React.FC<UserOverviewProps> = ({
 }) => (
   <div css={containerStyles}>
     <div css={[columnStyles]}>
-      <Card padding={false}>
-        <div css={cardStyles}>
-          <Headline3 noMargin>Contact Information</Headline3>
-          <div css={contentStyles}>
-            <EmailSection
-              contactEmails={[
-                { email, contact: 'Institutional email' },
-                { email: secondaryEmail, contact: 'Alternative email' },
-              ]}
-            />
-          </div>
-        </div>
-      </Card>
-      <Card padding={false}>
-        <div css={cardStyles}>
-          <Headline3 noMargin>Keywords</Headline3>
-          <div css={contentStyles}>
-            <TagList tags={keywords} />
-          </div>
-        </div>
-      </Card>
+      <UserContactInformation secondaryEmail={secondaryEmail} email={email} />
+      <UserKeywords keywords={keywords} />
     </div>
-    <Card padding={false}>
-      <div css={cardStyles}>
-        <Headline3 noMargin>Biography</Headline3>
-        <div css={contentStyles}>
-          <ExpandableText>{biography}</ExpandableText>
-        </div>
-      </div>
-    </Card>
+    <UserBiography biography={biography} />
     {projects.length > 0 && (
       <Card padding={false}>
         <div css={cardStyles}>

@@ -132,7 +132,7 @@ const Resources: React.FC<ResourcesProps> = ({
                     paddingTop: rem(8),
                   })}
                 >
-                  <Subtitle styleAsHeading={4} hasMargin={false}>
+                  <Subtitle styleAsHeading={4} noMargin>
                     {resource.title}
                   </Subtitle>
                   {resource.type === 'Link' && (
@@ -143,7 +143,7 @@ const Resources: React.FC<ResourcesProps> = ({
                     </div>
                   )}
                 </div>
-                <Paragraph hasMargin={false} accent="lead">
+                <Paragraph noMargin accent="lead">
                   {resource.description}
                 </Paragraph>
               </Card>

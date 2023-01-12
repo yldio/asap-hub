@@ -149,7 +149,7 @@ describe('CoreDetails', () => {
     mockGetUser.mockResolvedValueOnce(user);
     await renderCoreDetails(user.id);
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-    userEvent.click(screen.getByRole('link', { name: 'Optional Add' }));
+    userEvent.click(screen.getByRole('link', { name: 'Edit Edit' }));
     expect(screen.getByRole('dialog')).toBeVisible();
     userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {

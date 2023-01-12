@@ -15,13 +15,13 @@ import { gp2 } from '@asap-hub/model';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getUser, patchUser } from '../../users/api';
 import { refreshUserState } from '../../users/state';
-import OnboardingPage from '../OnboardingPage';
+import Onboarding from '../Onboarding';
 
 jest.mock('../../users/api');
 
 mockConsoleError();
 
-const renderOnboardingPage = async (id: string) => {
+const renderOnboarding = async (id: string) => {
   render(
     <RecoilRoot
       initializeState={({ set }) => {
@@ -34,7 +34,7 @@ const renderOnboardingPage = async (id: string) => {
             <MemoryRouter
               initialEntries={[gp2Routing.onboarding({}).coreDetails({}).$]}
             >
-              <OnboardingPage />
+              <Onboarding />
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -45,7 +45,7 @@ const renderOnboardingPage = async (id: string) => {
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };
 
-describe('OnboardingPage', () => {
+describe('Onboarding', () => {
   beforeEach(jest.resetAllMocks);
   const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
   const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
@@ -53,7 +53,7 @@ describe('OnboardingPage', () => {
   it('has core details activated', async () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
-    await renderOnboardingPage(user.id);
+    await renderOnboarding(user.id);
     expect(screen.getByRole('link', { name: /core details/i })).toHaveClass(
       'active-link',
     );
@@ -66,7 +66,7 @@ describe('OnboardingPage', () => {
     };
     mockGetUser.mockResolvedValueOnce(user);
 
-    await renderOnboardingPage(user.id);
+    await renderOnboarding(user.id);
     userEvent.click(screen.getByRole('link', { name: 'Continue' }));
     userEvent.click(screen.getByRole('link', { name: 'Continue' }));
     userEvent.click(screen.getByRole('link', { name: 'Continue' }));

@@ -70,10 +70,10 @@ const DashboardRecommendedUsers: React.FC<DashboardRecommendedUsersProps> = ({
           </LinkHeadline>
           {user.teams.length > 0 && (
             <div css={roleStyles}>
-              <Paragraph hasMargin={false} accent="lead">
+              <Paragraph noMargin accent="lead">
                 {user.teams[0].role} on
               </Paragraph>
-              <Paragraph hasMargin={false} accent="lead">
+              <Paragraph noMargin accent="lead">
                 {user.teams[0].displayName}
               </Paragraph>
             </div>

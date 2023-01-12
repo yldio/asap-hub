@@ -114,7 +114,7 @@ const TeamGroupsTabbedCard: React.FC<TeamGroupsTabbedCardProps> = ({
                 >
                   {name}
                 </LinkHeadline>
-                <Paragraph hasMargin={false} accent="lead">
+                <Paragraph noMargin accent="lead">
                   {description}
                 </Paragraph>
                 <span css={teamsStyles}>

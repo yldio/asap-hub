@@ -9,10 +9,9 @@ import {
 import { useState } from 'react';
 import { mobileQuery, nonMobileQuery } from '../layout';
 
-const { rem, vminLinearCalcClamped, mobileScreen, tabletScreen } = pixels;
+const { rem } = pixels;
 
 const footerStyles = css({
-  paddingTop: vminLinearCalcClamped(mobileScreen, 33, tabletScreen, 48, 'px'),
   display: 'flex',
   justifyContent: 'space-between',
   flexDirection: 'column-reverse',

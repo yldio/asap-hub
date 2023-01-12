@@ -740,7 +740,7 @@ __metadata:
     "@types/hapi": 18.0.7
     "@types/hapi__boom": 9.0.1
     "@types/hapi__bourne": "workspace:*"
-    "@types/hapi__joi": 17.1.8
+    "@types/hapi__joi": 17.1.9
     "@types/jest": 27.5.2
     "@types/jest-when": 3.5.2
     "@types/jsonwebtoken": 8.5.9
@@ -1473,7 +1473,7 @@ __metadata:
     "@types/hapi": 18.0.7
     "@types/hapi__boom": 9.0.1
     "@types/hapi__bourne": "workspace:*"
-    "@types/hapi__joi": 17.1.8
+    "@types/hapi__joi": 17.1.9
     "@types/jest": 27.5.2
     "@types/jwt-decode": 2.2.1
     "@types/jwt-encode": "workspace:*"
@@ -1507,7 +1507,7 @@ __metadata:
     "@types/hapi": 18.0.7
     "@types/hapi__boom": 9.0.1
     "@types/hapi__bourne": "workspace:*"
-    "@types/hapi__joi": 17.1.8
+    "@types/hapi__joi": 17.1.9
     "@types/jest": 27.5.2
     "@types/jwt-decode": 2.2.1
     "@types/jwt-encode": "workspace:*"
@@ -13079,10 +13079,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@types/hapi__joi@npm:17.1.8":
-  version: 17.1.8
-  resolution: "@types/hapi__joi@npm:17.1.8"
-  checksum: b346c23a30ea848e7d69bf0df00aa467a4c333b1ba0be8b824bade25dfd7857b37678b3bb63d21fdf5aaeab6437919c5b698e899f69655bd8727afc2d5ece69d
+"@types/hapi__joi@npm:17.1.9":
+  version: 17.1.9
+  resolution: "@types/hapi__joi@npm:17.1.9"
+  checksum: 982e80e5cb667df7b41fcf8c8180d63e809217e1d1f02e2954d5c924b05570b4ec1d4ab474b0b1fbac1fc058a9d5d391a3ba9239bf8feaf03c9066f38bc21cce
   languageName: node
   linkType: hard
 

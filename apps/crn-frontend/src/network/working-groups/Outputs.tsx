@@ -1,15 +1,19 @@
 import { SearchFrame } from '@asap-hub/frontend-utils';
-import { ProfileOutputs } from '@asap-hub/react-components';
+import { WorkingGroupDataObject } from '@asap-hub/model';
+import {
+  noop,
+  ProfileOutputs,
+  ResearchOutputsSearch,
+} from '@asap-hub/react-components';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { ComponentProps } from 'react';
 
 import { usePagination, usePaginationParams } from '../../hooks';
-import { useWorkingGroupById } from './state';
 
 type OutputsListProps = Pick<
   ComponentProps<typeof ProfileOutputs>,
-  'hasOutputs' | 'userAssociationMember'
+  'userAssociationMember'
 > & {
   displayName: string;
   searchQuery: string;
@@ -17,12 +21,11 @@ type OutputsListProps = Pick<
   workingGroupId: string;
 };
 type OutputsProps = {
-  workingGroupId: string;
+  workingGroup: WorkingGroupDataObject;
 };
 
 const OutputsList: React.FC<OutputsListProps> = ({
   workingGroupId,
-  hasOutputs,
   userAssociationMember,
 }) => {
   const { currentPage, isListView, cardViewParams, listViewParams } =
@@ -48,30 +51,36 @@ const OutputsList: React.FC<OutputsListProps> = ({
           .workingGroup({ workingGroupId })
           .outputs({}).$ + listViewParams
       }
-      hasOutputs={hasOutputs}
       userAssociationMember={userAssociationMember}
       publishingEntity={'Working Group'}
     />
   );
 };
 
-const Outputs: React.FC<OutputsProps> = ({ workingGroupId }) => {
-  const hasOutputs = false;
-  const workingGroup = useWorkingGroupById(workingGroupId);
+const Outputs: React.FC<OutputsProps> = ({ workingGroup }) => {
+  const showSearchBar = false;
 
   const currentUserId = useCurrentUserCRN()?.id;
-  const userAssociationMember = !!useWorkingGroupById(
-    workingGroupId,
-  )?.members.filter((member) => member.user.id === currentUserId).length;
+  const userAssociationMember = !!workingGroup.members.filter(
+    (member) => member.user.id === currentUserId,
+  ).length;
+
   return (
     <article>
+      {showSearchBar && (
+        <ResearchOutputsSearch
+          onChangeSearch={noop}
+          searchQuery={''}
+          onChangeFilter={noop}
+          filters={new Set()}
+        />
+      )}
       <SearchFrame title="">
         <OutputsList
-          workingGroupId={workingGroupId}
+          workingGroupId={workingGroup.id}
           searchQuery={''}
           filters={new Set()}
-          hasOutputs={hasOutputs}
-          displayName={workingGroup?.title ?? ''}
+          displayName={workingGroup.title}
           userAssociationMember={userAssociationMember}
         />
       </SearchFrame>

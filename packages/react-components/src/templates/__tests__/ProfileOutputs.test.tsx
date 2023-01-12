@@ -13,7 +13,6 @@ const baseProps: ComponentProps<typeof ProfileOutputs> = {
   isListView: false,
   cardViewHref: '',
   listViewHref: '',
-  hasOutputs: true,
   userAssociationMember: true,
   publishingEntity: 'Team',
 };
@@ -60,7 +59,6 @@ it('renders the no output page for your own team', () => {
   const { getByTitle, getByRole, getByText, rerender } = render(
     <ProfileOutputs
       {...baseProps}
-      hasOutputs={false}
       userAssociationMember={true}
       publishingEntity="Team"
     />,
@@ -71,7 +69,6 @@ it('renders the no output page for your own team', () => {
   rerender(
     <ProfileOutputs
       {...baseProps}
-      hasOutputs={false}
       userAssociationMember={true}
       contactEmail="example@example.com"
       publishingEntity="Team"
@@ -85,11 +82,7 @@ it('renders the no output page for your own team', () => {
 
 it('renders the no output page for another team', () => {
   const { getByTitle, getByRole, getByText, rerender } = render(
-    <ProfileOutputs
-      {...baseProps}
-      hasOutputs={false}
-      userAssociationMember={false}
-    />,
+    <ProfileOutputs {...baseProps} userAssociationMember={false} />,
   );
   expect(getByTitle('Research')).toBeInTheDocument();
   expect(getByRole('heading', { level: 1 }).textContent).toMatch(/This team/i);
@@ -97,7 +90,6 @@ it('renders the no output page for another team', () => {
   rerender(
     <ProfileOutputs
       {...baseProps}
-      hasOutputs={false}
       userAssociationMember={false}
       contactEmail="example@example.com"
     />,
@@ -112,7 +104,6 @@ it('renders the no outputs page for a working group', () => {
   const { getByRole, rerender } = render(
     <ProfileOutputs
       {...baseProps}
-      hasOutputs={false}
       userAssociationMember={false}
       publishingEntity="Working Group"
     />,
@@ -124,7 +115,6 @@ it('renders the no outputs page for a working group', () => {
   rerender(
     <ProfileOutputs
       {...baseProps}
-      hasOutputs={false}
       publishingEntity="Working Group"
       userAssociationMember={true}
     />,

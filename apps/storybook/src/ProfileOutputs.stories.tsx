@@ -25,7 +25,6 @@ export const Normal = () => {
         ['Team', 'Working Group'],
         'Team',
       )}
-      hasOutputs={!!numberOfOutputs}
       contactEmail={text('Contact Email', 'test@exmaple.com')}
     />
   );

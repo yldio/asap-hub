@@ -16,7 +16,6 @@ export type ProfileOutputsProps = Omit<
   'children'
 > & {
   userAssociationMember: boolean;
-  hasOutputs: boolean;
   contactEmail?: string;
   publishingEntity: ResearchOutputPublishingEntities;
 };
@@ -31,13 +30,12 @@ const ProfileOutputs: React.FC<ProfileOutputsProps> = ({
   cardViewHref,
   exportResults,
   listViewHref,
-  hasOutputs,
   userAssociationMember,
   contactEmail,
   publishingEntity,
 }) => (
   <div css={containerStyles}>
-    {hasOutputs ? (
+    {numberOfItems ? (
       <SharedResearchList
         exportResults={exportResults}
         researchOutputs={researchOutputs}
@@ -49,43 +47,25 @@ const ProfileOutputs: React.FC<ProfileOutputsProps> = ({
         cardViewHref={cardViewHref}
         listViewHref={listViewHref}
       />
-    ) : userAssociationMember ? (
-      <NoOutputsPage
-        title={`Your ${publishingEntity?.toLowerCase()} hasn’t shared any research.`}
-        description={
-          <>
-            {publishingEntity === 'Team' && (
-              <>
-                To start sharing research,{' '}
-                <LinkConditional
-                  href={
-                    contactEmail ? createMailTo(contactEmail) : contactEmail
-                  }
-                >
-                  contact your PM
-                </LinkConditional>
-                .
-              </>
-            )}
-            In the meantime, try exploring research outputs shared by the
-            network.
-          </>
-        }
-      />
     ) : (
       <NoOutputsPage
-        title={`This ${publishingEntity?.toLowerCase()} hasn’t shared any research.`}
+        title={`
+          ${
+            userAssociationMember ? 'Your' : 'This'
+          } ${publishingEntity.toLowerCase()} hasn’t shared any research.`}
         description={
           <>
             {publishingEntity === 'Team' && (
               <>
-                To learn more about this team’s work,{' '}
+                {userAssociationMember
+                  ? 'To start sharing research,'
+                  : 'To learn more about this team’s work,'}{' '}
                 <LinkConditional
                   href={
                     contactEmail ? createMailTo(contactEmail) : contactEmail
                   }
                 >
-                  contact the PM
+                  {userAssociationMember ? 'contact your PM' : 'contact the PM'}
                 </LinkConditional>
                 .
               </>

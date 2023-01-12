@@ -53,7 +53,7 @@ const WorkingGroupProfile: FC = () => {
                 {...workingGroup}
               >
                 <Frame title="Outputs">
-                  <Outputs workingGroupId={workingGroupId} />
+                  <Outputs workingGroup={workingGroup} />
                 </Frame>
               </WorkingGroupPage>
             </Route>

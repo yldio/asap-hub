@@ -23,7 +23,7 @@ import { useTeamById } from './state';
 
 type OutputsListProps = Pick<
   ComponentProps<typeof ProfileOutputs>,
-  'hasOutputs' | 'userAssociationMember' | 'contactEmail'
+  'userAssociationMember' | 'contactEmail'
 > & {
   displayName: string;
   searchQuery: string;
@@ -38,7 +38,6 @@ const OutputsList: React.FC<OutputsListProps> = ({
   searchQuery,
   filters,
   teamId,
-  hasOutputs,
   userAssociationMember,
   contactEmail,
   displayName,
@@ -90,7 +89,6 @@ const OutputsList: React.FC<OutputsListProps> = ({
       listViewHref={
         network({}).teams({}).team({ teamId }).outputs({}).$ + listViewParams
       }
-      hasOutputs={hasOutputs}
       userAssociationMember={userAssociationMember}
       contactEmail={contactEmail}
       publishingEntity="Team"
@@ -134,7 +132,6 @@ const Outputs: React.FC<OutputsProps> = ({ teamId }) => {
           teamId={teamId}
           searchQuery={debouncedSearchQuery}
           filters={filters}
-          hasOutputs={hasOutputs}
           userAssociationMember={userAssociationMember}
           contactEmail={team?.pointOfContact?.email}
           displayName={team?.displayName ?? ''}

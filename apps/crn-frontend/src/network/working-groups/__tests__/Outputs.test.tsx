@@ -2,7 +2,10 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitFor } from '@testing-library/react';
 import { network } from '@asap-hub/routing';
-import { createUserResponse } from '@asap-hub/fixtures';
+import {
+  createUserResponse,
+  createWorkingGroupResponse,
+} from '@asap-hub/fixtures';
 
 import { RecoilRoot } from 'recoil';
 import Outputs from '../Outputs';
@@ -11,18 +14,21 @@ import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 jest.mock('../../../shared-research/api');
 jest.mock('../api');
 
-const renderOutputs = async (workingGroupId = '42', userId = 'user-id') => {
+const renderOutputs = async (
+  workingGroup = createWorkingGroupResponse({}),
+  user = createUserResponse(),
+) => {
   const result = render(
     <RecoilRoot>
       <Suspense fallback="loading">
-        <Auth0Provider user={{ ...createUserResponse(), id: userId }}>
+        <Auth0Provider user={user}>
           <WhenReady>
             <MemoryRouter
               initialEntries={[
                 {
                   pathname: network({})
                     .workingGroups({})
-                    .workingGroup({ workingGroupId })
+                    .workingGroup({ workingGroupId: workingGroup.id })
                     .outputs({}).$,
                 },
               ]}
@@ -31,11 +37,11 @@ const renderOutputs = async (workingGroupId = '42', userId = 'user-id') => {
                 path={
                   network({})
                     .workingGroups({})
-                    .workingGroup({ workingGroupId })
+                    .workingGroup({ workingGroupId: workingGroup.id })
                     .outputs({}).$
                 }
               >
-                <Outputs workingGroupId={workingGroupId} />
+                <Outputs workingGroup={workingGroup} />
               </Route>
             </MemoryRouter>
           </WhenReady>
@@ -50,16 +56,28 @@ const renderOutputs = async (workingGroupId = '42', userId = 'user-id') => {
   return result;
 };
 
-it('renders the no outputs component correctly', async () => {
-  const { getByText } = await renderOutputs('');
+it('renders the no outputs component correctly for your own team', async () => {
+  const { getByText } = await renderOutputs(
+    {
+      ...createWorkingGroupResponse({}),
+      members: [{ user: { ...createUserResponse(), id: 'groupMember' } }],
+    },
+    { ...createUserResponse(), id: 'groupMember' },
+  );
   expect(
-    getByText('This working group hasn’t shared any research.'),
+    getByText('Your working group hasn’t shared any research.'),
   ).toBeVisible();
 });
 
-it('renders the no outputs component correctly for own team', async () => {
-  const { getByText } = await renderOutputs('working-group-id', 'user-id-0');
+it('renders the no outputs component correctly for a different team', async () => {
+  const { getByText } = await renderOutputs(
+    {
+      ...createWorkingGroupResponse({}),
+      members: [{ user: { ...createUserResponse(), id: 'groupMember' } }],
+    },
+    { ...createUserResponse(), id: 'notGroupMember' },
+  );
   expect(
-    getByText('Your working group hasn’t shared any research.'),
+    getByText('This working group hasn’t shared any research.'),
   ).toBeVisible();
 });

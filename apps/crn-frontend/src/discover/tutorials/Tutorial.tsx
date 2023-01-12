@@ -18,7 +18,7 @@ const Tutorial: React.FC<Record<string, never>> = () => {
     };
     return (
       <Frame title={tutorial.title}>
-        <NewsDetailsPage {...props} />
+        <NewsDetailsPage {...props} type="Tutorial" />
       </Frame>
     );
   }

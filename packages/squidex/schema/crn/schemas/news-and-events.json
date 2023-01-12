@@ -45,27 +45,6 @@
         }
       },
       {
-        "name": "type",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "allowedValues": ["News", "Working Groups"],
-          "isUnique": false,
-          "isEmbeddable": false,
-          "inlineEditable": true,
-          "createEnum": false,
-          "contentType": "Unspecified",
-          "editor": "Dropdown",
-          "label": "Type",
-          "isRequired": true,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
         "name": "shortText",
         "isHidden": false,
         "isLocked": false,

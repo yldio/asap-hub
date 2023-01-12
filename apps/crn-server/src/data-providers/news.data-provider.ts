@@ -54,7 +54,6 @@ const parseRestNews = (item: RestNews): NewsDataObject => ({
     ? createUrl(item.data.thumbnail.iv)[0]
     : undefined,
   title: item.data.title.iv,
-  type: item.data.type.iv,
 });
 
 const getFrequencyFilter = (frequencyFilter: NewsFrequency[]) => {

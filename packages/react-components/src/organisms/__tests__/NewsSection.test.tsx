@@ -4,6 +4,7 @@ import { render, screen } from '@testing-library/react';
 import NewsSection from '../NewsSection';
 
 const props: ComponentProps<typeof NewsSection> = {
+  type: 'News',
   news: [],
   title: '',
 };

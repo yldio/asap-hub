@@ -1,11 +1,11 @@
-import { createNewsResponse } from '@asap-hub/fixtures';
+import { createNewsResponseWithType } from '@asap-hub/fixtures';
 import { render, screen } from '@testing-library/react';
 
-import DiscoverNewsCardList from '../DiscoverNewsCardList';
+import DiscoverTutorialsCardList from '../DiscoverTutorialsCardList';
 
 it('renders the provided title and subtitle', () => {
   render(
-    <DiscoverNewsCardList
+    <DiscoverTutorialsCardList
       title="Tutorials"
       subtitle="Explore our tutorials to understand how you can use the Hub and work with the tools."
       news={[]}
@@ -21,12 +21,12 @@ it('renders the provided title and subtitle', () => {
 
 it('renders news items', () => {
   render(
-    <DiscoverNewsCardList
+    <DiscoverTutorialsCardList
       title="Tutorials"
       subtitle="Explore our tutorials to understand how you can use the Hub and work with the tools."
       news={[
-        createNewsResponse({ key: 'First One', type: 'Tutorial' }),
-        createNewsResponse({ key: 'Second One', type: 'Tutorial' }),
+        createNewsResponseWithType({ key: 'First One', type: 'Tutorial' }),
+        createNewsResponseWithType({ key: 'Second One', type: 'Tutorial' }),
       ]}
     />,
   );

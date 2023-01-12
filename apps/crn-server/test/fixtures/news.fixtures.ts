@@ -83,7 +83,6 @@ export const newsSquidexApiResponse: {
 export const getNewsDataObject = (): NewsDataObject => ({
   id: 'news-1',
   title: 'News 1',
-  type: 'News',
   frequency: 'News Articles',
   shortText: 'Short text of news 1',
   text: '<p>text</p>',

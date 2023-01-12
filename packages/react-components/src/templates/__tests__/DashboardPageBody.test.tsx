@@ -14,13 +14,11 @@ const props: ComponentProps<typeof DashboardPageBody> = {
       id: '55724942-3408-4ad6-9a73-14b92226ffb6',
       created: '2020-09-07T17:36:54Z',
       title: 'News Title',
-      type: 'News',
     },
     {
       id: '55724942-3408-4ad6-9a73-14b92226ffb77',
       created: '2020-09-07T17:36:54Z',
       title: 'Tutorial Title',
-      type: 'Tutorial',
     },
   ],
   pastEvents: [],
@@ -42,13 +40,11 @@ it('renders multiple news cards', () => {
           id: '55724942-3408-4ad6-9a73-14b92226ffb6',
           created: '2020-09-07T17:36:54Z',
           title: 'News Title 1',
-          type: 'News',
         },
         {
           id: '55724942-3408-4ad6-9a73-14b92226ffb77',
           created: '2020-09-07T17:36:54Z',
           title: 'Tutorial Title 1',
-          type: 'Tutorial',
         },
       ]}
     />,

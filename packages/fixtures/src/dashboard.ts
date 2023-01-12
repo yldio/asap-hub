@@ -6,9 +6,7 @@ export const createDashboardResponse = (
   length: number = 5,
 ): DashboardResponse => ({
   news: [
-    ...Array.from({ length }).map((_, i) =>
-      createNewsResponse({ key: i, type: 'News' }),
-    ),
+    ...Array.from({ length }).map((_, i) => createNewsResponse({ key: i })),
   ],
   pages: ['content', 'about', 'slides'].map(createPageResponse),
 });

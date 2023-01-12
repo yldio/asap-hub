@@ -10,21 +10,26 @@ const styles = css({
   paddingBottom: `${24 / perRem}em`,
 });
 
-type DiscoverNewsCardListProps = {
+type DiscoverTutorialsCardListProps = {
   title: string;
   subtitle: string;
   news: ComponentProps<typeof NewsSection>['news'];
 };
 
-const DiscoverNewsCardList: React.FC<DiscoverNewsCardListProps> = ({
+const DiscoverTutorialsCardList: React.FC<DiscoverTutorialsCardListProps> = ({
   title,
   subtitle,
   news,
 }) => (
   <div css={styles}>
-    <NewsSection title={title} subtitle={subtitle} news={news} />
+    <NewsSection
+      type="Tutorial"
+      title={title}
+      subtitle={subtitle}
+      news={news}
+    />
     <HelpSection />
   </div>
 );
 
-export default DiscoverNewsCardList;
+export default DiscoverTutorialsCardList;

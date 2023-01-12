@@ -7,8 +7,8 @@ it('renders multiple news cards', () => {
   const { getAllByRole } = render(
     <NewsPageBody
       news={[
-        createNewsResponse({ key: '1' }),
-        createNewsResponse({ key: '2' }),
+        createNewsResponse({ key: 'id-1' }),
+        createNewsResponse({ key: 'id-2' }),
       ]}
       numberOfPages={1}
       renderPageHref={(idx) => `${idx}`}
@@ -17,6 +17,6 @@ it('renders multiple news cards', () => {
     />,
   );
   expect(getAllByRole('heading').map(({ textContent }) => textContent)).toEqual(
-    ['News 1 title', 'News 2 title'],
+    ['id-1 title', 'id-2 title'],
   );
 });

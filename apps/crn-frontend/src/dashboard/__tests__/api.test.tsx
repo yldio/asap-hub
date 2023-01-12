@@ -18,7 +18,6 @@ describe('getDashboard', () => {
           id: '55724942-3408-4ad6-9a73-14b92226ffb6',
           created: '2020-09-07T17:36:54Z',
           title: 'News Title',
-          type: 'News',
         },
       ],
       pages: [],

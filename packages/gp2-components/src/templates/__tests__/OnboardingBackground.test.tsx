@@ -4,33 +4,24 @@ import OnboardingBackground from '../OnboardingBackground';
 
 const { createUserResponse } = gp2;
 
-it('renders the page description', () => {
+describe('OnboardingBackground', () => {
   const defaultProps = {
     ...createUserResponse(),
     editBiographyHref: '',
     editKeywordsHref: '',
   };
-  render(<OnboardingBackground {...defaultProps} />);
-  expect(
-    screen.getByText(/next up, we’d like to capture some more information/i),
-  ).toBeVisible();
-});
-
-it('renders the keywords card', () => {
-  const defaultProps = {
-    ...createUserResponse(),
-    editBiographyHref: '',
-    editKeywordsHref: '',
-  };
-  render(<OnboardingBackground {...defaultProps} />);
-  expect(screen.getByRole('heading', { name: 'Keywords' })).toBeVisible();
-});
-it('renders the biography card', () => {
-  const defaultProps = {
-    ...createUserResponse(),
-    editBiographyHref: '',
-    editKeywordsHref: '',
-  };
-  render(<OnboardingBackground {...defaultProps} />);
-  expect(screen.getByRole('heading', { name: 'Keywords' })).toBeVisible();
+  it('renders the page description', () => {
+    render(<OnboardingBackground {...defaultProps} />);
+    expect(
+      screen.getByText(/next up, we’d like to capture some more information/i),
+    ).toBeVisible();
+  });
+  it('renders the keywords card', () => {
+    render(<OnboardingBackground {...defaultProps} />);
+    expect(screen.getByRole('heading', { name: 'Keywords' })).toBeVisible();
+  });
+  it('renders the biography card', () => {
+    render(<OnboardingBackground {...defaultProps} />);
+    expect(screen.getByRole('heading', { name: 'Keywords' })).toBeVisible();
+  });
 });

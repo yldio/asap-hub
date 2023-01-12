@@ -14,7 +14,7 @@ describe('UserBiography', () => {
   describe('if no biography', () => {
     it('renders placeholder when theres an edit link', () => {
       const { rerender } = render(<UserBiography />);
-      expect(screen.queryByText(/summarize your/i)).toBeNull();
+      expect(screen.queryByText(/summarize your/i)).not.toBeInTheDocument();
       rerender(<UserBiography editHref="/" />);
       expect(screen.getByText(/summarize your/i)).toBeVisible();
     });

@@ -14,7 +14,7 @@ describe('UserKeywords', () => {
   describe('if no keywords', () => {
     it('renders placeholder when theres an edit link', () => {
       const { rerender } = render(<UserKeywords keywords={[]} />);
-      expect(screen.queryByText(/help others/i)).toBeNull();
+      expect(screen.queryByText(/help others/i)).not.toBeInTheDocument();
       rerender(<UserKeywords keywords={[]} editHref="/" />);
       expect(screen.getByText(/help others/i)).toBeVisible();
     });

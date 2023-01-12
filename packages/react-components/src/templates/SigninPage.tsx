@@ -20,6 +20,7 @@ const SigninPage: React.FC<SigninPageProps> = ({ appOrigin, ...props }) => (
         72,
         'px',
       )} ${contentSidePaddingWithNavigation()}`,
+      margin: 'auto',
     }}
   >
     <div css={{ width: 'max-content', maxWidth: '100%' }}>

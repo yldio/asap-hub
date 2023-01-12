@@ -19,7 +19,7 @@ export const Normal = () => {
       isListView={false}
       cardViewHref={''}
       listViewHref={''}
-      userAssociationMember={boolean('Own Entity', true)}
+      userAssociationMember={boolean('User is association member', true)}
       publishingEntity={select(
         'Publishing Entity',
         ['Team', 'Working Group'],

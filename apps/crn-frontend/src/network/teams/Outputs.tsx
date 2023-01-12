@@ -9,6 +9,7 @@ import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import format from 'date-fns/format';
 import { ComponentProps } from 'react';
+import { TeamResponse } from '@asap-hub/model';
 
 import { usePagination, usePaginationParams, useSearch } from '../../hooks';
 import { useResearchOutputs } from '../../shared-research/state';
@@ -19,7 +20,6 @@ import {
   algoliaResultsToStream,
   researchOutputToCSV,
 } from '../../shared-research/export';
-import { useTeamById } from './state';
 
 type OutputsListProps = Pick<
   ComponentProps<typeof ProfileOutputs>,
@@ -31,7 +31,7 @@ type OutputsListProps = Pick<
   teamId: string;
 };
 type OutputsProps = {
-  teamId: string;
+  team: TeamResponse;
 };
 
 const OutputsList: React.FC<OutputsListProps> = ({
@@ -96,7 +96,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
   );
 };
 
-const Outputs: React.FC<OutputsProps> = ({ teamId }) => {
+const Outputs: React.FC<OutputsProps> = ({ team }) => {
   const {
     filters,
     searchQuery,
@@ -110,13 +110,12 @@ const Outputs: React.FC<OutputsProps> = ({ teamId }) => {
     filters: new Set(),
     currentPage,
     pageSize,
-    teamId,
+    teamId: team.id,
   }).total;
-  const team = useTeamById(teamId);
 
-  const userAssociationMember = !!(useCurrentUserCRN()?.teams ?? []).filter(
-    ({ id }) => id === teamId,
-  ).length;
+  const userAssociationMember = (useCurrentUserCRN()?.teams ?? []).some(
+    ({ id }) => id === team.id,
+  );
   return (
     <article>
       {hasOutputs && (
@@ -129,7 +128,7 @@ const Outputs: React.FC<OutputsProps> = ({ teamId }) => {
       )}
       <SearchFrame title="">
         <OutputsList
-          teamId={teamId}
+          teamId={team.id}
           searchQuery={debouncedSearchQuery}
           filters={filters}
           userAssociationMember={userAssociationMember}

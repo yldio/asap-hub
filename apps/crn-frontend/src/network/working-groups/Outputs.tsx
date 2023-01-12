@@ -61,9 +61,9 @@ const Outputs: React.FC<OutputsProps> = ({ workingGroup }) => {
   const showSearchBar = false;
 
   const currentUserId = useCurrentUserCRN()?.id;
-  const userAssociationMember = !!workingGroup.members.filter(
+  const userAssociationMember = workingGroup.members.some(
     (member) => member.user.id === currentUserId,
-  ).length;
+  );
 
   return (
     <article>

@@ -19,6 +19,7 @@ gp2-auth-url=https://dev.gp2.asap.science/.auth/
 gp2-auth0-audience=https://dev.gp2.asap.science
 gp2-auth0-client-id=sUSMSrBS3FMhb58bxiwQZOTPbZMPWIje
 gp2-auth0-domain=dev-gp2-hub.us.auth0.com
+gp2-ci-auth0-client-id=o6NEEPm9WVKt1aqRr25tbFDlAV8WQVnR
 gp2-squidex-api-client-id=gp2-hub-dev:gp2-api-client
 gp2-squidex-app-name=gp2-hub-dev
 gp2-squidex-backup-bucket-name=gp2-hub-dev-data-backup

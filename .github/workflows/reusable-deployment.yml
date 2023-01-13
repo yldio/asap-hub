@@ -37,6 +37,9 @@ on:
       CRN_SQUIDEX_SHARED_SECRET:
         description: 'CRN Squidex Shared Secret'
         required: true
+      GP2_CI_AUTH0_CLIENT_SECRET:
+        description: 'GP2 CI Auth0 Client Secret'
+        required: false
       GP2_SQUIDEX_API_CLIENT_SECRET:
         description: 'GP2 API Squidex Client Secret'
         required: true
@@ -292,10 +295,17 @@ jobs:
         uses: ./.github/actions/cache-unplugged
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Deploy
+      - name: Deploy CRN
         if: ${{ inputs.environment-name=='Development' || inputs.environment-name=='Production' }}
         run: yarn workspace @asap-hub/auth0-rules deploy --debug
         env:
           AUTH0_CLIENT_ID: ${{ steps.setup.outputs.crn-ci-auth0-client-id }}
           AUTH0_CLIENT_SECRET: ${{ secrets.CRN_CI_AUTH0_CLIENT_SECRET }}
           AUTH0_DOMAIN: ${{ steps.setup.outputs.crn-auth0-domain }}
+      - name: Deploy GP2
+        if: ${{ inputs.environment-name=='Development' || inputs.environment-name=='Production' }}
+        run: yarn workspace @asap-hub/auth0-rules deploy --debug
+        env:
+          AUTH0_CLIENT_ID: ${{ steps.setup.outputs.gp2-ci-auth0-client-id }}
+          AUTH0_CLIENT_SECRET: ${{ secrets.GP2_CI_AUTH0_CLIENT_SECRET }}
+          AUTH0_DOMAIN: ${{ steps.setup.outputs.gp2-auth0-domain }}

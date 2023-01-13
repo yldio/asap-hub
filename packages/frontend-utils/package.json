@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@babel/runtime-corejs3": "7.19.6",
-    "csv-stringify": "6.2.0",
+    "csv-stringify": "6.2.3",
     "react-titled": "1.0.1",
     "streamsaver": "2.0.6",
     "web-streams-polyfill": "3.2.1"

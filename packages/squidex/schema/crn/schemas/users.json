@@ -260,7 +260,7 @@
               "contentType": "Unspecified",
               "editor": "Dropdown",
               "label": "Status",
-              "isRequired": true,
+              "isRequired": false,
               "isRequiredOnPublish": false,
               "isHalfWidth": true
             }

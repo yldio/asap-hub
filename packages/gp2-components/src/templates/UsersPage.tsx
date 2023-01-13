@@ -4,7 +4,7 @@ import { gp2 } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { usersHeaderImage } from '../images';
-import { FiltersModal } from '../organisms';
+import { FilterPills, FiltersModal } from '../organisms';
 import FilterSearchExport from '../organisms/FilterSearchExport';
 import PageBanner from '../organisms/PageBanner';
 
@@ -56,6 +56,7 @@ const UsersPage: React.FC<UsersPageProps> = ({
           onExportClick={onExportClick}
           isAdministrator={isAdministrator}
         />
+        <FilterPills filters={filters} />
       </div>
       <main>{children}</main>
       {displayFilters && (

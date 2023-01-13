@@ -313,10 +313,7 @@ const getSharePresentationRemindersFromQuery = (
     ) {
       const speaker = event.flatData.speakers?.filter((speakerData) => {
         const speakerUser = speakerData.user?.[0];
-        if (speakerUser && 'id' in speakerUser) {
-          return speakerUser.id === userId;
-        }
-        return false;
+        return speakerUser && 'id' in speakerUser && speakerUser.id === userId;
       });
 
       const PM = speaker?.[0]?.team

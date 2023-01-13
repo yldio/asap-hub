@@ -1123,63 +1123,91 @@ describe('Reminder Data Provider', () => {
         });
       });
 
-      it('Should provide no speaker PM ID when that PM does not exist', async () => {
-        // set current time to one minute after the end of the fixture event
-        jest.setSystemTime(DateTime.fromISO('2022-01-01T10:01:00Z').toJSDate());
-        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
-        squidexGraphqlResponse.queryEventsContents![0]!.flatData.startDate =
-          '2022-01-01T08:00:00Z';
-        squidexGraphqlResponse.queryEventsContents![0]!.flatData.endDate =
-          '2022-01-01T10:00:00Z';
-
-        squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.team![0]! =
-          {
-            id: 'team-id-3',
-            referencingUsersContents: [
+      describe('When there is no related PM ', () => {
+        const speakerUserData = {
+          id: 'user-id',
+          flatData: {
+            role: 'Grantee',
+            teams: [
               {
-                id: 'user-pm',
-                flatData: {
-                  teams: [{ id: [{ id: 'team-id-3' }], role: 'Key Personnel' }],
-                },
+                id: [
+                  {
+                    id: 'team-id-3',
+                  },
+                ],
+                role: 'Key Personnel',
               },
             ],
-          };
+          },
+        };
+        const referencingUsersContentsData = {
+          id: 'user-pm',
+          flatData: {
+            teams: [{ id: [{ id: 'team-id-3' }], role: 'Key Personnel' }],
+          },
+        };
 
-        squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.user![0]! =
+        const testData = [
           {
-            id: 'user-id',
-            flatData: {
-              role: 'Grantee',
-              teams: [
-                {
-                  id: [
-                    {
-                      id: 'team-id-3',
-                    },
-                  ],
-                  role: 'Key Personnel',
-                },
-              ],
+            referencingUsersContents: referencingUsersContentsData,
+            speakerUser: speakerUserData,
+          },
+          {
+            referencingUsersContents: {
+              ...referencingUsersContentsData,
+              flatData: {
+                teams: [
+                  { id: [{ id: 'team-id-false' }], role: 'Key Personnel' },
+                ],
+              },
             },
-          };
+            speakerUser: speakerUserData,
+          },
+        ];
 
-        squidexGraphqlResponse.queryResearchOutputsContents = [];
-        squidexGraphqlClientMock.request.mockResolvedValueOnce(
-          squidexGraphqlResponse,
+        it.each(testData)(
+          'should not provide a speaker ID',
+          async ({ referencingUsersContents, speakerUser }) => {
+            // set current time to one minute after the end of the fixture event
+            jest.setSystemTime(
+              DateTime.fromISO('2022-01-01T10:01:00Z').toJSDate(),
+            );
+            const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+            squidexGraphqlResponse.queryEventsContents![0]!.flatData.startDate =
+              '2022-01-01T08:00:00Z';
+            squidexGraphqlResponse.queryEventsContents![0]!.flatData.endDate =
+              '2022-01-01T10:00:00Z';
+
+            squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.team![0]! =
+              {
+                id: 'team-id-3',
+                referencingUsersContents: [referencingUsersContents],
+              };
+
+            squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.user![0]! =
+              speakerUser;
+
+            squidexGraphqlResponse.queryResearchOutputsContents = [];
+            squidexGraphqlClientMock.request.mockResolvedValueOnce(
+              squidexGraphqlResponse,
+            );
+
+            const result = await reminderDataProvider.fetch(
+              fetchRemindersOptions,
+            );
+
+            const expectedEventRecentlyEndedReminder =
+              getSharePresentationReminder();
+
+            expectedEventRecentlyEndedReminder.data.pmId = undefined;
+            expectedEventRecentlyEndedReminder.data.endDate =
+              '2022-01-01T10:00:00Z';
+            expect(result).toEqual({
+              total: 1,
+              items: [expectedEventRecentlyEndedReminder],
+            });
+          },
         );
-
-        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
-
-        const expectedEventRecentlyEndedReminder =
-          getSharePresentationReminder();
-
-        expectedEventRecentlyEndedReminder.data.pmId = undefined;
-        expectedEventRecentlyEndedReminder.data.endDate =
-          '2022-01-01T10:00:00Z';
-        expect(result).toEqual({
-          total: 1,
-          items: [expectedEventRecentlyEndedReminder],
-        });
       });
     });
 

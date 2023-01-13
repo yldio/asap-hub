@@ -3,8 +3,10 @@ import colors from './colors';
 
 const theme = {
   colors,
-  button: {
-    svg: {},
+  navigationLinkTheme: {
+    svg: {
+      fill: 'currentColor',
+    },
   },
 };
 

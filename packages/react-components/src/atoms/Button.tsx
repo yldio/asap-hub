@@ -67,7 +67,7 @@ const Button: React.FC<ButtonProps> = ({
       onClick();
       event.preventDefault();
     }}
-    css={({ colors, button }) => [
+    css={({ colors }) => [
       linkStyle
         ? [linkStyles, buttonAsLinkStyles, getLinkColors(colors, theme)]
         : getButtonStyles({
@@ -79,7 +79,6 @@ const Button: React.FC<ButtonProps> = ({
             noMargin,
             colors,
             fullWidth,
-            button,
           }),
       overrideStyles,
     ]}

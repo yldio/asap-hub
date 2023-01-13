@@ -11,9 +11,9 @@ declare module '@emotion/react' {
       info100?: OpaqueColor | TransparentColor;
       info900?: OpaqueColor | TransparentColor;
     };
-    button?: {
+    navigationLinkTheme?: {
       svg: {
-        stroke: SerializedStyles;
+        fill: SerializedStyles;
       };
     };
   }

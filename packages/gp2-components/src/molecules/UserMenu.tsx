@@ -8,8 +8,9 @@ import {
   NavigationLink,
   pixels,
 } from '@asap-hub/react-components';
-import { ProjectIcon, WorkingGroupIcon } from '../icons';
+import { workingGroupIcon } from '../icons';
 import { nonMobileQuery } from '../layout';
+import projectIcon from '../icons/project-icon';
 
 const { vminLinearCalc, mobileScreen, largeDesktopScreen, rem } = pixels;
 const { projects: projectsRoute, workingGroups: workingGroupRoute } =
@@ -51,8 +52,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ projects, workingGroups }) => (
               <li key={`user-menu-project-${id}`}>
                 <NavigationLink
                   href={projectsRoute({}).project({ projectId: id }).$}
-                  icon={<ProjectIcon />}
-                  hasStroke={false}
+                  icon={projectIcon}
                 >
                   My project: {title}
                 </NavigationLink>
@@ -64,8 +64,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ projects, workingGroups }) => (
                 href={
                   workingGroupRoute({}).workingGroup({ workingGroupId: id }).$
                 }
-                icon={<WorkingGroupIcon />}
-                hasStroke={false}
+                icon={workingGroupIcon}
               >
                 My working group: {title}
               </NavigationLink>

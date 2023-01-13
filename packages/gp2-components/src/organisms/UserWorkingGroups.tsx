@@ -89,7 +89,7 @@ const UserWorkingGroups: React.FC<UserWorkingGroupsProps> = ({
             </IconWithLabel>
           </div>
           <div css={[listElementStyles, listElementSecondaryStyles]}>
-            <IconWithLabel icon={<UsersIcon />}>
+            <IconWithLabel icon={UsersIcon}>
               {getCounterString(workingGroup.members.length, 'Member')}
             </IconWithLabel>
           </div>

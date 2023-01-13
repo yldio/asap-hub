@@ -3,7 +3,7 @@ import { utils } from '@asap-hub/react-components';
 
 import { format, formatDistanceStrict as formatDistance } from 'date-fns';
 import dateIcon from '../icons/date-icon';
-import UsersIcon from '../icons/users-icon';
+import usersIcon from '../icons/users-icon';
 import IconWithLabel from '../molecules/IconWithLabel';
 import colors from '../templates/colors';
 
@@ -20,7 +20,7 @@ const ProjectSummaryFooter: React.FC<ProjectSummaryFooterProps> = ({
   endDate,
 }) => (
   <>
-    <IconWithLabel icon={<UsersIcon />}>
+    <IconWithLabel icon={usersIcon}>
       {getCounterString(members.length, 'Member')}
     </IconWithLabel>
     <IconWithLabel icon={dateIcon}>

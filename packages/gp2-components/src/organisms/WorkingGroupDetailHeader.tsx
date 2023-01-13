@@ -11,9 +11,8 @@ import {
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 
 import { css } from '@emotion/react';
-
-import ProjectIcon from '../icons/project-icon';
-import UsersIcon from '../icons/users-icon';
+import projectIcon from '../icons/project-icon';
+import usersIcon from '../icons/users-icon';
 import { workingGroupsImage } from '../images';
 import CardWithBackground from '../molecules/CardWithBackground';
 import IconWithLabel from '../molecules/IconWithLabel';
@@ -54,10 +53,10 @@ const WorkingGroupDetailHeader: React.FC<WorkingGroupDetailHeaderProps> = ({
       <Subtitle>Working Group</Subtitle>
       <h2>{title}</h2>
       <div css={infoContainerStyles}>
-        <IconWithLabel icon={<UsersIcon />}>
+        <IconWithLabel icon={usersIcon}>
           {getCounterString(members.length, 'member')}
         </IconWithLabel>
-        <IconWithLabel icon={<ProjectIcon />}>
+        <IconWithLabel icon={projectIcon}>
           {getCounterString(projects?.length || 0, 'project')}
         </IconWithLabel>
       </div>

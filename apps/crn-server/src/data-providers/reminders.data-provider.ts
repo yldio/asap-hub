@@ -320,8 +320,8 @@ const getSharePresentationRemindersFromQuery = (
       });
 
       const PM = speaker?.[0]?.team
-        ?.map((team) => {
-          return team.referencingUsersContents?.find((refUser) => {
+        ?.map((team) =>
+          team.referencingUsersContents?.find((refUser) => {
             const isSameTeamPM = refUser.flatData.teams?.some((refTeam) => {
               if (refTeam.id?.[0]?.id === team.id) {
                 return refTeam.role === 'Project Manager';
@@ -332,8 +332,8 @@ const getSharePresentationRemindersFromQuery = (
               return refUser;
             }
             return false;
-          });
-        })
+          }),
+        )
         .filter((team) => !!team);
 
       const PMId = PM?.[0]?.id;

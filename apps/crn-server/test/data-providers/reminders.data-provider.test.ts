@@ -645,7 +645,7 @@ describe('Reminder Data Provider', () => {
               '2022-01-01T10:00:00Z';
 
             squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.team![0]! =
-              { id: 'team-id-3' };
+              { id: 'team-id-3', referencingUsersContents: [] };
 
             squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.user![0]! =
               {
@@ -711,7 +711,7 @@ describe('Reminder Data Provider', () => {
               '2022-01-01T10:00:00Z';
 
             squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.team![0]! =
-              { id: 'team-id-3' };
+              { id: 'team-id-3', referencingUsersContents: [] };
 
             squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.user![0]! =
               {
@@ -758,7 +758,7 @@ describe('Reminder Data Provider', () => {
           '2022-01-01T10:00:00Z';
 
         squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.team![0]! =
-          { id: 'team-id-3' };
+          { id: 'team-id-3', referencingUsersContents: [] };
 
         squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.user![0]! =
           {
@@ -852,7 +852,7 @@ describe('Reminder Data Provider', () => {
           '2022-01-01T10:00:00Z';
 
         squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.team![0]! =
-          { id: 'team-id-3' };
+          { id: 'team-id-3', referencingUsersContents: [] };
 
         squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.user![0]! =
           {
@@ -899,7 +899,7 @@ describe('Reminder Data Provider', () => {
           '2022-01-01T10:00:00Z';
 
         squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.team![0]! =
-          { id: 'team-id-3' };
+          { id: 'team-id-3', referencingUsersContents: [] };
 
         squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.user![0]! =
           {
@@ -941,7 +941,7 @@ describe('Reminder Data Provider', () => {
           '2023-01-06T10:00:00Z';
 
         squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.team![0]! =
-          { id: 'team-id-3' };
+          { id: 'team-id-3', referencingUsersContents: [] };
 
         squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.user![0]! =
           {
@@ -983,7 +983,7 @@ describe('Reminder Data Provider', () => {
           '2023-01-06T11:00:00Z';
 
         squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.team![0]! =
-          { id: 'team-id-3' };
+          { id: 'team-id-3', referencingUsersContents: [] };
 
         squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.user![0]! =
           {
@@ -1025,7 +1025,7 @@ describe('Reminder Data Provider', () => {
           '2022-01-01T10:00:00Z';
 
         squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.team![0]! =
-          { id: 'random-team' };
+          { id: 'random-team', referencingUsersContents: [] };
 
         squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.user![0]! =
           {
@@ -1234,7 +1234,7 @@ describe('Reminder Data Provider', () => {
             '2022-01-01T10:00:00Z';
 
           squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.team![0]! =
-            { id: 'team-id-3' };
+            { id: 'team-id-3', referencingUsersContents: [] };
 
           squidexGraphqlResponse.findUsersContent!.flatData.teams = [
             {
@@ -1293,7 +1293,7 @@ describe('Reminder Data Provider', () => {
               '2022-01-01T10:00:00Z';
 
             squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.team![0]! =
-              { id: 'team-id-3' };
+              { id: 'team-id-3', referencingUsersContents: [] };
 
             squidexGraphqlResponse.findUsersContent!.flatData.teams = [
               {
@@ -1330,7 +1330,7 @@ describe('Reminder Data Provider', () => {
           '2022-01-01T10:00:00Z';
 
         squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.team![0]! =
-          { id: 'team-id-3' };
+          { id: 'team-id-3', referencingUsersContents: [] };
 
         squidexGraphqlResponse.findUsersContent!.flatData.teams = [
           {
@@ -1413,7 +1413,7 @@ describe('Reminder Data Provider', () => {
           '2022-01-01T10:00:00Z';
 
         squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.team![0]! =
-          { id: 'team-id-3' };
+          { id: 'team-id-3', referencingUsersContents: [] };
 
         squidexGraphqlResponse.findUsersContent!.flatData.teams = [
           {
@@ -1449,7 +1449,7 @@ describe('Reminder Data Provider', () => {
           '2022-01-01T10:00:00Z';
 
         squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.team![0]! =
-          { id: 'team-id-3' };
+          { id: 'team-id-3', referencingUsersContents: [] };
 
         squidexGraphqlResponse.findUsersContent!.flatData.teams = [
           {
@@ -1480,7 +1480,7 @@ describe('Reminder Data Provider', () => {
           '2023-01-06T10:00:00Z';
 
         squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.team![0]! =
-          { id: 'team-id-3' };
+          { id: 'team-id-3', referencingUsersContents: [] };
 
         squidexGraphqlResponse.findUsersContent!.flatData.teams = [
           {
@@ -1511,7 +1511,7 @@ describe('Reminder Data Provider', () => {
           '2023-01-06T11:00:00Z';
 
         squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.team![0]! =
-          { id: 'team-id-3' };
+          { id: 'team-id-3', referencingUsersContents: [] };
 
         squidexGraphqlResponse.findUsersContent!.flatData.teams = [
           {

@@ -1,6 +1,7 @@
 import { FetchOptions, ListResponse } from './common';
 import { LabResponse } from './lab';
 import { TeamRole } from './team';
+import { WorkingGroupMembership } from './working-group';
 
 export const userRole = ['Staff', 'Grantee', 'Guest', 'Hidden'] as const;
 export type Role = typeof userRole[number];
@@ -149,6 +150,7 @@ export interface UserDataObject extends Invitee {
   social?: UserSocialLinks;
   labs: LabResponse[];
   connections?: Connection[];
+  workingGroups: WorkingGroupMembership[];
   _tags?: UserTag[];
 }
 export type ListUserDataObject = ListResponse<UserDataObject>;

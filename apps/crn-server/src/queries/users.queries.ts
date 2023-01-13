@@ -6,6 +6,24 @@ export const usersContentQueryFragment = gql`
     created
     lastModified
     version
+    referencingWorkingGroupsContents {
+      id
+      flatData {
+        title
+        complete
+        leaders {
+          role
+          user {
+            id
+          }
+        }
+        members {
+          user {
+            id
+          }
+        }
+      }
+    }
     flatData {
       alumniSinceDate
       alumniLocation
@@ -53,6 +71,7 @@ export const usersContentQueryFragment = gql`
           }
         }
       }
+
       social {
         github
         googleScholar

@@ -5,6 +5,7 @@ import {
   OpenQuestionsModal,
   RoleModal,
   UserProfileResearch,
+  WorkingGroupsTabbedCard,
 } from '@asap-hub/react-components';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
@@ -32,6 +33,15 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
         userProfileGroupsCard={
           <Frame title={null} fallback={null}>
             <GroupsCard user={user} />
+          </Frame>
+        }
+        userProfileWorkingGroupsCard={
+          <Frame title={null} fallback={null}>
+            <WorkingGroupsTabbedCard
+              userName={user.displayName}
+              isUserAlumni={!!user.alumniSinceDate}
+              groups={user.workingGroups}
+            />
           </Frame>
         }
         teams={user.teams.map((team) => ({

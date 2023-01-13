@@ -9160,6 +9160,22 @@ export type UsersContentFragment = Pick<
   Users,
   'id' | 'created' | 'lastModified' | 'version'
 > & {
+  referencingWorkingGroupsContents: Maybe<
+    Array<
+      Pick<WorkingGroups, 'id'> & {
+        flatData: Pick<WorkingGroupsFlatDataDto, 'title' | 'complete'> & {
+          leaders: Maybe<
+            Array<
+              Pick<WorkingGroupsDataLeadersChildDto, 'role'> & {
+                user: Maybe<Array<Pick<Users, 'id'>>>;
+              }
+            >
+          >;
+          members: Maybe<Array<{ user: Maybe<Array<Pick<Users, 'id'>>> }>>;
+        };
+      }
+    >
+  >;
   flatData: Pick<
     UsersFlatDataDto,
     | 'alumniSinceDate'
@@ -9245,6 +9261,22 @@ export type FetchUserQueryVariables = Exact<{
 export type FetchUserQuery = {
   findUsersContent: Maybe<
     Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
+      referencingWorkingGroupsContents: Maybe<
+        Array<
+          Pick<WorkingGroups, 'id'> & {
+            flatData: Pick<WorkingGroupsFlatDataDto, 'title' | 'complete'> & {
+              leaders: Maybe<
+                Array<
+                  Pick<WorkingGroupsDataLeadersChildDto, 'role'> & {
+                    user: Maybe<Array<Pick<Users, 'id'>>>;
+                  }
+                >
+              >;
+              members: Maybe<Array<{ user: Maybe<Array<Pick<Users, 'id'>>> }>>;
+            };
+          }
+        >
+      >;
       flatData: Pick<
         UsersFlatDataDto,
         | 'alumniSinceDate'
@@ -9337,6 +9369,27 @@ export type FetchUsersQuery = {
       items: Maybe<
         Array<
           Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
+            referencingWorkingGroupsContents: Maybe<
+              Array<
+                Pick<WorkingGroups, 'id'> & {
+                  flatData: Pick<
+                    WorkingGroupsFlatDataDto,
+                    'title' | 'complete'
+                  > & {
+                    leaders: Maybe<
+                      Array<
+                        Pick<WorkingGroupsDataLeadersChildDto, 'role'> & {
+                          user: Maybe<Array<Pick<Users, 'id'>>>;
+                        }
+                      >
+                    >;
+                    members: Maybe<
+                      Array<{ user: Maybe<Array<Pick<Users, 'id'>>> }>
+                    >;
+                  };
+                }
+              >
+            >;
             flatData: Pick<
               UsersFlatDataDto,
               | 'alumniSinceDate'
@@ -11843,6 +11896,78 @@ export const UsersContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'created' } },
           { kind: 'Field', name: { kind: 'Name', value: 'lastModified' } },
           { kind: 'Field', name: { kind: 'Name', value: 'version' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'referencingWorkingGroupsContents' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'flatData' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'complete' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'leaders' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'role' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'user' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'members' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'user' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'flatData' },

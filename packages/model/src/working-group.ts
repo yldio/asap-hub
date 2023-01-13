@@ -40,6 +40,13 @@ export type WorkingGroupMember = {
   >;
 };
 
+export type WorkingGroupMembership = {
+  id: string;
+  name: string;
+  role: 'Chair' | 'Project Manager' | 'Member';
+  active: boolean;
+};
+
 export type WorkingGroupDataObject = {
   id: string;
   title: string;

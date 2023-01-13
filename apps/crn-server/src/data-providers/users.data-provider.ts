@@ -280,8 +280,16 @@ type GraphQLUserRequiredFlatData = Pick<
 type GraphQLUserOptionalFlatData = Partial<
   Omit<GraphQLUserFlatData, GraphQLUserRequiredFlatDataProperties>
 >;
-type GraphQLUser = Omit<UsersContentFragment, 'flatData'> & {
+
+type GraphQLUserReferencingWorkingGroupsContents =
+  UsersContentFragment['referencingWorkingGroupsContents'];
+
+type GraphQLUser = Omit<
+  UsersContentFragment,
+  'flatData' | 'referencingWorkingGroupsContents'
+> & {
   flatData: GraphQLUserRequiredFlatData & GraphQLUserOptionalFlatData;
+  referencingWorkingGroupsContents?: GraphQLUserReferencingWorkingGroupsContents;
 };
 
 export const parseGraphQLUser = (user: GraphQLUser): UserResponse => {
@@ -346,6 +354,22 @@ export const parseGraphQLUserToDataObject = (
       ? item.flatData.role
       : 'Guest';
   const teams = parseGraphQLUserTeamConnections(flatTeams || []);
+
+  const workingGroups = (item.referencingWorkingGroupsContents || []).map(
+    (wg) => {
+      const leaderData = wg.flatData.leaders?.find(
+        (leader) => leader.user?.[0]?.id === item.id,
+      );
+      const wgRole = leaderData ? leaderData.role : 'Member';
+
+      return {
+        id: wg.id,
+        name: wg.flatData.title || '',
+        role: wgRole as 'Chair' | 'Project Manager' | 'Member',
+        active: !wg.flatData.complete,
+      };
+    },
+  );
 
   const orcid = item.flatData.orcid || undefined;
   // merge both and remove null values
@@ -435,6 +459,7 @@ export const parseGraphQLUserToDataObject = (
     lastModifiedDate: item.flatData.lastModifiedDate || createdDate,
     teams,
     social,
+    workingGroups,
     alumniSinceDate: item.flatData.alumniSinceDate || undefined,
     alumniLocation: item.flatData.alumniLocation || undefined,
     avatarUrl: flatAvatar?.length

@@ -95,6 +95,7 @@ export const getGraphQLUser = (
   version: 42,
   created: '2020-09-23T20:45:22Z',
   ...user,
+  referencingWorkingGroupsContents: null,
   flatData: {
     alumniSinceDate: null,
     alumniLocation: null,
@@ -243,6 +244,7 @@ export const fetchUserResponseDataObject = (): UserDataObject => ({
       role: 'Collaborating PI',
     },
   ],
+  workingGroups: [],
   connections: [],
 });
 
@@ -279,6 +281,7 @@ export const getUserResponse = (): UserResponse => ({
   country: 'United Kingdom',
   city: 'London',
   lastModifiedDate: '2020-09-23T20:45:22.000Z',
+  workingGroups: [],
   orcidWorks: [
     {
       doi: 'test-doi',
@@ -337,6 +340,7 @@ export const fetchExpectation: ListUserResponse = {
       firstName: 'Arnold',
       lastName: 'Schwatzneger',
       lastModifiedDate: '2020-09-23T20:45:22.000Z',
+      workingGroups: [],
       orcidWorks: [
         {
           doi: 'test-doi',
@@ -568,6 +572,7 @@ export const getUserDataObject = (): UserDataObject => ({
   country: 'United Kingdom',
   city: 'London',
   lastModifiedDate: '2020-09-23T20:45:22.000Z',
+  workingGroups: [],
   orcidWorks: [
     {
       doi: 'test-doi',
@@ -606,6 +611,7 @@ export const getUserCreateDataObject = (): UserCreateDataObject => {
     lastModifiedDate: _lastModifiedDate,
     createdDate: _createdDate,
     social: _social,
+    workingGroups,
     _tags,
     ...createDataObject
   } = getUserDataObject();

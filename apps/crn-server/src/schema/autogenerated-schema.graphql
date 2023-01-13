@@ -6071,7 +6071,6 @@ type UsersDataTeamsChildDto {
   id: [Teams!]
   """Attention: Check if this user needs to be added to Smart Simple"""
   role: String
-  """Attention: Check if this user needs to be added to Smart Simple"""
   status: String
 }
 
@@ -6080,7 +6079,6 @@ input UsersDataTeamsChildInputDto {
   id: [String!]
   """Attention: Check if this user needs to be added to Smart Simple"""
   role: String
-  """Attention: Check if this user needs to be added to Smart Simple"""
   status: String
 }
 

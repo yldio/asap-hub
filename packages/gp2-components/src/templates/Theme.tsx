@@ -3,6 +3,9 @@ import colors from './colors';
 
 const theme = {
   colors,
+  button: {
+    svg: {},
+  },
 };
 
 const Theme: React.FC = ({ children }) => (

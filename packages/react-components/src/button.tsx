@@ -178,7 +178,7 @@ export const activePrimaryStyles = (
     primary100 = activePrimaryBackgroundColorDefault,
     primary900 = pine,
   }: Theme['colors'] = {},
-  hasStroke: boolean = true,
+  button?: Theme['button'],
 ) =>
   css({
     backgroundColor: primary100.rgba,
@@ -195,6 +195,7 @@ export const activePrimaryStyles = (
       backgroundColor: primary100.rgba,
       color: primary900.rgba,
     },
+    ...button,
   });
 export const activeSecondaryStyles = css({
   backgroundColor: paper.rgb,
@@ -220,6 +221,7 @@ export const getButtonStyles = ({
   noMargin = false,
   fullWidth = false,
   colors,
+  button,
 }: {
   colors?: Theme['colors'];
   primary?: boolean;
@@ -229,6 +231,7 @@ export const getButtonStyles = ({
   noMargin?: boolean;
   fullWidth?: boolean;
   children?: React.ReactNode;
+  button?: Theme['button'];
 }) =>
   css([
     styles,
@@ -238,7 +241,7 @@ export const getButtonStyles = ({
     enabled
       ? active
         ? primary
-          ? activePrimaryStyles(colors)
+          ? activePrimaryStyles(colors, button)
           : activeSecondaryStyles
         : primary
         ? primaryStyles(colors)

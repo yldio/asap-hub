@@ -5871,7 +5871,6 @@ export type UsersDataTeamsChildDto = {
   id: Maybe<Array<Teams>>;
   /** Attention: Check if this user needs to be added to Smart Simple */
   role: Maybe<Scalars['String']>;
-  /** Attention: Check if this user needs to be added to Smart Simple */
   status: Maybe<Scalars['String']>;
 };
 
@@ -5880,7 +5879,6 @@ export type UsersDataTeamsChildInputDto = {
   id: InputMaybe<Array<Scalars['String']>>;
   /** Attention: Check if this user needs to be added to Smart Simple */
   role: InputMaybe<Scalars['String']>;
-  /** Attention: Check if this user needs to be added to Smart Simple */
   status: InputMaybe<Scalars['String']>;
 };
 

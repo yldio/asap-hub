@@ -8234,7 +8234,7 @@ export type FetchReminderDataQuery = {
                     referencingUsersContents: Maybe<
                       Array<
                         Pick<Users, 'id'> & {
-                          flatData: Pick<UsersFlatDataDto, 'firstName'> & {
+                          flatData: {
                             teams: Maybe<
                               Array<
                                 Pick<UsersDataTeamsChildDto, 'role'> & {
@@ -13673,13 +13673,6 @@ export const FetchReminderDataDocument = {
                                                 selectionSet: {
                                                   kind: 'SelectionSet',
                                                   selections: [
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value: 'firstName',
-                                                      },
-                                                    },
                                                     {
                                                       kind: 'Field',
                                                       name: {

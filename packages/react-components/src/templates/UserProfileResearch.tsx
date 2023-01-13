@@ -69,6 +69,9 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
     },
   ];
   const staffCards = [
+    userProfileWorkingGroupsCard !== undefined && {
+      card: userProfileWorkingGroupsCard,
+    },
     !isOwnProfile && {
       card: <HelpSection />,
     },

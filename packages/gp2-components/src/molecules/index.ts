@@ -1,3 +1,4 @@
+export { default as EditableCard } from './EditableCard';
 export { default as CardWithBackground } from './CardWithBackground';
 export { default as CollapsibleTable } from './CollapsibleTable';
 export { default as ContactSupport } from './ContactSupport';

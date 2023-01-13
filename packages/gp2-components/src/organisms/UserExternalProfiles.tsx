@@ -1,4 +1,5 @@
-import { UserResponse, UserSocial } from '@asap-hub/model/src/gp2';
+import { gp2 } from '@asap-hub/model';
+import { UserSocial } from '@asap-hub/model/src/gp2';
 import {
   GithubIcon,
   GlobeIcon,
@@ -8,9 +9,11 @@ import {
   Divider,
   TwitterIcon,
   pixels,
+  UserProfilePlaceholderCard,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
-import { ReactNode } from 'react';
+import React, { ComponentProps, ReactNode } from 'react';
+import EditableCard from '../molecules/EditableCard';
 import colors from '../templates/colors';
 import SocialSubGroup from './SocialSubGroup';
 
@@ -65,7 +68,13 @@ const socialNetworkKeys: Array<keyof UserSocial> = [
   'github',
 ];
 
-const UserExternalProfiles = ({ social }: Pick<UserResponse, 'social'>) => {
+type UserExternalProfilesProps = Pick<
+  gp2.UserResponse,
+  'social'
+> &
+  Pick<ComponentProps<typeof EditableCard>, 'editHref'>;
+
+const UserExternalProfiles: React.FC<UserExternalProfilesProps> = ({ social, editHref }) => {
   const filterSocial = (key: keyof UserSocial) => !!social?.[key];
   const mapSocialInfo = (key: keyof UserSocial) => ({
     key,
@@ -83,15 +92,29 @@ const UserExternalProfiles = ({ social }: Pick<UserResponse, 'social'>) => {
   const hasSocialNetworks = !!socialNetworks.length;
 
   return (
-    <div css={externalProfilesContainerStyles}>
-      {hasResearchNetworks && (
-        <SocialSubGroup list={researchNetworks} title="Research Networks" />
+    <EditableCard
+      editHref={editHref}
+      title="External Profiles"
+      edit={!!(hasResearchNetworks || hasSocialNetworks)}
+      optional
+    >
+      {editHref && !hasResearchNetworks && !hasSocialNetworks ? (
+        <UserProfilePlaceholderCard>
+          Share external research network or social network profiles that are
+          relevant to your work.
+        </UserProfilePlaceholderCard>
+      ) : (
+        <div css={externalProfilesContainerStyles}>
+          {hasResearchNetworks && (
+            <SocialSubGroup list={researchNetworks} title="Research Networks" />
+          )}
+          {hasResearchNetworks && hasSocialNetworks && <Divider />}
+          {hasSocialNetworks && (
+            <SocialSubGroup list={socialNetworks} title="Social Networks" />
+          )}
+        </div>
       )}
-      {hasResearchNetworks && hasSocialNetworks && <Divider />}
-      {hasSocialNetworks && (
-        <SocialSubGroup list={socialNetworks} title="Social Networks" />
-      )}
-    </div>
+    </EditableCard>
   );
 };
 

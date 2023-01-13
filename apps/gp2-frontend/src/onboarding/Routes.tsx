@@ -4,6 +4,7 @@ import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { lazy, useEffect } from 'react';
 import Onboarding from './Onboarding';
 import Background from './Background';
+import AdditionalDetails from './AdditionalDetails';
 
 const loadWelcome = () =>
   import(/* webpackChunkName: "onboarding-welcome" */ './Welcome');
@@ -37,7 +38,7 @@ const Routes: React.FC<Record<string, never>> = () => {
           <div>GP2 Groups</div>
         </Route>
         <Route path={onboarding({}).additionalDetails({}).$}>
-          <div>Additional Details</div>
+          <AdditionalDetails />
         </Route>
         <Route path={onboarding({}).preview({}).$}>
           <div>Preview</div>

@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { sharedResearch, events } from '@asap-hub/routing';
+import { sharedResearch, events, network } from '@asap-hub/routing';
 import {
   EventReminderType,
   FetchRemindersOptions,
@@ -72,12 +72,15 @@ export default class Reminders implements ReminderController {
           reminder.entity === 'Event' &&
           reminder.type === 'Share Presentation'
         ) {
+          const href = reminder.data.pmId
+            ? network({}).users({}).user({ userId: reminder.data.pmId }).$
+            : events({}).event({
+                eventId: reminder.data.eventId,
+              }).$;
           return {
             id: reminder.id,
             entity: reminder.entity,
-            href: events({}).event({
-              eventId: reminder.data.eventId,
-            }).$,
+            href,
             description: `Don't forget to share your presentation for the ${reminder.data.title} event with your Project Manager.`,
           };
         }

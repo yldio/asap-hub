@@ -8228,7 +8228,27 @@ export type FetchReminderDataQuery = {
         > & {
           speakers: Maybe<
             Array<{
-              team: Maybe<Array<Pick<Teams, 'id'>>>;
+              team: Maybe<
+                Array<
+                  Pick<Teams, 'id'> & {
+                    referencingUsersContents: Maybe<
+                      Array<
+                        Pick<Users, 'id'> & {
+                          flatData: Pick<UsersFlatDataDto, 'firstName'> & {
+                            teams: Maybe<
+                              Array<
+                                Pick<UsersDataTeamsChildDto, 'role'> & {
+                                  id: Maybe<Array<Pick<Teams, 'id'>>>;
+                                }
+                              >
+                            >;
+                          };
+                        }
+                      >
+                    >;
+                  }
+                >
+              >;
               user: Maybe<
                 Array<
                   | (Pick<Users, 'id'> & {
@@ -13612,6 +13632,97 @@ export const FetchReminderDataDocument = {
                                         {
                                           kind: 'Field',
                                           name: { kind: 'Name', value: 'id' },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'referencingUsersContents',
+                                          },
+                                          arguments: [
+                                            {
+                                              kind: 'Argument',
+                                              name: {
+                                                kind: 'Name',
+                                                value: 'filter',
+                                              },
+                                              value: {
+                                                kind: 'StringValue',
+                                                value:
+                                                  "data/teams/iv/role eq 'Project Manager'",
+                                                block: false,
+                                              },
+                                            },
+                                          ],
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'id',
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'flatData',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'firstName',
+                                                      },
+                                                    },
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'teams',
+                                                      },
+                                                      selectionSet: {
+                                                        kind: 'SelectionSet',
+                                                        selections: [
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value: 'id',
+                                                            },
+                                                            selectionSet: {
+                                                              kind: 'SelectionSet',
+                                                              selections: [
+                                                                {
+                                                                  kind: 'Field',
+                                                                  name: {
+                                                                    kind: 'Name',
+                                                                    value: 'id',
+                                                                  },
+                                                                },
+                                                              ],
+                                                            },
+                                                          },
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value: 'role',
+                                                            },
+                                                          },
+                                                        ],
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
+                                          },
                                         },
                                       ],
                                     },

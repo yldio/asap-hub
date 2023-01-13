@@ -311,13 +311,14 @@ const getSharePresentationRemindersFromQuery = (
       eventHasEnded(event.flatData.endDate) &&
       inLast72Hours(event.flatData.endDate)
     ) {
-      const speaker = event.flatData.speakers?.filter((speaker) => {
-        const speakerUser = speaker.user?.[0];
+      const speaker = event.flatData.speakers?.filter((speakerData) => {
+        const speakerUser = speakerData.user?.[0];
         if (speakerUser && 'id' in speakerUser) {
           return speakerUser.id === userId;
         }
         return false;
       });
+
       const PM = speaker?.[0]?.team
         ?.map((team) => {
           return team.referencingUsersContents?.find((refUser) => {

@@ -1081,7 +1081,6 @@ describe('Reminder Data Provider', () => {
                   teams: [
                     { id: [{ id: 'team-id-3' }], role: 'Project Manager' },
                   ],
-                  firstName: 'foo',
                 },
               },
             ],
@@ -1112,12 +1111,69 @@ describe('Reminder Data Provider', () => {
 
         const result = await reminderDataProvider.fetch(fetchRemindersOptions);
 
-        console.log(result);
-
         const expectedEventRecentlyEndedReminder =
           getSharePresentationReminder();
 
         expectedEventRecentlyEndedReminder.data.pmId = 'user-pm';
+        expectedEventRecentlyEndedReminder.data.endDate =
+          '2022-01-01T10:00:00Z';
+        expect(result).toEqual({
+          total: 1,
+          items: [expectedEventRecentlyEndedReminder],
+        });
+      });
+
+      it('Should provide no speaker PM ID when that PM does not exist', async () => {
+        // set current time to one minute after the end of the fixture event
+        jest.setSystemTime(DateTime.fromISO('2022-01-01T10:01:00Z').toJSDate());
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryEventsContents![0]!.flatData.startDate =
+          '2022-01-01T08:00:00Z';
+        squidexGraphqlResponse.queryEventsContents![0]!.flatData.endDate =
+          '2022-01-01T10:00:00Z';
+
+        squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.team![0]! =
+          {
+            id: 'team-id-3',
+            referencingUsersContents: [
+              {
+                id: 'user-pm',
+                flatData: {
+                  teams: [{ id: [{ id: 'team-id-3' }], role: 'Key Personnel' }],
+                },
+              },
+            ],
+          };
+
+        squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.user![0]! =
+          {
+            id: 'user-id',
+            flatData: {
+              role: 'Grantee',
+              teams: [
+                {
+                  id: [
+                    {
+                      id: 'team-id-3',
+                    },
+                  ],
+                  role: 'Key Personnel',
+                },
+              ],
+            },
+          };
+
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        const expectedEventRecentlyEndedReminder =
+          getSharePresentationReminder();
+
+        expectedEventRecentlyEndedReminder.data.pmId = undefined;
         expectedEventRecentlyEndedReminder.data.endDate =
           '2022-01-01T10:00:00Z';
         expect(result).toEqual({

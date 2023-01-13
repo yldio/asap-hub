@@ -183,6 +183,18 @@ describe('Reminder Controller', () => {
             "Don't forget to share your presentation for the Some Test Event Title event with your Project Manager.",
           href: `/events/some-event-id`,
         });
+
+        const reminderDataObjectWithPM: SharePresentationReminder =
+          getSharePresentationReminder();
+        reminderDataObjectWithPM.data.pmId = 'user-pm';
+
+        reminderDataProviderMock.fetch.mockResolvedValueOnce({
+          total: 1,
+          items: [reminderDataObjectWithPM],
+        });
+
+        const { items: itemsWithPM } = await reminderController.fetch(options);
+        expect(itemsWithPM[0]?.href).toBe('/network/users/user-pm');
       });
 
       test('Should return the correct description for the publish material reminder', async () => {

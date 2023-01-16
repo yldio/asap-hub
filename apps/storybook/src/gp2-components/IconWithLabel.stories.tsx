@@ -1,5 +1,4 @@
-import { IconWithLabel } from '@asap-hub/gp2-components';
-import projectIcon from '@asap-hub/gp2-components/src/icons/project-icon';
+import { IconWithLabel, projectIcon } from '@asap-hub/gp2-components';
 import { text } from '@storybook/addon-knobs';
 
 export default {

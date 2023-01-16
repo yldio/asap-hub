@@ -27,7 +27,6 @@
     }
   },
   "dependencies": {
-    "@algolia/cli": "4.0.8",
     "@asap-hub/algolia": "workspace:*",
     "@asap-hub/auth": "workspace:*",
     "@asap-hub/contentful": "workspace:^",

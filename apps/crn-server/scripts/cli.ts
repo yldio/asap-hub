@@ -13,7 +13,7 @@ yargs(hideBin(process.argv))
         .positional('entity', {
           describe: 'specific an entity to import',
           type: 'string',
-          choices: ['users', 'research-outputs', 'external-authors', 'events'],
+          choices: ['user', 'research-output', 'external-author', 'event'],
           demandOption: true,
         })
         .option('filename', {
@@ -23,7 +23,7 @@ yargs(hideBin(process.argv))
         }),
     handler: async ({ entity, filename }) =>
       exportEntity(
-        entity as 'users' | 'research-outputs' | 'external-authors' | 'events',
+        entity as 'user' | 'research-output' | 'external-author' | 'event',
         filename,
       ),
   })

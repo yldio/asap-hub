@@ -39,6 +39,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Install Algolia CLI
+        uses: algolia/setup-algolia-cli@master
+        with:
+          version: 1.2.1
       - name: Check PR Number
         if: ${{ inputs.environment-name=='Branch' }}
         uses: ./.github/actions/is-number
@@ -61,22 +65,15 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: Build
         run: yarn exec "yarn workspaces foreach -vptR --from '{@asap-hub/asap-cli,@asap-hub/crn-server}' run build:babel"
-      - name: Clone index settings to a temporary index (ALL)
-        if: ${{ inputs.entity == 'all'}}
-        run: yarn workspace @asap-hub/algolia run algolia transferindexconfig -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -d $ALGOLIA_APP_ID -y $ALGOLIA_API_KEY -i $ALGOLIA_INDEX_TEMP -e true
+      - name: Copy index to a temporary index (ALL)
+        run: algolia indices copy -y -w $SCOPE $ALGOLIA_INDEX $ALGOLIA_INDEX_TEMP
         env:
-          ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
-          ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          ALGOLIA_APPLICATION_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          ALGOLIA_ADMIN_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
           ALGOLIA_INDEX_TEMP: '${{ steps.setup.outputs.algolia-index }}_temp'
-      - name: Copy index to a temporary index (ENTITY)
-        if: ${{ inputs.entity != 'all'}}
-        run: yarn workspace @asap-hub/algolia run algolia transferindex -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -d $ALGOLIA_APP_ID -y $ALGOLIA_API_KEY -i $ALGOLIA_INDEX_TEMP -e true
-        env:
-          ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
-          ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
-          ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
-          ALGOLIA_INDEX_TEMP: '${{ steps.setup.outputs.algolia-index }}_temp'
+          # Copy the records too if all entities are being synced
+          SCOPE: ${{ inputs.entity == 'all' && '-s settings' || '' }}
       - name: Remove the entity data (ENTITY)
         if: ${{ inputs.entity != 'all'}}
         run: yarn algolia:remove-records -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_TEMP -e $ENTITY_TYPE

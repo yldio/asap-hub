@@ -8,6 +8,7 @@ export default class RemoveWorkingGroupsFromNews extends Migration {
     await applyToAllItemsInCollection<RestNews>(
       'news-and-events',
       async (news, squidexClient) => {
+        // @ts-ignore
         if (news.data.type.iv === 'Working Groups') {
           await squidexClient.delete(news.id);
         }

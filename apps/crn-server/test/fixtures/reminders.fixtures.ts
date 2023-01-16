@@ -241,7 +241,7 @@ export const getSquidexReminderEventsContents = (): NonNullable<
       startDate: event.flatData.startDate,
       endDate: event.flatData.endDate,
       title: event.flatData.title,
-      speakers: [speaker], //event.flatData.speakers,
+      speakers: [speaker],
       videoRecordingUpdatedAt: event.flatData.videoRecordingUpdatedAt,
       presentationUpdatedAt: event.flatData.presentationUpdatedAt,
       notesUpdatedAt: event.flatData.notesUpdatedAt,

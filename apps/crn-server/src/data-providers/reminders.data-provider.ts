@@ -281,59 +281,53 @@ const getSharePresentationRemindersFromQuery = (
   const eventReminders = (queryEventsContents || []).reduce<
     SharePresentationReminder[]
   >((events, event) => {
-    const shouldShowSharePresentation = event.flatData.speakers?.some(
-      (speaker) => {
-        const { user: speakerUserList, team: speakerTeamList } = speaker;
-
-        const speakerUser = speakerUserList?.[0];
-        const speakerTeam = speakerTeamList?.[0];
-        if (speakerUser && speakerTeam && 'id' in speakerUser) {
-          const speakerUserTeam = speakerUser.flatData.teams?.find(
-            (team) => team.id?.[0]?.id === speakerTeam?.id,
-          );
-
-          return (
-            speakerUser.id === userId &&
-            !isCMSAdministrator(
-              speakerUser.flatData.role as Role,
-              speakerUserTeam?.role as TeamRole,
-            ) &&
-            speakerUserTeam?.role !== 'Project Manager'
-          );
-        }
-
-        return false;
-      },
+    const loggedUserSpeaker = event.flatData.speakers?.find(
+      (speaker) =>
+        speaker.user?.[0] &&
+        'id' in speaker.user[0] &&
+        speaker.user[0].id === userId,
     );
+    const isLoggedUserSpeaker = !!loggedUserSpeaker;
+
+    if (!isLoggedUserSpeaker) {
+      // If user is not a speaker, we do not show share
+      // presentation reminder
+      return events;
+    }
+
+    const { user: speakerUserList, team: speakerTeamList } = loggedUserSpeaker;
+    const speakerUser = speakerUserList?.[0];
+    const speakerTeam = speakerTeamList?.[0];
+
+    if (!speakerUser || !speakerTeam || !('id' in speakerUser)) {
+      return events;
+    }
+
+    const speakerUserTeam = speakerUser.flatData.teams?.find(
+      (team) => team.id?.[0]?.id === speakerTeam?.id,
+    );
+
+    const shouldShowSharePresentation =
+      !isCMSAdministrator(
+        speakerUser.flatData.role as Role,
+        speakerUserTeam?.role as TeamRole,
+      ) && speakerUserTeam?.role !== 'Project Manager';
 
     if (
       shouldShowSharePresentation &&
       eventHasEnded(event.flatData.endDate) &&
       inLast72Hours(event.flatData.endDate)
     ) {
-      const speaker = event.flatData.speakers?.filter((speakerData) => {
-        const speakerUser = speakerData.user?.[0];
-        return speakerUser && 'id' in speakerUser && speakerUser.id === userId;
-      });
+      const loggedUserSpeakerTeamId = speakerTeam.id;
 
-      const PM = speaker?.[0]?.team
-        ?.map((team) =>
-          team.referencingUsersContents?.find((refUser) => {
-            const isSameTeamPM = refUser.flatData.teams?.some((refTeam) => {
-              if (refTeam.id?.[0]?.id === team.id) {
-                return refTeam.role === 'Project Manager';
-              }
-              return false;
-            });
-            if (isSameTeamPM) {
-              return refUser;
-            }
-            return false;
-          }),
-        )
-        .filter((team) => !!team);
-
-      const PMId = PM?.[0]?.id;
+      const pmFromSpeakersTeam = speakerTeam.referencingUsersContents?.find(
+        (teamMember) =>
+          teamMember.flatData.teams?.find(
+            (team) =>
+              team.id?.[0]?.id === loggedUserSpeakerTeamId &&
+              team.role === 'Project Manager',
+          ),
+      );
 
       return [
         ...events,
@@ -342,7 +336,7 @@ const getSharePresentationRemindersFromQuery = (
           entity: 'Event',
           type: 'Share Presentation',
           data: {
-            pmId: PMId,
+            pmId: pmFromSpeakersTeam?.id,
             eventId: event.id,
             title: event.flatData.title || '',
             endDate: event.flatData.endDate,

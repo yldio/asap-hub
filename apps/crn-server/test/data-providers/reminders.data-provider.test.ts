@@ -1141,7 +1141,7 @@ describe('Reminder Data Provider', () => {
           },
         };
         const referencingUsersContentsData = {
-          id: 'user-pm',
+          id: 'user-key-personnel',
           flatData: {
             teams: [{ id: [{ id: 'team-id-3' }], role: 'Key Personnel' }],
           },

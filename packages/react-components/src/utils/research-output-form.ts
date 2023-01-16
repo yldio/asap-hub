@@ -9,7 +9,6 @@ import {
   ResearchOutputDocumentType,
 } from '@asap-hub/model';
 import { isInternalUser } from '@asap-hub/validation';
-import equal from 'fast-deep-equal';
 import { ComponentProps } from 'react';
 import ResearchOutputContributorsCard from '../organisms/ResearchOutputContributorsCard';
 
@@ -41,13 +40,6 @@ export const getTeamsState = ({
     ]
   );
 };
-
-export function isDirty(
-  initialState: ResearchOutputPostRequest,
-  currentState: ResearchOutputPostRequest,
-): boolean {
-  return !equal(initialState, currentState);
-}
 
 const identifierTypeToFieldName: Record<
   ResearchOutputIdentifierType,

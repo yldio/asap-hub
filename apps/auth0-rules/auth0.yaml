@@ -1,15 +1,15 @@
 pages:
   - name: login
     enabled: true
-    html: ../crn-auth-frontend/build/index.html
+    html: ../{{applicationName}}-auth-frontend/build/index.html
 actions:
   - name: Add Metadata
     code: ./build/post-login-add-metadata.js
     dependencies:
       - name: got
-        version: 11.8.5
+        version:
       - name: '@babel/runtime-corejs3'
-        version: 7.20.1
+        version:
     deployed: true
     runtime: node16
     secrets:
@@ -25,9 +25,9 @@ actions:
     code: ./build/post-login-connect-user.js
     dependencies:
       - name: got
-        version: 11.8.5
+        version:
       - name: '@babel/runtime-corejs3'
-        version: 7.20.1
+        version:
     deployed: true
     runtime: node16
     secrets:

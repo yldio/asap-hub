@@ -48,6 +48,7 @@ export const researchOutputTypes = [
   'Published',
   'Report',
   'Sample Prep',
+  'Sequencing',
   'Shipment Procedure',
   'Software',
   'Spectroscopy',
@@ -95,6 +96,7 @@ export const researchOutputDocumentTypeToType: Record<
     'Model System',
     'Protein expression',
     'Sample Prep',
+    'Sequencing',
     'Shipment Procedure',
   ]),
   'Lab Resource': new Set<ResearchOutputType>([

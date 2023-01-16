@@ -96,7 +96,8 @@
             "Model System",
             "Protein Expression",
             "Sample Prep",
-            "Shipment Procedure"
+            "Shipment Procedure",
+            "Sequencing"
           ],
           "createEnum": false,
           "editor": "Checkboxes",

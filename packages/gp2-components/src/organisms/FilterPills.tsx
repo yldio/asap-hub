@@ -9,17 +9,25 @@ interface FilterPillsProps {
   filters: FetchUsersFilter;
 }
 const containerStyles = css({
-  padding: rem(10),
+  display: 'flex',
+  flexDirection: 'row',
+  paddingTop: rem(24),
 });
-
-const addPill = (item: string) => <FilterPill>{item}</FilterPill>;
 
 const FilterPills: React.FC<FilterPillsProps> = ({ filters }) => (
   <div css={containerStyles}>
-    {filters.regions?.map((x) => addPill(x))}
-    {filters.keywords?.map((x) => addPill(x))}
-    {filters.projects?.map((x) => addPill(x))}
-    {filters.workingGroups?.map((x) => addPill(x))}
+    {filters.regions?.map((filter, index) => (
+      <FilterPill key={`region-${index}`} filter={filter} />
+    ))}
+    {filters.keywords?.map((filter, index) => (
+      <FilterPill key={`keyword-${index}`} filter={filter} />
+    ))}
+    {filters.projects?.map((filter, index) => (
+      <FilterPill key={`project-${index}`} filter={filter} />
+    ))}
+    {filters.workingGroups?.map((filter, index) => (
+      <FilterPill key={`workingGroup-${index}`} filter={filter} />
+    ))}
   </div>
 );
 

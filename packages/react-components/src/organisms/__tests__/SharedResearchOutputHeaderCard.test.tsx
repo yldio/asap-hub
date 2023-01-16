@@ -84,12 +84,13 @@ it('renders an output with document type and type', () => {
       authors={[]}
       workingGroups={[]}
       documentType="Protocol"
+      publishingEntity="Team"
       type={undefined}
     />,
   );
   expect(
     getAllByRole('listitem').map(({ textContent }) => textContent),
-  ).toEqual(['Protocol']);
+  ).toEqual(['Team', 'Protocol']);
 
   rerender(
     <SharedResearchOutputHeaderCard
@@ -98,10 +99,11 @@ it('renders an output with document type and type', () => {
       authors={[]}
       workingGroups={[]}
       documentType="Protocol"
+      publishingEntity="Team"
       type={'3D Printing'}
     />,
   );
   expect(
     getAllByRole('listitem').map(({ textContent }) => textContent),
-  ).toEqual(['Protocol', '3D Printing']);
+  ).toEqual(['Team', 'Protocol', '3D Printing']);
 });

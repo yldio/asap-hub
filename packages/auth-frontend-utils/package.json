@@ -17,7 +17,7 @@
     "auth0-js": "9.19.1",
     "camelcase": "6.3.0",
     "pify": "5.0.0",
-    "util": "0.12.4"
+    "util": "0.12.5"
   },
   "devDependencies": {
     "@asap-hub/dom-test-utils": "workspace:*",

@@ -79,23 +79,6 @@ describe('parseGraphQLTeamMember', () => {
     ).toThrow('Invalid team role on user user-id-1 : invalid role');
   });
 
-  test('should throw when teamStatus dont match TeamStatus', () => {
-    const invalidTeamStatus = {
-      ...teamMember.flatData.teams![0]!,
-      status: 'invalid status',
-    };
-    const teamMemberWithInvalidStatus = {
-      ...teamMember,
-      flatData: {
-        ...teamMember.flatData,
-        teams: [invalidTeamStatus],
-      },
-    };
-    expect(() =>
-      parseGraphQLTeamMember(teamMemberWithInvalidStatus, 'team-id-0'),
-    ).toThrow('Invalid team status on user user-id-1 : invalid status');
-  });
-
   test('should throw when email is null', () => {
     const teamMemberWithMissingEmail = {
       ...teamMember,

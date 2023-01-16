@@ -43,14 +43,10 @@ export const parseGraphQLTeamMember = (
 
   const status = user.flatData.teams
     ?.filter((t) => t.id && t.id[0]?.id === teamId)
-    .filter((s) => s.status)[0]?.status;
+    .filter((s) => s.status)[0]?.status as TeamStatus;
 
   if (typeof role === 'undefined' || !isTeamRole(role)) {
     throw new Error(`Invalid team role on user ${user.id} : ${role}`);
-  }
-
-  if (typeof status === 'undefined' || !isTeamStatus(status)) {
-    throw new Error(`Invalid team status on user ${user.id} : ${status}`);
   }
 
   if (!user.flatData.email) {
@@ -65,7 +61,7 @@ export const parseGraphQLTeamMember = (
     lastName: user.flatData.lastName ?? '',
     displayName: `${user.flatData.firstName} ${user.flatData.lastName}`,
     role,
-    status,
+    status: status || 'Active',
     labs,
     avatarUrl: flatAvatar.length
       ? createUrl(flatAvatar.map((a) => a.id))[0]

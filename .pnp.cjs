@@ -3560,7 +3560,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "cacheable-request",\
-        "npm:7.0.1"\
+        "npm:7.0.2"\
       ],\
       [\
         "cachedir",\
@@ -5399,7 +5399,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "got",\
-        "npm:11.8.5"\
+        "npm:11.8.6"\
       ],\
       [\
         "graceful-fs",\
@@ -10635,7 +10635,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["async-sema", "npm:3.1.1"],\
             ["aws-sdk", "npm:2.1220.0"],\
             ["csv-parse", "npm:4.16.3"],\
-            ["got", "npm:11.8.5"],\
+            ["got", "npm:11.8.6"],\
             ["jwt-encode", "npm:1.0.1"],\
             ["luxon", "npm:1.28.1"],\
             ["nock", "npm:13.0.11"],\
@@ -10718,7 +10718,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jest", "npm:27.5.2"],\
             ["@vedicium/auth0-actions-sdk", "npm:0.1.3"],\
             ["auth0-deploy-cli", "npm:7.15.1"],\
-            ["got", "npm:11.8.5"],\
+            ["got", "npm:11.8.6"],\
             ["nock", "npm:13.0.11"]\
           ],\
           "linkType": "SOFT"\
@@ -11041,7 +11041,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["express-async-errors", "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:3.1.1"],\
             ["form-data", "npm:3.0.1"],\
             ["googleapis", "npm:67.1.1"],\
-            ["got", "npm:11.8.5"],\
+            ["got", "npm:11.8.6"],\
             ["graphql", "npm:15.8.0"],\
             ["graphql-tag", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:2.12.6"],\
             ["graphql-typescript-integration", "npm:1.2.1"],\
@@ -11109,7 +11109,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/errors", "workspace:packages/errors"],\
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],\
             ["@babel/runtime-corejs3", "npm:7.19.6"],\
-            ["got", "npm:11.8.5"]\
+            ["got", "npm:11.8.6"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -12311,7 +12311,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["csv-parse", "npm:4.16.3"],\
             ["express", "npm:4.18.2"],\
             ["express-async-errors", "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:3.1.1"],\
-            ["got", "npm:11.8.5"],\
+            ["got", "npm:11.8.6"],\
             ["jsonwebtoken", "npm:8.5.1"],\
             ["jwt-encode", "npm:1.0.1"],\
             ["nock", "npm:13.0.11"],\
@@ -12354,7 +12354,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["chance", "npm:1.1.9"],\
             ["cross-fetch", "npm:3.1.4"],\
             ["debug", "virtual:fd8de37609258cc0a542fd94a84d3a92a7a50fe97add0d0ad2eb2de7df7a01a41d03004536a361279c31772f9825e9f1c1db0cf143d0ea8269bb824c9db84c63#npm:4.3.4"],\
-            ["got", "npm:11.8.5"],\
+            ["got", "npm:11.8.6"],\
             ["graphql", "npm:15.8.0"],\
             ["graphql-request", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:3.4.0"],\
             ["jwt-decode", "npm:2.2.0"],\
@@ -12390,7 +12390,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["chance", "npm:1.1.9"],\
             ["cross-fetch", "npm:3.1.4"],\
             ["debug", "virtual:fd8de37609258cc0a542fd94a84d3a92a7a50fe97add0d0ad2eb2de7df7a01a41d03004536a361279c31772f9825e9f1c1db0cf143d0ea8269bb824c9db84c63#npm:4.3.4"],\
-            ["got", "npm:11.8.5"],\
+            ["got", "npm:11.8.6"],\
             ["graphql", "npm:15.8.0"],\
             ["graphql-request", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:3.4.0"],\
             ["jwt-decode", "npm:2.2.0"],\
@@ -49113,6 +49113,24 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/got-npm-11.8.5-787b5e3116-2de8a1bbda.zip/node_modules/got/",\
           "packageDependencies": [\
             ["got", "npm:11.8.5"],\
+            ["@sindresorhus/is", "npm:4.0.1"],\
+            ["@szmarczak/http-timer", "npm:4.0.5"],\
+            ["@types/cacheable-request", "npm:6.0.1"],\
+            ["@types/responselike", "npm:1.0.0"],\
+            ["cacheable-lookup", "npm:5.0.3"],\
+            ["cacheable-request", "npm:7.0.2"],\
+            ["decompress-response", "npm:6.0.0"],\
+            ["http2-wrapper", "npm:1.0.0-beta.5.2"],\
+            ["lowercase-keys", "npm:2.0.0"],\
+            ["p-cancelable", "npm:2.0.0"],\
+            ["responselike", "npm:2.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:11.8.6", {\
+          "packageLocation": "./.yarn/cache/got-npm-11.8.6-89e7cd5d67-bbc783578a.zip/node_modules/got/",\
+          "packageDependencies": [\
+            ["got", "npm:11.8.6"],\
             ["@sindresorhus/is", "npm:4.0.1"],\
             ["@szmarczak/http-timer", "npm:4.0.5"],\
             ["@types/cacheable-request", "npm:6.0.1"],\

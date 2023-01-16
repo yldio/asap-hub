@@ -224,7 +224,7 @@ const ResearchOutputTeamForm: React.FC<ResearchOutputTeamFormProps> = ({
     publishingEntity,
   });
 
-  const [initialPayload] = useState(currentPayload);
+  const [remotePayload] = useState(currentPayload);
 
   return (
     <>
@@ -235,7 +235,7 @@ const ResearchOutputTeamForm: React.FC<ResearchOutputTeamFormProps> = ({
       <main css={mainStyles}>
         <Form<ResearchOutputResponse>
           serverErrors={serverValidationErrors}
-          dirty={!equal(initialPayload, currentPayload)}
+          dirty={!equal(remotePayload, currentPayload)}
           onSave={() => onSave(currentPayload)}
         >
           {({ isSaving, onSave: handleSave, onCancel: handleCancel }) => (

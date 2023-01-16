@@ -26,6 +26,7 @@ type SharedResearchCardProps = Pick<
   | 'title'
   | 'authors'
   | 'type'
+  | 'workingGroups'
 > &
   ComponentProps<typeof SharedResearchMetadata>;
 
@@ -37,6 +38,7 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
   title,
   authors,
   labs,
+  workingGroups,
   ...props
 }) => (
   <Card>
@@ -57,6 +59,15 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
         associations={labs.map(({ id, name }) => ({ displayName: name, id }))}
       />
       <AssociationList type="Team" inline max={3} associations={teams} />
+      <AssociationList
+        type="Working Group"
+        inline
+        max={3}
+        associations={workingGroups.map(({ id, title: displayName }) => ({
+          id,
+          displayName,
+        }))}
+      />
     </div>
     <Caption accent={'lead'} asParagraph>
       Date Added: {formatDate(new Date(addedDate))}

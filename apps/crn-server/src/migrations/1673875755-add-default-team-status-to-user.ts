@@ -21,5 +21,21 @@ export default class AddDefaultTeamStatusToUser extends Migration {
       },
     );
   };
-  down = async (): Promise<void> => {};
+  down = async (): Promise<void> => {
+    await applyToAllItemsInCollection<RestUser>(
+      'users',
+      async (user, squidexClient) => {
+        if (user.data.teams?.iv) {
+          await squidexClient.patch(user.id, {
+            teams: {
+              iv: user.data.teams.iv.map((v) => ({
+                ...v,
+                status: undefined,
+              })),
+            },
+          });
+        }
+      },
+    );
+  };
 }

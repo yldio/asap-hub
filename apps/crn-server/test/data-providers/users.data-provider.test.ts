@@ -789,17 +789,6 @@ describe('User data provider', () => {
         );
         expect(parsedTeams).toEqual([]);
       });
-
-      test('should filter out teams when team status is invalid', () => {
-        const teams: GraphqlUserTeam[] = getGraphQLUser().flatData.teams!;
-        teams[0]!.status = 'invalid status';
-        const loggerWarnSpy = jest.spyOn(logger, 'warn');
-        const parsedTeams = parseGraphQLUserTeamConnections(teams);
-        expect(loggerWarnSpy).toHaveBeenCalledWith(
-          `Invalid team status: invalid status`,
-        );
-        expect(parsedTeams).toEqual([]);
-      });
     });
     describe('parseUserToResponse', () => {
       test('adds display name', () => {

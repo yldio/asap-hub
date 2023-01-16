@@ -424,7 +424,7 @@ __metadata:
     auth0-js: 9.19.1
     camelcase: 6.3.0
     pify: 5.0.0
-    util: 0.12.4
+    util: 0.12.5
   languageName: unknown
   linkType: soft
 
@@ -961,7 +961,7 @@ __metadata:
     react-router-dom: 5.3.4
     react-scripts: 5.0.1
     typescript: 4.8.4
-    util: 0.12.4
+    util: 0.12.5
     webpack: 5.74.0
   languageName: unknown
   linkType: soft
@@ -1329,7 +1329,7 @@ __metadata:
     serialize-error: 7.0.1
     unified: 9.2.2
     use-debounce: 8.0.4
-    util: 0.12.4
+    util: 0.12.5
     uuid: 8.3.2
   peerDependencies:
     "@asap-hub/react-context": "*"
@@ -39754,17 +39754,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"util@npm:0.12.4, util@npm:^0.12.4":
-  version: 0.12.4
-  resolution: "util@npm:0.12.4"
+"util@npm:0.12.5":
+  version: 0.12.5
+  resolution: "util@npm:0.12.5"
   dependencies:
-    inherits: "npm:^2.0.3"
-    is-arguments: "npm:^1.0.4"
-    is-generator-function: "npm:^1.0.7"
-    is-typed-array: "npm:^1.1.3"
-    safe-buffer: "npm:^5.1.2"
-    which-typed-array: "npm:^1.1.2"
-  checksum: 8eac7a6e6b341c0f1b3eb73bbe5dfcae31a7e9699c8fc3266789f3e95f7637946a7700dcf1904dbd3749a58a36760ebf7acf4bb5b717f7468532a8a79f44eff0
+    inherits: ^2.0.3
+    is-arguments: ^1.0.4
+    is-generator-function: ^1.0.7
+    is-typed-array: ^1.1.3
+    which-typed-array: ^1.1.2
+  checksum: 705e51f0de5b446f4edec10739752ac25856541e0254ea1e7e45e5b9f9b0cb105bc4bd415736a6210edc68245a7f903bf085ffb08dd7deb8a0e847f60538a38a
   languageName: node
   linkType: hard
 
@@ -39783,6 +39782,20 @@ __metadata:
   dependencies:
     inherits: "npm:2.0.3"
   checksum: 80bee6a2edf5ab08dcb97bfe55ca62289b4e66f762ada201f2c5104cb5e46474c8b334f6504d055c0e6a8fda10999add9bcbd81ba765e7f37b17dc767331aa55
+  languageName: node
+  linkType: hard
+
+"util@npm:^0.12.4":
+  version: 0.12.4
+  resolution: "util@npm:0.12.4"
+  dependencies:
+    inherits: "npm:^2.0.3"
+    is-arguments: "npm:^1.0.4"
+    is-generator-function: "npm:^1.0.7"
+    is-typed-array: "npm:^1.1.3"
+    safe-buffer: "npm:^5.1.2"
+    which-typed-array: "npm:^1.1.2"
+  checksum: 8eac7a6e6b341c0f1b3eb73bbe5dfcae31a7e9699c8fc3266789f3e95f7637946a7700dcf1904dbd3749a58a36760ebf7acf4bb5b717f7468532a8a79f44eff0
   languageName: node
   linkType: hard
 

@@ -9713,7 +9713,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "util",\
-        "npm:0.12.4"\
+        "npm:0.12.5"\
       ],\
       [\
         "util-deprecate",\
@@ -10698,7 +10698,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["auth0-js", "npm:9.19.1"],\
             ["camelcase", "npm:6.3.0"],\
             ["pify", "npm:5.0.0"],\
-            ["util", "npm:0.12.4"]\
+            ["util", "npm:0.12.5"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -11310,7 +11310,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-router-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:5.3.4"],\
             ["react-scripts", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:5.0.1"],\
             ["typescript", "patch:typescript@npm%3A4.8.4#~builtin<compat/typescript>::version=4.8.4&hash=701156"],\
-            ["util", "npm:0.12.4"],\
+            ["util", "npm:0.12.5"],\
             ["webpack", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:5.74.0"]\
           ],\
           "linkType": "SOFT"\
@@ -11895,7 +11895,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["serialize-error", "npm:7.0.1"],\
             ["unified", "npm:9.2.2"],\
             ["use-debounce", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:8.0.4"],\
-            ["util", "npm:0.12.4"],\
+            ["util", "npm:0.12.5"],\
             ["uuid", "npm:8.3.2"]\
           ],\
           "packagePeers": [\
@@ -11981,7 +11981,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["serialize-error", "npm:7.0.1"],\
             ["unified", "npm:9.2.2"],\
             ["use-debounce", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:8.0.4"],\
-            ["util", "npm:0.12.4"],\
+            ["util", "npm:0.12.5"],\
             ["uuid", "npm:8.3.2"]\
           ],\
           "packagePeers": [\
@@ -12071,7 +12071,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["serialize-error", "npm:7.0.1"],\
             ["unified", "npm:9.2.2"],\
             ["use-debounce", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:8.0.4"],\
-            ["util", "npm:0.12.4"],\
+            ["util", "npm:0.12.5"],\
             ["uuid", "npm:8.3.2"]\
           ],\
           "packagePeers": [\
@@ -12161,7 +12161,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["serialize-error", "npm:7.0.1"],\
             ["unified", "npm:9.2.2"],\
             ["use-debounce", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:8.0.4"],\
-            ["util", "npm:0.12.4"],\
+            ["util", "npm:0.12.5"],\
             ["uuid", "npm:8.3.2"]\
           ],\
           "linkType": "SOFT"\
@@ -67383,6 +67383,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["is-generator-function", "npm:1.0.7"],\
             ["is-typed-array", "npm:1.1.3"],\
             ["safe-buffer", "npm:5.2.0"],\
+            ["which-typed-array", "npm:1.1.2"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:0.12.5", {\
+          "packageLocation": "./.yarn/cache/util-npm-0.12.5-3668276f26-705e51f0de.zip/node_modules/util/",\
+          "packageDependencies": [\
+            ["util", "npm:0.12.5"],\
+            ["inherits", "npm:2.0.4"],\
+            ["is-arguments", "npm:1.0.4"],\
+            ["is-generator-function", "npm:1.0.7"],\
+            ["is-typed-array", "npm:1.1.3"],\
             ["which-typed-array", "npm:1.1.2"]\
           ],\
           "linkType": "HARD"\

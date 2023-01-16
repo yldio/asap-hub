@@ -21,7 +21,7 @@ it('renders Team document types', () => {
 
   expect(
     getAllByRole('listitem').map(({ textContent }) => textContent),
-  ).toEqual(['Article', 'Code']);
+  ).toEqual(['Team', 'Article', 'Code']);
 });
 
 it('renders Working Group document types', () => {

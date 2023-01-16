@@ -10,7 +10,6 @@ export const newsQueryFragment = gql`
       title
       shortText
       text
-      type
       thumbnail {
         id
       }

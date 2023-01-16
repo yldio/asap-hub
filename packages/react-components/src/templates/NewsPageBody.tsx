@@ -1,9 +1,9 @@
-import { ComponentProps } from 'react';
+import { NewsResponse, TutorialsResponse } from '@asap-hub/model';
 
 import { ResultList, NewsCard } from '../organisms';
 
 interface NewsPageBodyProps {
-  readonly news: ReadonlyArray<ComponentProps<typeof NewsCard>>;
+  readonly news: ReadonlyArray<NewsResponse | TutorialsResponse>;
   readonly numberOfItems: number;
   readonly numberOfPages: number;
   readonly currentPage: number;
@@ -25,7 +25,7 @@ const NewsPageBody: React.FC<NewsPageBodyProps> = ({
   >
     {news.map((data) => (
       <div key={data.id}>
-        <NewsCard {...data} />
+        <NewsCard {...data} type="News" />
       </div>
     ))}
   </ResultList>

@@ -71,7 +71,6 @@ export const parseContentfulGraphQlNews = (item: NewsItem): NewsDataObject => ({
   // https://www.contentfulcommunity.com/t/why-do-required-fields-appear-as-nullable-in-the-graphql-graph/4079/4
   id: item.sys.id ?? '',
   title: item.title ?? '',
-  type: 'News',
   frequency: (item.frequency as NewsFrequency) ?? undefined,
   shortText: item.shortText ?? undefined,
   thumbnail: item.thumbnail?.url ?? undefined,

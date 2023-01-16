@@ -1,5 +1,5 @@
 import { NewsDetailsPage } from '@asap-hub/react-components';
-import { createNewsResponse } from '@asap-hub/fixtures';
+import { createNewsResponseWithType } from '@asap-hub/fixtures';
 
 export default {
   title: 'Templates / News / News Details Page',
@@ -7,5 +7,5 @@ export default {
 };
 
 export const Normal = () => (
-  <NewsDetailsPage {...createNewsResponse({ key: '1' })} />
+  <NewsDetailsPage {...createNewsResponseWithType({ key: '1' })} />
 );

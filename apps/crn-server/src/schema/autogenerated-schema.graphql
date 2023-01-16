@@ -3847,7 +3847,6 @@ type NewsAndEventsDataDto {
   text: NewsAndEventsDataTextDto
   thumbnail: NewsAndEventsDataThumbnailDto
   title: NewsAndEventsDataTitleDto
-  type: NewsAndEventsDataTypeDto
 }
 
 """The structure of the Frequency field of the News content type."""
@@ -3869,7 +3868,6 @@ input NewsAndEventsDataInputDto {
   text: NewsAndEventsDataTextInputDto
   thumbnail: NewsAndEventsDataThumbnailInputDto
   title: NewsAndEventsDataTitleInputDto
-  type: NewsAndEventsDataTypeInputDto
 }
 
 """The structure of the External Link field of the News content type."""
@@ -3940,16 +3938,6 @@ input NewsAndEventsDataTitleInputDto {
   iv: String
 }
 
-"""The structure of the Type field of the News content type."""
-type NewsAndEventsDataTypeDto {
-  iv: String
-}
-
-"""The structure of the Type field of the News content input type."""
-input NewsAndEventsDataTypeInputDto {
-  iv: String
-}
-
 """The structure of the flat News data type."""
 type NewsAndEventsFlatDataDto {
   frequency: String
@@ -3963,7 +3951,6 @@ type NewsAndEventsFlatDataDto {
   text: String
   thumbnail: [Asset!]
   title: String
-  type: String
 }
 
 """List of News items and total count."""

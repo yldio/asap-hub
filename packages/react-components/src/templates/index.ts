@@ -7,7 +7,7 @@ export { default as DashboardPageBody } from './DashboardPageBody';
 export { default as DashboardPageHeader } from './DashboardPageHeader';
 export { default as DiscoverAbout } from './DiscoverAbout';
 export { default as DiscoverGuides } from './DiscoverGuides';
-export { default as DiscoverNewsCardList } from './DiscoverNewsCardList';
+export { default as DiscoverTutorialsCardList } from './DiscoverTutorialsCardList';
 export { default as DiscoverPage } from './DiscoverPage';
 export { default as DiscoverPageBody } from './DiscoverPageBody';
 export { default as DiscoverPageHeader } from './DiscoverPageHeader';

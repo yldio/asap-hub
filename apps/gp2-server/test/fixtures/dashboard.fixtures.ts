@@ -59,7 +59,6 @@ export const squidexGraphqlDashboardResponse = (): DashboardResponse => ({
       text: '<p>text</p>',
       thumbnail: `${baseUrl}/api/assets/${appName}/thumbnail-uuid1`,
       title: 'News 1',
-      type: 'News',
     },
     {
       created: '2020-09-24T11:06:27.164Z',
@@ -68,7 +67,6 @@ export const squidexGraphqlDashboardResponse = (): DashboardResponse => ({
       text: '<p>text</p>',
       thumbnail: `${baseUrl}/api/assets/${appName}/thumbnail-uuid2`,
       title: 'Tutorial 2',
-      type: 'Tutorial',
     },
   ],
   pages: [],

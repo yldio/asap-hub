@@ -12,6 +12,7 @@ import {
   UserResponse,
   ListEventResponse,
   ListResearchOutputResponse,
+  NewsResponse,
 } from '@asap-hub/model';
 import {
   NewsSection,
@@ -49,9 +50,10 @@ type DashboardPageBodyProps = Pick<
   'reminders'
 > &
   Pick<ComponentProps<typeof RemindersCard>, 'reminders'> &
-  Omit<ComponentProps<typeof NewsSection>, 'title'> & {
+  Omit<ComponentProps<typeof NewsSection>, 'title' | 'type' | 'news'> & {
     readonly userId: string;
     readonly teamId?: string;
+    readonly news: ReadonlyArray<NewsResponse>;
   } & Pick<UserResponse, 'dismissedGettingStarted'> & {
     pastEvents: ComponentProps<typeof PastEventsDashboardCard>['events'];
     roles: TeamRole[];
@@ -176,6 +178,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
       {news.length ? (
         <div>
           <NewsSection
+            type="News"
             news={news}
             title="Latest News from ASAP"
             subtitle="Explore the latest shared research and learn more about them."

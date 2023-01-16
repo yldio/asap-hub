@@ -12,6 +12,7 @@ const { rem } = pixels;
 const styles = css({
   height: rem(40),
   marginRight: rem(9),
+  marginTop: rem(5),
   borderStyle: 'solid',
   borderWidth: `${borderWidth}px`,
   borderRadius: rem(24),
@@ -33,7 +34,9 @@ const FilterPill: React.FC<FilterPillProps> = ({ key, filter }) => (
   <span key={key} css={[styles]}>
     <Ellipsis>
       <div css={[containerStyle]}>
-        <div css={css({ marginRight: rem(8) })}>{filter}</div>
+        <div css={css({ marginRight: rem(8), wordWrap: 'break-word' })}>
+          {filter}
+        </div>
         <span css={css({ fill: colors.neutral900.rgb })}>{crossSmallIcon}</span>
       </div>
     </Ellipsis>

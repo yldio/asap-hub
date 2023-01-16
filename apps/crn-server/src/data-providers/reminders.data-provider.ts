@@ -299,50 +299,48 @@ const getSharePresentationRemindersFromQuery = (
     const speakerUser = speakerUserList?.[0];
     const speakerTeam = speakerTeamList?.[0];
 
-    if (!speakerUser || !speakerTeam || !('id' in speakerUser)) {
-      return events;
-    }
-
-    const speakerUserTeam = speakerUser.flatData.teams?.find(
-      (team) => team.id?.[0]?.id === speakerTeam?.id,
-    );
-
-    const shouldShowSharePresentation =
-      !isCMSAdministrator(
-        speakerUser.flatData.role as Role,
-        speakerUserTeam?.role as TeamRole,
-      ) && speakerUserTeam?.role !== 'Project Manager';
-
-    if (
-      shouldShowSharePresentation &&
-      eventHasEnded(event.flatData.endDate) &&
-      inLast72Hours(event.flatData.endDate)
-    ) {
-      const loggedUserSpeakerTeamId = speakerTeam.id;
-
-      const pmFromSpeakersTeam = speakerTeam.referencingUsersContents?.find(
-        (teamMember) =>
-          teamMember.flatData.teams?.find(
-            (team) =>
-              team.id?.[0]?.id === loggedUserSpeakerTeamId &&
-              team.role === 'Project Manager',
-          ),
+    if (speakerUser && speakerTeam && 'id' in speakerUser) {
+      const speakerUserTeam = speakerUser.flatData.teams?.find(
+        (team) => team.id?.[0]?.id === speakerTeam?.id,
       );
 
-      return [
-        ...events,
-        {
-          id: `share-presentation-${event.id}`,
-          entity: 'Event',
-          type: 'Share Presentation',
-          data: {
-            pmId: pmFromSpeakersTeam?.id,
-            eventId: event.id,
-            title: event.flatData.title || '',
-            endDate: event.flatData.endDate,
+      const shouldShowSharePresentation =
+        !isCMSAdministrator(
+          speakerUser.flatData.role as Role,
+          speakerUserTeam?.role as TeamRole,
+        ) && speakerUserTeam?.role !== 'Project Manager';
+
+      if (
+        shouldShowSharePresentation &&
+        eventHasEnded(event.flatData.endDate) &&
+        inLast72Hours(event.flatData.endDate)
+      ) {
+        const loggedUserSpeakerTeamId = speakerTeam.id;
+
+        const pmFromSpeakersTeam = speakerTeam.referencingUsersContents?.find(
+          (teamMember) =>
+            teamMember.flatData.teams?.find(
+              (team) =>
+                team.id?.[0]?.id === loggedUserSpeakerTeamId &&
+                team.role === 'Project Manager',
+            ),
+        );
+
+        return [
+          ...events,
+          {
+            id: `share-presentation-${event.id}`,
+            entity: 'Event',
+            type: 'Share Presentation',
+            data: {
+              pmId: pmFromSpeakersTeam?.id,
+              eventId: event.id,
+              title: event.flatData.title || '',
+              endDate: event.flatData.endDate,
+            },
           },
-        },
-      ];
+        ];
+      }
     }
     return events;
   }, []);

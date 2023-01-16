@@ -41,7 +41,7 @@ const NoOutputsPage: React.FC<NoOutputsPageProps> = ({
     <span css={iconStyles}>{libraryIcon}</span>
     <div>
       <Display styleAsHeading={3}>{title}</Display>
-      <Paragraph>{description}</Paragraph>
+      <Paragraph accent="lead">{description}</Paragraph>
     </div>
     <Link buttonStyle primary href={sharedResearch({}).$}>
       Explore Shared Research

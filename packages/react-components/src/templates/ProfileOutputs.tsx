@@ -52,7 +52,9 @@ const ProfileOutputs: React.FC<ProfileOutputsProps> = ({
         title={`
           ${
             userAssociationMember ? 'Your' : 'This'
-          } ${publishingEntity.toLowerCase()} hasn’t shared any research.`}
+          } ${publishingEntity.toLowerCase()} hasn’t shared any research ${
+          publishingEntity === 'Working Group' ? 'yet!' : '.'
+        }`}
         description={
           <>
             {publishingEntity === 'Team' && (

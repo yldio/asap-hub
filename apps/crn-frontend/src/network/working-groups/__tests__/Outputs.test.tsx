@@ -65,7 +65,7 @@ it('renders the no outputs component correctly for your own team', async () => {
     { ...createUserResponse(), id: 'groupMember' },
   );
   expect(
-    getByText('Your working group hasn’t shared any research.'),
+    getByText('Your working group hasn’t shared any research yet!'),
   ).toBeVisible();
 });
 
@@ -78,6 +78,6 @@ it('renders the no outputs component correctly for a different team', async () =
     { ...createUserResponse(), id: 'notGroupMember' },
   );
   expect(
-    getByText('This working group hasn’t shared any research.'),
+    getByText('This working group hasn’t shared any research yet!'),
   ).toBeVisible();
 });

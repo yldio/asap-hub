@@ -56,8 +56,13 @@ const UsersPage: React.FC<UsersPageProps> = ({
           onExportClick={onExportClick}
           isAdministrator={isAdministrator}
         />
-        <FilterPills filters={filters} />
       </div>
+      <FilterPills
+        filters={filters}
+        projects={projects}
+        workingGroups={workingGroups}
+        onApplyClick={(filter) => updateFilters(backHref, filter)}
+      />
       <main>{children}</main>
       {displayFilters && (
         <FiltersModal

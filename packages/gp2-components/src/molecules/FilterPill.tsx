@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import {
   borderWidth,
+  Button,
   crossSmallIcon,
   Ellipsis,
   pixels,
@@ -20,24 +21,42 @@ const styles = css({
   color: colors.neutral1000.rgb,
 });
 
-const containerStyle = css({
+const containerStyles = css({
   display: 'flex',
   padding: `${rem(9)} ${rem(14)}`,
 });
 
-interface FilterPillProps {
-  readonly key: string;
-  readonly filter: string;
+const linksStyles = css({
+  border: 'none',
+  listStyle: 'none',
+  boxShadow: 'none',
+  ':hover': {
+    boxShadow: 'none',
+  },
+  margin: 0,
+  padding: 0,
+  display: 'flex',
+});
+
+interface FilterProps {
+  readonly label: string;
+  readonly value: string;
 }
 
-const FilterPill: React.FC<FilterPillProps> = ({ key, filter }) => (
-  <span key={key} css={[styles]}>
+interface FilterPillProps {
+  readonly key: string;
+  readonly filter: FilterProps;
+  onDelete: () => void;
+}
+
+const FilterPill: React.FC<FilterPillProps> = ({ key, filter, onDelete }) => (
+  <span css={[styles]}>
     <Ellipsis>
-      <div css={[containerStyle]}>
-        <div css={css({ marginRight: rem(8), wordWrap: 'break-word' })}>
-          {filter}
-        </div>
-        <span css={css({ fill: colors.neutral900.rgb })}>{crossSmallIcon}</span>
+      <div css={[containerStyles]}>
+        <div css={css({ marginRight: rem(8) })}>{filter.label}</div>
+        <Button overrideStyles={css(linksStyles)} onClick={onDelete}>
+          {crossSmallIcon}
+        </Button>
       </div>
     </Ellipsis>
   </span>

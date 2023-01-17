@@ -9,8 +9,7 @@
     "build:babel": "../../scripts/build-babel.sh build",
     "watch:babel": "../../scripts/build-babel.sh watch",
     "typecheck": "tsc",
-    "deploy": "a0deploy import --input_file ./build/auth0.yaml",
-    "configure:versions": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\"}' ts-node --transpile-only ./scripts/configure-versions.ts"
+    "deploy": "a0deploy import --input_file ./auth0.yaml"
   },
   "dependencies": {
     "@vedicium/auth0-actions-sdk": "^0.1.3",
@@ -26,9 +25,6 @@
     "@babel/preset-typescript": "7.18.6",
     "@babel/runtime-corejs3": "7.19.6",
     "@types/jest": "27.5.2",
-    "@types/js-yaml": "^4",
-    "js-yaml": "^4.1.0",
-    "nock": "13.0.11",
-    "ts-node": "10.9.1"
+    "nock": "13.0.11"
   }
 }

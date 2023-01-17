@@ -176,3 +176,11 @@ it('renders the provided number of research outputs', () => {
   );
   expect(getByText('Working Group Outputs (2)')).toBeVisible();
 });
+
+it('does not render the research outputs link when the feature flag is disabled', () => {
+  disable('WORKING_GROUP_SHARED_OUTPUTS_TAB');
+  const { queryByText } = render(
+    <WorkingGroupHeader {...baseProps} workingGroupsOutputsCount={2} />,
+  );
+  expect(queryByText('Working Group Outputs (2)')).toBeNull();
+});

@@ -247,16 +247,18 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
         >
           About
         </TabLink>
-        <TabLink
-          href={
-            network({})
-              .workingGroups({})
-              .workingGroup({ workingGroupId: id })
-              .outputs({}).$
-          }
-        >
-          Working Group Outputs ({workingGroupsOutputsCount})
-        </TabLink>
+        {isEnabled('WORKING_GROUP_SHARED_OUTPUTS_TAB') && (
+          <TabLink
+            href={
+              network({})
+                .workingGroups({})
+                .workingGroup({ workingGroupId: id })
+                .outputs({}).$
+            }
+          >
+            Working Group Outputs ({workingGroupsOutputsCount})
+          </TabLink>
+        )}
       </TabNav>
     </header>
   );

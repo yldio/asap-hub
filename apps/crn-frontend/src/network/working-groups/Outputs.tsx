@@ -1,10 +1,6 @@
 import { SearchFrame } from '@asap-hub/frontend-utils';
 import { WorkingGroupDataObject } from '@asap-hub/model';
-import {
-  noop,
-  ProfileOutputs,
-  ResearchOutputsSearch,
-} from '@asap-hub/react-components';
+import { ProfileOutputs } from '@asap-hub/react-components';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { ComponentProps } from 'react';
@@ -58,8 +54,6 @@ const OutputsList: React.FC<OutputsListProps> = ({
 };
 
 const Outputs: React.FC<OutputsProps> = ({ workingGroup }) => {
-  const showSearchBar = false;
-
   const currentUserId = useCurrentUserCRN()?.id;
   const userAssociationMember = workingGroup.members.some(
     (member) => member.user.id === currentUserId,
@@ -67,14 +61,6 @@ const Outputs: React.FC<OutputsProps> = ({ workingGroup }) => {
 
   return (
     <article>
-      {showSearchBar && (
-        <ResearchOutputsSearch
-          onChangeSearch={noop}
-          searchQuery={''}
-          onChangeFilter={noop}
-          filters={new Set()}
-        />
-      )}
       <SearchFrame title="">
         <OutputsList
           workingGroupId={workingGroup.id}

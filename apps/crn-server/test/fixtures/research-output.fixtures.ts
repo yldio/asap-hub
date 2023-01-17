@@ -156,6 +156,7 @@ export const getResearchOutputDataObject = (): ResearchOutputDataObject => ({
     { id: '99c78dd7-627e-4fbd-aaec-d1977895189e', name: 'Test' },
     { id: 'cd7be402-84d7-4d21-a360-82e2695f2dd9', name: 'mike' },
   ],
+  workingGroups: [],
   methods: ['Activity Assay'],
   organisms: ['Rat'],
   environments: ['In Vitro'],
@@ -232,6 +233,7 @@ export const getResearchOutputPostRequest = (): ResearchOutputPostRequest => {
     labs,
     authors,
     teams,
+    workingGroups,
     ...researchOutputResponse
   } = getResearchOutputResponse();
   return {
@@ -242,6 +244,7 @@ export const getResearchOutputPostRequest = (): ResearchOutputPostRequest => {
     authors: authors.map(({ id }) => ({ userId: id })),
     teams: teams.map(({ id }) => id),
     publishingEntity: 'Team',
+    workingGroups: workingGroups.map(({ id }) => id),
   };
 };
 
@@ -267,6 +270,7 @@ export const getResearchOutputCreateDataObject =
       lastUpdatedPartial: _lastUpdatedPartial,
       created: _created,
       contactEmails: _contactEmails,
+      workingGroups: _workingGroups, // @TODO send this data to squidex once the schema has changed (1/2)
       ...researchOutputPostRequest
     } = getResearchOutputResponse();
 

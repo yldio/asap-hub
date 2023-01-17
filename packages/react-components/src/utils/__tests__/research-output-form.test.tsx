@@ -5,8 +5,6 @@ import {
 import {
   researchOutputDocumentTypes,
   ResearchOutputIdentifierType,
-  ResearchOutputPostRequest,
-  ResearchOutputResponse,
 } from '@asap-hub/model';
 import {
   getDecision,
@@ -14,122 +12,8 @@ import {
   getPublishDate,
   getPayload,
   getTeamsState,
-  isDirty,
-  isIdentifierModified,
   ResearchOutputPayload,
-} from '../researchOutputFormCommons';
-
-describe('isDirty', () => {
-  const researchOutputResponse: ResearchOutputResponse = {
-    ...createResearchOutputResponse(),
-    labs: [{ id: '1', name: 'Lab 1' }],
-  };
-
-  const initialState: ResearchOutputPostRequest = {
-    documentType: 'Article',
-    title: researchOutputResponse.title,
-    description: researchOutputResponse.description,
-    link: researchOutputResponse.link,
-    type: researchOutputResponse.type!,
-    tags: researchOutputResponse.tags,
-    methods: researchOutputResponse.methods,
-    organisms: researchOutputResponse.organisms,
-    environments: researchOutputResponse.environments,
-    teams: ['Team-0', 'Team-1'],
-    labs: ['Lab-0', 'Lab-1'],
-    authors: [{ userId: 'User-0' }],
-    subtype: researchOutputResponse.subtype,
-    labCatalogNumber: researchOutputResponse.labCatalogNumber,
-    publishDate: researchOutputResponse.publishDate,
-    asapFunded: researchOutputResponse.asapFunded,
-    usedInPublication: researchOutputResponse.usedInPublication,
-    sharingStatus: 'Network Only',
-    publishingEntity: 'Team',
-  };
-
-  const currentState = { ...initialState };
-
-  it('returns true for edit mode when teams are in diff order', () => {
-    expect(
-      isDirty(
-        {
-          ...initialState,
-          teams: ['Team-0', 'Team-1'],
-        },
-        {
-          ...initialState,
-          teams: ['Team-1', 'Team-0'],
-        },
-      ),
-    ).toBeTruthy();
-  });
-
-  it('returns false when values are not changed', () => {
-    expect(isDirty(initialState, initialState)).toBeFalsy();
-  });
-
-  it('returns true when the initial values are changed', () => {
-    expect(
-      isDirty(initialState, {
-        ...initialState,
-        title: 'changed',
-      }),
-    ).toBeTruthy();
-  });
-
-  it('returns false when the identifier is absent', () => {
-    expect(isIdentifierModified(researchOutputResponse)).toBeFalsy();
-  });
-
-  it('returns false when the identifier is equal to initial identifier', () => {
-    expect(
-      isIdentifierModified(
-        { ...researchOutputResponse, doi: '12.1234' },
-        '12.1234',
-      ),
-    ).toBeFalsy();
-  });
-
-  it('returns true when the identifier is not equal to initial identifier', () => {
-    expect(
-      isIdentifierModified(
-        { ...researchOutputResponse, doi: '12.1234' },
-        '12.5555',
-      ),
-    ).toBeTruthy();
-  });
-
-  it.each`
-    key                   | value
-    ${'title'}            | ${'Output 1 changed'}
-    ${'description'}      | ${'new changed description'}
-    ${'link'}             | ${'https://changed.com'}
-    ${'type'}             | ${'Data set'}
-    ${'tags'}             | ${['changed tag']}
-    ${'methods'}          | ${['Activity Assay']}
-    ${'organisms'}        | ${['Rat']}
-    ${'teams'}            | ${['In Vivo']}
-    ${'environments'}     | ${[{ label: 'team1', value: 't99' }]}
-    ${'authors'}          | ${[{ label: 'author1', value: 'a111' }]}
-    ${'subtype'}          | ${'Postmortem'}
-    ${'labCatalogNumber'} | ${'1'}
-    ${'labs'}             | ${['Asap Lab']}
-    ${'identifierType'}   | ${'RRID'}
-    ${'rrid'}             | ${'101994'}
-  `(
-    'Return true when $key is changed to $value and differs from the initial one',
-    async ({
-      key,
-      value,
-    }: {
-      key: keyof ResearchOutputPostRequest;
-      value: never;
-    }) => {
-      currentState[key] = value;
-      expect(isDirty(initialState, currentState)).toBeTruthy();
-    },
-  );
-});
+} from '../research-output-form';
 
 describe('getPublishDate', () => {
   const dateString = new Date().toString();
@@ -278,6 +162,7 @@ describe('getResearchOutputPayload', () => {
       }),
     ).toEqual({
       ...currentPayload,
+      workingGroups: [],
       teams: ['t99'],
       labs: ['l99'],
       authors: [{ externalAuthorName: 'a111' }],

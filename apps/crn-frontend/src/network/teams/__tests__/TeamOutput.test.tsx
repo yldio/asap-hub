@@ -144,6 +144,7 @@ describe('TeamOutput', () => {
         methods: [],
         organisms: [],
         environments: [],
+        workingGroups: [],
         labCatalogNumber: undefined,
         publishDate: undefined,
         subtype: undefined,

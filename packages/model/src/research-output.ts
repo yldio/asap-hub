@@ -3,6 +3,7 @@ import { ExternalAuthorResponse } from './external-author';
 import { LabResponse } from './lab';
 import { TeamResponse } from './team';
 import { UserResponse } from './user';
+import { WorkingGroupResponse } from './working-group';
 
 export const researchOutputDocumentTypes = [
   'Grant Document',
@@ -227,6 +228,7 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
   organisms: string[];
   subtype?: string;
   teams: Pick<TeamResponse, 'id' | 'displayName'>[];
+  workingGroups: Pick<WorkingGroupResponse, 'id' | 'title'>[];
 };
 
 export type ListResearchOutputDataObject =
@@ -289,6 +291,7 @@ export type ResearchOutputPostRequest = {
   subtype?: string;
   tags: string[];
   teams: string[];
+  workingGroups: string[];
   title: string;
   type: ResearchOutputType;
   usageNotes?: string;

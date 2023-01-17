@@ -62,6 +62,7 @@ describe('researchOutputToCSV', () => {
       labs: expect.anything(),
       tags: expect.anything(),
       teams: expect.anything(),
+      workingGroups: expect.anything(),
       methods: 'Activity Assay,RNA Single Cell',
       organisms: 'C. Elegans,Rat',
       environments: 'In Cellulo,In Vivo',

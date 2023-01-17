@@ -117,6 +117,7 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
         nullable: true,
       },
       teams: { type: 'array', items: { type: 'string' }, minItems: 1 },
+      workingGroups: { type: 'array', items: { type: 'string' }, minItems: 0 },
       usageNotes: { type: 'string', nullable: true },
       doi: {
         type: 'string',

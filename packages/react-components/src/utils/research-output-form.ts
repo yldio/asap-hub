@@ -9,7 +9,6 @@ import {
   ResearchOutputDocumentType,
 } from '@asap-hub/model';
 import { isInternalUser } from '@asap-hub/validation';
-import equal from 'fast-deep-equal';
 import { ComponentProps } from 'react';
 import ResearchOutputContributorsCard from '../organisms/ResearchOutputContributorsCard';
 
@@ -41,13 +40,6 @@ export const getTeamsState = ({
     ]
   );
 };
-
-export function isDirty(
-  initialState: ResearchOutputPostRequest,
-  currentState: ResearchOutputPostRequest,
-): boolean {
-  return !equal(initialState, currentState);
-}
 
 const identifierTypeToFieldName: Record<
   ResearchOutputIdentifierType,
@@ -132,12 +124,12 @@ export type ResearchOutputPayload = {
   asapFunded: DecisionOption;
   usedInPublication: DecisionOption;
   sharingStatus: ResearchOutputPostRequest['sharingStatus'];
-  publishDate: Date | undefined;
+  publishDate?: Date;
   labCatalogNumber: ResearchOutputPostRequest['labCatalogNumber'];
   methods: string[];
   organisms: string[];
   environments: string[];
-  subtype: string | undefined;
+  subtype?: string;
   publishingEntity: ResearchOutputPublishingEntities;
 };
 
@@ -186,6 +178,7 @@ export const getPayload = ({
   usedInPublication: convertDecisionToBoolean(usedInPublication),
   sharingStatus,
   publishDate: publishDate?.toISOString(),
+  workingGroups: [],
   labCatalogNumber:
     documentType === 'Lab Resource' && labCatalogNumber !== ''
       ? labCatalogNumber

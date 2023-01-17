@@ -33,7 +33,7 @@ import {
   getPayload,
 } from '../utils';
 
-type ResearchOutputPageProps = Pick<
+type ResearchOutputTeamFormProps = Pick<
   ComponentProps<typeof ResearchOutputFormSharingCard>,
   'serverValidationErrors' | 'clearServerValidationError'
 > &
@@ -93,7 +93,7 @@ const formControlsStyles = css({
   },
 });
 
-const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
+const ResearchOutputTeamForm: React.FC<ResearchOutputTeamFormProps> = ({
   documentType,
   researchOutputData,
   isEditMode,
@@ -224,7 +224,7 @@ const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
     publishingEntity,
   });
 
-  const [initialPayload] = useState(currentPayload);
+  const [remotePayload] = useState(currentPayload);
 
   return (
     <>
@@ -235,7 +235,7 @@ const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
       <main css={mainStyles}>
         <Form<ResearchOutputResponse>
           serverErrors={serverValidationErrors}
-          dirty={!equal(initialPayload, currentPayload)}
+          dirty={!equal(remotePayload, currentPayload)}
           onSave={() => onSave(currentPayload)}
         >
           {({ isSaving, onSave: handleSave, onCancel: handleCancel }) => (
@@ -360,4 +360,4 @@ const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
   );
 };
 
-export default ResearchOutputPage;
+export default ResearchOutputTeamForm;

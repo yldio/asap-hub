@@ -14,15 +14,20 @@ const styles = css({
 
 type SharedResearchMetadataProps = Pick<
   ResearchOutputResponse,
-  'documentType' | 'type' | 'link'
+  'documentType' | 'type' | 'link' | 'publishingEntity'
 >;
 
 const SharedResearchMetadata: React.FC<SharedResearchMetadataProps> = ({
   documentType,
   type,
   link,
+  publishingEntity,
 }) => {
-  const pills: string[] = type ? [documentType, type] : [documentType];
+  const pills: string[] = [
+    ...[publishingEntity],
+    ...(documentType ? [documentType] : []),
+    ...(type ? [type] : []),
+  ];
 
   return (
     <div css={styles}>

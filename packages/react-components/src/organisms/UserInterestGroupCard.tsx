@@ -128,7 +128,11 @@ const UserInterestGroupCard: React.FC<UserInterestGroupCardProps> = ({
     {({ data }) => (
       <div css={itemsListWrapper}>
         {data.map((item, index) => (
-          <UserInterestGroupItem {...item} index={index} />
+          <UserInterestGroupItem
+            key={`${index}-user-interest-group`}
+            {...item}
+            index={index}
+          />
         ))}
       </div>
     )}

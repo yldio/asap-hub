@@ -199,19 +199,12 @@ it('merges different tag types in the correct order', () => {
       teams={[]}
       labs={[]}
       authors={[]}
+      workingGroups={[]}
     />,
   );
   expect(
     getAllByRole('listitem')
       .map(({ textContent }) => textContent)
-      .slice(2),
-  ).toMatchInlineSnapshot(`
-    Array [
-      "method",
-      "organisms",
-      "environment",
-      "subtype",
-      "tag",
-    ]
-  `);
+      .slice(3),
+  ).toEqual(['method', 'organisms', 'environment', 'subtype', 'tag']);
 });

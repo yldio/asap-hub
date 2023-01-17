@@ -38,6 +38,19 @@ export const FETCH_REMINDER_DATA = gql`
           team {
             ... on Teams {
               id
+              referencingUsersContents(
+                filter: "data/teams/iv/role eq 'Project Manager'"
+              ) {
+                id
+                flatData {
+                  teams {
+                    id {
+                      id
+                    }
+                    role
+                  }
+                }
+              }
             }
           }
           user {

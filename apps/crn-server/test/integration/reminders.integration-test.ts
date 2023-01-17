@@ -475,6 +475,10 @@ describe('Reminders', () => {
       // setting system time to 10:05AM in UTC
       jest.setSystemTime(new Date('2022-08-10T11:05:00.0Z'));
 
+      let pmUserId;
+      const pmUserCreateDataObject = getUserInput(teamId, 'Project Manager');
+      pmUserId = await userDataProvider.create(pmUserCreateDataObject);
+
       const eventInput = getEventInput(calendarId);
       // the event starts at 10AM and ends at 11AM in UTC
       eventInput.startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
@@ -495,6 +499,7 @@ describe('Reminders', () => {
         entity: 'Event',
         type: 'Share Presentation',
         data: {
+          pmId: pmUserId,
           eventId: event.id,
           endDate: event.data.endDate.iv,
           title: event.data.title.iv,

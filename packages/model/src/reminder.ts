@@ -75,6 +75,7 @@ export interface SharePresentationReminder extends EventReminder {
   entity: 'Event';
   type: 'Share Presentation';
   data: {
+    pmId?: string;
     eventId: ReminderEventResponse['id'];
     title: ReminderEventResponse['title'];
     endDate: ReminderEventResponse['endDate'];

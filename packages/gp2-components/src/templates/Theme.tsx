@@ -3,6 +3,11 @@ import colors from './colors';
 
 const theme = {
   colors,
+  navigationLinkTheme: {
+    svg: {
+      fill: 'currentColor',
+    },
+  },
 };
 
 const Theme: React.FC = ({ children }) => (

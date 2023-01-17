@@ -2,10 +2,12 @@ import { drawerQuery, pixels } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React from 'react';
-import DashboardIcon from '../icons/dashboard-icon';
-import ProjectIcon from '../icons/project-icon';
-import UsersIcon from '../icons/users-icon';
-import WorkingGroupIcon from '../icons/working-group-icon';
+import {
+  dashboardIcon,
+  projectIcon,
+  usersIcon,
+  workingGroupIcon,
+} from '../icons';
 import NavigationLink from '../molecules/NavigationLink';
 
 const { workingGroups, users, projects } = gp2;
@@ -61,39 +63,26 @@ const MainNavigation: React.FC = () => (
   <nav css={containerStyles}>
     <ul css={listStyles}>
       <li>
-        <NavigationLink
-          href={'/'}
-          icon={<DashboardIcon color={'currentColor'} />}
-          hasStroke={false}
-        >
+        <NavigationLink href={'/'} icon={dashboardIcon}>
           Dashboard
         </NavigationLink>
       </li>
       <li>
-        <NavigationLink
-          href={users({}).$}
-          icon={<UsersIcon color={'currentColor'} />}
-          hasStroke={false}
-        >
+        <NavigationLink href={users({}).$} icon={usersIcon}>
           Users
         </NavigationLink>
       </li>
       <li>
         <NavigationLink
           href={workingGroups({}).$}
-          icon={<WorkingGroupIcon color={'currentColor'} />}
-          hasStroke={false}
+          icon={workingGroupIcon}
           enabled={true}
         >
           Groups
         </NavigationLink>
       </li>
       <li>
-        <NavigationLink
-          href={projects({}).$}
-          icon={<ProjectIcon color={'currentColor'} />}
-          hasStroke={false}
-        >
+        <NavigationLink href={projects({}).$} icon={projectIcon}>
           Projects
         </NavigationLink>
       </li>

@@ -33,6 +33,10 @@ const styles = css({
     'px',
   ),
   color: 'unset',
+  stroke: lead.rgb,
+  svg: {
+    stroke: charcoal.rgb,
+  },
   textDecoration: 'none',
   outline: 'none',
   borderRadius: `${6 / perRem}em`,
@@ -63,19 +67,11 @@ const squareBorderStyles = css({
   borderRadius: 'unset',
 });
 
-const strokeStyles = css({
-  stroke: lead.rgb,
-  svg: {
-    stroke: charcoal.rgb,
-  },
-});
-
 interface NavigationLinkProps {
   readonly href: string;
   readonly enabled?: boolean;
   readonly icon?: JSX.Element;
   readonly squareBorder?: boolean;
-  readonly hasStroke?: boolean;
 }
 const NavigationLink: React.FC<NavigationLinkProps> = ({
   href,
@@ -83,7 +79,6 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
   icon,
   squareBorder = false,
   children,
-  hasStroke = true,
 }) => {
   const [internal, url] = isInternalLink(href);
 
@@ -92,14 +87,14 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
       <NavHashLink
         to={url}
         activeClassName={activeClassName}
-        css={({ colors }) => [
+        css={({ colors, navigationLinkTheme }) => [
           styles,
-          hasStroke && strokeStyles,
           squareBorder && squareBorderStyles,
           {
-            [`&.${activeClassName}`]: activePrimaryStyles(colors, hasStroke),
+            [`&.${activeClassName}`]: activePrimaryStyles(colors),
           },
           !enabled && disableStyles,
+          navigationLinkTheme,
         ]}
         smooth
         isActive={(match) => enabled && !!match && match.url === url}
@@ -117,12 +112,12 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
   return (
     <a
       href={url}
-      css={({ colors }) => [
+      css={({ colors, navigationLinkTheme }) => [
         styles,
-        hasStroke && strokeStyles,
         squareBorder && squareBorderStyles,
-        active && activePrimaryStyles(colors, hasStroke),
+        active && activePrimaryStyles(colors),
         !enabled && disableStyles,
+        navigationLinkTheme,
       ]}
     >
       <p css={textStyles}>

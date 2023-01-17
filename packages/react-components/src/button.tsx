@@ -173,24 +173,17 @@ const disabledStyles = css({
   },
 });
 
-export const activePrimaryStyles = (
-  {
-    primary100 = activePrimaryBackgroundColorDefault,
-    primary900 = pine,
-  }: Theme['colors'] = {},
-  hasStroke: boolean = true,
-) =>
+export const activePrimaryStyles = ({
+  primary100 = activePrimaryBackgroundColorDefault,
+  primary900 = pine,
+}: Theme['colors'] = {}) =>
   css({
     backgroundColor: primary100.rgba,
     borderColor: 'transparent',
     color: primary900.rgba,
-    ...(hasStroke
-      ? {
-          svg: {
-            stroke: primary900.rgba,
-          },
-        }
-      : undefined),
+    svg: {
+      stroke: primary900.rgba,
+    },
     ':hover, :focus': {
       backgroundColor: primary100.rgba,
       color: primary900.rgba,

@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react';
-import ProjectIcon from '../../icons/project-icon';
+import projectIcon from '../../icons/project-icon';
 import IconWithLabel from '../IconWithLabel';
 
 describe('IconWithLabel', () => {
   it('should render the icon', () => {
-    render(<IconWithLabel icon={<ProjectIcon />} />);
+    render(<IconWithLabel icon={projectIcon} />);
     expect(screen.getByTitle('Projects')).toBeInTheDocument();
   });
   it('should render the children', () => {

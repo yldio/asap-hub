@@ -3,9 +3,7 @@ import { crossQuery, Link, pixels } from '@asap-hub/react-components';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps, Fragment } from 'react';
-import ProjectIcon from '../icons/project-icon';
-import roleIcon from '../icons/role-icon';
-import WorkingGroupIcon from '../icons/working-group-icon';
+import { roleIcon, workingGroupIcon, projectIcon } from '../icons';
 import colors from '../templates/colors';
 import IconWithLabel from './IconWithLabel';
 import UserRegion from './UserRegion';
@@ -71,7 +69,7 @@ const UserCardInfo: React.FC<UserCardInfoProps> = ({
       <UserRegion region={region} />
     </div>
     <div css={rowStyles}>
-      <IconWithLabel icon={<WorkingGroupIcon />}>
+      <IconWithLabel icon={workingGroupIcon}>
         <div css={[listLabelStyles, workingGroupsStyles]}>
           {workingGroups?.length > 0 ? (
             [...workingGroups]
@@ -99,7 +97,7 @@ const UserCardInfo: React.FC<UserCardInfoProps> = ({
       </IconWithLabel>
     </div>
     <div css={rowStyles}>
-      <IconWithLabel icon={<ProjectIcon />}>
+      <IconWithLabel icon={projectIcon}>
         <div css={listLabelStyles}>
           {projects?.length ? (
             [...projects].sort(caseInsensitiveTitle).map(({ id, title }) => (

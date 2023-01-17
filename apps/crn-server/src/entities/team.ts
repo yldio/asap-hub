@@ -49,6 +49,10 @@ export const parseGraphQLTeamMember = (
     throw new Error(`Invalid team role on user ${user.id} : ${role}`);
   }
 
+  if (status && !isTeamStatus(status)) {
+    throw new Error(`Invalid team status on user ${user.id} : ${status}`);
+  }
+
   if (!user.flatData.email) {
     throw new Error(`Email is missing in user ${user.id}`);
   }

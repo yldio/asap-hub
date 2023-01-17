@@ -58,7 +58,7 @@ const FilterPills: React.FC<FilterPillsProps> = ({
         <FilterPill
           key={`region-${index}`}
           filter={entityToSelect({ title: filter, id: filter })}
-          onDelete={async () => {
+          onApplyClick={async () => {
             const regions =
               filters.regions === undefined
                 ? []
@@ -76,21 +76,21 @@ const FilterPills: React.FC<FilterPillsProps> = ({
         <FilterPill
           key={`keyword-${index}`}
           filter={entityToSelect({ title: filter, id: filter })}
-          onDelete={() => {}}
+          onApplyClick={() => {}}
         />
       ))}
       {filters.projects?.map((filter, index) => (
         <FilterPill
           key={`project-${index}`}
           filter={addWorkingGroupLabel(filter)}
-          onDelete={() => {}}
+          onApplyClick={() => {}}
         />
       ))}
       {filters.workingGroups?.map((filter, index) => (
         <FilterPill
           key={`workingGroup-${index}`}
           filter={addProjectLabel(filter)}
-          onDelete={() => {}}
+          onApplyClick={() => {}}
         />
       ))}
     </div>

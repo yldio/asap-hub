@@ -44,17 +44,16 @@ interface FilterProps {
 }
 
 interface FilterPillProps {
-  readonly key: string;
   readonly filter: FilterProps;
-  onDelete: () => void;
+  onApplyClick: () => void;
 }
 
-const FilterPill: React.FC<FilterPillProps> = ({ key, filter, onDelete }) => (
+const FilterPill: React.FC<FilterPillProps> = ({ filter, onApplyClick }) => (
   <span css={[styles]}>
     <Ellipsis>
       <div css={[containerStyles]}>
         <div css={css({ marginRight: rem(8) })}>{filter.label}</div>
-        <Button overrideStyles={css(linksStyles)} onClick={onDelete}>
+        <Button overrideStyles={css(linksStyles)} onClick={onApplyClick}>
           {crossSmallIcon}
         </Button>
       </div>

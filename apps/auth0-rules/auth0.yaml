@@ -1,7 +1,7 @@
 pages:
   - name: login
     enabled: true
-    html: ../crn-auth-frontend/build/index.html
+    html: '../##APPLICATION_NAME##-auth-frontend/build/index.html'
 actions:
   - name: Add Metadata
     code: ./build/post-login-add-metadata.js

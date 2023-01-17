@@ -296,7 +296,8 @@ jobs:
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Deploy CRN
-        if: ${{ inputs.environment-name=='Development' || inputs.environment-name=='Production' }}
+        if: ${{ inputs.environment-name=='Development' }}
+        # if: ${{ inputs.environment-name=='Development' || inputs.environment-name=='Production' }}
         run: yarn workspace @asap-hub/auth0-rules deploy --debug
         env:
           AUTH0_CLIENT_ID: ${{ steps.setup.outputs.crn-ci-auth0-client-id }}
@@ -304,8 +305,7 @@ jobs:
           AUTH0_DOMAIN: ${{ steps.setup.outputs.crn-auth0-domain }}
           APPLICATION_NAME: crn
       - name: Deploy GP2
-        if: ${{ inputs.environment-name=='Branch' }}
-        # if: ${{ inputs.environment-name=='Development' || inputs.environment-name=='Production' }}
+        if: ${{ inputs.environment-name=='Development' || inputs.environment-name=='Production' }}
         run: yarn workspace @asap-hub/auth0-rules deploy --debug
         env:
           AUTH0_CLIENT_ID: ${{ steps.setup.outputs.gp2-ci-auth0-client-id }}

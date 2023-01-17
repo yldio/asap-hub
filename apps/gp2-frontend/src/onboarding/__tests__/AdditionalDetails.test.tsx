@@ -48,7 +48,7 @@ const renderAdditionalDetails = async (id: string) => {
 
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };
-describe('Background', () => {
+describe('AdditionalDetails', () => {
   beforeEach(jest.resetAllMocks);
   const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
 

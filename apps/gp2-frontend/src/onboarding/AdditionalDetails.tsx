@@ -24,7 +24,7 @@ const AdditionalDetails: React.FC<Record<string, never>> = () => {
             onboarding({}).additionalDetails({}).editFundingStreams({}).$
           }
           editContributingCohortsHref={
-            onboarding({}).additionalDetails({}).editFundingStreams({}).$
+            onboarding({}).additionalDetails({}).editContributingCohorts({}).$
           }
           editExternalProfilesHref={
             onboarding({}).additionalDetails({}).editExternalProfiles({}).$

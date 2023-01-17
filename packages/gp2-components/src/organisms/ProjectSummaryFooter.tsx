@@ -2,8 +2,7 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import { utils } from '@asap-hub/react-components';
 
 import { format, formatDistanceStrict as formatDistance } from 'date-fns';
-import dateIcon from '../icons/date-icon';
-import usersIcon from '../icons/users-icon';
+import { dateIcon, usersIcon } from '../icons';
 import IconWithLabel from '../molecules/IconWithLabel';
 import colors from '../templates/colors';
 

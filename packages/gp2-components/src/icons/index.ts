@@ -19,5 +19,6 @@ export { default as regionNorthAmericaIcon } from './region-north-america-icon';
 export { default as regionSouthAmericaIcon } from './region-south-america-icon';
 export { default as rightArrowIcon } from './right-arrow-icon';
 export { default as roleIcon } from './role-icon';
+export { default as userIcon } from './user-icon';
 export { default as usersIcon } from './users-icon';
 export { default as workingGroupIcon } from './working-group-icon';

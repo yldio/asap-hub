@@ -5,8 +5,7 @@ import { css } from '@emotion/react';
 import { nonMobileQuery } from '../layout';
 import colors from '../templates/colors';
 import { IconWithLabel } from '../molecules';
-import userIcon from '../icons/user-icon';
-import usersIcon from '../icons/users-icon';
+import { userIcon, usersIcon } from '../icons';
 
 const { rem } = pixels;
 const { getCounterString } = utils;

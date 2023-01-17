@@ -8,9 +8,8 @@ import {
   NavigationLink,
   pixels,
 } from '@asap-hub/react-components';
-import { workingGroupIcon } from '../icons';
+import { workingGroupIcon, projectIcon } from '../icons';
 import { nonMobileQuery } from '../layout';
-import projectIcon from '../icons/project-icon';
 
 const { vminLinearCalc, mobileScreen, largeDesktopScreen, rem } = pixels;
 const { projects: projectsRoute, workingGroups: workingGroupRoute } =

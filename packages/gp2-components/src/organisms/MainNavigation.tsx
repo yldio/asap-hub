@@ -2,10 +2,12 @@ import { drawerQuery, pixels } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React from 'react';
-import dashboardIcon from '../icons/dashboard-icon';
-import projectIcon from '../icons/project-icon';
-import usersIcon from '../icons/users-icon';
-import workingGroupIcon from '../icons/working-group-icon';
+import {
+  dashboardIcon,
+  projectIcon,
+  usersIcon,
+  workingGroupIcon,
+} from '../icons';
 import NavigationLink from '../molecules/NavigationLink';
 
 const { workingGroups, users, projects } = gp2;

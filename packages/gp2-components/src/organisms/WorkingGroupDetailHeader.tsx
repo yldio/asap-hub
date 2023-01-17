@@ -11,8 +11,7 @@ import {
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 
 import { css } from '@emotion/react';
-import projectIcon from '../icons/project-icon';
-import usersIcon from '../icons/users-icon';
+import { projectIcon, usersIcon } from '../icons';
 import { workingGroupsImage } from '../images';
 import CardWithBackground from '../molecules/CardWithBackground';
 import IconWithLabel from '../molecules/IconWithLabel';

@@ -149,7 +149,7 @@ describe('UserOverview', () => {
         <UserOverview {...defaultProps} fundingStreams={fundingStreams} />,
       );
       expect(
-        screen.getByRole('heading', { name: 'Funding Streams' }),
+        screen.getByRole('heading', { name: 'Funding Providers' }),
       ).toBeInTheDocument();
       expect(screen.getByText(fundingStreams)).toBeVisible();
     });

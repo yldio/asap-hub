@@ -19,12 +19,14 @@ export const isEnabled = (flag: Flag): boolean =>
 export const getOverrides = (): Flags => overrides;
 
 export const setCurrentOverrides = (flags?: Record<string, boolean>): void => {
-  overrides = Object.entries(overrides).reduce<
-    Record<string, boolean | undefined>
-  >((acc, [name, val]) => {
-    acc[name] = flags && flags[name] !== undefined ? flags[name] : val;
-    return acc;
-  }, {});
+  if (flags) {
+    overrides = Object.entries(flags).reduce<
+      Record<string, boolean | undefined>
+    >((acc, [name, val]) => {
+      acc[name] = flags && flags[name] !== undefined ? flags[name] : val;
+      return acc;
+    }, overrides);
+  }
 };
 const setOverride = (flag: Flag, value: boolean): void => {
   overrides = { ...overrides, [flag]: value };

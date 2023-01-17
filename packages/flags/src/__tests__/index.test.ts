@@ -34,6 +34,18 @@ describe('in test', () => {
   });
 
   describe('setCurrentOverrides,', () => {
+    it('overrides a given set of flags when overrides is empty', () => {
+      reset();
+
+      const actualOverrides = getOverrides();
+      expect(actualOverrides).toEqual({});
+
+      setCurrentOverrides({
+        PERSISTENT_EXAMPLE: true,
+      });
+      expect(isEnabled('PERSISTENT_EXAMPLE')).toBe(true);
+    });
+
     it('overrides a given set of flags', () => {
       disable('PERSISTENT_EXAMPLE');
 

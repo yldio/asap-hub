@@ -17,6 +17,7 @@ const { onboarding } = gp2Routing;
 const OnboardingCoreDetails: React.FC<OnboardingCoreDetailProps> = ({
   email,
   secondaryEmail,
+  onImageSelect,
   ...headerProps
 }) => (
   <>
@@ -27,6 +28,7 @@ const OnboardingCoreDetails: React.FC<OnboardingCoreDetailProps> = ({
     <UserDetailHeaderCard
       {...headerProps}
       edit={onboarding({}).coreDetails({}).editKeyInfo({}).$}
+      onImageSelect={onImageSelect}
     />
     <UserContactInformation
       editHref={onboarding({}).coreDetails({}).editContactInfo({}).$}

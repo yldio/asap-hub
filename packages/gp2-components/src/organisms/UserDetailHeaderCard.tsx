@@ -1,5 +1,11 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { Avatar, Headline3, Link, pixels } from '@asap-hub/react-components';
+import {
+  Avatar,
+  Headline3,
+  Link,
+  pixels,
+  uploadIcon,
+} from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { addIcon } from '../icons';
 import locationIcon from '../icons/location-icon';
@@ -9,6 +15,7 @@ import { mobileQuery, nonMobileQuery } from '../layout';
 import CardWithBackground from '../molecules/CardWithBackground';
 import IconWithLabel from '../molecules/IconWithLabel';
 import UserRegion from '../molecules/UserRegion';
+import colors from '../templates/colors';
 
 const { rem } = pixels;
 
@@ -27,6 +34,7 @@ type UserDetailHeaderCardProps = Pick<
   | 'positions'
 > & {
   edit?: string;
+  readonly onImageSelect?: (file: File) => void;
 };
 
 const avatarSize = 132;
@@ -86,16 +94,66 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
   country,
   positions,
   edit,
+  onImageSelect,
 }) => (
   <CardWithBackground image={usersHeaderImage}>
     <div css={containerStyles}>
-      <div css={css({ gridArea: 'avatar' })}>
-        <Avatar
-          imageUrl={avatarUrl}
-          firstName={firstName}
-          lastName={lastName}
-          overrideStyles={avatarStyles}
-        />
+      <div
+        css={css({
+          gridArea: 'avatar',
+          display: 'grid',
+          width: rem(avatarSize),
+          height: rem(avatarSize),
+        })}
+      >
+        <div css={css({ gridRow: 1, gridColumn: 1 })}>
+          <Avatar
+            imageUrl={avatarUrl}
+            firstName={firstName}
+            lastName={lastName}
+            overrideStyles={avatarStyles}
+          />
+        </div>
+        <div
+          css={css({
+            gridRow: 1,
+            gridColumn: 1,
+            alignSelf: 'center',
+            justifySelf: 'center',
+          })}
+        >
+          {onImageSelect && (
+            <label>
+              <Link
+                buttonStyle
+                href={undefined}
+                label="Edit Avatar"
+                // enabled={!avatarSaving}
+              >
+                <span
+                  css={css({
+                    svg: {
+                      stroke: colors.neutral900.rgb,
+                    },
+                  })}
+                >
+                  {uploadIcon}
+                </span>
+                <input
+                  // disabled={avatarSaving}
+                  type="file"
+                  accept="image/x-png,image/jpeg"
+                  aria-label="Upload Avatar"
+                  onChange={(event) =>
+                    event.target.files?.length &&
+                    onImageSelect(event.target.files[0])
+                  }
+                  css={{ display: 'none' }}
+                />
+              </Link>
+            </label>
+          )}
+        </div>
       </div>
 
       <div css={[rowStyles, { gridArea: 'headline' }]}>

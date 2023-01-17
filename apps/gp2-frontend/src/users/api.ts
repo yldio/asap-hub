@@ -88,6 +88,28 @@ export const patchUser = async (
   return resp.json();
 };
 
+export const postUserAvatar = async (
+  id: string,
+  post: gp2.UserAvatarPostRequest,
+  authorization: string,
+): Promise<gp2.UserResponse> => {
+  const resp = await fetch(`${API_BASE_URL}/users/${id}/avatar`, {
+    method: 'POST',
+    headers: {
+      authorization,
+      'content-type': 'application/json',
+      ...createSentryHeaders(),
+    },
+    body: JSON.stringify(post),
+  });
+  if (!resp.ok) {
+    throw new Error(
+      `Failed to update avatar for user with id ${id}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+    );
+  }
+  return resp.json();
+};
+
 export const getInstitutions = async ({
   searchQuery,
 }: {

@@ -118,6 +118,10 @@ export type UserPatchRequest = Omit<
   'avatarUrl' | 'connections' | 'email' | 'role'
 >;
 
+export type UserAvatarPostRequest = {
+  avatar: string;
+};
+
 export type ListUserDataObject = ListResponse<UserDataObject>;
 
 export interface UserResponse extends Omit<UserDataObject, 'connections'> {

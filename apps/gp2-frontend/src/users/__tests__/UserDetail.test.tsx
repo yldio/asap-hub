@@ -80,7 +80,7 @@ describe('UserDetail', () => {
         screen.getByRole('heading', { name: /Contact information/i }),
       ).toBeVisible();
       expect(
-        screen.getByRole('heading', { name: /funding streams/i }),
+        screen.getByRole('heading', { name: /funding providers/i }),
       ).toBeVisible();
     });
   });

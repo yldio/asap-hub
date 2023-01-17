@@ -10,7 +10,12 @@ const UserFundingStreams: React.FC<UserFundingStreamsProps> = ({
   fundingStreams,
   editHref,
 }) => (
-  <EditableCard editHref={editHref} title="Funding Providers" edit={!!fundingStreams} optional>
+  <EditableCard
+    editHref={editHref}
+    title="Funding Providers"
+    edit={!!fundingStreams}
+    optional
+  >
     {editHref && !fundingStreams ? (
       <UserProfilePlaceholderCard>
         List out the funding providers that you recieve in order to carry out

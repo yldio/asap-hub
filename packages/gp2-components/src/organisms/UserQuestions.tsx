@@ -1,5 +1,9 @@
 import { gp2 } from '@asap-hub/model';
-import { Paragraph, pixels, UserProfilePlaceholderCard } from '@asap-hub/react-components';
+import {
+  Paragraph,
+  pixels,
+  UserProfilePlaceholderCard,
+} from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import EditableCard from '../molecules/EditableCard';
@@ -10,8 +14,7 @@ const { rem } = pixels;
 type UserQuestionsProps = {
   questions: gp2.UserResponse['questions'];
   firstName: string;
-} &
-  Pick<ComponentProps<typeof EditableCard>, 'editHref'>;
+} & Pick<ComponentProps<typeof EditableCard>, 'editHref'>;
 
 const contentStyles = css({
   padding: `${rem(16)} 0`,
@@ -32,7 +35,12 @@ const UserQuestions: React.FC<UserQuestionsProps> = ({
   firstName,
   editHref,
 }) => (
-  <EditableCard editHref={editHref} title="Questions" edit={!!questions.length} optional>
+  <EditableCard
+    editHref={editHref}
+    title="Open Questions"
+    edit={!!questions.length}
+    optional
+  >
     {editHref && !questions.length ? (
       <UserProfilePlaceholderCard>
         Share the research questions that interest you and drive your work. This

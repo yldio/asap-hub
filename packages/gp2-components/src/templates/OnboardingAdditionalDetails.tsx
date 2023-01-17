@@ -7,14 +7,17 @@ import UserQuestions from '../organisms/UserQuestions';
 
 type OnboardingAdditionalDetailsProps = Pick<
   gp2.UserResponse,
-  'questions' | 'firstName' | 'fundingStreams' | 'contributingCohorts' | 'social'
-> &
-  {
-    editQuestionsHref: string;
-    editFundingStreamsHref: string;
-    editContributingCohortsHref: string;
-    editExternalProfilesHref: string;
-  };
+  | 'questions'
+  | 'firstName'
+  | 'fundingStreams'
+  | 'contributingCohorts'
+  | 'social'
+> & {
+  editQuestionsHref: string;
+  editFundingStreamsHref: string;
+  editContributingCohortsHref: string;
+  editExternalProfilesHref: string;
+};
 const OnboardingAdditionalDetails: React.FC<
   OnboardingAdditionalDetailsProps
 > = ({

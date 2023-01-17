@@ -1,5 +1,8 @@
 import { gp2 } from '@asap-hub/model';
-import { ExternalLink, UserProfilePlaceholderCard } from '@asap-hub/react-components';
+import {
+  ExternalLink,
+  UserProfilePlaceholderCard,
+} from '@asap-hub/react-components';
 import { ComponentProps } from 'react';
 import { CollapsibleTable, EditableCard } from '../molecules';
 

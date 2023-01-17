@@ -68,13 +68,13 @@ const socialNetworkKeys: Array<keyof UserSocial> = [
   'github',
 ];
 
-type UserExternalProfilesProps = Pick<
-  gp2.UserResponse,
-  'social'
-> &
+type UserExternalProfilesProps = Pick<gp2.UserResponse, 'social'> &
   Pick<ComponentProps<typeof EditableCard>, 'editHref'>;
 
-const UserExternalProfiles: React.FC<UserExternalProfilesProps> = ({ social, editHref }) => {
+const UserExternalProfiles: React.FC<UserExternalProfilesProps> = ({
+  social,
+  editHref,
+}) => {
   const filterSocial = (key: keyof UserSocial) => !!social?.[key];
   const mapSocialInfo = (key: keyof UserSocial) => ({
     key,

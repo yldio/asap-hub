@@ -33,8 +33,9 @@ const OnboardingAdditionalDetails: React.FC<
 }) => (
   <>
     <Paragraph noMargin>
-      Next up, we’d like to capture some more information around your skills and
-      experiences in order to help others to understand your areas of focus.
+      Adding additional details to your profile will help to tell other members
+      your story and contact you regarding relevant conversations. This step is
+      completely optional.
     </Paragraph>
     <UserQuestions
       firstName={firstName}

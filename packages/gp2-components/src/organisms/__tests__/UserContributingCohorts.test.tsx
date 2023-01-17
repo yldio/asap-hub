@@ -16,11 +16,15 @@ describe('UserContributingCohorts', () => {
       }),
     );
   const firstName: gp2.UserResponse['firstName'] = 'John';
-  const renderUserCohorts = (contributingCohorts: ContributingCohort[]) =>
+  const renderUserCohorts = (
+    contributingCohorts: ContributingCohort[],
+    editHref?: string,
+  ) =>
     render(
       <UserContributingCohorts
         contributingCohorts={contributingCohorts}
         firstName={firstName}
+        editHref={editHref}
       />,
     );
 
@@ -87,5 +91,18 @@ describe('UserContributingCohorts', () => {
     const button = screen.getByRole('button', { name: /Show more/i });
     userEvent.click(button);
     expect(screen.getByText('a name 3')).toBeVisible();
+  });
+
+  describe('if no contributing cohorts', () => {
+    it('renders placeholder when theres an edit link', () => {
+      renderUserCohorts([]);
+      expect(
+        screen.queryByText(/list out the contributing cohort studies/i),
+      ).not.toBeInTheDocument();
+      renderUserCohorts([], '/');
+      expect(
+        screen.getByText(/list out the contributing cohort studies/i),
+      ).toBeVisible();
+    });
   });
 });

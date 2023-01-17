@@ -22,6 +22,6 @@ describe('OnboardingBackground', () => {
   });
   it('renders the biography card', () => {
     render(<OnboardingBackground {...defaultProps} />);
-    expect(screen.getByRole('heading', { name: 'Keywords' })).toBeVisible();
+    expect(screen.getByRole('heading', { name: 'Biography' })).toBeVisible();
   });
 });

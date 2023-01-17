@@ -40,7 +40,6 @@ type ResearchOutputExtraInformationProps = Pick<
   isSaving: boolean;
   documentType: ResearchOutputDocumentType;
   researchTags: ResearchTagResponse[];
-  type: ResearchOutputPostRequest['type'] | '';
 } & Omit<ResearchOutputIdentifierProps, 'required'>;
 
 const ResearchOutputExtraInformationCard: React.FC<

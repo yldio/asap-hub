@@ -307,7 +307,6 @@ const ResearchOutputTeamForm: React.FC<ResearchOutputTeamFormProps> = ({
                 onChangeOrganisms={setOrganisms}
                 environments={environments}
                 onChangeEnvironments={setEnvironments}
-                type={type}
               />
               <ResearchOutputContributorsCard
                 isSaving={isSaving}

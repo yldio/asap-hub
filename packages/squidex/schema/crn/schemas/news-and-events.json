@@ -12,7 +12,6 @@
     "fieldsInLists": [
       "meta.status.color",
       "thumbnail",
-      "type",
       "title",
       "shortText",
       "text",

@@ -1,9 +1,11 @@
 import { gp2 } from '@asap-hub/model';
 import { Paragraph } from '@asap-hub/react-components';
-import { UserContributingCohorts } from '../organisms';
-import UserExternalProfiles from '../organisms/UserExternalProfiles';
-import UserFundingStreams from '../organisms/UserFundingStreams';
-import UserQuestions from '../organisms/UserQuestions';
+import {
+  UserContributingCohorts,
+  UserExternalProfiles,
+  UserFundingStreams,
+  UserQuestions,
+} from '../organisms';
 
 type OnboardingAdditionalDetailsProps = Pick<
   gp2.UserResponse,

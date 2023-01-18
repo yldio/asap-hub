@@ -7,15 +7,17 @@ import {
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
-import UserQuestions from '../organisms/UserQuestions';
-import UserProjects from '../organisms/UserProjects';
-import UserWorkingGroups from '../organisms/UserWorkingGroups';
-import { UserContributingCohorts } from '../organisms';
-import UserExternalProfiles from '../organisms/UserExternalProfiles';
-import UserBiography from '../organisms/UserBiography';
-import UserKeywords from '../organisms/UserKeywords';
-import UserContactInformation from '../organisms/UserContactInformation';
-import UserFundingStreams from '../organisms/UserFundingStreams';
+import {
+  UserBiography,
+  UserContactInformation,
+  UserContributingCohorts,
+  UserExternalProfiles,
+  UserFundingStreams,
+  UserKeywords,
+  UserQuestions,
+  UserProjects,
+  UserWorkingGroups,
+} from '../organisms';
 
 type UserOverviewProps = Pick<
   gp2.UserResponse,

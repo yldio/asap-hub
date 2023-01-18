@@ -80,9 +80,7 @@ Create a connection named `ORCID` and configure as follows:
 
 Enable for all
 
-## Auth0 Connect User Rule
-
-Create a new rule and configure as follows:
+## Auth0 Connect User Action
 
 **Settings**
 
@@ -98,14 +96,9 @@ function() {
 }
 ```
 
-Where `$CONNECT_USER` is the [build output](../../apps/auth0-rules/build/connect-user.js) of `@asap-hub/auth0-rules`.
+Where `$CONNECT_USER` is the [build output](../../apps/auth0/build/connect-user.js) of `@asap-hub/auth0`.
 
-> You'll need to force the import of a specific `got` version. On the Auth0 editor, where you find `require('got')` replace by `require('got@$VERSION')`, where \$VERSION is the version that `yarn why got` shows for `@asap-hub/auth0-rules`.
-> **Make sure the required version is supported by Auth0. You can check [here](https://auth0-extensions.github.io/canirequire)**
-
-## Auth0 Add User Metadata Rule
-
-Create a new rule and configure as follows:
+## Auth0 Add User Metadata Action
 
 **Settings**
 
@@ -121,9 +114,4 @@ function() {
 }
 ```
 
-Where `$ADD_USER_METADATA` is the [build output](../../apps/auth0-rules/build/add-user-metadata.js) of `@asap-hub/auth0-rules`.
-
-**For dev, check for commented out code that needs to be commented in.**
-
-> You'll need to force the import of a specific imports for example `got`. On the Auth0 editor, where you find `require('got')` replace by `require('got@$VERSION')`, where \$VERSION is the version that `yarn why got` shows for `@asap-hub/auth0-rules`.
-> **Make sure the required version is supported by Auth0. You can check [here](https://auth0-extensions.github.io/canirequire)**
+Where `$ADD_USER_METADATA` is the [build output](../../apps/auth0/build/add-user-metadata.js) of `@asap-hub/auth0`.

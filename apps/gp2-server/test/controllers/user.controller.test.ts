@@ -247,7 +247,7 @@ describe('Users controller', () => {
       };
       userDataProviderMock.fetch.mockResolvedValue({
         total: 1,
-        items: [{ ...user, id: userId }],
+        items: [{ ...user, activatedDate: undefined }],
       });
       userDataProviderMock.fetchById.mockResolvedValue(user);
       const result = await userController.connectByCode(
@@ -274,7 +274,7 @@ describe('Users controller', () => {
       };
       userDataProviderMock.fetch.mockResolvedValue({
         total: 1,
-        items: [{ ...user, id: userId }],
+        items: [user],
       });
       userDataProviderMock.fetchById.mockResolvedValue(user);
       await userController.connectByCode('some code', 'auth-user-id');

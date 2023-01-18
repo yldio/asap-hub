@@ -128,16 +128,11 @@ describe('POST /webhook/users/connections - success', () => {
 
     const squidexGraphqlMocks = jest
       .spyOn(SquidexGraphql.prototype, 'request')
-      .mockImplementationOnce(() => Promise.resolve(response))
-      .mockImplementationOnce(() =>
-        Promise.resolve(getSquidexUserGraphqlResponse()),
-      );
+      .mockResolvedValueOnce(response)
+      .mockResolvedValueOnce(getSquidexUserGraphqlResponse());
 
     nock(baseUrl)
-      .patch(`/api/content/${appName}/users/${user.id}`, {
-        email: { iv: email },
-        connections: { iv: [{ code: userId }] },
-      })
+      .patch(`/api/content/${appName}/users/${user.id}`)
       .reply(200, patchedUser);
 
     const res = (await rawHandler(

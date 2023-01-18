@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import {
   DecisionOption,
   ResearchOutputDocumentType,
+  researchOutputDocumentTypeToType,
   ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
   ResearchOutputPublishingEntities,
@@ -241,7 +242,6 @@ const ResearchOutputTeamForm: React.FC<ResearchOutputTeamFormProps> = ({
           {({ isSaving, onSave: handleSave, onCancel: handleCancel }) => (
             <div css={contentStyles}>
               <ResearchOutputFormSharingCard
-                documentType={documentType}
                 serverValidationErrors={serverValidationErrors}
                 clearServerValidationError={clearServerValidationError}
                 isSaving={isSaving}
@@ -272,6 +272,10 @@ const ResearchOutputTeamForm: React.FC<ResearchOutputTeamFormProps> = ({
                 onChangePublishDate={(date) =>
                   setPublishDate(date ? new Date(date) : undefined)
                 }
+                typeOptions={Array.from(
+                  researchOutputDocumentTypeToType[documentType],
+                )}
+                urlRequired={documentType !== 'Lab Resource'}
                 typeDescription={
                   publishingEntity === 'Team'
                     ? `Select the option that applies to this ${documentType.toLowerCase()}.`

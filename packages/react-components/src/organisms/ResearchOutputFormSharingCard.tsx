@@ -1,6 +1,5 @@
 import {
   DecisionOption,
-  researchOutputDocumentTypeToType,
   ResearchOutputPostRequest,
   ResearchOutputSharingStatus,
   ResearchOutputType,
@@ -23,12 +22,7 @@ import { noop } from '../utils';
 
 type ResearchOutputFormSharingCardProps = Pick<
   ResearchOutputPostRequest,
-  | 'link'
-  | 'title'
-  | 'description'
-  | 'documentType'
-  | 'sharingStatus'
-  | 'subtype'
+  'link' | 'title' | 'description' | 'sharingStatus' | 'subtype'
 > & {
   type: ResearchOutputType | '';
   onChangeLink?: (newValue: string) => void;
@@ -49,6 +43,8 @@ type ResearchOutputFormSharingCardProps = Pick<
   clearServerValidationError?: (instancePath: string) => void;
   typeDescription?: string;
   descriptionTip?: string;
+  urlRequired?: boolean;
+  typeOptions?: ResearchOutputType[];
 };
 
 export const getPublishDateValidationMessage = (e: ValidityState): string => {
@@ -65,8 +61,8 @@ const ResearchOutputFormSharingCard: React.FC<
   link,
   title,
   description,
-  documentType,
   type,
+  typeOptions = [],
   subtype,
   asapFunded,
   usedInPublication,
@@ -76,6 +72,7 @@ const ResearchOutputFormSharingCard: React.FC<
   serverValidationErrors = [],
   typeDescription,
   descriptionTip,
+  urlRequired,
   clearServerValidationError = noop,
   onChangeDescription = noop,
   onChangeLink = noop,
@@ -87,8 +84,6 @@ const ResearchOutputFormSharingCard: React.FC<
   onChangeSharingStatus = noop,
   onChangePublishDate = noop,
 }) => {
-  const urlRequired = documentType !== 'Lab Resource';
-  const urlSubtitle = urlRequired ? '(required)' : '(optional)';
   const [urlValidationMessage, setUrlValidationMessage] = useState<string>();
   const [titleValidationMessage, setTitleValidationMessage] =
     useState<string>();
@@ -118,7 +113,8 @@ const ResearchOutputFormSharingCard: React.FC<
     <FormCard title="What are you sharing?">
       <LabeledTextField
         title="URL"
-        subtitle={urlSubtitle}
+        subtitle={urlRequired ? '(required)' : '(optional)'}
+        required={urlRequired}
         pattern={UrlExpression}
         onChange={(newValue) => {
           clearServerValidationError('/link');
@@ -132,30 +128,29 @@ const ResearchOutputFormSharingCard: React.FC<
         }
         value={link ?? ''}
         enabled={!isSaving}
-        required={urlRequired}
         labelIndicator={<GlobeIcon />}
         placeholder="https://example.com"
       />
-      <LabeledDropdown<ResearchOutputType | ''>
-        title="Type"
-        subtitle="(required)"
-        description={typeDescription}
-        options={[
-          ...researchOutputDocumentTypeToType[documentType].values(),
-        ].map((option) => ({
-          value: option,
-          label: option,
-        }))}
-        onChange={(selectedType) => onChangeType(selectedType)}
-        getValidationMessage={() => 'Please choose a type'}
-        value={type ?? ''}
-        enabled={!isSaving}
-        required
-        noOptionsMessage={(option) =>
-          `Sorry, no types match ${option.inputValue}`
-        }
-        placeholder="Choose a type"
-      />
+      {typeOptions.length && (
+        <LabeledDropdown<ResearchOutputType | ''>
+          title="Type"
+          subtitle="(required)"
+          description={typeDescription}
+          options={typeOptions.map((option) => ({
+            value: option,
+            label: option,
+          }))}
+          onChange={(selectedType) => onChangeType(selectedType)}
+          getValidationMessage={() => 'Please choose a type'}
+          value={type ?? ''}
+          enabled={!isSaving}
+          required
+          noOptionsMessage={(option) =>
+            `Sorry, no types match ${option.inputValue}`
+          }
+          placeholder="Choose a type"
+        />
+      )}
       {subtypeSuggestions.length > 0 && (
         <LabeledDropdown
           title="Subtype"

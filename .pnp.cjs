@@ -52,8 +52,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:apps/asap-cli"\
       },\
       {\
-        "name": "@asap-hub/auth0-actions",\
-        "reference": "workspace:apps/auth0-actions"\
+        "name": "@asap-hub/auth0",\
+        "reference": "workspace:apps/auth0"\
       },\
       {\
         "name": "@asap-hub/crn-auth-frontend",\
@@ -204,7 +204,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@asap-hub/auth", ["workspace:packages/auth"]],\
       ["@asap-hub/auth-frontend-scripts", ["workspace:packages/auth-frontend-scripts"]],\
       ["@asap-hub/auth-frontend-utils", ["workspace:packages/auth-frontend-utils"]],\
-      ["@asap-hub/auth0-actions", ["workspace:apps/auth0-actions"]],\
+      ["@asap-hub/auth0", ["workspace:apps/auth0"]],\
       ["@asap-hub/cms-data-sync", ["workspace:packages/cms-data-sync"]],\
       ["@asap-hub/contentful", ["workspace:packages/contentful"]],\
       ["@asap-hub/crn-auth-frontend", ["workspace:apps/crn-auth-frontend"]],\
@@ -356,8 +356,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "workspace:packages/auth-frontend-utils"\
       ],\
       [\
-        "@asap-hub/auth0-actions",\
-        "workspace:apps/auth0-actions"\
+        "@asap-hub/auth0",\
+        "workspace:apps/auth0"\
       ],\
       [\
         "@asap-hub/cms-data-sync",\
@@ -10703,11 +10703,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT"\
         }]\
       ]],\
-      ["@asap-hub/auth0-actions", [\
-        ["workspace:apps/auth0-actions", {\
-          "packageLocation": "./apps/auth0-actions/",\
+      ["@asap-hub/auth0", [\
+        ["workspace:apps/auth0", {\
+          "packageLocation": "./apps/auth0/",\
           "packageDependencies": [\
-            ["@asap-hub/auth0-actions", "workspace:apps/auth0-actions"],\
+            ["@asap-hub/auth0", "workspace:apps/auth0"],\
             ["@asap-hub/auth", "workspace:packages/auth"],\
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],\
             ["@asap-hub/model", "workspace:packages/model"],\

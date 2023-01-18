@@ -96,7 +96,7 @@ function() {
 }
 ```
 
-Where `$CONNECT_USER` is the [build output](../../apps/auth0-actions/build/connect-user.js) of `@asap-hub/auth0-actions`.
+Where `$CONNECT_USER` is the [build output](../../apps/auth0/build/connect-user.js) of `@asap-hub/auth0`.
 
 ## Auth0 Add User Metadata Action
 
@@ -114,4 +114,4 @@ function() {
 }
 ```
 
-Where `$ADD_USER_METADATA` is the [build output](../../apps/auth0-actions/build/add-user-metadata.js) of `@asap-hub/auth0-actions`.
+Where `$ADD_USER_METADATA` is the [build output](../../apps/auth0/build/add-user-metadata.js) of `@asap-hub/auth0`.

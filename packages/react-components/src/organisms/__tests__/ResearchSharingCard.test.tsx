@@ -14,7 +14,6 @@ const props: ComponentProps<typeof ResearchOutputFormSharingCard> = {
   title: '',
   link: '',
   type: '',
-  documentType: 'Article',
   asapFunded: 'Not Sure',
   usedInPublication: 'Not Sure',
   sharingStatus: 'Network Only',
@@ -24,11 +23,11 @@ it('renders the card with provided values', () => {
   render(
     <ResearchOutputFormSharingCard
       {...props}
-      documentType="Article"
       description="description"
       link="http://example.com"
       title="title"
       type={'Preprint'}
+      typeOptions={['Preprint', '3D Printing']}
     />,
   );
   expect(screen.getByDisplayValue('description')).toBeVisible();
@@ -44,16 +43,20 @@ it.each`
   ${'Title'}       | ${/title/i}       | ${'Please enter a title'}
   ${'Type'}        | ${/type/i}        | ${'Please choose a type'}
 `('shows error message for missing value $title', async ({ label, error }) => {
-  render(<ResearchOutputFormSharingCard {...props} />);
+  render(
+    <ResearchOutputFormSharingCard
+      {...props}
+      urlRequired
+      typeOptions={['3D Printing']}
+    />,
+  );
   const input = screen.getByLabelText(label);
   fireEvent.focusOut(input);
   expect(await screen.findByText(error)).toBeVisible();
 });
 
-it('lab resource does not require an url', async () => {
-  render(
-    <ResearchOutputFormSharingCard {...props} documentType="Lab Resource" />,
-  );
+it('does not require an url', async () => {
+  render(<ResearchOutputFormSharingCard {...props} urlRequired={false} />);
   expect(
     await screen.findByText(
       (content, node) =>
@@ -111,7 +114,7 @@ it('triggers an on change for type', async () => {
   render(
     <ResearchOutputFormSharingCard
       {...props}
-      documentType="Article"
+      typeOptions={['Preprint', '3D Printing', 'ASAP subgroup meeting']}
       onChangeType={onChangeFn}
     />,
   );
@@ -129,7 +132,6 @@ it('triggers an on change for subtype', async () => {
   render(
     <ResearchOutputFormSharingCard
       {...props}
-      documentType="Article"
       researchTags={[researchTagSubtypeResponse]}
       onChangeSubtype={onChangeFn}
     />,
@@ -143,7 +145,12 @@ it('triggers an on change for subtype', async () => {
 });
 
 it('shows the custom no options message for type', async () => {
-  render(<ResearchOutputFormSharingCard {...props} documentType="Article" />);
+  render(
+    <ResearchOutputFormSharingCard
+      {...props}
+      typeOptions={['ASAP annual meeting', '3D Printing']}
+    />,
+  );
 
   userEvent.type(screen.getByLabelText(/type/i), 'asdflkjasdflkj');
 
@@ -154,20 +161,12 @@ it('shows the custom no options message for type', async () => {
 
 it('conditionally shows date published field', async () => {
   const { rerender } = render(
-    <ResearchOutputFormSharingCard
-      {...props}
-      documentType="Article"
-      sharingStatus={'Network Only'}
-    />,
+    <ResearchOutputFormSharingCard {...props} sharingStatus={'Network Only'} />,
   );
   expect(screen.queryByLabelText(/Date Published/i)).not.toBeInTheDocument();
 
   rerender(
-    <ResearchOutputFormSharingCard
-      {...props}
-      documentType="Article"
-      sharingStatus={'Public'}
-    />,
+    <ResearchOutputFormSharingCard {...props} sharingStatus={'Public'} />,
   );
   expect(screen.queryByLabelText(/Date Published/i)).toBeVisible();
 });
@@ -178,7 +177,6 @@ it('triggers an on change for date published', async () => {
   render(
     <ResearchOutputFormSharingCard
       {...props}
-      documentType="Article"
       sharingStatus={'Public'}
       onChangePublishDate={onChangeFn}
     />,
@@ -192,7 +190,6 @@ it('shows the custom error message for a date in the future', async () => {
   render(
     <ResearchOutputFormSharingCard
       {...props}
-      documentType="Article"
       sharingStatus={'Public'}
       publishDate={startOfTomorrow()}
     />,

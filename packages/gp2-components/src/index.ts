@@ -50,6 +50,7 @@ export {
   DashboardPage,
   DashboardPageBody,
   Layout,
+  OnboardingAdditionalDetails,
   OnboardingBackground,
   OnboardingCoreDetails,
   OnboardingPage,

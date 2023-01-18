@@ -4,6 +4,7 @@ export { default as DashboardPageBody } from './DashboardPageBody';
 export { default as Layout } from './Layout';
 export { default as OnboardingCoreDetails } from './OnboardingCoreDetails';
 export { default as OnboardingBackground } from './OnboardingBackground';
+export { default as OnboardingAdditionalDetails } from './OnboardingAdditionalDetails';
 export { default as OnboardingPage } from './OnboardingPage';
 export { default as OnboardingWelcome } from './OnboardingWelcome';
 export { default as ProjectDetailPage } from './ProjectDetailPage';

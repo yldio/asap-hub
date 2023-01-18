@@ -7,15 +7,17 @@ import {
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
-import ExpandableText from '../molecules/ExpandableText';
-import UserQuestions from '../organisms/UserQuestions';
-import UserProjects from '../organisms/UserProjects';
-import UserWorkingGroups from '../organisms/UserWorkingGroups';
-import { UserContributingCohorts } from '../organisms';
-import UserExternalProfiles from '../organisms/UserExternalProfiles';
-import UserBiography from '../organisms/UserBiography';
-import UserKeywords from '../organisms/UserKeywords';
-import UserContactInformation from '../organisms/UserContactInformation';
+import {
+  UserBiography,
+  UserContactInformation,
+  UserContributingCohorts,
+  UserExternalProfiles,
+  UserFundingStreams,
+  UserKeywords,
+  UserQuestions,
+  UserProjects,
+  UserWorkingGroups,
+} from '../organisms';
 
 type UserOverviewProps = Pick<
   gp2.UserResponse,
@@ -40,10 +42,6 @@ const containerStyles = css({
   flexDirection: 'column',
   gap: rem(32),
   padding: `${rem(32)} 0 ${rem(48)}`,
-});
-
-const contentStyles = css({
-  paddingTop: rem(32),
 });
 
 const columnStyles = css({
@@ -96,43 +94,17 @@ const UserOverview: React.FC<UserOverviewProps> = ({
       </Card>
     )}
     {questions.length > 0 && (
-      <Card padding={false}>
-        <div css={cardStyles}>
-          <Headline3 noMargin>Open Questions</Headline3>
-          <UserQuestions questions={questions} firstName={firstName} />
-        </div>
-      </Card>
+      <UserQuestions questions={questions} firstName={firstName} />
     )}
-    {fundingStreams && (
-      <Card padding={false}>
-        <div css={cardStyles}>
-          <Headline3 noMargin>Funding Streams</Headline3>
-          <div css={contentStyles}>
-            <ExpandableText>{fundingStreams}</ExpandableText>
-          </div>
-        </div>
-      </Card>
-    )}
+    {fundingStreams && <UserFundingStreams fundingStreams={fundingStreams} />}
     {contributingCohorts.length > 0 && (
-      <Card padding={false}>
-        <div css={cardStyles}>
-          <Headline3 noMargin>Contributing Cohort Studies</Headline3>
-          <UserContributingCohorts
-            contributingCohorts={contributingCohorts}
-            firstName={firstName}
-          />
-        </div>
-      </Card>
+      <UserContributingCohorts
+        contributingCohorts={contributingCohorts}
+        firstName={firstName}
+      />
     )}
     {social && Object.values(social).filter((value) => !!value) && (
-      <Card padding={false}>
-        <div css={cardStyles}>
-          <Headline3 noMargin>External Profiles</Headline3>
-          <div css={contentStyles}>
-            <UserExternalProfiles social={social} />
-          </div>
-        </div>
-      </Card>
+      <UserExternalProfiles social={social} />
     )}
   </div>
 );

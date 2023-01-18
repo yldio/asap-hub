@@ -85,4 +85,29 @@ describe('UserExternalProfiles', () => {
     expect(links[0]).toHaveTextContent('Google Scholar');
     expect(links[1]).toHaveTextContent('Twitter');
   });
+
+  describe('if no external profiles', () => {
+    it('does not render placeholder when edit link is not provided', () => {
+      const props = {
+        social: {},
+      };
+      const { queryByText } = render(<UserExternalProfiles {...props} />);
+
+      expect(
+        queryByText(/share external research network or social/i),
+      ).not.toBeInTheDocument();
+    });
+
+    it('renders placeholder when there is an edit link', () => {
+      const props = {
+        social: {},
+        editHref: '/',
+      };
+      const { getByText } = render(<UserExternalProfiles {...props} />);
+
+      expect(
+        getByText(/share external research network or social/i),
+      ).toBeVisible();
+    });
+  });
 });

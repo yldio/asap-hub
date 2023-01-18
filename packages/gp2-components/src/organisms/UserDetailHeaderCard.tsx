@@ -7,7 +7,7 @@ import {
   uploadIcon,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
-import { addIcon } from '../icons';
+import { addIcon, editIcon } from '../icons';
 import locationIcon from '../icons/location-icon';
 import roleIcon from '../icons/role-icon';
 import { usersHeaderImage } from '../images';
@@ -33,7 +33,7 @@ type UserDetailHeaderCardProps = Pick<
   | 'country'
   | 'positions'
 > & {
-  edit?: string;
+  editHref?: string;
   readonly onImageSelect?: (file: File) => void;
   readonly avatarSaving?: boolean;
 };
@@ -61,6 +61,7 @@ const containerStyles = css({
 const avatarStyles = css({
   width: rem(avatarSize),
   height: rem(avatarSize),
+  margin: 0,
   [mobileQuery]: {
     margin: 'auto',
   },
@@ -83,6 +84,32 @@ const editButtonStyles = css({
   },
 });
 
+const validateCompleted = ({
+  firstName,
+  lastName,
+  degrees,
+  region,
+  country,
+  positions,
+  role,
+}: Pick<
+  UserDetailHeaderCardProps,
+  | 'firstName'
+  | 'lastName'
+  | 'degrees'
+  | 'region'
+  | 'role'
+  | 'country'
+  | 'positions'
+>) =>
+  firstName &&
+  lastName &&
+  degrees?.length &&
+  region &&
+  country &&
+  positions.length &&
+  role;
+
 const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
   displayName,
   avatarUrl,
@@ -94,7 +121,7 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
   city,
   country,
   positions,
-  edit,
+  editHref,
   onImageSelect,
   avatarSaving = false,
 }) => (
@@ -120,20 +147,24 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
           css={css({
             gridRow: 1,
             gridColumn: 1,
-            alignSelf: 'center',
-            justifySelf: 'center',
+            alignSelf: 'flex-end',
+            justifySelf: 'flex-end',
           })}
         >
           {onImageSelect && (
             <label>
               <Link
+                small
                 buttonStyle
+                noMargin
                 href={undefined}
                 label="Edit Avatar"
                 enabled={!avatarSaving}
               >
                 <span
                   css={css({
+                    display: 'flex',
+                    margin: `${rem(3)} 0`,
                     svg: {
                       stroke: colors.neutral900.rgb,
                     },
@@ -185,10 +216,31 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
           ),
         )}
       </div>
-      {edit && (
+      {editHref && (
         <div css={[{ gridArea: 'edit' }, editButtonStyles]}>
-          <Link href={edit} buttonStyle noMargin small fullWidth>
-            Required {addIcon}
+          <Link href={editHref} buttonStyle noMargin small fullWidth>
+            {validateCompleted({
+              degrees,
+              firstName,
+              lastName,
+              region,
+              role,
+              country,
+              positions,
+            })
+              ? 'Edit'
+              : 'Required'}{' '}
+            {validateCompleted({
+              degrees,
+              firstName,
+              lastName,
+              region,
+              role,
+              country,
+              positions,
+            })
+              ? editIcon
+              : addIcon}
           </Link>
         </div>
       )}

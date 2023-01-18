@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import UserDetailHeaderCard from '../UserDetailHeaderCard';
 
 describe('UserDetailHeaderCard', () => {
@@ -85,5 +86,18 @@ describe('UserDetailHeaderCard', () => {
     expect(
       screen.getByText('Car designer in Design at Powell Motors'),
     ).toBeInTheDocument();
+  });
+  it('renders upload buttton for avatar', () => {
+    const onImageSelect = jest.fn((file: File) => {});
+    const testFile = new File(['foo'], 'foo.png', { type: 'image/png' });
+    const { getByLabelText } = render(
+      <UserDetailHeaderCard {...defaultProps} onImageSelect={onImageSelect} />,
+    );
+    const editButton = getByLabelText(/edit.+avatar/i);
+    const uploadInput = getByLabelText(/upload.+avatar/i);
+    expect(editButton).toBeVisible();
+    expect(uploadInput).not.toHaveAttribute('disabled');
+    userEvent.upload(uploadInput, testFile);
+    expect(onImageSelect).toBeCalledWith(testFile);
   });
 });

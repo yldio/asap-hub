@@ -121,6 +121,7 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
             title="Degree"
             subtitle={required}
             enabled={!isSaving}
+            required
             values={getValues(newDegrees)}
             onChange={onChangeSelect(setNewDegrees)}
             suggestions={getValues([...gp2.userDegrees])}

@@ -27,7 +27,7 @@ const OnboardingCoreDetails: React.FC<OnboardingCoreDetailProps> = ({
     </Paragraph>
     <UserDetailHeaderCard
       {...headerProps}
-      edit={onboarding({}).coreDetails({}).editKeyInfo({}).$}
+      editHref={onboarding({}).coreDetails({}).editKeyInfo({}).$}
       onImageSelect={onImageSelect}
     />
     <UserContactInformation

@@ -167,7 +167,7 @@ describe('Users controller', () => {
     test('Should return the newly updated user', async () => {
       const user = getUserDataObject();
       userDataProviderMock.fetchById.mockResolvedValue(user);
-      const result = await userController.update(user.id, {}, user.id);
+      const result = await userController.update(user.id, {});
 
       expect(result).toEqual(getUserResponse());
       expect(userDataProviderMock.update).toHaveBeenCalledWith(user.id, {});
@@ -188,7 +188,6 @@ describe('Users controller', () => {
         userId,
         Buffer.from('avatar'),
         'image/jpeg',
-        userId,
       );
 
       expect(result).toEqual(getUserResponse());
@@ -212,7 +211,6 @@ describe('Users controller', () => {
           'user-id',
           Buffer.from('avatar'),
           'image/jpeg',
-          'user-id',
         ),
       ).rejects.toThrow();
     });
@@ -225,7 +223,6 @@ describe('Users controller', () => {
           'user-id',
           Buffer.from('avatar'),
           'image/jpeg',
-          'user-id',
         ),
       ).rejects.toThrow();
     });

@@ -2038,6 +2038,16 @@ type Users implements Content {
   version: Int!
 }
 
+"""The structure of the Activated Date field of the Users content type."""
+type UsersDataActivatedDateDto {
+  iv: Instant
+}
+
+"""The structure of the Activated Date field of the Users content input type."""
+input UsersDataActivatedDateInputDto {
+  iv: Instant
+}
+
 """The structure of the Avatar field of the Users content type."""
 type UsersDataAvatarDto {
   iv: [Asset!]
@@ -2170,6 +2180,7 @@ input UsersDataDegreeInputDto {
 
 """The structure of the Users data type."""
 type UsersDataDto {
+  activatedDate: UsersDataActivatedDateDto
   avatar: UsersDataAvatarDto
   biography: UsersDataBiographyDto
   city: UsersDataCityDto
@@ -2182,6 +2193,7 @@ type UsersDataDto {
   fundingStreams: UsersDataFundingStreamsDto
   keywords: UsersDataKeywordsDto
   lastName: UsersDataLastNameDto
+  lastUpdatedPartial: UsersDataLastUpdatedPartialDto
   onboarded: UsersDataOnboardedDto
   positions: UsersDataPositionsDto
   questions: UsersDataQuestionsDto
@@ -2227,6 +2239,7 @@ input UsersDataFundingStreamsInputDto {
 
 """The structure of the Users data input type."""
 input UsersDataInputDto {
+  activatedDate: UsersDataActivatedDateInputDto
   avatar: UsersDataAvatarInputDto
   biography: UsersDataBiographyInputDto
   city: UsersDataCityInputDto
@@ -2239,6 +2252,7 @@ input UsersDataInputDto {
   fundingStreams: UsersDataFundingStreamsInputDto
   keywords: UsersDataKeywordsInputDto
   lastName: UsersDataLastNameInputDto
+  lastUpdatedPartial: UsersDataLastUpdatedPartialInputDto
   onboarded: UsersDataOnboardedInputDto
   positions: UsersDataPositionsInputDto
   questions: UsersDataQuestionsInputDto
@@ -2268,6 +2282,18 @@ type UsersDataLastNameDto {
 """The structure of the Last Name field of the Users content input type."""
 input UsersDataLastNameInputDto {
   iv: String
+}
+
+"""The structure of the Last Updated (partial) field of the Users content type."""
+type UsersDataLastUpdatedPartialDto {
+  """Does not include changes to Publish Date and Admin notes"""
+  iv: Instant
+}
+
+"""The structure of the Last Updated (partial) field of the Users content input type."""
+input UsersDataLastUpdatedPartialInputDto {
+  """Does not include changes to Publish Date and Admin notes"""
+  iv: Instant
 }
 
 """The structure of the Onboarding complete field of the Users content type."""
@@ -2440,6 +2466,7 @@ input UsersDataTelephoneNumberInputDto {
 
 """The structure of the flat Users data type."""
 type UsersFlatDataDto {
+  activatedDate: Instant
   avatar: [Asset!]
   biography: String
   city: String
@@ -2453,6 +2480,8 @@ type UsersFlatDataDto {
   fundingStreams: String
   keywords: [String!]
   lastName: String
+  """Does not include changes to Publish Date and Admin notes"""
+  lastUpdatedPartial: Instant
   """Use this to allow the user to see the full Hub and skip profile completion"""
   onboarded: Boolean
   positions: [UsersDataPositionsChildDto!]

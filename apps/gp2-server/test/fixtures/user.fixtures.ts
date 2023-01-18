@@ -404,6 +404,7 @@ export const getGraphQLUser = (
         github: 'https://github.com',
       },
     ],
+    activatedDate: '2020-09-24T20:45:22.000Z',
     ...user?.flatData,
   },
   referencingProjectsContents: [

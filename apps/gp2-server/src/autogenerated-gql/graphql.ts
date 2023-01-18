@@ -2134,7 +2134,6 @@ export type UsersDataDto = {
   fundingStreams: Maybe<UsersDataFundingStreamsDto>;
   keywords: Maybe<UsersDataKeywordsDto>;
   lastName: Maybe<UsersDataLastNameDto>;
-  lastUpdatedPartial: Maybe<UsersDataLastUpdatedPartialDto>;
   onboarded: Maybe<UsersDataOnboardedDto>;
   positions: Maybe<UsersDataPositionsDto>;
   questions: Maybe<UsersDataQuestionsDto>;
@@ -2193,7 +2192,6 @@ export type UsersDataInputDto = {
   fundingStreams: InputMaybe<UsersDataFundingStreamsInputDto>;
   keywords: InputMaybe<UsersDataKeywordsInputDto>;
   lastName: InputMaybe<UsersDataLastNameInputDto>;
-  lastUpdatedPartial: InputMaybe<UsersDataLastUpdatedPartialInputDto>;
   onboarded: InputMaybe<UsersDataOnboardedInputDto>;
   positions: InputMaybe<UsersDataPositionsInputDto>;
   questions: InputMaybe<UsersDataQuestionsInputDto>;
@@ -2223,18 +2221,6 @@ export type UsersDataLastNameDto = {
 /** The structure of the Last Name field of the Users content input type. */
 export type UsersDataLastNameInputDto = {
   iv: InputMaybe<Scalars['String']>;
-};
-
-/** The structure of the Last Updated (partial) field of the Users content type. */
-export type UsersDataLastUpdatedPartialDto = {
-  /** Does not include changes to Publish Date and Admin notes */
-  iv: Maybe<Scalars['Instant']>;
-};
-
-/** The structure of the Last Updated (partial) field of the Users content input type. */
-export type UsersDataLastUpdatedPartialInputDto = {
-  /** Does not include changes to Publish Date and Admin notes */
-  iv: InputMaybe<Scalars['Instant']>;
 };
 
 /** The structure of the Onboarding complete field of the Users content type. */
@@ -2421,8 +2407,6 @@ export type UsersFlatDataDto = {
   fundingStreams: Maybe<Scalars['String']>;
   keywords: Maybe<Array<Scalars['String']>>;
   lastName: Maybe<Scalars['String']>;
-  /** Does not include changes to Publish Date and Admin notes */
-  lastUpdatedPartial: Maybe<Scalars['Instant']>;
   /** Use this to allow the user to see the full Hub and skip profile completion */
   onboarded: Maybe<Scalars['Boolean']>;
   positions: Maybe<Array<UsersDataPositionsChildDto>>;

@@ -2,6 +2,7 @@
 
 import {
   Asset as ContentfulAsset,
+  CreateAssetProps,
   Environment,
   SysLink,
 } from 'contentful-management';
@@ -24,6 +25,34 @@ export const checkIfAssetAlreadyExistsInContentful = async (
 
     throw error;
   }
+};
+
+export type InlineAssetBody = [id: string, fields: CreateAssetProps];
+
+export const createInlineAssets = async (
+  contentfulEnvironment: Environment,
+  inlineAssetBodies: InlineAssetBody[],
+) => {
+  const assets = await Promise.all(
+    inlineAssetBodies.map(async ([id, fields]) => {
+      const isAssetAlreadyInContentful =
+        await checkIfAssetAlreadyExistsInContentful(contentfulEnvironment, id);
+      if (!isAssetAlreadyInContentful) {
+        console.log(`Creating asset with id ${id}.`);
+        return contentfulEnvironment.createAssetWithId(id, fields);
+      }
+      return null;
+    }),
+  );
+
+  await Promise.all(
+    assets
+      .filter((asset): asset is ContentfulAsset => asset !== null)
+      .map(async (asset) => {
+        const processedAsset = await asset.processForAllLocales();
+        processedAsset.publish();
+      }),
+  );
 };
 
 export const migrateAsset = async (

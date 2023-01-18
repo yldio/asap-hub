@@ -2,6 +2,7 @@ import { Environment } from 'contentful-management';
 import {
   checkIfAssetAlreadyExistsInContentful,
   createAsset,
+  createInlineAssets,
   migrateAsset,
 } from '../../src/utils';
 import {
@@ -111,6 +112,60 @@ describe('migrateAsset', () => {
 
     expect(contenfulAsset.processForAllLocales).toHaveBeenCalled();
     expect(contenfulAsset.publish).toHaveBeenCalled();
+  });
+});
+
+describe('createInlineAssets', () => {
+  let envMock: Environment;
+
+  const consoleLogRef = console.log;
+
+  beforeEach(async () => {
+    jest.clearAllMocks();
+    console.log = jest.fn();
+
+    envMock = getContentfulEnvironmentMock();
+  });
+
+  afterAll(() => {
+    console.log = consoleLogRef;
+  });
+
+  it('calls createAssetWithId with correct payload', async () => {
+    const contenfulErrorResponse = new Error();
+    contenfulErrorResponse.message = '{"status":404}';
+    jest
+      .spyOn(envMock, 'getAsset')
+      .mockRejectedValueOnce(contenfulErrorResponse);
+
+    jest
+      .spyOn(envMock, 'createAssetWithId')
+      .mockResolvedValueOnce(contenfulAsset);
+
+    jest
+      .spyOn(contenfulAsset, 'processForAllLocales')
+      .mockResolvedValueOnce(contenfulAsset);
+
+    await createInlineAssets(envMock, [
+      ['asset-id', { fields: { ...contenfulUploadAssetFields } }],
+    ]);
+    expect(envMock.createAssetWithId).toHaveBeenCalledWith('asset-id', {
+      fields: contenfulUploadAssetFields,
+    });
+
+    expect(contenfulAsset.processForAllLocales).toHaveBeenCalled();
+    expect(contenfulAsset.publish).toHaveBeenCalled();
+  });
+
+  it('does not call createAssetWithId if asset already exist', async () => {
+    jest.spyOn(envMock, 'getAsset').mockResolvedValueOnce(contenfulAsset);
+
+    await createInlineAssets(envMock, [
+      ['asset-id', { fields: { ...contenfulUploadAssetFields } }],
+    ]);
+    expect(envMock.createAssetWithId).not.toHaveBeenCalled();
+    expect(contenfulAsset.processForAllLocales).not.toHaveBeenCalled();
+    expect(contenfulAsset.publish).not.toHaveBeenCalled();
   });
 });
 

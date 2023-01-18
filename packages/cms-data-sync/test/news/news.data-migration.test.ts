@@ -198,7 +198,10 @@ describe('Migrate news', () => {
 
       const convertHtmlToContentfulFormatMock =
         convertHtmlToContentfulFormat as jest.Mock;
-      convertHtmlToContentfulFormatMock.mockReturnValueOnce(textDocument);
+      convertHtmlToContentfulFormatMock.mockReturnValueOnce({
+        document: textDocument,
+        inlineAssetBodies: [],
+      });
 
       await migrateNews();
 

@@ -1,6 +1,7 @@
 import { Document } from '@contentful/rich-text-types';
-import { parseHtml } from 'contentful-html-rich-text-converter';
+import { parseHtml, parseAssets } from 'contentful-html-rich-text-converter';
 import { logger } from './logs';
+import type { InlineAssetBody } from './assets';
 
 export const clearParsedHtmlOutput = (htmlDocument: Document) => ({
   ...htmlDocument,
@@ -39,6 +40,8 @@ export const convertHtmlToContentfulFormat = (html: string) => {
   logger(`HTML post-parsed:\n${htmlWithoutDivTag}`, 'DEBUG');
 
   const parsedHtml = parseHtml(htmlWithoutDivTag) as Document;
+  const inlineAssetBodies = parseAssets(htmlWithoutDivTag) as InlineAssetBody[];
+
   logger(
     `Parsed HTML in Contentful format:\n${JSON.stringify(
       parsedHtml,
@@ -48,15 +51,11 @@ export const convertHtmlToContentfulFormat = (html: string) => {
     'DEBUG',
   );
 
-  const cleanedDocument = clearParsedHtmlOutput(parsedHtml);
+  const document = clearParsedHtmlOutput(parsedHtml);
   logger(
-    `Cleaned Contentful Document:\n${JSON.stringify(
-      cleanedDocument,
-      undefined,
-      2,
-    )}`,
+    `Cleaned Contentful Document:\n${JSON.stringify(document, undefined, 2)}`,
     'DEBUG',
   );
 
-  return cleanedDocument;
+  return { document, inlineAssetBodies };
 };

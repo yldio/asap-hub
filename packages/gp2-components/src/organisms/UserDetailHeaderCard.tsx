@@ -7,9 +7,7 @@ import {
   uploadIcon,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
-import { addIcon, editIcon } from '../icons';
-import locationIcon from '../icons/location-icon';
-import roleIcon from '../icons/role-icon';
+import { addIcon, editIcon, locationIcon, roleIcon } from '../icons';
 import { usersHeaderImage } from '../images';
 import { mobileQuery, nonMobileQuery } from '../layout';
 import CardWithBackground from '../molecules/CardWithBackground';

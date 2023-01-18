@@ -1,4 +1,7 @@
-export type Flag = 'PERSISTENT_EXAMPLE' | 'WORKING_GROUP_SHARED_OUTPUT_BTN';
+export type Flag =
+  | 'PERSISTENT_EXAMPLE'
+  | 'WORKING_GROUP_SHARED_OUTPUT_BTN'
+  | 'WORKING_GROUP_SHARED_OUTPUTS_TAB';
 
 export type Flags = Partial<Record<Flag, boolean | undefined>>;
 let overrides: Flags = {

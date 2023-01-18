@@ -116,6 +116,7 @@ const isProjectManager = (
 
 type WorkingGroupPageHeaderProps = {
   readonly membersListElementId: string;
+  readonly workingGroupsOutputsCount?: number;
 } & Pick<
   WorkingGroupResponse,
   | 'id'
@@ -138,6 +139,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
   leaders,
   members,
   membersListElementId,
+  workingGroupsOutputsCount = 0,
 }) => {
   const currentUserCRN = useCurrentUserCRN();
   const isWorkingGroupProjectManager = isProjectManager(
@@ -245,6 +247,18 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
         >
           About
         </TabLink>
+        {isEnabled('WORKING_GROUP_SHARED_OUTPUTS_TAB') && (
+          <TabLink
+            href={
+              network({})
+                .workingGroups({})
+                .workingGroup({ workingGroupId: id })
+                .outputs({}).$
+            }
+          >
+            Working Group Outputs ({workingGroupsOutputsCount})
+          </TabLink>
+        )}
       </TabNav>
     </header>
   );

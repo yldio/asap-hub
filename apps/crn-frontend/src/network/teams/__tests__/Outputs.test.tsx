@@ -14,7 +14,6 @@ import { getResearchOutputs } from '../../../shared-research/api';
 import { researchOutputsState } from '../../../shared-research/state';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
 import { MAX_ALGOLIA_RESULTS } from '../../../shared-research/export';
-import { getTeam } from '../api';
 
 jest.mock('@asap-hub/frontend-utils', () => {
   const original = jest.requireActual('@asap-hub/frontend-utils');
@@ -36,8 +35,6 @@ const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
   typeof getResearchOutputs
 >;
 
-const mockGetTeam = getTeam as jest.MockedFunction<typeof getTeam>;
-
 const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
   typeof createCsvFileStream
 >;
@@ -45,7 +42,7 @@ const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
 const renderOutputs = async (
   searchQuery = '',
   filters = new Set<string>(),
-  teamId = '42',
+  team = createTeamResponse(),
 ) => {
   const result = render(
     <RecoilRoot
@@ -54,7 +51,7 @@ const renderOutputs = async (
           researchOutputsState({
             searchQuery,
             filters,
-            teamId,
+            teamId: team.id,
             currentPage: 0,
             pageSize: CARD_VIEW_PAGE_SIZE,
           }),
@@ -63,7 +60,7 @@ const renderOutputs = async (
           researchOutputsState({
             searchQuery,
             filters,
-            teamId,
+            teamId: team.id,
             currentPage: 0,
             pageSize: MAX_ALGOLIA_RESULTS,
           }),
@@ -76,15 +73,19 @@ const renderOutputs = async (
             <MemoryRouter
               initialEntries={[
                 {
-                  pathname: network({}).teams({}).team({ teamId }).outputs({})
-                    .$,
+                  pathname: network({})
+                    .teams({})
+                    .team({ teamId: team.id })
+                    .outputs({}).$,
                 },
               ]}
             >
               <Route
-                path={network({}).teams({}).team({ teamId }).outputs({}).$}
+                path={
+                  network({}).teams({}).team({ teamId: team.id }).outputs({}).$
+                }
               >
-                <Outputs teamId={teamId} />
+                <Outputs team={team} />
               </Route>
             </MemoryRouter>
           </WhenReady>
@@ -129,7 +130,7 @@ it('calls getResearchOutputs with the right arguments', async () => {
   const { getByRole, getByText, getByLabelText } = await renderOutputs(
     searchQuery,
     filters,
-    teamId,
+    { ...createTeamResponse(), id: teamId },
   );
   userEvent.type(getByRole('searchbox'), searchQuery);
 
@@ -153,10 +154,6 @@ it('calls getResearchOutputs with the right arguments', async () => {
 });
 
 it('triggers export with the same parameters and custom file name', async () => {
-  mockGetTeam.mockResolvedValue({
-    ...createTeamResponse(),
-    displayName: 'example team 123',
-  });
   const filters = new Set(['Grant Document']);
   const searchQuery = 'Some Search';
   const teamId = '12345';
@@ -166,7 +163,7 @@ it('triggers export with the same parameters and custom file name', async () => 
   const { getByRole, getByText, getByLabelText } = await renderOutputs(
     searchQuery,
     filters,
-    teamId,
+    { ...createTeamResponse(), id: teamId, displayName: 'example team 123' },
   );
   userEvent.type(getByRole('searchbox'), searchQuery);
   userEvent.click(getByText('Filters'));

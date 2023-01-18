@@ -2,9 +2,9 @@ import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import { render } from '@testing-library/react';
 import { ComponentProps } from 'react';
 
-import TeamProfileOutputs from '../TeamProfileOutputs';
+import ProfileOutputs from '../ProfileOutputs';
 
-const baseProps: ComponentProps<typeof TeamProfileOutputs> = {
+const baseProps: ComponentProps<typeof ProfileOutputs> = {
   researchOutputs: [],
   numberOfItems: 0,
   numberOfPages: 1,
@@ -13,13 +13,13 @@ const baseProps: ComponentProps<typeof TeamProfileOutputs> = {
   isListView: false,
   cardViewHref: '',
   listViewHref: '',
-  hasOutputs: true,
-  ownTeam: true,
+  userAssociationMember: true,
+  publishingEntity: 'Team',
 };
 
 it('renders output cards', () => {
   const { getAllByRole, queryByText } = render(
-    <TeamProfileOutputs
+    <ProfileOutputs
       {...baseProps}
       researchOutputs={[
         {
@@ -57,17 +57,21 @@ it('renders output cards', () => {
 
 it('renders the no output page for your own team', () => {
   const { getByTitle, getByRole, getByText, rerender } = render(
-    <TeamProfileOutputs {...baseProps} hasOutputs={false} ownTeam={true} />,
+    <ProfileOutputs
+      {...baseProps}
+      userAssociationMember={true}
+      publishingEntity="Team"
+    />,
   );
   expect(getByTitle('Research')).toBeInTheDocument();
   expect(getByRole('heading', { level: 1 }).textContent).toMatch(/Your team/i);
   expect(getByText(/contact your PM/i).closest('a')).toBeNull();
   rerender(
-    <TeamProfileOutputs
+    <ProfileOutputs
       {...baseProps}
-      hasOutputs={false}
-      ownTeam={true}
+      userAssociationMember={true}
       contactEmail="example@example.com"
+      publishingEntity="Team"
     />,
   );
   expect(getByText(/contact your PM/i).closest('a')).toHaveAttribute(
@@ -78,21 +82,44 @@ it('renders the no output page for your own team', () => {
 
 it('renders the no output page for another team', () => {
   const { getByTitle, getByRole, getByText, rerender } = render(
-    <TeamProfileOutputs {...baseProps} hasOutputs={false} ownTeam={false} />,
+    <ProfileOutputs {...baseProps} userAssociationMember={false} />,
   );
   expect(getByTitle('Research')).toBeInTheDocument();
   expect(getByRole('heading', { level: 1 }).textContent).toMatch(/This team/i);
   expect(getByText(/contact the PM/i).closest('a')).toBeNull();
   rerender(
-    <TeamProfileOutputs
+    <ProfileOutputs
       {...baseProps}
-      hasOutputs={false}
-      ownTeam={false}
+      userAssociationMember={false}
       contactEmail="example@example.com"
     />,
   );
   expect(getByText(/contact the PM/i).closest('a')).toHaveAttribute(
     'href',
     expect.stringMatching(/example@example/i),
+  );
+});
+
+it('renders the no outputs page for a working group', () => {
+  const { getByRole, rerender } = render(
+    <ProfileOutputs
+      {...baseProps}
+      userAssociationMember={false}
+      publishingEntity="Working Group"
+    />,
+  );
+
+  expect(getByRole('heading', { level: 1 }).textContent).toMatch(
+    /This working group/i,
+  );
+  rerender(
+    <ProfileOutputs
+      {...baseProps}
+      publishingEntity="Working Group"
+      userAssociationMember={true}
+    />,
+  );
+  expect(getByRole('heading', { level: 1 }).textContent).toMatch(
+    /Your working group/i,
   );
 });

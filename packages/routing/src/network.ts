@@ -123,6 +123,7 @@ const groups = route('/groups', {}, { group });
 
 const workingGroup = (() => {
   const about = route('/about', {}, {});
+  const outputs = route('/outputs', {}, {});
   const createOutput = route(
     '/create-output/:outputDocumentType',
     { outputDocumentType: outputDocumentTypeParser },
@@ -132,7 +133,7 @@ const workingGroup = (() => {
   return route(
     '/:workingGroupId',
     { workingGroupId: stringParser },
-    { about, createOutput },
+    { about, createOutput, outputs },
   );
 })();
 

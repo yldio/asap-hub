@@ -22,6 +22,7 @@ const baseProps: ComponentProps<typeof WorkingGroupHeader> = {
   pointOfContact: undefined,
   leaders: [],
   members: [],
+  workingGroupsOutputsCount: 0,
 };
 
 const userProvider =
@@ -167,4 +168,19 @@ it('renders a Working Group Folder when externalLink is provided', () => {
     <WorkingGroupHeader {...baseProps} externalLink="http://www.hub.com" />,
   );
   expect(getByText('Working Group Folder')).toBeVisible();
+});
+
+it('renders the provided number of research outputs', () => {
+  const { getByText } = render(
+    <WorkingGroupHeader {...baseProps} workingGroupsOutputsCount={2} />,
+  );
+  expect(getByText('Working Group Outputs (2)')).toBeVisible();
+});
+
+it('does not render the research outputs link when the feature flag is disabled', () => {
+  disable('WORKING_GROUP_SHARED_OUTPUTS_TAB');
+  const { queryByText } = render(
+    <WorkingGroupHeader {...baseProps} workingGroupsOutputsCount={2} />,
+  );
+  expect(queryByText('Working Group Outputs (2)')).toBeNull();
 });

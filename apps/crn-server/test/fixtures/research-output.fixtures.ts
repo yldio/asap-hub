@@ -100,6 +100,7 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
         },
       },
     ],
+    teams: [],
     methods: [
       {
         flatData: {

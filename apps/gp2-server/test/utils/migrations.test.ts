@@ -1,6 +1,7 @@
 import {
   gp2 as gp2squidex,
   Results,
+  SquidexGraphql,
   SquidexRest,
   SquidexRestClient,
 } from '@asap-hub/squidex';
@@ -55,6 +56,7 @@ describe('Migration utils', () => {
       expect(processingFunction).toBeCalledWith(
         restUserMock(),
         expect.any(SquidexRest),
+        expect.any(SquidexGraphql),
       );
     });
 
@@ -80,6 +82,7 @@ describe('Migration utils', () => {
       expect(processingFunction).toBeCalledWith(
         restUserMock(),
         expect.any(SquidexRest),
+        expect.any(SquidexGraphql),
       );
       expect(mockFetch).toBeCalledTimes(2);
     });

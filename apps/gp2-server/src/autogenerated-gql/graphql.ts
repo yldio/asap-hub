@@ -1979,6 +1979,16 @@ export type UsersReferencingWorkingGroupsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
+/** The structure of the Activated Date field of the Users content type. */
+export type UsersDataActivatedDateDto = {
+  iv: Maybe<Scalars['Instant']>;
+};
+
+/** The structure of the Activated Date field of the Users content input type. */
+export type UsersDataActivatedDateInputDto = {
+  iv: InputMaybe<Scalars['Instant']>;
+};
+
 /** The structure of the Avatar field of the Users content type. */
 export type UsersDataAvatarDto = {
   iv: Maybe<Array<Asset>>;
@@ -2111,6 +2121,7 @@ export type UsersDataDegreeInputDto = {
 
 /** The structure of the Users data type. */
 export type UsersDataDto = {
+  activatedDate: Maybe<UsersDataActivatedDateDto>;
   avatar: Maybe<UsersDataAvatarDto>;
   biography: Maybe<UsersDataBiographyDto>;
   city: Maybe<UsersDataCityDto>;
@@ -2123,6 +2134,7 @@ export type UsersDataDto = {
   fundingStreams: Maybe<UsersDataFundingStreamsDto>;
   keywords: Maybe<UsersDataKeywordsDto>;
   lastName: Maybe<UsersDataLastNameDto>;
+  lastUpdatedPartial: Maybe<UsersDataLastUpdatedPartialDto>;
   onboarded: Maybe<UsersDataOnboardedDto>;
   positions: Maybe<UsersDataPositionsDto>;
   questions: Maybe<UsersDataQuestionsDto>;
@@ -2168,6 +2180,7 @@ export type UsersDataFundingStreamsInputDto = {
 
 /** The structure of the Users data input type. */
 export type UsersDataInputDto = {
+  activatedDate: InputMaybe<UsersDataActivatedDateInputDto>;
   avatar: InputMaybe<UsersDataAvatarInputDto>;
   biography: InputMaybe<UsersDataBiographyInputDto>;
   city: InputMaybe<UsersDataCityInputDto>;
@@ -2180,6 +2193,7 @@ export type UsersDataInputDto = {
   fundingStreams: InputMaybe<UsersDataFundingStreamsInputDto>;
   keywords: InputMaybe<UsersDataKeywordsInputDto>;
   lastName: InputMaybe<UsersDataLastNameInputDto>;
+  lastUpdatedPartial: InputMaybe<UsersDataLastUpdatedPartialInputDto>;
   onboarded: InputMaybe<UsersDataOnboardedInputDto>;
   positions: InputMaybe<UsersDataPositionsInputDto>;
   questions: InputMaybe<UsersDataQuestionsInputDto>;
@@ -2209,6 +2223,18 @@ export type UsersDataLastNameDto = {
 /** The structure of the Last Name field of the Users content input type. */
 export type UsersDataLastNameInputDto = {
   iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Last Updated (partial) field of the Users content type. */
+export type UsersDataLastUpdatedPartialDto = {
+  /** Does not include changes to Publish Date and Admin notes */
+  iv: Maybe<Scalars['Instant']>;
+};
+
+/** The structure of the Last Updated (partial) field of the Users content input type. */
+export type UsersDataLastUpdatedPartialInputDto = {
+  /** Does not include changes to Publish Date and Admin notes */
+  iv: InputMaybe<Scalars['Instant']>;
 };
 
 /** The structure of the Onboarding complete field of the Users content type. */
@@ -2381,6 +2407,7 @@ export type UsersDataTelephoneNumberInputDto = {
 
 /** The structure of the flat Users data type. */
 export type UsersFlatDataDto = {
+  activatedDate: Maybe<Scalars['Instant']>;
   avatar: Maybe<Array<Asset>>;
   biography: Maybe<Scalars['String']>;
   city: Maybe<Scalars['String']>;
@@ -2394,6 +2421,8 @@ export type UsersFlatDataDto = {
   fundingStreams: Maybe<Scalars['String']>;
   keywords: Maybe<Array<Scalars['String']>>;
   lastName: Maybe<Scalars['String']>;
+  /** Does not include changes to Publish Date and Admin notes */
+  lastUpdatedPartial: Maybe<Scalars['Instant']>;
   /** Use this to allow the user to see the full Hub and skip profile completion */
   onboarded: Maybe<Scalars['Boolean']>;
   positions: Maybe<Array<UsersDataPositionsChildDto>>;
@@ -3027,6 +3056,7 @@ export type UsersContentFragment = Pick<
     | 'keywords'
     | 'fundingStreams'
     | 'biography'
+    | 'activatedDate'
   > & {
     avatar: Maybe<Array<Pick<Asset, 'id'>>>;
     positions: Maybe<
@@ -3113,6 +3143,7 @@ export type FetchUserQuery = {
         | 'keywords'
         | 'fundingStreams'
         | 'biography'
+        | 'activatedDate'
       > & {
         avatar: Maybe<Array<Pick<Asset, 'id'>>>;
         positions: Maybe<
@@ -3214,6 +3245,7 @@ export type FetchUsersQuery = {
               | 'keywords'
               | 'fundingStreams'
               | 'biography'
+              | 'activatedDate'
             > & {
               avatar: Maybe<Array<Pick<Asset, 'id'>>>;
               positions: Maybe<
@@ -4139,6 +4171,10 @@ export const UsersContentFragmentDoc = {
                       },
                     ],
                   },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'activatedDate' },
                 },
               ],
             },

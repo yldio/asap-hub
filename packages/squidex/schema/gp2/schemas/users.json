@@ -762,20 +762,20 @@
         ]
       },
       {
-        "name": "lastUpdatedPartial",
+        "name": "separatorTechnical",
         "isHidden": false,
         "isLocked": false,
-        "isDisabled": true,
+        "isDisabled": false,
         "partitioning": "invariant",
         "properties": {
-          "fieldType": "DateTime",
-          "editor": "DateTime",
-          "calculatedDefaultValue": "Now",
-          "label": "Last Updated (partial)",
-          "hints": "Does not include changes to Publish Date and Admin notes",
+          "fieldType": "UI",
+          "editor": "Separator",
+          "label": "Technical",
+          "hints": "Fields used mostly by our API",
+          "placeholder": "",
           "isRequired": false,
           "isRequiredOnPublish": false,
-          "isHalfWidth": true
+          "isHalfWidth": false
         }
       },
       {
@@ -844,7 +844,6 @@
         "properties": {
           "fieldType": "DateTime",
           "editor": "DateTime",
-          "calculatedDefaultValue": "Now",
           "label": "Activated Date",
           "isRequired": false,
           "isRequiredOnPublish": false,

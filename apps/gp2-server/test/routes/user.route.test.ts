@@ -287,15 +287,10 @@ describe('/users/ route', () => {
       expect(userControllerMock.update).toBeCalledWith(
         loggedInUserId,
         remainingParams,
-        loggedInUserId,
       );
-      expect(userControllerMock.update).toBeCalledWith(
-        loggedInUserId,
-        {
-          onboarded,
-        },
-        loggedInUserId,
-      );
+      expect(userControllerMock.update).toBeCalledWith(loggedInUserId, {
+        onboarded,
+      });
     });
 
     describe('Parameter validation', () => {
@@ -743,103 +738,99 @@ describe('/users/ route', () => {
         expect(response.body).toEqual(onboardedUserResponse);
       });
     });
+  });
+  describe('POST /users/{user_id}/avatar', () => {
+    const user = { ...getUserResponse(), id: loggedInUserId };
+    const userId = loggedInUserId;
 
-    describe('POST /users/{user_id}/avatar', () => {
-      const user = { ...getUserResponse(), id: loggedInUserId };
-      const userId = loggedInUserId;
+    test('Should return the results correctly', async () => {
+      userControllerMock.updateAvatar.mockResolvedValueOnce(user);
 
-      test('Should return the results correctly', async () => {
-        userControllerMock.updateAvatar.mockResolvedValueOnce(user);
+      const response = await supertest(app)
+        .post(`/users/${userId}/avatar`)
+        .send(updateAvatarBody);
 
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(user);
+    });
+
+    test('Should upload pictures of 2MB correctly', async () => {
+      userControllerMock.updateAvatar.mockResolvedValueOnce(getUserResponse());
+      const blob = Crypto.randomBytes(2097152).toString('base64');
+      const updateLargeAvatar = {
+        avatar: `data:image/jpeg;base64,${blob}`,
+      };
+
+      const response = await supertest(app)
+        .post(`/users/${userId}/avatar`)
+        .send(updateLargeAvatar);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(getUserResponse());
+    });
+
+    test('Should return 500 when it fails to update the avatar', async () => {
+      userControllerMock.updateAvatar.mockRejectedValueOnce(
+        Boom.badImplementation('squidex', {
+          data: 'Squidex Error Message',
+        }),
+      );
+
+      const response = await supertest(app)
+        .post(`/users/${userId}/avatar`)
+        .send(updateAvatarBody);
+
+      expect(response.status).toBe(500);
+    });
+
+    test('Returns 403 when user is changing other user', async () => {
+      const response = await supertest(app)
+        .post('/users/not-me/avatar')
+        .send(updateAvatarBody);
+      expect(response.status).toBe(403);
+    });
+
+    test('Should call the controller method with the correct parameters', async () => {
+      await supertest(app)
+        .post(`/users/${userId}/avatar`)
+        .send(updateAvatarBody);
+
+      expect(userControllerMock.updateAvatar).toBeCalledWith(
+        userId,
+        expect.any(Buffer),
+        'image/jpeg',
+      );
+    });
+
+    describe('Parameter validation', () => {
+      test('Returns 400 when payload is invalid', async () => {
+        const response = await supertest(app).post(`/users/${userId}/avatar`);
+        expect(response.status).toBe(400);
+      });
+
+      test('Returns 400 when payload is not data URL conformant', async () => {
         const response = await supertest(app)
           .post(`/users/${userId}/avatar`)
-          .send(updateAvatarBody);
-
-        expect(response.status).toBe(200);
-        expect(response.body).toEqual(user);
+          .send({ avatar: 'data:video/mp4' });
+        expect(response.status).toBe(400);
       });
 
-      test('Should upload pictures of 2MB correctly', async () => {
-        userControllerMock.updateAvatar.mockResolvedValueOnce(
-          getUserResponse(),
-        );
-        const blob = Crypto.randomBytes(2097152).toString('base64');
-        const updateLargeAvatar = {
-          avatar: `data:image/jpeg;base64,${blob}`,
-        };
-
+      test('Returns 415 when content type is invalid', async () => {
         const response = await supertest(app)
           .post(`/users/${userId}/avatar`)
-          .send(updateLargeAvatar);
-
-        expect(response.status).toBe(200);
-        expect(response.body).toEqual(getUserResponse());
+          .send({ avatar: 'data:video/mp4;base64,some-data' });
+        expect(response.status).toBe(415);
       });
 
-      test('Should return 500 when it fails to update the avatar', async () => {
-        userControllerMock.updateAvatar.mockRejectedValueOnce(
-          Boom.badImplementation('squidex', {
-            data: 'Squidex Error Message',
-          }),
-        );
-
+      test('Returns 413 when avatar is too big', async () => {
         const response = await supertest(app)
           .post(`/users/${userId}/avatar`)
-          .send(updateAvatarBody);
-
-        expect(response.status).toBe(500);
-      });
-
-      test('Returns 403 when user is changing other user', async () => {
-        const response = await supertest(app)
-          .post('/users/not-me/avatar')
-          .send(updateAvatarBody);
-        expect(response.status).toBe(403);
-      });
-
-      test('Should call the controller method with the correct parameters', async () => {
-        await supertest(app)
-          .post(`/users/${userId}/avatar`)
-          .send(updateAvatarBody);
-
-        expect(userControllerMock.updateAvatar).toBeCalledWith(
-          userId,
-          expect.any(Buffer),
-          'image/jpeg',
-          loggedInUserId,
-        );
-      });
-
-      describe('Parameter validation', () => {
-        test('Returns 400 when payload is invalid', async () => {
-          const response = await supertest(app).post(`/users/${userId}/avatar`);
-          expect(response.status).toBe(400);
-        });
-
-        test('Returns 400 when payload is not data URL conformant', async () => {
-          const response = await supertest(app)
-            .post(`/users/${userId}/avatar`)
-            .send({ avatar: 'data:video/mp4' });
-          expect(response.status).toBe(400);
-        });
-
-        test('Returns 415 when content type is invalid', async () => {
-          const response = await supertest(app)
-            .post(`/users/${userId}/avatar`)
-            .send({ avatar: 'data:video/mp4;base64,some-data' });
-          expect(response.status).toBe(415);
-        });
-
-        test('Returns 413 when avatar is too big', async () => {
-          const response = await supertest(app)
-            .post(`/users/${userId}/avatar`)
-            .send({
-              avatar: `data:image/jpeg;base64,${Buffer.alloc(4e6).toString(
-                'base64',
-              )}`,
-            });
-          expect(response.status).toBe(413);
-        });
+          .send({
+            avatar: `data:image/jpeg;base64,${Buffer.alloc(4e6).toString(
+              'base64',
+            )}`,
+          });
+        expect(response.status).toBe(413);
       });
     });
   });

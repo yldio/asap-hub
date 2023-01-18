@@ -92,7 +92,6 @@ export const userRouteFactory = (userController: UserController): Router =>
         const updatedUser = await userController.update(
           userId,
           userProfileUpdate,
-          userId,
         );
 
         const saveOnboarded = (): Promise<gp2Model.UserResponse> => {
@@ -100,7 +99,7 @@ export const userRouteFactory = (userController: UserController): Router =>
             throw Boom.badData('User profile is not complete');
           }
 
-          return userController.update(userId, { onboarded: true }, userId);
+          return userController.update(userId, { onboarded: true });
         };
         const userResponse = onboarded ? await saveOnboarded() : updatedUser;
 
@@ -134,7 +133,6 @@ export const userRouteFactory = (userController: UserController): Router =>
         userId,
         avatar,
         parsed.contentType,
-        userId,
       );
       res.json(result);
     });

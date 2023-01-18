@@ -121,6 +121,9 @@ export const userRouteFactory = (userController: UserController): Router =>
       if (!parsed) {
         throw Boom.badRequest('avatar must be a valid data URL');
       }
+      if (!parsed.contentType.startsWith('image')) {
+        throw Boom.unsupportedMediaType('Content-type must be image');
+      }
       const avatar = parsed.toBuffer();
       // convert bytes to MB and check size
       // 3MB = 2.8MB (2MB Base64 image) + some slack

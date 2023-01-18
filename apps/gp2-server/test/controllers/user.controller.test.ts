@@ -174,6 +174,63 @@ describe('Users controller', () => {
     });
   });
 
+  describe('updateAvatar', () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
+
+    test('should return 200 when syncs asset and updates users profile', async () => {
+      const user = getUserDataObject();
+      const userId = user.id;
+      assetDataProviderMock.create.mockResolvedValueOnce('42');
+      userDataProviderMock.fetchById.mockResolvedValueOnce(user);
+      const result = await userController.updateAvatar(
+        userId,
+        Buffer.from('avatar'),
+        'image/jpeg',
+        userId,
+      );
+
+      expect(result).toEqual(getUserResponse());
+      expect(userDataProviderMock.update).toHaveBeenCalledWith(userId, {
+        avatarUrl: '42',
+      });
+      expect(assetDataProviderMock.create).toHaveBeenCalledWith(
+        userId,
+        Buffer.from('avatar'),
+        'image/jpeg',
+      );
+      expect(userDataProviderMock.fetchById).toHaveBeenCalledWith(userId);
+    });
+
+    test('should throw when fails to update asset - squidex error', async () => {
+      assetDataProviderMock.create.mockResolvedValue('42');
+      userDataProviderMock.update.mockRejectedValue(new Error());
+
+      await expect(
+        userController.updateAvatar(
+          'user-id',
+          Buffer.from('avatar'),
+          'image/jpeg',
+          'user-id',
+        ),
+      ).rejects.toThrow();
+    });
+
+    test('should throw when fails to update user - squidex error', async () => {
+      assetDataProviderMock.create.mockRejectedValue(new Error());
+
+      await expect(
+        userController.updateAvatar(
+          'user-id',
+          Buffer.from('avatar'),
+          'image/jpeg',
+          'user-id',
+        ),
+      ).rejects.toThrow();
+    });
+  });
+
   describe('connectByCode', () => {
     beforeEach(() => {
       jest.resetAllMocks();

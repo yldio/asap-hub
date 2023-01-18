@@ -7,7 +7,7 @@ import { NotFoundPage } from '@asap-hub/react-components';
 import { ToastContext, useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 } from '@asap-hub/routing';
 import imageCompression from 'browser-image-compression';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { Route } from 'react-router-dom';
 import { getInstitutions } from '../users/api';
 import locationSuggestions from '../users/location-suggestions';
@@ -30,7 +30,10 @@ const CoreDetails: React.FC<Record<string, never>> = () => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const postUserAvatar = usePostUserAvatarById(currentUser!.id);
 
-  const onImageSelect = (file: File) =>
+  const [avatarSaving, setAvatarSaving] = useState(false);
+
+  const onImageSelect = (file: File) => {
+    setAvatarSaving(true);
     imageCompression(file, { maxSizeMB: 2 })
       .then((compressedFile) =>
         imageCompression.getDataUrlFromFile(compressedFile),
@@ -38,12 +41,18 @@ const CoreDetails: React.FC<Record<string, never>> = () => {
       .then((encodedFile) => postUserAvatar(encodedFile))
       .catch(() =>
         toast('There was an error and we were unable to save your picture'),
-      );
+      )
+      .finally(() => setAvatarSaving(false));
+  };
 
   if (userData) {
     return (
       <>
-        <OnboardingCoreDetails {...userData} onImageSelect={onImageSelect} />
+        <OnboardingCoreDetails
+          {...userData}
+          onImageSelect={onImageSelect}
+          avatarSaving={avatarSaving}
+        />
         <Route path={onboarding({}).coreDetails({}).editKeyInfo({}).$}>
           <KeyInformationModal
             {...userData}

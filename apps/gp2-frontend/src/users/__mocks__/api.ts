@@ -25,6 +25,19 @@ export const patchUser = jest.fn(
   }),
 );
 
+export const postUserAvatar = jest.fn(
+  async (
+    id: string,
+    post: gp2.UserAvatarPostRequest,
+  ): Promise<gp2.UserResponse> => {
+    const user = await getUser(id);
+    return {
+      ...user,
+      avatarUrl: `url: ${post.avatar}`,
+    };
+  },
+);
+
 export const getInstitutions = jest.fn(
   async (): Promise<InstitutionsResponse> => ({
     number_of_results: 20,

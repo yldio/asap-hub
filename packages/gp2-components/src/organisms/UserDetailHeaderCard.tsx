@@ -35,6 +35,7 @@ type UserDetailHeaderCardProps = Pick<
 > & {
   edit?: string;
   readonly onImageSelect?: (file: File) => void;
+  readonly avatarSaving?: boolean;
 };
 
 const avatarSize = 132;
@@ -95,6 +96,7 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
   positions,
   edit,
   onImageSelect,
+  avatarSaving = false,
 }) => (
   <CardWithBackground image={usersHeaderImage}>
     <div css={containerStyles}>
@@ -128,7 +130,7 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
                 buttonStyle
                 href={undefined}
                 label="Edit Avatar"
-                // enabled={!avatarSaving}
+                enabled={!avatarSaving}
               >
                 <span
                   css={css({
@@ -140,7 +142,7 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
                   {uploadIcon}
                 </span>
                 <input
-                  // disabled={avatarSaving}
+                  disabled={avatarSaving}
                   type="file"
                   accept="image/x-png,image/jpeg"
                   aria-label="Upload Avatar"

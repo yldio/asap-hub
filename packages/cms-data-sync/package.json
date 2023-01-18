@@ -19,7 +19,7 @@
     "@asap-hub/squidex": "workspace:*",
     "@babel/runtime-corejs3": "7.19.6",
     "@contentful/rich-text-types": "^15.13.2",
-    "contentful-html-rich-text-converter": "yldio/contentful-html-rich-text-converter#v1.0.14",
+    "contentful-html-rich-text-converter": "yldio/contentful-html-rich-text-converter#5fed410f9fc6f5d2771574a87ded2d0c90f7e59a",
     "contentful-management": "^10.19.3",
     "graphql": "15.8.0",
     "graphql-tag": "2.12.6"
@@ -36,7 +36,7 @@
     "@graphql-tools/mock": "8.7.15",
     "@graphql-tools/schema": "8.5.1",
     "@graphql-typed-document-node/core": "3.1.1",
-    "@types/contentful-html-rich-text-converter": "workspace:*",
+    "@types/contentful-html-rich-text-converter": "workspace:^",
     "@types/jest": "27.5.2",
     "@types/node": "14.18.33",
     "@types/prettier": "2.7.1",

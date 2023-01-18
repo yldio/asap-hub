@@ -105,6 +105,7 @@ export type UserDataObject = {
   social?: UserSocial;
   keywords: Keyword[];
   biography?: string;
+  activatedDate?: string;
 };
 
 export type UserCreateDataObject = Omit<
@@ -115,7 +116,12 @@ export type UserCreateDataObject = Omit<
 export type UserUpdateDataObject = Partial<UserCreateDataObject>;
 export type UserPatchRequest = Omit<
   UserUpdateDataObject,
-  'avatarUrl' | 'connections' | 'email' | 'role'
+  | 'avatarUrl'
+  | 'connections'
+  | 'email'
+  | 'role'
+  | 'createdDate'
+  | 'activatedDate'
 >;
 
 export type ListUserDataObject = ListResponse<UserDataObject>;

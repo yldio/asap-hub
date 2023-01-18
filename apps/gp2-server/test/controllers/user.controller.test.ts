@@ -175,10 +175,16 @@ describe('Users controller', () => {
 
   describe('connectByCode', () => {
     beforeEach(() => {
-      jest.resetAllMocks();
+      jest.resetAllMocks().useFakeTimers('modern');
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
     });
 
     test('should connect and return the user on success', async () => {
+      const activatedDate = '2021-12-28T14:00:00.000Z';
+      jest.setSystemTime(new Date(activatedDate));
       const userId = '42';
       const user = {
         ...getUserDataObject(),
@@ -197,8 +203,32 @@ describe('Users controller', () => {
       expect(userDataProviderMock.update).toHaveBeenCalledWith(userId, {
         email: user.email,
         connections: [{ code: 'auth-user-id' }],
+        activatedDate,
       });
       expect(result).toEqual({ ...getUserResponse(), id: userId });
+    });
+    test('should not update the activated date if already exists', async () => {
+      const activatedDate = '2021-12-28T14:00:00.000Z';
+      const newActivatedDate = '2022-12-28T14:00:00.000Z';
+      jest.setSystemTime(new Date(newActivatedDate));
+      const userId = '42';
+      const user = {
+        ...getUserDataObject(),
+        id: userId,
+        activatedDate,
+      };
+      userDataProviderMock.fetch.mockResolvedValue({
+        total: 1,
+        items: [{ ...user, id: userId }],
+      });
+      userDataProviderMock.fetchById.mockResolvedValue(user);
+      await userController.connectByCode('some code', 'auth-user-id');
+
+      expect(userDataProviderMock.update).toHaveBeenCalledWith(userId, {
+        email: user.email,
+        connections: [{ code: 'auth-user-id' }],
+        activatedDate,
+      });
     });
     test('Shouldnt do anything if connecting with existing code', async () => {
       const userId = '42';

@@ -96,6 +96,7 @@ export default class Users implements UserController {
       {
         email: user.email,
         connections: [...(user.connections || []), { code: authUserId }],
+        activatedDate: user.activatedDate ?? new Date().toISOString(),
       },
       user.id,
     );

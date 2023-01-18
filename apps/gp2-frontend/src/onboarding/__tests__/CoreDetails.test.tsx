@@ -127,7 +127,10 @@ describe('CoreDetails', () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
     await renderCoreDetails(user.id);
-    userEvent.click(screen.getByRole('link', { name: 'Required Add' }));
+    const [keyInformationEditButton] = screen.getAllByRole('link', {
+      name: 'Edit Edit',
+    });
+    userEvent.click(keyInformationEditButton);
     expect(screen.getByRole('dialog')).toBeVisible();
   });
 
@@ -153,7 +156,10 @@ describe('CoreDetails', () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
     await renderCoreDetails(user.id);
-    userEvent.click(screen.getByRole('link', { name: 'Required Add' }));
+    const [keyInformationEditButton] = screen.getAllByRole('link', {
+      name: 'Edit Edit',
+    });
+    userEvent.click(keyInformationEditButton);
 
     userEvent.type(await screen.findByDisplayValue('Stark Industries'), ' 1');
     expect(await screen.findByText('ExampleInst')).toBeVisible();
@@ -167,7 +173,10 @@ describe('CoreDetails', () => {
     mockGetUser.mockResolvedValueOnce(user);
     await renderCoreDetails(user.id);
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-    userEvent.click(screen.getByRole('link', { name: 'Required Add' }));
+    const [keyInformationEditButton] = screen.getAllByRole('link', {
+      name: 'Edit Edit',
+    });
+    userEvent.click(keyInformationEditButton);
     expect(screen.getByRole('dialog')).toBeVisible();
     userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {
@@ -185,7 +194,10 @@ describe('CoreDetails', () => {
     mockGetUser.mockResolvedValueOnce(user);
     await renderCoreDetails(user.id);
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-    userEvent.click(screen.getByRole('link', { name: 'Edit Edit' }));
+    const [, contactInformationEditButton] = screen.getAllByRole('link', {
+      name: 'Edit Edit',
+    });
+    userEvent.click(contactInformationEditButton);
     expect(screen.getByRole('dialog')).toBeVisible();
     userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {

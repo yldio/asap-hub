@@ -87,6 +87,7 @@ jobs:
       GP2_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.GP2_SQUIDEX_CI_CLIENT_SECRET }}
       GP2_SQUIDEX_SHARED_SECRET: ${{ secrets.GP2_SQUIDEX_SHARED_SECRET }}
       GP2_AUTH0_SHARED_SECRET: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}
+      GP2_CI_AUTH0_CLIENT_SECRET: ${{ secrets.GP2_CI_AUTH0_CLIENT_SECRET }}
 
   algolia-sync-development:
     needs: [deployment-development]
@@ -129,6 +130,7 @@ jobs:
       GP2_SQUIDEX_API_CLIENT_SECRET: ${{ secrets.GP2_SQUIDEX_API_CLIENT_SECRET }}
       GP2_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.GP2_SQUIDEX_CI_CLIENT_SECRET }}
       GP2_SQUIDEX_SHARED_SECRET: ${{ secrets.GP2_SQUIDEX_SHARED_SECRET }}
+      GP2_CI_AUTH0_CLIENT_SECRET: ${{ secrets.GP2_CI_AUTH0_CLIENT_SECRET }}
 
   algolia-sync-production:
     needs: [deployment-production]

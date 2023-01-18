@@ -104,6 +104,9 @@ outputs:
   gp2-auth0-domain:
     description: 'GP2 Auth0 Domain'
     value: ${{ steps.vars.outputs.gp2-auth0-domain }}
+  gp2-ci-auth0-client-id:
+    description: 'GP2 CI Auth0 Client Id'
+    value: ${{ steps.vars.outputs.gp2-ci-auth0-client-id }}
   pr-number:
     description: 'PR Number'
     value: ${{ steps.vars.outputs.pr-number }}

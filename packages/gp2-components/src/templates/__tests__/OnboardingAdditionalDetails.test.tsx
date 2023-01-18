@@ -20,31 +20,13 @@ describe('OnboardingAdditionalDetails', () => {
     ).toBeVisible();
   });
 
-  it('renders the questions card', () => {
+  it.each([
+    'Open Questions',
+    'Funding Providers',
+    'Contributing Cohort Studies',
+    'External Profiles',
+  ])('renders the %s card', (name) => {
     render(<OnboardingAdditionalDetails {...defaultProps} />);
-    expect(
-      screen.getByRole('heading', { name: 'Open Questions' }),
-    ).toBeVisible();
-  });
-
-  it('renders the funding providers card', () => {
-    render(<OnboardingAdditionalDetails {...defaultProps} />);
-    expect(
-      screen.getByRole('heading', { name: 'Funding Providers' }),
-    ).toBeVisible();
-  });
-
-  it('renders the contributing cohorts', () => {
-    render(<OnboardingAdditionalDetails {...defaultProps} />);
-    expect(
-      screen.getByRole('heading', { name: 'Contributing Cohort Studies' }),
-    ).toBeVisible();
-  });
-
-  it('renders the external profiles card', () => {
-    render(<OnboardingAdditionalDetails {...defaultProps} />);
-    expect(
-      screen.getByRole('heading', { name: 'External Profiles' }),
-    ).toBeVisible();
+    expect(screen.getByRole('heading', { name })).toBeVisible();
   });
 });

@@ -22,6 +22,7 @@ import {
 export const getUserResponse = (): gp2.UserResponse => ({
   id: 'user-id-1',
   createdDate: '2020-09-23T20:45:22.000Z',
+  activatedDate: '2020-09-24T20:45:22.000Z',
   displayName: 'Tony Stark',
   email: 'T@ark.io',
   firstName: 'Tony',
@@ -181,6 +182,7 @@ export const patchResponse = (): gp2squidex.RestUser => ({
 export const getUserDataObject = (): gp2.UserDataObject => ({
   id: 'user-id-1',
   createdDate: '2020-09-23T20:45:22.000Z',
+  activatedDate: '2020-09-24T20:45:22.000Z',
   email: 'T@ark.io',
   firstName: 'Tony',
   lastName: 'Stark',

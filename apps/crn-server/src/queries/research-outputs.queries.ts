@@ -116,6 +116,27 @@ export const researchOutputContentQueryFragment = gql`
           name
         }
       }
+      teams {
+        id
+        created
+        lastModified
+        version
+        flatData {
+          displayName
+          inactiveSince
+        }
+        referencingUsersContents {
+          flatData {
+            email
+            teams {
+              role
+              id {
+                id
+              }
+            }
+          }
+        }
+      }
       methods {
         flatData {
           name

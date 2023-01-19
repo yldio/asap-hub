@@ -1,10 +1,12 @@
-import { FetchUsersFilter } from '@asap-hub/model';
+import { FetchUsersFilter, gp2 as gp2Model } from '@asap-hub/model';
 import { pixels } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import { ComponentProps } from 'react';
+import { ComponentProps, useCallback } from 'react';
 import { usersHeaderImage } from '../images';
-import { FilterPills, FiltersModal } from '../organisms';
+import { ValueProps } from '../molecules/FilterPill';
+import { FiltersModal } from '../organisms';
+import FilterPills from '../organisms/FilterPills';
 import FilterSearchExport from '../organisms/FilterSearchExport';
 import PageBanner from '../organisms/PageBanner';
 
@@ -25,9 +27,55 @@ type UsersPageProps = ComponentProps<typeof FilterSearchExport> & {
     ComponentProps<typeof FiltersModal>,
     'filters' | 'projects' | 'workingGroups'
   >;
+
+type FiltersType = Pick<
+  gp2Model.FetchUsersFilter,
+  'keywords' | 'regions' | 'workingGroups' | 'projects'
+>;
+
+type FilterMappingType = {
+  [key: string]: (x: string) => string;
+};
+
+type ProjectsType = Pick<gp2Model.ProjectResponse, 'id' | 'title'>[];
+
+type WorkingGroupsType = Pick<gp2Model.WorkingGroupResponse, 'id' | 'title'>[];
+
+type LabelArrayType = ProjectsType | WorkingGroupsType;
+
 const containerStyles = css({
   marginTop: rem(48),
 });
+
+const getLabel = function (array: LabelArrayType, filter: string) {
+  const index = array.findIndex((value) => value.id === filter);
+  return array[index].title;
+};
+
+const mapFilters = (
+  filters: FiltersType,
+  projects: ProjectsType,
+  workingGroups: WorkingGroupsType,
+) => {
+  const mapping: FilterMappingType = {
+    keywords: (x: string) => x,
+    regions: (x: string) => x,
+    projects: (x: string) => getLabel(projects, x),
+    workingGroups: (x: string) => getLabel(workingGroups, x),
+  };
+
+  return Object.entries(filters).reduce(
+    (acc: any, [key, value]) => [
+      ...acc,
+      ...value.map((v) => ({
+        id: `${key}_${v}`,
+        label: mapping[key](v),
+      })),
+    ],
+    [],
+  );
+};
+
 const UsersPage: React.FC<UsersPageProps> = ({
   children,
   searchQuery,
@@ -45,6 +93,23 @@ const UsersPage: React.FC<UsersPageProps> = ({
   const { users } = gp2;
   const backHref = users({}).$;
   const onBackClick = () => changeLocation(backHref);
+
+  const onRemove = useCallback(
+    (value: ValueProps) => {
+      const { id } = value;
+      const [key, val] = id.split('_');
+      const newFilter = (filters[key as keyof FiltersType] || []).filter(
+        (i) => i !== val,
+      );
+      const updatedFilters = {
+        ...filters,
+        [key]: newFilter,
+      };
+      updateFilters(backHref, updatedFilters);
+    },
+    [filters],
+  );
+
   return (
     <article>
       <PageBanner {...bannerProps} />
@@ -58,10 +123,8 @@ const UsersPage: React.FC<UsersPageProps> = ({
         />
       </div>
       <FilterPills
-        filters={filters}
-        projects={projects}
-        workingGroups={workingGroups}
-        onApplyClick={(filter) => updateFilters(backHref, filter)}
+        values={mapFilters(filters, projects, workingGroups)}
+        onRemove={onRemove}
       />
       <main>{children}</main>
       {displayFilters && (

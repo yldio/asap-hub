@@ -38,22 +38,25 @@ const linksStyles = css({
   display: 'flex',
 });
 
-interface FilterProps {
+export interface ValueProps {
   readonly label: string;
-  readonly value: string;
+  readonly id: string;
 }
 
-interface FilterPillProps {
-  readonly filter: FilterProps;
-  onApplyClick: () => void;
+interface PillProps {
+  readonly value: ValueProps;
+  onRemove: (value: ValueProps) => void;
 }
 
-const FilterPill: React.FC<FilterPillProps> = ({ filter, onApplyClick }) => (
+const FilterPill: React.FC<PillProps> = ({ value, onRemove }) => (
   <span css={[styles]}>
     <Ellipsis>
       <div css={[containerStyles]}>
-        <div css={css({ marginRight: rem(8) })}>{filter.label}</div>
-        <Button overrideStyles={css(linksStyles)} onClick={onApplyClick}>
+        <div css={css({ marginRight: rem(8) })}>{value.label}</div>
+        <Button
+          overrideStyles={css(linksStyles)}
+          onClick={() => onRemove(value)}
+        >
           {crossSmallIcon}
         </Button>
       </div>

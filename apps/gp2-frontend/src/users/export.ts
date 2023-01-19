@@ -21,7 +21,7 @@ export const userFields = {
   fundingStreams: 'Funding streams',
   contributingCohorts: 'Contributing cohorts',
   createdDate: 'Account Created',
-  activatedDate: 'Activated account',
+  activatedDate: 'Account activated',
 };
 
 type UserCSV = Record<keyof typeof userFields, CSVValue>;
@@ -32,39 +32,47 @@ const getPositionString = (position?: gp2.UserPosition) =>
   position
     ? `${position.role} in ${position.department} at ${position.institution}`
     : undefined;
-
-export const userToCSV = (output: gp2.UserResponse): UserCSV => ({
-  firstName: output.firstName,
-  lastName: output.lastName,
-  email: output.email,
-  region: output.region,
-  location: `${output.country}${output.city ? ', ' : ''}${output.city || ''}`,
-  role: output.role,
-  degrees: output.degrees?.sort(caseInsensitive).join(',\n'),
-  onboarded: output.onboarded ? 'Yes' : 'No',
-  primaryPosition: getPositionString(output.positions[0]),
-  secondaryPosition: getPositionString(output.positions[1]),
-  tertiaryPosition: getPositionString(output.positions[2]),
-  projects: output.projects
-    .map(({ title }) => title)
-    .sort(caseInsensitive)
-    .join(',\n'),
-  workingGroups: output.workingGroups
-    .map(({ title }) => title)
-    .sort(caseInsensitive)
-    .join(',\n'),
-  fundingStreams: output.fundingStreams,
-  contributingCohorts: output.contributingCohorts
-    .map(({ name, role, studyUrl }) => {
-      const required = `${name} ${role}`;
+const sorted = (items?: string[]) => items?.sort(caseInsensitive).join(',\n');
+export const userToCSV = ({
+  firstName,
+  lastName,
+  email,
+  region,
+  country,
+  city,
+  role,
+  degrees,
+  onboarded,
+  positions,
+  projects,
+  workingGroups,
+  fundingStreams,
+  contributingCohorts,
+  createdDate,
+  activatedDate,
+}: gp2.UserResponse): UserCSV => ({
+  firstName,
+  lastName,
+  email,
+  region,
+  location: city ? `${country}, ${city}` : country,
+  role,
+  degrees: sorted(degrees),
+  onboarded: onboarded ? 'Yes' : 'No',
+  primaryPosition: getPositionString(positions[0]),
+  secondaryPosition: getPositionString(positions[1]),
+  tertiaryPosition: getPositionString(positions[2]),
+  projects: sorted(projects.map(({ title }) => title)),
+  workingGroups: sorted(workingGroups.map(({ title }) => title)),
+  fundingStreams,
+  contributingCohorts: sorted(
+    contributingCohorts.map(({ name, role: cohortRole, studyUrl }) => {
+      const required = `${name} ${cohortRole}`;
       return studyUrl ? `${required} ${studyUrl}` : required;
-    })
-    .sort(caseInsensitive)
-    .join(', '),
-  createdDate: formatDate(new Date(output.createdDate)),
-  activatedDate: output.activatedDate
-    ? formatDate(new Date(output.activatedDate))
-    : '',
+    }),
+  ),
+  createdDate: formatDate(new Date(createdDate)),
+  activatedDate: activatedDate && formatDate(new Date(activatedDate)),
 });
 
 export const squidexUsersResponseToStream = async (

@@ -20,6 +20,7 @@ export const userFields = {
   workingGroups: 'Working groups',
   fundingStreams: 'Funding streams',
   contributingCohorts: 'Contributing cohorts',
+  createdDate: 'Account Created',
   activatedDate: 'Activated account',
 };
 
@@ -60,6 +61,7 @@ export const userToCSV = (output: gp2.UserResponse): UserCSV => ({
     })
     .sort(caseInsensitive)
     .join(', '),
+  createdDate: formatDate(new Date(output.createdDate)),
   activatedDate: output.activatedDate
     ? formatDate(new Date(output.activatedDate))
     : '',

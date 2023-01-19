@@ -32,6 +32,7 @@ describe('userToCSV', () => {
       role: 'Trainee',
       fundingStreams: 'funding stream',
       activatedDate: expect.anything(),
+      createdDate: expect.anything(),
       location: expect.anything(),
       contributingCohorts: expect.anything(),
       degrees: expect.anything(),
@@ -181,6 +182,15 @@ describe('userToCSV', () => {
     );
   });
 
+  it('formats the createdDate', () => {
+    const output: gp2Model.UserResponse = {
+      ...gp2Fixtures.createUserResponse(),
+      createdDate: '2021-12-28T14:00:00.000Z',
+    };
+    expect(userToCSV(output).createdDate).toMatchInlineSnapshot(
+      `"28th December 2021"`,
+    );
+  });
   it('formats the activatedDate', () => {
     const output: gp2Model.UserResponse = {
       ...gp2Fixtures.createUserResponse(),
@@ -189,6 +199,13 @@ describe('userToCSV', () => {
     expect(userToCSV(output).activatedDate).toMatchInlineSnapshot(
       `"28th December 2021"`,
     );
+  });
+  it('formats the undefined activatedDate', () => {
+    const output: gp2Model.UserResponse = {
+      ...gp2Fixtures.createUserResponse(),
+      activatedDate: undefined,
+    };
+    expect(userToCSV(output).activatedDate).toEqual('');
   });
 });
 

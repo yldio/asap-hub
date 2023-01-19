@@ -9,9 +9,8 @@ import {
   userToCSV,
 } from '../export';
 
-afterEach(() => {
-  jest.clearAllMocks();
-});
+afterEach(jest.resetAllMocks);
+
 describe('userToCSV', () => {
   it('handles flat data', () => {
     const output: gp2Model.UserResponse = {
@@ -20,8 +19,8 @@ describe('userToCSV', () => {
       email: 'T@ark.io',
       firstName: 'Tony',
       lastName: 'Stark',
-      region: 'Europe' as const,
-      role: 'Trainee' as const,
+      region: 'Europe',
+      role: 'Trainee',
       onboarded: true,
       fundingStreams: 'funding stream',
     };
@@ -32,7 +31,7 @@ describe('userToCSV', () => {
       region: 'Europe',
       role: 'Trainee',
       fundingStreams: 'funding stream',
-      createdDate: expect.anything(),
+      activatedDate: expect.anything(),
       location: expect.anything(),
       contributingCohorts: expect.anything(),
       degrees: expect.anything(),
@@ -181,13 +180,14 @@ describe('userToCSV', () => {
       `"CALYPSO Contributor first-study, DATATOP Investigator second-study, ICEBERG Contributor"`,
     );
   });
-  it('formats the createdDate', () => {
+
+  it('formats the activatedDate', () => {
     const output: gp2Model.UserResponse = {
       ...gp2Fixtures.createUserResponse(),
-      createdDate: '2020-09-23T20:45:22.000Z',
+      activatedDate: '2021-12-28T14:00:00.000Z',
     };
-    expect(userToCSV(output).createdDate).toMatchInlineSnapshot(
-      `"23rd September 2020"`,
+    expect(userToCSV(output).activatedDate).toMatchInlineSnapshot(
+      `"28th December 2021"`,
     );
   });
 });

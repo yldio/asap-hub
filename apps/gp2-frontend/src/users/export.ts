@@ -20,7 +20,7 @@ export const userFields = {
   workingGroups: 'Working groups',
   fundingStreams: 'Funding streams',
   contributingCohorts: 'Contributing cohorts',
-  createdDate: 'Activated account',
+  activatedDate: 'Activated account',
 };
 
 type UserCSV = Record<keyof typeof userFields, CSVValue>;
@@ -60,7 +60,9 @@ export const userToCSV = (output: gp2.UserResponse): UserCSV => ({
     })
     .sort(caseInsensitive)
     .join(', '),
-  createdDate: formatDate(new Date(output.createdDate)),
+  activatedDate: output.activatedDate
+    ? formatDate(new Date(output.activatedDate))
+    : '',
 });
 
 export const squidexUsersResponseToStream = async (

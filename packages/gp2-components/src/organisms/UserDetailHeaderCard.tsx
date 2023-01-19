@@ -1,14 +1,19 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { Avatar, Headline3, Link, pixels } from '@asap-hub/react-components';
+import {
+  Avatar,
+  Headline3,
+  Link,
+  pixels,
+  uploadIcon,
+} from '@asap-hub/react-components';
 import { css } from '@emotion/react';
-import { addIcon } from '../icons';
-import locationIcon from '../icons/location-icon';
-import roleIcon from '../icons/role-icon';
+import { addIcon, editIcon, locationIcon, roleIcon } from '../icons';
 import { usersHeaderImage } from '../images';
 import { mobileQuery, nonMobileQuery } from '../layout';
 import CardWithBackground from '../molecules/CardWithBackground';
 import IconWithLabel from '../molecules/IconWithLabel';
 import UserRegion from '../molecules/UserRegion';
+import colors from '../templates/colors';
 
 const { rem } = pixels;
 
@@ -26,7 +31,9 @@ type UserDetailHeaderCardProps = Pick<
   | 'country'
   | 'positions'
 > & {
-  edit?: string;
+  editHref?: string;
+  readonly onImageSelect?: (file: File) => void;
+  readonly avatarSaving?: boolean;
 };
 
 const avatarSize = 132;
@@ -52,6 +59,7 @@ const containerStyles = css({
 const avatarStyles = css({
   width: rem(avatarSize),
   height: rem(avatarSize),
+  margin: 0,
   [mobileQuery]: {
     margin: 'auto',
   },
@@ -74,6 +82,32 @@ const editButtonStyles = css({
   },
 });
 
+const validateCompleted = ({
+  firstName,
+  lastName,
+  degrees,
+  region,
+  country,
+  positions,
+  role,
+}: Pick<
+  UserDetailHeaderCardProps,
+  | 'firstName'
+  | 'lastName'
+  | 'degrees'
+  | 'region'
+  | 'role'
+  | 'country'
+  | 'positions'
+>) =>
+  firstName &&
+  lastName &&
+  degrees?.length &&
+  region &&
+  country &&
+  positions.length &&
+  role;
+
 const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
   displayName,
   avatarUrl,
@@ -85,17 +119,72 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
   city,
   country,
   positions,
-  edit,
+  editHref,
+  onImageSelect,
+  avatarSaving = false,
 }) => (
   <CardWithBackground image={usersHeaderImage}>
     <div css={containerStyles}>
-      <div css={css({ gridArea: 'avatar' })}>
-        <Avatar
-          imageUrl={avatarUrl}
-          firstName={firstName}
-          lastName={lastName}
-          overrideStyles={avatarStyles}
-        />
+      <div
+        css={css({
+          gridArea: 'avatar',
+          display: 'grid',
+          width: rem(avatarSize),
+          height: rem(avatarSize),
+        })}
+      >
+        <div css={css({ gridRow: 1, gridColumn: 1 })}>
+          <Avatar
+            imageUrl={avatarUrl}
+            firstName={firstName}
+            lastName={lastName}
+            overrideStyles={avatarStyles}
+          />
+        </div>
+        <div
+          css={css({
+            gridRow: 1,
+            gridColumn: 1,
+            alignSelf: 'flex-end',
+            justifySelf: 'flex-end',
+          })}
+        >
+          {onImageSelect && (
+            <label>
+              <Link
+                small
+                buttonStyle
+                noMargin
+                href={undefined}
+                label="Edit Avatar"
+                enabled={!avatarSaving}
+              >
+                <span
+                  css={css({
+                    display: 'flex',
+                    margin: `${rem(3)} 0`,
+                    svg: {
+                      stroke: colors.neutral900.rgb,
+                    },
+                  })}
+                >
+                  {uploadIcon}
+                </span>
+                <input
+                  disabled={avatarSaving}
+                  type="file"
+                  accept="image/x-png,image/jpeg"
+                  aria-label="Upload Avatar"
+                  onChange={(event) =>
+                    event.target.files?.length &&
+                    onImageSelect(event.target.files[0])
+                  }
+                  css={{ display: 'none' }}
+                />
+              </Link>
+            </label>
+          )}
+        </div>
       </div>
 
       <div css={[rowStyles, { gridArea: 'headline' }]}>
@@ -125,10 +214,31 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
           ),
         )}
       </div>
-      {edit && (
+      {editHref && (
         <div css={[{ gridArea: 'edit' }, editButtonStyles]}>
-          <Link href={edit} buttonStyle noMargin small fullWidth>
-            Required {addIcon}
+          <Link href={editHref} buttonStyle noMargin small fullWidth>
+            {validateCompleted({
+              degrees,
+              firstName,
+              lastName,
+              region,
+              role,
+              country,
+              positions,
+            })
+              ? 'Edit'
+              : 'Required'}{' '}
+            {validateCompleted({
+              degrees,
+              firstName,
+              lastName,
+              region,
+              role,
+              country,
+              positions,
+            })
+              ? editIcon
+              : addIcon}
           </Link>
         </div>
       )}

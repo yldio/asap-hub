@@ -143,3 +143,21 @@ export const validateUserPatchRequest = validateInput(
     skipNull: true,
   },
 );
+
+type UserPostRequest = { avatar: string };
+
+const userPostRequestValidationSchema: JSONSchemaType<UserPostRequest> = {
+  type: 'object',
+  properties: {
+    avatar: { type: 'string' },
+  },
+  required: ['avatar'],
+  additionalProperties: false,
+};
+
+export const validateUserPostRequestInput = validateInput(
+  userPostRequestValidationSchema,
+  {
+    skipNull: false,
+  },
+);

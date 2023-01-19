@@ -1,15 +1,17 @@
 import { GenericError, NotFoundError } from '@asap-hub/errors';
 import { gp2 } from '@asap-hub/model';
+import { AssetDataProvider } from '../data-providers/assets.data-provider';
 import { UserDataProvider } from '../data-providers/user.data-provider';
 
 export interface UserController {
   fetch(options: gp2.FetchUsersOptions): Promise<gp2.ListUserResponse>;
   fetchByCode(code: string): Promise<gp2.UserResponse>;
   fetchById(id: string, loggedInUserId: string): Promise<gp2.UserResponse>;
-  update(
+  update(id: string, update: gp2.UserUpdateRequest): Promise<gp2.UserResponse>;
+  updateAvatar(
     id: string,
-    update: gp2.UserUpdateRequest,
-    loggedInUserId: string,
+    avatar: Buffer,
+    contentType: string,
   ): Promise<gp2.UserResponse>;
   connectByCode(
     welcomeCode: string,
@@ -19,18 +21,35 @@ export interface UserController {
 
 export default class Users implements UserController {
   userDataProvider: UserDataProvider;
+  assetDataProvider: AssetDataProvider;
 
-  constructor(userDataProvider: UserDataProvider) {
+  constructor(
+    userDataProvider: UserDataProvider,
+    assetDataProvider: AssetDataProvider,
+  ) {
     this.userDataProvider = userDataProvider;
+    this.assetDataProvider = assetDataProvider;
   }
 
   async update(
     id: string,
     update: gp2.UserUpdateRequest,
-    loggedInUserId: string,
   ): Promise<gp2.UserResponse> {
     await this.userDataProvider.update(id, update);
-    return this.fetchById(id, loggedInUserId);
+    return this.fetchById(id, id);
+  }
+
+  async updateAvatar(
+    id: string,
+    avatar: Buffer,
+    contentType: string,
+  ): Promise<gp2.UserResponse> {
+    const assetId = await this.assetDataProvider.create(
+      id,
+      avatar,
+      contentType,
+    );
+    return this.update(id, { avatarUrl: assetId });
   }
 
   async fetch(options: gp2.FetchUsersOptions): Promise<gp2.ListUserResponse> {
@@ -91,14 +110,10 @@ export default class Users implements UserController {
     if (user.connections?.find(({ code }) => code === authUserId)) {
       return parseUserToResponse(user, user.id);
     }
-    return this.update(
-      user.id,
-      {
-        email: user.email,
-        connections: [...(user.connections || []), { code: authUserId }],
-      },
-      user.id,
-    );
+    return this.update(user.id, {
+      email: user.email,
+      connections: [...(user.connections || []), { code: authUserId }],
+    });
   }
 
   private async queryByCode(code: string) {

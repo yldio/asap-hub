@@ -28,6 +28,7 @@ import {
   FETCH_WORKINGGROUPS_MEMBERS,
 } from '../queries/users.queries';
 import { reverseMap } from '../utils/reverse-map';
+import { createUrl } from '../utils/urls';
 import { roleMap as projectRoleMap } from './project.data-provider';
 import { roleMap as workingGroupRoleMap } from './working-group.data-provider';
 
@@ -59,7 +60,6 @@ export class UserSquidexDataProvider implements UserDataProvider {
 
   async update(id: string, user: gp2Model.UserUpdateDataObject): Promise<void> {
     const cleanedUser = getUserSquidexData(user);
-
     await this.userSquidexRestClient.patch(id, cleanedUser);
   }
 
@@ -217,15 +217,15 @@ const mapContributingCohorts = (
 
 function getUserSquidexData(
   input: gp2Model.UserCreateDataObject,
-): Omit<gp2Squidex.InputUser['data'], 'connections' | 'avatar'>;
+): Omit<gp2Squidex.InputUser['data'], 'connections'>;
 function getUserSquidexData(
   input: gp2Model.UserUpdateDataObject,
-): Partial<Omit<gp2Squidex.InputUser['data'], 'connections' | 'avatar'>>;
+): Partial<Omit<gp2Squidex.InputUser['data'], 'connections'>>;
 function getUserSquidexData(
   input: gp2Model.UserUpdateDataObject | gp2Model.UserCreateDataObject,
 ):
-  | Omit<gp2Squidex.InputUser['data'], 'connections' | 'avatar'>
-  | Partial<Omit<gp2Squidex.InputUser['data'], 'connections' | 'avatar'>> {
+  | Omit<gp2Squidex.InputUser['data'], 'connections'>
+  | Partial<Omit<gp2Squidex.InputUser['data'], 'connections'>> {
   const {
     region,
     role,
@@ -233,6 +233,7 @@ function getUserSquidexData(
     telephone,
     questions,
     contributingCohorts,
+    avatarUrl,
     ...userInput
   } = input;
   const fieldMappedUser = mapUserFields({ region, role, degrees });
@@ -246,6 +247,7 @@ function getUserSquidexData(
     ...mappedTelephone,
     questions: mappedQuestions,
     contributingCohorts: mappedCohorts,
+    avatar: avatarUrl ? [avatarUrl] : undefined,
   });
 }
 
@@ -299,6 +301,9 @@ export const parseGraphQLUserToDataObject = ({
     throw new Error(`Role not defined: ${user.role}`);
   }
 
+  const avatarUrl = user.avatar?.length
+    ? createUrl(user.avatar.map((a) => a.id))[0]
+    : undefined;
   const createdDate = parseDate(created).toISOString();
   const degrees = parseDegrees(user.degree);
   const positions = parsePositions(user.positions);
@@ -323,6 +328,7 @@ export const parseGraphQLUserToDataObject = ({
   return {
     id,
     createdDate,
+    avatarUrl,
     firstName: user.firstName || '',
     lastName: user.lastName || '',
     degrees,

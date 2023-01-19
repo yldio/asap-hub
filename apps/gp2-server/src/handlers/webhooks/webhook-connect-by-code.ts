@@ -5,6 +5,7 @@ import {
   SquidexGraphql,
   SquidexRest,
 } from '@asap-hub/squidex';
+import { assetDataProviderMock } from '../../../test/mocks/asset-data-provider.mock';
 import { appName, auth0SharedSecret, baseUrl } from '../../config';
 import Users from '../../controllers/user.controller';
 import { UserSquidexDataProvider } from '../../data-providers/user.data-provider';
@@ -27,7 +28,7 @@ const userDataProvider = new UserSquidexDataProvider(
   squidexGraphqlClient,
   userRestClient,
 );
-const users = new Users(userDataProvider);
+const users = new Users(userDataProvider, assetDataProviderMock);
 const connectByCodeHandler = connectByCodeHandlerFactory(
   users,
   auth0SharedSecret,

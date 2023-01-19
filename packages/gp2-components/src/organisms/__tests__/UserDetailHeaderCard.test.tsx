@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import UserDetailHeaderCard from '../UserDetailHeaderCard';
 
 describe('UserDetailHeaderCard', () => {
@@ -85,5 +86,36 @@ describe('UserDetailHeaderCard', () => {
     expect(
       screen.getByText('Car designer in Design at Powell Motors'),
     ).toBeInTheDocument();
+  });
+  it('renders upload buttton for avatar', () => {
+    const onImageSelect = jest.fn((file: File) => {});
+    const testFile = new File(['foo'], 'foo.png', { type: 'image/png' });
+    render(
+      <UserDetailHeaderCard {...defaultProps} onImageSelect={onImageSelect} />,
+    );
+    const editButton = screen.getByLabelText(/edit.+avatar/i);
+    const uploadInput = screen.getByLabelText(/upload.+avatar/i);
+    expect(editButton).toBeVisible();
+    expect(uploadInput).not.toHaveAttribute('disabled');
+    userEvent.upload(uploadInput, testFile);
+    expect(onImageSelect).toBeCalledWith(testFile);
+  });
+  describe('when passing a editHref', () => {
+    it('renders edit button when information is complete', () => {
+      render(<UserDetailHeaderCard {...defaultProps} editHref="/" />);
+      expect(screen.getByRole('link', { name: /edit.+edit/i })).toBeVisible();
+    });
+    it('renders required button when information is incomplete', () => {
+      render(
+        <UserDetailHeaderCard
+          {...defaultProps}
+          editHref="/"
+          degrees={undefined}
+        />,
+      );
+      expect(
+        screen.getByRole('link', { name: /required.+add/i }),
+      ).toBeVisible();
+    });
   });
 });

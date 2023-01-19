@@ -36,6 +36,10 @@ import WorkingGroups, {
   WorkingGroupController,
 } from './controllers/working-group.controller';
 import {
+  AssetDataProvider,
+  AssetSquidexDataProvider,
+} from './data-providers/assets.data-provider';
+import {
   ProjectDataProvider,
   ProjectSquidexDataProvider,
 } from './data-providers/project.data-provider';
@@ -108,6 +112,8 @@ export const appFactory = (libs: Libs = {}): Express => {
   const userResponseCacheClient = new MemoryCacheClient<gp2.UserResponse>();
 
   // Data Providers
+  const assetDataProvider =
+    libs.assetDataProvider || new AssetSquidexDataProvider(userRestClient);
   const userDataProvider =
     libs.userDataProvider ||
     new UserSquidexDataProvider(squidexGraphqlClient, userRestClient);
@@ -138,7 +144,8 @@ export const appFactory = (libs: Libs = {}): Express => {
   /**
    * Public routes --->
    */
-  const userController = libs.userController || new Users(userDataProvider);
+  const userController =
+    libs.userController || new Users(userDataProvider, assetDataProvider);
 
   // Handlers
   const authHandler =
@@ -190,6 +197,7 @@ export const appFactory = (libs: Libs = {}): Express => {
 };
 
 export type Libs = {
+  assetDataProvider?: AssetDataProvider;
   userDataProvider?: UserDataProvider;
   dashboardController?: DashboardController;
   workingGroupDataProvider?: WorkingGroupDataProvider;

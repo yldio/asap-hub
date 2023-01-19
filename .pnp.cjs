@@ -11718,7 +11718,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jest", "npm:27.5.2"],\
             ["@types/jsonwebtoken", "npm:8.5.9"],\
             ["@types/jwt-encode", "workspace:@types/jwt-encode"],\
+            ["@types/mime-types", "npm:2.1.1"],\
             ["@types/node", "npm:14.18.33"],\
+            ["@types/parse-data-url", "npm:3.0.0"],\
             ["@types/serverless", "npm:3.12.8"],\
             ["@types/source-map-support", "npm:0.5.4"],\
             ["@types/supertest", "npm:2.0.12"],\
@@ -11733,13 +11735,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["cors", "npm:2.8.5"],\
             ["express", "npm:4.18.2"],\
             ["express-async-errors", "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:3.1.1"],\
+            ["form-data", "npm:3.0.1"],\
             ["graphql", "npm:15.8.0"],\
             ["graphql-tag", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:2.12.6"],\
             ["graphql-typescript-integration", "npm:1.2.1"],\
             ["jsonwebtoken", "npm:8.5.1"],\
             ["jwt-encode", "npm:1.0.1"],\
+            ["mime-types", "npm:2.1.35"],\
             ["nock", "npm:13.0.11"],\
             ["node-dev", "npm:6.7.0"],\
+            ["parse-data-url", "npm:3.0.0"],\
             ["serverless", "npm:3.22.0"],\
             ["serverless-http", "npm:2.7.0"],\
             ["serverless-s3-sync", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:3.1.0"],\

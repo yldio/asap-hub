@@ -8,7 +8,7 @@ import {
   useSetRecoilState,
 } from 'recoil';
 import { authorizationState } from '../auth/state';
-import { getUser, getUsers, patchUser } from './api';
+import { getUser, getUsers, patchUser, postUserAvatar } from './api';
 
 export const usersState = selectorFamily<
   gp2.ListUserResponse,
@@ -68,6 +68,21 @@ export const usePatchUserById = (id: string) => {
   const setPatchedUser = useSetRecoilState(patchedUserState(id));
   return async (patch: gp2.UserPatchRequest) => {
     setPatchedUser(await patchUser(id, patch, authorization));
+    await getTokenSilently({
+      redirect_uri: window.location.origin,
+      ignoreCache: true,
+    });
+
+    await refreshUser();
+  };
+};
+
+export const usePostUserAvatarById = (id: string) => {
+  const { getTokenSilently, refreshUser } = useAuth0GP2();
+  const authorization = useRecoilValue(authorizationState);
+  const setPatchedUser = useSetRecoilState(patchedUserState(id));
+  return async (avatar: string) => {
+    setPatchedUser(await postUserAvatar(id, { avatar }, authorization));
     await getTokenSilently({
       redirect_uri: window.location.origin,
       ignoreCache: true,

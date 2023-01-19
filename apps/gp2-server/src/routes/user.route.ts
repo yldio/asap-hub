@@ -6,10 +6,12 @@ import {
 } from '@asap-hub/server-common';
 import Boom, { isBoom } from '@hapi/boom';
 import { Router } from 'express';
+import parseURI from 'parse-data-url';
 import { UserController } from '../controllers/user.controller';
 import {
   validateUserParameters,
   validateUserPatchRequest,
+  validateUserPostRequestInput,
 } from '../validation/user.validation';
 
 const { isUserOnboardable } = gp2Validation;
@@ -90,7 +92,6 @@ export const userRouteFactory = (userController: UserController): Router =>
         const updatedUser = await userController.update(
           userId,
           userProfileUpdate,
-          userId,
         );
 
         const saveOnboarded = (): Promise<gp2Model.UserResponse> => {
@@ -98,12 +99,42 @@ export const userRouteFactory = (userController: UserController): Router =>
             throw Boom.badData('User profile is not complete');
           }
 
-          return userController.update(userId, { onboarded: true }, userId);
+          return userController.update(userId, { onboarded: true });
         };
         const userResponse = onboarded ? await saveOnboarded() : updatedUser;
 
         res.json(userResponse);
       },
-    );
+    )
+    .post('/users/:userId/avatar', async (req, res) => {
+      const { params, body, loggedInUser } = req;
+      const { userId } = validateUserParameters(params);
+
+      // user is trying to update someone else
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      if (loggedInUser!.id !== userId) {
+        throw Boom.forbidden();
+      }
+      const payload = validateUserPostRequestInput(body);
+      const parsed = parseURI(payload.avatar);
+      if (!parsed) {
+        throw Boom.badRequest('avatar must be a valid data URL');
+      }
+      if (!parsed.contentType.startsWith('image')) {
+        throw Boom.unsupportedMediaType('Content-type must be image');
+      }
+      const avatar = parsed.toBuffer();
+      // convert bytes to MB and check size
+      // 3MB = 2.8MB (2MB Base64 image) + some slack
+      if (avatar.length / 1e6 > 3) {
+        throw Boom.entityTooLarge('Avatar must be smaller than 2MB');
+      }
+      const result = await userController.updateAvatar(
+        userId,
+        avatar,
+        parsed.contentType,
+      );
+      res.json(result);
+    });
 
 type UserPublicResponse = Pick<gp2Model.UserResponse, 'id' | 'displayName'>;

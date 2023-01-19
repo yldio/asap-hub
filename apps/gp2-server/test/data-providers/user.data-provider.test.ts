@@ -183,6 +183,14 @@ describe('User data provider', () => {
       const result = await userDataProvider.fetchById('user-id');
       expect(result?.questions).toEqual(['a valid question']);
     });
+    test('avatar is added', async () => {
+      const user = getGraphQLUser();
+      user.flatData.avatar = [{ id: 'avatar-id' }];
+      const mockResponse = getSquidexUserGraphqlResponse(user);
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+      const result = await userDataProvider.fetchById('user-id');
+      expect(result?.avatarUrl).toEqual(expect.stringContaining('avatar-id'));
+    });
 
     test('questions are valid', async () => {
       const invalidQuestion = [{ question: null }];

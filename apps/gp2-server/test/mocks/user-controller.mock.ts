@@ -6,4 +6,5 @@ export const userControllerMock: jest.Mocked<UserController> = {
   fetchByCode: jest.fn(),
   connectByCode: jest.fn(),
   update: jest.fn(),
+  updateAvatar: jest.fn(),
 };

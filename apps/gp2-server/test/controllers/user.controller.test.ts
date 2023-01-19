@@ -2,10 +2,11 @@ import { GenericError, NotFoundError } from '@asap-hub/errors';
 import { gp2 } from '@asap-hub/model';
 import Users from '../../src/controllers/user.controller';
 import { getUserDataObject, getUserResponse } from '../fixtures/user.fixtures';
+import { assetDataProviderMock } from '../mocks/asset-data-provider.mock';
 import { userDataProviderMock } from '../mocks/user-data-provider.mock';
 
 describe('Users controller', () => {
-  const userController = new Users(userDataProviderMock);
+  const userController = new Users(userDataProviderMock, assetDataProviderMock);
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -166,10 +167,64 @@ describe('Users controller', () => {
     test('Should return the newly updated user', async () => {
       const user = getUserDataObject();
       userDataProviderMock.fetchById.mockResolvedValue(user);
-      const result = await userController.update(user.id, {}, user.id);
+      const result = await userController.update(user.id, {});
 
       expect(result).toEqual(getUserResponse());
       expect(userDataProviderMock.update).toHaveBeenCalledWith(user.id, {});
+    });
+  });
+
+  describe('updateAvatar', () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
+
+    test('should return 200 when syncs asset and updates users profile', async () => {
+      const user = getUserDataObject();
+      const userId = user.id;
+      assetDataProviderMock.create.mockResolvedValueOnce('42');
+      userDataProviderMock.fetchById.mockResolvedValueOnce(user);
+      const result = await userController.updateAvatar(
+        userId,
+        Buffer.from('avatar'),
+        'image/jpeg',
+      );
+
+      expect(result).toEqual(getUserResponse());
+      expect(userDataProviderMock.update).toHaveBeenCalledWith(userId, {
+        avatarUrl: '42',
+      });
+      expect(assetDataProviderMock.create).toHaveBeenCalledWith(
+        userId,
+        Buffer.from('avatar'),
+        'image/jpeg',
+      );
+      expect(userDataProviderMock.fetchById).toHaveBeenCalledWith(userId);
+    });
+
+    test('should throw when fails to update asset - squidex error', async () => {
+      assetDataProviderMock.create.mockResolvedValue('42');
+      userDataProviderMock.update.mockRejectedValue(new Error());
+
+      await expect(
+        userController.updateAvatar(
+          'user-id',
+          Buffer.from('avatar'),
+          'image/jpeg',
+        ),
+      ).rejects.toThrow();
+    });
+
+    test('should throw when fails to update user - squidex error', async () => {
+      assetDataProviderMock.create.mockRejectedValue(new Error());
+
+      await expect(
+        userController.updateAvatar(
+          'user-id',
+          Buffer.from('avatar'),
+          'image/jpeg',
+        ),
+      ).rejects.toThrow();
     });
   });
 

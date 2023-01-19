@@ -4,6 +4,7 @@ import {
   FetchPagesQueryVariables,
   GraphQLClient,
   parseRichText,
+  RichTextFromQuery,
 } from '@asap-hub/contentful';
 import { ListPageDataObject, PageDataObject } from '@asap-hub/model';
 import {
@@ -53,5 +54,5 @@ export const parseContentfulGraphQlPages = (
   shortText: item.shortText || '',
   link: item.link || '',
   linkText: item.linkText || '',
-  text: item.text ? parseRichText(item?.text.json) : '',
+  text: item.text ? parseRichText(item?.text as RichTextFromQuery) : '',
 });

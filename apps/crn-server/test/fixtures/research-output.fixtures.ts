@@ -331,6 +331,9 @@ export const getRestResearchOutputCreateData =
         'cd7be402-84d7-4d21-a360-82e2695f2dd9',
       ],
     },
+    teams: {
+      iv: ['team-id-0'],
+    },
     authors: { iv: ['user-id-1', 'user-id-2'] },
     createdBy: { iv: ['userId'] },
     updatedBy: { iv: ['userId'] },

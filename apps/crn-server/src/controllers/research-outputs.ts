@@ -67,29 +67,34 @@ export default class ResearchOutputs implements ResearchOutputController {
     const { methods, organisms, environments, subtype } =
       await this.parseResearchTags(researchOutputCreateData);
 
-    const {
-      teams,
-      labs,
-      methods: _,
-      organisms: __,
-      environments: ___,
-      subtype: ____,
-      workingGroups: _____, // @TODO send this data to squidex once the schema has changed (1/2)
-      ...input
-    } = researchOutputCreateData;
-
     const researchOutputCreateDataObject: ResearchOutputCreateDataObject = {
-      ...input,
-      teamIds: teams,
-      labIds: labs || [],
       authors: await this.mapAuthorsPostRequestToId(
         researchOutputCreateData.authors ?? [],
       ),
+      accession: researchOutputCreateData.accession,
+      addedDate: new Date(Date.now()).toISOString(),
+      asapFunded: researchOutputCreateData.asapFunded,
+      createdBy: researchOutputCreateData.createdBy,
+      description: researchOutputCreateData.description,
+      documentType: researchOutputCreateData.documentType,
+      doi: researchOutputCreateData.doi,
+      environmentIds: environments,
+      labCatalogNumber: researchOutputCreateData.labCatalogNumber,
+      labIds: researchOutputCreateData.labs || [],
+      link: researchOutputCreateData.link,
       methodIds: methods,
       organismIds: organisms,
-      environmentIds: environments,
+      publishDate: researchOutputCreateData.publishDate,
+      publishingEntity: researchOutputCreateData.publishingEntity,
+      rrid: researchOutputCreateData.rrid,
+      sharingStatus: researchOutputCreateData.sharingStatus,
       subtypeId: subtype,
-      addedDate: new Date(Date.now()).toISOString(),
+      tags: researchOutputCreateData.tags,
+      teamIds: researchOutputCreateData.teams,
+      title: researchOutputCreateData.title,
+      type: researchOutputCreateData.type,
+      usageNotes: researchOutputCreateData.usageNotes,
+      usedInPublication: researchOutputCreateData.usedInPublication,
     };
 
     const researchOutputId = await this.researchOutputDataProvider.create(
@@ -108,16 +113,6 @@ export default class ResearchOutputs implements ResearchOutputController {
     const { methods, organisms, environments, subtype } =
       await this.parseResearchTags(researchOutputUpdateData);
 
-    const {
-      teams,
-      labs,
-      methods: _,
-      organisms: __,
-      environments: ___,
-      subtype: ____,
-      ...input
-    } = researchOutputUpdateData;
-
     const currentResearchOutput =
       await this.researchOutputDataProvider.fetchById(id);
 
@@ -129,17 +124,33 @@ export default class ResearchOutputs implements ResearchOutputController {
     }
 
     const researchOutputUpdateDataObject: ResearchOutputUpdateDataObject = {
-      ...input,
-      teamIds: teams,
-      labIds: labs || [],
       authors: await this.mapAuthorsPostRequestToId(
         researchOutputUpdateData.authors ?? [],
       ),
+      accession: researchOutputUpdateData.accession,
+      addedDate: currentResearchOutput.addedDate,
+      asapFunded: researchOutputUpdateData.asapFunded,
+      description: researchOutputUpdateData.description,
+      documentType: researchOutputUpdateData.documentType,
+      doi: researchOutputUpdateData.doi,
+      environmentIds: environments,
+      labCatalogNumber: researchOutputUpdateData.labCatalogNumber,
+      labIds: researchOutputUpdateData.labs || [],
+      link: researchOutputUpdateData.link,
       methodIds: methods,
       organismIds: organisms,
-      environmentIds: environments,
+      publishDate: researchOutputUpdateData.publishDate,
+      publishingEntity: researchOutputUpdateData.publishingEntity,
+      rrid: researchOutputUpdateData.rrid,
+      sharingStatus: researchOutputUpdateData.sharingStatus,
       subtypeId: subtype,
-      addedDate: currentResearchOutput.addedDate,
+      tags: researchOutputUpdateData.tags,
+      teamIds: researchOutputUpdateData.teams,
+      title: researchOutputUpdateData.title,
+      type: researchOutputUpdateData.type,
+      updatedBy: researchOutputUpdateData.updatedBy,
+      usageNotes: researchOutputUpdateData.usageNotes,
+      usedInPublication: researchOutputUpdateData.usedInPublication,
     };
 
     const researchOutputId = await this.researchOutputDataProvider.update(

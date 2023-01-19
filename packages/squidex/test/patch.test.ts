@@ -82,6 +82,46 @@ describe('squidex wrapper', () => {
     ).rejects.toThrow(GenericError);
   });
 
+  it('returns ValidationError along with the response payload formatted to json when squidex returns validation error', async () => {
+    nock(baseUrl)
+      .patch(`/api/content/${appName}/${collection}/42`)
+      .query(() => true)
+      .reply(400, {
+        message: 'Validation error',
+        traceId: '00-ba8100d975b2cb551a023702a7d0d5b7-891e647127349001-01',
+        type: 'https://tools.ietf.org/html/rfc7231#section-6.5.1',
+        details: ['link.iv: Another content with the same value exists.'],
+        statusCode: 400,
+      });
+
+    await expect(() =>
+      client.patch('42', {
+        string: {
+          iv: 'value',
+        },
+      }),
+    ).rejects.toThrowError(
+      expect.objectContaining({
+        details: ['link.iv: Another content with the same value exists.'],
+      }),
+    );
+  });
+
+  it('returns GenericError along with the raw response payload when squidex returns an error response which is not json', async () => {
+    nock(baseUrl)
+      .patch(`/api/content/${appName}/${collection}/42`)
+      .query(() => true)
+      .reply(400, '<not>json</not>');
+
+    await expect(() =>
+      client.patch('42', {
+        string: {
+          iv: 'value',
+        },
+      }),
+    ).rejects.toThrowError(GenericError);
+  });
+
   it('patch a specific document based on filter', async () => {
     nock(baseUrl)
       .patch(`/api/content/${appName}/${collection}/42`, {

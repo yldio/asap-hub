@@ -223,6 +223,19 @@ export class Squidex<
       return res as T;
     } catch (err) {
       if (err instanceof HTTPError) {
+        if (err.response?.statusCode === 400) {
+          let body: unknown;
+          try {
+            body = JSON.parse(String(err.response.body));
+          } catch {
+            body = err.response.body;
+          }
+
+          if (isSquidexError(body) && body?.message === 'Validation error') {
+            throw new ValidationError(err, body.details);
+          }
+        }
+
         if (err.response.statusCode === 404) {
           throw new NotFoundError(err);
         }

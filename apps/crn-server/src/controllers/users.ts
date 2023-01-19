@@ -37,10 +37,10 @@ export default class Users implements UserController {
 
   constructor(
     userDataProvider: UserDataProvider,
-    assetDateProvider: AssetDataProvider,
+    assetDataProvider: AssetDataProvider,
   ) {
     this.userDataProvider = userDataProvider;
-    this.assetDataProvider = assetDateProvider;
+    this.assetDataProvider = assetDataProvider;
   }
 
   async update(id: string, update: UserUpdateRequest): Promise<UserResponse> {

@@ -8,8 +8,8 @@
       "validateOnPublish": false
     },
     "scripts": {
-        "create": "if(JSON.stringify(ctx.data.teams.iv).indexOf('ASAP Staff') > 0  && ctx.data.role.iv !== 'Staff') {\n    reject('Only Staff can be given this team role. Change ASAP Hub Role to \"Staff\".')\n}",
-        "update": "if(JSON.stringify(ctx.data.teams.iv).indexOf('ASAP Staff') > 0  && ctx.data.role.iv !== 'Staff') {\n    reject('Only Staff can be given this team role. Change ASAP Hub Role to \"Staff\".')\n}\n\nconst isAlumni = ctx.data.alumniSinceDate && ctx.data.alumniSinceDate.iv;\n\nif (isAlumni && ctx.data.teams && ctx.data.teams.iv) {\n    let statusChanged = false;\n    ctx.data.teams.iv = ctx.data.teams.iv.map((team) => {\n        if (team.status !== 'Inactive') {\n            team.status = 'Inactive';\n            if (!statusChanged) {\n                statusChanged = true;\n            }\n        }\n        return team;\n    });\n    if (statusChanged) {\n        replace();\n    }\n}"
+      "create": "if(JSON.stringify(ctx.data.teams.iv).indexOf('ASAP Staff') > 0  && ctx.data.role.iv !== 'Staff') {\n    reject('Only Staff can be given this team role. Change ASAP Hub Role to \"Staff\".')\n}",
+      "update": "if(JSON.stringify(ctx.data.teams.iv).indexOf('ASAP Staff') > 0  && ctx.data.role.iv !== 'Staff') {\n    reject('Only Staff can be given this team role. Change ASAP Hub Role to \"Staff\".')\n}\n\nconst isAlumni = ctx.data.alumniSinceDate && ctx.data.alumniSinceDate.iv;\n\nif (isAlumni && ctx.data.teams && ctx.data.teams.iv) {\n    let statusChanged = false;\n    ctx.data.teams.iv = ctx.data.teams.iv.map((team) => {\n        if (team.status !== 'Inactive') {\n            team.status = 'Inactive';\n            if (!statusChanged) {\n                statusChanged = true;\n            }\n        }\n        return team;\n    });\n    if (statusChanged) {\n        replace();\n    }\n}"
     },
     "fieldsInReferences": ["firstName", "lastName", "orcid"],
     "fieldsInLists": [

@@ -833,6 +833,7 @@
           "createEnum": true,
           "allowedValues": [
             "Administrator",
+            "Hidden",
             "Network_Collaborator",
             "Network_Investigator",
             "Trainee",

@@ -108,7 +108,7 @@ const UsersPage: React.FC<UsersPageProps> = ({
       };
       updateFilters(backHref, updatedFilters);
     },
-    [filters],
+    [filters, backHref, updateFilters],
   );
 
   return (

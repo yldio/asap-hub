@@ -364,6 +364,7 @@ const regionMap: Record<UsersDataRegionEnum, gp2Model.UserRegion> = {
 };
 const roleMap: Record<UsersDataRoleEnum, gp2Model.UserRole> = {
   [UsersDataRoleEnum.Administrator]: 'Administrator',
+  [UsersDataRoleEnum.Hidden]: 'Hidden',
   [UsersDataRoleEnum.NetworkCollaborator]: 'Network Collaborator',
   [UsersDataRoleEnum.NetworkInvestigator]: 'Network Investigator',
   [UsersDataRoleEnum.Trainee]: 'Trainee',

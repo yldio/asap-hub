@@ -119,7 +119,7 @@ export default class Users implements UserController {
 
   private async queryByCode(code: string) {
     return this.userDataProvider.fetch({
-      filter: { code },
+      filter: { code, hidden: false },
       take: 1,
       skip: 0,
     });

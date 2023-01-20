@@ -144,6 +144,7 @@ export type FetchUsersFilter = {
   onlyOnboarded?: boolean;
   projects?: string[];
   workingGroups?: string[];
+  hidden?: boolean;
 };
 
 export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;

@@ -52,10 +52,9 @@ export class UserSquidexDataProvider implements UserDataProvider {
 
   async fetchById(id: string): Promise<gp2Model.UserDataObject | null> {
     const { findUsersContent } = await this.queryFetchByIdData(id);
-    if (!findUsersContent) {
-      return null;
-    }
-    return parseGraphQLUserToDataObject(findUsersContent);
+    return findUsersContent
+      ? parseGraphQLUserToDataObject(findUsersContent)
+      : null;
   }
 
   async update(id: string, user: gp2Model.UserUpdateDataObject): Promise<void> {
@@ -257,11 +256,12 @@ const generateFetchQueryFilter = (
     keywords,
     code,
     onlyOnboarded,
+    hidden = true,
   }: gp2Model.FetchUsersOptions['filter'] = {},
   userIdFilter: string,
   searchFilter: string,
 ) => {
-  const filterOnboarded = onlyOnboarded === true && 'data/onboarded/iv eq true';
+  const filterOnboarded = onlyOnboarded && 'data/onboarded/iv eq true';
   const filterRegions = regions
     ?.map((r) => `data/region/iv eq '${reverseRegionMap[r]}'`)
     .join(' or ');
@@ -270,9 +270,11 @@ const generateFetchQueryFilter = (
     .join(' or ');
 
   const filterCode = code && `data/connections/iv/code eq '${code}'`;
+  const filterHidden = hidden && "data/role/iv ne 'Hidden'";
 
   return [
     filterOnboarded,
+    filterHidden,
     filterRegions,
     filterCode,
     filterKeywords,

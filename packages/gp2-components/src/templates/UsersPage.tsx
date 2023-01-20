@@ -47,10 +47,10 @@ const containerStyles = css({
   marginTop: rem(48),
 });
 
-const getLabel = function (array: LabelArrayType, filter: string) {
+function getLabel(array: LabelArrayType, filter: string) {
   const index = array.findIndex((value) => value.id === filter);
   return array[index].title;
-};
+}
 
 const mapFilters = (
   filters: FiltersType,
@@ -65,6 +65,7 @@ const mapFilters = (
   };
 
   return Object.entries(filters).reduce(
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     (acc: any, [key, value]) => [
       ...acc,
       ...value.map((v) => ({

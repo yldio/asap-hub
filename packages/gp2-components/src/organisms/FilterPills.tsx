@@ -17,14 +17,12 @@ interface FilterPillsProps {
   onRemove: (value: ValueProps) => void;
 }
 
-const FilterPills: React.FC<FilterPillsProps> = ({ values, onRemove }) => {
-  return (
-    <div css={containerStyles}>
-      {values.map((value) => (
-        <FilterPill key={value.id} value={value} onRemove={onRemove} />
-      ))}
-    </div>
-  );
-};
+const FilterPills: React.FC<FilterPillsProps> = ({ values, onRemove }) => (
+  <div css={containerStyles}>
+    {values.map((value) => (
+      <FilterPill key={value.id} value={value} onRemove={onRemove} />
+    ))}
+  </div>
+);
 
 export default FilterPills;

@@ -99,7 +99,7 @@
     "@graphql-tools/mock": "8.7.15",
     "@graphql-tools/schema": "8.5.1",
     "@graphql-typed-document-node/core": "3.1.1",
-    "@serverless/typescript": "3.19.0",
+    "@serverless/typescript": "3.25.0",
     "@types/apr-intercept": "workspace:*",
     "@types/aws-lambda": "8.10.109",
     "@types/babel__preset-env": "7.9.2",

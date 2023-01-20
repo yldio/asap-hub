@@ -107,14 +107,13 @@ export default class Users implements UserController {
     }
 
     const user = items[0];
-    if (user.connections?.find(({ code }) => code === authUserId)) {
-      return parseUserToResponse(user, user.id);
-    }
-    return this.update(user.id, {
-      email: user.email,
-      connections: [...(user.connections || []), { code: authUserId }],
-      activatedDate: user.activatedDate ?? new Date().toISOString(),
-    });
+    return user.connections?.find(({ code }) => code === authUserId)
+      ? parseUserToResponse(user, user.id)
+      : this.update(user.id, {
+          email: user.email,
+          connections: [...(user.connections || []), { code: authUserId }],
+          activatedDate: user.activatedDate ?? new Date().toISOString(),
+        });
   }
 
   private async queryByCode(code: string) {
@@ -129,11 +128,8 @@ export default class Users implements UserController {
 export const parseUserToResponse = (
   { connections: _, telephone, ...user }: gp2.UserDataObject,
   loggedInUserId?: string,
-): gp2.UserResponse => {
-  const displayName = `${user.firstName} ${user.lastName}`;
-  return {
-    ...user,
-    displayName,
-    ...(user.id === loggedInUserId && { telephone }),
-  };
-};
+): gp2.UserResponse => ({
+  ...user,
+  displayName: `${user.firstName} ${user.lastName}`,
+  ...(user.id === loggedInUserId && { telephone }),
+});

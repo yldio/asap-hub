@@ -174,13 +174,9 @@ type UserUpdateInputEnumFields = Partial<UserCreateInputEnumFields>;
 const mapUserFields = (
   input: UserCreateDataObjectEnumFields | UserUpdateDataObjectEnumFields,
 ): UserCreateInputEnumFields | UserUpdateInputEnumFields => {
-  const mappedDegrees = input.degrees?.map((degree) => {
-    if (degree === 'MD, PhD') {
-      return UsersDataDegreeEnum.MdPhD;
-    }
-
-    return degree;
-  });
+  const mappedDegrees = input.degrees?.map((degree) =>
+    degree === 'MD, PhD' ? UsersDataDegreeEnum.MdPhD : degree,
+  );
 
   return {
     ...(input.region && { region: reverseRegionMap[input.region] }),
@@ -424,13 +420,9 @@ const parseDegrees = (
     FetchUserQuery['findUsersContent']
   >['flatData']['degree'],
 ): gp2Model.UserDataObject['degrees'] =>
-  degrees?.map<gp2Model.UserDegree>((degree) => {
-    if (degree === UsersDataDegreeEnum.MdPhD) {
-      return 'MD, PhD';
-    }
-
-    return degree;
-  });
+  degrees?.map<gp2Model.UserDegree>((degree) =>
+    degree === UsersDataDegreeEnum.MdPhD ? 'MD, PhD' : degree,
+  );
 
 const parseQuestions = (
   questions: NonNullable<

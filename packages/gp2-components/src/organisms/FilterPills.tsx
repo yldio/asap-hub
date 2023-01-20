@@ -13,7 +13,7 @@ const containerStyles = css({
 });
 
 interface FilterPillsProps {
-  values: [ValueProps];
+  values: ValueProps[];
   onRemove: (value: ValueProps) => void;
 }
 

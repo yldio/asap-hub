@@ -13,10 +13,13 @@ describe('FilterPill', () => {
     expect(screen.getByText('A pill')).toBeInTheDocument();
   });
 
-  it('should be clickable', () => {
+  it('shows the remove button and be clickable', () => {
     render(<FilterPill value={value} onRemove={onRemove} />);
     const onRemoveButton = screen.getByRole('button');
     userEvent.click(onRemoveButton);
-    expect(onRemove).toBeCalledTimes(1);
+    expect(onRemove).toBeCalledWith({
+      label: 'A pill',
+      id: 'pill-0',
+    });
   });
 });

@@ -7,9 +7,9 @@ import {
   SquidexGraphql,
   SquidexRest,
 } from '@asap-hub/squidex';
-import { assetDataProviderMock } from '../../../test/mocks/asset-data-provider.mock';
 import { appName, auth0SharedSecret, baseUrl } from '../../config';
 import Users, { UserController } from '../../controllers/user.controller';
+import { AssetSquidexDataProvider } from '../../data-providers/assets.data-provider';
 import { UserSquidexDataProvider } from '../../data-providers/user.data-provider';
 import { getAuthToken } from '../../utils/auth';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
@@ -51,12 +51,11 @@ const userDataProvider = new UserSquidexDataProvider(
   squidexGraphqlClient,
   userRestClient,
 );
+const assetDataProvider = new AssetSquidexDataProvider(userRestClient);
 
 /* istanbul ignore next */
 export const handler = sentryWrapper(
-  fetchUserByCodeHandlerFactory(
-    new Users(userDataProvider, assetDataProviderMock),
-  ),
+  fetchUserByCodeHandlerFactory(new Users(userDataProvider, assetDataProvider)),
 );
 
 const validateParams = (

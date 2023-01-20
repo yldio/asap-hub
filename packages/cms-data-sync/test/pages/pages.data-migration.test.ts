@@ -22,22 +22,25 @@ describe('Migrate Pages', () => {
   } as unknown as Entry;
 
   (convertHtmlToContentfulFormat as jest.Mock).mockReturnValue({
-    content: [
-      {
-        content: [
-          {
-            data: {},
-            marks: [],
-            value: 'Hello world',
-            nodeType: 'text',
-          },
-        ],
-        data: {},
-        nodeType: 'paragraph',
-      },
-    ],
-    data: {},
-    nodeType: 'document',
+    document: {
+      content: [
+        {
+          content: [
+            {
+              data: {},
+              marks: [],
+              value: 'Hello world',
+              nodeType: 'text',
+            },
+          ],
+          data: {},
+          nodeType: 'paragraph',
+        },
+      ],
+      data: {},
+      nodeType: 'document',
+    },
+    inlineAssetBodies: [],
   });
 
   beforeEach(() => {

@@ -479,11 +479,11 @@ __metadata:
     "@graphql-tools/mock": 8.7.15
     "@graphql-tools/schema": 8.5.1
     "@graphql-typed-document-node/core": 3.1.1
-    "@types/contentful-html-rich-text-converter": "workspace:*"
+    "@types/contentful-html-rich-text-converter": "workspace:^"
     "@types/jest": 27.5.2
     "@types/node": 14.18.33
     "@types/prettier": 2.7.1
-    contentful-html-rich-text-converter: "yldio/contentful-html-rich-text-converter#v1.0.14"
+    contentful-html-rich-text-converter: "yldio/contentful-html-rich-text-converter#5fed410f9fc6f5d2771574a87ded2d0c90f7e59a"
     contentful-management: ^10.19.3
     graphql: 15.8.0
     graphql-tag: 2.12.6
@@ -12792,7 +12792,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/contentful-html-rich-text-converter@workspace:*, @types/contentful-html-rich-text-converter@workspace:@types/contentful-html-rich-text-converter":
+"@types/contentful-html-rich-text-converter@workspace:@types/contentful-html-rich-text-converter, @types/contentful-html-rich-text-converter@workspace:^":
   version: 0.0.0-use.local
   resolution: "@types/contentful-html-rich-text-converter@workspace:@types/contentful-html-rich-text-converter"
   languageName: unknown
@@ -19146,14 +19146,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"contentful-html-rich-text-converter@yldio/contentful-html-rich-text-converter#v1.0.14":
+"contentful-html-rich-text-converter@yldio/contentful-html-rich-text-converter#5fed410f9fc6f5d2771574a87ded2d0c90f7e59a":
   version: 1.0.9
-  resolution: "contentful-html-rich-text-converter@https://github.com/yldio/contentful-html-rich-text-converter.git#commit=8f61574217a3f05c91f219867187a6c71eea5ab2"
+  resolution: "contentful-html-rich-text-converter@https://github.com/yldio/contentful-html-rich-text-converter.git#commit=5fed410f9fc6f5d2771574a87ded2d0c90f7e59a"
   dependencies:
     html-entities: 1.2.1
     htmlparser: ^1.7.7
+    mime-types: ^2.1.35
     ramda: ^0.26.1
-  checksum: e258d05793be52baf43bf439c7675d3c86f16c0b79e39d41073d22806e660e3482717733262310d3670809a9f942d10dacddba972d5128ec52b35a8547dab482
+  checksum: 2d3948680cf30d4a2bed461561a785a48f57c8d96585e3a575e185b2b71012f8a98eb14b59f3a91c0c0ce15c24840d6774414362cb5bac1dd38c065fbe54dd4f
   languageName: node
   linkType: hard
 
@@ -30037,7 +30038,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mime-types@npm:2.1.35, mime-types@npm:^2.1.30, mime-types@npm:^2.1.31, mime-types@npm:~2.1.34":
+"mime-types@npm:2.1.35, mime-types@npm:^2.1.30, mime-types@npm:^2.1.31, mime-types@npm:^2.1.35, mime-types@npm:~2.1.34":
   version: 2.1.35
   resolution: "mime-types@npm:2.1.35"
   dependencies:

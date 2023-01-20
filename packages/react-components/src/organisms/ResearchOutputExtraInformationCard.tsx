@@ -19,6 +19,20 @@ import {
   ResearchOutputIdentifierProps,
 } from './ResearchOutputIdentifier';
 
+type ResearchOutputReportType =
+  | ({
+      onChangeLabCatalogNumber?: (value: string) => void;
+      documentType: ResearchOutputDocumentType;
+    } & Omit<ResearchOutputIdentifierProps, 'required'>)
+  | {
+      onChangeLabCatalogNumber?: undefined;
+      documentType?: undefined;
+      identifier?: undefined;
+      identifierType?: undefined;
+      setIdentifier?: undefined;
+      setIdentifierType?: undefined;
+    };
+
 type ResearchOutputExtraInformationProps = Pick<
   ResearchOutputPostRequest,
   | 'tags'
@@ -33,14 +47,12 @@ type ResearchOutputExtraInformationProps = Pick<
   >;
   onChangeTags?: (values: string[]) => void;
   onChangeUsageNotes?: (value: string) => void;
-  onChangeLabCatalogNumber?: (value: string) => void;
   onChangeMethods?: (value: string[]) => void;
   onChangeOrganisms?: (value: string[]) => void;
   onChangeEnvironments?: (value: string[]) => void;
   isSaving: boolean;
-  documentType: ResearchOutputDocumentType;
   researchTags: ResearchTagResponse[];
-} & Omit<ResearchOutputIdentifierProps, 'required'>;
+} & ResearchOutputReportType;
 
 const ResearchOutputExtraInformationCard: React.FC<
   ResearchOutputExtraInformationProps
@@ -149,24 +161,27 @@ const ResearchOutputExtraInformationCard: React.FC<
       <Link href={mailToSupport({ subject: 'New keyword' }).toString()}>
         Ask ASAP to add a new keyword
       </Link>
-
-      <ResearchOutputIdentifier
-        documentType={documentType}
-        identifier={identifier}
-        setIdentifier={setIdentifier}
-        identifierType={identifierType}
-        setIdentifierType={setIdentifierType}
-      />
-      {documentType === 'Lab Resource' && (
-        <LabeledTextField
-          title="Catalog Number (Vendor/Lab)"
-          subtitle="(optional)"
-          description="Catalog number and vendor used to identify resource"
-          onChange={onChangeLabCatalogNumber}
-          placeholder="Catalog number and vendor e.g. AB123 (Abcam)"
-          enabled={!isSaving}
-          value={labCatalogNumber || ''}
-        />
+      {documentType && (
+        <>
+          <ResearchOutputIdentifier
+            documentType={documentType}
+            identifier={identifier}
+            setIdentifier={setIdentifier}
+            identifierType={identifierType}
+            setIdentifierType={setIdentifierType}
+          />
+          {documentType === 'Lab Resource' && (
+            <LabeledTextField
+              title="Catalog Number (Vendor/Lab)"
+              subtitle="(optional)"
+              description="Catalog number and vendor used to identify resource"
+              onChange={onChangeLabCatalogNumber}
+              placeholder="Catalog number and vendor e.g. AB123 (Abcam)"
+              enabled={!isSaving}
+              value={labCatalogNumber || ''}
+            />
+          )}
+        </>
       )}
       <LabeledTextArea
         title="Usage Notes"

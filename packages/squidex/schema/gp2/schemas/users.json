@@ -85,6 +85,30 @@
         }
       },
       {
+        "name": "avatar",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Assets",
+          "previewMode": "Image",
+          "minItems": 0,
+          "maxItems": 1,
+          "expectedType": "Image",
+          "resolveFirst": true,
+          "mustBeImage": true,
+          "resolveImage": true,
+          "allowDuplicates": false,
+          "label": "Avatar",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": true
+        }
+      },
+      {
         "name": "degree",
         "isHidden": false,
         "isLocked": false,
@@ -111,35 +135,6 @@
           "editor": "Checkboxes",
           "label": "Degree",
           "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": true
-        }
-      },
-      {
-        "name": "region",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "allowedValues": [
-            "Africa",
-            "Asia",
-            "Australia_Australiasia",
-            "Europe",
-            "Latin_America",
-            "North_America",
-            "South_America"
-          ],
-          "isUnique": false,
-          "isEmbeddable": false,
-          "inlineEditable": true,
-          "createEnum": true,
-          "contentType": "Unspecified",
-          "editor": "Dropdown",
-          "label": "Region",
-          "isRequired": true,
           "isRequiredOnPublish": false,
           "isHalfWidth": true
         }
@@ -180,6 +175,35 @@
           "editor": "Input",
           "label": "City",
           "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": true
+        }
+      },
+      {
+        "name": "region",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "allowedValues": [
+            "Africa",
+            "Asia",
+            "Australia_Australiasia",
+            "Europe",
+            "Latin_America",
+            "North_America",
+            "South_America"
+          ],
+          "isUnique": false,
+          "isEmbeddable": false,
+          "inlineEditable": true,
+          "createEnum": true,
+          "contentType": "Unspecified",
+          "editor": "Dropdown",
+          "label": "Region",
+          "isRequired": true,
           "isRequiredOnPublish": false,
           "isHalfWidth": true
         }
@@ -345,30 +369,6 @@
           "isHalfWidth": true
         }
       },
-      {
-        "name": "avatar",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "Assets",
-          "previewMode": "Image",
-          "minItems": 0,
-          "maxItems": 1,
-          "expectedType": "Image",
-          "resolveFirst": true,
-          "mustBeImage": true,
-          "resolveImage": true,
-          "allowDuplicates": false,
-          "label": "Avatar",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": true
-        }
-      },
 
       {
         "name": "separatorBackground",
@@ -446,7 +446,7 @@
           "label": "Keywords",
           "isRequired": false,
           "isRequiredOnPublish": false,
-          "isHalfWidth": true
+          "isHalfWidth": false
         }
       },
       {

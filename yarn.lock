@@ -711,7 +711,7 @@ __metadata:
     "@types/chance": 1.1.3
     "@types/cors": 2.8.13
     "@types/debug": 4.1.7
-    "@types/express": 4.17.14
+    "@types/express": 4.17.15
     "@types/graphql": 14.5.0
     "@types/hapi": 18.0.8
     "@types/hapi__boom": 9.0.1
@@ -1159,7 +1159,7 @@ __metadata:
     "@types/apr-intercept": "workspace:*"
     "@types/aws-lambda": 8.10.109
     "@types/cors": 2.8.13
-    "@types/express": 4.17.14
+    "@types/express": 4.17.15
     "@types/jest": 27.5.2
     "@types/jsonwebtoken": 8.5.9
     "@types/jwt-encode": "workspace:*"
@@ -1407,7 +1407,7 @@ __metadata:
     "@sentry/serverless": 6.19.7
     "@types/apr-intercept": "workspace:*"
     "@types/aws-lambda": 8.10.109
-    "@types/express": 4.17.14
+    "@types/express": 4.17.15
     "@types/jest": 27.5.2
     "@types/jsonwebtoken": 8.5.9
     "@types/pump": 1.1.1
@@ -12920,6 +12920,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/express-serve-static-core@npm:^4.17.31":
+  version: 4.17.32
+  resolution: "@types/express-serve-static-core@npm:4.17.32"
+  dependencies:
+    "@types/node": "*"
+    "@types/qs": "*"
+    "@types/range-parser": "*"
+  checksum: 70ec1b8f386628850b315a7b9fd4240a5a70297b41ef1c39af65c8b9661d2c775cfff4686b491fd90e5b6eef43088af203700c5541aec0d063db0c6cbeff254c
+  languageName: node
+  linkType: hard
+
 "@types/express-unless@npm:*":
   version: 0.5.3
   resolution: "@types/express-unless@npm:0.5.3"
@@ -12941,7 +12952,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/express@npm:4.17.14, @types/express@npm:^4.17.13":
+"@types/express@npm:4.17.15":
+  version: 4.17.15
+  resolution: "@types/express@npm:4.17.15"
+  dependencies:
+    "@types/body-parser": "*"
+    "@types/express-serve-static-core": ^4.17.31
+    "@types/qs": "*"
+    "@types/serve-static": "*"
+  checksum: b4acd8a836d4f6409cdf79b12d6e660485249b62500cccd61e7997d2f520093edf77d7f8498ca79d64a112c6434b6de5ca48039b8fde2c881679eced7e96979b
+  languageName: node
+  linkType: hard
+
+"@types/express@npm:^4.17.13":
   version: 4.17.14
   resolution: "@types/express@npm:4.17.14"
   dependencies:

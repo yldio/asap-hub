@@ -1,3 +1,4 @@
+import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/contentful';
 import { UserResponse } from '@asap-hub/model';
 import {
   AuthHandler,
@@ -23,21 +24,20 @@ import {
   SquidexGraphql,
   SquidexRest,
 } from '@asap-hub/squidex';
-import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/contentful';
 
 import * as Sentry from '@sentry/serverless';
 import AWSXray from 'aws-xray-sdk';
 import cors from 'cors';
-import express, { Express, RequestHandler } from 'express';
+import express, { ErrorRequestHandler, Express, RequestHandler } from 'express';
 import 'express-async-errors';
 import { Tracer } from 'opentracing';
 import {
   appName,
   auth0Audience,
   baseUrl,
-  contentfulSpaceId,
   contentfulAccessToken,
   contentfulEnvId,
+  contentfulSpaceId,
   isContentfulEnabled,
 } from './config';
 import Calendars, { CalendarController } from './controllers/calendars';
@@ -58,14 +58,20 @@ import ResearchTags, {
 import Teams, { TeamController } from './controllers/teams';
 import Tutorials, { TutorialsController } from './controllers/tutorials';
 import Users, { UserController } from './controllers/users';
-import { NewsDataProvider } from './data-providers/types';
-import { NewsSquidexDataProvider } from './data-providers/news.data-provider';
-import { NewsContentfulDataProvider } from './data-providers/contentful/news.data-provider';
+import WorkingGroups, {
+  WorkingGroupController,
+} from './controllers/working-groups';
 import {
   AssetDataProvider,
   AssetSquidexDataProvider,
 } from './data-providers/assets.data-provider';
 import { CalendarSquidexDataProvider } from './data-providers/calendars.data-provider';
+import { DashboardContentfulDataProvider } from './data-providers/contentful/dashboard.data-provider';
+import { NewsContentfulDataProvider } from './data-providers/contentful/news.data-provider';
+import { PageContentfulDataProvider } from './data-providers/contentful/pages.data-provider';
+import DashboardSquidexDataProvider, {
+  DashboardDataProvider,
+} from './data-providers/dashboard.data-provider';
 import {
   ExternalAuthorDataProvider,
   ExternalAuthorSquidexDataProvider,
@@ -74,6 +80,11 @@ import {
   GroupDataProvider,
   GroupSquidexDataProvider,
 } from './data-providers/groups.data-provider';
+import { NewsSquidexDataProvider } from './data-providers/news.data-provider';
+import {
+  PageDataProvider,
+  PageSquidexDataProvider,
+} from './data-providers/pages.data-provider';
 import {
   ReminderDataProvider,
   ReminderSquidexDataProvider,
@@ -91,13 +102,18 @@ import {
   TeamSquidexDataProvider,
 } from './data-providers/teams.data-provider';
 import {
+  TutorialsDataProvider,
+  TutorialsSquidexDataProvider,
+} from './data-providers/tutorials.data-provider';
+import { NewsDataProvider } from './data-providers/types';
+import {
   UserDataProvider,
   UserSquidexDataProvider,
 } from './data-providers/users.data-provider';
 import {
-  TutorialsDataProvider,
-  TutorialsSquidexDataProvider,
-} from './data-providers/tutorials.data-provider';
+  WorkingGroupDataProvider,
+  WorkingGroupSquidexDataProvider,
+} from './data-providers/working-groups.data-provider';
 import { permissionHandler } from './middleware/permission-handler';
 import { sentryTransactionIdMiddleware } from './middleware/sentry-transaction-id-handler';
 import { tracingHandlerFactory } from './middleware/tracing-handler';
@@ -115,26 +131,10 @@ import { researchTagsRouteFactory } from './routes/research-tags.route';
 import { teamRouteFactory } from './routes/teams.route';
 import { tutorialsRouteFactory } from './routes/tutorials.route';
 import { userPublicRouteFactory, userRouteFactory } from './routes/user.route';
+import { workingGroupRouteFactory } from './routes/working-groups.route';
 import assignUserToContext from './utils/assign-user-to-context';
 import { getAuthToken } from './utils/auth';
 import pinoLogger from './utils/logger';
-import WorkingGroups, {
-  WorkingGroupController,
-} from './controllers/working-groups';
-import { workingGroupRouteFactory } from './routes/working-groups.route';
-import {
-  WorkingGroupDataProvider,
-  WorkingGroupSquidexDataProvider,
-} from './data-providers/working-groups.data-provider';
-import {
-  PageDataProvider,
-  PageSquidexDataProvider,
-} from './data-providers/pages.data-provider';
-import DashboardSquidexDataProvider, {
-  DashboardDataProvider,
-} from './data-providers/dashboard.data-provider';
-import { PageContentfulDataProvider } from './data-providers/contentful/pages.data-provider';
-import { DashboardContentfulDataProvider } from './data-providers/contentful/dashboard.data-provider';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -339,7 +339,7 @@ export const appFactory = (libs: Libs = {}): Express => {
 
   /* istanbul ignore next */
   if (libs.xRay) {
-    app.use(libs.xRay.express.openSegment('default'));
+    app.use(libs.xRay.express.openSegment('default') as RequestHandler);
     libs.xRay.middleware.enableDynamicNaming('*.hub.asap.science');
   }
 
@@ -405,7 +405,7 @@ export const appFactory = (libs: Libs = {}): Express => {
 
   /* istanbul ignore next */
   if (libs.xRay) {
-    app.use(libs.xRay.express.closeSegment());
+    app.use(libs.xRay.express.closeSegment() as ErrorRequestHandler);
   }
 
   /* istanbul ignore next */

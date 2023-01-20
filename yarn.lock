@@ -453,7 +453,7 @@ __metadata:
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/model": "workspace:*"
-    "@auth0/auth0-spa-js": 1.22.6
+    "@auth0/auth0-spa-js": 1.22.5
     "@babel/runtime-corejs3": 7.19.6
     "@types/jest": 27.5.2
     "@types/node": 14.18.33
@@ -581,7 +581,7 @@ __metadata:
     "@asap-hub/routing": "workspace:*"
     "@asap-hub/unsupported-browser-page": "workspace:*"
     "@asap-hub/validation": "workspace:*"
-    "@auth0/auth0-spa-js": 1.22.6
+    "@auth0/auth0-spa-js": 1.22.5
     "@babel/runtime-corejs3": 7.19.6
     "@sentry/cli": 1.74.6
     "@sentry/react": 6.11.0
@@ -1045,7 +1045,7 @@ __metadata:
     "@asap-hub/routing": "workspace:*"
     "@asap-hub/unsupported-browser-page": "workspace:*"
     "@asap-hub/validation": "workspace:*"
-    "@auth0/auth0-spa-js": 1.22.6
+    "@auth0/auth0-spa-js": 1.22.5
     "@babel/runtime-corejs3": 7.19.6
     "@sentry/cli": 1.74.6
     "@sentry/react": 6.11.0
@@ -1274,7 +1274,7 @@ __metadata:
     "@asap-hub/react-context": "workspace:*"
     "@asap-hub/routing": "workspace:*"
     "@asap-hub/validation": "workspace:*"
-    "@auth0/auth0-spa-js": 1.22.6
+    "@auth0/auth0-spa-js": 1.22.5
     "@babel/core": 7.19.6
     "@babel/preset-react": 7.18.6
     "@babel/runtime-corejs3": 7.19.6
@@ -1572,18 +1572,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@auth0/auth0-spa-js@npm:1.22.6":
-  version: 1.22.6
-  resolution: "@auth0/auth0-spa-js@npm:1.22.6"
+"@auth0/auth0-spa-js@npm:1.22.5":
+  version: 1.22.5
+  resolution: "@auth0/auth0-spa-js@npm:1.22.5"
   dependencies:
     abortcontroller-polyfill: ^1.7.3
     browser-tabs-lock: ^1.2.15
-    core-js: ^3.25.4
+    core-js: ^3.25.1
     es-cookie: ~1.3.2
     fast-text-encoding: ^1.0.6
     promise-polyfill: ^8.2.3
     unfetch: ^4.2.0
-  checksum: 0155025b82898bd0533db373d7c8b85938fbae097c6fdf732a315ddee67d84a32c32a3b944465aec0600adb11d6d32e53eabbfc2ea04e6b5c90f92f72607bc30
+  checksum: 54d9a8abaddff073e28dba6a89c1fe43762f06e53f40ad5c293786a1f76df94fa63642b97b94a612166ea8571414fd38de9f5b356d7a5e41e76180708ebc5936
   languageName: node
   linkType: hard
 
@@ -19537,13 +19537,6 @@ __metadata:
   version: 3.25.2
   resolution: "core-js@npm:3.25.2"
   checksum: e93c6c645d44d98973efb07750975552ad405f080f5a563a99972ff6b2c5c6ee25705f55accd363f5dccd51e9e5f56be25e2be6c14a7294da65763e0e5659c02
-  languageName: node
-  linkType: hard
-
-"core-js@npm:^3.25.4":
-  version: 3.27.1
-  resolution: "core-js@npm:3.27.1"
-  checksum: d50b5f88aea4302512ad9446c18e90f4d35dea1e6d8d3f87337690677061565ff11a670f1e0c87de57aa6074375fbb25ed5784076c040d3c4de8b4bce7d2ebeb
   languageName: node
   linkType: hard
 

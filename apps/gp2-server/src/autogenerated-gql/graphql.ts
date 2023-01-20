@@ -1979,6 +1979,16 @@ export type UsersReferencingWorkingGroupsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
+/** The structure of the Activated Date field of the Users content type. */
+export type UsersDataActivatedDateDto = {
+  iv: Maybe<Scalars['Instant']>;
+};
+
+/** The structure of the Activated Date field of the Users content input type. */
+export type UsersDataActivatedDateInputDto = {
+  iv: InputMaybe<Scalars['Instant']>;
+};
+
 /** The structure of the Avatar field of the Users content type. */
 export type UsersDataAvatarDto = {
   iv: Maybe<Array<Asset>>;
@@ -2111,6 +2121,7 @@ export type UsersDataDegreeInputDto = {
 
 /** The structure of the Users data type. */
 export type UsersDataDto = {
+  activatedDate: Maybe<UsersDataActivatedDateDto>;
   avatar: Maybe<UsersDataAvatarDto>;
   biography: Maybe<UsersDataBiographyDto>;
   city: Maybe<UsersDataCityDto>;
@@ -2168,6 +2179,7 @@ export type UsersDataFundingStreamsInputDto = {
 
 /** The structure of the Users data input type. */
 export type UsersDataInputDto = {
+  activatedDate: InputMaybe<UsersDataActivatedDateInputDto>;
   avatar: InputMaybe<UsersDataAvatarInputDto>;
   biography: InputMaybe<UsersDataBiographyInputDto>;
   city: InputMaybe<UsersDataCityInputDto>;
@@ -2381,6 +2393,7 @@ export type UsersDataTelephoneNumberInputDto = {
 
 /** The structure of the flat Users data type. */
 export type UsersFlatDataDto = {
+  activatedDate: Maybe<Scalars['Instant']>;
   avatar: Maybe<Array<Asset>>;
   biography: Maybe<Scalars['String']>;
   city: Maybe<Scalars['String']>;
@@ -3027,6 +3040,7 @@ export type UsersContentFragment = Pick<
     | 'keywords'
     | 'fundingStreams'
     | 'biography'
+    | 'activatedDate'
   > & {
     avatar: Maybe<Array<Pick<Asset, 'id'>>>;
     positions: Maybe<
@@ -3113,6 +3127,7 @@ export type FetchUserQuery = {
         | 'keywords'
         | 'fundingStreams'
         | 'biography'
+        | 'activatedDate'
       > & {
         avatar: Maybe<Array<Pick<Asset, 'id'>>>;
         positions: Maybe<
@@ -3214,6 +3229,7 @@ export type FetchUsersQuery = {
               | 'keywords'
               | 'fundingStreams'
               | 'biography'
+              | 'activatedDate'
             > & {
               avatar: Maybe<Array<Pick<Asset, 'id'>>>;
               positions: Maybe<
@@ -4139,6 +4155,10 @@ export const UsersContentFragmentDoc = {
                       },
                     ],
                   },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'activatedDate' },
                 },
               ],
             },

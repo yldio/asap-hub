@@ -51,6 +51,7 @@ export const usersContentQueryFragment = gql`
         linkedIn
         github
       }
+      activatedDate
     }
     referencingProjectsContents {
       id

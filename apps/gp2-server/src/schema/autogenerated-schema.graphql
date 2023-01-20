@@ -2038,6 +2038,16 @@ type Users implements Content {
   version: Int!
 }
 
+"""The structure of the Activated Date field of the Users content type."""
+type UsersDataActivatedDateDto {
+  iv: Instant
+}
+
+"""The structure of the Activated Date field of the Users content input type."""
+input UsersDataActivatedDateInputDto {
+  iv: Instant
+}
+
 """The structure of the Avatar field of the Users content type."""
 type UsersDataAvatarDto {
   iv: [Asset!]
@@ -2170,6 +2180,7 @@ input UsersDataDegreeInputDto {
 
 """The structure of the Users data type."""
 type UsersDataDto {
+  activatedDate: UsersDataActivatedDateDto
   avatar: UsersDataAvatarDto
   biography: UsersDataBiographyDto
   city: UsersDataCityDto
@@ -2227,6 +2238,7 @@ input UsersDataFundingStreamsInputDto {
 
 """The structure of the Users data input type."""
 input UsersDataInputDto {
+  activatedDate: UsersDataActivatedDateInputDto
   avatar: UsersDataAvatarInputDto
   biography: UsersDataBiographyInputDto
   city: UsersDataCityInputDto
@@ -2440,6 +2452,7 @@ input UsersDataTelephoneNumberInputDto {
 
 """The structure of the flat Users data type."""
 type UsersFlatDataDto {
+  activatedDate: Instant
   avatar: [Asset!]
   biography: String
   city: String

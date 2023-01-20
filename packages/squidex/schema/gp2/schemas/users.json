@@ -154,24 +154,6 @@
         }
       },
       {
-        "name": "onboarded",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "Boolean",
-          "defaultValue": false,
-          "inlineEditable": true,
-          "editor": "Toggle",
-          "label": "Onboarding complete",
-          "hints": "Use this to allow the user to see the full Hub and skip profile completion",
-          "isRequired": true,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
         "name": "avatar",
         "isHidden": false,
         "isLocked": false,
@@ -649,45 +631,6 @@
         ]
       },
       {
-        "name": "connections",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "Array",
-          "label": "Connections",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        },
-        "nested": [
-          {
-            "name": "code",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "isEmbeddable": false,
-              "inlineEditable": true,
-              "createEnum": false,
-              "contentType": "Unspecified",
-              "editor": "Input",
-              "label": "Code",
-              "hints": "",
-              "placeholder": "",
-              "isRequired": true,
-              "isRequiredOnPublish": false,
-              "isHalfWidth": false
-            }
-          }
-        ]
-      },
-      {
         "name": "social",
         "isHidden": false,
         "isLocked": false,
@@ -817,6 +760,95 @@
             }
           }
         ]
+      },
+      {
+        "name": "separatorTechnical",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "UI",
+          "editor": "Separator",
+          "label": "Technical",
+          "hints": "Fields used mostly by our API",
+          "placeholder": "",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "connections",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Array",
+          "label": "Connections",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        },
+        "nested": [
+          {
+            "name": "code",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "isEmbeddable": false,
+              "inlineEditable": true,
+              "createEnum": false,
+              "contentType": "Unspecified",
+              "editor": "Input",
+              "label": "Code",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": true,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false
+            }
+          }
+        ]
+      },
+      {
+        "name": "onboarded",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Boolean",
+          "defaultValue": false,
+          "inlineEditable": true,
+          "editor": "Toggle",
+          "label": "Onboarding complete",
+          "hints": "Use this to allow the user to see the full Hub and skip profile completion",
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": true
+        }
+      },
+      {
+        "name": "activatedDate",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": true,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "DateTime",
+          "editor": "DateTime",
+          "label": "Activated Date",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": true
+        }
       }
     ],
     "previewUrls": {

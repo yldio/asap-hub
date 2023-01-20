@@ -349,6 +349,7 @@ export const parseGraphQLUserToDataObject = ({
     questions,
     contributingCohorts,
     social,
+    activatedDate: user.activatedDate || undefined,
   };
 };
 

@@ -113,6 +113,7 @@ export default class Users implements UserController {
     return this.update(user.id, {
       email: user.email,
       connections: [...(user.connections || []), { code: authUserId }],
+      activatedDate: user.activatedDate ?? new Date().toISOString(),
     });
   }
 

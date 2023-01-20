@@ -47,7 +47,7 @@ export const FETCH_NEWS = gql`
     $order: [NewsOrder]
     $where: NewsFilter
   ) {
-    newsCollection(limit: 100, skip: $skip, order: $order, where: $where) {
+    newsCollection(limit: $limit, skip: $skip, order: $order, where: $where) {
       total
       items {
         ...NewsContent

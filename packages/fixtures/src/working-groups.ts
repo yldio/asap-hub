@@ -3,11 +3,13 @@ import {
   WorkingGroupListResponse,
   deliverableStatus,
 } from '@asap-hub/model';
+import { createCalendarResponse } from './calendars';
 import { createUserResponse } from './users';
 
 type FixtureOptions = {
   deliverables?: number;
   members?: number;
+  calendarsCount?: number;
 };
 
 export const createDeliverables = (
@@ -49,7 +51,7 @@ export const createWorkingGroupPointOfContact =
   });
 
 export const createWorkingGroupResponse = (
-  options: FixtureOptions,
+  { calendarsCount = 1, deliverables, members }: FixtureOptions = {},
   itemIndex = 0,
 ): WorkingGroupResponse => ({
   id: `working-group-id-${itemIndex}`,
@@ -58,10 +60,13 @@ export const createWorkingGroupResponse = (
   shortText: `Working Group ${itemIndex} Short Text`,
   lastModifiedDate: '2020-11-09T20:36:54Z',
   externalLink: `https://www.example.com/working-group-${itemIndex}`,
-  deliverables: createDeliverables(options?.deliverables ?? 1),
+  deliverables: createDeliverables(deliverables ?? 1),
   complete: false,
-  members: createWorkingGroupMembers(options?.members ?? 1),
-  leaders: createWorkingGroupLeaders(options?.members ?? 1),
+  members: createWorkingGroupMembers(members ?? 1),
+  leaders: createWorkingGroupLeaders(members ?? 1),
+  calendars: Array.from({ length: calendarsCount }, (_, index) =>
+    createCalendarResponse(index),
+  ),
 });
 
 export const createWorkingGroupListResponse = (

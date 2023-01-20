@@ -16,7 +16,8 @@ type EventsCalendarPageProps = {
 const EventsCalendarPage: React.FC<EventsCalendarPageProps> = (props) => (
   <div css={containerStyles}>
     <GoogleCalendar {...props} />
-    <CalendarList page="calendar" {...props} />
+    <CalendarList page="calendar" {...props} showBottomMessage={false} />
+    <CalendarList page="calendar-working-group" {...props} />
   </div>
 );
 

@@ -44,6 +44,14 @@ export const workingGroupContentQueryFragment = gql`
           }
         }
       }
+      calendars {
+        id
+        flatData {
+          color
+          googleCalendarId
+          name
+        }
+      }
     }
   }
 `;

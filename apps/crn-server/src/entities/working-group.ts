@@ -85,6 +85,7 @@ export const parseGraphQlWorkingGroup = (
         )
       : [],
     lastModifiedDate: workingGroupGraphQl.lastModified,
+    calendars: [],
   };
 
   if (!workingGroupGraphQl.flatData.externalLink) {

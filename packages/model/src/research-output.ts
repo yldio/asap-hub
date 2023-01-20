@@ -206,6 +206,7 @@ export type ResearchOutputCoreObject = {
   lastModifiedDate?: string;
   link?: string;
   publishDate?: string;
+  publishingEntity: ResearchOutputPublishingEntities;
   rrid?: string;
   sharingStatus: ResearchOutputSharingStatus;
   tags: string[];
@@ -213,7 +214,6 @@ export type ResearchOutputCoreObject = {
   type?: ResearchOutputType;
   usageNotes?: string;
   usedInPublication?: boolean;
-  publishingEntity: ResearchOutputPublishingEntities;
 };
 
 export type ResearchOutputDataObject = ResearchOutputCoreObject & {

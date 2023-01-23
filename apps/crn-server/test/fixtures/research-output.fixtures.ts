@@ -100,7 +100,7 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
         },
       },
     ],
-    teams: [],
+    teams: [getSquidexGraphqlTeam({})],
     methods: [
       {
         flatData: {
@@ -130,7 +130,6 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
       },
     ],
   },
-  referencingTeamsContents: [getSquidexGraphqlTeam({})],
 });
 
 export const getResearchOutputDataObject = (): ResearchOutputDataObject => ({

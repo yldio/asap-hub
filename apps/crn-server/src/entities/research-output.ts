@@ -20,7 +20,7 @@ export const parseGraphQLResearchOutput = (
   output: NonNullable<FetchResearchOutputQuery['findResearchOutputsContent']>,
 ): ResearchOutputDataObject => {
   const contactEmails =
-    output.referencingTeamsContents?.flatMap((team) =>
+    output.flatData.teams?.flatMap((team) =>
       team.referencingUsersContents
         ?.filter(
           (user) =>
@@ -67,9 +67,7 @@ export const parseGraphQLResearchOutput = (
           };
         }) || [],
     teams:
-      output.referencingTeamsContents?.map((team) =>
-        parseGraphqlTeamLite(team),
-      ) || [],
+      output.flatData.teams?.map((team) => parseGraphqlTeamLite(team)) || [],
     workingGroups: [],
     created: parseDate(output.created).toISOString(),
     link: data.link || undefined,
@@ -137,7 +135,7 @@ const isSharingStatus = (
 type FetchResearchOutputTeamContents = NonNullable<
   NonNullable<
     FetchResearchOutputQuery['findResearchOutputsContent']
-  >['referencingTeamsContents']
+  >['flatData']['teams']
 >[number];
 
 type LabWithName = Pick<Labs, 'id'> & {

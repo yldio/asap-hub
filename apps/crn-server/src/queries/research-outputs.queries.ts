@@ -116,7 +116,7 @@ export const researchOutputContentQueryFragment = gql`
           name
         }
       }
-      teams {
+      teams @include(if: $withTeams) {
         id
         created
         lastModified
@@ -155,27 +155,6 @@ export const researchOutputContentQueryFragment = gql`
       subtype {
         flatData {
           name
-        }
-      }
-    }
-    referencingTeamsContents @include(if: $withTeams) {
-      id
-      created
-      lastModified
-      version
-      flatData {
-        displayName
-        inactiveSince
-      }
-      referencingUsersContents {
-        flatData {
-          email
-          teams {
-            role
-            id {
-              id
-            }
-          }
         }
       }
     }

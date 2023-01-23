@@ -4919,7 +4919,6 @@ export type TeamsDataDto = {
   displayName: Maybe<TeamsDataDisplayNameDto>;
   expertiseAndResourceTags: Maybe<TeamsDataExpertiseAndResourceTagsDto>;
   inactiveSince: Maybe<TeamsDataInactiveSinceDto>;
-  outputs: Maybe<TeamsDataOutputsDto>;
   projectSummary: Maybe<TeamsDataProjectSummaryDto>;
   projectTitle: Maybe<TeamsDataProjectTitleDto>;
   proposal: Maybe<TeamsDataProposalDto>;
@@ -4952,21 +4951,10 @@ export type TeamsDataInputDto = {
   displayName: InputMaybe<TeamsDataDisplayNameInputDto>;
   expertiseAndResourceTags: InputMaybe<TeamsDataExpertiseAndResourceTagsInputDto>;
   inactiveSince: InputMaybe<TeamsDataInactiveSinceInputDto>;
-  outputs: InputMaybe<TeamsDataOutputsInputDto>;
   projectSummary: InputMaybe<TeamsDataProjectSummaryInputDto>;
   projectTitle: InputMaybe<TeamsDataProjectTitleInputDto>;
   proposal: InputMaybe<TeamsDataProposalInputDto>;
   tools: InputMaybe<TeamsDataToolsInputDto>;
-};
-
-/** The structure of the Shared Research field of the Teams content type. */
-export type TeamsDataOutputsDto = {
-  iv: Maybe<Array<ResearchOutputs>>;
-};
-
-/** The structure of the Shared Research field of the Teams content input type. */
-export type TeamsDataOutputsInputDto = {
-  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Project Summary field of the Teams content type. */
@@ -5029,7 +5017,6 @@ export type TeamsFlatDataDto = {
   displayName: Maybe<Scalars['String']>;
   expertiseAndResourceTags: Maybe<Array<Scalars['String']>>;
   inactiveSince: Maybe<Scalars['Instant']>;
-  outputs: Maybe<Array<ResearchOutputs>>;
   projectSummary: Maybe<Scalars['String']>;
   projectTitle: Maybe<Scalars['String']>;
   proposal: Maybe<Array<ResearchOutputs>>;
@@ -6403,7 +6390,6 @@ export type EventContentFragment = Pick<
                             >
                           >
                         >;
-                        outputs: Maybe<Array<Pick<ResearchOutputs, 'id'>>>;
                       };
                       referencingUsersContents: Maybe<
                         Array<
@@ -6749,9 +6735,6 @@ export type FetchEventsQuery = {
                                         'description' | 'name' | 'url'
                                       >
                                     >
-                                  >;
-                                  outputs: Maybe<
-                                    Array<Pick<ResearchOutputs, 'id'>>
                                   >;
                                 };
                                 referencingUsersContents: Maybe<
@@ -7133,7 +7116,6 @@ export type FetchEventQuery = {
                                 >
                               >
                             >;
-                            outputs: Maybe<Array<Pick<ResearchOutputs, 'id'>>>;
                           };
                           referencingUsersContents: Maybe<
                             Array<
@@ -7488,7 +7470,6 @@ export type GroupsContentFragment = Pick<
                 Pick<TeamsDataToolsChildDto, 'description' | 'name' | 'url'>
               >
             >;
-            outputs: Maybe<Array<Pick<ResearchOutputs, 'id'>>>;
           };
           referencingUsersContents: Maybe<
             Array<
@@ -7735,7 +7716,6 @@ export type FetchGroupsQuery = {
                           >
                         >
                       >;
-                      outputs: Maybe<Array<Pick<ResearchOutputs, 'id'>>>;
                     };
                     referencingUsersContents: Maybe<
                       Array<
@@ -7989,7 +7969,6 @@ export type FetchGroupQuery = {
                     Pick<TeamsDataToolsChildDto, 'description' | 'name' | 'url'>
                   >
                 >;
-                outputs: Maybe<Array<Pick<ResearchOutputs, 'id'>>>;
               };
               referencingUsersContents: Maybe<
                 Array<
@@ -8439,7 +8418,7 @@ export type ResearchOutputContentFragment = Pick<
     labs: Maybe<
       Array<Pick<Labs, 'id'> & { flatData: Pick<LabsFlatDataDto, 'name'> }>
     >;
-    teams: Maybe<
+    teams?: Maybe<
       Array<
         Pick<Teams, 'id' | 'created' | 'lastModified' | 'version'> & {
           flatData: Pick<TeamsFlatDataDto, 'displayName' | 'inactiveSince'>;
@@ -8468,26 +8447,6 @@ export type ResearchOutputContentFragment = Pick<
     >;
     subtype: Maybe<Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>>;
   };
-  referencingTeamsContents?: Maybe<
-    Array<
-      Pick<Teams, 'id' | 'created' | 'lastModified' | 'version'> & {
-        flatData: Pick<TeamsFlatDataDto, 'displayName' | 'inactiveSince'>;
-        referencingUsersContents: Maybe<
-          Array<{
-            flatData: Pick<UsersFlatDataDto, 'email'> & {
-              teams: Maybe<
-                Array<
-                  Pick<UsersDataTeamsChildDto, 'role'> & {
-                    id: Maybe<Array<Pick<Teams, 'id'>>>;
-                  }
-                >
-              >;
-            };
-          }>
-        >;
-      }
-    >
-  >;
 };
 
 export type FetchResearchOutputQueryVariables = Exact<{
@@ -8622,7 +8581,7 @@ export type FetchResearchOutputQuery = {
         labs: Maybe<
           Array<Pick<Labs, 'id'> & { flatData: Pick<LabsFlatDataDto, 'name'> }>
         >;
-        teams: Maybe<
+        teams?: Maybe<
           Array<
             Pick<Teams, 'id' | 'created' | 'lastModified' | 'version'> & {
               flatData: Pick<TeamsFlatDataDto, 'displayName' | 'inactiveSince'>;
@@ -8655,26 +8614,6 @@ export type FetchResearchOutputQuery = {
           Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
         >;
       };
-      referencingTeamsContents?: Maybe<
-        Array<
-          Pick<Teams, 'id' | 'created' | 'lastModified' | 'version'> & {
-            flatData: Pick<TeamsFlatDataDto, 'displayName' | 'inactiveSince'>;
-            referencingUsersContents: Maybe<
-              Array<{
-                flatData: Pick<UsersFlatDataDto, 'email'> & {
-                  teams: Maybe<
-                    Array<
-                      Pick<UsersDataTeamsChildDto, 'role'> & {
-                        id: Maybe<Array<Pick<Teams, 'id'>>>;
-                      }
-                    >
-                  >;
-                };
-              }>
-            >;
-          }
-        >
-      >;
     }
   >;
 };
@@ -8824,7 +8763,7 @@ export type FetchResearchOutputsQuery = {
                   Pick<Labs, 'id'> & { flatData: Pick<LabsFlatDataDto, 'name'> }
                 >
               >;
-              teams: Maybe<
+              teams?: Maybe<
                 Array<
                   Pick<Teams, 'id' | 'created' | 'lastModified' | 'version'> & {
                     flatData: Pick<
@@ -8860,29 +8799,6 @@ export type FetchResearchOutputsQuery = {
                 Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
               >;
             };
-            referencingTeamsContents?: Maybe<
-              Array<
-                Pick<Teams, 'id' | 'created' | 'lastModified' | 'version'> & {
-                  flatData: Pick<
-                    TeamsFlatDataDto,
-                    'displayName' | 'inactiveSince'
-                  >;
-                  referencingUsersContents: Maybe<
-                    Array<{
-                      flatData: Pick<UsersFlatDataDto, 'email'> & {
-                        teams: Maybe<
-                          Array<
-                            Pick<UsersDataTeamsChildDto, 'role'> & {
-                              id: Maybe<Array<Pick<Teams, 'id'>>>;
-                            }
-                          >
-                        >;
-                      };
-                    }>
-                  >;
-                }
-              >
-            >;
           }
         >
       >;
@@ -8937,7 +8853,6 @@ export type TeamsContentFragment = Pick<
     tools: Maybe<
       Array<Pick<TeamsDataToolsChildDto, 'description' | 'name' | 'url'>>
     >;
-    outputs: Maybe<Array<Pick<ResearchOutputs, 'id'>>>;
   };
   referencingUsersContents: Maybe<
     Array<
@@ -9043,7 +8958,6 @@ export type FetchTeamQuery = {
         tools: Maybe<
           Array<Pick<TeamsDataToolsChildDto, 'description' | 'name' | 'url'>>
         >;
-        outputs: Maybe<Array<Pick<ResearchOutputs, 'id'>>>;
       };
       referencingUsersContents: Maybe<
         Array<
@@ -9160,7 +9074,6 @@ export type FetchTeamsQuery = {
                   Pick<TeamsDataToolsChildDto, 'description' | 'name' | 'url'>
                 >
               >;
-              outputs: Maybe<Array<Pick<ResearchOutputs, 'id'>>>;
             };
             referencingUsersContents: Maybe<
               Array<
@@ -9909,16 +9822,6 @@ export const TeamsContentFragmentDoc = {
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'name' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'outputs' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                     ],
                   },
                 },
@@ -11738,6 +11641,22 @@ export const ResearchOutputContentFragmentDoc = {
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'teams' },
+                  directives: [
+                    {
+                      kind: 'Directive',
+                      name: { kind: 'Name', value: 'include' },
+                      arguments: [
+                        {
+                          kind: 'Argument',
+                          name: { kind: 'Name', value: 'if' },
+                          value: {
+                            kind: 'Variable',
+                            name: { kind: 'Name', value: 'withTeams' },
+                          },
+                        },
+                      ],
+                    },
+                  ],
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
@@ -11909,103 +11828,6 @@ export const ResearchOutputContentFragmentDoc = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'name' },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'referencingTeamsContents' },
-            directives: [
-              {
-                kind: 'Directive',
-                name: { kind: 'Name', value: 'include' },
-                arguments: [
-                  {
-                    kind: 'Argument',
-                    name: { kind: 'Name', value: 'if' },
-                    value: {
-                      kind: 'Variable',
-                      name: { kind: 'Name', value: 'withTeams' },
-                    },
-                  },
-                ],
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'created' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'lastModified' },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'version' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'flatData' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'displayName' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'inactiveSince' },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'referencingUsersContents' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'flatData' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'email' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'teams' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'role' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'id' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'id' },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
-                              },
                             },
                           ],
                         },

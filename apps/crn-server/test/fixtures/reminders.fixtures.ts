@@ -211,9 +211,7 @@ export const getSquidexReminderReseachOutputsContents = (): NonNullable<
       documentType: researchOutput.flatData.documentType,
       title: researchOutput.flatData.title,
     },
-    referencingTeamsContents: [
-      { id: researchOutput.referencingTeamsContents![0]!.id },
-    ],
+    referencingTeamsContents: [{ id: researchOutput.flatData.teams![0]!.id }],
   };
 };
 

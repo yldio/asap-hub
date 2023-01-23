@@ -51,18 +51,13 @@ export const getTeamResponse = (): TeamResponse => getTeamDataObject();
 export type GraphTeamTool = NonNullable<
   NonNullable<FetchTeamQuery['findTeamsContent']>['flatData']['tools']
 >[number];
-export type GraphTeamOutputs = NonNullable<
-  NonNullable<FetchTeamQuery['findTeamsContent']>['flatData']['outputs']
->;
 
 export const getSquidexGraphqlTeam = ({
   tools = [],
   id = 'team-id-0',
-  outputs = [],
 }: Partial<{
   tools: GraphTeamTool[];
   id: string;
-  outputs: GraphTeamOutputs;
 }>): NonNullable<FetchTeamQuery['findTeamsContent']> => {
   const referencingUsersContents = getGraphQLUser();
   referencingUsersContents.flatData.teams![0]!.id![0]!.id = id;
@@ -86,22 +81,17 @@ export const getSquidexGraphqlTeam = ({
         },
       ],
       tools,
-      outputs,
     },
     referencingUsersContents: [referencingUsersContents],
   };
 };
 
 export const getSquidexTeamGraphqlResponse = (
-  {
-    tools = [],
-    outputs = [],
-  }: Partial<{ tools: GraphTeamTool[]; outputs: GraphTeamOutputs }> = {
+  { tools = [] }: Partial<{ tools: GraphTeamTool[] }> = {
     tools: [],
-    outputs: [],
   },
 ): FetchTeamQuery => ({
-  findTeamsContent: getSquidexGraphqlTeam({ tools, outputs }),
+  findTeamsContent: getSquidexGraphqlTeam({ tools }),
 });
 
 export const getSquidexTeamsGraphqlResponse = (): FetchTeamsQuery => ({

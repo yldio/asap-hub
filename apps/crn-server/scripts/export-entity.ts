@@ -6,7 +6,6 @@ import {
   RestEvent,
   RestExternalAuthor,
   RestResearchOutput,
-  RestTeam,
   RestUser,
   SquidexGraphql,
   SquidexRest,
@@ -99,10 +98,6 @@ const getController = (entity: keyof EntityResponses) => {
     appName,
     baseUrl,
   });
-  const teamRestClient = new SquidexRest<RestTeam>(getAuthToken, 'teams', {
-    appName,
-    baseUrl,
-  });
   const userDataProvider = new UserSquidexDataProvider(
     squidexGraphqlClient,
     userRestClient,
@@ -110,7 +105,6 @@ const getController = (entity: keyof EntityResponses) => {
   const researchOutputDataProvider = new ResearchOutputSquidexDataProvider(
     squidexGraphqlClient,
     researchOutputRestClient,
-    teamRestClient,
   );
   const researchTagDataProvider = new ResearchTagSquidexDataProvider(
     squidexGraphqlClient,

@@ -11,7 +11,6 @@ import {
   InputResearchOutput,
   parseToSquidex,
   RestResearchOutput,
-  RestTeam,
   SquidexGraphqlClient,
   SquidexRestClient,
 } from '@asap-hub/squidex';
@@ -71,7 +70,6 @@ export class ResearchOutputSquidexDataProvider
       RestResearchOutput,
       InputResearchOutput
     >,
-    private teamSquidexRestClient: SquidexRestClient<RestTeam>,
   ) {}
   async fetchById(id: string): Promise<ResearchOutputDataObject | null> {
     const researchOutputGraphqlResponse =
@@ -209,12 +207,6 @@ export class ResearchOutputSquidexDataProvider
         usedInAPublication: usedInPublication,
       });
 
-    await Promise.all(
-      teamIds.map((teamId) =>
-        this.associateResearchOutputToTeam(teamId, researchOutputId),
-      ),
-    );
-
     return researchOutputId;
   }
 
@@ -259,19 +251,6 @@ export class ResearchOutputSquidexDataProvider
     });
 
     return researchOutputId;
-  }
-
-  private async associateResearchOutputToTeam(
-    teamId: string,
-    researchOutputId: string,
-  ) {
-    const { data } = await this.teamSquidexRestClient.fetchById(teamId, false);
-    const existingOutputs = data.outputs?.iv || [];
-    await this.teamSquidexRestClient.patch(teamId, {
-      outputs: {
-        iv: [...existingOutputs, researchOutputId],
-      },
-    });
   }
 }
 

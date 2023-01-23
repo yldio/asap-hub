@@ -6,7 +6,6 @@ import { EventBridgeHandler } from '@asap-hub/server-common';
 import {
   RestExternalAuthor,
   RestResearchOutput,
-  RestTeam,
   SquidexGraphql,
   SquidexRest,
 } from '@asap-hub/squidex';
@@ -67,10 +66,6 @@ const researchOutputRestClient = new SquidexRest<RestResearchOutput>(
   'research-outputs',
   { appName, baseUrl },
 );
-const teamRestClient = new SquidexRest<RestTeam>(getAuthToken, 'teams', {
-  appName,
-  baseUrl,
-});
 const externalAuthorRestClient = new SquidexRest<RestExternalAuthor>(
   getAuthToken,
   'external-authors',
@@ -79,7 +74,6 @@ const externalAuthorRestClient = new SquidexRest<RestExternalAuthor>(
 const researchOutputDataProvider = new ResearchOutputSquidexDataProvider(
   squidexGraphqlClient,
   researchOutputRestClient,
-  teamRestClient,
 );
 const researchTagDataProvider = new ResearchTagSquidexDataProvider(
   squidexGraphqlClient,

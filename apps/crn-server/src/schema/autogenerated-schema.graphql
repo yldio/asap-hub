@@ -5135,7 +5135,6 @@ type TeamsDataDto {
   displayName: TeamsDataDisplayNameDto
   expertiseAndResourceTags: TeamsDataExpertiseAndResourceTagsDto
   inactiveSince: TeamsDataInactiveSinceDto
-  outputs: TeamsDataOutputsDto
   projectSummary: TeamsDataProjectSummaryDto
   projectTitle: TeamsDataProjectTitleDto
   proposal: TeamsDataProposalDto
@@ -5168,21 +5167,10 @@ input TeamsDataInputDto {
   displayName: TeamsDataDisplayNameInputDto
   expertiseAndResourceTags: TeamsDataExpertiseAndResourceTagsInputDto
   inactiveSince: TeamsDataInactiveSinceInputDto
-  outputs: TeamsDataOutputsInputDto
   projectSummary: TeamsDataProjectSummaryInputDto
   projectTitle: TeamsDataProjectTitleInputDto
   proposal: TeamsDataProposalInputDto
   tools: TeamsDataToolsInputDto
-}
-
-"""The structure of the Shared Research field of the Teams content type."""
-type TeamsDataOutputsDto {
-  iv: [ResearchOutputs!]
-}
-
-"""The structure of the Shared Research field of the Teams content input type."""
-input TeamsDataOutputsInputDto {
-  iv: [String!]
 }
 
 """The structure of the Project Summary field of the Teams content type."""
@@ -5245,7 +5233,6 @@ type TeamsFlatDataDto {
   displayName: String
   expertiseAndResourceTags: [String!]
   inactiveSince: Instant
-  outputs: [ResearchOutputs!]
   projectSummary: String
   projectTitle: String
   proposal: [ResearchOutputs!]

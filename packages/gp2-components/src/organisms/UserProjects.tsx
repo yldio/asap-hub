@@ -1,12 +1,14 @@
 import { gp2 } from '@asap-hub/model';
 import { Link } from '@asap-hub/react-components';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
-import { CollapsibleTable, StatusPill } from '../molecules';
+import { ComponentProps } from 'react';
+import { CollapsibleTable, EditableCard, StatusPill } from '../molecules';
 
 type UserProjectsProps = Pick<
   gp2.UserResponse,
   'id' | 'firstName' | 'projects'
->;
+> &
+  Pick<ComponentProps<typeof EditableCard>, 'subtitle'>;
 
 const getUserProjectRole = (
   userId: gp2.UserResponse['id'],
@@ -18,33 +20,40 @@ const UserProjects: React.FC<UserProjectsProps> = ({
   projects,
   firstName,
   id,
+  subtitle,
 }) => (
-  <CollapsibleTable
-    paragraph={`${firstName} has been involved in the following GP2 projects:`}
-    headings={['Name', 'Role', 'Status']}
+  <EditableCard
+    title="Projects"
+    subtitle={
+      subtitle
+        ? subtitle
+        : `${firstName} has been involved in the following GP2 projects:`
+    }
   >
-    {projects.map((project) => {
-      const name = (
-        <Link
-          underlined
-          href={
-            gp2Routing.projects({}).project({
-              projectId: project.id,
-            }).$
-          }
-        >
-          {project.title}
-        </Link>
-      );
-      const role = getUserProjectRole(id, project) || '';
-      const status = <StatusPill status={project.status} />;
+    <CollapsibleTable headings={['Name', 'Role', 'Status']}>
+      {projects.map((project) => {
+        const name = (
+          <Link
+            underlined
+            href={
+              gp2Routing.projects({}).project({
+                projectId: project.id,
+              }).$
+            }
+          >
+            {project.title}
+          </Link>
+        );
+        const role = getUserProjectRole(id, project) || '';
+        const status = <StatusPill status={project.status} />;
 
-      return {
-        id,
-        values: [name, role, status],
-      };
-    })}
-  </CollapsibleTable>
+        return {
+          id,
+          values: [name, role, status],
+        };
+      })}
+    </CollapsibleTable>
+  </EditableCard>
 );
 
 export default UserProjects;

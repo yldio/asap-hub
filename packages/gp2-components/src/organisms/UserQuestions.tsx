@@ -16,10 +16,6 @@ type UserQuestionsProps = {
   firstName: string;
 } & Pick<ComponentProps<typeof EditableCard>, 'editHref'>;
 
-const contentStyles = css({
-  padding: `${rem(16)} 0`,
-});
-
 const rowStyles = css({
   borderBottom: `1px solid ${colors.neutral500.rgb}`,
   marginBottom: rem(12),
@@ -38,6 +34,8 @@ const UserQuestions: React.FC<UserQuestionsProps> = ({
   <EditableCard
     editHref={editHref}
     title="Open Questions"
+    paragraph={`${firstName} is interested in answering the following questions
+    within their work:`}
     edit={!!questions.length}
     optional
   >
@@ -49,12 +47,6 @@ const UserQuestions: React.FC<UserQuestionsProps> = ({
       </UserProfilePlaceholderCard>
     ) : (
       <>
-        <div css={[contentStyles]}>
-          <Paragraph noMargin accent="lead">
-            {firstName} is interested in answering the following questions
-            within their work:
-          </Paragraph>
-        </div>
         {questions.map((question, index) => (
           <div key={`user-question-${index}`} css={rowStyles}>
             <strong>Q:</strong> {question}

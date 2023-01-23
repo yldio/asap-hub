@@ -5,6 +5,7 @@ import { lazy, useEffect } from 'react';
 import Onboarding from './Onboarding';
 import Background from './Background';
 import AdditionalDetails from './AdditionalDetails';
+import Groups from './Groups';
 
 const loadWelcome = () =>
   import(/* webpackChunkName: "onboarding-welcome" */ './Welcome');
@@ -35,7 +36,7 @@ const Routes: React.FC<Record<string, never>> = () => {
           <Background />
         </Route>
         <Route path={onboarding({}).groups({}).$}>
-          <div>GP2 Groups</div>
+          <Groups />
         </Route>
         <Route path={onboarding({}).additionalDetails({}).$}>
           <AdditionalDetails />

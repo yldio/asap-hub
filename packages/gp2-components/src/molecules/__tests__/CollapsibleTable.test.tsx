@@ -15,7 +15,6 @@ describe('CollapsibleTable', () => {
     ...overrides
   }: Partial<TableDisplayProps>) => {
     const props: Omit<TableDisplayProps, 'children'> = {
-      paragraph: 'a paragraph',
       headings: ['a heading'],
     };
     render(
@@ -24,11 +23,6 @@ describe('CollapsibleTable', () => {
       </CollapsibleTable>,
     );
   };
-  it('displays the paragraph', () => {
-    const paragraph = 'some paragraph to display';
-    renderTableDisplay({ paragraph });
-    expect(screen.getByText(paragraph)).toBeVisible();
-  });
   it('displays the row', () => {
     const value = 'some row to display';
     renderTableDisplay({ children: [{ id: '42', values: [value] }] });

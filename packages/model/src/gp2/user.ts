@@ -53,7 +53,10 @@ type UserProjectMember = Pick<ProjectMember, 'userId' | 'role'>;
 type UserProject = Pick<ProjectDataObject, 'id' | 'title' | 'status'> & {
   members: UserProjectMember[];
 };
-type UserWorkingGroupMember = Pick<WorkingGroupMember, 'userId' | 'role'>;
+export type UserWorkingGroupMember = Pick<
+  WorkingGroupMember,
+  'userId' | 'role'
+>;
 type UserWorkingGroup = Pick<WorkingGroupDataObject, 'id' | 'title'> & {
   members: UserWorkingGroupMember[];
 };

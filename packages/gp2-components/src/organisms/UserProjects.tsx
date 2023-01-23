@@ -8,7 +8,9 @@ type UserProjectsProps = Pick<
   gp2.UserResponse,
   'id' | 'firstName' | 'projects'
 > &
-  Pick<ComponentProps<typeof EditableCard>, 'subtitle'>;
+  Pick<ComponentProps<typeof EditableCard>, 'subtitle'> & {
+    noLinks?: boolean;
+  };
 
 const getUserProjectRole = (
   userId: gp2.UserResponse['id'],
@@ -21,6 +23,7 @@ const UserProjects: React.FC<UserProjectsProps> = ({
   firstName,
   id,
   subtitle,
+  noLinks = false,
 }) => (
   <EditableCard
     title="Projects"
@@ -32,7 +35,9 @@ const UserProjects: React.FC<UserProjectsProps> = ({
   >
     <CollapsibleTable headings={['Name', 'Role', 'Status']}>
       {projects.map((project) => {
-        const name = (
+        const name = noLinks ? (
+          project.title
+        ) : (
           <Link
             underlined
             href={

@@ -19,6 +19,7 @@ const OnboardingGroups: React.FC<OnboardingGroupsProps> = ({
     {projects && (
       <UserProjects
         {...userProps}
+        noLinks
         projects={projects}
         subtitle={<ContactSupport />}
       />
@@ -26,6 +27,7 @@ const OnboardingGroups: React.FC<OnboardingGroupsProps> = ({
     {workingGroups && (
       <UserWorkingGroups
         {...userProps}
+        noLinks
         workingGroups={workingGroups}
         subtitle={<ContactSupport />}
       />

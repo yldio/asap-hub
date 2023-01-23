@@ -1,5 +1,6 @@
-import { gp2 } from '@asap-hub/model';
-import { utils } from '@asap-hub/react-components';
+import { gp2 as gp2Model } from '@asap-hub/model';
+import { gp2 as gp2Routing } from '@asap-hub/routing';
+import { Link, utils } from '@asap-hub/react-components';
 
 import { CollapsibleTable, EditableCard, IconWithLabel } from '../molecules';
 import { userIcon, usersIcon } from '../icons';
@@ -8,21 +9,24 @@ import { ComponentProps } from 'react';
 const { getCounterString } = utils;
 
 type UserWorkingGroupsProps = Pick<
-  gp2.UserResponse,
+  gp2Model.UserResponse,
   'id' | 'firstName' | 'workingGroups'
 > &
-  Pick<ComponentProps<typeof EditableCard>, 'subtitle'>;
+  Pick<ComponentProps<typeof EditableCard>, 'subtitle'> & {
+    noLinks?: boolean;
+  };
 
 const UserWorkingGroups: React.FC<UserWorkingGroupsProps> = ({
   workingGroups,
   firstName,
   subtitle,
   id,
+  noLinks = false,
 }) => {
   const getUserWorkingGroupRole = (
-    userId: gp2.UserResponse['id'],
-    members: gp2.UserWorkingGroupMember[],
-  ): gp2.WorkingGroupMemberRole | null =>
+    userId: gp2Model.UserResponse['id'],
+    members: gp2Model.UserWorkingGroupMember[],
+  ): gp2Model.WorkingGroupMemberRole | null =>
     members.find((member) => member.userId === userId)?.role || null;
 
   return (
@@ -35,8 +39,21 @@ const UserWorkingGroups: React.FC<UserWorkingGroupsProps> = ({
       }
     >
       <CollapsibleTable headings={['Name', 'Role', 'Nº of Members']}>
-        {workingGroups.map(({ title, members }) => {
-          const name = title;
+        {workingGroups.map(({ title, members, id: workingGroupId }) => {
+          const name = noLinks ? (
+            title
+          ) : (
+            <Link
+              underlined
+              href={
+                gp2Routing.workingGroups({}).workingGroup({
+                  workingGroupId,
+                }).$
+              }
+            >
+              {title}
+            </Link>
+          );
           const role = (
             <IconWithLabel noMargin icon={userIcon}>
               {getUserWorkingGroupRole(id, members) || ''}

@@ -1,41 +1,32 @@
 import { css } from '@emotion/react';
-import {
-  borderWidth,
-  Button,
-  crossSmallIcon,
-  Ellipsis,
-  pixels,
-} from '@asap-hub/react-components';
+import { borderWidth, crossSmallIcon } from '@asap-hub/react-components';
 import colors from '../templates/colors';
 
-const { rem } = pixels;
-
-const styles = css({
-  height: rem(40),
-  marginRight: rem(9),
-  marginTop: rem(5),
+const pillStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: 'fit-content',
+  height: '40px',
   borderStyle: 'solid',
   borderWidth: `${borderWidth}px`,
-  borderRadius: rem(24),
+  borderRadius: '24px',
   borderColor: colors.neutral500.rgb,
   color: colors.neutral1000.rgb,
 });
 
-const containerStyles = css({
+const iconStyles = css({
   display: 'flex',
-  padding: `${rem(9)} ${rem(14)}`,
-});
-
-const linksStyles = css({
-  border: 'none',
-  listStyle: 'none',
-  boxShadow: 'none',
-  ':hover': {
-    boxShadow: 'none',
-  },
-  margin: 0,
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
   padding: 0,
-  display: 'flex',
+  marginLeft: '8px',
+  border: 'none',
+  backgroundColor: 'unset',
+  svg: {
+    fill: colors.neutral900.rgb,
+  },
 });
 
 export interface ValueProps {
@@ -49,19 +40,14 @@ interface PillProps {
 }
 
 const FilterPill: React.FC<PillProps> = ({ value, onRemove }) => (
-  <span css={[styles]}>
-    <Ellipsis>
-      <div css={[containerStyles]}>
-        <div css={css({ marginRight: rem(8) })}>{value.label}</div>
-        <Button
-          overrideStyles={css(linksStyles)}
-          onClick={() => onRemove(value)}
-        >
-          {crossSmallIcon}
-        </Button>
-      </div>
-    </Ellipsis>
-  </span>
+  <div css={[pillStyles]}>
+    <div css={css({ display: 'flex', padding: `8px 12px` })}>
+      <div>{value.label}</div>
+      <button css={iconStyles} onClick={() => onRemove(value)}>
+        {crossSmallIcon}
+      </button>
+    </div>
+  </div>
 );
 
 export default FilterPill;

@@ -9,6 +9,7 @@ const containerStyles = css({
   flexDirection: 'row',
   flexWrap: 'wrap',
   width: '100%',
+  gap: '8px',
   paddingTop: rem(24),
 });
 

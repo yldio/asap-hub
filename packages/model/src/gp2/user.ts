@@ -5,11 +5,12 @@ import { ProjectDataObject, ProjectMember } from './project';
 import { WorkingGroupDataObject, WorkingGroupMember } from './working-group';
 
 export const userRoles = [
-  'Working Group Participant',
-  'Network Investigator',
-  'Network Collaborator',
   'Administrator',
+  'Hidden',
+  'Network Collaborator',
+  'Network Investigator',
   'Trainee',
+  'Working Group Participant',
 ] as const;
 
 export type UserRole = typeof userRoles[number];
@@ -19,15 +20,15 @@ export const userDegrees = [
   'AAS',
   'BA',
   'BSc',
-  'MSc',
-  'PhD',
+  'MA',
+  'MBA',
+  'MBBS',
   'MD',
   'MD, PhD',
   'MPH',
-  'MA',
-  'MBA',
+  'MSc',
+  'PhD',
   'PharmD',
-  'MBBS',
 ] as const;
 export type UserDegree = typeof userDegrees[number];
 
@@ -36,8 +37,8 @@ export const userRegions = [
   'Asia',
   'Australia/Australiasia',
   'Europe',
-  'North America',
   'Latin America',
+  'North America',
   'South America',
 ] as const;
 
@@ -143,6 +144,7 @@ export type FetchUsersFilter = {
   onlyOnboarded?: boolean;
   projects?: string[];
   workingGroups?: string[];
+  hidden?: boolean;
 };
 
 export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;

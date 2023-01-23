@@ -26,6 +26,7 @@ export type RestUsersRegion =
 
 export type RestUsersRole =
   | 'Administrator'
+  | 'Hidden'
   | 'Network_Collaborator'
   | 'Network_Investigator'
   | 'Trainee'

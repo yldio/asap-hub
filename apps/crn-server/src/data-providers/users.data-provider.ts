@@ -51,10 +51,9 @@ export class UserSquidexDataProvider implements UserDataProvider {
   ) {}
   async fetchById(id: string): Promise<UserDataObject | null> {
     const { findUsersContent } = await this.queryFetchByIdData(id);
-    if (!findUsersContent) {
-      return null;
-    }
-    return parseGraphQLUserToDataObject(findUsersContent);
+    return findUsersContent
+      ? parseGraphQLUserToDataObject(findUsersContent)
+      : null;
   }
 
   async create(userCreateDataObject: UserCreateDataObject): Promise<string> {

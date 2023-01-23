@@ -52,10 +52,9 @@ export class UserSquidexDataProvider implements UserDataProvider {
 
   async fetchById(id: string): Promise<gp2Model.UserDataObject | null> {
     const { findUsersContent } = await this.queryFetchByIdData(id);
-    if (!findUsersContent) {
-      return null;
-    }
-    return parseGraphQLUserToDataObject(findUsersContent);
+    return findUsersContent
+      ? parseGraphQLUserToDataObject(findUsersContent)
+      : null;
   }
 
   async update(id: string, user: gp2Model.UserUpdateDataObject): Promise<void> {
@@ -175,13 +174,9 @@ type UserUpdateInputEnumFields = Partial<UserCreateInputEnumFields>;
 const mapUserFields = (
   input: UserCreateDataObjectEnumFields | UserUpdateDataObjectEnumFields,
 ): UserCreateInputEnumFields | UserUpdateInputEnumFields => {
-  const mappedDegrees = input.degrees?.map((degree) => {
-    if (degree === 'MD, PhD') {
-      return UsersDataDegreeEnum.MdPhD;
-    }
-
-    return degree;
-  });
+  const mappedDegrees = input.degrees?.map((degree) =>
+    degree === 'MD, PhD' ? UsersDataDegreeEnum.MdPhD : degree,
+  );
 
   return {
     ...(input.region && { region: reverseRegionMap[input.region] }),
@@ -257,11 +252,12 @@ const generateFetchQueryFilter = (
     keywords,
     code,
     onlyOnboarded,
+    hidden = true,
   }: gp2Model.FetchUsersOptions['filter'] = {},
   userIdFilter: string,
   searchFilter: string,
 ) => {
-  const filterOnboarded = onlyOnboarded === true && 'data/onboarded/iv eq true';
+  const filterOnboarded = onlyOnboarded && 'data/onboarded/iv eq true';
   const filterRegions = regions
     ?.map((r) => `data/region/iv eq '${reverseRegionMap[r]}'`)
     .join(' or ');
@@ -270,9 +266,11 @@ const generateFetchQueryFilter = (
     .join(' or ');
 
   const filterCode = code && `data/connections/iv/code eq '${code}'`;
+  const filterHidden = hidden && "data/role/iv ne 'Hidden'";
 
   return [
     filterOnboarded,
+    filterHidden,
     filterRegions,
     filterCode,
     filterKeywords,
@@ -364,6 +362,7 @@ const regionMap: Record<UsersDataRegionEnum, gp2Model.UserRegion> = {
 };
 const roleMap: Record<UsersDataRoleEnum, gp2Model.UserRole> = {
   [UsersDataRoleEnum.Administrator]: 'Administrator',
+  [UsersDataRoleEnum.Hidden]: 'Hidden',
   [UsersDataRoleEnum.NetworkCollaborator]: 'Network Collaborator',
   [UsersDataRoleEnum.NetworkInvestigator]: 'Network Investigator',
   [UsersDataRoleEnum.Trainee]: 'Trainee',
@@ -421,13 +420,9 @@ const parseDegrees = (
     FetchUserQuery['findUsersContent']
   >['flatData']['degree'],
 ): gp2Model.UserDataObject['degrees'] =>
-  degrees?.map<gp2Model.UserDegree>((degree) => {
-    if (degree === UsersDataDegreeEnum.MdPhD) {
-      return 'MD, PhD';
-    }
-
-    return degree;
-  });
+  degrees?.map<gp2Model.UserDegree>((degree) =>
+    degree === UsersDataDegreeEnum.MdPhD ? 'MD, PhD' : degree,
+  );
 
 const parseQuestions = (
   questions: NonNullable<

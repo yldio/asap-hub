@@ -2374,6 +2374,8 @@ type UsersDataRoleDto {
 enum UsersDataRoleEnum {
   """Administrator"""
   Administrator
+  """Hidden"""
+  Hidden
   """Network_Collaborator"""
   Network_Collaborator
   """Network_Investigator"""

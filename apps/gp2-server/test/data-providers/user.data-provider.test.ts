@@ -1,5 +1,5 @@
 import { GenericError, NotFoundError } from '@asap-hub/errors';
-import { FetchUsersOptions, gp2 as gp2Model } from '@asap-hub/model';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Squidex, SquidexRest } from '@asap-hub/squidex';
 import nock from 'nock';
 import {
@@ -970,7 +970,8 @@ describe('User data provider', () => {
       };
       const users = await userDataProvider.fetch(fetchOptions);
 
-      const filter = '(data/onboarded/iv eq true)';
+      const filter =
+        "(data/onboarded/iv eq true) and (data/role/iv ne 'Hidden')";
       expect(squidexGraphqlClientMock.request).toBeCalledWith(
         expect.anything(),
         {
@@ -1000,7 +1001,7 @@ describe('User data provider', () => {
         {
           top: 12,
           skip: 2,
-          filter: '',
+          filter: "(data/role/iv ne 'Hidden')",
         },
       );
       expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
@@ -1023,7 +1024,10 @@ describe('User data provider', () => {
       };
       await userDataProvider.fetch(fetchOptions);
 
-      const filter = `(data/${fieldName}/iv eq '${value[0]}' or data/${fieldName}/iv eq '${value[1]}')`;
+      const filter =
+        "(data/role/iv ne 'Hidden')" +
+        ' and' +
+        ` (data/${fieldName}/iv eq '${value[0]}' or data/${fieldName}/iv eq '${value[1]}')`;
       expect(squidexGraphqlClientMock.request).toBeCalledWith(
         expect.anything(),
         {
@@ -1067,7 +1071,7 @@ describe('User data provider', () => {
             filter: projectFilter,
           },
         );
-        const userFilter = `(id eq '${userId}')`;
+        const userFilter = `(data/role/iv ne 'Hidden') and (id eq '${userId}')`;
         expect(squidexGraphqlClientMock.request).toHaveBeenNthCalledWith(
           2,
           expect.anything(),
@@ -1116,7 +1120,10 @@ describe('User data provider', () => {
             filter: projectFilter,
           },
         );
-        const userFilter = `(id eq '${user1Id}' or id eq '${user2Id}')`;
+        const userFilter =
+          "(data/role/iv ne 'Hidden')" +
+          ' and' +
+          ` (id eq '${user1Id}' or id eq '${user2Id}')`;
         expect(squidexGraphqlClientMock.request).toHaveBeenNthCalledWith(
           2,
           expect.anything(),
@@ -1166,7 +1173,10 @@ describe('User data provider', () => {
             filter: projectFilter,
           },
         );
-        const userFilter = `(id eq '${user1Id}' or id eq '${user2Id}' or id eq '${user3Id}')`;
+        const userFilter =
+          "(data/role/iv ne 'Hidden')" +
+          ' and' +
+          ` (id eq '${user1Id}' or id eq '${user2Id}' or id eq '${user3Id}')`;
         expect(squidexGraphqlClientMock.request).toHaveBeenNthCalledWith(
           2,
           expect.anything(),
@@ -1215,7 +1225,7 @@ describe('User data provider', () => {
             filter: projectFilter,
           },
         );
-        const userFilter = `(id eq '${user1Id}')`;
+        const userFilter = `(data/role/iv ne 'Hidden') and (id eq '${user1Id}')`;
         expect(squidexGraphqlClientMock.request).toHaveBeenNthCalledWith(
           2,
           expect.anything(),
@@ -1262,7 +1272,7 @@ describe('User data provider', () => {
             filter: workingGroupFilter,
           },
         );
-        const userFilter = `(id eq '${userId}')`;
+        const userFilter = `(data/role/iv ne 'Hidden') and (id eq '${userId}')`;
         expect(squidexGraphqlClientMock.request).toHaveBeenNthCalledWith(
           2,
           expect.anything(),
@@ -1313,7 +1323,10 @@ describe('User data provider', () => {
             filter: workingGroupFilter,
           },
         );
-        const userFilter = `(id eq '${user1Id}' or id eq '${user2Id}')`;
+        const userFilter =
+          "(data/role/iv ne 'Hidden')" +
+          ' and' +
+          ` (id eq '${user1Id}' or id eq '${user2Id}')`;
         expect(squidexGraphqlClientMock.request).toHaveBeenNthCalledWith(
           2,
           expect.anything(),
@@ -1365,7 +1378,10 @@ describe('User data provider', () => {
             filter: workingGroupFilter,
           },
         );
-        const userFilter = `(id eq '${user1Id}' or id eq '${user2Id}' or id eq '${user3Id}')`;
+        const userFilter =
+          "(data/role/iv ne 'Hidden')" +
+          ' and' +
+          ` (id eq '${user1Id}' or id eq '${user2Id}' or id eq '${user3Id}')`;
         expect(squidexGraphqlClientMock.request).toHaveBeenNthCalledWith(
           2,
           expect.anything(),
@@ -1416,7 +1432,7 @@ describe('User data provider', () => {
             filter: workingGroupFilter,
           },
         );
-        const userFilter = `(id eq '${user1Id}')`;
+        const userFilter = `(data/role/iv ne 'Hidden') and (id eq '${user1Id}')`;
         expect(squidexGraphqlClientMock.request).toHaveBeenNthCalledWith(
           2,
           expect.anything(),
@@ -1478,7 +1494,7 @@ describe('User data provider', () => {
           filter: workingGroupFilter,
         },
       );
-      const userFilter = `(id eq '${user1Id}')`;
+      const userFilter = `(data/role/iv ne 'Hidden') and (id eq '${user1Id}')`;
       expect(squidexGraphqlClientMock.request).toHaveBeenNthCalledWith(
         3,
         expect.anything(),
@@ -1568,11 +1584,11 @@ describe('User data provider', () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexUsersGraphqlResponse(),
       );
-      const fetchOptions: FetchUsersOptions = {
+      const fetchOptions: gp2Model.FetchUsersOptions = {
         take: 1,
         skip: 0,
         filter: {
-          onboarded: false,
+          onlyOnboarded: false,
           hidden: false,
           code: 'a-code',
         },
@@ -1594,7 +1610,7 @@ describe('User data provider', () => {
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           getSquidexUsersGraphqlResponse(),
         );
-        const fetchOptions: FetchUsersOptions = {
+        const fetchOptions: gp2Model.FetchUsersOptions = {
           take: 12,
           skip: 2,
           search: 'tony stark',
@@ -1603,7 +1619,9 @@ describe('User data provider', () => {
         const users = await userDataProvider.fetch(fetchOptions);
 
         const filterQuery =
-          "((contains(data/firstName/iv, 'tony')" +
+          "(data/role/iv ne 'Hidden')" +
+          ' and' +
+          " ((contains(data/firstName/iv, 'tony')" +
           " or contains(data/lastName/iv, 'tony'))" +
           ' and' +
           " (contains(data/firstName/iv, 'stark')" +
@@ -1622,7 +1640,7 @@ describe('User data provider', () => {
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           getSquidexUsersGraphqlResponse(),
         );
-        const fetchOptions: FetchUsersOptions = {
+        const fetchOptions: gp2Model.FetchUsersOptions = {
           take: 12,
           skip: 2,
           search: "'",
@@ -1630,7 +1648,9 @@ describe('User data provider', () => {
         await userDataProvider.fetch(fetchOptions);
 
         const expectedFilter =
-          "((contains(data/firstName/iv, '%27%27')" +
+          "(data/role/iv ne 'Hidden')" +
+          ' and' +
+          " ((contains(data/firstName/iv, '%27%27')" +
           " or contains(data/lastName/iv, '%27%27')))";
 
         expect(squidexGraphqlClientMock.request).toBeCalledWith(
@@ -1646,7 +1666,7 @@ describe('User data provider', () => {
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           getSquidexUsersGraphqlResponse(),
         );
-        const fetchOptions: FetchUsersOptions = {
+        const fetchOptions: gp2Model.FetchUsersOptions = {
           take: 12,
           skip: 2,
           search: '"',
@@ -1654,7 +1674,9 @@ describe('User data provider', () => {
         await userDataProvider.fetch(fetchOptions);
 
         const expectedFilter =
-          "((contains(data/firstName/iv, '%22')" +
+          "(data/role/iv ne 'Hidden')" +
+          ' and' +
+          " ((contains(data/firstName/iv, '%22')" +
           " or contains(data/lastName/iv, '%22')))";
 
         expect(squidexGraphqlClientMock.request).toBeCalledWith(
@@ -1670,7 +1692,7 @@ describe('User data provider', () => {
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           getSquidexUsersGraphqlResponse(),
         );
-        const fetchOptions: FetchUsersOptions = {
+        const fetchOptions: gp2Model.FetchUsersOptions = {
           take: 12,
           skip: 2,
           search: 'Solène',
@@ -1678,7 +1700,9 @@ describe('User data provider', () => {
         await userDataProvider.fetch(fetchOptions);
 
         const expectedFilter =
-          "((contains(data/firstName/iv, 'Solène')" +
+          "(data/role/iv ne 'Hidden')" +
+          ' and' +
+          " ((contains(data/firstName/iv, 'Solène')" +
           " or contains(data/lastName/iv, 'Solène')))";
 
         expect(squidexGraphqlClientMock.request).toBeCalledWith(

@@ -2315,6 +2315,8 @@ export type UsersDataRoleDto = {
 export enum UsersDataRoleEnum {
   /** Administrator */
   Administrator = 'Administrator',
+  /** Hidden */
+  Hidden = 'Hidden',
   /** Network_Collaborator */
   NetworkCollaborator = 'Network_Collaborator',
   /** Network_Investigator */

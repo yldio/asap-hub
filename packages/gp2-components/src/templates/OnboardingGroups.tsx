@@ -16,16 +16,20 @@ const OnboardingGroups: React.FC<OnboardingGroupsProps> = ({
       by one of the admins. Please review the information and get in touch if
       there are any issues.
     </Paragraph>
-    <UserProjects
-      {...userProps}
-      projects={projects}
-      subtitle={<ContactSupport />}
-    />
-    <UserWorkingGroups
-      {...userProps}
-      workingGroups={workingGroups}
-      subtitle={<ContactSupport />}
-    />
+    {projects && (
+      <UserProjects
+        {...userProps}
+        projects={projects}
+        subtitle={<ContactSupport />}
+      />
+    )}
+    {workingGroups && (
+      <UserWorkingGroups
+        {...userProps}
+        workingGroups={workingGroups}
+        subtitle={<ContactSupport />}
+      />
+    )}
   </>
 );
 

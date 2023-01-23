@@ -1,9 +1,5 @@
 import { gp2 } from '@asap-hub/model';
-import {
-  Paragraph,
-  pixels,
-  UserProfilePlaceholderCard,
-} from '@asap-hub/react-components';
+import { pixels, UserProfilePlaceholderCard } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import EditableCard from '../molecules/EditableCard';
@@ -34,7 +30,7 @@ const UserQuestions: React.FC<UserQuestionsProps> = ({
   <EditableCard
     editHref={editHref}
     title="Open Questions"
-    paragraph={`${firstName} is interested in answering the following questions
+    subtitle={`${firstName} is interested in answering the following questions
     within their work:`}
     edit={!!questions.length}
     optional

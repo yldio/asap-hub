@@ -10,11 +10,7 @@ const Groups: React.FC<Record<string, never>> = () => {
   const userData = useUserById(currentUser!.id);
 
   if (userData) {
-    return (
-      <>
-        <OnboardingGroups {...userData} />
-      </>
-    );
+    return <OnboardingGroups {...userData} />;
   }
   return <NotFoundPage />;
 };

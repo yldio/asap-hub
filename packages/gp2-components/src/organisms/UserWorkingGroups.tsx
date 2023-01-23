@@ -1,10 +1,10 @@
+import { ComponentProps } from 'react';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { Link, utils } from '@asap-hub/react-components';
 
 import { CollapsibleTable, EditableCard, IconWithLabel } from '../molecules';
 import { userIcon, usersIcon } from '../icons';
-import { ComponentProps } from 'react';
 
 const { getCounterString } = utils;
 
@@ -33,9 +33,8 @@ const UserWorkingGroups: React.FC<UserWorkingGroupsProps> = ({
     <EditableCard
       title="Working Groups"
       subtitle={
-        subtitle
-          ? subtitle
-          : `${firstName} is involved in the following GP2 working groups:`
+        subtitle ||
+        `${firstName} is involved in the following GP2 working groups:`
       }
     >
       <CollapsibleTable headings={['Name', 'Role', 'Nº of Members']}>
@@ -66,7 +65,7 @@ const UserWorkingGroups: React.FC<UserWorkingGroupsProps> = ({
           );
 
           return {
-            id: id,
+            id,
             values: [name, role, numberOfMembers],
           };
         })}

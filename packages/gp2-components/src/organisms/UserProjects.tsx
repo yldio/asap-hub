@@ -28,9 +28,8 @@ const UserProjects: React.FC<UserProjectsProps> = ({
   <EditableCard
     title="Projects"
     subtitle={
-      subtitle
-        ? subtitle
-        : `${firstName} has been involved in the following GP2 projects:`
+      subtitle ||
+      `${firstName} has been involved in the following GP2 projects:`
     }
   >
     <CollapsibleTable headings={['Name', 'Role', 'Status']}>

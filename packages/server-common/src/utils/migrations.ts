@@ -2,6 +2,8 @@ import {
   Entity,
   Rest,
   Results,
+  SquidexGraphql,
+  SquidexGraphqlClient,
   SquidexRest,
   SquidexRestClient,
 } from '@asap-hub/squidex';
@@ -12,7 +14,8 @@ export const applyToAllItemsInCollectionFactory =
     entityName: string,
     processEntity: (
       entity: T,
-      squidexClient: SquidexRestClient<T>,
+      squidexRestClient: SquidexRestClient<T>,
+      squidexGraphqlClient: SquidexGraphqlClient,
     ) => Promise<void>,
   ): Promise<void> => {
     const squidexClient = new SquidexRest<T>(
@@ -23,6 +26,10 @@ export const applyToAllItemsInCollectionFactory =
         unpublished: true,
       },
     );
+    const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
+      appName,
+      baseUrl,
+    });
 
     let pointer = 0;
     let result: Results<T>;
@@ -37,7 +44,7 @@ export const applyToAllItemsInCollectionFactory =
       });
 
       for (const item of result.items) {
-        await processEntity(item, squidexClient);
+        await processEntity(item, squidexClient, squidexGraphqlClient);
       }
 
       pointer += 10;

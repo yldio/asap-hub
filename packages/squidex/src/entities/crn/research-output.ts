@@ -34,6 +34,7 @@ export interface ResearchOutput<
   environments: string[];
   labCatalogNumber?: string;
   labs: TLabConnection[];
+  teams?: string[];
   lastUpdatedPartial?: string;
   link?: string;
   methods: string[];

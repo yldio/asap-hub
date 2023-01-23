@@ -4251,6 +4251,32 @@ type ResearchOutputs implements Content {
     """Optional number of items to take."""
     top: Int
   ): ResearchTagsResultDto
+  """Query Teams content items."""
+  referencesTeamsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [Teams!]
+  """Query Teams content items with total count."""
+  referencesTeamsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): TeamsResultDto
   """Query Users content items."""
   referencesUsersContents(
     """Optional OData filter."""
@@ -4441,6 +4467,7 @@ type ResearchOutputsDataDto {
   sharingStatus: ResearchOutputsDataSharingStatusDto
   subtype: ResearchOutputsDataSubtypeDto
   tags: ResearchOutputsDataTagsDto
+  teams: ResearchOutputsDataTeamsDto
   title: ResearchOutputsDataTitleDto
   type: ResearchOutputsDataTypeDto
   updatedBy: ResearchOutputsDataUpdatedByDto
@@ -4482,6 +4509,7 @@ input ResearchOutputsDataInputDto {
   sharingStatus: ResearchOutputsDataSharingStatusInputDto
   subtype: ResearchOutputsDataSubtypeInputDto
   tags: ResearchOutputsDataTagsInputDto
+  teams: ResearchOutputsDataTeamsInputDto
   title: ResearchOutputsDataTitleInputDto
   type: ResearchOutputsDataTypeInputDto
   updatedBy: ResearchOutputsDataUpdatedByInputDto
@@ -4632,6 +4660,16 @@ input ResearchOutputsDataTagsInputDto {
   iv: [String!]
 }
 
+"""The structure of the Teams field of the Research Outputs content type."""
+type ResearchOutputsDataTeamsDto {
+  iv: [Teams!]
+}
+
+"""The structure of the Teams field of the Research Outputs content input type."""
+input ResearchOutputsDataTeamsInputDto {
+  iv: [String!]
+}
+
 """The structure of the Title field of the Research Outputs content type."""
 type ResearchOutputsDataTitleDto {
   iv: String
@@ -4724,6 +4762,7 @@ type ResearchOutputsFlatDataDto {
   sharingStatus: String
   subtype: [ResearchTags!]
   tags: [String!]
+  teams: [Teams!]
   title: String
   type: String
   updatedBy: [Users!]
@@ -5008,6 +5047,32 @@ type Teams implements Content {
     """Optional number of items to take."""
     top: Int
   ): GroupsResultDto
+  """Query Research Outputs content items."""
+  referencingResearchOutputsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [ResearchOutputs!]
+  """Query Research Outputs content items with total count."""
+  referencingResearchOutputsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): ResearchOutputsResultDto
   """Query Users content items."""
   referencingUsersContents(
     """Optional OData filter."""

@@ -19,6 +19,8 @@ export const errorHandlerFactory =
 
     if (err instanceof GenericError) {
       if (err.cause instanceof HTTPError) {
+        req.log.error(err.cause);
+
         Sentry.setContext('asapHttpError', {
           response: JSON.stringify(err.cause.response?.body),
         });

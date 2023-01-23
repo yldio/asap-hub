@@ -193,6 +193,7 @@ export class ResearchOutputSquidexDataProvider
       createdBy: [researchOutputData.createdBy],
       updatedBy: [researchOutputData.createdBy],
       labs: labIds,
+      teams: teamIds,
       methods: methodIds,
       environments: environmentIds,
       organisms: organismIds,
@@ -239,6 +240,7 @@ export class ResearchOutputSquidexDataProvider
       ),
       authors: authors.map(getAuthorIdList),
       labs: labIds,
+      teams: _teamIds,
       methods: methodIds,
       environments: environmentIds,
       organisms: organismIds,
@@ -252,7 +254,8 @@ export class ResearchOutputSquidexDataProvider
       rrid: { iv: null },
       ...researchOutput,
       usedInAPublication: usedInPublication,
-      labs: researchOutput.labs || { iv: null },
+      labs: researchOutput.labs,
+      teams: researchOutput.teams,
     });
 
     return researchOutputId;

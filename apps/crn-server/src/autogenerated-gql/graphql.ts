@@ -4033,6 +4033,10 @@ export type ResearchOutputs = Content & {
   referencesResearchTagsContents: Maybe<Array<ResearchTags>>;
   /** Query Research Tags content items with total count. */
   referencesResearchTagsContentsWithTotal: Maybe<ResearchTagsResultDto>;
+  /** Query Teams content items. */
+  referencesTeamsContents: Maybe<Array<Teams>>;
+  /** Query Teams content items with total count. */
+  referencesTeamsContentsWithTotal: Maybe<TeamsResultDto>;
   /** Query Users content items. */
   referencesUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
@@ -4098,6 +4102,24 @@ export type ResearchOutputsReferencesResearchTagsContentsArgs = {
 
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesResearchTagsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Research Outputs content type. */
+export type ResearchOutputsReferencesTeamsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Research Outputs content type. */
+export type ResearchOutputsReferencesTeamsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -4269,6 +4291,7 @@ export type ResearchOutputsDataDto = {
   sharingStatus: Maybe<ResearchOutputsDataSharingStatusDto>;
   subtype: Maybe<ResearchOutputsDataSubtypeDto>;
   tags: Maybe<ResearchOutputsDataTagsDto>;
+  teams: Maybe<ResearchOutputsDataTeamsDto>;
   title: Maybe<ResearchOutputsDataTitleDto>;
   type: Maybe<ResearchOutputsDataTypeDto>;
   updatedBy: Maybe<ResearchOutputsDataUpdatedByDto>;
@@ -4310,6 +4333,7 @@ export type ResearchOutputsDataInputDto = {
   sharingStatus: InputMaybe<ResearchOutputsDataSharingStatusInputDto>;
   subtype: InputMaybe<ResearchOutputsDataSubtypeInputDto>;
   tags: InputMaybe<ResearchOutputsDataTagsInputDto>;
+  teams: InputMaybe<ResearchOutputsDataTeamsInputDto>;
   title: InputMaybe<ResearchOutputsDataTitleInputDto>;
   type: InputMaybe<ResearchOutputsDataTypeInputDto>;
   updatedBy: InputMaybe<ResearchOutputsDataUpdatedByInputDto>;
@@ -4452,6 +4476,16 @@ export type ResearchOutputsDataTagsInputDto = {
   iv: InputMaybe<Array<Scalars['String']>>;
 };
 
+/** The structure of the Teams field of the Research Outputs content type. */
+export type ResearchOutputsDataTeamsDto = {
+  iv: Maybe<Array<Teams>>;
+};
+
+/** The structure of the Teams field of the Research Outputs content input type. */
+export type ResearchOutputsDataTeamsInputDto = {
+  iv: InputMaybe<Array<Scalars['String']>>;
+};
+
 /** The structure of the Title field of the Research Outputs content type. */
 export type ResearchOutputsDataTitleDto = {
   iv: Maybe<Scalars['String']>;
@@ -4540,6 +4574,7 @@ export type ResearchOutputsFlatDataDto = {
   sharingStatus: Maybe<Scalars['String']>;
   subtype: Maybe<Array<ResearchTags>>;
   tags: Maybe<Array<Scalars['String']>>;
+  teams: Maybe<Array<Teams>>;
   title: Maybe<Scalars['String']>;
   type: Maybe<Scalars['String']>;
   updatedBy: Maybe<Array<Users>>;
@@ -4732,6 +4767,10 @@ export type Teams = Content & {
   referencingGroupsContents: Maybe<Array<Groups>>;
   /** Query Groups content items with total count. */
   referencingGroupsContentsWithTotal: Maybe<GroupsResultDto>;
+  /** Query Research Outputs content items. */
+  referencingResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
+  /** Query Research Outputs content items with total count. */
+  referencingResearchOutputsContentsWithTotal: Maybe<ResearchOutputsResultDto>;
   /** Query Users content items. */
   referencingUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
@@ -4811,6 +4850,24 @@ export type TeamsReferencingGroupsContentsArgs = {
 
 /** The structure of a Teams content type. */
 export type TeamsReferencingGroupsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Teams content type. */
+export type TeamsReferencingResearchOutputsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Teams content type. */
+export type TeamsReferencingResearchOutputsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -8382,6 +8439,26 @@ export type ResearchOutputContentFragment = Pick<
     labs: Maybe<
       Array<Pick<Labs, 'id'> & { flatData: Pick<LabsFlatDataDto, 'name'> }>
     >;
+    teams: Maybe<
+      Array<
+        Pick<Teams, 'id' | 'created' | 'lastModified' | 'version'> & {
+          flatData: Pick<TeamsFlatDataDto, 'displayName' | 'inactiveSince'>;
+          referencingUsersContents: Maybe<
+            Array<{
+              flatData: Pick<UsersFlatDataDto, 'email'> & {
+                teams: Maybe<
+                  Array<
+                    Pick<UsersDataTeamsChildDto, 'role'> & {
+                      id: Maybe<Array<Pick<Teams, 'id'>>>;
+                    }
+                  >
+                >;
+              };
+            }>
+          >;
+        }
+      >
+    >;
     methods: Maybe<Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>>;
     organisms: Maybe<
       Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
@@ -8544,6 +8621,26 @@ export type FetchResearchOutputQuery = {
         >;
         labs: Maybe<
           Array<Pick<Labs, 'id'> & { flatData: Pick<LabsFlatDataDto, 'name'> }>
+        >;
+        teams: Maybe<
+          Array<
+            Pick<Teams, 'id' | 'created' | 'lastModified' | 'version'> & {
+              flatData: Pick<TeamsFlatDataDto, 'displayName' | 'inactiveSince'>;
+              referencingUsersContents: Maybe<
+                Array<{
+                  flatData: Pick<UsersFlatDataDto, 'email'> & {
+                    teams: Maybe<
+                      Array<
+                        Pick<UsersDataTeamsChildDto, 'role'> & {
+                          id: Maybe<Array<Pick<Teams, 'id'>>>;
+                        }
+                      >
+                    >;
+                  };
+                }>
+              >;
+            }
+          >
         >;
         methods: Maybe<
           Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
@@ -8725,6 +8822,29 @@ export type FetchResearchOutputsQuery = {
               labs: Maybe<
                 Array<
                   Pick<Labs, 'id'> & { flatData: Pick<LabsFlatDataDto, 'name'> }
+                >
+              >;
+              teams: Maybe<
+                Array<
+                  Pick<Teams, 'id' | 'created' | 'lastModified' | 'version'> & {
+                    flatData: Pick<
+                      TeamsFlatDataDto,
+                      'displayName' | 'inactiveSince'
+                    >;
+                    referencingUsersContents: Maybe<
+                      Array<{
+                        flatData: Pick<UsersFlatDataDto, 'email'> & {
+                          teams: Maybe<
+                            Array<
+                              Pick<UsersDataTeamsChildDto, 'role'> & {
+                                id: Maybe<Array<Pick<Teams, 'id'>>>;
+                              }
+                            >
+                          >;
+                        };
+                      }>
+                    >;
+                  }
                 >
               >;
               methods: Maybe<
@@ -11608,6 +11728,99 @@ export const ResearchOutputContentFragmentDoc = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'name' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'teams' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'created' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'lastModified' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'version' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'displayName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'inactiveSince' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'referencingUsersContents',
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'flatData' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'email' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'teams' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'role' },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'id',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
                             },
                           ],
                         },

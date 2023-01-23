@@ -1,6 +1,7 @@
 import {
   RestUser,
   Results,
+  SquidexGraphql,
   SquidexRest,
   SquidexRestClient,
 } from '@asap-hub/squidex';
@@ -61,6 +62,7 @@ describe('Migration utils', () => {
       expect(processingFunction).toBeCalledWith(
         restUserMock(),
         expect.any(SquidexRest),
+        expect.any(SquidexGraphql),
       );
     });
 
@@ -86,6 +88,7 @@ describe('Migration utils', () => {
       expect(processingFunction).toBeCalledWith(
         restUserMock(),
         expect.any(SquidexRest),
+        expect.any(SquidexGraphql),
       );
     });
   });

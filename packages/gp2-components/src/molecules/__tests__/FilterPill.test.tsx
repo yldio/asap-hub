@@ -10,7 +10,7 @@ describe('FilterPill', () => {
   const onRemove = jest.fn();
   it('should render the pill', () => {
     render(<FilterPill value={value} onRemove={onRemove} />);
-    expect(screen.getByText('A pill')).toBeInTheDocument();
+    expect(screen.getByText('A pill')).toBeVisible();
   });
 
   it('shows the remove button and be clickable', () => {

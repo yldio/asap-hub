@@ -19,10 +19,11 @@ describe('FilterPills', () => {
     expect(screen.getByText('A pill')).toBeVisible();
     expect(screen.getByText('A second pill')).toBeVisible();
   });
-  it('should appear the remove button for the second pill and be clickable', () => {
+  it("shows the remove button for the second pill and it's clickable", () => {
     render(<FilterPills values={values} onRemove={onRemove} />);
     const onRemoveButton =
       screen.getByText('A second pill').nextElementSibling!;
+    expect(onRemoveButton).toBeVisible();
     userEvent.click(onRemoveButton);
     expect(onRemove).toBeCalledWith({
       label: 'A second pill',

@@ -14,6 +14,7 @@ export {
   UserRegion,
 } from './molecules';
 export {
+  BiographyModal,
   EditResourceModal,
   EmailSection,
   DashboardHeader,

@@ -7095,7 +7095,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "nock",\
-        "npm:13.0.11"\
+        "npm:13.3.0"\
       ],\
       [\
         "node-dev",\
@@ -10172,7 +10172,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-watch-select-projects", "npm:2.0.0"],\
             ["jest-watch-suspend", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.2"],\
             ["jest-watch-typeahead", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:0.6.5"],\
-            ["nock", "npm:13.0.11"],\
+            ["nock", "npm:13.3.0"],\
             ["node-fetch", "npm:3.0.0-beta.9"],\
             ["prettier", "npm:2.7.1"],\
             ["react-test-renderer", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:17.0.2"],\
@@ -10634,7 +10634,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["got", "npm:11.8.6"],\
             ["jwt-encode", "npm:1.0.1"],\
             ["luxon", "npm:1.28.1"],\
-            ["nock", "npm:13.0.11"],\
+            ["nock", "npm:13.3.0"],\
             ["prettier", "npm:2.7.1"],\
             ["pump", "npm:3.0.0"],\
             ["through2-concurrent", "npm:2.0.0"],\
@@ -10715,7 +10715,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@vedicium/auth0-actions-sdk", "npm:0.1.3"],\
             ["auth0-deploy-cli", "npm:7.15.1"],\
             ["got", "npm:11.8.6"],\
-            ["nock", "npm:13.0.11"]\
+            ["nock", "npm:13.3.0"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -10887,7 +10887,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["history", "npm:4.10.1"],\
             ["identity-obj-proxy", "npm:3.0.0"],\
             ["jose", "npm:2.0.6"],\
-            ["nock", "npm:13.0.11"],\
+            ["nock", "npm:13.3.0"],\
             ["path", [\
               "path-browserify",\
               "npm:1.0.1"\
@@ -11051,7 +11051,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["lodash.uniqby", "npm:4.7.0"],\
             ["luxon", "npm:1.28.1"],\
             ["mime-types", "npm:2.1.35"],\
-            ["nock", "npm:13.0.11"],\
+            ["nock", "npm:13.3.0"],\
             ["node-dev", "npm:6.7.0"],\
             ["odata-query", "npm:7.0.3"],\
             ["opentracing", "npm:0.14.7"],\
@@ -11620,7 +11620,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["history", "npm:4.10.1"],\
             ["identity-obj-proxy", "npm:3.0.0"],\
             ["jose", "npm:2.0.6"],\
-            ["nock", "npm:13.0.11"],\
+            ["nock", "npm:13.3.0"],\
             ["path", [\
               "path-browserify",\
               "npm:1.0.1"\
@@ -11738,7 +11738,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jsonwebtoken", "npm:8.5.1"],\
             ["jwt-encode", "npm:1.0.1"],\
             ["mime-types", "npm:2.1.35"],\
-            ["nock", "npm:13.0.11"],\
+            ["nock", "npm:13.3.0"],\
             ["node-dev", "npm:6.7.0"],\
             ["parse-data-url", "npm:3.0.0"],\
             ["serverless", "npm:3.22.0"],\
@@ -12315,7 +12315,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["got", "npm:11.8.6"],\
             ["jsonwebtoken", "npm:8.5.1"],\
             ["jwt-encode", "npm:1.0.1"],\
-            ["nock", "npm:13.0.11"],\
+            ["nock", "npm:13.3.0"],\
             ["pino", "npm:8.8.0"],\
             ["pino-http", "npm:8.3.1"],\
             ["pino-lambda", "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:4.1.0"],\
@@ -12360,7 +12360,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["graphql-request", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:3.4.0"],\
             ["jwt-decode", "npm:2.2.0"],\
             ["jwt-encode", "npm:1.0.1"],\
-            ["nock", "npm:13.0.11"]\
+            ["nock", "npm:13.3.0"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -12397,7 +12397,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jwt-decode", "npm:2.2.0"],\
             ["jwt-encode", "npm:1.0.1"],\
             ["luxon", "npm:1.28.1"],\
-            ["nock", "npm:13.0.11"],\
+            ["nock", "npm:13.3.0"],\
             ["opentracing", "npm:0.14.7"]\
           ],\
           "linkType": "SOFT"\
@@ -38130,7 +38130,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-watch-select-projects", "npm:2.0.0"],\
             ["jest-watch-suspend", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.2"],\
             ["jest-watch-typeahead", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:0.6.5"],\
-            ["nock", "npm:13.0.11"],\
+            ["nock", "npm:13.3.0"],\
             ["node-fetch", "npm:3.0.0-beta.9"],\
             ["prettier", "npm:2.7.1"],\
             ["react-test-renderer", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:17.0.2"],\
@@ -55822,17 +55822,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["nock", [\
-        ["npm:13.0.11", {\
-          "packageLocation": "./.yarn/cache/nock-npm-13.0.11-d618e2eef2-f472f3c578.zip/node_modules/nock/",\
-          "packageDependencies": [\
-            ["nock", "npm:13.0.11"],\
-            ["debug", "virtual:8334b3c6a227f020cb3cfaed49b93ea085604f96818182663a4d27d635b07044add7461800b7eb3d9f29147a23a29096f0510e575488abff719ed56277843fcc#npm:4.2.0"],\
-            ["json-stringify-safe", "npm:5.0.1"],\
-            ["lodash.set", "npm:4.3.2"],\
-            ["propagate", "npm:2.0.1"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
         ["npm:13.0.4", {\
           "packageLocation": "./.yarn/cache/nock-npm-13.0.4-d232d43721-8217b7b45e.zip/node_modules/nock/",\
           "packageDependencies": [\
@@ -55840,6 +55829,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["debug", "virtual:8334b3c6a227f020cb3cfaed49b93ea085604f96818182663a4d27d635b07044add7461800b7eb3d9f29147a23a29096f0510e575488abff719ed56277843fcc#npm:4.2.0"],\
             ["json-stringify-safe", "npm:5.0.1"],\
             ["lodash.set", "npm:4.3.2"],\
+            ["propagate", "npm:2.0.1"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:13.3.0", {\
+          "packageLocation": "./.yarn/cache/nock-npm-13.3.0-48c93e5ec9-118d04e95a.zip/node_modules/nock/",\
+          "packageDependencies": [\
+            ["nock", "npm:13.3.0"],\
+            ["debug", "virtual:8334b3c6a227f020cb3cfaed49b93ea085604f96818182663a4d27d635b07044add7461800b7eb3d9f29147a23a29096f0510e575488abff719ed56277843fcc#npm:4.2.0"],\
+            ["json-stringify-safe", "npm:5.0.1"],\
+            ["lodash", "npm:4.17.21"],\
             ["propagate", "npm:2.0.1"]\
           ],\
           "linkType": "HARD"\

@@ -381,7 +381,7 @@ __metadata:
     got: 11.8.6
     jwt-encode: 1.0.1
     luxon: 1.28.1
-    nock: 13.0.11
+    nock: 13.3.0
     prettier: 2.7.1
     pump: 3.0.0
     through2-concurrent: 2.0.0
@@ -443,7 +443,7 @@ __metadata:
     "@vedicium/auth0-actions-sdk": ^0.1.3
     auth0-deploy-cli: ^7.15.1
     got: 11.8.6
-    nock: 13.0.11
+    nock: 13.3.0
   languageName: unknown
   linkType: soft
 
@@ -614,7 +614,7 @@ __metadata:
     history: 4.10.1
     identity-obj-proxy: 3.0.0
     jose: 2.0.6
-    nock: 13.0.11
+    nock: 13.3.0
     path: "npm:path-browserify@1.0.1"
     pirates: 4.0.5
     qs: 6.11.0
@@ -768,7 +768,7 @@ __metadata:
     lodash.uniqby: 4.7.0
     luxon: 1.28.1
     mime-types: 2.1.35
-    nock: 13.0.11
+    nock: 13.3.0
     node-dev: 6.7.0
     odata-query: 7.0.3
     opentracing: 0.14.7
@@ -1076,7 +1076,7 @@ __metadata:
     history: 4.10.1
     identity-obj-proxy: 3.0.0
     jose: 2.0.6
-    nock: 13.0.11
+    nock: 13.3.0
     path: "npm:path-browserify@1.0.1"
     pirates: 4.0.5
     react: 17.0.2
@@ -1187,7 +1187,7 @@ __metadata:
     jsonwebtoken: 8.5.1
     jwt-encode: 1.0.1
     mime-types: 2.1.35
-    nock: 13.0.11
+    nock: 13.3.0
     node-dev: 6.7.0
     parse-data-url: 3.0.0
     serverless: 3.22.0
@@ -1425,7 +1425,7 @@ __metadata:
     got: 11.8.6
     jsonwebtoken: 8.5.1
     jwt-encode: 1.0.1
-    nock: 13.0.11
+    nock: 13.3.0
     pino: 8.8.0
     pino-http: 8.3.1
     pino-lambda: 4.1.0
@@ -1468,7 +1468,7 @@ __metadata:
     graphql-request: 3.4.0
     jwt-decode: 2.2.0
     jwt-encode: 1.0.1
-    nock: 13.0.11
+    nock: 13.3.0
   languageName: unknown
   linkType: soft
 
@@ -1503,7 +1503,7 @@ __metadata:
     jwt-decode: 2.2.0
     jwt-encode: 1.0.1
     luxon: 1.28.1
-    nock: 13.0.11
+    nock: 13.3.0
     opentracing: 0.14.7
   languageName: unknown
   linkType: soft
@@ -15970,7 +15970,7 @@ __metadata:
     jest-watch-select-projects: 2.0.0
     jest-watch-suspend: 1.1.2
     jest-watch-typeahead: 0.6.5
-    nock: 13.0.11
+    nock: 13.3.0
     node-fetch: 3.0.0-beta.9
     prettier: 2.7.1
     react-test-renderer: 17.0.2
@@ -30581,15 +30581,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nock@npm:13.0.11":
-  version: 13.0.11
-  resolution: "nock@npm:13.0.11"
+"nock@npm:13.3.0":
+  version: 13.3.0
+  resolution: "nock@npm:13.3.0"
   dependencies:
-    debug: "npm:^4.1.0"
-    json-stringify-safe: "npm:^5.0.1"
-    lodash.set: "npm:^4.3.2"
-    propagate: "npm:^2.0.0"
-  checksum: f472f3c57858219977bc17f9fc623aadaecc8c8a0103da7b72072fff15e5d0ed374e6bdedf922daf1e5f21615ad57aaf7c3fb5bf18c69845583137a2e30322fe
+    debug: ^4.1.0
+    json-stringify-safe: ^5.0.1
+    lodash: ^4.17.21
+    propagate: ^2.0.0
+  checksum: 118d04e95a17f493898a82b5dfecc03762776e1980d9c3b2077479747e60b77109c5f7c0df969d1a8f6039260abe5961733553a5841f0f627bb35238576a0009
   languageName: node
   linkType: hard
 

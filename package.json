@@ -145,7 +145,7 @@
     "jest-watch-select-projects": "2.0.0",
     "jest-watch-suspend": "1.1.2",
     "jest-watch-typeahead": "0.6.5",
-    "nock": "13.0.11",
+    "nock": "13.3.0",
     "node-fetch": "3.0.0-beta.9",
     "prettier": "2.7.1",
     "react-test-renderer": "17.0.2",

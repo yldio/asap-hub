@@ -66,6 +66,7 @@ export const getSquidexWorkingGroupsGraphqlResponse =
             leaders: [],
             members: [],
             complete: false,
+            calendars: [],
           },
         },
       ],
@@ -85,5 +86,6 @@ export const getSquidexGraphqlWorkingGroup =
       members: [],
       leaders: [],
       complete: false,
+      calendars: [],
     },
   });

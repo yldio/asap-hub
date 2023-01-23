@@ -366,7 +366,7 @@ __metadata:
     "@types/jest": 27.5.2
     "@types/jwt-decode": 2.2.1
     "@types/jwt-encode": "workspace:*"
-    "@types/luxon": 1.26.4
+    "@types/luxon": 1.27.1
     "@types/prettier": 2.7.1
     "@types/pump": 1.1.1
     "@types/through2-concurrent": 2.0.1
@@ -725,7 +725,7 @@ __metadata:
     "@types/lodash.get": 4.4.7
     "@types/lodash.matches": 4.6.7
     "@types/lodash.uniqby": 4.7.7
-    "@types/luxon": 1.26.4
+    "@types/luxon": 1.27.1
     "@types/mime-types": 2.1.1
     "@types/node": 14.18.33
     "@types/parse-data-url": 3.0.0
@@ -1492,7 +1492,7 @@ __metadata:
     "@types/jest": 27.5.2
     "@types/jwt-decode": 2.2.1
     "@types/jwt-encode": "workspace:*"
-    "@types/luxon": 1.26.4
+    "@types/luxon": 1.27.1
     apr-intercept: 3.0.4
     chance: 1.1.9
     cross-fetch: ^3.1.4
@@ -13337,10 +13337,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/luxon@npm:1.26.4":
-  version: 1.26.4
-  resolution: "@types/luxon@npm:1.26.4"
-  checksum: d3b4dcdc8273891eefa19e6c996c195f8fc17aec80527f8e85d5912c64f013a6bb5dc29a50886752c8dcb3e7c7f7134595afb83cc9935b6f98f10fe5bc6c95c8
+"@types/luxon@npm:1.27.1":
+  version: 1.27.1
+  resolution: "@types/luxon@npm:1.27.1"
+  checksum: 732405c7459dd9f991cff056b801620b92d7c18ddad3cd7c6d3b9c2de714dbfca0c48fc103a5544d19c6e7b9bb7a954bbd2369b30733c680a4633fa60cb03f1f
   languageName: node
   linkType: hard
 

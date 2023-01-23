@@ -2385,7 +2385,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@types/luxon",\
-        "npm:1.26.4"\
+        "npm:1.27.1"\
       ],\
       [\
         "@types/mdast",\
@@ -10619,7 +10619,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jest", "npm:27.5.2"],\
             ["@types/jwt-decode", "npm:2.2.1"],\
             ["@types/jwt-encode", "workspace:@types/jwt-encode"],\
-            ["@types/luxon", "npm:1.26.4"],\
+            ["@types/luxon", "npm:1.27.1"],\
             ["@types/prettier", "npm:2.7.1"],\
             ["@types/pump", "npm:1.1.1"],\
             ["@types/through2-concurrent", "npm:2.0.1"],\
@@ -11008,7 +11008,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/lodash.get", "npm:4.4.7"],\
             ["@types/lodash.matches", "npm:4.6.7"],\
             ["@types/lodash.uniqby", "npm:4.7.7"],\
-            ["@types/luxon", "npm:1.26.4"],\
+            ["@types/luxon", "npm:1.27.1"],\
             ["@types/mime-types", "npm:2.1.1"],\
             ["@types/node", "npm:14.18.33"],\
             ["@types/parse-data-url", "npm:3.0.0"],\
@@ -12386,7 +12386,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jest", "npm:27.5.2"],\
             ["@types/jwt-decode", "npm:2.2.1"],\
             ["@types/jwt-encode", "workspace:@types/jwt-encode"],\
-            ["@types/luxon", "npm:1.26.4"],\
+            ["@types/luxon", "npm:1.27.1"],\
             ["apr-intercept", "npm:3.0.4"],\
             ["chance", "npm:1.1.9"],\
             ["cross-fetch", "npm:3.1.4"],\
@@ -35046,10 +35046,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/luxon", [\
-        ["npm:1.26.4", {\
-          "packageLocation": "./.yarn/cache/@types-luxon-npm-1.26.4-2a1a3dbe38-d3b4dcdc82.zip/node_modules/@types/luxon/",\
+        ["npm:1.27.1", {\
+          "packageLocation": "./.yarn/cache/@types-luxon-npm-1.27.1-ffe8f597c2-732405c745.zip/node_modules/@types/luxon/",\
           "packageDependencies": [\
-            ["@types/luxon", "npm:1.26.4"]\
+            ["@types/luxon", "npm:1.27.1"]\
           ],\
           "linkType": "HARD"\
         }]\

@@ -780,7 +780,7 @@ __metadata:
     serverless-http: 2.7.0
     serverless-iam-roles-per-function: 2.0.2
     serverless-s3-sync: 3.1.0
-    serverless-webpack: 5.9.1
+    serverless-webpack: 5.11.0
     source-map-support: 0.5.21
     stream-json: 1.7.5
     supertest: 6.2.4
@@ -1193,7 +1193,7 @@ __metadata:
     serverless: 3.26.0
     serverless-http: 2.7.0
     serverless-s3-sync: 3.1.0
-    serverless-webpack: 5.9.1
+    serverless-webpack: 5.11.0
     source-map-support: 0.5.21
     supertest: 6.2.4
     ts-node: 10.9.1
@@ -23679,6 +23679,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"find-yarn-workspace-root@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "find-yarn-workspace-root@npm:2.0.0"
+  dependencies:
+    micromatch: ^4.0.2
+  checksum: fa5ca8f9d08fe7a54ce7c0a5931ff9b7e36f9ee7b9475fb13752bcea80ec6b5f180fa5102d60b376d5526ce924ea3fc6b19301262efa0a5d248dd710f3644242
+  languageName: node
+  linkType: hard
+
 "findit2@npm:~2.2.3":
   version: 2.2.3
   resolution: "findit2@npm:2.2.3"
@@ -36434,25 +36443,33 @@ __metadata:
   languageName: node
   linkType: hard
 
-"serverless-webpack@npm:5.9.1":
-  version: 5.9.1
-  resolution: "serverless-webpack@npm:5.9.1"
+"serverless-webpack@npm:5.11.0":
+  version: 5.11.0
+  resolution: "serverless-webpack@npm:5.11.0"
   dependencies:
     archiver: ^5.3.1
     bluebird: ^3.7.2
+    find-yarn-workspace-root: ^2.0.0
     fs-extra: ^9.1.0
     glob: ^7.2.3
     is-builtin-module: ^3.2.0
     lodash: ^4.17.21
-    semver: ^7.3.7
+    semver: ^7.3.8
     ts-node: ">= 8.3.0"
   peerDependencies:
+    "@types/node": "*"
     serverless: 1 || 2 || 3
+    typescript: ">=2.0"
     webpack: ">= 3.0.0 < 6"
   dependenciesMeta:
     ts-node:
       optional: true
-  checksum: 20d0bcdb990b4277f71bbed4fead8f9b5872f91410262adcec75dd5f928fca9ebb83ef702909f3461fd9acf6fde254b4ac2d4194aa921ce7a173f5a2738e4415
+  peerDependenciesMeta:
+    "@types/node":
+      optional: true
+    typescript:
+      optional: true
+  checksum: f1c68ca2d6928295d70c8d07a66fff4dd87b06bd13bc38e58662d8369a31a0204e82c677d8f03479907c929213d640973c40de22246dadf5c162683bee515f97
   languageName: node
   linkType: hard
 

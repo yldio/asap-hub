@@ -5,9 +5,9 @@ import {
   SquidexGraphql,
   SquidexRest,
 } from '@asap-hub/squidex';
-import { assetDataProviderMock } from '../../../test/mocks/asset-data-provider.mock';
 import { appName, auth0SharedSecret, baseUrl } from '../../config';
 import Users from '../../controllers/user.controller';
+import { AssetSquidexDataProvider } from '../../data-providers/assets.data-provider';
 import { UserSquidexDataProvider } from '../../data-providers/user.data-provider';
 import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
@@ -28,7 +28,8 @@ const userDataProvider = new UserSquidexDataProvider(
   squidexGraphqlClient,
   userRestClient,
 );
-const users = new Users(userDataProvider, assetDataProviderMock);
+const assetDataProvider = new AssetSquidexDataProvider(userRestClient);
+const users = new Users(userDataProvider, assetDataProvider);
 const connectByCodeHandler = connectByCodeHandlerFactory(
   users,
   auth0SharedSecret,

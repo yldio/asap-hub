@@ -19,7 +19,7 @@
     "@asap-hub/squidex": "workspace:*",
     "@babel/runtime-corejs3": "7.19.6",
     "@contentful/rich-text-types": "^15.13.2",
-    "contentful-html-rich-text-converter": "yldio/contentful-html-rich-text-converter#5fed410f9fc6f5d2771574a87ded2d0c90f7e59a",
+    "contentful-html-rich-text-converter": "yldio/contentful-html-rich-text-converter#8f61574217a3f05c91f219867187a6c71eea5ab2",
     "contentful-management": "^10.19.3",
     "graphql": "15.8.0",
     "graphql-tag": "2.12.6"

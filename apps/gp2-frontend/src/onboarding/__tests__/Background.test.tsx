@@ -5,13 +5,15 @@ import {
   render,
   waitForElementToBeRemoved,
   screen,
+  waitFor,
 } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getUser } from '../../users/api';
+import { getUser, patchUser } from '../../users/api';
 import { refreshUserState } from '../../users/state';
 import Background from '../Background';
 
@@ -47,6 +49,7 @@ const renderBackground = async (id: string) => {
 describe('Background', () => {
   beforeEach(jest.resetAllMocks);
   const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
+  const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
 
   it('renders biography and keywords', async () => {
     const user = gp2Fixtures.createUserResponse();
@@ -64,5 +67,27 @@ describe('Background', () => {
         name: 'Sorry! We can’t seem to find that page.',
       }),
     ).toBeVisible();
+  });
+
+  it('saves the biography modal', async () => {
+    const biography = 'this is some biography';
+    const user = { ...gp2Fixtures.createUserResponse(), biography };
+    mockGetUser.mockResolvedValueOnce(user);
+    await renderBackground(user.id);
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    const [, biographyEditButton] = screen.getAllByRole('link', {
+      name: 'Edit Edit',
+    });
+    userEvent.click(biographyEditButton);
+    expect(screen.getByRole('dialog')).toBeVisible();
+    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+    expect(mockPatchUser).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({ biography }),
+      expect.anything(),
+    );
   });
 });

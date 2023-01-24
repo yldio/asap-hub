@@ -107,11 +107,7 @@ describe('UserDetailHeaderCard', () => {
     });
     it('renders required button when information is incomplete', () => {
       render(
-        <UserDetailHeaderCard
-          {...defaultProps}
-          editHref="/"
-          degrees={undefined}
-        />,
+        <UserDetailHeaderCard {...defaultProps} editHref="/" degrees={[]} />,
       );
       expect(
         screen.getByRole('link', { name: /required.+add/i }),

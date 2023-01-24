@@ -14,7 +14,7 @@ export const Normal = () => (
   <CalendarList
     page={select<ComponentProps<typeof CalendarList>['page']>(
       'Page',
-      ['event', 'calendar', 'group'],
+      ['event', 'calendar', 'group', 'calendar-working-group'],
       'calendar',
     )}
     calendars={[

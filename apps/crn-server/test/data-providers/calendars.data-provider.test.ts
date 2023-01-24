@@ -172,7 +172,12 @@ describe('Calendars data provider', () => {
           order: 'data/name/iv asc',
         },
       );
-      expect(result).toEqual({ total: 1, items: [getCalendarDataObject()] });
+      expect(result).toEqual({
+        total: 1,
+        items: [
+          { ...getCalendarDataObject(), workingGroup: true, group: true },
+        ],
+      });
     });
 
     test('Should default missing data to an empty string', async () => {

@@ -65,7 +65,7 @@ export const createWorkingGroupResponse = (
   members: createWorkingGroupMembers(members ?? 1),
   leaders: createWorkingGroupLeaders(members ?? 1),
   calendars: Array.from({ length: calendarsCount }, (_, index) =>
-    createCalendarResponse(index),
+    createCalendarResponse({ workingGroup: true }, index),
   ),
 });
 

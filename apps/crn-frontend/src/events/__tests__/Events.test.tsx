@@ -88,8 +88,7 @@ describe('Events', () => {
       const calendars = screen.getByTitle('Calendar');
       expect(calendars.tagName).toBe('IFRAME');
     });
-    // eslint-disable-next-line jest/no-disabled-tests
-    it.skip('Displays a list of calendars', async () => {
+    it('Displays a list of calendars', async () => {
       mockGetCalendars.mockResolvedValue({
         ...createListCalendarResponse(2),
         items: createListCalendarResponse(2).items.map((item, index) => ({

@@ -88,7 +88,10 @@ export const createEventResponse = (
   itemIndex = 0,
 ): ReminderEventResponse => ({
   id: `event-${itemIndex}`,
-  calendar: createCalendarResponse(itemIndex),
+  calendar: createCalendarResponse(
+    { group: false, workingGroup: false },
+    itemIndex,
+  ),
   startDate: new Date().toISOString(),
   startDateTimeZone: 'Europe/London',
   startDateTimestamp: new Date().getTime(),

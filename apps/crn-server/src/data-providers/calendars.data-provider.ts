@@ -156,4 +156,6 @@ export const parseGraphQlCalendarToDataObject = (
   version: item.version,
   expirationDate: item.flatData.expirationDate,
   syncToken: item.flatData.syncToken,
+  group: !!item.referencingGroupsContents?.length,
+  workingGroup: !!item.referencingWorkingGroupsContents?.length,
 });

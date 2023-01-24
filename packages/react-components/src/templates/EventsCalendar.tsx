@@ -13,11 +13,24 @@ type EventsCalendarPageProps = {
   calendars: ReadonlyArray<CalendarResponse>;
 };
 
-const EventsCalendarPage: React.FC<EventsCalendarPageProps> = (props) => (
+const EventsCalendarPage: React.FC<EventsCalendarPageProps> = ({
+  calendars,
+}) => (
   <div css={containerStyles}>
-    <GoogleCalendar {...props} />
-    <CalendarList page="calendar" {...props} showBottomMessage={false} />
-    <CalendarList page="calendar-working-group" {...props} />
+    <GoogleCalendar calendars={calendars} />
+    <CalendarList
+      page="calendar"
+      calendars={calendars.filter(
+        (calendar) =>
+          calendar.group === true ||
+          (calendar.group === false && calendar.workingGroup === false),
+      )}
+      showBottomMessage={false}
+    />
+    <CalendarList
+      page="calendar-working-group"
+      calendars={calendars.filter((calendar) => calendar.workingGroup === true)}
+    />
   </div>
 );
 

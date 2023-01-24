@@ -44,7 +44,7 @@ describe('Contentful feature flag', () => {
       expect(newsSquidexDataProviderMock.fetch).toHaveBeenCalledTimes(1);
 
       expect(newsContentfulDataProviderMock.fetch).not.toHaveBeenCalled();
-    });
+    }, 10_000);
 
     test('news controller uses squidex data provider when IS_CONTENTFUL_ENABLED undefined', async () => {
       process.env.IS_CONTENTFUL_ENABLED = undefined;

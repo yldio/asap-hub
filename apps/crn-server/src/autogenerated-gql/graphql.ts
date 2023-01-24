@@ -6234,6 +6234,9 @@ export type CalendarsContentFragment = Pick<
   referencingGroupsContents: Maybe<
     Array<{ flatData: Pick<GroupsFlatDataDto, 'active'> }>
   >;
+  referencingWorkingGroupsContents: Maybe<
+    Array<{ flatData: Pick<WorkingGroupsFlatDataDto, 'complete'> }>
+  >;
 };
 
 export type FetchCalendarQueryVariables = Exact<{
@@ -6254,6 +6257,9 @@ export type FetchCalendarQuery = {
       >;
       referencingGroupsContents: Maybe<
         Array<{ flatData: Pick<GroupsFlatDataDto, 'active'> }>
+      >;
+      referencingWorkingGroupsContents: Maybe<
+        Array<{ flatData: Pick<WorkingGroupsFlatDataDto, 'complete'> }>
       >;
     }
   >;
@@ -6283,6 +6289,9 @@ export type FetchCalendarsQuery = {
             >;
             referencingGroupsContents: Maybe<
               Array<{ flatData: Pick<GroupsFlatDataDto, 'active'> }>
+            >;
+            referencingWorkingGroupsContents: Maybe<
+              Array<{ flatData: Pick<WorkingGroupsFlatDataDto, 'complete'> }>
             >;
           }
         >
@@ -9918,6 +9927,28 @@ export const CalendarsContentFragmentDoc = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'active' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'referencingWorkingGroupsContents' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'flatData' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'complete' },
                       },
                     ],
                   },

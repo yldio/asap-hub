@@ -73,19 +73,20 @@ export const getSquidexWorkingGroupsGraphqlResponse =
     },
   });
 
-export const getSquidexGraphqlWorkingGroup =
-  (): FetchWorkingGroupQuery['findWorkingGroupsContent'] => ({
-    id: '123',
-    lastModified: '2021-01-01T00:00:00.000Z',
-    flatData: {
-      title: 'Working Group Title',
-      description: 'Working Group Description',
-      shortText: 'Working Group Short Text',
-      externalLink: 'https://example.com',
-      deliverables: [],
-      members: [],
-      leaders: [],
-      complete: false,
-      calendars: [],
-    },
-  });
+export const getSquidexGraphqlWorkingGroup = (): NonNullable<
+  FetchWorkingGroupQuery['findWorkingGroupsContent']
+> => ({
+  id: '123',
+  lastModified: '2021-01-01T00:00:00.000Z',
+  flatData: {
+    title: 'Working Group Title',
+    description: 'Working Group Description',
+    shortText: 'Working Group Short Text',
+    externalLink: 'https://example.com',
+    deliverables: [],
+    members: [],
+    leaders: [],
+    complete: false,
+    calendars: [],
+  },
+});

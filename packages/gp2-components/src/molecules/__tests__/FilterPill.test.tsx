@@ -18,9 +18,6 @@ describe('FilterPill', () => {
     const onRemoveButton = screen.getByRole('button');
     expect(onRemoveButton).toBeVisible();
     userEvent.click(onRemoveButton);
-    expect(onRemove).toBeCalledWith({
-      label: 'A pill',
-      id: 'pill-0',
-    });
+    expect(onRemove).toBeCalledWith(value);
   });
 });

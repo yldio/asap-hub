@@ -65,8 +65,7 @@ const mapFilters = (
   };
 
   return Object.entries(filters).reduce(
-    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-    (acc: any, [key, value]) => [
+    (acc: ValueProps[], [key, value]) => [
       ...acc,
       ...value.map((v) => ({
         id: `${key}_${v}`,

@@ -7,7 +7,9 @@ const pillStyles = css({
   alignItems: 'center',
   justifyContent: 'center',
   width: 'fit-content',
-  height: '40px',
+  height: '22px',
+  padding: `8px 12px`,
+  gap: '8px',
   borderStyle: 'solid',
   borderWidth: `${borderWidth}px`,
   borderRadius: '24px',
@@ -21,7 +23,6 @@ const iconStyles = css({
   justifyContent: 'center',
   alignItems: 'center',
   padding: 0,
-  marginLeft: '8px',
   border: 'none',
   backgroundColor: 'unset',
   svg: {
@@ -40,13 +41,11 @@ interface PillProps {
 }
 
 const FilterPill: React.FC<PillProps> = ({ value, onRemove }) => (
-  <div css={[pillStyles]}>
-    <div css={css({ display: 'flex', padding: `8px 12px` })}>
-      <div>{value.label}</div>
-      <button css={iconStyles} onClick={() => onRemove(value)}>
-        {crossSmallIcon}
-      </button>
-    </div>
+  <div css={pillStyles}>
+    <div>{value.label}</div>
+    <button css={iconStyles} onClick={() => onRemove(value)}>
+      {crossSmallIcon}
+    </button>
   </div>
 );
 

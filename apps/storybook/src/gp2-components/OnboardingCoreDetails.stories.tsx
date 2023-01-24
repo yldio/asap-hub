@@ -2,7 +2,7 @@ import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { OnboardingCoreDetails } from '@asap-hub/gp2-components';
 
 export default {
-  title: 'GP2 / Templates / Onboard Core Details',
+  title: 'GP2 / Templates / Onboarding / Core Details',
   component: OnboardingCoreDetails,
 };
 

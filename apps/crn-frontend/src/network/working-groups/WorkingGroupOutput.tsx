@@ -9,10 +9,7 @@ import {
   isValidationErrorResponse,
   ValidationErrorResponse,
 } from '@asap-hub/model';
-import {
-  NotFoundPage,
-  ResearchOutputTeamForm,
-} from '@asap-hub/react-components';
+import { NotFoundPage, ResearchOutputForm } from '@asap-hub/react-components';
 import { network, useRouteParams } from '@asap-hub/routing';
 import React, { useContext, useState } from 'react';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
@@ -68,7 +65,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   if (canCreateUpdate && workingGroup) {
     return (
       <Frame title="Share Working Group Research Output">
-        <ResearchOutputTeamForm
+        <ResearchOutputForm
           tagSuggestions={researchSuggestions}
           documentType={documentType}
           getLabSuggestions={getLabSuggestions}

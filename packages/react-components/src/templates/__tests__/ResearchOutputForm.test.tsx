@@ -26,11 +26,11 @@ import {
   within,
 } from '@testing-library/react';
 import { createMemoryHistory, History } from 'history';
-import ResearchOutputTeamForm from '../ResearchOutputTeamForm';
+import ResearchOutputForm from '../ResearchOutputForm';
 import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 import { createIdentifierField } from '../../utils/research-output-form';
 
-const props: ComponentProps<typeof ResearchOutputTeamForm> = {
+const props: ComponentProps<typeof ResearchOutputForm> = {
   onSave: jest.fn(() => Promise.resolve()),
   tagSuggestions: [],
   researchTags: [],
@@ -44,7 +44,7 @@ jest.setTimeout(60000);
 it('renders the research output header', () => {
   render(
     <StaticRouter>
-      <ResearchOutputTeamForm {...props} />
+      <ResearchOutputForm {...props} />
     </StaticRouter>,
   );
   expect(screen.getByRole('heading', { name: /Share/i })).toBeInTheDocument();
@@ -53,7 +53,7 @@ it('renders the research output header', () => {
 it('renders the correct subtitles for publishing entity team', () => {
   render(
     <StaticRouter>
-      <ResearchOutputTeamForm
+      <ResearchOutputForm
         {...props}
         publishingEntity="Team"
         documentType="Article"
@@ -72,7 +72,7 @@ it('renders the correct subtitles for publishing entity team', () => {
 it('renders the correct subtitles for publishing entity working group', () => {
   render(
     <StaticRouter>
-      <ResearchOutputTeamForm
+      <ResearchOutputForm
         {...props}
         publishingEntity="Working Group"
         documentType="Article"
@@ -114,7 +114,7 @@ describe('createIdentifierField', () => {
 it('renders the form', async () => {
   render(
     <StaticRouter>
-      <ResearchOutputTeamForm {...props} />
+      <ResearchOutputForm {...props} />
     </StaticRouter>,
   );
   expect(
@@ -126,7 +126,7 @@ it('renders the form', async () => {
 it('renders the edit form button when research output data is present', async () => {
   render(
     <StaticRouter>
-      <ResearchOutputTeamForm
+      <ResearchOutputForm
         {...props}
         researchOutputData={createResearchOutputResponse()}
         isEditMode
@@ -160,7 +160,7 @@ it('renders the edit form with fields from researchOutputData prepopulated', asy
   };
   await render(
     <StaticRouter>
-      <ResearchOutputTeamForm
+      <ResearchOutputForm
         {...props}
         documentType={'Dataset'}
         researchOutputData={researchOutputData}
@@ -189,7 +189,7 @@ it('displays proper message when no author is found', async () => {
   const getAuthorSuggestions = jest.fn().mockResolvedValue([]);
   render(
     <StaticRouter>
-      <ResearchOutputTeamForm
+      <ResearchOutputForm
         {...props}
         getAuthorSuggestions={getAuthorSuggestions}
       />
@@ -205,10 +205,7 @@ it('displays proper message when no lab is found', async () => {
   const getLabSuggestions = jest.fn().mockResolvedValue([]);
   render(
     <StaticRouter>
-      <ResearchOutputTeamForm
-        {...props}
-        getLabSuggestions={getLabSuggestions}
-      />
+      <ResearchOutputForm {...props} getLabSuggestions={getLabSuggestions} />
     </StaticRouter>,
   );
   userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
@@ -219,7 +216,7 @@ it('displays proper message when no lab is found', async () => {
 it('displays current team within the form', async () => {
   render(
     <StaticRouter>
-      <ResearchOutputTeamForm
+      <ResearchOutputForm
         {...props}
         team={{ ...createTeamResponse(), displayName: 'example team' }}
       />
@@ -282,9 +279,7 @@ describe('on submit', () => {
       researchTags = [{ id: '1', name: 'research tag 1' }],
     }: {
       data?: Data;
-      documentType?: ComponentProps<
-        typeof ResearchOutputTeamForm
-      >['documentType'];
+      documentType?: ComponentProps<typeof ResearchOutputForm>['documentType'];
       researchTags?: ResearchTagResponse[];
     } = {
       data: {
@@ -299,7 +294,7 @@ describe('on submit', () => {
   ) => {
     render(
       <Router history={history}>
-        <ResearchOutputTeamForm
+        <ResearchOutputForm
           {...props}
           team={{ ...createTeamResponse(), id: 'TEAMID' }}
           documentType={documentType}

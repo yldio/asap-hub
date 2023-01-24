@@ -9,10 +9,7 @@ import {
   ValidationErrorResponse,
   ResearchOutputResponse,
 } from '@asap-hub/model';
-import {
-  NotFoundPage,
-  ResearchOutputTeamForm,
-} from '@asap-hub/react-components';
+import { NotFoundPage, ResearchOutputForm } from '@asap-hub/react-components';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import {
   network,
@@ -93,7 +90,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   if (canCreateUpdate && team) {
     return (
       <Frame title="Share Research Output">
-        <ResearchOutputTeamForm
+        <ResearchOutputForm
           team={team}
           tagSuggestions={researchSuggestions}
           documentType={documentType}

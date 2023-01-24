@@ -4,6 +4,7 @@ export * from './images';
 export * from './messages';
 export {
   CardWithBackground,
+  CollapsibleTable,
   ExpandableText,
   HeaderLogo,
   IconWithLabel,
@@ -53,6 +54,7 @@ export {
   OnboardingAdditionalDetails,
   OnboardingBackground,
   OnboardingCoreDetails,
+  OnboardingGroups,
   OnboardingPage,
   OnboardingWelcome,
   ProjectDetailPage,

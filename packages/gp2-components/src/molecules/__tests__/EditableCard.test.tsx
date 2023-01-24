@@ -11,6 +11,14 @@ describe('Editable Card', () => {
     render(<EditableCard title="Card Title">Text Content</EditableCard>);
     expect(screen.getByText('Text Content')).toBeVisible();
   });
+  it('renders the subtitle', () => {
+    render(
+      <EditableCard title="Card Title" subtitle="Card Subtitle">
+        Text Content
+      </EditableCard>,
+    );
+    expect(screen.getByText('Card Subtitle')).toBeVisible();
+  });
   describe('edit link', () => {
     it('renders a link when a href is passed', () => {
       render(<EditableCard title="Card Title" editHref="/" />);

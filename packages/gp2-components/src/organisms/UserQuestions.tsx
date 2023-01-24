@@ -1,9 +1,5 @@
 import { gp2 } from '@asap-hub/model';
-import {
-  Paragraph,
-  pixels,
-  UserProfilePlaceholderCard,
-} from '@asap-hub/react-components';
+import { pixels, UserProfilePlaceholderCard } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import EditableCard from '../molecules/EditableCard';
@@ -15,10 +11,6 @@ type UserQuestionsProps = {
   questions: gp2.UserResponse['questions'];
   firstName: string;
 } & Pick<ComponentProps<typeof EditableCard>, 'editHref'>;
-
-const contentStyles = css({
-  padding: `${rem(16)} 0`,
-});
 
 const rowStyles = css({
   borderBottom: `1px solid ${colors.neutral500.rgb}`,
@@ -38,6 +30,8 @@ const UserQuestions: React.FC<UserQuestionsProps> = ({
   <EditableCard
     editHref={editHref}
     title="Open Questions"
+    subtitle={`${firstName} is interested in answering the following questions
+    within their work:`}
     edit={!!questions.length}
     optional
   >
@@ -49,12 +43,6 @@ const UserQuestions: React.FC<UserQuestionsProps> = ({
       </UserProfilePlaceholderCard>
     ) : (
       <>
-        <div css={[contentStyles]}>
-          <Paragraph noMargin accent="lead">
-            {firstName} is interested in answering the following questions
-            within their work:
-          </Paragraph>
-        </div>
         {questions.map((question, index) => (
           <div key={`user-question-${index}`} css={rowStyles}>
             <strong>Q:</strong> {question}

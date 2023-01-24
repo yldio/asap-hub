@@ -2,74 +2,56 @@ import {
   Button,
   chevronCircleDownIcon,
   chevronCircleUpIcon,
-  Headline4,
-  Paragraph,
+  Subtitle,
   pixels,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ReactNode, useState } from 'react';
-import { nonMobileQuery } from '../layout';
+import { mobileQuery, nonMobileQuery } from '../layout';
 import colors from '../templates/colors';
 
 const { rem } = pixels;
 
-const contentStyles = css({
-  padding: `${rem(16)} 0 ${rem(20)}`,
-});
 const rowStyles = css({
+  display: 'grid',
   borderBottom: `1px solid ${colors.neutral500.rgb}`,
-  marginBottom: rem(12),
   padding: `${rem(16)} 0 ${rem(12)}`,
+  rowGap: rem(32),
+  [nonMobileQuery]: {
+    gridTemplateColumns: '1fr 196px 156px',
+    columnGap: `${rem(24)}`,
+    rowGap: 0,
+  },
   ':last-child': {
     borderBottom: 'none',
     marginBottom: 0,
     paddingBottom: 0,
   },
-  [nonMobileQuery]: {
-    display: 'flex',
-  },
 });
-const hideStyles = css({
-  [`:nth-of-type(n+6)`]: { display: 'none' },
-});
-const headingTopStyles = css({
-  display: 'none',
-  [nonMobileQuery]: {
-    display: 'flex',
+
+const gridTitleStyles = css({
+  borderBottom: 'none',
+  marginBottom: 0,
+  paddingBottom: 0,
+  [mobileQuery]: {
+    display: 'none',
   },
-  '*:first-of-type': {
-    flex: '40% 0 0',
-  },
-  '& > *': {
-    flex: '30% 0 0',
-  },
-});
-const listElementStyles = css({
-  display: 'flex',
-  alignItems: 'flex-start',
-  gap: rem(32),
-  marginBottom: rem(8),
-});
-const listElementMainStyles = css({
-  [nonMobileQuery]: {
-    flex: '40% 0 0',
-  },
-});
-const listElementSecondaryStyles = css({
-  [nonMobileQuery]: {
-    flex: '30% 0 0',
-  },
-});
-const secondaryTextStyles = css({
-  color: colors.greyscale1000.rgb,
 });
 
 const headingListStyles = css({
-  flex: '30% 0 0',
   [nonMobileQuery]: {
     display: 'none',
   },
 });
+
+const hideStyles = css({
+  [`:nth-of-type(n+5)`]: { display: 'none' },
+});
+
+const secondaryTextStyles = css({
+  color: colors.greyscale1000.rgb,
+});
+
 const buttonWrapperStyles = css({
   paddingTop: rem(8),
   display: 'flex',
@@ -83,12 +65,10 @@ type CollapsibleTableRow = {
   values: (string | ReactNode | undefined)[];
 };
 type CollapsibleTableProps = {
-  paragraph: string;
   headings: string[];
   children: CollapsibleTableRow[];
 };
 const CollapsibleTable: React.FC<CollapsibleTableProps> = ({
-  paragraph,
   headings,
   children,
 }) => {
@@ -96,21 +76,16 @@ const CollapsibleTable: React.FC<CollapsibleTableProps> = ({
   const [expanded, setExpanded] = useState(false);
 
   const getListStyles = () =>
-    children.length < minimumToDisplay + 1 || expanded
+    children.length <= minimumToDisplay || expanded
       ? rowStyles
       : [rowStyles, hideStyles];
 
   const getTextStyles = (idx: number) => (idx === 0 ? [] : secondaryTextStyles);
   return (
     <>
-      <div css={[contentStyles]}>
-        <Paragraph noMargin accent="lead">
-          {paragraph}
-        </Paragraph>
-      </div>
-      <div css={headingTopStyles}>
+      <div css={[rowStyles, gridTitleStyles]}>
         {headings.map((heading, idx) => (
-          <Headline4 key={`heading-${idx}`}>{heading}</Headline4>
+          <Subtitle key={`heading-${idx}`}>{heading}</Subtitle>
         ))}
       </div>
       {children.map(({ id, values }) => (
@@ -118,17 +93,18 @@ const CollapsibleTable: React.FC<CollapsibleTableProps> = ({
           {values.map((value, idx) => (
             <div
               key={`display-row-value-${idx}`}
-              css={[
-                listElementStyles,
-                idx === 0 ? listElementMainStyles : listElementSecondaryStyles,
-              ]}
+              css={css({
+                display: 'flex',
+                gap: rem(16),
+                flexDirection: 'column',
+              })}
             >
               {value && (
                 <>
                   <div css={headingListStyles}>
-                    <Headline4 noMargin styleAsHeading={5}>
+                    <Subtitle noMargin styleAsHeading={5}>
                       {headings[idx]}:
-                    </Headline4>
+                    </Subtitle>
                   </div>
                   <span css={getTextStyles(idx)}>{value}</span>
                 </>

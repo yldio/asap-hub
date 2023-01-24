@@ -5,6 +5,7 @@ const { rem } = pixels;
 
 type IconWithLabelProps = {
   readonly icon: JSX.Element;
+  readonly noMargin?: boolean;
 };
 
 const styles = css({
@@ -17,8 +18,12 @@ const iconStyles = css({
   display: 'inline-flex',
 });
 
-const IconWithLabel: React.FC<IconWithLabelProps> = ({ icon, children }) => (
-  <div css={styles}>
+const IconWithLabel: React.FC<IconWithLabelProps> = ({
+  icon,
+  children,
+  noMargin = false,
+}) => (
+  <div css={[styles, noMargin && { margin: 0 }]}>
     <span css={iconStyles}>{icon}</span>
     {children}
   </div>

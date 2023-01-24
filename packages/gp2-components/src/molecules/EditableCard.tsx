@@ -1,11 +1,19 @@
-import { Card, Headline3, Link, pixels } from '@asap-hub/react-components';
+import {
+  Card,
+  Headline3,
+  Link,
+  Paragraph,
+  pixels,
+} from '@asap-hub/react-components';
 
 import { css } from '@emotion/react';
+import { ReactNode } from 'react';
 import { addIcon, editIcon } from '../icons';
 import { mobileQuery } from '../layout';
 
 type EditableCardProps = {
   title: string;
+  subtitle?: ReactNode;
   edit?: boolean;
   editHref?: string;
   optional?: boolean;
@@ -32,6 +40,7 @@ const containerStyles = css({
 const EditableCard: React.FC<EditableCardProps> = ({
   title,
   editHref,
+  subtitle,
   optional = false,
   edit = true,
   children,
@@ -39,7 +48,14 @@ const EditableCard: React.FC<EditableCardProps> = ({
   <Card>
     <article css={containerStyles}>
       <div css={[{ gridArea: 'headline' }]}>
-        <Headline3>{title}</Headline3>
+        <Headline3 noMargin>{title}</Headline3>
+        {subtitle && (
+          <div css={css({ marginTop: rem(24) })}>
+            <Paragraph noMargin accent="lead">
+              {subtitle}
+            </Paragraph>
+          </div>
+        )}
       </div>
       {editHref && (
         <div css={[{ gridArea: 'edit' }]}>

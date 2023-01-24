@@ -1,10 +1,5 @@
 import { gp2 } from '@asap-hub/model';
-import {
-  Card,
-  crossQuery,
-  Headline3,
-  pixels,
-} from '@asap-hub/react-components';
+import { crossQuery, pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import {
@@ -52,7 +47,6 @@ const columnStyles = css({
     rowGap: rem(32),
   },
 });
-const cardStyles = css({ padding: `${rem(32)} ${rem(24)}` });
 const UserOverview: React.FC<UserOverviewProps> = ({
   id,
   biography,
@@ -74,24 +68,14 @@ const UserOverview: React.FC<UserOverviewProps> = ({
     </div>
     <UserBiography biography={biography} />
     {projects.length > 0 && (
-      <Card padding={false}>
-        <div css={cardStyles}>
-          <Headline3 noMargin>Projects</Headline3>
-          <UserProjects projects={projects} firstName={firstName} id={id} />
-        </div>
-      </Card>
+      <UserProjects projects={projects} firstName={firstName} id={id} />
     )}
     {workingGroups.length > 0 && (
-      <Card padding={false}>
-        <div css={cardStyles}>
-          <Headline3 noMargin>Working Groups</Headline3>
-          <UserWorkingGroups
-            workingGroups={workingGroups}
-            firstName={firstName}
-            id={id}
-          />
-        </div>
-      </Card>
+      <UserWorkingGroups
+        workingGroups={workingGroups}
+        firstName={firstName}
+        id={id}
+      />
     )}
     {questions.length > 0 && (
       <UserQuestions questions={questions} firstName={firstName} />

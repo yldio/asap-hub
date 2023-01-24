@@ -19,6 +19,7 @@ const UserContributingCohorts: React.FC<UserContributingCohortsProps> = ({
   <EditableCard
     editHref={editHref}
     title="Contributing Cohort Studies"
+    subtitle={`${firstName} has contributed to the following cohort studies:`}
     edit={!!contributingCohorts.length}
     optional
   >
@@ -28,10 +29,7 @@ const UserContributingCohorts: React.FC<UserContributingCohortsProps> = ({
         to ten).
       </UserProfilePlaceholderCard>
     ) : (
-      <CollapsibleTable
-        paragraph={`${firstName} has contributed to the following cohort studies:`}
-        headings={['Name', 'Role', 'Link']}
-      >
+      <CollapsibleTable headings={['Name', 'Role', 'Link']}>
         {contributingCohorts.map(
           ({ contributingCohortId, name, studyUrl, role }) => {
             const study = studyUrl && (

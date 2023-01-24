@@ -34,7 +34,7 @@ import {
   getPayload,
 } from '../utils';
 
-type ResearchOutputTeamFormProps = Pick<
+type ResearchOutputFormProps = Pick<
   ComponentProps<typeof ResearchOutputFormSharingCard>,
   'serverValidationErrors' | 'clearServerValidationError'
 > &
@@ -94,7 +94,7 @@ const formControlsStyles = css({
   },
 });
 
-const ResearchOutputTeamForm: React.FC<ResearchOutputTeamFormProps> = ({
+const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   documentType,
   researchOutputData,
   isEditMode,
@@ -363,4 +363,4 @@ const ResearchOutputTeamForm: React.FC<ResearchOutputTeamFormProps> = ({
   );
 };
 
-export default ResearchOutputTeamForm;
+export default ResearchOutputForm;

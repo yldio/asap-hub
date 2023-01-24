@@ -4,17 +4,17 @@ import {
   createUserResponse,
   researchTagMethodResponse,
 } from '@asap-hub/fixtures';
-import { ResearchOutputTeamForm } from '@asap-hub/react-components';
+import { ResearchOutputForm } from '@asap-hub/react-components';
 import { StaticRouter } from 'react-router-dom';
 
 export default {
-  title: 'Templates / Team Profile / Team Create Output Page',
-  component: ResearchOutputTeamForm,
+  title: 'Templates / Research Output Form',
+  component: ResearchOutputForm,
 };
 
 export const Normal = () => (
   <StaticRouter>
-    <ResearchOutputTeamForm
+    <ResearchOutputForm
       onSave={() => Promise.resolve()}
       tagSuggestions={['A53T', 'Activity assay']}
       documentType="Article"
@@ -54,7 +54,7 @@ const researchOutputData = {
 };
 export const EditMode = () => (
   <StaticRouter>
-    <ResearchOutputTeamForm
+    <ResearchOutputForm
       researchOutputData={researchOutputData}
       onSave={() => Promise.resolve()}
       tagSuggestions={['A53T', 'Activity assay']}

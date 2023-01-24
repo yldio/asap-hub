@@ -196,7 +196,7 @@ export {
   PasswordResetEmailSentPage,
   PersonalInfoModal,
   ProfileOutputs,
-  ResearchOutputTeamForm,
+  ResearchOutputForm,
   ResearchOutputsSearch,
   RoleModal,
   SharedResearchList,

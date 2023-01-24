@@ -66,6 +66,7 @@ export const getGraphqlResponseFetchUsers = (): FetchUsersQuery =>
         ],
         teams: [
           {
+            inactiveSinceDate: '',
             status: 'Active',
             role: 'Project Manager',
             id: [
@@ -144,7 +145,7 @@ export const getGraphQLUser = (
     ],
     teams: user?.flatData?.teams || [
       {
-        inactiveSinceDate: null,
+        inactiveSinceDate: '',
         status: 'Active',
         role: 'Lead PI (Core Leadership)',
         id: [
@@ -196,11 +197,13 @@ export const patchResponse = (): RestUser => ({
           id: ['team-id-1'],
           role: 'Lead PI (Core Leadership)',
           status: 'Active',
+          inactiveSinceDate: '',
         },
         {
           id: ['team-id-3'],
           role: 'Collaborating PI',
           status: 'Active',
+          inactiveSinceDate: '',
         },
       ],
     },
@@ -243,12 +246,14 @@ export const fetchUserResponseDataObject = (): UserDataObject => ({
       id: 'team-id-1',
       role: 'Lead PI (Core Leadership)',
       status: 'Active',
+      inactiveSinceDate: '',
     },
     {
       displayName: 'Unknown',
       id: 'team-id-3',
       role: 'Collaborating PI',
       status: 'Active',
+      inactiveSinceDate: '',
     },
   ],
   workingGroups: [],
@@ -311,6 +316,7 @@ export const getUserResponse = (): UserResponse => ({
       displayName: 'Team A',
       proposal: 'proposalId1',
       status: 'Active',
+      inactiveSinceDate: '',
     },
   ],
   role: 'Grantee',
@@ -370,6 +376,7 @@ export const fetchExpectation: ListUserResponse = {
           displayName: 'Team B',
           proposal: 'proposalId',
           status: 'Active',
+          inactiveSinceDate: '',
         },
       ],
       role: 'Grantee',
@@ -400,6 +407,7 @@ export const userPatchRequest: UserPatchRequest = {
       id: 'team-id-1',
       role: 'Lead PI (Core Leadership)',
       status: 'Active',
+      inactiveSinceDate: '',
     },
   ],
 };
@@ -605,6 +613,7 @@ export const getUserDataObject = (): UserDataObject => ({
       displayName: 'Team A',
       proposal: 'proposalId1',
       status: 'Active',
+      inactiveSinceDate: '',
     },
   ],
   role: 'Grantee',
@@ -684,6 +693,7 @@ export const getInputUser = (): InputUser['data'] => ({
         id: ['team-id-0'],
         role: 'Lead PI (Core Leadership)',
         status: 'Active',
+        inactiveSinceDate: '',
       },
     ],
   },

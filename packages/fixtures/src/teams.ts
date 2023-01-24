@@ -16,6 +16,7 @@ export const teamMember: Omit<
   displayName: 'Birdie Romeo',
   role: 'Lead PI (Core Leadership)',
   status: 'Active',
+  inactiveSinceDate: '',
 };
 
 const teamTool = (id: number): TeamTool => ({

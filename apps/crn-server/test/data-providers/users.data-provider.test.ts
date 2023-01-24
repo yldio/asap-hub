@@ -783,6 +783,7 @@ describe('User data provider', () => {
             proposal: 'proposalId1',
             role: 'Lead PI (Core Leadership)',
             status: 'Active',
+            inactiveSinceDate: '',
           },
         ]);
       });

@@ -1,6 +1,7 @@
 import { pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
-import FilterPill, { ValueProps } from '../molecules/FilterPill';
+import { ComponentProps } from 'react';
+import FilterPill from '../molecules/FilterPill';
 
 const { rem } = pixels;
 
@@ -9,13 +10,15 @@ const containerStyles = css({
   flexDirection: 'row',
   flexWrap: 'wrap',
   width: '100%',
-  gap: '8px',
+  gap: rem(8),
   paddingTop: rem(24),
 });
 
+type FilterPillProps = ComponentProps<typeof FilterPill>;
+
 interface FilterPillsProps {
-  values: ValueProps[];
-  onRemove: (value: ValueProps) => void;
+  values: FilterPillProps['value'][];
+  onRemove: FilterPillProps['onRemove'];
 }
 
 const FilterPills: React.FC<FilterPillsProps> = ({ values, onRemove }) => (

@@ -1,18 +1,25 @@
+import { gp2 as gp2Model } from '@asap-hub/model';
+import {
+  pixels,
+  borderWidth,
+  crossSmallIcon,
+} from '@asap-hub/react-components';
 import { css } from '@emotion/react';
-import { borderWidth, crossSmallIcon } from '@asap-hub/react-components';
 import colors from '../templates/colors';
+
+const { rem } = pixels;
 
 const pillStyles = css({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   width: 'fit-content',
-  height: '22px',
-  padding: `8px 12px`,
-  gap: '8px',
+  height: rem(22),
+  padding: `${rem(8)} ${rem(12)}`,
+  gap: rem(8),
   borderStyle: 'solid',
   borderWidth: `${borderWidth}px`,
-  borderRadius: '24px',
+  borderRadius: rem(24),
   borderColor: colors.neutral500.rgb,
   color: colors.neutral1000.rgb,
 });
@@ -30,17 +37,23 @@ const iconStyles = css({
   },
 });
 
-export interface ValueProps {
+type FiltersType = Pick<
+  gp2Model.FetchUsersFilter,
+  'keywords' | 'regions' | 'workingGroups' | 'projects'
+>;
+
+interface Value {
   readonly label: string;
+  readonly typeOfFilter: keyof FiltersType;
   readonly id: string;
 }
 
-interface PillProps {
-  readonly value: ValueProps;
-  onRemove: (value: ValueProps) => void;
+interface FilterPillProps {
+  readonly value: Value;
+  onRemove: (value: Value) => void;
 }
 
-const FilterPill: React.FC<PillProps> = ({ value, onRemove }) => (
+const FilterPill: React.FC<FilterPillProps> = ({ value, onRemove }) => (
   <div css={pillStyles}>
     <div>{value.label}</div>
     <button css={iconStyles} onClick={() => onRemove(value)}>

@@ -1,4 +1,5 @@
 import { FilterPill } from '@asap-hub/gp2-components';
+import { noop } from '@asap-hub/react-components';
 import { ComponentProps } from 'react';
 
 export default {
@@ -11,7 +12,7 @@ const props: ComponentProps<typeof FilterPill> = {
     id: 'region-Africa',
     label: 'Africa',
   },
-  onRemove: (value) => alert(`${value.label} erased!`),
+  onRemove: noop,
 };
 
 export const Normal = () => <FilterPill {...props}></FilterPill>;

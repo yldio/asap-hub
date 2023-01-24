@@ -1,4 +1,5 @@
 import { FilterPills } from '@asap-hub/gp2-components';
+import { noop } from '@asap-hub/react-components';
 import { ComponentProps } from 'react';
 
 export default {
@@ -17,7 +18,7 @@ const props: ComponentProps<typeof FilterPills> = {
       label: 'Asia',
     },
   ],
-  onRemove: (value) => alert(`${value.label} erased!`),
+  onRemove: noop,
 };
 
 export const Normal = () => <FilterPills {...props}></FilterPills>;

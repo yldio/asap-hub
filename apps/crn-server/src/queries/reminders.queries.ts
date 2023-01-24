@@ -64,6 +64,7 @@ export const FETCH_REMINDER_DATA = gql`
                   }
                   role
                   status
+                  inactiveSinceDate
                 }
               }
             }

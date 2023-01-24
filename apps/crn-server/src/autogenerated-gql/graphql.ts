@@ -5869,6 +5869,7 @@ export type UsersDataSocialInputDto = {
 /** The structure of the Teams nested schema. */
 export type UsersDataTeamsChildDto = {
   id: Maybe<Array<Teams>>;
+  inactiveSinceDate: Maybe<Scalars['Instant']>;
   /** Attention: Check if this user needs to be added to Smart Simple */
   role: Maybe<Scalars['String']>;
   status: Maybe<Scalars['String']>;
@@ -5877,6 +5878,7 @@ export type UsersDataTeamsChildDto = {
 /** The structure of the Teams nested schema. */
 export type UsersDataTeamsChildInputDto = {
   id: InputMaybe<Array<Scalars['String']>>;
+  inactiveSinceDate: InputMaybe<Scalars['Instant']>;
   /** Attention: Check if this user needs to be added to Smart Simple */
   role: InputMaybe<Scalars['String']>;
   status: InputMaybe<Scalars['String']>;
@@ -6461,7 +6463,7 @@ export type EventContentFragment = Pick<
                                 Array<
                                   Pick<
                                     UsersDataTeamsChildDto,
-                                    'role' | 'status'
+                                    'inactiveSinceDate' | 'role' | 'status'
                                   > & {
                                     id: Maybe<
                                       Array<
@@ -6566,7 +6568,7 @@ export type EventContentFragment = Pick<
                                 Array<
                                   Pick<
                                     UsersDataTeamsChildDto,
-                                    'status' | 'role'
+                                    'inactiveSinceDate' | 'status' | 'role'
                                   > & {
                                     id: Maybe<
                                       Array<
@@ -6657,9 +6659,10 @@ export type EventContentFragment = Pick<
                     avatar: Maybe<Array<Pick<Asset, 'id'>>>;
                     teams: Maybe<
                       Array<
-                        Pick<UsersDataTeamsChildDto, 'status' | 'role'> & {
-                          id: Maybe<Array<Pick<Teams, 'id'>>>;
-                        }
+                        Pick<
+                          UsersDataTeamsChildDto,
+                          'inactiveSinceDate' | 'status' | 'role'
+                        > & { id: Maybe<Array<Pick<Teams, 'id'>>> }
                       >
                     >;
                   };
@@ -6822,7 +6825,9 @@ export type FetchEventsQuery = {
                                           Array<
                                             Pick<
                                               UsersDataTeamsChildDto,
-                                              'role' | 'status'
+                                              | 'inactiveSinceDate'
+                                              | 'role'
+                                              | 'status'
                                             > & {
                                               id: Maybe<
                                                 Array<
@@ -6941,7 +6946,9 @@ export type FetchEventsQuery = {
                                           Array<
                                             Pick<
                                               UsersDataTeamsChildDto,
-                                              'status' | 'role'
+                                              | 'inactiveSinceDate'
+                                              | 'status'
+                                              | 'role'
                                             > & {
                                               id: Maybe<
                                                 Array<
@@ -7051,7 +7058,7 @@ export type FetchEventsQuery = {
                                 Array<
                                   Pick<
                                     UsersDataTeamsChildDto,
-                                    'status' | 'role'
+                                    'inactiveSinceDate' | 'status' | 'role'
                                   > & { id: Maybe<Array<Pick<Teams, 'id'>>> }
                                 >
                               >;
@@ -7201,7 +7208,7 @@ export type FetchEventQuery = {
                                     Array<
                                       Pick<
                                         UsersDataTeamsChildDto,
-                                        'role' | 'status'
+                                        'inactiveSinceDate' | 'role' | 'status'
                                       > & {
                                         id: Maybe<
                                           Array<
@@ -7311,7 +7318,7 @@ export type FetchEventQuery = {
                                     Array<
                                       Pick<
                                         UsersDataTeamsChildDto,
-                                        'status' | 'role'
+                                        'inactiveSinceDate' | 'status' | 'role'
                                       > & {
                                         id: Maybe<
                                           Array<
@@ -7413,9 +7420,10 @@ export type FetchEventQuery = {
                         avatar: Maybe<Array<Pick<Asset, 'id'>>>;
                         teams: Maybe<
                           Array<
-                            Pick<UsersDataTeamsChildDto, 'status' | 'role'> & {
-                              id: Maybe<Array<Pick<Teams, 'id'>>>;
-                            }
+                            Pick<
+                              UsersDataTeamsChildDto,
+                              'inactiveSinceDate' | 'status' | 'role'
+                            > & { id: Maybe<Array<Pick<Teams, 'id'>>> }
                           >
                         >;
                       };
@@ -7552,7 +7560,10 @@ export type GroupsContentFragment = Pick<
                   >;
                   teams: Maybe<
                     Array<
-                      Pick<UsersDataTeamsChildDto, 'role' | 'status'> & {
+                      Pick<
+                        UsersDataTeamsChildDto,
+                        'inactiveSinceDate' | 'role' | 'status'
+                      > & {
                         id: Maybe<
                           Array<
                             Pick<Teams, 'id'> & {
@@ -7649,7 +7660,10 @@ export type GroupsContentFragment = Pick<
                   >;
                   teams: Maybe<
                     Array<
-                      Pick<UsersDataTeamsChildDto, 'status' | 'role'> & {
+                      Pick<
+                        UsersDataTeamsChildDto,
+                        'inactiveSinceDate' | 'status' | 'role'
+                      > & {
                         id: Maybe<
                           Array<
                             Pick<Teams, 'id'> & {
@@ -7806,7 +7820,7 @@ export type FetchGroupsQuery = {
                               Array<
                                 Pick<
                                   UsersDataTeamsChildDto,
-                                  'role' | 'status'
+                                  'inactiveSinceDate' | 'role' | 'status'
                                 > & {
                                   id: Maybe<
                                     Array<
@@ -7911,7 +7925,7 @@ export type FetchGroupsQuery = {
                               Array<
                                 Pick<
                                   UsersDataTeamsChildDto,
-                                  'status' | 'role'
+                                  'inactiveSinceDate' | 'status' | 'role'
                                 > & {
                                   id: Maybe<
                                     Array<
@@ -8059,7 +8073,10 @@ export type FetchGroupQuery = {
                       >;
                       teams: Maybe<
                         Array<
-                          Pick<UsersDataTeamsChildDto, 'role' | 'status'> & {
+                          Pick<
+                            UsersDataTeamsChildDto,
+                            'inactiveSinceDate' | 'role' | 'status'
+                          > & {
                             id: Maybe<
                               Array<
                                 Pick<Teams, 'id'> & {
@@ -8156,7 +8173,10 @@ export type FetchGroupQuery = {
                       >;
                       teams: Maybe<
                         Array<
-                          Pick<UsersDataTeamsChildDto, 'status' | 'role'> & {
+                          Pick<
+                            UsersDataTeamsChildDto,
+                            'inactiveSinceDate' | 'status' | 'role'
+                          > & {
                             id: Maybe<
                               Array<
                                 Pick<Teams, 'id'> & {
@@ -8319,9 +8339,10 @@ export type FetchReminderDataQuery = {
                       flatData: Pick<UsersFlatDataDto, 'role'> & {
                         teams: Maybe<
                           Array<
-                            Pick<UsersDataTeamsChildDto, 'role' | 'status'> & {
-                              id: Maybe<Array<Pick<Teams, 'id'>>>;
-                            }
+                            Pick<
+                              UsersDataTeamsChildDto,
+                              'role' | 'status' | 'inactiveSinceDate'
+                            > & { id: Maybe<Array<Pick<Teams, 'id'>>> }
                           >
                         >;
                       };
@@ -8416,7 +8437,10 @@ export type ResearchOutputContentFragment = Pick<
                 >;
                 teams: Maybe<
                   Array<
-                    Pick<UsersDataTeamsChildDto, 'status' | 'role'> & {
+                    Pick<
+                      UsersDataTeamsChildDto,
+                      'inactiveSinceDate' | 'status' | 'role'
+                    > & {
                       id: Maybe<
                         Array<
                           Pick<Teams, 'id'> & {
@@ -8498,9 +8522,10 @@ export type ResearchOutputContentFragment = Pick<
             flatData: Pick<UsersFlatDataDto, 'email'> & {
               teams: Maybe<
                 Array<
-                  Pick<UsersDataTeamsChildDto, 'status' | 'role'> & {
-                    id: Maybe<Array<Pick<Teams, 'id'>>>;
-                  }
+                  Pick<
+                    UsersDataTeamsChildDto,
+                    'inactiveSinceDate' | 'status' | 'role'
+                  > & { id: Maybe<Array<Pick<Teams, 'id'>>> }
                 >
               >;
             };
@@ -8596,7 +8621,10 @@ export type FetchResearchOutputQuery = {
                     >;
                     teams: Maybe<
                       Array<
-                        Pick<UsersDataTeamsChildDto, 'status' | 'role'> & {
+                        Pick<
+                          UsersDataTeamsChildDto,
+                          'inactiveSinceDate' | 'status' | 'role'
+                        > & {
                           id: Maybe<
                             Array<
                               Pick<Teams, 'id'> & {
@@ -8685,9 +8713,10 @@ export type FetchResearchOutputQuery = {
                 flatData: Pick<UsersFlatDataDto, 'email'> & {
                   teams: Maybe<
                     Array<
-                      Pick<UsersDataTeamsChildDto, 'status' | 'role'> & {
-                        id: Maybe<Array<Pick<Teams, 'id'>>>;
-                      }
+                      Pick<
+                        UsersDataTeamsChildDto,
+                        'inactiveSinceDate' | 'status' | 'role'
+                      > & { id: Maybe<Array<Pick<Teams, 'id'>>> }
                     >
                   >;
                 };
@@ -8798,7 +8827,7 @@ export type FetchResearchOutputsQuery = {
                             Array<
                               Pick<
                                 UsersDataTeamsChildDto,
-                                'status' | 'role'
+                                'inactiveSinceDate' | 'status' | 'role'
                               > & {
                                 id: Maybe<
                                   Array<
@@ -8896,9 +8925,10 @@ export type FetchResearchOutputsQuery = {
                       flatData: Pick<UsersFlatDataDto, 'email'> & {
                         teams: Maybe<
                           Array<
-                            Pick<UsersDataTeamsChildDto, 'status' | 'role'> & {
-                              id: Maybe<Array<Pick<Teams, 'id'>>>;
-                            }
+                            Pick<
+                              UsersDataTeamsChildDto,
+                              'inactiveSinceDate' | 'status' | 'role'
+                            > & { id: Maybe<Array<Pick<Teams, 'id'>>> }
                           >
                         >;
                       };
@@ -9008,7 +9038,10 @@ export type TeamsContentFragment = Pick<
           questions: Maybe<Array<Pick<UsersDataQuestionsChildDto, 'question'>>>;
           teams: Maybe<
             Array<
-              Pick<UsersDataTeamsChildDto, 'role' | 'status'> & {
+              Pick<
+                UsersDataTeamsChildDto,
+                'inactiveSinceDate' | 'role' | 'status'
+              > & {
                 id: Maybe<
                   Array<
                     Pick<Teams, 'id'> & {
@@ -9116,7 +9149,10 @@ export type FetchTeamQuery = {
               >;
               teams: Maybe<
                 Array<
-                  Pick<UsersDataTeamsChildDto, 'role' | 'status'> & {
+                  Pick<
+                    UsersDataTeamsChildDto,
+                    'inactiveSinceDate' | 'role' | 'status'
+                  > & {
                     id: Maybe<
                       Array<
                         Pick<Teams, 'id'> & {
@@ -9233,7 +9269,10 @@ export type FetchTeamsQuery = {
                     >;
                     teams: Maybe<
                       Array<
-                        Pick<UsersDataTeamsChildDto, 'role' | 'status'> & {
+                        Pick<
+                          UsersDataTeamsChildDto,
+                          'inactiveSinceDate' | 'role' | 'status'
+                        > & {
                           id: Maybe<
                             Array<
                               Pick<Teams, 'id'> & {
@@ -9370,7 +9409,10 @@ export type UsersContentFragment = Pick<
     questions: Maybe<Array<Pick<UsersDataQuestionsChildDto, 'question'>>>;
     teams: Maybe<
       Array<
-        Pick<UsersDataTeamsChildDto, 'status' | 'role'> & {
+        Pick<
+          UsersDataTeamsChildDto,
+          'inactiveSinceDate' | 'status' | 'role'
+        > & {
           id: Maybe<
             Array<
               Pick<Teams, 'id'> & {
@@ -9471,7 +9513,10 @@ export type FetchUserQuery = {
         questions: Maybe<Array<Pick<UsersDataQuestionsChildDto, 'question'>>>;
         teams: Maybe<
           Array<
-            Pick<UsersDataTeamsChildDto, 'status' | 'role'> & {
+            Pick<
+              UsersDataTeamsChildDto,
+              'inactiveSinceDate' | 'status' | 'role'
+            > & {
               id: Maybe<
                 Array<
                   Pick<Teams, 'id'> & {
@@ -9586,7 +9631,10 @@ export type FetchUsersQuery = {
               >;
               teams: Maybe<
                 Array<
-                  Pick<UsersDataTeamsChildDto, 'status' | 'role'> & {
+                  Pick<
+                    UsersDataTeamsChildDto,
+                    'inactiveSinceDate' | 'status' | 'role'
+                  > & {
                     id: Maybe<
                       Array<
                         Pick<Teams, 'id'> & {
@@ -10115,6 +10163,13 @@ export const TeamsContentFragmentDoc = {
                           selections: [
                             {
                               kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'inactiveSinceDate',
+                              },
+                            },
+                            {
+                              kind: 'Field',
                               name: { kind: 'Name', value: 'role' },
                             },
                             {
@@ -10518,6 +10573,13 @@ export const GroupsContentFragmentDoc = {
                                     selectionSet: {
                                       kind: 'SelectionSet',
                                       selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'inactiveSinceDate',
+                                          },
+                                        },
                                         {
                                           kind: 'Field',
                                           name: {
@@ -11046,6 +11108,13 @@ export const EventContentFragmentDoc = {
                                                 kind: 'Field',
                                                 name: {
                                                   kind: 'Name',
+                                                  value: 'inactiveSinceDate',
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
                                                   value: 'status',
                                                 },
                                               },
@@ -11513,6 +11582,13 @@ export const ResearchOutputContentFragmentDoc = {
                                     selectionSet: {
                                       kind: 'SelectionSet',
                                       selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'inactiveSinceDate',
+                                          },
+                                        },
                                         {
                                           kind: 'Field',
                                           name: {
@@ -12038,6 +12114,13 @@ export const ResearchOutputContentFragmentDoc = {
                                 selections: [
                                   {
                                     kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'inactiveSinceDate',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
                                     name: { kind: 'Name', value: 'status' },
                                   },
                                   {
@@ -12345,6 +12428,10 @@ export const UsersContentFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'inactiveSinceDate' },
+                      },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'status' },
@@ -14178,6 +14265,14 @@ export const FetchReminderDataDocument = {
                                                       name: {
                                                         kind: 'Name',
                                                         value: 'status',
+                                                      },
+                                                    },
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value:
+                                                          'inactiveSinceDate',
                                                       },
                                                     },
                                                   ],

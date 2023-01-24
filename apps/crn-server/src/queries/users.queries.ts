@@ -60,6 +60,7 @@ export const usersContentQueryFragment = gql`
       expertiseAndResourceTags
       expertiseAndResourceDescription
       teams {
+        inactiveSinceDate
         status
         role
         id {

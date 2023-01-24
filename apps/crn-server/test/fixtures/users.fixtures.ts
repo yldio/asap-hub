@@ -144,6 +144,7 @@ export const getGraphQLUser = (
     ],
     teams: user?.flatData?.teams || [
       {
+        inactiveSinceDate: null,
         status: 'Active',
         role: 'Lead PI (Core Leadership)',
         id: [

@@ -65,6 +65,7 @@ export const researchOutputContentQueryFragment = gql`
             expertiseAndResourceTags
             expertiseAndResourceDescription
             teams {
+              inactiveSinceDate
               status
               role
               id {
@@ -172,6 +173,7 @@ export const researchOutputContentQueryFragment = gql`
         flatData {
           email
           teams {
+            inactiveSinceDate
             status
             role
             id {

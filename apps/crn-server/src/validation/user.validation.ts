@@ -44,6 +44,7 @@ const userPatchRequestValidationSchema: JSONSchemaType<UserPatchRequest> = {
           id: { type: 'string' },
           role: { type: 'string', enum: teamRole },
           status: { type: 'string', enum: teamStatus },
+          inactiveSinceDate: { type: 'string', nullable: true },
         },
         required: ['id', 'role'],
       },

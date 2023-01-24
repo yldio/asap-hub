@@ -9,7 +9,7 @@
     },
     "scripts": {
       "create": "if(JSON.stringify(ctx.data.teams.iv).indexOf('ASAP Staff') > 0  && ctx.data.role.iv !== 'Staff') {\n    reject('Only Staff can be given this team role. Change ASAP Hub Role to \"Staff\".')\n}",
-      "update": "if(JSON.stringify(ctx.data.teams.iv).indexOf('ASAP Staff') > 0  && ctx.data.role.iv !== 'Staff') {\n    reject('Only Staff can be given this team role. Change ASAP Hub Role to \"Staff\".')\n}\n\nconst isAlumni = ctx.data.alumniSinceDate && ctx.data.alumniSinceDate.iv;\n\nif (isAlumni && ctx.data.teams && ctx.data.teams.iv) {\n    let statusChanged = false;\n    ctx.data.teams.iv = ctx.data.teams.iv.map((team) => {\n        if (team.status !== 'Inactive') {\n            team.status = 'Inactive';\n            if (!statusChanged) {\n                statusChanged = true;\n            }\n        }\n        return team;\n    });\n    if (statusChanged) {\n        replace();\n    }\n}"
+      "update": "if(JSON.stringify(ctx.data.teams.iv).indexOf('ASAP Staff') > 0  && ctx.data.role.iv !== 'Staff') {\n    reject('Only Staff can be given this team role. Change ASAP Hub Role to \"Staff\".')\n}\n\nconst becameAlumni = ctx.data.alumniSinceDate.iv && (ctx.oldData.alumniSinceDate.iv !== ctx.data.alumniSinceDate.iv);\nconst oldTeams = ctx.oldData.teams.iv.reduce((teamMap, team) => {\n    teamMap[team.id] = team;\n    return teamMap;\n}, {});\n\n\nctx.data.teams.iv = ctx.data.teams.iv.map((team) => {\n    if (becameAlumni) {\n        if (team.status !== 'Inactive') {\n            team.status = 'Inactive';\n        }\n        if (!team.inactiveSinceDate) {\n            team.inactiveSinceDate = new Date().toISOString();\n        }\n    } else {\n        const oldTeam = oldTeams[team.id];\n        const statusChanged = oldTeam.status !== team.status;\n        const inactiveDateChanged = team.inactiveSinceDate !== oldTeam.inactiveSinceDate;\n        \n        if (statusChanged) {\n            if (team.status === 'Inactive' && !team.inactiveSinceDate) {\n                team.inactiveSinceDate = new Date().toISOString();\n            }\n            if (team.status !== 'Inactive' && team.inactiveSinceDate) {\n                team.inactiveSinceDate = \"\";\n            }\n        } \n        if (inactiveDateChanged) {\n            if (team.inactiveSinceDate && team.status !== 'Inactive') {\n                team.status = 'Inactive'\n            }\n            if (!team.inactiveSinceDate && team.status === 'Inactive') {\n                team.status = 'Active'\n            }\n        }\n    }\n    \n    return team;\n});\n\nreplace();\n"
     },
     "fieldsInReferences": ["firstName", "lastName", "orcid"],
     "fieldsInLists": [
@@ -264,6 +264,20 @@
               "isRequiredOnPublish": false,
               "isHalfWidth": true
             }
+          },
+          {
+            "name": "inactiveSinceDate",
+            "properties": {
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": true,
+              "fieldType": "DateTime",
+              "editor": "Date",
+              "label": "Inactive Since"
+            },
+            "isLocked": false,
+            "isHidden": false,
+            "isDisabled": false
           }
         ]
       },

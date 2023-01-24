@@ -16,6 +16,7 @@ import {
 import { GraphqlTeam } from './team';
 
 export type UserTeamConnection<T = string> = {
+  inactiveSinceDate?: string;
   status?: TeamStatus;
   role: TeamRole;
   id: T[];

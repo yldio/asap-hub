@@ -107,6 +107,7 @@ export interface UserTeam {
   proposal?: string;
   role: TeamRole;
   status: TeamStatus;
+  inactiveSinceDate?: string;
 }
 
 export interface UserSocialLinks {
@@ -182,7 +183,7 @@ export type UserCreateDataObject = {
   reachOut?: string;
   researchInterests?: string;
   questions?: string[];
-  teams?: Pick<UserTeam, 'id' | 'role' | 'status'>[];
+  teams?: Pick<UserTeam, 'id' | 'role' | 'status' | 'inactiveSinceDate'>[];
   social?: Omit<UserSocialLinks, 'orcid'>;
   onboarded?: boolean;
   avatar?: string;

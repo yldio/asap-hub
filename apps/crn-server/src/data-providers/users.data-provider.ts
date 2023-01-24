@@ -81,6 +81,7 @@ export class UserSquidexDataProvider implements UserDataProvider {
             id: [team.id],
             role: team.role,
             status: team.status,
+            inactiveSinceDate: team.inactiveSinceDate,
           })) || [],
       },
       labs: {
@@ -267,6 +268,7 @@ export const parseGraphQLUserTeamConnections = (
         proposal: proposal?.length ? proposal[0]?.id : undefined,
         displayName: displayName || '',
         status: item?.status ?? 'Active',
+        inactiveSinceDate: item.inactiveSinceDate,
       },
     ] as UserTeam[];
   }, []);

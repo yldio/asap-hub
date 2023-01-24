@@ -65,6 +65,7 @@ export const eventContentFragment = gql`
                 id
               }
               teams {
+                inactiveSinceDate
                 status
                 role
                 id {

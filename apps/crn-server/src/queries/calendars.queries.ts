@@ -19,6 +19,11 @@ export const calendarContentQueryFragment = gql`
         active
       }
     }
+    referencingWorkingGroupsContents {
+      flatData {
+        complete
+      }
+    }
   }
 `;
 

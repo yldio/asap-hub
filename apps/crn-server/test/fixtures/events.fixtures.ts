@@ -153,6 +153,7 @@ export const getSquidexGraphqlEventSpeakerWithUser = (): NonNullable<
               },
             ],
             role: 'Lead PI (Core Leadership)',
+            inactiveSinceDate: null,
           },
         ],
       },

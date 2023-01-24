@@ -106,6 +106,7 @@ export interface UserTeam {
   displayName?: string;
   proposal?: string;
   role: TeamRole;
+  inactiveSinceDate?: string;
 }
 
 export interface UserSocialLinks {
@@ -191,7 +192,7 @@ export type UserCreateDataObject = {
   responsibilities?: string;
   role: Role;
   social?: Omit<UserSocialLinks, 'orcid'>;
-  teams?: Pick<UserTeam, 'id' | 'role'>[];
+  teams?: Pick<UserTeam, 'id' | 'role' | 'inactiveSinceDate'>[];
 };
 
 export type UserUpdateDataObject = Partial<UserCreateDataObject>;

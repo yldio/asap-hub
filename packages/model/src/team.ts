@@ -40,6 +40,7 @@ export interface TeamMember {
   avatarUrl?: string;
   labs?: LabResponse[];
   alumniSinceDate?: string;
+  inactiveSinceDate?: string;
 }
 
 export type TeamDataObject = Omit<TeamCreateRequest, 'applicationNumber'> & {

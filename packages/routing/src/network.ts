@@ -70,17 +70,17 @@ const user = (() => {
 })();
 const users = route('/users', {}, { user });
 
-export type OutputDocumentTypeParameter =
+export type TeamOutputDocumentTypeParameter =
   | 'article'
   | 'bioinformatics'
   | 'dataset'
   | 'lab-resource'
   | 'protocol';
 
-const outputDocumentTypeParser = {
-  parse: (data: string): OutputDocumentTypeParameter =>
-    data as OutputDocumentTypeParameter,
-  serialize: (data: OutputDocumentTypeParameter): string => data,
+const teamOutputDocumentTypeParser = {
+  parse: (data: string): TeamOutputDocumentTypeParameter =>
+    data as TeamOutputDocumentTypeParameter,
+  serialize: (data: TeamOutputDocumentTypeParameter): string => data,
 };
 
 const team = (() => {
@@ -91,8 +91,8 @@ const team = (() => {
   const tools = route('/tools', {}, { tool });
   const workspace = route('/workspace', {}, { tools });
   const createOutput = route(
-    '/create-output/:outputDocumentType',
-    { outputDocumentType: outputDocumentTypeParser },
+    '/create-output/:teamOutputDocumentType',
+    { teamOutputDocumentType: teamOutputDocumentTypeParser },
     {},
   );
 
@@ -121,12 +121,19 @@ const group = (() => {
 })();
 const groups = route('/groups', {}, { group });
 
+const workingGroupOutputDocumentTypeParser = {
+  parse: (data: string): WorkingGroupOutputDocumentTypeParameter =>
+    data as WorkingGroupOutputDocumentTypeParameter,
+  serialize: (data: WorkingGroupOutputDocumentTypeParameter): string => data,
+};
+export type WorkingGroupOutputDocumentTypeParameter = 'article' | 'report';
+
 const workingGroup = (() => {
   const about = route('/about', {}, {});
   const outputs = route('/outputs', {}, {});
   const createOutput = route(
-    '/create-output/:outputDocumentType',
-    { outputDocumentType: outputDocumentTypeParser },
+    '/create-output/:workingGroupOutputDocumentType',
+    { workingGroupOutputDocumentType: workingGroupOutputDocumentTypeParser },
     {},
   );
 

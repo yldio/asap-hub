@@ -13,6 +13,7 @@ import {
   NotFoundPage,
   ResearchOutputTeamForm,
 } from '@asap-hub/react-components';
+import { network, useRouteParams } from '@asap-hub/routing';
 import React, { useContext, useState } from 'react';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import researchSuggestions from '../teams/research-suggestions';
@@ -23,6 +24,7 @@ import {
   useTeamSuggestions,
 } from './state';
 import { usePostResearchOutput, useResearchTags } from '../teams/state';
+import { paramOutputDocumentTypeToResearchOutputDocumentType } from '../../shared-research';
 
 type WorkingGroupOutputProps = {
   workingGroupId: string;
@@ -42,7 +44,13 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   const getTeamSuggestions = useTeamSuggestions();
   const researchTags = useResearchTags();
   const createResearchOutput = usePostResearchOutput();
-
+  const route = network({})
+    .workingGroups({})
+    .workingGroup({ workingGroupId }).createOutput;
+  const { workingGroupOutputDocumentType } = useRouteParams(route);
+  const documentType = paramOutputDocumentTypeToResearchOutputDocumentType(
+    workingGroupOutputDocumentType,
+  );
   const handleError = (error: unknown) => {
     if (error instanceof BackendError) {
       const { response } = error;
@@ -62,7 +70,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
       <Frame title="Share Working Group Research Output">
         <ResearchOutputTeamForm
           tagSuggestions={researchSuggestions}
-          documentType="Article"
+          documentType={documentType}
           getLabSuggestions={getLabSuggestions}
           getAuthorSuggestions={(input) =>
             getAuthorSuggestions(input).then((users) =>

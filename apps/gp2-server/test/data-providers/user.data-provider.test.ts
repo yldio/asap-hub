@@ -113,6 +113,14 @@ describe('User data provider', () => {
         expect(result?.degrees).toEqual([expected]);
       },
     );
+    test('degrees default to empty array', async () => {
+      const user = getGraphQLUser();
+      user.flatData.degree = null;
+      const mockResponse = getSquidexUserGraphqlResponse(user);
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+      const result = await userDataProvider.fetchById('user-id');
+      expect(result?.degrees).toEqual([]);
+    });
 
     test.each`
       region                                       | expected

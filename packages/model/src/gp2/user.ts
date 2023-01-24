@@ -87,7 +87,7 @@ export type UserDataObject = {
   connections?: Connection[];
   country: string;
   createdDate: string;
-  degrees?: UserDegree[];
+  degrees: UserDegree[];
   email: string;
   firstName: string;
   id: string;

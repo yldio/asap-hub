@@ -314,6 +314,7 @@ export const fetchUserResponseDataObject = (): gp2.UserDataObject => ({
   role: 'Trainee',
   region: 'Europe',
   country: 'Spain',
+  degrees: ['PhD', 'MSc'],
   positions: [
     {
       role: 'Photographer',

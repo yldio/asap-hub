@@ -422,7 +422,7 @@ const parseDegrees = (
 ): gp2Model.UserDataObject['degrees'] =>
   degrees?.map<gp2Model.UserDegree>((degree) =>
     degree === UsersDataDegreeEnum.MdPhD ? 'MD, PhD' : degree,
-  );
+  ) || [];
 
 const parseQuestions = (
   questions: NonNullable<

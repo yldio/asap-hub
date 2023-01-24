@@ -11,6 +11,8 @@ const mockedUser: gp2.UserResponse = {
   region: 'Europe',
   degrees: ['PhD'],
   role: 'Trainee',
+  biography:
+    'Tony Stark is the wealthy son of industrialist and weapons manufacturer Howard Stark and his wife, Maria.',
   country: 'Spain',
   positions: [
     {

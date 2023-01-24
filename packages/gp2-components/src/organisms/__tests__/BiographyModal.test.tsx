@@ -2,7 +2,7 @@ import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom';
 import BiographyModal from '../BiographyModal';
 
 describe('BiographyModal', () => {
@@ -18,9 +18,9 @@ describe('BiographyModal', () => {
 
   const renderModal = (overrides: Partial<BiographyModalProps> = {}) =>
     render(
-      <MemoryRouter>
+      <StaticRouter>
         <BiographyModal {...defaultProps} {...overrides} />
-      </MemoryRouter>,
+      </StaticRouter>,
     );
 
   it('renders a dialog with the right title', () => {
@@ -72,6 +72,18 @@ describe('BiographyModal', () => {
     expect(onSave).toHaveBeenCalledWith({
       biography,
     });
+    await waitFor(() => expect(getSaveButton()).toBeEnabled());
+  });
+  it('shows validation message', async () => {
+    const onSave = jest.fn();
+    renderModal({
+      biography: '',
+      onSave,
+    });
+
+    userEvent.click(getSaveButton());
+    expect(onSave).not.toHaveBeenCalled();
+    expect(screen.getByText('Please add your biography')).toBeVisible();
     await waitFor(() => expect(getSaveButton()).toBeEnabled());
   });
 });

@@ -5,7 +5,6 @@ import {
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import { BackendError } from '@asap-hub/frontend-utils';
 import {
-  ResearchOutputDocumentType,
   ResearchOutputResponse,
   ValidationErrorResponse,
 } from '@asap-hub/model';
@@ -13,7 +12,7 @@ import {
   ResearchOutputPermissionsContext,
   ToastContext,
 } from '@asap-hub/react-context';
-import { network, OutputDocumentTypeParameter } from '@asap-hub/routing';
+import { network, TeamOutputDocumentTypeParameter } from '@asap-hub/routing';
 import {
   render,
   screen,
@@ -26,9 +25,7 @@ import { Route, StaticRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { createResearchOutput } from '../api';
 import { refreshTeamState } from '../state';
-import TeamOutput, {
-  paramOutputDocumentTypeToResearchOutputDocumentType,
-} from '../TeamOutput';
+import TeamOutput from '../TeamOutput';
 
 jest.setTimeout(30000);
 jest.mock('../api');
@@ -45,13 +42,16 @@ describe('TeamOutput', () => {
 
   interface RenderPageOptions {
     teamId: string;
-    outputDocumentType?: OutputDocumentTypeParameter;
+    teamOutputDocumentType?: TeamOutputDocumentTypeParameter;
     canCreateUpdate?: boolean;
     researchOutputData?: ResearchOutputResponse;
   }
 
   it('Renders the research output', async () => {
-    await renderPage({ teamId: '42', outputDocumentType: 'bioinformatics' });
+    await renderPage({
+      teamId: '42',
+      teamOutputDocumentType: 'bioinformatics',
+    });
 
     expect(
       screen.getByRole('heading', { name: /Share bioinformatics/i }),
@@ -61,7 +61,7 @@ describe('TeamOutput', () => {
   it('Renders the correct button in create mode', async () => {
     await renderPage({
       teamId: '42',
-      outputDocumentType: 'bioinformatics',
+      teamOutputDocumentType: 'bioinformatics',
     });
 
     expect(
@@ -72,7 +72,7 @@ describe('TeamOutput', () => {
   it('Renders the correct button in edit mode', async () => {
     await renderPage({
       teamId: '42',
-      outputDocumentType: 'bioinformatics',
+      teamOutputDocumentType: 'bioinformatics',
       researchOutputData: createResearchOutputResponse(),
     });
 
@@ -80,7 +80,7 @@ describe('TeamOutput', () => {
   });
 
   it('switches research output type based on parameter', async () => {
-    await renderPage({ teamId: '42', outputDocumentType: 'article' });
+    await renderPage({ teamId: '42', teamOutputDocumentType: 'article' });
 
     expect(
       screen.getByRole('heading', { name: /Share an article/i }),
@@ -107,7 +107,7 @@ describe('TeamOutput', () => {
     const type = 'Animal Model';
     const doi = '10.0777';
 
-    await renderPage({ teamId, outputDocumentType: 'lab-resource' });
+    await renderPage({ teamId, teamOutputDocumentType: 'lab-resource' });
 
     const { publish } = await mandatoryFields({
       link,
@@ -171,7 +171,7 @@ describe('TeamOutput', () => {
       new BackendError('example', validationResponse, 400),
     );
 
-    await renderPage({ teamId: '42', outputDocumentType: 'article' });
+    await renderPage({ teamId: '42', teamOutputDocumentType: 'article' });
     const { publish } = await mandatoryFields({}, true);
 
     await publish();
@@ -200,7 +200,7 @@ describe('TeamOutput', () => {
       new Error('Something went wrong'),
     );
 
-    await renderPage({ teamId: '42', outputDocumentType: 'article' });
+    await renderPage({ teamId: '42', teamOutputDocumentType: 'article' });
 
     const { publish } = await mandatoryFields({}, true);
 
@@ -225,7 +225,7 @@ describe('TeamOutput', () => {
 
     await renderPage({
       teamId: '42',
-      outputDocumentType: 'article',
+      teamOutputDocumentType: 'article',
       researchOutputData: { ...createResearchOutputResponse(), doi },
     });
 
@@ -249,26 +249,10 @@ describe('TeamOutput', () => {
     );
   });
 
-  it.each<{
-    param: OutputDocumentTypeParameter;
-    outputType: ResearchOutputDocumentType;
-  }>([
-    { param: 'article', outputType: 'Article' },
-    { param: 'bioinformatics', outputType: 'Bioinformatics' },
-    { param: 'dataset', outputType: 'Dataset' },
-    { param: 'lab-resource', outputType: 'Lab Resource' },
-    { param: 'protocol', outputType: 'Protocol' },
-    { param: 'unknown' as OutputDocumentTypeParameter, outputType: 'Article' },
-  ])('maps from $param to $outputType', ({ param, outputType }) => {
-    expect(paramOutputDocumentTypeToResearchOutputDocumentType(param)).toEqual(
-      outputType,
-    );
-  });
-
   async function renderPage({
     canCreateUpdate = true,
     teamId,
-    outputDocumentType = 'bioinformatics',
+    teamOutputDocumentType = 'bioinformatics',
     researchOutputData,
   }: RenderPageOptions) {
     const path =
@@ -292,7 +276,7 @@ describe('TeamOutput', () => {
                     network({})
                       .teams({})
                       .team({ teamId })
-                      .createOutput({ outputDocumentType }).$
+                      .createOutput({ teamOutputDocumentType }).$
                   }
                 >
                   <ResearchOutputPermissionsContext.Provider

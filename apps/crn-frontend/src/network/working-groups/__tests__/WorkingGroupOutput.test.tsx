@@ -12,7 +12,10 @@ import {
   ResearchOutputPermissionsContext,
   ToastContext,
 } from '@asap-hub/react-context';
-import { network, OutputDocumentTypeParameter } from '@asap-hub/routing';
+import {
+  network,
+  WorkingGroupOutputDocumentTypeParameter,
+} from '@asap-hub/routing';
 import {
   render,
   screen,
@@ -44,7 +47,7 @@ describe('WorkingGroupOutput', () => {
 
   interface RenderPageOptions {
     workingGroupId: string;
-    outputDocumentType?: OutputDocumentTypeParameter;
+    workingGroupOutputDocumentType?: WorkingGroupOutputDocumentTypeParameter;
     canCreateUpdate?: boolean;
     researchOutputData?: ResearchOutputResponse;
   }
@@ -52,7 +55,7 @@ describe('WorkingGroupOutput', () => {
   it('Renders the research output', async () => {
     await renderPage({
       workingGroupId: '42',
-      outputDocumentType: 'article',
+      workingGroupOutputDocumentType: 'article',
     });
 
     expect(
@@ -80,7 +83,10 @@ describe('WorkingGroupOutput', () => {
     const type = 'Preprint';
     const doi = '10.0777';
 
-    await renderPage({ workingGroupId, outputDocumentType: 'article' });
+    await renderPage({
+      workingGroupId,
+      workingGroupOutputDocumentType: 'article',
+    });
 
     const { publish } = await mandatoryFields({
       link,
@@ -144,7 +150,10 @@ describe('WorkingGroupOutput', () => {
       new BackendError('example', validationResponse, 400),
     );
 
-    await renderPage({ workingGroupId: '42', outputDocumentType: 'article' });
+    await renderPage({
+      workingGroupId: '42',
+      workingGroupOutputDocumentType: 'article',
+    });
     const { publish } = await mandatoryFields({}, true);
 
     await publish();
@@ -173,7 +182,10 @@ describe('WorkingGroupOutput', () => {
       new Error('Something went wrong'),
     );
 
-    await renderPage({ workingGroupId: '42', outputDocumentType: 'article' });
+    await renderPage({
+      workingGroupId: '42',
+      workingGroupOutputDocumentType: 'article',
+    });
 
     const { publish } = await mandatoryFields({}, true);
 
@@ -198,7 +210,7 @@ describe('WorkingGroupOutput', () => {
 
     await renderPage({
       workingGroupId: '42',
-      outputDocumentType: 'article',
+      workingGroupOutputDocumentType: 'article',
       researchOutputData: { ...createResearchOutputResponse(), doi },
     });
 
@@ -224,7 +236,7 @@ describe('WorkingGroupOutput', () => {
   async function renderPage({
     canCreateUpdate = true,
     workingGroupId = 'wg1',
-    outputDocumentType = 'article',
+    workingGroupOutputDocumentType = 'article',
   }: RenderPageOptions) {
     const path =
       network.template +
@@ -248,7 +260,7 @@ describe('WorkingGroupOutput', () => {
                     network({})
                       .workingGroups({})
                       .workingGroup({ workingGroupId })
-                      .createOutput({ outputDocumentType }).$
+                      .createOutput({ workingGroupOutputDocumentType }).$
                   }
                 >
                   <ResearchOutputPermissionsContext.Provider

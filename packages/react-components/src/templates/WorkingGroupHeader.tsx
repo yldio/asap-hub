@@ -194,7 +194,9 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
               >
                 {{
                   item: <>{article} Article</>,
-                  href: route.createOutput({ outputDocumentType: 'article' }).$,
+                  href: route.createOutput({
+                    workingGroupOutputDocumentType: 'article',
+                  }).$,
                 }}
                 {{
                   item: <>{bioinformatics} Bioinformatics</>,
@@ -214,7 +216,9 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
                 }}
                 {{
                   item: <>{crnReportIcon} CRN Report</>,
-                  href: '#',
+                  href: route.createOutput({
+                    workingGroupOutputDocumentType: 'report',
+                  }).$,
                 }}
               </DropdownButton>
             </div>

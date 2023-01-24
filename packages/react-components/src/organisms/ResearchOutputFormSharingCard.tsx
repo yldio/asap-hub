@@ -131,7 +131,7 @@ const ResearchOutputFormSharingCard: React.FC<
         labelIndicator={<GlobeIcon />}
         placeholder="https://example.com"
       />
-      {typeOptions.length && (
+      {!!typeOptions.length && (
         <LabeledDropdown<ResearchOutputType | ''>
           title="Type"
           subtitle="(required)"
@@ -151,7 +151,7 @@ const ResearchOutputFormSharingCard: React.FC<
           placeholder="Choose a type"
         />
       )}
-      {subtypeSuggestions.length > 0 && (
+      {!!subtypeSuggestions.length && (
         <LabeledDropdown
           title="Subtype"
           subtitle="(required)"

@@ -13,6 +13,7 @@ export const researchOutputDocumentTypes = [
   'Protocol',
   'Lab Resource',
   'Article',
+  'Report',
 ] as const;
 
 export type ResearchOutputDocumentType =
@@ -117,6 +118,7 @@ export const researchOutputDocumentTypeToType: Record<
     'Team meeting',
   ]),
   'Grant Document': new Set<ResearchOutputType>(['Proposal', 'Report']),
+  Report: new Set(),
 };
 
 export const isResearchOutputDocumentType = (
@@ -189,6 +191,7 @@ export const researchOutputToIdentifierType: Record<
   ],
   'Grant Document': [],
   Presentation: [],
+  Report: [],
 };
 
 export const sharingStatuses = ['Public', 'Network Only'] as const;

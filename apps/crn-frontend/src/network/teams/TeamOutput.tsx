@@ -6,7 +6,6 @@ import {
 } from '@asap-hub/frontend-utils';
 import {
   isValidationErrorResponse,
-  ResearchOutputDocumentType,
   ValidationErrorResponse,
   ResearchOutputResponse,
 } from '@asap-hub/model';
@@ -17,7 +16,7 @@ import {
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import {
   network,
-  OutputDocumentTypeParameter,
+  TeamOutputDocumentTypeParameter,
   useRouteParams,
   sharedResearch,
 } from '@asap-hub/routing';
@@ -36,33 +35,15 @@ import {
   useTeamSuggestions,
   usePutTeamResearchOutput,
 } from './state';
+import { paramOutputDocumentTypeToResearchOutputDocumentType } from '../../shared-research';
 
 const useParamOutputDocumentType = (
   teamId: string,
-): OutputDocumentTypeParameter => {
+): TeamOutputDocumentTypeParameter => {
   const route = network({}).teams({}).team({ teamId }).createOutput;
-  const { outputDocumentType } = useRouteParams(route);
-  return outputDocumentType;
+  const { teamOutputDocumentType } = useRouteParams(route);
+  return teamOutputDocumentType;
 };
-
-export function paramOutputDocumentTypeToResearchOutputDocumentType(
-  data: OutputDocumentTypeParameter,
-): ResearchOutputDocumentType {
-  switch (data) {
-    case 'article':
-      return 'Article';
-    case 'bioinformatics':
-      return 'Bioinformatics';
-    case 'dataset':
-      return 'Dataset';
-    case 'lab-resource':
-      return 'Lab Resource';
-    case 'protocol':
-      return 'Protocol';
-    default:
-      return 'Article';
-  }
-}
 
 type TeamOutputProps = {
   teamId: string;

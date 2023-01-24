@@ -514,7 +514,7 @@ __metadata:
     "@graphql-tools/schema": 8.5.1
     "@graphql-typed-document-node/core": 3.1.1
     "@types/node": 14.18.33
-    contentful-cli: 1.15.36
+    contentful-cli: 1.19.1
     contentful-management: ^10.19.3
     contentful-migrate: 0.17.0
     graphql: 15.8.0
@@ -16091,6 +16091,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"assert@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "assert@npm:2.0.0"
+  dependencies:
+    es6-object-assign: ^1.1.0
+    is-nan: ^1.2.1
+    object-is: ^1.0.1
+    util: ^0.12.0
+  checksum: bb91f181a86d10588ee16c5e09c280f9811373974c29974cbe401987ea34e966699d7989a812b0e19377b511ea0bc627f5905647ce569311824848ede382cae8
+  languageName: node
+  linkType: hard
+
 "assign-symbols@npm:^1.0.0":
   version: 1.0.0
   resolution: "assign-symbols@npm:1.0.0"
@@ -19107,9 +19119,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"contentful-cli@npm:1.15.36":
-  version: 1.15.36
-  resolution: "contentful-cli@npm:1.15.36"
+"contentful-cli@npm:1.19.1":
+  version: 1.19.1
+  resolution: "contentful-cli@npm:1.19.1"
   dependencies:
     ast-types: ^0.14.2
     bfj: ^7.0.2
@@ -19119,10 +19131,10 @@ __metadata:
     chalk: ^2.4.1
     cli-table3: ^0.6.0
     command-exists: ^1.2.7
-    contentful-export: ^7.17.16
+    contentful-export: ^7.19.0
     contentful-import: ^8.3.2
     contentful-management: ^10.0.0
-    contentful-migration: ^4.8.0
+    contentful-migration: ^4.12.5
     emojic: ^1.1.11
     execa: ^5.0.0
     figlet: ^1.2.0
@@ -19138,23 +19150,24 @@ __metadata:
     open: ^8.0.5
     path: ^0.12.7
     prettier: ^2.0.2
-    recast: ^0.21.1
+    recast: ^0.22.0
     rxjs: ^7.3.0
     shell-escape: ^0.2.0
     tar: ^6.0.1
     to-ast: ^1.0.0
     tree-kill: ^1.2.2
+    typescript: ^4.9.4
     wrap-ansi: ^7.0.0
     yargs: ~13.3.2
   bin:
     contentful: bin/contentful.js
-  checksum: 30fac79bfb82b3e94cfc317c02617c0549f4982ca05709c7452e143b8b91424398675080b99af48718d64c313d9d7a32f76dba12fce4323703881661ea5c05f9
+  checksum: 1be2603d5e3ff7e135954f523ccfb5521881579baad72ab745d7b6d23ac134df92593d43087bf05aaaa3ae52ddd862ed9ce0e3e70dba035ae3d763cb3ae8974d
   languageName: node
   linkType: hard
 
-"contentful-export@npm:^7.17.16":
-  version: 7.18.9
-  resolution: "contentful-export@npm:7.18.9"
+"contentful-export@npm:^7.19.0":
+  version: 7.19.20
+  resolution: "contentful-export@npm:7.19.20"
   dependencies:
     bfj: ^7.0.2
     bluebird: ^3.3.3
@@ -19164,17 +19177,17 @@ __metadata:
     contentful-management: ^10.0.0
     date-fns: ^2.28.0
     figures: ^3.2.0
-    jsonwebtoken: ^8.5.1
+    jsonwebtoken: ^9.0.0
     listr: ^0.14.1
     listr-update-renderer: ^0.5.0
     listr-verbose-renderer: ^0.6.0
     lodash.startcase: ^4.4.0
-    mkdirp: ^1.0.3
+    mkdirp: ^2.0.0
     node-fetch: ^2.6.7
     yargs: ^17.1.1
   bin:
     contentful-export: bin/contentful-export
-  checksum: 76b4715cf196a74b76f5145ec99dae6fcd54931d31adc72adbc1c21d79bf26a39422513331cfd96f89b47d7bc63e0af4439d83df67d48a1390295ea1d861c765
+  checksum: 67ce8c2bae46ac3db638c209f70a5c682deebe45f7094c15d7a0634fac8458f31103b215eb459304a8a188a9e442af56a82f028adf3a9f2ba4783f21e131d3dc
   languageName: node
   linkType: hard
 
@@ -19280,6 +19293,32 @@ __metadata:
   languageName: node
   linkType: hard
 
+"contentful-migration@npm:^4.12.5":
+  version: 4.12.7
+  resolution: "contentful-migration@npm:4.12.7"
+  dependencies:
+    "@hapi/hoek": ^10.0.1
+    axios: ^0.21.0
+    bluebird: ^3.7.2
+    callsites: ^3.1.0
+    cardinal: ^2.1.1
+    chalk: ^4.0.0
+    contentful-management: ^7.51.5
+    didyoumean2: ^5.0.0
+    https-proxy-agent: ^5.0.0
+    inquirer: ^8.1.2
+    joi: ^17.4.0
+    kind-of: ^6.0.3
+    listr2: ^3.13.5
+    lodash: ^4.17.15
+    uuid: ^8.3.2
+    yargs: ^15.3.1
+  bin:
+    contentful-migration: bin/contentful-migration
+  checksum: a9a2f41bae3b6b879ced7f32890ddfdc94c18e4a5a3320473cb6703f258f8d8c3c86c0eab3ec8a876029196734c528daadc7b4df70dc5089038efa1913707f92
+  languageName: node
+  linkType: hard
+
 "contentful-migration@npm:^4.5.0":
   version: 4.11.0
   resolution: "contentful-migration@npm:4.11.0"
@@ -19303,32 +19342,6 @@ __metadata:
   bin:
     contentful-migration: bin/contentful-migration
   checksum: c64db1637e85ae29833a41d975b70c6db49be4da26f9dfaa88f79246adf1b23504bef91a06b95ac42f94f2cc2c2184ec45849c8bbe107923fb1335161f06554a
-  languageName: node
-  linkType: hard
-
-"contentful-migration@npm:^4.8.0":
-  version: 4.9.4
-  resolution: "contentful-migration@npm:4.9.4"
-  dependencies:
-    "@hapi/hoek": ^10.0.1
-    axios: ^0.21.0
-    bluebird: ^3.7.2
-    callsites: ^3.1.0
-    cardinal: ^2.1.1
-    chalk: ^4.0.0
-    contentful-management: ^7.51.5
-    didyoumean2: ^5.0.0
-    https-proxy-agent: ^5.0.0
-    inquirer: ^8.1.2
-    joi: ^17.4.0
-    kind-of: ^6.0.3
-    listr2: ^3.13.5
-    lodash: ^4.17.15
-    uuid: ^8.3.2
-    yargs: ^15.3.1
-  bin:
-    contentful-migration: bin/contentful-migration
-  checksum: efbac7a189c06b57da79918d23bf52fd9bdd3a372c56a9aef4aed6735f2ac6e8072d452103102bbf30eb98de77e0ec3b720a8af931ee45ff4a95dd0d5098a59a
   languageName: node
   linkType: hard
 
@@ -21841,6 +21854,13 @@ __metadata:
     es5-ext: "npm:^0.10.35"
     es6-symbol: "npm:^3.1.1"
   checksum: 6e48b1c2d962c21dee604b3d9f0bc3889f11ed5a8b33689155a2065d20e3107e2a69cc63a71bd125aeee3a589182f8bbcb5c8a05b6a8f38fa4205671b6d09697
+  languageName: node
+  linkType: hard
+
+"es6-object-assign@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "es6-object-assign@npm:1.1.0"
+  checksum: 8d4fdf63484d78b5c64cacc2c2e1165bc7b6a64b739d2a9db6a4dc8641d99cc9efb433cdd4dc3d3d6b00bfa6ce959694e4665e3255190339945c5f33b692b5d8
   languageName: node
   linkType: hard
 
@@ -26751,6 +26771,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"is-nan@npm:^1.2.1":
+  version: 1.3.2
+  resolution: "is-nan@npm:1.3.2"
+  dependencies:
+    call-bind: ^1.0.0
+    define-properties: ^1.1.3
+  checksum: 5dfadcef6ad12d3029d43643d9800adbba21cf3ce2ec849f734b0e14ee8da4070d82b15fdb35138716d02587c6578225b9a22779cab34888a139cc43e4e3610a
+  languageName: node
+  linkType: hard
+
 "is-natural-number@npm:^4.0.1":
   version: 4.0.1
   resolution: "is-natural-number@npm:4.0.1"
@@ -28568,6 +28598,18 @@ __metadata:
     ms: "npm:^2.1.1"
     semver: "npm:^5.6.0"
   checksum: 93c9e3f23c59b758ac88ba15f4e4753b3749dfce7a6f7c40fb86663128a1e282db085eec852d4e0cbca4cefdcd3a8275ee255dbd08fcad0df26ad9f6e4cc853a
+  languageName: node
+  linkType: hard
+
+"jsonwebtoken@npm:^9.0.0":
+  version: 9.0.0
+  resolution: "jsonwebtoken@npm:9.0.0"
+  dependencies:
+    jws: ^3.2.2
+    lodash: ^4.17.21
+    ms: ^2.1.1
+    semver: ^7.3.8
+  checksum: b9181cecf9df99f1dc0253f91ba000a1aa4d91f5816d1608c0dba61a5623726a0bfe200b51df25de18c1a6000825d231ad7ce2788aa54fd48dcb760ad9eb9514
   languageName: node
   linkType: hard
 
@@ -30464,6 +30506,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mkdirp@npm:^2.0.0":
+  version: 2.1.3
+  resolution: "mkdirp@npm:2.1.3"
+  bin:
+    mkdirp: dist/cjs/src/bin.js
+  checksum: 5d7d7997e38a962e8b66dd4db1974bdcb841f084531ba8c9e1f3d52d71f5e6639677a96b2eb5d5940406d729a2153d820f396077ed3a6716058d3e75041dc1f2
+  languageName: node
+  linkType: hard
+
 "move-concurrently@npm:^1.0.1":
   version: 1.0.1
   resolution: "move-concurrently@npm:1.0.1"
@@ -31205,6 +31256,16 @@ __metadata:
   version: 1.10.3
   resolution: "object-inspect@npm:1.10.3"
   checksum: 9a56db2e0146fe94a7a9c78f677a2a28eec11d0ae13430e0bb2cb908fdd2d3feb7dbba7c638b9b7f88ace01d9a937227a8801709d13afb76613775aeb68632d3
+  languageName: node
+  linkType: hard
+
+"object-is@npm:^1.0.1":
+  version: 1.1.5
+  resolution: "object-is@npm:1.1.5"
+  dependencies:
+    call-bind: ^1.0.2
+    define-properties: ^1.1.3
+  checksum: 989b18c4cba258a6b74dc1d74a41805c1a1425bce29f6cabb50dcb1a6a651ea9104a1b07046739a49a5bb1bc49727bcb00efd5c55f932f6ea04ec8927a7901fe
   languageName: node
   linkType: hard
 
@@ -34866,15 +34927,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"recast@npm:^0.21.1":
-  version: 0.21.2
-  resolution: "recast@npm:0.21.2"
+"recast@npm:^0.22.0":
+  version: 0.22.0
+  resolution: "recast@npm:0.22.0"
   dependencies:
+    assert: ^2.0.0
     ast-types: 0.15.2
     esprima: ~4.0.0
     source-map: ~0.6.1
     tslib: ^2.0.1
-  checksum: ad2d50728ce0851fc3f95d4a7cd2d3c07cfb70d657a89bf8802b57885b5d9624cf283f1e514dcc2055cd5ee886aa934d3d2b28564de4d441584ae9e970befae7
+  checksum: b725e11ea79967a83dba93f3e20744c35de336e5a5fb539b0d5716ba0435caee1088ebddb6fddbb7e65f312727a79ec7782ca44d750e9313cbf260874e10270f
   languageName: node
   linkType: hard
 
@@ -39323,6 +39385,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"typescript@npm:^4.9.4":
+  version: 4.9.4
+  resolution: "typescript@npm:4.9.4"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: e782fb9e0031cb258a80000f6c13530288c6d63f1177ed43f770533fdc15740d271554cdae86701c1dd2c83b082cea808b07e97fd68b38a172a83dbf9e0d0ef9
+  languageName: node
+  linkType: hard
+
 "typescript@patch:typescript@4.8.4#~builtin<compat/typescript>":
   version: 4.8.4
   resolution: "typescript@patch:typescript@npm%3A4.8.4#~builtin<compat/typescript>::version=4.8.4&hash=701156"
@@ -39330,6 +39402,16 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 301459fc3eb3b1a38fe91bf96d98eb55da88a9cb17b4ef80b4d105d620f4d547ba776cc27b44cc2ef58b66eda23fe0a74142feb5e79a6fb99f54fc018a696afa
+  languageName: node
+  linkType: hard
+
+"typescript@patch:typescript@^4.9.4#~builtin<compat/typescript>":
+  version: 4.9.4
+  resolution: "typescript@patch:typescript@npm%3A4.9.4#~builtin<compat/typescript>::version=4.9.4&hash=701156"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 37f6e2c3c5e2aa5934b85b0fddbf32eeac8b1bacf3a5b51d01946936d03f5377fe86255d4e5a4ae628fd0cd553386355ad362c57f13b4635064400f3e8e05b9d
   languageName: node
   linkType: hard
 
@@ -39947,7 +40029,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"util@npm:0.12.5":
+"util@npm:0.12.5, util@npm:^0.12.0":
   version: 0.12.5
   resolution: "util@npm:0.12.5"
   dependencies:

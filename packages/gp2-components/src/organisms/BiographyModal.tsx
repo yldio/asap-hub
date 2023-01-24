@@ -15,8 +15,6 @@ const BiographyModal: React.FC<BiographyModalProps> = ({
 }) => {
   const [newBiography, setNewBiography] = useState(biography);
 
-  const checkDirty = () => newBiography !== (biography || '');
-
   return (
     <EditUserModal
       title="Biography"
@@ -27,7 +25,7 @@ const BiographyModal: React.FC<BiographyModalProps> = ({
         })
       }
       backHref={backHref}
-      dirty={checkDirty()}
+      dirty={newBiography !== biography}
     >
       {({ isSaving }) => (
         <LabeledTextArea
@@ -37,7 +35,7 @@ const BiographyModal: React.FC<BiographyModalProps> = ({
           required
           maxLength={2500}
           title="Background"
-          subtitle="(Required)"
+          subtitle="(required)"
           placeholder="Example: Randy is a Professor in the Department of Molecule and Celluar Biology at the University of California and an Investigator of the Howard Hughes Medical Institute. He studied.."
           getValidationMessage={() => 'Please add your biography'}
         />

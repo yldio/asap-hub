@@ -30,13 +30,17 @@ describe('BiographyModal', () => {
     );
   });
 
-  it('renders biography', () => {
-    renderModal();
-    expect(
-      screen.getByRole('textbox', {
-        name: 'Background (Required)',
-      }),
-    ).toBeVisible();
+  it.each`
+    biography     | expected
+    ${undefined}  | ${''}
+    ${'some bio'} | ${'some bio'}
+  `('renders biography with value "$expected"', ({ biography, expected }) => {
+    renderModal({ biography });
+    const textbox = screen.getByRole('textbox', {
+      name: /Background/i,
+    });
+    expect(textbox).toBeVisible();
+    expect(textbox).toHaveValue(expected);
   });
 
   it('calls onSave with the right arguments', async () => {
@@ -63,7 +67,7 @@ describe('BiographyModal', () => {
 
     userEvent.type(
       screen.getByRole('textbox', {
-        name: 'Background (Required)',
+        name: /Background/i,
       }),
       biography,
     );

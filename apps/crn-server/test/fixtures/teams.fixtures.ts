@@ -221,7 +221,4 @@ export const getInputTeam = (): InputTeam['data'] => ({
       },
     ],
   },
-  outputs: {
-    iv: [],
-  },
 });

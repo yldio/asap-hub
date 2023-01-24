@@ -23,9 +23,9 @@ export const FETCH_REMINDER_DATA = gql`
         addedDate
         documentType
         title
-      }
-      referencingTeamsContents {
-        id
+        teams {
+          id
+        }
       }
     }
     queryEventsContents(filter: $eventFilter) {

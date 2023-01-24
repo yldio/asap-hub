@@ -141,7 +141,6 @@ export class TeamSquidexDataProvider implements TeamDataProvider {
       inactiveSince: { iv: input.inactiveSince || null },
       expertiseAndResourceTags: { iv: input.expertiseAndResourceTags },
       projectTitle: { iv: input.projectTitle },
-      outputs: { iv: input.researchOutputIds || [] },
       projectSummary: { iv: input.projectSummary || null },
       proposal: { iv: [] },
       tools: { iv: input.tools || null },

@@ -43,7 +43,7 @@ type WorkingGroupsType = Pick<gp2Model.WorkingGroupResponse, 'id' | 'title'>[];
 
 type LabelArrayType = ProjectsType | WorkingGroupsType;
 
-function getLabel(array: LabelArrayType, filter: string) {
+function getLabelWithArray(array: LabelArrayType, filter: string) {
   const index = array.findIndex((value) => value.id === filter);
   return array[index].title;
 }
@@ -56,11 +56,11 @@ const mapFilters = (
   projects: ProjectsType,
   workingGroups: WorkingGroupsType,
 ) => {
-  const mapping: FilterMappingType = {
+  const getLabel: FilterMappingType = {
     keywords: (filter: string) => filter,
     regions: (filter: string) => filter,
-    projects: (filter: string) => getLabel(projects, filter),
-    workingGroups: (filter: string) => getLabel(workingGroups, filter),
+    projects: (filter: string) => getLabelWithArray(projects, filter),
+    workingGroups: (filter: string) => getLabelWithArray(workingGroups, filter),
   };
 
   return Object.entries(filters)
@@ -68,7 +68,7 @@ const mapFilters = (
       filterList.map((filterId) => ({
         id: filterId,
         typeOfFilter: typeOfFilter as FiltersType,
-        label: mapping[typeOfFilter](filterId),
+        label: getLabel[typeOfFilter](filterId),
       })),
     )
     .flat();

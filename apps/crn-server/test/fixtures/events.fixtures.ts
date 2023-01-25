@@ -125,7 +125,7 @@ export const getSquidexGraphqlEventSpeakerWithUser = (): NonNullable<
 > => ({
   team: [
     {
-      id: 'team-id-4',
+      id: 'team-id-3',
       flatData: {
         displayName: 'The team three',
         inactiveSince: '2022-10-24T11:00:00Z',

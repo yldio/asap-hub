@@ -25,12 +25,12 @@ const containerStyles = css({
 const OnboardingPage: React.FC<OnboardingPageProps> = ({
   children,
   steps,
-  ...otherProps
+  ...footerProps
 }) => (
   <article>
-    <OnboardingPageHeader {...otherProps} steps={steps} />
+    <OnboardingPageHeader steps={steps} />
     <main css={containerStyles}>{children}</main>
-    <OnboardingPageFooter {...otherProps} />
+    <OnboardingPageFooter {...footerProps} />
   </article>
 );
 

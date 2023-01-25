@@ -1,5 +1,4 @@
 import {
-  ResearchOutputDocumentType,
   ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
   ResearchTagResponse,
@@ -19,20 +18,6 @@ import {
   ResearchOutputIdentifierProps,
 } from './ResearchOutputIdentifier';
 
-type ResearchOutputReportType =
-  | ({
-      onChangeLabCatalogNumber?: (value: string) => void;
-      documentType: ResearchOutputDocumentType;
-    } & Omit<ResearchOutputIdentifierProps, 'required'>)
-  | {
-      onChangeLabCatalogNumber?: undefined;
-      documentType?: undefined;
-      identifier?: undefined;
-      identifierType?: undefined;
-      setIdentifier?: undefined;
-      setIdentifierType?: undefined;
-    };
-
 type ResearchOutputExtraInformationProps = Pick<
   ResearchOutputPostRequest,
   | 'tags'
@@ -50,9 +35,10 @@ type ResearchOutputExtraInformationProps = Pick<
   onChangeMethods?: (value: string[]) => void;
   onChangeOrganisms?: (value: string[]) => void;
   onChangeEnvironments?: (value: string[]) => void;
+  onChangeLabCatalogNumber?: (value: string) => void;
   isSaving: boolean;
   researchTags: ResearchTagResponse[];
-} & ResearchOutputReportType;
+} & Omit<ResearchOutputIdentifierProps, 'required'>;
 
 const ResearchOutputExtraInformationCard: React.FC<
   ResearchOutputExtraInformationProps
@@ -161,7 +147,7 @@ const ResearchOutputExtraInformationCard: React.FC<
       <Link href={mailToSupport({ subject: 'New keyword' }).toString()}>
         Ask ASAP to add a new keyword
       </Link>
-      {documentType && (
+      {documentType !== 'Report' && (
         <>
           <ResearchOutputIdentifier
             documentType={documentType}

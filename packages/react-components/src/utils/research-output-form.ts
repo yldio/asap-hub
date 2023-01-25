@@ -130,7 +130,6 @@ export type ResearchOutputPayload = {
   organisms: string[];
   environments: string[];
   subtype?: string;
-  publishingEntity: ResearchOutputPublishingEntities;
 };
 
 export const getPayload = ({
@@ -155,8 +154,10 @@ export const getPayload = ({
   organisms,
   environments,
   subtype,
-  publishingEntity,
-}: ResearchOutputPayload): ResearchOutputPostRequest => ({
+}: ResearchOutputPayload): Omit<
+  ResearchOutputPostRequest,
+  'publishingEntity'
+> => ({
   ...createIdentifierField(identifierType, identifier),
   documentType,
   tags,
@@ -179,13 +180,9 @@ export const getPayload = ({
   sharingStatus,
   publishDate: publishDate?.toISOString(),
   workingGroups: [],
-  labCatalogNumber:
-    documentType === 'Lab Resource' && labCatalogNumber !== ''
-      ? labCatalogNumber
-      : undefined,
+  labCatalogNumber,
   methods,
   organisms,
   environments,
   subtype,
-  publishingEntity,
 });

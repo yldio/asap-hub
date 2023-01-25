@@ -1,15 +1,14 @@
+import { clearAjvErrorForPath, Frame } from '@asap-hub/frontend-utils';
 import {
-  BackendError,
-  clearAjvErrorForPath,
-  Frame,
-  validationErrorsAreSupported,
-} from '@asap-hub/frontend-utils';
-import {
-  isValidationErrorResponse,
   ValidationErrorResponse,
   ResearchOutputResponse,
+  researchOutputDocumentTypeToType,
 } from '@asap-hub/model';
-import { NotFoundPage, ResearchOutputForm } from '@asap-hub/react-components';
+import {
+  NotFoundPage,
+  ResearchOutputForm,
+  ResearchOutputHeader,
+} from '@asap-hub/react-components';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import {
   network,
@@ -20,10 +19,6 @@ import {
 import React, { useContext, useState } from 'react';
 import researchSuggestions from './research-suggestions';
 import {
-  ResearchOutputPostRequest,
-  ResearchOutputPutRequest,
-} from '../../../../../packages/model/src/research-output';
-import {
   useAuthorSuggestions,
   useLabSuggestions,
   usePostResearchOutput,
@@ -32,7 +27,10 @@ import {
   useTeamSuggestions,
   usePutTeamResearchOutput,
 } from './state';
-import { paramOutputDocumentTypeToResearchOutputDocumentType } from '../../shared-research';
+import {
+  handleError,
+  paramOutputDocumentTypeToResearchOutputDocumentType,
+} from '../../shared-research';
 
 const useParamOutputDocumentType = (
   teamId: string,
@@ -73,25 +71,14 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   const getTeamSuggestions = useTeamSuggestions();
   const researchTags = useResearchTags();
 
-  const handleError = (error: unknown) => {
-    if (error instanceof BackendError) {
-      const { response } = error;
-      if (
-        isValidationErrorResponse(response) &&
-        validationErrorsAreSupported(response, ['/link', '/title'])
-      ) {
-        setErrors(response.data);
-        return;
-      }
-    }
-    throw error;
-  };
-
   if (canCreateUpdate && team) {
     return (
       <Frame title="Share Research Output">
+        <ResearchOutputHeader
+          documentType={documentType}
+          publishingEntity={'Team'}
+        />
         <ResearchOutputForm
-          team={team}
           tagSuggestions={researchSuggestions}
           documentType={documentType}
           getLabSuggestions={getLabSuggestions}
@@ -112,13 +99,28 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
           }
           researchOutputData={researchOutputData}
           isEditMode={isEditMode}
-          publishingEntity="Team"
-          onSave={(
-            output: ResearchOutputPostRequest | ResearchOutputPutRequest,
-          ) =>
+          typeDescription={`Select the option that applies to this ${documentType.toLowerCase()}.`}
+          typeOptions={[
+            ...researchOutputDocumentTypeToType[documentType].values(),
+          ]}
+          urlRequired={documentType !== 'Lab Resource'}
+          selectedTeams={(researchOutputData?.teams ?? [team]).map(
+            (selectedTeam, index) => ({
+              label: selectedTeam.displayName,
+              value: selectedTeam.id,
+              isFixed: index === 0,
+            }),
+          )}
+          onSave={(output) =>
             isEditMode
-              ? updateResearchOutput(output).catch(handleError)
-              : createResearchOutput(output).catch(handleError)
+              ? updateResearchOutput({
+                  ...output,
+                  publishingEntity: 'Team',
+                }).catch(handleError(['/link', '/title'], setErrors))
+              : createResearchOutput({
+                  ...output,
+                  publishingEntity: 'Team',
+                }).catch(handleError(['/link', '/title'], setErrors))
           }
         />
       </Frame>

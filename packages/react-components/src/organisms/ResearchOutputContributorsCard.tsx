@@ -31,7 +31,6 @@ type ResearchOutputContributorsProps = {
 
   readonly isSaving: boolean;
   isEditMode?: boolean;
-  authorsSubtitle?: string;
   authorsRequired?: boolean;
 };
 
@@ -49,7 +48,6 @@ const ResearchOutputContributorsCard: React.FC<
   onChangeTeams = noop,
   isSaving,
   isEditMode,
-  authorsSubtitle = '(optional)',
   authorsRequired,
 }) => (
   <FormCard title="Who were the contributors?">
@@ -82,7 +80,7 @@ const ResearchOutputContributorsCard: React.FC<
     <AuthorSelect
       title="Authors"
       description=""
-      subtitle={authorsSubtitle}
+      subtitle={authorsRequired ? '(required)' : '(optional)'}
       enabled={!isSaving}
       placeholder="Start typing..."
       loadOptions={getAuthorSuggestions}

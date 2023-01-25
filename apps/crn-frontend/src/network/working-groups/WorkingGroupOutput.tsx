@@ -1,15 +1,14 @@
+import { clearAjvErrorForPath, Frame } from '@asap-hub/frontend-utils';
 import {
-  BackendError,
-  clearAjvErrorForPath,
-  Frame,
-  validationErrorsAreSupported,
-} from '@asap-hub/frontend-utils';
-import {
+  researchOutputDocumentTypeToType,
   ResearchOutputResponse,
-  isValidationErrorResponse,
   ValidationErrorResponse,
 } from '@asap-hub/model';
-import { NotFoundPage, ResearchOutputForm } from '@asap-hub/react-components';
+import {
+  NotFoundPage,
+  ResearchOutputForm,
+  ResearchOutputHeader,
+} from '@asap-hub/react-components';
 import { network, useRouteParams } from '@asap-hub/routing';
 import React, { useContext, useState } from 'react';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
@@ -21,7 +20,10 @@ import {
   useTeamSuggestions,
 } from './state';
 import { usePostResearchOutput, useResearchTags } from '../teams/state';
-import { paramOutputDocumentTypeToResearchOutputDocumentType } from '../../shared-research';
+import {
+  handleError,
+  paramOutputDocumentTypeToResearchOutputDocumentType,
+} from '../../shared-research';
 
 type WorkingGroupOutputProps = {
   workingGroupId: string;
@@ -48,23 +50,14 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   const documentType = paramOutputDocumentTypeToResearchOutputDocumentType(
     workingGroupOutputDocumentType,
   );
-  const handleError = (error: unknown) => {
-    if (error instanceof BackendError) {
-      const { response } = error;
-      if (
-        isValidationErrorResponse(response) &&
-        validationErrorsAreSupported(response, ['/link', '/title'])
-      ) {
-        setErrors(response.data);
-        return;
-      }
-    }
-    throw error;
-  };
 
   if (canCreateUpdate && workingGroup) {
     return (
       <Frame title="Share Working Group Research Output">
+        <ResearchOutputHeader
+          documentType={documentType}
+          publishingEntity={'Working Group'}
+        />
         <ResearchOutputForm
           tagSuggestions={researchSuggestions}
           documentType={documentType}
@@ -78,6 +71,10 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
               })),
             )
           }
+          typeOptions={[
+            ...researchOutputDocumentTypeToType[documentType].values(),
+          ]}
+          selectedTeams={[]}
           getTeamSuggestions={getTeamSuggestions}
           researchTags={researchTags}
           researchOutputData={researchOutputData}
@@ -86,8 +83,13 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
             setErrors(clearAjvErrorForPath(errors, instancePath))
           }
           isEditMode={false}
-          publishingEntity="Working Group"
-          onSave={(output) => createResearchOutput(output).catch(handleError)}
+          onSave={(output) =>
+            createResearchOutput({
+              ...output,
+              publishingEntity: 'Working Group',
+            }).catch(handleError(['/link', '/title'], setErrors))
+          }
+          descriptionTip="Add an abstract or a summary that describes this work."
         />
       </Frame>
     );

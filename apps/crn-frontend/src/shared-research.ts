@@ -2,8 +2,16 @@ import {
   TeamOutputDocumentTypeParameter,
   WorkingGroupOutputDocumentTypeParameter,
 } from '@asap-hub/routing';
+import {
+  BackendError,
+  validationErrorsAreSupported,
+} from '@asap-hub/frontend-utils';
 
-import { ResearchOutputDocumentType } from '@asap-hub/model';
+import {
+  isValidationErrorResponse,
+  ResearchOutputDocumentType,
+  ValidationErrorResponse,
+} from '@asap-hub/model';
 
 export function paramOutputDocumentTypeToResearchOutputDocumentType(
   data:
@@ -27,3 +35,22 @@ export function paramOutputDocumentTypeToResearchOutputDocumentType(
       return 'Article';
   }
 }
+
+export const handleError =
+  (
+    supportedErrors: string[],
+    setErrors: (errors: ValidationErrorResponse['data']) => void,
+  ) =>
+  (error: unknown) => {
+    if (error instanceof BackendError) {
+      const { response } = error;
+      if (
+        isValidationErrorResponse(response) &&
+        validationErrorsAreSupported(response, supportedErrors)
+      ) {
+        setErrors(response.data);
+        return;
+      }
+    }
+    throw error;
+  };

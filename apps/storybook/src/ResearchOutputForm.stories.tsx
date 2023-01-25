@@ -1,9 +1,9 @@
 import {
   createResearchOutputResponse,
-  createTeamResponse,
   createUserResponse,
   researchTagMethodResponse,
 } from '@asap-hub/fixtures';
+import { researchOutputDocumentTypeToType } from '@asap-hub/model';
 import { ResearchOutputForm } from '@asap-hub/react-components';
 import { StaticRouter } from 'react-router-dom';
 
@@ -34,7 +34,8 @@ export const Normal = () => (
           }, 1000);
         })
       }
-      team={createTeamResponse()}
+      selectedTeams={[]}
+      typeOptions={[...researchOutputDocumentTypeToType['Article'].values()]}
       getTeamSuggestions={() =>
         new Promise((resolve) => {
           setTimeout(() => {
@@ -75,7 +76,8 @@ export const EditMode = () => (
           }, 1000);
         })
       }
-      team={createTeamResponse()}
+      selectedTeams={[]}
+      typeOptions={[...researchOutputDocumentTypeToType['Dataset'].values()]}
       getTeamSuggestions={() =>
         new Promise((resolve) => {
           setTimeout(() => {

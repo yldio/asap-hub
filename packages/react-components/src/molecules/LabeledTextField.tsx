@@ -55,7 +55,7 @@ const LabeledTextField: React.FC<LabeledTextFieldProps> = ({
         <span
           css={[
             descriptionStyles,
-            showDescriptionSpace && forceDescriptionStyles,
+            ...(showDescriptionSpace ? [forceDescriptionStyles] : []),
           ]}
         >
           {description}

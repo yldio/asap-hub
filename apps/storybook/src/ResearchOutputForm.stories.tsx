@@ -35,7 +35,7 @@ export const Normal = () => (
         })
       }
       selectedTeams={[]}
-      typeOptions={[...researchOutputDocumentTypeToType['Article'].values()]}
+      typeOptions={[...researchOutputDocumentTypeToType.Article.values()]}
       getTeamSuggestions={() =>
         new Promise((resolve) => {
           setTimeout(() => {
@@ -44,7 +44,6 @@ export const Normal = () => (
         })
       }
       researchTags={[researchTagMethodResponse]}
-      isEditMode={false}
     />
   </StaticRouter>
 );
@@ -77,7 +76,7 @@ export const EditMode = () => (
         })
       }
       selectedTeams={[]}
-      typeOptions={[...researchOutputDocumentTypeToType['Dataset'].values()]}
+      typeOptions={[...researchOutputDocumentTypeToType.Dataset.values()]}
       getTeamSuggestions={() =>
         new Promise((resolve) => {
           setTimeout(() => {
@@ -86,7 +85,6 @@ export const EditMode = () => (
         })
       }
       researchTags={[researchTagMethodResponse]}
-      isEditMode={true}
     />
   </StaticRouter>
 );

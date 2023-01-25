@@ -82,7 +82,6 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
           clearServerValidationError={(instancePath: string) =>
             setErrors(clearAjvErrorForPath(errors, instancePath))
           }
-          isEditMode={false}
           onSave={(output) =>
             createResearchOutput({
               ...output,

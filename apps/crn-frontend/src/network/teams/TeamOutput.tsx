@@ -49,7 +49,6 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   researchOutputData,
 }) => {
   const paramOutputDocumentType = useParamOutputDocumentType(teamId);
-  const isEditMode = !!researchOutputData;
   const { researchOutputId } = useRouteParams(
     sharedResearch({}).researchOutput,
   );
@@ -98,7 +97,6 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
             setErrors(clearAjvErrorForPath(errors, instancePath))
           }
           researchOutputData={researchOutputData}
-          isEditMode={isEditMode}
           typeDescription={`Select the option that applies to this ${documentType.toLowerCase()}.`}
           typeOptions={[
             ...researchOutputDocumentTypeToType[documentType].values(),
@@ -112,12 +110,12 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
             }),
           )}
           onSave={(output) =>
-            isEditMode
-              ? updateResearchOutput({
+            !researchOutputData
+              ? createResearchOutput({
                   ...output,
                   publishingEntity: 'Team',
                 }).catch(handleError(['/link', '/title'], setErrors))
-              : createResearchOutput({
+              : updateResearchOutput({
                   ...output,
                   publishingEntity: 'Team',
                 }).catch(handleError(['/link', '/title'], setErrors))

@@ -1,16 +1,18 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { ComponentProps } from 'react';
 import FilterPill from '../FilterPill';
 
 describe('FilterPill', () => {
-  const value = {
-    label: 'A pill',
-    id: 'pill-0',
+  const value: ComponentProps<typeof FilterPill>['value'] = {
+    label: 'Asia',
+    typeOfFilter: 'regions',
+    id: '0',
   };
   const onRemove = jest.fn();
   it('should render the pill', () => {
     render(<FilterPill value={value} onRemove={onRemove} />);
-    expect(screen.getByText('A pill')).toBeVisible();
+    expect(screen.getByText('Asia')).toBeVisible();
   });
 
   it("shows the remove button and it's clickable", () => {

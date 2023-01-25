@@ -9,7 +9,8 @@ export default {
 
 const props: ComponentProps<typeof FilterPill> = {
   value: {
-    id: 'region-Africa',
+    id: '0',
+    typeOfFilter: 'regions',
     label: 'Africa',
   },
   onRemove: noop,

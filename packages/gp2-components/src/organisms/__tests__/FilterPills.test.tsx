@@ -1,33 +1,32 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { ComponentProps } from 'react';
 import FilterPills from '../FilterPills';
 
 describe('FilterPills', () => {
-  const values = [
+  const values: ComponentProps<typeof FilterPills>['values'] = [
     {
-      label: 'A pill',
-      id: 'pill-0',
+      label: 'Asia',
+      typeOfFilter: 'regions',
+      id: '0',
     },
     {
-      label: 'A second pill',
-      id: 'pill-1',
+      label: 'Africa',
+      typeOfFilter: 'regions',
+      id: '1',
     },
   ];
   const onRemove = jest.fn();
   it('should render all the pills', () => {
     render(<FilterPills values={values} onRemove={onRemove} />);
-    expect(screen.getByText('A pill')).toBeVisible();
-    expect(screen.getByText('A second pill')).toBeVisible();
+    expect(screen.getByText('Asia')).toBeVisible();
+    expect(screen.getByText('Africa')).toBeVisible();
   });
   it("shows the remove button for the second pill and it's clickable", () => {
     render(<FilterPills values={values} onRemove={onRemove} />);
-    const onRemoveButton =
-      screen.getByText('A second pill').nextElementSibling!;
+    const onRemoveButton = screen.getByText('Africa').nextElementSibling!;
     expect(onRemoveButton).toBeVisible();
     userEvent.click(onRemoveButton);
-    expect(onRemove).toBeCalledWith({
-      label: 'A second pill',
-      id: 'pill-1',
-    });
+    expect(onRemove).toBeCalledWith(values[1]);
   });
 });

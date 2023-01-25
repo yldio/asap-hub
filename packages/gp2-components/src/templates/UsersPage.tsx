@@ -27,9 +27,11 @@ type UsersPageProps = ComponentProps<typeof FilterSearchExport> & {
     'filters' | 'projects' | 'workingGroups'
   >;
 
-type FiltersType = ComponentProps<
-  typeof FilterPills
->['values'][number]['typeOfFilter'];
+type FilterPillValueList = ComponentProps<typeof FilterPills>['values'];
+
+type FilterPillValue = FilterPillValueList[number];
+
+type FiltersType = FilterPillValue['typeOfFilter'];
 
 type FilterMappingType = {
   [key: string]: (filter: string) => string;
@@ -40,14 +42,6 @@ type ProjectsType = Pick<gp2Model.ProjectResponse, 'id' | 'title'>[];
 type WorkingGroupsType = Pick<gp2Model.WorkingGroupResponse, 'id' | 'title'>[];
 
 type LabelArrayType = ProjectsType | WorkingGroupsType;
-
-type ValueProps = ComponentProps<typeof FilterPills>['values'][number];
-
-type ValuePropsList = ComponentProps<typeof FilterPills>['values'];
-
-const containerStyles = css({
-  marginTop: rem(48),
-});
 
 function getLabel(array: LabelArrayType, filter: string) {
   const index = array.findIndex((value) => value.id === filter);
@@ -70,7 +64,7 @@ const mapFilters = (
   };
 
   return Object.entries(filters)
-    .map<ValuePropsList>(([typeOfFilter, filterList]) =>
+    .map<FilterPillValueList>(([typeOfFilter, filterList]) =>
       filterList.map((filterId) => ({
         id: filterId,
         typeOfFilter: typeOfFilter as FiltersType,
@@ -79,6 +73,10 @@ const mapFilters = (
     )
     .flat();
 };
+
+const containerStyles = css({
+  marginTop: rem(48),
+});
 
 const UsersPage: React.FC<UsersPageProps> = ({
   children,
@@ -99,7 +97,7 @@ const UsersPage: React.FC<UsersPageProps> = ({
   const onBackClick = () => changeLocation(backHref);
 
   const onRemove = useCallback(
-    (value: ValueProps) => {
+    (value: FilterPillValue) => {
       const { id, typeOfFilter } = value;
       const newFilter = (filters[typeOfFilter] || []).filter(
         (filter) => filter !== id,

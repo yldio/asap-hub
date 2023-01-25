@@ -10,11 +10,13 @@ export default {
 const props: ComponentProps<typeof FilterPills> = {
   values: [
     {
-      id: 'region-Africa',
+      id: '0',
+      typeOfFilter: 'regions',
       label: 'Africa',
     },
     {
-      id: 'region-Asia',
+      id: '1',
+      typeOfFilter: 'regions',
       label: 'Asia',
     },
   ],

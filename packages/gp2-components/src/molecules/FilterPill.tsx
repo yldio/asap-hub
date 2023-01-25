@@ -55,7 +55,7 @@ interface FilterPillProps {
 
 const FilterPill: React.FC<FilterPillProps> = ({ value, onRemove }) => (
   <div css={pillStyles}>
-    <div>{value.label}</div>
+    {value.label}
     <button css={iconStyles} onClick={() => onRemove(value)}>
       {crossSmallIcon}
     </button>

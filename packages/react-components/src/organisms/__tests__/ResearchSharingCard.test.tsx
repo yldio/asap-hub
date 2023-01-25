@@ -18,6 +18,7 @@ const props: ComponentProps<typeof ResearchOutputFormSharingCard> = {
   usedInPublication: 'Not Sure',
   sharingStatus: 'Network Only',
   researchTags: [],
+  typeOptions: [],
 };
 it('renders the card with provided values', () => {
   render(

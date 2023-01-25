@@ -44,7 +44,7 @@ type ResearchOutputFormSharingCardProps = Pick<
   typeDescription?: string;
   descriptionTip?: string;
   urlRequired?: boolean;
-  typeOptions?: ResearchOutputType[];
+  typeOptions: ResearchOutputType[];
 };
 
 export const getPublishDateValidationMessage = (e: ValidityState): string => {
@@ -70,7 +70,7 @@ const ResearchOutputFormSharingCard: React.FC<
   publishDate,
   researchTags,
   serverValidationErrors = [],
-  typeDescription,
+  typeDescription = 'Select the type that matches your output the best.',
   descriptionTip,
   urlRequired,
   clearServerValidationError = noop,

@@ -1,15 +1,10 @@
 import { css } from '@emotion/react';
 import {
   DecisionOption,
-  ResearchOutputDocumentType,
-  researchOutputDocumentTypeToType,
   ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
-  ResearchOutputPublishingEntities,
-  ResearchOutputPutRequest,
   ResearchOutputResponse,
   ResearchTagResponse,
-  TeamResponse,
 } from '@asap-hub/model';
 import { sharedResearch } from '@asap-hub/routing';
 import React, { ComponentProps, useState } from 'react';
@@ -27,7 +22,6 @@ import ResearchOutputContributorsCard from '../organisms/ResearchOutputContribut
 import { usePushFromHere } from '../routing';
 import {
   noop,
-  getTeamsState,
   getDecision,
   getPublishDate,
   getIdentifierType,
@@ -36,21 +30,29 @@ import {
 
 type ResearchOutputFormProps = Pick<
   ComponentProps<typeof ResearchOutputFormSharingCard>,
-  'serverValidationErrors' | 'clearServerValidationError'
+  | 'serverValidationErrors'
+  | 'clearServerValidationError'
+  | 'descriptionTip'
+  | 'typeOptions'
+  | 'typeDescription'
+  | 'urlRequired'
 > &
   Pick<
     ComponentProps<typeof ResearchOutputContributorsCard>,
-    'getLabSuggestions' | 'getAuthorSuggestions' | 'getTeamSuggestions'
+    | 'getLabSuggestions'
+    | 'getAuthorSuggestions'
+    | 'getTeamSuggestions'
+    | 'authorsRequired'
   > & {
     onSave: (
-      output: ResearchOutputPostRequest | ResearchOutputPutRequest,
+      output: Omit<ResearchOutputPostRequest, 'publishingEntity'>,
     ) => Promise<ResearchOutputResponse | void>;
     researchTags: ResearchTagResponse[];
-    documentType: ResearchOutputDocumentType;
-    team?: TeamResponse;
+    selectedTeams: NonNullable<
+      ComponentProps<typeof ResearchOutputContributorsCard>['teams']
+    >;
     researchOutputData?: ResearchOutputResponse;
     isEditMode: boolean;
-    publishingEntity?: ResearchOutputPublishingEntities;
     tagSuggestions: string[];
   } & ComponentProps<typeof ResearchOutputHeader>;
 
@@ -98,14 +100,18 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   documentType,
   researchOutputData,
   isEditMode,
-  publishingEntity = 'Team',
   onSave,
   tagSuggestions,
+  typeDescription,
+  descriptionTip,
+  urlRequired = true,
+  authorsRequired = false,
+  typeOptions,
+  selectedTeams = [],
   getLabSuggestions = noop,
   getTeamSuggestions = noop,
   getAuthorSuggestions = noop,
   researchTags,
-  team,
   serverValidationErrors,
   clearServerValidationError,
 }) => {
@@ -143,9 +149,12 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     })) || [],
   );
 
-  const [teams, setTeams] = useState<
-    NonNullable<ComponentProps<typeof ResearchOutputContributorsCard>['teams']>
-  >(getTeamsState({ team, publishingEntity, researchOutputData }));
+  const [teams, setTeams] =
+    useState<
+      NonNullable<
+        ComponentProps<typeof ResearchOutputContributorsCard>['teams']
+      >
+    >(selectedTeams);
 
   const [description, setDescription] = useState<
     ResearchOutputPostRequest['description']
@@ -222,144 +231,122 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     organisms,
     environments,
     subtype,
-    publishingEntity,
   });
 
   const [remotePayload] = useState(currentPayload);
 
   return (
-    <>
-      <ResearchOutputHeader
-        documentType={documentType}
-        publishingEntity={publishingEntity}
-      />
-      <main css={mainStyles}>
-        <Form<ResearchOutputResponse>
-          serverErrors={serverValidationErrors}
-          dirty={!equal(remotePayload, currentPayload)}
-          onSave={() => onSave(currentPayload)}
-        >
-          {({ isSaving, onSave: handleSave, onCancel: handleCancel }) => (
-            <div css={contentStyles}>
-              <ResearchOutputFormSharingCard
-                serverValidationErrors={serverValidationErrors}
-                clearServerValidationError={clearServerValidationError}
-                isSaving={isSaving}
-                description={description}
-                onChangeDescription={setDescription}
-                title={title}
-                onChangeTitle={setTitle}
-                link={link}
-                onChangeLink={setLink}
-                type={type}
-                onChangeType={(newType) => {
-                  setType(newType);
-                  setMethods([]);
-                  setOrganisms([]);
-                  setEnvironments([]);
-                  setSubtype(undefined);
-                }}
-                subtype={subtype}
-                onChangeSubtype={setSubtype}
-                researchTags={filteredResearchTags}
-                asapFunded={asapFunded}
-                onChangeAsapFunded={setAsapFunded}
-                usedInPublication={usedInPublication}
-                onChangeUsedInPublication={setUsedInPublication}
-                sharingStatus={sharingStatus}
-                onChangeSharingStatus={setSharingStatus}
-                publishDate={publishDate}
-                onChangePublishDate={(date) =>
-                  setPublishDate(date ? new Date(date) : undefined)
-                }
-                typeOptions={Array.from(
-                  researchOutputDocumentTypeToType[documentType],
-                )}
-                urlRequired={documentType !== 'Lab Resource'}
-                typeDescription={
-                  publishingEntity === 'Team'
-                    ? `Select the option that applies to this ${documentType.toLowerCase()}.`
-                    : 'Select the type that matches your output the best.'
-                }
-                descriptionTip={`${
-                  publishingEntity === 'Team'
-                    ? ''
-                    : 'Add an abstract or a summary that describes this work.'
-                }`}
-              />
-              <ResearchOutputExtraInformationCard
-                documentType={documentType}
-                isSaving={isSaving}
-                researchTags={filteredResearchTags}
-                tagSuggestions={tagSuggestions.map((suggestion) => ({
-                  label: suggestion,
-                  value: suggestion,
-                }))}
-                tags={tags}
-                onChangeTags={setTags}
-                usageNotes={usageNotes}
-                onChangeUsageNotes={setUsageNotes}
-                identifier={identifier}
-                setIdentifier={setIdentifier}
-                identifierType={identifierType}
-                setIdentifierType={setIdentifierType}
-                labCatalogNumber={labCatalogNumber}
-                onChangeLabCatalogNumber={setLabCatalogNumber}
-                methods={methods}
-                onChangeMethods={setMethods}
-                organisms={organisms}
-                onChangeOrganisms={setOrganisms}
-                environments={environments}
-                onChangeEnvironments={setEnvironments}
-              />
-              <ResearchOutputContributorsCard
-                isSaving={isSaving}
-                labs={labs}
-                getLabSuggestions={getLabSuggestions}
-                onChangeLabs={setLabs}
-                authors={authors}
-                getAuthorSuggestions={getAuthorSuggestions}
-                onChangeAuthors={setAuthors}
-                teams={teams}
-                onChangeTeams={setTeams}
-                getTeamSuggestions={getTeamSuggestions}
-                isEditMode={isEditMode}
-                authorsRequired={publishingEntity === 'Working Group'}
-                authorsSubtitle={
-                  publishingEntity === 'Working Group'
-                    ? '(required)'
-                    : '(optional)'
-                }
-              />
-              <div css={formControlsContainerStyles}>
-                <div css={formControlsStyles}>
-                  <Button enabled={!isSaving} onClick={handleCancel}>
-                    Cancel
-                  </Button>
-                  <Button
-                    enabled={!isSaving}
-                    primary
-                    onClick={async () => {
-                      const researchOutput = await handleSave();
-                      if (researchOutput) {
-                        const { id } = researchOutput;
-                        const path = sharedResearch({}).researchOutput({
-                          researchOutputId: id,
-                        }).$;
-                        historyPush(path);
-                      }
-                      return researchOutput;
-                    }}
-                  >
-                    {isEditMode ? 'Save' : 'Publish'}
-                  </Button>
-                </div>
+    <main css={mainStyles}>
+      <Form<ResearchOutputResponse>
+        serverErrors={serverValidationErrors}
+        dirty={!equal(remotePayload, currentPayload)}
+        onSave={() => onSave(currentPayload)}
+      >
+        {({ isSaving, onSave: handleSave, onCancel: handleCancel }) => (
+          <div css={contentStyles}>
+            <ResearchOutputFormSharingCard
+              serverValidationErrors={serverValidationErrors}
+              clearServerValidationError={clearServerValidationError}
+              isSaving={isSaving}
+              description={description}
+              onChangeDescription={setDescription}
+              title={title}
+              onChangeTitle={setTitle}
+              link={link}
+              onChangeLink={setLink}
+              type={type}
+              onChangeType={(newType) => {
+                setType(newType);
+                setMethods([]);
+                setOrganisms([]);
+                setEnvironments([]);
+                setSubtype(undefined);
+              }}
+              subtype={subtype}
+              onChangeSubtype={setSubtype}
+              researchTags={filteredResearchTags}
+              asapFunded={asapFunded}
+              onChangeAsapFunded={setAsapFunded}
+              usedInPublication={usedInPublication}
+              onChangeUsedInPublication={setUsedInPublication}
+              sharingStatus={sharingStatus}
+              onChangeSharingStatus={setSharingStatus}
+              publishDate={publishDate}
+              onChangePublishDate={(date) =>
+                setPublishDate(date ? new Date(date) : undefined)
+              }
+              typeOptions={typeOptions}
+              urlRequired={urlRequired}
+              typeDescription={typeDescription}
+              descriptionTip={descriptionTip}
+            />
+            <ResearchOutputExtraInformationCard
+              documentType={documentType}
+              isSaving={isSaving}
+              researchTags={filteredResearchTags}
+              tagSuggestions={tagSuggestions.map((suggestion) => ({
+                label: suggestion,
+                value: suggestion,
+              }))}
+              tags={tags}
+              onChangeTags={setTags}
+              usageNotes={usageNotes}
+              onChangeUsageNotes={setUsageNotes}
+              identifier={identifier}
+              setIdentifier={setIdentifier}
+              identifierType={identifierType}
+              setIdentifierType={setIdentifierType}
+              labCatalogNumber={labCatalogNumber}
+              onChangeLabCatalogNumber={setLabCatalogNumber}
+              methods={methods}
+              onChangeMethods={setMethods}
+              organisms={organisms}
+              onChangeOrganisms={setOrganisms}
+              environments={environments}
+              onChangeEnvironments={setEnvironments}
+            />
+            <ResearchOutputContributorsCard
+              isSaving={isSaving}
+              labs={labs}
+              getLabSuggestions={getLabSuggestions}
+              onChangeLabs={setLabs}
+              authors={authors}
+              getAuthorSuggestions={getAuthorSuggestions}
+              onChangeAuthors={setAuthors}
+              teams={teams}
+              onChangeTeams={setTeams}
+              getTeamSuggestions={getTeamSuggestions}
+              isEditMode={isEditMode}
+              authorsRequired={authorsRequired}
+            />
+            <div css={formControlsContainerStyles}>
+              <div css={formControlsStyles}>
+                <Button enabled={!isSaving} onClick={handleCancel}>
+                  Cancel
+                </Button>
+                <Button
+                  enabled={!isSaving}
+                  primary
+                  onClick={async () => {
+                    const researchOutput = await handleSave();
+                    if (researchOutput) {
+                      const { id } = researchOutput;
+                      const path = sharedResearch({}).researchOutput({
+                        researchOutputId: id,
+                      }).$;
+                      historyPush(path);
+                    }
+                    return researchOutput;
+                  }}
+                >
+                  {isEditMode ? 'Save' : 'Publish'}
+                </Button>
               </div>
             </div>
-          )}
-        </Form>
-      </main>
-    </>
+          </div>
+        )}
+      </Form>
+    </main>
   );
 };
 

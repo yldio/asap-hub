@@ -3,7 +3,6 @@ import { ComponentProps } from 'react';
 import { StaticRouter, Router } from 'react-router-dom';
 import {
   createResearchOutputResponse,
-  createTeamResponse,
   createUserResponse,
   researchTagEnvironmentResponse,
   researchTagMethodResponse,
@@ -35,8 +34,9 @@ const props: ComponentProps<typeof ResearchOutputForm> = {
   tagSuggestions: [],
   researchTags: [],
   documentType: 'Article',
-  team: createTeamResponse(),
+  selectedTeams: [],
   isEditMode: false,
+  typeOptions: [],
 };
 
 jest.setTimeout(60000);
@@ -218,7 +218,7 @@ it('displays current team within the form', async () => {
     <StaticRouter>
       <ResearchOutputForm
         {...props}
-        team={{ ...createTeamResponse(), displayName: 'example team' }}
+        selectedTeams={[{ label: 'example team', value: 'id' }]}
       />
     </StaticRouter>,
   );
@@ -296,7 +296,7 @@ describe('on submit', () => {
       <Router history={history}>
         <ResearchOutputForm
           {...props}
-          team={{ ...createTeamResponse(), id: 'TEAMID' }}
+          selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
           documentType={documentType}
           onSave={saveFn}
           getLabSuggestions={getLabSuggestions}

@@ -88,6 +88,7 @@ describe('Events', () => {
       const calendars = screen.getByTitle('Calendar');
       expect(calendars.tagName).toBe('IFRAME');
     });
+
     it('Displays a list of calendars', async () => {
       mockGetCalendars.mockResolvedValue({
         ...createListCalendarResponse(2),

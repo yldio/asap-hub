@@ -27,10 +27,10 @@ export const getTeamsState = ({
     return [];
   }
   return (
-    researchOutputData?.teams.map((element) => ({
+    researchOutputData?.teams.map((element, index) => ({
       label: element.displayName,
       value: element.id,
-      isFixed: true,
+      isFixed: index === 0,
     })) || [
       {
         label: team?.displayName || '',

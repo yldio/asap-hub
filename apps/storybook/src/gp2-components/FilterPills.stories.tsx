@@ -8,7 +8,7 @@ export default {
 };
 
 const props: ComponentProps<typeof FilterPills> = {
-  values: [
+  pills: [
     {
       id: '0',
       typeOfFilter: 'regions',
@@ -23,4 +23,4 @@ const props: ComponentProps<typeof FilterPills> = {
   onRemove: noop,
 };
 
-export const Normal = () => <FilterPills {...props}></FilterPills>;
+export const Normal = () => <FilterPills {...props} />;

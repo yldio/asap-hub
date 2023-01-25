@@ -1,10 +1,11 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import FilterPills from '../FilterPills';
 
 describe('FilterPills', () => {
-  const values: ComponentProps<typeof FilterPills>['values'] = [
+  beforeEach(jest.resetAllMocks);
+  const pills: ComponentProps<typeof FilterPills>['pills'] = [
     {
       label: 'Asia',
       typeOfFilter: 'regions',
@@ -18,15 +19,17 @@ describe('FilterPills', () => {
   ];
   const onRemove = jest.fn();
   it('should render all the pills', () => {
-    render(<FilterPills values={values} onRemove={onRemove} />);
+    render(<FilterPills pills={pills} onRemove={onRemove} />);
     expect(screen.getByText('Asia')).toBeVisible();
     expect(screen.getByText('Africa')).toBeVisible();
   });
   it("shows the remove button for the second pill and it's clickable", () => {
-    render(<FilterPills values={values} onRemove={onRemove} />);
-    const onRemoveButton = screen.getByText('Africa').nextElementSibling!;
+    render(<FilterPills pills={pills} onRemove={onRemove} />);
+    const onRemoveButton = within(screen.getByText('Africa')).getByRole(
+      'button',
+    );
     expect(onRemoveButton).toBeVisible();
     userEvent.click(onRemoveButton);
-    expect(onRemove).toBeCalledWith(values[1]);
+    expect(onRemove).toBeCalledWith(pills[1].id, pills[1].typeOfFilter);
   });
 });

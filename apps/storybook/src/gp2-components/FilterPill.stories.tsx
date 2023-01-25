@@ -8,12 +8,7 @@ export default {
 };
 
 const props: ComponentProps<typeof FilterPill> = {
-  value: {
-    id: '0',
-    typeOfFilter: 'regions',
-    label: 'Africa',
-  },
   onRemove: noop,
 };
 
-export const Normal = () => <FilterPill {...props}></FilterPill>;
+export const Normal = () => <FilterPill {...props}>Africa</FilterPill>;

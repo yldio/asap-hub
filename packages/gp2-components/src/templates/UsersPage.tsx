@@ -27,53 +27,46 @@ type UsersPageProps = ComponentProps<typeof FilterSearchExport> & {
     'filters' | 'projects' | 'workingGroups'
   >;
 
-type FilterPillValueList = ComponentProps<typeof FilterPills>['values'];
-
-type FilterPillValue = FilterPillValueList[number];
-
+type FilterPillValue = ComponentProps<typeof FilterPills>['pills'][number];
+type FilterPillId = FilterPillValue['id'];
 type FiltersType = FilterPillValue['typeOfFilter'];
-
-type FilterMappingType = {
-  [key: string]: (filter: string) => string;
-};
-
 type ProjectsType = Pick<gp2Model.ProjectResponse, 'id' | 'title'>[];
-
 type WorkingGroupsType = Pick<gp2Model.WorkingGroupResponse, 'id' | 'title'>[];
-
 type LabelArrayType = ProjectsType | WorkingGroupsType;
 
-function getLabelWithArray(array: LabelArrayType, filter: string) {
-  const index = array.findIndex((value) => value.id === filter);
-  return array[index].title;
-}
-
-const mapFilters = (
-  filters: Pick<
-    gp2Model.FetchUsersFilter,
-    'keywords' | 'regions' | 'workingGroups' | 'projects'
-  >,
+const getPillValues = (
   projects: ProjectsType,
   workingGroups: WorkingGroupsType,
 ) => {
-  const getLabel: FilterMappingType = {
-    keywords: (filter: string) => filter,
-    regions: (filter: string) => filter,
-    projects: (filter: string) => getLabelWithArray(projects, filter),
-    workingGroups: (filter: string) => getLabelWithArray(workingGroups, filter),
+  const map: Record<FiltersType, LabelArrayType> = {
+    projects,
+    workingGroups,
+    keywords: [],
+    regions: [],
+  };
+  const getLabelBy = (type: FiltersType) => (id: string) => {
+    const items = map[type].filter((value) => value.id === id);
+    return items[0]?.title ?? id;
   };
 
-  return Object.entries(filters)
-    .map<FilterPillValueList>(([typeOfFilter, filterList]) =>
-      filterList.map((filterId) => ({
-        id: filterId,
-        typeOfFilter: typeOfFilter as FiltersType,
-        label: getLabel[typeOfFilter](filterId),
-      })),
-    )
-    .flat();
+  return (
+    filters: Pick<
+      gp2Model.FetchUsersFilter,
+      'keywords' | 'regions' | 'workingGroups' | 'projects'
+    >,
+  ) =>
+    Object.entries(filters)
+      .map(([key, filterList]) => {
+        const typeOfFilter = key as FiltersType;
+        const getLabel = getLabelBy(typeOfFilter);
+        return filterList.map((id) => ({
+          id,
+          typeOfFilter,
+          label: getLabel(id),
+        }));
+      })
+      .flat();
 };
-
 const containerStyles = css({
   marginTop: rem(48),
 });
@@ -97,8 +90,7 @@ const UsersPage: React.FC<UsersPageProps> = ({
   const onBackClick = () => changeLocation(backHref);
 
   const onRemove = useCallback(
-    (value: FilterPillValue) => {
-      const { id, typeOfFilter } = value;
+    (id: FilterPillId, typeOfFilter: FiltersType) => {
       const newFilter = (filters[typeOfFilter] || []).filter(
         (filter) => filter !== id,
       );
@@ -110,6 +102,7 @@ const UsersPage: React.FC<UsersPageProps> = ({
     },
     [filters, backHref, updateFilters],
   );
+  const pillsValues = getPillValues(projects, workingGroups);
 
   return (
     <article>
@@ -123,10 +116,7 @@ const UsersPage: React.FC<UsersPageProps> = ({
           isAdministrator={isAdministrator}
         />
       </div>
-      <FilterPills
-        values={mapFilters(filters, projects, workingGroups)}
-        onRemove={onRemove}
-      />
+      <FilterPills pills={pillsValues(filters)} onRemove={onRemove} />
       <main>{children}</main>
       {displayFilters && (
         <FiltersModal

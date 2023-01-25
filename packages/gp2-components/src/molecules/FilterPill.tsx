@@ -1,8 +1,7 @@
-import { gp2 as gp2Model } from '@asap-hub/model';
 import {
-  pixels,
   borderWidth,
   crossSmallIcon,
+  pixels,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import colors from '../templates/colors';
@@ -37,26 +36,15 @@ const iconStyles = css({
   },
 });
 
-type FiltersType = Pick<
-  gp2Model.FetchUsersFilter,
-  'keywords' | 'regions' | 'workingGroups' | 'projects'
->;
+type FilterPillProps = {
+  readonly children?: React.ReactNode;
+  onRemove: () => void;
+};
 
-interface Value {
-  readonly label: string;
-  readonly typeOfFilter: keyof FiltersType;
-  readonly id: string;
-}
-
-interface FilterPillProps {
-  readonly value: Value;
-  onRemove: (value: Value) => void;
-}
-
-const FilterPill: React.FC<FilterPillProps> = ({ value, onRemove }) => (
+const FilterPill: React.FC<FilterPillProps> = ({ children, onRemove }) => (
   <div css={pillStyles}>
-    {value.label}
-    <button css={iconStyles} onClick={() => onRemove(value)}>
+    {children}
+    <button css={iconStyles} onClick={onRemove}>
       {crossSmallIcon}
     </button>
   </div>

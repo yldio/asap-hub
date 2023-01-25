@@ -52,7 +52,6 @@ type ResearchOutputFormProps = Pick<
       ComponentProps<typeof ResearchOutputContributorsCard>['teams']
     >;
     researchOutputData?: ResearchOutputResponse;
-    isEditMode: boolean;
     tagSuggestions: string[];
   } & ComponentProps<typeof ResearchOutputHeader>;
 
@@ -99,7 +98,6 @@ const formControlsStyles = css({
 const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   documentType,
   researchOutputData,
-  isEditMode,
   onSave,
   tagSuggestions,
   typeDescription,
@@ -316,7 +314,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
               teams={teams}
               onChangeTeams={setTeams}
               getTeamSuggestions={getTeamSuggestions}
-              isEditMode={isEditMode}
+              isEditMode={!!researchOutputData}
               authorsRequired={authorsRequired}
             />
             <div css={formControlsContainerStyles}>
@@ -339,7 +337,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                     return researchOutput;
                   }}
                 >
-                  {isEditMode ? 'Save' : 'Publish'}
+                  {!researchOutputData ? 'Publish' : 'Save'}
                 </Button>
               </div>
             </div>

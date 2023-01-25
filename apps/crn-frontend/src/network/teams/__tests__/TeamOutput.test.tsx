@@ -145,7 +145,7 @@ describe('TeamOutput', () => {
         organisms: [],
         environments: [],
         workingGroups: [],
-        labCatalogNumber: undefined,
+        labCatalogNumber: '',
         publishDate: undefined,
         subtype: undefined,
         usageNotes: '',

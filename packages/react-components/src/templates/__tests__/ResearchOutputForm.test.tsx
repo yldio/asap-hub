@@ -13,6 +13,7 @@ import {
   ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
+  researchOutputDocumentTypeToType,
   ResearchOutputType,
   ResearchTagResponse,
 } from '@asap-hub/model';
@@ -35,8 +36,7 @@ const props: ComponentProps<typeof ResearchOutputForm> = {
   researchTags: [],
   documentType: 'Article',
   selectedTeams: [],
-  isEditMode: false,
-  typeOptions: [],
+  typeOptions: Array.from(researchOutputDocumentTypeToType.Article.values()),
 };
 
 jest.setTimeout(60000);
@@ -129,7 +129,6 @@ it('renders the edit form button when research output data is present', async ()
       <ResearchOutputForm
         {...props}
         researchOutputData={createResearchOutputResponse()}
-        isEditMode
       />
     </StaticRouter>,
   );
@@ -164,7 +163,6 @@ it('renders the edit form with fields from researchOutputData prepopulated', asy
         {...props}
         documentType={'Dataset'}
         researchOutputData={researchOutputData}
-        isEditMode
       />
     </StaticRouter>,
   );

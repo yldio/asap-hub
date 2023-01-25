@@ -4,6 +4,7 @@ import {
   pixels,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
+import { ReactNode } from 'react';
 import colors from '../templates/colors';
 
 const { rem } = pixels;
@@ -37,7 +38,7 @@ const iconStyles = css({
 });
 
 type FilterPillProps = {
-  readonly children?: React.ReactNode;
+  readonly children: ReactNode;
   onRemove: () => void;
 };
 

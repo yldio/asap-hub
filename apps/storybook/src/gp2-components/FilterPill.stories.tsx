@@ -7,7 +7,7 @@ export default {
   component: FilterPill,
 };
 
-const props: ComponentProps<typeof FilterPill> = {
+const props: Omit<ComponentProps<typeof FilterPill>, 'children'> = {
   onRemove: noop,
 };
 

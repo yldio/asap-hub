@@ -117,7 +117,7 @@ describe('ResourceModal', () => {
     it('renders the type of the resource', async () => {
       renderResourseModal({ type: 'Link', title: 'test' });
       await waitFor(() => expect(titleBox()).toBeEnabled());
-      return expect(await screen.findByText('Link')).toBeVisible();
+      expect(await screen.findByText('Link')).toBeVisible();
     });
     it('renders the title of the resource', () => {
       renderResourseModal({ title: 'This is the new test' });

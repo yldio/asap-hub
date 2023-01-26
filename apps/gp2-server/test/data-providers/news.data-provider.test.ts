@@ -23,7 +23,7 @@ describe('News data provider', () => {
   beforeEach(jest.resetAllMocks);
 
   describe('Fetch', () => {
-    test.only('Should fetch the project from squidex graphql', async () => {
+    test('Should fetch the project from squidex graphql', async () => {
       const result = await newsDataProviderMockGraphqlServer.fetch();
 
       expect(result).toMatchObject(getListNewsDataObject());

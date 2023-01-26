@@ -27,6 +27,7 @@ import {
 import Dashboard, {
   DashboardController,
 } from './controllers/dashboard.controller';
+import News, { NewsController } from './controllers/news.controller';
 import Projects, { ProjectController } from './controllers/project.controller';
 import Users, { UserController } from './controllers/user.controller';
 import WorkingGroupNetwork, {
@@ -39,6 +40,10 @@ import {
   AssetDataProvider,
   AssetSquidexDataProvider,
 } from './data-providers/assets.data-provider';
+import {
+  NewsDataProvider,
+  NewsSquidexDataProvider,
+} from './data-providers/news.data-provider';
 import {
   ProjectDataProvider,
   ProjectSquidexDataProvider,
@@ -56,6 +61,7 @@ import {
   WorkingGroupSquidexDataProvider,
 } from './data-providers/working-group.data-provider';
 import { dashboardRouteFactory } from './routes/dashboard.route';
+import { newsRouteFactory } from './routes/news.route';
 import { projectRouteFactory } from './routes/project.route';
 import { userPublicRouteFactory, userRouteFactory } from './routes/user.route';
 import { workingGroupNetworkRouteFactory } from './routes/working-group-network.route';
@@ -117,6 +123,8 @@ export const appFactory = (libs: Libs = {}): Express => {
   const userDataProvider =
     libs.userDataProvider ||
     new UserSquidexDataProvider(squidexGraphqlClient, userRestClient);
+  const newsDataProvider =
+    libs.newsDataProvider || new NewsSquidexDataProvider(squidexGraphqlClient);
   const workingGroupDataProvider =
     libs.workingGroupDataProvider ||
     new WorkingGroupSquidexDataProvider(
@@ -141,6 +149,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     new WorkingGroupNetwork(workingGroupNetworkDataProvider);
   const projectController =
     libs.projectController || new Projects(projectDataProvider);
+  const newsController = libs.newsController || new News(newsDataProvider);
   /**
    * Public routes --->
    */
@@ -162,6 +171,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const dashboardRoutes = dashboardRouteFactory(dashboardController);
   const userPublicRoutes = userPublicRouteFactory(userController);
   const userRoutes = userRouteFactory(userController);
+  const newsRoutes = newsRouteFactory(newsController);
   const workingGroupRoutes = workingGroupRouteFactory(workingGroupController);
   const workingGroupNetworkRoutes = workingGroupNetworkRouteFactory(
     workingGroupNetworkController,
@@ -177,6 +187,7 @@ export const appFactory = (libs: Libs = {}): Express => {
    */
   app.use(userRoutes);
   app.use(dashboardRoutes);
+  app.use(newsRoutes);
   app.use(workingGroupRoutes);
   app.use(workingGroupNetworkRoutes);
   app.use(projectRoutes);
@@ -199,11 +210,13 @@ export const appFactory = (libs: Libs = {}): Express => {
 export type Libs = {
   assetDataProvider?: AssetDataProvider;
   userDataProvider?: UserDataProvider;
+  newsDataProvider?: NewsDataProvider;
   dashboardController?: DashboardController;
   workingGroupDataProvider?: WorkingGroupDataProvider;
   workingGroupNetworkDataProvider?: WorkingGroupNetworkDataProvider;
   projectDataProvider?: ProjectDataProvider;
   userController?: UserController;
+  newsController?: NewsController;
   workingGroupController?: WorkingGroupController;
   workingGroupNetworkController?: WorkingGroupNetworkController;
   projectController?: ProjectController;

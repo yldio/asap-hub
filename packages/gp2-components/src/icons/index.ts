@@ -17,6 +17,8 @@ export { default as regionEuropeIcon } from './region-europe-icon';
 export { default as regionLatinAmericaIcon } from './region-latin-america-icon';
 export { default as regionNorthAmericaIcon } from './region-north-america-icon';
 export { default as regionSouthAmericaIcon } from './region-south-america-icon';
+export { default as onboardingDisabledIcon } from './onboarding-disabled-icon';
+export { default as onboardingCompletedIcon } from './onboarding-completed-icon';
 export { default as rightArrowIcon } from './right-arrow-icon';
 export { default as roleIcon } from './role-icon';
 export { default as userIcon } from './user-icon';

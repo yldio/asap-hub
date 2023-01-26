@@ -2,8 +2,7 @@ import { pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
-import onboardingCompletedIcon from '../icons/onboarding-completed-icon';
-import onboardingDisabledIcon from '../icons/onboarding-disabled-icon';
+import { onboardingCompletedIcon, onboardingDisabledIcon } from '../icons';
 
 import { mobileQuery } from '../layout';
 import colors from '../templates/colors';
@@ -42,13 +41,13 @@ const mobileStyle = css({
   },
 });
 
-interface OnboardedTabLinkProps {
+type OnboardedTabLinkProps = {
   readonly href: string;
   readonly completed?: boolean;
   readonly disabled?: boolean;
   readonly index: number;
   readonly children: ReactNode;
-}
+};
 
 const OnboardedTabLink: React.FC<OnboardedTabLinkProps> = ({
   href,

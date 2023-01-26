@@ -10,8 +10,11 @@ export const Normal = () => (
   <EventsCalendar
     calendars={
       createListCalendarResponse(number('Calendar item', 1, { min: 0 }), {
-        group: boolean('Calendar connected to Group', true),
-        workingGroup: boolean('Calendar connected to Working Group', true),
+        activeGroups: boolean('Calendar connected to Group', true),
+        incompleteWorkingGroups: boolean(
+          'Calendar connected to Working Group',
+          true,
+        ),
       }).items
     }
   />

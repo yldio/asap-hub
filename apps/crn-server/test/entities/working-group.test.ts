@@ -6,7 +6,7 @@ describe('parseGraphQLWorkingGroup', () => {
   const workingGroup = getSquidexGraphqlWorkingGroup() as NonNullable<
     FetchWorkingGroupQuery['findWorkingGroupsContent']
   >;
-  test('should return the correct format for calendars', () => {
+  test('should return the correct format', () => {
     const workingGroupWithCalendars = {
       ...workingGroup,
       flatData: {
@@ -24,14 +24,25 @@ describe('parseGraphQLWorkingGroup', () => {
       },
     };
 
-    expect(
-      parseGraphQlWorkingGroup(workingGroupWithCalendars).calendars,
-    ).toEqual([
-      {
-        id: 'hub@asap.science',
-        color: '#B1365F',
-        name: 'ASAP Hub',
-      },
-    ]);
+    expect(parseGraphQlWorkingGroup(workingGroupWithCalendars)).toEqual({
+      calendars: [
+        {
+          color: '#B1365F',
+          id: 'hub@asap.science',
+          name: 'ASAP Hub',
+        },
+      ],
+      complete: false,
+      deliverables: [],
+      description: 'Working Group Description',
+      externalLink: 'https://example.com',
+      id: '123',
+      lastModifiedDate: '2021-01-01T00:00:00.000Z',
+      leaders: [],
+      members: [],
+      pointOfContact: undefined,
+      shortText: 'Working Group Short Text',
+      title: 'Working Group Title',
+    });
   });
 });

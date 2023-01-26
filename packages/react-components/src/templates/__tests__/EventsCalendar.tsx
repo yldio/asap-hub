@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 
 import EventsCalendar from '../EventsCalendar';
 
-it('Renders calender list', () => {
+it('Renders calendar list', () => {
   const { getByText } = render(
     <EventsCalendar
       calendars={[
@@ -10,8 +10,8 @@ it('Renders calender list', () => {
           color: '#0D7813',
           name: 'Test Event',
           id: '1',
-          group: false,
-          workingGroup: false,
+          activeGroups: false,
+          incompleteWorkingGroups: false,
         },
       ]}
     />,
@@ -27,8 +27,8 @@ it('Renders the calendar both for working and interest group', () => {
           color: '#0D7813',
           name: 'Test Event',
           id: '1',
-          group: true,
-          workingGroup: true,
+          activeGroups: true,
+          incompleteWorkingGroups: true,
         },
       ]}
     />,

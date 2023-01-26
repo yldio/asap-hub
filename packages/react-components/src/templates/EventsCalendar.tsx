@@ -22,14 +22,17 @@ const EventsCalendarPage: React.FC<EventsCalendarPageProps> = ({
       page="calendar"
       calendars={calendars.filter(
         (calendar) =>
-          calendar.group === true ||
-          (calendar.group === false && calendar.workingGroup === false),
+          calendar.activeGroups === true ||
+          (calendar.activeGroups === false &&
+            calendar.incompleteWorkingGroups === false),
       )}
       showBottomMessage={false}
     />
     <CalendarList
       page="calendar-working-group"
-      calendars={calendars.filter((calendar) => calendar.workingGroup === true)}
+      calendars={calendars.filter(
+        (calendar) => calendar.incompleteWorkingGroups === true,
+      )}
     />
   </div>
 );

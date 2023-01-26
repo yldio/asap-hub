@@ -57,8 +57,8 @@ export interface CalendarDataObject {
   resourceId?: string | null;
   expirationDate?: number | null;
   version: number;
-  group?: boolean;
-  workingGroup?: boolean;
+  activeGroups?: boolean;
+  incompleteWorkingGroups?: boolean;
 }
 
 export type CalendarCreateDataObject = Omit<
@@ -74,8 +74,8 @@ export interface CalendarResponse {
   id: string;
   name: string;
   color: GoogleLegacyCalendarColor;
-  group?: boolean;
-  workingGroup?: boolean;
+  activeGroups?: boolean;
+  incompleteWorkingGroups?: boolean;
 }
 
 export type ListCalendarResponse = ListResponse<CalendarResponse>;

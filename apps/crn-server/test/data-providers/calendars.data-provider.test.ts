@@ -174,9 +174,7 @@ describe('Calendars data provider', () => {
       );
       expect(result).toEqual({
         total: 1,
-        items: [
-          { ...getCalendarDataObject(), workingGroup: true, group: true },
-        ],
+        items: [getCalendarDataObject()],
       });
     });
 
@@ -209,7 +207,7 @@ describe('Calendars data provider', () => {
     });
 
     describe('Active filter', () => {
-      test('Should skip the calendars which belong to an inactive group when active is set to true', async () => {
+      test('Should skip the calendars which belong to an inactive group and complete working group when active is set to true', async () => {
         const squidexGraphqlResponse = getSquidexCalendarsGraphqlResponse();
         const calendar1Active = getSquidexGraphqlCalendar();
         calendar1Active.id = 'calendar-id-1';
@@ -219,17 +217,29 @@ describe('Calendars data provider', () => {
         calendar2Inactive.id = 'calendar-id-2';
         calendar2Inactive.referencingGroupsContents![0]!.flatData.active =
           false;
+        calendar2Inactive.referencingWorkingGroupsContents![0]!.flatData.complete =
+          true;
 
         const calendar3Active = getSquidexGraphqlCalendar();
         calendar3Active.id = 'calendar-id-3';
         calendar3Active.referencingGroupsContents![0]!.flatData.active = true;
+        calendar3Active.referencingWorkingGroupsContents!![0]!.flatData.complete =
+          true;
+
+        const calendar4Complete = getSquidexGraphqlCalendar();
+        calendar4Complete.id = 'calendar-id-4';
+        calendar4Complete.referencingGroupsContents![0]!.flatData.active =
+          false;
+        calendar4Complete.referencingWorkingGroupsContents!![0]!.flatData.complete =
+          false;
 
         squidexGraphqlResponse.queryCalendarsContentsWithTotal!.items = [
           calendar1Active,
           calendar2Inactive,
           calendar3Active,
+          calendar4Complete,
         ];
-        squidexGraphqlResponse.queryCalendarsContentsWithTotal!.total = 3;
+        squidexGraphqlResponse.queryCalendarsContentsWithTotal!.total = 4;
 
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
@@ -238,13 +248,16 @@ describe('Calendars data provider', () => {
         const result = await calendarDataProvider.fetch({ active: true });
 
         expect(result).toEqual({
-          total: 2,
+          total: 3,
           items: [
             expect.objectContaining({
               id: calendar1Active.id,
             }),
             expect.objectContaining({
               id: calendar3Active.id,
+            }),
+            expect.objectContaining({
+              id: calendar4Complete.id,
             }),
           ],
         });

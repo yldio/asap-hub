@@ -1,26 +1,29 @@
 import { ListCalendarResponse, CalendarResponse } from '@asap-hub/model';
 
 interface FixtureOptions {
-  group?: boolean;
-  workingGroup?: boolean;
+  activeGroups?: boolean;
+  incompleteWorkingGroups?: boolean;
 }
 
 export const createCalendarResponse = (
-  { group = false, workingGroup = false }: FixtureOptions = {},
+  {
+    activeGroups = false,
+    incompleteWorkingGroups = false,
+  }: FixtureOptions = {},
   itemIndex = 0,
 ): CalendarResponse => ({
   id: `calendar-${itemIndex}`,
   color: '#B1365F',
   name: `Calendar ${itemIndex}`,
-  group,
-  workingGroup,
+  activeGroups,
+  incompleteWorkingGroups,
 });
 
 export const createListCalendarResponse = (
   items: number = 1,
   options: FixtureOptions = {
-    group: false,
-    workingGroup: false,
+    activeGroups: false,
+    incompleteWorkingGroups: false,
   },
 ): ListCalendarResponse => ({
   total: items,

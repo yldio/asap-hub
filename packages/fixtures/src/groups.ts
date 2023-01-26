@@ -52,7 +52,7 @@ export const createGroupResponse = (
       })),
     ],
     calendars: Array.from({ length: calendarsCount }, (_, index) =>
-      createCalendarResponse({ group: true }, index),
+      createCalendarResponse({ activeGroups: true }, index),
     ),
   };
 };

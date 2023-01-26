@@ -2316,16 +2316,6 @@ export type UsersDataCityInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
-/** The structure of the CohortCount field of the Users content type. */
-export type UsersDataCohortCountDto = {
-  iv: Maybe<Scalars['Float']>;
-};
-
-/** The structure of the CohortCount field of the Users content input type. */
-export type UsersDataCohortCountInputDto = {
-  iv: InputMaybe<Scalars['Float']>;
-};
-
 /** The structure of the Connections nested schema. */
 export type UsersDataConnectionsChildDto = {
   code: Maybe<Scalars['String']>;
@@ -2432,7 +2422,6 @@ export type UsersDataDto = {
   avatar: Maybe<UsersDataAvatarDto>;
   biography: Maybe<UsersDataBiographyDto>;
   city: Maybe<UsersDataCityDto>;
-  cohortCount: Maybe<UsersDataCohortCountDto>;
   connections: Maybe<UsersDataConnectionsDto>;
   contributingCohorts: Maybe<UsersDataContributingCohortsDto>;
   country: Maybe<UsersDataCountryDto>;
@@ -2491,7 +2480,6 @@ export type UsersDataInputDto = {
   avatar: InputMaybe<UsersDataAvatarInputDto>;
   biography: InputMaybe<UsersDataBiographyInputDto>;
   city: InputMaybe<UsersDataCityInputDto>;
-  cohortCount: InputMaybe<UsersDataCohortCountInputDto>;
   connections: InputMaybe<UsersDataConnectionsInputDto>;
   contributingCohorts: InputMaybe<UsersDataContributingCohortsInputDto>;
   country: InputMaybe<UsersDataCountryInputDto>;
@@ -2708,7 +2696,6 @@ export type UsersFlatDataDto = {
   avatar: Maybe<Array<Asset>>;
   biography: Maybe<Scalars['String']>;
   city: Maybe<Scalars['String']>;
-  cohortCount: Maybe<Scalars['Float']>;
   connections: Maybe<Array<UsersDataConnectionsChildDto>>;
   contributingCohorts: Maybe<Array<UsersDataContributingCohortsChildDto>>;
   country: Maybe<Scalars['String']>;
@@ -3164,13 +3151,47 @@ export type WorkingGroupsResultDto = {
   total: Scalars['Int'];
 };
 
-export type NewsFragment = Pick<
+export type NewsContentFragment = Pick<
   NewsAndEvents,
   'id' | 'created' | 'lastModified' | 'version'
 > & {
   flatData: Pick<
     NewsAndEventsFlatDataDto,
-    'title' | 'text' | 'link' | 'linkText'
+    | 'title'
+    | 'text'
+    | 'link'
+    | 'linkText'
+    | 'sampleCount'
+    | 'articleCount'
+    | 'cohortCount'
+  >;
+};
+
+export type FetchNewsQueryVariables = Exact<{
+  top: InputMaybe<Scalars['Int']>;
+  skip: InputMaybe<Scalars['Int']>;
+}>;
+
+export type FetchNewsQuery = {
+  queryNewsAndEventsContentsWithTotal: Maybe<
+    Pick<NewsAndEventsResultDto, 'total'> & {
+      items: Maybe<
+        Array<
+          Pick<NewsAndEvents, 'id' | 'created' | 'lastModified' | 'version'> & {
+            flatData: Pick<
+              NewsAndEventsFlatDataDto,
+              | 'title'
+              | 'text'
+              | 'link'
+              | 'linkText'
+              | 'sampleCount'
+              | 'articleCount'
+              | 'cohortCount'
+            >;
+          }
+        >
+      >;
+    }
   >;
 };
 
@@ -4176,12 +4197,12 @@ export type FetchWorkingGroupsQuery = {
   >;
 };
 
-export const NewsFragmentDoc = {
+export const NewsContentFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'News' },
+      name: { kind: 'Name', value: 'NewsContent' },
       typeCondition: {
         kind: 'NamedType',
         name: { kind: 'Name', value: 'NewsAndEvents' },
@@ -4203,6 +4224,14 @@ export const NewsFragmentDoc = {
                 { kind: 'Field', name: { kind: 'Name', value: 'text' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'link' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'linkText' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'sampleCount' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'articleCount' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'cohortCount' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'link' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'linkText' } },
               ],
             },
           },
@@ -4210,7 +4239,7 @@ export const NewsFragmentDoc = {
       },
     },
   ],
-} as unknown as DocumentNode<NewsFragment, unknown>;
+} as unknown as DocumentNode<NewsContentFragment, unknown>;
 export const ProjectContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -4934,6 +4963,87 @@ export const WorkingGroupNetworkContentFragmentDoc = {
     ...WorkingGroupContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<WorkingGroupNetworkContentFragment, unknown>;
+export const FetchNewsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchNews' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'top' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: {
+              kind: 'Name',
+              value: 'queryNewsAndEventsContentsWithTotal',
+            },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'top' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'top' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'orderby' },
+                value: {
+                  kind: 'StringValue',
+                  value: 'data/created',
+                  block: false,
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'NewsContent' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...NewsContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<FetchNewsQuery, FetchNewsQueryVariables>;
 export const FetchProjectDocument = {
   kind: 'Document',
   definitions: [

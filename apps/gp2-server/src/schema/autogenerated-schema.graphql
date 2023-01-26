@@ -2392,16 +2392,6 @@ input UsersDataCityInputDto {
   iv: String
 }
 
-"""The structure of the CohortCount field of the Users content type."""
-type UsersDataCohortCountDto {
-  iv: Float
-}
-
-"""The structure of the CohortCount field of the Users content input type."""
-input UsersDataCohortCountInputDto {
-  iv: Float
-}
-
 """The structure of the Connections nested schema."""
 type UsersDataConnectionsChildDto {
   code: String
@@ -2508,7 +2498,6 @@ type UsersDataDto {
   avatar: UsersDataAvatarDto
   biography: UsersDataBiographyDto
   city: UsersDataCityDto
-  cohortCount: UsersDataCohortCountDto
   connections: UsersDataConnectionsDto
   contributingCohorts: UsersDataContributingCohortsDto
   country: UsersDataCountryDto
@@ -2567,7 +2556,6 @@ input UsersDataInputDto {
   avatar: UsersDataAvatarInputDto
   biography: UsersDataBiographyInputDto
   city: UsersDataCityInputDto
-  cohortCount: UsersDataCohortCountInputDto
   connections: UsersDataConnectionsInputDto
   contributingCohorts: UsersDataContributingCohortsInputDto
   country: UsersDataCountryInputDto
@@ -2784,7 +2772,6 @@ type UsersFlatDataDto {
   avatar: [Asset!]
   biography: String
   city: String
-  cohortCount: Float
   connections: [UsersDataConnectionsChildDto!]
   contributingCohorts: [UsersDataContributingCohortsChildDto!]
   country: String

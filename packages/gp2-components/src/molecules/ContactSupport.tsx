@@ -3,9 +3,15 @@ import { Link, mail } from '@asap-hub/react-components';
 const { createMailTo } = mail;
 const email = 'techsupport@gp2.org';
 
-const ContactSupport = () => (
+type ContactSupportProps = {
+  preContactText?: string;
+};
+
+const ContactSupport: React.FC<ContactSupportProps> = ({
+  preContactText = 'Need to change something?',
+}) => (
   <span>
-    Need to change something? Contact{' '}
+    {preContactText} Contact{' '}
     <Link
       href={createMailTo(email, {
         subject: 'GP2 Hub: Tech support',

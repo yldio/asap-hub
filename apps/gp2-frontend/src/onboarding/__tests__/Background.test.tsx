@@ -1,5 +1,6 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
+import { Keyword } from '@asap-hub/model/build/gp2';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
   render,
@@ -87,6 +88,28 @@ describe('Background', () => {
     expect(mockPatchUser).toHaveBeenCalledWith(
       expect.anything(),
       expect.objectContaining({ biography }),
+      expect.anything(),
+    );
+  });
+
+  it('saves the keywords modal', async () => {
+    const keywords = ['Genetics'] as Keyword[];
+    const user = { ...gp2Fixtures.createUserResponse(), keywords };
+    mockGetUser.mockResolvedValueOnce(user);
+    await renderBackground(user.id);
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    const [keywordsEditButton] = screen.getAllByRole('link', {
+      name: 'Edit Edit',
+    });
+    userEvent.click(keywordsEditButton);
+    expect(screen.getByRole('dialog')).toBeVisible();
+    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+    expect(mockPatchUser).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({ keywords }),
       expect.anything(),
     );
   });

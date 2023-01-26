@@ -2,7 +2,6 @@ export { default as EditableCard } from './EditableCard';
 export { default as CardWithBackground } from './CardWithBackground';
 export { default as CollapsibleTable } from './CollapsibleTable';
 export { default as ContactSupport } from './ContactSupport';
-export { default as FilterPill } from './FilterPill';
 export { default as ExpandableText } from './ExpandableText';
 export { default as HeaderLogo } from './HeaderLogo';
 export { default as IconWithLabel } from './IconWithLabel';

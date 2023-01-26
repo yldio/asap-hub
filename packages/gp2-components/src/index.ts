@@ -6,7 +6,6 @@ export {
   CardWithBackground,
   CollapsibleTable,
   ExpandableText,
-  FilterPill,
   HeaderLogo,
   IconWithLabel,
   NavigationLink,

@@ -26,6 +26,7 @@ export {
   Paragraph,
   Pill,
   Subtitle,
+  Tag,
   TabLink,
   TabButton,
   Toggle,

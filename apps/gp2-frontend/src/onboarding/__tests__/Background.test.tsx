@@ -1,6 +1,6 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
-import { gp2 } from '@asap-hub/model';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
   render,
@@ -93,7 +93,7 @@ describe('Background', () => {
   });
 
   it('saves the keywords modal', async () => {
-    const keywords = ['Genetics'] as gp2.Keyword[];
+    const keywords = ['Genetics'] as gp2Model.Keyword[];
     const user = { ...gp2Fixtures.createUserResponse(), keywords };
     mockGetUser.mockResolvedValueOnce(user);
     await renderBackground(user.id);

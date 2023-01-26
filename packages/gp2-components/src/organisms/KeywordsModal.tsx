@@ -1,5 +1,4 @@
 import { gp2 } from '@asap-hub/model';
-import { Keyword } from '@asap-hub/model/src/gp2';
 import { LabeledMultiSelect } from '@asap-hub/react-components';
 import { ComponentProps, useState } from 'react';
 import { ContactSupport } from '../molecules';
@@ -15,7 +14,7 @@ const KeywordsModal: React.FC<KeywordsModalProps> = ({
   backHref,
   keywords,
 }) => {
-  const [newKeywords, setNewKeywords] = useState<Keyword[]>(keywords || []);
+  const [newKeywords, setNewKeywords] = useState<gp2.Keyword[]>(keywords || []);
 
   const checkDirty = () =>
     (!keywords && newKeywords.length) ||
@@ -56,7 +55,10 @@ const KeywordsModal: React.FC<KeywordsModalProps> = ({
               setNewKeywords(
                 newValues
                   .slice(0, 10)
-                  .reduce((acc, curr) => [...acc, curr.value], [] as Keyword[]),
+                  .reduce(
+                    (acc, curr) => [...acc, curr.value],
+                    [] as gp2.Keyword[],
+                  ),
               );
             }}
             placeholder="Start typing..."

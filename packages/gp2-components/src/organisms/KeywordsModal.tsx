@@ -54,10 +54,9 @@ const KeywordsModal: React.FC<KeywordsModalProps> = ({
             }))}
             onChange={(newValues) => {
               setNewKeywords(
-                newValues.slice(0, 10).reduce(
-                  (acc, curr) => [...acc, curr.value],
-                  [] as Keyword[],
-                ),
+                newValues
+                  .slice(0, 10)
+                  .reduce((acc, curr) => [...acc, curr.value], [] as Keyword[]),
               );
             }}
             placeholder="Start typing..."

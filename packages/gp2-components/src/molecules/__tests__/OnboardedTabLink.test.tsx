@@ -4,9 +4,14 @@ import OnboardedTabLink from '../OnboardedTabLink';
 
 describe('OnboardedTabLink', () => {
   it('should display the link when enabled', () => {
-    render(<OnboardedTabLink href={'/test'}>Link Test</OnboardedTabLink>, {
-      wrapper: StaticRouter,
-    });
+    render(
+      <OnboardedTabLink index={1} href={'/test'}>
+        Link Test
+      </OnboardedTabLink>,
+      {
+        wrapper: StaticRouter,
+      },
+    );
     const link = screen.getByRole('link', { name: /link test/i });
     expect(link).toBeVisible();
     expect(link).toHaveAttribute('href', '/test');
@@ -14,7 +19,7 @@ describe('OnboardedTabLink', () => {
 
   it('should not display the link when disabled', () => {
     render(
-      <OnboardedTabLink disabled href={'/test'}>
+      <OnboardedTabLink index={1} disabled href={'/test'}>
         Link Test
       </OnboardedTabLink>,
       { wrapper: StaticRouter },

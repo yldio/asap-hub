@@ -1,7 +1,6 @@
 import { pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
-import { leftArrowIcon, rightArrowIcon } from '../icons';
-import { mobileQuery, nonMobileQuery } from '../layout';
+import { mobileQuery } from '../layout';
 import OnboardedTabLink from '../molecules/OnboardedTabLink';
 import PageBanner from './PageBanner';
 
@@ -18,55 +17,45 @@ type OnboardingPageHeaderProps = {
 
 const { vminLinearCalcClamped, mobileScreen, tabletScreen } = pixels;
 
-const divStyle = css({
-  display: 'flex',
-  alignItems: 'flex-end',
-  [mobileQuery]: {
-    marginBottom: 0,
-  },
+const containerStyles = css({
+  marginTop: `${vminLinearCalcClamped(
+    mobileScreen,
+    -33,
+    tabletScreen,
+    -48,
+    'px',
+  )}`,
 });
 
-const buttonStyle = css({
-  [nonMobileQuery]: {
-    display: 'none',
+const navStyles = css({
+  width: '100%',
+  display: 'flex',
+  justifyContent: 'space-between',
+
+  [mobileQuery]: {
+    justifyContent: 'center',
+    marginBottom: 0,
   },
 });
 
 const OnboardingPageHeader: React.FC<OnboardingPageHeaderProps> = ({
   steps,
 }) => (
-  <div
-    css={css({
-      marginTop: `${vminLinearCalcClamped(
-        mobileScreen,
-        -33,
-        tabletScreen,
-        -48,
-        'px',
-      )}`,
-    })}
-  >
+  <div css={containerStyles}>
     <PageBanner title={'Registration'} noMarginBottom noBorderTop>
-      <div css={divStyle}>
-        <div css={buttonStyle}>{leftArrowIcon}</div>
-        <nav
-          css={css({
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'space-between',
-            [mobileQuery]: {
-              justifyContent: 'center',
-            },
-          })}
-        >
-          {steps.map(({ disabled, href, name }) => (
-            <OnboardedTabLink key={name} disabled={disabled} href={href}>
-              {name}
-            </OnboardedTabLink>
-          ))}
-        </nav>
-        <div css={buttonStyle}>{rightArrowIcon}</div>
-      </div>
+      <nav css={navStyles}>
+        {steps.map(({ disabled, href, name, completed }, index) => (
+          <OnboardedTabLink
+            key={name}
+            disabled={disabled}
+            href={href}
+            index={index + 1}
+            completed={completed}
+          >
+            {name}
+          </OnboardedTabLink>
+        ))}
+      </nav>
     </PageBanner>
   </div>
 );

@@ -3,6 +3,8 @@ import * as graphql from './graphql';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
 const documents = {
+  '\n  fragment News on NewsAndEvents {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      title\n      text\n      link\n      linkText\n    }\n  }\n':
+    graphql.NewsFragmentDoc,
   '\n  fragment ProjectContent on Projects {\n    id\n    flatData {\n      title\n      startDate\n      endDate\n      status\n      projectProposal\n      description\n      pmEmail\n      leadEmail\n      keywords\n      members {\n        role\n        user {\n          id\n          created\n          lastModified\n          version\n          flatData {\n            avatar {\n              id\n            }\n            firstName\n            lastName\n            onboarded\n          }\n        }\n      }\n      milestones {\n        title\n        description\n        status\n        link\n      }\n      resources {\n        type\n        title\n        description\n        externalLink\n      }\n    }\n  }\n':
     graphql.ProjectContentFragmentDoc,
   '\n  query FetchProject($id: String!) {\n    findProjectsContent(id: $id) {\n      ...ProjectContent\n    }\n  }\n  \n':
@@ -35,6 +37,9 @@ const documents = {
     graphql.FetchWorkingGroupsDocument,
 };
 
+export function gql(
+  source: '\n  fragment News on NewsAndEvents {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      title\n      text\n      link\n      linkText\n    }\n  }\n',
+): typeof documents['\n  fragment News on NewsAndEvents {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      title\n      text\n      link\n      linkText\n    }\n  }\n'];
 export function gql(
   source: '\n  fragment ProjectContent on Projects {\n    id\n    flatData {\n      title\n      startDate\n      endDate\n      status\n      projectProposal\n      description\n      pmEmail\n      leadEmail\n      keywords\n      members {\n        role\n        user {\n          id\n          created\n          lastModified\n          version\n          flatData {\n            avatar {\n              id\n            }\n            firstName\n            lastName\n            onboarded\n          }\n        }\n      }\n      milestones {\n        title\n        description\n        status\n        link\n      }\n      resources {\n        type\n        title\n        description\n        externalLink\n      }\n    }\n  }\n',
 ): typeof documents['\n  fragment ProjectContent on Projects {\n    id\n    flatData {\n      title\n      startDate\n      endDate\n      status\n      projectProposal\n      description\n      pmEmail\n      leadEmail\n      keywords\n      members {\n        role\n        user {\n          id\n          created\n          lastModified\n          version\n          flatData {\n            avatar {\n              id\n            }\n            firstName\n            lastName\n            onboarded\n          }\n        }\n      }\n      milestones {\n        title\n        description\n        status\n        link\n      }\n      resources {\n        type\n        title\n        description\n        externalLink\n      }\n    }\n  }\n'];

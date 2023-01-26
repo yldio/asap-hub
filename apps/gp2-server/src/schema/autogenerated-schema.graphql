@@ -45,6 +45,17 @@ type ApplicationMutations {
     """The status for the content."""
     status: String!
   ): Migrations!
+  """Change a News content."""
+  changeNewsAndEventsContent(
+    """The timestamp when the status should be changed."""
+    dueTime: Instant
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The status for the content."""
+    status: String!
+  ): NewsAndEvents!
   """Change a Projects content."""
   changeProjectsContent(
     """The timestamp when the status should be changed."""
@@ -122,6 +133,17 @@ type ApplicationMutations {
     """The initial status."""
     status: String
   ): Migrations!
+  """Creates an News content."""
+  createNewsAndEventsContent(
+    """The data for the content."""
+    data: NewsAndEventsDataInputDto!
+    """The optional custom content ID."""
+    id: String
+    """Set to true to autopublish content on create."""
+    publish: Boolean = false
+    """The initial status."""
+    status: String
+  ): NewsAndEvents!
   """Creates an Projects content."""
   createProjectsContent(
     """The data for the content."""
@@ -187,6 +209,13 @@ type ApplicationMutations {
     """The ID of the content (usually GUID)."""
     id: String!
   ): EntitySavedResultDto!
+  """Delete an News content."""
+  deleteNewsAndEventsContent(
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the content (usually GUID)."""
+    id: String!
+  ): EntitySavedResultDto!
   """Delete an Projects content."""
   deleteProjectsContent(
     """The expected version."""
@@ -242,6 +271,15 @@ type ApplicationMutations {
     """The ID of the object (usually GUID)."""
     id: String
   ): Migrations!
+  """Patch an News content by id."""
+  patchNewsAndEventsContent(
+    """The data for the content."""
+    data: NewsAndEventsDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String
+  ): NewsAndEvents!
   """Patch an Projects content by id."""
   patchProjectsContent(
     """The data for the content."""
@@ -311,6 +349,17 @@ type ApplicationMutations {
     """The status for the content."""
     status: String!
   ): Migrations! @deprecated(reason: "Use 'changeMigrationsContent' instead")
+  """Publish a News content."""
+  publishNewsAndEventsContent(
+    """The timestamp when the status should be changed."""
+    dueTime: Instant
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The status for the content."""
+    status: String!
+  ): NewsAndEvents! @deprecated(reason: "Use 'changeNewsAndEventsContent' instead")
   """Publish a Projects content."""
   publishProjectsContent(
     """The timestamp when the status should be changed."""
@@ -382,6 +431,15 @@ type ApplicationMutations {
     """The ID of the object (usually GUID)."""
     id: String
   ): Migrations!
+  """Update an News content by id."""
+  updateNewsAndEventsContent(
+    """The data for the content."""
+    data: NewsAndEventsDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String
+  ): NewsAndEvents!
   """Update an Projects content by id."""
   updateProjectsContent(
     """The data for the content."""
@@ -463,6 +521,21 @@ type ApplicationMutations {
     """The initial status."""
     status: String
   ): Migrations!
+  """Upsert an News content by id."""
+  upsertNewsAndEventsContent(
+    """The data for the content."""
+    data: NewsAndEventsDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """Makes the update as patch."""
+    patch: Boolean = false
+    """Set to true to autopublish content on create."""
+    publish: Boolean = false
+    """The initial status."""
+    status: String
+  ): NewsAndEvents!
   """Upsert an Projects content by id."""
   upsertProjectsContent(
     """The data for the content."""
@@ -553,6 +626,13 @@ type ApplicationQueries {
     """The optional version of the content to retrieve an older instance (not cached)."""
     version: Int
   ): Migrations
+  """Find an News content by id."""
+  findNewsAndEventsContent(
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The optional version of the content to retrieve an older instance (not cached)."""
+    version: Int
+  ): NewsAndEvents
   """Find an Projects content by id."""
   findProjectsContent(
     """The ID of the object (usually GUID)."""
@@ -681,6 +761,32 @@ type ApplicationQueries {
     """Optional number of items to take."""
     top: Int
   ): MigrationsResultDto
+  """Query News content items."""
+  queryNewsAndEventsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [NewsAndEvents!]
+  """Query News content items with total count."""
+  queryNewsAndEventsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): NewsAndEventsResultDto
   """Query Projects content items."""
   queryProjectsContents(
     """Optional OData filter."""
@@ -1135,6 +1241,32 @@ type Dashboard implements Content {
     """Optional number of items to take."""
     top: Int
   ): MigrationsResultDto
+  """Query News content items."""
+  referencesNewsAndEventsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [NewsAndEvents!]
+  """Query News content items with total count."""
+  referencesNewsAndEventsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): NewsAndEventsResultDto
   """Query Projects content items."""
   referencesProjectsContents(
     """Optional OData filter."""
@@ -1297,7 +1429,7 @@ input DashboardDataNewsInputDto {
   iv: [String!]
 }
 
-union DashboardDataNewsUnionDto = ContributingCohorts | Dashboard | Migrations | Projects | Users | WorkingGroupNetwork | WorkingGroups
+union DashboardDataNewsUnionDto = ContributingCohorts | Dashboard | Migrations | NewsAndEvents | Projects | Users | WorkingGroupNetwork | WorkingGroups
 
 """The structure of the Where to Start field of the Dashboard content type."""
 type DashboardDataPagesDto {
@@ -1309,7 +1441,7 @@ input DashboardDataPagesInputDto {
   iv: [String!]
 }
 
-union DashboardDataPagesUnionDto = ContributingCohorts | Dashboard | Migrations | Projects | Users | WorkingGroupNetwork | WorkingGroups
+union DashboardDataPagesUnionDto = ContributingCohorts | Dashboard | Migrations | NewsAndEvents | Projects | Users | WorkingGroupNetwork | WorkingGroups
 
 """The structure of the flat Dashboard data type."""
 type DashboardFlatDataDto {
@@ -1533,6 +1665,188 @@ type MigrationsFlatDataDto {
 type MigrationsResultDto {
   """The contents."""
   items: [Migrations!]
+  """The total count of  contents."""
+  total: Int!
+}
+
+"""The structure of a News content type."""
+type NewsAndEvents implements Content {
+  """The timestamp when the object was created."""
+  created: Instant!
+  """The user who created the object."""
+  createdBy: String!
+  """The user who created the object."""
+  createdByUser: User!
+  """The data of the content."""
+  data: NewsAndEventsDataDto!
+  """The edit token."""
+  editToken: String
+  """The flat data of the content."""
+  flatData: NewsAndEventsFlatDataDto!
+  """The ID of the object (usually GUID)."""
+  id: String!
+  """The timestamp when the object was updated the last time."""
+  lastModified: Instant!
+  """The user who updated the object the last time."""
+  lastModifiedBy: String!
+  """The user who updated the object the last time."""
+  lastModifiedByUser: User!
+  """The new status of the content."""
+  newStatus: String
+  """The status color of the content."""
+  newStatusColor: String
+  """Query Dashboard content items."""
+  referencingDashboardContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [Dashboard!]
+  """Query Dashboard content items with total count."""
+  referencingDashboardContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): DashboardResultDto
+  """The status of the content."""
+  status: String!
+  """The status color of the content."""
+  statusColor: String!
+  """The URL to the content."""
+  url: String!
+  """The version of the objec."""
+  version: Int!
+}
+
+"""The structure of the Number of articles field of the News content type."""
+type NewsAndEventsDataArticleCountDto {
+  iv: Float
+}
+
+"""The structure of the Number of articles field of the News content input type."""
+input NewsAndEventsDataArticleCountInputDto {
+  iv: Float
+}
+
+"""The structure of the Number of cohorts field of the News content type."""
+type NewsAndEventsDataCohortCountDto {
+  iv: Float
+}
+
+"""The structure of the Number of cohorts field of the News content input type."""
+input NewsAndEventsDataCohortCountInputDto {
+  iv: Float
+}
+
+"""The structure of the News data type."""
+type NewsAndEventsDataDto {
+  articleCount: NewsAndEventsDataArticleCountDto
+  cohortCount: NewsAndEventsDataCohortCountDto
+  link: NewsAndEventsDataLinkDto
+  linkText: NewsAndEventsDataLinkTextDto
+  sampleCount: NewsAndEventsDataSampleCountDto
+  text: NewsAndEventsDataTextDto
+  title: NewsAndEventsDataTitleDto
+}
+
+"""The structure of the News data input type."""
+input NewsAndEventsDataInputDto {
+  articleCount: NewsAndEventsDataArticleCountInputDto
+  cohortCount: NewsAndEventsDataCohortCountInputDto
+  link: NewsAndEventsDataLinkInputDto
+  linkText: NewsAndEventsDataLinkTextInputDto
+  sampleCount: NewsAndEventsDataSampleCountInputDto
+  text: NewsAndEventsDataTextInputDto
+  title: NewsAndEventsDataTitleInputDto
+}
+
+"""The structure of the External Link field of the News content type."""
+type NewsAndEventsDataLinkDto {
+  iv: String
+}
+
+"""The structure of the External Link field of the News content input type."""
+input NewsAndEventsDataLinkInputDto {
+  iv: String
+}
+
+"""The structure of the External Link Text field of the News content type."""
+type NewsAndEventsDataLinkTextDto {
+  """
+  Leave this empty to show "Open External Link"
+  """
+  iv: String
+}
+
+"""The structure of the External Link Text field of the News content input type."""
+input NewsAndEventsDataLinkTextInputDto {
+  """
+  Leave this empty to show "Open External Link"
+  """
+  iv: String
+}
+
+"""The structure of the Number of samples field of the News content type."""
+type NewsAndEventsDataSampleCountDto {
+  iv: Float
+}
+
+"""The structure of the Number of samples field of the News content input type."""
+input NewsAndEventsDataSampleCountInputDto {
+  iv: Float
+}
+
+"""The structure of the Text field of the News content type."""
+type NewsAndEventsDataTextDto {
+  iv: String
+}
+
+"""The structure of the Text field of the News content input type."""
+input NewsAndEventsDataTextInputDto {
+  iv: String
+}
+
+"""The structure of the Title field of the News content type."""
+type NewsAndEventsDataTitleDto {
+  iv: String
+}
+
+"""The structure of the Title field of the News content input type."""
+input NewsAndEventsDataTitleInputDto {
+  iv: String
+}
+
+"""The structure of the flat News data type."""
+type NewsAndEventsFlatDataDto {
+  articleCount: Float
+  cohortCount: Float
+  link: String
+  """
+  Leave this empty to show "Open External Link"
+  """
+  linkText: String
+  sampleCount: Float
+  text: String
+  title: String
+}
+
+"""List of News items and total count."""
+type NewsAndEventsResultDto {
+  """The contents."""
+  items: [NewsAndEvents!]
   """The total count of  contents."""
   total: Int!
 }
@@ -2078,6 +2392,16 @@ input UsersDataCityInputDto {
   iv: String
 }
 
+"""The structure of the CohortCount field of the Users content type."""
+type UsersDataCohortCountDto {
+  iv: Float
+}
+
+"""The structure of the CohortCount field of the Users content input type."""
+input UsersDataCohortCountInputDto {
+  iv: Float
+}
+
 """The structure of the Connections nested schema."""
 type UsersDataConnectionsChildDto {
   code: String
@@ -2184,6 +2508,7 @@ type UsersDataDto {
   avatar: UsersDataAvatarDto
   biography: UsersDataBiographyDto
   city: UsersDataCityDto
+  cohortCount: UsersDataCohortCountDto
   connections: UsersDataConnectionsDto
   contributingCohorts: UsersDataContributingCohortsDto
   country: UsersDataCountryDto
@@ -2242,6 +2567,7 @@ input UsersDataInputDto {
   avatar: UsersDataAvatarInputDto
   biography: UsersDataBiographyInputDto
   city: UsersDataCityInputDto
+  cohortCount: UsersDataCohortCountInputDto
   connections: UsersDataConnectionsInputDto
   contributingCohorts: UsersDataContributingCohortsInputDto
   country: UsersDataCountryInputDto
@@ -2458,6 +2784,7 @@ type UsersFlatDataDto {
   avatar: [Asset!]
   biography: String
   city: String
+  cohortCount: Float
   connections: [UsersDataConnectionsChildDto!]
   contributingCohorts: [UsersDataContributingCohortsChildDto!]
   country: String

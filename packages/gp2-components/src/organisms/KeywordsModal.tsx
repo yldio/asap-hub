@@ -54,7 +54,7 @@ const KeywordsModal: React.FC<KeywordsModalProps> = ({
             }))}
             onChange={(newValues) => {
               setNewKeywords(
-                newValues.reduce(
+                newValues.slice(0, 10).reduce(
                   (acc, curr) => [...acc, curr.value],
                   [] as Keyword[],
                 ),

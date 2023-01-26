@@ -59,7 +59,7 @@ def main():
         print("App", appName, "created")
         client = getAppClient(appName)
         promoteClient(appName, client)
-        syncApp(appName, client['id'], client['secret'], app)
+        # syncApp(appName, client['id'], client['secret'], app)
         print("::set-output name=app-created::true")
 
 

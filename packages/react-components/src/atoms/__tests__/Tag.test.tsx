@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
-
+import userEvent from '@testing-library/user-event';
 import Tag from '../Tag';
 import { mint, tin } from '../../colors';
 
@@ -39,4 +39,13 @@ it('renders a tag with different border and text color when disabled', () => {
 it('renders a tag with a title', () => {
   const { getByTitle } = render(<Tag title="Text"></Tag>);
   expect(getByTitle('Text')).toBeVisible();
+});
+
+it('renders the remove Button if the onRemove is provided', () => {
+  const onRemove = jest.fn();
+  const { getByRole } = render(<Tag title="Text" onRemove={onRemove}></Tag>);
+  const onRemoveButton = getByRole('button');
+  expect(onRemoveButton).toBeVisible();
+  userEvent.click(onRemoveButton);
+  expect(onRemove).toBeCalled();
 });

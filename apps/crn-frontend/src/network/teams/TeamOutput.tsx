@@ -98,9 +98,9 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
           }
           researchOutputData={researchOutputData}
           typeDescription={`Select the option that applies to this ${documentType.toLowerCase()}.`}
-          typeOptions={[
-            ...researchOutputDocumentTypeToType[documentType].values(),
-          ]}
+          typeOptions={Array.from(
+            researchOutputDocumentTypeToType[documentType],
+          )}
           urlRequired={documentType !== 'Lab Resource'}
           selectedTeams={(researchOutputData?.teams ?? [team]).map(
             (selectedTeam, index) => ({

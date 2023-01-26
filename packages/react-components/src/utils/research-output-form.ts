@@ -180,7 +180,7 @@ export const getPayload = ({
   sharingStatus,
   publishDate: publishDate?.toISOString(),
   workingGroups: [],
-  labCatalogNumber,
+  labCatalogNumber: labCatalogNumber || undefined,
   methods,
   organisms,
   environments,

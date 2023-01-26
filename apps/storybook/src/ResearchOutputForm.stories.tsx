@@ -35,7 +35,7 @@ export const Normal = () => (
         })
       }
       selectedTeams={[]}
-      typeOptions={[...researchOutputDocumentTypeToType.Article.values()]}
+      typeOptions={Array.from(researchOutputDocumentTypeToType.Article)}
       getTeamSuggestions={() =>
         new Promise((resolve) => {
           setTimeout(() => {
@@ -76,7 +76,7 @@ export const EditMode = () => (
         })
       }
       selectedTeams={[]}
-      typeOptions={[...researchOutputDocumentTypeToType.Dataset.values()]}
+      typeOptions={Array.from(researchOutputDocumentTypeToType.Dataset)}
       getTeamSuggestions={() =>
         new Promise((resolve) => {
           setTimeout(() => {

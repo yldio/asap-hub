@@ -5,6 +5,7 @@ import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { usersHeaderImage } from '../images';
 import { FiltersModal } from '../organisms';
+import FilterPills from '../organisms/FilterPills';
 import FilterSearchExport from '../organisms/FilterSearchExport';
 import PageBanner from '../organisms/PageBanner';
 
@@ -25,9 +26,14 @@ type UsersPageProps = ComponentProps<typeof FilterSearchExport> & {
     ComponentProps<typeof FiltersModal>,
     'filters' | 'projects' | 'workingGroups'
   >;
+
+type FiltersType = ComponentProps<typeof FilterPills>['filters'];
+type FilterType = keyof FiltersType;
+
 const containerStyles = css({
   marginTop: rem(48),
 });
+
 const UsersPage: React.FC<UsersPageProps> = ({
   children,
   searchQuery,
@@ -45,6 +51,17 @@ const UsersPage: React.FC<UsersPageProps> = ({
   const { users } = gp2;
   const backHref = users({}).$;
   const onBackClick = () => changeLocation(backHref);
+
+  const onRemove = (id: string, filterType: FilterType) => {
+    const updatedFilters = {
+      ...filters,
+      [filterType]: (filters[filterType] || []).filter(
+        (filter) => filter !== id,
+      ),
+    };
+    updateFilters(backHref, updatedFilters);
+  };
+
   return (
     <article>
       <PageBanner {...bannerProps} />
@@ -57,6 +74,12 @@ const UsersPage: React.FC<UsersPageProps> = ({
           isAdministrator={isAdministrator}
         />
       </div>
+      <FilterPills
+        filters={filters}
+        workingGroups={workingGroups}
+        projects={projects}
+        onRemove={onRemove}
+      />
       <main>{children}</main>
       {displayFilters && (
         <FiltersModal

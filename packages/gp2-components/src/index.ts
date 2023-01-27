@@ -19,6 +19,7 @@ export {
   EditResourceModal,
   EmailSection,
   DashboardHeader,
+  FilterPills,
   FiltersModal,
   KeyInformationModal,
   KeywordsModal,

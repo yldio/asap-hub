@@ -14,6 +14,7 @@ export {
   Card,
   Display,
   Divider,
+  Ellipsis,
   Headline2,
   Headline3,
   Headline4,
@@ -25,6 +26,7 @@ export {
   Paragraph,
   Pill,
   Subtitle,
+  Tag,
   TabLink,
   TabButton,
   Toggle,
@@ -33,6 +35,7 @@ export {
   StateTag,
 } from './atoms';
 export * from './colors';
+export { borderWidth } from './form';
 export * from './hooks';
 export * from './icons';
 export * from './images';

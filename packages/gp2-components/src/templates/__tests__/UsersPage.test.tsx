@@ -1,4 +1,5 @@
 import { gp2 } from '@asap-hub/fixtures';
+import { FetchUsersFilter } from '@asap-hub/model/src/gp2';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import UsersPage from '../UsersPage';
@@ -98,4 +99,36 @@ describe('UsersPage', () => {
       });
     },
   );
+  it('calls the updateFilters with the right arguments for removing a certain filter', () => {
+    const filters: FetchUsersFilter = {
+      regions: ['Asia'],
+      keywords: [],
+      projects: [],
+      workingGroups: [],
+    };
+    const updateFilterSpy = jest.fn();
+
+    const { items: projects } = gp2.createProjectsResponse();
+    const { items: workingGroups } = gp2.createWorkingGroupsResponse();
+    render(
+      <UsersPage
+        {...props}
+        filters={filters}
+        updateFilters={updateFilterSpy}
+        projects={projects}
+        workingGroups={workingGroups}
+      />,
+    );
+
+    const onRemoveButton = screen.getByRole('button', { name: /cross/i });
+
+    userEvent.click(onRemoveButton);
+
+    expect(updateFilterSpy).toHaveBeenCalledWith('/users', {
+      regions: [],
+      keywords: [],
+      projects: [],
+      workingGroups: [],
+    });
+  });
 });

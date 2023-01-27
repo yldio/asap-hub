@@ -17,7 +17,12 @@ const GroupProfileCalendar: React.FC<GroupProfileCalendarProps> = ({
 }) => (
   <div css={styles}>
     <GoogleCalendar calendars={calendars} />
-    {!!calendars.length && <CalendarList page="group" calendars={calendars} />}
+    {!!calendars.length && (
+      <CalendarList
+        calendars={calendars}
+        title="Subscribe to this interest group's Calendar"
+      />
+    )}
   </div>
 );
 

@@ -1,4 +1,8 @@
-import { ListCalendarResponse, CalendarResponse } from '@asap-hub/model';
+import {
+  ListCalendarResponse,
+  CalendarResponse,
+  googleLegacyCalendarColor,
+} from '@asap-hub/model';
 
 interface FixtureOptions {
   activeGroups?: boolean;
@@ -13,7 +17,8 @@ export const createCalendarResponse = (
   itemIndex = 0,
 ): CalendarResponse => ({
   id: `calendar-${itemIndex}`,
-  color: '#B1365F',
+  color:
+    googleLegacyCalendarColor[itemIndex % googleLegacyCalendarColor.length],
   name: `Calendar ${itemIndex}`,
   activeGroups,
   incompleteWorkingGroups,

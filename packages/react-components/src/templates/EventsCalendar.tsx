@@ -19,19 +19,22 @@ const EventsCalendarPage: React.FC<EventsCalendarPageProps> = ({
   <div css={containerStyles}>
     <GoogleCalendar calendars={calendars} />
     <CalendarList
-      page="calendar"
       calendars={calendars.filter(
         (calendar) =>
-          calendar.activeGroups === true ||
-          (calendar.activeGroups === false &&
-            calendar.incompleteWorkingGroups === false),
+          calendar.activeGroups ||
+          (!calendar.activeGroups && !calendar.incompleteWorkingGroups),
       )}
-      showBottomMessage={false}
+      title="Subscribe to Interest Groups on Calendar"
+      description="Below you can find a list of all the Interest Groups that will present in the future. Hitting subscribe will allow you to
+      add them to your own personal calendar."
+      hideSupportText
     />
     <CalendarList
-      page="calendar-working-group"
+      title="Subscribe to Working Groups on Calendar"
+      description="Below you can find a list of all the Working Groups that will present in the future. Hitting subscribe will allow you to
+      add them to your own personal calendar."
       calendars={calendars.filter(
-        (calendar) => calendar.incompleteWorkingGroups === true,
+        (calendar) => calendar.incompleteWorkingGroups,
       )}
     />
   </div>

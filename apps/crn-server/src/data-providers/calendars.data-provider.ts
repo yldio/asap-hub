@@ -111,15 +111,6 @@ export class CalendarSquidexDataProvider {
 
     let graphqlCalendars: GraphqlCalendar[] = calendars;
 
-    /*
-
-    no group and no working group reference => group calendar 
-    only one group reference to an inactive groupe => don't show (remove)
-    only one group reference to an active group => show
-    only one working group reference => show
-
-    */
-
     if (active) {
       graphqlCalendars = graphqlCalendars.filter(
         (calendar: GraphqlCalendar) => {
@@ -129,19 +120,16 @@ export class CalendarSquidexDataProvider {
             (!calendar?.referencingWorkingGroupsContents ||
               calendar.referencingWorkingGroupsContents.length === 0)
           ) {
-            // no group and no working group reference => asap / event calendar go to group calendar
             return true;
           }
 
           return (
-            // returns the calendars that either have a active group or active working group
-            // removes every calendar that has no active group and no active working group
-            calendar.referencingGroupsContents?.findIndex(
-              (group) => group.flatData.active === true,
-            ) !== -1 ||
-            calendar.referencingWorkingGroupsContents?.findIndex(
-              (workingGroup) => workingGroup.flatData.complete !== true,
-            ) !== -1
+            calendar.referencingGroupsContents?.some(
+              ({ flatData }) => flatData.active,
+            ) ||
+            calendar.referencingWorkingGroupsContents?.some(
+              ({ flatData: { complete } }) => !complete,
+            )
           );
         },
       );
@@ -173,12 +161,10 @@ export const parseGraphQlCalendarToDataObject = (
   version: item.version,
   expirationDate: item.flatData.expirationDate,
   syncToken: item.flatData.syncToken,
-  activeGroups:
-    item.referencingGroupsContents?.findIndex(
-      (group) => group.flatData.active === true,
-    ) !== -1,
-  incompleteWorkingGroups:
-    item.referencingWorkingGroupsContents?.findIndex(
-      (workingGroup) => workingGroup.flatData.complete === false,
-    ) !== -1,
+  activeGroups: item.referencingGroupsContents?.some(
+    ({ flatData: { active } }) => active,
+  ),
+  incompleteWorkingGroups: item.referencingWorkingGroupsContents?.some(
+    ({ flatData: { complete } }) => !complete,
+  ),
 });

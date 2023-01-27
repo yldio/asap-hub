@@ -9,7 +9,7 @@ import { createUserResponse } from './users';
 type FixtureOptions = {
   deliverables?: number;
   members?: number;
-  calendarsCount?: number;
+  calendars?: number;
 };
 
 export const createDeliverables = (
@@ -51,7 +51,7 @@ export const createWorkingGroupPointOfContact =
   });
 
 export const createWorkingGroupResponse = (
-  { calendarsCount = 1, deliverables, members }: FixtureOptions = {},
+  { calendars = 1, deliverables = 1, members = 1 }: FixtureOptions = {},
   itemIndex = 0,
 ): WorkingGroupResponse => ({
   id: `working-group-id-${itemIndex}`,
@@ -60,11 +60,11 @@ export const createWorkingGroupResponse = (
   shortText: `Working Group ${itemIndex} Short Text`,
   lastModifiedDate: '2020-11-09T20:36:54Z',
   externalLink: `https://www.example.com/working-group-${itemIndex}`,
-  deliverables: createDeliverables(deliverables ?? 1),
+  deliverables: createDeliverables(deliverables),
   complete: false,
-  members: createWorkingGroupMembers(members ?? 1),
-  leaders: createWorkingGroupLeaders(members ?? 1),
-  calendars: Array.from({ length: calendarsCount }, (_, index) =>
+  members: createWorkingGroupMembers(members),
+  leaders: createWorkingGroupLeaders(members),
+  calendars: Array.from({ length: calendars }, (_, index) =>
     createCalendarResponse({ incompleteWorkingGroups: true }, index),
   ),
 });

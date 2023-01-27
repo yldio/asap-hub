@@ -6,8 +6,9 @@ import CalendarList from '../CalendarList';
 
 const props: ComponentProps<typeof CalendarList> = {
   calendars: [],
-  page: 'calendar',
+  title: 'Subscribe to this Interest Groups Calendar',
 };
+
 it('Renders calender list', () => {
   const { getByRole } = render(<CalendarList {...props} />);
   expect(getByRole('heading').textContent).toMatch(/subscribe/i);
@@ -53,35 +54,10 @@ it('Correctly generates the subscribe link', () => {
   `);
 });
 
-it('adapts for interest group page', () => {
-  const { getByRole } = render(<CalendarList {...props} page="group" />);
-  expect(getByRole('heading')).toHaveTextContent(/this interest group/i);
-});
-
-it('adapts the headline for event page', () => {
-  const { getByRole } = render(<CalendarList {...props} page="event" />);
-  expect(getByRole('heading')).toHaveTextContent(/this event/i);
-});
-
-it('adapts the headline and adds a description for calendar page', () => {
-  const { getByText } = render(<CalendarList {...props} page="calendar" />);
-  expect(getByText(/interest groups on/i)).toBeVisible();
-  expect(getByText(/list of.+groups/i)).toBeVisible();
-});
-
-it('adapts the headline and adds a description for calendar working group page', () => {
-  const { getByText } = render(
-    <CalendarList {...props} page="calendar-working-group" />,
-  );
-  expect(getByText(/working groups on/i)).toBeVisible();
-  expect(getByText(/list of.+groups/i)).toBeVisible();
-});
-
 it('displays the show more button', () => {
   const { getByText, queryByText, getByRole } = render(
     <CalendarList
       {...props}
-      page="calendar-working-group"
       calendars={createListCalendarResponse(6).items.concat({
         color: '#113F47',
         name: 'last Event',

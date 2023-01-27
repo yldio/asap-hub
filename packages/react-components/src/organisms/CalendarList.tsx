@@ -81,13 +81,15 @@ const showMoreStyles = css({
 
 interface CalendarListProps {
   calendars: ReadonlyArray<CalendarResponse>;
-  page: 'calendar' | 'event' | 'group' | 'calendar-working-group';
-  showBottomMessage?: boolean;
+  title: string;
+  description?: string;
+  hideSupportText?: boolean;
 }
 const CalendarList: FC<CalendarListProps> = ({
   calendars,
-  page,
-  showBottomMessage = true,
+  title,
+  description,
+  hideSupportText = false,
 }) => {
   const truncateFrom = 5;
   const [showMore, setShowMore] = useState(false);
@@ -97,42 +99,29 @@ const CalendarList: FC<CalendarListProps> = ({
     <div css={containerStyles}>
       <Card padding={false}>
         <div css={headerStyles}>
-          <Headline3 noMargin>
-            Subscribe to{' '}
-            {page === 'group'
-              ? "this interest group's"
-              : page === 'event'
-              ? "this event's"
-              : page === 'calendar-working-group'
-              ? 'Working Groups on'
-              : 'Interest Groups on'}{' '}
-            Calendar
-          </Headline3>
+          <Headline3 noMargin>{title}</Headline3>
         </div>
-        {(page === 'calendar' || page === 'calendar-working-group') && (
+        {description && (
           <div css={subheaderStyles}>
             <Paragraph accent="lead" noMargin>
-              Below you can find a list of all the{' '}
-              {page === 'calendar' ? 'Interest Groups' : 'Working Groups'} that
-              will present in the future. Hitting subscribe will allow you to
-              add them to your own personal calendar.
+              {description}
             </Paragraph>
           </div>
         )}
         {!!calendars.length && (
-          <ul css={orderList}>
+          <ul
+            css={[
+              orderList,
+              !displayShowMoreButton && {
+                paddingBottom: `${24 / perRem}em`,
+              },
+            ]}
+          >
             {calendars
               .slice(0, showMore ? undefined : truncateFrom)
               .map(({ id, name, color }) => (
                 <li key={id}>
-                  <div
-                    css={[
-                      dataGrid,
-                      !displayShowMoreButton && {
-                        paddingBottom: `${24 / perRem}em`,
-                      },
-                    ]}
-                  >
+                  <div css={dataGrid}>
                     <div css={gridText}>
                       <Paragraph accent="charcoal">
                         <span css={{ display: 'flex' }}>
@@ -161,7 +150,7 @@ const CalendarList: FC<CalendarListProps> = ({
           </div>
         )}
       </Card>
-      {showBottomMessage && (
+      {!hideSupportText && (
         <Paragraph accent="lead">
           Having issues? Set up your calendar manually with these instructions
           for{' '}

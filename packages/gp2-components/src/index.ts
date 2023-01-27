@@ -21,6 +21,7 @@ export {
   DashboardHeader,
   FiltersModal,
   KeyInformationModal,
+  KeywordsModal,
   ContactInformationModal,
   MainNavigation,
   NavigationHeader,

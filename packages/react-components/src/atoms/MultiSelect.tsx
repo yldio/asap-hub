@@ -126,6 +126,7 @@ export type MultiSelectProps<T extends MultiSelectOptionsType> = {
   readonly creatable?: boolean;
   readonly required?: boolean;
   readonly getValidationMessage?: Parameters<typeof useValidation>[1];
+  readonly maxMenuHeight?: number;
 } & (
   | (Pick<Props<T, true>, 'noOptionsMessage' | 'components'> & {
       readonly suggestions: ReadonlyArray<T>;
@@ -148,6 +149,7 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
   components,
   enabled = true,
   placeholder = '',
+  maxMenuHeight,
   noOptionsMessage,
   values = [],
   onChange = noop,
@@ -249,7 +251,11 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
   return (
     <div css={containerStyles} onContextMenu={handleOnContextMenu}>
       {suggestions ? (
-        <SelectComponent<T, true> {...commonProps} options={suggestions} />
+        <SelectComponent<T, true>
+          {...commonProps}
+          options={suggestions}
+          maxMenuHeight={maxMenuHeight}
+        />
       ) : (
         <AsyncSelectComponent<T, true>
           {...commonProps}

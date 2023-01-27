@@ -1,4 +1,8 @@
-import { OnboardingBackground, BiographyModal } from '@asap-hub/gp2-components';
+import {
+  OnboardingBackground,
+  BiographyModal,
+  KeywordsModal,
+} from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 } from '@asap-hub/routing';
@@ -31,7 +35,11 @@ const Background: React.FC<Record<string, never>> = () => {
           />
         </Route>
         <Route path={onboarding({}).background({}).editKeywords({}).$}>
-          {/* { edit Keywords Modal} */}
+          <KeywordsModal
+            {...userData}
+            backHref={onboarding({}).background({}).$}
+            onSave={(patchedUser) => patchUser(patchedUser)}
+          />
         </Route>
       </>
     );

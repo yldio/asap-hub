@@ -3,7 +3,7 @@ import * as graphql from './graphql';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
 const documents = {
-  '\n  fragment CalendarsContent on Calendars {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      googleCalendarId\n      name\n      color\n      syncToken\n      resourceId\n      expirationDate\n    }\n    referencingGroupsContents {\n      flatData {\n        active\n      }\n    }\n    referencingWorkingGroupsContents {\n      flatData {\n        complete\n      }\n    }\n  }\n':
+  '\n  fragment CalendarsContent on Calendars {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      googleCalendarId\n      name\n      color\n      syncToken\n      resourceId\n      expirationDate\n    }\n    referencingGroupsContents {\n      id\n      flatData {\n        active\n      }\n    }\n    referencingWorkingGroupsContents {\n      id\n      flatData {\n        complete\n      }\n    }\n  }\n':
     graphql.CalendarsContentFragmentDoc,
   '\n  query FetchCalendar($id: String!) {\n    findCalendarsContent(id: $id) {\n      ...CalendarsContent\n    }\n  }\n  \n':
     graphql.FetchCalendarDocument,
@@ -76,8 +76,8 @@ const documents = {
 };
 
 export function gql(
-  source: '\n  fragment CalendarsContent on Calendars {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      googleCalendarId\n      name\n      color\n      syncToken\n      resourceId\n      expirationDate\n    }\n    referencingGroupsContents {\n      flatData {\n        active\n      }\n    }\n    referencingWorkingGroupsContents {\n      flatData {\n        complete\n      }\n    }\n  }\n',
-): typeof documents['\n  fragment CalendarsContent on Calendars {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      googleCalendarId\n      name\n      color\n      syncToken\n      resourceId\n      expirationDate\n    }\n    referencingGroupsContents {\n      flatData {\n        active\n      }\n    }\n    referencingWorkingGroupsContents {\n      flatData {\n        complete\n      }\n    }\n  }\n'];
+  source: '\n  fragment CalendarsContent on Calendars {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      googleCalendarId\n      name\n      color\n      syncToken\n      resourceId\n      expirationDate\n    }\n    referencingGroupsContents {\n      id\n      flatData {\n        active\n      }\n    }\n    referencingWorkingGroupsContents {\n      id\n      flatData {\n        complete\n      }\n    }\n  }\n',
+): typeof documents['\n  fragment CalendarsContent on Calendars {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      googleCalendarId\n      name\n      color\n      syncToken\n      resourceId\n      expirationDate\n    }\n    referencingGroupsContents {\n      id\n      flatData {\n        active\n      }\n    }\n    referencingWorkingGroupsContents {\n      id\n      flatData {\n        complete\n      }\n    }\n  }\n'];
 export function gql(
   source: '\n  query FetchCalendar($id: String!) {\n    findCalendarsContent(id: $id) {\n      ...CalendarsContent\n    }\n  }\n  \n',
 ): typeof documents['\n  query FetchCalendar($id: String!) {\n    findCalendarsContent(id: $id) {\n      ...CalendarsContent\n    }\n  }\n  \n'];

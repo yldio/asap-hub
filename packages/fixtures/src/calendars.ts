@@ -20,8 +20,10 @@ export const createCalendarResponse = (
   color:
     googleLegacyCalendarColor[itemIndex % googleLegacyCalendarColor.length],
   name: `Calendar ${itemIndex}`,
-  activeGroups,
-  incompleteWorkingGroups,
+  groups: [{ id: 'group-1', active: activeGroups }],
+  workingGroups: [
+    { id: 'working-group-1', complete: !incompleteWorkingGroups },
+  ],
 });
 
 export const createListCalendarResponse = (

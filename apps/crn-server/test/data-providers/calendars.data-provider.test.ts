@@ -347,9 +347,11 @@ describe('Calendars data provider', () => {
         calendar.id = 'calendar-id-1';
         calendar.referencingGroupsContents! = [
           {
+            id: 'group-id-1',
             flatData: { active: false },
           },
           {
+            id: 'group-id-2',
             flatData: { active: true },
           },
         ];

@@ -88,6 +88,28 @@
         }
       },
       {
+        "name": "calendars",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "References",
+          "maxItems": 1,
+          "allowDuplicates": false,
+          "resolveReference": true,
+          "mustBePublished": false,
+          "editor": "Dropdown",
+          "schemaIds": ["calendars"],
+          "label": "Calendars",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
         "name": "external-link",
         "isHidden": false,
         "isLocked": false,
@@ -262,28 +284,6 @@
             "isDisabled": false
           }
         ]
-      },
-      {
-        "name": "calendars",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "References",
-          "maxItems": 1,
-          "allowDuplicates": false,
-          "resolveReference": true,
-          "mustBePublished": false,
-          "editor": "Dropdown",
-          "schemaIds": ["calendars"],
-          "label": "Calendars",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
       },
       {
         "name": "members",

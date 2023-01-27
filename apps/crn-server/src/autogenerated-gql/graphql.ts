@@ -28,69 +28,69 @@ export type Scalars = {
 /** The app mutations. */
 export type ApplicationMutations = {
   /** Change a Calendars content. */
-  changeCalendarsContent: Calendars;
+  changeCalendarsContent: Maybe<Calendars>;
   /** Change a Dashboard content. */
-  changeDashboardContent: Dashboard;
+  changeDashboardContent: Maybe<Dashboard>;
   /** Change a Discover ASAP content. */
-  changeDiscoverContent: Discover;
+  changeDiscoverContent: Maybe<Discover>;
   /** Change a Events content. */
-  changeEventsContent: Events;
+  changeEventsContent: Maybe<Events>;
   /** Change a External authors content. */
-  changeExternalAuthorsContent: ExternalAuthors;
+  changeExternalAuthorsContent: Maybe<ExternalAuthors>;
   /** Change a Groups content. */
-  changeGroupsContent: Groups;
+  changeGroupsContent: Maybe<Groups>;
   /** Change a Labs content. */
-  changeLabsContent: Labs;
+  changeLabsContent: Maybe<Labs>;
   /** Change a Migrations content. */
-  changeMigrationsContent: Migrations;
+  changeMigrationsContent: Maybe<Migrations>;
   /** Change a News content. */
-  changeNewsAndEventsContent: NewsAndEvents;
+  changeNewsAndEventsContent: Maybe<NewsAndEvents>;
   /** Change a Pages content. */
-  changePagesContent: Pages;
+  changePagesContent: Maybe<Pages>;
   /** Change a Research Outputs content. */
-  changeResearchOutputsContent: ResearchOutputs;
+  changeResearchOutputsContent: Maybe<ResearchOutputs>;
   /** Change a Research Tags content. */
-  changeResearchTagsContent: ResearchTags;
+  changeResearchTagsContent: Maybe<ResearchTags>;
   /** Change a Teams content. */
-  changeTeamsContent: Teams;
+  changeTeamsContent: Maybe<Teams>;
   /** Change a Tutorials content. */
-  changeTutorialsContent: Tutorials;
+  changeTutorialsContent: Maybe<Tutorials>;
   /** Change a Users content. */
-  changeUsersContent: Users;
+  changeUsersContent: Maybe<Users>;
   /** Change a Working Groups content. */
-  changeWorkingGroupsContent: WorkingGroups;
+  changeWorkingGroupsContent: Maybe<WorkingGroups>;
   /** Creates an Calendars content. */
-  createCalendarsContent: Calendars;
+  createCalendarsContent: Maybe<Calendars>;
   /** Creates an Dashboard content. */
-  createDashboardContent: Dashboard;
+  createDashboardContent: Maybe<Dashboard>;
   /** Creates an Discover ASAP content. */
-  createDiscoverContent: Discover;
+  createDiscoverContent: Maybe<Discover>;
   /** Creates an Events content. */
-  createEventsContent: Events;
+  createEventsContent: Maybe<Events>;
   /** Creates an External authors content. */
-  createExternalAuthorsContent: ExternalAuthors;
+  createExternalAuthorsContent: Maybe<ExternalAuthors>;
   /** Creates an Groups content. */
-  createGroupsContent: Groups;
+  createGroupsContent: Maybe<Groups>;
   /** Creates an Labs content. */
-  createLabsContent: Labs;
+  createLabsContent: Maybe<Labs>;
   /** Creates an Migrations content. */
-  createMigrationsContent: Migrations;
+  createMigrationsContent: Maybe<Migrations>;
   /** Creates an News content. */
-  createNewsAndEventsContent: NewsAndEvents;
+  createNewsAndEventsContent: Maybe<NewsAndEvents>;
   /** Creates an Pages content. */
-  createPagesContent: Pages;
+  createPagesContent: Maybe<Pages>;
   /** Creates an Research Outputs content. */
-  createResearchOutputsContent: ResearchOutputs;
+  createResearchOutputsContent: Maybe<ResearchOutputs>;
   /** Creates an Research Tags content. */
-  createResearchTagsContent: ResearchTags;
+  createResearchTagsContent: Maybe<ResearchTags>;
   /** Creates an Teams content. */
-  createTeamsContent: Teams;
+  createTeamsContent: Maybe<Teams>;
   /** Creates an Tutorials content. */
-  createTutorialsContent: Tutorials;
+  createTutorialsContent: Maybe<Tutorials>;
   /** Creates an Users content. */
-  createUsersContent: Users;
+  createUsersContent: Maybe<Users>;
   /** Creates an Working Groups content. */
-  createWorkingGroupsContent: WorkingGroups;
+  createWorkingGroupsContent: Maybe<WorkingGroups>;
   /** Delete an Calendars content. */
   deleteCalendarsContent: EntitySavedResultDto;
   /** Delete an Dashboard content. */
@@ -124,181 +124,181 @@ export type ApplicationMutations = {
   /** Delete an Working Groups content. */
   deleteWorkingGroupsContent: EntitySavedResultDto;
   /** Patch an Calendars content by id. */
-  patchCalendarsContent: Calendars;
+  patchCalendarsContent: Maybe<Calendars>;
   /** Patch an Dashboard content by id. */
-  patchDashboardContent: Dashboard;
+  patchDashboardContent: Maybe<Dashboard>;
   /** Patch an Discover ASAP content by id. */
-  patchDiscoverContent: Discover;
+  patchDiscoverContent: Maybe<Discover>;
   /** Patch an Events content by id. */
-  patchEventsContent: Events;
+  patchEventsContent: Maybe<Events>;
   /** Patch an External authors content by id. */
-  patchExternalAuthorsContent: ExternalAuthors;
+  patchExternalAuthorsContent: Maybe<ExternalAuthors>;
   /** Patch an Groups content by id. */
-  patchGroupsContent: Groups;
+  patchGroupsContent: Maybe<Groups>;
   /** Patch an Labs content by id. */
-  patchLabsContent: Labs;
+  patchLabsContent: Maybe<Labs>;
   /** Patch an Migrations content by id. */
-  patchMigrationsContent: Migrations;
+  patchMigrationsContent: Maybe<Migrations>;
   /** Patch an News content by id. */
-  patchNewsAndEventsContent: NewsAndEvents;
+  patchNewsAndEventsContent: Maybe<NewsAndEvents>;
   /** Patch an Pages content by id. */
-  patchPagesContent: Pages;
+  patchPagesContent: Maybe<Pages>;
   /** Patch an Research Outputs content by id. */
-  patchResearchOutputsContent: ResearchOutputs;
+  patchResearchOutputsContent: Maybe<ResearchOutputs>;
   /** Patch an Research Tags content by id. */
-  patchResearchTagsContent: ResearchTags;
+  patchResearchTagsContent: Maybe<ResearchTags>;
   /** Patch an Teams content by id. */
-  patchTeamsContent: Teams;
+  patchTeamsContent: Maybe<Teams>;
   /** Patch an Tutorials content by id. */
-  patchTutorialsContent: Tutorials;
+  patchTutorialsContent: Maybe<Tutorials>;
   /** Patch an Users content by id. */
-  patchUsersContent: Users;
+  patchUsersContent: Maybe<Users>;
   /** Patch an Working Groups content by id. */
-  patchWorkingGroupsContent: WorkingGroups;
+  patchWorkingGroupsContent: Maybe<WorkingGroups>;
   /**
    * Publish a Calendars content.
    * @deprecated Use 'changeCalendarsContent' instead
    */
-  publishCalendarsContent: Calendars;
+  publishCalendarsContent: Maybe<Calendars>;
   /**
    * Publish a Dashboard content.
    * @deprecated Use 'changeDashboardContent' instead
    */
-  publishDashboardContent: Dashboard;
+  publishDashboardContent: Maybe<Dashboard>;
   /**
    * Publish a Discover ASAP content.
    * @deprecated Use 'changeDiscoverContent' instead
    */
-  publishDiscoverContent: Discover;
+  publishDiscoverContent: Maybe<Discover>;
   /**
    * Publish a Events content.
    * @deprecated Use 'changeEventsContent' instead
    */
-  publishEventsContent: Events;
+  publishEventsContent: Maybe<Events>;
   /**
    * Publish a External authors content.
    * @deprecated Use 'changeExternalAuthorsContent' instead
    */
-  publishExternalAuthorsContent: ExternalAuthors;
+  publishExternalAuthorsContent: Maybe<ExternalAuthors>;
   /**
    * Publish a Groups content.
    * @deprecated Use 'changeGroupsContent' instead
    */
-  publishGroupsContent: Groups;
+  publishGroupsContent: Maybe<Groups>;
   /**
    * Publish a Labs content.
    * @deprecated Use 'changeLabsContent' instead
    */
-  publishLabsContent: Labs;
+  publishLabsContent: Maybe<Labs>;
   /**
    * Publish a Migrations content.
    * @deprecated Use 'changeMigrationsContent' instead
    */
-  publishMigrationsContent: Migrations;
+  publishMigrationsContent: Maybe<Migrations>;
   /**
    * Publish a News content.
    * @deprecated Use 'changeNewsAndEventsContent' instead
    */
-  publishNewsAndEventsContent: NewsAndEvents;
+  publishNewsAndEventsContent: Maybe<NewsAndEvents>;
   /**
    * Publish a Pages content.
    * @deprecated Use 'changePagesContent' instead
    */
-  publishPagesContent: Pages;
+  publishPagesContent: Maybe<Pages>;
   /**
    * Publish a Research Outputs content.
    * @deprecated Use 'changeResearchOutputsContent' instead
    */
-  publishResearchOutputsContent: ResearchOutputs;
+  publishResearchOutputsContent: Maybe<ResearchOutputs>;
   /**
    * Publish a Research Tags content.
    * @deprecated Use 'changeResearchTagsContent' instead
    */
-  publishResearchTagsContent: ResearchTags;
+  publishResearchTagsContent: Maybe<ResearchTags>;
   /**
    * Publish a Teams content.
    * @deprecated Use 'changeTeamsContent' instead
    */
-  publishTeamsContent: Teams;
+  publishTeamsContent: Maybe<Teams>;
   /**
    * Publish a Tutorials content.
    * @deprecated Use 'changeTutorialsContent' instead
    */
-  publishTutorialsContent: Tutorials;
+  publishTutorialsContent: Maybe<Tutorials>;
   /**
    * Publish a Users content.
    * @deprecated Use 'changeUsersContent' instead
    */
-  publishUsersContent: Users;
+  publishUsersContent: Maybe<Users>;
   /**
    * Publish a Working Groups content.
    * @deprecated Use 'changeWorkingGroupsContent' instead
    */
-  publishWorkingGroupsContent: WorkingGroups;
+  publishWorkingGroupsContent: Maybe<WorkingGroups>;
   /** Update an Calendars content by id. */
-  updateCalendarsContent: Calendars;
+  updateCalendarsContent: Maybe<Calendars>;
   /** Update an Dashboard content by id. */
-  updateDashboardContent: Dashboard;
+  updateDashboardContent: Maybe<Dashboard>;
   /** Update an Discover ASAP content by id. */
-  updateDiscoverContent: Discover;
+  updateDiscoverContent: Maybe<Discover>;
   /** Update an Events content by id. */
-  updateEventsContent: Events;
+  updateEventsContent: Maybe<Events>;
   /** Update an External authors content by id. */
-  updateExternalAuthorsContent: ExternalAuthors;
+  updateExternalAuthorsContent: Maybe<ExternalAuthors>;
   /** Update an Groups content by id. */
-  updateGroupsContent: Groups;
+  updateGroupsContent: Maybe<Groups>;
   /** Update an Labs content by id. */
-  updateLabsContent: Labs;
+  updateLabsContent: Maybe<Labs>;
   /** Update an Migrations content by id. */
-  updateMigrationsContent: Migrations;
+  updateMigrationsContent: Maybe<Migrations>;
   /** Update an News content by id. */
-  updateNewsAndEventsContent: NewsAndEvents;
+  updateNewsAndEventsContent: Maybe<NewsAndEvents>;
   /** Update an Pages content by id. */
-  updatePagesContent: Pages;
+  updatePagesContent: Maybe<Pages>;
   /** Update an Research Outputs content by id. */
-  updateResearchOutputsContent: ResearchOutputs;
+  updateResearchOutputsContent: Maybe<ResearchOutputs>;
   /** Update an Research Tags content by id. */
-  updateResearchTagsContent: ResearchTags;
+  updateResearchTagsContent: Maybe<ResearchTags>;
   /** Update an Teams content by id. */
-  updateTeamsContent: Teams;
+  updateTeamsContent: Maybe<Teams>;
   /** Update an Tutorials content by id. */
-  updateTutorialsContent: Tutorials;
+  updateTutorialsContent: Maybe<Tutorials>;
   /** Update an Users content by id. */
-  updateUsersContent: Users;
+  updateUsersContent: Maybe<Users>;
   /** Update an Working Groups content by id. */
-  updateWorkingGroupsContent: WorkingGroups;
+  updateWorkingGroupsContent: Maybe<WorkingGroups>;
   /** Upsert an Calendars content by id. */
-  upsertCalendarsContent: Calendars;
+  upsertCalendarsContent: Maybe<Calendars>;
   /** Upsert an Dashboard content by id. */
-  upsertDashboardContent: Dashboard;
+  upsertDashboardContent: Maybe<Dashboard>;
   /** Upsert an Discover ASAP content by id. */
-  upsertDiscoverContent: Discover;
+  upsertDiscoverContent: Maybe<Discover>;
   /** Upsert an Events content by id. */
-  upsertEventsContent: Events;
+  upsertEventsContent: Maybe<Events>;
   /** Upsert an External authors content by id. */
-  upsertExternalAuthorsContent: ExternalAuthors;
+  upsertExternalAuthorsContent: Maybe<ExternalAuthors>;
   /** Upsert an Groups content by id. */
-  upsertGroupsContent: Groups;
+  upsertGroupsContent: Maybe<Groups>;
   /** Upsert an Labs content by id. */
-  upsertLabsContent: Labs;
+  upsertLabsContent: Maybe<Labs>;
   /** Upsert an Migrations content by id. */
-  upsertMigrationsContent: Migrations;
+  upsertMigrationsContent: Maybe<Migrations>;
   /** Upsert an News content by id. */
-  upsertNewsAndEventsContent: NewsAndEvents;
+  upsertNewsAndEventsContent: Maybe<NewsAndEvents>;
   /** Upsert an Pages content by id. */
-  upsertPagesContent: Pages;
+  upsertPagesContent: Maybe<Pages>;
   /** Upsert an Research Outputs content by id. */
-  upsertResearchOutputsContent: ResearchOutputs;
+  upsertResearchOutputsContent: Maybe<ResearchOutputs>;
   /** Upsert an Research Tags content by id. */
-  upsertResearchTagsContent: ResearchTags;
+  upsertResearchTagsContent: Maybe<ResearchTags>;
   /** Upsert an Teams content by id. */
-  upsertTeamsContent: Teams;
+  upsertTeamsContent: Maybe<Teams>;
   /** Upsert an Tutorials content by id. */
-  upsertTutorialsContent: Tutorials;
+  upsertTutorialsContent: Maybe<Tutorials>;
   /** Upsert an Users content by id. */
-  upsertUsersContent: Users;
+  upsertUsersContent: Maybe<Users>;
   /** Upsert an Working Groups content by id. */
-  upsertWorkingGroupsContent: WorkingGroups;
+  upsertWorkingGroupsContent: Maybe<WorkingGroups>;
 };
 
 /** The app mutations. */
@@ -6232,10 +6232,14 @@ export type CalendarsContentFragment = Pick<
     | 'expirationDate'
   >;
   referencingGroupsContents: Maybe<
-    Array<{ flatData: Pick<GroupsFlatDataDto, 'active'> }>
+    Array<Pick<Groups, 'id'> & { flatData: Pick<GroupsFlatDataDto, 'active'> }>
   >;
   referencingWorkingGroupsContents: Maybe<
-    Array<{ flatData: Pick<WorkingGroupsFlatDataDto, 'complete'> }>
+    Array<
+      Pick<WorkingGroups, 'id'> & {
+        flatData: Pick<WorkingGroupsFlatDataDto, 'complete'>;
+      }
+    >
   >;
 };
 
@@ -6256,10 +6260,16 @@ export type FetchCalendarQuery = {
         | 'expirationDate'
       >;
       referencingGroupsContents: Maybe<
-        Array<{ flatData: Pick<GroupsFlatDataDto, 'active'> }>
+        Array<
+          Pick<Groups, 'id'> & { flatData: Pick<GroupsFlatDataDto, 'active'> }
+        >
       >;
       referencingWorkingGroupsContents: Maybe<
-        Array<{ flatData: Pick<WorkingGroupsFlatDataDto, 'complete'> }>
+        Array<
+          Pick<WorkingGroups, 'id'> & {
+            flatData: Pick<WorkingGroupsFlatDataDto, 'complete'>;
+          }
+        >
       >;
     }
   >;
@@ -6288,10 +6298,18 @@ export type FetchCalendarsQuery = {
               | 'expirationDate'
             >;
             referencingGroupsContents: Maybe<
-              Array<{ flatData: Pick<GroupsFlatDataDto, 'active'> }>
+              Array<
+                Pick<Groups, 'id'> & {
+                  flatData: Pick<GroupsFlatDataDto, 'active'>;
+                }
+              >
             >;
             referencingWorkingGroupsContents: Maybe<
-              Array<{ flatData: Pick<WorkingGroupsFlatDataDto, 'complete'> }>
+              Array<
+                Pick<WorkingGroups, 'id'> & {
+                  flatData: Pick<WorkingGroupsFlatDataDto, 'complete'>;
+                }
+              >
             >;
           }
         >
@@ -9918,6 +9936,7 @@ export const CalendarsContentFragmentDoc = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'flatData' },
@@ -9940,6 +9959,7 @@ export const CalendarsContentFragmentDoc = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'flatData' },

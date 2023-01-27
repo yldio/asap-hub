@@ -4,7 +4,6 @@ import { ComponentProps } from 'react';
 import FilterPills from '../FilterPills';
 
 describe('FilterPills', () => {
-  beforeEach(jest.resetAllMocks);
   const props = {
     filters: {
       keywords: ['Epidemiology'],
@@ -23,7 +22,7 @@ describe('FilterPills', () => {
     expect(screen.getByText('Project 1')).toBeVisible();
     expect(screen.getByText('Working Group 1')).toBeVisible();
   });
-  it("shows the remove button for the second pill and it's clickable", () => {
+  it('calls the onRemove function for every pill with their respective id and type of filter', () => {
     render(<FilterPills {...props} />);
     const onRemoveKeywordButton =
       screen.getByText('Epidemiology').nextElementSibling!;

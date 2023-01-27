@@ -24,9 +24,6 @@ import {
   clientId,
   clientSecret,
 } from './config';
-import Dashboard, {
-  DashboardController,
-} from './controllers/dashboard.controller';
 import News, { NewsController } from './controllers/news.controller';
 import Projects, { ProjectController } from './controllers/project.controller';
 import Users, { UserController } from './controllers/user.controller';
@@ -60,7 +57,6 @@ import {
   WorkingGroupDataProvider,
   WorkingGroupSquidexDataProvider,
 } from './data-providers/working-group.data-provider';
-import { dashboardRouteFactory } from './routes/dashboard.route';
 import { newsRouteFactory } from './routes/news.route';
 import { projectRouteFactory } from './routes/project.route';
 import { userPublicRouteFactory, userRouteFactory } from './routes/user.route';
@@ -139,8 +135,6 @@ export const appFactory = (libs: Libs = {}): Express => {
     new ProjectSquidexDataProvider(squidexGraphqlClient, projectRestClient);
 
   // Controllers
-  const dashboardController =
-    libs.dashboardController || new Dashboard(squidexGraphqlClient);
 
   const workingGroupController =
     libs.workingGroupController || new WorkingGroups(workingGroupDataProvider);
@@ -168,7 +162,6 @@ export const appFactory = (libs: Libs = {}): Express => {
     );
 
   // Routes
-  const dashboardRoutes = dashboardRouteFactory(dashboardController);
   const userPublicRoutes = userPublicRouteFactory(userController);
   const userRoutes = userRouteFactory(userController);
   const newsRoutes = newsRouteFactory(newsController);
@@ -186,7 +179,6 @@ export const appFactory = (libs: Libs = {}): Express => {
    * Routes requiring onboarding below
    */
   app.use(userRoutes);
-  app.use(dashboardRoutes);
   app.use(newsRoutes);
   app.use(workingGroupRoutes);
   app.use(workingGroupNetworkRoutes);
@@ -211,7 +203,6 @@ export type Libs = {
   assetDataProvider?: AssetDataProvider;
   userDataProvider?: UserDataProvider;
   newsDataProvider?: NewsDataProvider;
-  dashboardController?: DashboardController;
   workingGroupDataProvider?: WorkingGroupDataProvider;
   workingGroupNetworkDataProvider?: WorkingGroupNetworkDataProvider;
   projectDataProvider?: ProjectDataProvider;

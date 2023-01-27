@@ -6,11 +6,16 @@ import CalendarList from '../CalendarList';
 
 const props: ComponentProps<typeof CalendarList> = {
   calendars: [],
-  title: 'Subscribe to this Interest Groups Calendar',
+  title: '',
 };
 
 it('Renders calender list', () => {
-  const { getByRole } = render(<CalendarList {...props} />);
+  const { getByRole } = render(
+    <CalendarList
+      {...props}
+      title="Subscribe to this Interest Groups Calendar"
+    />,
+  );
   expect(getByRole('heading').textContent).toMatch(/subscribe/i);
 });
 

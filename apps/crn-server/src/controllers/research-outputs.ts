@@ -13,6 +13,7 @@ import {
   ValidationErrorResponse,
   VALIDATION_ERROR_MESSAGE,
   ResearchOutputUpdateDataObject,
+  ResearchOutputDataObject,
 } from '@asap-hub/model';
 import {
   FetchResearchOutputOptions,
@@ -62,7 +63,7 @@ export default class ResearchOutputs implements ResearchOutputController {
   async create(
     researchOutputCreateData: ResearchOutputCreateData,
   ): Promise<ResearchOutputResponse | null> {
-    await this.validateResearchOutputUniqueness(researchOutputCreateData);
+    await this.validateResearchOutput(researchOutputCreateData);
 
     const { methods, organisms, environments, subtype } =
       await this.parseResearchTags(researchOutputCreateData);
@@ -108,11 +109,6 @@ export default class ResearchOutputs implements ResearchOutputController {
     id: string,
     researchOutputUpdateData: ResearchOutputUpdateData,
   ): Promise<ResearchOutputResponse | null> {
-    await this.validateResearchOutputUniqueness(researchOutputUpdateData, id);
-
-    const { methods, organisms, environments, subtype } =
-      await this.parseResearchTags(researchOutputUpdateData);
-
     const currentResearchOutput =
       await this.researchOutputDataProvider.fetchById(id);
 
@@ -122,6 +118,15 @@ export default class ResearchOutputs implements ResearchOutputController {
         `research-output with id ${id} not found`,
       );
     }
+
+    await this.validateResearchOutput(
+      researchOutputUpdateData,
+      id,
+      currentResearchOutput,
+    );
+
+    const { methods, organisms, environments, subtype } =
+      await this.parseResearchTags(researchOutputUpdateData);
 
     const researchOutputUpdateDataObject: ResearchOutputUpdateDataObject = {
       authors: await this.mapAuthorsPostRequestToId(
@@ -161,9 +166,10 @@ export default class ResearchOutputs implements ResearchOutputController {
     return this.researchOutputDataProvider.fetchById(researchOutputId);
   }
 
-  private async validateResearchOutputUniqueness(
+  private async validateResearchOutput(
     researchOutputData: ResearchOutputCreateData | ResearchOutputUpdateData,
     resarchOutputId?: string,
+    currentResearchOutput?: ResearchOutputDataObject,
   ): Promise<void> {
     const isError = (
       error: ValidationErrorResponse['data'][0] | null,
@@ -173,6 +179,10 @@ export default class ResearchOutputs implements ResearchOutputController {
       await Promise.all([
         this.validateTitleUniqueness(researchOutputData, resarchOutputId),
         this.validateLinkUniqueness(researchOutputData, resarchOutputId),
+        (!('createdBy' in researchOutputData) &&
+          currentResearchOutput &&
+          this.validateTeamList(researchOutputData, currentResearchOutput)) ||
+          null,
       ])
     ).filter(isError);
 
@@ -215,6 +225,26 @@ export default class ResearchOutputs implements ResearchOutputController {
       },
       schemaPath: '#/properties/title/unique',
     };
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  private validateTeamList(
+    researchOutputData: ResearchOutputUpdateData,
+    currentResearchOutput: ResearchOutputDataObject,
+  ): ValidationErrorResponse['data'][0] | null {
+    if (currentResearchOutput.teams[0]?.id !== researchOutputData.teams?.[0]) {
+      return {
+        instancePath: '/teams',
+        keyword: 'invalid',
+        message: 'first team cannot be removed or changed',
+        params: {
+          type: 'string',
+        },
+        schemaPath: '#/properties/teams/invalid',
+      };
+    }
+
+    return null;
   }
 
   private async validateLinkUniqueness(

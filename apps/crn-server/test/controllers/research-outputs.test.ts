@@ -529,158 +529,221 @@ describe('ResearchOutputs controller', () => {
       );
     });
 
-    describe('Validating uniqueness', () => {
-      const researchOutputDataObject = getResearchOutputDataObject();
-      researchOutputDataObject.id = researchOutputId;
-
-      const researchOutputRequest = getResearchOutputUpdateData();
-      researchOutputRequest.title = 'some-test-title';
-      researchOutputRequest.link = 'https://some-test-link.com';
-
-      test('Should throw an error when a different research output with the same type and title already exists', async () => {
-        const otherResearchOutputDataObject = getResearchOutputDataObject();
-        otherResearchOutputDataObject.id = 'another-research-output-id';
-        // returns this research output and another one with the same type and title
-        when(researchOutputDataProviderMock.fetch)
-          .calledWith({
-            filter: {
-              title: researchOutputRequest.title,
-              documentType: researchOutputRequest.documentType,
-            },
-            includeDrafts: true,
-          })
-          .mockResolvedValueOnce({
-            total: 2,
-            items: [researchOutputDataObject, otherResearchOutputDataObject],
-          });
-        // returns this research output only
-        when(researchOutputDataProviderMock.fetch)
-          .calledWith({
-            filter: { link: researchOutputRequest.link },
-            includeDrafts: true,
-          })
-          .mockResolvedValueOnce({
-            total: 1,
-            items: [researchOutputDataObject],
-          });
+    describe('Validation', () => {
+      test('Should throw a validation error when the first team is removed', async () => {
+        const currentResearchOutput = getResearchOutputDataObject();
+        currentResearchOutput.teams = [
+          { id: 'team-id-a', displayName: 'Team A' },
+          { id: 'team-id-b', displayName: 'Team B' },
+        ];
+        researchOutputDataProviderMock.fetchById.mockResolvedValue(
+          currentResearchOutput,
+        );
+        const researchOutputUpdateData = getResearchOutputUpdateData();
+        researchOutputUpdateData.teams = ['team-id-b'];
 
         await expect(
-          researchOutputs.update(researchOutputId, researchOutputRequest),
+          researchOutputs.update(researchOutputId, researchOutputUpdateData),
         ).rejects.toThrow(
           expect.objectContaining({
             data: [
               {
-                instancePath: '/title',
-                keyword: 'unique',
-                message: 'must be unique',
+                instancePath: '/teams',
+                keyword: 'invalid',
+                message: 'first team cannot be removed or changed',
                 params: {
                   type: 'string',
                 },
-                schemaPath: '#/properties/title/unique',
+                schemaPath: '#/properties/teams/invalid',
               },
             ],
           }),
         );
       });
 
-      test('Should throw error when a research output with the same link already exists', async () => {
-        const otherResearchOutputDataObject = getResearchOutputDataObject();
-        otherResearchOutputDataObject.id = 'another-research-output-id';
-        // returns this research output and another one with the link
-        when(researchOutputDataProviderMock.fetch)
-          .calledWith({
-            filter: { link: researchOutputRequest.link },
-            includeDrafts: true,
-          })
-          .mockResolvedValueOnce({
-            total: 2,
-            items: [researchOutputDataObject, otherResearchOutputDataObject],
-          });
-
-        // returns this research output only
-        when(researchOutputDataProviderMock.fetch)
-          .calledWith({
-            filter: {
-              title: researchOutputRequest.title,
-              documentType: researchOutputRequest.documentType,
-            },
-            includeDrafts: true,
-          })
-          .mockResolvedValueOnce({
-            total: 1,
-            items: [researchOutputDataObject],
-          });
+      test('Should throw a validation error when the first team is moved down the list', async () => {
+        const currentResearchOutput = getResearchOutputDataObject();
+        currentResearchOutput.teams = [
+          { id: 'team-id-a', displayName: 'Team A' },
+          { id: 'team-id-b', displayName: 'Team B' },
+        ];
+        researchOutputDataProviderMock.fetchById.mockResolvedValue(
+          currentResearchOutput,
+        );
+        const researchOutputUpdateData = getResearchOutputUpdateData();
+        researchOutputUpdateData.teams = ['team-id-b', 'team-id-a'];
 
         await expect(
-          researchOutputs.update(researchOutputId, researchOutputRequest),
+          researchOutputs.update(researchOutputId, researchOutputUpdateData),
         ).rejects.toThrow(
           expect.objectContaining({
             data: [
               {
-                instancePath: '/link',
-                keyword: 'unique',
-                message: 'must be unique',
+                instancePath: '/teams',
+                keyword: 'invalid',
+                message: 'first team cannot be removed or changed',
                 params: {
                   type: 'string',
                 },
-                schemaPath: '#/properties/link/unique',
+                schemaPath: '#/properties/teams/invalid',
               },
             ],
           }),
         );
       });
+      describe('Validating uniqueness', () => {
+        const researchOutputDataObject = getResearchOutputDataObject();
+        researchOutputDataObject.id = researchOutputId;
 
-      test('Should throw two validation errors when a research output with the same type and title and link already exists', async () => {
-        const otherResearchOutputDataObject = getResearchOutputDataObject();
-        otherResearchOutputDataObject.id = 'another-research-output-id';
-        when(researchOutputDataProviderMock.fetch)
-          .calledWith({
-            filter: {
-              title: researchOutputRequest.title,
-              documentType: researchOutputRequest.documentType,
-            },
-            includeDrafts: true,
-          })
-          .mockResolvedValueOnce({
-            total: 2,
-            items: [researchOutputDataObject, otherResearchOutputDataObject],
-          });
-        when(researchOutputDataProviderMock.fetch)
-          .calledWith({
-            filter: { link: researchOutputRequest.link },
-            includeDrafts: true,
-          })
-          .mockResolvedValueOnce({
-            total: 2,
-            items: [researchOutputDataObject, otherResearchOutputDataObject],
-          });
+        const researchOutputRequest = getResearchOutputUpdateData();
+        researchOutputRequest.title = 'some-test-title';
+        researchOutputRequest.link = 'https://some-test-link.com';
 
-        await expect(
-          researchOutputs.update(researchOutputId, researchOutputRequest),
-        ).rejects.toThrow(
-          expect.objectContaining({
-            data: [
-              {
-                instancePath: '/title',
-                keyword: 'unique',
-                message: 'must be unique',
-                params: {
-                  type: 'string',
-                },
-                schemaPath: '#/properties/title/unique',
+        test('Should throw an error when a different research output with the same type and title already exists', async () => {
+          const otherResearchOutputDataObject = getResearchOutputDataObject();
+          otherResearchOutputDataObject.id = 'another-research-output-id';
+          // returns this research output and another one with the same type and title
+          when(researchOutputDataProviderMock.fetch)
+            .calledWith({
+              filter: {
+                title: researchOutputRequest.title,
+                documentType: researchOutputRequest.documentType,
               },
-              {
-                instancePath: '/link',
-                keyword: 'unique',
-                message: 'must be unique',
-                params: {
-                  type: 'string',
+              includeDrafts: true,
+            })
+            .mockResolvedValueOnce({
+              total: 2,
+              items: [researchOutputDataObject, otherResearchOutputDataObject],
+            });
+          // returns this research output only
+          when(researchOutputDataProviderMock.fetch)
+            .calledWith({
+              filter: { link: researchOutputRequest.link },
+              includeDrafts: true,
+            })
+            .mockResolvedValueOnce({
+              total: 1,
+              items: [researchOutputDataObject],
+            });
+
+          await expect(
+            researchOutputs.update(researchOutputId, researchOutputRequest),
+          ).rejects.toThrow(
+            expect.objectContaining({
+              data: [
+                {
+                  instancePath: '/title',
+                  keyword: 'unique',
+                  message: 'must be unique',
+                  params: {
+                    type: 'string',
+                  },
+                  schemaPath: '#/properties/title/unique',
                 },
-                schemaPath: '#/properties/link/unique',
+              ],
+            }),
+          );
+        });
+
+        test('Should throw error when a research output with the same link already exists', async () => {
+          const otherResearchOutputDataObject = getResearchOutputDataObject();
+          otherResearchOutputDataObject.id = 'another-research-output-id';
+          // returns this research output and another one with the link
+          when(researchOutputDataProviderMock.fetch)
+            .calledWith({
+              filter: { link: researchOutputRequest.link },
+              includeDrafts: true,
+            })
+            .mockResolvedValueOnce({
+              total: 2,
+              items: [researchOutputDataObject, otherResearchOutputDataObject],
+            });
+
+          // returns this research output only
+          when(researchOutputDataProviderMock.fetch)
+            .calledWith({
+              filter: {
+                title: researchOutputRequest.title,
+                documentType: researchOutputRequest.documentType,
               },
-            ],
-          }),
-        );
+              includeDrafts: true,
+            })
+            .mockResolvedValueOnce({
+              total: 1,
+              items: [researchOutputDataObject],
+            });
+
+          await expect(
+            researchOutputs.update(researchOutputId, researchOutputRequest),
+          ).rejects.toThrow(
+            expect.objectContaining({
+              data: [
+                {
+                  instancePath: '/link',
+                  keyword: 'unique',
+                  message: 'must be unique',
+                  params: {
+                    type: 'string',
+                  },
+                  schemaPath: '#/properties/link/unique',
+                },
+              ],
+            }),
+          );
+        });
+
+        test('Should throw two validation errors when a research output with the same type and title and link already exists', async () => {
+          const otherResearchOutputDataObject = getResearchOutputDataObject();
+          otherResearchOutputDataObject.id = 'another-research-output-id';
+          when(researchOutputDataProviderMock.fetch)
+            .calledWith({
+              filter: {
+                title: researchOutputRequest.title,
+                documentType: researchOutputRequest.documentType,
+              },
+              includeDrafts: true,
+            })
+            .mockResolvedValueOnce({
+              total: 2,
+              items: [researchOutputDataObject, otherResearchOutputDataObject],
+            });
+          when(researchOutputDataProviderMock.fetch)
+            .calledWith({
+              filter: { link: researchOutputRequest.link },
+              includeDrafts: true,
+            })
+            .mockResolvedValueOnce({
+              total: 2,
+              items: [researchOutputDataObject, otherResearchOutputDataObject],
+            });
+
+          await expect(
+            researchOutputs.update(researchOutputId, researchOutputRequest),
+          ).rejects.toThrow(
+            expect.objectContaining({
+              data: [
+                {
+                  instancePath: '/title',
+                  keyword: 'unique',
+                  message: 'must be unique',
+                  params: {
+                    type: 'string',
+                  },
+                  schemaPath: '#/properties/title/unique',
+                },
+                {
+                  instancePath: '/link',
+                  keyword: 'unique',
+                  message: 'must be unique',
+                  params: {
+                    type: 'string',
+                  },
+                  schemaPath: '#/properties/link/unique',
+                },
+              ],
+            }),
+          );
+        });
       });
     });
 

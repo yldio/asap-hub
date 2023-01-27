@@ -51,7 +51,7 @@ const UserPosition: React.FC<UserPositionProps> = ({
         {index !== 0 && (
           <div css={buttonStyles}>
             <Button onClick={onRemove} small>
-              {binIcon}
+              <div css={css({ display: 'flex' })}>{binIcon}</div>
             </Button>
           </div>
         )}

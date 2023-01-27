@@ -59,9 +59,24 @@ const EditableCard: React.FC<EditableCardProps> = ({
       </div>
       {editHref && (
         <div css={[{ gridArea: 'edit' }]}>
-          <Link href={editHref} buttonStyle noMargin small fullWidth>
-            {edit ? 'Edit' : optional ? 'Optional' : 'Required'}{' '}
-            {edit ? editIcon : addIcon}
+          <Link
+            href={editHref}
+            buttonStyle
+            noMargin
+            small
+            fullWidth
+            overrideStyles={css({ padding: `${rem(5)} ${rem(14)}` })}
+          >
+            <div
+              css={{
+                display: 'flex',
+                flexDirection: 'row',
+                gap: rem(8),
+              }}
+            >
+              {edit ? 'Edit' : optional ? 'Optional' : 'Required'}
+              {edit ? editIcon : addIcon}
+            </div>
           </Link>
         </div>
       )}

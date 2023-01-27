@@ -216,29 +216,44 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
       </div>
       {editHref && (
         <div css={[{ gridArea: 'edit' }, editButtonStyles]}>
-          <Link href={editHref} buttonStyle noMargin small fullWidth>
-            {validateCompleted({
-              degrees,
-              firstName,
-              lastName,
-              region,
-              role,
-              country,
-              positions,
-            })
-              ? 'Edit'
-              : 'Required'}{' '}
-            {validateCompleted({
-              degrees,
-              firstName,
-              lastName,
-              region,
-              role,
-              country,
-              positions,
-            })
-              ? editIcon
-              : addIcon}
+          <Link
+            href={editHref}
+            buttonStyle
+            noMargin
+            small
+            fullWidth
+            overrideStyles={css({ padding: `${rem(5)} ${rem(14)}` })}
+          >
+            <div
+              css={{
+                display: 'flex',
+                flexDirection: 'row',
+                gap: rem(8),
+              }}
+            >
+              {validateCompleted({
+                degrees,
+                firstName,
+                lastName,
+                region,
+                role,
+                country,
+                positions,
+              })
+                ? 'Edit'
+                : 'Required'}
+              {validateCompleted({
+                degrees,
+                firstName,
+                lastName,
+                region,
+                role,
+                country,
+                positions,
+              })
+                ? editIcon
+                : addIcon}
+            </div>
           </Link>
         </div>
       )}

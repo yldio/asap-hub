@@ -12,7 +12,7 @@ describe('/working-groups-network/ route', () => {
     logger: loggerMock,
   });
 
-  afterEach(jest.resetAllMocks);
+  beforeEach(jest.resetAllMocks);
 
   describe('GET /working-group-network', () => {
     test('Should return 200 when no working groups are found', async () => {
@@ -37,14 +37,9 @@ describe('/working-groups-network/ route', () => {
 
       const response = await supertest(app).get('/working-group-network');
 
+      expect(workingGroupNetworkControllerMock.fetch).toBeCalled();
       expect(response.status).toBe(200);
       expect(response.body).toEqual(getListWorkingGroupNetworkResponse());
-    });
-
-    test('Should call the controller fetch method', async () => {
-      await supertest(app).get('/working-group-network');
-
-      expect(workingGroupNetworkControllerMock.fetch).toBeCalled();
     });
   });
 });

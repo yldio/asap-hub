@@ -33,6 +33,8 @@ export type ApplicationMutations = {
   changeDashboardContent: Dashboard;
   /** Change a Migrations content. */
   changeMigrationsContent: Migrations;
+  /** Change a News content. */
+  changeNewsAndEventsContent: NewsAndEvents;
   /** Change a Projects content. */
   changeProjectsContent: Projects;
   /** Change a Users content. */
@@ -47,6 +49,8 @@ export type ApplicationMutations = {
   createDashboardContent: Dashboard;
   /** Creates an Migrations content. */
   createMigrationsContent: Migrations;
+  /** Creates an News content. */
+  createNewsAndEventsContent: NewsAndEvents;
   /** Creates an Projects content. */
   createProjectsContent: Projects;
   /** Creates an Users content. */
@@ -61,6 +65,8 @@ export type ApplicationMutations = {
   deleteDashboardContent: EntitySavedResultDto;
   /** Delete an Migrations content. */
   deleteMigrationsContent: EntitySavedResultDto;
+  /** Delete an News content. */
+  deleteNewsAndEventsContent: EntitySavedResultDto;
   /** Delete an Projects content. */
   deleteProjectsContent: EntitySavedResultDto;
   /** Delete an Users content. */
@@ -75,6 +81,8 @@ export type ApplicationMutations = {
   patchDashboardContent: Dashboard;
   /** Patch an Migrations content by id. */
   patchMigrationsContent: Migrations;
+  /** Patch an News content by id. */
+  patchNewsAndEventsContent: NewsAndEvents;
   /** Patch an Projects content by id. */
   patchProjectsContent: Projects;
   /** Patch an Users content by id. */
@@ -98,6 +106,11 @@ export type ApplicationMutations = {
    * @deprecated Use 'changeMigrationsContent' instead
    */
   publishMigrationsContent: Migrations;
+  /**
+   * Publish a News content.
+   * @deprecated Use 'changeNewsAndEventsContent' instead
+   */
+  publishNewsAndEventsContent: NewsAndEvents;
   /**
    * Publish a Projects content.
    * @deprecated Use 'changeProjectsContent' instead
@@ -124,6 +137,8 @@ export type ApplicationMutations = {
   updateDashboardContent: Dashboard;
   /** Update an Migrations content by id. */
   updateMigrationsContent: Migrations;
+  /** Update an News content by id. */
+  updateNewsAndEventsContent: NewsAndEvents;
   /** Update an Projects content by id. */
   updateProjectsContent: Projects;
   /** Update an Users content by id. */
@@ -138,6 +153,8 @@ export type ApplicationMutations = {
   upsertDashboardContent: Dashboard;
   /** Upsert an Migrations content by id. */
   upsertMigrationsContent: Migrations;
+  /** Upsert an News content by id. */
+  upsertNewsAndEventsContent: NewsAndEvents;
   /** Upsert an Projects content by id. */
   upsertProjectsContent: Projects;
   /** Upsert an Users content by id. */
@@ -166,6 +183,14 @@ export type ApplicationMutationsChangeDashboardContentArgs = {
 
 /** The app mutations. */
 export type ApplicationMutationsChangeMigrationsContentArgs = {
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  status: Scalars['String'];
+};
+
+/** The app mutations. */
+export type ApplicationMutationsChangeNewsAndEventsContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -229,6 +254,14 @@ export type ApplicationMutationsCreateMigrationsContentArgs = {
 };
 
 /** The app mutations. */
+export type ApplicationMutationsCreateNewsAndEventsContentArgs = {
+  data: NewsAndEventsDataInputDto;
+  id: InputMaybe<Scalars['String']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
 export type ApplicationMutationsCreateProjectsContentArgs = {
   data: ProjectsDataInputDto;
   id: InputMaybe<Scalars['String']>;
@@ -279,6 +312,12 @@ export type ApplicationMutationsDeleteMigrationsContentArgs = {
 };
 
 /** The app mutations. */
+export type ApplicationMutationsDeleteNewsAndEventsContentArgs = {
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+};
+
+/** The app mutations. */
 export type ApplicationMutationsDeleteProjectsContentArgs = {
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -319,6 +358,13 @@ export type ApplicationMutationsPatchDashboardContentArgs = {
 /** The app mutations. */
 export type ApplicationMutationsPatchMigrationsContentArgs = {
   data: MigrationsDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
+export type ApplicationMutationsPatchNewsAndEventsContentArgs = {
+  data: NewsAndEventsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
@@ -376,6 +422,14 @@ export type ApplicationMutationsPublishMigrationsContentArgs = {
 };
 
 /** The app mutations. */
+export type ApplicationMutationsPublishNewsAndEventsContentArgs = {
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  status: Scalars['String'];
+};
+
+/** The app mutations. */
 export type ApplicationMutationsPublishProjectsContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
   expectedVersion?: InputMaybe<Scalars['Int']>;
@@ -424,6 +478,13 @@ export type ApplicationMutationsUpdateDashboardContentArgs = {
 /** The app mutations. */
 export type ApplicationMutationsUpdateMigrationsContentArgs = {
   data: MigrationsDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
+export type ApplicationMutationsUpdateNewsAndEventsContentArgs = {
+  data: NewsAndEventsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
@@ -487,6 +548,16 @@ export type ApplicationMutationsUpsertMigrationsContentArgs = {
 };
 
 /** The app mutations. */
+export type ApplicationMutationsUpsertNewsAndEventsContentArgs = {
+  data: NewsAndEventsDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  patch?: InputMaybe<Scalars['Boolean']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
 export type ApplicationMutationsUpsertProjectsContentArgs = {
   data: ProjectsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
@@ -536,6 +607,8 @@ export type ApplicationQueries = {
   findDashboardContent: Maybe<Dashboard>;
   /** Find an Migrations content by id. */
   findMigrationsContent: Maybe<Migrations>;
+  /** Find an News content by id. */
+  findNewsAndEventsContent: Maybe<NewsAndEvents>;
   /** Find an Projects content by id. */
   findProjectsContent: Maybe<Projects>;
   /** Find an Users content by id. */
@@ -560,6 +633,10 @@ export type ApplicationQueries = {
   queryMigrationsContents: Maybe<Array<Migrations>>;
   /** Query Migrations content items with total count. */
   queryMigrationsContentsWithTotal: Maybe<MigrationsResultDto>;
+  /** Query News content items. */
+  queryNewsAndEventsContents: Maybe<Array<NewsAndEvents>>;
+  /** Query News content items with total count. */
+  queryNewsAndEventsContentsWithTotal: Maybe<NewsAndEventsResultDto>;
   /** Query Projects content items. */
   queryProjectsContents: Maybe<Array<Projects>>;
   /** Query Projects content items with total count. */
@@ -597,6 +674,12 @@ export type ApplicationQueriesFindDashboardContentArgs = {
 
 /** The app queries. */
 export type ApplicationQueriesFindMigrationsContentArgs = {
+  id: Scalars['String'];
+  version: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type ApplicationQueriesFindNewsAndEventsContentArgs = {
   id: Scalars['String'];
   version: InputMaybe<Scalars['Int']>;
 };
@@ -688,6 +771,24 @@ export type ApplicationQueriesQueryMigrationsContentsArgs = {
 
 /** The app queries. */
 export type ApplicationQueriesQueryMigrationsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type ApplicationQueriesQueryNewsAndEventsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type ApplicationQueriesQueryNewsAndEventsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -1053,6 +1154,10 @@ export type Dashboard = Content & {
   referencesMigrationsContents: Maybe<Array<Migrations>>;
   /** Query Migrations content items with total count. */
   referencesMigrationsContentsWithTotal: Maybe<MigrationsResultDto>;
+  /** Query News content items. */
+  referencesNewsAndEventsContents: Maybe<Array<NewsAndEvents>>;
+  /** Query News content items with total count. */
+  referencesNewsAndEventsContentsWithTotal: Maybe<NewsAndEventsResultDto>;
   /** Query Projects content items. */
   referencesProjectsContents: Maybe<Array<Projects>>;
   /** Query Projects content items with total count. */
@@ -1130,6 +1235,24 @@ export type DashboardReferencesMigrationsContentsArgs = {
 
 /** The structure of a Dashboard content type. */
 export type DashboardReferencesMigrationsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Dashboard content type. */
+export type DashboardReferencesNewsAndEventsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Dashboard content type. */
+export type DashboardReferencesNewsAndEventsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -1253,6 +1376,7 @@ export type DashboardDataNewsUnionDto =
   | ContributingCohorts
   | Dashboard
   | Migrations
+  | NewsAndEvents
   | Projects
   | Users
   | WorkingGroupNetwork
@@ -1272,6 +1396,7 @@ export type DashboardDataPagesUnionDto =
   | ContributingCohorts
   | Dashboard
   | Migrations
+  | NewsAndEvents
   | Projects
   | Users
   | WorkingGroupNetwork
@@ -1498,6 +1623,178 @@ export type MigrationsFlatDataDto = {
 export type MigrationsResultDto = {
   /** The contents. */
   items: Maybe<Array<Migrations>>;
+  /** The total count of  contents. */
+  total: Scalars['Int'];
+};
+
+/** The structure of a News content type. */
+export type NewsAndEvents = Content & {
+  /** The timestamp when the object was created. */
+  created: Scalars['Instant'];
+  /** The user who created the object. */
+  createdBy: Scalars['String'];
+  /** The user who created the object. */
+  createdByUser: User;
+  /** The data of the content. */
+  data: NewsAndEventsDataDto;
+  /** The edit token. */
+  editToken: Maybe<Scalars['String']>;
+  /** The flat data of the content. */
+  flatData: NewsAndEventsFlatDataDto;
+  /** The ID of the object (usually GUID). */
+  id: Scalars['String'];
+  /** The timestamp when the object was updated the last time. */
+  lastModified: Scalars['Instant'];
+  /** The user who updated the object the last time. */
+  lastModifiedBy: Scalars['String'];
+  /** The user who updated the object the last time. */
+  lastModifiedByUser: User;
+  /** The new status of the content. */
+  newStatus: Maybe<Scalars['String']>;
+  /** The status color of the content. */
+  newStatusColor: Maybe<Scalars['String']>;
+  /** Query Dashboard content items. */
+  referencingDashboardContents: Maybe<Array<Dashboard>>;
+  /** Query Dashboard content items with total count. */
+  referencingDashboardContentsWithTotal: Maybe<DashboardResultDto>;
+  /** The status of the content. */
+  status: Scalars['String'];
+  /** The status color of the content. */
+  statusColor: Scalars['String'];
+  /** The URL to the content. */
+  url: Scalars['String'];
+  /** The version of the objec. */
+  version: Scalars['Int'];
+};
+
+/** The structure of a News content type. */
+export type NewsAndEventsReferencingDashboardContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a News content type. */
+export type NewsAndEventsReferencingDashboardContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of the Number of articles field of the News content type. */
+export type NewsAndEventsDataArticleCountDto = {
+  iv: Maybe<Scalars['Float']>;
+};
+
+/** The structure of the Number of articles field of the News content input type. */
+export type NewsAndEventsDataArticleCountInputDto = {
+  iv: InputMaybe<Scalars['Float']>;
+};
+
+/** The structure of the Number of cohorts field of the News content type. */
+export type NewsAndEventsDataCohortCountDto = {
+  iv: Maybe<Scalars['Float']>;
+};
+
+/** The structure of the Number of cohorts field of the News content input type. */
+export type NewsAndEventsDataCohortCountInputDto = {
+  iv: InputMaybe<Scalars['Float']>;
+};
+
+/** The structure of the News data type. */
+export type NewsAndEventsDataDto = {
+  articleCount: Maybe<NewsAndEventsDataArticleCountDto>;
+  cohortCount: Maybe<NewsAndEventsDataCohortCountDto>;
+  link: Maybe<NewsAndEventsDataLinkDto>;
+  linkText: Maybe<NewsAndEventsDataLinkTextDto>;
+  sampleCount: Maybe<NewsAndEventsDataSampleCountDto>;
+  text: Maybe<NewsAndEventsDataTextDto>;
+  title: Maybe<NewsAndEventsDataTitleDto>;
+};
+
+/** The structure of the News data input type. */
+export type NewsAndEventsDataInputDto = {
+  articleCount: InputMaybe<NewsAndEventsDataArticleCountInputDto>;
+  cohortCount: InputMaybe<NewsAndEventsDataCohortCountInputDto>;
+  link: InputMaybe<NewsAndEventsDataLinkInputDto>;
+  linkText: InputMaybe<NewsAndEventsDataLinkTextInputDto>;
+  sampleCount: InputMaybe<NewsAndEventsDataSampleCountInputDto>;
+  text: InputMaybe<NewsAndEventsDataTextInputDto>;
+  title: InputMaybe<NewsAndEventsDataTitleInputDto>;
+};
+
+/** The structure of the External Link field of the News content type. */
+export type NewsAndEventsDataLinkDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the External Link field of the News content input type. */
+export type NewsAndEventsDataLinkInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the External Link Text field of the News content type. */
+export type NewsAndEventsDataLinkTextDto = {
+  /** Leave this empty to show "Open External Link" */
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the External Link Text field of the News content input type. */
+export type NewsAndEventsDataLinkTextInputDto = {
+  /** Leave this empty to show "Open External Link" */
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Number of samples field of the News content type. */
+export type NewsAndEventsDataSampleCountDto = {
+  iv: Maybe<Scalars['Float']>;
+};
+
+/** The structure of the Number of samples field of the News content input type. */
+export type NewsAndEventsDataSampleCountInputDto = {
+  iv: InputMaybe<Scalars['Float']>;
+};
+
+/** The structure of the Text field of the News content type. */
+export type NewsAndEventsDataTextDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Text field of the News content input type. */
+export type NewsAndEventsDataTextInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Title field of the News content type. */
+export type NewsAndEventsDataTitleDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Title field of the News content input type. */
+export type NewsAndEventsDataTitleInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the flat News data type. */
+export type NewsAndEventsFlatDataDto = {
+  articleCount: Maybe<Scalars['Float']>;
+  cohortCount: Maybe<Scalars['Float']>;
+  link: Maybe<Scalars['String']>;
+  /** Leave this empty to show "Open External Link" */
+  linkText: Maybe<Scalars['String']>;
+  sampleCount: Maybe<Scalars['Float']>;
+  text: Maybe<Scalars['String']>;
+  title: Maybe<Scalars['String']>;
+};
+
+/** List of News items and total count. */
+export type NewsAndEventsResultDto = {
+  /** The contents. */
+  items: Maybe<Array<NewsAndEvents>>;
   /** The total count of  contents. */
   total: Scalars['Int'];
 };
@@ -2854,6 +3151,50 @@ export type WorkingGroupsResultDto = {
   total: Scalars['Int'];
 };
 
+export type NewsContentFragment = Pick<
+  NewsAndEvents,
+  'id' | 'created' | 'lastModified' | 'version'
+> & {
+  flatData: Pick<
+    NewsAndEventsFlatDataDto,
+    | 'title'
+    | 'text'
+    | 'link'
+    | 'linkText'
+    | 'sampleCount'
+    | 'articleCount'
+    | 'cohortCount'
+  >;
+};
+
+export type FetchNewsQueryVariables = Exact<{
+  top: InputMaybe<Scalars['Int']>;
+  skip: InputMaybe<Scalars['Int']>;
+}>;
+
+export type FetchNewsQuery = {
+  queryNewsAndEventsContentsWithTotal: Maybe<
+    Pick<NewsAndEventsResultDto, 'total'> & {
+      items: Maybe<
+        Array<
+          Pick<NewsAndEvents, 'id' | 'created' | 'lastModified' | 'version'> & {
+            flatData: Pick<
+              NewsAndEventsFlatDataDto,
+              | 'title'
+              | 'text'
+              | 'link'
+              | 'linkText'
+              | 'sampleCount'
+              | 'articleCount'
+              | 'cohortCount'
+            >;
+          }
+        >
+      >;
+    }
+  >;
+};
+
 export type ProjectContentFragment = Pick<Projects, 'id'> & {
   flatData: Pick<
     ProjectsFlatDataDto,
@@ -3856,6 +4197,49 @@ export type FetchWorkingGroupsQuery = {
   >;
 };
 
+export const NewsContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'NewsContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'NewsAndEvents' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'created' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'lastModified' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'version' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'flatData' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'text' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'link' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'linkText' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'sampleCount' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'articleCount' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'cohortCount' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'link' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'linkText' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<NewsContentFragment, unknown>;
 export const ProjectContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -4579,6 +4963,87 @@ export const WorkingGroupNetworkContentFragmentDoc = {
     ...WorkingGroupContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<WorkingGroupNetworkContentFragment, unknown>;
+export const FetchNewsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchNews' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'top' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: {
+              kind: 'Name',
+              value: 'queryNewsAndEventsContentsWithTotal',
+            },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'top' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'top' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'orderby' },
+                value: {
+                  kind: 'StringValue',
+                  value: 'data/created',
+                  block: false,
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'NewsContent' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...NewsContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<FetchNewsQuery, FetchNewsQueryVariables>;
 export const FetchProjectDocument = {
   kind: 'Document',
   definitions: [

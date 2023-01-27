@@ -10,6 +10,7 @@ import {
   print,
 } from 'graphql';
 import { getSquidexGraphqlDashboard } from '../fixtures/dashboard.fixtures';
+import { getGraphQLNews } from '../fixtures/news.fixtures';
 import { getGraphQLProject } from '../fixtures/project.fixtures';
 import { getGraphQLUser } from '../fixtures/user.fixtures';
 import { getGraphQLWorkingGroupNetwork } from '../fixtures/working-group-network.fixtures';
@@ -33,14 +34,16 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
     JsonScalar: () => {},
     Dashboard: () => getSquidexGraphqlDashboard(),
     DashboardResultDto: resultDto,
-    Users: () => getGraphQLUser(),
-    UsersResultDto: resultDto,
-    WorkingGroups: () => getGraphQLWorkingGroup(),
-    WorkingGroupsResultDto: resultDto,
-    WorkingGroupNetwork: () => getGraphQLWorkingGroupNetwork(),
-    WorkingGroupNetworkResultDto: resultDto,
+    NewsAndEvents: () => getGraphQLNews(),
+    NewsAndEventsResultDto: resultDto,
     Projects: () => getGraphQLProject(),
     ProjectsResultDto: resultDto,
+    Users: () => getGraphQLUser(),
+    UsersResultDto: resultDto,
+    WorkingGroupNetwork: () => getGraphQLWorkingGroupNetwork(),
+    WorkingGroupNetworkResultDto: resultDto,
+    WorkingGroups: () => getGraphQLWorkingGroup(),
+    WorkingGroupsResultDto: resultDto,
   };
   const store = createMockStore({
     schema,

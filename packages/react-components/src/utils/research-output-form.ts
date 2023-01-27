@@ -18,29 +18,6 @@ export type getTeamState = {
   researchOutputData: ResearchOutputResponse | undefined;
 };
 
-export const getTeamsState = ({
-  team,
-  publishingEntity,
-  researchOutputData,
-}: getTeamState) => {
-  if (publishingEntity === 'Working Group') {
-    return [];
-  }
-  return (
-    researchOutputData?.teams.map((element, index) => ({
-      label: element.displayName,
-      value: element.id,
-      isFixed: index === 0,
-    })) || [
-      {
-        label: team?.displayName || '',
-        value: team?.id || '',
-        isFixed: true,
-      },
-    ]
-  );
-};
-
 const identifierTypeToFieldName: Record<
   ResearchOutputIdentifierType,
   'doi' | 'accession' | 'labCatalogNumber' | 'rrid' | undefined

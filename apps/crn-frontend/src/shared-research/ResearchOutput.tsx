@@ -7,6 +7,7 @@ import { useRouteMatch, Route } from 'react-router-dom';
 import { useResearchOutputById } from './state';
 import { useCanCreateUpdateResearchOutput } from '../network/teams/state';
 import TeamOutput from '../network/teams/TeamOutput';
+import WorkingGroupOutput from '../network/working-groups/WorkingGroupOutput';
 
 const ResearchOutput: React.FC = () => {
   const { researchOutputId } = useRouteParams(
@@ -34,10 +35,17 @@ const ResearchOutput: React.FC = () => {
               .editResearchOutput.template
           }
         >
-          <TeamOutput
-            teamId={researchOutputData.teams[0]?.id}
-            researchOutputData={researchOutputData}
-          />
+          {researchOutputData.publishingEntity === 'Team' ? (
+            <TeamOutput
+              teamId={researchOutputData.teams[0]?.id}
+              researchOutputData={researchOutputData}
+            />
+          ) : (
+            <WorkingGroupOutput
+              workingGroupId={researchOutputData.workingGroups[0]?.id}
+              researchOutputData={researchOutputData}
+            />
+          )}
         </Route>
       </ResearchOutputPermissionsContext.Provider>
     );

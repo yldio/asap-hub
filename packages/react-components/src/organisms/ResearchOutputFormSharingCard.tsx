@@ -62,7 +62,7 @@ const ResearchOutputFormSharingCard: React.FC<
   title,
   description,
   type,
-  typeOptions = [],
+  typeOptions,
   subtype,
   asapFunded,
   usedInPublication,

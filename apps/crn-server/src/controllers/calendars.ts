@@ -61,13 +61,13 @@ export const parseCalendarDataObjectToResponse = (
     | 'googleCalendarId'
     | 'color'
     | 'name'
-    | 'activeGroups'
-    | 'incompleteWorkingGroups'
+    | 'groups'
+    | 'workingGroups'
   >,
 ): CalendarResponse => ({
   id: calendarDataObject.googleCalendarId,
   name: calendarDataObject.name,
   color: calendarDataObject.color,
-  activeGroups: calendarDataObject.activeGroups,
-  incompleteWorkingGroups: calendarDataObject.incompleteWorkingGroups,
+  groups: calendarDataObject.groups,
+  workingGroups: calendarDataObject.workingGroups,
 });

@@ -15,11 +15,13 @@ export const calendarContentQueryFragment = gql`
       expirationDate
     }
     referencingGroupsContents {
+      id,
       flatData {
         active
       }
     }
     referencingWorkingGroupsContents {
+      id,
       flatData {
         complete
       }

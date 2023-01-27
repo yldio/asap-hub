@@ -10,8 +10,8 @@ it('Renders calendar list', () => {
           color: '#0D7813',
           name: 'Test Event',
           id: '1',
-          activeGroups: false,
-          incompleteWorkingGroups: false,
+          groups: [{ id: '1', active: false }],
+          workingGroups: [{ id: '2', complete: true }],
         },
       ]}
     />,
@@ -27,8 +27,8 @@ it('Renders the calendar both for working and interest group', () => {
           color: '#0D7813',
           name: 'Test Event',
           id: '1',
-          activeGroups: true,
-          incompleteWorkingGroups: true,
+          groups: [{ id: '1', active: true }],
+          workingGroups: [{ id: '2', complete: false }],
         },
       ]}
     />,

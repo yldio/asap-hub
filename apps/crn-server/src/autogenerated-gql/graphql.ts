@@ -6232,10 +6232,14 @@ export type CalendarsContentFragment = Pick<
     | 'expirationDate'
   >;
   referencingGroupsContents: Maybe<
-    Array<{ flatData: Pick<GroupsFlatDataDto, 'active'> }>
+    Array<Pick<Groups, 'id'> & { flatData: Pick<GroupsFlatDataDto, 'active'> }>
   >;
   referencingWorkingGroupsContents: Maybe<
-    Array<{ flatData: Pick<WorkingGroupsFlatDataDto, 'complete'> }>
+    Array<
+      Pick<WorkingGroups, 'id'> & {
+        flatData: Pick<WorkingGroupsFlatDataDto, 'complete'>;
+      }
+    >
   >;
 };
 
@@ -6256,10 +6260,16 @@ export type FetchCalendarQuery = {
         | 'expirationDate'
       >;
       referencingGroupsContents: Maybe<
-        Array<{ flatData: Pick<GroupsFlatDataDto, 'active'> }>
+        Array<
+          Pick<Groups, 'id'> & { flatData: Pick<GroupsFlatDataDto, 'active'> }
+        >
       >;
       referencingWorkingGroupsContents: Maybe<
-        Array<{ flatData: Pick<WorkingGroupsFlatDataDto, 'complete'> }>
+        Array<
+          Pick<WorkingGroups, 'id'> & {
+            flatData: Pick<WorkingGroupsFlatDataDto, 'complete'>;
+          }
+        >
       >;
     }
   >;
@@ -6288,10 +6298,18 @@ export type FetchCalendarsQuery = {
               | 'expirationDate'
             >;
             referencingGroupsContents: Maybe<
-              Array<{ flatData: Pick<GroupsFlatDataDto, 'active'> }>
+              Array<
+                Pick<Groups, 'id'> & {
+                  flatData: Pick<GroupsFlatDataDto, 'active'>;
+                }
+              >
             >;
             referencingWorkingGroupsContents: Maybe<
-              Array<{ flatData: Pick<WorkingGroupsFlatDataDto, 'complete'> }>
+              Array<
+                Pick<WorkingGroups, 'id'> & {
+                  flatData: Pick<WorkingGroupsFlatDataDto, 'complete'>;
+                }
+              >
             >;
           }
         >
@@ -9918,6 +9936,7 @@ export const CalendarsContentFragmentDoc = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'flatData' },
@@ -9940,6 +9959,7 @@ export const CalendarsContentFragmentDoc = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'flatData' },

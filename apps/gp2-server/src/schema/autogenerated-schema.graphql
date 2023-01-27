@@ -23,17 +23,6 @@ type ApplicationMutations {
     """The status for the content."""
     status: String!
   ): ContributingCohorts
-  """Change a Dashboard content."""
-  changeDashboardContent(
-    """The timestamp when the status should be changed."""
-    dueTime: Instant
-    """The expected version."""
-    expectedVersion: Int = -2
-    """The ID of the object (usually GUID)."""
-    id: String!
-    """The status for the content."""
-    status: String!
-  ): Dashboard
   """Change a Migrations content."""
   changeMigrationsContent(
     """The timestamp when the status should be changed."""
@@ -111,17 +100,6 @@ type ApplicationMutations {
     """The initial status."""
     status: String
   ): ContributingCohorts
-  """Creates an Dashboard content."""
-  createDashboardContent(
-    """The data for the content."""
-    data: DashboardDataInputDto!
-    """The optional custom content ID."""
-    id: String
-    """Set to true to autopublish content on create."""
-    publish: Boolean = false
-    """The initial status."""
-    status: String
-  ): Dashboard
   """Creates an Migrations content."""
   createMigrationsContent(
     """The data for the content."""
@@ -195,13 +173,6 @@ type ApplicationMutations {
     """The ID of the content (usually GUID)."""
     id: String!
   ): EntitySavedResultDto!
-  """Delete an Dashboard content."""
-  deleteDashboardContent(
-    """The expected version."""
-    expectedVersion: Int = -2
-    """The ID of the content (usually GUID)."""
-    id: String!
-  ): EntitySavedResultDto!
   """Delete an Migrations content."""
   deleteMigrationsContent(
     """The expected version."""
@@ -253,15 +224,6 @@ type ApplicationMutations {
     """The ID of the object (usually GUID)."""
     id: String
   ): ContributingCohorts
-  """Patch an Dashboard content by id."""
-  patchDashboardContent(
-    """The data for the content."""
-    data: DashboardDataInputDto!
-    """The expected version."""
-    expectedVersion: Int = -2
-    """The ID of the object (usually GUID)."""
-    id: String
-  ): Dashboard
   """Patch an Migrations content by id."""
   patchMigrationsContent(
     """The data for the content."""
@@ -327,17 +289,6 @@ type ApplicationMutations {
     """The status for the content."""
     status: String!
   ): ContributingCohorts @deprecated(reason: "Use 'changeContributingCohortsContent' instead")
-  """Publish a Dashboard content."""
-  publishDashboardContent(
-    """The timestamp when the status should be changed."""
-    dueTime: Instant
-    """The expected version."""
-    expectedVersion: Int = -2
-    """The ID of the object (usually GUID)."""
-    id: String!
-    """The status for the content."""
-    status: String!
-  ): Dashboard @deprecated(reason: "Use 'changeDashboardContent' instead")
   """Publish a Migrations content."""
   publishMigrationsContent(
     """The timestamp when the status should be changed."""
@@ -413,15 +364,6 @@ type ApplicationMutations {
     """The ID of the object (usually GUID)."""
     id: String
   ): ContributingCohorts
-  """Update an Dashboard content by id."""
-  updateDashboardContent(
-    """The data for the content."""
-    data: DashboardDataInputDto!
-    """The expected version."""
-    expectedVersion: Int = -2
-    """The ID of the object (usually GUID)."""
-    id: String
-  ): Dashboard
   """Update an Migrations content by id."""
   updateMigrationsContent(
     """The data for the content."""
@@ -491,21 +433,6 @@ type ApplicationMutations {
     """The initial status."""
     status: String
   ): ContributingCohorts
-  """Upsert an Dashboard content by id."""
-  upsertDashboardContent(
-    """The data for the content."""
-    data: DashboardDataInputDto!
-    """The expected version."""
-    expectedVersion: Int = -2
-    """The ID of the object (usually GUID)."""
-    id: String!
-    """Makes the update as patch."""
-    patch: Boolean = false
-    """Set to true to autopublish content on create."""
-    publish: Boolean = false
-    """The initial status."""
-    status: String
-  ): Dashboard
   """Upsert an Migrations content by id."""
   upsertMigrationsContent(
     """The data for the content."""
@@ -612,13 +539,6 @@ type ApplicationQueries {
     """The optional version of the content to retrieve an older instance (not cached)."""
     version: Int
   ): ContributingCohorts
-  """Find an Dashboard content by id."""
-  findDashboardContent(
-    """The ID of the object (usually GUID)."""
-    id: String!
-    """The optional version of the content to retrieve an older instance (not cached)."""
-    version: Int
-  ): Dashboard
   """Find an Migrations content by id."""
   findMigrationsContent(
     """The ID of the object (usually GUID)."""
@@ -709,32 +629,6 @@ type ApplicationQueries {
     """Optional number of items to take."""
     top: Int
   ): ContributingCohortsResultDto
-  """Query Dashboard content items."""
-  queryDashboardContents(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): [Dashboard!]
-  """Query Dashboard content items with total count."""
-  queryDashboardContentsWithTotal(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): DashboardResultDto
   """Query Migrations content items."""
   queryMigrationsContents(
     """Optional OData filter."""
@@ -1042,32 +936,6 @@ type ContributingCohorts implements Content {
   newStatus: String
   """The status color of the content."""
   newStatusColor: String
-  """Query Dashboard content items."""
-  referencingDashboardContents(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): [Dashboard!]
-  """Query Dashboard content items with total count."""
-  referencingDashboardContentsWithTotal(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): DashboardResultDto
   """Query Users content items."""
   referencingUsersContents(
     """Optional OData filter."""
@@ -1133,326 +1001,6 @@ type ContributingCohortsFlatDataDto {
 type ContributingCohortsResultDto {
   """The contents."""
   items: [ContributingCohorts!]
-  """The total count of  contents."""
-  total: Int!
-}
-
-"""The structure of a Dashboard content type."""
-type Dashboard implements Content {
-  """The timestamp when the object was created."""
-  created: Instant!
-  """The user who created the object."""
-  createdBy: String!
-  """The user who created the object."""
-  createdByUser: User!
-  """The data of the content."""
-  data: DashboardDataDto!
-  """The edit token."""
-  editToken: String
-  """The flat data of the content."""
-  flatData: DashboardFlatDataDto!
-  """The ID of the object (usually GUID)."""
-  id: String!
-  """The timestamp when the object was updated the last time."""
-  lastModified: Instant!
-  """The user who updated the object the last time."""
-  lastModifiedBy: String!
-  """The user who updated the object the last time."""
-  lastModifiedByUser: User!
-  """The new status of the content."""
-  newStatus: String
-  """The status color of the content."""
-  newStatusColor: String
-  """Query Contributing Cohorts content items."""
-  referencesContributingCohortsContents(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): [ContributingCohorts!]
-  """Query Contributing Cohorts content items with total count."""
-  referencesContributingCohortsContentsWithTotal(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): ContributingCohortsResultDto
-  """Query Dashboard content items."""
-  referencesDashboardContents(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): [Dashboard!]
-  """Query Dashboard content items with total count."""
-  referencesDashboardContentsWithTotal(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): DashboardResultDto
-  """Query Migrations content items."""
-  referencesMigrationsContents(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): [Migrations!]
-  """Query Migrations content items with total count."""
-  referencesMigrationsContentsWithTotal(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): MigrationsResultDto
-  """Query News content items."""
-  referencesNewsAndEventsContents(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): [NewsAndEvents!]
-  """Query News content items with total count."""
-  referencesNewsAndEventsContentsWithTotal(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): NewsAndEventsResultDto
-  """Query Projects content items."""
-  referencesProjectsContents(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): [Projects!]
-  """Query Projects content items with total count."""
-  referencesProjectsContentsWithTotal(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): ProjectsResultDto
-  """Query Users content items."""
-  referencesUsersContents(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): [Users!]
-  """Query Users content items with total count."""
-  referencesUsersContentsWithTotal(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): UsersResultDto
-  """Query Working Group Network content items."""
-  referencesWorkingGroupNetworkContents(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): [WorkingGroupNetwork!]
-  """Query Working Group Network content items with total count."""
-  referencesWorkingGroupNetworkContentsWithTotal(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): WorkingGroupNetworkResultDto
-  """Query Working Groups content items."""
-  referencesWorkingGroupsContents(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): [WorkingGroups!]
-  """Query Working Groups content items with total count."""
-  referencesWorkingGroupsContentsWithTotal(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): WorkingGroupsResultDto
-  """Query Dashboard content items."""
-  referencingDashboardContents(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): [Dashboard!]
-  """Query Dashboard content items with total count."""
-  referencingDashboardContentsWithTotal(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): DashboardResultDto
-  """The status of the content."""
-  status: String!
-  """The status color of the content."""
-  statusColor: String!
-  """The URL to the content."""
-  url: String!
-  """The version of the objec."""
-  version: Int!
-}
-
-"""The structure of the Dashboard data type."""
-type DashboardDataDto {
-  news: DashboardDataNewsDto
-  pages: DashboardDataPagesDto
-}
-
-"""The structure of the Dashboard data input type."""
-input DashboardDataInputDto {
-  news: DashboardDataNewsInputDto
-  pages: DashboardDataPagesInputDto
-}
-
-"""The structure of the Latest News from ASAP field of the Dashboard content type."""
-type DashboardDataNewsDto {
-  iv: [DashboardDataNewsUnionDto!]
-}
-
-"""The structure of the Latest News from ASAP field of the Dashboard content input type."""
-input DashboardDataNewsInputDto {
-  iv: [String!]
-}
-
-union DashboardDataNewsUnionDto = ContributingCohorts | Dashboard | Migrations | NewsAndEvents | Projects | Users | WorkingGroupNetwork | WorkingGroups
-
-"""The structure of the Where to Start field of the Dashboard content type."""
-type DashboardDataPagesDto {
-  iv: [DashboardDataPagesUnionDto!]
-}
-
-"""The structure of the Where to Start field of the Dashboard content input type."""
-input DashboardDataPagesInputDto {
-  iv: [String!]
-}
-
-union DashboardDataPagesUnionDto = ContributingCohorts | Dashboard | Migrations | NewsAndEvents | Projects | Users | WorkingGroupNetwork | WorkingGroups
-
-"""The structure of the flat Dashboard data type."""
-type DashboardFlatDataDto {
-  news: [DashboardDataNewsUnionDto!]
-  pages: [DashboardDataPagesUnionDto!]
-}
-
-"""List of Dashboard items and total count."""
-type DashboardResultDto {
-  """The contents."""
-  items: [Dashboard!]
   """The total count of  contents."""
   total: Int!
 }
@@ -1600,32 +1148,6 @@ type Migrations implements Content {
   newStatus: String
   """The status color of the content."""
   newStatusColor: String
-  """Query Dashboard content items."""
-  referencingDashboardContents(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): [Dashboard!]
-  """Query Dashboard content items with total count."""
-  referencingDashboardContentsWithTotal(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): DashboardResultDto
   """The status of the content."""
   status: String!
   """The status color of the content."""
@@ -1695,32 +1217,6 @@ type NewsAndEvents implements Content {
   newStatus: String
   """The status color of the content."""
   newStatusColor: String
-  """Query Dashboard content items."""
-  referencingDashboardContents(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): [Dashboard!]
-  """Query Dashboard content items with total count."""
-  referencingDashboardContentsWithTotal(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): DashboardResultDto
   """The status of the content."""
   status: String!
   """The status color of the content."""
@@ -1903,32 +1399,6 @@ type Projects implements Content {
     """Optional number of items to take."""
     top: Int
   ): UsersResultDto
-  """Query Dashboard content items."""
-  referencingDashboardContents(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): [Dashboard!]
-  """Query Dashboard content items with total count."""
-  referencingDashboardContentsWithTotal(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): DashboardResultDto
   """The status of the content."""
   status: String!
   """The status color of the content."""
@@ -2264,32 +1734,6 @@ type Users implements Content {
     """Optional number of items to take."""
     top: Int
   ): ContributingCohortsResultDto
-  """Query Dashboard content items."""
-  referencingDashboardContents(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): [Dashboard!]
-  """Query Dashboard content items with total count."""
-  referencingDashboardContentsWithTotal(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): DashboardResultDto
   """Query Projects content items."""
   referencingProjectsContents(
     """Optional OData filter."""
@@ -2855,32 +2299,6 @@ type WorkingGroupNetwork implements Content {
     """Optional number of items to take."""
     top: Int
   ): WorkingGroupsResultDto
-  """Query Dashboard content items."""
-  referencingDashboardContents(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): [Dashboard!]
-  """Query Dashboard content items with total count."""
-  referencingDashboardContentsWithTotal(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): DashboardResultDto
   """The status of the content."""
   status: String!
   """The status color of the content."""
@@ -3015,32 +2433,6 @@ type WorkingGroups implements Content {
     """Optional number of items to take."""
     top: Int
   ): UsersResultDto
-  """Query Dashboard content items."""
-  referencingDashboardContents(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): [Dashboard!]
-  """Query Dashboard content items with total count."""
-  referencingDashboardContentsWithTotal(
-    """Optional OData filter."""
-    filter: String
-    """Optional OData order definition."""
-    orderby: String
-    """Optional OData full text search."""
-    search: String
-    """Optional number of items to skip."""
-    skip: Int = 0
-    """Optional number of items to take."""
-    top: Int
-  ): DashboardResultDto
   """Query Working Group Network content items."""
   referencingWorkingGroupNetworkContents(
     """Optional OData filter."""

@@ -10,6 +10,7 @@ import {
   FetchNewsQuery,
   NewsOrder,
   FetchNewsQueryVariables,
+  RichTextFromQuery,
 } from '@asap-hub/contentful';
 
 import { NewsDataProvider, FetchNewsProviderOptions } from '../types';
@@ -76,6 +77,6 @@ export const parseContentfulGraphQlNews = (item: NewsItem): NewsDataObject => ({
   thumbnail: item.thumbnail?.url ?? undefined,
   link: item.link ?? undefined,
   linkText: item.linkText ?? undefined,
-  text: item.text ? parseRichText(item?.text.json) : undefined,
+  text: item.text ? parseRichText(item.text as RichTextFromQuery) : undefined,
   created: item.sys.firstPublishedAt,
 });

@@ -27,6 +27,11 @@ export const getContentfulGraphqlNews = (): NonNullable<
         },
       ],
     },
+    links: {
+      assets: {
+        block: [],
+      },
+    },
   },
   frequency: 'News Articles',
   sys: {

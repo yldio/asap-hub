@@ -10,6 +10,20 @@ export const pagesContentQueryFragment = gql`
     shortText
     text {
       json
+      links {
+        assets {
+          block {
+            sys {
+              id
+            }
+            url
+            description
+            contentType
+            width
+            height
+          }
+        }
+      }
     }
     link
     linkText

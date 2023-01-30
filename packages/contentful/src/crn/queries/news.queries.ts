@@ -16,6 +16,20 @@ export const newsContentQueryFragment = gql`
     }
     text {
       json
+      links {
+        assets {
+          block {
+            sys {
+              id
+            }
+            url
+            description
+            contentType
+            width
+            height
+          }
+        }
+      }
     }
   }
 `;

@@ -996,7 +996,26 @@ export type FetchDashboardQuery = {
               > & {
                 sys: Pick<Sys, 'id' | 'firstPublishedAt'>;
                 thumbnail?: Maybe<Pick<Asset, 'url'>>;
-                text?: Maybe<Pick<NewsText, 'json'>>;
+                text?: Maybe<
+                  Pick<NewsText, 'json'> & {
+                    links: {
+                      assets: {
+                        block: Array<
+                          Maybe<
+                            Pick<
+                              Asset,
+                              | 'url'
+                              | 'description'
+                              | 'contentType'
+                              | 'width'
+                              | 'height'
+                            > & { sys: Pick<Sys, 'id'> }
+                          >
+                        >;
+                      };
+                    };
+                  }
+                >;
               }
             >
           >;
@@ -1009,7 +1028,26 @@ export type FetchDashboardQuery = {
                 'title' | 'path' | 'shortText' | 'link' | 'linkText'
               > & {
                 sys: Pick<Sys, 'id'>;
-                text?: Maybe<Pick<PagesText, 'json'>>;
+                text?: Maybe<
+                  Pick<PagesText, 'json'> & {
+                    links: {
+                      assets: {
+                        block: Array<
+                          Maybe<
+                            Pick<
+                              Asset,
+                              | 'url'
+                              | 'description'
+                              | 'contentType'
+                              | 'width'
+                              | 'height'
+                            > & { sys: Pick<Sys, 'id'> }
+                          >
+                        >;
+                      };
+                    };
+                  }
+                >;
               }
             >
           >;
@@ -1025,7 +1063,22 @@ export type NewsContentFragment = Pick<
 > & {
   sys: Pick<Sys, 'id' | 'firstPublishedAt'>;
   thumbnail?: Maybe<Pick<Asset, 'url'>>;
-  text?: Maybe<Pick<NewsText, 'json'>>;
+  text?: Maybe<
+    Pick<NewsText, 'json'> & {
+      links: {
+        assets: {
+          block: Array<
+            Maybe<
+              Pick<
+                Asset,
+                'url' | 'description' | 'contentType' | 'width' | 'height'
+              > & { sys: Pick<Sys, 'id'> }
+            >
+          >;
+        };
+      };
+    }
+  >;
 };
 
 export type FetchNewsByIdQueryVariables = Exact<{
@@ -1037,7 +1090,22 @@ export type FetchNewsByIdQuery = {
     Pick<News, 'title' | 'shortText' | 'frequency' | 'link' | 'linkText'> & {
       sys: Pick<Sys, 'id' | 'firstPublishedAt'>;
       thumbnail?: Maybe<Pick<Asset, 'url'>>;
-      text?: Maybe<Pick<NewsText, 'json'>>;
+      text?: Maybe<
+        Pick<NewsText, 'json'> & {
+          links: {
+            assets: {
+              block: Array<
+                Maybe<
+                  Pick<
+                    Asset,
+                    'url' | 'description' | 'contentType' | 'width' | 'height'
+                  > & { sys: Pick<Sys, 'id'> }
+                >
+              >;
+            };
+          };
+        }
+      >;
     }
   >;
 };
@@ -1060,7 +1128,26 @@ export type FetchNewsQuery = {
           > & {
             sys: Pick<Sys, 'id' | 'firstPublishedAt'>;
             thumbnail?: Maybe<Pick<Asset, 'url'>>;
-            text?: Maybe<Pick<NewsText, 'json'>>;
+            text?: Maybe<
+              Pick<NewsText, 'json'> & {
+                links: {
+                  assets: {
+                    block: Array<
+                      Maybe<
+                        Pick<
+                          Asset,
+                          | 'url'
+                          | 'description'
+                          | 'contentType'
+                          | 'width'
+                          | 'height'
+                        > & { sys: Pick<Sys, 'id'> }
+                      >
+                    >;
+                  };
+                };
+              }
+            >;
           }
         >
       >;
@@ -1071,7 +1158,25 @@ export type FetchNewsQuery = {
 export type PageContentFragment = Pick<
   Pages,
   'title' | 'path' | 'shortText' | 'link' | 'linkText'
-> & { sys: Pick<Sys, 'id'>; text?: Maybe<Pick<PagesText, 'json'>> };
+> & {
+  sys: Pick<Sys, 'id'>;
+  text?: Maybe<
+    Pick<PagesText, 'json'> & {
+      links: {
+        assets: {
+          block: Array<
+            Maybe<
+              Pick<
+                Asset,
+                'url' | 'description' | 'contentType' | 'width' | 'height'
+              > & { sys: Pick<Sys, 'id'> }
+            >
+          >;
+        };
+      };
+    }
+  >;
+};
 
 export type FetchPagesQueryVariables = Exact<{
   where?: InputMaybe<PagesFilter>;
@@ -1084,7 +1189,26 @@ export type FetchPagesQuery = {
         Maybe<
           Pick<Pages, 'title' | 'path' | 'shortText' | 'link' | 'linkText'> & {
             sys: Pick<Sys, 'id'>;
-            text?: Maybe<Pick<PagesText, 'json'>>;
+            text?: Maybe<
+              Pick<PagesText, 'json'> & {
+                links: {
+                  assets: {
+                    block: Array<
+                      Maybe<
+                        Pick<
+                          Asset,
+                          | 'url'
+                          | 'description'
+                          | 'contentType'
+                          | 'width'
+                          | 'height'
+                        > & { sys: Pick<Sys, 'id'> }
+                      >
+                    >;
+                  };
+                };
+              }
+            >;
           }
         >
       >;
@@ -1141,6 +1265,72 @@ export const NewsContentFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'json' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'links' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'assets' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'block' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'url' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'description',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'contentType',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'width' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'height' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -1182,6 +1372,72 @@ export const PageContentFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'json' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'links' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'assets' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'block' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'url' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'description',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'contentType',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'width' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'height' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },

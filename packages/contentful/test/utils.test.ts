@@ -95,7 +95,7 @@ describe('parseRichText', () => {
       links,
     };
     expect(parseRichText(rtf)).toEqual(
-      `<p>Here it will appear an image</p><img class="img-fluid" src="${baseAssetUrl}/${assetId_1}/penguin.jpeg" alt=A very cute baby penguin walking/><p>below there&#39;s a cat</p><img class="img-fluid" src="${baseAssetUrl}/${assetId_2}/cat.png" alt=cat/><p> </p>`,
+      `<p>Here it will appear an image</p><img src=\"https://images.ctfassets.net/envId/image1/penguin.jpeg\" alt=A very cute baby penguin walking/><p>below there&#39;s a cat</p><img src=\"https://images.ctfassets.net/envId/image2/cat.png\" alt=cat/><p> </p>`,
     );
   });
 

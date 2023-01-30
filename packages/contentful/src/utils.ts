@@ -58,7 +58,7 @@ export const parseRichText = (rtf: RichTextFromQuery) => {
               return `<iframe src="${url}"${dimensions} allowFullScreen>`;
 
             default:
-              return `<img class="img-fluid"${dimensions} src="${url}" alt=${
+              return `<img src="${url}"${dimensions} alt=${
                 description || ''
               }/>`;
           }

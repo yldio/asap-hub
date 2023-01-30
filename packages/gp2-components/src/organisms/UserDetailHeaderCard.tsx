@@ -221,7 +221,7 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
               css={{
                 display: 'inline-flex',
                 gap: rem(8),
-                margin: `${rem(3)} 0 ${rem(3)} ${rem(6)}`,
+                marginLeft: rem(6),
               }}
             >
               {validateCompleted({

@@ -83,7 +83,7 @@ const UserPositions: React.FC<UserPositionsProps> = ({
               css={{
                 display: 'inline-flex',
                 gap: rem(8),
-                margin: `0 ${rem(5)}`,
+                margin: `0 ${rem(3)}`,
               }}
             >
               Add Another Position {addIcon}

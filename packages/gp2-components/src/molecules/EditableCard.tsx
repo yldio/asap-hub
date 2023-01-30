@@ -64,7 +64,7 @@ const EditableCard: React.FC<EditableCardProps> = ({
               css={{
                 display: 'inline-flex',
                 gap: rem(8),
-                margin: `${rem(2)} ${rem(1)} ${rem(2)} ${rem(7)}`,
+                margin: `${rem(3)} 0 ${rem(3)} ${rem(6)}`,
               }}
             >
               {edit ? 'Edit' : optional ? 'Optional' : 'Required'}

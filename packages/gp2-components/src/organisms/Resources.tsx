@@ -89,7 +89,7 @@ const Resources: React.FC<ResourcesProps> = ({
                   css={{
                     display: 'inline-flex',
                     gap: rem(8),
-                    padding: `0 ${rem(5)}`,
+                    padding: `0 ${rem(3)}`,
                   }}
                 >
                   Add {addIcon}
@@ -132,7 +132,7 @@ const Resources: React.FC<ResourcesProps> = ({
                           css={{
                             display: 'inline-flex',
                             gap: rem(8),
-                            padding: `0 ${rem(5)}`,
+                            padding: `0 ${rem(3)}`,
                           }}
                         >
                           Edit {editIcon}

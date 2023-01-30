@@ -32,12 +32,10 @@ export const getCalendarCreateDataObject = (): CalendarCreateDataObject => {
   const {
     id: _id,
     version: _version,
+    groups: _groups,
+    workingGroups: _workingGroups,
     ...data
-  } = {
-    ...getCalendarDataObject(),
-    groups: undefined,
-    workingGroups: undefined,
-  };
+  } = getCalendarDataObject();
   return data;
 };
 

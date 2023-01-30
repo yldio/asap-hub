@@ -15,6 +15,7 @@ import {
 } from '../fixtures/calendars.fixtures';
 import { GenericError } from '@asap-hub/errors';
 import { CalendarSquidexDataProvider } from '../../src/data-providers/calendars.data-provider';
+import { getSquidexGraphqlWorkingGroup } from '../fixtures/working-groups.fixtures';
 
 describe('Calendars data provider', () => {
   const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
@@ -207,37 +208,118 @@ describe('Calendars data provider', () => {
     });
 
     describe('Active filter', () => {
-      test('Should skip the calendars which belong to an inactive group and complete working group when active is set to true', async () => {
+      test('Should show calendars that belong to an inactive group and to a working group that is not complete', async () => {
         const squidexGraphqlResponse = getSquidexCalendarsGraphqlResponse();
-        const calendar1Active = getSquidexGraphqlCalendar();
-        calendar1Active.id = 'calendar-id-1';
-        calendar1Active.referencingGroupsContents![0]!.flatData.active = true;
+        const calendar = getSquidexGraphqlCalendar();
 
-        const calendar2Inactive = getSquidexGraphqlCalendar();
-        calendar2Inactive.id = 'calendar-id-2';
-        calendar2Inactive.referencingGroupsContents![0]!.flatData.active =
-          false;
-        calendar2Inactive.referencingWorkingGroupsContents![0]!.flatData.complete =
-          true;
-
-        const calendar3Active = getSquidexGraphqlCalendar();
-        calendar3Active.id = 'calendar-id-3';
-        calendar3Active.referencingGroupsContents![0]!.flatData.active = true;
-        calendar3Active.referencingWorkingGroupsContents!![0]!.flatData.complete =
-          true;
-
-        const calendar4Complete = getSquidexGraphqlCalendar();
-        calendar4Complete.id = 'calendar-id-4';
-        calendar4Complete.referencingGroupsContents![0]!.flatData.active =
-          false;
-        calendar4Complete.referencingWorkingGroupsContents!![0]!.flatData.complete =
+        calendar.id = 'calendar-id-1';
+        calendar.referencingGroupsContents![0]!.flatData.active = false;
+        calendar.referencingWorkingGroupsContents![0]!.flatData.complete =
           false;
 
         squidexGraphqlResponse.queryCalendarsContentsWithTotal!.items = [
-          calendar1Active,
-          calendar2Inactive,
-          calendar3Active,
-          calendar4Complete,
+          calendar,
+        ];
+        squidexGraphqlResponse.queryCalendarsContentsWithTotal!.total = 1;
+
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await calendarDataProvider.fetch({ active: true });
+
+        expect(result).toEqual({
+          total: 1,
+          items: [
+            expect.objectContaining({
+              id: calendar.id,
+            }),
+          ],
+        });
+      });
+      test('Should show calendars that belong to an active group and to a working group that is complete', async () => {
+        const squidexGraphqlResponse = getSquidexCalendarsGraphqlResponse();
+        const calendar = getSquidexGraphqlCalendar();
+
+        calendar.id = 'calendar-id-1';
+        calendar.referencingGroupsContents![0]!.flatData.active = true;
+        calendar.referencingWorkingGroupsContents![0]!.flatData.complete = true;
+
+        squidexGraphqlResponse.queryCalendarsContentsWithTotal!.items = [
+          calendar,
+        ];
+        squidexGraphqlResponse.queryCalendarsContentsWithTotal!.total = 1;
+
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await calendarDataProvider.fetch({ active: true });
+
+        expect(result).toEqual({
+          total: 1,
+          items: [
+            expect.objectContaining({
+              id: calendar.id,
+            }),
+          ],
+        });
+      });
+      test('Should skip a calendar that belong to an inactive group and to a working group that is complete', async () => {
+        const squidexGraphqlResponse = getSquidexCalendarsGraphqlResponse();
+        const calendar = getSquidexGraphqlCalendar();
+
+        calendar.id = 'calendar-id-1';
+        calendar.referencingGroupsContents![0]!.flatData.active = false;
+        calendar.referencingWorkingGroupsContents![0]!.flatData.complete = true;
+
+        squidexGraphqlResponse.queryCalendarsContentsWithTotal!.items = [
+          calendar,
+        ];
+        squidexGraphqlResponse.queryCalendarsContentsWithTotal!.total = 4;
+
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await calendarDataProvider.fetch({ active: true });
+
+        expect(result).toEqual({
+          total: 0,
+          items: [],
+        });
+      });
+      test('Should skip the calendars which belong to an inactive group and complete working group but show the rest when active is set to true', async () => {
+        const squidexGraphqlResponse = getSquidexCalendarsGraphqlResponse();
+        const calendar1ActiveComplete = getSquidexGraphqlCalendar();
+        calendar1ActiveComplete.id = 'calendar-id-1';
+        calendar1ActiveComplete.referencingGroupsContents![0]!.flatData.active =
+          true;
+        calendar1ActiveComplete.referencingWorkingGroupsContents![0]!.flatData.complete =
+          true;
+
+        const calendar2InactiveIncomplete = getSquidexGraphqlCalendar();
+        calendar2InactiveIncomplete.id = 'calendar-id-2';
+        calendar2InactiveIncomplete.referencingGroupsContents![0]!.flatData.active =
+          false;
+        calendar2InactiveIncomplete.referencingWorkingGroupsContents![0]!.flatData.complete =
+          false;
+
+        const calendar3InactiveComplete = getSquidexGraphqlCalendar();
+        calendar3InactiveComplete.id = 'calendar-id-3';
+        calendar3InactiveComplete.referencingGroupsContents![0]!.flatData.active =
+          false;
+        calendar3InactiveComplete.referencingWorkingGroupsContents!![0]!.flatData.complete =
+          true;
+
+        const calendar4 = getSquidexGraphqlCalendar();
+        calendar4.id = 'calendar-id-4';
+
+        squidexGraphqlResponse.queryCalendarsContentsWithTotal!.items = [
+          calendar1ActiveComplete,
+          calendar2InactiveIncomplete,
+          calendar3InactiveComplete,
+          calendar4,
         ];
         squidexGraphqlResponse.queryCalendarsContentsWithTotal!.total = 4;
 
@@ -251,39 +333,94 @@ describe('Calendars data provider', () => {
           total: 3,
           items: [
             expect.objectContaining({
-              id: calendar1Active.id,
+              id: calendar1ActiveComplete.id,
             }),
             expect.objectContaining({
-              id: calendar3Active.id,
+              id: calendar2InactiveIncomplete.id,
             }),
             expect.objectContaining({
-              id: calendar4Complete.id,
+              id: calendar4.id,
             }),
           ],
         });
       });
-
-      test('Should not skip the calendars which belong to an inactive group when active is set to false', async () => {
+      test('Should show calendars that belong to multiple working groups of which one is not complete', async () => {
         const squidexGraphqlResponse = getSquidexCalendarsGraphqlResponse();
-        const calendar1Active = getSquidexGraphqlCalendar();
-        calendar1Active.id = 'calendar-id-1';
-        calendar1Active.referencingGroupsContents![0]!.flatData.active = true;
-
-        const calendar2Inactive = getSquidexGraphqlCalendar();
-        calendar2Inactive.id = 'calendar-id-2';
-        calendar2Inactive.referencingGroupsContents![0]!.flatData.active =
-          false;
-
-        const calendar3Active = getSquidexGraphqlCalendar();
-        calendar3Active.id = 'calendar-id-3';
-        calendar3Active.referencingGroupsContents![0]!.flatData.active = true;
+        const calendar = {
+          ...getSquidexGraphqlCalendar(),
+          id: 'calendar-id-1',
+          referencingWorkingGroupsContents: [
+            {
+              ...getSquidexGraphqlWorkingGroup(),
+              id: 'working-group-id-1',
+              flatData: { complete: true },
+            },
+            {
+              ...getSquidexGraphqlWorkingGroup(),
+              id: 'working-group-id-2',
+              flatData: { complete: true },
+            },
+            {
+              ...getSquidexGraphqlWorkingGroup(),
+              id: 'working-group-id-3',
+              flatData: { complete: false },
+            },
+          ],
+        };
 
         squidexGraphqlResponse.queryCalendarsContentsWithTotal!.items = [
-          calendar1Active,
-          calendar2Inactive,
-          calendar3Active,
+          calendar,
         ];
-        squidexGraphqlResponse.queryCalendarsContentsWithTotal!.total = 3;
+        squidexGraphqlResponse.queryCalendarsContentsWithTotal!.total = 1;
+
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await calendarDataProvider.fetch({ active: true });
+
+        expect(result).toEqual({
+          total: 1,
+          items: [
+            expect.objectContaining({
+              id: calendar.id,
+            }),
+          ],
+        });
+      });
+      test('Should not skip the calendars which belong to an inactive group and complete working group when active is set to false', async () => {
+        const squidexGraphqlResponse = getSquidexCalendarsGraphqlResponse();
+        const calendar1ActiveComplete = getSquidexGraphqlCalendar();
+        calendar1ActiveComplete.id = 'calendar-id-1';
+        calendar1ActiveComplete.referencingGroupsContents![0]!.flatData.active =
+          true;
+        calendar1ActiveComplete.referencingWorkingGroupsContents![0]!.flatData.complete =
+          true;
+
+        const calendar2InactiveIncomplete = getSquidexGraphqlCalendar();
+        calendar2InactiveIncomplete.id = 'calendar-id-2';
+        calendar2InactiveIncomplete.referencingGroupsContents![0]!.flatData.active =
+          false;
+        calendar2InactiveIncomplete.referencingWorkingGroupsContents![0]!.flatData.complete =
+          false;
+
+        const calendar3InactiveComplete = getSquidexGraphqlCalendar();
+        calendar3InactiveComplete.id = 'calendar-id-3';
+        calendar3InactiveComplete.referencingGroupsContents![0]!.flatData.active =
+          false;
+        calendar3InactiveComplete.referencingWorkingGroupsContents!![0]!.flatData.complete =
+          true;
+
+        const calendar4 = getSquidexGraphqlCalendar();
+        calendar4.id = 'calendar-id-4';
+
+        squidexGraphqlResponse.queryCalendarsContentsWithTotal!.items = [
+          calendar1ActiveComplete,
+          calendar2InactiveIncomplete,
+          calendar3InactiveComplete,
+          calendar4,
+        ];
+        squidexGraphqlResponse.queryCalendarsContentsWithTotal!.total = 4;
 
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
@@ -292,30 +429,34 @@ describe('Calendars data provider', () => {
         const result = await calendarDataProvider.fetch({ active: false });
 
         expect(result).toEqual({
-          total: 3,
+          total: 4,
           items: [
             expect.objectContaining({
-              id: calendar1Active.id,
+              id: calendar1ActiveComplete.id,
             }),
             expect.objectContaining({
-              id: calendar2Inactive.id,
+              id: calendar2InactiveIncomplete.id,
             }),
             expect.objectContaining({
-              id: calendar3Active.id,
+              id: calendar3InactiveComplete.id,
+            }),
+            expect.objectContaining({
+              id: calendar4.id,
             }),
           ],
         });
       });
-
-      test('Should show the calendars which do not belong to any group', async () => {
+      test('Should show the calendars which do not belong to any group or working group', async () => {
         const squidexGraphqlResponse = getSquidexCalendarsGraphqlResponse();
 
         const calendar1 = getSquidexGraphqlCalendar();
         calendar1.id = 'calendar-id-1';
         calendar1.referencingGroupsContents = null;
+        calendar1.referencingWorkingGroupsContents = null;
         const calendar2 = getSquidexGraphqlCalendar();
         calendar2.id = 'calendar-id-2';
         calendar2.referencingGroupsContents = [];
+        calendar2.referencingWorkingGroupsContents = [];
         squidexGraphqlResponse.queryCalendarsContentsWithTotal!.items = [
           calendar1,
           calendar2,

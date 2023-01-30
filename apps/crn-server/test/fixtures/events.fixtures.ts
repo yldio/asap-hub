@@ -78,6 +78,8 @@ export const getEventResponse = (): EventResponse => ({
     color: '#125A12',
     id: 'c_t92qa82jd702q1fkreoi0hf4hk@group.calendar.google.com',
     name: 'Tech 1 - Sequencing/omics',
+    groups: [],
+    workingGroups: [],
   },
   group: getGroupResponse(),
   speakers: [getEventSpeakerUser()],

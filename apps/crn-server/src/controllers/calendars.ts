@@ -64,6 +64,6 @@ export const parseCalendarDataObjectToResponse = (
   id: calendarDataObject.googleCalendarId,
   name: calendarDataObject.name,
   color: calendarDataObject.color,
-  groups: calendarDataObject.groups,
-  workingGroups: calendarDataObject.workingGroups,
+  groups: calendarDataObject.groups || [],
+  workingGroups: calendarDataObject.workingGroups || [],
 });

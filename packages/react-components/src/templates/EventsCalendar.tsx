@@ -21,9 +21,9 @@ const EventsCalendarPage: React.FC<EventsCalendarPageProps> = ({
     <CalendarList
       calendars={calendars.filter(
         (calendar) =>
-          calendar.groups?.some(({ active }) => active) ||
-          (calendar.groups?.every(({ active }) => !active) &&
-            calendar.workingGroups?.every(({ complete }) => complete)),
+          calendar.groups.some(({ active }) => active) ||
+          (calendar.groups.every(({ active }) => !active) &&
+            calendar.workingGroups.every(({ complete }) => complete)),
       )}
       title="Subscribe to Interest Groups on Calendar"
       description="Below you can find a list of all the Interest Groups that will present in the future. Hitting subscribe will allow you to
@@ -35,7 +35,7 @@ const EventsCalendarPage: React.FC<EventsCalendarPageProps> = ({
       description="Below you can find a list of all the Working Groups that will present in the future. Hitting subscribe will allow you to
       add them to your own personal calendar."
       calendars={calendars.filter((calendar) =>
-        calendar.workingGroups?.some(({ complete }) => !complete),
+        calendar.workingGroups.some(({ complete }) => !complete),
       )}
     />
   </div>

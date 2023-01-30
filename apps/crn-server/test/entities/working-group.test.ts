@@ -30,6 +30,8 @@ describe('parseGraphQLWorkingGroup', () => {
           color: '#B1365F',
           id: 'hub@asap.science',
           name: 'ASAP Hub',
+          groups: [],
+          workingGroups: [],
         },
       ],
       complete: false,

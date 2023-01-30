@@ -76,8 +76,8 @@ export interface CalendarResponse {
   id: string;
   name: string;
   color: GoogleLegacyCalendarColor;
-  groups?: Pick<GroupResponse, 'id' | 'active'>[];
-  workingGroups?: Pick<WorkingGroupResponse, 'id' | 'complete'>[];
+  groups: Pick<GroupResponse, 'id' | 'active'>[];
+  workingGroups: Pick<WorkingGroupResponse, 'id' | 'complete'>[];
 }
 
 export type ListCalendarResponse = ListResponse<CalendarResponse>;

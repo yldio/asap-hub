@@ -153,6 +153,8 @@ describe('/groups/ route', () => {
               id: 'calendar-id-1',
               name: 'Example calendar',
               color: '#333333',
+              groups: [],
+              workingGroups: [],
             },
             tags: [],
             status: 'Confirmed',

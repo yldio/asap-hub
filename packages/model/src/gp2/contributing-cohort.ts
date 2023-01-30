@@ -10,3 +10,8 @@ export type ListContributingCohortDataObject =
 export type ContributingCohortResponse = ContributingCohortDataObject;
 export type ListContributingCohortResponse =
   ListResponse<ContributingCohortResponse>;
+
+export type ContributingCohortCreateDataObject = Omit<
+  ContributingCohortDataObject,
+  'id'
+>;

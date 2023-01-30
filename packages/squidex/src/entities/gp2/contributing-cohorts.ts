@@ -1,13 +1,13 @@
 import { Entity, Rest, RestPayload } from '../common';
 
-export interface ContributingCohorts {
+export interface ContributingCohort {
   name: string;
 }
 
-export interface RestContributingCohorts
+export interface RestContributingCohort
   extends Entity,
-    Rest<ContributingCohorts> {}
+    Rest<ContributingCohort> {}
 
-export interface InputContributingCohorts
+export interface InputContributingCohort
   extends Entity,
-    RestPayload<ContributingCohorts> {}
+    RestPayload<ContributingCohort> {}

@@ -153,7 +153,7 @@ describe('parseRichText', () => {
     );
   });
 
-  test('throws an error if rtf is linked to an image that does not exist', () => {
+  test('throws an error if rtf is linked to an asset that does not exist', () => {
     const inexistentAssetId = 'not-found';
     const rtf = {
       json: {

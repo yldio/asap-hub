@@ -26,7 +26,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
-          "isUnique": false,
+          "isUnique": true,
           "isEmbeddable": false,
           "inlineEditable": true,
           "createEnum": false,

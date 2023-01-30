@@ -167,7 +167,7 @@ it('renders the correct subtitles for working groups', async () => {
     screen.getByText('Add an abstract or a summary that describes this work.'),
   ).toBeVisible();
   expect(
-    screen.getByRole('textbox', { name: 'Authors (optional)' }),
+    screen.getByRole('textbox', { name: 'Authors (required)' }),
   ).toBeVisible();
 });
 
@@ -231,7 +231,7 @@ it('can submit a form when form data is valid', async () => {
       methods: [],
       organisms: [],
       environments: [],
-      workingGroups: [],
+      workingGroups: ['wg-42'],
       publishDate: undefined,
       subtype: undefined,
       usageNotes: '',

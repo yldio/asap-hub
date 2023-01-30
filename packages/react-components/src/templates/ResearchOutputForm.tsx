@@ -105,7 +105,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   urlRequired = true,
   authorsRequired = false,
   typeOptions,
-  selectedTeams = [],
+  selectedTeams,
   getLabSuggestions = noop,
   getTeamSuggestions = noop,
   getAuthorSuggestions = noop,

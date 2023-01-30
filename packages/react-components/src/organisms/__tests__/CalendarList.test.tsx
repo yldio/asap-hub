@@ -26,7 +26,7 @@ it('Renders calender list item with colour', () => {
       calendars={[
         {
           color: '#0D7813',
-          name: 'Test Event',
+          name: 'Test Calendar',
           id: '1',
           groups: [],
           workingGroups: [],
@@ -35,7 +35,7 @@ it('Renders calender list item with colour', () => {
     />,
   );
   expect(getComputedStyle(getByText('●')).color).toMatch('rgb(13, 120, 19)');
-  expect(getByText('Test Event')).toBeVisible();
+  expect(getByText('Test Calendar')).toBeVisible();
 });
 
 it('Correctly generates the subscribe link', () => {
@@ -45,7 +45,7 @@ it('Correctly generates the subscribe link', () => {
       calendars={[
         {
           color: '#113F47',
-          name: 'Test Event',
+          name: 'Test Calendar',
           id: '1',
           groups: [],
           workingGroups: [],
@@ -69,7 +69,7 @@ it('displays the show more button', () => {
       {...props}
       calendars={createListCalendarResponse(6).items.concat({
         color: '#113F47',
-        name: 'last Event',
+        name: 'last Calendar',
         id: '1',
         groups: [],
         workingGroups: [],
@@ -79,8 +79,8 @@ it('displays the show more button', () => {
   const button = getByRole('button', { name: 'View More' });
 
   expect(button).toBeVisible();
-  expect(queryByText('last Event')).not.toBeInTheDocument();
+  expect(queryByText('last Calendar')).not.toBeInTheDocument();
   fireEvent.click(button);
   expect(getByRole('button', { name: 'View Less' })).toBeVisible();
-  expect(getByText('last Event')).toBeInTheDocument();
+  expect(getByText('last Calendar')).toBeInTheDocument();
 });

@@ -112,9 +112,9 @@ const CalendarList: FC<CalendarListProps> = ({
           <ul
             css={[
               orderList,
-              !displayShowMoreButton && {
-                paddingBottom: `${24 / perRem}em`,
-              },
+              ...(!displayShowMoreButton
+                ? [{ paddingBottom: `${24 / perRem}em` }]
+                : []),
             ]}
           >
             {calendars

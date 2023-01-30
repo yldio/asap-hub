@@ -85,16 +85,15 @@ const Resources: React.FC<ResourcesProps> = ({
           {add && (
             <div css={editButtonStyles}>
               <Link href={add} fullWidth buttonStyle noMargin small>
-                <div
+                <span
                   css={{
-                    display: 'flex',
-                    flexDirection: 'row',
+                    display: 'inline-flex',
                     gap: rem(8),
                     padding: `0 ${rem(5)}`,
                   }}
                 >
                   Add {addIcon}
-                </div>
+                </span>
               </Link>
             </div>
           )}
@@ -129,16 +128,15 @@ const Resources: React.FC<ResourcesProps> = ({
                         noMargin
                         small
                       >
-                        <div
+                        <span
                           css={{
-                            display: 'flex',
-                            flexDirection: 'row',
+                            display: 'inline-flex',
                             gap: rem(8),
                             padding: `0 ${rem(5)}`,
                           }}
                         >
                           Edit {editIcon}
-                        </div>
+                        </span>
                       </Link>
                     </div>
                   )}

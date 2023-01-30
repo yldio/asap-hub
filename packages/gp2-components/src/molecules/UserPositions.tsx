@@ -79,16 +79,15 @@ const UserPositions: React.FC<UserPositionsProps> = ({
       {positions.length < 3 && (
         <div css={buttonStyles}>
           <Button onClick={add} enabled={!isSaving} small>
-            <div
+            <span
               css={{
-                display: 'flex',
-                flexDirection: 'row',
+                display: 'inline-flex',
                 gap: rem(8),
-                padding: `0 ${rem(5)}`,
+                margin: `0 ${rem(5)}`,
               }}
             >
               Add Another Position {addIcon}
-            </div>
+            </span>
           </Button>
         </div>
       )}

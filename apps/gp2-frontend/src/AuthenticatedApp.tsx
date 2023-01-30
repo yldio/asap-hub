@@ -3,7 +3,7 @@ import { Frame } from '@asap-hub/frontend-utils';
 import { BasicLayout } from '@asap-hub/gp2-components';
 import { Loading, NotFoundPage } from '@asap-hub/react-components';
 import { useAuth0GP2, useCurrentUserGP2 } from '@asap-hub/react-context';
-import { FC, lazy, useEffect } from 'react';
+import { FC, lazy, useEffect, useState } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { RecoilRoot, useRecoilState, useResetRecoilState } from 'recoil';
 import { auth0State } from './auth/state';
@@ -35,12 +35,21 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
     user?.onboarded ? loadOnboardedApp() : loadOnboarding();
   }, [user?.onboarded]);
 
+  const [showWelcomeBackBanner, setShowWelcomeBackBanner] = useState(
+    user?.onboarded || false,
+  );
   if (!user || !recoilAuth0) {
     return <Loading />;
   }
 
+  /* istanbul ignore next */
+  const dismissBanner = () => setShowWelcomeBackBanner(false);
+
   return user.onboarded ? (
-    <OnboardedApp />
+    <OnboardedApp
+      showWelcomeBackBanner={showWelcomeBackBanner}
+      dismissBanner={dismissBanner}
+    />
   ) : (
     <BasicLayout>
       <Switch>

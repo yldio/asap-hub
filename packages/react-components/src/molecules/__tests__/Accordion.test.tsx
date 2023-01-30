@@ -118,4 +118,15 @@ describe('open close behaviour', () => {
     expect(isContentHidden('description 1')).toBe(true);
     expect(isContentHidden('description 2')).toBe(false);
   });
+  it('allows description to be an ReactNode', () => {
+    const node = <div id="id1">description 1</div>;
+    render(
+      <Accordion items={[{ ...item, title: 'title 1', description: node }]} />,
+    );
+
+    expect(isContentHidden('description 1')).toBe(true);
+    userEvent.click(screen.getByText('title 1'));
+    expect(isContentHidden('description 1')).toBe(false);
+    expect(screen.getByText('description 1')).toHaveAttribute('id', 'id1');
+  });
 });

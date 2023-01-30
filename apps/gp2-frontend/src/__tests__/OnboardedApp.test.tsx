@@ -40,7 +40,10 @@ const renderAuthenticatedApp = async () => {
         <Auth0Provider user={{ id }}>
           <WhenReady>
             <StaticRouter>
-              <OnboardedApp />
+              <OnboardedApp
+                showWelcomeBackBanner={false}
+                dismissBanner={jest.fn()}
+              />
             </StaticRouter>
           </WhenReady>
         </Auth0Provider>

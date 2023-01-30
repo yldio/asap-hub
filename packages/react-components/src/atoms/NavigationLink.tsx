@@ -87,14 +87,14 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
       <NavHashLink
         to={url}
         activeClassName={activeClassName}
-        css={({ colors, navigationLinkTheme }) => [
+        css={({ colors, components }) => [
           styles,
           squareBorder && squareBorderStyles,
           {
             [`&.${activeClassName}`]: activePrimaryStyles(colors),
           },
           !enabled && disableStyles,
-          navigationLinkTheme,
+          components?.NavigationLink?.styles,
         ]}
         smooth
         isActive={(match) => enabled && !!match && match.url === url}
@@ -112,12 +112,12 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
   return (
     <a
       href={url}
-      css={({ colors, navigationLinkTheme }) => [
+      css={({ colors, components }) => [
         styles,
         squareBorder && squareBorderStyles,
         active && activePrimaryStyles(colors),
         !enabled && disableStyles,
-        navigationLinkTheme,
+        components?.NavigationLink?.styles,
       ]}
     >
       <p css={textStyles}>

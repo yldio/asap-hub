@@ -3,7 +3,7 @@ import { Layout } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Route } from '@asap-hub/routing';
-import { FC, lazy, useEffect, useState } from 'react';
+import { FC, lazy, useEffect, ComponentProps } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { useUserById } from './users/state';
 
@@ -29,17 +29,13 @@ const WorkingGroups = lazy(loadWorkingGroups);
 const Projects = lazy(loadProjects);
 const Users = lazy(loadUsers);
 
-const OnboardedApp: FC<Record<string, never>> = () => {
+const OnboardedApp: FC<ComponentProps<typeof Dashboard>> = ({
+  showWelcomeBackBanner,
+  dismissBanner,
+}) => {
   const { path } = useRouteMatch();
 
   const user = useCurrentUserGP2();
-
-  const [showWelcomeBackBanner, setShowWelcomeBackBanner] = useState(
-    user?.onboarded || false,
-  );
-
-  /* istanbul ignore next */
-  const dismissBanner = () => setShowWelcomeBackBanner(false);
 
   useEffect(() => {
     // order by the likelyhood of user navigating there

@@ -1,10 +1,10 @@
-import { FC, useState } from 'react';
+import { FC, ReactNode, useState } from 'react';
 import { css } from '@emotion/react';
-import { Card, Headline5, Paragraph, Link } from '..';
+import { Headline5, Link, Paragraph } from '..';
 import { lineHeight, perRem, tabletScreen } from '../pixels';
 import { chevronDownIcon, externalLinkIcon, infoInfoIcon } from '../icons';
 import { isInternalLink } from '../utils';
-import { info500, info100, silver, steel } from '../colors';
+import { info500, info100, silver, steel, neutral900 } from '../colors';
 
 const containerStyles = css({
   padding: `0 ${9 / perRem}em`,
@@ -44,6 +44,7 @@ const iconOpenStyles = css({
 
 const bodyStyles = css({
   padding: `0 ${54 / perRem}em ${15 / perRem}em`,
+  color: neutral900.rgb,
 });
 
 const hiddenStyles = css({
@@ -53,7 +54,7 @@ const hiddenStyles = css({
 });
 
 const openStyles = css({
-  maxHeight: '500px', // value larger than probable content
+  maxHeight: '700px', // value larger than probable content
   transition: 'max-height 200ms ease-in-out',
 });
 
@@ -96,9 +97,9 @@ type AccordionProps = {
   items: {
     icon: JSX.Element;
     title: string;
-    description: string;
-    href: string;
-    hrefText: string;
+    description: ReactNode | string;
+    href?: string;
+    hrefText?: string;
   }[];
   info?: {
     text: string;
@@ -110,10 +111,21 @@ type AccordionProps = {
 const Accordion: FC<AccordionProps> = ({ items, info }) => {
   const [opened, setOpened] = useState<number | undefined>();
   return (
-    <Card accent="neutral200" padding={false}>
-      <div css={containerStyles}>
+    <>
+      <div
+        css={({ components }) => [
+          containerStyles,
+          components?.Accordion?.containerStyles,
+        ]}
+      >
         {items.map(({ icon, title, description, href, hrefText }, index) => (
-          <div key={`accordion-${index}`} css={itemStyles}>
+          <div
+            key={`accordion-${index}`}
+            css={({ components }) => [
+              itemStyles,
+              components?.Accordion?.itemStyles,
+            ]}
+          >
             <button
               css={[buttonStyles, headerStyles]}
               onClick={() => setOpened(opened === index ? undefined : index)}
@@ -126,12 +138,18 @@ const Accordion: FC<AccordionProps> = ({ items, info }) => {
             </button>
             <div css={[hiddenStyles, index === opened && openStyles]}>
               <div css={bodyStyles}>
-                <Paragraph accent={'lead'}>{description}</Paragraph>
-                <div css={{ width: 'fit-content' }}>
-                  <Link buttonStyle small primary href={href}>
-                    {hrefText} {!isInternalLink(href)[0] && externalLinkIcon}
-                  </Link>
-                </div>
+                {typeof description === 'string' ? (
+                  <Paragraph>{description}</Paragraph>
+                ) : (
+                  description
+                )}
+                {href && (
+                  <div css={{ width: 'fit-content' }}>
+                    <Link buttonStyle small primary href={href}>
+                      {hrefText} {!isInternalLink(href)[0] && externalLinkIcon}
+                    </Link>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -148,7 +166,7 @@ const Accordion: FC<AccordionProps> = ({ items, info }) => {
           </div>
         </div>
       )}
-    </Card>
+    </>
   );
 };
 export default Accordion;

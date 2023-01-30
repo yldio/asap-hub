@@ -122,7 +122,7 @@ describe('parseRichText', () => {
       },
     };
     expect(parseRichText(rtf)).toEqual(
-      `<p>Here it will appear an image</p><iframe src=\"https://images.ctfassets.net/envId/image1/file-1.pdf\" width=\"200\" height=\"300><p>below there&#39;s a cat</p><iframe src=\"https://images.ctfassets.net/envId/image2/file-2.pdf\"><p> </p>`,
+      `<p>Here it will appear an image</p><iframe src=\"https://images.ctfassets.net/envId/image1/file-1.pdf\" width=\"200\" height=\"300\"><p>below there&#39;s a cat</p><iframe src=\"https://images.ctfassets.net/envId/image2/file-2.pdf\"><p> </p>`,
     );
   });
 
@@ -149,7 +149,7 @@ describe('parseRichText', () => {
       },
     };
     expect(parseRichText(rtf)).toEqual(
-      `<p>Here it will appear an image</p><iframe src=\"https://images.ctfassets.net/envId/image1/video-1.mp4\" width=\"200\" height=\"300 allowFullScreen><p>below there&#39;s a cat</p><iframe src=\"https://images.ctfassets.net/envId/image2/video-2.mp4\" allowFullScreen><p> </p>`,
+      `<p>Here it will appear an image</p><iframe src=\"https://images.ctfassets.net/envId/image1/video-1.mp4\" width=\"200\" height=\"300\" allowFullScreen><p>below there&#39;s a cat</p><iframe src=\"https://images.ctfassets.net/envId/image2/video-2.mp4\" allowFullScreen><p> </p>`,
     );
   });
 

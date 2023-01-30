@@ -48,7 +48,7 @@ export const parseRichText = (rtf: RichTextFromQuery) => {
           const { url, description, contentType, width, height } =
             assetById[assetId];
           const dimensions =
-            width && height ? ` width="${width}" height="${height}` : '';
+            width && height ? ` width="${width}" height="${height}"` : '';
 
           switch (contentType) {
             case 'application/pdf':

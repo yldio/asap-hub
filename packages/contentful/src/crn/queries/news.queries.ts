@@ -24,6 +24,9 @@ export const newsContentQueryFragment = gql`
             }
             url
             description
+            contentType
+            width
+            height
           }
         }
       }

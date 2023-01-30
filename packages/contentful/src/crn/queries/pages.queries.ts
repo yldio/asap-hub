@@ -18,6 +18,9 @@ export const pagesContentQueryFragment = gql`
             }
             url
             description
+            contentType
+            width
+            height
           }
         }
       }

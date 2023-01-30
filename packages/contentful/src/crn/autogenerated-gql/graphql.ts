@@ -1002,9 +1002,14 @@ export type FetchDashboardQuery = {
                       assets: {
                         block: Array<
                           Maybe<
-                            Pick<Asset, 'url' | 'description'> & {
-                              sys: Pick<Sys, 'id'>;
-                            }
+                            Pick<
+                              Asset,
+                              | 'url'
+                              | 'description'
+                              | 'contentType'
+                              | 'width'
+                              | 'height'
+                            > & { sys: Pick<Sys, 'id'> }
                           >
                         >;
                       };
@@ -1029,9 +1034,14 @@ export type FetchDashboardQuery = {
                       assets: {
                         block: Array<
                           Maybe<
-                            Pick<Asset, 'url' | 'description'> & {
-                              sys: Pick<Sys, 'id'>;
-                            }
+                            Pick<
+                              Asset,
+                              | 'url'
+                              | 'description'
+                              | 'contentType'
+                              | 'width'
+                              | 'height'
+                            > & { sys: Pick<Sys, 'id'> }
                           >
                         >;
                       };
@@ -1058,7 +1068,12 @@ export type NewsContentFragment = Pick<
       links: {
         assets: {
           block: Array<
-            Maybe<Pick<Asset, 'url' | 'description'> & { sys: Pick<Sys, 'id'> }>
+            Maybe<
+              Pick<
+                Asset,
+                'url' | 'description' | 'contentType' | 'width' | 'height'
+              > & { sys: Pick<Sys, 'id'> }
+            >
           >;
         };
       };
@@ -1081,7 +1096,10 @@ export type FetchNewsByIdQuery = {
             assets: {
               block: Array<
                 Maybe<
-                  Pick<Asset, 'url' | 'description'> & { sys: Pick<Sys, 'id'> }
+                  Pick<
+                    Asset,
+                    'url' | 'description' | 'contentType' | 'width' | 'height'
+                  > & { sys: Pick<Sys, 'id'> }
                 >
               >;
             };
@@ -1116,9 +1134,14 @@ export type FetchNewsQuery = {
                   assets: {
                     block: Array<
                       Maybe<
-                        Pick<Asset, 'url' | 'description'> & {
-                          sys: Pick<Sys, 'id'>;
-                        }
+                        Pick<
+                          Asset,
+                          | 'url'
+                          | 'description'
+                          | 'contentType'
+                          | 'width'
+                          | 'height'
+                        > & { sys: Pick<Sys, 'id'> }
                       >
                     >;
                   };
@@ -1142,7 +1165,12 @@ export type PageContentFragment = Pick<
       links: {
         assets: {
           block: Array<
-            Maybe<Pick<Asset, 'url' | 'description'> & { sys: Pick<Sys, 'id'> }>
+            Maybe<
+              Pick<
+                Asset,
+                'url' | 'description' | 'contentType' | 'width' | 'height'
+              > & { sys: Pick<Sys, 'id'> }
+            >
           >;
         };
       };
@@ -1167,9 +1195,14 @@ export type FetchPagesQuery = {
                   assets: {
                     block: Array<
                       Maybe<
-                        Pick<Asset, 'url' | 'description'> & {
-                          sys: Pick<Sys, 'id'>;
-                        }
+                        Pick<
+                          Asset,
+                          | 'url'
+                          | 'description'
+                          | 'contentType'
+                          | 'width'
+                          | 'height'
+                        > & { sys: Pick<Sys, 'id'> }
                       >
                     >;
                   };
@@ -1274,6 +1307,21 @@ export const NewsContentFragmentDoc = {
                                       value: 'description',
                                     },
                                   },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'contentType',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'width' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'height' },
+                                  },
                                 ],
                               },
                             },
@@ -1365,6 +1413,21 @@ export const PageContentFragmentDoc = {
                                       kind: 'Name',
                                       value: 'description',
                                     },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'contentType',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'width' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'height' },
                                   },
                                 ],
                               },

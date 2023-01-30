@@ -28,37 +28,37 @@ export type Scalars = {
 /** The app mutations. */
 export type ApplicationMutations = {
   /** Change a Contributing Cohorts content. */
-  changeContributingCohortsContent: ContributingCohorts;
+  changeContributingCohortsContent: Maybe<ContributingCohorts>;
   /** Change a Dashboard content. */
-  changeDashboardContent: Dashboard;
+  changeDashboardContent: Maybe<Dashboard>;
   /** Change a Migrations content. */
-  changeMigrationsContent: Migrations;
+  changeMigrationsContent: Maybe<Migrations>;
   /** Change a News content. */
-  changeNewsAndEventsContent: NewsAndEvents;
+  changeNewsAndEventsContent: Maybe<NewsAndEvents>;
   /** Change a Projects content. */
-  changeProjectsContent: Projects;
+  changeProjectsContent: Maybe<Projects>;
   /** Change a Users content. */
-  changeUsersContent: Users;
+  changeUsersContent: Maybe<Users>;
   /** Change a Working Group Network content. */
-  changeWorkingGroupNetworkContent: WorkingGroupNetwork;
+  changeWorkingGroupNetworkContent: Maybe<WorkingGroupNetwork>;
   /** Change a Working Groups content. */
-  changeWorkingGroupsContent: WorkingGroups;
+  changeWorkingGroupsContent: Maybe<WorkingGroups>;
   /** Creates an Contributing Cohorts content. */
-  createContributingCohortsContent: ContributingCohorts;
+  createContributingCohortsContent: Maybe<ContributingCohorts>;
   /** Creates an Dashboard content. */
-  createDashboardContent: Dashboard;
+  createDashboardContent: Maybe<Dashboard>;
   /** Creates an Migrations content. */
-  createMigrationsContent: Migrations;
+  createMigrationsContent: Maybe<Migrations>;
   /** Creates an News content. */
-  createNewsAndEventsContent: NewsAndEvents;
+  createNewsAndEventsContent: Maybe<NewsAndEvents>;
   /** Creates an Projects content. */
-  createProjectsContent: Projects;
+  createProjectsContent: Maybe<Projects>;
   /** Creates an Users content. */
-  createUsersContent: Users;
+  createUsersContent: Maybe<Users>;
   /** Creates an Working Group Network content. */
-  createWorkingGroupNetworkContent: WorkingGroupNetwork;
+  createWorkingGroupNetworkContent: Maybe<WorkingGroupNetwork>;
   /** Creates an Working Groups content. */
-  createWorkingGroupsContent: WorkingGroups;
+  createWorkingGroupsContent: Maybe<WorkingGroups>;
   /** Delete an Contributing Cohorts content. */
   deleteContributingCohortsContent: EntitySavedResultDto;
   /** Delete an Dashboard content. */
@@ -76,93 +76,93 @@ export type ApplicationMutations = {
   /** Delete an Working Groups content. */
   deleteWorkingGroupsContent: EntitySavedResultDto;
   /** Patch an Contributing Cohorts content by id. */
-  patchContributingCohortsContent: ContributingCohorts;
+  patchContributingCohortsContent: Maybe<ContributingCohorts>;
   /** Patch an Dashboard content by id. */
-  patchDashboardContent: Dashboard;
+  patchDashboardContent: Maybe<Dashboard>;
   /** Patch an Migrations content by id. */
-  patchMigrationsContent: Migrations;
+  patchMigrationsContent: Maybe<Migrations>;
   /** Patch an News content by id. */
-  patchNewsAndEventsContent: NewsAndEvents;
+  patchNewsAndEventsContent: Maybe<NewsAndEvents>;
   /** Patch an Projects content by id. */
-  patchProjectsContent: Projects;
+  patchProjectsContent: Maybe<Projects>;
   /** Patch an Users content by id. */
-  patchUsersContent: Users;
+  patchUsersContent: Maybe<Users>;
   /** Patch an Working Group Network content by id. */
-  patchWorkingGroupNetworkContent: WorkingGroupNetwork;
+  patchWorkingGroupNetworkContent: Maybe<WorkingGroupNetwork>;
   /** Patch an Working Groups content by id. */
-  patchWorkingGroupsContent: WorkingGroups;
+  patchWorkingGroupsContent: Maybe<WorkingGroups>;
   /**
    * Publish a Contributing Cohorts content.
    * @deprecated Use 'changeContributingCohortsContent' instead
    */
-  publishContributingCohortsContent: ContributingCohorts;
+  publishContributingCohortsContent: Maybe<ContributingCohorts>;
   /**
    * Publish a Dashboard content.
    * @deprecated Use 'changeDashboardContent' instead
    */
-  publishDashboardContent: Dashboard;
+  publishDashboardContent: Maybe<Dashboard>;
   /**
    * Publish a Migrations content.
    * @deprecated Use 'changeMigrationsContent' instead
    */
-  publishMigrationsContent: Migrations;
+  publishMigrationsContent: Maybe<Migrations>;
   /**
    * Publish a News content.
    * @deprecated Use 'changeNewsAndEventsContent' instead
    */
-  publishNewsAndEventsContent: NewsAndEvents;
+  publishNewsAndEventsContent: Maybe<NewsAndEvents>;
   /**
    * Publish a Projects content.
    * @deprecated Use 'changeProjectsContent' instead
    */
-  publishProjectsContent: Projects;
+  publishProjectsContent: Maybe<Projects>;
   /**
    * Publish a Users content.
    * @deprecated Use 'changeUsersContent' instead
    */
-  publishUsersContent: Users;
+  publishUsersContent: Maybe<Users>;
   /**
    * Publish a Working Group Network content.
    * @deprecated Use 'changeWorkingGroupNetworkContent' instead
    */
-  publishWorkingGroupNetworkContent: WorkingGroupNetwork;
+  publishWorkingGroupNetworkContent: Maybe<WorkingGroupNetwork>;
   /**
    * Publish a Working Groups content.
    * @deprecated Use 'changeWorkingGroupsContent' instead
    */
-  publishWorkingGroupsContent: WorkingGroups;
+  publishWorkingGroupsContent: Maybe<WorkingGroups>;
   /** Update an Contributing Cohorts content by id. */
-  updateContributingCohortsContent: ContributingCohorts;
+  updateContributingCohortsContent: Maybe<ContributingCohorts>;
   /** Update an Dashboard content by id. */
-  updateDashboardContent: Dashboard;
+  updateDashboardContent: Maybe<Dashboard>;
   /** Update an Migrations content by id. */
-  updateMigrationsContent: Migrations;
+  updateMigrationsContent: Maybe<Migrations>;
   /** Update an News content by id. */
-  updateNewsAndEventsContent: NewsAndEvents;
+  updateNewsAndEventsContent: Maybe<NewsAndEvents>;
   /** Update an Projects content by id. */
-  updateProjectsContent: Projects;
+  updateProjectsContent: Maybe<Projects>;
   /** Update an Users content by id. */
-  updateUsersContent: Users;
+  updateUsersContent: Maybe<Users>;
   /** Update an Working Group Network content by id. */
-  updateWorkingGroupNetworkContent: WorkingGroupNetwork;
+  updateWorkingGroupNetworkContent: Maybe<WorkingGroupNetwork>;
   /** Update an Working Groups content by id. */
-  updateWorkingGroupsContent: WorkingGroups;
+  updateWorkingGroupsContent: Maybe<WorkingGroups>;
   /** Upsert an Contributing Cohorts content by id. */
-  upsertContributingCohortsContent: ContributingCohorts;
+  upsertContributingCohortsContent: Maybe<ContributingCohorts>;
   /** Upsert an Dashboard content by id. */
-  upsertDashboardContent: Dashboard;
+  upsertDashboardContent: Maybe<Dashboard>;
   /** Upsert an Migrations content by id. */
-  upsertMigrationsContent: Migrations;
+  upsertMigrationsContent: Maybe<Migrations>;
   /** Upsert an News content by id. */
-  upsertNewsAndEventsContent: NewsAndEvents;
+  upsertNewsAndEventsContent: Maybe<NewsAndEvents>;
   /** Upsert an Projects content by id. */
-  upsertProjectsContent: Projects;
+  upsertProjectsContent: Maybe<Projects>;
   /** Upsert an Users content by id. */
-  upsertUsersContent: Users;
+  upsertUsersContent: Maybe<Users>;
   /** Upsert an Working Group Network content by id. */
-  upsertWorkingGroupNetworkContent: WorkingGroupNetwork;
+  upsertWorkingGroupNetworkContent: Maybe<WorkingGroupNetwork>;
   /** Upsert an Working Groups content by id. */
-  upsertWorkingGroupsContent: WorkingGroups;
+  upsertWorkingGroupsContent: Maybe<WorkingGroups>;
 };
 
 /** The app mutations. */

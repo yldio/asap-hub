@@ -22,7 +22,7 @@ type ApplicationMutations {
     id: String!
     """The status for the content."""
     status: String!
-  ): Calendars!
+  ): Calendars
   """Change a Dashboard content."""
   changeDashboardContent(
     """The timestamp when the status should be changed."""
@@ -33,7 +33,7 @@ type ApplicationMutations {
     id: String!
     """The status for the content."""
     status: String!
-  ): Dashboard!
+  ): Dashboard
   """Change a Discover ASAP content."""
   changeDiscoverContent(
     """The timestamp when the status should be changed."""
@@ -44,7 +44,7 @@ type ApplicationMutations {
     id: String!
     """The status for the content."""
     status: String!
-  ): Discover!
+  ): Discover
   """Change a Events content."""
   changeEventsContent(
     """The timestamp when the status should be changed."""
@@ -55,7 +55,7 @@ type ApplicationMutations {
     id: String!
     """The status for the content."""
     status: String!
-  ): Events!
+  ): Events
   """Change a External authors content."""
   changeExternalAuthorsContent(
     """The timestamp when the status should be changed."""
@@ -66,7 +66,7 @@ type ApplicationMutations {
     id: String!
     """The status for the content."""
     status: String!
-  ): ExternalAuthors!
+  ): ExternalAuthors
   """Change a Groups content."""
   changeGroupsContent(
     """The timestamp when the status should be changed."""
@@ -77,7 +77,7 @@ type ApplicationMutations {
     id: String!
     """The status for the content."""
     status: String!
-  ): Groups!
+  ): Groups
   """Change a Labs content."""
   changeLabsContent(
     """The timestamp when the status should be changed."""
@@ -88,7 +88,7 @@ type ApplicationMutations {
     id: String!
     """The status for the content."""
     status: String!
-  ): Labs!
+  ): Labs
   """Change a Migrations content."""
   changeMigrationsContent(
     """The timestamp when the status should be changed."""
@@ -99,7 +99,7 @@ type ApplicationMutations {
     id: String!
     """The status for the content."""
     status: String!
-  ): Migrations!
+  ): Migrations
   """Change a News content."""
   changeNewsAndEventsContent(
     """The timestamp when the status should be changed."""
@@ -110,7 +110,7 @@ type ApplicationMutations {
     id: String!
     """The status for the content."""
     status: String!
-  ): NewsAndEvents!
+  ): NewsAndEvents
   """Change a Pages content."""
   changePagesContent(
     """The timestamp when the status should be changed."""
@@ -121,7 +121,7 @@ type ApplicationMutations {
     id: String!
     """The status for the content."""
     status: String!
-  ): Pages!
+  ): Pages
   """Change a Research Outputs content."""
   changeResearchOutputsContent(
     """The timestamp when the status should be changed."""
@@ -132,7 +132,7 @@ type ApplicationMutations {
     id: String!
     """The status for the content."""
     status: String!
-  ): ResearchOutputs!
+  ): ResearchOutputs
   """Change a Research Tags content."""
   changeResearchTagsContent(
     """The timestamp when the status should be changed."""
@@ -143,7 +143,7 @@ type ApplicationMutations {
     id: String!
     """The status for the content."""
     status: String!
-  ): ResearchTags!
+  ): ResearchTags
   """Change a Teams content."""
   changeTeamsContent(
     """The timestamp when the status should be changed."""
@@ -154,7 +154,7 @@ type ApplicationMutations {
     id: String!
     """The status for the content."""
     status: String!
-  ): Teams!
+  ): Teams
   """Change a Tutorials content."""
   changeTutorialsContent(
     """The timestamp when the status should be changed."""
@@ -165,7 +165,7 @@ type ApplicationMutations {
     id: String!
     """The status for the content."""
     status: String!
-  ): Tutorials!
+  ): Tutorials
   """Change a Users content."""
   changeUsersContent(
     """The timestamp when the status should be changed."""
@@ -176,7 +176,7 @@ type ApplicationMutations {
     id: String!
     """The status for the content."""
     status: String!
-  ): Users!
+  ): Users
   """Change a Working Groups content."""
   changeWorkingGroupsContent(
     """The timestamp when the status should be changed."""
@@ -187,7 +187,7 @@ type ApplicationMutations {
     id: String!
     """The status for the content."""
     status: String!
-  ): WorkingGroups!
+  ): WorkingGroups
   """Creates an Calendars content."""
   createCalendarsContent(
     """The data for the content."""
@@ -198,7 +198,7 @@ type ApplicationMutations {
     publish: Boolean = false
     """The initial status."""
     status: String
-  ): Calendars!
+  ): Calendars
   """Creates an Dashboard content."""
   createDashboardContent(
     """The data for the content."""
@@ -209,7 +209,7 @@ type ApplicationMutations {
     publish: Boolean = false
     """The initial status."""
     status: String
-  ): Dashboard!
+  ): Dashboard
   """Creates an Discover ASAP content."""
   createDiscoverContent(
     """The data for the content."""
@@ -220,7 +220,7 @@ type ApplicationMutations {
     publish: Boolean = false
     """The initial status."""
     status: String
-  ): Discover!
+  ): Discover
   """Creates an Events content."""
   createEventsContent(
     """The data for the content."""
@@ -231,7 +231,7 @@ type ApplicationMutations {
     publish: Boolean = false
     """The initial status."""
     status: String
-  ): Events!
+  ): Events
   """Creates an External authors content."""
   createExternalAuthorsContent(
     """The data for the content."""
@@ -242,7 +242,7 @@ type ApplicationMutations {
     publish: Boolean = false
     """The initial status."""
     status: String
-  ): ExternalAuthors!
+  ): ExternalAuthors
   """Creates an Groups content."""
   createGroupsContent(
     """The data for the content."""
@@ -253,7 +253,7 @@ type ApplicationMutations {
     publish: Boolean = false
     """The initial status."""
     status: String
-  ): Groups!
+  ): Groups
   """Creates an Labs content."""
   createLabsContent(
     """The data for the content."""
@@ -264,7 +264,7 @@ type ApplicationMutations {
     publish: Boolean = false
     """The initial status."""
     status: String
-  ): Labs!
+  ): Labs
   """Creates an Migrations content."""
   createMigrationsContent(
     """The data for the content."""
@@ -275,7 +275,7 @@ type ApplicationMutations {
     publish: Boolean = false
     """The initial status."""
     status: String
-  ): Migrations!
+  ): Migrations
   """Creates an News content."""
   createNewsAndEventsContent(
     """The data for the content."""
@@ -286,7 +286,7 @@ type ApplicationMutations {
     publish: Boolean = false
     """The initial status."""
     status: String
-  ): NewsAndEvents!
+  ): NewsAndEvents
   """Creates an Pages content."""
   createPagesContent(
     """The data for the content."""
@@ -297,7 +297,7 @@ type ApplicationMutations {
     publish: Boolean = false
     """The initial status."""
     status: String
-  ): Pages!
+  ): Pages
   """Creates an Research Outputs content."""
   createResearchOutputsContent(
     """The data for the content."""
@@ -308,7 +308,7 @@ type ApplicationMutations {
     publish: Boolean = false
     """The initial status."""
     status: String
-  ): ResearchOutputs!
+  ): ResearchOutputs
   """Creates an Research Tags content."""
   createResearchTagsContent(
     """The data for the content."""
@@ -319,7 +319,7 @@ type ApplicationMutations {
     publish: Boolean = false
     """The initial status."""
     status: String
-  ): ResearchTags!
+  ): ResearchTags
   """Creates an Teams content."""
   createTeamsContent(
     """The data for the content."""
@@ -330,7 +330,7 @@ type ApplicationMutations {
     publish: Boolean = false
     """The initial status."""
     status: String
-  ): Teams!
+  ): Teams
   """Creates an Tutorials content."""
   createTutorialsContent(
     """The data for the content."""
@@ -341,7 +341,7 @@ type ApplicationMutations {
     publish: Boolean = false
     """The initial status."""
     status: String
-  ): Tutorials!
+  ): Tutorials
   """Creates an Users content."""
   createUsersContent(
     """The data for the content."""
@@ -352,7 +352,7 @@ type ApplicationMutations {
     publish: Boolean = false
     """The initial status."""
     status: String
-  ): Users!
+  ): Users
   """Creates an Working Groups content."""
   createWorkingGroupsContent(
     """The data for the content."""
@@ -363,7 +363,7 @@ type ApplicationMutations {
     publish: Boolean = false
     """The initial status."""
     status: String
-  ): WorkingGroups!
+  ): WorkingGroups
   """Delete an Calendars content."""
   deleteCalendarsContent(
     """The expected version."""
@@ -484,7 +484,7 @@ type ApplicationMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String
-  ): Calendars!
+  ): Calendars
   """Patch an Dashboard content by id."""
   patchDashboardContent(
     """The data for the content."""
@@ -493,7 +493,7 @@ type ApplicationMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String
-  ): Dashboard!
+  ): Dashboard
   """Patch an Discover ASAP content by id."""
   patchDiscoverContent(
     """The data for the content."""
@@ -502,7 +502,7 @@ type ApplicationMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String
-  ): Discover!
+  ): Discover
   """Patch an Events content by id."""
   patchEventsContent(
     """The data for the content."""
@@ -511,7 +511,7 @@ type ApplicationMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String
-  ): Events!
+  ): Events
   """Patch an External authors content by id."""
   patchExternalAuthorsContent(
     """The data for the content."""
@@ -520,7 +520,7 @@ type ApplicationMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String
-  ): ExternalAuthors!
+  ): ExternalAuthors
   """Patch an Groups content by id."""
   patchGroupsContent(
     """The data for the content."""
@@ -529,7 +529,7 @@ type ApplicationMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String
-  ): Groups!
+  ): Groups
   """Patch an Labs content by id."""
   patchLabsContent(
     """The data for the content."""
@@ -538,7 +538,7 @@ type ApplicationMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String
-  ): Labs!
+  ): Labs
   """Patch an Migrations content by id."""
   patchMigrationsContent(
     """The data for the content."""
@@ -547,7 +547,7 @@ type ApplicationMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String
-  ): Migrations!
+  ): Migrations
   """Patch an News content by id."""
   patchNewsAndEventsContent(
     """The data for the content."""
@@ -556,7 +556,7 @@ type ApplicationMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String
-  ): NewsAndEvents!
+  ): NewsAndEvents
   """Patch an Pages content by id."""
   patchPagesContent(
     """The data for the content."""
@@ -565,7 +565,7 @@ type ApplicationMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String
-  ): Pages!
+  ): Pages
   """Patch an Research Outputs content by id."""
   patchResearchOutputsContent(
     """The data for the content."""
@@ -574,7 +574,7 @@ type ApplicationMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String
-  ): ResearchOutputs!
+  ): ResearchOutputs
   """Patch an Research Tags content by id."""
   patchResearchTagsContent(
     """The data for the content."""
@@ -583,7 +583,7 @@ type ApplicationMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String
-  ): ResearchTags!
+  ): ResearchTags
   """Patch an Teams content by id."""
   patchTeamsContent(
     """The data for the content."""
@@ -592,7 +592,7 @@ type ApplicationMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String
-  ): Teams!
+  ): Teams
   """Patch an Tutorials content by id."""
   patchTutorialsContent(
     """The data for the content."""
@@ -601,7 +601,7 @@ type ApplicationMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String
-  ): Tutorials!
+  ): Tutorials
   """Patch an Users content by id."""
   patchUsersContent(
     """The data for the content."""
@@ -610,7 +610,7 @@ type ApplicationMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String
-  ): Users!
+  ): Users
   """Patch an Working Groups content by id."""
   patchWorkingGroupsContent(
     """The data for the content."""
@@ -619,7 +619,7 @@ type ApplicationMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String
-  ): WorkingGroups!
+  ): WorkingGroups
   """Publish a Calendars content."""
   publishCalendarsContent(
     """The timestamp when the status should be changed."""
@@ -630,7 +630,7 @@ type ApplicationMutations {
     id: String!
     """The status for the content."""
     status: String!
-  ): Calendars! @deprecated(reason: "Use 'changeCalendarsContent' instead")
+  ): Calendars @deprecated(reason: "Use 'changeCalendarsContent' instead")
   """Publish a Dashboard content."""
   publishDashboardContent(
     """The timestamp when the status should be changed."""
@@ -641,7 +641,7 @@ type ApplicationMutations {
     id: String!
     """The status for the content."""
     status: String!
-  ): Dashboard! @deprecated(reason: "Use 'changeDashboardContent' instead")
+  ): Dashboard @deprecated(reason: "Use 'changeDashboardContent' instead")
   """Publish a Discover ASAP content."""
   publishDiscoverContent(
     """The timestamp when the status should be changed."""
@@ -652,7 +652,7 @@ type ApplicationMutations {
     id: String!
     """The status for the content."""
     status: String!
-  ): Discover! @deprecated(reason: "Use 'changeDiscoverContent' instead")
+  ): Discover @deprecated(reason: "Use 'changeDiscoverContent' instead")
   """Publish a Events content."""
   publishEventsContent(
     """The timestamp when the status should be changed."""
@@ -663,7 +663,7 @@ type ApplicationMutations {
     id: String!
     """The status for the content."""
     status: String!
-  ): Events! @deprecated(reason: "Use 'changeEventsContent' instead")
+  ): Events @deprecated(reason: "Use 'changeEventsContent' instead")
   """Publish a External authors content."""
   publishExternalAuthorsContent(
     """The timestamp when the status should be changed."""
@@ -674,7 +674,7 @@ type ApplicationMutations {
     id: String!
     """The status for the content."""
     status: String!
-  ): ExternalAuthors! @deprecated(reason: "Use 'changeExternalAuthorsContent' instead")
+  ): ExternalAuthors @deprecated(reason: "Use 'changeExternalAuthorsContent' instead")
   """Publish a Groups content."""
   publishGroupsContent(
     """The timestamp when the status should be changed."""
@@ -685,7 +685,7 @@ type ApplicationMutations {
     id: String!
     """The status for the content."""
     status: String!
-  ): Groups! @deprecated(reason: "Use 'changeGroupsContent' instead")
+  ): Groups @deprecated(reason: "Use 'changeGroupsContent' instead")
   """Publish a Labs content."""
   publishLabsContent(
     """The timestamp when the status should be changed."""
@@ -696,7 +696,7 @@ type ApplicationMutations {
     id: String!
     """The status for the content."""
     status: String!
-  ): Labs! @deprecated(reason: "Use 'changeLabsContent' instead")
+  ): Labs @deprecated(reason: "Use 'changeLabsContent' instead")
   """Publish a Migrations content."""
   publishMigrationsContent(
     """The timestamp when the status should be changed."""
@@ -707,7 +707,7 @@ type ApplicationMutations {
     id: String!
     """The status for the content."""
     status: String!
-  ): Migrations! @deprecated(reason: "Use 'changeMigrationsContent' instead")
+  ): Migrations @deprecated(reason: "Use 'changeMigrationsContent' instead")
   """Publish a News content."""
   publishNewsAndEventsContent(
     """The timestamp when the status should be changed."""
@@ -718,7 +718,7 @@ type ApplicationMutations {
     id: String!
     """The status for the content."""
     status: String!
-  ): NewsAndEvents! @deprecated(reason: "Use 'changeNewsAndEventsContent' instead")
+  ): NewsAndEvents @deprecated(reason: "Use 'changeNewsAndEventsContent' instead")
   """Publish a Pages content."""
   publishPagesContent(
     """The timestamp when the status should be changed."""
@@ -729,7 +729,7 @@ type ApplicationMutations {
     id: String!
     """The status for the content."""
     status: String!
-  ): Pages! @deprecated(reason: "Use 'changePagesContent' instead")
+  ): Pages @deprecated(reason: "Use 'changePagesContent' instead")
   """Publish a Research Outputs content."""
   publishResearchOutputsContent(
     """The timestamp when the status should be changed."""
@@ -740,7 +740,7 @@ type ApplicationMutations {
     id: String!
     """The status for the content."""
     status: String!
-  ): ResearchOutputs! @deprecated(reason: "Use 'changeResearchOutputsContent' instead")
+  ): ResearchOutputs @deprecated(reason: "Use 'changeResearchOutputsContent' instead")
   """Publish a Research Tags content."""
   publishResearchTagsContent(
     """The timestamp when the status should be changed."""
@@ -751,7 +751,7 @@ type ApplicationMutations {
     id: String!
     """The status for the content."""
     status: String!
-  ): ResearchTags! @deprecated(reason: "Use 'changeResearchTagsContent' instead")
+  ): ResearchTags @deprecated(reason: "Use 'changeResearchTagsContent' instead")
   """Publish a Teams content."""
   publishTeamsContent(
     """The timestamp when the status should be changed."""
@@ -762,7 +762,7 @@ type ApplicationMutations {
     id: String!
     """The status for the content."""
     status: String!
-  ): Teams! @deprecated(reason: "Use 'changeTeamsContent' instead")
+  ): Teams @deprecated(reason: "Use 'changeTeamsContent' instead")
   """Publish a Tutorials content."""
   publishTutorialsContent(
     """The timestamp when the status should be changed."""
@@ -773,7 +773,7 @@ type ApplicationMutations {
     id: String!
     """The status for the content."""
     status: String!
-  ): Tutorials! @deprecated(reason: "Use 'changeTutorialsContent' instead")
+  ): Tutorials @deprecated(reason: "Use 'changeTutorialsContent' instead")
   """Publish a Users content."""
   publishUsersContent(
     """The timestamp when the status should be changed."""
@@ -784,7 +784,7 @@ type ApplicationMutations {
     id: String!
     """The status for the content."""
     status: String!
-  ): Users! @deprecated(reason: "Use 'changeUsersContent' instead")
+  ): Users @deprecated(reason: "Use 'changeUsersContent' instead")
   """Publish a Working Groups content."""
   publishWorkingGroupsContent(
     """The timestamp when the status should be changed."""
@@ -795,7 +795,7 @@ type ApplicationMutations {
     id: String!
     """The status for the content."""
     status: String!
-  ): WorkingGroups! @deprecated(reason: "Use 'changeWorkingGroupsContent' instead")
+  ): WorkingGroups @deprecated(reason: "Use 'changeWorkingGroupsContent' instead")
   """Update an Calendars content by id."""
   updateCalendarsContent(
     """The data for the content."""
@@ -804,7 +804,7 @@ type ApplicationMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String
-  ): Calendars!
+  ): Calendars
   """Update an Dashboard content by id."""
   updateDashboardContent(
     """The data for the content."""
@@ -813,7 +813,7 @@ type ApplicationMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String
-  ): Dashboard!
+  ): Dashboard
   """Update an Discover ASAP content by id."""
   updateDiscoverContent(
     """The data for the content."""
@@ -822,7 +822,7 @@ type ApplicationMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String
-  ): Discover!
+  ): Discover
   """Update an Events content by id."""
   updateEventsContent(
     """The data for the content."""
@@ -831,7 +831,7 @@ type ApplicationMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String
-  ): Events!
+  ): Events
   """Update an External authors content by id."""
   updateExternalAuthorsContent(
     """The data for the content."""
@@ -840,7 +840,7 @@ type ApplicationMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String
-  ): ExternalAuthors!
+  ): ExternalAuthors
   """Update an Groups content by id."""
   updateGroupsContent(
     """The data for the content."""
@@ -849,7 +849,7 @@ type ApplicationMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String
-  ): Groups!
+  ): Groups
   """Update an Labs content by id."""
   updateLabsContent(
     """The data for the content."""
@@ -858,7 +858,7 @@ type ApplicationMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String
-  ): Labs!
+  ): Labs
   """Update an Migrations content by id."""
   updateMigrationsContent(
     """The data for the content."""
@@ -867,7 +867,7 @@ type ApplicationMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String
-  ): Migrations!
+  ): Migrations
   """Update an News content by id."""
   updateNewsAndEventsContent(
     """The data for the content."""
@@ -876,7 +876,7 @@ type ApplicationMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String
-  ): NewsAndEvents!
+  ): NewsAndEvents
   """Update an Pages content by id."""
   updatePagesContent(
     """The data for the content."""
@@ -885,7 +885,7 @@ type ApplicationMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String
-  ): Pages!
+  ): Pages
   """Update an Research Outputs content by id."""
   updateResearchOutputsContent(
     """The data for the content."""
@@ -894,7 +894,7 @@ type ApplicationMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String
-  ): ResearchOutputs!
+  ): ResearchOutputs
   """Update an Research Tags content by id."""
   updateResearchTagsContent(
     """The data for the content."""
@@ -903,7 +903,7 @@ type ApplicationMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String
-  ): ResearchTags!
+  ): ResearchTags
   """Update an Teams content by id."""
   updateTeamsContent(
     """The data for the content."""
@@ -912,7 +912,7 @@ type ApplicationMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String
-  ): Teams!
+  ): Teams
   """Update an Tutorials content by id."""
   updateTutorialsContent(
     """The data for the content."""
@@ -921,7 +921,7 @@ type ApplicationMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String
-  ): Tutorials!
+  ): Tutorials
   """Update an Users content by id."""
   updateUsersContent(
     """The data for the content."""
@@ -930,7 +930,7 @@ type ApplicationMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String
-  ): Users!
+  ): Users
   """Update an Working Groups content by id."""
   updateWorkingGroupsContent(
     """The data for the content."""
@@ -939,7 +939,7 @@ type ApplicationMutations {
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String
-  ): WorkingGroups!
+  ): WorkingGroups
   """Upsert an Calendars content by id."""
   upsertCalendarsContent(
     """The data for the content."""
@@ -954,7 +954,7 @@ type ApplicationMutations {
     publish: Boolean = false
     """The initial status."""
     status: String
-  ): Calendars!
+  ): Calendars
   """Upsert an Dashboard content by id."""
   upsertDashboardContent(
     """The data for the content."""
@@ -969,7 +969,7 @@ type ApplicationMutations {
     publish: Boolean = false
     """The initial status."""
     status: String
-  ): Dashboard!
+  ): Dashboard
   """Upsert an Discover ASAP content by id."""
   upsertDiscoverContent(
     """The data for the content."""
@@ -984,7 +984,7 @@ type ApplicationMutations {
     publish: Boolean = false
     """The initial status."""
     status: String
-  ): Discover!
+  ): Discover
   """Upsert an Events content by id."""
   upsertEventsContent(
     """The data for the content."""
@@ -999,7 +999,7 @@ type ApplicationMutations {
     publish: Boolean = false
     """The initial status."""
     status: String
-  ): Events!
+  ): Events
   """Upsert an External authors content by id."""
   upsertExternalAuthorsContent(
     """The data for the content."""
@@ -1014,7 +1014,7 @@ type ApplicationMutations {
     publish: Boolean = false
     """The initial status."""
     status: String
-  ): ExternalAuthors!
+  ): ExternalAuthors
   """Upsert an Groups content by id."""
   upsertGroupsContent(
     """The data for the content."""
@@ -1029,7 +1029,7 @@ type ApplicationMutations {
     publish: Boolean = false
     """The initial status."""
     status: String
-  ): Groups!
+  ): Groups
   """Upsert an Labs content by id."""
   upsertLabsContent(
     """The data for the content."""
@@ -1044,7 +1044,7 @@ type ApplicationMutations {
     publish: Boolean = false
     """The initial status."""
     status: String
-  ): Labs!
+  ): Labs
   """Upsert an Migrations content by id."""
   upsertMigrationsContent(
     """The data for the content."""
@@ -1059,7 +1059,7 @@ type ApplicationMutations {
     publish: Boolean = false
     """The initial status."""
     status: String
-  ): Migrations!
+  ): Migrations
   """Upsert an News content by id."""
   upsertNewsAndEventsContent(
     """The data for the content."""
@@ -1074,7 +1074,7 @@ type ApplicationMutations {
     publish: Boolean = false
     """The initial status."""
     status: String
-  ): NewsAndEvents!
+  ): NewsAndEvents
   """Upsert an Pages content by id."""
   upsertPagesContent(
     """The data for the content."""
@@ -1089,7 +1089,7 @@ type ApplicationMutations {
     publish: Boolean = false
     """The initial status."""
     status: String
-  ): Pages!
+  ): Pages
   """Upsert an Research Outputs content by id."""
   upsertResearchOutputsContent(
     """The data for the content."""
@@ -1104,7 +1104,7 @@ type ApplicationMutations {
     publish: Boolean = false
     """The initial status."""
     status: String
-  ): ResearchOutputs!
+  ): ResearchOutputs
   """Upsert an Research Tags content by id."""
   upsertResearchTagsContent(
     """The data for the content."""
@@ -1119,7 +1119,7 @@ type ApplicationMutations {
     publish: Boolean = false
     """The initial status."""
     status: String
-  ): ResearchTags!
+  ): ResearchTags
   """Upsert an Teams content by id."""
   upsertTeamsContent(
     """The data for the content."""
@@ -1134,7 +1134,7 @@ type ApplicationMutations {
     publish: Boolean = false
     """The initial status."""
     status: String
-  ): Teams!
+  ): Teams
   """Upsert an Tutorials content by id."""
   upsertTutorialsContent(
     """The data for the content."""
@@ -1149,7 +1149,7 @@ type ApplicationMutations {
     publish: Boolean = false
     """The initial status."""
     status: String
-  ): Tutorials!
+  ): Tutorials
   """Upsert an Users content by id."""
   upsertUsersContent(
     """The data for the content."""
@@ -1164,7 +1164,7 @@ type ApplicationMutations {
     publish: Boolean = false
     """The initial status."""
     status: String
-  ): Users!
+  ): Users
   """Upsert an Working Groups content by id."""
   upsertWorkingGroupsContent(
     """The data for the content."""
@@ -1179,7 +1179,7 @@ type ApplicationMutations {
     publish: Boolean = false
     """The initial status."""
     status: String
-  ): WorkingGroups!
+  ): WorkingGroups
 }
 
 """The app queries."""

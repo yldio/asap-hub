@@ -5,7 +5,7 @@ export interface ContributingCohortController {
   fetch: () => Promise<gp2.ListContributingCohortResponse>;
 }
 
-export default class ContributingCohort
+export default class ContributingCohorts
   implements ContributingCohortController
 {
   constructor(private cohortDataProvider: ContributingCohortDataProvider) {}

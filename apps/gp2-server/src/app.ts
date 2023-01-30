@@ -24,7 +24,7 @@ import {
   clientId,
   clientSecret,
 } from './config';
-import ContributingCohort, {
+import ContributingCohorts, {
   ContributingCohortController,
 } from './controllers/contributing-cohort.controller';
 import News, { NewsController } from './controllers/news.controller';
@@ -104,6 +104,13 @@ export const appFactory = (libs: Libs = {}): Express => {
     appName,
     baseUrl,
   });
+  const contributingCohortRestClient = new SquidexRest<
+    gp2squidex.RestContributingCohort,
+    gp2squidex.InputContributingCohort
+  >(getAuthToken, 'contributing-cohorts', {
+    appName,
+    baseUrl,
+  });
   const workingGroupRestClient = new SquidexRest<
     gp2squidex.RestWorkingGroup,
     gp2squidex.InputWorkingGroup
@@ -126,7 +133,10 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.assetDataProvider || new AssetSquidexDataProvider(userRestClient);
   const contributingCohortDataProvider =
     libs.contributingCohortDataProvider ||
-    new ContributingCohortSquidexDataProvider(squidexGraphqlClient);
+    new ContributingCohortSquidexDataProvider(
+      squidexGraphqlClient,
+      contributingCohortRestClient,
+    );
   const userDataProvider =
     libs.userDataProvider ||
     new UserSquidexDataProvider(squidexGraphqlClient, userRestClient);
@@ -157,7 +167,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const newsController = libs.newsController || new News(newsDataProvider);
   const contributingCohortController =
     libs.contributingCohortController ||
-    new ContributingCohort(contributingCohortDataProvider);
+    new ContributingCohorts(contributingCohortDataProvider);
   /**
    * Public routes --->
    */

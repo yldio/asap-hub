@@ -3,4 +3,5 @@ import { ContributingCohortDataProvider } from '../../src/data-providers/contrib
 export const contributingCohortDataProviderMock: jest.Mocked<ContributingCohortDataProvider> =
   {
     fetch: jest.fn(),
+    create: jest.fn(),
   };

@@ -24,6 +24,9 @@ import {
   clientId,
   clientSecret,
 } from './config';
+import ContributingCohort, {
+  ContributingCohortController,
+} from './controllers/contributing-cohort.controller';
 import News, { NewsController } from './controllers/news.controller';
 import Projects, { ProjectController } from './controllers/project.controller';
 import Users, { UserController } from './controllers/user.controller';
@@ -37,6 +40,10 @@ import {
   AssetDataProvider,
   AssetSquidexDataProvider,
 } from './data-providers/asset.data-provider';
+import {
+  ContributingCohortDataProvider,
+  ContributingCohortSquidexDataProvider,
+} from './data-providers/contributing-cohort.data-provider';
 import {
   NewsDataProvider,
   NewsSquidexDataProvider,
@@ -57,6 +64,7 @@ import {
   WorkingGroupDataProvider,
   WorkingGroupSquidexDataProvider,
 } from './data-providers/working-group.data-provider';
+import { contributingCohortRouteFactory } from './routes/contributing-cohort.route';
 import { newsRouteFactory } from './routes/news.route';
 import { projectRouteFactory } from './routes/project.route';
 import { userPublicRouteFactory, userRouteFactory } from './routes/user.route';
@@ -116,6 +124,9 @@ export const appFactory = (libs: Libs = {}): Express => {
   // Data Providers
   const assetDataProvider =
     libs.assetDataProvider || new AssetSquidexDataProvider(userRestClient);
+  const contributingCohortDataProvider =
+    libs.contributingCohortDataProvider ||
+    new ContributingCohortSquidexDataProvider(squidexGraphqlClient);
   const userDataProvider =
     libs.userDataProvider ||
     new UserSquidexDataProvider(squidexGraphqlClient, userRestClient);
@@ -144,6 +155,9 @@ export const appFactory = (libs: Libs = {}): Express => {
   const projectController =
     libs.projectController || new Projects(projectDataProvider);
   const newsController = libs.newsController || new News(newsDataProvider);
+  const contributingCohortController =
+    libs.contributingCohortController ||
+    new ContributingCohort(contributingCohortDataProvider);
   /**
    * Public routes --->
    */
@@ -165,6 +179,9 @@ export const appFactory = (libs: Libs = {}): Express => {
   const userPublicRoutes = userPublicRouteFactory(userController);
   const userRoutes = userRouteFactory(userController);
   const newsRoutes = newsRouteFactory(newsController);
+  const contributingCohortRoutes = contributingCohortRouteFactory(
+    contributingCohortController,
+  );
   const workingGroupRoutes = workingGroupRouteFactory(workingGroupController);
   const workingGroupNetworkRoutes = workingGroupNetworkRouteFactory(
     workingGroupNetworkController,
@@ -179,6 +196,7 @@ export const appFactory = (libs: Libs = {}): Express => {
    * Routes requiring onboarding below
    */
   app.use(userRoutes);
+  app.use(contributingCohortRoutes);
   app.use(newsRoutes);
   app.use(workingGroupRoutes);
   app.use(workingGroupNetworkRoutes);
@@ -203,11 +221,13 @@ export type Libs = {
   assetDataProvider?: AssetDataProvider;
   userDataProvider?: UserDataProvider;
   newsDataProvider?: NewsDataProvider;
+  contributingCohortDataProvider?: ContributingCohortDataProvider;
   workingGroupDataProvider?: WorkingGroupDataProvider;
   workingGroupNetworkDataProvider?: WorkingGroupNetworkDataProvider;
   projectDataProvider?: ProjectDataProvider;
   userController?: UserController;
   newsController?: NewsController;
+  contributingCohortController?: ContributingCohortController;
   workingGroupController?: WorkingGroupController;
   workingGroupNetworkController?: WorkingGroupNetworkController;
   projectController?: ProjectController;

@@ -1,6 +1,6 @@
 import { GenericError, NotFoundError } from '@asap-hub/errors';
 import { gp2 } from '@asap-hub/model';
-import { AssetDataProvider } from '../data-providers/assets.data-provider';
+import { AssetDataProvider } from '../data-providers/asset.data-provider';
 import { UserDataProvider } from '../data-providers/user.data-provider';
 
 export interface UserController {

@@ -36,7 +36,7 @@ import WorkingGroups, {
 import {
   AssetDataProvider,
   AssetSquidexDataProvider,
-} from './data-providers/assets.data-provider';
+} from './data-providers/asset.data-provider';
 import {
   NewsDataProvider,
   NewsSquidexDataProvider,

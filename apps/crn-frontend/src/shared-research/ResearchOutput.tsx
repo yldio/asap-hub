@@ -35,14 +35,14 @@ const ResearchOutput: React.FC = () => {
               .editResearchOutput.template
           }
         >
-          {researchOutputData.publishingEntity === 'Team' ? (
-            <TeamOutput
-              teamId={researchOutputData.teams[0]?.id}
+          {researchOutputData.publishingEntity === 'Working Group' ? (
+            <WorkingGroupOutput
+              workingGroupId={researchOutputData.workingGroups[0]?.id}
               researchOutputData={researchOutputData}
             />
           ) : (
-            <WorkingGroupOutput
-              workingGroupId={researchOutputData.workingGroups[0]?.id}
+            <TeamOutput
+              teamId={researchOutputData.teams[0]?.id}
               researchOutputData={researchOutputData}
             />
           )}

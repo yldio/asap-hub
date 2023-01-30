@@ -144,13 +144,9 @@ export const researchOutputMapType = (
 export const researchOutputMapPublishingEntity = (
   publishingEntity?: string | null,
 ): ResearchOutputPublishingEntities => {
-  if (
-    publishingEntity &&
-    (publishingEntity === 'Team' || publishingEntity === 'Working Group')
-  ) {
-    return publishingEntity;
+  if (publishingEntity === 'Working_Group') {
+    return 'Working Group';
   }
-
   return 'Team';
 };
 

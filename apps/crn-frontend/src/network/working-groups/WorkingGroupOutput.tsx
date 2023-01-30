@@ -86,6 +86,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
           onSave={(output) =>
             createResearchOutput({
               ...output,
+              workingGroups: [workingGroupId],
               publishingEntity: 'Working Group',
             }).catch(handleError(['/link', '/title'], setErrors))
           }

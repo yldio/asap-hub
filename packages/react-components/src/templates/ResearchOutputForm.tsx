@@ -32,9 +32,7 @@ type ResearchOutputFormProps = Pick<
   ComponentProps<typeof ResearchOutputFormSharingCard>,
   | 'serverValidationErrors'
   | 'clearServerValidationError'
-  | 'descriptionTip'
   | 'typeOptions'
-  | 'typeDescription'
   | 'urlRequired'
 > &
   Pick<
@@ -101,8 +99,6 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   researchOutputData,
   onSave,
   tagSuggestions,
-  typeDescription,
-  descriptionTip,
   urlRequired = true,
   authorsRequired = false,
   typeOptions,
@@ -276,8 +272,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
               }
               typeOptions={typeOptions}
               urlRequired={urlRequired}
-              typeDescription={typeDescription}
-              descriptionTip={descriptionTip}
+              typeDescription={`Select the option that applies to this ${documentType.toLowerCase()}.`}
             />
             <ResearchOutputExtraInformationCard
               documentType={documentType}

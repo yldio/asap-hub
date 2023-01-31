@@ -95,7 +95,6 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
               value: id,
             }),
           )}
-          descriptionTip="Add an abstract or a summary that describes this work."
           authorsRequired
           onSave={(output) =>
             researchOutputData

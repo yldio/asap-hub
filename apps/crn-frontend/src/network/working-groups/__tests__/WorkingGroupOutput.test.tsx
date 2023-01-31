@@ -78,7 +78,7 @@ const mandatoryFields = async (
   );
 
   const typeInput = screen.getByRole('textbox', {
-    name: /Select the type that matches your output the best./i,
+    name: /Select the option/i,
   });
   userEvent.type(typeInput, type);
   userEvent.type(typeInput, specialChars.enter);
@@ -159,7 +159,7 @@ const renderPage = async ({
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };
 
-it('Renders the research output', async () => {
+it('Renders the working group research output form with correct settings', async () => {
   await renderPage({
     workingGroupId: '42',
     workingGroupOutputDocumentType: 'article',
@@ -168,18 +168,11 @@ it('Renders the research output', async () => {
   expect(
     screen.getByRole('heading', { name: /Share a Working Group Article/i }),
   ).toBeInTheDocument();
-});
-
-it('renders the correct subtitles for working groups', async () => {
-  await renderPage();
   expect(
-    screen.getByText('Select the type that matches your output the best.'),
+    screen.getByRole('textbox', { name: 'Authors (required)' }),
   ).toBeVisible();
   expect(
     screen.getByText('Add an abstract or a summary that describes this work.'),
-  ).toBeVisible();
-  expect(
-    screen.getByRole('textbox', { name: 'Authors (required)' }),
   ).toBeVisible();
 });
 

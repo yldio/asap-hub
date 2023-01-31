@@ -42,7 +42,6 @@ type ResearchOutputFormSharingCardProps = Pick<
   serverValidationErrors?: ValidationErrorResponse['data'];
   clearServerValidationError?: (instancePath: string) => void;
   typeDescription?: string;
-  descriptionTip?: string;
   urlRequired?: boolean;
   typeOptions: ResearchOutputType[];
 };
@@ -70,8 +69,7 @@ const ResearchOutputFormSharingCard: React.FC<
   publishDate,
   researchTags,
   serverValidationErrors = [],
-  typeDescription = 'Select the type that matches your output the best.',
-  descriptionTip,
+  typeDescription,
   urlRequired,
   clearServerValidationError = noop,
   onChangeDescription = noop,
@@ -189,7 +187,7 @@ const ResearchOutputFormSharingCard: React.FC<
       <LabeledTextArea
         title="Description"
         subtitle="(required)"
-        tip={descriptionTip}
+        tip="Add an abstract or a summary that describes this work."
         onChange={onChangeDescription}
         getValidationMessage={() => 'Please enter a description'}
         required

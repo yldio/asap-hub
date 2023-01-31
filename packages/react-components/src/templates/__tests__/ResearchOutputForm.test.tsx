@@ -60,15 +60,6 @@ it('sets authors to required', () => {
   ).toBeVisible();
 });
 
-it('Shows the default and provided description tip', () => {
-  render(
-    <StaticRouter>
-      <ResearchOutputForm {...props} descriptionTip="Example description tip" />
-    </StaticRouter>,
-  );
-  expect(screen.getByText('Example description tip')).toBeVisible();
-});
-
 describe('createIdentifierField', () => {
   it('maps the ResearchOutputIdentifierType to fields including the identifier', () => {
     expect(
@@ -276,7 +267,6 @@ describe('on submit', () => {
       <Router history={history}>
         <ResearchOutputForm
           {...props}
-          typeDescription={`Select the option that applies to this ${documentType.toLowerCase()}.`}
           selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
           documentType={documentType}
           typeOptions={Array.from(

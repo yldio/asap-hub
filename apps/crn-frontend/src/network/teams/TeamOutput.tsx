@@ -93,7 +93,6 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
             setErrors(clearAjvErrorForPath(errors, instancePath))
           }
           researchOutputData={researchOutputData}
-          typeDescription={`Select the option that applies to this ${documentType.toLowerCase()}.`}
           typeOptions={Array.from(
             researchOutputDocumentTypeToType[documentType],
           )}

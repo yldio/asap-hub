@@ -68,7 +68,6 @@ export const getGraphqlResponseFetchUsers = (): FetchUsersQuery =>
         ],
         teams: [
           {
-            inactiveSinceDate: null,
             role: 'Project Manager',
             id: [
               {
@@ -321,7 +320,6 @@ export const getUserResponse = (): UserResponse => ({
       role: 'Lead PI (Core Leadership)',
       displayName: 'Team A',
       proposal: 'proposalId1',
-      inactiveSinceDate: undefined,
     },
   ],
   role: 'Grantee',
@@ -384,7 +382,6 @@ export const fetchExpectation: ListUserResponse = {
           role: 'Project Manager',
           displayName: 'Team B',
           proposal: 'proposalId',
-          inactiveSinceDate: undefined,
         },
       ],
       role: 'Grantee',

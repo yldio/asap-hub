@@ -1246,7 +1246,6 @@ export type NewsAndEventsDataDto = {
   linkText: Maybe<NewsAndEventsDataLinkTextDto>;
   sampleCount: Maybe<NewsAndEventsDataSampleCountDto>;
   shortText: Maybe<NewsAndEventsDataShortTextDto>;
-  text: Maybe<NewsAndEventsDataTextDto>;
   title: Maybe<NewsAndEventsDataTitleDto>;
 };
 
@@ -1258,7 +1257,6 @@ export type NewsAndEventsDataInputDto = {
   linkText: InputMaybe<NewsAndEventsDataLinkTextInputDto>;
   sampleCount: InputMaybe<NewsAndEventsDataSampleCountInputDto>;
   shortText: InputMaybe<NewsAndEventsDataShortTextInputDto>;
-  text: InputMaybe<NewsAndEventsDataTextInputDto>;
   title: InputMaybe<NewsAndEventsDataTitleInputDto>;
 };
 
@@ -1306,16 +1304,6 @@ export type NewsAndEventsDataShortTextInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
-/** The structure of the Text field of the News content type. */
-export type NewsAndEventsDataTextDto = {
-  iv: Maybe<Scalars['String']>;
-};
-
-/** The structure of the Text field of the News content input type. */
-export type NewsAndEventsDataTextInputDto = {
-  iv: InputMaybe<Scalars['String']>;
-};
-
 /** The structure of the Title field of the News content type. */
 export type NewsAndEventsDataTitleDto = {
   iv: Maybe<Scalars['String']>;
@@ -1336,7 +1324,6 @@ export type NewsAndEventsFlatDataDto = {
   sampleCount: Maybe<Scalars['Float']>;
   /** The text visible on the card version of News and Events */
   shortText: Maybe<Scalars['String']>;
-  text: Maybe<Scalars['String']>;
   title: Maybe<Scalars['String']>;
 };
 

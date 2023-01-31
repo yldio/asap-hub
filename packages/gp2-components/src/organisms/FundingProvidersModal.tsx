@@ -44,6 +44,9 @@ const FundingProvidersModal: React.FC<FundingProvidersModalProps> = ({
           value={newFundingProviders}
           onChange={setNewFundingProviders}
           enabled={!isSaving}
+          placeholder={
+            'Example: University of Plymouth, University Hospitals Plymouth NHS Trust and National Institute of Health Research...'
+          }
         />
       )}
     </EditUserModal>

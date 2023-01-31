@@ -265,7 +265,7 @@ export const parseGraphQLUserTeamConnections = (
         role: item.role,
         proposal: proposal?.length ? proposal[0]?.id : undefined,
         displayName: displayName || '',
-        inactiveSinceDate: item.inactiveSinceDate,
+        inactiveSinceDate: item.inactiveSinceDate ?? undefined,
       },
     ];
   }, []);

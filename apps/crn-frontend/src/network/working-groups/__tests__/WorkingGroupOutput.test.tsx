@@ -26,7 +26,10 @@ import userEvent, { specialChars } from '@testing-library/user-event';
 import { ContextType, Suspense } from 'react';
 import { Route, StaticRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import { createResearchOutput } from '../../teams/api';
+import {
+  createResearchOutput,
+  updateTeamResearchOutput,
+} from '../../teams/api';
 import { refreshWorkingGroupState } from '../state';
 import WorkingGroupOutput from '../WorkingGroupOutput';
 
@@ -43,6 +46,11 @@ const mockToast = jest.fn() as jest.MockedFunction<
 const mockCreateResearchOutput = createResearchOutput as jest.MockedFunction<
   typeof createResearchOutput
 >;
+
+const mockUpdateResearchOutput =
+  updateTeamResearchOutput as jest.MockedFunction<
+    typeof updateTeamResearchOutput
+  >;
 
 const mandatoryFields = async (
   {
@@ -99,6 +107,7 @@ const renderPage = async ({
   canCreateUpdate = true,
   workingGroupId = 'wg1',
   workingGroupOutputDocumentType = 'article',
+  researchOutputData,
 }: {
   workingGroupId?: string;
   workingGroupOutputDocumentType?: WorkingGroupOutputDocumentTypeParameter;
@@ -134,7 +143,10 @@ const renderPage = async ({
                   value={{ canCreateUpdate }}
                 >
                   <Route path={path}>
-                    <WorkingGroupOutput workingGroupId={workingGroupId} />
+                    <WorkingGroupOutput
+                      workingGroupId={workingGroupId}
+                      researchOutputData={researchOutputData}
+                    />
                   </Route>
                 </ResearchOutputPermissionsContext.Provider>
               </StaticRouter>
@@ -302,36 +314,41 @@ it('will toast server side errors for unknown errors', async () => {
   );
 });
 
-it('will toast server side errors for unknown errors in edit mode', async () => {
+it('can edit a report working group research output', async () => {
+  const id = 'RO-ID';
+  const workingGroupId = 'wg-42';
   const link = 'https://example42.com';
   const title = 'example42 title';
   const description = 'example42 description';
-  const type = 'Animal Model';
-  const doi = '10.0777';
-
-  mockCreateResearchOutput.mockRejectedValue(new Error('Something went wrong'));
 
   await renderPage({
-    workingGroupId: '42',
-    workingGroupOutputDocumentType: 'article',
-    researchOutputData: { ...createResearchOutputResponse(), doi },
-  });
-
-  const { publish } = await mandatoryFields(
-    {
+    workingGroupId,
+    workingGroupOutputDocumentType: 'report',
+    researchOutputData: {
+      ...createResearchOutputResponse(),
+      id,
       link,
       title,
       description,
-      type,
-      doi,
     },
-    true,
-  );
+  });
 
-  await publish();
+  const button = screen.getByRole('button', { name: /Save/i });
+  userEvent.click(button);
+  await waitFor(() => {
+    expect(button).toBeEnabled();
+  });
 
-  expect(mockCreateResearchOutput).toHaveBeenCalled();
-  expect(mockToast).toHaveBeenCalledWith(
-    'There was an error and we were unable to save your changes. Please try again.',
+  expect(mockUpdateResearchOutput).toHaveBeenCalledWith(
+    id,
+    expect.objectContaining({
+      documentType: 'Report',
+      link,
+      title,
+      description,
+      workingGroups: [workingGroupId],
+      publishingEntity: 'Working Group',
+    }),
+    expect.anything(),
   );
 });

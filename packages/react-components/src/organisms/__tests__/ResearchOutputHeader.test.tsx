@@ -1,68 +1,82 @@
+import {
+  ResearchOutputDocumentType,
+  ResearchOutputPublishingEntities,
+} from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
 
 import ResearchOutputHeader from '../ResearchOutputHeader';
 
-it.each([
+it.each<{
+  documentType: ResearchOutputDocumentType;
+  publishingEntity: ResearchOutputPublishingEntities;
+  headingName: RegExp;
+  subHeader: RegExp;
+}>([
   {
     documentType: 'Article',
+    publishingEntity: 'Team',
     headingName: /Share an article/i,
-    text: /published article/,
+    subHeader: /published article/,
   },
   {
     documentType: 'Protocol',
+    publishingEntity: 'Team',
     headingName: /Share a protocol/i,
-    text: /Add your protocol/,
+    subHeader: /Add your protocol/,
   },
   {
     documentType: 'Dataset',
+    publishingEntity: 'Team',
     headingName: /Share a dataset/i,
-    text: /Add your dataset/,
+    subHeader: /Add your dataset/,
   },
   {
     documentType: 'Bioinformatics',
+    publishingEntity: 'Team',
     headingName: /Share bioinformatics/i,
-    text: /Add bioinformatics/,
+    subHeader: /Add bioinformatics/,
   },
   {
     documentType: 'Lab Resource',
+    publishingEntity: 'Team',
     headingName: /Share a lab resource/i,
-    text: /Add your lab resource/,
+    subHeader: /Add your lab resource/,
   },
-] as const)(
-  'renders the $documentType research output',
-  ({ documentType, headingName, text }) => {
-    render(<ResearchOutputHeader documentType={documentType} />);
-    expect(
-      screen.getByRole('heading', { name: headingName }),
-    ).toBeInTheDocument();
-    expect(screen.getByText(text)).toBeInTheDocument();
-  },
-);
-
-it.each([
   {
     documentType: 'Article',
+    publishingEntity: 'Working Group',
     headingName: /Share a Working Group Article/i,
-    text: /published article/,
+    subHeader: /published article/,
   },
-] as const)(
-  'renders the $documentType research output for a working group publishing entity',
-  ({ documentType, headingName, text }) => {
+  {
+    documentType: 'Report',
+    publishingEntity: 'Working Group',
+    headingName: /Share a Working Group CRN Report/i,
+    subHeader: /add your CRN report/,
+  },
+])(
+  'renders the $documentType $publishingEntity research output',
+  ({ documentType, headingName, subHeader, publishingEntity }) => {
     render(
       <ResearchOutputHeader
+        publishingEntity={publishingEntity}
         documentType={documentType}
-        publishingEntity={'Working Group'}
       />,
     );
     expect(
       screen.getByRole('heading', { name: headingName }),
     ).toBeInTheDocument();
-    expect(screen.getByText(text)).toBeInTheDocument();
+    expect(screen.getByText(subHeader)).toBeInTheDocument();
   },
 );
 
 it('falls back to a generic description otherwise', () => {
-  render(<ResearchOutputHeader documentType="Presentation" />);
+  render(
+    <ResearchOutputHeader
+      publishingEntity="Team"
+      documentType="Presentation"
+    />,
+  );
   expect(
     screen.getByRole('heading', { name: /Share a resource/i }),
   ).toBeInTheDocument();

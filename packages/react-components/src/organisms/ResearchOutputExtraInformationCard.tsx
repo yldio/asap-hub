@@ -167,16 +167,16 @@ const ResearchOutputExtraInformationCard: React.FC<
               value={labCatalogNumber || ''}
             />
           )}
+          <LabeledTextArea
+            title="Usage Notes"
+            subtitle="(optional)"
+            onChange={onChangeUsageNotes}
+            placeholder="E.g. To access the output, you will first need to create an account on..."
+            enabled={!isSaving}
+            value={usageNotes || ''}
+          />
         </>
       )}
-      <LabeledTextArea
-        title="Usage Notes"
-        subtitle="(optional)"
-        onChange={onChangeUsageNotes}
-        placeholder="E.g. To access the output, you will first need to create an account on..."
-        enabled={!isSaving}
-        value={usageNotes || ''}
-      />
     </FormCard>
   );
 };

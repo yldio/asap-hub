@@ -14,7 +14,6 @@ import {
   network,
   TeamOutputDocumentTypeParameter,
   useRouteParams,
-  sharedResearch,
 } from '@asap-hub/routing';
 import React, { useContext, useState } from 'react';
 import researchSuggestions from './research-suggestions';
@@ -25,7 +24,7 @@ import {
   useResearchTags,
   useTeamById,
   useTeamSuggestions,
-  usePutTeamResearchOutput,
+  usePutResearchOutput,
 } from './state';
 import {
   handleError,
@@ -49,9 +48,6 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   researchOutputData,
 }) => {
   const paramOutputDocumentType = useParamOutputDocumentType(teamId);
-  const { researchOutputId } = useRouteParams(
-    sharedResearch({}).researchOutput,
-  );
   const documentType =
     researchOutputData?.documentType ||
     paramOutputDocumentTypeToResearchOutputDocumentType(
@@ -63,7 +59,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   const { canCreateUpdate } = useContext(ResearchOutputPermissionsContext);
 
   const createResearchOutput = usePostResearchOutput();
-  const updateResearchOutput = usePutTeamResearchOutput(researchOutputId);
+  const updateResearchOutput = usePutResearchOutput();
 
   const getLabSuggestions = useLabSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();
@@ -75,7 +71,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
       <Frame title="Share Research Output">
         <ResearchOutputHeader
           documentType={documentType}
-          publishingEntity={'Team'}
+          publishingEntity="Team"
         />
         <ResearchOutputForm
           tagSuggestions={researchSuggestions}
@@ -110,12 +106,12 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
             }),
           )}
           onSave={(output) =>
-            !researchOutputData
-              ? createResearchOutput({
+            researchOutputData
+              ? updateResearchOutput(researchOutputData.id, {
                   ...output,
                   publishingEntity: 'Team',
                 }).catch(handleError(['/link', '/title'], setErrors))
-              : updateResearchOutput({
+              : createResearchOutput({
                   ...output,
                   publishingEntity: 'Team',
                 }).catch(handleError(['/link', '/title'], setErrors))

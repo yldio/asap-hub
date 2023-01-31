@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import {
   DecisionOption,
+  ResearchOutputDocumentType,
   ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
@@ -14,7 +15,6 @@ import {
   Form,
   ResearchOutputExtraInformationCard,
   ResearchOutputFormSharingCard,
-  ResearchOutputHeader,
 } from '../organisms';
 import { mobileScreen, perRem } from '../pixels';
 import { Button } from '../atoms';
@@ -47,13 +47,14 @@ type ResearchOutputFormProps = Pick<
     onSave: (
       output: Omit<ResearchOutputPostRequest, 'publishingEntity'>,
     ) => Promise<ResearchOutputResponse | void>;
+    documentType: ResearchOutputDocumentType;
     researchTags: ResearchTagResponse[];
     selectedTeams: NonNullable<
       ComponentProps<typeof ResearchOutputContributorsCard>['teams']
     >;
     researchOutputData?: ResearchOutputResponse;
     tagSuggestions: string[];
-  } & ComponentProps<typeof ResearchOutputHeader>;
+  };
 
 const mainStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)} ${

@@ -115,6 +115,7 @@ const ResearchOutputFormSharingCard: React.FC<
         title="URL"
         subtitle={urlRequired ? '(required)' : '(optional)'}
         required={urlRequired}
+        description="Use the link of your document (for example, google document link)."
         pattern={UrlExpression}
         onChange={(newValue) => {
           clearServerValidationError('/link');

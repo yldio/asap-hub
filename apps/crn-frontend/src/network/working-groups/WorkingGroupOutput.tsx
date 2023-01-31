@@ -1,8 +1,8 @@
 import { clearAjvErrorForPath, Frame } from '@asap-hub/frontend-utils';
 import {
-  researchOutputDocumentTypeToType,
-  ResearchOutputResponse,
   ValidationErrorResponse,
+  ResearchOutputResponse,
+  researchOutputDocumentTypeToType,
 } from '@asap-hub/model';
 import {
   NotFoundPage,
@@ -19,7 +19,11 @@ import {
   useWorkingGroupById,
   useTeamSuggestions,
 } from './state';
-import { usePostResearchOutput, useResearchTags } from '../teams/state';
+import {
+  usePostResearchOutput,
+  usePutResearchOutput,
+  useResearchTags,
+} from '../teams/state';
 import {
   handleError,
   paramOutputDocumentTypeToResearchOutputDocumentType,
@@ -33,16 +37,6 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   workingGroupId,
   researchOutputData,
 }) => {
-  const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
-
-  const workingGroup = useWorkingGroupById(workingGroupId);
-  const { canCreateUpdate } = useContext(ResearchOutputPermissionsContext);
-
-  const getLabSuggestions = useLabSuggestions();
-  const getAuthorSuggestions = useAuthorSuggestions();
-  const getTeamSuggestions = useTeamSuggestions();
-  const researchTags = useResearchTags();
-  const createResearchOutput = usePostResearchOutput();
   const route = network({})
     .workingGroups({})
     .workingGroup({ workingGroupId }).createOutput;
@@ -51,12 +45,26 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
     workingGroupOutputDocumentType,
   );
 
+  const workingGroup = useWorkingGroupById(workingGroupId);
+
+  const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
+
+  const { canCreateUpdate } = useContext(ResearchOutputPermissionsContext);
+
+  const createResearchOutput = usePostResearchOutput();
+  const updateResearchOutput = usePutResearchOutput();
+
+  const getLabSuggestions = useLabSuggestions();
+  const getAuthorSuggestions = useAuthorSuggestions();
+  const getTeamSuggestions = useTeamSuggestions();
+  const researchTags = useResearchTags();
+
   if (canCreateUpdate && workingGroup) {
     return (
       <Frame title="Share Working Group Research Output">
         <ResearchOutputHeader
           documentType={documentType}
-          publishingEntity={'Working Group'}
+          publishingEntity="Working Group"
         />
         <ResearchOutputForm
           tagSuggestions={researchSuggestions}
@@ -71,26 +79,37 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
               })),
             )
           }
-          typeOptions={[
-            ...researchOutputDocumentTypeToType[documentType].values(),
-          ]}
-          selectedTeams={[]}
           getTeamSuggestions={getTeamSuggestions}
           researchTags={researchTags}
-          researchOutputData={researchOutputData}
           serverValidationErrors={errors}
           clearServerValidationError={(instancePath: string) =>
             setErrors(clearAjvErrorForPath(errors, instancePath))
           }
+          researchOutputData={researchOutputData}
+          typeOptions={Array.from(
+            researchOutputDocumentTypeToType[documentType],
+          )}
+          selectedTeams={(researchOutputData?.teams ?? []).map(
+            ({ displayName, id }) => ({
+              label: displayName,
+              value: id,
+            }),
+          )}
+          descriptionTip="Add an abstract or a summary that describes this work."
           authorsRequired
           onSave={(output) =>
-            createResearchOutput({
-              ...output,
-              workingGroups: [workingGroupId],
-              publishingEntity: 'Working Group',
-            }).catch(handleError(['/link', '/title'], setErrors))
+            researchOutputData
+              ? updateResearchOutput(researchOutputData.id, {
+                  ...output,
+                  workingGroups: [workingGroupId],
+                  publishingEntity: 'Working Group',
+                }).catch(handleError(['/link', '/title'], setErrors))
+              : createResearchOutput({
+                  ...output,
+                  workingGroups: [workingGroupId],
+                  publishingEntity: 'Working Group',
+                }).catch(handleError(['/link', '/title'], setErrors))
           }
-          descriptionTip="Add an abstract or a summary that describes this work."
         />
       </Frame>
     );

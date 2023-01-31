@@ -66,7 +66,10 @@ const EventPage: React.FC<EventPageProps> = ({
       <EventMaterials {...props} />
       <EventConversation {...props} />
       {(props.group === undefined || props.group.active) && (
-        <CalendarList page="event" calendars={[calendar]} />
+        <CalendarList
+          calendars={[calendar]}
+          title="Subscribe to this event's Calendar"
+        />
       )}
     </div>
   </div>

@@ -115,16 +115,21 @@ export class CalendarSquidexDataProvider {
       graphqlCalendars = graphqlCalendars.filter(
         (calendar: GraphqlCalendar) => {
           if (
-            !calendar?.referencingGroupsContents ||
-            calendar.referencingGroupsContents.length === 0
+            (!calendar?.referencingGroupsContents ||
+              calendar.referencingGroupsContents.length === 0) &&
+            (!calendar?.referencingWorkingGroupsContents ||
+              calendar.referencingWorkingGroupsContents.length === 0)
           ) {
             return true;
           }
 
           return (
-            calendar.referencingGroupsContents.findIndex(
-              (group) => group.flatData.active === true,
-            ) !== -1
+            calendar.referencingGroupsContents?.some(
+              ({ flatData }) => flatData.active,
+            ) ||
+            calendar.referencingWorkingGroupsContents?.some(
+              ({ flatData: { complete } }) => !complete,
+            )
           );
         },
       );
@@ -156,4 +161,10 @@ export const parseGraphQlCalendarToDataObject = (
   version: item.version,
   expirationDate: item.flatData.expirationDate,
   syncToken: item.flatData.syncToken,
+  groups: item.referencingGroupsContents?.map(
+    ({ id, flatData: { active } }) => ({ id, active: !!active }),
+  ),
+  workingGroups: item.referencingWorkingGroupsContents?.map(
+    ({ id, flatData: { complete } }) => ({ id, complete: !!complete }),
+  ),
 });

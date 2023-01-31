@@ -1910,6 +1910,32 @@ type Calendars implements Content {
     """Optional number of items to take."""
     top: Int
   ): GroupsResultDto
+  """Query Working Groups content items."""
+  referencingWorkingGroupsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [WorkingGroups!]
+  """Query Working Groups content items with total count."""
+  referencingWorkingGroupsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): WorkingGroupsResultDto
   """The status of the content."""
   status: String!
   """The status color of the content."""
@@ -6208,6 +6234,32 @@ type WorkingGroups implements Content {
   newStatus: String
   """The status color of the content."""
   newStatusColor: String
+  """Query Calendars content items."""
+  referencesCalendarsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [Calendars!]
+  """Query Calendars content items with total count."""
+  referencesCalendarsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): CalendarsResultDto
   """Query Users content items."""
   referencesUsersContents(
     """Optional OData filter."""
@@ -6242,6 +6294,16 @@ type WorkingGroups implements Content {
   url: String!
   """The version of the objec."""
   version: Int!
+}
+
+"""The structure of the Calendars field of the Working Groups content type."""
+type WorkingGroupsDataCalendarsDto {
+  iv: [Calendars!]
+}
+
+"""The structure of the Calendars field of the Working Groups content input type."""
+input WorkingGroupsDataCalendarsInputDto {
+  iv: [String!]
 }
 
 """The structure of the This working group is complete field of the Working Groups content type."""
@@ -6288,6 +6350,7 @@ input WorkingGroupsDataDescriptionInputDto {
 
 """The structure of the Working Groups data type."""
 type WorkingGroupsDataDto {
+  calendars: WorkingGroupsDataCalendarsDto
   complete: WorkingGroupsDataCompleteDto
   deliverables: WorkingGroupsDataDeliverablesDto
   description: WorkingGroupsDataDescriptionDto
@@ -6310,6 +6373,7 @@ input WorkingGroupsDataExternalLinkInputDto {
 
 """The structure of the Working Groups data input type."""
 input WorkingGroupsDataInputDto {
+  calendars: WorkingGroupsDataCalendarsInputDto
   complete: WorkingGroupsDataCompleteInputDto
   deliverables: WorkingGroupsDataDeliverablesInputDto
   description: WorkingGroupsDataDescriptionInputDto
@@ -6386,6 +6450,7 @@ input WorkingGroupsDataTitleInputDto {
 
 """The structure of the flat Working Groups data type."""
 type WorkingGroupsFlatDataDto {
+  calendars: [Calendars!]
   complete: Boolean
   deliverables: [WorkingGroupsDataDeliverablesChildDto!]
   description: String

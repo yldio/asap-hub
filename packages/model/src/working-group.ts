@@ -1,3 +1,4 @@
+import { CalendarDataObject } from './calendar';
 import { FetchOptions, ListResponse } from './common';
 import { UserResponse } from './user';
 
@@ -57,6 +58,10 @@ export type WorkingGroupDataObject = {
   pointOfContact?: WorkingGroupLeader;
   complete: boolean;
   shortText: string;
+  calendars: Pick<
+    CalendarDataObject,
+    'id' | 'name' | 'color' | 'groups' | 'workingGroups'
+  >[];
   deliverables: {
     description: string;
     status: DeliverableStatus;

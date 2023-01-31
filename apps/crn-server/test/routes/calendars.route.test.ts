@@ -42,11 +42,15 @@ const listCalendarResponse: ListCalendarResponse = {
       id: 'calendar-id-1',
       color: '#5C1158',
       name: 'Kubernetes Meetups',
+      groups: [],
+      workingGroups: [],
     },
     {
       id: 'calendar-id-2',
       color: '#B1365F',
       name: 'Service Mesh Conferences',
+      groups: [],
+      workingGroups: [],
     },
   ],
 };

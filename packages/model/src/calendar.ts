@@ -1,4 +1,6 @@
 import { FetchPaginationOptions, ListResponse } from './common';
+import { GroupDataObject, GroupResponse } from './group';
+import { WorkingGroupDataObject, WorkingGroupResponse } from './working-group';
 
 export const googleLegacyCalendarColor = [
   '#B1365F',
@@ -57,11 +59,13 @@ export interface CalendarDataObject {
   resourceId?: string | null;
   expirationDate?: number | null;
   version: number;
+  groups?: Pick<GroupDataObject, 'id' | 'active'>[];
+  workingGroups?: Pick<WorkingGroupDataObject, 'id' | 'complete'>[];
 }
 
 export type CalendarCreateDataObject = Omit<
   CalendarDataObject,
-  'version' | 'id'
+  'version' | 'id' | 'groups' | 'workingGroups'
 >;
 
 export type CalendarUpdateDataObject = Partial<CalendarCreateDataObject>;
@@ -72,6 +76,8 @@ export interface CalendarResponse {
   id: string;
   name: string;
   color: GoogleLegacyCalendarColor;
+  groups: Pick<GroupResponse, 'id' | 'active'>[];
+  workingGroups: Pick<WorkingGroupResponse, 'id' | 'complete'>[];
 }
 
 export type ListCalendarResponse = ListResponse<CalendarResponse>;

@@ -344,7 +344,13 @@ export const listGroupsResponse: ListGroupResponse = {
         },
       ],
       calendars: [
-        { id: 'hub@asap.science', color: '#B1365F', name: 'ASAP Hub' },
+        {
+          id: 'hub@asap.science',
+          color: '#B1365F',
+          name: 'ASAP Hub',
+          groups: [],
+          workingGroups: [],
+        },
       ],
     },
     {
@@ -363,7 +369,13 @@ export const listGroupsResponse: ListGroupResponse = {
       teams: [],
       leaders: [],
       calendars: [
-        { id: 'hub@asap.science', color: '#B1365F', name: 'ASAP Hub' },
+        {
+          id: 'hub@asap.science',
+          color: '#B1365F',
+          name: 'ASAP Hub',
+          groups: [],
+          workingGroups: [],
+        },
       ],
     },
   ],
@@ -400,6 +412,8 @@ export const getSquidexGraphqlGroup = (): NonNullable<
           googleCalendarId: 'hub@asap.science',
           name: 'ASAP Hub',
         },
+        referencingGroupsContents: [],
+        referencingWorkingGroupsContents: [],
       },
     ],
     teams: [getSquidexGraphqlTeam({})],
@@ -488,5 +502,13 @@ export const getGroupDataObject = (): GroupDataObject => ({
       role: 'Project Manager',
     },
   ],
-  calendars: [{ id: 'hub@asap.science', color: '#B1365F', name: 'ASAP Hub' }],
+  calendars: [
+    {
+      id: 'hub@asap.science',
+      color: '#B1365F',
+      name: 'ASAP Hub',
+      groups: [],
+      workingGroups: [],
+    },
+  ],
 });

@@ -58,10 +58,12 @@ export default class Calendars implements CalendarController {
 export const parseCalendarDataObjectToResponse = (
   calendarDataObject: Pick<
     CalendarDataObject,
-    'googleCalendarId' | 'color' | 'name'
+    'googleCalendarId' | 'color' | 'name' | 'groups' | 'workingGroups'
   >,
 ): CalendarResponse => ({
   id: calendarDataObject.googleCalendarId,
   name: calendarDataObject.name,
   color: calendarDataObject.color,
+  groups: calendarDataObject.groups || [],
+  workingGroups: calendarDataObject.workingGroups || [],
 });

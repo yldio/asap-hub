@@ -1,14 +1,21 @@
 import { ComponentProps } from 'react';
-import { render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
+import { createListCalendarResponse } from '@asap-hub/fixtures';
 
 import CalendarList from '../CalendarList';
 
 const props: ComponentProps<typeof CalendarList> = {
   calendars: [],
-  page: 'calendar',
+  title: '',
 };
+
 it('Renders calender list', () => {
-  const { getByRole } = render(<CalendarList {...props} />);
+  const { getByRole } = render(
+    <CalendarList
+      {...props}
+      title="Subscribe to this Interest Groups Calendar"
+    />,
+  );
   expect(getByRole('heading').textContent).toMatch(/subscribe/i);
 });
 
@@ -19,14 +26,16 @@ it('Renders calender list item with colour', () => {
       calendars={[
         {
           color: '#0D7813',
-          name: 'Test Event',
+          name: 'Test Calendar',
           id: '1',
+          groups: [],
+          workingGroups: [],
         },
       ]}
     />,
   );
   expect(getComputedStyle(getByText('●')).color).toMatch('rgb(13, 120, 19)');
-  expect(getByText('Test Event')).toBeVisible();
+  expect(getByText('Test Calendar')).toBeVisible();
 });
 
 it('Correctly generates the subscribe link', () => {
@@ -36,8 +45,10 @@ it('Correctly generates the subscribe link', () => {
       calendars={[
         {
           color: '#113F47',
-          name: 'Test Event',
+          name: 'Test Calendar',
           id: '1',
+          groups: [],
+          workingGroups: [],
         },
       ]}
     />,
@@ -52,18 +63,24 @@ it('Correctly generates the subscribe link', () => {
   `);
 });
 
-it('adapts for group page', () => {
-  const { getByRole } = render(<CalendarList {...props} page="group" />);
-  expect(getByRole('heading')).toHaveTextContent(/this group/i);
-});
+it('displays the show more button', () => {
+  const { getByText, queryByText, getByRole } = render(
+    <CalendarList
+      {...props}
+      calendars={createListCalendarResponse(6).items.concat({
+        color: '#113F47',
+        name: 'last Calendar',
+        id: '1',
+        groups: [],
+        workingGroups: [],
+      })}
+    />,
+  );
+  const button = getByRole('button', { name: 'View More' });
 
-it('adapts the headline for event page', () => {
-  const { getByRole } = render(<CalendarList {...props} page="event" />);
-  expect(getByRole('heading')).toHaveTextContent(/this event/i);
-});
-
-it('adapts the headline and adds a description for calendar page', () => {
-  const { getByText } = render(<CalendarList {...props} page="calendar" />);
-  expect(getByText(/groups on/i)).toBeVisible();
-  expect(getByText(/list of.+groups/i)).toBeVisible();
+  expect(button).toBeVisible();
+  expect(queryByText('last Calendar')).not.toBeInTheDocument();
+  fireEvent.click(button);
+  expect(getByRole('button', { name: 'View Less' })).toBeVisible();
+  expect(getByText('last Calendar')).toBeInTheDocument();
 });

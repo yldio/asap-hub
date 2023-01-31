@@ -91,7 +91,6 @@ describe('Reminders', () => {
   const researchOutputDataProvider = new ResearchOutputSquidexDataProvider(
     squidexGraphqlClient,
     researchOutputRestClient,
-    teamRestClient,
   );
   // @todo https://asaphub.atlassian.net/browse/CRN-937
   const eventController = new Events(squidexGraphqlClient, eventRestClient);

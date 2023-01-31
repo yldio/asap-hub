@@ -2,7 +2,6 @@ import { GenericError, NotFoundError } from '@asap-hub/errors';
 import { ResearchOutputDataObject } from '@asap-hub/model';
 import {
   RestResearchOutput,
-  RestTeam,
   SquidexGraphqlError,
   SquidexRest,
 } from '@asap-hub/squidex';
@@ -42,14 +41,9 @@ describe('ResearchOutputs data provider', () => {
     'research-outputs',
     { appName, baseUrl },
   );
-  const teamRestclient = new SquidexRest<RestTeam>(getAuthToken, 'teams', {
-    appName,
-    baseUrl,
-  });
   const researchOutputDataProvider = new ResearchOutputSquidexDataProvider(
     squidexGraphqlClientMock,
     researchOutputRestClient,
-    teamRestclient,
   );
 
   const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
@@ -57,7 +51,6 @@ describe('ResearchOutputs data provider', () => {
     new ResearchOutputSquidexDataProvider(
       squidexGraphqlClientMockServer,
       researchOutputRestClient,
-      teamRestclient,
     );
 
   beforeAll(() => {
@@ -127,7 +120,7 @@ describe('ResearchOutputs data provider', () => {
 
     test('Should default missing team reference to an empty array of teams', async () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
-      squidexGraphqlResponse.findResearchOutputsContent!.referencingTeamsContents =
+      squidexGraphqlResponse.findResearchOutputsContent!.flatData.teams =
         undefined;
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         squidexGraphqlResponse,
@@ -142,7 +135,7 @@ describe('ResearchOutputs data provider', () => {
 
     test('Should default team displayName to an empty string when not present', async () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
-      squidexGraphqlResponse.findResearchOutputsContent!.referencingTeamsContents![0]!.flatData.displayName =
+      squidexGraphqlResponse.findResearchOutputsContent!.flatData.teams![0]!.flatData.displayName =
         null;
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         squidexGraphqlResponse,
@@ -343,8 +336,7 @@ describe('ResearchOutputs data provider', () => {
 
     test('Should return the research output without the team', async () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
-      squidexGraphqlResponse.findResearchOutputsContent!.referencingTeamsContents =
-        [];
+      squidexGraphqlResponse.findResearchOutputsContent!.flatData.teams = [];
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         squidexGraphqlResponse,
       );
@@ -468,7 +460,7 @@ describe('ResearchOutputs data provider', () => {
         const pm2 = getGraphQLUser();
         pm2.flatData.email = 'pm2@example.com';
         pm2.flatData.teams![0]!.role = 'Project Manager';
-        squidexGraphqlResponse.findResearchOutputsContent!.referencingTeamsContents![0]!.referencingUsersContents! =
+        squidexGraphqlResponse.findResearchOutputsContent!.flatData.teams![0]!.referencingUsersContents! =
           [pm1, pm2];
 
         // And one on another team
@@ -477,7 +469,7 @@ describe('ResearchOutputs data provider', () => {
         pm3.flatData.teams![0]!.role = 'Project Manager';
         const team = getSquidexGraphqlTeam({});
         team.referencingUsersContents = [pm3];
-        squidexGraphqlResponse.findResearchOutputsContent!.referencingTeamsContents!.push(
+        squidexGraphqlResponse.findResearchOutputsContent!.flatData.teams!.push(
           team,
         );
 
@@ -506,13 +498,13 @@ describe('ResearchOutputs data provider', () => {
         const pm2 = getGraphQLUser();
         pm2.flatData.email = 'pm2@example.com';
         pm2.flatData.teams![0]!.role = 'Project Manager';
-        squidexGraphqlResponse.findResearchOutputsContent!.referencingTeamsContents![0]!.referencingUsersContents! =
+        squidexGraphqlResponse.findResearchOutputsContent!.flatData.teams![0]!.referencingUsersContents! =
           [pm1, pm2];
 
         // Same one on another team
         const team = getSquidexGraphqlTeam({});
         team.referencingUsersContents = [pm1];
-        squidexGraphqlResponse.findResearchOutputsContent!.referencingTeamsContents!.push(
+        squidexGraphqlResponse.findResearchOutputsContent!.flatData.teams!.push(
           team,
         );
 
@@ -845,7 +837,6 @@ describe('ResearchOutputs data provider', () => {
     describe('Create', () => {
       test('Should send the correct requests to Squidex and return its ID', async () => {
         const researchOutputRequest = getResearchOutputCreateDataObject();
-        const teamId = researchOutputRequest.teamIds[0];
         const researchOutputId = 'created-output-id';
 
         nock(baseUrl)
@@ -854,15 +845,8 @@ describe('ResearchOutputs data provider', () => {
             `/api/content/${appName}/research-outputs?publish=true`,
             getRestResearchOutputCreateData(),
           )
-          .reply(201, { id: researchOutputId })
-          .get(`/api/content/${appName}/teams/${teamId}`)
-          .matchHeader('X-Unpublished', `true`)
-          .reply(200, { data: { id: teamId, outputs: { iv: ['output-1'] } } })
-          // Add the ResearchOutput to the team
-          .patch(`/api/content/${appName}/teams/${teamId}`, {
-            outputs: { iv: ['output-1', researchOutputId] },
-          })
-          .reply(200);
+          .reply(201, { id: researchOutputId });
+
         const result = await researchOutputDataProvider.create(
           researchOutputRequest,
         );
@@ -872,7 +856,6 @@ describe('ResearchOutputs data provider', () => {
       test('Should default the missing subtype to an empty array', async () => {
         const researchOutputRequest = getResearchOutputCreateDataObject();
         researchOutputRequest.subtypeId = undefined;
-        const teamId = researchOutputRequest.teamIds[0];
         const researchOutputId = 'created-output-id';
 
         nock(baseUrl)
@@ -882,13 +865,7 @@ describe('ResearchOutputs data provider', () => {
               subtype: { iv: [] },
             }),
           )
-          .reply(201, { id: researchOutputId })
-          .get(`/api/content/${appName}/teams/${teamId}`)
-          .reply(200, { data: { id: teamId, outputs: { iv: ['output-1'] } } })
-          .patch(`/api/content/${appName}/teams/${teamId}`, {
-            outputs: { iv: ['output-1', researchOutputId] },
-          })
-          .reply(200);
+          .reply(201, { id: researchOutputId });
 
         await researchOutputDataProvider.create(researchOutputRequest);
       });
@@ -901,7 +878,6 @@ describe('ResearchOutputs data provider', () => {
           },
           { userId: 'some-user-id' },
         ];
-        const teamId = researchOutputRequest.teamIds[0];
         const researchOutputId = 'created-output-id';
 
         nock(baseUrl)
@@ -911,13 +887,7 @@ describe('ResearchOutputs data provider', () => {
               authors: { iv: ['some-external-user-id', 'some-user-id'] },
             }),
           )
-          .reply(201, { id: researchOutputId })
-          .get(`/api/content/${appName}/teams/${teamId}`)
-          .reply(200, { data: { id: teamId, outputs: { iv: ['output-1'] } } })
-          .patch(`/api/content/${appName}/teams/${teamId}`, {
-            outputs: { iv: ['output-1', researchOutputId] },
-          })
-          .reply(200);
+          .reply(201, { id: researchOutputId });
 
         await researchOutputDataProvider.create(researchOutputRequest);
       });
@@ -938,39 +908,6 @@ describe('ResearchOutputs data provider', () => {
         const researchOutputRequest = getResearchOutputCreateDataObject();
         nock(baseUrl)
           .post(`/api/content/${appName}/research-outputs?publish=true`)
-          .reply(500);
-
-        await expect(
-          researchOutputDataProvider.create(researchOutputRequest),
-        ).rejects.toThrow(GenericError);
-      });
-
-      test('Should throw when a team from the research output cannot be found', async () => {
-        const researchOutputRequest = getResearchOutputCreateDataObject();
-
-        nock(baseUrl)
-          .post(`/api/content/${appName}/research-outputs?publish=true`)
-          .reply(201)
-          .get(
-            `/api/content/${appName}/teams/${researchOutputRequest.teamIds[0]}`,
-          )
-          .reply(404);
-
-        await expect(
-          researchOutputDataProvider.create(researchOutputRequest),
-        ).rejects.toThrow(NotFoundError);
-      });
-
-      test('Should throw when research output association cannot be made', async () => {
-        const researchOutputRequest = getResearchOutputCreateDataObject();
-        const teamId = researchOutputRequest.teamIds[0];
-
-        nock(baseUrl)
-          .post(`/api/content/${appName}/research-outputs?publish=true`)
-          .reply(201)
-          .get(`/api/content/${appName}/teams/${teamId}`)
-          .reply(200, { data: { id: teamId, outputs: { iv: ['output-1'] } } })
-          .patch(`/api/content/${appName}/teams/${teamId}`)
           .reply(500);
 
         await expect(

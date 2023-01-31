@@ -2,7 +2,6 @@ import { Chance } from 'chance';
 import {
   InputUser,
   RestResearchOutput,
-  RestTeam,
   RestUser,
   SquidexGraphql,
   SquidexRest,
@@ -27,10 +26,6 @@ const researchOutputRestClient = new SquidexRest<RestResearchOutput>(
   'research-outputs',
   { appName, baseUrl },
 );
-const teamRestClient = new SquidexRest<RestTeam>(getAuthToken, 'teams', {
-  appName,
-  baseUrl,
-});
 const userRestClient = new SquidexRest<RestUser, InputUser>(
   getAuthToken,
   'users',
@@ -46,7 +41,6 @@ const userDataProvider = new UserSquidexDataProvider(
 const researchOutputDataProvider = new ResearchOutputSquidexDataProvider(
   squidexGraphqlClient,
   researchOutputRestClient,
-  teamRestClient,
 );
 
 describe('Research Outputs', () => {

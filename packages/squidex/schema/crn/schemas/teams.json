@@ -14,7 +14,6 @@
       "displayName",
       "applicationNumber",
       "proposal",
-      "outputs",
       "projectTitle",
       "projectSummary",
       "expertiseAndResourceTags",
@@ -152,25 +151,6 @@
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Project Summary",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
-        "name": "outputs",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "References",
-          "allowDuplicates": false,
-          "resolveReference": false,
-          "mustBePublished": false,
-          "editor": "List",
-          "schemaIds": ["research-outputs"],
-          "label": "Shared Research",
           "isRequired": false,
           "isRequiredOnPublish": false,
           "isHalfWidth": false

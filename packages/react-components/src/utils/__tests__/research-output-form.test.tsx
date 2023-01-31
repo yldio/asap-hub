@@ -103,7 +103,7 @@ describe('getTeamsState', () => {
       }),
     ).toEqual([]);
   });
-  it('returns an array of teams when there is research output data', () => {
+  it('returns an array of teams when there is research output data and mark the first team as fixed', () => {
     const team1 = { ...createTeamResponse(), displayName: 'team1' };
     const team2 = { ...createTeamResponse(), displayName: 'team2' };
     expect(
@@ -124,7 +124,7 @@ describe('getTeamsState', () => {
       {
         label: team2.displayName,
         value: team2.id,
-        isFixed: true,
+        isFixed: false,
       },
     ]);
   });

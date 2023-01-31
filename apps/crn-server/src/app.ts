@@ -251,7 +251,6 @@ export const appFactory = (libs: Libs = {}): Express => {
     new ResearchOutputSquidexDataProvider(
       squidexGraphqlClient,
       researchOutputRestClient,
-      teamRestClient,
     );
   const researchTagDataProvider =
     libs.researchTagDataProvider ||

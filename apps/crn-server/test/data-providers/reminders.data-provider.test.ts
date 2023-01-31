@@ -144,7 +144,7 @@ describe('Reminder Data Provider', () => {
 
       test('Should return an empty result when research-output referencingTeamsContents property is null', async () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
-        squidexGraphqlResponse.queryResearchOutputsContents![0]!.referencingTeamsContents =
+        squidexGraphqlResponse.queryResearchOutputsContents![0]!.flatData.teams =
           null;
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
@@ -406,7 +406,7 @@ describe('Reminder Data Provider', () => {
 
       test('Should fetch the event reminder from squidex graphql when research-output referencingTeamsContents property is null', async () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
-        squidexGraphqlResponse.queryResearchOutputsContents![0]!.referencingTeamsContents =
+        squidexGraphqlResponse.queryResearchOutputsContents![0]!.flatData.teams =
           null;
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,

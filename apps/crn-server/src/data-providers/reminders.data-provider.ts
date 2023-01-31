@@ -168,11 +168,11 @@ const getResearchOutputRemindersFromQuery = (
 
   return queryResearchOutputsContents.reduce<ResearchOutputPublishedReminder[]>(
     (researchOutputReminders, researchOutput) => {
-      if (!researchOutput.referencingTeamsContents) {
+      if (!researchOutput.flatData.teams) {
         return researchOutputReminders;
       }
 
-      const researchOutputTeams = researchOutput.referencingTeamsContents.map(
+      const researchOutputTeams = researchOutput.flatData.teams.map(
         (team) => team.id,
       );
 

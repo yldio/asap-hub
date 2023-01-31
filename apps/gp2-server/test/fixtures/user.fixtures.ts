@@ -67,7 +67,7 @@ export const getUserResponse = (): gp2.UserResponse => ({
     {
       contributingCohortId: 'cohort-id',
       name: 'CALYPSO',
-      role: 'Contributor',
+      role: 'Investigator',
       studyUrl: 'http://example.com/study',
     },
   ],
@@ -231,7 +231,7 @@ export const getUserDataObject = (): gp2.UserDataObject => ({
   biography: 'a biography of Tony Stark',
   contributingCohorts: [
     {
-      role: 'Contributor',
+      role: 'Investigator',
       studyUrl: 'http://example.com/study',
       contributingCohortId: 'cohort-id',
       name: 'CALYPSO',
@@ -390,7 +390,7 @@ export const getGraphQLUser = (
     ],
     contributingCohorts: [
       {
-        role: UsersDataContributingCohortsRoleEnum.Contributor,
+        role: UsersDataContributingCohortsRoleEnum.Investigator,
         study: 'http://example.com/study',
         id: [
           {

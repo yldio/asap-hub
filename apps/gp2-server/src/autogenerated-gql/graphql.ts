@@ -1853,10 +1853,12 @@ export type UsersDataContributingCohortsInputDto = {
 };
 
 export enum UsersDataContributingCohortsRoleEnum {
-  /** Contributor */
-  Contributor = 'Contributor',
+  /** Co_Investigator */
+  CoInvestigator = 'Co_Investigator',
   /** Investigator */
   Investigator = 'Investigator',
+  /** Lead_Investigator */
+  LeadInvestigator = 'Lead_Investigator',
 }
 
 /** The structure of the Country field of the Users content type. */

@@ -4941,7 +4941,6 @@ export type TeamsDataDto = {
   displayName: Maybe<TeamsDataDisplayNameDto>;
   expertiseAndResourceTags: Maybe<TeamsDataExpertiseAndResourceTagsDto>;
   inactiveSince: Maybe<TeamsDataInactiveSinceDto>;
-  outputs: Maybe<TeamsDataOutputsDto>;
   projectSummary: Maybe<TeamsDataProjectSummaryDto>;
   projectTitle: Maybe<TeamsDataProjectTitleDto>;
   proposal: Maybe<TeamsDataProposalDto>;
@@ -4974,21 +4973,10 @@ export type TeamsDataInputDto = {
   displayName: InputMaybe<TeamsDataDisplayNameInputDto>;
   expertiseAndResourceTags: InputMaybe<TeamsDataExpertiseAndResourceTagsInputDto>;
   inactiveSince: InputMaybe<TeamsDataInactiveSinceInputDto>;
-  outputs: InputMaybe<TeamsDataOutputsInputDto>;
   projectSummary: InputMaybe<TeamsDataProjectSummaryInputDto>;
   projectTitle: InputMaybe<TeamsDataProjectTitleInputDto>;
   proposal: InputMaybe<TeamsDataProposalInputDto>;
   tools: InputMaybe<TeamsDataToolsInputDto>;
-};
-
-/** The structure of the Shared Research field of the Teams content type. */
-export type TeamsDataOutputsDto = {
-  iv: Maybe<Array<ResearchOutputs>>;
-};
-
-/** The structure of the Shared Research field of the Teams content input type. */
-export type TeamsDataOutputsInputDto = {
-  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Project Summary field of the Teams content type. */
@@ -5051,7 +5039,6 @@ export type TeamsFlatDataDto = {
   displayName: Maybe<Scalars['String']>;
   expertiseAndResourceTags: Maybe<Array<Scalars['String']>>;
   inactiveSince: Maybe<Scalars['Instant']>;
-  outputs: Maybe<Array<ResearchOutputs>>;
   projectSummary: Maybe<Scalars['String']>;
   projectTitle: Maybe<Scalars['String']>;
   proposal: Maybe<Array<ResearchOutputs>>;

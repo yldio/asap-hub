@@ -31,7 +31,7 @@ export class NewsSquidexDataProvider implements NewsDataProvider {
 const parseNews = (item: GraphqlNews): gp2Model.NewsDataObject => ({
   id: item.id,
   created: parseDate(item.created).toISOString(),
-  text: item.flatData.text || '',
+  shortText: item.flatData.shortText || '',
   title: item.flatData.title || '',
   link: item.flatData.link || undefined,
   linkText: item.flatData.linkText || undefined,

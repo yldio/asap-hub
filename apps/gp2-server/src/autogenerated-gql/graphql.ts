@@ -1245,6 +1245,7 @@ export type NewsAndEventsDataDto = {
   link: Maybe<NewsAndEventsDataLinkDto>;
   linkText: Maybe<NewsAndEventsDataLinkTextDto>;
   sampleCount: Maybe<NewsAndEventsDataSampleCountDto>;
+  shortText: Maybe<NewsAndEventsDataShortTextDto>;
   text: Maybe<NewsAndEventsDataTextDto>;
   title: Maybe<NewsAndEventsDataTitleDto>;
 };
@@ -1256,6 +1257,7 @@ export type NewsAndEventsDataInputDto = {
   link: InputMaybe<NewsAndEventsDataLinkInputDto>;
   linkText: InputMaybe<NewsAndEventsDataLinkTextInputDto>;
   sampleCount: InputMaybe<NewsAndEventsDataSampleCountInputDto>;
+  shortText: InputMaybe<NewsAndEventsDataShortTextInputDto>;
   text: InputMaybe<NewsAndEventsDataTextInputDto>;
   title: InputMaybe<NewsAndEventsDataTitleInputDto>;
 };
@@ -1292,6 +1294,18 @@ export type NewsAndEventsDataSampleCountInputDto = {
   iv: InputMaybe<Scalars['Float']>;
 };
 
+/** The structure of the Short Text field of the News content type. */
+export type NewsAndEventsDataShortTextDto = {
+  /** The text visible on the card version of News and Events */
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Short Text field of the News content input type. */
+export type NewsAndEventsDataShortTextInputDto = {
+  /** The text visible on the card version of News and Events */
+  iv: InputMaybe<Scalars['String']>;
+};
+
 /** The structure of the Text field of the News content type. */
 export type NewsAndEventsDataTextDto = {
   iv: Maybe<Scalars['String']>;
@@ -1320,6 +1334,8 @@ export type NewsAndEventsFlatDataDto = {
   /** Leave this empty to show "Open External Link" */
   linkText: Maybe<Scalars['String']>;
   sampleCount: Maybe<Scalars['Float']>;
+  /** The text visible on the card version of News and Events */
+  shortText: Maybe<Scalars['String']>;
   text: Maybe<Scalars['String']>;
   title: Maybe<Scalars['String']>;
 };
@@ -2603,7 +2619,7 @@ export type NewsContentFragment = Pick<
   flatData: Pick<
     NewsAndEventsFlatDataDto,
     | 'title'
-    | 'text'
+    | 'shortText'
     | 'link'
     | 'linkText'
     | 'sampleCount'
@@ -2626,7 +2642,7 @@ export type FetchNewsQuery = {
             flatData: Pick<
               NewsAndEventsFlatDataDto,
               | 'title'
-              | 'text'
+              | 'shortText'
               | 'link'
               | 'linkText'
               | 'sampleCount'
@@ -3666,7 +3682,7 @@ export const NewsContentFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'text' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'shortText' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'link' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'linkText' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'sampleCount' } },

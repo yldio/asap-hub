@@ -8,7 +8,7 @@ export const newsContentQueryFragment = gql`
     version
     flatData {
       title
-      text
+      shortText
       link
       linkText
       sampleCount

@@ -4,7 +4,7 @@ export type NewsDataObject = {
   id: string;
   created: string;
   title: string;
-  text: string;
+  shortText: string;
   link?: string;
   linkText?: string;
   sampleCount: number;

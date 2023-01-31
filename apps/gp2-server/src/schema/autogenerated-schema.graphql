@@ -1254,7 +1254,7 @@ type NewsAndEventsDataDto {
   link: NewsAndEventsDataLinkDto
   linkText: NewsAndEventsDataLinkTextDto
   sampleCount: NewsAndEventsDataSampleCountDto
-  text: NewsAndEventsDataTextDto
+  shortText: NewsAndEventsDataShortTextDto
   title: NewsAndEventsDataTitleDto
 }
 
@@ -1265,7 +1265,7 @@ input NewsAndEventsDataInputDto {
   link: NewsAndEventsDataLinkInputDto
   linkText: NewsAndEventsDataLinkTextInputDto
   sampleCount: NewsAndEventsDataSampleCountInputDto
-  text: NewsAndEventsDataTextInputDto
+  shortText: NewsAndEventsDataShortTextInputDto
   title: NewsAndEventsDataTitleInputDto
 }
 
@@ -1305,13 +1305,15 @@ input NewsAndEventsDataSampleCountInputDto {
   iv: Float
 }
 
-"""The structure of the Text field of the News content type."""
-type NewsAndEventsDataTextDto {
+"""The structure of the Short Text field of the News content type."""
+type NewsAndEventsDataShortTextDto {
+  """The text visible on the card version of News and Events"""
   iv: String
 }
 
-"""The structure of the Text field of the News content input type."""
-input NewsAndEventsDataTextInputDto {
+"""The structure of the Short Text field of the News content input type."""
+input NewsAndEventsDataShortTextInputDto {
+  """The text visible on the card version of News and Events"""
   iv: String
 }
 
@@ -1335,7 +1337,8 @@ type NewsAndEventsFlatDataDto {
   """
   linkText: String
   sampleCount: Float
-  text: String
+  """The text visible on the card version of News and Events"""
+  shortText: String
   title: String
 }
 

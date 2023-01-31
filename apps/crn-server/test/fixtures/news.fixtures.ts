@@ -104,5 +104,5 @@ export const getNewsResponse = (): NewsResponse => getNewsDataObject();
 
 export const getListNewsResponse = (): ListNewsResponse => ({
   total: 1,
-  items: [getNewsDataObject()],
+  items: [getNewsResponse()],
 });

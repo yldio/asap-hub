@@ -12,7 +12,7 @@ export const getGraphQLNews = (): NonNullable<
   version: 11,
   flatData: {
     title: 'a news item',
-    text: 'the description of the news',
+    shortText: 'the short text of the news',
     sampleCount: 3,
     articleCount: 11,
     cohortCount: 43,
@@ -30,7 +30,7 @@ export const getSquidexNewsGraphqlResponse = (): FetchNewsQuery => ({
 export const getNewsDataObject = (): gp2.NewsDataObject => ({
   id: '42',
   title: 'a news item',
-  text: 'the description of the news',
+  shortText: 'the short text of the news',
   created: '2021-12-28T00:00:00.000Z',
   sampleCount: 3,
   articleCount: 11,
@@ -48,5 +48,5 @@ export const getNewsResponse = (): gp2.NewsResponse => getNewsDataObject();
 
 export const getListNewsResponse = (): gp2.ListNewsResponse => ({
   total: 1,
-  items: [getNewsDataObject()],
+  items: [getNewsResponse()],
 });

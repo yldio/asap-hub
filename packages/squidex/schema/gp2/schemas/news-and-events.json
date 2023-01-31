@@ -12,7 +12,7 @@
     "fieldsInLists": [
       "meta.status.color",
       "title",
-      "text",
+      "shortText",
       "link",
       "sampleCount",
       "articleCount",
@@ -44,7 +44,7 @@
         }
       },
       {
-        "name": "text",
+        "name": "shortText",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,
@@ -53,11 +53,12 @@
           "fieldType": "String",
           "isUnique": false,
           "isEmbeddable": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "createEnum": false,
           "contentType": "Unspecified",
-          "editor": "RichText",
-          "label": "Text",
+          "editor": "Input",
+          "label": "Short Text",
+          "hints": "The text visible on the card version of News and Events",
           "isRequired": false,
           "isRequiredOnPublish": false,
           "isHalfWidth": false

@@ -55,6 +55,7 @@ const ResearchOutputContributorsCard: React.FC<
       title="Teams"
       description="Add other teams that contributed to this output. Those teams will also then be able to edit."
       subtitle="(required)"
+      required
       enabled={!isSaving || !isEditMode}
       placeholder="Start typing..."
       loadOptions={getTeamSuggestions}

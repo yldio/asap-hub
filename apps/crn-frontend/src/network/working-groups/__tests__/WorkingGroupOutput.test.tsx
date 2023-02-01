@@ -92,6 +92,9 @@ const mandatoryFields = async (
   );
   userEvent.click(screen.getByRole('textbox', { name: /Authors/i }));
   userEvent.click(screen.getByText('Person A 3'));
+
+  userEvent.click(screen.getByRole('textbox', { name: /Teams/i }));
+  userEvent.click(screen.getByText('Abu-Remaileh, M 1'));
   const button = screen.getByRole('button', { name: /Publish/i });
   return {
     publish: async () => {
@@ -209,8 +212,6 @@ it('can submit a form when form data is valid', async () => {
     doi,
   });
 
-  userEvent.click(screen.getByRole('textbox', { name: /Teams/i }));
-  userEvent.click(screen.getByText('Abu-Remaileh, M 1'));
   userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
   userEvent.click(screen.getByText('Example 1 Lab'));
 

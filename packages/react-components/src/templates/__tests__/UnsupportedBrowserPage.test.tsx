@@ -11,7 +11,7 @@ it('links to supported browsers', () => {
   const { getAllByRole } = render(<UnsupportedBrowserPage />);
   expect((getAllByRole('link') as HTMLAnchorElement[]).map(({ href }) => href))
     .toMatchInlineSnapshot(`
-    Array [
+    [
       "https://www.google.com/chrome/",
       "https://www.apple.com/safari/",
       "https://www.microsoft.com/edge",

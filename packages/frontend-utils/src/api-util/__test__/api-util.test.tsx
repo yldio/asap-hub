@@ -120,10 +120,11 @@ describe('clearAjvErrorForPath', () => {
           { ...validationError, instancePath: '/test' },
           { ...validationError, instancePath: '/title' },
         ],
+
         '/test',
       ).map(({ instancePath }) => instancePath),
     ).toMatchInlineSnapshot(`
-      Array [
+      [
         "/url",
         "/title",
       ]

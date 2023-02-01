@@ -4,6 +4,8 @@ import { ComponentProps } from 'react';
 import { authTestUtils } from '../..';
 import UserNavigation from '../UserNavigation';
 
+window.crypto = { subtle: {} };
+
 describe('UserNavigation', () => {
   const props: ComponentProps<typeof UserNavigation> = {
     projects: [],

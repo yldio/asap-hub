@@ -32,7 +32,7 @@ describe('FundingProvidersModal', () => {
     );
   });
 
-  it('renders email, secondary email and telephone country code and number', () => {
+  it('renders funding providers', () => {
     renderContactInformation();
     expect(
       screen.getByRole('textbox', {
@@ -59,7 +59,7 @@ describe('FundingProvidersModal', () => {
     const onSave = jest.fn();
     const fundingStreams = 'Funding Providers';
     renderContactInformation({
-      fundingStreams,
+      fundingStreams: '',
       onSave,
     });
 
@@ -69,6 +69,11 @@ describe('FundingProvidersModal', () => {
       }),
       fundingStreams,
     );
+
+    userEvent.click(getSaveButton());
+    expect(onSave).toHaveBeenCalledWith({
+      fundingStreams,
+    });
 
     await waitFor(() => expect(getSaveButton()).toBeEnabled());
   });

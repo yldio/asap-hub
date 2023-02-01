@@ -121,3 +121,10 @@ export const createAsset = async (
     },
   };
 };
+
+export const getAssetId = (url: string) => {
+  const regex =
+    /https:\/\/cloud\.squidex\.io\/api\/assets\/.*\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\/.*/i;
+  const regexMatch = regex.exec(url);
+  return regexMatch?.length ? regexMatch[1] : null;
+};

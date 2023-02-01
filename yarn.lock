@@ -15990,6 +15990,7 @@ __metadata:
     jest: 27.5.1
     jest-circus: 27.5.1
     jest-environment-jsdom: 27.5.1
+    jest-fail-on-console: ^3.0.2
     jest-runner-eslint: 1.1.0
     jest-watch-select-projects: 2.0.0
     jest-watch-suspend: 1.1.2
@@ -27518,6 +27519,15 @@ __metadata:
     jest-mock: ^27.5.1
     jest-util: ^27.5.1
   checksum: 0f988330c4f3eec092e3fb37ea753b0c6f702e83cd8f4d770af9c2bf964a70bc45fbd34ec6fdb6d71ce98a778d9f54afd673e63f222e4667fff289e8069dba39
+  languageName: node
+  linkType: hard
+
+"jest-fail-on-console@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "jest-fail-on-console@npm:3.0.2"
+  dependencies:
+    chalk: ^4.1.0
+  checksum: 3d14a72f38028317a3dd1d1d7118bf045b71ce7c7d815fa0be2e4303ebaee314e83f640a155c34a42a2e8819259f994ac4341d0e6743d049880b81aee27e10a0
   languageName: node
   linkType: hard
 

@@ -5,13 +5,15 @@ import {
   render,
   waitForElementToBeRemoved,
   screen,
+  waitFor,
 } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getUser } from '../../users/api';
+import { getUser, patchUser } from '../../users/api';
 import { refreshUserState } from '../../users/state';
 import AdditionalDetails from '../AdditionalDetails';
 
@@ -51,6 +53,7 @@ const renderAdditionalDetails = async (id: string) => {
 describe('AdditionalDetails', () => {
   beforeEach(jest.resetAllMocks);
   const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
+  const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
 
   it('renders questions, funding providers, contributing cohorts and external profiles', async () => {
     const user = gp2Fixtures.createUserResponse();
@@ -78,5 +81,28 @@ describe('AdditionalDetails', () => {
         name: 'Sorry! We can’t seem to find that page.',
       }),
     ).toBeVisible();
+  });
+
+  it('saves the funding providers modal', async () => {
+    const user = gp2Fixtures.createUserResponse();
+    mockGetUser.mockResolvedValueOnce(user);
+    await renderAdditionalDetails(user.id);
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    const [fundingProvidersButton] = screen.getAllByRole('link', {
+      name: 'Optional Add',
+    });
+    userEvent.click(fundingProvidersButton);
+    expect(screen.getByRole('dialog')).toBeVisible();
+    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+    expect(mockPatchUser).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        fundingStreams: '',
+      }),
+      expect.anything(),
+    );
   });
 });

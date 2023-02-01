@@ -28353,6 +28353,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jest-environment-node@npm:*":
+  version: 29.4.1
+  resolution: "jest-environment-node@npm:29.4.1"
+  dependencies:
+    "@jest/environment": ^29.4.1
+    "@jest/fake-timers": ^29.4.1
+    "@jest/types": ^29.4.1
+    "@types/node": "*"
+    jest-mock: ^29.4.1
+    jest-util: ^29.4.1
+  checksum: 1de024edbc8a281b2c54d379d649a2d63e153049848c257be4118eaa5136cc4943a32f3ce44841ca2356e18850ab51f833cb94509f268e25ebcd32c6bfac27a3
+  languageName: node
+  linkType: hard
+
 "jest-environment-node@npm:^27.5.1":
   version: 27.5.1
   resolution: "jest-environment-node@npm:27.5.1"

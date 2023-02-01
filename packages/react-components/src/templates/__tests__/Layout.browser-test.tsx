@@ -1,3 +1,5 @@
+import 'jest-playwright-preset';
+
 import { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';

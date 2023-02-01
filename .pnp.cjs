@@ -53371,6 +53371,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-util", "npm:29.4.0"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:29.4.1", {\
+          "packageLocation": "./.yarn/cache/jest-environment-node-npm-29.4.1-364c51740b-1de024edbc.zip/node_modules/jest-environment-node/",\
+          "packageDependencies": [\
+            ["jest-environment-node", "npm:29.4.1"],\
+            ["@jest/environment", "npm:29.4.1"],\
+            ["@jest/fake-timers", "npm:29.4.1"],\
+            ["@jest/types", "npm:29.4.1"],\
+            ["@types/node", "npm:13.11.1"],\
+            ["jest-mock", "npm:29.4.1"],\
+            ["jest-util", "npm:29.4.1"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["jest-get-type", [\
@@ -53641,7 +53654,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["expect-playwright", "npm:0.8.0"],\
             ["jest", null],\
             ["jest-circus", null],\
-            ["jest-environment-node", null],\
+            ["jest-environment-node", "npm:29.4.1"],\
             ["jest-process-manager", "npm:0.3.1"],\
             ["jest-runner", null],\
             ["nyc", "npm:15.1.0"],\
@@ -53655,7 +53668,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             "@types/jest-runner",\
             "@types/jest",\
             "jest-circus",\
-            "jest-environment-node",\
             "jest-runner",\
             "jest"\
           ],\
@@ -53672,7 +53684,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["expect-playwright", "npm:0.8.0"],\
             ["jest", null],\
             ["jest-circus", null],\
-            ["jest-environment-node", null],\
+            ["jest-environment-node", "npm:29.4.1"],\
             ["jest-process-manager", "npm:0.3.1"],\
             ["jest-runner", null],\
             ["nyc", "npm:15.1.0"],\
@@ -53686,7 +53698,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             "@types/jest-runner",\
             "@types/jest",\
             "jest-circus",\
-            "jest-environment-node",\
             "jest-runner",\
             "jest"\
           ],\

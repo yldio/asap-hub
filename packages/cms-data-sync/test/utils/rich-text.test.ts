@@ -96,8 +96,9 @@ describe('convertHtmlToContentfulFormat', () => {
   });
 
   it('converts html with inline image', () => {
-    const assetId = '8ca5d37d-4bc1-4085-b05e-786c3e6f5a38';
-    const html = `<p>some text and now an image <img src="https://cloud.squidex.io/api/assets/crn-2023/${assetId}/sky.png" alt="blue sky" width="564" height="564" /></p>`;
+    const generatedAssetId = '1515595253';
+    const squidexAssetId = '8ca5d37d-4bc1-4085-b05e-786c3e6f5a38';
+    const html = `<p>some text and now an image <img src="https://cloud.squidex.io/api/assets/crn-2023/${squidexAssetId}/sky.png" alt="blue sky" width="564" height="564" /></p>`;
 
     expect(convertHtmlToContentfulFormat(html)).toEqual({
       document: {
@@ -119,7 +120,7 @@ describe('convertHtmlToContentfulFormat', () => {
             data: {
               target: {
                 sys: {
-                  id: assetId,
+                  id: generatedAssetId,
                   linkType: 'Asset',
                   type: 'Link',
                 },
@@ -133,7 +134,7 @@ describe('convertHtmlToContentfulFormat', () => {
       },
       inlineAssetBodies: [
         [
-          assetId,
+          generatedAssetId,
           {
             fields: {
               description: {
@@ -143,7 +144,7 @@ describe('convertHtmlToContentfulFormat', () => {
                 'en-US': {
                   contentType: 'image/png',
                   fileName: 'sky.png',
-                  upload: `https://cloud.squidex.io/api/assets/crn-2023/${assetId}/sky.png`,
+                  upload: `https://cloud.squidex.io/api/assets/crn-2023/${squidexAssetId}/sky.png`,
                 },
               },
               title: {

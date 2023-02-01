@@ -470,6 +470,11 @@ export const parseGraphQLUserToDataObject = (
     reachOut: item.flatData.reachOut || undefined,
     labs: flatLabs || [],
     orcidLastSyncDate: item.flatData.orcidLastSyncDate || undefined,
+    orcidLastModifiedDate: item.flatData.orcidLastModifiedDate || undefined,
     _tags: [item.flatData.alumniSinceDate ? inactiveUserTag : activeUserTag],
+    connections:
+      item.flatData.connections?.filter(
+        (connection): connection is { code: string } => !!connection.code,
+      ) || [],
   };
 };

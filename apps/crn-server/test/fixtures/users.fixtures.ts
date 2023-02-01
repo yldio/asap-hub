@@ -4,7 +4,7 @@ import {
   UserDataObject,
   UserPatchRequest,
   UserResponse,
-  activeUserTag,
+  inactiveUserTag,
 } from '@asap-hub/model';
 import { UserEvent, UserPayload } from '@asap-hub/server-common';
 import { InputUser, RestUser, User, WebhookPayload } from '@asap-hub/squidex';
@@ -39,6 +39,8 @@ export const getGraphqlResponseFetchUsers = (): FetchUsersQuery =>
     getGraphQLUser({
       id: 'user-id-2',
       flatData: {
+        alumniLocation: 'some alumni location',
+        alumniSinceDate: '2020-09-23T20:45:22Z',
         biography: 'some biography',
         orcidWorks: [
           {
@@ -97,15 +99,21 @@ export const getGraphQLUser = (
   ...user,
   referencingWorkingGroupsContents: null,
   flatData: {
-    alumniSinceDate: null,
-    alumniLocation: null,
+    alumniLocation: 'some alumni location',
+    alumniSinceDate: '2020-09-23T20:45:22.000Z',
+    expertiseAndResourceDescription: 'some expertise and resource description',
+    orcidLastModifiedDate: '2020-09-23T20:45:22.000Z',
+    orcidLastSyncDate: '2020-09-23T20:45:22.000Z',
+    connections: [
+      {
+        code: 'some-code',
+      },
+    ],
     biography: 'some bio',
     institution: 'some institution',
     jobTitle: 'some job title',
     onboarded: true,
     dismissedGettingStarted: false,
-    orcidLastModifiedDate: null,
-    orcidLastSyncDate: null,
     reachOut: 'some reach out',
     responsibilities: 'some responsibilities',
     researchInterests: 'some research interests',
@@ -118,7 +126,6 @@ export const getGraphQLUser = (
     city: 'London',
     lastModifiedDate: '',
     questions: [{ question: 'Question 1' }, { question: 'Question 2' }],
-    expertiseAndResourceDescription: null,
     orcid: '123-456-789',
     social: null,
     degree: 'MPH',
@@ -254,7 +261,9 @@ export const updateAvatarBody: { avatar: string } = {
 };
 
 export const getUserResponse = (): UserResponse => ({
-  _tags: [activeUserTag],
+  _tags: [inactiveUserTag],
+  alumniLocation: 'some alumni location',
+  alumniSinceDate: '2020-09-23T20:45:22.000Z',
   id: 'user-id-1',
   biography: 'some bio',
   onboarded: true,
@@ -282,6 +291,7 @@ export const getUserResponse = (): UserResponse => ({
   city: 'London',
   lastModifiedDate: '2020-09-23T20:45:22.000Z',
   workingGroups: [],
+  expertiseAndResourceDescription: 'some expertise and resource description',
   orcidWorks: [
     {
       doi: 'test-doi',
@@ -293,6 +303,8 @@ export const getUserResponse = (): UserResponse => ({
     },
   ],
   orcid: '123-456-789',
+  orcidLastModifiedDate: '2020-09-23T20:45:22.000Z',
+  orcidLastSyncDate: '2020-09-23T20:45:22.000Z',
   degree: 'MPH',
   social: {
     orcid: '123-456-789',
@@ -317,8 +329,10 @@ export const fetchExpectation: ListUserResponse = {
   items: [
     getUserResponse(),
     {
-      _tags: [activeUserTag],
+      _tags: [inactiveUserTag],
       id: 'user-id-2',
+      alumniLocation: 'some alumni location',
+      alumniSinceDate: '2020-09-23T20:45:22Z',
       biography: 'some biography',
       city: 'some city',
       contactEmail: 'some@contact.email',
@@ -327,6 +341,8 @@ export const fetchExpectation: ListUserResponse = {
       institution: 'some institution',
       jobTitle: 'some job title',
       orcid: 'orcid',
+      orcidLastModifiedDate: '2020-09-23T20:45:22.000Z',
+      orcidLastSyncDate: '2020-09-23T20:45:22.000Z',
       reachOut: 'some reach out',
       responsibilities: 'some responsibilities',
       researchInterests: 'some research interests',
@@ -546,12 +562,22 @@ export const getUserEvent = (id: string, eventType: UserEvent) =>
   );
 
 export const getUserDataObject = (): UserDataObject => ({
-  _tags: [activeUserTag],
+  _tags: [inactiveUserTag],
   id: 'user-id-1',
   biography: 'some bio',
   onboarded: true,
   dismissedGettingStarted: false,
   createdDate: '2020-09-23T20:45:22.000Z',
+  connections: [
+    {
+      code: 'some-code',
+    },
+  ],
+  alumniLocation: 'some alumni location',
+  alumniSinceDate: '2020-09-23T20:45:22.000Z',
+  expertiseAndResourceDescription: 'some expertise and resource description',
+  orcidLastModifiedDate: '2020-09-23T20:45:22.000Z',
+  orcidLastSyncDate: '2020-09-23T20:45:22.000Z',
   questions: ['Question 1', 'Question 2'],
   expertiseAndResourceTags: [
     'expertise 1',
@@ -612,6 +638,9 @@ export const getUserCreateDataObject = (): UserCreateDataObject => {
     createdDate: _createdDate,
     social: _social,
     workingGroups,
+    connections,
+    alumniLocation,
+    alumniSinceDate,
     _tags,
     ...createDataObject
   } = getUserDataObject();
@@ -641,6 +670,11 @@ export const getInputUser = (): InputUser['data'] => ({
       'expertise 5',
     ],
   },
+  expertiseAndResourceDescription: {
+    iv: 'some expertise and resource description',
+  },
+  orcidLastModifiedDate: { iv: '2020-09-23T20:45:22.000Z' },
+  orcidLastSyncDate: { iv: '2020-09-23T20:45:22.000Z' },
   institution: { iv: 'some institution' },
   jobTitle: { iv: 'some job title' },
   reachOut: { iv: 'some reach out' },

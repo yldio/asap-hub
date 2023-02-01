@@ -19,6 +19,7 @@ describe('parseGraphQLTeamMember', () => {
     const parsedTeamMember = parseGraphQLTeamMember(teamMember, 'team-id-0');
     expect(parsedTeamMember).toEqual({
       id: 'user-id-1',
+      alumniSinceDate: '2020-09-23T20:45:22.000Z',
       firstName: 'Tom',
       lastName: 'Hardy',
       displayName: 'Tom Hardy',

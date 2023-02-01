@@ -97,6 +97,7 @@ export const researchOutputContentQueryFragment = gql`
               }
             }
             alumniSinceDate
+            alumniLocation
           }
         }
         ... on ExternalAuthors {

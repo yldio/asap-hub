@@ -184,7 +184,7 @@ describe('Users controller', () => {
 
       expect(userDataProviderMock.update).toHaveBeenCalledWith(userId, {
         email: user.email,
-        connections: [{ code: 'user-id' }],
+        connections: [...user.connections!, { code: 'user-id' }],
       });
       expect(result).toEqual(getUserResponse());
     });

@@ -91,6 +91,7 @@ export const groupContentQueryFragment = gql`
               }
             }
             alumniSinceDate
+            alumniLocation
           }
         }
       }

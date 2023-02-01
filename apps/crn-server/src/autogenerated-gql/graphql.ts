@@ -6607,6 +6607,7 @@ export type EventContentFragment = Pick<
                               | 'researchInterests'
                               | 'reachOut'
                               | 'alumniSinceDate'
+                              | 'alumniLocation'
                             > & {
                               avatar: Maybe<Array<Pick<Asset, 'id'>>>;
                               orcidWorks: Maybe<
@@ -6714,7 +6715,11 @@ export type EventContentFragment = Pick<
             | ({ __typename: 'Users' } & Pick<Users, 'id'> & {
                   flatData: Pick<
                     UsersFlatDataDto,
-                    'alumniSinceDate' | 'firstName' | 'lastName' | 'onboarded'
+                    | 'alumniSinceDate'
+                    | 'alumniLocation'
+                    | 'firstName'
+                    | 'lastName'
+                    | 'onboarded'
                   > & {
                     avatar: Maybe<Array<Pick<Asset, 'id'>>>;
                     teams: Maybe<
@@ -6973,6 +6978,7 @@ export type FetchEventsQuery = {
                                         | 'researchInterests'
                                         | 'reachOut'
                                         | 'alumniSinceDate'
+                                        | 'alumniLocation'
                                       > & {
                                         avatar: Maybe<Array<Pick<Asset, 'id'>>>;
                                         orcidWorks: Maybe<
@@ -7101,6 +7107,7 @@ export type FetchEventsQuery = {
                             flatData: Pick<
                               UsersFlatDataDto,
                               | 'alumniSinceDate'
+                              | 'alumniLocation'
                               | 'firstName'
                               | 'lastName'
                               | 'onboarded'
@@ -7338,6 +7345,7 @@ export type FetchEventQuery = {
                                   | 'researchInterests'
                                   | 'reachOut'
                                   | 'alumniSinceDate'
+                                  | 'alumniLocation'
                                 > & {
                                   avatar: Maybe<Array<Pick<Asset, 'id'>>>;
                                   orcidWorks: Maybe<
@@ -7457,6 +7465,7 @@ export type FetchEventQuery = {
                       flatData: Pick<
                         UsersFlatDataDto,
                         | 'alumniSinceDate'
+                        | 'alumniLocation'
                         | 'firstName'
                         | 'lastName'
                         | 'onboarded'
@@ -7679,6 +7688,7 @@ export type GroupsContentFragment = Pick<
                   | 'researchInterests'
                   | 'reachOut'
                   | 'alumniSinceDate'
+                  | 'alumniLocation'
                 > & {
                   avatar: Maybe<Array<Pick<Asset, 'id'>>>;
                   orcidWorks: Maybe<
@@ -7933,6 +7943,7 @@ export type FetchGroupsQuery = {
                             | 'researchInterests'
                             | 'reachOut'
                             | 'alumniSinceDate'
+                            | 'alumniLocation'
                           > & {
                             avatar: Maybe<Array<Pick<Asset, 'id'>>>;
                             orcidWorks: Maybe<
@@ -8178,6 +8189,7 @@ export type FetchGroupQuery = {
                       | 'researchInterests'
                       | 'reachOut'
                       | 'alumniSinceDate'
+                      | 'alumniLocation'
                     > & {
                       avatar: Maybe<Array<Pick<Asset, 'id'>>>;
                       orcidWorks: Maybe<
@@ -8437,6 +8449,7 @@ export type ResearchOutputContentFragment = Pick<
                 | 'researchInterests'
                 | 'reachOut'
                 | 'alumniSinceDate'
+                | 'alumniLocation'
               > & {
                 avatar: Maybe<Array<Pick<Asset, 'id'>>>;
                 orcidWorks: Maybe<
@@ -8597,6 +8610,7 @@ export type FetchResearchOutputQuery = {
                     | 'researchInterests'
                     | 'reachOut'
                     | 'alumniSinceDate'
+                    | 'alumniLocation'
                   > & {
                     avatar: Maybe<Array<Pick<Asset, 'id'>>>;
                     orcidWorks: Maybe<
@@ -8777,6 +8791,7 @@ export type FetchResearchOutputsQuery = {
                           | 'researchInterests'
                           | 'reachOut'
                           | 'alumniSinceDate'
+                          | 'alumniLocation'
                         > & {
                           avatar: Maybe<Array<Pick<Asset, 'id'>>>;
                           orcidWorks: Maybe<
@@ -9326,6 +9341,7 @@ export type UsersContentFragment = Pick<
     | 'reachOut'
   > & {
     avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+    connections: Maybe<Array<Pick<UsersDataConnectionsChildDto, 'code'>>>;
     orcidWorks: Maybe<
       Array<
         Pick<
@@ -9427,6 +9443,7 @@ export type FetchUserQuery = {
         | 'reachOut'
       > & {
         avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+        connections: Maybe<Array<Pick<UsersDataConnectionsChildDto, 'code'>>>;
         orcidWorks: Maybe<
           Array<
             Pick<
@@ -9540,6 +9557,9 @@ export type FetchUsersQuery = {
               | 'reachOut'
             > & {
               avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+              connections: Maybe<
+                Array<Pick<UsersDataConnectionsChildDto, 'code'>>
+              >;
               orcidWorks: Maybe<
                 Array<
                   Pick<
@@ -10717,6 +10737,13 @@ export const GroupsContentFragmentDoc = {
                                       value: 'alumniSinceDate',
                                     },
                                   },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'alumniLocation',
+                                    },
+                                  },
                                 ],
                               },
                             },
@@ -10996,6 +11023,13 @@ export const EventContentFragmentDoc = {
                                           name: {
                                             kind: 'Name',
                                             value: 'alumniSinceDate',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'alumniLocation',
                                           },
                                         },
                                         {
@@ -11698,6 +11732,13 @@ export const ResearchOutputContentFragmentDoc = {
                                       value: 'alumniSinceDate',
                                     },
                                   },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'alumniLocation',
+                                    },
+                                  },
                                 ],
                               },
                             },
@@ -12170,6 +12211,16 @@ export const UsersContentFragmentDoc = {
                   },
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'biography' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'connections' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                    ],
+                  },
+                },
                 { kind: 'Field', name: { kind: 'Name', value: 'degree' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'email' } },
                 {

@@ -2834,6 +2834,7 @@ export type UsersContentFragment = Pick<
     | 'activatedDate'
   > & {
     avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+    connections: Maybe<Array<Pick<UsersDataConnectionsChildDto, 'code'>>>;
     positions: Maybe<
       Array<
         Pick<UsersDataPositionsChildDto, 'role' | 'department' | 'institution'>
@@ -2921,6 +2922,7 @@ export type FetchUserQuery = {
         | 'activatedDate'
       > & {
         avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+        connections: Maybe<Array<Pick<UsersDataConnectionsChildDto, 'code'>>>;
         positions: Maybe<
           Array<
             Pick<
@@ -3023,6 +3025,9 @@ export type FetchUsersQuery = {
               | 'activatedDate'
             > & {
               avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+              connections: Maybe<
+                Array<Pick<UsersDataConnectionsChildDto, 'code'>>
+              >;
               positions: Maybe<
                 Array<
                   Pick<
@@ -3865,6 +3870,16 @@ export const UsersContentFragmentDoc = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'connections' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'code' } },
                     ],
                   },
                 },

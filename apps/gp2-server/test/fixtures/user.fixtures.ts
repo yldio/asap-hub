@@ -188,6 +188,7 @@ export const getUserDataObject = (): gp2.UserDataObject => ({
   id: 'user-id-1',
   createdDate: '2020-09-23T20:45:22.000Z',
   activatedDate: '2020-09-24T20:45:22.000Z',
+  connections: [{ code: 'some-code' }],
   email: 'T@ark.io',
   firstName: 'Tony',
   lastName: 'Stark',
@@ -362,6 +363,11 @@ export const getGraphQLUser = (
   ...user,
   flatData: {
     avatar: [],
+    connections: [
+      {
+        code: 'some-code',
+      },
+    ],
     email: 'T@ark.io',
     firstName: 'Tony',
     lastName: 'Stark',

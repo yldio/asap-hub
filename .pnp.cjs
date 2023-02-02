@@ -4232,7 +4232,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "data-uri-to-buffer",\
-        "npm:3.0.1"\
+        "npm:4.0.1"\
       ],\
       [\
         "data-urls",\
@@ -5044,7 +5044,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "fetch-blob",\
-        "virtual:6d113662d53f111ebc45d76894379672c4bef1024d442c9142fc052527e3a96d54235ec89724f5865223f87cc87cf23a111fa3aa71b23aae42bc577034ca5762#npm:2.1.2"\
+        "npm:3.2.0"\
       ],\
       [\
         "fetch-retry",\
@@ -5201,6 +5201,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [\
         "formdata-node",\
         "npm:4.3.3"\
+      ],\
+      [\
+        "formdata-polyfill",\
+        "npm:4.0.10"\
       ],\
       [\
         "formidable",\
@@ -7139,7 +7143,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "node-fetch",\
-        "npm:3.0.0-beta.9"\
+        "npm:3.3.0"\
       ],\
       [\
         "node-forge",\
@@ -10205,7 +10209,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-watch-suspend", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.2"],\
             ["jest-watch-typeahead", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:0.6.5"],\
             ["nock", "npm:13.3.0"],\
-            ["node-fetch", "npm:3.0.0-beta.9"],\
+            ["node-fetch", "npm:3.3.0"],\
             ["prettier", "npm:2.7.1"],\
             ["react-test-renderer", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:17.0.2"],\
             ["rimraf", "npm:3.0.2"],\
@@ -11035,7 +11039,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/runtime-corejs3", "npm:7.20.13"],\
             ["@playwright/test", "npm:1.25.2"],\
             ["@types/node-fetch", "npm:2.5.10"],\
-            ["node-fetch", "npm:3.0.0-beta.9"]\
+            ["node-fetch", "npm:3.3.0"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -38165,7 +38169,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-watch-suspend", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.2"],\
             ["jest-watch-typeahead", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:0.6.5"],\
             ["nock", "npm:13.3.0"],\
-            ["node-fetch", "npm:3.0.0-beta.9"],\
+            ["node-fetch", "npm:3.3.0"],\
             ["prettier", "npm:2.7.1"],\
             ["react-test-renderer", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:17.0.2"],\
             ["rimraf", "npm:3.0.2"],\
@@ -43597,10 +43601,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["data-uri-to-buffer", [\
-        ["npm:3.0.1", {\
-          "packageLocation": "./.yarn/cache/data-uri-to-buffer-npm-3.0.1-830646f9ee-c59c300968.zip/node_modules/data-uri-to-buffer/",\
+        ["npm:4.0.1", {\
+          "packageLocation": "./.yarn/cache/data-uri-to-buffer-npm-4.0.1-5c66a78beb-0d0790b67f.zip/node_modules/data-uri-to-buffer/",\
           "packageDependencies": [\
-            ["data-uri-to-buffer", "npm:3.0.1"]\
+            ["data-uri-to-buffer", "npm:4.0.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -47410,23 +47414,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["fetch-blob", [\
-        ["npm:2.1.2", {\
-          "packageLocation": "./.yarn/cache/fetch-blob-npm-2.1.2-2056bf83c5-22d4487ce7.zip/node_modules/fetch-blob/",\
+        ["npm:3.2.0", {\
+          "packageLocation": "./.yarn/cache/fetch-blob-npm-3.2.0-28e01becfc-f19bc28a2a.zip/node_modules/fetch-blob/",\
           "packageDependencies": [\
-            ["fetch-blob", "npm:2.1.2"]\
-          ],\
-          "linkType": "SOFT"\
-        }],\
-        ["virtual:6d113662d53f111ebc45d76894379672c4bef1024d442c9142fc052527e3a96d54235ec89724f5865223f87cc87cf23a111fa3aa71b23aae42bc577034ca5762#npm:2.1.2", {\
-          "packageLocation": "./.yarn/__virtual__/fetch-blob-virtual-166ee5ce72/0/cache/fetch-blob-npm-2.1.2-2056bf83c5-22d4487ce7.zip/node_modules/fetch-blob/",\
-          "packageDependencies": [\
-            ["fetch-blob", "virtual:6d113662d53f111ebc45d76894379672c4bef1024d442c9142fc052527e3a96d54235ec89724f5865223f87cc87cf23a111fa3aa71b23aae42bc577034ca5762#npm:2.1.2"],\
-            ["@types/domexception", null],\
-            ["domexception", null]\
-          ],\
-          "packagePeers": [\
-            "@types/domexception",\
-            "domexception"\
+            ["fetch-blob", "npm:3.2.0"],\
+            ["node-domexception", "npm:1.0.0"],\
+            ["web-streams-polyfill", "npm:3.2.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -48308,6 +48301,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["formdata-node", "npm:4.3.3"],\
             ["node-domexception", "npm:1.0.0"],\
             ["web-streams-polyfill", "npm:4.0.0-beta.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["formdata-polyfill", [\
+        ["npm:4.0.10", {\
+          "packageLocation": "./.yarn/cache/formdata-polyfill-npm-4.0.10-e03013c013-82a34df292.zip/node_modules/formdata-polyfill/",\
+          "packageDependencies": [\
+            ["formdata-polyfill", "npm:4.0.10"],\
+            ["fetch-blob", "npm:3.2.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -56091,12 +56094,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["npm:3.0.0-beta.9", {\
-          "packageLocation": "./.yarn/cache/node-fetch-npm-3.0.0-beta.9-6d113662d5-586af09106.zip/node_modules/node-fetch/",\
+        ["npm:3.3.0", {\
+          "packageLocation": "./.yarn/cache/node-fetch-npm-3.3.0-45d971325c-e9936908d2.zip/node_modules/node-fetch/",\
           "packageDependencies": [\
-            ["node-fetch", "npm:3.0.0-beta.9"],\
-            ["data-uri-to-buffer", "npm:3.0.1"],\
-            ["fetch-blob", "virtual:6d113662d53f111ebc45d76894379672c4bef1024d442c9142fc052527e3a96d54235ec89724f5865223f87cc87cf23a111fa3aa71b23aae42bc577034ca5762#npm:2.1.2"]\
+            ["node-fetch", "npm:3.3.0"],\
+            ["data-uri-to-buffer", "npm:4.0.1"],\
+            ["fetch-blob", "npm:3.2.0"],\
+            ["formdata-polyfill", "npm:4.0.10"]\
           ],\
           "linkType": "HARD"\
         }],\

@@ -166,19 +166,19 @@ describe('userToCSV', () => {
       contributingCohorts: [
         {
           name: 'CALYPSO',
-          role: 'Contributor',
+          role: 'Investigator',
           studyUrl: 'first-study',
           contributingCohortId: '1',
         },
         {
           name: 'DATATOP',
-          role: 'Investigator',
+          role: 'Co-Investigator',
           studyUrl: 'second-study',
           contributingCohortId: '2',
         },
         {
           name: 'ICEBERG',
-          role: 'Contributor',
+          role: 'Lead Investigator',
           contributingCohortId: '3',
         },
       ],
@@ -186,9 +186,9 @@ describe('userToCSV', () => {
     const { contributingCohorts } = userToCSV(userResponse);
     expect(contributingCohorts).toMatchInlineSnapshot(
       `
-      "CALYPSO Contributor first-study,
-      DATATOP Investigator second-study,
-      ICEBERG Contributor"
+      "CALYPSO Investigator first-study,
+      DATATOP Co-Investigator second-study,
+      ICEBERG Lead Investigator"
     `,
     );
   });

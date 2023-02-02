@@ -1,4 +1,5 @@
 export * from './common';
+export * from './contributing-cohort';
 export * from './news';
 export * from './project';
 export * from './user';

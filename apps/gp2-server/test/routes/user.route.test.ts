@@ -577,10 +577,10 @@ describe('/users/ route', () => {
         });
       });
       describe('contributing cohorts', () => {
-        const cohort = (id = '42') => ({
+        const cohort = (id = '42'): gp2.UserContributingCohort => ({
           name: `the name ${id}`,
           contributingCohortId: id,
-          role: 'Contributor',
+          role: 'Investigator',
           studyUrl: 'http://example.com',
         });
         test('allows valid cohorts', async () => {

@@ -253,7 +253,7 @@ describe('User data provider', () => {
     });
     describe('contributing cohorts', () => {
       const cohort = {
-        role: UsersDataContributingCohortsRoleEnum.Contributor,
+        role: UsersDataContributingCohortsRoleEnum.Investigator,
         id: [{ id: '42', flatData: { name: 'a cohort' } }],
         study: 'http://example.com',
       };
@@ -288,6 +288,22 @@ describe('User data provider', () => {
         const result = await userDataProvider.fetchById('user-id');
         expect(result?.contributingCohorts).toEqual([]);
       });
+      test.each`
+        role                                                     | expectedRole
+        ${UsersDataContributingCohortsRoleEnum.Investigator}     | ${'Investigator'}
+        ${UsersDataContributingCohortsRoleEnum.CoInvestigator}   | ${'Co-Investigator'}
+        ${UsersDataContributingCohortsRoleEnum.LeadInvestigator} | ${'Lead Investigator'}
+      `(
+        'should parse the role $role => $expectedRole',
+        async ({ role, expectedRole }) => {
+          const user = getGraphQLUser();
+          user.flatData.contributingCohorts = [{ ...cohort, role }];
+          const mockResponse = getSquidexUserGraphqlResponse(user);
+          squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+          const result = await userDataProvider.fetchById('user-id');
+          expect(result?.contributingCohorts[0]?.role).toEqual(expectedRole);
+        },
+      );
     });
     describe('projects', () => {
       const project = {
@@ -822,6 +838,37 @@ describe('User data provider', () => {
         expect(nock.isDone()).toBe(true);
       },
     );
+    test.each`
+      role                   | expected
+      ${'Investigator'}      | ${UsersDataContributingCohortsRoleEnum.Investigator}
+      ${'Co-Investigator'}   | ${UsersDataContributingCohortsRoleEnum.CoInvestigator}
+      ${'Lead Investigator'} | ${UsersDataContributingCohortsRoleEnum.LeadInvestigator}
+    `(
+      'Should update the contributing cohort role $role => $expected',
+      async ({ role, expected }) => {
+        const id = '42';
+        const name = 'a name';
+        nock(baseUrl)
+          .patch(`/api/content/${appName}/users/${userId}`, {
+            contributingCohorts: {
+              iv: [
+                {
+                  id: [id],
+                  name,
+                  role: expected,
+                },
+              ],
+            },
+          })
+          .reply(200, fetchUserResponse());
+        expect(
+          await userDataProvider.update(userId, {
+            contributingCohorts: [{ contributingCohortId: id, name, role }],
+          }),
+        ).not.toBeDefined();
+        expect(nock.isDone()).toBe(true);
+      },
+    );
   });
 
   describe('Create', () => {
@@ -927,6 +974,37 @@ describe('User data provider', () => {
         await userDataProvider.create({
           ...userCreateDataObject,
           degrees: [expected],
+        });
+      },
+    );
+    test.each`
+      role                   | expected
+      ${'Investigator'}      | ${UsersDataContributingCohortsRoleEnum.Investigator}
+      ${'Co-Investigator'}   | ${UsersDataContributingCohortsRoleEnum.CoInvestigator}
+      ${'Lead Investigator'} | ${UsersDataContributingCohortsRoleEnum.LeadInvestigator}
+    `(
+      'Should update the contributing cohort role $role => $expected',
+      async ({ role, expected }) => {
+        const userCreateDataObject = getUserCreateDataObject();
+        const id = '42';
+        const name = 'a name';
+        nock(baseUrl)
+          .post(`/api/content/${appName}/users?publish=true`, {
+            ...getUserInput(),
+            contributingCohorts: {
+              iv: [
+                {
+                  id: [id],
+                  name,
+                  role: expected,
+                },
+              ],
+            },
+          })
+          .reply(200, fetchUserResponse());
+        await userDataProvider.create({
+          ...userCreateDataObject,
+          contributingCohorts: [{ contributingCohortId: id, name, role }],
         });
       },
     );

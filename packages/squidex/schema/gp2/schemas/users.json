@@ -600,7 +600,11 @@
             "isDisabled": false,
             "properties": {
               "fieldType": "String",
-              "allowedValues": ["Contributor", "Investigator"],
+              "allowedValues": [
+                "Investigator",
+                "Lead_Investigator",
+                "Co_Investigator"
+              ],
               "isUnique": false,
               "isEmbeddable": false,
               "inlineEditable": true,

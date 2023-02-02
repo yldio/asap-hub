@@ -7,7 +7,7 @@ import {
 } from '@asap-hub/squidex';
 import { appName, auth0SharedSecret, baseUrl } from '../../config';
 import Users from '../../controllers/user.controller';
-import { AssetSquidexDataProvider } from '../../data-providers/assets.data-provider';
+import { AssetSquidexDataProvider } from '../../data-providers/asset.data-provider';
 import { UserSquidexDataProvider } from '../../data-providers/user.data-provider';
 import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';

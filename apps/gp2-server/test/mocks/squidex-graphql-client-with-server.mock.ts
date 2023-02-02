@@ -9,6 +9,7 @@ import {
   graphql,
   print,
 } from 'graphql';
+import { getGraphQLContributingCohort } from '../fixtures/contributing-cohort.fixtures';
 import { getGraphQLNews } from '../fixtures/news.fixtures';
 import { getGraphQLProject } from '../fixtures/project.fixtures';
 import { getGraphQLUser } from '../fixtures/user.fixtures';
@@ -33,6 +34,8 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
     JsonScalar: () => {},
     NewsAndEvents: () => getGraphQLNews(),
     NewsAndEventsResultDto: resultDto,
+    ContributingCohorts: () => getGraphQLContributingCohort(),
+    ContributingCohortsResultDto: resultDto,
     Projects: () => getGraphQLProject(),
     ProjectsResultDto: resultDto,
     Users: () => getGraphQLUser(),

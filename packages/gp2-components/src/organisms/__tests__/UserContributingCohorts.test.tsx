@@ -11,7 +11,7 @@ describe('UserContributingCohorts', () => {
       (_, itemIndex): ContributingCohort => ({
         contributingCohortId: `id-${itemIndex}`,
         name: `a name ${itemIndex}`,
-        role: 'Contributor',
+        role: 'Investigator',
         studyUrl: `http://a-url-${itemIndex}`,
       }),
     );

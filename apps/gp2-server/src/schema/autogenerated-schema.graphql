@@ -1884,10 +1884,12 @@ input UsersDataContributingCohortsInputDto {
 }
 
 enum UsersDataContributingCohortsRoleEnum {
-  """Contributor"""
-  Contributor
+  """Co_Investigator"""
+  Co_Investigator
   """Investigator"""
   Investigator
+  """Lead_Investigator"""
+  Lead_Investigator
 }
 
 """The structure of the Country field of the Users content type."""

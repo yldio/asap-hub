@@ -1,3 +1,5 @@
+import '@testing-library/jest-dom';
+
 afterEach(() => {
   // for tests in consumers of @asap-hub/flags
   require('@asap-hub/flags').reset();

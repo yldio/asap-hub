@@ -33,6 +33,24 @@ describe('parseGraphQLTeamMember', () => {
     });
   });
 
+  test('should parse inactive teamMember', () => {
+    const parsedTeamMember = parseGraphQLTeamMember(teamMember, 'team-id-1');
+    expect(parsedTeamMember).toEqual({
+      id: 'user-id-1',
+      firstName: 'Tom',
+      lastName: 'Hardy',
+      displayName: 'Tom Hardy',
+      email: 'H@rdy.io',
+      role: 'Lead PI (Core Leadership)',
+      inactiveSinceDate: '2020-09-25T09:42:51.000Z',
+      labs: [
+        { id: 'cd7be4902', name: 'Brighton' },
+        { id: 'cd7be4903', name: 'Liverpool' },
+      ],
+      avatarUrl: undefined,
+    });
+  });
+
   test('should parse team member avatar', () => {
     const graphqlUser = getGraphQLUser();
     graphqlUser.flatData.avatar = [

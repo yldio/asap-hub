@@ -95,6 +95,7 @@ describe('User data provider', () => {
     test('Should filter out a team when the team role is invalid', async () => {
       const mockResponse = getSquidexUserGraphqlResponse();
       mockResponse.findUsersContent!.flatData.teams![0]!.role = 'invalid role';
+      mockResponse.findUsersContent!.flatData.teams![1]!.role = 'invalid role';
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
       const expectedResponse = getUserDataObject();
       expectedResponse.teams = [];
@@ -759,6 +760,14 @@ describe('User data provider', () => {
             id: 'team-id-0',
             proposal: 'proposalId1',
             role: 'Lead PI (Core Leadership)',
+            inactiveSinceDate: undefined,
+          },
+          {
+            displayName: 'Team B',
+            id: 'team-id-1',
+            proposal: 'proposalId2',
+            role: 'Lead PI (Core Leadership)',
+            inactiveSinceDate: '2020-09-25T09:42:51.000Z',
           },
         ]);
       });
@@ -766,6 +775,7 @@ describe('User data provider', () => {
       test('should filter out teams where id is null', () => {
         const teams: GraphqlUserTeam[] = getGraphQLUser().flatData.teams!;
         teams[0]!.id = null;
+        teams[1]!.id = null;
         const loggerWarnSpy = jest.spyOn(logger, 'warn');
         const parsedTeams = parseGraphQLUserTeamConnections(teams);
         expect(loggerWarnSpy).toHaveBeenCalledWith(
@@ -777,6 +787,7 @@ describe('User data provider', () => {
       test('should filter out teams when team role is invalid', () => {
         const teams: GraphqlUserTeam[] = getGraphQLUser().flatData.teams!;
         teams[0]!.role = 'invalid role';
+        teams[1]!.role = 'invalid role';
         const loggerWarnSpy = jest.spyOn(logger, 'warn');
         const parsedTeams = parseGraphQLUserTeamConnections(teams);
         expect(loggerWarnSpy).toHaveBeenCalledWith(

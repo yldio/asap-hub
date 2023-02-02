@@ -1,4 +1,5 @@
 import {
+  ContributingCohortsModal,
   FundingProviderModal,
   OnboardingAdditionalDetails,
 } from '@asap-hub/gp2-components';
@@ -52,7 +53,11 @@ const AdditionalDetails: React.FC<Record<string, never>> = () => {
             onboarding({}).additionalDetails({}).editContributingCohorts({}).$
           }
         >
-          {/* { edit Contributing Cohorts Modal} */}
+          <ContributingCohortsModal
+            {...userData}
+            backHref={onboarding({}).additionalDetails({}).$}
+            onSave={(patchedUser) => patchUser(patchedUser)}
+          />
         </Route>
         <Route
           path={onboarding({}).additionalDetails({}).editExternalProfiles({}).$}

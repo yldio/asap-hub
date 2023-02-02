@@ -5007,10 +5007,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.0.6"\
       ],\
       [\
-        "fast-url-parser",\
-        "npm:1.1.3"\
-      ],\
-      [\
         "fast-xml-parser",\
         "npm:4.0.11"\
       ],\
@@ -7610,7 +7606,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "pino-http",\
-        "npm:8.3.1"\
+        "npm:8.3.2"\
       ],\
       [\
         "pino-lambda",\
@@ -12263,7 +12259,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jwt-encode", "npm:1.0.1"],\
             ["nock", "npm:13.3.0"],\
             ["pino", "npm:8.8.0"],\
-            ["pino-http", "npm:8.3.1"],\
+            ["pino-http", "npm:8.3.2"],\
             ["pino-lambda", "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:4.1.0"],\
             ["pino-noir", "npm:2.2.1"],\
             ["pino-pretty", "npm:9.1.1"],\
@@ -47312,16 +47308,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["fast-url-parser", [\
-        ["npm:1.1.3", {\
-          "packageLocation": "./.yarn/cache/fast-url-parser-npm-1.1.3-9be698120a-5043d0c4a8.zip/node_modules/fast-url-parser/",\
-          "packageDependencies": [\
-            ["fast-url-parser", "npm:1.1.3"],\
-            ["punycode", "npm:1.4.1"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
       ["fast-xml-parser", [\
         ["npm:4.0.11", {\
           "packageLocation": "./.yarn/cache/fast-xml-parser-npm-4.0.11-fb9c5662b0-d8a08e4d55.zip/node_modules/fast-xml-parser/",\
@@ -57831,11 +57817,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["pino-http", [\
-        ["npm:8.3.1", {\
-          "packageLocation": "./.yarn/cache/pino-http-npm-8.3.1-bbfe4c09fe-9b7c2693cf.zip/node_modules/pino-http/",\
+        ["npm:8.3.2", {\
+          "packageLocation": "./.yarn/cache/pino-http-npm-8.3.2-9b08210712-21df0013b2.zip/node_modules/pino-http/",\
           "packageDependencies": [\
-            ["pino-http", "npm:8.3.1"],\
-            ["fast-url-parser", "npm:1.1.3"],\
+            ["pino-http", "npm:8.3.2"],\
             ["get-caller-file", "npm:2.0.5"],\
             ["pino", "npm:8.8.0"],\
             ["pino-std-serializers", "npm:6.0.0"],\

@@ -107,13 +107,17 @@ export default class Users implements UserController {
     }
 
     const user = items[0];
-    return user.connections?.find(({ code }) => code === authUserId)
-      ? parseUserToResponse(user, user.id)
-      : this.update(user.id, {
-          email: user.email,
-          connections: [...(user.connections || []), { code: authUserId }],
-          activatedDate: user.activatedDate ?? new Date().toISOString(),
-        });
+    if (user.connections?.find(({ code }) => code === authUserId)) {
+      return parseUserToResponse(user);
+    }
+    const existingConnections =
+      user.connections?.filter(({ code }) => code !== welcomeCode) || [];
+
+    return this.update(user.id, {
+      email: user.email,
+      connections: [...existingConnections, { code: authUserId }],
+      activatedDate: user.activatedDate ?? new Date().toISOString(),
+    });
   }
 
   private async queryByCode(code: string) {

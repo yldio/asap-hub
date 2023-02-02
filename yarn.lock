@@ -443,7 +443,7 @@ __metadata:
     "@asap-hub/react-components": "workspace:*"
     "@babel/runtime-corejs3": 7.20.13
     "@testing-library/dom": 8.20.0
-    "@testing-library/jest-dom": 5.16.5
+    "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@testing-library/user-event": 12.8.3
     "@types/history": 4.7.11
@@ -492,7 +492,7 @@ __metadata:
     "@sentry/react": 6.19.7
     "@sentry/tracing": 6.19.7
     "@testing-library/dom": 8.20.0
-    "@testing-library/jest-dom": 5.16.5
+    "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": 8.0.1
     "@testing-library/user-event": 12.8.3
@@ -718,7 +718,7 @@ __metadata:
   resolution: "@asap-hub/e2e-tests@workspace:apps/e2e-tests"
   dependencies:
     "@babel/runtime-corejs3": 7.20.13
-    "@playwright/test": 1.25.2
+    "@playwright/test": ^1.30.0
     "@types/node-fetch": 2.5.10
     node-fetch: 3.0.0-beta.9
   languageName: unknown
@@ -844,7 +844,7 @@ __metadata:
     "@asap-hub/react-components": "workspace:*"
     "@babel/runtime-corejs3": 7.20.13
     "@testing-library/dom": 8.20.0
-    "@testing-library/jest-dom": 5.16.5
+    "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@testing-library/user-event": 12.8.3
     "@types/history": 4.7.11
@@ -10745,15 +10745,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@playwright/test@npm:1.25.2":
-  version: 1.25.2
-  resolution: "@playwright/test@npm:1.25.2"
+"@playwright/test@npm:^1.30.0":
+  version: 1.30.0
+  resolution: "@playwright/test@npm:1.30.0"
   dependencies:
     "@types/node": "*"
-    playwright-core: 1.25.2
+    playwright-core: 1.30.0
   bin:
     playwright: cli.js
-  checksum: 3c24027bd9b305a3985cae35a4046e656dd0ffb76ef4dfcfc864f6c8492a643fc21c79048ee8169c5c1562d3cae493e7223a5473b127fef3bda7c7c52795c17d
+  checksum: 777432ac9cf3d0341fcd8dd265cb4c0775619d0ef48252b32a7c4d632d8038449756ec34bec873828cadbc08ba634e81176cb193304d34e699472771b7fb4d1e
   languageName: node
   linkType: hard
 
@@ -12767,7 +12767,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/jest-dom@npm:5.16.5, @testing-library/jest-dom@npm:^5.16.5":
+"@testing-library/jest-dom@npm:^5.16.5":
   version: 5.16.5
   resolution: "@testing-library/jest-dom@npm:5.16.5"
   dependencies:
@@ -33572,21 +33572,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"playwright-core@npm:1.25.2, playwright-core@npm:>=1.2.0":
-  version: 1.25.2
-  resolution: "playwright-core@npm:1.25.2"
-  bin:
-    playwright: cli.js
-  checksum: 24ada61e2132bd7278cf0aa0ef711280e1519c437efa0088a99c47ef994202f4c9880521d8c0c51ab854bef08806f372477d754aac1e790ea64f18cd346b5b2f
-  languageName: node
-  linkType: hard
-
 "playwright-core@npm:1.30.0, playwright-core@npm:^1.30.0":
   version: 1.30.0
   resolution: "playwright-core@npm:1.30.0"
   bin:
     playwright: cli.js
   checksum: 4c5693f27245a1168f94708ecd8e1eb0d200de435b25cc07cfa25b97a094633818954dc00baf24e0ff551825f672050b83d1309362c1f97213fe8ebd2a147ed9
+  languageName: node
+  linkType: hard
+
+"playwright-core@npm:>=1.2.0":
+  version: 1.25.2
+  resolution: "playwright-core@npm:1.25.2"
+  bin:
+    playwright: cli.js
+  checksum: 24ada61e2132bd7278cf0aa0ef711280e1519c437efa0088a99c47ef994202f4c9880521d8c0c51ab854bef08806f372477d754aac1e790ea64f18cd346b5b2f
   languageName: node
   linkType: hard
 

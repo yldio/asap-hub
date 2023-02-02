@@ -1781,7 +1781,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@playwright/test",\
-        "npm:1.25.2"\
+        "npm:1.30.0"\
       ],\
       [\
         "@pmmmwh/react-refresh-webpack-plugin",\
@@ -11061,7 +11061,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@asap-hub/e2e-tests", "workspace:apps/e2e-tests"],\
             ["@babel/runtime-corejs3", "npm:7.20.13"],\
-            ["@playwright/test", "npm:1.25.2"],\
+            ["@playwright/test", "npm:1.30.0"],\
             ["@types/node-fetch", "npm:2.5.10"],\
             ["node-fetch", "npm:3.0.0-beta.9"]\
           ],\
@@ -31379,12 +31379,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@playwright/test", [\
-        ["npm:1.25.2", {\
-          "packageLocation": "./.yarn/cache/@playwright-test-npm-1.25.2-8da79c4411-3c24027bd9.zip/node_modules/@playwright/test/",\
+        ["npm:1.30.0", {\
+          "packageLocation": "./.yarn/cache/@playwright-test-npm-1.30.0-79845750cc-777432ac9c.zip/node_modules/@playwright/test/",\
           "packageDependencies": [\
-            ["@playwright/test", "npm:1.25.2"],\
+            ["@playwright/test", "npm:1.30.0"],\
             ["@types/node", "npm:13.11.1"],\
-            ["playwright-core", "npm:1.25.2"]\
+            ["playwright-core", "npm:1.30.0"]\
           ],\
           "linkType": "HARD"\
         }]\

@@ -56,13 +56,14 @@ const ContributingCohortsModal: React.FC<ContributingCohortsModalProps> = ({
   backHref,
   contributingCohorts,
 }) => {
+  const emptyCohort = {
+    name: undefined,
+    role: undefined,
+    contributingCohortId: undefined,
+  };
   const [newCohorts, setCohorts] = useState<
     Partial<gp2.UserContributingCohort>[]
-  >(
-    contributingCohorts.length
-      ? contributingCohorts
-      : [{ name: undefined, role: undefined, contributingCohortId: undefined }],
-  );
+  >(contributingCohorts.length ? contributingCohorts : [emptyCohort]);
   const loadCohortOptions = () => Promise.resolve(['one', 'two']);
 
   const checkDirty = () =>
@@ -87,7 +88,7 @@ const ContributingCohortsModal: React.FC<ContributingCohortsModalProps> = ({
   const onRemove = (index: number) => () =>
     setCohorts(newCohorts.filter((_, idx) => idx !== index));
 
-  const onAdd = () => setCohorts([...newCohorts, { name: undefined }]);
+  const onAdd = () => setCohorts([...newCohorts, emptyCohort]);
   return (
     <EditUserModal
       title="Contributing Cohort Studies"
@@ -112,62 +113,58 @@ const ContributingCohortsModal: React.FC<ContributingCohortsModalProps> = ({
     >
       {({ isSaving }) => (
         <div css={[containerStyles]}>
-          {newCohorts.map((cohort, index) => {
-            const { name, role, studyUrl } = cohort || {};
-
-            return (
-              <div key={`cohort-${index}`}>
-                <div css={headerStyles}>
-                  <Subtitle styleAsHeading={4}>
-                    #{index + 1} Cohort Study
-                  </Subtitle>
-                  {index !== 0 && (
-                    <div css={buttonStyles}>
-                      <Button onClick={onRemove(index)} small>
-                        <span css={css({ display: 'inline-flex' })}>
-                          {binIcon}
-                        </span>
-                      </Button>
-                    </div>
-                  )}
-                </div>
-                <LabeledTypeahead
-                  title="Name"
-                  subtitle={required}
-                  getValidationMessage={() => 'Please add the cohort name'}
-                  enabled={!isSaving}
-                  value={name || ''}
-                  onChange={onChangeValue(index, 'name')}
-                  required
-                  loadOptions={loadCohortOptions}
-                />
-                <LabeledDropdown
-                  title="Role"
-                  subtitle={required}
-                  options={getValues([...gp2.userContributingCohortRole])}
-                  enabled={!isSaving}
-                  value={role || ''}
-                  onChange={onChangeValue(index, 'role')}
-                  required
-                  placeholder={'Select a role'}
-                />
-                <LabeledTextField
-                  title="Link"
-                  subtitle={optional}
-                  enabled={!isSaving}
-                  value={studyUrl || ''}
-                  onChange={onChangeValue(index, 'studyUrl')}
-                  pattern={UrlExpression}
-                  getValidationMessage={() =>
-                    'Please enter a valid URL, starting with http://'
-                  }
-                  labelIndicator={<GlobeIcon />}
-                  placeholder="https://example.com"
-                />
+          {newCohorts.map(({ name, role, studyUrl }, index) => (
+            <div key={`cohort-${index}`}>
+              <div css={headerStyles}>
+                <Subtitle styleAsHeading={4}>
+                  #{index + 1} Cohort Study
+                </Subtitle>
+                {index !== 0 ? (
+                  <div css={buttonStyles}>
+                    <Button onClick={onRemove(index)} small>
+                      <span css={css({ display: 'inline-flex' })}>
+                        {binIcon}
+                      </span>
+                    </Button>
+                  </div>
+                ) : undefined}
               </div>
-            );
-          })}
-          {newCohorts.length < 10 && (
+              <LabeledTypeahead
+                title="Name"
+                subtitle={required}
+                getValidationMessage={() => 'Please add the cohort name'}
+                enabled={!isSaving}
+                value={name || ''}
+                onChange={onChangeValue(index, 'name')}
+                required
+                loadOptions={loadCohortOptions}
+              />
+              <LabeledDropdown
+                title="Role"
+                subtitle={required}
+                options={getValues([...gp2.userContributingCohortRole])}
+                enabled={!isSaving}
+                value={role || ''}
+                onChange={onChangeValue(index, 'role')}
+                required
+                placeholder={'Select a role'}
+              />
+              <LabeledTextField
+                title="Link"
+                subtitle={optional}
+                enabled={!isSaving}
+                value={studyUrl || ''}
+                onChange={onChangeValue(index, 'studyUrl')}
+                pattern={UrlExpression}
+                getValidationMessage={() =>
+                  'Please enter a valid URL, starting with http://'
+                }
+                labelIndicator={<GlobeIcon />}
+                placeholder="https://example.com"
+              />
+            </div>
+          ))}
+          {newCohorts.length < 10 ? (
             <div css={addButtonStyles}>
               <Button onClick={onAdd} enabled={!isSaving} small>
                 <span
@@ -181,7 +178,7 @@ const ContributingCohortsModal: React.FC<ContributingCohortsModalProps> = ({
                 </span>
               </Button>
             </div>
-          )}
+          ) : undefined}
         </div>
       )}
     </EditUserModal>

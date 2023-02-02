@@ -151,7 +151,12 @@ describe('Fetch-user-by-code handler', () => {
       )) as APIGatewayProxyResult;
 
       expect(result.statusCode).toStrictEqual(200);
-      expect(JSON.parse(result.body)).toMatchObject(getUserResponse());
+
+      // Using stringify() in the expected response since the result body
+      // is also using it and undefined properties are removed when running it.
+      const expected = JSON.parse(JSON.stringify(getUserResponse()));
+
+      expect(JSON.parse(result.body)).toMatchObject(expected);
     });
 
     test('should return an algolia API key', async () => {

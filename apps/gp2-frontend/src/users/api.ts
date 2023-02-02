@@ -125,3 +125,20 @@ export const getInstitutions = async ({
   }
   return resp.json();
 };
+export const getContributingCohorts = async (
+  authorization: string,
+): Promise<gp2.ContributingCohortResponse[]> => {
+  const resp = await fetch(`${API_BASE_URL}/contributing-cohorts`, {
+    headers: { authorization, ...createSentryHeaders() },
+  });
+
+  if (!resp.ok) {
+    throw new Error(
+      `Failed to fetch contributing cohorts. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+    );
+  }
+
+  const response = await resp.json();
+
+  return response?.items || [];
+};

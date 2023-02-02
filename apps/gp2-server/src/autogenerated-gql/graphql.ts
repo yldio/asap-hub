@@ -4531,7 +4531,7 @@ export const FetchContributingCohortsDocument = {
                 name: { kind: 'Name', value: 'orderby' },
                 value: {
                   kind: 'StringValue',
-                  value: 'data/created',
+                  value: 'data/name/iv',
                   block: false,
                 },
               },

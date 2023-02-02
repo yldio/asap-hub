@@ -4,7 +4,6 @@ import {
   GlobeIcon,
   LabeledDropdown,
   LabeledTextField,
-  LabeledTypeahead,
   pixels,
   Subtitle,
 } from '@asap-hub/react-components';
@@ -49,12 +48,15 @@ type ContributingCohortsModalProps = Pick<
 > &
   Pick<ComponentProps<typeof EditUserModal>, 'backHref'> & {
     onSave: (userData: gp2.UserPatchRequest) => Promise<void>;
+  } & {
+    cohortOptions: gp2.ContributingCohortResponse[];
   };
 
 const ContributingCohortsModal: React.FC<ContributingCohortsModalProps> = ({
   onSave,
   backHref,
   contributingCohorts,
+  cohortOptions,
 }) => {
   const emptyCohort = {
     name: undefined,
@@ -64,7 +66,6 @@ const ContributingCohortsModal: React.FC<ContributingCohortsModalProps> = ({
   const [newCohorts, setCohorts] = useState<
     Partial<gp2.UserContributingCohort>[]
   >(contributingCohorts.length ? contributingCohorts : [emptyCohort]);
-  const loadCohortOptions = () => Promise.resolve(['one', 'two']);
 
   const checkDirty = () =>
     newCohorts.some(
@@ -113,7 +114,7 @@ const ContributingCohortsModal: React.FC<ContributingCohortsModalProps> = ({
     >
       {({ isSaving }) => (
         <div css={[containerStyles]}>
-          {newCohorts.map(({ name, role, studyUrl }, index) => (
+          {newCohorts.map(({ contributingCohortId, role, studyUrl }, index) => (
             <div key={`cohort-${index}`}>
               <div css={headerStyles}>
                 <Subtitle styleAsHeading={4}>
@@ -129,15 +130,18 @@ const ContributingCohortsModal: React.FC<ContributingCohortsModalProps> = ({
                   </div>
                 ) : undefined}
               </div>
-              <LabeledTypeahead
+              <LabeledDropdown
                 title="Name"
                 subtitle={required}
                 getValidationMessage={() => 'Please add the cohort name'}
                 enabled={!isSaving}
-                value={name || ''}
-                onChange={onChangeValue(index, 'name')}
+                value={contributingCohortId || ''}
+                onChange={onChangeValue(index, 'contributingCohortId')}
                 required
-                loadOptions={loadCohortOptions}
+                options={cohortOptions.map(({ id, name }) => ({
+                  label: name,
+                  value: id,
+                }))}
               />
               <LabeledDropdown
                 title="Role"

@@ -24,6 +24,7 @@ describe('ContributingCohortsModal', () => {
     ...gp2Fixtures.createUserResponse(),
     backHref: '',
     onSave: jest.fn(),
+    cohortOptions: [],
   };
 
   const renderContributingCohorts = (

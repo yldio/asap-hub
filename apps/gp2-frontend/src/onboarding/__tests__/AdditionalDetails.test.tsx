@@ -1,6 +1,7 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import {
   render,
   waitForElementToBeRemoved,
@@ -13,7 +14,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getUser, patchUser } from '../../users/api';
+import { getUser, getContributingCohorts, patchUser } from '../../users/api';
 import { refreshUserState } from '../../users/state';
 import AdditionalDetails from '../AdditionalDetails';
 
@@ -52,12 +53,23 @@ const renderAdditionalDetails = async (id: string) => {
 };
 describe('AdditionalDetails', () => {
   beforeEach(jest.resetAllMocks);
+  const contributingCohortResponse: gp2Model.ContributingCohortResponse[] = [
+    { id: '7', name: 'AGPDS' },
+    { id: '11', name: 'S3' },
+  ];
   const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
   const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
+  const mockGetContributingCohorts =
+    getContributingCohorts as jest.MockedFunction<
+      typeof getContributingCohorts
+    >;
 
   it('renders questions, funding providers, contributing cohorts and external profiles', async () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
+    mockGetContributingCohorts.mockResolvedValueOnce(
+      contributingCohortResponse,
+    );
     await renderAdditionalDetails(user.id);
     expect(
       screen.getByRole('heading', { name: 'Open Questions' }),
@@ -75,6 +87,9 @@ describe('AdditionalDetails', () => {
 
   it('renders not found if no user is returned', async () => {
     mockGetUser.mockResolvedValueOnce(undefined);
+    mockGetContributingCohorts.mockResolvedValueOnce(
+      contributingCohortResponse,
+    );
     await renderAdditionalDetails('unknown-id');
     expect(
       screen.getByRole('heading', {

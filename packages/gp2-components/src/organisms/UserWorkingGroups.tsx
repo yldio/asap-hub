@@ -65,7 +65,7 @@ const UserWorkingGroups: React.FC<UserWorkingGroupsProps> = ({
           );
 
           return {
-            id,
+            id: workingGroupId,
             values: [name, role, numberOfMembers],
           };
         })}

@@ -130,7 +130,7 @@
     "@types/stream-json": "1.7.3",
     "@types/supertest": "2.0.12",
     "@types/uuid": "8.3.4",
-    "@types/yargs": "17.0.5",
+    "@types/yargs": "17.0.22",
     "babel-loader": "8.2.5",
     "copy-webpack-plugin": "9.1.0",
     "graphql-typescript-integration": "1.2.1",
@@ -143,7 +143,7 @@
     "serverless-webpack": "5.11.0",
     "stream-json": "1.7.5",
     "supertest": "6.3.3",
-    "yargs": "17.3.1"
+    "yargs": "17.6.2"
   },
   "serverless-webpack": {
     "unplugged": true

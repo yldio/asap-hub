@@ -53506,7 +53506,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["expect-playwright", "npm:0.8.0"],\
             ["jest", null],\
             ["jest-circus", null],\
-            ["jest-environment-node", null],\
+            ["jest-environment-node", "npm:29.4.1"],\
             ["jest-process-manager", "npm:0.3.1"],\
             ["jest-runner", null],\
             ["nyc", "npm:15.1.0"],\
@@ -53520,7 +53520,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             "@types/jest-runner",\
             "@types/jest",\
             "jest-circus",\
-            "jest-environment-node",\
             "jest-runner",\
             "jest"\
           ],\
@@ -53537,7 +53536,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["expect-playwright", "npm:0.8.0"],\
             ["jest", null],\
             ["jest-circus", null],\
-            ["jest-environment-node", null],\
+            ["jest-environment-node", "npm:29.4.1"],\
             ["jest-process-manager", "npm:0.3.1"],\
             ["jest-runner", null],\
             ["nyc", "npm:15.1.0"],\
@@ -53551,7 +53550,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             "@types/jest-runner",\
             "@types/jest",\
             "jest-circus",\
-            "jest-environment-node",\
             "jest-runner",\
             "jest"\
           ],\

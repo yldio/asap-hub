@@ -28213,6 +28213,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jest-environment-node@npm:*, jest-environment-node@npm:^29.4.1":
+  version: 29.4.1
+  resolution: "jest-environment-node@npm:29.4.1"
+  dependencies:
+    "@jest/environment": ^29.4.1
+    "@jest/fake-timers": ^29.4.1
+    "@jest/types": ^29.4.1
+    "@types/node": "*"
+    jest-mock: ^29.4.1
+    jest-util: ^29.4.1
+  checksum: 1de024edbc8a281b2c54d379d649a2d63e153049848c257be4118eaa5136cc4943a32f3ce44841ca2356e18850ab51f833cb94509f268e25ebcd32c6bfac27a3
+  languageName: node
+  linkType: hard
+
 "jest-environment-node@npm:^27.5.1":
   version: 27.5.1
   resolution: "jest-environment-node@npm:27.5.1"
@@ -28224,20 +28238,6 @@ __metadata:
     jest-mock: ^27.5.1
     jest-util: ^27.5.1
   checksum: 0f988330c4f3eec092e3fb37ea753b0c6f702e83cd8f4d770af9c2bf964a70bc45fbd34ec6fdb6d71ce98a778d9f54afd673e63f222e4667fff289e8069dba39
-  languageName: node
-  linkType: hard
-
-"jest-environment-node@npm:^29.4.1":
-  version: 29.4.1
-  resolution: "jest-environment-node@npm:29.4.1"
-  dependencies:
-    "@jest/environment": ^29.4.1
-    "@jest/fake-timers": ^29.4.1
-    "@jest/types": ^29.4.1
-    "@types/node": "*"
-    jest-mock: ^29.4.1
-    jest-util: ^29.4.1
-  checksum: 1de024edbc8a281b2c54d379d649a2d63e153049848c257be4118eaa5136cc4943a32f3ce44841ca2356e18850ab51f833cb94509f268e25ebcd32c6bfac27a3
   languageName: node
   linkType: hard
 

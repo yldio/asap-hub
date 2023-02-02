@@ -57,7 +57,7 @@ export const inviteHandlerFactory =
     try {
       await userClient.patch(user.id, {
         connections: {
-          iv: [{ code: newCode }],
+          iv: [...(user.data.connections.iv || []), { code: newCode }],
         },
       });
     } catch (error) {

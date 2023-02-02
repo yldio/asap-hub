@@ -16,7 +16,7 @@ describe('FundingProviderModal', () => {
     onSave: jest.fn(),
   };
 
-  const renderContactInformation = (
+  const renderFundingProvider = (
     overrides: Partial<FundingProviderModalProps> = {},
   ) =>
     render(<FundingProviderModal {...defaultProps} {...overrides} />, {
@@ -24,14 +24,14 @@ describe('FundingProviderModal', () => {
     });
 
   it('renders a dialog with the right title', () => {
-    renderContactInformation();
+    renderFundingProvider();
     expect(screen.getByRole('dialog')).toContainElement(
       screen.getByRole('heading', { name: 'Funding Providers' }),
     );
   });
 
   it('renders funding providers', () => {
-    renderContactInformation();
+    renderFundingProvider();
     expect(
       screen.getByRole('textbox', {
         name: 'Funding Names (optional)',
@@ -42,7 +42,7 @@ describe('FundingProviderModal', () => {
   it('calls onSave with the right arguments', async () => {
     const onSave = jest.fn();
     const fundingStreams = 'Funding Providers';
-    renderContactInformation({
+    renderFundingProvider({
       fundingStreams,
       onSave,
     });
@@ -56,7 +56,7 @@ describe('FundingProviderModal', () => {
   it('calls onSave with the updated fields', async () => {
     const onSave = jest.fn();
     const fundingStreams = 'Funding Providers';
-    renderContactInformation({
+    renderFundingProvider({
       fundingStreams: '',
       onSave,
     });

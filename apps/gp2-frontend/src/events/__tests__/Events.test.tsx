@@ -15,8 +15,8 @@ const renderEvents = async () => {
       <Suspense fallback="loading">
         <Auth0Provider user={{ role: 'Administrator' }}>
           <WhenReady>
-            <MemoryRouter initialEntries={['/users/']}>
-              <Route path="/users">
+            <MemoryRouter initialEntries={['/events']}>
+              <Route path="/events">
                 <Events />
               </Route>
             </MemoryRouter>

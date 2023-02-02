@@ -257,10 +257,21 @@ export const getUserCreateDataObject = (): gp2.UserCreateDataObject => {
   const {
     id: _id,
     createdDate: _createdDate,
+    contributingCohorts,
     ...userCreateDataObject
   } = getUserDataObject();
 
-  return userCreateDataObject;
+  return {
+    ...userCreateDataObject,
+
+    contributingCohorts: contributingCohorts.map(
+      ({ contributingCohortId, role, studyUrl }) => ({
+        contributingCohortId,
+        role,
+        studyUrl,
+      }),
+    ),
+  };
 };
 
 export const getUserInput = (): gp2Squidex.InputUser['data'] => {
@@ -294,11 +305,10 @@ export const getUserInput = (): gp2Squidex.InputUser['data'] => {
     fundingStreams: { iv: fundingStreams || '' },
     contributingCohorts: {
       iv: contributingCohorts.map(
-        ({ contributingCohortId, role, studyUrl, name }) => ({
+        ({ contributingCohortId, role, studyUrl }) => ({
           id: [contributingCohortId],
           role,
           study: studyUrl || '',
-          name,
         }),
       ),
     },

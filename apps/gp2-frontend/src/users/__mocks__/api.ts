@@ -15,10 +15,7 @@ export const getUser = jest.fn(
 );
 
 export const patchUser = jest.fn(
-  async (
-    id: string,
-    patch: gp2.UserPatchRequest,
-  ): Promise<gp2.UserResponse> => ({
+  async (id: string, patch: gp2.UserResponse): Promise<gp2.UserResponse> => ({
     ...gp2Fixtures.createUserResponse(),
     ...patch,
     id,

@@ -59,9 +59,9 @@ const ContributingCohortsModal: React.FC<ContributingCohortsModalProps> = ({
   cohortOptions,
 }) => {
   const emptyCohort = {
-    name: undefined,
     role: undefined,
     contributingCohortId: undefined,
+    studyUrl: undefined,
   };
   const [newCohorts, setCohorts] = useState<
     Partial<gp2.UserContributingCohort>[]
@@ -98,10 +98,12 @@ const ContributingCohortsModal: React.FC<ContributingCohortsModalProps> = ({
         const isCohort = (
           cohort: Partial<gp2.UserContributingCohort>,
         ): cohort is gp2.UserContributingCohort =>
-          !!cohort.name && !!cohort.contributingCohortId && !!cohort.role;
+          !!cohort.contributingCohortId && !!cohort.role;
 
-        const cleanCohorts = newCohorts.reduce(
-          (acc: gp2.UserContributingCohort[], cohort) =>
+        const cleanCohorts = newCohorts.reduce<
+          NonNullable<gp2.UserPatchRequest['contributingCohorts']>
+        >(
+          (acc, { name: _name, ...cohort }) =>
             isCohort(cohort) ? [...acc, cohort] : acc,
           [],
         );

@@ -856,14 +856,12 @@ describe('User data provider', () => {
       'Should update the contributing cohort role $role => $expected',
       async ({ role, expected }) => {
         const id = '42';
-        const name = 'a name';
         nock(baseUrl)
           .patch(`/api/content/${appName}/users/${userId}`, {
             contributingCohorts: {
               iv: [
                 {
                   id: [id],
-                  name,
                   role: expected,
                 },
               ],
@@ -872,7 +870,7 @@ describe('User data provider', () => {
           .reply(200, fetchUserResponse());
         expect(
           await userDataProvider.update(userId, {
-            contributingCohorts: [{ contributingCohortId: id, name, role }],
+            contributingCohorts: [{ contributingCohortId: id, role }],
           }),
         ).not.toBeDefined();
         expect(nock.isDone()).toBe(true);
@@ -996,7 +994,6 @@ describe('User data provider', () => {
       async ({ role, expected }) => {
         const userCreateDataObject = getUserCreateDataObject();
         const id = '42';
-        const name = 'a name';
         nock(baseUrl)
           .post(`/api/content/${appName}/users?publish=true`, {
             ...getUserInput(),
@@ -1004,7 +1001,6 @@ describe('User data provider', () => {
               iv: [
                 {
                   id: [id],
-                  name,
                   role: expected,
                 },
               ],
@@ -1013,7 +1009,7 @@ describe('User data provider', () => {
           .reply(200, fetchUserResponse());
         await userDataProvider.create({
           ...userCreateDataObject,
-          contributingCohorts: [{ contributingCohortId: id, name, role }],
+          contributingCohorts: [{ contributingCohortId: id, role }],
         });
       },
     );

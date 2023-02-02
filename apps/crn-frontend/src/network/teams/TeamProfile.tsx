@@ -107,7 +107,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
                   </Frame>
                 </Route>
                 <Route path={path + route({ teamId }).outputs.template}>
-                  <SearchFrame title="outputs">
+                  <SearchFrame title="Outputs">
                     <Outputs team={team} />
                   </SearchFrame>
                 </Route>

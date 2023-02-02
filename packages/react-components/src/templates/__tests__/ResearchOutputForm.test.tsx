@@ -3,7 +3,6 @@ import { ComponentProps } from 'react';
 import { StaticRouter, Router } from 'react-router-dom';
 import {
   createResearchOutputResponse,
-  createTeamResponse,
   createUserResponse,
   researchTagEnvironmentResponse,
   researchTagMethodResponse,
@@ -14,6 +13,7 @@ import {
   ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
+  researchOutputDocumentTypeToType,
   ResearchOutputType,
   ResearchTagResponse,
 } from '@asap-hub/model';
@@ -26,66 +26,35 @@ import {
   within,
 } from '@testing-library/react';
 import { createMemoryHistory, History } from 'history';
-import ResearchOutputTeamForm from '../ResearchOutputTeamForm';
+import ResearchOutputForm from '../ResearchOutputForm';
 import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 import { createIdentifierField } from '../../utils/research-output-form';
 
-const props: ComponentProps<typeof ResearchOutputTeamForm> = {
+const props: ComponentProps<typeof ResearchOutputForm> = {
   onSave: jest.fn(() => Promise.resolve()),
   tagSuggestions: [],
   researchTags: [],
   documentType: 'Article',
-  team: createTeamResponse(),
-  isEditMode: false,
+  selectedTeams: [],
+  typeOptions: Array.from(researchOutputDocumentTypeToType.Article.values()),
 };
 
 jest.setTimeout(60000);
 
-it('renders the research output header', () => {
+it('sets authors to required', () => {
   render(
     <StaticRouter>
-      <ResearchOutputTeamForm {...props} />
+      <ResearchOutputForm {...props} authorsRequired={false} />
     </StaticRouter>,
   );
-  expect(screen.getByRole('heading', { name: /Share/i })).toBeInTheDocument();
-});
-
-it('renders the correct subtitles for publishing entity team', () => {
-  render(
-    <StaticRouter>
-      <ResearchOutputTeamForm
-        {...props}
-        publishingEntity="Team"
-        documentType="Article"
-      />
-    </StaticRouter>,
-  );
-
-  expect(
-    screen.getByText('Select the option that applies to this article.'),
-  ).toBeVisible();
   expect(
     screen.getByRole('textbox', { name: 'Authors (optional)' }),
   ).toBeVisible();
-});
-
-it('renders the correct subtitles for publishing entity working group', () => {
   render(
     <StaticRouter>
-      <ResearchOutputTeamForm
-        {...props}
-        publishingEntity="Working Group"
-        documentType="Article"
-      />
+      <ResearchOutputForm {...props} authorsRequired={true} />
     </StaticRouter>,
   );
-
-  expect(
-    screen.getByText('Select the type that matches your output the best.'),
-  ).toBeVisible();
-  expect(
-    screen.getByText('Add an abstract or a summary that describes this work.'),
-  ).toBeVisible();
   expect(
     screen.getByRole('textbox', { name: 'Authors (required)' }),
   ).toBeVisible();
@@ -114,7 +83,7 @@ describe('createIdentifierField', () => {
 it('renders the form', async () => {
   render(
     <StaticRouter>
-      <ResearchOutputTeamForm {...props} />
+      <ResearchOutputForm {...props} />
     </StaticRouter>,
   );
   expect(
@@ -126,10 +95,9 @@ it('renders the form', async () => {
 it('renders the edit form button when research output data is present', async () => {
   render(
     <StaticRouter>
-      <ResearchOutputTeamForm
+      <ResearchOutputForm
         {...props}
         researchOutputData={createResearchOutputResponse()}
-        isEditMode
       />
     </StaticRouter>,
   );
@@ -137,7 +105,7 @@ it('renders the edit form button when research output data is present', async ()
   expect(screen.getByRole('button', { name: /Save/i })).toBeVisible();
 });
 
-it('renders the edit form with fields from researchOutputData prepopulated', async () => {
+it('pre populates the form with provided backend response', async () => {
   const researchOutputData = {
     ...createResearchOutputResponse(),
     title: 'test title',
@@ -145,12 +113,6 @@ it('renders the edit form with fields from researchOutputData prepopulated', asy
     description: 'test description',
     type: 'Genetic Data - DNA' as ResearchOutputType,
     tags: ['testAddedTag'],
-    teams: [
-      {
-        id: 'team1',
-        displayName: 'Team 1',
-      },
-    ],
     labs: [
       {
         id: 'lab1',
@@ -160,11 +122,11 @@ it('renders the edit form with fields from researchOutputData prepopulated', asy
   };
   await render(
     <StaticRouter>
-      <ResearchOutputTeamForm
+      <ResearchOutputForm
         {...props}
         documentType={'Dataset'}
+        typeOptions={Array.from(researchOutputDocumentTypeToType.Dataset)}
         researchOutputData={researchOutputData}
-        isEditMode
       />
     </StaticRouter>,
   );
@@ -176,20 +138,30 @@ it('renders the edit form with fields from researchOutputData prepopulated', asy
   expect(
     screen.getByText(researchOutputData.authors[0].displayName),
   ).toBeVisible();
-  expect(
-    screen.getByText(researchOutputData.teams[0].displayName),
-  ).toBeVisible();
+
   expect(screen.getByText(researchOutputData.tags[0])).toBeVisible();
   expect(screen.getByText(researchOutputData.labs[0].name)).toBeVisible();
 
   expect(screen.getByRole('button', { name: /Save/i })).toBeVisible();
 });
 
-it('displays proper message when no author is found', async () => {
+it('displays selected teams', async () => {
+  await render(
+    <StaticRouter>
+      <ResearchOutputForm
+        {...props}
+        selectedTeams={[{ label: 'Team 1', value: 'abc123' }]}
+      />
+    </StaticRouter>,
+  );
+  expect(screen.getByText('Team 1')).toBeVisible();
+});
+
+it('displays error message when no author is found', async () => {
   const getAuthorSuggestions = jest.fn().mockResolvedValue([]);
   render(
     <StaticRouter>
-      <ResearchOutputTeamForm
+      <ResearchOutputForm
         {...props}
         getAuthorSuggestions={getAuthorSuggestions}
       />
@@ -201,14 +173,11 @@ it('displays proper message when no author is found', async () => {
   expect(screen.getByText(/Sorry, no authors match/i)).toBeVisible();
 });
 
-it('displays proper message when no lab is found', async () => {
+it('displays error message when no lab is found', async () => {
   const getLabSuggestions = jest.fn().mockResolvedValue([]);
   render(
     <StaticRouter>
-      <ResearchOutputTeamForm
-        {...props}
-        getLabSuggestions={getLabSuggestions}
-      />
+      <ResearchOutputForm {...props} getLabSuggestions={getLabSuggestions} />
     </StaticRouter>,
   );
   userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
@@ -219,9 +188,9 @@ it('displays proper message when no lab is found', async () => {
 it('displays current team within the form', async () => {
   render(
     <StaticRouter>
-      <ResearchOutputTeamForm
+      <ResearchOutputForm
         {...props}
-        team={{ ...createTeamResponse(), displayName: 'example team' }}
+        selectedTeams={[{ label: 'example team', value: 'id' }]}
       />
     </StaticRouter>,
   );
@@ -246,7 +215,7 @@ describe('on submit', () => {
     jest.resetAllMocks();
   });
 
-  const expectedRequest: ResearchOutputPostRequest = {
+  const expectedRequest: Omit<ResearchOutputPostRequest, 'publishingEntity'> = {
     documentType: 'Article',
     doi: '10.1234',
     tags: [],
@@ -262,7 +231,6 @@ describe('on submit', () => {
     organisms: [],
     environments: [],
     usageNotes: '',
-    publishingEntity: 'Team',
     workingGroups: [],
   };
   type Data = Pick<
@@ -282,9 +250,7 @@ describe('on submit', () => {
       researchTags = [{ id: '1', name: 'research tag 1' }],
     }: {
       data?: Data;
-      documentType?: ComponentProps<
-        typeof ResearchOutputTeamForm
-      >['documentType'];
+      documentType?: ComponentProps<typeof ResearchOutputForm>['documentType'];
       researchTags?: ResearchTagResponse[];
     } = {
       data: {
@@ -299,10 +265,13 @@ describe('on submit', () => {
   ) => {
     render(
       <Router history={history}>
-        <ResearchOutputTeamForm
+        <ResearchOutputForm
           {...props}
-          team={{ ...createTeamResponse(), id: 'TEAMID' }}
+          selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
           documentType={documentType}
+          typeOptions={Array.from(
+            researchOutputDocumentTypeToType[documentType],
+          )}
           onSave={saveFn}
           getLabSuggestions={getLabSuggestions}
           getAuthorSuggestions={getAuthorSuggestions}

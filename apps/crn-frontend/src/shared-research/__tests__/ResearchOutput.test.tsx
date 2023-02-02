@@ -13,6 +13,7 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
+import { User } from '@asap-hub/auth';
 
 import ResearchOutput from '../ResearchOutput';
 import { getResearchOutput } from '../api';
@@ -21,6 +22,7 @@ import { refreshResearchOutputState } from '../state';
 jest.setTimeout(30000);
 jest.mock('../../network/teams/api');
 jest.mock('../../network/users/api');
+jest.mock('../../network/working-groups/api');
 jest.mock('../api');
 
 const id = '42';
@@ -45,7 +47,7 @@ const teams: UserTeam[] = [
   },
 ];
 
-const user = {
+const defaultUser: User = {
   ...createUserResponse({}, 1),
   teams,
   algoliaApiKey: 'algolia-mock-key',
@@ -55,7 +57,7 @@ const researchOutputRoute = sharedResearch({}).researchOutput({
   researchOutputId: id,
 });
 
-const renderComponent = async (path: string) => {
+const renderComponent = async (path: string, user = defaultUser) => {
   const result = render(
     <RecoilRoot
       initializeState={({ set }) =>
@@ -182,6 +184,32 @@ describe('a not-grant-document research output', () => {
     expect(getByText(/Example Tag/i)).toBeVisible();
     expect(getByRole('heading', { level: 1 }).textContent).toEqual(
       'Not-Grant-Document title!',
+    );
+  });
+});
+
+describe('a working group research output', () => {
+  it('renders a working group research output form for ASAP Staff', async () => {
+    mockGetResearchOutput.mockResolvedValue({
+      ...createResearchOutputResponse(),
+      documentType: 'Article',
+      publishingEntity: 'Working Group',
+      workingGroups: [{ title: 'Example Working Group', id: 'abc123' }],
+    });
+    const { getByRole } = await renderComponent(
+      researchOutputRoute.editResearchOutput({}).$,
+      {
+        ...defaultUser,
+        teams: [
+          {
+            id: 'any',
+            role: 'ASAP Staff',
+          },
+        ],
+      },
+    );
+    expect(getByRole('heading', { level: 1 }).textContent).toEqual(
+      'Share a Working Group Article',
     );
   });
 });

@@ -113,14 +113,14 @@ export const ResearchOutputIdentifier: React.FC<
 
   const infoText = getIdentifierInfoMessage(identifiers);
   const onChangeIdentifierType = useCallback(
-    (newType: string) => {
+    (newType: ResearchOutputIdentifierType) => {
       if (
         newType === undefined ||
         identifiers.find(
           (availableIdentifier) => availableIdentifier.value === newType,
         )
       ) {
-        setIdentifierType(newType as ResearchOutputIdentifierType);
+        setIdentifierType(newType);
       }
       setIdentifier('');
     },

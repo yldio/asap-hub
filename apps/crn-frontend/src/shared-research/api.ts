@@ -43,6 +43,7 @@ export const researchOutputDocumentTypeFilters: Record<
   Bioinformatics: { filter: 'documentType:Bioinformatics' },
   'Lab Resource': { filter: 'documentType:"Lab Resource"' },
   Article: { filter: 'documentType:Article' },
+  Report: { filter: 'documentType:Report' },
 };
 
 export const getTypeFilters = (filters: Set<string>): string =>

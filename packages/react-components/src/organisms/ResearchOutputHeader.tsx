@@ -43,6 +43,8 @@ const headerCopy = (
   switch (outputDocumentType) {
     case 'Article':
       return 'Share a Working Group Article';
+    case 'Report':
+      return 'Share a Working Group CRN Report';
     default:
       return 'Share a Working Group Resource';
   }
@@ -99,6 +101,14 @@ const SubheaderCopy: React.FC<{
       );
     case 'Article':
       return <>Share your preprint or published article on the Hub.</>;
+    case 'Report':
+      return (
+        <>
+          If possible, please add your CRN report (for example, survey and table
+          summaries, CRN guidelines, etc.) to the working group google folder
+          before sharing on the Hub.
+        </>
+      );
     default:
       return null;
   }
@@ -106,12 +116,12 @@ const SubheaderCopy: React.FC<{
 
 type ResearchOutputHeaderProps = {
   documentType: ResearchOutputDocumentType;
-  publishingEntity?: ResearchOutputPublishingEntities;
+  publishingEntity: ResearchOutputPublishingEntities;
 };
 
 const ResearchOutputHeader: React.FC<ResearchOutputHeaderProps> = ({
   documentType,
-  publishingEntity = 'Team',
+  publishingEntity,
 }) => (
   <header>
     <div css={visualHeaderStyles}>

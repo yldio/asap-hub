@@ -22,7 +22,6 @@ const commonProps: ComponentProps<typeof ResearchOutputExtraInformationCard> = {
     value: suggestion,
   })),
   researchTags: researchTagsResponse,
-  type: 'Protein Data',
   documentType: select('type', researchOutputDocumentTypes, 'Article'),
 };
 

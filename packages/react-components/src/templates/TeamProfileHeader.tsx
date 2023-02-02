@@ -182,26 +182,30 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
             >
               {{
                 item: <>{article} Article</>,
-                href: route.createOutput({ outputDocumentType: 'article' }).$,
+                href: route.createOutput({ teamOutputDocumentType: 'article' })
+                  .$,
               }}
               {{
                 item: <>{bioinformatics} Bioinformatics</>,
                 href: route.createOutput({
-                  outputDocumentType: 'bioinformatics',
+                  teamOutputDocumentType: 'bioinformatics',
                 }).$,
               }}
               {{
                 item: <>{dataset} Dataset</>,
-                href: route.createOutput({ outputDocumentType: 'dataset' }).$,
-              }}
-              {{
-                item: <>{labResource} Lab Resource</>,
-                href: route.createOutput({ outputDocumentType: 'lab-resource' })
+                href: route.createOutput({ teamOutputDocumentType: 'dataset' })
                   .$,
               }}
               {{
+                item: <>{labResource} Lab Resource</>,
+                href: route.createOutput({
+                  teamOutputDocumentType: 'lab-resource',
+                }).$,
+              }}
+              {{
                 item: <>{protocol} Protocol</>,
-                href: route.createOutput({ outputDocumentType: 'protocol' }).$,
+                href: route.createOutput({ teamOutputDocumentType: 'protocol' })
+                  .$,
               }}
             </DropdownButton>
           </div>

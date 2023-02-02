@@ -1,5 +1,4 @@
 import {
-  ResearchOutputDocumentType,
   ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
   ResearchTagResponse,
@@ -33,14 +32,12 @@ type ResearchOutputExtraInformationProps = Pick<
   >;
   onChangeTags?: (values: string[]) => void;
   onChangeUsageNotes?: (value: string) => void;
-  onChangeLabCatalogNumber?: (value: string) => void;
   onChangeMethods?: (value: string[]) => void;
   onChangeOrganisms?: (value: string[]) => void;
   onChangeEnvironments?: (value: string[]) => void;
+  onChangeLabCatalogNumber?: (value: string) => void;
   isSaving: boolean;
-  documentType: ResearchOutputDocumentType;
   researchTags: ResearchTagResponse[];
-  type: ResearchOutputPostRequest['type'] | '';
 } & Omit<ResearchOutputIdentifierProps, 'required'>;
 
 const ResearchOutputExtraInformationCard: React.FC<
@@ -150,33 +147,36 @@ const ResearchOutputExtraInformationCard: React.FC<
       <Link href={mailToSupport({ subject: 'New keyword' }).toString()}>
         Ask ASAP to add a new keyword
       </Link>
-
-      <ResearchOutputIdentifier
-        documentType={documentType}
-        identifier={identifier}
-        setIdentifier={setIdentifier}
-        identifierType={identifierType}
-        setIdentifierType={setIdentifierType}
-      />
-      {documentType === 'Lab Resource' && (
-        <LabeledTextField
-          title="Catalog Number (Vendor/Lab)"
-          subtitle="(optional)"
-          description="Catalog number and vendor used to identify resource"
-          onChange={onChangeLabCatalogNumber}
-          placeholder="Catalog number and vendor e.g. AB123 (Abcam)"
-          enabled={!isSaving}
-          value={labCatalogNumber || ''}
-        />
+      {documentType !== 'Report' && (
+        <>
+          <ResearchOutputIdentifier
+            documentType={documentType}
+            identifier={identifier}
+            setIdentifier={setIdentifier}
+            identifierType={identifierType}
+            setIdentifierType={setIdentifierType}
+          />
+          {documentType === 'Lab Resource' && (
+            <LabeledTextField
+              title="Catalog Number (Vendor/Lab)"
+              subtitle="(optional)"
+              description="Catalog number and vendor used to identify resource"
+              onChange={onChangeLabCatalogNumber}
+              placeholder="Catalog number and vendor e.g. AB123 (Abcam)"
+              enabled={!isSaving}
+              value={labCatalogNumber || ''}
+            />
+          )}
+          <LabeledTextArea
+            title="Usage Notes"
+            subtitle="(optional)"
+            onChange={onChangeUsageNotes}
+            placeholder="E.g. To access the output, you will first need to create an account on..."
+            enabled={!isSaving}
+            value={usageNotes || ''}
+          />
+        </>
       )}
-      <LabeledTextArea
-        title="Usage Notes"
-        subtitle="(optional)"
-        onChange={onChangeUsageNotes}
-        placeholder="E.g. To access the output, you will first need to create an account on..."
-        enabled={!isSaving}
-        value={usageNotes || ''}
-      />
     </FormCard>
   );
 };

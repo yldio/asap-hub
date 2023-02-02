@@ -1,20 +1,20 @@
 import {
   createResearchOutputResponse,
-  createTeamResponse,
   createUserResponse,
   researchTagMethodResponse,
 } from '@asap-hub/fixtures';
-import { ResearchOutputTeamForm } from '@asap-hub/react-components';
+import { researchOutputDocumentTypeToType } from '@asap-hub/model';
+import { ResearchOutputForm } from '@asap-hub/react-components';
 import { StaticRouter } from 'react-router-dom';
 
 export default {
-  title: 'Templates / Team Profile / Team Create Output Page',
-  component: ResearchOutputTeamForm,
+  title: 'Templates / Research Output Form',
+  component: ResearchOutputForm,
 };
 
 export const Normal = () => (
   <StaticRouter>
-    <ResearchOutputTeamForm
+    <ResearchOutputForm
       onSave={() => Promise.resolve()}
       tagSuggestions={['A53T', 'Activity assay']}
       documentType="Article"
@@ -34,7 +34,8 @@ export const Normal = () => (
           }, 1000);
         })
       }
-      team={createTeamResponse()}
+      selectedTeams={[]}
+      typeOptions={Array.from(researchOutputDocumentTypeToType.Article)}
       getTeamSuggestions={() =>
         new Promise((resolve) => {
           setTimeout(() => {
@@ -43,7 +44,6 @@ export const Normal = () => (
         })
       }
       researchTags={[researchTagMethodResponse]}
-      isEditMode={false}
     />
   </StaticRouter>
 );
@@ -54,7 +54,7 @@ const researchOutputData = {
 };
 export const EditMode = () => (
   <StaticRouter>
-    <ResearchOutputTeamForm
+    <ResearchOutputForm
       researchOutputData={researchOutputData}
       onSave={() => Promise.resolve()}
       tagSuggestions={['A53T', 'Activity assay']}
@@ -75,7 +75,8 @@ export const EditMode = () => (
           }, 1000);
         })
       }
-      team={createTeamResponse()}
+      selectedTeams={[]}
+      typeOptions={Array.from(researchOutputDocumentTypeToType.Dataset)}
       getTeamSuggestions={() =>
         new Promise((resolve) => {
           setTimeout(() => {
@@ -84,7 +85,6 @@ export const EditMode = () => (
         })
       }
       researchTags={[researchTagMethodResponse]}
-      isEditMode={true}
     />
   </StaticRouter>
 );

@@ -3,25 +3,23 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import FundingProvidersModal from '../FundingProvidersModal';
+import FundingProviderModal from '../FundingProviderModal';
 
-describe('FundingProvidersModal', () => {
+describe('FundingProviderModal', () => {
   const getSaveButton = () => screen.getByRole('button', { name: 'Save' });
 
   beforeEach(jest.resetAllMocks);
-  type FundingProvidersModalProps = ComponentProps<
-    typeof FundingProvidersModal
-  >;
-  const defaultProps: FundingProvidersModalProps = {
+  type FundingProviderModalProps = ComponentProps<typeof FundingProviderModal>;
+  const defaultProps: FundingProviderModalProps = {
     ...gp2Fixtures.createUserResponse(),
     backHref: '',
     onSave: jest.fn(),
   };
 
   const renderContactInformation = (
-    overrides: Partial<FundingProvidersModalProps> = {},
+    overrides: Partial<FundingProviderModalProps> = {},
   ) =>
-    render(<FundingProvidersModal {...defaultProps} {...overrides} />, {
+    render(<FundingProviderModal {...defaultProps} {...overrides} />, {
       wrapper: MemoryRouter,
     });
 

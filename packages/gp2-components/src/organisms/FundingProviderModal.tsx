@@ -3,24 +3,21 @@ import { LabeledTextArea } from '@asap-hub/react-components';
 import { ComponentProps, useState } from 'react';
 import EditUserModal from './EditUserModal';
 
-type FundingProvidersModalProps = Pick<
-  gp2Model.UserResponse,
-  'fundingStreams'
-> &
+type FundingProviderModalProps = Pick<gp2Model.UserResponse, 'fundingStreams'> &
   Pick<ComponentProps<typeof EditUserModal>, 'backHref'> & {
     onSave: (userData: gp2Model.UserPatchRequest) => Promise<void>;
   };
 
-const FundingProvidersModal: React.FC<FundingProvidersModalProps> = ({
+const FundingProviderModal: React.FC<FundingProviderModalProps> = ({
   fundingStreams,
   backHref,
   onSave,
 }) => {
-  const [newFundingProviders, setNewFundingProviders] = useState(
+  const [newFundingProvider, setNewFundingProvider] = useState(
     fundingStreams || '',
   );
 
-  const checkDirty = () => newFundingProviders !== (fundingStreams || '');
+  const checkDirty = () => newFundingProvider !== (fundingStreams || '');
 
   return (
     <EditUserModal
@@ -30,7 +27,7 @@ const FundingProvidersModal: React.FC<FundingProvidersModalProps> = ({
       }
       onSave={() =>
         onSave({
-          fundingStreams: newFundingProviders,
+          fundingStreams: newFundingProvider,
         })
       }
       backHref={backHref}
@@ -41,8 +38,8 @@ const FundingProvidersModal: React.FC<FundingProvidersModalProps> = ({
           title={'Funding Names'}
           subtitle={'(optional)'}
           maxLength={1000}
-          value={newFundingProviders}
-          onChange={setNewFundingProviders}
+          value={newFundingProvider}
+          onChange={setNewFundingProvider}
           enabled={!isSaving}
           placeholder={
             'Example: University of Plymouth, University Hospitals Plymouth NHS Trust and National Institute of Health Research...'
@@ -53,4 +50,4 @@ const FundingProvidersModal: React.FC<FundingProvidersModalProps> = ({
   );
 };
 
-export default FundingProvidersModal;
+export default FundingProviderModal;

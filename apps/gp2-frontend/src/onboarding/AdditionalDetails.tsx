@@ -1,5 +1,5 @@
 import {
-  FundingProvidersModal,
+  FundingProviderModal,
   OnboardingAdditionalDetails,
 } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
@@ -41,7 +41,7 @@ const AdditionalDetails: React.FC<Record<string, never>> = () => {
         <Route
           path={onboarding({}).additionalDetails({}).editFundingStreams({}).$}
         >
-          <FundingProvidersModal
+          <FundingProviderModal
             {...userData}
             backHref={onboarding({}).additionalDetails({}).$}
             onSave={(patchedUser) => patchUser(patchedUser)}

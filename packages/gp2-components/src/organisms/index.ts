@@ -5,7 +5,7 @@ export { default as EditResourceModal } from './EditResourceModal';
 export { default as EmailSection } from './EmailSection';
 export { default as FiltersModal } from './FiltersModal';
 export { default as FilterPills } from './FilterPills';
-export { default as FundingProvidersModal } from './FundingProvidersModal';
+export { default as FundingProviderModal } from './FundingProviderModal';
 export { default as KeyInformationModal } from './KeyInformationModal';
 export { default as KeywordsModal } from './KeywordsModal';
 export { default as MainNavigation } from './MainNavigation';

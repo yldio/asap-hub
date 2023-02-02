@@ -72,7 +72,7 @@ it('renders default values into text inputs', () => {
       .queryAllByRole('textbox')
       .map((input) => input.getAttribute('value')),
   ).toMatchInlineSnapshot(`
-    Array [
+    [
       "firstName",
       "lastName",
       "",

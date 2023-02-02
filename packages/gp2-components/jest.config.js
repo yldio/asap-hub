@@ -10,7 +10,6 @@ module.exports = {
   testEnvironment: 'jsdom',
 
   transformIgnorePatterns: [
-    ...baseConfig.transformIgnorePatterns,
     '[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|cjs|ts|tsx)$',
     '^.+\\.module\\.(css|sass|scss)$',
   ],

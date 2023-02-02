@@ -22,7 +22,7 @@ it('renders calendar links on modal', () => {
   fireEvent.click(getByRole('button'));
   const items = getAllByRole('link').map((e) => e.getAttribute('href'));
   expect(items).toMatchInlineSnapshot(`
-    Array [
+    [
       "https://calendar.google.com/calendar/r?cid=123",
       "webcal://calendar.google.com/calendar/ical/123/public/basic.ics",
     ]

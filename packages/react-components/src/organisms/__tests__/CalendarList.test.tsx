@@ -56,7 +56,7 @@ it('Correctly generates the subscribe link', () => {
 
   const links = getAllByRole('link').map((e) => e.getAttribute('href'));
   expect(links).toMatchInlineSnapshot(`
-    Array [
+    [
       "https://support.apple.com/en-us/guide/calendar/icl1022/mac",
       "https://support.microsoft.com/en-us/office/import-or-subscribe-to-a-calendar-in-outlook-com-cff1429c-5af6-41ec-a5b4-74f2c278e98c",
     ]

@@ -5,7 +5,6 @@ import {
   parseIFrames,
 } from 'contentful-html-rich-text-converter';
 import { logger } from './logs';
-import { getAssetId } from './assets';
 
 export const clearParsedHtmlOutput = (htmlDocument: Document) => ({
   ...htmlDocument,
@@ -43,8 +42,8 @@ export const convertHtmlToContentfulFormat = (html: string) => {
   logger(`HTML pre-parsed:\n${html}`, 'DEBUG');
   logger(`HTML post-parsed:\n${htmlWithoutDivTag}`, 'DEBUG');
 
-  const parsedHtml = parseHtml(htmlWithoutDivTag, getAssetId) as Document;
-  const inlineAssetBodies = parseAssets(htmlWithoutDivTag, getAssetId);
+  const parsedHtml = parseHtml(htmlWithoutDivTag) as Document;
+  const inlineAssetBodies = parseAssets(htmlWithoutDivTag);
   const inlineIFramesBodies = parseIFrames(htmlWithoutDivTag);
 
   logger(

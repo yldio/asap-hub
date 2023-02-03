@@ -29,7 +29,7 @@ describe('createMediaEntries', () => {
     },
   };
 
-  it('creates media when it does exist on contentful yet', async () => {
+  it('creates media when it does not exist in Contentful yet', async () => {
     const entry = getEntry({ url: mediaURL });
 
     const contenfulErrorResponse = new Error();

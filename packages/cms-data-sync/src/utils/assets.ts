@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 
+import { InlineAssetBody } from 'contentful-html-rich-text-converter';
 import {
   Asset as ContentfulAsset,
-  CreateAssetProps,
   Environment,
   SysLink,
 } from 'contentful-management';
@@ -26,8 +26,6 @@ export const checkIfAssetAlreadyExistsInContentful = async (
     throw error;
   }
 };
-
-export type InlineAssetBody = [id: string, fields: CreateAssetProps];
 
 export const createInlineAssets = async (
   contentfulEnvironment: Environment,

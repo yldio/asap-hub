@@ -445,6 +445,69 @@ export type ImageTransformOptions = {
   width?: InputMaybe<Scalars['Dimension']>;
 };
 
+/** Videos and PDFs [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/media) */
+export type Media = Entry & {
+  contentfulMetadata: ContentfulMetadata;
+  linkedFrom?: Maybe<MediaLinkingCollections>;
+  sys: Sys;
+  url?: Maybe<Scalars['String']>;
+};
+
+/** Videos and PDFs [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/media) */
+export type MediaLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** Videos and PDFs [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/media) */
+export type MediaUrlArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type MediaCollection = {
+  items: Array<Maybe<Media>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type MediaFilter = {
+  AND?: InputMaybe<Array<InputMaybe<MediaFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<MediaFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  sys?: InputMaybe<SysFilter>;
+  url?: InputMaybe<Scalars['String']>;
+  url_contains?: InputMaybe<Scalars['String']>;
+  url_exists?: InputMaybe<Scalars['Boolean']>;
+  url_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  url_not?: InputMaybe<Scalars['String']>;
+  url_not_contains?: InputMaybe<Scalars['String']>;
+  url_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type MediaLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type MediaLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum MediaOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
+}
+
 /** Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/migration) */
 export type Migration = Entry & {
   contentTypeId?: Maybe<Scalars['String']>;
@@ -843,6 +906,8 @@ export type Query = {
   dashboard?: Maybe<Dashboard>;
   dashboardCollection?: Maybe<DashboardCollection>;
   entryCollection?: Maybe<EntryCollection>;
+  media?: Maybe<Media>;
+  mediaCollection?: Maybe<MediaCollection>;
   migration?: Maybe<Migration>;
   migrationCollection?: Maybe<MigrationCollection>;
   news?: Maybe<News>;
@@ -888,6 +953,21 @@ export type QueryEntryCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<EntryFilter>;
+};
+
+export type QueryMediaArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryMediaCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<MediaOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<MediaFilter>;
 };
 
 export type QueryMigrationArgs = {
@@ -999,6 +1079,27 @@ export type FetchDashboardQuery = {
                 text?: Maybe<
                   Pick<NewsText, 'json'> & {
                     links: {
+                      entries: {
+                        inline: Array<
+                          Maybe<
+                            | ({ __typename: 'Dashboard' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                            | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
+                                  sys: Pick<Sys, 'id'>;
+                                })
+                            | ({ __typename: 'Migration' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                            | ({ __typename: 'News' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                            | ({ __typename: 'Pages' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                          >
+                        >;
+                      };
                       assets: {
                         block: Array<
                           Maybe<
@@ -1031,6 +1132,27 @@ export type FetchDashboardQuery = {
                 text?: Maybe<
                   Pick<PagesText, 'json'> & {
                     links: {
+                      entries: {
+                        inline: Array<
+                          Maybe<
+                            | ({ __typename: 'Dashboard' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                            | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
+                                  sys: Pick<Sys, 'id'>;
+                                })
+                            | ({ __typename: 'Migration' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                            | ({ __typename: 'News' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                            | ({ __typename: 'Pages' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                          >
+                        >;
+                      };
                       assets: {
                         block: Array<
                           Maybe<
@@ -1066,6 +1188,19 @@ export type NewsContentFragment = Pick<
   text?: Maybe<
     Pick<NewsText, 'json'> & {
       links: {
+        entries: {
+          inline: Array<
+            Maybe<
+              | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
+                    sys: Pick<Sys, 'id'>;
+                  })
+              | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+            >
+          >;
+        };
         assets: {
           block: Array<
             Maybe<
@@ -1093,6 +1228,19 @@ export type FetchNewsByIdQuery = {
       text?: Maybe<
         Pick<NewsText, 'json'> & {
           links: {
+            entries: {
+              inline: Array<
+                Maybe<
+                  | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
+                        sys: Pick<Sys, 'id'>;
+                      })
+                  | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+                >
+              >;
+            };
             assets: {
               block: Array<
                 Maybe<
@@ -1131,6 +1279,23 @@ export type FetchNewsQuery = {
             text?: Maybe<
               Pick<NewsText, 'json'> & {
                 links: {
+                  entries: {
+                    inline: Array<
+                      Maybe<
+                        | ({ __typename: 'Dashboard' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                        | ({ __typename: 'Migration' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+                      >
+                    >;
+                  };
                   assets: {
                     block: Array<
                       Maybe<
@@ -1163,6 +1328,19 @@ export type PageContentFragment = Pick<
   text?: Maybe<
     Pick<PagesText, 'json'> & {
       links: {
+        entries: {
+          inline: Array<
+            Maybe<
+              | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
+                    sys: Pick<Sys, 'id'>;
+                  })
+              | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+            >
+          >;
+        };
         assets: {
           block: Array<
             Maybe<
@@ -1192,6 +1370,23 @@ export type FetchPagesQuery = {
             text?: Maybe<
               Pick<PagesText, 'json'> & {
                 links: {
+                  entries: {
+                    inline: Array<
+                      Maybe<
+                        | ({ __typename: 'Dashboard' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                        | ({ __typename: 'Migration' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+                      >
+                    >;
+                  };
                   assets: {
                     block: Array<
                       Maybe<
@@ -1271,6 +1466,57 @@ export const NewsContentFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'entries' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'inline' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: '__typename' },
+                                  },
+                                  {
+                                    kind: 'InlineFragment',
+                                    typeCondition: {
+                                      kind: 'NamedType',
+                                      name: { kind: 'Name', value: 'Media' },
+                                    },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'url' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'assets' },
@@ -1378,6 +1624,57 @@ export const PageContentFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'entries' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'inline' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: '__typename' },
+                                  },
+                                  {
+                                    kind: 'InlineFragment',
+                                    typeCondition: {
+                                      kind: 'NamedType',
+                                      name: { kind: 'Name', value: 'Media' },
+                                    },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'url' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'assets' },

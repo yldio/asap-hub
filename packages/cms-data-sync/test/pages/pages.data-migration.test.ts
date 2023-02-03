@@ -43,7 +43,11 @@ describe('Migrate Pages', () => {
     inlineAssetBodies: [],
   });
 
+  const consoleLogRef = console.log;
+
   beforeEach(() => {
+    console.log = jest.fn();
+
     (getSquidexAndContentfulClients as jest.Mock).mockResolvedValueOnce({
       contentfulEnvironment: contentfulEnv,
       squidexGraphqlClient: squidexGraphqlClientMock,
@@ -61,6 +65,10 @@ describe('Migrate Pages', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+  });
+
+  afterAll(() => {
+    console.log = consoleLogRef;
   });
 
   test('Should fetch data from Squidex GraphQl API, parse it and create a record', async () => {

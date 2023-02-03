@@ -164,7 +164,7 @@ describe('Run-migrations Webhook', () => {
       expect(loggerInfoSpy).toBeCalledWith(`Executed and saved 0 migrations`);
     });
 
-    test.only('Should not run the consecutive migrations after one fails to run and only save the ones that have', async () => {
+    test('Should not run the consecutive migrations after one fails to run and only save the ones that have', async () => {
       const loggerInfoSpy = jest.spyOn(pinoLogger, 'info');
       const loggerErrorSpy = jest.spyOn(pinoLogger, 'error');
       mockFSPromises.readdir.mockResolvedValueOnce([

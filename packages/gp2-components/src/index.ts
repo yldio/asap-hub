@@ -21,6 +21,7 @@ export {
   DashboardHeader,
   FilterPills,
   FiltersModal,
+  FundingProviderModal,
   KeyInformationModal,
   KeywordsModal,
   ContactInformationModal,

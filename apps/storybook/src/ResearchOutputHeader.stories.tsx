@@ -5,4 +5,6 @@ export default {
   component: ResearchOutputHeader,
 };
 
-export const Normal = () => <ResearchOutputHeader documentType="Article" />;
+export const Normal = () => (
+  <ResearchOutputHeader publishingEntity="Team" documentType="Article" />
+);

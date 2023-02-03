@@ -38,7 +38,7 @@ describe('Research Output Model', () => {
 
   describe('Publishing Entities', () => {
     it('should map to the correct entity', () => {
-      expect(researchOutputMapPublishingEntity('Working Group')).toEqual(
+      expect(researchOutputMapPublishingEntity('Working_Group')).toEqual(
         'Working Group',
       );
     });

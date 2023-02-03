@@ -1853,10 +1853,12 @@ export type UsersDataContributingCohortsInputDto = {
 };
 
 export enum UsersDataContributingCohortsRoleEnum {
-  /** Contributor */
-  Contributor = 'Contributor',
+  /** Co_Investigator */
+  CoInvestigator = 'Co_Investigator',
   /** Investigator */
   Investigator = 'Investigator',
+  /** Lead_Investigator */
+  LeadInvestigator = 'Lead_Investigator',
 }
 
 /** The structure of the Country field of the Users content type. */
@@ -2597,6 +2599,30 @@ export type WorkingGroupsResultDto = {
   items: Maybe<Array<WorkingGroups>>;
   /** The total count of  contents. */
   total: Scalars['Int'];
+};
+
+export type ContributingCohortsContentFragment = Pick<
+  ContributingCohorts,
+  'id'
+> & { flatData: Pick<ContributingCohortsFlatDataDto, 'name'> };
+
+export type FetchContributingCohortsQueryVariables = Exact<{
+  top: InputMaybe<Scalars['Int']>;
+  skip: InputMaybe<Scalars['Int']>;
+}>;
+
+export type FetchContributingCohortsQuery = {
+  queryContributingCohortsContentsWithTotal: Maybe<
+    Pick<ContributingCohortsResultDto, 'total'> & {
+      items: Maybe<
+        Array<
+          Pick<ContributingCohorts, 'id'> & {
+            flatData: Pick<ContributingCohortsFlatDataDto, 'name'>;
+          }
+        >
+      >;
+    }
+  >;
 };
 
 export type NewsContentFragment = Pick<
@@ -3645,6 +3671,35 @@ export type FetchWorkingGroupsQuery = {
   >;
 };
 
+export const ContributingCohortsContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ContributingCohortsContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'ContributingCohorts' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'flatData' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ContributingCohortsContentFragment, unknown>;
 export const NewsContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -4411,6 +4466,93 @@ export const WorkingGroupNetworkContentFragmentDoc = {
     ...WorkingGroupContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<WorkingGroupNetworkContentFragment, unknown>;
+export const FetchContributingCohortsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchContributingCohorts' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'top' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: {
+              kind: 'Name',
+              value: 'queryContributingCohortsContentsWithTotal',
+            },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'top' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'top' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'orderby' },
+                value: {
+                  kind: 'StringValue',
+                  value: 'data/created',
+                  block: false,
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'ContributingCohortsContent',
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...ContributingCohortsContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchContributingCohortsQuery,
+  FetchContributingCohortsQueryVariables
+>;
 export const FetchNewsDocument = {
   kind: 'Document',
   definitions: [

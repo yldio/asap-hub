@@ -181,7 +181,7 @@ describe('UserOverview', () => {
     it('renders the cohrots', () => {
       const cohorts: gp2.UserResponse['contributingCohorts'] = [
         {
-          role: 'Contributor',
+          role: 'Investigator',
           name: 'a cohort',
           contributingCohortId: '42',
           studyUrl: 'a-link',

@@ -16,6 +16,7 @@ import {
   FetchUsersQueryVariables,
   FetchWorkingGroupsMembersQuery,
   FetchWorkingGroupsMembersQueryVariables,
+  UsersDataContributingCohortsRoleEnum,
   UsersDataDegreeEnum,
   UsersDataRegionEnum,
   UsersDataRoleEnum,
@@ -206,8 +207,8 @@ const mapContributingCohorts = (
   cohorts?.map(({ contributingCohortId, name, role, studyUrl }) => ({
     id: [contributingCohortId],
     name,
-    role,
-    study: studyUrl || '',
+    role: reverseCohortRoleMap[role],
+    study: studyUrl || undefined,
   }));
 
 function getUserSquidexData(
@@ -368,8 +369,17 @@ const roleMap: Record<UsersDataRoleEnum, gp2Model.UserRole> = {
   [UsersDataRoleEnum.Trainee]: 'Trainee',
   [UsersDataRoleEnum.WorkingGroupParticipant]: 'Working Group Participant',
 };
+const cohortRoleMap: Record<
+  UsersDataContributingCohortsRoleEnum,
+  gp2Model.UserContributingCohortRole
+> = {
+  [UsersDataContributingCohortsRoleEnum.Investigator]: 'Investigator',
+  [UsersDataContributingCohortsRoleEnum.CoInvestigator]: 'Co-Investigator',
+  [UsersDataContributingCohortsRoleEnum.LeadInvestigator]: 'Lead Investigator',
+};
 const reverseRegionMap = reverseMap(regionMap);
 const reverseRoleMap = reverseMap(roleMap);
+const reverseCohortRoleMap = reverseMap(cohortRoleMap);
 
 const parseProjects = (
   projects: NonNullable<
@@ -479,7 +489,7 @@ const parseContributingCohorts = (
     return {
       contributingCohortId: cohort.id,
       name: cohort.flatData.name,
-      role,
+      role: cohortRoleMap[role],
       ...(study && { studyUrl: study }),
     };
   }) || [];

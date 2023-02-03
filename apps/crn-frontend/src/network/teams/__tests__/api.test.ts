@@ -171,7 +171,7 @@ describe('Team Research Output', () => {
       .put('/research-outputs/123', payload)
       .reply(200, { id: 123 });
 
-    await updateTeamResearchOutput(payload, 'Bearer x', '123');
+    await updateTeamResearchOutput('123', payload, 'Bearer x');
     expect(nock.isDone()).toBe(true);
   });
 
@@ -189,7 +189,7 @@ describe('Team Research Output', () => {
     nock(API_BASE_URL).put('/research-outputs/123').reply(500, {});
 
     await expect(
-      updateTeamResearchOutput(payload, 'Bearer x', '123'),
+      updateTeamResearchOutput('123', payload, 'Bearer x'),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to update research output for teams 90210 Expected status 200. Received status 500."`,
     );

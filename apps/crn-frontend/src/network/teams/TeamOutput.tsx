@@ -1,32 +1,22 @@
+import { clearAjvErrorForPath, Frame } from '@asap-hub/frontend-utils';
 import {
-  BackendError,
-  clearAjvErrorForPath,
-  Frame,
-  validationErrorsAreSupported,
-} from '@asap-hub/frontend-utils';
-import {
-  isValidationErrorResponse,
-  ResearchOutputDocumentType,
   ValidationErrorResponse,
   ResearchOutputResponse,
+  researchOutputDocumentTypeToType,
 } from '@asap-hub/model';
 import {
   NotFoundPage,
-  ResearchOutputTeamForm,
+  ResearchOutputForm,
+  ResearchOutputHeader,
 } from '@asap-hub/react-components';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import {
   network,
-  OutputDocumentTypeParameter,
+  TeamOutputDocumentTypeParameter,
   useRouteParams,
-  sharedResearch,
 } from '@asap-hub/routing';
 import React, { useContext, useState } from 'react';
 import researchSuggestions from './research-suggestions';
-import {
-  ResearchOutputPostRequest,
-  ResearchOutputPutRequest,
-} from '../../../../../packages/model/src/research-output';
 import {
   useAuthorSuggestions,
   useLabSuggestions,
@@ -34,35 +24,20 @@ import {
   useResearchTags,
   useTeamById,
   useTeamSuggestions,
-  usePutTeamResearchOutput,
+  usePutResearchOutput,
 } from './state';
+import {
+  handleError,
+  paramOutputDocumentTypeToResearchOutputDocumentType,
+} from '../../shared-research';
 
 const useParamOutputDocumentType = (
   teamId: string,
-): OutputDocumentTypeParameter => {
+): TeamOutputDocumentTypeParameter => {
   const route = network({}).teams({}).team({ teamId }).createOutput;
-  const { outputDocumentType } = useRouteParams(route);
-  return outputDocumentType;
+  const { teamOutputDocumentType } = useRouteParams(route);
+  return teamOutputDocumentType;
 };
-
-export function paramOutputDocumentTypeToResearchOutputDocumentType(
-  data: OutputDocumentTypeParameter,
-): ResearchOutputDocumentType {
-  switch (data) {
-    case 'article':
-      return 'Article';
-    case 'bioinformatics':
-      return 'Bioinformatics';
-    case 'dataset':
-      return 'Dataset';
-    case 'lab-resource':
-      return 'Lab Resource';
-    case 'protocol':
-      return 'Protocol';
-    default:
-      return 'Article';
-  }
-}
 
 type TeamOutputProps = {
   teamId: string;
@@ -73,10 +48,6 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   researchOutputData,
 }) => {
   const paramOutputDocumentType = useParamOutputDocumentType(teamId);
-  const isEditMode = !!researchOutputData;
-  const { researchOutputId } = useRouteParams(
-    sharedResearch({}).researchOutput,
-  );
   const documentType =
     researchOutputData?.documentType ||
     paramOutputDocumentTypeToResearchOutputDocumentType(
@@ -88,32 +59,21 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   const { canCreateUpdate } = useContext(ResearchOutputPermissionsContext);
 
   const createResearchOutput = usePostResearchOutput();
-  const updateResearchOutput = usePutTeamResearchOutput(researchOutputId);
+  const updateResearchOutput = usePutResearchOutput();
 
   const getLabSuggestions = useLabSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();
   const getTeamSuggestions = useTeamSuggestions();
   const researchTags = useResearchTags();
 
-  const handleError = (error: unknown) => {
-    if (error instanceof BackendError) {
-      const { response } = error;
-      if (
-        isValidationErrorResponse(response) &&
-        validationErrorsAreSupported(response, ['/link', '/title'])
-      ) {
-        setErrors(response.data);
-        return;
-      }
-    }
-    throw error;
-  };
-
   if (canCreateUpdate && team) {
     return (
       <Frame title="Share Research Output">
-        <ResearchOutputTeamForm
-          team={team}
+        <ResearchOutputHeader
+          documentType={documentType}
+          publishingEntity="Team"
+        />
+        <ResearchOutputForm
           tagSuggestions={researchSuggestions}
           documentType={documentType}
           getLabSuggestions={getLabSuggestions}
@@ -133,14 +93,27 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
             setErrors(clearAjvErrorForPath(errors, instancePath))
           }
           researchOutputData={researchOutputData}
-          isEditMode={isEditMode}
-          publishingEntity="Team"
-          onSave={(
-            output: ResearchOutputPostRequest | ResearchOutputPutRequest,
-          ) =>
-            isEditMode
-              ? updateResearchOutput(output).catch(handleError)
-              : createResearchOutput(output).catch(handleError)
+          typeOptions={Array.from(
+            researchOutputDocumentTypeToType[documentType],
+          )}
+          urlRequired={documentType !== 'Lab Resource'}
+          selectedTeams={(researchOutputData?.teams ?? [team]).map(
+            (selectedTeam, index) => ({
+              label: selectedTeam.displayName,
+              value: selectedTeam.id,
+              isFixed: index === 0,
+            }),
+          )}
+          onSave={(output) =>
+            researchOutputData
+              ? updateResearchOutput(researchOutputData.id, {
+                  ...output,
+                  publishingEntity: 'Team',
+                }).catch(handleError(['/link', '/title'], setErrors))
+              : createResearchOutput({
+                  ...output,
+                  publishingEntity: 'Team',
+                }).catch(handleError(['/link', '/title'], setErrors))
           }
         />
       </Frame>

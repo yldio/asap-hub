@@ -192,14 +192,14 @@ export const usePostResearchOutput = () => {
   };
 };
 
-export const usePutTeamResearchOutput = (id: string) => {
+export const usePutResearchOutput = () => {
   const authorization = useRecoilValue(authorizationState);
   const setResearchOutputItem = useSetResearchOutputItem();
-  return async (payload: ResearchOutputPutRequest) => {
+  return async (id: string, payload: ResearchOutputPutRequest) => {
     const researchOutput = await updateTeamResearchOutput(
+      id,
       payload,
       authorization,
-      id,
     );
     setResearchOutputItem(researchOutput);
     return researchOutput;

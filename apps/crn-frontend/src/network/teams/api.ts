@@ -97,9 +97,9 @@ export const createResearchOutput = async (
 };
 
 export const updateTeamResearchOutput = async (
+  researchOutputId: string,
   researchOutput: ResearchOutputPostRequest,
   authorization: string,
-  researchOutputId: string,
 ): Promise<ResearchOutputResponse> => {
   const resp = await fetch(
     `${API_BASE_URL}/research-outputs/${researchOutputId}`,

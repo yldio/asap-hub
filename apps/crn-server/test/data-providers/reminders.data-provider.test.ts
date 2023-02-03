@@ -1706,7 +1706,7 @@ describe('Reminder Data Provider', () => {
         expectedMaterialReminder,
       }: TestProps) => {
         beforeAll(() => {
-          jest.useFakeTimers('modern');
+          jest.useFakeTimers();
         });
 
         afterAll(() => {
@@ -1805,7 +1805,7 @@ describe('Reminder Data Provider', () => {
 
     describe('Multiple material reminders', () => {
       beforeAll(() => {
-        jest.useFakeTimers('modern');
+        jest.useFakeTimers();
       });
 
       afterAll(() => {

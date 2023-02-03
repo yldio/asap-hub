@@ -246,7 +246,7 @@ it('renders working-group profile page', async () => {
   expect(await screen.findByText(/Working Group Description/i)).toBeVisible();
 });
 
-it('handles server error nicely for working groups tab', async () => {
+it('handles server error for working groups tab', async () => {
   mockGetWorkingGroups.mockRejectedValueOnce(new Error('Failed to fetch'));
   await renderNetworkPage(network({}).workingGroups({}).$);
 

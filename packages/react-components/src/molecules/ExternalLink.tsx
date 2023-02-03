@@ -1,3 +1,4 @@
+/** @jsxImportSource @emotion/react */
 import { css, CSSObject, Theme } from '@emotion/react';
 
 import { Anchor } from '../atoms';

@@ -88,8 +88,8 @@ const CollapsibleTable: React.FC<CollapsibleTableProps> = ({
           <Subtitle key={`heading-${idx}`}>{heading}</Subtitle>
         ))}
       </div>
-      {children.map(({ id, values }) => (
-        <div key={`display-row-${id}`} css={getListStyles()}>
+      {children.map(({ id, values }, index) => (
+        <div key={`display-row-${id}-${index}`} css={getListStyles()}>
           {values.map((value, idx) => (
             <div
               key={`display-row-value-${idx}`}

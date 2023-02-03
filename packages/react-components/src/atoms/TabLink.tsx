@@ -1,3 +1,4 @@
+/** @jsxImportSource @emotion/react */
 import { ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
 import { css, Theme } from '@emotion/react';

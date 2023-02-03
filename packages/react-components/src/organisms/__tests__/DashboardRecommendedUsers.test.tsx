@@ -7,15 +7,16 @@ it('renders the dashboard recommended users', () => {
     <DashboardRecommendedUsers
       recommendedUsers={[
         {
-          ...createUserResponse(),
+          ...createUserResponse(undefined, 0),
           displayName: 'John Doe',
         },
         {
-          ...createUserResponse(),
+          ...createUserResponse(undefined, 1),
           displayName: 'Octavian Ratiu',
         },
         {
-          ...createUserResponse(),
+          ...createUserResponse(undefined, 2),
+          id: '345',
           displayName: 'User 3',
         },
       ]}
@@ -43,8 +44,8 @@ it('renders the recommended user', () => {
             { id: 'team-1', displayName: 'Team 1', role: 'Key Personnel' },
           ],
         },
-        createUserResponse(),
-        createUserResponse(),
+        createUserResponse(undefined, 1),
+        createUserResponse(undefined, 2),
       ]}
     />,
   );

@@ -87,15 +87,16 @@ export function useValidation<T extends ValidationTarget>(
   }, [customValidationMessage, validationMessage]);
 
   const validate = () => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const inputField = inputRef.current!;
-    const inputFieldValidity = inputField.validity.valid;
-    setValidationMessage(
-      (getValidationMessage &&
-        !inputFieldValidity &&
-        getValidationMessage(inputField.validity)) ||
-        inputField.validationMessage,
-    );
+    if (inputRef.current) {
+      const inputField = inputRef.current;
+      const inputFieldValidity = inputField.validity.valid;
+      setValidationMessage(
+        (getValidationMessage &&
+          !inputFieldValidity &&
+          getValidationMessage(inputField.validity)) ||
+          inputField.validationMessage,
+      );
+    }
   };
   return {
     validate,

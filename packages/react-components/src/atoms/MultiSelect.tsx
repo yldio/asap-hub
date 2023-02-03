@@ -268,6 +268,7 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
         {...validationTargetProps}
         tabIndex={-1}
         autoComplete="off"
+        onChange={noop}
         value={values.map((value) => value.label).join('')}
         required={required}
         disabled={!enabled}

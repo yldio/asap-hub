@@ -10,7 +10,7 @@ import { Auth0User } from '@asap-hub/auth';
 import { disable } from '@asap-hub/flags';
 import { WorkingGroupLeader } from '@asap-hub/model';
 
-import WorkingGroupHeader from '../WorkingGroupHeader';
+import WorkingGroupHeader from '../WorkingGroupPageHeader';
 
 const baseProps: ComponentProps<typeof WorkingGroupHeader> = {
   membersListElementId: 'members-list-elem-id',

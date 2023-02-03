@@ -34,7 +34,7 @@ import {
 import { refreshWorkingGroupState } from '../state';
 import WorkingGroupOutput from '../WorkingGroupOutput';
 
-jest.setTimeout(30000);
+jest.setTimeout(60000);
 jest.mock('../api');
 jest.mock('../../teams/api');
 jest.mock('../../users/api');

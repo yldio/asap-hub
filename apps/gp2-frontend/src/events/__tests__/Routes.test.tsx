@@ -4,20 +4,20 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
+import { MemoryRouter, Route } from 'react-router-dom';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import Events from '../Events';
+import Routes from '../Routes';
 
-const renderEvents = async () => {
+const renderRoutes = async () => {
   render(
     <RecoilRoot>
       <Suspense fallback="loading">
-        <Auth0Provider user={{ role: 'Administrator' }}>
+        <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/events']}>
               <Route path="/events">
-                <Events />
+                <Routes />
               </Route>
             </MemoryRouter>
           </WhenReady>
@@ -25,11 +25,15 @@ const renderEvents = async () => {
       </Suspense>
     </RecoilRoot>,
   );
-  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  return waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };
-afterEach(jest.clearAllMocks);
+beforeEach(() => {
+  jest.resetAllMocks();
+});
 
-it('renders the events', async () => {
-  await renderEvents();
-  expect(screen.getByRole('heading', { name: 'Events' })).toBeVisible();
+describe('Routes', () => {
+  it('renders the title', async () => {
+    await renderRoutes();
+    expect(screen.getByRole('heading', { name: 'Events' })).toBeInTheDocument();
+  });
 });

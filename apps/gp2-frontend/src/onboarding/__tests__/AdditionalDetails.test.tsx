@@ -1,12 +1,12 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
-import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { gp2 as gp2Model } from '@asap-hub/model';
+import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
   render,
-  waitForElementToBeRemoved,
   screen,
   waitFor,
+  waitForElementToBeRemoved,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
@@ -14,7 +14,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getUser, getContributingCohorts, patchUser } from '../../users/api';
+import { getContributingCohorts, getUser, patchUser } from '../../users/api';
 import { refreshUserState } from '../../users/state';
 import AdditionalDetails from '../AdditionalDetails';
 
@@ -117,6 +117,43 @@ describe('AdditionalDetails', () => {
       expect.objectContaining({
         fundingStreams: '',
       }),
+      expect.anything(),
+    );
+  });
+  it('opens the contributing cohorts modal', async () => {
+    const contributingCohorts: gp2Model.UserContributingCohort[] = [
+      {
+        contributingCohortId: '11',
+        name: 'some name',
+        role: 'Lead Investigator',
+        studyUrl: 'http://example.com/study',
+      },
+    ];
+    const user = { ...gp2Fixtures.createUserResponse(), contributingCohorts };
+    mockGetUser.mockResolvedValueOnce(user);
+    mockGetContributingCohorts.mockResolvedValueOnce(
+      contributingCohortResponse,
+    );
+    await renderAdditionalDetails(user.id);
+    const [, cohortEditButton] = screen.getAllByRole('link', {
+      name: 'Edit Edit',
+    });
+    userEvent.click(cohortEditButton);
+    expect(await screen.findByRole('dialog')).toBeVisible();
+    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+    const expectedCohorts = contributingCohorts.map(
+      ({ contributingCohortId, role, studyUrl }) => ({
+        contributingCohortId,
+        role,
+        studyUrl,
+      }),
+    );
+    expect(mockPatchUser).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({ contributingCohorts: expectedCohorts }),
       expect.anything(),
     );
   });

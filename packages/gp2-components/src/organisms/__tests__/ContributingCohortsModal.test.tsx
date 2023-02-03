@@ -1,12 +1,13 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
-import { render, screen } from '@testing-library/react';
+import { gp2 as gp2Model } from '@asap-hub/model';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import ContributingCohortsModal from '../ContributingCohortsModal';
 
 describe('ContributingCohortsModal', () => {
-  // const getSaveButton = () => screen.getByRole('button', { name: 'Save' });
+  const getSaveButton = () => screen.getByRole('button', { name: 'Save' });
 
   const getAddButton = () =>
     screen.getByRole('button', {
@@ -112,10 +113,94 @@ describe('ContributingCohortsModal', () => {
       screen.queryByRole('heading', { name: /#2 Cohort Study/i }),
     ).not.toBeInTheDocument();
   });
-  it.todo('how to remove all cohorts? first cohort has no delete');
-  it.todo('can save cohorts with url');
-  it.todo('can save cohorts without url');
+  it('allows the name to be edited', () => {
+    const contributingCohortId = '11';
+    const role = 'Investigator';
+    const onSave = jest.fn();
+    renderContributingCohorts({
+      cohortOptions: [
+        { id: '7', name: 'S3' },
+        { id: '11', name: 'DIGPD' },
+      ],
+      contributingCohorts: [
+        {
+          contributingCohortId,
+          name: 'DIGPD',
+          role,
+        },
+      ],
+      onSave,
+    });
+    const name = 'S3';
+    const input = screen.getByRole('textbox', { name: /Name/i });
+    userEvent.click(input);
+    userEvent.click(screen.getByText(name));
+    waitFor(() => expect(input).toHaveTextContent(name));
+    userEvent.click(getSaveButton());
+    expect(onSave).toBeCalledWith({
+      contributingCohorts: [{ contributingCohortId: '7', role }],
+    });
+  });
+  it.each(gp2Model.userContributingCohortRole)(
+    'allows the role to be edited %s',
+    (updatedRole) => {
+      const contributingCohortId = '11';
+      const role =
+        updatedRole === 'Investigator' ? 'Lead Investigator' : 'Investigator';
+      const onSave = jest.fn();
+      renderContributingCohorts({
+        cohortOptions: [
+          { id: '7', name: 'S3' },
+          { id: '11', name: 'DIGPD' },
+        ],
+        contributingCohorts: [
+          {
+            contributingCohortId,
+            name: 'DIGPD',
+            role,
+          },
+        ],
+        onSave,
+      });
+      const input = screen.getByRole('textbox', { name: /Role/i });
+      userEvent.click(input);
+      userEvent.click(screen.getByText(updatedRole));
+      waitFor(() => expect(input).toHaveTextContent(updatedRole));
+      userEvent.click(getSaveButton());
+      expect(onSave).toBeCalledWith({
+        contributingCohorts: [{ contributingCohortId, role: updatedRole }],
+      });
+    },
+  );
+  it('allows the link to be edited', () => {
+    const contributingCohortId = '11';
+    const role = 'Investigator';
+    const onSave = jest.fn();
+    renderContributingCohorts({
+      cohortOptions: [
+        { id: '7', name: 'S3' },
+        { id: '11', name: 'DIGPD' },
+      ],
+      contributingCohorts: [
+        {
+          contributingCohortId,
+          name: 'DIGPD',
+          role,
+        },
+      ],
+      onSave,
+    });
+    const studyUrl = 'http://example.com';
+    const input = screen.getByRole('textbox', { name: /Link/i });
+    userEvent.type(input, studyUrl);
+    waitFor(() => expect(input).toHaveTextContent(studyUrl));
+    userEvent.click(getSaveButton());
+    expect(onSave).toBeCalledWith({
+      contributingCohorts: [{ contributingCohortId, role, studyUrl }],
+    });
+  });
   it.todo('validation url');
-  it.todo('correct role');
-  it.todo('name should be from list');
+  it.todo('validation name');
+  it.todo('validation role');
+  it.todo('how to remove all cohorts? first cohort has no delete');
 });

@@ -8,7 +8,7 @@ export type RichTextFromQuery = {
   json: Document;
   links: {
     entries: {
-      inline: Array<InlineEntry>;
+      inline: InlineEntry[];
     };
     assets: {
       block: Array<

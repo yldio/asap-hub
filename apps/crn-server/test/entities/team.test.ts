@@ -35,16 +35,26 @@ describe('parseGraphQLTeamMember', () => {
 
   test('should parse inactive teamMember', () => {
     const inactiveTeamMeber = {
-      ...teamMember,
-      flatData: {
-        ...teamMember.flatData,
-        teams: teamMember.flatData.teams
-          ? teamMember.flatData.teams.map((t) => ({
-              ...t,
+      ...getGraphQLUser({
+        flatData: {
+          ...teamMember.flatData,
+          teams: [
+            {
               inactiveSinceDate: '2020-09-25T09:42:51.000Z',
-            }))
-          : [],
-      },
+              role: 'Lead PI (Core Leadership)',
+              id: [
+                {
+                  id: 'team-id-0',
+                  flatData: {
+                    displayName: 'Team A',
+                    proposal: [{ id: 'proposalId1' }],
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      }),
     };
     const parsedTeamMember = parseGraphQLTeamMember(
       inactiveTeamMeber,

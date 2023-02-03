@@ -34,7 +34,22 @@ describe('parseGraphQLTeamMember', () => {
   });
 
   test('should parse inactive teamMember', () => {
-    const parsedTeamMember = parseGraphQLTeamMember(teamMember, 'team-id-1');
+    const inactiveTeamMeber = {
+      ...teamMember,
+      flatData: {
+        ...teamMember.flatData,
+        teams: teamMember.flatData.teams
+          ? teamMember.flatData.teams.map((t) => ({
+              ...t,
+              inactiveSinceDate: '2020-09-25T09:42:51.000Z',
+            }))
+          : [],
+      },
+    };
+    const parsedTeamMember = parseGraphQLTeamMember(
+      inactiveTeamMeber,
+      'team-id-0',
+    );
     expect(parsedTeamMember).toEqual({
       id: 'user-id-1',
       firstName: 'Tom',

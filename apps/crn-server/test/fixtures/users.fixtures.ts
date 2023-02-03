@@ -162,19 +162,6 @@ export const getGraphQLUser = (
           },
         ],
       },
-      {
-        inactiveSinceDate: '2020-09-25T09:42:51.000Z',
-        role: 'Lead PI (Core Leadership)',
-        id: [
-          {
-            id: 'team-id-1',
-            flatData: {
-              displayName: 'Team B',
-              proposal: [{ id: 'proposalId2' }],
-            },
-          },
-        ],
-      },
     ],
     labs: user?.flatData?.labs || [
       { id: 'cd7be4902', flatData: { name: 'Brighton' } },
@@ -334,13 +321,6 @@ export const getUserResponse = (): UserResponse => ({
       displayName: 'Team A',
       proposal: 'proposalId1',
       inactiveSinceDate: undefined,
-    },
-    {
-      id: 'team-id-1',
-      role: 'Lead PI (Core Leadership)',
-      displayName: 'Team B',
-      proposal: 'proposalId2',
-      inactiveSinceDate: '2020-09-25T09:42:51.000Z',
     },
   ],
   role: 'Grantee',
@@ -649,13 +629,6 @@ export const getUserDataObject = (): UserDataObject => ({
       proposal: 'proposalId1',
       inactiveSinceDate: undefined,
     },
-    {
-      id: 'team-id-1',
-      role: 'Lead PI (Core Leadership)',
-      displayName: 'Team B',
-      proposal: 'proposalId2',
-      inactiveSinceDate: '2020-09-25T09:42:51.000Z',
-    },
   ],
   role: 'Grantee',
   labs: [
@@ -742,11 +715,6 @@ export const getInputUser = (): InputUser['data'] => ({
         id: ['team-id-0'],
         role: 'Lead PI (Core Leadership)',
         inactiveSinceDate: undefined,
-      },
-      {
-        id: ['team-id-1'],
-        role: 'Lead PI (Core Leadership)',
-        inactiveSinceDate: '2020-09-25T09:42:51.000Z',
       },
     ],
   },

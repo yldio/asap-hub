@@ -199,8 +199,47 @@ describe('ContributingCohortsModal', () => {
       contributingCohorts: [{ contributingCohortId, role, studyUrl }],
     });
   });
-  it.todo('validation url');
-  it.todo('validation name');
-  it.todo('validation role');
-  it.todo('how to remove all cohorts? first cohort has no delete');
+  it('shows the validation messages for required fields', () => {
+    const onSave = jest.fn();
+    renderContributingCohorts({
+      cohortOptions: [
+        { id: '7', name: 'S3' },
+        { id: '11', name: 'DIGPD' },
+      ],
+      contributingCohorts: [],
+      onSave,
+    });
+    userEvent.click(getSaveButton());
+    expect(onSave).not.toBeCalled();
+    expect(screen.getByText('Please add the cohort name')).toBeVisible();
+    expect(screen.getByText('Please add the role')).toBeVisible();
+  });
+  it('does not allow an invalid url', () => {
+    const contributingCohortId = '11';
+    const role = 'Investigator';
+    const onSave = jest.fn();
+    renderContributingCohorts({
+      cohortOptions: [
+        { id: '7', name: 'S3' },
+        { id: '11', name: 'DIGPD' },
+      ],
+      contributingCohorts: [
+        {
+          contributingCohortId,
+          name: 'DIGPD',
+          role,
+        },
+      ],
+      onSave,
+    });
+    const studyUrl = 'http://invalid-url';
+    const input = screen.getByRole('textbox', { name: /Link/i });
+    userEvent.type(input, studyUrl);
+    waitFor(() => expect(input).toHaveTextContent(studyUrl));
+    userEvent.click(getSaveButton());
+    expect(onSave).not.toBeCalled();
+    expect(
+      screen.getByText(/Please enter a valid URL, starting with http/),
+    ).toBeVisible();
+  });
 });

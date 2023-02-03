@@ -150,6 +150,7 @@ const ContributingCohortsModal: React.FC<ContributingCohortsModalProps> = ({
                 subtitle={required}
                 options={getValues([...gp2.userContributingCohortRole])}
                 enabled={!isSaving}
+                getValidationMessage={() => 'Please add the role'}
                 value={role || ''}
                 onChange={onChangeValue(index, 'role')}
                 required

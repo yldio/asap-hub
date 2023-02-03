@@ -766,6 +766,44 @@
               "isRequiredOnPublish": false,
               "isHalfWidth": true
             }
+          },
+          {
+            "name": "researchGate",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "isEmbeddable": false,
+              "inlineEditable": true,
+              "createEnum": false,
+              "contentType": "Unspecified",
+              "editor": "Input",
+              "label": "Research Gate",
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": true
+            }
+          },
+          {
+            "name": "researcherId",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "isEmbeddable": false,
+              "inlineEditable": true,
+              "createEnum": false,
+              "contentType": "Unspecified",
+              "editor": "Input",
+              "label": "Researcher ID",
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": true
+            }
           }
         ]
       },

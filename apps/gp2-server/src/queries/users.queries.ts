@@ -49,6 +49,8 @@ export const usersContentQueryFragment = gql`
       social {
         googleScholar
         orcid
+        researchGate
+        researcherId
         blog
         twitter
         linkedIn

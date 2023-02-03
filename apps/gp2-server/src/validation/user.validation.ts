@@ -126,6 +126,8 @@ const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
       properties: {
         googleScholar: { type: 'string', nullable: true },
         orcid: { type: 'string', nullable: true },
+        researchGate: { type: 'string', nullable: true },
+        researcherId: { type: 'string', nullable: true },
         blog: { type: 'string', nullable: true },
         twitter: { type: 'string', nullable: true },
         linkedIn: { type: 'string', nullable: true },

@@ -4,6 +4,7 @@ export { default as ContributingCohortsModal } from './ContributingCohortsModal'
 export { default as DashboardHeader } from './DashboardHeader';
 export { default as EditResourceModal } from './EditResourceModal';
 export { default as EmailSection } from './EmailSection';
+export { default as ExternalProfilesModal } from './ExternalProfilesModal';
 export { default as FilterPills } from './FilterPills';
 export { default as FiltersModal } from './FiltersModal';
 export { default as FundingProviderModal } from './FundingProviderModal';

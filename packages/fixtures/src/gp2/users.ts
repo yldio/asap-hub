@@ -55,6 +55,8 @@ const mockedUser: gp2.UserResponse = {
   social: {
     googleScholar: 'https://scholar.google.com',
     orcid: 'https://orcid.org',
+    researchGate: 'https://researchid.com/rid/',
+    researcherId: 'https://researchid.com/rid/',
     blog: 'https://www.blogger.com',
     twitter: 'https://twitter.com',
     linkedIn: 'https://www.linkedin.com',

@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react';
 import domToPlayWright from 'dom-to-playwright';
+import 'jest-playwright-preset';
 
 import ProfileCardList from '../ProfileCardList';
 import { getBoundingClientRect } from '../../browser-test-utils';

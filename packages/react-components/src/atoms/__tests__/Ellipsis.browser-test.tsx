@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import { render } from '@testing-library/react';
 import domToPlaywright from 'dom-to-playwright';
+import 'jest-playwright-preset';
 
 import { mobileScreen } from '../../pixels';
 

@@ -2,6 +2,7 @@ import { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import domToPlaywright from 'dom-to-playwright';
+import 'jest-playwright-preset';
 
 import Layout from '../Layout';
 import { largeDesktopScreen } from '../../pixels';

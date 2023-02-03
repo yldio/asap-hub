@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react';
 import domToPlaywright from 'dom-to-playwright';
+import 'jest-playwright-preset';
 
 import TagList from '../TagList';
 import { mobileScreen, largeDesktopScreen } from '../../pixels';

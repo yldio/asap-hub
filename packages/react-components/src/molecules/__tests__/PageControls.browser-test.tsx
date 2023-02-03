@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react';
 import domToPlaywright from 'dom-to-playwright';
+import 'jest-playwright-preset';
 
 import PageControls from '../PageControls';
 import { textContentWithPseudo } from '../../test-utils';

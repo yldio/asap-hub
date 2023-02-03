@@ -1,6 +1,25 @@
 import { Environment, Entry } from 'contentful-management';
 import { logger } from './logs';
 
+export const checkIfEntryAlreadyExistsInContentful = async (
+  contentfulEnvironment: Environment,
+  id: string,
+) => {
+  try {
+    const entry = await contentfulEnvironment.getEntry(id);
+    return !!entry;
+  } catch (error) {
+    if (error instanceof Error) {
+      const errorParsed = JSON.parse(error?.message);
+      if (errorParsed.status === 404) {
+        return false;
+      }
+    }
+
+    throw error;
+  }
+};
+
 export const clearContentfulEntries = async (
   contentfulEnvironment: Environment,
   contentType: string,

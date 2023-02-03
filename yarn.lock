@@ -388,7 +388,7 @@ __metadata:
     "@types/jest": 27.5.2
     "@types/node": 14.18.33
     "@types/prettier": 2.7.1
-    contentful-html-rich-text-converter: "yldio/contentful-html-rich-text-converter#v1.0.15"
+    contentful-html-rich-text-converter: "yldio/contentful-html-rich-text-converter#v1.0.16"
     contentful-management: ^10.19.3
     graphql: 15.8.0
     graphql-tag: 2.12.6
@@ -19169,15 +19169,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"contentful-html-rich-text-converter@yldio/contentful-html-rich-text-converter#v1.0.15":
+"contentful-html-rich-text-converter@yldio/contentful-html-rich-text-converter#v1.0.16":
   version: 1.0.9
-  resolution: "contentful-html-rich-text-converter@https://github.com/yldio/contentful-html-rich-text-converter.git#commit=4957c87a98b86f442df12db0df35b4ca7684c72e"
+  resolution: "contentful-html-rich-text-converter@https://github.com/yldio/contentful-html-rich-text-converter.git#commit=cff4669078ed07102c49c46c3f7afa4958b705d7"
   dependencies:
     html-entities: 1.2.1
     htmlparser: ^1.7.7
     mime-types: ^2.1.35
     ramda: ^0.26.1
-  checksum: b279a036c92580e3bfb4116a1fcfdba461095faaf8285b8813d35735402b3ba5bf516506fa7408e9d9832f4069710665c1d900f124903a106cbc2a00938d01a6
+  checksum: 55bef82df812d99fb86ef00fcea2dc825f7618f302c12ceacdb9a50fd163434fc3271f626143ecdb257fbf024af1d3c604e58a9bf6d5c2e5e174e94e2972ef53
   languageName: node
   linkType: hard
 

@@ -49,6 +49,9 @@ export const getContentfulGraphqlPages = (): NonNullable<
       ],
     },
     links: {
+      entries: {
+        inline: [],
+      },
       assets: {
         block: [],
       },

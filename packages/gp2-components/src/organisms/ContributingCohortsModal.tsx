@@ -12,6 +12,7 @@ import { css } from '@emotion/react';
 import { ComponentProps, useState } from 'react';
 import { addIcon, binIcon } from '../icons';
 import { mobileQuery } from '../layout';
+import colors from '../templates/colors';
 import EditUserModal from './EditUserModal';
 
 const { rem } = pixels;
@@ -21,7 +22,16 @@ const containerStyles = css({
   },
   display: 'flex',
   flexDirection: 'column',
-  gap: rem(24),
+});
+const rowStyles = css({
+  borderBottom: `1px solid ${colors.neutral500.rgb}`,
+  marginBottom: rem(12),
+  padding: `${rem(16)} 0`,
+  ':last-child': {
+    borderBottom: 'none',
+    marginBottom: 0,
+    paddingBottom: 0,
+  },
 });
 const headerStyles = css({
   display: 'flex',
@@ -114,59 +124,65 @@ const ContributingCohortsModal: React.FC<ContributingCohortsModalProps> = ({
       dirty={checkDirty()}
     >
       {({ isSaving }) => (
-        <div css={[containerStyles]}>
-          {newCohorts.map(({ contributingCohortId, role, studyUrl }, index) => (
-            <div key={`cohort-${index}`}>
-              <div css={headerStyles}>
-                <Subtitle styleAsHeading={4}>
-                  #{index + 1} Cohort Study
-                </Subtitle>
-                <div css={buttonStyles}>
-                  <Button onClick={onRemove(index)} small>
-                    <span css={css({ display: 'inline-flex' })}>{binIcon}</span>
-                  </Button>
+        <>
+          <div css={[containerStyles]}>
+            {newCohorts.map(
+              ({ contributingCohortId, role, studyUrl }, index) => (
+                <div css={[rowStyles]} key={`cohort-${index}`}>
+                  <div css={headerStyles}>
+                    <Subtitle styleAsHeading={4}>
+                      #{index + 1} Cohort Study
+                    </Subtitle>
+                    <div css={buttonStyles}>
+                      <Button onClick={onRemove(index)} small>
+                        <span css={css({ display: 'inline-flex' })}>
+                          {binIcon}
+                        </span>
+                      </Button>
+                    </div>
+                  </div>
+                  <LabeledDropdown
+                    title="Name"
+                    subtitle={required}
+                    getValidationMessage={() => 'Please add the cohort name'}
+                    enabled={!isSaving}
+                    value={contributingCohortId || ''}
+                    onChange={onChangeValue(index, 'contributingCohortId')}
+                    required
+                    options={cohortOptions.map(({ id, name }) => ({
+                      label: name,
+                      value: id,
+                    }))}
+                    placeholder={'Type a cohort study name...'}
+                  />
+                  <LabeledDropdown
+                    title="Role"
+                    subtitle={required}
+                    options={getValues([...gp2.userContributingCohortRole])}
+                    enabled={!isSaving}
+                    getValidationMessage={() => 'Please add the role'}
+                    value={role || ''}
+                    onChange={onChangeValue(index, 'role')}
+                    required
+                    placeholder={'Select a role...'}
+                  />
+                  <LabeledTextField
+                    title="Link"
+                    subtitle={optional}
+                    enabled={!isSaving}
+                    value={studyUrl || ''}
+                    onChange={onChangeValue(index, 'studyUrl')}
+                    pattern={UrlExpression}
+                    getValidationMessage={() =>
+                      'Please enter a valid URL, starting with http://'
+                    }
+                    labelIndicator={<GlobeIcon />}
+                    placeholder="https://www.example.com"
+                  />
                 </div>
-              </div>
-              <LabeledDropdown
-                title="Name"
-                subtitle={required}
-                getValidationMessage={() => 'Please add the cohort name'}
-                enabled={!isSaving}
-                value={contributingCohortId || ''}
-                onChange={onChangeValue(index, 'contributingCohortId')}
-                required
-                options={cohortOptions.map(({ id, name }) => ({
-                  label: name,
-                  value: id,
-                }))}
-                placeholder={'Type a cohort study name...'}
-              />
-              <LabeledDropdown
-                title="Role"
-                subtitle={required}
-                options={getValues([...gp2.userContributingCohortRole])}
-                enabled={!isSaving}
-                getValidationMessage={() => 'Please add the role'}
-                value={role || ''}
-                onChange={onChangeValue(index, 'role')}
-                required
-                placeholder={'Select a role...'}
-              />
-              <LabeledTextField
-                title="Link"
-                subtitle={optional}
-                enabled={!isSaving}
-                value={studyUrl || ''}
-                onChange={onChangeValue(index, 'studyUrl')}
-                pattern={UrlExpression}
-                getValidationMessage={() =>
-                  'Please enter a valid URL, starting with http://'
-                }
-                labelIndicator={<GlobeIcon />}
-                placeholder="https://www.example.com"
-              />
-            </div>
-          ))}
+              ),
+            )}
+          </div>
           {newCohorts.length < 10 ? (
             <div css={addButtonStyles}>
               <Button onClick={onAdd} enabled={!isSaving} small>
@@ -182,7 +198,7 @@ const ContributingCohortsModal: React.FC<ContributingCohortsModalProps> = ({
               </Button>
             </div>
           ) : undefined}
-        </div>
+        </>
       )}
     </EditUserModal>
   );

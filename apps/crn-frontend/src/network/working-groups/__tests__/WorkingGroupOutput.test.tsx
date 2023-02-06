@@ -24,7 +24,8 @@ import {
 } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
 import { ContextType, Suspense } from 'react';
-import { Route, StaticRouter } from 'react-router-dom';
+import { Router, Route } from 'react-router-dom';
+import { createMemoryHistory, History } from 'history';
 import { RecoilRoot } from 'recoil';
 import {
   createResearchOutput,
@@ -111,11 +112,20 @@ const renderPage = async ({
   workingGroupId = 'wg1',
   workingGroupOutputDocumentType = 'article',
   researchOutputData,
+  history = createMemoryHistory({
+    initialEntries: [
+      network({})
+        .workingGroups({})
+        .workingGroup({ workingGroupId })
+        .createOutput({ workingGroupOutputDocumentType }).$,
+    ],
+  }),
 }: {
   workingGroupId?: string;
   workingGroupOutputDocumentType?: WorkingGroupOutputDocumentTypeParameter;
   canCreateUpdate?: boolean;
   researchOutputData?: ResearchOutputResponse;
+  history?: History;
 } = {}) => {
   const path =
     network.template +
@@ -134,14 +144,7 @@ const renderPage = async ({
         <ToastContext.Provider value={mockToast}>
           <Auth0Provider user={{}}>
             <WhenReady>
-              <StaticRouter
-                location={
-                  network({})
-                    .workingGroups({})
-                    .workingGroup({ workingGroupId })
-                    .createOutput({ workingGroupOutputDocumentType }).$
-                }
-              >
+              <Router history={history}>
                 <ResearchOutputPermissionsContext.Provider
                   value={{ canCreateUpdate }}
                 >
@@ -152,7 +155,7 @@ const renderPage = async ({
                     />
                   </Route>
                 </ResearchOutputPermissionsContext.Provider>
-              </StaticRouter>
+              </Router>
             </WhenReady>
           </Auth0Provider>
         </ToastContext.Provider>
@@ -162,7 +165,7 @@ const renderPage = async ({
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };
 
-it('Renders the working group research output form with correct settings', async () => {
+it('Renders the working group research output form with relevant fields', async () => {
   await renderPage({
     workingGroupId: '42',
     workingGroupOutputDocumentType: 'article',
@@ -198,10 +201,21 @@ it('can submit a form when form data is valid', async () => {
   const description = 'example42 description';
   const type = 'Preprint';
   const doi = '10.0777';
+  const workingGroupOutputDocumentType = 'article';
+
+  const history = createMemoryHistory({
+    initialEntries: [
+      network({})
+        .workingGroups({})
+        .workingGroup({ workingGroupId })
+        .createOutput({ workingGroupOutputDocumentType }).$,
+    ],
+  });
 
   await renderPage({
     workingGroupId,
-    workingGroupOutputDocumentType: 'article',
+    workingGroupOutputDocumentType,
+    history,
   });
 
   const { publish } = await mandatoryFields({
@@ -247,6 +261,11 @@ it('can submit a form when form data is valid', async () => {
     },
     expect.anything(),
   );
+  await waitFor(() => {
+    expect(history.location.pathname).toBe(
+      '/shared-research/research-output-id',
+    );
+  });
 });
 
 it('will show server side validation error for link', async () => {
@@ -314,10 +333,19 @@ it('can edit a report working group research output', async () => {
   const link = 'https://example42.com';
   const title = 'example42 title';
   const description = 'example42 description';
+  const workingGroupOutputDocumentType = 'report';
 
+  const history = createMemoryHistory({
+    initialEntries: [
+      network({})
+        .workingGroups({})
+        .workingGroup({ workingGroupId })
+        .createOutput({ workingGroupOutputDocumentType }).$,
+    ],
+  });
   await renderPage({
     workingGroupId,
-    workingGroupOutputDocumentType: 'report',
+    workingGroupOutputDocumentType,
     researchOutputData: {
       ...createResearchOutputResponse(),
       id,
@@ -325,12 +353,16 @@ it('can edit a report working group research output', async () => {
       title,
       description,
     },
+    history,
   });
 
   const button = screen.getByRole('button', { name: /Save/i });
   userEvent.click(button);
   await waitFor(() => {
     expect(button).toBeEnabled();
+    expect(history.location.pathname).toBe(
+      '/shared-research/research-output-id',
+    );
   });
 
   expect(mockUpdateResearchOutput).toHaveBeenCalledWith(

@@ -1,9 +1,6 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { css } from '@emotion/react';
-import {
-  ResearchOutputDocumentType,
-  ResearchOutputAssociation,
-} from '@asap-hub/model';
+import { ResearchOutputDocumentType } from '@asap-hub/model';
 
 import { news } from '@asap-hub/routing';
 import { Display, Link, Paragraph } from '../atoms';
@@ -20,11 +17,85 @@ const visualHeaderStyles = css({
   boxShadow: `0 2px 4px -2px ${steel.rgb}`,
 });
 
+const excludedTypes = ['Grant Document', 'Presentation'];
+
+type subHeaderTypes = Exclude<
+  ResearchOutputDocumentType,
+  'Grant Document' | 'Presentation'
+>;
+
+type subHeaderRecordType = {
+  [key in subHeaderTypes]: ReactNode;
+};
+
+const subheaderRecord: subHeaderRecordType = {
+  Protocol: (
+    <>
+      Add your protocol to a repository (e.g. protocols.io) before sharing on
+      the Hub. Find out{' '}
+      <Link
+        href={
+          news({}).article({
+            articleId: '7d3dd1ec-14ef-441c-8a2c-19a23d6264f3',
+          }).$
+        }
+      >
+        how to add to protocols.io
+      </Link>{' '}
+      to get started.
+    </>
+  ),
+  Dataset: (
+    <>
+      Add your dataset to a platform (e.g. Zenodo) before sharing on the Hub.
+      Find out{' '}
+      <Link
+        href={
+          news({}).article({
+            articleId: '735944ac-5641-431f-8984-bf53972dfd4e',
+          }).$
+        }
+      >
+        how to add to Zenodo
+      </Link>{' '}
+      to get started.
+    </>
+  ),
+  Bioinformatics: (
+    <>
+      Add bioinformatics, such as scripts or software, to a platform (e.g.
+      Github) before sharing on the Hub.
+    </>
+  ),
+  'Lab Resource': (
+    <>
+      Add your lab resource to a repository (e.g. Addgene or WiCell) before
+      sharing on the Hub, if possible. Alternatively, find out{' '}
+      <Link
+        href={
+          'https://drive.google.com/file/d/1qJ2nbqFl5AquhgvUwwxxyOL_k_BMaD2X/view'
+        }
+      >
+        how to distribute a resource
+      </Link>{' '}
+      through ASAP’s tool program.
+    </>
+  ),
+  Article: <>Share your preprint or published article on the Hub.</>,
+  Report: (
+    <>
+      If possible, please add your CRN report (for example, survey and table
+      summaries, CRN guidelines, etc.) to the working group google folder before
+      sharing on the Hub.
+    </>
+  ),
+};
+
 const headerCopy = (
   outputDocumentType: ResearchOutputDocumentType,
-  association: ResearchOutputAssociation,
+  teamAssociation: boolean,
 ) => {
-  if (association === 'Team') {
+  if (teamAssociation) {
     switch (outputDocumentType) {
       case 'Protocol':
         return 'Share a protocol';
@@ -50,87 +121,25 @@ const headerCopy = (
   }
 };
 
-const SubheaderCopy: React.FC<{
-  outputDocumentType: ResearchOutputDocumentType;
-}> = ({ outputDocumentType }) => {
-  const protocolsIoLink = news({}).article({
-    articleId: '7d3dd1ec-14ef-441c-8a2c-19a23d6264f3',
-  }).$;
-  const zenodoLink = news({}).article({
-    articleId: '735944ac-5641-431f-8984-bf53972dfd4e',
-  }).$;
-  switch (outputDocumentType) {
-    case 'Protocol':
-      return (
-        <>
-          Add your protocol to a repository (e.g. protocols.io) before sharing
-          on the Hub. Find out{' '}
-          <Link href={protocolsIoLink}>how to add to protocols.io</Link> to get
-          started.
-        </>
-      );
-    case 'Dataset':
-      return (
-        <>
-          Add your dataset to a platform (e.g. Zenodo) before sharing on the
-          Hub. Find out <Link href={zenodoLink}>how to add to Zenodo</Link> to
-          get started.
-        </>
-      );
-    case 'Bioinformatics':
-      return (
-        <>
-          Add bioinformatics, such as scripts or software, to a platform (e.g.
-          Github) before sharing on the Hub.
-        </>
-      );
-    case 'Lab Resource':
-      return (
-        <>
-          Add your lab resource to a repository (e.g. Addgene or WiCell) before
-          sharing on the Hub, if possible. Alternatively, find out{' '}
-          <Link
-            href={
-              'https://drive.google.com/file/d/1qJ2nbqFl5AquhgvUwwxxyOL_k_BMaD2X/view'
-            }
-          >
-            how to distribute a resource
-          </Link>{' '}
-          through ASAP’s tool program.
-        </>
-      );
-    case 'Article':
-      return <>Share your preprint or published article on the Hub.</>;
-    case 'Report':
-      return (
-        <>
-          If possible, please add your CRN report (for example, survey and table
-          summaries, CRN guidelines, etc.) to the working group google folder
-          before sharing on the Hub.
-        </>
-      );
-    default:
-      return null;
-  }
-};
-
 type ResearchOutputHeaderProps = {
   documentType: ResearchOutputDocumentType;
-  association: ResearchOutputAssociation;
+  teamAssociation?: boolean;
 };
 
 const ResearchOutputHeader: React.FC<ResearchOutputHeaderProps> = ({
   documentType,
-  association,
+  teamAssociation = false,
 }) => (
   <header>
     <div css={visualHeaderStyles}>
       <Display styleAsHeading={2}>
-        {headerCopy(documentType, association)}
+        {headerCopy(documentType, teamAssociation)}
       </Display>
       <div>
         <Paragraph accent="lead">
-          <SubheaderCopy outputDocumentType={documentType} />
+          {excludedTypes.includes(documentType)
+            ? null
+            : subheaderRecord[documentType as subHeaderTypes]}
         </Paragraph>
       </div>
     </div>

@@ -8435,7 +8435,6 @@ export type ResearchOutputContentFragment = Pick<
     | 'link'
     | 'addedDate'
     | 'publishDate'
-    | 'publishingEntity'
     | 'doi'
     | 'labCatalogNumber'
     | 'accession'
@@ -8597,7 +8596,6 @@ export type FetchResearchOutputQuery = {
         | 'link'
         | 'addedDate'
         | 'publishDate'
-        | 'publishingEntity'
         | 'doi'
         | 'labCatalogNumber'
         | 'accession'
@@ -8778,7 +8776,6 @@ export type FetchResearchOutputsQuery = {
               | 'link'
               | 'addedDate'
               | 'publishDate'
-              | 'publishingEntity'
               | 'doi'
               | 'labCatalogNumber'
               | 'accession'
@@ -11370,10 +11367,6 @@ export const ResearchOutputContentFragmentDoc = {
                 { kind: 'Field', name: { kind: 'Name', value: 'link' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'addedDate' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'publishDate' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'publishingEntity' },
-                },
                 { kind: 'Field', name: { kind: 'Name', value: 'doi' } },
                 {
                   kind: 'Field',

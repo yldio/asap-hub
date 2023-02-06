@@ -13,17 +13,17 @@ const styles = css({
 
 type SharedResearchMetadataProps = Pick<
   ResearchOutputResponse,
-  'documentType' | 'type' | 'link' | 'publishingEntity'
+  'documentType' | 'type' | 'link' | 'workingGroups'
 >;
 
 const SharedResearchMetadata: React.FC<SharedResearchMetadataProps> = ({
   documentType,
   type,
   link,
-  publishingEntity,
+  workingGroups,
 }) => {
   const pills: string[] = [
-    ...[publishingEntity],
+    ...[workingGroups.length > 0 ? 'Working Group' : 'Team'],
     ...(documentType ? [documentType] : []),
     ...(type ? [type] : []),
   ];

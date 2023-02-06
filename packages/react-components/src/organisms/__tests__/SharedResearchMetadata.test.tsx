@@ -6,7 +6,7 @@ import SharedResearchMetadata from '../SharedResearchMetadata';
 const props: ComponentProps<typeof SharedResearchMetadata> = {
   documentType: 'Article',
   type: 'Code',
-  publishingEntity: 'Team',
+  workingGroups: [],
 };
 
 it('renders Team document types', () => {
@@ -25,7 +25,7 @@ it('renders Working Group document types', () => {
       {...props}
       documentType="Article"
       type="Code"
-      publishingEntity='Working Group'
+      workingGroups={[{ id: 'wg1', title: 'Working group 1' }]}
     />,
   );
   expect(

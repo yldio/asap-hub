@@ -42,7 +42,7 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
   ...props
 }) => (
   <Card>
-    <SharedResearchMetadata {...props} />
+    <SharedResearchMetadata {...props} workingGroups={workingGroups} />
     <LinkHeadline
       level={2}
       styleAsHeading={4}

@@ -58,10 +58,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   if (canCreateUpdate && workingGroup) {
     return (
       <Frame title="Share Working Group Research Output">
-        <ResearchOutputHeader
-          documentType={documentType}
-          association="Working Group"
-        />
+        <ResearchOutputHeader documentType={documentType} />
         <ResearchOutputForm
           tagSuggestions={researchSuggestions}
           documentType={documentType}
@@ -97,12 +94,10 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
               ? updateResearchOutput(researchOutputData.id, {
                   ...output,
                   workingGroups: [workingGroupId],
-                  publishingEntity: 'Working Group',
                 }).catch(handleError(['/link', '/title'], setErrors))
               : createResearchOutput({
                   ...output,
                   workingGroups: [workingGroupId],
-                  publishingEntity: 'Working Group',
                 }).catch(handleError(['/link', '/title'], setErrors))
           }
         />

@@ -67,10 +67,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   if (canCreateUpdate && team) {
     return (
       <Frame title="Share Research Output">
-        <ResearchOutputHeader
-          documentType={documentType}
-          association="Team"
-        />
+        <ResearchOutputHeader documentType={documentType} teamAssociation />
         <ResearchOutputForm
           tagSuggestions={researchSuggestions}
           documentType={documentType}
@@ -104,14 +101,12 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
           )}
           onSave={(output) =>
             researchOutputData
-              ? updateResearchOutput(researchOutputData.id, {
-                  ...output,
-                  publishingEntity: 'Team'
-                }).catch(handleError(['/link', '/title'], setErrors))
-              : createResearchOutput({
-                  ...output,
-                  publishingEntity: 'Team'
-                }).catch(handleError(['/link', '/title'], setErrors))
+              ? updateResearchOutput(researchOutputData.id, output).catch(
+                  handleError(['/link', '/title'], setErrors),
+                )
+              : createResearchOutput(output).catch(
+                  handleError(['/link', '/title'], setErrors),
+                )
           }
         />
       </Frame>

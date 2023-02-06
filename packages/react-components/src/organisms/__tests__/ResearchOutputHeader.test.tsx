@@ -59,7 +59,7 @@ it.each<{
   ({ documentType, headingName, subHeader, association }) => {
     render(
       <ResearchOutputHeader
-        association={association}
+        teamAssociation={association === 'Team'}
         documentType={documentType}
       />,
     );
@@ -71,21 +71,14 @@ it.each<{
 );
 
 it('falls back to a generic description otherwise', () => {
-  render(
-    <ResearchOutputHeader association="Team" documentType="Presentation" />,
-  );
+  render(<ResearchOutputHeader documentType="Presentation" teamAssociation />);
   expect(
     screen.getByRole('heading', { name: /Share a resource/i }),
   ).toBeInTheDocument();
 });
 
 it('falls back to a generic description for working groups', () => {
-  render(
-    <ResearchOutputHeader
-      documentType="Presentation"
-      association="Working Group"
-    />,
-  );
+  render(<ResearchOutputHeader documentType="Presentation" />);
   expect(
     screen.getByRole('heading', { name: /Share a working group resource/i }),
   ).toBeInTheDocument();

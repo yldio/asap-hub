@@ -4,9 +4,8 @@ import {
   createListUserResponse,
   createWorkingGroupListResponse,
 } from '@asap-hub/fixtures';
-import { ResearchOutputPublishingEntities } from '@asap-hub/model';
 import { SharedResearchCard } from '@asap-hub/react-components';
-import { text, date, number, select } from '@storybook/addon-knobs';
+import { text, date, number } from '@storybook/addon-knobs';
 
 export default {
   title: 'Organisms / Shared Research / Card',
@@ -36,10 +35,5 @@ export const Normal = () => (
         number('Number of Working Groups', 1, { max: 1 }),
       ).items
     }
-    publishingEntity={select<ResearchOutputPublishingEntities>(
-      'Publishing Entity',
-      ['Team', 'Working Group'],
-      'Team',
-    )}
   />
 );

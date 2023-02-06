@@ -3,7 +3,6 @@ import {
   checkIfAssetAlreadyExistsInContentful,
   createAsset,
   createInlineAssets,
-  getAssetId,
   migrateAsset,
 } from '../../src/utils';
 import {
@@ -186,20 +185,5 @@ describe('createAsset', () => {
     expect(assetLinkPayload).toEqual({
       sys: { id: 'asset-id', linkType: 'Asset', type: 'Link' },
     });
-  });
-});
-
-describe('getAssetId', () => {
-  const assetId = '8ca5d37d-4bc1-4085-b05e-786c3e6f5a38';
-  const squidexAssetUrlSuffix = 'https://cloud.squidex.io/api/assets/crn-100';
-
-  it('returns the expect assetId', () => {
-    expect(
-      getAssetId(`${squidexAssetUrlSuffix}/${assetId}/example.jpg`),
-    ).toEqual(assetId);
-  });
-
-  it('returns null when it does not find the id', () => {
-    expect(getAssetId(`http://non-squidex-url.example.jpg`)).toBeNull();
   });
 });

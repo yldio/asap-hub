@@ -88,7 +88,6 @@ const ContributingCohortsModal: React.FC<ContributingCohortsModalProps> = ({
       );
   const onRemove = (index: number) => () =>
     setCohorts(newCohorts.filter((_, idx) => idx !== index));
-
   const onAdd = () => setCohorts([...newCohorts, emptyCohort]);
   return (
     <EditUserModal
@@ -122,15 +121,11 @@ const ContributingCohortsModal: React.FC<ContributingCohortsModalProps> = ({
                 <Subtitle styleAsHeading={4}>
                   #{index + 1} Cohort Study
                 </Subtitle>
-                {index !== 0 ? (
-                  <div css={buttonStyles}>
-                    <Button onClick={onRemove(index)} small>
-                      <span css={css({ display: 'inline-flex' })}>
-                        {binIcon}
-                      </span>
-                    </Button>
-                  </div>
-                ) : undefined}
+                <div css={buttonStyles}>
+                  <Button onClick={onRemove(index)} small>
+                    <span css={css({ display: 'inline-flex' })}>{binIcon}</span>
+                  </Button>
+                </div>
               </div>
               <LabeledDropdown
                 title="Name"
@@ -181,7 +176,7 @@ const ContributingCohortsModal: React.FC<ContributingCohortsModalProps> = ({
                     margin: `0 ${rem(3)}`,
                   }}
                 >
-                  Add Another Cohort {addIcon}
+                  Add A{newCohorts.length > 0 && 'nother'} Cohort {addIcon}
                 </span>
               </Button>
             </div>

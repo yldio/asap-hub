@@ -134,6 +134,7 @@ describe('AdditionalDetails', () => {
     mockGetContributingCohorts.mockResolvedValueOnce(
       contributingCohortResponse,
     );
+
     await renderAdditionalDetails(user.id);
     const [, cohortEditButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',

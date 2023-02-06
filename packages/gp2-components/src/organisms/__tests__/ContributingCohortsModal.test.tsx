@@ -1,9 +1,9 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom';
 import ContributingCohortsModal from '../ContributingCohortsModal';
 
 describe('ContributingCohortsModal', () => {
@@ -12,10 +12,6 @@ describe('ContributingCohortsModal', () => {
   const getAddButton = () =>
     screen.getByRole('button', {
       name: /add another cohort/i,
-    });
-  const getRemoveButton = () =>
-    screen.getByRole('button', {
-      name: /delete/i,
     });
   beforeEach(jest.resetAllMocks);
   type ContributingCohortsModalProps = ComponentProps<
@@ -32,7 +28,7 @@ describe('ContributingCohortsModal', () => {
     overrides: Partial<ContributingCohortsModalProps> = {},
   ) =>
     render(<ContributingCohortsModal {...defaultProps} {...overrides} />, {
-      wrapper: MemoryRouter,
+      wrapper: StaticRouter,
     });
 
   it('renders a dialog with the right title', () => {
@@ -107,11 +103,50 @@ describe('ContributingCohortsModal', () => {
     expect(
       screen.getByRole('heading', { name: /#2 Cohort Study/i }),
     ).toBeVisible();
-    const removeButton = getRemoveButton();
+
+    const removeButton = within(
+      screen.getByRole('heading', {
+        name: /#2 Cohort Study/i,
+      }).parentElement as HTMLElement,
+    ).getByRole('button', {
+      name: /delete/i,
+    });
+
     userEvent.click(removeButton);
     expect(
       screen.queryByRole('heading', { name: /#2 Cohort Study/i }),
     ).not.toBeInTheDocument();
+  });
+  it('removing the last', () => {
+    const contributingCohorts = Array.from({ length: 1 }).map((_, i) => ({
+      ...defaultProps.contributingCohorts[0],
+      contributingCohortId: `${i}`,
+    }));
+    const onSave = jest.fn();
+    renderContributingCohorts({ contributingCohorts, onSave });
+    expect(
+      screen.getByRole('heading', { name: /#1 Cohort Study/i }),
+    ).toBeVisible();
+
+    const removeButton = screen.getByRole('button', {
+      name: /delete/i,
+    });
+
+    userEvent.click(removeButton);
+
+    expect(
+      screen.queryByRole('heading', { name: /#1 Cohort Study/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', {
+        name: /add another cohort/i,
+      }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole('button', {
+        name: /add a cohort/i,
+      }),
+    ).toBeVisible();
   });
   it('allows the name to be edited', () => {
     const contributingCohortId = '11';

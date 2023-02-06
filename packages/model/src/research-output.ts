@@ -58,6 +58,8 @@ export const researchOutputTypes = [
   'Viral Vector',
 ] as const;
 
+export type ResearchOutputAssociation = 'Team' | 'Working Group';
+
 export const ResearchOutputPublishingEntitiesValues = <const>[
   'Team',
   'Working Group',
@@ -149,7 +151,6 @@ export const researchOutputMapPublishingEntity = (
   }
   return 'Team';
 };
-
 export enum ResearchOutputIdentifierType {
   Empty = '',
   None = 'None',

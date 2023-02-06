@@ -11,12 +11,7 @@ const props: ComponentProps<typeof SharedResearchMetadata> = {
 
 it('renders Team document types', () => {
   const { getAllByRole } = render(
-    <SharedResearchMetadata
-      {...props}
-      publishingEntity="Team"
-      documentType="Article"
-      type="Code"
-    />,
+    <SharedResearchMetadata {...props} documentType="Article" type="Code" />,
   );
 
   expect(
@@ -28,9 +23,9 @@ it('renders Working Group document types', () => {
   const { getAllByRole } = render(
     <SharedResearchMetadata
       {...props}
-      publishingEntity="Working Group"
       documentType="Article"
       type="Code"
+      publishingEntity='Working Group'
     />,
   );
   expect(

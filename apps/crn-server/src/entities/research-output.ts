@@ -2,7 +2,6 @@ import {
   convertDecisionToBoolean,
   isResearchOutputDocumentType,
   ResearchOutputDataObject,
-  researchOutputMapPublishingEntity,
   researchOutputMapType,
   ResearchOutputSharingStatus,
   sharingStatuses,
@@ -42,9 +41,7 @@ export const parseGraphQLResearchOutput = (
 
   const data = output.flatData;
   const type = researchOutputMapType(data.type);
-  const publishingEntity = researchOutputMapPublishingEntity(
-    data.publishingEntity,
-  );
+  const publishingEntity = 'Team';
 
   return {
     id: output.id,

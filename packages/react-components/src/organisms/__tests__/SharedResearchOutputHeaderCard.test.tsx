@@ -84,7 +84,6 @@ it('renders an output with document type and type', () => {
       authors={[]}
       workingGroups={[]}
       documentType="Protocol"
-      publishingEntity="Team"
       type={undefined}
     />,
   );
@@ -99,7 +98,6 @@ it('renders an output with document type and type', () => {
       authors={[]}
       workingGroups={[]}
       documentType="Protocol"
-      publishingEntity="Team"
       type={'3D Printing'}
     />,
   );

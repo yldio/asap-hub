@@ -48,7 +48,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
           .outputs({}).$ + listViewParams
       }
       userAssociationMember={userAssociationMember}
-      publishingEntity={'Working Group'}
+      association="Working Group"
     />
   );
 };

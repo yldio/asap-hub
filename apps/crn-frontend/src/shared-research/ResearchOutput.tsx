@@ -35,7 +35,7 @@ const ResearchOutput: React.FC = () => {
               .editResearchOutput.template
           }
         >
-          {researchOutputData.publishingEntity === 'Working Group' ? (
+          {researchOutputData.workingGroups.length > 0 ? (
             <WorkingGroupOutput
               workingGroupId={researchOutputData.workingGroups[0]?.id}
               researchOutputData={researchOutputData}

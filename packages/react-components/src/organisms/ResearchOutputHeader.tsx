@@ -2,7 +2,7 @@ import React from 'react';
 import { css } from '@emotion/react';
 import {
   ResearchOutputDocumentType,
-  ResearchOutputPublishingEntities,
+  ResearchOutputAssociation,
 } from '@asap-hub/model';
 
 import { news } from '@asap-hub/routing';
@@ -22,9 +22,9 @@ const visualHeaderStyles = css({
 
 const headerCopy = (
   outputDocumentType: ResearchOutputDocumentType,
-  publishingEntity: ResearchOutputPublishingEntities,
+  association: ResearchOutputAssociation,
 ) => {
-  if (publishingEntity === 'Team') {
+  if (association === 'Team') {
     switch (outputDocumentType) {
       case 'Protocol':
         return 'Share a protocol';
@@ -116,17 +116,17 @@ const SubheaderCopy: React.FC<{
 
 type ResearchOutputHeaderProps = {
   documentType: ResearchOutputDocumentType;
-  publishingEntity: ResearchOutputPublishingEntities;
+  association: ResearchOutputAssociation;
 };
 
 const ResearchOutputHeader: React.FC<ResearchOutputHeaderProps> = ({
   documentType,
-  publishingEntity,
+  association,
 }) => (
   <header>
     <div css={visualHeaderStyles}>
       <Display styleAsHeading={2}>
-        {headerCopy(documentType, publishingEntity)}
+        {headerCopy(documentType, association)}
       </Display>
       <div>
         <Paragraph accent="lead">

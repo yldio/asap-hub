@@ -13,20 +13,16 @@ import { network, useRouteParams } from '@asap-hub/routing';
 import React, { useContext, useState } from 'react';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import researchSuggestions from '../teams/research-suggestions';
-import {
-  useAuthorSuggestions,
-  useLabSuggestions,
-  useWorkingGroupById,
-  useTeamSuggestions,
-} from './state';
-import {
-  usePostResearchOutput,
-  usePutResearchOutput,
-  useResearchTags,
-} from '../teams/state';
+import { useWorkingGroupById } from './state';
 import {
   handleError,
   paramOutputDocumentTypeToResearchOutputDocumentType,
+  useAuthorSuggestions,
+  useLabSuggestions,
+  useTeamSuggestions,
+  useResearchTags,
+  usePostResearchOutput,
+  usePutResearchOutput,
 } from '../../shared-research';
 
 type WorkingGroupOutputProps = {
@@ -64,7 +60,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
       <Frame title="Share Working Group Research Output">
         <ResearchOutputHeader
           documentType={documentType}
-          publishingEntity="Working Group"
+          association="Working Group"
         />
         <ResearchOutputForm
           tagSuggestions={researchSuggestions}

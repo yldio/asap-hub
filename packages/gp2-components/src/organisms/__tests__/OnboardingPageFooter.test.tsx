@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import OnboardingPageFooter from '../OnboardingPageFooter';
@@ -48,7 +48,7 @@ describe('OnboardingPageFooter', () => {
     ).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Publish' })).toBeVisible();
   });
-  it('calls the publishUser function when pressing the publish button', () => {
+  it('calls the publishUser function when pressing the publish button', async () => {
     const publishUser = jest.fn();
     render(
       <OnboardingPageFooter
@@ -63,5 +63,8 @@ describe('OnboardingPageFooter', () => {
     );
     userEvent.click(screen.getByRole('button', { name: 'Publish' }));
     expect(publishUser).toHaveBeenCalled();
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Publish' })).toBeEnabled(),
+    );
   });
 });

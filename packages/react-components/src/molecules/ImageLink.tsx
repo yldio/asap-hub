@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { Anchor } from '../atoms';
 import { fern } from '../colors';
 
-const hoverStyle = css({
+export const hoverStyle = css({
   transition: `100ms ease-in-out, color 100ms ease-in-out`,
   ':hover': {
     color: fern.rgb,

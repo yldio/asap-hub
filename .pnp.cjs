@@ -6230,6 +6230,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:27.5.1"\
       ],\
       [\
+        "jest-fail-on-console",\
+        "npm:3.0.2"\
+      ],\
+      [\
         "jest-get-type",\
         "npm:27.5.1"\
       ],\
@@ -10200,6 +10204,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:27.5.1"],\
             ["jest-circus", "npm:27.5.1"],\
             ["jest-environment-jsdom", "npm:27.5.1"],\
+            ["jest-fail-on-console", "npm:3.0.2"],\
             ["jest-runner-eslint", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.0"],\
             ["jest-watch-select-projects", "npm:2.0.0"],\
             ["jest-watch-suspend", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.2"],\
@@ -38121,6 +38126,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:27.5.1"],\
             ["jest-circus", "npm:27.5.1"],\
             ["jest-environment-jsdom", "npm:27.5.1"],\
+            ["jest-fail-on-console", "npm:3.0.2"],\
             ["jest-runner-eslint", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.0"],\
             ["jest-watch-select-projects", "npm:2.0.0"],\
             ["jest-watch-suspend", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.2"],\
@@ -52358,6 +52364,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/node", "npm:13.11.1"],\
             ["jest-mock", "npm:27.5.1"],\
             ["jest-util", "npm:27.5.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["jest-fail-on-console", [\
+        ["npm:3.0.2", {\
+          "packageLocation": "./.yarn/cache/jest-fail-on-console-npm-3.0.2-6b7071d0df-3d14a72f38.zip/node_modules/jest-fail-on-console/",\
+          "packageDependencies": [\
+            ["jest-fail-on-console", "npm:3.0.2"],\
+            ["chalk", "npm:4.1.0"]\
           ],\
           "linkType": "HARD"\
         }]\

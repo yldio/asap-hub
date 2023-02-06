@@ -7,7 +7,7 @@ describe('ProjectMilestones', () => {
   type Milestone = gp2.ProjectResponse['milestones'][0];
   const getMilestones = (length = 1): Milestone[] =>
     Array.from({ length }, (_, itemIndex) => ({
-      id: `itemIndex`,
+      id: `${itemIndex}`,
       title: `a title ${itemIndex}`,
       status: 'Active',
     }));

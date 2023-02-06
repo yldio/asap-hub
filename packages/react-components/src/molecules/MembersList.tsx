@@ -7,7 +7,7 @@ import { perRem, tabletScreen } from '../pixels';
 import { lead } from '../colors';
 import { Link, Avatar, Anchor, Ellipsis } from '../atoms';
 import { alumniBadgeIcon } from '../icons';
-import { ImageLink } from '.';
+import { hoverStyle } from './ImageLink';
 import { styles } from '../atoms/Link';
 import { hover } from './LinkHeadline';
 
@@ -102,9 +102,7 @@ const MembersList: React.FC<MembersListProps> = ({
         return (
           <li key={id} css={{ display: 'contents' }}>
             <Anchor href={href} css={{ display: 'contents' }}>
-              <div css={avatarStyles}>
-                <ImageLink link={href}>{userAvatar}</ImageLink>
-              </div>
+              <div css={[avatarStyles, hoverStyle]}>{userAvatar}</div>
             </Anchor>
             <Anchor
               href={href}

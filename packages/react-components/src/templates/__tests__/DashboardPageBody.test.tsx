@@ -127,17 +127,17 @@ describe('the recent shared outputs card', () => {
         recentSharedOutputs={{
           items: [
             {
-              ...createResearchOutputResponse(),
+              ...createResearchOutputResponse(0),
               title: 'Shared 1',
               documentType: 'Article',
             },
             {
-              ...createResearchOutputResponse(),
+              ...createResearchOutputResponse(1),
               title: 'Shared 2',
               documentType: 'Article',
             },
             {
-              ...createResearchOutputResponse(),
+              ...createResearchOutputResponse(2),
               title: 'Shared 3',
               documentType: 'Article',
             },

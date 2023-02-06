@@ -30,8 +30,9 @@ const Dashboard: React.FC<dashboardProps> = ({
     )}
     <article
       css={
-        showWelcomeBackBanner &&
-        css({ position: 'relative', marginTop: rem(48) })
+        showWelcomeBackBanner
+          ? { position: 'relative', marginTop: rem(48) }
+          : {}
       }
     >
       <DashboardHeader />

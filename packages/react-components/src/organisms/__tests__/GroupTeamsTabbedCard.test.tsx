@@ -14,7 +14,7 @@ const renderTabbedCard = (isGroupInactive: boolean) =>
       {...props}
       teams={[
         { displayName: 'team 1', id: '123' },
-        { displayName: 'team 2', id: '123', inactiveSince: '2021-01-01' },
+        { displayName: 'team 2', id: '245', inactiveSince: '2021-01-01' },
       ]}
       isGroupActive={isGroupInactive}
     />,

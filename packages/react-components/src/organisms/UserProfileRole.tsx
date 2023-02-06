@@ -51,7 +51,7 @@ const listItemStyle = css({
       gridTemplateRows: '1fr',
     },
 
-    [`&:not(:first-of-type) > :nth-child(odd)`]: {
+    [`&:not(:first-of-type) > :nth-of-type(odd)`]: {
       display: 'none',
     },
   },
@@ -94,7 +94,9 @@ const UserProfileRole: React.FC<UserProfileRoleProps> = ({
                 {idx === 0 || <Divider />}
                 <li key={idx} css={listItemStyle}>
                   <div css={[titleStyle]}>Team</div>
-                  <Link href={teamHref(id)}>Team {displayName}</Link>
+                  <div>
+                    <Link href={teamHref(id)}>Team {displayName}</Link>
+                  </div>
                   <div css={[titleStyle]}>Role</div>
                   <div>{teamRole}</div>
                 </li>

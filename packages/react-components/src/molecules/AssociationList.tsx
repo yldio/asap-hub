@@ -29,7 +29,7 @@ const itemStyles = css({
   paddingTop: `${24 / perRem}em`,
   color: lead.rgb,
 
-  '&:first-child': {
+  '&:first-of-type': {
     paddingTop: `${18 / perRem}em`,
   },
 });

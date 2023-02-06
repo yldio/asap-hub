@@ -1,11 +1,19 @@
 import { css } from '@emotion/react';
 import { pixels, Toast } from '@asap-hub/react-components';
 import DashboardHeader from '../organisms/DashboardHeader';
+import { mobileQuery } from '../layout';
 
 const { rem } = pixels;
 
 const mainStyles = css({
-  padding: `${rem(36)} 0`,
+  display: 'flex',
+  flexDirection: 'column',
+  gap: rem(48),
+  padding: `${rem(48)} 0`,
+  [mobileQuery]: {
+    gap: rem(24),
+    padding: `${rem(32)} 0`,
+  },
 });
 
 type dashboardProps = {

@@ -1,3 +1,4 @@
+import { gp2 } from '@asap-hub/model';
 import {
   Accordion,
   Card,
@@ -10,12 +11,17 @@ import {
   toolsIcon,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
+import DashboardNews from '../organisms/DashboardNews';
 
-const DashboardPageBody: React.FC = () => (
+type DashboardPageBodyProps = {
+  news: gp2.ListNewsResponse;
+};
+
+const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({ news }) => (
   <>
     <Card>
       <Headline2>Tools and Tutorials</Headline2>
-      <Paragraph>
+      <Paragraph accent="lead">
         Here are some key actions to take within the GP2 network:
       </Paragraph>
       <Accordion
@@ -113,7 +119,7 @@ const DashboardPageBody: React.FC = () => (
         ]}
       />
     </Card>
+    {!!news.total && <DashboardNews items={news.items} />}
   </>
 );
-
 export default DashboardPageBody;

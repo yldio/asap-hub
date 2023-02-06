@@ -2,6 +2,7 @@ import { Frame } from '@asap-hub/frontend-utils';
 import { DashboardPage } from '@asap-hub/gp2-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { ComponentProps, FC, lazy } from 'react';
+import { useNews } from './state';
 
 const loadBody = () =>
   import(/* webpackChunkName: "dashboard-body" */ './Body');
@@ -23,6 +24,7 @@ const Dashboard: FC<DashboardProps> = ({
   }
 
   const { firstName } = currentUser;
+  const news = useNews();
 
   return (
     <DashboardPage
@@ -31,7 +33,7 @@ const Dashboard: FC<DashboardProps> = ({
       dismissBanner={dismissBanner}
     >
       <Frame title={null}>
-        <Body />
+        <Body news={news} />
       </Frame>
     </DashboardPage>
   );

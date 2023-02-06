@@ -4,13 +4,14 @@ import { css } from '@emotion/react';
 import React from 'react';
 import {
   dashboardIcon,
+  eventsIcon,
   projectIcon,
   usersIcon,
   workingGroupIcon,
 } from '../icons';
 import NavigationLink from '../molecules/NavigationLink';
 
-const { workingGroups, users, projects } = gp2;
+const { workingGroups, users, projects, events } = gp2;
 const {
   largeDesktopScreen,
   mobileScreen,
@@ -84,6 +85,11 @@ const MainNavigation: React.FC = () => (
       <li>
         <NavigationLink href={projects({}).$} icon={projectIcon}>
           Projects
+        </NavigationLink>
+      </li>
+      <li>
+        <NavigationLink href={events({}).$} icon={eventsIcon}>
+          Events
         </NavigationLink>
       </li>
     </ul>

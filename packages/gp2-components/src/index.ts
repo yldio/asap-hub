@@ -54,6 +54,7 @@ export {
   BasicLayout,
   DashboardPage,
   DashboardPageBody,
+  EventsPage,
   Layout,
   OnboardingAdditionalDetails,
   OnboardingBackground,

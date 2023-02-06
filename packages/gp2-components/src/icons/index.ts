@@ -1,6 +1,7 @@
 export { default as addIcon } from './add-icon';
 export { default as binIcon } from './bin-icon';
 export { default as copyIcon } from './copy-icon';
+export { default as eventsIcon } from './events-icon';
 export { default as dashboardIcon } from './dashboard-icon';
 export { default as dateIcon } from './date-icon';
 export { default as editIcon } from './edit-icon';

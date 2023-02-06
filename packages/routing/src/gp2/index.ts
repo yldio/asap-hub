@@ -1,3 +1,4 @@
+export { default as events } from './events';
 export { default as onboarding } from './onboarding';
 export { default as projects } from './projects';
 export { default as resource } from './resource';

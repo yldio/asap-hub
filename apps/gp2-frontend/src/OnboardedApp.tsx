@@ -11,6 +11,7 @@ const {
   workingGroups: workingGroupsRoute,
   users: usersRoute,
   projects: projectsRoute,
+  events: eventsRoute,
 } = gp2Route;
 const loadDashboard = () =>
   import(/* webpackChunkName: "dashboard" */ './dashboard/Dashboard');
@@ -24,10 +25,14 @@ const loadProjects = () =>
 const loadUsers = () =>
   import(/* webpackChunkName: "users" */ './users/Routes');
 
+const loadEvents = () =>
+  import(/* webpackChunkName: "events" */ './events/Routes');
+
 const Dashboard = lazy(loadDashboard);
 const WorkingGroups = lazy(loadWorkingGroups);
 const Projects = lazy(loadProjects);
 const Users = lazy(loadUsers);
+const Events = lazy(loadEvents);
 
 const OnboardedApp: FC<ComponentProps<typeof Dashboard>> = ({
   showWelcomeBackBanner,
@@ -39,7 +44,11 @@ const OnboardedApp: FC<ComponentProps<typeof Dashboard>> = ({
 
   useEffect(() => {
     // order by the likelyhood of user navigating there
-    loadDashboard().then(loadUsers).then(loadWorkingGroups).then(loadProjects);
+    loadDashboard()
+      .then(loadUsers)
+      .then(loadWorkingGroups)
+      .then(loadProjects)
+      .then(loadEvents);
   });
 
   const { projects = [], workingGroups = [] } =
@@ -70,6 +79,11 @@ const OnboardedApp: FC<ComponentProps<typeof Dashboard>> = ({
         <Route path={projectsRoute.template}>
           <Frame title="Projects">
             <Projects />
+          </Frame>
+        </Route>
+        <Route path={eventsRoute.template}>
+          <Frame title="Events">
+            <Events />
           </Frame>
         </Route>
         <Route>

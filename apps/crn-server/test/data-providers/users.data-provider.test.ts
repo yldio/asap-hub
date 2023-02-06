@@ -536,6 +536,26 @@ describe('User data provider', () => {
       expect(result).toEqual(userId);
     });
 
+    test('Should create a user with no team', async () => {
+      const userCreateDataObject = {
+        ...getUserCreateDataObject(),
+        teams: null,
+      };
+      const inputWithNoTeams = {
+        ...getInputUser(),
+        teams: {
+          iv: []
+        }
+      }
+
+      nock(baseUrl)
+        .post(`/api/content/${appName}/users?publish=true`, inputWithNoTeams)
+        .reply(201, { id: userId });
+
+      const result = await userDataProvider.create(userCreateDataObject);
+      expect(result).toEqual(userId);
+    });
+
     test('Should throw when it fails to create the user', async () => {
       nock(baseUrl)
         .post(`/api/content/${appName}/users?publish=true`)

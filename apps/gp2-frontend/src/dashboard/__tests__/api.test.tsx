@@ -12,10 +12,8 @@ describe('getNews', () => {
     nock.cleanAll();
   });
   it('returns a successfully fetched news', async () => {
-    const newsResponse: gp2Model.ListNewsResponse = {
-      items: [gp2Fixtures.createNewsResponse()],
-      total: 1,
-    };
+    const newsResponse: gp2Model.ListNewsResponse =
+      gp2Fixtures.createNewsResponse();
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
       .get('/news')
       .reply(200, newsResponse);

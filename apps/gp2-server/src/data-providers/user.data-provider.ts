@@ -317,6 +317,10 @@ export const parseGraphQLUserToDataObject = ({
           number: user.telephoneNumber || undefined,
         }
       : undefined;
+  const connections =
+    user.connections?.filter(
+      (connection): connection is { code: string } => !!connection.code,
+    ) || [];
 
   if (user.keywords && !user.keywords.every(gp2Model.isKeyword)) {
     throw new TypeError('Invalid keyword received from Squidex');
@@ -325,30 +329,31 @@ export const parseGraphQLUserToDataObject = ({
     user.contributingCohorts,
   );
   return {
-    id,
-    createdDate,
+    activatedDate: user.activatedDate || undefined,
     avatarUrl,
-    firstName: user.firstName || '',
-    lastName: user.lastName || '',
+    biography: user.biography || undefined,
+    city: user.city || undefined,
+    connections,
+    contributingCohorts,
+    country: user.country || '',
+    createdDate,
     degrees,
     email: user.email || '',
+    firstName: user.firstName || '',
+    fundingStreams: user.fundingStreams || undefined,
+    id,
+    keywords: user.keywords || [],
+    lastName: user.lastName || '',
+    onboarded: user.onboarded || false,
+    positions,
+    projects,
+    questions,
     region: regionMap[user.region],
     role: roleMap[user.role],
-    country: user.country || '',
-    city: user.city || undefined,
-    positions,
-    onboarded: user.onboarded || false,
-    projects,
-    workingGroups,
-    fundingStreams: user.fundingStreams || undefined,
     secondaryEmail: user.secondaryEmail || undefined,
-    telephone,
-    keywords: user.keywords || [],
-    biography: user.biography || undefined,
-    questions,
-    contributingCohorts,
     social,
-    activatedDate: user.activatedDate || undefined,
+    telephone,
+    workingGroups,
   };
 };
 

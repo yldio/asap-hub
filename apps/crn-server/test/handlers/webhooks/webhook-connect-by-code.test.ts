@@ -139,7 +139,9 @@ describe('POST /webhook/users/connections - success', () => {
     nock(baseUrl)
       .patch(`/api/content/${appName}/users/${user.id}`, {
         email: { iv: email },
-        connections: { iv: [{ code: userId }] },
+        connections: {
+          iv: [...userResponse.flatData.connections!, { code: userId }],
+        },
       })
       .reply(200, patchedUser);
 

@@ -10,6 +10,9 @@ export const usersContentQueryFragment = gql`
       avatar {
         id
       }
+      connections {
+        code
+      }
       degree
       email
       firstName

@@ -119,7 +119,16 @@ describe('User data provider', () => {
       const mockResponse = getSquidexUserGraphqlResponse(user);
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
       const result = await userDataProvider.fetchById('user-id');
-      expect(result?.degrees).toEqual([]);
+      expect(result!.degrees).toEqual([]);
+    });
+
+    test('connections default to empty array', async () => {
+      const user = getGraphQLUser();
+      user.flatData.connections = null;
+      const mockResponse = getSquidexUserGraphqlResponse(user);
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+      const result = await userDataProvider.fetchById('user-id');
+      expect(result!.connections).toEqual([]);
     });
 
     test.each`

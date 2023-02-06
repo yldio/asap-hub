@@ -109,9 +109,11 @@ export default class Users implements UserController {
     if (user.connections?.find(({ code }) => code === userId)) {
       return parseUserToResponse(user);
     }
+    const existingConnections =
+      user.connections?.filter(({ code }) => code !== welcomeCode) || [];
     return this.update(user.id, {
       email: user.email,
-      connections: [...(user.connections || []), { code: userId }],
+      connections: [...existingConnections, { code: userId }],
     });
   }
 

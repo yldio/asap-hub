@@ -31,6 +31,9 @@ export const usersContentQueryFragment = gql`
         id
       }
       biography
+      connections {
+        code
+      }
       degree
       email
       contactEmail

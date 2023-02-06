@@ -172,15 +172,17 @@ describe('Users controller', () => {
   });
 
   describe('connectByCode', () => {
-    test('should connect and return the user on success', async () => {
+    test('should replace the welcome code with the connection code and return the user on success', async () => {
       const userId = '42';
       const user = getUserDataObject();
+      const welcomeCode = 'welcome-code';
+      user.connections = [{ code: welcomeCode }];
       userDataProviderMock.fetch.mockResolvedValue({
         total: 1,
         items: [{ ...user, id: userId }],
       });
       userDataProviderMock.fetchById.mockResolvedValue(user);
-      const result = await userController.connectByCode('some code', 'user-id');
+      const result = await userController.connectByCode(welcomeCode, 'user-id');
 
       expect(userDataProviderMock.update).toHaveBeenCalledWith(userId, {
         email: user.email,
@@ -188,6 +190,30 @@ describe('Users controller', () => {
       });
       expect(result).toEqual(getUserResponse());
     });
+
+    test('should keep the existing connections when creating a new one', async () => {
+      const userId = '42';
+      const user = getUserDataObject();
+      const existingConnection = 'auth0|123456';
+      const welcomeCode = 'welcome-code';
+      user.connections = [{ code: existingConnection }, { code: welcomeCode }];
+      userDataProviderMock.fetch.mockResolvedValue({
+        total: 1,
+        items: [{ ...user, id: userId }],
+      });
+      userDataProviderMock.fetchById.mockResolvedValue(user);
+      await userController.connectByCode('some code', 'user-id');
+
+      expect(userDataProviderMock.update).toHaveBeenCalledWith(userId, {
+        email: user.email,
+        connections: expect.arrayContaining([
+          {
+            code: existingConnection,
+          },
+        ]),
+      });
+    });
+
     test('Shouldnt do anything if connecting with existing code', async () => {
       const userId = '42';
       const userCode = 'google-oauth2|token';

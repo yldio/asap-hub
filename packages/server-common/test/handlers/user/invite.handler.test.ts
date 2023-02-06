@@ -107,7 +107,8 @@ describe('Invite Handler', () => {
     expect(sendEmailMock).not.toBeCalled();
   });
 
-  test('Should find the user with a non-matching invitation code, create an invitation code and send the invitation email', async () => {
+  test('Should find the user with an existing connection code and add an invitation code without removing the existing connection', async () => {
+    const connectionCode = 'auth0|some-other-id';
     const userWithOtherConnection: RestUser = {
       ...restUserMock(),
       data: {
@@ -115,7 +116,7 @@ describe('Invite Handler', () => {
         connections: {
           iv: [
             {
-              code: 'some-other-code',
+              code: connectionCode,
             },
           ],
         },
@@ -130,17 +131,12 @@ describe('Invite Handler', () => {
     expect(userClient.fetchById).toBeCalledWith(userWithOtherConnection.id);
     expect(userClient.patch).toBeCalledWith(userWithOtherConnection.id, {
       connections: {
-        iv: [{ code: expect.any(String) }],
-      },
-    });
-    const code = userClient.patch.mock.calls[0]![1].connections!.iv![0]!.code;
-    const expectedLink = new url.URL(path.join(`/welcome/${code}`), origin);
-    expect(sendEmailMock).toBeCalledWith({
-      to: [userWithOtherConnection.data.email.iv],
-      template: crnWelcomeTemplate,
-      values: {
-        firstName: userWithOtherConnection.data.firstName.iv,
-        link: expectedLink.toString(),
+        iv: [
+          {
+            code: connectionCode,
+          },
+          { code: expect.any(String) },
+        ],
       },
     });
   });

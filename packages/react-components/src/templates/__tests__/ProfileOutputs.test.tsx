@@ -14,7 +14,7 @@ const baseProps: ComponentProps<typeof ProfileOutputs> = {
   cardViewHref: '',
   listViewHref: '',
   userAssociationMember: true,
-  publishingEntity: 'Team',
+  association: 'Team',
 };
 
 it('renders output cards', () => {
@@ -60,7 +60,7 @@ it('renders the no output page for your own team', () => {
     <ProfileOutputs
       {...baseProps}
       userAssociationMember={true}
-      publishingEntity="Team"
+      association="Team"
     />,
   );
   expect(getByTitle('Research')).toBeInTheDocument();
@@ -71,7 +71,7 @@ it('renders the no output page for your own team', () => {
       {...baseProps}
       userAssociationMember={true}
       contactEmail="example@example.com"
-      publishingEntity="Team"
+      association="Team"
     />,
   );
   expect(getByText(/contact your PM/i).closest('a')).toHaveAttribute(
@@ -105,7 +105,7 @@ it('renders the no outputs page for a working group', () => {
     <ProfileOutputs
       {...baseProps}
       userAssociationMember={false}
-      publishingEntity="Working Group"
+      association="Working Group"
     />,
   );
 
@@ -115,7 +115,7 @@ it('renders the no outputs page for a working group', () => {
   rerender(
     <ProfileOutputs
       {...baseProps}
-      publishingEntity="Working Group"
+      association="Working Group"
       userAssociationMember={true}
     />,
   );

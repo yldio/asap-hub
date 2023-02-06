@@ -3,7 +3,6 @@ import {
   convertDecisionToBoolean,
   isResearchOutputDocumentType,
   isResearchOutputType,
-  researchOutputMapPublishingEntity,
   researchOutputMapType,
 } from '../src/research-output';
 
@@ -33,19 +32,6 @@ describe('Research Output Model', () => {
 
     it('should return null on not known type', () => {
       expect(researchOutputMapType('NotACloningType')).toBeNull();
-    });
-  });
-
-  describe('Publishing Entities', () => {
-    it('should map to the correct entity', () => {
-      expect(researchOutputMapPublishingEntity('Working_Group')).toEqual(
-        'Working Group',
-      );
-    });
-    it('should map to Team by default', () => {
-      expect(
-        researchOutputMapPublishingEntity('not a publishing entity'),
-      ).toEqual('Team');
     });
   });
 });

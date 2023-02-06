@@ -15,9 +15,6 @@ import {
 } from 'recoil';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { authorizationState } from '../../auth/state';
-import { useAlgolia } from '../../hooks/algolia';
-import { getLabs, getTeams } from '../teams/api';
-import { getUsersAndExternalAuthors } from '../users/api';
 import { getWorkingGroup, getWorkingGroups } from './api';
 
 const workingGroupIndexState = atomFamily<
@@ -127,43 +124,6 @@ export const useWorkingGroups = (options: GetListOptions) => {
     throw workingGroups;
   }
   return workingGroups;
-};
-
-export const useTeamSuggestions = () => {
-  const authorization = useRecoilValue(authorizationState);
-  return (searchQuery: string) =>
-    getTeams(
-      { searchQuery, filters: new Set(), currentPage: null, pageSize: null },
-      authorization,
-    ).then(({ items }) =>
-      items.map(({ id, displayName }) => ({
-        label: displayName,
-        value: id,
-      })),
-    );
-};
-
-export const useLabSuggestions = () => {
-  const authorization = useRecoilValue(authorizationState);
-  return (searchQuery: string) =>
-    getLabs(
-      { searchQuery, filters: new Set(), currentPage: null, pageSize: null },
-      authorization,
-    ).then(({ items }) =>
-      items.map(({ id, name }) => ({ label: `${name} Lab`, value: id })),
-    );
-};
-
-export const useAuthorSuggestions = () => {
-  const algoliaClient = useAlgolia();
-
-  return (searchQuery: string) =>
-    getUsersAndExternalAuthors(algoliaClient.client, {
-      searchQuery,
-      currentPage: null,
-      pageSize: 100,
-      filters: new Set(),
-    }).then(({ items }) => items);
 };
 
 export const useCanCreateUpdateResearchOutput = (

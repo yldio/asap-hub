@@ -87,7 +87,7 @@ export const createResearchOutput = async (
   if (!resp.ok) {
     throw new BackendError(
       `Failed to create research output for ${
-        researchOutput.publishingEntity
+        researchOutput.workingGroups.length > 0 ? 'working group' : 'team'
       }. Expected status 201. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
       response,
       resp.status,

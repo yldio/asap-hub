@@ -6,5 +6,5 @@ export default {
 };
 
 export const Normal = () => (
-  <ResearchOutputHeader publishingEntity="Team" documentType="Article" />
+  <ResearchOutputHeader association="Team" documentType="Article" />
 );

@@ -1,4 +1,4 @@
-import { ResearchOutputPublishingEntities } from '@asap-hub/model';
+import { ResearchOutputAssociation } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import React, { ComponentProps } from 'react';
 import { SharedResearchList } from '.';
@@ -17,7 +17,7 @@ export type ProfileOutputsProps = Omit<
 > & {
   userAssociationMember: boolean;
   contactEmail?: string;
-  publishingEntity: ResearchOutputPublishingEntities;
+  association: ResearchOutputAssociation;
 };
 
 const ProfileOutputs: React.FC<ProfileOutputsProps> = ({
@@ -32,7 +32,7 @@ const ProfileOutputs: React.FC<ProfileOutputsProps> = ({
   listViewHref,
   userAssociationMember,
   contactEmail,
-  publishingEntity,
+  association = 'Team',
 }) => (
   <div css={containerStyles}>
     {numberOfItems ? (
@@ -52,12 +52,12 @@ const ProfileOutputs: React.FC<ProfileOutputsProps> = ({
         title={`
           ${
             userAssociationMember ? 'Your' : 'This'
-          } ${publishingEntity.toLowerCase()} hasn’t shared any research ${
-          publishingEntity === 'Working Group' ? 'yet!' : '.'
+          } ${association.toLowerCase()} hasn’t shared any research ${
+          association === 'Working Group' ? 'yet!' : '.'
         }`}
         description={
           <>
-            {publishingEntity === 'Team' && (
+            {association === 'Team' && (
               <>
                 {userAssociationMember
                   ? 'To start sharing research,'

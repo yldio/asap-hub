@@ -6,7 +6,6 @@ import { ExternalLink, PillList } from '../molecules';
 
 const styles = css({
   flex: 1,
-
   display: 'flex',
   justifyContent: 'space-between',
   columnGap: `${12 / perRem}em`,

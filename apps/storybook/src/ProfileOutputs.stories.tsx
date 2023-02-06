@@ -20,7 +20,7 @@ export const Normal = () => {
       cardViewHref={''}
       listViewHref={''}
       userAssociationMember={boolean('User is association member', true)}
-      publishingEntity={select(
+      association={select(
         'Publishing Entity',
         ['Team', 'Working Group'],
         'Team',

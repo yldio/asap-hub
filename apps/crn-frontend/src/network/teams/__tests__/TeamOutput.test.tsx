@@ -198,7 +198,6 @@ it('can submit a form when form data is valid', async () => {
       usageNotes: '',
       asapFunded: undefined,
       usedInPublication: undefined,
-      publishingEntity: 'Team',
     },
     expect.anything(),
   );

@@ -139,6 +139,7 @@ const ContributingCohortsModal: React.FC<ContributingCohortsModalProps> = ({
                   label: name,
                   value: id,
                 }))}
+                placeholder={'Type a cohort study name...'}
               />
               <LabeledDropdown
                 title="Role"
@@ -149,7 +150,7 @@ const ContributingCohortsModal: React.FC<ContributingCohortsModalProps> = ({
                 value={role || ''}
                 onChange={onChangeValue(index, 'role')}
                 required
-                placeholder={'Select a role'}
+                placeholder={'Select a role...'}
               />
               <LabeledTextField
                 title="Link"
@@ -162,7 +163,7 @@ const ContributingCohortsModal: React.FC<ContributingCohortsModalProps> = ({
                   'Please enter a valid URL, starting with http://'
                 }
                 labelIndicator={<GlobeIcon />}
-                placeholder="https://example.com"
+                placeholder="https://www.example.com"
               />
             </div>
           ))}

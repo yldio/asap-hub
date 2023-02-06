@@ -151,10 +151,6 @@ describe('Fetch-user-by-code handler', () => {
       )) as APIGatewayProxyResult;
 
       expect(result.statusCode).toStrictEqual(200);
-
-      // Using stringify() in the expected response since the result body
-      // is also using it and undefined properties are removed when running it.
-
       expect(JSON.parse(result.body)).toEqual(getUserResponse());
     });
 

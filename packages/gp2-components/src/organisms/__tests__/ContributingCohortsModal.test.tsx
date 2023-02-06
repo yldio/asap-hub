@@ -7,16 +7,17 @@ import { StaticRouter } from 'react-router-dom';
 import ContributingCohortsModal from '../ContributingCohortsModal';
 
 describe('ContributingCohortsModal', () => {
+  type ContributingCohortsModalProps = ComponentProps<
+    typeof ContributingCohortsModal
+  >;
+
   const getSaveButton = () => screen.getByRole('button', { name: 'Save' });
 
   const getAddButton = () =>
     screen.getByRole('button', {
-      name: /add another cohort/i,
+      name: /add another study/i,
     });
-  beforeEach(jest.resetAllMocks);
-  type ContributingCohortsModalProps = ComponentProps<
-    typeof ContributingCohortsModal
-  >;
+
   const defaultProps: ContributingCohortsModalProps = {
     ...gp2Fixtures.createUserResponse(),
     backHref: '',
@@ -31,12 +32,15 @@ describe('ContributingCohortsModal', () => {
       wrapper: StaticRouter,
     });
 
+  beforeEach(jest.resetAllMocks);
+
   it('renders a dialog with the right title', () => {
     renderContributingCohorts();
     expect(screen.getByRole('dialog')).toContainElement(
       screen.getByRole('heading', { name: 'Contributing Cohort Studies' }),
     );
   });
+
   it('renders name, role and study link', () => {
     renderContributingCohorts();
     expect(
@@ -49,6 +53,7 @@ describe('ContributingCohortsModal', () => {
       screen.getByRole('textbox', { name: /link \(optional\)/i }),
     ).toBeVisible();
   });
+
   it('can add an extra cohort', () => {
     renderContributingCohorts();
     expect(
@@ -63,6 +68,7 @@ describe('ContributingCohortsModal', () => {
       screen.getByRole('heading', { name: /#2 Cohort Study/i }),
     ).toBeVisible();
   });
+
   it('there can be 9 cohorts', () => {
     const contributingCohorts = Array.from({ length: 9 }).map((_, i) => ({
       ...defaultProps.contributingCohorts[0],
@@ -73,10 +79,11 @@ describe('ContributingCohortsModal', () => {
     });
     expect(
       screen.queryByRole('button', {
-        name: /add another cohort/i,
+        name: /add another study/i,
       }),
     ).toBeVisible();
   });
+
   it('there can be only 10 cohorts', () => {
     const contributingCohorts = Array.from({ length: 10 }).map((_, i) => ({
       ...defaultProps.contributingCohorts[0],
@@ -87,10 +94,11 @@ describe('ContributingCohortsModal', () => {
     });
     expect(
       screen.queryByRole('button', {
-        name: /add another cohort/i,
+        name: /add another study/i,
       }),
     ).not.toBeInTheDocument();
   });
+
   it('can remove an cohort', () => {
     const contributingCohorts = Array.from({ length: 2 }).map((_, i) => ({
       ...defaultProps.contributingCohorts[0],
@@ -117,11 +125,13 @@ describe('ContributingCohortsModal', () => {
       screen.queryByRole('heading', { name: /#2 Cohort Study/i }),
     ).not.toBeInTheDocument();
   });
+
   it('removing the last', () => {
-    const contributingCohorts = Array.from({ length: 1 }).map((_, i) => ({
-      ...defaultProps.contributingCohorts[0],
-      contributingCohortId: `${i}`,
-    }));
+    const contributingCohorts = [
+      {
+        ...defaultProps.contributingCohorts[0],
+      },
+    ];
     const onSave = jest.fn();
     renderContributingCohorts({ contributingCohorts, onSave });
     expect(
@@ -139,15 +149,16 @@ describe('ContributingCohortsModal', () => {
     ).not.toBeInTheDocument();
     expect(
       screen.queryByRole('button', {
-        name: /add another cohort/i,
+        name: /add another study/i,
       }),
     ).not.toBeInTheDocument();
     expect(
       screen.getByRole('button', {
-        name: /add a cohort/i,
+        name: /add cohort study/i,
       }),
     ).toBeVisible();
   });
+
   it('allows the name to be edited', () => {
     const contributingCohortId = '11';
     const role = 'Investigator';
@@ -176,12 +187,14 @@ describe('ContributingCohortsModal', () => {
       contributingCohorts: [{ contributingCohortId: '7', role }],
     });
   });
+
   it.each(gp2Model.userContributingCohortRole)(
     'allows the role to be edited %s',
     (updatedRole) => {
       const contributingCohortId = '11';
-      const role =
+      const role: gp2Model.UserContributingCohortRole =
         updatedRole === 'Investigator' ? 'Lead Investigator' : 'Investigator';
+
       const onSave = jest.fn();
       renderContributingCohorts({
         cohortOptions: [
@@ -207,6 +220,7 @@ describe('ContributingCohortsModal', () => {
       });
     },
   );
+
   it('allows the link to be edited', () => {
     const contributingCohortId = '11';
     const role = 'Investigator';
@@ -234,6 +248,7 @@ describe('ContributingCohortsModal', () => {
       contributingCohorts: [{ contributingCohortId, role, studyUrl }],
     });
   });
+
   it('shows the validation messages for required fields', () => {
     const onSave = jest.fn();
     renderContributingCohorts({
@@ -249,6 +264,7 @@ describe('ContributingCohortsModal', () => {
     expect(screen.getByText('Please add the cohort name')).toBeVisible();
     expect(screen.getByText('Please add the role')).toBeVisible();
   });
+
   it('does not allow an invalid url', () => {
     const contributingCohortId = '11';
     const role = 'Investigator';

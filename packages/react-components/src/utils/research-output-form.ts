@@ -129,10 +129,7 @@ export const getPayload = ({
   organisms,
   environments,
   subtype,
-}: ResearchOutputPayload): Omit<
-ResearchOutputPostRequest,
-'publishingEntity'
-> => ({
+}: ResearchOutputPayload): ResearchOutputPostRequest => ({
   ...createIdentifierField(identifierType, identifier),
   documentType,
   tags,

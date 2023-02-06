@@ -43,7 +43,7 @@ type ResearchOutputFormProps = Pick<
     | 'authorsRequired'
   > & {
     onSave: (
-      output: Omit<ResearchOutputPostRequest, 'publishingEntity'>,
+      output: ResearchOutputPostRequest,
     ) => Promise<ResearchOutputResponse | void>;
     documentType: ResearchOutputDocumentType;
     researchTags: ResearchTagResponse[];

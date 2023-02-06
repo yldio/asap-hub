@@ -77,29 +77,6 @@
         }
       },
       {
-        "name": "publishingEntity",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "allowedValues": ["Team", "Working_Group"],
-          "isUnique": false,
-          "isEmbeddable": false,
-          "inlineEditable": true,
-          "createEnum": true,
-          "contentType": "Unspecified",
-          "editor": "Dropdown",
-          "label": "Publishing Entity",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": true,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": true
-        }
-      },
-      {
         "name": "documentType",
         "isHidden": false,
         "isLocked": false,

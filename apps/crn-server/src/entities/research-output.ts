@@ -41,7 +41,6 @@ export const parseGraphQLResearchOutput = (
 
   const data = output.flatData;
   const type = researchOutputMapType(data.type);
-  const publishingEntity = 'Team';
 
   return {
     id: output.id,
@@ -112,7 +111,6 @@ export const parseGraphQLResearchOutput = (
         environment.flatData.name ? [environment.flatData.name] : [],
       ) || [],
     subtype: data.subtype?.[0]?.flatData.name || undefined,
-    publishingEntity: publishingEntity || 'Team',
   };
 };
 

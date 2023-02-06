@@ -143,14 +143,6 @@ export const researchOutputMapType = (
   return null;
 };
 
-export const researchOutputMapPublishingEntity = (
-  publishingEntity?: string | null,
-): ResearchOutputPublishingEntities => {
-  if (publishingEntity === 'Working_Group') {
-    return 'Working Group';
-  }
-  return 'Team';
-};
 export enum ResearchOutputIdentifierType {
   Empty = '',
   None = 'None',
@@ -206,7 +198,6 @@ export type ResearchOutputCoreObject = {
   lastModifiedDate?: string;
   link?: string;
   publishDate?: string;
-  publishingEntity: ResearchOutputPublishingEntities;
   rrid?: string;
   sharingStatus: ResearchOutputSharingStatus;
   tags: string[];
@@ -296,7 +287,6 @@ export type ResearchOutputPostRequest = {
   type: ResearchOutputType;
   usageNotes?: string;
   usedInPublication?: boolean;
-  publishingEntity: ResearchOutputPublishingEntities;
 };
 
 export type ResearchOutputPutRequest = ResearchOutputPostRequest;

@@ -18,7 +18,12 @@ import {
 import { atom, selector, useRecoilValue } from 'recoil';
 import { authorizationState } from './auth/state';
 import { useAlgolia } from './hooks/algolia';
-import { createResearchOutput, getLabs, getTeams, updateTeamResearchOutput } from './network/teams/api';
+import {
+  createResearchOutput,
+  getLabs,
+  getTeams,
+  updateTeamResearchOutput,
+} from './network/teams/api';
 import { getUsersAndExternalAuthors } from './network/users/api';
 import { getResearchTags } from './shared-research/api';
 import { useSetResearchOutputItem } from './shared-research/state';

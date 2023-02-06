@@ -58,7 +58,7 @@ const SharedResearchOutputHeaderCard: React.FC<
   ...props
 }) => (
   <Card>
-    <SharedResearchMetadata {...props} />
+    <SharedResearchMetadata {...props} workingGroups={workingGroups} />
     <Display styleAsHeading={3}>{title}</Display>
     <UsersList users={authors} />
     <div css={associationStyles}>

@@ -92,6 +92,17 @@ describe('User data provider', () => {
       expect(result).toEqual(getUserDataObject());
     });
 
+    test('Should return the user when teams is empty', async () => {
+      const mockResponse = getSquidexUserGraphqlResponse();
+      mockResponse.findUsersContent!.flatData.teams = null;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+      const expectedResponse = getUserDataObject();
+      expectedResponse.teams = [];
+
+      const result = await userDataProvider.fetchById('user-id');
+      expect(result).toEqual(expectedResponse);
+    });
+
     test('Should filter out a team when the team role is invalid', async () => {
       const mockResponse = getSquidexUserGraphqlResponse();
       mockResponse.findUsersContent!.flatData.teams![0]!.role = 'invalid role';

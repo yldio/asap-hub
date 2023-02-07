@@ -7610,7 +7610,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "pino-http",\
-        "npm:8.3.2"\
+        "npm:8.3.3"\
       ],\
       [\
         "pino-lambda",\
@@ -12264,7 +12264,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jwt-encode", "npm:1.0.1"],\
             ["nock", "npm:13.3.0"],\
             ["pino", "npm:8.8.0"],\
-            ["pino-http", "npm:8.3.2"],\
+            ["pino-http", "npm:8.3.3"],\
             ["pino-lambda", "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:4.1.0"],\
             ["pino-noir", "npm:2.2.1"],\
             ["pino-pretty", "npm:9.1.1"],\
@@ -57755,10 +57755,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["pino-http", [\
-        ["npm:8.3.2", {\
-          "packageLocation": "./.yarn/cache/pino-http-npm-8.3.2-9b08210712-21df0013b2.zip/node_modules/pino-http/",\
+        ["npm:8.3.3", {\
+          "packageLocation": "./.yarn/cache/pino-http-npm-8.3.3-4aaa45e0c3-6d9fb4f923.zip/node_modules/pino-http/",\
           "packageDependencies": [\
-            ["pino-http", "npm:8.3.2"],\
+            ["pino-http", "npm:8.3.3"],\
             ["get-caller-file", "npm:2.0.5"],\
             ["pino", "npm:8.8.0"],\
             ["pino-std-serializers", "npm:6.0.0"],\

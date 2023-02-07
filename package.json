@@ -157,5 +157,5 @@
     "ts-node": "10.9.1",
     "uuid": "8.3.2"
   },
-  "packageManager": "yarn@3.3.1"
+  "packageManager": "yarn@3.4.1"
 }

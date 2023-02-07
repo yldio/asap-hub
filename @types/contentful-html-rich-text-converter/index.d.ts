@@ -16,10 +16,7 @@ declare module 'contentful-html-rich-text-converter' {
     html: string,
     getAssetId?: (url: string) => string | null,
   ): unknown;
-  function parseAssets(
-    html: string,
-    getAssetId?: (url: string) => string | null,
-  ): InlineAssetBody[];
+  function parseAssets(html: string): InlineAssetBody[];
   function parseIFrames(html: string): InlineIFrameBody[];
 
   export { parseHtml, parseAssets, parseIFrames };

@@ -4618,7 +4618,7 @@ export const FetchNewsDocument = {
                 name: { kind: 'Name', value: 'orderby' },
                 value: {
                   kind: 'StringValue',
-                  value: 'data/created',
+                  value: 'created desc',
                   block: false,
                 },
               },

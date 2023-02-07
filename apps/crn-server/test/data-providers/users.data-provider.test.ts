@@ -544,9 +544,9 @@ describe('User data provider', () => {
       const inputWithNoTeams = {
         ...getInputUser(),
         teams: {
-          iv: []
-        }
-      }
+          iv: [],
+        },
+      };
 
       nock(baseUrl)
         .post(`/api/content/${appName}/users?publish=true`, inputWithNoTeams)

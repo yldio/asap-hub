@@ -21,7 +21,7 @@ export const Normal = () => {
       listViewHref={''}
       userAssociationMember={boolean('User is association member', true)}
       association={select(
-        'Publishing Entity',
+        'Profile belongs to an association of type',
         ['Team', 'Working Group'],
         'Team',
       )}

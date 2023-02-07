@@ -1,4 +1,4 @@
-import { ResearchOutputAssociation } from '@asap-hub/model';
+import { ResearchOutputAssociations } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import React, { ComponentProps } from 'react';
 import { SharedResearchList } from '.';
@@ -17,7 +17,7 @@ export type ProfileOutputsProps = Omit<
 > & {
   userAssociationMember: boolean;
   contactEmail?: string;
-  association: ResearchOutputAssociation;
+  association: ResearchOutputAssociations;
 };
 
 const ProfileOutputs: React.FC<ProfileOutputsProps> = ({

@@ -1,65 +1,62 @@
-import {
-  ResearchOutputAssociation,
-  ResearchOutputDocumentType,
-} from '@asap-hub/model';
+import { ResearchOutputDocumentType } from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
 
 import ResearchOutputHeader from '../ResearchOutputHeader';
 
 it.each<{
   documentType: ResearchOutputDocumentType;
-  association: ResearchOutputAssociation;
+  teamAssociation: boolean;
   headingName: RegExp;
   subHeader: RegExp;
 }>([
   {
     documentType: 'Article',
-    association: 'Team',
+    teamAssociation: true,
     headingName: /Share an article/i,
     subHeader: /published article/,
   },
   {
     documentType: 'Protocol',
-    association: 'Team',
+    teamAssociation: true,
     headingName: /Share a protocol/i,
     subHeader: /Add your protocol/,
   },
   {
     documentType: 'Dataset',
-    association: 'Team',
+    teamAssociation: true,
     headingName: /Share a dataset/i,
     subHeader: /Add your dataset/,
   },
   {
     documentType: 'Bioinformatics',
-    association: 'Team',
+    teamAssociation: true,
     headingName: /Share bioinformatics/i,
     subHeader: /Add bioinformatics/,
   },
   {
     documentType: 'Lab Resource',
-    association: 'Team',
+    teamAssociation: true,
     headingName: /Share a lab resource/i,
     subHeader: /Add your lab resource/,
   },
   {
     documentType: 'Article',
-    association: 'Working Group',
+    teamAssociation: false,
     headingName: /Share a Working Group Article/i,
     subHeader: /published article/,
   },
   {
     documentType: 'Report',
-    association: 'Working Group',
+    teamAssociation: false,
     headingName: /Share a Working Group CRN Report/i,
     subHeader: /add your CRN report/,
   },
 ])(
   'renders the $documentType $association research output',
-  ({ documentType, headingName, subHeader, association }) => {
+  ({ documentType, headingName, subHeader, teamAssociation }) => {
     render(
       <ResearchOutputHeader
-        teamAssociation={association === 'Team'}
+        teamAssociation={teamAssociation}
         documentType={documentType}
       />,
     );

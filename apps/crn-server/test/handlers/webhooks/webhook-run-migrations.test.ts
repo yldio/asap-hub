@@ -172,6 +172,7 @@ describe('Run-migrations Webhook', () => {
         '2-test-migration.ts',
         '3-test-migration.ts',
       ] as any);
+
       jest
         .spyOn(SquidexRest.prototype, 'fetchOne')
         .mockRejectedValue(new NotFoundError(undefined));
@@ -179,13 +180,15 @@ describe('Run-migrations Webhook', () => {
       mockUp.mockResolvedValueOnce(null);
       mockUp.mockRejectedValueOnce(new Error());
       mockUp.mockResolvedValueOnce(null);
+      mockUp.mockResolvedValueOnce(null);
       const squidexCreateSpy = jest.spyOn(SquidexRest.prototype, 'create');
 
       await expect(runHandler(...mockHandlerArguments)).rejects.toThrow();
-      expect(mockUp).toHaveBeenCalledTimes(1);
+
+      expect(mockUp).toHaveBeenCalledTimes(2);
       expect(squidexCreateSpy).toHaveBeenCalledWith({
         name: {
-          iv: '1-test-migration',
+          iv: '2-test-migration',
         },
       });
       expect(loggerErrorSpy).toHaveBeenCalledWith(

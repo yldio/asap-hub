@@ -180,20 +180,21 @@ describe('Run-migrations Webhook', () => {
       mockUp.mockResolvedValueOnce(null);
       mockUp.mockRejectedValueOnce(new Error());
       mockUp.mockResolvedValueOnce(null);
-      mockUp.mockResolvedValueOnce(null);
-      const squidexCreateSpy = jest.spyOn(SquidexRest.prototype, 'create');
+      const squidexCreateSpy = jest
+        .spyOn(SquidexRest.prototype, 'create')
+        .mockResolvedValue(null);
 
       await expect(runHandler(...mockHandlerArguments)).rejects.toThrow();
 
       expect(mockUp).toHaveBeenCalledTimes(2);
       expect(squidexCreateSpy).toHaveBeenCalledWith({
         name: {
-          iv: '2-test-migration',
+          iv: '1-test-migration',
         },
       });
       expect(loggerErrorSpy).toHaveBeenCalledWith(
         expect.any(Error),
-        expect.stringMatching(/1-test-migration/),
+        expect.stringMatching(/2-test-migration/),
       );
       expect(loggerInfoSpy).toBeCalledWith(`Executed and saved 1 migrations`);
     });

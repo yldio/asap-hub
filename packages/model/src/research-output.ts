@@ -58,8 +58,6 @@ export const researchOutputTypes = [
   'Viral Vector',
 ] as const;
 
-export type ResearchOutputAssociations = 'Team' | 'Working Group';
-
 export const ResearchOutputPublishingEntitiesValues = <const>[
   'Team',
   'Working Group',

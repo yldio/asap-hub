@@ -14,7 +14,7 @@ const baseProps: ComponentProps<typeof ProfileOutputs> = {
   cardViewHref: '',
   listViewHref: '',
   userAssociationMember: true,
-  association: 'Team',
+  teamAssociation: true,
 };
 
 it('renders output cards', () => {
@@ -60,7 +60,7 @@ it('renders the no output page for your own team', () => {
     <ProfileOutputs
       {...baseProps}
       userAssociationMember={true}
-      association="Team"
+      teamAssociation
     />,
   );
   expect(getByTitle('Research')).toBeInTheDocument();
@@ -71,7 +71,7 @@ it('renders the no output page for your own team', () => {
       {...baseProps}
       userAssociationMember={true}
       contactEmail="example@example.com"
-      association="Team"
+      teamAssociation
     />,
   );
   expect(getByText(/contact your PM/i).closest('a')).toHaveAttribute(
@@ -82,7 +82,11 @@ it('renders the no output page for your own team', () => {
 
 it('renders the no output page for another team', () => {
   const { getByTitle, getByRole, getByText, rerender } = render(
-    <ProfileOutputs {...baseProps} userAssociationMember={false} />,
+    <ProfileOutputs
+      {...baseProps}
+      userAssociationMember={false}
+      teamAssociation
+    />,
   );
   expect(getByTitle('Research')).toBeInTheDocument();
   expect(getByRole('heading', { level: 1 }).textContent).toMatch(/This team/i);
@@ -92,6 +96,7 @@ it('renders the no output page for another team', () => {
       {...baseProps}
       userAssociationMember={false}
       contactEmail="example@example.com"
+      teamAssociation
     />,
   );
   expect(getByText(/contact the PM/i).closest('a')).toHaveAttribute(
@@ -105,7 +110,7 @@ it('renders the no outputs page for a working group', () => {
     <ProfileOutputs
       {...baseProps}
       userAssociationMember={false}
-      association="Working Group"
+      teamAssociation={false}
     />,
   );
 
@@ -115,8 +120,8 @@ it('renders the no outputs page for a working group', () => {
   rerender(
     <ProfileOutputs
       {...baseProps}
-      association="Working Group"
       userAssociationMember={true}
+      teamAssociation={false}
     />,
   );
   expect(getByRole('heading', { level: 1 }).textContent).toMatch(

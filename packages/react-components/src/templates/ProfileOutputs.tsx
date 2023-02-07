@@ -1,4 +1,3 @@
-import { ResearchOutputAssociations } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import React, { ComponentProps } from 'react';
 import { SharedResearchList } from '.';
@@ -17,7 +16,7 @@ export type ProfileOutputsProps = Omit<
 > & {
   userAssociationMember: boolean;
   contactEmail?: string;
-  association: ResearchOutputAssociations;
+  teamAssociation: boolean;
 };
 
 const ProfileOutputs: React.FC<ProfileOutputsProps> = ({
@@ -32,7 +31,7 @@ const ProfileOutputs: React.FC<ProfileOutputsProps> = ({
   listViewHref,
   userAssociationMember,
   contactEmail,
-  association = 'Team',
+  teamAssociation,
 }) => (
   <div css={containerStyles}>
     {numberOfItems ? (
@@ -50,14 +49,12 @@ const ProfileOutputs: React.FC<ProfileOutputsProps> = ({
     ) : (
       <NoOutputsPage
         title={`
-          ${
-            userAssociationMember ? 'Your' : 'This'
-          } ${association.toLowerCase()} hasn’t shared any research ${
-          association === 'Working Group' ? 'yet!' : '.'
-        }`}
+          ${userAssociationMember ? 'Your' : 'This'} ${
+          teamAssociation ? 'team' : 'working group'
+        } hasn’t shared any research ${teamAssociation ? '.' : 'yet!'}`}
         description={
           <>
-            {association === 'Team' && (
+            {teamAssociation && (
               <>
                 {userAssociationMember
                   ? 'To start sharing research,'

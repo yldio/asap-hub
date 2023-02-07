@@ -1,6 +1,6 @@
 import { ProfileOutputs } from '@asap-hub/react-components';
 import { createListResearchOutputResponse } from '@asap-hub/fixtures';
-import { boolean, number, select, text } from '@storybook/addon-knobs';
+import { boolean, number, text } from '@storybook/addon-knobs';
 
 export default {
   title: 'Templates / Profile Outputs',
@@ -20,11 +20,7 @@ export const Normal = () => {
       cardViewHref={''}
       listViewHref={''}
       userAssociationMember={boolean('User is association member', true)}
-      association={select(
-        'Profile belongs to an association of type',
-        ['Team', 'Working Group'],
-        'Team',
-      )}
+      teamAssociation={boolean('Belongs to a team association', true)}
       contactEmail={text('Contact Email', 'test@exmaple.com')}
     />
   );

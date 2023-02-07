@@ -542,7 +542,7 @@ describe('User data provider', () => {
         teams: undefined,
       };
       const inputWithNoTeams = {
-        ...getInputUser(),
+        ...(getInputUser() as any),
         teams: {
           iv: [],
         },

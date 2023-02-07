@@ -1065,7 +1065,7 @@ __metadata:
     "@types/aws-lambda": 8.10.110
     "@types/cors": 2.8.13
     "@types/express": 4.17.17
-    "@types/jest": 27.5.2
+    "@types/jest": ^29.4.0
     "@types/jsonwebtoken": 8.5.9
     "@types/jwt-encode": "workspace:*"
     "@types/mime-types": 2.1.1
@@ -13484,16 +13484,6 @@ __metadata:
     jest-diff: "npm:^25.2.1"
     pretty-format: "npm:^25.2.1"
   checksum: 35157c842395d51c60a90aa46463fe6feac7c0c2b621961f749ac48bbc79949454701a01c2f41aa6a9c775b8d3fff4a01ed01c8b0c5df267f0a5b6913cf68b85
-  languageName: node
-  linkType: hard
-
-"@types/jest@npm:27.5.2":
-  version: 27.5.2
-  resolution: "@types/jest@npm:27.5.2"
-  dependencies:
-    jest-matcher-utils: ^27.0.0
-    pretty-format: ^27.0.0
-  checksum: 7e11c6826aa429ad990dc262e4e4b54aa36573287fddf15773e4137f07d11d3105f0dd9f1baff73252160a057df23f5529bb83b1bf83cd3f45f9460a5ca5c22e
   languageName: node
   linkType: hard
 
@@ -28287,7 +28277,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-matcher-utils@npm:^27.0.0, jest-matcher-utils@npm:^27.5.1":
+"jest-matcher-utils@npm:^27.5.1":
   version: 27.5.1
   resolution: "jest-matcher-utils@npm:27.5.1"
   dependencies:
@@ -34647,7 +34637,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pretty-format@npm:^27.0.0, pretty-format@npm:^27.0.2, pretty-format@npm:^27.5.1":
+"pretty-format@npm:^27.0.2, pretty-format@npm:^27.5.1":
   version: 27.5.1
   resolution: "pretty-format@npm:27.5.1"
   dependencies:

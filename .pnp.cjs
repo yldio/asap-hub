@@ -8006,7 +8006,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "pretty-format",\
-        "npm:27.5.1"\
+        "npm:29.4.1"\
       ],\
       [\
         "pretty-hrtime",\
@@ -11686,7 +11686,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/aws-lambda", "npm:8.10.110"],\
             ["@types/cors", "npm:2.8.13"],\
             ["@types/express", "npm:4.17.17"],\
-            ["@types/jest", "npm:27.5.2"],\
+            ["@types/jest", "npm:29.4.0"],\
             ["@types/jsonwebtoken", "npm:8.5.9"],\
             ["@types/jwt-encode", "workspace:@types/jwt-encode"],\
             ["@types/mime-types", "npm:2.1.1"],\
@@ -35239,15 +35239,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jest", "npm:26.0.3"],\
             ["jest-diff", "npm:25.3.0"],\
             ["pretty-format", "npm:25.5.0"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
-        ["npm:27.5.2", {\
-          "packageLocation": "./.yarn/cache/@types-jest-npm-27.5.2-f8ba570ba6-7e11c6826a.zip/node_modules/@types/jest/",\
-          "packageDependencies": [\
-            ["@types/jest", "npm:27.5.2"],\
-            ["jest-matcher-utils", "npm:27.5.1"],\
-            ["pretty-format", "npm:27.5.1"]\
           ],\
           "linkType": "HARD"\
         }],\

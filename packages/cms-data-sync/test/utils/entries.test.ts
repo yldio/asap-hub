@@ -1,10 +1,58 @@
 import { Environment } from 'contentful-management';
 import {
+  checkIfEntryAlreadyExistsInContentful,
   clearContentfulEntries,
   publishContentfulEntries,
 } from '../../src/utils';
-import { newsEntry } from '../fixtures';
+import { getEntry, newsEntry } from '../fixtures';
 import { getContentfulEnvironmentMock } from '../mocks/contentful.mocks';
+
+describe('checkIfEntryAlreadyExistsInContentful', () => {
+  let envMock: Environment;
+
+  const consoleLogRef = console.log;
+
+  beforeEach(async () => {
+    console.log = jest.fn();
+    jest.clearAllMocks();
+
+    envMock = getContentfulEnvironmentMock();
+  });
+
+  afterAll(() => {
+    console.log = consoleLogRef;
+  });
+
+  it('outputs correct value when entry does not exist on contentful', async () => {
+    const contenfulErrorResponse = new Error();
+    contenfulErrorResponse.message = '{"status":404}';
+    jest
+      .spyOn(envMock, 'getEntry')
+      .mockRejectedValueOnce(contenfulErrorResponse);
+
+    expect(
+      await checkIfEntryAlreadyExistsInContentful(envMock, 'entryId'),
+    ).toEqual(false);
+  });
+
+  it('outputs correct value when entry exists on contentful', async () => {
+    const entry = getEntry({ url: 'http://vimeo.com/video' });
+
+    jest.spyOn(envMock, 'getEntry').mockResolvedValueOnce(entry);
+
+    expect(
+      await checkIfEntryAlreadyExistsInContentful(envMock, 'entryId'),
+    ).toEqual(true);
+  });
+
+  it('rejects when contentful response is not successful', async () => {
+    jest.spyOn(envMock, 'getEntry').mockRejectedValueOnce('error');
+
+    await expect(
+      checkIfEntryAlreadyExistsInContentful(envMock, 'entryId'),
+    ).rejects.toEqual('error');
+  });
+});
 
 describe('clearContentfulEntries', () => {
   let envMock: Environment;

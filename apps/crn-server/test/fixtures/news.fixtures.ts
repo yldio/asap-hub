@@ -28,6 +28,9 @@ export const getContentfulGraphqlNews = (): NonNullable<
       ],
     },
     links: {
+      entries: {
+        inline: [],
+      },
       assets: {
         block: [],
       },

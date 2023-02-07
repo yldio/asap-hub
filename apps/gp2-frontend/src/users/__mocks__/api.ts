@@ -15,10 +15,7 @@ export const getUser = jest.fn(
 );
 
 export const patchUser = jest.fn(
-  async (
-    id: string,
-    patch: gp2.UserPatchRequest,
-  ): Promise<gp2.UserResponse> => ({
+  async (id: string, patch: gp2.UserResponse): Promise<gp2.UserResponse> => ({
     ...gp2Fixtures.createUserResponse(),
     ...patch,
     id,
@@ -55,4 +52,25 @@ export const getInstitutions = jest.fn(
       types: [],
     })),
   }),
+);
+
+export const getContributingCohorts = jest.fn(
+  async (): Promise<gp2.ContributingCohortResponse[]> => [
+    {
+      id: '9cfcda7e-6902-4ca0-b7a2-9fab83f20c75',
+      name: 'AGPDS',
+    },
+    {
+      id: '57cc1e0b-82c3-4578-8d90-840ecaa45a3a',
+      name: 'Arizona Brain Bank Brain and body donation programme (BBDP)',
+    },
+    {
+      id: 'c8ace8ba-0527-4571-9cca-f696d439c096',
+      name: 'BADGE-PD',
+    },
+    {
+      id: '670ed9ad-5451-4004-801b-57ddc0feac3d',
+      name: 'BCM-UMD',
+    },
+  ],
 );

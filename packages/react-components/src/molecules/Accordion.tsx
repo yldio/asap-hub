@@ -1,3 +1,4 @@
+/** @jsxImportSource @emotion/react */
 import { FC, ReactNode, useState } from 'react';
 import { css } from '@emotion/react';
 import { Headline5, Link, Paragraph } from '..';

@@ -76,7 +76,12 @@ export class UserSquidexDataProvider implements UserDataProvider {
         iv: input.role,
       },
       teams: {
-        iv: teams?.map((team) => ({ id: [team.id], role: team.role })) || [],
+        iv:
+          teams?.map((team: UserTeam) => ({
+            id: [team.id],
+            role: team.role,
+            inactiveSinceDate: team.inactiveSinceDate,
+          })) || [],
       },
       labs: {
         iv: labIds,
@@ -260,6 +265,7 @@ export const parseGraphQLUserTeamConnections = (
         role: item.role,
         proposal: proposal?.length ? proposal[0]?.id : undefined,
         displayName: displayName || '',
+        inactiveSinceDate: item.inactiveSinceDate ?? undefined,
       },
     ];
   }, []);
@@ -470,6 +476,11 @@ export const parseGraphQLUserToDataObject = (
     reachOut: item.flatData.reachOut || undefined,
     labs: flatLabs || [],
     orcidLastSyncDate: item.flatData.orcidLastSyncDate || undefined,
+    orcidLastModifiedDate: item.flatData.orcidLastModifiedDate || undefined,
     _tags: [item.flatData.alumniSinceDate ? inactiveUserTag : activeUserTag],
+    connections:
+      item.flatData.connections?.filter(
+        (connection): connection is { code: string } => !!connection.code,
+      ) || [],
   };
 };

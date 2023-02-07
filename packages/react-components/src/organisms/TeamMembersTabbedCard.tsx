@@ -38,9 +38,12 @@ const TeamMembersTabbedCard: React.FC<TeamMembersTabbedCardProps> = ({
   members,
   isTeamInactive,
 }) => {
-  const [alumniMembers, activeMembers] = splitListBy(
+  const [pastMembers, activeMembers] = splitListBy(
     members,
-    (member) => isTeamInactive || !!member?.alumniSinceDate,
+    (member) =>
+      isTeamInactive ||
+      !!member?.alumniSinceDate ||
+      !!member?.inactiveSinceDate,
   );
 
   return (
@@ -64,11 +67,11 @@ const TeamMembersTabbedCard: React.FC<TeamMembersTabbedCardProps> = ({
         },
         {
           tabTitle: `Past Team Members (${
-            isTeamInactive ? members.length : alumniMembers.length
+            isTeamInactive ? members.length : pastMembers.length
           })`,
-          items: isTeamInactive ? members : alumniMembers,
+          items: isTeamInactive ? members : pastMembers,
           truncateFrom: 8,
-          disabled: alumniMembers.length === 0,
+          disabled: pastMembers.length === 0,
           empty: (
             <Paragraph accent="lead">There are no past team members.</Paragraph>
           ),

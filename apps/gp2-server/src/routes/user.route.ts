@@ -1,9 +1,9 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { gp2 as gp2Validation } from '@asap-hub/validation';
 import {
   validateFetchUsersOptions,
   validateUserInviteParameters,
 } from '@asap-hub/server-common';
+import { gp2 as gp2Validation } from '@asap-hub/validation';
 import Boom, { isBoom } from '@hapi/boom';
 import { Router } from 'express';
 import parseURI from 'parse-data-url';

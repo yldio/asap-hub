@@ -16,6 +16,7 @@ const renderTabbedCard = (isGroupActive: boolean) =>
         {
           user: {
             ...createUserResponse(),
+            id: 'leader-id',
             displayName: 'Active Leader Name',
           },
           role: 'Chair',
@@ -23,6 +24,7 @@ const renderTabbedCard = (isGroupActive: boolean) =>
         {
           user: {
             ...createUserResponse(),
+            id: 'user-id',
             displayName: 'Alumni Leader Name',
             alumniSinceDate: '2021-01-01',
           },

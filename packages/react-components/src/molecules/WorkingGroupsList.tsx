@@ -37,7 +37,7 @@ const listItemStyle = css({
       gridTemplateRows: '1fr',
     },
 
-    [`&:not(:first-of-type) > :nth-child(odd)`]: {
+    [`&:not(:first-of-type) > :nth-of-type(odd)`]: {
       display: 'none',
     },
   },
@@ -61,7 +61,9 @@ const WorkingGroupsList: React.FC<WorkingGroupsListProps> = ({ groups }) => {
           {idx === 0 || <Divider />}
           <li key={idx} css={listItemStyle}>
             <div css={[titleStyle]}>Working Group</div>
-            <Link href={wgHref(id)}>{name}</Link>
+            <div>
+              <Link href={wgHref(id)}>{name}</Link>
+            </div>
             <div css={[titleStyle]}>Role</div>
             <div>{role}</div>
           </li>

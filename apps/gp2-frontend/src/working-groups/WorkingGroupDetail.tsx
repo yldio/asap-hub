@@ -62,7 +62,7 @@ const WorkingGroupDetail = () => {
                       <ResourceModal
                         modalTitle={'Add Resource'}
                         modalDescription={
-                          'Select a resource type and provide the neccessary information required to share a resource privately with your group.'
+                          'Select a resource type and provide the necessary information required to share a resource privately with your group.'
                         }
                         backHref={resources}
                         onSave={(resource: gp2Model.Resource) =>

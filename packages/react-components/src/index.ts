@@ -215,7 +215,7 @@ export {
   UserProfileResearchOutputs,
   UserProfileSearchAndFilter,
   WelcomePage,
-  WorkingGroupHeader,
+  WorkingGroupPageHeader,
   WorkingGroupPage,
   WorkingGroupAbout,
 } from './templates';

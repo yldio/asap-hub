@@ -59,6 +59,7 @@ export const groupContentQueryFragment = gql`
             expertiseAndResourceTags
             expertiseAndResourceDescription
             teams {
+              inactiveSinceDate
               role
               id {
                 id
@@ -91,6 +92,7 @@ export const groupContentQueryFragment = gql`
               }
             }
             alumniSinceDate
+            alumniLocation
           }
         }
       }

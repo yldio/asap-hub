@@ -189,6 +189,7 @@ describe('events entity', () => {
         id: 'user-id-3',
         flatData: {
           alumniSinceDate: undefined,
+          alumniLocation: 'Cambridge, UK',
           avatar: [
             {
               id: 'avatar-id',

@@ -14,7 +14,7 @@ const props: ComponentProps<typeof NetworkWorkingGroups> = {
       complete: false,
     },
     {
-      id: '42',
+      id: '43',
       title: 'My Working Group',
       externalLink: 'https://www.google.com',
       shortText: 'My Working Group Description',

@@ -577,8 +577,11 @@ describe('/users/ route', () => {
         });
       });
       describe('contributing cohorts', () => {
-        const cohort = (id = '42'): gp2.UserContributingCohort => ({
-          name: `the name ${id}`,
+        const cohort = (
+          id = '42',
+        ): NonNullable<
+          gp2.UserPatchRequest['contributingCohorts']
+        >[number] => ({
           contributingCohortId: id,
           role: 'Investigator',
           studyUrl: 'http://example.com',
@@ -664,22 +667,19 @@ describe('/users/ route', () => {
             });
           expect(response.status).toBe(400);
         });
-        test.each(['name', 'contributingCohortId'])(
-          'does not allow invalid %s',
-          async (key) => {
-            const response = await supertest(app)
-              .patch(`/users/${loggedInUserId}`)
-              .send({
-                contributingCohorts: [
-                  {
-                    ...cohort(),
-                    [key]: undefined,
-                  },
-                ],
-              });
-            expect(response.status).toBe(400);
-          },
-        );
+        test('does not allow invalid contributingCohortId', async () => {
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({
+              contributingCohorts: [
+                {
+                  ...cohort(),
+                  contributingCohortId: undefined,
+                },
+              ],
+            });
+          expect(response.status).toBe(400);
+        });
       });
     });
 

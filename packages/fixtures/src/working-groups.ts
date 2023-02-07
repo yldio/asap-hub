@@ -24,7 +24,10 @@ export const createWorkingGroupMembers = (
   members: number,
 ): WorkingGroupResponse['members'] =>
   Array.from({ length: members }, (_, itemIndex) => ({
-    user: createUserResponse({}, itemIndex),
+    user: {
+      ...createUserResponse({}, itemIndex),
+      id: `user-member-${itemIndex}`,
+    },
     workstreamRole: `member role - ${itemIndex}`,
   }));
 
@@ -32,7 +35,10 @@ export const createWorkingGroupLeaders = (
   members: number,
 ): WorkingGroupResponse['leaders'] =>
   Array.from({ length: members }, (_, itemIndex) => ({
-    user: createUserResponse({}, itemIndex),
+    user: {
+      ...createUserResponse({}, itemIndex),
+      id: `user-leader-${itemIndex}`,
+    },
     role: 'Project Manager' as const,
     workstreamRole: `leader role - ${itemIndex}`,
   }));

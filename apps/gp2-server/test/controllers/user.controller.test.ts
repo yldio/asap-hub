@@ -237,35 +237,48 @@ describe('Users controller', () => {
       jest.useRealTimers();
     });
 
-    test('should connect and return the user on success', async () => {
-      const activatedDate = '2021-12-28T14:00:00.000Z';
-      jest.setSystemTime(new Date(activatedDate));
+    test('should replace the welcome code with connection code, set the activatedDate to current time and return the user on success', async () => {
+      const currentTime = '2021-12-28T14:00:00.000Z';
+      jest.setSystemTime(new Date(currentTime));
       const userId = '42';
+      const welcomeCode = 'welcome-code';
       const user = {
         ...getUserDataObject(),
         id: userId,
+        connections: [{ code: welcomeCode }],
+        activatedDate: undefined,
       };
       userDataProviderMock.fetch.mockResolvedValue({
         total: 1,
-        items: [{ ...user, activatedDate: undefined }],
+        items: [user],
       });
-      userDataProviderMock.fetchById.mockResolvedValue(user);
+      userDataProviderMock.fetchById.mockResolvedValue({
+        ...user,
+        activatedDate: currentTime,
+      });
+      const newConnectionCode = 'auth0|auth-user-id';
       const result = await userController.connectByCode(
-        'some code',
-        'auth-user-id',
+        welcomeCode,
+        newConnectionCode,
       );
 
       expect(userDataProviderMock.update).toHaveBeenCalledWith(userId, {
         email: user.email,
-        connections: [{ code: 'auth-user-id' }],
-        activatedDate,
+        connections: [{ code: newConnectionCode }],
+        activatedDate: currentTime,
       });
-      expect(result).toEqual({ ...getUserResponse(), id: userId });
+      expect(result).toMatchObject({
+        ...getUserResponse(),
+        id: userId,
+        activatedDate: currentTime,
+      });
     });
+
     test('should not update the activated date if already exists', async () => {
+      const currentTime = '2022-12-28T14:00:00.000Z';
+      jest.setSystemTime(new Date(currentTime));
+
       const activatedDate = '2021-12-28T14:00:00.000Z';
-      const newActivatedDate = '2022-12-28T14:00:00.000Z';
-      jest.setSystemTime(new Date(newActivatedDate));
       const userId = '42';
       const user = {
         ...getUserDataObject(),
@@ -281,11 +294,11 @@ describe('Users controller', () => {
 
       expect(userDataProviderMock.update).toHaveBeenCalledWith(userId, {
         email: user.email,
-        connections: [{ code: 'auth-user-id' }],
+        connections: expect.anything(),
         activatedDate,
       });
     });
-    test('Shouldnt do anything if connecting with existing code', async () => {
+    test('should not update the user when connecting with existing connection code', async () => {
       const userId = '42';
       const userCode = 'google-oauth2|token';
       userDataProviderMock.fetch.mockResolvedValue({
@@ -299,14 +312,39 @@ describe('Users controller', () => {
         ],
       });
       userDataProviderMock.fetchById.mockResolvedValue(getUserDataObject());
-      const result = await userController.connectByCode(
-        'asapWelcomeCode',
-        userCode,
-      );
+      await userController.connectByCode('asapWelcomeCode', userCode);
 
       expect(userDataProviderMock.update).not.toHaveBeenCalled();
-      expect(result).toBeDefined();
     });
+
+    test('should keep the existing connections when creating a new one', async () => {
+      const userId = '42';
+      const welcomeCode = 'welcome-code';
+      const existingConnectionCode = 'google-oauth2|token';
+      const user = {
+        ...getUserDataObject(),
+        id: userId,
+        connections: [{ code: existingConnectionCode }, { code: welcomeCode }],
+        activatedDate: undefined,
+      };
+      userDataProviderMock.fetch.mockResolvedValue({
+        total: 1,
+        items: [user],
+      });
+      userDataProviderMock.fetchById.mockResolvedValue(user);
+      const newConnectionCode = 'auth0|auth-user-id';
+      await userController.connectByCode(welcomeCode, newConnectionCode);
+
+      expect(userDataProviderMock.update).toHaveBeenCalledWith(userId, {
+        email: user.email,
+        connections: [
+          { code: existingConnectionCode },
+          { code: newConnectionCode },
+        ],
+        activatedDate: expect.anything(),
+      });
+    });
+
     test('throws if no user is returned', async () => {
       userDataProviderMock.fetch.mockResolvedValue({ total: 0, items: [] });
 

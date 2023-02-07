@@ -65,6 +65,7 @@ export const researchOutputContentQueryFragment = gql`
             expertiseAndResourceTags
             expertiseAndResourceDescription
             teams {
+              inactiveSinceDate
               role
               id {
                 id
@@ -97,6 +98,7 @@ export const researchOutputContentQueryFragment = gql`
               }
             }
             alumniSinceDate
+            alumniLocation
           }
         }
         ... on ExternalAuthors {

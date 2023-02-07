@@ -10,6 +10,7 @@ import {
   convertHtmlToContentfulFormat,
   createAsset,
   createInlineAssets,
+  createMediaEntries,
   getSquidexAndContentfulClients,
   logger,
 } from '../utils';
@@ -57,10 +58,11 @@ export const migrateNews = async () => {
 
     if (text) {
       try {
-        const { document, inlineAssetBodies } =
+        const { document, inlineAssetBodies, inlineIFramesBodies } =
           convertHtmlToContentfulFormat(text);
         newsPayload.text = document;
         await createInlineAssets(contentfulEnvironment, inlineAssetBodies);
+        await createMediaEntries(contentfulEnvironment, inlineIFramesBodies);
       } catch {
         logger(
           `There is a problem converting rich text from entry ${id}`,

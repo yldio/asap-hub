@@ -11,6 +11,17 @@ export const pagesContentQueryFragment = gql`
     text {
       json
       links {
+        entries {
+          inline {
+            sys {
+              id
+            }
+            __typename
+            ... on Media {
+              url
+            }
+          }
+        }
         assets {
           block {
             sys {

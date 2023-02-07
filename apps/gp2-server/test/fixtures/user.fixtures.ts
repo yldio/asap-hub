@@ -188,6 +188,7 @@ export const getUserDataObject = (): gp2.UserDataObject => ({
   id: 'user-id-1',
   createdDate: '2020-09-23T20:45:22.000Z',
   activatedDate: '2020-09-24T20:45:22.000Z',
+  connections: [{ code: 'some-code' }],
   email: 'T@ark.io',
   firstName: 'Tony',
   lastName: 'Stark',
@@ -256,10 +257,21 @@ export const getUserCreateDataObject = (): gp2.UserCreateDataObject => {
   const {
     id: _id,
     createdDate: _createdDate,
+    contributingCohorts,
     ...userCreateDataObject
   } = getUserDataObject();
 
-  return userCreateDataObject;
+  return {
+    ...userCreateDataObject,
+
+    contributingCohorts: contributingCohorts.map(
+      ({ contributingCohortId, role, studyUrl }) => ({
+        contributingCohortId,
+        role,
+        studyUrl,
+      }),
+    ),
+  };
 };
 
 export const getUserInput = (): gp2Squidex.InputUser['data'] => {
@@ -293,11 +305,10 @@ export const getUserInput = (): gp2Squidex.InputUser['data'] => {
     fundingStreams: { iv: fundingStreams || '' },
     contributingCohorts: {
       iv: contributingCohorts.map(
-        ({ contributingCohortId, role, studyUrl, name }) => ({
+        ({ contributingCohortId, role, studyUrl }) => ({
           id: [contributingCohortId],
           role,
           study: studyUrl || '',
-          name,
         }),
       ),
     },
@@ -362,6 +373,11 @@ export const getGraphQLUser = (
   ...user,
   flatData: {
     avatar: [],
+    connections: [
+      {
+        code: 'some-code',
+      },
+    ],
     email: 'T@ark.io',
     firstName: 'Tony',
     lastName: 'Stark',

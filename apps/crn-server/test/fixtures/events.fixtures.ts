@@ -140,6 +140,7 @@ export const getSquidexGraphqlEventSpeakerWithUser = (): NonNullable<
       id: 'user-id-3',
       flatData: {
         alumniSinceDate: null,
+        alumniLocation: 'some alumni location',
         avatar: [],
         firstName: 'Adam',
         lastName: 'Brown',

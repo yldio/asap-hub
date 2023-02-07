@@ -18,8 +18,18 @@ describe('Migration from Squidex to Contentful', () => {
     },
   } as unknown as jest.Mocked<Entry>;
 
+  const consoleLogRef = console.log;
+
+  beforeEach(async () => {
+    console.log = jest.fn();
+  });
+
   afterEach(() => {
     jest.clearAllMocks();
+  });
+
+  afterAll(() => {
+    console.log = consoleLogRef;
   });
 
   describe("Cleaning up Contentful's entries", () => {

@@ -30,15 +30,15 @@ export const isUserRole = (data: string): data is Role =>
 export const isUserDegree = (data: string): data is UserDegree =>
   (userDegree as ReadonlyArray<string>).includes(data);
 export interface Invitee {
+  avatarUrl?: string;
+  biography?: string;
+  city?: string;
+  country?: string;
   email: string;
   firstName: string;
-  lastName: string;
-  biography?: string;
-  jobTitle?: string;
   institution?: string;
-  country?: string;
-  city?: string;
-  avatarUrl?: string;
+  jobTitle?: string;
+  lastName: string;
 }
 
 export const orcidWorkType = [
@@ -106,6 +106,7 @@ export interface UserTeam {
   displayName?: string;
   proposal?: string;
   role: TeamRole;
+  inactiveSinceDate?: string;
 }
 
 export interface UserSocialLinks {
@@ -125,33 +126,32 @@ export interface Connection {
 }
 
 export interface UserDataObject extends Invitee {
-  alumniSinceDate?: string;
+  _tags?: UserTag[];
   alumniLocation?: string;
-  id: string;
-  onboarded?: boolean | null;
-  dismissedGettingStarted?: boolean;
+  alumniSinceDate?: string;
+  connections?: Connection[];
   contactEmail?: string;
-  lastModifiedDate: string;
   createdDate: string;
-  teams: UserTeam[];
   degree?: UserDegree;
-  expertiseAndResourceTags: string[];
+  dismissedGettingStarted?: boolean;
   expertiseAndResourceDescription?: string;
-  questions: string[];
-  biosketch?: string;
+  expertiseAndResourceTags: string[];
+  id: string;
+  labs: LabResponse[];
+  lastModifiedDate: string;
+  onboarded?: boolean | null;
   orcid?: string;
   orcidLastModifiedDate?: string;
   orcidLastSyncDate?: string;
   orcidWorks?: OrcidWork[];
+  questions: string[];
   reachOut?: string;
-  responsibilities?: string;
   researchInterests?: string;
+  responsibilities?: string;
   role: Role;
   social?: UserSocialLinks;
-  labs: LabResponse[];
-  connections?: Connection[];
+  teams: UserTeam[];
   workingGroups: WorkingGroupMembership[];
-  _tags?: UserTag[];
 }
 export type ListUserDataObject = ListResponse<UserDataObject>;
 export interface UserResponse
@@ -165,34 +165,34 @@ export type UserMetadataResponse = Omit<UserResponse, 'labs'> & {
 };
 
 export type UserCreateDataObject = {
-  contactEmail?: string;
-  dismissedGettingStarted?: boolean;
-  firstName: string;
-  lastName: string;
-  biography?: string;
-  jobTitle?: string;
-  institution?: string;
-  degree?: UserDegree | '';
-  country?: string;
-  city?: string;
-  expertiseAndResourceTags?: string[];
-  expertiseAndResourceDescription?: string;
-  responsibilities?: string;
-  reachOut?: string;
-  researchInterests?: string;
-  questions?: string[];
-  teams?: Pick<UserTeam, 'id' | 'role'>[];
-  social?: Omit<UserSocialLinks, 'orcid'>;
-  onboarded?: boolean;
   avatar?: string;
+  biography?: string;
+  city?: string;
   connections?: Connection[];
+  contactEmail?: string;
+  country?: string;
+  degree?: UserDegree | '';
+  dismissedGettingStarted?: boolean;
   email: string;
+  expertiseAndResourceDescription?: string;
+  expertiseAndResourceTags?: string[];
+  firstName: string;
+  institution?: string;
+  jobTitle?: string;
+  labIds: string[];
+  lastName: string;
+  onboarded?: boolean;
   orcid?: string;
   orcidLastModifiedDate?: string;
   orcidLastSyncDate?: string;
   orcidWorks?: OrcidWork[];
-  labIds: string[];
+  questions?: string[];
+  reachOut?: string;
+  researchInterests?: string;
+  responsibilities?: string;
   role: Role;
+  social?: Omit<UserSocialLinks, 'orcid'>;
+  teams?: Pick<UserTeam, 'id' | 'role' | 'inactiveSinceDate'>[];
 };
 
 export type UserUpdateDataObject = Partial<UserCreateDataObject>;

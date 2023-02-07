@@ -24,6 +24,7 @@ describe('convertHtmlToContentfulFormat', () => {
         nodeType: 'document',
       },
       inlineAssetBodies: [],
+      inlineIFramesBodies: [],
     });
   });
 
@@ -92,6 +93,7 @@ describe('convertHtmlToContentfulFormat', () => {
         nodeType: 'document',
       },
       inlineAssetBodies: [],
+      inlineIFramesBodies: [],
     });
   });
 
@@ -132,6 +134,7 @@ describe('convertHtmlToContentfulFormat', () => {
         data: {},
         nodeType: 'document',
       },
+      inlineIFramesBodies: [],
       inlineAssetBodies: [
         [
           generatedAssetId,

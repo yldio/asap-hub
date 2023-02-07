@@ -14,15 +14,11 @@ import {
 } from '../common';
 import { GraphqlTeam } from './team';
 
-export type UserTeamConnection<T = string> = T extends string
-  ? {
-      role: TeamRole;
-      id: T[];
-    }
-  : {
-      role: TeamRole;
-      id: T[];
-    };
+export type UserTeamConnection<T = string> = {
+  inactiveSinceDate?: string;
+  role: TeamRole;
+  id: T[];
+};
 
 export type UserLabConnection = { id: string } & Graphql<{
   name: string;

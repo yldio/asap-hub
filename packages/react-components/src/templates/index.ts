@@ -64,4 +64,4 @@ export { default as UserProfileSearchAndFilter } from './UserProfileSearchAndFil
 export { default as WelcomePage } from './WelcomePage';
 export { default as WorkingGroupPage } from './WorkingGroupPage';
 export { default as WorkingGroupAbout } from './WorkingGroupAbout';
-export { default as WorkingGroupHeader } from './WorkingGroupHeader';
+export { default as WorkingGroupPageHeader } from './WorkingGroupPageHeader';

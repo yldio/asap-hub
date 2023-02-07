@@ -41,7 +41,7 @@ const listItemStyle = css({
       gridTemplateRows: '1fr',
     },
 
-    [`&:not(:first-of-type) > :nth-child(odd)`]: {
+    [`&:not(:first-of-type) > :nth-of-type(odd)`]: {
       display: 'none',
     },
   },
@@ -58,12 +58,14 @@ const GroupList: React.FC<GroupListProps> = ({ id, groups }) => (
         {idx === 0 || <Divider />}
         <li key={idx} css={listItemStyle}>
           <div css={[titleStyle]}>Group</div>
-          <Link
-            ellipsed
-            href={network({}).groups({}).group({ groupId: group.id }).$}
-          >
-            {group.name}
-          </Link>
+          <div>
+            <Link
+              ellipsed
+              href={network({}).groups({}).group({ groupId: group.id }).$}
+            >
+              {group.name}
+            </Link>
+          </div>
           <div css={[titleStyle]}>Role</div>
           <div css={roleStyle}>
             {group.leaders.find((leader) => leader.user.id === id)?.role ??

@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 
+import { InlineAssetBody } from 'contentful-html-rich-text-converter';
 import {
   Asset as ContentfulAsset,
-  CreateAssetProps,
   Environment,
   SysLink,
 } from 'contentful-management';
@@ -26,8 +26,6 @@ export const checkIfAssetAlreadyExistsInContentful = async (
     throw error;
   }
 };
-
-export type InlineAssetBody = [id: string, fields: CreateAssetProps];
 
 export const createInlineAssets = async (
   contentfulEnvironment: Environment,
@@ -120,11 +118,4 @@ export const createAsset = async (
       id: asset[0]?.id,
     },
   };
-};
-
-export const getAssetId = (url: string) => {
-  const regex =
-    /https:\/\/cloud\.squidex\.io\/api\/assets\/.*\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\/.*/i;
-  const regexMatch = regex.exec(url);
-  return regexMatch?.length ? regexMatch[1] : null;
 };

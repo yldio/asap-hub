@@ -109,7 +109,6 @@ const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
         additionalProperties: false,
         properties: {
           contributingCohortId: { type: 'string' },
-          name: { type: 'string' },
           role: { type: 'string', enum: userContributingCohortRole },
           studyUrl: {
             type: 'string',
@@ -117,7 +116,7 @@ const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
             nullable: true,
           },
         },
-        required: ['contributingCohortId', 'name', 'role'],
+        required: ['contributingCohortId', 'role'],
       },
     },
     social: {

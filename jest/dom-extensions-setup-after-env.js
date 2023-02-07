@@ -1,3 +1,6 @@
+import failOnConsole from 'jest-fail-on-console';
+failOnConsole();
+
 if (typeof document === 'object') {
   // jest-dom adds custom jest matchers for asserting on DOM nodes.
   // allows you to do things like:

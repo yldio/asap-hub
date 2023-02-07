@@ -62,6 +62,7 @@ const renderNetworkPage = async (pathname: string, query = '') => {
 
 describe('when toggling from teams to users', () => {
   it('changes the placeholder', async () => {
+    jest.spyOn(console, 'error').mockImplementation();
     await renderNetworkPage(network({}).teams({}).$);
 
     expect(
@@ -102,6 +103,7 @@ describe('when toggling from teams to users', () => {
 
 describe('when toggling from users to teams', () => {
   it('changes the placeholder', async () => {
+    jest.spyOn(console, 'error').mockImplementation();
     await renderNetworkPage(network({}).users({}).$);
 
     expect(
@@ -138,6 +140,7 @@ describe('when toggling from users to teams', () => {
 });
 
 it('allows typing in search queries', async () => {
+  jest.spyOn(console, 'error').mockImplementation();
   await renderNetworkPage(network({}).users({}).$);
   const searchBox = screen.getByRole('searchbox') as HTMLInputElement;
 
@@ -246,7 +249,9 @@ it('renders working-group profile page', async () => {
   expect(await screen.findByText(/Working Group Description/i)).toBeVisible();
 });
 
-it('handles server error nicely for working groups tab', async () => {
+it('handles server error for working groups tab', async () => {
+  const spy = jest.spyOn(console, 'error').mockImplementation();
+
   mockGetWorkingGroups.mockRejectedValueOnce(new Error('Failed to fetch'));
   await renderNetworkPage(network({}).workingGroups({}).$);
 
@@ -254,4 +259,5 @@ it('handles server error nicely for working groups tab', async () => {
     expect(mockGetWorkingGroups).toHaveBeenCalled();
   });
   expect(screen.getByText(/Something went wrong/i)).toBeVisible();
+  await waitFor(() => expect(spy).toHaveBeenCalled());
 });

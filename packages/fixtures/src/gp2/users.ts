@@ -38,7 +38,14 @@ const mockedUser: gp2.UserResponse = {
       members: [{ userId: 'user-id-1', role: 'Co-lead' }],
     },
   ],
-  contributingCohorts: [],
+  contributingCohorts: [
+    {
+      contributingCohortId: 'cohort-id-11',
+      role: 'Investigator',
+      name: 'S4',
+      studyUrl: 'http://example.com',
+    },
+  ],
   fundingStreams: undefined,
   keywords: ['Bash'],
   telephone: {

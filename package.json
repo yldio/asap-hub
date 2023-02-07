@@ -141,6 +141,7 @@
     "jest": "^29.4.0",
     "jest-circus": "^29.4.0",
     "jest-environment-jsdom": "^29.4.1",
+    "jest-fail-on-console": "^3.0.2",
     "jest-runner-eslint": "^1.1.0",
     "jest-watch-select-projects": "2.0.0",
     "jest-watch-suspend": "1.1.2",
@@ -156,5 +157,5 @@
     "ts-node": "10.9.1",
     "uuid": "8.3.2"
   },
-  "packageManager": "yarn@3.3.1"
+  "packageManager": "yarn@3.4.1"
 }

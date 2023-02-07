@@ -31,6 +31,9 @@ export const usersContentQueryFragment = gql`
         id
       }
       biography
+      connections {
+        code
+      }
       degree
       email
       contactEmail
@@ -60,6 +63,7 @@ export const usersContentQueryFragment = gql`
       expertiseAndResourceTags
       expertiseAndResourceDescription
       teams {
+        inactiveSinceDate
         role
         id {
           id

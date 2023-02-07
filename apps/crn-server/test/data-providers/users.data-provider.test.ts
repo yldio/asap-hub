@@ -539,7 +539,7 @@ describe('User data provider', () => {
     test('Should create a user with no team', async () => {
       const userCreateDataObject = {
         ...getUserCreateDataObject(),
-        teams: null,
+        teams: undefined,
       };
       const inputWithNoTeams = {
         ...getInputUser(),

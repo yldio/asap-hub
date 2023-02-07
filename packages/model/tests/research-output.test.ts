@@ -4,6 +4,8 @@ import {
   isResearchOutputDocumentType,
   isResearchOutputType,
   researchOutputMapType,
+  ResearchOutputResponse,
+  teamResearchOutput,
 } from '../src/research-output';
 
 describe('Research Output Model', () => {

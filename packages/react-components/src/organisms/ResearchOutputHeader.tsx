@@ -17,15 +17,8 @@ const visualHeaderStyles = css({
   boxShadow: `0 2px 4px -2px ${steel.rgb}`,
 });
 
-const excludedTypes = ['Grant Document', 'Presentation'];
-
-type subHeaderTypes = Exclude<
-  ResearchOutputDocumentType,
-  'Grant Document' | 'Presentation'
->;
-
 type subHeaderRecordType = {
-  [key in subHeaderTypes]: ReactNode;
+  [key in ResearchOutputDocumentType]: ReactNode | null;
 };
 
 const subheaderRecord: subHeaderRecordType = {
@@ -89,6 +82,8 @@ const subheaderRecord: subHeaderRecordType = {
       sharing on the Hub.
     </>
   ),
+  'Grant Document': null,
+  Presentation: null,
 };
 
 const headerCopy = (
@@ -136,11 +131,7 @@ const ResearchOutputHeader: React.FC<ResearchOutputHeaderProps> = ({
         {headerCopy(documentType, teamAssociation)}
       </Display>
       <div>
-        <Paragraph accent="lead">
-          {excludedTypes.includes(documentType)
-            ? null
-            : subheaderRecord[documentType as subHeaderTypes]}
-        </Paragraph>
+        <Paragraph accent="lead">{subheaderRecord[documentType]}</Paragraph>
       </div>
     </div>
   </header>

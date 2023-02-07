@@ -39,6 +39,10 @@ export const parseGraphQLTeamMember = (
     ?.filter((t) => t.id && t.id[0]?.id === teamId)
     .filter((s) => s.role)[0]?.role;
 
+  const inactiveSinceDate = user.flatData.teams
+    ?.filter((t) => t.id && t.id[0]?.id === teamId)
+    .filter((s) => s.inactiveSinceDate)[0]?.inactiveSinceDate;
+
   if (typeof role === 'undefined' || !isTeamRole(role)) {
     throw new Error(`Invalid team role on user ${user.id} : ${role}`);
   }
@@ -55,6 +59,7 @@ export const parseGraphQLTeamMember = (
     lastName: user.flatData.lastName ?? '',
     displayName: `${user.flatData.firstName} ${user.flatData.lastName}`,
     role,
+    inactiveSinceDate,
     labs,
     avatarUrl: flatAvatar.length
       ? createUrl(flatAvatar.map((a) => a.id))[0]

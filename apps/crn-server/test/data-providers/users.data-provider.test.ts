@@ -92,6 +92,17 @@ describe('User data provider', () => {
       expect(result).toEqual(getUserDataObject());
     });
 
+    test('Should return the user when teams is empty', async () => {
+      const mockResponse = getSquidexUserGraphqlResponse();
+      mockResponse.findUsersContent!.flatData.teams = null;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+      const expectedResponse = getUserDataObject();
+      expectedResponse.teams = [];
+
+      const result = await userDataProvider.fetchById('user-id');
+      expect(result).toEqual(expectedResponse);
+    });
+
     test('Should filter out a team when the team role is invalid', async () => {
       const mockResponse = getSquidexUserGraphqlResponse();
       mockResponse.findUsersContent!.flatData.teams![0]!.role = 'invalid role';
@@ -525,6 +536,26 @@ describe('User data provider', () => {
       expect(result).toEqual(userId);
     });
 
+    test('Should create a user with no team', async () => {
+      const userCreateDataObject = {
+        ...getUserCreateDataObject(),
+        teams: undefined,
+      };
+      const inputWithNoTeams = {
+        ...(getInputUser() as any),
+        teams: {
+          iv: [],
+        },
+      };
+
+      nock(baseUrl)
+        .post(`/api/content/${appName}/users?publish=true`, inputWithNoTeams)
+        .reply(201, { id: userId });
+
+      const result = await userDataProvider.create(userCreateDataObject);
+      expect(result).toEqual(userId);
+    });
+
     test('Should throw when it fails to create the user', async () => {
       nock(baseUrl)
         .post(`/api/content/${appName}/users?publish=true`)
@@ -759,6 +790,7 @@ describe('User data provider', () => {
             id: 'team-id-0',
             proposal: 'proposalId1',
             role: 'Lead PI (Core Leadership)',
+            inactiveSinceDate: undefined,
           },
         ]);
       });

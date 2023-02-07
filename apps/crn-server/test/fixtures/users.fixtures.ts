@@ -150,6 +150,7 @@ export const getGraphQLUser = (
     ],
     teams: user?.flatData?.teams || [
       {
+        inactiveSinceDate: null,
         role: 'Lead PI (Core Leadership)',
         id: [
           {
@@ -199,10 +200,12 @@ export const patchResponse = (): RestUser => ({
         {
           id: ['team-id-1'],
           role: 'Lead PI (Core Leadership)',
+          inactiveSinceDate: undefined,
         },
         {
           id: ['team-id-3'],
           role: 'Collaborating PI',
+          inactiveSinceDate: undefined,
         },
       ],
     },
@@ -244,11 +247,13 @@ export const fetchUserResponseDataObject = (): UserDataObject => ({
       displayName: 'Unknown',
       id: 'team-id-1',
       role: 'Lead PI (Core Leadership)',
+      inactiveSinceDate: undefined,
     },
     {
       displayName: 'Unknown',
       id: 'team-id-3',
       role: 'Collaborating PI',
+      inactiveSinceDate: '2022-09-25T09:42:51.000Z',
     },
   ],
   workingGroups: [],
@@ -315,6 +320,7 @@ export const getUserResponse = (): UserResponse => ({
       role: 'Lead PI (Core Leadership)',
       displayName: 'Team A',
       proposal: 'proposalId1',
+      inactiveSinceDate: undefined,
     },
   ],
   role: 'Grantee',
@@ -406,6 +412,7 @@ export const userPatchRequest: UserPatchRequest = {
     {
       id: 'team-id-1',
       role: 'Lead PI (Core Leadership)',
+      inactiveSinceDate: undefined,
     },
   ],
 };
@@ -620,6 +627,7 @@ export const getUserDataObject = (): UserDataObject => ({
       role: 'Lead PI (Core Leadership)',
       displayName: 'Team A',
       proposal: 'proposalId1',
+      inactiveSinceDate: undefined,
     },
   ],
   role: 'Grantee',
@@ -706,6 +714,7 @@ export const getInputUser = (): InputUser['data'] => ({
       {
         id: ['team-id-0'],
         role: 'Lead PI (Core Leadership)',
+        inactiveSinceDate: undefined,
       },
     ],
   },

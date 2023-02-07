@@ -120,7 +120,7 @@ it('shows the correct number of members', () => {
   expect(screen.getByText('Past Team Members (2)')).toBeVisible();
 });
 
-it('splits the active and alumni users', () => {
+it('splits the active, alumni and inactive users', () => {
   const members: TeamMember[] = [
     {
       ...teamMember,
@@ -141,6 +141,13 @@ it('splits the active and alumni users', () => {
         },
       ],
     },
+    {
+      ...teamMember,
+      id: 'member-3',
+      displayName: 'John Doe',
+      role: 'ASAP Staff',
+      inactiveSinceDate: '2020-01-02',
+    },
   ];
   render(
     <TeamMembersTabbedCard {...props} members={members} title="Example" />,
@@ -149,8 +156,9 @@ it('splits the active and alumni users', () => {
   expect(screen.queryByText('Beyonce Knowles')).not.toBeInTheDocument();
   expect(screen.getByText('Justin Bieber')).toBeVisible();
 
-  fireEvent.click(screen.getByText('Past Team Members (1)'));
+  fireEvent.click(screen.getByText('Past Team Members (2)'));
 
   expect(screen.getByText('Beyonce Knowles')).toBeVisible();
   expect(screen.queryByText('Justin Bieber')).not.toBeInTheDocument();
+  expect(screen.getByText('John Doe')).toBeVisible();
 });

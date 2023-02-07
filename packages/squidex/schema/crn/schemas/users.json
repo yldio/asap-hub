@@ -9,7 +9,7 @@
     },
     "scripts": {
       "create": "if(JSON.stringify(ctx.data.teams.iv).indexOf('ASAP Staff') > 0  && ctx.data.role.iv !== 'Staff') {\n    reject('Only Staff can be given this team role. Change ASAP Hub Role to \"Staff\".')\n}",
-      "update": "if(JSON.stringify(ctx.data.teams.iv).indexOf('ASAP Staff') > 0  && ctx.data.role.iv !== 'Staff') {\n    reject('Only Staff can be given this team role. Change ASAP Hub Role to \"Staff\".')\n}"
+      "update": "if(JSON.stringify(ctx.data.teams.iv).indexOf('ASAP Staff') > 0  && ctx.data.role.iv !== 'Staff') {\n    reject('Only Staff can be given this team role. Change ASAP Hub Role to \"Staff\".')\n}\n\nconst becameAlumni = ctx.data.alumniSinceDate.iv && (ctx.oldData.alumniSinceDate.iv !== ctx.data.alumniSinceDate.iv);\nlet anyTeamChanged = false;\n\nctx.data.teams.iv = ctx.data.teams.iv.map((team) => {\n    if (becameAlumni && !team.inactiveSinceDate) {\n        team.inactiveSinceDate = new Date().toISOString();\n        anyTeamChanged = true;\n    }\n    return team;\n});\n\nif (anyTeamChanged) {\n    replace();\n}"
     },
     "fieldsInReferences": ["firstName", "lastName", "orcid"],
     "fieldsInLists": [
@@ -243,6 +243,20 @@
               "isRequiredOnPublish": false,
               "isHalfWidth": true
             }
+          },
+          {
+            "name": "inactiveSinceDate",
+            "properties": {
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": true,
+              "fieldType": "DateTime",
+              "editor": "Date",
+              "label": "Inactive Since"
+            },
+            "isLocked": false,
+            "isHidden": false,
+            "isDisabled": false
           }
         ]
       },

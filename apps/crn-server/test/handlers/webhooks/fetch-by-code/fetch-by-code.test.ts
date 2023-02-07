@@ -151,7 +151,7 @@ describe('Fetch-user-by-code handler', () => {
       )) as APIGatewayProxyResult;
 
       expect(result.statusCode).toStrictEqual(200);
-      expect(JSON.parse(result.body)).toMatchObject(getUserResponse());
+      expect(JSON.parse(result.body)).toEqual(getUserResponse());
     });
 
     test('should return an algolia API key', async () => {

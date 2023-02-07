@@ -50,8 +50,8 @@ const newsItemStyles = css({
     "image content content" auto
     /192px auto min-content
   `,
-  columnGap: '24px',
-  rowGap: '24px',
+  columnGap: rem(24),
+  rowGap: rem(24),
   margin: `${rem(32)} 0`,
   [mobileQuery]: {
     grid: `
@@ -101,8 +101,8 @@ const DashboardNews: React.FC<DashboardNewsProps> = ({ items }) => {
         </IconWithLabel>
       </div>
       <Divider />
-      {news.map(({ title, link, linkText, shortText, created }) => (
-        <>
+      {news.map(({ title, link, linkText, shortText, created, id }) => (
+        <div key={id}>
           <article css={newsItemStyles}>
             <div css={imageStyles}>{newsPlaceholder}</div>
             <div css={css({ gridArea: 'headline' })}>
@@ -123,7 +123,7 @@ const DashboardNews: React.FC<DashboardNewsProps> = ({ items }) => {
             </div>
           </article>
           <Divider />
-        </>
+        </div>
       ))}
 
       {items.length > 1 && (

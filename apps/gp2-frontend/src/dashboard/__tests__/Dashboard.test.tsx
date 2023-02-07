@@ -45,6 +45,7 @@ const renderDashboard = async ({
 };
 const mockGetNews = getNews as jest.MockedFunction<typeof getNews>;
 it('renders dashboard header', async () => {
+  mockGetNews.mockResolvedValueOnce(gp2.createNewsResponse());
   await renderDashboard({});
   expect(
     await screen.getByRole('heading', { name: 'Dashboard' }),
@@ -52,6 +53,7 @@ it('renders dashboard header', async () => {
 });
 
 it('doesnt render the welcome back banner when its disabled', async () => {
+  mockGetNews.mockResolvedValueOnce(gp2.createNewsResponse());
   await renderDashboard({
     user: { firstName: 'Tony' },
     showWelcomeBackBanner: false,
@@ -61,6 +63,7 @@ it('doesnt render the welcome back banner when its disabled', async () => {
   ).not.toBeInTheDocument();
 });
 it('renders the welcome back banner when its enabled', async () => {
+  mockGetNews.mockResolvedValueOnce(gp2.createNewsResponse());
   await renderDashboard({
     user: { firstName: 'Tony' },
     showWelcomeBackBanner: true,
@@ -70,6 +73,7 @@ it('renders the welcome back banner when its enabled', async () => {
 
 it('calls the dismissBanner function when pressing the close button on the welcome back banner', async () => {
   const dismissBanner = jest.fn();
+  mockGetNews.mockResolvedValueOnce(gp2.createNewsResponse());
   await renderDashboard({
     user: { firstName: 'Tony' },
     showWelcomeBackBanner: true,

@@ -1332,7 +1332,7 @@ __metadata:
     jwt-encode: 1.0.1
     nock: 13.3.0
     pino: 8.8.0
-    pino-http: 8.3.2
+    pino-http: 8.3.3
     pino-lambda: 4.1.0
     pino-noir: 2.2.1
     pino-pretty: ^9.1.1
@@ -32364,15 +32364,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pino-http@npm:8.3.2":
-  version: 8.3.2
-  resolution: "pino-http@npm:8.3.2"
+"pino-http@npm:8.3.3":
+  version: 8.3.3
+  resolution: "pino-http@npm:8.3.3"
   dependencies:
     get-caller-file: ^2.0.5
     pino: ^8.0.0
     pino-std-serializers: ^6.0.0
     process-warning: ^2.0.0
-  checksum: 21df0013b270efa1c9b303f0c489274786ac0a9c8b44dc3008c4db82a2f72808db9e01e16cf065338a698d0b865f63874c0afba9963eab584377b8a84e67833f
+  checksum: 6d9fb4f9230dce04d934b3d6179b2b9a14654e8e0e6cb7344cd1d8baeb53d5c42e1d169dffe350379bfeb9e41b59dc0ec417fe86eb01d49a21e2bac031c2803e
   languageName: node
   linkType: hard
 

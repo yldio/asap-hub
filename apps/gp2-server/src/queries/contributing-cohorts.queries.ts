@@ -14,7 +14,7 @@ export const FETCH_CONTRIBUTING_COHORTS = gql`
     queryContributingCohortsContentsWithTotal(
       top: $top
       skip: $skip
-      orderby: "data/created"
+      orderby: "data/name/iv"
     ) {
       total
       items {

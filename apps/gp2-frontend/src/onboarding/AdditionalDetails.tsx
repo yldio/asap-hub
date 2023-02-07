@@ -1,4 +1,5 @@
 import {
+  ContributingCohortsModal,
   FundingProviderModal,
   OnboardingAdditionalDetails,
 } from '@asap-hub/gp2-components';
@@ -7,7 +8,11 @@ import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 } from '@asap-hub/routing';
 import { Route } from 'react-router-dom';
 
-import { usePatchUserById, useUserById } from '../users/state';
+import {
+  useContributingCohorts,
+  usePatchUserById,
+  useUserById,
+} from '../users/state';
 
 const AdditionalDetails: React.FC<Record<string, never>> = () => {
   const currentUser = useCurrentUserGP2();
@@ -17,6 +22,7 @@ const AdditionalDetails: React.FC<Record<string, never>> = () => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const patchUser = usePatchUserById(currentUser!.id);
 
+  const cohortOptions = useContributingCohorts();
   if (userData) {
     return (
       <>
@@ -52,7 +58,12 @@ const AdditionalDetails: React.FC<Record<string, never>> = () => {
             onboarding({}).additionalDetails({}).editContributingCohorts({}).$
           }
         >
-          {/* { edit Contributing Cohorts Modal} */}
+          <ContributingCohortsModal
+            {...userData}
+            backHref={onboarding({}).additionalDetails({}).$}
+            onSave={(patchedUser) => patchUser(patchedUser)}
+            cohortOptions={cohortOptions}
+          />
         </Route>
         <Route
           path={onboarding({}).additionalDetails({}).editExternalProfiles({}).$}

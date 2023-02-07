@@ -5,7 +5,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 const documents = {
   '\n  fragment ContributingCohortsContent on ContributingCohorts {\n    id\n    flatData {\n      name\n    }\n  }\n':
     graphql.ContributingCohortsContentFragmentDoc,
-  '\n  query FetchContributingCohorts($top: Int, $skip: Int) {\n    queryContributingCohortsContentsWithTotal(\n      top: $top\n      skip: $skip\n      orderby: "data/created"\n    ) {\n      total\n      items {\n        ...ContributingCohortsContent\n      }\n    }\n  }\n  \n':
+  '\n  query FetchContributingCohorts($top: Int, $skip: Int) {\n    queryContributingCohortsContentsWithTotal(\n      top: $top\n      skip: $skip\n      orderby: "data/name/iv"\n    ) {\n      total\n      items {\n        ...ContributingCohortsContent\n      }\n    }\n  }\n  \n':
     graphql.FetchContributingCohortsDocument,
   '\n  fragment NewsContent on NewsAndEvents {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      title\n      shortText\n      link\n      linkText\n      sampleCount\n      articleCount\n      cohortCount\n      link\n      linkText\n    }\n  }\n':
     graphql.NewsContentFragmentDoc,
@@ -47,8 +47,8 @@ export function gql(
   source: '\n  fragment ContributingCohortsContent on ContributingCohorts {\n    id\n    flatData {\n      name\n    }\n  }\n',
 ): typeof documents['\n  fragment ContributingCohortsContent on ContributingCohorts {\n    id\n    flatData {\n      name\n    }\n  }\n'];
 export function gql(
-  source: '\n  query FetchContributingCohorts($top: Int, $skip: Int) {\n    queryContributingCohortsContentsWithTotal(\n      top: $top\n      skip: $skip\n      orderby: "data/created"\n    ) {\n      total\n      items {\n        ...ContributingCohortsContent\n      }\n    }\n  }\n  \n',
-): typeof documents['\n  query FetchContributingCohorts($top: Int, $skip: Int) {\n    queryContributingCohortsContentsWithTotal(\n      top: $top\n      skip: $skip\n      orderby: "data/created"\n    ) {\n      total\n      items {\n        ...ContributingCohortsContent\n      }\n    }\n  }\n  \n'];
+  source: '\n  query FetchContributingCohorts($top: Int, $skip: Int) {\n    queryContributingCohortsContentsWithTotal(\n      top: $top\n      skip: $skip\n      orderby: "data/name/iv"\n    ) {\n      total\n      items {\n        ...ContributingCohortsContent\n      }\n    }\n  }\n  \n',
+): typeof documents['\n  query FetchContributingCohorts($top: Int, $skip: Int) {\n    queryContributingCohortsContentsWithTotal(\n      top: $top\n      skip: $skip\n      orderby: "data/name/iv"\n    ) {\n      total\n      items {\n        ...ContributingCohortsContent\n      }\n    }\n  }\n  \n'];
 export function gql(
   source: '\n  fragment NewsContent on NewsAndEvents {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      title\n      shortText\n      link\n      linkText\n      sampleCount\n      articleCount\n      cohortCount\n      link\n      linkText\n    }\n  }\n',
 ): typeof documents['\n  fragment NewsContent on NewsAndEvents {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      title\n      shortText\n      link\n      linkText\n      sampleCount\n      articleCount\n      cohortCount\n      link\n      linkText\n    }\n  }\n'];

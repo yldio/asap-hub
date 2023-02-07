@@ -204,9 +204,8 @@ type UserCreateCohorts = gp2Model.UserCreateDataObject['contributingCohorts'];
 const mapContributingCohorts = (
   cohorts: UserUpdateCohorts | UserCreateCohorts,
 ) =>
-  cohorts?.map(({ contributingCohortId, name, role, studyUrl }) => ({
+  cohorts?.map(({ contributingCohortId, role, studyUrl }) => ({
     id: [contributingCohortId],
-    name,
     role: reverseCohortRoleMap[role],
     study: studyUrl || undefined,
   }));

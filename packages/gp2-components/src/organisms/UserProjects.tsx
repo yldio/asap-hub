@@ -52,7 +52,7 @@ const UserProjects: React.FC<UserProjectsProps> = ({
         const status = <StatusPill status={project.status} />;
 
         return {
-          id,
+          id: project.id,
           values: [name, role, status],
         };
       })}

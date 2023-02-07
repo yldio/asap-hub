@@ -3,23 +3,35 @@ import { gp2 } from '@asap-hub/routing';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { lazy, useEffect } from 'react';
 import Onboarding from './Onboarding';
-import Background from './Background';
-import AdditionalDetails from './AdditionalDetails';
-import Groups from './Groups';
 
 const loadWelcome = () =>
   import(/* webpackChunkName: "onboarding-welcome" */ './Welcome');
 const loadCoreDetail = () =>
   import(/* webpackChunkName: "onboarding-core-details" */ './CoreDetails');
+const loadBackGround = () =>
+  import(/* webpackChunkName: "onboarding-background" */ './Background');
 
+const loadGroups = () =>
+  import(/* webpackChunkName: "onboarding-groups" */ './Groups');
+const loadAdditionalDetails = () =>
+  import(
+    /* webpackChunkName: "onboarding-additional-details" */ './AdditionalDetails'
+  );
 const Welcome = lazy(loadWelcome);
 const CoreDetails = lazy(loadCoreDetail);
+const Background = lazy(loadBackGround);
+const Groups = lazy(loadGroups);
+const AdditionalDetails = lazy(loadAdditionalDetails);
 
 const { onboarding } = gp2;
 
 const Routes: React.FC<Record<string, never>> = () => {
   useEffect(() => {
-    loadWelcome().then(loadCoreDetail);
+    loadWelcome()
+      .then(loadCoreDetail)
+      .then(loadBackGround)
+      .then(loadGroups)
+      .then(loadAdditionalDetails);
   }, []);
   const { path } = useRouteMatch();
 

@@ -116,8 +116,10 @@ export type UserDataObject = {
 
 export type UserCreateDataObject = Omit<
   UserDataObject,
-  'id' | 'createdDate' | 'projects' | 'workingGroups'
->;
+  'id' | 'createdDate' | 'projects' | 'workingGroups' | 'contributingCohorts'
+> & {
+  contributingCohorts: Omit<UserContributingCohort, 'name'>[];
+};
 
 export type UserUpdateDataObject = Partial<UserCreateDataObject>;
 export type UserPatchRequest = Omit<

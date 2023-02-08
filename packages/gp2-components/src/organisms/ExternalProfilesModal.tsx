@@ -17,7 +17,7 @@ type ExternalProfilesModalProps = Pick<gp2.UserResponse, 'social'> &
   };
 
 const baseUrl = {
-  orcid: 'https://orcid.com/rid',
+  orcid: 'https://orcid.org/',
   researcherId: 'https://researcherid.com/rid/',
 };
 
@@ -29,12 +29,14 @@ const ExternalProfilesModal: React.FC<ExternalProfilesModalProps> = ({
   const [newGoogleScholar, setGoogleScholar] = useState<string>(
     social?.googleScholar || '',
   );
-  const [newOrcid, setOrcid] = useState<string>(social?.orcid || '');
+  const [newOrcid, setOrcid] = useState<string>(
+    social?.orcid?.split(baseUrl.orcid)[1] || '',
+  );
   const [newResearchGate, setResearchGate] = useState<string>(
     social?.researchGate || '',
   );
   const [newResearcherId, setResearcherId] = useState<string>(
-    social?.researcherId || '',
+    social?.researcherId?.split(baseUrl.researcherId)[1] || '',
   );
   const [newBlog, setBlog] = useState<string>(social?.blog || '');
   const [newTwitter, setTwitter] = useState<string>(social?.twitter || '');
@@ -45,11 +47,11 @@ const ExternalProfilesModal: React.FC<ExternalProfilesModalProps> = ({
     (!social?.googleScholar && newGoogleScholar !== '') ||
     social?.googleScholar !== newGoogleScholar ||
     (!social?.orcid && newOrcid !== '') ||
-    social?.orcid !== newOrcid ||
+    social?.orcid !== `${baseUrl.orcid}${newOrcid}` ||
     (!social?.researchGate && newResearchGate !== '') ||
     social?.researchGate !== newResearchGate ||
     (!social?.researcherId && newResearcherId !== '') ||
-    social?.researcherId !== newResearcherId ||
+    social?.researcherId !== `${baseUrl.researcherId}${newResearcherId}` ||
     (!social?.blog && newBlog !== '') ||
     social?.blog !== newBlog ||
     (!social?.twitter && newTwitter !== '') ||
@@ -66,14 +68,16 @@ const ExternalProfilesModal: React.FC<ExternalProfilesModalProps> = ({
       onSave={() =>
         onSave({
           social: {
-            googleScholar: newGoogleScholar,
-            orcid: newOrcid || undefined,
-            researchGate: newResearchGate || undefined,
-            researcherId: newResearcherId || undefined,
-            blog: newBlog || undefined,
-            twitter: newTwitter || undefined,
-            linkedIn: newLinkedIn || undefined,
-            github: newGithub || undefined,
+            ...(newGoogleScholar ? { googleScholar: newGoogleScholar } : {}),
+            ...(newOrcid ? { orcid: `${baseUrl.orcid}${newOrcid}` } : {}),
+            ...(newResearchGate ? { researchGate: newResearchGate } : {}),
+            ...(newResearcherId
+              ? { researcherId: `${baseUrl.researcherId}${newResearcherId}` }
+              : {}),
+            ...(newBlog ? { blog: newBlog } : {}),
+            ...(newTwitter ? { twitter: newTwitter } : {}),
+            ...(newLinkedIn ? { linkedIn: newLinkedIn } : {}),
+            ...(newGithub ? { github: newGithub } : {}),
           },
         })
       }
@@ -96,7 +100,7 @@ const ExternalProfilesModal: React.FC<ExternalProfilesModalProps> = ({
             placeholder="https://www.example.com"
             enabled={!isSaving}
             value={newGoogleScholar}
-            onChange={(val) => setGoogleScholar(val)}
+            onChange={setGoogleScholar}
           />
           <LabeledTextField
             title="ORCID"
@@ -109,8 +113,8 @@ const ExternalProfilesModal: React.FC<ExternalProfilesModalProps> = ({
             }
             placeholder="0000-0000-0000-0000"
             enabled={!isSaving}
-            value={newOrcid ? newOrcid.split(baseUrl.orcid)[1] : ''}
-            onChange={(val) => setOrcid(`${baseUrl.orcid}${val}`)}
+            value={newOrcid}
+            onChange={setOrcid}
           />
           <LabeledTextField
             title="Research Gate"
@@ -120,7 +124,7 @@ const ExternalProfilesModal: React.FC<ExternalProfilesModalProps> = ({
             placeholder="https://www.example.com"
             enabled={!isSaving}
             value={newResearchGate}
-            onChange={(val) => setResearchGate(val)}
+            onChange={setResearchGate}
           />
           <LabeledTextField
             title="ResearcherID"
@@ -139,12 +143,8 @@ const ExternalProfilesModal: React.FC<ExternalProfilesModalProps> = ({
             }
             placeholder="0-0000-0000"
             enabled={!isSaving}
-            value={
-              newResearcherId
-                ? newResearcherId.split(baseUrl.researcherId)[1]
-                : ''
-            }
-            onChange={(val) => setResearcherId(`${baseUrl.researcherId}${val}`)}
+            value={newResearcherId}
+            onChange={setResearcherId}
           />
           <header>
             <Headline4 styleAsHeading={3}>Social Networks</Headline4>
@@ -169,7 +169,7 @@ const ExternalProfilesModal: React.FC<ExternalProfilesModalProps> = ({
             placeholder="https://www.example.com"
             enabled={!isSaving}
             value={newTwitter}
-            onChange={(val) => setTwitter(val)}
+            onChange={setTwitter}
           />
           <LabeledTextField
             title="LinkedIn"
@@ -179,7 +179,7 @@ const ExternalProfilesModal: React.FC<ExternalProfilesModalProps> = ({
             placeholder="https://www.example.com"
             enabled={!isSaving}
             value={newLinkedIn}
-            onChange={(val) => setLinkedIn(val)}
+            onChange={setLinkedIn}
           />
           <LabeledTextField
             title="Github"
@@ -189,7 +189,7 @@ const ExternalProfilesModal: React.FC<ExternalProfilesModalProps> = ({
             placeholder="https://www.example.com"
             enabled={!isSaving}
             value={newGithub}
-            onChange={(val) => setGithub(val)}
+            onChange={setGithub}
           />
         </>
       )}

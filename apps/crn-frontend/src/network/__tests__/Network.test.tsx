@@ -2,7 +2,11 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import { createListUserResponse } from '@asap-hub/fixtures';
+import {
+  createListEventResponse,
+  createListUserResponse,
+  createWorkingGroupResponse,
+} from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
 import {
   fireEvent,
@@ -19,7 +23,8 @@ import Network from '../Network';
 import { getTeams } from '../teams/api';
 import { getGroups } from '../groups/api';
 import { useUsers } from '../users/state';
-import { getWorkingGroups } from '../working-groups/api';
+import { getWorkingGroup, getWorkingGroups } from '../working-groups/api';
+import { getEvents } from '../../events/api';
 
 jest.mock('../users/state', () => ({
   useUsers: jest.fn().mockReturnValue({ items: [], total: 0 }),
@@ -28,13 +33,23 @@ jest.mock('../users/state', () => ({
 jest.mock('../teams/api');
 jest.mock('../groups/api');
 jest.mock('../working-groups/api');
+jest.mock('../../events/api');
 
 const mockUseUsers = useUsers as jest.MockedFunction<typeof useUsers>;
 const mockGetTeams = getTeams as jest.MockedFunction<typeof getTeams>;
 const mockGetGroups = getGroups as jest.MockedFunction<typeof getGroups>;
+const mockGetWorkingGroup = getWorkingGroup as jest.MockedFunction<
+  typeof getWorkingGroup
+>;
 const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
   typeof getWorkingGroups
 >;
+const mockGetWorkingGroupEventsFromAlgolia = getEvents as jest.MockedFunction<
+  typeof getEvents
+>;
+
+const response = createListEventResponse(7);
+mockGetWorkingGroupEventsFromAlgolia.mockResolvedValue(response);
 
 mockUseUsers.mockReturnValue(createListUserResponse(1));
 
@@ -239,4 +254,27 @@ it('reads filters from url', async () => {
       }),
     ),
   );
+});
+
+it('renders working-group profile page', async () => {
+  const workingGroupResponse = createWorkingGroupResponse({});
+  mockGetWorkingGroup.mockResolvedValueOnce(workingGroupResponse);
+  await renderNetworkPage(
+    network({}).workingGroups({}).workingGroup({ workingGroupId: '123' }).$,
+  );
+
+  expect(await screen.findByText(/Working Group Description/i)).toBeVisible();
+});
+
+it('handles server error for working groups tab', async () => {
+  const spy = jest.spyOn(console, 'error').mockImplementation();
+
+  mockGetWorkingGroups.mockRejectedValueOnce(new Error('Failed to fetch'));
+  await renderNetworkPage(network({}).workingGroups({}).$);
+
+  await waitFor(() => {
+    expect(mockGetWorkingGroups).toHaveBeenCalled();
+  });
+  expect(screen.getByText(/Something went wrong/i)).toBeVisible();
+  await waitFor(() => expect(spy).toHaveBeenCalled());
 });

@@ -30,7 +30,7 @@ const externalProfilesContainerStyles = css({
 
 const networkInfo: Record<
   keyof UserSocial,
-  { icon: ReactNode; displayName: string; baseUrl?: string }
+  { icon: ReactNode; displayName: string }
 > = {
   googleScholar: {
     icon: <GoogleScholarIcon color={iconsColor} />,
@@ -39,7 +39,6 @@ const networkInfo: Record<
   orcid: {
     icon: <OrcidIcon color={iconsColor} />,
     displayName: 'Orcid',
-    baseUrl: 'https://orcid.org/',
   },
   researchGate: {
     icon: <ResearchGateIcon color={iconsColor} />,
@@ -71,7 +70,7 @@ const researchNetworksKeys: Array<keyof UserSocial> = [
   'googleScholar',
   'orcid',
   'researchGate',
-  'researcherId'
+  'researcherId',
 ];
 
 const socialNetworkKeys: Array<keyof UserSocial> = [

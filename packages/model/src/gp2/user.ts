@@ -79,10 +79,7 @@ export type UserContributingCohort = {
 };
 
 export interface UserSocial
-  extends Omit<
-    UserSocialLinks,
-    'website1' | 'website2'
-  > {
+  extends Omit<UserSocialLinks, 'website1' | 'website2'> {
   blog?: string;
 }
 

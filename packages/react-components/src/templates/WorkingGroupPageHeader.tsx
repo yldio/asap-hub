@@ -153,7 +153,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
   const route = network({})
     .workingGroups({})
     .workingGroup({ workingGroupId: id });
-
+  console.log('WORKING_GROUP_EVENTS', isEnabled('WORKING_GROUP_EVENTS'));
   return (
     <header css={containerStyles}>
       <div css={titleStyle}>
@@ -267,14 +267,16 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
             Working Group Outputs ({workingGroupsOutputsCount})
           </TabLink>
         )}
-        {!complete && (
+        {isEnabled('WORKING_GROUP_EVENTS') && !complete && (
           <TabLink href={route.upcoming({}).$}>
             Upcoming Events {`(${upcomingEventsCount})`}
           </TabLink>
         )}
-        <TabLink href={route.past({}).$}>
-          Past Events {`(${pastEventsCount})`}
-        </TabLink>
+        {isEnabled('WORKING_GROUP_EVENTS') && (
+          <TabLink href={route.past({}).$}>
+            Past Events {`(${pastEventsCount})`}
+          </TabLink>
+        )}
       </TabNav>
     </header>
   );

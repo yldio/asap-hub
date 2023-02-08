@@ -3,6 +3,7 @@ import {
   createUserResponse,
   createWorkingGroupResponse,
 } from '@asap-hub/fixtures';
+import { disable } from '@asap-hub/flags';
 import { network } from '@asap-hub/routing';
 import { render, waitFor, screen } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
@@ -164,5 +165,15 @@ describe('the event tabs', () => {
     await renderWorkingGroupProfile();
 
     expect(await screen.findByText(/Past Events \(7\)/i)).toBeVisible();
+  });
+
+  it('does not render event tabs when feature flag is disabled', async () => {
+    disable('ASAP_WORKING_GROUP_EVENTS');
+
+    mockGetWorkingGroupEventsFromAlgolia.mockResolvedValue(response);
+    await renderWorkingGroupProfile();
+
+    expect(await screen.queryByText(/Past Events/i)).toBeNull();
+    expect(await screen.queryByText(/Upcoming Events/i)).toBeNull();
   });
 });

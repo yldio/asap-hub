@@ -17,6 +17,5 @@ module.exports = {
     ...(this.setupFilesAfterEnv || []),
     require.resolve('./jest/global-styles-setup-after-env.js'),
   ],
-
   testMatch: ['**/*.browser-test.{js,jsx,ts,tsx}'],
 };

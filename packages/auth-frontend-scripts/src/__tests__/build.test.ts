@@ -60,10 +60,10 @@ describe('build', () => {
     ]);
 
     expect(mockWriteFileSync.mock.calls[0]).toMatchInlineSnapshot(`
-      Array [
+      [
         "/index.html",
-        "<!doctype html><html lang=\\"en\\"><head>
-                <script defer=\\"defer\\" src=\\"https://dev.hub.asap.science/.auth/static/js/main.chunk.js\\"> </script></head><body></body></html>",
+        "<!doctype html><html lang="en"><head>
+                <script defer="defer" src="https://dev.hub.asap.science/.auth/static/js/main.chunk.js"> </script></head><body></body></html>",
       ]
     `);
   });

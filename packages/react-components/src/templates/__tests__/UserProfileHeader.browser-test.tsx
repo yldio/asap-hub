@@ -2,6 +2,7 @@ import { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 import domToPlaywright from 'dom-to-playwright';
 import { createUserResponse } from '@asap-hub/fixtures';
+import 'jest-playwright-preset';
 
 import UserProfileHeader from '../UserProfileHeader';
 import { mobileScreen, largeDesktopScreen } from '../../pixels';

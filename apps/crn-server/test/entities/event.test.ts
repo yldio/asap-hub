@@ -66,7 +66,7 @@ describe('events entity', () => {
         },
       };
       expect(() => parseGraphQLEvent(event)).toThrowErrorMatchingInlineSnapshot(
-        `"Invalid event (example) status \\"invalid\\""`,
+        `"Invalid event (example) status "invalid""`,
       );
     });
   });

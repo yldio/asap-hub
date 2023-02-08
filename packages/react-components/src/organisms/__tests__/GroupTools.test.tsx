@@ -65,7 +65,7 @@ it('renders the subscribe button', () => {
 
   expect(queryAllByRole('link').map((s) => s.getAttribute('href')))
     .toMatchInlineSnapshot(`
-    Array [
+    [
       "https://calendar.google.com/calendar/r?cid=12w3",
       "webcal://calendar.google.com/calendar/ical/12w3/public/basic.ics",
     ]

@@ -3,8 +3,6 @@ import { screen } from './pixels';
 
 // For TypeScript to understand the extended matcher
 import '@emotion/jest';
-// For TypeScript to understand the globals
-import 'jest-playwright-preset';
 
 export const viewportCalc = (
   calcExpression: string,

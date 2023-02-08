@@ -230,7 +230,7 @@ describe('Users controller', () => {
 
   describe('connectByCode', () => {
     beforeEach(() => {
-      jest.resetAllMocks().useFakeTimers('modern');
+      jest.resetAllMocks().useFakeTimers();
     });
 
     afterEach(() => {

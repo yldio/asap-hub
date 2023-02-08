@@ -23,40 +23,40 @@ it('renders icon and link', () => {
       link.getAttribute('href'),
     ]),
   ).toMatchInlineSnapshot(`
-    Array [
-      Array [
+    [
+      [
         "ORCID",
         "https://orcid.org/test",
       ],
-      Array [
+      [
         "ResearcherID",
         "https://publons.com/researcher/test",
       ],
-      Array [
+      [
         "Twitter",
         "https://twitter.com/test",
       ],
-      Array [
+      [
         "GitHub",
         "https://github.com/test",
       ],
-      Array [
+      [
         "Google Scholar",
         "https://scholar.google.co.uk/citations?user=test",
       ],
-      Array [
+      [
         "Research Gate",
         "https://www.researchgate.net/profile/test",
       ],
-      Array [
+      [
         "LinkedIn",
         "https://www.linkedin.com/in/test",
       ],
-      Array [
+      [
         "Website",
         "http://example.com/website1",
       ],
-      Array [
+      [
         "Website",
         "http://example.com/website2",
       ],

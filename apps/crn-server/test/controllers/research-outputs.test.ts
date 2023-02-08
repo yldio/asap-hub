@@ -139,9 +139,7 @@ describe('ResearchOutputs controller', () => {
 
     test('Should create the new research output and return it', async () => {
       const mockDate = new Date('2010-01-01');
-      const spy = jest
-        .spyOn(global, 'Date')
-        .mockImplementation(() => mockDate as unknown as string);
+      const spy = jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
 
       const researchOutputCreateData = getResearchOutputCreateData();
       const researchOutputId = 'research-output-id-1';

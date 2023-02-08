@@ -45,7 +45,7 @@ it('renders default values into inputs', () => {
   );
   expect(queryAllByRole('textbox').map((input) => input.getAttribute('value')))
     .toMatchInlineSnapshot(`
-    Array [
+    [
       "http://example.com",
       "LinkName",
       "LinkDescription",

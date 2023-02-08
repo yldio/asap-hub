@@ -1,6 +1,7 @@
 import { render } from '@testing-library/react';
 import domToPlaywright from 'dom-to-playwright';
 import { createListUserResponse } from '@asap-hub/fixtures';
+import 'jest-playwright-preset';
 
 import MembersList from '../MembersList';
 import { largeDesktopScreen } from '../../pixels';

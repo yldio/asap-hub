@@ -179,7 +179,9 @@ describe('Run-migrations Webhook', () => {
       mockUp.mockResolvedValueOnce(null);
       mockUp.mockRejectedValueOnce(new Error());
       mockUp.mockResolvedValueOnce(null);
-      const squidexCreateSpy = jest.spyOn(SquidexRest.prototype, 'create');
+      const squidexCreateSpy = jest
+        .spyOn(SquidexRest.prototype, 'create')
+        .mockResolvedValue(null);
 
       await expect(runHandler(...mockHandlerArguments)).rejects.toThrow();
       expect(mockUp).toHaveBeenCalledTimes(2);

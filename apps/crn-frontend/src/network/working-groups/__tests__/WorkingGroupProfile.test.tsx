@@ -168,7 +168,7 @@ describe('the event tabs', () => {
   });
 
   it('does not render event tabs when feature flag is disabled', async () => {
-    disable('ASAP_WORKING_GROUP_EVENTS');
+    disable('WORKING_GROUP_EVENTS');
 
     mockGetWorkingGroupEventsFromAlgolia.mockResolvedValue(response);
     await renderWorkingGroupProfile();

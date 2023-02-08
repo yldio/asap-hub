@@ -40,6 +40,20 @@ const user: gp2Squidex.RestUser = {
     biography: { iv: 'a biography' },
     country: { iv: 'Spain' },
     contributingCohorts: { iv: [] },
+    social: {
+      iv: [
+        {
+          googleScholar: 'https://scholar.google.com',
+          orcid: 'https://orcid.org',
+          blog: 'https://www.blogger.com',
+          twitter: 'https://twitter.com',
+          linkedIn: 'https://www.linkedin.com',
+          github: 'https://github.com',
+          researchGate: 'https://researchid.com/rid/',
+          researcherId: 'https://researcherid.com/rid/',
+        },
+      ],
+    },
   },
 };
 

@@ -3,9 +3,12 @@ import {
   GlobeIcon,
   Headline4,
   LabeledTextField,
+  OrcidIcon,
   Paragraph,
+  ResearcherIdIcon,
 } from '@asap-hub/react-components';
 import { ComponentProps, useState } from 'react';
+import colors from '../templates/colors';
 import EditUserModal from './EditUserModal';
 
 type ExternalProfilesModalProps = Pick<gp2.UserResponse, 'social'> &
@@ -13,15 +16,9 @@ type ExternalProfilesModalProps = Pick<gp2.UserResponse, 'social'> &
     onSave: (userData: gp2.UserPatchRequest) => Promise<void>;
   };
 
-const prefixes = {
-  googleScholar: 'scholar.google.com/citations?user=',
-  orcid: 'orcid.com/rid',
-  researchGate: 'researchid.com/rid/',
-  researcherId: 'researchid.com/rid/',
-  blog: 'globeIcon',
-  twitter: '@',
-  linkedIn: 'linkedin.com/in/',
-  github: 'github.com/',
+const baseUrl = {
+  orcid: 'https://orcid.com/rid',
+  researcherId: 'https://researcherid.com/rid/',
 };
 
 const ExternalProfilesModal: React.FC<ExternalProfilesModalProps> = ({
@@ -45,13 +42,21 @@ const ExternalProfilesModal: React.FC<ExternalProfilesModalProps> = ({
   const [newGithub, setGithub] = useState<string>(social?.github || '');
 
   const checkDirty = () =>
+    (!social?.googleScholar && newGoogleScholar !== '') ||
     social?.googleScholar !== newGoogleScholar ||
+    (!social?.orcid && newOrcid !== '') ||
     social?.orcid !== newOrcid ||
+    (!social?.researchGate && newResearchGate !== '') ||
     social?.researchGate !== newResearchGate ||
+    (!social?.researcherId && newResearcherId !== '') ||
     social?.researcherId !== newResearcherId ||
+    (!social?.blog && newBlog !== '') ||
     social?.blog !== newBlog ||
+    (!social?.twitter && newTwitter !== '') ||
     social?.twitter !== newTwitter ||
+    (!social?.linkedIn && newLinkedIn !== '') ||
     social?.linkedIn !== newLinkedIn ||
+    (!social?.github && newGithub !== '') ||
     social?.github !== newGithub;
 
   return (
@@ -62,13 +67,13 @@ const ExternalProfilesModal: React.FC<ExternalProfilesModalProps> = ({
         onSave({
           social: {
             googleScholar: newGoogleScholar,
-            orcid: newOrcid,
-            researchGate: newResearchGate,
-            researcherId: newResearcherId,
-            blog: newBlog,
-            twitter: newTwitter,
-            linkedIn: newLinkedIn,
-            github: newGithub,
+            orcid: newOrcid || undefined,
+            researchGate: newResearchGate || undefined,
+            researcherId: newResearcherId || undefined,
+            blog: newBlog || undefined,
+            twitter: newTwitter || undefined,
+            linkedIn: newLinkedIn || undefined,
+            github: newGithub || undefined,
           },
         })
       }
@@ -86,56 +91,60 @@ const ExternalProfilesModal: React.FC<ExternalProfilesModalProps> = ({
           <LabeledTextField
             title="Google Scholar"
             subtitle="(optional)"
-            labelIndicator={prefixes.googleScholar}
-            placeholder="profileID"
+            description="Type your Google Scholar profile URL."
+            labelIndicator={<GlobeIcon />}
+            placeholder="https://www.example.com"
             enabled={!isSaving}
-            value={
-              newGoogleScholar
-                ? newGoogleScholar.split(prefixes.googleScholar)[1]
-                : ''
-            }
-            onChange={(val) =>
-              setGoogleScholar(`https://${prefixes.googleScholar}${val}`)
-            }
+            value={newGoogleScholar}
+            onChange={(val) => setGoogleScholar(val)}
           />
           <LabeledTextField
             title="ORCID"
             subtitle="(optional)"
-            labelIndicator={prefixes.orcid}
-            placeholder="xxxx-xxxx-xxxx-xxxx"
+            description="Type your ORCID ID."
+            labelIndicator={
+              <span css={{ width: 24, display: 'inline-flex' }}>
+                <OrcidIcon color={colors.neutral900.rgba} />
+              </span>
+            }
+            placeholder="0000-0000-0000-0000"
             enabled={!isSaving}
-            value={newOrcid ? newOrcid.split(prefixes.orcid)[1] : ''}
-            onChange={(val) => setOrcid(`https://${prefixes.orcid}${val}`)}
+            value={newOrcid ? newOrcid.split(baseUrl.orcid)[1] : ''}
+            onChange={(val) => setOrcid(`${baseUrl.orcid}${val}`)}
           />
           <LabeledTextField
             title="Research Gate"
             subtitle="(optional)"
-            labelIndicator={prefixes.researchGate}
-            placeholder="xxxx-xxxx-xxxx"
+            description="Type your Research Gate profile URL."
+            labelIndicator={<GlobeIcon />}
+            placeholder="https://www.example.com"
             enabled={!isSaving}
-            value={
-              newResearchGate
-                ? newResearchGate.split(prefixes.researchGate)[1]
-                : ''
-            }
-            onChange={(val) =>
-              setResearchGate(`https://${prefixes.researchGate}${val}`)
-            }
+            value={newResearchGate}
+            onChange={(val) => setResearchGate(val)}
           />
           <LabeledTextField
             title="ResearcherID"
             subtitle="(optional)"
-            labelIndicator={prefixes.researcherId}
-            placeholder="xxxx-xxxx-xxxx"
+            description="Type your Researcher ID."
+            labelIndicator={
+              <span
+                css={{
+                  display: 'inline-flex',
+                  height: 24,
+                  '& > svg > path:first-of-type': { fill: 'transparent' },
+                }}
+              >
+                <ResearcherIdIcon color={colors.neutral900.rgba} />
+              </span>
+            }
+            placeholder="0-0000-0000"
             enabled={!isSaving}
             value={
               newResearcherId
-                ? newResearcherId.split(prefixes.researcherId)[1]
+                ? newResearcherId.split(baseUrl.researcherId)[1]
                 : ''
             }
-            onChange={(val) =>
-              setResearcherId(`https://${prefixes.researcherId}${val}`)
-            }
+            onChange={(val) => setResearcherId(`${baseUrl.researcherId}${val}`)}
           />
           <header>
             <Headline4 styleAsHeading={3}>Social Networks</Headline4>
@@ -149,37 +158,38 @@ const ExternalProfilesModal: React.FC<ExternalProfilesModalProps> = ({
             labelIndicator={<GlobeIcon />}
             placeholder="https://www.example.com"
             enabled={!isSaving}
-            value={newBlog ? newBlog : ''}
+            value={newBlog}
             onChange={setBlog}
           />
           <LabeledTextField
             title="Twitter"
             subtitle="(optional)"
-            labelIndicator="@"
-            placeholder="twitterhandle"
+            description="Type your Twitter profile URL."
+            labelIndicator={<GlobeIcon />}
+            placeholder="https://www.example.com"
             enabled={!isSaving}
-            value={newTwitter ? newTwitter.split(prefixes.twitter)[1] : ''}
-            onChange={(val) => setTwitter(`https://${prefixes.twitter}${val}`)}
+            value={newTwitter}
+            onChange={(val) => setTwitter(val)}
           />
           <LabeledTextField
             title="LinkedIn"
             subtitle="(optional)"
-            labelIndicator={prefixes.linkedIn}
-            placeholder="username"
+            description="Type your LinkedIn profile URL."
+            labelIndicator={<GlobeIcon />}
+            placeholder="https://www.example.com"
             enabled={!isSaving}
-            value={newLinkedIn ? newLinkedIn.split(prefixes.linkedIn)[1] : ''}
-            onChange={(val) =>
-              setLinkedIn(`https://${prefixes.linkedIn}${val}`)
-            }
+            value={newLinkedIn}
+            onChange={(val) => setLinkedIn(val)}
           />
           <LabeledTextField
             title="Github"
             subtitle="(optional)"
-            labelIndicator={prefixes.github}
-            placeholder="username"
+            description="Type your Github profile URL."
+            labelIndicator={<GlobeIcon />}
+            placeholder="https://www.example.com"
             enabled={!isSaving}
-            value={newGithub ? newGithub.split(prefixes.github)[1] : ''}
-            onChange={(val) => setGithub(`https://${prefixes.github}${val}`)}
+            value={newGithub}
+            onChange={(val) => setGithub(val)}
           />
         </>
       )}

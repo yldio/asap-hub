@@ -10,7 +10,8 @@ import {
   TwitterIcon,
   pixels,
   UserProfilePlaceholderCard,
-  researchGateIcon,
+  ResearchGateIcon,
+  ResearcherIdIcon,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import React, { ComponentProps, ReactNode } from 'react';
@@ -34,7 +35,6 @@ const networkInfo: Record<
   googleScholar: {
     icon: <GoogleScholarIcon color={iconsColor} />,
     displayName: 'Google Scholar',
-    baseUrl: 'https://scholar.google.com/citations?user=',
   },
   orcid: {
     icon: <OrcidIcon color={iconsColor} />,
@@ -42,14 +42,12 @@ const networkInfo: Record<
     baseUrl: 'https://orcid.org/',
   },
   researchGate: {
-    icon: researchGateIcon,
+    icon: <ResearchGateIcon color={iconsColor} />,
     displayName: 'Research Gate',
-    baseUrl: 'https://researchid.com/rid/',
   },
   researcherId: {
-    icon: researchGateIcon,
+    icon: <ResearcherIdIcon color={iconsColor} />,
     displayName: 'Researcher ID',
-    baseUrl: 'https://researchid.com/rid/',
   },
   blog: {
     icon: <GlobeIcon color={iconsColor} />,
@@ -58,17 +56,14 @@ const networkInfo: Record<
   twitter: {
     icon: <TwitterIcon color={iconsColor} />,
     displayName: 'Twitter',
-    baseUrl: 'https://twitter.com/',
   },
   linkedIn: {
     icon: <LinkedInIcon color={iconsColor} />,
     displayName: 'LinkedIn',
-    baseUrl: 'https://linkedin.com/in/',
   },
   github: {
     icon: <GithubIcon color={iconsColor} />,
     displayName: 'Github',
-    baseUrl: 'https://github.com/',
   },
 };
 
@@ -96,7 +91,7 @@ const UserExternalProfiles: React.FC<UserExternalProfilesProps> = ({
   const filterSocial = (key: keyof UserSocial) => !!social?.[key];
   const mapSocialInfo = (key: keyof UserSocial) => ({
     key,
-    link: networkInfo[key].baseUrl ? `${networkInfo[key].baseUrl}${social?.[key]}`: social?.[key],
+    link: social?.[key],
     ...networkInfo[key],
   });
   const researchNetworks = researchNetworksKeys

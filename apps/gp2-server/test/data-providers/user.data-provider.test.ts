@@ -657,8 +657,8 @@ describe('User data provider', () => {
             twitter: null,
             linkedIn: null,
             github: null,
-            // researcherId: null,
-            // researchGate: null,
+            researcherId: null,
+            researchGate: null,
           },
         ];
         const mockResponse = getSquidexUserGraphqlResponse(invalidUser);

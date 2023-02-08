@@ -2141,6 +2141,8 @@ export type UsersDataSocialChildDto = {
   googleScholar: Maybe<Scalars['String']>;
   linkedIn: Maybe<Scalars['String']>;
   orcid: Maybe<Scalars['String']>;
+  researchGate: Maybe<Scalars['String']>;
+  researcherId: Maybe<Scalars['String']>;
   twitter: Maybe<Scalars['String']>;
 };
 
@@ -2151,6 +2153,8 @@ export type UsersDataSocialChildInputDto = {
   googleScholar: InputMaybe<Scalars['String']>;
   linkedIn: InputMaybe<Scalars['String']>;
   orcid: InputMaybe<Scalars['String']>;
+  researchGate: InputMaybe<Scalars['String']>;
+  researcherId: InputMaybe<Scalars['String']>;
   twitter: InputMaybe<Scalars['String']>;
 };
 
@@ -2884,7 +2888,14 @@ export type UsersContentFragment = Pick<
       Array<
         Pick<
           UsersDataSocialChildDto,
-          'googleScholar' | 'orcid' | 'blog' | 'twitter' | 'linkedIn' | 'github'
+          | 'googleScholar'
+          | 'orcid'
+          | 'researchGate'
+          | 'researcherId'
+          | 'blog'
+          | 'twitter'
+          | 'linkedIn'
+          | 'github'
         >
       >
     >;
@@ -2977,6 +2988,8 @@ export type FetchUserQuery = {
               UsersDataSocialChildDto,
               | 'googleScholar'
               | 'orcid'
+              | 'researchGate'
+              | 'researcherId'
               | 'blog'
               | 'twitter'
               | 'linkedIn'
@@ -3090,6 +3103,8 @@ export type FetchUsersQuery = {
                     UsersDataSocialChildDto,
                     | 'googleScholar'
                     | 'orcid'
+                    | 'researchGate'
+                    | 'researcherId'
                     | 'blog'
                     | 'twitter'
                     | 'linkedIn'
@@ -4044,6 +4059,14 @@ export const UsersContentFragmentDoc = {
                         name: { kind: 'Name', value: 'googleScholar' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'orcid' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'researchGate' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'researcherId' },
+                      },
                       { kind: 'Field', name: { kind: 'Name', value: 'blog' } },
                       {
                         kind: 'Field',

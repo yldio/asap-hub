@@ -67,7 +67,10 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   if (canCreateUpdate && team) {
     return (
       <Frame title="Share Research Output">
-        <ResearchOutputHeader documentType={documentType} teamAssociation />
+        <ResearchOutputHeader
+          documentType={documentType}
+          workingGroupAssociation={false}
+        />
         <ResearchOutputForm
           tagSuggestions={researchSuggestions}
           documentType={documentType}

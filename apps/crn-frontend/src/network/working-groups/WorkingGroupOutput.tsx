@@ -58,7 +58,10 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   if (canCreateUpdate && workingGroup) {
     return (
       <Frame title="Share Working Group Research Output">
-        <ResearchOutputHeader documentType={documentType} />
+        <ResearchOutputHeader
+          documentType={documentType}
+          workingGroupAssociation
+        />
         <ResearchOutputForm
           tagSuggestions={researchSuggestions}
           documentType={documentType}

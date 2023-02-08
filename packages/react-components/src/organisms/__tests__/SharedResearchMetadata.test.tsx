@@ -25,7 +25,7 @@ it('renders Working Group document types', () => {
       {...props}
       documentType="Article"
       type="Code"
-      workingGroups={[{ id: 'wg1', title: 'Working group 1' }]}
+      workingGroups={[{ id: '1', title: 'Working Group' }]}
     />,
   );
   expect(

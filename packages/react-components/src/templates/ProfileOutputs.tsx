@@ -16,7 +16,7 @@ export type ProfileOutputsProps = Omit<
 > & {
   userAssociationMember: boolean;
   contactEmail?: string;
-  teamAssociation: boolean;
+  workingGroupAssociation: boolean;
 };
 
 const ProfileOutputs: React.FC<ProfileOutputsProps> = ({
@@ -31,7 +31,7 @@ const ProfileOutputs: React.FC<ProfileOutputsProps> = ({
   listViewHref,
   userAssociationMember,
   contactEmail,
-  teamAssociation,
+  workingGroupAssociation,
 }) => (
   <div css={containerStyles}>
     {numberOfItems ? (
@@ -50,11 +50,11 @@ const ProfileOutputs: React.FC<ProfileOutputsProps> = ({
       <NoOutputsPage
         title={`
           ${userAssociationMember ? 'Your' : 'This'} ${
-          teamAssociation ? 'team' : 'working group'
-        } hasn’t shared any research ${teamAssociation ? '.' : 'yet!'}`}
+          workingGroupAssociation ? 'working group' : 'team'
+        } hasn’t shared any research ${workingGroupAssociation ? 'yet!' : '.'}`}
         description={
           <>
-            {teamAssociation && (
+            {!workingGroupAssociation && (
               <>
                 {userAssociationMember
                   ? 'To start sharing research,'

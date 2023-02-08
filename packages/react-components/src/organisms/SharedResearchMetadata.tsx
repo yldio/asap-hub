@@ -1,5 +1,6 @@
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
+import { isResearchOutputWorkingGroup } from '@asap-hub/validation';
 
 import { perRem } from '../pixels';
 import { ExternalLink, PillList } from '../molecules';
@@ -23,7 +24,7 @@ const SharedResearchMetadata: React.FC<SharedResearchMetadataProps> = ({
   workingGroups,
 }) => {
   const pills: string[] = [
-    ...[workingGroups.length > 0 ? 'Working Group' : 'Team'],
+    isResearchOutputWorkingGroup({ workingGroups }) ? 'Working Group' : 'Team',
     ...(documentType ? [documentType] : []),
     ...(type ? [type] : []),
   ];

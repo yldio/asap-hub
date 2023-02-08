@@ -254,6 +254,10 @@ export type ResearchOutputResponse = Omit<
   'createdBy'
 >;
 
+export type ResearchOutputWorkingGroupResponse = ResearchOutputResponse & {
+  workingGroups: [Pick<WorkingGroupResponse, 'id' | 'title'>];
+};
+
 export type ListResearchOutputResponse = ListResponse<ResearchOutputResponse>;
 
 export type AuthorPostRequest =

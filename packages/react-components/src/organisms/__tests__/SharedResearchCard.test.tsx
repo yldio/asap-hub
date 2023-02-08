@@ -6,7 +6,6 @@ import SharedResearchCard from '../SharedResearchCard';
 
 const sharedResearchCardProps: ComponentProps<typeof SharedResearchCard> =
   createResearchOutputResponse();
-
 it('renders the title', () => {
   const { getByRole } = render(
     <SharedResearchCard {...sharedResearchCardProps} title="test123" />,

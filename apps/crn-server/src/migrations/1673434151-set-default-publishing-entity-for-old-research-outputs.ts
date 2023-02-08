@@ -10,7 +10,7 @@ export default class SetResearchOutputPublishingEntityDefault extends Migration 
       async (researchOutput, squidexClient) => {
         await squidexClient.patch(researchOutput.id, {
           publishingEntity: {
-            iv: null,
+            iv: 'Team',
           },
         });
       },

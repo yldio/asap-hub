@@ -20,7 +20,10 @@ export const Normal = () => {
       cardViewHref={''}
       listViewHref={''}
       userAssociationMember={boolean('User is association member', true)}
-      teamAssociation={boolean('Belongs to a team association', true)}
+      workingGroupAssociation={boolean(
+        'Belongs to a working group association',
+        true,
+      )}
       contactEmail={text('Contact Email', 'test@exmaple.com')}
     />
   );

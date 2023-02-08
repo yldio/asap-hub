@@ -88,50 +88,52 @@ const subheaderRecord: subHeaderRecordType = {
 
 const headerCopy = (
   outputDocumentType: ResearchOutputDocumentType,
-  teamAssociation: boolean,
+  workingGroupAssocation: boolean,
 ) => {
-  if (teamAssociation) {
+  if (workingGroupAssocation) {
     switch (outputDocumentType) {
-      case 'Protocol':
-        return 'Share a protocol';
-      case 'Dataset':
-        return 'Share a dataset';
-      case 'Bioinformatics':
-        return 'Share bioinformatics';
-      case 'Lab Resource':
-        return 'Share a lab resource';
       case 'Article':
-        return 'Share an article';
+        return 'Share a Working Group Article';
+      case 'Report':
+        return 'Share a Working Group CRN Report';
       default:
-        return 'Share a resource';
+        return 'Share a Working Group Resource';
     }
   }
   switch (outputDocumentType) {
+    case 'Protocol':
+      return 'Share a protocol';
+    case 'Dataset':
+      return 'Share a dataset';
+    case 'Bioinformatics':
+      return 'Share bioinformatics';
+    case 'Lab Resource':
+      return 'Share a lab resource';
     case 'Article':
-      return 'Share a Working Group Article';
-    case 'Report':
-      return 'Share a Working Group CRN Report';
+      return 'Share an article';
     default:
-      return 'Share a Working Group Resource';
+      return 'Share a resource';
   }
 };
 
 type ResearchOutputHeaderProps = {
   documentType: ResearchOutputDocumentType;
-  teamAssociation?: boolean;
+  workingGroupAssociation: boolean;
 };
 
 const ResearchOutputHeader: React.FC<ResearchOutputHeaderProps> = ({
   documentType,
-  teamAssociation = false,
+  workingGroupAssociation,
 }) => (
   <header>
     <div css={visualHeaderStyles}>
       <Display styleAsHeading={2}>
-        {headerCopy(documentType, teamAssociation)}
+        {headerCopy(documentType, workingGroupAssociation)}
       </Display>
       <div>
-        <Paragraph accent="lead">{subheaderRecord[documentType]}</Paragraph>
+        {subheaderRecord[documentType] && (
+          <Paragraph accent="lead">{subheaderRecord[documentType]}</Paragraph>
+        )}
       </div>
     </div>
   </header>

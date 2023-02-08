@@ -1,17 +1,17 @@
 import { ResearchOutputResponse } from '@asap-hub/model/src/research-output';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
-import { isTeamResearchOutput } from '../src/research-output-guards';
+import { isResearchOutputWorkingGroup } from '../src/research-output-guards';
 
-describe('isTeamResearchOutput', () => {
+describe('isResearchOutputWorkingGroup', () => {
   test.each`
-    description                                        | given                                 | expected
-    ${'returns true when workingGroups is empty'}      | ${[]}                                 | ${true}
-    ${'returns false when workingGroups is not empty'} | ${[{ id: 'wg1', title: 'wg title' }]} | ${false}
-  `('$description', ({ given, expected }) => {
+    description                                       | workingGroups                         | expected
+    ${'returns false when workingGroups is empty'}    | ${[]}                                 | ${false}
+    ${'returns true when workingGroups is not empty'} | ${[{ id: 'wg1', title: 'wg title' }]} | ${true}
+  `('$description', ({ workingGroups, expected }) => {
     const researchOutput: ResearchOutputResponse = {
       ...createResearchOutputResponse(),
-      workingGroups: given,
+      workingGroups,
     };
-    expect(isTeamResearchOutput(researchOutput)).toEqual(expected);
+    expect(isResearchOutputWorkingGroup(researchOutput)).toEqual(expected);
   });
 });

@@ -9,7 +9,7 @@ export default {
 
 export const Normal = () => (
   <ResearchOutputHeader
-    teamAssociation={boolean('Team Association', true)}
+    workingGroupAssociation={boolean('Working Group Association', true)}
     documentType={select(
       'Choose document type',
       researchOutputDocumentTypes,

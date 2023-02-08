@@ -14,7 +14,7 @@ const baseProps: ComponentProps<typeof ProfileOutputs> = {
   cardViewHref: '',
   listViewHref: '',
   userAssociationMember: true,
-  teamAssociation: true,
+  workingGroupAssociation: false,
 };
 
 it('renders output cards', () => {
@@ -57,11 +57,7 @@ it('renders output cards', () => {
 
 it('renders the no output page for your own team', () => {
   const { getByTitle, getByRole, getByText, rerender } = render(
-    <ProfileOutputs
-      {...baseProps}
-      userAssociationMember={true}
-      teamAssociation
-    />,
+    <ProfileOutputs {...baseProps} userAssociationMember={true} />,
   );
   expect(getByTitle('Research')).toBeInTheDocument();
   expect(getByRole('heading', { level: 1 }).textContent).toMatch(/Your team/i);
@@ -71,7 +67,6 @@ it('renders the no output page for your own team', () => {
       {...baseProps}
       userAssociationMember={true}
       contactEmail="example@example.com"
-      teamAssociation
     />,
   );
   expect(getByText(/contact your PM/i).closest('a')).toHaveAttribute(
@@ -82,11 +77,7 @@ it('renders the no output page for your own team', () => {
 
 it('renders the no output page for another team', () => {
   const { getByTitle, getByRole, getByText, rerender } = render(
-    <ProfileOutputs
-      {...baseProps}
-      userAssociationMember={false}
-      teamAssociation
-    />,
+    <ProfileOutputs {...baseProps} userAssociationMember={false} />,
   );
   expect(getByTitle('Research')).toBeInTheDocument();
   expect(getByRole('heading', { level: 1 }).textContent).toMatch(/This team/i);
@@ -96,7 +87,6 @@ it('renders the no output page for another team', () => {
       {...baseProps}
       userAssociationMember={false}
       contactEmail="example@example.com"
-      teamAssociation
     />,
   );
   expect(getByText(/contact the PM/i).closest('a')).toHaveAttribute(
@@ -110,7 +100,12 @@ it('renders the no outputs page for a working group', () => {
     <ProfileOutputs
       {...baseProps}
       userAssociationMember={false}
-      teamAssociation={false}
+      researchOutputs={[
+        {
+          ...createResearchOutputResponse(),
+        },
+      ]}
+      workingGroupAssociation={true}
     />,
   );
 
@@ -121,7 +116,12 @@ it('renders the no outputs page for a working group', () => {
     <ProfileOutputs
       {...baseProps}
       userAssociationMember={true}
-      teamAssociation={false}
+      researchOutputs={[
+        {
+          ...createResearchOutputResponse(),
+        },
+      ]}
+      workingGroupAssociation={true}
     />,
   );
   expect(getByRole('heading', { level: 1 }).textContent).toMatch(

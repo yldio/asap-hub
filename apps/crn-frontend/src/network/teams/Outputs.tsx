@@ -91,7 +91,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
       }
       userAssociationMember={userAssociationMember}
       contactEmail={contactEmail}
-      teamAssociation
+      workingGroupAssociation={false}
     />
   );
 };

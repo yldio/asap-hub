@@ -24,7 +24,7 @@ const itemStyles = css({
 
 type SharedResearchListCardProps = {
   researchOutputs: ReadonlyArray<
-    Pick<ResearchOutputResponse, 'id' | 'title'> &
+    Pick<ResearchOutputResponse, 'id' | 'title' | 'workingGroups'> &
       ComponentProps<typeof SharedResearchMetadata>
   >;
 };
@@ -34,16 +34,23 @@ const SharedResearchListCard: React.FC<SharedResearchListCardProps> = ({
 }) => (
   <Card padding={false}>
     <ul css={containerStyles}>
-      {researchOutputs.map(({ title, id, ...researchOutput }) => (
-        <li key={`output-${id}`} css={[itemStyles, paddingStyles]}>
-          <SharedResearchMetadata {...researchOutput} />
-          <Anchor
-            href={sharedResearch({}).researchOutput({ researchOutputId: id }).$}
-          >
-            <Headline2 styleAsHeading={5}>{title}</Headline2>
-          </Anchor>
-        </li>
-      ))}
+      {researchOutputs.map(
+        ({ title, id, workingGroups, ...researchOutput }) => (
+          <li key={`output-${id}`} css={[itemStyles, paddingStyles]}>
+            <SharedResearchMetadata
+              {...researchOutput}
+              workingGroups={workingGroups}
+            />
+            <Anchor
+              href={
+                sharedResearch({}).researchOutput({ researchOutputId: id }).$
+              }
+            >
+              <Headline2 styleAsHeading={5}>{title}</Headline2>
+            </Anchor>
+          </li>
+        ),
+      )}
     </ul>
   </Card>
 );

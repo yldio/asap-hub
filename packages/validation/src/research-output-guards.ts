@@ -1,13 +1,9 @@
 import {
   ResearchOutputResponse,
-  ResearchOutputPostRequest,
+  ResearchOutputWorkingGroupResponse,
 } from '@asap-hub/model/src/research-output';
 
-export const isTeamResearchOutput = (
-  researchOutputData: ResearchOutputResponse | ResearchOutputPostRequest,
-): boolean => {
-  if (researchOutputData.workingGroups.length > 0) {
-    return false;
-  }
-  return true;
-};
+export const isResearchOutputWorkingGroup = (
+  researchOutputData: Pick<ResearchOutputResponse, 'workingGroups'>,
+): researchOutputData is ResearchOutputWorkingGroupResponse =>
+  !!researchOutputData.workingGroups.length;

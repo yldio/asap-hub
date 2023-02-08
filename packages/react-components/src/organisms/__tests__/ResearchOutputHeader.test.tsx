@@ -5,58 +5,58 @@ import ResearchOutputHeader from '../ResearchOutputHeader';
 
 it.each<{
   documentType: ResearchOutputDocumentType;
-  teamAssociation: boolean;
+  workingGroupAssociation: boolean;
   headingName: RegExp;
   subHeader: RegExp;
 }>([
   {
     documentType: 'Article',
-    teamAssociation: true,
+    workingGroupAssociation: false,
     headingName: /Share an article/i,
     subHeader: /published article/,
   },
   {
     documentType: 'Protocol',
-    teamAssociation: true,
+    workingGroupAssociation: false,
     headingName: /Share a protocol/i,
     subHeader: /Add your protocol/,
   },
   {
     documentType: 'Dataset',
-    teamAssociation: true,
+    workingGroupAssociation: false,
     headingName: /Share a dataset/i,
     subHeader: /Add your dataset/,
   },
   {
     documentType: 'Bioinformatics',
-    teamAssociation: true,
+    workingGroupAssociation: false,
     headingName: /Share bioinformatics/i,
     subHeader: /Add bioinformatics/,
   },
   {
     documentType: 'Lab Resource',
-    teamAssociation: true,
+    workingGroupAssociation: false,
     headingName: /Share a lab resource/i,
     subHeader: /Add your lab resource/,
   },
   {
     documentType: 'Article',
-    teamAssociation: false,
+    workingGroupAssociation: true,
     headingName: /Share a Working Group Article/i,
     subHeader: /published article/,
   },
   {
     documentType: 'Report',
-    teamAssociation: false,
+    workingGroupAssociation: true,
     headingName: /Share a Working Group CRN Report/i,
     subHeader: /add your CRN report/,
   },
 ])(
   'renders the $documentType $association research output',
-  ({ documentType, headingName, subHeader, teamAssociation }) => {
+  ({ documentType, headingName, subHeader, workingGroupAssociation }) => {
     render(
       <ResearchOutputHeader
-        teamAssociation={teamAssociation}
+        workingGroupAssociation={workingGroupAssociation}
         documentType={documentType}
       />,
     );
@@ -68,14 +68,24 @@ it.each<{
 );
 
 it('falls back to a generic description otherwise', () => {
-  render(<ResearchOutputHeader documentType="Presentation" teamAssociation />);
+  render(
+    <ResearchOutputHeader
+      documentType="Presentation"
+      workingGroupAssociation={false}
+    />,
+  );
   expect(
     screen.getByRole('heading', { name: /Share a resource/i }),
   ).toBeInTheDocument();
 });
 
 it('falls back to a generic description for working groups', () => {
-  render(<ResearchOutputHeader documentType="Presentation" />);
+  render(
+    <ResearchOutputHeader
+      documentType="Presentation"
+      workingGroupAssociation
+    />,
+  );
   expect(
     screen.getByRole('heading', { name: /Share a working group resource/i }),
   ).toBeInTheDocument();

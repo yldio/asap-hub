@@ -27,8 +27,12 @@ export type Scalars = {
 
 /** The app mutations. */
 export type ApplicationMutations = {
+  /** Change a Calendars content. */
+  changeCalendarsContent: Maybe<Calendars>;
   /** Change a Contributing Cohorts content. */
   changeContributingCohortsContent: Maybe<ContributingCohorts>;
+  /** Change a Events content. */
+  changeEventsContent: Maybe<Events>;
   /** Change a Migrations content. */
   changeMigrationsContent: Maybe<Migrations>;
   /** Change a News content. */
@@ -41,8 +45,12 @@ export type ApplicationMutations = {
   changeWorkingGroupNetworkContent: Maybe<WorkingGroupNetwork>;
   /** Change a Working Groups content. */
   changeWorkingGroupsContent: Maybe<WorkingGroups>;
+  /** Creates an Calendars content. */
+  createCalendarsContent: Maybe<Calendars>;
   /** Creates an Contributing Cohorts content. */
   createContributingCohortsContent: Maybe<ContributingCohorts>;
+  /** Creates an Events content. */
+  createEventsContent: Maybe<Events>;
   /** Creates an Migrations content. */
   createMigrationsContent: Maybe<Migrations>;
   /** Creates an News content. */
@@ -55,8 +63,12 @@ export type ApplicationMutations = {
   createWorkingGroupNetworkContent: Maybe<WorkingGroupNetwork>;
   /** Creates an Working Groups content. */
   createWorkingGroupsContent: Maybe<WorkingGroups>;
+  /** Delete an Calendars content. */
+  deleteCalendarsContent: EntitySavedResultDto;
   /** Delete an Contributing Cohorts content. */
   deleteContributingCohortsContent: EntitySavedResultDto;
+  /** Delete an Events content. */
+  deleteEventsContent: EntitySavedResultDto;
   /** Delete an Migrations content. */
   deleteMigrationsContent: EntitySavedResultDto;
   /** Delete an News content. */
@@ -69,8 +81,12 @@ export type ApplicationMutations = {
   deleteWorkingGroupNetworkContent: EntitySavedResultDto;
   /** Delete an Working Groups content. */
   deleteWorkingGroupsContent: EntitySavedResultDto;
+  /** Patch an Calendars content by id. */
+  patchCalendarsContent: Maybe<Calendars>;
   /** Patch an Contributing Cohorts content by id. */
   patchContributingCohortsContent: Maybe<ContributingCohorts>;
+  /** Patch an Events content by id. */
+  patchEventsContent: Maybe<Events>;
   /** Patch an Migrations content by id. */
   patchMigrationsContent: Maybe<Migrations>;
   /** Patch an News content by id. */
@@ -84,10 +100,20 @@ export type ApplicationMutations = {
   /** Patch an Working Groups content by id. */
   patchWorkingGroupsContent: Maybe<WorkingGroups>;
   /**
+   * Publish a Calendars content.
+   * @deprecated Use 'changeCalendarsContent' instead
+   */
+  publishCalendarsContent: Maybe<Calendars>;
+  /**
    * Publish a Contributing Cohorts content.
    * @deprecated Use 'changeContributingCohortsContent' instead
    */
   publishContributingCohortsContent: Maybe<ContributingCohorts>;
+  /**
+   * Publish a Events content.
+   * @deprecated Use 'changeEventsContent' instead
+   */
+  publishEventsContent: Maybe<Events>;
   /**
    * Publish a Migrations content.
    * @deprecated Use 'changeMigrationsContent' instead
@@ -118,8 +144,12 @@ export type ApplicationMutations = {
    * @deprecated Use 'changeWorkingGroupsContent' instead
    */
   publishWorkingGroupsContent: Maybe<WorkingGroups>;
+  /** Update an Calendars content by id. */
+  updateCalendarsContent: Maybe<Calendars>;
   /** Update an Contributing Cohorts content by id. */
   updateContributingCohortsContent: Maybe<ContributingCohorts>;
+  /** Update an Events content by id. */
+  updateEventsContent: Maybe<Events>;
   /** Update an Migrations content by id. */
   updateMigrationsContent: Maybe<Migrations>;
   /** Update an News content by id. */
@@ -132,8 +162,12 @@ export type ApplicationMutations = {
   updateWorkingGroupNetworkContent: Maybe<WorkingGroupNetwork>;
   /** Update an Working Groups content by id. */
   updateWorkingGroupsContent: Maybe<WorkingGroups>;
+  /** Upsert an Calendars content by id. */
+  upsertCalendarsContent: Maybe<Calendars>;
   /** Upsert an Contributing Cohorts content by id. */
   upsertContributingCohortsContent: Maybe<ContributingCohorts>;
+  /** Upsert an Events content by id. */
+  upsertEventsContent: Maybe<Events>;
   /** Upsert an Migrations content by id. */
   upsertMigrationsContent: Maybe<Migrations>;
   /** Upsert an News content by id. */
@@ -149,7 +183,23 @@ export type ApplicationMutations = {
 };
 
 /** The app mutations. */
+export type ApplicationMutationsChangeCalendarsContentArgs = {
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  status: Scalars['String'];
+};
+
+/** The app mutations. */
 export type ApplicationMutationsChangeContributingCohortsContentArgs = {
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  status: Scalars['String'];
+};
+
+/** The app mutations. */
+export type ApplicationMutationsChangeEventsContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -205,8 +255,24 @@ export type ApplicationMutationsChangeWorkingGroupsContentArgs = {
 };
 
 /** The app mutations. */
+export type ApplicationMutationsCreateCalendarsContentArgs = {
+  data: CalendarsDataInputDto;
+  id: InputMaybe<Scalars['String']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
 export type ApplicationMutationsCreateContributingCohortsContentArgs = {
   data: ContributingCohortsDataInputDto;
+  id: InputMaybe<Scalars['String']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
+export type ApplicationMutationsCreateEventsContentArgs = {
+  data: EventsDataInputDto;
   id: InputMaybe<Scalars['String']>;
   publish?: InputMaybe<Scalars['Boolean']>;
   status: InputMaybe<Scalars['String']>;
@@ -261,7 +327,19 @@ export type ApplicationMutationsCreateWorkingGroupsContentArgs = {
 };
 
 /** The app mutations. */
+export type ApplicationMutationsDeleteCalendarsContentArgs = {
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+};
+
+/** The app mutations. */
 export type ApplicationMutationsDeleteContributingCohortsContentArgs = {
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+};
+
+/** The app mutations. */
+export type ApplicationMutationsDeleteEventsContentArgs = {
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
@@ -303,8 +381,22 @@ export type ApplicationMutationsDeleteWorkingGroupsContentArgs = {
 };
 
 /** The app mutations. */
+export type ApplicationMutationsPatchCalendarsContentArgs = {
+  data: CalendarsDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
 export type ApplicationMutationsPatchContributingCohortsContentArgs = {
   data: ContributingCohortsDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
+export type ApplicationMutationsPatchEventsContentArgs = {
+  data: EventsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
@@ -352,7 +444,23 @@ export type ApplicationMutationsPatchWorkingGroupsContentArgs = {
 };
 
 /** The app mutations. */
+export type ApplicationMutationsPublishCalendarsContentArgs = {
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  status: Scalars['String'];
+};
+
+/** The app mutations. */
 export type ApplicationMutationsPublishContributingCohortsContentArgs = {
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  status: Scalars['String'];
+};
+
+/** The app mutations. */
+export type ApplicationMutationsPublishEventsContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -408,8 +516,22 @@ export type ApplicationMutationsPublishWorkingGroupsContentArgs = {
 };
 
 /** The app mutations. */
+export type ApplicationMutationsUpdateCalendarsContentArgs = {
+  data: CalendarsDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
 export type ApplicationMutationsUpdateContributingCohortsContentArgs = {
   data: ContributingCohortsDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
+export type ApplicationMutationsUpdateEventsContentArgs = {
+  data: EventsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
@@ -457,8 +579,28 @@ export type ApplicationMutationsUpdateWorkingGroupsContentArgs = {
 };
 
 /** The app mutations. */
+export type ApplicationMutationsUpsertCalendarsContentArgs = {
+  data: CalendarsDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  patch?: InputMaybe<Scalars['Boolean']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
 export type ApplicationMutationsUpsertContributingCohortsContentArgs = {
   data: ContributingCohortsDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  patch?: InputMaybe<Scalars['Boolean']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
+export type ApplicationMutationsUpsertEventsContentArgs = {
+  data: EventsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   patch?: InputMaybe<Scalars['Boolean']>;
@@ -530,8 +672,12 @@ export type ApplicationMutationsUpsertWorkingGroupsContentArgs = {
 export type ApplicationQueries = {
   /** Find an asset by id. */
   findAsset: Maybe<Asset>;
+  /** Find an Calendars content by id. */
+  findCalendarsContent: Maybe<Calendars>;
   /** Find an Contributing Cohorts content by id. */
   findContributingCohortsContent: Maybe<ContributingCohorts>;
+  /** Find an Events content by id. */
+  findEventsContent: Maybe<Events>;
   /** Find an Migrations content by id. */
   findMigrationsContent: Maybe<Migrations>;
   /** Find an News content by id. */
@@ -548,10 +694,18 @@ export type ApplicationQueries = {
   queryAssets: Array<Asset>;
   /** Get assets and total count. */
   queryAssetsWithTotal: AssetResultDto;
+  /** Query Calendars content items. */
+  queryCalendarsContents: Maybe<Array<Calendars>>;
+  /** Query Calendars content items with total count. */
+  queryCalendarsContentsWithTotal: Maybe<CalendarsResultDto>;
   /** Query Contributing Cohorts content items. */
   queryContributingCohortsContents: Maybe<Array<ContributingCohorts>>;
   /** Query Contributing Cohorts content items with total count. */
   queryContributingCohortsContentsWithTotal: Maybe<ContributingCohortsResultDto>;
+  /** Query Events content items. */
+  queryEventsContents: Maybe<Array<Events>>;
+  /** Query Events content items with total count. */
+  queryEventsContentsWithTotal: Maybe<EventsResultDto>;
   /** Query Migrations content items. */
   queryMigrationsContents: Maybe<Array<Migrations>>;
   /** Query Migrations content items with total count. */
@@ -584,7 +738,19 @@ export type ApplicationQueriesFindAssetArgs = {
 };
 
 /** The app queries. */
+export type ApplicationQueriesFindCalendarsContentArgs = {
+  id: Scalars['String'];
+  version: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
 export type ApplicationQueriesFindContributingCohortsContentArgs = {
+  id: Scalars['String'];
+  version: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type ApplicationQueriesFindEventsContentArgs = {
   id: Scalars['String'];
   version: InputMaybe<Scalars['Int']>;
 };
@@ -642,6 +808,24 @@ export type ApplicationQueriesQueryAssetsWithTotalArgs = {
 };
 
 /** The app queries. */
+export type ApplicationQueriesQueryCalendarsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type ApplicationQueriesQueryCalendarsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
 export type ApplicationQueriesQueryContributingCohortsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
@@ -652,6 +836,24 @@ export type ApplicationQueriesQueryContributingCohortsContentsArgs = {
 
 /** The app queries. */
 export type ApplicationQueriesQueryContributingCohortsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type ApplicationQueriesQueryEventsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type ApplicationQueriesQueryEventsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -869,6 +1071,165 @@ export enum AssetType {
   Unknown = 'UNKNOWN',
   Video = 'VIDEO',
 }
+
+/** The structure of a Calendars content type. */
+export type Calendars = Content & {
+  /** The timestamp when the object was created. */
+  created: Scalars['Instant'];
+  /** The user who created the object. */
+  createdBy: Scalars['String'];
+  /** The user who created the object. */
+  createdByUser: User;
+  /** The data of the content. */
+  data: CalendarsDataDto;
+  /** The edit token. */
+  editToken: Maybe<Scalars['String']>;
+  /** The flat data of the content. */
+  flatData: CalendarsFlatDataDto;
+  /** The ID of the object (usually GUID). */
+  id: Scalars['String'];
+  /** The timestamp when the object was updated the last time. */
+  lastModified: Scalars['Instant'];
+  /** The user who updated the object the last time. */
+  lastModifiedBy: Scalars['String'];
+  /** The user who updated the object the last time. */
+  lastModifiedByUser: User;
+  /** The new status of the content. */
+  newStatus: Maybe<Scalars['String']>;
+  /** The status color of the content. */
+  newStatusColor: Maybe<Scalars['String']>;
+  /** Query Events content items. */
+  referencingEventsContents: Maybe<Array<Events>>;
+  /** Query Events content items with total count. */
+  referencingEventsContentsWithTotal: Maybe<EventsResultDto>;
+  /** The status of the content. */
+  status: Scalars['String'];
+  /** The status color of the content. */
+  statusColor: Scalars['String'];
+  /** The URL to the content. */
+  url: Scalars['String'];
+  /** The version of the objec. */
+  version: Scalars['Int'];
+};
+
+/** The structure of a Calendars content type. */
+export type CalendarsReferencingEventsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Calendars content type. */
+export type CalendarsReferencingEventsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of the Color field of the Calendars content type. */
+export type CalendarsDataColorDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Color field of the Calendars content input type. */
+export type CalendarsDataColorInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Calendars data type. */
+export type CalendarsDataDto = {
+  color: Maybe<CalendarsDataColorDto>;
+  expirationDate: Maybe<CalendarsDataExpirationDateDto>;
+  googleCalendarId: Maybe<CalendarsDataGoogleCalendarIdDto>;
+  name: Maybe<CalendarsDataNameDto>;
+  resourceId: Maybe<CalendarsDataResourceIdDto>;
+  syncToken: Maybe<CalendarsDataSyncTokenDto>;
+};
+
+/** The structure of the Google subscription expiration date field of the Calendars content type. */
+export type CalendarsDataExpirationDateDto = {
+  iv: Maybe<Scalars['Float']>;
+};
+
+/** The structure of the Google subscription expiration date field of the Calendars content input type. */
+export type CalendarsDataExpirationDateInputDto = {
+  iv: InputMaybe<Scalars['Float']>;
+};
+
+/** The structure of the Google Calendar ID field of the Calendars content type. */
+export type CalendarsDataGoogleCalendarIdDto = {
+  /** Make sure this GCal is Public BEFORE adding it. Syncing will NOT work otherwise. */
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Google Calendar ID field of the Calendars content input type. */
+export type CalendarsDataGoogleCalendarIdInputDto = {
+  /** Make sure this GCal is Public BEFORE adding it. Syncing will NOT work otherwise. */
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Calendars data input type. */
+export type CalendarsDataInputDto = {
+  color: InputMaybe<CalendarsDataColorInputDto>;
+  expirationDate: InputMaybe<CalendarsDataExpirationDateInputDto>;
+  googleCalendarId: InputMaybe<CalendarsDataGoogleCalendarIdInputDto>;
+  name: InputMaybe<CalendarsDataNameInputDto>;
+  resourceId: InputMaybe<CalendarsDataResourceIdInputDto>;
+  syncToken: InputMaybe<CalendarsDataSyncTokenInputDto>;
+};
+
+/** The structure of the Name field of the Calendars content type. */
+export type CalendarsDataNameDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Name field of the Calendars content input type. */
+export type CalendarsDataNameInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Google resource ID field of the Calendars content type. */
+export type CalendarsDataResourceIdDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Google resource ID field of the Calendars content input type. */
+export type CalendarsDataResourceIdInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Google Last Sync Token field of the Calendars content type. */
+export type CalendarsDataSyncTokenDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Google Last Sync Token field of the Calendars content input type. */
+export type CalendarsDataSyncTokenInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the flat Calendars data type. */
+export type CalendarsFlatDataDto = {
+  color: Maybe<Scalars['String']>;
+  expirationDate: Maybe<Scalars['Float']>;
+  /** Make sure this GCal is Public BEFORE adding it. Syncing will NOT work otherwise. */
+  googleCalendarId: Maybe<Scalars['String']>;
+  name: Maybe<Scalars['String']>;
+  resourceId: Maybe<Scalars['String']>;
+  syncToken: Maybe<Scalars['String']>;
+};
+
+/** List of Calendars items and total count. */
+export type CalendarsResultDto = {
+  /** The contents. */
+  items: Maybe<Array<Calendars>>;
+  /** The total count of  contents. */
+  total: Scalars['Int'];
+};
 
 /** The structure of all content types. */
 export type Component = {
@@ -1111,6 +1472,506 @@ export enum EnrichedContentEventType {
 export type EntitySavedResultDto = {
   /** The new version of the item. */
   version: Scalars['Long'];
+};
+
+/** The structure of a Events content type. */
+export type Events = Content & {
+  /** The timestamp when the object was created. */
+  created: Scalars['Instant'];
+  /** The user who created the object. */
+  createdBy: Scalars['String'];
+  /** The user who created the object. */
+  createdByUser: User;
+  /** The data of the content. */
+  data: EventsDataDto;
+  /** The edit token. */
+  editToken: Maybe<Scalars['String']>;
+  /** The flat data of the content. */
+  flatData: EventsFlatDataDto;
+  /** The ID of the object (usually GUID). */
+  id: Scalars['String'];
+  /** The timestamp when the object was updated the last time. */
+  lastModified: Scalars['Instant'];
+  /** The user who updated the object the last time. */
+  lastModifiedBy: Scalars['String'];
+  /** The user who updated the object the last time. */
+  lastModifiedByUser: User;
+  /** The new status of the content. */
+  newStatus: Maybe<Scalars['String']>;
+  /** The status color of the content. */
+  newStatusColor: Maybe<Scalars['String']>;
+  /** Query Calendars content items. */
+  referencesCalendarsContents: Maybe<Array<Calendars>>;
+  /** Query Calendars content items with total count. */
+  referencesCalendarsContentsWithTotal: Maybe<CalendarsResultDto>;
+  /** Query Users content items. */
+  referencesUsersContents: Maybe<Array<Users>>;
+  /** Query Users content items with total count. */
+  referencesUsersContentsWithTotal: Maybe<UsersResultDto>;
+  /** The status of the content. */
+  status: Scalars['String'];
+  /** The status color of the content. */
+  statusColor: Scalars['String'];
+  /** The URL to the content. */
+  url: Scalars['String'];
+  /** The version of the objec. */
+  version: Scalars['Int'];
+};
+
+/** The structure of a Events content type. */
+export type EventsReferencesCalendarsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Events content type. */
+export type EventsReferencesCalendarsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Events content type. */
+export type EventsReferencesUsersContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Events content type. */
+export type EventsReferencesUsersContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of the Calendar field of the Events content type. */
+export type EventsDataCalendarDto = {
+  iv: Maybe<Array<Calendars>>;
+};
+
+/** The structure of the Calendar field of the Events content input type. */
+export type EventsDataCalendarInputDto = {
+  iv: InputMaybe<Array<Scalars['String']>>;
+};
+
+/** The structure of the Description field of the Events content type. */
+export type EventsDataDescriptionDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Description field of the Events content input type. */
+export type EventsDataDescriptionInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Events data type. */
+export type EventsDataDto = {
+  calendar: Maybe<EventsDataCalendarDto>;
+  description: Maybe<EventsDataDescriptionDto>;
+  endDate: Maybe<EventsDataEndDateDto>;
+  endDateTimeZone: Maybe<EventsDataEndDateTimeZoneDto>;
+  eventLink: Maybe<EventsDataEventLinkDto>;
+  googleId: Maybe<EventsDataGoogleIdDto>;
+  hidden: Maybe<EventsDataHiddenDto>;
+  hideMeetingLink: Maybe<EventsDataHideMeetingLinkDto>;
+  meetingLink: Maybe<EventsDataMeetingLinkDto>;
+  meetingMaterials: Maybe<EventsDataMeetingMaterialsDto>;
+  meetingMaterialsPermanentlyUnavailable: Maybe<EventsDataMeetingMaterialsPermanentlyUnavailableDto>;
+  notes: Maybe<EventsDataNotesDto>;
+  notesPermanentlyUnavailable: Maybe<EventsDataNotesPermanentlyUnavailableDto>;
+  notesUpdatedAt: Maybe<EventsDataNotesUpdatedAtDto>;
+  presentation: Maybe<EventsDataPresentationDto>;
+  presentationPermanentlyUnavailable: Maybe<EventsDataPresentationPermanentlyUnavailableDto>;
+  presentationUpdatedAt: Maybe<EventsDataPresentationUpdatedAtDto>;
+  speakers: Maybe<EventsDataSpeakersDto>;
+  startDate: Maybe<EventsDataStartDateDto>;
+  startDateTimeZone: Maybe<EventsDataStartDateTimeZoneDto>;
+  status: Maybe<EventsDataStatusDto>;
+  tags: Maybe<EventsDataTagsDto>;
+  thumbnail: Maybe<EventsDataThumbnailDto>;
+  title: Maybe<EventsDataTitleDto>;
+  videoRecording: Maybe<EventsDataVideoRecordingDto>;
+  videoRecordingPermanentlyUnavailable: Maybe<EventsDataVideoRecordingPermanentlyUnavailableDto>;
+  videoRecordingUpdatedAt: Maybe<EventsDataVideoRecordingUpdatedAtDto>;
+};
+
+/** The structure of the End Date field of the Events content type. */
+export type EventsDataEndDateDto = {
+  iv: Maybe<Scalars['Instant']>;
+};
+
+/** The structure of the End Date field of the Events content input type. */
+export type EventsDataEndDateInputDto = {
+  iv: InputMaybe<Scalars['Instant']>;
+};
+
+/** The structure of the End Date Time Zone field of the Events content type. */
+export type EventsDataEndDateTimeZoneDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the End Date Time Zone field of the Events content input type. */
+export type EventsDataEndDateTimeZoneInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Google Event Link field of the Events content type. */
+export type EventsDataEventLinkDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Google Event Link field of the Events content input type. */
+export type EventsDataEventLinkInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Google Id field of the Events content type. */
+export type EventsDataGoogleIdDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Google Id field of the Events content input type. */
+export type EventsDataGoogleIdInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Hide Event field of the Events content type. */
+export type EventsDataHiddenDto = {
+  /** Hidden events will NOT show on the Hub. (Note: any event cancelled on GCal will be hidden by default. To show a cancelled event on the Hub, you have to manually un-hide the event here) */
+  iv: Maybe<Scalars['Boolean']>;
+};
+
+/** The structure of the Hide Event field of the Events content input type. */
+export type EventsDataHiddenInputDto = {
+  /** Hidden events will NOT show on the Hub. (Note: any event cancelled on GCal will be hidden by default. To show a cancelled event on the Hub, you have to manually un-hide the event here) */
+  iv: InputMaybe<Scalars['Boolean']>;
+};
+
+/** The structure of the Hide Meeting Link field of the Events content type. */
+export type EventsDataHideMeetingLinkDto = {
+  iv: Maybe<Scalars['Boolean']>;
+};
+
+/** The structure of the Hide Meeting Link field of the Events content input type. */
+export type EventsDataHideMeetingLinkInputDto = {
+  iv: InputMaybe<Scalars['Boolean']>;
+};
+
+/** The structure of the Events data input type. */
+export type EventsDataInputDto = {
+  calendar: InputMaybe<EventsDataCalendarInputDto>;
+  description: InputMaybe<EventsDataDescriptionInputDto>;
+  endDate: InputMaybe<EventsDataEndDateInputDto>;
+  endDateTimeZone: InputMaybe<EventsDataEndDateTimeZoneInputDto>;
+  eventLink: InputMaybe<EventsDataEventLinkInputDto>;
+  googleId: InputMaybe<EventsDataGoogleIdInputDto>;
+  hidden: InputMaybe<EventsDataHiddenInputDto>;
+  hideMeetingLink: InputMaybe<EventsDataHideMeetingLinkInputDto>;
+  meetingLink: InputMaybe<EventsDataMeetingLinkInputDto>;
+  meetingMaterials: InputMaybe<EventsDataMeetingMaterialsInputDto>;
+  meetingMaterialsPermanentlyUnavailable: InputMaybe<EventsDataMeetingMaterialsPermanentlyUnavailableInputDto>;
+  notes: InputMaybe<EventsDataNotesInputDto>;
+  notesPermanentlyUnavailable: InputMaybe<EventsDataNotesPermanentlyUnavailableInputDto>;
+  notesUpdatedAt: InputMaybe<EventsDataNotesUpdatedAtInputDto>;
+  presentation: InputMaybe<EventsDataPresentationInputDto>;
+  presentationPermanentlyUnavailable: InputMaybe<EventsDataPresentationPermanentlyUnavailableInputDto>;
+  presentationUpdatedAt: InputMaybe<EventsDataPresentationUpdatedAtInputDto>;
+  speakers: InputMaybe<EventsDataSpeakersInputDto>;
+  startDate: InputMaybe<EventsDataStartDateInputDto>;
+  startDateTimeZone: InputMaybe<EventsDataStartDateTimeZoneInputDto>;
+  status: InputMaybe<EventsDataStatusInputDto>;
+  tags: InputMaybe<EventsDataTagsInputDto>;
+  thumbnail: InputMaybe<EventsDataThumbnailInputDto>;
+  title: InputMaybe<EventsDataTitleInputDto>;
+  videoRecording: InputMaybe<EventsDataVideoRecordingInputDto>;
+  videoRecordingPermanentlyUnavailable: InputMaybe<EventsDataVideoRecordingPermanentlyUnavailableInputDto>;
+  videoRecordingUpdatedAt: InputMaybe<EventsDataVideoRecordingUpdatedAtInputDto>;
+};
+
+/** The structure of the Meeting Link field of the Events content type. */
+export type EventsDataMeetingLinkDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Meeting Link field of the Events content input type. */
+export type EventsDataMeetingLinkInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Additional Meeting Materials nested schema. */
+export type EventsDataMeetingMaterialsChildDto = {
+  title: Maybe<Scalars['String']>;
+  url: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Additional Meeting Materials nested schema. */
+export type EventsDataMeetingMaterialsChildInputDto = {
+  title: InputMaybe<Scalars['String']>;
+  url: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Additional Meeting Materials field of the Events content type. */
+export type EventsDataMeetingMaterialsDto = {
+  /** If permanently unavailable box is ticked, any content you put here will be ignored. */
+  iv: Maybe<Array<EventsDataMeetingMaterialsChildDto>>;
+};
+
+/** The structure of the Additional Meeting Materials field of the Events content input type. */
+export type EventsDataMeetingMaterialsInputDto = {
+  /** If permanently unavailable box is ticked, any content you put here will be ignored. */
+  iv: InputMaybe<Array<EventsDataMeetingMaterialsChildInputDto>>;
+};
+
+/** The structure of the Mark Additional Meeting Materials as permanently unavailable field of the Events content type. */
+export type EventsDataMeetingMaterialsPermanentlyUnavailableDto = {
+  /** This box is automatically ticked if no output is added after 14 days from the event's end date. */
+  iv: Maybe<Scalars['Boolean']>;
+};
+
+/** The structure of the Mark Additional Meeting Materials as permanently unavailable field of the Events content input type. */
+export type EventsDataMeetingMaterialsPermanentlyUnavailableInputDto = {
+  /** This box is automatically ticked if no output is added after 14 days from the event's end date. */
+  iv: InputMaybe<Scalars['Boolean']>;
+};
+
+/** The structure of the Notes field of the Events content type. */
+export type EventsDataNotesDto = {
+  /** If permanently unavailable box is ticked, any content you put here will be ignored. */
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Notes field of the Events content input type. */
+export type EventsDataNotesInputDto = {
+  /** If permanently unavailable box is ticked, any content you put here will be ignored. */
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Mark Notes as permanently unavailable field of the Events content type. */
+export type EventsDataNotesPermanentlyUnavailableDto = {
+  /** This box is automatically ticked if no output is added after 14 days from the event's end date. */
+  iv: Maybe<Scalars['Boolean']>;
+};
+
+/** The structure of the Mark Notes as permanently unavailable field of the Events content input type. */
+export type EventsDataNotesPermanentlyUnavailableInputDto = {
+  /** This box is automatically ticked if no output is added after 14 days from the event's end date. */
+  iv: InputMaybe<Scalars['Boolean']>;
+};
+
+/** The structure of the Notes Updated At field of the Events content type. */
+export type EventsDataNotesUpdatedAtDto = {
+  iv: Maybe<Scalars['Instant']>;
+};
+
+/** The structure of the Notes Updated At field of the Events content input type. */
+export type EventsDataNotesUpdatedAtInputDto = {
+  iv: InputMaybe<Scalars['Instant']>;
+};
+
+/** The structure of the Presentation field of the Events content type. */
+export type EventsDataPresentationDto = {
+  /** If permanently unavailable box is ticked, any content you put here will be ignored. */
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Presentation field of the Events content input type. */
+export type EventsDataPresentationInputDto = {
+  /** If permanently unavailable box is ticked, any content you put here will be ignored. */
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Mark Presentation as permanently unavailable field of the Events content type. */
+export type EventsDataPresentationPermanentlyUnavailableDto = {
+  /** This box is automatically ticked if no output is added after 14 days from the event's end date. */
+  iv: Maybe<Scalars['Boolean']>;
+};
+
+/** The structure of the Mark Presentation as permanently unavailable field of the Events content input type. */
+export type EventsDataPresentationPermanentlyUnavailableInputDto = {
+  /** This box is automatically ticked if no output is added after 14 days from the event's end date. */
+  iv: InputMaybe<Scalars['Boolean']>;
+};
+
+/** The structure of the Presentation Updated At field of the Events content type. */
+export type EventsDataPresentationUpdatedAtDto = {
+  iv: Maybe<Scalars['Instant']>;
+};
+
+/** The structure of the Presentation Updated At field of the Events content input type. */
+export type EventsDataPresentationUpdatedAtInputDto = {
+  iv: InputMaybe<Scalars['Instant']>;
+};
+
+/** The structure of the Speakers nested schema. */
+export type EventsDataSpeakersChildDto = {
+  user: Maybe<Array<Users>>;
+};
+
+/** The structure of the Speakers nested schema. */
+export type EventsDataSpeakersChildInputDto = {
+  user: InputMaybe<Array<Scalars['String']>>;
+};
+
+/** The structure of the Speakers field of the Events content type. */
+export type EventsDataSpeakersDto = {
+  iv: Maybe<Array<EventsDataSpeakersChildDto>>;
+};
+
+/** The structure of the Speakers field of the Events content input type. */
+export type EventsDataSpeakersInputDto = {
+  iv: InputMaybe<Array<EventsDataSpeakersChildInputDto>>;
+};
+
+/** The structure of the Start Date field of the Events content type. */
+export type EventsDataStartDateDto = {
+  iv: Maybe<Scalars['Instant']>;
+};
+
+/** The structure of the Start Date field of the Events content input type. */
+export type EventsDataStartDateInputDto = {
+  iv: InputMaybe<Scalars['Instant']>;
+};
+
+/** The structure of the Start Date Time Zone field of the Events content type. */
+export type EventsDataStartDateTimeZoneDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Start Date Time Zone field of the Events content input type. */
+export type EventsDataStartDateTimeZoneInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Status field of the Events content type. */
+export type EventsDataStatusDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Status field of the Events content input type. */
+export type EventsDataStatusInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Tags field of the Events content type. */
+export type EventsDataTagsDto = {
+  iv: Maybe<Array<Scalars['String']>>;
+};
+
+/** The structure of the Tags field of the Events content input type. */
+export type EventsDataTagsInputDto = {
+  iv: InputMaybe<Array<Scalars['String']>>;
+};
+
+/** The structure of the Thumbnail field of the Events content type. */
+export type EventsDataThumbnailDto = {
+  iv: Maybe<Array<Asset>>;
+};
+
+/** The structure of the Thumbnail field of the Events content input type. */
+export type EventsDataThumbnailInputDto = {
+  iv: InputMaybe<Array<Scalars['String']>>;
+};
+
+/** The structure of the Title field of the Events content type. */
+export type EventsDataTitleDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Title field of the Events content input type. */
+export type EventsDataTitleInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Video Recording field of the Events content type. */
+export type EventsDataVideoRecordingDto = {
+  /** If permanently unavailable box is ticked, any content you put here will be ignored. */
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Video Recording field of the Events content input type. */
+export type EventsDataVideoRecordingInputDto = {
+  /** If permanently unavailable box is ticked, any content you put here will be ignored. */
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Mark Video Recording as permanently unavailable field of the Events content type. */
+export type EventsDataVideoRecordingPermanentlyUnavailableDto = {
+  /** This box is automatically ticked if no output is added after 14 days from the event's end date. */
+  iv: Maybe<Scalars['Boolean']>;
+};
+
+/** The structure of the Mark Video Recording as permanently unavailable field of the Events content input type. */
+export type EventsDataVideoRecordingPermanentlyUnavailableInputDto = {
+  /** This box is automatically ticked if no output is added after 14 days from the event's end date. */
+  iv: InputMaybe<Scalars['Boolean']>;
+};
+
+/** The structure of the Video Recording Updated At field of the Events content type. */
+export type EventsDataVideoRecordingUpdatedAtDto = {
+  iv: Maybe<Scalars['Instant']>;
+};
+
+/** The structure of the Video Recording Updated At field of the Events content input type. */
+export type EventsDataVideoRecordingUpdatedAtInputDto = {
+  iv: InputMaybe<Scalars['Instant']>;
+};
+
+/** The structure of the flat Events data type. */
+export type EventsFlatDataDto = {
+  calendar: Maybe<Array<Calendars>>;
+  description: Maybe<Scalars['String']>;
+  endDate: Maybe<Scalars['Instant']>;
+  endDateTimeZone: Maybe<Scalars['String']>;
+  eventLink: Maybe<Scalars['String']>;
+  googleId: Maybe<Scalars['String']>;
+  /** Hidden events will NOT show on the Hub. (Note: any event cancelled on GCal will be hidden by default. To show a cancelled event on the Hub, you have to manually un-hide the event here) */
+  hidden: Maybe<Scalars['Boolean']>;
+  hideMeetingLink: Maybe<Scalars['Boolean']>;
+  meetingLink: Maybe<Scalars['String']>;
+  /** If permanently unavailable box is ticked, any content you put here will be ignored. */
+  meetingMaterials: Maybe<Array<EventsDataMeetingMaterialsChildDto>>;
+  /** This box is automatically ticked if no output is added after 14 days from the event's end date. */
+  meetingMaterialsPermanentlyUnavailable: Maybe<Scalars['Boolean']>;
+  /** If permanently unavailable box is ticked, any content you put here will be ignored. */
+  notes: Maybe<Scalars['String']>;
+  /** This box is automatically ticked if no output is added after 14 days from the event's end date. */
+  notesPermanentlyUnavailable: Maybe<Scalars['Boolean']>;
+  notesUpdatedAt: Maybe<Scalars['Instant']>;
+  /** If permanently unavailable box is ticked, any content you put here will be ignored. */
+  presentation: Maybe<Scalars['String']>;
+  /** This box is automatically ticked if no output is added after 14 days from the event's end date. */
+  presentationPermanentlyUnavailable: Maybe<Scalars['Boolean']>;
+  presentationUpdatedAt: Maybe<Scalars['Instant']>;
+  speakers: Maybe<Array<EventsDataSpeakersChildDto>>;
+  startDate: Maybe<Scalars['Instant']>;
+  startDateTimeZone: Maybe<Scalars['String']>;
+  status: Maybe<Scalars['String']>;
+  tags: Maybe<Array<Scalars['String']>>;
+  thumbnail: Maybe<Array<Asset>>;
+  title: Maybe<Scalars['String']>;
+  /** If permanently unavailable box is ticked, any content you put here will be ignored. */
+  videoRecording: Maybe<Scalars['String']>;
+  /** This box is automatically ticked if no output is added after 14 days from the event's end date. */
+  videoRecordingPermanentlyUnavailable: Maybe<Scalars['Boolean']>;
+  videoRecordingUpdatedAt: Maybe<Scalars['Instant']>;
+};
+
+/** List of Events items and total count. */
+export type EventsResultDto = {
+  /** The contents. */
+  items: Maybe<Array<Events>>;
+  /** The total count of  contents. */
+  total: Scalars['Int'];
 };
 
 /** The structure of a Migrations content type. */
@@ -1696,6 +2557,10 @@ export type Users = Content & {
   referencesContributingCohortsContents: Maybe<Array<ContributingCohorts>>;
   /** Query Contributing Cohorts content items with total count. */
   referencesContributingCohortsContentsWithTotal: Maybe<ContributingCohortsResultDto>;
+  /** Query Events content items. */
+  referencingEventsContents: Maybe<Array<Events>>;
+  /** Query Events content items with total count. */
+  referencingEventsContentsWithTotal: Maybe<EventsResultDto>;
   /** Query Projects content items. */
   referencingProjectsContents: Maybe<Array<Projects>>;
   /** Query Projects content items with total count. */
@@ -1725,6 +2590,24 @@ export type UsersReferencesContributingCohortsContentsArgs = {
 
 /** The structure of a Users content type. */
 export type UsersReferencesContributingCohortsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Users content type. */
+export type UsersReferencingEventsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Users content type. */
+export type UsersReferencingEventsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;

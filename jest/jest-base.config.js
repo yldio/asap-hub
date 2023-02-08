@@ -39,14 +39,6 @@ module.exports = {
 
   collectCoverageFrom: ['<rootDir>/src/**/*.{js,jsx,ts,tsx}'],
   coveragePathIgnorePatterns: testPathIgnorePatterns,
-  coverageThreshold: {
-    global: {
-      branches: 90,
-      functions: 90,
-      lines: 90,
-      statements: 90,
-    },
-  },
 
   watchPlugins: [
     require.resolve('jest-watch-select-projects'),

@@ -11,7 +11,6 @@ jobs:
     uses: ./.github/workflows/reusable-test.yml
     with:
       environment-name: Development
-      since-master: false
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       CRN_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}

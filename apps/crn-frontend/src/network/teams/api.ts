@@ -11,6 +11,7 @@ import {
   TeamPatchRequest,
   TeamResponse,
 } from '@asap-hub/model';
+import { isResearchOutputWorkingGroupRequest } from '@asap-hub/validation';
 import { API_BASE_URL } from '../../config';
 import createListApiUrl from '../../CreateListApiUrl';
 
@@ -87,7 +88,9 @@ export const createResearchOutput = async (
   if (!resp.ok) {
     throw new BackendError(
       `Failed to create research output for ${
-        researchOutput.workingGroups.length ? 'Working Group' : 'Team'
+        isResearchOutputWorkingGroupRequest(researchOutput)
+          ? 'Working Group'
+          : 'Team'
       }. Expected status 201. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
       response,
       resp.status,

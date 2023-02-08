@@ -116,11 +116,7 @@ it('renders the no outputs page for a working group', () => {
     <ProfileOutputs
       {...baseProps}
       userAssociationMember={true}
-      researchOutputs={[
-        {
-          ...createResearchOutputResponse(),
-        },
-      ]}
+      researchOutputs={[createResearchOutputResponse()]}
       workingGroupAssociation={true}
     />,
   );

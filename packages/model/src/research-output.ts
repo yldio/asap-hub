@@ -293,6 +293,13 @@ export type ResearchOutputPostRequest = {
 
 export type ResearchOutputPutRequest = ResearchOutputPostRequest;
 
+type NonEmptyArray<T> = [T, ...T[]];
+
+export type ResearchOutputWorkingGroupPostRequest =
+  ResearchOutputPostRequest & {
+    workingGroups: NonEmptyArray<string>;
+  };
+
 export const convertDecisionToBoolean = (
   decision: string | null | DecisionOption,
 ): boolean | undefined =>

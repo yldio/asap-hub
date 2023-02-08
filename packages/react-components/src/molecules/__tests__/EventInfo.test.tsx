@@ -1,6 +1,10 @@
 import { ComponentProps } from 'react';
 import { render, screen } from '@testing-library/react';
-import { createEventResponse, createGroupResponse } from '@asap-hub/fixtures';
+import {
+  createEventResponse,
+  createGroupResponse,
+  createWorkingGroupResponse,
+} from '@asap-hub/fixtures';
 
 import EventInfo from '../EventInfo';
 
@@ -60,7 +64,7 @@ it('renders placeholder event thumbnail', () => {
   expect(screen.getByText(/placeholder/i)).toBeInTheDocument();
 });
 
-it('renders the group name linking to the group and icon', () => {
+it('renders the interest group name linking to the group and icon', () => {
   render(
     <EventInfo
       {...props}
@@ -76,6 +80,24 @@ it('renders the group name linking to the group and icon', () => {
     expect.stringMatching(/grp$/),
   );
   expect(screen.getByTitle('Interest Group')).toBeInTheDocument();
+});
+
+it('renders the working group name linking to the group and icon', () => {
+  render(
+    <EventInfo
+      {...props}
+      workingGroup={{
+        ...createWorkingGroupResponse(),
+        id: 'grp',
+        title: 'My Working Group',
+      }}
+    />,
+  );
+  expect(screen.getByText('My Working Group')).toHaveAttribute(
+    'href',
+    expect.stringMatching(/grp$/),
+  );
+  expect(screen.getByTitle('Working Groups')).toBeInTheDocument();
 });
 
 it('shows that the event is run by ASAP when there is no group', () => {

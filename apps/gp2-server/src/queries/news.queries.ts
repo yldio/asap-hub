@@ -25,7 +25,7 @@ export const FETCH_NEWS = gql`
     queryNewsAndEventsContentsWithTotal(
       top: $top
       skip: $skip
-      orderby: "data/created"
+      orderby: "created desc"
     ) {
       total
       items {

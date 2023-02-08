@@ -90,9 +90,7 @@ it('renders dashboard with news', async () => {
   });
   expect(await screen.findByText(/john/i, { selector: 'h1' })).toBeVisible();
   expect(screen.queryAllByText(/title/i, { selector: 'h4' }).length).toBe(2);
-  expect(
-    screen.getAllByText(/title/i, { selector: 'h4' }).at(0)?.textContent,
-  ).toEqual('News Title');
+  expect(screen.getByRole('heading', { name: 'News Title' })).toBeVisible();
 });
 
 it('renders reminders', async () => {

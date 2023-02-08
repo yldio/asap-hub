@@ -1,12 +1,11 @@
 name: 'Run unit tests'
 description: 'Check if a string is a number'
 inputs:
-  since-master:
-    description: 'Whether to run tests since master'
-    required: false
-    default: 'false'
-  codecov-token:
-    description: 'The environment name'
+  shard:
+    description: 'The target shard'
+    required: true
+  total:
+    description: 'The total shards'
     required: true
 runs:
   using: 'composite'
@@ -23,27 +22,13 @@ runs:
     - name: Get number of CPU cores
       id: cpu-cores
       uses: SimenB/github-actions-cpu-cores@v1
-    - name: Fetch master branch
-      shell: bash
-      if: ${{ inputs.since-master == 'true' }}
-      run: |
-        chown -R root /__w/asap-hub/asap-hub
-        git fetch --no-tags --depth=1 origin master
-        git checkout -b master origin/master
-        git checkout -
-    - name: Run tests from diff with master
-      shell: bash
-      if: ${{ inputs.since-master == 'true' }}
-      run: yarn test --maxWorkers ${{ steps.cpu-cores.outputs.count }} --ci --changedSince=master
     - name: Run all tests
       shell: bash
-      if: ${{ inputs.since-master == 'false' }}
-      run: yarn test --coverage --maxWorkers ${{ steps.cpu-cores.outputs.count }} --ci
-    - uses: codecov/codecov-action@v3
-      if: ${{ inputs.since-master == 'false' }}
+      run: yarn test --coverage --shard ${{ inputs.shard }}/${{ inputs.total }} --maxWorkers ${{ steps.cpu-cores.outputs.count }} --ci
+    - name: move coverage
+      shell: bash
+      run: mv coverage/coverage-final.json coverage/${{matrix.shard}}.json
+    - uses: actions/upload-artifact@v3
       with:
-        fail_ci_if_error: true
-        directory: coverage
-        verbose: true
-      env:
-        CODECOV_TOKEN: ${{ inputs.codecov-token }}
+        name: coverage-artifacts
+        path: coverage/

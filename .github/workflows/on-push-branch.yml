@@ -41,23 +41,6 @@ jobs:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       CRN_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
 
-  unit-all:
-    runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:be0ebbcbd0ff209d56070f09590c5d9622e8a6dc
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Run unit tests
-        id: test
-        uses: ./.github/actions/test-unit
-        with:
-          codecov-token: ${{ secrets.CODECOV_TOKEN }}
-          since-master: false
-
   build:
     needs: [setup]
     uses: ./.github/workflows/reusable-build.yml
@@ -138,16 +121,7 @@ jobs:
     environment:
       name: Branch
       url: ${{ steps.setup.outputs.crn-app-url }}
-    needs:
-      [
-        test,
-        unit-all,
-        build,
-        build-analysis,
-        create-environment,
-        deployment,
-        verify,
-      ]
+    needs: [test, build, build-analysis, create-environment, deployment, verify]
     if: ${{ always() }}
     steps:
       - name: Checkout

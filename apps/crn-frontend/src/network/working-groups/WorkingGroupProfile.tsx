@@ -1,65 +1,78 @@
-import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
-import { Frame } from '@asap-hub/frontend-utils';
-import { FC, useState } from 'react';
+import { FC, lazy, useEffect, useState } from 'react';
 import { v4 as uuid } from 'uuid';
-import {
-  NotFoundPage,
-  WorkingGroupAbout,
-  WorkingGroupPage,
-} from '@asap-hub/react-components';
+
+import { NotFoundPage, WorkingGroupPage } from '@asap-hub/react-components';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { network, useRouteParams } from '@asap-hub/routing';
-import { useCanCreateUpdateResearchOutput, useWorkingGroupById } from './state';
-import Outputs from './Outputs';
-import WorkingGroupOutput from './WorkingGroupOutput';
 
-const WorkingGroupProfile: FC = () => {
+import { useUpcomingAndPastEvents } from '../events';
+import ProfileSwitch from '../ProfileSwitch';
+
+import { useCanCreateUpdateResearchOutput, useWorkingGroupById } from './state';
+
+const loadAbout = () =>
+  import(/* webpackChunkName: "network-working-group-about" */ './About');
+const loadOutputs = () =>
+  import(/* webpackChunkName: "network-working-group-outputs" */ './Outputs');
+const loadWorkingGroupOutput = () =>
+  import(
+    /* webpackChunkName: "network-working-group-output" */ './WorkingGroupOutput'
+  );
+
+const About = lazy(loadAbout);
+const Outputs = lazy(loadOutputs);
+const WorkingGroupOutput = lazy(loadWorkingGroupOutput);
+loadAbout();
+
+type WorkingGroupProfileProps = {
+  currentTime: Date;
+};
+const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
   const route = network({}).workingGroups({}).workingGroup;
-  const { workingGroupId } = useRouteParams(route);
-  const { path } = useRouteMatch();
-  const workingGroup = useWorkingGroupById(workingGroupId);
   const [membersListElementId] = useState(`wg-members-${uuid()}`);
 
+  const { workingGroupId } = useRouteParams(route);
+  const workingGroup = useWorkingGroupById(workingGroupId);
+
   const canCreateUpdate = useCanCreateUpdateResearchOutput(workingGroup);
+
+  useEffect(() => {
+    loadAbout().then(loadOutputs).then(loadWorkingGroupOutput);
+  }, []);
+
+  const [upcomingEventsResult, pastEventsResult] = useUpcomingAndPastEvents(
+    currentTime,
+    { workingGroupId },
+  );
 
   if (workingGroup) {
     return (
       <ResearchOutputPermissionsContext.Provider value={{ canCreateUpdate }}>
-        <Frame title={workingGroup.title}>
-          <Switch>
-            <Route
-              path={path + route({ workingGroupId }).createOutput.template}
-            >
-              <Frame title="Share Working Group Output">
-                <WorkingGroupOutput workingGroupId={workingGroupId} />
-              </Frame>
-            </Route>
-            <Route path={path + route({ workingGroupId }).about.template}>
-              <WorkingGroupPage
+        <WorkingGroupPage
+          upcomingEventsCount={upcomingEventsResult.total}
+          pastEventsCount={pastEventsResult.total}
+          membersListElementId={membersListElementId}
+          {...workingGroup}
+        >
+          <ProfileSwitch
+            About={() => (
+              <About
                 membersListElementId={membersListElementId}
-                {...workingGroup}
-              >
-                <Frame title="About">
-                  <WorkingGroupAbout
-                    membersListElementId={membersListElementId}
-                    {...workingGroup}
-                  />
-                </Frame>
-              </WorkingGroupPage>
-            </Route>
-            <Route path={path + route({ workingGroupId }).outputs.template}>
-              <WorkingGroupPage
-                membersListElementId={membersListElementId}
-                {...workingGroup}
-              >
-                <Frame title="Outputs">
-                  <Outputs workingGroup={workingGroup} />
-                </Frame>
-              </WorkingGroupPage>
-            </Route>
-            <Redirect to={route({ workingGroupId }).about({}).$} />
-          </Switch>
-        </Frame>
+                workingGroup={workingGroup}
+              />
+            )}
+            currentTime={currentTime}
+            displayName={workingGroup.title}
+            eventConstraint={{ workingGroupId }}
+            isActive={!workingGroup.complete}
+            Outputs={() => <Outputs workingGroup={workingGroup} />}
+            route={route({ workingGroupId })}
+            ShareOutput={() => (
+              <WorkingGroupOutput workingGroupId={workingGroupId} />
+            )}
+            type="working group"
+          />
+        </WorkingGroupPage>
       </ResearchOutputPermissionsContext.Provider>
     );
   }

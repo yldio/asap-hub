@@ -2,6 +2,7 @@ import { CalendarResponse } from './calendar';
 import { ListResponse } from './common';
 import { GroupResponse } from './group';
 import { TeamResponse } from './team';
+import { WorkingGroupResponse } from './working-group';
 
 export const MEETING_LINK_AVAILABLE_HOURS_BEFORE_EVENT: number = 24;
 export const EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT: number = 1;
@@ -76,6 +77,7 @@ export interface EventResponse {
 
   calendar: CalendarResponse;
   group?: GroupResponse;
+  workingGroup?: WorkingGroupResponse;
 
   speakers: EventSpeaker[];
 }
@@ -93,6 +95,7 @@ export const isEventStatus = (status: string | null): status is EventStatus =>
   eventStatus.includes(status as EventStatus);
 
 export type EventConstraint = {
+  workingGroupId?: string;
   groupId?: string;
   userId?: string;
   teamId?: string;

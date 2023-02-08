@@ -116,6 +116,8 @@ const isProjectManager = (
 
 type WorkingGroupPageHeaderProps = {
   readonly membersListElementId: string;
+  readonly upcomingEventsCount?: number;
+  readonly pastEventsCount?: number;
   readonly workingGroupsOutputsCount?: number;
 } & Pick<
   WorkingGroupResponse,
@@ -140,6 +142,8 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
   members,
   membersListElementId,
   workingGroupsOutputsCount = 0,
+  upcomingEventsCount,
+  pastEventsCount,
 }) => {
   const currentUserCRN = useCurrentUserCRN();
   const isWorkingGroupProjectManager = isProjectManager(
@@ -263,6 +267,14 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
             Working Group Outputs ({workingGroupsOutputsCount})
           </TabLink>
         )}
+        {!complete && (
+          <TabLink href={route.upcoming({}).$}>
+            Upcoming Events {`(${upcomingEventsCount})`}
+          </TabLink>
+        )}
+        <TabLink href={route.past({}).$}>
+          Past Events {`(${pastEventsCount})`}
+        </TabLink>
       </TabNav>
     </header>
   );

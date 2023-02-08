@@ -31,7 +31,7 @@ describe('Filters', () => {
     );
   });
 
-  test('dates constained by team', () => {
+  test('dates constrained by team', () => {
     expect(
       getEventFilters(
         { before: '2007-07-06', after: '2021-12-28' },
@@ -52,34 +52,40 @@ describe('Filters', () => {
     ).toThrowError(/userId and teamId not supported/i);
   });
 
-  test('dates constained by group', () => {
-    expect(
-      getEventFilters(
-        { before: '2007-07-06', after: '2021-12-28' },
-        { groupId: '1234' },
-      ),
-    ).toEqual(
-      '(endDateTimestamp < 1183680000 OR endDateTimestamp > 1640649600) AND (group.id: "1234")',
-    );
-  });
-  test('only groupId is passed', () => {
-    expect(getEventFilters({}, { groupId: '1234' })).toEqual(
-      'group.id: "1234"',
-    );
-  });
-  test('groupId and userId is passed', () => {
-    expect(getEventFilters({}, { userId: '4321', groupId: '1234' })).toEqual(
-      'speakers.user.id: "4321" AND group.id: "1234"',
-    );
-  });
-  test('dates constained by user and group', () => {
-    expect(
-      getEventFilters(
-        { before: '2007-07-06', after: '2021-12-28' },
-        { userId: '1103', groupId: '4321' },
-      ),
-    ).toEqual(
-      '(endDateTimestamp < 1183680000 OR endDateTimestamp > 1640649600) AND (speakers.user.id: "1103" AND group.id: "4321")',
-    );
+  describe.each`
+    groupName           | entity            | field
+    ${`interest group`} | ${`group`}        | ${`groupId`}
+    ${`working group`}  | ${`workingGroup`} | ${`workingGroupId`}
+  `('$groupName', ({ groupName, entity, field }) => {
+    test(`dates constrained by ${groupName}`, () => {
+      expect(
+        getEventFilters(
+          { before: '2007-07-06', after: '2021-12-28' },
+          { [field]: '1234' },
+        ),
+      ).toEqual(
+        `(endDateTimestamp < 1183680000 OR endDateTimestamp > 1640649600) AND (${entity}.id: "1234")`,
+      );
+    });
+    test(`only ${field} is passed`, () => {
+      expect(getEventFilters({}, { [field]: '1234' })).toEqual(
+        `${entity}.id: "1234"`,
+      );
+    });
+    test(`${field} and userId is passed`, () => {
+      expect(getEventFilters({}, { userId: '4321', [field]: '1234' })).toEqual(
+        `speakers.user.id: "4321" AND ${entity}.id: "1234"`,
+      );
+    });
+    test(`dates constrained by user and ${entity}`, () => {
+      expect(
+        getEventFilters(
+          { before: '2007-07-06', after: '2021-12-28' },
+          { userId: '1103', [field]: '4321' },
+        ),
+      ).toEqual(
+        `(endDateTimestamp < 1183680000 OR endDateTimestamp > 1640649600) AND (speakers.user.id: "1103" AND ${entity}.id: "4321")`,
+      );
+    });
   });
 });

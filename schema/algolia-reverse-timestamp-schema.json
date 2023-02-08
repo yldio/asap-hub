@@ -13,7 +13,8 @@
     "speakers.user.id",
     "speakers.team.id",
     "status",
-    "group.id"
+    "group.id",
+    "workingGroup.id"
   ],
   "attributesToIndex": [
     "displayName",
@@ -50,6 +51,7 @@
     "speakers.user.displayName",
     "endDateTimestamp",
     "startDateTimestamp",
-    "group.id"
+    "group.id",
+    "workingGroup.id"
   ]
 }

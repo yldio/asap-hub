@@ -240,24 +240,3 @@ it('reads filters from url', async () => {
     ),
   );
 });
-
-it('renders working-group profile page', async () => {
-  await renderNetworkPage(
-    network({}).workingGroups({}).workingGroup({ workingGroupId: '123' }).$,
-  );
-
-  expect(await screen.findByText(/Working Group Description/i)).toBeVisible();
-});
-
-it('handles server error for working groups tab', async () => {
-  const spy = jest.spyOn(console, 'error').mockImplementation();
-
-  mockGetWorkingGroups.mockRejectedValueOnce(new Error('Failed to fetch'));
-  await renderNetworkPage(network({}).workingGroups({}).$);
-
-  await waitFor(() => {
-    expect(mockGetWorkingGroups).toHaveBeenCalled();
-  });
-  expect(screen.getByText(/Something went wrong/i)).toBeVisible();
-  await waitFor(() => expect(spy).toHaveBeenCalled());
-});

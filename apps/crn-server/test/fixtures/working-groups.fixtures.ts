@@ -38,7 +38,15 @@ export const getWorkingGroupDataObject = (): WorkingGroupDataObject => ({
   complete: false,
   lastModifiedDate: '2021-01-01T00:00:00.000Z',
   externalLink: 'https://example.com',
-  calendars: [],
+  calendars: [
+    {
+      id: 'hub@asap.science',
+      color: '#B1365F',
+      name: 'ASAP Hub',
+      groups: [],
+      workingGroups: [],
+    },
+  ],
 });
 
 export const getWorkingGroupResponse = (): WorkingGroupResponse =>
@@ -87,6 +95,15 @@ export const getSquidexGraphqlWorkingGroup = (): NonNullable<
     members: [],
     leaders: [],
     complete: false,
-    calendars: [],
+    calendars: [
+      {
+        id: 'calendar-id-1',
+        flatData: {
+          color: '#B1365F',
+          googleCalendarId: 'hub@asap.science',
+          name: 'ASAP Hub',
+        },
+      },
+    ],
   },
 });

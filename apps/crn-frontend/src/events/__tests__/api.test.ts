@@ -225,6 +225,26 @@ describe('getEvents', () => {
       false,
     );
   });
+
+  it('calls for upcoming events with a certain working group id', async () => {
+    search.mockResolvedValueOnce(createAlgoliaResponse<'event'>([]));
+
+    await getEvents(algoliaSearchClient, {
+      ...getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
+      constraint: { workingGroupId: 'wg-1' },
+    });
+    expect(search).toBeCalledWith(
+      ['event'],
+      '',
+      {
+        filters:
+          '(endDateTimestamp > 1609498800) AND (workingGroup.id: "wg-1")',
+        hitsPerPage: 10,
+        page: 0,
+      },
+      false,
+    );
+  });
 });
 
 describe('getSquidexUrl', () => {

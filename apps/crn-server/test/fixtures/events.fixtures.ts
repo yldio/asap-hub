@@ -15,6 +15,10 @@ import { appName, baseUrl } from '../../src/config';
 import { EventEvent, EventPayload } from '../../src/handlers/event-bus';
 import { createEventBridgeEventMock } from '../helpers/events';
 import { getGroupResponse, getSquidexGraphqlGroup } from './groups.fixtures';
+import {
+  getSquidexGraphqlWorkingGroup,
+  getWorkingGroupResponse,
+} from './working-groups.fixtures';
 
 export const getEventRestResponse = (): Event => ({
   googleId: 'google-event-id',
@@ -82,6 +86,7 @@ export const getEventResponse = (): EventResponse => ({
     workingGroups: [],
   },
   group: getGroupResponse(),
+  workingGroup: getWorkingGroupResponse(),
   speakers: [getEventSpeakerUser()],
 });
 
@@ -222,6 +227,7 @@ const squidexGraphqlEventsFlatData = (): EventContentFragment['flatData'] & {
         name: 'Tech 1 - Sequencing/omics',
       },
       referencingGroupsContents: [getSquidexGraphqlGroup()],
+      referencingWorkingGroupsContents: [getSquidexGraphqlWorkingGroup()],
     },
   ],
   speakers: [getSquidexGraphqlEventSpeakerWithUser()],

@@ -9,7 +9,9 @@ import {
   graphql,
   print,
 } from 'graphql';
+import { getSquidexGraphqlCalendar } from '../fixtures/calendar.fixtures';
 import { getGraphQLContributingCohort } from '../fixtures/contributing-cohort.fixtures';
+import { getSquidexGraphqlEvent } from '../fixtures/event.fixtures';
 import { getGraphQLNews } from '../fixtures/news.fixtures';
 import { getGraphQLProject } from '../fixtures/project.fixtures';
 import { getGraphQLUser } from '../fixtures/user.fixtures';
@@ -38,6 +40,10 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
     ContributingCohortsResultDto: resultDto,
     Projects: () => getGraphQLProject(),
     ProjectsResultDto: resultDto,
+    Calendars: () => getSquidexGraphqlCalendar(),
+    CalendarsResultDto: resultDto,
+    Events: () => getSquidexGraphqlEvent(),
+    EventsResultDto: resultDto,
     Users: () => getGraphQLUser(),
     UsersResultDto: resultDto,
     WorkingGroupNetwork: () => getGraphQLWorkingGroupNetwork(),

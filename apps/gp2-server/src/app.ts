@@ -11,6 +11,7 @@ import {
 import {
   getAccessTokenFactory,
   gp2 as gp2squidex,
+  RestEvent,
   SquidexGraphql,
   SquidexRest,
 } from '@asap-hub/squidex';
@@ -27,6 +28,7 @@ import {
 import ContributingCohorts, {
   ContributingCohortController,
 } from './controllers/contributing-cohort.controller';
+import Events, { EventController } from './controllers/event.controller';
 import News, { NewsController } from './controllers/news.controller';
 import Projects, { ProjectController } from './controllers/project.controller';
 import Users, { UserController } from './controllers/user.controller';
@@ -65,6 +67,7 @@ import {
   WorkingGroupSquidexDataProvider,
 } from './data-providers/working-group.data-provider';
 import { contributingCohortRouteFactory } from './routes/contributing-cohort.route';
+import { eventRouteFactory } from './routes/event.route';
 import { newsRouteFactory } from './routes/news.route';
 import { projectRouteFactory } from './routes/project.route';
 import { userPublicRouteFactory, userRouteFactory } from './routes/user.route';
@@ -125,6 +128,10 @@ export const appFactory = (libs: Libs = {}): Express => {
     appName,
     baseUrl,
   });
+  const eventRestClient = new SquidexRest<RestEvent>(getAuthToken, 'events', {
+    appName,
+    baseUrl,
+  });
   const decodeToken = decodeTokenFactory(auth0Audience);
   const userResponseCacheClient = new MemoryCacheClient<gp2.UserResponse>();
 
@@ -165,6 +172,8 @@ export const appFactory = (libs: Libs = {}): Express => {
   const projectController =
     libs.projectController || new Projects(projectDataProvider);
   const newsController = libs.newsController || new News(newsDataProvider);
+  const eventController =
+    libs.eventController || new Events(squidexGraphqlClient, eventRestClient);
   const contributingCohortController =
     libs.contributingCohortController ||
     new ContributingCohorts(contributingCohortDataProvider);
@@ -197,6 +206,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     workingGroupNetworkController,
   );
   const projectRoutes = projectRouteFactory(projectController);
+  const eventRoutes = eventRouteFactory(eventController);
 
   app.use(userPublicRoutes);
   // Auth
@@ -211,6 +221,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(workingGroupRoutes);
   app.use(workingGroupNetworkRoutes);
   app.use(projectRoutes);
+  app.use(eventRoutes);
 
   // Catch all
   app.get('*', async (_req, res) => {
@@ -237,6 +248,7 @@ export type Libs = {
   projectDataProvider?: ProjectDataProvider;
   userController?: UserController;
   newsController?: NewsController;
+  eventController?: EventController;
   contributingCohortController?: ContributingCohortController;
   workingGroupController?: WorkingGroupController;
   workingGroupNetworkController?: WorkingGroupNetworkController;

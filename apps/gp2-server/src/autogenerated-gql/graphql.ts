@@ -3484,6 +3484,70 @@ export type WorkingGroupsResultDto = {
   total: Scalars['Int'];
 };
 
+export type CalendarsContentFragment = Pick<
+  Calendars,
+  'id' | 'created' | 'lastModified' | 'version'
+> & {
+  flatData: Pick<
+    CalendarsFlatDataDto,
+    | 'googleCalendarId'
+    | 'name'
+    | 'color'
+    | 'syncToken'
+    | 'resourceId'
+    | 'expirationDate'
+  >;
+};
+
+export type FetchCalendarQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchCalendarQuery = {
+  findCalendarsContent: Maybe<
+    Pick<Calendars, 'id' | 'created' | 'lastModified' | 'version'> & {
+      flatData: Pick<
+        CalendarsFlatDataDto,
+        | 'googleCalendarId'
+        | 'name'
+        | 'color'
+        | 'syncToken'
+        | 'resourceId'
+        | 'expirationDate'
+      >;
+    }
+  >;
+};
+
+export type FetchCalendarsQueryVariables = Exact<{
+  top: InputMaybe<Scalars['Int']>;
+  skip: InputMaybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  order: InputMaybe<Scalars['String']>;
+}>;
+
+export type FetchCalendarsQuery = {
+  queryCalendarsContentsWithTotal: Maybe<
+    Pick<CalendarsResultDto, 'total'> & {
+      items: Maybe<
+        Array<
+          Pick<Calendars, 'id' | 'created' | 'lastModified' | 'version'> & {
+            flatData: Pick<
+              CalendarsFlatDataDto,
+              | 'googleCalendarId'
+              | 'name'
+              | 'color'
+              | 'syncToken'
+              | 'resourceId'
+              | 'expirationDate'
+            >;
+          }
+        >
+      >;
+    }
+  >;
+};
+
 export type ContributingCohortsContentFragment = Pick<
   ContributingCohorts,
   'id'
@@ -3504,6 +3568,187 @@ export type FetchContributingCohortsQuery = {
           }
         >
       >;
+    }
+  >;
+};
+
+export type EventContentFragment = Pick<
+  Events,
+  'id' | 'lastModified' | 'version' | 'created'
+> & {
+  flatData: Pick<
+    EventsFlatDataDto,
+    | 'description'
+    | 'endDate'
+    | 'endDateTimeZone'
+    | 'startDate'
+    | 'startDateTimeZone'
+    | 'meetingLink'
+    | 'hideMeetingLink'
+    | 'eventLink'
+    | 'status'
+    | 'tags'
+    | 'title'
+    | 'notesPermanentlyUnavailable'
+    | 'notes'
+    | 'videoRecordingPermanentlyUnavailable'
+    | 'videoRecording'
+    | 'presentationPermanentlyUnavailable'
+    | 'presentation'
+    | 'meetingMaterialsPermanentlyUnavailable'
+  > & {
+    meetingMaterials: Maybe<
+      Array<Pick<EventsDataMeetingMaterialsChildDto, 'url' | 'title'>>
+    >;
+    calendar: Maybe<
+      Array<{
+        flatData: Pick<
+          CalendarsFlatDataDto,
+          'googleCalendarId' | 'color' | 'name'
+        >;
+      }>
+    >;
+    thumbnail: Maybe<Array<Pick<Asset, 'id'>>>;
+    speakers: Maybe<
+      Array<{
+        user: Maybe<
+          Array<
+            { __typename: 'Users' } & Pick<Users, 'id'> & {
+                flatData: Pick<
+                  UsersFlatDataDto,
+                  'firstName' | 'lastName' | 'onboarded'
+                > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+              }
+          >
+        >;
+      }>
+    >;
+  };
+};
+
+export type FetchEventsQueryVariables = Exact<{
+  top: InputMaybe<Scalars['Int']>;
+  skip: InputMaybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+  order: InputMaybe<Scalars['String']>;
+}>;
+
+export type FetchEventsQuery = {
+  queryEventsContentsWithTotal: Maybe<
+    Pick<EventsResultDto, 'total'> & {
+      items: Maybe<
+        Array<
+          Pick<Events, 'id' | 'lastModified' | 'version' | 'created'> & {
+            flatData: Pick<
+              EventsFlatDataDto,
+              | 'description'
+              | 'endDate'
+              | 'endDateTimeZone'
+              | 'startDate'
+              | 'startDateTimeZone'
+              | 'meetingLink'
+              | 'hideMeetingLink'
+              | 'eventLink'
+              | 'status'
+              | 'tags'
+              | 'title'
+              | 'notesPermanentlyUnavailable'
+              | 'notes'
+              | 'videoRecordingPermanentlyUnavailable'
+              | 'videoRecording'
+              | 'presentationPermanentlyUnavailable'
+              | 'presentation'
+              | 'meetingMaterialsPermanentlyUnavailable'
+            > & {
+              meetingMaterials: Maybe<
+                Array<Pick<EventsDataMeetingMaterialsChildDto, 'url' | 'title'>>
+              >;
+              calendar: Maybe<
+                Array<{
+                  flatData: Pick<
+                    CalendarsFlatDataDto,
+                    'googleCalendarId' | 'color' | 'name'
+                  >;
+                }>
+              >;
+              thumbnail: Maybe<Array<Pick<Asset, 'id'>>>;
+              speakers: Maybe<
+                Array<{
+                  user: Maybe<
+                    Array<
+                      { __typename: 'Users' } & Pick<Users, 'id'> & {
+                          flatData: Pick<
+                            UsersFlatDataDto,
+                            'firstName' | 'lastName' | 'onboarded'
+                          > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+                        }
+                    >
+                  >;
+                }>
+              >;
+            };
+          }
+        >
+      >;
+    }
+  >;
+};
+
+export type FetchEventQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchEventQuery = {
+  findEventsContent: Maybe<
+    Pick<Events, 'id' | 'lastModified' | 'version' | 'created'> & {
+      flatData: Pick<
+        EventsFlatDataDto,
+        | 'description'
+        | 'endDate'
+        | 'endDateTimeZone'
+        | 'startDate'
+        | 'startDateTimeZone'
+        | 'meetingLink'
+        | 'hideMeetingLink'
+        | 'eventLink'
+        | 'status'
+        | 'tags'
+        | 'title'
+        | 'notesPermanentlyUnavailable'
+        | 'notes'
+        | 'videoRecordingPermanentlyUnavailable'
+        | 'videoRecording'
+        | 'presentationPermanentlyUnavailable'
+        | 'presentation'
+        | 'meetingMaterialsPermanentlyUnavailable'
+      > & {
+        meetingMaterials: Maybe<
+          Array<Pick<EventsDataMeetingMaterialsChildDto, 'url' | 'title'>>
+        >;
+        calendar: Maybe<
+          Array<{
+            flatData: Pick<
+              CalendarsFlatDataDto,
+              'googleCalendarId' | 'color' | 'name'
+            >;
+          }>
+        >;
+        thumbnail: Maybe<Array<Pick<Asset, 'id'>>>;
+        speakers: Maybe<
+          Array<{
+            user: Maybe<
+              Array<
+                { __typename: 'Users' } & Pick<Users, 'id'> & {
+                    flatData: Pick<
+                      UsersFlatDataDto,
+                      'firstName' | 'lastName' | 'onboarded'
+                    > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+                  }
+              >
+            >;
+          }>
+        >;
+      };
     }
   >;
 };
@@ -4559,6 +4804,49 @@ export type FetchWorkingGroupsQuery = {
   >;
 };
 
+export const CalendarsContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'CalendarsContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Calendars' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'created' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'lastModified' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'version' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'flatData' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'googleCalendarId' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'color' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'syncToken' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'resourceId' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'expirationDate' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<CalendarsContentFragment, unknown>;
 export const ContributingCohortsContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -4588,6 +4876,229 @@ export const ContributingCohortsContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<ContributingCohortsContentFragment, unknown>;
+export const EventContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'EventContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Events' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'lastModified' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'version' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'created' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'flatData' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'endDate' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'endDateTimeZone' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'startDate' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'startDateTimeZone' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'meetingLink' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'hideMeetingLink' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'eventLink' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'notesPermanentlyUnavailable' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'notes' } },
+                {
+                  kind: 'Field',
+                  name: {
+                    kind: 'Name',
+                    value: 'videoRecordingPermanentlyUnavailable',
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'videoRecording' },
+                },
+                {
+                  kind: 'Field',
+                  name: {
+                    kind: 'Name',
+                    value: 'presentationPermanentlyUnavailable',
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'presentation' },
+                },
+                {
+                  kind: 'Field',
+                  name: {
+                    kind: 'Name',
+                    value: 'meetingMaterialsPermanentlyUnavailable',
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'meetingMaterials' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'calendar' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'googleCalendarId' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'color' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'thumbnail' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'speakers' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'user' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: '__typename' },
+                            },
+                            {
+                              kind: 'InlineFragment',
+                              typeCondition: {
+                                kind: 'NamedType',
+                                name: { kind: 'Name', value: 'Users' },
+                              },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'flatData' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'firstName',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'lastName',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'onboarded',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'avatar',
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'id',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<EventContentFragment, unknown>;
 export const NewsContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -5364,6 +5875,159 @@ export const WorkingGroupNetworkContentFragmentDoc = {
     ...WorkingGroupContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<WorkingGroupNetworkContentFragment, unknown>;
+export const FetchCalendarDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchCalendar' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'findCalendarsContent' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'CalendarsContent' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...CalendarsContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<FetchCalendarQuery, FetchCalendarQueryVariables>;
+export const FetchCalendarsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchCalendars' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'top' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'filter' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'order' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'queryCalendarsContentsWithTotal' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'top' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'top' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'filter' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'filter' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'orderby' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'order' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'CalendarsContent' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...CalendarsContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<FetchCalendarsQuery, FetchCalendarsQueryVariables>;
 export const FetchContributingCohortsDocument = {
   kind: 'Document',
   definitions: [
@@ -5451,6 +6115,159 @@ export const FetchContributingCohortsDocument = {
   FetchContributingCohortsQuery,
   FetchContributingCohortsQueryVariables
 >;
+export const FetchEventsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchEvents' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'top' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'filter' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'order' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'queryEventsContentsWithTotal' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'top' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'top' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'filter' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'filter' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'orderby' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'order' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'EventContent' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...EventContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<FetchEventsQuery, FetchEventsQueryVariables>;
+export const FetchEventDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchEvent' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'findEventsContent' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'EventContent' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...EventContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<FetchEventQuery, FetchEventQueryVariables>;
 export const FetchNewsDocument = {
   kind: 'Document',
   definitions: [

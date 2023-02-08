@@ -46,7 +46,7 @@
         "name": "title",
         "isHidden": false,
         "isLocked": false,
-        "isDisabled": true,
+        "isDisabled": false,
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
@@ -68,7 +68,7 @@
         "name": "startDate",
         "isHidden": false,
         "isLocked": false,
-        "isDisabled": true,
+        "isDisabled": false,
         "partitioning": "invariant",
         "properties": {
           "fieldType": "DateTime",
@@ -85,7 +85,7 @@
         "name": "status",
         "isHidden": false,
         "isLocked": false,
-        "isDisabled": true,
+        "isDisabled": false,
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
@@ -108,7 +108,7 @@
         "name": "calendar",
         "isHidden": false,
         "isLocked": false,
-        "isDisabled": true,
+        "isDisabled": false,
         "partitioning": "invariant",
         "properties": {
           "fieldType": "References",
@@ -518,7 +518,7 @@
         "name": "description",
         "isHidden": false,
         "isLocked": false,
-        "isDisabled": true,
+        "isDisabled": false,
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
@@ -540,7 +540,7 @@
         "name": "startDateTimeZone",
         "isHidden": false,
         "isLocked": false,
-        "isDisabled": true,
+        "isDisabled": false,
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
@@ -560,7 +560,7 @@
         "name": "endDate",
         "isHidden": false,
         "isLocked": false,
-        "isDisabled": true,
+        "isDisabled": false,
         "partitioning": "invariant",
         "properties": {
           "fieldType": "DateTime",
@@ -577,7 +577,7 @@
         "name": "endDateTimeZone",
         "isHidden": false,
         "isLocked": false,
-        "isDisabled": true,
+        "isDisabled": false,
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
@@ -597,7 +597,7 @@
         "name": "eventLink",
         "isHidden": false,
         "isLocked": false,
-        "isDisabled": true,
+        "isDisabled": false,
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
@@ -619,7 +619,7 @@
         "name": "googleId",
         "isHidden": false,
         "isLocked": false,
-        "isDisabled": true,
+        "isDisabled": false,
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
@@ -649,7 +649,7 @@
         },
         "isLocked": false,
         "isHidden": false,
-        "isDisabled": true,
+        "isDisabled": false,
         "partitioning": "invariant"
       },
       {
@@ -664,7 +664,7 @@
         },
         "isLocked": false,
         "isHidden": false,
-        "isDisabled": true,
+        "isDisabled": false,
         "partitioning": "invariant"
       },
       {
@@ -679,7 +679,7 @@
         },
         "isLocked": false,
         "isHidden": false,
-        "isDisabled": true,
+        "isDisabled": false,
         "partitioning": "invariant"
       }
     ],

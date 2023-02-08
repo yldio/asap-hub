@@ -7,11 +7,6 @@ on:
         description: 'The environment name'
         required: true
         type: string
-      since-master:
-        description: 'Whether to run tests since master'
-        required: false
-        type: boolean
-        default: false
     secrets:
       CODECOV_TOKEN:
         description: Codecov Token
@@ -72,10 +67,10 @@ jobs:
       - uses: codecov/codecov-action@v3
         with:
           fail_ci_if_error: true
-          directory: coverage
+          directory: merged-output
           verbose: true
         env:
-          CODECOV_TOKEN: ${{ inputs.codecov-token }}
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   integration:
     if: ${{ inputs.environment-name=='Branch' }}

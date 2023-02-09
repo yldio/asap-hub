@@ -1,5 +1,5 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { Button, LabeledTextArea, pixels } from '@asap-hub/react-components';
+import { Button, pixels, TextArea } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ComponentProps, useState } from 'react';
 import { addIcon, binIcon } from '../icons';
@@ -8,6 +8,7 @@ import colors from '../templates/colors';
 import EditUserModal from './EditUserModal';
 
 const { rem } = pixels;
+
 const containerStyles = css({
   [mobileQuery]: {
     display: 'unset',
@@ -16,6 +17,7 @@ const containerStyles = css({
   paddingBottom: rem(8),
   flexDirection: 'column',
 });
+
 const rowStyles = css({
   borderBottom: `1px solid ${colors.neutral500.rgb}`,
   marginBottom: rem(12),
@@ -26,13 +28,16 @@ const rowStyles = css({
     paddingBottom: 0,
   },
 });
+
 const headerStyles = css({
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
 });
+
 const buttonStyles = css({ margin: 0 });
+
 const addButtonStyles = css({
   width: 'fit-content',
   [mobileQuery]: {
@@ -94,7 +99,7 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
                       </Button>
                     </div>
                   </div>
-                  <LabeledTextArea
+                  <TextArea
                     enabled={!isSaving}
                     value={question}
                     onChange={onChangeValue(index)}

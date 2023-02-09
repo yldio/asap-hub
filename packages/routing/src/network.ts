@@ -149,4 +149,7 @@ const workingGroup = (() => {
 
 const workingGroups = route('/working-groups', {}, { workingGroup });
 
+export type GroupRoute = typeof group.children;
+export type TeamRoute = typeof team.children;
+export type WorkingGroupRoute = typeof workingGroup.children;
 export default route('/network', {}, { users, teams, groups, workingGroups });

@@ -2,7 +2,12 @@ import { ComponentProps, FC, lazy } from 'react';
 import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
 
 import { NoEvents } from '@asap-hub/react-components';
-import { events } from '@asap-hub/routing';
+import {
+  events,
+  WorkingGroupRoute,
+  GroupRoute,
+  TeamRoute,
+} from '@asap-hub/routing';
 import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
 
 import { EventConstraint } from '@asap-hub/model';
@@ -20,8 +25,7 @@ type ProfileSwitchProps = {
   eventConstraint: EventConstraint;
   isActive?: boolean;
   Outputs?: FC;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  route: any;
+  route: WorkingGroupRoute | GroupRoute | TeamRoute;
   ShareOutput?: FC;
   type: ComponentProps<typeof NoEvents>['type'];
   Workspace?: FC;
@@ -45,7 +49,7 @@ const ProfileSwitch: FC<ProfileSwitchProps> = ({
   return (
     <Frame title={displayName}>
       <Switch>
-        {ShareOutput && (
+        {ShareOutput && 'createOutput' in route && (
           <Route path={path + route.createOutput.template}>
             <Frame title="Share Output">
               <ShareOutput />
@@ -55,21 +59,21 @@ const ProfileSwitch: FC<ProfileSwitchProps> = ({
         <Route path={path + route.about.template}>
           <Frame title="About">{<About />}</Frame>
         </Route>
-        {isActive && Calendar && (
+        {isActive && Calendar && 'calendar' in route && (
           <Route path={path + route.calendar.template}>
             <Frame title="Calendar">
               <Calendar />
             </Frame>
           </Route>
         )}
-        {Outputs && (
+        {Outputs && 'outputs' in route && (
           <Route path={path + route.outputs.template}>
             <SearchFrame title="Outputs">
               <Outputs />
             </SearchFrame>
           </Route>
         )}
-        {Workspace && (
+        {Workspace && 'workspace' in route && (
           <Route path={path + route.workspace.template}>
             <Frame title="Workspace">
               <Workspace />

@@ -107,6 +107,7 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
                     placeholder={
                       'Example: Are alpha-synuclein deposits the cause or consequence of something deeper wrong with neurons?'
                     }
+                    getValidationMessage={() => 'Please add a question'}
                   />
                 </div>
               ))}

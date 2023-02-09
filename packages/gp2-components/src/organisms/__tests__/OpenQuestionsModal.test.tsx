@@ -26,4 +26,49 @@ describe('OpenQuestionsModal', () => {
       screen.getByRole('heading', { name: 'Open Questions' }),
     );
   });
+
+  it('renders the question field', () => {
+    const props = { questions: ['a question?'] };
+    renderOpenQuestions(props);
+    expect(screen.getByRole('textbox')).toContainHTML(props.questions[0]);
+  });
+
+  it('renders multiple questions', () => {
+    const props = {
+      questions: [
+        'a first question?',
+        'a second question?',
+        'a third question?',
+      ],
+    };
+    renderOpenQuestions(props);
+    screen
+      .getAllByRole('textbox')
+      .map((textarea, index) =>
+        expect(textarea).toContainHTML(props.questions[index]),
+      );
+  });
+
+  it('shows the add another question button', () => {
+    renderOpenQuestions();
+    expect(
+      screen.getByRole('button', { name: /add another question/i }),
+    ).toBeVisible();
+  });
+
+  it("doesn't show the add another question button if there's already five questions added", () => {
+    const props = {
+      questions: [
+        'a first question?',
+        'a second question?',
+        'a third question?',
+        'a fourth question?',
+        'a fifth question?',
+      ],
+    };
+    renderOpenQuestions(props);
+    expect(
+      screen.queryByRole('button', { name: /add another question/i }),
+    ).not.toBeInTheDocument();
+  });
 });

@@ -893,7 +893,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@babel/parser",\
-        "npm:7.20.13"\
+        "npm:7.20.15"\
       ],\
       [\
         "@babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression",\
@@ -12266,7 +12266,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/services-common", "workspace:packages/services-common"],\
             ["@asap-hub/squidex", "workspace:packages/squidex"],\
             ["@babel/core", "npm:7.20.12"],\
-            ["@babel/parser", "npm:7.20.13"],\
+            ["@babel/parser", "npm:7.20.15"],\
             ["@babel/runtime-corejs3", "npm:7.20.13"],\
             ["@hapi/boom", "npm:9.1.4"],\
             ["@sentry/serverless", "npm:6.19.7"],\
@@ -16090,6 +16090,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@babel-parser-npm-7.20.13-5e7ca52733-7eb2e3d9d9.zip/node_modules/@babel/parser/",\
           "packageDependencies": [\
             ["@babel/parser", "npm:7.20.13"],\
+            ["@babel/types", "npm:7.11.5"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:7.20.15", {\
+          "packageLocation": "./.yarn/cache/@babel-parser-npm-7.20.15-f05df4b4ba-1d0f47ca67.zip/node_modules/@babel/parser/",\
+          "packageDependencies": [\
+            ["@babel/parser", "npm:7.20.15"],\
             ["@babel/types", "npm:7.11.5"]\
           ],\
           "linkType": "HARD"\

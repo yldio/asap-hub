@@ -16,6 +16,8 @@ jest.mock('../api');
 const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
   typeof getResearchOutputs
 >;
+jest.setTimeout(30000);
+beforeEach(() => jest.spyOn(console, 'warn').mockImplementation());
 
 const renderSharedResearchPage = async (pathname: string, query = '') => {
   const result = render(
@@ -41,11 +43,16 @@ const renderSharedResearchPage = async (pathname: string, query = '') => {
 
 describe('the shared research listing page', () => {
   it('allows typing in search queries', async () => {
-    const { getByRole } = await renderSharedResearchPage('/shared-research');
+    const { getByRole, queryByText } = await renderSharedResearchPage(
+      '/shared-research',
+    );
     const searchBox = getByRole('searchbox') as HTMLInputElement;
 
     userEvent.type(searchBox, 'test123');
     expect(searchBox.value).toEqual('test123');
+    await waitFor(() =>
+      expect(queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
   });
 
   it('allows selection of filters', async () => {

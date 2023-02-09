@@ -7,7 +7,6 @@ export { default as discover } from './discover';
 export { default as events } from './events';
 export { default as logout } from './logout';
 export { default as network } from './network';
-export type { GroupRoute, TeamRoute, WorkingGroupRoute } from './network';
 export type {
   TeamOutputDocumentTypeParameter,
   WorkingGroupOutputDocumentTypeParameter,

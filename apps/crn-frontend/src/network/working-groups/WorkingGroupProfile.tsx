@@ -1,4 +1,5 @@
 import { FC, lazy, useEffect, useState } from 'react';
+import { useRouteMatch } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 
 import { NotFoundPage, WorkingGroupPage } from '@asap-hub/react-components';
@@ -28,6 +29,7 @@ type WorkingGroupProfileProps = {
   currentTime: Date;
 };
 const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
+  const { path } = useRouteMatch();
   const route = network({}).workingGroups({}).workingGroup;
   const [membersListElementId] = useState(`wg-members-${uuid()}`);
 
@@ -46,7 +48,16 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
   );
 
   if (workingGroup) {
-    console.log('Working Group Profile route', route({ workingGroupId }));
+    const { about, createOutput, outputs, past, upcoming } = route({
+      workingGroupId,
+    });
+    const paths = {
+      about: path + about.template,
+      createOutput: path + createOutput.template,
+      outputs: path + outputs.template,
+      past: path + past.template,
+      upcoming: path + upcoming.template,
+    };
     return (
       <ResearchOutputPermissionsContext.Provider value={{ canCreateUpdate }}>
         <WorkingGroupPage
@@ -67,7 +78,7 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
             eventConstraint={{ workingGroupId }}
             isActive={!workingGroup.complete}
             Outputs={() => <Outputs workingGroup={workingGroup} />}
-            route={route({ workingGroupId })}
+            paths={paths}
             ShareOutput={() => (
               <WorkingGroupOutput workingGroupId={workingGroupId} />
             )}

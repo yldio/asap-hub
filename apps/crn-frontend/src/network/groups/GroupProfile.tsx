@@ -1,4 +1,5 @@
 import { FC, lazy, useEffect, useState } from 'react';
+import { useRouteMatch } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 
 import { GroupProfilePage, NotFoundPage } from '@asap-hub/react-components';
@@ -25,6 +26,7 @@ type GroupProfileProps = {
 };
 
 const GroupProfile: FC<GroupProfileProps> = ({ currentTime }) => {
+  const { path } = useRouteMatch();
   const route = network({}).groups({}).group;
   const [groupTeamsElementId] = useState(`group-teams-${uuid()}`);
 
@@ -40,6 +42,16 @@ const GroupProfile: FC<GroupProfileProps> = ({ currentTime }) => {
   });
 
   if (group) {
+    const { about, past, upcoming, calendar } = route({
+      groupId,
+    });
+    const paths = {
+      about: path + about.template,
+      calendar: path + calendar.template,
+      past: path + past.template,
+      upcoming: path + upcoming.template,
+    };
+
     return (
       <GroupProfilePage
         groupTeamsHref={`${
@@ -61,7 +73,7 @@ const GroupProfile: FC<GroupProfileProps> = ({ currentTime }) => {
           displayName={group.name}
           eventConstraint={{ groupId }}
           isActive={group.active}
-          route={route({ groupId })}
+          paths={paths}
           type="group"
         />
       </GroupProfilePage>

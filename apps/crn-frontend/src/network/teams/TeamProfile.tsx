@@ -1,4 +1,5 @@
 import { FC, lazy, useEffect, useState } from 'react';
+import { useRouteMatch } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 
 import { NotFoundPage, TeamProfilePage } from '@asap-hub/react-components';
@@ -35,6 +36,7 @@ type TeamProfileProps = {
 };
 
 const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
+  const { path } = useRouteMatch();
   const route = network({}).teams({}).team;
   const [teamListElementId] = useState(`team-list-${uuid()}`);
 
@@ -65,6 +67,18 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
   });
 
   if (team) {
+    const { about, createOutput, outputs, past, upcoming, workspace } = route({
+      teamId,
+    });
+    const paths = {
+      about: path + about.template,
+      createOutput: path + createOutput.template,
+      outputs: path + outputs.template,
+      past: path + past.template,
+      upcoming: path + upcoming.template,
+      workspace: path + workspace.template,
+    };
+
     return (
       <ResearchOutputPermissionsContext.Provider value={{ canCreateUpdate }}>
         <TeamProfilePage
@@ -83,7 +97,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
             eventConstraint={{ teamId }}
             isActive={!team?.inactiveSince}
             Outputs={() => <Outputs team={team} />}
-            route={route({ teamId })}
+            paths={paths}
             ShareOutput={() => <TeamOutput teamId={teamId} />}
             type="team"
             Workspace={() => (

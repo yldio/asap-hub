@@ -1,13 +1,8 @@
-import { FC, lazy } from 'react';
-import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
+import { ComponentProps, FC, lazy } from 'react';
+import { Switch, Route, Redirect } from 'react-router-dom';
 
 import { NoEvents } from '@asap-hub/react-components';
-import {
-  events,
-  WorkingGroupRoute,
-  GroupRoute,
-  TeamRoute,
-} from '@asap-hub/routing';
+import { events } from '@asap-hub/routing';
 import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
 
 import { EventConstraint } from '@asap-hub/model';
@@ -25,28 +20,10 @@ type ProfileSwitchProps = {
   eventConstraint: EventConstraint;
   isActive?: boolean;
   Outputs?: FC;
-  route: WorkingGroupRoute | GroupRoute | TeamRoute;
+  paths: { [tab: string]: string };
   ShareOutput?: FC;
-  type: 'group' | 'team' | 'working group';
+  type: ComponentProps<typeof NoEvents>['type'];
   Workspace?: FC;
-};
-
-const RouteFrame = (
-  path: string,
-  title: string,
-  Component?: FC,
-  search = false,
-) => {
-  const ChosenFrame = search ? SearchFrame : Frame;
-  return (
-    Component && (
-      <Route path={path}>
-        <ChosenFrame title={title}>
-          <Component />
-        </ChosenFrame>
-      </Route>
-    )
-  );
 };
 
 const ProfileSwitch: FC<ProfileSwitchProps> = ({
@@ -57,96 +34,82 @@ const ProfileSwitch: FC<ProfileSwitchProps> = ({
   eventConstraint,
   isActive,
   Outputs,
-  route,
+  paths,
   ShareOutput,
   type,
   Workspace,
-}) => {
-  const { path } = useRouteMatch();
-
-  const UpcomingEvents = () => (
-    <EventsList
-      constraint={eventConstraint}
-      currentTime={currentTime}
-      past={false}
-      noEventsComponent={
-        <NoEvents
-          displayName={displayName}
-          link={events({}).upcoming({}).$}
-          type={type}
-        />
-      }
-    />
-  );
-
-  const PastEvents = () => (
-    <EventsList
-      constraint={eventConstraint}
-      currentTime={currentTime}
-      past={true}
-      noEventsComponent={
-        <NoEvents
-          past
-          displayName={displayName}
-          link={events({}).past({}).$}
-          type={type}
-        />
-      }
-    />
-  );
-
-  const SwitchFrame = ({ children }: { children: React.ReactNode }) => (
-    <Frame title={displayName}>
-      <Switch>
-        {RouteFrame(path + route.about.template, 'About', About)}
-        {children}
-        {isActive &&
-          RouteFrame(
-            path + route.upcoming.template,
-            'Upcoming Events',
-            UpcomingEvents,
-          )}
-        {RouteFrame(path + route.past.template, 'Past Events', PastEvents)}
-        <Redirect to={route.about({}).$} />
-      </Switch>
-    </Frame>
-  );
-
-  // type narrowing to select TeamRoute
-  if ('workspace' in route) {
-    return (
-      <SwitchFrame>
-        {RouteFrame(
-          path + route.createOutput.template,
-          'Share Output',
-          ShareOutput,
-        )}
-        {RouteFrame(path + route.outputs.template, 'Outputs', Outputs, true)}
-        {RouteFrame(path + route.workspace.template, 'Workspace', Workspace)}
-      </SwitchFrame>
-    );
-  }
-
-  // type narrowing to select GroupRoute for now
-  if ('calendar' in route) {
-    return (
-      <SwitchFrame>
-        {isActive &&
-          RouteFrame(path + route.calendar.template, 'Calendar', Calendar)}
-      </SwitchFrame>
-    );
-  }
-
-  return (
-    <SwitchFrame>
-      {RouteFrame(
-        path + route.createOutput.template,
-        'Share Output',
-        ShareOutput,
+}) => (
+  <Frame title={displayName}>
+    <Switch>
+      {ShareOutput && (
+        <Route path={paths.createOutput}>
+          <Frame title="Share Output">
+            <ShareOutput />
+          </Frame>
+        </Route>
       )}
-      {RouteFrame(path + route.outputs.template, 'Outputs', Outputs, true)}
-    </SwitchFrame>
-  );
-};
+      <Route path={paths.about}>
+        <Frame title="About">{<About />}</Frame>
+      </Route>
+      {isActive && Calendar && (
+        <Route path={paths.calendar}>
+          <Frame title="Calendar">
+            <Calendar />
+          </Frame>
+        </Route>
+      )}
+      {Outputs && (
+        <Route path={paths.outputs}>
+          <SearchFrame title="Outputs">
+            <Outputs />
+          </SearchFrame>
+        </Route>
+      )}
+      {Workspace && (
+        <Route path={paths.workspace}>
+          <Frame title="Workspace">
+            <Workspace />
+          </Frame>
+        </Route>
+      )}
+      {isActive && (
+        <Route path={paths.upcoming}>
+          <Frame title="Upcoming Events">
+            <EventsList
+              constraint={eventConstraint}
+              currentTime={currentTime}
+              past={false}
+              noEventsComponent={
+                <NoEvents
+                  displayName={displayName}
+                  link={events({}).upcoming({}).$}
+                  type={type}
+                />
+              }
+            />
+          </Frame>
+        </Route>
+      )}
+      <Route path={paths.past}>
+        <Frame title="Past Events">
+          <EventsList
+            constraint={eventConstraint}
+            currentTime={currentTime}
+            past={true}
+            noEventsComponent={
+              <NoEvents
+                past
+                displayName={displayName}
+                link={events({}).past({}).$}
+                type={type}
+              />
+            }
+          />
+        </Frame>
+      </Route>
+      <Redirect to={paths.about} />
+    </Switch>
+  </Frame>
+);
 
 export default ProfileSwitch;

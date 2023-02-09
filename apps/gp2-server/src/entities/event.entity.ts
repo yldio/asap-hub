@@ -74,7 +74,6 @@ export const parseGraphQLEvent = (
 
   const meetingLink = item.flatData.meetingLink || undefined;
 
-  // fallback to group thumbnail
   const thumbnail = item.flatData.thumbnail?.length
     ? createUrl(item.flatData.thumbnail.map((t) => t.id))[0]
     : undefined;

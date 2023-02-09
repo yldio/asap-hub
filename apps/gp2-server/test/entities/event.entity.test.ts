@@ -40,6 +40,18 @@ describe('events entity', () => {
         `"Invalid event (example) status "invalid""`,
       );
     });
+    test('ignores empty thumbnail', () => {
+      const event = {
+        ...graphqlEvent,
+        id: 'example',
+        flatData: {
+          ...graphqlEvent.flatData,
+          thumbnail: [],
+        },
+      };
+      const { thumbnail } = parseGraphQLEvent(event);
+      expect(thumbnail).toEqual(undefined);
+    });
   });
   describe('getMeetingMaterial', () => {
     test.each([null, undefined, [], 'detail', ['item']])(
@@ -85,7 +97,7 @@ describe('events entity', () => {
     test('Should return the user', () => {
       const eventSpeakers = parseGraphQLSpeakers([
         getSquidexGraphqlEventSpeakerWithUser(),
-      ]) as [gp2.EventSpeakerUser];
+      ]);
 
       expect(eventSpeakers[0]!.user).toBeDefined();
 
@@ -112,5 +124,12 @@ describe('events entity', () => {
       expect(eventSpeaker?.displayName).toEqual('Adam Brown');
       expect(eventSpeaker?.avatarUrl).toContain('/avatar-id');
     });
+  });
+  test('Should skip the user if not onboarded', () => {
+    const eventSpeakers = parseGraphQLSpeakers([
+      getSquidexGraphqlEventSpeakerWithUser({ onboarded: false }),
+    ]);
+
+    expect(eventSpeakers).toStrictEqual([]);
   });
 });

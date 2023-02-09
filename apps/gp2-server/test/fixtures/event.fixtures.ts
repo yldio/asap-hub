@@ -102,10 +102,14 @@ export const getSquidexGraphqlEvent = () => ({
   version: 43,
   flatData: squidexGraphqlEventsFlatData(),
 });
-
-export const getSquidexGraphqlEventSpeakerWithUser = (): NonNullable<
+type EventSpeakers = NonNullable<
   NonNullable<EventContentFragment['flatData']['speakers']>[number]
-> => ({
+>;
+
+type EventSpeakerUser = NonNullable<EventSpeakers['user']>[number]['flatData'];
+export const getSquidexGraphqlEventSpeakerWithUser = (
+  overrides: Partial<EventSpeakerUser> = {},
+): EventSpeakers => ({
   user: [
     {
       __typename: 'Users',
@@ -115,6 +119,7 @@ export const getSquidexGraphqlEventSpeakerWithUser = (): NonNullable<
         firstName: 'Adam',
         lastName: 'Brown',
         onboarded: true,
+        ...overrides,
       },
     },
   ],

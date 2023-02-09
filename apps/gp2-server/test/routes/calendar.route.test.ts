@@ -1,4 +1,4 @@
-import { ListCalendarResponse } from '@asap-hub/model';
+import { gp2 } from '@asap-hub/model';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
@@ -35,22 +35,18 @@ describe('/calendars/ route', () => {
   });
 });
 
-const listCalendarResponse: ListCalendarResponse = {
+const listCalendarResponse: gp2.ListCalendarResponse = {
   total: 2,
   items: [
     {
       id: 'calendar-id-1',
       color: '#5C1158',
       name: 'Kubernetes Meetups',
-      groups: [],
-      workingGroups: [],
     },
     {
       id: 'calendar-id-2',
       color: '#B1365F',
       name: 'Service Mesh Conferences',
-      groups: [],
-      workingGroups: [],
     },
   ],
 };

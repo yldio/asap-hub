@@ -3,6 +3,7 @@ import {
   ExternalProfilesModal,
   FundingProviderModal,
   OnboardingAdditionalDetails,
+  OpenQuestionsModal,
 } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
@@ -43,7 +44,11 @@ const AdditionalDetails: React.FC<Record<string, never>> = () => {
           }
         />
         <Route path={onboarding({}).additionalDetails({}).editQuestions({}).$}>
-          {/* { edit Questions Modal} */}
+          <OpenQuestionsModal
+            {...userData}
+            backHref={onboarding({}).additionalDetails({}).$}
+            onSave={(patchedUser) => patchUser(patchedUser)}
+          />
         </Route>
         <Route
           path={onboarding({}).additionalDetails({}).editFundingStreams({}).$}

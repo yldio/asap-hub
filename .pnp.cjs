@@ -2161,7 +2161,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@types/auth0-js",\
-        "npm:9.14.6"\
+        "npm:9.14.7"\
       ],\
       [\
         "@types/aws-lambda",\
@@ -3212,7 +3212,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "auth0-js",\
-        "npm:9.19.1"\
+        "npm:9.20.1"\
       ],\
       [\
         "auto-bind",\
@@ -10662,11 +10662,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/core", "npm:7.20.12"],\
             ["@babel/preset-react", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.18.6"],\
             ["@babel/runtime-corejs3", "npm:7.20.13"],\
-            ["@types/auth0-js", "npm:9.14.6"],\
+            ["@types/auth0-js", "npm:9.14.7"],\
             ["@types/jest", "npm:29.4.0"],\
             ["@types/node", "npm:14.18.33"],\
             ["@types/pify", "npm:3.0.2"],\
-            ["auth0-js", "npm:9.19.1"],\
+            ["auth0-js", "npm:9.20.1"],\
             ["camelcase", "npm:6.3.0"],\
             ["pify", "npm:5.0.0"],\
             ["util", "npm:0.12.5"]\
@@ -34589,10 +34589,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/auth0-js", [\
-        ["npm:9.14.6", {\
-          "packageLocation": "./.yarn/cache/@types-auth0-js-npm-9.14.6-674ac0be75-62fe675fea.zip/node_modules/@types/auth0-js/",\
+        ["npm:9.14.7", {\
+          "packageLocation": "./.yarn/cache/@types-auth0-js-npm-9.14.7-deff66bbe8-dda4c3355a.zip/node_modules/@types/auth0-js/",\
           "packageDependencies": [\
-            ["@types/auth0-js", "npm:9.14.6"]\
+            ["@types/auth0-js", "npm:9.14.7"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -38848,10 +38848,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["auth0-js", [\
-        ["npm:9.19.1", {\
-          "packageLocation": "./.yarn/cache/auth0-js-npm-9.19.1-dbf29f155f-ecc159a7fa.zip/node_modules/auth0-js/",\
+        ["npm:9.20.1", {\
+          "packageLocation": "./.yarn/cache/auth0-js-npm-9.20.1-44f01ef4a5-ae6c72b9fc.zip/node_modules/auth0-js/",\
           "packageDependencies": [\
-            ["auth0-js", "npm:9.19.1"],\
+            ["auth0-js", "npm:9.20.1"],\
             ["base64-js", "npm:1.5.1"],\
             ["idtoken-verifier", "npm:2.2.2"],\
             ["js-cookie", "npm:2.2.1"],\

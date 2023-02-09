@@ -11,6 +11,8 @@ import {
 import {
   getAccessTokenFactory,
   gp2 as gp2squidex,
+  InputCalendar,
+  RestCalendar,
   RestEvent,
   SquidexGraphql,
   SquidexRest,
@@ -25,6 +27,9 @@ import {
   clientId,
   clientSecret,
 } from './config';
+import Calendars, {
+  CalendarController,
+} from './controllers/calendar.controller';
 import ContributingCohorts, {
   ContributingCohortController,
 } from './controllers/contributing-cohort.controller';
@@ -42,6 +47,10 @@ import {
   AssetDataProvider,
   AssetSquidexDataProvider,
 } from './data-providers/asset.data-provider';
+import {
+  CalendarDataProvider,
+  CalendarSquidexDataProvider,
+} from './data-providers/calendar.data-provider';
 import {
   ContributingCohortDataProvider,
   ContributingCohortSquidexDataProvider,
@@ -66,6 +75,7 @@ import {
   WorkingGroupDataProvider,
   WorkingGroupSquidexDataProvider,
 } from './data-providers/working-group.data-provider';
+import { calendarRouteFactory } from './routes/calendar.route';
 import { contributingCohortRouteFactory } from './routes/contributing-cohort.route';
 import { eventRouteFactory } from './routes/event.route';
 import { newsRouteFactory } from './routes/news.route';
@@ -132,6 +142,14 @@ export const appFactory = (libs: Libs = {}): Express => {
     appName,
     baseUrl,
   });
+  const calendarRestClient = new SquidexRest<RestCalendar, InputCalendar>(
+    getAuthToken,
+    'calendars',
+    {
+      appName,
+      baseUrl,
+    },
+  );
   const decodeToken = decodeTokenFactory(auth0Audience);
   const userResponseCacheClient = new MemoryCacheClient<gp2.UserResponse>();
 
@@ -161,6 +179,9 @@ export const appFactory = (libs: Libs = {}): Express => {
   const projectDataProvider =
     libs.projectDataProvider ||
     new ProjectSquidexDataProvider(squidexGraphqlClient, projectRestClient);
+  const calendarDataProvider =
+    libs.calendarDataProvider ||
+    new CalendarSquidexDataProvider(calendarRestClient, squidexGraphqlClient);
 
   // Controllers
 
@@ -174,6 +195,8 @@ export const appFactory = (libs: Libs = {}): Express => {
   const newsController = libs.newsController || new News(newsDataProvider);
   const eventController =
     libs.eventController || new Events(squidexGraphqlClient, eventRestClient);
+  const calendarController =
+    libs.calendarController || new Calendars(calendarDataProvider);
   const contributingCohortController =
     libs.contributingCohortController ||
     new ContributingCohorts(contributingCohortDataProvider);
@@ -207,6 +230,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   );
   const projectRoutes = projectRouteFactory(projectController);
   const eventRoutes = eventRouteFactory(eventController);
+  const calendarRoutes = calendarRouteFactory(calendarController);
 
   app.use(userPublicRoutes);
   // Auth
@@ -222,6 +246,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(workingGroupNetworkRoutes);
   app.use(projectRoutes);
   app.use(eventRoutes);
+  app.use(calendarRoutes);
 
   // Catch all
   app.get('*', async (_req, res) => {
@@ -242,6 +267,7 @@ export type Libs = {
   assetDataProvider?: AssetDataProvider;
   userDataProvider?: UserDataProvider;
   newsDataProvider?: NewsDataProvider;
+  calendarDataProvider?: CalendarDataProvider;
   contributingCohortDataProvider?: ContributingCohortDataProvider;
   workingGroupDataProvider?: WorkingGroupDataProvider;
   workingGroupNetworkDataProvider?: WorkingGroupNetworkDataProvider;
@@ -249,6 +275,7 @@ export type Libs = {
   userController?: UserController;
   newsController?: NewsController;
   eventController?: EventController;
+  calendarController?: CalendarController;
   contributingCohortController?: ContributingCohortController;
   workingGroupController?: WorkingGroupController;
   workingGroupNetworkController?: WorkingGroupNetworkController;

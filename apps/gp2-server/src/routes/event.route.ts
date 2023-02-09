@@ -1,5 +1,5 @@
 import { gp2 } from '@asap-hub/model';
-import { Response, Router } from 'express';
+import { Router } from 'express';
 import { EventController } from '../controllers/event.controller';
 import {
   validateEventFetchParameters,
@@ -9,9 +9,9 @@ import {
 export const eventRouteFactory = (eventController: EventController): Router => {
   const eventRoutes = Router();
 
-  eventRoutes.get(
+  eventRoutes.get<unknown, gp2.ListEventResponse>(
     '/events',
-    async (req, res: Response<gp2.ListEventResponse>) => {
+    async (req, res) => {
       const query = validateEventFetchParameters(req.query);
       const result = await eventController.fetch(query);
 
@@ -19,9 +19,9 @@ export const eventRouteFactory = (eventController: EventController): Router => {
     },
   );
 
-  eventRoutes.get<{ eventId: string }>(
+  eventRoutes.get<{ eventId: string }, gp2.EventResponse>(
     '/events/:eventId',
-    async (req, res: Response<gp2.EventResponse>) => {
+    async (req, res) => {
       const { params } = req;
       const { eventId } = validateEventParameters(params);
       const result = await eventController.fetchById(eventId);

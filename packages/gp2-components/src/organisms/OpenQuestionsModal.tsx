@@ -103,6 +103,7 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
                     enabled={!isSaving}
                     value={question}
                     onChange={onChangeValue(index)}
+                    maxLength={250}
                     placeholder={
                       'Example: Are alpha-synuclein deposits the cause or consequence of something deeper wrong with neurons?'
                     }
@@ -110,7 +111,7 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
                 </div>
               ))}
             </div>
-            {newQuestions.length < 10 ? (
+            {newQuestions.length < 5 ? (
               <div css={addButtonStyles}>
                 <Button onClick={onAdd} enabled={!isSaving} small>
                   <span
@@ -120,7 +121,7 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
                       margin: `0 ${rem(3)}`,
                     }}
                   >
-                    Add Question
+                    Add Another Question
                     {addIcon}
                   </span>
                 </Button>

@@ -1,0 +1,2 @@
+1. WBR not supported
+2. Inside links breaks it

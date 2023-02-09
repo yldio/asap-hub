@@ -161,28 +161,7 @@ describe('convertHtmlToContentfulFormat', () => {
   });
 
   it('converts a line break to an empty paragraph', async () => {
-    const html = `<wbr />`;
-
-    expect(
-      convertHtmlToContentfulFormat(html) /*?JSON.stringify($, null, 2)*/,
-    ).toEqual({
-      document: {
-        data: {},
-        content: [
-          // {
-          //   data: {},
-          //   content: [],
-          //   nodeType: 'paragraph',
-          // },
-        ],
-        nodeType: 'document',
-      },
-      inlineAssetBodies: [],
-    });
-  });
-
-  it('converts a line break to an empty paragraph', async () => {
-    const html = `<br />`;
+    const html = `<p>Line 1<wbr>Line 2</p>`;
 
     expect(
       convertHtmlToContentfulFormat(html) /*?JSON.stringify($, null, 2)*/,
@@ -192,13 +171,54 @@ describe('convertHtmlToContentfulFormat', () => {
         content: [
           {
             data: {},
-            content: [],
+            content: [
+              { data: {}, marks: [], value: 'Line 1', nodeType: 'text' },
+            ],
+            nodeType: 'paragraph',
+          },
+          {
+            data: {},
+            content: [
+              { data: {}, marks: [], value: 'Line 2', nodeType: 'text' },
+            ],
             nodeType: 'paragraph',
           },
         ],
         nodeType: 'document',
       },
       inlineAssetBodies: [],
+      inlineIFramesBodies: [],
+    });
+  });
+
+  it('converts a line break to an empty paragraph', async () => {
+    const html = `<p>Line 1<br>Line 2</p>`;
+
+    expect(
+      convertHtmlToContentfulFormat(html) /*?JSON.stringify($, null, 2)*/,
+    ).toEqual({
+      document: {
+        data: {},
+        content: [
+          {
+            data: {},
+            content: [
+              { data: {}, marks: [], value: 'Line 1', nodeType: 'text' },
+            ],
+            nodeType: 'paragraph',
+          },
+          {
+            data: {},
+            content: [
+              { data: {}, marks: [], value: 'Line 2', nodeType: 'text' },
+            ],
+            nodeType: 'paragraph',
+          },
+        ],
+        nodeType: 'document',
+      },
+      inlineAssetBodies: [],
+      inlineIFramesBodies: [],
     });
   });
 });

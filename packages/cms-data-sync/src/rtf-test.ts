@@ -57,7 +57,7 @@ type PageItem = NonNullable<FetchPagesQuery['queryPagesContents']>[number];
     ];
   };
 
-  const parseNewsItem = async (item: NewsItem | PageItem) => {
+  const parseItem = async (item: NewsItem | PageItem) => {
     const {
       flatData: { text },
       id,
@@ -73,8 +73,12 @@ type PageItem = NonNullable<FetchPagesQuery['queryPagesContents']>[number];
     }
 
     try {
+      // remove br and wbr html tags from text
+      const textWithoutBr = text.replace(/<br\s*\/?>/gi, '');
+      const textWithoutWbr = textWithoutBr.replace(/<wbr\s*\/?>/gi, '');
+
       const { document, inlineAssetBodies } =
-        convertHtmlToContentfulFormat(text);
+        convertHtmlToContentfulFormat(textWithoutWbr);
       content = document;
       await createInlineAssets(contentfulEnvironment, inlineAssetBodies);
     } catch (error) {
@@ -116,7 +120,7 @@ type PageItem = NonNullable<FetchPagesQuery['queryPagesContents']>[number];
   await migrateFromSquidexToContentful<NewsItem | PageItem>(
     'testModel',
     fetchData,
-    parseNewsItem,
+    parseItem,
     undefined,
     onComplete,
   );

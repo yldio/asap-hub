@@ -25,24 +25,47 @@ const getContent = () => ({
     data: {},
     content: [
       {
-        data: {},
+        data: {
+          uri: 'https://aligningscienceacrossparkinsonsasap.cmail19.com/t/t-l-colrid-wuujihjhk-i/',
+        },
         content: [
           {
-            data: {
-              uri: 'mailto:crn_times@asap.science',
-            },
+            data: {},
+            marks: [
+              {
+                type: 'bold',
+              },
+            ],
+            value: 'https://hydrop.aertslab.',
+            nodeType: 'text',
+          },
+          {
+            data: {},
             content: [
               {
                 data: {},
-                content: [],
+                marks: [
+                  {
+                    type: 'bold',
+                  },
+                ],
+                value: '',
                 nodeType: 'text',
               },
-
             ],
-            nodeType: 'hyperlink',
+          },
+          {
+            data: {},
+            marks: [
+              {
+                type: 'bold',
+              },
+            ],
+            value: 'org/',
+            nodeType: 'text',
           },
         ],
-        nodeType: 'paragraph',
+        nodeType: 'hyperlink',
       },
     ],
   },

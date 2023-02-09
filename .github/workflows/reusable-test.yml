@@ -99,6 +99,7 @@ jobs:
         shell: bash
         run: |
           python .github/scripts/squidex/create-app.py
+          sq sync in packages/squidex/schema/crn -t app -t schemas -t contents'.format(app=app))'
           yarn test:integration
         env:
           APP: crn

@@ -12,11 +12,14 @@ echo 'Importing data...'
 
 if [ "$RECREATE_APP_ON_EVERY_PR" = true ] || [ "$FIRST_RUN" = true ]; then
     # create-app.py configures sq to new app
-    export SQ_SYNC_OUTPUT="$(sq sync in backup)"
-    if [[ "$SQ_SYNC_OUTPUT" =~ (warn|error|fail|exception) ]]; then
+    export SQ_SYNC_OUTPUT="$(sq sync in backup -t schemas, contents, contributors, clients, roles, workflows)"
+    export SQ_SYNC_OUTPUT_RULES="$(sq sync in backup -t rules)"
+    if [[ "$SQ_SYNC_OUTPUT" =~ (warn|error|fail|exception) ] | [ "$SQ_SYNC_OUTPUT_RULES" =~ (warn|error|fail|exception) ]]; then
         echo "Data import failure - sq sync in backup failed:"
         echo $SQ_SYNC_OUTPUT
+        echo $SQ_SYNC_OUTPUT_RULES
         unset SQ_SYNC_OUTPUT
+        unset SQ_SYNC_OUTPUT_RULES
         unset IFS
         exit 1
     fi

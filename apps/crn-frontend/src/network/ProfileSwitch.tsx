@@ -1,4 +1,4 @@
-import { ComponentProps, FC, lazy } from 'react';
+import { FC, lazy } from 'react';
 import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
 
 import { NoEvents } from '@asap-hub/react-components';
@@ -27,8 +27,26 @@ type ProfileSwitchProps = {
   Outputs?: FC;
   route: WorkingGroupRoute | GroupRoute | TeamRoute;
   ShareOutput?: FC;
-  type: ComponentProps<typeof NoEvents>['type'];
+  type: 'group' | 'team' | 'working group';
   Workspace?: FC;
+};
+
+const RouteFrame = (
+  path: string,
+  title: string,
+  Component?: FC,
+  search = false,
+) => {
+  const ChosenFrame = search ? SearchFrame : Frame;
+  return (
+    Component && (
+      <Route path={path}>
+        <ChosenFrame title={title}>
+          <Component />
+        </ChosenFrame>
+      </Route>
+    )
+  );
 };
 
 const ProfileSwitch: FC<ProfileSwitchProps> = ({
@@ -46,78 +64,88 @@ const ProfileSwitch: FC<ProfileSwitchProps> = ({
 }) => {
   const { path } = useRouteMatch();
 
-  return (
+  const UpcomingEvents = () => (
+    <EventsList
+      constraint={eventConstraint}
+      currentTime={currentTime}
+      past={false}
+      noEventsComponent={
+        <NoEvents
+          displayName={displayName}
+          link={events({}).upcoming({}).$}
+          type={type}
+        />
+      }
+    />
+  );
+
+  const PastEvents = () => (
+    <EventsList
+      constraint={eventConstraint}
+      currentTime={currentTime}
+      past={true}
+      noEventsComponent={
+        <NoEvents
+          past
+          displayName={displayName}
+          link={events({}).past({}).$}
+          type={type}
+        />
+      }
+    />
+  );
+
+  const SwitchFrame = ({ children }: { children: React.ReactNode }) => (
     <Frame title={displayName}>
       <Switch>
-        {ShareOutput && 'createOutput' in route && (
-          <Route path={path + route.createOutput.template}>
-            <Frame title="Share Output">
-              <ShareOutput />
-            </Frame>
-          </Route>
-        )}
-        <Route path={path + route.about.template}>
-          <Frame title="About">{<About />}</Frame>
-        </Route>
-        {isActive && Calendar && 'calendar' in route && (
-          <Route path={path + route.calendar.template}>
-            <Frame title="Calendar">
-              <Calendar />
-            </Frame>
-          </Route>
-        )}
-        {Outputs && 'outputs' in route && (
-          <Route path={path + route.outputs.template}>
-            <SearchFrame title="Outputs">
-              <Outputs />
-            </SearchFrame>
-          </Route>
-        )}
-        {Workspace && 'workspace' in route && (
-          <Route path={path + route.workspace.template}>
-            <Frame title="Workspace">
-              <Workspace />
-            </Frame>
-          </Route>
-        )}
-        {isActive && (
-          <Route path={path + route.upcoming.template}>
-            <Frame title="Upcoming Events">
-              <EventsList
-                constraint={eventConstraint}
-                currentTime={currentTime}
-                past={false}
-                noEventsComponent={
-                  <NoEvents
-                    displayName={displayName}
-                    link={events({}).upcoming({}).$}
-                    type={type}
-                  />
-                }
-              />
-            </Frame>
-          </Route>
-        )}
-        <Route path={path + route.past.template}>
-          <Frame title="Past Events">
-            <EventsList
-              constraint={eventConstraint}
-              currentTime={currentTime}
-              past={true}
-              noEventsComponent={
-                <NoEvents
-                  past
-                  displayName={displayName}
-                  link={events({}).past({}).$}
-                  type={type}
-                />
-              }
-            />
-          </Frame>
-        </Route>
+        {RouteFrame(path + route.about.template, 'About', About)}
+        {children}
+        {isActive &&
+          RouteFrame(
+            path + route.upcoming.template,
+            'Upcoming Events',
+            UpcomingEvents,
+          )}
+        {RouteFrame(path + route.past.template, 'Past Events', PastEvents)}
         <Redirect to={route.about({}).$} />
       </Switch>
     </Frame>
+  );
+
+  // type narrowing to select TeamRoute
+  if ('workspace' in route) {
+    return (
+      <SwitchFrame>
+        {RouteFrame(
+          path + route.createOutput.template,
+          'Share Output',
+          ShareOutput,
+        )}
+        {RouteFrame(path + route.outputs.template, 'Outputs', Outputs, true)}
+        {RouteFrame(path + route.workspace.template, 'Workspace', Workspace)}
+      </SwitchFrame>
+    );
+  }
+
+  // type narrowing to select GroupRoute for now
+  if ('calendar' in route) {
+    return (
+      <SwitchFrame>
+        {isActive &&
+          RouteFrame(path + route.calendar.template, 'Calendar', Calendar)}
+      </SwitchFrame>
+    );
+  }
+
+  return (
+    <SwitchFrame>
+      {RouteFrame(
+        path + route.createOutput.template,
+        'Share Output',
+        ShareOutput,
+      )}
+      {RouteFrame(path + route.outputs.template, 'Outputs', Outputs, true)}
+    </SwitchFrame>
   );
 };
 

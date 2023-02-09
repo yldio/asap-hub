@@ -46,6 +46,7 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
   );
 
   if (workingGroup) {
+    console.log('Working Group Profile route', route({ workingGroupId }));
     return (
       <ResearchOutputPermissionsContext.Provider value={{ canCreateUpdate }}>
         <WorkingGroupPage

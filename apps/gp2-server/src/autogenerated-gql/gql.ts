@@ -3,10 +3,22 @@ import * as graphql from './graphql';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
 const documents = {
+  '\n  fragment CalendarsContent on Calendars {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      googleCalendarId\n      name\n      color\n      syncToken\n      resourceId\n      expirationDate\n    }\n  }\n':
+    graphql.CalendarsContentFragmentDoc,
+  '\n  query FetchCalendar($id: String!) {\n    findCalendarsContent(id: $id) {\n      ...CalendarsContent\n    }\n  }\n  \n':
+    graphql.FetchCalendarDocument,
+  '\n  query FetchCalendars($top: Int, $skip: Int, $filter: String, $order: String) {\n    queryCalendarsContentsWithTotal(\n      top: $top\n      skip: $skip\n      filter: $filter\n      orderby: $order\n    ) {\n      total\n      items {\n        ...CalendarsContent\n      }\n    }\n  }\n  \n':
+    graphql.FetchCalendarsDocument,
   '\n  fragment ContributingCohortsContent on ContributingCohorts {\n    id\n    flatData {\n      name\n    }\n  }\n':
     graphql.ContributingCohortsContentFragmentDoc,
   '\n  query FetchContributingCohorts($top: Int, $skip: Int) {\n    queryContributingCohortsContentsWithTotal(\n      top: $top\n      skip: $skip\n      orderby: "data/name/iv"\n    ) {\n      total\n      items {\n        ...ContributingCohortsContent\n      }\n    }\n  }\n  \n':
     graphql.FetchContributingCohortsDocument,
+  '\n  fragment EventContent on Events {\n    id\n    lastModified\n    version\n    created\n    flatData {\n      description\n      endDate\n      endDateTimeZone\n      startDate\n      startDateTimeZone\n      meetingLink\n      hideMeetingLink\n      eventLink\n      status\n      tags\n      title\n      notesPermanentlyUnavailable\n      notes\n      videoRecordingPermanentlyUnavailable\n      videoRecording\n      presentationPermanentlyUnavailable\n      presentation\n      meetingMaterialsPermanentlyUnavailable\n      meetingMaterials {\n        url\n        title\n      }\n      calendar {\n        flatData {\n          googleCalendarId\n          color\n          name\n        }\n      }\n      thumbnail {\n        id\n      }\n      speakers {\n        user {\n          __typename\n          ... on Users {\n            id\n            flatData {\n              firstName\n              lastName\n              onboarded\n              avatar {\n                id\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n':
+    graphql.EventContentFragmentDoc,
+  '\n  query FetchEvents($top: Int, $skip: Int, $filter: String, $order: String) {\n    queryEventsContentsWithTotal(\n      top: $top\n      skip: $skip\n      filter: $filter\n      orderby: $order\n    ) {\n      total\n      items {\n        ...EventContent\n      }\n    }\n  }\n  \n':
+    graphql.FetchEventsDocument,
+  '\n  query FetchEvent($id: String!) {\n    findEventsContent(id: $id) {\n      ...EventContent\n    }\n  }\n  \n':
+    graphql.FetchEventDocument,
   '\n  fragment NewsContent on NewsAndEvents {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      title\n      shortText\n      link\n      linkText\n      sampleCount\n      articleCount\n      cohortCount\n      link\n      linkText\n    }\n  }\n':
     graphql.NewsContentFragmentDoc,
   '\n  query FetchNews($top: Int, $skip: Int) {\n    queryNewsAndEventsContentsWithTotal(\n      top: $top\n      skip: $skip\n      orderby: "created desc"\n    ) {\n      total\n      items {\n        ...NewsContent\n      }\n    }\n  }\n  \n':
@@ -44,11 +56,29 @@ const documents = {
 };
 
 export function gql(
+  source: '\n  fragment CalendarsContent on Calendars {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      googleCalendarId\n      name\n      color\n      syncToken\n      resourceId\n      expirationDate\n    }\n  }\n',
+): typeof documents['\n  fragment CalendarsContent on Calendars {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      googleCalendarId\n      name\n      color\n      syncToken\n      resourceId\n      expirationDate\n    }\n  }\n'];
+export function gql(
+  source: '\n  query FetchCalendar($id: String!) {\n    findCalendarsContent(id: $id) {\n      ...CalendarsContent\n    }\n  }\n  \n',
+): typeof documents['\n  query FetchCalendar($id: String!) {\n    findCalendarsContent(id: $id) {\n      ...CalendarsContent\n    }\n  }\n  \n'];
+export function gql(
+  source: '\n  query FetchCalendars($top: Int, $skip: Int, $filter: String, $order: String) {\n    queryCalendarsContentsWithTotal(\n      top: $top\n      skip: $skip\n      filter: $filter\n      orderby: $order\n    ) {\n      total\n      items {\n        ...CalendarsContent\n      }\n    }\n  }\n  \n',
+): typeof documents['\n  query FetchCalendars($top: Int, $skip: Int, $filter: String, $order: String) {\n    queryCalendarsContentsWithTotal(\n      top: $top\n      skip: $skip\n      filter: $filter\n      orderby: $order\n    ) {\n      total\n      items {\n        ...CalendarsContent\n      }\n    }\n  }\n  \n'];
+export function gql(
   source: '\n  fragment ContributingCohortsContent on ContributingCohorts {\n    id\n    flatData {\n      name\n    }\n  }\n',
 ): typeof documents['\n  fragment ContributingCohortsContent on ContributingCohorts {\n    id\n    flatData {\n      name\n    }\n  }\n'];
 export function gql(
   source: '\n  query FetchContributingCohorts($top: Int, $skip: Int) {\n    queryContributingCohortsContentsWithTotal(\n      top: $top\n      skip: $skip\n      orderby: "data/name/iv"\n    ) {\n      total\n      items {\n        ...ContributingCohortsContent\n      }\n    }\n  }\n  \n',
 ): typeof documents['\n  query FetchContributingCohorts($top: Int, $skip: Int) {\n    queryContributingCohortsContentsWithTotal(\n      top: $top\n      skip: $skip\n      orderby: "data/name/iv"\n    ) {\n      total\n      items {\n        ...ContributingCohortsContent\n      }\n    }\n  }\n  \n'];
+export function gql(
+  source: '\n  fragment EventContent on Events {\n    id\n    lastModified\n    version\n    created\n    flatData {\n      description\n      endDate\n      endDateTimeZone\n      startDate\n      startDateTimeZone\n      meetingLink\n      hideMeetingLink\n      eventLink\n      status\n      tags\n      title\n      notesPermanentlyUnavailable\n      notes\n      videoRecordingPermanentlyUnavailable\n      videoRecording\n      presentationPermanentlyUnavailable\n      presentation\n      meetingMaterialsPermanentlyUnavailable\n      meetingMaterials {\n        url\n        title\n      }\n      calendar {\n        flatData {\n          googleCalendarId\n          color\n          name\n        }\n      }\n      thumbnail {\n        id\n      }\n      speakers {\n        user {\n          __typename\n          ... on Users {\n            id\n            flatData {\n              firstName\n              lastName\n              onboarded\n              avatar {\n                id\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n',
+): typeof documents['\n  fragment EventContent on Events {\n    id\n    lastModified\n    version\n    created\n    flatData {\n      description\n      endDate\n      endDateTimeZone\n      startDate\n      startDateTimeZone\n      meetingLink\n      hideMeetingLink\n      eventLink\n      status\n      tags\n      title\n      notesPermanentlyUnavailable\n      notes\n      videoRecordingPermanentlyUnavailable\n      videoRecording\n      presentationPermanentlyUnavailable\n      presentation\n      meetingMaterialsPermanentlyUnavailable\n      meetingMaterials {\n        url\n        title\n      }\n      calendar {\n        flatData {\n          googleCalendarId\n          color\n          name\n        }\n      }\n      thumbnail {\n        id\n      }\n      speakers {\n        user {\n          __typename\n          ... on Users {\n            id\n            flatData {\n              firstName\n              lastName\n              onboarded\n              avatar {\n                id\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n'];
+export function gql(
+  source: '\n  query FetchEvents($top: Int, $skip: Int, $filter: String, $order: String) {\n    queryEventsContentsWithTotal(\n      top: $top\n      skip: $skip\n      filter: $filter\n      orderby: $order\n    ) {\n      total\n      items {\n        ...EventContent\n      }\n    }\n  }\n  \n',
+): typeof documents['\n  query FetchEvents($top: Int, $skip: Int, $filter: String, $order: String) {\n    queryEventsContentsWithTotal(\n      top: $top\n      skip: $skip\n      filter: $filter\n      orderby: $order\n    ) {\n      total\n      items {\n        ...EventContent\n      }\n    }\n  }\n  \n'];
+export function gql(
+  source: '\n  query FetchEvent($id: String!) {\n    findEventsContent(id: $id) {\n      ...EventContent\n    }\n  }\n  \n',
+): typeof documents['\n  query FetchEvent($id: String!) {\n    findEventsContent(id: $id) {\n      ...EventContent\n    }\n  }\n  \n'];
 export function gql(
   source: '\n  fragment NewsContent on NewsAndEvents {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      title\n      shortText\n      link\n      linkText\n      sampleCount\n      articleCount\n      cohortCount\n      link\n      linkText\n    }\n  }\n',
 ): typeof documents['\n  fragment NewsContent on NewsAndEvents {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      title\n      shortText\n      link\n      linkText\n      sampleCount\n      articleCount\n      cohortCount\n      link\n      linkText\n    }\n  }\n'];

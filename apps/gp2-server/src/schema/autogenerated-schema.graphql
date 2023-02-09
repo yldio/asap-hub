@@ -12,6 +12,17 @@ directive @cache(
 
 """The app mutations."""
 type ApplicationMutations {
+  """Change a Calendars content."""
+  changeCalendarsContent(
+    """The timestamp when the status should be changed."""
+    dueTime: Instant
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The status for the content."""
+    status: String!
+  ): Calendars
   """Change a Contributing Cohorts content."""
   changeContributingCohortsContent(
     """The timestamp when the status should be changed."""
@@ -23,6 +34,17 @@ type ApplicationMutations {
     """The status for the content."""
     status: String!
   ): ContributingCohorts
+  """Change a Events content."""
+  changeEventsContent(
+    """The timestamp when the status should be changed."""
+    dueTime: Instant
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The status for the content."""
+    status: String!
+  ): Events
   """Change a Migrations content."""
   changeMigrationsContent(
     """The timestamp when the status should be changed."""
@@ -89,6 +111,17 @@ type ApplicationMutations {
     """The status for the content."""
     status: String!
   ): WorkingGroups
+  """Creates an Calendars content."""
+  createCalendarsContent(
+    """The data for the content."""
+    data: CalendarsDataInputDto!
+    """The optional custom content ID."""
+    id: String
+    """Set to true to autopublish content on create."""
+    publish: Boolean = false
+    """The initial status."""
+    status: String
+  ): Calendars
   """Creates an Contributing Cohorts content."""
   createContributingCohortsContent(
     """The data for the content."""
@@ -100,6 +133,17 @@ type ApplicationMutations {
     """The initial status."""
     status: String
   ): ContributingCohorts
+  """Creates an Events content."""
+  createEventsContent(
+    """The data for the content."""
+    data: EventsDataInputDto!
+    """The optional custom content ID."""
+    id: String
+    """Set to true to autopublish content on create."""
+    publish: Boolean = false
+    """The initial status."""
+    status: String
+  ): Events
   """Creates an Migrations content."""
   createMigrationsContent(
     """The data for the content."""
@@ -166,8 +210,22 @@ type ApplicationMutations {
     """The initial status."""
     status: String
   ): WorkingGroups
+  """Delete an Calendars content."""
+  deleteCalendarsContent(
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the content (usually GUID)."""
+    id: String!
+  ): EntitySavedResultDto!
   """Delete an Contributing Cohorts content."""
   deleteContributingCohortsContent(
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the content (usually GUID)."""
+    id: String!
+  ): EntitySavedResultDto!
+  """Delete an Events content."""
+  deleteEventsContent(
     """The expected version."""
     expectedVersion: Int = -2
     """The ID of the content (usually GUID)."""
@@ -215,6 +273,15 @@ type ApplicationMutations {
     """The ID of the content (usually GUID)."""
     id: String!
   ): EntitySavedResultDto!
+  """Patch an Calendars content by id."""
+  patchCalendarsContent(
+    """The data for the content."""
+    data: CalendarsDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String
+  ): Calendars
   """Patch an Contributing Cohorts content by id."""
   patchContributingCohortsContent(
     """The data for the content."""
@@ -224,6 +291,15 @@ type ApplicationMutations {
     """The ID of the object (usually GUID)."""
     id: String
   ): ContributingCohorts
+  """Patch an Events content by id."""
+  patchEventsContent(
+    """The data for the content."""
+    data: EventsDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String
+  ): Events
   """Patch an Migrations content by id."""
   patchMigrationsContent(
     """The data for the content."""
@@ -278,6 +354,17 @@ type ApplicationMutations {
     """The ID of the object (usually GUID)."""
     id: String
   ): WorkingGroups
+  """Publish a Calendars content."""
+  publishCalendarsContent(
+    """The timestamp when the status should be changed."""
+    dueTime: Instant
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The status for the content."""
+    status: String!
+  ): Calendars @deprecated(reason: "Use 'changeCalendarsContent' instead")
   """Publish a Contributing Cohorts content."""
   publishContributingCohortsContent(
     """The timestamp when the status should be changed."""
@@ -289,6 +376,17 @@ type ApplicationMutations {
     """The status for the content."""
     status: String!
   ): ContributingCohorts @deprecated(reason: "Use 'changeContributingCohortsContent' instead")
+  """Publish a Events content."""
+  publishEventsContent(
+    """The timestamp when the status should be changed."""
+    dueTime: Instant
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The status for the content."""
+    status: String!
+  ): Events @deprecated(reason: "Use 'changeEventsContent' instead")
   """Publish a Migrations content."""
   publishMigrationsContent(
     """The timestamp when the status should be changed."""
@@ -355,6 +453,15 @@ type ApplicationMutations {
     """The status for the content."""
     status: String!
   ): WorkingGroups @deprecated(reason: "Use 'changeWorkingGroupsContent' instead")
+  """Update an Calendars content by id."""
+  updateCalendarsContent(
+    """The data for the content."""
+    data: CalendarsDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String
+  ): Calendars
   """Update an Contributing Cohorts content by id."""
   updateContributingCohortsContent(
     """The data for the content."""
@@ -364,6 +471,15 @@ type ApplicationMutations {
     """The ID of the object (usually GUID)."""
     id: String
   ): ContributingCohorts
+  """Update an Events content by id."""
+  updateEventsContent(
+    """The data for the content."""
+    data: EventsDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String
+  ): Events
   """Update an Migrations content by id."""
   updateMigrationsContent(
     """The data for the content."""
@@ -418,6 +534,21 @@ type ApplicationMutations {
     """The ID of the object (usually GUID)."""
     id: String
   ): WorkingGroups
+  """Upsert an Calendars content by id."""
+  upsertCalendarsContent(
+    """The data for the content."""
+    data: CalendarsDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """Makes the update as patch."""
+    patch: Boolean = false
+    """Set to true to autopublish content on create."""
+    publish: Boolean = false
+    """The initial status."""
+    status: String
+  ): Calendars
   """Upsert an Contributing Cohorts content by id."""
   upsertContributingCohortsContent(
     """The data for the content."""
@@ -433,6 +564,21 @@ type ApplicationMutations {
     """The initial status."""
     status: String
   ): ContributingCohorts
+  """Upsert an Events content by id."""
+  upsertEventsContent(
+    """The data for the content."""
+    data: EventsDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """Makes the update as patch."""
+    patch: Boolean = false
+    """Set to true to autopublish content on create."""
+    publish: Boolean = false
+    """The initial status."""
+    status: String
+  ): Events
   """Upsert an Migrations content by id."""
   upsertMigrationsContent(
     """The data for the content."""
@@ -532,6 +678,13 @@ type ApplicationQueries {
     """The ID of the asset (usually GUID)."""
     id: String!
   ): Asset
+  """Find an Calendars content by id."""
+  findCalendarsContent(
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The optional version of the content to retrieve an older instance (not cached)."""
+    version: Int
+  ): Calendars
   """Find an Contributing Cohorts content by id."""
   findContributingCohortsContent(
     """The ID of the object (usually GUID)."""
@@ -539,6 +692,13 @@ type ApplicationQueries {
     """The optional version of the content to retrieve an older instance (not cached)."""
     version: Int
   ): ContributingCohorts
+  """Find an Events content by id."""
+  findEventsContent(
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The optional version of the content to retrieve an older instance (not cached)."""
+    version: Int
+  ): Events
   """Find an Migrations content by id."""
   findMigrationsContent(
     """The ID of the object (usually GUID)."""
@@ -603,6 +763,32 @@ type ApplicationQueries {
     """Optional number of items to take."""
     top: Int
   ): AssetResultDto!
+  """Query Calendars content items."""
+  queryCalendarsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [Calendars!]
+  """Query Calendars content items with total count."""
+  queryCalendarsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): CalendarsResultDto
   """Query Contributing Cohorts content items."""
   queryContributingCohortsContents(
     """Optional OData filter."""
@@ -629,6 +815,32 @@ type ApplicationQueries {
     """Optional number of items to take."""
     top: Int
   ): ContributingCohortsResultDto
+  """Query Events content items."""
+  queryEventsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [Events!]
+  """Query Events content items with total count."""
+  queryEventsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): EventsResultDto
   """Query Migrations content items."""
   queryMigrationsContents(
     """Optional OData filter."""
@@ -878,6 +1090,169 @@ enum AssetType {
   VIDEO
 }
 
+"""The structure of a Calendars content type."""
+type Calendars implements Content {
+  """The timestamp when the object was created."""
+  created: Instant!
+  """The user who created the object."""
+  createdBy: String!
+  """The user who created the object."""
+  createdByUser: User!
+  """The data of the content."""
+  data: CalendarsDataDto!
+  """The edit token."""
+  editToken: String
+  """The flat data of the content."""
+  flatData: CalendarsFlatDataDto!
+  """The ID of the object (usually GUID)."""
+  id: String!
+  """The timestamp when the object was updated the last time."""
+  lastModified: Instant!
+  """The user who updated the object the last time."""
+  lastModifiedBy: String!
+  """The user who updated the object the last time."""
+  lastModifiedByUser: User!
+  """The new status of the content."""
+  newStatus: String
+  """The status color of the content."""
+  newStatusColor: String
+  """Query Events content items."""
+  referencingEventsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [Events!]
+  """Query Events content items with total count."""
+  referencingEventsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): EventsResultDto
+  """The status of the content."""
+  status: String!
+  """The status color of the content."""
+  statusColor: String!
+  """The URL to the content."""
+  url: String!
+  """The version of the objec."""
+  version: Int!
+}
+
+"""The structure of the Color field of the Calendars content type."""
+type CalendarsDataColorDto {
+  iv: String
+}
+
+"""The structure of the Color field of the Calendars content input type."""
+input CalendarsDataColorInputDto {
+  iv: String
+}
+
+"""The structure of the Calendars data type."""
+type CalendarsDataDto {
+  color: CalendarsDataColorDto
+  expirationDate: CalendarsDataExpirationDateDto
+  googleCalendarId: CalendarsDataGoogleCalendarIdDto
+  name: CalendarsDataNameDto
+  resourceId: CalendarsDataResourceIdDto
+  syncToken: CalendarsDataSyncTokenDto
+}
+
+"""The structure of the Google subscription expiration date field of the Calendars content type."""
+type CalendarsDataExpirationDateDto {
+  iv: Float
+}
+
+"""The structure of the Google subscription expiration date field of the Calendars content input type."""
+input CalendarsDataExpirationDateInputDto {
+  iv: Float
+}
+
+"""The structure of the Google Calendar ID field of the Calendars content type."""
+type CalendarsDataGoogleCalendarIdDto {
+  """Make sure this GCal is Public BEFORE adding it. Syncing will NOT work otherwise."""
+  iv: String
+}
+
+"""The structure of the Google Calendar ID field of the Calendars content input type."""
+input CalendarsDataGoogleCalendarIdInputDto {
+  """Make sure this GCal is Public BEFORE adding it. Syncing will NOT work otherwise."""
+  iv: String
+}
+
+"""The structure of the Calendars data input type."""
+input CalendarsDataInputDto {
+  color: CalendarsDataColorInputDto
+  expirationDate: CalendarsDataExpirationDateInputDto
+  googleCalendarId: CalendarsDataGoogleCalendarIdInputDto
+  name: CalendarsDataNameInputDto
+  resourceId: CalendarsDataResourceIdInputDto
+  syncToken: CalendarsDataSyncTokenInputDto
+}
+
+"""The structure of the Name field of the Calendars content type."""
+type CalendarsDataNameDto {
+  iv: String
+}
+
+"""The structure of the Name field of the Calendars content input type."""
+input CalendarsDataNameInputDto {
+  iv: String
+}
+
+"""The structure of the Google resource ID field of the Calendars content type."""
+type CalendarsDataResourceIdDto {
+  iv: String
+}
+
+"""The structure of the Google resource ID field of the Calendars content input type."""
+input CalendarsDataResourceIdInputDto {
+  iv: String
+}
+
+"""The structure of the Google Last Sync Token field of the Calendars content type."""
+type CalendarsDataSyncTokenDto {
+  iv: String
+}
+
+"""The structure of the Google Last Sync Token field of the Calendars content input type."""
+input CalendarsDataSyncTokenInputDto {
+  iv: String
+}
+
+"""The structure of the flat Calendars data type."""
+type CalendarsFlatDataDto {
+  color: String
+  expirationDate: Float
+  """Make sure this GCal is Public BEFORE adding it. Syncing will NOT work otherwise."""
+  googleCalendarId: String
+  name: String
+  resourceId: String
+  syncToken: String
+}
+
+"""List of Calendars items and total count."""
+type CalendarsResultDto {
+  """The contents."""
+  items: [Calendars!]
+  """The total count of  contents."""
+  total: Int!
+}
+
 """The structure of all content types."""
 interface Component {
   """The ID of the schema."""
@@ -1112,6 +1487,514 @@ enum EnrichedContentEventType {
 type EntitySavedResultDto {
   """The new version of the item."""
   version: Long!
+}
+
+"""The structure of a Events content type."""
+type Events implements Content {
+  """The timestamp when the object was created."""
+  created: Instant!
+  """The user who created the object."""
+  createdBy: String!
+  """The user who created the object."""
+  createdByUser: User!
+  """The data of the content."""
+  data: EventsDataDto!
+  """The edit token."""
+  editToken: String
+  """The flat data of the content."""
+  flatData: EventsFlatDataDto!
+  """The ID of the object (usually GUID)."""
+  id: String!
+  """The timestamp when the object was updated the last time."""
+  lastModified: Instant!
+  """The user who updated the object the last time."""
+  lastModifiedBy: String!
+  """The user who updated the object the last time."""
+  lastModifiedByUser: User!
+  """The new status of the content."""
+  newStatus: String
+  """The status color of the content."""
+  newStatusColor: String
+  """Query Calendars content items."""
+  referencesCalendarsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [Calendars!]
+  """Query Calendars content items with total count."""
+  referencesCalendarsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): CalendarsResultDto
+  """Query Users content items."""
+  referencesUsersContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [Users!]
+  """Query Users content items with total count."""
+  referencesUsersContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): UsersResultDto
+  """The status of the content."""
+  status: String!
+  """The status color of the content."""
+  statusColor: String!
+  """The URL to the content."""
+  url: String!
+  """The version of the objec."""
+  version: Int!
+}
+
+"""The structure of the Calendar field of the Events content type."""
+type EventsDataCalendarDto {
+  iv: [Calendars!]
+}
+
+"""The structure of the Calendar field of the Events content input type."""
+input EventsDataCalendarInputDto {
+  iv: [String!]
+}
+
+"""The structure of the Description field of the Events content type."""
+type EventsDataDescriptionDto {
+  iv: String
+}
+
+"""The structure of the Description field of the Events content input type."""
+input EventsDataDescriptionInputDto {
+  iv: String
+}
+
+"""The structure of the Events data type."""
+type EventsDataDto {
+  calendar: EventsDataCalendarDto
+  description: EventsDataDescriptionDto
+  endDate: EventsDataEndDateDto
+  endDateTimeZone: EventsDataEndDateTimeZoneDto
+  eventLink: EventsDataEventLinkDto
+  googleId: EventsDataGoogleIdDto
+  hidden: EventsDataHiddenDto
+  hideMeetingLink: EventsDataHideMeetingLinkDto
+  meetingLink: EventsDataMeetingLinkDto
+  meetingMaterials: EventsDataMeetingMaterialsDto
+  meetingMaterialsPermanentlyUnavailable: EventsDataMeetingMaterialsPermanentlyUnavailableDto
+  notes: EventsDataNotesDto
+  notesPermanentlyUnavailable: EventsDataNotesPermanentlyUnavailableDto
+  notesUpdatedAt: EventsDataNotesUpdatedAtDto
+  presentation: EventsDataPresentationDto
+  presentationPermanentlyUnavailable: EventsDataPresentationPermanentlyUnavailableDto
+  presentationUpdatedAt: EventsDataPresentationUpdatedAtDto
+  speakers: EventsDataSpeakersDto
+  startDate: EventsDataStartDateDto
+  startDateTimeZone: EventsDataStartDateTimeZoneDto
+  status: EventsDataStatusDto
+  tags: EventsDataTagsDto
+  thumbnail: EventsDataThumbnailDto
+  title: EventsDataTitleDto
+  videoRecording: EventsDataVideoRecordingDto
+  videoRecordingPermanentlyUnavailable: EventsDataVideoRecordingPermanentlyUnavailableDto
+  videoRecordingUpdatedAt: EventsDataVideoRecordingUpdatedAtDto
+}
+
+"""The structure of the End Date field of the Events content type."""
+type EventsDataEndDateDto {
+  iv: Instant
+}
+
+"""The structure of the End Date field of the Events content input type."""
+input EventsDataEndDateInputDto {
+  iv: Instant
+}
+
+"""The structure of the End Date Time Zone field of the Events content type."""
+type EventsDataEndDateTimeZoneDto {
+  iv: String
+}
+
+"""The structure of the End Date Time Zone field of the Events content input type."""
+input EventsDataEndDateTimeZoneInputDto {
+  iv: String
+}
+
+"""The structure of the Google Event Link field of the Events content type."""
+type EventsDataEventLinkDto {
+  iv: String
+}
+
+"""The structure of the Google Event Link field of the Events content input type."""
+input EventsDataEventLinkInputDto {
+  iv: String
+}
+
+"""The structure of the Google Id field of the Events content type."""
+type EventsDataGoogleIdDto {
+  iv: String
+}
+
+"""The structure of the Google Id field of the Events content input type."""
+input EventsDataGoogleIdInputDto {
+  iv: String
+}
+
+"""The structure of the Hide Event field of the Events content type."""
+type EventsDataHiddenDto {
+  """Hidden events will NOT show on the Hub. (Note: any event cancelled on GCal will be hidden by default. To show a cancelled event on the Hub, you have to manually un-hide the event here)"""
+  iv: Boolean
+}
+
+"""The structure of the Hide Event field of the Events content input type."""
+input EventsDataHiddenInputDto {
+  """Hidden events will NOT show on the Hub. (Note: any event cancelled on GCal will be hidden by default. To show a cancelled event on the Hub, you have to manually un-hide the event here)"""
+  iv: Boolean
+}
+
+"""The structure of the Hide Meeting Link field of the Events content type."""
+type EventsDataHideMeetingLinkDto {
+  iv: Boolean
+}
+
+"""The structure of the Hide Meeting Link field of the Events content input type."""
+input EventsDataHideMeetingLinkInputDto {
+  iv: Boolean
+}
+
+"""The structure of the Events data input type."""
+input EventsDataInputDto {
+  calendar: EventsDataCalendarInputDto
+  description: EventsDataDescriptionInputDto
+  endDate: EventsDataEndDateInputDto
+  endDateTimeZone: EventsDataEndDateTimeZoneInputDto
+  eventLink: EventsDataEventLinkInputDto
+  googleId: EventsDataGoogleIdInputDto
+  hidden: EventsDataHiddenInputDto
+  hideMeetingLink: EventsDataHideMeetingLinkInputDto
+  meetingLink: EventsDataMeetingLinkInputDto
+  meetingMaterials: EventsDataMeetingMaterialsInputDto
+  meetingMaterialsPermanentlyUnavailable: EventsDataMeetingMaterialsPermanentlyUnavailableInputDto
+  notes: EventsDataNotesInputDto
+  notesPermanentlyUnavailable: EventsDataNotesPermanentlyUnavailableInputDto
+  notesUpdatedAt: EventsDataNotesUpdatedAtInputDto
+  presentation: EventsDataPresentationInputDto
+  presentationPermanentlyUnavailable: EventsDataPresentationPermanentlyUnavailableInputDto
+  presentationUpdatedAt: EventsDataPresentationUpdatedAtInputDto
+  speakers: EventsDataSpeakersInputDto
+  startDate: EventsDataStartDateInputDto
+  startDateTimeZone: EventsDataStartDateTimeZoneInputDto
+  status: EventsDataStatusInputDto
+  tags: EventsDataTagsInputDto
+  thumbnail: EventsDataThumbnailInputDto
+  title: EventsDataTitleInputDto
+  videoRecording: EventsDataVideoRecordingInputDto
+  videoRecordingPermanentlyUnavailable: EventsDataVideoRecordingPermanentlyUnavailableInputDto
+  videoRecordingUpdatedAt: EventsDataVideoRecordingUpdatedAtInputDto
+}
+
+"""The structure of the Meeting Link field of the Events content type."""
+type EventsDataMeetingLinkDto {
+  iv: String
+}
+
+"""The structure of the Meeting Link field of the Events content input type."""
+input EventsDataMeetingLinkInputDto {
+  iv: String
+}
+
+"""The structure of the Additional Meeting Materials nested schema."""
+type EventsDataMeetingMaterialsChildDto {
+  title: String
+  url: String
+}
+
+"""The structure of the Additional Meeting Materials nested schema."""
+input EventsDataMeetingMaterialsChildInputDto {
+  title: String
+  url: String
+}
+
+"""The structure of the Additional Meeting Materials field of the Events content type."""
+type EventsDataMeetingMaterialsDto {
+  """If permanently unavailable box is ticked, any content you put here will be ignored."""
+  iv: [EventsDataMeetingMaterialsChildDto!]
+}
+
+"""The structure of the Additional Meeting Materials field of the Events content input type."""
+input EventsDataMeetingMaterialsInputDto {
+  """If permanently unavailable box is ticked, any content you put here will be ignored."""
+  iv: [EventsDataMeetingMaterialsChildInputDto!]
+}
+
+"""The structure of the Mark Additional Meeting Materials as permanently unavailable field of the Events content type."""
+type EventsDataMeetingMaterialsPermanentlyUnavailableDto {
+  """This box is automatically ticked if no output is added after 14 days from the event's end date."""
+  iv: Boolean
+}
+
+"""The structure of the Mark Additional Meeting Materials as permanently unavailable field of the Events content input type."""
+input EventsDataMeetingMaterialsPermanentlyUnavailableInputDto {
+  """This box is automatically ticked if no output is added after 14 days from the event's end date."""
+  iv: Boolean
+}
+
+"""The structure of the Notes field of the Events content type."""
+type EventsDataNotesDto {
+  """If permanently unavailable box is ticked, any content you put here will be ignored."""
+  iv: String
+}
+
+"""The structure of the Notes field of the Events content input type."""
+input EventsDataNotesInputDto {
+  """If permanently unavailable box is ticked, any content you put here will be ignored."""
+  iv: String
+}
+
+"""The structure of the Mark Notes as permanently unavailable field of the Events content type."""
+type EventsDataNotesPermanentlyUnavailableDto {
+  """This box is automatically ticked if no output is added after 14 days from the event's end date."""
+  iv: Boolean
+}
+
+"""The structure of the Mark Notes as permanently unavailable field of the Events content input type."""
+input EventsDataNotesPermanentlyUnavailableInputDto {
+  """This box is automatically ticked if no output is added after 14 days from the event's end date."""
+  iv: Boolean
+}
+
+"""The structure of the Notes Updated At field of the Events content type."""
+type EventsDataNotesUpdatedAtDto {
+  iv: Instant
+}
+
+"""The structure of the Notes Updated At field of the Events content input type."""
+input EventsDataNotesUpdatedAtInputDto {
+  iv: Instant
+}
+
+"""The structure of the Presentation field of the Events content type."""
+type EventsDataPresentationDto {
+  """If permanently unavailable box is ticked, any content you put here will be ignored."""
+  iv: String
+}
+
+"""The structure of the Presentation field of the Events content input type."""
+input EventsDataPresentationInputDto {
+  """If permanently unavailable box is ticked, any content you put here will be ignored."""
+  iv: String
+}
+
+"""The structure of the Mark Presentation as permanently unavailable field of the Events content type."""
+type EventsDataPresentationPermanentlyUnavailableDto {
+  """This box is automatically ticked if no output is added after 14 days from the event's end date."""
+  iv: Boolean
+}
+
+"""The structure of the Mark Presentation as permanently unavailable field of the Events content input type."""
+input EventsDataPresentationPermanentlyUnavailableInputDto {
+  """This box is automatically ticked if no output is added after 14 days from the event's end date."""
+  iv: Boolean
+}
+
+"""The structure of the Presentation Updated At field of the Events content type."""
+type EventsDataPresentationUpdatedAtDto {
+  iv: Instant
+}
+
+"""The structure of the Presentation Updated At field of the Events content input type."""
+input EventsDataPresentationUpdatedAtInputDto {
+  iv: Instant
+}
+
+"""The structure of the Speakers nested schema."""
+type EventsDataSpeakersChildDto {
+  user: [Users!]
+}
+
+"""The structure of the Speakers nested schema."""
+input EventsDataSpeakersChildInputDto {
+  user: [String!]
+}
+
+"""The structure of the Speakers field of the Events content type."""
+type EventsDataSpeakersDto {
+  iv: [EventsDataSpeakersChildDto!]
+}
+
+"""The structure of the Speakers field of the Events content input type."""
+input EventsDataSpeakersInputDto {
+  iv: [EventsDataSpeakersChildInputDto!]
+}
+
+"""The structure of the Start Date field of the Events content type."""
+type EventsDataStartDateDto {
+  iv: Instant
+}
+
+"""The structure of the Start Date field of the Events content input type."""
+input EventsDataStartDateInputDto {
+  iv: Instant
+}
+
+"""The structure of the Start Date Time Zone field of the Events content type."""
+type EventsDataStartDateTimeZoneDto {
+  iv: String
+}
+
+"""The structure of the Start Date Time Zone field of the Events content input type."""
+input EventsDataStartDateTimeZoneInputDto {
+  iv: String
+}
+
+"""The structure of the Status field of the Events content type."""
+type EventsDataStatusDto {
+  iv: String
+}
+
+"""The structure of the Status field of the Events content input type."""
+input EventsDataStatusInputDto {
+  iv: String
+}
+
+"""The structure of the Tags field of the Events content type."""
+type EventsDataTagsDto {
+  iv: [String!]
+}
+
+"""The structure of the Tags field of the Events content input type."""
+input EventsDataTagsInputDto {
+  iv: [String!]
+}
+
+"""The structure of the Thumbnail field of the Events content type."""
+type EventsDataThumbnailDto {
+  iv: [Asset!]
+}
+
+"""The structure of the Thumbnail field of the Events content input type."""
+input EventsDataThumbnailInputDto {
+  iv: [String!]
+}
+
+"""The structure of the Title field of the Events content type."""
+type EventsDataTitleDto {
+  iv: String
+}
+
+"""The structure of the Title field of the Events content input type."""
+input EventsDataTitleInputDto {
+  iv: String
+}
+
+"""The structure of the Video Recording field of the Events content type."""
+type EventsDataVideoRecordingDto {
+  """If permanently unavailable box is ticked, any content you put here will be ignored."""
+  iv: String
+}
+
+"""The structure of the Video Recording field of the Events content input type."""
+input EventsDataVideoRecordingInputDto {
+  """If permanently unavailable box is ticked, any content you put here will be ignored."""
+  iv: String
+}
+
+"""The structure of the Mark Video Recording as permanently unavailable field of the Events content type."""
+type EventsDataVideoRecordingPermanentlyUnavailableDto {
+  """This box is automatically ticked if no output is added after 14 days from the event's end date."""
+  iv: Boolean
+}
+
+"""The structure of the Mark Video Recording as permanently unavailable field of the Events content input type."""
+input EventsDataVideoRecordingPermanentlyUnavailableInputDto {
+  """This box is automatically ticked if no output is added after 14 days from the event's end date."""
+  iv: Boolean
+}
+
+"""The structure of the Video Recording Updated At field of the Events content type."""
+type EventsDataVideoRecordingUpdatedAtDto {
+  iv: Instant
+}
+
+"""The structure of the Video Recording Updated At field of the Events content input type."""
+input EventsDataVideoRecordingUpdatedAtInputDto {
+  iv: Instant
+}
+
+"""The structure of the flat Events data type."""
+type EventsFlatDataDto {
+  calendar: [Calendars!]
+  description: String
+  endDate: Instant
+  endDateTimeZone: String
+  eventLink: String
+  googleId: String
+  """Hidden events will NOT show on the Hub. (Note: any event cancelled on GCal will be hidden by default. To show a cancelled event on the Hub, you have to manually un-hide the event here)"""
+  hidden: Boolean
+  hideMeetingLink: Boolean
+  meetingLink: String
+  """If permanently unavailable box is ticked, any content you put here will be ignored."""
+  meetingMaterials: [EventsDataMeetingMaterialsChildDto!]
+  """This box is automatically ticked if no output is added after 14 days from the event's end date."""
+  meetingMaterialsPermanentlyUnavailable: Boolean
+  """If permanently unavailable box is ticked, any content you put here will be ignored."""
+  notes: String
+  """This box is automatically ticked if no output is added after 14 days from the event's end date."""
+  notesPermanentlyUnavailable: Boolean
+  notesUpdatedAt: Instant
+  """If permanently unavailable box is ticked, any content you put here will be ignored."""
+  presentation: String
+  """This box is automatically ticked if no output is added after 14 days from the event's end date."""
+  presentationPermanentlyUnavailable: Boolean
+  presentationUpdatedAt: Instant
+  speakers: [EventsDataSpeakersChildDto!]
+  startDate: Instant
+  startDateTimeZone: String
+  status: String
+  tags: [String!]
+  thumbnail: [Asset!]
+  title: String
+  """If permanently unavailable box is ticked, any content you put here will be ignored."""
+  videoRecording: String
+  """This box is automatically ticked if no output is added after 14 days from the event's end date."""
+  videoRecordingPermanentlyUnavailable: Boolean
+  videoRecordingUpdatedAt: Instant
+}
+
+"""List of Events items and total count."""
+type EventsResultDto {
+  """The contents."""
+  items: [Events!]
+  """The total count of  contents."""
+  total: Int!
 }
 
 """The `DateTime` scalar type represents a date and time. `DateTime` expects timestamps to be formatted in accordance with the [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601) standard."""
@@ -1737,6 +2620,32 @@ type Users implements Content {
     """Optional number of items to take."""
     top: Int
   ): ContributingCohortsResultDto
+  """Query Events content items."""
+  referencingEventsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [Events!]
+  """Query Events content items with total count."""
+  referencingEventsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): EventsResultDto
   """Query Projects content items."""
   referencingProjectsContents(
     """Optional OData filter."""

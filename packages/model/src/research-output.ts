@@ -249,14 +249,22 @@ export type ResearchOutputUpdateDataObject = ResearchOutputCoreObject & {
   updatedBy: string;
 };
 
-export type ResearchOutputResponse = Omit<
+export type ResearchOutputBaseResponse = Omit<
   ResearchOutputDataObject,
-  'createdBy'
+  'createdBy' | 'workingGroups'
 >;
 
-export type ResearchOutputWorkingGroupResponse = ResearchOutputResponse & {
+export type ResearchOutputTeamResponse = ResearchOutputBaseResponse & {
+  workingGroups: undefined;
+};
+
+export type ResearchOutputWorkingGroupResponse = ResearchOutputBaseResponse & {
   workingGroups: [Pick<WorkingGroupResponse, 'id' | 'title'>];
 };
+
+export type ResearchOutputResponse =
+  | ResearchOutputWorkingGroupResponse
+  | ResearchOutputTeamResponse;
 
 export type ListResearchOutputResponse = ListResponse<ResearchOutputResponse>;
 

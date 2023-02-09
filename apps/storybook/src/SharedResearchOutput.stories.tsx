@@ -16,7 +16,7 @@ import {
   createListTeamResponse,
   createListUserResponse,
   createResearchOutputResponse,
-  createWorkingGroupListResponse,
+  createWorkingGroupResponse,
 } from '@asap-hub/fixtures';
 import {
   ExternalAuthorResponse,
@@ -80,9 +80,9 @@ const props = (): ComponentProps<typeof SharedResearchOutput> => ({
     ),
   ],
   labs: createLabs({ labs: number('Number of labs', 2) }),
-  workingGroups: createWorkingGroupListResponse(
-    number('Number of Working Groups', 0, { max: 1 }),
-  ).items,
+  workingGroups: number('Number of Working Groups', 0, { max: 1 })
+    ? [createWorkingGroupResponse()]
+    : undefined,
 });
 
 export const Normal = () => (

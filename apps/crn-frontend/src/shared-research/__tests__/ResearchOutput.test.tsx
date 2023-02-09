@@ -141,7 +141,7 @@ describe('a grant document research output', () => {
           displayName: 'Jakobsson, J',
         },
       ],
-      workingGroups: [],
+      workingGroups: undefined,
     });
 
     await renderComponent(researchOutputRoute.editResearchOutput({}).$);

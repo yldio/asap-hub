@@ -2,7 +2,7 @@ import {
   createLabs,
   createListTeamResponse,
   createListUserResponse,
-  createWorkingGroupListResponse,
+  createWorkingGroupResponse,
 } from '@asap-hub/fixtures';
 import { SharedResearchCard } from '@asap-hub/react-components';
 import { text, date, number } from '@storybook/addon-knobs';
@@ -31,9 +31,9 @@ export const Normal = () => (
     labs={createLabs({ labs: number('Number of labs', 2) })}
     authors={createListUserResponse(number('Number of Authors', 5)).items}
     workingGroups={
-      createWorkingGroupListResponse(
-        number('Number of Working Groups', 1, { max: 1 }),
-      ).items
+      number('Number of Working Groups', 1, { max: 1 })
+        ? [createWorkingGroupResponse()]
+        : undefined
     }
   />
 );

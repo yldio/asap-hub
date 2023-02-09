@@ -1,5 +1,6 @@
 import {
   ListResearchOutputResponse,
+  ListResponse,
   ResearchOutputCreateDataObject,
   ResearchOutputDataObject,
   ResearchOutputPostRequest,
@@ -162,13 +163,25 @@ export const getResearchOutputDataObject = (): ResearchOutputDataObject => ({
 });
 
 export const getListResearchOutputDataObject =
-  (): ListResearchOutputResponse => ({
-    total: 1,
-    items: [getResearchOutputDataObject()],
-  });
+  (): ListResponse<ResearchOutputDataObject> => {
+    const researchOutput = getResearchOutputDataObject();
 
-export const getResearchOutputResponse = (): ResearchOutputResponse =>
-  getResearchOutputDataObject();
+    return {
+      total: 1,
+      items: [researchOutput],
+    };
+  };
+
+export const getResearchOutputResponse = (): ResearchOutputResponse => {
+  const researchOutput = getResearchOutputDataObject();
+
+  return {
+    ...researchOutput,
+    workingGroups: researchOutput.workingGroups[0]
+      ? [researchOutput.workingGroups[0]]
+      : undefined,
+  };
+};
 
 export const getListResearchOutputResponse =
   (): ListResearchOutputResponse => ({
@@ -240,7 +253,7 @@ export const getResearchOutputPostRequest = (): ResearchOutputPostRequest => {
     labs: labs.map(({ id }) => id),
     authors: authors.map(({ id }) => ({ userId: id })),
     teams: teams.map(({ id }) => id),
-    workingGroups: workingGroups.map(({ id }) => id),
+    workingGroups: workingGroups ? workingGroups.map(({ id }) => id) : [],
   };
 };
 

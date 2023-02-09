@@ -15,11 +15,8 @@ export interface CalendarController {
 }
 
 export default class Calendars implements CalendarController {
-  dataProvider: CalendarDataProvider;
+  constructor(private dataProvider: CalendarDataProvider) {}
 
-  constructor(dataProvider: CalendarDataProvider) {
-    this.dataProvider = dataProvider;
-  }
   async fetch(): Promise<gp2.ListCalendarResponse> {
     const { total, items: calendars } = await this.dataProvider.fetch({
       active: true,

@@ -1,10 +1,10 @@
+import { FetchEventsOptions } from '@asap-hub/model/src/gp2';
 import Boom from '@hapi/boom';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
-import { FetchEventsOptions } from '../../src/controllers/event.controller';
 import {
   getEventResponse,
-  listEventResponse,
+  getListEventResponse,
 } from '../fixtures/event.fixtures';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { eventControllerMock } from '../mocks/event-controller.mock';
@@ -39,11 +39,11 @@ describe('/events/ routes', () => {
     });
 
     test('Should return results correctly', async () => {
-      eventControllerMock.fetch.mockResolvedValueOnce(listEventResponse);
+      eventControllerMock.fetch.mockResolvedValueOnce(getListEventResponse());
       const response = await supertest(app).get('/events').query(query);
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(listEventResponse);
+      expect(response.body).toEqual(getListEventResponse());
     });
 
     test('Should call the controller method with the correct parameters', async () => {

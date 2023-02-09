@@ -1,4 +1,4 @@
-import { ListResponse } from '../common';
+import { FetchOptions, ListResponse } from '../common';
 import { CalendarResponse } from './calendar';
 
 export const MEETING_LINK_AVAILABLE_HOURS_BEFORE_EVENT: number = 24;
@@ -23,7 +23,7 @@ export type EventSpeakerUser = {
 
 export type EventSpeaker = EventSpeakerUser;
 
-export interface EventResponse {
+export type EventDataObject = {
   id: string;
 
   startDate: string;
@@ -57,8 +57,10 @@ export interface EventResponse {
   calendar: CalendarResponse;
 
   speakers: EventSpeaker[];
-}
+};
 
+export type ListEventDataObject = ListResponse<EventDataObject>;
+export type EventResponse = EventDataObject;
 export type ListEventResponse = ListResponse<EventResponse>;
 
 export const eventMaterialTypes: ReadonlyArray<
@@ -75,3 +77,52 @@ export type EventConstraint = {
   userId?: string;
   notStatus?: string;
 };
+
+export type EventCreateDataObject = Pick<
+  EventDataObject,
+  | 'title'
+  | 'description'
+  | 'startDate'
+  | 'startDateTimeZone'
+  | 'endDate'
+  | 'endDateTimeZone'
+  | 'status'
+  | 'tags'
+  | 'meetingLink'
+  | 'hideMeetingLink'
+> & {
+  googleId: string;
+  calendar: string;
+  hidden: boolean;
+};
+export type EventUpdateDataObject = Partial<EventDataObject>;
+
+export type EventCreateRequest = EventCreateDataObject;
+export type EventUpdateRequest = EventUpdateDataObject;
+
+export type AllOrNone<T> = T | { [K in keyof T]?: never };
+type SortOptions = AllOrNone<{
+  sortBy: 'startDate' | 'endDate';
+  sortOrder: 'asc' | 'desc';
+}>;
+
+type FilterOptions = {
+  userId?: string;
+  googleId?: string;
+};
+export type FetchEventsOptions = (
+  | {
+      before: string;
+      after?: string;
+    }
+  | {
+      after: string;
+      before?: string;
+    }
+  | {
+      after?: never;
+      before?: never;
+    }
+) &
+  SortOptions &
+  FetchOptions<FilterOptions>;

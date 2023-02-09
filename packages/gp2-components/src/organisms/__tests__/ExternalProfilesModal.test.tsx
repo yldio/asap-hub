@@ -91,15 +91,15 @@ describe('ExternalProfilesModal', () => {
   });
 
   it.each`
-    name               | input                                          | field                                                                | value
-    ${'googleScholar'} | ${'https://scholar.google.com/test_scholar'}   | ${'Google Scholar (optional) Type your Google Scholar profile URL.'} | ${undefined}
-    ${'orcid'}         | ${'1234-1234-1234-1234'}                       | ${'ORCID (optional) Type your ORCID ID.'}                            | ${'https://orcid.org/1234-1234-1234-1234'}
-    ${'researchGate'}  | ${'https://researchid.com/rid/1234-1234-1234'} | ${'Research Gate (optional) Type your Research Gate profile URL.'}   | ${undefined}
-    ${'researcherId'}  | ${'R-1234-1234'}                               | ${'ResearcherID (optional) Type your Researcher ID.'}                | ${'https://researcherid.com/rid/R-1234-1234'}
-    ${'blog'}          | ${'https://www.blogger.com'}                   | ${'Blog (optional)'}                                                 | ${undefined}
-    ${'twitter'}       | ${'https://twitter.com/YLD.io'}                | ${'Twitter (optional) Type your Twitter profile URL.'}               | ${undefined}
-    ${'linkedIn'}      | ${'https://www.linkedin.com/test_linkedIn'}    | ${'LinkedIn (optional) Type your LinkedIn profile URL.'}             | ${undefined}
-    ${'github'}        | ${'https://github.com/test_github'}            | ${'Github (optional) Type your Github profile URL.'}                 | ${undefined}
+    name               | input                                          | field               | value
+    ${'googleScholar'} | ${'https://scholar.google.com/test_scholar'}   | ${/Google Scholar/} | ${undefined}
+    ${'orcid'}         | ${'1234-1234-1234-1234'}                       | ${/ORCID/}          | ${'https://orcid.org/1234-1234-1234-1234'}
+    ${'researchGate'}  | ${'https://researchid.com/rid/1234-1234-1234'} | ${/Research Gate/}  | ${undefined}
+    ${'researcherId'}  | ${'R-1234-1234'}                               | ${/ResearcherID/}   | ${'https://researcherid.com/rid/R-1234-1234'}
+    ${'blog'}          | ${'https://www.blogger.com'}                   | ${/Blog/}           | ${undefined}
+    ${'twitter'}       | ${'https://twitter.com/YLD.io'}                | ${/Twitter/}        | ${undefined}
+    ${'linkedIn'}      | ${'https://www.linkedin.com/test_linkedIn'}    | ${/LinkedIn/}       | ${undefined}
+    ${'github'}        | ${'https://github.com/test_github'}            | ${/Github/}         | ${undefined}
   `(
     'calls onSave with the updated field $name',
     async ({ name, input, field, value = input }) => {

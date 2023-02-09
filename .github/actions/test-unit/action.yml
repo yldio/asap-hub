@@ -22,9 +22,12 @@ runs:
     - name: Get number of CPU cores
       id: cpu-cores
       uses: SimenB/github-actions-cpu-cores@v1
-    - name: Run all tests
-      shell: bash
-      run: yarn test --coverage --shard ${{ inputs.shard }}/${{ inputs.total }} --maxWorkers ${{ steps.cpu-cores.outputs.count }} --ci
+    - uses: Wandalen/wretry.action@master
+      name: Run test shard
+      with:
+        command: yarn test --coverage --shard ${{ inputs.shard }}/${{ inputs.total }} --maxWorkers ${{ steps.cpu-cores.outputs.count }} --ci
+        attempt_limit: 3
+        attempt_delay: 2000
     - name: move coverage
       shell: bash
       run: mv coverage/coverage-final.json coverage/${{matrix.shard}}.json

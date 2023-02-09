@@ -69,7 +69,7 @@
     "@types/mime-types": "2.1.1",
     "@types/node": "14.18.33",
     "@types/parse-data-url": "3.0.0",
-    "@types/serverless": "3.12.9",
+    "@types/serverless": "3.12.10",
     "@types/source-map-support": "0.5.4",
     "@types/supertest": "2.0.12",
     "@types/uuid": "8.3.4",

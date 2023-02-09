@@ -14,6 +14,7 @@ import {
   VALIDATION_ERROR_MESSAGE,
   ResearchOutputUpdateDataObject,
   ResearchOutputDataObject,
+  WorkingGroupResponse,
 } from '@asap-hub/model';
 import {
   FetchResearchOutputOptions,
@@ -40,7 +41,12 @@ export default class ResearchOutputs implements ResearchOutputController {
       );
     }
 
-    return researchOutput;
+    return {
+      ...researchOutput,
+      workingGroups: this.convertDataProviderWorkingGroupsToResponseType(
+        researchOutput.workingGroups,
+      ),
+    };
   }
 
   async fetch(options: {
@@ -57,7 +63,21 @@ export default class ResearchOutputs implements ResearchOutputController {
     )
       ? { documentType: fetchFilter }
       : fetchFilter;
-    return this.researchOutputDataProvider.fetch({ ...fetchOptions, filter });
+
+    const researchOutputList = await this.researchOutputDataProvider.fetch({
+      ...fetchOptions,
+      filter,
+    });
+
+    return {
+      items: researchOutputList.items.map((researchOutput) => ({
+        ...researchOutput,
+        workingGroups: this.convertDataProviderWorkingGroupsToResponseType(
+          researchOutput.workingGroups,
+        ),
+      })),
+      total: researchOutputList.total,
+    };
   }
 
   async create(
@@ -101,7 +121,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       researchOutputCreateDataObject,
     );
 
-    return this.researchOutputDataProvider.fetchById(researchOutputId);
+    return this.fetchById(researchOutputId);
   }
 
   async update(
@@ -161,7 +181,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       researchOutputUpdateDataObject,
     );
 
-    return this.researchOutputDataProvider.fetchById(researchOutputId);
+    return this.fetchById(researchOutputId);
   }
 
   private async validateResearchOutput(
@@ -334,6 +354,12 @@ export default class ResearchOutputs implements ResearchOutputController {
         return { externalAuthorId };
       }),
     );
+
+  // eslint-disable-next-line class-methods-use-this
+  private convertDataProviderWorkingGroupsToResponseType = (
+    workingGroups: Pick<WorkingGroupResponse, 'id' | 'title'>[],
+  ): [Pick<WorkingGroupResponse, 'id' | 'title'>] | undefined =>
+    workingGroups[0] ? [workingGroups[0]] : undefined;
 }
 
 export interface ResearchOutputController {

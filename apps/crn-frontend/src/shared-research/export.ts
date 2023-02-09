@@ -43,9 +43,11 @@ export const researchOutputToCSV = (
     )
     .join(','),
   workingGroups: output.workingGroups
-    .map((wg) => wg.title)
-    .sort(caseInsensitive)
-    .join(','),
+    ? output.workingGroups
+        .map((wg) => wg.title)
+        .sort(caseInsensitive)
+        .join(',')
+    : '',
   methods: output.methods
     .map((item) => item)
     .sort(caseInsensitive)

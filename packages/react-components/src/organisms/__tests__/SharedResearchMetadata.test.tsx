@@ -6,7 +6,7 @@ import SharedResearchMetadata from '../SharedResearchMetadata';
 const props: ComponentProps<typeof SharedResearchMetadata> = {
   documentType: 'Article',
   type: 'Code',
-  workingGroups: [],
+  workingGroups: undefined,
 };
 
 it('renders Team document types', () => {

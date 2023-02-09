@@ -6,9 +6,9 @@ import {
 } from '@asap-hub/model/src/research-output';
 
 export const isResearchOutputWorkingGroup = (
-  researchOutputData: Pick<ResearchOutputResponse, 'workingGroups'>,
+  researchOutputData: ResearchOutputResponse,
 ): researchOutputData is ResearchOutputWorkingGroupResponse =>
-  !!researchOutputData.workingGroups.length;
+  !!researchOutputData.workingGroups?.length;
 
 export const isResearchOutputWorkingGroupRequest = (
   researchOutputData: Pick<ResearchOutputPostRequest, 'workingGroups'>,

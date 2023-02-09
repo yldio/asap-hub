@@ -74,10 +74,14 @@ const SharedResearchOutputHeaderCard: React.FC<
       <AssociationList
         type="Working Group"
         inline
-        associations={workingGroups.map(({ id, title: displayName }) => ({
-          id,
-          displayName,
-        }))}
+        associations={
+          workingGroups
+            ? workingGroups.map(({ id, title: displayName }) => ({
+                id,
+                displayName,
+              }))
+            : []
+        }
       />
     </div>
     <div css={[timestampStyles, captionStyles]}>

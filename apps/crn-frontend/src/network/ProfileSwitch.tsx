@@ -12,6 +12,9 @@ const loadEventsList = () =>
 
 const EventsList = lazy(loadEventsList);
 
+type RequiredPaths = 'about' | 'upcoming' | 'past';
+type OptionalPaths = 'calendar' | 'createOutput' | 'outputs' | 'workspace';
+
 type ProfileSwitchProps = {
   About: FC;
   Calendar?: FC;
@@ -20,7 +23,7 @@ type ProfileSwitchProps = {
   eventConstraint: EventConstraint;
   isActive?: boolean;
   Outputs?: FC;
-  paths: { [tab: string]: string };
+  paths: Record<RequiredPaths, string> & Partial<Record<OptionalPaths, string>>;
   ShareOutput?: FC;
   type: ComponentProps<typeof NoEvents>['type'];
   Workspace?: FC;

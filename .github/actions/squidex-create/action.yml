@@ -63,6 +63,7 @@ runs:
         aws s3api get-object --bucket $BUCKET_NAME --key $MOST_RECENT_BACKUP  $MOST_RECENT_BACKUP
         tar -xf $MOST_RECENT_BACKUP
         FIRST_RUN="true" .github/scripts/prepare-squidex/import-data.sh
+        sq sync in packages/squidex/schema/${{ inputs.app }} -t app -t schemas -t contents'.format(app=app))'
       env:
         AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
         AWS_REGION: ${{ inputs.aws-region }}

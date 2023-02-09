@@ -10,6 +10,8 @@ import {
   TwitterIcon,
   pixels,
   UserProfilePlaceholderCard,
+  ResearchGateIcon,
+  ResearcherIdIcon,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import React, { ComponentProps, ReactNode } from 'react';
@@ -38,6 +40,14 @@ const networkInfo: Record<
     icon: <OrcidIcon color={iconsColor} />,
     displayName: 'Orcid',
   },
+  researchGate: {
+    icon: <ResearchGateIcon color={iconsColor} />,
+    displayName: 'Research Gate',
+  },
+  researcherId: {
+    icon: <ResearcherIdIcon color={iconsColor} />,
+    displayName: 'Researcher ID',
+  },
   blog: {
     icon: <GlobeIcon color={iconsColor} />,
     displayName: 'Blog',
@@ -59,6 +69,8 @@ const networkInfo: Record<
 const researchNetworksKeys: Array<keyof UserSocial> = [
   'googleScholar',
   'orcid',
+  'researchGate',
+  'researcherId',
 ];
 
 const socialNetworkKeys: Array<keyof UserSocial> = [

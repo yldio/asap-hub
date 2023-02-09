@@ -1,11 +1,17 @@
 /* istanbul ignore file */
 
-const researchGateIcon = (
+import { FC } from 'react';
+
+interface ResearchGateIconProps {
+  readonly color?: string;
+}
+
+const ResearchGateIcon: FC<ResearchGateIconProps> = ({ color = '#00222C' }) => (
   <svg
     width={28}
     height={28}
     viewBox="0 0 28 28"
-    fill="#00222C"
+    fill={color}
     xmlns="http://www.w3.org/2000/svg"
     style={{
       stroke: 'none',
@@ -21,4 +27,4 @@ const researchGateIcon = (
   </svg>
 );
 
-export default researchGateIcon;
+export default ResearchGateIcon;

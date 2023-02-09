@@ -53,6 +53,16 @@ export interface User<TAvatar = string> {
   keywords: string[];
   fundingStreams: string;
   contributingCohorts: { id: string[]; role: string; study?: string }[];
+  social: {
+    googleScholar?: string;
+    orcid?: string;
+    researchGate?: string;
+    researcherId?: string;
+    blog?: string;
+    twitter?: string;
+    linkedIn?: string;
+    github?: string;
+  }[];
 }
 
 export interface RestUser extends Entity, Rest<User> {}

@@ -1,11 +1,17 @@
 /* istanbul ignore file */
 
-const researcherIdIcon = (
+import { FC } from 'react';
+
+interface ResearcherIdIconProps {
+  readonly color?: string;
+}
+
+const ResearcherIdIcon: FC<ResearcherIdIconProps> = ({ color = '#00222C' }) => (
   <svg
     width={28}
     height={28}
     viewBox="0 0 28 28"
-    fill="#00222C"
+    fill={color}
     xmlns="http://www.w3.org/2000/svg"
     style={{
       stroke: 'none',
@@ -17,4 +23,4 @@ const researcherIdIcon = (
   </svg>
 );
 
-export default researcherIdIcon;
+export default ResearcherIdIcon;

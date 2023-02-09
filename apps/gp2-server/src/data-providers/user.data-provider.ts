@@ -225,6 +225,7 @@ function getUserSquidexData(
     region,
     role,
     degrees,
+    social,
     telephone,
     questions,
     contributingCohorts,
@@ -243,6 +244,7 @@ function getUserSquidexData(
     questions: mappedQuestions,
     contributingCohorts: mappedCohorts,
     avatar: avatarUrl ? [avatarUrl] : undefined,
+    social: social ? [social] : undefined,
   });
 }
 

@@ -120,6 +120,7 @@ describe('AdditionalDetails', () => {
       expect.anything(),
     );
   });
+
   it('opens the contributing cohorts modal', async () => {
     const contributingCohorts: gp2Model.UserContributingCohort[] = [
       {
@@ -155,6 +156,38 @@ describe('AdditionalDetails', () => {
     expect(mockPatchUser).toHaveBeenCalledWith(
       expect.anything(),
       expect.objectContaining({ contributingCohorts: expectedCohorts }),
+      expect.anything(),
+    );
+  });
+
+  it('opens the external profiles modal', async () => {
+    const user = gp2Fixtures.createUserResponse();
+    mockGetUser.mockResolvedValueOnce(user);
+    await renderAdditionalDetails(user.id);
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    const [, , externalProfilesButton] = screen.getAllByRole('link', {
+      name: 'Edit Edit',
+    });
+    userEvent.click(externalProfilesButton);
+    expect(screen.getByRole('dialog')).toBeVisible();
+    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+    expect(mockPatchUser).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        social: {
+          googleScholar: 'https://scholar.google.com',
+          orcid: 'https://orcid.org/1234-1234-1234-1234',
+          researchGate: 'https://researchid.com/rid/',
+          researcherId: 'https://researcherid.com/rid/R-1234-1234',
+          blog: 'https://www.blogger.com',
+          twitter: 'https://twitter.com',
+          linkedIn: 'https://www.linkedin.com',
+          github: 'https://github.com/',
+        },
+      }),
       expect.anything(),
     );
   });

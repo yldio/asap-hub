@@ -21,6 +21,7 @@ export {
   DashboardHeader,
   EditResourceModal,
   EmailSection,
+  ExternalProfilesModal,
   FilterPills,
   FiltersModal,
   FundingProviderModal,

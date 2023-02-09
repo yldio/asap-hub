@@ -2172,6 +2172,8 @@ type UsersDataSocialChildDto {
   googleScholar: String
   linkedIn: String
   orcid: String
+  researchGate: String
+  researcherId: String
   twitter: String
 }
 
@@ -2182,6 +2184,8 @@ input UsersDataSocialChildInputDto {
   googleScholar: String
   linkedIn: String
   orcid: String
+  researchGate: String
+  researcherId: String
   twitter: String
 }
 

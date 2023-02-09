@@ -86,6 +86,8 @@ export const getUserResponse = (): gp2.UserResponse => ({
     twitter: 'https://twitter.com',
     linkedIn: 'https://www.linkedin.com',
     github: 'https://github.com',
+    researchGate: 'https://researchid.com/rid/',
+    researcherId: 'https://researcherid.com/rid/',
   },
 });
 
@@ -155,6 +157,20 @@ export const getUserWebhookPayload = (
       keywords: { iv: [] },
       fundingStreams: { iv: '' },
       contributingCohorts: { iv: [] },
+      social: {
+        iv: [
+          {
+            googleScholar: 'https://scholar.google.com',
+            orcid: 'https://orcid.org',
+            blog: 'https://www.blogger.com',
+            twitter: 'https://twitter.com',
+            linkedIn: 'https://www.linkedin.com',
+            github: 'https://github.com',
+            researcherId: 'https://researcherid.com/rid/',
+            researchGate: 'https://researchid.com/rid/',
+          },
+        ],
+      },
     },
   },
 });
@@ -178,6 +194,20 @@ export const patchResponse = (): gp2Squidex.RestUser => ({
     keywords: { iv: [] },
     fundingStreams: { iv: '' },
     contributingCohorts: { iv: [] },
+    social: {
+      iv: [
+        {
+          googleScholar: 'https://scholar.google.com',
+          orcid: 'https://orcid.org',
+          blog: 'https://www.blogger.com',
+          twitter: 'https://twitter.com',
+          linkedIn: 'https://www.linkedin.com',
+          github: 'https://github.com',
+          researcherId: 'https://researcherid.com/rid/',
+          researchGate: 'https://researchid.com/rid/',
+        },
+      ],
+    },
   },
   created: '2020-09-25T09:42:51Z',
   lastModified: '2020-09-25T09:42:51Z',
@@ -251,6 +281,8 @@ export const getUserDataObject = (): gp2.UserDataObject => ({
     twitter: 'https://twitter.com',
     linkedIn: 'https://www.linkedin.com',
     github: 'https://github.com',
+    researcherId: 'https://researcherid.com/rid/',
+    researchGate: 'https://researchid.com/rid/',
   },
 });
 export const getUserCreateDataObject = (): gp2.UserCreateDataObject => {
@@ -285,6 +317,7 @@ export const getUserInput = (): gp2Squidex.InputUser['data'] => {
     positions,
     country,
     keywords,
+    social,
     ...input
   } = getUserCreateDataObject();
 
@@ -312,6 +345,7 @@ export const getUserInput = (): gp2Squidex.InputUser['data'] => {
         }),
       ),
     },
+    social: { iv: social ? [social] : null },
   };
 };
 
@@ -424,6 +458,8 @@ export const getGraphQLUser = (
         twitter: 'https://twitter.com',
         linkedIn: 'https://www.linkedin.com',
         github: 'https://github.com',
+        researcherId: 'https://researcherid.com/rid/',
+        researchGate: 'https://researchid.com/rid/',
       },
     ],
     activatedDate: '2020-09-24T20:45:22.000Z',

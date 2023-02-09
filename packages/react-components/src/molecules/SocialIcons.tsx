@@ -8,8 +8,8 @@ import {
   LinkedInIcon,
   GithubIcon,
   TwitterIcon,
-  researchGateIcon,
-  researcherIdIcon,
+  ResearchGateIcon,
+  ResearcherIdIcon,
   orcidSocialIcon,
   GoogleScholarIcon,
   GlobeIcon,
@@ -78,7 +78,7 @@ const SocialIcons: React.FC<SocialIconsProps> = ({
               ).toString()
             : undefined
         }
-        icon={researcherIdIcon}
+        icon={<ResearcherIdIcon />}
         isOwnProfile={isOwnProfile}
       />
       <SocialIconLink
@@ -118,7 +118,7 @@ const SocialIcons: React.FC<SocialIconsProps> = ({
               ).toString()
             : undefined
         }
-        icon={researchGateIcon}
+        icon={<ResearchGateIcon />}
         isOwnProfile={isOwnProfile}
       />
       <SocialIconLink

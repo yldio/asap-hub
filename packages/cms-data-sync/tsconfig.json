@@ -2,7 +2,8 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "rootDir": "src",
-    "outDir": "build"
+    "outDir": "build",
+    "module": "CommonJS"
   },
   "include": ["src", "types"],
   "filesGlob": ["**/*.ts", "../scripts/**/*.ts", "../test/**/*.ts"],

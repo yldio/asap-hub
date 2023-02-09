@@ -22,6 +22,7 @@ export const migrateFromSquidexToContentfulFactory =
     fallbackParseData?: (
       data: Record<string, unknown>,
     ) => Promise<Record<string, unknown>>,
+    onComplete?: (error?: unknown) => Promise<void>,
   ) => {
     const data = await fetchData();
 
@@ -42,7 +43,10 @@ export const migrateFromSquidexToContentfulFactory =
           },
         );
         entries.push(entry);
+
+        onComplete && (await onComplete());
       } catch (err) {
+        console.log('got error');
         logger(`Error details of entry ${id}:\n${err}`, 'ERROR-DEBUG');
 
         if (fallbackParseData) {
@@ -63,7 +67,10 @@ export const migrateFromSquidexToContentfulFactory =
             entries.push(fallbackEntry);
           } catch {
             logger(`There is a problem creating entry ${id}`, 'ERROR');
+            onComplete && (await onComplete(err));
           }
+        } else {
+          onComplete && (await onComplete(err));
         }
       }
     }

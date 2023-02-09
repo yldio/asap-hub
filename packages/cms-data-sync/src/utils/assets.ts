@@ -33,6 +33,7 @@ export const createInlineAssets = async (
 ) => {
   const assets = await Promise.all(
     inlineAssetBodies.map(async ([id, fields]) => {
+      console.log(`Creating asset with id ${id}.`);
       const isAssetAlreadyInContentful =
         await checkIfAssetAlreadyExistsInContentful(contentfulEnvironment, id);
       if (!isAssetAlreadyInContentful) {
@@ -42,6 +43,8 @@ export const createInlineAssets = async (
       return null;
     }),
   );
+
+  console.log(assets);
 
   await Promise.all(
     assets

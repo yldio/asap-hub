@@ -159,4 +159,46 @@ describe('convertHtmlToContentfulFormat', () => {
       ],
     });
   });
+
+  it('converts a line break to an empty paragraph', async () => {
+    const html = `<wbr />`;
+
+    expect(
+      convertHtmlToContentfulFormat(html) /*?JSON.stringify($, null, 2)*/,
+    ).toEqual({
+      document: {
+        data: {},
+        content: [
+          // {
+          //   data: {},
+          //   content: [],
+          //   nodeType: 'paragraph',
+          // },
+        ],
+        nodeType: 'document',
+      },
+      inlineAssetBodies: [],
+    });
+  });
+
+  it('converts a line break to an empty paragraph', async () => {
+    const html = `<br />`;
+
+    expect(
+      convertHtmlToContentfulFormat(html) /*?JSON.stringify($, null, 2)*/,
+    ).toEqual({
+      document: {
+        data: {},
+        content: [
+          {
+            data: {},
+            content: [],
+            nodeType: 'paragraph',
+          },
+        ],
+        nodeType: 'document',
+      },
+      inlineAssetBodies: [],
+    });
+  });
 });

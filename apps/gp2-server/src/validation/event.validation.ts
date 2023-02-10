@@ -1,11 +1,11 @@
+import { gp2 } from '@asap-hub/model';
 import {
   fetchOptionsValidationSchema,
   validateInput,
 } from '@asap-hub/server-common';
 import { JSONSchemaType } from 'ajv';
-import { FetchEventsOptions } from '../controllers/event.controller';
 
-const eventFetchValidationSchema: JSONSchemaType<FetchEventsOptions> = {
+const eventFetchValidationSchema: JSONSchemaType<gp2.FetchEventsOptions> = {
   type: 'object',
   properties: {
     ...fetchOptionsValidationSchema.properties,

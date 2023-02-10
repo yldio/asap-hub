@@ -97,9 +97,17 @@ jobs:
           environment-name: ${{ inputs.environment-name }}
       - name: Setup app
         shell: bash
-        run: |
-          python .github/scripts/squidex/create-app.py
-          yarn test:integration
+        run: python .github/scripts/squidex/create-app.py
+        env:
+          APP: crn
+          SQUIDEX_APP_NAME: ${{ steps.setup.outputs.crn-squidex-app-name }}-${{ github.run_id }}
+          SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
+          SQUIDEX_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
+          SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
+      - uses: Wandalen/wretry.action@master
+        name: Run integration tests
+        with:
+          command: yarn test:integration
         env:
           APP: crn
           SQUIDEX_APP_NAME: ${{ steps.setup.outputs.crn-squidex-app-name }}-${{ github.run_id }}

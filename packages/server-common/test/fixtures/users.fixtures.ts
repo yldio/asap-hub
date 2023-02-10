@@ -4,6 +4,7 @@ import { UserEvent } from '../../src/handlers/event-bus';
 export const patchResponse = (): RestUser => ({
   id: 'userId',
   data: {
+    dismissedGettingStarted: { iv: false },
     onboarded: { iv: true },
     reachOut: { iv: 'some reach out' },
     responsibilities: { iv: 'some responsibilities' },
@@ -57,6 +58,7 @@ export const getUserWebhookPayload = (
     lastModified: '2020-07-31T15:52:33Z',
     version: 42,
     data: {
+      dismissedGettingStarted: { iv: false },
       firstName: { iv: 'Tony' },
       lastName: { iv: 'Stark' },
       onboarded: { iv: true },

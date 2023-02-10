@@ -3,6 +3,7 @@ import { UserResponse } from '@asap-hub/model';
 import {
   AuthHandler,
   authHandlerFactory,
+  CalendarController,
   decodeTokenFactory,
   errorHandlerFactory,
   getHttpLogger,
@@ -40,7 +41,7 @@ import {
   contentfulSpaceId,
   isContentfulEnabled,
 } from './config';
-import Calendars, { CalendarController } from './controllers/calendars';
+import Calendars from './controllers/calendars';
 import Dashboard, { DashboardController } from './controllers/dashboard';
 import Discover, { DiscoverController } from './controllers/discover';
 import Events, { EventController } from './controllers/events';

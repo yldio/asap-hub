@@ -1,3 +1,8 @@
+import { CalendarDataObject } from '@asap-hub/model';
+import {
+  CalendarDataProvider,
+  getJWTCredentialsFactory,
+} from '@asap-hub/server-common';
 import { framework as lambda } from '@asap-hub/services-common';
 import {
   InputCalendar,
@@ -6,25 +11,30 @@ import {
   SquidexGraphql,
   SquidexRest,
 } from '@asap-hub/squidex';
-import { CalendarDataObject } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { Handler } from 'aws-lambda';
-import { appName, baseUrl, googleApiToken } from '../../config';
+import {
+  appName,
+  baseUrl,
+  googleApiCredentialsSecretId,
+  googleApiToken,
+  region,
+} from '../../config';
 import Events from '../../controllers/events';
+import { CalendarSquidexDataProvider } from '../../data-providers/calendars.data-provider';
 import { getAuthToken } from '../../utils/auth';
-import getJWTCredentials from '../../utils/aws-secret-manager';
 import logger from '../../utils/logger';
+import { sentryWrapper } from '../../utils/sentry-wrapper';
 import {
   SyncCalendar,
   syncCalendarFactory,
 } from '../../utils/sync-google-calendar';
 import { syncEventFactory } from '../../utils/sync-google-event';
-import { sentryWrapper } from '../../utils/sentry-wrapper';
-import {
-  CalendarSquidexDataProvider,
-  CalendarDataProvider,
-} from '../../data-providers/calendars.data-provider';
 
+const getJWTCredentials = getJWTCredentialsFactory({
+  googleApiCredentialsSecretId,
+  region,
+});
 export const webhookEventUpdatedHandlerFactory = (
   calendarDataProvider: CalendarDataProvider,
   syncCalendar: SyncCalendar,

@@ -1,4 +1,5 @@
-import { CalendarPayload } from '../../../src/handlers/event-bus';
+import { CalendarPayload } from '../../../src';
+
 export const getCalendarCreateEvent = (
   version: number = 0,
 ): CalendarPayload => ({

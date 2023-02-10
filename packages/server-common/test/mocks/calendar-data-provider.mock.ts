@@ -1,4 +1,4 @@
-import { CalendarDataProvider } from '@asap-hub/server-common';
+import { CalendarDataProvider } from '../../src';
 
 export const calendarDataProviderMock: jest.Mocked<CalendarDataProvider> = {
   create: jest.fn(),

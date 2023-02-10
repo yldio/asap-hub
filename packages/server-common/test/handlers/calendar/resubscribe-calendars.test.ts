@@ -1,15 +1,27 @@
+// import { resubscribeCalendarsHandlerFactory } from '@asap-hub/crn-server/src/handlers/calendar/resubscribe-handler';
+// import {
+//   SubscribeToEventChanges,
+//   UnsubscribeFromEventChanges,
+// } from '@asap-hub/crn-server/src/handlers/calendar/subscribe-handler';
+// import { getCalendarDataObject } from '@asap-hub/crn-server/test/fixtures/calendars.fixtures';
+// import {
+//   createEventBridgeScheduledEventMock,
+//   createHandlerContext,
+// } from '@asap-hub/crn-server/test/helpers/events';
+// import { calendarDataProviderMock } from '@asap-hub/crn-server/test/mocks/calendar-data-provider.mock';
 import { Settings } from 'luxon';
-import { resubscribeCalendarsHandlerFactory } from '../../../src/handlers/calendar/resubscribe-handler';
-import { getCalendarDataObject } from '../../fixtures/calendars.fixtures';
 import {
-  UnsubscribeFromEventChanges,
+  resubscribeCalendarsHandlerFactory,
   SubscribeToEventChanges,
-} from '../../../src/handlers/calendar/subscribe-handler';
+  UnsubscribeFromEventChanges,
+} from '../../../src';
+import { getCalendarDataObject } from '../../fixtures/calendar.fixtures';
 import {
   createEventBridgeScheduledEventMock,
   createHandlerContext,
 } from '../../helpers/events';
 import { calendarDataProviderMock } from '../../mocks/calendar-data-provider.mock';
+import { loggerMock as logger } from '../../mocks/logger.mock';
 
 describe('Resubscribe calendar handler', () => {
   const unsubscribeMock: jest.MockedFunction<UnsubscribeFromEventChanges> =
@@ -19,6 +31,7 @@ describe('Resubscribe calendar handler', () => {
     calendarDataProviderMock,
     unsubscribeMock,
     subscribeMock,
+    logger,
   );
   const invokeHandler = () =>
     resubscribeCalendarsHandler(

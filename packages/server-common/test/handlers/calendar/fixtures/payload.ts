@@ -1,4 +1,4 @@
-import { CalendarPayload } from '../../../../src/handlers/event-bus';
+import { CalendarPayload } from '../../../../src';
 
 export {
   inOrderfirstSave,

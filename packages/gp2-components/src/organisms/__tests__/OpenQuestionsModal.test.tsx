@@ -1,11 +1,11 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import OpenQuestionsModal from '../OpenQuestionsModal';
 
 describe('OpenQuestionsModal', () => {
-  beforeEach(jest.resetAllMocks);
   type OpenQuestionsModalProps = ComponentProps<typeof OpenQuestionsModal>;
   const defaultProps: OpenQuestionsModalProps = {
     ...gp2Fixtures.createUserResponse(),
@@ -20,6 +20,8 @@ describe('OpenQuestionsModal', () => {
       wrapper: MemoryRouter,
     });
 
+  beforeEach(jest.resetAllMocks);
+
   it('renders a dialog with the right title', () => {
     renderOpenQuestions();
     expect(screen.getByRole('dialog')).toContainElement(
@@ -30,7 +32,7 @@ describe('OpenQuestionsModal', () => {
   it('renders the question field', () => {
     const props = { questions: ['a question?'] };
     renderOpenQuestions(props);
-    expect(screen.getByRole('textbox')).toContainHTML(props.questions[0]);
+    expect(screen.getByRole('textbox')).toHaveTextContent(props.questions[0]);
   });
 
   it('renders multiple questions', () => {
@@ -41,16 +43,23 @@ describe('OpenQuestionsModal', () => {
         'a third question?',
       ],
     };
-    renderOpenQuestions(props);
+    renderOpenQuestions();
     screen
       .getAllByRole('textbox')
       .map((textarea, index) =>
-        expect(textarea).toContainHTML(props.questions[index]),
+        expect(textarea).toHaveTextContent(props.questions[index]),
       );
   });
 
   it('shows the add another question button', () => {
-    renderOpenQuestions();
+    const props = {
+      questions: [
+        'a first question?',
+        'a second question?',
+        'a third question?',
+      ],
+    };
+    renderOpenQuestions(props);
     expect(
       screen.getByRole('button', { name: /add another question/i }),
     ).toBeVisible();
@@ -70,5 +79,68 @@ describe('OpenQuestionsModal', () => {
     expect(
       screen.queryByRole('button', { name: /add another question/i }),
     ).not.toBeInTheDocument();
+  });
+  it('adds a question', () => {
+    const props = {
+      questions: [
+        'a first question?',
+        'a second question?',
+        'a third question?',
+      ],
+    };
+    const newQuestion = 'a fourth question?';
+    renderOpenQuestions(props);
+    const addButton = screen.getByRole('button', {
+      name: 'Add Another Question Add',
+    });
+    userEvent.click(addButton);
+    const emptyTextArea = screen.getAllByRole('textbox')[3];
+    userEvent.type(emptyTextArea, newQuestion);
+    expect(emptyTextArea).toHaveTextContent(newQuestion);
+  });
+  it('removes the only question it exists and shows the add open question button', () => {
+    const onSave = jest.fn();
+    const props = {
+      questions: ['a first question?'],
+      onSave,
+    };
+    renderOpenQuestions(props);
+
+    const deleteButton = screen.getByRole('button', { name: /delete/i });
+    userEvent.click(deleteButton);
+    expect(
+      screen.getByRole('button', { name: /add open question add/i }),
+    ).toBeVisible();
+  });
+  it('the saveButton saves all the information', async () => {
+    const onSave = jest.fn();
+    const props = {
+      questions: [
+        'a first question?',
+        'a second question?',
+        'a third question?',
+      ],
+      onSave,
+    };
+    renderOpenQuestions(props);
+
+    const newQuestion = 'a fourth question?';
+    const addButton = screen.getByRole('button', {
+      name: 'Add Another Question Add',
+    });
+    userEvent.click(addButton);
+    const emptyTextArea = screen.getAllByRole('textbox')[3];
+    userEvent.type(emptyTextArea, newQuestion);
+    expect(emptyTextArea).toHaveTextContent(newQuestion);
+    const saveButton = screen.getByRole('button', { name: 'Save' });
+    await waitFor(() => userEvent.click(saveButton));
+    expect(onSave).toBeCalledWith({
+      questions: [
+        'a first question?',
+        'a second question?',
+        'a third question?',
+        'a fourth question?',
+      ],
+    });
   });
 });

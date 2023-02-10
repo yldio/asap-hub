@@ -4,7 +4,6 @@ import { css } from '@emotion/react';
 import { ComponentProps, useState } from 'react';
 import { addIcon, binIcon } from '../icons';
 import { mobileQuery } from '../layout';
-import colors from '../templates/colors';
 import EditUserModal from './EditUserModal';
 
 const { rem } = pixels;
@@ -19,8 +18,7 @@ const containerStyles = css({
 });
 
 const rowStyles = css({
-  borderBottom: `1px solid ${colors.neutral500.rgb}`,
-  marginBottom: rem(12),
+  marginBottom: rem(16),
   padding: `${rem(16)} 0`,
   ':last-child': {
     borderBottom: 'none',
@@ -122,7 +120,9 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
                       margin: `0 ${rem(3)}`,
                     }}
                   >
-                    Add Another Question
+                    {newQuestions.length > 0
+                      ? 'Add Another Question'
+                      : 'Add Open Question'}
                     {addIcon}
                   </span>
                 </Button>

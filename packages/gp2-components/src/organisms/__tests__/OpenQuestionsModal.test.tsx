@@ -112,7 +112,19 @@ describe('OpenQuestionsModal', () => {
       screen.getByRole('button', { name: /add open question add/i }),
     ).toBeVisible();
   });
-  it('the saveButton saves all the information', async () => {
+  it("closes the dialog if the user doesn't have any questions and he doesn't want to create a new questions", async () => {
+    const props = {
+      questions: [],
+    };
+    renderOpenQuestions(props);
+
+    const closeButton = screen.getByRole('button', { name: /close/i });
+    await waitFor(() => userEvent.click(closeButton));
+
+    expect(closeButton).toBeDisabled();
+  });
+
+  it('allows the saveButton to saves all the information', async () => {
     const onSave = jest.fn();
     const props = {
       questions: [

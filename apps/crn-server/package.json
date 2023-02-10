@@ -131,7 +131,7 @@
     "@types/supertest": "2.0.12",
     "@types/uuid": "8.3.4",
     "@types/yargs": "17.0.5",
-    "babel-loader": "8.2.5",
+    "babel-loader": "8.3.0",
     "copy-webpack-plugin": "9.1.0",
     "graphql-typescript-integration": "1.2.1",
     "jest-when": "3.5.2",

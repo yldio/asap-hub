@@ -3284,7 +3284,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "babel-loader",\
-        "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:8.2.5"\
+        "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:8.3.0"\
       ],\
       [\
         "babel-plugin-add-react-displayname",\
@@ -10911,7 +10911,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react", "npm:17.0.53"],\
             ["@types/react-dom", "npm:17.0.18"],\
             ["aws-sdk", "npm:2.1312.0"],\
-            ["babel-loader", "virtual:f53f6b44d9b092b2e1aa5b63bb87beb2480b63a8d0a2b1a23e0f956d506c3680d24881755aeeb3d594954cc38ab1cccd34ff5f34427de818908fd21d3b38370f#npm:8.2.5"],\
+            ["babel-loader", "virtual:f53f6b44d9b092b2e1aa5b63bb87beb2480b63a8d0a2b1a23e0f956d506c3680d24881755aeeb3d594954cc38ab1cccd34ff5f34427de818908fd21d3b38370f#npm:8.3.0"],\
             ["babel-preset-react-app", "npm:10.0.1"],\
             ["core-js", "npm:3.24.1"],\
             ["juice", "npm:7.0.0"],\
@@ -11002,7 +11002,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["aws-lambda", "npm:1.0.7"],\
             ["aws-sdk", "npm:2.1312.0"],\
             ["aws-xray-sdk", "npm:3.4.1"],\
-            ["babel-loader", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:8.2.5"],\
+            ["babel-loader", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:8.3.0"],\
             ["chance", "npm:1.1.9"],\
             ["copy-webpack-plugin", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:9.1.0"],\
             ["cors", "npm:2.8.5"],\
@@ -11639,7 +11639,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react", "npm:17.0.53"],\
             ["@types/react-dom", "npm:17.0.18"],\
             ["aws-sdk", "npm:2.1312.0"],\
-            ["babel-loader", "virtual:f53f6b44d9b092b2e1aa5b63bb87beb2480b63a8d0a2b1a23e0f956d506c3680d24881755aeeb3d594954cc38ab1cccd34ff5f34427de818908fd21d3b38370f#npm:8.2.5"],\
+            ["babel-loader", "virtual:f53f6b44d9b092b2e1aa5b63bb87beb2480b63a8d0a2b1a23e0f956d506c3680d24881755aeeb3d594954cc38ab1cccd34ff5f34427de818908fd21d3b38370f#npm:8.3.0"],\
             ["babel-preset-react-app", "npm:10.0.1"],\
             ["core-js", "npm:3.24.1"],\
             ["juice", "npm:7.0.0"],\
@@ -11702,7 +11702,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["apr-intercept", "npm:3.0.4"],\
             ["aws-lambda", "npm:1.0.7"],\
             ["aws-sdk", "npm:2.1312.0"],\
-            ["babel-loader", "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:8.2.5"],\
+            ["babel-loader", "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:8.3.0"],\
             ["copy-webpack-plugin", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:9.1.0"],\
             ["cors", "npm:2.8.5"],\
             ["express", "npm:4.18.2"],\
@@ -11756,7 +11756,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react", "npm:17.0.53"],\
             ["@types/react-dom", "npm:17.0.18"],\
             ["aws-sdk", "npm:2.1312.0"],\
-            ["babel-loader", "virtual:f53f6b44d9b092b2e1aa5b63bb87beb2480b63a8d0a2b1a23e0f956d506c3680d24881755aeeb3d594954cc38ab1cccd34ff5f34427de818908fd21d3b38370f#npm:8.2.5"],\
+            ["babel-loader", "virtual:f53f6b44d9b092b2e1aa5b63bb87beb2480b63a8d0a2b1a23e0f956d506c3680d24881755aeeb3d594954cc38ab1cccd34ff5f34427de818908fd21d3b38370f#npm:8.3.0"],\
             ["babel-preset-react-app", "npm:10.0.1"],\
             ["core-js", "npm:3.24.1"],\
             ["juice", "npm:7.0.0"],\
@@ -39307,10 +39307,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:8.2.5", {\
-          "packageLocation": "./.yarn/__virtual__/babel-loader-virtual-042f592a89/0/cache/babel-loader-npm-8.2.5-e749e26bb5-a660555788.zip/node_modules/babel-loader/",\
+        ["npm:8.3.0", {\
+          "packageLocation": "./.yarn/cache/babel-loader-npm-8.3.0-a5239d7ed2-d48bcf9e03.zip/node_modules/babel-loader/",\
           "packageDependencies": [\
-            ["babel-loader", "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:8.2.5"],\
+            ["babel-loader", "npm:8.3.0"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:8.3.0", {\
+          "packageLocation": "./.yarn/__virtual__/babel-loader-virtual-0f29d1e658/0/cache/babel-loader-npm-8.3.0-a5239d7ed2-d48bcf9e03.zip/node_modules/babel-loader/",\
+          "packageDependencies": [\
+            ["babel-loader", "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:8.3.0"],\
             ["@babel/core", null],\
             ["@types/babel__core", null],\
             ["@types/webpack", null],\
@@ -39391,10 +39398,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:8.2.5", {\
-          "packageLocation": "./.yarn/__virtual__/babel-loader-virtual-4a3b96ca88/0/cache/babel-loader-npm-8.2.5-e749e26bb5-a660555788.zip/node_modules/babel-loader/",\
+        ["virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:8.3.0", {\
+          "packageLocation": "./.yarn/__virtual__/babel-loader-virtual-5c9a21c19a/0/cache/babel-loader-npm-8.3.0-a5239d7ed2-d48bcf9e03.zip/node_modules/babel-loader/",\
           "packageDependencies": [\
-            ["babel-loader", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:8.2.5"],\
+            ["babel-loader", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:8.3.0"],\
             ["@babel/core", "npm:7.20.12"],\
             ["@types/babel__core", null],\
             ["@types/webpack", null],\
@@ -39412,10 +39419,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["virtual:f53f6b44d9b092b2e1aa5b63bb87beb2480b63a8d0a2b1a23e0f956d506c3680d24881755aeeb3d594954cc38ab1cccd34ff5f34427de818908fd21d3b38370f#npm:8.2.5", {\
-          "packageLocation": "./.yarn/__virtual__/babel-loader-virtual-1296e78136/0/cache/babel-loader-npm-8.2.5-e749e26bb5-a660555788.zip/node_modules/babel-loader/",\
+        ["virtual:f53f6b44d9b092b2e1aa5b63bb87beb2480b63a8d0a2b1a23e0f956d506c3680d24881755aeeb3d594954cc38ab1cccd34ff5f34427de818908fd21d3b38370f#npm:8.3.0", {\
+          "packageLocation": "./.yarn/__virtual__/babel-loader-virtual-a6d3789ee4/0/cache/babel-loader-npm-8.3.0-a5239d7ed2-d48bcf9e03.zip/node_modules/babel-loader/",\
           "packageDependencies": [\
-            ["babel-loader", "virtual:f53f6b44d9b092b2e1aa5b63bb87beb2480b63a8d0a2b1a23e0f956d506c3680d24881755aeeb3d594954cc38ab1cccd34ff5f34427de818908fd21d3b38370f#npm:8.2.5"],\
+            ["babel-loader", "virtual:f53f6b44d9b092b2e1aa5b63bb87beb2480b63a8d0a2b1a23e0f956d506c3680d24881755aeeb3d594954cc38ab1cccd34ff5f34427de818908fd21d3b38370f#npm:8.3.0"],\
             ["@babel/core", "npm:7.20.12"],\
             ["@types/babel__core", "npm:7.20.0"],\
             ["@types/webpack", null],\

@@ -21,7 +21,6 @@ const rowStyles = css({
   marginBottom: rem(16),
   padding: `${rem(16)} 0`,
   ':last-child': {
-    borderBottom: 'none',
     marginBottom: 0,
     paddingBottom: 0,
   },
@@ -33,8 +32,6 @@ const headerStyles = css({
   justifyContent: 'space-between',
   alignItems: 'center',
 });
-
-const buttonStyles = css({ margin: 0 });
 
 const addButtonStyles = css({
   width: 'fit-content',
@@ -58,8 +55,18 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
   const [newQuestions, setQuestions] = useState(
     !questions.length ? [''] : questions,
   );
-  const checkDirty = () =>
-    newQuestions.some((question, index) => question !== questions[index]);
+  const checkDirty = () => {
+    if (
+      !questions.length &&
+      newQuestions.length === 1 &&
+      newQuestions[0] === ''
+    ) {
+      return false;
+    }
+    return newQuestions.some(
+      (question, index) => question !== questions[index],
+    );
+  };
 
   const onChangeValue = (index: number) => (value: string) =>
     setQuestions(
@@ -80,55 +87,51 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
       dirty={checkDirty()}
     >
       {({ isSaving }) => (
-        <>
-          <div css={[containerStyles]}>
-            <div css={{ paddingBottom: '0' }}>
-              {newQuestions.map((question, index) => (
-                <div css={[rowStyles]} key={`question-${index}`}>
-                  <div css={headerStyles}>
-                    <p>
-                      <strong>Question {index + 1}</strong> {optional}
-                    </p>
-                    <div css={buttonStyles}>
-                      <Button onClick={onRemove(index)} small>
-                        <span css={css({ display: 'inline-flex' })}>
-                          {binIcon}
-                        </span>
-                      </Button>
-                    </div>
+        <div css={containerStyles}>
+          <div>
+            {newQuestions.map((question, index) => (
+              <div css={rowStyles} key={`question-${index}`}>
+                <div css={headerStyles}>
+                  <p>
+                    <strong>Question {index + 1}</strong> {optional}
+                  </p>
+                  <div css={{ margin: 0 }}>
+                    <Button onClick={onRemove(index)} small>
+                      <span css={{ display: 'inline-flex' }}>{binIcon}</span>
+                    </Button>
                   </div>
-                  <TextArea
-                    enabled={!isSaving}
-                    value={question}
-                    onChange={onChangeValue(index)}
-                    maxLength={250}
-                    placeholder={
-                      'Example: Are alpha-synuclein deposits the cause or consequence of something deeper wrong with neurons?'
-                    }
-                  />
                 </div>
-              ))}
-            </div>
-            {newQuestions.length < 5 ? (
-              <div css={addButtonStyles}>
-                <Button onClick={onAdd} enabled={!isSaving} small>
-                  <span
-                    css={{
-                      display: 'inline-flex',
-                      gap: rem(8),
-                      margin: `0 ${rem(3)}`,
-                    }}
-                  >
-                    {newQuestions.length > 0
-                      ? 'Add Another Question'
-                      : 'Add Open Question'}
-                    {addIcon}
-                  </span>
-                </Button>
+                <TextArea
+                  enabled={!isSaving}
+                  value={question}
+                  onChange={onChangeValue(index)}
+                  maxLength={250}
+                  placeholder={
+                    'Example: Are alpha-synuclein deposits the cause or consequence of something deeper wrong with neurons?'
+                  }
+                />
               </div>
-            ) : undefined}
+            ))}
           </div>
-        </>
+          {newQuestions.length < 5 ? (
+            <div css={addButtonStyles}>
+              <Button onClick={onAdd} enabled={!isSaving} small>
+                <span
+                  css={{
+                    display: 'inline-flex',
+                    gap: rem(8),
+                    margin: `0 ${rem(3)}`,
+                  }}
+                >
+                  {newQuestions.length > 0
+                    ? 'Add Another Question'
+                    : 'Add Open Question'}
+                  {addIcon}
+                </span>
+              </Button>
+            </div>
+          ) : undefined}
+        </div>
       )}
     </EditUserModal>
   );

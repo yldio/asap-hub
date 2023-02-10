@@ -4,7 +4,7 @@
     "noFieldDeletion": false,
     "noFieldRecreation": false,
     "properties": {
-      "label": "Dashboard",
+      "label": "Dashboard!",
       "validateOnPublish": false
     },
     "scripts": {},

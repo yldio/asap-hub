@@ -95,7 +95,11 @@ export type EventCreateDataObject = Pick<
   calendar: string;
   hidden: boolean;
 };
-export type EventUpdateDataObject = Partial<EventDataObject>;
+export type EventUpdateDataObject = Partial<
+  Omit<EventDataObject, 'calendar'> & {
+    calendar: string;
+  }
+>;
 
 export type EventCreateRequest = EventCreateDataObject;
 export type EventUpdateRequest = EventUpdateDataObject;

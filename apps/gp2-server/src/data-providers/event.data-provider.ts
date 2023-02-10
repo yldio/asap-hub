@@ -157,6 +157,6 @@ const toEventData = (
 
   return {
     ...parsed,
-    ...(data.calendar && { calendar: { iv: [data.calendar.toString()] } }), // TODO: fix this toString
+    ...(data.calendar && { calendar: { iv: [data.calendar] } }),
   };
 };

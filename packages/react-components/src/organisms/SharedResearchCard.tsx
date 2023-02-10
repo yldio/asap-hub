@@ -42,7 +42,7 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
   ...props
 }) => (
   <Card>
-    <SharedResearchMetadata {...props} />
+    <SharedResearchMetadata {...props} workingGroups={workingGroups} />
     <LinkHeadline
       level={2}
       styleAsHeading={4}
@@ -59,15 +59,17 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
         associations={labs.map(({ id, name }) => ({ displayName: name, id }))}
       />
       <AssociationList type="Team" inline max={3} associations={teams} />
-      <AssociationList
-        type="Working Group"
-        inline
-        max={3}
-        associations={workingGroups.map(({ id, title: displayName }) => ({
-          id,
-          displayName,
-        }))}
-      />
+      {workingGroups && (
+        <AssociationList
+          type="Working Group"
+          inline
+          max={3}
+          associations={workingGroups.map(({ id, title: displayName }) => ({
+            id,
+            displayName,
+          }))}
+        />
+      )}
     </div>
     <Caption accent={'lead'} asParagraph>
       Date Added: {formatDate(new Date(addedDate))}

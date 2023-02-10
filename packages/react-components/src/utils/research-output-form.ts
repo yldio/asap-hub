@@ -2,7 +2,6 @@ import {
   ResearchOutputResponse,
   ResearchOutputIdentifierType,
   DecisionOption,
-  ResearchOutputPublishingEntities,
   TeamResponse,
   ResearchOutputPostRequest,
   convertDecisionToBoolean,
@@ -14,7 +13,6 @@ import ResearchOutputContributorsCard from '../organisms/ResearchOutputContribut
 
 export type getTeamState = {
   team: TeamResponse | undefined;
-  publishingEntity: ResearchOutputPublishingEntities;
   researchOutputData: ResearchOutputResponse | undefined;
 };
 
@@ -131,10 +129,7 @@ export const getPayload = ({
   organisms,
   environments,
   subtype,
-}: ResearchOutputPayload): Omit<
-  ResearchOutputPostRequest,
-  'publishingEntity'
-> => ({
+}: ResearchOutputPayload): ResearchOutputPostRequest => ({
   ...createIdentifierField(identifierType, identifier),
   documentType,
   tags,

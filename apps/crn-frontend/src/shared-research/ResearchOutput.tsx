@@ -3,6 +3,7 @@ import { sharedResearch, useRouteParams } from '@asap-hub/routing';
 import { Frame, useBackHref } from '@asap-hub/frontend-utils';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { useRouteMatch, Route } from 'react-router-dom';
+import { isResearchOutputWorkingGroup } from '@asap-hub/validation';
 
 import { useResearchOutputById } from './state';
 import { useCanCreateUpdateResearchOutput } from '../network/teams/state';
@@ -35,7 +36,7 @@ const ResearchOutput: React.FC = () => {
               .editResearchOutput.template
           }
         >
-          {researchOutputData.publishingEntity === 'Working Group' ? (
+          {isResearchOutputWorkingGroup(researchOutputData) ? (
             <WorkingGroupOutput
               workingGroupId={researchOutputData.workingGroups[0]?.id}
               researchOutputData={researchOutputData}

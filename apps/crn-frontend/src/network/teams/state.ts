@@ -1,19 +1,14 @@
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
   ListTeamResponse,
-  ResearchOutputPostRequest,
-  ResearchOutputPutRequest,
-  ResearchTagResponse,
   TeamPatchRequest,
   TeamResponse,
 } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { hasCreateUpdateResearchOutputPermissions } from '@asap-hub/validation';
 import {
-  atom,
   atomFamily,
   DefaultValue,
-  selector,
   selectorFamily,
   useRecoilState,
   useRecoilValue,
@@ -22,18 +17,7 @@ import {
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { authorizationState } from '../../auth/state';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
-import { useAlgolia } from '../../hooks/algolia';
-import { getResearchTags } from '../../shared-research/api';
-import { useSetResearchOutputItem } from '../../shared-research/state';
-import { getUsersAndExternalAuthors } from '../users/api';
-import {
-  createResearchOutput,
-  getLabs,
-  getTeam,
-  getTeams,
-  patchTeam,
-  updateTeamResearchOutput,
-} from './api';
+import { getTeam, getTeams, patchTeam } from './api';
 
 const teamIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
@@ -145,67 +129,6 @@ export const usePatchTeamById = (id: string) => {
   };
 };
 
-export const useLabSuggestions = () => {
-  const authorization = useRecoilValue(authorizationState);
-  return (searchQuery: string) =>
-    getLabs(
-      { searchQuery, filters: new Set(), currentPage: null, pageSize: null },
-      authorization,
-    ).then(({ items }) =>
-      items.map(({ id, name }) => ({ label: `${name} Lab`, value: id })),
-    );
-};
-
-export const useTeamSuggestions = () => {
-  const authorization = useRecoilValue(authorizationState);
-  return (searchQuery: string) =>
-    getTeams(
-      { searchQuery, filters: new Set(), currentPage: null, pageSize: null },
-      authorization,
-    ).then(({ items }) =>
-      items.map(({ id, displayName }) => ({
-        label: displayName,
-        value: id,
-      })),
-    );
-};
-
-export const useAuthorSuggestions = () => {
-  const algoliaClient = useAlgolia();
-
-  return (searchQuery: string) =>
-    getUsersAndExternalAuthors(algoliaClient.client, {
-      searchQuery,
-      currentPage: null,
-      pageSize: 100,
-      filters: new Set(),
-    }).then(({ items }) => items);
-};
-
-export const usePostResearchOutput = () => {
-  const authorization = useRecoilValue(authorizationState);
-  const setResearchOutputItem = useSetResearchOutputItem();
-  return async (payload: ResearchOutputPostRequest) => {
-    const researchOutput = await createResearchOutput(payload, authorization);
-    setResearchOutputItem(researchOutput);
-    return researchOutput;
-  };
-};
-
-export const usePutResearchOutput = () => {
-  const authorization = useRecoilValue(authorizationState);
-  const setResearchOutputItem = useSetResearchOutputItem();
-  return async (id: string, payload: ResearchOutputPutRequest) => {
-    const researchOutput = await updateTeamResearchOutput(
-      id,
-      payload,
-      authorization,
-    );
-    setResearchOutputItem(researchOutput);
-    return researchOutput;
-  };
-};
-
 export const useCanCreateUpdateResearchOutput = (
   teamIds: string[],
 ): boolean => {
@@ -213,19 +136,3 @@ export const useCanCreateUpdateResearchOutput = (
 
   return !!(user && hasCreateUpdateResearchOutputPermissions(user, teamIds));
 };
-
-const researchTagsState = atom<ResearchTagResponse[]>({
-  key: 'researchTagsState',
-  default: [],
-});
-
-export const researchTagsSelector = selector({
-  key: 'researchTags',
-  get: ({ get }) => {
-    get(researchTagsState);
-    const authorization = get(authorizationState);
-    return getResearchTags(authorization);
-  },
-});
-
-export const useResearchTags = () => useRecoilValue(researchTagsSelector);

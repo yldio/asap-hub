@@ -1,10 +1,19 @@
+import { researchOutputDocumentTypes } from '@asap-hub/model';
 import { ResearchOutputHeader } from '@asap-hub/react-components';
+import { boolean, select } from '@storybook/addon-knobs';
 
 export default {
-  title: 'Organisms / Team Profile / Team Create Output Header',
+  title: 'Organisms / Research Output Header',
   component: ResearchOutputHeader,
 };
 
 export const Normal = () => (
-  <ResearchOutputHeader publishingEntity="Team" documentType="Article" />
+  <ResearchOutputHeader
+    workingGroupAssociation={boolean('Working Group Association', true)}
+    documentType={select(
+      'Choose document type',
+      researchOutputDocumentTypes,
+      'Article',
+    )}
+  />
 );

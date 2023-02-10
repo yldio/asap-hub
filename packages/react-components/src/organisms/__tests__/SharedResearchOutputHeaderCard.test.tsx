@@ -82,9 +82,8 @@ it('renders an output with document type and type', () => {
       {...createResearchOutputResponse()}
       teams={[]}
       authors={[]}
-      workingGroups={[]}
       documentType="Protocol"
-      publishingEntity="Team"
+      workingGroups={undefined}
       type={undefined}
     />,
   );
@@ -97,9 +96,8 @@ it('renders an output with document type and type', () => {
       {...createResearchOutputResponse()}
       teams={[]}
       authors={[]}
-      workingGroups={[]}
       documentType="Protocol"
-      publishingEntity="Team"
+      workingGroups={undefined}
       type={'3D Printing'}
     />,
   );

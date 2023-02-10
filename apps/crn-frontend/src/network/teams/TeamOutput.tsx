@@ -17,18 +17,16 @@ import {
 } from '@asap-hub/routing';
 import React, { useContext, useState } from 'react';
 import researchSuggestions from './research-suggestions';
-import {
-  useAuthorSuggestions,
-  useLabSuggestions,
-  usePostResearchOutput,
-  useResearchTags,
-  useTeamById,
-  useTeamSuggestions,
-  usePutResearchOutput,
-} from './state';
+import { useTeamById } from './state';
 import {
   handleError,
   paramOutputDocumentTypeToResearchOutputDocumentType,
+  useAuthorSuggestions,
+  useLabSuggestions,
+  useTeamSuggestions,
+  useResearchTags,
+  usePutResearchOutput,
+  usePostResearchOutput,
 } from '../../shared-research';
 
 const useParamOutputDocumentType = (
@@ -71,7 +69,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
       <Frame title="Share Research Output">
         <ResearchOutputHeader
           documentType={documentType}
-          publishingEntity="Team"
+          workingGroupAssociation={false}
         />
         <ResearchOutputForm
           tagSuggestions={researchSuggestions}
@@ -106,14 +104,12 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
           )}
           onSave={(output) =>
             researchOutputData
-              ? updateResearchOutput(researchOutputData.id, {
-                  ...output,
-                  publishingEntity: 'Team',
-                }).catch(handleError(['/link', '/title'], setErrors))
-              : createResearchOutput({
-                  ...output,
-                  publishingEntity: 'Team',
-                }).catch(handleError(['/link', '/title'], setErrors))
+              ? updateResearchOutput(researchOutputData.id, output).catch(
+                  handleError(['/link', '/title'], setErrors),
+                )
+              : createResearchOutput(output).catch(
+                  handleError(['/link', '/title'], setErrors),
+                )
           }
         />
       </Frame>

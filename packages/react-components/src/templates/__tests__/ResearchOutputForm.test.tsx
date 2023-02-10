@@ -215,7 +215,7 @@ describe('on submit', () => {
     jest.resetAllMocks();
   });
 
-  const expectedRequest: Omit<ResearchOutputPostRequest, 'publishingEntity'> = {
+  const expectedRequest: ResearchOutputPostRequest = {
     documentType: 'Article',
     doi: '10.1234',
     tags: [],

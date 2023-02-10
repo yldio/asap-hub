@@ -154,7 +154,6 @@ describe('Team Research Output', () => {
     methods: [],
     organisms: [],
     environments: [],
-    publishingEntity: 'Team',
     workingGroups: [],
   };
   it('makes an authorized POST request to create a research output', async () => {

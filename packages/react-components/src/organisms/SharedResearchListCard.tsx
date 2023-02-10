@@ -24,7 +24,7 @@ const itemStyles = css({
 
 type SharedResearchListCardProps = {
   researchOutputs: ReadonlyArray<
-    Pick<ResearchOutputResponse, 'id' | 'title'> &
+    Pick<ResearchOutputResponse, 'id' | 'title' | 'workingGroups'> &
       ComponentProps<typeof SharedResearchMetadata>
   >;
 };

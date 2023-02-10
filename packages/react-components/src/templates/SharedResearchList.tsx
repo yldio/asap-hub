@@ -11,7 +11,10 @@ type SharedResearchListProps = Omit<
   'children'
 > & {
   readonly researchOutputs: ReadonlyArray<
-    ComponentProps<typeof SharedResearchCard> & { id: string }
+    Omit<
+      ComponentProps<typeof SharedResearchCard>,
+      'workingGroupAssociation'
+    > & { id: string }
   >;
   readonly listViewHref: string;
   readonly cardViewHref: string;

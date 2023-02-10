@@ -141,6 +141,7 @@ describe('a grant document research output', () => {
           displayName: 'Jakobsson, J',
         },
       ],
+      workingGroups: undefined,
     });
 
     await renderComponent(researchOutputRoute.editResearchOutput({}).$);
@@ -193,7 +194,6 @@ describe('a working group research output', () => {
     mockGetResearchOutput.mockResolvedValue({
       ...createResearchOutputResponse(),
       documentType: 'Article',
-      publishingEntity: 'Working Group',
       workingGroups: [{ title: 'Example Working Group', id: 'abc123' }],
     });
     const { getByRole } = await renderComponent(

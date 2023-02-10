@@ -43,9 +43,11 @@ export const researchOutputToCSV = (
     )
     .join(','),
   workingGroups: output.workingGroups
-    .map((wg) => wg.title)
-    .sort(caseInsensitive)
-    .join(','),
+    ? output.workingGroups
+        .map((wg) => wg.title)
+        .sort(caseInsensitive)
+        .join(',')
+    : '',
   methods: output.methods
     .map((item) => item)
     .sort(caseInsensitive)
@@ -80,7 +82,6 @@ export const researchOutputToCSV = (
   id: output.id,
   created: output.created,
   lastModifiedDate: output.lastModifiedDate,
-  publishingEntity: output.publishingEntity,
 });
 
 export const algoliaResultsToStream = async <T extends keyof EntityResponses>(

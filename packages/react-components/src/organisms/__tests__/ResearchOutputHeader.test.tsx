@@ -1,65 +1,62 @@
-import {
-  ResearchOutputDocumentType,
-  ResearchOutputPublishingEntities,
-} from '@asap-hub/model';
+import { ResearchOutputDocumentType } from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
 
 import ResearchOutputHeader from '../ResearchOutputHeader';
 
 it.each<{
   documentType: ResearchOutputDocumentType;
-  publishingEntity: ResearchOutputPublishingEntities;
+  workingGroupAssociation: boolean;
   headingName: RegExp;
   subHeader: RegExp;
 }>([
   {
     documentType: 'Article',
-    publishingEntity: 'Team',
+    workingGroupAssociation: false,
     headingName: /Share an article/i,
     subHeader: /published article/,
   },
   {
     documentType: 'Protocol',
-    publishingEntity: 'Team',
+    workingGroupAssociation: false,
     headingName: /Share a protocol/i,
     subHeader: /Add your protocol/,
   },
   {
     documentType: 'Dataset',
-    publishingEntity: 'Team',
+    workingGroupAssociation: false,
     headingName: /Share a dataset/i,
     subHeader: /Add your dataset/,
   },
   {
     documentType: 'Bioinformatics',
-    publishingEntity: 'Team',
+    workingGroupAssociation: false,
     headingName: /Share bioinformatics/i,
     subHeader: /Add bioinformatics/,
   },
   {
     documentType: 'Lab Resource',
-    publishingEntity: 'Team',
+    workingGroupAssociation: false,
     headingName: /Share a lab resource/i,
     subHeader: /Add your lab resource/,
   },
   {
     documentType: 'Article',
-    publishingEntity: 'Working Group',
+    workingGroupAssociation: true,
     headingName: /Share a Working Group Article/i,
     subHeader: /published article/,
   },
   {
     documentType: 'Report',
-    publishingEntity: 'Working Group',
+    workingGroupAssociation: true,
     headingName: /Share a Working Group CRN Report/i,
     subHeader: /add your CRN report/,
   },
 ])(
-  'renders the $documentType $publishingEntity research output',
-  ({ documentType, headingName, subHeader, publishingEntity }) => {
+  'renders the $documentType $association research output',
+  ({ documentType, headingName, subHeader, workingGroupAssociation }) => {
     render(
       <ResearchOutputHeader
-        publishingEntity={publishingEntity}
+        workingGroupAssociation={workingGroupAssociation}
         documentType={documentType}
       />,
     );
@@ -73,8 +70,8 @@ it.each<{
 it('falls back to a generic description otherwise', () => {
   render(
     <ResearchOutputHeader
-      publishingEntity="Team"
       documentType="Presentation"
+      workingGroupAssociation={false}
     />,
   );
   expect(
@@ -86,7 +83,7 @@ it('falls back to a generic description for working groups', () => {
   render(
     <ResearchOutputHeader
       documentType="Presentation"
-      publishingEntity="Working Group"
+      workingGroupAssociation
     />,
   );
   expect(

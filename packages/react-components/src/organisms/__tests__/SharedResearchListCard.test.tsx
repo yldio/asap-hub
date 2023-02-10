@@ -14,8 +14,14 @@ it('renders multiple research outputs', () => {
     <SharedResearchListCard
       {...sharedResearchListCardProps}
       researchOutputs={[
-        { ...createResearchOutputResponse(0), title: 'Output 1' },
-        { ...createResearchOutputResponse(1), title: 'Output 2' },
+        {
+          ...createResearchOutputResponse(0),
+          title: 'Output 1',
+        },
+        {
+          ...createResearchOutputResponse(1),
+          title: 'Output 2',
+        },
       ]}
     />,
   );
@@ -29,7 +35,11 @@ it('links to research outputs', () => {
     <SharedResearchListCard
       {...sharedResearchListCardProps}
       researchOutputs={[
-        { ...createResearchOutputResponse(0), title: 'Output 1', id: '123' },
+        {
+          ...createResearchOutputResponse(0),
+          title: 'Output 1',
+          id: '123',
+        },
       ]}
     />,
   );
@@ -44,7 +54,10 @@ it('shows external link icon when link provided', () => {
     <SharedResearchListCard
       {...sharedResearchListCardProps}
       researchOutputs={[
-        { ...createResearchOutputResponse(0), link: undefined },
+        {
+          ...createResearchOutputResponse(0),
+          link: undefined,
+        },
       ]}
     />,
   );
@@ -53,7 +66,10 @@ it('shows external link icon when link provided', () => {
     <SharedResearchListCard
       {...sharedResearchListCardProps}
       researchOutputs={[
-        { ...createResearchOutputResponse(0), link: 'http://example.com' },
+        {
+          ...createResearchOutputResponse(0),
+          link: 'http://example.com',
+        },
       ]}
     />,
   );

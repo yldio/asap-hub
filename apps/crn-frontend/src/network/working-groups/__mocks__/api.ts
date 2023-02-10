@@ -4,7 +4,6 @@ import {
   createWorkingGroupResponse,
 } from '@asap-hub/fixtures';
 import {
-  ResearchOutputPublishingEntities,
   WorkingGroupListResponse,
   WorkingGroupResponse,
 } from '@asap-hub/model';
@@ -27,5 +26,4 @@ export const createResearchOutput: jest.Mocked<
 > = jest.fn(async () => ({
   ...createResearchOutputResponse(),
   id: 'research-output-id',
-  publishingEntity: 'Working Group' as ResearchOutputPublishingEntities,
 }));

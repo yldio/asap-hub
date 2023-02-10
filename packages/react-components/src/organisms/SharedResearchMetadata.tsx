@@ -6,7 +6,6 @@ import { ExternalLink, PillList } from '../molecules';
 
 const styles = css({
   flex: 1,
-
   display: 'flex',
   justifyContent: 'space-between',
   columnGap: `${12 / perRem}em`,
@@ -14,17 +13,17 @@ const styles = css({
 
 type SharedResearchMetadataProps = Pick<
   ResearchOutputResponse,
-  'documentType' | 'type' | 'link' | 'publishingEntity'
+  'documentType' | 'type' | 'link' | 'workingGroups'
 >;
 
 const SharedResearchMetadata: React.FC<SharedResearchMetadataProps> = ({
   documentType,
   type,
   link,
-  publishingEntity,
+  workingGroups,
 }) => {
   const pills: string[] = [
-    ...[publishingEntity],
+    workingGroups ? 'Working Group' : 'Team',
     ...(documentType ? [documentType] : []),
     ...(type ? [type] : []),
   ];

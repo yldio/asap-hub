@@ -2,6 +2,7 @@ import {
   createResearchOutputResponse,
   createTeamResponse,
   createUserResponse,
+  createWorkingGroupResponse,
 } from '@asap-hub/fixtures';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { Stringifier } from 'csv-stringify';
@@ -67,7 +68,6 @@ describe('researchOutputToCSV', () => {
       organisms: 'C. Elegans,Rat',
       environments: 'In Cellulo,In Vivo',
       subtype: 'Metabolite',
-      publishingEntity: 'Team',
     });
   });
   it('flattens authors, preserves order, displays orcid and external status when available', () => {
@@ -128,6 +128,19 @@ describe('researchOutputToCSV', () => {
       ],
     };
     expect(researchOutputToCSV(output).teams).toMatchInlineSnapshot(`"1,b,z"`);
+  });
+  it('handles working groups', () => {
+    const output: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      workingGroups: [{ ...createWorkingGroupResponse({}), title: 'wg' }],
+    };
+    expect(researchOutputToCSV(output).workingGroups).toMatchInlineSnapshot(
+      `"wg"`,
+    );
+    expect(
+      researchOutputToCSV({ ...output, workingGroups: undefined })
+        .workingGroups,
+    ).toMatchInlineSnapshot(`""`);
   });
   it('flattens and orders contact emails', () => {
     const output: ResearchOutputResponse = {

@@ -2,7 +2,6 @@ import {
   convertDecisionToBoolean,
   isResearchOutputDocumentType,
   ResearchOutputDataObject,
-  researchOutputMapPublishingEntity,
   researchOutputMapType,
   ResearchOutputSharingStatus,
   sharingStatuses,
@@ -42,9 +41,6 @@ export const parseGraphQLResearchOutput = (
 
   const data = output.flatData;
   const type = researchOutputMapType(data.type);
-  const publishingEntity = researchOutputMapPublishingEntity(
-    data.publishingEntity,
-  );
 
   return {
     id: output.id,
@@ -115,7 +111,6 @@ export const parseGraphQLResearchOutput = (
         environment.flatData.name ? [environment.flatData.name] : [],
       ) || [],
     subtype: data.subtype?.[0]?.flatData.name || undefined,
-    publishingEntity: publishingEntity || 'Team',
   };
 };
 

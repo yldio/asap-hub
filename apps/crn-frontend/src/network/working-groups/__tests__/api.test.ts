@@ -78,7 +78,7 @@ describe('getWorkingGroups', () => {
     );
   });
 });
-describe('teamResearchOutput', () => {
+describe('working group research output', () => {
   const payload: ResearchOutputPostRequest = {
     teams: ['90210'],
     documentType: 'Article',
@@ -96,8 +96,7 @@ describe('teamResearchOutput', () => {
     organisms: [],
     environments: [],
     authors: [{ userId: 'user-1' }],
-    publishingEntity: 'Working Group',
-    workingGroups: [],
+    workingGroups: ['wg-1'],
   };
   it('makes an authorized POST request to create a research output', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })

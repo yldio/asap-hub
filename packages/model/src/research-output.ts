@@ -141,15 +141,6 @@ export const researchOutputMapType = (
   return null;
 };
 
-export const researchOutputMapPublishingEntity = (
-  publishingEntity?: string | null,
-): ResearchOutputPublishingEntities => {
-  if (publishingEntity === 'Working_Group') {
-    return 'Working Group';
-  }
-  return 'Team';
-};
-
 export enum ResearchOutputIdentifierType {
   Empty = '',
   None = 'None',
@@ -205,7 +196,6 @@ export type ResearchOutputCoreObject = {
   lastModifiedDate?: string;
   link?: string;
   publishDate?: string;
-  publishingEntity: ResearchOutputPublishingEntities;
   rrid?: string;
   sharingStatus: ResearchOutputSharingStatus;
   tags: string[];
@@ -259,10 +249,22 @@ export type ResearchOutputUpdateDataObject = ResearchOutputCoreObject & {
   updatedBy: string;
 };
 
-export type ResearchOutputResponse = Omit<
+export type ResearchOutputBaseResponse = Omit<
   ResearchOutputDataObject,
-  'createdBy'
+  'createdBy' | 'workingGroups'
 >;
+
+export type ResearchOutputTeamResponse = ResearchOutputBaseResponse & {
+  workingGroups: undefined;
+};
+
+export type ResearchOutputWorkingGroupResponse = ResearchOutputBaseResponse & {
+  workingGroups: [Pick<WorkingGroupResponse, 'id' | 'title'>];
+};
+
+export type ResearchOutputResponse =
+  | ResearchOutputWorkingGroupResponse
+  | ResearchOutputTeamResponse;
 
 export type ListResearchOutputResponse = ListResponse<ResearchOutputResponse>;
 
@@ -295,10 +297,16 @@ export type ResearchOutputPostRequest = {
   type: ResearchOutputType;
   usageNotes?: string;
   usedInPublication?: boolean;
-  publishingEntity: ResearchOutputPublishingEntities;
 };
 
 export type ResearchOutputPutRequest = ResearchOutputPostRequest;
+
+type NonEmptyArray<T> = [T, ...T[]];
+
+export type ResearchOutputWorkingGroupPostRequest =
+  ResearchOutputPostRequest & {
+    workingGroups: NonEmptyArray<string>;
+  };
 
 export const convertDecisionToBoolean = (
   decision: string | null | DecisionOption,

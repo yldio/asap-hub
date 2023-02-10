@@ -257,7 +257,6 @@ it('can submit a form when form data is valid', async () => {
       usageNotes: '',
       asapFunded: undefined,
       usedInPublication: undefined,
-      publishingEntity: 'Working Group',
     },
     expect.anything(),
   );
@@ -373,7 +372,6 @@ it('can edit a report working group research output', async () => {
       title,
       description,
       workingGroups: [workingGroupId],
-      publishingEntity: 'Working Group',
     }),
     expect.anything(),
   );

@@ -4,7 +4,6 @@ export { default as copyIcon } from './copy-icon';
 export { default as eventsIcon } from './events-icon';
 export { default as dashboardIcon } from './dashboard-icon';
 export { default as dateIcon } from './date-icon';
-export { default as downArrowIcon } from './down-arrow-icon';
 export { default as editIcon } from './edit-icon';
 export { default as exportIcon } from './export-icon';
 export { default as gp2LogoFull } from './gp2-logo-full';

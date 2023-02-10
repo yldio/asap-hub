@@ -84,7 +84,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
-          "allowedValues": ["Team", "Working_Group"],
+          "allowedValues": ["Team", "Working Group"],
           "isUnique": false,
           "isEmbeddable": false,
           "inlineEditable": true,

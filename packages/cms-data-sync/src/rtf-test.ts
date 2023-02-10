@@ -76,9 +76,15 @@ type PageItem = NonNullable<FetchPagesQuery['queryPagesContents']>[number];
       // remove br and wbr html tags from text
       const textWithoutBr = text.replace(/<br\s*\/?>/gi, '');
       const textWithoutWbr = textWithoutBr.replace(/<wbr\s*\/?>/gi, '');
+      // remove wbr html tag with inline style from text
+      const textWithoutWbrWithInlineStyle = textWithoutWbr.replace(
+        /<wbr\s*style="(.*)"\s*\/?>/gi,
+        '',
+      );
 
-      const { document, inlineAssetBodies } =
-        convertHtmlToContentfulFormat(textWithoutWbr);
+      const { document, inlineAssetBodies } = convertHtmlToContentfulFormat(
+        textWithoutWbrWithInlineStyle,
+      );
       content = document;
       await createInlineAssets(contentfulEnvironment, inlineAssetBodies);
     } catch (error) {

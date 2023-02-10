@@ -221,4 +221,67 @@ describe('convertHtmlToContentfulFormat', () => {
       inlineIFramesBodies: [],
     });
   });
+
+  it('removes the wbr tag', async () => {
+    const text = `Loukia&nbsp;Parisiadou&nbsp;(<wbr style=\"line-height: inherit;\" />Northwestern&nbsp;University), 27th`;
+    const textWithoutBr = text.replace(/<br\s*\/?>/gi, '');
+    const textWithoutWbr = textWithoutBr.replace(/<wbr\s*\/?>/gi, '');
+    // remove wbr html tag with inline style from text
+    const textWithoutWbrWithInlineStyle = textWithoutWbr.replace(
+      /<wbr\s*style="(.*)"\s*\/?>/gi,
+      '',
+    );
+    expect(textWithoutWbrWithInlineStyle).toEqual(
+      'Loukia&nbsp;Parisiadou&nbsp;(Northwestern&nbsp;University), 27th',
+    );
+  });
+
+  it('converts a link', async () => {
+    const html = `<a
+    href="https://aligningscienceacrossparkinsonsasap.cmail20.com/t/t-l-qdikktl-wuujihjhk-jh/"
+    target="_blank" rel="noopener"
+    ><img
+        class="an1" src="https://fonts.gstatic.com/s/e/notoemoji/14.0/1f4e2/32.png" alt="📢"
+        loading="lazy" data-emoji="📢" aria-label="📢" /></a>`;
+
+    expect(
+      convertHtmlToContentfulFormat(html) /*?JSON.stringify($, null, 2)*/,
+    ).toEqual({
+      document: {
+        data: {},
+        content: [
+          {
+            data: {},
+            content: [
+              {
+                data: {
+                  uri: 'https://aligningscienceacrossparkinsonsasap.cmail20.com/t/t-l-qdikktl-wuujihjhk-jh/',
+                },
+                content: [
+                  {
+                    data: {
+                      target: {
+                        sys: {
+                          type: 'Link',
+                          linkType: 'Asset',
+                          id: '512766340',
+                        },
+                      },
+                    },
+                    content: [],
+                    nodeType: 'embedded-asset-block',
+                  },
+                ],
+                nodeType: 'hyperlink',
+              },
+            ],
+            nodeType: 'paragraph',
+          },
+        ],
+        nodeType: 'document',
+      },
+      inlineAssetBodies: expect.anything(),
+      inlineIFramesBodies: [],
+    });
+  });
 });

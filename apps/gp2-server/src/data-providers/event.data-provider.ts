@@ -80,9 +80,6 @@ export class EventSquidexDataProvider {
         [],
       );
 
-    if (filter?.googleId) {
-      filters.push(`data/googleId/iv eq '${filter.googleId}'`);
-    }
     filters.push('data/hidden/iv ne true');
 
     if (after) {
@@ -101,6 +98,9 @@ export class EventSquidexDataProvider {
 
     if (filter?.userId) {
       filters.push(`data/speakers/iv/user eq '${filter.userId}'`);
+    }
+    if (filter?.googleId) {
+      filters.push(`data/googleId/iv eq '${filter.googleId}'`);
     }
 
     const { queryEventsContentsWithTotal } =

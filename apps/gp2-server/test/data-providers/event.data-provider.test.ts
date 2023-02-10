@@ -450,6 +450,29 @@ describe('Event data provider', () => {
         expect(result.items[0]?.meetingMaterials).toHaveLength(1);
       });
     });
+    test('can filter by userID', async () => {
+      const userId = 'some-user-id';
+      const filter = `data/speakers/iv/user eq '${userId}'`;
+
+      const eventsGraphqlResponse = getSquidexEventsGraphqlResponse();
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        eventsGraphqlResponse,
+      );
+      const result = await eventDataProvider.fetch({
+        filter: { userId },
+      });
+
+      expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+        expect.anything(),
+        {
+          filter: `data/hidden/iv ne true and ${filter}`,
+          skip: 0,
+          order: '',
+          top: 10,
+        },
+      );
+      expect(result).toEqual(getListEventResponse());
+    });
     test('can filter by googleId', async () => {
       const googleId = 'google-event-id';
       const filter = `data/googleId/iv eq '${googleId}'`;
@@ -465,7 +488,7 @@ describe('Event data provider', () => {
       expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
         expect.anything(),
         {
-          filter: `${filter} and data/hidden/iv ne true`,
+          filter: `data/hidden/iv ne true and ${filter}`,
           skip: 0,
           order: '',
           top: 10,

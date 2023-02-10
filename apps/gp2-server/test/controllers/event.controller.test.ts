@@ -53,17 +53,54 @@ describe('Event controller', () => {
   });
   describe('Create method', () => {
     test('Should return the newly created event', async () => {
-      const description = 'a new description';
-      eventDataProviderMock.fetchById.mockResolvedValue(getEventDataObject());
-      const result = await eventController.update('7', {
-        ...getEventDataObject(),
+      const googleId = 'a-google-id';
+      const calendar = 'a-squidex-calendar';
+      const hidden = false;
+      const {
+        title,
         description,
+        startDate,
+        startDateTimeZone,
+        endDate,
+        endDateTimeZone,
+        status,
+        tags,
+        meetingLink,
+        hideMeetingLink,
+      } = getEventDataObject();
+
+      eventDataProviderMock.fetchById.mockResolvedValue(getEventDataObject());
+      const result = await eventController.create({
+        description,
+        title,
+        startDate,
+        startDateTimeZone,
+        endDate,
+        endDateTimeZone,
+        status,
+        tags,
+        meetingLink,
+        hideMeetingLink,
+        googleId,
+        calendar,
+        hidden,
       });
 
       expect(result).toEqual(getEventResponse());
-      expect(eventDataProviderMock.update).toHaveBeenCalledWith('7', {
-        ...getEventDataObject(),
+      expect(eventDataProviderMock.create).toHaveBeenCalledWith({
         description,
+        title,
+        startDate,
+        startDateTimeZone,
+        endDate,
+        endDateTimeZone,
+        status,
+        tags,
+        meetingLink,
+        hideMeetingLink,
+        googleId,
+        calendar,
+        hidden,
       });
     });
   });
@@ -85,12 +122,23 @@ describe('Event controller', () => {
     const googleId = 'google-event-id';
     test('it should fetch the events', async () => {
       eventDataProviderMock.fetch.mockResolvedValue(getListEventDataObject());
-      const result = await eventController.fetch({ filter: { googleId } });
+      const result = await eventController.fetchByGoogleId(googleId);
 
       expect(eventDataProviderMock.fetch).toHaveBeenCalledWith({
         filter: { googleId },
+        take: 1,
       });
-      expect(result).toEqual(getListEventResponse());
+      expect(result).toEqual(getEventResponse());
+    });
+    test('it should return null if no events found', async () => {
+      eventDataProviderMock.fetch.mockResolvedValue({ total: 0, items: [] });
+      const result = await eventController.fetchByGoogleId(googleId);
+
+      expect(eventDataProviderMock.fetch).toHaveBeenCalledWith({
+        filter: { googleId },
+        take: 1,
+      });
+      expect(result).toEqual(null);
     });
   });
 });

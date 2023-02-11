@@ -31,33 +31,22 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
   expertiseAndResourceDescription,
   questions,
   isOwnProfile,
-  labs,
   displayName,
   userProfileGroupsCard,
   userProfileWorkingGroupsCard,
   editExpertiseAndResourcesHref,
   editQuestionsHref,
   editRoleHref,
-  teams,
   role,
   ...roleProps
 }) => {
   const isRoleEmpty =
-    !labs.length &&
-    !teams.length &&
-    !roleProps.researchInterests &&
-    !roleProps.responsibilities;
+    !roleProps.researchInterests && !roleProps.responsibilities;
   const showRoleSection = isOwnProfile ? true : !isRoleEmpty;
   const roleSection = [
     showRoleSection && {
       card: (
-        <UserProfileRole
-          firstName={firstName}
-          labs={labs}
-          teams={teams}
-          role={role}
-          {...roleProps}
-        />
+        <UserProfileRole firstName={firstName} role={role} {...roleProps} />
       ),
       editLink:
         editRoleHref === undefined

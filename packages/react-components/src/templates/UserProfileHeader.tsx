@@ -249,6 +249,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
               teams={teams}
               role={role}
               labs={labs}
+              userActiveTeamsRoute={tabRoutes.research({}).$}
             />
           </div>
           <div css={avatarContainer}>

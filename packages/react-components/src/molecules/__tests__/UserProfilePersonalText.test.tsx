@@ -7,6 +7,7 @@ const props: ComponentProps<typeof UserProfilePersonalText> = {
   labs: [],
   teams: [],
   role: 'Grantee',
+  userActiveTeamsRoute: '#',
 };
 
 it.each`
@@ -58,6 +59,38 @@ it("generates information about the user's team", async () => {
     />,
   );
   expect(container).toHaveTextContent(/Lead PI \(Core Leadership\) on Team/);
+});
+
+it('renders no more than 3 teams and roles', async () => {
+  const { container, getByLabelText } = render(
+    <UserProfilePersonalText
+      {...props}
+      teams={[
+        {
+          id: '42',
+          displayName: 'Team',
+          role: 'Lead PI (Core Leadership)',
+        },
+        {
+          id: '1337',
+          displayName: 'Meat',
+          role: 'Collaborating PI',
+        },
+        {
+          id: '2',
+          displayName: 'Drink',
+          role: 'Collaborating PI',
+        },
+        {
+          id: '3',
+          displayName: 'Desert',
+          role: 'Collaborating PI',
+        },
+      ]}
+    />,
+  );
+  expect(container).toHaveTextContent(/Lead PI \(Core Leadership\) on Team/);
+  expect(getByLabelText(/\+1/)).toBeVisible();
 });
 it('does not show team information if the user is not on a team', async () => {
   const { container } = render(<UserProfilePersonalText {...props} />);

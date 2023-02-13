@@ -50,11 +50,6 @@ export const googleLegacyCalendarColor = [
 export type GoogleLegacyCalendarColor =
   typeof googleLegacyCalendarColor[number];
 
-export interface CalendarDataObject extends CalendarBaseDataObject {
-  groups?: Pick<GroupDataObject, 'id' | 'active'>[];
-  workingGroups?: Pick<WorkingGroupDataObject, 'id' | 'complete'>[];
-}
-
 export interface CalendarBaseDataObject {
   id: string;
   googleCalendarId: string;
@@ -65,6 +60,12 @@ export interface CalendarBaseDataObject {
   expirationDate?: number | null;
   version: number;
 }
+
+export interface CalendarDataObject extends CalendarBaseDataObject {
+  groups?: Pick<GroupDataObject, 'id' | 'active'>[];
+  workingGroups?: Pick<WorkingGroupDataObject, 'id' | 'complete'>[];
+}
+
 export type CalendarCreateDataObject = Omit<
   CalendarDataObject,
   'version' | 'id' | 'groups' | 'workingGroups'
@@ -74,16 +75,17 @@ export type CalendarUpdateDataObject = Partial<CalendarCreateDataObject>;
 
 export type ListCalendarDataObject = ListResponse<CalendarDataObject>;
 
-export interface CalendarResponse extends CalendarBaseResponse {
-  groups: Pick<GroupResponse, 'id' | 'active'>[];
-  workingGroups: Pick<WorkingGroupResponse, 'id' | 'complete'>[];
-}
-
 export interface CalendarBaseResponse {
   id: string;
   name: string;
   color: GoogleLegacyCalendarColor;
 }
+
+export interface CalendarResponse extends CalendarBaseResponse {
+  groups: Pick<GroupResponse, 'id' | 'active'>[];
+  workingGroups: Pick<WorkingGroupResponse, 'id' | 'complete'>[];
+}
+
 export type ListCalendarResponse = ListResponse<CalendarResponse>;
 
 export interface CalendarUpdateRequest {

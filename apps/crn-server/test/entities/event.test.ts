@@ -16,6 +16,7 @@ import {
   getSquidexGraphqlEventSpeakerWithExternalUser,
   getSquidexGraphqlEventSpeakerWithUser,
 } from '../fixtures/events.fixtures';
+import { getWorkingGroupDataObject } from '../fixtures/working-groups.fixtures';
 
 describe('events entity', () => {
   const graphqlEvent = getSquidexGraphqlEvent();
@@ -213,6 +214,30 @@ describe('events entity', () => {
 
       expect(eventSpeaker?.displayName).toEqual('Adam Brown');
       expect(eventSpeaker?.avatarUrl).toContain('/avatar-id');
+    });
+  });
+
+  describe('Working Group', () => {
+    it('returns undefined when referencingWorkingGroupsContents is null', () => {
+      const event = {
+        ...graphqlEvent,
+        flatData: {
+          ...graphqlEvent.flatData,
+          calendar: [
+            {
+              ...graphqlEvent.flatData.calendar![0]!,
+              referencingWorkingGroupsContents: null,
+            },
+          ],
+        },
+      };
+      const parsedEvent = parseGraphQLEvent(event);
+      expect(parsedEvent.workingGroup).toEqual(undefined);
+    });
+
+    it('returns working group object when referencingWorkingGroupsContents is not null', () => {
+      const parsedEvent = parseGraphQLEvent(graphqlEvent);
+      expect(parsedEvent.workingGroup).toEqual(getWorkingGroupDataObject());
     });
   });
 });

@@ -5,12 +5,14 @@ import {
 import {
   createListEventResponse,
   createTeamResponse,
+  createUserResponse,
 } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { createMemoryHistory } from 'history';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { Route, Router } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { getEvents } from '../../../events/api';
 import { getResearchOutputs } from '../../../shared-research/api';
@@ -73,6 +75,35 @@ it('does not allow navigating to the workspace tab when team tools are not avail
   expect(
     screen.queryByText(/workspace/i, { selector: 'nav *' }),
   ).not.toBeInTheDocument();
+});
+
+it('share outputs page is rendered when user clicks share an output and chooses an option', async () => {
+  const teamResponse = createTeamResponse();
+  const userResponse = createUserResponse({}, 1);
+  const history = createMemoryHistory({
+    initialEntries: [network({}).teams({}).team({ teamId: teamResponse.id }).$],
+  });
+
+  const { findByText, getByText } = await renderPage(
+    teamResponse,
+    { teamId: teamResponse.id, currentTime: new Date() },
+    {
+      ...userResponse,
+      teams: [
+        {
+          ...userResponse.teams[0],
+          role: 'ASAP Staff',
+        },
+      ],
+    },
+    history,
+  );
+  userEvent.click(await findByText(/share an output/i));
+  expect(getByText(/article/i, { selector: 'span' })).toBeVisible();
+  userEvent.click(getByText(/article/i, { selector: 'span' }));
+  expect(history.location.pathname).toEqual(
+    `/network/teams/${teamResponse.id}/create-output/article`,
+  );
 });
 
 it('renders the 404 page for a missing team', async () => {
@@ -161,7 +192,10 @@ it.each`
 const renderPage = async (
   teamResponse = createTeamResponse(),
   { teamId = teamResponse.id, currentTime = new Date() } = {},
-  initialEntries?: string,
+  user = {},
+  history = createMemoryHistory({
+    initialEntries: [network({}).teams({}).team({ teamId }).$],
+  }),
 ) => {
   const mockGetTeam = getTeam as jest.MockedFunction<typeof getTeam>;
   mockGetTeam.mockImplementation(async (id) =>
@@ -175,13 +209,9 @@ const renderPage = async (
       }
     >
       <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
+        <Auth0Provider user={user}>
           <WhenReady>
-            <MemoryRouter
-              initialEntries={[
-                initialEntries ?? network({}).teams({}).team({ teamId }).$,
-              ]}
-            >
+            <Router history={history}>
               <Route
                 path={
                   network.template +
@@ -191,7 +221,7 @@ const renderPage = async (
               >
                 <TeamProfile currentTime={currentTime} />
               </Route>
-            </MemoryRouter>
+            </Router>
           </WhenReady>
         </Auth0Provider>
       </Suspense>

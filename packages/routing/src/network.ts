@@ -137,10 +137,13 @@ const workingGroup = (() => {
     {},
   );
 
+  const upcoming = route('/upcoming', {}, {});
+  const past = route('/past', {}, {});
+
   return route(
     '/:workingGroupId',
     { workingGroupId: stringParser },
-    { about, createOutput, outputs },
+    { about, createOutput, outputs, upcoming, past },
   );
 })();
 

@@ -15,7 +15,7 @@ const NoEvents: React.FC<{
   displayName: string;
   past?: boolean;
   link: string;
-  type: 'team' | 'group' | 'user';
+  type: 'team' | 'group' | 'working group' | 'user';
 }> = ({ displayName, past, link, type }) => {
   const eventPeriod = past ? 'Past' : 'Upcoming';
   const lowerEventPeriod = eventPeriod.toLocaleLowerCase();

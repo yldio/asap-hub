@@ -11,6 +11,7 @@ import {
   eventPlaceholderIcon,
   speakerIcon,
   inactiveBadgeIcon,
+  WorkingGroupsIcon,
 } from '../icons';
 import {
   AssociationList,
@@ -77,7 +78,14 @@ const inactiveBadgeStyles = {
 type EventInfoProps = ComponentProps<typeof EventTime> &
   Pick<
     EventResponse,
-    'id' | 'title' | 'thumbnail' | 'group' | 'status' | 'speakers' | 'tags'
+    | 'id'
+    | 'title'
+    | 'thumbnail'
+    | 'group'
+    | 'workingGroup'
+    | 'status'
+    | 'speakers'
+    | 'tags'
   > & {
     titleLimit?: number | null;
     showNumberOfSpeakers?: boolean;
@@ -135,6 +143,7 @@ const EventInfo: React.FC<EventInfoProps> = ({
   title,
   thumbnail,
   group,
+  workingGroup,
   status,
   titleLimit = TITLE_LIMIT,
   showNumberOfSpeakers = false,
@@ -179,6 +188,19 @@ const EventInfo: React.FC<EventInfoProps> = ({
                 {!group.active && (
                   <span css={inactiveBadgeStyles}>{inactiveBadgeIcon}</span>
                 )}
+              </Link>
+            ) : workingGroup ? (
+              <Link
+                href={
+                  network({})
+                    .workingGroups({})
+                    .workingGroup({ workingGroupId: workingGroup.id }).$
+                }
+              >
+                <span css={iconStyles}>
+                  <WorkingGroupsIcon />
+                </span>
+                {workingGroup.title}
               </Link>
             ) : (
               <>

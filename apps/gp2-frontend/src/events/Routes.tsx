@@ -7,12 +7,15 @@ import { EventsPage } from '@asap-hub/gp2-components';
 
 const loadEventList = () =>
   import(/* webpackChunkName: "events-list" */ './EventsList');
+const loadEvent = () => import(/* webpackChunkName: "events-list" */ './Event');
 
 const EventList = lazy(loadEventList);
+const Event = lazy(loadEvent);
 
 const Events: FC<Record<string, never>> = () => {
   useEffect(() => {
     loadEventList();
+    loadEvent();
   }, []);
 
   const { path } = useRouteMatch();
@@ -44,7 +47,7 @@ const Events: FC<Record<string, never>> = () => {
       </Route>
       <Route path={path + gp2.events({}).event.template}>
         <Frame title="Event">
-          <div>Event Detail Page</div>
+          <Event />
         </Frame>
       </Route>
       <Redirect to={gp2.events({}).upcoming({}).$} />

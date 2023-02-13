@@ -155,4 +155,18 @@ describe('OpenQuestionsModal', () => {
       ],
     });
   });
+
+  it("doesn't allow the saveButton to save an empty question", async () => {
+    const onSave = jest.fn();
+    const props = {
+      questions: [],
+      onSave,
+    };
+    renderOpenQuestions(props);
+
+    const saveButton = screen.getByRole('button', { name: 'Save' });
+    await waitFor(() => userEvent.click(saveButton));
+    expect(onSave).not.toBeCalled();
+    expect(screen.getByText(/Please enter a question/)).toBeVisible();
+  });
 });

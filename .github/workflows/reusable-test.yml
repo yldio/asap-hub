@@ -97,7 +97,9 @@ jobs:
           environment-name: ${{ inputs.environment-name }}
       - name: Setup app
         shell: bash
-        run: python .github/scripts/squidex/create-app.py
+        run: |
+          python .github/scripts/squidex/create-app.py
+          sq sync in packages/squidex/schema/crn -t app -t schemas -t contents
         env:
           APP: crn
           SQUIDEX_APP_NAME: ${{ steps.setup.outputs.crn-squidex-app-name }}-${{ github.run_id }}

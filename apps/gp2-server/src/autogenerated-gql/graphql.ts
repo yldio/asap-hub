@@ -1409,7 +1409,7 @@ export type EnrichedAssetEvent = {
   sourceUrl: Scalars['String'];
   /** The thumbnail URL to the asset. */
   thumbnailUrl: Maybe<Scalars['String']>;
-  /** The type of the event, e.g. 'Created' or 'Updated'. */
+  /** The type of the event. */
   type: Maybe<EnrichedAssetEventType>;
   /** The URL to the asset. */
   url: Scalars['String'];
@@ -1453,7 +1453,7 @@ export type EnrichedContentEvent = {
   newStatus: Maybe<Scalars['String']>;
   /** The status of the content. */
   status: Scalars['String'];
-  /** The type of the event, e.g. 'Created' or 'Updated'. */
+  /** The type of the event. */
   type: Maybe<EnrichedContentEventType>;
   /** The version of the objec. */
   version: Scalars['Int'];

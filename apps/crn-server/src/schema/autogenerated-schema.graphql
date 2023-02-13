@@ -1744,14 +1744,14 @@ type ApplicationQueries {
 type ApplicationSubscriptions {
   """Subscribe to asset events."""
   assetChanges(
-    """The type of the event, e.g. 'Created' or 'Updated'."""
+    """The type of the event."""
     type: EnrichedAssetEventType
   ): EnrichedAssetEvent
   """Subscribe to content events."""
   contentChanges(
     """The name of the schema."""
     schemaName: String
-    """The type of the event, e.g. 'Created' or 'Updated'."""
+    """The type of the event."""
     type: EnrichedContentEventType
   ): EnrichedContentEvent
 }
@@ -2539,7 +2539,7 @@ type EnrichedAssetEvent {
   sourceUrl: String!
   """The thumbnail URL to the asset."""
   thumbnailUrl: String
-  """The type of the event, e.g. 'Created' or 'Updated'."""
+  """The type of the event."""
   type: EnrichedAssetEventType
   """The URL to the asset."""
   url: String!
@@ -2578,7 +2578,7 @@ type EnrichedContentEvent {
   newStatus: String
   """The status of the content."""
   status: String!
-  """The type of the event, e.g. 'Created' or 'Updated'."""
+  """The type of the event."""
   type: EnrichedContentEventType
   """The version of the objec."""
   version: Int!

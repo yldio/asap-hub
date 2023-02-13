@@ -63,6 +63,12 @@ export const researchOutputContentQueryFragment = gql`
             }
             expertiseAndResourceTags
             expertiseAndResourceDescription
+            workingGroups {
+              id
+              flatData {
+                name
+              }
+            }
             teams {
               inactiveSinceDate
               role

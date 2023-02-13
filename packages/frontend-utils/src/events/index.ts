@@ -1,9 +1,9 @@
-import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
   EventConstraint,
   EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
 } from '@asap-hub/model';
 import { subHours } from 'date-fns';
+import { GetListOptions } from '../api-util';
 
 export type GetEventListOptions = GetListOptions &
   (

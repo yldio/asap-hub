@@ -1,8 +1,8 @@
+import { GetEventListOptions } from '@asap-hub/frontend-utils';
 import { EventResponse, ListEventResponse } from '@asap-hub/model';
 import { atom, atomFamily, selectorFamily, useRecoilValue } from 'recoil';
 import { authorizationState } from '../auth/state';
 import { getEvent, getEvents } from './api';
-import { GetEventListOptions } from './options';
 
 export const eventsState = selectorFamily<
   ListEventResponse,

@@ -1,8 +1,9 @@
-import { createSentryHeaders } from '@asap-hub/frontend-utils';
+import {
+  createSentryHeaders,
+  GetEventListOptions,
+} from '@asap-hub/frontend-utils';
 import { EventResponse, ListEventResponse } from '@asap-hub/model';
 import { API_BASE_URL } from '../config';
-
-import { GetEventListOptions } from './options';
 
 export const getEvents = async (
   authorization: string,

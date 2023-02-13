@@ -1,4 +1,5 @@
 import { User } from '@asap-hub/auth';
+import { GetEventListOptions } from '@asap-hub/frontend-utils';
 import { EventResponse, ListEventResponse } from '@asap-hub/model';
 import {
   atomFamily,
@@ -12,7 +13,6 @@ import useDeepCompareEffect from 'use-deep-compare-effect';
 import { authorizationState } from '../auth/state';
 import { useAlgolia } from '../hooks/algolia';
 import { getEvent, getEvents } from './api';
-import { GetEventListOptions } from './options';
 
 const eventIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,

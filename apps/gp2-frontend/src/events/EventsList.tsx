@@ -1,8 +1,8 @@
+import { getEventListOptions } from '@asap-hub/frontend-utils';
 import { EventsList } from '@asap-hub/react-components';
 
 import { usePagination, usePaginationParams } from '../hooks/pagination';
 import { useEvents } from './state';
-import { getEventListOptions } from './options';
 
 type EventListProps = {
   readonly currentTime: Date;

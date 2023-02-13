@@ -2,11 +2,11 @@ import {
   createEventResponse,
   createListEventResponse,
 } from '@asap-hub/fixtures';
+import { GetEventListOptions } from '@asap-hub/frontend-utils';
 import { ListEventResponse } from '@asap-hub/model';
 import nock from 'nock';
 import { API_BASE_URL } from '../../config';
 import { getEvent, getEvents } from '../api';
-import { GetEventListOptions } from '../options';
 
 jest.mock('../../config');
 

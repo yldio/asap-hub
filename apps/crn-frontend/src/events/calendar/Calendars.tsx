@@ -1,8 +1,8 @@
 import { EventsCalendar } from '@asap-hub/react-components';
+import { getEventListOptions } from '@asap-hub/frontend-utils';
 
 import { useCalendars } from './state';
 import { usePrefetchEvents } from '../state';
-import { getEventListOptions } from '../options';
 
 interface CalendarsProps {
   currentTime: Date;

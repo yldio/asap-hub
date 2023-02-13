@@ -25,25 +25,15 @@ const getContent = () => ({
     data: {},
     content: [
       {
-        data: {
-          uri: 'https://aligningscienceacrossparkinsonsasap.cmail20.com/t/t-l-qdikktl-wuujihjhk-jh/',
-        },
+        data: {},
         content: [
           {
-            data: {
-              target: {
-                sys: {
-                  type: 'Link',
-                  linkType: 'Asset',
-                  id: '512766340',
-                },
-              },
-            },
-            content: [],
-            nodeType: 'embedded-asset-block',
+            data: {},
+            marks: [],
+            value: 'th',
+            nodeType: 'text',
           },
         ],
-        nodeType: 'hyperlink',
       },
     ],
   },

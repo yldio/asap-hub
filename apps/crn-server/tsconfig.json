@@ -17,7 +17,7 @@
     "test/**/*.json",
     "@types/**/*.d.ts",
     "serverless.ts"
-, "../../packages/server-common/test/mocks/google-api.mock.ts" ],
+],
   "references": [
     { "path": "../../packages/auth" },
     { "path": "../../packages/algolia" },

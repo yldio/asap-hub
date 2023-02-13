@@ -12279,6 +12279,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jsonwebtoken", "npm:8.5.9"],\
             ["@types/luxon", "npm:1.27.1"],\
             ["@types/pump", "npm:1.1.1"],\
+            ["@types/source-map-support", "npm:0.5.4"],\
             ["@types/supertest", "npm:2.0.12"],\
             ["@types/through2-concurrent", "npm:2.0.1"],\
             ["@types/uuid", "npm:8.3.4"],\
@@ -12302,6 +12303,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["pino-noir", "npm:2.2.1"],\
             ["pino-pretty", "npm:9.1.1"],\
             ["pump", "npm:3.0.0"],\
+            ["source-map-support", "npm:0.5.21"],\
             ["supertest", "npm:6.3.3"],\
             ["through2-concurrent", "npm:2.0.0"],\
             ["uuid", "npm:8.3.2"]\

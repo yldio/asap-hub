@@ -1,5 +1,5 @@
+import { syncCalendarFactory } from '@asap-hub/crn-server/src/utils/sync-google-calendar';
 import { GetJWTCredentials } from '../../src/utils/aws-secret-manager';
-import { syncCalendarFactory } from '../../src/utils/sync-google-calendar';
 import * as fixtures from '../fixtures/google-events.fixtures';
 
 const mockList = jest.fn();

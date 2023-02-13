@@ -21,6 +21,7 @@ import { CalendarSquidexDataProvider } from '../../data-providers/calendars.data
 import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
+
 const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
   appName,
   baseUrl,

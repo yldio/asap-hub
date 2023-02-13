@@ -1,7 +1,8 @@
+import * as Sentry from '@sentry/serverless';
+
 export interface Alerts {
   error: (error: unknown) => void | Promise<void>;
 }
-import * as Sentry from '@sentry/serverless';
 
 export class AlertsSentry implements Alerts {
   private captureExceptionSentry: typeof Sentry.captureException;

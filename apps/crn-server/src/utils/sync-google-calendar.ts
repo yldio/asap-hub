@@ -1,6 +1,6 @@
-import { google, calendar_v3 as calendarV3, Auth } from 'googleapis';
+import { GetJWTCredentials } from '@asap-hub/server-common';
+import { Auth, calendar_v3 as calendarV3, google } from 'googleapis';
 import { DateTime } from 'luxon';
-import { GetJWTCredentials } from './aws-secret-manager';
 import logger from './logger';
 import { SyncEvent } from './sync-google-event';
 

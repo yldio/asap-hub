@@ -1,4 +1,3 @@
-import { SendEmail } from '@asap-hub/server-common';
 import { RestUser } from '@asap-hub/squidex';
 import { notFound } from '@hapi/boom';
 import path from 'path';
@@ -7,7 +6,7 @@ import {
   inviteHandlerFactory,
   UserInviteEventBridgeEvent,
 } from '../../../src/handlers/user';
-import { crnWelcomeTemplate } from '../../../src/utils';
+import { crnWelcomeTemplate, SendEmail } from '../../../src/utils';
 import { restUserMock } from '../../fixtures/users.fixtures';
 import { loggerMock as logger } from '../../mocks/logger.mock';
 import { getSquidexClientMock } from '../../mocks/squidex-client.mock';

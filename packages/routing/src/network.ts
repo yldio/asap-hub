@@ -136,14 +136,14 @@ const workingGroup = (() => {
     { workingGroupOutputDocumentType: workingGroupOutputDocumentTypeParser },
     {},
   );
-
+  const calendar = route('/calendar', {}, {});
   const upcoming = route('/upcoming', {}, {});
   const past = route('/past', {}, {});
 
   return route(
     '/:workingGroupId',
     { workingGroupId: stringParser },
-    { about, createOutput, outputs, upcoming, past },
+    { about, createOutput, outputs, calendar, upcoming, past },
   );
 })();
 

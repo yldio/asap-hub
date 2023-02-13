@@ -132,6 +132,26 @@ describe('the outputs tab', () => {
   });
 });
 
+describe('the calendar tab', () => {
+  it('can be switched to', async () => {
+    const { findByText } = await renderWorkingGroupProfile();
+    userEvent.click(await findByText(/calendar/i, { selector: 'nav a *' }));
+    expect(
+      await findByText(/subscribe to this working group's calendar/i),
+    ).toBeVisible();
+  });
+
+  it('cannot be switched to if the working group is inactive', async () => {
+    mockGetWorkingGroup.mockResolvedValueOnce({
+      ...createWorkingGroupResponse(),
+      complete: true,
+    });
+    const { queryByText } = await renderWorkingGroupProfile();
+
+    expect(await queryByText('Calendar')).not.toBeInTheDocument();
+  });
+});
+
 describe('the upcoming events tab', () => {
   it('can be switched to', async () => {
     const { findByText } = await renderWorkingGroupProfile();

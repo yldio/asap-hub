@@ -68,7 +68,9 @@ const GroupProfile: FC<GroupProfileProps> = ({ currentTime }) => {
           About={() => (
             <About group={group} groupTeamsElementId={groupTeamsElementId} />
           )}
-          Calendar={() => <Calendar calendars={group.calendars} />}
+          Calendar={() => (
+            <Calendar calendars={group.calendars} groupType="interest" />
+          )}
           currentTime={currentTime}
           displayName={group.name}
           eventConstraint={{ groupId }}

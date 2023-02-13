@@ -12,5 +12,6 @@ export const Normal = () => (
     calendars={
       createListCalendarResponse(number('Number of Group Calendars', 1)).items
     }
+    groupType="interest"
   />
 );

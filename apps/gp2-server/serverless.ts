@@ -111,6 +111,22 @@ const serverlessConfig: AWS = {
         statements: [
           {
             Effect: 'Allow',
+            Action: 'secretsmanager:*',
+            Resource: {
+              'Fn::Join': [
+                ':',
+                [
+                  'arn:aws:secretsmanager',
+                  { Ref: 'AWS::Region' },
+                  { Ref: 'AWS::AccountId' },
+                  'secret',
+                  `google-api-credentials-${envAlias}*`,
+                ],
+              ],
+            },
+          },
+          {
+            Effect: 'Allow',
             Action: 'ses:SendTemplatedEmail',
             Resource: ['*'],
             Condition: {
@@ -218,6 +234,39 @@ const serverlessConfig: AWS = {
       environment: {
         AUTH0_CLIENT_ID: auth0ClientId,
         AUTH0_SHARED_SECRET: auth0SharedSecret,
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
+    subscribeCalendar: {
+      handler: './src/handlers/calendar/subscribe-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus,
+            pattern: {
+              source: [eventBusSource],
+              'detail-type': ['CalendarsCreated', 'CalendarsUpdated'],
+            },
+          },
+        },
+      ],
+      environment: {
+        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
+        GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
+    resubscribeCalendars: {
+      handler: './src/handlers/calendar/resubscribe-handler.handler',
+      timeout: 120,
+      events: [
+        {
+          schedule: 'cron(0 1 * * ? *)',
+        },
+      ],
+      environment: {
+        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
+        GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
@@ -658,6 +707,52 @@ const serverlessConfig: AWS = {
               },
             },
           ],
+        },
+      },
+      SubscribeCalendarDLQ: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          MessageRetentionPeriod: 1_209_600, // 14 days
+          QueueName:
+            '${self:service}-${self:provider.stage}-subscribe-calendar-dlq',
+        },
+      },
+      SubscribeCalendarDLQPolicy: {
+        Type: 'AWS::SQS::QueuePolicy',
+        Properties: {
+          PolicyDocument: {
+            Id: '${self:service}-${self:provider.stage}-subscribe-calendar-dlq-policy',
+            Version: '2012-10-17',
+            Statement: [
+              {
+                Sid: 'Publisher-statement-id',
+                Effect: 'Allow',
+                Principal: {
+                  AWS: '*',
+                },
+                Action: 'sqs:SendMessage',
+                Resource: {
+                  'Fn::GetAtt': [`SubscribeCalendarDLQ`, 'Arn'],
+                },
+              },
+            ],
+          },
+          Queues: [
+            {
+              Ref: `SubscribeCalendarDLQ`,
+            },
+          ],
+        },
+      },
+    },
+    extensions: {
+      SubscribeCalendarLambdaFunction: {
+        Properties: {
+          DeadLetterConfig: {
+            TargetArn: {
+              'Fn::GetAtt': ['SubscribeCalendarDLQ', 'Arn'],
+            },
+          },
         },
       },
     },

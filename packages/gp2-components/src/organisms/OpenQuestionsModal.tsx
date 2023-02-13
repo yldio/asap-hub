@@ -18,12 +18,8 @@ const containerStyles = css({
 });
 
 const rowStyles = css({
-  marginBottom: rem(16),
-  padding: `${rem(16)} 0`,
-  ':last-child': {
-    marginBottom: 0,
-    paddingBottom: 0,
-  },
+  marginTop: rem(36),
+  marginBottom: rem(12),
 });
 
 const headerStyles = css({
@@ -40,7 +36,7 @@ const addButtonStyles = css({
   },
 });
 
-const optional = '(optional)';
+const required = '(required)';
 
 type OpenQuestionsModalProps = Pick<gp2Model.UserResponse, 'questions'> &
   Pick<ComponentProps<typeof EditUserModal>, 'backHref'> & {
@@ -81,38 +77,38 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
   return (
     <EditUserModal
       title="Open Questions"
-      description="Share the research questions that interest you and drive your work. Other members will be able to respond to you privately using your email."
+      description="Share the research questions that interest you and drive your work (up to five). This will give other members a good sense of the kinds of problems that you’re interested in solving."
       onSave={() => onSave({ questions: newQuestions })}
       backHref={backHref}
       dirty={checkDirty()}
     >
       {({ isSaving }) => (
         <div css={containerStyles}>
-          <div>
-            {newQuestions.map((question, index) => (
-              <div css={rowStyles} key={`question-${index}`}>
-                <div css={headerStyles}>
-                  <p>
-                    <strong>Question {index + 1}</strong> {optional}
-                  </p>
-                  <div css={{ margin: 0 }}>
-                    <Button onClick={onRemove(index)} small>
-                      <span css={{ display: 'inline-flex' }}>{binIcon}</span>
-                    </Button>
-                  </div>
+          {newQuestions.map((question, index) => (
+            <div css={rowStyles} key={`question-${index}`}>
+              <div css={headerStyles}>
+                <p>
+                  <strong>Question {index + 1}</strong> {required}
+                </p>
+                <div css={{ margin: 0 }}>
+                  <Button onClick={onRemove(index)} small>
+                    <span css={{ display: 'inline-flex' }}>{binIcon}</span>
+                  </Button>
                 </div>
-                <TextArea
-                  enabled={!isSaving}
-                  value={question}
-                  onChange={onChangeValue(index)}
-                  maxLength={250}
-                  placeholder={
-                    'Example: Are alpha-synuclein deposits the cause or consequence of something deeper wrong with neurons?'
-                  }
-                />
               </div>
-            ))}
-          </div>
+              <TextArea
+                enabled={!isSaving}
+                value={question}
+                required
+                onChange={onChangeValue(index)}
+                maxLength={250}
+                getValidationMessage={() => 'Please enter a question'}
+                placeholder={
+                  'Example: Are alpha-synuclein deposits the cause or consequence of something deeper wrong with neurons?'
+                }
+              />
+            </div>
+          ))}
           {newQuestions.length < 5 ? (
             <div css={addButtonStyles}>
               <Button onClick={onAdd} enabled={!isSaving} small>

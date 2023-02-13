@@ -35,6 +35,7 @@ const calendarDataProvider = new CalendarSquidexDataProvider(
   calendarRestClient,
   squidexGraphqlClient,
 );
+/* istanbul ignore next */
 const getJWTCredentialsAWS = getJWTCredentialsFactory({
   googleApiCredentialsSecretId,
   region,

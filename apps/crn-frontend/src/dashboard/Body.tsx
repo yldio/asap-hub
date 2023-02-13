@@ -2,11 +2,11 @@ import { ComponentProps, FC } from 'react';
 import { User } from '@asap-hub/auth';
 import { DashboardPageBody } from '@asap-hub/react-components';
 import { activeUserTag } from '@asap-hub/model';
-import { useEvents } from '../events/state';
+import { getEventListOptions } from '@asap-hub/frontend-utils';
 
+import { useEvents } from '../events/state';
 import { useResearchOutputs } from '../shared-research/state';
 import { useUsers } from '../network/users/state';
-import { getEventListOptions } from '@asap-hub/frontend-utils';
 
 type BodyProps = Omit<
   ComponentProps<typeof DashboardPageBody>,

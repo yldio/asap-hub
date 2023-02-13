@@ -31,6 +31,7 @@ export {
   NavigationHeader,
   OnboardingPageFooter,
   OnboardingPageHeader,
+  OpenQuestionsModal,
   PageBanner,
   ProjectCard,
   ProjectDetailHeader,

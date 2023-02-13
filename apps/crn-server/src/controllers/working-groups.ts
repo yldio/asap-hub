@@ -5,6 +5,7 @@ import {
   WorkingGroupResponse,
 } from '@asap-hub/model';
 import { WorkingGroupDataProvider } from '../data-providers/working-groups.data-provider';
+import { toWorkingGroupResponse } from '../entities/working-group';
 
 export interface WorkingGroupController {
   fetch: (options: FetchOptions) => Promise<WorkingGroupListResponse>;
@@ -31,7 +32,7 @@ export default class WorkingGroups implements WorkingGroupController {
       ...workingGroupFilter,
     });
 
-    return { total, items };
+    return { total, items: items.map(toWorkingGroupResponse) };
   }
 
   async fetchById(groupId: string): Promise<WorkingGroupResponse> {
@@ -42,6 +43,7 @@ export default class WorkingGroups implements WorkingGroupController {
         `working group with id ${groupId} not found`,
       );
     }
-    return workingGroup;
+
+    return toWorkingGroupResponse(workingGroup);
   }
 }

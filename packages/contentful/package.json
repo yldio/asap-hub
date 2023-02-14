@@ -30,7 +30,7 @@
     "contentful-management": "^10.19.3",
     "contentful-migrate": "0.17.0",
     "graphql": "15.8.0",
-    "graphql-request": "3.4.0",
+    "graphql-request": "3.7.0",
     "graphql-tag": "2.12.6"
   },
   "devDependencies": {

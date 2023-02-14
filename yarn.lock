@@ -423,7 +423,7 @@ __metadata:
     contentful-management: ^10.19.3
     contentful-migrate: 0.17.0
     graphql: 15.8.0
-    graphql-request: 3.4.0
+    graphql-request: 3.7.0
     graphql-tag: 2.12.6
     graphql-typescript-integration: 1.2.1
     prettier: 2.7.1
@@ -1372,7 +1372,7 @@ __metadata:
     debug: 4.3.4
     got: 11.8.6
     graphql: 15.8.0
-    graphql-request: 3.4.0
+    graphql-request: 3.7.0
     jwt-decode: 2.2.0
     jwt-encode: 1.0.1
     nock: 13.3.0
@@ -1406,7 +1406,7 @@ __metadata:
     debug: 4.3.4
     got: 11.8.6
     graphql: 15.8.0
-    graphql-request: 3.4.0
+    graphql-request: 3.7.0
     jwt-decode: 2.2.0
     jwt-encode: 1.0.1
     luxon: 1.28.1
@@ -25402,16 +25402,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphql-request@npm:3.4.0":
-  version: 3.4.0
-  resolution: "graphql-request@npm:3.4.0"
+"graphql-request@npm:3.7.0":
+  version: 3.7.0
+  resolution: "graphql-request@npm:3.7.0"
   dependencies:
-    cross-fetch: "npm:^3.0.6"
-    extract-files: "npm:^9.0.0"
-    form-data: "npm:^3.0.0"
+    cross-fetch: ^3.0.6
+    extract-files: ^9.0.0
+    form-data: ^3.0.0
   peerDependencies:
-    graphql: 14.x || 15.x
-  checksum: 5be0398af5cd02694893169bcc3b92f454910dac3b257aa350fa59686d8ef24334619f0b5bdd2fdefea654eab9544ec6f270688255dde9eeff5475d5e64ea073
+    graphql: 14 - 16
+  checksum: db3800cc4ee884cd1514d7d5eafafb9ed27694278fdddd7402345754a7d25e7d713246c72aa510b439b6df2633b74f2cf74fb36864a22a857d5fb2de1cf0b4d8
   languageName: node
   linkType: hard
 

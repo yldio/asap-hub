@@ -1,5 +1,6 @@
+import { getEventListOptions } from '@asap-hub/frontend-utils';
 import { EventConstraint } from '@asap-hub/model';
-import { getEventListOptions } from '../events/options';
+
 import { useEvents } from '../events/state';
 import { usePaginationParams } from '../hooks';
 

@@ -1,4 +1,5 @@
 import { createListCalendarResponse } from '@asap-hub/fixtures';
+import { getEventListOptions } from '@asap-hub/frontend-utils';
 import { events } from '@asap-hub/routing';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -11,7 +12,7 @@ import { getEvents } from '../api';
 import { getCalendars } from '../calendar/api';
 import { refreshCalendarsState } from '../calendar/state';
 import Events from '../Events';
-import { getEventListOptions } from '../options';
+
 import { eventsState } from '../state';
 
 jest.mock('../calendar/api');

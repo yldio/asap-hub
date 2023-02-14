@@ -2,8 +2,9 @@ import { ComponentProps, FC } from 'react';
 import { User } from '@asap-hub/auth';
 import { DashboardPageBody } from '@asap-hub/react-components';
 import { activeUserTag } from '@asap-hub/model';
+import { getEventListOptions } from '@asap-hub/frontend-utils';
+
 import { useEvents } from '../events/state';
-import { getEventListOptions } from '../events/options';
 import { useResearchOutputs } from '../shared-research/state';
 import { useUsers } from '../network/users/state';
 

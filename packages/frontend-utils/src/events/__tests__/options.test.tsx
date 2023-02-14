@@ -1,4 +1,4 @@
-import { getEventListOptions } from '../options';
+import { getEventListOptions } from '..';
 
 describe('getEventListOptions', () => {
   it('sets after for upcoming events', () => {

@@ -1,17 +1,19 @@
 {
   "extends": ["config:base"],
-  "prConcurrentLimit": 10,
-  "prHourlyLimit": 5,
+  "prConcurrentLimit": 15,
+  "prHourlyLimit": 1,
+  "platformAutomerge": true,
   "packageRules": [
     {
       "matchCurrentVersion": "!/^0/",
-      "automerge": true
+      "automerge": true,
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"]
     }
   ],
   "timezone": "Europe/London",
-  "updateNotScheduled": "false",
-  "schedule": ["after 7am and before 10am every weekday"],
-  "automergeSchedule": ["after 8am and before 11am every weekday"],
+  "updateNotScheduled": false,
+  "schedule": ["after 5am and before 10am every weekday"],
+  "automergeSchedule": ["after 6am and before 11am every weekday"],
   "lockFileMaintenance": {
     "enabled": true,
     "automerge": true

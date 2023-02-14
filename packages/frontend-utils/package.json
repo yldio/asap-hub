@@ -16,7 +16,7 @@
     "@asap-hub/model": "workspace:*",
     "@asap-hub/react-components": "workspace:*",
     "@sentry/react": "6.19.7",
-    "core-js": "3.27.2",
+    "core-js": "3.28.0",
     "react": "^17.0.2",
     "react-error-boundary": "3.1.4",
     "react-router-dom": "5.3.4",
@@ -25,6 +25,7 @@
   "dependencies": {
     "@babel/runtime-corejs3": "7.20.13",
     "csv-stringify": "6.2.4",
+    "date-fns": "2.29.3",
     "react-titled": "1.0.1",
     "streamsaver": "2.0.6",
     "web-streams-polyfill": "3.2.1"

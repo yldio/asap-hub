@@ -1,4 +1,4 @@
-import { gp2 } from '@asap-hub/model';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import { Event, RestEvent } from '@asap-hub/squidex';
 import {
   EventContentFragment,
@@ -16,14 +16,14 @@ export const getEventRestResponse = (): Event => ({
   endDate: '2021-02-23T19:32:00Z',
   endDateTimeZone: 'Europe/Lisbon',
   calendar: ['squidex-calendar-id'],
-  status: 'Confirmed' as gp2.EventStatus,
+  status: 'Confirmed' as gp2Model.EventStatus,
   tags: [],
   hidden: false,
   meetingLink: 'https://zweem.com',
   hideMeetingLink: false,
 });
 
-export const getEventSpeakerUser = (): gp2.EventSpeakerUser => ({
+export const getEventSpeakerUser = (): gp2Model.EventSpeakerUser => ({
   user: {
     id: 'user-id-3',
     firstName: 'Adam',
@@ -33,7 +33,7 @@ export const getEventSpeakerUser = (): gp2.EventSpeakerUser => ({
   },
 });
 
-export const getEventResponse = (): gp2.EventResponse => ({
+export const getEventDataObject = (): gp2Model.EventDataObject => ({
   id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
   description: 'This event is awesome',
   lastModifiedDate: '2021-05-14T14:48:46.000Z',
@@ -66,20 +66,24 @@ export const getEventResponse = (): gp2.EventResponse => ({
   speakers: [getEventSpeakerUser()],
 });
 
-export const listEventResponse = {
+export const getListEventDataObject = (): gp2Model.ListEventDataObject => ({
   total: 1,
-  items: [getEventResponse()],
-};
+  items: [getEventDataObject()],
+});
+export const getEventResponse = (): gp2Model.EventResponse =>
+  getEventDataObject();
+export const getListEventResponse = (): gp2Model.ListEventResponse =>
+  getListEventDataObject();
 
 export const getRestEvent = (): RestEvent => ({
   id: 'squidex-event-id',
   created: '2021-02-23T19:32:00Z',
   lastModified: '2021-02-23T19:32:00Z',
   version: 42,
-  data: squidexRestEventData(),
+  data: getEventInput(),
 });
 
-export const squidexRestEventData = () => ({
+export const getEventInput = () => ({
   googleId: { iv: 'google-event-id' },
   title: { iv: 'Event Tittle' },
   description: { iv: 'This event will be good' },
@@ -88,13 +92,27 @@ export const squidexRestEventData = () => ({
   endDate: { iv: '2021-02-23T19:32:00Z' },
   endDateTimeZone: { iv: 'Europe/Lisbon' },
   calendar: { iv: ['squidex-calendar-id'] },
-  status: { iv: 'Confirmed' as gp2.EventStatus },
+  status: { iv: 'Confirmed' as gp2Model.EventStatus },
   tags: { iv: [] },
   hidden: { iv: false },
   meetingLink: { iv: 'https://zweem.com' },
   hideMeetingLink: { iv: false },
 });
-
+export const getUserCreateDataObject = (): gp2Model.EventCreateDataObject => ({
+  googleId: 'google-event-id',
+  title: 'Event Tittle',
+  description: 'This event will be good',
+  startDate: '2021-02-23T19:32:00Z',
+  startDateTimeZone: 'Europe/Lisbon',
+  endDate: '2021-02-23T19:32:00Z',
+  endDateTimeZone: 'Europe/Lisbon',
+  calendar: 'squidex-calendar-id',
+  status: 'Confirmed' as gp2Model.EventStatus,
+  tags: [],
+  hidden: false,
+  meetingLink: 'https://zweem.com',
+  hideMeetingLink: false,
+});
 export const getSquidexGraphqlEvent = () => ({
   id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
   created: '2020-09-23T16:34:26.842Z',
@@ -175,7 +193,7 @@ const squidexGraphqlEventsFlatData = (): EventContentFragment['flatData'] & {
   speakers: [getSquidexGraphqlEventSpeakerWithUser()],
 });
 
-export const getSquidexGraphqlEvents = (): gp2.ListEventResponse => ({
+export const getSquidexGraphqlEvents = (): gp2Model.ListEventResponse => ({
   items: [getEventResponse()],
   total: 1,
 });

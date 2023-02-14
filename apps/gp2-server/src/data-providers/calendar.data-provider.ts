@@ -34,16 +34,10 @@ export interface CalendarDataProvider {
 }
 
 export class CalendarSquidexDataProvider {
-  squidexRestClient: SquidexRestClient<RestCalendar, InputCalendar>;
-  squidexGraphqlClient: SquidexGraphqlClient;
-
   constructor(
-    squidexRestClient: SquidexRestClient<RestCalendar, InputCalendar>,
-    squidexGraphqlClient: SquidexGraphqlClient,
-  ) {
-    this.squidexRestClient = squidexRestClient;
-    this.squidexGraphqlClient = squidexGraphqlClient;
-  }
+    private squidexRestClient: SquidexRestClient<RestCalendar, InputCalendar>,
+    private squidexGraphqlClient: SquidexGraphqlClient,
+  ) {}
 
   async fetchById(id: string): Promise<gp2.CalendarDataObject | null> {
     const { findCalendarsContent: calendar } =
@@ -111,7 +105,8 @@ export class CalendarSquidexDataProvider {
   }
 
   async create(create: gp2.CalendarCreateDataObject): Promise<string> {
-    const { id } = await this.squidexRestClient.create(parseToSquidex(create));
+    const data = parseToSquidex(create);
+    const { id } = await this.squidexRestClient.create(data);
 
     return id;
   }

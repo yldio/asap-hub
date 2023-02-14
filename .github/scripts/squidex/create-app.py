@@ -30,17 +30,13 @@ def promoteClient(appName, client):
     requests.put(url=clientUrl, headers=headers, json=update)
 
 
-def syncApp(appName, clientId, clientSecret, app):
+def setApp(appName, clientId, clientSecret, app):
     os.system('sq config add {appName} {appName}:default {clientSecret}'.format(
         appName=appName,
         clientId=clientId,
         clientSecret=clientSecret
     ))
     os.system('sq config use {appName}'.format(appName=appName))
-    # ATM we have not contents in the repo, but we can easily use this feature to setup fixture data
-    os.system(
-        'sq sync in packages/squidex/schema/{app} -t app -t schemas -t contents'.format(app=app))
-
 
 def main():
     appName = os.getenv('SQUIDEX_APP_NAME')
@@ -59,8 +55,7 @@ def main():
         print("App", appName, "created")
         client = getAppClient(appName)
         promoteClient(appName, client)
-        syncApp(appName, client['id'], client['secret'], app)
+        setApp(appName, client['id'], client['secret'], app)
         print("::set-output name=app-created::true")
-
 
 main()

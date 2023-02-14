@@ -98,6 +98,29 @@ describe('AdditionalDetails', () => {
     ).toBeVisible();
   });
 
+  it('saves the open questions modal', async () => {
+    const user = gp2Fixtures.createUserResponse();
+    mockGetUser.mockResolvedValueOnce(user);
+    await renderAdditionalDetails(user.id);
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    const [openQuestionsButton] = screen.getAllByRole('link', {
+      name: 'Edit Edit',
+    });
+    userEvent.click(openQuestionsButton);
+    expect(screen.getByRole('dialog')).toBeVisible();
+    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+    expect(mockPatchUser).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        questions: ['a first question?', 'a second question?'],
+      }),
+      expect.anything(),
+    );
+  });
+
   it('saves the funding providers modal', async () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);

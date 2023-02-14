@@ -112,9 +112,11 @@ describe('Working Group Data Provider', () => {
           skip: 2,
         },
       );
+      const expectedResult = getWorkingGroupDataObject();
+      expectedResult.calendars = [];
       expect(result).toEqual({
         total: 1,
-        items: [getWorkingGroupDataObject()],
+        items: [expectedResult],
       });
     });
   });

@@ -1,10 +1,9 @@
-import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
   EventConstraint,
   EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
 } from '@asap-hub/model';
 import { subHours } from 'date-fns';
-import { CARD_VIEW_PAGE_SIZE } from '../hooks';
+import { GetListOptions } from '../api-util';
 
 export type GetEventListOptions = GetListOptions &
   (
@@ -36,7 +35,7 @@ export const getEventListOptions = (
     past,
     searchQuery = '',
     currentPage = 0,
-    pageSize = CARD_VIEW_PAGE_SIZE,
+    pageSize = 10,
     constraint = {},
   }: EventListParams,
 ): GetEventListOptions => {

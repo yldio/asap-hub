@@ -161,7 +161,7 @@ const Network: FC<Record<string, never>> = () => {
         }
       >
         <Frame title="Working Group Profile">
-          <WorkingGroupProfile />
+          <WorkingGroupProfile currentTime={currentTime} />
         </Frame>
       </Route>
       <Redirect to={network({}).users({}).$} />

@@ -120,6 +120,7 @@ export const getSquidexGraphqlEventCalendar = (): NonNullable<
 >[number] => ({
   flatData: squidexGraphqlCalendarsFlatData(),
   referencingGroupsContents: [getSquidexGraphqlGroup()],
+  referencingWorkingGroupsContents: [getSquidexGraphqlWorkingGroup()],
 });
 
 export const getSquidexCalendarsGraphqlResponse = (): FetchCalendarsQuery => ({

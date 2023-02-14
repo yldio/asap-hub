@@ -19,7 +19,7 @@
     "@asap-hub/auth": "workspace:*",
     "@asap-hub/flags": "workspace:*",
     "@babel/runtime-corejs3": "7.20.13",
-    "core-js": "3.27.2"
+    "core-js": "3.28.0"
   },
   "devDependencies": {
     "@asap-hub/dom-test-utils": "workspace:*",

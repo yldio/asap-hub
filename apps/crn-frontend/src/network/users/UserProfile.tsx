@@ -1,4 +1,4 @@
-import { Frame } from '@asap-hub/frontend-utils';
+import { Frame, getEventListOptions } from '@asap-hub/frontend-utils';
 import {
   NotFoundPage,
   UserProfilePage,
@@ -13,7 +13,7 @@ import { events, network, useRouteParams } from '@asap-hub/routing';
 import imageCompression from 'browser-image-compression';
 import { ComponentProps, FC, lazy, useContext, useState } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
-import { getEventListOptions } from '../../events/options';
+
 import { useEvents } from '../../events/state';
 import {
   useCurrentUserProfileTabRoute,

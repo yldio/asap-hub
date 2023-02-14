@@ -20,16 +20,10 @@ export interface UserController {
 }
 
 export default class Users implements UserController {
-  userDataProvider: UserDataProvider;
-  assetDataProvider: AssetDataProvider;
-
   constructor(
-    userDataProvider: UserDataProvider,
-    assetDataProvider: AssetDataProvider,
-  ) {
-    this.userDataProvider = userDataProvider;
-    this.assetDataProvider = assetDataProvider;
-  }
+    private userDataProvider: UserDataProvider,
+    private assetDataProvider: AssetDataProvider,
+  ) {}
 
   async update(
     id: string,

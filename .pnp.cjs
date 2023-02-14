@@ -316,10 +316,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:2.2.0"\
       ],\
       [\
-        "@apideck/better-ajv-errors",\
-        "virtual:71d02fae4313ca57011174350e5f9afe80b5719d521a2394c895ef4a460132f7bf8d3a9572e911d3fde0ce0f76d6192b54631e87893e1f2c030e5ffc82d8df40#npm:0.3.6"\
-      ],\
-      [\
         "@arcanis/slice-ansi",\
         "npm:1.1.1"\
       ],\
@@ -2956,15 +2952,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "ajv",\
-        "npm:8.11.0"\
+        "npm:8.12.0"\
       ],\
       [\
         "ajv-formats",\
-        "virtual:4b7d8bb1684f7f69bf042a03dae4d118ab00edf0e34f409e5270fb3cce9e5fcf8ce9581b8f5bc8597c1e50c52a23eba5d4eadeede8c58ab0be3187e2389e11d5#npm:2.1.1"\
-      ],\
-      [\
-        "ajv-keywords",\
-        "virtual:4b7d8bb1684f7f69bf042a03dae4d118ab00edf0e34f409e5270fb3cce9e5fcf8ce9581b8f5bc8597c1e50c52a23eba5d4eadeede8c58ab0be3187e2389e11d5#npm:5.1.0"\
+        "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:2.1.1"\
       ],\
       [\
         "algoliasearch",\
@@ -10995,8 +10987,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/uuid", "npm:8.3.4"],\
             ["@types/yargs", "npm:17.0.5"],\
             ["@yarnpkg/pnpify", "npm:3.1.6"],\
-            ["ajv", "npm:8.11.0"],\
-            ["ajv-formats", "virtual:4b7d8bb1684f7f69bf042a03dae4d118ab00edf0e34f409e5270fb3cce9e5fcf8ce9581b8f5bc8597c1e50c52a23eba5d4eadeede8c58ab0be3187e2389e11d5#npm:2.1.1"],\
+            ["ajv", "npm:8.12.0"],\
+            ["ajv-formats", "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:2.1.1"],\
             ["algoliasearch", "npm:4.14.3"],\
             ["apr-intercept", "npm:3.0.4"],\
             ["aws-lambda", "npm:1.0.7"],\
@@ -11698,7 +11690,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/supertest", "npm:2.0.12"],\
             ["@types/uuid", "npm:8.3.4"],\
             ["@yarnpkg/pnpify", "npm:3.1.6"],\
-            ["ajv", "npm:8.11.0"],\
+            ["ajv", "npm:8.12.0"],\
             ["apr-intercept", "npm:3.0.4"],\
             ["aws-lambda", "npm:1.0.7"],\
             ["aws-sdk", "npm:2.1312.0"],\
@@ -11775,7 +11767,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@asap-hub/model", "workspace:packages/model"],\
             ["@babel/runtime-corejs3", "npm:7.20.13"],\
-            ["ajv", "npm:8.11.0"]\
+            ["ajv", "npm:8.12.0"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -12281,8 +12273,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/supertest", "npm:2.0.12"],\
             ["@types/through2-concurrent", "npm:2.0.1"],\
             ["@types/uuid", "npm:8.3.4"],\
-            ["ajv", "npm:8.11.0"],\
-            ["ajv-formats", "virtual:4b7d8bb1684f7f69bf042a03dae4d118ab00edf0e34f409e5270fb3cce9e5fcf8ce9581b8f5bc8597c1e50c52a23eba5d4eadeede8c58ab0be3187e2389e11d5#npm:2.1.1"],\
+            ["ajv", "npm:8.12.0"],\
+            ["ajv-formats", "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:2.1.1"],\
             ["apr-intercept", "npm:3.0.4"],\
             ["aws-lambda", "npm:1.0.7"],\
             ["aws-sdk", "npm:2.1312.0"],\
@@ -37818,10 +37810,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["virtual:e5ea8b1ce2df77e910b34f56109761ec3c6b18f133751fff7510d8316120b00572593adb6c9f0cc6c3348bf9c4e033eb9c28820e441076518262f9596a608766#npm:2.1.1", {\
-          "packageLocation": "./.yarn/__virtual__/ajv-formats-virtual-6b303b543e/0/cache/ajv-formats-npm-2.1.1-3cec02eae9-4a287d937f.zip/node_modules/ajv-formats/",\
+        ["virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:2.1.1", {\
+          "packageLocation": "./.yarn/__virtual__/ajv-formats-virtual-b1ff871991/0/cache/ajv-formats-npm-2.1.1-3cec02eae9-4a287d937f.zip/node_modules/ajv-formats/",\
           "packageDependencies": [\
-            ["ajv-formats", "virtual:e5ea8b1ce2df77e910b34f56109761ec3c6b18f133751fff7510d8316120b00572593adb6c9f0cc6c3348bf9c4e033eb9c28820e441076518262f9596a608766#npm:2.1.1"],\
+            ["ajv-formats", "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:2.1.1"],\
             ["@types/ajv", null],\
             ["ajv", "npm:8.12.0"]\
           ],\
@@ -64568,7 +64560,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@serverless/platform-client", "npm:4.3.2"],\
             ["@serverless/utils", "npm:6.8.2"],\
             ["ajv", "npm:8.12.0"],\
-            ["ajv-formats", "virtual:e5ea8b1ce2df77e910b34f56109761ec3c6b18f133751fff7510d8316120b00572593adb6c9f0cc6c3348bf9c4e033eb9c28820e441076518262f9596a608766#npm:2.1.1"],\
+            ["ajv-formats", "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:2.1.1"],\
             ["archiver", "npm:5.3.1"],\
             ["aws-sdk", "npm:2.1307.0"],\
             ["bluebird", "npm:3.7.2"],\

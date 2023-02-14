@@ -22,7 +22,7 @@
     "@babel/runtime-corejs3": "7.20.13",
     "@hapi/boom": "9.1.4",
     "@sentry/serverless": "6.19.7",
-    "ajv": "8.11.0",
+    "ajv": "8.12.0",
     "ajv-formats": "2.1.1",
     "apr-intercept": "3.0.4",
     "aws-lambda": "1.0.7",

@@ -32,7 +32,6 @@ jobs:
       - name: Check
         run: |
           yarn ${{ matrix.script }}
-
   unit:
     runs-on: ubuntu-latest
     strategy:
@@ -74,10 +73,6 @@ jobs:
 
   integration:
     if: ${{ inputs.environment-name=='Branch' }}
-    # limiting to one instance at a time as running these in parallel can cause
-    # issues with Squidex
-    concurrency:
-      group: crn-test-integration
     permissions:
       packages: read
     runs-on: ubuntu-latest
@@ -110,6 +105,8 @@ jobs:
         name: Run integration tests
         with:
           command: yarn test:integration
+          attempt_limit: 3
+          attempt_delay: 2000
         env:
           APP: crn
           SQUIDEX_APP_NAME: ${{ steps.setup.outputs.crn-squidex-app-name }}-${{ github.run_id }}

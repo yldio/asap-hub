@@ -199,7 +199,7 @@ export class ResearchOutputSquidexDataProvider
       methods: methodIds,
       environments: environmentIds,
       organisms: organismIds,
-      workingGroup: workingGroups,
+      workingGroups: workingGroups,
       subtype: (subtypeId && [subtypeId]) || [],
     });
 

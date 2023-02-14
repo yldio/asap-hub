@@ -1,7 +1,7 @@
 {
   "extends": ["config:base"],
   "prConcurrentLimit": 15,
-  "prHourlyLimit": 5,
+  "prHourlyLimit": 1,
   "platformAutomerge": true,
   "packageRules": [
     {

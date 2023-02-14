@@ -51,6 +51,7 @@ const appHostname = stage === 'production' ? hostname : `${stage}.${hostname}`;
 const apiHostname =
   stage === 'production' ? `api.${hostname}` : `api-${stage}.${hostname}`;
 const appUrl = `https://${appHostname}`;
+const apiUrl = `https://${apiHostname}`;
 const currentRevision = process.env.CI_COMMIT_SHA;
 const nodeEnv = 'production';
 
@@ -254,7 +255,7 @@ const serverlessConfig: AWS = {
         GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
-        GP2_API_URL: apiHostname,
+        GP2_API_URL: apiUrl,
         REGION: '${env:AWS_REGION}',
       },
     },
@@ -270,7 +271,7 @@ const serverlessConfig: AWS = {
         GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
-        GP2_API_URL: apiHostname,
+        GP2_API_URL: apiUrl,
         REGION: '${env:AWS_REGION}',
       },
     },

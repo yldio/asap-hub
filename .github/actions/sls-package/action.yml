@@ -66,6 +66,7 @@ runs:
       run: |
         yarn workspace @asap-hub/${{ inputs.app }} run pnpify serverless package --package $PWD/${{ inputs.app }}-sls-package
       env:
+        NODE_OPTIONS: '--max-old-space-size=8192'
         ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
         AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
         AWS_REGION: ${{ steps.setup.outputs.aws-region }}

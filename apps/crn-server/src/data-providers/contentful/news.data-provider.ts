@@ -8,9 +8,9 @@ import {
   FetchNewsByIdQuery,
   FetchNewsByIdQueryVariables,
   FetchNewsQuery,
-  NewsOrder,
   FetchNewsQueryVariables,
   RichTextFromQuery,
+  NewsOrder,
 } from '@asap-hub/contentful';
 
 import { NewsDataProvider, FetchNewsProviderOptions } from '../types';
@@ -29,7 +29,7 @@ export class NewsContentfulDataProvider implements NewsDataProvider {
     >(FETCH_NEWS, {
       limit: options?.take || null,
       skip: options?.skip || null,
-      order: [NewsOrder.SysFirstPublishedAtDesc],
+      order: [NewsOrder.PublishDateDesc],
       where: {
         frequency_in: options?.filter?.frequency as string[],
         title_contains: options?.filter?.title || null,
@@ -78,5 +78,5 @@ export const parseContentfulGraphQlNews = (item: NewsItem): NewsDataObject => ({
   link: item.link ?? undefined,
   linkText: item.linkText ?? undefined,
   text: item.text ? parseRichText(item.text as RichTextFromQuery) : undefined,
-  created: item.sys.firstPublishedAt,
+  created: item.publishDate,
 });

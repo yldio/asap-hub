@@ -42,6 +42,7 @@ export const newsContentQueryFragment = gql`
         }
       }
     }
+    publishDate
   }
 `;
 

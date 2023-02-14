@@ -39,7 +39,7 @@ export const migrateNews = async () => {
   };
 
   const parseNewsItem = async (news: NewsItem) => {
-    const { flatData: squidexNewsItem, id } = news;
+    const { flatData: squidexNewsItem, id, created } = news;
 
     const { title, shortText, frequency, link, linkText, thumbnail, text } =
       squidexNewsItem;
@@ -54,6 +54,7 @@ export const migrateNews = async () => {
       thumbnail: thumbnail?.length
         ? await createAsset(contentfulEnvironment, thumbnail)
         : null,
+      publishDate: created,
     };
 
     if (text) {

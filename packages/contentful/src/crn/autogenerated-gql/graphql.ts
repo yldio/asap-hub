@@ -585,6 +585,7 @@ export type News = Entry & {
   link?: Maybe<Scalars['String']>;
   linkText?: Maybe<Scalars['String']>;
   linkedFrom?: Maybe<NewsLinkingCollections>;
+  publishDate?: Maybe<Scalars['DateTime']>;
   shortText?: Maybe<Scalars['String']>;
   sys: Sys;
   text?: Maybe<NewsText>;
@@ -610,6 +611,11 @@ export type NewsLinkTextArgs = {
 /** ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
 export type NewsLinkedFromArgs = {
   allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
+export type NewsPublishDateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
 };
 
 /** ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
@@ -665,6 +671,15 @@ export type NewsFilter = {
   link_not?: InputMaybe<Scalars['String']>;
   link_not_contains?: InputMaybe<Scalars['String']>;
   link_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  publishDate?: InputMaybe<Scalars['DateTime']>;
+  publishDate_exists?: InputMaybe<Scalars['Boolean']>;
+  publishDate_gt?: InputMaybe<Scalars['DateTime']>;
+  publishDate_gte?: InputMaybe<Scalars['DateTime']>;
+  publishDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  publishDate_lt?: InputMaybe<Scalars['DateTime']>;
+  publishDate_lte?: InputMaybe<Scalars['DateTime']>;
+  publishDate_not?: InputMaybe<Scalars['DateTime']>;
+  publishDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   shortText?: InputMaybe<Scalars['String']>;
   shortText_contains?: InputMaybe<Scalars['String']>;
   shortText_exists?: InputMaybe<Scalars['Boolean']>;
@@ -712,6 +727,8 @@ export enum NewsOrder {
   LinkTextDesc = 'linkText_DESC',
   LinkAsc = 'link_ASC',
   LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -1072,7 +1089,12 @@ export type FetchDashboardQuery = {
             Maybe<
               Pick<
                 News,
-                'title' | 'shortText' | 'frequency' | 'link' | 'linkText'
+                | 'title'
+                | 'shortText'
+                | 'frequency'
+                | 'link'
+                | 'linkText'
+                | 'publishDate'
               > & {
                 sys: Pick<Sys, 'id' | 'firstPublishedAt'>;
                 thumbnail?: Maybe<Pick<Asset, 'url'>>;
@@ -1181,7 +1203,7 @@ export type FetchDashboardQuery = {
 
 export type NewsContentFragment = Pick<
   News,
-  'title' | 'shortText' | 'frequency' | 'link' | 'linkText'
+  'title' | 'shortText' | 'frequency' | 'link' | 'linkText' | 'publishDate'
 > & {
   sys: Pick<Sys, 'id' | 'firstPublishedAt'>;
   thumbnail?: Maybe<Pick<Asset, 'url'>>;
@@ -1222,7 +1244,10 @@ export type FetchNewsByIdQueryVariables = Exact<{
 
 export type FetchNewsByIdQuery = {
   news?: Maybe<
-    Pick<News, 'title' | 'shortText' | 'frequency' | 'link' | 'linkText'> & {
+    Pick<
+      News,
+      'title' | 'shortText' | 'frequency' | 'link' | 'linkText' | 'publishDate'
+    > & {
       sys: Pick<Sys, 'id' | 'firstPublishedAt'>;
       thumbnail?: Maybe<Pick<Asset, 'url'>>;
       text?: Maybe<
@@ -1272,7 +1297,12 @@ export type FetchNewsQuery = {
         Maybe<
           Pick<
             News,
-            'title' | 'shortText' | 'frequency' | 'link' | 'linkText'
+            | 'title'
+            | 'shortText'
+            | 'frequency'
+            | 'link'
+            | 'linkText'
+            | 'publishDate'
           > & {
             sys: Pick<Sys, 'id' | 'firstPublishedAt'>;
             thumbnail?: Maybe<Pick<Asset, 'url'>>;
@@ -1580,6 +1610,7 @@ export const NewsContentFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'publishDate' } },
         ],
       },
     },

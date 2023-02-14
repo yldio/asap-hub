@@ -28,69 +28,69 @@ export type Scalars = {
 /** The app mutations. */
 export type ApplicationMutations = {
   /** Change a Calendars content. */
-  changeCalendarsContent: Calendars;
+  changeCalendarsContent: Maybe<Calendars>;
   /** Change a Dashboard content. */
-  changeDashboardContent: Dashboard;
+  changeDashboardContent: Maybe<Dashboard>;
   /** Change a Discover ASAP content. */
-  changeDiscoverContent: Discover;
+  changeDiscoverContent: Maybe<Discover>;
   /** Change a Events content. */
-  changeEventsContent: Events;
+  changeEventsContent: Maybe<Events>;
   /** Change a External authors content. */
-  changeExternalAuthorsContent: ExternalAuthors;
+  changeExternalAuthorsContent: Maybe<ExternalAuthors>;
   /** Change a Groups content. */
-  changeGroupsContent: Groups;
+  changeGroupsContent: Maybe<Groups>;
   /** Change a Labs content. */
-  changeLabsContent: Labs;
+  changeLabsContent: Maybe<Labs>;
   /** Change a Migrations content. */
-  changeMigrationsContent: Migrations;
+  changeMigrationsContent: Maybe<Migrations>;
   /** Change a News content. */
-  changeNewsAndEventsContent: NewsAndEvents;
+  changeNewsAndEventsContent: Maybe<NewsAndEvents>;
   /** Change a Pages content. */
-  changePagesContent: Pages;
+  changePagesContent: Maybe<Pages>;
   /** Change a Research Outputs content. */
-  changeResearchOutputsContent: ResearchOutputs;
+  changeResearchOutputsContent: Maybe<ResearchOutputs>;
   /** Change a Research Tags content. */
-  changeResearchTagsContent: ResearchTags;
+  changeResearchTagsContent: Maybe<ResearchTags>;
   /** Change a Teams content. */
-  changeTeamsContent: Teams;
+  changeTeamsContent: Maybe<Teams>;
   /** Change a Tutorials content. */
-  changeTutorialsContent: Tutorials;
+  changeTutorialsContent: Maybe<Tutorials>;
   /** Change a Users content. */
-  changeUsersContent: Users;
+  changeUsersContent: Maybe<Users>;
   /** Change a Working Groups content. */
-  changeWorkingGroupsContent: WorkingGroups;
+  changeWorkingGroupsContent: Maybe<WorkingGroups>;
   /** Creates an Calendars content. */
-  createCalendarsContent: Calendars;
+  createCalendarsContent: Maybe<Calendars>;
   /** Creates an Dashboard content. */
-  createDashboardContent: Dashboard;
+  createDashboardContent: Maybe<Dashboard>;
   /** Creates an Discover ASAP content. */
-  createDiscoverContent: Discover;
+  createDiscoverContent: Maybe<Discover>;
   /** Creates an Events content. */
-  createEventsContent: Events;
+  createEventsContent: Maybe<Events>;
   /** Creates an External authors content. */
-  createExternalAuthorsContent: ExternalAuthors;
+  createExternalAuthorsContent: Maybe<ExternalAuthors>;
   /** Creates an Groups content. */
-  createGroupsContent: Groups;
+  createGroupsContent: Maybe<Groups>;
   /** Creates an Labs content. */
-  createLabsContent: Labs;
+  createLabsContent: Maybe<Labs>;
   /** Creates an Migrations content. */
-  createMigrationsContent: Migrations;
+  createMigrationsContent: Maybe<Migrations>;
   /** Creates an News content. */
-  createNewsAndEventsContent: NewsAndEvents;
+  createNewsAndEventsContent: Maybe<NewsAndEvents>;
   /** Creates an Pages content. */
-  createPagesContent: Pages;
+  createPagesContent: Maybe<Pages>;
   /** Creates an Research Outputs content. */
-  createResearchOutputsContent: ResearchOutputs;
+  createResearchOutputsContent: Maybe<ResearchOutputs>;
   /** Creates an Research Tags content. */
-  createResearchTagsContent: ResearchTags;
+  createResearchTagsContent: Maybe<ResearchTags>;
   /** Creates an Teams content. */
-  createTeamsContent: Teams;
+  createTeamsContent: Maybe<Teams>;
   /** Creates an Tutorials content. */
-  createTutorialsContent: Tutorials;
+  createTutorialsContent: Maybe<Tutorials>;
   /** Creates an Users content. */
-  createUsersContent: Users;
+  createUsersContent: Maybe<Users>;
   /** Creates an Working Groups content. */
-  createWorkingGroupsContent: WorkingGroups;
+  createWorkingGroupsContent: Maybe<WorkingGroups>;
   /** Delete an Calendars content. */
   deleteCalendarsContent: EntitySavedResultDto;
   /** Delete an Dashboard content. */
@@ -124,181 +124,181 @@ export type ApplicationMutations = {
   /** Delete an Working Groups content. */
   deleteWorkingGroupsContent: EntitySavedResultDto;
   /** Patch an Calendars content by id. */
-  patchCalendarsContent: Calendars;
+  patchCalendarsContent: Maybe<Calendars>;
   /** Patch an Dashboard content by id. */
-  patchDashboardContent: Dashboard;
+  patchDashboardContent: Maybe<Dashboard>;
   /** Patch an Discover ASAP content by id. */
-  patchDiscoverContent: Discover;
+  patchDiscoverContent: Maybe<Discover>;
   /** Patch an Events content by id. */
-  patchEventsContent: Events;
+  patchEventsContent: Maybe<Events>;
   /** Patch an External authors content by id. */
-  patchExternalAuthorsContent: ExternalAuthors;
+  patchExternalAuthorsContent: Maybe<ExternalAuthors>;
   /** Patch an Groups content by id. */
-  patchGroupsContent: Groups;
+  patchGroupsContent: Maybe<Groups>;
   /** Patch an Labs content by id. */
-  patchLabsContent: Labs;
+  patchLabsContent: Maybe<Labs>;
   /** Patch an Migrations content by id. */
-  patchMigrationsContent: Migrations;
+  patchMigrationsContent: Maybe<Migrations>;
   /** Patch an News content by id. */
-  patchNewsAndEventsContent: NewsAndEvents;
+  patchNewsAndEventsContent: Maybe<NewsAndEvents>;
   /** Patch an Pages content by id. */
-  patchPagesContent: Pages;
+  patchPagesContent: Maybe<Pages>;
   /** Patch an Research Outputs content by id. */
-  patchResearchOutputsContent: ResearchOutputs;
+  patchResearchOutputsContent: Maybe<ResearchOutputs>;
   /** Patch an Research Tags content by id. */
-  patchResearchTagsContent: ResearchTags;
+  patchResearchTagsContent: Maybe<ResearchTags>;
   /** Patch an Teams content by id. */
-  patchTeamsContent: Teams;
+  patchTeamsContent: Maybe<Teams>;
   /** Patch an Tutorials content by id. */
-  patchTutorialsContent: Tutorials;
+  patchTutorialsContent: Maybe<Tutorials>;
   /** Patch an Users content by id. */
-  patchUsersContent: Users;
+  patchUsersContent: Maybe<Users>;
   /** Patch an Working Groups content by id. */
-  patchWorkingGroupsContent: WorkingGroups;
+  patchWorkingGroupsContent: Maybe<WorkingGroups>;
   /**
    * Publish a Calendars content.
    * @deprecated Use 'changeCalendarsContent' instead
    */
-  publishCalendarsContent: Calendars;
+  publishCalendarsContent: Maybe<Calendars>;
   /**
    * Publish a Dashboard content.
    * @deprecated Use 'changeDashboardContent' instead
    */
-  publishDashboardContent: Dashboard;
+  publishDashboardContent: Maybe<Dashboard>;
   /**
    * Publish a Discover ASAP content.
    * @deprecated Use 'changeDiscoverContent' instead
    */
-  publishDiscoverContent: Discover;
+  publishDiscoverContent: Maybe<Discover>;
   /**
    * Publish a Events content.
    * @deprecated Use 'changeEventsContent' instead
    */
-  publishEventsContent: Events;
+  publishEventsContent: Maybe<Events>;
   /**
    * Publish a External authors content.
    * @deprecated Use 'changeExternalAuthorsContent' instead
    */
-  publishExternalAuthorsContent: ExternalAuthors;
+  publishExternalAuthorsContent: Maybe<ExternalAuthors>;
   /**
    * Publish a Groups content.
    * @deprecated Use 'changeGroupsContent' instead
    */
-  publishGroupsContent: Groups;
+  publishGroupsContent: Maybe<Groups>;
   /**
    * Publish a Labs content.
    * @deprecated Use 'changeLabsContent' instead
    */
-  publishLabsContent: Labs;
+  publishLabsContent: Maybe<Labs>;
   /**
    * Publish a Migrations content.
    * @deprecated Use 'changeMigrationsContent' instead
    */
-  publishMigrationsContent: Migrations;
+  publishMigrationsContent: Maybe<Migrations>;
   /**
    * Publish a News content.
    * @deprecated Use 'changeNewsAndEventsContent' instead
    */
-  publishNewsAndEventsContent: NewsAndEvents;
+  publishNewsAndEventsContent: Maybe<NewsAndEvents>;
   /**
    * Publish a Pages content.
    * @deprecated Use 'changePagesContent' instead
    */
-  publishPagesContent: Pages;
+  publishPagesContent: Maybe<Pages>;
   /**
    * Publish a Research Outputs content.
    * @deprecated Use 'changeResearchOutputsContent' instead
    */
-  publishResearchOutputsContent: ResearchOutputs;
+  publishResearchOutputsContent: Maybe<ResearchOutputs>;
   /**
    * Publish a Research Tags content.
    * @deprecated Use 'changeResearchTagsContent' instead
    */
-  publishResearchTagsContent: ResearchTags;
+  publishResearchTagsContent: Maybe<ResearchTags>;
   /**
    * Publish a Teams content.
    * @deprecated Use 'changeTeamsContent' instead
    */
-  publishTeamsContent: Teams;
+  publishTeamsContent: Maybe<Teams>;
   /**
    * Publish a Tutorials content.
    * @deprecated Use 'changeTutorialsContent' instead
    */
-  publishTutorialsContent: Tutorials;
+  publishTutorialsContent: Maybe<Tutorials>;
   /**
    * Publish a Users content.
    * @deprecated Use 'changeUsersContent' instead
    */
-  publishUsersContent: Users;
+  publishUsersContent: Maybe<Users>;
   /**
    * Publish a Working Groups content.
    * @deprecated Use 'changeWorkingGroupsContent' instead
    */
-  publishWorkingGroupsContent: WorkingGroups;
+  publishWorkingGroupsContent: Maybe<WorkingGroups>;
   /** Update an Calendars content by id. */
-  updateCalendarsContent: Calendars;
+  updateCalendarsContent: Maybe<Calendars>;
   /** Update an Dashboard content by id. */
-  updateDashboardContent: Dashboard;
+  updateDashboardContent: Maybe<Dashboard>;
   /** Update an Discover ASAP content by id. */
-  updateDiscoverContent: Discover;
+  updateDiscoverContent: Maybe<Discover>;
   /** Update an Events content by id. */
-  updateEventsContent: Events;
+  updateEventsContent: Maybe<Events>;
   /** Update an External authors content by id. */
-  updateExternalAuthorsContent: ExternalAuthors;
+  updateExternalAuthorsContent: Maybe<ExternalAuthors>;
   /** Update an Groups content by id. */
-  updateGroupsContent: Groups;
+  updateGroupsContent: Maybe<Groups>;
   /** Update an Labs content by id. */
-  updateLabsContent: Labs;
+  updateLabsContent: Maybe<Labs>;
   /** Update an Migrations content by id. */
-  updateMigrationsContent: Migrations;
+  updateMigrationsContent: Maybe<Migrations>;
   /** Update an News content by id. */
-  updateNewsAndEventsContent: NewsAndEvents;
+  updateNewsAndEventsContent: Maybe<NewsAndEvents>;
   /** Update an Pages content by id. */
-  updatePagesContent: Pages;
+  updatePagesContent: Maybe<Pages>;
   /** Update an Research Outputs content by id. */
-  updateResearchOutputsContent: ResearchOutputs;
+  updateResearchOutputsContent: Maybe<ResearchOutputs>;
   /** Update an Research Tags content by id. */
-  updateResearchTagsContent: ResearchTags;
+  updateResearchTagsContent: Maybe<ResearchTags>;
   /** Update an Teams content by id. */
-  updateTeamsContent: Teams;
+  updateTeamsContent: Maybe<Teams>;
   /** Update an Tutorials content by id. */
-  updateTutorialsContent: Tutorials;
+  updateTutorialsContent: Maybe<Tutorials>;
   /** Update an Users content by id. */
-  updateUsersContent: Users;
+  updateUsersContent: Maybe<Users>;
   /** Update an Working Groups content by id. */
-  updateWorkingGroupsContent: WorkingGroups;
+  updateWorkingGroupsContent: Maybe<WorkingGroups>;
   /** Upsert an Calendars content by id. */
-  upsertCalendarsContent: Calendars;
+  upsertCalendarsContent: Maybe<Calendars>;
   /** Upsert an Dashboard content by id. */
-  upsertDashboardContent: Dashboard;
+  upsertDashboardContent: Maybe<Dashboard>;
   /** Upsert an Discover ASAP content by id. */
-  upsertDiscoverContent: Discover;
+  upsertDiscoverContent: Maybe<Discover>;
   /** Upsert an Events content by id. */
-  upsertEventsContent: Events;
+  upsertEventsContent: Maybe<Events>;
   /** Upsert an External authors content by id. */
-  upsertExternalAuthorsContent: ExternalAuthors;
+  upsertExternalAuthorsContent: Maybe<ExternalAuthors>;
   /** Upsert an Groups content by id. */
-  upsertGroupsContent: Groups;
+  upsertGroupsContent: Maybe<Groups>;
   /** Upsert an Labs content by id. */
-  upsertLabsContent: Labs;
+  upsertLabsContent: Maybe<Labs>;
   /** Upsert an Migrations content by id. */
-  upsertMigrationsContent: Migrations;
+  upsertMigrationsContent: Maybe<Migrations>;
   /** Upsert an News content by id. */
-  upsertNewsAndEventsContent: NewsAndEvents;
+  upsertNewsAndEventsContent: Maybe<NewsAndEvents>;
   /** Upsert an Pages content by id. */
-  upsertPagesContent: Pages;
+  upsertPagesContent: Maybe<Pages>;
   /** Upsert an Research Outputs content by id. */
-  upsertResearchOutputsContent: ResearchOutputs;
+  upsertResearchOutputsContent: Maybe<ResearchOutputs>;
   /** Upsert an Research Tags content by id. */
-  upsertResearchTagsContent: ResearchTags;
+  upsertResearchTagsContent: Maybe<ResearchTags>;
   /** Upsert an Teams content by id. */
-  upsertTeamsContent: Teams;
+  upsertTeamsContent: Maybe<Teams>;
   /** Upsert an Tutorials content by id. */
-  upsertTutorialsContent: Tutorials;
+  upsertTutorialsContent: Maybe<Tutorials>;
   /** Upsert an Users content by id. */
-  upsertUsersContent: Users;
+  upsertUsersContent: Maybe<Users>;
   /** Upsert an Working Groups content by id. */
-  upsertWorkingGroupsContent: WorkingGroups;
+  upsertWorkingGroupsContent: Maybe<WorkingGroups>;
 };
 
 /** The app mutations. */
@@ -1813,6 +1813,10 @@ export type Calendars = Content & {
   referencingGroupsContents: Maybe<Array<Groups>>;
   /** Query Groups content items with total count. */
   referencingGroupsContentsWithTotal: Maybe<GroupsResultDto>;
+  /** Query Working Groups content items. */
+  referencingWorkingGroupsContents: Maybe<Array<WorkingGroups>>;
+  /** Query Working Groups content items with total count. */
+  referencingWorkingGroupsContentsWithTotal: Maybe<WorkingGroupsResultDto>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
@@ -1852,6 +1856,24 @@ export type CalendarsReferencingGroupsContentsArgs = {
 
 /** The structure of a Calendars content type. */
 export type CalendarsReferencingGroupsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Calendars content type. */
+export type CalendarsReferencingWorkingGroupsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Calendars content type. */
+export type CalendarsReferencingWorkingGroupsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -2430,7 +2452,7 @@ export type EnrichedAssetEvent = {
   sourceUrl: Scalars['String'];
   /** The thumbnail URL to the asset. */
   thumbnailUrl: Maybe<Scalars['String']>;
-  /** The type of the event, e.g. 'Created' or 'Updated'. */
+  /** The type of the event. */
   type: Maybe<EnrichedAssetEventType>;
   /** The URL to the asset. */
   url: Scalars['String'];
@@ -2474,7 +2496,7 @@ export type EnrichedContentEvent = {
   newStatus: Maybe<Scalars['String']>;
   /** The status of the content. */
   status: Scalars['String'];
-  /** The type of the event, e.g. 'Created' or 'Updated'. */
+  /** The type of the event. */
   type: Maybe<EnrichedContentEventType>;
   /** The version of the objec. */
   version: Scalars['Int'];
@@ -3709,7 +3731,6 @@ export type NewsAndEventsDataDto = {
   text: Maybe<NewsAndEventsDataTextDto>;
   thumbnail: Maybe<NewsAndEventsDataThumbnailDto>;
   title: Maybe<NewsAndEventsDataTitleDto>;
-  type: Maybe<NewsAndEventsDataTypeDto>;
 };
 
 /** The structure of the Frequency field of the News content type. */
@@ -3731,7 +3752,6 @@ export type NewsAndEventsDataInputDto = {
   text: InputMaybe<NewsAndEventsDataTextInputDto>;
   thumbnail: InputMaybe<NewsAndEventsDataThumbnailInputDto>;
   title: InputMaybe<NewsAndEventsDataTitleInputDto>;
-  type: InputMaybe<NewsAndEventsDataTypeInputDto>;
 };
 
 /** The structure of the External Link field of the News content type. */
@@ -3798,16 +3818,6 @@ export type NewsAndEventsDataTitleInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
-/** The structure of the Type field of the News content type. */
-export type NewsAndEventsDataTypeDto = {
-  iv: Maybe<Scalars['String']>;
-};
-
-/** The structure of the Type field of the News content input type. */
-export type NewsAndEventsDataTypeInputDto = {
-  iv: InputMaybe<Scalars['String']>;
-};
-
 /** The structure of the flat News data type. */
 export type NewsAndEventsFlatDataDto = {
   frequency: Maybe<Scalars['String']>;
@@ -3819,7 +3829,6 @@ export type NewsAndEventsFlatDataDto = {
   text: Maybe<Scalars['String']>;
   thumbnail: Maybe<Array<Asset>>;
   title: Maybe<Scalars['String']>;
-  type: Maybe<Scalars['String']>;
 };
 
 /** List of News items and total count. */
@@ -4046,6 +4055,10 @@ export type ResearchOutputs = Content & {
   referencesResearchTagsContents: Maybe<Array<ResearchTags>>;
   /** Query Research Tags content items with total count. */
   referencesResearchTagsContentsWithTotal: Maybe<ResearchTagsResultDto>;
+  /** Query Teams content items. */
+  referencesTeamsContents: Maybe<Array<Teams>>;
+  /** Query Teams content items with total count. */
+  referencesTeamsContentsWithTotal: Maybe<TeamsResultDto>;
   /** Query Users content items. */
   referencesUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
@@ -4111,6 +4124,24 @@ export type ResearchOutputsReferencesResearchTagsContentsArgs = {
 
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesResearchTagsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Research Outputs content type. */
+export type ResearchOutputsReferencesTeamsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Research Outputs content type. */
+export type ResearchOutputsReferencesTeamsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -4281,6 +4312,7 @@ export type ResearchOutputsDataDto = {
   sharingStatus: Maybe<ResearchOutputsDataSharingStatusDto>;
   subtype: Maybe<ResearchOutputsDataSubtypeDto>;
   tags: Maybe<ResearchOutputsDataTagsDto>;
+  teams: Maybe<ResearchOutputsDataTeamsDto>;
   title: Maybe<ResearchOutputsDataTitleDto>;
   type: Maybe<ResearchOutputsDataTypeDto>;
   updatedBy: Maybe<ResearchOutputsDataUpdatedByDto>;
@@ -4321,6 +4353,7 @@ export type ResearchOutputsDataInputDto = {
   sharingStatus: InputMaybe<ResearchOutputsDataSharingStatusInputDto>;
   subtype: InputMaybe<ResearchOutputsDataSubtypeInputDto>;
   tags: InputMaybe<ResearchOutputsDataTagsInputDto>;
+  teams: InputMaybe<ResearchOutputsDataTeamsInputDto>;
   title: InputMaybe<ResearchOutputsDataTitleInputDto>;
   type: InputMaybe<ResearchOutputsDataTypeInputDto>;
   updatedBy: InputMaybe<ResearchOutputsDataUpdatedByInputDto>;
@@ -4446,6 +4479,16 @@ export type ResearchOutputsDataTagsInputDto = {
   iv: InputMaybe<Array<Scalars['String']>>;
 };
 
+/** The structure of the Teams field of the Research Outputs content type. */
+export type ResearchOutputsDataTeamsDto = {
+  iv: Maybe<Array<Teams>>;
+};
+
+/** The structure of the Teams field of the Research Outputs content input type. */
+export type ResearchOutputsDataTeamsInputDto = {
+  iv: InputMaybe<Array<Scalars['String']>>;
+};
+
 /** The structure of the Title field of the Research Outputs content type. */
 export type ResearchOutputsDataTitleDto = {
   iv: Maybe<Scalars['String']>;
@@ -4533,6 +4576,7 @@ export type ResearchOutputsFlatDataDto = {
   sharingStatus: Maybe<Scalars['String']>;
   subtype: Maybe<Array<ResearchTags>>;
   tags: Maybe<Array<Scalars['String']>>;
+  teams: Maybe<Array<Teams>>;
   title: Maybe<Scalars['String']>;
   type: Maybe<Scalars['String']>;
   updatedBy: Maybe<Array<Users>>;
@@ -4725,6 +4769,10 @@ export type Teams = Content & {
   referencingGroupsContents: Maybe<Array<Groups>>;
   /** Query Groups content items with total count. */
   referencingGroupsContentsWithTotal: Maybe<GroupsResultDto>;
+  /** Query Research Outputs content items. */
+  referencingResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
+  /** Query Research Outputs content items with total count. */
+  referencingResearchOutputsContentsWithTotal: Maybe<ResearchOutputsResultDto>;
   /** Query Users content items. */
   referencingUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
@@ -4812,6 +4860,24 @@ export type TeamsReferencingGroupsContentsWithTotalArgs = {
 };
 
 /** The structure of a Teams content type. */
+export type TeamsReferencingResearchOutputsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Teams content type. */
+export type TeamsReferencingResearchOutputsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Teams content type. */
 export type TeamsReferencingUsersContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
@@ -4855,7 +4921,6 @@ export type TeamsDataDto = {
   displayName: Maybe<TeamsDataDisplayNameDto>;
   expertiseAndResourceTags: Maybe<TeamsDataExpertiseAndResourceTagsDto>;
   inactiveSince: Maybe<TeamsDataInactiveSinceDto>;
-  outputs: Maybe<TeamsDataOutputsDto>;
   projectSummary: Maybe<TeamsDataProjectSummaryDto>;
   projectTitle: Maybe<TeamsDataProjectTitleDto>;
   proposal: Maybe<TeamsDataProposalDto>;
@@ -4888,21 +4953,10 @@ export type TeamsDataInputDto = {
   displayName: InputMaybe<TeamsDataDisplayNameInputDto>;
   expertiseAndResourceTags: InputMaybe<TeamsDataExpertiseAndResourceTagsInputDto>;
   inactiveSince: InputMaybe<TeamsDataInactiveSinceInputDto>;
-  outputs: InputMaybe<TeamsDataOutputsInputDto>;
   projectSummary: InputMaybe<TeamsDataProjectSummaryInputDto>;
   projectTitle: InputMaybe<TeamsDataProjectTitleInputDto>;
   proposal: InputMaybe<TeamsDataProposalInputDto>;
   tools: InputMaybe<TeamsDataToolsInputDto>;
-};
-
-/** The structure of the Shared Research field of the Teams content type. */
-export type TeamsDataOutputsDto = {
-  iv: Maybe<Array<ResearchOutputs>>;
-};
-
-/** The structure of the Shared Research field of the Teams content input type. */
-export type TeamsDataOutputsInputDto = {
-  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Project Summary field of the Teams content type. */
@@ -4965,7 +5019,6 @@ export type TeamsFlatDataDto = {
   displayName: Maybe<Scalars['String']>;
   expertiseAndResourceTags: Maybe<Array<Scalars['String']>>;
   inactiveSince: Maybe<Scalars['Instant']>;
-  outputs: Maybe<Array<ResearchOutputs>>;
   projectSummary: Maybe<Scalars['String']>;
   projectTitle: Maybe<Scalars['String']>;
   proposal: Maybe<Array<ResearchOutputs>>;
@@ -5607,12 +5660,12 @@ export type UsersDataLabsInputDto = {
 
 /** The structure of the Last Modified Date field of the Users content type. */
 export type UsersDataLastModifiedDateDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: Maybe<Scalars['Instant']>;
 };
 
 /** The structure of the Last Modified Date field of the Users content input type. */
 export type UsersDataLastModifiedDateInputDto = {
-  iv: InputMaybe<Scalars['String']>;
+  iv: InputMaybe<Scalars['Instant']>;
 };
 
 /** The structure of the Last Name field of the Users content type. */
@@ -5805,6 +5858,7 @@ export type UsersDataSocialInputDto = {
 /** The structure of the Teams nested schema. */
 export type UsersDataTeamsChildDto = {
   id: Maybe<Array<Teams>>;
+  inactiveSinceDate: Maybe<Scalars['Instant']>;
   /** Attention: Check if this user needs to be added to Smart Simple */
   role: Maybe<Scalars['String']>;
 };
@@ -5812,6 +5866,7 @@ export type UsersDataTeamsChildDto = {
 /** The structure of the Teams nested schema. */
 export type UsersDataTeamsChildInputDto = {
   id: InputMaybe<Array<Scalars['String']>>;
+  inactiveSinceDate: InputMaybe<Scalars['Instant']>;
   /** Attention: Check if this user needs to be added to Smart Simple */
   role: InputMaybe<Scalars['String']>;
 };
@@ -5850,7 +5905,7 @@ export type UsersFlatDataDto = {
   jobTitle: Maybe<Scalars['String']>;
   /** Mandatory for grantees. They cannot publish profile without a lab. */
   labs: Maybe<Array<Labs>>;
-  lastModifiedDate: Maybe<Scalars['String']>;
+  lastModifiedDate: Maybe<Scalars['Instant']>;
   lastName: Maybe<Scalars['String']>;
   /** Use this to allow the user to see the full Hub and skip profile completion */
   onboarded: Maybe<Scalars['Boolean']>;
@@ -5905,6 +5960,10 @@ export type WorkingGroups = Content & {
   newStatus: Maybe<Scalars['String']>;
   /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
+  /** Query Calendars content items. */
+  referencesCalendarsContents: Maybe<Array<Calendars>>;
+  /** Query Calendars content items with total count. */
+  referencesCalendarsContentsWithTotal: Maybe<CalendarsResultDto>;
   /** Query Users content items. */
   referencesUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
@@ -5917,6 +5976,24 @@ export type WorkingGroups = Content & {
   url: Scalars['String'];
   /** The version of the objec. */
   version: Scalars['Int'];
+};
+
+/** The structure of a Working Groups content type. */
+export type WorkingGroupsReferencesCalendarsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Working Groups content type. */
+export type WorkingGroupsReferencesCalendarsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Working Groups content type. */
@@ -5935,6 +6012,16 @@ export type WorkingGroupsReferencesUsersContentsWithTotalArgs = {
   search: InputMaybe<Scalars['String']>;
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of the Calendars field of the Working Groups content type. */
+export type WorkingGroupsDataCalendarsDto = {
+  iv: Maybe<Array<Calendars>>;
+};
+
+/** The structure of the Calendars field of the Working Groups content input type. */
+export type WorkingGroupsDataCalendarsInputDto = {
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the This working group is complete field of the Working Groups content type. */
@@ -5981,6 +6068,7 @@ export type WorkingGroupsDataDescriptionInputDto = {
 
 /** The structure of the Working Groups data type. */
 export type WorkingGroupsDataDto = {
+  calendars: Maybe<WorkingGroupsDataCalendarsDto>;
   complete: Maybe<WorkingGroupsDataCompleteDto>;
   deliverables: Maybe<WorkingGroupsDataDeliverablesDto>;
   description: Maybe<WorkingGroupsDataDescriptionDto>;
@@ -6003,6 +6091,7 @@ export type WorkingGroupsDataExternalLinkInputDto = {
 
 /** The structure of the Working Groups data input type. */
 export type WorkingGroupsDataInputDto = {
+  calendars: InputMaybe<WorkingGroupsDataCalendarsInputDto>;
   complete: InputMaybe<WorkingGroupsDataCompleteInputDto>;
   deliverables: InputMaybe<WorkingGroupsDataDeliverablesInputDto>;
   description: InputMaybe<WorkingGroupsDataDescriptionInputDto>;
@@ -6079,6 +6168,7 @@ export type WorkingGroupsDataTitleInputDto = {
 
 /** The structure of the flat Working Groups data type. */
 export type WorkingGroupsFlatDataDto = {
+  calendars: Maybe<Array<Calendars>>;
   complete: Maybe<Scalars['Boolean']>;
   deliverables: Maybe<Array<WorkingGroupsDataDeliverablesChildDto>>;
   description: Maybe<Scalars['String']>;
@@ -6102,7 +6192,7 @@ export type FetchNewsQueryVariables = Exact<{ [key: string]: never }>;
 export type FetchNewsQuery = {
   queryNewsAndEventsContents: Maybe<
     Array<
-      Pick<NewsAndEvents, 'id'> & {
+      Pick<NewsAndEvents, 'id' | 'created'> & {
         flatData: Pick<
           NewsAndEventsFlatDataDto,
           'title' | 'shortText' | 'text' | 'frequency' | 'link' | 'linkText'
@@ -6160,6 +6250,7 @@ export const FetchNewsDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'created' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'flatData' },

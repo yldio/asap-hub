@@ -442,6 +442,7 @@ type News implements Entry {
   link(locale: String): String
   linkText(locale: String): String
   linkedFrom(allowedLocales: [String]): NewsLinkingCollections
+  publishDate(locale: String): DateTime
   shortText(locale: String): String
   sys: Sys!
   text(locale: String): NewsText
@@ -481,6 +482,15 @@ input NewsFilter {
   link_not: String
   link_not_contains: String
   link_not_in: [String]
+  publishDate: DateTime
+  publishDate_exists: Boolean
+  publishDate_gt: DateTime
+  publishDate_gte: DateTime
+  publishDate_in: [DateTime]
+  publishDate_lt: DateTime
+  publishDate_lte: DateTime
+  publishDate_not: DateTime
+  publishDate_not_in: [DateTime]
   shortText: String
   shortText_contains: String
   shortText_exists: Boolean
@@ -514,6 +524,8 @@ enum NewsOrder {
   linkText_DESC
   link_ASC
   link_DESC
+  publishDate_ASC
+  publishDate_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC

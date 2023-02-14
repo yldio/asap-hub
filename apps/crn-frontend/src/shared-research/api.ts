@@ -12,6 +12,7 @@ import { API_BASE_URL } from '../config';
 export type ResearchOutputListOptions = GetListOptions & {
   teamId?: string;
   userId?: string;
+  workingGroupId?: string;
 };
 
 export const getResearchOutput = async (
@@ -58,15 +59,18 @@ export const getAllFilters = (
   filters: Set<string>,
   teamId?: string,
   userId?: string,
+  workingGroupId?: string,
 ) => {
   const typeFilters = getTypeFilters(filters);
   const typeFiltersWithParenthesis = typeFilters
     ? `(${getTypeFilters(filters)})`
     : typeFilters;
+  console.log(workingGroupId);
   const teamFilter = teamId ? `teams.id:"${teamId}"` : '';
+  const wgFilter = workingGroupId ? `workingGroups.id:"${workingGroupId}"` : '';
   const authorFilter = userId ? `authors.id:"${userId}"` : '';
 
-  return [typeFiltersWithParenthesis, teamFilter, authorFilter]
+  return [typeFiltersWithParenthesis, teamFilter, authorFilter, wgFilter]
     .filter(Boolean)
     .join(' AND ');
 };
@@ -79,7 +83,12 @@ export const getResearchOutputs = (
     .search(['research-output'], options.searchQuery, {
       page: options.currentPage ?? 0,
       hitsPerPage: options.pageSize ?? 10,
-      filters: getAllFilters(options.filters, options.teamId, options.userId),
+      filters: getAllFilters(
+        options.filters,
+        options.teamId,
+        options.userId,
+        options.workingGroupId,
+      ),
     })
     .catch((error: Error) => {
       throw new Error(`Could not search: ${error.message}`);

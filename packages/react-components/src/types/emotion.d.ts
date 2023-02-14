@@ -1,4 +1,5 @@
 import '@emotion/react';
+import { SerializedStyles } from '@emotion/react';
 
 import { OpaqueColor, TransparentColor } from '../colors';
 
@@ -17,6 +18,16 @@ declare module '@emotion/react' {
           svg: {
             fill: Property.fill;
           };
+        };
+      };
+      form?: {
+        focusStyle: {
+          borderColor: OpaqueColor | TransparentColor;
+        };
+      };
+      TextArea?: {
+        maxLengthStyles: {
+          color: OpaqueColor | TransparentColor;
         };
       };
       Accordion?: {

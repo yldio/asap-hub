@@ -100,11 +100,16 @@ const TextArea: React.FC<TextAreaProps> = ({
         onChange={({ currentTarget: { value: newValue } }) =>
           onChange(newValue)
         }
-        css={[
+        css={({ components }) => [
           styles,
           textareaStyles,
           enabled || disabledStyles,
           validationMessage && invalidStyles,
+          {
+            ':focus': {
+              borderColor: components?.form?.focusStyle.borderColor.rgba,
+            },
+          },
         ]}
       />
       <div css={validationAndLimitStyles}>
@@ -113,10 +118,15 @@ const TextArea: React.FC<TextAreaProps> = ({
         </div>
         {maxLength !== undefined && (
           <div
-            css={[
+            css={({ components }) => [
               validationMessageStyles,
               limitStyles,
               { color: reachedMaxLength ? ember.rgb : fern.rgb },
+              {
+                color: reachedMaxLength
+                  ? ember.rgb
+                  : components?.TextArea?.maxLengthStyles.color.rgba,
+              },
             ]}
           >
             {value.length}/{maxLength}

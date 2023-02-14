@@ -4,18 +4,18 @@ import { Frame } from '@asap-hub/frontend-utils';
 
 import { gp2 } from '@asap-hub/routing';
 import { EventsPage } from '@asap-hub/gp2-components';
+import Calendars from './calendar/Calendars';
 
 const loadEventList = () =>
   import(/* webpackChunkName: "events-list" */ './EventsList');
-const loadEvent = () => import(/* webpackChunkName: "events-list" */ './Event');
+const loadEvent = () => import(/* webpackChunkName: "event" */ './Event');
 
 const EventList = lazy(loadEventList);
 const Event = lazy(loadEvent);
 
 const Events: FC<Record<string, never>> = () => {
   useEffect(() => {
-    loadEventList();
-    loadEvent();
+    loadEventList().then(loadEvent);
   }, []);
 
   const { path } = useRouteMatch();
@@ -26,7 +26,7 @@ const Events: FC<Record<string, never>> = () => {
       <Route exact path={path + gp2.events({}).calendar.template}>
         <EventsPage>
           <Frame title="Subscribe to Calendars">
-            <div>Calendars</div>
+            <Calendars />
           </Frame>
         </EventsPage>
       </Route>

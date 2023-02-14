@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { StaticRouter, Route } from 'react-router-dom';
-import { render, act, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { createEventResponse } from '@asap-hub/fixtures';
 import { events } from '@asap-hub/routing';
 
@@ -64,34 +64,4 @@ it('falls back to the not found page for a missing event', async () => {
   mockGetEvent.mockResolvedValue(undefined);
   const { findByText } = render(<Event />, { wrapper });
   expect(await findByText(/sorry.+page/i)).toBeVisible();
-});
-// eslint-disable-next-line jest/no-disabled-tests
-it.skip('silently refreshes the event to fetch the meeting link', async () => {
-  mockGetEvent.mockResolvedValue({
-    ...createEventResponse(),
-    id,
-    meetingLink: undefined,
-    startDate: new Date().toISOString(),
-    title: 'Kool Event',
-  });
-  const { getByText, findByText, queryByText } = render(<Event />, { wrapper });
-  expect(await findByText('Kool Event', { exact: false })).toBeVisible();
-
-  mockGetEvent.mockResolvedValue({
-    ...createEventResponse(),
-    id,
-    meetingLink: 'https://example.com/meeting',
-    startDate: new Date().toISOString(),
-    title: 'New Title',
-  });
-  act(() => {
-    jest.advanceTimersByTime(5 * 60 * 1000);
-  });
-
-  let hasShownLoading = false;
-  await waitFor(() => {
-    if (queryByText(/loading/i)) hasShownLoading = true;
-    expect(getByText('New Title')).toBeVisible();
-  });
-  expect(hasShownLoading).toBe(false);
 });

@@ -27,7 +27,7 @@
     "@asap-hub/routing": "workspace:*",
     "@asap-hub/validation": "workspace:*",
     "@babel/runtime-corejs3": "7.20.13",
-    "core-js": "3.27.2",
+    "core-js": "3.28.0",
     "date-fns": "2.29.3",
     "emotion-normalize": "11.0.1"
   },

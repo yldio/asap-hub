@@ -182,6 +182,9 @@ export class ResearchOutputSquidexDataProvider
       workingGroups,
       ...researchOutputData
     } = input;
+
+    console.log(researchOutputData);
+
     const { usedInPublication, ...researchOutput } = parseToSquidex({
       ...researchOutputData,
       asapFunded: convertBooleanToDecision(researchOutputData.asapFunded),
@@ -199,6 +202,9 @@ export class ResearchOutputSquidexDataProvider
       workingGroup: workingGroups,
       subtype: (subtypeId && [subtypeId]) || [],
     });
+
+    console.log('FOOOOO');
+    console.log(researchOutput);
 
     const { id: researchOutputId } =
       await this.researchOutputSquidexRestClient.create({

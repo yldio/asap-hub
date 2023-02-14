@@ -115,6 +115,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       type: researchOutputCreateData.type,
       usageNotes: researchOutputCreateData.usageNotes,
       usedInPublication: researchOutputCreateData.usedInPublication,
+      workingGroups: researchOutputCreateData.workingGroups,
     };
 
     const researchOutputId = await this.researchOutputDataProvider.create(

@@ -50,7 +50,7 @@ export const googleLegacyCalendarColor = [
 export type GoogleLegacyCalendarColor =
   typeof googleLegacyCalendarColor[number];
 
-export interface CalendarBaseDataObject {
+export interface CalendarDataObject {
   id: string;
   googleCalendarId: string;
   color: GoogleLegacyCalendarColor;
@@ -59,9 +59,6 @@ export interface CalendarBaseDataObject {
   resourceId?: string | null;
   expirationDate?: number | null;
   version: number;
-}
-
-export interface CalendarDataObject extends CalendarBaseDataObject {
   groups?: Pick<GroupDataObject, 'id' | 'active'>[];
   workingGroups?: Pick<WorkingGroupDataObject, 'id' | 'complete'>[];
 }
@@ -75,13 +72,10 @@ export type CalendarUpdateDataObject = Partial<CalendarCreateDataObject>;
 
 export type ListCalendarDataObject = ListResponse<CalendarDataObject>;
 
-export interface CalendarBaseResponse {
+export interface CalendarResponse {
   id: string;
   name: string;
   color: GoogleLegacyCalendarColor;
-}
-
-export interface CalendarResponse extends CalendarBaseResponse {
   groups: Pick<GroupResponse, 'id' | 'active'>[];
   workingGroups: Pick<WorkingGroupResponse, 'id' | 'complete'>[];
 }

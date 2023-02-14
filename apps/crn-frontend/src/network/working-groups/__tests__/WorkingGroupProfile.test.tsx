@@ -102,20 +102,23 @@ describe('the share outputs page', () => {
         network({}).workingGroups({}).workingGroup({ workingGroupId }).$,
       ],
     });
-    const { findByText, getByText } = await renderWorkingGroupProfile(
-      {
-        ...createUserResponse({}, 1),
-        role: 'Project Manager',
-        id: workingGroupResponse.leaders[0].user.id,
-      },
-      history,
-    );
+    const { findByText, getByText, queryByText } =
+      await renderWorkingGroupProfile(
+        {
+          ...createUserResponse({}, 1),
+          role: 'Project Manager',
+          id: workingGroupResponse.leaders[0].user.id,
+        },
+        history,
+      );
+    expect(queryByText(/about/i)).toBeInTheDocument();
     userEvent.click(await findByText(/share an output/i));
     expect(getByText(/article/i, { selector: 'span' })).toBeVisible();
     userEvent.click(getByText(/article/i, { selector: 'span' }));
     expect(history.location.pathname).toEqual(
       '/network/working-groups/working-group-id-0/create-output/article',
     );
+    expect(queryByText(/about/i)).not.toBeInTheDocument();
   });
 });
 

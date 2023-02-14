@@ -8,6 +8,7 @@ import { network, useRouteParams } from '@asap-hub/routing';
 
 import { useUpcomingAndPastEvents } from '../events';
 import ProfileSwitch from '../ProfileSwitch';
+import ShareOutputSwitch from '../ShareOutputSwitch';
 
 import { useCanCreateUpdateResearchOutput, useWorkingGroupById } from './state';
 
@@ -53,38 +54,41 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
     });
     const paths = {
       about: path + about.template,
-      createOutput: path + createOutput.template,
       outputs: path + outputs.template,
       past: path + past.template,
       upcoming: path + upcoming.template,
     };
     return (
       <ResearchOutputPermissionsContext.Provider value={{ canCreateUpdate }}>
-        <WorkingGroupPage
-          upcomingEventsCount={upcomingEventsResult.total}
-          pastEventsCount={pastEventsResult.total}
-          membersListElementId={membersListElementId}
-          {...workingGroup}
+        <ShareOutputSwitch
+          ShareOutput={() => (
+            <WorkingGroupOutput workingGroupId={workingGroupId} />
+          )}
+          path={path + createOutput.template}
         >
-          <ProfileSwitch
-            About={() => (
-              <About
-                membersListElementId={membersListElementId}
-                workingGroup={workingGroup}
-              />
-            )}
-            currentTime={currentTime}
-            displayName={workingGroup.title}
-            eventConstraint={{ workingGroupId }}
-            isActive={!workingGroup.complete}
-            Outputs={() => <Outputs workingGroup={workingGroup} />}
-            paths={paths}
-            ShareOutput={() => (
-              <WorkingGroupOutput workingGroupId={workingGroupId} />
-            )}
-            type="working group"
-          />
-        </WorkingGroupPage>
+          <WorkingGroupPage
+            upcomingEventsCount={upcomingEventsResult.total}
+            pastEventsCount={pastEventsResult.total}
+            membersListElementId={membersListElementId}
+            {...workingGroup}
+          >
+            <ProfileSwitch
+              About={() => (
+                <About
+                  membersListElementId={membersListElementId}
+                  workingGroup={workingGroup}
+                />
+              )}
+              currentTime={currentTime}
+              displayName={workingGroup.title}
+              eventConstraint={{ workingGroupId }}
+              isActive={!workingGroup.complete}
+              Outputs={() => <Outputs workingGroup={workingGroup} />}
+              paths={paths}
+              type="working group"
+            />
+          </WorkingGroupPage>
+        </ShareOutputSwitch>
       </ResearchOutputPermissionsContext.Provider>
     );
   }

@@ -11,6 +11,7 @@ import { useResearchOutputs } from '../../shared-research/state';
 
 import { useUpcomingAndPastEvents } from '../events';
 import ProfileSwitch from '../ProfileSwitch';
+import ShareOutputSwitch from '../ShareOutputSwitch';
 
 import { useCanCreateUpdateResearchOutput, useTeamById } from './state';
 
@@ -81,30 +82,34 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
 
     return (
       <ResearchOutputPermissionsContext.Provider value={{ canCreateUpdate }}>
-        <TeamProfilePage
-          teamListElementId={teamListElementId}
-          upcomingEventsCount={upcomingEvents.total}
-          pastEventsCount={pastEvents.total}
-          teamOutputsCount={teamOutputsResult.total}
-          {...team}
+        <ShareOutputSwitch
+          ShareOutput={() => <TeamOutput teamId={teamId} />}
+          path={path + createOutput.template}
         >
-          <ProfileSwitch
-            About={() => (
-              <About teamListElementId={teamListElementId} team={team} />
-            )}
-            currentTime={currentTime}
-            displayName={team.displayName}
-            eventConstraint={{ teamId }}
-            isActive={!team?.inactiveSince}
-            Outputs={() => <Outputs team={team} />}
-            paths={paths}
-            ShareOutput={() => <TeamOutput teamId={teamId} />}
-            type="team"
-            Workspace={() => (
-              <Workspace team={{ ...team, tools: team.tools ?? [] }} />
-            )}
-          />
-        </TeamProfilePage>
+          <TeamProfilePage
+            teamListElementId={teamListElementId}
+            upcomingEventsCount={upcomingEvents.total}
+            pastEventsCount={pastEvents.total}
+            teamOutputsCount={teamOutputsResult.total}
+            {...team}
+          >
+            <ProfileSwitch
+              About={() => (
+                <About teamListElementId={teamListElementId} team={team} />
+              )}
+              currentTime={currentTime}
+              displayName={team.displayName}
+              eventConstraint={{ teamId }}
+              isActive={!team?.inactiveSince}
+              Outputs={() => <Outputs team={team} />}
+              paths={paths}
+              type="team"
+              Workspace={() => (
+                <Workspace team={{ ...team, tools: team.tools ?? [] }} />
+              )}
+            />
+          </TeamProfilePage>
+        </ShareOutputSwitch>
       </ResearchOutputPermissionsContext.Provider>
     );
   }

@@ -13,7 +13,7 @@ const loadEventsList = () =>
 const EventsList = lazy(loadEventsList);
 
 type RequiredPaths = 'about' | 'upcoming' | 'past';
-type OptionalPaths = 'calendar' | 'createOutput' | 'outputs' | 'workspace';
+type OptionalPaths = 'calendar' | 'outputs' | 'workspace';
 
 type ProfileSwitchProps = {
   About: FC;
@@ -24,7 +24,6 @@ type ProfileSwitchProps = {
   isActive?: boolean;
   Outputs?: FC;
   paths: Record<RequiredPaths, string> & Partial<Record<OptionalPaths, string>>;
-  ShareOutput?: FC;
   type: ComponentProps<typeof NoEvents>['type'];
   Workspace?: FC;
 };
@@ -38,19 +37,11 @@ const ProfileSwitch: FC<ProfileSwitchProps> = ({
   isActive,
   Outputs,
   paths,
-  ShareOutput,
   type,
   Workspace,
 }) => (
   <Frame title={displayName}>
     <Switch>
-      {ShareOutput && (
-        <Route path={paths.createOutput}>
-          <Frame title="Share Output">
-            <ShareOutput />
-          </Frame>
-        </Route>
-      )}
       <Route path={paths.about}>
         <Frame title="About">{<About />}</Frame>
       </Route>

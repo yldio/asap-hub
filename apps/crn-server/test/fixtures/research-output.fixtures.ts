@@ -128,7 +128,7 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
         },
       },
     ],
-    workingGroup: [],
+    workingGroups: [],
   },
 });
 
@@ -357,7 +357,7 @@ export const getRestResearchOutputCreateData =
     usageNotes: {
       iv: 'some access instructions',
     },
-    workingGroup: { iv: [] },
+    workingGroups: { iv: [] },
   });
 
 export const getResearchOutputUpdateData = (): ResearchOutputUpdateData => ({

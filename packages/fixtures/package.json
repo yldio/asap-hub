@@ -17,7 +17,7 @@
     "@asap-hub/auth": "workspace:*",
     "@asap-hub/model": "workspace:*",
     "@babel/runtime-corejs3": "7.20.13",
-    "core-js": "3.27.2",
+    "core-js": "3.28.0",
     "date-fns": "2.29.3",
     "jsonwebtoken": "8.5.1",
     "ramda": "0.27.1",

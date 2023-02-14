@@ -175,6 +175,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       updatedBy: researchOutputUpdateData.updatedBy,
       usageNotes: researchOutputUpdateData.usageNotes,
       usedInPublication: researchOutputUpdateData.usedInPublication,
+      workingGroups: researchOutputUpdateData.workingGroups,
     };
 
     const researchOutputId = await this.researchOutputDataProvider.update(

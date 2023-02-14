@@ -240,7 +240,7 @@ export class Squidex<
           throw new NotFoundError(err);
         }
       }
-
+      console.log(json);
       throw new GenericError(err instanceof Error ? err : undefined);
     }
   }

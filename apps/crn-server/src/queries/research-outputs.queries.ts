@@ -117,7 +117,7 @@ export const researchOutputContentQueryFragment = gql`
           name
         }
       }
-      workingGroup {
+      workingGroups {
         id
         flatData {
           title

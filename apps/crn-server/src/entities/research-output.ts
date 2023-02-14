@@ -111,7 +111,7 @@ export const parseGraphQLResearchOutput = (
       ) || [],
     subtype: data.subtype?.[0]?.flatData.name || undefined,
     workingGroups:
-      data.workingGroup?.map((group) => ({
+      data.workingGroups?.map((group) => ({
         id: group.id,
         title: group.flatData.title || '',
       })) || [],

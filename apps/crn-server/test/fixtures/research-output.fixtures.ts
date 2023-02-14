@@ -128,6 +128,7 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
         },
       },
     ],
+    workingGroup: [],
   },
 });
 
@@ -291,16 +292,21 @@ export const getResearchOutputCreateDataObject =
       subtypeId: 'dd0da578-5573-4758-b1db-43a078f5076e',
       link: 'http://a.link',
       type: 'Software',
+      workingGroups: [],
     };
   };
 
 export const getResearchOutputUpdateDataObject =
   (): ResearchOutputUpdateDataObject => {
-    const { createdBy: _, ...researchOutputCreateDataObject } =
-      getResearchOutputCreateDataObject();
+    const {
+      createdBy: _,
+      workingGroups,
+      ...researchOutputCreateDataObject
+    } = getResearchOutputCreateDataObject();
 
     return {
       ...researchOutputCreateDataObject,
+      workingGroups: workingGroups || [],
       updatedBy: 'userId',
     };
   };
@@ -351,6 +357,7 @@ export const getRestResearchOutputCreateData =
     usageNotes: {
       iv: 'some access instructions',
     },
+    workingGroup: { iv: [] },
   });
 
 export const getResearchOutputUpdateData = (): ResearchOutputUpdateData => ({

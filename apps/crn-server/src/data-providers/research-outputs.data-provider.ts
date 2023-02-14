@@ -203,9 +203,6 @@ export class ResearchOutputSquidexDataProvider
       subtype: (subtypeId && [subtypeId]) || [],
     });
 
-    console.log('FOOOOO');
-    console.log(researchOutput);
-
     const { id: researchOutputId } =
       await this.researchOutputSquidexRestClient.create({
         doi: { iv: null },

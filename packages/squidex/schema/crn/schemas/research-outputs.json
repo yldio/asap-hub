@@ -455,7 +455,7 @@
         }
       },
       {
-        "name": "workingGroup",
+        "name": "workingGroups",
         "properties": {
           "isRequired": false,
           "isRequiredOnPublish": false,

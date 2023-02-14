@@ -248,6 +248,7 @@ export type ResearchOutputUpdateDataObject = ResearchOutputCoreObject & {
   subtypeId?: string;
   teamIds: string[];
   updatedBy: string;
+  workingGroups: string[];
 };
 
 export type ResearchOutputBaseResponse = Omit<

@@ -254,6 +254,8 @@ const serverlessConfig: AWS = {
         GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
+        GP2_API_URL: apiHostname,
+        REGION: '${env:AWS_REGION}',
       },
     },
     resubscribeCalendars: {
@@ -268,6 +270,8 @@ const serverlessConfig: AWS = {
         GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
+        GP2_API_URL: apiHostname,
+        REGION: '${env:AWS_REGION}',
       },
     },
     inviteUser: {

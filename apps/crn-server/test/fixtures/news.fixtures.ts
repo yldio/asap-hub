@@ -41,6 +41,7 @@ export const getContentfulGraphqlNews = (): NonNullable<
     id: 'news-1',
     firstPublishedAt: '2020-09-08T16:35:28.000Z',
   },
+  publishDate: '2020-09-08T16:35:28.000Z',
   thumbnail: {
     url: `${baseUrl}/api/assets/${appName}/thumbnail-uuid1`,
   },

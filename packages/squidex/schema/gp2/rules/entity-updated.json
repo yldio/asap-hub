@@ -6,6 +6,10 @@
     "triggerType": "ContentChanged",
     "schemas": [
       {
+        "schemaId": "calendars",
+        "condition": "event.type === 'Created' || event.type === 'Published' || event.type === 'Unpublished' || event.type === 'Updated' || event.type === 'Deleted'"
+      },
+      {
         "schemaId": "users",
         "condition": "event.type === 'Created' || event.type === 'Published' || event.type === 'Unpublished' || event.type === 'Updated' || event.type === 'Deleted'"
       }

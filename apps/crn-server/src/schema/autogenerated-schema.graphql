@@ -4524,7 +4524,7 @@ type ResearchOutputsDataDto {
   updatedBy: ResearchOutputsDataUpdatedByDto
   usageNotes: ResearchOutputsDataUsageNotesDto
   usedInAPublication: ResearchOutputsDataUsedInAPublicationDto
-  workingGroup: ResearchOutputsDataWorkingGroupDto
+  workingGroups: ResearchOutputsDataWorkingGroupsDto
 }
 
 """The structure of the Environment field of the Research Outputs content type."""
@@ -4566,7 +4566,7 @@ input ResearchOutputsDataInputDto {
   updatedBy: ResearchOutputsDataUpdatedByInputDto
   usageNotes: ResearchOutputsDataUsageNotesInputDto
   usedInAPublication: ResearchOutputsDataUsedInAPublicationInputDto
-  workingGroup: ResearchOutputsDataWorkingGroupInputDto
+  workingGroups: ResearchOutputsDataWorkingGroupsInputDto
 }
 
 """The structure of the Lab Catalog Number field of the Research Outputs content type."""
@@ -4760,12 +4760,12 @@ input ResearchOutputsDataUsedInAPublicationInputDto {
 }
 
 """The structure of the Working Group field of the Research Outputs content type."""
-type ResearchOutputsDataWorkingGroupDto {
+type ResearchOutputsDataWorkingGroupsDto {
   iv: [WorkingGroups!]
 }
 
 """The structure of the Working Group field of the Research Outputs content input type."""
-input ResearchOutputsDataWorkingGroupInputDto {
+input ResearchOutputsDataWorkingGroupsInputDto {
   iv: [String!]
 }
 
@@ -4814,7 +4814,7 @@ type ResearchOutputsFlatDataDto {
   usageNotes: String
   """"Not sure" will not be shown on the Hub"""
   usedInAPublication: String
-  workingGroup: [WorkingGroups!]
+  workingGroups: [WorkingGroups!]
 }
 
 """List of Research Outputs items and total count."""

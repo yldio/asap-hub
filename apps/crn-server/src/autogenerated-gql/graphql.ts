@@ -4340,7 +4340,7 @@ export type ResearchOutputsDataDto = {
   updatedBy: Maybe<ResearchOutputsDataUpdatedByDto>;
   usageNotes: Maybe<ResearchOutputsDataUsageNotesDto>;
   usedInAPublication: Maybe<ResearchOutputsDataUsedInAPublicationDto>;
-  workingGroup: Maybe<ResearchOutputsDataWorkingGroupDto>;
+  workingGroups: Maybe<ResearchOutputsDataWorkingGroupsDto>;
 };
 
 /** The structure of the Environment field of the Research Outputs content type. */
@@ -4382,7 +4382,7 @@ export type ResearchOutputsDataInputDto = {
   updatedBy: InputMaybe<ResearchOutputsDataUpdatedByInputDto>;
   usageNotes: InputMaybe<ResearchOutputsDataUsageNotesInputDto>;
   usedInAPublication: InputMaybe<ResearchOutputsDataUsedInAPublicationInputDto>;
-  workingGroup: InputMaybe<ResearchOutputsDataWorkingGroupInputDto>;
+  workingGroups: InputMaybe<ResearchOutputsDataWorkingGroupsInputDto>;
 };
 
 /** The structure of the Lab Catalog Number field of the Research Outputs content type. */
@@ -4568,12 +4568,12 @@ export type ResearchOutputsDataUsedInAPublicationInputDto = {
 };
 
 /** The structure of the Working Group field of the Research Outputs content type. */
-export type ResearchOutputsDataWorkingGroupDto = {
+export type ResearchOutputsDataWorkingGroupsDto = {
   iv: Maybe<Array<WorkingGroups>>;
 };
 
 /** The structure of the Working Group field of the Research Outputs content input type. */
-export type ResearchOutputsDataWorkingGroupInputDto = {
+export type ResearchOutputsDataWorkingGroupsInputDto = {
   iv: InputMaybe<Array<Scalars['String']>>;
 };
 
@@ -4618,7 +4618,7 @@ export type ResearchOutputsFlatDataDto = {
   usageNotes: Maybe<Scalars['String']>;
   /** "Not sure" will not be shown on the Hub */
   usedInAPublication: Maybe<Scalars['String']>;
-  workingGroup: Maybe<Array<WorkingGroups>>;
+  workingGroups: Maybe<Array<WorkingGroups>>;
 };
 
 /** List of Research Outputs items and total count. */
@@ -8585,7 +8585,7 @@ export type ResearchOutputContentFragment = Pick<
     labs: Maybe<
       Array<Pick<Labs, 'id'> & { flatData: Pick<LabsFlatDataDto, 'name'> }>
     >;
-    workingGroup: Maybe<
+    workingGroups: Maybe<
       Array<
         Pick<WorkingGroups, 'id'> & {
           flatData: Pick<WorkingGroupsFlatDataDto, 'title'>;
@@ -8758,7 +8758,7 @@ export type FetchResearchOutputQuery = {
         labs: Maybe<
           Array<Pick<Labs, 'id'> & { flatData: Pick<LabsFlatDataDto, 'name'> }>
         >;
-        workingGroup: Maybe<
+        workingGroups: Maybe<
           Array<
             Pick<WorkingGroups, 'id'> & {
               flatData: Pick<WorkingGroupsFlatDataDto, 'title'>;
@@ -8950,7 +8950,7 @@ export type FetchResearchOutputsQuery = {
                   Pick<Labs, 'id'> & { flatData: Pick<LabsFlatDataDto, 'name'> }
                 >
               >;
-              workingGroup: Maybe<
+              workingGroups: Maybe<
                 Array<
                   Pick<WorkingGroups, 'id'> & {
                     flatData: Pick<WorkingGroupsFlatDataDto, 'title'>;
@@ -11934,7 +11934,7 @@ export const ResearchOutputContentFragmentDoc = {
                 },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'workingGroup' },
+                  name: { kind: 'Name', value: 'workingGroups' },
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [

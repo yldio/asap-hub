@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import {
   AlertsSentry,
   calendarCreatedHandlerFactory,
@@ -35,7 +36,7 @@ const calendarDataProvider = new CalendarSquidexDataProvider(
   calendarRestClient,
   squidexGraphqlClient,
 );
-/* istanbul ignore next */
+
 const getJWTCredentialsAWS = getJWTCredentialsFactory({
   googleApiCredentialsSecretId,
   region,

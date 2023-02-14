@@ -63,12 +63,6 @@ export const researchOutputContentQueryFragment = gql`
             }
             expertiseAndResourceTags
             expertiseAndResourceDescription
-            workingGroups {
-              id
-              flatData {
-                name
-              }
-            }
             teams {
               inactiveSinceDate
               role
@@ -121,6 +115,12 @@ export const researchOutputContentQueryFragment = gql`
         id
         flatData {
           name
+        }
+      }
+      workingGroup {
+        id
+        flatData {
+          title
         }
       }
       teams @include(if: $withTeams) {

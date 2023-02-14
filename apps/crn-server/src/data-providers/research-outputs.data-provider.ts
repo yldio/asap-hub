@@ -179,6 +179,7 @@ export class ResearchOutputSquidexDataProvider
       environmentIds,
       organismIds,
       subtypeId,
+      workingGroups,
       ...researchOutputData
     } = input;
     const { usedInPublication, ...researchOutput } = parseToSquidex({
@@ -195,6 +196,7 @@ export class ResearchOutputSquidexDataProvider
       methods: methodIds,
       environments: environmentIds,
       organisms: organismIds,
+      workingGroup: workingGroups,
       subtype: (subtypeId && [subtypeId]) || [],
     });
 

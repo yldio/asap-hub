@@ -1333,7 +1333,7 @@ __metadata:
     jsonwebtoken: 8.5.1
     jwt-encode: 1.0.1
     nock: 13.3.0
-    pino: 8.8.0
+    pino: 8.10.0
     pino-http: 8.3.3
     pino-lambda: 4.1.0
     pino-noir: 2.2.1
@@ -33448,7 +33448,28 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pino@npm:8.8.0, pino@npm:^8.0.0":
+"pino@npm:8.10.0":
+  version: 8.10.0
+  resolution: "pino@npm:8.10.0"
+  dependencies:
+    atomic-sleep: ^1.0.0
+    fast-redact: ^3.1.1
+    on-exit-leak-free: ^2.1.0
+    pino-abstract-transport: v1.0.0
+    pino-std-serializers: ^6.0.0
+    process-warning: ^2.0.0
+    quick-format-unescaped: ^4.0.3
+    real-require: ^0.2.0
+    safe-stable-stringify: ^2.3.1
+    sonic-boom: ^3.1.0
+    thread-stream: ^2.0.0
+  bin:
+    pino: bin.js
+  checksum: c8b87e72a2863e9d2c94fdfa61aec8c7fa782320669df40ce5b9281473324987a227710a0bf067d63aed821dfeeeea3665db4eecece273a60c5d2d58b011a4da
+  languageName: node
+  linkType: hard
+
+"pino@npm:^8.0.0":
   version: 8.8.0
   resolution: "pino@npm:8.8.0"
   dependencies:

@@ -183,8 +183,6 @@ export class ResearchOutputSquidexDataProvider
       ...researchOutputData
     } = input;
 
-    console.log(researchOutputData);
-
     const { usedInPublication, ...researchOutput } = parseToSquidex({
       ...researchOutputData,
       asapFunded: convertBooleanToDecision(researchOutputData.asapFunded),
@@ -199,7 +197,7 @@ export class ResearchOutputSquidexDataProvider
       methods: methodIds,
       environments: environmentIds,
       organisms: organismIds,
-      workingGroups: workingGroups,
+      workingGroups,
       subtype: (subtypeId && [subtypeId]) || [],
     });
 

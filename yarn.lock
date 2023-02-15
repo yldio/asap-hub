@@ -388,7 +388,7 @@ __metadata:
     "@types/jest": ^29.4.0
     "@types/node": 14.18.33
     "@types/prettier": 2.7.1
-    contentful-html-rich-text-converter: "yldio/contentful-html-rich-text-converter#v1.0.16"
+    contentful-html-rich-text-converter: "yldio/contentful-html-rich-text-converter#v1.0.17"
     contentful-management: ^10.19.3
     graphql: 15.8.0
     graphql-tag: 2.12.6
@@ -19670,15 +19670,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"contentful-html-rich-text-converter@yldio/contentful-html-rich-text-converter#v1.0.16":
+"contentful-html-rich-text-converter@yldio/contentful-html-rich-text-converter#v1.0.17":
   version: 1.0.9
-  resolution: "contentful-html-rich-text-converter@https://github.com/yldio/contentful-html-rich-text-converter.git#commit=cff4669078ed07102c49c46c3f7afa4958b705d7"
+  resolution: "contentful-html-rich-text-converter@https://github.com/yldio/contentful-html-rich-text-converter.git#commit=cef0840824a895f2abe07b9fe9ad1382598a6a90"
   dependencies:
-    html-entities: 1.2.1
+    html-entities: 2.3.3
     htmlparser: ^1.7.7
     mime-types: ^2.1.35
     ramda: ^0.26.1
-  checksum: 55bef82df812d99fb86ef00fcea2dc825f7618f302c12ceacdb9a50fd163434fc3271f626143ecdb257fbf024af1d3c604e58a9bf6d5c2e5e174e94e2972ef53
+  checksum: 604424611587a968a85ae7f47280afea6eb878619581c7bbe23d76f92c4c5b00f3bd8ec1a05c4451f92f1fd9b71354042567f64a662b55251b59ae22246ade5a
   languageName: node
   linkType: hard
 
@@ -26222,14 +26222,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"html-entities@npm:1.2.1":
-  version: 1.2.1
-  resolution: "html-entities@npm:1.2.1"
-  checksum: 97df9c27065e0d0171189d9d301b048ef1de5b5aedb4c733c612c7630b653d26d74a08f9c700ba72fa680677e7cb98b8b7f1d969f3967d549acd6d7efabef4ed
-  languageName: node
-  linkType: hard
-
-"html-entities@npm:^2.1.0, html-entities@npm:^2.3.2":
+"html-entities@npm:2.3.3, html-entities@npm:^2.1.0, html-entities@npm:^2.3.2":
   version: 2.3.3
   resolution: "html-entities@npm:2.3.3"
   checksum: 92521501da8aa5f66fee27f0f022d6e9ceae62667dae93aa6a2f636afa71ad530b7fb24a18d4d6c124c9885970cac5f8a52dbf1731741161002816ae43f98196

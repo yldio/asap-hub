@@ -159,4 +159,120 @@ describe('convertHtmlToContentfulFormat', () => {
       ],
     });
   });
+
+  it.skip('converts a line break to an empty paragraph', async () => {
+    const html = `<p>Line 1<wbr>Line 2</p>`;
+
+    expect(convertHtmlToContentfulFormat(html)).toEqual({
+      document: {
+        data: {},
+        content: [
+          {
+            data: {},
+            content: [
+              { data: {}, marks: [], value: 'Line 1', nodeType: 'text' },
+            ],
+            nodeType: 'paragraph',
+          },
+          {
+            data: {},
+            content: [
+              { data: {}, marks: [], value: 'Line 2', nodeType: 'text' },
+            ],
+            nodeType: 'paragraph',
+          },
+        ],
+        nodeType: 'document',
+      },
+      inlineAssetBodies: [],
+      inlineIFramesBodies: [],
+    });
+  });
+
+  it('converts a line break to an empty paragraph', async () => {
+    const html = `<p>Line 1<br>Line 2</p>`;
+
+    expect(convertHtmlToContentfulFormat(html)).toEqual({
+      document: {
+        data: {},
+        content: [
+          {
+            data: {},
+            content: [
+              { data: {}, marks: [], value: 'Line 1', nodeType: 'text' },
+            ],
+            nodeType: 'paragraph',
+          },
+          {
+            data: {},
+            content: [
+              { data: {}, marks: [], value: 'Line 2', nodeType: 'text' },
+            ],
+            nodeType: 'paragraph',
+          },
+        ],
+        nodeType: 'document',
+      },
+      inlineAssetBodies: [],
+      inlineIFramesBodies: [],
+    });
+  });
+
+  it('converts a sup to an paragraph', async () => {
+    const html = `<p><sup>XYZ</sup></p>`;
+
+    expect(convertHtmlToContentfulFormat(html)).toEqual({
+      document: {
+        data: {},
+        content: [
+          {
+            data: {},
+            content: [
+              {
+                data: {},
+                marks: [
+                  {
+                    type: 'superscript',
+                  },
+                ],
+                value: 'XYZ',
+                nodeType: 'text',
+              },
+            ],
+            nodeType: 'paragraph',
+          },
+        ],
+        nodeType: 'document',
+      },
+      inlineAssetBodies: [],
+      inlineIFramesBodies: [],
+    });
+  });
+
+  it('converts html encoded entities', async () => {
+    const html = `<p>&nbsp;test&nbsp;test&amp;</p>`;
+
+    expect(convertHtmlToContentfulFormat(html)).toEqual({
+      document: {
+        data: {},
+        content: [
+          {
+            data: {},
+            content: [
+              {
+                data: {},
+                marks: [],
+                value: ' test test&',
+                nodeType: 'text',
+              },
+            ],
+            nodeType: 'paragraph',
+          },
+        ],
+        nodeType: 'document',
+      },
+      inlineAssetBodies: [],
+      inlineIFramesBodies: [],
+    });
+  });
 });

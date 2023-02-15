@@ -61,7 +61,6 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
     const paths = {
       about: path + about.template,
       calendar: path + calendar.template,
-      createOutput: path + createOutput.template,
       outputs: path + outputs.template,
       past: path + past.template,
       upcoming: path + upcoming.template,

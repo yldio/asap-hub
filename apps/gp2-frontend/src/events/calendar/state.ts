@@ -1,4 +1,4 @@
-import { useRecoilValue, atom, selector, useRecoilValueLoadable } from 'recoil';
+import { useRecoilValue, atom, selector } from 'recoil';
 import { ListCalendarResponse } from '@asap-hub/model';
 
 import { getCalendars } from './api';
@@ -18,6 +18,4 @@ export const calendarsState = selector<ListCalendarResponse>({
   },
 });
 
-export const usePrefetchCalendars = () =>
-  useRecoilValueLoadable(calendarsState);
 export const useCalendars = () => useRecoilValue(calendarsState);

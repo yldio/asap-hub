@@ -84,7 +84,7 @@ it('share outputs page is rendered when user clicks share an output and chooses 
     initialEntries: [network({}).teams({}).team({ teamId: teamResponse.id }).$],
   });
 
-  const { findByText, getByText } = await renderPage(
+  const { findByText, getByText, queryByText } = await renderPage(
     teamResponse,
     { teamId: teamResponse.id, currentTime: new Date() },
     {
@@ -98,12 +98,14 @@ it('share outputs page is rendered when user clicks share an output and chooses 
     },
     history,
   );
+  expect(queryByText(/about/i)).toBeInTheDocument();
   userEvent.click(await findByText(/share an output/i));
   expect(getByText(/article/i, { selector: 'span' })).toBeVisible();
   userEvent.click(getByText(/article/i, { selector: 'span' }));
   expect(history.location.pathname).toEqual(
     `/network/teams/${teamResponse.id}/create-output/article`,
   );
+  expect(queryByText(/about/i)).not.toBeInTheDocument();
 });
 
 it('renders the 404 page for a missing team', async () => {

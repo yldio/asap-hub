@@ -1,7 +1,8 @@
 import { FC, lazy, useEffect, useState } from 'react';
-import { useRouteMatch } from 'react-router-dom';
+import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 
+import { Frame } from '@asap-hub/frontend-utils';
 import { NotFoundPage, TeamProfilePage } from '@asap-hub/react-components';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { network, useRouteParams } from '@asap-hub/routing';
@@ -72,7 +73,6 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
     });
     const paths = {
       about: path + about.template,
-      createOutput: path + createOutput.template,
       outputs: path + outputs.template,
       past: path + past.template,
       upcoming: path + upcoming.template,
@@ -81,30 +81,36 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
 
     return (
       <ResearchOutputPermissionsContext.Provider value={{ canCreateUpdate }}>
-        <TeamProfilePage
-          teamListElementId={teamListElementId}
-          upcomingEventsCount={upcomingEvents.total}
-          pastEventsCount={pastEvents.total}
-          teamOutputsCount={teamOutputsResult.total}
-          {...team}
-        >
-          <ProfileSwitch
-            About={() => (
-              <About teamListElementId={teamListElementId} team={team} />
-            )}
-            currentTime={currentTime}
-            displayName={team.displayName}
-            eventConstraint={{ teamId }}
-            isActive={!team?.inactiveSince}
-            Outputs={() => <Outputs team={team} />}
-            paths={paths}
-            ShareOutput={() => <TeamOutput teamId={teamId} />}
-            type="team"
-            Workspace={() => (
-              <Workspace team={{ ...team, tools: team.tools ?? [] }} />
-            )}
-          />
-        </TeamProfilePage>
+        <Switch>
+          <Route path={path + createOutput.template}>
+            <Frame title="Share Output">
+              <TeamOutput teamId={teamId} />
+            </Frame>
+          </Route>
+          <TeamProfilePage
+            teamListElementId={teamListElementId}
+            upcomingEventsCount={upcomingEvents.total}
+            pastEventsCount={pastEvents.total}
+            teamOutputsCount={teamOutputsResult.total}
+            {...team}
+          >
+            <ProfileSwitch
+              About={() => (
+                <About teamListElementId={teamListElementId} team={team} />
+              )}
+              currentTime={currentTime}
+              displayName={team.displayName}
+              eventConstraint={{ teamId }}
+              isActive={!team?.inactiveSince}
+              Outputs={() => <Outputs team={team} />}
+              paths={paths}
+              type="team"
+              Workspace={() => (
+                <Workspace team={{ ...team, tools: team.tools ?? [] }} />
+              )}
+            />
+          </TeamProfilePage>
+        </Switch>
       </ResearchOutputPermissionsContext.Provider>
     );
   }

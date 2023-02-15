@@ -12,14 +12,23 @@ import { Suspense } from 'react';
 import { Router, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
+import { getResearchOutputs } from '../../../shared-research/api';
 import { getWorkingGroup } from '../api';
 import { refreshWorkingGroupState } from '../state';
 import WorkingGroupProfile from '../WorkingGroupProfile';
 import { getEvents } from '../../../events/api';
+import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
 
 jest.mock('../api');
 jest.mock('../../../events/api');
+jest.mock('../../../shared-research/api');
 
+const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
+  typeof getResearchOutputs
+>;
+mockGetResearchOutputs.mockResolvedValue({
+  ...createResearchOutputListAlgoliaResponse(1),
+});
 const mockGetWorkingGroup = getWorkingGroup as jest.MockedFunction<
   typeof getWorkingGroup
 >;

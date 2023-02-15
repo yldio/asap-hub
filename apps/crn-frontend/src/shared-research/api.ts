@@ -65,7 +65,7 @@ export const getAllFilters = (
   const typeFiltersWithParenthesis = typeFilters
     ? `(${getTypeFilters(filters)})`
     : typeFilters;
-  console.log(workingGroupId);
+
   const teamFilter = teamId ? `teams.id:"${teamId}"` : '';
   const wgFilter = workingGroupId ? `workingGroups.id:"${workingGroupId}"` : '';
   const authorFilter = userId ? `authors.id:"${userId}"` : '';

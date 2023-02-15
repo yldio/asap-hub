@@ -1,7 +1,8 @@
 import { FC, lazy, useEffect, useState } from 'react';
-import { useRouteMatch } from 'react-router-dom';
+import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 
+import { Frame } from '@asap-hub/frontend-utils';
 import { NotFoundPage, WorkingGroupPage } from '@asap-hub/react-components';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { network, useRouteParams } from '@asap-hub/routing';
@@ -65,38 +66,41 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
     });
     const paths = {
       about: path + about.template,
-      createOutput: path + createOutput.template,
       outputs: path + outputs.template,
       past: path + past.template,
       upcoming: path + upcoming.template,
     };
     return (
       <ResearchOutputPermissionsContext.Provider value={{ canCreateUpdate }}>
-        <WorkingGroupPage
-          upcomingEventsCount={upcomingEventsResult.total}
-          pastEventsCount={pastEventsResult.total}
-          membersListElementId={membersListElementId}
-          {...workingGroup}
-        >
-          <ProfileSwitch
-            About={() => (
-              <About
-                membersListElementId={membersListElementId}
-                workingGroup={workingGroup}
-              />
-            )}
-            currentTime={currentTime}
-            displayName={workingGroup.title}
-            eventConstraint={{ workingGroupId }}
-            isActive={!workingGroup.complete}
-            Outputs={() => <Outputs workingGroup={workingGroup} />}
-            paths={paths}
-            ShareOutput={() => (
+        <Switch>
+          <Route path={path + createOutput.template}>
+            <Frame title="Share Output">
               <WorkingGroupOutput workingGroupId={workingGroupId} />
-            )}
-            type="working group"
-          />
-        </WorkingGroupPage>
+            </Frame>
+          </Route>
+          <WorkingGroupPage
+            upcomingEventsCount={upcomingEventsResult.total}
+            pastEventsCount={pastEventsResult.total}
+            membersListElementId={membersListElementId}
+            {...workingGroup}
+          >
+            <ProfileSwitch
+              About={() => (
+                <About
+                  membersListElementId={membersListElementId}
+                  workingGroup={workingGroup}
+                />
+              )}
+              currentTime={currentTime}
+              displayName={workingGroup.title}
+              eventConstraint={{ workingGroupId }}
+              isActive={!workingGroup.complete}
+              Outputs={() => <Outputs workingGroup={workingGroup} />}
+              paths={paths}
+              type="working group"
+            />
+          </WorkingGroupPage>
+        </Switch>
       </ResearchOutputPermissionsContext.Provider>
     );
   }

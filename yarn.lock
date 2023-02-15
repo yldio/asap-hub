@@ -281,7 +281,7 @@ __metadata:
     algoliasearch: 4.14.3
     apr-intercept: 3.0.4
     async-sema: 3.1.1
-    aws-sdk: 2.1312.0
+    aws-sdk: 2.1314.0
     csv-parse: 4.16.3
     got: 11.8.6
     jwt-encode: 1.0.1
@@ -450,7 +450,7 @@ __metadata:
     "@types/jest": ^29.4.0
     "@types/jsdom": 16.2.15
     "@types/react": 17.0.53
-    "@types/react-dom": 17.0.18
+    "@types/react-dom": 17.0.19
     "@types/react-router-dom": 5.3.3
     "@types/testing-library__jest-dom": 5.14.5
     "@types/testing-library__react": 10.0.1
@@ -502,7 +502,7 @@ __metadata:
     "@types/node": 14.18.33
     "@types/qs": 6.9.7
     "@types/react": 17.0.53
-    "@types/react-dom": 17.0.18
+    "@types/react-dom": 17.0.19
     "@types/react-router-dom": 5.3.3
     "@types/react-test-renderer": 17.0.2
     "@types/streamsaver": 2.0.1
@@ -558,8 +558,8 @@ __metadata:
     "@types/babel__core": 7.20.0
     "@types/node": 14.18.33
     "@types/react": 17.0.53
-    "@types/react-dom": 17.0.18
-    aws-sdk: 2.1312.0
+    "@types/react-dom": 17.0.19
+    aws-sdk: 2.1314.0
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
     core-js: 3.28.0
@@ -647,7 +647,7 @@ __metadata:
     algoliasearch: 4.14.3
     apr-intercept: 3.0.4
     aws-lambda: 1.0.7
-    aws-sdk: 2.1312.0
+    aws-sdk: 2.1314.0
     aws-xray-sdk: 3.4.1
     babel-loader: 8.3.0
     chance: 1.1.9
@@ -749,7 +749,7 @@ __metadata:
     eslint-plugin-flowtype: 8.0.3
     eslint-plugin-import: 2.26.0
     eslint-plugin-jest: 26.9.0
-    eslint-plugin-jsx-a11y: 6.6.1
+    eslint-plugin-jsx-a11y: 6.7.1
     eslint-plugin-prettier: 4.2.1
     eslint-plugin-react: 7.32.2
     eslint-plugin-react-hooks: 4.6.0
@@ -852,7 +852,7 @@ __metadata:
     "@types/jest": ^29.4.0
     "@types/jsdom": 16.2.15
     "@types/react": 17.0.53
-    "@types/react-dom": 17.0.18
+    "@types/react-dom": 17.0.19
     "@types/react-router-dom": 5.3.3
     "@types/testing-library__jest-dom": 5.14.5
     "@types/testing-library__react": 10.0.1
@@ -901,7 +901,7 @@ __metadata:
     "@types/history": 4.7.11
     "@types/jest": ^29.4.0
     "@types/react": 17.0.53
-    "@types/react-dom": 17.0.18
+    "@types/react-dom": 17.0.19
     "@types/react-router-dom": 5.3.3
     "@types/react-router-hash-link": 1.2.1
     "@types/react-test-renderer": 17.0.2
@@ -966,7 +966,7 @@ __metadata:
     "@types/nock": 11.1.0
     "@types/node": 14.18.33
     "@types/react": 17.0.53
-    "@types/react-dom": 17.0.18
+    "@types/react-dom": 17.0.19
     "@types/react-router-dom": 5.3.3
     "@types/react-test-renderer": 17.0.2
     "@types/streamsaver": 2.0.1
@@ -1019,8 +1019,8 @@ __metadata:
     "@types/babel__core": 7.20.0
     "@types/node": 14.18.33
     "@types/react": 17.0.53
-    "@types/react-dom": 17.0.18
-    aws-sdk: 2.1312.0
+    "@types/react-dom": 17.0.19
+    aws-sdk: 2.1314.0
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
     core-js: 3.28.0
@@ -1081,7 +1081,7 @@ __metadata:
     ajv: 8.11.0
     apr-intercept: 3.0.4
     aws-lambda: 1.0.7
-    aws-sdk: 2.1312.0
+    aws-sdk: 2.1314.0
     babel-loader: 8.3.0
     copy-webpack-plugin: 9.1.0
     cors: 2.8.5
@@ -1130,8 +1130,8 @@ __metadata:
     "@emotion/server": 11.10.0
     "@types/babel__core": 7.20.0
     "@types/react": 17.0.53
-    "@types/react-dom": 17.0.18
-    aws-sdk: 2.1312.0
+    "@types/react-dom": 17.0.19
+    aws-sdk: 2.1314.0
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
     core-js: 3.28.0
@@ -1201,7 +1201,7 @@ __metadata:
     "@types/jest": ^29.4.0
     "@types/ramda": 0.27.20
     "@types/react": 17.0.53
-    "@types/react-dom": 17.0.18
+    "@types/react-dom": 17.0.19
     "@types/react-router-dom": 5.3.3
     "@types/react-router-hash-link": 1.2.1
     "@types/react-select": "patch:@types/react-select@^4#patches/types__react-select.patch"
@@ -1326,7 +1326,7 @@ __metadata:
     ajv-formats: 2.1.1
     apr-intercept: 3.0.4
     aws-lambda: 1.0.7
-    aws-sdk: 2.1312.0
+    aws-sdk: 2.1314.0
     csv-parse: 4.16.3
     express: 4.18.2
     express-async-errors: 3.1.1
@@ -1462,7 +1462,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.20.13
     "@types/node": 14.18.33
     "@types/react": 17.0.53
-    "@types/react-dom": 17.0.18
+    "@types/react-dom": 17.0.19
     react: 17.0.2
     react-dom: 17.0.2
   languageName: unknown
@@ -7899,6 +7899,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime@npm:^7.20.7":
+  version: 7.20.13
+  resolution: "@babel/runtime@npm:7.20.13"
+  dependencies:
+    regenerator-runtime: ^0.13.11
+  checksum: 09b7a97a05c80540db6c9e4ddf8c5d2ebb06cae5caf3a87e33c33f27f8c4d49d9c67a2d72f1570e796045288fad569f98a26ceba0c4f5fad2af84b6ad855c4fb
+  languageName: node
+  linkType: hard
+
 "@babel/template@npm:^7.10.4, @babel/template@npm:^7.3.3":
   version: 7.10.4
   resolution: "@babel/template@npm:7.10.4"
@@ -13945,12 +13954,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:17.0.18":
-  version: 17.0.18
-  resolution: "@types/react-dom@npm:17.0.18"
+"@types/react-dom@npm:17.0.19":
+  version: 17.0.19
+  resolution: "@types/react-dom@npm:17.0.19"
   dependencies:
     "@types/react": ^17
-  checksum: b74525b1a13a0e27fe20859ff7a7e8f7e4581fb9d45ed1b6447ad1534d86f813818353c39d0df2e28f9d2b9be2e3af1908c244b2214a979393d19f217665e614
+  checksum: 875a472d868b235435c905ded16cf92297bd2afb20a5a78f5dccd54312f6f038ccf452ea92bb41c0b39150c2f16f3ddff0265a2de756c6f63b0971dd5719578b
   languageName: node
   linkType: hard
 
@@ -16113,6 +16122,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"aria-query@npm:^5.1.3":
+  version: 5.1.3
+  resolution: "aria-query@npm:5.1.3"
+  dependencies:
+    deep-equal: ^2.0.5
+  checksum: 929ff95f02857b650fb4cbcd2f41072eee2f46159a6605ea03bf63aa572e35ffdff43d69e815ddc462e16e07de8faba3978afc2813650b4448ee18c9895d982b
+  languageName: node
+  linkType: hard
+
 "arr-diff@npm:^4.0.0":
   version: 4.0.0
   resolution: "arr-diff@npm:4.0.0"
@@ -16754,9 +16772,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:2.1312.0":
-  version: 2.1312.0
-  resolution: "aws-sdk@npm:2.1312.0"
+"aws-sdk@npm:2.1314.0":
+  version: 2.1314.0
+  resolution: "aws-sdk@npm:2.1314.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -16768,7 +16786,7 @@ __metadata:
     util: ^0.12.4
     uuid: 8.0.0
     xml2js: 0.4.19
-  checksum: 9e91efee52fb7603df9b41778598f762aecb655bb22dbd0c80e22abc50bcdd36e324a2e004bc695743f8cca25671448f0b5baaabba3ee73bb1e868fead0cd757
+  checksum: bfe8bda40f3baca4d247435ccef7bf7b4572e18321e7788281f17a4f53621de5c6ae4a553c2bef051804966c739092352e80af0910998af634b9fd4acbc59d4e
   languageName: node
   linkType: hard
 
@@ -16905,6 +16923,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"axe-core@npm:^4.6.2":
+  version: 4.6.3
+  resolution: "axe-core@npm:4.6.3"
+  checksum: d0c46be92b9707c48b88a53cd5f471b155a2bfc8bf6beffb514ecd14e30b4863e340b5fc4f496d82a3c562048088c1f3ff5b93b9b3b026cb9c3bfacfd535da10
+  languageName: node
+  linkType: hard
+
 "axios@npm:^0.21.0, axios@npm:^0.21.4":
   version: 0.21.4
   resolution: "axios@npm:0.21.4"
@@ -16946,6 +16971,15 @@ __metadata:
   version: 2.2.0
   resolution: "axobject-query@npm:2.2.0"
   checksum: 96b8c7d807ca525f41ad9b286186e2089b561ba63a6d36c3e7d73dc08150714660995c7ad19cda05784458446a0793b45246db45894631e13853f48c1aa3117f
+  languageName: node
+  linkType: hard
+
+"axobject-query@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "axobject-query@npm:3.1.1"
+  dependencies:
+    deep-equal: ^2.0.5
+  checksum: c12a5da10dc7bab75e1cda9b6a3b5fcf10eba426ddf1a17b71ef65a434ed707ede7d1c4f013ba1609e970bc8c0cddac01365080d376204314e9b294719acd8a5
   languageName: node
   linkType: hard
 
@@ -21053,6 +21087,31 @@ __metadata:
   languageName: node
   linkType: hard
 
+"deep-equal@npm:^2.0.5":
+  version: 2.2.0
+  resolution: "deep-equal@npm:2.2.0"
+  dependencies:
+    call-bind: ^1.0.2
+    es-get-iterator: ^1.1.2
+    get-intrinsic: ^1.1.3
+    is-arguments: ^1.1.1
+    is-array-buffer: ^3.0.1
+    is-date-object: ^1.0.5
+    is-regex: ^1.1.4
+    is-shared-array-buffer: ^1.0.2
+    isarray: ^2.0.5
+    object-is: ^1.1.5
+    object-keys: ^1.1.1
+    object.assign: ^4.1.4
+    regexp.prototype.flags: ^1.4.3
+    side-channel: ^1.0.4
+    which-boxed-primitive: ^1.0.2
+    which-collection: ^1.0.1
+    which-typed-array: ^1.1.9
+  checksum: 46a34509d2766d6c6dc5aec4756089cf0cc137e46787e91f08f1ee0bb570d874f19f0493146907df0cf18aed4a7b4b50f6f62c899240a76c323f057528b122e3
+  languageName: node
+  linkType: hard
+
 "deep-is@npm:^0.1.3, deep-is@npm:~0.1.3":
   version: 0.1.3
   resolution: "deep-is@npm:0.1.3"
@@ -22313,6 +22372,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"es-get-iterator@npm:^1.1.2":
+  version: 1.1.3
+  resolution: "es-get-iterator@npm:1.1.3"
+  dependencies:
+    call-bind: ^1.0.2
+    get-intrinsic: ^1.1.3
+    has-symbols: ^1.0.3
+    is-arguments: ^1.1.1
+    is-map: ^2.0.2
+    is-set: ^2.0.2
+    is-string: ^1.0.7
+    isarray: ^2.0.5
+    stop-iteration-iterator: ^1.0.0
+  checksum: 8fa118da42667a01a7c7529f8a8cca514feeff243feec1ce0bb73baaa3514560bd09d2b3438873cf8a5aaec5d52da248131de153b28e2638a061b6e4df13267d
+  languageName: node
+  linkType: hard
+
 "es-module-lexer@npm:^0.9.0":
   version: 0.9.3
   resolution: "es-module-lexer@npm:0.9.3"
@@ -22719,7 +22795,33 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jsx-a11y@npm:6.6.1, eslint-plugin-jsx-a11y@npm:^6.5.1":
+"eslint-plugin-jsx-a11y@npm:6.7.1":
+  version: 6.7.1
+  resolution: "eslint-plugin-jsx-a11y@npm:6.7.1"
+  dependencies:
+    "@babel/runtime": ^7.20.7
+    aria-query: ^5.1.3
+    array-includes: ^3.1.6
+    array.prototype.flatmap: ^1.3.1
+    ast-types-flow: ^0.0.7
+    axe-core: ^4.6.2
+    axobject-query: ^3.1.1
+    damerau-levenshtein: ^1.0.8
+    emoji-regex: ^9.2.2
+    has: ^1.0.3
+    jsx-ast-utils: ^3.3.3
+    language-tags: =1.0.5
+    minimatch: ^3.1.2
+    object.entries: ^1.1.6
+    object.fromentries: ^2.0.6
+    semver: ^6.3.0
+  peerDependencies:
+    eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8
+  checksum: f166dd5fe7257c7b891c6692e6a3ede6f237a14043ae3d97581daf318fc5833ddc6b4871aa34ab7656187430170500f6d806895747ea17ecdf8231a666c3c2fd
+  languageName: node
+  linkType: hard
+
+"eslint-plugin-jsx-a11y@npm:^6.5.1":
   version: 6.6.1
   resolution: "eslint-plugin-jsx-a11y@npm:6.6.1"
   dependencies:
@@ -27006,6 +27108,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"is-arguments@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "is-arguments@npm:1.1.1"
+  dependencies:
+    call-bind: ^1.0.2
+    has-tostringtag: ^1.0.0
+  checksum: 7f02700ec2171b691ef3e4d0e3e6c0ba408e8434368504bb593d0d7c891c0dbfda6d19d30808b904a6cb1929bca648c061ba438c39f296c2a8ca083229c49f27
+  languageName: node
+  linkType: hard
+
 "is-array-buffer@npm:^3.0.1":
   version: 3.0.1
   resolution: "is-array-buffer@npm:3.0.1"
@@ -27165,6 +27277,15 @@ __metadata:
   version: 1.0.2
   resolution: "is-date-object@npm:1.0.2"
   checksum: ac859426e5df031abd9d1eeed32a41cc0de06e47227bd972b8bc716460a9404654b3dba78f41e8171ccf535c4bfa6d72a8d1d15a0873f9646698af415e92c2fb
+  languageName: node
+  linkType: hard
+
+"is-date-object@npm:^1.0.5":
+  version: 1.0.5
+  resolution: "is-date-object@npm:1.0.5"
+  dependencies:
+    has-tostringtag: ^1.0.0
+  checksum: baa9077cdf15eb7b58c79398604ca57379b2fc4cf9aa7a9b9e295278648f628c9b201400c01c5e0f7afae56507d741185730307cbe7cad3b9f90a77e5ee342fc
   languageName: node
   linkType: hard
 
@@ -27360,6 +27481,13 @@ __metadata:
   version: 2.0.1
   resolution: "is-map@npm:2.0.1"
   checksum: f45f68cd764e8a4dae4a68a8cb892a14c642378959032297e3d598118b3322d680bc3d61ee4bfcfa0442cb1848758fd64c239419e740f65f9cd316477cdd21b1
+  languageName: node
+  linkType: hard
+
+"is-map@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "is-map@npm:2.0.2"
+  checksum: ace3d0ecd667bbdefdb1852de601268f67f2db725624b1958f279316e13fecb8fa7df91fd60f690d7417b4ec180712f5a7ee967008e27c65cfd475cc84337728
   languageName: node
   linkType: hard
 
@@ -27578,6 +27706,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"is-set@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "is-set@npm:2.0.2"
+  checksum: b64343faf45e9387b97a6fd32be632ee7b269bd8183701f3b3f5b71a7cf00d04450ed8669d0bd08753e08b968beda96fca73a10fd0ff56a32603f64deba55a57
+  languageName: node
+  linkType: hard
+
 "is-shared-array-buffer@npm:^1.0.2":
   version: 1.0.2
   resolution: "is-shared-array-buffer@npm:1.0.2"
@@ -27699,12 +27834,29 @@ __metadata:
   languageName: node
   linkType: hard
 
+"is-weakmap@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "is-weakmap@npm:2.0.1"
+  checksum: 1222bb7e90c32bdb949226e66d26cb7bce12e1e28e3e1b40bfa6b390ba3e08192a8664a703dff2a00a84825f4e022f9cd58c4599ff9981ab72b1d69479f4f7f6
+  languageName: node
+  linkType: hard
+
 "is-weakref@npm:^1.0.2":
   version: 1.0.2
   resolution: "is-weakref@npm:1.0.2"
   dependencies:
     call-bind: ^1.0.2
   checksum: 95bd9a57cdcb58c63b1c401c60a474b0f45b94719c30f548c891860f051bc2231575c290a6b420c6bc6e7ed99459d424c652bd5bf9a1d5259505dc35b4bf83de
+  languageName: node
+  linkType: hard
+
+"is-weakset@npm:^2.0.1":
+  version: 2.0.2
+  resolution: "is-weakset@npm:2.0.2"
+  dependencies:
+    call-bind: ^1.0.2
+    get-intrinsic: ^1.1.1
+  checksum: 5d8698d1fa599a0635d7ca85be9c26d547b317ed8fd83fc75f03efbe75d50001b5eececb1e9971de85fcde84f69ae6f8346bc92d20d55d46201d328e4c74a367
   languageName: node
   linkType: hard
 
@@ -29729,7 +29881,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsx-ast-utils@npm:^3.3.2":
+"jsx-ast-utils@npm:^3.3.2, jsx-ast-utils@npm:^3.3.3":
   version: 3.3.3
   resolution: "jsx-ast-utils@npm:3.3.3"
   dependencies:
@@ -29944,7 +30096,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"language-tags@npm:^1.0.5":
+"language-tags@npm:=1.0.5, language-tags@npm:^1.0.5":
   version: 1.0.5
   resolution: "language-tags@npm:1.0.5"
   dependencies:
@@ -32374,7 +32526,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"object-is@npm:^1.0.1":
+"object-is@npm:^1.0.1, object-is@npm:^1.1.5":
   version: 1.1.5
   resolution: "object-is@npm:1.1.5"
   dependencies:
@@ -38590,6 +38742,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"stop-iteration-iterator@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "stop-iteration-iterator@npm:1.0.0"
+  dependencies:
+    internal-slot: ^1.0.4
+  checksum: d04173690b2efa40e24ab70e5e51a3ff31d56d699550cfad084104ab3381390daccb36652b25755e420245f3b0737de66c1879eaa2a8d4fc0a78f9bf892fcb42
+  languageName: node
+  linkType: hard
+
 "store2@npm:^2.12.0":
   version: 2.12.0
   resolution: "store2@npm:2.12.0"
@@ -42275,6 +42436,18 @@ __metadata:
     is-string: "npm:^1.0.5"
     is-symbol: "npm:^1.0.3"
   checksum: 53ce774c7379071729533922adcca47220228405e1895f26673bbd71bdf7fb09bee38c1d6399395927c6289476b5ae0629863427fd151491b71c4b6cb04f3a5e
+  languageName: node
+  linkType: hard
+
+"which-collection@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "which-collection@npm:1.0.1"
+  dependencies:
+    is-map: ^2.0.1
+    is-set: ^2.0.1
+    is-weakmap: ^2.0.1
+    is-weakset: ^2.0.1
+  checksum: c815bbd163107ef9cb84f135e6f34453eaf4cca994e7ba85ddb0d27cea724c623fae2a473ceccfd5549c53cc65a5d82692de418166df3f858e1e5dc60818581c
   languageName: node
   linkType: hard
 

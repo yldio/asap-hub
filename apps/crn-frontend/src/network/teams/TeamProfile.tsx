@@ -1,7 +1,8 @@
 import { FC, lazy, useEffect, useState } from 'react';
-import { useRouteMatch } from 'react-router-dom';
+import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 
+import { Frame } from '@asap-hub/frontend-utils';
 import { NotFoundPage, TeamProfilePage } from '@asap-hub/react-components';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { network, useRouteParams } from '@asap-hub/routing';
@@ -11,7 +12,6 @@ import { useResearchOutputs } from '../../shared-research/state';
 
 import { useUpcomingAndPastEvents } from '../events';
 import ProfileSwitch from '../ProfileSwitch';
-import ShareOutputSwitch from '../ShareOutputSwitch';
 
 import { useCanCreateUpdateResearchOutput, useTeamById } from './state';
 
@@ -73,7 +73,6 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
     });
     const paths = {
       about: path + about.template,
-      createOutput: path + createOutput.template,
       outputs: path + outputs.template,
       past: path + past.template,
       upcoming: path + upcoming.template,
@@ -82,10 +81,12 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
 
     return (
       <ResearchOutputPermissionsContext.Provider value={{ canCreateUpdate }}>
-        <ShareOutputSwitch
-          ShareOutput={() => <TeamOutput teamId={teamId} />}
-          path={path + createOutput.template}
-        >
+        <Switch>
+          <Route path={path + createOutput.template}>
+            <Frame title="Share Output">
+              <TeamOutput teamId={teamId} />
+            </Frame>
+          </Route>
           <TeamProfilePage
             teamListElementId={teamListElementId}
             upcomingEventsCount={upcomingEvents.total}
@@ -109,7 +110,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
               )}
             />
           </TeamProfilePage>
-        </ShareOutputSwitch>
+        </Switch>
       </ResearchOutputPermissionsContext.Provider>
     );
   }

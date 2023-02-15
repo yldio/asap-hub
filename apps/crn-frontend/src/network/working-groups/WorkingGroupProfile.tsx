@@ -1,14 +1,14 @@
 import { FC, lazy, useEffect, useState } from 'react';
-import { useRouteMatch } from 'react-router-dom';
+import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 
+import { Frame } from '@asap-hub/frontend-utils';
 import { NotFoundPage, WorkingGroupPage } from '@asap-hub/react-components';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { network, useRouteParams } from '@asap-hub/routing';
 
 import { useUpcomingAndPastEvents } from '../events';
 import ProfileSwitch from '../ProfileSwitch';
-import ShareOutputSwitch from '../ShareOutputSwitch';
 
 import { useCanCreateUpdateResearchOutput, useWorkingGroupById } from './state';
 
@@ -60,12 +60,12 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
     };
     return (
       <ResearchOutputPermissionsContext.Provider value={{ canCreateUpdate }}>
-        <ShareOutputSwitch
-          ShareOutput={() => (
-            <WorkingGroupOutput workingGroupId={workingGroupId} />
-          )}
-          path={path + createOutput.template}
-        >
+        <Switch>
+          <Route path={path + createOutput.template}>
+            <Frame title="Share Output">
+              <WorkingGroupOutput workingGroupId={workingGroupId} />
+            </Frame>
+          </Route>
           <WorkingGroupPage
             upcomingEventsCount={upcomingEventsResult.total}
             pastEventsCount={pastEventsResult.total}
@@ -88,7 +88,7 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
               type="working group"
             />
           </WorkingGroupPage>
-        </ShareOutputSwitch>
+        </Switch>
       </ResearchOutputPermissionsContext.Provider>
     );
   }

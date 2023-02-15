@@ -46,17 +46,17 @@ export const parseEventSpeakerUser = (
 export const parseGraphQLSpeakers = (
   speakers: NonNullable<EventContentFragment['flatData']['speakers']>,
 ): gp2.EventSpeaker[] =>
-  speakers.reduce((speakersList: gp2.EventSpeaker[], speaker) => {
+  speakers.reduce((speakerList: gp2.EventSpeaker[], speaker) => {
     const user = speaker?.user?.[0];
 
     if (!user || user.flatData.onboarded !== true) {
-      return speakersList;
+      return speakerList;
     }
 
-    speakersList.push({
+    speakerList.push({
       user: parseEventSpeakerUser(user),
     });
-    return speakersList;
+    return speakerList;
   }, []);
 
 export const parseGraphQLEvent = (

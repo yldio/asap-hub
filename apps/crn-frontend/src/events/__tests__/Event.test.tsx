@@ -55,6 +55,14 @@ it('displays the event with given id', async () => {
   expect(mockGetEvent.mock.calls).toEqual([[id, expect.anything()]]);
 });
 
+it('renders the speakers list', async () => {
+  mockGetEvent.mockResolvedValue({
+    ...createEventResponse(),
+  });
+  const { findByText } = render(<Event />, { wrapper });
+  expect(await findByText('Speakers')).toBeVisible();
+});
+
 it('generates the back href', async () => {
   const { findByText } = render(<Event />, { wrapper });
   expect((await findByText(/back/i)).closest('a')).toHaveAttribute(
@@ -68,6 +76,7 @@ it('falls back to the not found page for a missing event', async () => {
   const { findByText } = render(<Event />, { wrapper });
   expect(await findByText(/sorry.+page/i)).toBeVisible();
 });
+
 // eslint-disable-next-line jest/no-disabled-tests
 it.skip('silently refreshes the event to fetch the meeting link', async () => {
   mockGetEvent.mockResolvedValue({

@@ -150,39 +150,9 @@ it('renders calendar list for events with missing group', () => {
   expect(queryByText('Event Calendar')).toBeInTheDocument();
 });
 
-it('renders the speakers list component', () => {
-  const { queryByText } = render(<EventPage {...props} />);
-  expect(queryByText('Speakers')).toBeInTheDocument();
-});
-
-it('does not the speakers list component if there are no speakers', () => {
-  const noSpeakers = { ...props };
-  noSpeakers.speakers = [];
-  const { queryByText } = render(<EventPage {...noSpeakers} />);
-  expect(queryByText('Speakers')).not.toBeInTheDocument();
-});
-
-it('displays inactive badge when a team is inactive', () => {
-  render(
-    <EventPage
-      {...props}
-      speakers={[
-        {
-          team: {
-            displayName: 'Team',
-            id: '123',
-            inactiveSince: '2022-10-20T09:00:00Z',
-          },
-          user: {
-            displayName: 'User',
-            id: '123',
-          },
-        },
-      ]}
-    />,
-  );
-
-  expect(screen.getByTitle('Inactive')).toBeInTheDocument();
+it('renders the children', () => {
+  const { queryByText } = render(<EventPage {...props}>Children</EventPage>);
+  expect(queryByText('Children')).toBeVisible();
 });
 
 it('displays inactive badge when a group is inactive', () => {
@@ -194,52 +164,4 @@ it('displays inactive badge when a group is inactive', () => {
   );
 
   expect(screen.getByTitle('Inactive')).toBeInTheDocument();
-});
-
-it('displays inactive badge when a group and team are inactive', () => {
-  render(
-    <EventPage
-      {...props}
-      group={{ ...createGroupResponse(), active: false }}
-      speakers={[
-        {
-          team: {
-            displayName: 'Team',
-            id: '123',
-            inactiveSince: '2022-10-20T09:00:00Z',
-          },
-          user: {
-            displayName: 'User',
-            id: '123',
-          },
-        },
-      ]}
-    />,
-  );
-
-  expect(screen.getAllByTitle('Inactive')).toHaveLength(2);
-});
-
-it('does not display inactive badge when a group and team are active', () => {
-  render(
-    <EventPage
-      {...props}
-      group={{ ...createGroupResponse(), active: true }}
-      speakers={[
-        {
-          team: {
-            displayName: 'Team',
-            id: '123',
-            inactiveSince: undefined,
-          },
-          user: {
-            displayName: 'User',
-            id: '123',
-          },
-        },
-      ]}
-    />,
-  );
-
-  expect(screen.queryByTitle('Inactive')).not.toBeInTheDocument();
 });

@@ -1,6 +1,6 @@
 import { EventResponse, ListEventResponse } from '@asap-hub/model';
+import { EventController } from '@asap-hub/server-common';
 import { Response, Router } from 'express';
-import { EventController } from '../controllers/events';
 import {
   validateEventFetchParameters,
   validateEventParameters,

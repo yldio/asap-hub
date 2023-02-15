@@ -1,9 +1,12 @@
-import {
-  NullableOptionalProperties,
-  validateInput,
-} from '@asap-hub/server-common';
 import { JSONSchemaType } from 'ajv';
+import { NullableOptionalProperties } from '../utils';
+import { validateInput } from './validation';
 
+type Date = NullableOptionalProperties<{
+  date?: string;
+  dateTime?: string;
+  timeZone?: string;
+}>;
 export type GoogleEvent = NullableOptionalProperties<{
   id: string;
   summary: string;
@@ -14,11 +17,6 @@ export type GoogleEvent = NullableOptionalProperties<{
   status: string;
   start: Date;
   end: Date;
-}>;
-type Date = NullableOptionalProperties<{
-  date?: string;
-  dateTime?: string;
-  timeZone?: string;
 }>;
 const dateSchema: JSONSchemaType<Date> = {
   type: 'object',

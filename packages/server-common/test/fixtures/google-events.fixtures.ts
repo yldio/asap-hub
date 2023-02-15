@@ -1,6 +1,6 @@
 import { calendar_v3 } from 'googleapis';
 
-export const listEventsResponse: calendar_v3.Schema$Events = {
+export const getListEventsResponse = (): calendar_v3.Schema$Events => ({
   kind: 'calendar#events',
   etag: '"p330bru6hqvuus0g"',
   summary: 'New Test',
@@ -72,4 +72,4 @@ export const listEventsResponse: calendar_v3.Schema$Events = {
       },
     },
   ],
-};
+});

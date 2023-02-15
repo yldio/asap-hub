@@ -1,13 +1,14 @@
 import { calendar_v3 as calendarV3 } from 'googleapis';
-import { syncEventFactory } from '../../src/utils/sync-google-event';
-import { eventControllerMock } from '../mocks/event-controller.mock';
+import { syncEventFactory } from '../../src';
 import { getRestEvent } from '../fixtures/events.fixtures';
+import { eventControllerMock } from '../mocks/event-controller.mock';
+import { loggerMock as logger } from '../mocks/logger.mock';
 
 describe('Sync calendar util hook', () => {
   const googleCalendarId = 'google-calendar-id';
   const squidexCalendarId = 'squidex-calendar-id';
   const defaultCalendarTimezone = 'Europe/Lisbon';
-  const syncEvent = syncEventFactory(eventControllerMock);
+  const syncEvent = syncEventFactory(eventControllerMock, logger);
 
   afterEach(() => {
     jest.clearAllMocks();

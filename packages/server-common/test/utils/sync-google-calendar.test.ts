@@ -1,6 +1,6 @@
-import { GetJWTCredentials } from '@asap-hub/server-common';
-import { syncCalendarFactory } from '../../src/utils/sync-google-calendar';
-import * as fixtures from '../fixtures/google-events.fixtures';
+import { GetJWTCredentials, syncCalendarFactory } from '../../src';
+import { getListEventsResponse } from '../fixtures/google-events.fixtures';
+import { loggerMock as logger } from '../mocks/logger.mock';
 
 const mockList = jest.fn();
 jest.mock('googleapis', () => {
@@ -42,6 +42,7 @@ describe('Sync calendar util hook', () => {
   const syncCalendarHandler = syncCalendarFactory(
     syncEvent,
     getJWTCredentialsMock,
+    logger,
   );
 
   const googleCalendarId = 'google-calendar-id';
@@ -68,10 +69,10 @@ describe('Sync calendar util hook', () => {
   });
 
   test('Should trigger full sync when syncToken is invalidated', async () => {
-    // Mock time to be 2023
+    const listEventsResponse = getListEventsResponse();
     jest.spyOn(global.Date, 'now').mockImplementationOnce(() => 1677926270000);
     mockList.mockRejectedValueOnce({ code: '410' });
-    mockList.mockResolvedValueOnce({ data: fixtures.listEventsResponse });
+    mockList.mockResolvedValueOnce({ data: listEventsResponse });
 
     const result = await syncCalendarHandler(
       googleCalendarId,
@@ -94,9 +95,10 @@ describe('Sync calendar util hook', () => {
   });
 
   test('Should not throw if google sends null items', async () => {
+    const listEventsResponse = getListEventsResponse();
     mockList.mockResolvedValueOnce({
       data: {
-        ...fixtures.listEventsResponse,
+        ...listEventsResponse,
         items: null,
       },
     });
@@ -106,28 +108,30 @@ describe('Sync calendar util hook', () => {
   });
 
   test('Should not throw when syncEvent fails to update event', async () => {
+    const listEventsResponse = getListEventsResponse();
     syncEvent.mockRejectedValueOnce(new Error('Squidex Error'));
-    mockList.mockResolvedValueOnce({ data: fixtures.listEventsResponse });
+    mockList.mockResolvedValueOnce({ data: listEventsResponse });
 
     await syncCalendarHandler(googleCalendarId, squidexCalendarId, syncToken);
     expect(syncEvent).toBeCalledTimes(2);
   });
 
   test('Should call syncEvent with the google events', async () => {
-    mockList.mockResolvedValueOnce({ data: fixtures.listEventsResponse });
+    const listEventsResponse = getListEventsResponse();
+    mockList.mockResolvedValueOnce({ data: listEventsResponse });
 
     await syncCalendarHandler(googleCalendarId, squidexCalendarId, syncToken);
 
     expect(mockList).toHaveBeenCalledTimes(1);
     expect(syncEvent).toBeCalledTimes(2);
     expect(syncEvent).toHaveBeenCalledWith(
-      fixtures.listEventsResponse.items![0],
+      listEventsResponse.items![0],
       googleCalendarId,
       squidexCalendarId,
       defaultCalendarTimezone,
     );
     expect(syncEvent).toHaveBeenCalledWith(
-      fixtures.listEventsResponse.items![1],
+      listEventsResponse.items![1],
       googleCalendarId,
       squidexCalendarId,
       defaultCalendarTimezone,
@@ -135,13 +139,14 @@ describe('Sync calendar util hook', () => {
   });
 
   test('Should trigger fetch more events if nextPageToken is set', async () => {
+    const listEventsResponse = getListEventsResponse();
     mockList.mockResolvedValueOnce({
       data: {
-        ...fixtures.listEventsResponse,
+        ...listEventsResponse,
         nextPageToken: 'next-page-token-1',
       },
     });
-    mockList.mockResolvedValueOnce({ data: fixtures.listEventsResponse });
+    mockList.mockResolvedValueOnce({ data: listEventsResponse });
 
     await syncCalendarHandler(googleCalendarId, squidexCalendarId, syncToken);
 

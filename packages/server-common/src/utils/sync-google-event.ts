@@ -1,12 +1,12 @@
-import { Event, RestEvent } from '@asap-hub/squidex';
 import { EventStatus } from '@asap-hub/model';
+import { Event, RestEvent } from '@asap-hub/squidex';
 import { calendar_v3 as calendarV3 } from 'googleapis';
-import { EventController } from '../controllers/events';
-import logger from './logger';
+import { EventController } from '../controllers/event.controller';
 import {
   GoogleEvent,
   validateGoogleEvent,
 } from '../validation/sync-google-event.validation';
+import { Logger } from './logger';
 
 export type SyncEvent = (
   eventPayload: calendarV3.Schema$Event,
@@ -15,8 +15,13 @@ export type SyncEvent = (
   defaultTimezone: string,
 ) => Promise<RestEvent>;
 
+const getEventDate = (eventDate: calendarV3.Schema$EventDateTime): string => {
+  if (eventDate.dateTime) return new Date(eventDate.dateTime).toISOString();
+
+  return new Date(eventDate.date || 0).toISOString();
+};
 export const syncEventFactory =
-  (eventsController: EventController): SyncEvent =>
+  (eventsController: EventController, logger: Logger): SyncEvent =>
   async (
     eventPayload: calendarV3.Schema$Event,
     googleCalendarId: string,
@@ -89,9 +94,3 @@ export const syncEventFactory =
       throw err;
     }
   };
-
-const getEventDate = (eventDate: calendarV3.Schema$EventDateTime): string => {
-  if (eventDate.dateTime) return new Date(eventDate.dateTime).toISOString();
-
-  return new Date(eventDate.date || 0).toISOString();
-};

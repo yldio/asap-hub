@@ -1,4 +1,4 @@
-import { CalendarDataObject } from '@asap-hub/model';
+import { CalendarDataObject, ListCalendarDataObject } from '@asap-hub/model';
 
 export const getCalendarDataObject = (): CalendarDataObject => ({
   id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
@@ -11,4 +11,9 @@ export const getCalendarDataObject = (): CalendarDataObject => ({
   version: 42,
   groups: [{ id: 'group-id-1', active: true }],
   workingGroups: [{ id: '123', complete: false }],
+});
+
+export const getListCalendarDataObject = (): ListCalendarDataObject => ({
+  total: 1,
+  items: [getCalendarDataObject()],
 });

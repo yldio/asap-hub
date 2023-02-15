@@ -1,3 +1,4 @@
+import { User } from '@asap-hub/squidex';
 import { UserController } from '../../../src/controllers';
 import { connectByCodeHandlerFactory } from '../../../src/handlers/webhooks/connect-by-code.handler';
 import { Logger } from '../../../src/utils';
@@ -7,7 +8,7 @@ const secret = 'secret';
 describe('Connect by code handler', () => {
   const userController = {
     connectByCode: jest.fn(),
-  } as unknown as jest.Mocked<UserController>;
+  } as unknown as jest.Mocked<UserController<User>>;
   const logger = {
     debug: jest.fn(),
   } as unknown as jest.Mocked<Logger>;

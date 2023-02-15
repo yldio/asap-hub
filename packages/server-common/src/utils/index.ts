@@ -5,6 +5,8 @@ export * from './logger';
 export * from './migrations';
 export * from './send-email';
 export * from './sentry-wrapper';
+export * from './sync-google-calendar';
+export * from './sync-google-event';
 export * from './types';
 export * from './validate-auth0-request';
 export * from './validate-squidex-request';

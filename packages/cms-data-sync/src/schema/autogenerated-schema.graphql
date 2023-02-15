@@ -36,7 +36,7 @@ type ApplicationMutations {
     The status for the content.
     """
     status: String!
-  ): Calendars!
+  ): Calendars
   """
   Change a Dashboard content.
   """
@@ -57,7 +57,7 @@ type ApplicationMutations {
     The status for the content.
     """
     status: String!
-  ): Dashboard!
+  ): Dashboard
   """
   Change a Discover ASAP content.
   """
@@ -78,7 +78,7 @@ type ApplicationMutations {
     The status for the content.
     """
     status: String!
-  ): Discover!
+  ): Discover
   """
   Change a Events content.
   """
@@ -99,7 +99,7 @@ type ApplicationMutations {
     The status for the content.
     """
     status: String!
-  ): Events!
+  ): Events
   """
   Change a External authors content.
   """
@@ -120,7 +120,7 @@ type ApplicationMutations {
     The status for the content.
     """
     status: String!
-  ): ExternalAuthors!
+  ): ExternalAuthors
   """
   Change a Groups content.
   """
@@ -141,7 +141,7 @@ type ApplicationMutations {
     The status for the content.
     """
     status: String!
-  ): Groups!
+  ): Groups
   """
   Change a Labs content.
   """
@@ -162,7 +162,7 @@ type ApplicationMutations {
     The status for the content.
     """
     status: String!
-  ): Labs!
+  ): Labs
   """
   Change a Migrations content.
   """
@@ -183,7 +183,7 @@ type ApplicationMutations {
     The status for the content.
     """
     status: String!
-  ): Migrations!
+  ): Migrations
   """
   Change a News content.
   """
@@ -204,7 +204,7 @@ type ApplicationMutations {
     The status for the content.
     """
     status: String!
-  ): NewsAndEvents!
+  ): NewsAndEvents
   """
   Change a Pages content.
   """
@@ -225,7 +225,7 @@ type ApplicationMutations {
     The status for the content.
     """
     status: String!
-  ): Pages!
+  ): Pages
   """
   Change a Research Outputs content.
   """
@@ -246,7 +246,7 @@ type ApplicationMutations {
     The status for the content.
     """
     status: String!
-  ): ResearchOutputs!
+  ): ResearchOutputs
   """
   Change a Research Tags content.
   """
@@ -267,7 +267,7 @@ type ApplicationMutations {
     The status for the content.
     """
     status: String!
-  ): ResearchTags!
+  ): ResearchTags
   """
   Change a Teams content.
   """
@@ -288,7 +288,7 @@ type ApplicationMutations {
     The status for the content.
     """
     status: String!
-  ): Teams!
+  ): Teams
   """
   Change a Tutorials content.
   """
@@ -309,7 +309,7 @@ type ApplicationMutations {
     The status for the content.
     """
     status: String!
-  ): Tutorials!
+  ): Tutorials
   """
   Change a Users content.
   """
@@ -330,7 +330,7 @@ type ApplicationMutations {
     The status for the content.
     """
     status: String!
-  ): Users!
+  ): Users
   """
   Change a Working Groups content.
   """
@@ -351,7 +351,7 @@ type ApplicationMutations {
     The status for the content.
     """
     status: String!
-  ): WorkingGroups!
+  ): WorkingGroups
   """
   Creates an Calendars content.
   """
@@ -372,7 +372,7 @@ type ApplicationMutations {
     The initial status.
     """
     status: String
-  ): Calendars!
+  ): Calendars
   """
   Creates an Dashboard content.
   """
@@ -393,7 +393,7 @@ type ApplicationMutations {
     The initial status.
     """
     status: String
-  ): Dashboard!
+  ): Dashboard
   """
   Creates an Discover ASAP content.
   """
@@ -414,7 +414,7 @@ type ApplicationMutations {
     The initial status.
     """
     status: String
-  ): Discover!
+  ): Discover
   """
   Creates an Events content.
   """
@@ -435,7 +435,7 @@ type ApplicationMutations {
     The initial status.
     """
     status: String
-  ): Events!
+  ): Events
   """
   Creates an External authors content.
   """
@@ -456,7 +456,7 @@ type ApplicationMutations {
     The initial status.
     """
     status: String
-  ): ExternalAuthors!
+  ): ExternalAuthors
   """
   Creates an Groups content.
   """
@@ -477,7 +477,7 @@ type ApplicationMutations {
     The initial status.
     """
     status: String
-  ): Groups!
+  ): Groups
   """
   Creates an Labs content.
   """
@@ -498,7 +498,7 @@ type ApplicationMutations {
     The initial status.
     """
     status: String
-  ): Labs!
+  ): Labs
   """
   Creates an Migrations content.
   """
@@ -519,7 +519,7 @@ type ApplicationMutations {
     The initial status.
     """
     status: String
-  ): Migrations!
+  ): Migrations
   """
   Creates an News content.
   """
@@ -540,7 +540,7 @@ type ApplicationMutations {
     The initial status.
     """
     status: String
-  ): NewsAndEvents!
+  ): NewsAndEvents
   """
   Creates an Pages content.
   """
@@ -561,7 +561,7 @@ type ApplicationMutations {
     The initial status.
     """
     status: String
-  ): Pages!
+  ): Pages
   """
   Creates an Research Outputs content.
   """
@@ -582,7 +582,7 @@ type ApplicationMutations {
     The initial status.
     """
     status: String
-  ): ResearchOutputs!
+  ): ResearchOutputs
   """
   Creates an Research Tags content.
   """
@@ -603,7 +603,7 @@ type ApplicationMutations {
     The initial status.
     """
     status: String
-  ): ResearchTags!
+  ): ResearchTags
   """
   Creates an Teams content.
   """
@@ -624,7 +624,7 @@ type ApplicationMutations {
     The initial status.
     """
     status: String
-  ): Teams!
+  ): Teams
   """
   Creates an Tutorials content.
   """
@@ -645,7 +645,7 @@ type ApplicationMutations {
     The initial status.
     """
     status: String
-  ): Tutorials!
+  ): Tutorials
   """
   Creates an Users content.
   """
@@ -666,7 +666,7 @@ type ApplicationMutations {
     The initial status.
     """
     status: String
-  ): Users!
+  ): Users
   """
   Creates an Working Groups content.
   """
@@ -687,7 +687,7 @@ type ApplicationMutations {
     The initial status.
     """
     status: String
-  ): WorkingGroups!
+  ): WorkingGroups
   """
   Delete an Calendars content.
   """
@@ -912,7 +912,7 @@ type ApplicationMutations {
     The ID of the object (usually GUID).
     """
     id: String
-  ): Calendars!
+  ): Calendars
   """
   Patch an Dashboard content by id.
   """
@@ -929,7 +929,7 @@ type ApplicationMutations {
     The ID of the object (usually GUID).
     """
     id: String
-  ): Dashboard!
+  ): Dashboard
   """
   Patch an Discover ASAP content by id.
   """
@@ -946,7 +946,7 @@ type ApplicationMutations {
     The ID of the object (usually GUID).
     """
     id: String
-  ): Discover!
+  ): Discover
   """
   Patch an Events content by id.
   """
@@ -963,7 +963,7 @@ type ApplicationMutations {
     The ID of the object (usually GUID).
     """
     id: String
-  ): Events!
+  ): Events
   """
   Patch an External authors content by id.
   """
@@ -980,7 +980,7 @@ type ApplicationMutations {
     The ID of the object (usually GUID).
     """
     id: String
-  ): ExternalAuthors!
+  ): ExternalAuthors
   """
   Patch an Groups content by id.
   """
@@ -997,7 +997,7 @@ type ApplicationMutations {
     The ID of the object (usually GUID).
     """
     id: String
-  ): Groups!
+  ): Groups
   """
   Patch an Labs content by id.
   """
@@ -1014,7 +1014,7 @@ type ApplicationMutations {
     The ID of the object (usually GUID).
     """
     id: String
-  ): Labs!
+  ): Labs
   """
   Patch an Migrations content by id.
   """
@@ -1031,7 +1031,7 @@ type ApplicationMutations {
     The ID of the object (usually GUID).
     """
     id: String
-  ): Migrations!
+  ): Migrations
   """
   Patch an News content by id.
   """
@@ -1048,7 +1048,7 @@ type ApplicationMutations {
     The ID of the object (usually GUID).
     """
     id: String
-  ): NewsAndEvents!
+  ): NewsAndEvents
   """
   Patch an Pages content by id.
   """
@@ -1065,7 +1065,7 @@ type ApplicationMutations {
     The ID of the object (usually GUID).
     """
     id: String
-  ): Pages!
+  ): Pages
   """
   Patch an Research Outputs content by id.
   """
@@ -1082,7 +1082,7 @@ type ApplicationMutations {
     The ID of the object (usually GUID).
     """
     id: String
-  ): ResearchOutputs!
+  ): ResearchOutputs
   """
   Patch an Research Tags content by id.
   """
@@ -1099,7 +1099,7 @@ type ApplicationMutations {
     The ID of the object (usually GUID).
     """
     id: String
-  ): ResearchTags!
+  ): ResearchTags
   """
   Patch an Teams content by id.
   """
@@ -1116,7 +1116,7 @@ type ApplicationMutations {
     The ID of the object (usually GUID).
     """
     id: String
-  ): Teams!
+  ): Teams
   """
   Patch an Tutorials content by id.
   """
@@ -1133,7 +1133,7 @@ type ApplicationMutations {
     The ID of the object (usually GUID).
     """
     id: String
-  ): Tutorials!
+  ): Tutorials
   """
   Patch an Users content by id.
   """
@@ -1150,7 +1150,7 @@ type ApplicationMutations {
     The ID of the object (usually GUID).
     """
     id: String
-  ): Users!
+  ): Users
   """
   Patch an Working Groups content by id.
   """
@@ -1167,7 +1167,7 @@ type ApplicationMutations {
     The ID of the object (usually GUID).
     """
     id: String
-  ): WorkingGroups!
+  ): WorkingGroups
   """
   Publish a Calendars content.
   """
@@ -1188,7 +1188,7 @@ type ApplicationMutations {
     The status for the content.
     """
     status: String!
-  ): Calendars! @deprecated(reason: "Use 'changeCalendarsContent' instead")
+  ): Calendars @deprecated(reason: "Use 'changeCalendarsContent' instead")
   """
   Publish a Dashboard content.
   """
@@ -1209,7 +1209,7 @@ type ApplicationMutations {
     The status for the content.
     """
     status: String!
-  ): Dashboard! @deprecated(reason: "Use 'changeDashboardContent' instead")
+  ): Dashboard @deprecated(reason: "Use 'changeDashboardContent' instead")
   """
   Publish a Discover ASAP content.
   """
@@ -1230,7 +1230,7 @@ type ApplicationMutations {
     The status for the content.
     """
     status: String!
-  ): Discover! @deprecated(reason: "Use 'changeDiscoverContent' instead")
+  ): Discover @deprecated(reason: "Use 'changeDiscoverContent' instead")
   """
   Publish a Events content.
   """
@@ -1251,7 +1251,7 @@ type ApplicationMutations {
     The status for the content.
     """
     status: String!
-  ): Events! @deprecated(reason: "Use 'changeEventsContent' instead")
+  ): Events @deprecated(reason: "Use 'changeEventsContent' instead")
   """
   Publish a External authors content.
   """
@@ -1272,7 +1272,7 @@ type ApplicationMutations {
     The status for the content.
     """
     status: String!
-  ): ExternalAuthors!
+  ): ExternalAuthors
     @deprecated(reason: "Use 'changeExternalAuthorsContent' instead")
   """
   Publish a Groups content.
@@ -1294,7 +1294,7 @@ type ApplicationMutations {
     The status for the content.
     """
     status: String!
-  ): Groups! @deprecated(reason: "Use 'changeGroupsContent' instead")
+  ): Groups @deprecated(reason: "Use 'changeGroupsContent' instead")
   """
   Publish a Labs content.
   """
@@ -1315,7 +1315,7 @@ type ApplicationMutations {
     The status for the content.
     """
     status: String!
-  ): Labs! @deprecated(reason: "Use 'changeLabsContent' instead")
+  ): Labs @deprecated(reason: "Use 'changeLabsContent' instead")
   """
   Publish a Migrations content.
   """
@@ -1336,7 +1336,7 @@ type ApplicationMutations {
     The status for the content.
     """
     status: String!
-  ): Migrations! @deprecated(reason: "Use 'changeMigrationsContent' instead")
+  ): Migrations @deprecated(reason: "Use 'changeMigrationsContent' instead")
   """
   Publish a News content.
   """
@@ -1357,7 +1357,7 @@ type ApplicationMutations {
     The status for the content.
     """
     status: String!
-  ): NewsAndEvents!
+  ): NewsAndEvents
     @deprecated(reason: "Use 'changeNewsAndEventsContent' instead")
   """
   Publish a Pages content.
@@ -1379,7 +1379,7 @@ type ApplicationMutations {
     The status for the content.
     """
     status: String!
-  ): Pages! @deprecated(reason: "Use 'changePagesContent' instead")
+  ): Pages @deprecated(reason: "Use 'changePagesContent' instead")
   """
   Publish a Research Outputs content.
   """
@@ -1400,7 +1400,7 @@ type ApplicationMutations {
     The status for the content.
     """
     status: String!
-  ): ResearchOutputs!
+  ): ResearchOutputs
     @deprecated(reason: "Use 'changeResearchOutputsContent' instead")
   """
   Publish a Research Tags content.
@@ -1422,8 +1422,7 @@ type ApplicationMutations {
     The status for the content.
     """
     status: String!
-  ): ResearchTags!
-    @deprecated(reason: "Use 'changeResearchTagsContent' instead")
+  ): ResearchTags @deprecated(reason: "Use 'changeResearchTagsContent' instead")
   """
   Publish a Teams content.
   """
@@ -1444,7 +1443,7 @@ type ApplicationMutations {
     The status for the content.
     """
     status: String!
-  ): Teams! @deprecated(reason: "Use 'changeTeamsContent' instead")
+  ): Teams @deprecated(reason: "Use 'changeTeamsContent' instead")
   """
   Publish a Tutorials content.
   """
@@ -1465,7 +1464,7 @@ type ApplicationMutations {
     The status for the content.
     """
     status: String!
-  ): Tutorials! @deprecated(reason: "Use 'changeTutorialsContent' instead")
+  ): Tutorials @deprecated(reason: "Use 'changeTutorialsContent' instead")
   """
   Publish a Users content.
   """
@@ -1486,7 +1485,7 @@ type ApplicationMutations {
     The status for the content.
     """
     status: String!
-  ): Users! @deprecated(reason: "Use 'changeUsersContent' instead")
+  ): Users @deprecated(reason: "Use 'changeUsersContent' instead")
   """
   Publish a Working Groups content.
   """
@@ -1507,7 +1506,7 @@ type ApplicationMutations {
     The status for the content.
     """
     status: String!
-  ): WorkingGroups!
+  ): WorkingGroups
     @deprecated(reason: "Use 'changeWorkingGroupsContent' instead")
   """
   Update an Calendars content by id.
@@ -1525,7 +1524,7 @@ type ApplicationMutations {
     The ID of the object (usually GUID).
     """
     id: String
-  ): Calendars!
+  ): Calendars
   """
   Update an Dashboard content by id.
   """
@@ -1542,7 +1541,7 @@ type ApplicationMutations {
     The ID of the object (usually GUID).
     """
     id: String
-  ): Dashboard!
+  ): Dashboard
   """
   Update an Discover ASAP content by id.
   """
@@ -1559,7 +1558,7 @@ type ApplicationMutations {
     The ID of the object (usually GUID).
     """
     id: String
-  ): Discover!
+  ): Discover
   """
   Update an Events content by id.
   """
@@ -1576,7 +1575,7 @@ type ApplicationMutations {
     The ID of the object (usually GUID).
     """
     id: String
-  ): Events!
+  ): Events
   """
   Update an External authors content by id.
   """
@@ -1593,7 +1592,7 @@ type ApplicationMutations {
     The ID of the object (usually GUID).
     """
     id: String
-  ): ExternalAuthors!
+  ): ExternalAuthors
   """
   Update an Groups content by id.
   """
@@ -1610,7 +1609,7 @@ type ApplicationMutations {
     The ID of the object (usually GUID).
     """
     id: String
-  ): Groups!
+  ): Groups
   """
   Update an Labs content by id.
   """
@@ -1627,7 +1626,7 @@ type ApplicationMutations {
     The ID of the object (usually GUID).
     """
     id: String
-  ): Labs!
+  ): Labs
   """
   Update an Migrations content by id.
   """
@@ -1644,7 +1643,7 @@ type ApplicationMutations {
     The ID of the object (usually GUID).
     """
     id: String
-  ): Migrations!
+  ): Migrations
   """
   Update an News content by id.
   """
@@ -1661,7 +1660,7 @@ type ApplicationMutations {
     The ID of the object (usually GUID).
     """
     id: String
-  ): NewsAndEvents!
+  ): NewsAndEvents
   """
   Update an Pages content by id.
   """
@@ -1678,7 +1677,7 @@ type ApplicationMutations {
     The ID of the object (usually GUID).
     """
     id: String
-  ): Pages!
+  ): Pages
   """
   Update an Research Outputs content by id.
   """
@@ -1695,7 +1694,7 @@ type ApplicationMutations {
     The ID of the object (usually GUID).
     """
     id: String
-  ): ResearchOutputs!
+  ): ResearchOutputs
   """
   Update an Research Tags content by id.
   """
@@ -1712,7 +1711,7 @@ type ApplicationMutations {
     The ID of the object (usually GUID).
     """
     id: String
-  ): ResearchTags!
+  ): ResearchTags
   """
   Update an Teams content by id.
   """
@@ -1729,7 +1728,7 @@ type ApplicationMutations {
     The ID of the object (usually GUID).
     """
     id: String
-  ): Teams!
+  ): Teams
   """
   Update an Tutorials content by id.
   """
@@ -1746,7 +1745,7 @@ type ApplicationMutations {
     The ID of the object (usually GUID).
     """
     id: String
-  ): Tutorials!
+  ): Tutorials
   """
   Update an Users content by id.
   """
@@ -1763,7 +1762,7 @@ type ApplicationMutations {
     The ID of the object (usually GUID).
     """
     id: String
-  ): Users!
+  ): Users
   """
   Update an Working Groups content by id.
   """
@@ -1780,7 +1779,7 @@ type ApplicationMutations {
     The ID of the object (usually GUID).
     """
     id: String
-  ): WorkingGroups!
+  ): WorkingGroups
   """
   Upsert an Calendars content by id.
   """
@@ -1809,7 +1808,7 @@ type ApplicationMutations {
     The initial status.
     """
     status: String
-  ): Calendars!
+  ): Calendars
   """
   Upsert an Dashboard content by id.
   """
@@ -1838,7 +1837,7 @@ type ApplicationMutations {
     The initial status.
     """
     status: String
-  ): Dashboard!
+  ): Dashboard
   """
   Upsert an Discover ASAP content by id.
   """
@@ -1867,7 +1866,7 @@ type ApplicationMutations {
     The initial status.
     """
     status: String
-  ): Discover!
+  ): Discover
   """
   Upsert an Events content by id.
   """
@@ -1896,7 +1895,7 @@ type ApplicationMutations {
     The initial status.
     """
     status: String
-  ): Events!
+  ): Events
   """
   Upsert an External authors content by id.
   """
@@ -1925,7 +1924,7 @@ type ApplicationMutations {
     The initial status.
     """
     status: String
-  ): ExternalAuthors!
+  ): ExternalAuthors
   """
   Upsert an Groups content by id.
   """
@@ -1954,7 +1953,7 @@ type ApplicationMutations {
     The initial status.
     """
     status: String
-  ): Groups!
+  ): Groups
   """
   Upsert an Labs content by id.
   """
@@ -1983,7 +1982,7 @@ type ApplicationMutations {
     The initial status.
     """
     status: String
-  ): Labs!
+  ): Labs
   """
   Upsert an Migrations content by id.
   """
@@ -2012,7 +2011,7 @@ type ApplicationMutations {
     The initial status.
     """
     status: String
-  ): Migrations!
+  ): Migrations
   """
   Upsert an News content by id.
   """
@@ -2041,7 +2040,7 @@ type ApplicationMutations {
     The initial status.
     """
     status: String
-  ): NewsAndEvents!
+  ): NewsAndEvents
   """
   Upsert an Pages content by id.
   """
@@ -2070,7 +2069,7 @@ type ApplicationMutations {
     The initial status.
     """
     status: String
-  ): Pages!
+  ): Pages
   """
   Upsert an Research Outputs content by id.
   """
@@ -2099,7 +2098,7 @@ type ApplicationMutations {
     The initial status.
     """
     status: String
-  ): ResearchOutputs!
+  ): ResearchOutputs
   """
   Upsert an Research Tags content by id.
   """
@@ -2128,7 +2127,7 @@ type ApplicationMutations {
     The initial status.
     """
     status: String
-  ): ResearchTags!
+  ): ResearchTags
   """
   Upsert an Teams content by id.
   """
@@ -2157,7 +2156,7 @@ type ApplicationMutations {
     The initial status.
     """
     status: String
-  ): Teams!
+  ): Teams
   """
   Upsert an Tutorials content by id.
   """
@@ -2186,7 +2185,7 @@ type ApplicationMutations {
     The initial status.
     """
     status: String
-  ): Tutorials!
+  ): Tutorials
   """
   Upsert an Users content by id.
   """
@@ -2215,7 +2214,7 @@ type ApplicationMutations {
     The initial status.
     """
     status: String
-  ): Users!
+  ): Users
   """
   Upsert an Working Groups content by id.
   """
@@ -2244,7 +2243,7 @@ type ApplicationMutations {
     The initial status.
     """
     status: String
-  ): WorkingGroups!
+  ): WorkingGroups
 }
 
 """
@@ -3318,7 +3317,7 @@ type ApplicationSubscriptions {
   """
   assetChanges(
     """
-    The type of the event, e.g. 'Created' or 'Updated'.
+    The type of the event.
     """
     type: EnrichedAssetEventType
   ): EnrichedAssetEvent
@@ -3331,7 +3330,7 @@ type ApplicationSubscriptions {
     """
     schemaName: String
     """
-    The type of the event, e.g. 'Created' or 'Updated'.
+    The type of the event.
     """
     type: EnrichedContentEventType
   ): EnrichedContentEvent
@@ -3629,6 +3628,56 @@ type Calendars implements Content {
     """
     top: Int
   ): GroupsResultDto
+  """
+  Query Working Groups content items.
+  """
+  referencingWorkingGroupsContents(
+    """
+    Optional OData filter.
+    """
+    filter: String
+    """
+    Optional OData order definition.
+    """
+    orderby: String
+    """
+    Optional OData full text search.
+    """
+    search: String
+    """
+    Optional number of items to skip.
+    """
+    skip: Int = 0
+    """
+    Optional number of items to take.
+    """
+    top: Int
+  ): [WorkingGroups!]
+  """
+  Query Working Groups content items with total count.
+  """
+  referencingWorkingGroupsContentsWithTotal(
+    """
+    Optional OData filter.
+    """
+    filter: String
+    """
+    Optional OData order definition.
+    """
+    orderby: String
+    """
+    Optional OData full text search.
+    """
+    search: String
+    """
+    Optional number of items to skip.
+    """
+    skip: Int = 0
+    """
+    Optional number of items to take.
+    """
+    top: Int
+  ): WorkingGroupsResultDto
   """
   The status of the content.
   """
@@ -4655,7 +4704,7 @@ type EnrichedAssetEvent {
   """
   thumbnailUrl: String
   """
-  The type of the event, e.g. 'Created' or 'Updated'.
+  The type of the event.
   """
   type: EnrichedAssetEventType
   """
@@ -4724,7 +4773,7 @@ type EnrichedContentEvent {
   """
   status: String!
   """
-  The type of the event, e.g. 'Created' or 'Updated'.
+  The type of the event.
   """
   type: EnrichedContentEventType
   """
@@ -6850,7 +6899,6 @@ type NewsAndEventsDataDto {
   text: NewsAndEventsDataTextDto
   thumbnail: NewsAndEventsDataThumbnailDto
   title: NewsAndEventsDataTitleDto
-  type: NewsAndEventsDataTypeDto
 }
 
 """
@@ -6878,7 +6926,6 @@ input NewsAndEventsDataInputDto {
   text: NewsAndEventsDataTextInputDto
   thumbnail: NewsAndEventsDataThumbnailInputDto
   title: NewsAndEventsDataTitleInputDto
-  type: NewsAndEventsDataTypeInputDto
 }
 
 """
@@ -6978,20 +7025,6 @@ input NewsAndEventsDataTitleInputDto {
 }
 
 """
-The structure of the Type field of the News content type.
-"""
-type NewsAndEventsDataTypeDto {
-  iv: String
-}
-
-"""
-The structure of the Type field of the News content input type.
-"""
-input NewsAndEventsDataTypeInputDto {
-  iv: String
-}
-
-"""
 The structure of the flat News data type.
 """
 type NewsAndEventsFlatDataDto {
@@ -7008,7 +7041,6 @@ type NewsAndEventsFlatDataDto {
   text: String
   thumbnail: [Asset!]
   title: String
-  type: String
 }
 
 """
@@ -7532,6 +7564,56 @@ type ResearchOutputs implements Content {
     top: Int
   ): ResearchTagsResultDto
   """
+  Query Teams content items.
+  """
+  referencesTeamsContents(
+    """
+    Optional OData filter.
+    """
+    filter: String
+    """
+    Optional OData order definition.
+    """
+    orderby: String
+    """
+    Optional OData full text search.
+    """
+    search: String
+    """
+    Optional number of items to skip.
+    """
+    skip: Int = 0
+    """
+    Optional number of items to take.
+    """
+    top: Int
+  ): [Teams!]
+  """
+  Query Teams content items with total count.
+  """
+  referencesTeamsContentsWithTotal(
+    """
+    Optional OData filter.
+    """
+    filter: String
+    """
+    Optional OData order definition.
+    """
+    orderby: String
+    """
+    Optional OData full text search.
+    """
+    search: String
+    """
+    Optional number of items to skip.
+    """
+    skip: Int = 0
+    """
+    Optional number of items to take.
+    """
+    top: Int
+  ): TeamsResultDto
+  """
   Query Users content items.
   """
   referencesUsersContents(
@@ -7838,6 +7920,7 @@ type ResearchOutputsDataDto {
   sharingStatus: ResearchOutputsDataSharingStatusDto
   subtype: ResearchOutputsDataSubtypeDto
   tags: ResearchOutputsDataTagsDto
+  teams: ResearchOutputsDataTeamsDto
   title: ResearchOutputsDataTitleDto
   type: ResearchOutputsDataTypeDto
   updatedBy: ResearchOutputsDataUpdatedByDto
@@ -7884,6 +7967,7 @@ input ResearchOutputsDataInputDto {
   sharingStatus: ResearchOutputsDataSharingStatusInputDto
   subtype: ResearchOutputsDataSubtypeInputDto
   tags: ResearchOutputsDataTagsInputDto
+  teams: ResearchOutputsDataTeamsInputDto
   title: ResearchOutputsDataTitleInputDto
   type: ResearchOutputsDataTypeInputDto
   updatedBy: ResearchOutputsDataUpdatedByInputDto
@@ -8070,6 +8154,20 @@ input ResearchOutputsDataTagsInputDto {
 }
 
 """
+The structure of the Teams field of the Research Outputs content type.
+"""
+type ResearchOutputsDataTeamsDto {
+  iv: [Teams!]
+}
+
+"""
+The structure of the Teams field of the Research Outputs content input type.
+"""
+input ResearchOutputsDataTeamsInputDto {
+  iv: [String!]
+}
+
+"""
 The structure of the Title field of the Research Outputs content type.
 """
 type ResearchOutputsDataTitleDto {
@@ -8206,6 +8304,7 @@ type ResearchOutputsFlatDataDto {
   sharingStatus: String
   subtype: [ResearchTags!]
   tags: [String!]
+  teams: [Teams!]
   title: String
   type: String
   updatedBy: [Users!]
@@ -8715,6 +8814,56 @@ type Teams implements Content {
     top: Int
   ): GroupsResultDto
   """
+  Query Research Outputs content items.
+  """
+  referencingResearchOutputsContents(
+    """
+    Optional OData filter.
+    """
+    filter: String
+    """
+    Optional OData order definition.
+    """
+    orderby: String
+    """
+    Optional OData full text search.
+    """
+    search: String
+    """
+    Optional number of items to skip.
+    """
+    skip: Int = 0
+    """
+    Optional number of items to take.
+    """
+    top: Int
+  ): [ResearchOutputs!]
+  """
+  Query Research Outputs content items with total count.
+  """
+  referencingResearchOutputsContentsWithTotal(
+    """
+    Optional OData filter.
+    """
+    filter: String
+    """
+    Optional OData order definition.
+    """
+    orderby: String
+    """
+    Optional OData full text search.
+    """
+    search: String
+    """
+    Optional number of items to skip.
+    """
+    skip: Int = 0
+    """
+    Optional number of items to take.
+    """
+    top: Int
+  ): ResearchOutputsResultDto
+  """
   Query Users content items.
   """
   referencingUsersContents(
@@ -8818,7 +8967,6 @@ type TeamsDataDto {
   displayName: TeamsDataDisplayNameDto
   expertiseAndResourceTags: TeamsDataExpertiseAndResourceTagsDto
   inactiveSince: TeamsDataInactiveSinceDto
-  outputs: TeamsDataOutputsDto
   projectSummary: TeamsDataProjectSummaryDto
   projectTitle: TeamsDataProjectTitleDto
   proposal: TeamsDataProposalDto
@@ -8861,25 +9009,10 @@ input TeamsDataInputDto {
   displayName: TeamsDataDisplayNameInputDto
   expertiseAndResourceTags: TeamsDataExpertiseAndResourceTagsInputDto
   inactiveSince: TeamsDataInactiveSinceInputDto
-  outputs: TeamsDataOutputsInputDto
   projectSummary: TeamsDataProjectSummaryInputDto
   projectTitle: TeamsDataProjectTitleInputDto
   proposal: TeamsDataProposalInputDto
   tools: TeamsDataToolsInputDto
-}
-
-"""
-The structure of the Shared Research field of the Teams content type.
-"""
-type TeamsDataOutputsDto {
-  iv: [ResearchOutputs!]
-}
-
-"""
-The structure of the Shared Research field of the Teams content input type.
-"""
-input TeamsDataOutputsInputDto {
-  iv: [String!]
 }
 
 """
@@ -8964,7 +9097,6 @@ type TeamsFlatDataDto {
   displayName: String
   expertiseAndResourceTags: [String!]
   inactiveSince: Instant
-  outputs: [ResearchOutputs!]
   projectSummary: String
   projectTitle: String
   proposal: [ResearchOutputs!]
@@ -10044,14 +10176,14 @@ input UsersDataLabsInputDto {
 The structure of the Last Modified Date field of the Users content type.
 """
 type UsersDataLastModifiedDateDto {
-  iv: String
+  iv: Instant
 }
 
 """
 The structure of the Last Modified Date field of the Users content input type.
 """
 input UsersDataLastModifiedDateInputDto {
-  iv: String
+  iv: Instant
 }
 
 """
@@ -10322,6 +10454,7 @@ The structure of the Teams nested schema.
 """
 type UsersDataTeamsChildDto {
   id: [Teams!]
+  inactiveSinceDate: Instant
   """
   Attention: Check if this user needs to be added to Smart Simple
   """
@@ -10333,6 +10466,7 @@ The structure of the Teams nested schema.
 """
 input UsersDataTeamsChildInputDto {
   id: [String!]
+  inactiveSinceDate: Instant
   """
   Attention: Check if this user needs to be added to Smart Simple
   """
@@ -10387,7 +10521,7 @@ type UsersFlatDataDto {
   Mandatory for grantees. They cannot publish profile without a lab.
   """
   labs: [Labs!]
-  lastModifiedDate: String
+  lastModifiedDate: Instant
   lastName: String
   """
   Use this to allow the user to see the full Hub and skip profile completion
@@ -10485,6 +10619,56 @@ type WorkingGroups implements Content {
   """
   newStatusColor: String
   """
+  Query Calendars content items.
+  """
+  referencesCalendarsContents(
+    """
+    Optional OData filter.
+    """
+    filter: String
+    """
+    Optional OData order definition.
+    """
+    orderby: String
+    """
+    Optional OData full text search.
+    """
+    search: String
+    """
+    Optional number of items to skip.
+    """
+    skip: Int = 0
+    """
+    Optional number of items to take.
+    """
+    top: Int
+  ): [Calendars!]
+  """
+  Query Calendars content items with total count.
+  """
+  referencesCalendarsContentsWithTotal(
+    """
+    Optional OData filter.
+    """
+    filter: String
+    """
+    Optional OData order definition.
+    """
+    orderby: String
+    """
+    Optional OData full text search.
+    """
+    search: String
+    """
+    Optional number of items to skip.
+    """
+    skip: Int = 0
+    """
+    Optional number of items to take.
+    """
+    top: Int
+  ): CalendarsResultDto
+  """
   Query Users content items.
   """
   referencesUsersContents(
@@ -10553,6 +10737,20 @@ type WorkingGroups implements Content {
 }
 
 """
+The structure of the Calendars field of the Working Groups content type.
+"""
+type WorkingGroupsDataCalendarsDto {
+  iv: [Calendars!]
+}
+
+"""
+The structure of the Calendars field of the Working Groups content input type.
+"""
+input WorkingGroupsDataCalendarsInputDto {
+  iv: [String!]
+}
+
+"""
 The structure of the This working group is complete field of the Working Groups content type.
 """
 type WorkingGroupsDataCompleteDto {
@@ -10614,6 +10812,7 @@ input WorkingGroupsDataDescriptionInputDto {
 The structure of the Working Groups data type.
 """
 type WorkingGroupsDataDto {
+  calendars: WorkingGroupsDataCalendarsDto
   complete: WorkingGroupsDataCompleteDto
   deliverables: WorkingGroupsDataDeliverablesDto
   description: WorkingGroupsDataDescriptionDto
@@ -10642,6 +10841,7 @@ input WorkingGroupsDataExternalLinkInputDto {
 The structure of the Working Groups data input type.
 """
 input WorkingGroupsDataInputDto {
+  calendars: WorkingGroupsDataCalendarsInputDto
   complete: WorkingGroupsDataCompleteInputDto
   deliverables: WorkingGroupsDataDeliverablesInputDto
   description: WorkingGroupsDataDescriptionInputDto
@@ -10744,6 +10944,7 @@ input WorkingGroupsDataTitleInputDto {
 The structure of the flat Working Groups data type.
 """
 type WorkingGroupsFlatDataDto {
+  calendars: [Calendars!]
   complete: Boolean
   deliverables: [WorkingGroupsDataDeliverablesChildDto!]
   description: String

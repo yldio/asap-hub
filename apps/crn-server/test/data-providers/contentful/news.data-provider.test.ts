@@ -114,7 +114,7 @@ describe('News data provider', () => {
         expect.anything(),
         expect.objectContaining({
           limit: null,
-          order: ['sys_firstPublishedAt_DESC'],
+          order: ['publishDate_DESC'],
           skip: null,
           where: { frequency_in: undefined, title_contains: null },
         }),
@@ -140,7 +140,7 @@ describe('News data provider', () => {
           expect.anything(),
           expect.objectContaining({
             limit: 8,
-            order: ['sys_firstPublishedAt_DESC'],
+            order: ['publishDate_DESC'],
             skip: 5,
             where: { frequency_in: ['CRN Quarterly'], title_contains: null },
           }),
@@ -163,7 +163,7 @@ describe('News data provider', () => {
           expect.anything(),
           expect.objectContaining({
             limit: null,
-            order: ['sys_firstPublishedAt_DESC'],
+            order: ['publishDate_DESC'],
             skip: null,
             where: { frequency_in: undefined, title_contains: 'hey' },
           }),
@@ -190,7 +190,7 @@ describe('News data provider', () => {
           expect.objectContaining({
             limit: 8,
             skip: 5,
-            order: ['sys_firstPublishedAt_DESC'],
+            order: ['publishDate_DESC'],
             where: {
               frequency_in: ['CRN Quarterly', 'News Articles'],
               title_contains: 'hey',

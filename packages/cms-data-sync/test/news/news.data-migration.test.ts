@@ -128,6 +128,7 @@ describe('Migrate news', () => {
             text: { 'en-US': null },
             thumbnail: { 'en-US': null },
             title: { 'en-US': 'news' },
+            publishDate: { 'en-US': undefined },
           },
         },
       );
@@ -167,6 +168,7 @@ describe('Migrate news', () => {
             text: { 'en-US': null },
             thumbnail: { 'en-US': contenfulUploadAssetFields['file']['en-US'] },
             title: { 'en-US': 'news' },
+            publishDate: { 'en-US': undefined },
           },
         },
       );
@@ -221,6 +223,7 @@ describe('Migrate news', () => {
             text: { 'en-US': textDocument },
             thumbnail: { 'en-US': null },
             title: { 'en-US': 'news' },
+            publishDate: { 'en-US': undefined },
           },
         },
       );
@@ -265,6 +268,7 @@ describe('Migrate news', () => {
             text: { 'en-US': null },
             thumbnail: { 'en-US': null },
             title: { 'en-US': 'news' },
+            publishDate: { 'en-US': undefined },
           },
         },
       );

@@ -450,7 +450,7 @@ __metadata:
     "@types/jest": ^29.4.0
     "@types/jsdom": 16.2.15
     "@types/react": 17.0.53
-    "@types/react-dom": 17.0.18
+    "@types/react-dom": 17.0.19
     "@types/react-router-dom": 5.3.3
     "@types/testing-library__jest-dom": 5.14.5
     "@types/testing-library__react": 10.0.1
@@ -502,7 +502,7 @@ __metadata:
     "@types/node": 14.18.33
     "@types/qs": 6.9.7
     "@types/react": 17.0.53
-    "@types/react-dom": 17.0.18
+    "@types/react-dom": 17.0.19
     "@types/react-router-dom": 5.3.3
     "@types/react-test-renderer": 17.0.2
     "@types/streamsaver": 2.0.1
@@ -558,7 +558,7 @@ __metadata:
     "@types/babel__core": 7.20.0
     "@types/node": 14.18.33
     "@types/react": 17.0.53
-    "@types/react-dom": 17.0.18
+    "@types/react-dom": 17.0.19
     aws-sdk: 2.1314.0
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
@@ -852,7 +852,7 @@ __metadata:
     "@types/jest": ^29.4.0
     "@types/jsdom": 16.2.15
     "@types/react": 17.0.53
-    "@types/react-dom": 17.0.18
+    "@types/react-dom": 17.0.19
     "@types/react-router-dom": 5.3.3
     "@types/testing-library__jest-dom": 5.14.5
     "@types/testing-library__react": 10.0.1
@@ -901,7 +901,7 @@ __metadata:
     "@types/history": 4.7.11
     "@types/jest": ^29.4.0
     "@types/react": 17.0.53
-    "@types/react-dom": 17.0.18
+    "@types/react-dom": 17.0.19
     "@types/react-router-dom": 5.3.3
     "@types/react-router-hash-link": 1.2.1
     "@types/react-test-renderer": 17.0.2
@@ -966,7 +966,7 @@ __metadata:
     "@types/nock": 11.1.0
     "@types/node": 14.18.33
     "@types/react": 17.0.53
-    "@types/react-dom": 17.0.18
+    "@types/react-dom": 17.0.19
     "@types/react-router-dom": 5.3.3
     "@types/react-test-renderer": 17.0.2
     "@types/streamsaver": 2.0.1
@@ -1019,7 +1019,7 @@ __metadata:
     "@types/babel__core": 7.20.0
     "@types/node": 14.18.33
     "@types/react": 17.0.53
-    "@types/react-dom": 17.0.18
+    "@types/react-dom": 17.0.19
     aws-sdk: 2.1314.0
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
@@ -1130,7 +1130,7 @@ __metadata:
     "@emotion/server": 11.10.0
     "@types/babel__core": 7.20.0
     "@types/react": 17.0.53
-    "@types/react-dom": 17.0.18
+    "@types/react-dom": 17.0.19
     aws-sdk: 2.1314.0
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
@@ -1201,7 +1201,7 @@ __metadata:
     "@types/jest": ^29.4.0
     "@types/ramda": 0.27.20
     "@types/react": 17.0.53
-    "@types/react-dom": 17.0.18
+    "@types/react-dom": 17.0.19
     "@types/react-router-dom": 5.3.3
     "@types/react-router-hash-link": 1.2.1
     "@types/react-select": "patch:@types/react-select@^4#patches/types__react-select.patch"
@@ -1462,7 +1462,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.20.13
     "@types/node": 14.18.33
     "@types/react": 17.0.53
-    "@types/react-dom": 17.0.18
+    "@types/react-dom": 17.0.19
     react: 17.0.2
     react-dom: 17.0.2
   languageName: unknown
@@ -13954,12 +13954,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:17.0.18":
-  version: 17.0.18
-  resolution: "@types/react-dom@npm:17.0.18"
+"@types/react-dom@npm:17.0.19":
+  version: 17.0.19
+  resolution: "@types/react-dom@npm:17.0.19"
   dependencies:
     "@types/react": ^17
-  checksum: b74525b1a13a0e27fe20859ff7a7e8f7e4581fb9d45ed1b6447ad1534d86f813818353c39d0df2e28f9d2b9be2e3af1908c244b2214a979393d19f217665e614
+  checksum: 875a472d868b235435c905ded16cf92297bd2afb20a5a78f5dccd54312f6f038ccf452ea92bb41c0b39150c2f16f3ddff0265a2de756c6f63b0971dd5719578b
   languageName: node
   linkType: hard
 

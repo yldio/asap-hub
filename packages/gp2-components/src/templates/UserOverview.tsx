@@ -28,7 +28,15 @@ type UserOverviewProps = Pick<
   | 'contributingCohorts'
   | 'social'
 > &
-  ComponentProps<typeof UserQuestions>;
+  ComponentProps<typeof UserQuestions> & {
+    editBiographyHref?: string;
+    editContactInfoHref?: string;
+    editContributingCohortsHref?: string;
+    editExternalProfilesHref?: string;
+    editFundingStreamsHref?: string;
+    editKeywordsHref?: string;
+    editQuestionsHref?: string;
+  };
 
 const { rem } = pixels;
 
@@ -60,13 +68,24 @@ const UserOverview: React.FC<UserOverviewProps> = ({
   firstName,
   contributingCohorts,
   social,
+  editBiographyHref,
+  editContactInfoHref,
+  editContributingCohortsHref,
+  editExternalProfilesHref,
+  editFundingStreamsHref,
+  editKeywordsHref,
+  editQuestionsHref,
 }) => (
   <div css={containerStyles}>
     <div css={[columnStyles]}>
-      <UserContactInformation secondaryEmail={secondaryEmail} email={email} />
-      <UserKeywords keywords={keywords} />
+      <UserContactInformation
+        secondaryEmail={secondaryEmail}
+        email={email}
+        editHref={editContactInfoHref}
+      />
+      <UserKeywords keywords={keywords} editHref={editKeywordsHref} />
     </div>
-    <UserBiography biography={biography} />
+    <UserBiography biography={biography} editHref={editBiographyHref} />
     {projects.length > 0 && (
       <UserProjects projects={projects} firstName={firstName} id={id} />
     )}
@@ -77,18 +96,32 @@ const UserOverview: React.FC<UserOverviewProps> = ({
         id={id}
       />
     )}
-    {questions.length > 0 && (
-      <UserQuestions questions={questions} firstName={firstName} />
+    {(editQuestionsHref || questions.length > 0) && (
+      <UserQuestions
+        questions={questions}
+        firstName={firstName}
+        editHref={editQuestionsHref}
+      />
     )}
-    {fundingStreams && <UserFundingStreams fundingStreams={fundingStreams} />}
-    {contributingCohorts.length > 0 && (
+    {(editFundingStreamsHref || fundingStreams) && (
+      <UserFundingStreams
+        fundingStreams={fundingStreams}
+        editHref={editFundingStreamsHref}
+      />
+    )}
+    {(editContributingCohortsHref || contributingCohorts.length > 0) && (
       <UserContributingCohorts
         contributingCohorts={contributingCohorts}
         firstName={firstName}
+        editHref={editContributingCohortsHref}
       />
     )}
-    {social && Object.values(social).filter((value) => !!value) && (
-      <UserExternalProfiles social={social} />
+    {(editExternalProfilesHref ||
+      (social && Object.values(social).filter((value) => !!value))) && (
+      <UserExternalProfiles
+        social={social}
+        editHref={editExternalProfilesHref}
+      />
     )}
   </div>
 );

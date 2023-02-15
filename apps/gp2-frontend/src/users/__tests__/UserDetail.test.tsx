@@ -3,8 +3,10 @@ import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
   render,
   screen,
+  waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
@@ -82,6 +84,56 @@ describe('UserDetail', () => {
       expect(
         screen.getByRole('heading', { name: /funding providers/i }),
       ).toBeVisible();
+    });
+  });
+
+  describe('own profile', () => {
+    it('renders edit buttons for each section', async () => {
+      const user = gp2Fixtures.createUserResponse({
+        id: 'testuserid',
+        fundingStreams: 'a stream',
+      });
+      mockGetUser.mockResolvedValueOnce(user);
+
+      await renderUserDetail(user.id);
+
+      const editButtons = screen.getAllByRole('link', {
+        name: 'Edit Edit',
+      });
+
+      expect(editButtons.length).toBe(8);
+
+      // open edit Key Information modal
+      userEvent.click(editButtons[0]);
+
+      expect(screen.getByRole('dialog')).toBeVisible();
+      expect(
+        screen.getByRole('heading', { name: 'Key Information' }),
+      ).toBeVisible();
+
+      userEvent.click(screen.getByRole('button', { name: 'Save' }));
+
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+      });
+    });
+
+    it('renders placeholders for each section when they are not defined', async () => {
+      const user = gp2Fixtures.createUserResponse({
+        id: 'testuserid',
+        questions: [],
+        biography: undefined,
+        contributingCohorts: [],
+      });
+      mockGetUser.mockResolvedValueOnce(user);
+
+      await renderUserDetail(user.id);
+
+      const editButtons = screen.findAllByRole('link', {
+        name: 'Edit Edit',
+      });
+
+      expect((await editButtons).length).toBe(4);
     });
   });
 });

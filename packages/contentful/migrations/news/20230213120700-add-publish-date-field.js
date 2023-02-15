@@ -10,7 +10,10 @@ module.exports.up = function (migration) {
     .required(true)
     .validations([])
     .disabled(false)
-    .omitted(false);
+    .omitted(false)
+    .defaultValue({
+      'en-US': new Date(),
+    });
 
   news.changeFieldControl('publishDate', 'builtin', 'datePicker', {
     ampm: '12',

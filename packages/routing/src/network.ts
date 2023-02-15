@@ -126,7 +126,13 @@ const workingGroupOutputDocumentTypeParser = {
     data as WorkingGroupOutputDocumentTypeParameter,
   serialize: (data: WorkingGroupOutputDocumentTypeParameter): string => data,
 };
-export type WorkingGroupOutputDocumentTypeParameter = 'article' | 'report';
+export type WorkingGroupOutputDocumentTypeParameter =
+  | 'article'
+  | 'report'
+  | 'bioinformatics'
+  | 'dataset'
+  | 'lab-resource'
+  | 'protocol';
 
 const workingGroup = (() => {
   const about = route('/about', {}, {});

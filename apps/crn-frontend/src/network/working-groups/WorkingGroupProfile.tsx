@@ -51,7 +51,7 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
   );
   const { pageSize } = usePaginationParams();
 
-  const outputsResult = useResearchOutputs({
+  useResearchOutputs({
     filters: new Set(),
     currentPage: 0,
     searchQuery: '',

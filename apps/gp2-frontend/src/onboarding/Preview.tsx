@@ -9,10 +9,10 @@ import {
   OnboardingPreview,
   OpenQuestionsModal,
 } from '@asap-hub/gp2-components';
-import { UserPatchRequest } from '@asap-hub/model/build/gp2';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
-import { gp2 } from '@asap-hub/routing';
+import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { Route } from 'react-router-dom';
 import { useSelectAvatar } from '../hooks/useSelectAvatar';
 import { getInstitutions } from '../users/api';
@@ -26,7 +26,7 @@ import {
 
 const Preview: React.FC<Record<string, never>> = () => {
   const currentUser = useCurrentUserGP2();
-  const { onboarding } = gp2;
+  const { onboarding } = gp2Routing;
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const userData = useUserById(currentUser!.id);
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -36,7 +36,7 @@ const Preview: React.FC<Record<string, never>> = () => {
 
   const commonModalProps = {
     backHref: onboarding({}).preview({}).$,
-    onSave: (patchedUser: UserPatchRequest) => patchUser(patchedUser),
+    onSave: (patchedUser: gp2Model.UserPatchRequest) => patchUser(patchedUser),
   };
   const {
     editKeyInfo,

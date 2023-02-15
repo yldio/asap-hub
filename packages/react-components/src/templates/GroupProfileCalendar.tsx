@@ -11,16 +11,18 @@ const styles = css({
 
 type GroupProfileCalendarProps = {
   readonly calendars: ReadonlyArray<CalendarResponse>;
+  readonly groupType: 'interest' | 'working';
 };
 const GroupProfileCalendar: React.FC<GroupProfileCalendarProps> = ({
   calendars,
+  groupType,
 }) => (
   <div css={styles}>
     <GoogleCalendar calendars={calendars} />
     {!!calendars.length && (
       <CalendarList
         calendars={calendars}
-        title="Subscribe to this interest group's Calendar"
+        title={`Subscribe to this ${groupType} group's Calendar`}
       />
     )}
   </div>

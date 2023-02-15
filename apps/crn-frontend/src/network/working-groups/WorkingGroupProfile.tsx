@@ -14,6 +14,8 @@ import { useCanCreateUpdateResearchOutput, useWorkingGroupById } from './state';
 
 const loadAbout = () =>
   import(/* webpackChunkName: "network-working-group-about" */ './About');
+const loadCalendar = () =>
+  import(/* webpackChunkName: "network-working-group-calendar" */ './Calendar');
 const loadOutputs = () =>
   import(/* webpackChunkName: "network-working-group-outputs" */ './Outputs');
 const loadWorkingGroupOutput = () =>
@@ -22,6 +24,7 @@ const loadWorkingGroupOutput = () =>
   );
 
 const About = lazy(loadAbout);
+const Calendar = lazy(loadCalendar);
 const Outputs = lazy(loadOutputs);
 const WorkingGroupOutput = lazy(loadWorkingGroupOutput);
 loadAbout();
@@ -40,7 +43,10 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
   const canCreateUpdate = useCanCreateUpdateResearchOutput(workingGroup);
 
   useEffect(() => {
-    loadAbout().then(loadOutputs).then(loadWorkingGroupOutput);
+    loadAbout()
+      .then(loadCalendar)
+      .then(loadOutputs)
+      .then(loadWorkingGroupOutput);
   }, []);
 
   const [upcomingEventsResult, pastEventsResult] = useUpcomingAndPastEvents(
@@ -49,11 +55,12 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
   );
 
   if (workingGroup) {
-    const { about, createOutput, outputs, past, upcoming } = route({
+    const { about, calendar, createOutput, outputs, past, upcoming } = route({
       workingGroupId,
     });
     const paths = {
       about: path + about.template,
+      calendar: path + calendar.template,
       outputs: path + outputs.template,
       past: path + past.template,
       upcoming: path + upcoming.template,
@@ -77,6 +84,12 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
                 <About
                   membersListElementId={membersListElementId}
                   workingGroup={workingGroup}
+                />
+              )}
+              Calendar={() => (
+                <Calendar
+                  calendars={workingGroup.calendars}
+                  groupType="working"
                 />
               )}
               currentTime={currentTime}

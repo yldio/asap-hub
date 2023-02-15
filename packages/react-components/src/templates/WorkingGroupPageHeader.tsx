@@ -255,6 +255,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
         >
           About
         </TabLink>
+        {!complete && <TabLink href={route.calendar({}).$}>Calendar</TabLink>}
         {isEnabled('WORKING_GROUP_SHARED_OUTPUTS_TAB') && (
           <TabLink
             href={

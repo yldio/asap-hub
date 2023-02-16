@@ -2521,7 +2521,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@types/ramda",\
-        "npm:0.27.20"\
+        "npm:0.28.23"\
       ],\
       [\
         "@types/range-parser",\
@@ -8254,7 +8254,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "ramda",\
-        "npm:0.27.1"\
+        "npm:0.28.0"\
       ],\
       [\
         "randombytes",\
@@ -11204,7 +11204,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["core-js", "npm:3.28.0"],\
             ["date-fns", "npm:2.29.3"],\
             ["jsonwebtoken", "npm:8.5.1"],\
-            ["ramda", "npm:0.27.1"],\
+            ["ramda", "npm:0.28.0"],\
             ["uuid", "npm:8.3.2"]\
           ],\
           "linkType": "SOFT"\
@@ -11912,7 +11912,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/hast-util-sanitize", "workspace:@types/hast-util-sanitize"],\
             ["@types/history", "npm:4.7.11"],\
             ["@types/jest", "npm:29.4.0"],\
-            ["@types/ramda", "npm:0.27.20"],\
+            ["@types/ramda", "npm:0.28.23"],\
             ["@types/react", "npm:17.0.53"],\
             ["@types/react-dom", "npm:17.0.19"],\
             ["@types/react-router-dom", "npm:5.3.3"],\
@@ -11938,7 +11938,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-playwright-preset", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:3.0.1"],\
             ["playwright", "npm:1.30.0"],\
             ["playwright-core", "npm:1.30.0"],\
-            ["ramda", "npm:0.27.1"],\
+            ["ramda", "npm:0.28.0"],\
             ["react", "npm:17.0.2"],\
             ["react-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:17.0.2"],\
             ["react-router-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:5.3.4"],\
@@ -11998,7 +11998,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/hast-util-sanitize", "workspace:@types/hast-util-sanitize"],\
             ["@types/history", "npm:4.7.11"],\
             ["@types/jest", "npm:29.4.0"],\
-            ["@types/ramda", "npm:0.27.20"],\
+            ["@types/ramda", "npm:0.28.23"],\
             ["@types/react", "npm:17.0.53"],\
             ["@types/react-dom", "npm:17.0.19"],\
             ["@types/react-router-dom", "npm:5.3.3"],\
@@ -12024,7 +12024,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-playwright-preset", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:3.0.1"],\
             ["playwright", "npm:1.30.0"],\
             ["playwright-core", "npm:1.30.0"],\
-            ["ramda", "npm:0.27.1"],\
+            ["ramda", "npm:0.28.0"],\
             ["react", "npm:17.0.2"],\
             ["react-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:17.0.2"],\
             ["react-router-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:5.3.4"],\
@@ -12088,7 +12088,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/hast-util-sanitize", "workspace:@types/hast-util-sanitize"],\
             ["@types/history", "npm:4.7.11"],\
             ["@types/jest", "npm:29.4.0"],\
-            ["@types/ramda", "npm:0.27.20"],\
+            ["@types/ramda", "npm:0.28.23"],\
             ["@types/react", "npm:17.0.53"],\
             ["@types/react-dom", "npm:17.0.19"],\
             ["@types/react-router-dom", "npm:5.3.3"],\
@@ -12114,7 +12114,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-playwright-preset", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:3.0.1"],\
             ["playwright", "npm:1.30.0"],\
             ["playwright-core", "npm:1.30.0"],\
-            ["ramda", "npm:0.27.1"],\
+            ["ramda", "npm:0.28.0"],\
             ["react", "npm:17.0.2"],\
             ["react-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:17.0.2"],\
             ["react-router-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:5.3.4"],\
@@ -12178,7 +12178,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/hast-util-sanitize", "workspace:@types/hast-util-sanitize"],\
             ["@types/history", "npm:4.7.11"],\
             ["@types/jest", "npm:29.4.0"],\
-            ["@types/ramda", "npm:0.27.20"],\
+            ["@types/ramda", "npm:0.28.23"],\
             ["@types/react", "npm:17.0.53"],\
             ["@types/react-dom", "npm:17.0.19"],\
             ["@types/react-router-dom", "npm:5.3.3"],\
@@ -12204,7 +12204,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-playwright-preset", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:3.0.1"],\
             ["playwright", "npm:1.30.0"],\
             ["playwright-core", "npm:1.30.0"],\
-            ["ramda", "npm:0.27.1"],\
+            ["ramda", "npm:0.28.0"],\
             ["react", "npm:17.0.2"],\
             ["react-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:17.0.2"],\
             ["react-router-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:5.3.4"],\
@@ -36010,10 +36010,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/ramda", [\
-        ["npm:0.27.20", {\
-          "packageLocation": "./.yarn/cache/@types-ramda-npm-0.27.20-b84fed1726-28bb90bc8e.zip/node_modules/@types/ramda/",\
+        ["npm:0.28.23", {\
+          "packageLocation": "./.yarn/cache/@types-ramda-npm-0.28.23-3b354d0630-61d7416c0f.zip/node_modules/@types/ramda/",\
           "packageDependencies": [\
-            ["@types/ramda", "npm:0.27.20"],\
+            ["@types/ramda", "npm:0.28.23"],\
             ["ts-toolbelt", "npm:6.15.5"]\
           ],\
           "linkType": "HARD"\
@@ -62698,6 +62698,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/ramda-npm-0.27.2-5f4ede0eb9-28d6735dd1.zip/node_modules/ramda/",\
           "packageDependencies": [\
             ["ramda", "npm:0.27.2"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:0.28.0", {\
+          "packageLocation": "./.yarn/cache/ramda-npm-0.28.0-6a5fe8f6cc-44ea6e5010.zip/node_modules/ramda/",\
+          "packageDependencies": [\
+            ["ramda", "npm:0.28.0"]\
           ],\
           "linkType": "HARD"\
         }]\

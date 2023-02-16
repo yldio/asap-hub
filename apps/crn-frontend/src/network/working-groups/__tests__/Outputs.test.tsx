@@ -10,9 +10,18 @@ import {
 import { RecoilRoot } from 'recoil';
 import Outputs from '../Outputs';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
+import { getResearchOutputs } from '../../../shared-research/api';
+import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
 
 jest.mock('../../../shared-research/api');
 jest.mock('../api');
+
+const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
+  typeof getResearchOutputs
+>;
+mockGetResearchOutputs.mockResolvedValue({
+  ...createResearchOutputListAlgoliaResponse(0),
+});
 
 const renderOutputs = async (
   workingGroup = createWorkingGroupResponse({}),

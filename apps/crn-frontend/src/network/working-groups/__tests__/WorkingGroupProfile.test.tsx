@@ -27,7 +27,7 @@ const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
   typeof getResearchOutputs
 >;
 mockGetResearchOutputs.mockResolvedValue({
-  ...createResearchOutputListAlgoliaResponse(1),
+  ...createResearchOutputListAlgoliaResponse(0),
 });
 const mockGetWorkingGroup = getWorkingGroup as jest.MockedFunction<
   typeof getWorkingGroup

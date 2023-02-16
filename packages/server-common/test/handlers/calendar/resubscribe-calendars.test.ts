@@ -1,14 +1,3 @@
-// import { resubscribeCalendarsHandlerFactory } from '@asap-hub/crn-server/src/handlers/calendar/resubscribe-handler';
-// import {
-//   SubscribeToEventChanges,
-//   UnsubscribeFromEventChanges,
-// } from '@asap-hub/crn-server/src/handlers/calendar/subscribe-handler';
-// import { getCalendarDataObject } from '@asap-hub/crn-server/test/fixtures/calendars.fixtures';
-// import {
-//   createEventBridgeScheduledEventMock,
-//   createHandlerContext,
-// } from '@asap-hub/crn-server/test/helpers/events';
-// import { calendarDataProviderMock } from '@asap-hub/crn-server/test/mocks/calendar-data-provider.mock';
 import { Settings } from 'luxon';
 import {
   resubscribeCalendarsHandlerFactory,

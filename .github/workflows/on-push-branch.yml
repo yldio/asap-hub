@@ -6,6 +6,21 @@ on:
     branches:
       - master
 jobs:
+  copy-past-detection:
+    runs-on: ubuntu-latest
+    environment: Branch
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: Branch
+      - name: Dry Code Action
+        uses: Pposong-Hantaihe/dry-code@v1.0.2
+        with:
+          token: '${{ secrets.GITHUB_TOKEN }}'
   setup:
     runs-on: ubuntu-latest
     environment: Branch

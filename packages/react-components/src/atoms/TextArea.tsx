@@ -107,7 +107,7 @@ const TextArea: React.FC<TextAreaProps> = ({
           validationMessage && invalidStyles,
           {
             ':focus': {
-              borderColor: components?.form?.focusStyle.borderColor.rgba,
+              borderColor: components?.textArea?.focusStyle.borderColor.rgba,
             },
           },
         ]}
@@ -125,7 +125,7 @@ const TextArea: React.FC<TextAreaProps> = ({
               {
                 color: reachedMaxLength
                   ? ember.rgb
-                  : components?.TextArea?.maxLengthStyles.color.rgba,
+                  : components?.textArea?.maxLengthStyles.color.rgba,
               },
             ]}
           >

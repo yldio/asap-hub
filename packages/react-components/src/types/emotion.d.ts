@@ -19,12 +19,10 @@ declare module '@emotion/react' {
           };
         };
       };
-      form?: {
+      textArea?: {
         focusStyle: {
           borderColor: OpaqueColor | TransparentColor;
         };
-      };
-      TextArea?: {
         maxLengthStyles: {
           color: OpaqueColor | TransparentColor;
         };

@@ -119,14 +119,11 @@ const TextArea: React.FC<TextAreaProps> = ({
         </div>
         {maxLength !== undefined && (
           <div
-            css={({ colors }) => {
-              const notMaxLengthColor = colors?.primary500?.rgba || fern.rgb;
-              return [
-                validationMessageStyles,
-                limitStyles,
-                { color: reachedMaxLength ? ember.rgb : notMaxLengthColor },
-              ];
-            }}
+            css={({ colors: { primary500 = fern } = {} }) => [
+              validationMessageStyles,
+              limitStyles,
+              { color: reachedMaxLength ? ember.rgb : primary500.rgba },
+            ]}
           >
             {value.length}/{maxLength}
           </div>

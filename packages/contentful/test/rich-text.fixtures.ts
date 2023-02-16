@@ -171,3 +171,12 @@ export const linksWithEntries = {
     block: [],
   },
 };
+
+export const emptyLinks = {
+  assets: {
+    block: [],
+  },
+  entries: {
+    inline: [],
+  },
+};

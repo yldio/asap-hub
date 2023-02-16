@@ -6,6 +6,7 @@ import { network } from '@asap-hub/routing';
 import { ComponentProps } from 'react';
 
 import { usePagination, usePaginationParams } from '../../hooks';
+import { useResearchOutputs } from '../../shared-research/state';
 
 type OutputsListProps = Pick<
   ComponentProps<typeof ProfileOutputs>,
@@ -23,14 +24,28 @@ type OutputsProps = {
 const OutputsList: React.FC<OutputsListProps> = ({
   workingGroupId,
   userAssociationMember,
+  searchQuery,
+  filters,
 }) => {
-  const { currentPage, isListView, cardViewParams, listViewParams } =
+  const { currentPage, pageSize, isListView, cardViewParams, listViewParams } =
     usePaginationParams();
-  const { numberOfPages, renderPageHref } = usePagination(0, 10);
+
+  const result = useResearchOutputs({
+    searchQuery,
+    filters,
+    currentPage,
+    pageSize,
+    workingGroupId,
+  });
+
+  const { numberOfPages, renderPageHref } = usePagination(
+    result.total,
+    pageSize,
+  );
   return (
     <ProfileOutputs
-      researchOutputs={[]}
-      numberOfItems={0}
+      researchOutputs={result.items}
+      numberOfItems={result.total}
       numberOfPages={numberOfPages}
       currentPageIndex={currentPage}
       renderPageHref={renderPageHref}

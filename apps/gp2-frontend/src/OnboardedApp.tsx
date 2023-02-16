@@ -12,6 +12,7 @@ const {
   users: usersRoute,
   projects: projectsRoute,
   events: eventsRoute,
+  outputs: outputsRoute,
 } = gp2Route;
 const loadDashboard = () =>
   import(/* webpackChunkName: "dashboard" */ './dashboard/Dashboard');
@@ -28,11 +29,15 @@ const loadUsers = () =>
 const loadEvents = () =>
   import(/* webpackChunkName: "events" */ './events/Routes');
 
+const loadOutputs = () =>
+  import(/* webpackChunkName: "outputs" */ './outputs/Routes');
+
 const Dashboard = lazy(loadDashboard);
 const WorkingGroups = lazy(loadWorkingGroups);
 const Projects = lazy(loadProjects);
 const Users = lazy(loadUsers);
 const Events = lazy(loadEvents);
+const Outputs = lazy(loadOutputs);
 
 const OnboardedApp: FC<ComponentProps<typeof Dashboard>> = ({
   showWelcomeBackBanner,
@@ -48,7 +53,8 @@ const OnboardedApp: FC<ComponentProps<typeof Dashboard>> = ({
       .then(loadUsers)
       .then(loadWorkingGroups)
       .then(loadProjects)
-      .then(loadEvents);
+      .then(loadEvents)
+      .then(loadOutputs);
   });
 
   const { projects = [], workingGroups = [] } =
@@ -84,6 +90,11 @@ const OnboardedApp: FC<ComponentProps<typeof Dashboard>> = ({
         <Route path={eventsRoute.template}>
           <Frame title="Events">
             <Events />
+          </Frame>
+        </Route>
+        <Route path={outputsRoute.template}>
+          <Frame title="Outputs">
+            <Outputs />
           </Frame>
         </Route>
         <Route>

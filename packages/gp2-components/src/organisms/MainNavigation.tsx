@@ -5,13 +5,14 @@ import React from 'react';
 import {
   dashboardIcon,
   eventsIcon,
+  outputsIcon,
   projectIcon,
   usersIcon,
   workingGroupIcon,
 } from '../icons';
 import NavigationLink from '../molecules/NavigationLink';
 
-const { workingGroups, users, projects, events } = gp2;
+const { workingGroups, users, projects, outputs, events } = gp2;
 const {
   largeDesktopScreen,
   mobileScreen,
@@ -90,6 +91,11 @@ const MainNavigation: React.FC = () => (
       <li>
         <NavigationLink href={events({}).$} icon={eventsIcon}>
           Events
+        </NavigationLink>
+      </li>
+      <li>
+        <NavigationLink href={outputs({}).$} icon={outputsIcon}>
+          Outputs
         </NavigationLink>
       </li>
     </ul>

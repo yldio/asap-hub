@@ -52,7 +52,7 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
   );
   const { pageSize } = usePaginationParams();
 
-  useResearchOutputs({
+  const outputResults = useResearchOutputs({
     filters: new Set(),
     currentPage: 0,
     searchQuery: '',
@@ -83,6 +83,7 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
             pastEventsCount={pastEventsResult.total}
             membersListElementId={membersListElementId}
             {...workingGroup}
+            workingGroupsOutputsCount={outputResults.total}
           >
             <ProfileSwitch
               About={() => (

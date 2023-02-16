@@ -1,8 +1,9 @@
 {
   "extends": ["config:base"],
-  "prConcurrentLimit": 15,
+  "prConcurrentLimit": 8,
   "prHourlyLimit": 1,
   "platformAutomerge": true,
+  "rebaseWhen": "conflicted",
   "packageRules": [
     {
       "matchCurrentVersion": "!/^0/",

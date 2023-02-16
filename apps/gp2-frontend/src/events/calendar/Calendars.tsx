@@ -4,7 +4,6 @@ import { useCalendars } from './state';
 
 const Calendars: React.FC<Record<string, never>> = () => {
   const { items } = useCalendars();
-  console.log(items);
   return <EventsCalendar calendars={items} />;
 };
 

@@ -10,7 +10,7 @@ const outputsIcon = (
     xmlnsXlink="http://www.w3.org/1999/xlink"
     fill="#4D646B"
   >
-    <title>Research</title>
+    <title>Output</title>
     <defs>
       <polygon id="path-1" points="0 24 24 24 24 0 0 0"></polygon>
     </defs>

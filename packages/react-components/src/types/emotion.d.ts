@@ -19,14 +19,6 @@ declare module '@emotion/react' {
           };
         };
       };
-      textArea?: {
-        focusStyles: {
-          borderColor: OpaqueColor | TransparentColor;
-        };
-        maxLengthStyles: {
-          color: OpaqueColor | TransparentColor;
-        };
-      };
       Accordion?: {
         containerStyles: {
           padding: string;

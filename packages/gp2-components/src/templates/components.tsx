@@ -8,12 +8,10 @@ const components = {
       },
     },
   },
-  form: {
-    focusStyle: {
+  textArea: {
+    focusStyles: {
       borderColor: colors.primary500,
     },
-  },
-  TextArea: {
     maxLengthStyles: {
       color: colors.primary500,
     },

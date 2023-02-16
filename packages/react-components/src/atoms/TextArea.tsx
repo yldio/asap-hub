@@ -1,3 +1,4 @@
+/** @jsxImportSource @emotion/react */
 import { InputHTMLAttributes } from 'react';
 import { css } from '@emotion/react';
 
@@ -107,7 +108,7 @@ const TextArea: React.FC<TextAreaProps> = ({
           validationMessage && invalidStyles,
           {
             ':focus': {
-              borderColor: components?.textArea?.focusStyle.borderColor.rgba,
+              borderColor: components?.textArea?.focusStyles.borderColor.rgba,
             },
           },
         ]}

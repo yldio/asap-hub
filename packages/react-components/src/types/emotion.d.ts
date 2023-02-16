@@ -20,7 +20,7 @@ declare module '@emotion/react' {
         };
       };
       textArea?: {
-        focusStyle: {
+        focusStyles: {
           borderColor: OpaqueColor | TransparentColor;
         };
         maxLengthStyles: {

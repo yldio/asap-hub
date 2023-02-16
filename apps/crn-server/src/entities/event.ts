@@ -72,19 +72,19 @@ export const parseEventSpeakerExternalUser = (
 export const parseGraphQLSpeakers = (
   speakers: NonNullable<EventContentFragment['flatData']['speakers']>,
 ): EventSpeaker[] =>
-  speakers.reduce((speakersList: EventSpeaker[], speaker) => {
+  speakers.reduce((speakerList: EventSpeaker[], speaker) => {
     const team = speaker?.team?.[0];
     const user = speaker?.user?.[0];
 
     if (user?.__typename === 'ExternalAuthors') {
-      speakersList.push({
+      speakerList.push({
         externalUser: parseEventSpeakerExternalUser(user),
       });
-      return speakersList;
+      return speakerList;
     }
 
     if (!team) {
-      return speakersList;
+      return speakerList;
     }
 
     const role =
@@ -93,17 +93,17 @@ export const parseGraphQLSpeakers = (
         .filter((s) => s.role)[0]?.role || undefined;
 
     if (!user || !role || user.flatData.onboarded !== true) {
-      speakersList.push({
+      speakerList.push({
         team: {
           id: team.id,
           displayName: team.flatData.displayName ?? '',
           inactiveSince: team.flatData.inactiveSince ?? undefined,
         },
       });
-      return speakersList;
+      return speakerList;
     }
 
-    speakersList.push({
+    speakerList.push({
       team: {
         id: team.id,
         displayName: team.flatData.displayName ?? '',
@@ -112,7 +112,7 @@ export const parseGraphQLSpeakers = (
       user: parseEventSpeakerUser(user),
       role,
     });
-    return speakersList;
+    return speakerList;
   }, []);
 
 export const parseGraphQLEvent = (

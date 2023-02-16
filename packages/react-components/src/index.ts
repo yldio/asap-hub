@@ -139,7 +139,7 @@ export {
   SearchAndFilter,
   SharedResearchCard,
   SharedResearchListCard,
-  SpeakersList,
+  SpeakerList,
   SsoButtons,
   TeamCard,
   TeamGroupsCard,

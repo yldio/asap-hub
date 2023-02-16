@@ -3,7 +3,7 @@ import { subHours } from 'date-fns';
 import userEvent from '@testing-library/user-event';
 import { EventSpeaker } from '@asap-hub/model';
 import { createEventResponse } from '@asap-hub/fixtures';
-import SpeakersList from '../SpeakersList';
+import SpeakerList from '../SpeakerList';
 
 const gridLabels = ['Speakers', 'Team', 'Speaker', 'Role'];
 const team = {
@@ -46,7 +46,7 @@ describe('When rendering the speaker list', () => {
         speakers: [unnanouncedSpeaker],
       };
 
-      render(<SpeakersList {...event} />);
+      render(<SpeakerList {...event} />);
 
       expect(screen.getByText('Speaker to be announced')).toBeVisible();
     });
@@ -57,7 +57,7 @@ describe('When rendering the speaker list', () => {
         speakers: [announcedSpeaker],
       };
 
-      render(<SpeakersList {...event} />);
+      render(<SpeakerList {...event} />);
 
       expect(
         screen.getAllByRole('link').map(({ textContent }) => textContent),
@@ -77,7 +77,7 @@ describe('When rendering the speaker list', () => {
         speakers: [alumniSpeaker],
       };
 
-      render(<SpeakersList {...event} />);
+      render(<SpeakerList {...event} />);
       expect(screen.getByTitle('Alumni Badge')).toBeInTheDocument();
     });
 
@@ -86,7 +86,7 @@ describe('When rendering the speaker list', () => {
         ...createEventResponse(),
         speakers: [{ ...announcedSpeaker, role: 'Genetics' }],
       };
-      render(<SpeakersList {...event} />);
+      render(<SpeakerList {...event} />);
 
       expect(
         screen.getAllByRole('heading').map(({ textContent }) => textContent),
@@ -100,7 +100,7 @@ describe('When rendering the speaker list', () => {
         speakers: [externalSpeaker],
       };
 
-      render(<SpeakersList {...event} />);
+      render(<SpeakerList {...event} />);
 
       expect(screen.getByText('External Speaker')).toBeVisible();
       expect(screen.getByText('Jhonny External')).toBeVisible();
@@ -111,7 +111,7 @@ describe('When rendering the speaker list', () => {
         ...createEventResponse({ numberOfSpeakers: 6 }),
       };
 
-      render(<SpeakersList {...event} />);
+      render(<SpeakerList {...event} />);
 
       expect(screen.getByRole('button', { name: /Show more/i })).toBeVisible();
     });
@@ -121,7 +121,7 @@ describe('When rendering the speaker list', () => {
         ...createEventResponse({ numberOfSpeakers: 10 }),
       };
 
-      render(<SpeakersList {...event} />);
+      render(<SpeakerList {...event} />);
 
       const button = screen.getByRole('button', { name: /Show more/i });
       expect(button).toBeVisible();
@@ -138,7 +138,7 @@ describe('When rendering the speaker list', () => {
         }),
       };
 
-      render(<SpeakersList {...event} />);
+      render(<SpeakerList {...event} />);
 
       expect(
         screen.queryByRole('button', { name: /Show more/i }),
@@ -154,7 +154,7 @@ describe('When rendering the speaker list', () => {
         }),
       };
 
-      render(<SpeakersList {...event} />);
+      render(<SpeakerList {...event} />);
 
       expect(
         screen.queryByRole('link', { name: 'The team 4' }),
@@ -170,9 +170,34 @@ describe('When rendering the speaker list', () => {
         speakers: [unnanouncedSpeaker],
       };
 
-      render(<SpeakersList {...eventInThePast} />);
+      render(<SpeakerList {...eventInThePast} />);
 
       expect(screen.getByText('Speaker was not announced')).toBeVisible();
+    });
+  });
+  describe('inactive badge', () => {
+    const props = createEventResponse();
+    it('displays inactive badge when a team is inactive', () => {
+      render(
+        <SpeakerList
+          {...props}
+          speakers={[
+            {
+              team: {
+                displayName: 'Team',
+                id: '123',
+                inactiveSince: '2022-10-20T09:00:00Z',
+              },
+              user: {
+                displayName: 'User',
+                id: '123',
+              },
+            },
+          ]}
+        />,
+      );
+
+      expect(screen.getByTitle('Inactive')).toBeInTheDocument();
     });
   });
 });

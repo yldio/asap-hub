@@ -1,9 +1,9 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 import EventsCalendar from '../EventsCalendar';
 
-it('Renders calendar list', () => {
-  const { getByText } = render(
+it('renders the google calendar', () => {
+  render(
     <EventsCalendar
       calendars={[
         {
@@ -16,22 +16,10 @@ it('Renders calendar list', () => {
       ]}
     />,
   );
-  expect(getByText('Test Calendar')).toBeVisible();
+  expect(screen.getByTitle('Calendar')).toBeVisible();
 });
 
-it('Renders the calendar both for working and interest group', () => {
-  const { getAllByText } = render(
-    <EventsCalendar
-      calendars={[
-        {
-          color: '#0D7813',
-          name: 'Test Calendar',
-          id: '1',
-          groups: [{ id: '1', active: true }],
-          workingGroups: [{ id: '2', complete: false }],
-        },
-      ]}
-    />,
-  );
-  expect(getAllByText('Test Calendar').length).toEqual(2);
+it('renders the children', () => {
+  render(<EventsCalendar calendars={[]}>{'Subscribe'}</EventsCalendar>);
+  expect(screen.getByText('Subscribe')).toBeVisible();
 });

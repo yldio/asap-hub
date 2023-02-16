@@ -84,3 +84,10 @@ it('displays the show more button', () => {
   expect(getByRole('button', { name: 'View Less' })).toBeVisible();
   expect(getByText('last Calendar')).toBeInTheDocument();
 });
+
+it('displays the description', () => {
+  const { getByText } = render(
+    <CalendarList {...props} description={'Test Description'} />,
+  );
+  expect(getByText('Test Description')).toBeVisible();
+});

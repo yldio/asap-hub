@@ -1,5 +1,5 @@
 import { createEventResponse } from '@asap-hub/fixtures';
-import { SpeakersList } from '@asap-hub/react-components';
+import { SpeakerList } from '@asap-hub/react-components';
 import { boolean, number } from '@storybook/addon-knobs';
 
 export default {
@@ -7,7 +7,7 @@ export default {
 };
 
 export const Normal = () => (
-  <SpeakersList
+  <SpeakerList
     {...createEventResponse({
       numberOfSpeakers: number('Number of speakers', 4),
       numberOfUnknownSpeakers: number('Number of unknown speakers', 2),

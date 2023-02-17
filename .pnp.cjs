@@ -4004,7 +4004,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "contentful-html-rich-text-converter",\
-        "https://github.com/yldio/contentful-html-rich-text-converter.git#commit=cef0840824a895f2abe07b9fe9ad1382598a6a90"\
+        "https://github.com/yldio/contentful-html-rich-text-converter.git#commit=ba7abf23e1bff5f26cfb5e0f17dd32f3b45c8f57"\
       ],\
       [\
         "contentful-import",\
@@ -10799,7 +10799,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jest", "npm:29.4.0"],\
             ["@types/node", "npm:14.18.33"],\
             ["@types/prettier", "npm:2.7.1"],\
-            ["contentful-html-rich-text-converter", "https://github.com/yldio/contentful-html-rich-text-converter.git#commit=cef0840824a895f2abe07b9fe9ad1382598a6a90"],\
+            ["contentful-html-rich-text-converter", "https://github.com/yldio/contentful-html-rich-text-converter.git#commit=ba7abf23e1bff5f26cfb5e0f17dd32f3b45c8f57"],\
             ["contentful-management", "npm:10.19.3"],\
             ["graphql", "npm:15.8.0"],\
             ["graphql-tag", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:2.12.6"],\
@@ -43009,10 +43009,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["contentful-html-rich-text-converter", [\
-        ["https://github.com/yldio/contentful-html-rich-text-converter.git#commit=cef0840824a895f2abe07b9fe9ad1382598a6a90", {\
-          "packageLocation": "./.yarn/cache/contentful-html-rich-text-converter-https-78f1850c2b-6044246115.zip/node_modules/contentful-html-rich-text-converter/",\
+        ["https://github.com/yldio/contentful-html-rich-text-converter.git#commit=ba7abf23e1bff5f26cfb5e0f17dd32f3b45c8f57", {\
+          "packageLocation": "./.yarn/cache/contentful-html-rich-text-converter-https-763d0c2279-8717aa23e9.zip/node_modules/contentful-html-rich-text-converter/",\
           "packageDependencies": [\
-            ["contentful-html-rich-text-converter", "https://github.com/yldio/contentful-html-rich-text-converter.git#commit=cef0840824a895f2abe07b9fe9ad1382598a6a90"],\
+            ["contentful-html-rich-text-converter", "https://github.com/yldio/contentful-html-rich-text-converter.git#commit=ba7abf23e1bff5f26cfb5e0f17dd32f3b45c8f57"],\
             ["html-entities", "npm:2.3.3"],\
             ["htmlparser", "npm:1.7.7"],\
             ["mime-types", "npm:2.1.35"],\

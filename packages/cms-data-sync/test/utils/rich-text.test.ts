@@ -160,119 +160,107 @@ describe('convertHtmlToContentfulFormat', () => {
     });
   });
 
-  it.skip('converts a line break to an empty paragraph', async () => {
+  it('converts an optional line break to an empty paragraph', async () => {
     const html = `<p>Line 1<wbr>Line 2</p>`;
 
-    expect(convertHtmlToContentfulFormat(html)).toEqual({
-      document: {
+    expect(convertHtmlToContentfulFormat(html).document.content).toEqual([
+      {
         data: {},
         content: [
           {
             data: {},
-            content: [
-              { data: {}, marks: [], value: 'Line 1', nodeType: 'text' },
-            ],
-            nodeType: 'paragraph',
+            marks: [],
+            value: 'Line 1',
+            nodeType: 'text',
           },
           {
             data: {},
-            content: [
-              { data: {}, marks: [], value: 'Line 2', nodeType: 'text' },
-            ],
-            nodeType: 'paragraph',
+            marks: [],
+            value: '\n',
+            nodeType: 'text',
+          },
+          {
+            data: {},
+            marks: [],
+            value: 'Line 2',
+            nodeType: 'text',
           },
         ],
-        nodeType: 'document',
+        nodeType: 'paragraph',
       },
-      inlineAssetBodies: [],
-      inlineIFramesBodies: [],
-    });
+    ]);
   });
 
   it('converts a line break to an empty paragraph', async () => {
     const html = `<p>Line 1<br>Line 2</p>`;
 
-    expect(convertHtmlToContentfulFormat(html)).toEqual({
-      document: {
+    expect(convertHtmlToContentfulFormat(html).document.content).toEqual([
+      {
         data: {},
         content: [
           {
             data: {},
-            content: [
-              { data: {}, marks: [], value: 'Line 1', nodeType: 'text' },
-            ],
-            nodeType: 'paragraph',
+            marks: [],
+            value: 'Line 1',
+            nodeType: 'text',
           },
           {
             data: {},
-            content: [
-              { data: {}, marks: [], value: 'Line 2', nodeType: 'text' },
-            ],
-            nodeType: 'paragraph',
+            marks: [],
+            value: '\n',
+            nodeType: 'text',
+          },
+          {
+            data: {},
+            marks: [],
+            value: 'Line 2',
+            nodeType: 'text',
           },
         ],
-        nodeType: 'document',
+        nodeType: 'paragraph',
       },
-      inlineAssetBodies: [],
-      inlineIFramesBodies: [],
-    });
+    ]);
   });
 
   it('converts a sup to an paragraph', async () => {
     const html = `<p><sup>XYZ</sup></p>`;
 
-    expect(convertHtmlToContentfulFormat(html)).toEqual({
-      document: {
+    expect(convertHtmlToContentfulFormat(html).document.content).toEqual([
+      {
         data: {},
         content: [
           {
             data: {},
-            content: [
+            marks: [
               {
-                data: {},
-                marks: [
-                  {
-                    type: 'superscript',
-                  },
-                ],
-                value: 'XYZ',
-                nodeType: 'text',
+                type: 'superscript',
               },
             ],
-            nodeType: 'paragraph',
+            value: 'XYZ',
+            nodeType: 'text',
           },
         ],
-        nodeType: 'document',
+        nodeType: 'paragraph',
       },
-      inlineAssetBodies: [],
-      inlineIFramesBodies: [],
-    });
+    ]);
   });
 
   it('converts html encoded entities', async () => {
     const html = `<p>&nbsp;test&nbsp;test&amp;</p>`;
 
-    expect(convertHtmlToContentfulFormat(html)).toEqual({
-      document: {
+    expect(convertHtmlToContentfulFormat(html).document.content).toEqual([
+      {
         data: {},
         content: [
           {
             data: {},
-            content: [
-              {
-                data: {},
-                marks: [],
-                value: ' test test&',
-                nodeType: 'text',
-              },
-            ],
-            nodeType: 'paragraph',
+            marks: [],
+            value: ' test test&',
+            nodeType: 'text',
           },
         ],
-        nodeType: 'document',
+        nodeType: 'paragraph',
       },
-      inlineAssetBodies: [],
-      inlineIFramesBodies: [],
-    });
+    ]);
   });
 });

@@ -45,6 +45,17 @@ type ApplicationMutations {
     """The status for the content."""
     status: String!
   ): Events
+  """Change a External authors content."""
+  changeExternalAuthorsContent(
+    """The timestamp when the status should be changed."""
+    dueTime: Instant
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The status for the content."""
+    status: String!
+  ): ExternalAuthors
   """Change a Migrations content."""
   changeMigrationsContent(
     """The timestamp when the status should be changed."""
@@ -67,6 +78,17 @@ type ApplicationMutations {
     """The status for the content."""
     status: String!
   ): NewsAndEvents
+  """Change a Outputs content."""
+  changeOutputsContent(
+    """The timestamp when the status should be changed."""
+    dueTime: Instant
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The status for the content."""
+    status: String!
+  ): Outputs
   """Change a Projects content."""
   changeProjectsContent(
     """The timestamp when the status should be changed."""
@@ -144,6 +166,17 @@ type ApplicationMutations {
     """The initial status."""
     status: String
   ): Events
+  """Creates an External authors content."""
+  createExternalAuthorsContent(
+    """The data for the content."""
+    data: ExternalAuthorsDataInputDto!
+    """The optional custom content ID."""
+    id: String
+    """Set to true to autopublish content on create."""
+    publish: Boolean = false
+    """The initial status."""
+    status: String
+  ): ExternalAuthors
   """Creates an Migrations content."""
   createMigrationsContent(
     """The data for the content."""
@@ -166,6 +199,17 @@ type ApplicationMutations {
     """The initial status."""
     status: String
   ): NewsAndEvents
+  """Creates an Outputs content."""
+  createOutputsContent(
+    """The data for the content."""
+    data: OutputsDataInputDto!
+    """The optional custom content ID."""
+    id: String
+    """Set to true to autopublish content on create."""
+    publish: Boolean = false
+    """The initial status."""
+    status: String
+  ): Outputs
   """Creates an Projects content."""
   createProjectsContent(
     """The data for the content."""
@@ -231,6 +275,13 @@ type ApplicationMutations {
     """The ID of the content (usually GUID)."""
     id: String!
   ): EntitySavedResultDto!
+  """Delete an External authors content."""
+  deleteExternalAuthorsContent(
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the content (usually GUID)."""
+    id: String!
+  ): EntitySavedResultDto!
   """Delete an Migrations content."""
   deleteMigrationsContent(
     """The expected version."""
@@ -240,6 +291,13 @@ type ApplicationMutations {
   ): EntitySavedResultDto!
   """Delete an News content."""
   deleteNewsAndEventsContent(
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the content (usually GUID)."""
+    id: String!
+  ): EntitySavedResultDto!
+  """Delete an Outputs content."""
+  deleteOutputsContent(
     """The expected version."""
     expectedVersion: Int = -2
     """The ID of the content (usually GUID)."""
@@ -300,6 +358,15 @@ type ApplicationMutations {
     """The ID of the object (usually GUID)."""
     id: String
   ): Events
+  """Patch an External authors content by id."""
+  patchExternalAuthorsContent(
+    """The data for the content."""
+    data: ExternalAuthorsDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String
+  ): ExternalAuthors
   """Patch an Migrations content by id."""
   patchMigrationsContent(
     """The data for the content."""
@@ -318,6 +385,15 @@ type ApplicationMutations {
     """The ID of the object (usually GUID)."""
     id: String
   ): NewsAndEvents
+  """Patch an Outputs content by id."""
+  patchOutputsContent(
+    """The data for the content."""
+    data: OutputsDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String
+  ): Outputs
   """Patch an Projects content by id."""
   patchProjectsContent(
     """The data for the content."""
@@ -387,6 +463,17 @@ type ApplicationMutations {
     """The status for the content."""
     status: String!
   ): Events @deprecated(reason: "Use 'changeEventsContent' instead")
+  """Publish a External authors content."""
+  publishExternalAuthorsContent(
+    """The timestamp when the status should be changed."""
+    dueTime: Instant
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The status for the content."""
+    status: String!
+  ): ExternalAuthors @deprecated(reason: "Use 'changeExternalAuthorsContent' instead")
   """Publish a Migrations content."""
   publishMigrationsContent(
     """The timestamp when the status should be changed."""
@@ -409,6 +496,17 @@ type ApplicationMutations {
     """The status for the content."""
     status: String!
   ): NewsAndEvents @deprecated(reason: "Use 'changeNewsAndEventsContent' instead")
+  """Publish a Outputs content."""
+  publishOutputsContent(
+    """The timestamp when the status should be changed."""
+    dueTime: Instant
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The status for the content."""
+    status: String!
+  ): Outputs @deprecated(reason: "Use 'changeOutputsContent' instead")
   """Publish a Projects content."""
   publishProjectsContent(
     """The timestamp when the status should be changed."""
@@ -480,6 +578,15 @@ type ApplicationMutations {
     """The ID of the object (usually GUID)."""
     id: String
   ): Events
+  """Update an External authors content by id."""
+  updateExternalAuthorsContent(
+    """The data for the content."""
+    data: ExternalAuthorsDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String
+  ): ExternalAuthors
   """Update an Migrations content by id."""
   updateMigrationsContent(
     """The data for the content."""
@@ -498,6 +605,15 @@ type ApplicationMutations {
     """The ID of the object (usually GUID)."""
     id: String
   ): NewsAndEvents
+  """Update an Outputs content by id."""
+  updateOutputsContent(
+    """The data for the content."""
+    data: OutputsDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String
+  ): Outputs
   """Update an Projects content by id."""
   updateProjectsContent(
     """The data for the content."""
@@ -579,6 +695,21 @@ type ApplicationMutations {
     """The initial status."""
     status: String
   ): Events
+  """Upsert an External authors content by id."""
+  upsertExternalAuthorsContent(
+    """The data for the content."""
+    data: ExternalAuthorsDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """Makes the update as patch."""
+    patch: Boolean = false
+    """Set to true to autopublish content on create."""
+    publish: Boolean = false
+    """The initial status."""
+    status: String
+  ): ExternalAuthors
   """Upsert an Migrations content by id."""
   upsertMigrationsContent(
     """The data for the content."""
@@ -609,6 +740,21 @@ type ApplicationMutations {
     """The initial status."""
     status: String
   ): NewsAndEvents
+  """Upsert an Outputs content by id."""
+  upsertOutputsContent(
+    """The data for the content."""
+    data: OutputsDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """Makes the update as patch."""
+    patch: Boolean = false
+    """Set to true to autopublish content on create."""
+    publish: Boolean = false
+    """The initial status."""
+    status: String
+  ): Outputs
   """Upsert an Projects content by id."""
   upsertProjectsContent(
     """The data for the content."""
@@ -699,6 +845,13 @@ type ApplicationQueries {
     """The optional version of the content to retrieve an older instance (not cached)."""
     version: Int
   ): Events
+  """Find an External authors content by id."""
+  findExternalAuthorsContent(
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The optional version of the content to retrieve an older instance (not cached)."""
+    version: Int
+  ): ExternalAuthors
   """Find an Migrations content by id."""
   findMigrationsContent(
     """The ID of the object (usually GUID)."""
@@ -713,6 +866,13 @@ type ApplicationQueries {
     """The optional version of the content to retrieve an older instance (not cached)."""
     version: Int
   ): NewsAndEvents
+  """Find an Outputs content by id."""
+  findOutputsContent(
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The optional version of the content to retrieve an older instance (not cached)."""
+    version: Int
+  ): Outputs
   """Find an Projects content by id."""
   findProjectsContent(
     """The ID of the object (usually GUID)."""
@@ -841,6 +1001,32 @@ type ApplicationQueries {
     """Optional number of items to take."""
     top: Int
   ): EventsResultDto
+  """Query External authors content items."""
+  queryExternalAuthorsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [ExternalAuthors!]
+  """Query External authors content items with total count."""
+  queryExternalAuthorsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): ExternalAuthorsResultDto
   """Query Migrations content items."""
   queryMigrationsContents(
     """Optional OData filter."""
@@ -893,6 +1079,32 @@ type ApplicationQueries {
     """Optional number of items to take."""
     top: Int
   ): NewsAndEventsResultDto
+  """Query Outputs content items."""
+  queryOutputsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [Outputs!]
+  """Query Outputs content items with total count."""
+  queryOutputsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): OutputsResultDto
   """Query Projects content items."""
   queryProjectsContents(
     """Optional OData filter."""
@@ -1997,6 +2209,117 @@ type EventsResultDto {
   total: Int!
 }
 
+"""The structure of a External authors content type."""
+type ExternalAuthors implements Content {
+  """The timestamp when the object was created."""
+  created: Instant!
+  """The user who created the object."""
+  createdBy: String!
+  """The user who created the object."""
+  createdByUser: User!
+  """The data of the content."""
+  data: ExternalAuthorsDataDto!
+  """The edit token."""
+  editToken: String
+  """The flat data of the content."""
+  flatData: ExternalAuthorsFlatDataDto!
+  """The ID of the object (usually GUID)."""
+  id: String!
+  """The timestamp when the object was updated the last time."""
+  lastModified: Instant!
+  """The user who updated the object the last time."""
+  lastModifiedBy: String!
+  """The user who updated the object the last time."""
+  lastModifiedByUser: User!
+  """The new status of the content."""
+  newStatus: String
+  """The status color of the content."""
+  newStatusColor: String
+  """Query Outputs content items."""
+  referencingOutputsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [Outputs!]
+  """Query Outputs content items with total count."""
+  referencingOutputsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): OutputsResultDto
+  """The status of the content."""
+  status: String!
+  """The status color of the content."""
+  statusColor: String!
+  """The URL to the content."""
+  url: String!
+  """The version of the objec."""
+  version: Int!
+}
+
+"""The structure of the External authors data type."""
+type ExternalAuthorsDataDto {
+  name: ExternalAuthorsDataNameDto
+  orcid: ExternalAuthorsDataOrcidDto
+}
+
+"""The structure of the External authors data input type."""
+input ExternalAuthorsDataInputDto {
+  name: ExternalAuthorsDataNameInputDto
+  orcid: ExternalAuthorsDataOrcidInputDto
+}
+
+"""The structure of the Name field of the External authors content type."""
+type ExternalAuthorsDataNameDto {
+  iv: String
+}
+
+"""The structure of the Name field of the External authors content input type."""
+input ExternalAuthorsDataNameInputDto {
+  iv: String
+}
+
+"""The structure of the ORCID field of the External authors content type."""
+type ExternalAuthorsDataOrcidDto {
+  """ORCIDs cannot be repeated on the Hub"""
+  iv: String
+}
+
+"""The structure of the ORCID field of the External authors content input type."""
+input ExternalAuthorsDataOrcidInputDto {
+  """ORCIDs cannot be repeated on the Hub"""
+  iv: String
+}
+
+"""The structure of the flat External authors data type."""
+type ExternalAuthorsFlatDataDto {
+  name: String
+  """ORCIDs cannot be repeated on the Hub"""
+  orcid: String
+}
+
+"""List of External authors items and total count."""
+type ExternalAuthorsResultDto {
+  """The contents."""
+  items: [ExternalAuthors!]
+  """The total count of  contents."""
+  total: Int!
+}
+
 """The `DateTime` scalar type represents a date and time. `DateTime` expects timestamps to be formatted in accordance with the [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601) standard."""
 scalar Instant
 
@@ -2229,6 +2552,271 @@ type NewsAndEventsFlatDataDto {
 type NewsAndEventsResultDto {
   """The contents."""
   items: [NewsAndEvents!]
+  """The total count of  contents."""
+  total: Int!
+}
+
+"""The structure of a Outputs content type."""
+type Outputs implements Content {
+  """The timestamp when the object was created."""
+  created: Instant!
+  """The user who created the object."""
+  createdBy: String!
+  """The user who created the object."""
+  createdByUser: User!
+  """The data of the content."""
+  data: OutputsDataDto!
+  """The edit token."""
+  editToken: String
+  """The flat data of the content."""
+  flatData: OutputsFlatDataDto!
+  """The ID of the object (usually GUID)."""
+  id: String!
+  """The timestamp when the object was updated the last time."""
+  lastModified: Instant!
+  """The user who updated the object the last time."""
+  lastModifiedBy: String!
+  """The user who updated the object the last time."""
+  lastModifiedByUser: User!
+  """The new status of the content."""
+  newStatus: String
+  """The status color of the content."""
+  newStatusColor: String
+  """Query External authors content items."""
+  referencesExternalAuthorsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [ExternalAuthors!]
+  """Query External authors content items with total count."""
+  referencesExternalAuthorsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): ExternalAuthorsResultDto
+  """Query Users content items."""
+  referencesUsersContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [Users!]
+  """Query Users content items with total count."""
+  referencesUsersContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): UsersResultDto
+  """The status of the content."""
+  status: String!
+  """The status color of the content."""
+  statusColor: String!
+  """The URL to the content."""
+  url: String!
+  """The version of the objec."""
+  version: Int!
+}
+
+"""The structure of the Added Date field of the Outputs content type."""
+type OutputsDataAddedDateDto {
+  """Date output was shared with ASAP Network (different from publication date)"""
+  iv: Instant
+}
+
+"""The structure of the Added Date field of the Outputs content input type."""
+input OutputsDataAddedDateInputDto {
+  """Date output was shared with ASAP Network (different from publication date)"""
+  iv: Instant
+}
+
+"""The structure of the Admin notes field of the Outputs content type."""
+type OutputsDataAdminNotesDto {
+  """This is ASAP internal content and it's not being shown on the Hub"""
+  iv: String
+}
+
+"""The structure of the Admin notes field of the Outputs content input type."""
+input OutputsDataAdminNotesInputDto {
+  """This is ASAP internal content and it's not being shown on the Hub"""
+  iv: String
+}
+
+"""The structure of the Authors field of the Outputs content type."""
+type OutputsDataAuthorsDto {
+  iv: [OutputsDataAuthorsUnionDto!]
+}
+
+"""The structure of the Authors field of the Outputs content input type."""
+input OutputsDataAuthorsInputDto {
+  iv: [String!]
+}
+
+union OutputsDataAuthorsUnionDto = ExternalAuthors | Users
+
+"""The structure of the Created by field of the Outputs content type."""
+type OutputsDataCreatedByDto {
+  iv: [Users!]
+}
+
+"""The structure of the Created by field of the Outputs content input type."""
+input OutputsDataCreatedByInputDto {
+  iv: [String!]
+}
+
+"""The structure of the Document type field of the Outputs content type."""
+type OutputsDataDocumentTypeDto {
+  iv: String
+}
+
+"""The structure of the Document type field of the Outputs content input type."""
+input OutputsDataDocumentTypeInputDto {
+  iv: String
+}
+
+"""The structure of the Outputs data type."""
+type OutputsDataDto {
+  addedDate: OutputsDataAddedDateDto
+  adminNotes: OutputsDataAdminNotesDto
+  authors: OutputsDataAuthorsDto
+  createdBy: OutputsDataCreatedByDto
+  documentType: OutputsDataDocumentTypeDto
+  lastUpdatedPartial: OutputsDataLastUpdatedPartialDto
+  link: OutputsDataLinkDto
+  publishDate: OutputsDataPublishDateDto
+  title: OutputsDataTitleDto
+  type: OutputsDataTypeDto
+  updatedBy: OutputsDataUpdatedByDto
+}
+
+"""The structure of the Outputs data input type."""
+input OutputsDataInputDto {
+  addedDate: OutputsDataAddedDateInputDto
+  adminNotes: OutputsDataAdminNotesInputDto
+  authors: OutputsDataAuthorsInputDto
+  createdBy: OutputsDataCreatedByInputDto
+  documentType: OutputsDataDocumentTypeInputDto
+  lastUpdatedPartial: OutputsDataLastUpdatedPartialInputDto
+  link: OutputsDataLinkInputDto
+  publishDate: OutputsDataPublishDateInputDto
+  title: OutputsDataTitleInputDto
+  type: OutputsDataTypeInputDto
+  updatedBy: OutputsDataUpdatedByInputDto
+}
+
+"""The structure of the Last Updated (partial) field of the Outputs content type."""
+type OutputsDataLastUpdatedPartialDto {
+  """Does not include changes to Publish Date and Admin notes"""
+  iv: Instant
+}
+
+"""The structure of the Last Updated (partial) field of the Outputs content input type."""
+input OutputsDataLastUpdatedPartialInputDto {
+  """Does not include changes to Publish Date and Admin notes"""
+  iv: Instant
+}
+
+"""The structure of the External Link field of the Outputs content type."""
+type OutputsDataLinkDto {
+  iv: String
+}
+
+"""The structure of the External Link field of the Outputs content input type."""
+input OutputsDataLinkInputDto {
+  iv: String
+}
+
+"""The structure of the Publish Date field of the Outputs content type."""
+type OutputsDataPublishDateDto {
+  """Date of publishing (outside the Hub). Only applies to outputs that have been published."""
+  iv: Instant
+}
+
+"""The structure of the Publish Date field of the Outputs content input type."""
+input OutputsDataPublishDateInputDto {
+  """Date of publishing (outside the Hub). Only applies to outputs that have been published."""
+  iv: Instant
+}
+
+"""The structure of the Title field of the Outputs content type."""
+type OutputsDataTitleDto {
+  iv: String
+}
+
+"""The structure of the Title field of the Outputs content input type."""
+input OutputsDataTitleInputDto {
+  iv: String
+}
+
+"""The structure of the Type field of the Outputs content type."""
+type OutputsDataTypeDto {
+  iv: String
+}
+
+"""The structure of the Type field of the Outputs content input type."""
+input OutputsDataTypeInputDto {
+  iv: String
+}
+
+"""The structure of the Updated by field of the Outputs content type."""
+type OutputsDataUpdatedByDto {
+  iv: [Users!]
+}
+
+"""The structure of the Updated by field of the Outputs content input type."""
+input OutputsDataUpdatedByInputDto {
+  iv: [String!]
+}
+
+"""The structure of the flat Outputs data type."""
+type OutputsFlatDataDto {
+  """Date output was shared with ASAP Network (different from publication date)"""
+  addedDate: Instant
+  """This is ASAP internal content and it's not being shown on the Hub"""
+  adminNotes: String
+  authors: [OutputsDataAuthorsUnionDto!]
+  createdBy: [Users!]
+  documentType: String
+  """Does not include changes to Publish Date and Admin notes"""
+  lastUpdatedPartial: Instant
+  link: String
+  """Date of publishing (outside the Hub). Only applies to outputs that have been published."""
+  publishDate: Instant
+  title: String
+  type: String
+  updatedBy: [Users!]
+}
+
+"""List of Outputs items and total count."""
+type OutputsResultDto {
+  """The contents."""
+  items: [Outputs!]
   """The total count of  contents."""
   total: Int!
 }
@@ -2646,6 +3234,32 @@ type Users implements Content {
     """Optional number of items to take."""
     top: Int
   ): EventsResultDto
+  """Query Outputs content items."""
+  referencingOutputsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [Outputs!]
+  """Query Outputs content items with total count."""
+  referencingOutputsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): OutputsResultDto
   """Query Projects content items."""
   referencingProjectsContents(
     """Optional OData filter."""

@@ -33,10 +33,14 @@ export type ApplicationMutations = {
   changeContributingCohortsContent: Maybe<ContributingCohorts>;
   /** Change a Events content. */
   changeEventsContent: Maybe<Events>;
+  /** Change a External authors content. */
+  changeExternalAuthorsContent: Maybe<ExternalAuthors>;
   /** Change a Migrations content. */
   changeMigrationsContent: Maybe<Migrations>;
   /** Change a News content. */
   changeNewsAndEventsContent: Maybe<NewsAndEvents>;
+  /** Change a Outputs content. */
+  changeOutputsContent: Maybe<Outputs>;
   /** Change a Projects content. */
   changeProjectsContent: Maybe<Projects>;
   /** Change a Users content. */
@@ -51,10 +55,14 @@ export type ApplicationMutations = {
   createContributingCohortsContent: Maybe<ContributingCohorts>;
   /** Creates an Events content. */
   createEventsContent: Maybe<Events>;
+  /** Creates an External authors content. */
+  createExternalAuthorsContent: Maybe<ExternalAuthors>;
   /** Creates an Migrations content. */
   createMigrationsContent: Maybe<Migrations>;
   /** Creates an News content. */
   createNewsAndEventsContent: Maybe<NewsAndEvents>;
+  /** Creates an Outputs content. */
+  createOutputsContent: Maybe<Outputs>;
   /** Creates an Projects content. */
   createProjectsContent: Maybe<Projects>;
   /** Creates an Users content. */
@@ -69,10 +77,14 @@ export type ApplicationMutations = {
   deleteContributingCohortsContent: EntitySavedResultDto;
   /** Delete an Events content. */
   deleteEventsContent: EntitySavedResultDto;
+  /** Delete an External authors content. */
+  deleteExternalAuthorsContent: EntitySavedResultDto;
   /** Delete an Migrations content. */
   deleteMigrationsContent: EntitySavedResultDto;
   /** Delete an News content. */
   deleteNewsAndEventsContent: EntitySavedResultDto;
+  /** Delete an Outputs content. */
+  deleteOutputsContent: EntitySavedResultDto;
   /** Delete an Projects content. */
   deleteProjectsContent: EntitySavedResultDto;
   /** Delete an Users content. */
@@ -87,10 +99,14 @@ export type ApplicationMutations = {
   patchContributingCohortsContent: Maybe<ContributingCohorts>;
   /** Patch an Events content by id. */
   patchEventsContent: Maybe<Events>;
+  /** Patch an External authors content by id. */
+  patchExternalAuthorsContent: Maybe<ExternalAuthors>;
   /** Patch an Migrations content by id. */
   patchMigrationsContent: Maybe<Migrations>;
   /** Patch an News content by id. */
   patchNewsAndEventsContent: Maybe<NewsAndEvents>;
+  /** Patch an Outputs content by id. */
+  patchOutputsContent: Maybe<Outputs>;
   /** Patch an Projects content by id. */
   patchProjectsContent: Maybe<Projects>;
   /** Patch an Users content by id. */
@@ -115,6 +131,11 @@ export type ApplicationMutations = {
    */
   publishEventsContent: Maybe<Events>;
   /**
+   * Publish a External authors content.
+   * @deprecated Use 'changeExternalAuthorsContent' instead
+   */
+  publishExternalAuthorsContent: Maybe<ExternalAuthors>;
+  /**
    * Publish a Migrations content.
    * @deprecated Use 'changeMigrationsContent' instead
    */
@@ -124,6 +145,11 @@ export type ApplicationMutations = {
    * @deprecated Use 'changeNewsAndEventsContent' instead
    */
   publishNewsAndEventsContent: Maybe<NewsAndEvents>;
+  /**
+   * Publish a Outputs content.
+   * @deprecated Use 'changeOutputsContent' instead
+   */
+  publishOutputsContent: Maybe<Outputs>;
   /**
    * Publish a Projects content.
    * @deprecated Use 'changeProjectsContent' instead
@@ -150,10 +176,14 @@ export type ApplicationMutations = {
   updateContributingCohortsContent: Maybe<ContributingCohorts>;
   /** Update an Events content by id. */
   updateEventsContent: Maybe<Events>;
+  /** Update an External authors content by id. */
+  updateExternalAuthorsContent: Maybe<ExternalAuthors>;
   /** Update an Migrations content by id. */
   updateMigrationsContent: Maybe<Migrations>;
   /** Update an News content by id. */
   updateNewsAndEventsContent: Maybe<NewsAndEvents>;
+  /** Update an Outputs content by id. */
+  updateOutputsContent: Maybe<Outputs>;
   /** Update an Projects content by id. */
   updateProjectsContent: Maybe<Projects>;
   /** Update an Users content by id. */
@@ -168,10 +198,14 @@ export type ApplicationMutations = {
   upsertContributingCohortsContent: Maybe<ContributingCohorts>;
   /** Upsert an Events content by id. */
   upsertEventsContent: Maybe<Events>;
+  /** Upsert an External authors content by id. */
+  upsertExternalAuthorsContent: Maybe<ExternalAuthors>;
   /** Upsert an Migrations content by id. */
   upsertMigrationsContent: Maybe<Migrations>;
   /** Upsert an News content by id. */
   upsertNewsAndEventsContent: Maybe<NewsAndEvents>;
+  /** Upsert an Outputs content by id. */
+  upsertOutputsContent: Maybe<Outputs>;
   /** Upsert an Projects content by id. */
   upsertProjectsContent: Maybe<Projects>;
   /** Upsert an Users content by id. */
@@ -207,6 +241,14 @@ export type ApplicationMutationsChangeEventsContentArgs = {
 };
 
 /** The app mutations. */
+export type ApplicationMutationsChangeExternalAuthorsContentArgs = {
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  status: Scalars['String'];
+};
+
+/** The app mutations. */
 export type ApplicationMutationsChangeMigrationsContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
   expectedVersion?: InputMaybe<Scalars['Int']>;
@@ -216,6 +258,14 @@ export type ApplicationMutationsChangeMigrationsContentArgs = {
 
 /** The app mutations. */
 export type ApplicationMutationsChangeNewsAndEventsContentArgs = {
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  status: Scalars['String'];
+};
+
+/** The app mutations. */
+export type ApplicationMutationsChangeOutputsContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -279,6 +329,14 @@ export type ApplicationMutationsCreateEventsContentArgs = {
 };
 
 /** The app mutations. */
+export type ApplicationMutationsCreateExternalAuthorsContentArgs = {
+  data: ExternalAuthorsDataInputDto;
+  id: InputMaybe<Scalars['String']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
 export type ApplicationMutationsCreateMigrationsContentArgs = {
   data: MigrationsDataInputDto;
   id: InputMaybe<Scalars['String']>;
@@ -289,6 +347,14 @@ export type ApplicationMutationsCreateMigrationsContentArgs = {
 /** The app mutations. */
 export type ApplicationMutationsCreateNewsAndEventsContentArgs = {
   data: NewsAndEventsDataInputDto;
+  id: InputMaybe<Scalars['String']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
+export type ApplicationMutationsCreateOutputsContentArgs = {
+  data: OutputsDataInputDto;
   id: InputMaybe<Scalars['String']>;
   publish?: InputMaybe<Scalars['Boolean']>;
   status: InputMaybe<Scalars['String']>;
@@ -345,6 +411,12 @@ export type ApplicationMutationsDeleteEventsContentArgs = {
 };
 
 /** The app mutations. */
+export type ApplicationMutationsDeleteExternalAuthorsContentArgs = {
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+};
+
+/** The app mutations. */
 export type ApplicationMutationsDeleteMigrationsContentArgs = {
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -352,6 +424,12 @@ export type ApplicationMutationsDeleteMigrationsContentArgs = {
 
 /** The app mutations. */
 export type ApplicationMutationsDeleteNewsAndEventsContentArgs = {
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+};
+
+/** The app mutations. */
+export type ApplicationMutationsDeleteOutputsContentArgs = {
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
@@ -402,6 +480,13 @@ export type ApplicationMutationsPatchEventsContentArgs = {
 };
 
 /** The app mutations. */
+export type ApplicationMutationsPatchExternalAuthorsContentArgs = {
+  data: ExternalAuthorsDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
 export type ApplicationMutationsPatchMigrationsContentArgs = {
   data: MigrationsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
@@ -411,6 +496,13 @@ export type ApplicationMutationsPatchMigrationsContentArgs = {
 /** The app mutations. */
 export type ApplicationMutationsPatchNewsAndEventsContentArgs = {
   data: NewsAndEventsDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
+export type ApplicationMutationsPatchOutputsContentArgs = {
+  data: OutputsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
@@ -468,6 +560,14 @@ export type ApplicationMutationsPublishEventsContentArgs = {
 };
 
 /** The app mutations. */
+export type ApplicationMutationsPublishExternalAuthorsContentArgs = {
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  status: Scalars['String'];
+};
+
+/** The app mutations. */
 export type ApplicationMutationsPublishMigrationsContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
   expectedVersion?: InputMaybe<Scalars['Int']>;
@@ -477,6 +577,14 @@ export type ApplicationMutationsPublishMigrationsContentArgs = {
 
 /** The app mutations. */
 export type ApplicationMutationsPublishNewsAndEventsContentArgs = {
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  status: Scalars['String'];
+};
+
+/** The app mutations. */
+export type ApplicationMutationsPublishOutputsContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -537,6 +645,13 @@ export type ApplicationMutationsUpdateEventsContentArgs = {
 };
 
 /** The app mutations. */
+export type ApplicationMutationsUpdateExternalAuthorsContentArgs = {
+  data: ExternalAuthorsDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
 export type ApplicationMutationsUpdateMigrationsContentArgs = {
   data: MigrationsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
@@ -546,6 +661,13 @@ export type ApplicationMutationsUpdateMigrationsContentArgs = {
 /** The app mutations. */
 export type ApplicationMutationsUpdateNewsAndEventsContentArgs = {
   data: NewsAndEventsDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
+export type ApplicationMutationsUpdateOutputsContentArgs = {
+  data: OutputsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
@@ -609,6 +731,16 @@ export type ApplicationMutationsUpsertEventsContentArgs = {
 };
 
 /** The app mutations. */
+export type ApplicationMutationsUpsertExternalAuthorsContentArgs = {
+  data: ExternalAuthorsDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  patch?: InputMaybe<Scalars['Boolean']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
 export type ApplicationMutationsUpsertMigrationsContentArgs = {
   data: MigrationsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
@@ -621,6 +753,16 @@ export type ApplicationMutationsUpsertMigrationsContentArgs = {
 /** The app mutations. */
 export type ApplicationMutationsUpsertNewsAndEventsContentArgs = {
   data: NewsAndEventsDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  patch?: InputMaybe<Scalars['Boolean']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
+export type ApplicationMutationsUpsertOutputsContentArgs = {
+  data: OutputsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   patch?: InputMaybe<Scalars['Boolean']>;
@@ -678,10 +820,14 @@ export type ApplicationQueries = {
   findContributingCohortsContent: Maybe<ContributingCohorts>;
   /** Find an Events content by id. */
   findEventsContent: Maybe<Events>;
+  /** Find an External authors content by id. */
+  findExternalAuthorsContent: Maybe<ExternalAuthors>;
   /** Find an Migrations content by id. */
   findMigrationsContent: Maybe<Migrations>;
   /** Find an News content by id. */
   findNewsAndEventsContent: Maybe<NewsAndEvents>;
+  /** Find an Outputs content by id. */
+  findOutputsContent: Maybe<Outputs>;
   /** Find an Projects content by id. */
   findProjectsContent: Maybe<Projects>;
   /** Find an Users content by id. */
@@ -706,6 +852,10 @@ export type ApplicationQueries = {
   queryEventsContents: Maybe<Array<Events>>;
   /** Query Events content items with total count. */
   queryEventsContentsWithTotal: Maybe<EventsResultDto>;
+  /** Query External authors content items. */
+  queryExternalAuthorsContents: Maybe<Array<ExternalAuthors>>;
+  /** Query External authors content items with total count. */
+  queryExternalAuthorsContentsWithTotal: Maybe<ExternalAuthorsResultDto>;
   /** Query Migrations content items. */
   queryMigrationsContents: Maybe<Array<Migrations>>;
   /** Query Migrations content items with total count. */
@@ -714,6 +864,10 @@ export type ApplicationQueries = {
   queryNewsAndEventsContents: Maybe<Array<NewsAndEvents>>;
   /** Query News content items with total count. */
   queryNewsAndEventsContentsWithTotal: Maybe<NewsAndEventsResultDto>;
+  /** Query Outputs content items. */
+  queryOutputsContents: Maybe<Array<Outputs>>;
+  /** Query Outputs content items with total count. */
+  queryOutputsContentsWithTotal: Maybe<OutputsResultDto>;
   /** Query Projects content items. */
   queryProjectsContents: Maybe<Array<Projects>>;
   /** Query Projects content items with total count. */
@@ -756,6 +910,12 @@ export type ApplicationQueriesFindEventsContentArgs = {
 };
 
 /** The app queries. */
+export type ApplicationQueriesFindExternalAuthorsContentArgs = {
+  id: Scalars['String'];
+  version: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
 export type ApplicationQueriesFindMigrationsContentArgs = {
   id: Scalars['String'];
   version: InputMaybe<Scalars['Int']>;
@@ -763,6 +923,12 @@ export type ApplicationQueriesFindMigrationsContentArgs = {
 
 /** The app queries. */
 export type ApplicationQueriesFindNewsAndEventsContentArgs = {
+  id: Scalars['String'];
+  version: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type ApplicationQueriesFindOutputsContentArgs = {
   id: Scalars['String'];
   version: InputMaybe<Scalars['Int']>;
 };
@@ -862,6 +1028,24 @@ export type ApplicationQueriesQueryEventsContentsWithTotalArgs = {
 };
 
 /** The app queries. */
+export type ApplicationQueriesQueryExternalAuthorsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type ApplicationQueriesQueryExternalAuthorsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
 export type ApplicationQueriesQueryMigrationsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
@@ -890,6 +1074,24 @@ export type ApplicationQueriesQueryNewsAndEventsContentsArgs = {
 
 /** The app queries. */
 export type ApplicationQueriesQueryNewsAndEventsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type ApplicationQueriesQueryOutputsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type ApplicationQueriesQueryOutputsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -1974,6 +2176,113 @@ export type EventsResultDto = {
   total: Scalars['Int'];
 };
 
+/** The structure of a External authors content type. */
+export type ExternalAuthors = Content & {
+  /** The timestamp when the object was created. */
+  created: Scalars['Instant'];
+  /** The user who created the object. */
+  createdBy: Scalars['String'];
+  /** The user who created the object. */
+  createdByUser: User;
+  /** The data of the content. */
+  data: ExternalAuthorsDataDto;
+  /** The edit token. */
+  editToken: Maybe<Scalars['String']>;
+  /** The flat data of the content. */
+  flatData: ExternalAuthorsFlatDataDto;
+  /** The ID of the object (usually GUID). */
+  id: Scalars['String'];
+  /** The timestamp when the object was updated the last time. */
+  lastModified: Scalars['Instant'];
+  /** The user who updated the object the last time. */
+  lastModifiedBy: Scalars['String'];
+  /** The user who updated the object the last time. */
+  lastModifiedByUser: User;
+  /** The new status of the content. */
+  newStatus: Maybe<Scalars['String']>;
+  /** The status color of the content. */
+  newStatusColor: Maybe<Scalars['String']>;
+  /** Query Outputs content items. */
+  referencingOutputsContents: Maybe<Array<Outputs>>;
+  /** Query Outputs content items with total count. */
+  referencingOutputsContentsWithTotal: Maybe<OutputsResultDto>;
+  /** The status of the content. */
+  status: Scalars['String'];
+  /** The status color of the content. */
+  statusColor: Scalars['String'];
+  /** The URL to the content. */
+  url: Scalars['String'];
+  /** The version of the objec. */
+  version: Scalars['Int'];
+};
+
+/** The structure of a External authors content type. */
+export type ExternalAuthorsReferencingOutputsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a External authors content type. */
+export type ExternalAuthorsReferencingOutputsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of the External authors data type. */
+export type ExternalAuthorsDataDto = {
+  name: Maybe<ExternalAuthorsDataNameDto>;
+  orcid: Maybe<ExternalAuthorsDataOrcidDto>;
+};
+
+/** The structure of the External authors data input type. */
+export type ExternalAuthorsDataInputDto = {
+  name: InputMaybe<ExternalAuthorsDataNameInputDto>;
+  orcid: InputMaybe<ExternalAuthorsDataOrcidInputDto>;
+};
+
+/** The structure of the Name field of the External authors content type. */
+export type ExternalAuthorsDataNameDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Name field of the External authors content input type. */
+export type ExternalAuthorsDataNameInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the ORCID field of the External authors content type. */
+export type ExternalAuthorsDataOrcidDto = {
+  /** ORCIDs cannot be repeated on the Hub */
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the ORCID field of the External authors content input type. */
+export type ExternalAuthorsDataOrcidInputDto = {
+  /** ORCIDs cannot be repeated on the Hub */
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the flat External authors data type. */
+export type ExternalAuthorsFlatDataDto = {
+  name: Maybe<Scalars['String']>;
+  /** ORCIDs cannot be repeated on the Hub */
+  orcid: Maybe<Scalars['String']>;
+};
+
+/** List of External authors items and total count. */
+export type ExternalAuthorsResultDto = {
+  /** The contents. */
+  items: Maybe<Array<ExternalAuthors>>;
+  /** The total count of  contents. */
+  total: Scalars['Int'];
+};
+
 /** The structure of a Migrations content type. */
 export type Migrations = Content & {
   /** The timestamp when the object was created. */
@@ -2192,6 +2501,263 @@ export type NewsAndEventsFlatDataDto = {
 export type NewsAndEventsResultDto = {
   /** The contents. */
   items: Maybe<Array<NewsAndEvents>>;
+  /** The total count of  contents. */
+  total: Scalars['Int'];
+};
+
+/** The structure of a Outputs content type. */
+export type Outputs = Content & {
+  /** The timestamp when the object was created. */
+  created: Scalars['Instant'];
+  /** The user who created the object. */
+  createdBy: Scalars['String'];
+  /** The user who created the object. */
+  createdByUser: User;
+  /** The data of the content. */
+  data: OutputsDataDto;
+  /** The edit token. */
+  editToken: Maybe<Scalars['String']>;
+  /** The flat data of the content. */
+  flatData: OutputsFlatDataDto;
+  /** The ID of the object (usually GUID). */
+  id: Scalars['String'];
+  /** The timestamp when the object was updated the last time. */
+  lastModified: Scalars['Instant'];
+  /** The user who updated the object the last time. */
+  lastModifiedBy: Scalars['String'];
+  /** The user who updated the object the last time. */
+  lastModifiedByUser: User;
+  /** The new status of the content. */
+  newStatus: Maybe<Scalars['String']>;
+  /** The status color of the content. */
+  newStatusColor: Maybe<Scalars['String']>;
+  /** Query External authors content items. */
+  referencesExternalAuthorsContents: Maybe<Array<ExternalAuthors>>;
+  /** Query External authors content items with total count. */
+  referencesExternalAuthorsContentsWithTotal: Maybe<ExternalAuthorsResultDto>;
+  /** Query Users content items. */
+  referencesUsersContents: Maybe<Array<Users>>;
+  /** Query Users content items with total count. */
+  referencesUsersContentsWithTotal: Maybe<UsersResultDto>;
+  /** The status of the content. */
+  status: Scalars['String'];
+  /** The status color of the content. */
+  statusColor: Scalars['String'];
+  /** The URL to the content. */
+  url: Scalars['String'];
+  /** The version of the objec. */
+  version: Scalars['Int'];
+};
+
+/** The structure of a Outputs content type. */
+export type OutputsReferencesExternalAuthorsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Outputs content type. */
+export type OutputsReferencesExternalAuthorsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Outputs content type. */
+export type OutputsReferencesUsersContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Outputs content type. */
+export type OutputsReferencesUsersContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of the Added Date field of the Outputs content type. */
+export type OutputsDataAddedDateDto = {
+  /** Date output was shared with ASAP Network (different from publication date) */
+  iv: Maybe<Scalars['Instant']>;
+};
+
+/** The structure of the Added Date field of the Outputs content input type. */
+export type OutputsDataAddedDateInputDto = {
+  /** Date output was shared with ASAP Network (different from publication date) */
+  iv: InputMaybe<Scalars['Instant']>;
+};
+
+/** The structure of the Admin notes field of the Outputs content type. */
+export type OutputsDataAdminNotesDto = {
+  /** This is ASAP internal content and it's not being shown on the Hub */
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Admin notes field of the Outputs content input type. */
+export type OutputsDataAdminNotesInputDto = {
+  /** This is ASAP internal content and it's not being shown on the Hub */
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Authors field of the Outputs content type. */
+export type OutputsDataAuthorsDto = {
+  iv: Maybe<Array<OutputsDataAuthorsUnionDto>>;
+};
+
+/** The structure of the Authors field of the Outputs content input type. */
+export type OutputsDataAuthorsInputDto = {
+  iv: InputMaybe<Array<Scalars['String']>>;
+};
+
+export type OutputsDataAuthorsUnionDto = ExternalAuthors | Users;
+
+/** The structure of the Created by field of the Outputs content type. */
+export type OutputsDataCreatedByDto = {
+  iv: Maybe<Array<Users>>;
+};
+
+/** The structure of the Created by field of the Outputs content input type. */
+export type OutputsDataCreatedByInputDto = {
+  iv: InputMaybe<Array<Scalars['String']>>;
+};
+
+/** The structure of the Document type field of the Outputs content type. */
+export type OutputsDataDocumentTypeDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Document type field of the Outputs content input type. */
+export type OutputsDataDocumentTypeInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Outputs data type. */
+export type OutputsDataDto = {
+  addedDate: Maybe<OutputsDataAddedDateDto>;
+  adminNotes: Maybe<OutputsDataAdminNotesDto>;
+  authors: Maybe<OutputsDataAuthorsDto>;
+  createdBy: Maybe<OutputsDataCreatedByDto>;
+  documentType: Maybe<OutputsDataDocumentTypeDto>;
+  lastUpdatedPartial: Maybe<OutputsDataLastUpdatedPartialDto>;
+  link: Maybe<OutputsDataLinkDto>;
+  publishDate: Maybe<OutputsDataPublishDateDto>;
+  title: Maybe<OutputsDataTitleDto>;
+  type: Maybe<OutputsDataTypeDto>;
+  updatedBy: Maybe<OutputsDataUpdatedByDto>;
+};
+
+/** The structure of the Outputs data input type. */
+export type OutputsDataInputDto = {
+  addedDate: InputMaybe<OutputsDataAddedDateInputDto>;
+  adminNotes: InputMaybe<OutputsDataAdminNotesInputDto>;
+  authors: InputMaybe<OutputsDataAuthorsInputDto>;
+  createdBy: InputMaybe<OutputsDataCreatedByInputDto>;
+  documentType: InputMaybe<OutputsDataDocumentTypeInputDto>;
+  lastUpdatedPartial: InputMaybe<OutputsDataLastUpdatedPartialInputDto>;
+  link: InputMaybe<OutputsDataLinkInputDto>;
+  publishDate: InputMaybe<OutputsDataPublishDateInputDto>;
+  title: InputMaybe<OutputsDataTitleInputDto>;
+  type: InputMaybe<OutputsDataTypeInputDto>;
+  updatedBy: InputMaybe<OutputsDataUpdatedByInputDto>;
+};
+
+/** The structure of the Last Updated (partial) field of the Outputs content type. */
+export type OutputsDataLastUpdatedPartialDto = {
+  /** Does not include changes to Publish Date and Admin notes */
+  iv: Maybe<Scalars['Instant']>;
+};
+
+/** The structure of the Last Updated (partial) field of the Outputs content input type. */
+export type OutputsDataLastUpdatedPartialInputDto = {
+  /** Does not include changes to Publish Date and Admin notes */
+  iv: InputMaybe<Scalars['Instant']>;
+};
+
+/** The structure of the External Link field of the Outputs content type. */
+export type OutputsDataLinkDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the External Link field of the Outputs content input type. */
+export type OutputsDataLinkInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Publish Date field of the Outputs content type. */
+export type OutputsDataPublishDateDto = {
+  /** Date of publishing (outside the Hub). Only applies to outputs that have been published. */
+  iv: Maybe<Scalars['Instant']>;
+};
+
+/** The structure of the Publish Date field of the Outputs content input type. */
+export type OutputsDataPublishDateInputDto = {
+  /** Date of publishing (outside the Hub). Only applies to outputs that have been published. */
+  iv: InputMaybe<Scalars['Instant']>;
+};
+
+/** The structure of the Title field of the Outputs content type. */
+export type OutputsDataTitleDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Title field of the Outputs content input type. */
+export type OutputsDataTitleInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Type field of the Outputs content type. */
+export type OutputsDataTypeDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Type field of the Outputs content input type. */
+export type OutputsDataTypeInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Updated by field of the Outputs content type. */
+export type OutputsDataUpdatedByDto = {
+  iv: Maybe<Array<Users>>;
+};
+
+/** The structure of the Updated by field of the Outputs content input type. */
+export type OutputsDataUpdatedByInputDto = {
+  iv: InputMaybe<Array<Scalars['String']>>;
+};
+
+/** The structure of the flat Outputs data type. */
+export type OutputsFlatDataDto = {
+  /** Date output was shared with ASAP Network (different from publication date) */
+  addedDate: Maybe<Scalars['Instant']>;
+  /** This is ASAP internal content and it's not being shown on the Hub */
+  adminNotes: Maybe<Scalars['String']>;
+  authors: Maybe<Array<OutputsDataAuthorsUnionDto>>;
+  createdBy: Maybe<Array<Users>>;
+  documentType: Maybe<Scalars['String']>;
+  /** Does not include changes to Publish Date and Admin notes */
+  lastUpdatedPartial: Maybe<Scalars['Instant']>;
+  link: Maybe<Scalars['String']>;
+  /** Date of publishing (outside the Hub). Only applies to outputs that have been published. */
+  publishDate: Maybe<Scalars['Instant']>;
+  title: Maybe<Scalars['String']>;
+  type: Maybe<Scalars['String']>;
+  updatedBy: Maybe<Array<Users>>;
+};
+
+/** List of Outputs items and total count. */
+export type OutputsResultDto = {
+  /** The contents. */
+  items: Maybe<Array<Outputs>>;
   /** The total count of  contents. */
   total: Scalars['Int'];
 };
@@ -2561,6 +3127,10 @@ export type Users = Content & {
   referencingEventsContents: Maybe<Array<Events>>;
   /** Query Events content items with total count. */
   referencingEventsContentsWithTotal: Maybe<EventsResultDto>;
+  /** Query Outputs content items. */
+  referencingOutputsContents: Maybe<Array<Outputs>>;
+  /** Query Outputs content items with total count. */
+  referencingOutputsContentsWithTotal: Maybe<OutputsResultDto>;
   /** Query Projects content items. */
   referencingProjectsContents: Maybe<Array<Projects>>;
   /** Query Projects content items with total count. */
@@ -2608,6 +3178,24 @@ export type UsersReferencingEventsContentsArgs = {
 
 /** The structure of a Users content type. */
 export type UsersReferencingEventsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Users content type. */
+export type UsersReferencingOutputsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Users content type. */
+export type UsersReferencingOutputsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;

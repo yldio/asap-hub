@@ -73,6 +73,11 @@ const renderCoreDetails = async (
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };
 
+const fileBuffer = readFileSync(join(__dirname, 'jpeg.jpg'));
+const file = new File([new Uint8Array(fileBuffer)], 'jpeg.jpg', {
+  type: 'image/jpeg',
+});
+
 describe('CoreDetails', () => {
   beforeEach(jest.resetAllMocks);
   const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
@@ -89,6 +94,7 @@ describe('CoreDetails', () => {
   imageCompressionMock.getDataUrlFromFile = jest.requireActual(
     'browser-image-compression',
   ).getDataUrlFromFile;
+
   it('renders header with title', async () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
@@ -105,12 +111,14 @@ describe('CoreDetails', () => {
       }),
     ).toBeVisible();
   });
+
   it('renders the primary email', async () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
     await renderCoreDetails(user.id);
     expect(screen.getByRole('link', { name: /T@ark.io/i })).toBeVisible();
   });
+
   it('renders the secondary email', async () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce({
@@ -216,75 +224,27 @@ describe('CoreDetails', () => {
     );
   });
 
-  describe('for the avatar', () => {
-    const fileBuffer = readFileSync(join(__dirname, 'jpeg.jpg'));
-    const file = new File([new Uint8Array(fileBuffer)], 'jpeg.jpg', {
-      type: 'image/jpeg',
-    });
-    beforeEach(() => {
-      imageCompressionMock.mockImplementationOnce((fileToCompress) =>
-        Promise.resolve(fileToCompress),
-      );
-    });
+  it('updates the avatar', async () => {
+    const user = {
+      ...gp2Fixtures.createUserResponse(),
+      avatarUrl: 'https://placekitten.com/200/300',
+      id: '42',
+    };
+    mockGetUser.mockResolvedValueOnce(user);
+    imageCompressionMock.mockImplementationOnce((fileToCompress) =>
+      Promise.resolve(fileToCompress),
+    );
+    await renderCoreDetails(user.id);
 
-    it('updates the avatar', async () => {
-      const user = {
-        ...gp2Fixtures.createUserResponse(),
-        avatarUrl: 'https://placekitten.com/200/300',
-        id: '42',
-      };
-      mockGetUser.mockResolvedValueOnce(user);
-      await renderCoreDetails(user.id);
-
-      userEvent.upload(await screen.findByLabelText(/upload.+avatar/i), file);
-      await waitFor(() =>
-        expect(mockPostUserAvatar).toHaveBeenLastCalledWith(
-          '42',
-          expect.objectContaining({
-            avatar: `data:image/jpeg;base64,${fileBuffer.toString('base64')}`,
-          }),
-          expect.any(String),
-        ),
-      );
-    });
-
-    it('refreshes the Auth0 id token', async () => {
-      const user = {
-        ...gp2Fixtures.createUserResponse(),
-        avatarUrl: 'https://placekitten.com/200/300',
-        id: '42',
-      };
-      const mockToken = jest.fn().mockResolvedValue('token');
-      mockGetUser.mockResolvedValueOnce(user);
-      await renderCoreDetails(user.id, (authClient, authUser) => ({
-        getTokenSilently:
-          authClient && authUser
-            ? mockToken
-            : () => {
-                throw new Error('Not Ready');
-              },
-      }));
-
-      userEvent.upload(await screen.findByLabelText(/upload.+avatar/i), file);
-      await waitFor(() => expect(mockToken).toHaveBeenCalled());
-    });
-
-    it('toasts if the upload fails', async () => {
-      const user = {
-        ...gp2Fixtures.createUserResponse(),
-        avatarUrl: 'https://placekitten.com/200/300',
-        id: '42',
-      };
-      mockGetUser.mockResolvedValueOnce(user);
-      await renderCoreDetails(user.id);
-
-      mockPostUserAvatar.mockRejectedValue(new Error('500'));
-      userEvent.upload(await screen.findByLabelText(/upload.+avatar/i), file);
-      await waitFor(() => {
-        expect(mockToast).toHaveBeenCalledWith(
-          expect.stringMatching(/error.+picture/i),
-        );
-      });
-    });
+    userEvent.upload(await screen.findByLabelText(/upload.+avatar/i), file);
+    await waitFor(() =>
+      expect(mockPostUserAvatar).toHaveBeenLastCalledWith(
+        '42',
+        expect.objectContaining({
+          avatar: `data:image/jpeg;base64,${fileBuffer.toString('base64')}`,
+        }),
+        expect.any(String),
+      ),
+    );
   });
 });

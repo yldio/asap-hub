@@ -1069,6 +1069,7 @@ __metadata:
     "@types/jest": ^29.4.0
     "@types/jsonwebtoken": 8.5.9
     "@types/jwt-encode": "workspace:*"
+    "@types/lodash.matches": 4.6.7
     "@types/luxon": 1.27.1
     "@types/mime-types": 2.1.1
     "@types/node": 14.18.33
@@ -1093,10 +1094,12 @@ __metadata:
     graphql-typescript-integration: 1.2.1
     jsonwebtoken: 8.5.1
     jwt-encode: 1.0.1
+    lodash.matches: 4.6.0
     luxon: 1.28.1
     mime-types: 2.1.35
     nock: 13.3.0
     node-dev: 6.7.0
+    odata-query: 7.0.3
     parse-data-url: 3.0.0
     serverless: 3.27.0
     serverless-http: 2.7.0

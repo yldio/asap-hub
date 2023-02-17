@@ -2692,12 +2692,27 @@ input OutputsDataCreatedByInputDto {
 
 """The structure of the Document type field of the Outputs content type."""
 type OutputsDataDocumentTypeDto {
-  iv: String
+  iv: OutputsDataDocumentTypeEnum
+}
+
+enum OutputsDataDocumentTypeEnum {
+  """Article"""
+  Article
+  """Code_Software"""
+  Code_Software
+  """Data_Release"""
+  Data_Release
+  """Form"""
+  Form
+  """Training_Material"""
+  Training_Material
+  """Update"""
+  Update
 }
 
 """The structure of the Document type field of the Outputs content input type."""
 input OutputsDataDocumentTypeInputDto {
-  iv: String
+  iv: OutputsDataDocumentTypeEnum
 }
 
 """The structure of the Outputs data type."""
@@ -2710,6 +2725,7 @@ type OutputsDataDto {
   lastUpdatedPartial: OutputsDataLastUpdatedPartialDto
   link: OutputsDataLinkDto
   publishDate: OutputsDataPublishDateDto
+  subtype: OutputsDataSubtypeDto
   title: OutputsDataTitleDto
   type: OutputsDataTypeDto
   updatedBy: OutputsDataUpdatedByDto
@@ -2725,6 +2741,7 @@ input OutputsDataInputDto {
   lastUpdatedPartial: OutputsDataLastUpdatedPartialInputDto
   link: OutputsDataLinkInputDto
   publishDate: OutputsDataPublishDateInputDto
+  subtype: OutputsDataSubtypeInputDto
   title: OutputsDataTitleInputDto
   type: OutputsDataTypeInputDto
   updatedBy: OutputsDataUpdatedByInputDto
@@ -2764,6 +2781,25 @@ input OutputsDataPublishDateInputDto {
   iv: Instant
 }
 
+"""The structure of the SubType field of the Outputs content type."""
+type OutputsDataSubtypeDto {
+  """For article research"""
+  iv: OutputsDataSubtypeEnum
+}
+
+enum OutputsDataSubtypeEnum {
+  """Preprints"""
+  Preprints
+  """Published"""
+  Published
+}
+
+"""The structure of the SubType field of the Outputs content input type."""
+input OutputsDataSubtypeInputDto {
+  """For article research"""
+  iv: OutputsDataSubtypeEnum
+}
+
 """The structure of the Title field of the Outputs content type."""
 type OutputsDataTitleDto {
   iv: String
@@ -2776,12 +2812,27 @@ input OutputsDataTitleInputDto {
 
 """The structure of the Type field of the Outputs content type."""
 type OutputsDataTypeDto {
-  iv: String
+  """For articles"""
+  iv: OutputsDataTypeEnum
+}
+
+enum OutputsDataTypeEnum {
+  """Blog"""
+  Blog
+  """Hot_Topic"""
+  Hot_Topic
+  """Letter"""
+  Letter
+  """Research"""
+  Research
+  """Review"""
+  Review
 }
 
 """The structure of the Type field of the Outputs content input type."""
 input OutputsDataTypeInputDto {
-  iv: String
+  """For articles"""
+  iv: OutputsDataTypeEnum
 }
 
 """The structure of the Updated by field of the Outputs content type."""
@@ -2802,14 +2853,17 @@ type OutputsFlatDataDto {
   adminNotes: String
   authors: [OutputsDataAuthorsUnionDto!]
   createdBy: [Users!]
-  documentType: String
+  documentType: OutputsDataDocumentTypeEnum
   """Does not include changes to Publish Date and Admin notes"""
   lastUpdatedPartial: Instant
   link: String
   """Date of publishing (outside the Hub). Only applies to outputs that have been published."""
   publishDate: Instant
+  """For article research"""
+  subtype: OutputsDataSubtypeEnum
   title: String
-  type: String
+  """For articles"""
+  type: OutputsDataTypeEnum
   updatedBy: [Users!]
 }
 

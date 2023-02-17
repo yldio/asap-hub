@@ -10,6 +10,7 @@ export const outputContentQueryFragment = gql`
       title
       documentType
       type
+      subtype
       link
       addedDate
       publishDate
@@ -27,6 +28,7 @@ export const outputContentQueryFragment = gql`
             }
             firstName
             lastName
+            onboarded
           }
         }
         ... on ExternalAuthors {
@@ -44,8 +46,8 @@ export const outputContentQueryFragment = gql`
   }
 `;
 
-export const FETCH_RESEARCH_OUTPUT = gql`
-  query FetchOutput($id: String!, $withTeams: Boolean!) {
+export const FETCH_OUTPUT = gql`
+  query FetchOutput($id: String!) {
     findOutputsContent(id: $id) {
       ...OutputContent
     }
@@ -54,12 +56,7 @@ export const FETCH_RESEARCH_OUTPUT = gql`
 `;
 
 export const FETCH_OUTPUTS = gql`
-  query FetchOutputs(
-    $top: Int
-    $skip: Int
-    $filter: String
-    $withTeams: Boolean!
-  ) {
+  query FetchOutputs($top: Int, $skip: Int, $filter: String) {
     queryOutputsContentsWithTotal(
       top: $top
       skip: $skip

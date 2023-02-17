@@ -1,4 +1,10 @@
-import { Entity, Rest, RestPayload } from '../common';
+import {
+  Entity,
+  Graphql,
+  GraphqlWithTypename,
+  Rest,
+  RestPayload,
+} from '../common';
 
 export type RestUsersDegree =
   | 'AA'
@@ -68,3 +74,6 @@ export interface User<TAvatar = string> {
 export interface RestUser extends Entity, Rest<User> {}
 
 export interface InputUser extends Entity, RestPayload<User<string>> {}
+
+export interface GraphqlUser extends Entity, Graphql<User<{ id: string }>> {}
+export type GraphqlUserAssoc = GraphqlWithTypename<GraphqlUser, 'Users'>;

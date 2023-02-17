@@ -11759,6 +11759,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jest", "npm:29.4.0"],\
             ["@types/jsonwebtoken", "npm:8.5.9"],\
             ["@types/jwt-encode", "workspace:@types/jwt-encode"],\
+            ["@types/lodash.matches", "npm:4.6.7"],\
             ["@types/luxon", "npm:1.27.1"],\
             ["@types/mime-types", "npm:2.1.1"],\
             ["@types/node", "npm:14.18.33"],\
@@ -11783,10 +11784,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["graphql-typescript-integration", "npm:1.2.1"],\
             ["jsonwebtoken", "npm:8.5.1"],\
             ["jwt-encode", "npm:1.0.1"],\
+            ["lodash.matches", "npm:4.6.0"],\
             ["luxon", "npm:1.28.1"],\
             ["mime-types", "npm:2.1.35"],\
             ["nock", "npm:13.3.0"],\
             ["node-dev", "npm:6.7.0"],\
+            ["odata-query", "npm:7.0.3"],\
             ["parse-data-url", "npm:3.0.0"],\
             ["serverless", "npm:3.27.0"],\
             ["serverless-http", "npm:2.7.0"],\

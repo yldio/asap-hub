@@ -2633,12 +2633,27 @@ export type OutputsDataCreatedByInputDto = {
 
 /** The structure of the Document type field of the Outputs content type. */
 export type OutputsDataDocumentTypeDto = {
-  iv: Maybe<Scalars['String']>;
+  iv: Maybe<OutputsDataDocumentTypeEnum>;
 };
+
+export enum OutputsDataDocumentTypeEnum {
+  /** Article */
+  Article = 'Article',
+  /** Code_Software */
+  CodeSoftware = 'Code_Software',
+  /** Data_Release */
+  DataRelease = 'Data_Release',
+  /** Form */
+  Form = 'Form',
+  /** Training_Material */
+  TrainingMaterial = 'Training_Material',
+  /** Update */
+  Update = 'Update',
+}
 
 /** The structure of the Document type field of the Outputs content input type. */
 export type OutputsDataDocumentTypeInputDto = {
-  iv: InputMaybe<Scalars['String']>;
+  iv: InputMaybe<OutputsDataDocumentTypeEnum>;
 };
 
 /** The structure of the Outputs data type. */
@@ -2651,6 +2666,7 @@ export type OutputsDataDto = {
   lastUpdatedPartial: Maybe<OutputsDataLastUpdatedPartialDto>;
   link: Maybe<OutputsDataLinkDto>;
   publishDate: Maybe<OutputsDataPublishDateDto>;
+  subtype: Maybe<OutputsDataSubtypeDto>;
   title: Maybe<OutputsDataTitleDto>;
   type: Maybe<OutputsDataTypeDto>;
   updatedBy: Maybe<OutputsDataUpdatedByDto>;
@@ -2666,6 +2682,7 @@ export type OutputsDataInputDto = {
   lastUpdatedPartial: InputMaybe<OutputsDataLastUpdatedPartialInputDto>;
   link: InputMaybe<OutputsDataLinkInputDto>;
   publishDate: InputMaybe<OutputsDataPublishDateInputDto>;
+  subtype: InputMaybe<OutputsDataSubtypeInputDto>;
   title: InputMaybe<OutputsDataTitleInputDto>;
   type: InputMaybe<OutputsDataTypeInputDto>;
   updatedBy: InputMaybe<OutputsDataUpdatedByInputDto>;
@@ -2705,6 +2722,25 @@ export type OutputsDataPublishDateInputDto = {
   iv: InputMaybe<Scalars['Instant']>;
 };
 
+/** The structure of the SubType field of the Outputs content type. */
+export type OutputsDataSubtypeDto = {
+  /** For article research */
+  iv: Maybe<OutputsDataSubtypeEnum>;
+};
+
+export enum OutputsDataSubtypeEnum {
+  /** Preprints */
+  Preprints = 'Preprints',
+  /** Published */
+  Published = 'Published',
+}
+
+/** The structure of the SubType field of the Outputs content input type. */
+export type OutputsDataSubtypeInputDto = {
+  /** For article research */
+  iv: InputMaybe<OutputsDataSubtypeEnum>;
+};
+
 /** The structure of the Title field of the Outputs content type. */
 export type OutputsDataTitleDto = {
   iv: Maybe<Scalars['String']>;
@@ -2717,12 +2753,27 @@ export type OutputsDataTitleInputDto = {
 
 /** The structure of the Type field of the Outputs content type. */
 export type OutputsDataTypeDto = {
-  iv: Maybe<Scalars['String']>;
+  /** For articles */
+  iv: Maybe<OutputsDataTypeEnum>;
 };
+
+export enum OutputsDataTypeEnum {
+  /** Blog */
+  Blog = 'Blog',
+  /** Hot_Topic */
+  HotTopic = 'Hot_Topic',
+  /** Letter */
+  Letter = 'Letter',
+  /** Research */
+  Research = 'Research',
+  /** Review */
+  Review = 'Review',
+}
 
 /** The structure of the Type field of the Outputs content input type. */
 export type OutputsDataTypeInputDto = {
-  iv: InputMaybe<Scalars['String']>;
+  /** For articles */
+  iv: InputMaybe<OutputsDataTypeEnum>;
 };
 
 /** The structure of the Updated by field of the Outputs content type. */
@@ -2743,14 +2794,17 @@ export type OutputsFlatDataDto = {
   adminNotes: Maybe<Scalars['String']>;
   authors: Maybe<Array<OutputsDataAuthorsUnionDto>>;
   createdBy: Maybe<Array<Users>>;
-  documentType: Maybe<Scalars['String']>;
+  documentType: Maybe<OutputsDataDocumentTypeEnum>;
   /** Does not include changes to Publish Date and Admin notes */
   lastUpdatedPartial: Maybe<Scalars['Instant']>;
   link: Maybe<Scalars['String']>;
   /** Date of publishing (outside the Hub). Only applies to outputs that have been published. */
   publishDate: Maybe<Scalars['Instant']>;
+  /** For article research */
+  subtype: Maybe<OutputsDataSubtypeEnum>;
   title: Maybe<Scalars['String']>;
-  type: Maybe<Scalars['String']>;
+  /** For articles */
+  type: Maybe<OutputsDataTypeEnum>;
   updatedBy: Maybe<Array<Users>>;
 };
 
@@ -4398,6 +4452,7 @@ export type OutputContentFragment = Pick<
     | 'title'
     | 'documentType'
     | 'type'
+    | 'subtype'
     | 'link'
     | 'addedDate'
     | 'publishDate'
@@ -4413,9 +4468,10 @@ export type OutputContentFragment = Pick<
             Users,
             'id' | 'created' | 'lastModified' | 'version'
           > & {
-              flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'> & {
-                avatar: Maybe<Array<Pick<Asset, 'id'>>>;
-              };
+              flatData: Pick<
+                UsersFlatDataDto,
+                'firstName' | 'lastName' | 'onboarded'
+              > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
             })
       >
     >;
@@ -4424,7 +4480,6 @@ export type OutputContentFragment = Pick<
 
 export type FetchOutputQueryVariables = Exact<{
   id: Scalars['String'];
-  withTeams: Scalars['Boolean'];
 }>;
 
 export type FetchOutputQuery = {
@@ -4435,6 +4490,7 @@ export type FetchOutputQuery = {
         | 'title'
         | 'documentType'
         | 'type'
+        | 'subtype'
         | 'link'
         | 'addedDate'
         | 'publishDate'
@@ -4452,9 +4508,10 @@ export type FetchOutputQuery = {
                 Users,
                 'id' | 'created' | 'lastModified' | 'version'
               > & {
-                  flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'> & {
-                    avatar: Maybe<Array<Pick<Asset, 'id'>>>;
-                  };
+                  flatData: Pick<
+                    UsersFlatDataDto,
+                    'firstName' | 'lastName' | 'onboarded'
+                  > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
                 })
           >
         >;
@@ -4467,7 +4524,6 @@ export type FetchOutputsQueryVariables = Exact<{
   top: InputMaybe<Scalars['Int']>;
   skip: InputMaybe<Scalars['Int']>;
   filter: InputMaybe<Scalars['String']>;
-  withTeams: Scalars['Boolean'];
 }>;
 
 export type FetchOutputsQuery = {
@@ -4481,6 +4537,7 @@ export type FetchOutputsQuery = {
               | 'title'
               | 'documentType'
               | 'type'
+              | 'subtype'
               | 'link'
               | 'addedDate'
               | 'publishDate'
@@ -4503,7 +4560,7 @@ export type FetchOutputsQuery = {
                     > & {
                         flatData: Pick<
                           UsersFlatDataDto,
-                          'firstName' | 'lastName'
+                          'firstName' | 'lastName' | 'onboarded'
                         > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
                       })
                 >
@@ -5901,6 +5958,7 @@ export const OutputContentFragmentDoc = {
                   name: { kind: 'Name', value: 'documentType' },
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'subtype' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'link' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'addedDate' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'publishDate' } },
@@ -5969,6 +6027,10 @@ export const OutputContentFragmentDoc = {
                                   {
                                     kind: 'Field',
                                     name: { kind: 'Name', value: 'lastName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'onboarded' },
                                   },
                                 ],
                               },
@@ -7266,20 +7328,6 @@ export const FetchOutputDocument = {
             },
           },
         },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'withTeams' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: { kind: 'Name', value: 'Boolean' },
-            },
-          },
-        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -7338,20 +7386,6 @@ export const FetchOutputsDocument = {
             name: { kind: 'Name', value: 'filter' },
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'withTeams' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: { kind: 'Name', value: 'Boolean' },
-            },
-          },
         },
       ],
       selectionSet: {

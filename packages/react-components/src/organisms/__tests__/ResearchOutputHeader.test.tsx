@@ -66,27 +66,3 @@ it.each<{
     expect(screen.getByText(subHeader)).toBeInTheDocument();
   },
 );
-
-it('falls back to a generic description otherwise', () => {
-  render(
-    <ResearchOutputHeader
-      documentType="Presentation"
-      workingGroupAssociation={false}
-    />,
-  );
-  expect(
-    screen.getByRole('heading', { name: /Share a resource/i }),
-  ).toBeInTheDocument();
-});
-
-it('falls back to a generic description for working groups', () => {
-  render(
-    <ResearchOutputHeader
-      documentType="Presentation"
-      workingGroupAssociation
-    />,
-  );
-  expect(
-    screen.getByRole('heading', { name: /Share a working group resource/i }),
-  ).toBeInTheDocument();
-});

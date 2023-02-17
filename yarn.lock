@@ -817,7 +817,7 @@ __metadata:
     react-router-dom: 5.3.4
     react-router-last-location: 2.0.1
     react-test-renderer: 17.0.2
-    react-titled: 1.0.1
+    react-titled: 1.1.1
     streamsaver: 2.0.6
     web-streams-polyfill: 3.2.1
   peerDependencies:
@@ -36548,14 +36548,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-titled@npm:1.0.1":
-  version: 1.0.1
-  resolution: "react-titled@npm:1.0.1"
+"react-titled@npm:1.1.1":
+  version: 1.1.1
+  resolution: "react-titled@npm:1.1.1"
   dependencies:
     prop-types: ^15.5.8
   peerDependencies:
     react: ^16.3.0-0 || ^17.0.0-0
-  checksum: 9f22ce07f74678bffb1031f0f14d432e6cf5e9c2486f350693d5900ad934895c6b08b9ede235864bdee1da3c601b068e46f37abded75ea23ed85bf59d32ca204
+  checksum: 5d67162a0d1b35ba9c1f1be92056626ad1c86383fcacff5f056a491abbdfd9f405519054c46989e420c60a6e800a1a04239694097124cc8afb7faa004c98b95e
   languageName: node
   linkType: hard
 

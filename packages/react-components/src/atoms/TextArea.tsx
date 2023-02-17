@@ -1,3 +1,4 @@
+/** @jsxImportSource @emotion/react */
 import { InputHTMLAttributes } from 'react';
 import { css } from '@emotion/react';
 
@@ -100,11 +101,16 @@ const TextArea: React.FC<TextAreaProps> = ({
         onChange={({ currentTarget: { value: newValue } }) =>
           onChange(newValue)
         }
-        css={[
+        css={({ colors }) => [
           styles,
           textareaStyles,
           enabled || disabledStyles,
           validationMessage && invalidStyles,
+          colors?.primary500 && {
+            ':focus': {
+              borderColor: colors?.primary500.rgba,
+            },
+          },
         ]}
       />
       <div css={validationAndLimitStyles}>
@@ -113,10 +119,10 @@ const TextArea: React.FC<TextAreaProps> = ({
         </div>
         {maxLength !== undefined && (
           <div
-            css={[
+            css={({ colors: { primary500 = fern } = {} }) => [
               validationMessageStyles,
               limitStyles,
-              { color: reachedMaxLength ? ember.rgb : fern.rgb },
+              { color: reachedMaxLength ? ember.rgb : primary500.rgba },
             ]}
           >
             {value.length}/{maxLength}

@@ -21,7 +21,6 @@ jest.mock('../../users/api');
 jest.mock('browser-image-compression');
 
 const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
-// const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
 const mockPostUserAvatar = postUserAvatar as jest.MockedFunction<
   typeof postUserAvatar
 >;

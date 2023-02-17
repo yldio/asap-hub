@@ -34,6 +34,12 @@ it('renders output cards', () => {
               displayName: 'Unknown',
             },
           ],
+          workingGroups: [
+            {
+              id: 'uuid-wg',
+              title: 'WG',
+            },
+          ],
         },
       ]}
       numberOfItems={1}
@@ -41,17 +47,19 @@ it('renders output cards', () => {
   );
 
   const links = getAllByRole('link');
-  expect(links).toHaveLength(2);
-  const [titleLink, teamLink] = links;
+  expect(links).toHaveLength(3);
+  const [titleLink, teamLink, wgLink] = links;
 
   expect(titleLink).toHaveTextContent('Title');
   expect(teamLink).toHaveTextContent(/Unknown/);
+  expect(wgLink).toHaveTextContent(/WG/);
 
   expect(titleLink).toHaveAttribute(
     'href',
     expect.stringMatching(/uuid-output$/),
   );
   expect(teamLink).toHaveAttribute('href', expect.stringMatching(/uuid-team$/));
+  expect(wgLink).toHaveAttribute('href', expect.stringMatching(/uuid-wg$/));
 
   expect(queryByText(/more\sto\scome/i)).not.toBeInTheDocument();
 });

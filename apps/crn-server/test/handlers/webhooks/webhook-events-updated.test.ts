@@ -1,10 +1,10 @@
 import { APIGatewayProxyResult } from 'aws-lambda';
-import { webhookEventUpdatedHandlerFactory } from '../../../src/handlers/webhooks/webhook-events-updated';
-import { getApiGatewayEvent } from '../../helpers/events';
-import { SyncCalendar } from '../../../src/utils/sync-google-calendar';
 import { googleApiToken } from '../../../src/config';
-import { calendarDataProviderMock } from '../../mocks/calendar-data-provider.mock';
+import { webhookEventUpdatedHandlerFactory } from '../../../src/handlers/webhooks/webhook-events-updated';
+import { SyncCalendar } from '../../../src/utils/sync-google-calendar';
 import { getListCalendarDataObject } from '../../fixtures/calendars.fixtures';
+import { getApiGatewayEvent } from '../../helpers/events';
+import { calendarDataProviderMock } from '../../mocks/calendar-data-provider.mock';
 
 describe('Event Webhook', () => {
   afterEach(() => {

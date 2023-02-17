@@ -1,3 +1,5 @@
+export * from './alerts';
+export * from './aws-secret-manager';
 export * from './csv-parse';
 export * from './logger';
 export * from './migrations';

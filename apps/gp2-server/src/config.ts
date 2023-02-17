@@ -4,9 +4,13 @@ const {
   APP_ORIGIN,
   AUTH0_CLIENT_ID,
   AUTH0_SHARED_SECRET,
+  GP2_API_URL,
   ENVIRONMENT,
+  REGION,
+  GOOGLE_API_CREDENTIALS_SECRET_ID,
   EVENT_BUS,
   EVENT_SOURCE,
+  GOOGLE_API_TOKEN,
   LOG_LEVEL,
   LOG_ENABLED,
   NODE_ENV,
@@ -25,6 +29,12 @@ const {
 } = process.env;
 
 export const appName = SQUIDEX_APP_NAME || 'asap-local';
+export const asapApiUrl = GP2_API_URL || 'http://localhost:3333';
+export const googleApiUrl = 'https://www.googleapis.com/';
+export const region = REGION || 'us-east-1';
+export const googleApiCredentialsSecretId =
+  GOOGLE_API_CREDENTIALS_SECRET_ID || 'google-api-credentials-dev';
+export const googleApiToken = GOOGLE_API_TOKEN || 'asap-google-api-token';
 export const auth0ClientId = AUTH0_CLIENT_ID || '';
 export const auth0Audience =
   process.env.GP2_AUTH0_AUDIENCE || AUTH0_AUDIENCE || '';

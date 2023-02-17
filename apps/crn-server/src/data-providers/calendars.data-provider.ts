@@ -5,6 +5,10 @@ import {
   ListCalendarDataObject,
 } from '@asap-hub/model';
 import {
+  CalendarDataProvider,
+  FetchCalendarProviderOptions,
+} from '@asap-hub/server-common';
+import {
   InputCalendar,
   parseToSquidex,
   RestCalendar,
@@ -21,24 +25,9 @@ import { parseGraphqlCalendarPartialToDataObject } from '../entities';
 import { FETCH_CALENDAR, FETCH_CALENDARS } from '../queries/calendars.queries';
 import logger from '../utils/logger';
 
-export type FetchCalendarProviderOptions = {
-  maxExpiration?: number;
-  active?: boolean;
-  resourceId?: string;
-};
-
 type GraphqlCalendar = NonNullable<FetchCalendarQuery['findCalendarsContent']>;
 
-export interface CalendarDataProvider {
-  create(create: CalendarCreateDataObject): Promise<string>;
-  update(id: string, update: CalendarUpdateDataObject): Promise<void>;
-  fetch(
-    options?: FetchCalendarProviderOptions,
-  ): Promise<ListCalendarDataObject>;
-  fetchById(id: string): Promise<CalendarDataObject | null>;
-}
-
-export class CalendarSquidexDataProvider {
+export class CalendarSquidexDataProvider implements CalendarDataProvider {
   squidexRestClient: SquidexRestClient<RestCalendar, InputCalendar>;
   squidexGraphqlClient: SquidexGraphqlClient;
 

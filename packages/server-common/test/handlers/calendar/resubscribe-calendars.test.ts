@@ -1,15 +1,16 @@
 import { Settings } from 'luxon';
-import { resubscribeCalendarsHandlerFactory } from '../../../src/handlers/calendar/resubscribe-handler';
-import { getCalendarDataObject } from '../../fixtures/calendars.fixtures';
 import {
-  UnsubscribeFromEventChanges,
+  resubscribeCalendarsHandlerFactory,
   SubscribeToEventChanges,
-} from '../../../src/handlers/calendar/subscribe-handler';
+  UnsubscribeFromEventChanges,
+} from '../../../src';
+import { getCalendarDataObject } from '../../fixtures/calendar.fixtures';
 import {
   createEventBridgeScheduledEventMock,
   createHandlerContext,
 } from '../../helpers/events';
 import { calendarDataProviderMock } from '../../mocks/calendar-data-provider.mock';
+import { loggerMock as logger } from '../../mocks/logger.mock';
 
 describe('Resubscribe calendar handler', () => {
   const unsubscribeMock: jest.MockedFunction<UnsubscribeFromEventChanges> =
@@ -19,6 +20,7 @@ describe('Resubscribe calendar handler', () => {
     calendarDataProviderMock,
     unsubscribeMock,
     subscribeMock,
+    logger,
   );
   const invokeHandler = () =>
     resubscribeCalendarsHandler(

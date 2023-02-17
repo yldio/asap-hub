@@ -1,23 +1,21 @@
 import { EventBridgeEvent } from 'aws-lambda';
 import nock from 'nock';
-import { asapApiUrl, googleApiToken, googleApiUrl } from '../../../src/config';
 import {
   calendarCreatedHandlerFactory,
+  CalendarEvent,
+  CalendarPayload,
   SubscribeToEventChanges,
   subscribeToEventChangesFactory,
   UnsubscribeFromEventChanges,
   unsubscribeFromEventChangesFactory,
-} from '../../../src/handlers/calendar/subscribe-handler';
-import {
-  CalendarEvent,
-  CalendarPayload,
-} from '../../../src/handlers/event-bus';
+} from '../../../src';
 import { Alerts } from '../../../src/utils/alerts';
 import { GetJWTCredentials } from '../../../src/utils/aws-secret-manager';
-import { getCalendarDataObject } from '../../fixtures/calendars.fixtures';
+import { getCalendarDataObject } from '../../fixtures/calendar.fixtures';
 import { createEventBridgeEventMock } from '../../helpers/events';
 import { calendarDataProviderMock } from '../../mocks/calendar-data-provider.mock';
 import { googleApiAuthJWTCredentials } from '../../mocks/google-api.mock';
+import { loggerMock as logger } from '../../mocks/logger.mock';
 import {
   inOrderfirstSave,
   inOrderfirstSaveUpdateFromUnSubscribe,
@@ -32,6 +30,7 @@ import {
   getCalendarCreateEvent,
   getCalendarUpdateEvent,
 } from './webhook-sync-calendar.fixtures';
+const googleApiUrl = 'https://www.googleapis.com/';
 
 describe('Calendar handler', () => {
   const subscribe: jest.MockedFunction<SubscribeToEventChanges> = jest.fn();
@@ -45,6 +44,7 @@ describe('Calendar handler', () => {
     unsubscribe,
     calendarDataProviderMock,
     alerts,
+    logger,
   );
 
   afterEach(() => {
@@ -430,8 +430,13 @@ describe('Calendar handler', () => {
 describe('Subscription', () => {
   const calendarId = 'calendar-id';
   const getJWTCredentials: jest.MockedFunction<GetJWTCredentials> = jest.fn();
-  const subscribeToEventChanges =
-    subscribeToEventChangesFactory(getJWTCredentials);
+  const asapApiUrl = 'http://asap-api-url';
+  const googleApiToken = 'google-api-token';
+  const subscribeToEventChanges = subscribeToEventChangesFactory(
+    getJWTCredentials,
+    logger,
+    { googleApiUrl, googleApiToken, asapApiUrl },
+  );
 
   test('Should subscribe to the calendar events notifications and return the resourceId', async () => {
     getJWTCredentials.mockResolvedValueOnce(googleApiAuthJWTCredentials);
@@ -442,7 +447,7 @@ describe('Subscription', () => {
       .post('/oauth2/v4/token')
       .reply(200, {
         access_token: '1/8xbJqaOZXSUZbHLl5EOtu1pxz3fmmetKx9W8CV4t79M',
-        scope: 'https://www.googleapis.com/auth/prediction',
+        scope: `${googleApiUrl}auth/prediction`,
         token_type: 'Bearer',
         expires_in: 3600,
       })
@@ -478,8 +483,11 @@ describe('Unsubscribing', () => {
   const resourceId = 'resource-id';
   const channelId = 'channel-id';
   const getJWTCredentials: jest.MockedFunction<GetJWTCredentials> = jest.fn();
-  const unsubscribeFromEventChanges =
-    unsubscribeFromEventChangesFactory(getJWTCredentials);
+  const unsubscribeFromEventChanges = unsubscribeFromEventChangesFactory(
+    getJWTCredentials,
+    logger,
+    { googleApiUrl },
+  );
 
   test('Should unsubscribe from the calendar events notifications', async () => {
     getJWTCredentials.mockResolvedValueOnce(googleApiAuthJWTCredentials);
@@ -490,7 +498,7 @@ describe('Unsubscribing', () => {
       .post('/oauth2/v4/token')
       .reply(200, {
         access_token: '1/8xbJqaOZXSUZbHLl5EOtu1pxz3fmmetKx9W8CV4t79M',
-        scope: 'https://www.googleapis.com/auth/prediction',
+        scope: `${googleApiUrl}auth/prediction`,
         token_type: 'Bearer',
         expires_in: 3600,
       })
@@ -537,6 +545,7 @@ const generateHandler = (
     unsubscribe,
     { ...calendarDataProviderMock, fetchById },
     alerts,
+    logger,
   );
   return handler;
 };

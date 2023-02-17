@@ -1,186 +1,26 @@
+import {
+  AlertsSentry,
+  calendarCreatedHandlerFactory,
+  getJWTCredentialsFactory,
+  subscribeToEventChangesFactory,
+  unsubscribeFromEventChangesFactory,
+} from '@asap-hub/server-common';
 import { RestCalendar, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
-import { EventBridgeEvent } from 'aws-lambda';
-import { Auth } from 'googleapis';
-import 'source-map-support/register';
 import * as Sentry from '@sentry/serverless';
+import 'source-map-support/register';
 import {
   appName,
   asapApiUrl,
   baseUrl,
+  googleApiCredentialsSecretId,
   googleApiToken,
   googleApiUrl,
+  region,
 } from '../../config';
-import { Alerts, AlertsSentry } from '../../utils/alerts';
+import { CalendarSquidexDataProvider } from '../../data-providers/calendars.data-provider';
 import { getAuthToken } from '../../utils/auth';
-import getJWTCredentialsAWS, {
-  GetJWTCredentials,
-} from '../../utils/aws-secret-manager';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
-import { validateBody } from '../../validation/subscribe-handler.validation';
-import { CalendarEvent, CalendarPayload } from '../event-bus';
-import {
-  CalendarSquidexDataProvider,
-  CalendarDataProvider,
-} from '../../data-providers/calendars.data-provider';
-
-export const calendarCreatedHandlerFactory =
-  (
-    subscribe: SubscribeToEventChanges,
-    unsubscribe: UnsubscribeFromEventChanges,
-    calendarDataProvider: CalendarDataProvider,
-    alerts: Alerts,
-  ) =>
-  async (
-    event: EventBridgeEvent<CalendarEvent, CalendarPayload>,
-  ): Promise<'OK'> => {
-    logger.debug(JSON.stringify(event, null, 2), 'Event input');
-
-    const { type: eventType, payload } = validateBody(event.detail as never);
-
-    logger.info(
-      `Received a '${eventType}' event for the calendar ${payload.id}`,
-    );
-
-    logger.debug(`Event payload: ${JSON.stringify(payload)}`);
-    if (eventType === 'CalendarsUpdated') {
-      if (
-        !payload.dataOld ||
-        !payload.dataOld.googleCalendarId ||
-        payload.dataOld.googleCalendarId.iv === payload.data.googleCalendarId.iv
-      ) {
-        return 'OK';
-      }
-
-      const result = await calendarDataProvider.fetchById(payload.id);
-
-      if (!result) {
-        logger.error('Failed to retrieve calendar by ID.');
-
-        return 'OK';
-      }
-
-      const { version } = result;
-
-      if (version > (payload.version as number)) {
-        logger.warn(
-          `version recieved (${payload.version}) is older than current version: ${version}`,
-        );
-        return 'OK';
-      }
-
-      if (payload.dataOld.resourceId) {
-        try {
-          await unsubscribe(payload.dataOld.resourceId?.iv, payload.id);
-
-          await calendarDataProvider.update(payload.id, {
-            resourceId: null,
-          });
-        } catch (error) {
-          logger.error(error, 'Error during unsubscribing from the calendar');
-          alerts.error(error);
-        }
-      }
-    }
-
-    if (payload.data.googleCalendarId.iv === '') {
-      return 'OK';
-    }
-
-    if (['CalendarsCreated', 'CalendarsUpdated'].includes(eventType)) {
-      try {
-        const { resourceId, expiration } = await subscribe(
-          payload.data.googleCalendarId.iv,
-          payload.id,
-        );
-
-        await calendarDataProvider.update(payload.id, {
-          resourceId,
-          expirationDate: expiration,
-        });
-      } catch (error) {
-        logger.error(error, 'Error subscribing to the calendar');
-        alerts.error(error);
-
-        throw error;
-      }
-
-      return 'OK';
-    }
-
-    return 'OK';
-  };
-
-export const subscribeToEventChangesFactory =
-  (getJWTCredentials: GetJWTCredentials) =>
-  async (
-    calendarId: string,
-    subscriptionId: string,
-  ): Promise<{
-    resourceId: string;
-    expiration: number;
-  }> => {
-    const creds = await getJWTCredentials();
-    const client = Auth.auth.fromJSON(creds) as Auth.JWT;
-
-    client.scopes = [
-      'https://www.googleapis.com/auth/calendar',
-      'https://www.googleapis.com/auth/calendar.events',
-    ];
-    const url = `${googleApiUrl}calendar/v3/calendars/${calendarId}/events/watch`;
-    const ttl = 2592000; // 30 days
-    const data = {
-      id: subscriptionId,
-      token: googleApiToken,
-      type: 'web_hook',
-      address: `${asapApiUrl}/webhook/events`,
-      params: {
-        // 30 days, which is a maximum TTL
-        ttl,
-      },
-    };
-
-    const response = await client.request<{
-      resourceId: string;
-      expiration: string;
-    }>({
-      url,
-      method: 'POST',
-      data,
-    });
-
-    logger.debug({ response }, 'Google API subscription response');
-
-    return {
-      resourceId: response.data.resourceId,
-      expiration: parseInt(response.data.expiration, 10),
-    };
-  };
-
-export type SubscribeToEventChanges = ReturnType<
-  typeof subscribeToEventChangesFactory
->;
-
-export const unsubscribeFromEventChangesFactory =
-  (getJWTCredentials: GetJWTCredentials) =>
-  async (resourceId: string, channelId: string): Promise<void> => {
-    const creds = await getJWTCredentials();
-    const client = Auth.auth.fromJSON(creds) as Auth.JWT;
-
-    client.scopes = [
-      'https://www.googleapis.com/auth/calendar',
-      'https://www.googleapis.com/auth/calendar.events',
-    ];
-    const url = `${googleApiUrl}calendar/v3/channels/stop`;
-    const data = {
-      id: channelId,
-      resourceId,
-    };
-
-    const response = await client.request({ url, method: 'POST', data });
-
-    logger.debug({ response }, 'Google API unsubscribing response');
-  };
 
 const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
   appName,
@@ -195,20 +35,23 @@ const calendarDataProvider = new CalendarSquidexDataProvider(
   calendarRestClient,
   squidexGraphqlClient,
 );
+/* istanbul ignore next */
+const getJWTCredentialsAWS = getJWTCredentialsFactory({
+  googleApiCredentialsSecretId,
+  region,
+});
 const webhookHandler = calendarCreatedHandlerFactory(
-  subscribeToEventChangesFactory(getJWTCredentialsAWS),
-  unsubscribeFromEventChangesFactory(getJWTCredentialsAWS),
+  subscribeToEventChangesFactory(getJWTCredentialsAWS, logger, {
+    asapApiUrl,
+    googleApiToken,
+    googleApiUrl,
+  }),
+  unsubscribeFromEventChangesFactory(getJWTCredentialsAWS, logger, {
+    googleApiUrl,
+  }),
   calendarDataProvider,
   new AlertsSentry(Sentry.captureException.bind(Sentry)),
+  logger,
 );
 
 export const handler = sentryWrapper(webhookHandler);
-
-export type UnsubscribeFromEventChanges = ReturnType<
-  typeof unsubscribeFromEventChangesFactory
->;
-
-export type CalendarEventBridgeEvent = EventBridgeEvent<
-  CalendarEvent,
-  CalendarPayload
->;

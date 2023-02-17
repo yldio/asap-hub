@@ -1,4 +1,4 @@
-import { GetJWTCredentials } from '../../src/utils/aws-secret-manager';
+import { GetJWTCredentials } from '@asap-hub/server-common';
 import { syncCalendarFactory } from '../../src/utils/sync-google-calendar';
 import * as fixtures from '../fixtures/google-events.fixtures';
 

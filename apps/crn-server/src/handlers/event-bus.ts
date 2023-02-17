@@ -1,11 +1,10 @@
 import {
+  CalendarEvent,
   LabEvent,
   SquidexEntityEvent,
   UserEvent,
 } from '@asap-hub/server-common';
-import { RestCalendar } from '@asap-hub/squidex';
 
-export type CalendarEvent = `Calendars${SquidexEntityEvent}`;
 export type EventEvent = `Events${SquidexEntityEvent}`;
 export type ExternalAuthorEvent = `ExternalAuthors${SquidexEntityEvent}`;
 export type GroupEvent = `Groups${SquidexEntityEvent}`;
@@ -84,21 +83,5 @@ export type TeamPayload = {
     dataOld?: {
       outputs: { iv: string[] };
     };
-  };
-};
-
-type CalendarPayloadData = Pick<
-  RestCalendar['data'],
-  'googleCalendarId' | 'resourceId' | 'name' | 'color'
->;
-export type CalendarPayload = {
-  type: CalendarEvent;
-  payload: {
-    $type: 'EnrichedContentEvent';
-    type: SquidexEntityEvent;
-    id: string;
-    data: CalendarPayloadData;
-    dataOld?: CalendarPayloadData;
-    version: number;
   };
 };

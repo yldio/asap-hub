@@ -1,20 +1,14 @@
-import {
-  ListCalendarResponse,
-  CalendarResponse,
-  CalendarDataObject,
-  CalendarUpdateRequest,
-} from '@asap-hub/model';
 import { NotFoundError } from '@asap-hub/errors';
-import { CalendarDataProvider } from '../data-providers/calendars.data-provider';
-
-export interface CalendarController {
-  fetch: () => Promise<ListCalendarResponse>;
-  fetchById(id: string, options?: { raw: false }): Promise<CalendarResponse>;
-  update: (
-    calendarId: string,
-    data: CalendarUpdateRequest,
-  ) => Promise<CalendarResponse>;
-}
+import {
+  CalendarDataObject,
+  CalendarResponse,
+  CalendarUpdateRequest,
+  ListCalendarResponse,
+} from '@asap-hub/model';
+import {
+  CalendarController,
+  CalendarDataProvider,
+} from '@asap-hub/server-common';
 
 export default class Calendars implements CalendarController {
   dataProvider: CalendarDataProvider;

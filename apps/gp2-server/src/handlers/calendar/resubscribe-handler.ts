@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import {
   getJWTCredentialsFactory,
   resubscribeCalendarsHandlerFactory,
@@ -14,7 +15,7 @@ import {
   googleApiUrl,
   region,
 } from '../../config';
-import { CalendarSquidexDataProvider } from '../../data-providers/calendars.data-provider';
+import { CalendarSquidexDataProvider } from '../../data-providers/calendar.data-provider';
 import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
@@ -33,7 +34,6 @@ const calendarDataProvider = new CalendarSquidexDataProvider(
   squidexGraphqlClient,
 );
 
-/* istanbul ignore next */
 const getJWTCredentials = getJWTCredentialsFactory({
   googleApiCredentialsSecretId,
   region,

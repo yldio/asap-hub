@@ -90,11 +90,7 @@ const Preview: React.FC<Record<string, never>> = () => {
           <KeywordsModal {...userData} {...commonModalProps} />
         </Route>
         <Route path={editQuestions({}).$}>
-          <OpenQuestionsModal
-            {...userData}
-            backHref={onboarding({}).additionalDetails({}).$}
-            onSave={(patchedUser) => patchUser(patchedUser)}
-          />
+          <OpenQuestionsModal {...userData} {...commonModalProps} />
         </Route>
         <Route path={editFundingStreams({}).$}>
           <FundingProviderModal {...userData} {...commonModalProps} />

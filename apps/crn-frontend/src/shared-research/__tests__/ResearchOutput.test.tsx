@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import { render, waitFor, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Switch } from 'react-router-dom';
 import { sharedResearch } from '@asap-hub/routing';
-import { UserTeam } from '@asap-hub/model';
+import { UserTeam, WorkingGroupMembership } from '@asap-hub/model';
 import {
   createUserResponse,
   createResearchOutputResponse,
@@ -47,9 +47,19 @@ const teams: UserTeam[] = [
   },
 ];
 
+const workingGroups: WorkingGroupMembership[] = [
+  {
+    id: 'wg0',
+    name: 'Working Group',
+    role: 'Project Manager',
+    active: true,
+  },
+];
+
 const defaultUser: User = {
   ...createUserResponse({}, 1),
   teams,
+  workingGroups,
   algoliaApiKey: 'algolia-mock-key',
 };
 
@@ -131,7 +141,7 @@ describe('a grant document research output', () => {
     );
   });
 
-  it('renders the edit page when you have permissions', async () => {
+  it('renders the edit page when you have permissions for teams', async () => {
     mockGetResearchOutput.mockResolvedValue({
       ...createResearchOutputResponse(),
       documentType: 'Bioinformatics',
@@ -152,7 +162,7 @@ describe('a grant document research output', () => {
     expect(screen.getByText('Save')).toBeVisible();
   });
 
-  it('renders sorry page if you cannot edit', async () => {
+  it('renders sorry page if you cannot edit the teams research out', async () => {
     mockGetResearchOutput.mockResolvedValue({
       ...createResearchOutputResponse(),
       documentType: 'Bioinformatics',
@@ -190,11 +200,11 @@ describe('a not-grant-document research output', () => {
 });
 
 describe('a working group research output', () => {
-  it('renders a working group research output form for ASAP Staff', async () => {
+  it('renders a research output form for ASAP Staff', async () => {
     mockGetResearchOutput.mockResolvedValue({
       ...createResearchOutputResponse(),
       documentType: 'Article',
-      workingGroups: [{ title: 'Example Working Group', id: 'abc123' }],
+      workingGroups: [{ title: 'Example Working Group', id: 'wg0' }],
     });
     const { getByRole } = await renderComponent(
       researchOutputRoute.editResearchOutput({}).$,
@@ -206,11 +216,90 @@ describe('a working group research output', () => {
             role: 'ASAP Staff',
           },
         ],
+        workingGroups: [
+          {
+            id: 'wg1',
+            name: 'Example Working Group',
+            role: 'Chair',
+            active: true,
+          },
+        ],
       },
     );
     expect(getByRole('heading', { level: 1 }).textContent).toEqual(
       'Share a Working Group Article',
     );
+  });
+
+  it('renders a research output form for a Project Manager', async () => {
+    mockGetResearchOutput.mockResolvedValue({
+      ...createResearchOutputResponse(),
+      documentType: 'Article',
+      workingGroups: [{ title: 'Example Working Group', id: 'wg0' }],
+    });
+    const { getByRole } = await renderComponent(
+      researchOutputRoute.editResearchOutput({}).$,
+      {
+        ...defaultUser,
+        workingGroups: [
+          {
+            id: 'wg0',
+            name: 'Example Working Group',
+            role: 'Project Manager',
+            active: true,
+          },
+        ],
+      },
+    );
+    expect(getByRole('heading', { level: 1 }).textContent).toEqual(
+      'Share a Working Group Article',
+    );
+  });
+
+  it('renders the sorry page if you are not a project manager', async () => {
+    mockGetResearchOutput.mockResolvedValue({
+      ...createResearchOutputResponse(),
+      documentType: 'Article',
+      workingGroups: [{ title: 'Example Working Group', id: 'wg0' }],
+    });
+    const { getByText } = await renderComponent(
+      researchOutputRoute.editResearchOutput({}).$,
+      {
+        ...defaultUser,
+        workingGroups: [
+          {
+            id: 'wg0',
+            name: 'Example Working Group',
+            role: 'Chair',
+            active: true,
+          },
+        ],
+      },
+    );
+    expect(getByText(/sorry.+page/i)).toBeVisible();
+  });
+
+  it('renders the sorry page if you do not belong to that working group', async () => {
+    mockGetResearchOutput.mockResolvedValue({
+      ...createResearchOutputResponse(),
+      documentType: 'Article',
+      workingGroups: [{ title: 'Example Working Group', id: 'wg0' }],
+    });
+    const { getByText } = await renderComponent(
+      researchOutputRoute.editResearchOutput({}).$,
+      {
+        ...defaultUser,
+        workingGroups: [
+          {
+            id: 'wg1',
+            name: 'Example Working Group',
+            role: 'Project Manager',
+            active: true,
+          },
+        ],
+      },
+    );
+    expect(getByText(/sorry.+page/i)).toBeVisible();
   });
 });
 

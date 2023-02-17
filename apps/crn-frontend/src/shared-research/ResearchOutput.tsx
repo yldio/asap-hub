@@ -5,7 +5,10 @@ import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { useRouteMatch, Route } from 'react-router-dom';
 import { isResearchOutputWorkingGroup } from '@asap-hub/validation';
 
-import { useResearchOutputById } from './state';
+import {
+  useCanUpdateWorkingGroupResearchOutput,
+  useResearchOutputById,
+} from './state';
 import { useCanCreateUpdateResearchOutput } from '../network/teams/state';
 import TeamOutput from '../network/teams/TeamOutput';
 import WorkingGroupOutput from '../network/working-groups/WorkingGroupOutput';
@@ -17,13 +20,25 @@ const ResearchOutput: React.FC = () => {
   const { path } = useRouteMatch();
   const researchOutputData = useResearchOutputById(researchOutputId);
   const backHref = useBackHref() ?? sharedResearch({}).$;
-  const canCreateUpdate = useCanCreateUpdateResearchOutput(
+  const canCreateUpdateTeam = useCanCreateUpdateResearchOutput(
     researchOutputData ? researchOutputData.teams.map(({ id }) => id) : [],
+  );
+
+  const canCreateUpdateWorkingGroup = useCanUpdateWorkingGroupResearchOutput(
+    researchOutputData && researchOutputData.workingGroups
+      ? researchOutputData.workingGroups.map((wg) => wg.id)
+      : [],
   );
 
   if (researchOutputData) {
     return (
-      <ResearchOutputPermissionsContext.Provider value={{ canCreateUpdate }}>
+      <ResearchOutputPermissionsContext.Provider
+        value={
+          isResearchOutputWorkingGroup(researchOutputData)
+            ? { canCreateUpdate: canCreateUpdateWorkingGroup }
+            : { canCreateUpdate: canCreateUpdateTeam }
+        }
+      >
         <Route exact path={path}>
           <Frame title={researchOutputData.title}>
             <SharedResearchOutput {...researchOutputData} backHref={backHref} />

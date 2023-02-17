@@ -88,6 +88,7 @@ describe('share an output button', () => {
           onboarded: true,
           teams: [],
           algoliaApiKey: 'asdasda',
+          workingGroups: [],
         },
       })({ ...props }) as ReactElement,
     );

@@ -16,6 +16,14 @@ export const createAuthUser = (): User => ({
     },
   ],
   algoliaApiKey: 'test-mock-key',
+  workingGroups: [
+    {
+      id: 'wg-id-1',
+      name: 'Working Group',
+      role: 'Project Manager',
+      active: true,
+    },
+  ],
 });
 
 export const getJwtPayload = (): JwtPayload => ({

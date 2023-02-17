@@ -88,6 +88,7 @@ describe('useCurrentUser', () => {
           displayName: 'John Doe',
           teams: [],
           algoliaApiKey: 'asdasda',
+          workingGroups: [],
         },
       }),
     });
@@ -193,6 +194,7 @@ describe('useCurrentUserTeamRoles', () => {
             { ...userTeam, role: 'Collaborating PI' },
           ],
           algoliaApiKey: 'asdasda',
+          workingGroups: [],
         },
       }),
     });

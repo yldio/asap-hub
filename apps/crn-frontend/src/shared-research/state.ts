@@ -2,6 +2,7 @@ import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
 } from '@asap-hub/model';
+import { useCurrentUserCRN } from '@asap-hub/react-context';
 import {
   atom,
   atomFamily,
@@ -159,4 +160,20 @@ export const useSetResearchOutputItem = () => {
     setResearchOutputItem(researchOutput);
     setRefresh(refresh + 1);
   };
+};
+
+export const useCanUpdateWorkingGroupResearchOutput = (
+  workingGroupIds: string[],
+): boolean => {
+  const user = useCurrentUserCRN();
+
+  if (user === null) return false;
+  if (!workingGroupIds.length) return false;
+  if (user.teams.some((team) => team.role === 'ASAP Staff')) return true;
+
+  return !!user.workingGroups.find(
+    (workingGroup) =>
+      workingGroupIds.includes(workingGroup.id) &&
+      workingGroup.role === 'Project Manager',
+  );
 };

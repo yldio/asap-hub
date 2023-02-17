@@ -38,6 +38,7 @@ const createAuth0 = (
         },
       ],
       algoliaApiKey: 'test-api-key',
+      workingGroups: [],
       ...user,
     };
     auth0User = {

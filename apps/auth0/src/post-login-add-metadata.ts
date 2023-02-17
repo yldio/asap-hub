@@ -23,6 +23,7 @@ const extractUser = (response: Auth0UserResponse): User | gp2Auth.User => {
       avatarUrl,
       teams,
       algoliaApiKey,
+      workingGroups,
     } = response;
 
     return {
@@ -40,6 +41,7 @@ const extractUser = (response: Auth0UserResponse): User | gp2Auth.User => {
         inactiveSinceDate: team.inactiveSinceDate,
       })),
       algoliaApiKey,
+      workingGroups,
     };
   }
   const {

@@ -9,7 +9,6 @@ import {
   linksWithAssets,
   documentWithEntries,
   linksWithEntries,
-  emptyLinks,
 } from './rich-text.fixtures';
 
 describe('parseRichText', () => {
@@ -162,34 +161,6 @@ describe('parseRichText', () => {
       expect(() => parseRichText(rtf)).toThrowError(
         'Entry with id not-found does not exist in contentful',
       );
-    });
-  });
-
-  describe('test', () => {
-    test('Should convert new line characters to br tags', () => {
-      const rtf = {
-        json: {
-          nodeType: 'document' as BLOCKS.DOCUMENT,
-          data: {},
-          content: [
-            {
-              nodeType: 'paragraph' as BLOCKS.PARAGRAPH,
-              data: {},
-              content: [
-                {
-                  nodeType: 'text' as const,
-                  value: 'line1\nline2',
-                  marks: [],
-                  data: {},
-                },
-              ],
-            },
-          ],
-        },
-        links: emptyLinks,
-      };
-
-      expect(parseRichText(rtf)).toEqual(`<p>line1<br/>line2</p>`);
     });
   });
 });

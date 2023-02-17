@@ -22,20 +22,59 @@ it('renders <a> as a link', () => {
   expect(getByText('anchor')).toHaveAttribute('href', 'https://localhost/');
 });
 
+it('renders <a> as link with italic text', () => {
+  const { getByRole } = render(
+    <RichText text={'<a href="https://localhost/"><i>anchor</i></a>'} />,
+  );
+  const link = getByRole('link');
+
+  expect(link).toHaveAttribute('href', 'https://localhost/');
+  expect(link.firstElementChild?.innerHTML).toEqual(
+    '<i style="color:inherit">anchor</i>',
+  );
+});
+
+it('renders <a> as link with bold text', () => {
+  const { getByRole } = render(
+    <RichText text={'<a href="https://localhost/"><b>anchor</b></a>'} />,
+  );
+  const link = getByRole('link');
+
+  expect(link).toHaveAttribute('href', 'https://localhost/');
+  expect(link.firstElementChild?.innerHTML).toEqual(
+    '<b style="color:inherit">anchor</b>',
+  );
+});
+
+it('renders <a> as link with bold and italic text', () => {
+  const { getByRole } = render(
+    <RichText text={'<a href="https://localhost/"><b><i>anchor</i></b></a>'} />,
+  );
+  const link = getByRole('link');
+
+  expect(link).toHaveAttribute('href', 'https://localhost/');
+  expect(link.firstElementChild?.innerHTML).toEqual(
+    '<i style="color:inherit"><b style="color:inherit">anchor</b></i>',
+  );
+});
+
+it('renders <a> as link with formatting in the middle', () => {
+  const { getByRole } = render(
+    <RichText
+      text={'<a href="https://localhost/"><b>bold</b> normal <i>italic</i></a>'}
+    />,
+  );
+  const link = getByRole('link');
+
+  expect(link).toHaveAttribute('href', 'https://localhost/');
+  expect(link.firstElementChild?.innerHTML).toEqual(
+    '<b style="color:inherit">bold</b> normal <i style="color:inherit">italic</i>',
+  );
+});
+
 it('displays error when <a> without an href', () => {
   const { container } = render(<RichText text={'<a>anchor</a>'} />);
   expect(container.textContent).toContain('"anchor" is missing href');
-});
-
-it('displays error when styling applied within <a>', () => {
-  const { container } = render(
-    <RichText
-      text={'<a href="https://localhost/"><strong>anchor</strong></a>'}
-    />,
-  );
-  expect(container.textContent).toContain(
-    'Invalid link styling with href https://localhost/',
-  );
 });
 
 it.each([

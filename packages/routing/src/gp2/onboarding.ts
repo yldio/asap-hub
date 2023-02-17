@@ -30,7 +30,20 @@ const additionalDetails = route(
   },
 );
 
-const preview = route('/preview', {}, {});
+const preview = route(
+  '/preview',
+  {},
+  {
+    editKeyInfo,
+    editContactInfo,
+    editBiography,
+    editKeywords,
+    editQuestions,
+    editFundingStreams,
+    editContributingCohorts,
+    editExternalProfiles,
+  },
+);
 
 const onboarding = route(
   '/',

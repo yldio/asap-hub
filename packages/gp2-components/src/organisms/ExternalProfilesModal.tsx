@@ -16,10 +16,18 @@ type ExternalProfilesModalProps = Pick<gp2.UserResponse, 'social'> &
     onSave: (userData: gp2.UserPatchRequest) => Promise<void>;
   };
 
-const baseUrl = {
+const baseUrls = {
   orcid: 'https://orcid.org/',
   researcherId: 'https://researcherid.com/rid/',
 };
+
+const isPropDirty = (
+  initialValue: string | undefined,
+  inputValue: string,
+  baseUrl = '',
+) =>
+  (!initialValue && inputValue !== '') ||
+  (!!initialValue && initialValue !== `${baseUrl}${inputValue}`);
 
 const ExternalProfilesModal: React.FC<ExternalProfilesModalProps> = ({
   onSave,
@@ -30,13 +38,13 @@ const ExternalProfilesModal: React.FC<ExternalProfilesModalProps> = ({
     social?.googleScholar || '',
   );
   const [newOrcid, setOrcid] = useState<string>(
-    social?.orcid?.split(baseUrl.orcid)[1] || '',
+    social?.orcid?.split(baseUrls.orcid)[1] || '',
   );
   const [newResearchGate, setResearchGate] = useState<string>(
     social?.researchGate || '',
   );
   const [newResearcherId, setResearcherId] = useState<string>(
-    social?.researcherId?.split(baseUrl.researcherId)[1] || '',
+    social?.researcherId?.split(baseUrls.researcherId)[1] || '',
   );
   const [newBlog, setBlog] = useState<string>(social?.blog || '');
   const [newTwitter, setTwitter] = useState<string>(social?.twitter || '');
@@ -44,22 +52,14 @@ const ExternalProfilesModal: React.FC<ExternalProfilesModalProps> = ({
   const [newGithub, setGithub] = useState<string>(social?.github || '');
 
   const checkDirty = () =>
-    (!social?.googleScholar && newGoogleScholar !== '') ||
-    social?.googleScholar !== newGoogleScholar ||
-    (!social?.orcid && newOrcid !== '') ||
-    social?.orcid !== `${baseUrl.orcid}${newOrcid}` ||
-    (!social?.researchGate && newResearchGate !== '') ||
-    social?.researchGate !== newResearchGate ||
-    (!social?.researcherId && newResearcherId !== '') ||
-    social?.researcherId !== `${baseUrl.researcherId}${newResearcherId}` ||
-    (!social?.blog && newBlog !== '') ||
-    social?.blog !== newBlog ||
-    (!social?.twitter && newTwitter !== '') ||
-    social?.twitter !== newTwitter ||
-    (!social?.linkedIn && newLinkedIn !== '') ||
-    social?.linkedIn !== newLinkedIn ||
-    (!social?.github && newGithub !== '') ||
-    social?.github !== newGithub;
+    isPropDirty(social?.googleScholar, newGoogleScholar) ||
+    isPropDirty(social?.orcid, newOrcid, baseUrls.orcid) ||
+    isPropDirty(social?.researchGate, newResearchGate) ||
+    isPropDirty(social?.researcherId, newResearcherId, baseUrls.researcherId) ||
+    isPropDirty(social?.blog, newBlog) ||
+    isPropDirty(social?.twitter, newTwitter) ||
+    isPropDirty(social?.linkedIn, newLinkedIn) ||
+    isPropDirty(social?.github, newGithub);
 
   return (
     <EditUserModal
@@ -69,10 +69,10 @@ const ExternalProfilesModal: React.FC<ExternalProfilesModalProps> = ({
         onSave({
           social: {
             ...(newGoogleScholar ? { googleScholar: newGoogleScholar } : {}),
-            ...(newOrcid ? { orcid: `${baseUrl.orcid}${newOrcid}` } : {}),
+            ...(newOrcid ? { orcid: `${baseUrls.orcid}${newOrcid}` } : {}),
             ...(newResearchGate ? { researchGate: newResearchGate } : {}),
             ...(newResearcherId
-              ? { researcherId: `${baseUrl.researcherId}${newResearcherId}` }
+              ? { researcherId: `${baseUrls.researcherId}${newResearcherId}` }
               : {}),
             ...(newBlog ? { blog: newBlog } : {}),
             ...(newTwitter ? { twitter: newTwitter } : {}),

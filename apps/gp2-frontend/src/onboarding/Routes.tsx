@@ -17,11 +17,14 @@ const loadAdditionalDetails = () =>
   import(
     /* webpackChunkName: "onboarding-additional-details" */ './AdditionalDetails'
   );
+const loadPreview = () =>
+  import(/* webpackChunkName: "onboarding-additional-details" */ './Preview');
 const Welcome = lazy(loadWelcome);
 const CoreDetails = lazy(loadCoreDetail);
 const Background = lazy(loadBackGround);
 const Groups = lazy(loadGroups);
 const AdditionalDetails = lazy(loadAdditionalDetails);
+const Preview = lazy(loadPreview);
 
 const { onboarding } = gp2;
 
@@ -31,7 +34,8 @@ const Routes: React.FC<Record<string, never>> = () => {
       .then(loadCoreDetail)
       .then(loadBackGround)
       .then(loadGroups)
-      .then(loadAdditionalDetails);
+      .then(loadAdditionalDetails)
+      .then(loadPreview);
   }, []);
   const { path } = useRouteMatch();
 
@@ -54,7 +58,7 @@ const Routes: React.FC<Record<string, never>> = () => {
           <AdditionalDetails />
         </Route>
         <Route path={onboarding({}).preview({}).$}>
-          <div>Preview</div>
+          <Preview />
         </Route>
       </Onboarding>
 

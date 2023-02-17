@@ -1,26 +1,19 @@
 import {
-  OnboardingCoreDetails,
-  KeyInformationModal,
   ContactInformationModal,
+  KeyInformationModal,
+  OnboardingCoreDetails,
 } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
-import { ToastContext, useCurrentUserGP2 } from '@asap-hub/react-context';
+import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 } from '@asap-hub/routing';
-import imageCompression from 'browser-image-compression';
-import { useContext, useState } from 'react';
 import { Route } from 'react-router-dom';
+import { useSelectAvatar } from '../hooks/useSelectAvatar';
 import { getInstitutions } from '../users/api';
 import locationSuggestions from '../users/location-suggestions';
-import {
-  usePatchUserById,
-  usePostUserAvatarById,
-  useUserById,
-} from '../users/state';
+import { usePatchUserById, useUserById } from '../users/state';
 
 const CoreDetails: React.FC<Record<string, never>> = () => {
   const currentUser = useCurrentUserGP2();
-
-  const toast = useContext(ToastContext);
 
   const { onboarding } = gp2;
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -28,22 +21,7 @@ const CoreDetails: React.FC<Record<string, never>> = () => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const patchUser = usePatchUserById(currentUser!.id);
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const postUserAvatar = usePostUserAvatarById(currentUser!.id);
-
-  const [avatarSaving, setAvatarSaving] = useState(false);
-
-  const onImageSelect = (file: File) => {
-    setAvatarSaving(true);
-    imageCompression(file, { maxSizeMB: 2 })
-      .then((compressedFile) =>
-        imageCompression.getDataUrlFromFile(compressedFile),
-      )
-      .then((encodedFile) => postUserAvatar(encodedFile))
-      .catch(() =>
-        toast('There was an error and we were unable to save your picture'),
-      )
-      .finally(() => setAvatarSaving(false));
-  };
+  const { avatarSaving, onImageSelect } = useSelectAvatar(currentUser!.id);
 
   if (userData) {
     return (

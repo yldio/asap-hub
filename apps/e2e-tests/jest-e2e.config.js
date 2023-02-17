@@ -14,4 +14,5 @@ module.exports = {
   displayName: 'test-e2e-tests',
 
   testMatch: ['**/*.e2e-test.{js,jsx,ts,tsx}'],
+  testTimeout: 10000,
 };

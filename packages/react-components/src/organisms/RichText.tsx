@@ -23,7 +23,7 @@ import {
   Link,
   Headline2,
 } from '../atoms';
-import { isTextChildren, isAllowedChildren } from '../text';
+import { isAllowedChildren } from '../text';
 import { ErrorCard } from '../molecules';
 import { perRem } from '../pixels';
 import { charcoal, lead } from '../colors';
@@ -86,14 +86,6 @@ const components = {
       />
     ),
   a: ({ children, href }: AnchorHTMLAttributes<HTMLAnchorElement>) => {
-    if (!isTextChildren(children)) {
-      return (
-        <ErrorCard
-          title="Styling Error"
-          description={`Invalid link styling with href ${href}`}
-        />
-      );
-    }
     if (typeof href === 'undefined') {
       return (
         <ErrorCard
@@ -102,6 +94,47 @@ const components = {
         />
       );
     }
+
+    let tags: string[] = [];
+    const htmlElements: string[] = [];
+
+    const getTags = (node: React.ReactNode) =>
+      Array.isArray(node) &&
+      node?.forEach((child) => {
+        if (child.type) {
+          tags.push(child.type);
+        } else {
+          let html = '';
+
+          if (tags.length) {
+            tags.forEach((tag, index) => {
+              if (index === 0) {
+                html = `<${tag} style=color:inherit>${String(child)}</${tag}>`;
+              } else {
+                html = `<${tag} style=color:inherit>${html}</${tag}>`;
+              }
+            });
+          } else {
+            html = String(child);
+          }
+
+          htmlElements.push(html);
+          tags = [];
+        }
+        if (child?.props?.children) {
+          getTags(child.props.children);
+        }
+      });
+
+    getTags(children);
+    if (htmlElements.length && htmlElements[0].startsWith('<')) {
+      return (
+        <Link href={href}>
+          <span dangerouslySetInnerHTML={{ __html: htmlElements.join('') }} />
+        </Link>
+      );
+    }
+
     return <Link href={href}>{children}</Link>;
   },
 } as Record<string, ComponentLike<ReturnType<typeof createElement>>>;
@@ -129,7 +162,7 @@ const styles = css({
   '.toc-level-2': {
     paddingLeft: `${18 / perRem}em`,
   },
-  'p > strong, h4, h5, h6': {
+  'p > strong, b, h4, h5, h6': {
     color: charcoal.rgb,
   },
   img: { height: 'auto', maxWidth: '100%' },

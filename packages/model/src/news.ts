@@ -1,8 +1,24 @@
-import type { Asset, Entry } from 'contentful-management';
 import { Document } from '@contentful/rich-text-types';
 import { FetchOptions, ListResponse } from './common';
 
-type LinkEntry = { __typename: 'Media' } & Entry;
+export type LinkEntry = {
+  sys: {
+    id: string;
+  };
+  __typename: string;
+  url: string;
+};
+
+export type AssetBlock = {
+  sys: {
+    id: string;
+  };
+  url: string;
+  description: string | null;
+  contentType: string;
+  width?: number;
+  height?: number;
+};
 
 export type ContentfulNewsText = {
   json: Document;
@@ -12,7 +28,7 @@ export type ContentfulNewsText = {
       block: LinkEntry[];
     };
     assets: {
-      block: Asset[];
+      block: AssetBlock[];
     };
   };
 };

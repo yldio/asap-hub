@@ -139,7 +139,7 @@ const components = {
   },
 } as Record<string, ComponentLike<ReturnType<typeof createElement>>>;
 
-interface RichTextProps {
+interface SquidexRichTextProps {
   readonly toc?: boolean;
   readonly text: string;
   readonly poorText?: undefined;
@@ -178,7 +178,7 @@ const hasClass = (html: string, className: string): boolean => {
   return !!doc.querySelectorAll(`.${className}`).length;
 };
 
-const RichText: React.FC<RichTextProps | PoorTextProps> = ({
+const SquidexRichText: React.FC<SquidexRichTextProps | PoorTextProps> = ({
   toc = false,
   text,
   poorText = false,
@@ -248,4 +248,4 @@ const RichText: React.FC<RichTextProps | PoorTextProps> = ({
   );
 };
 
-export default RichText;
+export default SquidexRichText;

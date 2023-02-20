@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 
-import RichText from '../RichText';
+import RichText from '../SquidexRichText';
 
 it('renders <p> as a paragraph', () => {
   const { getByText } = render(<RichText text={'<p>text</p>'} />);

@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 
 import { Card, Headline2 } from '../atoms';
-import RichText from './RichText';
+import RichText from './SquidexRichText';
 import { Collapsible } from '../molecules';
 
 type RichTextCardProps = {

@@ -11204,6 +11204,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/auth", "workspace:packages/auth"],\
             ["@asap-hub/model", "workspace:packages/model"],\
             ["@babel/runtime-corejs3", "npm:7.20.13"],\
+            ["@contentful/rich-text-types", "npm:15.13.2"],\
             ["@types/jsonwebtoken", "npm:8.5.9"],\
             ["core-js", "npm:3.28.0"],\
             ["date-fns", "npm:2.29.3"],\
@@ -11862,8 +11863,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/model", "workspace:packages/model"],\
             ["@babel/runtime-corejs3", "npm:7.20.13"],\
             ["@contentful/rich-text-types", "npm:15.13.2"],\
-            ["ajv", "npm:8.11.0"],\
-            ["contentful-management", "npm:10.19.3"]\
+            ["ajv", "npm:8.11.0"]\
           ],\
           "linkType": "SOFT"\
         }]\

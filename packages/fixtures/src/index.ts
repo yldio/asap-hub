@@ -1,5 +1,6 @@
 export * from './auth';
 export * from './calendars';
+export * from './contentful-rich-text';
 export * from './dashboard';
 export * from './discover';
 export * from './events';

@@ -766,6 +766,7 @@ __metadata:
     "@asap-hub/auth": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@babel/runtime-corejs3": 7.20.13
+    "@contentful/rich-text-types": ^15.13.2
     "@types/jsonwebtoken": 8.5.9
     core-js: 3.28.0
     date-fns: 2.29.3
@@ -1151,7 +1152,6 @@ __metadata:
     "@babel/runtime-corejs3": 7.20.13
     "@contentful/rich-text-types": ^15.13.2
     ajv: 8.11.0
-    contentful-management: ^10.19.3
   languageName: unknown
   linkType: soft
 

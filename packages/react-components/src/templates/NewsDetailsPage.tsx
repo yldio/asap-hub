@@ -33,10 +33,6 @@ type NewsDetailsPageProps = (
   | Pick<TutorialsResponse, 'text' | 'title' | 'created' | 'link' | 'linkText'>
 ) & { type: NewsType };
 
-// Create a bespoke renderOptions object to target BLOCKS.EMBEDDED_ENTRY (linked block entries e.g. code blocks)
-// INLINES.EMBEDDED_ENTRY (linked inline entries e.g. a reference to another blog post)
-// and BLOCKS.EMBEDDED_ASSET (linked assets e.g. images)
-
 function renderOptions(links: NonNullable<ContentfulNewsText>['links']) {
   const assetMap = new Map();
   links.assets.block.forEach((asset) => {
@@ -63,9 +59,9 @@ function renderOptions(links: NonNullable<ContentfulNewsText>['links']) {
       [BLOCKS.PARAGRAPH]: (node: Node, children: React.ReactNode) => (
         <Paragraph>{children}</Paragraph>
       ),
-      [INLINES.HYPERLINK]: (node: Node, children: React.ReactNode) => {
-        return <Link href={node.data.uri}>{children}</Link>;
-      },
+      [INLINES.HYPERLINK]: (node: Node, children: React.ReactNode) => (
+        <Link href={node.data.uri}>{children}</Link>
+      ),
 
       [INLINES.EMBEDDED_ENTRY]: (node: Node) => {
         const entry = entryMap.get(node.data.target.sys.id);
@@ -109,11 +105,19 @@ function renderOptions(links: NonNullable<ContentfulNewsText>['links']) {
 
         switch (contentType) {
           case 'application/pdf':
-            return <iframe src={url} width={width} height={height} />;
+            return (
+              <iframe title={url} src={url} width={width} height={height} />
+            );
 
           case 'video/mp4':
             return (
-              <iframe src={url} width={width} height={height} allowFullScreen />
+              <iframe
+                title={url}
+                src={url}
+                width={width}
+                height={height}
+                allowFullScreen
+              />
             );
 
           default:

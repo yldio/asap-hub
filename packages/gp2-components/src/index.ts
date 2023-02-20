@@ -66,6 +66,7 @@ export {
   OnboardingPage,
   OnboardingPreview,
   OnboardingWelcome,
+  OutputsPage,
   ProjectDetailPage,
   ProjectOverview,
   ProjectResources,

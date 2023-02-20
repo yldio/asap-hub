@@ -1148,7 +1148,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/model@workspace:packages/model"
   dependencies:
+    "@asap-hub/contentful": "workspace:^"
     "@babel/runtime-corejs3": 7.20.13
+    "@contentful/rich-text-types": ^16.0.2
     ajv: 8.11.0
   languageName: unknown
   linkType: soft
@@ -1186,6 +1188,8 @@ __metadata:
     "@babel/core": 7.20.12
     "@babel/preset-react": 7.18.6
     "@babel/runtime-corejs3": 7.20.13
+    "@contentful/rich-text-react-renderer": ^15.16.2
+    "@contentful/rich-text-types": ^16.0.2
     "@emotion/babel-plugin": 11.10.6
     "@emotion/jest": ^11.10.5
     "@emotion/react": 11.10.6
@@ -8393,10 +8397,29 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@contentful/rich-text-react-renderer@npm:^15.16.2":
+  version: 15.16.2
+  resolution: "@contentful/rich-text-react-renderer@npm:15.16.2"
+  dependencies:
+    "@contentful/rich-text-types": ^16.0.2
+  peerDependencies:
+    react: ^16.8.6 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.8.6 || ^17.0.0 || ^18.0.0
+  checksum: 8c7582d83c8b1fbd0553f3cd79a92066699870a5ebbbe546f9622f660e702ef9f52aa138648478a687fa189394b81216a427a6afb8efc3b17cdd017b55a51829
+  languageName: node
+  linkType: hard
+
 "@contentful/rich-text-types@npm:^15.12.1, @contentful/rich-text-types@npm:^15.13.2":
   version: 15.13.2
   resolution: "@contentful/rich-text-types@npm:15.13.2"
   checksum: cf27fa7d3459e7fb67488e71dfc39a92f9bd9aefb493bce4d6ba5fcb9e37f92c512c1d06a2134dea4798541b267a06a87100a422d612c5185bd71764eea5b4f7
+  languageName: node
+  linkType: hard
+
+"@contentful/rich-text-types@npm:^16.0.2":
+  version: 16.0.2
+  resolution: "@contentful/rich-text-types@npm:16.0.2"
+  checksum: efa9a3e1bcd196f64c61f2ed820188d01aacbca05f5a64efa9d88390b165d9a51f1382bc7bc1305fe0e54e958556ec38f99b7164c073a6af3749dde9b0c84b42
   languageName: node
   linkType: hard
 

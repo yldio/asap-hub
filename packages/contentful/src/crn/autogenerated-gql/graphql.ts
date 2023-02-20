@@ -1121,6 +1121,25 @@ export type FetchDashboardQuery = {
                               })
                           >
                         >;
+                        block: Array<
+                          Maybe<
+                            | ({ __typename: 'Dashboard' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                            | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
+                                  sys: Pick<Sys, 'id'>;
+                                })
+                            | ({ __typename: 'Migration' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                            | ({ __typename: 'News' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                            | ({ __typename: 'Pages' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                          >
+                        >;
                       };
                       assets: {
                         block: Array<
@@ -1222,6 +1241,17 @@ export type NewsContentFragment = Pick<
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
             >
           >;
+          block: Array<
+            Maybe<
+              | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
+                    sys: Pick<Sys, 'id'>;
+                  })
+              | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+            >
+          >;
         };
         assets: {
           block: Array<
@@ -1255,6 +1285,17 @@ export type FetchNewsByIdQuery = {
           links: {
             entries: {
               inline: Array<
+                Maybe<
+                  | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
+                        sys: Pick<Sys, 'id'>;
+                      })
+                  | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+                >
+              >;
+              block: Array<
                 Maybe<
                   | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
@@ -1311,6 +1352,21 @@ export type FetchNewsQuery = {
                 links: {
                   entries: {
                     inline: Array<
+                      Maybe<
+                        | ({ __typename: 'Dashboard' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                        | ({ __typename: 'Migration' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+                      >
+                    >;
+                    block: Array<
                       Maybe<
                         | ({ __typename: 'Dashboard' } & {
                             sys: Pick<Sys, 'id'>;
@@ -1505,6 +1561,48 @@ export const NewsContentFragmentDoc = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'inline' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: '__typename' },
+                                  },
+                                  {
+                                    kind: 'InlineFragment',
+                                    typeCondition: {
+                                      kind: 'NamedType',
+                                      name: { kind: 'Name', value: 'Media' },
+                                    },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'url' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'block' },
                               selectionSet: {
                                 kind: 'SelectionSet',
                                 selections: [

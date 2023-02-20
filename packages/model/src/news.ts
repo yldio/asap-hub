@@ -1,4 +1,9 @@
+import { FetchNewsQuery } from '@asap-hub/contentful';
 import { FetchOptions, ListResponse } from './common';
+
+export type ContentfulNewsText = NonNullable<
+  NonNullable<FetchNewsQuery['newsCollection']>['items'][number]
+>['text'];
 
 /* istanbul ignore next */
 export const newsType = ['News', 'Tutorial'] as const;
@@ -16,7 +21,7 @@ export type NewsDataObject = {
   title: string;
   frequency?: NewsFrequency;
   shortText?: string;
-  text?: string;
+  text?: string | ContentfulNewsText;
   thumbnail?: string;
   link?: string;
   linkText?: string;

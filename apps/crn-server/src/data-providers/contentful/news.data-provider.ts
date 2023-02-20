@@ -2,14 +2,12 @@ import { NewsDataObject, NewsFrequency } from '@asap-hub/model';
 
 import {
   GraphQLClient,
-  parseRichText,
   FETCH_NEWS,
   FETCH_NEWS_BY_ID,
   FetchNewsByIdQuery,
   FetchNewsByIdQueryVariables,
   FetchNewsQuery,
   FetchNewsQueryVariables,
-  RichTextFromQuery,
   NewsOrder,
 } from '@asap-hub/contentful';
 
@@ -77,6 +75,6 @@ export const parseContentfulGraphQlNews = (item: NewsItem): NewsDataObject => ({
   thumbnail: item.thumbnail?.url ?? undefined,
   link: item.link ?? undefined,
   linkText: item.linkText ?? undefined,
-  text: item.text ? parseRichText(item.text as RichTextFromQuery) : undefined,
+  text: item?.text,
   created: item.publishDate,
 });

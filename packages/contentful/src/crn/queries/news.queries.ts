@@ -27,6 +27,15 @@ export const newsContentQueryFragment = gql`
               url
             }
           }
+          block {
+            sys {
+              id
+            }
+            __typename
+            ... on Media {
+              url
+            }
+          }
         }
         assets {
           block {

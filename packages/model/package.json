@@ -13,7 +13,11 @@
     "watch:babel": "../../scripts/build-babel.sh watch"
   },
   "dependencies": {
+    "@asap-hub/contentful": "workspace:^",
     "@babel/runtime-corejs3": "7.20.13",
     "ajv": "8.11.0"
+  },
+  "devDependencies": {
+    "@contentful/rich-text-types": "^16.0.2"
   }
 }

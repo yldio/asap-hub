@@ -2,7 +2,7 @@ import { getContentfulGraphqlClientMockServer } from '@asap-hub/contentful';
 import { DashboardContentfulDataProvider } from '../../../src/data-providers/contentful/dashboard.data-provider';
 import {
   getContentfulDashboardGraphqlResponse,
-  getDashboardDataObject,
+  getContentfulDashboardDataObject,
 } from '../../fixtures/dashboard.fixtures';
 import { getContentfulGraphqlNews } from '../../fixtures/news.fixtures';
 import { getContentfulGraphqlPages } from '../../fixtures/page.fixtures';
@@ -31,7 +31,7 @@ describe('DashboardDataProvider', () => {
     test('Should fetch the list of news from Contentful GraphQl', async () => {
       const result = await dashboardDataProviderMockGraphql.fetch();
 
-      expect(result).toMatchObject(getDashboardDataObject());
+      expect(result).toMatchObject(getContentfulDashboardDataObject());
     });
 
     test('Should return an empty result when the client returns an empty array for news and pages', async () => {

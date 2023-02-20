@@ -4,6 +4,10 @@ import {
 } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import {
+  hasCreateUpdateResearchOutputPermissions,
+  isResearchOutputWorkingGroup,
+} from '@asap-hub/validation';
+import {
   atom,
   atomFamily,
   DefaultValue,
@@ -160,6 +164,69 @@ export const useSetResearchOutputItem = () => {
     setResearchOutputItem(researchOutput);
     setRefresh(refresh + 1);
   };
+};
+
+type permissionsType = {
+  canCreateDraft: boolean;
+  canUpdateDraft: boolean;
+  canPublishDraft: boolean;
+  canEditPublished: boolean;
+};
+
+export const useTestFunction = (
+  researchOutputData: ResearchOutputResponse | undefined,
+): permissionsType => {
+  let permissionsObject: permissionsType = {
+    canCreateDraft: false,
+    canUpdateDraft: false,
+    canPublishDraft: false,
+    canEditPublished: false,
+  };
+  const user = useCurrentUserCRN();
+
+  if (user === null || researchOutputData === undefined) {
+    return permissionsObject;
+  }
+
+  if (user.teams.some((team) => team.role === 'ASAP Staff')) {
+    permissionsObject = {
+      canCreateDraft: true,
+      canUpdateDraft: true,
+      canPublishDraft: true,
+      canEditPublished: true,
+    };
+    return permissionsObject;
+  }
+
+  const teamIds = researchOutputData.teams?.map((team) => team.id);
+
+  if (
+    isResearchOutputWorkingGroup(researchOutputData) &&
+    !!user.workingGroups.find(
+      (workingGroup) =>
+        researchOutputData.workingGroups
+          .map((wg) => wg.id)
+          .includes(workingGroup.id) && workingGroup.role === 'Project Manager',
+    )
+  ) {
+    permissionsObject = {
+      canCreateDraft: true,
+      canUpdateDraft: true,
+      canPublishDraft: true,
+      canEditPublished: true,
+    };
+    return permissionsObject;
+  }
+  if (hasCreateUpdateResearchOutputPermissions(user, teamIds)) {
+    permissionsObject = {
+      canCreateDraft: true,
+      canUpdateDraft: true,
+      canPublishDraft: true,
+      canEditPublished: true,
+    };
+    return permissionsObject;
+  }
+  return permissionsObject;
 };
 
 export const useCanUpdateWorkingGroupResearchOutput = (

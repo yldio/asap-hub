@@ -8,7 +8,9 @@ import {
   paragraphWrapper,
   blockAssetNode,
   blockAssetNodeLink,
+  getHeadingNode,
 } from '@asap-hub/fixtures';
+import { BLOCKS } from '@contentful/rich-text-types';
 import { render } from '@testing-library/react';
 
 import ContentfulRichText from '../ContentfulRichText';
@@ -209,12 +211,18 @@ it('renders <a> as link with formatting in the middle', () => {
 });
 
 it.each([
-  [1, 'H4'],
-  [2, 'H5'],
-  [3, 'H6'],
-])('renders <h%i> to %s', (i, expected) => {
+  [BLOCKS.HEADING_1, 'H4'],
+  [BLOCKS.HEADING_2, 'H5'],
+  [BLOCKS.HEADING_3, 'H6'],
+])('renders %s to %s', (nodeType, expected) => {
   const { getByText } = render(
-    <ContentfulRichText text={`<h${i}>heading</h${i}>`} />,
+    <ContentfulRichText
+      text={getRichTextField({
+        jsonDocument: getDocument({
+          content: paragraphWrapper(getHeadingNode(nodeType)),
+        }),
+      })}
+    />,
   );
   const heading = getByText('heading');
   expect(heading.tagName).toBe(expected);

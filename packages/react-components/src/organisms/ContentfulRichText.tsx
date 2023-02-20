@@ -2,7 +2,14 @@ import { ContentfulNewsText } from '@asap-hub/model';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import { BLOCKS, Document, INLINES, Node } from '@contentful/rich-text-types';
 
-import { Paragraph, Link } from '../atoms';
+import {
+  Paragraph,
+  Link,
+  Headline4,
+  Headline5,
+  Headline6,
+  Headline2,
+} from '../atoms';
 
 function renderOptions(links: NonNullable<ContentfulNewsText>['links']) {
   const assetMap = new Map();
@@ -29,6 +36,17 @@ function renderOptions(links: NonNullable<ContentfulNewsText>['links']) {
     renderNode: {
       [BLOCKS.PARAGRAPH]: (node: Node, children: React.ReactNode) => (
         <Paragraph>{children}</Paragraph>
+      ),
+      [BLOCKS.HEADING_1]: (node: Node, children: React.ReactElement) => {
+        console.log('node', node);
+        console.log('children', children);
+        return <Headline4>{children}</Headline4>;
+      },
+      [BLOCKS.HEADING_2]: (node: Node, children: React.ReactElement) => (
+        <Headline5>{children}</Headline5>
+      ),
+      [BLOCKS.HEADING_3]: (node: Node, children: React.ReactElement) => (
+        <Headline6>{children}</Headline6>
       ),
       [INLINES.HYPERLINK]: (node: Node, children: React.ReactNode) => (
         <Link href={node.data.uri}>{children}</Link>

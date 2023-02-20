@@ -1,4 +1,4 @@
-import { ContentfulNewsText, LinkEntry } from '@asap-hub/model';
+import { ContentfulNewsText } from '@asap-hub/model';
 import {
   Block,
   BLOCKS,
@@ -91,6 +91,20 @@ export const getHyperlinkNode = (marks: Mark[] = []) =>
       },
     ],
   } as Inline);
+
+export const getHeadingNode = (nodeType: BLOCKS) =>
+  ({
+    data: {},
+    content: [
+      {
+        data: {},
+        marks: [],
+        value: 'heading',
+        nodeType: 'text',
+      },
+    ],
+    nodeType,
+  } as Block);
 
 export const getDocument = ({
   content = paragraphNode,

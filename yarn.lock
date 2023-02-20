@@ -1148,9 +1148,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/model@workspace:packages/model"
   dependencies:
-    "@asap-hub/contentful": "workspace:^"
     "@babel/runtime-corejs3": 7.20.13
+    "@contentful/rich-text-types": ^15.13.2
     ajv: 8.11.0
+    contentful-management: ^10.19.3
   languageName: unknown
   linkType: soft
 

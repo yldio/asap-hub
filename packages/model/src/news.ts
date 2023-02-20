@@ -1,9 +1,21 @@
-import { FetchNewsQuery } from '@asap-hub/contentful';
+import type { Asset, Entry } from 'contentful-management';
+import { Document } from '@contentful/rich-text-types';
 import { FetchOptions, ListResponse } from './common';
 
-export type ContentfulNewsText = NonNullable<
-  NonNullable<FetchNewsQuery['newsCollection']>['items'][number]
->['text'];
+type LinkEntry = { __typename: 'Media' } & Entry;
+
+export type ContentfulNewsText = {
+  json: Document;
+  links: {
+    entries: {
+      inline: LinkEntry[];
+      block: LinkEntry[];
+    };
+    assets: {
+      block: Asset[];
+    };
+  };
+};
 
 /* istanbul ignore next */
 export const newsType = ['News', 'Tutorial'] as const;

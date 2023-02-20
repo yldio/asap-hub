@@ -1,4 +1,8 @@
-import { NewsDataObject, NewsFrequency } from '@asap-hub/model';
+import {
+  ContentfulNewsText,
+  NewsDataObject,
+  NewsFrequency,
+} from '@asap-hub/model';
 
 import {
   GraphQLClient,
@@ -75,6 +79,6 @@ export const parseContentfulGraphQlNews = (item: NewsItem): NewsDataObject => ({
   thumbnail: item.thumbnail?.url ?? undefined,
   link: item.link ?? undefined,
   linkText: item.linkText ?? undefined,
-  text: item?.text,
+  text: item?.text as ContentfulNewsText,
   created: item.publishDate,
 });

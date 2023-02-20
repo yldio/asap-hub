@@ -1,6 +1,7 @@
 import { RestNews } from '@asap-hub/squidex';
 import { FetchNewsQuery } from '@asap-hub/contentful';
 import {
+  ContentfulNewsText,
   ListNewsDataObject,
   ListNewsResponse,
   NewsDataObject,
@@ -107,7 +108,7 @@ export const getListNewsDataObject = (): ListNewsDataObject => ({
 
 export const getContentfulNewsDataObject = (): NewsDataObject => ({
   ...getNewsDataObject(),
-  text: getContentfulGraphqlNews()['text'],
+  text: getContentfulGraphqlNews()['text'] as ContentfulNewsText,
 });
 
 export const getContentfulListNewsDataObject = (): ListNewsDataObject => ({

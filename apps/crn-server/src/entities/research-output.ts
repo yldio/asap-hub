@@ -64,7 +64,6 @@ export const parseGraphQLResearchOutput = (
         }) || [],
     teams:
       output.flatData.teams?.map((team) => parseGraphqlTeamLite(team)) || [],
-    workingGroups: [],
     created: parseDate(output.created).toISOString(),
     link: data.link || undefined,
     documentType:
@@ -111,6 +110,11 @@ export const parseGraphQLResearchOutput = (
         environment.flatData.name ? [environment.flatData.name] : [],
       ) || [],
     subtype: data.subtype?.[0]?.flatData.name || undefined,
+    workingGroups:
+      data.workingGroups?.map((group) => ({
+        id: group.id,
+        title: group.flatData.title || '',
+      })) || [],
   };
 };
 

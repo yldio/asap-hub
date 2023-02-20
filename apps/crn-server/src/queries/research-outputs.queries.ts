@@ -117,6 +117,12 @@ export const researchOutputContentQueryFragment = gql`
           name
         }
       }
+      workingGroups {
+        id
+        flatData {
+          title
+        }
+      }
       teams @include(if: $withTeams) {
         id
         created

@@ -48,6 +48,7 @@ export interface ResearchOutput<
   updatedBy?: TUserConnection[];
   usageNotes?: string;
   usedInAPublication: DecisionOption;
+  workingGroups: string[];
 }
 
 export interface RestResearchOutput extends Entity, Rest<ResearchOutput> {}

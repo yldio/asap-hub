@@ -179,8 +179,10 @@ export class ResearchOutputSquidexDataProvider
       environmentIds,
       organismIds,
       subtypeId,
+      workingGroups,
       ...researchOutputData
     } = input;
+
     const { usedInPublication, ...researchOutput } = parseToSquidex({
       ...researchOutputData,
       asapFunded: convertBooleanToDecision(researchOutputData.asapFunded),
@@ -195,6 +197,7 @@ export class ResearchOutputSquidexDataProvider
       methods: methodIds,
       environments: environmentIds,
       organisms: organismIds,
+      workingGroups,
       subtype: (subtypeId && [subtypeId]) || [],
     });
 

@@ -24,11 +24,21 @@ import { getTeams } from '../teams/api';
 import { getGroups } from '../groups/api';
 import { useUsers } from '../users/state';
 import { getWorkingGroup, getWorkingGroups } from '../working-groups/api';
+import { getResearchOutputs } from '../../shared-research/api';
 import { getEvents } from '../../events/api';
+import { createResearchOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
 
 jest.mock('../users/state', () => ({
   useUsers: jest.fn().mockReturnValue({ items: [], total: 0 }),
 }));
+jest.mock('../../shared-research/api');
+
+const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
+  typeof getResearchOutputs
+>;
+mockGetResearchOutputs.mockResolvedValue({
+  ...createResearchOutputListAlgoliaResponse(1),
+});
 
 jest.mock('../teams/api');
 jest.mock('../groups/api');

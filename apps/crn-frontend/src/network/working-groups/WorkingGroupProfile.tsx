@@ -7,6 +7,9 @@ import { NotFoundPage, WorkingGroupPage } from '@asap-hub/react-components';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { network, useRouteParams } from '@asap-hub/routing';
 
+import { usePaginationParams } from '../../hooks';
+import { useResearchOutputs } from '../../shared-research/state';
+
 import { useUpcomingAndPastEvents } from '../events';
 import ProfileSwitch from '../ProfileSwitch';
 
@@ -53,6 +56,15 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
     currentTime,
     { workingGroupId },
   );
+  const { pageSize } = usePaginationParams();
+
+  const outputResults = useResearchOutputs({
+    filters: new Set(),
+    currentPage: 0,
+    searchQuery: '',
+    pageSize,
+    workingGroupId,
+  });
 
   if (workingGroup) {
     const { about, calendar, createOutput, outputs, past, upcoming } = route({
@@ -78,6 +90,7 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
             pastEventsCount={pastEventsResult.total}
             membersListElementId={membersListElementId}
             {...workingGroup}
+            workingGroupsOutputsCount={outputResults.total}
           >
             <ProfileSwitch
               About={() => (

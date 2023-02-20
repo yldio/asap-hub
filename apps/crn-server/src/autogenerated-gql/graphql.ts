@@ -4063,6 +4063,10 @@ export type ResearchOutputs = Content & {
   referencesUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
   referencesUsersContentsWithTotal: Maybe<UsersResultDto>;
+  /** Query Working Groups content items. */
+  referencesWorkingGroupsContents: Maybe<Array<WorkingGroups>>;
+  /** Query Working Groups content items with total count. */
+  referencesWorkingGroupsContentsWithTotal: Maybe<WorkingGroupsResultDto>;
   /** Query Teams content items. */
   referencingTeamsContents: Maybe<Array<Teams>>;
   /** Query Teams content items with total count. */
@@ -4160,6 +4164,24 @@ export type ResearchOutputsReferencesUsersContentsArgs = {
 
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesUsersContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Research Outputs content type. */
+export type ResearchOutputsReferencesWorkingGroupsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Research Outputs content type. */
+export type ResearchOutputsReferencesWorkingGroupsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -4318,6 +4340,7 @@ export type ResearchOutputsDataDto = {
   updatedBy: Maybe<ResearchOutputsDataUpdatedByDto>;
   usageNotes: Maybe<ResearchOutputsDataUsageNotesDto>;
   usedInAPublication: Maybe<ResearchOutputsDataUsedInAPublicationDto>;
+  workingGroups: Maybe<ResearchOutputsDataWorkingGroupsDto>;
 };
 
 /** The structure of the Environment field of the Research Outputs content type. */
@@ -4359,6 +4382,7 @@ export type ResearchOutputsDataInputDto = {
   updatedBy: InputMaybe<ResearchOutputsDataUpdatedByInputDto>;
   usageNotes: InputMaybe<ResearchOutputsDataUsageNotesInputDto>;
   usedInAPublication: InputMaybe<ResearchOutputsDataUsedInAPublicationInputDto>;
+  workingGroups: InputMaybe<ResearchOutputsDataWorkingGroupsInputDto>;
 };
 
 /** The structure of the Lab Catalog Number field of the Research Outputs content type. */
@@ -4543,6 +4567,16 @@ export type ResearchOutputsDataUsedInAPublicationInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
+/** The structure of the Working Group field of the Research Outputs content type. */
+export type ResearchOutputsDataWorkingGroupsDto = {
+  iv: Maybe<Array<WorkingGroups>>;
+};
+
+/** The structure of the Working Group field of the Research Outputs content input type. */
+export type ResearchOutputsDataWorkingGroupsInputDto = {
+  iv: InputMaybe<Array<Scalars['String']>>;
+};
+
 /** The structure of the flat Research Outputs data type. */
 export type ResearchOutputsFlatDataDto = {
   /** This must start with a letter */
@@ -4584,6 +4618,7 @@ export type ResearchOutputsFlatDataDto = {
   usageNotes: Maybe<Scalars['String']>;
   /** "Not sure" will not be shown on the Hub */
   usedInAPublication: Maybe<Scalars['String']>;
+  workingGroups: Maybe<Array<WorkingGroups>>;
 };
 
 /** List of Research Outputs items and total count. */
@@ -5968,6 +6003,10 @@ export type WorkingGroups = Content & {
   referencesUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
   referencesUsersContentsWithTotal: Maybe<UsersResultDto>;
+  /** Query Research Outputs content items. */
+  referencingResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
+  /** Query Research Outputs content items with total count. */
+  referencingResearchOutputsContentsWithTotal: Maybe<ResearchOutputsResultDto>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
@@ -6007,6 +6046,24 @@ export type WorkingGroupsReferencesUsersContentsArgs = {
 
 /** The structure of a Working Groups content type. */
 export type WorkingGroupsReferencesUsersContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Working Groups content type. */
+export type WorkingGroupsReferencingResearchOutputsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Working Groups content type. */
+export type WorkingGroupsReferencingResearchOutputsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -8758,6 +8815,13 @@ export type ResearchOutputContentFragment = Pick<
     labs: Maybe<
       Array<Pick<Labs, 'id'> & { flatData: Pick<LabsFlatDataDto, 'name'> }>
     >;
+    workingGroups: Maybe<
+      Array<
+        Pick<WorkingGroups, 'id'> & {
+          flatData: Pick<WorkingGroupsFlatDataDto, 'title'>;
+        }
+      >
+    >;
     teams?: Maybe<
       Array<
         Pick<Teams, 'id' | 'created' | 'lastModified' | 'version'> & {
@@ -8923,6 +8987,13 @@ export type FetchResearchOutputQuery = {
         >;
         labs: Maybe<
           Array<Pick<Labs, 'id'> & { flatData: Pick<LabsFlatDataDto, 'name'> }>
+        >;
+        workingGroups: Maybe<
+          Array<
+            Pick<WorkingGroups, 'id'> & {
+              flatData: Pick<WorkingGroupsFlatDataDto, 'title'>;
+            }
+          >
         >;
         teams?: Maybe<
           Array<
@@ -9107,6 +9178,13 @@ export type FetchResearchOutputsQuery = {
               labs: Maybe<
                 Array<
                   Pick<Labs, 'id'> & { flatData: Pick<LabsFlatDataDto, 'name'> }
+                >
+              >;
+              workingGroups: Maybe<
+                Array<
+                  Pick<WorkingGroups, 'id'> & {
+                    flatData: Pick<WorkingGroupsFlatDataDto, 'title'>;
+                  }
                 >
               >;
               teams?: Maybe<
@@ -12313,6 +12391,29 @@ export const ResearchOutputContentFragmentDoc = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'name' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'workingGroups' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'title' },
                             },
                           ],
                         },

@@ -143,7 +143,17 @@ const AssociationList: FC<AssociationListProps> = ({
                 {displayName} {type}
               </>
             )}
-            {type === 'Working Group' && <>{displayName}</>}
+            {type === 'Working Group' && (
+              <Link
+                href={
+                  network({})
+                    .workingGroups({})
+                    .workingGroup({ workingGroupId: id }).$
+                }
+              >
+                {displayName}
+              </Link>
+            )}
             {inline && <span css={bulletStyles}>·</span>}
           </li>
         ))}

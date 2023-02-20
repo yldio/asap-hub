@@ -40,7 +40,8 @@
     "endDateTimestamp",
     "startDateTimestamp",
     "group.id",
-    "workingGroup.id"
+    "workingGroup.id",
+    "workingGroups.id"
   ],
   "numericAttributesToIndex": null,
   "attributesToRetrieve": null,
@@ -57,7 +58,8 @@
     "speakers.team.id",
     "status",
     "group.id",
-    "workingGroup.id"
+    "workingGroup.id",
+    "workingGroups.id"
   ],
   "attributesToSnippet": null,
   "attributesToHighlight": null,

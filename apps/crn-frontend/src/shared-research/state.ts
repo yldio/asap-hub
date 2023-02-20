@@ -187,7 +187,7 @@ export const useTestFunction = (
   if (user === null || researchOutputData === undefined) {
     return permissionsObject;
   }
-
+  console.log(user);
   if (user.teams.some((team) => team.role === 'ASAP Staff')) {
     permissionsObject = {
       canCreateDraft: true,

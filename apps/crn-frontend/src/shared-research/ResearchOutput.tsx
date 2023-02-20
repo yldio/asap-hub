@@ -6,7 +6,6 @@ import { useRouteMatch, Route } from 'react-router-dom';
 import { isResearchOutputWorkingGroup } from '@asap-hub/validation';
 
 import { useResearchOutputById, useTestFunction } from './state';
-import { useCanCreateUpdateResearchOutput } from '../network/teams/state';
 import TeamOutput from '../network/teams/TeamOutput';
 import WorkingGroupOutput from '../network/working-groups/WorkingGroupOutput';
 
@@ -17,21 +16,13 @@ const ResearchOutput: React.FC = () => {
   const { path } = useRouteMatch();
   const researchOutputData = useResearchOutputById(researchOutputId);
   const backHref = useBackHref() ?? sharedResearch({}).$;
-  const canCreateUpdateTeam = useCanCreateUpdateResearchOutput(
-    researchOutputData ? researchOutputData.teams.map(({ id }) => id) : [],
-  );
 
   const permissions = useTestFunction(researchOutputData);
-  console.log(permissions);
 
   if (researchOutputData) {
     return (
       <ResearchOutputPermissionsContext.Provider
-        value={
-          isResearchOutputWorkingGroup(researchOutputData)
-            ? { canCreateUpdate: canCreateUpdateWorkingGroup }
-            : { canCreateUpdate: canCreateUpdateTeam }
-        }
+        value={{ canCreateUpdate: permissions.canPublishDraft }}
       >
         <Route exact path={path}>
           <Frame title={researchOutputData.title}>

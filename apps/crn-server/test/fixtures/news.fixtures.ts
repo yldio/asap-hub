@@ -30,6 +30,7 @@ export const getContentfulGraphqlNews = (): NonNullable<
     links: {
       entries: {
         inline: [],
+        block: [],
       },
       assets: {
         block: [],
@@ -102,6 +103,16 @@ export const getNewsDataObject = (): NewsDataObject => ({
 export const getListNewsDataObject = (): ListNewsDataObject => ({
   total: 1,
   items: [getNewsDataObject()],
+});
+
+export const getContentfulNewsDataObject = (): NewsDataObject => ({
+  ...getNewsDataObject(),
+  text: getContentfulGraphqlNews()['text'],
+});
+
+export const getContentfulListNewsDataObject = (): ListNewsDataObject => ({
+  total: 1,
+  items: [getContentfulNewsDataObject()],
 });
 
 export const getNewsResponse = (): NewsResponse => getNewsDataObject();

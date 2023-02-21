@@ -1,25 +1,12 @@
 import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
-import { EventResponse, EventSpeakerTeam } from '@asap-hub/model';
-import { events, network } from '@asap-hub/routing';
+import { BasicEvent } from '@asap-hub/model';
+import { events } from '@asap-hub/routing';
 
-import { Link } from '../atoms';
-import { lead } from '../colors';
-import { perRem, largeDesktopScreen } from '../pixels';
-import {
-  InterestGroupsIcon,
-  eventPlaceholderIcon,
-  speakerIcon,
-  inactiveBadgeIcon,
-  WorkingGroupsIcon,
-} from '../icons';
-import {
-  AssociationList,
-  EventTime,
-  TagList,
-  LinkHeadline,
-  ImageLink,
-} from '.';
+import { neutral900 } from '../colors';
+import { perRem, largeDesktopScreen, rem } from '../pixels';
+import { eventPlaceholderIcon } from '../icons';
+import { EventTime, TagList, LinkHeadline, ImageLink } from '.';
 
 const TITLE_LIMIT = 55;
 
@@ -37,6 +24,16 @@ const imageContainerStyle = css({
   },
 });
 
+const listItemStyles = css({
+  padding: `${rem(7.5)} 0`,
+  color: neutral900.rgb,
+  whiteSpace: 'break-spaces',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  fontSize: rem(17),
+  display: 'flex',
+});
+
 const imageStyle = css({
   objectFit: 'cover',
   width: '100%',
@@ -48,106 +45,27 @@ const cardStyles = css({
   flexDirection: 'row',
 });
 
-const listItemStyles = css({
-  padding: `${7.5 / perRem}em 0`,
-  color: lead.rgb,
-  whiteSpace: 'break-spaces',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  fontSize: `${17 / perRem}em`,
-  display: 'flex',
-});
 const widthStyles = css({
   display: 'grid',
 });
 
-const iconStyles = css({
-  display: 'inline-grid',
-  verticalAlign: 'middle',
-  width: `${24 / perRem}em`,
-  height: `${24 / perRem}em`,
-  paddingRight: `${9 / perRem}em`,
-});
-
-const inactiveBadgeStyles = {
-  lineHeight: `${18 / perRem}em`,
-  verticalAlign: 'middle',
-  marginLeft: `${8 / perRem}em`,
-};
-
 type EventInfoProps = ComponentProps<typeof EventTime> &
-  Pick<
-    EventResponse,
-    | 'id'
-    | 'title'
-    | 'thumbnail'
-    | 'group'
-    | 'workingGroup'
-    | 'status'
-    | 'speakers'
-    | 'tags'
-  > & {
+  Pick<BasicEvent, 'id' | 'title' | 'thumbnail' | 'status' | 'tags'> & {
+    eventOwner: React.ReactNode;
     titleLimit?: number | null;
-    showNumberOfSpeakers?: boolean;
-    showTeams?: boolean;
+    eventSpeakers?: React.ReactNode;
+    eventTeams?: React.ReactNode;
   };
-
-const EventTeams: React.FC<{ speakers: EventResponse['speakers'] }> = ({
-  speakers,
-}) => {
-  const teams: EventSpeakerTeam['team'][] = speakers.reduce((acc, speaker) => {
-    if ('team' in speaker && !acc.some((team) => team.id === speaker.team.id)) {
-      return [...acc, speaker.team];
-    }
-
-    return acc;
-  }, [] as EventSpeakerTeam['team'][]);
-
-  if (teams.length === 0) {
-    return null;
-  }
-
-  return (
-    <div css={listItemStyles}>
-      <AssociationList
-        type="Team"
-        inline
-        associations={teams.slice(0, 7)}
-        more={teams.length > 7 ? teams.length - 7 : undefined}
-      />
-    </div>
-  );
-};
-
-const EventSpeakers: React.FC<{ speakers: EventResponse['speakers'] }> = ({
-  speakers,
-}) => {
-  const numberOfSpeakers = speakers.filter(
-    (speaker) => 'user' in speaker || 'externalUser' in speaker,
-  ).length;
-
-  if (numberOfSpeakers === 0) {
-    return null;
-  }
-
-  return (
-    <div css={listItemStyles}>
-      <span css={iconStyles}>{speakerIcon}</span> {numberOfSpeakers} Speaker
-      {numberOfSpeakers === 1 ? '' : 's'}
-    </div>
-  );
-};
 
 const EventInfo: React.FC<EventInfoProps> = ({
   id,
   title,
   thumbnail,
-  group,
-  workingGroup,
+  eventOwner,
   status,
   titleLimit = TITLE_LIMIT,
-  showNumberOfSpeakers = false,
-  showTeams = false,
+  eventSpeakers,
+  eventTeams,
   tags,
   ...props
 }) => {
@@ -176,43 +94,9 @@ const EventInfo: React.FC<EventInfoProps> = ({
         </LinkHeadline>
         <EventTime {...props} />
         <div css={widthStyles}>
-          <div css={listItemStyles}>
-            {group ? (
-              <Link
-                href={network({}).groups({}).group({ groupId: group.id }).$}
-              >
-                <span css={iconStyles}>
-                  <InterestGroupsIcon />
-                </span>
-                {group.name}
-                {!group.active && (
-                  <span css={inactiveBadgeStyles}>{inactiveBadgeIcon}</span>
-                )}
-              </Link>
-            ) : workingGroup ? (
-              <Link
-                href={
-                  network({})
-                    .workingGroups({})
-                    .workingGroup({ workingGroupId: workingGroup.id }).$
-                }
-              >
-                <span css={iconStyles}>
-                  <WorkingGroupsIcon />
-                </span>
-                {workingGroup.title}
-              </Link>
-            ) : (
-              <>
-                <span css={iconStyles}>
-                  <InterestGroupsIcon />
-                </span>
-                ASAP Event
-              </>
-            )}
-          </div>
-          {showTeams && <EventTeams speakers={props.speakers} />}
-          {showNumberOfSpeakers && <EventSpeakers speakers={props.speakers} />}
+          {eventOwner}
+          {eventTeams}
+          {eventSpeakers}
           {tags.length > 0 && (
             <div css={listItemStyles}>
               <TagList tags={tags} max={3} />

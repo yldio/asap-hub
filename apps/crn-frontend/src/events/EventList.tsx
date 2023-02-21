@@ -1,4 +1,10 @@
-import { EventsList } from '@asap-hub/react-components';
+import {
+  EventsList,
+  EventOwner,
+  EventTeams,
+  EventSpeakers,
+} from '@asap-hub/react-components';
+import { EventResponse } from '@asap-hub/model';
 import { getEventListOptions } from '@asap-hub/frontend-utils';
 
 import { useEvents, usePrefetchEvents } from './state';
@@ -11,6 +17,23 @@ type EventListProps = {
 
   readonly searchQuery: string;
 };
+
+export const eventMapper = ({
+  speakers,
+  group,
+  workingGroup,
+  ...event
+}: EventResponse) => ({
+  hasSpeakersToBeAnnounced: !!(
+    speakers.length === 0 ||
+    speakers.find((speaker) => 'team' in speaker && !('user' in speaker))
+  ),
+  eventTeams: <EventTeams speakers={speakers} />,
+  eventSpeakers: <EventSpeakers speakers={speakers} />,
+  eventOwner: <EventOwner group={group} workingGroup={workingGroup} />,
+  ...event,
+});
+
 const EventList: React.FC<EventListProps> = ({
   currentTime,
   past = false,
@@ -44,7 +67,7 @@ const EventList: React.FC<EventListProps> = ({
       numberOfItems={total}
       renderPageHref={renderPageHref}
       numberOfPages={numberOfPages}
-      events={items}
+      events={items.map(eventMapper)}
     />
   );
 };

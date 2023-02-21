@@ -1,11 +1,11 @@
 import { GetEventListOptions } from '@asap-hub/frontend-utils';
-import { EventResponse, ListEventResponse } from '@asap-hub/model';
+import { gp2 } from '@asap-hub/model';
 import { atom, atomFamily, selectorFamily, useRecoilValue } from 'recoil';
 import { authorizationState } from '../auth/state';
 import { getEvent, getEvents } from './api';
 
 export const eventsState = selectorFamily<
-  ListEventResponse,
+  gp2.ListEventResponse,
   GetEventListOptions
 >({
   key: 'eventsState',
@@ -27,7 +27,7 @@ export const refreshEventState = atomFamily<number, string>({
   default: 0,
 });
 
-const fetchEventState = selectorFamily<EventResponse | undefined, string>({
+const fetchEventState = selectorFamily<gp2.EventResponse | undefined, string>({
   key: 'fetchEvent',
   get:
     (id) =>
@@ -38,7 +38,7 @@ const fetchEventState = selectorFamily<EventResponse | undefined, string>({
     },
 });
 
-const eventState = selectorFamily<EventResponse | undefined, string>({
+const eventState = selectorFamily<gp2.EventResponse | undefined, string>({
   key: 'event',
   get:
     (id) =>

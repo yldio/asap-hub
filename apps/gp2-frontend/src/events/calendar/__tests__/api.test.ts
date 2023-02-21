@@ -1,5 +1,5 @@
 import nock from 'nock';
-import { createListCalendarResponse } from '@asap-hub/fixtures';
+import { gp2 } from '@asap-hub/fixtures';
 
 import { API_BASE_URL } from '../../../config';
 import { getCalendars } from '../api';
@@ -20,7 +20,7 @@ describe('getCalendars', () => {
   });
 
   it('returns a successfully fetched calendars', async () => {
-    const team = createListCalendarResponse();
+    const team = gp2.createListCalendarResponse();
     nock(API_BASE_URL).get('/calendars').reply(200, team);
     expect(await getCalendars('')).toEqual(team);
   });

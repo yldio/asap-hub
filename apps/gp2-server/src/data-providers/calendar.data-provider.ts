@@ -1,4 +1,8 @@
-import { gp2 } from '@asap-hub/model';
+import {
+  CalendarCreateDataObject,
+  CalendarUpdateDataObject,
+  gp2,
+} from '@asap-hub/model';
 import {
   InputCalendar,
   parseToSquidex,
@@ -25,8 +29,8 @@ export type FetchCalendarProviderOptions = {
 type GraphqlCalendar = NonNullable<FetchCalendarQuery['findCalendarsContent']>;
 
 export interface CalendarDataProvider {
-  create(create: gp2.CalendarCreateDataObject): Promise<string>;
-  update(id: string, update: gp2.CalendarUpdateDataObject): Promise<void>;
+  create(create: CalendarCreateDataObject): Promise<string>;
+  update(id: string, update: CalendarUpdateDataObject): Promise<void>;
   fetch(
     options?: FetchCalendarProviderOptions,
   ): Promise<gp2.ListCalendarDataObject>;
@@ -104,17 +108,14 @@ export class CalendarSquidexDataProvider {
     };
   }
 
-  async create(create: gp2.CalendarCreateDataObject): Promise<string> {
+  async create(create: CalendarCreateDataObject): Promise<string> {
     const data = parseToSquidex(create);
     const { id } = await this.squidexRestClient.create(data);
 
     return id;
   }
 
-  async update(
-    id: string,
-    update: gp2.CalendarUpdateDataObject,
-  ): Promise<void> {
+  async update(id: string, update: CalendarUpdateDataObject): Promise<void> {
     await this.squidexRestClient.patch(id, parseToSquidex(update));
   }
 }

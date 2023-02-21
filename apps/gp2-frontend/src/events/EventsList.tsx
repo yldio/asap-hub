@@ -1,6 +1,5 @@
 import { getEventListOptions } from '@asap-hub/frontend-utils';
 import { EventsList } from '@asap-hub/react-components';
-
 import { usePagination, usePaginationParams } from '../hooks/pagination';
 import { useEvents } from './state';
 
@@ -8,6 +7,7 @@ type EventListProps = {
   readonly currentTime: Date;
   readonly past?: boolean;
 };
+
 const EventList: React.FC<EventListProps> = ({ currentTime, past = false }) => {
   const { currentPage, pageSize } = usePaginationParams();
 
@@ -26,7 +26,11 @@ const EventList: React.FC<EventListProps> = ({ currentTime, past = false }) => {
       numberOfItems={total}
       renderPageHref={renderPageHref}
       numberOfPages={numberOfPages}
-      events={items}
+      events={items.map(({ speakers, startDate, ...event }) => ({
+        ...event,
+        hasSpeakersToBeAnnounced: speakers.length === 0,
+        startDate,
+      }))}
     />
   );
 };

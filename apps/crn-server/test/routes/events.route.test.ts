@@ -1,7 +1,8 @@
+import { FetchEventsOptions } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
-import { FetchEventsOptions } from '../../src/controllers/events';
+
 import {
   getEventResponse,
   listEventResponse,

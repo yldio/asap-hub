@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { CalendarResponse } from '@asap-hub/model';
+import { BasicCalendarResponse } from '@asap-hub/model';
 
 import { getLocalTimezone } from '../localization';
 
@@ -10,7 +10,7 @@ const iframeStyles = css({
 });
 
 interface GoogleCalendarProps {
-  calendars: ReadonlyArray<Pick<CalendarResponse, 'id' | 'color'>>;
+  calendars: ReadonlyArray<Pick<BasicCalendarResponse, 'id' | 'color'>>;
 }
 const GoogleCalendar: React.FC<GoogleCalendarProps> = ({ calendars }) => {
   const iframeSrc = new URL(

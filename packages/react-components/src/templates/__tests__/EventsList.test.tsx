@@ -21,12 +21,14 @@ it('renders multiple event cards', () => {
         {
           ...createEventResponse({}, 0),
           title: 'FirstEvent',
-          group: undefined,
+          eventOwner: <div>ASAP Team</div>,
+          hasSpeakersToBeAnnounced: false,
         },
         {
           ...createEventResponse({}, 1),
           title: 'SecondEvent',
-          group: undefined,
+          eventOwner: <div>ASAP Team</div>,
+          hasSpeakersToBeAnnounced: false,
         },
       ])}
     />,

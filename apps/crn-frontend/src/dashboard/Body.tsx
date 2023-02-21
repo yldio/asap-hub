@@ -7,6 +7,7 @@ import { getEventListOptions } from '@asap-hub/frontend-utils';
 import { useEvents } from '../events/state';
 import { useResearchOutputs } from '../shared-research/state';
 import { useUsers } from '../network/users/state';
+import { eventMapper } from '../events/EventList';
 
 type BodyProps = Omit<
   ComponentProps<typeof DashboardPageBody>,
@@ -28,7 +29,7 @@ const Body: FC<BodyProps> = ({ date, user, ...props }) => {
     user,
   );
 
-  const upcomingEvents = useEvents(
+  const { items } = useEvents(
     getEventListOptions(date, {
       past: false,
       pageSize,
@@ -53,7 +54,7 @@ const Body: FC<BodyProps> = ({ date, user, ...props }) => {
     <DashboardPageBody
       {...props}
       pastEvents={pastEvents}
-      upcomingEvents={upcomingEvents}
+      upcomingEvents={items.map(eventMapper)}
       recentSharedOutputs={recentSharedOutputs}
       recommendedUsers={recommendedUsers}
     />

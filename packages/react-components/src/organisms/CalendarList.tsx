@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { CalendarResponse } from '@asap-hub/model';
+import { BasicCalendarResponse } from '@asap-hub/model';
 import { FC, useState } from 'react';
 
 import { Card, Headline3, Paragraph, Link, Button } from '../atoms';
@@ -80,7 +80,7 @@ const showMoreStyles = css({
 });
 
 interface CalendarListProps {
-  calendars: ReadonlyArray<CalendarResponse>;
+  calendars: ReadonlyArray<BasicCalendarResponse>;
   title: string;
   description?: string;
   hideSupportText?: boolean;

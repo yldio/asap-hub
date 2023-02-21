@@ -1,11 +1,11 @@
-import { ListCalendarResponse } from '@asap-hub/model';
+import { gp2 } from '@asap-hub/model';
 import { createSentryHeaders } from '@asap-hub/frontend-utils';
 
 import { API_BASE_URL } from '../../config';
 
 export const getCalendars = async (
   authorization: string,
-): Promise<ListCalendarResponse> => {
+): Promise<gp2.ListCalendarResponse> => {
   const resp = await fetch(`${API_BASE_URL}/calendars`, {
     headers: { authorization, ...createSentryHeaders() },
   });

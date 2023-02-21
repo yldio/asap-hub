@@ -1,18 +1,15 @@
 import { ComponentProps } from 'react';
 import { render, screen } from '@testing-library/react';
-import {
-  createEventResponse,
-  createGroupResponse,
-  createWorkingGroupResponse,
-} from '@asap-hub/fixtures';
+import { createEventResponse } from '@asap-hub/fixtures';
 
 import EventInfo from '../EventInfo';
 
 jest.mock('../../localization');
 
+const eventOwner = <div>ASAP Team</div>;
 const props: ComponentProps<typeof EventInfo> = {
   ...createEventResponse(),
-  group: undefined,
+  eventOwner,
 };
 
 it('renders an event', () => {
@@ -65,16 +62,7 @@ it('renders placeholder event thumbnail', () => {
 });
 
 it('renders the interest group name linking to the group and icon', () => {
-  render(
-    <EventInfo
-      {...props}
-      group={{
-        ...createGroupResponse(),
-        id: 'grp',
-        name: 'My Group',
-      }}
-    />,
-  );
+  render(<EventInfo {...props} />);
   expect(screen.getByText('My Group')).toHaveAttribute(
     'href',
     expect.stringMatching(/grp$/),
@@ -83,16 +71,7 @@ it('renders the interest group name linking to the group and icon', () => {
 });
 
 it('renders the working group name linking to the group and icon', () => {
-  render(
-    <EventInfo
-      {...props}
-      workingGroup={{
-        ...createWorkingGroupResponse(),
-        id: 'grp',
-        title: 'My Working Group',
-      }}
-    />,
-  );
+  render(<EventInfo {...props} />);
   expect(screen.getByText('My Working Group')).toHaveAttribute(
     'href',
     expect.stringMatching(/grp$/),
@@ -101,7 +80,7 @@ it('renders the working group name linking to the group and icon', () => {
 });
 
 it('shows that the event is run by ASAP when there is no group', () => {
-  render(<EventInfo {...props} group={undefined} />);
+  render(<EventInfo {...props} />);
   expect(screen.getByText(/asap event/i)).not.toHaveAttribute('href');
   expect(screen.getByTitle('Calendar')).toBeInTheDocument();
 });
@@ -114,7 +93,7 @@ it('shows number of speakers with singular form', () => {
         numberOfExternalSpeakers: 0,
         numberOfUnknownSpeakers: 5,
       })}
-      showNumberOfSpeakers={true}
+      eventOwner={eventOwner}
     />,
   );
   expect(screen.getByText('1 Speaker')).toBeInTheDocument();
@@ -129,7 +108,7 @@ it('do not shows number of speakers when showNumberOfSpeakers is false', () => {
         numberOfExternalSpeakers: 4,
         numberOfUnknownSpeakers: 5,
       })}
-      showNumberOfSpeakers={false}
+      eventOwner={eventOwner}
     />,
   );
   expect(screen.queryByText('7 Speakers')).not.toBeInTheDocument();
@@ -142,7 +121,7 @@ it('shows number of speakers with plural form', () => {
         numberOfExternalSpeakers: 4,
         numberOfUnknownSpeakers: 5,
       })}
-      showNumberOfSpeakers={true}
+      eventOwner={eventOwner}
     />,
   );
   expect(screen.getByText('7 Speakers')).toBeInTheDocument();
@@ -155,7 +134,7 @@ it('do not shows number of speakers when there are no speakers', () => {
         numberOfExternalSpeakers: 0,
         numberOfUnknownSpeakers: 5,
       })}
-      showNumberOfSpeakers={true}
+      eventOwner={eventOwner}
     />,
   );
   expect(screen.queryByText(/Speaker/i)).not.toBeInTheDocument();
@@ -169,7 +148,7 @@ it('displays the teams with number of additional teams', () => {
         numberOfExternalSpeakers: 0,
         numberOfUnknownSpeakers: 0,
       })}
-      showTeams={true}
+      eventOwner={eventOwner}
     />,
   );
 
@@ -178,45 +157,13 @@ it('displays the teams with number of additional teams', () => {
 });
 
 it('displays the teams', () => {
-  render(
-    <EventInfo
-      {...createEventResponse()}
-      speakers={[
-        {
-          team: {
-            displayName: 'one team',
-            id: 'team-id',
-          },
-        },
-        {
-          team: {
-            displayName: 'another team',
-            id: 'team-id-1',
-          },
-        },
-      ]}
-      showTeams={true}
-      tags={[]}
-    />,
-  );
+  render(<EventInfo {...props} tags={[]} />);
   expect(screen.getByText(/one team/i)).toBeInTheDocument();
   expect(screen.getByText(/another team/i)).toBeInTheDocument();
 });
 
 it('displays the team only once if it is duplicated', () => {
-  render(
-    <EventInfo
-      {...createEventResponse()}
-      speakers={Array.from({ length: 10 }, () => ({
-        team: {
-          displayName: 'the team',
-          id: 'team-id',
-        },
-      }))}
-      showTeams={true}
-      tags={[]}
-    />,
-  );
+  render(<EventInfo {...props} tags={[]} />);
 
   expect(screen.getAllByText(/the team/i).length).toEqual(1);
 });
@@ -229,7 +176,7 @@ it('do not display the team when there is none', () => {
         numberOfExternalSpeakers: 0,
         numberOfUnknownSpeakers: 0,
       })}
-      showTeams={true}
+      eventOwner={eventOwner}
     />,
   );
 

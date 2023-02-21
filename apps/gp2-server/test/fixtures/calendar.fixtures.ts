@@ -1,4 +1,4 @@
-import { gp2 } from '@asap-hub/model';
+import { CalendarCreateDataObject, gp2 } from '@asap-hub/model';
 import { RestCalendar } from '@asap-hub/squidex';
 import {
   FetchCalendarQuery,
@@ -17,7 +17,7 @@ export const getCalendarDataObject = (): gp2.CalendarDataObject => ({
   version: 42,
 });
 
-export const getCalendarCreateDataObject = (): gp2.CalendarCreateDataObject => {
+export const getCalendarCreateDataObject = (): CalendarCreateDataObject => {
   const { id: _id, version: _version, ...data } = getCalendarDataObject();
   return data;
 };

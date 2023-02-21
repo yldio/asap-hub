@@ -1,9 +1,6 @@
-import {
-  createEventResponse,
-  createListEventResponse,
-} from '@asap-hub/fixtures';
+import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { GetEventListOptions } from '@asap-hub/frontend-utils';
-import { ListEventResponse } from '@asap-hub/model';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import nock from 'nock';
 import { API_BASE_URL } from '../../config';
 import { getEvent, getEvents } from '../api';
@@ -17,7 +14,7 @@ describe('getEvent', () => {
   });
 
   it('returns a successfully fetched event by id', async () => {
-    const eventResponse = createEventResponse();
+    const eventResponse = gp2Fixtures.createEventResponse();
     const { id } = eventResponse;
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
       .get(`/events/${id}`)
@@ -60,7 +57,8 @@ describe('getEvents', () => {
   };
 
   it('returns a successfully fetched events', async () => {
-    const eventsResponse: ListEventResponse = createListEventResponse(1);
+    const eventsResponse: gp2Model.ListEventResponse =
+      gp2Fixtures.createListEventResponse(1);
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
       .get('/events')
       .query({

@@ -79,7 +79,10 @@ export const parseGraphQlWorkingGroup = (
       workingGroupGraphQl.flatData.members,
     ),
     leaders,
-    pointOfContact: leaders.find(({ role }) => role === 'Project Manager'),
+    pointOfContact: leaders.find(
+      ({ role, user: { alumniSinceDate } }) =>
+        role === 'Project Manager' && !alumniSinceDate,
+    ),
     complete: !!workingGroupGraphQl.flatData.complete,
     deliverables: workingGroupGraphQl.flatData.deliverables
       ? workingGroupGraphQl.flatData.deliverables.map(

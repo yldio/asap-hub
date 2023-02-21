@@ -28,10 +28,14 @@ export default class Outputs implements OutputController {
     return output;
   }
 
-  async fetch(
-    options: gp2Model.FetchOutputOptions,
-  ): Promise<gp2Model.ListOutputResponse> {
-    const { filter, ...fetchOptions } = options;
+  async fetch(options: FetchOptions): Promise<gp2Model.ListOutputResponse> {
+    const { filter: fetchFilter, ...fetchOptions } = options;
+
+    const filter: gp2Model.FetchOutputOptions['filter'] = Array.isArray(
+      fetchFilter,
+    )
+      ? { documentType: fetchFilter }
+      : fetchFilter;
 
     const { items, total } = await this.outputDataProvider.fetch({
       ...fetchOptions,
@@ -206,10 +210,11 @@ export default class Outputs implements OutputController {
     );
 }
 
+type FetchOptions = Omit<gp2Model.FetchOutputOptions, 'filter'> & {
+  filter?: OutputFilter;
+};
 export interface OutputController {
-  fetch: (
-    options: gp2Model.FetchOutputOptions,
-  ) => Promise<gp2Model.ListOutputResponse>;
+  fetch: (options: FetchOptions) => Promise<gp2Model.ListOutputResponse>;
 
   fetchById: (id: string) => Promise<gp2Model.OutputResponse>;
   create: (output: OutputCreateData) => Promise<gp2Model.OutputResponse | null>;
@@ -225,3 +230,4 @@ export type OutputCreateData = gp2Model.OutputPostRequest & {
 export type OutputUpdateData = gp2Model.OutputPutRequest & {
   updatedBy: string;
 };
+type OutputFilter = string[] | gp2Model.FetchOutputFilter;

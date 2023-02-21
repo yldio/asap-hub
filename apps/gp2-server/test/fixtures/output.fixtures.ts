@@ -175,7 +175,7 @@ export const getRestOutputCreateData = (): gp2Squidex.InputOutput['data'] => ({
   updatedBy: { iv: ['userId'] },
 });
 
-export const getoutputUpdateData = (): OutputUpdateData => ({
+export const getOutputUpdateData = (): OutputUpdateData => ({
   ...getOutputPutRequest(),
   updatedBy: 'userId',
 });

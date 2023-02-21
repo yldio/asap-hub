@@ -100,14 +100,7 @@ export type OutputUpdateDataObject = OutputCoreObject & {
   updatedBy: string;
 };
 
-export type OutputBaseResponse = Omit<
-  OutputDataObject,
-  'createdBy' | 'workingGroups'
->;
-
-export type OutputTeamResponse = OutputBaseResponse & {
-  workingGroups: undefined;
-};
+export type OutputBaseResponse = Omit<OutputDataObject, 'createdBy'>;
 
 export type OutputResponse = OutputBaseResponse;
 

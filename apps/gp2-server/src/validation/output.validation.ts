@@ -1,73 +1,46 @@
-import {
-  ResearchOutputPostRequest,
-  researchOutputTypes,
-  ResearchOutputIdentifierType,
-  researchOutputToIdentifierType,
-  researchOutputDocumentTypes,
-  ResearchOutputPutRequest,
-} from '@asap-hub/model';
-import {
-  ResearchOutputIdentifierValidationExpression,
-  UrlExpression,
-} from '@asap-hub/validation';
-import Boom from '@hapi/boom';
-import { JSONSchemaType } from 'ajv';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import { validateInput } from '@asap-hub/server-common';
+import { UrlExpression } from '@asap-hub/validation';
+import { JSONSchemaType } from 'ajv';
 
-type ResearchOutputParameters = {
-  researchOutputId: string;
+type OutputParameters = {
+  outputId: string;
+};
+const { outputDocumentTypes, outputTypes, outputSubTypes } = gp2Model;
+const outputParametersValidationSchema: JSONSchemaType<OutputParameters> = {
+  type: 'object',
+  properties: {
+    outputId: { type: 'string' },
+  },
+  required: ['outputId'],
+  additionalProperties: false,
 };
 
-const researchOutputParametersValidationSchema: JSONSchemaType<ResearchOutputParameters> =
-  {
-    type: 'object',
-    properties: {
-      researchOutputId: { type: 'string' },
-    },
-    required: ['researchOutputId'],
-    additionalProperties: false,
-  };
-
-export const validateResearchOutputParameters = validateInput(
-  researchOutputParametersValidationSchema,
+export const validateOutputParameters = validateInput(
+  outputParametersValidationSchema,
   {
     skipNull: false,
     coerce: false,
   },
 );
 
-const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPostRequest> =
+const outputPostRequestValidationSchema: JSONSchemaType<gp2Model.OutputPostRequest> =
   {
     type: 'object',
     properties: {
       documentType: {
         type: 'string',
-        enum: researchOutputDocumentTypes,
+        enum: outputDocumentTypes,
       },
       type: {
         type: 'string',
-        enum: researchOutputTypes,
-      },
-      description: { type: 'string' },
-      tags: {
-        type: 'array',
-        items: { type: 'string' },
-      },
-      methods: {
-        type: 'array',
-        items: { type: 'string' },
-      },
-      organisms: {
-        type: 'array',
-        items: { type: 'string' },
-      },
-      environments: {
-        type: 'array',
-        items: { type: 'string' },
+        nullable: true,
+        enum: outputTypes,
       },
       subtype: {
         type: 'string',
         nullable: true,
+        enum: outputSubTypes,
       },
       link: {
         type: 'string',
@@ -75,15 +48,7 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
         pattern: UrlExpression,
       },
       title: { type: 'string' },
-      asapFunded: { type: 'boolean', nullable: true },
-      sharingStatus: { type: 'string' },
-      usedInPublication: { type: 'boolean', nullable: true },
       publishDate: { type: 'string', format: 'date-time', nullable: true },
-      labs: {
-        type: 'array',
-        items: { type: 'string' },
-        nullable: true,
-      },
       authors: {
         type: 'array',
         items: {
@@ -110,79 +75,23 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
         },
         nullable: true,
       },
-      teams: { type: 'array', items: { type: 'string' }, minItems: 1 },
-      workingGroups: { type: 'array', items: { type: 'string' }, minItems: 0 },
-      usageNotes: { type: 'string', nullable: true },
-      doi: {
-        type: 'string',
-        nullable: true,
-        pattern: ResearchOutputIdentifierValidationExpression.DOI,
-      },
-      accession: {
-        type: 'string',
-        nullable: true,
-        pattern:
-          ResearchOutputIdentifierValidationExpression['Accession Number'],
-      },
-      labCatalogNumber: { type: 'string', nullable: true },
-      rrid: {
-        type: 'string',
-        nullable: true,
-        pattern: ResearchOutputIdentifierValidationExpression.RRID,
-      },
     },
-    required: [
-      'documentType',
-      'type',
-      'description',
-      'tags',
-      'title',
-      'sharingStatus',
-      'teams',
-      'methods',
-      'organisms',
-      'environments',
-    ],
+    required: ['documentType', 'title'],
     additionalProperties: false,
   };
 
-export const validateResearchOutputPostRequestParameters = validateInput(
-  researchOutputPostRequestValidationSchema,
+export const validateOutputPostRequestParameters = validateInput(
+  outputPostRequestValidationSchema,
   {
     skipNull: true,
     coerce: true,
   },
 );
 
-export const validateResearchOutputPostRequestParametersIdentifiers = (
-  data: ResearchOutputPostRequest,
-): void => {
-  const types = researchOutputToIdentifierType[data.documentType];
-
-  if (data.rrid && !types.includes(ResearchOutputIdentifierType.RRID)) {
-    throw Boom.badRequest('Validation error', {
-      details: `RRID identifier is not supported for research output of type ${data.documentType}`,
-    });
-  }
-  if (data.doi && !types.includes(ResearchOutputIdentifierType.DOI)) {
-    throw Boom.badRequest('Validation error', {
-      details: `DOI identifier is not supported for research output of type ${data.documentType}`,
-    });
-  }
-  if (
-    data.accession &&
-    !types.includes(ResearchOutputIdentifierType.AccessionNumber)
-  ) {
-    throw Boom.badRequest('Validation error', {
-      details: `Accession number identifier is not supported for research output of type ${data.documentType}`,
-    });
-  }
-};
-
-export const validateResearchOutputPutRequestParameters = validateInput<
-  ResearchOutputPutRequest,
+export const validateOutputPutRequestParameters = validateInput<
+  gp2Model.OutputPutRequest,
   true
->(researchOutputPostRequestValidationSchema, {
+>(outputPostRequestValidationSchema, {
   skipNull: true,
   coerce: true,
 });

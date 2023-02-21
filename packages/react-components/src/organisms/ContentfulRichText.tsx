@@ -1,15 +1,39 @@
+import { css } from '@emotion/react';
+
 import { ContentfulNewsText } from '@asap-hub/model';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import { BLOCKS, Document, INLINES, Node } from '@contentful/rich-text-types';
 
-import {
-  Paragraph,
-  Link,
-  Headline4,
-  Headline5,
-  Headline6,
-  Headline2,
-} from '../atoms';
+import { Paragraph, Link, Headline4, Headline5, Headline6 } from '../atoms';
+
+const iframeContainer = css({
+  display: 'block',
+  position: 'relative',
+  paddingBottom: '56.25%',
+  width: '100%',
+  height: 0,
+
+  iframe: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+
+    border: 0,
+  },
+});
+
+const renderIFrame = (url: string) => (
+  <span css={iframeContainer}>
+    <iframe
+      title="Embedded Media"
+      style={{ maxWidth: '100%', height: 'auto' }}
+      src={url}
+      allowFullScreen
+    />
+  </span>
+);
 
 function renderOptions(links: NonNullable<ContentfulNewsText>['links']) {
   const assetMap = new Map();
@@ -54,18 +78,7 @@ function renderOptions(links: NonNullable<ContentfulNewsText>['links']) {
 
       [INLINES.EMBEDDED_ENTRY]: (node: Node) => {
         const entry = entryMap.get(node.data.target.sys.id);
-        return (
-          <iframe
-            title={entry.url}
-            src={entry.url}
-            style={{ maxWidth: '100%', height: 'auto' }}
-            height="100%"
-            width="100%"
-            frameBorder="0"
-            scrolling="no"
-            allowFullScreen={true}
-          />
-        );
+        return renderIFrame(entry.url);
       },
       [BLOCKS.EMBEDDED_ENTRY]: (node: Node) => {
         const entry = entryMap.get(node.data.target.sys.id);
@@ -77,16 +90,7 @@ function renderOptions(links: NonNullable<ContentfulNewsText>['links']) {
           );
         }
 
-        return (
-          <iframe
-            style={{ maxWidth: '100%', height: 'auto' }}
-            title={entry.url}
-            src={entry.url}
-            frameBorder="0"
-            scrolling="no"
-            allowFullScreen={true}
-          />
-        );
+        return renderIFrame(entry.url);
       },
       [BLOCKS.EMBEDDED_ASSET]: (node: Node) => {
         const asset = assetMap.get(node.data.target.sys.id);
@@ -99,15 +103,7 @@ function renderOptions(links: NonNullable<ContentfulNewsText>['links']) {
             );
 
           case 'video/mp4':
-            return (
-              <iframe
-                title={url}
-                src={url}
-                width={width}
-                height={height}
-                allowFullScreen
-              />
-            );
+            return renderIFrame(url);
 
           default:
             return (

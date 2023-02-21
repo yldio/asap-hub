@@ -26,7 +26,7 @@ it('renders <p> as a paragraph', () => {
   expect(getByText('text').tagName).toBe('P');
 });
 
-it('renders <iframe>', () => {
+it.only('renders <iframe>', () => {
   const { getByTitle } = render(
     <ContentfulRichText
       text={getRichTextField({
@@ -37,7 +37,9 @@ it('renders <iframe>', () => {
       })}
     />,
   );
-  expect(getByTitle(inlineEmbeddedEntryNodeLink.url)).toBeInTheDocument();
+  const iframe = getByTitle('Embedded Media');
+  expect(iframe).toBeInTheDocument();
+  expect(iframe).toHaveAttribute('src', inlineEmbeddedEntryNodeLink.url);
 });
 
 it('renders <a> as a link', () => {

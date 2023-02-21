@@ -6,6 +6,7 @@ import {
   RoleModal,
   UserProfileResearch,
   WorkingGroupsTabbedCard,
+  UserTeamsTabbedCard,
 } from '@asap-hub/react-components';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
@@ -44,13 +45,15 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
             />
           </Frame>
         }
-        teams={user.teams.map((team) => ({
-          ...team,
-          editHref:
-            id === user.id
-              ? route.editTeamMembership({ teamId: team.id }).$
-              : undefined,
-        }))}
+        userProfileTeamsCard={
+          <Frame title={null} fallback={null}>
+            <UserTeamsTabbedCard
+              userName={user.displayName}
+              isUserAlumni={!!user.alumniSinceDate}
+              teams={user.teams}
+            />
+          </Frame>
+        }
         editExpertiseAndResourcesHref={
           id === user.id ? route.editExpertiseAndResources({}).$ : undefined
         }

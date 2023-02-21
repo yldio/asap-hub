@@ -84,7 +84,7 @@ const patchedTeamState = atomFamily<TeamResponse | undefined, string>({
   default: undefined,
 });
 
-const teamState = selectorFamily<TeamResponse | undefined, string>({
+export const teamState = selectorFamily<TeamResponse | undefined, string>({
   key: 'team',
   get:
     (id) =>

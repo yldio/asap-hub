@@ -157,6 +157,7 @@ export const getGraphQLUser = (
             id: 'team-id-0',
             flatData: {
               displayName: 'Team A',
+              inactiveSince: '',
               proposal: [{ id: 'proposalId1' }],
             },
           },

@@ -4,7 +4,11 @@ import type { Auth0, Auth0User, gp2 } from '@asap-hub/auth';
 import { Auth0ContextGP2, getUserClaimKey } from '@asap-hub/react-context';
 import createAuth0Client, { Auth0Client } from '@auth0/auth0-spa-js';
 import { useEffect } from 'react';
-import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
+import {
+  useRecoilState,
+  useRecoilValue,
+  useRecoilRefresher_UNSTABLE,
+} from 'recoil';
 import { auth0State } from './state';
 
 const notImplemented = (method: string) => () => {
@@ -86,7 +90,7 @@ export const Auth0Provider: React.FC<{
   ) => Partial<Auth0<gp2.User>>;
 }> = ({ user, children, auth0Overrides }) => {
   const [auth0, setAuth0] = useRecoilState(auth0State);
-  const resetAuth0 = useResetRecoilState(auth0State);
+  const resetAuth0 = useRecoilRefresher_UNSTABLE(auth0State);
   useEffect(() => {
     const initAuth0 = async () => {
       const auth0Client = await createAuth0Client({

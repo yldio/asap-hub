@@ -1,6 +1,6 @@
 import { isBefore, addHours, parseISO } from 'date-fns';
 import {
-  EventResponse,
+  BasicEvent,
   EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
 } from '@asap-hub/model';
 
@@ -8,9 +8,9 @@ import { Headline2, Divider } from '../atoms';
 import { TagList, RichText } from '..';
 import { Collapsible } from '../molecules';
 
-type EventInfoProps = Pick<EventResponse, 'tags' | 'description' | 'endDate'>;
+type EventAboutProps = Pick<BasicEvent, 'tags' | 'description' | 'endDate'>;
 
-const EventAbout: React.FC<EventInfoProps> = ({
+const EventAbout: React.FC<EventAboutProps> = ({
   tags,
   description,
   endDate,

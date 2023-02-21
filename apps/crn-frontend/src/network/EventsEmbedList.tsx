@@ -3,6 +3,7 @@ import { EventConstraint, ListEventResponse } from '@asap-hub/model';
 import { EventSearch, EventsList } from '@asap-hub/react-components';
 import { usePagination, usePaginationParams, useSearch } from '../hooks';
 import { useEvents } from '../events/state';
+import { eventMapper } from '../events/EventList';
 
 type EventsEmbedListProps = {
   readonly currentTime: Date;
@@ -87,7 +88,7 @@ const EventsDisplay: React.FC<EventsDisplayProps> = ({
       numberOfItems={total}
       renderPageHref={renderPageHref}
       numberOfPages={numberOfPages}
-      events={items}
+      events={items.map(eventMapper)}
       noEventsComponent={noEventsComponent}
     />
   );

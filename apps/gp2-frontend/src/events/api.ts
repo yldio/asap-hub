@@ -2,13 +2,13 @@ import {
   createSentryHeaders,
   GetEventListOptions,
 } from '@asap-hub/frontend-utils';
-import { EventResponse, ListEventResponse } from '@asap-hub/model';
+import { gp2 } from '@asap-hub/model';
 import { API_BASE_URL } from '../config';
 
 export const getEvents = async (
   authorization: string,
   { before, after }: GetEventListOptions,
-): Promise<ListEventResponse> => {
+): Promise<gp2.ListEventResponse> => {
   const url = new URL('events', `${API_BASE_URL}/`);
   if (before) url.searchParams.set('before', before);
   if (after) url.searchParams.set('after', after);
@@ -27,7 +27,7 @@ export const getEvents = async (
 export const getEvent = async (
   id: string,
   authorization: string,
-): Promise<EventResponse | undefined> => {
+): Promise<gp2.EventResponse | undefined> => {
   const resp = await fetch(`${API_BASE_URL}/events/${id}`, {
     headers: { authorization, ...createSentryHeaders() },
   });

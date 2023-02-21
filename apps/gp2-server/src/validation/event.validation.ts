@@ -1,11 +1,11 @@
-import { gp2 } from '@asap-hub/model';
+import { FetchEventsOptions } from '@asap-hub/model';
 import {
   fetchOptionsValidationSchema,
   validateInput,
 } from '@asap-hub/server-common';
 import { JSONSchemaType } from 'ajv';
 
-const eventFetchValidationSchema: JSONSchemaType<gp2.FetchEventsOptions> = {
+const eventFetchValidationSchema: JSONSchemaType<FetchEventsOptions> = {
   type: 'object',
   properties: {
     ...fetchOptionsValidationSchema.properties,
@@ -21,14 +21,6 @@ const eventFetchValidationSchema: JSONSchemaType<gp2.FetchEventsOptions> = {
   },
   additionalProperties: false,
   required: [],
-  anyOf: [
-    {
-      required: ['before'],
-    },
-    {
-      required: ['after'],
-    },
-  ],
   dependencies: {
     sortBy: ['sortOrder'],
     sortOrder: ['sortBy'],

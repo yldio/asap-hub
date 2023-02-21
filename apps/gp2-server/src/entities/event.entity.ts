@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { gp2 } from '@asap-hub/model';
+import { gp2, isEventStatus } from '@asap-hub/model';
 import { parseDate } from '@asap-hub/squidex';
 import { DateTime } from 'luxon';
 
@@ -29,7 +29,7 @@ export type GraphqlEventSpeakerUser = Extract<
 
 export const parseEventSpeakerUser = (
   user: GraphqlEventSpeakerUser,
-): gp2.EventSpeakerUserData => {
+): gp2.EventSpeakerUser => {
   const flatAvatar = user.flatData.avatar || [];
 
   return {
@@ -53,9 +53,7 @@ export const parseGraphQLSpeakers = (
       return speakerList;
     }
 
-    speakerList.push({
-      user: parseEventSpeakerUser(user),
-    });
+    speakerList.push(parseEventSpeakerUser(user));
     return speakerList;
   }, []);
 
@@ -94,7 +92,7 @@ export const parseGraphQLEvent = (
     meetingMaterials,
   } = item.flatData;
 
-  if (!gp2.isEventStatus(item.flatData.status)) {
+  if (!isEventStatus(item.flatData.status)) {
     throw new Error(
       `Invalid event (${item.id}) status "${item.flatData.status}"`,
     );

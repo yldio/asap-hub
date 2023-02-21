@@ -1,4 +1,4 @@
-import { FetchEventsOptions } from '@asap-hub/model/src/gp2';
+import { FetchEventsOptions } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';

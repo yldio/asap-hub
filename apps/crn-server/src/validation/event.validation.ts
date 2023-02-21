@@ -1,9 +1,9 @@
+import { FetchEventsOptions } from '@asap-hub/model';
 import {
   fetchOptionsValidationSchema,
   validateInput,
 } from '@asap-hub/server-common';
 import { JSONSchemaType } from 'ajv';
-import { FetchEventsOptions } from '../controllers/events';
 
 const eventFetchValidationSchema: JSONSchemaType<FetchEventsOptions> = {
   type: 'object',
@@ -21,14 +21,6 @@ const eventFetchValidationSchema: JSONSchemaType<FetchEventsOptions> = {
   },
   additionalProperties: false,
   required: [],
-  anyOf: [
-    {
-      required: ['before'],
-    },
-    {
-      required: ['after'],
-    },
-  ],
   dependencies: {
     sortBy: ['sortOrder'],
     sortOrder: ['sortBy'],

@@ -7,8 +7,6 @@ export type GraphqlFetchOptions = {
   order?: string;
 };
 
-export type AllOrNone<T> = T | { [K in keyof T]?: never };
-
 export type ScheduledHandlerAsync = (
   event: EventBridgeEvent<'Scheduled Event', ScheduledEvent>,
   context: Context,

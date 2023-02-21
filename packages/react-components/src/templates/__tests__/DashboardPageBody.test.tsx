@@ -79,7 +79,13 @@ it('displays events cards or placeholder if there are no events', () => {
   const { rerender } = render(
     <DashboardPageBody
       {...props}
-      upcomingEvents={createListEventResponse(4, { customTitle: 'TestEvent' })}
+      upcomingEvents={createListEventResponse(4, {
+        customTitle: 'TestEvent',
+      }).items.map((event) => ({
+        ...event,
+        hasSpeakersToBeAnnounced: false,
+        eventOwner: <div>ASAP Team</div>,
+      }))}
     />,
   );
   expect(screen.getByText('Upcoming Events')).toBeVisible();

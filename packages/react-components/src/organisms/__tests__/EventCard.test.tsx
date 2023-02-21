@@ -1,13 +1,14 @@
 import { ComponentProps } from 'react';
 import { render, screen } from '@testing-library/react';
-import { createEventResponse, createGroupResponse } from '@asap-hub/fixtures';
+import { createEventResponse } from '@asap-hub/fixtures';
 import { addMinutes, subDays, subMinutes, addDays } from 'date-fns';
 
 import EventCard from '../EventCard';
 
 const props: ComponentProps<typeof EventCard> = {
   ...createEventResponse(),
-  group: undefined,
+  hasSpeakersToBeAnnounced: false,
+  eventOwner: <div>ASAP Team</div>,
   tags: [],
 };
 it('shows that an event has been cancelled', () => {
@@ -100,7 +101,6 @@ describe('current events', () => {
       <EventCard
         {...props}
         startDate={addMinutes(new Date(), 30).toISOString()}
-        speakers={[]}
       />,
     );
 
@@ -181,83 +181,25 @@ describe('past events', () => {
   });
 
   it('displays inactive badge when a team is inactive', () => {
-    render(
-      <EventCard
-        {...props}
-        speakers={[
-          {
-            team: {
-              displayName: 'Team',
-              id: '123',
-              inactiveSince: '2022-10-20T09:00:00Z',
-            },
-            user: {
-              displayName: 'User',
-              id: '123',
-            },
-          },
-        ]}
-      />,
-    );
+    render(<EventCard {...props} />);
 
     expect(screen.getByTitle('Inactive')).toBeInTheDocument();
   });
 
   it('displays inactive badge when a group is inactive', () => {
-    render(
-      <EventCard
-        {...props}
-        group={{ ...createGroupResponse(), active: false }}
-      />,
-    );
+    render(<EventCard {...props} />);
 
     expect(screen.getByTitle('Inactive')).toBeInTheDocument();
   });
 
   it('displays inactive badge when a group and team are inactive', () => {
-    render(
-      <EventCard
-        {...props}
-        group={{ ...createGroupResponse(), active: false }}
-        speakers={[
-          {
-            team: {
-              displayName: 'Team',
-              id: '123',
-              inactiveSince: '2022-10-20T09:00:00Z',
-            },
-            user: {
-              displayName: 'User',
-              id: '123',
-            },
-          },
-        ]}
-      />,
-    );
+    render(<EventCard {...props} />);
 
     expect(screen.getAllByTitle('Inactive')).toHaveLength(2);
   });
 
   it('does not display inactive badge when a group and team are active', () => {
-    render(
-      <EventCard
-        {...props}
-        group={{ ...createGroupResponse(), active: true }}
-        speakers={[
-          {
-            team: {
-              displayName: 'Team',
-              id: '123',
-              inactiveSince: undefined,
-            },
-            user: {
-              displayName: 'User',
-              id: '123',
-            },
-          },
-        ]}
-      />,
-    );
+    render(<EventCard {...props} />);
 
     expect(screen.queryByTitle('Inactive')).not.toBeInTheDocument();
   });
@@ -268,18 +210,6 @@ describe('past events', () => {
         {...props}
         endDate={addDays(new Date(), 1).toISOString()}
         startDate={addDays(new Date(), 2).toISOString()}
-        speakers={[
-          {
-            team: {
-              displayName: 'Team',
-              id: '123',
-            },
-            user: {
-              displayName: 'User',
-              id: '123',
-            },
-          },
-        ]}
       />,
     );
 
@@ -296,14 +226,6 @@ describe('past events', () => {
         status="Confirmed"
         startDate={addDays(new Date(), 2).toISOString()}
         endDate={addDays(new Date(), 1).toISOString()}
-        speakers={[
-          {
-            team: {
-              displayName: 'Team',
-              id: '123',
-            },
-          },
-        ]}
       />,
     );
 

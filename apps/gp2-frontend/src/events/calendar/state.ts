@@ -1,5 +1,5 @@
 import { useRecoilValue, atom, selector } from 'recoil';
-import { ListCalendarResponse } from '@asap-hub/model';
+import { gp2 } from '@asap-hub/model';
 
 import { getCalendars } from './api';
 import { authorizationState } from '../../auth/state';
@@ -9,7 +9,7 @@ export const refreshCalendarsState = atom({
   default: 0,
 });
 
-export const calendarsState = selector<ListCalendarResponse>({
+export const calendarsState = selector<gp2.ListCalendarResponse>({
   key: 'calendars',
   get: async ({ get }) => {
     get(refreshCalendarsState);

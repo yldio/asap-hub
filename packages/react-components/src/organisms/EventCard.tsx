@@ -2,8 +2,8 @@ import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 
 import {
+  BasicEvent,
   eventMaterialTypes,
-  EventResponse,
   EVENT_CONSIDERED_IN_PROGRESS_MINUTES_BEFORE_EVENT,
 } from '@asap-hub/model';
 
@@ -17,7 +17,7 @@ import { considerEndedAfter } from '../utils';
 
 type EventCardProps = ComponentProps<typeof EventInfo> &
   Pick<
-    EventResponse,
+    BasicEvent,
     | 'tags'
     | 'status'
     | 'meetingLink'
@@ -26,11 +26,9 @@ type EventCardProps = ComponentProps<typeof EventInfo> &
     | 'videoRecording'
     | 'presentation'
     | 'meetingMaterials'
-    | 'speakers'
   > & {
-    showNumberOfSpeakers?: boolean;
-    showTeams?: boolean;
     displayToast?: boolean;
+    hasSpeakersToBeAnnounced: boolean;
   };
 
 const buttonStyle = css({
@@ -42,10 +40,10 @@ const buttonStyle = css({
 
 const EventCard: React.FC<EventCardProps> = ({
   status,
-  speakers,
-  showNumberOfSpeakers = true,
-  showTeams = true,
+  eventSpeakers,
+  eventTeams,
   displayToast = true,
+  hasSpeakersToBeAnnounced,
   ...props
 }) => {
   const considerStartedAfter = subMinutes(
@@ -98,12 +96,7 @@ const EventCard: React.FC<EventCardProps> = ({
         ),
       };
     }
-
-    const hasSpeakersToBeAnnounced = speakers.find(
-      (speaker) => 'team' in speaker && !('user' in speaker),
-    );
-
-    if (!hasStarted && (speakers.length === 0 || hasSpeakersToBeAnnounced)) {
+    if (!hasStarted && hasSpeakersToBeAnnounced) {
       return {
         type: 'info',
         toastContent: 'More speakers to be announced.',
@@ -146,9 +139,8 @@ const EventCard: React.FC<EventCardProps> = ({
       <EventInfo
         {...props}
         status={status}
-        speakers={speakers}
-        showNumberOfSpeakers={showNumberOfSpeakers}
-        showTeams={showTeams}
+        eventSpeakers={eventSpeakers}
+        eventTeams={eventTeams}
       />
     </ToastCard>
   );

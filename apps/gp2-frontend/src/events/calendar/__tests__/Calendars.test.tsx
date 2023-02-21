@@ -1,4 +1,4 @@
-import { createListCalendarResponse } from '@asap-hub/fixtures';
+import { gp2 } from '@asap-hub/fixtures';
 import {
   render,
   waitForElementToBeRemoved,
@@ -37,7 +37,7 @@ it('renders calendar', async () => {
   const mockGetCalendars = getCalendars as jest.MockedFunction<
     typeof getCalendars
   >;
-  mockGetCalendars.mockResolvedValue(createListCalendarResponse());
+  mockGetCalendars.mockResolvedValue(gp2.createListCalendarResponse());
   await renderCalendars();
   expect(screen.getByTitle('Calendar')).toBeVisible();
 });

@@ -1417,7 +1417,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@figspec/react",\
-        "virtual:1900398b7ab3192c43d6e1f08be503b2f041bc6bd41e59ddb136ee8602fea185d9a368881b2595c6622144119300bc586a54d5b7d80ddf241e9e000ea3020c1a#npm:1.0.0"\
+        "virtual:2e6332cf5cd1b12ba5763f4fcf3f32b3e5b06387c800927f2b0a173003c9b4e967619e0ce775b05ea197ad72105109b0ac31be4a6474a7f84af13e0ff3c50721#npm:1.0.0"\
       ],\
       [\
         "@graphql-codegen/add",\
@@ -9082,7 +9082,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "storybook-addon-designs",\
-        "npm:6.2.1"\
+        "npm:6.3.1"\
       ],\
       [\
         "stream",\
@@ -12486,7 +12486,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react", "npm:17.0.2"],\
             ["react-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:17.0.2"],\
             ["react-router-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:5.3.4"],\
-            ["storybook-addon-designs", "npm:6.2.1"],\
+            ["storybook-addon-designs", "npm:6.3.1"],\
             ["typescript", "patch:typescript@npm%3A4.8.4#~builtin<compat/typescript>::version=4.8.4&hash=1a91c8"]\
           ],\
           "linkType": "SOFT"\
@@ -28571,10 +28571,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:1900398b7ab3192c43d6e1f08be503b2f041bc6bd41e59ddb136ee8602fea185d9a368881b2595c6622144119300bc586a54d5b7d80ddf241e9e000ea3020c1a#npm:1.0.0", {\
-          "packageLocation": "./.yarn/__virtual__/@figspec-react-virtual-8667b71a25/0/cache/@figspec-react-npm-1.0.0-830da9331b-27d7e2f685.zip/node_modules/@figspec/react/",\
+        ["virtual:2e6332cf5cd1b12ba5763f4fcf3f32b3e5b06387c800927f2b0a173003c9b4e967619e0ce775b05ea197ad72105109b0ac31be4a6474a7f84af13e0ff3c50721#npm:1.0.0", {\
+          "packageLocation": "./.yarn/__virtual__/@figspec-react-virtual-5ec31fa03c/0/cache/@figspec-react-npm-1.0.0-830da9331b-27d7e2f685.zip/node_modules/@figspec/react/",\
           "packageDependencies": [\
-            ["@figspec/react", "virtual:1900398b7ab3192c43d6e1f08be503b2f041bc6bd41e59ddb136ee8602fea185d9a368881b2595c6622144119300bc586a54d5b7d80ddf241e9e000ea3020c1a#npm:1.0.0"],\
+            ["@figspec/react", "virtual:2e6332cf5cd1b12ba5763f4fcf3f32b3e5b06387c800927f2b0a173003c9b4e967619e0ce775b05ea197ad72105109b0ac31be4a6474a7f84af13e0ff3c50721#npm:1.0.0"],\
             ["@figspec/components", "npm:1.0.0"],\
             ["@types/react", null],\
             ["react", null]\
@@ -66915,11 +66915,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["storybook-addon-designs", [\
-        ["npm:6.2.1", {\
-          "packageLocation": "./.yarn/cache/storybook-addon-designs-npm-6.2.1-1900398b7a-0ea3ef4d1b.zip/node_modules/storybook-addon-designs/",\
+        ["npm:6.3.1", {\
+          "packageLocation": "./.yarn/cache/storybook-addon-designs-npm-6.3.1-2e6332cf5c-63d9135854.zip/node_modules/storybook-addon-designs/",\
           "packageDependencies": [\
-            ["storybook-addon-designs", "npm:6.2.1"],\
-            ["@figspec/react", "virtual:1900398b7ab3192c43d6e1f08be503b2f041bc6bd41e59ddb136ee8602fea185d9a368881b2595c6622144119300bc586a54d5b7d80ddf241e9e000ea3020c1a#npm:1.0.0"]\
+            ["storybook-addon-designs", "npm:6.3.1"],\
+            ["@figspec/react", "virtual:2e6332cf5cd1b12ba5763f4fcf3f32b3e5b06387c800927f2b0a173003c9b4e967619e0ce775b05ea197ad72105109b0ac31be4a6474a7f84af13e0ff3c50721#npm:1.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\

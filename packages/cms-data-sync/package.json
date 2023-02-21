@@ -17,7 +17,7 @@
   "dependencies": {
     "@asap-hub/model": "workspace:*",
     "@asap-hub/squidex": "workspace:*",
-    "@babel/runtime-corejs3": "7.20.13",
+    "@babel/runtime-corejs3": "7.21.0",
     "@contentful/rich-text-types": "^15.13.2",
     "contentful-html-rich-text-converter": "yldio/contentful-html-rich-text-converter#v1.0.18",
     "contentful-management": "^10.19.3",

@@ -1,12 +1,10 @@
 import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
+  userPermissions,
 } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
-import {
-  hasCreateUpdateResearchOutputPermissions,
-  isResearchOutputWorkingGroup,
-} from '@asap-hub/validation';
+import { getUserPerrmisions } from '@asap-hub/validation';
 import {
   atom,
   atomFamily,
@@ -166,81 +164,10 @@ export const useSetResearchOutputItem = () => {
   };
 };
 
-type permissionsType = {
-  canCreateDraft: boolean;
-  canUpdateDraft: boolean;
-  canPublishDraft: boolean;
-  canEditPublished: boolean;
-};
-
-export const useTestFunction = (
+export const useUserPerrmisions = (
   researchOutputData: ResearchOutputResponse | undefined,
-): permissionsType => {
-  let permissionsObject: permissionsType = {
-    canCreateDraft: false,
-    canUpdateDraft: false,
-    canPublishDraft: false,
-    canEditPublished: false,
-  };
+): userPermissions => {
   const user = useCurrentUserCRN();
 
-  if (user === null || researchOutputData === undefined) {
-    return permissionsObject;
-  }
-  console.log(user);
-  if (user.teams.some((team) => team.role === 'ASAP Staff')) {
-    permissionsObject = {
-      canCreateDraft: true,
-      canUpdateDraft: true,
-      canPublishDraft: true,
-      canEditPublished: true,
-    };
-    return permissionsObject;
-  }
-
-  const teamIds = researchOutputData.teams?.map((team) => team.id);
-
-  if (
-    isResearchOutputWorkingGroup(researchOutputData) &&
-    !!user.workingGroups.find(
-      (workingGroup) =>
-        researchOutputData.workingGroups
-          .map((wg) => wg.id)
-          .includes(workingGroup.id) && workingGroup.role === 'Project Manager',
-    )
-  ) {
-    permissionsObject = {
-      canCreateDraft: true,
-      canUpdateDraft: true,
-      canPublishDraft: true,
-      canEditPublished: true,
-    };
-    return permissionsObject;
-  }
-  if (hasCreateUpdateResearchOutputPermissions(user, teamIds)) {
-    permissionsObject = {
-      canCreateDraft: true,
-      canUpdateDraft: true,
-      canPublishDraft: true,
-      canEditPublished: true,
-    };
-    return permissionsObject;
-  }
-  return permissionsObject;
-};
-
-export const useCanUpdateWorkingGroupResearchOutput = (
-  workingGroupIds: string[],
-): boolean => {
-  const user = useCurrentUserCRN();
-
-  if (user === null) return false;
-  if (!workingGroupIds.length) return false;
-  if (user.teams.some((team) => team.role === 'ASAP Staff')) return true;
-
-  return !!user.workingGroups.find(
-    (workingGroup) =>
-      workingGroupIds.includes(workingGroup.id) &&
-      workingGroup.role === 'Project Manager',
-  );
+  return getUserPerrmisions(user, researchOutputData);
 };

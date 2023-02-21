@@ -1,8 +1,14 @@
 import {
   hasCreateUpdateResearchOutputPermissions,
   hasWorkingGroupsCreateUpdateResearchOutputPermissions,
+  isUserProjectManagerOfTeams,
+  isUserProjectManagerOfWorkingGroups,
+  isUserAsapStaff,
+  getUserPerrmisions,
+  noPermissions,
 } from '../../src/permissions/research-output';
 import {
+  createResearchOutputResponse,
   createUserResponse,
   createWorkingGroupResponse,
 } from '@asap-hub/fixtures';
@@ -137,5 +143,298 @@ describe('hasWorkingGroupsCreateUpdateResearchOutputPermissions', () => {
         },
       ),
     ).toEqual(false);
+  });
+});
+
+describe('getUserPerrmisions', () => {
+  test('Should not have permissions when there is no user data', () => {
+    expect(getUserPerrmisions(null, createResearchOutputResponse())).toEqual(
+      noPermissions,
+    );
+  });
+  test('Should not have permissions when there is no research output data', () => {
+    expect(getUserPerrmisions(createUserResponse(), undefined)).toEqual(
+      noPermissions,
+    );
+  });
+  test('Should not have permission if the user is not a project manager or asap staff', () => {
+    expect(
+      getUserPerrmisions(
+        {
+          ...createUserResponse(),
+          teams: [
+            {
+              id: 'team-id-3',
+              role: 'Project Manager',
+              displayName: 'Team A',
+              proposal: 'proposalId1',
+            },
+          ],
+          workingGroups: [
+            {
+              id: 'wg-1',
+              role: 'Member',
+              active: true,
+              name: 'wg A',
+            },
+          ],
+        },
+        {
+          ...createResearchOutputResponse(),
+          teams: [{ id: 'team-id-3', displayName: 'Team A' }],
+          workingGroups: [{ id: 'wg-1', title: 'wg A' }],
+        },
+      ),
+    ).toEqual(noPermissions);
+  });
+  test('Should have permission if the user is a project manager on a team', () => {
+    expect(
+      getUserPerrmisions(
+        {
+          ...createUserResponse(),
+          teams: [
+            {
+              id: 'team-id-3',
+              role: 'Project Manager',
+              displayName: 'Team A',
+              proposal: 'proposalId1',
+            },
+          ],
+        },
+        {
+          ...createResearchOutputResponse(),
+          teams: [{ id: 'team-id-3', displayName: 'Team A' }],
+          workingGroups: undefined,
+        },
+      ),
+    ).toEqual({
+      createDraft: true,
+      editDraft: true,
+      publishDraft: true,
+      editPublished: true,
+    });
+  });
+  test('Should have permission if the user is a project manager on a working groups', () => {
+    expect(
+      getUserPerrmisions(
+        {
+          ...createUserResponse(),
+          workingGroups: [
+            {
+              id: 'wg-1',
+              role: 'Project Manager',
+              active: true,
+              name: 'wg A',
+            },
+          ],
+        },
+        {
+          ...createResearchOutputResponse(),
+          workingGroups: [{ id: 'wg-1', title: 'wg A' }],
+        },
+      ),
+    ).toEqual({
+      createDraft: true,
+      editDraft: true,
+      publishDraft: true,
+      editPublished: true,
+    });
+  });
+  test('Should have permission if the user is asap staff', () => {
+    expect(
+      getUserPerrmisions(
+        {
+          ...createUserResponse(),
+          teams: [
+            {
+              id: 'team-id-3',
+              role: 'ASAP Staff',
+              displayName: 'Team A',
+              proposal: 'proposalId1',
+            },
+          ],
+        },
+        {
+          ...createResearchOutputResponse(),
+          teams: [{ id: 'team-id-3', displayName: 'Team A' }],
+        },
+      ),
+    ).toEqual({
+      createDraft: true,
+      editDraft: true,
+      publishDraft: true,
+      editPublished: true,
+    });
+  });
+});
+
+describe('isUserAsapStaff', () => {
+  test('Should not have permissions when there are no teams assigned to the user', () => {
+    expect(
+      isUserAsapStaff({
+        ...createUserResponse(),
+        teams: [],
+      }),
+    ).toEqual(false);
+  });
+  test('Should not have permissions when the user is not a staff', () => {
+    expect(
+      isUserAsapStaff({
+        ...createUserResponse(),
+        teams: [
+          {
+            id: 'team-1',
+            role: 'Key Personnel',
+            displayName: 'Team A',
+            proposal: 'proposalId1',
+          },
+        ],
+      }),
+    ).toEqual(false);
+  });
+  test('Should have the permission when the user has a Staff role in any team', () => {
+    expect(
+      isUserAsapStaff({
+        ...createUserResponse(),
+        teams: [
+          {
+            id: 'team-id-3',
+            role: 'ASAP Staff',
+            displayName: 'Team A',
+            proposal: 'proposalId1',
+          },
+        ],
+      }),
+    ).toEqual(true);
+  });
+});
+
+describe('isUserProjectManagerOfTeams', () => {
+  test('Should not have permissions when there are no teams assigned to the user', () => {
+    expect(
+      isUserProjectManagerOfTeams(
+        {
+          ...createUserResponse(),
+          teams: [],
+        },
+        [
+          {
+            id: 'team-1',
+            displayName: 'Team A',
+          },
+        ],
+      ),
+    ).toEqual(false);
+  });
+  test('Should not have permissions when the user is not a PM', () => {
+    expect(
+      isUserProjectManagerOfTeams(
+        {
+          ...createUserResponse(),
+          teams: [
+            {
+              id: 'team-1',
+              role: 'Key Personnel',
+              displayName: 'Team A',
+              proposal: 'proposalId1',
+            },
+          ],
+        },
+        [
+          {
+            id: 'team-1',
+            displayName: 'Team A',
+          },
+        ],
+      ),
+    ).toEqual(false);
+  });
+  test('Should have the permission when the user has a Project Manager role inside the team', () => {
+    expect(
+      isUserProjectManagerOfTeams(
+        {
+          ...createUserResponse(),
+          teams: [
+            {
+              id: 'team-1',
+              role: 'Project Manager',
+              displayName: 'Team A',
+              proposal: 'proposalId1',
+            },
+          ],
+        },
+        [
+          {
+            id: 'team-1',
+            displayName: 'Team A',
+          },
+        ],
+      ),
+    ).toEqual(true);
+  });
+});
+
+describe('isUserProjectManagerOfWorkingGroups', () => {
+  test('Should not have permissions when there are no working groups assigned to the user', () => {
+    expect(
+      isUserProjectManagerOfWorkingGroups(
+        {
+          ...createUserResponse(),
+          workingGroups: [],
+        },
+        [
+          {
+            id: 'WG-1',
+            title: 'WG A',
+          },
+        ],
+      ),
+    ).toEqual(false);
+  });
+  test('Should not have permissions when the user is not a PM', () => {
+    expect(
+      isUserProjectManagerOfWorkingGroups(
+        {
+          ...createUserResponse(),
+          workingGroups: [
+            {
+              id: 'wg-1',
+              role: 'Member',
+              active: true,
+              name: 'wg A',
+            },
+          ],
+        },
+        [
+          {
+            id: 'wg-1',
+            title: 'wg A',
+          },
+        ],
+      ),
+    ).toEqual(false);
+  });
+  test('Should have the permission when the user has a Project Manager role inside the working group', () => {
+    expect(
+      isUserProjectManagerOfWorkingGroups(
+        {
+          ...createUserResponse(),
+          workingGroups: [
+            {
+              id: 'wg-1',
+              role: 'Project Manager',
+              name: 'wg A',
+              active: true,
+            },
+          ],
+        },
+        [
+          {
+            id: 'wg-1',
+            title: 'wg A',
+          },
+        ],
+      ),
+    ).toEqual(true);
   });
 });

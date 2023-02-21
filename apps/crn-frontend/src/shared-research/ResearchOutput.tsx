@@ -5,7 +5,7 @@ import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { useRouteMatch, Route } from 'react-router-dom';
 import { isResearchOutputWorkingGroup } from '@asap-hub/validation';
 
-import { useResearchOutputById, useTestFunction } from './state';
+import { useResearchOutputById, useUserPerrmisions } from './state';
 import TeamOutput from '../network/teams/TeamOutput';
 import WorkingGroupOutput from '../network/working-groups/WorkingGroupOutput';
 
@@ -17,12 +17,12 @@ const ResearchOutput: React.FC = () => {
   const researchOutputData = useResearchOutputById(researchOutputId);
   const backHref = useBackHref() ?? sharedResearch({}).$;
 
-  const permissions = useTestFunction(researchOutputData);
+  const permissions = useUserPerrmisions(researchOutputData);
 
   if (researchOutputData) {
     return (
       <ResearchOutputPermissionsContext.Provider
-        value={{ canCreateUpdate: permissions.canPublishDraft }}
+        value={{ canCreateUpdate: permissions.editPublished }}
       >
         <Route exact path={path}>
           <Frame title={researchOutputData.title}>

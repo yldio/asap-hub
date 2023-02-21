@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
-    "@babel/core": "7.20.12",
+    "@babel/core": "7.21.0",
     "@storybook/builder-webpack5": "^6.5.13",
     "@storybook/manager-webpack5": "^6.5.13",
     "@types/history": "4.7.11",

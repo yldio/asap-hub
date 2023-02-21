@@ -272,7 +272,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
               }
               typeOptions={typeOptions}
               urlRequired={urlRequired}
-              typeDescription={`Select the option that applies to this ${documentType.toLowerCase()}.`}
+              typeDescription="Select the type that matches your output the best."
             />
             <ResearchOutputExtraInformationCard
               documentType={documentType}

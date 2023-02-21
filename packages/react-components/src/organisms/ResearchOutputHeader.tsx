@@ -17,11 +17,7 @@ const visualHeaderStyles = css({
   boxShadow: `0 2px 4px -2px ${steel.rgb}`,
 });
 
-type subHeaderRecordType = {
-  [key in ResearchOutputDocumentType]: ReactNode | null;
-};
-
-const subheaderRecord: subHeaderRecordType = {
+const subheaderRecord: Record<ResearchOutputDocumentType, ReactNode | null> = {
   Protocol: (
     <>
       Add your protocol to a repository (e.g. protocols.io) before sharing on
@@ -86,34 +82,30 @@ const subheaderRecord: subHeaderRecordType = {
   Presentation: null,
 };
 
-const headerCopy = (
-  outputDocumentType: ResearchOutputDocumentType,
-  workingGroupAssocation: boolean,
-) => {
-  if (workingGroupAssocation) {
-    switch (outputDocumentType) {
-      case 'Article':
-        return 'Share a Working Group Article';
-      case 'Report':
-        return 'Share a Working Group CRN Report';
-      default:
-        return 'Share a Working Group Resource';
-    }
-  }
-  switch (outputDocumentType) {
-    case 'Protocol':
-      return 'Share a protocol';
-    case 'Dataset':
-      return 'Share a dataset';
-    case 'Bioinformatics':
-      return 'Share bioinformatics';
-    case 'Lab Resource':
-      return 'Share a lab resource';
-    case 'Article':
-      return 'Share an article';
-    default:
-      return 'Share a resource';
-  }
+const headerTextMap: Record<
+  'Team' | 'WorkingGroup',
+  Record<ResearchOutputDocumentType, string>
+> = {
+  WorkingGroup: {
+    Article: 'Share a Working Group Article',
+    Bioinformatics: 'Share a Working Group Bioinformatics',
+    Dataset: 'Share a Working Group Dataset',
+    Protocol: 'Share a Working Group Protocol',
+    'Lab Resource': 'Share a Working Group Lab Resource',
+    Report: 'Share a Working Group CRN Report',
+    'Grant Document': 'Share a Working Group Grant Document',
+    Presentation: 'Share a Working Group Presentation',
+  },
+  Team: {
+    Protocol: 'Share a protocol',
+    Dataset: 'Share a dataset',
+    Bioinformatics: 'Share bioinformatics',
+    'Lab Resource': 'Share a lab resource',
+    Article: 'Share an article',
+    'Grant Document': 'Share a grant document',
+    Presentation: 'Share a presentation',
+    Report: 'Share a report',
+  },
 };
 
 type ResearchOutputHeaderProps = {
@@ -128,7 +120,11 @@ const ResearchOutputHeader: React.FC<ResearchOutputHeaderProps> = ({
   <header>
     <div css={visualHeaderStyles}>
       <Display styleAsHeading={2}>
-        {headerCopy(documentType, workingGroupAssociation)}
+        {
+          headerTextMap[workingGroupAssociation ? 'WorkingGroup' : 'Team'][
+            documentType
+          ]
+        }
       </Display>
       <div>
         {subheaderRecord[documentType] && (

@@ -204,19 +204,27 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
                 }}
                 {{
                   item: <>{bioinformatics} Bioinformatics</>,
-                  href: '#',
+                  href: route.createOutput({
+                    workingGroupOutputDocumentType: 'bioinformatics',
+                  }).$,
                 }}
                 {{
                   item: <>{dataset} Dataset</>,
-                  href: '#',
+                  href: route.createOutput({
+                    workingGroupOutputDocumentType: 'dataset',
+                  }).$,
                 }}
                 {{
                   item: <>{labResource} Lab Resource</>,
-                  href: '#',
+                  href: route.createOutput({
+                    workingGroupOutputDocumentType: 'lab-resource',
+                  }).$,
                 }}
                 {{
                   item: <>{protocol} Protocol</>,
-                  href: '#',
+                  href: route.createOutput({
+                    workingGroupOutputDocumentType: 'protocol',
+                  }).$,
                 }}
                 {{
                   item: <>{crnReportIcon} CRN Report</>,

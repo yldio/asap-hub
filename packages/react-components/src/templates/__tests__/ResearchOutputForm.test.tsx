@@ -291,7 +291,7 @@ describe('on submit', () => {
     });
 
     const typeDropdown = screen.getByRole('textbox', {
-      name: /Select the option/i,
+      name: /Select the type/i,
     });
     fireEvent.change(typeDropdown, {
       target: { value: data.type },
@@ -408,7 +408,7 @@ describe('on submit', () => {
     const type = 'Spectroscopy';
     await setupForm({ researchTags, documentType });
     const typeDropdown = screen.getByRole('textbox', {
-      name: /Select the option/i,
+      name: /Select the type/i,
     });
     fireEvent.change(typeDropdown, {
       target: { value: type },
@@ -436,7 +436,7 @@ describe('on submit', () => {
       documentType,
     });
     const typeDropdown = screen.getByRole('textbox', {
-      name: /Select the option/i,
+      name: /Select the type/i,
     });
     fireEvent.change(typeDropdown, {
       target: { value: type },
@@ -465,7 +465,7 @@ describe('on submit', () => {
       documentType,
     });
     const typeDropdown = screen.getByRole('textbox', {
-      name: /Select the option/i,
+      name: /Select the type/i,
     });
     fireEvent.change(typeDropdown, {
       target: { value: type },
@@ -493,7 +493,7 @@ describe('on submit', () => {
     const type = 'Spectroscopy';
     await setupForm({ researchTags, documentType });
     const typeDropdown = screen.getByRole('textbox', {
-      name: /Select the option/i,
+      name: /Select the type/i,
     });
     fireEvent.change(typeDropdown, {
       target: { value: type },
@@ -525,7 +525,7 @@ describe('on submit', () => {
     const type = 'Model System';
     await setupForm({ researchTags, documentType });
     const typeDropdown = screen.getByRole('textbox', {
-      name: /Select the option/i,
+      name: /Select the type/i,
     });
     fireEvent.change(typeDropdown, {
       target: { value: type },
@@ -559,7 +559,7 @@ describe('on submit', () => {
     const researchTags = [researchTagEnvironmentResponse];
     await setupForm({ researchTags, documentType });
     const typeDropdown = screen.getByRole('textbox', {
-      name: /Select the option/i,
+      name: /Select the type/i,
     });
     fireEvent.change(typeDropdown, {
       target: { value: type },
@@ -592,7 +592,7 @@ describe('on submit', () => {
     const researchTags = [researchTagSubtypeResponse];
     await setupForm({ researchTags, documentType });
     const typeDropdown = screen.getByRole('textbox', {
-      name: /Select the option/i,
+      name: /Select the type/i,
     });
 
     fireEvent.change(typeDropdown, {

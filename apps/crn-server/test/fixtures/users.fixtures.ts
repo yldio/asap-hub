@@ -626,6 +626,7 @@ export const getUserDataObject = (): UserDataObject => ({
   teams: [
     {
       id: 'team-id-0',
+      teamInactiveSince: '',
       role: 'Lead PI (Core Leadership)',
       displayName: 'Team A',
       proposal: 'proposalId1',

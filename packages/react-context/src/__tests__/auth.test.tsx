@@ -89,6 +89,7 @@ describe('useCurrentUser', () => {
           teams: [],
           algoliaApiKey: 'asdasda',
           workingGroups: [],
+          role: 'Grantee',
         },
       }),
     });
@@ -195,6 +196,7 @@ describe('useCurrentUserTeamRoles', () => {
           ],
           algoliaApiKey: 'asdasda',
           workingGroups: [],
+          role: 'Grantee',
         },
       }),
     });

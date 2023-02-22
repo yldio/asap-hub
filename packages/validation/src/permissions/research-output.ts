@@ -43,9 +43,6 @@ export const noPermissions: userPermissions = {
   editPublished: false,
 };
 
-export const isUserAsapStaff = (user: Omit<User, 'algoliaApiKey'>): boolean =>
-  user.teams.some((team) => team.role === 'ASAP Staff');
-
 export const isUserProjectManagerOfTeams = (
   user: Omit<User, 'algoliaApiKey'>,
   teams: ResearchOutputResponse['teams'],
@@ -66,7 +63,7 @@ export const isUserProjectManagerOfWorkingGroups = (
       workingGroup.role === 'Project Manager',
   );
 
-export const getUserPerrmisions = (
+export const getUserPermissions = (
   user: Omit<User, 'algoliaApiKey'> | null,
   researchOutputData: ResearchOutputResponse | undefined,
 ): userPermissions => {
@@ -75,7 +72,7 @@ export const getUserPerrmisions = (
   }
 
   if (
-    isUserAsapStaff(user) ||
+    user.role === 'Staff' ||
     (isResearchOutputWorkingGroup(researchOutputData) &&
       isUserProjectManagerOfWorkingGroups(
         user,

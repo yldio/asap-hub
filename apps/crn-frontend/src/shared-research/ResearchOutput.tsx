@@ -5,7 +5,7 @@ import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { useRouteMatch, Route } from 'react-router-dom';
 import { isResearchOutputWorkingGroup } from '@asap-hub/validation';
 
-import { useResearchOutputById, useUserPerrmisions } from './state';
+import { useResearchOutputById, useUserPermissions } from './state';
 import TeamOutput from '../network/teams/TeamOutput';
 import WorkingGroupOutput from '../network/working-groups/WorkingGroupOutput';
 
@@ -17,7 +17,7 @@ const ResearchOutput: React.FC = () => {
   const researchOutputData = useResearchOutputById(researchOutputId);
   const backHref = useBackHref() ?? sharedResearch({}).$;
 
-  const permissions = useUserPerrmisions(researchOutputData);
+  const permissions = useUserPermissions(researchOutputData);
 
   if (researchOutputData) {
     return (

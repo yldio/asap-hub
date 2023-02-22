@@ -108,10 +108,11 @@ const dropdownButtonStyling = css({
   },
 });
 
-const isProjectManager = (
+const isProjectManagerOrStaff = (
   user: ReturnType<typeof useCurrentUserCRN>,
   leaders: WorkingGroupLeader[],
 ): boolean =>
+  user?.role === 'Staff' ||
   leaders.some((l) => l.user.id === user?.id && l.role === 'Project Manager');
 
 type WorkingGroupPageHeaderProps = {
@@ -146,7 +147,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
   pastEventsCount,
 }) => {
   const currentUserCRN = useCurrentUserCRN();
-  const isWorkingGroupProjectManager = isProjectManager(
+  const isWorkingGroupProjectManagerOrStaff = isProjectManagerOrStaff(
     currentUserCRN,
     leaders,
   );
@@ -172,7 +173,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
               .about({}).$
           }#${membersListElementId}`}
         />
-        {pointOfContact && !isWorkingGroupProjectManager && (
+        {pointOfContact && !isWorkingGroupProjectManagerOrStaff && (
           <div css={pointOfContactStyles}>
             <Link
               buttonStyle
@@ -186,7 +187,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
         )}
 
         {isEnabled('WORKING_GROUP_SHARED_OUTPUT_BTN') &&
-          isWorkingGroupProjectManager && (
+          isWorkingGroupProjectManagerOrStaff && (
             <div css={createStyles}>
               <DropdownButton
                 buttonChildren={() => (

@@ -24,6 +24,7 @@ export const createAuthUser = (): User => ({
       active: true,
     },
   ],
+  role: 'Grantee',
 });
 
 export const getJwtPayload = (): JwtPayload => ({

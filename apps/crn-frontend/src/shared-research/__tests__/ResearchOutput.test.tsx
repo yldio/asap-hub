@@ -210,10 +210,11 @@ describe('a working group research output', () => {
       researchOutputRoute.editResearchOutput({}).$,
       {
         ...defaultUser,
+        role: 'Staff',
         teams: [
           {
             id: 'any',
-            role: 'ASAP Staff',
+            role: 'Key Personnel',
           },
         ],
         workingGroups: [

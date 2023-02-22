@@ -3,8 +3,7 @@ import {
   hasWorkingGroupsCreateUpdateResearchOutputPermissions,
   isUserProjectManagerOfTeams,
   isUserProjectManagerOfWorkingGroups,
-  isUserAsapStaff,
-  getUserPerrmisions,
+  getUserPermissions,
   noPermissions,
 } from '../../src/permissions/research-output';
 import {
@@ -146,20 +145,20 @@ describe('hasWorkingGroupsCreateUpdateResearchOutputPermissions', () => {
   });
 });
 
-describe('getUserPerrmisions', () => {
+describe('getUserPermissions', () => {
   test('Should not have permissions when there is no user data', () => {
-    expect(getUserPerrmisions(null, createResearchOutputResponse())).toEqual(
+    expect(getUserPermissions(null, createResearchOutputResponse())).toEqual(
       noPermissions,
     );
   });
   test('Should not have permissions when there is no research output data', () => {
-    expect(getUserPerrmisions(createUserResponse(), undefined)).toEqual(
+    expect(getUserPermissions(createUserResponse(), undefined)).toEqual(
       noPermissions,
     );
   });
   test('Should not have permission if the user is not a project manager or asap staff', () => {
     expect(
-      getUserPerrmisions(
+      getUserPermissions(
         {
           ...createUserResponse(),
           teams: [
@@ -189,7 +188,7 @@ describe('getUserPerrmisions', () => {
   });
   test('Should have permission if the user is a project manager on a team', () => {
     expect(
-      getUserPerrmisions(
+      getUserPermissions(
         {
           ...createUserResponse(),
           teams: [
@@ -216,7 +215,7 @@ describe('getUserPerrmisions', () => {
   });
   test('Should have permission if the user is a project manager on a working groups', () => {
     expect(
-      getUserPerrmisions(
+      getUserPermissions(
         {
           ...createUserResponse(),
           workingGroups: [
@@ -242,13 +241,14 @@ describe('getUserPerrmisions', () => {
   });
   test('Should have permission if the user is asap staff', () => {
     expect(
-      getUserPerrmisions(
+      getUserPermissions(
         {
           ...createUserResponse(),
+          role: 'Staff',
           teams: [
             {
               id: 'team-id-3',
-              role: 'ASAP Staff',
+              role: 'Key Personnel',
               displayName: 'Team A',
               proposal: 'proposalId1',
             },
@@ -265,47 +265,6 @@ describe('getUserPerrmisions', () => {
       publishDraft: true,
       editPublished: true,
     });
-  });
-});
-
-describe('isUserAsapStaff', () => {
-  test('Should not have permissions when there are no teams assigned to the user', () => {
-    expect(
-      isUserAsapStaff({
-        ...createUserResponse(),
-        teams: [],
-      }),
-    ).toEqual(false);
-  });
-  test('Should not have permissions when the user is not a staff', () => {
-    expect(
-      isUserAsapStaff({
-        ...createUserResponse(),
-        teams: [
-          {
-            id: 'team-1',
-            role: 'Key Personnel',
-            displayName: 'Team A',
-            proposal: 'proposalId1',
-          },
-        ],
-      }),
-    ).toEqual(false);
-  });
-  test('Should have the permission when the user has a Staff role in any team', () => {
-    expect(
-      isUserAsapStaff({
-        ...createUserResponse(),
-        teams: [
-          {
-            id: 'team-id-3',
-            role: 'ASAP Staff',
-            displayName: 'Team A',
-            proposal: 'proposalId1',
-          },
-        ],
-      }),
-    ).toEqual(true);
   });
 });
 

@@ -13,7 +13,7 @@ describe('Resources', () => {
     }));
   const defaultProps = (): ResourcesProps => ({
     resources: getResources(),
-    headline: 'a headline',
+    headline: <p>a headline</p>,
   });
 
   it('renders heading', () => {

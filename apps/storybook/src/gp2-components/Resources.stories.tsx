@@ -15,10 +15,15 @@ const getResources = (length = 1): gp2.Resource[] =>
 const resources = getResources(5);
 
 const props = {
-  headline: `Please note, this is a private space for this working group on the
-        network. Nobody outside of this working group can see anything that you
-        upload here.`,
-
+  headline: (
+    <>
+      <b>Please note</b>
+      <br />
+      Please note, this is a private space for this working group on the
+      network. Nobody outside of this working group can see anything that you
+      upload here.`{' '}
+    </>
+  ),
   hint: 'View and share resources that others may find helpful.',
   resources,
 };

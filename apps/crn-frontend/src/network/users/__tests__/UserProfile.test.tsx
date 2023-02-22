@@ -190,11 +190,11 @@ it("links to the user's team", async () => {
   });
   expect(
     (
-      await screen.findByText('Kool Krew', {
+      await screen.findAllByText('Kool Krew', {
         exact: false,
-        selector: 'h2 ~ * *',
+        selector: 'div ~ * *',
       })
-    ).closest('a')!.href,
+    )[0].closest('a')!.href,
   ).toContain('42');
 });
 

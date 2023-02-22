@@ -36,8 +36,8 @@ type EventPageProps = ComponentProps<typeof EventInfo> &
     | 'calendar'
   > & {
     readonly backHref: string;
-    readonly eventConversation: ReactNode;
     readonly displayCalendar: boolean;
+    readonly eventConversation?: ReactNode;
   };
 const EventPage: React.FC<EventPageProps> = ({
   backHref,

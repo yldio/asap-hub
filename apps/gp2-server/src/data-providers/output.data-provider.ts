@@ -90,11 +90,6 @@ export class OutputSquidexDataProvider implements OutputDataProvider {
               contains: word,
             },
           },
-          {
-            [`data/tags/iv`]: {
-              contains: word,
-            },
-          },
         ],
         [],
       );

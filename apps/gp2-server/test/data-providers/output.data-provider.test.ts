@@ -476,8 +476,7 @@ describe('Outputs data provider', () => {
           expect.anything(),
           {
             ...expectedDefaultParams,
-            filter:
-              "((contains(data/title/iv,'Title')) or (contains(data/tags/iv,'Title')))",
+            filter: "contains(data/title/iv,'Title')",
           },
           expect.anything(),
         );
@@ -534,7 +533,7 @@ describe('Outputs data provider', () => {
 
         const expectedFilter =
           "((data/documentType/iv eq 'Grant Document') or (data/documentType/iv eq 'Presentation')) " +
-          "and ((contains(data/title/iv,'Title')) or (contains(data/tags/iv,'Title')))";
+          "and contains(data/title/iv,'Title')";
         expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
           expect.anything(),
           {
@@ -552,7 +551,7 @@ describe('Outputs data provider', () => {
         });
 
         const expectedFilter =
-          "((contains(data/title/iv,'some')) or (contains(data/tags/iv,'some')) or (contains(data/title/iv,'words')) or (contains(data/tags/iv,'words')))";
+          "((contains(data/title/iv,'some')) or (contains(data/title/iv,'words')))";
         expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
           expect.anything(),
           {
@@ -569,8 +568,7 @@ describe('Outputs data provider', () => {
           search: "'",
         });
 
-        const expectedFilter =
-          "((contains(data/title/iv,'''')) or (contains(data/tags/iv,'''')))";
+        const expectedFilter = "contains(data/title/iv,'''')";
         expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
           expect.anything(),
           {
@@ -587,8 +585,7 @@ describe('Outputs data provider', () => {
           search: '"',
         });
 
-        const expectedFilter =
-          "((contains(data/title/iv,'\"')) or (contains(data/tags/iv,'\"')))";
+        const expectedFilter = "contains(data/title/iv,'\"')";
         expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
           expect.anything(),
           {

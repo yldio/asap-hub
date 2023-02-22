@@ -143,15 +143,19 @@ const Resources: React.FC<ResourcesProps> = ({
                   )}
                 </div>
                 <div
-                  css={css({
-                    display: 'flex',
-                    flexDirection: 'row',
-                    paddingTop: rem(8),
-                    color: colors.primary500.rgb,
-                    svg: {
-                      stroke: colors.primary500.rgb,
+                  css={css([
+                    {
+                      display: 'flex',
+                      flexDirection: 'row',
+                      paddingTop: rem(8),
                     },
-                  })}
+                    resource.type === 'Link' && {
+                      color: colors.primary500.rgb,
+                      svg: {
+                        stroke: colors.primary500.rgb,
+                      },
+                    },
+                  ])}
                 >
                   <Subtitle styleAsHeading={4} noMargin>
                     {resource.title}

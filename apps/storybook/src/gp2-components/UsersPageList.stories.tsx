@@ -1,12 +1,12 @@
-import { Layout, UsersPage } from '@asap-hub/gp2-components';
+import { Layout, UsersPageList } from '@asap-hub/gp2-components';
 import { action } from '@storybook/addon-actions';
 import { select, text } from '@storybook/addon-knobs';
 import { ComponentProps } from 'react';
 import { NoPaddingDecorator } from '../layout';
 
 export default {
-  title: 'GP2 / Templates / Users Directory / Users Page',
-  component: UsersPage,
+  title: 'GP2 / Templates / Users Directory / Users Page List',
+  component: UsersPageList,
   decorators: [NoPaddingDecorator],
 };
 
@@ -19,7 +19,7 @@ const layoutProps: Pick<
 };
 export const Normal = () => (
   <Layout {...layoutProps}>
-    <UsersPage
+    <UsersPageList
       onSearchQueryChange={() => action('search')}
       searchQuery={text('Search Query', '')}
       isAdministrator={
@@ -37,6 +37,6 @@ export const Normal = () => (
       }
     >
       Page content
-    </UsersPage>
+    </UsersPageList>
   </Layout>
 );

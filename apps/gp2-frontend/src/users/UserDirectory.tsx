@@ -1,5 +1,5 @@
 import { createCsvFileStream, Frame } from '@asap-hub/frontend-utils';
-import { UsersPage } from '@asap-hub/gp2-components';
+import { UsersPageList } from '@asap-hub/gp2-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 } from '@asap-hub/routing';
 import { ComponentProps, FC } from 'react';
@@ -13,9 +13,10 @@ import { squidexUsersResponseToStream, userFields, userToCSV } from './export';
 import UserList from './UserList';
 
 type UserDirectoryProps = Pick<
-  ComponentProps<typeof UsersPage>,
+  ComponentProps<typeof UsersPageList>,
   'displayFilters'
 >;
+
 const UserDirectory: FC<UserDirectoryProps> = ({ displayFilters = false }) => {
   const { users } = gp2;
   const {
@@ -56,7 +57,7 @@ const UserDirectory: FC<UserDirectoryProps> = ({ displayFilters = false }) => {
   const { items: projects } = useProjectsState();
   const { items: workingGroups } = useWorkingGroupsState();
   return (
-    <UsersPage
+    <UsersPageList
       searchQuery={searchQuery}
       onSearchQueryChange={setSearchQuery}
       onFiltersClick={onFiltersClick}
@@ -69,10 +70,10 @@ const UserDirectory: FC<UserDirectoryProps> = ({ displayFilters = false }) => {
       workingGroups={workingGroups}
       filters={filters}
     >
-      <Frame title="Users">
+      <Frame title="User List">
         <UserList searchQuery={debouncedSearchQuery} filters={filters} />
       </Frame>
-    </UsersPage>
+    </UsersPageList>
   );
 };
 

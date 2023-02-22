@@ -75,6 +75,7 @@ export {
   UserDetailPage,
   UserOverview,
   UsersPage,
+  UsersPageList,
   WorkingGroupDetailPage,
   WorkingGroupOverview,
   WorkingGroupResources,

@@ -1,3 +1,5 @@
+import { Frame } from '@asap-hub/frontend-utils';
+import { UsersPage } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/routing';
 import { lazy, useEffect } from 'react';
@@ -19,10 +21,18 @@ const Routes: React.FC<Record<string, never>> = () => {
   return (
     <Switch>
       <Route exact path={path}>
-        <UserDirectory />
+        <UsersPage>
+          <Frame title="Users">
+            <UserDirectory />
+          </Frame>
+        </UsersPage>
       </Route>
       <Route exact path={users({}).filters({}).$}>
-        <UserDirectory displayFilters />
+        <UsersPage>
+          <Frame title="Users Display Filters">
+            <UserDirectory displayFilters />
+          </Frame>
+        </UsersPage>
       </Route>
       <Route path={path + users({}).user.template}>
         <UserDetail />

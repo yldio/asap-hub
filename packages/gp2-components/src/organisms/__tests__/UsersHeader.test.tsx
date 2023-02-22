@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react';
-import UsersPage from '../UsersPage';
+import UsersHeader from '../UsersHeader';
 
-describe('UsersPage', () => {
+describe('UsersHeader', () => {
   it('renders a banner', () => {
-    render(<UsersPage />);
+    render(<UsersHeader />);
     expect(screen.getByRole('banner')).toBeVisible();
   });
 });

@@ -218,98 +218,122 @@ describe('Outputs data provider', () => {
       expect(result!.authors).toEqual([]);
     });
 
-    const getInternalUsers = (): InternalUser[] => [
-      {
-        id: 'user-id-1',
-        created: '2021-06-04T09:37:54Z',
-        lastModified: '2021-06-04T09:37:54Z',
-        version: 42,
-        flatData: {
-          firstName: 'Tony',
-          lastName: 'Stark',
-          onboarded: true,
-          avatar: [],
-        },
-        __typename: 'Users',
-      },
-      {
-        id: 'user-id-2',
-        created: '2021-06-04T09:37:54Z',
-        lastModified: '2021-06-04T09:37:54Z',
-        version: 11,
-        flatData: {
-          firstName: 'Peter',
-          lastName: 'Parker',
-          onboarded: true,
-          avatar: [],
-        },
-        __typename: 'Users',
-      },
-    ];
-    test('Should return a mix of internal and external authors', async () => {
-      const squidexGraphqlResponse = getSquidexOutputGraphqlResponse();
-      const [squidexUser1, squidexUser2] = getInternalUsers();
-      const externalAuthor: ExternalUser = {
-        __typename: 'ExternalAuthors',
-        id: '3099015c-c9ed-40fd-830a-8fe1b6ec0482',
-        created: '2021-06-04T09:37:54Z',
-        lastModified: '2021-06-04T09:37:54Z',
-        version: 42,
-        flatData: {
-          name: 'test external author',
-          orcid: '23423423',
-        },
-      };
-      squidexGraphqlResponse.findOutputsContent!.flatData.authors = [
-        squidexUser1!,
-        externalAuthor,
-        squidexUser2!,
-      ];
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        squidexGraphqlResponse,
-      );
-
-      const result = await outputDataProvider.fetchById(outputId);
-
-      const { authors } = getOutputDataObject();
-
-      const expectedAuthorsResponse: gp2Model.OutputDataObject['authors'] = [
-        authors[0]!,
+    describe('Authors', () => {
+      const getInternalUsers = (): InternalUser[] => [
         {
-          id: '3099015c-c9ed-40fd-830a-8fe1b6ec0482',
-          displayName: externalAuthor.flatData!.name!,
-          orcid: externalAuthor.flatData!.orcid!,
+          id: 'user-id-1',
+          created: '2021-06-04T09:37:54Z',
+          lastModified: '2021-06-04T09:37:54Z',
+          version: 42,
+          flatData: {
+            firstName: 'Tony',
+            lastName: 'Stark',
+            onboarded: true,
+            avatar: [],
+          },
+          __typename: 'Users',
         },
-        authors[1]!,
+        {
+          id: 'user-id-2',
+          created: '2021-06-04T09:37:54Z',
+          lastModified: '2021-06-04T09:37:54Z',
+          version: 11,
+          flatData: {
+            firstName: 'Peter',
+            lastName: 'Parker',
+            onboarded: true,
+            avatar: [],
+          },
+          __typename: 'Users',
+        },
       ];
+      test('Should return a mix of internal and external authors', async () => {
+        const squidexGraphqlResponse = getSquidexOutputGraphqlResponse();
+        const [squidexUser1, squidexUser2] = getInternalUsers();
+        const externalAuthor: ExternalUser = {
+          __typename: 'ExternalAuthors',
+          id: '3099015c-c9ed-40fd-830a-8fe1b6ec0482',
+          created: '2021-06-04T09:37:54Z',
+          lastModified: '2021-06-04T09:37:54Z',
+          version: 42,
+          flatData: {
+            name: 'test external author',
+            orcid: '23423423',
+          },
+        };
+        squidexGraphqlResponse.findOutputsContent!.flatData.authors = [
+          squidexUser1!,
+          externalAuthor,
+          squidexUser2!,
+        ];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
 
-      expect(result!.authors).toEqual(expectedAuthorsResponse);
-    });
+        const result = await outputDataProvider.fetchById(outputId);
 
-    test('Should not return the non-onboarded authors', async () => {
-      const squidexGraphqlResponse = getSquidexOutputGraphqlResponse();
+        const { authors } = getOutputDataObject();
 
-      const [squidexUser1, squidexUser2] = getInternalUsers();
-      squidexUser1!.flatData.onboarded = false;
-      squidexUser2!.flatData.onboarded = true;
-      squidexGraphqlResponse.findOutputsContent!.flatData.authors = [
-        squidexUser1!,
-        squidexUser2!,
-      ];
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        squidexGraphqlResponse,
-      );
+        const expectedAuthorsResponse: gp2Model.OutputDataObject['authors'] = [
+          authors[0]!,
+          {
+            id: '3099015c-c9ed-40fd-830a-8fe1b6ec0482',
+            displayName: externalAuthor.flatData!.name!,
+            orcid: externalAuthor.flatData!.orcid!,
+          },
+          authors[1]!,
+        ];
 
-      const result = await outputDataProvider.fetchById(outputId);
+        expect(result!.authors).toEqual(expectedAuthorsResponse);
+      });
 
-      const { authors } = getOutputDataObject();
+      test('Should not return the non-onboarded authors', async () => {
+        const squidexGraphqlResponse = getSquidexOutputGraphqlResponse();
 
-      const expectedAuthorsResponse: gp2Model.OutputDataObject['authors'] = [
-        authors[1]!,
-      ];
+        const [squidexUser1, squidexUser2] = getInternalUsers();
+        squidexUser1!.flatData.onboarded = false;
+        squidexUser2!.flatData.onboarded = true;
+        squidexGraphqlResponse.findOutputsContent!.flatData.authors = [
+          squidexUser1!,
+          squidexUser2!,
+        ];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
 
-      expect(result!.authors).toHaveLength(1);
-      expect(result!.authors).toEqual(expectedAuthorsResponse);
+        const result = await outputDataProvider.fetchById(outputId);
+
+        const { authors } = getOutputDataObject();
+
+        const expectedAuthorsResponse: gp2Model.OutputDataObject['authors'] = [
+          authors[1]!,
+        ];
+
+        expect(result!.authors).toHaveLength(1);
+        expect(result!.authors).toEqual(expectedAuthorsResponse);
+      });
+      test('Should return internal user avatar', async () => {
+        const squidexGraphqlResponse = getSquidexOutputGraphqlResponse();
+
+        const [squidexUser1] = getInternalUsers();
+        squidexUser1!.flatData.avatar = [{ id: 'avatar-id' }];
+        squidexGraphqlResponse.findOutputsContent!.flatData.authors = [
+          squidexUser1!,
+        ];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await outputDataProvider.fetchById(outputId);
+
+        const { authors } = getOutputDataObject();
+
+        const expectedAuthorsResponse = {
+          ...authors[0]!,
+          avatarUrl: `${baseUrl}/api/assets/${appName}/avatar-id`,
+        };
+        expect(result!.authors[0]!).toEqual(expectedAuthorsResponse);
+      });
     });
 
     describe('Last Updated Partial field', () => {

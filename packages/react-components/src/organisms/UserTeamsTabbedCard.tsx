@@ -2,7 +2,6 @@ import { TeamRole, UserTeam } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React, { ComponentProps, Fragment } from 'react';
-import { formatISO, parseISO, parse, format } from 'date-fns';
 import { Divider, Link, Paragraph } from '../atoms';
 import { inactiveBadgeIcon } from '../icons';
 import { TabbedCard } from '../molecules';
@@ -83,8 +82,6 @@ const UserTeamsTabbedCard: React.FC<UserTeamsTabbedCardProps> = ({
   userName,
   teams,
 }) => {
-  console.log({ teams });
-  console.log({ parse, format, parseISO, formatISO });
   const sortedTeams = [...teams].sort(
     (a, b) => priorities[a.role] - priorities[b.role],
   );

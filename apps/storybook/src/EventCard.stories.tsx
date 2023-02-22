@@ -2,7 +2,7 @@ import { ComponentProps } from 'react';
 import { EventStatus } from '@asap-hub/model';
 import { array, boolean, date, select, text } from '@storybook/addon-knobs';
 import { EventCard } from '@asap-hub/react-components';
-import { createEventResponse, createGroupResponse } from '@asap-hub/fixtures';
+import { createEventResponse } from '@asap-hub/fixtures';
 import { addHours, subHours } from 'date-fns';
 
 import { CenterDecorator } from './layout';
@@ -27,7 +27,6 @@ const props = (): ComponentProps<typeof EventCard> => {
   return {
     ...createEventResponse(),
     title: text('Event Name', 'Example Event'),
-    group: boolean('has group', true) ? createGroupResponse() : undefined,
     status: select<EventStatus>(
       'Status',
       ['Cancelled', 'Confirmed', 'Tentative'],
@@ -83,6 +82,8 @@ const props = (): ComponentProps<typeof EventCard> => {
       date('Start Date', addHours(new Date(), 23)),
     ).toISOString(),
     endDate: new Date(date('End Date', addHours(new Date(), 24))).toISOString(),
+    eventOwner: <div>ASAP Team</div>,
+    hasSpeakersToBeAnnounced: boolean('has speakers to be announced', true),
   };
 };
 

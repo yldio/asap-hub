@@ -109,34 +109,11 @@ it('renders additional materials', () => {
   expect(getByText('Example Material')).toBeVisible();
 });
 
-it('renders continue the event conversation when group with slack provided', () => {
-  const { queryByTitle, rerender } = render(<EventPage {...props} />);
-  expect(queryByTitle(/slack/i)).toBeInTheDocument();
-  rerender(<EventPage {...props} />);
-  expect(queryByTitle(/slack/i)).not.toBeInTheDocument();
-});
-
-it('renders calendar list for active groups', () => {
-  const { queryByText, rerender } = render(
-    <EventPage
-      {...props}
-      calendar={{ ...createCalendarResponse(), name: 'Event Calendar' }}
-    />,
-  );
-  expect(queryByText('Event Calendar')).toBeVisible();
-  rerender(
-    <EventPage
-      {...props}
-      calendar={{ ...createCalendarResponse(), name: 'Event Calendar' }}
-    />,
-  );
-  expect(queryByText('Event Calendar')).not.toBeInTheDocument();
-});
-
-it('renders calendar list for events with missing group', () => {
+it('renders calendar list when displayCalendar is true', () => {
   const { queryByText } = render(
     <EventPage
       {...props}
+      displayCalendar
       calendar={{ ...createCalendarResponse(), name: 'Event Calendar' }}
     />,
   );
@@ -146,10 +123,4 @@ it('renders calendar list for events with missing group', () => {
 it('renders the children', () => {
   const { queryByText } = render(<EventPage {...props}>Children</EventPage>);
   expect(queryByText('Children')).toBeVisible();
-});
-
-it('displays inactive badge when a group is inactive', () => {
-  render(<EventPage {...props} />);
-
-  expect(screen.getByTitle('Inactive')).toBeInTheDocument();
 });

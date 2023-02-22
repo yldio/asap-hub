@@ -1,4 +1,4 @@
-import { eventStatus, isEventStatus } from '../../src/gp2';
+import { eventStatus, isEventStatus } from '../src/event-common';
 
 describe('Status', () => {
   it.each(eventStatus)(

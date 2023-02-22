@@ -44,3 +44,9 @@ it('shows that the event is run by ASAP when there is no group', () => {
   render(<EventOwner />);
   expect(screen.getByText(/asap event/i)).not.toHaveAttribute('href');
 });
+
+it('displays inactive badge when a group is inactive', () => {
+  render(<EventOwner group={{ ...createGroupResponse(), active: false }} />);
+
+  expect(screen.getByTitle('Inactive')).toBeInTheDocument();
+});

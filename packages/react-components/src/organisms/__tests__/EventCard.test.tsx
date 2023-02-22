@@ -100,6 +100,7 @@ describe('current events', () => {
     render(
       <EventCard
         {...props}
+        hasSpeakersToBeAnnounced
         startDate={addMinutes(new Date(), 30).toISOString()}
       />,
     );
@@ -180,30 +181,6 @@ describe('past events', () => {
     expect(screen.getByTitle(/paper/i)).toBeInTheDocument();
   });
 
-  it('displays inactive badge when a team is inactive', () => {
-    render(<EventCard {...props} />);
-
-    expect(screen.getByTitle('Inactive')).toBeInTheDocument();
-  });
-
-  it('displays inactive badge when a group is inactive', () => {
-    render(<EventCard {...props} />);
-
-    expect(screen.getByTitle('Inactive')).toBeInTheDocument();
-  });
-
-  it('displays inactive badge when a group and team are inactive', () => {
-    render(<EventCard {...props} />);
-
-    expect(screen.getAllByTitle('Inactive')).toHaveLength(2);
-  });
-
-  it('does not display inactive badge when a group and team are active', () => {
-    render(<EventCard {...props} />);
-
-    expect(screen.queryByTitle('Inactive')).not.toBeInTheDocument();
-  });
-
   it("doesn't display toast if none of the conditions are match", () => {
     render(
       <EventCard
@@ -217,18 +194,5 @@ describe('past events', () => {
     expect(screen.queryByText(/cancelled/)).not.toBeInTheDocument();
     expect(screen.queryByText(/currently live/)).not.toBeInTheDocument();
     expect(screen.queryByText(/currently happening/)).not.toBeInTheDocument();
-  });
-
-  it('display toast when event has a team with no users', () => {
-    render(
-      <EventCard
-        {...props}
-        status="Confirmed"
-        startDate={addDays(new Date(), 2).toISOString()}
-        endDate={addDays(new Date(), 1).toISOString()}
-      />,
-    );
-
-    expect(screen.getByText(/to be announced/)).toBeInTheDocument();
   });
 });

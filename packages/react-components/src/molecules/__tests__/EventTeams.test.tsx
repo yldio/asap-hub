@@ -70,3 +70,25 @@ it('do not display the team when there is none', () => {
 
   expect(screen.queryByTitle('Team')).not.toBeInTheDocument();
 });
+
+it('displays inactive badge when a team is inactive', () => {
+  render(
+    <EventTeams
+      speakers={[
+        {
+          team: {
+            displayName: 'Team',
+            id: '123',
+            inactiveSince: '2022-10-20T09:00:00Z',
+          },
+          user: {
+            displayName: 'User',
+            id: '123',
+          },
+        },
+      ]}
+    />,
+  );
+
+  expect(screen.getByTitle('Inactive')).toBeInTheDocument();
+});

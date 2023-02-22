@@ -82,13 +82,6 @@ describe('/events/ routes', () => {
         expect(response.status).toBe(400);
       });
 
-      test('Should return a validation error when both before and after are missing', async () => {
-        const response = await supertest(app).get('/events').query({
-          take: '10',
-        });
-        expect(response.status).toBe(400);
-      });
-
       test('Should return a validation error when before parameter is present but empty', async () => {
         const response = await supertest(app).get('/events').query({
           before: '',

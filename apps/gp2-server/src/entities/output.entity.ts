@@ -26,6 +26,7 @@ export const typeMap: Record<OutputsDataTypeEnum, gp2Model.OutputType> = {
   [OutputsDataTypeEnum.Research]: 'Research',
   [OutputsDataTypeEnum.Review]: 'Review',
 };
+
 const getType = (
   documentType: OutputsDataDocumentTypeEnum,
   type: OutputsDataTypeEnum | null,

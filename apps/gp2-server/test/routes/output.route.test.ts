@@ -21,9 +21,7 @@ describe('/outputs/ route', () => {
     logger: loggerMock,
   });
 
-  afterEach(() => {
-    jest.resetAllMocks();
-  });
+  afterEach(jest.resetAllMocks);
 
   describe('GET /outputs', () => {
     test('Should return 200 when no output exists', async () => {
@@ -117,8 +115,8 @@ describe('/outputs/ route', () => {
 
       outputControllerMock.create.mockResolvedValueOnce(outputResponse);
 
-      const { app } = getApp({ role: 'Administrator' });
-      const response = await supertest(app)
+      const { app: adminApp } = getApp({ role: 'Administrator' });
+      const response = await supertest(adminApp)
         .post('/outputs')
         .send(createOutputRequest)
         .set('Accept', 'application/json');
@@ -142,12 +140,12 @@ describe('/outputs/ route', () => {
     test('Should return a 500 error when creating a output fails due to server error', async () => {
       const output = getOutputPostRequest();
 
-      const { app } = getApp({ role: 'Administrator' });
+      const { app: adminApp } = getApp({ role: 'Administrator' });
       outputControllerMock.create.mockRejectedValueOnce(
         Boom.badImplementation(),
       );
 
-      await supertest(app)
+      await supertest(adminApp)
         .post('/outputs')
         .send(output)
         .set('Accept', 'application/json')
@@ -320,8 +318,8 @@ describe('/outputs/ route', () => {
     test('Should send the data to the controller and return status 200 along with all the output data', async () => {
       outputControllerMock.update.mockResolvedValueOnce(outputResponse);
 
-      const { app } = getApp({ role: 'Administrator' });
-      const response = await supertest(app)
+      const { app: adminApp } = getApp({ role: 'Administrator' });
+      const response = await supertest(adminApp)
         .put('/outputs/abc123')
         .send(outputPutRequest)
         .set('Accept', 'application/json');

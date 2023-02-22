@@ -19,9 +19,7 @@ describe('outputs controller', () => {
     externalAuthorDataProviderMock,
   );
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+  afterEach(jest.resetAllMocks);
 
   describe('Fetch', () => {
     test('Should return the outputs', async () => {
@@ -124,7 +122,7 @@ describe('outputs controller', () => {
 
     test('Should create the new output and return it', async () => {
       const mockDate = new Date('2010-01-01');
-      const spy = jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
+      jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
 
       const outputCreateData = getOutputCreateData();
       const outputId = 'output-id-1';
@@ -139,7 +137,6 @@ describe('outputs controller', () => {
         ...outputCreateDataObject,
         addedDate: mockDate.toISOString(),
       });
-      spy.mockRestore();
     });
 
     describe('Validating uniqueness', () => {

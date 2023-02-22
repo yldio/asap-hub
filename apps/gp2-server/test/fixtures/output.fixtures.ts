@@ -164,7 +164,7 @@ export const getOutputUpdateDataObject =
   };
 
 export const getRestOutputCreateData = (): gp2Squidex.InputOutput['data'] => ({
-  documentType: { iv: 'Articles' },
+  documentType: { iv: 'Article' },
   link: { iv: 'http://a.link' },
   title: { iv: 'Test Proposal 1234' },
   addedDate: { iv: '2021-05-21T13:18:31Z' },

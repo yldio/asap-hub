@@ -38,7 +38,7 @@ describe('Outputs data provider', () => {
 
   const outputRestClient = new SquidexRest<gp2Squidex.RestOutput>(
     getAuthToken,
-    'research-outputs',
+    'outputs',
     { appName, baseUrl },
   );
   const outputDataProvider = new OutputSquidexDataProvider(
@@ -639,7 +639,7 @@ describe('Outputs data provider', () => {
         nock(baseUrl)
           // Create the Output
           .post(
-            `/api/content/${appName}/research-outputs?publish=true`,
+            `/api/content/${appName}/outputs?publish=true`,
             getRestOutputCreateData(),
           )
           .reply(201, { id: outputId });
@@ -660,7 +660,7 @@ describe('Outputs data provider', () => {
 
         nock(baseUrl)
           .post(
-            `/api/content/${appName}/research-outputs?publish=true`,
+            `/api/content/${appName}/outputs?publish=true`,
             matches({
               authors: { iv: ['some-external-user-id', 'some-user-id'] },
             }),
@@ -674,7 +674,7 @@ describe('Outputs data provider', () => {
         const OutputRequest = getOutputCreateDataObject();
 
         nock(baseUrl)
-          .post(`/api/content/${appName}/research-outputs?publish=true`)
+          .post(`/api/content/${appName}/outputs?publish=true`)
           .reply(400);
 
         await expect(outputDataProvider.create(OutputRequest)).rejects.toThrow(
@@ -685,7 +685,7 @@ describe('Outputs data provider', () => {
       test('Should throw when fails to create the output - 500', async () => {
         const OutputRequest = getOutputCreateDataObject();
         nock(baseUrl)
-          .post(`/api/content/${appName}/research-outputs?publish=true`)
+          .post(`/api/content/${appName}/outputs?publish=true`)
           .reply(500);
 
         await expect(outputDataProvider.create(OutputRequest)).rejects.toThrow(
@@ -697,12 +697,12 @@ describe('Outputs data provider', () => {
     describe('Update', () => {
       const outputId = 'updated-output-id';
 
-      test('Should update the existing research-output and return its ID', async () => {
+      test('Should update the existing output and return its ID', async () => {
         const outputUpdateData = getOutputUpdateDataObject();
 
         const restOutputUpdateData = getRestOutputUpdateData();
         nock(baseUrl)
-          .patch(`/api/content/${appName}/research-outputs/${outputId}`, {
+          .patch(`/api/content/${appName}/outputs/${outputId}`, {
             ...restOutputUpdateData,
             updatedBy: { iv: [outputUpdateData.updatedBy] },
           })
@@ -719,7 +719,7 @@ describe('Outputs data provider', () => {
         const OutputRequest = getOutputUpdateDataObject();
 
         nock(baseUrl)
-          .patch(`/api/content/${appName}/research-outputs/${outputId}`)
+          .patch(`/api/content/${appName}/outputs/${outputId}`)
           .reply(400);
 
         await expect(
@@ -730,7 +730,7 @@ describe('Outputs data provider', () => {
       test('Should throw when fails to update the output - 500', async () => {
         const OutputRequest = getOutputUpdateDataObject();
         nock(baseUrl)
-          .patch(`/api/content/${appName}/research-outputs/${outputId}`)
+          .patch(`/api/content/${appName}/outputs/${outputId}`)
           .reply(500);
 
         await expect(
@@ -742,7 +742,7 @@ describe('Outputs data provider', () => {
         const OutputRequest = getOutputUpdateDataObject();
 
         nock(baseUrl)
-          .patch(`/api/content/${appName}/research-outputs/${outputId}`)
+          .patch(`/api/content/${appName}/outputs/${outputId}`)
           .reply(404);
 
         await expect(

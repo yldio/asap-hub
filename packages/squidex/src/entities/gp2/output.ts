@@ -9,17 +9,31 @@ import {
 import { GraphqlExternalAuthor } from '../crn';
 import { GraphqlUserAssoc } from './user';
 
+export type RestOutputDocumentType =
+  | 'Form'
+  | 'Update'
+  | 'Training_Material'
+  | 'Data_Release'
+  | 'Article'
+  | 'Code_Software';
+
+export type RestOutputType =
+  | 'Research'
+  | 'Review'
+  | 'Letter'
+  | 'Hot_Topic'
+  | 'Blog';
 export interface Output<TAuthorConnection = string, TUserConnection = string> {
   addedDate: string;
   adminNotes?: string;
   authors?: TAuthorConnection[];
   createdBy?: TUserConnection[];
-  documentType: gp2.OutputDocumentType;
+  documentType: RestOutputDocumentType;
   lastUpdatedPartial?: string;
   link?: string;
   subtype?: gp2.OutputSubType;
   title: string;
-  type?: gp2.OutputType;
+  type?: RestOutputType;
   updatedBy?: TUserConnection[];
 }
 

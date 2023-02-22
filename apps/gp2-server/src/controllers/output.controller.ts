@@ -134,13 +134,13 @@ export default class Outputs implements OutputController {
   }
 
   private async validateTitleUniqueness(
-    researchOutputData: OutputCreateData | OutputUpdateData,
-    researchOutputId?: string,
+    outputData: OutputCreateData | OutputUpdateData,
+    outputId?: string,
   ): Promise<ValidationErrorResponse['data'][0] | null> {
     const result = await this.outputDataProvider.fetch({
       filter: {
-        documentType: researchOutputData.documentType,
-        title: researchOutputData.title,
+        documentType: outputData.documentType,
+        title: outputData.title,
       },
       includeDrafts: true,
     });
@@ -149,7 +149,7 @@ export default class Outputs implements OutputController {
       return null;
     }
 
-    if (result.total === 1 && result.items[0]?.id === researchOutputId) {
+    if (result.total === 1 && result.items[0]?.id === outputId) {
       return null;
     }
 

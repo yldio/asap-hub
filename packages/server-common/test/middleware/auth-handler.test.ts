@@ -1,7 +1,9 @@
+import { NotFoundError } from '@asap-hub/errors';
 import { createUserResponse, getJwtPayload } from '@asap-hub/fixtures';
 import { UserResponse } from '@asap-hub/model';
 import express, { Express, Request, RequestHandler, Router } from 'express';
 import 'express-async-errors';
+import { HTTPError, Response } from 'got';
 import supertest from 'supertest';
 import { MemoryCacheClient } from '../../src/clients/cache.client';
 import { authHandlerFactory } from '../../src/middleware/auth-handler';
@@ -91,13 +93,33 @@ describe('Authentication middleware', () => {
 
   test('Should return 401 when it is unable to fetch the user', async () => {
     decodeToken.mockResolvedValueOnce(jwtPayload);
-    fetchByCode.mockRejectedValueOnce(new Error('some error'));
+    fetchByCode.mockRejectedValueOnce(new NotFoundError());
 
     const response = await supertest(app)
       .get('/test-route')
       .set('Authorization', 'Bearer something');
 
     expect(response.status).toBe(401);
+  });
+
+  test('Should return 500 when 500 response is returned for fetching the user', async () => {
+    const errResponse = {
+      statusCode: 500,
+      statusMessage: 'Internal server error',
+    } as unknown as Response;
+    const httpError = new HTTPError(errResponse);
+    // @ts-ignore
+    // https://github.com/sindresorhus/got/issues/1210#issuecomment-623534449
+    httpError.response = errResponse;
+
+    decodeToken.mockResolvedValueOnce(jwtPayload);
+    fetchByCode.mockRejectedValueOnce(httpError);
+
+    const response = await supertest(app)
+      .get('/test-route')
+      .set('Authorization', 'Bearer something');
+
+    expect(response.status).toBe(500);
   });
 
   test('Should return 200 when token is valid', async () => {

@@ -2,6 +2,7 @@ import Boom from '@hapi/boom';
 import Intercept from 'apr-intercept';
 import { createHash } from 'crypto';
 import { Request, RequestHandler } from 'express';
+import { GenericError } from '@asap-hub/errors';
 import { CacheClient } from '../clients/cache.client';
 import { Logger } from '../utils/logger';
 import { DecodeToken } from '../utils/validate-token';
@@ -51,7 +52,12 @@ export const authHandlerFactory =
         user = await fetchByCode(payload.sub);
       } catch (error) {
         logger.error(error, 'Error fetching user details');
-        throw Boom.unauthorized();
+
+        if (error instanceof GenericError) {
+          throw Boom.unauthorized();
+        }
+
+        throw error;
       }
 
       cacheClient.set(tokenHash, user);

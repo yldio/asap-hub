@@ -43,7 +43,6 @@ export const parseGraphQLOutput = (
   output: NonNullable<FetchOutputQuery['findOutputsContent']>,
 ): gp2Model.OutputDataObject => {
   const data = output.flatData;
-  // const type = gp2Model.outputMapType(data.type);
 
   if (!data.documentType) {
     throw new TypeError('document type not defined');

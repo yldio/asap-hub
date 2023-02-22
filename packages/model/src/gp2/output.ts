@@ -42,22 +42,6 @@ export const outputDocumentTypeToType: Record<
   'Code/Software': new Set<OutputType>(),
 };
 
-export const isOutputDocumentType = (
-  type: string,
-): type is OutputDocumentType =>
-  (outputDocumentTypes as ReadonlyArray<string>).includes(type);
-
-export const isOutputType = (type: string): type is OutputType =>
-  (outputTypes as ReadonlyArray<string>).includes(type);
-
-export const outputMapType = (type?: string | null): OutputType | null => {
-  if (type && isOutputType(type)) {
-    return type;
-  }
-
-  return null;
-};
-
 export type OutputCoreObject = {
   addedDate: string;
   documentType: OutputDocumentType;
@@ -81,7 +65,6 @@ export type OutputDataObject = OutputCoreObject & {
   created: string;
   id: string;
   lastUpdatedPartial: string;
-  // workingGroups: Pick<WorkingGroupResponse, 'id' | 'title'>[];
 };
 
 export type ListOutputDataObject = ListResponse<OutputDataObject>;

@@ -1,13 +1,7 @@
-export type Flag =
-  | 'PERSISTENT_EXAMPLE'
-  | 'WORKING_GROUP_EVENTS'
-  | 'ASAP_WORKING_GROUP_EVENTS'
-  | 'WORKING_GROUP_SHARED_OUTPUT_BTN'
-  | 'WORKING_GROUP_SHARED_OUTPUTS_TAB';
+export type Flag = 'PERSISTENT_EXAMPLE';
 
 export type Flags = Partial<Record<Flag, boolean | undefined>>;
 let overrides: Flags = {
-  ASAP_WORKING_GROUP_EVENTS: false,
   // flags already live in prod:
   // can also be used to manually disable a flag in development:
 };

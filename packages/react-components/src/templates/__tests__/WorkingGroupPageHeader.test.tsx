@@ -7,7 +7,6 @@ import { fireEvent, render } from '@testing-library/react';
 import { renderHook } from '@testing-library/react-hooks';
 import { Auth0ContextCRN, useAuth0CRN } from '@asap-hub/react-context';
 import { Auth0User } from '@asap-hub/auth';
-import { disable } from '@asap-hub/flags';
 import { WorkingGroupResponseLeader } from '@asap-hub/model';
 
 import WorkingGroupHeader from '../WorkingGroupPageHeader';
@@ -100,15 +99,6 @@ describe('share an output button', () => {
     expect(queryByText('Share an output')).toBeNull();
   });
 
-  it('does not render share an output button dropdown when user is project manager but feature flag is disabled', () => {
-    disable('WORKING_GROUP_SHARED_OUTPUT_BTN');
-    const { queryByText } = renderWithUser({
-      ...baseProps,
-      leaders: [testLeader],
-    });
-    expect(queryByText('Share an output')).toBeNull();
-  });
-
   it('renders share an output button dropdown when user is project manager and feature flag is enabled', () => {
     const { queryByText, getByText } = renderWithUser({
       ...baseProps,
@@ -178,12 +168,4 @@ it('renders the provided number of research outputs', () => {
     <WorkingGroupHeader {...baseProps} workingGroupsOutputsCount={2} />,
   );
   expect(getByText('Working Group Outputs (2)')).toBeVisible();
-});
-
-it('does not render the research outputs link when the feature flag is disabled', () => {
-  disable('WORKING_GROUP_SHARED_OUTPUTS_TAB');
-  const { queryByText } = render(
-    <WorkingGroupHeader {...baseProps} workingGroupsOutputsCount={2} />,
-  );
-  expect(queryByText('Working Group Outputs (2)')).toBeNull();
 });

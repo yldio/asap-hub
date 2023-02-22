@@ -1,3 +1,5 @@
+import { gp2 } from '@asap-hub/model';
+import { AuthHandler } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
@@ -7,6 +9,7 @@ import {
   getOutputPutRequest,
   getOutputResponse,
 } from '../fixtures/output.fixtures';
+import { getUserResponse } from '../fixtures/user.fixtures';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { loggerMock } from '../mocks/logger.mock';
 import { outputControllerMock } from '../mocks/output-controller.mock';
@@ -114,6 +117,7 @@ describe('/outputs/ route', () => {
 
       outputControllerMock.create.mockResolvedValueOnce(outputResponse);
 
+      const { app } = getApp({ role: 'Administrator' });
       const response = await supertest(app)
         .post('/outputs')
         .send(createOutputRequest)
@@ -138,6 +142,7 @@ describe('/outputs/ route', () => {
     test('Should return a 500 error when creating a output fails due to server error', async () => {
       const output = getOutputPostRequest();
 
+      const { app } = getApp({ role: 'Administrator' });
       outputControllerMock.create.mockRejectedValueOnce(
         Boom.badImplementation(),
       );
@@ -315,6 +320,7 @@ describe('/outputs/ route', () => {
     test('Should send the data to the controller and return status 200 along with all the output data', async () => {
       outputControllerMock.update.mockResolvedValueOnce(outputResponse);
 
+      const { app } = getApp({ role: 'Administrator' });
       const response = await supertest(app)
         .put('/outputs/abc123')
         .send(outputPutRequest)
@@ -496,3 +502,23 @@ describe('/outputs/ route', () => {
     });
   });
 });
+
+const getApp = ({ role }: { role?: gp2.UserResponse['role'] } = {}) => {
+  const loggedInUserId = 'user-id-0';
+  const loggedUser: gp2.UserResponse = {
+    ...getUserResponse(),
+    id: loggedInUserId,
+    ...(role && { role }),
+  };
+  const getLoggedUser = jest.fn().mockReturnValue(loggedUser);
+  const authHandlerMock: AuthHandler = (req, _res, next) => {
+    req.loggedInUser = getLoggedUser();
+    next();
+  };
+  const app = appFactory({
+    outputController: outputControllerMock,
+    authHandler: authHandlerMock,
+    logger: loggerMock,
+  });
+  return { app, loggedInUserId };
+};

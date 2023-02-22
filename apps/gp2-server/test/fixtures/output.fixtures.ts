@@ -115,6 +115,7 @@ export const getOutputPostRequest = (): gp2Model.OutputPostRequest => {
     id: _,
     created: _created,
     lastUpdatedPartial: _lastUpdatedPartial,
+    addedDate: _addedDate,
     authors,
     ...outputResponse
   } = getOutputResponse();
@@ -122,6 +123,7 @@ export const getOutputPostRequest = (): gp2Model.OutputPostRequest => {
     ...outputResponse,
     link: 'http://a.link',
     type: 'Research',
+    authors: authors.map(({ id }) => ({ userId: id })),
   };
 };
 

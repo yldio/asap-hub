@@ -47,13 +47,13 @@ export const outputRouteFactory = (
       throw Boom.forbidden();
     }
 
-    const researchOutput = await outputController.create({
+    const output = await outputController.create({
       ...createRequest,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       createdBy: loggedInUser!.id,
     });
 
-    res.status(201).json(researchOutput);
+    res.status(201).json(output);
   });
 
   outputRoutes.put('/outputs/:outputId', async (req, res) => {
@@ -77,4 +77,4 @@ export const outputRouteFactory = (
   return outputRoutes;
 };
 const hasCreateUpdateOutputPermissions = (user: gp2Model.UserResponse) =>
-  (user.role = 'Administrator');
+  user.role === 'Administrator';

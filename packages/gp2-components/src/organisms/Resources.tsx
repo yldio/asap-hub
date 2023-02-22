@@ -18,6 +18,7 @@ import { css } from '@emotion/react';
 import { useState } from 'react';
 import { addIcon, editIcon } from '../icons';
 import { mobileQuery, nonMobileQuery } from '../layout';
+import colors from '../templates/colors';
 
 export type ResourcesProps = {
   resources?: gp2.Resource[];
@@ -142,17 +143,31 @@ const Resources: React.FC<ResourcesProps> = ({
                   )}
                 </div>
                 <div
-                  css={css({
-                    display: 'flex',
-                    flexDirection: 'row',
-                    paddingTop: rem(8),
-                  })}
+                  css={css([
+                    {
+                      display: 'flex',
+                      flexDirection: 'row',
+                      paddingTop: rem(8),
+                    },
+                    resource.type === 'Link'
+                      ? {
+                          color: colors.primary500.rgb,
+                        }
+                      : {},
+                  ])}
                 >
                   <Subtitle styleAsHeading={4} noMargin>
                     {resource.title}
                   </Subtitle>
                   {resource.type === 'Link' && (
-                    <div css={css({ padding: '4px 8px' })}>
+                    <div
+                      css={css({
+                        padding: '4px 8px',
+                        svg: {
+                          stroke: colors.primary500.rgb,
+                        },
+                      })}
+                    >
                       <Anchor href={resource.externalLink}>
                         {externalLinkIcon}
                       </Anchor>

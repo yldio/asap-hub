@@ -1,8 +1,12 @@
 import { User } from '@asap-hub/auth';
 import {
   ResearchOutputPostRequest,
+  ResearchOutputResponse,
+  ResearchOutputWorkingGroupResponse,
+  userPermissions,
   WorkingGroupDataObject,
 } from '@asap-hub/model';
+import { isResearchOutputWorkingGroup } from '../research-output-guards';
 
 export const hasCreateUpdateResearchOutputPermissions = (
   user: Omit<User, 'algoliaApiKey'>,
@@ -30,4 +34,60 @@ export const hasWorkingGroupsCreateUpdateResearchOutputPermissions = (
     }
     return false;
   });
+};
+
+export const noPermissions: userPermissions = {
+  createDraft: false,
+  editDraft: false,
+  publishDraft: false,
+  editPublished: false,
+};
+
+export const isUserProjectManagerOfTeams = (
+  user: Omit<User, 'algoliaApiKey'>,
+  teams: ResearchOutputResponse['teams'],
+): boolean =>
+  !!user.teams.find(
+    (team) =>
+      teams.map((t) => t.id).includes(team.id) &&
+      team.role === 'Project Manager',
+  );
+
+export const isUserProjectManagerOfWorkingGroups = (
+  user: Omit<User, 'algoliaApiKey'>,
+  workingGroups: ResearchOutputWorkingGroupResponse['workingGroups'],
+): boolean =>
+  !!user.workingGroups.find(
+    (workingGroup) =>
+      workingGroups.map((wg) => wg.id).includes(workingGroup.id) &&
+      workingGroup.role === 'Project Manager',
+  );
+
+export const getUserPermissions = (
+  user: Omit<User, 'algoliaApiKey'> | null,
+  researchOutputData: ResearchOutputResponse | undefined,
+): userPermissions => {
+  if (user === null || researchOutputData === undefined) {
+    return noPermissions;
+  }
+
+  if (
+    user.role === 'Staff' ||
+    (isResearchOutputWorkingGroup(researchOutputData) &&
+      isUserProjectManagerOfWorkingGroups(
+        user,
+        researchOutputData.workingGroups,
+      )) ||
+    (!isResearchOutputWorkingGroup(researchOutputData) &&
+      isUserProjectManagerOfTeams(user, researchOutputData.teams))
+  ) {
+    return {
+      createDraft: true,
+      editDraft: true,
+      publishDraft: true,
+      editPublished: true,
+    };
+  }
+
+  return noPermissions;
 };

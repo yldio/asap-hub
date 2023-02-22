@@ -132,6 +132,7 @@ export const useCanCreateUpdateResearchOutput = (
   const user = useCurrentUserCRN();
 
   if (user === null) return false;
+  if (user.role === 'Staff') return true;
 
   return hasWorkingGroupsCreateUpdateResearchOutputPermissions(
     user,

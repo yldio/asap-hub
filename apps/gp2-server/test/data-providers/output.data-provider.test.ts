@@ -56,9 +56,7 @@ describe('Outputs data provider', () => {
     identity();
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+  afterEach(jest.resetAllMocks);
 
   describe('Fetch by ID method', () => {
     const outputId = 'some-uuid';
@@ -350,10 +348,7 @@ describe('Outputs data provider', () => {
 
   describe('Fetch method', () => {
     test('Should fetch the output from squidex graphql', async () => {
-      const result = await outputDataProviderMockGraphql.fetch({
-        take: 8,
-        skip: 0,
-      });
+      const result = await outputDataProviderMockGraphql.fetch({});
 
       expect(result).toMatchObject(getListOutputDataObject());
     });

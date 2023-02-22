@@ -152,9 +152,6 @@ const Resources: React.FC<ResourcesProps> = ({
                     resource.type === 'Link'
                       ? {
                           color: colors.primary500.rgb,
-                          svg: {
-                            stroke: colors.primary500.rgb,
-                          },
                         }
                       : {},
                   ])}
@@ -163,7 +160,14 @@ const Resources: React.FC<ResourcesProps> = ({
                     {resource.title}
                   </Subtitle>
                   {resource.type === 'Link' && (
-                    <div css={css({ padding: '4px 8px' })}>
+                    <div
+                      css={css({
+                        padding: '4px 8px',
+                        svg: {
+                          stroke: colors.primary500.rgb,
+                        },
+                      })}
+                    >
                       <Anchor href={resource.externalLink}>
                         {externalLinkIcon}
                       </Anchor>

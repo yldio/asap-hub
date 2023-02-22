@@ -69,7 +69,12 @@ it('renders the no outputs component correctly for your own team', async () => {
   const { getByText } = await renderOutputs(
     {
       ...createWorkingGroupResponse({}),
-      members: [{ user: { ...createUserResponse(), id: 'groupMember' } }],
+      members: [
+        {
+          user: { ...createUserResponse(), id: 'groupMember' },
+          isActive: true,
+        },
+      ],
     },
     { ...createUserResponse(), id: 'groupMember' },
   );
@@ -82,7 +87,12 @@ it('renders the no outputs component correctly for a different team', async () =
   const { getByText } = await renderOutputs(
     {
       ...createWorkingGroupResponse({}),
-      members: [{ user: { ...createUserResponse(), id: 'groupMember' } }],
+      members: [
+        {
+          user: { ...createUserResponse(), id: 'groupMember' },
+          isActive: true,
+        },
+      ],
     },
     { ...createUserResponse(), id: 'notGroupMember' },
   );

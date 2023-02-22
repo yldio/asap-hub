@@ -8,7 +8,7 @@ import { renderHook } from '@testing-library/react-hooks';
 import { Auth0ContextCRN, useAuth0CRN } from '@asap-hub/react-context';
 import { Auth0User } from '@asap-hub/auth';
 import { disable } from '@asap-hub/flags';
-import { WorkingGroupLeader } from '@asap-hub/model';
+import { WorkingGroupResponseLeader } from '@asap-hub/model';
 
 import WorkingGroupHeader from '../WorkingGroupPageHeader';
 
@@ -76,7 +76,8 @@ describe('share an output button', () => {
     role: 'Project Manager',
     user: testUser,
     workstreamRole: 'aWorkstreamRole',
-  } as WorkingGroupLeader;
+    isActive: true,
+  } as WorkingGroupResponseLeader;
 
   const renderWithUser = (props: ComponentProps<typeof WorkingGroupHeader>) =>
     render(

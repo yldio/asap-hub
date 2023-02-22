@@ -27,7 +27,10 @@ export type WorkingGroupLeader = {
   readonly role: WorkingGroupRole;
   readonly workstreamRole: string;
 };
-
+export type WorkingGroupResponseLeader = WorkingGroupLeader & {
+  readonly isActive: boolean;
+};
+//
 export type WorkingGroupMember = {
   readonly user: Pick<
     UserResponse,
@@ -39,6 +42,9 @@ export type WorkingGroupMember = {
     | 'email'
     | 'avatarUrl'
   >;
+};
+export type WorkingGroupResponseMember = WorkingGroupMember & {
+  readonly isActive: boolean;
 };
 
 export type WorkingGroupMembership = {
@@ -68,7 +74,13 @@ export type WorkingGroupDataObject = {
 
 export type WorkingGroupListDataObject = ListResponse<WorkingGroupDataObject>;
 
-export type WorkingGroupResponse = WorkingGroupDataObject;
+export type WorkingGroupResponse = Omit<
+  WorkingGroupDataObject,
+  'leaders' | 'members'
+> & {
+  leaders: WorkingGroupResponseLeader[];
+  members: WorkingGroupResponseMember[];
+};
 
 export type WorkingGroupListResponse = ListResponse<WorkingGroupResponse>;
 

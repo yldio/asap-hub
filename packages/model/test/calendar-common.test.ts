@@ -1,4 +1,7 @@
-import { googleLegacyCalendarColor, isGoogleLegacyCalendarColor } from '../src';
+import {
+  googleLegacyCalendarColor,
+  isGoogleLegacyCalendarColor,
+} from '../src/calendar-common';
 
 describe('isGoogleLegacyCalendarColor', () => {
   it.each(googleLegacyCalendarColor)(

@@ -77,12 +77,12 @@ export const webhookEventUpdatedHandlerFactory = (
     const { googleCalendarId } = calendar;
     const syncToken = calendar.syncToken || undefined;
 
+    logger.info('squidexCalendarId', squidexCalendarId);
     const nextSyncToken = await syncCalendar(
       googleCalendarId,
       squidexCalendarId,
       syncToken,
     );
-
     if (nextSyncToken) {
       await calendarDataProvider
         .update(squidexCalendarId, { syncToken: nextSyncToken })

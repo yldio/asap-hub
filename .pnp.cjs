@@ -11757,8 +11757,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/cors", "npm:2.8.13"],\
             ["@types/express", "npm:4.17.17"],\
             ["@types/jest", "npm:29.4.0"],\
+            ["@types/jest-when", "npm:3.5.2"],\
             ["@types/jsonwebtoken", "npm:8.5.9"],\
             ["@types/jwt-encode", "workspace:@types/jwt-encode"],\
+            ["@types/lodash.matches", "npm:4.6.7"],\
             ["@types/luxon", "npm:1.27.1"],\
             ["@types/mime-types", "npm:2.1.1"],\
             ["@types/node", "npm:14.18.33"],\
@@ -11781,12 +11783,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["graphql", "npm:15.8.0"],\
             ["graphql-tag", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:2.12.6"],\
             ["graphql-typescript-integration", "npm:1.2.1"],\
+            ["jest-when", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:3.5.2"],\
             ["jsonwebtoken", "npm:8.5.1"],\
             ["jwt-encode", "npm:1.0.1"],\
+            ["lodash.matches", "npm:4.6.0"],\
             ["luxon", "npm:1.28.1"],\
             ["mime-types", "npm:2.1.35"],\
             ["nock", "npm:13.3.0"],\
             ["node-dev", "npm:6.7.0"],\
+            ["odata-query", "npm:7.0.3"],\
             ["parse-data-url", "npm:3.0.0"],\
             ["serverless", "npm:3.27.0"],\
             ["serverless-http", "npm:2.7.0"],\

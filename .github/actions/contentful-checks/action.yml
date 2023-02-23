@@ -14,9 +14,6 @@ inputs:
   contentful-token:
     description: 'Contentful access token'
     required: true
-  max-contentful-envs:
-    description: 'Max Contentful environments'
-    required: true
 
 outputs:
   contentful-env:
@@ -25,9 +22,6 @@ outputs:
   on-branch-env:
     description: 'Whether the Contentful environment being used is a branch environment'
     value: ${{ steps.determine-environment.outputs.on-branch-env }}
-  contentful-limit-reached:
-    description: 'Whether Contentful environment limit has been reached'
-    value: ${{ steps.check-env-limit.outputs.limit-reached }}
   contentful-env-exists:
     description: 'Whether the Contentful environment already exists'
     value: ${{ steps.check-contentful-exists.outputs.exists }}

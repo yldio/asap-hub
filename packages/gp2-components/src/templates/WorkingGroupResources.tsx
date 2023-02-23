@@ -7,12 +7,12 @@ type WorkingGroupResourcesProps = Omit<
 >;
 
 const headline = (
-  <>
+  <div>
     <b>Please note</b>
     <br />
     Please note, this is a private space for this working group on the network.
     Nobody outside of this working group can see anything that you upload here.
-  </>
+  </div>
 );
 
 const WorkingGroupResources: React.FC<WorkingGroupResourcesProps> = ({

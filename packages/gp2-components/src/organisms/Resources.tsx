@@ -7,12 +7,12 @@ import {
   chevronCircleUpIcon,
   externalLinkIcon,
   Headline3,
+  infoCircleYellowIcon,
   Link,
   Paragraph,
   Pill,
   pixels,
   Subtitle,
-  Toast,
 } from '@asap-hub/react-components';
 
 import { css } from '@emotion/react';
@@ -81,7 +81,18 @@ const Resources: React.FC<ResourcesProps> = ({
 
   return (
     <div css={containerStyles}>
-      <Toast accent="warning">{headline}</Toast>
+      <Card padding={false} accent={'warning100'}>
+        <div
+          css={{
+            display: 'flex',
+            gap: rem(16),
+            padding: `${rem(32)} ${rem(24)}`,
+          }}
+        >
+          {infoCircleYellowIcon}
+          {headline}
+        </div>
+      </Card>
       <Card>
         <div css={[rowStyles, buttonStyles]}>
           <Headline3 noMargin>Resource List</Headline3>

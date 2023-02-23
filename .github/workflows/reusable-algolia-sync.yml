@@ -17,6 +17,10 @@ on:
         required: false
         type: string
         description: The PR number to run for
+      crn-contentful-env:
+        description: 'CRN Contentful environment name'
+        required: true
+        type: string
     secrets:
       AWS_ACCESS_KEY_ID:
         description: 'AWS Access Key ID'
@@ -26,6 +30,9 @@ on:
         required: true
       CRN_SQUIDEX_CI_CLIENT_SECRET:
         description: 'CRN Squidex Client Secret'
+        required: true
+      CRN_CONTENTFUL_ACCESS_TOKEN:
+        description: 'CRN Contentful Access Token'
         required: true
 jobs:
   sync_index:
@@ -72,7 +79,7 @@ jobs:
           ALGOLIA_ADMIN_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
           ALGOLIA_INDEX_TEMP: '${{ steps.setup.outputs.algolia-index }}_temp'
-          # Copy the records too if all entities are being synced
+          # Do not copy the records if all entities are being synced
           SCOPE: ${{ inputs.entity == 'all' && '-s settings' || '' }}
       - name: Remove the entity data (ENTITY)
         if: ${{ inputs.entity != 'all'}}
@@ -130,8 +137,100 @@ jobs:
           squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
           squidex-ci-client-id: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
           squidex-ci-client-secret: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
+          contentful-env: 'n-a'
+          contentful-access-token: 'n-a'
+          contentful-space-id: 'n-a'
       - name: Override index with the temp one
         run: yarn algolia:move-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_TEMP -i $ALGOLIA_INDEX
+        env:
+          ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
+          ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
+          ALGOLIA_INDEX_TEMP: '${{ steps.setup.outputs.algolia-index }}_temp'
+      # TODO: CRN-1329: Remove this step once the migration is complete
+      - name: Copy index to a temporary index (ALL)
+        run: algolia indices copy -y -w $SCOPE $ALGOLIA_INDEX-contentful $ALGOLIA_INDEX_TEMP
+        env:
+          ALGOLIA_APPLICATION_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          ALGOLIA_ADMIN_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
+          ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
+          ALGOLIA_INDEX_TEMP: '${{ steps.setup.outputs.algolia-index }}_temp'
+          # Do not copy the records if all entities are being synced
+          SCOPE: ${{ inputs.entity == 'all' && '-s settings' || '' }}
+      - name: Remove the entity data (ENTITY)
+        if: ${{ inputs.entity != 'all'}}
+        run: yarn algolia:remove-records -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_TEMP -e $ENTITY_TYPE
+        env:
+          ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
+          ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          ALGOLIA_INDEX_TEMP: '${{ steps.setup.outputs.algolia-index }}_temp'
+          ENTITY_TYPE: ${{ (inputs.entity == 'users' && 'user') || (inputs.entity == 'research-outputs' && 'research-output') || (inputs.entity == 'external-authors' && 'external-author') || (inputs.entity == 'events' && 'event') }}
+      - name: Import Research Outputs (ROs | ALL)
+        if: ${{ inputs.entity == 'research-outputs' || inputs.entity == 'all'}}
+        uses: ./.github/actions/algolia-import-entity
+        with:
+          algolia-api-key: ${{ steps.algolia-keys.outputs.algolia-api-key }}
+          algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          algolia-index: '${{ steps.setup.outputs.algolia-index }}_temp'
+          entity-type: 'research-output'
+          squidex-app-name: 'n-a'
+          squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
+          squidex-ci-client-id: 'n-a'
+          squidex-ci-client-secret: 'n-a'
+          contentful-env: ${{ steps.setup.outputs.crn-contentful-env }}
+          contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
+          contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
+          data-store: 'contentful'
+      - name: Import Users (USERs | ALL)
+        if: ${{ inputs.entity == 'users' || inputs.entity == 'all'}}
+        uses: ./.github/actions/algolia-import-entity
+        with:
+          algolia-api-key: ${{ steps.algolia-keys.outputs.algolia-api-key }}
+          algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          algolia-index: '${{ steps.setup.outputs.algolia-index }}_temp'
+          entity-type: 'user'
+          squidex-app-name: ${{ steps.setup.outputs.crn-squidex-app-name }}
+          squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
+          squidex-ci-client-id: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
+          squidex-ci-client-secret: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
+          contentful-env: ${{ steps.setup.outputs.crn-contentful-env }}
+          contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
+          contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
+          data-store: 'contentful'
+      - name: Import External Authors (EXTERNAL_AUTHORS | ALL)
+        if: ${{ inputs.entity == 'external-authors' || inputs.entity == 'all'}}
+        uses: ./.github/actions/algolia-import-entity
+        with:
+          algolia-api-key: ${{ steps.algolia-keys.outputs.algolia-api-key }}
+          algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          algolia-index: '${{ steps.setup.outputs.algolia-index }}_temp'
+          entity-type: 'external-author'
+          squidex-app-name: 'n-a'
+          squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
+          squidex-ci-client-id: 'n-a'
+          squidex-ci-client-secret: 'n-a'
+          contentful-env: ${{ steps.setup.outputs.crn-contentful-env }}
+          contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
+          contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
+          data-store: 'contentful'
+      - name: Import Events (EVENTS | ALL)
+        if: ${{ inputs.entity == 'events' || inputs.entity == 'all'}}
+        uses: ./.github/actions/algolia-import-entity
+        with:
+          algolia-api-key: ${{ steps.algolia-keys.outputs.algolia-api-key }}
+          algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          algolia-index: '${{ steps.setup.outputs.algolia-index }}_temp'
+          entity-type: 'event'
+          squidex-app-name: 'n-a'
+          squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
+          squidex-ci-client-id: 'n-a'
+          squidex-ci-client-secret: 'n-a'
+          contentful-env: ${{ steps.setup.outputs.crn-contentful-env }}
+          contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
+          contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
+          data-store: 'contentful'
+      - name: Override index with the temp one
+        run: yarn algolia:move-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_TEMP -i $ALGOLIA_INDEX-contentful
         env:
           ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}

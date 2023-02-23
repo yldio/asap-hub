@@ -11,13 +11,24 @@ import {
   SquidexRest,
 } from '@asap-hub/squidex';
 import { promises as fs } from 'fs';
-import { appName, baseUrl, clientId, clientSecret } from '../src/config';
+import {
+  appName,
+  baseUrl,
+  clientId,
+  clientSecret,
+  isContentfulEnabled,
+  contentfulAccessToken,
+  contentfulEnvId,
+  contentfulHost,
+  contentfulSpaceId,
+} from '../src/config';
 import Events from '../src/controllers/events';
 import ExternalAuthors from '../src/controllers/external-authors';
 import Labs from '../src/controllers/labs';
 import ResearchOutputs from '../src/controllers/research-outputs';
 import Users from '../src/controllers/users';
 import { AssetSquidexDataProvider } from '../src/data-providers/assets.data-provider';
+import { UserContentfulDataProvider } from '../src/data-providers/contentful/users.data-provider';
 import { ExternalAuthorSquidexDataProvider } from '../src/data-providers/external-authors.data-provider';
 import { ResearchOutputSquidexDataProvider } from '../src/data-providers/research-outputs.data-provider';
 import { ResearchTagSquidexDataProvider } from '../src/data-providers/research-tags.data-provider';
@@ -98,10 +109,10 @@ const getController = (entity: keyof EntityResponses) => {
     appName,
     baseUrl,
   });
-  const userDataProvider = new UserSquidexDataProvider(
-    squidexGraphqlClient,
-    userRestClient,
-  );
+  const userDataProvider = isContentfulEnabled
+    ? new UserContentfulDataProvider()
+    : new UserSquidexDataProvider(squidexGraphqlClient, userRestClient);
+
   const researchOutputDataProvider = new ResearchOutputSquidexDataProvider(
     squidexGraphqlClient,
     researchOutputRestClient,

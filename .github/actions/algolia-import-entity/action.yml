@@ -25,6 +25,19 @@ inputs:
   squidex-ci-client-secret:
     description: 'Squidex Client secret'
     required: true
+  contentful-space-id:
+    description: 'Contentful Space ID'
+    required: true
+  contentful-env:
+    description: 'Contentful environment'
+    required: true
+  contentful-access-token:
+    description: 'Contentful access token'
+    required: true
+  data-store:
+    description: 'Data store'
+    required: false
+    default: 'squidex'
 outputs:
   algolia-app-id:
     description: 'Algolia App ID'
@@ -49,3 +62,7 @@ runs:
         SQUIDEX_BASE_URL: ${{ inputs.squidex-base-url }}
         SQUIDEX_CLIENT_ID: ${{ inputs.squidex-ci-client-id }}
         SQUIDEX_CLIENT_SECRET: ${{ inputs.squidex-ci-client-secret }}
+        CONTENTFUL_ACCESS_TOKEN: ${{ inputs.contentful-access-token }}
+        CONTENTFUL_ENV: ${{  inputs.contentful-env }}
+        CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
+        IS_CONTENTFUL_ENABLED: ${{ inputs.data-store == 'contentful' }}

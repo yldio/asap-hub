@@ -23,16 +23,41 @@ on:
         type: string
         description: The PR number to run for
 jobs:
+  setup:
+    runs-on: ubuntu-latest
+    environment: Branch
+    outputs:
+      crn-contentful-env: ${{ steps.get-contentful-state.outputs.contentful-env }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: Branch
+          pr-number: ${{ github.event.inputs.pr-number }}
+      - name: Get Contentful Environment state
+        id: get-contentful-state
+        uses: ./.github/actions/contentful-checks
+        with:
+          pr-number: ${{ github.event.inputs.pr-number}}
+          contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
+          contentful-master-env: ${{ steps.setup.outputs.contentful-environment }}
+          contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          max-contentful-envs: ${{ steps.setup.outputs.max-contentful-envs }}
   algolia:
     uses: ./.github/workflows/reusable-algolia-sync.yml
     with:
       environment-name: ${{ github.event.inputs.environment-name }}
       entity: ${{ github.event.inputs.entity }}
       pr-number: ${{ github.event.inputs.pr-number }}
+      crn-contentful-env: ${{ needs.setup.outputs.crn-contentful-env }}
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       CRN_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
+      CRN_CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
 
   notify_failure:
     runs-on: ubuntu-latest

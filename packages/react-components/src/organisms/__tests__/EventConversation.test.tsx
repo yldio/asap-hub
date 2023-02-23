@@ -45,3 +45,7 @@ it('renders slack tool button', () => {
     'http://example.com',
   );
 });
+it('renders nothing if group is undefined', () => {
+  const { queryByText } = render(<EventConversation />);
+  expect(queryByText('Continue the conversation')).not.toBeInTheDocument();
+});

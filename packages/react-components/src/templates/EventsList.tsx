@@ -16,7 +16,7 @@ type EventsListProps = Omit<ComponentProps<typeof ResultList>, 'children'> & {
 const EventsListPage: FC<EventsListProps> = ({ events, ...props }) => (
   <div css={containerStyles}>
     <ResultList {...props}>
-      {events.map(({ eventSpeakers, eventTeams, ...event }) => (
+      {events.map(({ ...event }) => (
         <Fragment key={event.id}>
           <EventCard {...event} />
         </Fragment>

@@ -40,8 +40,6 @@ const buttonStyle = css({
 
 const EventCard: React.FC<EventCardProps> = ({
   status,
-  eventSpeakers,
-  eventTeams,
   displayToast = true,
   hasSpeakersToBeAnnounced,
   ...props
@@ -136,12 +134,7 @@ const EventCard: React.FC<EventCardProps> = ({
 
   return (
     <ToastCard {...toastCardProps(displayToast)}>
-      <EventInfo
-        {...props}
-        status={status}
-        eventSpeakers={eventSpeakers}
-        eventTeams={eventTeams}
-      />
+      <EventInfo {...props} status={status} />
     </ToastCard>
   );
 };

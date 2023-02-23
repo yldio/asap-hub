@@ -24,6 +24,7 @@ export const eventMapper = ({
   workingGroup,
   ...event
 }: EventResponse) => ({
+  ...event,
   hasSpeakersToBeAnnounced: !!(
     speakers.length === 0 ||
     speakers.find((speaker) => 'team' in speaker && !('user' in speaker))
@@ -31,7 +32,6 @@ export const eventMapper = ({
   eventTeams: <EventTeams speakers={speakers} />,
   eventSpeakers: <EventSpeakers speakers={speakers} />,
   eventOwner: <EventOwner group={group} workingGroup={workingGroup} />,
-  ...event,
 });
 
 const EventList: React.FC<EventListProps> = ({

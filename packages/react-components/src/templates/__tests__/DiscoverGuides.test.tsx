@@ -5,7 +5,7 @@ import DiscoverGuides from '../DiscoverGuides';
 it('renders all the sections', () => {
   render(<DiscoverGuides />);
 
-  expect(screen.getByText('Grant Welcome Packet')).toBeVisible();
+  expect(screen.getByText('Post-Award Guidelines')).toBeVisible();
   expect(screen.getByText('Grants Management Portal')).toBeVisible();
   expect(screen.getByText('Budget Reallocation Request Form')).toBeVisible();
   expect(

@@ -37,11 +37,11 @@ const DiscoverGuides: React.FC = () => (
           items={[
             {
               icon: giftIcon,
-              title: 'Grant Welcome Packet',
+              title: 'Post-Award Guidelines',
               description:
-                'All you need to know about the Network, the Hub, sharing, meetings, communications, publishing and more.',
-              hrefText: 'Open the packet',
-              href: 'https://drive.google.com/file/d/1AjFeIHqxSsfS_qVQaSydxK5HeFc-ClQg/view',
+                'All you need to know about the Network, the Hub, budgeting, sharing meetings, communications, publishing and more.',
+              hrefText: 'Open Folder',
+              href: 'https://drive.google.com/drive/folders/100b28nnuKwto7rmN_sYg8iTYnKRo7ZQo',
             },
             {
               icon: dashboardIcon,

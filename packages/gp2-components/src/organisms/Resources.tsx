@@ -16,7 +16,6 @@ import {
 } from '@asap-hub/react-components';
 
 import { css } from '@emotion/react';
-import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import { useState } from 'react';
 import { addIcon, editIcon } from '../icons';
 import { mobileQuery, nonMobileQuery } from '../layout';
@@ -24,7 +23,7 @@ import colors from '../templates/colors';
 
 export type ResourcesProps = {
   resources?: gp2.Resource[];
-  headline: EmotionJSX.Element;
+  headline: string;
   add?: string;
   edit?: string;
 };
@@ -90,9 +89,14 @@ const Resources: React.FC<ResourcesProps> = ({
           }}
         >
           {infoCircleYellowIcon}
-          {headline}
+          <div>
+            <b>Please note</b>
+            <br />
+            {headline}
+          </div>
         </div>
       </Card>
+
       <Card>
         <div css={[rowStyles, buttonStyles]}>
           <Headline3 noMargin>Resource List</Headline3>

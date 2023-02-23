@@ -32,8 +32,8 @@ runs:
       run: |
         ALGOLIA_APP_ID=$(aws ssm get-parameter --name '${{ inputs.algolia-app-id-name }}' --query Parameter.Value --output text)
         ALGOLIA_API_KEY=$(aws ssm get-parameter --name '${{ inputs.algolia-api-key-name }}' --query Parameter.Value --output text)
-        echo "::set-output name=algolia-app-id::$ALGOLIA_APP_ID"
-        echo "::set-output name=algolia-api-key::$ALGOLIA_API_KEY"
+        echo "name=algolia-app-id::$ALGOLIA_APP_ID" >> $GITHUB_OUTPUT
+        echo "name=algolia-api-key::$ALGOLIA_API_KEY" >> $GITHUB_OUTPUT
         echo "::add-mask::$ALGOLIA_API_KEY"
       env:
         AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}

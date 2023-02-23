@@ -61,8 +61,8 @@ runs:
         fi
 
         echo "$OUTSTANDING_MIGRATIONS migrations to run on $CONTENTFUL_ENV."
-        echo "::set-output name=env-id::$CONTENTFUL_ENV"
-        echo "::set-output name=on-branch-env::$BRANCH_ENV"
+        echo "name=env-id::$CONTENTFUL_ENV" >> $GITHUB_OUTPUT
+        echo "name=on-branch-env::$BRANCH_ENV" >> $GITHUB_OUTPUT
       env:
         CONTENTFUL_MASTER_ENV: ${{ inputs.contentful-master-env }}
         PR_NUMBER: ${{ inputs.pr-number }}
@@ -78,10 +78,10 @@ runs:
 
         if [[ "$ENVIRONMENT_TYPE" == "Environment" ]]; then
           echo "Environment found, setting exists flag to true."
-          echo "::set-output name=exists::true"
+          echo "name=exists::true" >> $GITHUB_OUTPUT
         else
           echo "Environment not found, setting exists flag to false."
-          echo "::set-output name=exists::false"
+          echo "name=exists::false" >> $GITHUB_OUTPUT
         fi
       env:
         CONTENTFUL_ENV: ${{ steps.determine-environment.outputs.env-id }}
@@ -93,19 +93,19 @@ runs:
       run: |
         if [[ "$CONTENTFUL_ENV_ID" == "$CONTENTFUL_MASTER_ENV" ]]; then
           echo "No new Contentful environment required for this branch."
-          echo "::set-output name=migrations-up-to-date::true"
+          echo "name=migrations-up-to-date::true" >> $GITHUB_OUTPUT
         elif [[ "$CONTENTFUL_ENV_EXISTS" == "false" ]]; then
           echo "New Contentful environment required but has not yet been created."
-          echo "::set-output name=migrations-up-to-date::true"
+          echo "name=migrations-up-to-date::true" >> $GITHUB_OUTPUT
         else
           OUTSTANDING_MIGRATIONS=$(yarn workspace @asap-hub/contentful space:migrate:crn:count)
 
           if [[ "$OUTSTANDING_MIGRATIONS" == "0" ]]; then
             echo "All migrations have been run on target environment."
-            echo "::set-output name=migrations-up-to-date::true"
+            echo "name=migrations-up-to-date::true" >> $GITHUB_OUTPUT
           else
             echo "New migrations need to be run on target environment."
-            echo "::set-output name=migrations-up-to-date::false"
+            echo "name=migrations-up-to-date::false" >> $GITHUB_OUTPUT
           fi
         fi
       env:

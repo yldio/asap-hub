@@ -181,7 +181,7 @@ runs:
         function set_outputs () {
           while IFS="=" read name value
           do
-              echo "::set-output name=$name::$value"
+              echo "name=$name::$value" >> $GITHUB_OUTPUT
           done < ./.github/environment/$1
         }
 
@@ -190,22 +190,22 @@ runs:
 
         if [ "$ENVIRONMENT_NAME" = "Branch" ]; then
           PR_NUMBER=${{ github.event.number || github.event.inputs.pr-number || inputs.pr-number }}
-          echo "::set-output name=algolia-index::asap-hub_CI-$PR_NUMBER"
-          echo "::set-output name=app-release::${{ github.run_id }}-dev"
-          echo "::set-output name=crn-api-url::https://api-$PR_NUMBER.hub.asap.science"
-          echo "::set-output name=crn-app-url::https://$PR_NUMBER.hub.asap.science"
-          echo "::set-output name=gp2-api-url::https://api-$PR_NUMBER.gp2.asap.science"
-          echo "::set-output name=gp2-app-url::https://$PR_NUMBER.gp2.asap.science"
-          echo "::set-output name=pr-number::$PR_NUMBER"
-          echo "::set-output name=sls-stage::$PR_NUMBER"
-          echo "::set-output name=crn-squidex-app-name::crn-$PR_NUMBER"
-          echo "::set-output name=crn-squidex-app-name-legacy::$PR_NUMBER"
-          echo "::set-output name=crn-contentful-env-id::crn-$PR_NUMBER"
-          echo "::set-output name=gp2-squidex-app-name::gp2-$PR_NUMBER"
+          echo "name=algolia-index::asap-hub_CI-$PR_NUMBER" >> $GITHUB_OUTPUT
+          echo "name=app-release::${{ github.run_id }}-dev" >> $GITHUB_OUTPUT
+          echo "name=crn-api-url::https://api-$PR_NUMBER.hub.asap.science" >> $GITHUB_OUTPUT
+          echo "name=crn-app-url::https://$PR_NUMBER.hub.asap.science" >> $GITHUB_OUTPUT
+          echo "name=gp2-api-url::https://api-$PR_NUMBER.gp2.asap.science" >> $GITHUB_OUTPUT
+          echo "name=gp2-app-url::https://$PR_NUMBER.gp2.asap.science" >> $GITHUB_OUTPUT
+          echo "name=pr-number::$PR_NUMBER" >> $GITHUB_OUTPUT
+          echo "name=sls-stage::$PR_NUMBER" >> $GITHUB_OUTPUT
+          echo "name=crn-squidex-app-name::crn-$PR_NUMBER" >> $GITHUB_OUTPUT
+          echo "name=crn-squidex-app-name-legacy::$PR_NUMBER" >> $GITHUB_OUTPUT
+          echo "name=crn-contentful-env-id::crn-$PR_NUMBER" >> $GITHUB_OUTPUT
+          echo "name=gp2-squidex-app-name::gp2-$PR_NUMBER" >> $GITHUB_OUTPUT
         elif [ "$ENVIRONMENT_NAME" = 'Development' ]; then
-          echo "::set-output name=app-release::${{ github.run_id }}-dev"
+          echo "name=app-release::${{ github.run_id }}-dev" >> $GITHUB_OUTPUT
         elif [ "$ENVIRONMENT_NAME" = 'Production' ]; then
-          echo "::set-output name=app-release::${{ github.run_id }}-prod"
+          echo "name=app-release::${{ github.run_id }}-prod" >> $GITHUB_OUTPUT
         else
           echo "Unknown environment: $ENVIRONMENT_NAME"
           exit 1

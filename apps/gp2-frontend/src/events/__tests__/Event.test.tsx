@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { StaticRouter, Route } from 'react-router-dom';
 import { render } from '@testing-library/react';
-import { createEventResponse } from '@asap-hub/fixtures';
+import { gp2 } from '@asap-hub/fixtures';
 import { events } from '@asap-hub/routing';
 
 import Event from '../Event';
@@ -18,7 +18,7 @@ const mockGetEvent = getEvent as jest.MockedFunction<typeof getEvent>;
 beforeEach(() => {
   mockGetEvent.mockClear();
   mockGetEvent.mockResolvedValue({
-    ...createEventResponse(),
+    ...gp2.createEventResponse(),
     id,
   });
 });
@@ -43,7 +43,7 @@ const wrapper: React.FC = ({ children }) => (
 
 it('displays the event with given id', async () => {
   mockGetEvent.mockResolvedValue({
-    ...createEventResponse(),
+    ...gp2.createEventResponse(),
     id,
     title: 'Kool Event',
   });

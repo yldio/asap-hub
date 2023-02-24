@@ -1,4 +1,4 @@
-import { gp2 as gp2Model } from '@asap-hub/model';
+import { EventStatus, gp2 as gp2Model } from '@asap-hub/model';
 import { Event, RestEvent } from '@asap-hub/squidex';
 import {
   EventContentFragment,
@@ -16,7 +16,7 @@ export const getEventRestResponse = (): Event => ({
   endDate: '2021-02-23T19:32:00Z',
   endDateTimeZone: 'Europe/Lisbon',
   calendar: ['squidex-calendar-id'],
-  status: 'Confirmed' as gp2Model.EventStatus,
+  status: 'Confirmed' as EventStatus,
   tags: [],
   hidden: false,
   meetingLink: 'https://zweem.com',
@@ -24,13 +24,11 @@ export const getEventRestResponse = (): Event => ({
 });
 
 export const getEventSpeakerUser = (): gp2Model.EventSpeakerUser => ({
-  user: {
-    id: 'user-id-3',
-    firstName: 'Adam',
-    lastName: 'Brown',
-    displayName: 'Adam Brown',
-    avatarUrl: undefined,
-  },
+  id: 'user-id-3',
+  firstName: 'Adam',
+  lastName: 'Brown',
+  displayName: 'Adam Brown',
+  avatarUrl: undefined,
 });
 
 export const getEventDataObject = (): gp2Model.EventDataObject => ({
@@ -92,7 +90,7 @@ export const getEventInput = () => ({
   endDate: { iv: '2021-02-23T19:32:00Z' },
   endDateTimeZone: { iv: 'Europe/Lisbon' },
   calendar: { iv: ['squidex-calendar-id'] },
-  status: { iv: 'Confirmed' as gp2Model.EventStatus },
+  status: { iv: 'Confirmed' as EventStatus },
   tags: { iv: [] },
   hidden: { iv: false },
   meetingLink: { iv: 'https://zweem.com' },
@@ -107,7 +105,7 @@ export const getUserCreateDataObject = (): gp2Model.EventCreateDataObject => ({
   endDate: '2021-02-23T19:32:00Z',
   endDateTimeZone: 'Europe/Lisbon',
   calendar: 'squidex-calendar-id',
-  status: 'Confirmed' as gp2Model.EventStatus,
+  status: 'Confirmed' as EventStatus,
   tags: [],
   hidden: false,
   meetingLink: 'https://zweem.com',

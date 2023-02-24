@@ -1,6 +1,6 @@
-import { ComponentProps } from 'react';
+import { ComponentProps, ReactNode } from 'react';
 import { css } from '@emotion/react';
-import { EventResponse } from '@asap-hub/model';
+import { BasicEvent } from '@asap-hub/model';
 import formatDistance from 'date-fns/formatDistance';
 
 import { EventInfo, BackLink } from '../molecules';
@@ -12,9 +12,7 @@ import {
   JoinEvent,
   EventAbout,
   CalendarList,
-  EventConversation,
 } from '../organisms';
-import SpeakerList from '../organisms/SpeakerList';
 
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
@@ -27,9 +25,8 @@ const cardsStyles = css({
 type EventPageProps = ComponentProps<typeof EventInfo> &
   ComponentProps<typeof JoinEvent> &
   ComponentProps<typeof EventAbout> &
-  ComponentProps<typeof SpeakerList> &
   Pick<
-    EventResponse,
+    BasicEvent,
     | 'lastModifiedDate'
     | 'notes'
     | 'videoRecording'
@@ -37,15 +34,18 @@ type EventPageProps = ComponentProps<typeof EventInfo> &
     | 'meetingMaterials'
     | 'hideMeetingLink'
     | 'calendar'
-    | 'group'
   > & {
     readonly backHref: string;
+    readonly displayCalendar: boolean;
+    readonly eventConversation?: ReactNode;
   };
 const EventPage: React.FC<EventPageProps> = ({
   backHref,
   lastModifiedDate,
   calendar,
   hideMeetingLink,
+  eventConversation,
+  displayCalendar,
   children,
   ...props
 }) => (
@@ -65,8 +65,8 @@ const EventPage: React.FC<EventPageProps> = ({
         <EventAbout {...props} />
       </Card>
       <EventMaterials {...props} />
-      <EventConversation {...props} />
-      {(props.group === undefined || props.group.active) && (
+      {eventConversation}
+      {displayCalendar && (
         <CalendarList
           calendars={[calendar]}
           title="Subscribe to this event's Calendar"

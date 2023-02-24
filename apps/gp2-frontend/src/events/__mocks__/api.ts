@@ -1,18 +1,15 @@
-import { EventResponse, ListEventResponse } from '@asap-hub/model';
-import {
-  createEventResponse,
-  createListEventResponse,
-} from '@asap-hub/fixtures';
+import { gp2 as gp2Model } from '@asap-hub/model';
+import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 
 export const getEvent = jest.fn(
-  async (id: string): Promise<EventResponse> => ({
-    ...createEventResponse(),
+  async (id: string): Promise<gp2Model.EventResponse> => ({
+    ...gp2Fixtures.createEventResponse(),
     id,
   }),
 );
 
 export const getEvents = jest.fn(
-  async (): Promise<ListEventResponse> => ({
-    ...createListEventResponse(2),
+  async (): Promise<gp2Model.ListEventResponse> => ({
+    ...gp2Fixtures.createListEventResponse(2),
   }),
 );

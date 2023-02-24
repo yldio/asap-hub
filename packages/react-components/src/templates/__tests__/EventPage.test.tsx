@@ -4,14 +4,15 @@ import { addDays, formatISO, subDays, subYears } from 'date-fns';
 import {
   createCalendarResponse,
   createEventResponse,
-  createGroupResponse,
 } from '@asap-hub/fixtures';
 
 import EventPage from '../EventPage';
 
 const props: ComponentProps<typeof EventPage> = {
   ...createEventResponse(),
-  group: createGroupResponse(),
+  eventOwner: <div>ASAP Team</div>,
+  eventConversation: <div>ASAP Team</div>,
+  displayCalendar: false,
   backHref: '/prev',
 };
 
@@ -108,42 +109,11 @@ it('renders additional materials', () => {
   expect(getByText('Example Material')).toBeVisible();
 });
 
-it('renders continue the event conversation when group with slack provided', () => {
-  const { queryByTitle, rerender } = render(
-    <EventPage
-      {...props}
-      group={{ ...createGroupResponse(), tools: { slack: 'http://slack.com' } }}
-    />,
-  );
-  expect(queryByTitle(/slack/i)).toBeInTheDocument();
-  rerender(<EventPage {...props} group={undefined} />);
-  expect(queryByTitle(/slack/i)).not.toBeInTheDocument();
-});
-
-it('renders calendar list for active groups', () => {
-  const { queryByText, rerender } = render(
-    <EventPage
-      {...props}
-      group={{ ...props.group!, active: true }}
-      calendar={{ ...createCalendarResponse(), name: 'Event Calendar' }}
-    />,
-  );
-  expect(queryByText('Event Calendar')).toBeVisible();
-  rerender(
-    <EventPage
-      {...props}
-      group={{ ...props.group!, active: false }}
-      calendar={{ ...createCalendarResponse(), name: 'Event Calendar' }}
-    />,
-  );
-  expect(queryByText('Event Calendar')).not.toBeInTheDocument();
-});
-
-it('renders calendar list for events with missing group', () => {
+it('renders calendar list when displayCalendar is true', () => {
   const { queryByText } = render(
     <EventPage
       {...props}
-      group={undefined}
+      displayCalendar
       calendar={{ ...createCalendarResponse(), name: 'Event Calendar' }}
     />,
   );
@@ -153,15 +123,4 @@ it('renders calendar list for events with missing group', () => {
 it('renders the children', () => {
   const { queryByText } = render(<EventPage {...props}>Children</EventPage>);
   expect(queryByText('Children')).toBeVisible();
-});
-
-it('displays inactive badge when a group is inactive', () => {
-  render(
-    <EventPage
-      {...props}
-      group={{ ...createGroupResponse(), active: false }}
-    />,
-  );
-
-  expect(screen.getByTitle('Inactive')).toBeInTheDocument();
 });

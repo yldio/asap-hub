@@ -35,7 +35,13 @@ const props = (): ComponentProps<typeof DashboardPageBody> => ({
   roles: [],
   pastEvents: createListEventResponse(3).items,
   reminders: createListReminderResponse(number('Reminders', 3)).items,
-  upcomingEvents: createListEventResponse(number('Number of events', 4)),
+  upcomingEvents: createListEventResponse(
+    number('Number of events', 4),
+  ).items.map((event) => ({
+    ...event,
+    eventOwner: <div>ASAP Team</div>,
+    hasSpeakersToBeAnnounced: false,
+  })),
   recentSharedOutputs: createListResearchOutputResponse(
     number('Number of outputs', 5),
   ),

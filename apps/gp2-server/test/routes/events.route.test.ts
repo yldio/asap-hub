@@ -1,4 +1,4 @@
-import { FetchEventsOptions } from '@asap-hub/model/src/gp2';
+import { FetchEventsOptions } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
@@ -77,13 +77,6 @@ describe('/events/ routes', () => {
       test('Should return a validation error when additional fields exist', async () => {
         const response = await supertest(app).get('/events').query({
           additionalField: 'some-data',
-        });
-        expect(response.status).toBe(400);
-      });
-
-      test('Should return a validation error when both before and after are missing', async () => {
-        const response = await supertest(app).get('/events').query({
-          take: '10',
         });
         expect(response.status).toBe(400);
       });

@@ -10,7 +10,13 @@ const numberOfEvents = number('Number of Events', 3);
 
 export const Default = () => (
   <DashboardUpcomingEvents
-    upcomingEvents={createListEventResponse(numberOfEvents)}
+    upcomingEvents={createListEventResponse(numberOfEvents).items.map(
+      (event) => ({
+        ...event,
+        eventOwner: <div>ASAP Team</div>,
+        hasSpeakersToBeAnnounced: false,
+      }),
+    )}
   />
 );
 

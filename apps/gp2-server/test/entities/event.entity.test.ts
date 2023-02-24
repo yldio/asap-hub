@@ -99,7 +99,7 @@ describe('events entity', () => {
         getSquidexGraphqlEventSpeakerWithUser(),
       ]);
 
-      expect(eventSpeakers[0]!.user).toBeDefined();
+      expect(eventSpeakers[0]!).toBeDefined();
 
       const expectedEventSpeakers: gp2.EventSpeakerUser = getEventSpeakerUser();
       expect(eventSpeakers).toStrictEqual([expectedEventSpeakers]);

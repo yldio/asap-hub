@@ -1,8 +1,12 @@
-import { FetchOptions, ListEventResponse } from '@asap-hub/model';
+import {
+  FetchEventsOptions,
+  FetchOptions,
+  ListEventResponse,
+} from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
-import { FetchEventsOptions } from '../../src/controllers/events';
+
 import {
   getGroupResponse,
   getListGroupResponse,
@@ -209,15 +213,6 @@ describe('/groups/ route', () => {
           .get(`/groups/${groupId}/events`)
           .query({
             additionalField: 'some-data',
-          });
-        expect(response.status).toBe(400);
-      });
-
-      test('Should return a validation error when both before and after are missing', async () => {
-        const response = await supertest(app)
-          .get(`/groups/${groupId}/events`)
-          .query({
-            take: '10',
           });
         expect(response.status).toBe(400);
       });

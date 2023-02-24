@@ -13,7 +13,12 @@ const Event: React.FC = () => {
   if (event) {
     return (
       <Frame title={event.title}>
-        <EventPage {...event} backHref={backHref} />
+        <EventPage
+          {...event}
+          backHref={backHref}
+          displayCalendar={false}
+          eventOwner={<div>GP2 Team</div>}
+        />
       </Frame>
     );
   }

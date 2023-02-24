@@ -7,11 +7,9 @@ it('renders the google calendar', () => {
     <EventsCalendar
       calendars={[
         {
-          color: '#0D7813',
+          color: '#0D7813' as const,
           name: 'Test Calendar',
           id: '1',
-          groups: [{ id: '1', active: false }],
-          workingGroups: [{ id: '2', complete: true }],
         },
       ]}
     />,

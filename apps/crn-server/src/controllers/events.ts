@@ -1,9 +1,9 @@
 import {
   EventResponse,
-  FetchOptions,
+  FetchEventsOptions,
   ListEventResponse,
 } from '@asap-hub/model';
-import { AllOrNone } from '@asap-hub/server-common';
+
 import {
   Event,
   RestEvent,
@@ -226,33 +226,3 @@ const toEventData = (data: Partial<Event>): RestEvent['data'] =>
     acc[key] = { iv: value };
     return acc;
   }, {} as { [key: string]: { iv: unknown } }) as RestEvent['data'];
-
-export type FetchEventsOptions = (
-  | {
-      before: string;
-      after?: string;
-    }
-  | {
-      after: string;
-      before?: string;
-    }
-  | {
-      after?: never;
-      before?: never;
-    }
-) &
-  SortOptions &
-  FetchOptions<FilterOptions>;
-
-type SortOptions = AllOrNone<{
-  sortBy: 'startDate' | 'endDate';
-  sortOrder: 'asc' | 'desc';
-}>;
-
-type FilterOptions = {
-  workingGroupId?: string;
-  groupId?: string;
-  userId?: string;
-  externalAuthorId?: string;
-  teamId?: string;
-};

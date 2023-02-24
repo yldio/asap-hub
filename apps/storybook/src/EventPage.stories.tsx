@@ -20,5 +20,7 @@ export const Normal = () => (
     })}
     backHref="#"
     hideMeetingLink={boolean('Hide Meeting Link', false)}
+    eventOwner={<div>ASAP Team</div>}
+    displayCalendar={boolean('display calendar', true)}
   />
 );

@@ -2,7 +2,11 @@ import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { StaticRouter, Route } from 'react-router-dom';
 import { render, act, waitFor } from '@testing-library/react';
-import { createEventResponse } from '@asap-hub/fixtures';
+import {
+  createCalendarResponse,
+  createEventResponse,
+  createGroupResponse,
+} from '@asap-hub/fixtures';
 import { events } from '@asap-hub/routing';
 
 import {
@@ -106,4 +110,35 @@ it.skip('silently refreshes the event to fetch the meeting link', async () => {
     expect(getByText('New Title')).toBeVisible();
   });
   expect(hasShownLoading).toBe(false);
+});
+
+it('renders calendar list for active groups', async () => {
+  mockGetEvent.mockResolvedValue({
+    ...createEventResponse(),
+    group: { ...createGroupResponse(), active: true },
+    calendar: { ...createCalendarResponse(), name: 'Event Calendar' },
+  });
+  const { findByText } = render(<Event />, { wrapper });
+
+  expect(await findByText('Event Calendar')).toBeVisible();
+});
+
+it('renders calendar list for events with missing group', async () => {
+  mockGetEvent.mockResolvedValue({
+    ...createEventResponse(),
+    group: undefined,
+    calendar: { ...createCalendarResponse(), name: 'Event Calendar' },
+  });
+  const { findByText } = render(<Event />, { wrapper });
+
+  expect(await findByText('Event Calendar')).toBeVisible();
+});
+it('renders continue the event conversation when group with slack provided', async () => {
+  mockGetEvent.mockResolvedValue({
+    ...createEventResponse(),
+    group: { ...createGroupResponse(), tools: { slack: 'http://slack.com' } },
+  });
+  const { findByTitle } = render(<Event />, { wrapper });
+
+  expect(await findByTitle(/slack/i)).toBeInTheDocument();
 });

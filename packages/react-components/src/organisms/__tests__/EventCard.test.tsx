@@ -1,13 +1,14 @@
 import { ComponentProps } from 'react';
 import { render, screen } from '@testing-library/react';
-import { createEventResponse, createGroupResponse } from '@asap-hub/fixtures';
+import { createEventResponse } from '@asap-hub/fixtures';
 import { addMinutes, subDays, subMinutes, addDays } from 'date-fns';
 
 import EventCard from '../EventCard';
 
 const props: ComponentProps<typeof EventCard> = {
   ...createEventResponse(),
-  group: undefined,
+  hasSpeakersToBeAnnounced: false,
+  eventOwner: <div>ASAP Team</div>,
   tags: [],
 };
 it('shows that an event has been cancelled', () => {
@@ -99,8 +100,8 @@ describe('current events', () => {
     render(
       <EventCard
         {...props}
+        hasSpeakersToBeAnnounced
         startDate={addMinutes(new Date(), 30).toISOString()}
-        speakers={[]}
       />,
     );
 
@@ -180,106 +181,12 @@ describe('past events', () => {
     expect(screen.getByTitle(/paper/i)).toBeInTheDocument();
   });
 
-  it('displays inactive badge when a team is inactive', () => {
-    render(
-      <EventCard
-        {...props}
-        speakers={[
-          {
-            team: {
-              displayName: 'Team',
-              id: '123',
-              inactiveSince: '2022-10-20T09:00:00Z',
-            },
-            user: {
-              displayName: 'User',
-              id: '123',
-            },
-          },
-        ]}
-      />,
-    );
-
-    expect(screen.getByTitle('Inactive')).toBeInTheDocument();
-  });
-
-  it('displays inactive badge when a group is inactive', () => {
-    render(
-      <EventCard
-        {...props}
-        group={{ ...createGroupResponse(), active: false }}
-      />,
-    );
-
-    expect(screen.getByTitle('Inactive')).toBeInTheDocument();
-  });
-
-  it('displays inactive badge when a group and team are inactive', () => {
-    render(
-      <EventCard
-        {...props}
-        group={{ ...createGroupResponse(), active: false }}
-        speakers={[
-          {
-            team: {
-              displayName: 'Team',
-              id: '123',
-              inactiveSince: '2022-10-20T09:00:00Z',
-            },
-            user: {
-              displayName: 'User',
-              id: '123',
-            },
-          },
-        ]}
-      />,
-    );
-
-    expect(screen.getAllByTitle('Inactive')).toHaveLength(2);
-  });
-
-  it('does not display inactive badge when a group and team are active', () => {
-    render(
-      <EventCard
-        {...props}
-        group={{ ...createGroupResponse(), active: true }}
-        speakers={[
-          {
-            team: {
-              displayName: 'Team',
-              id: '123',
-              inactiveSince: undefined,
-            },
-            user: {
-              displayName: 'User',
-              id: '123',
-            },
-          },
-        ]}
-      />,
-    );
-
-    expect(screen.queryByTitle('Inactive')).not.toBeInTheDocument();
-  });
-
   it("doesn't display toast if none of the conditions are match", () => {
     render(
       <EventCard
         {...props}
         endDate={addDays(new Date(), 1).toISOString()}
         startDate={addDays(new Date(), 2).toISOString()}
-        speakers={[
-          {
-            team: {
-              displayName: 'Team',
-              id: '123',
-            },
-            user: {
-              displayName: 'User',
-              id: '123',
-            },
-          },
-        ]}
       />,
     );
 
@@ -287,26 +194,5 @@ describe('past events', () => {
     expect(screen.queryByText(/cancelled/)).not.toBeInTheDocument();
     expect(screen.queryByText(/currently live/)).not.toBeInTheDocument();
     expect(screen.queryByText(/currently happening/)).not.toBeInTheDocument();
-  });
-
-  it('display toast when event has a team with no users', () => {
-    render(
-      <EventCard
-        {...props}
-        status="Confirmed"
-        startDate={addDays(new Date(), 2).toISOString()}
-        endDate={addDays(new Date(), 1).toISOString()}
-        speakers={[
-          {
-            team: {
-              displayName: 'Team',
-              id: '123',
-            },
-          },
-        ]}
-      />,
-    );
-
-    expect(screen.getByText(/to be announced/)).toBeInTheDocument();
   });
 });

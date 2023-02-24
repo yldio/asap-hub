@@ -1,6 +1,5 @@
-import { ListEventResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
-import React, { Fragment } from 'react';
+import React, { ComponentProps, Fragment } from 'react';
 import { Card } from '../atoms';
 import { lead } from '../colors';
 import { perRem } from '../pixels';
@@ -8,7 +7,7 @@ import EventCard from './EventCard';
 import { calendarIcon } from '../icons';
 
 type DashboardUpcomingEventsProps = {
-  upcomingEvents?: ListEventResponse;
+  upcomingEvents?: ComponentProps<typeof EventCard>[];
 };
 
 const upcomingEventsWrapper = css({
@@ -28,16 +27,11 @@ const DashboardUpcomingEvents: React.FC<DashboardUpcomingEventsProps> = ({
   upcomingEvents,
 }) => (
   <>
-    {upcomingEvents?.items ? (
+    {upcomingEvents ? (
       <div css={upcomingEventsWrapper}>
-        {upcomingEvents.items.map((event) => (
+        {upcomingEvents.map(({ eventSpeakers, eventTeams, ...event }) => (
           <Fragment key={event.id}>
-            <EventCard
-              {...event}
-              showNumberOfSpeakers={false}
-              showTeams={false}
-              displayToast={false}
-            />
+            <EventCard {...event} displayToast={false} />
           </Fragment>
         ))}
       </div>

@@ -10,7 +10,6 @@ import {
 import {
   TeamRole,
   UserResponse,
-  ListEventResponse,
   ListResearchOutputResponse,
   NewsResponse,
 } from '@asap-hub/model';
@@ -50,6 +49,7 @@ type DashboardPageBodyProps = Pick<
   'reminders'
 > &
   Pick<ComponentProps<typeof RemindersCard>, 'reminders'> &
+  ComponentProps<typeof DashboardUpcomingEvents> &
   Omit<ComponentProps<typeof NewsSection>, 'title' | 'type' | 'news'> & {
     readonly userId: string;
     readonly teamId?: string;
@@ -58,7 +58,6 @@ type DashboardPageBodyProps = Pick<
     pastEvents: ComponentProps<typeof PastEventsDashboardCard>['events'];
     roles: TeamRole[];
   } & {
-    upcomingEvents?: ListEventResponse;
     recentSharedOutputs?: ListResearchOutputResponse;
     recommendedUsers: UserResponse[];
   };
@@ -67,8 +66,6 @@ const publishRoles: TeamRole[] = ['ASAP Staff', 'Project Manager'];
 
 const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   news,
-  userId,
-  teamId,
   roles,
   reminders,
   pastEvents,
@@ -139,7 +136,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         <Headline2 styleAsHeading={3}>Upcoming Events</Headline2>
         <div css={infoStyles}>Here are some upcoming events.</div>
         <DashboardUpcomingEvents upcomingEvents={upcomingEvents} />
-        {upcomingEvents && upcomingEvents.total > 3 && (
+        {upcomingEvents && upcomingEvents.length > 3 && (
           <p css={viewAllStyles} data-testid="view-upcoming-events">
             <Link href={eventsRoute({}).upcoming({}).$}>View All →</Link>
           </p>

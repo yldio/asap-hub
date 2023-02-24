@@ -1,5 +1,5 @@
 import { NotFoundError } from '@asap-hub/errors';
-import { gp2 } from '@asap-hub/model';
+import { CalendarUpdateRequest, gp2 } from '@asap-hub/model';
 import { CalendarDataProvider } from '../data-providers/calendar.data-provider';
 
 export interface CalendarController {
@@ -10,7 +10,7 @@ export interface CalendarController {
   ): Promise<gp2.CalendarResponse>;
   update: (
     calendarId: string,
-    data: gp2.CalendarUpdateRequest,
+    data: CalendarUpdateRequest,
   ) => Promise<gp2.CalendarResponse>;
 }
 
@@ -43,7 +43,7 @@ export default class Calendars implements CalendarController {
 
   async update(
     calendarId: string,
-    data: gp2.CalendarUpdateRequest,
+    data: CalendarUpdateRequest,
   ): Promise<gp2.CalendarResponse> {
     await this.dataProvider.update(calendarId, data);
     return this.fetchById(calendarId);

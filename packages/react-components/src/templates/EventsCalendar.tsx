@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { CalendarResponse } from '@asap-hub/model';
+import { BasicCalendarResponse } from '@asap-hub/model';
 
 import { perRem } from '../pixels';
 import { GoogleCalendar } from '../organisms';
@@ -10,7 +10,7 @@ const containerStyles = css({
 });
 
 type EventsCalendarPageProps = {
-  calendars: ReadonlyArray<CalendarResponse>;
+  calendars: ReadonlyArray<BasicCalendarResponse>;
 };
 
 const EventsCalendarPage: React.FC<EventsCalendarPageProps> = ({

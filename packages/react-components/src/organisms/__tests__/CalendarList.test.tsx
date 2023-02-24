@@ -28,8 +28,6 @@ it('Renders calender list item with colour', () => {
           color: '#0D7813',
           name: 'Test Calendar',
           id: '1',
-          groups: [],
-          workingGroups: [],
         },
       ]}
     />,
@@ -47,8 +45,6 @@ it('Correctly generates the subscribe link', () => {
           color: '#113F47',
           name: 'Test Calendar',
           id: '1',
-          groups: [],
-          workingGroups: [],
         },
       ]}
     />,
@@ -67,13 +63,14 @@ it('displays the show more button', () => {
   const { getByText, queryByText, getByRole } = render(
     <CalendarList
       {...props}
-      calendars={createListCalendarResponse(6).items.concat({
-        color: '#113F47',
-        name: 'last Calendar',
-        id: '1',
-        groups: [],
-        workingGroups: [],
-      })}
+      calendars={[
+        ...createListCalendarResponse(6).items,
+        {
+          color: '#113F47' as const,
+          name: 'last Calendar',
+          id: '1',
+        },
+      ]}
     />,
   );
   const button = getByRole('button', { name: 'View More' });

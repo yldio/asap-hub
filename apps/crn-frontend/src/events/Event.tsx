@@ -1,4 +1,6 @@
 import {
+  EventConversation,
+  EventOwner,
   EventPage,
   NotFoundPage,
   SpeakerList,
@@ -17,7 +19,16 @@ const Event: React.FC = () => {
   if (event) {
     return (
       <Frame title={event.title}>
-        <EventPage {...event} backHref={backHref} onRefresh={refreshEvent}>
+        <EventPage
+          {...event}
+          backHref={backHref}
+          onRefresh={refreshEvent}
+          displayCalendar={event.group === undefined || event.group.active}
+          eventConversation={<EventConversation {...event} />}
+          eventOwner={
+            <EventOwner group={event.group} workingGroup={event.workingGroup} />
+          }
+        >
           {!!event.speakers.length && <SpeakerList {...event} />}
         </EventPage>
       </Frame>

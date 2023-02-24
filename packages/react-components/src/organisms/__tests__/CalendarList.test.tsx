@@ -1,7 +1,6 @@
 import { ComponentProps } from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import { createListCalendarResponse } from '@asap-hub/fixtures';
-import { BasicCalendarResponse } from '@asap-hub/model';
 
 import CalendarList from '../CalendarList';
 
@@ -64,7 +63,7 @@ it('displays the show more button', () => {
   const { getByText, queryByText, getByRole } = render(
     <CalendarList
       {...props}
-            calendars={[
+      calendars={[
         ...createListCalendarResponse(6).items,
         {
           color: '#113F47' as const,
@@ -72,10 +71,6 @@ it('displays the show more button', () => {
           id: '1',
         },
       ]}
-        color: '#113F47',
-        name: 'last Calendar',
-        id: '1',
-      })}
     />,
   );
   const button = getByRole('button', { name: 'View More' });

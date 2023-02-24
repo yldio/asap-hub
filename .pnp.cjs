@@ -7670,7 +7670,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "pino",\
-        "npm:8.8.0"\
+        "npm:8.11.0"\
       ],\
       [\
         "pino-abstract-transport",\
@@ -12372,7 +12372,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jwt-encode", "npm:1.0.1"],\
             ["luxon", "npm:1.28.1"],\
             ["nock", "npm:13.3.0"],\
-            ["pino", "npm:8.8.0"],\
+            ["pino", "npm:8.11.0"],\
             ["pino-http", "npm:8.3.3"],\
             ["pino-lambda", "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:4.1.0"],\
             ["pino-noir", "npm:2.2.1"],\
@@ -60336,6 +60336,24 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["pino", [\
+        ["npm:8.11.0", {\
+          "packageLocation": "./.yarn/cache/pino-npm-8.11.0-8f5941659a-1bcc2b9b44.zip/node_modules/pino/",\
+          "packageDependencies": [\
+            ["pino", "npm:8.11.0"],\
+            ["atomic-sleep", "npm:1.0.0"],\
+            ["fast-redact", "npm:3.1.2"],\
+            ["on-exit-leak-free", "npm:2.1.0"],\
+            ["pino-abstract-transport", "npm:1.0.0"],\
+            ["pino-std-serializers", "npm:6.0.0"],\
+            ["process-warning", "npm:2.1.0"],\
+            ["quick-format-unescaped", "npm:4.0.3"],\
+            ["real-require", "npm:0.2.0"],\
+            ["safe-stable-stringify", "npm:2.4.1"],\
+            ["sonic-boom", "npm:3.2.1"],\
+            ["thread-stream", "npm:2.2.0"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["npm:8.8.0", {\
           "packageLocation": "./.yarn/cache/pino-npm-8.8.0-827ae46607-6925646922.zip/node_modules/pino/",\
           "packageDependencies": [\
@@ -60392,7 +60410,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["pino-lambda", "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:4.1.0"],\
             ["@types/pino", null],\
-            ["pino", "npm:8.8.0"]\
+            ["pino", "npm:8.11.0"]\
           ],\
           "packagePeers": [\
             "@types/pino",\

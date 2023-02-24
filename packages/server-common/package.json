@@ -33,7 +33,7 @@
     "got": "11.8.6",
     "jsonwebtoken": "8.5.1",
     "luxon": "1.28.1",
-    "pino": "8.8.0",
+    "pino": "8.11.0",
     "pino-http": "8.3.3",
     "pino-lambda": "4.1.0",
     "pino-noir": "2.2.1",

@@ -19,6 +19,7 @@ describe('leaders section', () => {
             user: { ...createUserResponse(), displayName: 'Test User 1' },
             role: 'Chair',
             workstreamRole: 'A test role',
+            isActive: true,
           },
         ]}
       />,
@@ -38,10 +39,10 @@ describe('leaders section', () => {
             user: {
               ...createUserResponse(),
               displayName: 'Test User 1',
-              alumniSinceDate: new Date().toISOString(),
             },
             role: 'Chair',
             workstreamRole: 'A test role',
+            isActive: false,
           },
         ]}
       />,
@@ -61,35 +62,6 @@ describe('leaders section', () => {
     activeTabButton.click();
     expect(queryByText('Test User 1')).toBeNull();
   });
-
-  it('renders both active and past leaders in past tab when working group is complete', () => {
-    const { getByText } = render(
-      <WorkingGroupMembers
-        {...props}
-        isComplete
-        leaders={createListUserResponse(3).items.map((item, index) => ({
-          user: {
-            ...item,
-            displayName: `Test User ${index}`,
-            alumniSinceDate:
-              index % 2 === 0 ? new Date().toISOString() : undefined,
-          },
-          role: 'Chair',
-          workstreamRole: 'A test role',
-        }))}
-      />,
-    );
-
-    const pastTabButton = getByText('Past Leaders (3)');
-    const activeTabButton = getByText('Active Leaders (0)');
-
-    expect(pastTabButton).toBeVisible();
-    expect(activeTabButton).toBeVisible();
-
-    expect(getByText('Test User 0')).toBeVisible();
-    expect(getByText('Test User 1')).toBeVisible();
-    expect(getByText('Test User 2')).toBeVisible();
-  });
 });
 
 describe('member section', () => {
@@ -100,6 +72,7 @@ describe('member section', () => {
         members={[
           {
             user: { ...createUserResponse(), displayName: 'Test User 1' },
+            isActive: true,
           },
         ]}
       />,
@@ -118,8 +91,8 @@ describe('member section', () => {
             user: {
               ...createUserResponse(),
               displayName: 'Test User 1',
-              alumniSinceDate: new Date().toISOString(),
             },
+            isActive: false,
           },
         ]}
       />,
@@ -148,37 +121,11 @@ describe('member section', () => {
             ...item,
             displayName: `Test User ${index}`,
           },
+          isActive: true,
         }))}
       />,
     );
     fireEvent.click(getByText('View More Members'));
     expect(getByText(/View Less Members/)).toBeVisible();
-  });
-
-  it('renders both active and past members in past tab when working group is complete', () => {
-    const { getByText } = render(
-      <WorkingGroupMembers
-        {...props}
-        isComplete
-        members={createListUserResponse(3).items.map((item, index) => ({
-          user: {
-            ...item,
-            displayName: `Test User ${index}`,
-            alumniSinceDate:
-              index % 2 === 0 ? new Date().toISOString() : undefined,
-          },
-        }))}
-      />,
-    );
-
-    const pastTabButton = getByText('Past Members (3)');
-    const activeTabButton = getByText('Active Members (0)');
-
-    expect(pastTabButton).toBeVisible();
-    expect(activeTabButton).toBeVisible();
-
-    expect(getByText('Test User 0')).toBeVisible();
-    expect(getByText('Test User 1')).toBeVisible();
-    expect(getByText('Test User 2')).toBeVisible();
   });
 });

@@ -23,7 +23,7 @@
     "algoliasearch": "4.14.3",
     "apr-intercept": "3.0.4",
     "async-sema": "3.1.1",
-    "aws-sdk": "2.1317.0",
+    "aws-sdk": "2.1322.0",
     "csv-parse": "4.16.3",
     "got": "11.8.6",
     "jwt-encode": "1.0.1",
@@ -35,10 +35,10 @@
     "yargs": "17.3.1"
   },
   "devDependencies": {
-    "@babel/core": "7.20.12",
-    "@babel/plugin-transform-modules-commonjs": "7.20.11",
-    "@babel/plugin-transform-runtime": "7.19.6",
-    "@babel/runtime-corejs3": "7.20.13",
+    "@babel/core": "7.21.0",
+    "@babel/plugin-transform-modules-commonjs": "7.21.2",
+    "@babel/plugin-transform-runtime": "7.21.0",
+    "@babel/runtime-corejs3": "7.21.0",
     "@types/apr-intercept": "workspace:*",
     "@types/babel__core": "7.20.0",
     "@types/hapi__boom": "9.0.1",

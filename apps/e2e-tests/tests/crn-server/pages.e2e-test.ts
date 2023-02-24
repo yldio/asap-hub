@@ -13,5 +13,5 @@ describe('Pages endpoints', () => {
     expect(body).toMatchObject({
       path: '/privacy-policy',
     });
-  });
+  }, 30_000);
 });

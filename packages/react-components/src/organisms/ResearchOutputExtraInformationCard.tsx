@@ -79,6 +79,7 @@ const ResearchOutputExtraInformationCard: React.FC<
         <LabeledMultiSelect
           title="Methods"
           subtitle="(optional)"
+          description="Select the methods that were used in this output."
           values={methods.map((method) => ({
             label: method,
             value: method,
@@ -98,6 +99,7 @@ const ResearchOutputExtraInformationCard: React.FC<
         <LabeledMultiSelect
           title="Organisms"
           subtitle="(optional)"
+          description="Select the organisms that were used in this output."
           values={organisms.map((organism) => ({
             label: organism,
             value: organism,
@@ -117,6 +119,7 @@ const ResearchOutputExtraInformationCard: React.FC<
         <LabeledMultiSelect
           title="Environments"
           subtitle="(optional)"
+          description="Select the environments that were used in this output."
           values={environments.map((environment) => ({
             label: environment,
             value: environment,

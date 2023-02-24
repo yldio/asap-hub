@@ -1,4 +1,4 @@
-import { WorkingGroupLeader, WorkingGroupMember } from '@asap-hub/model';
+import { WorkingGroupResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import React from 'react';
 import { Card, Headline3, Paragraph, Subtitle } from '../atoms';
@@ -15,19 +15,20 @@ const containerStyles = css({
   },
 });
 
+type Leaders = WorkingGroupResponse['leaders'];
+type Members = WorkingGroupResponse['members'];
+
 type LeaderListProps = {
-  data: WorkingGroupLeader[];
+  data: Leaders;
 };
 
 type MemberListProps = {
-  data: WorkingGroupMember[];
+  data: Members;
 };
 
 type GroupLeadersTabbedCardProps = {
-  leaders: ReadonlyArray<
-    Pick<WorkingGroupLeader, 'user' | 'role' | 'workstreamRole'>
-  >;
-  members: ReadonlyArray<Pick<WorkingGroupMember, 'user'>>;
+  leaders: Readonly<Leaders>;
+  members: Readonly<Members>;
   isComplete: boolean;
 };
 
@@ -36,14 +37,13 @@ const GroupLeadersTabbedCard: React.FC<GroupLeadersTabbedCardProps> = ({
   members,
   isComplete,
 }) => {
-  const [inactiveLeaders, activeLeaders] = splitListBy(
+  const [activeLeaders, inactiveLeaders] = splitListBy(
     leaders,
-    (leader) => isComplete || !!leader?.user?.alumniSinceDate,
+    (leader) => leader.isActive,
   );
-
-  const [inactiveMembers, activeMembers] = splitListBy(
+  const [activeMembers, inactiveMembers] = splitListBy(
     members,
-    (member) => isComplete || !!member?.user?.alumniSinceDate,
+    (member) => member.isActive,
   );
 
   return (

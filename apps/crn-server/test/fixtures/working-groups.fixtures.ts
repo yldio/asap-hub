@@ -50,7 +50,7 @@ export const getWorkingGroupDataObject = (): WorkingGroupDataObject => ({
 });
 
 export const getWorkingGroupResponse = (): WorkingGroupResponse =>
-  getWorkingGroupDataObject();
+  getWorkingGroupDataObject() as WorkingGroupResponse;
 
 export const getSquidexWorkingGroupGraphqlResponse =
   (): FetchWorkingGroupQuery => ({

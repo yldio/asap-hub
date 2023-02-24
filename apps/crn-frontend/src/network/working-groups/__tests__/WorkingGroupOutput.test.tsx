@@ -79,7 +79,7 @@ const mandatoryFields = async (
   );
 
   const typeInput = screen.getByRole('textbox', {
-    name: /Select the option/i,
+    name: /Select the type/i,
   });
   userEvent.type(typeInput, type);
   userEvent.type(typeInput, specialChars.enter);

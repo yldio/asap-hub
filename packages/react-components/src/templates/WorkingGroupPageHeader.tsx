@@ -2,7 +2,6 @@ import { css } from '@emotion/react';
 import { formatDistance } from 'date-fns';
 import { WorkingGroupLeader, WorkingGroupResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
-import { isEnabled } from '@asap-hub/flags';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 
 import { mobileScreen, perRem, rem } from '../pixels';
@@ -108,10 +107,11 @@ const dropdownButtonStyling = css({
   },
 });
 
-const isProjectManager = (
+const isProjectManagerOrStaff = (
   user: ReturnType<typeof useCurrentUserCRN>,
   leaders: WorkingGroupLeader[],
 ): boolean =>
+  user?.role === 'Staff' ||
   leaders.some((l) => l.user.id === user?.id && l.role === 'Project Manager');
 
 type WorkingGroupPageHeaderProps = {
@@ -146,7 +146,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
   pastEventsCount,
 }) => {
   const currentUserCRN = useCurrentUserCRN();
-  const isWorkingGroupProjectManager = isProjectManager(
+  const isWorkingGroupProjectManagerOrStaff = isProjectManagerOrStaff(
     currentUserCRN,
     leaders,
   );
@@ -172,7 +172,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
               .about({}).$
           }#${membersListElementId}`}
         />
-        {pointOfContact && !isWorkingGroupProjectManager && (
+        {pointOfContact && !isWorkingGroupProjectManagerOrStaff && (
           <div css={pointOfContactStyles}>
             <Link
               buttonStyle
@@ -185,48 +185,55 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
           </div>
         )}
 
-        {isEnabled('WORKING_GROUP_SHARED_OUTPUT_BTN') &&
-          isWorkingGroupProjectManager && (
-            <div css={createStyles}>
-              <DropdownButton
-                buttonChildren={() => (
-                  <span css={dropdownButtonStyling}>
-                    {plusIcon}
-                    Share an output
-                  </span>
-                )}
-              >
-                {{
-                  item: <>{article} Article</>,
-                  href: route.createOutput({
-                    workingGroupOutputDocumentType: 'article',
-                  }).$,
-                }}
-                {{
-                  item: <>{bioinformatics} Bioinformatics</>,
-                  href: '#',
-                }}
-                {{
-                  item: <>{dataset} Dataset</>,
-                  href: '#',
-                }}
-                {{
-                  item: <>{labResource} Lab Resource</>,
-                  href: '#',
-                }}
-                {{
-                  item: <>{protocol} Protocol</>,
-                  href: '#',
-                }}
-                {{
-                  item: <>{crnReportIcon} CRN Report</>,
-                  href: route.createOutput({
-                    workingGroupOutputDocumentType: 'report',
-                  }).$,
-                }}
-              </DropdownButton>
-            </div>
-          )}
+        {isWorkingGroupProjectManagerOrStaff && (
+          <div css={createStyles}>
+            <DropdownButton
+              buttonChildren={() => (
+                <span css={dropdownButtonStyling}>
+                  {plusIcon}
+                  Share an output
+                </span>
+              )}
+            >
+              {{
+                item: <>{article} Article</>,
+                href: route.createOutput({
+                  workingGroupOutputDocumentType: 'article',
+                }).$,
+              }}
+              {{
+                item: <>{bioinformatics} Bioinformatics</>,
+                href: route.createOutput({
+                  workingGroupOutputDocumentType: 'bioinformatics',
+                }).$,
+              }}
+              {{
+                item: <>{dataset} Dataset</>,
+                href: route.createOutput({
+                  workingGroupOutputDocumentType: 'dataset',
+                }).$,
+              }}
+              {{
+                item: <>{labResource} Lab Resource</>,
+                href: route.createOutput({
+                  workingGroupOutputDocumentType: 'lab-resource',
+                }).$,
+              }}
+              {{
+                item: <>{protocol} Protocol</>,
+                href: route.createOutput({
+                  workingGroupOutputDocumentType: 'protocol',
+                }).$,
+              }}
+              {{
+                item: <>{crnReportIcon} CRN Report</>,
+                href: route.createOutput({
+                  workingGroupOutputDocumentType: 'report',
+                }).$,
+              }}
+            </DropdownButton>
+          </div>
+        )}
       </section>
       <div css={rowStyles}>
         {externalLink && (
@@ -256,28 +263,24 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
           About
         </TabLink>
         {!complete && <TabLink href={route.calendar({}).$}>Calendar</TabLink>}
-        {isEnabled('WORKING_GROUP_SHARED_OUTPUTS_TAB') && (
-          <TabLink
-            href={
-              network({})
-                .workingGroups({})
-                .workingGroup({ workingGroupId: id })
-                .outputs({}).$
-            }
-          >
-            Working Group Outputs ({workingGroupsOutputsCount})
-          </TabLink>
-        )}
-        {isEnabled('WORKING_GROUP_EVENTS') && !complete && (
+        <TabLink
+          href={
+            network({})
+              .workingGroups({})
+              .workingGroup({ workingGroupId: id })
+              .outputs({}).$
+          }
+        >
+          Working Group Outputs ({workingGroupsOutputsCount})
+        </TabLink>
+        {!complete && (
           <TabLink href={route.upcoming({}).$}>
             Upcoming Events {`(${upcomingEventsCount})`}
           </TabLink>
         )}
-        {isEnabled('WORKING_GROUP_EVENTS') && (
-          <TabLink href={route.past({}).$}>
-            Past Events {`(${pastEventsCount})`}
-          </TabLink>
-        )}
+        <TabLink href={route.past({}).$}>
+          Past Events {`(${pastEventsCount})`}
+        </TabLink>
       </TabNav>
     </header>
   );

@@ -10,10 +10,11 @@ import {
 } from '@asap-hub/server-common';
 import {
   getAccessTokenFactory,
-  gp2 as gp2squidex,
+  gp2 as gp2Squidex,
   InputCalendar,
   RestCalendar,
   RestEvent,
+  RestExternalAuthor,
   SquidexGraphql,
   SquidexRest,
 } from '@asap-hub/squidex';
@@ -35,6 +36,7 @@ import ContributingCohorts, {
 } from './controllers/contributing-cohort.controller';
 import Events, { EventController } from './controllers/event.controller';
 import News, { NewsController } from './controllers/news.controller';
+import Outputs, { OutputController } from './controllers/output.controller';
 import Projects, { ProjectController } from './controllers/project.controller';
 import Users, { UserController } from './controllers/user.controller';
 import WorkingGroupNetwork, {
@@ -60,9 +62,17 @@ import {
   EventSquidexDataProvider,
 } from './data-providers/event.data-provider';
 import {
+  ExternalAuthorDataProvider,
+  ExternalAuthorSquidexDataProvider,
+} from './data-providers/external-authors.data-provider';
+import {
   NewsDataProvider,
   NewsSquidexDataProvider,
 } from './data-providers/news.data-provider';
+import {
+  OutputDataProvider,
+  OutputSquidexDataProvider,
+} from './data-providers/output.data-provider';
 import {
   ProjectDataProvider,
   ProjectSquidexDataProvider,
@@ -83,6 +93,7 @@ import { calendarRouteFactory } from './routes/calendar.route';
 import { contributingCohortRouteFactory } from './routes/contributing-cohort.route';
 import { eventRouteFactory } from './routes/event.route';
 import { newsRouteFactory } from './routes/news.route';
+import { outputRouteFactory } from './routes/output.route';
 import { projectRouteFactory } from './routes/project.route';
 import { userPublicRouteFactory, userRouteFactory } from './routes/user.route';
 import { workingGroupNetworkRouteFactory } from './routes/working-group-network.route';
@@ -115,29 +126,29 @@ export const appFactory = (libs: Libs = {}): Express => {
   });
 
   const userRestClient = new SquidexRest<
-    gp2squidex.RestUser,
-    gp2squidex.InputUser
+    gp2Squidex.RestUser,
+    gp2Squidex.InputUser
   >(getAuthToken, 'users', {
     appName,
     baseUrl,
   });
   const contributingCohortRestClient = new SquidexRest<
-    gp2squidex.RestContributingCohort,
-    gp2squidex.InputContributingCohort
+    gp2Squidex.RestContributingCohort,
+    gp2Squidex.InputContributingCohort
   >(getAuthToken, 'contributing-cohorts', {
     appName,
     baseUrl,
   });
   const workingGroupRestClient = new SquidexRest<
-    gp2squidex.RestWorkingGroup,
-    gp2squidex.InputWorkingGroup
+    gp2Squidex.RestWorkingGroup,
+    gp2Squidex.InputWorkingGroup
   >(getAuthToken, 'working-groups', {
     appName,
     baseUrl,
   });
   const projectRestClient = new SquidexRest<
-    gp2squidex.RestProject,
-    gp2squidex.InputProject
+    gp2Squidex.RestProject,
+    gp2Squidex.InputProject
   >(getAuthToken, 'projects', {
     appName,
     baseUrl,
@@ -149,6 +160,21 @@ export const appFactory = (libs: Libs = {}): Express => {
   const calendarRestClient = new SquidexRest<RestCalendar, InputCalendar>(
     getAuthToken,
     'calendars',
+    {
+      appName,
+      baseUrl,
+    },
+  );
+  const outputRestClient = new SquidexRest<
+    gp2Squidex.RestOutput,
+    gp2Squidex.InputOutput
+  >(getAuthToken, 'outputs', {
+    appName,
+    baseUrl,
+  });
+  const externalAuthorRestClient = new SquidexRest<RestExternalAuthor>(
+    getAuthToken,
+    'external-authors',
     {
       appName,
       baseUrl,
@@ -189,7 +215,13 @@ export const appFactory = (libs: Libs = {}): Express => {
   const eventDataProvider =
     libs.eventDataProvider ||
     new EventSquidexDataProvider(eventRestClient, squidexGraphqlClient);
+  const outputDataProvider =
+    libs.outputDataProvider ||
+    new OutputSquidexDataProvider(squidexGraphqlClient, outputRestClient);
 
+  const externalAuthorDataProvider =
+    libs.externalAuthorDataProvider ||
+    new ExternalAuthorSquidexDataProvider(externalAuthorRestClient);
   // Controllers
 
   const workingGroupController =
@@ -203,6 +235,9 @@ export const appFactory = (libs: Libs = {}): Express => {
   const eventController = libs.eventController || new Events(eventDataProvider);
   const calendarController =
     libs.calendarController || new Calendars(calendarDataProvider);
+  const outputController =
+    libs.outputController ||
+    new Outputs(outputDataProvider, externalAuthorDataProvider);
   const contributingCohortController =
     libs.contributingCohortController ||
     new ContributingCohorts(contributingCohortDataProvider);
@@ -237,7 +272,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const projectRoutes = projectRouteFactory(projectController);
   const eventRoutes = eventRouteFactory(eventController);
   const calendarRoutes = calendarRouteFactory(calendarController);
-
+  const outputRoutes = outputRouteFactory(outputController);
   app.use(userPublicRoutes);
   // Auth
   app.use(authHandler);
@@ -253,6 +288,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(projectRoutes);
   app.use(eventRoutes);
   app.use(calendarRoutes);
+  app.use(outputRoutes);
 
   // Catch all
   app.get('*', async (_req, res) => {
@@ -271,22 +307,25 @@ export const appFactory = (libs: Libs = {}): Express => {
 
 export type Libs = {
   assetDataProvider?: AssetDataProvider;
-  userDataProvider?: UserDataProvider;
-  newsDataProvider?: NewsDataProvider;
-  eventDataProvider?: EventDataProvider;
+  authHandler?: AuthHandler;
+  calendarController?: CalendarController;
   calendarDataProvider?: CalendarDataProvider;
+  contributingCohortController?: ContributingCohortController;
   contributingCohortDataProvider?: ContributingCohortDataProvider;
-  workingGroupDataProvider?: WorkingGroupDataProvider;
-  workingGroupNetworkDataProvider?: WorkingGroupNetworkDataProvider;
+  eventController?: EventController;
+  eventDataProvider?: EventDataProvider;
+  externalAuthorDataProvider?: ExternalAuthorDataProvider;
+  logger?: Logger;
+  newsController?: NewsController;
+  newsDataProvider?: NewsDataProvider;
+  outputController?: OutputController;
+  outputDataProvider?: OutputDataProvider;
+  projectController?: ProjectController;
   projectDataProvider?: ProjectDataProvider;
   userController?: UserController;
-  newsController?: NewsController;
-  eventController?: EventController;
-  calendarController?: CalendarController;
-  contributingCohortController?: ContributingCohortController;
+  userDataProvider?: UserDataProvider;
   workingGroupController?: WorkingGroupController;
+  workingGroupDataProvider?: WorkingGroupDataProvider;
   workingGroupNetworkController?: WorkingGroupNetworkController;
-  projectController?: ProjectController;
-  authHandler?: AuthHandler;
-  logger?: Logger;
+  workingGroupNetworkDataProvider?: WorkingGroupNetworkDataProvider;
 };

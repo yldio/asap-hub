@@ -31,7 +31,7 @@ const renderDashboard = async ({
           set(refreshNewsState, Math.random());
         }}
       >
-        <Auth0Provider user={user}>
+        <Auth0Provider user={{ ...user, role: 'Network Collaborator' }}>
           <WhenReady>
             <Dashboard {...{ showWelcomeBackBanner, dismissBanner }} />
           </WhenReady>

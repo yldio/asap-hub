@@ -3,6 +3,7 @@ export * from './common';
 export * from './contributing-cohort';
 export * from './event';
 export * from './news';
+export * from './output';
 export * from './project';
 export * from './user';
 export * from './working-group';

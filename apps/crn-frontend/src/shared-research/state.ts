@@ -1,7 +1,10 @@
 import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
+  userPermissions,
 } from '@asap-hub/model';
+import { useCurrentUserCRN } from '@asap-hub/react-context';
+import { getUserPermissions } from '@asap-hub/validation';
 import {
   atom,
   atomFamily,
@@ -159,4 +162,12 @@ export const useSetResearchOutputItem = () => {
     setResearchOutputItem(researchOutput);
     setRefresh(refresh + 1);
   };
+};
+
+export const useUserPermissions = (
+  researchOutputData: ResearchOutputResponse | undefined,
+): userPermissions => {
+  const user = useCurrentUserCRN();
+
+  return getUserPermissions(user, researchOutputData);
 };

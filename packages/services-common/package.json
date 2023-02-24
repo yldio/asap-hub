@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@asap-hub/errors": "workspace:*",
-    "@babel/runtime-corejs3": "7.20.13",
+    "@babel/runtime-corejs3": "7.21.0",
     "@hapi/boom": "9.1.4",
     "@hapi/bourne": "2.1.0",
     "@hapi/joi": "17.1.1",
@@ -30,7 +30,7 @@
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@types/apr-intercept": "workspace:*",
-    "@types/aws-lambda": "8.10.110",
+    "@types/aws-lambda": "8.10.111",
     "@types/debug": "4.1.7",
     "@types/hapi": "18.0.8",
     "@types/hapi__boom": "9.0.1",

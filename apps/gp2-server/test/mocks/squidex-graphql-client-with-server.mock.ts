@@ -13,6 +13,7 @@ import { getSquidexGraphqlCalendar } from '../fixtures/calendar.fixtures';
 import { getGraphQLContributingCohort } from '../fixtures/contributing-cohort.fixtures';
 import { getSquidexGraphqlEvent } from '../fixtures/event.fixtures';
 import { getGraphQLNews } from '../fixtures/news.fixtures';
+import { getSquidexGraphqlOutput } from '../fixtures/output.fixtures';
 import { getGraphQLProject } from '../fixtures/project.fixtures';
 import { getGraphQLUser } from '../fixtures/user.fixtures';
 import { getGraphQLWorkingGroupNetwork } from '../fixtures/working-group-network.fixtures';
@@ -50,6 +51,10 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
     WorkingGroupNetworkResultDto: resultDto,
     WorkingGroups: () => getGraphQLWorkingGroup(),
     WorkingGroupsResultDto: resultDto,
+    Outputs: () => getSquidexGraphqlOutput(),
+    OutputsResultDto: resultDto,
+    // ExternalAuthors: () => getGraphQLExternalAuthor(),
+    // ExternalAuthorsDto: () => resultDto,
   };
   const store = createMockStore({
     schema,

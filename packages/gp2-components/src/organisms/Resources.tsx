@@ -160,35 +160,40 @@ const Resources: React.FC<ResourcesProps> = ({
                   )}
                 </div>
                 <div
-                  css={css([
-                    {
-                      display: 'flex',
-                      flexDirection: 'row',
-                      paddingTop: rem(8),
-                    },
-                    resource.type === 'Link'
-                      ? {
-                          color: colors.primary500.rgb,
-                        }
-                      : {},
-                  ])}
+                  css={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    padding: `${rem(8)} 0`,
+                  }}
                 >
-                  <Subtitle styleAsHeading={4} noMargin>
-                    {resource.title}
-                  </Subtitle>
-                  {resource.type === 'Link' && (
+                  {resource.type === 'Link' ? (
                     <div
                       css={css({
-                        padding: '4px 8px',
+                        color: colors.primary500.rgb,
                         svg: {
                           stroke: colors.primary500.rgb,
                         },
                       })}
                     >
                       <Anchor href={resource.externalLink}>
-                        {externalLinkIcon}
+                        <span
+                          css={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: rem(8),
+                          }}
+                        >
+                          <Subtitle styleAsHeading={4} noMargin>
+                            {resource.title}
+                          </Subtitle>
+                          {externalLinkIcon}
+                        </span>
                       </Anchor>
                     </div>
+                  ) : (
+                    <Subtitle styleAsHeading={4} noMargin>
+                      {resource.title}
+                    </Subtitle>
                   )}
                 </div>
                 <Paragraph noMargin accent="lead">

@@ -1,56 +1,57 @@
-import nock from 'nock';
 import { GenericError } from '@asap-hub/errors';
+import { EventSpeakerTeam } from '@asap-hub/model';
 import { RestEvent, SquidexRest } from '@asap-hub/squidex';
-import { identity } from '../helpers/squidex';
+import Boom from '@hapi/boom';
+import nock from 'nock';
+import { appName, baseUrl } from '../../src/config';
+import { EventSquidexDataProvider } from '../../src/data-providers/event.data-provider';
+import { getAuthToken } from '../../src/utils/auth';
 import {
-  listEventResponse,
+  getEventDataObject,
+  getEventInput,
   getEventResponse,
-  getEventRestResponse,
+  getListEventResponse,
   getRestEvent,
-  getSquidexEventsGraphqlResponse,
   getSquidexEventGraphqlResponse,
+  getSquidexEventsGraphqlResponse,
   getSquidexGraphqlEvents,
+  getUserCreateDataObject,
 } from '../fixtures/events.fixtures';
 import {
   getSquidexGraphqlGroup,
   getSquidexGroupGraphqlResponse,
 } from '../fixtures/groups.fixtures';
-import Events from '../../src/controllers/events';
-
+import { getSquidexWorkingGroupGraphqlResponse } from '../fixtures/working-groups.fixtures';
+import { identity } from '../helpers/squidex';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
-import Boom from '@hapi/boom';
-import { getAuthToken } from '../../src/utils/auth';
-import { appName, baseUrl } from '../../src/config';
-import { EventSpeakerTeam } from '@asap-hub/model';
-import { getSquidexWorkingGroupGraphqlResponse } from '../fixtures/working-groups.fixtures';
 
-describe('Event controller', () => {
+describe('Event data provider', () => {
+  const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
+  const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
+
   const eventRestClient = new SquidexRest<RestEvent>(getAuthToken, 'events', {
     appName,
     baseUrl,
   });
-  const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
-  const eventsController = new Events(
+  const eventDataProvider = new EventSquidexDataProvider(
+    eventRestClient,
     squidexGraphqlClientMock,
-    eventRestClient,
   );
-
-  const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
-  const eventsControllerMockGraphql = new Events(
+  const eventDataProviderMockGraphql = new EventSquidexDataProvider(
+    eventRestClient,
     squidexGraphqlClientMockServer,
-    eventRestClient,
   );
 
-  beforeAll(() => identity());
-  afterEach(() => {
-    jest.resetAllMocks();
-    jest.useRealTimers();
+  beforeAll(() => {
+    identity();
   });
 
-  describe('Fetch method', () => {
+  afterEach(jest.resetAllMocks);
+
+  describe('Fetch', () => {
     test('Should fetch the events from squidex graphql', async () => {
-      const result = await eventsControllerMockGraphql.fetch({
+      const result = await eventDataProviderMockGraphql.fetch({
         before: 'before',
       });
 
@@ -66,18 +67,19 @@ describe('Event controller', () => {
         eventsGraphqlResponse,
       );
 
-      const result = await eventsController.fetch({ before: 'before' });
+      const result = await eventDataProvider.fetch({ before: 'before' });
 
       expect(result.total).toEqual(0);
       expect(result.items).toHaveLength(0);
     });
+
     test('Should return a list of events', async () => {
       const eventsGraphqlResponse = getSquidexEventsGraphqlResponse();
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         eventsGraphqlResponse,
       );
 
-      const result = await eventsController.fetch({ before: 'before' });
+      const result = await eventDataProvider.fetch({ before: 'before' });
 
       expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
         expect.anything(),
@@ -88,7 +90,7 @@ describe('Event controller', () => {
           top: 10,
         },
       );
-      expect(result).toEqual(listEventResponse);
+      expect(result).toEqual(getListEventResponse());
     });
 
     test('Should apply the filter to remove hidden events by default', async () => {
@@ -97,7 +99,7 @@ describe('Event controller', () => {
         eventsGraphqlResponse,
       );
 
-      const result = await eventsController.fetch({ after: 'after-date' });
+      const result = await eventDataProvider.fetch({ after: 'after-date' });
 
       expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
         expect.anything(),
@@ -108,16 +110,15 @@ describe('Event controller', () => {
           top: 10,
         },
       );
-      expect(result).toEqual(listEventResponse);
+      expect(result).toEqual(getListEventResponse());
     });
-
     describe('Date filters', () => {
       test('Should apply the "after" filter to the end-date', async () => {
         const eventsGraphqlResponse = getSquidexEventsGraphqlResponse();
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           eventsGraphqlResponse,
         );
-        const result = await eventsController.fetch({ after: 'after-date' });
+        const result = await eventDataProvider.fetch({ after: 'after-date' });
 
         expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
           expect.anything(),
@@ -128,7 +129,7 @@ describe('Event controller', () => {
             top: 10,
           },
         );
-        expect(result).toEqual(listEventResponse);
+        expect(result).toEqual(getListEventResponse());
       });
 
       test('Should apply the "before" filter to the end-date', async () => {
@@ -137,7 +138,7 @@ describe('Event controller', () => {
           eventsGraphqlResponse,
         );
 
-        const result = await eventsController.fetch({ before: 'before-date' });
+        const result = await eventDataProvider.fetch({ before: 'before-date' });
 
         expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
           expect.anything(),
@@ -148,7 +149,7 @@ describe('Event controller', () => {
             top: 10,
           },
         );
-        expect(result).toEqual(listEventResponse);
+        expect(result).toEqual(getListEventResponse());
       });
 
       test('Should apply both the "after" and "before" filters', async () => {
@@ -157,7 +158,7 @@ describe('Event controller', () => {
           eventsGraphqlResponse,
         );
 
-        const result = await eventsController.fetch({
+        const result = await eventDataProvider.fetch({
           before: 'before-date',
           after: 'after-date',
         });
@@ -171,7 +172,7 @@ describe('Event controller', () => {
             top: 10,
           },
         );
-        expect(result).toEqual(listEventResponse);
+        expect(result).toEqual(getListEventResponse());
       });
 
       test('Should apply search query params', async () => {
@@ -180,7 +181,7 @@ describe('Event controller', () => {
           eventsGraphqlResponse,
         );
 
-        const result = await eventsController.fetch({
+        const result = await eventDataProvider.fetch({
           after: 'after-date',
           search: 'a',
         });
@@ -195,7 +196,7 @@ describe('Event controller', () => {
             top: 10,
           },
         );
-        expect(result).toEqual(listEventResponse);
+        expect(result).toEqual(getListEventResponse());
       });
 
       test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
@@ -204,7 +205,7 @@ describe('Event controller', () => {
           eventsGraphqlResponse,
         );
 
-        const result = await eventsController.fetch({
+        const result = await eventDataProvider.fetch({
           after: 'after-date',
           search: "'",
         });
@@ -219,7 +220,7 @@ describe('Event controller', () => {
             top: 10,
           },
         );
-        expect(result).toEqual(listEventResponse);
+        expect(result).toEqual(getListEventResponse());
       });
 
       test('Should sanitise double quotation mark by encoding to hex', async () => {
@@ -227,7 +228,7 @@ describe('Event controller', () => {
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           eventsGraphqlResponse,
         );
-        const result = await eventsController.fetch({
+        const result = await eventDataProvider.fetch({
           after: 'after-date',
           search: '"',
         });
@@ -242,10 +243,9 @@ describe('Event controller', () => {
             top: 10,
           },
         );
-        expect(result).toEqual(listEventResponse);
+        expect(result).toEqual(getListEventResponse());
       });
     });
-
     describe('Filters', () => {
       describe.each`
         typeOfGroup   | filterField         | groupGraphqlSquidexResponse              | graphqlField
@@ -260,7 +260,7 @@ describe('Event controller', () => {
             squidexGraphqlClientMock.request.mockRejectedValue(Boom.notFound());
 
             await expect(
-              eventsController.fetch({
+              eventDataProvider.fetch({
                 after: 'after-date',
                 filter: {
                   [filterField]: id,
@@ -283,7 +283,7 @@ describe('Event controller', () => {
             );
 
             await expect(
-              eventsController.fetch({
+              eventDataProvider.fetch({
                 after: 'after-date',
                 filter: { [filterField]: id },
               }),
@@ -303,7 +303,7 @@ describe('Event controller', () => {
             squidexGraphqlClientMock.request.mockResolvedValueOnce(
               eventsGraphqlResponse,
             );
-            const result = await eventsController.fetch({
+            const result = await eventDataProvider.fetch({
               after: 'after-date',
               filter: { [filterField]: id },
             });
@@ -317,7 +317,7 @@ describe('Event controller', () => {
                 top: 10,
               },
             );
-            expect(result).toEqual(listEventResponse);
+            expect(result).toEqual(getListEventResponse());
           });
         },
       );
@@ -327,7 +327,7 @@ describe('Event controller', () => {
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           eventsGraphqlResponse,
         );
-        const result = await eventsController.fetch({
+        const result = await eventDataProvider.fetch({
           after: 'after-date',
           filter: { teamId: 'team-1' },
         });
@@ -341,14 +341,14 @@ describe('Event controller', () => {
             top: 10,
           },
         );
-        expect(result).toEqual(listEventResponse);
+        expect(result).toEqual(getListEventResponse());
       });
       test('Should apply the "userId" filter', async () => {
         const eventsGraphqlResponse = getSquidexEventsGraphqlResponse();
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           eventsGraphqlResponse,
         );
-        const result = await eventsController.fetch({
+        const result = await eventDataProvider.fetch({
           after: 'after-date',
           filter: { userId: 'user-1' },
         });
@@ -362,14 +362,14 @@ describe('Event controller', () => {
             top: 10,
           },
         );
-        expect(result).toEqual(listEventResponse);
+        expect(result).toEqual(getListEventResponse());
       });
       test('Should apply the "externalUserId" filter', async () => {
         const eventsGraphqlResponse = getSquidexEventsGraphqlResponse();
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           eventsGraphqlResponse,
         );
-        const result = await eventsController.fetch({
+        const result = await eventDataProvider.fetch({
           after: 'after-date',
           filter: { externalAuthorId: 'external-user-1' },
         });
@@ -383,17 +383,16 @@ describe('Event controller', () => {
             top: 10,
           },
         );
-        expect(result).toEqual(listEventResponse);
+        expect(result).toEqual(getListEventResponse());
       });
     });
-
     describe('Sorting', () => {
       test('Should apply the "orderBy" option using the startDate field and ascending order', async () => {
         const eventsGraphqlResponse = getSquidexEventsGraphqlResponse();
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           eventsGraphqlResponse,
         );
-        const result = await eventsController.fetch({
+        const result = await eventDataProvider.fetch({
           after: 'after-date',
           sortBy: 'startDate',
           sortOrder: 'asc',
@@ -408,14 +407,14 @@ describe('Event controller', () => {
             top: 10,
           },
         );
-        expect(result).toEqual(listEventResponse);
+        expect(result).toEqual(getListEventResponse());
       });
       test('Should apply the "orderBy" option using the endDate field and descending order', async () => {
         const eventsGraphqlResponse = getSquidexEventsGraphqlResponse();
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           eventsGraphqlResponse,
         );
-        const result = await eventsController.fetch({
+        const result = await eventDataProvider.fetch({
           after: 'after-date',
           sortBy: 'endDate',
           sortOrder: 'desc',
@@ -430,14 +429,14 @@ describe('Event controller', () => {
             top: 10,
           },
         );
-        expect(result).toEqual(listEventResponse);
+        expect(result).toEqual(getListEventResponse());
       });
       test('Should not apply any order if the parameters are not provided', async () => {
         const eventsGraphqlResponse = getSquidexEventsGraphqlResponse();
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           eventsGraphqlResponse,
         );
-        const result = await eventsController.fetch({
+        const result = await eventDataProvider.fetch({
           after: 'after-date',
         });
 
@@ -450,7 +449,7 @@ describe('Event controller', () => {
             top: 10,
           },
         );
-        expect(result).toEqual(listEventResponse);
+        expect(result).toEqual(getListEventResponse());
       });
     });
     describe('Event link', () => {
@@ -472,7 +471,7 @@ describe('Event controller', () => {
           eventsGraphqlResponse,
         );
 
-        const result = await eventsController.fetch({
+        const result = await eventDataProvider.fetch({
           before: 'before',
         });
 
@@ -489,15 +488,13 @@ describe('Event controller', () => {
           eventsGraphqlResponse,
         );
 
-        const result = await eventsController.fetch({ before: 'before' });
+        const result = await eventDataProvider.fetch({ before: 'before' });
 
         expect(result.items[0]?.meetingLink).toEqual('some-link');
       });
     });
-
     describe('Past event materials states', () => {
       beforeEach(() => {
-        jest.useFakeTimers();
         jest.clearAllMocks();
       });
 
@@ -516,7 +513,7 @@ describe('Event controller', () => {
           eventsGraphqlResponse,
         );
 
-        const result = await eventsController.fetch({ before: 'before' });
+        const result = await eventDataProvider.fetch({ before: 'before' });
 
         expect(result.items[0]?.notes).toBeNull();
         expect(result.items[0]?.videoRecording).toBeNull();
@@ -542,7 +539,7 @@ describe('Event controller', () => {
           eventsGraphqlResponse,
         );
 
-        const result = await eventsController.fetch({ before: 'before' });
+        const result = await eventDataProvider.fetch({ before: 'before' });
 
         expect(result.items[0]?.notes).toBeNull();
         expect(result.items[0]?.videoRecording).toBeNull();
@@ -567,7 +564,7 @@ describe('Event controller', () => {
           eventsGraphqlResponse,
         );
 
-        const result = await eventsController.fetch({
+        const result = await eventDataProvider.fetch({
           before: 'before',
         });
 
@@ -593,7 +590,7 @@ describe('Event controller', () => {
           eventsGraphqlResponse,
         );
 
-        const result = await eventsController.fetch({ before: 'before' });
+        const result = await eventDataProvider.fetch({ before: 'before' });
 
         expect(result.items[0]?.notes).toBeDefined();
         expect(result.items[0]?.videoRecording).toBeDefined();
@@ -601,17 +598,62 @@ describe('Event controller', () => {
         expect(result.items[0]?.meetingMaterials).toHaveLength(1);
       });
     });
-  });
+    test('can filter by userID', async () => {
+      const userId = 'some-user-id';
+      const filter = `data/speakers/iv/user eq '${userId}'`;
 
-  describe('Fetch by id method', () => {
+      const eventsGraphqlResponse = getSquidexEventsGraphqlResponse();
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        eventsGraphqlResponse,
+      );
+      const result = await eventDataProvider.fetch({
+        filter: { userId },
+      });
+
+      expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+        expect.anything(),
+        {
+          filter: `data/hidden/iv ne true and ${filter}`,
+          skip: 0,
+          order: '',
+          top: 10,
+        },
+      );
+      expect(result).toEqual(getListEventResponse());
+    });
+    test('can filter by googleId', async () => {
+      const googleId = 'google-event-id';
+      const filter = `data/googleId/iv eq '${googleId}'`;
+
+      const eventsGraphqlResponse = getSquidexEventsGraphqlResponse();
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        eventsGraphqlResponse,
+      );
+      const result = await eventDataProvider.fetch({
+        filter: { googleId },
+      });
+
+      expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+        expect.anything(),
+        {
+          filter: `data/hidden/iv ne true and ${filter}`,
+          skip: 0,
+          order: '',
+          top: 10,
+        },
+      );
+      expect(result).toEqual(getListEventResponse());
+    });
+  });
+  describe('Fetch by ID', () => {
     const eventId = 'event-1';
 
     test('Should fetch the event from squidex graphql', async () => {
-      const result = await eventsControllerMockGraphql.fetchById(eventId);
-      expect(result).toMatchObject(getEventResponse());
+      const result = await eventDataProviderMockGraphql.fetchById(eventId);
+      expect(result).toMatchObject(getEventDataObject());
     });
 
-    test('Should throw a Not Found error when the event is not found', async () => {
+    test('Should return null when event not found', async () => {
       const eventGraphqlResponse = getSquidexEventGraphqlResponse();
       eventGraphqlResponse.findEventsContent = null;
 
@@ -619,9 +661,8 @@ describe('Event controller', () => {
         eventGraphqlResponse,
       );
 
-      await expect(eventsController.fetchById(eventId)).rejects.toThrow(
-        'Not Found',
-      );
+      const result = await eventDataProvider.fetchById(eventId);
+      expect(result).toBeNull();
     });
 
     test('Should return the event', async () => {
@@ -632,8 +673,8 @@ describe('Event controller', () => {
         eventGraphqlResponse,
       );
 
-      const result = await eventsController.fetchById(eventId);
-      expect(result).toMatchObject({ ...getEventResponse(), id: eventId });
+      const result = await eventDataProvider.fetchById(eventId);
+      expect(result).toMatchObject({ ...getEventDataObject(), id: eventId });
     });
 
     describe('Event link', () => {
@@ -641,8 +682,7 @@ describe('Event controller', () => {
         jest.useFakeTimers().setSystemTime(new Date('2021-06-06T10:00:00Z'));
       });
 
-      afterEach(() => jest.clearAllMocks());
-      beforeAll(() => jest.useRealTimers());
+      afterEach(() => jest.clearAllMocks().useRealTimers());
 
       test('Should reveal the event link when the event starts in less than 24h from now', async () => {
         const eventGraphqlResponse = getSquidexEventGraphqlResponse();
@@ -655,8 +695,8 @@ describe('Event controller', () => {
           eventGraphqlResponse,
         );
 
-        const result = await eventsController.fetchById(eventId);
-        expect(result.meetingLink).toEqual('some-link');
+        const result = await eventDataProvider.fetchById(eventId);
+        expect(result?.meetingLink).toEqual('some-link');
       });
       test('Should reveal the event link when the event start date is in the past', async () => {
         const eventGraphqlResponse = getSquidexEventGraphqlResponse();
@@ -669,8 +709,8 @@ describe('Event controller', () => {
           eventGraphqlResponse,
         );
 
-        const result = await eventsController.fetchById(eventId);
-        expect(result.meetingLink).toEqual('some-link');
+        const result = await eventDataProvider.fetchById(eventId);
+        expect(result?.meetingLink).toEqual('some-link');
       });
     });
     describe('Event groups', () => {
@@ -686,7 +726,7 @@ describe('Event controller', () => {
           eventGraphqlResponse,
         );
 
-        const result = await eventsController.fetchById(eventId);
+        const result = await eventDataProvider.fetchById(eventId);
         expect(result).toMatchObject(getEventResponse());
       });
 
@@ -699,7 +739,7 @@ describe('Event controller', () => {
           eventGraphqlResponse,
         );
 
-        const result = await eventsController.fetchById(eventId);
+        const result = await eventDataProvider.fetchById(eventId);
         expect(result).toMatchObject(getEventResponse());
       });
 
@@ -712,7 +752,7 @@ describe('Event controller', () => {
           eventGraphqlResponse,
         );
 
-        const result = await eventsController.fetchById(eventId);
+        const result = await eventDataProvider.fetchById(eventId);
         expect(result).toMatchObject({
           ...getEventResponse(),
           group: undefined,
@@ -734,13 +774,14 @@ describe('Event controller', () => {
         const speaker = expectedResponse.speakers[0]! as EventSpeakerTeam;
         speaker.team!.inactiveSince = undefined;
 
-        const result = await eventsController.fetchById(eventId);
-        const speakerResult = result.speakers[0]! as EventSpeakerTeam;
+        const result = await eventDataProvider.fetchById(eventId);
+        const speakerResult = result!.speakers[0]! as EventSpeakerTeam;
         expect(speakerResult.team.inactiveSince).toBeUndefined();
       });
     });
   });
-  describe('Create method', () => {
+
+  describe('Create and Update', () => {
     afterEach(() => {
       expect(nock.isDone()).toBe(true);
     });
@@ -749,106 +790,71 @@ describe('Event controller', () => {
       nock.cleanAll();
     });
 
-    test('Should create or update the event', async () => {
-      nock(baseUrl)
-        .post(
-          `/api/content/${appName}/events?publish=true`,
-          getRestEvent().data,
-        )
-        .reply(200, getRestEvent());
+    describe('Create', () => {
+      afterEach(() => {
+        expect(nock.isDone()).toBe(true);
+      });
 
-      await eventsController.create(getEventRestResponse());
-    });
+      afterEach(() => {
+        nock.cleanAll();
+      });
 
-    test('Should throw when squidex return an error', async () => {
-      nock(baseUrl)
-        .post(`/api/content/${appName}/events?publish=true`)
-        .reply(404);
+      test('Should create or update the event', async () => {
+        nock(baseUrl)
+          .post(
+            `/api/content/${appName}/events?publish=true`,
+            getRestEvent().data,
+          )
+          .reply(200, getEventInput());
 
-      await expect(
-        eventsController.create(getEventRestResponse()),
-      ).rejects.toThrow(GenericError);
-    });
-  });
+        await eventDataProvider.create(getUserCreateDataObject());
+      });
 
-  describe('Update method', () => {
-    afterEach(() => {
-      expect(nock.isDone()).toBe(true);
-    });
+      test('Should throw when squidex return an error', async () => {
+        nock(baseUrl)
+          .post(`/api/content/${appName}/events?publish=true`)
+          .reply(404);
 
-    afterEach(() => {
-      nock.cleanAll();
-    });
-
-    const eventId = 'event-id';
-
-    test('Should update the event', async () => {
-      nock(baseUrl)
-        .patch(`/api/content/${appName}/events/${eventId}`, {
-          tags: { iv: ['kubernetes'] },
-          meetingLink: { iv: 'https://zweem.com' },
-        })
-        .reply(200);
-
-      await eventsController.update(eventId, {
-        tags: ['kubernetes'],
-        meetingLink: 'https://zweem.com',
+        await expect(
+          eventDataProvider.create(getUserCreateDataObject()),
+        ).rejects.toThrow(GenericError);
       });
     });
 
-    test('Should throw when squidex return an error', async () => {
-      nock(baseUrl)
-        .patch(`/api/content/${appName}/events/${eventId}`)
-        .reply(404);
+    describe('Update', () => {
+      afterEach(() => {
+        expect(nock.isDone()).toBe(true);
+      });
 
-      await expect(
-        eventsController.update(eventId, { tags: ['kubernetes'] }),
-      ).rejects.toThrow(GenericError);
-    });
-  });
+      afterEach(() => {
+        nock.cleanAll();
+      });
 
-  describe('fetchByGoogleId method', () => {
-    afterEach(() => {
-      expect(nock.isDone()).toBe(true);
-    });
-    afterEach(() => {
-      nock.cleanAll();
-    });
-    const googleId = 'google-event-id';
-    const filter = `data/googleId/iv eq '${googleId}'`;
-    test('Should throw when gets an error from squidex', async () => {
-      nock(baseUrl)
-        .get(`/api/content/${appName}/events`)
-        .query({
-          $top: 1,
-          $filter: filter,
-        })
-        .reply(500);
-      await expect(
-        eventsController.fetchByGoogleId(googleId),
-      ).rejects.toThrow();
-    });
-    test('Should return null when squidex returns an empty array', async () => {
-      nock(baseUrl)
-        .get(`/api/content/${appName}/events`)
-        .query({
-          $top: 1,
-          $filter: filter,
-        })
-        .reply(200, { total: 0, items: [] });
-      const result = await eventsController.fetchByGoogleId(googleId);
-      expect(result).toBeNull;
-    });
-    test('Should return the event when finds it', async () => {
-      nock(baseUrl)
-        .get(`/api/content/${appName}/events`)
-        .query({
-          $top: 1,
-          $filter: filter,
-        })
-        .reply(200, { total: 1, items: [getRestEvent()] });
-      const result = await eventsController.fetchByGoogleId(googleId);
-      expect(result).toEqual(getRestEvent());
+      const eventId = 'event-id';
+
+      test('Should update the event', async () => {
+        nock(baseUrl)
+          .patch(`/api/content/${appName}/events/${eventId}`, {
+            tags: { iv: ['kubernetes'] },
+            meetingLink: { iv: 'https://zweem.com' },
+          })
+          .reply(200);
+
+        await eventDataProvider.update(eventId, {
+          tags: ['kubernetes'],
+          meetingLink: 'https://zweem.com',
+        });
+      });
+
+      test('Should throw when squidex return an error', async () => {
+        nock(baseUrl)
+          .patch(`/api/content/${appName}/events/${eventId}`)
+          .reply(404);
+
+        await expect(
+          eventDataProvider.update(eventId, { tags: ['kubernetes'] }),
+        ).rejects.toThrow(GenericError);
+      });
     });
   });
 });

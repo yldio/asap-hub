@@ -72,7 +72,7 @@ const OnboardingWelcome: React.FC<Record<string, never>> = () => (
       </Paragraph>
     </CardWithOffsetBackground>
     <Caption accent="lead">
-      <strong>Please note,</strong> all information provided can only be viewed
+      <strong>Please note —</strong> all information provided can only be viewed
       by other GP2 members that have also registered.
     </Caption>
     <footer css={footerStyles}>

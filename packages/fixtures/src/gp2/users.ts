@@ -1,6 +1,6 @@
 import { gp2 } from '@asap-hub/model';
 
-const mockedUser: gp2.UserResponse = {
+export const mockedUser: gp2.UserResponse = {
   id: 'user-id-1',
   createdDate: '2020-09-23T20:45:22.000Z',
   displayName: 'Tony Stark',

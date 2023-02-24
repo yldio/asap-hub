@@ -1,0 +1,39 @@
+import { createSentryHeaders, GetListOptions } from '@asap-hub/frontend-utils';
+import { gp2 } from '@asap-hub/model';
+import { API_BASE_URL } from '../config';
+
+export const getOutput = async (
+  id: string,
+  authorization: string,
+): Promise<gp2.OutputResponse | undefined> => {
+  const resp = await fetch(`${API_BASE_URL}/outputs/${id}`, {
+    headers: { authorization, ...createSentryHeaders() },
+  });
+  if (!resp.ok) {
+    if (resp.status === 404) {
+      return undefined;
+    }
+    throw new Error(
+      `Failed to fetch output with id ${id}. Expected status 2xx or 404. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+    );
+  }
+  return resp.json();
+};
+
+export const getOutputs = async (
+  authorization: string,
+  options: GetListOptions,
+): Promise<gp2.ListOutputResponse> => {
+  const url = new URL('outputs', `${API_BASE_URL}/`);
+
+  const resp = await fetch(url.toString(), {
+    headers: { authorization, ...createSentryHeaders() },
+  });
+
+  if (!resp.ok) {
+    throw new Error(
+      `Failed to fetch the Outputs. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+    );
+  }
+  return resp.json();
+};

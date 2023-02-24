@@ -37,6 +37,7 @@ export { default as UserKeywords } from './UserKeywords';
 export { default as UserNavigation } from './UserNavigation';
 export { default as UserProjects } from './UserProjects';
 export { default as UserQuestions } from './UserQuestions';
+export { default as UsersHeader } from './UsersHeader';
 export { default as UsersPageBody } from './UsersPageBody';
 export { default as UserWorkingGroups } from './UserWorkingGroups';
 export { default as WorkingGroupCard } from './WorkingGroupCard';

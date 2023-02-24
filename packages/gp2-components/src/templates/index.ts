@@ -20,6 +20,7 @@ export { default as Theme } from './Theme';
 export { default as UserDetailPage } from './UserDetailPage';
 export { default as UserOverview } from './UserOverview';
 export { default as UsersPage } from './UsersPage';
+export { default as UsersPageList } from './UsersPageList';
 export { default as WorkingGroupDetailPage } from './WorkingGroupDetailPage';
 export { default as WorkingGroupOverview } from './WorkingGroupOverview';
 export { default as WorkingGroupResources } from './WorkingGroupResources';

@@ -64,9 +64,14 @@ it('displays the show more button', () => {
   const { getByText, queryByText, getByRole } = render(
     <CalendarList
       {...props}
-      calendars={(
-        createListCalendarResponse(6).items as BasicCalendarResponse[]
-      ).concat({
+            calendars={[
+        ...createListCalendarResponse(6).items,
+        {
+          color: '#113F47' as const,
+          name: 'last Calendar',
+          id: '1',
+        },
+      ]}
         color: '#113F47',
         name: 'last Calendar',
         id: '1',

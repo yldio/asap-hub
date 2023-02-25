@@ -73,12 +73,12 @@ type UserTeamsTabbedCardProps = Pick<
   'description'
 > & {
   userName: string;
-  isUserAlumni: boolean;
+  userAlumni: boolean;
   teams: UserTeam[];
 };
 
 const UserTeamsTabbedCard: React.FC<UserTeamsTabbedCardProps> = ({
-  isUserAlumni,
+  userAlumni,
   userName,
   teams,
 }) => {
@@ -89,12 +89,12 @@ const UserTeamsTabbedCard: React.FC<UserTeamsTabbedCardProps> = ({
   const [inactiveTeams, activeTeams] = splitListBy(
     sortedTeams,
     (team) =>
-      isUserAlumni || !!team?.teamInactiveSince || !!team?.inactiveSinceDate,
+      userAlumni || !!team?.teamInactiveSince || !!team?.inactiveSinceDate,
   );
   return (
     <TabbedCard
       title={`${userName}'s Teams`}
-      activeTabIndex={isUserAlumni ? 1 : 0}
+      activeTabIndex={userAlumni ? 1 : 0}
       tabs={[
         {
           tabTitle: `Current Teams (${activeTeams.length})`,

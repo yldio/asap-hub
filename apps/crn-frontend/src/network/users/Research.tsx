@@ -49,7 +49,7 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
           <Frame title={null} fallback={null}>
             <UserTeamsTabbedCard
               userName={user.displayName}
-              isUserAlumni={!!user.alumniSinceDate}
+              userAlumni={!!user.alumniSinceDate}
               teams={user.teams}
             />
           </Frame>

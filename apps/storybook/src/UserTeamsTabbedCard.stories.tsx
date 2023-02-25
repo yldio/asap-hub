@@ -10,7 +10,7 @@ export default {
 export const Normal = () => {
   const props: ComponentProps<typeof UserTeamsTabbedCard> = {
     userName: 'Phillip Mars',
-    isUserAlumni: boolean('Is user alumni?', false),
+    userAlumni: boolean('User alumni?', false),
     teams: Array.from({ length: number('Number of teams', 4) }).map(
       (_, index) => ({
         id: `${index + 1}`,

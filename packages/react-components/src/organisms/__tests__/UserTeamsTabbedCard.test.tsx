@@ -6,7 +6,7 @@ import UserTeamsTabbedCard from '../UserTeamsTabbedCard';
 const props = {
   userName: 'Foo B',
   teams: [],
-  isUserAlumni: false,
+  userAlumni: false,
 };
 
 it('displays the title', () => {
@@ -17,10 +17,10 @@ it('displays the title', () => {
 
 it('renders the no teams message', () => {
   const { rerender } = render(
-    <UserTeamsTabbedCard {...props} isUserAlumni={true} />,
+    <UserTeamsTabbedCard {...props} userAlumni={true} />,
   );
   expect(screen.getByText('There are no previous teams.')).toBeVisible();
-  rerender(<UserTeamsTabbedCard {...props} isUserAlumni={false} />);
+  rerender(<UserTeamsTabbedCard {...props} userAlumni={false} />);
   expect(screen.getByText('There are no current teams.')).toBeVisible();
 });
 

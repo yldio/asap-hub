@@ -6,7 +6,7 @@ type WorkingGroupResourcesProps = Omit<
   'headline'
 >;
 
-const headline = `this is a private space for this working group on the
+const headline = `This is a private space for this working group on the
 network. Nobody outside of this working group can see anything that you
 upload here.`;
 

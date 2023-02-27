@@ -18,7 +18,7 @@ export type AccentVariant =
   | 'green'
   | 'placeholder'
   | 'neutral200'
-  | 'warning100';
+  | 'warning';
 
 export const accents: Record<AccentVariant, CSSObject> = {
   default: {
@@ -46,7 +46,7 @@ export const accents: Record<AccentVariant, CSSObject> = {
     borderColor: colors.steel.rgb,
     boxShadow: `0px 2px 4px ${colors.steel.rgb}`,
   },
-  warning100: {
+  warning: {
     backgroundColor: colors.warning100.rgb,
     color: colors.warning500.rgb,
     borderColor: colors.warning900.rgb,

@@ -80,7 +80,7 @@ const Resources: React.FC<ResourcesProps> = ({
 
   return (
     <div css={containerStyles}>
-      <Card padding={false} accent={'warning100'}>
+      <Card padding={false} accent={'warning'}>
         <div
           css={{
             display: 'flex',

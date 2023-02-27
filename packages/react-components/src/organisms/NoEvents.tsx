@@ -5,7 +5,7 @@ import { charcoal, Headline4, Link, Paragraph } from '..';
 
 const wrapperStyle = css({
   textAlign: 'center',
-  paddingTop: `${48 / perRem}em`,
+  paddingTop: rem(48),
 });
 
 const iconStyles = css({

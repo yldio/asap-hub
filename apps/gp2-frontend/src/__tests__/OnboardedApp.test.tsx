@@ -30,6 +30,7 @@ beforeEach(() => {
 });
 const renderAuthenticatedApp = async () => {
   const id = '42';
+  const currentTime = new Date();
   render(
     <RecoilRoot
       initializeState={({ set }) => {
@@ -43,6 +44,7 @@ const renderAuthenticatedApp = async () => {
               <OnboardedApp
                 showWelcomeBackBanner={false}
                 dismissBanner={jest.fn()}
+                currentTime={currentTime}
               />
             </StaticRouter>
           </WhenReady>

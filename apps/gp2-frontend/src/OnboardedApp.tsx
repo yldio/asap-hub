@@ -42,6 +42,7 @@ const Outputs = lazy(loadOutputs);
 const OnboardedApp: FC<ComponentProps<typeof Dashboard>> = ({
   showWelcomeBackBanner,
   dismissBanner,
+  currentTime,
 }) => {
   const { path } = useRouteMatch();
 
@@ -69,6 +70,7 @@ const OnboardedApp: FC<ComponentProps<typeof Dashboard>> = ({
             <Dashboard
               showWelcomeBackBanner={showWelcomeBackBanner}
               dismissBanner={dismissBanner}
+              currentTime={currentTime}
             />
           </Frame>
         </Route>

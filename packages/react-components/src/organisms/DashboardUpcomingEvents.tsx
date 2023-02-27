@@ -27,7 +27,7 @@ const DashboardUpcomingEvents: React.FC<DashboardUpcomingEventsProps> = ({
   upcomingEvents,
 }) => (
   <>
-    {upcomingEvents ? (
+    {upcomingEvents && upcomingEvents.length ? (
       <div css={upcomingEventsWrapper}>
         {upcomingEvents.map(({ eventSpeakers, eventTeams, ...event }) => (
           <Fragment key={event.id}>

@@ -24,14 +24,14 @@ const NoEvents: React.FC<{
     <main css={{ textAlign: 'center' }}>
       <span css={iconStyles}>{calendarIcon}</span>
       <Headline4>
-        {displayName} doesn’t have any {lowerEventPeriod} events!
+        This working group doesn’t have any {lowerEventPeriod} events!
       </Headline4>
       <Paragraph accent="lead">
-        It looks like this {type.toLowerCase()} will not speak at any events. In
-        the meantime, try exploring other {lowerEventPeriod} events on the Hub.
+        In the meantime, try exploring other {lowerEventPeriod} events on the
+        Hub.
       </Paragraph>
       <Link href={link} buttonStyle primary>
-        {`Explore & ${eventPeriod} Events`}
+        {`Explore ${eventPeriod} Events`}
       </Link>
     </main>
   );

@@ -73,6 +73,10 @@ export type EventCreateDataObject = Pick<
   googleId: string;
   calendar: string;
   hidden: boolean;
+  speakers?: {
+    user: string[];
+    team: string[];
+  }[];
 };
 
 export type EventUpdateDataObject = Partial<

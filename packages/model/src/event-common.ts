@@ -23,6 +23,7 @@ export interface BasicEvent {
   title: string;
   description?: string;
   status: EventStatus;
+  hidden?: boolean;
   lastModifiedDate: string;
   thumbnail?: string;
   tags: string[];
@@ -42,6 +43,9 @@ export interface BasicEvent {
   hideMeetingLink?: boolean;
 
   calendar: BasicCalendarResponse;
+  notesUpdatedAt?: string;
+  videoRecordingUpdatedAt?: string;
+  presentationUpdatedAt?: string;
 }
 
 export const eventMaterialTypes: ReadonlyArray<
@@ -63,6 +67,7 @@ type FilterOptions = {
   externalAuthorId?: string;
   teamId?: string;
   googleId?: string;
+  hidden?: boolean;
 };
 
 export type FetchEventsOptions = {

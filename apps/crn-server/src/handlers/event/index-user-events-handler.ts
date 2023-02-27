@@ -18,6 +18,7 @@ import {
   baseUrl,
 } from '../../config';
 import Events from '../../controllers/events';
+import { EventSquidexDataProvider } from '../../data-providers/event.data-provider';
 import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
 import {
@@ -75,10 +76,14 @@ const eventRestClient = new SquidexRest<RestEvent>(getAuthToken, 'events', {
   baseUrl,
 });
 
+const eventDataProvider = new EventSquidexDataProvider(
+  eventRestClient,
+  squidexGraphqlClient,
+);
 /* istanbul ignore next */
 export const handler = sentryWrapper(
   indexUserEventsHandler(
-    new Events(squidexGraphqlClient, eventRestClient),
+    new Events(eventDataProvider),
     algoliaSearchClientFactory({
       algoliaApiKey,
       algoliaAppId,

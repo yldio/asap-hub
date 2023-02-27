@@ -75,6 +75,10 @@ import DashboardSquidexDataProvider, {
   DashboardDataProvider,
 } from './data-providers/dashboard.data-provider';
 import {
+  EventDataProvider,
+  EventSquidexDataProvider,
+} from './data-providers/event.data-provider';
+import {
   ExternalAuthorDataProvider,
   ExternalAuthorSquidexDataProvider,
 } from './data-providers/external-authors.data-provider';
@@ -266,6 +270,9 @@ export const appFactory = (libs: Libs = {}): Express => {
   const workingGroupDataProvider =
     libs.workingGroupDataProvider ||
     new WorkingGroupSquidexDataProvider(squidexGraphqlClient);
+  const eventDataProvider =
+    libs.eventDataProvider ||
+    new EventSquidexDataProvider(eventRestClient, squidexGraphqlClient);
 
   // Controllers
   const calendarController =
@@ -275,8 +282,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const newsController = libs.newsController || new News(newsDataProvider);
   const discoverController =
     libs.discoverController || new Discover(squidexGraphqlClient);
-  const eventController =
-    libs.eventController || new Events(squidexGraphqlClient, eventRestClient);
+  const eventController = libs.eventController || new Events(eventDataProvider);
   const groupController =
     libs.groupController || new Groups(groupDataProvider, userDataProvider);
   const pageController = libs.pageController || new Pages(pageDataProvider);
@@ -454,6 +460,7 @@ export type Libs = {
   teamDataProvider?: TeamDataProvider;
   tutorialsDataProvider?: TutorialsDataProvider;
   userDataProvider?: UserDataProvider;
+  eventDataProvider?: EventDataProvider;
   workingGroupDataProvider?: WorkingGroupDataProvider;
   authHandler?: AuthHandler;
   tracer?: Tracer;

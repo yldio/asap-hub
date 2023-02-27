@@ -92,7 +92,9 @@ export class EventSquidexDataProvider {
         [],
       );
 
-    filters.push('data/hidden/iv ne true');
+    if (filter?.hidden !== true) {
+      filters.push('data/hidden/iv ne true');
+    }
 
     if (after) {
       filters.push(`data/endDate/iv gt ${after}`);

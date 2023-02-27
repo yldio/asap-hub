@@ -125,7 +125,7 @@ describe('Event controller', () => {
       const result = await eventController.fetchByGoogleId(googleId);
 
       expect(eventDataProviderMock.fetch).toHaveBeenCalledWith({
-        filter: { googleId },
+        filter: { googleId, hidden: true },
         take: 1,
       });
       expect(result).toEqual(getEventResponse());
@@ -135,7 +135,7 @@ describe('Event controller', () => {
       const result = await eventController.fetchByGoogleId(googleId);
 
       expect(eventDataProviderMock.fetch).toHaveBeenCalledWith({
-        filter: { googleId },
+        filter: { googleId, hidden: true },
         take: 1,
       });
       expect(result).toEqual(null);

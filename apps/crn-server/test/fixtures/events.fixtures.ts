@@ -7,7 +7,7 @@ import {
   ListEventDataObject,
   ListEventResponse,
 } from '@asap-hub/model';
-import { Event, RestEvent } from '@asap-hub/squidex';
+import { RestEvent } from '@asap-hub/squidex';
 import { EventBridgeEvent } from 'aws-lambda';
 import {
   EventContentFragment,
@@ -22,22 +22,6 @@ import {
   getSquidexGraphqlWorkingGroup,
   getWorkingGroupResponse,
 } from './working-groups.fixtures';
-
-export const getEventRestResponse = (): Event => ({
-  googleId: 'google-event-id',
-  title: 'Event Tittle',
-  description: 'This event will be good',
-  startDate: '2021-02-23T19:32:00Z',
-  startDateTimeZone: 'Europe/Lisbon',
-  endDate: '2021-02-23T19:32:00Z',
-  endDateTimeZone: 'Europe/Lisbon',
-  calendar: ['squidex-calendar-id'],
-  status: 'Confirmed' as EventStatus,
-  tags: [],
-  hidden: false,
-  meetingLink: 'https://zweem.com',
-  hideMeetingLink: false,
-});
 
 export const getEventSpeakerUser = (): EventSpeakerUser => ({
   team: {
@@ -67,6 +51,7 @@ export const getEventDataObject = (): EventDataObject => ({
   meetingLink: 'https://zoom.com/room/123',
   hideMeetingLink: false,
   status: 'Confirmed',
+  hidden: false,
   tags: [],
   title: 'Example Event',
   startDateTimeZone: 'UTC',
@@ -218,6 +203,7 @@ const squidexGraphqlEventsFlatData = (): EventContentFragment['flatData'] & {
   meetingLink: 'https://zoom.com/room/123',
   hideMeetingLink: false,
   status: 'Confirmed',
+  hidden: false,
   tags: [],
   title: 'Example Event',
   startDateTimeZone: 'UTC',

@@ -27,6 +27,10 @@ import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-clie
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
 
 describe('Event data provider', () => {
+  test.todo('test the following fields');
+  // notesUpdatedAt
+  // presentationUpdatedAt
+  // videoRecordingUpdatedAt
   const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
   const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
 
@@ -385,6 +389,27 @@ describe('Event data provider', () => {
         );
         expect(result).toEqual(getListEventResponse());
       });
+      test('Should apply the "hidden" filter', async () => {
+        const eventsGraphqlResponse = getSquidexEventsGraphqlResponse();
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          eventsGraphqlResponse,
+        );
+        const result = await eventDataProvider.fetch({
+          after: 'after-date',
+          filter: { hidden: true },
+        });
+
+        expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          {
+            filter: `data/endDate/iv gt after-date`,
+            order: '',
+            skip: 0,
+            top: 10,
+          },
+        );
+        expect(result).toEqual(getListEventResponse());
+      });
     });
     describe('Sorting', () => {
       test('Should apply the "orderBy" option using the startDate field and ascending order', async () => {
@@ -598,6 +623,7 @@ describe('Event data provider', () => {
         expect(result.items[0]?.meetingMaterials).toHaveLength(1);
       });
     });
+
     test('can filter by userID', async () => {
       const userId = 'some-user-id';
       const filter = `data/speakers/iv/user eq '${userId}'`;

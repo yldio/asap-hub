@@ -41,7 +41,7 @@ export default class Events implements EventController {
   async fetchByGoogleId(googleId: string): Promise<EventResponse | null> {
     const events = await this.dataProvider.fetch({
       take: 1,
-      filter: { googleId },
+      filter: { googleId, hidden: true },
     });
 
     const [event] = events.items;

@@ -5,7 +5,7 @@ import { appFactory } from '../../src/app';
 
 import {
   getEventResponse,
-  listEventResponse,
+  getListEventResponse,
 } from '../fixtures/events.fixtures';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { eventControllerMock } from '../mocks/event-controller.mock';
@@ -40,6 +40,7 @@ describe('/events/ routes', () => {
     });
 
     test('Should return results correctly', async () => {
+      const listEventResponse = getListEventResponse();
       eventControllerMock.fetch.mockResolvedValueOnce(listEventResponse);
       const response = await supertest(app).get('/events').query(query);
 

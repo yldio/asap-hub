@@ -19,14 +19,18 @@ export const eventContentFragment = gql`
       hideMeetingLink
       eventLink
       status
+      hidden
       tags
       title
       notesPermanentlyUnavailable
       notes
+      notesUpdatedAt
       videoRecordingPermanentlyUnavailable
       videoRecording
+      videoRecordingUpdatedAt
       presentationPermanentlyUnavailable
       presentation
+      presentationUpdatedAt
       meetingMaterialsPermanentlyUnavailable
       meetingMaterials {
         url

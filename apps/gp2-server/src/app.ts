@@ -4,6 +4,7 @@ import {
   authHandlerFactory,
   decodeTokenFactory,
   errorHandlerFactory,
+  EventController,
   getHttpLogger,
   Logger,
   MemoryCacheClient,
@@ -34,7 +35,7 @@ import Calendars, {
 import ContributingCohorts, {
   ContributingCohortController,
 } from './controllers/contributing-cohort.controller';
-import Events, { EventController } from './controllers/event.controller';
+import Events from './controllers/event.controller';
 import News, { NewsController } from './controllers/news.controller';
 import Outputs, { OutputController } from './controllers/output.controller';
 import Projects, { ProjectController } from './controllers/project.controller';
@@ -312,7 +313,12 @@ export type Libs = {
   calendarDataProvider?: CalendarDataProvider;
   contributingCohortController?: ContributingCohortController;
   contributingCohortDataProvider?: ContributingCohortDataProvider;
-  eventController?: EventController;
+  eventController?: EventController<
+    gp2.EventResponse,
+    gp2.ListEventResponse,
+    gp2.EventCreateRequest,
+    gp2.EventUpdateRequest
+  >;
   eventDataProvider?: EventDataProvider;
   externalAuthorDataProvider?: ExternalAuthorDataProvider;
   logger?: Logger;

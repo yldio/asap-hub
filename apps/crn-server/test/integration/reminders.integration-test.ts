@@ -1,43 +1,44 @@
 import {
+  CalendarCreateDataObject,
+  EventCreateDataObject,
+  EventHappeningNowReminder,
+  EventHappeningTodayReminder,
+  EventStatus,
+  FetchRemindersOptions,
+  PublishMaterialReminder,
+  ResearchOutputCreateDataObject,
+  ResearchOutputPublishedReminder,
+  SharePresentationReminder,
+  TeamRole,
+  UploadPresentationReminder,
+  UserCreateDataObject,
+} from '@asap-hub/model';
+import {
+  InputCalendar,
   InputUser,
+  RestCalendar,
+  RestEvent,
   RestResearchOutput,
   RestTeam,
   RestUser,
   SquidexGraphql,
   SquidexRest,
-  RestEvent,
-  RestCalendar,
-  InputCalendar,
-  Event,
 } from '@asap-hub/squidex';
 import { Chance } from 'chance';
-import {
-  EventHappeningNowReminder,
-  EventHappeningTodayReminder,
-  FetchRemindersOptions,
-  ResearchOutputCreateDataObject,
-  ResearchOutputPublishedReminder,
-  UserCreateDataObject,
-  CalendarCreateDataObject,
-  SharePresentationReminder,
-  PublishMaterialReminder,
-  TeamRole,
-  UploadPresentationReminder,
-} from '@asap-hub/model';
 import { appName, baseUrl } from '../../src/config';
+import Events from '../../src/controllers/events';
+import { CalendarSquidexDataProvider } from '../../src/data-providers/calendars.data-provider';
+import { EventSquidexDataProvider } from '../../src/data-providers/event.data-provider';
 import { ReminderSquidexDataProvider } from '../../src/data-providers/reminders.data-provider';
 import { ResearchOutputSquidexDataProvider } from '../../src/data-providers/research-outputs.data-provider';
 import { TeamSquidexDataProvider } from '../../src/data-providers/teams.data-provider';
 import { UserSquidexDataProvider } from '../../src/data-providers/users.data-provider';
 import { getAuthToken } from '../../src/utils/auth';
+import { getCalendarCreateDataObject } from '../fixtures/calendars.fixtures';
 import { getResearchOutputCreateDataObject } from '../fixtures/research-output.fixtures';
 import { getTeamCreateDataObject } from '../fixtures/teams.fixtures';
 import { getUserCreateDataObject } from '../fixtures/users.fixtures';
 import { createRandomOrcid } from '../helpers/users';
-import Events from '../../src/controllers/events';
-import { getEventRestResponse } from '../fixtures/events.fixtures';
-import { CalendarSquidexDataProvider } from '../../src/data-providers/calendars.data-provider';
-import { getCalendarCreateDataObject } from '../fixtures/calendars.fixtures';
 
 jest.setTimeout(30000);
 
@@ -92,8 +93,11 @@ describe('Reminders', () => {
     squidexGraphqlClient,
     researchOutputRestClient,
   );
-  // @todo https://asaphub.atlassian.net/browse/CRN-937
-  const eventController = new Events(squidexGraphqlClient, eventRestClient);
+  const eventDataProvider = new EventSquidexDataProvider(
+    eventRestClient,
+    squidexGraphqlClient,
+  );
+  const eventController = new Events(eventDataProvider);
 
   describe('Research Output Published Reminder', () => {
     let creatorId: string;
@@ -269,8 +273,8 @@ describe('Reminders', () => {
         type: 'Happening Today',
         data: {
           eventId: event.id,
-          startDate: event.data.startDate.iv,
-          title: event.data.title.iv,
+          startDate: event.startDate,
+          title: event.title,
         },
       };
       expect(reminders).toEqual({
@@ -330,7 +334,7 @@ describe('Reminders', () => {
       const calendarInput2 = getCalendarInputForReminder();
       const calendarId2 = await calendarDataProvider.create(calendarInput2);
       const eventInput2 = getEventInput(calendarId);
-      eventInput2.calendar = [calendarId2];
+      eventInput2.calendar = calendarId2;
       eventInput2.startDate = new Date('2022-08-10T17:00:00.0Z').toISOString();
       const event2 = await eventController.create(eventInput2);
 
@@ -402,9 +406,9 @@ describe('Reminders', () => {
         type: 'Happening Now',
         data: {
           eventId: event.id,
-          startDate: event.data.startDate.iv,
-          endDate: event.data.endDate.iv,
-          title: event.data.title.iv,
+          startDate: event.startDate,
+          endDate: event.endDate,
+          title: event.title,
         },
       };
 
@@ -474,9 +478,8 @@ describe('Reminders', () => {
       // setting system time to 10:05AM in UTC
       jest.setSystemTime(new Date('2022-08-10T11:05:00.0Z'));
 
-      let pmUserId;
       const pmUserCreateDataObject = getUserInput(teamId, 'Project Manager');
-      pmUserId = await userDataProvider.create(pmUserCreateDataObject);
+      const pmUserId = await userDataProvider.create(pmUserCreateDataObject);
 
       const eventInput = getEventInput(calendarId);
       // the event starts at 10AM and ends at 11AM in UTC
@@ -500,8 +503,8 @@ describe('Reminders', () => {
         data: {
           pmId: pmUserId,
           eventId: event.id,
-          endDate: event.data.endDate.iv,
-          title: event.data.title.iv,
+          endDate: event.endDate,
+          title: event.title,
         },
       };
 
@@ -635,8 +638,8 @@ describe('Reminders', () => {
         type: 'Publish Material',
         data: {
           eventId: event.id,
-          endDate: event.data.endDate.iv,
-          title: event.data.title.iv,
+          endDate: event.endDate,
+          title: event.title,
         },
       };
 
@@ -783,8 +786,8 @@ describe('Reminders', () => {
         type: 'Upload Presentation',
         data: {
           eventId: event.id,
-          endDate: event.data.endDate.iv,
-          title: event.data.title.iv,
+          endDate: event.endDate,
+          title: event.title,
         },
       };
 
@@ -958,8 +961,8 @@ describe('Reminders', () => {
           type: `${material} Updated`,
           data: {
             eventId: event.id,
-            title: event.data.title.iv,
-            [materialUpdatedAtName]: event.data[materialUpdatedAtName]?.iv,
+            title: event.title,
+            [materialUpdatedAtName]: event[materialUpdatedAtName],
           },
         };
 
@@ -1061,7 +1064,7 @@ describe('Reminders', () => {
           type: `${material} Updated`,
           data: {
             eventId: event.id,
-            title: event.data.title.iv,
+            title: event.title,
             [materialUpdatedAtName]: expect.any(String),
           },
         };
@@ -1196,10 +1199,20 @@ describe('Reminders', () => {
     googleCalendarId: chance.email(),
   });
 
-  const getEventInput = (calendarId: string): Event => ({
-    ...getEventRestResponse(),
-    calendar: [calendarId],
+  const getEventInput = (calendarId: string): EventCreateDataObject => ({
+    title: 'Event Tittle',
+    description: 'This event will be good',
+    startDate: '2021-02-23T19:32:00Z',
+    startDateTimeZone: 'Europe/Lisbon',
+    endDate: '2021-02-23T19:32:00Z',
+    endDateTimeZone: 'Europe/Lisbon',
+    status: 'Confirmed' as EventStatus,
+    hidden: false,
+    meetingLink: 'https://zweem.com',
+    hideMeetingLink: false,
+    calendar: calendarId,
     googleId: chance.string(),
+    tags: [],
   });
 
   const getResearchOutputInput = (

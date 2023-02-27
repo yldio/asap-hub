@@ -1,5 +1,8 @@
-import { EventStatus } from '@asap-hub/model';
-import { Event, RestEvent } from '@asap-hub/squidex';
+import {
+  EventCreateRequest,
+  EventResponse,
+  EventStatus,
+} from '@asap-hub/model';
 import { calendar_v3 as calendarV3 } from 'googleapis';
 import { EventController } from '../controllers/event.controller';
 import {
@@ -13,7 +16,7 @@ export type SyncEvent = (
   googleCalendarId: string,
   squidexCalendarId: string,
   defaultTimezone: string,
-) => Promise<RestEvent>;
+) => Promise<EventResponse>;
 
 const getEventDate = (eventDate: calendarV3.Schema$EventDateTime): string => {
   if (eventDate.dateTime) return new Date(eventDate.dateTime).toISOString();
@@ -27,7 +30,7 @@ export const syncEventFactory =
     googleCalendarId: string,
     squidexCalendarId: string,
     defaultTimezone: string,
-  ): Promise<RestEvent> => {
+  ): Promise<EventResponse> => {
     let googleEvent: GoogleEvent;
     try {
       googleEvent = validateGoogleEvent(eventPayload as GoogleEvent);
@@ -43,7 +46,7 @@ export const syncEventFactory =
       throw new Error('Invalid organiser');
     }
 
-    const newEvent: Omit<Event, 'tags'> = {
+    const newEvent: Omit<EventCreateRequest, 'tags' | 'speakers'> = {
       googleId: googleEvent.id,
       title: googleEvent.summary,
       description: googleEvent.description,
@@ -52,8 +55,8 @@ export const syncEventFactory =
       endDate: getEventDate(googleEvent.end),
       endDateTimeZone: googleEvent.end.timeZone || defaultTimezone,
       status: (googleEvent.status.charAt(0).toUpperCase() +
-        googleEvent.status.slice(1)) as EventStatus, // TODO: use lowercase
-      calendar: [squidexCalendarId],
+        googleEvent.status.slice(1)) as EventStatus,
+      calendar: squidexCalendarId,
       hidden: false,
       hideMeetingLink: false,
     };
@@ -67,17 +70,17 @@ export const syncEventFactory =
       if (existingEvent) {
         if (
           newEvent.status === 'Cancelled' &&
-          existingEvent.data.status.iv !== 'Cancelled'
+          existingEvent.status !== 'Cancelled'
         ) {
           newEvent.hidden = true;
         } else {
-          newEvent.hidden = existingEvent.data.hidden?.iv || false;
+          newEvent.hidden = existingEvent.hidden || false;
         }
         logger.debug(
           { id: existingEvent.id, event: newEvent },
           'Found event. Updating.',
         );
-        return await eventsController.update(existingEvent.id, newEvent);
+        return eventsController.update(existingEvent.id, newEvent);
       }
 
       if (newEvent.status === 'Cancelled') {
@@ -88,7 +91,7 @@ export const syncEventFactory =
         { id: googleEvent.id, event: newEvent },
         'Event not found. Creating.',
       );
-      return await eventsController.create({ ...newEvent, tags: [] });
+      return eventsController.create({ ...newEvent, tags: [] });
     } catch (err) {
       logger.error(err, 'Error syncing event');
       throw err;

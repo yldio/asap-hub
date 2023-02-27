@@ -1,6 +1,5 @@
 import { gp2 } from '@asap-hub/model';
 import {
-  Anchor,
   Button,
   Card,
   chevronCircleDownIcon,
@@ -9,6 +8,7 @@ import {
   Headline3,
   infoCircleYellowIcon,
   Link,
+  LinkHeadline,
   Paragraph,
   Pill,
   pixels,
@@ -167,29 +167,27 @@ const Resources: React.FC<ResourcesProps> = ({
                   }}
                 >
                   {resource.type === 'Link' ? (
-                    <div
-                      css={css({
-                        color: colors.primary500.rgb,
-                        svg: {
-                          stroke: colors.primary500.rgb,
-                        },
-                      })}
+                    <LinkHeadline
+                      noMargin
+                      level={4}
+                      href={resource.externalLink}
                     >
-                      <Anchor href={resource.externalLink}>
-                        <span
-                          css={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: rem(8),
-                          }}
-                        >
-                          <Subtitle styleAsHeading={4} noMargin>
-                            {resource.title}
-                          </Subtitle>
-                          {externalLinkIcon}
-                        </span>
-                      </Anchor>
-                    </div>
+                      <span
+                        css={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: rem(8),
+                          ':hover': {
+                            svg: {
+                              stroke: colors.primary500.rgb,
+                            },
+                          },
+                        }}
+                      >
+                        {resource.title}
+                        {externalLinkIcon}
+                      </span>
+                    </LinkHeadline>
                   ) : (
                     <Subtitle styleAsHeading={4} noMargin>
                       {resource.title}

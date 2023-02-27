@@ -102,7 +102,7 @@ it('renders the news when theres at least one news', async () => {
   ).toBeVisible();
 });
 
-it('renders the upcoming events with events when there\'s at least one upcoming event', async () => {
+it("renders the upcoming events with events when there's at least one upcoming event", async () => {
   mockGetNews.mockResolvedValueOnce(gp2.createNewsResponse());
   mockGetEvents.mockResolvedValueOnce(gp2.createListEventResponse(1));
   await renderDashboard({});

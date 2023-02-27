@@ -48,7 +48,8 @@ def main():
 
     appAvailable = isAppAvailable(appName, headers)
     if appAvailable:
-        print("::set-output name=app-created::false")
+        with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
+            print("app-created=false",file=fh)
         print("App", appName, "already exists")
     else:
         createAPP(appName)
@@ -56,6 +57,7 @@ def main():
         client = getAppClient(appName)
         promoteClient(appName, client)
         setApp(appName, client['id'], client['secret'], app)
-        print("::set-output name=app-created::true")
+        with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
+            print("app-created=true",file=fh)
 
 main()

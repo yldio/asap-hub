@@ -192,10 +192,10 @@ jobs:
         run: |
           OUTPUT=$(algolia settings get $ALGOLIA_INDEX 2>&1) || true
           if [[ "$OUTPUT" == *"Index does not exist"*  ]]; then
-            echo "::set-output name=index-exists::false"
+            echo "index-exists=false" >> $GITHUB_OUTPUT
             echo "Index does not exist"
           else
-            echo "::set-output name=index-exists::true"
+            echo "index-exists=true" >> $GITHUB_OUTPUT
             echo "Index exists"
           fi
         env:

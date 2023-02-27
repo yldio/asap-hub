@@ -1,18 +1,100 @@
 import { gp2 } from '@asap-hub/fixtures';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { createMemoryHistory } from 'history';
+import { Router } from 'react-router-dom';
 import DashboardPageBody from '../DashboardPageBody';
 
 describe('DashboardPageBody', () => {
   it('should render tools and tutorials', () => {
-    render(<DashboardPageBody news={{ total: 0, items: [] }} />);
+    render(
+      <DashboardPageBody
+        news={{ total: 0, items: [] }}
+        upcomingEvents={[]}
+        totalOfUpcomingEvents={0}
+      />,
+    );
     expect(
       screen.getByRole('heading', { name: 'Tools and Tutorials' }),
     ).toBeVisible();
   });
-  it('should render News and Updates if there a news item', () => {
-    render(<DashboardPageBody news={gp2.createNewsResponse()} />);
+
+  it('should render News and Updates if there is a news item', () => {
+    render(
+      <DashboardPageBody
+        news={gp2.createNewsResponse()}
+        upcomingEvents={[]}
+        totalOfUpcomingEvents={0}
+      />,
+    );
     expect(
       screen.getByRole('heading', { name: 'News and Updates' }),
     ).toBeVisible();
+  });
+
+  describe('Upcoming Events', () => {
+    it('should render no events if there is no upcoming event items', () => {
+      render(
+        <DashboardPageBody
+          news={{ total: 0, items: [] }}
+          upcomingEvents={[]}
+          totalOfUpcomingEvents={0}
+        />,
+      );
+      expect(
+        screen.getByRole('heading', { name: 'Upcoming Events' }),
+      ).toBeVisible();
+      expect(screen.getByText('There are no upcoming events.')).toBeVisible();
+    });
+
+    it('should render with events if there is an upcoming event item', async () => {
+      render(
+        <DashboardPageBody
+          news={{ total: 0, items: [] }}
+          upcomingEvents={gp2
+            .createListEventResponse(1)
+            .items.map(({ speakers, ...event }) => ({
+              ...event,
+              hasSpeakersToBeAnnounced: speakers.length === 0,
+              eventOwner: <div>GP2 Team</div>,
+            }))}
+          totalOfUpcomingEvents={1}
+        />,
+      );
+      expect(
+        screen.getByRole('heading', { name: 'Upcoming Events' }),
+      ).toBeVisible();
+      expect(
+        await screen.queryByText('There are no upcoming events.'),
+      ).not.toBeInTheDocument();
+    });
+
+    it('should render View All if there are more than 3 upcoming event items', () => {
+      const history = createMemoryHistory();
+      const pushSpy = jest.spyOn(history, 'push');
+      render(
+        <Router history={history}>
+          <DashboardPageBody
+            news={{ total: 0, items: [] }}
+            upcomingEvents={gp2
+              .createListEventResponse(4)
+              .items.map(({ speakers, ...event }) => ({
+                ...event,
+                hasSpeakersToBeAnnounced: speakers.length === 0,
+                eventOwner: <div>GP2 Team</div>,
+              }))}
+            totalOfUpcomingEvents={4}
+          />
+        </Router>,
+      );
+      expect(
+        screen.getByRole('heading', { name: 'Upcoming Events' }),
+      ).toBeVisible();
+      const viewAllButton = screen.getByRole('button', { name: 'View All' });
+      expect(viewAllButton).toBeVisible();
+
+      fireEvent.click(viewAllButton);
+
+      expect(pushSpy).toHaveBeenCalledWith({ pathname: '/events/upcoming' });
+    });
   });
 });

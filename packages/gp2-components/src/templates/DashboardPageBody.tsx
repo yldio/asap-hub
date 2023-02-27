@@ -15,7 +15,7 @@ import {
   Subtitle,
   toolsIcon,
 } from '@asap-hub/react-components';
-import { events } from '@asap-hub/routing/src/gp2';
+import { events } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { useHistory } from 'react-router-dom';

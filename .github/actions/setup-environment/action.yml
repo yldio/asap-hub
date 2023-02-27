@@ -190,14 +190,14 @@ runs:
 
         if [ "$ENVIRONMENT_NAME" = "Branch" ]; then
           PR_NUMBER=${{ github.event.number || github.event.inputs.pr-number || inputs.pr-number }}
-          echo "algolia-index::asap-hub_CI-$PR_NUMBER" >> $GITHUB_OUTPUT
+          echo "algolia-index=asap-hub_CI-$PR_NUMBER" >> $GITHUB_OUTPUT
           echo "app-release=${{ github.run_id }}-dev" >> $GITHUB_OUTPUT
           echo "crn-api-url=https://api-$PR_NUMBER.hub.asap.science" >> $GITHUB_OUTPUT
           echo "crn-app-url=https://$PR_NUMBER.hub.asap.science" >> $GITHUB_OUTPUT
           echo "gp2-api-url=https://api-$PR_NUMBER.gp2.asap.science" >> $GITHUB_OUTPUT
           echo "gp2-app-url=https://$PR_NUMBER.gp2.asap.science" >> $GITHUB_OUTPUT
-          echo "pr-number::$PR_NUMBER" >> $GITHUB_OUTPUT
-          echo "sls-stage::$PR_NUMBER" >> $GITHUB_OUTPUT
+          echo "pr-number=$PR_NUMBER" >> $GITHUB_OUTPUT
+          echo "sls-stage=$PR_NUMBER" >> $GITHUB_OUTPUT
           echo "crn-squidex-app-name=crn-$PR_NUMBER" >> $GITHUB_OUTPUT
           echo "crn-squidex-app-name-legacy=$PR_NUMBER" >> $GITHUB_OUTPUT
           echo "crn-contentful-env-id=crn-$PR_NUMBER" >> $GITHUB_OUTPUT

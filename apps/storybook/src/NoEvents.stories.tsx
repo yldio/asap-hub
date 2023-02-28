@@ -7,13 +7,15 @@ export default {
 };
 
 const props = (): ComponentProps<typeof NoEvents> => {
-  const displayName = 'ASAP Team';
   const past = boolean('Past Event', true);
   const link = '';
-  const type = select('Type', ['team', 'group'], 'team');
+  const type = select(
+    'Type',
+    ['team', 'interest group', 'working group'],
+    'team',
+  );
 
   return {
-    displayName,
     past,
     link,
     type,

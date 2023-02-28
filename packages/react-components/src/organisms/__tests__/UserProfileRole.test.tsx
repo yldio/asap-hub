@@ -5,8 +5,6 @@ import UserProfileRole from '../UserProfileRole';
 
 const defaultProps = {
   firstName: 'Phillip',
-  labs: [],
-  teams: [],
   researchInterests: 'These are my research interest',
   responsibilities: 'these are my responsibilities',
   role: 'Grantee' as const,
@@ -18,22 +16,6 @@ it('generates a heading', () => {
   expect(getByRole('heading', { level: 2 }).textContent).toMatchInlineSnapshot(
     `"Phillip's Role on ASAP Network"`,
   );
-});
-
-it('renders a link to team page', () => {
-  const { getByRole } = render(
-    <UserProfileRole
-      {...defaultProps}
-      teams={[
-        {
-          id: '42',
-          displayName: 'Team',
-          role: 'Lead PI (Core Leadership)',
-        },
-      ]}
-    />,
-  );
-  expect(getByRole('link')).toHaveAttribute('href', '/network/teams/42');
 });
 
 it('renders responsibilities if present', () => {
@@ -67,24 +49,6 @@ it('renders placeholder if no responsibilities provided for your own profile', (
   );
 
   expect(queryAllByText(/responsibilities/i).length).toBeGreaterThan(0);
-});
-
-it('renders the list of labs', () => {
-  const { queryByText } = render(
-    <UserProfileContext.Provider value={{ isOwnProfile: true }}>
-      <UserProfileRole
-        {...defaultProps}
-        labs={[
-          { name: 'LONDON', id: '0001' },
-          { name: 'Paris', id: '0002' },
-          { name: 'barcelona', id: '0003' },
-        ]}
-      />
-    </UserProfileContext.Provider>,
-  );
-
-  expect(queryByText(/labs/i)).toBeVisible();
-  expect(queryByText('LONDON Lab, Paris Lab and barcelona Lab')).toBeVisible();
 });
 
 describe('When the role is not Staff', () => {

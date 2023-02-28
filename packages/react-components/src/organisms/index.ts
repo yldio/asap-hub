@@ -67,6 +67,7 @@ export { default as UserProfileGroups } from './UserProfileGroups';
 export { default as UserProfilePlaceholderCard } from './UserProfilePlaceholderCard';
 export { default as UserProfileRecentWorks } from './UserProfileRecentWorks';
 export { default as UserProfileRole } from './UserProfileRole';
+export { default as UserTeamsTabbedCard } from './UserTeamsTabbedCard';
 export { default as WelcomeCard } from './WelcomeCard';
 export { default as WorkingGroupCard } from './WorkingGroupCard';
 export { default as WorkingGroupMembers } from './WorkingGroupMembers';

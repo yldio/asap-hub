@@ -73,6 +73,7 @@ export const researchOutputContentQueryFragment = gql`
                   proposal {
                     id
                   }
+                  inactiveSince
                 }
               }
             }

@@ -160,6 +160,7 @@ export {
   UserProfilePlaceholderCard,
   UserProfileRecentWorks,
   UserProfileRole,
+  UserTeamsTabbedCard,
   WorkingGroupCard,
   WorkingGroupMembers,
   WorkingGroupsTabbedCard,

@@ -1,7 +1,6 @@
 import { ComponentProps } from 'react';
 import { UserProfileResearch } from '@asap-hub/react-components';
 import { array, text, boolean, select } from '@storybook/addon-knobs';
-import { TeamRole } from '@asap-hub/model';
 
 export default {
   title: 'Templates / User Profile / Research',
@@ -13,17 +12,9 @@ const props = (): ComponentProps<typeof UserProfileResearch> => ({
   firstName: text('First Name', 'Phillip'),
   email: text('Email', 'me@example.com'),
   contactEmail: text('Contact email', 'contact@example.com'),
-  labs: [],
   researchInterests: 'My Research interests',
   responsibilities: 'My responsibilities',
   reachOut: 'If you need my help',
-  teams: [
-    {
-      id: '42',
-      role: text('Role', 'Researcher') as TeamRole,
-      displayName: text('Team Name', 'Ferguson, M'),
-    },
-  ],
   expertiseAndResourceTags: array('Expertise and Resources', [
     'Neurological Diseases',
     'Clinical Neurology',
@@ -43,6 +34,9 @@ const props = (): ComponentProps<typeof UserProfileResearch> => ({
   userProfileGroupsCard: boolean('User Profile Groups Placeholder', true)
     ? 'User Profile Groups Placeholder'
     : undefined,
+  userProfileTeamsCard: boolean('User Profile Teams Placeholder', true)
+    ? 'User Profile Teams Placeholder'
+    : undefined,
   isOwnProfile: boolean(`Is own profile`, false),
   role: select('ASAP Hub Role', ['Staff', 'Grantee', 'Guest'], 'Grantee'),
 });
@@ -54,8 +48,5 @@ export const Editable = () => (
     editExpertiseAndResourcesHref="#edit-expertise-and-resources"
     editQuestionsHref="#edit-questions"
     editRoleHref="#edit-role"
-    teams={props().teams.map((team) => ({
-      ...team,
-    }))}
   />
 );

@@ -17,6 +17,7 @@ type UserProfileResearchProps = ComponentProps<typeof QuestionsSection> &
   ComponentProps<typeof UserProfileRole> & {
     userProfileGroupsCard?: ReactNode;
     userProfileWorkingGroupsCard?: ReactNode;
+    userProfileTeamsCard?: ReactNode;
     editExpertiseAndResourcesHref?: string;
     editQuestionsHref?: string;
     editRoleHref?: string;
@@ -31,33 +32,23 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
   expertiseAndResourceDescription,
   questions,
   isOwnProfile,
-  labs,
   displayName,
   userProfileGroupsCard,
   userProfileWorkingGroupsCard,
+  userProfileTeamsCard,
   editExpertiseAndResourcesHref,
   editQuestionsHref,
   editRoleHref,
-  teams,
   role,
   ...roleProps
 }) => {
   const isRoleEmpty =
-    !labs.length &&
-    !teams.length &&
-    !roleProps.researchInterests &&
-    !roleProps.responsibilities;
+    !roleProps.researchInterests && !roleProps.responsibilities;
   const showRoleSection = isOwnProfile ? true : !isRoleEmpty;
   const roleSection = [
     showRoleSection && {
       card: (
-        <UserProfileRole
-          firstName={firstName}
-          labs={labs}
-          teams={teams}
-          role={role}
-          {...roleProps}
-        />
+        <UserProfileRole firstName={firstName} role={role} {...roleProps} />
       ),
       editLink:
         editRoleHref === undefined
@@ -71,6 +62,9 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
   const staffCards = [
     userProfileWorkingGroupsCard !== undefined && {
       card: userProfileWorkingGroupsCard,
+    },
+    userProfileTeamsCard !== undefined && {
+      card: userProfileTeamsCard,
     },
     !isOwnProfile && {
       card: <HelpSection />,
@@ -92,6 +86,9 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
     },
     userProfileGroupsCard !== undefined && {
       card: userProfileGroupsCard,
+    },
+    userProfileTeamsCard !== undefined && {
+      card: userProfileTeamsCard,
     },
     !isOwnProfile && {
       card: (

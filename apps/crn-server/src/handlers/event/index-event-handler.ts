@@ -2,7 +2,7 @@ import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
-import { EventBridgeHandler } from '@asap-hub/server-common';
+import { EventBridgeHandler, EventController } from '@asap-hub/server-common';
 import { RestEvent, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import { isBoom } from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
@@ -13,7 +13,7 @@ import {
   appName,
   baseUrl,
 } from '../../config';
-import Event, { EventController } from '../../controllers/events';
+import Event from '../../controllers/events';
 import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';

@@ -7,10 +7,8 @@ const commonProps: ComponentProps<typeof UserProfileResearch> = {
   firstName: 'Phillip',
   displayName: 'Phillip Winter',
   email: 'test@example.com',
-  teams: [],
   expertiseAndResourceTags: [],
   questions: [],
-  labs: [],
   role: 'Grantee',
 };
 
@@ -29,23 +27,6 @@ it('renders the role on ASAP when labs, teams responsabilites or researchInteres
     <UserProfileResearch {...commonProps} />,
   );
   expect(queryByText(/role.+asap/i)).not.toBeInTheDocument();
-  rerender(
-    <UserProfileResearch {...commonProps} labs={[{ id: '1', name: 'Lab' }]} />,
-  );
-  expect(queryByText(/role.+asap/i)).toBeInTheDocument();
-  rerender(
-    <UserProfileResearch
-      {...commonProps}
-      teams={[
-        {
-          id: '42',
-          displayName: 'Team',
-          role: 'Lead PI (Core Leadership)',
-        },
-      ]}
-    />,
-  );
-  expect(queryByText(/role.+asap/i)).toBeInTheDocument();
   rerender(
     <UserProfileResearch
       {...commonProps}
@@ -73,18 +54,7 @@ it('renders the expertiseAndResourceTags list', () => {
   expect(getByText('Neurological Diseases')).toBeVisible();
 });
 it('does not render an edit button by default (REGRESSION)', () => {
-  const { queryByLabelText } = render(
-    <UserProfileResearch
-      {...commonProps}
-      teams={[
-        {
-          id: '42',
-          displayName: 'Team',
-          role: 'Lead PI (Core Leadership)',
-        },
-      ]}
-    />,
-  );
+  const { queryByLabelText } = render(<UserProfileResearch {...commonProps} />);
   expect(queryByLabelText(/edit/i)).not.toBeInTheDocument();
 });
 

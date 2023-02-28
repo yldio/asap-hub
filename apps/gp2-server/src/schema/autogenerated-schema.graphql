@@ -2955,12 +2955,14 @@ type ProjectsDataDto {
   leadEmail: ProjectsDataLeadEmailDto
   members: ProjectsDataMembersDto
   milestones: ProjectsDataMilestonesDto
+  opportunitiesLink: ProjectsDataOpportunitiesLinkDto
   pmEmail: ProjectsDataPmEmailDto
   projectProposal: ProjectsDataProjectProposalDto
   resources: ProjectsDataResourcesDto
   startDate: ProjectsDataStartDateDto
   status: ProjectsDataStatusDto
   title: ProjectsDataTitleDto
+  traineeProject: ProjectsDataTraineeProjectDto
 }
 
 """The structure of the End Date field of the Projects content type."""
@@ -2981,12 +2983,14 @@ input ProjectsDataInputDto {
   leadEmail: ProjectsDataLeadEmailInputDto
   members: ProjectsDataMembersInputDto
   milestones: ProjectsDataMilestonesInputDto
+  opportunitiesLink: ProjectsDataOpportunitiesLinkInputDto
   pmEmail: ProjectsDataPmEmailInputDto
   projectProposal: ProjectsDataProjectProposalInputDto
   resources: ProjectsDataResourcesInputDto
   startDate: ProjectsDataStartDateInputDto
   status: ProjectsDataStatusInputDto
   title: ProjectsDataTitleInputDto
+  traineeProject: ProjectsDataTraineeProjectInputDto
 }
 
 """The structure of the Keywords field of the Projects content type."""
@@ -3079,6 +3083,16 @@ enum ProjectsDataMilestonesStatusEnum {
   Not_Started
 }
 
+"""The structure of the Opportunities Link field of the Projects content type."""
+type ProjectsDataOpportunitiesLinkDto {
+  iv: String
+}
+
+"""The structure of the Opportunities Link field of the Projects content input type."""
+input ProjectsDataOpportunitiesLinkInputDto {
+  iv: String
+}
+
 """The structure of the PM Email field of the Projects content type."""
 type ProjectsDataPmEmailDto {
   iv: String
@@ -3156,8 +3170,8 @@ enum ProjectsDataStatusEnum {
   Active
   """Completed"""
   Completed
-  """Inactive"""
-  Inactive
+  """Paused"""
+  Paused
 }
 
 """The structure of the Status field of the Projects content input type."""
@@ -3175,6 +3189,18 @@ input ProjectsDataTitleInputDto {
   iv: String
 }
 
+"""The structure of the Trainee Project field of the Projects content type."""
+type ProjectsDataTraineeProjectDto {
+  """check if project is a trainee project"""
+  iv: Boolean
+}
+
+"""The structure of the Trainee Project field of the Projects content input type."""
+input ProjectsDataTraineeProjectInputDto {
+  """check if project is a trainee project"""
+  iv: Boolean
+}
+
 """The structure of the flat Projects data type."""
 type ProjectsFlatDataDto {
   description: String
@@ -3183,6 +3209,7 @@ type ProjectsFlatDataDto {
   leadEmail: String
   members: [ProjectsDataMembersChildDto!]
   milestones: [ProjectsDataMilestonesChildDto!]
+  opportunitiesLink: String
   pmEmail: String
   """External link for a project proposal"""
   projectProposal: String
@@ -3190,6 +3217,8 @@ type ProjectsFlatDataDto {
   startDate: Instant
   status: ProjectsDataStatusEnum
   title: String
+  """check if project is a trainee project"""
+  traineeProject: Boolean
 }
 
 """List of Projects items and total count."""

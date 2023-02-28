@@ -27,7 +27,6 @@ export const getCalendarDataObject = (): CalendarDataObject => ({
   groups: [{ id: 'group-id-1', active: true }],
   workingGroups: [{ id: '123', complete: false }],
 });
-
 export const getCalendarCreateDataObject = (): CalendarCreateDataObject => {
   const {
     id: _id,

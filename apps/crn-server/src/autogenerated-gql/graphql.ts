@@ -6575,7 +6575,7 @@ export type EventContentFragment = Pick<
                                         Pick<Teams, 'id'> & {
                                           flatData: Pick<
                                             TeamsFlatDataDto,
-                                            'displayName'
+                                            'displayName' | 'inactiveSince'
                                           > & {
                                             proposal: Maybe<
                                               Array<Pick<ResearchOutputs, 'id'>>
@@ -6681,7 +6681,7 @@ export type EventContentFragment = Pick<
                                         Pick<Teams, 'id'> & {
                                           flatData: Pick<
                                             TeamsFlatDataDto,
-                                            'displayName'
+                                            'displayName' | 'inactiveSince'
                                           > & {
                                             proposal: Maybe<
                                               Array<Pick<ResearchOutputs, 'id'>>
@@ -7010,7 +7010,8 @@ export type FetchEventsQuery = {
                                                   Pick<Teams, 'id'> & {
                                                     flatData: Pick<
                                                       TeamsFlatDataDto,
-                                                      'displayName'
+                                                      | 'displayName'
+                                                      | 'inactiveSince'
                                                     > & {
                                                       proposal: Maybe<
                                                         Array<
@@ -7130,7 +7131,8 @@ export type FetchEventsQuery = {
                                                   Pick<Teams, 'id'> & {
                                                     flatData: Pick<
                                                       TeamsFlatDataDto,
-                                                      'displayName'
+                                                      | 'displayName'
+                                                      | 'inactiveSince'
                                                     > & {
                                                       proposal: Maybe<
                                                         Array<
@@ -7465,7 +7467,7 @@ export type FetchEventQuery = {
                                             Pick<Teams, 'id'> & {
                                               flatData: Pick<
                                                 TeamsFlatDataDto,
-                                                'displayName'
+                                                'displayName' | 'inactiveSince'
                                               > & {
                                                 proposal: Maybe<
                                                   Array<
@@ -7576,7 +7578,7 @@ export type FetchEventQuery = {
                                             Pick<Teams, 'id'> & {
                                               flatData: Pick<
                                                 TeamsFlatDataDto,
-                                                'displayName'
+                                                'displayName' | 'inactiveSince'
                                               > & {
                                                 proposal: Maybe<
                                                   Array<
@@ -7901,7 +7903,7 @@ export type GroupsContentFragment = Pick<
                             Pick<Teams, 'id'> & {
                               flatData: Pick<
                                 TeamsFlatDataDto,
-                                'displayName'
+                                'displayName' | 'inactiveSince'
                               > & {
                                 proposal: Maybe<
                                   Array<Pick<ResearchOutputs, 'id'>>
@@ -8002,7 +8004,7 @@ export type GroupsContentFragment = Pick<
                             Pick<Teams, 'id'> & {
                               flatData: Pick<
                                 TeamsFlatDataDto,
-                                'displayName'
+                                'displayName' | 'inactiveSince'
                               > & {
                                 proposal: Maybe<
                                   Array<Pick<ResearchOutputs, 'id'>>
@@ -8159,7 +8161,7 @@ export type FetchGroupsQuery = {
                                       Pick<Teams, 'id'> & {
                                         flatData: Pick<
                                           TeamsFlatDataDto,
-                                          'displayName'
+                                          'displayName' | 'inactiveSince'
                                         > & {
                                           proposal: Maybe<
                                             Array<Pick<ResearchOutputs, 'id'>>
@@ -8265,7 +8267,7 @@ export type FetchGroupsQuery = {
                                       Pick<Teams, 'id'> & {
                                         flatData: Pick<
                                           TeamsFlatDataDto,
-                                          'displayName'
+                                          'displayName' | 'inactiveSince'
                                         > & {
                                           proposal: Maybe<
                                             Array<Pick<ResearchOutputs, 'id'>>
@@ -8414,7 +8416,7 @@ export type FetchGroupQuery = {
                                 Pick<Teams, 'id'> & {
                                   flatData: Pick<
                                     TeamsFlatDataDto,
-                                    'displayName'
+                                    'displayName' | 'inactiveSince'
                                   > & {
                                     proposal: Maybe<
                                       Array<Pick<ResearchOutputs, 'id'>>
@@ -8515,7 +8517,7 @@ export type FetchGroupQuery = {
                                 Pick<Teams, 'id'> & {
                                   flatData: Pick<
                                     TeamsFlatDataDto,
-                                    'displayName'
+                                    'displayName' | 'inactiveSince'
                                   > & {
                                     proposal: Maybe<
                                       Array<Pick<ResearchOutputs, 'id'>>
@@ -8775,7 +8777,10 @@ export type ResearchOutputContentFragment = Pick<
                       id: Maybe<
                         Array<
                           Pick<Teams, 'id'> & {
-                            flatData: Pick<TeamsFlatDataDto, 'displayName'> & {
+                            flatData: Pick<
+                              TeamsFlatDataDto,
+                              'displayName' | 'inactiveSince'
+                            > & {
                               proposal: Maybe<
                                 Array<Pick<ResearchOutputs, 'id'>>
                               >;
@@ -8947,7 +8952,7 @@ export type FetchResearchOutputQuery = {
                               Pick<Teams, 'id'> & {
                                 flatData: Pick<
                                   TeamsFlatDataDto,
-                                  'displayName'
+                                  'displayName' | 'inactiveSince'
                                 > & {
                                   proposal: Maybe<
                                     Array<Pick<ResearchOutputs, 'id'>>
@@ -9137,7 +9142,7 @@ export type FetchResearchOutputsQuery = {
                                     Pick<Teams, 'id'> & {
                                       flatData: Pick<
                                         TeamsFlatDataDto,
-                                        'displayName'
+                                        'displayName' | 'inactiveSince'
                                       > & {
                                         proposal: Maybe<
                                           Array<Pick<ResearchOutputs, 'id'>>
@@ -9327,7 +9332,10 @@ export type TeamsContentFragment = Pick<
                 id: Maybe<
                   Array<
                     Pick<Teams, 'id'> & {
-                      flatData: Pick<TeamsFlatDataDto, 'displayName'> & {
+                      flatData: Pick<
+                        TeamsFlatDataDto,
+                        'displayName' | 'inactiveSince'
+                      > & {
                         proposal: Maybe<Array<Pick<ResearchOutputs, 'id'>>>;
                       };
                     }
@@ -9434,7 +9442,10 @@ export type FetchTeamQuery = {
                     id: Maybe<
                       Array<
                         Pick<Teams, 'id'> & {
-                          flatData: Pick<TeamsFlatDataDto, 'displayName'> & {
+                          flatData: Pick<
+                            TeamsFlatDataDto,
+                            'displayName' | 'inactiveSince'
+                          > & {
                             proposal: Maybe<Array<Pick<ResearchOutputs, 'id'>>>;
                           };
                         }
@@ -9555,7 +9566,7 @@ export type FetchTeamsQuery = {
                               Pick<Teams, 'id'> & {
                                 flatData: Pick<
                                   TeamsFlatDataDto,
-                                  'displayName'
+                                  'displayName' | 'inactiveSince'
                                 > & {
                                   proposal: Maybe<
                                     Array<Pick<ResearchOutputs, 'id'>>
@@ -9691,9 +9702,10 @@ export type UsersContentFragment = Pick<
           id: Maybe<
             Array<
               Pick<Teams, 'id'> & {
-                flatData: Pick<TeamsFlatDataDto, 'displayName'> & {
-                  proposal: Maybe<Array<Pick<ResearchOutputs, 'id'>>>;
-                };
+                flatData: Pick<
+                  TeamsFlatDataDto,
+                  'displayName' | 'inactiveSince'
+                > & { proposal: Maybe<Array<Pick<ResearchOutputs, 'id'>>> };
               }
             >
           >;
@@ -9793,9 +9805,10 @@ export type FetchUserQuery = {
               id: Maybe<
                 Array<
                   Pick<Teams, 'id'> & {
-                    flatData: Pick<TeamsFlatDataDto, 'displayName'> & {
-                      proposal: Maybe<Array<Pick<ResearchOutputs, 'id'>>>;
-                    };
+                    flatData: Pick<
+                      TeamsFlatDataDto,
+                      'displayName' | 'inactiveSince'
+                    > & { proposal: Maybe<Array<Pick<ResearchOutputs, 'id'>>> };
                   }
                 >
               >;
@@ -9911,7 +9924,10 @@ export type FetchUsersQuery = {
                     id: Maybe<
                       Array<
                         Pick<Teams, 'id'> & {
-                          flatData: Pick<TeamsFlatDataDto, 'displayName'> & {
+                          flatData: Pick<
+                            TeamsFlatDataDto,
+                            'displayName' | 'inactiveSince'
+                          > & {
                             proposal: Maybe<Array<Pick<ResearchOutputs, 'id'>>>;
                           };
                         }
@@ -10516,6 +10532,13 @@ export const TeamsContentFragmentDoc = {
                                           kind: 'Field',
                                           name: {
                                             kind: 'Name',
+                                            value: 'inactiveSince',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
                                             value: 'proposal',
                                           },
                                           selectionSet: {
@@ -10943,6 +10966,13 @@ export const GroupsContentFragmentDoc = {
                                                             },
                                                           },
                                                         ],
+                                                      },
+                                                    },
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'inactiveSince',
                                                       },
                                                     },
                                                   ],
@@ -12179,6 +12209,13 @@ export const ResearchOutputContentFragmentDoc = {
                                                         ],
                                                       },
                                                     },
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'inactiveSince',
+                                                      },
+                                                    },
                                                   ],
                                                 },
                                               },
@@ -12933,6 +12970,13 @@ export const UsersContentFragmentDoc = {
                                     name: {
                                       kind: 'Name',
                                       value: 'displayName',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'inactiveSince',
                                     },
                                   },
                                   {

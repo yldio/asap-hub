@@ -7,8 +7,7 @@
   "packageRules": [
     {
       "matchCurrentVersion": "!/^0/",
-      "automerge": true,
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"]
+      "automerge": true
     }
   ],
   "timezone": "Europe/London",

@@ -1,8 +1,7 @@
 import { Frame } from '@asap-hub/frontend-utils';
 import { DashboardPage } from '@asap-hub/gp2-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
-import { ComponentProps, FC, lazy } from 'react';
-import { useNews } from './state';
+import { ComponentProps, FC, lazy, useState } from 'react';
 
 const loadBody = () =>
   import(/* webpackChunkName: "dashboard-body" */ './Body');
@@ -18,13 +17,13 @@ const Dashboard: FC<DashboardProps> = ({
   showWelcomeBackBanner,
   dismissBanner,
 }) => {
+  const [currentTime] = useState(new Date());
   const currentUser = useCurrentUserGP2();
   if (!currentUser) {
     throw new Error('Failed to find out who is currently logged in');
   }
 
   const { firstName } = currentUser;
-  const news = useNews();
 
   return (
     <DashboardPage
@@ -33,7 +32,7 @@ const Dashboard: FC<DashboardProps> = ({
       dismissBanner={dismissBanner}
     >
       <Frame title={null}>
-        <Body news={news} />
+        <Body currentTime={currentTime} />
       </Frame>
     </DashboardPage>
   );

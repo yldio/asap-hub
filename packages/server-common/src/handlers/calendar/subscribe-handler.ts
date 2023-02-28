@@ -2,9 +2,7 @@ import { EventBridgeEvent } from 'aws-lambda';
 import { Auth } from 'googleapis';
 import 'source-map-support/register';
 import { CalendarDataProvider } from '../../data-providers';
-import { Alerts } from '../../utils';
-import { GetJWTCredentials } from '../../utils/aws-secret-manager';
-import { Logger } from '../../utils/logger';
+import { Alerts, GetJWTCredentials, Logger } from '../../utils';
 import { validateBody } from '../../validation/subscribe-handler.validation';
 import { CalendarEvent, CalendarPayload } from '../event-bus';
 

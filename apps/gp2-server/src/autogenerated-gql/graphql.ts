@@ -2892,12 +2892,14 @@ export type ProjectsDataDto = {
   leadEmail: Maybe<ProjectsDataLeadEmailDto>;
   members: Maybe<ProjectsDataMembersDto>;
   milestones: Maybe<ProjectsDataMilestonesDto>;
+  opportunitiesLink: Maybe<ProjectsDataOpportunitiesLinkDto>;
   pmEmail: Maybe<ProjectsDataPmEmailDto>;
   projectProposal: Maybe<ProjectsDataProjectProposalDto>;
   resources: Maybe<ProjectsDataResourcesDto>;
   startDate: Maybe<ProjectsDataStartDateDto>;
   status: Maybe<ProjectsDataStatusDto>;
   title: Maybe<ProjectsDataTitleDto>;
+  traineeProject: Maybe<ProjectsDataTraineeProjectDto>;
 };
 
 /** The structure of the End Date field of the Projects content type. */
@@ -2918,12 +2920,14 @@ export type ProjectsDataInputDto = {
   leadEmail: InputMaybe<ProjectsDataLeadEmailInputDto>;
   members: InputMaybe<ProjectsDataMembersInputDto>;
   milestones: InputMaybe<ProjectsDataMilestonesInputDto>;
+  opportunitiesLink: InputMaybe<ProjectsDataOpportunitiesLinkInputDto>;
   pmEmail: InputMaybe<ProjectsDataPmEmailInputDto>;
   projectProposal: InputMaybe<ProjectsDataProjectProposalInputDto>;
   resources: InputMaybe<ProjectsDataResourcesInputDto>;
   startDate: InputMaybe<ProjectsDataStartDateInputDto>;
   status: InputMaybe<ProjectsDataStatusInputDto>;
   title: InputMaybe<ProjectsDataTitleInputDto>;
+  traineeProject: InputMaybe<ProjectsDataTraineeProjectInputDto>;
 };
 
 /** The structure of the Keywords field of the Projects content type. */
@@ -3016,6 +3020,16 @@ export enum ProjectsDataMilestonesStatusEnum {
   NotStarted = 'Not_Started',
 }
 
+/** The structure of the Opportunities Link field of the Projects content type. */
+export type ProjectsDataOpportunitiesLinkDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Opportunities Link field of the Projects content input type. */
+export type ProjectsDataOpportunitiesLinkInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
 /** The structure of the PM Email field of the Projects content type. */
 export type ProjectsDataPmEmailDto = {
   iv: Maybe<Scalars['String']>;
@@ -3093,8 +3107,8 @@ export enum ProjectsDataStatusEnum {
   Active = 'Active',
   /** Completed */
   Completed = 'Completed',
-  /** Inactive */
-  Inactive = 'Inactive',
+  /** Paused */
+  Paused = 'Paused',
 }
 
 /** The structure of the Status field of the Projects content input type. */
@@ -3112,6 +3126,18 @@ export type ProjectsDataTitleInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
+/** The structure of the Trainee Project field of the Projects content type. */
+export type ProjectsDataTraineeProjectDto = {
+  /** check if project is a trainee project */
+  iv: Maybe<Scalars['Boolean']>;
+};
+
+/** The structure of the Trainee Project field of the Projects content input type. */
+export type ProjectsDataTraineeProjectInputDto = {
+  /** check if project is a trainee project */
+  iv: InputMaybe<Scalars['Boolean']>;
+};
+
 /** The structure of the flat Projects data type. */
 export type ProjectsFlatDataDto = {
   description: Maybe<Scalars['String']>;
@@ -3120,6 +3146,7 @@ export type ProjectsFlatDataDto = {
   leadEmail: Maybe<Scalars['String']>;
   members: Maybe<Array<ProjectsDataMembersChildDto>>;
   milestones: Maybe<Array<ProjectsDataMilestonesChildDto>>;
+  opportunitiesLink: Maybe<Scalars['String']>;
   pmEmail: Maybe<Scalars['String']>;
   /** External link for a project proposal */
   projectProposal: Maybe<Scalars['String']>;
@@ -3127,6 +3154,8 @@ export type ProjectsFlatDataDto = {
   startDate: Maybe<Scalars['Instant']>;
   status: Maybe<ProjectsDataStatusEnum>;
   title: Maybe<Scalars['String']>;
+  /** check if project is a trainee project */
+  traineeProject: Maybe<Scalars['Boolean']>;
 };
 
 /** List of Projects items and total count. */

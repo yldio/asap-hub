@@ -104,6 +104,7 @@ export interface OrcidWork {
 export interface UserTeam {
   id: string;
   displayName?: string;
+  teamInactiveSince?: string;
   proposal?: string;
   role: TeamRole;
   inactiveSinceDate?: string;

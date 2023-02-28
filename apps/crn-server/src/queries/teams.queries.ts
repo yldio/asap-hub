@@ -67,6 +67,7 @@ export const teamsContentQueryFragment = gql`
             id
             flatData {
               displayName
+              inactiveSince
               proposal {
                 id
               }

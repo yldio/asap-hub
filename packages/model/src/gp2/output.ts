@@ -53,7 +53,7 @@ export type OutputCoreObject = {
   subtype?: OutputSubType;
 };
 
-type UserAuthor = {
+export type UserAuthor = {
   id: string;
   firstName: string;
   lastName: string;

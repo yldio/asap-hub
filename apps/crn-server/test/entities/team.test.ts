@@ -46,6 +46,7 @@ describe('parseGraphQLTeamMember', () => {
                 {
                   id: 'team-id-0',
                   flatData: {
+                    inactiveSince: '',
                     displayName: 'Team A',
                     proposal: [{ id: 'proposalId1' }],
                   },

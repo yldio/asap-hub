@@ -6,9 +6,10 @@ type WorkingGroupResourcesProps = Omit<
   'headline'
 >;
 
-const headline = `Please note, this is a private space for this working group on the
-        network. Nobody outside of this working group can see anything that you
-        upload here.`;
+const headline = `This is a private space for this working group on the
+network. Nobody outside of this working group can see anything that you
+upload here.`;
+
 const WorkingGroupResources: React.FC<WorkingGroupResourcesProps> = ({
   ...props
 }) => <Resources {...props} headline={headline} />;

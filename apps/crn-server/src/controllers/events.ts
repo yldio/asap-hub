@@ -4,6 +4,7 @@ import {
   ListEventResponse,
 } from '@asap-hub/model';
 
+import { EventController } from '@asap-hub/server-common';
 import {
   Event,
   RestEvent,
@@ -31,14 +32,6 @@ import {
   FETCH_WORKING_GROUP_CALENDAR,
 } from '../queries/events.queries';
 import logger from '../utils/logger';
-
-export interface EventController {
-  fetch: (options: FetchEventsOptions) => Promise<ListEventResponse>;
-  fetchById: (eventId: string) => Promise<EventResponse>;
-  create: (event: Event) => Promise<RestEvent>;
-  fetchByGoogleId: (googleId: string) => Promise<RestEvent | null>;
-  update: (eventId: string, data: Partial<Event>) => Promise<RestEvent>;
-}
 
 export default class Events implements EventController {
   squidexGraphqlClient: SquidexGraphqlClient;

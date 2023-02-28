@@ -157,6 +157,7 @@ export const getGraphQLUser = (
             id: 'team-id-0',
             flatData: {
               displayName: 'Team A',
+              inactiveSince: '',
               proposal: [{ id: 'proposalId1' }],
             },
           },
@@ -317,6 +318,7 @@ export const getUserResponse = (): UserResponse => ({
   teams: [
     {
       id: 'team-id-0',
+      teamInactiveSince: '',
       role: 'Lead PI (Core Leadership)',
       displayName: 'Team A',
       proposal: 'proposalId1',
@@ -624,6 +626,7 @@ export const getUserDataObject = (): UserDataObject => ({
   teams: [
     {
       id: 'team-id-0',
+      teamInactiveSince: '',
       role: 'Lead PI (Core Leadership)',
       displayName: 'Team A',
       proposal: 'proposalId1',

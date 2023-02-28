@@ -54,6 +54,7 @@ For you, a newcomer, to be running your development setup, you'll need to comple
 ### Create a new user on Squidex
 
 - Log in to <https://cloud.squidex.io/app/asap-hub-dev>
+- You will need to be added to the "ASAP CRN Hub (dev)" app if you don't already have access
 - In `Content/Users`, create a new user (or edit if already created)
 
 ### Get everything running
@@ -74,10 +75,11 @@ For you, a newcomer, to be running your development setup, you'll need to comple
 
 ### Now that everything's up
 
-- On localhost:3000 you should have the CRN hub running. You'll need to get your profile created.
-- On localhost:4000 you should have the GP2 hub running. You'll need to get your profile created.
-- Get your UUID from the previous step, and use it on <https://dev.hub.asap.science/welcome/{uuid>}
-- Reload localhost:3000 and you should now have an account and be logged in.
+- On localhost:3000 you should have the CRN hub running.
+- On localhost:4000 you should have the GP2 hub running.
+- Get the UUID listed under "Connections" in Squidex on the user profile you created above.
+- Use this UUID to activate your account by visting <https://dev.hub.asap.science/welcome/{uuid}>.
+- Reload localhost:3000 and you should now be able to log in.
 
 ## Editor setup
 

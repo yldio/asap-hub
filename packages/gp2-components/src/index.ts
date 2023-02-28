@@ -32,6 +32,7 @@ export {
   OnboardingPageFooter,
   OnboardingPageHeader,
   OpenQuestionsModal,
+  OutputCard,
   PageBanner,
   ProjectCard,
   ProjectDetailHeader,

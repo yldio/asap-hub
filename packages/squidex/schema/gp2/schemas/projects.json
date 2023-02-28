@@ -137,7 +137,7 @@
         "properties": {
           "fieldType": "String",
           "defaultValue": "Active",
-          "allowedValues": ["Active", "Inactive", "Completed"],
+          "allowedValues": ["Active", "Completed", "Paused"],
           "isUnique": false,
           "isEmbeddable": false,
           "inlineEditable": true,
@@ -245,7 +245,8 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "Tags",
-          "createEnum": true,
+          "minItems": 1,
+          "maxItems": 6,
           "allowedValues": [
             "Movement Disorders",
             "Epidemiology",
@@ -290,8 +291,7 @@
             "Neuroimaging",
             "Parkinson disease"
           ],
-          "maxItems": 6,
-          "minItems": 1,
+          "createEnum": true,
           "editor": "Tags",
           "label": "Keywords",
           "isRequired": true,
@@ -493,6 +493,47 @@
             }
           }
         ]
+      },
+      {
+        "name": "traineeProject",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Boolean",
+          "defaultValue": false,
+          "inlineEditable": false,
+          "editor": "Toggle",
+          "label": "Trainee Project",
+          "hints": "check if project is a trainee project",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "opportunitiesLink",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "pattern": "^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#%[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
+          "patternMessage": "URL must start with http:// or https://",
+          "isUnique": false,
+          "isEmbeddable": false,
+          "inlineEditable": false,
+          "createEnum": false,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "Opportunities Link",
+          "hints": "",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
       }
     ],
     "previewUrls": {},

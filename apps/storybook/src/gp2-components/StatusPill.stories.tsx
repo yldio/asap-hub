@@ -12,6 +12,6 @@ export const Normal = () => (
     status={select<
       | gp2.ProjectResponse['status']
       | gp2.ProjectResponse['milestones'][0]['status']
-    >('Status', ['Active', 'Completed', 'Inactive', 'Not Started'], 'Active')}
+    >('Status', ['Active', 'Completed', 'Paused', 'Not Started'], 'Active')}
   />
 );

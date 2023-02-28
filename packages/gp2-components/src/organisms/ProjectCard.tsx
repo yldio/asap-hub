@@ -43,7 +43,7 @@ export const cardStyles: Record<
   Completed: {
     color: colors.secondary500.rgba,
   },
-  Inactive: {
+  Paused: {
     color: colors.warning500.rgba,
   },
 };

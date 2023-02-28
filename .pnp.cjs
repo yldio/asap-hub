@@ -5979,7 +5979,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "is-docker",\
-        "npm:2.0.0"\
+        "npm:2.2.1"\
       ],\
       [\
         "is-dom",\
@@ -8798,7 +8798,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "serverless",\
-        "npm:3.27.0"\
+        "npm:3.28.0"\
       ],\
       [\
         "serverless-http",\
@@ -11102,7 +11102,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["parse-data-url", "npm:3.0.0"],\
             ["pump", "npm:3.0.0"],\
             ["react-router-dom", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:5.3.4"],\
-            ["serverless", "npm:3.27.0"],\
+            ["serverless", "npm:3.28.0"],\
             ["serverless-http", "npm:2.7.0"],\
             ["serverless-iam-roles-per-function", "npm:2.0.2"],\
             ["serverless-s3-sync", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:3.1.0"],\
@@ -11793,7 +11793,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["node-dev", "npm:6.7.0"],\
             ["odata-query", "npm:7.0.3"],\
             ["parse-data-url", "npm:3.0.0"],\
-            ["serverless", "npm:3.27.0"],\
+            ["serverless", "npm:3.28.0"],\
             ["serverless-http", "npm:2.7.0"],\
             ["serverless-s3-sync", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:3.1.0"],\
             ["serverless-webpack", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:5.11.0"],\
@@ -38583,10 +38583,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["virtual:e5ea8b1ce2df77e910b34f56109761ec3c6b18f133751fff7510d8316120b00572593adb6c9f0cc6c3348bf9c4e033eb9c28820e441076518262f9596a608766#npm:2.1.1", {\
-          "packageLocation": "./.yarn/__virtual__/ajv-formats-virtual-6b303b543e/0/cache/ajv-formats-npm-2.1.1-3cec02eae9-4a287d937f.zip/node_modules/ajv-formats/",\
+        ["virtual:7bba23ed424c6abb31032cb1b3cb6fa70f616480b2d8678ea7750303033c4b84a0af7553dd3d0e698c34d82a01df49a6958beaba5f04e479158578190d6ffe29#npm:2.1.1", {\
+          "packageLocation": "./.yarn/__virtual__/ajv-formats-virtual-7244fd53b0/0/cache/ajv-formats-npm-2.1.1-3cec02eae9-4a287d937f.zip/node_modules/ajv-formats/",\
           "packageDependencies": [\
-            ["ajv-formats", "virtual:e5ea8b1ce2df77e910b34f56109761ec3c6b18f133751fff7510d8316120b00572593adb6c9f0cc6c3348bf9c4e033eb9c28820e441076518262f9596a608766#npm:2.1.1"],\
+            ["ajv-formats", "virtual:7bba23ed424c6abb31032cb1b3cb6fa70f616480b2d8678ea7750303033c4b84a0af7553dd3d0e698c34d82a01df49a6958beaba5f04e479158578190d6ffe29#npm:2.1.1"],\
             ["@types/ajv", null],\
             ["ajv", "npm:8.12.0"]\
           ],\
@@ -42728,6 +42728,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/ci-info-npm-3.7.1-fd86862c3f-72d93d5101.zip/node_modules/ci-info/",\
           "packageDependencies": [\
             ["ci-info", "npm:3.7.1"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:3.8.0", {\
+          "packageLocation": "./.yarn/cache/ci-info-npm-3.8.0-d56a0b67d6-d0a4d31604.zip/node_modules/ci-info/",\
+          "packageDependencies": [\
+            ["ci-info", "npm:3.8.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -59428,6 +59435,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["is-wsl", "npm:2.2.0"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:8.4.2", {\
+          "packageLocation": "./.yarn/unplugged/open-npm-8.4.2-1f763e8b75/node_modules/open/",\
+          "packageDependencies": [\
+            ["open", "npm:8.4.2"],\
+            ["define-lazy-prop", "npm:2.0.0"],\
+            ["is-docker", "npm:2.2.1"],\
+            ["is-wsl", "npm:2.2.0"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["opentracing", [\
@@ -66006,22 +66023,22 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["serverless", [\
-        ["npm:3.27.0", {\
-          "packageLocation": "./.yarn/unplugged/serverless-npm-3.27.0-e5ea8b1ce2/node_modules/serverless/",\
+        ["npm:3.28.0", {\
+          "packageLocation": "./.yarn/unplugged/serverless-npm-3.28.0-7bba23ed42/node_modules/serverless/",\
           "packageDependencies": [\
-            ["serverless", "npm:3.27.0"],\
+            ["serverless", "npm:3.28.0"],\
             ["@serverless/dashboard-plugin", "npm:6.2.3"],\
             ["@serverless/platform-client", "npm:4.3.2"],\
             ["@serverless/utils", "npm:6.8.2"],\
             ["ajv", "npm:8.12.0"],\
-            ["ajv-formats", "virtual:e5ea8b1ce2df77e910b34f56109761ec3c6b18f133751fff7510d8316120b00572593adb6c9f0cc6c3348bf9c4e033eb9c28820e441076518262f9596a608766#npm:2.1.1"],\
+            ["ajv-formats", "virtual:7bba23ed424c6abb31032cb1b3cb6fa70f616480b2d8678ea7750303033c4b84a0af7553dd3d0e698c34d82a01df49a6958beaba5f04e479158578190d6ffe29#npm:2.1.1"],\
             ["archiver", "npm:5.3.1"],\
             ["aws-sdk", "npm:2.1307.0"],\
             ["bluebird", "npm:3.7.2"],\
             ["cachedir", "npm:2.3.0"],\
             ["chalk", "npm:4.1.2"],\
             ["child-process-ext", "npm:2.1.1"],\
-            ["ci-info", "npm:3.7.1"],\
+            ["ci-info", "npm:3.8.0"],\
             ["cli-progress-footer", "npm:2.3.2"],\
             ["d", "npm:1.0.1"],\
             ["dayjs", "npm:1.11.7"],\
@@ -66048,7 +66065,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["node-fetch", "virtual:c348ce2f73a94191cec39cd794b8a8075493c01012889bf632d1545e59b1f7db7fbaec173636b80c08657fe39329bd67269c646b7dcc7bf62d09ce6a36dc829f#npm:2.6.9"],\
             ["npm-registry-utilities", "npm:1.0.0"],\
             ["object-hash", "npm:3.0.0"],\
-            ["open", "npm:8.4.0"],\
+            ["open", "npm:8.4.2"],\
             ["path2", "npm:0.1.0"],\
             ["process-utils", "npm:4.0.0"],\
             ["promise-queue", "npm:2.2.5"],\
@@ -66104,7 +66121,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["bluebird", "npm:3.7.2"],\
             ["mime", "npm:2.4.6"],\
             ["minimatch", "npm:3.0.4"],\
-            ["serverless", "npm:3.27.0"]\
+            ["serverless", "npm:3.28.0"]\
           ],\
           "packagePeers": [\
             "@types/serverless",\
@@ -66137,7 +66154,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["is-builtin-module", "npm:3.2.0"],\
             ["lodash", "npm:4.17.21"],\
             ["semver", "npm:7.3.8"],\
-            ["serverless", "npm:3.27.0"],\
+            ["serverless", "npm:3.28.0"],\
             ["ts-node", "virtual:30b1199b5227dbad580211d9f8cb8cb9e7012d68260f6ac74fa340e96315748307d8c51ddf07cce67ed45193abe489444670f6333ef83fac5c0c8944e2503c7c#npm:9.1.1"],\
             ["typescript", null],\
             ["webpack", null]\

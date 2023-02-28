@@ -132,6 +132,34 @@ describe('Project Data Provider', () => {
           new TypeError('status is unknown'),
         );
       });
+      describe('traineeProject', () => {
+        test('if doesnt exist it returns as false', () => {
+          const project = getGraphQLProject();
+          project.flatData.traineeProject = null;
+          const { traineeProject } = parseProjectToDataObject(project);
+          expect(traineeProject).toEqual(false);
+        });
+        test('returns if available', () => {
+          const project = getGraphQLProject();
+          project.flatData.traineeProject = true;
+          const { traineeProject } = parseProjectToDataObject(project);
+          expect(traineeProject).toEqual(true);
+        });
+      });
+      describe('opportunitiesLink', () => {
+        test('if doesnt exist it returns as false', () => {
+          const project = getGraphQLProject();
+          project.flatData.opportunitiesLink = null;
+          const { opportunitiesLink } = parseProjectToDataObject(project);
+          expect(opportunitiesLink).toBeUndefined();
+        });
+        test('returns if available', () => {
+          const project = getGraphQLProject();
+          project.flatData.opportunitiesLink = 'https://link';
+          const { opportunitiesLink } = parseProjectToDataObject(project);
+          expect(opportunitiesLink).toEqual('https://link');
+        });
+      });
 
       describe('members', () => {
         test('undefined members returns empty array', () => {

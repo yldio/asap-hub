@@ -46,6 +46,8 @@ export const getProjectDataObject = (): gp2Model.ProjectDataObject => ({
       title: 'Project resource title',
     },
   ],
+  traineeProject: false,
+  opportunitiesLink: 'http://opportunities',
 });
 export const getProjectUpdateDataObject =
   (): gp2Model.ProjectUpdateDataObject => ({
@@ -147,5 +149,7 @@ export const getGraphQLProject = (): NonNullable<
     leadEmail: 'peter@parker.com',
     milestones: [getGraphQLProjectMilestone()],
     resources: [getGraphQLProjectResource()],
+    traineeProject: false,
+    opportunitiesLink: 'http://opportunities',
   },
 });

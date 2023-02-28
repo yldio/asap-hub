@@ -29,6 +29,7 @@ const mockedProject: gp2.ProjectResponse = {
     },
   ],
   resources: projectResources,
+  traineeProject: false,
 };
 
 export const createProjectResponse = (

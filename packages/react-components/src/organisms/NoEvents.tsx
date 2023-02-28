@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { calendarIcon } from '../icons';
-import { perRem } from '../pixels';
+import { perRem, rem } from '../pixels';
 import { charcoal, Headline4, Link, Paragraph } from '..';
 
 const wrapperStyle = css({

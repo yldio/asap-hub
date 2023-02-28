@@ -6,6 +6,7 @@ import {
   CalendarController,
   decodeTokenFactory,
   errorHandlerFactory,
+  EventController,
   getHttpLogger,
   HttpLogger,
   Logger,
@@ -44,7 +45,7 @@ import {
 import Calendars from './controllers/calendars';
 import Dashboard, { DashboardController } from './controllers/dashboard';
 import Discover, { DiscoverController } from './controllers/discover';
-import Events, { EventController } from './controllers/events';
+import Events from './controllers/events';
 import Groups, { GroupController } from './controllers/groups';
 import Labs, { LabsController } from './controllers/labs';
 import News, { NewsController } from './controllers/news';

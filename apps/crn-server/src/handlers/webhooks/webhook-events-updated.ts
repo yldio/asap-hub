@@ -1,9 +1,9 @@
-import { CalendarDataObject } from '@asap-hub/model';
 import {
-  CalendarDataProvider,
   getJWTCredentialsFactory,
+  syncCalendarFactory,
+  syncEventFactory,
+  webhookEventUpdatedHandlerFactory,
 } from '@asap-hub/server-common';
-import { framework as lambda } from '@asap-hub/services-common';
 import {
   InputCalendar,
   RestCalendar,
@@ -11,7 +11,6 @@ import {
   SquidexGraphql,
   SquidexRest,
 } from '@asap-hub/squidex';
-import Boom from '@hapi/boom';
 import { Handler } from 'aws-lambda';
 import {
   appName,
@@ -25,76 +24,11 @@ import { CalendarSquidexDataProvider } from '../../data-providers/calendars.data
 import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
-import {
-  SyncCalendar,
-  syncCalendarFactory,
-} from '../../utils/sync-google-calendar';
-import { syncEventFactory } from '../../utils/sync-google-event';
 
 const getJWTCredentials = getJWTCredentialsFactory({
   googleApiCredentialsSecretId,
   region,
 });
-export const webhookEventUpdatedHandlerFactory = (
-  calendarDataProvider: CalendarDataProvider,
-  syncCalendar: SyncCalendar,
-): lambda.Handler =>
-  lambda.http(async (request) => {
-    logger.debug(JSON.stringify(request, null, 2), 'Request');
-
-    const channelToken = request.headers['x-goog-channel-token'];
-    if (!channelToken) {
-      throw Boom.unauthorized('Missing x-goog-channel-token header');
-    }
-
-    if (channelToken !== googleApiToken) {
-      throw Boom.forbidden('Channel token doesnt match');
-    }
-
-    const resourceId = request.headers['x-goog-resource-id'];
-    if (!resourceId) {
-      throw Boom.badRequest('Missing x-goog-resource-id header');
-    }
-
-    let calendar: CalendarDataObject;
-
-    try {
-      const calendars = await calendarDataProvider.fetch({
-        resourceId,
-      });
-
-      if (!calendars.items[0]) {
-        throw new Error('Failed to fetch calendar by resource ID.');
-      }
-
-      [calendar] = calendars.items;
-    } catch (error) {
-      logger.error(error, 'Error fetching calendar');
-      throw Boom.badGateway();
-    }
-
-    const squidexCalendarId = calendar.id;
-    const { googleCalendarId } = calendar;
-    const syncToken = calendar.syncToken || undefined;
-
-    const nextSyncToken = await syncCalendar(
-      googleCalendarId,
-      squidexCalendarId,
-      syncToken,
-    );
-
-    if (nextSyncToken) {
-      await calendarDataProvider
-        .update(squidexCalendarId, { syncToken: nextSyncToken })
-        .catch((err) => {
-          logger.error(err, 'Error updating syncToken');
-        });
-    }
-
-    return {
-      statusCode: 200,
-    };
-  });
 
 const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
   appName,
@@ -114,10 +48,16 @@ const calendarDataProvider = new CalendarSquidexDataProvider(
   squidexGraphqlClient,
 );
 const syncCalendar = syncCalendarFactory(
-  syncEventFactory(new Events(squidexGraphqlClient, eventRestClient)),
+  syncEventFactory(new Events(squidexGraphqlClient, eventRestClient), logger),
   getJWTCredentials,
+  logger,
 );
 
 export const handler: Handler = sentryWrapper(
-  webhookEventUpdatedHandlerFactory(calendarDataProvider, syncCalendar),
+  webhookEventUpdatedHandlerFactory(
+    calendarDataProvider,
+    syncCalendar,
+    logger,
+    { googleApiToken },
+  ),
 );

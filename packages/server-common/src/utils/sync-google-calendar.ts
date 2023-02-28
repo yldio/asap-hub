@@ -1,7 +1,7 @@
-import { GetJWTCredentials } from '@asap-hub/server-common';
 import { Auth, calendar_v3 as calendarV3, google } from 'googleapis';
 import { DateTime } from 'luxon';
-import logger from './logger';
+import { GetJWTCredentials } from './aws-secret-manager';
+import { Logger } from './logger';
 import { SyncEvent } from './sync-google-event';
 
 type GaxiosError = Error & {
@@ -19,6 +19,7 @@ export type SyncCalendar = (
 export const syncCalendarFactory = (
   syncEvent: SyncEvent,
   getJWTCredentials: GetJWTCredentials,
+  logger: Logger,
 ): SyncCalendar => {
   const fetchEvents = async (
     googleCalendarId: string,

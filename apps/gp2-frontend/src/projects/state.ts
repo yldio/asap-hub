@@ -2,13 +2,11 @@ import { gp2 } from '@asap-hub/model';
 import {
   atom,
   atomFamily,
-  ReadWriteSelectorOptions,
   selector,
   selectorFamily,
-  SetRecoilState,
+  useRecoilCallback,
   useRecoilState,
   useRecoilValue,
-  useSetRecoilState,
 } from 'recoil';
 import { authorizationState } from '../auth/state';
 import { getProject, getProjects, putProjectResources } from './api';
@@ -70,16 +68,8 @@ export const usePutProjectResources = (id: string) => {
 
 const useSetProjectItem = () => {
   const [refresh, setRefresh] = useRecoilState(refreshProjectsState);
-  const setProjectItem = useSetRecoilState(setProject);
-  return (project: gp2.ProjectResponse) => {
-    setProjectItem(project);
+  return useRecoilCallback(({ set }) => (project: gp2.ProjectResponse) => {
     setRefresh(refresh + 1);
-  };
-};
-
-const setProject = selector<gp2.ProjectResponse>({
-  key: 'setProject',
-  set: ({ set }: { set: SetRecoilState }, project: gp2.ProjectResponse) => {
     set(projectState(project.id), project);
-  },
-} as unknown as ReadWriteSelectorOptions<gp2.ProjectResponse>);
+  });
+};

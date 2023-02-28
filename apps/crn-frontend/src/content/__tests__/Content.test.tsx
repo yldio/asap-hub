@@ -1,13 +1,11 @@
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { render, waitFor, screen } from '@testing-library/react';
-import { PageResponse } from '@asap-hub/model';
 import { createPageResponse } from '@asap-hub/fixtures';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 
 import Content from '../Content';
 import { getPageByPath } from '../api';
-import { refreshPageState } from '../state';
 
 jest.mock('../api');
 
@@ -19,15 +17,9 @@ const mockGetPageByPath = getPageByPath as jest.MockedFunction<
   typeof getPageByPath
 >;
 
-const page: PageResponse = createPageResponse('1');
-
 const renderPage = async (pageId: string = 'privacy-policy') => {
   const result = render(
-    <RecoilRoot
-      initializeState={({ set }) =>
-        set(refreshPageState(page.id), Math.random())
-      }
-    >
+    <RecoilRoot>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -47,21 +39,23 @@ const renderPage = async (pageId: string = 'privacy-policy') => {
   return result;
 };
 
-describe('content page', () => {
-  it('renders a page title', async () => {
-    mockGetPageByPath.mockResolvedValue(page);
-    await renderPage();
-
-    expect(screen.getByRole('heading', { name: /Page 1 text/i })).toBeVisible();
-    expect(
-      screen.getByRole('heading', { name: /Page 1 title/i }),
-    ).toBeVisible();
+it('renders a page title', async () => {
+  mockGetPageByPath.mockResolvedValue({
+    ...createPageResponse('1'),
+    title: 'Example Title',
+    text: 'Example Description',
   });
+  await renderPage();
 
-  it('renders the 404 page for missing content', async () => {
-    mockGetPageByPath.mockResolvedValue(undefined);
+  expect(screen.getByRole('heading', { name: /Example Title/ })).toBeVisible();
+  expect(screen.getByText(/Example Description/)).toBeVisible();
+  expect(mockGetPageByPath).toHaveBeenCalled();
+});
 
-    await renderPage();
-    expect(await screen.findByText(/sorry.+page/i)).toBeVisible();
-  });
+it('renders the 404 page for missing content', async () => {
+  mockGetPageByPath.mockResolvedValue(undefined);
+
+  await renderPage();
+  expect(await screen.findByText(/sorry.+page/i)).toBeVisible();
+  expect(mockGetPageByPath).toHaveBeenCalled();
 });

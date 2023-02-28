@@ -18,7 +18,7 @@ import {
   getUser,
   patchUser,
 } from '../api';
-import { refreshUserState } from '../state';
+import { refreshCohortsState, refreshUserState } from '../state';
 import UserDetail from '../UserDetail';
 
 jest.mock('../api');
@@ -28,6 +28,7 @@ const renderUserDetail = async (id: string) => {
     <RecoilRoot
       initializeState={({ set }) => {
         set(refreshUserState(id), Math.random());
+        set(refreshCohortsState, Math.random());
       }}
     >
       <Suspense fallback="loading">

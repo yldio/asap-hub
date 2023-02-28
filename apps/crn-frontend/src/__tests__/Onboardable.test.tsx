@@ -10,7 +10,6 @@ import { Suspense } from 'react';
 import { Auth0Provider, WhenReady } from '../auth/test-utils';
 import Onboardable from '../Onboardable';
 import { getUser } from '../network/users/api';
-import { refreshUserState } from '../network/users/state';
 
 jest.mock('../network/users/api');
 const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
@@ -49,11 +48,7 @@ it('is undefined when there is no logged in user', async () => {
 });
 
 const renderOnboardable = (onboarded: boolean) => (
-  <RecoilRoot
-    initializeState={({ set }) => {
-      set(refreshUserState(onboardableUser.id), Math.random());
-    }}
-  >
+  <RecoilRoot>
     <Suspense fallback="loading">
       <Auth0Provider user={{ id: onboardableUser.id, onboarded }}>
         <WhenReady>

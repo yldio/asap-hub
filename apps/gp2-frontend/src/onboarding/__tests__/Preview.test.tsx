@@ -26,7 +26,7 @@ import {
   patchUser,
   postUserAvatar,
 } from '../../users/api';
-import { refreshUserState } from '../../users/state';
+import { refreshCohortsState, refreshUserState } from '../../users/state';
 import Preview from '../Preview';
 
 jest.mock('browser-image-compression');
@@ -54,6 +54,7 @@ const renderPreview = async (
     <RecoilRoot
       initializeState={({ set }) => {
         set(refreshUserState(id), Math.random());
+        set(refreshCohortsState, Math.random());
       }}
     >
       <Suspense fallback="loading">

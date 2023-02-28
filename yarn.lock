@@ -531,7 +531,7 @@ __metadata:
     react-router-last-location: 2.0.1
     react-scripts: 5.0.1
     react-test-renderer: 17.0.2
-    recoil: "patch:recoil@^0.1.2#../../patches/recoil.patch"
+    recoil: 0.7.6
     stream: "npm:stream-browserify@3.0.0"
     typescript: 4.8.4
     use-debounce: 8.0.4
@@ -993,7 +993,7 @@ __metadata:
     react-router-last-location: 2.0.1
     react-scripts: 5.0.1
     react-test-renderer: 17.0.2
-    recoil: "patch:recoil@^0.1.2#../../patches/recoil.patch"
+    recoil: 0.7.6
     typescript: 4.8.4
     use-debounce: 8.0.4
     use-deep-compare-effect: 1.6.1
@@ -26264,6 +26264,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"hamt_plus@npm:1.0.2":
+  version: 1.0.2
+  resolution: "hamt_plus@npm:1.0.2"
+  checksum: af26ea32db03009019cc83dfa9411521a2fa16079443de1a502c9be46d8b3c975acda8ed93fc5750ef08d3186d35901e2d8cfe717dd54bea67b358601fa74e4c
+  languageName: node
+  linkType: hard
+
 "handle-thing@npm:^2.0.0":
   version: 2.0.1
   resolution: "handle-thing@npm:2.0.1"
@@ -37026,9 +37033,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"recoil@npm:^0.1.2":
-  version: 0.1.3
-  resolution: "recoil@npm:0.1.3"
+"recoil@npm:0.7.6":
+  version: 0.7.6
+  resolution: "recoil@npm:0.7.6"
+  dependencies:
+    hamt_plus: 1.0.2
   peerDependencies:
     react: ">=16.13.1"
   peerDependenciesMeta:
@@ -37036,35 +37045,7 @@ __metadata:
       optional: true
     react-native:
       optional: true
-  checksum: 6a17e9430cf07188ae5245db4252de41cb14c0ebdc9e359f6634394e0486ee577440ce4d16cbd63e7b006514664123065a86bc7b206cd05c1dfd440816eb8937
-  languageName: node
-  linkType: hard
-
-"recoil@patch:recoil@^0.1.2#../../patches/recoil.patch::locator=%40asap-hub%2Fcrn-frontend%40workspace%3Aapps%2Fcrn-frontend":
-  version: 0.1.3
-  resolution: "recoil@patch:recoil@npm%3A0.1.3#../../patches/recoil.patch::version=0.1.3&hash=125d3b&locator=%40asap-hub%2Fcrn-frontend%40workspace%3Aapps%2Fcrn-frontend"
-  peerDependencies:
-    react: ">=16.13.1"
-  peerDependenciesMeta:
-    react-dom:
-      optional: true
-    react-native:
-      optional: true
-  checksum: e9bdb30a43e192675fc4dcd32a8457682b66dbd847c7ae088d1ca312a40ca91d1390caced43ff69b5a64907e46857f383d6fd005f8a257cc14f24c5bc2decada
-  languageName: node
-  linkType: hard
-
-"recoil@patch:recoil@^0.1.2#../../patches/recoil.patch::locator=%40asap-hub%2Fgp2-frontend%40workspace%3Aapps%2Fgp2-frontend":
-  version: 0.1.3
-  resolution: "recoil@patch:recoil@npm%3A0.1.3#../../patches/recoil.patch::version=0.1.3&hash=125d3b&locator=%40asap-hub%2Fgp2-frontend%40workspace%3Aapps%2Fgp2-frontend"
-  peerDependencies:
-    react: ">=16.13.1"
-  peerDependenciesMeta:
-    react-dom:
-      optional: true
-    react-native:
-      optional: true
-  checksum: e9bdb30a43e192675fc4dcd32a8457682b66dbd847c7ae088d1ca312a40ca91d1390caced43ff69b5a64907e46857f383d6fd005f8a257cc14f24c5bc2decada
+  checksum: 2b31dd29a7e0b369bc986a16f7253006776845144684c9e38bb6760e4ea954c5d7dc682aaf88e815e69098b8dea3ff62b6fa4e6c156157a29d2d9cb824db1779
   languageName: node
   linkType: hard
 

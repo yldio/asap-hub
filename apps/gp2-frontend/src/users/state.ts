@@ -99,18 +99,22 @@ export const usePostUserAvatarById = (id: string) => {
   };
 };
 
-const contributingCohortsState = atom<gp2.ContributingCohortResponse[]>({
-  key: 'contributingCohortsState',
-  default: [],
+export const refreshCohortsState = atom<number>({
+  key: 'refreshChorts',
+  default: 0,
 });
-
-export const contributingCohortSelector = selector({
+const contributingCohortSelector = selector({
   key: 'contributingCohorts',
   get: ({ get }) => {
-    get(contributingCohortsState);
+    get(refreshCohortsState);
     const authorization = get(authorizationState);
     return getContributingCohorts(authorization);
   },
 });
+const contributingCohortsState = atom<gp2.ContributingCohortResponse[]>({
+  key: 'contributingCohortsState',
+  default: contributingCohortSelector,
+});
+
 export const useContributingCohorts = () =>
-  useRecoilValue(contributingCohortSelector);
+  useRecoilValue(contributingCohortsState);

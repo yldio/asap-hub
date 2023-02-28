@@ -156,7 +156,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                         noEventsComponent={
                           <NoEvents
                             link={events({}).upcoming({}).$}
-                            type="user"
+                            type="member"
                           />
                         }
                       />
@@ -172,7 +172,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                           <NoEvents
                             past
                             link={events({}).past({}).$}
-                            type="user"
+                            type="member"
                           />
                         }
                       />

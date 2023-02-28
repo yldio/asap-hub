@@ -14,7 +14,7 @@ const iconStyles = css({
 const NoEvents: React.FC<{
   past?: boolean;
   link: string;
-  type: 'team' | 'interest group' | 'working group' | 'user';
+  type: 'team' | 'interest group' | 'working group' | 'member';
 }> = ({ past, link, type }) => {
   const eventPeriod = past ? 'Past' : 'Upcoming';
   const lowerEventPeriod = eventPeriod.toLocaleLowerCase();

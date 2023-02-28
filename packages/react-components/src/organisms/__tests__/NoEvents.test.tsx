@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { ComponentProps } from 'react';
 import NoEvents from '../NoEvents';
 
 it('renders the component', () => {
@@ -29,23 +30,19 @@ describe('upcoming and past', () => {
 });
 
 describe('type', () => {
-  it('renders for teams', () => {
-    render(<NoEvents type="team" past={true} link="/pastEvents" />);
-
-    expect(screen.getByText(/This team doesn’t/i)).toBeInTheDocument();
-  });
-
-  it('renders for working group', () => {
-    render(<NoEvents type="working group" past={true} link="/pastEvents" />);
-
-    expect(screen.getByText(/This working group doesn’t/i)).toBeInTheDocument();
-  });
-
-  it('renders for interest group', () => {
-    render(<NoEvents type="interest group" past={true} link="/pastEvents" />);
-
-    expect(
-      screen.getByText(/This interest group doesn’t/i),
-    ).toBeInTheDocument();
-  });
+  it.each(['interest group', 'team', 'working group', 'member'])(
+    'renders for type',
+    (type) => {
+      render(
+        <NoEvents
+          type={type as ComponentProps<typeof NoEvents>['type']}
+          past={true}
+          link="/pastEvents"
+        />,
+      );
+      expect(
+        screen.getByText(new RegExp(`This ${type} doesn’t`)),
+      ).toBeInTheDocument();
+    },
+  );
 });

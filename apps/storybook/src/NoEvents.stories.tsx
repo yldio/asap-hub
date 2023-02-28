@@ -11,7 +11,7 @@ const props = (): ComponentProps<typeof NoEvents> => {
   const link = '';
   const type = select(
     'Type',
-    ['team', 'interest group', 'working group'],
+    ['team', 'interest group', 'working group', 'member'],
     'team',
   );
 

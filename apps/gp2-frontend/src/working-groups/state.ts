@@ -2,13 +2,11 @@ import { gp2 } from '@asap-hub/model';
 import {
   atom,
   atomFamily,
-  ReadWriteSelectorOptions,
   selector,
   selectorFamily,
-  SetRecoilState,
+  useRecoilCallback,
   useRecoilState,
   useRecoilValue,
-  useSetRecoilState,
 } from 'recoil';
 import { authorizationState } from '../auth/state';
 import {
@@ -84,22 +82,14 @@ export const usePutWorkingGroupResources = (id: string) => {
 
 export const useSetWorkingGroupItem = () => {
   const [refresh, setRefresh] = useRecoilState(refreshWorkingGroupNetworkState);
-  const setWorkingGroupItem = useSetRecoilState(setWorkingGroup);
-  return (workingGroup: gp2.WorkingGroupResponse) => {
-    setWorkingGroupItem(workingGroup);
-    setRefresh(refresh + 1);
-  };
+  return useRecoilCallback(
+    ({ set }) =>
+      (workingGroup: gp2.WorkingGroupResponse) => {
+        set(workingGroupState(workingGroup.id), workingGroup);
+        setRefresh(refresh + 1);
+      },
+  );
 };
-
-const setWorkingGroup = selector<gp2.WorkingGroupResponse>({
-  key: 'setWorkingGroup',
-  set: (
-    { set }: { set: SetRecoilState },
-    workingGroup: gp2.WorkingGroupResponse,
-  ) => {
-    set(workingGroupState(workingGroup.id), workingGroup);
-  },
-} as unknown as ReadWriteSelectorOptions<gp2.WorkingGroupResponse>);
 
 export const refreshWorkingGroupsState = atom<number>({
   key: 'refreshWorkingGroups',

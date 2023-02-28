@@ -26,7 +26,7 @@
     "ajv-formats": "2.1.1",
     "apr-intercept": "3.0.4",
     "aws-lambda": "1.0.7",
-    "aws-sdk": "2.1322.0",
+    "aws-sdk": "2.1324.0",
     "csv-parse": "4.16.3",
     "express": "4.18.2",
     "googleapis": "67.1.1",

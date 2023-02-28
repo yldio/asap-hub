@@ -1,5 +1,6 @@
 import React, { ComponentProps, useContext } from 'react';
 import { css } from '@emotion/react';
+import { isEnabled } from '@asap-hub/flags';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { sharedResearch } from '@asap-hub/routing';
@@ -42,6 +43,7 @@ type SharedResearchOutputProps = Pick<
   | 'environments'
   | 'subtype'
   | 'id'
+  | 'published'
 > &
   ComponentProps<typeof SharedResearchOutputHeaderCard> & {
     backHref: string;
@@ -53,6 +55,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   usageNotes,
   contactEmails,
   id,
+  published,
   ...props
 }) => {
   const isGrantDocument = ['Grant Document', 'Presentation'].includes(
@@ -67,13 +70,18 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
     ...props.tags,
   ];
 
-  const { canCreateUpdate } = useContext(ResearchOutputPermissionsContext);
+  const { permissions } = useContext(ResearchOutputPermissionsContext);
 
+  const canEdit =
+    (isEnabled('DRAFT_RESEARCH_OUTPUT') &&
+      permissions.saveDraft &&
+      !published) ||
+    (permissions.publish && published);
   return (
     <div css={containerStyles}>
       <div css={buttonsContainer}>
         <BackLink href={backHref} />
-        {canCreateUpdate && !isGrantDocument && (
+        {canEdit && !isGrantDocument && (
           <div css={editButtonContainer}>
             <Link
               href={

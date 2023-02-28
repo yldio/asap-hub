@@ -45,17 +45,25 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
 
   const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
 
-  const { canCreateUpdate } = useContext(ResearchOutputPermissionsContext);
+  const { permissions } = useContext(ResearchOutputPermissionsContext);
 
-  const createResearchOutput = usePostResearchOutput();
-  const updateResearchOutput = usePutResearchOutput();
+  const createResearchOutput = usePostResearchOutput({ published: true });
+  const createDraftResearchOutput = usePostResearchOutput({ published: false });
+  const updateResearchOutput = usePutResearchOutput({ published: true });
+  const updateDraftResearchOutput = usePutResearchOutput({ published: false });
 
   const getLabSuggestions = useLabSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();
   const getTeamSuggestions = useTeamSuggestions();
   const researchTags = useResearchTags();
 
-  if (canCreateUpdate && workingGroup) {
+  const published = researchOutputData ? !!researchOutputData.published : false;
+
+  const isForbidden =
+    (!permissions.saveDraft && !permissions.publish) ||
+    (published && permissions.saveDraft && !permissions.publish);
+
+  if (!isForbidden && workingGroup) {
     return (
       <Frame title="Share Working Group Research Output">
         <ResearchOutputHeader
@@ -92,6 +100,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
             }),
           )}
           authorsRequired
+          published={published}
           onSave={(output) =>
             researchOutputData
               ? updateResearchOutput(researchOutputData.id, {
@@ -99,6 +108,17 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
                   workingGroups: [workingGroupId],
                 }).catch(handleError(['/link', '/title'], setErrors))
               : createResearchOutput({
+                  ...output,
+                  workingGroups: [workingGroupId],
+                }).catch(handleError(['/link', '/title'], setErrors))
+          }
+          onSaveDraft={(output) =>
+            researchOutputData
+              ? updateDraftResearchOutput(researchOutputData.id, {
+                  ...output,
+                  workingGroups: [workingGroupId],
+                }).catch(handleError(['/link', '/title'], setErrors))
+              : createDraftResearchOutput({
                   ...output,
                   workingGroups: [workingGroupId],
                 }).catch(handleError(['/link', '/title'], setErrors))

@@ -17,6 +17,7 @@ const props: ComponentProps<typeof Form> = {
   dirty: false,
   children: () => null,
   onSave: () => Promise.resolve(),
+  onSaveDraft: () => Promise.resolve(),
 };
 
 let getUserConfirmation!: jest.MockedFunction<

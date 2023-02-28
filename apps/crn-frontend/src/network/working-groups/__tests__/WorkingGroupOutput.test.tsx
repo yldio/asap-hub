@@ -6,6 +6,7 @@ import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import { BackendError } from '@asap-hub/frontend-utils';
 import {
   ResearchOutputResponse,
+  UserPermissions,
   ValidationErrorResponse,
 } from '@asap-hub/model';
 import {
@@ -16,6 +17,11 @@ import {
   network,
   WorkingGroupOutputDocumentTypeParameter,
 } from '@asap-hub/routing';
+import {
+  fullPermissions,
+  noPermissions,
+  partialPermissions,
+} from '@asap-hub/validation';
 import {
   render,
   screen,
@@ -97,6 +103,7 @@ const mandatoryFields = async (
   userEvent.click(screen.getByRole('textbox', { name: /Teams/i }));
   userEvent.click(screen.getByText('Abu-Remaileh, M 1'));
   const button = screen.getByRole('button', { name: /Publish/i });
+  const saveDraftButton = screen.getByRole('button', { name: /Save Draft/i });
   return {
     publish: async () => {
       userEvent.click(button);
@@ -104,11 +111,17 @@ const mandatoryFields = async (
         expect(button).toBeEnabled();
       });
     },
+    saveDraft: async () => {
+      userEvent.click(saveDraftButton);
+      await waitFor(() => {
+        expect(saveDraftButton).toBeEnabled();
+      });
+    },
   };
 };
 
 const renderPage = async ({
-  canCreateUpdate = true,
+  permissions = fullPermissions,
   workingGroupId = 'wg1',
   workingGroupOutputDocumentType = 'article',
   researchOutputData,
@@ -123,7 +136,7 @@ const renderPage = async ({
 }: {
   workingGroupId?: string;
   workingGroupOutputDocumentType?: WorkingGroupOutputDocumentTypeParameter;
-  canCreateUpdate?: boolean;
+  permissions?: UserPermissions;
   researchOutputData?: ResearchOutputResponse;
   history?: History;
 } = {}) => {
@@ -146,7 +159,7 @@ const renderPage = async ({
             <WhenReady>
               <Router history={history}>
                 <ResearchOutputPermissionsContext.Provider
-                  value={{ canCreateUpdate }}
+                  value={{ permissions }}
                 >
                   <Route path={path}>
                     <WorkingGroupOutput
@@ -182,8 +195,8 @@ it('Renders the working group research output form with relevant fields', async 
   ).toBeVisible();
 });
 
-it('Shows NotFoundPage when canCreate in ResearchOutputPermissions is false', async () => {
-  await renderPage({ workingGroupId: '42', canCreateUpdate: false });
+it('Shows NotFoundPage when user has no permissions', async () => {
+  await renderPage({ workingGroupId: '42', permissions: noPermissions });
   expect(
     screen.queryByRole('heading', { name: /Share/i }),
   ).not.toBeInTheDocument();
@@ -259,6 +272,7 @@ it('can submit a form when form data is valid', async () => {
       usedInPublication: undefined,
     },
     expect.anything(),
+    true,
   );
   await waitFor(() => {
     expect(history.location.pathname).toBe(
@@ -266,6 +280,94 @@ it('can submit a form when form data is valid', async () => {
     );
   });
 });
+
+it('can save draft when form data is valid', async () => {
+  const workingGroupId = 'wg-42';
+  const link = 'https://example42.com';
+  const title = 'example42 title';
+  const description = 'example42 description';
+  const type = 'Preprint';
+  const doi = '10.0777';
+  const workingGroupOutputDocumentType = 'article';
+
+  const history = createMemoryHistory({
+    initialEntries: [
+      network({})
+        .workingGroups({})
+        .workingGroup({ workingGroupId })
+        .createOutput({ workingGroupOutputDocumentType }).$,
+    ],
+  });
+
+  await renderPage({
+    workingGroupId,
+    workingGroupOutputDocumentType,
+    history,
+  });
+
+  const { saveDraft } = await mandatoryFields({
+    link,
+    title,
+    description,
+    type,
+    doi,
+  });
+
+  userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
+  userEvent.click(screen.getByText('Example 1 Lab'));
+
+  await saveDraft();
+
+  expect(mockCreateResearchOutput).toHaveBeenCalledWith(
+    {
+      doi,
+      documentType: 'Article',
+      tags: [],
+      sharingStatus: 'Network Only',
+      teams: ['t0'],
+      link,
+      title,
+      description,
+      type,
+      labs: ['l0'],
+      authors: [
+        {
+          userId: 'user-id-2',
+        },
+      ],
+      methods: [],
+      organisms: [],
+      environments: [],
+      workingGroups: ['wg-42'],
+      publishDate: undefined,
+      subtype: undefined,
+      usageNotes: '',
+      asapFunded: undefined,
+      usedInPublication: undefined,
+    },
+    expect.anything(),
+    false,
+  );
+  await waitFor(() => {
+    expect(history.location.pathname).toBe(
+      '/shared-research/research-output-id',
+    );
+  });
+});
+
+it.each([{ permissions: partialPermissions }, { permissions: noPermissions }])(
+  'displays sorry page when user has not saveDraft permission and the research output is published',
+  async ({ permissions }) => {
+    await renderPage({
+      permissions,
+      researchOutputData: {
+        ...createResearchOutputResponse(),
+        published: true,
+      },
+    });
+    expect(screen.getByText(/sorry.+page/i)).toBeVisible();
+  },
+);
 
 it('will show server side validation error for link', async () => {
   const validationResponse: ValidationErrorResponse = {
@@ -326,53 +428,61 @@ it('will toast server side errors for unknown errors', async () => {
   );
 });
 
-it('can edit a report working group research output', async () => {
-  const id = 'RO-ID';
-  const workingGroupId = 'wg-42';
-  const link = 'https://example42.com';
-  const title = 'example42 title';
-  const description = 'example42 description';
-  const workingGroupOutputDocumentType = 'report';
+it.each([
+  { status: 'draft', buttonName: 'Save Draft', published: false },
+  { status: 'published', buttonName: 'Save', published: true },
+])(
+  'can edit a $status report working group research output',
+  async ({ buttonName, published }) => {
+    const id = 'RO-ID';
+    const workingGroupId = 'wg-42';
+    const link = 'https://example42.com';
+    const title = 'example42 title';
+    const description = 'example42 description';
+    const workingGroupOutputDocumentType = 'report';
 
-  const history = createMemoryHistory({
-    initialEntries: [
-      network({})
-        .workingGroups({})
-        .workingGroup({ workingGroupId })
-        .createOutput({ workingGroupOutputDocumentType }).$,
-    ],
-  });
-  await renderPage({
-    workingGroupId,
-    workingGroupOutputDocumentType,
-    researchOutputData: {
-      ...createResearchOutputResponse(),
+    const history = createMemoryHistory({
+      initialEntries: [
+        network({})
+          .workingGroups({})
+          .workingGroup({ workingGroupId })
+          .createOutput({ workingGroupOutputDocumentType }).$,
+      ],
+    });
+    await renderPage({
+      workingGroupId,
+      workingGroupOutputDocumentType,
+      researchOutputData: {
+        ...createResearchOutputResponse(),
+        id,
+        link,
+        title,
+        description,
+        published,
+      },
+      history,
+    });
+
+    const button = screen.getByRole('button', { name: buttonName });
+    userEvent.click(button);
+    await waitFor(() => {
+      expect(button).toBeEnabled();
+      expect(history.location.pathname).toBe(
+        '/shared-research/research-output-id',
+      );
+    });
+
+    expect(mockUpdateResearchOutput).toHaveBeenCalledWith(
       id,
-      link,
-      title,
-      description,
-    },
-    history,
-  });
-
-  const button = screen.getByRole('button', { name: /Save/i });
-  userEvent.click(button);
-  await waitFor(() => {
-    expect(button).toBeEnabled();
-    expect(history.location.pathname).toBe(
-      '/shared-research/research-output-id',
+      expect.objectContaining({
+        documentType: 'Report',
+        link,
+        title,
+        description,
+        workingGroups: [workingGroupId],
+      }),
+      expect.anything(),
+      published,
     );
-  });
-
-  expect(mockUpdateResearchOutput).toHaveBeenCalledWith(
-    id,
-    expect.objectContaining({
-      documentType: 'Report',
-      link,
-      title,
-      description,
-      workingGroups: [workingGroupId],
-    }),
-    expect.anything(),
-  );
-});
+  },
+);

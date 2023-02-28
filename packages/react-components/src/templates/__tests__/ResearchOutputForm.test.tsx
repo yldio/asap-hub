@@ -1,3 +1,5 @@
+import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
+import { fullPermissions, partialPermissions } from '@asap-hub/validation';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { StaticRouter, Router } from 'react-router-dom';
@@ -16,6 +18,7 @@ import {
   researchOutputDocumentTypeToType,
   ResearchOutputType,
   ResearchTagResponse,
+  UserPermissions,
 } from '@asap-hub/model';
 import { fireEvent } from '@testing-library/dom';
 import {
@@ -29,9 +32,12 @@ import { createMemoryHistory, History } from 'history';
 import ResearchOutputForm from '../ResearchOutputForm';
 import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 import { createIdentifierField } from '../../utils/research-output-form';
+import { fern, paper } from '../../colors';
 
 const props: ComponentProps<typeof ResearchOutputForm> = {
   onSave: jest.fn(() => Promise.resolve()),
+  onSaveDraft: jest.fn(() => Promise.resolve()),
+  published: false,
   tagSuggestions: [],
   researchTags: [],
   documentType: 'Article',
@@ -83,7 +89,13 @@ describe('createIdentifierField', () => {
 it('renders the form', async () => {
   render(
     <StaticRouter>
-      <ResearchOutputForm {...props} />
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          permissions: fullPermissions,
+        }}
+      >
+        <ResearchOutputForm {...props} />
+      </ResearchOutputPermissionsContext.Provider>
     </StaticRouter>,
   );
   expect(
@@ -95,10 +107,16 @@ it('renders the form', async () => {
 it('renders the edit form button when research output data is present', async () => {
   render(
     <StaticRouter>
-      <ResearchOutputForm
-        {...props}
-        researchOutputData={createResearchOutputResponse()}
-      />
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          permissions: fullPermissions,
+        }}
+      >
+        <ResearchOutputForm
+          {...props}
+          researchOutputData={createResearchOutputResponse()}
+        />
+      </ResearchOutputPermissionsContext.Provider>
     </StaticRouter>,
   );
 
@@ -122,12 +140,18 @@ it('pre populates the form with provided backend response', async () => {
   };
   await render(
     <StaticRouter>
-      <ResearchOutputForm
-        {...props}
-        documentType={'Dataset'}
-        typeOptions={Array.from(researchOutputDocumentTypeToType.Dataset)}
-        researchOutputData={researchOutputData}
-      />
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          permissions: fullPermissions,
+        }}
+      >
+        <ResearchOutputForm
+          {...props}
+          documentType={'Dataset'}
+          typeOptions={Array.from(researchOutputDocumentTypeToType.Dataset)}
+          researchOutputData={researchOutputData}
+        />
+      </ResearchOutputPermissionsContext.Provider>
     </StaticRouter>,
   );
 
@@ -200,12 +224,14 @@ it('displays current team within the form', async () => {
 describe('on submit', () => {
   let history!: History;
   const id = '42';
+  const saveDraftFn = jest.fn();
   const saveFn = jest.fn();
   const getLabSuggestions = jest.fn();
   const getAuthorSuggestions = jest.fn();
 
   beforeEach(() => {
     history = createMemoryHistory();
+    saveDraftFn.mockResolvedValue({ id } as ResearchOutputResponse);
     saveFn.mockResolvedValue({ id } as ResearchOutputResponse);
     getLabSuggestions.mockResolvedValue([]);
     getAuthorSuggestions.mockResolvedValue([]);
@@ -264,20 +290,28 @@ describe('on submit', () => {
     },
   ) => {
     render(
-      <Router history={history}>
-        <ResearchOutputForm
-          {...props}
-          selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
-          documentType={documentType}
-          typeOptions={Array.from(
-            researchOutputDocumentTypeToType[documentType],
-          )}
-          onSave={saveFn}
-          getLabSuggestions={getLabSuggestions}
-          getAuthorSuggestions={getAuthorSuggestions}
-          researchTags={researchTags}
-        />
-      </Router>,
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          permissions: fullPermissions,
+        }}
+      >
+        <Router history={history}>
+          <ResearchOutputForm
+            {...props}
+            selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
+            documentType={documentType}
+            typeOptions={Array.from(
+              researchOutputDocumentTypeToType[documentType],
+            )}
+            onSave={saveFn}
+            onSaveDraft={saveDraftFn}
+            getLabSuggestions={getLabSuggestions}
+            getAuthorSuggestions={getAuthorSuggestions}
+            researchTags={researchTags}
+          />
+        </Router>
+        ,
+      </ResearchOutputPermissionsContext.Provider>,
     );
 
     fireEvent.change(screen.getByLabelText(/url/i), {
@@ -678,5 +712,139 @@ describe('on submit', () => {
         [fieldName]: expected,
       });
     });
+  });
+
+  const saveDraft = async () => {
+    const button = screen.getByRole('button', { name: /Save Draft/i });
+    userEvent.click(button);
+
+    expect(
+      await screen.findByRole('button', { name: /Save Draft/i }),
+    ).toBeEnabled();
+    expect(
+      await screen.findByRole('button', { name: /Cancel/i }),
+    ).toBeEnabled();
+  };
+
+  it('can save draft with minimum data', async () => {
+    await setupForm();
+    await saveDraft();
+    expect(saveDraftFn).toHaveBeenLastCalledWith(expectedRequest);
+    expect(history.location.pathname).toEqual(`/shared-research/${id}`);
+  });
+});
+
+describe('form buttons', () => {
+  let history!: History;
+  const id = '42';
+  const saveFn = jest.fn();
+  const getLabSuggestions = jest.fn();
+  const getAuthorSuggestions = jest.fn();
+
+  beforeEach(() => {
+    history = createMemoryHistory();
+    saveFn.mockResolvedValue({ id } as ResearchOutputResponse);
+    getLabSuggestions.mockResolvedValue([]);
+    getAuthorSuggestions.mockResolvedValue([]);
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  const setupForm = async (
+    {
+      permissions = fullPermissions,
+      published = false,
+      documentType = 'Article',
+      researchTags = [{ id: '1', name: 'research tag 1' }],
+    }: {
+      permissions?: UserPermissions;
+      published?: boolean;
+      documentType?: ComponentProps<typeof ResearchOutputForm>['documentType'];
+      researchTags?: ResearchTagResponse[];
+    } = {
+      documentType: 'Article',
+      researchTags: [],
+    },
+  ) => {
+    render(
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          permissions,
+        }}
+      >
+        <Router history={history}>
+          <ResearchOutputForm
+            {...props}
+            selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
+            documentType={documentType}
+            typeOptions={Array.from(
+              researchOutputDocumentTypeToType[documentType],
+            )}
+            onSave={saveFn}
+            getLabSuggestions={getLabSuggestions}
+            getAuthorSuggestions={getAuthorSuggestions}
+            researchTags={researchTags}
+            published={published}
+          />
+        </Router>
+        ,
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+  };
+
+  const primaryButtonBg = fern.rgb;
+  const notPrimaryButtonBg = paper.rgb;
+  it('shows Cancel, Save Draft and Publish buttons when user has full permission and the research output is not published yet', async () => {
+    await setupForm({ permissions: fullPermissions, published: false });
+
+    const publishButton = screen.getByRole('button', {
+      name: /Publish/i,
+    });
+    expect(publishButton).toBeInTheDocument();
+    expect(publishButton).toHaveStyle(`background-color:${primaryButtonBg}`);
+
+    const saveDraftButton = screen.getByRole('button', { name: /Save Draft/i });
+    expect(saveDraftButton).toBeInTheDocument();
+    expect(saveDraftButton).toHaveStyle(
+      `background-color:${notPrimaryButtonBg}`,
+    );
+
+    const cancelButton = screen.getByRole('button', { name: /Cancel/i });
+    expect(cancelButton).toBeInTheDocument();
+    expect(cancelButton).toHaveStyle(`background-color:${notPrimaryButtonBg}`);
+  });
+
+  it('shows only Cancel and Save buttons when user has full permission and the research output has already been published', async () => {
+    await setupForm({ permissions: fullPermissions, published: true });
+
+    expect(
+      screen.queryByRole('button', { name: /Publish/i }),
+    ).not.toBeInTheDocument();
+
+    const saveDraftButton = screen.getByRole('button', { name: /Save/i });
+    expect(saveDraftButton).toBeInTheDocument();
+    expect(saveDraftButton).toHaveStyle(`background-color:${primaryButtonBg}`);
+
+    const cancelButton = screen.getByRole('button', { name: /Cancel/i });
+    expect(cancelButton).toBeInTheDocument();
+    expect(cancelButton).toHaveStyle(`background-color:${notPrimaryButtonBg}`);
+  });
+
+  it('shows only Cancel and Save Draft buttons when user has partial permission and the research output is not published yet', async () => {
+    await setupForm({ permissions: partialPermissions, published: false });
+
+    expect(
+      screen.queryByRole('button', { name: /Publish/i }),
+    ).not.toBeInTheDocument();
+
+    const saveDraftButton = screen.getByRole('button', { name: /Save Draft/i });
+    expect(saveDraftButton).toBeInTheDocument();
+    expect(saveDraftButton).toHaveStyle(`background-color:${primaryButtonBg}`);
+
+    const cancelButton = screen.getByRole('button', { name: /Cancel/i });
+    expect(cancelButton).toBeInTheDocument();
+    expect(cancelButton).toHaveStyle(`background-color:${notPrimaryButtonBg}`);
   });
 });

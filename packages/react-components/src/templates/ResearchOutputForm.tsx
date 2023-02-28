@@ -7,8 +7,9 @@ import {
   ResearchOutputResponse,
   ResearchTagResponse,
 } from '@asap-hub/model';
+import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { sharedResearch } from '@asap-hub/routing';
-import React, { ComponentProps, useState } from 'react';
+import React, { ComponentProps, useContext, useState } from 'react';
 import equal from 'fast-deep-equal';
 import { contentSidePaddingWithNavigation } from '../layout';
 import {
@@ -45,6 +46,10 @@ type ResearchOutputFormProps = Pick<
     onSave: (
       output: ResearchOutputPostRequest,
     ) => Promise<ResearchOutputResponse | void>;
+    onSaveDraft: (
+      output: ResearchOutputPostRequest,
+    ) => Promise<ResearchOutputResponse | void>;
+    published: boolean;
     documentType: ResearchOutputDocumentType;
     researchTags: ResearchTagResponse[];
     selectedTeams: NonNullable<
@@ -73,9 +78,13 @@ const formControlsContainerStyles = css({
   display: 'flex',
   justifyContent: 'end',
   paddingBottom: `${200 / perRem}em`, // Hack for labs selector
+  [`@media (max-width: 810px)`]: {
+    justifySelf: 'end',
+    width: '100%',
+  },
 });
 
-const formControlsStyles = css({
+const formControlsTwoButtonsStyles = css({
   display: 'grid',
   alignItems: 'end',
   gridGap: `${24 / perRem}em`,
@@ -94,10 +103,34 @@ const formControlsStyles = css({
   },
 });
 
+const formControlsThreeButtonsStyles = css({
+  display: 'grid',
+  alignItems: 'end',
+  gridGap: `${24 / perRem}em`,
+  gridTemplateColumns: '1fr 1fr 1fr',
+  [`@media (max-width: 810px)`]: {
+    gridTemplateColumns: '1fr',
+    width: '100%',
+    'button:nth-of-type(1)': {
+      order: 3,
+      margin: '0',
+    },
+    'button:nth-of-type(2)': {
+      order: 2,
+      margin: '0',
+    },
+    'button:nth-of-type(3)': {
+      order: 1,
+      margin: '0',
+    },
+  },
+});
+
 const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   documentType,
   researchOutputData,
   onSave,
+  onSaveDraft,
   tagSuggestions,
   urlRequired = true,
   authorsRequired = false,
@@ -109,8 +142,14 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   researchTags,
   serverValidationErrors,
   clearServerValidationError,
+  published,
 }) => {
   const historyPush = usePushFromHere();
+  const { permissions } = useContext(ResearchOutputPermissionsContext);
+
+  const showSaveDraftButton = !published && permissions.saveDraft;
+  const showPublishButton = permissions.publish;
+  const displayThreeButtons = showSaveDraftButton && showPublishButton;
 
   const [tags, setTags] = useState<ResearchOutputPostRequest['tags']>(
     (researchOutputData?.tags as string[]) || [],
@@ -236,8 +275,14 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
         serverErrors={serverValidationErrors}
         dirty={!equal(remotePayload, currentPayload)}
         onSave={() => onSave(currentPayload)}
+        onSaveDraft={() => onSaveDraft(currentPayload)}
       >
-        {({ isSaving, onSave: handleSave, onCancel: handleCancel }) => (
+        {({
+          isSaving,
+          onSave: handleSave,
+          onSaveDraft: handleSaveDraft,
+          onCancel: handleCancel,
+        }) => (
           <div css={contentStyles}>
             <ResearchOutputFormSharingCard
               serverValidationErrors={serverValidationErrors}
@@ -314,27 +359,56 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
               authorsRequired={authorsRequired}
             />
             <div css={formControlsContainerStyles}>
-              <div css={formControlsStyles}>
-                <Button enabled={!isSaving} onClick={handleCancel}>
+              <div
+                css={
+                  displayThreeButtons
+                    ? formControlsThreeButtonsStyles
+                    : formControlsTwoButtonsStyles
+                }
+              >
+                <Button enabled={!isSaving} fullWidth onClick={handleCancel}>
                   Cancel
                 </Button>
-                <Button
-                  enabled={!isSaving}
-                  primary
-                  onClick={async () => {
-                    const researchOutput = await handleSave();
-                    if (researchOutput) {
-                      const { id } = researchOutput;
-                      const path = sharedResearch({}).researchOutput({
-                        researchOutputId: id,
-                      }).$;
-                      historyPush(path);
-                    }
-                    return researchOutput;
-                  }}
-                >
-                  {!researchOutputData ? 'Publish' : 'Save'}
-                </Button>
+                {showSaveDraftButton && (
+                  <Button
+                    enabled={!isSaving}
+                    fullWidth
+                    onClick={async () => {
+                      const researchOutput = await handleSaveDraft();
+                      if (researchOutput) {
+                        const { id } = researchOutput;
+                        const path = sharedResearch({}).researchOutput({
+                          researchOutputId: id,
+                        }).$;
+                        historyPush(path);
+                      }
+                      return researchOutput;
+                    }}
+                    primary={permissions.saveDraft && !permissions.publish}
+                  >
+                    Save Draft
+                  </Button>
+                )}
+                {showPublishButton && (
+                  <Button
+                    enabled={!isSaving}
+                    fullWidth
+                    primary
+                    onClick={async () => {
+                      const researchOutput = await handleSave();
+                      if (researchOutput) {
+                        const { id } = researchOutput;
+                        const path = sharedResearch({}).researchOutput({
+                          researchOutputId: id,
+                        }).$;
+                        historyPush(path);
+                      }
+                      return researchOutput;
+                    }}
+                  >
+                    {published ? 'Save' : 'Publish'}
+                  </Button>
+                )}
               </div>
             </div>
           </div>

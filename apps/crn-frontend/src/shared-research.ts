@@ -123,17 +123,21 @@ export const researchTagsSelector = selector({
 
 export const useResearchTags = () => useRecoilValue(researchTagsSelector);
 
-export const usePostResearchOutput = () => {
+export const usePostResearchOutput = ({ published = true }) => {
   const authorization = useRecoilValue(authorizationState);
   const setResearchOutputItem = useSetResearchOutputItem();
   return async (payload: ResearchOutputPostRequest) => {
-    const researchOutput = await createResearchOutput(payload, authorization);
+    const researchOutput = await createResearchOutput(
+      payload,
+      authorization,
+      published,
+    );
     setResearchOutputItem(researchOutput);
     return researchOutput;
   };
 };
 
-export const usePutResearchOutput = () => {
+export const usePutResearchOutput = ({ published = true }) => {
   const authorization = useRecoilValue(authorizationState);
   const setResearchOutputItem = useSetResearchOutputItem();
   return async (id: string, payload: ResearchOutputPutRequest) => {
@@ -141,6 +145,7 @@ export const usePutResearchOutput = () => {
       id,
       payload,
       authorization,
+      published,
     );
     setResearchOutputItem(researchOutput);
     return researchOutput;

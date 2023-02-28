@@ -1,7 +1,7 @@
 import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
-  userPermissions,
+  UserPermissions,
 } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { getUserPermissions } from '@asap-hub/validation';
@@ -153,10 +153,14 @@ export const useSetResearchOutputItem = () => {
   );
 };
 
-export const useUserPermissions = (
-  researchOutputData: ResearchOutputResponse | undefined,
-): userPermissions => {
+export const useUserPermissions = ({
+  entity,
+  entityIds,
+}: {
+  entity: 'teams' | 'workingGroups';
+  entityIds: string[];
+}): UserPermissions => {
   const user = useCurrentUserCRN();
 
-  return getUserPermissions(user, researchOutputData);
+  return getUserPermissions(user, entity, entityIds);
 };

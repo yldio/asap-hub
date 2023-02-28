@@ -4,8 +4,6 @@ import {
   TeamPatchRequest,
   TeamResponse,
 } from '@asap-hub/model';
-import { useCurrentUserCRN } from '@asap-hub/react-context';
-import { hasCreateUpdateResearchOutputPermissions } from '@asap-hub/validation';
 import {
   atomFamily,
   DefaultValue,
@@ -127,12 +125,4 @@ export const usePatchTeamById = (id: string) => {
   return async (patch: TeamPatchRequest) => {
     setPatchedTeam(await patchTeam(id, patch, authorization));
   };
-};
-
-export const useCanCreateUpdateResearchOutput = (
-  teamIds: string[],
-): boolean => {
-  const user = useCurrentUserCRN();
-
-  return !!(user && hasCreateUpdateResearchOutputPermissions(user, teamIds));
 };

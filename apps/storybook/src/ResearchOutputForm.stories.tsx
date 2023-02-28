@@ -5,6 +5,7 @@ import {
 } from '@asap-hub/fixtures';
 import { researchOutputDocumentTypeToType } from '@asap-hub/model';
 import { ResearchOutputForm } from '@asap-hub/react-components';
+import { boolean } from '@storybook/addon-knobs';
 import { StaticRouter } from 'react-router-dom';
 
 export default {
@@ -16,6 +17,7 @@ export const Normal = () => (
   <StaticRouter>
     <ResearchOutputForm
       onSave={() => Promise.resolve()}
+      onSaveDraft={() => Promise.resolve()}
       tagSuggestions={['A53T', 'Activity assay']}
       documentType="Article"
       getLabSuggestions={() =>
@@ -44,6 +46,7 @@ export const Normal = () => (
         })
       }
       researchTags={[researchTagMethodResponse]}
+      published={boolean('Published', true)}
     />
   </StaticRouter>
 );
@@ -57,6 +60,7 @@ export const EditMode = () => (
     <ResearchOutputForm
       researchOutputData={researchOutputData}
       onSave={() => Promise.resolve()}
+      onSaveDraft={() => Promise.resolve()}
       tagSuggestions={['A53T', 'Activity assay']}
       documentType="Dataset"
       getLabSuggestions={() =>
@@ -85,6 +89,7 @@ export const EditMode = () => (
         })
       }
       researchTags={[researchTagMethodResponse]}
+      published={boolean('Published', true)}
     />
   </StaticRouter>
 );

@@ -218,6 +218,7 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
   subtype?: string;
   teams: Pick<TeamResponse, 'id' | 'displayName'>[];
   workingGroups: Pick<WorkingGroupResponse, 'id' | 'title'>[];
+  published?: boolean;
 };
 
 export type ListResearchOutputDataObject =
@@ -261,7 +262,7 @@ export type ResearchOutputTeamResponse = ResearchOutputBaseResponse & {
 };
 
 export type ResearchOutputWorkingGroupResponse = ResearchOutputBaseResponse & {
-  workingGroups: [Pick<WorkingGroupResponse, 'id' | 'title'>];
+  workingGroups: Pick<WorkingGroupResponse, 'id' | 'title'>[];
 };
 
 export type ResearchOutputResponse =

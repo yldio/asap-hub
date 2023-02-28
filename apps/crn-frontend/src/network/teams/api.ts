@@ -74,16 +74,20 @@ export const patchTeam = async (
 export const createResearchOutput = async (
   researchOutput: ResearchOutputPostRequest,
   authorization: string,
+  published: boolean = true,
 ): Promise<ResearchOutputResponse> => {
-  const resp = await fetch(`${API_BASE_URL}/research-outputs`, {
-    method: 'POST',
-    headers: {
-      authorization,
-      'content-type': 'application/json',
-      ...createSentryHeaders(),
+  const resp = await fetch(
+    `${API_BASE_URL}/research-outputs?published=${published}`,
+    {
+      method: 'POST',
+      headers: {
+        authorization,
+        'content-type': 'application/json',
+        ...createSentryHeaders(),
+      },
+      body: JSON.stringify(researchOutput),
     },
-    body: JSON.stringify(researchOutput),
-  });
+  );
   const response = await resp.json();
   if (!resp.ok) {
     throw new BackendError(
@@ -103,9 +107,10 @@ export const updateTeamResearchOutput = async (
   researchOutputId: string,
   researchOutput: ResearchOutputPostRequest,
   authorization: string,
+  published: boolean = true,
 ): Promise<ResearchOutputResponse> => {
   const resp = await fetch(
-    `${API_BASE_URL}/research-outputs/${researchOutputId}`,
+    `${API_BASE_URL}/research-outputs/${researchOutputId}?published=${published}`,
     {
       method: 'PUT',
       headers: {

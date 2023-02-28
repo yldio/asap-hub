@@ -100,7 +100,7 @@ describe('working group research output', () => {
   };
   it('makes an authorized POST request to create a research output', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-      .post('/research-outputs', payload)
+      .post('/research-outputs?published=true', payload)
       .reply(201, { id: 123 });
 
     await createResearchOutput(payload, 'Bearer x');
@@ -108,7 +108,7 @@ describe('working group research output', () => {
   });
 
   it('errors for an error status', async () => {
-    nock(API_BASE_URL).post('/research-outputs').reply(500, {});
+    nock(API_BASE_URL).post('/research-outputs?published=true').reply(500, {});
 
     await expect(
       createResearchOutput(payload, 'Bearer x'),

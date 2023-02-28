@@ -137,11 +137,15 @@ describe('/research-outputs/ route', () => {
         .send(createResearchOutputRequest)
         .set('Accept', 'application/json');
 
+      const published = true;
       expect(response.status).toBe(201);
-      expect(researchOutputControllerMock.create).toBeCalledWith({
-        ...createResearchOutputRequest,
-        createdBy: 'user-id-0',
-      });
+      expect(researchOutputControllerMock.create).toBeCalledWith(
+        {
+          ...createResearchOutputRequest,
+          createdBy: 'user-id-0',
+        },
+        published,
+      );
 
       expect(response.body).toEqual(researchOutputResponse);
     });
@@ -170,6 +174,61 @@ describe('/research-outputs/ route', () => {
         .send({ ...researchOutput })
         .set('Accept', 'application/json')
         .expect(500);
+    });
+
+    describe('Query Param validation', () => {
+      test('Should return a validation error when query param is not valid', async () => {
+        const createResearchOutputRequest = getResearchOutputPostRequest();
+
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send(createResearchOutputRequest)
+          .set('Accept', 'application/json')
+          .query('draft=true');
+
+        expect(response.status).toBe(400);
+      });
+
+      test.each([{ published: false }, { published: true }])(
+        'Should get the correct value for publish when it is $published',
+        async ({ published }) => {
+          const createResearchOutputRequest = getResearchOutputPostRequest();
+
+          const response = await supertest(app)
+            .post('/research-outputs')
+            .send(createResearchOutputRequest)
+            .set('Accept', 'application/json')
+            .query(`published=${published}`);
+
+          expect(response.status).toBe(201);
+          expect(researchOutputControllerMock.create).toBeCalledWith(
+            {
+              ...createResearchOutputRequest,
+              createdBy: 'user-id-0',
+            },
+            published,
+          );
+        },
+      );
+
+      test('Should send published as true if query param is not set', async () => {
+        const createResearchOutputRequest = getResearchOutputPostRequest();
+
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send(createResearchOutputRequest)
+          .set('Accept', 'application/json');
+
+        const published = true;
+        expect(response.status).toBe(201);
+        expect(researchOutputControllerMock.create).toBeCalledWith(
+          {
+            ...createResearchOutputRequest,
+            createdBy: 'user-id-0',
+          },
+          published,
+        );
+      });
     });
 
     describe('Parameter validation', () => {

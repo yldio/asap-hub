@@ -1,7 +1,13 @@
 import { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
+import { disable } from '@asap-hub/flags';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
+import {
+  fullPermissions,
+  noPermissions,
+  partialPermissions,
+} from '@asap-hub/validation';
 
 import SharedResearchOutput from '../SharedResearchOutput';
 
@@ -31,7 +37,7 @@ describe('Grant Documents', () => {
   it('displays edit button when user has permission', () => {
     const { queryByTitle, rerender } = render(
       <ResearchOutputPermissionsContext.Provider
-        value={{ canCreateUpdate: false }}
+        value={{ permissions: noPermissions }}
       >
         <SharedResearchOutput {...props} documentType="Article" />,
       </ResearchOutputPermissionsContext.Provider>,
@@ -40,7 +46,7 @@ describe('Grant Documents', () => {
 
     rerender(
       <ResearchOutputPermissionsContext.Provider
-        value={{ canCreateUpdate: true }}
+        value={{ permissions: fullPermissions }}
       >
         <SharedResearchOutput {...props} documentType="Grant Document" />,
       </ResearchOutputPermissionsContext.Provider>,
@@ -49,12 +55,37 @@ describe('Grant Documents', () => {
 
     rerender(
       <ResearchOutputPermissionsContext.Provider
-        value={{ canCreateUpdate: true }}
+        value={{ permissions: fullPermissions }}
       >
         <SharedResearchOutput {...props} documentType="Article" />,
       </ResearchOutputPermissionsContext.Provider>,
     );
     expect(queryByTitle('Edit')).toBeInTheDocument();
+  });
+
+  it('displays edit button when user has partial permission', () => {
+    const { queryByTitle } = render(
+      <ResearchOutputPermissionsContext.Provider
+        value={{ permissions: partialPermissions }}
+      >
+        <SharedResearchOutput {...props} documentType="Article" />,
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+
+    expect(queryByTitle('Edit')).toBeInTheDocument();
+  });
+
+  it('does not display edit button when user has partial permission and feature flag is disable', () => {
+    disable('DRAFT_RESEARCH_OUTPUT');
+    const { queryByTitle } = render(
+      <ResearchOutputPermissionsContext.Provider
+        value={{ permissions: partialPermissions }}
+      >
+        <SharedResearchOutput {...props} documentType="Article" />,
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+
+    expect(queryByTitle('Edit')).toBeNull();
   });
 
   it('handles tags and separate RTF description', () => {

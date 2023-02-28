@@ -230,9 +230,7 @@ export type FetchUsersFilter = {
 
 export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;
 
-export type userPermissions = {
-  createDraft: boolean;
-  editDraft: boolean;
-  publishDraft: boolean;
-  editPublished: boolean;
+export type UserPermissions = {
+  saveDraft: boolean;
+  publish: boolean;
 };

@@ -153,12 +153,57 @@ describe('ResearchOutputs controller', () => {
 
       const researchOutputCreateDataObject =
         getResearchOutputCreateDataObject();
-      expect(researchOutputDataProviderMock.create).toBeCalledWith({
-        ...researchOutputCreateDataObject,
-        addedDate: mockDate.toISOString(),
-      });
+      expect(researchOutputDataProviderMock.create).toBeCalledWith(
+        {
+          ...researchOutputCreateDataObject,
+          addedDate: mockDate.toISOString(),
+        },
+        true,
+      );
       spy.mockRestore();
     });
+
+    test.each`
+      publishedValue | situation               | expected
+      ${true}        | ${'publish is true'}    | ${true}
+      ${false}       | ${'publish is false'}   | ${false}
+      ${undefined}   | ${'publish is not set'} | ${true}
+    `(
+      'Should call data provider with published equals $expected when $situation',
+      async ({ publishedValue, expected }) => {
+        const mockDate = new Date('2010-01-01');
+        const spy = jest
+          .spyOn(global, 'Date')
+          .mockImplementation(() => mockDate);
+
+        const researchOutputCreateData = getResearchOutputCreateData();
+        const researchOutputId = 'research-output-id-1';
+        researchOutputDataProviderMock.create.mockResolvedValueOnce(
+          researchOutputId,
+        );
+
+        const result =
+          publishedValue === undefined
+            ? await researchOutputs.create(researchOutputCreateData)
+            : await researchOutputs.create(
+                researchOutputCreateData,
+                publishedValue,
+              );
+
+        expect(result).toEqual(getResearchOutputResponse());
+
+        const researchOutputCreateDataObject =
+          getResearchOutputCreateDataObject();
+        expect(researchOutputDataProviderMock.create).toBeCalledWith(
+          {
+            ...researchOutputCreateDataObject,
+            addedDate: mockDate.toISOString(),
+          },
+          expected,
+        );
+        spy.mockRestore();
+      },
+    );
 
     describe('Validating uniqueness', () => {
       const researchOutputRequest = getResearchOutputCreateData();
@@ -312,6 +357,7 @@ describe('ResearchOutputs controller', () => {
           expect.objectContaining({
             subtypeId: undefined,
           }),
+          true,
         );
       });
 
@@ -454,6 +500,7 @@ describe('ResearchOutputs controller', () => {
               },
             ],
           }),
+          true,
         );
       });
     });

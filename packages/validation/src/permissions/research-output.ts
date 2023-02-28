@@ -1,92 +1,50 @@
 import { User } from '@asap-hub/auth';
-import {
-  ResearchOutputPostRequest,
-  ResearchOutputResponse,
-  ResearchOutputWorkingGroupResponse,
-  userPermissions,
-  WorkingGroupDataObject,
-} from '@asap-hub/model';
-import { isResearchOutputWorkingGroup } from '../research-output-guards';
+import { UserPermissions, UserResponse } from '@asap-hub/model';
 
-export const hasCreateUpdateResearchOutputPermissions = (
-  user: Omit<User, 'algoliaApiKey'>,
-  teams: ResearchOutputPostRequest['teams'],
-): boolean =>
-  !!user.teams.find((team) => {
-    if (team.role === 'ASAP Staff') {
-      return true;
-    }
-
-    return teams.includes(team.id) && team.role === 'Project Manager';
-  });
-
-export const hasWorkingGroupsCreateUpdateResearchOutputPermissions = (
-  user: Omit<User, 'algoliaApiKey'>,
-  workingGroup: WorkingGroupDataObject | undefined,
-): boolean => {
-  if (!workingGroup) return false;
-
-  const { leaders } = workingGroup;
-
-  return leaders.some((leader) => {
-    if (leader.user.id === user.id && leader.role === 'Project Manager') {
-      return true;
-    }
-    return false;
-  });
+export const noPermissions: UserPermissions = {
+  saveDraft: false,
+  publish: false,
 };
 
-export const noPermissions: userPermissions = {
-  createDraft: false,
-  editDraft: false,
-  publishDraft: false,
-  editPublished: false,
+export const partialPermissions: UserPermissions = {
+  saveDraft: true,
+  publish: false,
 };
 
-export const isUserProjectManagerOfTeams = (
-  user: Omit<User, 'algoliaApiKey'>,
-  teams: ResearchOutputResponse['teams'],
-): boolean =>
-  !!user.teams.find(
-    (team) =>
-      teams.map((t) => t.id).includes(team.id) &&
-      team.role === 'Project Manager',
-  );
-
-export const isUserProjectManagerOfWorkingGroups = (
-  user: Omit<User, 'algoliaApiKey'>,
-  workingGroups: ResearchOutputWorkingGroupResponse['workingGroups'],
-): boolean =>
-  !!user.workingGroups.find(
-    (workingGroup) =>
-      workingGroups.map((wg) => wg.id).includes(workingGroup.id) &&
-      workingGroup.role === 'Project Manager',
-  );
+export const fullPermissions: UserPermissions = {
+  saveDraft: true,
+  publish: true,
+};
 
 export const getUserPermissions = (
-  user: Omit<User, 'algoliaApiKey'> | null,
-  researchOutputData: ResearchOutputResponse | undefined,
-): userPermissions => {
-  if (user === null || researchOutputData === undefined) {
+  user: Omit<User, 'algoliaApiKey'> | UserResponse | null,
+  entity: 'teams' | 'workingGroups',
+  entityIds: string[],
+): UserPermissions => {
+  if (user === null) {
     return noPermissions;
   }
 
-  if (
-    user.role === 'Staff' ||
-    (isResearchOutputWorkingGroup(researchOutputData) &&
-      isUserProjectManagerOfWorkingGroups(
-        user,
-        researchOutputData.workingGroups,
-      )) ||
-    (!isResearchOutputWorkingGroup(researchOutputData) &&
-      isUserProjectManagerOfTeams(user, researchOutputData.teams))
-  ) {
-    return {
-      createDraft: true,
-      editDraft: true,
-      publishDraft: true,
-      editPublished: true,
-    };
+  if (user.role === 'Staff') {
+    return fullPermissions;
+  }
+
+  const isUserProjectManager = user[entity].some(
+    (teamOrWorkingGroup) =>
+      entityIds?.includes(teamOrWorkingGroup.id) &&
+      teamOrWorkingGroup.role === 'Project Manager',
+  );
+
+  if (isUserProjectManager) {
+    return fullPermissions;
+  }
+
+  const isUserMember = user[entity].some((teamOrWorkingGroup) =>
+    entityIds.includes(teamOrWorkingGroup.id),
+  );
+
+  if (isUserMember) {
+    return partialPermissions;
   }
 
   return noPermissions;

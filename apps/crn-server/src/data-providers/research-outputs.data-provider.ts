@@ -57,7 +57,10 @@ export interface ResearchOutputDataProvider {
   fetch(
     options: FetchResearchOutputOptions,
   ): Promise<ListResearchOutputDataObject>;
-  create(input: ResearchOutputCreateDataObject): Promise<string>;
+  create(
+    input: ResearchOutputCreateDataObject,
+    published?: boolean,
+  ): Promise<string>;
   update(id: string, input: ResearchOutputUpdateDataObject): Promise<string>;
 }
 
@@ -170,7 +173,10 @@ export class ResearchOutputSquidexDataProvider
     };
   }
 
-  async create(input: ResearchOutputCreateDataObject): Promise<string> {
+  async create(
+    input: ResearchOutputCreateDataObject,
+    published = true,
+  ): Promise<string> {
     const {
       authors,
       teamIds,
@@ -202,13 +208,16 @@ export class ResearchOutputSquidexDataProvider
     });
 
     const { id: researchOutputId } =
-      await this.researchOutputSquidexRestClient.create({
-        doi: { iv: null },
-        accession: { iv: null },
-        rrid: { iv: null },
-        ...researchOutput,
-        usedInAPublication: usedInPublication,
-      });
+      await this.researchOutputSquidexRestClient.create(
+        {
+          doi: { iv: null },
+          accession: { iv: null },
+          rrid: { iv: null },
+          ...researchOutput,
+          usedInAPublication: usedInPublication,
+        },
+        published,
+      );
 
     return researchOutputId;
   }

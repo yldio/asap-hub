@@ -54,17 +54,25 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   const team = useTeamById(teamId);
   const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
 
-  const { canCreateUpdate } = useContext(ResearchOutputPermissionsContext);
+  const { permissions } = useContext(ResearchOutputPermissionsContext);
 
-  const createResearchOutput = usePostResearchOutput();
-  const updateResearchOutput = usePutResearchOutput();
+  const createResearchOutput = usePostResearchOutput({ published: true });
+  const createDraftResearchOutput = usePostResearchOutput({ published: false });
+  const updateResearchOutput = usePutResearchOutput({ published: true });
+  const updateDraftResearchOutput = usePutResearchOutput({ published: false });
 
   const getLabSuggestions = useLabSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();
   const getTeamSuggestions = useTeamSuggestions();
   const researchTags = useResearchTags();
 
-  if (canCreateUpdate && team) {
+  const published = researchOutputData ? !!researchOutputData.published : false;
+
+  const isForbidden =
+    (!permissions.saveDraft && !permissions.publish) ||
+    (published && permissions.saveDraft && !permissions.publish);
+
+  if (!isForbidden && team) {
     return (
       <Frame title="Share Research Output">
         <ResearchOutputHeader
@@ -102,12 +110,22 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
               isFixed: index === 0,
             }),
           )}
+          published={published}
           onSave={(output) =>
             researchOutputData
               ? updateResearchOutput(researchOutputData.id, output).catch(
                   handleError(['/link', '/title'], setErrors),
                 )
               : createResearchOutput(output).catch(
+                  handleError(['/link', '/title'], setErrors),
+                )
+          }
+          onSaveDraft={(output) =>
+            researchOutputData
+              ? updateDraftResearchOutput(researchOutputData.id, output).catch(
+                  handleError(['/link', '/title'], setErrors),
+                )
+              : createDraftResearchOutput(output).catch(
                   handleError(['/link', '/title'], setErrors),
                 )
           }

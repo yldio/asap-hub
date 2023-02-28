@@ -17,13 +17,19 @@ const ResearchOutput: React.FC = () => {
   const researchOutputData = useResearchOutputById(researchOutputId);
   const backHref = useBackHref() ?? sharedResearch({}).$;
 
-  const permissions = useUserPermissions(researchOutputData);
+  const isLinkedToWorkingGroup =
+    researchOutputData && isResearchOutputWorkingGroup(researchOutputData);
+
+  const permissions = useUserPermissions({
+    entity: isLinkedToWorkingGroup ? 'workingGroups' : 'teams',
+    entityIds: isLinkedToWorkingGroup
+      ? researchOutputData?.workingGroups.map((wg) => wg.id) || []
+      : researchOutputData?.teams.map((team) => team.id) || [],
+  });
 
   if (researchOutputData) {
     return (
-      <ResearchOutputPermissionsContext.Provider
-        value={{ canCreateUpdate: permissions.editPublished }}
-      >
+      <ResearchOutputPermissionsContext.Provider value={{ permissions }}>
         <Route exact path={path}>
           <Frame title={researchOutputData.title}>
             <SharedResearchOutput {...researchOutputData} backHref={backHref} />
@@ -36,7 +42,7 @@ const ResearchOutput: React.FC = () => {
               .editResearchOutput.template
           }
         >
-          {isResearchOutputWorkingGroup(researchOutputData) ? (
+          {isLinkedToWorkingGroup ? (
             <WorkingGroupOutput
               workingGroupId={researchOutputData.workingGroups[0]?.id}
               researchOutputData={researchOutputData}

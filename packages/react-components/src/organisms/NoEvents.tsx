@@ -1,7 +1,12 @@
 import { css } from '@emotion/react';
 import { calendarIcon } from '../icons';
-import { perRem } from '../pixels';
+import { perRem, rem } from '../pixels';
 import { charcoal, Headline4, Link, Paragraph } from '..';
+
+const wrapperStyle = css({
+  textAlign: 'center',
+  paddingTop: rem(48),
+});
 
 const iconStyles = css({
   svg: {
@@ -21,7 +26,7 @@ const NoEvents: React.FC<{
   const lowerEventPeriod = eventPeriod.toLocaleLowerCase();
 
   return (
-    <main css={{ textAlign: 'center' }}>
+    <main css={wrapperStyle}>
       <span css={iconStyles}>{calendarIcon}</span>
       <Headline4>
         {displayName} doesn’t have any {lowerEventPeriod} events!
@@ -31,7 +36,7 @@ const NoEvents: React.FC<{
         the meantime, try exploring other {lowerEventPeriod} events on the Hub.
       </Paragraph>
       <Link href={link} buttonStyle primary>
-        {`Explore & ${eventPeriod} Events`}
+        {`Explore ${eventPeriod} Events`}
       </Link>
     </main>
   );

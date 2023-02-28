@@ -137,6 +137,7 @@ export {
   RemindersCard,
   ResearchOutputExtraInformationCard,
   ResearchOutputHeader,
+  ResultList,
   RichText,
   RichTextCard,
   SearchAndFilter,

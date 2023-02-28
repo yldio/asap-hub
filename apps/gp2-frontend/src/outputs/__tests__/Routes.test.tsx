@@ -6,13 +6,27 @@ import {
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { MemoryRouter, Route } from 'react-router-dom';
+import { gp2 } from '@asap-hub/fixtures';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import Routes from '../Routes';
+import { getOutputs } from '../api';
+import { refreshOutputsState } from '../state';
+
+jest.mock('../api');
+const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
+
+beforeEach(() => {
+  jest.clearAllMocks();
+});
 
 const renderRoutes = async () => {
   render(
-    <RecoilRoot>
+    <RecoilRoot
+      initializeState={({ set }) => {
+        set(refreshOutputsState, Math.random());
+      }}
+    >
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -34,9 +48,17 @@ beforeEach(() => {
 
 describe('Routes', () => {
   it('renders the title', async () => {
+    mockGetOutputs.mockResolvedValue(gp2.createListOutputResponse(0));
     await renderRoutes();
     expect(
       screen.getByRole('heading', { name: 'Outputs' }),
     ).toBeInTheDocument();
+  });
+
+  it('renders a list of  outputs', async () => {
+    mockGetOutputs.mockResolvedValue(gp2.createListOutputResponse(2));
+    await renderRoutes();
+    expect(screen.getByText('Output 1')).toBeVisible();
+    expect(screen.getByText('Output 2')).toBeVisible();
   });
 });

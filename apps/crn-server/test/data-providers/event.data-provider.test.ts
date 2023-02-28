@@ -27,10 +27,6 @@ import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-clie
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
 
 describe('Event data provider', () => {
-  test.todo('test the following fields');
-  // notesUpdatedAt
-  // presentationUpdatedAt
-  // videoRecordingUpdatedAt
   const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
   const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
 

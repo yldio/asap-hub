@@ -1,6 +1,7 @@
 import {
   EventResponse,
   EventSpeakerUser,
+  EventStatus,
   gp2 as gp2Model,
 } from '@asap-hub/model';
 import { RestEvent } from '@asap-hub/squidex';
@@ -81,7 +82,7 @@ export const getEventInput = () => ({
   endDate: { iv: '2021-02-23T19:32:00Z' },
   endDateTimeZone: { iv: 'Europe/Lisbon' },
   calendar: { iv: ['squidex-calendar-id'] },
-  status: { iv: 'Confirmed' as gp2Model.EventStatus },
+  status: { iv: 'Confirmed' as EventStatus },
   tags: { iv: [] },
   hidden: { iv: false },
   meetingLink: { iv: 'https://zweem.com' },

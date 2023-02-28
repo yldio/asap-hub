@@ -57,8 +57,11 @@ export const getEventDataObject = (): EventDataObject => ({
   startDateTimeZone: 'UTC',
   endDateTimeZone: 'UTC',
   notes: 'These are the notes from the meeting',
+  notesUpdatedAt: '2010-10-01T08:00:04.000Z',
   videoRecording: '<embeded>video</embeded>',
+  videoRecordingUpdatedAt: '2010-08-01T08:00:04.000Z',
   presentation: '<embeded>presentation</embeded>',
+  presentationUpdatedAt: '2010-09-01T08:00:04.000Z',
   meetingMaterials: [
     {
       title: 'My additional link',

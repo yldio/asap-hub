@@ -99,6 +99,10 @@ export const usePostUserAvatarById = (id: string) => {
   };
 };
 
+export const refreshCohortsState = atom<number>({
+  key: 'refreshChorts',
+  default: 0,
+});
 const contributingCohortsState = atom<gp2.ContributingCohortResponse[]>({
   key: 'contributingCohortsState',
   default: [],
@@ -107,6 +111,7 @@ const contributingCohortsState = atom<gp2.ContributingCohortResponse[]>({
 export const contributingCohortSelector = selector({
   key: 'contributingCohorts',
   get: ({ get }) => {
+    get(refreshCohortsState);
     get(contributingCohortsState);
     const authorization = get(authorizationState);
     return getContributingCohorts(authorization);

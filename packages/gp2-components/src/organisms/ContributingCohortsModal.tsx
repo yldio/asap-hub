@@ -66,8 +66,7 @@ const ContributingCohortsModal: React.FC<ContributingCohortsModalProps> = ({
   onSave,
   backHref,
   contributingCohorts,
-  /* istanbul ignore next */
-  cohortOptions = [], // Hack for tests to pass
+  cohortOptions,
 }) => {
   const emptyCohort = {
     role: undefined,

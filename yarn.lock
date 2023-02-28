@@ -531,7 +531,7 @@ __metadata:
     react-router-last-location: 2.0.1
     react-scripts: 5.0.1
     react-test-renderer: 17.0.2
-    recoil: "patch:recoil@0.7.0#../../patches/recoil.patch"
+    recoil: 0.7.6
     stream: "npm:stream-browserify@3.0.0"
     typescript: 4.8.4
     use-debounce: 8.0.4
@@ -993,7 +993,7 @@ __metadata:
     react-router-last-location: 2.0.1
     react-scripts: 5.0.1
     react-test-renderer: 17.0.2
-    recoil: "patch:recoil@0.7.0#../../patches/recoil.patch"
+    recoil: 0.7.6
     typescript: 4.8.4
     use-debounce: 8.0.4
     use-deep-compare-effect: 1.6.1
@@ -37015,9 +37015,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"recoil@npm:0.7.0":
-  version: 0.7.0
-  resolution: "recoil@npm:0.7.0"
+"recoil@npm:0.7.6":
+  version: 0.7.6
+  resolution: "recoil@npm:0.7.6"
   dependencies:
     hamt_plus: 1.0.2
   peerDependencies:
@@ -37027,39 +37027,7 @@ __metadata:
       optional: true
     react-native:
       optional: true
-  checksum: e190db5153e322ba8ca824e97701e756c41681080da23f3e87d104544da2e8c9eea44ada8a36857ef9a1ade368dfe6ea3af7d51796441b08c40272c0a1386c81
-  languageName: node
-  linkType: hard
-
-"recoil@patch:recoil@0.7.0#../../patches/recoil.patch::locator=%40asap-hub%2Fcrn-frontend%40workspace%3Aapps%2Fcrn-frontend":
-  version: 0.7.0
-  resolution: "recoil@patch:recoil@npm%3A0.7.0#../../patches/recoil.patch::version=0.7.0&hash=1fc4d7&locator=%40asap-hub%2Fcrn-frontend%40workspace%3Aapps%2Fcrn-frontend"
-  dependencies:
-    hamt_plus: 1.0.2
-  peerDependencies:
-    react: ">=16.13.1"
-  peerDependenciesMeta:
-    react-dom:
-      optional: true
-    react-native:
-      optional: true
-  checksum: 684711d6008d5dc67bc171c510f09c66a48d5deda6b5525a84684d52b1983d24ce7e3ebd5ccbe05be82a2a427eaba68ac1b306c9d275034cffd6c93277f38849
-  languageName: node
-  linkType: hard
-
-"recoil@patch:recoil@0.7.0#../../patches/recoil.patch::locator=%40asap-hub%2Fgp2-frontend%40workspace%3Aapps%2Fgp2-frontend":
-  version: 0.7.0
-  resolution: "recoil@patch:recoil@npm%3A0.7.0#../../patches/recoil.patch::version=0.7.0&hash=1fc4d7&locator=%40asap-hub%2Fgp2-frontend%40workspace%3Aapps%2Fgp2-frontend"
-  dependencies:
-    hamt_plus: 1.0.2
-  peerDependencies:
-    react: ">=16.13.1"
-  peerDependenciesMeta:
-    react-dom:
-      optional: true
-    react-native:
-      optional: true
-  checksum: 684711d6008d5dc67bc171c510f09c66a48d5deda6b5525a84684d52b1983d24ce7e3ebd5ccbe05be82a2a427eaba68ac1b306c9d275034cffd6c93277f38849
+  checksum: 2b31dd29a7e0b369bc986a16f7253006776845144684c9e38bb6760e4ea954c5d7dc682aaf88e815e69098b8dea3ff62b6fa4e6c156157a29d2d9cb824db1779
   languageName: node
   linkType: hard
 

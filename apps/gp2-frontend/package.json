@@ -40,7 +40,7 @@
     "react-error-boundary": "3.1.4",
     "react-router-dom": "5.3.4",
     "react-router-last-location": "2.0.1",
-    "recoil": "patch:recoil@0.7.0#../../patches/recoil.patch",
+    "recoil": "0.7.6",
     "use-debounce": "8.0.4",
     "use-deep-compare-effect": "1.6.1",
     "uuid": "8.3.2"

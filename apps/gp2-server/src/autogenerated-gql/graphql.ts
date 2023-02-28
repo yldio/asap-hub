@@ -4614,6 +4614,8 @@ export type ProjectContentFragment = Pick<Projects, 'id'> & {
     | 'pmEmail'
     | 'leadEmail'
     | 'keywords'
+    | 'traineeProject'
+    | 'opportunitiesLink'
   > & {
     members: Maybe<
       Array<
@@ -4668,6 +4670,8 @@ export type FetchProjectQuery = {
         | 'pmEmail'
         | 'leadEmail'
         | 'keywords'
+        | 'traineeProject'
+        | 'opportunitiesLink'
       > & {
         members: Maybe<
           Array<
@@ -4725,6 +4729,8 @@ export type FetchProjectsQuery = {
               | 'pmEmail'
               | 'leadEmail'
               | 'keywords'
+              | 'traineeProject'
+              | 'opportunitiesLink'
             > & {
               members: Maybe<
                 Array<
@@ -6155,6 +6161,14 @@ export const ProjectContentFragmentDoc = {
                 { kind: 'Field', name: { kind: 'Name', value: 'pmEmail' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'leadEmail' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'keywords' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'traineeProject' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'opportunitiesLink' },
+                },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'members' },

@@ -49,7 +49,8 @@ export type ProjectDataObject = {
   status: ProjectStatus;
   title: string;
   resources?: Resource[];
-  traineeProject?: boolean;
+  traineeProject: boolean;
+  opportunitiesLink?: string;
 };
 
 export type ListProjectDataObject = ListResponse<ProjectDataObject>;

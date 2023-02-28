@@ -189,6 +189,8 @@ export function parseProjectToDataObject({
     keywords: project.keywords || [],
     milestones,
     resources,
+    traineeProject: project.traineeProject || false,
+    opportunitiesLink: project.opportunitiesLink || undefined,
   };
 }
 

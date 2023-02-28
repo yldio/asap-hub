@@ -13,6 +13,8 @@ export const projectContentQueryFragment = gql`
       pmEmail
       leadEmail
       keywords
+      traineeProject
+      opportunitiesLink
       members {
         role
         user {

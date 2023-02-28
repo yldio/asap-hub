@@ -103,19 +103,18 @@ export const refreshCohortsState = atom<number>({
   key: 'refreshChorts',
   default: 0,
 });
-const contributingCohortsState = atom<gp2.ContributingCohortResponse[]>({
-  key: 'contributingCohortsState',
-  default: [],
-});
-
-export const contributingCohortSelector = selector({
+const contributingCohortSelector = selector({
   key: 'contributingCohorts',
   get: ({ get }) => {
     get(refreshCohortsState);
-    get(contributingCohortsState);
     const authorization = get(authorizationState);
     return getContributingCohorts(authorization);
   },
 });
+const contributingCohortsState = atom<gp2.ContributingCohortResponse[]>({
+  key: 'contributingCohortsState',
+  default: contributingCohortSelector,
+});
+
 export const useContributingCohorts = () =>
-  useRecoilValue(contributingCohortSelector);
+  useRecoilValue(contributingCohortsState);

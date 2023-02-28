@@ -44,7 +44,7 @@ describe('Event controller', () => {
         NotFoundError,
       );
     });
-    test('Should return the project when it finds it', async () => {
+    test('Should return the event when it finds it', async () => {
       eventDataProviderMock.fetchById.mockResolvedValue(getEventDataObject());
       const result = await eventController.fetchById('project-id');
 

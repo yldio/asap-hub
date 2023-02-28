@@ -17,7 +17,6 @@ const OnboardedApp = lazy(loadOnboardedApp);
 const Onboarding = lazy(loadOnboarding);
 
 const AuthenticatedApp: FC<Record<string, never>> = () => {
-  const [currentTime] = useState(new Date());
   const auth0 = useAuth0GP2();
   const [recoilAuth0, setAuth0] = useRecoilState<
     Auth0<gp2Auth.User> | undefined
@@ -50,7 +49,6 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
     <OnboardedApp
       showWelcomeBackBanner={showWelcomeBackBanner}
       dismissBanner={dismissBanner}
-      currentTime={currentTime}
     />
   ) : (
     <BasicLayout>

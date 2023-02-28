@@ -26,7 +26,6 @@ import {
 } from '@asap-hub/squidex';
 import { Chance } from 'chance';
 import { appName, baseUrl } from '../../src/config';
-import Events from '../../src/controllers/events';
 import { CalendarSquidexDataProvider } from '../../src/data-providers/calendars.data-provider';
 import { EventSquidexDataProvider } from '../../src/data-providers/event.data-provider';
 import { ReminderSquidexDataProvider } from '../../src/data-providers/reminders.data-provider';
@@ -97,7 +96,6 @@ describe('Reminders', () => {
     eventRestClient,
     squidexGraphqlClient,
   );
-  const eventController = new Events(eventDataProvider);
 
   describe('Research Output Published Reminder', () => {
     let creatorId: string;
@@ -261,20 +259,21 @@ describe('Reminders', () => {
       // the event happening at 3PM in UTC
       eventInput.startDate = new Date('2022-08-10T15:00:00.0Z').toISOString();
 
-      const event = await eventController.create(eventInput);
-      eventIdsForDeletion = [event.id];
+      const eventId = await eventDataProvider.create(eventInput);
+      eventIdsForDeletion = [eventId];
 
+      const event = await eventDataProvider.fetchById(eventId);
       // requesting reminders for the user based in London where it is 6AM
       const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
 
       const expectedReminder: EventHappeningTodayReminder = {
-        id: `event-happening-today-${event.id}`,
+        id: `event-happening-today-${eventId}`,
         entity: 'Event',
         type: 'Happening Today',
         data: {
-          eventId: event.id,
-          startDate: event.startDate,
-          title: event.title,
+          eventId: event!.id,
+          startDate: event!.startDate,
+          title: event!.title,
         },
       };
       expect(reminders).toEqual({
@@ -291,8 +290,8 @@ describe('Reminders', () => {
       // the event happening at 2PM in UTC
       eventInput.startDate = new Date('2022-08-10T14:00:00.0Z').toISOString();
 
-      const event = await eventController.create(eventInput);
-      eventIdsForDeletion = [event.id];
+      const eventId = await eventDataProvider.create(eventInput);
+      eventIdsForDeletion = [eventId];
 
       const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
 
@@ -310,8 +309,8 @@ describe('Reminders', () => {
       // the event happening at 3PM in UTC
       eventInput.startDate = new Date('2022-08-10T16:00:00.0Z').toISOString();
 
-      const event = await eventController.create(eventInput);
-      eventIdsForDeletion = [event.id];
+      const eventId = await eventDataProvider.create(eventInput);
+      eventIdsForDeletion = [eventId];
 
       // requesting reminders for the user based in LA where 5AM UTC is 10PM the previous day
       const timezone = 'America/Los_Angeles';
@@ -329,24 +328,24 @@ describe('Reminders', () => {
 
       const eventInput1 = getEventInput(calendarId);
       eventInput1.startDate = new Date('2022-08-10T15:00:00.0Z').toISOString();
-      const event1 = await eventController.create(eventInput1);
+      const event1Id = await eventDataProvider.create(eventInput1);
 
       const calendarInput2 = getCalendarInputForReminder();
       const calendarId2 = await calendarDataProvider.create(calendarInput2);
       const eventInput2 = getEventInput(calendarId);
       eventInput2.calendar = calendarId2;
       eventInput2.startDate = new Date('2022-08-10T17:00:00.0Z').toISOString();
-      const event2 = await eventController.create(eventInput2);
+      const event2Id = await eventDataProvider.create(eventInput2);
 
-      eventIdsForDeletion = [event1.id, event2.id];
+      eventIdsForDeletion = [event1Id, event2Id];
 
       const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
 
       expect(reminders).toEqual({
         total: 2,
         items: [
-          expect.objectContaining({ id: `event-happening-today-${event2.id}` }),
-          expect.objectContaining({ id: `event-happening-today-${event1.id}` }),
+          expect.objectContaining({ id: `event-happening-today-${event2Id}` }),
+          expect.objectContaining({ id: `event-happening-today-${event1Id}` }),
         ],
       });
     });
@@ -395,20 +394,21 @@ describe('Reminders', () => {
       eventInput.startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
       eventInput.endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
 
-      const event = await eventController.create(eventInput);
-      eventIdsForDeletion = [event.id];
+      const eventId = await eventDataProvider.create(eventInput);
+      eventIdsForDeletion = [eventId];
 
+      const event = await eventDataProvider.fetchById(eventId);
       const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
 
       const expectedReminder: EventHappeningNowReminder = {
-        id: `event-happening-now-${event.id}`,
+        id: `event-happening-now-${eventId}`,
         entity: 'Event',
         type: 'Happening Now',
         data: {
-          eventId: event.id,
-          startDate: event.startDate,
-          endDate: event.endDate,
-          title: event.title,
+          eventId: event!.id,
+          startDate: event!.startDate,
+          endDate: event!.endDate,
+          title: event!.title,
         },
       };
 
@@ -427,8 +427,8 @@ describe('Reminders', () => {
       eventInput.startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
       eventInput.endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
 
-      const event = await eventController.create(eventInput);
-      eventIdsForDeletion = [event.id];
+      const eventId = await eventDataProvider.create(eventInput);
+      eventIdsForDeletion = [eventId];
 
       const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
 
@@ -491,20 +491,21 @@ describe('Reminders', () => {
           team: [teamId],
         },
       ];
-      const event = await eventController.create(eventInput);
-      eventIdsForDeletion = [event.id];
+      const eventId = await eventDataProvider.create(eventInput);
+      eventIdsForDeletion = [eventId];
+      const event = await eventDataProvider.fetchById(eventId);
 
       const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
 
       const expectedReminder: SharePresentationReminder = {
-        id: `share-presentation-${event.id}`,
+        id: `share-presentation-${eventId}`,
         entity: 'Event',
         type: 'Share Presentation',
         data: {
           pmId: pmUserId,
-          eventId: event.id,
-          endDate: event.endDate,
-          title: event.title,
+          eventId,
+          endDate: event!.endDate,
+          title: event!.title,
         },
       };
 
@@ -523,8 +524,8 @@ describe('Reminders', () => {
       eventInput.startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
       eventInput.endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
       eventInput.speakers = [];
-      const event = await eventController.create(eventInput);
-      eventIdsForDeletion = [event.id];
+      const eventId = await eventDataProvider.create(eventInput);
+      eventIdsForDeletion = [eventId];
 
       const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
 
@@ -547,8 +548,8 @@ describe('Reminders', () => {
           team: [teamId],
         },
       ];
-      const event = await eventController.create(eventInput);
-      eventIdsForDeletion = [event.id];
+      const eventId = await eventDataProvider.create(eventInput);
+      eventIdsForDeletion = [eventId];
 
       const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
 
@@ -570,8 +571,8 @@ describe('Reminders', () => {
           team: [teamId],
         },
       ];
-      const event = await eventController.create(eventInput);
-      eventIdsForDeletion = [event.id];
+      const eventId = await eventDataProvider.create(eventInput);
+      eventIdsForDeletion = [eventId];
 
       const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
 
@@ -627,19 +628,20 @@ describe('Reminders', () => {
       // the event starts at 10AM and ends at 11AM in UTC
       eventInput.startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
       eventInput.endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
-      const event = await eventController.create(eventInput);
-      eventIdsForDeletion = [event.id];
+      const eventId = await eventDataProvider.create(eventInput);
+      eventIdsForDeletion = [eventId];
+      const event = await eventDataProvider.fetchById(eventId);
 
       const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
 
       const expectedReminder: PublishMaterialReminder = {
-        id: `publish-material-${event.id}`,
+        id: `publish-material-${eventId}`,
         entity: 'Event',
         type: 'Publish Material',
         data: {
-          eventId: event.id,
-          endDate: event.endDate,
-          title: event.title,
+          eventId,
+          endDate: event!.endDate,
+          title: event!.title,
         },
       };
 
@@ -664,8 +666,8 @@ describe('Reminders', () => {
       eventInput.startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
       eventInput.endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
 
-      const event = await eventController.create(eventInput);
-      eventIdsForDeletion = [event.id];
+      const eventId = await eventDataProvider.create(eventInput);
+      eventIdsForDeletion = [eventId];
 
       const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
 
@@ -690,8 +692,8 @@ describe('Reminders', () => {
       });
       fetchRemindersOptions = { userId, timezone: 'Europe/London' };
 
-      const event = await eventController.create(eventInput);
-      eventIdsForDeletion = [event.id];
+      const eventId = await eventDataProvider.create(eventInput);
+      eventIdsForDeletion = [eventId];
 
       const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
 
@@ -714,8 +716,8 @@ describe('Reminders', () => {
       });
       fetchRemindersOptions = { userId, timezone: 'Europe/London' };
 
-      const event = await eventController.create(eventInput);
-      eventIdsForDeletion = [event.id];
+      const eventId = await eventDataProvider.create(eventInput);
+      eventIdsForDeletion = [eventId];
 
       const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
 
@@ -775,19 +777,20 @@ describe('Reminders', () => {
           team: [teamId],
         },
       ];
-      const event = await eventController.create(eventInput);
-      eventIdsForDeletion = [event.id];
+      const eventId = await eventDataProvider.create(eventInput);
+      eventIdsForDeletion = [eventId];
+      const event = await eventDataProvider.fetchById(eventId);
 
       const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
 
       const expectedReminder: UploadPresentationReminder = {
-        id: `upload-presentation-${event.id}`,
+        id: `upload-presentation-${eventId}`,
         entity: 'Event',
         type: 'Upload Presentation',
         data: {
-          eventId: event.id,
-          endDate: event.endDate,
-          title: event.title,
+          eventId,
+          endDate: event!.endDate,
+          title: event!.title,
         },
       };
 
@@ -828,8 +831,8 @@ describe('Reminders', () => {
         },
       ];
 
-      const event = await eventController.create(eventInput);
-      eventIdsForDeletion = [event.id];
+      const eventId = await eventDataProvider.create(eventInput);
+      eventIdsForDeletion = [eventId];
 
       const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
 
@@ -852,8 +855,8 @@ describe('Reminders', () => {
           team: [teamId],
         },
       ];
-      const event = await eventController.create(eventInput);
-      eventIdsForDeletion = [event.id];
+      const eventId = await eventDataProvider.create(eventInput);
+      eventIdsForDeletion = [eventId];
 
       const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
 
@@ -875,8 +878,8 @@ describe('Reminders', () => {
           team: [teamId],
         },
       ];
-      const event = await eventController.create(eventInput);
-      eventIdsForDeletion = [event.id];
+      const eventId = await eventDataProvider.create(eventInput);
+      eventIdsForDeletion = [eventId];
 
       const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
 
@@ -943,26 +946,27 @@ describe('Reminders', () => {
 
         const eventInput = getEventInput(calendarId);
 
-        const event = await eventController.create({
+        const eventId = await eventDataProvider.create({
           ...eventInput,
           [materialUpdatedAtName]: new Date(
             '2022-09-26T08:00:00.0Z',
           ).toISOString(),
         });
-        eventIdsForDeletion = [event.id];
+        eventIdsForDeletion = [eventId];
+        const event = await eventDataProvider.fetchById(eventId);
 
         const reminders = await reminderDataProvider.fetch(
           fetchRemindersOptions,
         );
 
         const expectedReminder = {
-          id: `${material.toLowerCase()}-event-updated-${event.id}`,
+          id: `${material.toLowerCase()}-event-updated-${eventId}`,
           entity: 'Event',
           type: `${material} Updated`,
           data: {
-            eventId: event.id,
-            title: event.title,
-            [materialUpdatedAtName]: event[materialUpdatedAtName],
+            eventId,
+            title: event!.title,
+            [materialUpdatedAtName]: event![materialUpdatedAtName],
           },
         };
 
@@ -978,13 +982,13 @@ describe('Reminders', () => {
 
         const eventInput = getEventInput(calendarId);
 
-        const event = await eventController.create({
+        const eventId = await eventDataProvider.create({
           ...eventInput,
           [materialUpdatedAtName]: new Date(
             '2022-09-22T08:00:00.0Z',
           ).toISOString(),
         });
-        eventIdsForDeletion = [event.id];
+        eventIdsForDeletion = [eventId];
 
         const reminders = await reminderDataProvider.fetch(
           fetchRemindersOptions,
@@ -1002,14 +1006,14 @@ describe('Reminders', () => {
 
         const eventInput = getEventInput(calendarId);
 
-        const event = await eventController.create({
+        const eventId = await eventDataProvider.create({
           ...eventInput,
           [materialUpdatedAtName]: new Date(
             '2022-09-27T08:00:00.0Z',
           ).toISOString(),
         });
 
-        eventIdsForDeletion = [event.id];
+        eventIdsForDeletion = [eventId];
 
         const reminders = await reminderDataProvider.fetch(
           fetchRemindersOptions,
@@ -1027,8 +1031,8 @@ describe('Reminders', () => {
 
         const eventInput = getEventInput(calendarId);
 
-        const event = await eventController.create(eventInput);
-        eventIdsForDeletion = [event.id];
+        const eventId = await eventDataProvider.create(eventInput);
+        eventIdsForDeletion = [eventId];
 
         const reminders = await reminderDataProvider.fetch(
           fetchRemindersOptions,
@@ -1045,26 +1049,27 @@ describe('Reminders', () => {
 
         const eventInput = getEventInput(calendarId);
 
-        const event = await eventController.create(eventInput);
+        const eventId = await eventDataProvider.create(eventInput);
 
         // user updates material
-        await eventController.update(event.id, {
+        await eventDataProvider.update(eventId, {
           [materialContentName]: 'I am a material',
         });
 
-        eventIdsForDeletion = [event.id];
+        eventIdsForDeletion = [eventId];
 
         const reminders = await reminderDataProvider.fetch(
           fetchRemindersOptions,
         );
+        const event = await eventDataProvider.fetchById(eventId);
 
         const expectedReminder = {
-          id: `${material.toLowerCase()}-event-updated-${event.id}`,
+          id: `${material.toLowerCase()}-event-updated-${eventId}`,
           entity: 'Event',
           type: `${material} Updated`,
           data: {
-            eventId: event.id,
-            title: event.title,
+            eventId,
+            title: event!.title,
             [materialUpdatedAtName]: expect.any(String),
           },
         };
@@ -1075,7 +1080,7 @@ describe('Reminders', () => {
         });
 
         // user erases material
-        await eventController.update(event.id, {
+        await eventDataProvider.update(eventId, {
           [materialContentName]: '',
         });
 
@@ -1156,8 +1161,8 @@ describe('Reminders', () => {
       const researchOutputId2 = await researchOutputDataProvider.create(
         researchOutputInput2,
       );
-      const { id: event1Id } = await eventController.create(eventInput1);
-      const { id: event2Id } = await eventController.create(eventInput2);
+      const event1Id = await eventDataProvider.create(eventInput1);
+      const event2Id = await eventDataProvider.create(eventInput2);
       eventIdsForDeletion = [event1Id, event2Id];
 
       const reminders = await reminderDataProvider.fetch({

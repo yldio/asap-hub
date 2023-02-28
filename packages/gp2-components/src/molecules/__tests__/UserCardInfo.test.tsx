@@ -55,7 +55,7 @@ describe('UserCardInfo', () => {
         {...defaultProps}
         projects={[
           { id: '3', title: 'Project 3', status: 'Active', members: [] },
-          { id: '1', title: 'Project 1', status: 'Inactive', members: [] },
+          { id: '1', title: 'Project 1', status: 'Paused', members: [] },
           { id: '2', title: 'Project 2', status: 'Active', members: [] },
         ]}
       />,

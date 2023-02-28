@@ -23,7 +23,7 @@ export const statusStyles: Record<
     color: colors.success900.rgba,
     borderColor: colors.success900.rgba,
   },
-  Inactive: {
+  Paused: {
     color: colors.warning900.rgba,
     borderColor: colors.warning900.rgba,
   },

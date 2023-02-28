@@ -72,7 +72,7 @@ describe('UserMenu', () => {
       {
         id: '23',
         title: 'the second project title',
-        status: 'Inactive',
+        status: 'Paused',
         members: [],
       },
       {

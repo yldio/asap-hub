@@ -1,7 +1,7 @@
 import { ListResponse } from '../common';
 import { Keyword, Resource } from './common';
 
-export const projectStatus = ['Active', 'Inactive', 'Completed'] as const;
+export const projectStatus = ['Active', 'Paused', 'Completed'] as const;
 export type ProjectStatus = typeof projectStatus[number];
 
 export const projectMilestoneStatus = [
@@ -49,6 +49,7 @@ export type ProjectDataObject = {
   status: ProjectStatus;
   title: string;
   resources?: Resource[];
+  traineeProject?: boolean;
 };
 
 export type ListProjectDataObject = ListResponse<ProjectDataObject>;

@@ -42,7 +42,7 @@ const controlsStyles = css({
   padding: `0 ${contentSidePaddingWithNavigation(8)}`,
 });
 
-type Page = 'users' | 'groups' | 'teams' | 'working-groups';
+type Page = 'users' | 'interest-groups' | 'teams' | 'working-groups';
 
 type NetworkPageHeaderProps = {
   page: Page;
@@ -95,7 +95,7 @@ const getFilterOptionsAndPlaceholder = (page: Page) => {
         searchPlaceholder: 'Enter name, keyword, institution, …',
       };
 
-    case 'groups':
+    case 'interest-groups':
       return {
         filterOptions: groupFilters,
         searchPlaceholder: 'Enter an interest group, keyword, …',
@@ -152,7 +152,7 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
         >
           <span css={iconStyles}>
             <InterestGroupsIcon
-              color={page === 'groups' ? charcoal.rgb : lead.rgb}
+              color={page === 'interest-groups' ? charcoal.rgb : lead.rgb}
             />
           </span>
           Interest Groups

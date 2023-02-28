@@ -119,7 +119,7 @@ const group = (() => {
     { about, calendar, upcoming, past },
   );
 })();
-const groups = route('/groups', {}, { group });
+const groups = route('/interest-groups', {}, { group });
 
 const workingGroupOutputDocumentTypeParser = {
   parse: (data: string): WorkingGroupOutputDocumentTypeParameter =>

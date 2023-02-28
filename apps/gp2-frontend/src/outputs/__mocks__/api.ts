@@ -9,7 +9,6 @@ export const getOutput = jest.fn(
 );
 
 export const getOutputs = jest.fn(
-  async (): Promise<gp2Model.ListOutputResponse> => ({
-    ...gp2Fixtures.createListOutputResponse(2),
-  }),
+  async (): Promise<gp2Model.ListOutputResponse> =>
+    gp2Fixtures.createListOutputResponse(2),
 );

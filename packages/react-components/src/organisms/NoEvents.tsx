@@ -12,11 +12,10 @@ const iconStyles = css({
 });
 
 const NoEvents: React.FC<{
-  displayName: string;
   past?: boolean;
   link: string;
-  type: 'team' | 'group' | 'working group' | 'user';
-}> = ({ displayName, past, link, type }) => {
+  type: 'team' | 'interest group' | 'working group' | 'user';
+}> = ({ past, link, type }) => {
   const eventPeriod = past ? 'Past' : 'Upcoming';
   const lowerEventPeriod = eventPeriod.toLocaleLowerCase();
 
@@ -24,7 +23,7 @@ const NoEvents: React.FC<{
     <main css={{ textAlign: 'center' }}>
       <span css={iconStyles}>{calendarIcon}</span>
       <Headline4>
-        This working group doesn’t have any {lowerEventPeriod} events!
+        This {type} doesn’t have any {lowerEventPeriod} events!
       </Headline4>
       <Paragraph accent="lead">
         In the meantime, try exploring other {lowerEventPeriod} events on the

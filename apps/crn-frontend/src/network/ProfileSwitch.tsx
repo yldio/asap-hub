@@ -74,11 +74,7 @@ const ProfileSwitch: FC<ProfileSwitchProps> = ({
               currentTime={currentTime}
               past={false}
               noEventsComponent={
-                <NoEvents
-                  displayName={displayName}
-                  link={events({}).upcoming({}).$}
-                  type={type}
-                />
+                <NoEvents link={events({}).upcoming({}).$} type={type} />
               }
             />
           </Frame>
@@ -91,12 +87,7 @@ const ProfileSwitch: FC<ProfileSwitchProps> = ({
             currentTime={currentTime}
             past={true}
             noEventsComponent={
-              <NoEvents
-                past
-                displayName={displayName}
-                link={events({}).past({}).$}
-                type={type}
-              />
+              <NoEvents past link={events({}).past({}).$} type={type} />
             }
           />
         </Frame>

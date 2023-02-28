@@ -107,14 +107,16 @@ describe('Event controller', () => {
 
   describe('Update method', () => {
     test('Should return the newly updated event', async () => {
-      const description = 'a new description';
-      eventDataProviderMock.fetchById.mockResolvedValue(getEventDataObject());
-      const result = await eventController.update('7', { description });
+      const event = getEventDataObject();
+      const { calendar: _, ...eventUpdate } = event;
+      eventDataProviderMock.fetchById.mockResolvedValue(event);
+      const result = await eventController.update('7', eventUpdate);
 
       expect(result).toEqual(getEventResponse());
-      expect(eventDataProviderMock.update).toHaveBeenCalledWith('7', {
-        description,
-      });
+      expect(eventDataProviderMock.update).toHaveBeenCalledWith(
+        '7',
+        eventUpdate,
+      );
     });
   });
 

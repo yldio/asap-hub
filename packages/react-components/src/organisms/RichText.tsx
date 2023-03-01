@@ -23,7 +23,7 @@ import {
   Link,
   Headline2,
 } from '../atoms';
-import { isAllowedChildren } from '../text';
+import { getHTMLElements, isAllowedChildren } from '../text';
 import { ErrorCard } from '../molecules';
 import { perRem } from '../pixels';
 import { charcoal, lead } from '../colors';
@@ -56,8 +56,19 @@ const components = {
       <iframe title="Embedded Page" {...props} />
     </span>
   ),
-  h1: ({ children, id }: HTMLAttributes<HTMLHeadingElement>) =>
-    isAllowedChildren(children) ? (
+  h1: ({ children, id }: HTMLAttributes<HTMLHeadingElement>) => {
+    const htmlElements = getHTMLElements(children);
+    if (htmlElements.length && htmlElements[0].startsWith('<')) {
+      return (
+        <div css={headline1Spacing}>
+          <Headline4 id={id}>
+            <span dangerouslySetInnerHTML={{ __html: htmlElements.join('') }} />
+          </Headline4>
+        </div>
+      );
+    }
+
+    return isAllowedChildren(children) ? (
       <div css={headline1Spacing}>
         <Headline4 id={id}>{children}</Headline4>
       </div>
@@ -66,26 +77,49 @@ const components = {
         title="Styling Error"
         description="Invalid h1 heading styling"
       />
-    ),
-  h2: ({ children, id }: HTMLAttributes<HTMLHeadingElement>) =>
-    isAllowedChildren(children) ? (
+    );
+  },
+  h2: ({ children, id }: HTMLAttributes<HTMLHeadingElement>) => {
+    const htmlElements = getHTMLElements(children);
+    if (htmlElements.length && htmlElements[0].startsWith('<')) {
+      return (
+        <Headline5 id={id}>
+          <span dangerouslySetInnerHTML={{ __html: htmlElements.join('') }} />
+        </Headline5>
+      );
+    }
+
+    return isAllowedChildren(children) ? (
       <Headline5 id={id}>{children}</Headline5>
     ) : (
       <ErrorCard
         title="Styling Error"
         description="Invalid h2 heading styling"
       />
-    ),
-  h3: ({ children, id }: HTMLAttributes<HTMLHeadingElement>) =>
-    isAllowedChildren(children) ? (
+    );
+  },
+  h3: ({ children, id }: HTMLAttributes<HTMLHeadingElement>) => {
+    const htmlElements = getHTMLElements(children);
+    if (htmlElements.length && htmlElements[0].startsWith('<')) {
+      return (
+        <Headline6 id={id}>
+          <span dangerouslySetInnerHTML={{ __html: htmlElements.join('') }} />
+        </Headline6>
+      );
+    }
+
+    return isAllowedChildren(children) ? (
       <Headline6 id={id}>{children}</Headline6>
     ) : (
       <ErrorCard
         title="Styling Error"
         description="Invalid h3 heading styling"
       />
-    ),
+    );
+  },
   a: ({ children, href }: AnchorHTMLAttributes<HTMLAnchorElement>) => {
+    console.log('children', children);
+
     if (typeof href === 'undefined') {
       return (
         <ErrorCard
@@ -95,38 +129,7 @@ const components = {
       );
     }
 
-    let tags: string[] = [];
-    const htmlElements: string[] = [];
-
-    const getTags = (node: React.ReactNode) =>
-      Array.isArray(node) &&
-      node?.forEach((child) => {
-        if (child.type) {
-          tags.push(child.type);
-        } else {
-          let html = '';
-
-          if (tags.length) {
-            tags.forEach((tag, index) => {
-              if (index === 0) {
-                html = `<${tag} style=color:inherit>${String(child)}</${tag}>`;
-              } else {
-                html = `<${tag} style=color:inherit>${html}</${tag}>`;
-              }
-            });
-          } else {
-            html = String(child);
-          }
-
-          htmlElements.push(html);
-          tags = [];
-        }
-        if (child?.props?.children) {
-          getTags(child.props.children);
-        }
-      });
-
-    getTags(children);
+    const htmlElements = getHTMLElements(children);
     if (htmlElements.length && htmlElements[0].startsWith('<')) {
       return (
         <Link href={href}>

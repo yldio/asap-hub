@@ -66,6 +66,42 @@ export const isAllowedChildren = (
   return false;
 };
 
+export const getHTMLElements = (node: React.ReactNode) => {
+  let tags: string[] = [];
+  const htmlElements: string[] = [];
+
+  const getTags = (node: React.ReactNode) =>
+    Array.isArray(node) &&
+    node?.forEach((child) => {
+      if (child.type) {
+        tags.push(child.type);
+      } else {
+        let html = '';
+
+        if (tags.length) {
+          tags.forEach((tag, index) => {
+            if (index === 0) {
+              html = `<${tag} style=color:inherit>${String(child)}</${tag}>`;
+            } else {
+              html = `<${tag} style=color:inherit>${html}</${tag}>`;
+            }
+          });
+        } else {
+          html = String(child);
+        }
+
+        htmlElements.push(html);
+        tags = [];
+      }
+      if (child?.props?.children) {
+        getTags(child.props.children);
+      }
+    });
+
+  getTags(node);
+  return htmlElements;
+};
+
 export const fontStyles = {
   fontFamily:
     "Roboto, 'Roboto Slab', Calibri, Mukta, Candara, Segoe, 'Segoe UI', Optima, Arial, sans-serif",

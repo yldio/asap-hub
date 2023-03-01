@@ -4,6 +4,7 @@ import {
   isTextChildren,
   assertIsTextChildren,
   isAllowedChildren,
+  getHTMLElements,
 } from '../text';
 
 describe.each([
@@ -82,5 +83,41 @@ describe.each([
     it('returns false', () => {
       expect(isAllowedChildren(children)).toBe(false);
     });
+  });
+});
+
+describe('getHTMLElements', () => {
+  test.each(['i', 'b'])(
+    'returns html with style given node with %s tag',
+    (tag) => {
+      expect(
+        getHTMLElements([
+          {
+            props: { children: ['bold text'] },
+            type: tag,
+          },
+        ]),
+      ).toEqual([`<${tag} style=color:inherit>bold text</${tag}>`]);
+    },
+  );
+
+  test('returns html with style given node with b and i tags', () => {
+    expect(
+      getHTMLElements([
+        {
+          props: {
+            children: [
+              {
+                props: { children: ['bold-italic'] },
+                type: 'i',
+              },
+            ],
+          },
+          type: 'b',
+        },
+      ]),
+    ).toEqual([
+      '<i style=color:inherit><b style=color:inherit>bold-italic</b></i>',
+    ]);
   });
 });

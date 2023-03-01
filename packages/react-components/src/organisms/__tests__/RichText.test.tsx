@@ -87,23 +87,24 @@ it.each([
   expect(heading.tagName).toBe(expected);
 });
 
-it.each([1, 2, 3])(
-  'displays error when disallowed <h%i> styling applied',
-  (i) => {
-    const { container } = render(
-      <RichText text={`<h${i}><strong>heading</strong></h${i}>`} />,
-    );
-    expect(container.textContent).toContain(`Invalid h${i} heading styling`);
-  },
-);
-
-it.each([1, 2, 3])(
-  'displays heading when allowed <h%i> styling applied',
-  (i) => {
+it.each`
+  heading | tag         | tagName
+  ${`1`}  | ${`b`}      | ${`B`}
+  ${`2`}  | ${`b`}      | ${`B`}
+  ${`3`}  | ${`b`}      | ${`B`}
+  ${`1`}  | ${`strong`} | ${`STRONG`}
+  ${`2`}  | ${`strong`} | ${`STRONG`}
+  ${`3`}  | ${`strong`} | ${`STRONG`}
+  ${`1`}  | ${`i`}      | ${`I`}
+  ${`2`}  | ${`i`}      | ${`I`}
+  ${`3`}  | ${`i`}      | ${`I`}
+`(
+  'displays heading <h$heading> when wrapper by tag <$tag>',
+  ({ heading, tag, tagName }) => {
     const { getByText } = render(
-      <RichText text={`<h${i}><i>heading</i></h${i}>`} />,
+      <RichText text={`<h${heading}><${tag}>heading</${tag}></h${heading}>`} />,
     );
-    expect(getByText('heading').tagName).toEqual('I');
+    expect(getByText('heading').tagName).toEqual(tagName);
   },
 );
 

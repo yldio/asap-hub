@@ -17,6 +17,11 @@ runs:
         path: |
           .jest-cache/
         key: jest-cache-shard-${{ inputs.shard }}
+    - name: move coverage
+      shell: bash
+      run: |
+        ls -la
+        ls -la .jest-cache
     - name: Get number of CPU cores
       id: cpu-cores
       uses: SimenB/github-actions-cpu-cores@v1

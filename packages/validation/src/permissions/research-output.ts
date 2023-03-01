@@ -1,32 +1,17 @@
 import { User } from '@asap-hub/auth';
-import { UserPermissions, UserResponse } from '@asap-hub/model';
+import { UserPermissionsLevel, UserResponse } from '@asap-hub/model';
 
-export const noPermissions: UserPermissions = {
-  saveDraft: false,
-  publish: false,
-};
-
-export const partialPermissions: UserPermissions = {
-  saveDraft: true,
-  publish: false,
-};
-
-export const fullPermissions: UserPermissions = {
-  saveDraft: true,
-  publish: true,
-};
-
-export const getUserPermissions = (
+export const getUserPermissionLevel = (
   user: Omit<User, 'algoliaApiKey'> | UserResponse | null,
   entity: 'teams' | 'workingGroups',
   entityIds: string[],
-): UserPermissions => {
+): UserPermissionsLevel => {
   if (user === null) {
-    return noPermissions;
+    return 'None';
   }
 
   if (user.role === 'Staff') {
-    return fullPermissions;
+    return 'Admin';
   }
 
   const isUserProjectManager = user[entity].some(
@@ -36,7 +21,7 @@ export const getUserPermissions = (
   );
 
   if (isUserProjectManager) {
-    return fullPermissions;
+    return 'Admin';
   }
 
   const isUserMember = user[entity].some((teamOrWorkingGroup) =>
@@ -44,8 +29,23 @@ export const getUserPermissions = (
   );
 
   if (isUserMember) {
-    return partialPermissions;
+    return 'Member';
   }
 
-  return noPermissions;
+  return 'None';
+};
+
+export const hasCreateUpdateResearchOutputPermissions = (
+  userPermissionLevel: UserPermissionsLevel,
+  publish: boolean,
+): boolean => {
+  if (userPermissionLevel === 'Admin') {
+    return true;
+  }
+
+  if (userPermissionLevel === 'Member') {
+    return !publish;
+  }
+
+  return false;
 };

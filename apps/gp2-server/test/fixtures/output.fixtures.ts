@@ -110,6 +110,14 @@ export const getOutputDataObject = (): gp2Model.OutputDataObject => ({
   publishDate: '2021-05-21T13:18:31Z',
   lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
   subtype: 'Published',
+  projects: {
+    id: '42',
+    title: 'A Project',
+  },
+  workingGroups: {
+    id: '24',
+    title: 'A Working Group',
+  },
 });
 
 export const getListOutputDataObject =
@@ -133,6 +141,8 @@ export const getOutputPostRequest = (): gp2Model.OutputPostRequest => {
     lastUpdatedPartial: _lastUpdatedPartial,
     addedDate: _addedDate,
     authors,
+    workingGroups,
+    projects,
     ...outputResponse
   } = getOutputResponse();
   return {
@@ -158,6 +168,8 @@ export const getOutputCreateDataObject =
       id: _id,
       lastUpdatedPartial: _lastUpdatedPartial,
       created: _created,
+      workingGroups,
+      projects,
       ...outputPostRequest
     } = getOutputResponse();
 

@@ -51,6 +51,19 @@ export const parseGraphQLOutput = (
   const documentType = documentTypeMap[data.documentType];
   const type = getType(data.documentType, data.type);
 
+  const workingGroups = data.workingGroups?.length
+    ? {
+        id: data.workingGroups[0]?.id || '',
+        title: data.workingGroups[0]?.flatData.title || '',
+      }
+    : undefined;
+  const projects = data.projects?.length
+    ? {
+        id: data.projects[0]?.id || '',
+        title: data.projects[0]?.flatData.title || '',
+      }
+    : undefined;
+
   return {
     id: output.id,
     authors:
@@ -90,5 +103,7 @@ export const parseGraphQLOutput = (
     lastUpdatedPartial:
       data.lastUpdatedPartial || output.lastModified || output.created,
     subtype: data.subtype || undefined,
+    workingGroups,
+    projects,
   };
 };

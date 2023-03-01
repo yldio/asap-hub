@@ -60,11 +60,19 @@ export type UserAuthor = {
   onboarded: boolean;
   avatarUrl?: string;
 };
+
+type OutputOwner = {
+  id: string;
+  title: string;
+};
+
 export type OutputDataObject = OutputCoreObject & {
   authors: (UserAuthor | ExternalAuthorResponse)[];
   created: string;
   id: string;
   lastUpdatedPartial: string;
+  workingGroups?: OutputOwner;
+  projects?: OutputOwner;
 };
 
 export type ListOutputDataObject = ListResponse<OutputDataObject>;

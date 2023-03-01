@@ -137,9 +137,7 @@ describe('Resources', () => {
     const resources = getResources(4);
 
     render(<Resources {...defaultProps()} resources={resources} />);
-    expect(
-      screen.getByRole('heading', { name: 'resource title 2' }),
-    ).toBeInTheDocument();
+    expect(screen.getByText('resource title 2')).toBeVisible();
     expect(screen.getByText('resource title 3')).not.toBeVisible();
     const button = screen.getByRole('button', { name: /Show more/i });
     userEvent.click(button);

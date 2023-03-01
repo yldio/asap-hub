@@ -1,6 +1,5 @@
 import { gp2 } from '@asap-hub/model';
 import {
-  Anchor,
   Button,
   Card,
   chevronCircleDownIcon,
@@ -9,6 +8,7 @@ import {
   Headline3,
   infoCircleYellowIcon,
   Link,
+  LinkHeadline,
   Paragraph,
   Pill,
   pixels,
@@ -56,6 +56,21 @@ const buttonStyles = css({
 const editButtonStyles = css({
   [nonMobileQuery]: {
     marginLeft: 'auto',
+  },
+});
+const resourceTitleContainerStyles = css({
+  display: 'flex',
+  flexDirection: 'row',
+  padding: `${rem(8)} 0`,
+});
+const resourceLinkStyles = css({
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: rem(8),
+  ':hover': {
+    svg: {
+      stroke: colors.primary500.rgb,
+    },
   },
 });
 const hideStyles = css({
@@ -150,36 +165,22 @@ const Resources: React.FC<ResourcesProps> = ({
                     </div>
                   )}
                 </div>
-                <div
-                  css={css([
-                    {
-                      display: 'flex',
-                      flexDirection: 'row',
-                      paddingTop: rem(8),
-                    },
-                    resource.type === 'Link'
-                      ? {
-                          color: colors.primary500.rgb,
-                        }
-                      : {},
-                  ])}
-                >
-                  <Subtitle styleAsHeading={4} noMargin>
-                    {resource.title}
-                  </Subtitle>
-                  {resource.type === 'Link' && (
-                    <div
-                      css={css({
-                        padding: '4px 8px',
-                        svg: {
-                          stroke: colors.primary500.rgb,
-                        },
-                      })}
+                <div css={resourceTitleContainerStyles}>
+                  {resource.type === 'Link' ? (
+                    <LinkHeadline
+                      noMargin
+                      level={4}
+                      href={resource.externalLink}
                     >
-                      <Anchor href={resource.externalLink}>
+                      <span css={resourceLinkStyles}>
+                        {resource.title}
                         {externalLinkIcon}
-                      </Anchor>
-                    </div>
+                      </span>
+                    </LinkHeadline>
+                  ) : (
+                    <Subtitle styleAsHeading={4} noMargin>
+                      {resource.title}
+                    </Subtitle>
                   )}
                 </div>
                 <Paragraph noMargin accent="lead">

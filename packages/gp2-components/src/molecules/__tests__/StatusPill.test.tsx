@@ -6,9 +6,9 @@ import StatusPill from '../StatusPill';
 describe('StatusPill', () => {
   it.each`
     status                  | color
-    ${'Active' as const}    | ${colors.info900.rgb}
-    ${'Completed' as const} | ${colors.secondary900.rgb}
-    ${'Paused' as const}    | ${colors.warning900.rgb}
+    ${'Active' as const}    | ${colors.info500.rgb}
+    ${'Completed' as const} | ${colors.success500.rgb}
+    ${'Paused' as const}    | ${colors.warning500.rgb}
   `("has the color '$color' for the status $status", ({ status, color }) => {
     render(<StatusPill status={status} />);
     const pill = findParentWithStyle(screen.getByText(status), 'color');

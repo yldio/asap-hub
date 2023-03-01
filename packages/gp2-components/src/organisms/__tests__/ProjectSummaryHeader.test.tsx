@@ -10,7 +10,19 @@ describe('ProjectSummaryHeader', () => {
     render(<ProjectSummaryHeader {...defaultProps} />);
     expect(screen.getByText(/active/i)).toBeVisible();
   });
-
+  it('render the traineeProject pill if true', () => {
+    render(<ProjectSummaryHeader {...defaultProps} traineeProject />);
+    expect(screen.getByText(/trainee project/i)).toBeVisible();
+  });
+  it('render the opportunities available pill if theres a link', () => {
+    render(
+      <ProjectSummaryHeader
+        {...defaultProps}
+        opportunitiesLink={'something'}
+      />,
+    );
+    expect(screen.getByText(/opportunities available/i)).toBeVisible();
+  });
   it('renders the project proposed link', () => {
     const props = {
       ...defaultProps,

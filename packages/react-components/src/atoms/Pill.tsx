@@ -17,11 +17,12 @@ const styles = css({
 
 export type AccentVariant =
   | 'default'
+  | 'error'
   | 'green'
-  | 'warning'
   | 'info'
   | 'neutral'
-  | 'error';
+  | 'success'
+  | 'warning';
 
 export const accents: Record<AccentVariant, CSSObject> = {
   default: {
@@ -53,6 +54,11 @@ export const accents: Record<AccentVariant, CSSObject> = {
     backgroundColor: colors.error100.rgb,
     color: colors.error500.rgb,
     borderColor: colors.error500.rgb,
+  },
+  success: {
+    backgroundColor: colors.success100.rgb,
+    color: colors.success500.rgb,
+    borderColor: colors.success500.rgb,
   },
 };
 

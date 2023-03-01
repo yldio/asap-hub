@@ -22,11 +22,15 @@ describe('ProjectDetailHeader', () => {
     expect(screen.getByText('View proposal')).toBeVisible();
   });
 
-  it('renders backlink', () => {
-    render(<ProjectDetailHeader {...defaultProps} />);
+  it('renders opportunities available card when there a link', () => {
+    render(<ProjectDetailHeader {...defaultProps} opportunitiesLink="link" />);
     expect(
-      screen.getByRole('link', { name: 'Chevron Left Back' }),
-    ).toHaveAttribute('href', '/back');
+      screen.getByRole('heading', { name: /opportunities available/i }),
+    ).toBeVisible();
+    expect(screen.getByRole('link', { name: /read more/i })).toHaveAttribute(
+      'href',
+      'link',
+    );
   });
   it('renders overview tab', () => {
     render(<ProjectDetailHeader {...defaultProps} />);

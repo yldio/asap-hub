@@ -13,7 +13,7 @@ export const statusAccent: Record<
   AccentVariant
 > = {
   Active: 'info',
-  Completed: 'green',
+  Completed: 'success',
   Paused: 'warning',
   'Not Started': 'error',
 };

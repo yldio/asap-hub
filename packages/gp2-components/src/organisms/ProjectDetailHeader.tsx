@@ -27,7 +27,7 @@ const { rem } = pixels;
 type ProjectDetailHeaderProps = ComponentProps<typeof ProjectSummaryHeader> &
   Pick<
     gp2Model.ProjectResponse,
-    'id' | 'title' | 'startDate' | 'endDate' | 'members'
+    'id' | 'title' | 'startDate' | 'endDate' | 'members' | 'opportunitiesLink'
   > & {
     isProjectMember: boolean;
   };

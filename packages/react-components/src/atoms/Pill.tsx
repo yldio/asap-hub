@@ -1,3 +1,4 @@
+/** @jsxImportSource @emotion/react */
 import { css, CSSObject } from '@emotion/react';
 import { Ellipsis } from '.';
 import * as colors from '../colors';

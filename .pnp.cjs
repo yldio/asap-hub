@@ -3212,7 +3212,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "auth0-js",\
-        "npm:9.20.1"\
+        "npm:9.20.2"\
       ],\
       [\
         "auto-bind",\
@@ -4032,7 +4032,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "cookiejar",\
-        "npm:2.1.2"\
+        "npm:2.1.4"\
       ],\
       [\
         "copy-concurrently",\
@@ -5244,7 +5244,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "formidable",\
-        "npm:1.2.2"\
+        "npm:2.1.2"\
       ],\
       [\
         "forwarded",\
@@ -9261,7 +9261,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "superagent",\
-        "npm:5.3.1"\
+        "npm:7.1.5"\
       ],\
       [\
         "supertest",\
@@ -10738,7 +10738,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jest", "npm:29.4.0"],\
             ["@types/node", "npm:14.18.33"],\
             ["@types/pify", "npm:3.0.2"],\
-            ["auth0-js", "npm:9.20.1"],\
+            ["auth0-js", "npm:9.20.2"],\
             ["camelcase", "npm:6.3.0"],\
             ["pify", "npm:5.0.0"],\
             ["util", "npm:0.12.5"]\
@@ -39697,15 +39697,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["auth0-js", [\
-        ["npm:9.20.1", {\
-          "packageLocation": "./.yarn/cache/auth0-js-npm-9.20.1-44f01ef4a5-ae6c72b9fc.zip/node_modules/auth0-js/",\
+        ["npm:9.20.2", {\
+          "packageLocation": "./.yarn/cache/auth0-js-npm-9.20.2-952314bfe1-901833ff3d.zip/node_modules/auth0-js/",\
           "packageDependencies": [\
-            ["auth0-js", "npm:9.20.1"],\
+            ["auth0-js", "npm:9.20.2"],\
             ["base64-js", "npm:1.5.1"],\
             ["idtoken-verifier", "npm:2.2.2"],\
             ["js-cookie", "npm:2.2.1"],\
+            ["minimist", "npm:1.2.5"],\
             ["qs", "npm:6.11.0"],\
-            ["superagent", "npm:5.3.1"],\
+            ["superagent", "npm:7.1.5"],\
             ["url-join", "npm:4.0.1"],\
             ["winchan", "npm:0.2.2"]\
           ],\
@@ -67795,6 +67796,24 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["qs", "npm:6.9.6"],\
             ["readable-stream", "npm:3.6.0"],\
             ["semver", "npm:7.3.2"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:7.1.5", {\
+          "packageLocation": "./.yarn/cache/superagent-npm-7.1.5-b82717b291-4782ca099b.zip/node_modules/superagent/",\
+          "packageDependencies": [\
+            ["superagent", "npm:7.1.5"],\
+            ["component-emitter", "npm:1.3.0"],\
+            ["cookiejar", "npm:2.1.4"],\
+            ["debug", "virtual:fd8de37609258cc0a542fd94a84d3a92a7a50fe97add0d0ad2eb2de7df7a01a41d03004536a361279c31772f9825e9f1c1db0cf143d0ea8269bb824c9db84c63#npm:4.3.4"],\
+            ["fast-safe-stringify", "npm:2.1.1"],\
+            ["form-data", "npm:4.0.0"],\
+            ["formidable", "npm:2.1.2"],\
+            ["methods", "npm:1.1.2"],\
+            ["mime", "npm:2.6.0"],\
+            ["qs", "npm:6.10.5"],\
+            ["readable-stream", "npm:3.6.0"],\
+            ["semver", "npm:7.3.7"]\
           ],\
           "linkType": "HARD"\
         }],\

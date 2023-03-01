@@ -6,6 +6,7 @@ import {
   formatDate,
   Headline2,
   Link,
+  SharedResearchMetadata,
 } from '@asap-hub/react-components';
 
 import { IconWithLabel } from '../molecules';
@@ -13,7 +14,14 @@ import { projectIcon, workingGroupIcon } from '../icons';
 
 type OutputCardProps = Pick<
   gp2Model.OutputResponse,
-  'addedDate' | 'title' | 'workingGroups' | 'projects'
+  | 'addedDate'
+  | 'title'
+  | 'workingGroups'
+  | 'projects'
+  | 'authors'
+  | 'link'
+  | 'documentType'
+  | 'type'
 >;
 
 const OutputCard: React.FC<OutputCardProps> = ({
@@ -21,8 +29,16 @@ const OutputCard: React.FC<OutputCardProps> = ({
   title,
   workingGroups,
   projects,
+  documentType,
+  type,
+  authors,
+  link,
 }) => (
   <Card>
+    <SharedResearchMetadata
+      pills={[documentType, type].filter(Boolean)}
+      link={link}
+    />
     <Headline2 styleAsHeading={4}>{title}</Headline2>
     {workingGroups && (
       <IconWithLabel icon={workingGroupIcon}>

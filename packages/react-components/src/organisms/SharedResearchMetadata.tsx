@@ -21,7 +21,7 @@ const SharedResearchMetadata: React.FC<SharedResearchMetadataProps> = ({
 }) => (
   <div css={styles}>
     <PillList pills={pills} />
-    {link ? <ExternalLink href={link} label="Open External Link" /> : null}
+    {link ? <ExternalLink noMargin href={link} label="Access Output" /> : null}
   </div>
 );
 

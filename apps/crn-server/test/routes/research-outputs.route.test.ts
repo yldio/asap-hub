@@ -137,14 +137,13 @@ describe('/research-outputs/ route', () => {
         .send(createResearchOutputRequest)
         .set('Accept', 'application/json');
 
-      const published = true;
       expect(response.status).toBe(201);
       expect(researchOutputControllerMock.create).toBeCalledWith(
         {
           ...createResearchOutputRequest,
           createdBy: 'user-id-0',
         },
-        published,
+        { publish: true },
       );
 
       expect(response.body).toEqual(researchOutputResponse);
@@ -189,16 +188,16 @@ describe('/research-outputs/ route', () => {
         expect(response.status).toBe(400);
       });
 
-      test.each([{ published: false }, { published: true }])(
-        'Should get the correct value for publish when it is $published',
-        async ({ published }) => {
+      test.each([{ publish: false }, { publish: true }])(
+        'Should get the correct value for publish when it is $publish',
+        async ({ publish }) => {
           const createResearchOutputRequest = getResearchOutputPostRequest();
 
           const response = await supertest(app)
             .post('/research-outputs')
             .send(createResearchOutputRequest)
             .set('Accept', 'application/json')
-            .query(`published=${published}`);
+            .query(`publish=${publish}`);
 
           expect(response.status).toBe(201);
           expect(researchOutputControllerMock.create).toBeCalledWith(
@@ -206,12 +205,12 @@ describe('/research-outputs/ route', () => {
               ...createResearchOutputRequest,
               createdBy: 'user-id-0',
             },
-            published,
+            { publish },
           );
         },
       );
 
-      test('Should send published as true if query param is not set', async () => {
+      test('Should send publish as true if query param is not set', async () => {
         const createResearchOutputRequest = getResearchOutputPostRequest();
 
         const response = await supertest(app)
@@ -219,14 +218,14 @@ describe('/research-outputs/ route', () => {
           .send(createResearchOutputRequest)
           .set('Accept', 'application/json');
 
-        const published = true;
+        const publish = true;
         expect(response.status).toBe(201);
         expect(researchOutputControllerMock.create).toBeCalledWith(
           {
             ...createResearchOutputRequest,
             createdBy: 'user-id-0',
           },
-          published,
+          { publish },
         );
       });
     });

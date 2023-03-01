@@ -155,11 +155,11 @@ export const validateResearchOutputPostRequestParameters = validateInput(
 );
 
 const researchOutputRequestQueryParametersSchema: JSONSchemaType<{
-  published?: boolean;
+  publish?: boolean;
 }> = {
   type: 'object',
   properties: {
-    published: { type: 'boolean', nullable: true },
+    publish: { type: 'boolean', nullable: true },
   },
   additionalProperties: false,
 };

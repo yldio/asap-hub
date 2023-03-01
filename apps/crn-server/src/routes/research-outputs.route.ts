@@ -58,11 +58,10 @@ export const researchOutputRouteFactory = (
     );
 
     const options = validateResearchOutputRequestQueryParameters(query);
-    const published = options.published ?? true;
+    const publish = options.publish ?? true;
 
     const isRequestAllowed =
-      (permissions.saveDraft && !published) ||
-      (permissions.publish && published);
+      (permissions.saveDraft && !publish) || (permissions.publish && publish);
 
     if (!loggedInUser || !isRequestAllowed) {
       throw Boom.forbidden();
@@ -74,7 +73,7 @@ export const researchOutputRouteFactory = (
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         createdBy: loggedInUser!.id,
       },
-      published,
+      { publish },
     );
 
     res.status(201).json(researchOutput);
@@ -95,11 +94,10 @@ export const researchOutputRouteFactory = (
       );
 
       const options = validateResearchOutputRequestQueryParameters(query);
-      const published = options.published ?? true;
+      const publish = options.publish ?? true;
 
       const isRequestAllowed =
-        (permissions.saveDraft && !published) ||
-        (permissions.publish && published);
+        (permissions.saveDraft && !publish) || (permissions.publish && publish);
 
       if (!loggedInUser || !isRequestAllowed) {
         throw Boom.forbidden();

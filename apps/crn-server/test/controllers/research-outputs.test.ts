@@ -158,19 +158,13 @@ describe('ResearchOutputs controller', () => {
           ...researchOutputCreateDataObject,
           addedDate: mockDate.toISOString(),
         },
-        true,
+        { publish: true },
       );
       spy.mockRestore();
     });
 
-    test.each`
-      publishedValue | situation               | expected
-      ${true}        | ${'publish is true'}    | ${true}
-      ${false}       | ${'publish is false'}   | ${false}
-      ${undefined}   | ${'publish is not set'} | ${true}
-    `(
-      'Should call data provider with published equals $expected when $situation',
-      async ({ publishedValue, expected }) => {
+    describe('create options param', () => {
+      test('Should call data provider with published equals false when it is passed as false', async () => {
         const mockDate = new Date('2010-01-01');
         const spy = jest
           .spyOn(global, 'Date')
@@ -182,13 +176,9 @@ describe('ResearchOutputs controller', () => {
           researchOutputId,
         );
 
-        const result =
-          publishedValue === undefined
-            ? await researchOutputs.create(researchOutputCreateData)
-            : await researchOutputs.create(
-                researchOutputCreateData,
-                publishedValue,
-              );
+        const result = await researchOutputs.create(researchOutputCreateData, {
+          publish: false,
+        });
 
         expect(result).toEqual(getResearchOutputResponse());
 
@@ -199,11 +189,39 @@ describe('ResearchOutputs controller', () => {
             ...researchOutputCreateDataObject,
             addedDate: mockDate.toISOString(),
           },
-          expected,
+          { publish: false },
         );
         spy.mockRestore();
-      },
-    );
+      });
+
+      test('Should call data provider with published equals true when create options is not passed', async () => {
+        const mockDate = new Date('2010-01-01');
+        const spy = jest
+          .spyOn(global, 'Date')
+          .mockImplementation(() => mockDate);
+
+        const researchOutputCreateData = getResearchOutputCreateData();
+        const researchOutputId = 'research-output-id-1';
+        researchOutputDataProviderMock.create.mockResolvedValueOnce(
+          researchOutputId,
+        );
+
+        const result = await researchOutputs.create(researchOutputCreateData);
+
+        expect(result).toEqual(getResearchOutputResponse());
+
+        const researchOutputCreateDataObject =
+          getResearchOutputCreateDataObject();
+        expect(researchOutputDataProviderMock.create).toBeCalledWith(
+          {
+            ...researchOutputCreateDataObject,
+            addedDate: mockDate.toISOString(),
+          },
+          { publish: true },
+        );
+        spy.mockRestore();
+      });
+    });
 
     describe('Validating uniqueness', () => {
       const researchOutputRequest = getResearchOutputCreateData();
@@ -357,7 +375,7 @@ describe('ResearchOutputs controller', () => {
           expect.objectContaining({
             subtypeId: undefined,
           }),
-          true,
+          { publish: true },
         );
       });
 
@@ -500,7 +518,7 @@ describe('ResearchOutputs controller', () => {
               },
             ],
           }),
-          true,
+          { publish: true },
         );
       });
     });

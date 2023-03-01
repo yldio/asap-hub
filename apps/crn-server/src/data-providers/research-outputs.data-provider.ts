@@ -59,7 +59,7 @@ export interface ResearchOutputDataProvider {
   ): Promise<ListResearchOutputDataObject>;
   create(
     input: ResearchOutputCreateDataObject,
-    published?: boolean,
+    createOptions?: { publish: boolean },
   ): Promise<string>;
   update(id: string, input: ResearchOutputUpdateDataObject): Promise<string>;
 }
@@ -175,7 +175,7 @@ export class ResearchOutputSquidexDataProvider
 
   async create(
     input: ResearchOutputCreateDataObject,
-    published = true,
+    createOptions = { publish: true },
   ): Promise<string> {
     const {
       authors,
@@ -216,7 +216,7 @@ export class ResearchOutputSquidexDataProvider
           ...researchOutput,
           usedInAPublication: usedInPublication,
         },
-        published,
+        createOptions.publish,
       );
 
     return researchOutputId;

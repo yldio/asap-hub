@@ -82,7 +82,7 @@ export default class ResearchOutputs implements ResearchOutputController {
 
   async create(
     researchOutputCreateData: ResearchOutputCreateData,
-    published = true,
+    createOptions = { publish: true },
   ): Promise<ResearchOutputResponse | null> {
     await this.validateResearchOutput(researchOutputCreateData);
     const { methods, organisms, environments, subtype } =
@@ -120,7 +120,7 @@ export default class ResearchOutputs implements ResearchOutputController {
 
     const researchOutputId = await this.researchOutputDataProvider.create(
       researchOutputCreateDataObject,
-      published,
+      createOptions,
     );
 
     return this.fetchById(researchOutputId);
@@ -377,7 +377,7 @@ export interface ResearchOutputController {
   fetchById: (id: string) => Promise<ResearchOutputResponse>;
   create: (
     researchOutputRequest: ResearchOutputCreateData,
-    published?: boolean,
+    createOptions?: { publish: boolean },
   ) => Promise<ResearchOutputResponse | null>;
   update: (
     id: string,

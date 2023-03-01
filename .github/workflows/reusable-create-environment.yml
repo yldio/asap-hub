@@ -213,3 +213,15 @@ jobs:
           ALGOLIA_ADMIN_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_INDEX_DEV: ${{ steps.setup-dev.outputs.algolia-index }}
           ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
+      # TODO: CRN-1329 Remove this step once the migration is complete
+      - name: Copy index from Dev
+        if: ${{ inputs.environment-name=='Branch' && steps.index-exists.outputs.index-exists == 'false' }}
+        shell: bash
+        run: |
+          algolia indices copy -y -w $ALGOLIA_INDEX_DEV-contentful $ALGOLIA_INDEX-contentful
+          algolia indices copy -y -w $ALGOLIA_INDEX_DEV-contentful-reverse-timestamp $ALGOLIA_INDEX-contentful-reverse-timestamp
+        env:
+          ALGOLIA_APPLICATION_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          ALGOLIA_ADMIN_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
+          ALGOLIA_INDEX_DEV: ${{ steps.setup-dev.outputs.algolia-index }}
+          ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}

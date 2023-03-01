@@ -152,6 +152,14 @@ jobs:
           ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
+      # TODO: CRN-1329 Remove this step once the migration is complete
+      - name: Synchronize Schema for Contentful
+        run: |
+          yarn algolia:set-settings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX-contentful
+        env:
+          ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
+          ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
 
   crn-squidex-schema:
     needs: [crn-sls-deploy]

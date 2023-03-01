@@ -36,7 +36,7 @@ const OutputCard: React.FC<OutputCardProps> = ({
 }) => (
   <Card>
     <SharedResearchMetadata
-      pills={[documentType, type].filter(Boolean)}
+      pills={[documentType, type].filter(Boolean) as string[]}
       link={link}
     />
     <Headline2 styleAsHeading={4}>{title}</Headline2>

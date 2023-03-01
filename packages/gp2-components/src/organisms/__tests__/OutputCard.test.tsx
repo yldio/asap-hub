@@ -22,6 +22,7 @@ describe('OutputCard', () => {
       expect.stringContaining('42'),
     );
   });
+
   it('renders link to workingGroup', () => {
     render(
       <OutputCard
@@ -32,5 +33,19 @@ describe('OutputCard', () => {
     expect(
       screen.getByRole('link', { name: /working group name/i }),
     ).toHaveAttribute('href', expect.stringContaining('42'));
+  });
+  it('renders the link when available', () => {
+    render(<OutputCard {...defaultProps} link="https://example.com" />);
+    expect(
+      screen.getByRole('link', { name: /access output/i }),
+    ).toHaveAttribute('href', 'https://example.com');
+  });
+  it('renders documentType and output type as pills', () => {
+    render(
+      <OutputCard {...defaultProps} documentType="Articles" type="Research" />,
+    );
+    expect(
+      screen.getAllByRole('listitem').map(({ textContent }) => textContent),
+    ).toStrictEqual(['Articles', 'Research']);
   });
 });

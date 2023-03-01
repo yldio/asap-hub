@@ -2535,10 +2535,18 @@ export type Outputs = Content & {
   referencesExternalAuthorsContents: Maybe<Array<ExternalAuthors>>;
   /** Query External authors content items with total count. */
   referencesExternalAuthorsContentsWithTotal: Maybe<ExternalAuthorsResultDto>;
+  /** Query Projects content items. */
+  referencesProjectsContents: Maybe<Array<Projects>>;
+  /** Query Projects content items with total count. */
+  referencesProjectsContentsWithTotal: Maybe<ProjectsResultDto>;
   /** Query Users content items. */
   referencesUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
   referencesUsersContentsWithTotal: Maybe<UsersResultDto>;
+  /** Query Working Groups content items. */
+  referencesWorkingGroupsContents: Maybe<Array<WorkingGroups>>;
+  /** Query Working Groups content items with total count. */
+  referencesWorkingGroupsContentsWithTotal: Maybe<WorkingGroupsResultDto>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
@@ -2568,6 +2576,24 @@ export type OutputsReferencesExternalAuthorsContentsWithTotalArgs = {
 };
 
 /** The structure of a Outputs content type. */
+export type OutputsReferencesProjectsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Outputs content type. */
+export type OutputsReferencesProjectsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Outputs content type. */
 export type OutputsReferencesUsersContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
@@ -2578,6 +2604,24 @@ export type OutputsReferencesUsersContentsArgs = {
 
 /** The structure of a Outputs content type. */
 export type OutputsReferencesUsersContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Outputs content type. */
+export type OutputsReferencesWorkingGroupsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Outputs content type. */
+export type OutputsReferencesWorkingGroupsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -2665,11 +2709,13 @@ export type OutputsDataDto = {
   documentType: Maybe<OutputsDataDocumentTypeDto>;
   lastUpdatedPartial: Maybe<OutputsDataLastUpdatedPartialDto>;
   link: Maybe<OutputsDataLinkDto>;
+  projects: Maybe<OutputsDataProjectsDto>;
   publishDate: Maybe<OutputsDataPublishDateDto>;
   subtype: Maybe<OutputsDataSubtypeDto>;
   title: Maybe<OutputsDataTitleDto>;
   type: Maybe<OutputsDataTypeDto>;
   updatedBy: Maybe<OutputsDataUpdatedByDto>;
+  workingGroups: Maybe<OutputsDataWorkingGroupsDto>;
 };
 
 /** The structure of the Outputs data input type. */
@@ -2681,11 +2727,13 @@ export type OutputsDataInputDto = {
   documentType: InputMaybe<OutputsDataDocumentTypeInputDto>;
   lastUpdatedPartial: InputMaybe<OutputsDataLastUpdatedPartialInputDto>;
   link: InputMaybe<OutputsDataLinkInputDto>;
+  projects: InputMaybe<OutputsDataProjectsInputDto>;
   publishDate: InputMaybe<OutputsDataPublishDateInputDto>;
   subtype: InputMaybe<OutputsDataSubtypeInputDto>;
   title: InputMaybe<OutputsDataTitleInputDto>;
   type: InputMaybe<OutputsDataTypeInputDto>;
   updatedBy: InputMaybe<OutputsDataUpdatedByInputDto>;
+  workingGroups: InputMaybe<OutputsDataWorkingGroupsInputDto>;
 };
 
 /** The structure of the Last Updated (partial) field of the Outputs content type. */
@@ -2708,6 +2756,16 @@ export type OutputsDataLinkDto = {
 /** The structure of the External Link field of the Outputs content input type. */
 export type OutputsDataLinkInputDto = {
   iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Project field of the Outputs content type. */
+export type OutputsDataProjectsDto = {
+  iv: Maybe<Array<Projects>>;
+};
+
+/** The structure of the Project field of the Outputs content input type. */
+export type OutputsDataProjectsInputDto = {
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Publish Date field of the Outputs content type. */
@@ -2786,6 +2844,16 @@ export type OutputsDataUpdatedByInputDto = {
   iv: InputMaybe<Array<Scalars['String']>>;
 };
 
+/** The structure of the Working Group field of the Outputs content type. */
+export type OutputsDataWorkingGroupsDto = {
+  iv: Maybe<Array<WorkingGroups>>;
+};
+
+/** The structure of the Working Group field of the Outputs content input type. */
+export type OutputsDataWorkingGroupsInputDto = {
+  iv: InputMaybe<Array<Scalars['String']>>;
+};
+
 /** The structure of the flat Outputs data type. */
 export type OutputsFlatDataDto = {
   /** Date output was shared with ASAP Network (different from publication date) */
@@ -2798,6 +2866,7 @@ export type OutputsFlatDataDto = {
   /** Does not include changes to Publish Date and Admin notes */
   lastUpdatedPartial: Maybe<Scalars['Instant']>;
   link: Maybe<Scalars['String']>;
+  projects: Maybe<Array<Projects>>;
   /** Date of publishing (outside the Hub). Only applies to outputs that have been published. */
   publishDate: Maybe<Scalars['Instant']>;
   /** For article research */
@@ -2806,6 +2875,7 @@ export type OutputsFlatDataDto = {
   /** For articles */
   type: Maybe<OutputsDataTypeEnum>;
   updatedBy: Maybe<Array<Users>>;
+  workingGroups: Maybe<Array<WorkingGroups>>;
 };
 
 /** List of Outputs items and total count. */
@@ -2846,6 +2916,10 @@ export type Projects = Content & {
   referencesUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
   referencesUsersContentsWithTotal: Maybe<UsersResultDto>;
+  /** Query Outputs content items. */
+  referencingOutputsContents: Maybe<Array<Outputs>>;
+  /** Query Outputs content items with total count. */
+  referencingOutputsContentsWithTotal: Maybe<OutputsResultDto>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
@@ -2867,6 +2941,24 @@ export type ProjectsReferencesUsersContentsArgs = {
 
 /** The structure of a Projects content type. */
 export type ProjectsReferencesUsersContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Projects content type. */
+export type ProjectsReferencingOutputsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Projects content type. */
+export type ProjectsReferencingOutputsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -3939,6 +4031,10 @@ export type WorkingGroups = Content & {
   referencesUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
   referencesUsersContentsWithTotal: Maybe<UsersResultDto>;
+  /** Query Outputs content items. */
+  referencingOutputsContents: Maybe<Array<Outputs>>;
+  /** Query Outputs content items with total count. */
+  referencingOutputsContentsWithTotal: Maybe<OutputsResultDto>;
   /** Query Working Group Network content items. */
   referencingWorkingGroupNetworkContents: Maybe<Array<WorkingGroupNetwork>>;
   /** Query Working Group Network content items with total count. */
@@ -3964,6 +4060,24 @@ export type WorkingGroupsReferencesUsersContentsArgs = {
 
 /** The structure of a Working Groups content type. */
 export type WorkingGroupsReferencesUsersContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Working Groups content type. */
+export type WorkingGroupsReferencingOutputsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Working Groups content type. */
+export type WorkingGroupsReferencingOutputsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -4504,6 +4618,18 @@ export type OutputContentFragment = Pick<
             })
       >
     >;
+    workingGroups: Maybe<
+      Array<
+        Pick<WorkingGroups, 'id'> & {
+          flatData: Pick<WorkingGroupsFlatDataDto, 'title'>;
+        }
+      >
+    >;
+    projects: Maybe<
+      Array<
+        Pick<Projects, 'id'> & { flatData: Pick<ProjectsFlatDataDto, 'title'> }
+      >
+    >;
   };
 };
 
@@ -4542,6 +4668,20 @@ export type FetchOutputQuery = {
                     'firstName' | 'lastName' | 'onboarded'
                   > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
                 })
+          >
+        >;
+        workingGroups: Maybe<
+          Array<
+            Pick<WorkingGroups, 'id'> & {
+              flatData: Pick<WorkingGroupsFlatDataDto, 'title'>;
+            }
+          >
+        >;
+        projects: Maybe<
+          Array<
+            Pick<Projects, 'id'> & {
+              flatData: Pick<ProjectsFlatDataDto, 'title'>;
+            }
           >
         >;
       };
@@ -4592,6 +4732,20 @@ export type FetchOutputsQuery = {
                           'firstName' | 'lastName' | 'onboarded'
                         > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
                       })
+                >
+              >;
+              workingGroups: Maybe<
+                Array<
+                  Pick<WorkingGroups, 'id'> & {
+                    flatData: Pick<WorkingGroupsFlatDataDto, 'title'>;
+                  }
+                >
+              >;
+              projects: Maybe<
+                Array<
+                  Pick<Projects, 'id'> & {
+                    flatData: Pick<ProjectsFlatDataDto, 'title'>;
+                  }
                 >
               >;
             };
@@ -6114,6 +6268,52 @@ export const OutputContentFragmentDoc = {
                                   },
                                 ],
                               },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'workingGroups' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'title' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'projects' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'title' },
                             },
                           ],
                         },

@@ -8,8 +8,8 @@
       "validateOnPublish": false
     },
     "scripts": {
-      "create": "if(new Date(ctx.data.publishDate.iv) > new Date()) {\n    reject('Publish date date cannot be greater than today')\n}\n",
-      "update": "const modified = Object.keys(ctx.data)\n        .filter(key => JSON.stringify(ctx.data[key]) !== JSON.stringify(ctx.oldData[key]))\n        .filter(key => key !== 'publishDate' && key !== 'adminNotes');\n        \nif (modified.length > 0) {\n    ctx.data.lastUpdatedPartial.iv = new Date().toISOString().split('.')[0]+\"Z\";\n    replace();\n}\n"
+      "create": "if(new Date(ctx.data.publishDate.iv) > new Date()) {\n    reject('Publish date date cannot be greater than today')\n}\n\nif(ctx.data.workingGroups.iv.length > 0 && ctx.data.projects.iv.length > 0) {\n    reject('Can only have a Working group or Project')\n}",
+      "update": "if(ctx.data.workingGroups.iv.length > 0 && ctx.data.projects.iv.length > 0) {\n    reject('Can only have a Working group or Project')\n}\n\nconst modified = Object.keys(ctx.data)\n        .filter(key => JSON.stringify(ctx.data[key]) !== JSON.stringify(ctx.oldData[key]))\n        .filter(key => key !== 'publishDate' && key !== 'adminNotes');\n        \nif (modified.length > 0) {\n    ctx.data.lastUpdatedPartial.iv = new Date().toISOString().split('.')[0]+\"Z\";\n    replace();\n}\n\n\n"
     },
     "fieldsInReferences": ["title", "documentType"],
     "fieldsInLists": [
@@ -272,6 +272,46 @@
           "editor": "List",
           "schemaIds": ["users", "external-authors"],
           "label": "Authors",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "projects",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "References",
+          "maxItems": 1,
+          "allowDuplicates": false,
+          "resolveReference": true,
+          "mustBePublished": true,
+          "editor": "Dropdown",
+          "schemaIds": ["projects"],
+          "label": "Project",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "workingGroups",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "References",
+          "maxItems": 1,
+          "allowDuplicates": false,
+          "resolveReference": true,
+          "mustBePublished": false,
+          "editor": "Dropdown",
+          "schemaIds": ["working-groups"],
+          "label": "Working Group",
           "isRequired": false,
           "isRequiredOnPublish": false,
           "isHalfWidth": false

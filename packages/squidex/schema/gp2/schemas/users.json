@@ -116,7 +116,6 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "Tags",
-          "createEnum": true,
           "allowedValues": [
             "AA",
             "AAS",
@@ -132,6 +131,7 @@
             "PhD",
             "PharmD"
           ],
+          "createEnum": true,
           "editor": "Checkboxes",
           "label": "Degree",
           "isRequired": false,
@@ -215,9 +215,9 @@
         "isDisabled": false,
         "partitioning": "invariant",
         "properties": {
+          "fieldType": "Array",
           "minItems": 1,
           "maxItems": 3,
-          "fieldType": "Array",
           "label": "Positions",
           "isRequired": true,
           "isRequiredOnPublish": false,
@@ -369,7 +369,6 @@
           "isHalfWidth": true
         }
       },
-
       {
         "name": "separatorBackground",
         "isHidden": false,
@@ -395,7 +394,8 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "Tags",
-          "createEnum": true,
+          "minItems": 1,
+          "maxItems": 10,
           "allowedValues": [
             "Administrative Support",
             "Bash",
@@ -440,8 +440,7 @@
             "Stata",
             "Training"
           ],
-          "maxItems": 10,
-          "minItems": 1,
+          "createEnum": true,
           "editor": "Tags",
           "label": "Keywords",
           "isRequired": false,
@@ -627,7 +626,9 @@
               "pattern": "^(?:http(s)?:\\/\\/)[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#%[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
               "patternMessage": "URL must start with http:// or https://",
               "isUnique": false,
+              "isEmbeddable": false,
               "inlineEditable": false,
+              "createEnum": false,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Study Link",
@@ -872,7 +873,6 @@
         "properties": {
           "fieldType": "String",
           "defaultValue": "",
-          "createEnum": true,
           "allowedValues": [
             "Administrator",
             "Hidden",
@@ -882,7 +882,9 @@
             "Working_Group_Participant"
           ],
           "isUnique": false,
+          "isEmbeddable": false,
           "inlineEditable": true,
+          "createEnum": true,
           "contentType": "Unspecified",
           "editor": "Dropdown",
           "label": "GP2 Hub Role",

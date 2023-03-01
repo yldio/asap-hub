@@ -639,48 +639,48 @@
       },
       {
         "name": "videoRecordingUpdatedAt",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
         "properties": {
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false,
           "fieldType": "DateTime",
           "editor": "DateTime",
-          "label": "Video Recording Updated At"
-        },
-        "isLocked": false,
-        "isHidden": false,
-        "isDisabled": false,
-        "partitioning": "invariant"
+          "label": "Video Recording Updated At",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
       },
       {
         "name": "presentationUpdatedAt",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
         "properties": {
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false,
           "fieldType": "DateTime",
           "editor": "DateTime",
-          "label": "Presentation Updated At"
-        },
-        "isLocked": false,
-        "isHidden": false,
-        "isDisabled": false,
-        "partitioning": "invariant"
+          "label": "Presentation Updated At",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
       },
       {
         "name": "notesUpdatedAt",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
         "properties": {
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false,
           "fieldType": "DateTime",
           "editor": "DateTime",
-          "label": "Notes Updated At"
-        },
-        "isLocked": false,
-        "isHidden": false,
-        "isDisabled": false,
-        "partitioning": "invariant"
+          "label": "Notes Updated At",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
       }
     ],
     "previewUrls": {},

@@ -6460,14 +6460,18 @@ export type EventContentFragment = Pick<
     | 'hideMeetingLink'
     | 'eventLink'
     | 'status'
+    | 'hidden'
     | 'tags'
     | 'title'
     | 'notesPermanentlyUnavailable'
     | 'notes'
+    | 'notesUpdatedAt'
     | 'videoRecordingPermanentlyUnavailable'
     | 'videoRecording'
+    | 'videoRecordingUpdatedAt'
     | 'presentationPermanentlyUnavailable'
     | 'presentation'
+    | 'presentationUpdatedAt'
     | 'meetingMaterialsPermanentlyUnavailable'
   > & {
     meetingMaterials: Maybe<
@@ -6879,14 +6883,18 @@ export type FetchEventsQuery = {
               | 'hideMeetingLink'
               | 'eventLink'
               | 'status'
+              | 'hidden'
               | 'tags'
               | 'title'
               | 'notesPermanentlyUnavailable'
               | 'notes'
+              | 'notesUpdatedAt'
               | 'videoRecordingPermanentlyUnavailable'
               | 'videoRecording'
+              | 'videoRecordingUpdatedAt'
               | 'presentationPermanentlyUnavailable'
               | 'presentation'
+              | 'presentationUpdatedAt'
               | 'meetingMaterialsPermanentlyUnavailable'
             > & {
               meetingMaterials: Maybe<
@@ -7347,14 +7355,18 @@ export type FetchEventQuery = {
         | 'hideMeetingLink'
         | 'eventLink'
         | 'status'
+        | 'hidden'
         | 'tags'
         | 'title'
         | 'notesPermanentlyUnavailable'
         | 'notes'
+        | 'notesUpdatedAt'
         | 'videoRecordingPermanentlyUnavailable'
         | 'videoRecording'
+        | 'videoRecordingUpdatedAt'
         | 'presentationPermanentlyUnavailable'
         | 'presentation'
+        | 'presentationUpdatedAt'
         | 'meetingMaterialsPermanentlyUnavailable'
       > & {
         meetingMaterials: Maybe<
@@ -11433,6 +11445,7 @@ export const EventContentFragmentDoc = {
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'eventLink' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'status' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'title' } },
                 {
@@ -11440,6 +11453,10 @@ export const EventContentFragmentDoc = {
                   name: { kind: 'Name', value: 'notesPermanentlyUnavailable' },
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'notes' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'notesUpdatedAt' },
+                },
                 {
                   kind: 'Field',
                   name: {
@@ -11453,6 +11470,10 @@ export const EventContentFragmentDoc = {
                 },
                 {
                   kind: 'Field',
+                  name: { kind: 'Name', value: 'videoRecordingUpdatedAt' },
+                },
+                {
+                  kind: 'Field',
                   name: {
                     kind: 'Name',
                     value: 'presentationPermanentlyUnavailable',
@@ -11461,6 +11482,10 @@ export const EventContentFragmentDoc = {
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'presentation' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'presentationUpdatedAt' },
                 },
                 {
                   kind: 'Field',

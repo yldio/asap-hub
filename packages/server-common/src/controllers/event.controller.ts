@@ -1,14 +1,20 @@
 import {
-  EventResponse,
+  EventCreateRequest as DefaultEventCreateRequest,
+  EventResponse as DefaultEventResponse,
+  EventUpdateRequest as DefaultEventUpdateRequest,
   FetchEventsOptions,
-  ListEventResponse,
+  ListEventResponse as DefaultListEventResponse,
 } from '@asap-hub/model';
-import { Event, RestEvent } from '@asap-hub/squidex';
 
-export interface EventController {
+export interface EventController<
+  EventResponse = DefaultEventResponse,
+  ListEventResponse = DefaultListEventResponse,
+  EventCreateRequest = DefaultEventCreateRequest,
+  EventUpdateRequest = DefaultEventUpdateRequest,
+> {
   fetch: (options: FetchEventsOptions) => Promise<ListEventResponse>;
   fetchById: (eventId: string) => Promise<EventResponse>;
-  create: (event: Event) => Promise<RestEvent>;
-  fetchByGoogleId: (googleId: string) => Promise<RestEvent | null>;
-  update: (eventId: string, data: Partial<Event>) => Promise<RestEvent>;
+  create: (event: EventCreateRequest) => Promise<EventResponse>;
+  fetchByGoogleId: (googleId: string) => Promise<EventResponse | null>;
+  update: (eventId: string, data: EventUpdateRequest) => Promise<EventResponse>;
 }

@@ -39,9 +39,7 @@ describe('Event data provider', () => {
     identity();
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+  afterEach(jest.resetAllMocks);
 
   describe('Fetch', () => {
     test('Should fetch the events from squidex graphql', async () => {

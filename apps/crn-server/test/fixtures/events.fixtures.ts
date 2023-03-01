@@ -1,10 +1,13 @@
 import {
+  EventCreateDataObject,
+  EventDataObject,
   EventResponse,
   EventSpeakerUser,
   EventStatus,
+  ListEventDataObject,
   ListEventResponse,
 } from '@asap-hub/model';
-import { Event, RestEvent } from '@asap-hub/squidex';
+import { RestEvent } from '@asap-hub/squidex';
 import { EventBridgeEvent } from 'aws-lambda';
 import {
   EventContentFragment,
@@ -19,22 +22,6 @@ import {
   getSquidexGraphqlWorkingGroup,
   getWorkingGroupResponse,
 } from './working-groups.fixtures';
-
-export const getEventRestResponse = (): Event => ({
-  googleId: 'google-event-id',
-  title: 'Event Tittle',
-  description: 'This event will be good',
-  startDate: '2021-02-23T19:32:00Z',
-  startDateTimeZone: 'Europe/Lisbon',
-  endDate: '2021-02-23T19:32:00Z',
-  endDateTimeZone: 'Europe/Lisbon',
-  calendar: ['squidex-calendar-id'],
-  status: 'Confirmed' as EventStatus,
-  tags: [],
-  hidden: false,
-  meetingLink: 'https://zweem.com',
-  hideMeetingLink: false,
-});
 
 export const getEventSpeakerUser = (): EventSpeakerUser => ({
   team: {
@@ -53,7 +40,7 @@ export const getEventSpeakerUser = (): EventSpeakerUser => ({
   role: 'Lead PI (Core Leadership)',
 });
 
-export const getEventResponse = (): EventResponse => ({
+export const getEventDataObject = (): EventDataObject => ({
   id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
   description: 'This event is awesome',
   lastModifiedDate: '2021-05-14T14:48:46.000Z',
@@ -64,13 +51,17 @@ export const getEventResponse = (): EventResponse => ({
   meetingLink: 'https://zoom.com/room/123',
   hideMeetingLink: false,
   status: 'Confirmed',
+  hidden: false,
   tags: [],
   title: 'Example Event',
   startDateTimeZone: 'UTC',
   endDateTimeZone: 'UTC',
   notes: 'These are the notes from the meeting',
+  notesUpdatedAt: '2010-10-01T08:00:04.000Z',
   videoRecording: '<embeded>video</embeded>',
+  videoRecordingUpdatedAt: '2010-08-01T08:00:04.000Z',
   presentation: '<embeded>presentation</embeded>',
+  presentationUpdatedAt: '2010-09-01T08:00:04.000Z',
   meetingMaterials: [
     {
       title: 'My additional link',
@@ -90,20 +81,24 @@ export const getEventResponse = (): EventResponse => ({
   speakers: [getEventSpeakerUser()],
 });
 
-export const listEventResponse = {
+export const getEventResponse = (): EventResponse => getEventDataObject();
+
+export const getListEventDataObject = (): ListEventDataObject => ({
   total: 1,
-  items: [getEventResponse()],
-};
+  items: [getEventDataObject()],
+});
+export const getListEventResponse = (): ListEventResponse =>
+  getListEventDataObject();
 
 export const getRestEvent = (): RestEvent => ({
   id: 'squidex-event-id',
   created: '2021-02-23T19:32:00Z',
   lastModified: '2021-02-23T19:32:00Z',
   version: 42,
-  data: squidexRestEventData(),
+  data: getEventInput(),
 });
 
-export const squidexRestEventData = () => ({
+export const getEventInput = () => ({
   googleId: { iv: 'google-event-id' },
   title: { iv: 'Event Tittle' },
   description: { iv: 'This event will be good' },
@@ -117,6 +112,22 @@ export const squidexRestEventData = () => ({
   hidden: { iv: false },
   meetingLink: { iv: 'https://zweem.com' },
   hideMeetingLink: { iv: false },
+});
+
+export const getUserCreateDataObject = (): EventCreateDataObject => ({
+  googleId: 'google-event-id',
+  title: 'Event Tittle',
+  description: 'This event will be good',
+  startDate: '2021-02-23T19:32:00Z',
+  startDateTimeZone: 'Europe/Lisbon',
+  endDate: '2021-02-23T19:32:00Z',
+  endDateTimeZone: 'Europe/Lisbon',
+  calendar: 'squidex-calendar-id',
+  status: 'Confirmed' as EventStatus,
+  tags: [],
+  hidden: false,
+  meetingLink: 'https://zweem.com',
+  hideMeetingLink: false,
 });
 
 export const getSquidexGraphqlEvent = () => ({
@@ -195,6 +206,7 @@ const squidexGraphqlEventsFlatData = (): EventContentFragment['flatData'] & {
   meetingLink: 'https://zoom.com/room/123',
   hideMeetingLink: false,
   status: 'Confirmed',
+  hidden: false,
   tags: [],
   title: 'Example Event',
   startDateTimeZone: 'UTC',

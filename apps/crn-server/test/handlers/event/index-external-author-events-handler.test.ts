@@ -1,15 +1,15 @@
 import Boom from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
-import { toPayload } from '../../helpers/algolia';
-import { getExternalAuthorEvent } from '../../fixtures/external-authors.fixtures';
-import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
-import { eventControllerMock } from '../../mocks/event-controller.mock';
-import { indexExternalAuthorEventsHandler } from '../../../src/handlers/event/index-external-author-events-handler';
-import { listEventResponse } from '../../fixtures/events.fixtures';
 import {
   ExternalAuthorEvent,
   ExternalAuthorPayload,
 } from '../../../src/handlers/event-bus';
+import { indexExternalAuthorEventsHandler } from '../../../src/handlers/event/index-external-author-events-handler';
+import { getListEventResponse } from '../../fixtures/events.fixtures';
+import { getExternalAuthorEvent } from '../../fixtures/external-authors.fixtures';
+import { toPayload } from '../../helpers/algolia';
+import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
+import { eventControllerMock } from '../../mocks/event-controller.mock';
 
 const mapPayload = toPayload('event');
 
@@ -56,6 +56,7 @@ describe('Index Events on External Author event handler', () => {
   test('Should throw the algolia error when saving the record fails', async () => {
     const algoliaError = new Error('ERROR');
 
+    const listEventResponse = getListEventResponse();
     eventControllerMock.fetch.mockResolvedValueOnce(listEventResponse);
     algoliaSearchClientMock.saveMany.mockRejectedValueOnce(algoliaError);
 
@@ -68,7 +69,8 @@ describe('Index Events on External Author event handler', () => {
 
   test.each(possibleEvents)(
     'Should index event when External Author event %s occurs',
-    async (name, event) => {
+    async (_name, event) => {
+      const listEventResponse = getListEventResponse();
       eventControllerMock.fetch.mockResolvedValueOnce(listEventResponse);
 
       await indexHandler(event);

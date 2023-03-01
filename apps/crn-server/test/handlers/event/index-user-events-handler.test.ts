@@ -2,7 +2,7 @@ import { UserEvent, UserPayload } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 import { indexUserEventsHandler } from '../../../src/handlers/event/index-user-events-handler';
-import { listEventResponse } from '../../fixtures/events.fixtures';
+import { getListEventResponse } from '../../fixtures/events.fixtures';
 import { getUserEvent } from '../../fixtures/users.fixtures';
 import { toPayload } from '../../helpers/algolia';
 import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
@@ -36,6 +36,7 @@ describe('Index Events on User event handler', () => {
   test('Should throw the algolia error when saving the record fails', async () => {
     const algoliaError = new Error('ERROR');
 
+    const listEventResponse = getListEventResponse();
     eventControllerMock.fetch.mockResolvedValueOnce(listEventResponse);
     algoliaSearchClientMock.saveMany.mockRejectedValueOnce(algoliaError);
 
@@ -46,7 +47,8 @@ describe('Index Events on User event handler', () => {
 
   test.each(possibleEvents)(
     'Should index event when user event %s occurs',
-    async (name, event) => {
+    async (_name, event) => {
+      const listEventResponse = getListEventResponse();
       eventControllerMock.fetch.mockResolvedValueOnce(listEventResponse);
 
       await indexHandler(event);

@@ -21,6 +21,7 @@ import {
 } from '../../config';
 import Events from '../../controllers/events';
 import { CalendarSquidexDataProvider } from '../../data-providers/calendars.data-provider';
+import { EventSquidexDataProvider } from '../../data-providers/event.data-provider';
 import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
@@ -47,8 +48,12 @@ const calendarDataProvider = new CalendarSquidexDataProvider(
   calendarRestClient,
   squidexGraphqlClient,
 );
+const eventDataProvider = new EventSquidexDataProvider(
+  eventRestClient,
+  squidexGraphqlClient,
+);
 const syncCalendar = syncCalendarFactory(
-  syncEventFactory(new Events(squidexGraphqlClient, eventRestClient), logger),
+  syncEventFactory(new Events(eventDataProvider), logger),
   getJWTCredentials,
   logger,
 );

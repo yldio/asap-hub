@@ -20,13 +20,6 @@ describe('WorkingGroupDetailHeader', () => {
     expect(screen.getByText('0 projects')).toBeVisible();
   });
 
-  it('renders backlink', () => {
-    render(<WorkingGroupDetailHeader {...defaultProps} />);
-    expect(
-      screen.getByRole('link', { name: 'Chevron Left Back' }),
-    ).toHaveAttribute('href', '/back');
-  });
-
   it('renders overview tab', () => {
     render(<WorkingGroupDetailHeader {...defaultProps} />);
     expect(screen.getByRole('link', { name: 'Overview' })).toBeVisible();

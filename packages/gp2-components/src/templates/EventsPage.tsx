@@ -1,4 +1,4 @@
-import { pixels, TabLink } from '@asap-hub/react-components';
+import { pixels, TabLink, TabNav } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 
@@ -16,21 +16,21 @@ const bannerProps = {
 };
 
 const navStyles = css({
-  maxWidth: '100%',
-  display: 'flex',
-  gap: rem(32),
+  marginTop: rem(32),
 });
 
 const EventsPage: React.FC = ({ children }) => (
   <article>
     <PageBanner {...bannerProps} noMarginBottom>
-      <nav css={navStyles}>
-        <TabLink href={gp2.events({}).upcoming({}).$}>Upcoming</TabLink>
-        <TabLink href={gp2.events({}).past({}).$}>Past</TabLink>
-        <TabLink href={gp2.events({}).calendar({}).$}>
-          Subscribe to Calendars
-        </TabLink>
-      </nav>
+      <div css={navStyles}>
+        <TabNav>
+          <TabLink href={gp2.events({}).upcoming({}).$}>Upcoming</TabLink>
+          <TabLink href={gp2.events({}).past({}).$}>Past</TabLink>
+          <TabLink href={gp2.events({}).calendar({}).$}>
+            Subscribe to Calendars
+          </TabLink>
+        </TabNav>
+      </div>
     </PageBanner>
     <main>{children}</main>
   </article>

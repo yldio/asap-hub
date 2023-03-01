@@ -1,11 +1,13 @@
 import { pixels } from '@asap-hub/react-components';
+import { css } from '@emotion/react';
 
 const {
   largeDesktopScreen,
+  mobileScreen,
+  rem,
   smallDesktopScreen,
   tabletScreen,
   vminLinearCalcClamped,
-  mobileScreen,
 } = pixels;
 
 export const smallDesktopQuery = `@media (min-width: ${
@@ -43,3 +45,9 @@ export const layoutContentStyles = {
     )}`,
   },
 };
+
+export const detailHeaderStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: rem(32),
+});

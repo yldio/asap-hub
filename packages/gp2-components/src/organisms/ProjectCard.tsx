@@ -8,22 +8,18 @@ import {
 } from '@asap-hub/react-components';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { css } from '@emotion/react';
+import { ComponentProps } from 'react';
 import colors from '../templates/colors';
 import ProjectSummaryFooter from './ProjectSummaryFooter';
 import ProjectSummaryHeader from './ProjectSummaryHeader';
 
 const { rem } = pixels;
 
-type ProjectCardProps = Pick<
-  gp2Model.ProjectResponse,
-  | 'title'
-  | 'status'
-  | 'startDate'
-  | 'endDate'
-  | 'members'
-  | 'id'
-  | 'projectProposalUrl'
->;
+type ProjectCardProps = ComponentProps<typeof ProjectSummaryHeader> &
+  Pick<
+    gp2Model.ProjectResponse,
+    'title' | 'startDate' | 'endDate' | 'members' | 'id'
+  >;
 
 const rowStyles = css({
   display: 'flex',
@@ -56,11 +52,15 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   members,
   id,
   projectProposalUrl,
+  traineeProject,
+  opportunitiesLink,
 }) => (
   <Card stroke strokeColor={cardStyles[status].color} strokeSize={9}>
     <ProjectSummaryHeader
       projectProposalUrl={projectProposalUrl}
       status={status}
+      traineeProject={traineeProject}
+      opportunitiesLink={opportunitiesLink}
     />
     <LinkHeadline
       href={

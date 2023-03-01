@@ -1,7 +1,11 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 import {
-  BackLink,
+  Card,
   drawerQuery,
+  externalLinkIcon,
+  informationIcon,
+  Link,
+  Paragraph,
   pixels,
   Subtitle,
   TabLink,
@@ -10,27 +14,24 @@ import {
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 
 import { css } from '@emotion/react';
+import { ComponentProps } from 'react';
 
 import { projectsImage } from '../images';
+import { detailHeaderStyles } from '../layout';
 import CardWithBackground from '../molecules/CardWithBackground';
+
 import ProjectSummaryFooter from './ProjectSummaryFooter';
 import ProjectSummaryHeader from './ProjectSummaryHeader';
 
 const { rem } = pixels;
 
-type ProjectDetailHeaderProps = Pick<
-  gp2Model.ProjectResponse,
-  | 'id'
-  | 'title'
-  | 'status'
-  | 'startDate'
-  | 'endDate'
-  | 'members'
-  | 'projectProposalUrl'
-> & {
-  backHref: string;
-  isProjectMember: boolean;
-};
+type ProjectDetailHeaderProps = ComponentProps<typeof ProjectSummaryHeader> &
+  Pick<
+    gp2Model.ProjectResponse,
+    'id' | 'title' | 'startDate' | 'endDate' | 'members' | 'opportunitiesLink'
+  > & {
+    isProjectMember: boolean;
+  };
 
 const infoContainerStyles = css({
   display: 'flex',
@@ -38,6 +39,23 @@ const infoContainerStyles = css({
   gap: rem(32),
   [drawerQuery]: {
     display: 'unset',
+  },
+});
+const opportunitiesCardStyles = css({
+  display: 'flex',
+  gap: rem(16),
+  margin: `${rem(32)} ${rem(24)}`,
+});
+const cardTextContainerStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: rem(4),
+});
+
+const infoIconStyles = css({
+  display: 'inline-flex',
+  svg: {
+    stroke: 'currentcolor',
   },
 });
 
@@ -49,15 +67,35 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = ({
   endDate,
   members,
   projectProposalUrl,
-  backHref,
   isProjectMember,
+  traineeProject,
+  opportunitiesLink,
 }) => (
-  <header>
-    <BackLink href={backHref} />
+  <header css={detailHeaderStyles}>
+    {opportunitiesLink && (
+      <Card accent="information" padding={false}>
+        <div css={opportunitiesCardStyles}>
+          <div>{informationIcon}</div>
+          <div css={cardTextContainerStyles}>
+            <Subtitle noMargin>Opportunities Available</Subtitle>
+            <Paragraph noMargin>
+              This project is currently looking for additional team members.
+            </Paragraph>
+            <Link href={opportunitiesLink}>
+              <span css={css({ display: 'inline-flex' })}>
+                Read more <span css={infoIconStyles}>{externalLinkIcon}</span>
+              </span>
+            </Link>
+          </div>
+        </div>
+      </Card>
+    )}
     <CardWithBackground image={projectsImage}>
       <ProjectSummaryHeader
         projectProposalUrl={projectProposalUrl}
         status={status}
+        traineeProject={traineeProject}
+        opportunitiesLink={opportunitiesLink}
       />
       <Subtitle>Project</Subtitle>
       <h2>{title}</h2>

@@ -1,6 +1,5 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 import {
-  BackLink,
   drawerQuery,
   pixels,
   Subtitle,
@@ -13,6 +12,7 @@ import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { projectIcon, usersIcon } from '../icons';
 import { workingGroupsImage } from '../images';
+import { detailHeaderStyles } from '../layout';
 import CardWithBackground from '../molecules/CardWithBackground';
 import IconWithLabel from '../molecules/IconWithLabel';
 
@@ -23,7 +23,6 @@ type WorkingGroupDetailHeaderProps = Pick<
   'title' | 'members' | 'id'
 > & {
   projects?: unknown[];
-  backHref: string;
   isWorkingGroupMember: boolean;
 };
 
@@ -39,15 +38,13 @@ const infoContainerStyles = css({
 const { getCounterString } = utils;
 
 const WorkingGroupDetailHeader: React.FC<WorkingGroupDetailHeaderProps> = ({
-  backHref,
   title,
   members,
   projects,
   id,
   isWorkingGroupMember,
 }) => (
-  <header>
-    <BackLink href={backHref} />
+  <header css={detailHeaderStyles}>
     <CardWithBackground image={workingGroupsImage}>
       <Subtitle>Working Group</Subtitle>
       <h2>{title}</h2>

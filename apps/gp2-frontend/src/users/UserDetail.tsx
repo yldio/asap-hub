@@ -1,6 +1,5 @@
 import { gp2, useRouteParams } from '@asap-hub/routing';
 
-import { useBackHref } from '@asap-hub/frontend-utils';
 import {
   BiographyModal,
   ContactInformationModal,
@@ -29,7 +28,7 @@ const UserDetail = () => {
   const { userId } = useRouteParams(users({}).user);
   const isOwnProfile = userId === currentUser?.id;
   const user = useUserById(userId);
-  const backHref = useBackHref() ?? users({}).$;
+
   const backToUserDetails = users({}).user({ userId }).$;
   const editHrefs = {
     editBiographyHref: users({}).user({ userId }).editBiography({}).$,
@@ -55,7 +54,6 @@ const UserDetail = () => {
   if (user) {
     return (
       <UserDetailPage
-        backHref={backHref}
         editHref={
           isOwnProfile
             ? users({}).user({ userId }).editKeyInfo({}).$

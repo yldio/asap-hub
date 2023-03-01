@@ -1,4 +1,4 @@
-import { Frame, useBackHref } from '@asap-hub/frontend-utils';
+import { Frame } from '@asap-hub/frontend-utils';
 import {
   EditResourceModal,
   ResourceModal,
@@ -18,7 +18,7 @@ const { workingGroups } = gp2Routing;
 const WorkingGroupDetail = () => {
   const { workingGroupId } = useRouteParams(workingGroups({}).workingGroup);
   const workingGroup = useWorkingGroupById(workingGroupId);
-  const backHref = useBackHref() ?? workingGroups({}).$;
+
   const currentUser = useCurrentUserGP2();
   const isWorkingGroupMember =
     workingGroup?.members.some(({ userId }) => userId === currentUser?.id) ||
@@ -38,7 +38,6 @@ const WorkingGroupDetail = () => {
   if (workingGroup) {
     return (
       <WorkingGroupDetailPage
-        backHref={backHref}
         {...workingGroup}
         isWorkingGroupMember={isWorkingGroupMember}
       >

@@ -12,6 +12,7 @@ describe('ProjectDetailPage', () => {
     projectProposalUrl: '',
     id: '42',
     isProjectMember: true,
+    traineeProject: false,
   };
   it('renders header', () => {
     render(<ProjectDetailPage {...defaultProps}></ProjectDetailPage>);

@@ -39,10 +39,18 @@ const TabLink: React.FC<TabLinkProps> = ({ href, children }) => {
         activeClassName={activeClassName}
         css={(theme) => [
           styles,
+          theme.components?.TabLink?.styles,
           { [`&.${activeClassName}`]: activeStyles(theme) },
         ]}
       >
-        <p css={layoutStyles}>{children}</p>
+        <p
+          css={({ components }) => [
+            layoutStyles,
+            components?.TabLink?.layoutStyles,
+          ]}
+        >
+          {children}
+        </p>
       </NavLink>
     );
   }
@@ -50,8 +58,22 @@ const TabLink: React.FC<TabLinkProps> = ({ href, children }) => {
   const active =
     new URL(href, window.location.href).pathname === window.location.pathname;
   return (
-    <a href={href} css={(theme) => [styles, active && activeStyles(theme)]}>
-      <p css={layoutStyles}>{children}</p>
+    <a
+      href={href}
+      css={(theme) => [
+        styles,
+        theme.components?.TabLink?.styles,
+        active && activeStyles(theme),
+      ]}
+    >
+      <p
+        css={({ components }) => [
+          layoutStyles,
+          components?.TabLink?.layoutStyles,
+        ]}
+      >
+        {children}
+      </p>
     </a>
   );
 };

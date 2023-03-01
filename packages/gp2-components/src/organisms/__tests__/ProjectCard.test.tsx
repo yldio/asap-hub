@@ -10,6 +10,7 @@ describe('ProjectCard', () => {
     status: 'Completed' as const,
     projectProposalUrl: 'http://a-proposal',
     members: [],
+    traineeProject: false,
   };
   it('renders the status', () => {
     render(<ProjectCard {...defaultProps} />);

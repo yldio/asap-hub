@@ -1,17 +1,11 @@
-import { BackLink } from '@asap-hub/react-components';
 import { ComponentProps } from 'react';
+import { detailHeaderStyles } from '../layout';
 import UserDetailHeaderCard from './UserDetailHeaderCard';
 
-type UserDetailHeaderProps = ComponentProps<typeof UserDetailHeaderCard> & {
-  backHref?: string;
-};
+type UserDetailHeaderProps = ComponentProps<typeof UserDetailHeaderCard>;
 
-const UserDetailHeader: React.FC<UserDetailHeaderProps> = ({
-  backHref,
-  ...props
-}) => (
-  <header>
-    {backHref && <BackLink href={backHref} />}
+const UserDetailHeader: React.FC<UserDetailHeaderProps> = ({ ...props }) => (
+  <header css={detailHeaderStyles}>
     <UserDetailHeaderCard {...props} />
   </header>
 );

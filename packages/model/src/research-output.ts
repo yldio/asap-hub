@@ -219,9 +219,8 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
   teams: Pick<TeamResponse, 'id' | 'displayName'>[];
   workingGroups: Pick<WorkingGroupResponse, 'id' | 'title'>[];
   published: boolean;
-  relatedResearch?: Pick<
-    ResearchOutputDataObject,
-    'id' | 'title' | 'documentType' | 'teams'
+  relatedResearch?: Array<
+    Pick<ResearchOutputDataObject, 'id' | 'title' | 'documentType' | 'teams'>
   >;
 };
 
@@ -242,6 +241,7 @@ export type ResearchOutputCreateDataObject = ResearchOutputCoreObject & {
   subtypeId?: string;
   teamIds: string[];
   workingGroups?: string[];
+  relatedResearchIds?: string[];
 };
 
 export type ResearchOutputUpdateDataObject = ResearchOutputCoreObject & {
@@ -254,6 +254,7 @@ export type ResearchOutputUpdateDataObject = ResearchOutputCoreObject & {
   teamIds: string[];
   updatedBy: string;
   workingGroups: string[];
+  relatedResearchIds?: string[];
 };
 
 export type ResearchOutputBaseResponse = Omit<

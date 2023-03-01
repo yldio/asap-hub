@@ -230,4 +230,7 @@ export type FetchUsersFilter = {
 
 export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;
 
-export type UserPermissionsLevel = 'None' | 'Member' | 'Admin';
+export type UserPermissions = {
+  saveDraft: boolean;
+  publish: boolean;
+};

@@ -24,7 +24,7 @@ it('renders an output with an external link if available', () => {
     'href',
     'http://example.com',
   );
-  expect(getByText('Open External Link')).toBeInTheDocument();
+  expect(getByText('Access Output')).toBeInTheDocument();
 });
 
 it('renders an output with a last updated date', () => {

@@ -29,6 +29,7 @@ export const outputContentQueryFragment = gql`
             firstName
             lastName
             onboarded
+            email
           }
         }
         ... on ExternalAuthors {

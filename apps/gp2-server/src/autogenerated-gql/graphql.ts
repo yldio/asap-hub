@@ -4613,7 +4613,7 @@ export type OutputContentFragment = Pick<
           > & {
               flatData: Pick<
                 UsersFlatDataDto,
-                'firstName' | 'lastName' | 'onboarded'
+                'firstName' | 'lastName' | 'onboarded' | 'email'
               > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
             })
       >
@@ -4665,7 +4665,7 @@ export type FetchOutputQuery = {
               > & {
                   flatData: Pick<
                     UsersFlatDataDto,
-                    'firstName' | 'lastName' | 'onboarded'
+                    'firstName' | 'lastName' | 'onboarded' | 'email'
                   > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
                 })
           >
@@ -4729,7 +4729,7 @@ export type FetchOutputsQuery = {
                     > & {
                         flatData: Pick<
                           UsersFlatDataDto,
-                          'firstName' | 'lastName' | 'onboarded'
+                          'firstName' | 'lastName' | 'onboarded' | 'email'
                         > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
                       })
                 >
@@ -6220,6 +6220,10 @@ export const OutputContentFragmentDoc = {
                                   {
                                     kind: 'Field',
                                     name: { kind: 'Name', value: 'onboarded' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'email' },
                                   },
                                 ],
                               },

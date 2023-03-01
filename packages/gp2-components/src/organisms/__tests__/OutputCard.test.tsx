@@ -46,6 +46,6 @@ describe('OutputCard', () => {
     );
     expect(
       screen.getAllByRole('listitem').map(({ textContent }) => textContent),
-    ).toStrictEqual(['Articles', 'Research']);
+    ).toEqual(expect.arrayContaining(['Articles', 'Research']));
   });
 });

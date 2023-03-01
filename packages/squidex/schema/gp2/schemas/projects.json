@@ -507,7 +507,7 @@
           "editor": "Toggle",
           "label": "Trainee Project",
           "hints": "check if project is a trainee project",
-          "isRequired": false,
+          "isRequired": true,
           "isRequiredOnPublish": false,
           "isHalfWidth": false
         }

@@ -9,4 +9,28 @@ describe('OutputCard', () => {
     render(<OutputCard {...defaultProps} title="Output Title" />);
     expect(screen.getByRole('heading', { name: 'Output Title' })).toBeVisible();
   });
+
+  it('renders link to project', () => {
+    render(
+      <OutputCard
+        {...defaultProps}
+        projects={{ id: '42', title: 'project name' }}
+      />,
+    );
+    expect(screen.getByRole('link', { name: /project name/i })).toHaveAttribute(
+      'href',
+      expect.stringContaining('42'),
+    );
+  });
+  it('renders link to workingGroup', () => {
+    render(
+      <OutputCard
+        {...defaultProps}
+        workingGroups={{ id: '42', title: 'working group name' }}
+      />,
+    );
+    expect(
+      screen.getByRole('link', { name: /working group name/i }),
+    ).toHaveAttribute('href', expect.stringContaining('42'));
+  });
 });

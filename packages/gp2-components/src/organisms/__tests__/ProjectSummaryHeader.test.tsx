@@ -4,6 +4,7 @@ import ProjectSummaryHeader from '../ProjectSummaryHeader';
 describe('ProjectSummaryHeader', () => {
   const defaultProps = {
     status: 'Active' as const,
+    traineeProject: false,
   };
   it('renders the project status', () => {
     render(<ProjectSummaryHeader {...defaultProps} />);

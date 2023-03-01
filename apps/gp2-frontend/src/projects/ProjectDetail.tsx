@@ -1,4 +1,4 @@
-import { Frame, useBackHref } from '@asap-hub/frontend-utils';
+import { Frame } from '@asap-hub/frontend-utils';
 import {
   EditResourceModal,
   ProjectDetailPage,
@@ -18,7 +18,7 @@ const { projects } = gp2Routing;
 const ProjectDetail = () => {
   const { projectId } = useRouteParams(projects({}).project);
   const project = useProjectById(projectId);
-  const backHref = useBackHref() ?? projects({}).$;
+
   const currentUser = useCurrentUserGP2();
   const isProjectMember =
     project?.members.some(({ userId }) => userId === currentUser?.id) || false;
@@ -35,11 +35,7 @@ const ProjectDetail = () => {
 
   if (project) {
     return (
-      <ProjectDetailPage
-        backHref={backHref}
-        isProjectMember={isProjectMember}
-        {...project}
-      >
+      <ProjectDetailPage isProjectMember={isProjectMember} {...project}>
         <Switch>
           <Route path={overview}>
             <Frame title="Overview">

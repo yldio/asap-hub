@@ -229,3 +229,4 @@ export {
 export * from './theme';
 export { noop } from './utils';
 export { pixels, text, authTestUtils, utils, mail };
+export type { AccentVariant } from './atoms';

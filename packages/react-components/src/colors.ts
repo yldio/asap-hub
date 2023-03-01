@@ -105,3 +105,11 @@ export const neutral900 = color(77, 100, 107);
 export const warning100 = color(248, 237, 222);
 export const warning500 = color(206, 128, 26);
 export const warning900 = color(181, 107, 11);
+
+export const information100 = color(230, 243, 249);
+export const information500 = color(12, 141, 195);
+export const information900 = color(0, 106, 146);
+
+export const error100 = color(247, 232, 234);
+export const error500 = color(205, 20, 38);
+export const error900 = color(176, 10, 26);

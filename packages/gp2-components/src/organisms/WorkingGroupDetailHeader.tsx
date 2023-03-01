@@ -1,6 +1,5 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 import {
-  BackLink,
   drawerQuery,
   pixels,
   Subtitle,
@@ -23,7 +22,6 @@ type WorkingGroupDetailHeaderProps = Pick<
   'title' | 'members' | 'id'
 > & {
   projects?: unknown[];
-  backHref: string;
   isWorkingGroupMember: boolean;
 };
 
@@ -39,15 +37,13 @@ const infoContainerStyles = css({
 const { getCounterString } = utils;
 
 const WorkingGroupDetailHeader: React.FC<WorkingGroupDetailHeaderProps> = ({
-  backHref,
   title,
   members,
   projects,
   id,
   isWorkingGroupMember,
 }) => (
-  <header>
-    <BackLink href={backHref} />
+  <header css={css({ display: 'flex', flexDirection: 'column', gap: '32px' })}>
     <CardWithBackground image={workingGroupsImage}>
       <Subtitle>Working Group</Subtitle>
       <h2>{title}</h2>

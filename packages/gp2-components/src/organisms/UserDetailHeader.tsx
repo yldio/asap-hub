@@ -1,17 +1,11 @@
-import { BackLink } from '@asap-hub/react-components';
+import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import UserDetailHeaderCard from './UserDetailHeaderCard';
 
-type UserDetailHeaderProps = ComponentProps<typeof UserDetailHeaderCard> & {
-  backHref?: string;
-};
+type UserDetailHeaderProps = ComponentProps<typeof UserDetailHeaderCard>;
 
-const UserDetailHeader: React.FC<UserDetailHeaderProps> = ({
-  backHref,
-  ...props
-}) => (
-  <header>
-    {backHref && <BackLink href={backHref} />}
+const UserDetailHeader: React.FC<UserDetailHeaderProps> = ({ ...props }) => (
+  <header css={css({ display: 'flex', flexDirection: 'column', gap: '32px' })}>
     <UserDetailHeaderCard {...props} />
   </header>
 );

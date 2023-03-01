@@ -12,6 +12,7 @@ describe('ProjectDetailHeader', () => {
     endDate: '2022-09-30T00:00:00Z',
     projectProposalUrl: 'www.google.pt',
     isProjectMember: true,
+    traineeProject: false,
   };
 
   it('renders title, number of members and number of projects', () => {

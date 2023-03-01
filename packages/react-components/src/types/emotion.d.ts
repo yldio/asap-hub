@@ -1,4 +1,5 @@
 import '@emotion/react';
+import { SerializedStyles } from '@emotion/react';
 
 import { OpaqueColor, TransparentColor } from '../colors';
 
@@ -26,6 +27,13 @@ declare module '@emotion/react' {
         itemStyles: {
           margin: string;
         };
+      };
+      Pill?: {
+        styles: SerializedStyles;
+      };
+      TabLink?: {
+        styles: SerializedStyles;
+        layoutStyles: SerializedStyles;
       };
     };
   }

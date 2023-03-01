@@ -1,3 +1,7 @@
+import { pixels } from '@asap-hub/react-components';
+
+const { rem } = pixels;
+
 const components = {
   NavigationLink: {
     styles: {
@@ -11,6 +15,23 @@ const components = {
       padding: 0,
     },
     itemStyles: {
+      margin: 0,
+    },
+  },
+  Pill: {
+    styles: {
+      margin: 0,
+      fontSize: rem(14),
+      padding: '4px 8px',
+      lineHeight: rem(16),
+      maxWidth: 'fit-content',
+    },
+  },
+  TabLink: {
+    styles: {
+      paddingTop: 0,
+    },
+    layoutStyles: {
       margin: 0,
     },
   },

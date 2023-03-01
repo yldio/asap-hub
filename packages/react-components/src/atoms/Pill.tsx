@@ -1,4 +1,4 @@
-import { css, CSSObject, SerializedStyles } from '@emotion/react';
+import { css, CSSObject } from '@emotion/react';
 import { Ellipsis } from '.';
 import * as colors from '../colors';
 import { lineHeight, perRem } from '../pixels';
@@ -20,7 +20,8 @@ export type AccentVariant =
   | 'green'
   | 'warning'
   | 'info'
-  | 'neutral';
+  | 'neutral'
+  | 'error';
 
 export const accents: Record<AccentVariant, CSSObject> = {
   default: {
@@ -48,22 +49,31 @@ export const accents: Record<AccentVariant, CSSObject> = {
     color: colors.neutral800.rgb,
     borderColor: colors.neutral800.rgb,
   },
+  error: {
+    backgroundColor: colors.error100.rgb,
+    color: colors.error500.rgb,
+    borderColor: colors.error500.rgb,
+  },
 };
 
 type PillProps = {
   readonly children?: React.ReactNode;
-  readonly overrideStyles?: SerializedStyles;
   readonly small?: boolean;
   readonly accent?: AccentVariant;
 };
 
 const Pill: React.FC<PillProps> = ({
   children,
-  overrideStyles,
   small = true,
   accent = 'default',
 }) => (
-  <span css={[styles, accents[accent], overrideStyles]}>
+  <span
+    css={({ components }) => [
+      styles,
+      components?.Pill?.styles,
+      accents[accent],
+    ]}
+  >
     <Ellipsis>{small ? <small>{children}</small> : children}</Ellipsis>
   </span>
 );

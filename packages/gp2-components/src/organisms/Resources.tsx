@@ -126,16 +126,7 @@ const Resources: React.FC<ResourcesProps> = ({
             <div key={`resource-${index}`} css={getResourcesListStyles()}>
               <Card>
                 <div css={[rowStyles, buttonStyles]}>
-                  <Pill
-                    small={false}
-                    overrideStyles={css({
-                      margin: 0,
-                      fontSize: rem(14),
-                      padding: '4px 8px',
-                      lineHeight: rem(16),
-                      maxWidth: 'fit-content',
-                    })}
-                  >
+                  <Pill small={false}>
                     {resource.type === 'Link' ? 'Link' : 'Note'}
                   </Pill>
                   {edit && (

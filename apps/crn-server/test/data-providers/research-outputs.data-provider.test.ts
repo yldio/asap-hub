@@ -83,7 +83,7 @@ describe('ResearchOutputs data provider', () => {
       );
       const expectedResult = getResearchOutputDataObject();
 
-      expect(result).toEqual({ ...expectedResult, published: true });
+      expect(result).toEqual(expectedResult);
     });
 
     test('Should throw a Not Found error when the research output is not found', async () => {
@@ -349,7 +349,7 @@ describe('ResearchOutputs data provider', () => {
       expectedResult.teams = [];
       expectedResult.contactEmails = []; // as there are no referencing teams, there won't be any PMs
 
-      expect(result).toEqual({ ...expectedResult, published: true });
+      expect(result).toEqual(expectedResult);
     });
 
     test('Should return a mix of internal and external authors', async () => {

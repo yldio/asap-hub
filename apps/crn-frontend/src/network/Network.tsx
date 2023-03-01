@@ -115,7 +115,7 @@ const Network: FC<Record<string, never>> = () => {
       </Route>
       <Route exact path={path + network({}).groups.template}>
         <NetworkPage
-          page="groups"
+          page="interest-groups"
           searchQuery={searchQuery}
           onChangeSearchQuery={setSearchQuery}
           filters={filters}

@@ -37,7 +37,7 @@ it('alters the search placeholder based on the tab', () => {
 
   rerender(
     <MemoryRouter initialEntries={[network({}).groups({}).$]}>
-      <NetworkPageHeader {...props} page="groups" />
+      <NetworkPageHeader {...props} page="interest-groups" />
     </MemoryRouter>,
   );
   expect(
@@ -64,7 +64,7 @@ it('shows the filter in all the tabs (teams, groups, working-groups and users)',
 
   rerender(
     <MemoryRouter initialEntries={[network({}).groups({}).$]}>
-      <NetworkPageHeader {...props} page="groups" />
+      <NetworkPageHeader {...props} page="interest-groups" />
     </MemoryRouter>,
   );
   expect(getByText(/filters/i)).toBeInTheDocument();

@@ -13,13 +13,19 @@ export default {
 export const Normal = () => {
   const activeTab = select(
     'Active Tab',
-    { Users: 'users', Teams: 'teams', Groups: 'groups' },
+    {
+      Members: 'users',
+      Teams: 'teams',
+      'Interest Groups': 'interest-groups',
+      'Working Groups': 'working-groups',
+    },
     'users',
   );
   const routes = {
     users: network({}).users({}).$,
     teams: network({}).teams({}).$,
-    groups: network({}).groups({}).$,
+    'interest-groups': network({}).groups({}).$,
+    'working-groups': network({}).workingGroups({}).$,
   };
   return (
     <StaticRouter key={activeTab} location={routes[activeTab]}>

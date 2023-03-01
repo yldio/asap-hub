@@ -1,5 +1,4 @@
 import { ResearchOutputResponse } from '@asap-hub/model';
-import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 
 import { Card, Display } from '../atoms';
@@ -29,20 +28,20 @@ const associationStyles = css({
   rowGap: `${6 / perRem}em`,
 });
 
-type SharedResearchOutputHeaderCardProps = ComponentProps<
-  typeof SharedResearchMetadata
-> &
-  Pick<
-    ResearchOutputResponse,
-    | 'created'
-    | 'addedDate'
-    | 'authors'
-    | 'teams'
-    | 'labs'
-    | 'title'
-    | 'lastUpdatedPartial'
-    | 'workingGroups'
-  >;
+type SharedResearchOutputHeaderCardProps = Pick<
+  ResearchOutputResponse,
+  | 'addedDate'
+  | 'authors'
+  | 'created'
+  | 'documentType'
+  | 'labs'
+  | 'lastUpdatedPartial'
+  | 'link'
+  | 'teams'
+  | 'title'
+  | 'type'
+  | 'workingGroups'
+>;
 
 const SharedResearchOutputHeaderCard: React.FC<
   SharedResearchOutputHeaderCardProps
@@ -55,10 +54,19 @@ const SharedResearchOutputHeaderCard: React.FC<
   lastUpdatedPartial,
   labs,
   workingGroups,
-  ...props
+  documentType,
+  type,
+  link,
 }) => (
   <Card>
-    <SharedResearchMetadata {...props} workingGroups={workingGroups} />
+    <SharedResearchMetadata
+      pills={[
+        workingGroups ? 'Working Group' : 'Team',
+        ...(documentType ? [documentType] : []),
+        ...(type ? [type] : []),
+      ]}
+      link={link}
+    />
     <Display styleAsHeading={3}>{title}</Display>
     <UsersList users={authors} />
     <div css={associationStyles}>

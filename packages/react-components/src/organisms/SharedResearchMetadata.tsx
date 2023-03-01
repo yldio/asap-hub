@@ -1,4 +1,3 @@
-import { ResearchOutputResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 
 import { perRem } from '../pixels';
@@ -11,29 +10,19 @@ const styles = css({
   columnGap: `${12 / perRem}em`,
 });
 
-type SharedResearchMetadataProps = Pick<
-  ResearchOutputResponse,
-  'documentType' | 'type' | 'link' | 'workingGroups'
->;
+type SharedResearchMetadataProps = {
+  pills: string[];
+  link?: string;
+};
 
 const SharedResearchMetadata: React.FC<SharedResearchMetadataProps> = ({
-  documentType,
-  type,
+  pills,
   link,
-  workingGroups,
-}) => {
-  const pills: string[] = [
-    workingGroups ? 'Working Group' : 'Team',
-    ...(documentType ? [documentType] : []),
-    ...(type ? [type] : []),
-  ];
-
-  return (
-    <div css={styles}>
-      <PillList pills={pills} />
-      {link ? <ExternalLink href={link} label="Open External Link" /> : null}
-    </div>
-  );
-};
+}) => (
+  <div css={styles}>
+    <PillList pills={pills} />
+    {link ? <ExternalLink href={link} label="Open External Link" /> : null}
+  </div>
+);
 
 export default SharedResearchMetadata;

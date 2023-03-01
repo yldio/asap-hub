@@ -4,33 +4,15 @@ import { render } from '@testing-library/react';
 import SharedResearchMetadata from '../SharedResearchMetadata';
 
 const props: ComponentProps<typeof SharedResearchMetadata> = {
-  documentType: 'Article',
-  type: 'Code',
-  workingGroups: undefined,
+  pills: ['Team', 'Article', 'Code'],
 };
 
-it('renders Team document types', () => {
-  const { getAllByRole } = render(
-    <SharedResearchMetadata {...props} documentType="Article" type="Code" />,
-  );
+it('renders the pills', () => {
+  const { getAllByRole } = render(<SharedResearchMetadata {...props} />);
 
   expect(
     getAllByRole('listitem').map(({ textContent }) => textContent),
   ).toEqual(['Team', 'Article', 'Code']);
-});
-
-it('renders Working Group document types', () => {
-  const { getAllByRole } = render(
-    <SharedResearchMetadata
-      {...props}
-      documentType="Article"
-      type="Code"
-      workingGroups={[{ id: '1', title: 'Working Group' }]}
-    />,
-  );
-  expect(
-    getAllByRole('listitem').map(({ textContent }) => textContent),
-  ).toEqual(['Working Group', 'Article', 'Code']);
 });
 
 it('renders a link if available', () => {

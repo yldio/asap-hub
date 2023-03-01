@@ -218,6 +218,10 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
   subtype?: string;
   teams: Pick<TeamResponse, 'id' | 'displayName'>[];
   workingGroups: Pick<WorkingGroupResponse, 'id' | 'title'>[];
+  relatedResearch?: Pick<
+    ResearchOutputDataObject,
+    'id' | 'title' | 'documentType' | 'teams'
+  >;
 };
 
 export type ListResearchOutputDataObject =

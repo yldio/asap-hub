@@ -12,6 +12,7 @@ import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { projectIcon, usersIcon } from '../icons';
 import { workingGroupsImage } from '../images';
+import { detailHeaderStyles } from '../layout';
 import CardWithBackground from '../molecules/CardWithBackground';
 import IconWithLabel from '../molecules/IconWithLabel';
 
@@ -43,7 +44,7 @@ const WorkingGroupDetailHeader: React.FC<WorkingGroupDetailHeaderProps> = ({
   id,
   isWorkingGroupMember,
 }) => (
-  <header css={css({ display: 'flex', flexDirection: 'column', gap: '32px' })}>
+  <header css={detailHeaderStyles}>
     <CardWithBackground image={workingGroupsImage}>
       <Subtitle>Working Group</Subtitle>
       <h2>{title}</h2>

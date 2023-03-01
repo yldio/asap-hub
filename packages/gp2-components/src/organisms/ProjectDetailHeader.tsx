@@ -17,6 +17,7 @@ import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 
 import { projectsImage } from '../images';
+import { detailHeaderStyles } from '../layout';
 import CardWithBackground from '../molecules/CardWithBackground';
 
 import ProjectSummaryFooter from './ProjectSummaryFooter';
@@ -40,6 +41,17 @@ const infoContainerStyles = css({
     display: 'unset',
   },
 });
+const opportunitiesCardStyles = css({
+  display: 'flex',
+  gap: rem(16),
+  margin: `${rem(32)} ${rem(24)}`,
+});
+const cardTextContainerStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: rem(4),
+});
+
 const infoIconStyles = css({
   display: 'inline-flex',
   svg: {
@@ -59,20 +71,12 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = ({
   traineeProject,
   opportunitiesLink,
 }) => (
-  <header css={css({ display: 'flex', flexDirection: 'column', gap: '32px' })}>
+  <header css={detailHeaderStyles}>
     {opportunitiesLink && (
       <Card accent="information" padding={false}>
-        <div
-          css={css({
-            display: 'flex',
-            gap: '16px',
-            margin: `${rem(32)} ${rem(24)}`,
-          })}
-        >
+        <div css={opportunitiesCardStyles}>
           <div>{informationIcon}</div>
-          <div
-            css={css({ display: 'flex', flexDirection: 'column', gap: '4px' })}
-          >
+          <div css={cardTextContainerStyles}>
             <Subtitle noMargin>Opportunities Available</Subtitle>
             <Paragraph noMargin>
               This project is currently looking for additional team members.

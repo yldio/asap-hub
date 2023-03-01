@@ -58,6 +58,21 @@ const editButtonStyles = css({
     marginLeft: 'auto',
   },
 });
+const resourceTitleContainerStyles = css({
+  display: 'flex',
+  flexDirection: 'row',
+  padding: `${rem(8)} 0`,
+});
+const resourceLinkStyles = css({
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: rem(8),
+  ':hover': {
+    svg: {
+      stroke: colors.primary500.rgb,
+    },
+  },
+});
 const hideStyles = css({
   [`:nth-of-type(n+4)`]: { display: 'none' },
 });
@@ -159,31 +174,14 @@ const Resources: React.FC<ResourcesProps> = ({
                     </div>
                   )}
                 </div>
-                <div
-                  css={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    padding: `${rem(8)} 0`,
-                  }}
-                >
+                <div css={resourceTitleContainerStyles}>
                   {resource.type === 'Link' ? (
                     <LinkHeadline
                       noMargin
                       level={4}
                       href={resource.externalLink}
                     >
-                      <span
-                        css={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: rem(8),
-                          ':hover': {
-                            svg: {
-                              stroke: colors.primary500.rgb,
-                            },
-                          },
-                        }}
-                      >
+                      <span css={resourceLinkStyles}>
                         {resource.title}
                         {externalLinkIcon}
                       </span>

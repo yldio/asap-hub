@@ -42,6 +42,14 @@ describe('the built index.html', () => {
             rel="preconnect"
           />
           <link
+            href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+            rel="stylesheet"
+          />
+          <link
+            href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap"
+            rel="stylesheet"
+          />
+          <link
             href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;700&display=swap"
             rel="stylesheet"
           />

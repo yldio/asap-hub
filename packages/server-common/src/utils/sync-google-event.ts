@@ -1,8 +1,4 @@
-import {
-  EventCreateRequest,
-  EventResponse,
-  EventStatus,
-} from '@asap-hub/model';
+import { EventResponse, EventStatus, gp2 } from '@asap-hub/model';
 import { calendar_v3 as calendarV3 } from 'googleapis';
 import { EventController } from '../controllers/event.controller';
 import {
@@ -16,21 +12,29 @@ export type SyncEvent = (
   googleCalendarId: string,
   squidexCalendarId: string,
   defaultTimezone: string,
-) => Promise<EventResponse>;
+) => Promise<EventResponse | gp2.EventResponse>;
 
 const getEventDate = (eventDate: calendarV3.Schema$EventDateTime): string => {
   if (eventDate.dateTime) return new Date(eventDate.dateTime).toISOString();
 
   return new Date(eventDate.date || 0).toISOString();
 };
-export const syncEventFactory =
-  (eventsController: EventController, logger: Logger): SyncEvent =>
-  async (
-    eventPayload: calendarV3.Schema$Event,
-    googleCalendarId: string,
-    squidexCalendarId: string,
-    defaultTimezone: string,
-  ): Promise<EventResponse> => {
+type EventControllerGP2 = EventController<
+  gp2.EventResponse,
+  gp2.ListEventResponse,
+  gp2.EventCreateRequest,
+  gp2.EventUpdateRequest
+>;
+function syncEventFactory(
+  eventsController: EventController | EventControllerGP2,
+  logger: Logger,
+): SyncEvent {
+  return async (
+    eventPayload,
+    googleCalendarId,
+    squidexCalendarId,
+    defaultTimezone,
+  ) => {
     let googleEvent: GoogleEvent;
     try {
       googleEvent = validateGoogleEvent(eventPayload as GoogleEvent);
@@ -46,7 +50,7 @@ export const syncEventFactory =
       throw new Error('Invalid organiser');
     }
 
-    const newEvent: Omit<EventCreateRequest, 'tags' | 'speakers'> = {
+    const newEvent = {
       googleId: googleEvent.id,
       title: googleEvent.summary,
       description: googleEvent.description,
@@ -80,7 +84,8 @@ export const syncEventFactory =
           { id: existingEvent.id, event: newEvent },
           'Found event. Updating.',
         );
-        return eventsController.update(existingEvent.id, newEvent);
+        const bob = eventsController.update(existingEvent.id, newEvent);
+        return bob;
       }
 
       if (newEvent.status === 'Cancelled') {
@@ -97,3 +102,5 @@ export const syncEventFactory =
       throw err;
     }
   };
+}
+export { syncEventFactory };

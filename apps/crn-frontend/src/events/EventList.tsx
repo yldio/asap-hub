@@ -2,7 +2,7 @@ import {
   EventsList,
   EventOwner,
   EventTeams,
-  EventSpeakers,
+  EventNumberOfSpeakers,
 } from '@asap-hub/react-components';
 import { EventResponse } from '@asap-hub/model';
 import { getEventListOptions } from '@asap-hub/frontend-utils';
@@ -30,7 +30,7 @@ export const eventMapper = ({
     speakers.find((speaker) => 'team' in speaker && !('user' in speaker))
   ),
   eventTeams: <EventTeams speakers={speakers} />,
-  eventSpeakers: <EventSpeakers speakers={speakers} />,
+  eventSpeakers: <EventNumberOfSpeakers speakers={speakers} />,
   eventOwner: <EventOwner group={group} workingGroup={workingGroup} />,
 });
 

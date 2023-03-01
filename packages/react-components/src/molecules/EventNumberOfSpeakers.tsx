@@ -22,7 +22,7 @@ const iconStyles = css({
   paddingRight: rem(9),
 });
 
-const EventSpeakers: React.FC<{
+const EventNumberOfSpeakers: React.FC<{
   speakers: EventResponse['speakers'];
 }> = ({ speakers }) => {
   const numberOfSpeakers = speakers.filter(
@@ -41,4 +41,4 @@ const EventSpeakers: React.FC<{
   );
 };
 
-export default EventSpeakers;
+export default EventNumberOfSpeakers;

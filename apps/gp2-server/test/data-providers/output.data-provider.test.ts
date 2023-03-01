@@ -368,6 +368,30 @@ describe('Outputs data provider', () => {
         );
       });
     });
+    describe('working groups', () => {
+      it('should return undefined if theres no working group', async () => {
+        const squidexGraphqlResponse = getSquidexOutputGraphqlResponse();
+        squidexGraphqlResponse.findOutputsContent!.flatData.workingGroups = [];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+        const result = await outputDataProvider.fetchById(outputId);
+
+        expect(result!.workingGroups).toBeUndefined();
+      });
+    });
+    describe('projects', () => {
+      it('should return undefined if theres no project', async () => {
+        const squidexGraphqlResponse = getSquidexOutputGraphqlResponse();
+        squidexGraphqlResponse.findOutputsContent!.flatData.projects = [];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+        const result = await outputDataProvider.fetchById(outputId);
+
+        expect(result!.projects).toBeUndefined();
+      });
+    });
   });
 
   describe('Fetch method', () => {

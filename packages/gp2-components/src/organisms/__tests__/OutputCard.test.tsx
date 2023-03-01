@@ -48,4 +48,14 @@ describe('OutputCard', () => {
       screen.getAllByRole('listitem').map(({ textContent }) => textContent),
     ).toEqual(expect.arrayContaining(['Articles', 'Research']));
   });
+  it('renders authors', () => {
+    const author = gp2.createOutputResponse().authors[0];
+    author.displayName = 'Tony Stark';
+    author.id = '123';
+    render(<OutputCard {...defaultProps} authors={[author]} />);
+    expect(screen.getByRole('link', { name: 'Tony Stark' })).toHaveAttribute(
+      'href',
+      expect.stringMatching(/123/),
+    );
+  });
 });

@@ -83,9 +83,7 @@ export const parseGraphQLOutput = (
               email: author.flatData.email,
               firstName: author.flatData.firstName || '',
               lastName: author.flatData.lastName || '',
-              displayName:
-                `${author.flatData.firstName} ${author.flatData.lastName}` ||
-                '',
+              displayName: `${author.flatData.firstName} ${author.flatData.lastName}`,
               onboarded: author.flatData.onboarded || false,
               avatarUrl,
             };

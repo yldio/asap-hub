@@ -41,25 +41,30 @@ const OutputCard: React.FC<OutputCardProps> = ({
 }) => (
   <Card padding={false}>
     <div css={css({ padding: rem(24) })}>
-      <div css={css({ padding: `${rem(4)} 0` })}>
-        <SharedResearchMetadata
-          pills={
-            [
-              workingGroups && 'Working Group',
-              projects && 'Project',
-              documentType,
-              type,
-            ].filter(Boolean) as string[]
-          }
-          link={link}
-        />
-      </div>
+      <SharedResearchMetadata
+        pills={
+          [
+            workingGroups && 'Working Group',
+            projects && 'Project',
+            documentType,
+            type,
+          ].filter(Boolean) as string[]
+        }
+        link={link}
+      />
+
       <div css={css({ margin: `${rem(12)} 0 ${rem(24)}` })}>
         <Headline2 styleAsHeading={4} noMargin>
           {title}
         </Headline2>
       </div>
-      <UsersList users={authors} max={3} />
+      <UsersList
+        users={authors.map((author) => ({
+          ...author,
+          href: author.id && gp2Routing.users({}).user({ userId: author.id }).$,
+        }))}
+        max={3}
+      />
       <div css={css({ margin: `${rem(4)} 0 ${rem(32)}` })}>
         {workingGroups && (
           <IconWithLabel noMargin icon={workingGroupIcon}>

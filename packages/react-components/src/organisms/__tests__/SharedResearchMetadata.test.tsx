@@ -28,5 +28,5 @@ it('renders a labeled link if available', () => {
     <SharedResearchMetadata {...props} link="https://example.com" />,
   );
   expect(getByRole('link')).toHaveAttribute('href', 'https://example.com');
-  expect(getByText('Open External Link')).toBeInTheDocument();
+  expect(getByText('Access Output')).toBeInTheDocument();
 });

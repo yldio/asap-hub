@@ -1,5 +1,5 @@
 import { ResearchOutputResponse } from '@asap-hub/model';
-import { sharedResearch } from '@asap-hub/routing';
+import { network, sharedResearch } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 
 import { Card, Caption } from '../atoms';
@@ -59,7 +59,13 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
     >
       {title}
     </LinkHeadline>
-    <UsersList max={3} users={authors} />
+    <UsersList
+      max={3}
+      users={authors.map((author) => ({
+        ...author,
+        href: author.id && network({}).users({}).user({ userId: author.id }).$,
+      }))}
+    />
     <div css={associationStyles}>
       <AssociationList
         type="Lab"

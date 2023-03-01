@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 
-import { perRem } from '../pixels';
+import { perRem, rem } from '../pixels';
 import { ExternalLink, PillList } from '../molecules';
 
 const styles = css({
@@ -20,7 +20,9 @@ const SharedResearchMetadata: React.FC<SharedResearchMetadataProps> = ({
   link,
 }) => (
   <div css={styles}>
-    <PillList pills={pills} />
+    <div css={css({ padding: `${rem(4)} 0` })}>
+      <PillList pills={pills} />
+    </div>
     {link ? <ExternalLink noMargin href={link} label="Access Output" /> : null}
   </div>
 );

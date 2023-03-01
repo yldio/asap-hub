@@ -42,6 +42,18 @@ export const outputContentQueryFragment = gql`
           }
         }
       }
+      workingGroups {
+        id
+        flatData {
+          title
+        }
+      }
+      projects {
+        id
+        flatData {
+          title
+        }
+      }
     }
   }
 `;

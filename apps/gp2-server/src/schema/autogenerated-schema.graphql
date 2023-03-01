@@ -2608,6 +2608,32 @@ type Outputs implements Content {
     """Optional number of items to take."""
     top: Int
   ): ExternalAuthorsResultDto
+  """Query Projects content items."""
+  referencesProjectsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [Projects!]
+  """Query Projects content items with total count."""
+  referencesProjectsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): ProjectsResultDto
   """Query Users content items."""
   referencesUsersContents(
     """Optional OData filter."""
@@ -2634,6 +2660,32 @@ type Outputs implements Content {
     """Optional number of items to take."""
     top: Int
   ): UsersResultDto
+  """Query Working Groups content items."""
+  referencesWorkingGroupsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [WorkingGroups!]
+  """Query Working Groups content items with total count."""
+  referencesWorkingGroupsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): WorkingGroupsResultDto
   """The status of the content."""
   status: String!
   """The status color of the content."""
@@ -2724,11 +2776,13 @@ type OutputsDataDto {
   documentType: OutputsDataDocumentTypeDto
   lastUpdatedPartial: OutputsDataLastUpdatedPartialDto
   link: OutputsDataLinkDto
+  projects: OutputsDataProjectsDto
   publishDate: OutputsDataPublishDateDto
   subtype: OutputsDataSubtypeDto
   title: OutputsDataTitleDto
   type: OutputsDataTypeDto
   updatedBy: OutputsDataUpdatedByDto
+  workingGroups: OutputsDataWorkingGroupsDto
 }
 
 """The structure of the Outputs data input type."""
@@ -2740,11 +2794,13 @@ input OutputsDataInputDto {
   documentType: OutputsDataDocumentTypeInputDto
   lastUpdatedPartial: OutputsDataLastUpdatedPartialInputDto
   link: OutputsDataLinkInputDto
+  projects: OutputsDataProjectsInputDto
   publishDate: OutputsDataPublishDateInputDto
   subtype: OutputsDataSubtypeInputDto
   title: OutputsDataTitleInputDto
   type: OutputsDataTypeInputDto
   updatedBy: OutputsDataUpdatedByInputDto
+  workingGroups: OutputsDataWorkingGroupsInputDto
 }
 
 """The structure of the Last Updated (partial) field of the Outputs content type."""
@@ -2767,6 +2823,16 @@ type OutputsDataLinkDto {
 """The structure of the External Link field of the Outputs content input type."""
 input OutputsDataLinkInputDto {
   iv: String
+}
+
+"""The structure of the Project field of the Outputs content type."""
+type OutputsDataProjectsDto {
+  iv: [Projects!]
+}
+
+"""The structure of the Project field of the Outputs content input type."""
+input OutputsDataProjectsInputDto {
+  iv: [String!]
 }
 
 """The structure of the Publish Date field of the Outputs content type."""
@@ -2845,6 +2911,16 @@ input OutputsDataUpdatedByInputDto {
   iv: [String!]
 }
 
+"""The structure of the Working Group field of the Outputs content type."""
+type OutputsDataWorkingGroupsDto {
+  iv: [WorkingGroups!]
+}
+
+"""The structure of the Working Group field of the Outputs content input type."""
+input OutputsDataWorkingGroupsInputDto {
+  iv: [String!]
+}
+
 """The structure of the flat Outputs data type."""
 type OutputsFlatDataDto {
   """Date output was shared with ASAP Network (different from publication date)"""
@@ -2857,6 +2933,7 @@ type OutputsFlatDataDto {
   """Does not include changes to Publish Date and Admin notes"""
   lastUpdatedPartial: Instant
   link: String
+  projects: [Projects!]
   """Date of publishing (outside the Hub). Only applies to outputs that have been published."""
   publishDate: Instant
   """For article research"""
@@ -2865,6 +2942,7 @@ type OutputsFlatDataDto {
   """For articles"""
   type: OutputsDataTypeEnum
   updatedBy: [Users!]
+  workingGroups: [WorkingGroups!]
 }
 
 """List of Outputs items and total count."""
@@ -2927,6 +3005,32 @@ type Projects implements Content {
     """Optional number of items to take."""
     top: Int
   ): UsersResultDto
+  """Query Outputs content items."""
+  referencingOutputsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [Outputs!]
+  """Query Outputs content items with total count."""
+  referencingOutputsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): OutputsResultDto
   """The status of the content."""
   status: String!
   """The status color of the content."""
@@ -4048,6 +4152,32 @@ type WorkingGroups implements Content {
     """Optional number of items to take."""
     top: Int
   ): UsersResultDto
+  """Query Outputs content items."""
+  referencingOutputsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [Outputs!]
+  """Query Outputs content items with total count."""
+  referencingOutputsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): OutputsResultDto
   """Query Working Group Network content items."""
   referencingWorkingGroupNetworkContents(
     """Optional OData filter."""

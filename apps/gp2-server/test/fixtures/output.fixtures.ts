@@ -71,6 +71,22 @@ export const getSquidexGraphqlOutput = (): NonNullable<
     authors: getSquidexOutputGraphqlResponseAuthors(),
     type: OutputsDataTypeEnum.Research,
     subtype: OutputsDataSubtypeEnum.Published,
+    workingGroups: [
+      {
+        id: '24',
+        flatData: {
+          title: 'A Working Group',
+        },
+      },
+    ],
+    projects: [
+      {
+        id: '42',
+        flatData: {
+          title: 'A Project',
+        },
+      },
+    ],
   },
 });
 

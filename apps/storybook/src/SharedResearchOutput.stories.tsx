@@ -89,10 +89,9 @@ const props = (): ComponentProps<typeof SharedResearchOutput> => ({
 export const Normal = () => (
   <ResearchOutputPermissionsContext.Provider
     value={{
-      permissions: object('Permissions', {
-        publish: true,
-        saveDraft: true,
-      }),
+      canShareResearchOutput: true,
+      canEditResearchOutput: true,
+      canPublishResearchOutput: true,
     }}
   >
     <SharedResearchOutput
@@ -109,10 +108,9 @@ export const Normal = () => (
 export const GrantDocument = () => (
   <ResearchOutputPermissionsContext.Provider
     value={{
-      permissions: object('Permissions', {
-        publish: true,
-        saveDraft: true,
-      }),
+      canShareResearchOutput: true,
+      canEditResearchOutput: true,
+      canPublishResearchOutput: true,
     }}
   >
     <SharedResearchOutput

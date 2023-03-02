@@ -5,7 +5,14 @@ module.exports.up = (migration) => {
 
   pages.editField('text').validations([
     {
-      enabledMarks: ['bold', 'italic', 'underline', 'code'],
+      enabledMarks: [
+        'bold',
+        'italic',
+        'underline',
+        'code',
+        'subscript',
+        'superscript',
+      ],
       message: 'Only bold, italic, underline, and code marks are allowed',
     },
     {
@@ -26,8 +33,6 @@ module.exports.up = (migration) => {
         'entry-hyperlink',
         'asset-hyperlink',
         'embedded-entry-inline',
-        'superscript',
-        'subscript',
       ],
 
       message:

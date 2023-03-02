@@ -73,6 +73,7 @@ export const plugins = [
   './serverless-plugins/serverless-s3-sync',
   './serverless-plugins/serverless-iam-roles-per-function',
   './serverless-plugins/serverless-webpack',
+  './serverless-plugins/serverless-offline',
 ];
 
 const eventBusSource = 'asap.entity-updated';

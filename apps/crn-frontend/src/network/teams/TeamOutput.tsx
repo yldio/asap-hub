@@ -54,10 +54,10 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   const team = useTeamById(teamId);
   const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
 
-  const createResearchOutput = usePostResearchOutput({ published: true });
-  const createDraftResearchOutput = usePostResearchOutput({ published: false });
-  const updateResearchOutput = usePutResearchOutput({ published: true });
-  const updateDraftResearchOutput = usePutResearchOutput({ published: false });
+  const createResearchOutput = usePostResearchOutput({ publish: true });
+  const createDraftResearchOutput = usePostResearchOutput({ publish: false });
+  const updateResearchOutput = usePutResearchOutput({ publish: true });
+  const updateDraftResearchOutput = usePutResearchOutput({ publish: false });
 
   const getLabSuggestions = useLabSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();

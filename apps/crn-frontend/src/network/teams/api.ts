@@ -74,10 +74,10 @@ export const patchTeam = async (
 export const createResearchOutput = async (
   researchOutput: ResearchOutputPostRequest,
   authorization: string,
-  published: boolean = true,
+  publish: boolean = true,
 ): Promise<ResearchOutputResponse> => {
   const resp = await fetch(
-    `${API_BASE_URL}/research-outputs?published=${published}`,
+    `${API_BASE_URL}/research-outputs?publish=${publish}`,
     {
       method: 'POST',
       headers: {
@@ -107,10 +107,10 @@ export const updateTeamResearchOutput = async (
   researchOutputId: string,
   researchOutput: ResearchOutputPostRequest,
   authorization: string,
-  published: boolean = true,
+  publish: boolean = true,
 ): Promise<ResearchOutputResponse> => {
   const resp = await fetch(
-    `${API_BASE_URL}/research-outputs/${researchOutputId}?published=${published}`,
+    `${API_BASE_URL}/research-outputs/${researchOutputId}?publish=${publish}`,
     {
       method: 'PUT',
       headers: {

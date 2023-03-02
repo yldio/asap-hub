@@ -158,7 +158,7 @@ describe('Team Research Output', () => {
   };
   it('makes an authorized POST request to create a research output', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-      .post('/research-outputs?published=true', payload)
+      .post('/research-outputs?publish=true', payload)
       .reply(201, { id: 123 });
 
     await createResearchOutput(payload, 'Bearer x');
@@ -167,7 +167,7 @@ describe('Team Research Output', () => {
 
   it('makes an authorized PUT request to update a research output', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-      .put('/research-outputs/123?published=true', payload)
+      .put('/research-outputs/123', payload)
       .reply(200, { id: 123 });
 
     await updateTeamResearchOutput('123', payload, 'Bearer x');
@@ -175,7 +175,7 @@ describe('Team Research Output', () => {
   });
 
   it('errors for an error status', async () => {
-    nock(API_BASE_URL).post('/research-outputs?published=true').reply(500, {});
+    nock(API_BASE_URL).post('/research-outputs?publish=true').reply(500, {});
 
     await expect(
       createResearchOutput(payload, 'Bearer x'),
@@ -185,9 +185,7 @@ describe('Team Research Output', () => {
   });
 
   it('errors for an error status in edit mode', async () => {
-    nock(API_BASE_URL)
-      .put('/research-outputs/123?published=true')
-      .reply(500, {});
+    nock(API_BASE_URL).put('/research-outputs/123').reply(500, {});
 
     await expect(
       updateTeamResearchOutput('123', payload, 'Bearer x'),

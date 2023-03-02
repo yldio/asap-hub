@@ -1,5 +1,5 @@
 import { FetchOptions, ListResponse } from '../common';
-import { ExternalAuthorResponse } from '../external-author';
+import { ExternalUserResponse } from './external-user';
 
 export const outputDocumentTypes = [
   'Forms',
@@ -69,7 +69,7 @@ type OutputOwner = {
 };
 
 export type OutputDataObject = OutputCoreObject & {
-  authors: (UserAuthor | ExternalAuthorResponse)[];
+  authors: (UserAuthor | ExternalUserResponse)[];
   created: string;
   id: string;
   lastUpdatedPartial: string;
@@ -81,7 +81,7 @@ export type ListOutputDataObject = ListResponse<OutputDataObject>;
 
 export type AuthorUpsertDataObject =
   | { userId: string }
-  | { externalAuthorId: string };
+  | { externalUserId: string };
 
 export type OutputCreateDataObject = OutputCoreObject & {
   authors: AuthorUpsertDataObject[];
@@ -101,8 +101,8 @@ export type ListOutputResponse = ListResponse<OutputResponse>;
 
 export type AuthorPostRequest =
   | { userId: string }
-  | { externalAuthorId: string }
-  | { externalAuthorName: string };
+  | { externalUserId: string }
+  | { externalUserName: string };
 
 export type OutputPostRequest = {
   authors?: AuthorPostRequest[];

@@ -10,13 +10,13 @@ import {
   getOutputUpdateData,
   getOutputUpdateDataObject,
 } from '../fixtures/output.fixtures';
-import { externalAuthorDataProviderMock } from '../mocks/external-author-data-provider.mock';
+import { externalUserDataProviderMock } from '../mocks/external-user-data-provider.mock';
 import { outputDataProviderMock } from '../mocks/output-data-provider.mock';
 
 describe('outputs controller', () => {
   const outputs = new Outputs(
     outputDataProviderMock,
-    externalAuthorDataProviderMock,
+    externalUserDataProviderMock,
   );
 
   afterEach(jest.resetAllMocks);
@@ -276,38 +276,38 @@ describe('outputs controller', () => {
     });
 
     describe('Authors', () => {
-      test('Should throw when cannot create an external author', async () => {
-        externalAuthorDataProviderMock.create.mockRejectedValueOnce(
+      test('Should throw when cannot create an external user', async () => {
+        externalUserDataProviderMock.create.mockRejectedValueOnce(
           new GenericError(),
         );
 
         await expect(
           outputs.create({
             ...getOutputCreateData(),
-            authors: [{ externalAuthorName: 'Chris Blue' }],
+            authors: [{ externalUserName: 'Chris Blue' }],
           }),
         ).rejects.toThrow(GenericError);
       });
 
-      test('Should create a new external author and associate with the -output', async () => {
-        const externalAuthorId = 'external-author-id-1';
-        externalAuthorDataProviderMock.create.mockResolvedValueOnce(
-          externalAuthorId,
+      test('Should create a new external user and associate with the -output', async () => {
+        const externalUserId = 'external-user-id-1';
+        externalUserDataProviderMock.create.mockResolvedValueOnce(
+          externalUserId,
         );
 
         await outputs.create({
           ...getOutputCreateData(),
-          authors: [{ externalAuthorName: 'Chris Blue' }],
+          authors: [{ externalUserName: 'Chris Blue' }],
         });
 
-        expect(externalAuthorDataProviderMock.create).toBeCalledWith({
+        expect(externalUserDataProviderMock.create).toBeCalledWith({
           name: 'Chris Blue',
         });
         expect(outputDataProviderMock.create).toBeCalledWith(
           expect.objectContaining({
             authors: [
               {
-                externalAuthorId,
+                externalUserId,
               },
             ],
           }),
@@ -519,31 +519,31 @@ describe('outputs controller', () => {
     });
 
     describe('Authors', () => {
-      test('Should throw when cannot create an external author', async () => {
-        externalAuthorDataProviderMock.create.mockRejectedValueOnce(
+      test('Should throw when cannot create an external user', async () => {
+        externalUserDataProviderMock.create.mockRejectedValueOnce(
           new GenericError(),
         );
 
         await expect(
           outputs.update(outputId, {
             ...getOutputUpdateData(),
-            authors: [{ externalAuthorName: 'Chris Blue' }],
+            authors: [{ externalUserName: 'Chris Blue' }],
           }),
         ).rejects.toThrow(GenericError);
       });
 
-      test('Should create a new external author and associate with the output', async () => {
-        const externalAuthorId = 'external-author-id-1';
-        externalAuthorDataProviderMock.create.mockResolvedValueOnce(
-          externalAuthorId,
+      test('Should create a new external user and associate with the output', async () => {
+        const externalUserId = 'external-user-id-1';
+        externalUserDataProviderMock.create.mockResolvedValueOnce(
+          externalUserId,
         );
 
         await outputs.update(outputId, {
           ...getOutputUpdateData(),
-          authors: [{ externalAuthorName: 'Chris Blue' }],
+          authors: [{ externalUserName: 'Chris Blue' }],
         });
 
-        expect(externalAuthorDataProviderMock.create).toBeCalledWith({
+        expect(externalUserDataProviderMock.create).toBeCalledWith({
           name: 'Chris Blue',
         });
         expect(outputDataProviderMock.update).toBeCalledWith(
@@ -551,7 +551,7 @@ describe('outputs controller', () => {
           expect.objectContaining({
             authors: [
               {
-                externalAuthorId,
+                externalUserId,
               },
             ],
           }),

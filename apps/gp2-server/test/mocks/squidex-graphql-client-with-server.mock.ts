@@ -53,8 +53,8 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
     WorkingGroupsResultDto: resultDto,
     Outputs: () => getSquidexGraphqlOutput(),
     OutputsResultDto: resultDto,
-    // ExternalAuthors: () => getGraphQLExternalAuthor(),
-    // ExternalAuthorsDto: () => resultDto,
+    // ExternalUsers: () => getGraphQLExternalUser(),
+    // ExternalUsersDto: () => resultDto,
   };
   const store = createMockStore({
     schema,

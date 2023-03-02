@@ -2,7 +2,7 @@ import { gp2 } from '@asap-hub/model';
 import { addHours, subHours } from 'date-fns';
 import { createCalendarResponse } from './calendars';
 
-export const createSpeakersResponse = (
+export const createInternalSpeakerResponse = (
   itemIndex = 0,
 ): gp2.EventSpeakerUser => ({
   id: `user-id-${itemIndex}`,
@@ -11,11 +11,38 @@ export const createSpeakersResponse = (
   displayName: `John Doe ${itemIndex}`,
 });
 
-const getSpeakers = (numberOfSpeakers: number): gp2.EventSpeaker[] => {
+export const createExternalSpeakerResponse = (
+  itemIndex = 0,
+): gp2.EventSpeakerExternalUser => ({
+  name: 'John',
+  orcid: '1234-1234-1234',
+});
+
+const getSpeakers = (
+  numberOfInternalSpeakers: number,
+  numberOfExternalSpeakers: number,
+  numberOfSpeakersToBeAnnounced: number,
+): gp2.EventSpeaker[] => {
   const speakerList: gp2.EventSpeaker[] = [];
 
-  for (let index = 0; index < numberOfSpeakers; index += 1) {
-    speakerList.push(createSpeakersResponse(index));
+  for (let index = 0; index < numberOfInternalSpeakers; index += 1) {
+    speakerList.push({
+      speaker: createInternalSpeakerResponse(index),
+      topic: `Topic #${index}`,
+    });
+  }
+
+  for (let index = 0; index < numberOfExternalSpeakers; index += 1) {
+    speakerList.push({
+      speaker: createExternalSpeakerResponse(index),
+      topic: `Topic #${index}`,
+    });
+  }
+
+  for (let index = 0; index < numberOfSpeakersToBeAnnounced; index += 1) {
+    speakerList.push({
+      speaker: undefined,
+    });
   }
 
   return speakerList;
@@ -23,7 +50,9 @@ const getSpeakers = (numberOfSpeakers: number): gp2.EventSpeaker[] => {
 
 interface FixtureOptions {
   meetingMaterials?: number;
-  numberOfSpeakers?: number;
+  numberOfInternalSpeakers?: number;
+  numberOfExternalSpeakers?: number;
+  numberOfSpeakersToBeAnnounced?: number;
   isEventInThePast?: boolean;
   customTitle?: string;
 }
@@ -31,7 +60,9 @@ interface FixtureOptions {
 export const createEventResponse = (
   {
     meetingMaterials = 1,
-    numberOfSpeakers = 4,
+    numberOfInternalSpeakers = 4,
+    numberOfExternalSpeakers = 0,
+    numberOfSpeakersToBeAnnounced = 0,
     isEventInThePast = false,
     customTitle = 'Event',
   }: FixtureOptions = {},
@@ -65,7 +96,11 @@ export const createEventResponse = (
     title: `Material ${i + 1}`,
     url: `https://example.com/materials/${i}`,
   })),
-  speakers: getSpeakers(numberOfSpeakers),
+  speakers: getSpeakers(
+    numberOfInternalSpeakers,
+    numberOfExternalSpeakers,
+    numberOfSpeakersToBeAnnounced,
+  ),
 });
 
 export const createListEventResponse = (

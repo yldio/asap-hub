@@ -6,7 +6,7 @@ import {
   Rest,
   RestPayload,
 } from '../common';
-import { GraphqlExternalAuthor } from '../crn';
+import { GraphqlExternalUser } from '../gp2';
 import { GraphqlUserAssoc } from './user';
 
 export type RestOutputDocumentType =
@@ -42,14 +42,14 @@ export interface InputOutput
   extends Entity,
     RestPayload<Omit<Output, 'contactEmails' | 'adminNotes'>> {}
 
-export type GraphqlExternalAuthorAssoc = GraphqlWithTypename<
-  GraphqlExternalAuthor,
-  'ExternalAuthors'
+export type GraphqlExternalUserAssoc = GraphqlWithTypename<
+  GraphqlExternalUser,
+  'ExternalUsers'
 >;
 
 export type GraphqlOutputAuthors =
   | GraphqlUserAssoc
-  | GraphqlExternalAuthorAssoc;
+  | GraphqlExternalUserAssoc;
 export interface GraphqlOutput
   extends Entity,
     Graphql<Output<GraphqlOutputAuthors>> {}

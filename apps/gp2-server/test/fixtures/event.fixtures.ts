@@ -61,7 +61,12 @@ export const getEventDataObject = (): gp2Model.EventDataObject => ({
     id: 'c_t92qa82jd702q1fkreoi0hf4hk@group.calendar.google.com',
     name: 'Tech 1 - Sequencing/omics',
   },
-  speakers: [getEventSpeakerUser()],
+  speakers: [
+    {
+      speaker: getEventSpeakerUser(),
+      topic: 'Topic #1',
+    },
+  ],
 });
 
 export const getListEventDataObject = (): gp2Model.ListEventDataObject => ({
@@ -139,6 +144,7 @@ export const getSquidexGraphqlEventSpeakerWithUser = (
       },
     },
   ],
+  topic: 'Some Topic',
 });
 
 const squidexGraphqlEventsFlatData = (): EventContentFragment['flatData'] & {

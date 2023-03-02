@@ -15,7 +15,6 @@ import {
   InputCalendar,
   RestCalendar,
   RestEvent,
-  RestExternalAuthor,
   SquidexGraphql,
   SquidexRest,
 } from '@asap-hub/squidex';
@@ -63,9 +62,9 @@ import {
   EventSquidexDataProvider,
 } from './data-providers/event.data-provider';
 import {
-  ExternalAuthorDataProvider,
-  ExternalAuthorSquidexDataProvider,
-} from './data-providers/external-authors.data-provider';
+  ExternalUserDataProvider,
+  ExternalUserSquidexDataProvider,
+} from './data-providers/external-users.data-provider';
 import {
   NewsDataProvider,
   NewsSquidexDataProvider,
@@ -173,7 +172,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     appName,
     baseUrl,
   });
-  const externalAuthorRestClient = new SquidexRest<RestExternalAuthor>(
+  const externalUserRestClient = new SquidexRest<gp2Squidex.RestExternalUser>(
     getAuthToken,
     'external-authors',
     {
@@ -220,9 +219,9 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.outputDataProvider ||
     new OutputSquidexDataProvider(squidexGraphqlClient, outputRestClient);
 
-  const externalAuthorDataProvider =
-    libs.externalAuthorDataProvider ||
-    new ExternalAuthorSquidexDataProvider(externalAuthorRestClient);
+  const externalUserDataProvider =
+    libs.externalUserDataProvider ||
+    new ExternalUserSquidexDataProvider(externalUserRestClient);
   // Controllers
 
   const workingGroupController =
@@ -238,7 +237,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.calendarController || new Calendars(calendarDataProvider);
   const outputController =
     libs.outputController ||
-    new Outputs(outputDataProvider, externalAuthorDataProvider);
+    new Outputs(outputDataProvider, externalUserDataProvider);
   const contributingCohortController =
     libs.contributingCohortController ||
     new ContributingCohorts(contributingCohortDataProvider);
@@ -320,7 +319,7 @@ export type Libs = {
     gp2.EventUpdateRequest
   >;
   eventDataProvider?: EventDataProvider;
-  externalAuthorDataProvider?: ExternalAuthorDataProvider;
+  externalUserDataProvider?: ExternalUserDataProvider;
   logger?: Logger;
   newsController?: NewsController;
   newsDataProvider?: NewsDataProvider;

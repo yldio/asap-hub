@@ -4,7 +4,10 @@ import {
   UserResponse,
 } from '@asap-hub/model';
 import { validateFetchOptions } from '@asap-hub/server-common';
-import { getUserRole, hasUpsertPermission } from '@asap-hub/validation';
+import {
+  getUserRole,
+  hasEditResearchOutputPermission,
+} from '@asap-hub/validation';
 import Boom from '@hapi/boom';
 import { Response, Router } from 'express';
 import { ResearchOutputController } from '../controllers/research-outputs';
@@ -60,7 +63,7 @@ export const researchOutputRouteFactory = (
     const options = validateResearchOutputRequestQueryParameters(query);
     const publish = options.publish ?? true;
 
-    if (!loggedInUser || !hasUpsertPermission(userRole, false)) {
+    if (!loggedInUser || !hasEditResearchOutputPermission(userRole, false)) {
       throw Boom.forbidden();
     }
 
@@ -90,9 +93,9 @@ export const researchOutputRouteFactory = (
         updateRequest.teams,
       );
 
-      // TODO: update the published value in hasUpsertPermission in
+      // TODO: update the published value in hasEditResearchOutputPermission in
       // display draft task. Currently we are not sending the value published
-      if (!loggedInUser || !hasUpsertPermission(userRole, false)) {
+      if (!loggedInUser || !hasEditResearchOutputPermission(userRole, false)) {
         throw Boom.forbidden();
       }
 

@@ -302,7 +302,6 @@ it('can edit a research output', async () => {
       teams: [teamId],
     }),
     expect.anything(),
-    true,
   );
 });
 

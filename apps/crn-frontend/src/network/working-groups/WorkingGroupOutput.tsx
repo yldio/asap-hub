@@ -47,8 +47,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
 
   const createResearchOutput = usePostResearchOutput({ publish: true });
   const createDraftResearchOutput = usePostResearchOutput({ publish: false });
-  const updateResearchOutput = usePutResearchOutput({ publish: true });
-  const updateDraftResearchOutput = usePutResearchOutput({ publish: false });
+  const updateResearchOutput = usePutResearchOutput();
 
   const getLabSuggestions = useLabSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();
@@ -115,7 +114,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
           }
           onSaveDraft={(output) =>
             researchOutputData
-              ? updateDraftResearchOutput(researchOutputData.id, {
+              ? updateResearchOutput(researchOutputData.id, {
                   ...output,
                   workingGroups: [workingGroupId],
                 }).catch(handleError(['/link', '/title'], setErrors))

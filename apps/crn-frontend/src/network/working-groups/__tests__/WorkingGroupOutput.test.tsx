@@ -466,7 +466,6 @@ it.each([
         workingGroups: [workingGroupId],
       }),
       expect.anything(),
-      published,
     );
   },
 );

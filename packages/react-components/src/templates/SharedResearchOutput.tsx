@@ -42,7 +42,6 @@ type SharedResearchOutputProps = Pick<
   | 'environments'
   | 'subtype'
   | 'id'
-  | 'published'
 > &
   ComponentProps<typeof SharedResearchOutputHeaderCard> & {
     backHref: string;
@@ -54,7 +53,6 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   usageNotes,
   contactEmails,
   id,
-  published,
   ...props
 }) => {
   const isGrantDocument = ['Grant Document', 'Presentation'].includes(

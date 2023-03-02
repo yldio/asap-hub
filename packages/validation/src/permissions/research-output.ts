@@ -50,5 +50,3 @@ export const hasEditResearchOutputPermission = (
 ): boolean =>
   userRole === 'Staff' ||
   (isEnabled('DRAFT_RESEARCH_OUTPUT') && userRole === 'Member' && !published);
-
-export const hasUpsertPermission = hasEditResearchOutputPermission;

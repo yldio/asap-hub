@@ -107,10 +107,9 @@ export const updateTeamResearchOutput = async (
   researchOutputId: string,
   researchOutput: ResearchOutputPostRequest,
   authorization: string,
-  publish: boolean = true,
 ): Promise<ResearchOutputResponse> => {
   const resp = await fetch(
-    `${API_BASE_URL}/research-outputs/${researchOutputId}?publish=${publish}`,
+    `${API_BASE_URL}/research-outputs/${researchOutputId}`,
     {
       method: 'PUT',
       headers: {

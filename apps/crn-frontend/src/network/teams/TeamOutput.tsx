@@ -56,8 +56,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
 
   const createResearchOutput = usePostResearchOutput({ publish: true });
   const createDraftResearchOutput = usePostResearchOutput({ publish: false });
-  const updateResearchOutput = usePutResearchOutput({ publish: true });
-  const updateDraftResearchOutput = usePutResearchOutput({ publish: false });
+  const updateResearchOutput = usePutResearchOutput();
 
   const getLabSuggestions = useLabSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();
@@ -123,7 +122,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
           }
           onSaveDraft={(output) =>
             researchOutputData
-              ? updateDraftResearchOutput(researchOutputData.id, output).catch(
+              ? updateResearchOutput(researchOutputData.id, output).catch(
                   handleError(['/link', '/title'], setErrors),
                 )
               : createDraftResearchOutput(output).catch(

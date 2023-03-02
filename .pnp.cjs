@@ -2353,7 +2353,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@types/js-yaml",\
-        "npm:4.0.3"\
+        "npm:4.0.5"\
       ],\
       [\
         "@types/jsdom",\
@@ -10758,10 +10758,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/preset-typescript", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.21.0"],\
             ["@babel/runtime-corejs3", "npm:7.21.0"],\
             ["@types/jest", "npm:29.4.0"],\
+            ["@types/js-yaml", "npm:4.0.5"],\
+            ["@types/node", "npm:18.14.4"],\
             ["@vedicium/auth0-actions-sdk", "npm:0.1.3"],\
             ["auth0-deploy-cli", "npm:7.15.1"],\
             ["got", "npm:11.8.6"],\
-            ["nock", "npm:13.3.0"]\
+            ["js-yaml", "npm:4.1.0"],\
+            ["nock", "npm:13.3.0"],\
+            ["ts-node", "virtual:a165564317f0b92d7f72089df97002e7b69d2373ff7839f92d9f9e1bed5f710b4e712695583c77d16186478eb0c9ba6e1edcf723243579fe7c5a370e032217e7#npm:10.9.1"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -36048,6 +36052,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/js-yaml", "npm:4.0.3"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:4.0.5", {\
+          "packageLocation": "./.yarn/cache/@types-js-yaml-npm-4.0.5-bb64d71397-7dcac8c50f.zip/node_modules/@types/js-yaml/",\
+          "packageDependencies": [\
+            ["@types/js-yaml", "npm:4.0.5"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["@types/jsdom", [\
@@ -36334,6 +36345,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-node-npm-16.11.26-6163d95b7d-57757caaba.zip/node_modules/@types/node/",\
           "packageDependencies": [\
             ["@types/node", "npm:16.11.26"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:18.14.4", {\
+          "packageLocation": "./.yarn/cache/@types-node-npm-18.14.4-ed37dd0e01-3f2f625777.zip/node_modules/@types/node/",\
+          "packageDependencies": [\
+            ["@types/node", "npm:18.14.4"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -69053,6 +69071,42 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["yn", "npm:3.1.1"]\
           ],\
           "packagePeers": [\
+            "@types/typescript",\
+            "typescript"\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["virtual:a165564317f0b92d7f72089df97002e7b69d2373ff7839f92d9f9e1bed5f710b4e712695583c77d16186478eb0c9ba6e1edcf723243579fe7c5a370e032217e7#npm:10.9.1", {\
+          "packageLocation": "./.yarn/__virtual__/ts-node-virtual-158ab49397/0/cache/ts-node-npm-10.9.1-6c268be7f4-090adff130.zip/node_modules/ts-node/",\
+          "packageDependencies": [\
+            ["ts-node", "virtual:a165564317f0b92d7f72089df97002e7b69d2373ff7839f92d9f9e1bed5f710b4e712695583c77d16186478eb0c9ba6e1edcf723243579fe7c5a370e032217e7#npm:10.9.1"],\
+            ["@cspotcode/source-map-support", "npm:0.8.1"],\
+            ["@swc/core", null],\
+            ["@swc/wasm", null],\
+            ["@tsconfig/node10", "npm:1.0.8"],\
+            ["@tsconfig/node12", "npm:1.0.9"],\
+            ["@tsconfig/node14", "npm:1.0.1"],\
+            ["@tsconfig/node16", "npm:1.0.2"],\
+            ["@types/node", "npm:18.14.4"],\
+            ["@types/swc__core", null],\
+            ["@types/swc__wasm", null],\
+            ["@types/typescript", null],\
+            ["acorn", "npm:8.7.0"],\
+            ["acorn-walk", "npm:8.2.0"],\
+            ["arg", "npm:4.1.3"],\
+            ["create-require", "npm:1.1.1"],\
+            ["diff", "npm:4.0.2"],\
+            ["make-error", "npm:1.3.6"],\
+            ["typescript", null],\
+            ["v8-compile-cache-lib", "npm:3.0.1"],\
+            ["yn", "npm:3.1.1"]\
+          ],\
+          "packagePeers": [\
+            "@swc/core",\
+            "@swc/wasm",\
+            "@types/node",\
+            "@types/swc__core",\
+            "@types/swc__wasm",\
             "@types/typescript",\
             "typescript"\
           ],\

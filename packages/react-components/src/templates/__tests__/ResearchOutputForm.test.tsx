@@ -1,4 +1,3 @@
-import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { StaticRouter, Router } from 'react-router-dom';
@@ -41,12 +40,11 @@ const props: ComponentProps<typeof ResearchOutputForm> = {
   documentType: 'Article',
   selectedTeams: [],
   typeOptions: Array.from(researchOutputDocumentTypeToType.Article.values()),
-};
-
-const permissions = {
-  canEditResearchOutput: true,
-  canPublishResearchOutput: true,
-  canShareResearchOutput: true,
+  permissions: {
+    canEditResearchOutput: true,
+    canPublishResearchOutput: true,
+    canShareResearchOutput: true,
+  },
 };
 
 jest.setTimeout(60000);
@@ -93,9 +91,7 @@ describe('createIdentifierField', () => {
 it('renders the form', async () => {
   render(
     <StaticRouter>
-      <ResearchOutputPermissionsContext.Provider value={permissions}>
-        <ResearchOutputForm {...props} />
-      </ResearchOutputPermissionsContext.Provider>
+      <ResearchOutputForm {...props} />
     </StaticRouter>,
   );
   expect(
@@ -107,12 +103,10 @@ it('renders the form', async () => {
 it('renders the edit form button when research output data is present', async () => {
   render(
     <StaticRouter>
-      <ResearchOutputPermissionsContext.Provider value={permissions}>
-        <ResearchOutputForm
-          {...props}
-          researchOutputData={createResearchOutputResponse()}
-        />
-      </ResearchOutputPermissionsContext.Provider>
+      <ResearchOutputForm
+        {...props}
+        researchOutputData={createResearchOutputResponse()}
+      />
     </StaticRouter>,
   );
 
@@ -136,14 +130,12 @@ it('pre populates the form with provided backend response', async () => {
   };
   await render(
     <StaticRouter>
-      <ResearchOutputPermissionsContext.Provider value={permissions}>
-        <ResearchOutputForm
-          {...props}
-          documentType={'Dataset'}
-          typeOptions={Array.from(researchOutputDocumentTypeToType.Dataset)}
-          researchOutputData={researchOutputData}
-        />
-      </ResearchOutputPermissionsContext.Provider>
+      <ResearchOutputForm
+        {...props}
+        documentType={'Dataset'}
+        typeOptions={Array.from(researchOutputDocumentTypeToType.Dataset)}
+        researchOutputData={researchOutputData}
+      />
     </StaticRouter>,
   );
 
@@ -282,24 +274,21 @@ describe('on submit', () => {
     },
   ) => {
     render(
-      <ResearchOutputPermissionsContext.Provider value={permissions}>
-        <Router history={history}>
-          <ResearchOutputForm
-            {...props}
-            selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
-            documentType={documentType}
-            typeOptions={Array.from(
-              researchOutputDocumentTypeToType[documentType],
-            )}
-            onSave={saveFn}
-            onSaveDraft={saveDraftFn}
-            getLabSuggestions={getLabSuggestions}
-            getAuthorSuggestions={getAuthorSuggestions}
-            researchTags={researchTags}
-          />
-        </Router>
-        ,
-      </ResearchOutputPermissionsContext.Provider>,
+      <Router history={history}>
+        <ResearchOutputForm
+          {...props}
+          selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
+          documentType={documentType}
+          typeOptions={Array.from(
+            researchOutputDocumentTypeToType[documentType],
+          )}
+          onSave={saveFn}
+          onSaveDraft={saveDraftFn}
+          getLabSuggestions={getLabSuggestions}
+          getAuthorSuggestions={getAuthorSuggestions}
+          researchTags={researchTags}
+        />
+      </Router>,
     );
 
     fireEvent.change(screen.getByLabelText(/url/i), {
@@ -760,30 +749,26 @@ describe('form buttons', () => {
     },
   ) => {
     render(
-      <ResearchOutputPermissionsContext.Provider
-        value={{
-          canEditResearchOutput,
-          canPublishResearchOutput,
-          canShareResearchOutput: true,
-        }}
-      >
-        <Router history={history}>
-          <ResearchOutputForm
-            {...props}
-            selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
-            documentType={documentType}
-            typeOptions={Array.from(
-              researchOutputDocumentTypeToType[documentType],
-            )}
-            onSave={saveFn}
-            getLabSuggestions={getLabSuggestions}
-            getAuthorSuggestions={getAuthorSuggestions}
-            researchTags={researchTags}
-            published={published}
-          />
-        </Router>
-        ,
-      </ResearchOutputPermissionsContext.Provider>,
+      <Router history={history}>
+        <ResearchOutputForm
+          {...props}
+          selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
+          documentType={documentType}
+          typeOptions={Array.from(
+            researchOutputDocumentTypeToType[documentType],
+          )}
+          onSave={saveFn}
+          getLabSuggestions={getLabSuggestions}
+          getAuthorSuggestions={getAuthorSuggestions}
+          researchTags={researchTags}
+          published={published}
+          permissions={{
+            canEditResearchOutput,
+            canPublishResearchOutput,
+            canShareResearchOutput: true,
+          }}
+        />
+      </Router>,
     );
   };
 

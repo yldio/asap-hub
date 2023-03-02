@@ -7,9 +7,8 @@ import {
   ResearchOutputResponse,
   ResearchTagResponse,
 } from '@asap-hub/model';
-import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { sharedResearch } from '@asap-hub/routing';
-import React, { ComponentProps, useContext, useState } from 'react';
+import React, { ComponentProps, useState } from 'react';
 import equal from 'fast-deep-equal';
 import { contentSidePaddingWithNavigation } from '../layout';
 import {
@@ -57,6 +56,11 @@ type ResearchOutputFormProps = Pick<
     >;
     researchOutputData?: ResearchOutputResponse;
     tagSuggestions: string[];
+    permissions: {
+      canEditResearchOutput: boolean;
+      canPublishResearchOutput: boolean;
+      canShareResearchOutput: boolean;
+    };
   };
 
 const mainStyles = css({
@@ -143,11 +147,10 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   serverValidationErrors,
   clearServerValidationError,
   published,
+  permissions,
 }) => {
   const historyPush = usePushFromHere();
-  const { canShareResearchOutput, canPublishResearchOutput } = useContext(
-    ResearchOutputPermissionsContext,
-  );
+  const { canShareResearchOutput, canPublishResearchOutput } = permissions;
 
   const showSaveDraftButton = !published && canShareResearchOutput;
   const showPublishButton = canPublishResearchOutput;

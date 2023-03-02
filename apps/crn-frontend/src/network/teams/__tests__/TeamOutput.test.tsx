@@ -2,16 +2,17 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import { createResearchOutputResponse } from '@asap-hub/fixtures';
+import {
+  createResearchOutputResponse,
+  createUserResponse,
+} from '@asap-hub/fixtures';
 import { BackendError } from '@asap-hub/frontend-utils';
 import {
   ResearchOutputResponse,
+  UserResponse,
   ValidationErrorResponse,
 } from '@asap-hub/model';
-import {
-  ResearchOutputPermissionsContext,
-  ToastContext,
-} from '@asap-hub/react-context';
+import { ToastContext } from '@asap-hub/react-context';
 import { network, TeamOutputDocumentTypeParameter } from '@asap-hub/routing';
 import {
   render,
@@ -31,6 +32,8 @@ jest.setTimeout(30000);
 jest.mock('../api');
 jest.mock('../../users/api');
 jest.mock('../../../shared-research/api');
+
+const baseUser = createUserResponse();
 
 const mandatoryFields = async (
   {
@@ -104,7 +107,7 @@ const mockUpdateResearchOutput =
   >;
 
 interface RenderPageOptions {
-  canEditResearchOutput?: boolean;
+  user?: UserResponse;
   teamId: string;
   teamOutputDocumentType?: TeamOutputDocumentTypeParameter;
   researchOutputData?: ResearchOutputResponse;
@@ -149,7 +152,7 @@ it('switches research output type based on parameter', async () => {
 });
 
 it('can submit a form when form data is valid', async () => {
-  const teamId = 'team-42';
+  const teamId = '42';
   const link = 'https://example42.com';
   const title = 'example42 title';
   const description = 'example42 description';
@@ -207,7 +210,7 @@ it('can submit a form when form data is valid', async () => {
 });
 
 it('can save draft when form data is valid', async () => {
-  const teamId = 'team-42';
+  const teamId = '42';
   const link = 'https://example42.com';
   const title = 'example42 title';
   const description = 'example42 description';
@@ -305,7 +308,15 @@ it('can edit a research output', async () => {
 
 test('displays sorry page when user does not have edit permission', async () => {
   await renderPage({
-    canEditResearchOutput: false,
+    user: {
+      ...baseUser,
+      teams: [
+        {
+          ...baseUser.teams[0],
+          role: 'Key Personnel',
+        },
+      ],
+    },
     teamId: '42',
     teamOutputDocumentType: 'article',
     researchOutputData: {
@@ -404,7 +415,10 @@ it('will toast server side errors for unknown errors in edit mode', async () => 
 });
 
 async function renderPage({
-  canEditResearchOutput = true,
+  user = {
+    ...baseUser,
+    teams: [{ ...baseUser.teams[0], id: '42', role: 'Project Manager' }],
+  },
   teamId,
   teamOutputDocumentType = 'bioinformatics',
   researchOutputData,
@@ -423,7 +437,7 @@ async function renderPage({
     >
       <Suspense fallback="loading">
         <ToastContext.Provider value={mockToast}>
-          <Auth0Provider user={{}}>
+          <Auth0Provider user={user}>
             <WhenReady>
               <StaticRouter
                 location={
@@ -433,20 +447,12 @@ async function renderPage({
                     .createOutput({ teamOutputDocumentType }).$
                 }
               >
-                <ResearchOutputPermissionsContext.Provider
-                  value={{
-                    canEditResearchOutput,
-                    canShareResearchOutput: true,
-                    canPublishResearchOutput: true,
-                  }}
-                >
-                  <Route path={path}>
-                    <TeamOutput
-                      teamId={teamId}
-                      researchOutputData={researchOutputData}
-                    />
-                  </Route>
-                </ResearchOutputPermissionsContext.Provider>
+                <Route path={path}>
+                  <TeamOutput
+                    teamId={teamId}
+                    researchOutputData={researchOutputData}
+                  />
+                </Route>
               </StaticRouter>
             </WhenReady>
           </Auth0Provider>

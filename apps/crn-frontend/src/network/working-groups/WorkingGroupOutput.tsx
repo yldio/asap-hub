@@ -10,8 +10,7 @@ import {
   ResearchOutputHeader,
 } from '@asap-hub/react-components';
 import { network, useRouteParams } from '@asap-hub/routing';
-import React, { useContext, useState } from 'react';
-import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
+import React, { useState } from 'react';
 import researchSuggestions from '../teams/research-suggestions';
 import { useWorkingGroupById } from './state';
 import {
@@ -24,6 +23,7 @@ import {
   usePostResearchOutput,
   usePutResearchOutput,
 } from '../../shared-research';
+import { useResearchOutputPermissions } from '../../shared-research/state';
 
 type WorkingGroupOutputProps = {
   workingGroupId: string;
@@ -45,9 +45,6 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
 
   const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
 
-  const { canEditResearchOutput } = useContext(
-    ResearchOutputPermissionsContext,
-  );
   const createResearchOutput = usePostResearchOutput({ published: true });
   const createDraftResearchOutput = usePostResearchOutput({ published: false });
   const updateResearchOutput = usePutResearchOutput({ published: true });
@@ -60,7 +57,13 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
 
   const published = researchOutputData ? !!researchOutputData.published : false;
 
-  if (canEditResearchOutput && workingGroup) {
+  const permissions = useResearchOutputPermissions(
+    'workingGroups',
+    [workingGroupId],
+    published,
+  );
+
+  if (permissions.canEditResearchOutput && workingGroup) {
     return (
       <Frame title="Share Working Group Research Output">
         <ResearchOutputHeader
@@ -98,6 +101,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
           )}
           authorsRequired
           published={published}
+          permissions={permissions}
           onSave={(output) =>
             researchOutputData
               ? updateResearchOutput(researchOutputData.id, {

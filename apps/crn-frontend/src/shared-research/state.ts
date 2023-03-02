@@ -184,3 +184,21 @@ export const useCanPublishResearchOutput = (
   const userRole = getUserRole(user, association, associationIds);
   return hasPublishResearchOutputPermission(userRole);
 };
+
+export const useResearchOutputPermissions = (
+  association: 'teams' | 'workingGroups',
+  associationIds: string[],
+  published: boolean,
+): {
+  canEditResearchOutput: boolean;
+  canPublishResearchOutput: boolean;
+  canShareResearchOutput: boolean;
+} => {
+  const user = useCurrentUserCRN();
+  const userRole = getUserRole(user, association, associationIds);
+  return {
+    canEditResearchOutput: hasEditResearchOutputPermission(userRole, published),
+    canPublishResearchOutput: hasPublishResearchOutputPermission(userRole),
+    canShareResearchOutput: hasShareResearchOutputPermission(userRole),
+  };
+};

@@ -9,13 +9,12 @@ import {
   ResearchOutputForm,
   ResearchOutputHeader,
 } from '@asap-hub/react-components';
-import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import {
   network,
   TeamOutputDocumentTypeParameter,
   useRouteParams,
 } from '@asap-hub/routing';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import researchSuggestions from './research-suggestions';
 import { useTeamById } from './state';
 import {
@@ -28,6 +27,7 @@ import {
   usePutResearchOutput,
   usePostResearchOutput,
 } from '../../shared-research';
+import { useResearchOutputPermissions } from '../../shared-research/state';
 
 const useParamOutputDocumentType = (
   teamId: string,
@@ -54,10 +54,6 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   const team = useTeamById(teamId);
   const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
 
-  const { canEditResearchOutput } = useContext(
-    ResearchOutputPermissionsContext,
-  );
-
   const createResearchOutput = usePostResearchOutput({ published: true });
   const createDraftResearchOutput = usePostResearchOutput({ published: false });
   const updateResearchOutput = usePutResearchOutput({ published: true });
@@ -70,7 +66,13 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
 
   const published = researchOutputData ? !!researchOutputData.published : false;
 
-  if (canEditResearchOutput && team) {
+  const permissions = useResearchOutputPermissions(
+    'teams',
+    [teamId],
+    published,
+  );
+
+  if (permissions.canEditResearchOutput && team) {
     return (
       <Frame title="Share Research Output">
         <ResearchOutputHeader
@@ -109,6 +111,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
             }),
           )}
           published={published}
+          permissions={permissions}
           onSave={(output) =>
             researchOutputData
               ? updateResearchOutput(researchOutputData.id, output).catch(

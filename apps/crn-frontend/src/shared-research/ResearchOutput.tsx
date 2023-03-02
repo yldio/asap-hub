@@ -5,12 +5,7 @@ import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { useRouteMatch, Route } from 'react-router-dom';
 import { isResearchOutputWorkingGroup } from '@asap-hub/validation';
 
-import {
-  useResearchOutputById,
-  useCanEditResearchOutput,
-  useCanPublishResearchOutput,
-  useCanShareResearchOutput,
-} from './state';
+import { useResearchOutputById, useResearchOutputPermissions } from './state';
 import TeamOutput from '../network/teams/TeamOutput';
 import WorkingGroupOutput from '../network/working-groups/WorkingGroupOutput';
 
@@ -30,31 +25,15 @@ const ResearchOutput: React.FC = () => {
     ? researchOutputData?.workingGroups.map((wg) => wg.id) || []
     : researchOutputData?.teams.map((team) => team.id) || [];
 
-  const canShareResearchOutput = useCanShareResearchOutput(
+  const permissions = useResearchOutputPermissions(
     association,
     associationIds,
-  );
-
-  const canEditResearchOutput = useCanEditResearchOutput(
-    association,
-    associationIds,
-    !!researchOutputData?.published,
-  );
-
-  const canPublishResearchOutput = useCanPublishResearchOutput(
-    association,
-    associationIds,
+    researchOutputData ? researchOutputData.published : false,
   );
 
   if (researchOutputData) {
     return (
-      <ResearchOutputPermissionsContext.Provider
-        value={{
-          canShareResearchOutput,
-          canEditResearchOutput,
-          canPublishResearchOutput,
-        }}
-      >
+      <ResearchOutputPermissionsContext.Provider value={permissions}>
         <Route exact path={path}>
           <Frame title={researchOutputData.title}>
             <SharedResearchOutput {...researchOutputData} backHref={backHref} />

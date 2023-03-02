@@ -2,16 +2,17 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import { createResearchOutputResponse } from '@asap-hub/fixtures';
+import {
+  createResearchOutputResponse,
+  createUserResponse,
+} from '@asap-hub/fixtures';
 import { BackendError } from '@asap-hub/frontend-utils';
 import {
   ResearchOutputResponse,
+  UserResponse,
   ValidationErrorResponse,
 } from '@asap-hub/model';
-import {
-  ResearchOutputPermissionsContext,
-  ToastContext,
-} from '@asap-hub/react-context';
+import { ToastContext } from '@asap-hub/react-context';
 import {
   network,
   WorkingGroupOutputDocumentTypeParameter,
@@ -114,8 +115,14 @@ const mandatoryFields = async (
   };
 };
 
+const baseUser = createUserResponse();
 const renderPage = async ({
-  canEditResearchOutput = true,
+  user = {
+    ...baseUser,
+    workingGroups: [
+      { ...baseUser.workingGroups[0], id: 'wg1', role: 'Project Manager' },
+    ],
+  },
   workingGroupId = 'wg1',
   workingGroupOutputDocumentType = 'article',
   researchOutputData,
@@ -128,6 +135,7 @@ const renderPage = async ({
     ],
   }),
 }: {
+  user?: UserResponse;
   workingGroupId?: string;
   workingGroupOutputDocumentType?: WorkingGroupOutputDocumentTypeParameter;
   canEditResearchOutput?: boolean;
@@ -149,23 +157,15 @@ const renderPage = async ({
     >
       <Suspense fallback="loading">
         <ToastContext.Provider value={mockToast}>
-          <Auth0Provider user={{}}>
+          <Auth0Provider user={user}>
             <WhenReady>
               <Router history={history}>
-                <ResearchOutputPermissionsContext.Provider
-                  value={{
-                    canEditResearchOutput,
-                    canShareResearchOutput: true,
-                    canPublishResearchOutput: true,
-                  }}
-                >
-                  <Route path={path}>
-                    <WorkingGroupOutput
-                      workingGroupId={workingGroupId}
-                      researchOutputData={researchOutputData}
-                    />
-                  </Route>
-                </ResearchOutputPermissionsContext.Provider>
+                <Route path={path}>
+                  <WorkingGroupOutput
+                    workingGroupId={workingGroupId}
+                    researchOutputData={researchOutputData}
+                  />
+                </Route>
               </Router>
             </WhenReady>
           </Auth0Provider>
@@ -178,7 +178,6 @@ const renderPage = async ({
 
 it('Renders the working group research output form with relevant fields', async () => {
   await renderPage({
-    workingGroupId: '42',
     workingGroupOutputDocumentType: 'article',
   });
 
@@ -194,7 +193,7 @@ it('Renders the working group research output form with relevant fields', async 
 });
 
 it('can submit a form when form data is valid', async () => {
-  const workingGroupId = 'wg-42';
+  const workingGroupId = 'wg1';
   const link = 'https://example42.com';
   const title = 'example42 title';
   const description = 'example42 description';
@@ -250,7 +249,7 @@ it('can submit a form when form data is valid', async () => {
       methods: [],
       organisms: [],
       environments: [],
-      workingGroups: ['wg-42'],
+      workingGroups: ['wg1'],
       publishDate: undefined,
       subtype: undefined,
       usageNotes: '',
@@ -268,7 +267,7 @@ it('can submit a form when form data is valid', async () => {
 });
 
 it('can save draft when form data is valid', async () => {
-  const workingGroupId = 'wg-42';
+  const workingGroupId = 'wg1';
   const link = 'https://example42.com';
   const title = 'example42 title';
   const description = 'example42 description';
@@ -324,7 +323,7 @@ it('can save draft when form data is valid', async () => {
       methods: [],
       organisms: [],
       environments: [],
-      workingGroups: ['wg-42'],
+      workingGroups: ['wg1'],
       publishDate: undefined,
       subtype: undefined,
       usageNotes: '',
@@ -341,8 +340,12 @@ it('can save draft when form data is valid', async () => {
   });
 });
 
-it('displays sorry page when user has not editing permissions', async () => {
+it('displays sorry page when user does not have editing permissions', async () => {
   await renderPage({
+    user: {
+      ...baseUser,
+      workingGroups: [{ ...baseUser.workingGroups[0], role: 'Member' }],
+    },
     canEditResearchOutput: false,
     researchOutputData: {
       ...createResearchOutputResponse(),
@@ -367,7 +370,6 @@ it('will show server side validation error for link', async () => {
   );
 
   await renderPage({
-    workingGroupId: '42',
     workingGroupOutputDocumentType: 'article',
   });
   const { publish } = await mandatoryFields({}, true);
@@ -397,7 +399,6 @@ it('will toast server side errors for unknown errors', async () => {
   mockCreateResearchOutput.mockRejectedValue(new Error('Something went wrong'));
 
   await renderPage({
-    workingGroupId: '42',
     workingGroupOutputDocumentType: 'article',
   });
 
@@ -415,10 +416,10 @@ it.each([
   { status: 'draft', buttonName: 'Save Draft', published: false },
   { status: 'published', buttonName: 'Save', published: true },
 ])(
-  'can edit a $status report working group research output',
+  'can edit a $status working group research output',
   async ({ buttonName, published }) => {
     const id = 'RO-ID';
-    const workingGroupId = 'wg-42';
+    const workingGroupId = 'wg1';
     const link = 'https://example42.com';
     const title = 'example42 title';
     const description = 'example42 description';

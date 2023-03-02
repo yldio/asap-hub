@@ -16,6 +16,11 @@ export default {
 export const Normal = () => (
   <StaticRouter>
     <ResearchOutputForm
+      permissions={{
+        canEditResearchOutput: true,
+        canPublishResearchOutput: true,
+        canShareResearchOutput: true,
+      }}
       onSave={() => Promise.resolve()}
       onSaveDraft={() => Promise.resolve()}
       tagSuggestions={['A53T', 'Activity assay']}
@@ -58,6 +63,11 @@ const researchOutputData = {
 export const EditMode = () => (
   <StaticRouter>
     <ResearchOutputForm
+      permissions={{
+        canEditResearchOutput: true,
+        canPublishResearchOutput: true,
+        canShareResearchOutput: true,
+      }}
       researchOutputData={researchOutputData}
       onSave={() => Promise.resolve()}
       onSaveDraft={() => Promise.resolve()}

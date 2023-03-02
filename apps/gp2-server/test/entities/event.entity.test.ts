@@ -7,8 +7,11 @@ import {
   parseGraphQLSpeakers,
 } from '../../src/entities/event.entity';
 import {
+  getEventExternalSpeaker,
   getEventSpeaker,
+  getEventSpeakerToBeAnnounced,
   getSquidexGraphqlEvent,
+  getSquidexGraphqlEventSpeakerWithExternalUser,
   getSquidexGraphqlEventSpeakerWithUser,
 } from '../fixtures/event.fixtures';
 
@@ -151,6 +154,20 @@ describe('events entity', () => {
       expect(eventSpeakers[0]?.speaker).toBeUndefined();
       expect(eventSpeakers[0]?.topic).toBeUndefined();
     });
+  });
+
+  test('should return different types of speakers', () => {
+    const eventSpeakers = parseGraphQLSpeakers([
+      getSquidexGraphqlEventSpeakerWithUser(),
+      getSquidexGraphqlEventSpeakerWithExternalUser(),
+      { user: null, topic: null },
+    ]);
+
+    expect(eventSpeakers).toStrictEqual([
+      getEventSpeaker(),
+      getEventExternalSpeaker(),
+      getEventSpeakerToBeAnnounced(),
+    ]);
   });
 
   test('Should skip the user if not onboarded', () => {

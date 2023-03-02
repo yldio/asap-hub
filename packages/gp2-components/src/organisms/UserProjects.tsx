@@ -1,5 +1,5 @@
 import { gp2 } from '@asap-hub/model';
-import { Link } from '@asap-hub/react-components';
+import { Link, Subtitle } from '@asap-hub/react-components';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { ComponentProps } from 'react';
 import { CollapsibleTable, EditableCard, StatusPill } from '../molecules';
@@ -32,31 +32,37 @@ const UserProjects: React.FC<UserProjectsProps> = ({
       `${firstName} has been involved in the following GP2 projects:`
     }
   >
-    <CollapsibleTable headings={['Name', 'Role', 'Status']}>
-      {projects.map((project) => {
-        const name = noLinks ? (
-          project.title
-        ) : (
-          <Link
-            underlined
-            href={
-              gp2Routing.projects({}).project({
-                projectId: project.id,
-              }).$
-            }
-          >
-            {project.title}
-          </Link>
-        );
-        const role = getUserProjectRole(id, project) || '';
-        const status = <StatusPill status={project.status} />;
+    {projects.length ? (
+      <CollapsibleTable headings={['Name', 'Role', 'Status']}>
+        {projects.map((project) => {
+          const name = noLinks ? (
+            project.title
+          ) : (
+            <Link
+              underlined
+              href={
+                gp2Routing.projects({}).project({
+                  projectId: project.id,
+                }).$
+              }
+            >
+              {project.title}
+            </Link>
+          );
+          const role = getUserProjectRole(id, project) || '';
+          const status = <StatusPill status={project.status} />;
 
-        return {
-          id: project.id,
-          values: [name, role, status],
-        };
-      })}
-    </CollapsibleTable>
+          return {
+            id: project.id,
+            values: [name, role, status],
+          };
+        })}
+      </CollapsibleTable>
+    ) : (
+      <Subtitle accent={'lead'}>
+        You are not associated to any projects.
+      </Subtitle>
+    )}
   </EditableCard>
 );
 

@@ -421,7 +421,7 @@ __metadata:
     "@types/node": 14.18.37
     contentful-cli: 1.19.1
     contentful-management: ^10.19.3
-    contentful-migrate: 0.17.0
+    contentful-migrate: "deluan/contentful-migrate#37b9b898599b9ba48644534d3f340b4c169df212"
     graphql: 15.8.0
     graphql-request: 3.4.0
     graphql-tag: 2.12.6
@@ -20218,13 +20218,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"contentful-migrate@npm:0.17.0":
+"contentful-migrate@deluan/contentful-migrate#37b9b898599b9ba48644534d3f340b4c169df212":
   version: 0.17.0
-  resolution: "contentful-migrate@npm:0.17.0"
+  resolution: "contentful-migrate@https://github.com/deluan/contentful-migrate.git#commit=37b9b898599b9ba48644534d3f340b4c169df212"
   dependencies:
     chalk: ^3.0.0
     contentful-management: ^7.11.0
-    contentful-migration: ^4.5.0
+    contentful-migration: ^4.12.6
     dateformat: ^3.0.3
     eslint: ^6.8.0
     eslint-config-standard: ^14.1.0
@@ -20241,8 +20241,8 @@ __metadata:
     rimraf: ^3.0.2
     yargs: ^15.3.0
   bin:
-    ctf-migrate: bin/ctf-migrate
-  checksum: 1f2b869283b9a68ab1620ef7c331cb11c101767a785816b443c7d4fcf76c84ebfcb90bad7d01f2722e1f7a9f4bbf33890fa0240c5a93e8c35729e397790afb38
+    ctf-migrate: ./bin/ctf-migrate
+  checksum: 56bd928113b77c49218c4bc11770fd72a367419d25ea4d47ab786edb1aa16ea2591f1a8974971693e980453cc5456647dd411d81ab628e0b893bfb3523d87c6f
   languageName: node
   linkType: hard
 
@@ -20272,9 +20272,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"contentful-migration@npm:^4.5.0":
-  version: 4.11.0
-  resolution: "contentful-migration@npm:4.11.0"
+"contentful-migration@npm:^4.12.6":
+  version: 4.12.9
+  resolution: "contentful-migration@npm:4.12.9"
   dependencies:
     "@hapi/hoek": ^10.0.1
     axios: ^0.21.0
@@ -20294,7 +20294,7 @@ __metadata:
     yargs: ^15.3.1
   bin:
     contentful-migration: bin/contentful-migration
-  checksum: c64db1637e85ae29833a41d975b70c6db49be4da26f9dfaa88f79246adf1b23504bef91a06b95ac42f94f2cc2c2184ec45849c8bbe107923fb1335161f06554a
+  checksum: 60f333c342b147a53d3c239a9e8222c54ffca47db1fe629f7e49fd0be0af5dfd877a58cb989a10168b895d56a8cc5317fc1389523b14b46af7c732183105ee6f
   languageName: node
   linkType: hard
 

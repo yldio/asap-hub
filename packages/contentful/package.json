@@ -28,7 +28,7 @@
     "@graphql-tools/load": "7.8.12",
     "@graphql-tools/mock": "8.7.18",
     "contentful-management": "^10.19.3",
-    "contentful-migrate": "0.17.0",
+    "contentful-migrate": "deluan/contentful-migrate#37b9b898599b9ba48644534d3f340b4c169df212",
     "graphql": "15.8.0",
     "graphql-request": "3.4.0",
     "graphql-tag": "2.12.6"

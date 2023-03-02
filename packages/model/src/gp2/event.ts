@@ -14,10 +14,7 @@ export interface EventSpeakerExternalUser {
   orcid?: string;
 }
 export interface SpeakerInfo {
-  speaker:
-    | EventSpeakerUser
-    | EventSpeakerExternalUser
-    | undefined;
+  speaker: EventSpeakerUser | EventSpeakerExternalUser | undefined;
 }
 export type EventSpeaker = SpeakerInfo & { topic?: string };
 export interface EventDataObject extends BasicEvent {

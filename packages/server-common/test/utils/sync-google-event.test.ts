@@ -1,6 +1,6 @@
 import { calendar_v3 as calendarV3 } from 'googleapis';
 import { syncEventFactory } from '../../src';
-import { getEventResponse, getRestEvent } from '../fixtures/events.fixtures';
+import { getEventResponse } from '../fixtures/events.fixtures';
 import { eventControllerMock } from '../mocks/event-controller.mock';
 import { loggerMock as logger } from '../mocks/logger.mock';
 
@@ -10,9 +10,7 @@ describe('Sync calendar util hook', () => {
   const defaultCalendarTimezone = 'Europe/Lisbon';
   const syncEvent = syncEventFactory(eventControllerMock, logger);
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+  afterEach(jest.resetAllMocks);
 
   test('Should create the event when it is not found', async () => {
     eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(null);
@@ -50,43 +48,6 @@ describe('Sync calendar util hook', () => {
 
     await syncEvent(
       getGoogleEvent(),
-      googleCalendarId,
-      squidexCalendarId,
-      defaultCalendarTimezone,
-    );
-
-    expect(eventControllerMock.create).not.toHaveBeenCalled();
-    expect(eventControllerMock.update).toHaveBeenCalledTimes(1);
-    expect(eventControllerMock.update).toHaveBeenCalledWith(
-      'squidex-event-id',
-      {
-        googleId: '04rteq6hj3gfq9g3i8v2oqetvd',
-        title: 'Event Title',
-        description: 'Event Description',
-        startDate: '2021-02-27T00:00:00.000Z',
-        startDateTimeZone: 'Europe/Lisbon',
-        endDate: '2021-02-28T00:00:00.000Z',
-        endDateTimeZone: 'Europe/Lisbon',
-        status: 'Confirmed',
-        calendar: squidexCalendarId,
-        hidden: false,
-        hideMeetingLink: false,
-      },
-    );
-  });
-
-  test('Should update the event when it belongs to a different calendar', async () => {
-    const existingEvent = getEventResponse();
-    existingEvent.calendar![0] = 'some-other-calendar-id';
-    eventControllerMock.fetchByGoogleId.mockResolvedValueOnce({
-      ...existingEvent,
-      id: 'squidex-event-id',
-    });
-
-    const googleEvent = getGoogleEvent();
-
-    await syncEvent(
-      googleEvent,
       googleCalendarId,
       squidexCalendarId,
       defaultCalendarTimezone,

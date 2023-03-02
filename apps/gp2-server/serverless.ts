@@ -315,6 +315,23 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
+    eventsUpdated: {
+      timeout: 300,
+      handler: './src/handlers/webhooks/webhook-events-updated.handler',
+      events: [
+        {
+          httpApi: {
+            method: 'POST',
+            path: '/webhook/events',
+          },
+        },
+      ],
+      environment: {
+        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
+        GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
     runMigrations: {
       handler: './src/handlers/webhooks/webhook-run-migrations.run',
       timeout: 900,

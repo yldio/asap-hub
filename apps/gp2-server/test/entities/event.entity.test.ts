@@ -1,6 +1,7 @@
 import { gp2 } from '@asap-hub/model';
 import {
   getMeetingMaterial,
+  parseEventSpeakerExternalUser,
   parseEventSpeakerUser,
   parseGraphQLEvent,
   parseGraphQLSpeakers,
@@ -27,6 +28,7 @@ describe('events entity', () => {
         `Event (example) doesn't have a calendar`,
       );
     });
+
     test('throws when provided an invalid event status', () => {
       const event = {
         ...graphqlEvent,
@@ -40,6 +42,7 @@ describe('events entity', () => {
         `"Invalid event (example) status "invalid""`,
       );
     });
+
     test('ignores empty thumbnail', () => {
       const event = {
         ...graphqlEvent,
@@ -53,6 +56,7 @@ describe('events entity', () => {
       expect(thumbnail).toEqual(undefined);
     });
   });
+
   describe('getMeetingMaterial', () => {
     test.each([null, undefined, [], 'detail', ['item']])(
       'always returns null when meeting material "%s" specified unavailable',
@@ -80,6 +84,7 @@ describe('events entity', () => {
           empty,
         ),
     );
+
     test.each(['string', ['a']])(
       'always returns material "%s" when not permanently unavailable',
       (material) => {
@@ -105,7 +110,7 @@ describe('events entity', () => {
       expect(eventSpeakers).toStrictEqual([expectedEventSpeakers]);
     });
 
-    test('parse event speaker properly maps speaker', () => {
+    test('parse event speaker properly maps internal speaker', () => {
       const eventSpeaker = parseEventSpeakerUser({
         __typename: 'Users',
         id: 'user-id-3',
@@ -124,7 +129,30 @@ describe('events entity', () => {
       expect(eventSpeaker?.displayName).toEqual('Adam Brown');
       expect(eventSpeaker?.avatarUrl).toContain('/avatar-id');
     });
+
+    test('parse event speaker properly maps external speaker', () => {
+      const eventSpeaker = parseEventSpeakerExternalUser({
+        __typename: 'ExternalUsers',
+        id: 'user-id-3',
+        flatData: {
+          name: 'Adam Brown',
+          orcid: '1234-1234-1234',
+        },
+      });
+
+      expect(eventSpeaker?.name).toEqual('Adam Brown');
+      expect(eventSpeaker?.orcid).toEqual('1234-1234-1234');
+    });
+
+    test('parse event speaker properly maps speaker to be announced', () => {
+      const eventSpeakers = parseGraphQLSpeakers([{ user: null, topic: null }]);
+
+      expect(eventSpeakers.length).toBe(1);
+      expect(eventSpeakers[0]?.speaker).toBeUndefined();
+      expect(eventSpeakers[0]?.topic).toBeUndefined();
+    });
   });
+
   test('Should skip the user if not onboarded', () => {
     const eventSpeakers = parseGraphQLSpeakers([
       getSquidexGraphqlEventSpeakerWithUser({ onboarded: false }),

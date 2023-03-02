@@ -55,9 +55,6 @@ export const eventContentFragment = gql`
           }
           ... on ExternalUsers {
             id
-            created
-            lastModified
-            version
             flatData {
               name
               orcid

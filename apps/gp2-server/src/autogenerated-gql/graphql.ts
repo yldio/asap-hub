@@ -4451,10 +4451,7 @@ export type EventContentFragment = Pick<
         Pick<EventsDataSpeakersChildDto, 'topic'> & {
           user: Maybe<
             Array<
-              | ({ __typename: 'ExternalUsers' } & Pick<
-                  ExternalUsers,
-                  'id' | 'created' | 'lastModified' | 'version'
-                > & {
+              | ({ __typename: 'ExternalUsers' } & Pick<ExternalUsers, 'id'> & {
                     flatData: Pick<ExternalUsersFlatDataDto, 'name' | 'orcid'>;
                   })
               | ({ __typename: 'Users' } & Pick<Users, 'id'> & {
@@ -4524,7 +4521,7 @@ export type FetchEventsQuery = {
                       Array<
                         | ({ __typename: 'ExternalUsers' } & Pick<
                             ExternalUsers,
-                            'id' | 'created' | 'lastModified' | 'version'
+                            'id'
                           > & {
                               flatData: Pick<
                                 ExternalUsersFlatDataDto,
@@ -4597,7 +4594,7 @@ export type FetchEventQuery = {
                 Array<
                   | ({ __typename: 'ExternalUsers' } & Pick<
                       ExternalUsers,
-                      'id' | 'created' | 'lastModified' | 'version'
+                      'id'
                     > & {
                         flatData: Pick<
                           ExternalUsersFlatDataDto,
@@ -6151,21 +6148,6 @@ export const EventContentFragmentDoc = {
                                   {
                                     kind: 'Field',
                                     name: { kind: 'Name', value: 'id' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'created' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'lastModified',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'version' },
                                   },
                                   {
                                     kind: 'Field',

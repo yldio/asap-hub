@@ -3944,7 +3944,7 @@ export type WorkingGroupNetworkDataDto = {
   complexDisease: Maybe<WorkingGroupNetworkDataComplexDiseaseDto>;
   monogenic: Maybe<WorkingGroupNetworkDataMonogenicDto>;
   operational: Maybe<WorkingGroupNetworkDataOperationalDto>;
-  steeringCommitee: Maybe<WorkingGroupNetworkDataSteeringCommiteeDto>;
+  support: Maybe<WorkingGroupNetworkDataSupportDto>;
 };
 
 /** The structure of the Working Group Network data input type. */
@@ -3952,7 +3952,7 @@ export type WorkingGroupNetworkDataInputDto = {
   complexDisease: InputMaybe<WorkingGroupNetworkDataComplexDiseaseInputDto>;
   monogenic: InputMaybe<WorkingGroupNetworkDataMonogenicInputDto>;
   operational: InputMaybe<WorkingGroupNetworkDataOperationalInputDto>;
-  steeringCommitee: InputMaybe<WorkingGroupNetworkDataSteeringCommiteeInputDto>;
+  support: InputMaybe<WorkingGroupNetworkDataSupportInputDto>;
 };
 
 /** The structure of the Monogenic Working Groups field of the Working Group Network content type. */
@@ -3975,13 +3975,13 @@ export type WorkingGroupNetworkDataOperationalInputDto = {
   iv: InputMaybe<Array<Scalars['String']>>;
 };
 
-/** The structure of the Steering Committee field of the Working Group Network content type. */
-export type WorkingGroupNetworkDataSteeringCommiteeDto = {
+/** The structure of the Support Working Groups field of the Working Group Network content type. */
+export type WorkingGroupNetworkDataSupportDto = {
   iv: Maybe<Array<WorkingGroups>>;
 };
 
-/** The structure of the Steering Committee field of the Working Group Network content input type. */
-export type WorkingGroupNetworkDataSteeringCommiteeInputDto = {
+/** The structure of the Support Working Groups field of the Working Group Network content input type. */
+export type WorkingGroupNetworkDataSupportInputDto = {
   iv: InputMaybe<Array<Scalars['String']>>;
 };
 
@@ -3990,7 +3990,7 @@ export type WorkingGroupNetworkFlatDataDto = {
   complexDisease: Maybe<Array<WorkingGroups>>;
   monogenic: Maybe<Array<WorkingGroups>>;
   operational: Maybe<Array<WorkingGroups>>;
-  steeringCommitee: Maybe<Array<WorkingGroups>>;
+  support: Maybe<Array<WorkingGroups>>;
 };
 
 /** List of Working Group Network items and total count. */
@@ -5284,7 +5284,7 @@ export type WorkingGroupNetworkContentFragment = Pick<
   'id'
 > & {
   flatData: {
-    steeringCommitee: Maybe<
+    support: Maybe<
       Array<
         Pick<WorkingGroups, 'id'> & {
           flatData: Pick<
@@ -5468,7 +5468,7 @@ export type FetchWorkingGroupNetworkQuery = {
     Array<
       Pick<WorkingGroupNetwork, 'id'> & {
         flatData: {
-          steeringCommitee: Maybe<
+          support: Maybe<
             Array<
               Pick<WorkingGroups, 'id'> & {
                 flatData: Pick<
@@ -7019,7 +7019,7 @@ export const WorkingGroupNetworkContentFragmentDoc = {
               selections: [
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'steeringCommitee' },
+                  name: { kind: 'Name', value: 'support' },
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [

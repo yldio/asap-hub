@@ -2,20 +2,30 @@ import { gp2 } from '@asap-hub/model';
 import { addHours, subHours } from 'date-fns';
 import { createCalendarResponse } from './calendars';
 
+const topic = 'Some Topic';
+
 export const createInternalSpeakerResponse = (
   itemIndex = 0,
-): gp2.EventSpeakerUser => ({
-  id: `user-id-${itemIndex}`,
-  firstName: 'John',
-  lastName: 'Doe',
-  displayName: `John Doe ${itemIndex}`,
+): gp2.EventSpeaker => ({
+  speaker: {
+    id: `user-id-${itemIndex}`,
+    firstName: 'John',
+    lastName: 'Doe',
+    displayName: `John Doe ${itemIndex}`,
+  },
+  topic,
 });
 
-export const createExternalSpeakerResponse = (
-  itemIndex = 0,
-): gp2.EventSpeakerExternalUser => ({
-  name: 'John',
-  orcid: '1234-1234-1234',
+export const createExternalSpeakerResponse = (): gp2.EventSpeaker => ({
+  speaker: {
+    name: 'John',
+    orcid: '1234-1234-1234',
+  },
+  topic,
+});
+
+export const createSpeakerToBeAnnounced = (): gp2.EventSpeaker => ({
+  speaker: undefined,
 });
 
 const getSpeakers = (
@@ -26,23 +36,15 @@ const getSpeakers = (
   const speakerList: gp2.EventSpeaker[] = [];
 
   for (let index = 0; index < numberOfInternalSpeakers; index += 1) {
-    speakerList.push({
-      speaker: createInternalSpeakerResponse(index),
-      topic: `Topic #${index}`,
-    });
+    speakerList.push(createInternalSpeakerResponse(index));
   }
 
   for (let index = 0; index < numberOfExternalSpeakers; index += 1) {
-    speakerList.push({
-      speaker: createExternalSpeakerResponse(index),
-      topic: `Topic #${index}`,
-    });
+    speakerList.push(createExternalSpeakerResponse());
   }
 
   for (let index = 0; index < numberOfSpeakersToBeAnnounced; index += 1) {
-    speakerList.push({
-      speaker: undefined,
-    });
+    speakerList.push(createSpeakerToBeAnnounced());
   }
 
   return speakerList;

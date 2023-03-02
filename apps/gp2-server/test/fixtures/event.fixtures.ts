@@ -64,7 +64,7 @@ export const getEventDataObject = (): gp2Model.EventDataObject => ({
   speakers: [
     {
       speaker: getEventSpeakerUser(),
-      topic: 'Topic #1',
+      topic: 'Some Topic',
     },
   ],
 });

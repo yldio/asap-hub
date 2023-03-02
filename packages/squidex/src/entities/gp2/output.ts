@@ -6,7 +6,7 @@ import {
   Rest,
   RestPayload,
 } from '../common';
-import { GraphqlExternalUser } from '../gp2';
+import { GraphqlExternalUser } from './';
 import { GraphqlUserAssoc } from './user';
 
 export type RestOutputDocumentType =

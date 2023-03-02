@@ -15,7 +15,7 @@
   "dependencies": {
     "@asap-hub/auth": "workspace:*",
     "@asap-hub/fixtures": "workspace:*",
-    "@asap-hub/flags": "workspace:^",
+    "@asap-hub/flags": "workspace:*",
     "@asap-hub/model": "workspace:*",
     "@babel/runtime-corejs3": "7.21.0"
   },

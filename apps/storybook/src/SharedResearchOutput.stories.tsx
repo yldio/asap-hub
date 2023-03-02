@@ -7,7 +7,6 @@ import {
   boolean,
   date,
   number,
-  object,
   select,
   text,
 } from '@storybook/addon-knobs';

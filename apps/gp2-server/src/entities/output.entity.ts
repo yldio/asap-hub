@@ -80,8 +80,10 @@ export const parseGraphQLOutput = (
               : undefined;
             return {
               id: author.id,
+              email: author.flatData.email,
               firstName: author.flatData.firstName || '',
               lastName: author.flatData.lastName || '',
+              displayName: `${author.flatData.firstName} ${author.flatData.lastName}`,
               onboarded: author.flatData.onboarded || false,
               avatarUrl,
             };

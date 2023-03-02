@@ -31,6 +31,7 @@ export const getSquidexOutputGraphqlResponseAuthors = (): NonNullable<
     flatData: {
       firstName: 'Tony',
       lastName: 'Stark',
+      email: 'tony.stark@email.com',
       onboarded: true,
       avatar: [],
     },
@@ -44,6 +45,7 @@ export const getSquidexOutputGraphqlResponseAuthors = (): NonNullable<
     flatData: {
       firstName: 'Peter',
       lastName: 'Parker',
+      email: 'peter.parker@email.com',
       onboarded: true,
       avatar: [],
     },
@@ -99,11 +101,20 @@ export const getOutputDataObject = (): gp2Model.OutputDataObject => ({
   title: 'Test Proposal 1234',
   link: 'http://a.link',
   authors: [
-    { id: 'user-id-1', firstName: 'Tony', lastName: 'Stark', onboarded: true },
+    {
+      id: 'user-id-1',
+      firstName: 'Tony',
+      lastName: 'Stark',
+      email: 'tony.stark@email.com',
+      displayName: 'Tony Stark',
+      onboarded: true,
+    },
     {
       id: 'user-id-2',
       firstName: 'Peter',
       lastName: 'Parker',
+      displayName: 'Peter Parker',
+      email: 'peter.parker@email.com',
       onboarded: true,
     },
   ],

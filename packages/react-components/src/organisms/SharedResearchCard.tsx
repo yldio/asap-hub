@@ -1,6 +1,5 @@
-import { ComponentProps } from 'react';
 import { ResearchOutputResponse } from '@asap-hub/model';
-import { sharedResearch } from '@asap-hub/routing';
+import { network, sharedResearch } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 
 import { Card, Caption } from '../atoms';
@@ -18,17 +17,18 @@ const associationStyles = css({
 
 type SharedResearchCardProps = Pick<
   ResearchOutputResponse,
-  | 'id'
-  | 'created'
   | 'addedDate'
-  | 'teams'
-  | 'labs'
-  | 'title'
   | 'authors'
+  | 'created'
+  | 'documentType'
+  | 'id'
+  | 'labs'
+  | 'link'
+  | 'teams'
+  | 'title'
   | 'type'
   | 'workingGroups'
-> &
-  ComponentProps<typeof SharedResearchMetadata>;
+>;
 
 const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
   id: researchOutputId,
@@ -39,10 +39,19 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
   authors,
   labs,
   workingGroups,
-  ...props
+  type,
+  documentType,
+  link,
 }) => (
   <Card>
-    <SharedResearchMetadata {...props} workingGroups={workingGroups} />
+    <SharedResearchMetadata
+      pills={[
+        workingGroups ? 'Working Group' : 'Team',
+        ...(documentType ? [documentType] : []),
+        ...(type ? [type] : []),
+      ]}
+      link={link}
+    />
     <LinkHeadline
       level={2}
       styleAsHeading={4}
@@ -50,7 +59,13 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
     >
       {title}
     </LinkHeadline>
-    <UsersList max={3} users={authors} />
+    <UsersList
+      max={3}
+      users={authors.map((author) => ({
+        ...author,
+        href: author.id && network({}).users({}).user({ userId: author.id }).$,
+      }))}
+    />
     <div css={associationStyles}>
       <AssociationList
         type="Lab"

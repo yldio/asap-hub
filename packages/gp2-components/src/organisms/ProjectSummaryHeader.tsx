@@ -43,12 +43,7 @@ const ProjectSummaryHeader: React.FC<ProjectSummaryHeaderProps> = ({
           },
         })}
       >
-        <ExternalLink
-          href={projectProposalUrl}
-          label="View proposal"
-          noMargin
-          full
-        />
+        <ExternalLink href={projectProposalUrl} label="View proposal" full />
       </div>
     )}
   </div>

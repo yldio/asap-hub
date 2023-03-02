@@ -3,7 +3,7 @@ import {
   createUserResponse,
   createSpeakerUserResponse,
 } from '@asap-hub/fixtures';
-import { isInternalUser } from '../src/user-guards';
+import { isExternalUser, isInternalUser } from '../src/user-guards';
 describe('isInternalAuthor', () => {
   it('should return true when author is internal', () => {
     expect(isInternalUser(createUserResponse())).toEqual(true);
@@ -15,5 +15,18 @@ describe('isInternalAuthor', () => {
         displayName: 'user name',
       } as ExternalAuthorResponse),
     ).toEqual(false);
+  });
+});
+describe('isExternalUser', () => {
+  it('should return true when User is External', () => {
+    expect(
+      isExternalUser({
+        displayName: 'user name',
+      } as ExternalAuthorResponse),
+    ).toEqual(true);
+  });
+
+  it('should return false when User is internal', () => {
+    expect(isExternalUser(createUserResponse())).toEqual(false);
   });
 });

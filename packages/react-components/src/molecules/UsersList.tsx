@@ -2,8 +2,7 @@ import { FC } from 'react';
 import { css } from '@emotion/react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { ExternalAuthorResponse, UserResponse } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
-import { isInternalUser } from '@asap-hub/validation';
+import { isExternalUser } from '@asap-hub/validation';
 
 import { Avatar, Link } from '../atoms';
 import { ImageLink } from '.';
@@ -53,7 +52,7 @@ const iconStyles = css({
 
 interface UsersListProps {
   users: ReadonlyArray<
-    | Pick<
+    | (Pick<
         UserResponse,
         | 'displayName'
         | 'firstName'
@@ -62,7 +61,7 @@ interface UsersListProps {
         | 'id'
         | 'email'
         | 'alumniSinceDate'
-      >
+      > & { href: string })
     | ExternalAuthorResponse
   >;
   max?: number;
@@ -73,29 +72,28 @@ const UsersList: FC<UsersListProps> = ({
 }) => (
   <ul css={listStyles}>
     {users.slice(0, max).map((user, i) => {
-      const link = user.id && network({}).users({}).user({ userId: user.id }).$;
-      const internalUser = isInternalUser(user);
-      const imageUrl = internalUser
-        ? user.avatarUrl
-        : getPlaceholderAvatarUrl();
+      const externalUser = isExternalUser(user);
+      const imageUrl = externalUser
+        ? getPlaceholderAvatarUrl()
+        : user.avatarUrl;
       return (
         <li key={`author-${i}`} css={itemStyles}>
-          {internalUser ? (
+          {externalUser ? (
             <div css={userStyles}>
-              <ImageLink link={link}>
+              <Avatar {...user} imageUrl={imageUrl} />
+              <span css={nameStyles}>{user.displayName}</span>
+            </div>
+          ) : (
+            <div css={userStyles}>
+              <ImageLink link={user.href}>
                 <Avatar {...user} imageUrl={imageUrl} />
               </ImageLink>
-              <Link ellipsed href={link}>
+              <Link ellipsed href={user.href}>
                 <span css={nameStyles}>{user.displayName}</span>
               </Link>
               {user.alumniSinceDate && (
                 <span css={iconStyles}>{alumniBadgeIcon}</span>
               )}
-            </div>
-          ) : (
-            <div css={userStyles}>
-              <Avatar {...user} imageUrl={imageUrl} />
-              <span css={nameStyles}>{user.displayName}</span>
             </div>
           )}
         </li>

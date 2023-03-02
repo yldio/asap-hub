@@ -1,5 +1,4 @@
 import { css } from '@emotion/react';
-import { ComponentProps } from 'react';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { sharedResearch } from '@asap-hub/routing';
 
@@ -24,8 +23,10 @@ const itemStyles = css({
 
 type SharedResearchListCardProps = {
   researchOutputs: ReadonlyArray<
-    Pick<ResearchOutputResponse, 'id' | 'title' | 'workingGroups'> &
-      ComponentProps<typeof SharedResearchMetadata>
+    Pick<
+      ResearchOutputResponse,
+      'id' | 'title' | 'workingGroups' | 'documentType' | 'type' | 'link'
+    >
   >;
 };
 
@@ -34,16 +35,27 @@ const SharedResearchListCard: React.FC<SharedResearchListCardProps> = ({
 }) => (
   <Card padding={false}>
     <ul css={containerStyles}>
-      {researchOutputs.map(({ title, id, ...researchOutput }) => (
-        <li key={`output-${id}`} css={[itemStyles, paddingStyles]}>
-          <SharedResearchMetadata {...researchOutput} />
-          <Anchor
-            href={sharedResearch({}).researchOutput({ researchOutputId: id }).$}
-          >
-            <Headline2 styleAsHeading={5}>{title}</Headline2>
-          </Anchor>
-        </li>
-      ))}
+      {researchOutputs.map(
+        ({ title, id, workingGroups, documentType, type, link }) => (
+          <li key={`output-${id}`} css={[itemStyles, paddingStyles]}>
+            <SharedResearchMetadata
+              pills={[
+                workingGroups ? 'Working Group' : 'Team',
+                ...(documentType ? [documentType] : []),
+                ...(type ? [type] : []),
+              ]}
+              link={link}
+            />
+            <Anchor
+              href={
+                sharedResearch({}).researchOutput({ researchOutputId: id }).$
+              }
+            >
+              <Headline2 styleAsHeading={5}>{title}</Headline2>
+            </Anchor>
+          </li>
+        ),
+      )}
     </ul>
   </Card>
 );

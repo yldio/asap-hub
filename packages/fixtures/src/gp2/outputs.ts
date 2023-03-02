@@ -6,6 +6,8 @@ const userAuthor: gp2.UserAuthor = {
   id: mockedUser.id,
   firstName: mockedUser.firstName,
   lastName: mockedUser.lastName,
+  displayName: mockedUser.displayName,
+  email: mockedUser.email,
   onboarded: mockedUser.onboarded,
 };
 

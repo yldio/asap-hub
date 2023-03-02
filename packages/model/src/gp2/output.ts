@@ -55,8 +55,10 @@ export type OutputCoreObject = {
 
 export type UserAuthor = {
   id: string;
+  email: string;
   firstName: string;
   lastName: string;
+  displayName: string;
   onboarded: boolean;
   avatarUrl?: string;
 };

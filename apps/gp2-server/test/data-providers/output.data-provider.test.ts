@@ -228,6 +228,7 @@ describe('Outputs data provider', () => {
           flatData: {
             firstName: 'Tony',
             lastName: 'Stark',
+            email: 'tony.stark@email.com',
             onboarded: true,
             avatar: [],
           },
@@ -241,6 +242,7 @@ describe('Outputs data provider', () => {
           flatData: {
             firstName: 'Peter',
             lastName: 'Parker',
+            email: 'peter.parker@email.com',
             onboarded: true,
             avatar: [],
           },

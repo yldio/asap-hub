@@ -21,6 +21,11 @@ describe('UserProjects', () => {
     expect(
       screen.getByText(`${firstName} has been involved`, { exact: false }),
     ).toBeVisible();
+    expect(
+      screen.getByRole('heading', {
+        name: /you are not associated to any projects/i,
+      }),
+    ).toBeVisible();
   });
 
   it('renders project titles', () => {

@@ -25,6 +25,11 @@ describe('UserWorkingGroups', () => {
     expect(
       screen.getByText(`${firstName} is involved`, { exact: false }),
     ).toBeVisible();
+    expect(
+      screen.getByRole('heading', {
+        name: /you are not associated to any working groups/i,
+      }),
+    ).toBeVisible();
   });
 
   it('renders working-group titles', () => {

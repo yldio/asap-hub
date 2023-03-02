@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
-import { Link, utils } from '@asap-hub/react-components';
+import { Link, Subtitle, utils } from '@asap-hub/react-components';
 
 import { CollapsibleTable, EditableCard, IconWithLabel } from '../molecules';
 import { userIcon, usersIcon } from '../icons';
@@ -37,39 +37,45 @@ const UserWorkingGroups: React.FC<UserWorkingGroupsProps> = ({
         `${firstName} is involved in the following GP2 working groups:`
       }
     >
-      <CollapsibleTable headings={['Name', 'Role', 'Nº of Members']}>
-        {workingGroups.map(({ title, members, id: workingGroupId }) => {
-          const name = noLinks ? (
-            title
-          ) : (
-            <Link
-              underlined
-              href={
-                gp2Routing.workingGroups({}).workingGroup({
-                  workingGroupId,
-                }).$
-              }
-            >
-              {title}
-            </Link>
-          );
-          const role = (
-            <IconWithLabel noMargin icon={userIcon}>
-              {getUserWorkingGroupRole(id, members) || ''}
-            </IconWithLabel>
-          );
-          const numberOfMembers = (
-            <IconWithLabel noMargin icon={usersIcon}>
-              {getCounterString(members.length, 'Member')}
-            </IconWithLabel>
-          );
+      {workingGroups.length ? (
+        <CollapsibleTable headings={['Name', 'Role', 'Nº of Members']}>
+          {workingGroups.map(({ title, members, id: workingGroupId }) => {
+            const name = noLinks ? (
+              title
+            ) : (
+              <Link
+                underlined
+                href={
+                  gp2Routing.workingGroups({}).workingGroup({
+                    workingGroupId,
+                  }).$
+                }
+              >
+                {title}
+              </Link>
+            );
+            const role = (
+              <IconWithLabel noMargin icon={userIcon}>
+                {getUserWorkingGroupRole(id, members) || ''}
+              </IconWithLabel>
+            );
+            const numberOfMembers = (
+              <IconWithLabel noMargin icon={usersIcon}>
+                {getCounterString(members.length, 'Member')}
+              </IconWithLabel>
+            );
 
-          return {
-            id: workingGroupId,
-            values: [name, role, numberOfMembers],
-          };
-        })}
-      </CollapsibleTable>
+            return {
+              id: workingGroupId,
+              values: [name, role, numberOfMembers],
+            };
+          })}
+        </CollapsibleTable>
+      ) : (
+        <Subtitle accent={'lead'}>
+          You are not associated to any working groups.
+        </Subtitle>
+      )}
     </EditableCard>
   );
 };

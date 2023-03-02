@@ -6,7 +6,6 @@ import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import { BackendError } from '@asap-hub/frontend-utils';
 import {
   ResearchOutputResponse,
-  UserPermissions,
   ValidationErrorResponse,
 } from '@asap-hub/model';
 import {
@@ -17,11 +16,6 @@ import {
   network,
   WorkingGroupOutputDocumentTypeParameter,
 } from '@asap-hub/routing';
-import {
-  fullPermissions,
-  noPermissions,
-  partialPermissions,
-} from '@asap-hub/validation';
 import {
   render,
   screen,
@@ -121,7 +115,7 @@ const mandatoryFields = async (
 };
 
 const renderPage = async ({
-  permissions = fullPermissions,
+  canEditResearchOutput = true,
   workingGroupId = 'wg1',
   workingGroupOutputDocumentType = 'article',
   researchOutputData,
@@ -136,7 +130,7 @@ const renderPage = async ({
 }: {
   workingGroupId?: string;
   workingGroupOutputDocumentType?: WorkingGroupOutputDocumentTypeParameter;
-  permissions?: UserPermissions;
+  canEditResearchOutput?: boolean;
   researchOutputData?: ResearchOutputResponse;
   history?: History;
 } = {}) => {
@@ -159,7 +153,11 @@ const renderPage = async ({
             <WhenReady>
               <Router history={history}>
                 <ResearchOutputPermissionsContext.Provider
-                  value={{ permissions }}
+                  value={{
+                    canEditResearchOutput,
+                    canShareResearchOutput: true,
+                    canPublishResearchOutput: true,
+                  }}
                 >
                   <Route path={path}>
                     <WorkingGroupOutput
@@ -193,18 +191,6 @@ it('Renders the working group research output form with relevant fields', async 
   expect(
     screen.getByText('Add an abstract or a summary that describes this work.'),
   ).toBeVisible();
-});
-
-it('Shows NotFoundPage when user has no permissions', async () => {
-  await renderPage({ workingGroupId: '42', permissions: noPermissions });
-  expect(
-    screen.queryByRole('heading', { name: /Share/i }),
-  ).not.toBeInTheDocument();
-  expect(
-    screen.getByRole('heading', {
-      name: /Sorry! We can’t seem to find that page/i,
-    }),
-  ).toBeInTheDocument();
 });
 
 it('can submit a form when form data is valid', async () => {
@@ -355,19 +341,16 @@ it('can save draft when form data is valid', async () => {
   });
 });
 
-it.each([{ permissions: partialPermissions }, { permissions: noPermissions }])(
-  'displays sorry page when user has not saveDraft permission and the research output is published',
-  async ({ permissions }) => {
-    await renderPage({
-      permissions,
-      researchOutputData: {
-        ...createResearchOutputResponse(),
-        published: true,
-      },
-    });
-    expect(screen.getByText(/sorry.+page/i)).toBeVisible();
-  },
-);
+it('displays sorry page when user has not editing permissions', async () => {
+  await renderPage({
+    canEditResearchOutput: false,
+    researchOutputData: {
+      ...createResearchOutputResponse(),
+      published: true,
+    },
+  });
+  expect(screen.getByText(/sorry.+page/i)).toBeVisible();
+});
 
 it('will show server side validation error for link', async () => {
   const validationResponse: ValidationErrorResponse = {

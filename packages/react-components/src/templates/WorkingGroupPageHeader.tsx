@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
 import { formatDistance } from 'date-fns';
-import { isEnabled } from '@asap-hub/flags';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { WorkingGroupResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
@@ -140,10 +139,9 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
   upcomingEventsCount,
   pastEventsCount,
 }) => {
-  const { permissions } = useContext(ResearchOutputPermissionsContext);
-  const showShareResearchOutputButton =
-    (isEnabled('DRAFT_RESEARCH_OUTPUT') && permissions.saveDraft) ||
-    permissions.publish;
+  const { canShareResearchOutput } = useContext(
+    ResearchOutputPermissionsContext,
+  );
 
   const route = network({})
     .workingGroups({})
@@ -167,7 +165,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
               .about({}).$
           }#${membersListElementId}`}
         />
-        {pointOfContact && !showShareResearchOutputButton && (
+        {pointOfContact && !canShareResearchOutput && (
           <div css={pointOfContactStyles}>
             <Link
               buttonStyle
@@ -180,7 +178,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
           </div>
         )}
 
-        {showShareResearchOutputButton && (
+        {canShareResearchOutput && (
           <div css={createStyles}>
             <DropdownButton
               buttonChildren={() => (

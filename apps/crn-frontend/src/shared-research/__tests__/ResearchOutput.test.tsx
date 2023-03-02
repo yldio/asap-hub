@@ -113,7 +113,6 @@ describe('a grant document research output', () => {
           id: teams[0].id,
         },
       ],
-      workingGroups: [],
       title: 'Grant Document title!',
     });
     await renderComponent(researchOutputRoute.$);
@@ -133,7 +132,6 @@ describe('a grant document research output', () => {
           displayName: 'Sulzer, D',
         },
       ],
-      workingGroups: [],
     });
 
     const { getByText } = await renderComponent(researchOutputRoute.$);
@@ -197,7 +195,6 @@ describe('a not-grant-document research output', () => {
           displayName: 'Sulzer, D',
         },
       ],
-      workingGroups: [],
     });
     const { getByRole, getByText } = await renderComponent(
       researchOutputRoute.$,

@@ -1,5 +1,4 @@
 import { TeamResponse, TeamTool } from '@asap-hub/model';
-import { isEnabled } from '@asap-hub/flags';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
@@ -136,10 +135,9 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   pastEventsCount,
 }) => {
   const route = network({}).teams({}).team({ teamId: id });
-  const { permissions } = useContext(ResearchOutputPermissionsContext);
-  const showShareResearchOutputButton =
-    (isEnabled('DRAFT_RESEARCH_OUTPUT') && permissions.saveDraft) ||
-    permissions.publish;
+  const { canShareResearchOutput } = useContext(
+    ResearchOutputPermissionsContext,
+  );
 
   const isActive = !inactiveSince;
 
@@ -152,16 +150,14 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
 
       <section
         css={
-          showShareResearchOutputButton
-            ? createSectionStyles
-            : contactSectionStyles
+          canShareResearchOutput ? createSectionStyles : contactSectionStyles
         }
       >
         <UserAvatarList
           members={members}
           fullListRoute={`${route.about({}).$}#${teamListElementId}`}
         />
-        {pointOfContact && !showShareResearchOutputButton && (
+        {pointOfContact && !canShareResearchOutput && (
           <div css={pointOfContactStyles}>
             <Link
               buttonStyle
@@ -179,7 +175,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
             <span>{getCounterString(labCount, 'Lab')}</span>
           </div>
         )}
-        {showShareResearchOutputButton && (
+        {canShareResearchOutput && (
           <div css={createStyles}>
             <DropdownButton
               buttonChildren={() => (

@@ -4,7 +4,7 @@ import {
   UserResponse,
 } from '@asap-hub/model';
 import { validateFetchOptions } from '@asap-hub/server-common';
-import { getUserPermissions } from '@asap-hub/validation';
+import { getUserRole, hasUpsertPermission } from '@asap-hub/validation';
 import Boom from '@hapi/boom';
 import { Response, Router } from 'express';
 import { ResearchOutputController } from '../controllers/research-outputs';
@@ -51,7 +51,7 @@ export const researchOutputRouteFactory = (
     const createRequest = validateResearchOutputPostRequestParameters(body);
     validateResearchOutputPostRequestParametersIdentifiers(createRequest);
 
-    const permissions = getUserPermissions(
+    const userRole = getUserRole(
       loggedInUser as UserResponse,
       'teams',
       createRequest.teams,
@@ -60,10 +60,7 @@ export const researchOutputRouteFactory = (
     const options = validateResearchOutputRequestQueryParameters(query);
     const publish = options.publish ?? true;
 
-    const isRequestAllowed =
-      (permissions.saveDraft && !publish) || (permissions.publish && publish);
-
-    if (!loggedInUser || !isRequestAllowed) {
+    if (!loggedInUser || !hasUpsertPermission(userRole, false)) {
       throw Boom.forbidden();
     }
 
@@ -82,24 +79,20 @@ export const researchOutputRouteFactory = (
   researchOutputRoutes.put(
     '/research-outputs/:researchOutputId',
     async (req, res) => {
-      const { body, params, loggedInUser, query } = req;
+      const { body, params, loggedInUser } = req;
       const { researchOutputId } = validateResearchOutputParameters(params);
       const updateRequest = validateResearchOutputPutRequestParameters(body);
       validateResearchOutputPostRequestParametersIdentifiers(body);
 
-      const permissions = getUserPermissions(
+      const userRole = getUserRole(
         loggedInUser as UserResponse,
         'teams',
         updateRequest.teams,
       );
 
-      const options = validateResearchOutputRequestQueryParameters(query);
-      const publish = options.publish ?? true;
-
-      const isRequestAllowed =
-        (permissions.saveDraft && !publish) || (permissions.publish && publish);
-
-      if (!loggedInUser || !isRequestAllowed) {
+      // TODO: update the published value in hasUpsertPermission in
+      // display draft task. Currently we are not sending the value published
+      if (!loggedInUser || !hasUpsertPermission(userRole, false)) {
         throw Boom.forbidden();
       }
 

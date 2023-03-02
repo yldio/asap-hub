@@ -10,7 +10,7 @@ import { network, useRouteParams } from '@asap-hub/routing';
 import { usePaginationParams } from '../../hooks';
 import {
   useResearchOutputs,
-  useUserPermissions,
+  useCanShareResearchOutput,
 } from '../../shared-research/state';
 
 import { useUpcomingAndPastEvents } from '../events';
@@ -46,10 +46,9 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
   const { workingGroupId } = useRouteParams(route);
   const workingGroup = useWorkingGroupById(workingGroupId);
 
-  const permissions = useUserPermissions({
-    entity: 'workingGroups',
-    entityIds: [workingGroupId],
-  });
+  const canShareResearchOutput = useCanShareResearchOutput('workingGroups', [
+    workingGroupId,
+  ]);
 
   useEffect(() => {
     loadAbout()
@@ -84,7 +83,9 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
       upcoming: path + upcoming.template,
     };
     return (
-      <ResearchOutputPermissionsContext.Provider value={{ permissions }}>
+      <ResearchOutputPermissionsContext.Provider
+        value={{ canShareResearchOutput }}
+      >
         <Switch>
           <Route path={path + createOutput.template}>
             <Frame title="Share Output">

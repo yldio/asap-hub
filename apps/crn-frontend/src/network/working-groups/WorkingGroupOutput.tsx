@@ -45,8 +45,9 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
 
   const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
 
-  const { permissions } = useContext(ResearchOutputPermissionsContext);
-
+  const { canEditResearchOutput } = useContext(
+    ResearchOutputPermissionsContext,
+  );
   const createResearchOutput = usePostResearchOutput({ published: true });
   const createDraftResearchOutput = usePostResearchOutput({ published: false });
   const updateResearchOutput = usePutResearchOutput({ published: true });
@@ -59,11 +60,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
 
   const published = researchOutputData ? !!researchOutputData.published : false;
 
-  const isForbidden =
-    (!permissions.saveDraft && !permissions.publish) ||
-    (published && permissions.saveDraft && !permissions.publish);
-
-  if (!isForbidden && workingGroup) {
+  if (canEditResearchOutput && workingGroup) {
     return (
       <Frame title="Share Working Group Research Output">
         <ResearchOutputHeader

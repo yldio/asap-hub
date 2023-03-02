@@ -1,6 +1,5 @@
 import React, { ComponentProps, useContext } from 'react';
 import { css } from '@emotion/react';
-import { isEnabled } from '@asap-hub/flags';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { sharedResearch } from '@asap-hub/routing';
@@ -70,18 +69,15 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
     ...props.tags,
   ];
 
-  const { permissions } = useContext(ResearchOutputPermissionsContext);
+  const { canEditResearchOutput } = useContext(
+    ResearchOutputPermissionsContext,
+  );
 
-  const canEdit =
-    (isEnabled('DRAFT_RESEARCH_OUTPUT') &&
-      permissions.saveDraft &&
-      !published) ||
-    (permissions.publish && published);
   return (
     <div css={containerStyles}>
       <div css={buttonsContainer}>
         <BackLink href={backHref} />
-        {canEdit && !isGrantDocument && (
+        {canEditResearchOutput && !isGrantDocument && (
           <div css={editButtonContainer}>
             <Link
               href={

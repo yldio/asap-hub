@@ -1,120 +1,161 @@
 import { createUserResponse } from '@asap-hub/fixtures';
+import { disable } from '@asap-hub/flags';
 import { UserResponse } from '@asap-hub/model';
 import {
-  fullPermissions,
-  getUserPermissions,
-  noPermissions,
-  partialPermissions,
+  getUserRole,
+  hasEditResearchOutputPermission,
+  hasPublishResearchOutputPermission,
+  hasShareResearchOutputPermission,
 } from '../../src/permissions/research-output';
 
+const user = createUserResponse();
+
 describe.each`
-  entity             | entityId
-  ${'teams'}         | ${'team-id'}
-  ${'workingGroups'} | ${'working-group-id'}
-`('getUserPermissions - $entity', ({ entity, entityId }) => {
-  test('Should not have permissions when there is no user data', () => {
-    expect(getUserPermissions(null, entity, [entityId])).toEqual(noPermissions);
+  association        | associationId
+  ${`teams`}         | ${`team-1`}
+  ${`workingGroups`} | ${`wg-1`}
+`('getUserRole - $association', ({ association, associationId }) => {
+  test('returns Staff when user has asap role as staff', () => {
+    expect(
+      getUserRole({ ...user, role: 'Staff' }, association, associationId),
+    ).toEqual('Staff');
   });
 
-  describe('when asap-hub role is staff', () => {
-    const staffUser: UserResponse = {
-      ...createUserResponse(),
-      role: 'Staff',
-    };
+  test(`returns Staff when user is Project Manager of ${association}`, () => {
+    expect(
+      getUserRole(
+        {
+          ...user,
+          role: 'Grantee',
+          [association]: [
+            {
+              ...user[association][0],
+              id: associationId,
+              role: 'Project Manager',
+            },
+          ],
+        },
+        association,
+        [associationId],
+      ),
+    ).toEqual('Staff');
+  });
 
-    test('Should have full permission', () => {
-      expect(getUserPermissions(staffUser, entity, [entityId])).toEqual(
-        fullPermissions,
+  test(`returns Member when user belongs to ${association} and they are not a PM`, () => {
+    expect(
+      getUserRole(
+        {
+          ...user,
+          role: 'Grantee',
+          [association]: [
+            {
+              ...user[association][0],
+              id: associationId,
+              role: 'Collaborating PI',
+            },
+          ],
+        },
+        association,
+        [associationId],
+      ),
+    ).toEqual('Member');
+  });
+
+  test(`returns None when user does not belong to ${association}`, () => {
+    expect(
+      getUserRole(
+        {
+          ...user,
+          role: 'Grantee',
+          [association]: [
+            {
+              ...user[association][0],
+              id: associationId,
+              role: 'Collaborating PI',
+            },
+          ],
+        },
+        association,
+        ['does-not-belong'],
+      ),
+    ).toEqual('None');
+  });
+});
+
+describe('hasShareResearchOutputPermission', () => {
+  test.each`
+    userRole    | expected
+    ${`Staff`}  | ${true}
+    ${`Member`} | ${true}
+    ${`None`}   | ${false}
+  `(
+    'returns $expected when user role is $userRole',
+    ({ userRole, expected }) => {
+      expect(hasShareResearchOutputPermission(userRole)).toEqual(expected);
+    },
+  );
+
+  test.each`
+    userRole    | expected
+    ${`Staff`}  | ${true}
+    ${`Member`} | ${false}
+    ${`None`}   | ${false}
+  `(
+    'returns $expected when user role is $userRole and feature flag is disabled',
+    ({ userRole, expected }) => {
+      disable('DRAFT_RESEARCH_OUTPUT');
+      expect(hasShareResearchOutputPermission(userRole)).toEqual(expected);
+    },
+  );
+});
+
+describe('hasPublishResearchOutputPermission', () => {
+  test.each`
+    userRole    | expected
+    ${`Staff`}  | ${true}
+    ${`Member`} | ${false}
+    ${`None`}   | ${false}
+  `(
+    'returns $expected when user role is $userRole',
+    ({ userRole, expected }) => {
+      expect(hasPublishResearchOutputPermission(userRole)).toEqual(expected);
+    },
+  );
+});
+
+describe('hasEditResearchOutputPermission', () => {
+  test.each`
+    userRole    | published | expected
+    ${`Staff`}  | ${true}   | ${true}
+    ${`Staff`}  | ${false}  | ${true}
+    ${`Member`} | ${true}   | ${false}
+    ${`Member`} | ${false}  | ${true}
+    ${`None`}   | ${true}   | ${false}
+    ${`None`}   | ${false}  | ${false}
+  `(
+    'returns $expected when user role is $userRole and published is $published',
+    ({ userRole, published, expected }) => {
+      expect(hasEditResearchOutputPermission(userRole, published)).toEqual(
+        expected,
       );
-    });
-  });
+    },
+  );
 
-  describe('when asap-hub role is not staff', () => {
-    const nonStaffUser: UserResponse = {
-      ...createUserResponse(),
-      role: 'Grantee',
-    };
-
-    test('Should not have permissions when there is no entity ids', () => {
-      expect(getUserPermissions(nonStaffUser, entity, [])).toEqual(
-        noPermissions,
+  test.each`
+    userRole    | published | expected
+    ${`Staff`}  | ${true}   | ${true}
+    ${`Staff`}  | ${false}  | ${true}
+    ${`Member`} | ${true}   | ${false}
+    ${`Member`} | ${false}  | ${false}
+    ${`None`}   | ${true}   | ${false}
+    ${`None`}   | ${false}  | ${false}
+  `(
+    'returns $expected when user role is $userRole, published is $published and feature flag is disabled',
+    ({ userRole, published, expected }) => {
+      disable('DRAFT_RESEARCH_OUTPUT');
+      expect(hasEditResearchOutputPermission(userRole, published)).toEqual(
+        expected,
       );
-    });
-
-    test(`Should not have permissions if the user does not belong to the ${entity} and it is not a PM`, () => {
-      expect(
-        getUserPermissions(
-          {
-            ...nonStaffUser,
-            [entity]: [
-              {
-                ...nonStaffUser[entity][0],
-                id: 'entityId',
-                role: 'Member',
-              },
-            ],
-          },
-          entity,
-          ['do-not-belong'],
-        ),
-      ).toEqual(noPermissions);
-    });
-
-    test(`Should not have permissions if the user does not belong to the ${entity} and it is a PM`, () => {
-      expect(
-        getUserPermissions(
-          {
-            ...nonStaffUser,
-            [entity]: [
-              {
-                ...nonStaffUser[entity][0],
-                id: 'entityId',
-                role: 'Project Manager',
-              },
-            ],
-          },
-          entity,
-          ['do-not-belong'],
-        ),
-      ).toEqual(noPermissions);
-    });
-
-    test(`Should have partial permissions if the user is not a project manager but belongs to ${entity}`, () => {
-      expect(
-        getUserPermissions(
-          {
-            ...nonStaffUser,
-            [entity]: [
-              {
-                ...nonStaffUser[entity][0],
-                id: entityId,
-                role: 'Member',
-              },
-            ],
-          },
-          entity,
-          [entityId],
-        ),
-      ).toEqual(partialPermissions);
-    });
-
-    test(`Should have full permission if the user is a project manager of the ${entity}`, () => {
-      expect(
-        getUserPermissions(
-          {
-            ...nonStaffUser,
-            [entity]: [
-              {
-                ...nonStaffUser[entity][0],
-                id: entityId,
-                role: 'Project Manager',
-              },
-            ],
-          },
-          entity,
-          [entityId],
-        ),
-      ).toEqual(fullPermissions);
-    });
-  });
+    },
+  );
 });

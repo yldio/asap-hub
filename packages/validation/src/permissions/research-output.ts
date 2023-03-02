@@ -1,51 +1,54 @@
 import { User } from '@asap-hub/auth';
-import { UserPermissions, UserResponse } from '@asap-hub/model';
+import { UserRole, UserResponse } from '@asap-hub/model';
+import { isEnabled } from '@asap-hub/flags';
 
-export const noPermissions: UserPermissions = {
-  saveDraft: false,
-  publish: false,
-};
-
-export const partialPermissions: UserPermissions = {
-  saveDraft: true,
-  publish: false,
-};
-
-export const fullPermissions: UserPermissions = {
-  saveDraft: true,
-  publish: true,
-};
-
-export const getUserPermissions = (
+export const getUserRole = (
   user: Omit<User, 'algoliaApiKey'> | UserResponse | null,
-  entity: 'teams' | 'workingGroups',
-  entityIds: string[],
-): UserPermissions => {
+  association: 'teams' | 'workingGroups',
+  associationIds: string[],
+): UserRole => {
   if (user === null) {
-    return noPermissions;
+    return 'None';
   }
 
   if (user.role === 'Staff') {
-    return fullPermissions;
+    return 'Staff';
   }
 
-  const isUserProjectManager = user[entity].some(
+  const isUserProjectManager = user[association].some(
     (teamOrWorkingGroup) =>
-      entityIds?.includes(teamOrWorkingGroup.id) &&
+      associationIds?.includes(teamOrWorkingGroup.id) &&
       teamOrWorkingGroup.role === 'Project Manager',
   );
 
   if (isUserProjectManager) {
-    return fullPermissions;
+    return 'Staff';
   }
 
-  const isUserMember = user[entity].some((teamOrWorkingGroup) =>
-    entityIds.includes(teamOrWorkingGroup.id),
+  const isUserMember = user[association].some((teamOrWorkingGroup) =>
+    associationIds.includes(teamOrWorkingGroup.id),
   );
 
   if (isUserMember) {
-    return partialPermissions;
+    return 'Member';
   }
 
-  return noPermissions;
+  return 'None';
 };
+
+export const hasShareResearchOutputPermission = (userRole: UserRole): boolean =>
+  userRole === 'Staff' ||
+  (isEnabled('DRAFT_RESEARCH_OUTPUT') && userRole === 'Member');
+
+export const hasPublishResearchOutputPermission = (
+  userRole: UserRole,
+): boolean => userRole === 'Staff';
+
+export const hasEditResearchOutputPermission = (
+  userRole: UserRole,
+  published: boolean,
+): boolean =>
+  userRole === 'Staff' ||
+  (isEnabled('DRAFT_RESEARCH_OUTPUT') && userRole === 'Member' && !published);
+
+export const hasUpsertPermission = hasEditResearchOutputPermission;

@@ -1,10 +1,14 @@
 import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
-  UserPermissions,
 } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
-import { getUserPermissions } from '@asap-hub/validation';
+import {
+  getUserRole,
+  hasShareResearchOutputPermission,
+  hasEditResearchOutputPermission,
+  hasPublishResearchOutputPermission,
+} from '@asap-hub/validation';
 import {
   atom,
   atomFamily,
@@ -153,14 +157,30 @@ export const useSetResearchOutputItem = () => {
   );
 };
 
-export const useUserPermissions = ({
-  entity,
-  entityIds,
-}: {
-  entity: 'teams' | 'workingGroups';
-  entityIds: string[];
-}): UserPermissions => {
+export const useCanShareResearchOutput = (
+  association: 'teams' | 'workingGroups',
+  associationIds: string[],
+): boolean => {
   const user = useCurrentUserCRN();
+  const userRole = getUserRole(user, association, associationIds);
+  return hasShareResearchOutputPermission(userRole);
+};
 
-  return getUserPermissions(user, entity, entityIds);
+export const useCanEditResearchOutput = (
+  association: 'teams' | 'workingGroups',
+  associationIds: string[],
+  published: boolean,
+): boolean => {
+  const user = useCurrentUserCRN();
+  const userRole = getUserRole(user, association, associationIds);
+  return hasEditResearchOutputPermission(userRole, published);
+};
+
+export const useCanPublishResearchOutput = (
+  association: 'teams' | 'workingGroups',
+  associationIds: string[],
+): boolean => {
+  const user = useCurrentUserCRN();
+  const userRole = getUserRole(user, association, associationIds);
+  return hasPublishResearchOutputPermission(userRole);
 };

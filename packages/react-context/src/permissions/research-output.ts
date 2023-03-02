@@ -1,14 +1,16 @@
 import { createContext, useContext } from 'react';
-import { UserPermissions } from '@asap-hub/model';
-import { noPermissions } from '@asap-hub/validation';
 
 type ResearchOutputPermissions = {
-  permissions: UserPermissions;
+  canShareResearchOutput?: boolean;
+  canEditResearchOutput?: boolean;
+  canPublishResearchOutput?: boolean;
 };
 
 export const ResearchOutputPermissionsContext =
   createContext<ResearchOutputPermissions>({
-    permissions: noPermissions,
+    canShareResearchOutput: false,
+    canEditResearchOutput: false,
+    canPublishResearchOutput: false,
   });
 
 export const useResearchOutputPermissionsContext =

@@ -10,7 +10,7 @@ import { network, useRouteParams } from '@asap-hub/routing';
 import { usePaginationParams } from '../../hooks';
 import {
   useResearchOutputs,
-  useUserPermissions,
+  useCanShareResearchOutput,
 } from '../../shared-research/state';
 
 import { useUpcomingAndPastEvents } from '../events';
@@ -55,10 +55,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
       .then(loadEventsList);
   }, [team]);
 
-  const permissions = useUserPermissions({
-    entity: 'teams',
-    entityIds: [teamId],
-  });
+  const canShareResearchOutput = useCanShareResearchOutput('teams', [teamId]);
 
   const [upcomingEvents, pastEvents] = useUpcomingAndPastEvents(currentTime, {
     teamId,
@@ -86,7 +83,9 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
     };
 
     return (
-      <ResearchOutputPermissionsContext.Provider value={{ permissions }}>
+      <ResearchOutputPermissionsContext.Provider
+        value={{ canShareResearchOutput }}
+      >
         <Switch>
           <Route path={path + createOutput.template}>
             <Frame title="Share Output">

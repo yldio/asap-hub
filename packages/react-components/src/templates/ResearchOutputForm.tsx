@@ -145,10 +145,12 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   published,
 }) => {
   const historyPush = usePushFromHere();
-  const { permissions } = useContext(ResearchOutputPermissionsContext);
+  const { canShareResearchOutput, canPublishResearchOutput } = useContext(
+    ResearchOutputPermissionsContext,
+  );
 
-  const showSaveDraftButton = !published && permissions.saveDraft;
-  const showPublishButton = permissions.publish;
+  const showSaveDraftButton = !published && canShareResearchOutput;
+  const showPublishButton = canPublishResearchOutput;
   const displayThreeButtons = showSaveDraftButton && showPublishButton;
 
   const [tags, setTags] = useState<ResearchOutputPostRequest['tags']>(
@@ -384,7 +386,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                       }
                       return researchOutput;
                     }}
-                    primary={permissions.saveDraft && !permissions.publish}
+                    primary={showSaveDraftButton && !showPublishButton}
                   >
                     Save Draft
                   </Button>

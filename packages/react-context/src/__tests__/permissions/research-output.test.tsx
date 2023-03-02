@@ -3,17 +3,29 @@ import { render } from '@testing-library/react';
 import { useResearchOutputPermissionsContext } from '../../permissions/research-output';
 
 const TestComponent: React.FC<{ index?: number }> = () => {
-  const { permissions } = useResearchOutputPermissionsContext();
+  const {
+    canShareResearchOutput,
+    canEditResearchOutput,
+    canPublishResearchOutput,
+  } = useResearchOutputPermissionsContext();
   return (
     <>
-      <span>saveDraft: {permissions.saveDraft ? 'true' : 'false'}</span>
-      <span>publish: {permissions.publish ? 'true' : 'false'}</span>
+      <span>
+        canShareResearchOutput: {canShareResearchOutput ? 'true' : 'false'}
+      </span>
+      <span>
+        canEditResearchOutput: {canEditResearchOutput ? 'true' : 'false'}
+      </span>
+      <span>
+        canPublishResearchOutput: {canPublishResearchOutput ? 'true' : 'false'}
+      </span>
     </>
   );
 };
 
 it('passes through default profile context', () => {
   const { getByText } = render(<TestComponent />);
-  expect(getByText('saveDraft: false')).toBeVisible();
-  expect(getByText('publish: false')).toBeVisible();
+  expect(getByText('canShareResearchOutput: false')).toBeVisible();
+  expect(getByText('canEditResearchOutput: false')).toBeVisible();
+  expect(getByText('canPublishResearchOutput: false')).toBeVisible();
 });

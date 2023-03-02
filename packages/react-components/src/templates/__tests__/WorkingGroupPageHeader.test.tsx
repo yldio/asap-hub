@@ -3,15 +3,8 @@ import {
   createWorkingGroupMembers,
   createWorkingGroupPointOfContact,
 } from '@asap-hub/fixtures';
-import { disable } from '@asap-hub/flags';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
-import { UserPermissions } from '@asap-hub/model';
-import {
-  fullPermissions,
-  noPermissions,
-  partialPermissions,
-} from '@asap-hub/validation';
 
 import WorkingGroupHeader from '../WorkingGroupPageHeader';
 
@@ -49,16 +42,22 @@ it('renders CTA when pointOfContact is provided', () => {
 
 describe('Share an output button dropdown', () => {
   const renderWithPermissionsContext = (
-    permissions: UserPermissions = fullPermissions,
+    canShareResearchOutput: boolean = true,
   ) =>
     render(
-      <ResearchOutputPermissionsContext.Provider value={{ permissions }}>
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          canShareResearchOutput,
+          canEditResearchOutput: true,
+          canPublishResearchOutput: true,
+        }}
+      >
         <WorkingGroupHeader {...baseProps} title="A test group" />
       </ResearchOutputPermissionsContext.Provider>,
     );
 
-  it('renders share an output button when user has full permission', () => {
-    renderWithPermissionsContext(fullPermissions);
+  it('renders share an output button when user can share research output', () => {
+    renderWithPermissionsContext();
 
     expect(
       screen.queryByText(/article/i, { selector: 'span' }),
@@ -72,34 +71,8 @@ describe('Share an output button dropdown', () => {
       '/network/working-groups/id/create-output/article',
     );
   });
-
-  it('renders share an output button dropdown when user has partial permission', () => {
-    renderWithPermissionsContext(partialPermissions);
-
-    expect(
-      screen.queryByText(/article/i, { selector: 'span' }),
-    ).not.toBeVisible();
-    fireEvent.click(screen.getByRole('button', { name: /Share an output/i }));
-    expect(screen.getByText(/article/i, { selector: 'span' })).toBeVisible();
-    expect(
-      screen.getByText(/article/i, { selector: 'span' }).closest('a'),
-    ).toHaveAttribute(
-      'href',
-      '/network/working-groups/id/create-output/article',
-    );
-  });
-
-  it('does not render share an output button dropdown when user has partial permission and feature flag is disabled', () => {
-    disable('DRAFT_RESEARCH_OUTPUT');
-    renderWithPermissionsContext(partialPermissions);
-
-    expect(
-      screen.queryByRole('button', { name: /Share an output/i }),
-    ).not.toBeInTheDocument();
-  });
-
-  it('does not render share an output button dropdown when user has no permissions', () => {
-    renderWithPermissionsContext(noPermissions);
+  it('does not render share an output button dropdown when user cannot share research output', () => {
+    renderWithPermissionsContext(false);
 
     expect(
       screen.queryByRole('button', { name: /Share an output/i }),

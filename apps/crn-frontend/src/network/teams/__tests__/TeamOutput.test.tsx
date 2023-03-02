@@ -6,7 +6,6 @@ import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import { BackendError } from '@asap-hub/frontend-utils';
 import {
   ResearchOutputResponse,
-  UserPermissions,
   ValidationErrorResponse,
 } from '@asap-hub/model';
 import {
@@ -14,11 +13,6 @@ import {
   ToastContext,
 } from '@asap-hub/react-context';
 import { network, TeamOutputDocumentTypeParameter } from '@asap-hub/routing';
-import {
-  fullPermissions,
-  noPermissions,
-  partialPermissions,
-} from '@asap-hub/validation';
 import {
   render,
   screen,
@@ -110,9 +104,9 @@ const mockUpdateResearchOutput =
   >;
 
 interface RenderPageOptions {
+  canEditResearchOutput?: boolean;
   teamId: string;
   teamOutputDocumentType?: TeamOutputDocumentTypeParameter;
-  permissions?: UserPermissions;
   researchOutputData?: ResearchOutputResponse;
 }
 
@@ -151,18 +145,6 @@ it('switches research output type based on parameter', async () => {
 
   expect(
     screen.getByRole('heading', { name: /Share an article/i }),
-  ).toBeInTheDocument();
-});
-
-it('Shows NotFoundPage when user has no permissions', async () => {
-  await renderPage({ teamId: '42', permissions: noPermissions });
-  expect(
-    screen.queryByRole('heading', { name: /Share/i }),
-  ).not.toBeInTheDocument();
-  expect(
-    screen.getByRole('heading', {
-      name: /Sorry! We can’t seem to find that page/i,
-    }),
   ).toBeInTheDocument();
 });
 
@@ -282,66 +264,57 @@ it('can save draft when form data is valid', async () => {
   );
 });
 
-it.each([
-  { status: 'draft', isEditMode: true, published: false },
-  { status: 'published', isEditMode: true, published: true },
-])(
-  'can edit a $status working group research output',
-  async ({ isEditMode, published }) => {
-    const researchOutput = createResearchOutputResponse();
-    const teamId = researchOutput.teams[0].id;
-    const { type, description, title } = researchOutput;
-    const link = 'https://example42.com';
-    const doi = '10.0777';
+it('can edit a research output', async () => {
+  const researchOutput = createResearchOutputResponse();
+  const teamId = researchOutput.teams[0].id;
+  const { type, description, title } = researchOutput;
+  const link = 'https://example42.com';
+  const doi = '10.0777';
 
-    await renderPage({
-      teamId: '42',
-      teamOutputDocumentType: 'article',
-      researchOutputData: { ...researchOutput, doi, published },
-    });
+  await renderPage({
+    teamId: '42',
+    teamOutputDocumentType: 'article',
+    researchOutputData: { ...researchOutput, doi },
+  });
 
-    const { publish } = await mandatoryFields(
-      {
-        link,
-        title: '',
-        description: '',
-        type,
-        doi,
-      },
-      true,
-      isEditMode,
-    );
-    await publish();
+  const { publish } = await mandatoryFields(
+    {
+      link,
+      title: '',
+      description: '',
+      type,
+      doi,
+    },
+    true,
+    true,
+  );
+  await publish();
 
-    expect(mockUpdateResearchOutput).toHaveBeenCalledWith(
-      researchOutput.id,
-      expect.objectContaining({
-        link,
-        title,
-        description,
-        teams: [teamId],
-      }),
-      expect.anything(),
-      published,
-    );
-  },
-);
+  expect(mockUpdateResearchOutput).toHaveBeenCalledWith(
+    researchOutput.id,
+    expect.objectContaining({
+      link,
+      title,
+      description,
+      teams: [teamId],
+    }),
+    expect.anything(),
+    true,
+  );
+});
 
-it.each([{ permissions: partialPermissions }, { permissions: noPermissions }])(
-  'displays sorry page when user has not saveDraft permission and the research output is published',
-  async ({ permissions }) => {
-    await renderPage({
-      permissions,
-      teamId: '42',
-      teamOutputDocumentType: 'article',
-      researchOutputData: {
-        ...createResearchOutputResponse(),
-        published: true,
-      },
-    });
-    expect(screen.getByText(/sorry.+page/i)).toBeVisible();
-  },
-);
+test('displays sorry page when user does not have edit permission', async () => {
+  await renderPage({
+    canEditResearchOutput: false,
+    teamId: '42',
+    teamOutputDocumentType: 'article',
+    researchOutputData: {
+      ...createResearchOutputResponse(),
+      published: true,
+    },
+  });
+  expect(screen.getByText(/sorry.+page/i)).toBeVisible();
+});
 
 it('will show server side validation error for link', async () => {
   const validationResponse: ValidationErrorResponse = {
@@ -422,7 +395,6 @@ it('will toast server side errors for unknown errors in edit mode', async () => 
     true,
     true,
   );
-
   await publish();
 
   expect(mockCreateResearchOutput).toHaveBeenCalled();
@@ -432,7 +404,7 @@ it('will toast server side errors for unknown errors in edit mode', async () => 
 });
 
 async function renderPage({
-  permissions = fullPermissions,
+  canEditResearchOutput = true,
   teamId,
   teamOutputDocumentType = 'bioinformatics',
   researchOutputData,
@@ -462,7 +434,11 @@ async function renderPage({
                 }
               >
                 <ResearchOutputPermissionsContext.Provider
-                  value={{ permissions }}
+                  value={{
+                    canEditResearchOutput,
+                    canShareResearchOutput: true,
+                    canPublishResearchOutput: true,
+                  }}
                 >
                   <Route path={path}>
                     <TeamOutput

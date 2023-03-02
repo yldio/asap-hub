@@ -775,7 +775,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@asap-hub/flags@workspace:*, @asap-hub/flags@workspace:packages/flags":
+"@asap-hub/flags@workspace:*, @asap-hub/flags@workspace:^, @asap-hub/flags@workspace:packages/flags":
   version: 0.0.0-use.local
   resolution: "@asap-hub/flags@workspace:packages/flags"
   dependencies:
@@ -1487,6 +1487,7 @@ __metadata:
     "@asap-hub/auth": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/fixtures": "workspace:*"
+    "@asap-hub/flags": "workspace:^"
     "@asap-hub/model": "workspace:*"
     "@babel/runtime-corejs3": 7.21.0
   languageName: unknown

@@ -1,5 +1,4 @@
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
-import { fullPermissions, partialPermissions } from '@asap-hub/validation';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { StaticRouter, Router } from 'react-router-dom';
@@ -18,7 +17,6 @@ import {
   researchOutputDocumentTypeToType,
   ResearchOutputType,
   ResearchTagResponse,
-  UserPermissions,
 } from '@asap-hub/model';
 import { fireEvent } from '@testing-library/dom';
 import {
@@ -43,6 +41,12 @@ const props: ComponentProps<typeof ResearchOutputForm> = {
   documentType: 'Article',
   selectedTeams: [],
   typeOptions: Array.from(researchOutputDocumentTypeToType.Article.values()),
+};
+
+const permissions = {
+  canEditResearchOutput: true,
+  canPublishResearchOutput: true,
+  canShareResearchOutput: true,
 };
 
 jest.setTimeout(60000);
@@ -89,11 +93,7 @@ describe('createIdentifierField', () => {
 it('renders the form', async () => {
   render(
     <StaticRouter>
-      <ResearchOutputPermissionsContext.Provider
-        value={{
-          permissions: fullPermissions,
-        }}
-      >
+      <ResearchOutputPermissionsContext.Provider value={permissions}>
         <ResearchOutputForm {...props} />
       </ResearchOutputPermissionsContext.Provider>
     </StaticRouter>,
@@ -107,11 +107,7 @@ it('renders the form', async () => {
 it('renders the edit form button when research output data is present', async () => {
   render(
     <StaticRouter>
-      <ResearchOutputPermissionsContext.Provider
-        value={{
-          permissions: fullPermissions,
-        }}
-      >
+      <ResearchOutputPermissionsContext.Provider value={permissions}>
         <ResearchOutputForm
           {...props}
           researchOutputData={createResearchOutputResponse()}
@@ -140,11 +136,7 @@ it('pre populates the form with provided backend response', async () => {
   };
   await render(
     <StaticRouter>
-      <ResearchOutputPermissionsContext.Provider
-        value={{
-          permissions: fullPermissions,
-        }}
-      >
+      <ResearchOutputPermissionsContext.Provider value={permissions}>
         <ResearchOutputForm
           {...props}
           documentType={'Dataset'}
@@ -290,11 +282,7 @@ describe('on submit', () => {
     },
   ) => {
     render(
-      <ResearchOutputPermissionsContext.Provider
-        value={{
-          permissions: fullPermissions,
-        }}
-      >
+      <ResearchOutputPermissionsContext.Provider value={permissions}>
         <Router history={history}>
           <ResearchOutputForm
             {...props}
@@ -754,12 +742,15 @@ describe('form buttons', () => {
 
   const setupForm = async (
     {
-      permissions = fullPermissions,
+      canEditResearchOutput = false,
+      canPublishResearchOutput = false,
       published = false,
       documentType = 'Article',
       researchTags = [{ id: '1', name: 'research tag 1' }],
     }: {
-      permissions?: UserPermissions;
+      canEditResearchOutput?: boolean;
+      canPublishResearchOutput?: boolean;
+
       published?: boolean;
       documentType?: ComponentProps<typeof ResearchOutputForm>['documentType'];
       researchTags?: ResearchTagResponse[];
@@ -771,7 +762,9 @@ describe('form buttons', () => {
     render(
       <ResearchOutputPermissionsContext.Provider
         value={{
-          permissions,
+          canEditResearchOutput,
+          canPublishResearchOutput,
+          canShareResearchOutput: true,
         }}
       >
         <Router history={history}>
@@ -796,8 +789,13 @@ describe('form buttons', () => {
 
   const primaryButtonBg = fern.rgb;
   const notPrimaryButtonBg = paper.rgb;
-  it('shows Cancel, Save Draft and Publish buttons when user has full permission and the research output is not published yet', async () => {
-    await setupForm({ permissions: fullPermissions, published: false });
+
+  it('shows Cancel, Save Draft and Publish buttons when user has editing and publishing permissions and the research output has not been published yet', async () => {
+    await setupForm({
+      canEditResearchOutput: true,
+      canPublishResearchOutput: true,
+      published: false,
+    });
 
     const publishButton = screen.getByRole('button', {
       name: /Publish/i,
@@ -816,8 +814,12 @@ describe('form buttons', () => {
     expect(cancelButton).toHaveStyle(`background-color:${notPrimaryButtonBg}`);
   });
 
-  it('shows only Cancel and Save buttons when user has full permission and the research output has already been published', async () => {
-    await setupForm({ permissions: fullPermissions, published: true });
+  it('shows only Cancel and Save buttons when user has editing and publishing permission and the research output has already been published', async () => {
+    await setupForm({
+      canEditResearchOutput: true,
+      canPublishResearchOutput: true,
+      published: true,
+    });
 
     expect(
       screen.queryByRole('button', { name: /Publish/i }),
@@ -832,8 +834,12 @@ describe('form buttons', () => {
     expect(cancelButton).toHaveStyle(`background-color:${notPrimaryButtonBg}`);
   });
 
-  it('shows only Cancel and Save Draft buttons when user has partial permission and the research output is not published yet', async () => {
-    await setupForm({ permissions: partialPermissions, published: false });
+  it('shows only Cancel and Save Draft buttons when user has editing permission and the research output has not been published yet', async () => {
+    await setupForm({
+      canEditResearchOutput: true,
+      canPublishResearchOutput: false,
+      published: false,
+    });
 
     expect(
       screen.queryByRole('button', { name: /Publish/i }),

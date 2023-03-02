@@ -19,7 +19,7 @@ export interface SpeakerInfo {
     | EventSpeakerExternalUser
     | undefined;
 }
-export type EventSpeaker = SpeakerInfo & { topic?: string }
+export type EventSpeaker = SpeakerInfo & { topic?: string };
 export interface EventDataObject extends BasicEvent {
   calendar: CalendarResponse;
   speakers: EventSpeaker[];

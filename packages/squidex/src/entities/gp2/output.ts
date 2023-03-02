@@ -47,9 +47,7 @@ export type GraphqlExternalUserAssoc = GraphqlWithTypename<
   'ExternalUsers'
 >;
 
-export type GraphqlOutputAuthors =
-  | GraphqlUserAssoc
-  | GraphqlExternalUserAssoc;
+export type GraphqlOutputAuthors = GraphqlUserAssoc | GraphqlExternalUserAssoc;
 export interface GraphqlOutput
   extends Entity,
     Graphql<Output<GraphqlOutputAuthors>> {}

@@ -42,8 +42,7 @@ describe('External Users data provider', () => {
     });
 
     test('Should create an external user without ORCID', async () => {
-      const externalUserCreateDataObject =
-        getExternalUserCreateDataObject();
+      const externalUserCreateDataObject = getExternalUserCreateDataObject();
       delete externalUserCreateDataObject.orcid;
 
       nock(baseUrl)
@@ -60,8 +59,7 @@ describe('External Users data provider', () => {
     });
 
     test('Should throw when fails to create the external user - 500', async () => {
-      const externalUserCreateDataObject =
-        getExternalUserCreateDataObject();
+      const externalUserCreateDataObject = getExternalUserCreateDataObject();
 
       nock(baseUrl)
         .post(`/api/content/${appName}/external-users?publish=true`, {

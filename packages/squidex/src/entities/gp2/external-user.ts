@@ -6,6 +6,4 @@ export interface ExternalUser {
 }
 
 export interface RestExternalUser extends Entity, Rest<ExternalUser> {}
-export interface GraphqlExternalUser
-  extends Entity,
-    Graphql<ExternalUser> {}
+export interface GraphqlExternalUser extends Entity, Graphql<ExternalUser> {}

@@ -5,7 +5,9 @@ export interface ExternalUserDataProvider {
   create(input: gp2Model.ExternalUserCreateDataObject): Promise<string>;
 }
 
-export class ExternalUserSquidexDataProvider implements ExternalUserDataProvider {
+export class ExternalUserSquidexDataProvider
+  implements ExternalUserDataProvider
+{
   constructor(
     private externalUserSquidexRestClient: SquidexRestClient<gp2Squidex.RestExternalUser>,
   ) {}

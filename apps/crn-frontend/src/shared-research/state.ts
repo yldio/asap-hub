@@ -166,25 +166,6 @@ export const useCanShareResearchOutput = (
   return hasShareResearchOutputPermission(userRole);
 };
 
-export const useCanEditResearchOutput = (
-  association: 'teams' | 'workingGroups',
-  associationIds: string[],
-  published: boolean,
-): boolean => {
-  const user = useCurrentUserCRN();
-  const userRole = getUserRole(user, association, associationIds);
-  return hasEditResearchOutputPermission(userRole, published);
-};
-
-export const useCanPublishResearchOutput = (
-  association: 'teams' | 'workingGroups',
-  associationIds: string[],
-): boolean => {
-  const user = useCurrentUserCRN();
-  const userRole = getUserRole(user, association, associationIds);
-  return hasPublishResearchOutputPermission(userRole);
-};
-
 export const useResearchOutputPermissions = (
   association: 'teams' | 'workingGroups',
   associationIds: string[],

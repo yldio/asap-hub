@@ -80,6 +80,10 @@ describe.each`
       ),
     ).toEqual('None');
   });
+
+  test(`returns None when user data is null`, () => {
+    expect(getUserRole(null, association, [associationId])).toEqual('None');
+  });
 });
 
 describe('hasShareResearchOutputPermission', () => {

@@ -31,6 +31,11 @@ export const getEventSpeakerUser = (): gp2Model.EventSpeakerUser => ({
   avatarUrl: undefined,
 });
 
+export const getEventSpeaker = (): gp2Model.EventSpeaker => ({
+  speaker: getEventSpeakerUser(),
+  topic: 'Some Topic',
+});
+
 export const getEventDataObject = (): gp2Model.EventDataObject => ({
   id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
   description: 'This event is awesome',
@@ -61,12 +66,7 @@ export const getEventDataObject = (): gp2Model.EventDataObject => ({
     id: 'c_t92qa82jd702q1fkreoi0hf4hk@group.calendar.google.com',
     name: 'Tech 1 - Sequencing/omics',
   },
-  speakers: [
-    {
-      speaker: getEventSpeakerUser(),
-      topic: 'Some Topic',
-    },
-  ],
+  speakers: [getEventSpeaker()],
 });
 
 export const getListEventDataObject = (): gp2Model.ListEventDataObject => ({

@@ -6,7 +6,7 @@ import {
   parseGraphQLSpeakers,
 } from '../../src/entities/event.entity';
 import {
-  getEventSpeakerUser,
+  getEventSpeaker,
   getSquidexGraphqlEvent,
   getSquidexGraphqlEventSpeakerWithUser,
 } from '../fixtures/event.fixtures';
@@ -101,7 +101,7 @@ describe('events entity', () => {
 
       expect(eventSpeakers[0]!).toBeDefined();
 
-      const expectedEventSpeakers: gp2.EventSpeakerUser = getEventSpeakerUser();
+      const expectedEventSpeakers: gp2.EventSpeaker = getEventSpeaker();
       expect(eventSpeakers).toStrictEqual([expectedEventSpeakers]);
     });
 

@@ -62,12 +62,12 @@ export const parseGraphQLSpeakers = (
 ): gp2.EventSpeaker[] =>
   speakers.reduce((speakerList: gp2.EventSpeaker[], speaker) => {
     const user = speaker?.user?.[0];
-    const topic = speaker?.topic;
+    const topic = speaker?.topic || undefined;
 
     if (user?.__typename === 'ExternalUsers') {
       speakerList.push({
         speaker: parseEventSpeakerExternalUser(user),
-        topic: topic || undefined,
+        topic,
       });
       return speakerList;
     }
@@ -75,7 +75,7 @@ export const parseGraphQLSpeakers = (
     if (!user) {
       speakerList.push({
         speaker: undefined,
-        topic: topic || undefined,
+        topic,
       });
       return speakerList;
     }
@@ -86,7 +86,7 @@ export const parseGraphQLSpeakers = (
 
     speakerList.push({
       speaker: parseEventSpeakerUser(user),
-      topic: topic || undefined,
+      topic,
     });
     return speakerList;
   }, []);

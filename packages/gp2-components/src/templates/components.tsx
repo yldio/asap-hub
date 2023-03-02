@@ -35,6 +35,11 @@ const components = {
       margin: 0,
     },
   },
+  ExternalLink: {
+    styles: {
+      margin: 0,
+    },
+  },
 };
 
 export default components;

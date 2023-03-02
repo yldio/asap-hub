@@ -27,6 +27,7 @@ type OutputCardProps = Pick<
   | 'link'
   | 'documentType'
   | 'type'
+  | 'subtype'
 >;
 
 const OutputCard: React.FC<OutputCardProps> = ({
@@ -36,6 +37,7 @@ const OutputCard: React.FC<OutputCardProps> = ({
   projects,
   documentType,
   type,
+  subtype,
   authors,
   link,
 }) => (
@@ -48,6 +50,7 @@ const OutputCard: React.FC<OutputCardProps> = ({
             projects && 'Project',
             documentType,
             type,
+            subtype,
           ].filter(Boolean) as string[]
         }
         link={link}

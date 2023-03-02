@@ -36,12 +36,7 @@ const ProjectMilestone: React.FC<ProjectMilestoneProps> = ({ milestone }) => (
             },
           })}
         >
-          <ExternalLink
-            href={milestone.link}
-            label="View Milestone"
-            noMargin
-            full
-          />
+          <ExternalLink href={milestone.link} label="View Milestone" full />
         </div>
       )}
     </div>

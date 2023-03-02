@@ -33,7 +33,7 @@ const UserContributingCohorts: React.FC<UserContributingCohortsProps> = ({
         {contributingCohorts.map(
           ({ contributingCohortId, name, studyUrl, role }) => {
             const study = studyUrl && (
-              <ExternalLink href={studyUrl} label="View study" noMargin />
+              <ExternalLink href={studyUrl} label="View study" />
             );
             return {
               id: contributingCohortId,

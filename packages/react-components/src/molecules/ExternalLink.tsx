@@ -98,7 +98,12 @@ const ExternalLink: React.FC<ExternalLinkProps> = ({
 }) => (
   <div css={[containerStyles, containerSizes[size]]}>
     <Anchor href={href}>
-      <span css={({ colors }) => styles(colors, !!label, noMargin, full)}>
+      <span
+        css={({ colors, components }) => [
+          styles(colors, !!label, noMargin, full),
+          components?.ExternalLink?.styles,
+        ]}
+      >
         {icon}
         <span
           css={({ colors }) => [

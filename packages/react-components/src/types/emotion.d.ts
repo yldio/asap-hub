@@ -34,6 +34,9 @@ declare module '@emotion/react' {
         styles: SerializedStyles;
         layoutStyles: SerializedStyles;
       };
+      ExternalLink?: {
+        styles: SerializedStyles;
+      };
     };
   }
 }

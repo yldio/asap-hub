@@ -112,7 +112,7 @@ const DashboardNews: React.FC<DashboardNewsProps> = ({ items }) => {
             </div>
             {link && (
               <div css={css({ gridArea: 'link' })}>
-                <ExternalLink href={link} label={linkText} noMargin />
+                <ExternalLink href={link} label={linkText} />
               </div>
             )}
             <div css={contentStyles}>

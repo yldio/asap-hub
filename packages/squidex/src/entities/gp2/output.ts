@@ -4,7 +4,7 @@ import {
   Graphql,
   GraphqlWithTypename,
   Rest,
-  RestPayload
+  RestPayload,
 } from '../common';
 import { GraphqlExternalUser } from '.';
 import { GraphqlUserAssoc } from './user';

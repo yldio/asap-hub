@@ -22,14 +22,7 @@ export type FetchEventProviderOptions = {
   resourceId?: string;
 };
 
-export interface EventDataProvider {
-  create(create: gp2Model.EventCreateDataObject): Promise<string>;
-  update(id: string, update: gp2Model.EventUpdateDataObject): Promise<void>;
-  fetch(options?: FetchEventsOptions): Promise<gp2Model.ListEventDataObject>;
-  fetchById(id: string): Promise<gp2Model.EventDataObject | null>;
-}
-
-export class EventSquidexDataProvider implements EventDataProvider {
+export class EventSquidexDataProvider implements gp2Model.EventDataProvider {
   constructor(
     private squidexRestClient: SquidexRestClient<RestEvent, InputEvent>,
     private squidexGraphqlClient: SquidexGraphqlClient,

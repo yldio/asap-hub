@@ -1,21 +1,16 @@
 import { NotFoundError } from '@asap-hub/errors';
 import {
+  CalendarController,
   CalendarDataObject,
+  CalendarDataProvider,
   CalendarResponse,
   CalendarUpdateRequest,
   ListCalendarResponse,
 } from '@asap-hub/model';
-import {
-  CalendarController,
-  CalendarDataProvider,
-} from '@asap-hub/server-common';
 
 export default class Calendars implements CalendarController {
-  dataProvider: CalendarDataProvider;
+  constructor(private dataProvider: CalendarDataProvider) {}
 
-  constructor(dataProvider: CalendarDataProvider) {
-    this.dataProvider = dataProvider;
-  }
   async fetch(): Promise<ListCalendarResponse> {
     const { total, items: calendars } = await this.dataProvider.fetch({
       active: true,

@@ -3,7 +3,6 @@ import {
   CalendarUpdateDataObject,
   gp2,
 } from '@asap-hub/model';
-import { CalendarDataProvider as CalendarDataProviderBase } from '@asap-hub/server-common';
 import {
   InputCalendar,
   parseToSquidex,
@@ -28,12 +27,8 @@ export type FetchCalendarProviderOptions = {
 };
 
 type GraphqlCalendar = NonNullable<FetchCalendarQuery['findCalendarsContent']>;
-export type CalendarDataProvider = CalendarDataProviderBase<
-  gp2.CalendarDataObject,
-  gp2.ListCalendarDataObject
->;
 
-export class CalendarSquidexDataProvider implements CalendarDataProvider {
+export class CalendarSquidexDataProvider implements gp2.CalendarDataProvider {
   constructor(
     private squidexRestClient: SquidexRestClient<RestCalendar, InputCalendar>,
     private squidexGraphqlClient: SquidexGraphqlClient,

@@ -1,18 +1,8 @@
 import { NotFoundError } from '@asap-hub/errors';
 import { FetchEventsOptions, gp2 } from '@asap-hub/model';
-import { EventController } from '@asap-hub/server-common';
-import { EventDataProvider } from '../data-providers/event.data-provider';
 
-export default class Events
-  implements
-    EventController<
-      gp2.EventResponse,
-      gp2.ListEventResponse,
-      gp2.EventCreateRequest,
-      gp2.EventUpdateRequest
-    >
-{
-  constructor(private dataProvider: EventDataProvider) {}
+export default class Events implements gp2.EventController {
+  constructor(private dataProvider: gp2.EventDataProvider) {}
 
   async fetch(options: FetchEventsOptions): Promise<gp2.ListEventResponse> {
     return this.dataProvider.fetch(options);

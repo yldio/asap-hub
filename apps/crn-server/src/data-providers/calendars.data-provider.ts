@@ -1,13 +1,11 @@
 import {
   CalendarCreateDataObject,
   CalendarDataObject,
+  CalendarDataProvider,
   CalendarUpdateDataObject,
+  FetchCalendarProviderOptions,
   ListCalendarDataObject,
 } from '@asap-hub/model';
-import {
-  CalendarDataProvider,
-  FetchCalendarProviderOptions,
-} from '@asap-hub/server-common';
 import {
   InputCalendar,
   parseToSquidex,

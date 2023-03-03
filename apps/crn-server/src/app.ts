@@ -1,12 +1,15 @@
 import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/contentful';
-import { UserResponse } from '@asap-hub/model';
+import {
+  CalendarController,
+  EventController,
+  EventDataProvider,
+  UserResponse,
+} from '@asap-hub/model';
 import {
   AuthHandler,
   authHandlerFactory,
-  CalendarController,
   decodeTokenFactory,
   errorHandlerFactory,
-  EventController,
   getHttpLogger,
   HttpLogger,
   Logger,
@@ -74,10 +77,7 @@ import { PageContentfulDataProvider } from './data-providers/contentful/pages.da
 import DashboardSquidexDataProvider, {
   DashboardDataProvider,
 } from './data-providers/dashboard.data-provider';
-import {
-  EventDataProvider,
-  EventSquidexDataProvider,
-} from './data-providers/event.data-provider';
+import { EventSquidexDataProvider } from './data-providers/event.data-provider';
 import {
   ExternalAuthorDataProvider,
   ExternalAuthorSquidexDataProvider,

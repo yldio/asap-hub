@@ -4,7 +4,6 @@ import {
   authHandlerFactory,
   decodeTokenFactory,
   errorHandlerFactory,
-  EventController,
   getHttpLogger,
   Logger,
   MemoryCacheClient,
@@ -28,9 +27,7 @@ import {
   clientId,
   clientSecret,
 } from './config';
-import Calendars, {
-  CalendarController,
-} from './controllers/calendar.controller';
+import Calendars from './controllers/calendar.controller';
 import ContributingCohorts, {
   ContributingCohortController,
 } from './controllers/contributing-cohort.controller';
@@ -49,18 +46,12 @@ import {
   AssetDataProvider,
   AssetSquidexDataProvider,
 } from './data-providers/asset.data-provider';
-import {
-  CalendarDataProvider,
-  CalendarSquidexDataProvider,
-} from './data-providers/calendar.data-provider';
+import { CalendarSquidexDataProvider } from './data-providers/calendar.data-provider';
 import {
   ContributingCohortDataProvider,
   ContributingCohortSquidexDataProvider,
 } from './data-providers/contributing-cohort.data-provider';
-import {
-  EventDataProvider,
-  EventSquidexDataProvider,
-} from './data-providers/event.data-provider';
+import { EventSquidexDataProvider } from './data-providers/event.data-provider';
 import {
   ExternalUserDataProvider,
   ExternalUserSquidexDataProvider,
@@ -308,18 +299,13 @@ export const appFactory = (libs: Libs = {}): Express => {
 export type Libs = {
   assetDataProvider?: AssetDataProvider;
   authHandler?: AuthHandler;
-  calendarController?: CalendarController;
-  calendarDataProvider?: CalendarDataProvider;
+  calendarController?: gp2.CalendarController;
+  calendarDataProvider?: gp2.CalendarDataProvider;
   contributingCohortController?: ContributingCohortController;
   contributingCohortDataProvider?: ContributingCohortDataProvider;
-  eventController?: EventController<
-    gp2.EventResponse,
-    gp2.ListEventResponse,
-    gp2.EventCreateRequest,
-    gp2.EventUpdateRequest
-  >;
-  eventDataProvider?: EventDataProvider;
-  externalUserDataProvider?: ExternalUserDataProvider;
+  eventController?: gp2.EventController;
+  eventDataProvider?: gp2.EventDataProvider;
+  externalAuthorDataProvider?: ExternalUserDataProvider;
   logger?: Logger;
   newsController?: NewsController;
   newsDataProvider?: NewsDataProvider;

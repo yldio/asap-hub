@@ -44,7 +44,7 @@
     "recoil": "0.7.7",
     "stream": "npm:stream-browserify@3.0.0",
     "use-debounce": "8.0.4",
-    "use-deep-compare-effect": "1.6.1",
+    "use-deep-compare-effect": "1.8.1",
     "uuid": "8.3.2"
   },
   "devDependencies": {

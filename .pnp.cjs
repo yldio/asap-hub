@@ -8770,7 +8770,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "serverless",\
-        "npm:3.28.0"\
+        "npm:3.28.1"\
       ],\
       [\
         "serverless-http",\
@@ -11065,7 +11065,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["parse-data-url", "npm:3.0.0"],\
             ["pump", "npm:3.0.0"],\
             ["react-router-dom", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:5.3.4"],\
-            ["serverless", "npm:3.28.0"],\
+            ["serverless", "npm:3.28.1"],\
             ["serverless-http", "npm:2.7.0"],\
             ["serverless-iam-roles-per-function", "npm:2.0.2"],\
             ["serverless-s3-sync", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:3.1.0"],\
@@ -11756,7 +11756,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["node-dev", "npm:6.7.0"],\
             ["odata-query", "npm:7.0.3"],\
             ["parse-data-url", "npm:3.0.0"],\
-            ["serverless", "npm:3.28.0"],\
+            ["serverless", "npm:3.28.1"],\
             ["serverless-http", "npm:2.7.0"],\
             ["serverless-s3-sync", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:3.1.0"],\
             ["serverless-webpack", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:5.11.0"],\
@@ -38546,10 +38546,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["virtual:7bba23ed424c6abb31032cb1b3cb6fa70f616480b2d8678ea7750303033c4b84a0af7553dd3d0e698c34d82a01df49a6958beaba5f04e479158578190d6ffe29#npm:2.1.1", {\
-          "packageLocation": "./.yarn/__virtual__/ajv-formats-virtual-7244fd53b0/0/cache/ajv-formats-npm-2.1.1-3cec02eae9-4a287d937f.zip/node_modules/ajv-formats/",\
+        ["virtual:82ad36ebe87247bc5ee81d111b26aba46c9cb334325ef26f5cb289d927a0081ac506ce0bbaf81de89a6e3094728e8c0153f9879b43707901e31afe735637de4f#npm:2.1.1", {\
+          "packageLocation": "./.yarn/__virtual__/ajv-formats-virtual-78754c89b6/0/cache/ajv-formats-npm-2.1.1-3cec02eae9-4a287d937f.zip/node_modules/ajv-formats/",\
           "packageDependencies": [\
-            ["ajv-formats", "virtual:7bba23ed424c6abb31032cb1b3cb6fa70f616480b2d8678ea7750303033c4b84a0af7553dd3d0e698c34d82a01df49a6958beaba5f04e479158578190d6ffe29#npm:2.1.1"],\
+            ["ajv-formats", "virtual:82ad36ebe87247bc5ee81d111b26aba46c9cb334325ef26f5cb289d927a0081ac506ce0bbaf81de89a6e3094728e8c0153f9879b43707901e31afe735637de4f#npm:2.1.1"],\
             ["@types/ajv", null],\
             ["ajv", "npm:8.12.0"]\
           ],\
@@ -39753,10 +39753,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:2.1307.0", {\
-          "packageLocation": "./.yarn/cache/aws-sdk-npm-2.1307.0-6b37dc1c70-c7a24aeb0c.zip/node_modules/aws-sdk/",\
+        ["npm:2.1326.0", {\
+          "packageLocation": "./.yarn/cache/aws-sdk-npm-2.1326.0-7d96ccf63d-a999e8331e.zip/node_modules/aws-sdk/",\
           "packageDependencies": [\
-            ["aws-sdk", "npm:2.1307.0"],\
+            ["aws-sdk", "npm:2.1326.0"],\
             ["buffer", "npm:4.9.2"],\
             ["events", "npm:1.1.1"],\
             ["ieee754", "npm:1.1.13"],\
@@ -39770,10 +39770,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:2.1326.0", {\
-          "packageLocation": "./.yarn/cache/aws-sdk-npm-2.1326.0-7d96ccf63d-a999e8331e.zip/node_modules/aws-sdk/",\
+        ["npm:2.1327.0", {\
+          "packageLocation": "./.yarn/cache/aws-sdk-npm-2.1327.0-e094e96f3d-559a1ac525.zip/node_modules/aws-sdk/",\
           "packageDependencies": [\
-            ["aws-sdk", "npm:2.1326.0"],\
+            ["aws-sdk", "npm:2.1327.0"],\
             ["buffer", "npm:4.9.2"],\
             ["events", "npm:1.1.1"],\
             ["ieee754", "npm:1.1.13"],\
@@ -65868,17 +65868,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["serverless", [\
-        ["npm:3.28.0", {\
-          "packageLocation": "./.yarn/unplugged/serverless-npm-3.28.0-7bba23ed42/node_modules/serverless/",\
+        ["npm:3.28.1", {\
+          "packageLocation": "./.yarn/unplugged/serverless-npm-3.28.1-82ad36ebe8/node_modules/serverless/",\
           "packageDependencies": [\
-            ["serverless", "npm:3.28.0"],\
+            ["serverless", "npm:3.28.1"],\
             ["@serverless/dashboard-plugin", "npm:6.2.3"],\
             ["@serverless/platform-client", "npm:4.3.2"],\
             ["@serverless/utils", "npm:6.8.2"],\
             ["ajv", "npm:8.12.0"],\
-            ["ajv-formats", "virtual:7bba23ed424c6abb31032cb1b3cb6fa70f616480b2d8678ea7750303033c4b84a0af7553dd3d0e698c34d82a01df49a6958beaba5f04e479158578190d6ffe29#npm:2.1.1"],\
+            ["ajv-formats", "virtual:82ad36ebe87247bc5ee81d111b26aba46c9cb334325ef26f5cb289d927a0081ac506ce0bbaf81de89a6e3094728e8c0153f9879b43707901e31afe735637de4f#npm:2.1.1"],\
             ["archiver", "npm:5.3.1"],\
-            ["aws-sdk", "npm:2.1307.0"],\
+            ["aws-sdk", "npm:2.1327.0"],\
             ["bluebird", "npm:3.7.2"],\
             ["cachedir", "npm:2.3.0"],\
             ["chalk", "npm:4.1.2"],\
@@ -65966,7 +65966,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["bluebird", "npm:3.7.2"],\
             ["mime", "npm:2.4.6"],\
             ["minimatch", "npm:3.0.4"],\
-            ["serverless", "npm:3.28.0"]\
+            ["serverless", "npm:3.28.1"]\
           ],\
           "packagePeers": [\
             "@types/serverless",\
@@ -65999,7 +65999,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["is-builtin-module", "npm:3.2.0"],\
             ["lodash", "npm:4.17.21"],\
             ["semver", "npm:7.3.8"],\
-            ["serverless", "npm:3.28.0"],\
+            ["serverless", "npm:3.28.1"],\
             ["ts-node", "virtual:30b1199b5227dbad580211d9f8cb8cb9e7012d68260f6ac74fa340e96315748307d8c51ddf07cce67ed45193abe489444670f6333ef83fac5c0c8944e2503c7c#npm:9.1.1"],\
             ["typescript", null],\
             ["webpack", null]\

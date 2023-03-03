@@ -305,6 +305,44 @@ it('can edit a research output', async () => {
   );
 });
 
+it('can edit a draft research output', async () => {
+  const researchOutput = createResearchOutputResponse();
+  const teamId = researchOutput.teams[0].id;
+  const { type, description, title } = researchOutput;
+  const link = 'https://example42.com';
+  const doi = '10.0777';
+
+  await renderPage({
+    teamId: '42',
+    teamOutputDocumentType: 'article',
+    researchOutputData: { ...researchOutput, doi, published: false },
+  });
+
+  const { saveDraft } = await mandatoryFields(
+    {
+      link,
+      title: '',
+      description: '',
+      type,
+      doi,
+    },
+    true,
+    true,
+  );
+  await saveDraft();
+
+  expect(mockUpdateResearchOutput).toHaveBeenCalledWith(
+    researchOutput.id,
+    expect.objectContaining({
+      link,
+      title,
+      description,
+      teams: [teamId],
+    }),
+    expect.anything(),
+  );
+});
+
 test('displays sorry page when user does not have edit permission', async () => {
   await renderPage({
     user: {

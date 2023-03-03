@@ -14,6 +14,7 @@ gp2-ci-auth0-client-id=o6NEEPm9WVKt1aqRr25tbFDlAV8WQVnR
 gp2-squidex-api-client-id=6058c1ce6d296b4d1681c3ad
 gp2-squidex-backup-bucket-name=gp2-hub-dev-data-backup
 gp2-squidex-ci-client-id=6058c1ce6d296b4d1681c3ad
+react-app-gp2-sentry-dsn=https://a087618d35f54407bf1919bf82da2cc6@o850903.ingest.sentry.io/4504769246461952
 react-app-environment=development
 contentful-environment=Development
 is-contentful-enabled=true

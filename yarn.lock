@@ -681,7 +681,7 @@ __metadata:
     parse-data-url: 3.0.0
     pump: 3.0.0
     react-router-dom: 5.3.4
-    serverless: 3.28.0
+    serverless: 3.28.1
     serverless-http: 2.7.0
     serverless-iam-roles-per-function: 2.0.2
     serverless-s3-sync: 3.1.0
@@ -1103,7 +1103,7 @@ __metadata:
     node-dev: 6.7.0
     odata-query: 7.0.3
     parse-data-url: 3.0.0
-    serverless: 3.28.0
+    serverless: 3.28.1
     serverless-http: 2.7.0
     serverless-s3-sync: 3.1.0
     serverless-webpack: 5.11.0
@@ -17223,9 +17223,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:^2.1303.0":
-  version: 2.1307.0
-  resolution: "aws-sdk@npm:2.1307.0"
+"aws-sdk@npm:^2.1326.0":
+  version: 2.1327.0
+  resolution: "aws-sdk@npm:2.1327.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -17237,7 +17237,7 @@ __metadata:
     util: ^0.12.4
     uuid: 8.0.0
     xml2js: 0.4.19
-  checksum: c7a24aeb0c91d2d64b449e05a32913182adc8820b1d6179323a9c16f230060d772f75f7135a9e7d3a368a194e23cdd847345020c68a17e05e126c1f666b7db0c
+  checksum: 559a1ac525f3d30dd3022653ca15a82d9774806a42ee9e6a65eeb05180edc3ab559a4938d1854b0b832ea4eeb6562bf792dc006122b1e2b45bf9ba478e463b76
   languageName: node
   linkType: hard
 
@@ -38651,9 +38651,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"serverless@npm:3.28.0":
-  version: 3.28.0
-  resolution: "serverless@npm:3.28.0"
+"serverless@npm:3.28.1":
+  version: 3.28.1
+  resolution: "serverless@npm:3.28.1"
   dependencies:
     "@serverless/dashboard-plugin": ^6.2.3
     "@serverless/platform-client": ^4.3.2
@@ -38661,7 +38661,7 @@ __metadata:
     ajv: ^8.12.0
     ajv-formats: ^2.1.1
     archiver: ^5.3.1
-    aws-sdk: ^2.1303.0
+    aws-sdk: ^2.1326.0
     bluebird: ^3.7.2
     cachedir: ^2.3.0
     chalk: ^4.1.2
@@ -38711,7 +38711,7 @@ __metadata:
   bin:
     serverless: bin/serverless.js
     sls: bin/serverless.js
-  checksum: c16765df48eef16a4f55f63f8e77a6b37586315fe755fe8bd39294baaff7256390131f7b07af35973913017b26ef55bf0cf5d27be62b4a24c38ae5cfb4318073
+  checksum: 04315f923c79e37c83fd83e8968408286e591863304cf3678138ec3828afac15b2ed486b6b52c9ad3f48f3bd9603854d625d79efc10f33bc8e154a6afc0c5796
   languageName: node
   linkType: hard
 

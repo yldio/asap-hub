@@ -70,9 +70,9 @@ export const getHTMLElements = (node: React.ReactNode) => {
   let tags: string[] = [];
   const htmlElements: string[] = [];
 
-  const getTags = (node: React.ReactNode) =>
-    Array.isArray(node) &&
-    node?.forEach((child) => {
+  const getTags = (children: React.ReactNode) =>
+    Array.isArray(children) &&
+    children?.forEach((child) => {
       if (child.type) {
         tags.push(child.type);
       } else {

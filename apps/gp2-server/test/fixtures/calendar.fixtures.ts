@@ -92,6 +92,7 @@ export const getSquidexGraphqlCalendar = (): NonNullable<
   lastModified: '2021-05-14T14:48:46Z',
   version: 42,
   flatData: squidexGraphqlCalendarsFlatData(),
+  referencingProjectsContents: [],
 });
 
 export const getSquidexGraphqlEventCalendar = (): NonNullable<

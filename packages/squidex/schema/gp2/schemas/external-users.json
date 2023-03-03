@@ -4,7 +4,7 @@
     "noFieldDeletion": false,
     "noFieldRecreation": false,
     "properties": {
-      "label": "External authors",
+      "label": "External users",
       "validateOnPublish": false
     },
     "scripts": {},
@@ -68,7 +68,7 @@
     "category": "Storage",
     "isPublished": true
   },
-  "name": "external-authors",
+  "name": "external-users",
   "isSingleton": false,
   "schemaType": "Default"
 }

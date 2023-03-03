@@ -270,7 +270,7 @@
           "resolveReference": false,
           "mustBePublished": false,
           "editor": "List",
-          "schemaIds": ["users", "external-authors"],
+          "schemaIds": ["users", "external-users"],
           "label": "Authors",
           "isRequired": false,
           "isRequiredOnPublish": false,

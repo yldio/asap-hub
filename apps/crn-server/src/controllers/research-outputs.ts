@@ -377,7 +377,7 @@ export interface ResearchOutputController {
   fetchById: (id: string) => Promise<ResearchOutputResponse>;
   create: (
     researchOutputRequest: ResearchOutputCreateData,
-    createOptions?: { publish: boolean },
+    createOptions?: { publish?: boolean },
   ) => Promise<ResearchOutputResponse | null>;
   update: (
     id: string,

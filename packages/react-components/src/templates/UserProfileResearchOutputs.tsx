@@ -51,7 +51,7 @@ const UserProfileResearchOutputs: React.FC<UserProfileOutputsProps> = ({
                 'To add research to your profile, contact your PM. In the meantime, try exploring research outputs shared by the network.',
             }
           : {
-              title: `${firstName} hasn’t shared any research.`,
+              title: `This member hasn’t shared any research.`,
               description:
                 'It looks like this user has no shared outputs. In the meantime, try exploring research outputs shared by the network.',
             })}

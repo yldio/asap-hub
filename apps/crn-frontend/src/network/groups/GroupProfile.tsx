@@ -76,7 +76,7 @@ const GroupProfile: FC<GroupProfileProps> = ({ currentTime }) => {
           eventConstraint={{ groupId }}
           isActive={group.active}
           paths={paths}
-          type="group"
+          type="interest group"
         />
       </GroupProfilePage>
     );

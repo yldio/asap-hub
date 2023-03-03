@@ -3,13 +3,20 @@ import { BasicEvent } from '../event-common';
 import { CalendarResponse } from './calendar';
 
 export interface EventSpeakerUser {
-  id: string;
+  id?: string;
   firstName?: string;
   lastName?: string;
   displayName: string;
   avatarUrl?: string;
 }
-export type EventSpeaker = EventSpeakerUser;
+export interface EventSpeakerExternalUser {
+  name: string;
+  orcid?: string;
+}
+export interface SpeakerInfo {
+  speaker: EventSpeakerUser | EventSpeakerExternalUser | undefined;
+}
+export type EventSpeaker = SpeakerInfo & { topic?: string };
 export interface EventDataObject extends BasicEvent {
   calendar: CalendarResponse;
   speakers: EventSpeaker[];

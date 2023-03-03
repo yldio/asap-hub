@@ -1,10 +1,10 @@
 import { createEventResponse } from '@asap-hub/fixtures';
 import { render, screen } from '@testing-library/react';
-import EventSpeakers from '../EventSpeakers';
+import EventNumberOfSpeakers from '../EventNumberOfSpeakers';
 
 it('shows number of speakers with singular form', () => {
   render(
-    <EventSpeakers
+    <EventNumberOfSpeakers
       {...createEventResponse({
         numberOfSpeakers: 1,
         numberOfExternalSpeakers: 0,
@@ -18,7 +18,7 @@ it('shows number of speakers with singular form', () => {
 
 it('shows number of speakers with plural form', () => {
   render(
-    <EventSpeakers
+    <EventNumberOfSpeakers
       {...createEventResponse({
         numberOfSpeakers: 3,
         numberOfExternalSpeakers: 4,
@@ -30,7 +30,7 @@ it('shows number of speakers with plural form', () => {
 });
 it('do not shows number of speakers when there are no speakers', () => {
   render(
-    <EventSpeakers
+    <EventNumberOfSpeakers
       {...createEventResponse({
         numberOfSpeakers: 0,
         numberOfExternalSpeakers: 0,

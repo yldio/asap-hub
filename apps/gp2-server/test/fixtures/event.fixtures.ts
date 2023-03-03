@@ -31,6 +31,26 @@ export const getEventSpeakerUser = (): gp2Model.EventSpeakerUser => ({
   avatarUrl: undefined,
 });
 
+export const getEventSpeaker = (): gp2Model.EventSpeaker => ({
+  speaker: getEventSpeakerUser(),
+  topic: 'Some Topic',
+});
+
+export const getEventExternalUser = (): gp2Model.EventSpeakerExternalUser => ({
+  name: 'Adam Brown',
+  orcid: '1234-1234-1234',
+});
+
+export const getEventExternalSpeaker = (): gp2Model.EventSpeaker => ({
+  speaker: getEventExternalUser(),
+  topic: 'Some Topic',
+});
+
+export const getEventSpeakerToBeAnnounced = (): gp2Model.EventSpeaker => ({
+  speaker: undefined,
+  topic: undefined,
+});
+
 export const getEventDataObject = (): gp2Model.EventDataObject => ({
   id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
   description: 'This event is awesome',
@@ -61,7 +81,7 @@ export const getEventDataObject = (): gp2Model.EventDataObject => ({
     id: 'c_t92qa82jd702q1fkreoi0hf4hk@group.calendar.google.com',
     name: 'Tech 1 - Sequencing/omics',
   },
-  speakers: [getEventSpeakerUser()],
+  speakers: [getEventSpeaker()],
 });
 
 export const getListEventDataObject = (): gp2Model.ListEventDataObject => ({
@@ -139,6 +159,27 @@ export const getSquidexGraphqlEventSpeakerWithUser = (
       },
     },
   ],
+  topic: 'Some Topic',
+});
+
+type EventSpeakerExternalUser = NonNullable<
+  EventSpeakers['user']
+>[number]['flatData'];
+export const getSquidexGraphqlEventSpeakerWithExternalUser = (
+  overrides: Partial<EventSpeakerExternalUser> = {},
+): EventSpeakers => ({
+  user: [
+    {
+      __typename: 'ExternalUsers',
+      id: 'user-id-3',
+      flatData: {
+        name: 'Adam Brown',
+        orcid: '1234-1234-1234',
+        ...overrides,
+      },
+    },
+  ],
+  topic: 'Some Topic',
 });
 
 const squidexGraphqlEventsFlatData = (): EventContentFragment['flatData'] & {

@@ -32,7 +32,7 @@ export const outputContentQueryFragment = gql`
             email
           }
         }
-        ... on ExternalAuthors {
+        ... on ExternalUsers {
           id
           created
           lastModified

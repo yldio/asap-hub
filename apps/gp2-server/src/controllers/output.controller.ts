@@ -1,19 +1,17 @@
 import { NotFoundError } from '@asap-hub/errors';
 import {
-  AuthorPostRequest,
-  AuthorUpsertDataObject,
   gp2 as gp2Model,
   ValidationErrorResponse,
   VALIDATION_ERROR_MESSAGE,
 } from '@asap-hub/model';
 import Boom from '@hapi/boom';
-import { ExternalAuthorDataProvider } from '../data-providers/external-authors.data-provider';
+import { ExternalUserDataProvider } from '../data-providers/external-users.data-provider';
 import { OutputDataProvider } from '../data-providers/output.data-provider';
 
 export default class Outputs implements OutputController {
   constructor(
     private outputDataProvider: OutputDataProvider,
-    private externalAuthorDataProvider: ExternalAuthorDataProvider,
+    private externalUserDataProvider: ExternalUserDataProvider,
   ) {}
 
   async fetchById(outputId: string): Promise<gp2Model.OutputResponse> {
@@ -195,17 +193,17 @@ export default class Outputs implements OutputController {
   }
 
   private mapAuthorsPostRequestToId = async (
-    data: AuthorPostRequest[],
-  ): Promise<AuthorUpsertDataObject[]> =>
+    data: gp2Model.AuthorPostRequest[],
+  ): Promise<gp2Model.AuthorUpsertDataObject[]> =>
     Promise.all(
       data.map(async (author) => {
-        if ('userId' in author || 'externalAuthorId' in author) return author;
+        if ('userId' in author || 'externalUserId' in author) return author;
 
-        const externalAuthorId = await this.externalAuthorDataProvider.create({
-          name: author.externalAuthorName,
+        const externalUserId = await this.externalUserDataProvider.create({
+          name: author.externalUserName,
         });
 
-        return { externalAuthorId };
+        return { externalUserId };
       }),
     );
 }

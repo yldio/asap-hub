@@ -53,7 +53,15 @@ export const eventContentFragment = gql`
               }
             }
           }
+          ... on ExternalUsers {
+            id
+            flatData {
+              name
+              orcid
+            }
+          }
         }
+        topic
       }
     }
   }

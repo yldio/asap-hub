@@ -33,8 +33,8 @@ export type ApplicationMutations = {
   changeContributingCohortsContent: Maybe<ContributingCohorts>;
   /** Change a Events content. */
   changeEventsContent: Maybe<Events>;
-  /** Change a External authors content. */
-  changeExternalAuthorsContent: Maybe<ExternalAuthors>;
+  /** Change a External users content. */
+  changeExternalUsersContent: Maybe<ExternalUsers>;
   /** Change a Migrations content. */
   changeMigrationsContent: Maybe<Migrations>;
   /** Change a News content. */
@@ -55,8 +55,8 @@ export type ApplicationMutations = {
   createContributingCohortsContent: Maybe<ContributingCohorts>;
   /** Creates an Events content. */
   createEventsContent: Maybe<Events>;
-  /** Creates an External authors content. */
-  createExternalAuthorsContent: Maybe<ExternalAuthors>;
+  /** Creates an External users content. */
+  createExternalUsersContent: Maybe<ExternalUsers>;
   /** Creates an Migrations content. */
   createMigrationsContent: Maybe<Migrations>;
   /** Creates an News content. */
@@ -77,8 +77,8 @@ export type ApplicationMutations = {
   deleteContributingCohortsContent: EntitySavedResultDto;
   /** Delete an Events content. */
   deleteEventsContent: EntitySavedResultDto;
-  /** Delete an External authors content. */
-  deleteExternalAuthorsContent: EntitySavedResultDto;
+  /** Delete an External users content. */
+  deleteExternalUsersContent: EntitySavedResultDto;
   /** Delete an Migrations content. */
   deleteMigrationsContent: EntitySavedResultDto;
   /** Delete an News content. */
@@ -99,8 +99,8 @@ export type ApplicationMutations = {
   patchContributingCohortsContent: Maybe<ContributingCohorts>;
   /** Patch an Events content by id. */
   patchEventsContent: Maybe<Events>;
-  /** Patch an External authors content by id. */
-  patchExternalAuthorsContent: Maybe<ExternalAuthors>;
+  /** Patch an External users content by id. */
+  patchExternalUsersContent: Maybe<ExternalUsers>;
   /** Patch an Migrations content by id. */
   patchMigrationsContent: Maybe<Migrations>;
   /** Patch an News content by id. */
@@ -131,10 +131,10 @@ export type ApplicationMutations = {
    */
   publishEventsContent: Maybe<Events>;
   /**
-   * Publish a External authors content.
-   * @deprecated Use 'changeExternalAuthorsContent' instead
+   * Publish a External users content.
+   * @deprecated Use 'changeExternalUsersContent' instead
    */
-  publishExternalAuthorsContent: Maybe<ExternalAuthors>;
+  publishExternalUsersContent: Maybe<ExternalUsers>;
   /**
    * Publish a Migrations content.
    * @deprecated Use 'changeMigrationsContent' instead
@@ -176,8 +176,8 @@ export type ApplicationMutations = {
   updateContributingCohortsContent: Maybe<ContributingCohorts>;
   /** Update an Events content by id. */
   updateEventsContent: Maybe<Events>;
-  /** Update an External authors content by id. */
-  updateExternalAuthorsContent: Maybe<ExternalAuthors>;
+  /** Update an External users content by id. */
+  updateExternalUsersContent: Maybe<ExternalUsers>;
   /** Update an Migrations content by id. */
   updateMigrationsContent: Maybe<Migrations>;
   /** Update an News content by id. */
@@ -198,8 +198,8 @@ export type ApplicationMutations = {
   upsertContributingCohortsContent: Maybe<ContributingCohorts>;
   /** Upsert an Events content by id. */
   upsertEventsContent: Maybe<Events>;
-  /** Upsert an External authors content by id. */
-  upsertExternalAuthorsContent: Maybe<ExternalAuthors>;
+  /** Upsert an External users content by id. */
+  upsertExternalUsersContent: Maybe<ExternalUsers>;
   /** Upsert an Migrations content by id. */
   upsertMigrationsContent: Maybe<Migrations>;
   /** Upsert an News content by id. */
@@ -241,7 +241,7 @@ export type ApplicationMutationsChangeEventsContentArgs = {
 };
 
 /** The app mutations. */
-export type ApplicationMutationsChangeExternalAuthorsContentArgs = {
+export type ApplicationMutationsChangeExternalUsersContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -329,8 +329,8 @@ export type ApplicationMutationsCreateEventsContentArgs = {
 };
 
 /** The app mutations. */
-export type ApplicationMutationsCreateExternalAuthorsContentArgs = {
-  data: ExternalAuthorsDataInputDto;
+export type ApplicationMutationsCreateExternalUsersContentArgs = {
+  data: ExternalUsersDataInputDto;
   id: InputMaybe<Scalars['String']>;
   publish?: InputMaybe<Scalars['Boolean']>;
   status: InputMaybe<Scalars['String']>;
@@ -411,7 +411,7 @@ export type ApplicationMutationsDeleteEventsContentArgs = {
 };
 
 /** The app mutations. */
-export type ApplicationMutationsDeleteExternalAuthorsContentArgs = {
+export type ApplicationMutationsDeleteExternalUsersContentArgs = {
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
@@ -480,8 +480,8 @@ export type ApplicationMutationsPatchEventsContentArgs = {
 };
 
 /** The app mutations. */
-export type ApplicationMutationsPatchExternalAuthorsContentArgs = {
-  data: ExternalAuthorsDataInputDto;
+export type ApplicationMutationsPatchExternalUsersContentArgs = {
+  data: ExternalUsersDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
@@ -560,7 +560,7 @@ export type ApplicationMutationsPublishEventsContentArgs = {
 };
 
 /** The app mutations. */
-export type ApplicationMutationsPublishExternalAuthorsContentArgs = {
+export type ApplicationMutationsPublishExternalUsersContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -645,8 +645,8 @@ export type ApplicationMutationsUpdateEventsContentArgs = {
 };
 
 /** The app mutations. */
-export type ApplicationMutationsUpdateExternalAuthorsContentArgs = {
-  data: ExternalAuthorsDataInputDto;
+export type ApplicationMutationsUpdateExternalUsersContentArgs = {
+  data: ExternalUsersDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
@@ -731,8 +731,8 @@ export type ApplicationMutationsUpsertEventsContentArgs = {
 };
 
 /** The app mutations. */
-export type ApplicationMutationsUpsertExternalAuthorsContentArgs = {
-  data: ExternalAuthorsDataInputDto;
+export type ApplicationMutationsUpsertExternalUsersContentArgs = {
+  data: ExternalUsersDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   patch?: InputMaybe<Scalars['Boolean']>;
@@ -820,8 +820,8 @@ export type ApplicationQueries = {
   findContributingCohortsContent: Maybe<ContributingCohorts>;
   /** Find an Events content by id. */
   findEventsContent: Maybe<Events>;
-  /** Find an External authors content by id. */
-  findExternalAuthorsContent: Maybe<ExternalAuthors>;
+  /** Find an External users content by id. */
+  findExternalUsersContent: Maybe<ExternalUsers>;
   /** Find an Migrations content by id. */
   findMigrationsContent: Maybe<Migrations>;
   /** Find an News content by id. */
@@ -852,10 +852,10 @@ export type ApplicationQueries = {
   queryEventsContents: Maybe<Array<Events>>;
   /** Query Events content items with total count. */
   queryEventsContentsWithTotal: Maybe<EventsResultDto>;
-  /** Query External authors content items. */
-  queryExternalAuthorsContents: Maybe<Array<ExternalAuthors>>;
-  /** Query External authors content items with total count. */
-  queryExternalAuthorsContentsWithTotal: Maybe<ExternalAuthorsResultDto>;
+  /** Query External users content items. */
+  queryExternalUsersContents: Maybe<Array<ExternalUsers>>;
+  /** Query External users content items with total count. */
+  queryExternalUsersContentsWithTotal: Maybe<ExternalUsersResultDto>;
   /** Query Migrations content items. */
   queryMigrationsContents: Maybe<Array<Migrations>>;
   /** Query Migrations content items with total count. */
@@ -910,7 +910,7 @@ export type ApplicationQueriesFindEventsContentArgs = {
 };
 
 /** The app queries. */
-export type ApplicationQueriesFindExternalAuthorsContentArgs = {
+export type ApplicationQueriesFindExternalUsersContentArgs = {
   id: Scalars['String'];
   version: InputMaybe<Scalars['Int']>;
 };
@@ -1028,7 +1028,7 @@ export type ApplicationQueriesQueryEventsContentsWithTotalArgs = {
 };
 
 /** The app queries. */
-export type ApplicationQueriesQueryExternalAuthorsContentsArgs = {
+export type ApplicationQueriesQueryExternalUsersContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -1037,7 +1037,7 @@ export type ApplicationQueriesQueryExternalAuthorsContentsArgs = {
 };
 
 /** The app queries. */
-export type ApplicationQueriesQueryExternalAuthorsContentsWithTotalArgs = {
+export type ApplicationQueriesQueryExternalUsersContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -1706,6 +1706,10 @@ export type Events = Content & {
   referencesCalendarsContents: Maybe<Array<Calendars>>;
   /** Query Calendars content items with total count. */
   referencesCalendarsContentsWithTotal: Maybe<CalendarsResultDto>;
+  /** Query External users content items. */
+  referencesExternalUsersContents: Maybe<Array<ExternalUsers>>;
+  /** Query External users content items with total count. */
+  referencesExternalUsersContentsWithTotal: Maybe<ExternalUsersResultDto>;
   /** Query Users content items. */
   referencesUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
@@ -1731,6 +1735,24 @@ export type EventsReferencesCalendarsContentsArgs = {
 
 /** The structure of a Events content type. */
 export type EventsReferencesCalendarsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Events content type. */
+export type EventsReferencesExternalUsersContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Events content type. */
+export type EventsReferencesExternalUsersContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -2016,11 +2038,13 @@ export type EventsDataPresentationUpdatedAtInputDto = {
 
 /** The structure of the Speakers nested schema. */
 export type EventsDataSpeakersChildDto = {
-  user: Maybe<Array<Users>>;
+  topic: Maybe<Scalars['String']>;
+  user: Maybe<Array<EventsDataSpeakersUserUnionDto>>;
 };
 
 /** The structure of the Speakers nested schema. */
 export type EventsDataSpeakersChildInputDto = {
+  topic: InputMaybe<Scalars['String']>;
   user: InputMaybe<Array<Scalars['String']>>;
 };
 
@@ -2033,6 +2057,8 @@ export type EventsDataSpeakersDto = {
 export type EventsDataSpeakersInputDto = {
   iv: InputMaybe<Array<EventsDataSpeakersChildInputDto>>;
 };
+
+export type EventsDataSpeakersUserUnionDto = ExternalUsers | Users;
 
 /** The structure of the Start Date field of the Events content type. */
 export type EventsDataStartDateDto = {
@@ -2176,8 +2202,8 @@ export type EventsResultDto = {
   total: Scalars['Int'];
 };
 
-/** The structure of a External authors content type. */
-export type ExternalAuthors = Content & {
+/** The structure of a External users content type. */
+export type ExternalUsers = Content & {
   /** The timestamp when the object was created. */
   created: Scalars['Instant'];
   /** The user who created the object. */
@@ -2185,11 +2211,11 @@ export type ExternalAuthors = Content & {
   /** The user who created the object. */
   createdByUser: User;
   /** The data of the content. */
-  data: ExternalAuthorsDataDto;
+  data: ExternalUsersDataDto;
   /** The edit token. */
   editToken: Maybe<Scalars['String']>;
   /** The flat data of the content. */
-  flatData: ExternalAuthorsFlatDataDto;
+  flatData: ExternalUsersFlatDataDto;
   /** The ID of the object (usually GUID). */
   id: Scalars['String'];
   /** The timestamp when the object was updated the last time. */
@@ -2202,6 +2228,10 @@ export type ExternalAuthors = Content & {
   newStatus: Maybe<Scalars['String']>;
   /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
+  /** Query Events content items. */
+  referencingEventsContents: Maybe<Array<Events>>;
+  /** Query Events content items with total count. */
+  referencingEventsContentsWithTotal: Maybe<EventsResultDto>;
   /** Query Outputs content items. */
   referencingOutputsContents: Maybe<Array<Outputs>>;
   /** Query Outputs content items with total count. */
@@ -2216,8 +2246,8 @@ export type ExternalAuthors = Content & {
   version: Scalars['Int'];
 };
 
-/** The structure of a External authors content type. */
-export type ExternalAuthorsReferencingOutputsContentsArgs = {
+/** The structure of a External users content type. */
+export type ExternalUsersReferencingEventsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -2225,8 +2255,8 @@ export type ExternalAuthorsReferencingOutputsContentsArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-/** The structure of a External authors content type. */
-export type ExternalAuthorsReferencingOutputsContentsWithTotalArgs = {
+/** The structure of a External users content type. */
+export type ExternalUsersReferencingEventsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -2234,51 +2264,69 @@ export type ExternalAuthorsReferencingOutputsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-/** The structure of the External authors data type. */
-export type ExternalAuthorsDataDto = {
-  name: Maybe<ExternalAuthorsDataNameDto>;
-  orcid: Maybe<ExternalAuthorsDataOrcidDto>;
+/** The structure of a External users content type. */
+export type ExternalUsersReferencingOutputsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
-/** The structure of the External authors data input type. */
-export type ExternalAuthorsDataInputDto = {
-  name: InputMaybe<ExternalAuthorsDataNameInputDto>;
-  orcid: InputMaybe<ExternalAuthorsDataOrcidInputDto>;
+/** The structure of a External users content type. */
+export type ExternalUsersReferencingOutputsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
-/** The structure of the Name field of the External authors content type. */
-export type ExternalAuthorsDataNameDto = {
+/** The structure of the External users data type. */
+export type ExternalUsersDataDto = {
+  name: Maybe<ExternalUsersDataNameDto>;
+  orcid: Maybe<ExternalUsersDataOrcidDto>;
+};
+
+/** The structure of the External users data input type. */
+export type ExternalUsersDataInputDto = {
+  name: InputMaybe<ExternalUsersDataNameInputDto>;
+  orcid: InputMaybe<ExternalUsersDataOrcidInputDto>;
+};
+
+/** The structure of the Name field of the External users content type. */
+export type ExternalUsersDataNameDto = {
   iv: Maybe<Scalars['String']>;
 };
 
-/** The structure of the Name field of the External authors content input type. */
-export type ExternalAuthorsDataNameInputDto = {
+/** The structure of the Name field of the External users content input type. */
+export type ExternalUsersDataNameInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
-/** The structure of the ORCID field of the External authors content type. */
-export type ExternalAuthorsDataOrcidDto = {
+/** The structure of the ORCID field of the External users content type. */
+export type ExternalUsersDataOrcidDto = {
   /** ORCIDs cannot be repeated on the Hub */
   iv: Maybe<Scalars['String']>;
 };
 
-/** The structure of the ORCID field of the External authors content input type. */
-export type ExternalAuthorsDataOrcidInputDto = {
+/** The structure of the ORCID field of the External users content input type. */
+export type ExternalUsersDataOrcidInputDto = {
   /** ORCIDs cannot be repeated on the Hub */
   iv: InputMaybe<Scalars['String']>;
 };
 
-/** The structure of the flat External authors data type. */
-export type ExternalAuthorsFlatDataDto = {
+/** The structure of the flat External users data type. */
+export type ExternalUsersFlatDataDto = {
   name: Maybe<Scalars['String']>;
   /** ORCIDs cannot be repeated on the Hub */
   orcid: Maybe<Scalars['String']>;
 };
 
-/** List of External authors items and total count. */
-export type ExternalAuthorsResultDto = {
+/** List of External users items and total count. */
+export type ExternalUsersResultDto = {
   /** The contents. */
-  items: Maybe<Array<ExternalAuthors>>;
+  items: Maybe<Array<ExternalUsers>>;
   /** The total count of  contents. */
   total: Scalars['Int'];
 };
@@ -2531,10 +2579,10 @@ export type Outputs = Content & {
   newStatus: Maybe<Scalars['String']>;
   /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
-  /** Query External authors content items. */
-  referencesExternalAuthorsContents: Maybe<Array<ExternalAuthors>>;
-  /** Query External authors content items with total count. */
-  referencesExternalAuthorsContentsWithTotal: Maybe<ExternalAuthorsResultDto>;
+  /** Query External users content items. */
+  referencesExternalUsersContents: Maybe<Array<ExternalUsers>>;
+  /** Query External users content items with total count. */
+  referencesExternalUsersContentsWithTotal: Maybe<ExternalUsersResultDto>;
   /** Query Projects content items. */
   referencesProjectsContents: Maybe<Array<Projects>>;
   /** Query Projects content items with total count. */
@@ -2558,7 +2606,7 @@ export type Outputs = Content & {
 };
 
 /** The structure of a Outputs content type. */
-export type OutputsReferencesExternalAuthorsContentsArgs = {
+export type OutputsReferencesExternalUsersContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -2567,7 +2615,7 @@ export type OutputsReferencesExternalAuthorsContentsArgs = {
 };
 
 /** The structure of a Outputs content type. */
-export type OutputsReferencesExternalAuthorsContentsWithTotalArgs = {
+export type OutputsReferencesExternalUsersContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -2663,7 +2711,7 @@ export type OutputsDataAuthorsInputDto = {
   iv: InputMaybe<Array<Scalars['String']>>;
 };
 
-export type OutputsDataAuthorsUnionDto = ExternalAuthors | Users;
+export type OutputsDataAuthorsUnionDto = ExternalUsers | Users;
 
 /** The structure of the Created by field of the Outputs content type. */
 export type OutputsDataCreatedByDto = {
@@ -4399,18 +4447,23 @@ export type EventContentFragment = Pick<
     >;
     thumbnail: Maybe<Array<Pick<Asset, 'id'>>>;
     speakers: Maybe<
-      Array<{
-        user: Maybe<
-          Array<
-            { __typename: 'Users' } & Pick<Users, 'id'> & {
-                flatData: Pick<
-                  UsersFlatDataDto,
-                  'firstName' | 'lastName' | 'onboarded'
-                > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
-              }
-          >
-        >;
-      }>
+      Array<
+        Pick<EventsDataSpeakersChildDto, 'topic'> & {
+          user: Maybe<
+            Array<
+              | ({ __typename: 'ExternalUsers' } & Pick<ExternalUsers, 'id'> & {
+                    flatData: Pick<ExternalUsersFlatDataDto, 'name' | 'orcid'>;
+                  })
+              | ({ __typename: 'Users' } & Pick<Users, 'id'> & {
+                    flatData: Pick<
+                      UsersFlatDataDto,
+                      'firstName' | 'lastName' | 'onboarded'
+                    > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+                  })
+            >
+          >;
+        }
+      >
     >;
   };
 };
@@ -4462,18 +4515,29 @@ export type FetchEventsQuery = {
               >;
               thumbnail: Maybe<Array<Pick<Asset, 'id'>>>;
               speakers: Maybe<
-                Array<{
-                  user: Maybe<
-                    Array<
-                      { __typename: 'Users' } & Pick<Users, 'id'> & {
-                          flatData: Pick<
-                            UsersFlatDataDto,
-                            'firstName' | 'lastName' | 'onboarded'
-                          > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
-                        }
-                    >
-                  >;
-                }>
+                Array<
+                  Pick<EventsDataSpeakersChildDto, 'topic'> & {
+                    user: Maybe<
+                      Array<
+                        | ({ __typename: 'ExternalUsers' } & Pick<
+                            ExternalUsers,
+                            'id'
+                          > & {
+                              flatData: Pick<
+                                ExternalUsersFlatDataDto,
+                                'name' | 'orcid'
+                              >;
+                            })
+                        | ({ __typename: 'Users' } & Pick<Users, 'id'> & {
+                              flatData: Pick<
+                                UsersFlatDataDto,
+                                'firstName' | 'lastName' | 'onboarded'
+                              > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+                            })
+                      >
+                    >;
+                  }
+                >
               >;
             };
           }
@@ -4524,18 +4588,29 @@ export type FetchEventQuery = {
         >;
         thumbnail: Maybe<Array<Pick<Asset, 'id'>>>;
         speakers: Maybe<
-          Array<{
-            user: Maybe<
-              Array<
-                { __typename: 'Users' } & Pick<Users, 'id'> & {
-                    flatData: Pick<
-                      UsersFlatDataDto,
-                      'firstName' | 'lastName' | 'onboarded'
-                    > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
-                  }
-              >
-            >;
-          }>
+          Array<
+            Pick<EventsDataSpeakersChildDto, 'topic'> & {
+              user: Maybe<
+                Array<
+                  | ({ __typename: 'ExternalUsers' } & Pick<
+                      ExternalUsers,
+                      'id'
+                    > & {
+                        flatData: Pick<
+                          ExternalUsersFlatDataDto,
+                          'name' | 'orcid'
+                        >;
+                      })
+                  | ({ __typename: 'Users' } & Pick<Users, 'id'> & {
+                        flatData: Pick<
+                          UsersFlatDataDto,
+                          'firstName' | 'lastName' | 'onboarded'
+                        > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+                      })
+                >
+              >;
+            }
+          >
         >;
       };
     }
@@ -4603,10 +4678,10 @@ export type OutputContentFragment = Pick<
   > & {
     authors: Maybe<
       Array<
-        | ({ __typename: 'ExternalAuthors' } & Pick<
-            ExternalAuthors,
+        | ({ __typename: 'ExternalUsers' } & Pick<
+            ExternalUsers,
             'id' | 'created' | 'lastModified' | 'version'
-          > & { flatData: Pick<ExternalAuthorsFlatDataDto, 'name' | 'orcid'> })
+          > & { flatData: Pick<ExternalUsersFlatDataDto, 'name' | 'orcid'> })
         | ({ __typename: 'Users' } & Pick<
             Users,
             'id' | 'created' | 'lastModified' | 'version'
@@ -4653,11 +4728,11 @@ export type FetchOutputQuery = {
       > & {
         authors: Maybe<
           Array<
-            | ({ __typename: 'ExternalAuthors' } & Pick<
-                ExternalAuthors,
+            | ({ __typename: 'ExternalUsers' } & Pick<
+                ExternalUsers,
                 'id' | 'created' | 'lastModified' | 'version'
               > & {
-                  flatData: Pick<ExternalAuthorsFlatDataDto, 'name' | 'orcid'>;
+                  flatData: Pick<ExternalUsersFlatDataDto, 'name' | 'orcid'>;
                 })
             | ({ __typename: 'Users' } & Pick<
                 Users,
@@ -4714,12 +4789,12 @@ export type FetchOutputsQuery = {
             > & {
               authors: Maybe<
                 Array<
-                  | ({ __typename: 'ExternalAuthors' } & Pick<
-                      ExternalAuthors,
+                  | ({ __typename: 'ExternalUsers' } & Pick<
+                      ExternalUsers,
                       'id' | 'created' | 'lastModified' | 'version'
                     > & {
                         flatData: Pick<
-                          ExternalAuthorsFlatDataDto,
+                          ExternalUsersFlatDataDto,
                           'name' | 'orcid'
                         >;
                       })
@@ -6061,9 +6136,46 @@ export const EventContentFragmentDoc = {
                                 ],
                               },
                             },
+                            {
+                              kind: 'InlineFragment',
+                              typeCondition: {
+                                kind: 'NamedType',
+                                name: { kind: 'Name', value: 'ExternalUsers' },
+                              },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'flatData' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'name' },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'orcid',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
                           ],
                         },
                       },
+                      { kind: 'Field', name: { kind: 'Name', value: 'topic' } },
                     ],
                   },
                 },
@@ -6235,7 +6347,7 @@ export const OutputContentFragmentDoc = {
                         kind: 'InlineFragment',
                         typeCondition: {
                           kind: 'NamedType',
-                          name: { kind: 'Name', value: 'ExternalAuthors' },
+                          name: { kind: 'Name', value: 'ExternalUsers' },
                         },
                         selectionSet: {
                           kind: 'SelectionSet',

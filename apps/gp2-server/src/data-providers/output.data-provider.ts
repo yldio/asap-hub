@@ -192,7 +192,7 @@ const getAuthorIdList = (authorDataObject: gp2Model.AuthorUpsertDataObject) => {
     return authorDataObject.userId;
   }
 
-  return authorDataObject.externalAuthorId;
+  return authorDataObject.externalUserId;
 };
 
 const reverseDocumentTypeMap = reverseMap(documentTypeMap);

@@ -1,11 +1,15 @@
-import { CalendarDataObject } from '@asap-hub/model';
+import { gp2 } from '@asap-hub/model';
 import { framework as lambda } from '@asap-hub/services-common';
 import Boom from '@hapi/boom';
 import { CalendarDataProvider } from '../../data-providers';
 import { Logger, SyncCalendar } from '../../utils';
 
+type CalendarDataProviderGP2 = CalendarDataProvider<
+  gp2.CalendarDataObject,
+  gp2.ListCalendarDataObject
+>;
 export const webhookEventUpdatedHandlerFactory = (
-  calendarDataProvider: CalendarDataProvider,
+  calendarDataProvider: CalendarDataProvider | CalendarDataProviderGP2,
   syncCalendar: SyncCalendar,
   logger: Logger,
   { googleApiToken }: { googleApiToken: string },
@@ -27,22 +31,11 @@ export const webhookEventUpdatedHandlerFactory = (
       throw Boom.badRequest('Missing x-goog-resource-id header');
     }
 
-    let calendar: CalendarDataObject;
-
-    try {
-      const calendars = await calendarDataProvider.fetch({
-        resourceId,
-      });
-
-      if (!calendars.items[0]) {
-        throw new Error('Failed to fetch calendar by resource ID.');
-      }
-
-      [calendar] = calendars.items;
-    } catch (error) {
-      logger.error(error, 'Error fetching calendar');
-      throw Boom.badGateway();
-    }
+    const calendar = await getCalendar(
+      calendarDataProvider,
+      resourceId,
+      logger,
+    );
 
     const squidexCalendarId = calendar.id;
     const { googleCalendarId } = calendar;
@@ -66,3 +59,23 @@ export const webhookEventUpdatedHandlerFactory = (
       statusCode: 200,
     };
   });
+const getCalendar = async (
+  calendarDataProvider: CalendarDataProviderGP2 | CalendarDataProvider,
+  resourceId: string,
+  logger: Logger,
+) => {
+  try {
+    const calendars = await calendarDataProvider.fetch({
+      resourceId,
+    });
+
+    if (!calendars.items[0]) {
+      throw new Error('Failed to fetch calendar by resource ID.');
+    }
+    const [calendar] = calendars.items;
+    return calendar;
+  } catch (error) {
+    logger.error(error, 'Error fetching calendar');
+    throw Boom.badGateway();
+  }
+};

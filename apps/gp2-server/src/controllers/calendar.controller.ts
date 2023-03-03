@@ -1,19 +1,12 @@
 import { NotFoundError } from '@asap-hub/errors';
 import { CalendarUpdateRequest, gp2 } from '@asap-hub/model';
+import { CalendarController as CalendarControllerBase } from '@asap-hub/server-common';
 import { CalendarDataProvider } from '../data-providers/calendar.data-provider';
 
-export interface CalendarController {
-  fetch: () => Promise<gp2.ListCalendarResponse>;
-  fetchById(
-    id: string,
-    options?: { raw: false },
-  ): Promise<gp2.CalendarResponse>;
-  update: (
-    calendarId: string,
-    data: CalendarUpdateRequest,
-  ) => Promise<gp2.CalendarResponse>;
-}
-
+export type CalendarController = CalendarControllerBase<
+  gp2.CalendarResponse,
+  gp2.ListCalendarResponse
+>;
 export default class Calendars implements CalendarController {
   constructor(private dataProvider: CalendarDataProvider) {}
 
@@ -53,10 +46,12 @@ export default class Calendars implements CalendarController {
 export const parseCalendarDataObjectToResponse = (
   calendarDataObject: Pick<
     gp2.CalendarDataObject,
-    'googleCalendarId' | 'color' | 'name'
+    'googleCalendarId' | 'color' | 'name' | 'projects' | 'workingGroups'
   >,
 ): gp2.CalendarResponse => ({
   id: calendarDataObject.googleCalendarId,
   name: calendarDataObject.name,
   color: calendarDataObject.color,
+  projects: calendarDataObject.projects || [],
+  workingGroups: calendarDataObject.workingGroups || [],
 });

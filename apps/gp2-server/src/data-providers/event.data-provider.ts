@@ -29,7 +29,7 @@ export interface EventDataProvider {
   fetchById(id: string): Promise<gp2Model.EventDataObject | null>;
 }
 
-export class EventSquidexDataProvider {
+export class EventSquidexDataProvider implements EventDataProvider {
   constructor(
     private squidexRestClient: SquidexRestClient<RestEvent, InputEvent>,
     private squidexGraphqlClient: SquidexGraphqlClient,

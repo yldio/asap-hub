@@ -1,3 +1,4 @@
+import { gp2 } from '@asap-hub/model';
 import { EventBridgeEvent } from 'aws-lambda';
 import { Auth } from 'googleapis';
 import 'source-map-support/register';
@@ -94,11 +95,15 @@ export type UnsubscribeFromEventChanges = ReturnType<
   typeof unsubscribeFromEventChangesFactory
 >;
 
+type CalendarDataProviderGP2 = CalendarDataProvider<
+  gp2.CalendarDataObject,
+  gp2.ListCalendarDataObject
+>;
 export const calendarCreatedHandlerFactory =
   (
     subscribe: SubscribeToEventChanges,
     unsubscribe: UnsubscribeFromEventChanges,
-    calendarDataProvider: CalendarDataProvider,
+    calendarDataProvider: CalendarDataProvider | CalendarDataProviderGP2,
     alerts: Alerts,
     logger: Logger,
   ) =>

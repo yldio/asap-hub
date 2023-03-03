@@ -7,6 +7,8 @@ export const createCalendarResponse = (
   color:
     googleLegacyCalendarColor[itemIndex % googleLegacyCalendarColor.length],
   name: `Calendar ${itemIndex}`,
+  projects: [],
+  workingGroups: [],
 });
 
 export const createListCalendarResponse = (

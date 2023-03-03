@@ -15,10 +15,18 @@ export const getCalendarDataObject = (): gp2.CalendarDataObject => ({
   expirationDate: 1617196357000,
   googleCalendarId: '3@group.calendar.google.com',
   version: 42,
+  projects: [{ id: '7', title: 'a project title' }],
+  workingGroups: [{ id: '11', title: 'a working group title' }],
 });
 
 export const getCalendarCreateDataObject = (): CalendarCreateDataObject => {
-  const { id: _id, version: _version, ...data } = getCalendarDataObject();
+  const {
+    id: _,
+    version: __,
+    projects: ___,
+    workingGroups: ____,
+    ...data
+  } = getCalendarDataObject();
   return data;
 };
 
@@ -31,6 +39,8 @@ export const getCalendarResponse = (): gp2.CalendarResponse => ({
   id: '3@group.calendar.google.com',
   color: '#2952A3',
   name: 'Tech 4a - iPSCs - 3D & Co-cultures',
+  projects: [{ id: '7', title: 'a project title' }],
+  workingGroups: [{ id: '11', title: 'a working group title' }],
 });
 
 export const getListCalendarResponse = (): gp2.ListCalendarResponse => ({
@@ -92,7 +102,12 @@ export const getSquidexGraphqlCalendar = (): NonNullable<
   lastModified: '2021-05-14T14:48:46Z',
   version: 42,
   flatData: squidexGraphqlCalendarsFlatData(),
-  referencingProjectsContents: [],
+  referencingProjectsContents: [
+    { id: '7', flatData: { title: 'a project title' } },
+  ],
+  referencingWorkingGroupsContents: [
+    { id: '11', flatData: { title: 'a working group title' } },
+  ],
 });
 
 export const getSquidexGraphqlEventCalendar = (): NonNullable<

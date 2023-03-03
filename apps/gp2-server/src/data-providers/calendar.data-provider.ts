@@ -3,6 +3,7 @@ import {
   CalendarUpdateDataObject,
   gp2,
 } from '@asap-hub/model';
+import { CalendarDataProvider as CalendarDataProviderBase } from '@asap-hub/server-common';
 import {
   InputCalendar,
   parseToSquidex,
@@ -27,15 +28,10 @@ export type FetchCalendarProviderOptions = {
 };
 
 type GraphqlCalendar = NonNullable<FetchCalendarQuery['findCalendarsContent']>;
-
-export interface CalendarDataProvider {
-  create(create: CalendarCreateDataObject): Promise<string>;
-  update(id: string, update: CalendarUpdateDataObject): Promise<void>;
-  fetch(
-    options?: FetchCalendarProviderOptions,
-  ): Promise<gp2.ListCalendarDataObject>;
-  fetchById(id: string): Promise<gp2.CalendarDataObject | null>;
-}
+export type CalendarDataProvider = CalendarDataProviderBase<
+  gp2.CalendarDataObject,
+  gp2.ListCalendarDataObject
+>;
 
 export class CalendarSquidexDataProvider implements CalendarDataProvider {
   constructor(
@@ -129,4 +125,10 @@ export const parseGraphQlCalendarToDataObject = (
   version: item.version,
   expirationDate: item.flatData.expirationDate,
   syncToken: item.flatData.syncToken,
+  projects: item.referencingProjectsContents?.map(
+    ({ id, flatData: { title } }) => ({ id, title: title || '' }),
+  ),
+  workingGroups: item.referencingWorkingGroupsContents?.map(
+    ({ id, flatData: { title } }) => ({ id, title: title || '' }),
+  ),
 });

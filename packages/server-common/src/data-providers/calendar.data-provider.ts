@@ -1,8 +1,8 @@
 import {
   CalendarCreateDataObject,
-  CalendarDataObject,
+  CalendarDataObject as DefaultCalendarDataObject,
   CalendarUpdateDataObject,
-  ListCalendarDataObject,
+  ListCalendarDataObject as DefaultListCalendarDataObject,
 } from '@asap-hub/model';
 
 export type FetchCalendarProviderOptions = {
@@ -11,7 +11,10 @@ export type FetchCalendarProviderOptions = {
   resourceId?: string;
 };
 
-export interface CalendarDataProvider {
+export interface CalendarDataProvider<
+  CalendarDataObject = DefaultCalendarDataObject,
+  ListCalendarDataObject = DefaultListCalendarDataObject,
+> {
   create(create: CalendarCreateDataObject): Promise<string>;
   update(id: string, update: CalendarUpdateDataObject): Promise<void>;
   fetch(

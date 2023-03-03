@@ -7,9 +7,7 @@ actions:
     code: ./build/post-login-add-metadata.js
     dependencies:
       - name: got
-        version: 11.8.5
       - name: '@babel/runtime-corejs3'
-        version: 7.20.1
     deployed: true
     runtime: node16
     secrets:
@@ -25,9 +23,7 @@ actions:
     code: ./build/post-login-connect-user.js
     dependencies:
       - name: got
-        version: 11.8.5
       - name: '@babel/runtime-corejs3'
-        version: 7.20.1
     deployed: true
     runtime: node16
     secrets:

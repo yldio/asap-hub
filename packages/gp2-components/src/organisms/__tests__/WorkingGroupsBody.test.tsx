@@ -9,16 +9,16 @@ describe('WorkingGroupsBody', () => {
 
     render(<WorkingGroupsBody workingGroupNetwork={workingGroupsResponse} />);
     expect(
-      screen.getByRole('heading', { name: /Operational Working Group/i }),
+      screen.getByRole('heading', { name: /Operational Working Groups/i }),
     ).toBeVisible();
     expect(
-      screen.getByRole('heading', { name: /Monogenic Working Group/i }),
+      screen.getByRole('heading', { name: /Monogenic Working Groups/i }),
     ).toBeVisible();
     expect(
-      screen.getByRole('heading', { name: /Complex Disease Network/i }),
+      screen.getByRole('heading', { name: /Complex Disease Working Groups/i }),
     ).toBeVisible();
     expect(
-      screen.getByRole('heading', { name: /Steering Commitee/i }),
+      screen.getByRole('heading', { name: /Support Working Groups/i }),
     ).toBeVisible();
   });
 });

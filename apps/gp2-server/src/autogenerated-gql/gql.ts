@@ -49,7 +49,7 @@ const documents = {
     graphql.WorkingGroupMembersContentFragmentDoc,
   '\n  query FetchWorkingGroupsMembers($filter: String) {\n    queryWorkingGroupsContents(filter: $filter) {\n      ...WorkingGroupMembersContent\n    }\n  }\n  \n':
     graphql.FetchWorkingGroupsMembersDocument,
-  '\n  fragment WorkingGroupNetworkContent on WorkingGroupNetwork {\n    id\n    flatData {\n      steeringCommitee {\n        ...WorkingGroupContent\n      }\n      complexDisease {\n        ...WorkingGroupContent\n      }\n      monogenic {\n        ...WorkingGroupContent\n      }\n      operational {\n        ...WorkingGroupContent\n      }\n    }\n  }\n  \n':
+  '\n  fragment WorkingGroupNetworkContent on WorkingGroupNetwork {\n    id\n    flatData {\n      support {\n        ...WorkingGroupContent\n      }\n      complexDisease {\n        ...WorkingGroupContent\n      }\n      monogenic {\n        ...WorkingGroupContent\n      }\n      operational {\n        ...WorkingGroupContent\n      }\n    }\n  }\n  \n':
     graphql.WorkingGroupNetworkContentFragmentDoc,
   '\n  query FetchWorkingGroupNetwork {\n    queryWorkingGroupNetworkContents {\n      ...WorkingGroupNetworkContent\n    }\n  }\n  \n':
     graphql.FetchWorkingGroupNetworkDocument,
@@ -131,8 +131,8 @@ export function gql(
   source: '\n  query FetchWorkingGroupsMembers($filter: String) {\n    queryWorkingGroupsContents(filter: $filter) {\n      ...WorkingGroupMembersContent\n    }\n  }\n  \n',
 ): typeof documents['\n  query FetchWorkingGroupsMembers($filter: String) {\n    queryWorkingGroupsContents(filter: $filter) {\n      ...WorkingGroupMembersContent\n    }\n  }\n  \n'];
 export function gql(
-  source: '\n  fragment WorkingGroupNetworkContent on WorkingGroupNetwork {\n    id\n    flatData {\n      steeringCommitee {\n        ...WorkingGroupContent\n      }\n      complexDisease {\n        ...WorkingGroupContent\n      }\n      monogenic {\n        ...WorkingGroupContent\n      }\n      operational {\n        ...WorkingGroupContent\n      }\n    }\n  }\n  \n',
-): typeof documents['\n  fragment WorkingGroupNetworkContent on WorkingGroupNetwork {\n    id\n    flatData {\n      steeringCommitee {\n        ...WorkingGroupContent\n      }\n      complexDisease {\n        ...WorkingGroupContent\n      }\n      monogenic {\n        ...WorkingGroupContent\n      }\n      operational {\n        ...WorkingGroupContent\n      }\n    }\n  }\n  \n'];
+  source: '\n  fragment WorkingGroupNetworkContent on WorkingGroupNetwork {\n    id\n    flatData {\n      support {\n        ...WorkingGroupContent\n      }\n      complexDisease {\n        ...WorkingGroupContent\n      }\n      monogenic {\n        ...WorkingGroupContent\n      }\n      operational {\n        ...WorkingGroupContent\n      }\n    }\n  }\n  \n',
+): typeof documents['\n  fragment WorkingGroupNetworkContent on WorkingGroupNetwork {\n    id\n    flatData {\n      support {\n        ...WorkingGroupContent\n      }\n      complexDisease {\n        ...WorkingGroupContent\n      }\n      monogenic {\n        ...WorkingGroupContent\n      }\n      operational {\n        ...WorkingGroupContent\n      }\n    }\n  }\n  \n'];
 export function gql(
   source: '\n  query FetchWorkingGroupNetwork {\n    queryWorkingGroupNetworkContents {\n      ...WorkingGroupNetworkContent\n    }\n  }\n  \n',
 ): typeof documents['\n  query FetchWorkingGroupNetwork {\n    queryWorkingGroupNetworkContents {\n      ...WorkingGroupNetworkContent\n    }\n  }\n  \n'];

@@ -12,7 +12,7 @@
     "fieldsInLists": [],
     "fields": [
       {
-        "name": "steeringCommitee",
+        "name": "operational",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,
@@ -25,27 +25,7 @@
           "mustBePublished": false,
           "editor": "List",
           "schemaIds": ["working-groups"],
-          "label": "Steering Committee",
-          "isRequired": true,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
-        "name": "complexDisease",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "References",
-          "minItems": 1,
-          "allowDuplicates": false,
-          "resolveReference": false,
-          "mustBePublished": false,
-          "editor": "List",
-          "schemaIds": ["working-groups"],
-          "label": "Complex Disease Working Groups",
+          "label": "Operational Working Groups",
           "isRequired": true,
           "isRequiredOnPublish": false,
           "isHalfWidth": false
@@ -72,7 +52,7 @@
         }
       },
       {
-        "name": "operational",
+        "name": "complexDisease",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,
@@ -85,7 +65,27 @@
           "mustBePublished": false,
           "editor": "List",
           "schemaIds": ["working-groups"],
-          "label": "Operational Working Groups",
+          "label": "Complex Disease Working Groups",
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "support",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "References",
+          "minItems": 1,
+          "allowDuplicates": false,
+          "resolveReference": false,
+          "mustBePublished": false,
+          "editor": "List",
+          "schemaIds": ["working-groups"],
+          "label": "Support Working Groups",
           "isRequired": true,
           "isRequiredOnPublish": false,
           "isHalfWidth": false

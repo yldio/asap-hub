@@ -17,6 +17,7 @@ import {
   ResearchOutputType,
   ResearchTagResponse,
 } from '@asap-hub/model';
+import { disable } from '@asap-hub/flags';
 import { fireEvent } from '@testing-library/dom';
 import {
   render,
@@ -797,6 +798,25 @@ describe('form buttons', () => {
     const cancelButton = screen.getByRole('button', { name: /Cancel/i });
     expect(cancelButton).toBeInTheDocument();
     expect(cancelButton).toHaveStyle(`background-color:${notPrimaryButtonBg}`);
+  });
+
+  it('shows only Cancel and Publish buttons when user has editing and publishing permissions, the research output has not been published yet and feature flag is disabled', async () => {
+    disable('DRAFT_RESEARCH_OUTPUT');
+    await setupForm({
+      canEditResearchOutput: true,
+      canPublishResearchOutput: true,
+      published: false,
+    });
+
+    const publishButton = screen.getByRole('button', {
+      name: /Publish/i,
+    });
+    expect(publishButton).toBeInTheDocument();
+    expect(publishButton).toHaveStyle(`background-color:${primaryButtonBg}`);
+
+    expect(
+      screen.queryByRole('button', { name: /Save Draft/i }),
+    ).not.toBeInTheDocument();
   });
 
   it('shows only Cancel and Save buttons when user has editing and publishing permission and the research output has already been published', async () => {

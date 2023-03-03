@@ -1,7 +1,8 @@
 export type Flag =
   | 'PERSISTENT_EXAMPLE'
   | 'DRAFT_RESEARCH_OUTPUT'
-  | 'ASAP_DRAFT_RESEARCH_OUTPUT';
+  | 'ASAP_DRAFT_RESEARCH_OUTPUT'
+  | 'CONTENTFUL';
 
 export type Flags = Partial<Record<Flag, boolean | undefined>>;
 let overrides: Flags = {

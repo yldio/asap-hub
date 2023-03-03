@@ -13,11 +13,11 @@
     "watch:babel": "../../scripts/build-babel.sh watch"
   },
   "dependencies": {
-    "@algolia/client-common": "4.14.3",
-    "@algolia/client-search": "4.14.3",
+    "@algolia/client-common": "4.15.0",
+    "@algolia/client-search": "4.15.0",
     "@asap-hub/model": "workspace:*",
     "@babel/runtime-corejs3": "7.21.0",
-    "algoliasearch": "4.14.3",
+    "algoliasearch": "4.15.0",
     "prettier": "2.7.1"
   },
   "devDependencies": {

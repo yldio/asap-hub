@@ -118,8 +118,6 @@ const components = {
     );
   },
   a: ({ children, href }: AnchorHTMLAttributes<HTMLAnchorElement>) => {
-    console.log('children', children);
-
     if (typeof href === 'undefined') {
       return (
         <ErrorCard

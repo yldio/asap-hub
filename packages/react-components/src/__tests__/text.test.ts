@@ -74,7 +74,6 @@ describe.each([
   [{}],
   [Symbol('Forbidden primitive type')],
   [createElement('div')],
-  [createElement('b')],
   [createElement('i', { children: [createElement('div')] })],
   [createElement(Fragment, { children: {} })],
 ])('for the children %p', (children) => {

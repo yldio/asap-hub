@@ -87,25 +87,38 @@ it.each([
   expect(heading.tagName).toBe(expected);
 });
 
-it.each([1, 2, 3])(
-  'displays error when disallowed <h%i> styling applied',
-  (i) => {
-    const { container } = render(
-      <RichText text={`<h${i}><strong>heading</strong></h${i}>`} />,
+it.each`
+  heading | tag         | tagName
+  ${`1`}  | ${`b`}      | ${`B`}
+  ${`2`}  | ${`b`}      | ${`B`}
+  ${`3`}  | ${`b`}      | ${`B`}
+  ${`1`}  | ${`strong`} | ${`STRONG`}
+  ${`2`}  | ${`strong`} | ${`STRONG`}
+  ${`3`}  | ${`strong`} | ${`STRONG`}
+  ${`1`}  | ${`i`}      | ${`I`}
+  ${`2`}  | ${`i`}      | ${`I`}
+  ${`3`}  | ${`i`}      | ${`I`}
+  ${`1`}  | ${`em`}     | ${`EM`}
+  ${`2`}  | ${`em`}     | ${`EM`}
+  ${`3`}  | ${`em`}     | ${`EM`}
+`(
+  'displays heading <h$heading> with nested tag <$tag>',
+  ({ heading, tag, tagName }) => {
+    const { getByText } = render(
+      <RichText text={`<h${heading}><${tag}>heading</${tag}></h${heading}>`} />,
     );
-    expect(container.textContent).toContain(`Invalid h${i} heading styling`);
+    expect(getByText('heading').tagName).toEqual(tagName);
   },
 );
 
-it.each([1, 2, 3])(
-  'displays heading when allowed <h%i> styling applied',
-  (i) => {
-    const { getByText } = render(
-      <RichText text={`<h${i}><i>heading</i></h${i}>`} />,
-    );
-    expect(getByText('heading').tagName).toEqual('I');
-  },
-);
+it.each([1, 2, 3])('displays error when <h%i> has invalid nested tag', (i) => {
+  const { container } = render(
+    <RichText text={`<h${i}><ul>heading</ul></h${i}>`} />,
+  );
+  expect(container.textContent).toContain(
+    `Styling Error Invalid h${i} heading styling`,
+  );
+});
 
 it('passes through image props', () => {
   const { getByRole } = render(<RichText text={'<img width="100%" />'} />);

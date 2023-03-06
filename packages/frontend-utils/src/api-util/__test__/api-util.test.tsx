@@ -1,3 +1,4 @@
+import { setCurrentOverrides } from '@asap-hub/flags';
 import { ValidationErrorResponse } from '@asap-hub/model';
 import {
   BackendError,
@@ -5,6 +6,7 @@ import {
   createSentryHeaders,
   validationErrorsAreSupported,
   clearAjvErrorForPath,
+  createFeatureFlagHeaders,
 } from '../api-util';
 
 const mockSetTag = jest.fn();
@@ -95,12 +97,29 @@ describe('createSentryHeaders', () => {
       'X-Transaction-Id': expect.anything(),
     });
   });
-  it('sets the conte a header with a random string', () => {
+  it('sets the transaction header with a random string', () => {
     const { 'X-Transaction-Id': transactionId } = createSentryHeaders();
     expect(mockSetTag).toHaveBeenLastCalledWith(
       'transaction_id',
       transactionId,
     );
+  });
+});
+
+describe('createFeatureFlagHeaders', () => {
+  it('set a contentful feature flag header when the flag is on', () => {
+    setCurrentOverrides({ CONTENTFUL: true });
+
+    expect(createFeatureFlagHeaders()).toEqual({
+      'X-Contentful-Enabled': 'true',
+    });
+  });
+  it('set a contentful feature flag header when the flag is off', () => {
+    setCurrentOverrides({ CONTENTFUL: false });
+
+    expect(createFeatureFlagHeaders()).toEqual({
+      'X-Contentful-Enabled': 'false',
+    });
   });
 });
 

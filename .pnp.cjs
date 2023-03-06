@@ -11184,6 +11184,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/frontend-utils", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#workspace:packages/frontend-utils"],\
             ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],\
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],\
+            ["@asap-hub/flags", "workspace:packages/flags"],\
             ["@asap-hub/model", "workspace:packages/model"],\
             ["@asap-hub/react-components", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#workspace:packages/react-components"],\
             ["@babel/core", "npm:7.21.0"],\
@@ -11246,6 +11247,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/frontend-utils", "workspace:packages/frontend-utils"],\
             ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],\
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],\
+            ["@asap-hub/flags", "workspace:packages/flags"],\
             ["@asap-hub/model", "workspace:packages/model"],\
             ["@asap-hub/react-components", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#workspace:packages/react-components"],\
             ["@babel/core", "npm:7.21.0"],\

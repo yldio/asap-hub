@@ -305,7 +305,7 @@ export type Libs = {
   contributingCohortDataProvider?: ContributingCohortDataProvider;
   eventController?: gp2.EventController;
   eventDataProvider?: gp2.EventDataProvider;
-  externalAuthorDataProvider?: ExternalUserDataProvider;
+  externalUserDataProvider?: ExternalUserDataProvider;
   logger?: Logger;
   newsController?: NewsController;
   newsDataProvider?: NewsDataProvider;

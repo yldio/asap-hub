@@ -36,7 +36,7 @@ export const clearParsedHtmlOutput = (htmlDocument: Document) => ({
       in html as \n<p>&nbsp;</p>\n. This part <p>&nbsp;</p>
       generates a node like:
       {
-        content: [{ data: {}, marks: [], nodeType: 'text', value: ' ' }],
+        content: [{ data: {}, marks: [], nodeType: 'text', value: ' ' }],
         data: {},
         nodeType: 'paragraph',
       },

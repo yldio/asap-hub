@@ -5,3 +5,4 @@ export { default as projects } from './projects';
 export { default as resource } from './resource';
 export { default as users } from './users';
 export { default as workingGroups } from './working-groups';
+export type { OutputDocumentTypeParameter } from './working-groups';

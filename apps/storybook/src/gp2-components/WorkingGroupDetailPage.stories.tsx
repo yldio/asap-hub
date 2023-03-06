@@ -1,4 +1,5 @@
 import { Layout, WorkingGroupDetailPage } from '@asap-hub/gp2-components';
+import { boolean } from '@storybook/addon-knobs';
 import { ComponentProps } from 'react';
 import { NoPaddingDecorator } from '../layout';
 
@@ -16,6 +17,7 @@ const props = {
   projects: [],
   backHref: '',
   isWorkingGroupMember: false,
+  isAdministrator: boolean('is admin', false),
 };
 
 const layoutProps: Pick<

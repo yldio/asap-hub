@@ -56,6 +56,7 @@ export {
 } from './organisms';
 export {
   BasicLayout,
+  CreateOutputPage,
   DashboardPage,
   DashboardPageBody,
   EventsPage,

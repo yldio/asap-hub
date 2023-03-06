@@ -27,6 +27,7 @@ import {
   useResearchTags,
   usePutResearchOutput,
   usePostResearchOutput,
+  useRelatedResearchSuggestions,
 } from '../../shared-research';
 
 const useParamOutputDocumentType = (
@@ -62,6 +63,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   const getLabSuggestions = useLabSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();
   const getTeamSuggestions = useTeamSuggestions();
+  const getRelatedResearchSuggestions = useRelatedResearchSuggestions();
   const researchTags = useResearchTags();
 
   if (canCreateUpdate && team) {
@@ -85,6 +87,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
             )
           }
           getTeamSuggestions={getTeamSuggestions}
+          getRelatedResearchSuggestions={getRelatedResearchSuggestions}
           researchTags={researchTags}
           serverValidationErrors={errors}
           clearServerValidationError={(instancePath: string) =>

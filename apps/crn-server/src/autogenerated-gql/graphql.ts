@@ -8886,6 +8886,20 @@ export type ResearchOutputContentFragment = Pick<
             })
       >
     >;
+    relatedResearch: Maybe<
+      Array<
+        Pick<ResearchOutputs, 'id'> & {
+          flatData: Pick<ResearchOutputsFlatDataDto, 'title' | 'documentType'>;
+          referencesTeamsContents: Maybe<
+            Array<
+              Pick<Teams, 'id'> & {
+                flatData: Pick<TeamsFlatDataDto, 'displayName'>;
+              }
+            >
+          >;
+        }
+      >
+    >;
     labs: Maybe<
       Array<Pick<Labs, 'id'> & { flatData: Pick<LabsFlatDataDto, 'name'> }>
     >;
@@ -9057,6 +9071,23 @@ export type FetchResearchOutputQuery = {
                     >;
                   };
                 })
+          >
+        >;
+        relatedResearch: Maybe<
+          Array<
+            Pick<ResearchOutputs, 'id'> & {
+              flatData: Pick<
+                ResearchOutputsFlatDataDto,
+                'title' | 'documentType'
+              >;
+              referencesTeamsContents: Maybe<
+                Array<
+                  Pick<Teams, 'id'> & {
+                    flatData: Pick<TeamsFlatDataDto, 'displayName'>;
+                  }
+                >
+              >;
+            }
           >
         >;
         labs: Maybe<
@@ -9247,6 +9278,23 @@ export type FetchResearchOutputsQuery = {
                           >;
                         };
                       })
+                >
+              >;
+              relatedResearch: Maybe<
+                Array<
+                  Pick<ResearchOutputs, 'id'> & {
+                    flatData: Pick<
+                      ResearchOutputsFlatDataDto,
+                      'title' | 'documentType'
+                    >;
+                    referencesTeamsContents: Maybe<
+                      Array<
+                        Pick<Teams, 'id'> & {
+                          flatData: Pick<TeamsFlatDataDto, 'displayName'>;
+                        }
+                      >
+                    >;
+                  }
                 >
               >;
               labs: Maybe<
@@ -12484,6 +12532,65 @@ export const ResearchOutputContentFragmentDoc = {
                                   {
                                     kind: 'Field',
                                     name: { kind: 'Name', value: 'orcid' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'relatedResearch' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'title' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'documentType' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'referencesTeamsContents',
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'flatData' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'displayName',
+                                    },
                                   },
                                 ],
                               },

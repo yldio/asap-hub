@@ -85,6 +85,23 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
     asapFunded: 'Yes',
     usedInAPublication: 'No',
     type: '3D Printing',
+    relatedResearch: [
+      {
+        id: '123',
+        flatData: {
+          title: 'Related Research1',
+          documentType: 'Bioinformatics',
+        },
+        referencesTeamsContents: [
+          {
+            id: 'team-id',
+            flatData: {
+              displayName: 'Team1',
+            },
+          },
+        ],
+      },
+    ],
     labs: [
       {
         id: '99c78dd7-627e-4fbd-aaec-d1977895189e',
@@ -241,6 +258,7 @@ export const getResearchOutputPostRequest = (): ResearchOutputPostRequest => {
     authors,
     teams,
     workingGroups,
+    relatedResearch,
     ...researchOutputResponse
   } = getResearchOutputResponse();
   return {
@@ -250,6 +268,7 @@ export const getResearchOutputPostRequest = (): ResearchOutputPostRequest => {
     labs: labs.map(({ id }) => id),
     authors: authors.map(({ id }) => ({ userId: id })),
     teams: teams.map(({ id }) => id),
+    relatedResearch: relatedResearch?.map(({ id }) => id),
     workingGroups: workingGroups ? workingGroups.map(({ id }) => id) : [],
   };
 };

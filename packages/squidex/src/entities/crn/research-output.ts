@@ -49,9 +49,7 @@ export interface ResearchOutput<
   usageNotes?: string;
   usedInAPublication: DecisionOption;
   workingGroups: string[];
-  relatedResearch?: Array<
-    Pick<ResearchOutput, 'title' | 'documentType' | 'teams'>
-  >;
+  relatedResearch?: string[];
 }
 
 export interface RestResearchOutput extends Entity, Rest<ResearchOutput> {}

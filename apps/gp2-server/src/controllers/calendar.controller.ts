@@ -10,7 +10,22 @@ export default class Calendars implements gp2.CalendarController {
     });
 
     const items =
-      total > 0 ? calendars.map(parseCalendarDataObjectToResponse) : [];
+      total > 0
+        ? calendars.map(parseCalendarDataObjectToResponse).sort((a, b) => {
+            const hasRelationship = (calendar: gp2.CalendarResponse) =>
+              calendar.projects.length > 0 || calendar.workingGroups.length > 0;
+            const aHasRelationship = hasRelationship(a);
+            const bHasRelationship = hasRelationship(b);
+
+            if (aHasRelationship === bHasRelationship) {
+              return a.name.localeCompare(b.name, undefined, {
+                sensitivity: 'base',
+              });
+            }
+
+            return aHasRelationship && !bHasRelationship ? 1 : -1;
+          })
+        : [];
 
     return { total, items };
   }

@@ -67,7 +67,7 @@ type ApplicationMutations {
     """The status for the content."""
     status: String!
   ): ExternalAuthors
-  """Change a Interest Groups content."""
+  """Change a Groups content."""
   changeGroupsContent(
     """The timestamp when the status should be changed."""
     dueTime: Instant
@@ -243,7 +243,7 @@ type ApplicationMutations {
     """The initial status."""
     status: String
   ): ExternalAuthors
-  """Creates an Interest Groups content."""
+  """Creates an Groups content."""
   createGroupsContent(
     """The data for the content."""
     data: GroupsDataInputDto!
@@ -399,7 +399,7 @@ type ApplicationMutations {
     """The ID of the content (usually GUID)."""
     id: String!
   ): EntitySavedResultDto!
-  """Delete an Interest Groups content."""
+  """Delete an Groups content."""
   deleteGroupsContent(
     """The expected version."""
     expectedVersion: Int = -2
@@ -521,7 +521,7 @@ type ApplicationMutations {
     """The ID of the object (usually GUID)."""
     id: String
   ): ExternalAuthors
-  """Patch an Interest Groups content by id."""
+  """Patch an Groups content by id."""
   patchGroupsContent(
     """The data for the content."""
     data: GroupsDataInputDto!
@@ -675,7 +675,7 @@ type ApplicationMutations {
     """The status for the content."""
     status: String!
   ): ExternalAuthors @deprecated(reason: "Use 'changeExternalAuthorsContent' instead")
-  """Publish a Interest Groups content."""
+  """Publish a Groups content."""
   publishGroupsContent(
     """The timestamp when the status should be changed."""
     dueTime: Instant
@@ -841,7 +841,7 @@ type ApplicationMutations {
     """The ID of the object (usually GUID)."""
     id: String
   ): ExternalAuthors
-  """Update an Interest Groups content by id."""
+  """Update an Groups content by id."""
   updateGroupsContent(
     """The data for the content."""
     data: GroupsDataInputDto!
@@ -1015,7 +1015,7 @@ type ApplicationMutations {
     """The initial status."""
     status: String
   ): ExternalAuthors
-  """Upsert an Interest Groups content by id."""
+  """Upsert an Groups content by id."""
   upsertGroupsContent(
     """The data for the content."""
     data: GroupsDataInputDto!
@@ -1224,7 +1224,7 @@ type ApplicationQueries {
     """The optional version of the content to retrieve an older instance (not cached)."""
     version: Int
   ): ExternalAuthors
-  """Find an Interest Groups content by id."""
+  """Find an Groups content by id."""
   findGroupsContent(
     """The ID of the object (usually GUID)."""
     id: String!
@@ -1453,7 +1453,7 @@ type ApplicationQueries {
     """Optional number of items to take."""
     top: Int
   ): ExternalAuthorsResultDto
-  """Query Interest Groups content items."""
+  """Query Groups content items."""
   queryGroupsContents(
     """Optional OData filter."""
     filter: String
@@ -1466,7 +1466,7 @@ type ApplicationQueries {
     """Optional number of items to take."""
     top: Int
   ): [Groups!]
-  """Query Interest Groups content items with total count."""
+  """Query Groups content items with total count."""
   queryGroupsContentsWithTotal(
     """Optional OData filter."""
     filter: String
@@ -1884,7 +1884,7 @@ type Calendars implements Content {
     """Optional number of items to take."""
     top: Int
   ): EventsResultDto
-  """Query Interest Groups content items."""
+  """Query Groups content items."""
   referencingGroupsContents(
     """Optional OData filter."""
     filter: String
@@ -1897,7 +1897,7 @@ type Calendars implements Content {
     """Optional number of items to take."""
     top: Int
   ): [Groups!]
-  """Query Interest Groups content items with total count."""
+  """Query Groups content items with total count."""
   referencingGroupsContentsWithTotal(
     """Optional OData filter."""
     filter: String
@@ -3300,7 +3300,7 @@ type ExternalAuthorsResultDto {
   total: Int!
 }
 
-"""The structure of a Interest Groups content type."""
+"""The structure of a Groups content type."""
 type Groups implements Content {
   """The timestamp when the object was created."""
   created: Instant!
@@ -3414,39 +3414,39 @@ type Groups implements Content {
   version: Int!
 }
 
-"""The structure of the This group is active field of the Interest Groups content type."""
+"""The structure of the This group is active field of the Groups content type."""
 type GroupsDataActiveDto {
   """Active groups have Subscribe buttons and Calendar and Upcoming Events tabs"""
   iv: Boolean
 }
 
-"""The structure of the This group is active field of the Interest Groups content input type."""
+"""The structure of the This group is active field of the Groups content input type."""
 input GroupsDataActiveInputDto {
   """Active groups have Subscribe buttons and Calendar and Upcoming Events tabs"""
   iv: Boolean
 }
 
-"""The structure of the Calendars field of the Interest Groups content type."""
+"""The structure of the Calendars field of the Groups content type."""
 type GroupsDataCalendarsDto {
   iv: [Calendars!]
 }
 
-"""The structure of the Calendars field of the Interest Groups content input type."""
+"""The structure of the Calendars field of the Groups content input type."""
 input GroupsDataCalendarsInputDto {
   iv: [String!]
 }
 
-"""The structure of the Description field of the Interest Groups content type."""
+"""The structure of the Description field of the Groups content type."""
 type GroupsDataDescriptionDto {
   iv: String
 }
 
-"""The structure of the Description field of the Interest Groups content input type."""
+"""The structure of the Description field of the Groups content input type."""
 input GroupsDataDescriptionInputDto {
   iv: String
 }
 
-"""The structure of the Interest Groups data type."""
+"""The structure of the Groups data type."""
 type GroupsDataDto {
   active: GroupsDataActiveDto
   calendars: GroupsDataCalendarsDto
@@ -3459,7 +3459,7 @@ type GroupsDataDto {
   tools: GroupsDataToolsDto
 }
 
-"""The structure of the Interest Groups data input type."""
+"""The structure of the Groups data input type."""
 input GroupsDataInputDto {
   active: GroupsDataActiveInputDto
   calendars: GroupsDataCalendarsInputDto
@@ -3484,52 +3484,52 @@ input GroupsDataLeadersChildInputDto {
   user: [String!]
 }
 
-"""The structure of the Leaders field of the Interest Groups content type."""
+"""The structure of the Leaders field of the Groups content type."""
 type GroupsDataLeadersDto {
   iv: [GroupsDataLeadersChildDto!]
 }
 
-"""The structure of the Leaders field of the Interest Groups content input type."""
+"""The structure of the Leaders field of the Groups content input type."""
 input GroupsDataLeadersInputDto {
   iv: [GroupsDataLeadersChildInputDto!]
 }
 
-"""The structure of the Name field of the Interest Groups content type."""
+"""The structure of the Name field of the Groups content type."""
 type GroupsDataNameDto {
   iv: String
 }
 
-"""The structure of the Name field of the Interest Groups content input type."""
+"""The structure of the Name field of the Groups content input type."""
 input GroupsDataNameInputDto {
   iv: String
 }
 
-"""The structure of the Expertise (Tags) field of the Interest Groups content type."""
+"""The structure of the Expertise (Tags) field of the Groups content type."""
 type GroupsDataTagsDto {
   iv: [String!]
 }
 
-"""The structure of the Expertise (Tags) field of the Interest Groups content input type."""
+"""The structure of the Expertise (Tags) field of the Groups content input type."""
 input GroupsDataTagsInputDto {
   iv: [String!]
 }
 
-"""The structure of the Teams field of the Interest Groups content type."""
+"""The structure of the Teams field of the Groups content type."""
 type GroupsDataTeamsDto {
   iv: [Teams!]
 }
 
-"""The structure of the Teams field of the Interest Groups content input type."""
+"""The structure of the Teams field of the Groups content input type."""
 input GroupsDataTeamsInputDto {
   iv: [String!]
 }
 
-"""The structure of the Thumbnail field of the Interest Groups content type."""
+"""The structure of the Thumbnail field of the Groups content type."""
 type GroupsDataThumbnailDto {
   iv: [Asset!]
 }
 
-"""The structure of the Thumbnail field of the Interest Groups content input type."""
+"""The structure of the Thumbnail field of the Groups content input type."""
 input GroupsDataThumbnailInputDto {
   iv: [String!]
 }
@@ -3546,17 +3546,17 @@ input GroupsDataToolsChildInputDto {
   slack: String
 }
 
-"""The structure of the External Tools field of the Interest Groups content type."""
+"""The structure of the External Tools field of the Groups content type."""
 type GroupsDataToolsDto {
   iv: [GroupsDataToolsChildDto!]
 }
 
-"""The structure of the External Tools field of the Interest Groups content input type."""
+"""The structure of the External Tools field of the Groups content input type."""
 input GroupsDataToolsInputDto {
   iv: [GroupsDataToolsChildInputDto!]
 }
 
-"""The structure of the flat Interest Groups data type."""
+"""The structure of the flat Groups data type."""
 type GroupsFlatDataDto {
   """Active groups have Subscribe buttons and Calendar and Upcoming Events tabs"""
   active: Boolean
@@ -3570,7 +3570,7 @@ type GroupsFlatDataDto {
   tools: [GroupsDataToolsChildDto!]
 }
 
-"""List of Interest Groups items and total count."""
+"""List of Groups items and total count."""
 type GroupsResultDto {
   """The contents."""
   items: [Groups!]
@@ -4251,6 +4251,32 @@ type ResearchOutputs implements Content {
     """Optional number of items to take."""
     top: Int
   ): LabsResultDto
+  """Query Research Outputs content items."""
+  referencesResearchOutputsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [ResearchOutputs!]
+  """Query Research Outputs content items with total count."""
+  referencesResearchOutputsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): ResearchOutputsResultDto
   """Query Research Tags content items."""
   referencesResearchTagsContents(
     """Optional OData filter."""
@@ -4355,6 +4381,32 @@ type ResearchOutputs implements Content {
     """Optional number of items to take."""
     top: Int
   ): WorkingGroupsResultDto
+  """Query Research Outputs content items."""
+  referencingResearchOutputsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [ResearchOutputs!]
+  """Query Research Outputs content items with total count."""
+  referencingResearchOutputsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): ResearchOutputsResultDto
   """Query Teams content items."""
   referencingTeamsContents(
     """Optional OData filter."""
@@ -4514,6 +4566,7 @@ type ResearchOutputsDataDto {
   methods: ResearchOutputsDataMethodsDto
   organisms: ResearchOutputsDataOrganismsDto
   publishDate: ResearchOutputsDataPublishDateDto
+  relatedResearch: ResearchOutputsDataRelatedResearchDto
   rrid: ResearchOutputsDataRridDto
   sharingStatus: ResearchOutputsDataSharingStatusDto
   subtype: ResearchOutputsDataSubtypeDto
@@ -4556,6 +4609,7 @@ input ResearchOutputsDataInputDto {
   methods: ResearchOutputsDataMethodsInputDto
   organisms: ResearchOutputsDataOrganismsInputDto
   publishDate: ResearchOutputsDataPublishDateInputDto
+  relatedResearch: ResearchOutputsDataRelatedResearchInputDto
   rrid: ResearchOutputsDataRridInputDto
   sharingStatus: ResearchOutputsDataSharingStatusInputDto
   subtype: ResearchOutputsDataSubtypeInputDto
@@ -4647,6 +4701,16 @@ type ResearchOutputsDataPublishDateDto {
 input ResearchOutputsDataPublishDateInputDto {
   """Date of publishing (outside the Hub). Only applies to outputs that have been published."""
   iv: Instant
+}
+
+"""The structure of the Related Research field of the Research Outputs content type."""
+type ResearchOutputsDataRelatedResearchDto {
+  iv: [ResearchOutputs!]
+}
+
+"""The structure of the Related Research field of the Research Outputs content input type."""
+input ResearchOutputsDataRelatedResearchInputDto {
+  iv: [String!]
 }
 
 """The structure of the Identifier (RRID) field of the Research Outputs content type."""
@@ -4799,6 +4863,7 @@ type ResearchOutputsFlatDataDto {
   organisms: [ResearchTags!]
   """Date of publishing (outside the Hub). Only applies to outputs that have been published."""
   publishDate: Instant
+  relatedResearch: [ResearchOutputs!]
   """
   This must start with "RRID:"
   """
@@ -5066,7 +5131,7 @@ type Teams implements Content {
     """Optional number of items to take."""
     top: Int
   ): EventsResultDto
-  """Query Interest Groups content items."""
+  """Query Groups content items."""
   referencingGroupsContents(
     """Optional OData filter."""
     filter: String
@@ -5079,7 +5144,7 @@ type Teams implements Content {
     """Optional number of items to take."""
     top: Int
   ): [Groups!]
-  """Query Interest Groups content items with total count."""
+  """Query Groups content items with total count."""
   referencingGroupsContentsWithTotal(
     """Optional OData filter."""
     filter: String
@@ -5601,7 +5666,7 @@ type Users implements Content {
     """Optional number of items to take."""
     top: Int
   ): EventsResultDto
-  """Query Interest Groups content items."""
+  """Query Groups content items."""
   referencingGroupsContents(
     """Optional OData filter."""
     filter: String
@@ -5614,7 +5679,7 @@ type Users implements Content {
     """Optional number of items to take."""
     top: Int
   ): [Groups!]
-  """Query Interest Groups content items with total count."""
+  """Query Groups content items with total count."""
   referencingGroupsContentsWithTotal(
     """Optional OData filter."""
     filter: String

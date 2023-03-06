@@ -20,6 +20,7 @@ import {
 import { mobileScreen, perRem } from '../pixels';
 import { Button } from '../atoms';
 import ResearchOutputContributorsCard from '../organisms/ResearchOutputContributorsCard';
+import ResearchOutputRelatedOutputsCard from '../organisms/ResearchOutputRelatedOutputsCard';
 import { usePushFromHere } from '../routing';
 import {
   noop,
@@ -42,6 +43,10 @@ type ResearchOutputFormProps = Pick<
     | 'getAuthorSuggestions'
     | 'getTeamSuggestions'
     | 'authorsRequired'
+  > &
+  Pick<
+    ComponentProps<typeof ResearchOutputRelatedOutputsCard>,
+    'getRelatedResearchSuggestions'
   > & {
     onSave: (
       output: ResearchOutputPostRequest,
@@ -144,6 +149,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   getLabSuggestions = noop,
   getTeamSuggestions = noop,
   getAuthorSuggestions = noop,
+  getRelatedResearchSuggestions = noop,
   researchTags,
   serverValidationErrors,
   clearServerValidationError,
@@ -196,6 +202,17 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
         ComponentProps<typeof ResearchOutputContributorsCard>['teams']
       >
     >(selectedTeams);
+
+  const [relatedResearch, setRelatedResearch] = useState<
+    NonNullable<
+      ComponentProps<typeof ResearchOutputRelatedOutputsCard>['relatedResearch']
+    >
+  >(
+    researchOutputData?.relatedResearch?.map((research) => ({
+      value: research.id,
+      label: research.title,
+    })) || [],
+  );
 
   const [description, setDescription] = useState<
     ResearchOutputPostRequest['description']
@@ -263,6 +280,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     authors,
     labs,
     teams,
+    relatedResearch,
     usageNotes,
     asapFunded,
     usedInPublication,
@@ -363,6 +381,13 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                 getTeamSuggestions={getTeamSuggestions}
                 isEditMode={!!researchOutputData}
                 authorsRequired={authorsRequired}
+              />
+              <ResearchOutputRelatedOutputsCard
+                isSaving={isSaving}
+                relatedResearch={relatedResearch}
+                onChangeRelatedResearch={setRelatedResearch}
+                getRelatedResearchSuggestions={getRelatedResearchSuggestions}
+                isEditMode={!!researchOutputData}
               />
               <div css={formControlsContainerStyles}>
                 <div

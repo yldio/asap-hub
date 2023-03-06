@@ -64,6 +64,10 @@ export const parseGraphQLResearchOutput = (
         }) || [],
     teams:
       output.flatData.teams?.map((team) => parseGraphqlTeamLite(team)) || [],
+    relatedResearch:
+      output.flatData.relatedResearch?.map((research) =>
+        parseGraphqlResearchOutputLite(research),
+      ) || [],
     created: parseDate(output.created).toISOString(),
     link: data.link || undefined,
     documentType:
@@ -127,6 +131,28 @@ const parseGraphqlTeamLite = (
   inactiveSince: graphqlTeam.flatData?.inactiveSince,
 });
 
+const parseGraphqlResearchOutputLite = (
+  graphqlRelatedResearch: FetchResearchOutputRelatedResearch,
+): Pick<
+  ResearchOutputDataObject,
+  'id' | 'title' | 'documentType' | 'teams'
+> => ({
+  id: graphqlRelatedResearch.id,
+  title: graphqlRelatedResearch.flatData?.title || '',
+  documentType:
+    graphqlRelatedResearch.flatData?.documentType &&
+    isResearchOutputDocumentType(graphqlRelatedResearch.flatData.documentType)
+      ? graphqlRelatedResearch.flatData.documentType
+      : 'Grant Document',
+  teams:
+    graphqlRelatedResearch.referencesTeamsContents?.map(
+      ({ id, flatData: { displayName } }) => ({
+        id,
+        displayName: displayName || '',
+      }),
+    ) || [],
+});
+
 const isSharingStatus = (
   status: string,
 ): status is ResearchOutputSharingStatus =>
@@ -136,6 +162,12 @@ type FetchResearchOutputTeamContents = NonNullable<
   NonNullable<
     FetchResearchOutputQuery['findResearchOutputsContent']
   >['flatData']['teams']
+>[number];
+
+type FetchResearchOutputRelatedResearch = NonNullable<
+  NonNullable<
+    FetchResearchOutputQuery['findResearchOutputsContent']
+  >['flatData']['relatedResearch']
 >[number];
 
 type LabWithName = Pick<Labs, 'id'> & {

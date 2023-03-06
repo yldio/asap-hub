@@ -25,7 +25,7 @@ import {
   updateTeamResearchOutput,
 } from './network/teams/api';
 import { getUsersAndExternalAuthors } from './network/users/api';
-import { getResearchTags } from './shared-research/api';
+import { getResearchTags, getResearchOutputs } from './shared-research/api';
 import { useSetResearchOutputItem } from './shared-research/state';
 
 export function paramOutputDocumentTypeToResearchOutputDocumentType(
@@ -78,6 +78,19 @@ export const useLabSuggestions = () => {
       authorization,
     ).then(({ items }) =>
       items.map(({ id, name }) => ({ label: `${name} Lab`, value: id })),
+    );
+};
+
+export const useRelatedResearchSuggestions = () => {
+  const algoliaClient = useAlgolia();
+  return (searchQuery: string) =>
+    getResearchOutputs(algoliaClient.client, {
+      searchQuery,
+      filters: new Set(),
+      currentPage: null,
+      pageSize: null,
+    }).then(({ hits }) =>
+      hits.map(({ id, title }) => ({ label: title, value: id })),
     );
 };
 

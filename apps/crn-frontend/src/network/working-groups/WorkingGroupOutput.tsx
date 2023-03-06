@@ -22,6 +22,7 @@ import {
   useResearchTags,
   usePostResearchOutput,
   usePutResearchOutput,
+  useRelatedResearchSuggestions,
 } from '../../shared-research';
 import { useResearchOutputPermissions } from '../../shared-research/state';
 
@@ -55,6 +56,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   const getLabSuggestions = useLabSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();
   const getTeamSuggestions = useTeamSuggestions();
+  const getRelatedResearchSuggestions = useRelatedResearchSuggestions();
   const researchTags = useResearchTags();
 
   const published = researchOutputData ? !!researchOutputData.published : false;
@@ -86,6 +88,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
             )
           }
           getTeamSuggestions={getTeamSuggestions}
+          getRelatedResearchSuggestions={getRelatedResearchSuggestions}
           researchTags={researchTags}
           serverValidationErrors={errors}
           clearServerValidationError={(instancePath: string) =>

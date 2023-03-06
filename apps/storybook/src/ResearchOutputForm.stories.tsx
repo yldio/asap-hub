@@ -50,6 +50,13 @@ export const Normal = () => (
           }, 1000);
         })
       }
+      getRelatedResearchSuggestions={() =>
+        new Promise((resolve) => {
+          setTimeout(() => {
+            resolve([{ label: 'Research 1', value: '1' }]);
+          }, 1000);
+        })
+      }
       researchTags={[researchTagMethodResponse]}
       published={boolean('Published', true)}
     />
@@ -95,6 +102,13 @@ export const EditMode = () => (
         new Promise((resolve) => {
           setTimeout(() => {
             resolve([{ label: 'team name', value: '1' }]);
+          }, 1000);
+        })
+      }
+      getRelatedResearchSuggestions={() =>
+        new Promise((resolve) => {
+          setTimeout(() => {
+            resolve([{ label: 'Research 1', value: '1' }]);
           }, 1000);
         })
       }

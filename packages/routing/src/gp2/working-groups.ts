@@ -21,7 +21,7 @@ const workingGroup = (() => {
   const overview = route('/overview', {}, {});
   const resources = route('/resources', {}, { add, edit });
 
-  const upcoming = route('/past', {}, {});
+  const upcoming = route('/upcoming', {}, {});
   const past = route('/past', {}, {});
   const outputs = route('/outputs', {}, {});
   const createOutput = route(

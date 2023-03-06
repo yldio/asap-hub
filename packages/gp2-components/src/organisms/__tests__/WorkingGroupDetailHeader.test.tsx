@@ -45,4 +45,12 @@ describe('WorkingGroupDetailHeader', () => {
       screen.queryByRole('link', { name: 'Resources' }),
     ).not.toBeInTheDocument();
   });
+  it('renders share output if you are an admin', () => {
+    render(
+      <WorkingGroupDetailHeader {...defaultProps} isAdministrator={true} />,
+    );
+    expect(
+      screen.getByRole('button', { name: /share an output/i }),
+    ).toBeVisible();
+  });
 });

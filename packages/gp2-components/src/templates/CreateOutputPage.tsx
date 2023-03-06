@@ -19,12 +19,15 @@ type CreateOutputPageProps = {
   documentType: gp2Routing.OutputDocumentTypeParameter;
 };
 
-const EntityMappper: Record<CreateOutputPageProps['entityType'], string> = {
+export const EntityMappper: Record<
+  CreateOutputPageProps['entityType'],
+  string
+> = {
   workingGroup: 'working group',
   project: 'project',
 };
 
-const documentTypeMapper: Record<
+export const documentTypeMapper: Record<
   CreateOutputPageProps['documentType'],
   gp2Model.OutputDocumentType
 > = {

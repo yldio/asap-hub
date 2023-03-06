@@ -1,6 +1,7 @@
 import {
   EventCreateDataObject,
   EventDataObject,
+  EventDataProvider,
   EventUpdateDataObject,
   FetchEventsOptions,
   ListEventDataObject,
@@ -38,14 +39,7 @@ export type FetchEventProviderOptions = {
   resourceId?: string;
 };
 
-export interface EventDataProvider {
-  create(create: EventCreateDataObject): Promise<string>;
-  update(id: string, update: EventUpdateDataObject): Promise<void>;
-  fetch(options?: FetchEventsOptions): Promise<ListEventDataObject>;
-  fetchById(id: string): Promise<EventDataObject | null>;
-}
-
-export class EventSquidexDataProvider {
+export class EventSquidexDataProvider implements EventDataProvider {
   constructor(
     private squidexRestClient: SquidexRestClient<RestEvent, InputEvent>,
     private squidexGraphqlClient: SquidexGraphqlClient,

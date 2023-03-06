@@ -1,9 +1,9 @@
 import { GenericError, NotFoundError } from '@asap-hub/errors';
-import { gp2 } from '@asap-hub/model';
+import { gp2, UserController as UserControllerBase } from '@asap-hub/model';
 import { AssetDataProvider } from '../data-providers/asset.data-provider';
 import { UserDataProvider } from '../data-providers/user.data-provider';
 
-export interface UserController {
+export interface UserController extends UserControllerBase<gp2.UserResponse> {
   fetch(options: gp2.FetchUsersOptions): Promise<gp2.ListUserResponse>;
   fetchByCode(code: string): Promise<gp2.UserResponse>;
   fetchById(id: string, loggedInUserId: string): Promise<gp2.UserResponse>;

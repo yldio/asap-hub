@@ -2,7 +2,8 @@ import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
-import { EventBridgeHandler, EventController } from '@asap-hub/server-common';
+import { EventController } from '@asap-hub/model';
+import { EventBridgeHandler } from '@asap-hub/server-common';
 import { RestEvent, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import { isBoom } from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';

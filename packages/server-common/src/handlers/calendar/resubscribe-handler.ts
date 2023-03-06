@@ -1,5 +1,5 @@
+import { CalendarDataProvider, gp2 } from '@asap-hub/model';
 import { DateTime } from 'luxon';
-import { CalendarDataProvider } from '../../data-providers';
 import { Logger, ScheduledHandlerAsync } from '../../utils';
 import {
   SubscribeToEventChanges,
@@ -8,7 +8,7 @@ import {
 
 export const resubscribeCalendarsHandlerFactory =
   (
-    calendarDataProvider: CalendarDataProvider,
+    calendarDataProvider: CalendarDataProvider | gp2.CalendarDataProvider,
     unsubscribe: UnsubscribeFromEventChanges,
     subscribe: SubscribeToEventChanges,
     logger: Logger,

@@ -1,4 +1,4 @@
-import { EventDataProvider } from '../../src/data-providers/event.data-provider';
+import { EventDataProvider } from '@asap-hub/model';
 
 export const eventDataProviderMock: jest.Mocked<EventDataProvider> = {
   fetchById: jest.fn(),

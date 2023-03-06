@@ -1,6 +1,5 @@
-import { BasicEvent, EventStatus, gp2 } from '@asap-hub/model';
+import { BasicEvent, EventController, EventStatus, gp2 } from '@asap-hub/model';
 import { calendar_v3 as calendarV3 } from 'googleapis';
-import { EventController } from '../controllers/event.controller';
 import {
   GoogleEvent,
   validateGoogleEvent,
@@ -30,15 +29,9 @@ const validateEvent = (
     throw error;
   }
 };
-type EventControllerGP2 = EventController<
-  gp2.EventResponse,
-  gp2.ListEventResponse,
-  gp2.EventCreateRequest,
-  gp2.EventUpdateRequest
->;
 export const syncEventFactory =
   (
-    eventsController: EventController | EventControllerGP2,
+    eventsController: EventController | gp2.EventController,
     logger: Logger,
   ): SyncEvent =>
   async (

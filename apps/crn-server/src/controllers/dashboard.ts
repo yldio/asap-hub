@@ -5,7 +5,7 @@ export interface DashboardController {
   fetch: () => Promise<DashboardResponse>;
 }
 
-export default class Dashboard {
+export default class Dashboard implements DashboardController {
   constructor(private dashboardDataProvider: DashboardDataProvider) {}
 
   async fetch(): Promise<DashboardResponse> {

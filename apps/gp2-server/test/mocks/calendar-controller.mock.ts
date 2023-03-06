@@ -1,6 +1,6 @@
-import { CalendarController } from '../../src/controllers/calendar.controller';
+import { gp2 } from '@asap-hub/model';
 
-export const calendarControllerMock: jest.Mocked<CalendarController> = {
+export const calendarControllerMock: jest.Mocked<gp2.CalendarController> = {
   fetch: jest.fn(),
   fetchById: jest.fn(),
   update: jest.fn(),

@@ -1,7 +1,7 @@
+import { CalendarDataProvider, gp2 } from '@asap-hub/model';
 import { EventBridgeEvent } from 'aws-lambda';
 import { Auth } from 'googleapis';
 import 'source-map-support/register';
-import { CalendarDataProvider } from '../../data-providers';
 import { Alerts, GetJWTCredentials, Logger } from '../../utils';
 import { validateBody } from '../../validation/subscribe-handler.validation';
 import { CalendarEvent, CalendarPayload } from '../event-bus';
@@ -98,7 +98,7 @@ export const calendarCreatedHandlerFactory =
   (
     subscribe: SubscribeToEventChanges,
     unsubscribe: UnsubscribeFromEventChanges,
-    calendarDataProvider: CalendarDataProvider,
+    calendarDataProvider: CalendarDataProvider | gp2.CalendarDataProvider,
     alerts: Alerts,
     logger: Logger,
   ) =>

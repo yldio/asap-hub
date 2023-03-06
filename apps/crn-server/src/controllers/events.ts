@@ -1,14 +1,13 @@
 import { NotFoundError } from '@asap-hub/errors';
 import {
+  EventController,
   EventCreateRequest,
+  EventDataProvider,
   EventResponse,
   EventUpdateRequest,
   FetchEventsOptions,
   ListEventResponse,
 } from '@asap-hub/model';
-
-import { EventController } from '@asap-hub/server-common';
-import { EventDataProvider } from '../data-providers/event.data-provider';
 
 export default class Events implements EventController {
   constructor(private dataProvider: EventDataProvider) {}

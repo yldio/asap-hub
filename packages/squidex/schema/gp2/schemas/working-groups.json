@@ -8,8 +8,19 @@
       "validateOnPublish": false
     },
     "scripts": {},
-    "fieldsInReferences": [],
-    "fieldsInLists": [],
+    "fieldsInReferences": ["title"],
+    "fieldsInLists": [
+      "meta.status.color",
+      "title",
+      "shortDescription",
+      "calendars",
+      "primaryEmail",
+      "secondaryEmail",
+      "meta.created",
+      "meta.createdBy.avatar",
+      "meta.lastModified",
+      "meta.lastModifiedBy.avatar"
+    ],
     "fields": [
       {
         "name": "title",
@@ -67,6 +78,28 @@
           "contentType": "Unspecified",
           "editor": "TextArea",
           "label": "Description",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "calendars",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "References",
+          "maxItems": 1,
+          "allowDuplicates": false,
+          "resolveReference": true,
+          "mustBePublished": false,
+          "editor": "Dropdown",
+          "schemaIds": ["calendars"],
+          "label": "Calendars",
+          "hints": "",
+          "placeholder": "",
           "isRequired": false,
           "isRequiredOnPublish": false,
           "isHalfWidth": false

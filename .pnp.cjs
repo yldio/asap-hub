@@ -4216,7 +4216,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "csv-stringify",\
-        "npm:6.2.4"\
+        "npm:6.3.0"\
       ],\
       [\
         "currently-unhandled",\
@@ -10884,7 +10884,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["browser-image-compression", "npm:1.0.17"],\
             ["browserslist-useragent-regexp", "npm:3.0.2"],\
             ["cross-env", "npm:7.0.3"],\
-            ["csv-stringify", "npm:6.2.4"],\
+            ["csv-stringify", "npm:6.3.0"],\
             ["date-fns", "npm:2.29.3"],\
             ["fs", [\
               "browserify-fs",\
@@ -11204,7 +11204,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/testing-library__jest-dom", "npm:5.14.5"],\
             ["@types/testing-library__react", "npm:10.0.1"],\
             ["core-js", null],\
-            ["csv-stringify", "npm:6.2.4"],\
+            ["csv-stringify", "npm:6.3.0"],\
             ["date-fns", "npm:2.29.3"],\
             ["history", "npm:4.10.1"],\
             ["react", "npm:17.0.2"],\
@@ -11259,7 +11259,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/streamsaver", "npm:2.0.1"],\
             ["@types/testing-library__jest-dom", "npm:5.14.5"],\
             ["@types/testing-library__react", "npm:10.0.1"],\
-            ["csv-stringify", "npm:6.2.4"],\
+            ["csv-stringify", "npm:6.3.0"],\
             ["date-fns", "npm:2.29.3"],\
             ["history", "npm:4.10.1"],\
             ["react", "npm:17.0.2"],\
@@ -11623,7 +11623,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["browser-image-compression", "npm:1.0.17"],\
             ["browserslist-useragent-regexp", "npm:3.0.2"],\
             ["cross-env", "npm:7.0.3"],\
-            ["csv-stringify", "npm:6.2.4"],\
+            ["csv-stringify", "npm:6.3.0"],\
             ["date-fns", "npm:2.29.3"],\
             ["history", "npm:4.10.1"],\
             ["identity-obj-proxy", "npm:3.0.0"],\
@@ -44876,10 +44876,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["csv-stringify", [\
-        ["npm:6.2.4", {\
-          "packageLocation": "./.yarn/cache/csv-stringify-npm-6.2.4-b28135f4b9-12d8ab2997.zip/node_modules/csv-stringify/",\
+        ["npm:6.3.0", {\
+          "packageLocation": "./.yarn/cache/csv-stringify-npm-6.3.0-9895e2a630-d2503ad298.zip/node_modules/csv-stringify/",\
           "packageDependencies": [\
-            ["csv-stringify", "npm:6.2.4"]\
+            ["csv-stringify", "npm:6.3.0"]\
           ],\
           "linkType": "HARD"\
         }]\

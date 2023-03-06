@@ -197,6 +197,7 @@ const RichText: React.FC<RichTextProps | PoorTextProps> = ({
           'sup',
           'i',
           'b',
+          'u',
           // lists with default UA styling
           'ul',
           'ol',

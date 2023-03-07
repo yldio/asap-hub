@@ -25,8 +25,8 @@ on:
       CRN_CI_AUTH0_CLIENT_SECRET:
         description: 'CRN CI Auth0 Client Secret'
         required: false
-      CRN_CI_AUTH0_SHARED_SECRET:
-        description: 'CRN CI Auth0 Shared Secret'
+      CRN_AUTH0_SHARED_SECRET:
+        description: 'CRN Auth0 Shared Secret'
         required: true
       CRN_CONTENTFUL_ACCESS_TOKEN:
         description: 'CRN Contentful Access Token'
@@ -43,9 +43,6 @@ on:
       GP2_CI_AUTH0_CLIENT_SECRET:
         description: 'GP2 CI Auth0 Client Secret'
         required: false
-      GP2_CI_AUTH0_SHARED_SECRET:
-        description: 'GP2 CI Auth0 Shared Secret'
-        required: true
       GP2_SQUIDEX_API_CLIENT_SECRET:
         description: 'GP2 API Squidex Client Secret'
         required: true
@@ -320,7 +317,7 @@ jobs:
           BASE_PR_APP_DOMAIN: ${{ steps.setup.outputs.crn-base-pr-app-domain }}
           API_URL: ${{ steps.setup.outputs.crn-api-url }}
           AUTH0_ADDITIONAL_CLAIM_DOMAIN: ${{ steps.setup.outputs.crn-auth0-additional-claim-domain }}
-          AUTH0_SHARED_SECRET: ${{ secrets.CRN_CI_AUTH0_SHARED_SECRET }}
+          AUTH0_SHARED_SECRET: ${{ secrets.CRN_AUTH0_SHARED_SECRET }}
       - name: Deploy GP2
         if: ${{ inputs.environment-name=='Development' || inputs.environment-name=='Production' }}
         run: yarn workspace @asap-hub/auth0 deploy --debug
@@ -332,4 +329,4 @@ jobs:
           BASE_PR_APP_DOMAIN: ${{ steps.setup.outputs.gp2-base-pr-app-domain }}
           API_URL: ${{ steps.setup.outputs.gp2-api-url }}
           AUTH0_ADDITIONAL_CLAIM_DOMAIN: ${{ steps.setup.outputs.gp2-auth0-additional-claim-domain }}
-          AUTH0_SHARED_SECRET: ${{ secrets.GP2_CI_AUTH0_SHARED_SECRET }}
+          AUTH0_SHARED_SECRET: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}

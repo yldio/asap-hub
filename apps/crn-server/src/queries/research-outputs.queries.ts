@@ -117,11 +117,11 @@ export const researchOutputContentQueryFragment = gql`
         flatData {
           title
           documentType
-        }
-        referencesTeamsContents {
-          id
-          flatData {
-            displayName
+          teams {
+            id
+            flatData {
+              displayName
+            }
           }
         }
       }

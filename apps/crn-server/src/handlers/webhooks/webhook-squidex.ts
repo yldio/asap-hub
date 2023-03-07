@@ -21,7 +21,16 @@ export const squidexWebhookFactory = (
   return lambda.http(squidexHandler);
 };
 
-const eventBridge = new EventBridge();
+const eventBridge = new EventBridge(
+  /* istanbul ignore next */
+  process.env.IS_OFFLINE
+    ? {
+        endpoint: 'http://127.0.0.1:4010',
+        accessKeyId: 'YOURKEY',
+        secretAccessKey: 'YOURSECRET',
+      }
+    : undefined,
+);
 
 export const handler: Handler = sentryWrapper(
   squidexWebhookFactory(eventBridge),

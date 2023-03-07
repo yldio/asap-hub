@@ -23,6 +23,7 @@ node_modules
 # production
 /apps/*/build*
 /packages/*/build*
+/apps/*/.webpack
 
 /.serverless*
 dev/localstack

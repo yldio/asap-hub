@@ -87,19 +87,19 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
     type: '3D Printing',
     relatedResearch: [
       {
-        id: '123',
+        id: 'related-research-id-0',
         flatData: {
           title: 'Related Research1',
           documentType: 'Bioinformatics',
-        },
-        referencesTeamsContents: [
-          {
-            id: 'team-id',
-            flatData: {
-              displayName: 'Team1',
+          teams: [
+            {
+              id: 'team-id-1',
+              flatData: {
+                displayName: 'Team B',
+              },
             },
-          },
-        ],
+          ],
+        },
       },
     ],
     labs: [
@@ -160,6 +160,14 @@ export const getResearchOutputDataObject = (): ResearchOutputDataObject => ({
   tags: ['tag', 'test'],
   authors: fetchExpectation.items,
   teams: [{ id: 'team-id-0', displayName: 'Team A' }],
+  relatedResearch: [
+    {
+      id: 'related-research-id-0',
+      title: 'Related Research1',
+      documentType: 'Bioinformatics',
+      teams: [{ id: 'team-id-1', displayName: 'Team B' }],
+    },
+  ],
   publishDate: '2021-05-21T13:18:31Z',
   labCatalogNumber: 'http://example.com',
   rrid: 'RRID:AB_90755',
@@ -287,6 +295,7 @@ export const getResearchOutputCreateDataObject =
       teams,
       labs,
       authors,
+      relatedResearch,
       methods: _methods,
       environments: _environments,
       organisms: _organisms,
@@ -305,6 +314,7 @@ export const getResearchOutputCreateDataObject =
       authors: authors.map(({ id }) => ({ userId: id })),
       teamIds: teams.map(({ id }) => id),
       labIds: labs.map(({ id }) => id),
+      relatedResearchIds: relatedResearch?.map(({ id }) => id) || [],
       methodIds: ['ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca'],
       organismIds: ['d77a7607-7b9a-4ef1-99ee-c389b33ea95b'],
       environmentIds: ['8a936e45-6d5e-42a6-8acd-b849ab10f3f8'],
@@ -363,6 +373,7 @@ export const getRestResearchOutputCreateData =
     teams: {
       iv: ['team-id-0'],
     },
+    relatedResearch: { iv: ['related-research-id-0'] },
     authors: { iv: ['user-id-1', 'user-id-2'] },
     createdBy: { iv: ['userId'] },
     updatedBy: { iv: ['userId'] },

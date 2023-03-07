@@ -116,4 +116,26 @@ describe('Calendars', () => {
       within(projectSection).queryByText(/calendar title/),
     ).not.toBeInTheDocument();
   });
+  it('renders a calendar in the boths sections when the calendar has a working group and a project', async () => {
+    const mockGetCalendars = getCalendars as jest.MockedFunction<
+      typeof getCalendars
+    >;
+    const listCalendars = gp2.createListCalendarResponse(1, {
+      name: 'calendar title',
+      projects: [{ id: '42', title: 'a' }],
+      workingGroups: [{ id: '42', title: 'a' }],
+    });
+    mockGetCalendars.mockResolvedValue(listCalendars);
+    await renderCalendars();
+    const projectSection = screen.getByRole('heading', {
+      name: /Subscribe to Projects on Calendar/i,
+    }).parentElement?.parentElement as HTMLElement;
+    const workingGroupSection = screen.getByRole('heading', {
+      name: /Subscribe to Working Groups on Calendar/i,
+    }).parentElement?.parentElement as HTMLElement;
+    expect(
+      within(workingGroupSection).getByText(/calendar title/),
+    ).toBeVisible();
+    expect(within(projectSection).queryByText(/calendar title/)).toBeVisible();
+  });
 });

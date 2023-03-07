@@ -9,11 +9,14 @@ const Calendars: React.FC<Record<string, never>> = () => {
       <CalendarList
         title="Subscribe to Working Groups on Calendar"
         description="Below you can find the list of all working groups. Hitting subscribe will allow you to add them to your own personal calendar."
-        calendars={items.filter((calendar) => calendar.projects.length === 0)}
+        calendars={items.filter(
+          ({ projects, workingGroups }) =>
+            projects.length === 0 || workingGroups.length > 0,
+        )}
         hideSupportText
       />
       <CalendarList
-        calendars={items.filter((calendar) => calendar.projects.length > 0)}
+        calendars={items.filter(({ projects }) => projects.length > 0)}
         title="Subscribe to Projects on Calendar"
         description="Below you can find the list of all projects. Hitting subscribe will allow you to add them to your own personal calendar."
       />

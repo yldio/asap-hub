@@ -526,7 +526,7 @@ __metadata:
     nock: 13.3.0
     path: "npm:path-browserify@1.0.1"
     pirates: 4.0.5
-    qs: 6.11.0
+    qs: 6.11.1
     react: 17.0.2
     react-app-polyfill: 3.0.0
     react-dom: 17.0.2
@@ -1297,7 +1297,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.21.0
     "@types/qs": 6.9.7
     "@types/react-router-dom": 5.3.3
-    qs: 6.11.0
+    qs: 6.11.1
     typesafe-routes: 9.0.1
     typescript: 4.8.4
   peerDependencies:
@@ -36141,6 +36141,15 @@ __metadata:
   dependencies:
     side-channel: ^1.0.4
   checksum: 6e1f29dd5385f7488ec74ac7b6c92f4d09a90408882d0c208414a34dd33badc1a621019d4c799a3df15ab9b1d0292f97c1dd71dc7c045e69f81a8064e5af7297
+  languageName: node
+  linkType: hard
+
+"qs@npm:6.11.1":
+  version: 6.11.1
+  resolution: "qs@npm:6.11.1"
+  dependencies:
+    side-channel: ^1.0.4
+  checksum: 82ee78ef12a16f3372fae5b64f76f8aedecb000feea882bbff1af146c147f6eb66b08f9c3f34d7e076f28563586956318b9b2ca41141846cdd6d5ad6f241d52f
   languageName: node
   linkType: hard
 

@@ -116,6 +116,7 @@ export const researchOutputContentQueryFragment = gql`
         id
         flatData {
           title
+          type
           documentType
           teams {
             id

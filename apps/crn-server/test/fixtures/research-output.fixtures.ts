@@ -90,6 +90,7 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
         id: 'related-research-id-0',
         flatData: {
           title: 'Related Research1',
+          type: 'Report',
           documentType: 'Bioinformatics',
           teams: [
             {
@@ -164,6 +165,7 @@ export const getResearchOutputDataObject = (): ResearchOutputDataObject => ({
     {
       id: 'related-research-id-0',
       title: 'Related Research1',
+      type: 'Report',
       documentType: 'Bioinformatics',
       teams: [{ id: 'team-id-1', displayName: 'Team B' }],
     },

@@ -220,7 +220,10 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
   workingGroups: Pick<WorkingGroupResponse, 'id' | 'title'>[];
   published: boolean;
   relatedResearch?: Array<
-    Pick<ResearchOutputDataObject, 'id' | 'title' | 'documentType' | 'teams'>
+    Pick<
+      ResearchOutputDataObject,
+      'id' | 'title' | 'type' | 'documentType' | 'teams'
+    >
   >;
 };
 

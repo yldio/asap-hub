@@ -8891,7 +8891,7 @@ export type ResearchOutputContentFragment = Pick<
         Pick<ResearchOutputs, 'id'> & {
           flatData: Pick<
             ResearchOutputsFlatDataDto,
-            'title' | 'documentType'
+            'title' | 'type' | 'documentType'
           > & {
             teams: Maybe<
               Array<
@@ -9082,7 +9082,7 @@ export type FetchResearchOutputQuery = {
             Pick<ResearchOutputs, 'id'> & {
               flatData: Pick<
                 ResearchOutputsFlatDataDto,
-                'title' | 'documentType'
+                'title' | 'type' | 'documentType'
               > & {
                 teams: Maybe<
                   Array<
@@ -9290,7 +9290,7 @@ export type FetchResearchOutputsQuery = {
                   Pick<ResearchOutputs, 'id'> & {
                     flatData: Pick<
                       ResearchOutputsFlatDataDto,
-                      'title' | 'documentType'
+                      'title' | 'type' | 'documentType'
                     > & {
                       teams: Maybe<
                         Array<
@@ -12564,6 +12564,10 @@ export const ResearchOutputContentFragmentDoc = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'title' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'type' },
                             },
                             {
                               kind: 'Field',

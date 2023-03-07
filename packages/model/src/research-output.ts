@@ -56,7 +56,6 @@ export const researchOutputTypes = [
   'Spectroscopy',
   'Team meeting',
   'Viral Vector',
-  '',
 ] as const;
 
 export const ResearchOutputPublishingEntitiesValues = <const>[
@@ -297,7 +296,7 @@ export type ResearchOutputPostRequest = {
   teams: string[];
   workingGroups: string[];
   title: string;
-  type: ResearchOutputType;
+  type?: ResearchOutputType;
   usageNotes?: string;
   usedInPublication?: boolean;
 };

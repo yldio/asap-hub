@@ -130,26 +130,26 @@ const parseGraphqlTeamLite = (
   inactiveSince: graphqlTeam.flatData?.inactiveSince,
 });
 
-const parseGraphqlResearchOutputLite = (
-  graphqlRelatedResearch: FetchResearchOutputRelatedResearch,
-): Pick<
+const parseGraphqlResearchOutputLite = ({
+  id,
+  flatData,
+}: FetchResearchOutputRelatedResearch): Pick<
   ResearchOutputDataObject,
-  'id' | 'title' | 'documentType' | 'teams'
+  'id' | 'title' | 'type' | 'documentType' | 'teams'
 > => ({
-  id: graphqlRelatedResearch.id,
-  title: graphqlRelatedResearch.flatData?.title || '',
+  id,
+  title: flatData?.title || '',
+  type: researchOutputMapType(flatData?.type) || undefined,
   documentType:
-    graphqlRelatedResearch.flatData?.documentType &&
-    isResearchOutputDocumentType(graphqlRelatedResearch.flatData.documentType)
-      ? graphqlRelatedResearch.flatData.documentType
+    flatData?.documentType &&
+    isResearchOutputDocumentType(flatData.documentType)
+      ? flatData.documentType
       : 'Grant Document',
   teams:
-    graphqlRelatedResearch.flatData.teams?.map(
-      ({ id, flatData: { displayName } }) => ({
-        id,
-        displayName: displayName || '',
-      }),
-    ) || [],
+    flatData.teams?.map(({ id, flatData: { displayName } }) => ({
+      id,
+      displayName: displayName || '',
+    })) || [],
 });
 
 const isSharingStatus = (

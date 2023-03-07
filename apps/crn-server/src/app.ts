@@ -141,6 +141,7 @@ import { workingGroupRouteFactory } from './routes/working-groups.route';
 import assignUserToContext from './utils/assign-user-to-context';
 import { getAuthToken } from './utils/auth';
 import pinoLogger from './utils/logger';
+import { shouldHandleError } from './utils/should-handle-error';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -417,7 +418,7 @@ export const appFactory = (libs: Libs = {}): Express => {
 
   /* istanbul ignore next */
   if (libs.sentryErrorHandler) {
-    app.use(libs.sentryErrorHandler());
+    app.use(libs.sentryErrorHandler({ shouldHandleError }));
   }
 
   app.use(errorHandler);

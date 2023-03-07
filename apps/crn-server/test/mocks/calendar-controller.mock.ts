@@ -1,4 +1,4 @@
-import { CalendarController } from '@asap-hub/server-common';
+import { CalendarController } from '@asap-hub/model';
 
 export const calendarControllerMock: jest.Mocked<CalendarController> = {
   fetch: jest.fn(),

@@ -211,7 +211,7 @@ describe('/outputs/ route', () => {
             message: 'Validation error',
             statusCode: 400,
             data: [
-              ...['userId', 'externalAuthorId', 'externalAuthorName'].map(
+              ...['userId', 'externalUserId', 'externalUserName'].map(
                 (field, idx) => ({
                   instancePath: '/authors/0',
                   schemaPath: `#/properties/authors/items/oneOf/${idx}/required`,
@@ -234,7 +234,7 @@ describe('/outputs/ route', () => {
             ],
           });
         });
-        test('Should return a validation error when passing invalid schema (userId, externalAuthorId, externalAuthorName)', async () => {
+        test('Should return a validation error when passing invalid schema (userId, externalUserId, externalUserName)', async () => {
           const response = await supertest(app)
             .post('/outputs')
             .send({
@@ -242,8 +242,8 @@ describe('/outputs/ route', () => {
               authors: [
                 {
                   userId: 'userId-1',
-                  externalAuthorId: 'external-id-1',
-                  externalAuthorName: 'author-name-1',
+                  externalUserId: 'external-id-1',
+                  externalUserName: 'author-name-1',
                 },
               ],
             })
@@ -259,7 +259,7 @@ describe('/outputs/ route', () => {
             ]),
           );
         });
-        test('Should return a validation error when passing invalid schema (userId, externalAuthorId)', async () => {
+        test('Should return a validation error when passing invalid schema (userId, externalUserId)', async () => {
           const response = await supertest(app)
             .post('/outputs')
             .send({
@@ -267,7 +267,7 @@ describe('/outputs/ route', () => {
               authors: [
                 {
                   userId: 'userId-1',
-                  externalAuthorId: 'external-id-1',
+                  externalUserId: 'external-id-1',
                 },
               ],
             })
@@ -283,7 +283,7 @@ describe('/outputs/ route', () => {
             ]),
           );
         });
-        test('Should return a validation error when passing invalid schema (userId, externalAuthorName)', async () => {
+        test('Should return a validation error when passing invalid schema (userId, externalUserName)', async () => {
           const response = await supertest(app)
             .post('/outputs')
             .send({
@@ -291,7 +291,7 @@ describe('/outputs/ route', () => {
               authors: [
                 {
                   userId: 'userId-1',
-                  externalAuthorName: 'author-name-1',
+                  externalUserName: 'author-name-1',
                 },
               ],
             })
@@ -397,7 +397,7 @@ describe('/outputs/ route', () => {
             message: 'Validation error',
             statusCode: 400,
             data: [
-              ...['userId', 'externalAuthorId', 'externalAuthorName'].map(
+              ...['userId', 'externalUserId', 'externalUserName'].map(
                 (field, idx) => ({
                   instancePath: '/authors/0',
                   schemaPath: `#/properties/authors/items/oneOf/${idx}/required`,
@@ -421,7 +421,7 @@ describe('/outputs/ route', () => {
           });
         });
 
-        test('Should return a validation error when passing invalid schema (userId, externalAuthorId, externalAuthorName)', async () => {
+        test('Should return a validation error when passing invalid schema (userId, externalUserId, externalUserName)', async () => {
           const response = await supertest(app)
             .put('/outputs/abc123')
             .send({
@@ -429,8 +429,8 @@ describe('/outputs/ route', () => {
               authors: [
                 {
                   userId: 'userId-1',
-                  externalAuthorId: 'external-id-1',
-                  externalAuthorName: 'author-name-1',
+                  externalUserId: 'external-id-1',
+                  externalUserName: 'author-name-1',
                 },
               ],
             })
@@ -447,7 +447,7 @@ describe('/outputs/ route', () => {
           );
         });
 
-        test('Should return a validation error when passing invalid schema (userId, externalAuthorId)', async () => {
+        test('Should return a validation error when passing invalid schema (userId, externalUserId)', async () => {
           const response = await supertest(app)
             .put('/outputs/abc123')
             .send({
@@ -455,7 +455,7 @@ describe('/outputs/ route', () => {
               authors: [
                 {
                   userId: 'userId-1',
-                  externalAuthorId: 'external-id-1',
+                  externalUserId: 'external-id-1',
                 },
               ],
             })
@@ -472,7 +472,7 @@ describe('/outputs/ route', () => {
           );
         });
 
-        test('Should return a validation error when passing invalid schema (userId, externalAuthorName)', async () => {
+        test('Should return a validation error when passing invalid schema (userId, externalUserName)', async () => {
           const response = await supertest(app)
             .put('/outputs/abc123')
             .send({
@@ -480,7 +480,7 @@ describe('/outputs/ route', () => {
               authors: [
                 {
                   userId: 'userId-1',
-                  externalAuthorName: 'author-name-1',
+                  externalUserName: 'author-name-1',
                 },
               ],
             })

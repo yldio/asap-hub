@@ -155,9 +155,8 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                         past={false}
                         noEventsComponent={
                           <NoEvents
-                            displayName={user.firstName}
                             link={events({}).upcoming({}).$}
-                            type="user"
+                            type="member"
                           />
                         }
                       />
@@ -172,9 +171,8 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                         noEventsComponent={
                           <NoEvents
                             past
-                            displayName={user.firstName}
                             link={events({}).past({}).$}
-                            type="user"
+                            type="member"
                           />
                         }
                       />

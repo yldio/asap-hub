@@ -1,9 +1,8 @@
 import { gp2 } from '@asap-hub/model';
 import { Router } from 'express';
-import { CalendarController } from '../controllers/calendar.controller';
 
 export const calendarRouteFactory = (
-  calendarController: CalendarController,
+  calendarController: gp2.CalendarController,
 ): Router => {
   const calendarRoutes = Router();
 

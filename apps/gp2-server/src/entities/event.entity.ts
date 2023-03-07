@@ -27,6 +27,13 @@ export type GraphqlEventSpeakerUser = Extract<
   { __typename: 'Users' }
 >;
 
+export type GraphqlEventSpeakerExternalUser = Extract<
+  NonNullable<
+    NonNullable<EventContentFragment['flatData']['speakers']>[number]['user']
+  >[number],
+  { __typename: 'ExternalUsers' }
+>;
+
 export const parseEventSpeakerUser = (
   user: GraphqlEventSpeakerUser,
 ): gp2.EventSpeakerUser => {
@@ -43,17 +50,44 @@ export const parseEventSpeakerUser = (
   };
 };
 
+export const parseEventSpeakerExternalUser = (
+  user: GraphqlEventSpeakerExternalUser,
+): gp2.EventSpeakerExternalUser => ({
+  name: user.flatData.name || '',
+  orcid: user.flatData.orcid || '',
+});
+
 export const parseGraphQLSpeakers = (
   speakers: NonNullable<EventContentFragment['flatData']['speakers']>,
 ): gp2.EventSpeaker[] =>
   speakers.reduce((speakerList: gp2.EventSpeaker[], speaker) => {
     const user = speaker?.user?.[0];
+    const topic = speaker?.topic || undefined;
 
-    if (!user || user.flatData.onboarded !== true) {
+    if (user?.__typename === 'ExternalUsers') {
+      speakerList.push({
+        speaker: parseEventSpeakerExternalUser(user),
+        topic,
+      });
       return speakerList;
     }
 
-    speakerList.push(parseEventSpeakerUser(user));
+    if (!user) {
+      speakerList.push({
+        speaker: undefined,
+        topic,
+      });
+      return speakerList;
+    }
+
+    if (user?.flatData.onboarded !== true) {
+      return speakerList;
+    }
+
+    speakerList.push({
+      speaker: parseEventSpeakerUser(user),
+      topic,
+    });
     return speakerList;
   }, []);
 

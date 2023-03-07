@@ -30,7 +30,7 @@
     "@sentry/react": "6.19.7",
     "@sentry/tracing": "6.19.7",
     "browser-image-compression": "1.0.17",
-    "csv-stringify": "6.2.4",
+    "csv-stringify": "6.3.0",
     "date-fns": "2.29.3",
     "history": "4.10.1",
     "path": "npm:path-browserify@1.0.1",
@@ -40,7 +40,7 @@
     "react-error-boundary": "3.1.4",
     "react-router-dom": "5.3.4",
     "react-router-last-location": "2.0.1",
-    "recoil": "0.7.6",
+    "recoil": "0.7.7",
     "use-debounce": "8.0.4",
     "use-deep-compare-effect": "1.6.1",
     "uuid": "8.3.2"

@@ -89,6 +89,6 @@ it('renders the no output page for another user', () => {
   );
   expect(getByTitle('Research')).toBeInTheDocument();
   expect(getByRole('heading', { level: 1 }).textContent).toMatch(
-    /PersonA hasn’t/i,
+    /This member hasn’t shared any research./i,
   );
 });

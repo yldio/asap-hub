@@ -252,20 +252,20 @@ describe('Outputs data provider', () => {
       test('Should return a mix of internal and external authors', async () => {
         const squidexGraphqlResponse = getSquidexOutputGraphqlResponse();
         const [squidexUser1, squidexUser2] = getInternalUsers();
-        const externalAuthor: ExternalUser = {
-          __typename: 'ExternalAuthors',
+        const externalUser: ExternalUser = {
+          __typename: 'ExternalUsers',
           id: '3099015c-c9ed-40fd-830a-8fe1b6ec0482',
           created: '2021-06-04T09:37:54Z',
           lastModified: '2021-06-04T09:37:54Z',
           version: 42,
           flatData: {
-            name: 'test external author',
+            name: 'test external user',
             orcid: '23423423',
           },
         };
         squidexGraphqlResponse.findOutputsContent!.flatData.authors = [
           squidexUser1!,
-          externalAuthor,
+          externalUser,
           squidexUser2!,
         ];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
@@ -280,8 +280,8 @@ describe('Outputs data provider', () => {
           authors[0]!,
           {
             id: '3099015c-c9ed-40fd-830a-8fe1b6ec0482',
-            displayName: externalAuthor.flatData!.name!,
-            orcid: externalAuthor.flatData!.orcid!,
+            displayName: externalUser.flatData!.name!,
+            orcid: externalUser.flatData!.orcid!,
           },
           authors[1]!,
         ];
@@ -678,7 +678,7 @@ describe('Outputs data provider', () => {
         const OutputRequest = getOutputCreateDataObject();
         OutputRequest.authors = [
           {
-            externalAuthorId: 'some-external-user-id',
+            externalUserId: 'some-external-user-id',
           },
           { userId: 'some-user-id' },
         ];
@@ -810,4 +810,4 @@ type Author = NonNullable<
   NonNullable<FetchOutputQuery['findOutputsContent']>['flatData']['authors']
 >[number];
 type InternalUser = Extract<Author, { __typename: 'Users' }>;
-type ExternalUser = Extract<Author, { __typename: 'ExternalAuthors' }>;
+type ExternalUser = Extract<Author, { __typename: 'ExternalUsers' }>;

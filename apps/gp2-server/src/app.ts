@@ -4,7 +4,6 @@ import {
   authHandlerFactory,
   decodeTokenFactory,
   errorHandlerFactory,
-  EventController,
   getHttpLogger,
   Logger,
   MemoryCacheClient,
@@ -15,7 +14,6 @@ import {
   InputCalendar,
   RestCalendar,
   RestEvent,
-  RestExternalAuthor,
   SquidexGraphql,
   SquidexRest,
 } from '@asap-hub/squidex';
@@ -29,9 +27,7 @@ import {
   clientId,
   clientSecret,
 } from './config';
-import Calendars, {
-  CalendarController,
-} from './controllers/calendar.controller';
+import Calendars from './controllers/calendar.controller';
 import ContributingCohorts, {
   ContributingCohortController,
 } from './controllers/contributing-cohort.controller';
@@ -50,22 +46,16 @@ import {
   AssetDataProvider,
   AssetSquidexDataProvider,
 } from './data-providers/asset.data-provider';
-import {
-  CalendarDataProvider,
-  CalendarSquidexDataProvider,
-} from './data-providers/calendar.data-provider';
+import { CalendarSquidexDataProvider } from './data-providers/calendar.data-provider';
 import {
   ContributingCohortDataProvider,
   ContributingCohortSquidexDataProvider,
 } from './data-providers/contributing-cohort.data-provider';
+import { EventSquidexDataProvider } from './data-providers/event.data-provider';
 import {
-  EventDataProvider,
-  EventSquidexDataProvider,
-} from './data-providers/event.data-provider';
-import {
-  ExternalAuthorDataProvider,
-  ExternalAuthorSquidexDataProvider,
-} from './data-providers/external-authors.data-provider';
+  ExternalUserDataProvider,
+  ExternalUserSquidexDataProvider,
+} from './data-providers/external-users.data-provider';
 import {
   NewsDataProvider,
   NewsSquidexDataProvider,
@@ -173,7 +163,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     appName,
     baseUrl,
   });
-  const externalAuthorRestClient = new SquidexRest<RestExternalAuthor>(
+  const externalUserRestClient = new SquidexRest<gp2Squidex.RestExternalUser>(
     getAuthToken,
     'external-authors',
     {
@@ -220,9 +210,9 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.outputDataProvider ||
     new OutputSquidexDataProvider(squidexGraphqlClient, outputRestClient);
 
-  const externalAuthorDataProvider =
-    libs.externalAuthorDataProvider ||
-    new ExternalAuthorSquidexDataProvider(externalAuthorRestClient);
+  const externalUserDataProvider =
+    libs.externalUserDataProvider ||
+    new ExternalUserSquidexDataProvider(externalUserRestClient);
   // Controllers
 
   const workingGroupController =
@@ -238,7 +228,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.calendarController || new Calendars(calendarDataProvider);
   const outputController =
     libs.outputController ||
-    new Outputs(outputDataProvider, externalAuthorDataProvider);
+    new Outputs(outputDataProvider, externalUserDataProvider);
   const contributingCohortController =
     libs.contributingCohortController ||
     new ContributingCohorts(contributingCohortDataProvider);
@@ -309,18 +299,13 @@ export const appFactory = (libs: Libs = {}): Express => {
 export type Libs = {
   assetDataProvider?: AssetDataProvider;
   authHandler?: AuthHandler;
-  calendarController?: CalendarController;
-  calendarDataProvider?: CalendarDataProvider;
+  calendarController?: gp2.CalendarController;
+  calendarDataProvider?: gp2.CalendarDataProvider;
   contributingCohortController?: ContributingCohortController;
   contributingCohortDataProvider?: ContributingCohortDataProvider;
-  eventController?: EventController<
-    gp2.EventResponse,
-    gp2.ListEventResponse,
-    gp2.EventCreateRequest,
-    gp2.EventUpdateRequest
-  >;
-  eventDataProvider?: EventDataProvider;
-  externalAuthorDataProvider?: ExternalAuthorDataProvider;
+  eventController?: gp2.EventController;
+  eventDataProvider?: gp2.EventDataProvider;
+  externalUserDataProvider?: ExternalUserDataProvider;
   logger?: Logger;
   newsController?: NewsController;
   newsDataProvider?: NewsDataProvider;

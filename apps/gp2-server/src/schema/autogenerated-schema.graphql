@@ -45,8 +45,8 @@ type ApplicationMutations {
     """The status for the content."""
     status: String!
   ): Events
-  """Change a External authors content."""
-  changeExternalAuthorsContent(
+  """Change a External users content."""
+  changeExternalUsersContent(
     """The timestamp when the status should be changed."""
     dueTime: Instant
     """The expected version."""
@@ -55,7 +55,7 @@ type ApplicationMutations {
     id: String!
     """The status for the content."""
     status: String!
-  ): ExternalAuthors
+  ): ExternalUsers
   """Change a Migrations content."""
   changeMigrationsContent(
     """The timestamp when the status should be changed."""
@@ -166,17 +166,17 @@ type ApplicationMutations {
     """The initial status."""
     status: String
   ): Events
-  """Creates an External authors content."""
-  createExternalAuthorsContent(
+  """Creates an External users content."""
+  createExternalUsersContent(
     """The data for the content."""
-    data: ExternalAuthorsDataInputDto!
+    data: ExternalUsersDataInputDto!
     """The optional custom content ID."""
     id: String
     """Set to true to autopublish content on create."""
     publish: Boolean = false
     """The initial status."""
     status: String
-  ): ExternalAuthors
+  ): ExternalUsers
   """Creates an Migrations content."""
   createMigrationsContent(
     """The data for the content."""
@@ -275,8 +275,8 @@ type ApplicationMutations {
     """The ID of the content (usually GUID)."""
     id: String!
   ): EntitySavedResultDto!
-  """Delete an External authors content."""
-  deleteExternalAuthorsContent(
+  """Delete an External users content."""
+  deleteExternalUsersContent(
     """The expected version."""
     expectedVersion: Int = -2
     """The ID of the content (usually GUID)."""
@@ -358,15 +358,15 @@ type ApplicationMutations {
     """The ID of the object (usually GUID)."""
     id: String
   ): Events
-  """Patch an External authors content by id."""
-  patchExternalAuthorsContent(
+  """Patch an External users content by id."""
+  patchExternalUsersContent(
     """The data for the content."""
-    data: ExternalAuthorsDataInputDto!
+    data: ExternalUsersDataInputDto!
     """The expected version."""
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String
-  ): ExternalAuthors
+  ): ExternalUsers
   """Patch an Migrations content by id."""
   patchMigrationsContent(
     """The data for the content."""
@@ -463,8 +463,8 @@ type ApplicationMutations {
     """The status for the content."""
     status: String!
   ): Events @deprecated(reason: "Use 'changeEventsContent' instead")
-  """Publish a External authors content."""
-  publishExternalAuthorsContent(
+  """Publish a External users content."""
+  publishExternalUsersContent(
     """The timestamp when the status should be changed."""
     dueTime: Instant
     """The expected version."""
@@ -473,7 +473,7 @@ type ApplicationMutations {
     id: String!
     """The status for the content."""
     status: String!
-  ): ExternalAuthors @deprecated(reason: "Use 'changeExternalAuthorsContent' instead")
+  ): ExternalUsers @deprecated(reason: "Use 'changeExternalUsersContent' instead")
   """Publish a Migrations content."""
   publishMigrationsContent(
     """The timestamp when the status should be changed."""
@@ -578,15 +578,15 @@ type ApplicationMutations {
     """The ID of the object (usually GUID)."""
     id: String
   ): Events
-  """Update an External authors content by id."""
-  updateExternalAuthorsContent(
+  """Update an External users content by id."""
+  updateExternalUsersContent(
     """The data for the content."""
-    data: ExternalAuthorsDataInputDto!
+    data: ExternalUsersDataInputDto!
     """The expected version."""
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
     id: String
-  ): ExternalAuthors
+  ): ExternalUsers
   """Update an Migrations content by id."""
   updateMigrationsContent(
     """The data for the content."""
@@ -695,10 +695,10 @@ type ApplicationMutations {
     """The initial status."""
     status: String
   ): Events
-  """Upsert an External authors content by id."""
-  upsertExternalAuthorsContent(
+  """Upsert an External users content by id."""
+  upsertExternalUsersContent(
     """The data for the content."""
-    data: ExternalAuthorsDataInputDto!
+    data: ExternalUsersDataInputDto!
     """The expected version."""
     expectedVersion: Int = -2
     """The ID of the object (usually GUID)."""
@@ -709,7 +709,7 @@ type ApplicationMutations {
     publish: Boolean = false
     """The initial status."""
     status: String
-  ): ExternalAuthors
+  ): ExternalUsers
   """Upsert an Migrations content by id."""
   upsertMigrationsContent(
     """The data for the content."""
@@ -845,13 +845,13 @@ type ApplicationQueries {
     """The optional version of the content to retrieve an older instance (not cached)."""
     version: Int
   ): Events
-  """Find an External authors content by id."""
-  findExternalAuthorsContent(
+  """Find an External users content by id."""
+  findExternalUsersContent(
     """The ID of the object (usually GUID)."""
     id: String!
     """The optional version of the content to retrieve an older instance (not cached)."""
     version: Int
-  ): ExternalAuthors
+  ): ExternalUsers
   """Find an Migrations content by id."""
   findMigrationsContent(
     """The ID of the object (usually GUID)."""
@@ -1001,8 +1001,8 @@ type ApplicationQueries {
     """Optional number of items to take."""
     top: Int
   ): EventsResultDto
-  """Query External authors content items."""
-  queryExternalAuthorsContents(
+  """Query External users content items."""
+  queryExternalUsersContents(
     """Optional OData filter."""
     filter: String
     """Optional OData order definition."""
@@ -1013,9 +1013,9 @@ type ApplicationQueries {
     skip: Int = 0
     """Optional number of items to take."""
     top: Int
-  ): [ExternalAuthors!]
-  """Query External authors content items with total count."""
-  queryExternalAuthorsContentsWithTotal(
+  ): [ExternalUsers!]
+  """Query External users content items with total count."""
+  queryExternalUsersContentsWithTotal(
     """Optional OData filter."""
     filter: String
     """Optional OData order definition."""
@@ -1026,7 +1026,7 @@ type ApplicationQueries {
     skip: Int = 0
     """Optional number of items to take."""
     top: Int
-  ): ExternalAuthorsResultDto
+  ): ExternalUsersResultDto
   """Query Migrations content items."""
   queryMigrationsContents(
     """Optional OData filter."""
@@ -1354,6 +1354,58 @@ type Calendars implements Content {
     """Optional number of items to take."""
     top: Int
   ): EventsResultDto
+  """Query Projects content items."""
+  referencingProjectsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [Projects!]
+  """Query Projects content items with total count."""
+  referencingProjectsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): ProjectsResultDto
+  """Query Working Groups content items."""
+  referencingWorkingGroupsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [WorkingGroups!]
+  """Query Working Groups content items with total count."""
+  referencingWorkingGroupsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): WorkingGroupsResultDto
   """The status of the content."""
   status: String!
   """The status color of the content."""
@@ -1753,6 +1805,32 @@ type Events implements Content {
     """Optional number of items to take."""
     top: Int
   ): CalendarsResultDto
+  """Query External users content items."""
+  referencesExternalUsersContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [ExternalUsers!]
+  """Query External users content items with total count."""
+  referencesExternalUsersContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): ExternalUsersResultDto
   """Query Users content items."""
   referencesUsersContents(
     """Optional OData filter."""
@@ -2049,11 +2127,13 @@ input EventsDataPresentationUpdatedAtInputDto {
 
 """The structure of the Speakers nested schema."""
 type EventsDataSpeakersChildDto {
-  user: [Users!]
+  topic: String
+  user: [EventsDataSpeakersUserUnionDto!]
 }
 
 """The structure of the Speakers nested schema."""
 input EventsDataSpeakersChildInputDto {
+  topic: String
   user: [String!]
 }
 
@@ -2066,6 +2146,8 @@ type EventsDataSpeakersDto {
 input EventsDataSpeakersInputDto {
   iv: [EventsDataSpeakersChildInputDto!]
 }
+
+union EventsDataSpeakersUserUnionDto = ExternalUsers | Users
 
 """The structure of the Start Date field of the Events content type."""
 type EventsDataStartDateDto {
@@ -2209,8 +2291,8 @@ type EventsResultDto {
   total: Int!
 }
 
-"""The structure of a External authors content type."""
-type ExternalAuthors implements Content {
+"""The structure of a External users content type."""
+type ExternalUsers implements Content {
   """The timestamp when the object was created."""
   created: Instant!
   """The user who created the object."""
@@ -2218,11 +2300,11 @@ type ExternalAuthors implements Content {
   """The user who created the object."""
   createdByUser: User!
   """The data of the content."""
-  data: ExternalAuthorsDataDto!
+  data: ExternalUsersDataDto!
   """The edit token."""
   editToken: String
   """The flat data of the content."""
-  flatData: ExternalAuthorsFlatDataDto!
+  flatData: ExternalUsersFlatDataDto!
   """The ID of the object (usually GUID)."""
   id: String!
   """The timestamp when the object was updated the last time."""
@@ -2235,6 +2317,32 @@ type ExternalAuthors implements Content {
   newStatus: String
   """The status color of the content."""
   newStatusColor: String
+  """Query Events content items."""
+  referencingEventsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [Events!]
+  """Query Events content items with total count."""
+  referencingEventsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): EventsResultDto
   """Query Outputs content items."""
   referencingOutputsContents(
     """Optional OData filter."""
@@ -2271,51 +2379,51 @@ type ExternalAuthors implements Content {
   version: Int!
 }
 
-"""The structure of the External authors data type."""
-type ExternalAuthorsDataDto {
-  name: ExternalAuthorsDataNameDto
-  orcid: ExternalAuthorsDataOrcidDto
+"""The structure of the External users data type."""
+type ExternalUsersDataDto {
+  name: ExternalUsersDataNameDto
+  orcid: ExternalUsersDataOrcidDto
 }
 
-"""The structure of the External authors data input type."""
-input ExternalAuthorsDataInputDto {
-  name: ExternalAuthorsDataNameInputDto
-  orcid: ExternalAuthorsDataOrcidInputDto
+"""The structure of the External users data input type."""
+input ExternalUsersDataInputDto {
+  name: ExternalUsersDataNameInputDto
+  orcid: ExternalUsersDataOrcidInputDto
 }
 
-"""The structure of the Name field of the External authors content type."""
-type ExternalAuthorsDataNameDto {
+"""The structure of the Name field of the External users content type."""
+type ExternalUsersDataNameDto {
   iv: String
 }
 
-"""The structure of the Name field of the External authors content input type."""
-input ExternalAuthorsDataNameInputDto {
+"""The structure of the Name field of the External users content input type."""
+input ExternalUsersDataNameInputDto {
   iv: String
 }
 
-"""The structure of the ORCID field of the External authors content type."""
-type ExternalAuthorsDataOrcidDto {
+"""The structure of the ORCID field of the External users content type."""
+type ExternalUsersDataOrcidDto {
   """ORCIDs cannot be repeated on the Hub"""
   iv: String
 }
 
-"""The structure of the ORCID field of the External authors content input type."""
-input ExternalAuthorsDataOrcidInputDto {
+"""The structure of the ORCID field of the External users content input type."""
+input ExternalUsersDataOrcidInputDto {
   """ORCIDs cannot be repeated on the Hub"""
   iv: String
 }
 
-"""The structure of the flat External authors data type."""
-type ExternalAuthorsFlatDataDto {
+"""The structure of the flat External users data type."""
+type ExternalUsersFlatDataDto {
   name: String
   """ORCIDs cannot be repeated on the Hub"""
   orcid: String
 }
 
-"""List of External authors items and total count."""
-type ExternalAuthorsResultDto {
+"""List of External users items and total count."""
+type ExternalUsersResultDto {
   """The contents."""
-  items: [ExternalAuthors!]
+  items: [ExternalUsers!]
   """The total count of  contents."""
   total: Int!
 }
@@ -2582,8 +2690,8 @@ type Outputs implements Content {
   newStatus: String
   """The status color of the content."""
   newStatusColor: String
-  """Query External authors content items."""
-  referencesExternalAuthorsContents(
+  """Query External users content items."""
+  referencesExternalUsersContents(
     """Optional OData filter."""
     filter: String
     """Optional OData order definition."""
@@ -2594,9 +2702,9 @@ type Outputs implements Content {
     skip: Int = 0
     """Optional number of items to take."""
     top: Int
-  ): [ExternalAuthors!]
-  """Query External authors content items with total count."""
-  referencesExternalAuthorsContentsWithTotal(
+  ): [ExternalUsers!]
+  """Query External users content items with total count."""
+  referencesExternalUsersContentsWithTotal(
     """Optional OData filter."""
     filter: String
     """Optional OData order definition."""
@@ -2607,7 +2715,7 @@ type Outputs implements Content {
     skip: Int = 0
     """Optional number of items to take."""
     top: Int
-  ): ExternalAuthorsResultDto
+  ): ExternalUsersResultDto
   """Query Projects content items."""
   referencesProjectsContents(
     """Optional OData filter."""
@@ -2730,7 +2838,7 @@ input OutputsDataAuthorsInputDto {
   iv: [String!]
 }
 
-union OutputsDataAuthorsUnionDto = ExternalAuthors | Users
+union OutputsDataAuthorsUnionDto = ExternalUsers | Users
 
 """The structure of the Created by field of the Outputs content type."""
 type OutputsDataCreatedByDto {
@@ -2979,6 +3087,32 @@ type Projects implements Content {
   newStatus: String
   """The status color of the content."""
   newStatusColor: String
+  """Query Calendars content items."""
+  referencesCalendarsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [Calendars!]
+  """Query Calendars content items with total count."""
+  referencesCalendarsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): CalendarsResultDto
   """Query Users content items."""
   referencesUsersContents(
     """Optional OData filter."""
@@ -3041,6 +3175,16 @@ type Projects implements Content {
   version: Int!
 }
 
+"""The structure of the Calendars field of the Projects content type."""
+type ProjectsDataCalendarsDto {
+  iv: [Calendars!]
+}
+
+"""The structure of the Calendars field of the Projects content input type."""
+input ProjectsDataCalendarsInputDto {
+  iv: [String!]
+}
+
 """The structure of the Description field of the Projects content type."""
 type ProjectsDataDescriptionDto {
   iv: String
@@ -3053,6 +3197,7 @@ input ProjectsDataDescriptionInputDto {
 
 """The structure of the Projects data type."""
 type ProjectsDataDto {
+  calendars: ProjectsDataCalendarsDto
   description: ProjectsDataDescriptionDto
   endDate: ProjectsDataEndDateDto
   keywords: ProjectsDataKeywordsDto
@@ -3081,6 +3226,7 @@ input ProjectsDataEndDateInputDto {
 
 """The structure of the Projects data input type."""
 input ProjectsDataInputDto {
+  calendars: ProjectsDataCalendarsInputDto
   description: ProjectsDataDescriptionInputDto
   endDate: ProjectsDataEndDateInputDto
   keywords: ProjectsDataKeywordsInputDto
@@ -3307,6 +3453,7 @@ input ProjectsDataTraineeProjectInputDto {
 
 """The structure of the flat Projects data type."""
 type ProjectsFlatDataDto {
+  calendars: [Calendars!]
   description: String
   endDate: Instant
   keywords: [String!]
@@ -4043,7 +4190,7 @@ type WorkingGroupNetworkDataDto {
   complexDisease: WorkingGroupNetworkDataComplexDiseaseDto
   monogenic: WorkingGroupNetworkDataMonogenicDto
   operational: WorkingGroupNetworkDataOperationalDto
-  steeringCommitee: WorkingGroupNetworkDataSteeringCommiteeDto
+  support: WorkingGroupNetworkDataSupportDto
 }
 
 """The structure of the Working Group Network data input type."""
@@ -4051,7 +4198,7 @@ input WorkingGroupNetworkDataInputDto {
   complexDisease: WorkingGroupNetworkDataComplexDiseaseInputDto
   monogenic: WorkingGroupNetworkDataMonogenicInputDto
   operational: WorkingGroupNetworkDataOperationalInputDto
-  steeringCommitee: WorkingGroupNetworkDataSteeringCommiteeInputDto
+  support: WorkingGroupNetworkDataSupportInputDto
 }
 
 """The structure of the Monogenic Working Groups field of the Working Group Network content type."""
@@ -4074,13 +4221,13 @@ input WorkingGroupNetworkDataOperationalInputDto {
   iv: [String!]
 }
 
-"""The structure of the Steering Committee field of the Working Group Network content type."""
-type WorkingGroupNetworkDataSteeringCommiteeDto {
+"""The structure of the Support Working Groups field of the Working Group Network content type."""
+type WorkingGroupNetworkDataSupportDto {
   iv: [WorkingGroups!]
 }
 
-"""The structure of the Steering Committee field of the Working Group Network content input type."""
-input WorkingGroupNetworkDataSteeringCommiteeInputDto {
+"""The structure of the Support Working Groups field of the Working Group Network content input type."""
+input WorkingGroupNetworkDataSupportInputDto {
   iv: [String!]
 }
 
@@ -4089,7 +4236,7 @@ type WorkingGroupNetworkFlatDataDto {
   complexDisease: [WorkingGroups!]
   monogenic: [WorkingGroups!]
   operational: [WorkingGroups!]
-  steeringCommitee: [WorkingGroups!]
+  support: [WorkingGroups!]
 }
 
 """List of Working Group Network items and total count."""
@@ -4126,6 +4273,32 @@ type WorkingGroups implements Content {
   newStatus: String
   """The status color of the content."""
   newStatusColor: String
+  """Query Calendars content items."""
+  referencesCalendarsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [Calendars!]
+  """Query Calendars content items with total count."""
+  referencesCalendarsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): CalendarsResultDto
   """Query Users content items."""
   referencesUsersContents(
     """Optional OData filter."""
@@ -4214,6 +4387,16 @@ type WorkingGroups implements Content {
   version: Int!
 }
 
+"""The structure of the Calendars field of the Working Groups content type."""
+type WorkingGroupsDataCalendarsDto {
+  iv: [Calendars!]
+}
+
+"""The structure of the Calendars field of the Working Groups content input type."""
+input WorkingGroupsDataCalendarsInputDto {
+  iv: [String!]
+}
+
 """The structure of the Description field of the Working Groups content type."""
 type WorkingGroupsDataDescriptionDto {
   iv: String
@@ -4226,6 +4409,7 @@ input WorkingGroupsDataDescriptionInputDto {
 
 """The structure of the Working Groups data type."""
 type WorkingGroupsDataDto {
+  calendars: WorkingGroupsDataCalendarsDto
   description: WorkingGroupsDataDescriptionDto
   leadingMembers: WorkingGroupsDataLeadingMembersDto
   members: WorkingGroupsDataMembersDto
@@ -4238,6 +4422,7 @@ type WorkingGroupsDataDto {
 
 """The structure of the Working Groups data input type."""
 input WorkingGroupsDataInputDto {
+  calendars: WorkingGroupsDataCalendarsInputDto
   description: WorkingGroupsDataDescriptionInputDto
   leadingMembers: WorkingGroupsDataLeadingMembersInputDto
   members: WorkingGroupsDataMembersInputDto
@@ -4366,6 +4551,7 @@ input WorkingGroupsDataTitleInputDto {
 
 """The structure of the flat Working Groups data type."""
 type WorkingGroupsFlatDataDto {
+  calendars: [Calendars!]
   description: String
   leadingMembers: String
   members: [WorkingGroupsDataMembersChildDto!]

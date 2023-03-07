@@ -1,0 +1,74 @@
+{
+  "$schema": "./../__json/schema.json",
+  "schema": {
+    "noFieldDeletion": false,
+    "noFieldRecreation": false,
+    "properties": {
+      "label": "External users",
+      "validateOnPublish": false
+    },
+    "scripts": {},
+    "fieldsInReferences": ["name", "orcid"],
+    "fieldsInLists": [
+      "meta.status.color",
+      "name",
+      "orcid",
+      "meta.created",
+      "meta.createdBy.avatar",
+      "meta.lastModified",
+      "meta.lastModifiedBy.avatar"
+    ],
+    "fields": [
+      {
+        "name": "name",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "isEmbeddable": false,
+          "inlineEditable": true,
+          "createEnum": false,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "Name",
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "orcid",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "pattern": "^\\d{4}-\\d{4}-\\d{4}-\\d{3}(\\d|X)$",
+          "patternMessage": "ORCID must have the following format: 0000-0000-0000-0000",
+          "isUnique": false,
+          "isEmbeddable": false,
+          "inlineEditable": true,
+          "createEnum": false,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "ORCID",
+          "hints": "ORCIDs cannot be repeated on the Hub",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      }
+    ],
+    "previewUrls": {},
+    "fieldRules": [],
+    "category": "Storage",
+    "isPublished": true
+  },
+  "name": "external-users",
+  "isSingleton": false,
+  "schemaType": "Default"
+}

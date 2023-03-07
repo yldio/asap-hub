@@ -1,5 +1,4 @@
 import { gp2 } from '@asap-hub/model';
-import { EventController } from '@asap-hub/server-common';
 import { Router } from 'express';
 import {
   validateEventFetchParameters,
@@ -7,12 +6,7 @@ import {
 } from '../validation/event.validation';
 
 export const eventRouteFactory = (
-  eventController: EventController<
-    gp2.EventResponse,
-    gp2.ListEventResponse,
-    gp2.EventCreateRequest,
-    gp2.EventUpdateRequest
-  >,
+  eventController: gp2.EventController,
 ): Router => {
   const eventRoutes = Router();
 

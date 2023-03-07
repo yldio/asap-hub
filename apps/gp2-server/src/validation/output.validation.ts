@@ -55,8 +55,8 @@ const outputPostRequestValidationSchema: JSONSchemaType<gp2Model.OutputPostReque
           type: 'object',
           properties: {
             userId: { type: 'string' },
-            externalAuthorId: { type: 'string' },
-            externalAuthorName: { type: 'string' },
+            externalUserId: { type: 'string' },
+            externalUserName: { type: 'string' },
           },
           oneOf: [
             {
@@ -65,11 +65,11 @@ const outputPostRequestValidationSchema: JSONSchemaType<gp2Model.OutputPostReque
             },
             {
               type: 'object',
-              required: ['externalAuthorId'],
+              required: ['externalUserId'],
             },
             {
               type: 'object',
-              required: ['externalAuthorName'],
+              required: ['externalUserName'],
             },
           ],
         },

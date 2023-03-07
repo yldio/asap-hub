@@ -1,13 +1,15 @@
-export * as gp2 from './gp2';
-export * from './calendar-common';
 export * from './calendar';
+export * from './calendar-common';
 export * from './common';
+export * from './controllers';
 export * from './dashboard';
+export * from './data-providers';
 export * from './discover';
 export * from './error';
-export * from './event-common';
 export * from './event';
+export * from './event-common';
 export * from './external-author';
+export * as gp2 from './gp2';
 export * from './group';
 export * from './lab';
 export * from './news';

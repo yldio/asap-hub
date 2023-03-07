@@ -11,8 +11,23 @@
       "create": "if(ctx.data.endDate.iv && new Date(ctx.data.startDate.iv) > new Date(ctx.data.endDate.iv)) {\n    reject('Start date date cannot be greater than end date')\n}\nif(!ctx.data.pmEmail.iv && !ctx.data.leadEmail.iv) { \n reject('pm or lead email should be entered') \n}\n",
       "update": "if(ctx.data.endDate.iv && new Date(ctx.data.startDate.iv) > new Date(ctx.data.endDate.iv)) {\n    reject('Start date date cannot be greater than end date')\n}\nif(!ctx.data.pmEmail.iv && !ctx.data.leadEmail.iv) { \n reject('pm or lead email should be entered') \n}\n"
     },
-    "fieldsInReferences": [],
-    "fieldsInLists": [],
+    "fieldsInReferences": ["title"],
+    "fieldsInLists": [
+      "meta.status.color",
+      "title",
+      "startDate",
+      "endDate",
+      "calendars",
+      "status",
+      "projectProposal",
+      "pmEmail",
+      "leadEmail",
+      "traineeProject",
+      "meta.created",
+      "meta.createdBy.avatar",
+      "meta.lastModified",
+      "meta.lastModifiedBy.avatar"
+    ],
     "fields": [
       {
         "name": "title",
@@ -126,6 +141,28 @@
           "isRequired": false,
           "isRequiredOnPublish": false,
           "isHalfWidth": true
+        }
+      },
+      {
+        "name": "calendars",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "References",
+          "maxItems": 1,
+          "allowDuplicates": false,
+          "resolveReference": true,
+          "mustBePublished": false,
+          "editor": "Dropdown",
+          "schemaIds": ["calendars"],
+          "label": "Calendars",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {

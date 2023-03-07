@@ -37,25 +37,25 @@ const WorkingGroupNetwork: React.FC<
     gp2.WorkingGroupNetworkRole,
     { subtitle: string; paragraph: string }
   > = {
-    steeringCommitee: {
-      subtitle: 'Steering Commitee',
+    operational: {
+      subtitle: 'Operational Working Groups',
       paragraph:
-        'Provide additional support and assistance to the functioning of the other GP2 working groups.',
-    },
-    complexDisease: {
-      subtitle: 'Complex Disease Network',
-      paragraph:
-        'One of the two clusters of GP2 working groups focusing on data collection and analysis.',
+        'Manage the day to day workings of the GP2 working group structure.',
     },
     monogenic: {
       subtitle: 'Monogenic Working Groups',
       paragraph:
         'One of the two clusters of GP2 working groups focusing on data collection and analysis.',
     },
-    operational: {
-      subtitle: 'Operational Working Groups',
+    complexDisease: {
+      subtitle: 'Complex Disease Working Groups',
       paragraph:
-        'Manage the day to day workings of the GP2 working group structure.',
+        'One of the two clusters of GP2 working groups focusing on data collection and analysis.',
+    },
+    support: {
+      subtitle: 'Support Working Groups',
+      paragraph:
+        'Provide additional support and assistance to the functioning of the other GP2 working groups.',
     },
   };
 

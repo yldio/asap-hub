@@ -36,9 +36,9 @@ init({
   // Turn sampleRate on to reduce the amount of data sent to Sentry
   // sampleRate: 0.1, // 0.1 = 10% of error events will be sent
   allowUrls: [
-    'hub.asap.science/static/js/', // your code
-    'asap-hub.us.auth0.com', // code served from Auth0
-    'hub.asap.science/.auth/static/js', // code served from Auth0
+    'gp2.asap.science/static/js/', // your code
+    'gp2-hub.us.auth0.com', // code served from Auth0
+    'gp2.asap.science/.auth/static/js', // code served from Auth0
   ],
   denyUrls: [
     /fonts\.googleapis\.com/i, // code served from Google Fonts

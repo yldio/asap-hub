@@ -1,5 +1,5 @@
+import { UserController } from '@asap-hub/model';
 import { framework as lambda } from '@asap-hub/services-common';
-import { UserController } from '../../controllers';
 import { Logger, validateAuth0Request } from '../../utils';
 import { validateWebhookConnectByCodeBody } from '../../validation';
 

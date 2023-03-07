@@ -10,11 +10,7 @@ const WorkingGroupsBody: React.FC<WorkingGroupsBodyProps> = ({
 }) => (
   <>
     <WorkingGroupNetwork
-      role={'steeringCommitee'}
-      workingGroupNetwork={workingGroupNetwork}
-    />
-    <WorkingGroupNetwork
-      role={'complexDisease'}
+      role={'operational'}
       workingGroupNetwork={workingGroupNetwork}
     />
     <WorkingGroupNetwork
@@ -22,7 +18,11 @@ const WorkingGroupsBody: React.FC<WorkingGroupsBodyProps> = ({
       workingGroupNetwork={workingGroupNetwork}
     />
     <WorkingGroupNetwork
-      role={'operational'}
+      role={'complexDisease'}
+      workingGroupNetwork={workingGroupNetwork}
+    />
+    <WorkingGroupNetwork
+      role={'support'}
       workingGroupNetwork={workingGroupNetwork}
     />
   </>

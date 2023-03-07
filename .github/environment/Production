@@ -31,3 +31,5 @@ ses-region=us-east-1
 sls-stage=production
 contentful-environment=Production
 is-contentful-enabled=true
+crn-auth0-additional-claim-domain=
+gp2-auth0-additional-claim-domain=

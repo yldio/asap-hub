@@ -17,3 +17,7 @@ contentful-space-id=5v6w5j61tndm
 contentful-environment=Production
 max-contentful-envs=6
 crn-contentful-env-id=Production
+crn-base-pr-app-domain=hub.asap.science
+gp2-base-pr-app-domain=gp2.asap.science
+crn-auth0-additional-claim-domain=https://dev.hub.asap.science
+gp2-auth0-additional-claim-domain=https://dev.gp2.asap.science

@@ -1,6 +1,8 @@
 import { NotFoundError } from '@asap-hub/errors';
 import { CalendarUpdateRequest } from '@asap-hub/model';
-import Calendars from '../../src/controllers/calendar.controller';
+import Calendars, {
+  parseCalendarDataObjectToResponse,
+} from '../../src/controllers/calendar.controller';
 import {
   getCalendarDataObject,
   getCalendarResponse,
@@ -45,6 +47,93 @@ describe('Calendars Controller', () => {
 
       expect(calendarDataProviderMock.fetch).toBeCalledWith({
         active: true,
+      });
+    });
+    describe('sort order', () => {
+      test('calendars with no projects or working groups are sorted alphabetically', async () => {
+        const calendar1 = getCalendarDataObject();
+        calendar1.projects = [];
+        calendar1.workingGroups = [];
+        const calendar2 = getCalendarDataObject();
+        calendar2.projects = [];
+        calendar2.workingGroups = [];
+        const calendar3 = getCalendarDataObject();
+        calendar3.projects = [];
+        calendar3.workingGroups = [];
+
+        calendar1.name = 'c';
+        calendar2.name = 'a';
+        calendar3.name = 'b';
+        calendarDataProviderMock.fetch.mockResolvedValue({
+          total: 3,
+          items: [calendar1, calendar2, calendar3],
+        });
+        const result = await calendarsController.fetch();
+        expect(result).toEqual({
+          items: [
+            parseCalendarDataObjectToResponse(calendar2),
+            parseCalendarDataObjectToResponse(calendar3),
+            parseCalendarDataObjectToResponse(calendar1),
+          ],
+          total: 3,
+        });
+      });
+      test('calendars with projects or groups are sorted alphabetically', async () => {
+        const calendar1 = getCalendarDataObject();
+        calendar1.projects = [{ id: '42', title: 'a' }];
+        calendar1.workingGroups = [];
+        const calendar2 = getCalendarDataObject();
+        calendar2.projects = [{ id: '42', title: 'a' }];
+        calendar2.workingGroups = [];
+        const calendar3 = getCalendarDataObject();
+        calendar3.projects = [];
+        calendar3.workingGroups = [{ id: '42', title: 'a' }];
+
+        calendar1.name = 'c';
+        calendar2.name = 'a';
+        calendar3.name = 'b';
+        calendarDataProviderMock.fetch.mockResolvedValue({
+          total: 3,
+          items: [calendar1, calendar2, calendar3],
+        });
+        const result = await calendarsController.fetch();
+        expect(result).toEqual({
+          items: [
+            parseCalendarDataObjectToResponse(calendar2),
+            parseCalendarDataObjectToResponse(calendar3),
+            parseCalendarDataObjectToResponse(calendar1),
+          ],
+          total: 3,
+        });
+      });
+      test('calendars with no project or working group are sorted to the top', async () => {
+        const calendar1 = getCalendarDataObject();
+        const calendar2 = getCalendarDataObject();
+        const calendar3 = getCalendarDataObject();
+
+        calendar1.name = 'b';
+        calendar1.projects = [{ id: '42', title: 'a' }];
+        calendar1.workingGroups = [];
+        calendar2.name = 'c';
+        calendar2.projects = [];
+        calendar2.workingGroups = [];
+        calendar3.name = 'a';
+        calendar3.projects = [];
+        calendar3.workingGroups = [{ id: '42', title: 'a' }];
+
+        calendarDataProviderMock.fetch.mockResolvedValue({
+          total: 3,
+          items: [calendar1, calendar2, calendar3],
+        });
+        const result = await calendarsController.fetch();
+        expect(result).toEqual({
+          items: [
+            parseCalendarDataObjectToResponse(calendar2),
+            parseCalendarDataObjectToResponse(calendar3),
+            parseCalendarDataObjectToResponse(calendar1),
+          ],
+          total: 3,
+        });
       });
     });
   });

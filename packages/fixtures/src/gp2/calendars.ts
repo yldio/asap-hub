@@ -2,6 +2,7 @@ import { gp2, googleLegacyCalendarColor } from '@asap-hub/model';
 
 export const createCalendarResponse = (
   itemIndex = 0,
+  overrides: Partial<gp2.CalendarResponse> = {},
 ): gp2.CalendarResponse => ({
   id: `calendar-${itemIndex}`,
   color:
@@ -9,15 +10,15 @@ export const createCalendarResponse = (
   name: `Calendar ${itemIndex}`,
   projects: [],
   workingGroups: [],
+  ...overrides,
 });
 
 export const createListCalendarResponse = (
   items: number = 1,
+  overrides: Partial<gp2.CalendarResponse> = {},
 ): gp2.ListCalendarResponse => ({
   total: items,
   items: Array.from({ length: items }, (_, itemIndex) =>
-    createCalendarResponse(itemIndex),
+    createCalendarResponse(itemIndex, overrides),
   ),
 });
-
-export default createListCalendarResponse;

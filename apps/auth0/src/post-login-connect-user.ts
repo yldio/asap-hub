@@ -32,8 +32,8 @@ export const onExecutePostLogin = async (
   );
 
   if (invitationCode) {
-    const [apiUrl] = getApiUrl(event);
     try {
+      const [apiUrl] = getApiUrl(event);
       await got
         .post(`${apiUrl}/webhook/users/connections`, {
           json: {

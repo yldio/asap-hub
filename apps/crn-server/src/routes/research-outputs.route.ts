@@ -59,16 +59,6 @@ export const researchOutputRouteFactory = (
         : 'u',
     );
 
-    loggedInUser.teams.find((team) => {
-      if (team.role === 'ASAP Staff') {
-        return true;
-      }
-      console.log('TEAM', team);
-      return (
-        createRequest.teams.includes(team.id) && team.role === 'Project Manager'
-      );
-    });
-
     if (
       !loggedInUser ||
       !hasCreateUpdateResearchOutputPermissions(

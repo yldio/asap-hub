@@ -592,7 +592,6 @@ __metadata:
     "@asap-hub/services-common": "workspace:*"
     "@asap-hub/squidex": "workspace:*"
     "@asap-hub/validation": "workspace:*"
-    "@aws-sdk/client-cloudfront": 3.287.0
     "@babel/core": 7.21.0
     "@babel/preset-env": 7.20.2
     "@babel/preset-typescript": 7.21.0
@@ -1319,6 +1318,7 @@ __metadata:
     "@asap-hub/model": "workspace:*"
     "@asap-hub/services-common": "workspace:*"
     "@asap-hub/squidex": "workspace:*"
+    "@aws-sdk/client-cloudfront": ^3.287.0
     "@babel/core": 7.21.0
     "@babel/parser": 7.21.2
     "@babel/runtime-corejs3": 7.21.0
@@ -1595,7 +1595,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-cloudfront@npm:3.287.0":
+"@aws-sdk/client-cloudfront@npm:^3.287.0":
   version: 3.287.0
   resolution: "@aws-sdk/client-cloudfront@npm:3.287.0"
   dependencies:

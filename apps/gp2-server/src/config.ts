@@ -26,8 +26,10 @@ const {
   SQUIDEX_CLIENT_SECRET,
   SQUIDEX_SHARED_SECRET,
   AUTH0_AUDIENCE,
+  CLOUDFRONT_DISTRIBUTION_ID,
 } = process.env;
 
+export const cloudfrontDistributionId = CLOUDFRONT_DISTRIBUTION_ID || '';
 export const appName = SQUIDEX_APP_NAME || 'asap-local';
 export const asapApiUrl = GP2_API_URL || 'http://localhost:3333';
 export const googleApiUrl = 'https://www.googleapis.com/';

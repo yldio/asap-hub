@@ -49,6 +49,26 @@ export const researchOutputRouteFactory = (
     const createRequest = validateResearchOutputPostRequestParameters(body);
     validateResearchOutputPostRequestParametersIdentifiers(createRequest);
 
+    console.log(
+      loggedInUser,
+      loggedInUser
+        ? hasCreateUpdateResearchOutputPermissions(
+            loggedInUser,
+            createRequest.teams,
+          )
+        : 'u',
+    );
+
+    loggedInUser.teams.find((team) => {
+      if (team.role === 'ASAP Staff') {
+        return true;
+      }
+      console.log('TEAM', team);
+      return (
+        createRequest.teams.includes(team.id) && team.role === 'Project Manager'
+      );
+    });
+
     if (
       !loggedInUser ||
       !hasCreateUpdateResearchOutputPermissions(

@@ -24,7 +24,7 @@ type ResearchOutputFormSharingCardProps = Pick<
   ResearchOutputPostRequest,
   'link' | 'title' | 'description' | 'sharingStatus' | 'subtype'
 > & {
-  type: ResearchOutputType | '';
+  type?: ResearchOutputType | '';
   onChangeLink?: (newValue: string) => void;
   onChangeTitle?: (newValue: string) => void;
   onChangeDescription?: (newValue: string) => void;

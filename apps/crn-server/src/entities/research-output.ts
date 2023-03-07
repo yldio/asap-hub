@@ -145,7 +145,7 @@ const parseGraphqlResearchOutputLite = (
       ? graphqlRelatedResearch.flatData.documentType
       : 'Grant Document',
   teams:
-    graphqlRelatedResearch.referencesTeamsContents?.map(
+    graphqlRelatedResearch.flatData.teams?.map(
       ({ id, flatData: { displayName } }) => ({
         id,
         displayName: displayName || '',

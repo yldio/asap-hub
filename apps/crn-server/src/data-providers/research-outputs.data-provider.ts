@@ -201,7 +201,7 @@ export class ResearchOutputSquidexDataProvider
       updatedBy: [researchOutputData.createdBy],
       labs: labIds,
       teams: teamIds,
-      relatedResearch: relatedResearchIds || [],
+      relatedResearch: relatedResearchIds,
       methods: methodIds,
       environments: environmentIds,
       organisms: organismIds,

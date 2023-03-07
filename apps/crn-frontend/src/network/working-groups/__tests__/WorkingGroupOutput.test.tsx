@@ -246,6 +246,7 @@ it('can submit a form when form data is valid', async () => {
           userId: 'user-id-2',
         },
       ],
+      relatedResearch: [],
       methods: [],
       organisms: [],
       environments: [],

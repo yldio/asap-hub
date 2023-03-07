@@ -7,16 +7,8 @@ module.exports.up = (migration) => {
     .editField('text')
     .validations([
       {
-        enabledMarks: [
-          'bold',
-          'italic',
-          'underline',
-          'code',
-          'superscript',
-          'subscript',
-        ],
-        message:
-          'Only bold, italic, underline, code, superscript, and subscript marks are allowed',
+        enabledMarks: ['bold', 'italic', 'underline', 'code'],
+        message: 'Only bold, italic, underline, code marks are allowed',
       },
       {
         enabledNodeTypes: [

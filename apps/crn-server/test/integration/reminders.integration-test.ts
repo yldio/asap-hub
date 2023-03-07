@@ -101,8 +101,10 @@ describe('Reminders', () => {
     let creatorId: string;
     let teamId: string;
     let fetchRemindersOptions: FetchRemindersOptions;
+    let researchOutputsToDelete: string[];
 
     beforeEach(async () => {
+      researchOutputsToDelete = [];
       const teamCreateDataObject = getTeamCreateDataObject();
       teamCreateDataObject.applicationNumber = chance.name();
       teamId = await teamDataProvider.create(teamCreateDataObject);
@@ -117,12 +119,22 @@ describe('Reminders', () => {
       fetchRemindersOptions = { userId: userId1, timezone };
     });
 
+    afterEach(async () => {
+      await teamRestClient.delete(teamId);
+      await userRestClient.delete(creatorId);
+      await userRestClient.delete(fetchRemindersOptions.userId);
+      for (const id of researchOutputsToDelete) {
+        await researchOutputRestClient.delete(id);
+      }
+    });
+
     test('Should see the reminder when the research output was created recently and the user is associated with the team that owns it', async () => {
       const researchOutputInput = getResearchOutputInput(teamId, creatorId);
 
       const researchOutputId = await researchOutputDataProvider.create(
         researchOutputInput,
       );
+      researchOutputsToDelete.push(researchOutputId);
 
       const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
 
@@ -217,6 +229,7 @@ describe('Reminders', () => {
 
   describe('Event Happening Today Reminder', () => {
     let userId: string;
+    let teamId: string;
     let calendarId: string;
     let eventIdsForDeletion: string[] = [];
     let fetchRemindersOptions: FetchRemindersOptions;
@@ -226,13 +239,15 @@ describe('Reminders', () => {
 
       const teamCreateDataObject = getTeamCreateDataObject();
       teamCreateDataObject.applicationNumber = chance.name();
-      const teamId = await teamDataProvider.create(teamCreateDataObject);
+      teamId = await teamDataProvider.create(teamCreateDataObject);
 
       const userCreateDataObject = getUserInput(teamId);
       userId = await userDataProvider.create(userCreateDataObject);
     });
 
-    afterAll(() => {
+    afterAll(async () => {
+      await teamRestClient.delete(teamId);
+      await userRestClient.delete(userId);
       jest.useRealTimers();
     });
 
@@ -249,6 +264,7 @@ describe('Reminders', () => {
         eventIdsForDeletion.map((id) => eventRestClient.delete(id)),
       );
       eventIdsForDeletion = [];
+      await calendarRestClient.delete(calendarId);
     });
 
     test('Should see the reminder when the event is starting after midnight today', async () => {
@@ -353,6 +369,7 @@ describe('Reminders', () => {
 
   describe('Event Happening Now Reminder', () => {
     let userId: string;
+    let teamId: string;
     let calendarId: string;
     let eventIdsForDeletion: string[] = [];
     let fetchRemindersOptions: FetchRemindersOptions;
@@ -362,7 +379,7 @@ describe('Reminders', () => {
 
       const teamCreateDataObject = getTeamCreateDataObject();
       teamCreateDataObject.applicationNumber = chance.name();
-      const teamId = await teamDataProvider.create(teamCreateDataObject);
+      teamId = await teamDataProvider.create(teamCreateDataObject);
 
       const userCreateDataObject = getUserInput(teamId);
       userId = await userDataProvider.create(userCreateDataObject);
@@ -371,6 +388,8 @@ describe('Reminders', () => {
 
     afterAll(() => {
       jest.useRealTimers();
+      userRestClient.delete(userId);
+      teamRestClient.delete(teamId);
     });
 
     beforeEach(async () => {
@@ -383,6 +402,7 @@ describe('Reminders', () => {
         eventIdsForDeletion.map((id) => eventRestClient.delete(id)),
       );
       eventIdsForDeletion = [];
+      calendarRestClient.delete(calendarId);
     });
 
     test('Should see the reminder when the event has started but has not finished', async () => {
@@ -600,6 +620,8 @@ describe('Reminders', () => {
 
     afterAll(() => {
       jest.useRealTimers();
+      userRestClient.delete(userId);
+      teamRestClient.delete(teamId);
     });
 
     beforeEach(async () => {
@@ -612,6 +634,7 @@ describe('Reminders', () => {
         eventIdsForDeletion.map((id) => eventRestClient.delete(id)),
       );
       eventIdsForDeletion = [];
+      calendarRestClient.delete(calendarId)
     });
 
     test('Should see the reminder when the event has finished and user is staff', async () => {

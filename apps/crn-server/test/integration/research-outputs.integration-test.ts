@@ -45,8 +45,9 @@ const researchOutputDataProvider = new ResearchOutputSquidexDataProvider(
 
 describe('Research Outputs', () => {
   let userId: string;
+  let researchOutputId: string;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     const userCreateDataObject = getUserCreateDataObject();
     userCreateDataObject.teams = [];
     userCreateDataObject.labIds = [];
@@ -54,6 +55,11 @@ describe('Research Outputs', () => {
     delete userCreateDataObject.orcid;
     delete userCreateDataObject.avatar;
     userId = await userDataProvider.create(userCreateDataObject);
+  });
+
+  afterEach(async () => {
+    await researchOutputRestClient.delete(researchOutputId);
+    await userRestClient.delete(userId);
   });
 
   test('Should create and fetch the research output by ID', async () => {
@@ -71,7 +77,7 @@ describe('Research Outputs', () => {
     const randomTitle = chance.guid();
     researchOutputInput.title = randomTitle;
 
-    const researchOutputId = await researchOutputDataProvider.create(
+    researchOutputId = await researchOutputDataProvider.create(
       researchOutputInput,
     );
 

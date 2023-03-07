@@ -42,12 +42,18 @@ const teamDataProvider = new TeamSquidexDataProvider(
 
 describe('Users', () => {
   let teamId: string;
+  let userId: string;
 
   beforeAll(async () => {
     const teamCreateDataObject = getTeamCreateDataObject();
     teamCreateDataObject.applicationNumber = chance.name();
 
     teamId = await teamDataProvider.create(teamCreateDataObject);
+  });
+
+  afterAll(async () => {
+    await userRestClient.delete(userId);
+    await teamRestClient.delete(teamId);
   });
 
   test('Should create and fetch a user', async () => {
@@ -61,7 +67,7 @@ describe('Users', () => {
     delete userCreateDataObject.avatar;
     userCreateDataObject.firstName = firstName;
     userCreateDataObject.orcid = orcid;
-    const userId = await userDataProvider.create(userCreateDataObject);
+    userId = await userDataProvider.create(userCreateDataObject);
     const result = await userDataProvider.fetchById(userId);
 
     expect(result).toEqual(

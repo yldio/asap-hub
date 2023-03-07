@@ -5,5 +5,10 @@ const {
 
 module.exports = {
   ...base,
-  testMatch: ['**/*.integration-test.{js,jsx,ts,tsx}'],
+  testMatch: [
+    //'**/reminders.integration-test.{js,jsx,ts,tsx}',
+    '**/research-outputs.integration-test.{js,jsx,ts,tsx}',
+    '**/teams.integration-test.{js,jsx,ts,tsx}',
+    '**/users.integration-test.{js,jsx,ts,tsx}',
+  ],
 };

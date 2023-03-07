@@ -23,16 +23,22 @@ const teamDataProvider = new TeamSquidexDataProvider(
 );
 
 describe('Teams', () => {
+
+  let teamId: string;
+  afterEach(async () => {
+    await teamRestClient.delete(teamId);
+  });
+
   test('Should create and fetch a team', async () => {
     const teamCreateDataObject = getTeamCreateDataObject();
     teamCreateDataObject.applicationNumber = chance.name();
 
-    const id = await teamDataProvider.create(teamCreateDataObject);
-    const result = await teamDataProvider.fetchById(id);
+    teamId = await teamDataProvider.create(teamCreateDataObject);
+    const result = await teamDataProvider.fetchById(teamId);
 
     const { displayName, projectTitle } = getTeamDataObject();
     expect(result).toEqual(
-      expect.objectContaining({ id, displayName, projectTitle }),
+      expect.objectContaining({ id: teamId, displayName, projectTitle }),
     );
   });
 });

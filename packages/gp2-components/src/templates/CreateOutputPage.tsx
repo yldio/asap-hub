@@ -32,7 +32,7 @@ export const documentTypeMapper: Record<
   gp2Model.OutputDocumentType
 > = {
   article: 'Article',
-  'code/software': 'Code/Software',
+  'code-software': 'Code/Software',
   'data-release': 'Data Release',
   form: 'Form',
   'training-materials': 'Training Material',
@@ -42,6 +42,7 @@ export const documentTypeMapper: Record<
 const CreateOutputPage: React.FC<CreateOutputPageProps> = ({
   documentType,
   entityType,
+  children,
 }) => (
   <article>
     <PageBanner
@@ -49,6 +50,7 @@ const CreateOutputPage: React.FC<CreateOutputPageProps> = ({
       noLayoutPadding
       {...props(entityType, documentType)}
     />
+    <main>{children}</main>
   </article>
 );
 

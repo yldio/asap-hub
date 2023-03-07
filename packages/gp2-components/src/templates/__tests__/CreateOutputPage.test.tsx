@@ -16,7 +16,7 @@ describe('CreateOutputPage', () => {
   );
   it.each([
     'article' as const,
-    'code/software' as const,
+    'code-software' as const,
     'data-release' as const,
     'form' as const,
     'training-materials' as const,

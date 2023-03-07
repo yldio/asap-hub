@@ -37,3 +37,25 @@ export const getOutputs = async (
   }
   return resp.json();
 };
+
+export const createOutput = async (
+  output: gp2.OutputPostRequest,
+  authorization: string,
+): Promise<gp2.OutputResponse> => {
+  const resp = await fetch(`${API_BASE_URL}/outputs`, {
+    method: 'POST',
+    headers: {
+      authorization,
+      'content-type': 'application/json',
+      ...createSentryHeaders(),
+    },
+    body: JSON.stringify(output),
+  });
+
+  if (!resp.ok) {
+    throw new Error(
+      `Failed to create output. Expected status 201. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+    );
+  }
+  return resp.json();
+};

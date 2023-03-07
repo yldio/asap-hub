@@ -2,7 +2,7 @@ import { GetListOptions } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
 import { atom, selectorFamily, useRecoilValue } from 'recoil';
 import { authorizationState } from '../auth/state';
-import { getOutputs } from './api';
+import { createOutput, getOutputs } from './api';
 
 export const outputsState = selectorFamily<
   gp2.ListOutputResponse,
@@ -24,3 +24,11 @@ export const refreshOutputsState = atom<number>({
 
 export const useOutputs = (options: GetListOptions) =>
   useRecoilValue(outputsState(options));
+
+export const useCreateOutput = () => {
+  const authorization = useRecoilValue(authorizationState);
+  return async (payload: gp2.OutputPostRequest) => {
+    const output = await createOutput(payload, authorization);
+    return output;
+  };
+};

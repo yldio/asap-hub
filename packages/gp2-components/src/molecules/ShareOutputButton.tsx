@@ -40,7 +40,7 @@ const ShareOutputButton: React.FC<ShareOutputButtonProps> = ({
       {{
         item: <>Code/Software</>,
         href: route.createOutput({
-          outputDocumentType: 'code/software',
+          outputDocumentType: 'code-software',
         }).$,
       }}
       {{

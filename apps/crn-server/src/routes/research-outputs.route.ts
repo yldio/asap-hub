@@ -49,16 +49,6 @@ export const researchOutputRouteFactory = (
     const createRequest = validateResearchOutputPostRequestParameters(body);
     validateResearchOutputPostRequestParametersIdentifiers(createRequest);
 
-    console.log(
-      loggedInUser,
-      loggedInUser
-        ? hasCreateUpdateResearchOutputPermissions(
-            loggedInUser,
-            createRequest.teams,
-          )
-        : 'u',
-    );
-
     if (
       !loggedInUser ||
       !hasCreateUpdateResearchOutputPermissions(

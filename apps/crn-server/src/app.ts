@@ -26,6 +26,7 @@ import {
   RestResearchOutput,
   RestTeam,
   RestUser,
+  RestWorkingGroup,
   SquidexGraphql,
   SquidexRest,
 } from '@asap-hub/squidex';
@@ -187,6 +188,14 @@ export const appFactory = (libs: Libs = {}): Express => {
       baseUrl,
     },
   );
+  const workingGroupRestClient = new SquidexRest<RestWorkingGroup>(
+    getAuthToken,
+    'working-groups',
+    {
+      appName,
+      baseUrl,
+    },
+  );
   const newsRestClient = new SquidexRest<RestNews>(
     getAuthToken,
     'news-and-events',
@@ -290,7 +299,10 @@ export const appFactory = (libs: Libs = {}): Express => {
     new CalendarSquidexDataProvider(calendarRestClient, squidexGraphqlClient);
   const workingGroupDataProvider =
     libs.workingGroupDataProvider ||
-    new WorkingGroupSquidexDataProvider(squidexGraphqlClient);
+    new WorkingGroupSquidexDataProvider(
+      squidexGraphqlClient,
+      workingGroupRestClient,
+    );
   const eventDataProvider =
     libs.eventDataProvider ||
     new EventSquidexDataProvider(eventRestClient, squidexGraphqlClient);

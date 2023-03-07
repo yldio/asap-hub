@@ -74,7 +74,8 @@ it.each`
   status           | textColor
   ${'Complete'}    | ${colors.pine.rgb}
   ${'In Progress'} | ${colors.info500.rgb}
-  ${'Not Started'} | ${colors.neutral800.rgb}
+  ${'Not Started'} | ${colors.error500.rgb}
+  ${'Incomplete'}  | ${colors.warning500.rgb}
   ${'Pending'}     | ${colors.neutral800.rgb}
 `(
   'uses the correct accent color for status $status',

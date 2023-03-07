@@ -9,7 +9,9 @@ import {
 } from '../fixtures/working-groups.fixtures';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
+import { getSquidexClientMock } from '../mocks/squidex-client.mock';
 import { FetchWorkingGroupOptions } from '@asap-hub/model';
+import { RestWorkingGroup } from '@asap-hub/squidex';
 
 const graphqlUser = getGraphQLUser();
 
@@ -27,13 +29,18 @@ const parsedGraphQlWorkingGroupUser = {
 
 describe('Working Group Data Provider', () => {
   const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
+  const workingGroupRestClient = getSquidexClientMock<RestWorkingGroup>();
   const workingGroupDataProvider = new WorkingGroupSquidexDataProvider(
     squidexGraphqlClientMock,
+    workingGroupRestClient,
   );
 
   const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
   const workingGroupDataProviderMockGraphql =
-    new WorkingGroupSquidexDataProvider(squidexGraphqlClientMockServer);
+    new WorkingGroupSquidexDataProvider(
+      squidexGraphqlClientMockServer,
+      workingGroupRestClient,
+    );
 
   afterEach(() => {
     jest.resetAllMocks();
@@ -461,6 +468,30 @@ describe('Working Group Data Provider', () => {
           expect(response![user][0]!.user!.avatarUrl).toEqual(expectedValue);
         },
       );
+    });
+  });
+
+  describe('patch method', () => {
+    it('calls `patch` method on squidex rest client', async () => {
+      await workingGroupDataProvider.patch('123', { title: 'New title' });
+
+      expect(workingGroupRestClient.patch).toHaveBeenCalled();
+    });
+
+    it('maps arguments to `{ iv: <arg> }` pattern expected by Squidex API', async () => {
+      await workingGroupDataProvider.patch('123', { title: 'New title' });
+
+      expect(workingGroupRestClient.patch).toHaveBeenCalledWith('123', {
+        title: { iv: 'New title' },
+      });
+    });
+
+    it('replaces empty string values with `null`', async () => {
+      await workingGroupDataProvider.patch('123', { title: '' });
+
+      expect(workingGroupRestClient.patch).toHaveBeenCalledWith('123', {
+        title: { iv: null },
+      });
     });
   });
 });

@@ -92,3 +92,11 @@ export const createHandlerContext = () =>
     logGroupName: 'some-log-group',
     logStreamName: 'some-log-stream',
   } as Context);
+
+export const wrapIV = (
+  data: Record<string, any> = {},
+): Record<string, { iv: any }> =>
+  Object.keys(data).reduce(
+    (output, key) => ({ ...output, [key]: { iv: data[key] } }),
+    {},
+  );

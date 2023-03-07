@@ -219,7 +219,10 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
   teams: Pick<TeamResponse, 'id' | 'displayName'>[];
   workingGroups: Pick<WorkingGroupResponse, 'id' | 'title'>[];
   relatedResearch?: Array<
-    Pick<ResearchOutputDataObject, 'id' | 'title' | 'documentType' | 'teams'>
+    Pick<
+      ResearchOutputDataObject,
+      'id' | 'title' | 'type' | 'documentType' | 'teams'
+    >
   >;
 };
 

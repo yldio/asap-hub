@@ -10,13 +10,20 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
+import { FC, lazy, useEffect } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import CreateWorkingGroupOutput from './CreateWorkingGroupOutput';
 import { usePutWorkingGroupResources, useWorkingGroupById } from './state';
 
 const { workingGroups } = gp2Routing;
 
-const WorkingGroupDetail = () => {
+const loadCreateWorkingGroupOutput = () =>
+  import(
+    /* webpackChunkName: "working-group-create-output-" */ './CreateWorkingGroupOutput'
+  );
+
+const CreateWorkingGroupOutput = lazy(loadCreateWorkingGroupOutput);
+
+const WorkingGroupDetail: FC<Record<string, never>> = () => {
   const { workingGroupId } = useRouteParams(workingGroups({}).workingGroup);
   const workingGroup = useWorkingGroupById(workingGroupId);
 
@@ -36,6 +43,11 @@ const WorkingGroupDetail = () => {
 
   const updateWorkingGroupResources =
     usePutWorkingGroupResources(workingGroupId);
+
+  useEffect(() => {
+    loadCreateWorkingGroupOutput();
+  }, [workingGroup]);
+
   if (workingGroup) {
     return (
       <Switch>

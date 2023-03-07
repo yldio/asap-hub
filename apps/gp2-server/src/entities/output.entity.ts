@@ -11,12 +11,12 @@ export const documentTypeMap: Record<
   OutputsDataDocumentTypeEnum,
   gp2Model.OutputDocumentType
 > = {
-  [OutputsDataDocumentTypeEnum.Article]: 'Articles',
+  [OutputsDataDocumentTypeEnum.Article]: 'Article',
   [OutputsDataDocumentTypeEnum.CodeSoftware]: 'Code/Software',
-  [OutputsDataDocumentTypeEnum.DataRelease]: 'Data Releases',
-  [OutputsDataDocumentTypeEnum.Form]: 'Forms',
-  [OutputsDataDocumentTypeEnum.TrainingMaterial]: 'Training Materials',
-  [OutputsDataDocumentTypeEnum.Update]: 'Updates',
+  [OutputsDataDocumentTypeEnum.DataRelease]: 'Data Release',
+  [OutputsDataDocumentTypeEnum.Form]: 'Form',
+  [OutputsDataDocumentTypeEnum.TrainingMaterial]: 'Training Material',
+  [OutputsDataDocumentTypeEnum.Update]: 'Update',
 };
 
 export const typeMap: Record<OutputsDataTypeEnum, gp2Model.OutputType> = {

@@ -11,6 +11,7 @@ import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { Redirect, Route, Switch } from 'react-router-dom';
+import CreateWorkingGroupOutput from './CreateWorkingGroupOutput';
 import { usePutWorkingGroupResources, useWorkingGroupById } from './state';
 
 const { workingGroups } = gp2Routing;
@@ -26,6 +27,7 @@ const WorkingGroupDetail = () => {
   const isAdministrator = currentUser?.role === 'Administrator';
   const workingGroupRoute = workingGroups({}).workingGroup({ workingGroupId });
   const resourcesRoute = workingGroupRoute.resources({});
+  const createOutputRoute = workingGroupRoute.createOutput;
   const editRoute = resourcesRoute.edit({});
   const add = isAdministrator ? resourcesRoute.add({}).$ : undefined;
   const edit = isAdministrator ? editRoute.$ : undefined;
@@ -34,60 +36,67 @@ const WorkingGroupDetail = () => {
 
   const updateWorkingGroupResources =
     usePutWorkingGroupResources(workingGroupId);
-
   if (workingGroup) {
     return (
-      <WorkingGroupDetailPage
-        {...workingGroup}
-        isWorkingGroupMember={isWorkingGroupMember}
-      >
-        <Switch>
-          <Route path={overview}>
-            <Frame title="Overview">
-              <WorkingGroupOverview {...workingGroup} />
-            </Frame>
-          </Route>
-          {isWorkingGroupMember && (
-            <Route path={resources}>
-              <Frame title="Resources">
-                <WorkingGroupResources
-                  {...workingGroup}
-                  add={add}
-                  edit={edit}
-                />
-                {isAdministrator && (
-                  <>
-                    <Route path={add}>
-                      <ResourceModal
-                        modalTitle={'Add Resource'}
-                        modalDescription={
-                          'Select a resource type and provide the necessary information required to share a resource privately with your group.'
-                        }
-                        backHref={resources}
-                        onSave={(resource: gp2Model.Resource) =>
-                          updateWorkingGroupResources([
-                            ...(workingGroup.resources || []),
-                            resource,
-                          ])
-                        }
-                      />
-                    </Route>
-                    <Route exact path={edit + editRoute.resource.template}>
-                      <EditResourceModal
-                        route={editRoute.resource}
-                        resources={workingGroup.resources || []}
-                        backHref={resources}
-                        updateResources={updateWorkingGroupResources}
-                      />
-                    </Route>
-                  </>
-                )}
+      <Switch>
+        <Route exact path={workingGroupRoute.$ + createOutputRoute.template}>
+          <Frame title="Create Output">
+            <CreateWorkingGroupOutput />
+          </Frame>
+        </Route>
+        <WorkingGroupDetailPage
+          {...workingGroup}
+          isWorkingGroupMember={isWorkingGroupMember}
+          isAdministrator={isAdministrator}
+        >
+          <Switch>
+            <Route path={overview}>
+              <Frame title="Overview">
+                <WorkingGroupOverview {...workingGroup} />
               </Frame>
             </Route>
-          )}
-          <Redirect to={overview} />
-        </Switch>
-      </WorkingGroupDetailPage>
+            {isWorkingGroupMember && (
+              <Route path={resources}>
+                <Frame title="Resources">
+                  <WorkingGroupResources
+                    {...workingGroup}
+                    add={add}
+                    edit={edit}
+                  />
+                  {isAdministrator && (
+                    <>
+                      <Route path={add}>
+                        <ResourceModal
+                          modalTitle={'Add Resource'}
+                          modalDescription={
+                            'Select a resource type and provide the necessary information required to share a resource privately with your group.'
+                          }
+                          backHref={resources}
+                          onSave={(resource: gp2Model.Resource) =>
+                            updateWorkingGroupResources([
+                              ...(workingGroup.resources || []),
+                              resource,
+                            ])
+                          }
+                        />
+                      </Route>
+                      <Route exact path={edit + editRoute.resource.template}>
+                        <EditResourceModal
+                          route={editRoute.resource}
+                          resources={workingGroup.resources || []}
+                          backHref={resources}
+                          updateResources={updateWorkingGroupResources}
+                        />
+                      </Route>
+                    </>
+                  )}
+                </Frame>
+              </Route>
+            )}
+            <Redirect to={overview} />
+          </Switch>
+        </WorkingGroupDetailPage>
+      </Switch>
     );
   }
   return <NotFoundPage />;

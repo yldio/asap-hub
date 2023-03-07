@@ -8,6 +8,7 @@ describe('WorkingGroupDetailPage', () => {
     members: [],
     id: '42',
     isWorkingGroupMember: true,
+    isAdministrator: false,
   };
   it('renders header', () => {
     render(<WorkingGroupDetailPage {...defaultProps}></WorkingGroupDetailPage>);

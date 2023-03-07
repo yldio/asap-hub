@@ -48,7 +48,7 @@ export const migrateNews = async () => {
       title: title!,
       shortText,
       frequency: frequency || 'News Articles',
-      link: link!,
+      link: link?.length ? link : null,
       linkText: linkText!,
       text: null as Document | null,
       thumbnail: thumbnail?.length

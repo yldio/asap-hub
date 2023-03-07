@@ -122,7 +122,7 @@ describe('Migrate news', () => {
         {
           fields: {
             frequency: { 'en-US': 'News Articles' },
-            link: { 'en-US': undefined },
+            link: { 'en-US': null },
             linkText: { 'en-US': undefined },
             shortText: { 'en-US': undefined },
             text: { 'en-US': null },
@@ -162,7 +162,7 @@ describe('Migrate news', () => {
         {
           fields: {
             frequency: { 'en-US': 'News Articles' },
-            link: { 'en-US': undefined },
+            link: { 'en-US': null },
             linkText: { 'en-US': undefined },
             shortText: { 'en-US': undefined },
             text: { 'en-US': null },
@@ -217,10 +217,43 @@ describe('Migrate news', () => {
         {
           fields: {
             frequency: { 'en-US': 'News Articles' },
-            link: { 'en-US': undefined },
+            link: { 'en-US': null },
             linkText: { 'en-US': undefined },
             shortText: { 'en-US': undefined },
             text: { 'en-US': textDocument },
+            thumbnail: { 'en-US': null },
+            title: { 'en-US': 'news' },
+            publishDate: { 'en-US': undefined },
+          },
+        },
+      );
+    });
+
+    it('for a news that contains empty string in link', async () => {
+      squidexGraphqlClientMock.request.mockResolvedValueOnce({
+        queryNewsAndEventsContents: [
+          {
+            id: 'news-1',
+            flatData: {
+              title: 'news',
+              link: '',
+            },
+          },
+        ],
+      });
+
+      await migrateNews();
+
+      expect(contenfulEnv.createEntryWithId).toHaveBeenCalledWith(
+        'news',
+        'news-1',
+        {
+          fields: {
+            frequency: { 'en-US': 'News Articles' },
+            link: { 'en-US': null },
+            linkText: { 'en-US': undefined },
+            shortText: { 'en-US': undefined },
+            text: { 'en-US': null },
             thumbnail: { 'en-US': null },
             title: { 'en-US': 'news' },
             publishDate: { 'en-US': undefined },
@@ -262,7 +295,7 @@ describe('Migrate news', () => {
         {
           fields: {
             frequency: { 'en-US': 'News Articles' },
-            link: { 'en-US': undefined },
+            link: { 'en-US': null },
             linkText: { 'en-US': undefined },
             shortText: { 'en-US': undefined },
             text: { 'en-US': null },

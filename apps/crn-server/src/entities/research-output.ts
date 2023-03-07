@@ -131,13 +131,13 @@ const parseGraphqlTeamLite = (
 });
 
 const parseGraphqlResearchOutputLite = ({
-  id,
+  id: researchOutputId,
   flatData,
 }: FetchResearchOutputRelatedResearch): Pick<
   ResearchOutputDataObject,
   'id' | 'title' | 'type' | 'documentType' | 'teams'
 > => ({
-  id,
+  id: researchOutputId,
   title: flatData?.title || '',
   type: researchOutputMapType(flatData?.type) || undefined,
   documentType:

@@ -37,6 +37,9 @@ declare module '@emotion/react' {
       ExternalLink?: {
         styles: SerializedStyles;
       };
+      EventPage?: {
+        containerStyles: SerializedStyles;
+      };
     };
   }
 }

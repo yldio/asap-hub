@@ -3,7 +3,7 @@ import { BasicEvent } from '../event-common';
 import { CalendarResponse } from './calendar';
 
 export interface EventSpeakerUser {
-  id?: string;
+  id: string;
   firstName?: string;
   lastName?: string;
   displayName: string;

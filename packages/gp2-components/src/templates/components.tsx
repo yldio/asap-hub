@@ -40,6 +40,11 @@ const components = {
       margin: 0,
     },
   },
+  EventPage: {
+    containerStyles: {
+      padding: 0,
+    },
+  },
 };
 
 export default components;

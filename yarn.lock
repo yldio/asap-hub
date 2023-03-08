@@ -425,7 +425,7 @@ __metadata:
     "@types/node": 14.18.37
     contentful-cli: 1.19.1
     contentful-management: ^10.19.3
-    contentful-migrate: "deluan/contentful-migrate#37b9b898599b9ba48644534d3f340b4c169df212"
+    contentful-migrate: "deluan/contentful-migrate#4231ccf14a49e35cdb8d58d5c925473532f1dd83"
     graphql: 15.8.0
     graphql-request: 3.4.0
     graphql-tag: 2.12.6
@@ -20182,13 +20182,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"contentful-migrate@deluan/contentful-migrate#37b9b898599b9ba48644534d3f340b4c169df212":
+"contentful-migrate@deluan/contentful-migrate#4231ccf14a49e35cdb8d58d5c925473532f1dd83":
   version: 0.17.0
-  resolution: "contentful-migrate@https://github.com/deluan/contentful-migrate.git#commit=37b9b898599b9ba48644534d3f340b4c169df212"
+  resolution: "contentful-migrate@https://github.com/deluan/contentful-migrate.git#commit=4231ccf14a49e35cdb8d58d5c925473532f1dd83"
   dependencies:
     chalk: ^3.0.0
     contentful-management: ^7.11.0
-    contentful-migration: ^4.12.6
+    contentful-migration: ^4.5.0
     dateformat: ^3.0.3
     eslint: ^6.8.0
     eslint-config-standard: ^14.1.0
@@ -20206,7 +20206,7 @@ __metadata:
     yargs: ^15.3.0
   bin:
     ctf-migrate: ./bin/ctf-migrate
-  checksum: 56bd928113b77c49218c4bc11770fd72a367419d25ea4d47ab786edb1aa16ea2591f1a8974971693e980453cc5456647dd411d81ab628e0b893bfb3523d87c6f
+  checksum: a38983d48a0c22f14731fdbad807dade4bc0120caa8516cb30cfc98f3d984e3f7ed002966644f786bb6813211c9b719adac93fd2a7774f9b09036c9d068610a5
   languageName: node
   linkType: hard
 
@@ -20236,7 +20236,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"contentful-migration@npm:^4.12.6":
+"contentful-migration@npm:^4.5.0":
   version: 4.12.9
   resolution: "contentful-migration@npm:4.12.9"
   dependencies:

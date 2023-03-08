@@ -4,9 +4,9 @@ import { StaticRouter } from 'react-router-dom';
 import { ComponentProps } from 'react';
 import { waitFor } from '@testing-library/dom';
 
-import ResearchOutputRelatedOutputsCard from '../ResearchOutputRelatedOutputsCard';
+import ResearchOutputRelatedResearchCard from '../ResearchOutputRelatedResearchCard';
 
-const props: ComponentProps<typeof ResearchOutputRelatedOutputsCard> = {
+const props: ComponentProps<typeof ResearchOutputRelatedResearchCard> = {
   relatedResearch: [],
   isSaving: false,
 };
@@ -14,7 +14,7 @@ const props: ComponentProps<typeof ResearchOutputRelatedOutputsCard> = {
 it('renders the contributors card form', async () => {
   const { getByText } = render(
     <StaticRouter>
-      <ResearchOutputRelatedOutputsCard {...props} />
+      <ResearchOutputRelatedResearchCard {...props} />
     </StaticRouter>,
   );
   expect(getByText(/Are there any related outputs/i)).toBeVisible();
@@ -23,11 +23,21 @@ it('renders the contributors card form', async () => {
 describe('Related Research Multiselect', () => {
   it('should render provided values', () => {
     const { getByText } = render(
-      <ResearchOutputRelatedOutputsCard
+      <ResearchOutputRelatedResearchCard
         {...props}
         relatedResearch={[
-          { label: 'First Related Research', value: '1' },
-          { label: 'Second Related Research', value: '2' },
+          {
+            label: 'First Related Research',
+            value: '1',
+            type: '3D Printing',
+            documentType: 'Report',
+          },
+          {
+            label: 'Second Related Research',
+            value: '2',
+            type: 'Analysis',
+            documentType: 'Article',
+          },
         ]}
       />,
     );
@@ -43,7 +53,7 @@ describe('Related Research Multiselect', () => {
     ]);
 
     const { getByText, getByLabelText, queryByText } = render(
-      <ResearchOutputRelatedOutputsCard
+      <ResearchOutputRelatedResearchCard
         {...props}
         getRelatedResearchSuggestions={loadOptions}
         onChangeRelatedResearch={mockOnChange}
@@ -62,7 +72,7 @@ describe('Related Research Multiselect', () => {
     const loadOptions = jest.fn();
     loadOptions.mockResolvedValue([]);
     const { getByLabelText, queryByText } = render(
-      <ResearchOutputRelatedOutputsCard
+      <ResearchOutputRelatedResearchCard
         {...props}
         getRelatedResearchSuggestions={loadOptions}
       />,

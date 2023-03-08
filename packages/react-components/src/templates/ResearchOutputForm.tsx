@@ -20,7 +20,7 @@ import {
 import { mobileScreen, perRem } from '../pixels';
 import { Button } from '../atoms';
 import ResearchOutputContributorsCard from '../organisms/ResearchOutputContributorsCard';
-import ResearchOutputRelatedOutputsCard from '../organisms/ResearchOutputRelatedOutputsCard';
+import ResearchOutputRelatedResearchCard from '../organisms/ResearchOutputRelatedResearchCard';
 import { usePushFromHere } from '../routing';
 import {
   noop,
@@ -43,10 +43,6 @@ type ResearchOutputFormProps = Pick<
     | 'getAuthorSuggestions'
     | 'getTeamSuggestions'
     | 'authorsRequired'
-  > &
-  Pick<
-    ComponentProps<typeof ResearchOutputRelatedOutputsCard>,
-    'getRelatedResearchSuggestions'
   > & {
     onSave: (
       output: ResearchOutputPostRequest,
@@ -59,6 +55,11 @@ type ResearchOutputFormProps = Pick<
     researchTags: ResearchTagResponse[];
     selectedTeams: NonNullable<
       ComponentProps<typeof ResearchOutputContributorsCard>['teams']
+    >;
+    getRelatedResearchSuggestions?: NonNullable<
+      ComponentProps<
+        typeof ResearchOutputRelatedResearchCard
+      >['getRelatedResearchSuggestions']
     >;
     researchOutputData?: ResearchOutputResponse;
     tagSuggestions: string[];
@@ -205,12 +206,16 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
 
   const [relatedResearch, setRelatedResearch] = useState<
     NonNullable<
-      ComponentProps<typeof ResearchOutputRelatedOutputsCard>['relatedResearch']
+      ComponentProps<
+        typeof ResearchOutputRelatedResearchCard
+      >['relatedResearch']
     >
   >(
     researchOutputData?.relatedResearch?.map((research) => ({
       value: research.id,
       label: research.title,
+      type: research.type,
+      documentType: research.documentType,
     })) || [],
   );
 
@@ -382,7 +387,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                 isEditMode={!!researchOutputData}
                 authorsRequired={authorsRequired}
               />
-              <ResearchOutputRelatedOutputsCard
+              <ResearchOutputRelatedResearchCard
                 isSaving={isSaving}
                 relatedResearch={relatedResearch}
                 onChangeRelatedResearch={setRelatedResearch}

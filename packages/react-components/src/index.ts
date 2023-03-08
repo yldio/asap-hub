@@ -139,6 +139,7 @@ export {
   RemindersCard,
   ResearchOutputExtraInformationCard,
   ResearchOutputHeader,
+  ResearchOutputRelatedResearchCard,
   ResultList,
   RichText,
   RichTextCard,
@@ -233,3 +234,4 @@ export * from './theme';
 export { noop } from './utils';
 export { pixels, text, authTestUtils, utils, mail };
 export type { AccentVariant } from './atoms';
+export type { ResearchOutputOption } from './utils';

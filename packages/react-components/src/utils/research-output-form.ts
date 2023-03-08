@@ -11,12 +11,19 @@ import { isInternalUser } from '@asap-hub/validation';
 import { ComponentProps, ComponentPropsWithRef } from 'react';
 import AuthorSelect from '../organisms/AuthorSelect';
 import ResearchOutputContributorsCard from '../organisms/ResearchOutputContributorsCard';
-import ResearchOutputRelatedOutputsCard from '../organisms/ResearchOutputRelatedOutputsCard';
+import ResearchOutputRelatedResearchCard from '../organisms/ResearchOutputRelatedResearchCard';
+import { MultiSelectOptionsType } from '../atoms';
 
 export type getTeamState = {
   team: TeamResponse | undefined;
   researchOutputData: ResearchOutputResponse | undefined;
 };
+
+export type ResearchOutputOption = Pick<
+  ResearchOutputResponse,
+  'type' | 'documentType'
+> &
+  MultiSelectOptionsType;
 
 const identifierTypeToFieldName: Record<
   ResearchOutputIdentifierType,
@@ -109,7 +116,7 @@ export type ResearchOutputPayload = {
     ComponentProps<typeof ResearchOutputContributorsCard>['teams']
   >;
   relatedResearch?: NonNullable<
-    ComponentProps<typeof ResearchOutputRelatedOutputsCard>['relatedResearch']
+    ComponentProps<typeof ResearchOutputRelatedResearchCard>['relatedResearch']
   >;
   usageNotes: ResearchOutputPostRequest['usageNotes'];
   asapFunded: DecisionOption;

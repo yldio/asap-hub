@@ -42,6 +42,7 @@ export { default as RemindersCard } from './RemindersCard';
 export { default as ResearchOutputExtraInformationCard } from './ResearchOutputExtraInformationCard';
 export { default as ResearchOutputFormSharingCard } from './ResearchOutputFormSharingCard';
 export { default as ResearchOutputHeader } from './ResearchOutputHeader';
+export { default as ResearchOutputRelatedResearchCard } from './ResearchOutputRelatedResearchCard';
 export { default as ResultList } from './ResultList';
 export { default as RichText } from './RichText';
 export { default as RichTextCard } from './RichTextCard';

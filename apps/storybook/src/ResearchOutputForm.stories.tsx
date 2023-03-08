@@ -4,7 +4,10 @@ import {
   researchTagMethodResponse,
 } from '@asap-hub/fixtures';
 import { researchOutputDocumentTypeToType } from '@asap-hub/model';
-import { ResearchOutputForm } from '@asap-hub/react-components';
+import {
+  ResearchOutputForm,
+  ResearchOutputOption,
+} from '@asap-hub/react-components';
 import { boolean } from '@storybook/addon-knobs';
 import { StaticRouter } from 'react-router-dom';
 
@@ -53,7 +56,14 @@ export const Normal = () => (
       getRelatedResearchSuggestions={() =>
         new Promise((resolve) => {
           setTimeout(() => {
-            resolve([{ label: 'Research 1', value: '1' }]);
+            resolve([
+              {
+                label: 'Research 11',
+                value: '1',
+                type: 'Preprint',
+                documentType: 'Report',
+              } as ResearchOutputOption,
+            ]);
           }, 1000);
         })
       }

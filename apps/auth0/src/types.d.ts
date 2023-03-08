@@ -24,8 +24,8 @@ export type DeepPartial<T> = {
 
 type Auth0Secrets = {
   secrets: {
-    BASE_PR_APP_DOMAIN: string; // hub.asap.science / gp2.asap.science
-    API_URL: string; // https://api-dev.hub.asap.science / https://api-dev.gp2.asap.science
+    PR_APP_DOMAIN: string; // hub.asap.science / gp2.asap.science
+    ASAP_API_URL: string; // https://api-dev.hub.asap.science / https://api-dev.gp2.asap.science
     AUTH0_SHARED_SECRET: string;
     AUTH0_ADDITIONAL_CLAIM_DOMAIN?: string; // 'https://dev.hub.asap.science' / https://dev.gp2.asap.science in development to allow local login
   };

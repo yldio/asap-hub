@@ -60,3 +60,8 @@ export const keywords = [
 export type Keyword = typeof keywords[number];
 export const isKeyword = (data: string | null): data is Keyword =>
   keywords.includes(data as Keyword);
+
+export interface Calendar {
+  id: string;
+  name: string;
+}

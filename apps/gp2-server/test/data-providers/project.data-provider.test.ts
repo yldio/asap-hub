@@ -101,233 +101,243 @@ describe('Project Data Provider', () => {
         startDate: '',
       });
     });
-    describe('FetchById', () => {
-      test('Should fetch the project from squidex graphql', async () => {
-        const result = await projectDataProviderMockGraphqlServer.fetchById(
-          'project-id',
-        );
+    test('Should default null calendars to undefined', async () => {
+      const mockResponse = getSquidexProjectsGraphqlResponse();
+      const project = getGraphQLProject();
+      project.flatData.calendars = null;
+      mockResponse.queryProjectsContentsWithTotal!.items = [project];
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
-        expect(result).toMatchObject(getProjectDataObject());
+      const { items } = await projectDataProvider.fetch();
+      expect(items[0]).toMatchObject({
+        calendar: undefined,
       });
-      test('Should return null when the project is not found', async () => {
-        const mockResponse = getSquidexProjectGraphqlResponse();
-        mockResponse.findProjectsContent = null;
-        squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+    });
+  });
+  describe('FetchById', () => {
+    test('Should fetch the project from squidex graphql', async () => {
+      const result = await projectDataProviderMockGraphqlServer.fetchById(
+        'project-id',
+      );
 
-        expect(await projectDataProvider.fetchById('not-found')).toBeNull();
+      expect(result).toMatchObject(getProjectDataObject());
+    });
+    test('Should return null when the project is not found', async () => {
+      const mockResponse = getSquidexProjectGraphqlResponse();
+      mockResponse.findProjectsContent = null;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      expect(await projectDataProvider.fetchById('not-found')).toBeNull();
+    });
+  });
+  describe('Parsing', () => {
+    test('the project is parsed', () => {
+      const project = getGraphQLProject();
+      const projectDataObject = parseProjectToDataObject(project);
+      const expected = getProjectDataObject();
+      expect(projectDataObject).toEqual(expected);
+    });
+    test('with no status', () => {
+      const project = getGraphQLProject();
+      project.flatData.status = null;
+      expect(() => parseProjectToDataObject(project)).toThrowError(
+        new TypeError('status is unknown'),
+      );
+    });
+    describe('traineeProject', () => {
+      test('if doesnt exist it returns as false', () => {
+        const project = getGraphQLProject();
+        project.flatData.traineeProject = null;
+        const { traineeProject } = parseProjectToDataObject(project);
+        expect(traineeProject).toEqual(false);
+      });
+      test('returns if available', () => {
+        const project = getGraphQLProject();
+        project.flatData.traineeProject = true;
+        const { traineeProject } = parseProjectToDataObject(project);
+        expect(traineeProject).toEqual(true);
+      });
+    });
+    describe('opportunitiesLink', () => {
+      test('if doesnt exist it returns as false', () => {
+        const project = getGraphQLProject();
+        project.flatData.opportunitiesLink = null;
+        const { opportunitiesLink } = parseProjectToDataObject(project);
+        expect(opportunitiesLink).toBeUndefined();
+      });
+      test('returns if available', () => {
+        const project = getGraphQLProject();
+        project.flatData.opportunitiesLink = 'https://link';
+        const { opportunitiesLink } = parseProjectToDataObject(project);
+        expect(opportunitiesLink).toEqual('https://link');
       });
     });
 
-    describe('Parsing', () => {
-      test('the project is parsed', () => {
+    describe('members', () => {
+      test('undefined members returns empty array', () => {
         const project = getGraphQLProject();
-        const projectDataObject = parseProjectToDataObject(project);
-        const expected = getProjectDataObject();
-        expect(projectDataObject).toEqual(expected);
+        project.flatData.members = null;
+        const { members } = parseProjectToDataObject(project);
+        expect(members).toEqual([]);
       });
-      test('with no status', () => {
+      test('avatar urls are added if available', () => {
         const project = getGraphQLProject();
-        project.flatData.status = null;
-        expect(() => parseProjectToDataObject(project)).toThrowError(
-          new TypeError('status is unknown'),
+        const member = getGraphQLProjectMember();
+        member!.user![0]!.flatData.avatar = [{ id: 'avatar-id' }];
+        project.flatData.members = [member];
+        const { members } = parseProjectToDataObject(project);
+        expect(members[0]?.avatarUrl).toEqual(
+          `${baseUrl}/api/assets/${appName}/avatar-id`,
         );
       });
-      describe('traineeProject', () => {
-        test('if doesnt exist it returns as false', () => {
-          const project = getGraphQLProject();
-          project.flatData.traineeProject = null;
-          const { traineeProject } = parseProjectToDataObject(project);
-          expect(traineeProject).toEqual(false);
-        });
-        test('returns if available', () => {
-          const project = getGraphQLProject();
-          project.flatData.traineeProject = true;
-          const { traineeProject } = parseProjectToDataObject(project);
-          expect(traineeProject).toEqual(true);
-        });
-      });
-      describe('opportunitiesLink', () => {
-        test('if doesnt exist it returns as false', () => {
-          const project = getGraphQLProject();
-          project.flatData.opportunitiesLink = null;
-          const { opportunitiesLink } = parseProjectToDataObject(project);
-          expect(opportunitiesLink).toBeUndefined();
-        });
-        test('returns if available', () => {
-          const project = getGraphQLProject();
-          project.flatData.opportunitiesLink = 'https://link';
-          const { opportunitiesLink } = parseProjectToDataObject(project);
-          expect(opportunitiesLink).toEqual('https://link');
-        });
-      });
 
-      describe('members', () => {
-        test('undefined members returns empty array', () => {
-          const project = getGraphQLProject();
-          project.flatData.members = null;
-          const { members } = parseProjectToDataObject(project);
-          expect(members).toEqual([]);
-        });
-        test('avatar urls are added if available', () => {
-          const project = getGraphQLProject();
-          const member = getGraphQLProjectMember();
-          member!.user![0]!.flatData.avatar = [{ id: 'avatar-id' }];
-          project.flatData.members = [member];
-          const { members } = parseProjectToDataObject(project);
-          expect(members[0]?.avatarUrl).toEqual(
-            `${baseUrl}/api/assets/${appName}/avatar-id`,
-          );
-        });
-
-        test('should skip the user from the result if the user property is undefined', () => {
-          const project = getGraphQLProject();
-          const member = getGraphQLProjectMember();
-          member!.user = null;
-          project.flatData.members = [member];
-          const { members } = parseProjectToDataObject(project);
-          expect(members).toEqual([]);
-        });
-
-        test('should skip the user from the result if the role property is undefined', () => {
-          const project = getGraphQLProject();
-          const member = getGraphQLProjectMember();
-          member!.role = null;
-          project.flatData.members = [member];
-          const { members } = parseProjectToDataObject(project);
-          expect(members).toEqual([]);
-        });
-
-        test('should skip the user from the result if the user is not onboarded', () => {
-          const project = getGraphQLProject();
-          const member = getGraphQLProjectMember();
-          member!.user![0]!.flatData.onboarded = false;
-          project.flatData.members = [member];
-          const { members } = parseProjectToDataObject(project);
-          expect(members).toEqual([]);
-        });
-        test.each`
-          role                                          | expectedRole
-          ${ProjectsDataMembersRoleEnum.ProjectManager} | ${'Project manager'}
-          ${ProjectsDataMembersRoleEnum.ProjectLead}    | ${'Project lead'}
-          ${ProjectsDataMembersRoleEnum.ProjectCoLead}  | ${'Project co-lead'}
-          ${ProjectsDataMembersRoleEnum.Contributor}    | ${'Contributor'}
-          ${ProjectsDataMembersRoleEnum.Investigator}   | ${'Investigator'}
-        `('should parse the role', ({ role, expectedRole }) => {
-          const project = getGraphQLProject();
-          const member = getGraphQLProjectMember();
-          member!.role = role;
-          project.flatData.members = [member];
-          const { members } = parseProjectToDataObject(project);
-          expect(members[0]?.role).toEqual(expectedRole);
-        });
-      });
-      describe('resources', () => {
-        test('should map a resource note', () => {
-          const project = getGraphQLProject();
-          const { resources } = parseProjectToDataObject(project);
-          const { resources: expectedResources } = getProjectDataObject();
-          expect(resources).toStrictEqual(expectedResources);
-        });
-        test('should ignore an external link for a resource note', () => {
-          const project = getGraphQLProject();
-          const resource = getGraphQLProjectResource();
-          resource.type = ProjectsDataResourcesTypeEnum.Note;
-          resource.externalLink = 'some external link';
-          project.flatData.resources = [resource];
-          const { resources } = parseProjectToDataObject(project);
-          const { resources: expectedResources } = getProjectDataObject();
-          expect(resources).toStrictEqual(expectedResources);
-        });
-        test('should map a resource link', () => {
-          const project = getGraphQLProject();
-          const externalLink = 'this is an external link';
-          const resource = getGraphQLProjectResource();
-          resource.type = ProjectsDataResourcesTypeEnum.Link;
-          resource.externalLink = externalLink;
-          project.flatData.resources = [resource];
-          const { resources } = parseProjectToDataObject(project);
-          const { resources: expectedResources } = getProjectDataObject();
-          expect(resources).toEqual([
-            {
-              ...expectedResources![0],
-              type: 'Link',
-              externalLink,
-            },
-          ]);
-        });
-        test('should ignore a resource if title is undefined.', () => {
-          const project = getGraphQLProject();
-          const resource = getGraphQLProjectResource();
-          resource.title = null;
-          project.flatData.resources = [resource];
-          const { resources } = parseProjectToDataObject(project);
-          expect(resources).toEqual([]);
-        });
-        test('should return a resource if description is undefined.', () => {
-          const project = getGraphQLProject();
-          const resource = getGraphQLProjectResource();
-          resource.description = null;
-          project.flatData.resources = [resource];
-          const { resources } = parseProjectToDataObject(project);
-          const description = resources![0]?.description;
-          expect(description).toBeUndefined();
-        });
-        test('should ignore a resource if external Link is undefined for a Link.', () => {
-          const project = getGraphQLProject();
-          const externalLink = null;
-          const resource = getGraphQLProjectResource();
-          resource.type = ProjectsDataResourcesTypeEnum.Link;
-          resource.externalLink = externalLink;
-          project.flatData.resources = [resource];
-          const { resources } = parseProjectToDataObject(project);
-          expect(resources).toEqual([]);
-        });
-        test('undefined resources returns empty array', () => {
-          const project = getGraphQLProject();
-          project.flatData.resources = null;
-          const { resources } = parseProjectToDataObject(project);
-          expect(resources).toEqual([]);
-        });
-      });
-      test('pm emails are added if available', () => {
-        const email = 'tony@starkenterprises.com';
+      test('should skip the user from the result if the user property is undefined', () => {
         const project = getGraphQLProject();
-        project.flatData.pmEmail = email;
-        const { pmEmail } = parseProjectToDataObject(project);
-        expect(pmEmail).toEqual(email);
+        const member = getGraphQLProjectMember();
+        member!.user = null;
+        project.flatData.members = [member];
+        const { members } = parseProjectToDataObject(project);
+        expect(members).toEqual([]);
       });
 
-      test('lead emails are added if available', () => {
-        const email = 'tony@starkenterprises.com';
+      test('should skip the user from the result if the role property is undefined', () => {
         const project = getGraphQLProject();
-        project.flatData.leadEmail = email;
-        const { leadEmail } = parseProjectToDataObject(project);
-        expect(leadEmail).toEqual(email);
+        const member = getGraphQLProjectMember();
+        member!.role = null;
+        project.flatData.members = [member];
+        const { members } = parseProjectToDataObject(project);
+        expect(members).toEqual([]);
       });
 
-      test('description is added if available', () => {
-        const expectedDescription = 'this is a description';
+      test('should skip the user from the result if the user is not onboarded', () => {
         const project = getGraphQLProject();
-        project.flatData.description = expectedDescription;
-        const { description } = parseProjectToDataObject(project);
-        expect(description).toEqual(expectedDescription);
+        const member = getGraphQLProjectMember();
+        member!.user![0]!.flatData.onboarded = false;
+        project.flatData.members = [member];
+        const { members } = parseProjectToDataObject(project);
+        expect(members).toEqual([]);
       });
-      test.each(gp2Model.keywords)('keywords are added - %s', (keyword) => {
-        const expectedKeywords = [keyword];
+      test.each`
+        role                                          | expectedRole
+        ${ProjectsDataMembersRoleEnum.ProjectManager} | ${'Project manager'}
+        ${ProjectsDataMembersRoleEnum.ProjectLead}    | ${'Project lead'}
+        ${ProjectsDataMembersRoleEnum.ProjectCoLead}  | ${'Project co-lead'}
+        ${ProjectsDataMembersRoleEnum.Contributor}    | ${'Contributor'}
+        ${ProjectsDataMembersRoleEnum.Investigator}   | ${'Investigator'}
+      `('should parse the role', ({ role, expectedRole }) => {
         const project = getGraphQLProject();
-        project.flatData.keywords = expectedKeywords;
-        const { keywords } = parseProjectToDataObject(project);
-        expect(keywords).toEqual(expectedKeywords);
-      });
-
-      test('keywords are valid', () => {
-        const expectedKeywords = ['invalid-keyword'];
-        const project = getGraphQLProject();
-        project.flatData.keywords = expectedKeywords;
-        expect(() => parseProjectToDataObject(project)).toThrow();
+        const member = getGraphQLProjectMember();
+        member!.role = role;
+        project.flatData.members = [member];
+        const { members } = parseProjectToDataObject(project);
+        expect(members[0]?.role).toEqual(expectedRole);
       });
     });
+    describe('resources', () => {
+      test('should map a resource note', () => {
+        const project = getGraphQLProject();
+        const { resources } = parseProjectToDataObject(project);
+        const { resources: expectedResources } = getProjectDataObject();
+        expect(resources).toStrictEqual(expectedResources);
+      });
+      test('should ignore an external link for a resource note', () => {
+        const project = getGraphQLProject();
+        const resource = getGraphQLProjectResource();
+        resource.type = ProjectsDataResourcesTypeEnum.Note;
+        resource.externalLink = 'some external link';
+        project.flatData.resources = [resource];
+        const { resources } = parseProjectToDataObject(project);
+        const { resources: expectedResources } = getProjectDataObject();
+        expect(resources).toStrictEqual(expectedResources);
+      });
+      test('should map a resource link', () => {
+        const project = getGraphQLProject();
+        const externalLink = 'this is an external link';
+        const resource = getGraphQLProjectResource();
+        resource.type = ProjectsDataResourcesTypeEnum.Link;
+        resource.externalLink = externalLink;
+        project.flatData.resources = [resource];
+        const { resources } = parseProjectToDataObject(project);
+        const { resources: expectedResources } = getProjectDataObject();
+        expect(resources).toEqual([
+          {
+            ...expectedResources![0],
+            type: 'Link',
+            externalLink,
+          },
+        ]);
+      });
+      test('should ignore a resource if title is undefined.', () => {
+        const project = getGraphQLProject();
+        const resource = getGraphQLProjectResource();
+        resource.title = null;
+        project.flatData.resources = [resource];
+        const { resources } = parseProjectToDataObject(project);
+        expect(resources).toEqual([]);
+      });
+      test('should return a resource if description is undefined.', () => {
+        const project = getGraphQLProject();
+        const resource = getGraphQLProjectResource();
+        resource.description = null;
+        project.flatData.resources = [resource];
+        const { resources } = parseProjectToDataObject(project);
+        const description = resources![0]?.description;
+        expect(description).toBeUndefined();
+      });
+      test('should ignore a resource if external Link is undefined for a Link.', () => {
+        const project = getGraphQLProject();
+        const externalLink = null;
+        const resource = getGraphQLProjectResource();
+        resource.type = ProjectsDataResourcesTypeEnum.Link;
+        resource.externalLink = externalLink;
+        project.flatData.resources = [resource];
+        const { resources } = parseProjectToDataObject(project);
+        expect(resources).toEqual([]);
+      });
+      test('undefined resources returns empty array', () => {
+        const project = getGraphQLProject();
+        project.flatData.resources = null;
+        const { resources } = parseProjectToDataObject(project);
+        expect(resources).toEqual([]);
+      });
+    });
+    test('pm emails are added if available', () => {
+      const email = 'tony@starkenterprises.com';
+      const project = getGraphQLProject();
+      project.flatData.pmEmail = email;
+      const { pmEmail } = parseProjectToDataObject(project);
+      expect(pmEmail).toEqual(email);
+    });
 
+    test('lead emails are added if available', () => {
+      const email = 'tony@starkenterprises.com';
+      const project = getGraphQLProject();
+      project.flatData.leadEmail = email;
+      const { leadEmail } = parseProjectToDataObject(project);
+      expect(leadEmail).toEqual(email);
+    });
+
+    test('description is added if available', () => {
+      const expectedDescription = 'this is a description';
+      const project = getGraphQLProject();
+      project.flatData.description = expectedDescription;
+      const { description } = parseProjectToDataObject(project);
+      expect(description).toEqual(expectedDescription);
+    });
+    test.each(gp2Model.keywords)('keywords are added - %s', (keyword) => {
+      const expectedKeywords = [keyword];
+      const project = getGraphQLProject();
+      project.flatData.keywords = expectedKeywords;
+      const { keywords } = parseProjectToDataObject(project);
+      expect(keywords).toEqual(expectedKeywords);
+    });
+
+    test('keywords are valid', () => {
+      const expectedKeywords = ['invalid-keyword'];
+      const project = getGraphQLProject();
+      project.flatData.keywords = expectedKeywords;
+      expect(() => parseProjectToDataObject(project)).toThrow();
+    });
     describe('milestones', () => {
       test('undefined milestones returns empty array', () => {
         const project = getGraphQLProject();

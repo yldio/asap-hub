@@ -48,7 +48,6 @@ export const projectContentQueryFragment = gql`
         id
         flatData {
           name
-          color
         }
       }
     }

@@ -111,6 +111,10 @@ export type GraphQLProjectResource = NonNullable<
   NonNullable<GraphQLProject['flatData']>['resources']
 >[number];
 
+export type GraphQLProjectCalendar = NonNullable<
+  NonNullable<GraphQLProject['flatData']>['calendars']
+>[number];
+
 const parseProjectMembers = (
   user: GraphQLProjectMemberUser,
   role: GraphQLProjectMemberRole,
@@ -175,6 +179,14 @@ export function parseProjectToDataObject({
     }) || [];
 
   const resources = project.resources?.reduce(parseResources, []) || [];
+  const calendars = project.calendars;
+  const calendar =
+    calendars && calendars[0]
+      ? {
+          id: calendars[0].id,
+          name: calendars[0].flatData.name || '',
+        }
+      : undefined;
   return {
     id,
     title: project.title || '',
@@ -191,6 +203,7 @@ export function parseProjectToDataObject({
     resources,
     traineeProject: project.traineeProject || false,
     opportunitiesLink: project.opportunitiesLink || undefined,
+    calendar,
   };
 }
 

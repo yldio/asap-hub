@@ -5034,9 +5034,7 @@ export type ProjectContentFragment = Pick<Projects, 'id'> & {
     >;
     calendars: Maybe<
       Array<
-        Pick<Calendars, 'id'> & {
-          flatData: Pick<CalendarsFlatDataDto, 'name' | 'color'>;
-        }
+        Pick<Calendars, 'id'> & { flatData: Pick<CalendarsFlatDataDto, 'name'> }
       >
     >;
   };
@@ -5098,7 +5096,7 @@ export type FetchProjectQuery = {
         calendars: Maybe<
           Array<
             Pick<Calendars, 'id'> & {
-              flatData: Pick<CalendarsFlatDataDto, 'name' | 'color'>;
+              flatData: Pick<CalendarsFlatDataDto, 'name'>;
             }
           >
         >;
@@ -5167,7 +5165,7 @@ export type FetchProjectsQuery = {
               calendars: Maybe<
                 Array<
                   Pick<Calendars, 'id'> & {
-                    flatData: Pick<CalendarsFlatDataDto, 'name' | 'color'>;
+                    flatData: Pick<CalendarsFlatDataDto, 'name'>;
                   }
                 >
               >;
@@ -5576,7 +5574,7 @@ export type WorkingGroupNetworkContentFragment = Pick<
             calendars: Maybe<
               Array<
                 Pick<Calendars, 'id'> & {
-                  flatData: Pick<CalendarsFlatDataDto, 'name' | 'color'>;
+                  flatData: Pick<CalendarsFlatDataDto, 'name'>;
                 }
               >
             >;
@@ -5626,7 +5624,7 @@ export type WorkingGroupNetworkContentFragment = Pick<
             calendars: Maybe<
               Array<
                 Pick<Calendars, 'id'> & {
-                  flatData: Pick<CalendarsFlatDataDto, 'name' | 'color'>;
+                  flatData: Pick<CalendarsFlatDataDto, 'name'>;
                 }
               >
             >;
@@ -5676,7 +5674,7 @@ export type WorkingGroupNetworkContentFragment = Pick<
             calendars: Maybe<
               Array<
                 Pick<Calendars, 'id'> & {
-                  flatData: Pick<CalendarsFlatDataDto, 'name' | 'color'>;
+                  flatData: Pick<CalendarsFlatDataDto, 'name'>;
                 }
               >
             >;
@@ -5726,7 +5724,7 @@ export type WorkingGroupNetworkContentFragment = Pick<
             calendars: Maybe<
               Array<
                 Pick<Calendars, 'id'> & {
-                  flatData: Pick<CalendarsFlatDataDto, 'name' | 'color'>;
+                  flatData: Pick<CalendarsFlatDataDto, 'name'>;
                 }
               >
             >;
@@ -5788,7 +5786,7 @@ export type FetchWorkingGroupNetworkQuery = {
                   calendars: Maybe<
                     Array<
                       Pick<Calendars, 'id'> & {
-                        flatData: Pick<CalendarsFlatDataDto, 'name' | 'color'>;
+                        flatData: Pick<CalendarsFlatDataDto, 'name'>;
                       }
                     >
                   >;
@@ -5838,7 +5836,7 @@ export type FetchWorkingGroupNetworkQuery = {
                   calendars: Maybe<
                     Array<
                       Pick<Calendars, 'id'> & {
-                        flatData: Pick<CalendarsFlatDataDto, 'name' | 'color'>;
+                        flatData: Pick<CalendarsFlatDataDto, 'name'>;
                       }
                     >
                   >;
@@ -5888,7 +5886,7 @@ export type FetchWorkingGroupNetworkQuery = {
                   calendars: Maybe<
                     Array<
                       Pick<Calendars, 'id'> & {
-                        flatData: Pick<CalendarsFlatDataDto, 'name' | 'color'>;
+                        flatData: Pick<CalendarsFlatDataDto, 'name'>;
                       }
                     >
                   >;
@@ -5938,7 +5936,7 @@ export type FetchWorkingGroupNetworkQuery = {
                   calendars: Maybe<
                     Array<
                       Pick<Calendars, 'id'> & {
-                        flatData: Pick<CalendarsFlatDataDto, 'name' | 'color'>;
+                        flatData: Pick<CalendarsFlatDataDto, 'name'>;
                       }
                     >
                   >;
@@ -5988,9 +5986,7 @@ export type WorkingGroupContentFragment = Pick<WorkingGroups, 'id'> & {
     >;
     calendars: Maybe<
       Array<
-        Pick<Calendars, 'id'> & {
-          flatData: Pick<CalendarsFlatDataDto, 'name' | 'color'>;
-        }
+        Pick<Calendars, 'id'> & { flatData: Pick<CalendarsFlatDataDto, 'name'> }
       >
     >;
   };
@@ -6039,7 +6035,7 @@ export type FetchWorkingGroupQuery = {
         calendars: Maybe<
           Array<
             Pick<Calendars, 'id'> & {
-              flatData: Pick<CalendarsFlatDataDto, 'name' | 'color'>;
+              flatData: Pick<CalendarsFlatDataDto, 'name'>;
             }
           >
         >;
@@ -6095,7 +6091,7 @@ export type FetchWorkingGroupsQuery = {
               calendars: Maybe<
                 Array<
                   Pick<Calendars, 'id'> & {
-                    flatData: Pick<CalendarsFlatDataDto, 'name' | 'color'>;
+                    flatData: Pick<CalendarsFlatDataDto, 'name'>;
                   }
                 >
               >;
@@ -6901,10 +6897,6 @@ export const ProjectContentFragmentDoc = {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'name' },
                             },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'color' },
-                            },
                           ],
                         },
                       },
@@ -7440,10 +7432,6 @@ export const WorkingGroupContentFragmentDoc = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'name' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'color' },
                             },
                           ],
                         },

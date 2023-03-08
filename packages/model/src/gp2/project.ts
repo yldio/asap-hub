@@ -1,5 +1,5 @@
 import { ListResponse } from '../common';
-import { Keyword, Resource } from './common';
+import { Calendar, Keyword, Resource } from './common';
 
 export const projectStatus = ['Active', 'Paused', 'Completed'] as const;
 export type ProjectStatus = typeof projectStatus[number];
@@ -51,6 +51,7 @@ export type ProjectDataObject = {
   resources?: Resource[];
   traineeProject: boolean;
   opportunitiesLink?: string;
+  calendar?: Calendar;
 };
 
 export type ListProjectDataObject = ListResponse<ProjectDataObject>;

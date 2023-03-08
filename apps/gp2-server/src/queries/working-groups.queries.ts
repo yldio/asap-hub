@@ -37,7 +37,6 @@ export const workingGroupContentQueryFragment = gql`
         id
         flatData {
           name
-          color
         }
       }
     }

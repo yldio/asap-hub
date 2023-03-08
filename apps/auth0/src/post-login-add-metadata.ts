@@ -69,7 +69,7 @@ const extractUser = (response: Auth0UserResponse): User | gp2Auth.User => {
   };
 };
 
-const getApiUrl = (event: Auth0PostLoginEventWithSecrets) => {
+const getApiUrls = (event: Auth0PostLoginEventWithSecrets) => {
   const redirect_uri = new URLSearchParams(event.request.query).get(
     'redirect_uri',
   )
@@ -95,7 +95,7 @@ export const onExecutePostLogin = async (
   api: Auth0PostLoginApi,
 ) => {
   try {
-    const [apiUrl, redirect_uri] = getApiUrl(event);
+    const [apiUrl, redirect_uri] = getApiUrls(event);
     const response = await got(
       `${apiUrl}/webhook/users/${event.user.user_id}`,
       {

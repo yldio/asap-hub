@@ -2,7 +2,7 @@ import { Auth0PostLoginApi } from '@vedicium/auth0-actions-sdk';
 import got from 'got';
 import type { Auth0PostLoginEventWithSecrets } from './types';
 
-const getApiUrl = (event: Auth0PostLoginEventWithSecrets) => {
+const getApiUrls = (event: Auth0PostLoginEventWithSecrets) => {
   const redirect_uri = new URLSearchParams(event.request.query).get(
     'redirect_uri',
   )
@@ -33,7 +33,7 @@ export const onExecutePostLogin = async (
 
   if (invitationCode) {
     try {
-      const [apiUrl] = getApiUrl(event);
+      const [apiUrl] = getApiUrls(event);
       await got
         .post(`${apiUrl}/webhook/users/connections`, {
           json: {

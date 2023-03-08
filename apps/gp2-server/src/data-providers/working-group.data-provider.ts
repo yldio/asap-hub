@@ -159,7 +159,8 @@ export function parseWorkingGroupToDataObject({
     ) || [];
 
   const resources = workingGroup.resources?.reduce(parseResources, []) || [];
-  const calendars = workingGroup.calendars;
+
+  const { calendars } = workingGroup;
   const calendar =
     calendars && calendars[0]
       ? {

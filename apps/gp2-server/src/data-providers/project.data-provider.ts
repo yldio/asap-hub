@@ -179,7 +179,7 @@ export function parseProjectToDataObject({
     }) || [];
 
   const resources = project.resources?.reduce(parseResources, []) || [];
-  const calendars = project.calendars;
+  const { calendars } = project;
   const calendar =
     calendars && calendars[0]
       ? {

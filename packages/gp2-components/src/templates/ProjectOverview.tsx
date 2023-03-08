@@ -80,7 +80,12 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
       {calendar ? (
         <Card overrideStyles={cardStyles}>
           <Headline3 noMargin>Events</Headline3>
-          <Events calendarId={calendar.id} />
+          <Events
+            calendarId={calendar.id}
+            paragraph={
+              'Subscribe this project calendar to stay always updated with the latest events.'
+            }
+          />
         </Card>
       ) : undefined}
     </div>

@@ -3,18 +3,16 @@ import { CalendarLink, Paragraph } from '@asap-hub/react-components';
 
 type EventsProps = {
   readonly calendarId: string;
+  readonly paragraph: string;
 };
 
 const buttonStyles = css({
   width: 'fit-content',
 });
 
-const Events: React.FC<EventsProps> = ({ calendarId }) => (
+const Events: React.FC<EventsProps> = ({ calendarId, paragraph }) => (
   <>
-    <Paragraph accent="lead">
-      Subscribe this project calendar to stay always updated with the latest
-      events.
-    </Paragraph>
+    <Paragraph accent="lead">{paragraph}</Paragraph>
     <div css={buttonStyles}>
       <CalendarLink id={calendarId}>Subscribe to Calendar</CalendarLink>
     </div>

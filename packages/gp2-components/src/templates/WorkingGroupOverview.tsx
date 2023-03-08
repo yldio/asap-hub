@@ -69,7 +69,12 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
       {calendar ? (
         <Card overrideStyles={cardStyles}>
           <Headline3 noMargin>Events</Headline3>
-          <Events calendarId={calendar.id} />
+          <Events
+            calendarId={calendar.id}
+            paragraph={
+              'Subscribe this working group calendar to stay always updated with the latest events.'
+            }
+          />
         </Card>
       ) : undefined}
     </div>

@@ -14,14 +14,14 @@ const styles = css({
 
 type FormProps<T> = {
   onSave: () => Promise<T | void>;
-  onSaveDraft: () => Promise<T | void>;
+  onSaveDraft?: () => Promise<T | void>;
   validate?: () => boolean;
   dirty: boolean; // mandatory so that it cannot be forgotten
   serverErrors?: ValidationErrorResponse['data'];
   children: (state: {
     isSaving: boolean;
     onSave: () => void | Promise<T | void>;
-    onSaveDraft: () => void | Promise<T | void>;
+    onSaveDraft?: () => void | Promise<T | void>;
     onCancel: () => void;
   }) => ReactNode;
 };
@@ -96,7 +96,9 @@ const Form = <T extends void | Record<string, unknown>>({
           onCancel,
           isSaving: status === 'isSaving',
           onSave: getWrappedOnSave(onSave),
-          onSaveDraft: getWrappedOnSave(onSaveDraft),
+          ...(onSaveDraft
+            ? { onSaveDraft: getWrappedOnSave(onSaveDraft) }
+            : {}),
         })}
       </form>
     </>

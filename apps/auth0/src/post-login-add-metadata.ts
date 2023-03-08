@@ -69,29 +69,35 @@ const extractUser = (response: Auth0UserResponse): User | gp2Auth.User => {
   };
 };
 
-export const onExecutePostLogin = async (
-  event: Auth0PostLoginEventWithSecrets,
-  api: Auth0PostLoginApi,
-) => {
+const getApiUrls = (event: Auth0PostLoginEventWithSecrets) => {
   const redirect_uri = new URLSearchParams(event.request.query).get(
     'redirect_uri',
   )
     ? new URLSearchParams(event.request.query).get('redirect_uri')
     : event.request.body.redirect_uri;
   if (!redirect_uri) {
-    return api.access.deny('Missing redirect_uri');
+    throw new Error('Missing redirect_uri');
   }
-
   const prUrlRegex = new RegExp(
-    `https://(?<pr_number>[0-9]+).${event.secrets.PR_APP_DOMAIN}`,
+    `https://(?<pr_number>[0-9]+).${event.secrets.BASE_PR_APP_DOMAIN}`,
   );
   const matches = prUrlRegex.exec(redirect_uri);
-  const apiURL = matches?.groups?.pr_number
-    ? `https://api-${matches.groups.pr_number}.${event.secrets.PR_APP_DOMAIN}`
-    : event.secrets.ASAP_API_URL;
+  return [
+    matches?.groups?.pr_number
+      ? `https://api-${matches.groups.pr_number}.${event.secrets.BASE_PR_APP_DOMAIN}`
+      : event.secrets.API_URL,
+    redirect_uri,
+  ];
+};
+
+export const onExecutePostLogin = async (
+  event: Auth0PostLoginEventWithSecrets,
+  api: Auth0PostLoginApi,
+) => {
   try {
+    const [apiUrl, redirect_uri] = getApiUrls(event);
     const response = await got(
-      `${apiURL}/webhook/users/${event.user.user_id}`,
+      `${apiUrl}/webhook/users/${event.user.user_id}`,
       {
         headers: {
           Authorization: `Basic ${event.secrets.AUTH0_SHARED_SECRET}`,

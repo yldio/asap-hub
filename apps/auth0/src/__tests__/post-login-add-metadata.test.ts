@@ -45,9 +45,9 @@ const eventBase = {
   },
   user,
   secrets: {
-    ASAP_API_URL: apiUrl,
+    API_URL: apiUrl,
     AUTH0_SHARED_SECRET: '',
-    PR_APP_DOMAIN: '',
+    BASE_PR_APP_DOMAIN: '',
     AUTH0_ADDITIONAL_CLAIM_DOMAIN: '',
   },
 } as DeepPartial<Auth0PostLoginEventWithSecrets> as Auth0PostLoginEventWithSecrets;
@@ -80,7 +80,7 @@ it('denies login if the redirect_uri is missing from query and body', async () =
   expect(apiBase.access.deny).toHaveBeenCalledWith('Missing redirect_uri');
 });
 
-it('uses ASAP_API_URL when the query redirect uri is not a PR URL', async () => {
+it('uses API_URL when the query redirect uri is not a PR URL', async () => {
   const exampleApiUrl = 'http://api2.example.com';
   nock(exampleApiUrl).get(`/webhook/users/${user.user_id}`).reply(200);
   await onExecutePostLogin(
@@ -95,7 +95,7 @@ it('uses ASAP_API_URL when the query redirect uri is not a PR URL', async () => 
       },
       secrets: {
         ...eventBase.secrets,
-        ASAP_API_URL: exampleApiUrl,
+        API_URL: exampleApiUrl,
       },
     },
     apiBase,
@@ -119,7 +119,7 @@ it('constructs PR backend API from query redirect_uri', async () => {
       },
       secrets: {
         ...eventBase.secrets,
-        PR_APP_DOMAIN: 'hub.example.com',
+        BASE_PR_APP_DOMAIN: 'hub.example.com',
       },
     },
     apiBase,
@@ -143,7 +143,7 @@ it('constructs PR backend API from body redirect_uri', async () => {
       },
       secrets: {
         ...eventBase.secrets,
-        PR_APP_DOMAIN: 'hub.example.com',
+        BASE_PR_APP_DOMAIN: 'hub.example.com',
       },
     },
     apiBase,

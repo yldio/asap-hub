@@ -17,7 +17,6 @@ const props: ComponentProps<typeof Form> = {
   dirty: false,
   children: () => null,
   onSave: () => Promise.resolve(),
-  onSaveDraft: () => Promise.resolve(),
 };
 
 let getUserConfirmation!: jest.MockedFunction<
@@ -145,6 +144,26 @@ describe('when saving', () => {
       const { getByText } = render(
         <Form {...props} onSave={handleSave} dirty>
           {({ onSave: onSubmit }) => (
+            <>
+              <input type="text" required />
+              <Button primary onClick={onSubmit}>
+                save
+              </Button>
+            </>
+          )}
+        </Form>,
+        { wrapper: MemoryRouter },
+      );
+
+      userEvent.click(getByText(/^save/i));
+      expect(handleSave).not.toHaveBeenCalled();
+    });
+
+    it('does not call onSaveDraft', () => {
+      const handleSave = jest.fn();
+      const { getByText } = render(
+        <Form {...props} onSaveDraft={handleSave} dirty>
+          {({ onSaveDraft: onSubmit }) => (
             <>
               <input type="text" required />
               <Button primary onClick={onSubmit}>

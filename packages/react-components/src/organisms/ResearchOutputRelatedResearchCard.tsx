@@ -6,21 +6,21 @@ import { noop, ResearchOutputOption } from '../utils';
 import { components } from 'react-select';
 import { perRem } from '../pixels';
 import { getIconForDocumentType } from './RecentSharedOutputs';
-import { Tag } from '../atoms';
+import { Pill } from '../atoms';
 
-const optionStyles = css({
-  display: 'flex',
-  justifyContent: 'flex-start',
-  alignItems: 'center',
-  '*': {
-    paddingRight: `${12 / perRem}em`,
-    maxHeight: '24px',
-  },
-  svg: {
-    width: '18px',
-    height: '18px',
-  },
-});
+const optionStyles = (showPill: boolean) =>
+  css({
+    display: 'grid',
+    gridTemplateColumns: `min-content${showPill ? ' min-content' : ''} auto`,
+    justifyItems: 'start',
+    alignItems: 'center',
+    alignContent: 'center',
+    columnGap: '12px',
+    svg: {
+      width: '18px',
+      height: '18px',
+    },
+  });
 
 type ResearchOutputRelatedResearchProps = {
   readonly relatedResearch: ComponentPropsWithRef<
@@ -72,19 +72,29 @@ const ResearchOutputRelatedResearchCard: React.FC<
         ),
         MultiValueLabel: (multiValueLabelProps) => (
           <components.MultiValueLabel {...multiValueLabelProps}>
-            <div css={optionStyles}>
+            <div
+              css={optionStyles(
+                multiValueLabelProps.data.documentType === 'Article',
+              )}
+            >
               {getIconForDocumentType(multiValueLabelProps.data.documentType)}
+              {multiValueLabelProps.data.documentType === 'Article' && (
+                <Pill accent="gray">{multiValueLabelProps.data.type}</Pill>
+              )}
               <span>{multiValueLabelProps.children}</span>
-              <Tag>{multiValueLabelProps.data.type}</Tag>
             </div>
           </components.MultiValueLabel>
         ),
         Option: (optionProps) => (
           <components.Option {...optionProps}>
-            <div css={optionStyles}>
+            <div
+              css={optionStyles(optionProps.data.documentType === 'Article')}
+            >
               {getIconForDocumentType(optionProps.data.documentType)}
-              <span>{optionProps.children}</span>
-              <Tag>{optionProps.data.type}</Tag>
+              {optionProps.data.documentType === 'Article' && (
+                <Pill accent="gray">{optionProps.data.type}</Pill>
+              )}
+              <div>{optionProps.children}</div>
             </div>
           </components.Option>
         ),

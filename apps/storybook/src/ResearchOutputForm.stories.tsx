@@ -4,10 +4,7 @@ import {
   researchTagMethodResponse,
 } from '@asap-hub/fixtures';
 import { researchOutputDocumentTypeToType } from '@asap-hub/model';
-import {
-  ResearchOutputForm,
-  ResearchOutputOption,
-} from '@asap-hub/react-components';
+import { ResearchOutputForm } from '@asap-hub/react-components';
 import { boolean } from '@storybook/addon-knobs';
 import { StaticRouter } from 'react-router-dom';
 
@@ -58,11 +55,23 @@ export const Normal = () => (
           setTimeout(() => {
             resolve([
               {
-                label: 'Research 11',
+                label: 'Research 1',
                 value: '1',
                 type: 'Preprint',
                 documentType: 'Report',
-              } as ResearchOutputOption,
+              },
+              {
+                label: 'Research With a very long name to display in the page',
+                value: '2',
+                type: 'Preprint',
+                documentType: 'Article',
+              },
+              {
+                label: 'Research 3',
+                value: '3',
+                type: 'Preprint',
+                documentType: 'Protocol',
+              },
             ]);
           }, 1000);
         })

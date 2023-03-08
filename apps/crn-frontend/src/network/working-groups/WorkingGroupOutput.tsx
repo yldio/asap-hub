@@ -10,8 +10,7 @@ import {
   ResearchOutputHeader,
 } from '@asap-hub/react-components';
 import { network, useRouteParams } from '@asap-hub/routing';
-import React, { useContext, useState } from 'react';
-import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
+import React, { useState } from 'react';
 import researchSuggestions from '../teams/research-suggestions';
 import { useWorkingGroupById } from './state';
 import {
@@ -24,6 +23,7 @@ import {
   usePostResearchOutput,
   usePutResearchOutput,
 } from '../../shared-research';
+import { useResearchOutputPermissions } from '../../shared-research/state';
 
 type WorkingGroupOutputProps = {
   workingGroupId: string;
@@ -45,9 +45,8 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
 
   const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
 
-  const { canCreateUpdate } = useContext(ResearchOutputPermissionsContext);
-
-  const createResearchOutput = usePostResearchOutput();
+  const createResearchOutput = usePostResearchOutput({ publish: true });
+  const createDraftResearchOutput = usePostResearchOutput({ publish: false });
   const updateResearchOutput = usePutResearchOutput();
 
   const getLabSuggestions = useLabSuggestions();
@@ -55,7 +54,15 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   const getTeamSuggestions = useTeamSuggestions();
   const researchTags = useResearchTags();
 
-  if (canCreateUpdate && workingGroup) {
+  const published = researchOutputData ? !!researchOutputData.published : false;
+
+  const permissions = useResearchOutputPermissions(
+    'workingGroups',
+    [workingGroupId],
+    published,
+  );
+
+  if (permissions.canEditResearchOutput && workingGroup) {
     return (
       <Frame title="Share Working Group Research Output">
         <ResearchOutputHeader
@@ -92,6 +99,8 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
             }),
           )}
           authorsRequired
+          published={published}
+          permissions={permissions}
           onSave={(output) =>
             researchOutputData
               ? updateResearchOutput(researchOutputData.id, {
@@ -99,6 +108,17 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
                   workingGroups: [workingGroupId],
                 }).catch(handleError(['/link', '/title'], setErrors))
               : createResearchOutput({
+                  ...output,
+                  workingGroups: [workingGroupId],
+                }).catch(handleError(['/link', '/title'], setErrors))
+          }
+          onSaveDraft={(output) =>
+            researchOutputData
+              ? updateResearchOutput(researchOutputData.id, {
+                  ...output,
+                  workingGroups: [workingGroupId],
+                }).catch(handleError(['/link', '/title'], setErrors))
+              : createDraftResearchOutput({
                   ...output,
                   workingGroups: [workingGroupId],
                 }).catch(handleError(['/link', '/title'], setErrors))

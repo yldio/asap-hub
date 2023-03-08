@@ -2,16 +2,17 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import { createResearchOutputResponse } from '@asap-hub/fixtures';
+import {
+  createResearchOutputResponse,
+  createUserResponse,
+} from '@asap-hub/fixtures';
 import { BackendError } from '@asap-hub/frontend-utils';
 import {
   ResearchOutputResponse,
+  UserResponse,
   ValidationErrorResponse,
 } from '@asap-hub/model';
-import {
-  ResearchOutputPermissionsContext,
-  ToastContext,
-} from '@asap-hub/react-context';
+import { ToastContext } from '@asap-hub/react-context';
 import {
   network,
   WorkingGroupOutputDocumentTypeParameter,
@@ -97,6 +98,7 @@ const mandatoryFields = async (
   userEvent.click(screen.getByRole('textbox', { name: /Teams/i }));
   userEvent.click(screen.getByText('Abu-Remaileh, M 1'));
   const button = screen.getByRole('button', { name: /Publish/i });
+  const saveDraftButton = screen.getByRole('button', { name: /Save Draft/i });
   return {
     publish: async () => {
       userEvent.click(button);
@@ -104,11 +106,23 @@ const mandatoryFields = async (
         expect(button).toBeEnabled();
       });
     },
+    saveDraft: async () => {
+      userEvent.click(saveDraftButton);
+      await waitFor(() => {
+        expect(saveDraftButton).toBeEnabled();
+      });
+    },
   };
 };
 
+const baseUser = createUserResponse();
 const renderPage = async ({
-  canCreateUpdate = true,
+  user = {
+    ...baseUser,
+    workingGroups: [
+      { ...baseUser.workingGroups[0], id: 'wg1', role: 'Project Manager' },
+    ],
+  },
   workingGroupId = 'wg1',
   workingGroupOutputDocumentType = 'article',
   researchOutputData,
@@ -121,9 +135,10 @@ const renderPage = async ({
     ],
   }),
 }: {
+  user?: UserResponse;
   workingGroupId?: string;
   workingGroupOutputDocumentType?: WorkingGroupOutputDocumentTypeParameter;
-  canCreateUpdate?: boolean;
+  canEditResearchOutput?: boolean;
   researchOutputData?: ResearchOutputResponse;
   history?: History;
 } = {}) => {
@@ -142,19 +157,15 @@ const renderPage = async ({
     >
       <Suspense fallback="loading">
         <ToastContext.Provider value={mockToast}>
-          <Auth0Provider user={{}}>
+          <Auth0Provider user={user}>
             <WhenReady>
               <Router history={history}>
-                <ResearchOutputPermissionsContext.Provider
-                  value={{ canCreateUpdate }}
-                >
-                  <Route path={path}>
-                    <WorkingGroupOutput
-                      workingGroupId={workingGroupId}
-                      researchOutputData={researchOutputData}
-                    />
-                  </Route>
-                </ResearchOutputPermissionsContext.Provider>
+                <Route path={path}>
+                  <WorkingGroupOutput
+                    workingGroupId={workingGroupId}
+                    researchOutputData={researchOutputData}
+                  />
+                </Route>
               </Router>
             </WhenReady>
           </Auth0Provider>
@@ -167,7 +178,6 @@ const renderPage = async ({
 
 it('Renders the working group research output form with relevant fields', async () => {
   await renderPage({
-    workingGroupId: '42',
     workingGroupOutputDocumentType: 'article',
   });
 
@@ -182,20 +192,8 @@ it('Renders the working group research output form with relevant fields', async 
   ).toBeVisible();
 });
 
-it('Shows NotFoundPage when canCreate in ResearchOutputPermissions is false', async () => {
-  await renderPage({ workingGroupId: '42', canCreateUpdate: false });
-  expect(
-    screen.queryByRole('heading', { name: /Share/i }),
-  ).not.toBeInTheDocument();
-  expect(
-    screen.getByRole('heading', {
-      name: /Sorry! We can’t seem to find that page/i,
-    }),
-  ).toBeInTheDocument();
-});
-
 it('can submit a form when form data is valid', async () => {
-  const workingGroupId = 'wg-42';
+  const workingGroupId = 'wg1';
   const link = 'https://example42.com';
   const title = 'example42 title';
   const description = 'example42 description';
@@ -251,7 +249,7 @@ it('can submit a form when form data is valid', async () => {
       methods: [],
       organisms: [],
       environments: [],
-      workingGroups: ['wg-42'],
+      workingGroups: ['wg1'],
       publishDate: undefined,
       subtype: undefined,
       usageNotes: '',
@@ -259,12 +257,102 @@ it('can submit a form when form data is valid', async () => {
       usedInPublication: undefined,
     },
     expect.anything(),
+    true,
   );
   await waitFor(() => {
     expect(history.location.pathname).toBe(
       '/shared-research/research-output-id',
     );
   });
+});
+
+it('can save draft when form data is valid', async () => {
+  const workingGroupId = 'wg1';
+  const link = 'https://example42.com';
+  const title = 'example42 title';
+  const description = 'example42 description';
+  const type = 'Preprint';
+  const doi = '10.0777';
+  const workingGroupOutputDocumentType = 'article';
+
+  const history = createMemoryHistory({
+    initialEntries: [
+      network({})
+        .workingGroups({})
+        .workingGroup({ workingGroupId })
+        .createOutput({ workingGroupOutputDocumentType }).$,
+    ],
+  });
+
+  await renderPage({
+    workingGroupId,
+    workingGroupOutputDocumentType,
+    history,
+  });
+
+  const { saveDraft } = await mandatoryFields({
+    link,
+    title,
+    description,
+    type,
+    doi,
+  });
+
+  userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
+  userEvent.click(screen.getByText('Example 1 Lab'));
+
+  await saveDraft();
+
+  expect(mockCreateResearchOutput).toHaveBeenCalledWith(
+    {
+      doi,
+      documentType: 'Article',
+      tags: [],
+      sharingStatus: 'Network Only',
+      teams: ['t0'],
+      link,
+      title,
+      description,
+      type,
+      labs: ['l0'],
+      authors: [
+        {
+          userId: 'user-id-2',
+        },
+      ],
+      methods: [],
+      organisms: [],
+      environments: [],
+      workingGroups: ['wg1'],
+      publishDate: undefined,
+      subtype: undefined,
+      usageNotes: '',
+      asapFunded: undefined,
+      usedInPublication: undefined,
+    },
+    expect.anything(),
+    false,
+  );
+  await waitFor(() => {
+    expect(history.location.pathname).toBe(
+      '/shared-research/research-output-id',
+    );
+  });
+});
+
+it('displays sorry page when user does not have editing permissions', async () => {
+  await renderPage({
+    user: {
+      ...baseUser,
+      workingGroups: [{ ...baseUser.workingGroups[0], role: 'Member' }],
+    },
+    canEditResearchOutput: false,
+    researchOutputData: {
+      ...createResearchOutputResponse(),
+      published: true,
+    },
+  });
+  expect(screen.getByText(/sorry.+page/i)).toBeVisible();
 });
 
 it('will show server side validation error for link', async () => {
@@ -282,7 +370,6 @@ it('will show server side validation error for link', async () => {
   );
 
   await renderPage({
-    workingGroupId: '42',
     workingGroupOutputDocumentType: 'article',
   });
   const { publish } = await mandatoryFields({}, true);
@@ -312,7 +399,6 @@ it('will toast server side errors for unknown errors', async () => {
   mockCreateResearchOutput.mockRejectedValue(new Error('Something went wrong'));
 
   await renderPage({
-    workingGroupId: '42',
     workingGroupOutputDocumentType: 'article',
   });
 
@@ -326,53 +412,60 @@ it('will toast server side errors for unknown errors', async () => {
   );
 });
 
-it('can edit a report working group research output', async () => {
-  const id = 'RO-ID';
-  const workingGroupId = 'wg-42';
-  const link = 'https://example42.com';
-  const title = 'example42 title';
-  const description = 'example42 description';
-  const workingGroupOutputDocumentType = 'report';
+it.each([
+  { status: 'draft', buttonName: 'Save Draft', published: false },
+  { status: 'published', buttonName: 'Save', published: true },
+])(
+  'can edit a $status working group research output',
+  async ({ buttonName, published }) => {
+    const id = 'RO-ID';
+    const workingGroupId = 'wg1';
+    const link = 'https://example42.com';
+    const title = 'example42 title';
+    const description = 'example42 description';
+    const workingGroupOutputDocumentType = 'report';
 
-  const history = createMemoryHistory({
-    initialEntries: [
-      network({})
-        .workingGroups({})
-        .workingGroup({ workingGroupId })
-        .createOutput({ workingGroupOutputDocumentType }).$,
-    ],
-  });
-  await renderPage({
-    workingGroupId,
-    workingGroupOutputDocumentType,
-    researchOutputData: {
-      ...createResearchOutputResponse(),
+    const history = createMemoryHistory({
+      initialEntries: [
+        network({})
+          .workingGroups({})
+          .workingGroup({ workingGroupId })
+          .createOutput({ workingGroupOutputDocumentType }).$,
+      ],
+    });
+    await renderPage({
+      workingGroupId,
+      workingGroupOutputDocumentType,
+      researchOutputData: {
+        ...createResearchOutputResponse(),
+        id,
+        link,
+        title,
+        description,
+        published,
+      },
+      history,
+    });
+
+    const button = screen.getByRole('button', { name: buttonName });
+    userEvent.click(button);
+    await waitFor(() => {
+      expect(button).toBeEnabled();
+      expect(history.location.pathname).toBe(
+        '/shared-research/research-output-id',
+      );
+    });
+
+    expect(mockUpdateResearchOutput).toHaveBeenCalledWith(
       id,
-      link,
-      title,
-      description,
-    },
-    history,
-  });
-
-  const button = screen.getByRole('button', { name: /Save/i });
-  userEvent.click(button);
-  await waitFor(() => {
-    expect(button).toBeEnabled();
-    expect(history.location.pathname).toBe(
-      '/shared-research/research-output-id',
+      expect.objectContaining({
+        documentType: 'Report',
+        link,
+        title,
+        description,
+        workingGroups: [workingGroupId],
+      }),
+      expect.anything(),
     );
-  });
-
-  expect(mockUpdateResearchOutput).toHaveBeenCalledWith(
-    id,
-    expect.objectContaining({
-      documentType: 'Report',
-      link,
-      title,
-      description,
-      workingGroups: [workingGroupId],
-    }),
-    expect.anything(),
-  );
-});
+  },
+);

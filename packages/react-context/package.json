@@ -18,6 +18,8 @@
   "dependencies": {
     "@asap-hub/auth": "workspace:*",
     "@asap-hub/flags": "workspace:*",
+    "@asap-hub/model": "workspace:*",
+    "@asap-hub/validation": "workspace:*",
     "@babel/runtime-corejs3": "7.21.0",
     "core-js": "3.29.0"
   },

@@ -5,7 +5,7 @@ import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { useRouteMatch, Route } from 'react-router-dom';
 import { isResearchOutputWorkingGroup } from '@asap-hub/validation';
 
-import { useResearchOutputById, useUserPermissions } from './state';
+import { useResearchOutputById, useResearchOutputPermissions } from './state';
 import TeamOutput from '../network/teams/TeamOutput';
 import WorkingGroupOutput from '../network/working-groups/WorkingGroupOutput';
 
@@ -17,13 +17,23 @@ const ResearchOutput: React.FC = () => {
   const researchOutputData = useResearchOutputById(researchOutputId);
   const backHref = useBackHref() ?? sharedResearch({}).$;
 
-  const permissions = useUserPermissions(researchOutputData);
+  const isLinkedToWorkingGroup =
+    researchOutputData && isResearchOutputWorkingGroup(researchOutputData);
+
+  const association = isLinkedToWorkingGroup ? 'workingGroups' : 'teams';
+  const associationIds = isLinkedToWorkingGroup
+    ? researchOutputData?.workingGroups.map((wg) => wg.id) || []
+    : researchOutputData?.teams.map((team) => team.id) || [];
+
+  const permissions = useResearchOutputPermissions(
+    association,
+    associationIds,
+    researchOutputData ? researchOutputData.published : false,
+  );
 
   if (researchOutputData) {
     return (
-      <ResearchOutputPermissionsContext.Provider
-        value={{ canCreateUpdate: permissions.editPublished }}
-      >
+      <ResearchOutputPermissionsContext.Provider value={permissions}>
         <Route exact path={path}>
           <Frame title={researchOutputData.title}>
             <SharedResearchOutput {...researchOutputData} backHref={backHref} />
@@ -36,7 +46,7 @@ const ResearchOutput: React.FC = () => {
               .editResearchOutput.template
           }
         >
-          {isResearchOutputWorkingGroup(researchOutputData) ? (
+          {isLinkedToWorkingGroup ? (
             <WorkingGroupOutput
               workingGroupId={researchOutputData.workingGroups[0]?.id}
               researchOutputData={researchOutputData}

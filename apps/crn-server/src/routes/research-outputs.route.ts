@@ -1,9 +1,13 @@
 import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
+  UserResponse,
 } from '@asap-hub/model';
 import { validateFetchOptions } from '@asap-hub/server-common';
-import { hasCreateUpdateResearchOutputPermissions } from '@asap-hub/validation';
+import {
+  getUserRole,
+  hasEditResearchOutputPermission,
+} from '@asap-hub/validation';
 import Boom from '@hapi/boom';
 import { Response, Router } from 'express';
 import { ResearchOutputController } from '../controllers/research-outputs';
@@ -11,6 +15,7 @@ import {
   validateResearchOutputParameters,
   validateResearchOutputPostRequestParameters,
   validateResearchOutputPostRequestParametersIdentifiers,
+  validateResearchOutputRequestQueryParameters,
   validateResearchOutputPutRequestParameters,
 } from '../validation/research-output.validation';
 
@@ -45,25 +50,31 @@ export const researchOutputRouteFactory = (
   );
 
   researchOutputRoutes.post('/research-outputs', async (req, res) => {
-    const { body, loggedInUser } = req;
+    const { body, loggedInUser, query } = req;
     const createRequest = validateResearchOutputPostRequestParameters(body);
     validateResearchOutputPostRequestParametersIdentifiers(createRequest);
 
-    if (
-      !loggedInUser ||
-      !hasCreateUpdateResearchOutputPermissions(
-        loggedInUser,
-        createRequest.teams,
-      )
-    ) {
+    const userRole = getUserRole(
+      loggedInUser as UserResponse,
+      'teams',
+      createRequest.teams,
+    );
+
+    const options = validateResearchOutputRequestQueryParameters(query);
+    const publish = options.publish ?? true;
+
+    if (!loggedInUser || !hasEditResearchOutputPermission(userRole, false)) {
       throw Boom.forbidden();
     }
 
-    const researchOutput = await researchOutputController.create({
-      ...createRequest,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      createdBy: loggedInUser!.id,
-    });
+    const researchOutput = await researchOutputController.create(
+      {
+        ...createRequest,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        createdBy: loggedInUser!.id,
+      },
+      { publish },
+    );
 
     res.status(201).json(researchOutput);
   });
@@ -76,13 +87,15 @@ export const researchOutputRouteFactory = (
       const updateRequest = validateResearchOutputPutRequestParameters(body);
       validateResearchOutputPostRequestParametersIdentifiers(body);
 
-      if (
-        !loggedInUser ||
-        !hasCreateUpdateResearchOutputPermissions(
-          loggedInUser,
-          updateRequest.teams,
-        )
-      ) {
+      const userRole = getUserRole(
+        loggedInUser as UserResponse,
+        'teams',
+        updateRequest.teams,
+      );
+
+      // TODO: update the published value in hasEditResearchOutputPermission in
+      // display draft task. Currently we are not sending the value published
+      if (!loggedInUser || !hasEditResearchOutputPermission(userRole, false)) {
         throw Boom.forbidden();
       }
 

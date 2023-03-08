@@ -1,9 +1,13 @@
-export type Flag = 'PERSISTENT_EXAMPLE';
+export type Flag =
+  | 'PERSISTENT_EXAMPLE'
+  | 'DRAFT_RESEARCH_OUTPUT'
+  | 'ASAP_DRAFT_RESEARCH_OUTPUT';
 
 export type Flags = Partial<Record<Flag, boolean | undefined>>;
 let overrides: Flags = {
   // flags already live in prod:
   // can also be used to manually disable a flag in development:
+  ASAP_DRAFT_RESEARCH_OUTPUT: false,
 };
 
 const envDefaults: Record<string, boolean> = {

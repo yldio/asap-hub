@@ -92,6 +92,7 @@ it('share outputs page is rendered when user clicks share an output and chooses 
       teams: [
         {
           ...userResponse.teams[0],
+          id: teamResponse.id,
           role: 'ASAP Staff',
         },
       ],

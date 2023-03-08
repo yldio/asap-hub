@@ -138,10 +138,13 @@ describe('/research-outputs/ route', () => {
         .set('Accept', 'application/json');
 
       expect(response.status).toBe(201);
-      expect(researchOutputControllerMock.create).toBeCalledWith({
-        ...createResearchOutputRequest,
-        createdBy: 'user-id-0',
-      });
+      expect(researchOutputControllerMock.create).toBeCalledWith(
+        {
+          ...createResearchOutputRequest,
+          createdBy: 'user-id-0',
+        },
+        { publish: true },
+      );
 
       expect(response.body).toEqual(researchOutputResponse);
     });
@@ -170,6 +173,61 @@ describe('/research-outputs/ route', () => {
         .send({ ...researchOutput })
         .set('Accept', 'application/json')
         .expect(500);
+    });
+
+    describe('Query Param validation', () => {
+      test('Should return a validation error when query param is not valid', async () => {
+        const createResearchOutputRequest = getResearchOutputPostRequest();
+
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send(createResearchOutputRequest)
+          .set('Accept', 'application/json')
+          .query('draft=true');
+
+        expect(response.status).toBe(400);
+      });
+
+      test.each([{ publish: false }, { publish: true }])(
+        'Should get the correct value for publish when it is $publish',
+        async ({ publish }) => {
+          const createResearchOutputRequest = getResearchOutputPostRequest();
+
+          const response = await supertest(app)
+            .post('/research-outputs')
+            .send(createResearchOutputRequest)
+            .set('Accept', 'application/json')
+            .query(`publish=${publish}`);
+
+          expect(response.status).toBe(201);
+          expect(researchOutputControllerMock.create).toBeCalledWith(
+            {
+              ...createResearchOutputRequest,
+              createdBy: 'user-id-0',
+            },
+            { publish },
+          );
+        },
+      );
+
+      test('Should send publish as true if query param is not set', async () => {
+        const createResearchOutputRequest = getResearchOutputPostRequest();
+
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send(createResearchOutputRequest)
+          .set('Accept', 'application/json');
+
+        const publish = true;
+        expect(response.status).toBe(201);
+        expect(researchOutputControllerMock.create).toBeCalledWith(
+          {
+            ...createResearchOutputRequest,
+            createdBy: 'user-id-0',
+          },
+          { publish },
+        );
+      });
     });
 
     describe('Parameter validation', () => {

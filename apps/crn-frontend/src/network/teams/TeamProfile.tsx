@@ -8,12 +8,15 @@ import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { network, useRouteParams } from '@asap-hub/routing';
 
 import { usePaginationParams } from '../../hooks';
-import { useResearchOutputs } from '../../shared-research/state';
+import {
+  useResearchOutputs,
+  useCanShareResearchOutput,
+} from '../../shared-research/state';
 
 import { useUpcomingAndPastEvents } from '../events';
 import ProfileSwitch from '../ProfileSwitch';
 
-import { useCanCreateUpdateResearchOutput, useTeamById } from './state';
+import { useTeamById } from './state';
 
 const loadAbout = () =>
   import(/* webpackChunkName: "network-team-about" */ './About');
@@ -52,7 +55,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
       .then(loadEventsList);
   }, [team]);
 
-  const canCreateUpdate = useCanCreateUpdateResearchOutput([teamId]);
+  const canShareResearchOutput = useCanShareResearchOutput('teams', [teamId]);
 
   const [upcomingEvents, pastEvents] = useUpcomingAndPastEvents(currentTime, {
     teamId,
@@ -80,7 +83,9 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
     };
 
     return (
-      <ResearchOutputPermissionsContext.Provider value={{ canCreateUpdate }}>
+      <ResearchOutputPermissionsContext.Provider
+        value={{ canShareResearchOutput }}
+      >
         <Switch>
           <Route path={path + createOutput.template}>
             <Frame title="Share Output">

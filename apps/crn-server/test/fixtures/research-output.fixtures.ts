@@ -161,6 +161,7 @@ export const getResearchOutputDataObject = (): ResearchOutputDataObject => ({
   organisms: ['Rat'],
   environments: ['In Vitro'],
   subtype: 'Metabolite',
+  published: true,
 });
 
 export const getListResearchOutputDataObject =
@@ -241,6 +242,7 @@ export const getResearchOutputPostRequest = (): ResearchOutputPostRequest => {
     authors,
     teams,
     workingGroups,
+    published: _published,
     ...researchOutputResponse
   } = getResearchOutputResponse();
   return {
@@ -277,6 +279,7 @@ export const getResearchOutputCreateDataObject =
       created: _created,
       contactEmails: _contactEmails,
       workingGroups: _workingGroups, // @TODO send this data to squidex once the schema has changed (1/2)
+      published: _published,
       ...researchOutputPostRequest
     } = getResearchOutputResponse();
 

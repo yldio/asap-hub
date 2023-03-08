@@ -8,6 +8,7 @@
   "references": [
     { "path": "../../packages/auth" },
     { "path": "../../packages/model" },
-    { "path": "../../packages/fixtures" }
+    { "path": "../../packages/fixtures" },
+    { "path": "../../packages/flags" }
   ]
 }

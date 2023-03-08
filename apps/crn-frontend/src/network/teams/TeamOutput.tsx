@@ -9,13 +9,12 @@ import {
   ResearchOutputForm,
   ResearchOutputHeader,
 } from '@asap-hub/react-components';
-import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import {
   network,
   TeamOutputDocumentTypeParameter,
   useRouteParams,
 } from '@asap-hub/routing';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import researchSuggestions from './research-suggestions';
 import { useTeamById } from './state';
 import {
@@ -28,6 +27,7 @@ import {
   usePutResearchOutput,
   usePostResearchOutput,
 } from '../../shared-research';
+import { useResearchOutputPermissions } from '../../shared-research/state';
 
 const useParamOutputDocumentType = (
   teamId: string,
@@ -54,9 +54,8 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   const team = useTeamById(teamId);
   const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
 
-  const { canCreateUpdate } = useContext(ResearchOutputPermissionsContext);
-
-  const createResearchOutput = usePostResearchOutput();
+  const createResearchOutput = usePostResearchOutput({ publish: true });
+  const createDraftResearchOutput = usePostResearchOutput({ publish: false });
   const updateResearchOutput = usePutResearchOutput();
 
   const getLabSuggestions = useLabSuggestions();
@@ -64,7 +63,15 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   const getTeamSuggestions = useTeamSuggestions();
   const researchTags = useResearchTags();
 
-  if (canCreateUpdate && team) {
+  const published = researchOutputData ? !!researchOutputData.published : false;
+
+  const permissions = useResearchOutputPermissions(
+    'teams',
+    [teamId],
+    published,
+  );
+
+  if (permissions.canEditResearchOutput && team) {
     return (
       <Frame title="Share Research Output">
         <ResearchOutputHeader
@@ -102,12 +109,23 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
               isFixed: index === 0,
             }),
           )}
+          published={published}
+          permissions={permissions}
           onSave={(output) =>
             researchOutputData
               ? updateResearchOutput(researchOutputData.id, output).catch(
                   handleError(['/link', '/title'], setErrors),
                 )
               : createResearchOutput(output).catch(
+                  handleError(['/link', '/title'], setErrors),
+                )
+          }
+          onSaveDraft={(output) =>
+            researchOutputData
+              ? updateResearchOutput(researchOutputData.id, output).catch(
+                  handleError(['/link', '/title'], setErrors),
+                )
+              : createDraftResearchOutput(output).catch(
                   handleError(['/link', '/title'], setErrors),
                 )
           }

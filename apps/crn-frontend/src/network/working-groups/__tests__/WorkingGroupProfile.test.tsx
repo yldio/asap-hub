@@ -114,8 +114,7 @@ describe('the share outputs page', () => {
       await renderWorkingGroupProfile(
         {
           ...createUserResponse({}, 1),
-          role: 'Project Manager',
-          id: workingGroupResponse.leaders[0].user.id,
+          workingGroups: [{ id: workingGroupId, role: 'Project Manager' }],
         },
         history,
       );

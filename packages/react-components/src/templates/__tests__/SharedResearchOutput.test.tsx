@@ -31,7 +31,11 @@ describe('Grant Documents', () => {
   it('displays edit button when user has permission', () => {
     const { queryByTitle, rerender } = render(
       <ResearchOutputPermissionsContext.Provider
-        value={{ canCreateUpdate: false }}
+        value={{
+          canEditResearchOutput: false,
+          canPublishResearchOutput: false,
+          canShareResearchOutput: false,
+        }}
       >
         <SharedResearchOutput {...props} documentType="Article" />,
       </ResearchOutputPermissionsContext.Provider>,
@@ -40,7 +44,11 @@ describe('Grant Documents', () => {
 
     rerender(
       <ResearchOutputPermissionsContext.Provider
-        value={{ canCreateUpdate: true }}
+        value={{
+          canEditResearchOutput: false,
+          canPublishResearchOutput: false,
+          canShareResearchOutput: false,
+        }}
       >
         <SharedResearchOutput {...props} documentType="Grant Document" />,
       </ResearchOutputPermissionsContext.Provider>,
@@ -49,7 +57,11 @@ describe('Grant Documents', () => {
 
     rerender(
       <ResearchOutputPermissionsContext.Provider
-        value={{ canCreateUpdate: true }}
+        value={{
+          canEditResearchOutput: true,
+          canPublishResearchOutput: false,
+          canShareResearchOutput: false,
+        }}
       >
         <SharedResearchOutput {...props} documentType="Article" />,
       </ResearchOutputPermissionsContext.Provider>,

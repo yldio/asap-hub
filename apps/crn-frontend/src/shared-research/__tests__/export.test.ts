@@ -68,6 +68,7 @@ describe('researchOutputToCSV', () => {
       organisms: 'C. Elegans,Rat',
       environments: 'In Cellulo,In Vivo',
       subtype: 'Metabolite',
+      published: true,
     });
   });
   it('flattens authors, preserves order, displays orcid and external status when available', () => {

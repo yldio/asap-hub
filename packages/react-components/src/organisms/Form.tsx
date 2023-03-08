@@ -13,15 +13,14 @@ const styles = css({
 });
 
 type FormProps<T> = {
-  onSave: () => Promise<T | void>;
-  onSaveDraft?: () => Promise<T | void>;
   validate?: () => boolean;
   dirty: boolean; // mandatory so that it cannot be forgotten
   serverErrors?: ValidationErrorResponse['data'];
   children: (state: {
     isSaving: boolean;
-    onSave: () => void | Promise<T | void>;
-    onSaveDraft?: () => void | Promise<T | void>;
+    getWrappedOnSave: (
+      onSaveFunction: () => Promise<T | void>,
+    ) => () => Promise<T | void>;
     onCancel: () => void;
   }) => ReactNode;
 };
@@ -29,8 +28,6 @@ const Form = <T extends void | Record<string, unknown>>({
   dirty,
   children,
   validate = () => true,
-  onSave,
-  onSaveDraft,
   serverErrors = [],
 }: FormProps<T>): React.ReactElement => {
   const toast = useContext(ToastContext);
@@ -95,10 +92,7 @@ const Form = <T extends void | Record<string, unknown>>({
         {children({
           onCancel,
           isSaving: status === 'isSaving',
-          onSave: getWrappedOnSave(onSave),
-          ...(onSaveDraft
-            ? { onSaveDraft: getWrappedOnSave(onSaveDraft) }
-            : {}),
+          getWrappedOnSave,
         })}
       </form>
     </>

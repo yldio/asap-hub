@@ -27,8 +27,8 @@ const OutputForm: React.FC<OutputFormType> = ({
   };
 
   return (
-    <Form onSave={() => createOutput(currentPayload)} dirty={title !== ''}>
-      {({ isSaving, onSave }) => (
+    <Form dirty={title !== ''}>
+      {({ isSaving, getWrappedOnSave }) => (
         <>
           <FormCard title="What are you sharing?">
             <LabeledTextField
@@ -40,7 +40,10 @@ const OutputForm: React.FC<OutputFormType> = ({
               enabled={!isSaving}
             />
           </FormCard>
-          <Button primary onClick={onSave}>
+          <Button
+            primary
+            onClick={getWrappedOnSave(() => createOutput(currentPayload))}
+          >
             Publish
           </Button>
         </>

@@ -16,7 +16,6 @@ import Form from '../Form';
 const props: ComponentProps<typeof Form> = {
   dirty: false,
   children: () => null,
-  onSave: () => Promise.resolve(),
 };
 
 let getUserConfirmation!: jest.MockedFunction<
@@ -142,31 +141,11 @@ describe('when saving', () => {
     it('does not call onSave', () => {
       const handleSave = jest.fn();
       const { getByText } = render(
-        <Form {...props} onSave={handleSave} dirty>
-          {({ onSave: onSubmit }) => (
+        <Form {...props} dirty>
+          {({ getWrappedOnSave }) => (
             <>
               <input type="text" required />
-              <Button primary onClick={onSubmit}>
-                save
-              </Button>
-            </>
-          )}
-        </Form>,
-        { wrapper: MemoryRouter },
-      );
-
-      userEvent.click(getByText(/^save/i));
-      expect(handleSave).not.toHaveBeenCalled();
-    });
-
-    it('does not call onSaveDraft', () => {
-      const handleSave = jest.fn();
-      const { getByText } = render(
-        <Form {...props} onSaveDraft={handleSave} dirty>
-          {({ onSaveDraft: onSubmit }) => (
-            <>
-              <input type="text" required />
-              <Button primary onClick={onSubmit}>
+              <Button primary onClick={getWrappedOnSave(handleSave)}>
                 save
               </Button>
             </>
@@ -183,11 +162,11 @@ describe('when saving', () => {
       const handleSave = jest.fn(() => Promise.resolve());
       const handleValidate = jest.fn(() => false);
       const { getByText } = render(
-        <Form {...props} validate={handleValidate} onSave={handleSave} dirty>
-          {({ onSave: onSubmit }) => (
+        <Form {...props} validate={handleValidate} dirty>
+          {({ getWrappedOnSave }) => (
             <>
               <input type="text" />
-              <Button primary onClick={onSubmit}>
+              <Button primary onClick={getWrappedOnSave(handleSave)}>
                 save
               </Button>
             </>
@@ -223,11 +202,15 @@ describe('when saving', () => {
       result = render(
         <ToastContext.Provider value={mockToast}>
           <Router history={history}>
-            <Form {...props} onSave={handleSave} dirty>
-              {({ onSave: onSubmit, isSaving }) => (
+            <Form {...props} dirty>
+              {({ getWrappedOnSave, isSaving }) => (
                 <>
                   <Link to={'/another-url'}>Navigate away</Link>
-                  <Button primary enabled={!isSaving} onClick={onSubmit}>
+                  <Button
+                    primary
+                    enabled={!isSaving}
+                    onClick={getWrappedOnSave(handleSave)}
+                  >
                     save
                   </Button>
                 </>
@@ -291,11 +274,15 @@ describe('when saving', () => {
         );
         rerender(
           <Router history={history}>
-            <Form {...props} onSave={handleSave}>
-              {({ onSave: onSubmit, isSaving }) => (
+            <Form {...props}>
+              {({ getWrappedOnSave, isSaving }) => (
                 <>
                   <Link to={'/another-url'}>Navigate away</Link>
-                  <Button primary enabled={!isSaving} onClick={onSubmit}>
+                  <Button
+                    primary
+                    enabled={!isSaving}
+                    onClick={getWrappedOnSave(handleSave)}
+                  >
                     save
                   </Button>
                 </>

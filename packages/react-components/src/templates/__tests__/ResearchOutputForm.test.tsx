@@ -154,6 +154,21 @@ it('pre populates the form with provided backend response', async () => {
   expect(screen.getByRole('button', { name: /Save/i })).toBeVisible();
 });
 
+it('displays keywords suggestions', async () => {
+  await render(
+    <StaticRouter>
+      <ResearchOutputForm
+        {...props}
+        tagSuggestions={['2D Cultures', 'Adenosine', 'Adrenal']}
+      />
+    </StaticRouter>,
+  );
+  userEvent.click(screen.getByText(/add a keyword/i));
+  expect(screen.getByText('2D Cultures')).toBeVisible();
+  expect(screen.getByText('Adenosine')).toBeVisible();
+  expect(screen.getByText('Adrenal')).toBeVisible();
+});
+
 it('displays selected teams', async () => {
   await render(
     <StaticRouter>

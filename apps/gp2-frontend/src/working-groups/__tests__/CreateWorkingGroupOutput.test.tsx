@@ -74,6 +74,8 @@ it('publishes the output', async () => {
     {
       title,
       documentType: 'Form',
+      workingGroups: expect.arrayContaining(['1']),
+      projects: undefined,
     },
     expect.anything(),
   );

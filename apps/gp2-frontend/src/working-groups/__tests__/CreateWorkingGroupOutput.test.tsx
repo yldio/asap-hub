@@ -31,7 +31,7 @@ const renderCreateWorkingGroupOutput = async (
               initialEntries={[
                 gp2Routing
                   .workingGroups({})
-                  .workingGroup({ workingGroupId: '1' })
+                  .workingGroup({ workingGroupId: 'working-group-id-1' })
                   .createOutput({ outputDocumentType: documentType }).$,
               ]}
             >
@@ -41,7 +41,8 @@ const renderCreateWorkingGroupOutput = async (
                   gp2Routing.workingGroups({}).workingGroup.template +
                   gp2Routing
                     .workingGroups({})
-                    .workingGroup({ workingGroupId: '1' }).createOutput.template
+                    .workingGroup({ workingGroupId: 'working-group-id-1' })
+                    .createOutput.template
                 }
               >
                 <CreateWorkingGroupOutput />
@@ -74,7 +75,7 @@ it('publishes the output', async () => {
     {
       title,
       documentType: 'Form',
-      workingGroups: expect.arrayContaining(['1']),
+      workingGroups: expect.arrayContaining(['working-group-id-1']),
       projects: undefined,
     },
     expect.anything(),

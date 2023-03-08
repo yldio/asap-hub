@@ -10,7 +10,7 @@ type RecordToDelete = {
 export const teardownHelper = (
   clients: SquidexRestClient[],
 ): (() => Promise<void>) => {
-  const toDelete: RecordToDelete[] = [];
+  let toDelete: RecordToDelete[] = [];
 
   for (const client of clients) {
     const create = client.create;
@@ -22,9 +22,9 @@ export const teardownHelper = (
   }
 
   return async () => {
-    while (toDelete.length) {
-      const record: RecordToDelete = toDelete.pop();
+    for (const record of toDelete) {
       await record.client.delete(record.id);
     }
+    toDelete = [];
   };
 };

@@ -28,7 +28,7 @@ export const createSpeakerToBeAnnounced = (): gp2.EventSpeaker => ({
   speaker: undefined,
 });
 
-const getSpeakers = (
+export const getSpeakers = (
   numberOfInternalSpeakers: number,
   numberOfExternalSpeakers: number,
   numberOfSpeakersToBeAnnounced: number,

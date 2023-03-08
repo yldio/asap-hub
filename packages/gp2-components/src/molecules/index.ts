@@ -11,3 +11,4 @@ export { default as UserCardInfo } from './UserCardInfo';
 export { default as UserMenu } from './UserMenu';
 export { default as UserPositions } from './UserPositions';
 export { default as UserRegion } from './UserRegion';
+export { default as EventSpeakers } from './EventSpeakers';

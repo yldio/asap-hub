@@ -1,5 +1,5 @@
 import { Frame, useBackHref } from '@asap-hub/frontend-utils';
-import { Divider, EventPage, NotFoundPage } from '@asap-hub/react-components';
+import { EventPage, NotFoundPage } from '@asap-hub/react-components';
 import { gp2, useRouteParams } from '@asap-hub/routing';
 
 import { EventSpeakers } from '@asap-hub/gp2-components';
@@ -20,12 +20,7 @@ const Event: React.FC = () => {
           displayCalendar={false}
           eventOwner={<div>GP2 Team</div>}
         >
-          {event.speakers.length && (
-            <>
-              <EventSpeakers speakers={event.speakers} />
-              <Divider />
-            </>
-          )}
+          {event.speakers.length && <EventSpeakers speakers={event.speakers} />}
         </EventPage>
       </Frame>
     );

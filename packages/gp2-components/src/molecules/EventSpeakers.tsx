@@ -4,6 +4,7 @@ import { css } from '@emotion/react';
 import {
   Avatar,
   Collapsible,
+  Divider,
   Link,
   pixels,
   Subtitle,
@@ -82,7 +83,7 @@ type ExternalOrToBeAnnouncedProps = {
 
 const ExternalOrToBeAnnounced = ({ speaker }: ExternalOrToBeAnnouncedProps) => (
   <div css={[{ display: 'flex' }, secondaryTextStyles]}>
-    <span css={{ marginRight: 9 }}>{userPlaceholderIcon}</span>
+    <span css={{ marginRight: 9, height: 24 }}>{userPlaceholderIcon}</span>
     {speaker?.name || <i>To be announced</i>}
   </div>
 );
@@ -134,7 +135,7 @@ const EventSpeakers: React.FC<EventSpeakersProps> = ({ speakers }) => {
                           {headings[idx]}:
                         </Subtitle>
                       </div>
-                      <span css={getTextStyles(idx)}>{value}</span>
+                      <div css={getTextStyles(idx)}>{value}</div>
                     </>
                   )}
                 </div>
@@ -143,6 +144,7 @@ const EventSpeakers: React.FC<EventSpeakersProps> = ({ speakers }) => {
           ))}
         </div>
       </Collapsible>
+      <Divider />
     </div>
   );
 };

@@ -376,7 +376,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                 <Button enabled={!isSaving} fullWidth onClick={handleCancel}>
                   Cancel
                 </Button>
-                {showSaveDraftButton && (
+                {showSaveDraftButton && handleSaveDraft && (
                   <Button
                     enabled={!isSaving}
                     fullWidth

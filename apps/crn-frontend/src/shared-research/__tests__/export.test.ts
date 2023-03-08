@@ -37,6 +37,7 @@ describe('researchOutputToCSV', () => {
       type: '3D Printing',
       usedInPublication: false,
       methods: ['Activity Assay', 'RNA Single Cell'],
+      relatedResearch: undefined,
     };
     expect(researchOutputToCSV(output)).toEqual({
       created: 'created',
@@ -64,7 +65,7 @@ describe('researchOutputToCSV', () => {
       tags: expect.anything(),
       teams: expect.anything(),
       workingGroups: expect.anything(),
-      relatedResearch: expect.anything(),
+      relatedResearch: '',
       methods: 'Activity Assay,RNA Single Cell',
       organisms: 'C. Elegans,Rat',
       environments: 'In Cellulo,In Vivo',
@@ -154,6 +155,19 @@ describe('researchOutputToCSV', () => {
     };
     expect(researchOutputToCSV(output).contactEmails).toMatchInlineSnapshot(
       `"atest@example.com,ctest@example.com,ztest@example.com"`,
+    );
+  });
+  it('flattens and orders related research', () => {
+    const output: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      relatedResearch: [
+        { ...createResearchOutputResponse(), title: 't1' },
+        { ...createResearchOutputResponse(), title: 't2' },
+        { ...createResearchOutputResponse(), title: 't3' },
+      ],
+    };
+    expect(researchOutputToCSV(output).relatedResearch).toMatchInlineSnapshot(
+      `"t1,t2,t3"`,
     );
   });
 

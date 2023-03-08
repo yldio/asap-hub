@@ -185,6 +185,21 @@ it('displays error message when no lab is found', async () => {
   expect(screen.getByText(/Sorry, no labs match/i)).toBeVisible();
 });
 
+it('displays error message when no related research is found', async () => {
+  const getRelatedResearchSuggestions = jest.fn().mockResolvedValue([]);
+  render(
+    <StaticRouter>
+      <ResearchOutputForm
+        {...props}
+        getRelatedResearchSuggestions={getRelatedResearchSuggestions}
+      />
+    </StaticRouter>,
+  );
+  userEvent.click(screen.getByRole('textbox', { name: /Related Outputs/i }));
+  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  expect(screen.getByText(/Sorry, no related outputs match/i)).toBeVisible();
+});
+
 it('displays current team within the form', async () => {
   render(
     <StaticRouter>
@@ -203,12 +218,14 @@ describe('on submit', () => {
   const saveFn = jest.fn();
   const getLabSuggestions = jest.fn();
   const getAuthorSuggestions = jest.fn();
+  const getRelatedResearchSuggestions = jest.fn();
 
   beforeEach(() => {
     history = createMemoryHistory();
     saveFn.mockResolvedValue({ id } as ResearchOutputResponse);
     getLabSuggestions.mockResolvedValue([]);
     getAuthorSuggestions.mockResolvedValue([]);
+    getRelatedResearchSuggestions.mockResolvedValue([]);
   });
 
   afterEach(() => {
@@ -276,6 +293,7 @@ describe('on submit', () => {
           onSave={saveFn}
           getLabSuggestions={getLabSuggestions}
           getAuthorSuggestions={getAuthorSuggestions}
+          getRelatedResearchSuggestions={getRelatedResearchSuggestions}
           researchTags={researchTags}
         />
       </Router>,
@@ -347,6 +365,23 @@ describe('on submit', () => {
     expect(saveFn).toHaveBeenLastCalledWith({
       ...expectedRequest,
       labs: ['1'],
+    });
+  });
+
+  it('can submit a related research', async () => {
+    getRelatedResearchSuggestions.mockResolvedValue([
+      { label: 'First Related Research', value: '1' },
+      { label: 'Second Related Research', value: '2' },
+    ]);
+    await setupForm();
+
+    userEvent.click(screen.getByRole('textbox', { name: /Related Outputs/i }));
+    // await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+    userEvent.click(screen.getByText('First Related Research'));
+    await submitForm();
+    expect(saveFn).toHaveBeenLastCalledWith({
+      ...expectedRequest,
+      relatedResearch: ['1'],
     });
   });
   it('can submit existing internal and external and create a new external author', async () => {

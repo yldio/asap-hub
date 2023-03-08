@@ -151,7 +151,7 @@ export class OutputSquidexDataProvider implements OutputDataProvider {
     publishDate: _,
     ...input
   }: gp2Model.OutputCreateDataObject): Promise<string> {
-    const output = getUserSquidexData({ authors, documentType, type });
+    const output = getOutputSquidexData({ authors, documentType, type });
 
     const parsedOutput = parseToSquidex({
       ...input,
@@ -174,7 +174,7 @@ export class OutputSquidexDataProvider implements OutputDataProvider {
       ...input
     }: gp2Model.OutputUpdateDataObject,
   ): Promise<string> {
-    const output = getUserSquidexData({ authors, documentType, type });
+    const output = getOutputSquidexData({ authors, documentType, type });
 
     const parsedOutput = parseToSquidex({
       ...input,
@@ -198,7 +198,7 @@ const getAuthorIdList = (authorDataObject: gp2Model.AuthorUpsertDataObject) => {
 const reverseDocumentTypeMap = reverseMap(documentTypeMap);
 const reverseTypeMap = reverseMap(typeMap);
 
-const getUserSquidexData = ({
+const getOutputSquidexData = ({
   authors,
   documentType,
   type,

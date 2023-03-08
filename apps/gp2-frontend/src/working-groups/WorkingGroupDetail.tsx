@@ -11,7 +11,7 @@ import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { usePutWorkingGroupResources, useWorkingGroupById } from './state';
 
 const { workingGroups } = gp2Routing;
@@ -24,6 +24,7 @@ const loadCreateWorkingGroupOutput = () =>
 const CreateWorkingGroupOutput = lazy(loadCreateWorkingGroupOutput);
 
 const WorkingGroupDetail: FC<Record<string, never>> = () => {
+  const { path } = useRouteMatch();
   const { workingGroupId } = useRouteParams(workingGroups({}).workingGroup);
   const workingGroup = useWorkingGroupById(workingGroupId);
 
@@ -51,7 +52,7 @@ const WorkingGroupDetail: FC<Record<string, never>> = () => {
   if (workingGroup) {
     return (
       <Switch>
-        <Route exact path={workingGroupRoute.$ + createOutputRoute.template}>
+        <Route exact path={path + createOutputRoute.template}>
           <Frame title="Create Output">
             <CreateWorkingGroupOutput />
           </Frame>

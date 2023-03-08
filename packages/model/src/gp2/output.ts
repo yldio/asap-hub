@@ -86,6 +86,8 @@ export type AuthorUpsertDataObject =
 export type OutputCreateDataObject = OutputCoreObject & {
   authors: AuthorUpsertDataObject[];
   createdBy: string;
+  workingGroups?: string[];
+  projects?: string[];
 };
 
 export type OutputUpdateDataObject = OutputCoreObject & {
@@ -112,6 +114,8 @@ export type OutputPostRequest = {
   title: string;
   type?: OutputType;
   subtype?: OutputSubType;
+  workingGroups?: string[];
+  projects?: string[];
 };
 
 export type OutputPutRequest = OutputPostRequest;

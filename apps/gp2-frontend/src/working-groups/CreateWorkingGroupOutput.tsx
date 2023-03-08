@@ -1,11 +1,13 @@
 import { CreateOutputPage, OutputForm } from '@asap-hub/gp2-components';
-import { gp2, useRouteParams } from '@asap-hub/routing';
+import { gp2 as gp2Model } from '@asap-hub/model';
+import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { useCreateOutput } from '../outputs/state';
 
-const { workingGroups } = gp2;
+const { workingGroups } = gp2Routing;
 
 const CreateWorkingGroupOutput = () => {
   const { workingGroupId } = useRouteParams(workingGroups({}).workingGroup);
+
   const { outputDocumentType } = useRouteParams(
     workingGroups({}).workingGroup({ workingGroupId }).createOutput,
   );
@@ -17,7 +19,13 @@ const CreateWorkingGroupOutput = () => {
       entityType="workingGroup"
     >
       <OutputForm
-        createOutput={createOutput}
+        createOutput={async (payload: gp2Model.OutputPostRequest) =>
+          createOutput({
+            ...payload,
+            workingGroups: [workingGroupId],
+            projects: undefined,
+          })
+        }
         documentType={outputDocumentType}
       />
     </CreateOutputPage>

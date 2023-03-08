@@ -281,7 +281,7 @@ __metadata:
     algoliasearch: 4.15.0
     apr-intercept: 3.0.4
     async-sema: 3.1.1
-    aws-sdk: 2.1328.0
+    aws-sdk: 2.1330.0
     csv-parse: 4.16.3
     got: 11.8.6
     jwt-encode: 1.0.1
@@ -563,7 +563,7 @@ __metadata:
     "@types/node": 14.18.37
     "@types/react": 17.0.53
     "@types/react-dom": 17.0.19
-    aws-sdk: 2.1328.0
+    aws-sdk: 2.1330.0
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
     core-js: 3.29.0
@@ -651,7 +651,7 @@ __metadata:
     algoliasearch: 4.15.0
     apr-intercept: 3.0.4
     aws-lambda: 1.0.7
-    aws-sdk: 2.1328.0
+    aws-sdk: 2.1330.0
     aws-xray-sdk: 3.4.1
     babel-loader: 8.3.0
     chance: 1.1.11
@@ -1024,7 +1024,7 @@ __metadata:
     "@types/node": 14.18.37
     "@types/react": 17.0.53
     "@types/react-dom": 17.0.19
-    aws-sdk: 2.1328.0
+    aws-sdk: 2.1330.0
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
     core-js: 3.29.0
@@ -1087,7 +1087,7 @@ __metadata:
     ajv: 8.11.0
     apr-intercept: 3.0.4
     aws-lambda: 1.0.7
-    aws-sdk: 2.1328.0
+    aws-sdk: 2.1330.0
     babel-loader: 8.3.0
     copy-webpack-plugin: 9.1.0
     cors: 2.8.5
@@ -1140,7 +1140,7 @@ __metadata:
     "@types/babel__core": 7.20.0
     "@types/react": 17.0.53
     "@types/react-dom": 17.0.19
-    aws-sdk: 2.1328.0
+    aws-sdk: 2.1330.0
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
     core-js: 3.29.0
@@ -1337,7 +1337,7 @@ __metadata:
     ajv-formats: 2.1.1
     apr-intercept: 3.0.4
     aws-lambda: 1.0.7
-    aws-sdk: 2.1328.0
+    aws-sdk: 2.1330.0
     csv-parse: 4.16.3
     express: 4.18.2
     express-async-errors: 3.1.1
@@ -17200,9 +17200,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:2.1328.0":
-  version: 2.1328.0
-  resolution: "aws-sdk@npm:2.1328.0"
+"aws-sdk@npm:2.1330.0":
+  version: 2.1330.0
+  resolution: "aws-sdk@npm:2.1330.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -17214,7 +17214,7 @@ __metadata:
     util: ^0.12.4
     uuid: 8.0.0
     xml2js: 0.4.19
-  checksum: 6455ac3067dccb65a530b83266863cd459b78ae82ec1dcb1d7df284046b15a5690a4478af9b0009c38650e8f0dc8a798e30ca768380a6742c987642d7ebd739b
+  checksum: 813a65ed95f6ae8b30af64a44292a54b5423fc2b946b10b31a7faf309c237f3f4686a91eb667847583a47bc413bdb21e8128ee470e7b9a4ad6f994398e9c7f8f
   languageName: node
   linkType: hard
 

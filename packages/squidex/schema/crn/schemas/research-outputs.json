@@ -530,9 +530,7 @@
           "isRequired": false,
           "isRequiredOnPublish": false,
           "isHalfWidth": false,
-          "schemaIds": [
-            "research-outputs"
-          ],
+          "schemaIds": ["research-outputs"],
           "label": "Related Research"
         }
       },

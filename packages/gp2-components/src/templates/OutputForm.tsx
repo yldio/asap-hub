@@ -29,7 +29,7 @@ const OutputForm: React.FC<OutputFormType> = ({
   return (
     <Form onSave={() => createOutput(currentPayload)} dirty={title !== ''}>
       {({ isSaving, onSave }) => (
-        <div>
+        <>
           <FormCard title="What are you sharing?">
             <LabeledTextField
               title={'Title'}
@@ -43,7 +43,7 @@ const OutputForm: React.FC<OutputFormType> = ({
           <Button primary onClick={onSave}>
             Publish
           </Button>
-        </div>
+        </>
       )}
     </Form>
   );

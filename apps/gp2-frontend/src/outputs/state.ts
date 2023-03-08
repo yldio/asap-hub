@@ -27,8 +27,6 @@ export const useOutputs = (options: GetListOptions) =>
 
 export const useCreateOutput = () => {
   const authorization = useRecoilValue(authorizationState);
-  return async (payload: gp2.OutputPostRequest) => {
-    const output = await createOutput(payload, authorization);
-    return output;
-  };
+  return (payload: gp2.OutputPostRequest) =>
+    createOutput(payload, authorization);
 };

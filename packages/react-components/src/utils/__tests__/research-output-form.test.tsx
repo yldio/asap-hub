@@ -112,6 +112,7 @@ describe('getResearchOutputPayload', () => {
       publishDate: new Date('2020-01-01').toISOString(),
       identifierType: undefined,
       identifier: undefined,
+      relatedResearch: undefined,
     });
   });
 });

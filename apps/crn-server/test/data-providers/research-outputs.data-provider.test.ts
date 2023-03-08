@@ -257,6 +257,21 @@ describe('ResearchOutputs data provider', () => {
       expect(result!.authors).toEqual([]);
     });
 
+    test('Should default related research to an empty array when missing', async () => {
+      const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
+      squidexGraphqlResponse.findResearchOutputsContent!.flatData.relatedResearch =
+        null;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
+
+      const result = await researchOutputDataProvider.fetchById(
+        researchOutputId,
+      );
+
+      expect(result!.relatedResearch).toEqual([]);
+    });
+
     test('Should default methods to an empty array when missing', async () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
       squidexGraphqlResponse.findResearchOutputsContent!.flatData.methods =

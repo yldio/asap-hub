@@ -27,8 +27,8 @@ const OutputForm: React.FC<OutputFormType> = ({
   };
 
   return (
-    <Form onSave={() => createOutput(currentPayload)} dirty={false}>
-      {({ isSaving, onSave, onCancel }) => (
+    <Form onSave={() => createOutput(currentPayload)} dirty={title !== ''}>
+      {({ isSaving, onSave }) => (
         <div>
           <FormCard title="What are you sharing?">
             <LabeledTextField

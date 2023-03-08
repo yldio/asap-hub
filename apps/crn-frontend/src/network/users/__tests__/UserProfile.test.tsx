@@ -130,7 +130,6 @@ const renderUserProfile = async (
   return result;
 };
 
-jest.retryTimes(3);
 it('renders the personal info', async () => {
   await renderUserProfile({
     ...createUserResponse(),
@@ -390,8 +389,10 @@ describe('a header edit button', () => {
               },
       }));
 
-      userEvent.upload(await screen.findByLabelText(/upload.+avatar/i), file);
+      const upload = await screen.findByLabelText(/upload.+avatar/i);
+      userEvent.upload(upload, file);
       await waitFor(() => expect(mockToken).toHaveBeenCalled());
+      await waitFor(() => expect(mockPostUserAvatar).toHaveBeenCalled());
     });
 
     it('toasts if the upload fails', async () => {
@@ -403,7 +404,8 @@ describe('a header edit button', () => {
       await renderUserProfile(userProfile);
 
       mockPostUserAvatar.mockRejectedValue(new Error('500'));
-      userEvent.upload(await screen.findByLabelText(/upload.+avatar/i), file);
+      const upload = await screen.findByLabelText(/upload.+avatar/i);
+      userEvent.upload(upload, file);
       await waitFor(() => {
         expect(mockToast).toHaveBeenCalledWith(
           expect.stringMatching(/error.+picture/i),

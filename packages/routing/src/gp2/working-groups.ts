@@ -3,7 +3,7 @@ import resource from './resource';
 
 export type OutputDocumentTypeParameter =
   | 'article'
-  | 'code/software'
+  | 'code-software'
   | 'data-release'
   | 'form'
   | 'training-materials'

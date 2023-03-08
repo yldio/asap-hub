@@ -18,7 +18,7 @@ describe('ShareOutputButton', () => {
         .map((element) => (element as HTMLAnchorElement).href),
     ).toEqual([
       expect.stringContaining('article'),
-      expect.stringContaining('code%2Fsoftware'),
+      expect.stringContaining('code-software'),
       expect.stringContaining('data-release'),
       expect.stringContaining('form'),
       expect.stringContaining('training-materials'),

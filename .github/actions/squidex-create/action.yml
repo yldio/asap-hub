@@ -50,7 +50,7 @@ runs:
         SQUIDEX_CLIENT_SECRET: ${{ inputs.squidex-ci-client-secret }}
     - name: Configure AWS credentials
       if: ${{ inputs.environment-name=='Branch' && steps.setup-app.outputs.app-created == 'true' }}
-      uses: aws-actions/configure-aws-credentials@v1
+      uses: aws-actions/configure-aws-credentials@v2
       with:
         aws-access-key-id: ${{ inputs.aws-access-key-id }}
         aws-secret-access-key: ${{ inputs.aws-secret-access-key }}

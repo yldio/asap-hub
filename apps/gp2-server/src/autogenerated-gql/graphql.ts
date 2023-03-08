@@ -5032,6 +5032,13 @@ export type ProjectContentFragment = Pick<Projects, 'id'> & {
         >
       >
     >;
+    calendars: Maybe<
+      Array<
+        Pick<Calendars, 'id'> & {
+          flatData: Pick<CalendarsFlatDataDto, 'name' | 'color'>;
+        }
+      >
+    >;
   };
 };
 
@@ -5086,6 +5093,13 @@ export type FetchProjectQuery = {
               ProjectsDataResourcesChildDto,
               'type' | 'title' | 'description' | 'externalLink'
             >
+          >
+        >;
+        calendars: Maybe<
+          Array<
+            Pick<Calendars, 'id'> & {
+              flatData: Pick<CalendarsFlatDataDto, 'name' | 'color'>;
+            }
           >
         >;
       };
@@ -5148,6 +5162,13 @@ export type FetchProjectsQuery = {
                     ProjectsDataResourcesChildDto,
                     'type' | 'title' | 'description' | 'externalLink'
                   >
+                >
+              >;
+              calendars: Maybe<
+                Array<
+                  Pick<Calendars, 'id'> & {
+                    flatData: Pick<CalendarsFlatDataDto, 'name' | 'color'>;
+                  }
                 >
               >;
             };
@@ -5552,6 +5573,13 @@ export type WorkingGroupNetworkContentFragment = Pick<
                 >
               >
             >;
+            calendars: Maybe<
+              Array<
+                Pick<Calendars, 'id'> & {
+                  flatData: Pick<CalendarsFlatDataDto, 'name' | 'color'>;
+                }
+              >
+            >;
           };
         }
       >
@@ -5593,6 +5621,13 @@ export type WorkingGroupNetworkContentFragment = Pick<
                   WorkingGroupsDataResourcesChildDto,
                   'type' | 'title' | 'description' | 'externalLink'
                 >
+              >
+            >;
+            calendars: Maybe<
+              Array<
+                Pick<Calendars, 'id'> & {
+                  flatData: Pick<CalendarsFlatDataDto, 'name' | 'color'>;
+                }
               >
             >;
           };
@@ -5638,6 +5673,13 @@ export type WorkingGroupNetworkContentFragment = Pick<
                 >
               >
             >;
+            calendars: Maybe<
+              Array<
+                Pick<Calendars, 'id'> & {
+                  flatData: Pick<CalendarsFlatDataDto, 'name' | 'color'>;
+                }
+              >
+            >;
           };
         }
       >
@@ -5679,6 +5721,13 @@ export type WorkingGroupNetworkContentFragment = Pick<
                   WorkingGroupsDataResourcesChildDto,
                   'type' | 'title' | 'description' | 'externalLink'
                 >
+              >
+            >;
+            calendars: Maybe<
+              Array<
+                Pick<Calendars, 'id'> & {
+                  flatData: Pick<CalendarsFlatDataDto, 'name' | 'color'>;
+                }
               >
             >;
           };
@@ -5736,6 +5785,13 @@ export type FetchWorkingGroupNetworkQuery = {
                       >
                     >
                   >;
+                  calendars: Maybe<
+                    Array<
+                      Pick<Calendars, 'id'> & {
+                        flatData: Pick<CalendarsFlatDataDto, 'name' | 'color'>;
+                      }
+                    >
+                  >;
                 };
               }
             >
@@ -5777,6 +5833,13 @@ export type FetchWorkingGroupNetworkQuery = {
                         WorkingGroupsDataResourcesChildDto,
                         'type' | 'title' | 'description' | 'externalLink'
                       >
+                    >
+                  >;
+                  calendars: Maybe<
+                    Array<
+                      Pick<Calendars, 'id'> & {
+                        flatData: Pick<CalendarsFlatDataDto, 'name' | 'color'>;
+                      }
                     >
                   >;
                 };
@@ -5822,6 +5885,13 @@ export type FetchWorkingGroupNetworkQuery = {
                       >
                     >
                   >;
+                  calendars: Maybe<
+                    Array<
+                      Pick<Calendars, 'id'> & {
+                        flatData: Pick<CalendarsFlatDataDto, 'name' | 'color'>;
+                      }
+                    >
+                  >;
                 };
               }
             >
@@ -5863,6 +5933,13 @@ export type FetchWorkingGroupNetworkQuery = {
                         WorkingGroupsDataResourcesChildDto,
                         'type' | 'title' | 'description' | 'externalLink'
                       >
+                    >
+                  >;
+                  calendars: Maybe<
+                    Array<
+                      Pick<Calendars, 'id'> & {
+                        flatData: Pick<CalendarsFlatDataDto, 'name' | 'color'>;
+                      }
                     >
                   >;
                 };
@@ -5909,6 +5986,13 @@ export type WorkingGroupContentFragment = Pick<WorkingGroups, 'id'> & {
         >
       >
     >;
+    calendars: Maybe<
+      Array<
+        Pick<Calendars, 'id'> & {
+          flatData: Pick<CalendarsFlatDataDto, 'name' | 'color'>;
+        }
+      >
+    >;
   };
 };
 
@@ -5950,6 +6034,13 @@ export type FetchWorkingGroupQuery = {
               WorkingGroupsDataResourcesChildDto,
               'type' | 'title' | 'description' | 'externalLink'
             >
+          >
+        >;
+        calendars: Maybe<
+          Array<
+            Pick<Calendars, 'id'> & {
+              flatData: Pick<CalendarsFlatDataDto, 'name' | 'color'>;
+            }
           >
         >;
       };
@@ -5999,6 +6090,13 @@ export type FetchWorkingGroupsQuery = {
                     WorkingGroupsDataResourcesChildDto,
                     'type' | 'title' | 'description' | 'externalLink'
                   >
+                >
+              >;
+              calendars: Maybe<
+                Array<
+                  Pick<Calendars, 'id'> & {
+                    flatData: Pick<CalendarsFlatDataDto, 'name' | 'color'>;
+                  }
                 >
               >;
             };
@@ -6786,6 +6884,33 @@ export const ProjectContentFragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'calendars' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'color' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -7295,6 +7420,33 @@ export const WorkingGroupContentFragmentDoc = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'externalLink' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'calendars' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'color' },
+                            },
+                          ],
+                        },
                       },
                     ],
                   },

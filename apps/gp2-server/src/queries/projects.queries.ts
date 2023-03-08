@@ -44,6 +44,13 @@ export const projectContentQueryFragment = gql`
         description
         externalLink
       }
+      calendars {
+        id
+        flatData {
+          name
+          color
+        }
+      }
     }
   }
 `;

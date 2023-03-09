@@ -112,6 +112,10 @@ export type GraphQLWorkingGroupResource = NonNullable<
   NonNullable<GraphQLWorkingGroup['flatData']>['resources']
 >[number];
 
+export type GraphQLWorkingGroupCalendar = NonNullable<
+  NonNullable<GraphQLWorkingGroup['flatData']>['calendars']
+>[number];
+
 const parseWorkingGroupMembers = (
   user: GraphQLWorkingGroupMemberUser,
   role: GraphQLWorkingGroupMemberRole,
@@ -156,6 +160,15 @@ export function parseWorkingGroupToDataObject({
 
   const resources = workingGroup.resources?.reduce(parseResources, []) || [];
 
+  const { calendars } = workingGroup;
+  const calendar =
+    calendars && calendars[0]
+      ? {
+          id: calendars[0].id,
+          name: calendars[0].flatData.name || '',
+        }
+      : undefined;
+
   return {
     id,
     title: workingGroup.title || '',
@@ -166,6 +179,7 @@ export function parseWorkingGroupToDataObject({
     leadingMembers: workingGroup.leadingMembers || '',
     members,
     resources,
+    calendar,
   };
 }
 

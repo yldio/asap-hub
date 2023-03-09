@@ -26,7 +26,7 @@ describe('ProjectOverview', () => {
   it('renders the contact information', () => {
     render(<ProjectOverview {...defaultProps} />);
     expect(
-      screen.getByRole('heading', { name: 'Contact Information' }),
+      screen.getByRole('heading', { name: 'Contact' }),
     ).toBeInTheDocument();
   });
   it('renders the PM email information', () => {
@@ -133,5 +133,22 @@ describe('ProjectOverview', () => {
       </ProjectOverview>,
     );
     expect(screen.getByText('Project Members (0)')).toBeInTheDocument();
+  });
+  it('renders the events', () => {
+    render(
+      <ProjectOverview
+        {...defaultProps}
+        calendar={{ id: '42', name: 'test' }}
+      />,
+    );
+
+    expect(screen.getByRole('heading', { name: 'Events' })).toBeVisible();
+  });
+  it('does not renders the events if there is no calendar', () => {
+    render(<ProjectOverview {...defaultProps} calendar={undefined} />);
+
+    expect(
+      screen.queryByRole('heading', { name: 'Events' }),
+    ).not.toBeInTheDocument();
   });
 });

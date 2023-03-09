@@ -471,15 +471,15 @@ describe('Working Group Data Provider', () => {
     });
   });
 
-  describe('patch method', () => {
+  describe('update method', () => {
     it('calls `patch` method on squidex rest client', async () => {
-      await workingGroupDataProvider.patch('123', { title: 'New title' });
+      await workingGroupDataProvider.update('123', { title: 'New title' });
 
       expect(workingGroupRestClient.patch).toHaveBeenCalled();
     });
 
     it('maps arguments to `{ iv: <arg> }` pattern expected by Squidex API', async () => {
-      await workingGroupDataProvider.patch('123', { title: 'New title' });
+      await workingGroupDataProvider.update('123', { title: 'New title' });
 
       expect(workingGroupRestClient.patch).toHaveBeenCalledWith('123', {
         title: { iv: 'New title' },

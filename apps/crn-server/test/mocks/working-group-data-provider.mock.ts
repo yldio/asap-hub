@@ -4,5 +4,5 @@ export const workingGroupDataProviderMock: jest.Mocked<WorkingGroupDataProvider>
   {
     fetchById: jest.fn(),
     fetch: jest.fn(),
-    patch: jest.fn(),
+    update: jest.fn(),
   };

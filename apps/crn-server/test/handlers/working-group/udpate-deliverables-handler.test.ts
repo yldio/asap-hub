@@ -20,11 +20,11 @@ describe('Working Group update handler', () => {
     workingGroupDataProviderMock.fetchById.mockResolvedValueOnce(
       getWorkingGroupResponse({ complete: true, deliverables }),
     );
-    workingGroupDataProviderMock.patch.mockResolvedValueOnce();
+    workingGroupDataProviderMock.update.mockResolvedValueOnce();
 
     await handler(event);
 
-    expect(workingGroupDataProviderMock.patch).toHaveBeenCalledWith(
+    expect(workingGroupDataProviderMock.update).toHaveBeenCalledWith(
       event.detail.payload.id,
       {
         deliverables: [
@@ -44,11 +44,11 @@ describe('Working Group update handler', () => {
     workingGroupDataProviderMock.fetchById.mockResolvedValueOnce(
       getWorkingGroupResponse({ complete: true, deliverables }),
     );
-    workingGroupDataProviderMock.patch.mockResolvedValueOnce();
+    workingGroupDataProviderMock.update.mockResolvedValueOnce();
 
     await handler(event);
 
-    expect(workingGroupDataProviderMock.patch).toHaveBeenCalledWith(
+    expect(workingGroupDataProviderMock.update).toHaveBeenCalledWith(
       event.detail.payload.id,
       {
         deliverables: [
@@ -68,11 +68,11 @@ describe('Working Group update handler', () => {
     workingGroupDataProviderMock.fetchById.mockResolvedValueOnce(
       getWorkingGroupResponse({ complete: false, deliverables }),
     );
-    workingGroupDataProviderMock.patch.mockResolvedValueOnce();
+    workingGroupDataProviderMock.update.mockResolvedValueOnce();
 
     await handler(event);
 
-    expect(workingGroupDataProviderMock.patch).toHaveBeenCalledWith(
+    expect(workingGroupDataProviderMock.update).toHaveBeenCalledWith(
       event.detail.payload.id,
       {
         deliverables: [
@@ -92,11 +92,11 @@ describe('Working Group update handler', () => {
     workingGroupDataProviderMock.fetchById.mockResolvedValueOnce(
       getWorkingGroupResponse({ complete: false, deliverables }),
     );
-    workingGroupDataProviderMock.patch.mockResolvedValueOnce();
+    workingGroupDataProviderMock.update.mockResolvedValueOnce();
 
     await handler(event);
 
-    expect(workingGroupDataProviderMock.patch).not.toHaveBeenCalled();
+    expect(workingGroupDataProviderMock.update).not.toHaveBeenCalled();
   });
 
   test('does not send update request if working group has no deliverables', async () => {
@@ -104,11 +104,11 @@ describe('Working Group update handler', () => {
     workingGroupDataProviderMock.fetchById.mockResolvedValueOnce(
       getWorkingGroupResponse({ complete: false, deliverables: [] }),
     );
-    workingGroupDataProviderMock.patch.mockResolvedValueOnce();
+    workingGroupDataProviderMock.update.mockResolvedValueOnce();
 
     await handler(event);
 
-    expect(workingGroupDataProviderMock.patch).not.toHaveBeenCalled();
+    expect(workingGroupDataProviderMock.update).not.toHaveBeenCalled();
   });
 
   test('does not send update request if fetch does not return a value', async () => {
@@ -118,10 +118,10 @@ describe('Working Group update handler', () => {
     ];
     const event = getWorkingGroupEvent({ complete: true, deliverables });
     workingGroupDataProviderMock.fetchById.mockResolvedValueOnce(null);
-    workingGroupDataProviderMock.patch.mockResolvedValueOnce();
+    workingGroupDataProviderMock.update.mockResolvedValueOnce();
 
     await handler(event);
 
-    expect(workingGroupDataProviderMock.patch).not.toHaveBeenCalled();
+    expect(workingGroupDataProviderMock.update).not.toHaveBeenCalled();
   });
 });

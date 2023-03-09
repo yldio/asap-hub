@@ -65,7 +65,7 @@ export const workingGroupUpdateHandler =
       logger.info(
         `Updating deliverable statuses for working group ${event.detail.payload.data?.title?.iv}`,
       );
-      await dataProvider.patch(id, { deliverables });
+      await dataProvider.update(id, { deliverables });
     } else {
       logger.info(
         `No deliverable statuses to update for working group ${event.detail.payload.data?.title?.iv}`,

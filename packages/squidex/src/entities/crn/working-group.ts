@@ -1,25 +1,18 @@
-import {
-  WorkingGroupRole,
-  DeliverableStatus,
-  WorkingGroupLeader,
-} from '@asap-hub/model';
-import { Rest, Entity } from '../common';
+import { DeliverableStatus } from '@asap-hub/model';
+import { Rest, RestPayload, Entity } from '../common';
 
-interface WorkingGroupUserConnection<T = string> {
-  role: WorkingGroupRole;
-  user: Array<T | undefined>;
-}
-
-interface WorkingGroup<TUserConnection = string, TCalendar = string> {
+interface WorkingGroup {
   title: string;
-  description: string;
-  externalLink?: string;
-  leaders: WorkingGroupUserConnection<TUserConnection>[];
-  members: WorkingGroupUserConnection<TUserConnection>[];
-  pointOfContact?: WorkingGroupLeader;
   complete: boolean;
+  description: string;
   shortText: string;
-  calendars: TCalendar[];
+  calendars: string[];
+  leaders: {
+    user: string[];
+    role: string;
+    workstreamRole: string;
+  }[];
+  members: string[];
   deliverables: {
     description: string;
     status: DeliverableStatus;
@@ -28,3 +21,4 @@ interface WorkingGroup<TUserConnection = string, TCalendar = string> {
 }
 
 export interface RestWorkingGroup extends Entity, Rest<WorkingGroup> {}
+export interface InputWorkingGroup extends Entity, RestPayload<WorkingGroup> {}

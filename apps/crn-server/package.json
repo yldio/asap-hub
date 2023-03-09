@@ -38,7 +38,7 @@
     "@asap-hub/services-common": "workspace:*",
     "@asap-hub/squidex": "workspace:*",
     "@asap-hub/validation": "workspace:*",
-    "@aws-sdk/client-cloudfront": "3.282.0",
+    "@aws-sdk/client-cloudfront": "3.287.0",
     "@babel/core": "7.21.0",
     "@babel/register": "7.21.0",
     "@babel/runtime-corejs3": "7.21.0",

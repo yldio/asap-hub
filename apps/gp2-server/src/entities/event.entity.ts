@@ -93,7 +93,7 @@ export const parseGraphQLSpeakers = (
 
 export const parseGraphQLEvent = (
   item: EventContentFragment,
-): gp2.EventResponse => {
+): gp2.EventDataObject => {
   if (!item.flatData.calendar?.[0]) {
     throw new Error(`Event (${item.id}) doesn't have a calendar"`);
   }
@@ -102,6 +102,16 @@ export const parseGraphQLEvent = (
     item.flatData.calendar[0].flatData,
   );
 
+  const workingGroup =
+    item.flatData.calendar![0].referencingWorkingGroupsContents?.map((wg) => ({
+      id: wg.id,
+      title: wg.flatData.title || '',
+    }))[0] || undefined;
+  const project =
+    item.flatData.calendar![0].referencingProjectsContents?.map((p) => ({
+      id: p.id,
+      title: p.flatData.title || '',
+    }))[0] || undefined;
   const startDate = DateTime.fromISO(item.flatData.startDate!);
 
   const meetingLink = item.flatData.meetingLink || undefined;
@@ -176,6 +186,8 @@ export const parseGraphQLEvent = (
     status: item.flatData.status,
     tags: item.flatData.tags ?? [],
     calendar,
+    workingGroup,
+    project,
     speakers,
   };
 };

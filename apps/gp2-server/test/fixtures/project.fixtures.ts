@@ -16,8 +16,8 @@ import {
 } from '../../src/data-providers/project.data-provider';
 
 export const getProjectDataObject = (): gp2Model.ProjectDataObject => ({
-  id: '42',
-  title: 'A Project',
+  id: '7',
+  title: 'a project title',
   startDate: '2020-07-06',
   endDate: '2021-12-28',
   status: 'Completed',
@@ -143,9 +143,9 @@ export const getGraphQLProject = (): NonNullable<
     NonNullable<FetchProjectsQuery>['queryProjectsContentsWithTotal']
   >['items']
 >[number] => ({
-  id: '42',
+  id: '7',
   flatData: {
-    title: 'A Project',
+    title: 'a project title',
     startDate: '2020-07-06',
     endDate: '2021-12-28',
     status: ProjectsDataStatusEnum.Completed,

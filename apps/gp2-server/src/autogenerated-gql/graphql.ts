@@ -4597,6 +4597,119 @@ export type EventContentFragment = Pick<
           CalendarsFlatDataDto,
           'googleCalendarId' | 'color' | 'name'
         >;
+        referencingProjectsContents: Maybe<
+          Array<
+            Pick<Projects, 'id'> & {
+              flatData: Pick<
+                ProjectsFlatDataDto,
+                | 'title'
+                | 'startDate'
+                | 'endDate'
+                | 'status'
+                | 'projectProposal'
+                | 'description'
+                | 'pmEmail'
+                | 'leadEmail'
+                | 'keywords'
+                | 'traineeProject'
+                | 'opportunitiesLink'
+              > & {
+                members: Maybe<
+                  Array<
+                    Pick<ProjectsDataMembersChildDto, 'role'> & {
+                      user: Maybe<
+                        Array<
+                          Pick<
+                            Users,
+                            'id' | 'created' | 'lastModified' | 'version'
+                          > & {
+                            flatData: Pick<
+                              UsersFlatDataDto,
+                              'firstName' | 'lastName' | 'onboarded'
+                            > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+                          }
+                        >
+                      >;
+                    }
+                  >
+                >;
+                milestones: Maybe<
+                  Array<
+                    Pick<
+                      ProjectsDataMilestonesChildDto,
+                      'title' | 'description' | 'status' | 'link'
+                    >
+                  >
+                >;
+                resources: Maybe<
+                  Array<
+                    Pick<
+                      ProjectsDataResourcesChildDto,
+                      'type' | 'title' | 'description' | 'externalLink'
+                    >
+                  >
+                >;
+                calendars: Maybe<
+                  Array<
+                    Pick<Calendars, 'id'> & {
+                      flatData: Pick<CalendarsFlatDataDto, 'name'>;
+                    }
+                  >
+                >;
+              };
+            }
+          >
+        >;
+        referencingWorkingGroupsContents: Maybe<
+          Array<
+            Pick<WorkingGroups, 'id'> & {
+              flatData: Pick<
+                WorkingGroupsFlatDataDto,
+                | 'title'
+                | 'shortDescription'
+                | 'leadingMembers'
+                | 'description'
+                | 'primaryEmail'
+                | 'secondaryEmail'
+              > & {
+                members: Maybe<
+                  Array<
+                    Pick<WorkingGroupsDataMembersChildDto, 'role'> & {
+                      user: Maybe<
+                        Array<
+                          Pick<
+                            Users,
+                            'id' | 'created' | 'lastModified' | 'version'
+                          > & {
+                            flatData: Pick<
+                              UsersFlatDataDto,
+                              'firstName' | 'lastName' | 'onboarded'
+                            > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+                          }
+                        >
+                      >;
+                    }
+                  >
+                >;
+                resources: Maybe<
+                  Array<
+                    Pick<
+                      WorkingGroupsDataResourcesChildDto,
+                      'type' | 'title' | 'description' | 'externalLink'
+                    >
+                  >
+                >;
+                calendars: Maybe<
+                  Array<
+                    Pick<Calendars, 'id'> & {
+                      flatData: Pick<CalendarsFlatDataDto, 'name'>;
+                    }
+                  >
+                >;
+              };
+            }
+          >
+        >;
       }>
     >;
     thumbnail: Maybe<Array<Pick<Asset, 'id'>>>;
@@ -4664,6 +4777,135 @@ export type FetchEventsQuery = {
                   flatData: Pick<
                     CalendarsFlatDataDto,
                     'googleCalendarId' | 'color' | 'name'
+                  >;
+                  referencingProjectsContents: Maybe<
+                    Array<
+                      Pick<Projects, 'id'> & {
+                        flatData: Pick<
+                          ProjectsFlatDataDto,
+                          | 'title'
+                          | 'startDate'
+                          | 'endDate'
+                          | 'status'
+                          | 'projectProposal'
+                          | 'description'
+                          | 'pmEmail'
+                          | 'leadEmail'
+                          | 'keywords'
+                          | 'traineeProject'
+                          | 'opportunitiesLink'
+                        > & {
+                          members: Maybe<
+                            Array<
+                              Pick<ProjectsDataMembersChildDto, 'role'> & {
+                                user: Maybe<
+                                  Array<
+                                    Pick<
+                                      Users,
+                                      | 'id'
+                                      | 'created'
+                                      | 'lastModified'
+                                      | 'version'
+                                    > & {
+                                      flatData: Pick<
+                                        UsersFlatDataDto,
+                                        'firstName' | 'lastName' | 'onboarded'
+                                      > & {
+                                        avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+                                      };
+                                    }
+                                  >
+                                >;
+                              }
+                            >
+                          >;
+                          milestones: Maybe<
+                            Array<
+                              Pick<
+                                ProjectsDataMilestonesChildDto,
+                                'title' | 'description' | 'status' | 'link'
+                              >
+                            >
+                          >;
+                          resources: Maybe<
+                            Array<
+                              Pick<
+                                ProjectsDataResourcesChildDto,
+                                | 'type'
+                                | 'title'
+                                | 'description'
+                                | 'externalLink'
+                              >
+                            >
+                          >;
+                          calendars: Maybe<
+                            Array<
+                              Pick<Calendars, 'id'> & {
+                                flatData: Pick<CalendarsFlatDataDto, 'name'>;
+                              }
+                            >
+                          >;
+                        };
+                      }
+                    >
+                  >;
+                  referencingWorkingGroupsContents: Maybe<
+                    Array<
+                      Pick<WorkingGroups, 'id'> & {
+                        flatData: Pick<
+                          WorkingGroupsFlatDataDto,
+                          | 'title'
+                          | 'shortDescription'
+                          | 'leadingMembers'
+                          | 'description'
+                          | 'primaryEmail'
+                          | 'secondaryEmail'
+                        > & {
+                          members: Maybe<
+                            Array<
+                              Pick<WorkingGroupsDataMembersChildDto, 'role'> & {
+                                user: Maybe<
+                                  Array<
+                                    Pick<
+                                      Users,
+                                      | 'id'
+                                      | 'created'
+                                      | 'lastModified'
+                                      | 'version'
+                                    > & {
+                                      flatData: Pick<
+                                        UsersFlatDataDto,
+                                        'firstName' | 'lastName' | 'onboarded'
+                                      > & {
+                                        avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+                                      };
+                                    }
+                                  >
+                                >;
+                              }
+                            >
+                          >;
+                          resources: Maybe<
+                            Array<
+                              Pick<
+                                WorkingGroupsDataResourcesChildDto,
+                                | 'type'
+                                | 'title'
+                                | 'description'
+                                | 'externalLink'
+                              >
+                            >
+                          >;
+                          calendars: Maybe<
+                            Array<
+                              Pick<Calendars, 'id'> & {
+                                flatData: Pick<CalendarsFlatDataDto, 'name'>;
+                              }
+                            >
+                          >;
+                        };
+                      }
+                    >
                   >;
                 }>
               >;
@@ -4737,6 +4979,119 @@ export type FetchEventQuery = {
             flatData: Pick<
               CalendarsFlatDataDto,
               'googleCalendarId' | 'color' | 'name'
+            >;
+            referencingProjectsContents: Maybe<
+              Array<
+                Pick<Projects, 'id'> & {
+                  flatData: Pick<
+                    ProjectsFlatDataDto,
+                    | 'title'
+                    | 'startDate'
+                    | 'endDate'
+                    | 'status'
+                    | 'projectProposal'
+                    | 'description'
+                    | 'pmEmail'
+                    | 'leadEmail'
+                    | 'keywords'
+                    | 'traineeProject'
+                    | 'opportunitiesLink'
+                  > & {
+                    members: Maybe<
+                      Array<
+                        Pick<ProjectsDataMembersChildDto, 'role'> & {
+                          user: Maybe<
+                            Array<
+                              Pick<
+                                Users,
+                                'id' | 'created' | 'lastModified' | 'version'
+                              > & {
+                                flatData: Pick<
+                                  UsersFlatDataDto,
+                                  'firstName' | 'lastName' | 'onboarded'
+                                > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+                              }
+                            >
+                          >;
+                        }
+                      >
+                    >;
+                    milestones: Maybe<
+                      Array<
+                        Pick<
+                          ProjectsDataMilestonesChildDto,
+                          'title' | 'description' | 'status' | 'link'
+                        >
+                      >
+                    >;
+                    resources: Maybe<
+                      Array<
+                        Pick<
+                          ProjectsDataResourcesChildDto,
+                          'type' | 'title' | 'description' | 'externalLink'
+                        >
+                      >
+                    >;
+                    calendars: Maybe<
+                      Array<
+                        Pick<Calendars, 'id'> & {
+                          flatData: Pick<CalendarsFlatDataDto, 'name'>;
+                        }
+                      >
+                    >;
+                  };
+                }
+              >
+            >;
+            referencingWorkingGroupsContents: Maybe<
+              Array<
+                Pick<WorkingGroups, 'id'> & {
+                  flatData: Pick<
+                    WorkingGroupsFlatDataDto,
+                    | 'title'
+                    | 'shortDescription'
+                    | 'leadingMembers'
+                    | 'description'
+                    | 'primaryEmail'
+                    | 'secondaryEmail'
+                  > & {
+                    members: Maybe<
+                      Array<
+                        Pick<WorkingGroupsDataMembersChildDto, 'role'> & {
+                          user: Maybe<
+                            Array<
+                              Pick<
+                                Users,
+                                'id' | 'created' | 'lastModified' | 'version'
+                              > & {
+                                flatData: Pick<
+                                  UsersFlatDataDto,
+                                  'firstName' | 'lastName' | 'onboarded'
+                                > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+                              }
+                            >
+                          >;
+                        }
+                      >
+                    >;
+                    resources: Maybe<
+                      Array<
+                        Pick<
+                          WorkingGroupsDataResourcesChildDto,
+                          'type' | 'title' | 'description' | 'externalLink'
+                        >
+                      >
+                    >;
+                    calendars: Maybe<
+                      Array<
+                        Pick<Calendars, 'id'> & {
+                          flatData: Pick<CalendarsFlatDataDto, 'name'>;
+                        }
+                      >
+                    >;
+                  };
+                }
+              >
             >;
           }>
         >;
@@ -6215,6 +6570,341 @@ export const ContributingCohortsContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<ContributingCohortsContentFragment, unknown>;
+export const ProjectContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProjectContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Projects' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'flatData' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'startDate' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'endDate' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'projectProposal' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'pmEmail' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'leadEmail' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'keywords' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'traineeProject' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'opportunitiesLink' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'members' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'role' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'user' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'created' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lastModified' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'version' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'flatData' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'avatar' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'firstName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'lastName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'onboarded' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'milestones' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'status' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'link' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'resources' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'externalLink' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'calendars' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ProjectContentFragment, unknown>;
+export const WorkingGroupContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'WorkingGroupContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'WorkingGroups' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'flatData' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'shortDescription' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'leadingMembers' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'primaryEmail' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'secondaryEmail' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'members' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'role' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'user' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'created' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lastModified' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'version' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'flatData' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'avatar' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'firstName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'lastName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'onboarded' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'resources' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'externalLink' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'calendars' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<WorkingGroupContentFragment, unknown>;
 export const EventContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -6326,6 +7016,41 @@ export const EventContentFragmentDoc = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'name' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'referencingProjectsContents',
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'FragmentSpread',
+                              name: { kind: 'Name', value: 'ProjectContent' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'referencingWorkingGroupsContents',
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'FragmentSpread',
+                              name: {
+                                kind: 'Name',
+                                value: 'WorkingGroupContent',
+                              },
                             },
                           ],
                         },
@@ -6473,6 +7198,8 @@ export const EventContentFragmentDoc = {
         ],
       },
     },
+    ...ProjectContentFragmentDoc.definitions,
+    ...WorkingGroupContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<EventContentFragment, unknown>;
 export const NewsContentFragmentDoc = {
@@ -6733,184 +7460,6 @@ export const OutputContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<OutputContentFragment, unknown>;
-export const ProjectContentFragmentDoc = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'ProjectContent' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'Projects' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'flatData' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'startDate' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'endDate' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'projectProposal' },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'pmEmail' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'leadEmail' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'keywords' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'traineeProject' },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'opportunitiesLink' },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'members' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'role' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'user' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'created' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'lastModified' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'version' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'flatData' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'avatar' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'id' },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'firstName' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'lastName' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'onboarded' },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'milestones' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'description' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'status' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'link' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'resources' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'description' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'externalLink' },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'calendars' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'flatData' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'name' },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<ProjectContentFragment, unknown>;
 export const UsersContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -7290,163 +7839,6 @@ export const WorkingGroupMembersContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<WorkingGroupMembersContentFragment, unknown>;
-export const WorkingGroupContentFragmentDoc = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'WorkingGroupContent' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'WorkingGroups' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'flatData' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'shortDescription' },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'leadingMembers' },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'primaryEmail' },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'secondaryEmail' },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'members' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'role' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'user' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'created' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'lastModified' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'version' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'flatData' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'avatar' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'id' },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'firstName' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'lastName' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'onboarded' },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'resources' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'description' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'externalLink' },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'calendars' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'flatData' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'name' },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<WorkingGroupContentFragment, unknown>;
 export const WorkingGroupNetworkContentFragmentDoc = {
   kind: 'Document',
   definitions: [

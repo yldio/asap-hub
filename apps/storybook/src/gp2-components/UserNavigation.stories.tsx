@@ -8,6 +8,7 @@ export default {
 
 const props: ComponentProps<typeof UserNavigation> = {
   projects: [],
+  userId: '1',
   workingGroups: [],
 };
 export const Normal = () => <UserNavigation {...props} />;

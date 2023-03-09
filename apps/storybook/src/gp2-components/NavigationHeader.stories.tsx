@@ -8,6 +8,7 @@ export default {
 
 const props: ComponentProps<typeof NavigationHeader> = {
   projects: [],
+  userId: '1',
   workingGroups: [],
 };
 export const Normal = () => <NavigationHeader {...props} />;

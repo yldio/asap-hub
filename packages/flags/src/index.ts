@@ -9,6 +9,7 @@ let overrides: Flags = {
   // flags already live in prod:
   // can also be used to manually disable a flag in development:
   ASAP_DRAFT_RESEARCH_OUTPUT: false,
+  CONTENTFUL: false,
 };
 
 const envDefaults: Record<string, boolean> = {

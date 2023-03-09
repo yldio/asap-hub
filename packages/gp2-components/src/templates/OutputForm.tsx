@@ -1,11 +1,11 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 import {
   Button,
-  FormCard,
-  LabeledTextField,
   Form,
+  FormCard,
   GlobeIcon,
   LabeledDropdown,
+  LabeledTextField,
   pixels,
   usePushFromHere,
 } from '@asap-hub/react-components';
@@ -46,14 +46,14 @@ const OutputForm: React.FC<OutputFormType> = ({
   const historyPush = usePushFromHere();
   const [title, setTitle] = useState('');
   const [link, setLink] = useState('');
-  const [type, setType] = useState('');
-  const [subtype, setSubtype] = useState('');
+  const [type, setType] = useState<gp2Model.OutputType | ''>('');
+  const [subtype, setSubtype] = useState<gp2Model.OutputSubtype | ''>('');
   const currentPayload = {
     title,
     documentType: documentTypeMapper[documentType],
     link,
-    type: type ? (type as gp2Model.OutputType) : undefined,
-    subtype: subtype ? (subtype as gp2Model.OutputSubtype) : undefined,
+    type: type || undefined,
+    subtype: subtype || undefined,
   };
 
   return (

@@ -86,6 +86,63 @@ describe('/research-outputs/ route', () => {
         expect(response.status).toBe(400);
       });
     });
+
+    describe('Drafts', () => {
+      test('Should only return drafts', async () => {
+        const listResearchOutputResponse = getListResearchOutputResponse({
+          published: false,
+        });
+
+        researchOutputControllerMock.fetch.mockResolvedValueOnce(
+          listResearchOutputResponse,
+        );
+
+        const response = await supertest(app).get('/research-outputs');
+
+        expect(response.body.items[0].published).toBe(false);
+      });
+
+      test('Should return a validation error when additional fields exist', async () => {
+        const response = await supertest(app).get(`/research-outputs`).query({
+          status: 'draft',
+          associationId: '123',
+          additionalField: 'some-data',
+        });
+
+        expect(response.status).toBe(400);
+      });
+
+      test('Should call the controller with the right parameters', async () => {
+        await supertest(app).get('/research-outputs').query({
+          take: 15,
+          skip: 5,
+          status: 'draft',
+          associationId: 'team-id-0',
+        });
+
+        const expectedParams = {
+          take: 15,
+          skip: 5,
+          filter: `status eq 'Draft' and (data/workingGroups/iv in ['team-id-0'] or data/teams/iv in ['team-id-0'])`,
+          includeDrafts: true,
+        };
+
+        expect(researchOutputControllerMock.fetch).toBeCalledWith(
+          expectedParams,
+        );
+      });
+
+      test("Should return 403 if user is not associated to output's team or working group", async () => {
+        const response = await supertest(app).get('/research-outputs').query({
+          take: 15,
+          skip: 5,
+          status: 'draft',
+          associationId: 'team-id-403',
+        });
+
+        expect(response.status).toBe(403);
+      });
+    });
   });
 
   describe('GET /research-outputs/{research_output_id}', () => {

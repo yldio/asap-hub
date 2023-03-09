@@ -10,13 +10,17 @@ import {
 } from '@asap-hub/validation';
 import Boom from '@hapi/boom';
 import { Response, Router } from 'express';
-import { ResearchOutputController } from '../controllers/research-outputs';
+import {
+  ResearchOutputFetchOptions,
+  ResearchOutputController,
+} from '../controllers/research-outputs';
 import {
   validateResearchOutputParameters,
   validateResearchOutputPostRequestParameters,
   validateResearchOutputPostRequestParametersIdentifiers,
   validateResearchOutputRequestQueryParameters,
   validateResearchOutputPutRequestParameters,
+  validateResearchOutputDraftFetchOptions,
 } from '../validation/research-output.validation';
 
 export const researchOutputRouteFactory = (
@@ -27,11 +31,31 @@ export const researchOutputRouteFactory = (
   researchOutputRoutes.get(
     '/research-outputs',
     async (req, res: Response<ListResearchOutputResponse>) => {
-      const { query } = req;
+      const { query, loggedInUser } = req;
 
-      const options = validateFetchOptions(query);
+      const { associationId, status, ...options } = query.status
+        ? validateResearchOutputDraftFetchOptions(query)
+        : { ...validateFetchOptions(query), associationId: '', status: false };
 
-      const result = await researchOutputController.fetch(options);
+      const hasTeamRole =
+        getUserRole(loggedInUser as UserResponse, 'teams', [associationId]) !==
+        'None';
+      const hasWorkingGroupRole =
+        getUserRole(loggedInUser as UserResponse, 'workingGroups', [
+          associationId,
+        ]) !== 'None';
+
+      if (status && !hasTeamRole && !hasWorkingGroupRole) {
+        throw Boom.forbidden();
+      }
+
+      const result = await researchOutputController.fetch({
+        ...options,
+        ...(status && {
+          includeDrafts: true,
+          filter: `status eq 'Draft' and (data/workingGroups/iv in ['${associationId}'] or data/teams/iv in ['${associationId}'])`,
+        }),
+      } as ResearchOutputFetchOptions);
 
       res.json(result);
     },

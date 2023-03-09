@@ -49,13 +49,9 @@ export default class ResearchOutputs implements ResearchOutputController {
     };
   }
 
-  async fetch(options: {
-    take?: number;
-    skip?: number;
-    search?: string;
-    filter?: ResearchOutputFilter;
-    includeDrafts?: boolean;
-  }): Promise<ListResearchOutputResponse> {
+  async fetch(
+    options: ResearchOutputFetchOptions,
+  ): Promise<ListResearchOutputResponse> {
     const { filter: fetchFilter, ...fetchOptions } = options;
 
     const filter: FetchResearchOutputOptions['filter'] = Array.isArray(
@@ -368,14 +364,9 @@ export default class ResearchOutputs implements ResearchOutputController {
 }
 
 export interface ResearchOutputController {
-  fetch: (options: {
-    take?: number;
-    skip?: number;
-    search?: string;
-    filter?: ResearchOutputFilter;
-    includeDrafts?: boolean;
-  }) => Promise<ListResearchOutputResponse>;
-
+  fetch: (
+    options: ResearchOutputFetchOptions,
+  ) => Promise<ListResearchOutputResponse>;
   fetchById: (id: string) => Promise<ResearchOutputResponse>;
   create: (
     researchOutputRequest: ResearchOutputCreateData,
@@ -434,6 +425,7 @@ const mapResearchTag = (
 };
 
 type ResearchOutputFilter =
+  | string
   | string[]
   | {
       documentType?: string;
@@ -452,4 +444,12 @@ type ResearchOutputParsedTags = {
   organisms: string[];
   environments: string[];
   subtype?: string;
+};
+
+export type ResearchOutputFetchOptions = {
+  take?: number;
+  skip?: number;
+  search?: string;
+  filter?: ResearchOutputFilter;
+  includeDrafts?: boolean;
 };

@@ -95,7 +95,7 @@ export class ResearchOutputSquidexDataProvider
     take?: number;
     skip?: number;
     search?: string;
-    filter?: ResearchOutputFilter;
+    filter?: ResearchOutputFilter | string;
     includeDrafts?: boolean;
   }): Promise<ListResearchOutputDataObject> {
     const { search, filter, take = 8, skip = 0, includeDrafts } = options;
@@ -125,7 +125,8 @@ export class ResearchOutputSquidexDataProvider
         ? containsFilters[0]
         : { or: containsFilters }
       : null;
-    const filterQ = makeODataFilter(filter);
+    const filterQ =
+      typeof filter === 'string' ? filter : makeODataFilter(filter);
     const filtersAndSearch = [filterQ, searchQ].filter(Boolean);
     const query =
       filtersAndSearch.length === 1 ? filtersAndSearch[0] : filtersAndSearch;
@@ -270,7 +271,9 @@ export class ResearchOutputSquidexDataProvider
   }
 }
 
-export type FetchResearchOutputOptions = FetchOptions<ResearchOutputFilter> & {
+export type FetchResearchOutputOptions = FetchOptions<
+  ResearchOutputFilter | string
+> & {
   includeDrafts?: boolean;
 };
 

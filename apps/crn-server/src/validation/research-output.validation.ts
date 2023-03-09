@@ -5,6 +5,7 @@ import {
   researchOutputToIdentifierType,
   researchOutputDocumentTypes,
   ResearchOutputPutRequest,
+  FetchPaginationOptions,
 } from '@asap-hub/model';
 import {
   ResearchOutputIdentifierValidationExpression,
@@ -17,6 +18,32 @@ import { validateInput } from '@asap-hub/server-common';
 type ResearchOutputParameters = {
   researchOutputId: string;
 };
+
+type ResearchOutputDraftParameters = FetchPaginationOptions & {
+  status: string;
+  associationId: string;
+};
+
+const researchOutputDraftFetchOptionsValidationSchema: JSONSchemaType<ResearchOutputDraftParameters> =
+  {
+    type: 'object',
+    properties: {
+      take: { type: 'number', nullable: true },
+      skip: { type: 'number', nullable: true },
+      status: { type: 'string', const: 'draft' },
+      associationId: { type: 'string' },
+    },
+    required: ['associationId'],
+    additionalProperties: false,
+  };
+
+export const validateResearchOutputDraftFetchOptions = validateInput(
+  researchOutputDraftFetchOptionsValidationSchema,
+  {
+    skipNull: false,
+    coerce: true,
+  },
+);
 
 const researchOutputParametersValidationSchema: JSONSchemaType<ResearchOutputParameters> =
   {

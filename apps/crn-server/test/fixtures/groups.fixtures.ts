@@ -412,8 +412,6 @@ export const getSquidexGraphqlGroup = (): NonNullable<
           googleCalendarId: 'hub@asap.science',
           name: 'ASAP Hub',
         },
-        referencingGroupsContents: [],
-        referencingWorkingGroupsContents: [],
       },
     ],
     teams: [getSquidexGraphqlTeam({})],

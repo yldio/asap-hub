@@ -100,6 +100,7 @@ const serverlessConfig: AWS = {
         allowedHeaders: [
           'authorization',
           'x-transaction-id',
+          'x-contentful-enabled',
           'content-type',
           'accept',
           'origin',

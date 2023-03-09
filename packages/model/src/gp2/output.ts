@@ -21,8 +21,8 @@ export const outputTypes = [
 ] as const;
 export type OutputType = typeof outputTypes[number];
 
-export const outputSubTypes = ['Preprints', 'Published'] as const;
-export type OutputSubType = typeof outputSubTypes[number];
+export const outputSubtypes = ['Preprints', 'Published'] as const;
+export type OutputSubtype = typeof outputSubtypes[number];
 
 export const outputDocumentTypeToType: Record<
   OutputDocumentType,
@@ -50,7 +50,7 @@ export type OutputCoreObject = {
   publishDate?: string;
   title: string;
   type?: OutputType;
-  subtype?: OutputSubType;
+  subtype?: OutputSubtype;
 };
 
 export type UserAuthor = {
@@ -113,7 +113,7 @@ export type OutputPostRequest = {
   publishDate?: string;
   title: string;
   type?: OutputType;
-  subtype?: OutputSubType;
+  subtype?: OutputSubtype;
   workingGroups?: string[];
   projects?: string[];
 };

@@ -6,7 +6,7 @@ import { JSONSchemaType } from 'ajv';
 type OutputParameters = {
   outputId: string;
 };
-const { outputDocumentTypes, outputTypes, outputSubTypes } = gp2Model;
+const { outputDocumentTypes, outputTypes, outputSubtypes } = gp2Model;
 const outputParametersValidationSchema: JSONSchemaType<OutputParameters> = {
   type: 'object',
   properties: {
@@ -40,7 +40,7 @@ const outputPostRequestValidationSchema: JSONSchemaType<gp2Model.OutputPostReque
       subtype: {
         type: 'string',
         nullable: true,
-        enum: outputSubTypes,
+        enum: outputSubtypes,
       },
       link: {
         type: 'string',

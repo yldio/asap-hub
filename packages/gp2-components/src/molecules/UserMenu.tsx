@@ -10,6 +10,9 @@ import {
 } from '@asap-hub/react-components';
 import { workingGroupIcon, projectIcon, userIcon } from '../icons';
 import { nonMobileQuery } from '../layout';
+import { useEffect } from 'react';
+import { Location } from 'history';
+import { useLocation } from 'react-router-dom';
 
 const { vminLinearCalc, mobileScreen, largeDesktopScreen, rem } = pixels;
 const {
@@ -45,7 +48,8 @@ type UserMenuProps = Pick<
   gp2Model.UserResponse,
   'projects' | 'workingGroups'
 > & {
-  closeUserMenu: () => void;
+  menuShown: boolean;
+  closeUserMenu: (menuShown: boolean) => void;
   userId: string;
 };
 
@@ -53,65 +57,82 @@ const UserMenu: React.FC<UserMenuProps> = ({
   userId,
   projects,
   workingGroups,
+  menuShown,
   closeUserMenu,
-}) => (
-  <nav css={containerStyles}>
-    <ul css={listStyles}>
-      <li>
-        <NavigationLink
-          href={usersRoutes({}).user({ userId }).$}
-          onClick={closeUserMenu}
-          icon={userIcon}
-        >
-          My Profile
-        </NavigationLink>
-      </li>
-    </ul>
-    {(workingGroups.length > 0 || projects.length > 0) && (
-      <>
-        <ul css={listStyles}>
-          {projects
-            .filter(({ status }) => status === 'Active')
-            .map(({ id, title }) => (
-              <li key={`user-menu-project-${id}`}>
+}) => {
+  let location: Location | undefined;
+
+  // This hook *is* called unconditionally despite what rules-of-hooks says
+  /* eslint-disable react-hooks/rules-of-hooks */
+  try {
+    location = useLocation();
+  } catch {
+    // If there is no router, fine, never auto-close the menu
+  }
+  /* eslint-enable react-hooks/rules-of-hooks */
+  useEffect(() => {
+    closeUserMenu(false);
+  }, [location]);
+
+  return (
+    <nav css={containerStyles}>
+      <ul css={listStyles}>
+        <li>
+          <NavigationLink
+            href={usersRoutes({}).user({ userId }).$}
+            onClick={() => closeUserMenu(!menuShown)}
+            icon={userIcon}
+          >
+            My Profile
+          </NavigationLink>
+        </li>
+      </ul>
+      {(workingGroups.length > 0 || projects.length > 0) && (
+        <>
+          <ul css={listStyles}>
+            {projects
+              .filter(({ status }) => status === 'Active')
+              .map(({ id, title }) => (
+                <li key={`user-menu-project-${id}`}>
+                  <NavigationLink
+                    href={projectsRoute({}).project({ projectId: id }).$}
+                    onClick={() => closeUserMenu(!menuShown)}
+                    icon={projectIcon}
+                  >
+                    My project: {title}
+                  </NavigationLink>
+                </li>
+              ))}
+            {workingGroups.map(({ id, title }) => (
+              <li key={`user-menu-working-group-${id}`}>
                 <NavigationLink
-                  href={projectsRoute({}).project({ projectId: id }).$}
-                  onClick={closeUserMenu}
-                  icon={projectIcon}
+                  href={
+                    workingGroupRoute({}).workingGroup({ workingGroupId: id }).$
+                  }
+                  onClick={() => closeUserMenu(!menuShown)}
+                  icon={workingGroupIcon}
                 >
-                  My project: {title}
+                  My working group: {title}
                 </NavigationLink>
               </li>
             ))}
-          {workingGroups.map(({ id, title }) => (
-            <li key={`user-menu-working-group-${id}`}>
-              <NavigationLink
-                href={
-                  workingGroupRoute({}).workingGroup({ workingGroupId: id }).$
-                }
-                onClick={closeUserMenu}
-                icon={workingGroupIcon}
-              >
-                My working group: {title}
-              </NavigationLink>
-            </li>
-          ))}
-        </ul>
-        <Divider />
-      </>
-    )}
-    <ul css={listStyles}>
-      <li>
-        <NavigationLink
-          href={logout({}).$}
-          onClick={closeUserMenu}
-          icon={logoutIcon}
-        >
-          Log Out
-        </NavigationLink>
-      </li>
-    </ul>
-  </nav>
-);
+          </ul>
+          <Divider />
+        </>
+      )}
+      <ul css={listStyles}>
+        <li>
+          <NavigationLink
+            href={logout({}).$}
+            onClick={() => closeUserMenu(!menuShown)}
+            icon={logoutIcon}
+          >
+            Log Out
+          </NavigationLink>
+        </li>
+      </ul>
+    </nav>
+  );
+};
 
 export default UserMenu;

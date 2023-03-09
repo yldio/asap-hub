@@ -5,10 +5,8 @@ import { MemoryRouter } from 'react-router-dom';
 import { Layout } from '..';
 
 describe('Layout', () => {
-  const props: Pick<
-    ComponentProps<typeof Layout>,
-    'userId' | 'projects' | 'workingGroups'
-  > = {
+  const props: Omit<ComponentProps<typeof Layout>, 'children'> = {
+    menuShown: false,
     userId: '1',
     projects: [],
     workingGroups: [],

@@ -9,10 +9,8 @@ export default {
   decorators: [NoPaddingDecorator],
 };
 
-const props: Pick<
-  ComponentProps<typeof Layout>,
-  'projects' | 'userId' | 'workingGroups'
-> = {
+const props: Omit<ComponentProps<typeof Layout>, 'children'> = {
+  menuShown: false,
   projects: [],
   userId: '1',
   workingGroups: [],

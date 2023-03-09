@@ -6,6 +6,7 @@ import UserNavigation from '../UserNavigation';
 
 describe('UserNavigation', () => {
   const props: ComponentProps<typeof UserNavigation> = {
+    menuShown: false,
     userId: '1',
     projects: [],
     workingGroups: [],

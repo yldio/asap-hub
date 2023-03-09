@@ -22,11 +22,12 @@ const props = {
 
 const layoutProps: Pick<
   ComponentProps<typeof Layout>,
-  'projects' | 'userId' | 'workingGroups'
+  'projects' | 'userId' | 'workingGroups' | 'menuShown'
 > = {
   projects: [],
   userId: '1',
   workingGroups: [],
+  menuShown: false,
 };
 export const Normal = () => (
   <Layout {...layoutProps}>

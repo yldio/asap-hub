@@ -66,18 +66,18 @@ const bottomBorderStyles = css({
 });
 
 type NavigationHeaderProps = {
-  menuOpen?: boolean;
-  onToggleMenu?: () => void;
+  menuShown: boolean;
+  onToggleMenu: (menuOpen: boolean) => void;
 } & ComponentProps<typeof UserNavigation>;
 const NavigationHeader: React.FC<NavigationHeaderProps> = ({
-  menuOpen = false,
+  menuShown = false,
   onToggleMenu = noop,
   ...userNavigationProps
 }) => (
   <header>
     <div css={[navigationHeaderstyles]}>
       <div css={[menuButtonStyles]}>
-        <MenuButton open={menuOpen} onClick={() => onToggleMenu()} />
+        <MenuButton open={menuShown} onClick={() => onToggleMenu(!menuShown)} />
       </div>
       <HeaderLogo />
       <div css={desktopNavigationStyles}>
@@ -85,7 +85,7 @@ const NavigationHeader: React.FC<NavigationHeaderProps> = ({
       </div>
 
       <div css={desktopNavigationStyles}>
-        <UserNavigation {...userNavigationProps} />
+        <UserNavigation {...userNavigationProps} menuShown={menuShown} />
       </div>
     </div>
     <div css={[bottomBorderStyles, desktopNavigationStyles]} />

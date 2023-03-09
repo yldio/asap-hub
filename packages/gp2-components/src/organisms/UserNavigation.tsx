@@ -61,7 +61,8 @@ const UserNavigation: React.FC<UserNavigationProps> = (userNavigationProps) => {
       <div css={css([userMenuStyles, menuShown && userMenuShownStyles])}>
         <UserMenu
           {...userNavigationProps}
-          closeUserMenu={() => setMenuShown(!menuShown)}
+          menuShown={menuShown}
+          closeUserMenu={setMenuShown}
         />
       </div>
     </div>

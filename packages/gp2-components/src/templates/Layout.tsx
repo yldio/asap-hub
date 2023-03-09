@@ -134,10 +134,8 @@ const Layout: FC<LayoutProps> = ({
       <article css={styles}>
         <div css={headerStyles}>
           <NavigationHeader
-            menuOpen={menuShown}
-            onToggleMenu={() => {
-              setMenuShown(!menuShown);
-            }}
+            menuShown={menuShown}
+            onToggleMenu={setMenuShown}
             userId={userId}
             projects={projects}
             workingGroups={workingGroups}
@@ -170,9 +168,8 @@ const Layout: FC<LayoutProps> = ({
               userId={userId}
               projects={projects}
               workingGroups={workingGroups}
-              closeUserMenu={() => {
-                setMenuShown(!menuShown);
-              }}
+              menuShown={menuShown}
+              closeUserMenu={setMenuShown}
             />
           </div>
         </div>

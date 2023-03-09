@@ -8,6 +8,7 @@ import {
   RestWorkingGroup,
   SquidexGraphqlClient,
   SquidexRestClient,
+  parseToSquidex,
 } from '@asap-hub/squidex';
 import { Filter } from 'odata-query';
 import {
@@ -109,15 +110,6 @@ export class WorkingGroupSquidexDataProvider
   }
 
   async patch(id: string, data: WorkingGroupUpdateDataObject): Promise<void> {
-    await this.squidexRestClient.patch(id, mapWorkingGroupValues(data));
+    await this.squidexRestClient.patch(id, parseToSquidex(data));
   }
 }
-
-const mapWorkingGroupValues = (wgToUpdate: WorkingGroupUpdateDataObject) =>
-  Object.entries(wgToUpdate).reduce((acc, [key, value]) => {
-    const setValue = (item: unknown) => ({ ...acc, [key]: { iv: item } });
-    if (typeof value === 'string' && value.trim() === '') {
-      return setValue(null);
-    }
-    return setValue(value);
-  }, {} as { [key: string]: { iv: unknown } });

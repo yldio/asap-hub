@@ -3,6 +3,7 @@ import {
   WorkingGroupListDataObject,
   WorkingGroupResponse,
 } from '@asap-hub/model';
+import { parseToSquidex } from '@asap-hub/squidex';
 import type { EventBridgeEvent } from 'aws-lambda';
 
 import {
@@ -133,7 +134,7 @@ export const getWorkingGroupEventPayload = (
       title: { iv: 'Working Group Title' },
       complete: { iv: false },
       deliverables: { iv: [] },
-      ...wrapIV(data),
+      ...parseToSquidex(data),
     },
   },
 });

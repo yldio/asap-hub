@@ -485,13 +485,5 @@ describe('Working Group Data Provider', () => {
         title: { iv: 'New title' },
       });
     });
-
-    it('replaces empty string values with `null`', async () => {
-      await workingGroupDataProvider.patch('123', { title: '' });
-
-      expect(workingGroupRestClient.patch).toHaveBeenCalledWith('123', {
-        title: { iv: null },
-      });
-    });
   });
 });

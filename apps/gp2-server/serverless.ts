@@ -346,6 +346,32 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
+    invalidateCache: {
+      handler: './src/handlers/invalidate-cache/invalidate-handler.handler',
+      events: [
+        {
+          s3: {
+            bucket: { Ref: 'FrontendBucket' },
+            event: 's3:ObjectCreated:*',
+            rules: [
+              {
+                prefix: 'index',
+              },
+              {
+                suffix: '.html',
+              },
+            ],
+            existing: true,
+          },
+        },
+      ],
+      environment: {
+        CLOUDFRONT_DISTRIBUTION_ID: {
+          Ref: 'CloudFrontDistribution',
+        },
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
   },
   resources: {
     Conditions: {

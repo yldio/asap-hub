@@ -10976,7 +10976,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/services-common", "workspace:packages/services-common"],\
             ["@asap-hub/squidex", "workspace:packages/squidex"],\
             ["@asap-hub/validation", "workspace:packages/validation"],\
-            ["@aws-sdk/client-cloudfront", "npm:3.287.0"],\
             ["@babel/core", "npm:7.21.0"],\
             ["@babel/preset-env", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.20.2"],\
             ["@babel/preset-typescript", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.21.0"],\
@@ -12313,6 +12312,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/model", "workspace:packages/model"],\
             ["@asap-hub/services-common", "workspace:packages/services-common"],\
             ["@asap-hub/squidex", "workspace:packages/squidex"],\
+            ["@aws-sdk/client-cloudfront", "npm:3.287.0"],\
             ["@babel/core", "npm:7.21.0"],\
             ["@babel/parser", "npm:7.21.2"],\
             ["@babel/runtime-corejs3", "npm:7.21.0"],\

@@ -256,6 +256,7 @@ it('can save draft when form data is valid', async () => {
       organisms: [],
       environments: [],
       workingGroups: [],
+      relatedResearch: [],
       labCatalogNumber: undefined,
       publishDate: undefined,
       subtype: undefined,

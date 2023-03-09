@@ -1,9 +1,9 @@
 import { ComponentPropsWithRef } from 'react';
 import { css } from '@emotion/react';
+import { components } from 'react-select';
 
 import { FormCard, LabeledMultiSelect } from '../molecules';
 import { noop, ResearchOutputOption } from '../utils';
-import { components } from 'react-select';
 import { perRem } from '../pixels';
 import { getIconForDocumentType } from './RecentSharedOutputs';
 import { Pill } from '../atoms';

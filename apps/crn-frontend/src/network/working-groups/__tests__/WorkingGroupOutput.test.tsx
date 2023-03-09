@@ -324,6 +324,7 @@ it('can save draft when form data is valid', async () => {
       methods: [],
       organisms: [],
       environments: [],
+      relatedResearch: [],
       workingGroups: ['wg1'],
       publishDate: undefined,
       subtype: undefined,

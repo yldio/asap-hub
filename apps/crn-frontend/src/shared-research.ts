@@ -90,7 +90,12 @@ export const useRelatedResearchSuggestions = () => {
       currentPage: null,
       pageSize: null,
     }).then(({ hits }) =>
-      hits.map(({ id, title }) => ({ label: title, value: id })),
+      hits.map(({ id, title, type, documentType }) => ({
+        label: title,
+        value: id,
+        type,
+        documentType,
+      })),
     );
 };
 

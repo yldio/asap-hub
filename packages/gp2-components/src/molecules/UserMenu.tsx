@@ -8,12 +8,15 @@ import {
   NavigationLink,
   pixels,
 } from '@asap-hub/react-components';
-import { workingGroupIcon, projectIcon } from '../icons';
+import { workingGroupIcon, projectIcon, userIcon } from '../icons';
 import { nonMobileQuery } from '../layout';
 
 const { vminLinearCalc, mobileScreen, largeDesktopScreen, rem } = pixels;
-const { projects: projectsRoute, workingGroups: workingGroupRoute } =
-  gp2Routing;
+const {
+  users: usersRoutes,
+  projects: projectsRoute,
+  workingGroups: workingGroupRoute,
+} = gp2Routing;
 
 const containerStyles = css({
   height: '100%',
@@ -38,10 +41,32 @@ const listStyles = css({
   padding: 0,
 });
 
-type UserMenuProps = Pick<gp2Model.UserResponse, 'projects' | 'workingGroups'>;
+type UserMenuProps = Pick<
+  gp2Model.UserResponse,
+  'projects' | 'workingGroups'
+> & {
+  closeUserMenu: () => void;
+  userId: string;
+};
 
-const UserMenu: React.FC<UserMenuProps> = ({ projects, workingGroups }) => (
+const UserMenu: React.FC<UserMenuProps> = ({
+  userId,
+  projects,
+  workingGroups,
+  closeUserMenu,
+}) => (
   <nav css={containerStyles}>
+    <ul css={listStyles}>
+      <li>
+        <NavigationLink
+          href={usersRoutes({}).user({ userId }).$}
+          onClick={closeUserMenu}
+          icon={userIcon}
+        >
+          My Profile
+        </NavigationLink>
+      </li>
+    </ul>
     {(workingGroups.length > 0 || projects.length > 0) && (
       <>
         <ul css={listStyles}>
@@ -51,6 +76,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ projects, workingGroups }) => (
               <li key={`user-menu-project-${id}`}>
                 <NavigationLink
                   href={projectsRoute({}).project({ projectId: id }).$}
+                  onClick={closeUserMenu}
                   icon={projectIcon}
                 >
                   My project: {title}
@@ -63,6 +89,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ projects, workingGroups }) => (
                 href={
                   workingGroupRoute({}).workingGroup({ workingGroupId: id }).$
                 }
+                onClick={closeUserMenu}
                 icon={workingGroupIcon}
               >
                 My working group: {title}
@@ -75,7 +102,11 @@ const UserMenu: React.FC<UserMenuProps> = ({ projects, workingGroups }) => (
     )}
     <ul css={listStyles}>
       <li>
-        <NavigationLink href={logout({}).$} icon={logoutIcon}>
+        <NavigationLink
+          href={logout({}).$}
+          onClick={closeUserMenu}
+          icon={logoutIcon}
+        >
           Log Out
         </NavigationLink>
       </li>

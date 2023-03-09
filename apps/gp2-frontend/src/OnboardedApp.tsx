@@ -62,7 +62,8 @@ const OnboardedApp: FC<ComponentProps<typeof Dashboard>> = ({
     useUserById(user!.id) || {};
 
   return (
-    <Layout projects={projects} workingGroups={workingGroups}>
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    <Layout userId={user!.id} projects={projects} workingGroups={workingGroups}>
       <Switch>
         <Route exact path={path}>
           <Frame title="Dashboard">

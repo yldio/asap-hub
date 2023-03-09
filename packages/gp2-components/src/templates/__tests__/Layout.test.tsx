@@ -7,8 +7,9 @@ import { Layout } from '..';
 describe('Layout', () => {
   const props: Pick<
     ComponentProps<typeof Layout>,
-    'projects' | 'workingGroups'
+    'userId' | 'projects' | 'workingGroups'
   > = {
+    userId: '1',
     projects: [],
     workingGroups: [],
   };

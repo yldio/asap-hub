@@ -35,7 +35,10 @@ const buttonTextStyles = css({
   },
 });
 
-type UserNavigationProps = ComponentProps<typeof UserMenu>;
+type UserNavigationProps = Omit<
+  ComponentProps<typeof UserMenu>,
+  'closeUserMenu'
+>;
 
 const UserNavigation: React.FC<UserNavigationProps> = (userNavigationProps) => {
   const [menuShown, setMenuShown] = useState(false);
@@ -56,7 +59,10 @@ const UserNavigation: React.FC<UserNavigationProps> = (userNavigationProps) => {
         }`}</span>
       </UserMenuButton>
       <div css={css([userMenuStyles, menuShown && userMenuShownStyles])}>
-        <UserMenu {...userNavigationProps} />
+        <UserMenu
+          {...userNavigationProps}
+          closeUserMenu={() => setMenuShown(!menuShown)}
+        />
       </div>
     </div>
   );

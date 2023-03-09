@@ -98,8 +98,13 @@ const userMenuStyles = css({
 
 type LayoutProps = {
   readonly children: ReactNode;
-} & ComponentProps<typeof UserMenu>;
-const Layout: FC<LayoutProps> = ({ children, projects, workingGroups }) => {
+} & Omit<ComponentProps<typeof UserMenu>, 'closeUserMenu'>;
+const Layout: FC<LayoutProps> = ({
+  children,
+  projects,
+  workingGroups,
+  userId,
+}) => {
   const [menuShown, setMenuShown] = useState(false);
 
   let location: Location | undefined;
@@ -133,6 +138,7 @@ const Layout: FC<LayoutProps> = ({ children, projects, workingGroups }) => {
             onToggleMenu={() => {
               setMenuShown(!menuShown);
             }}
+            userId={userId}
             projects={projects}
             workingGroups={workingGroups}
           />
@@ -160,7 +166,14 @@ const Layout: FC<LayoutProps> = ({ children, projects, workingGroups }) => {
             </Suspense>
           </div>
           <div css={[userMenuStyles]}>
-            <UserMenu projects={projects} workingGroups={workingGroups} />
+            <UserMenu
+              userId={userId}
+              projects={projects}
+              workingGroups={workingGroups}
+              closeUserMenu={() => {
+                setMenuShown(!menuShown);
+              }}
+            />
           </div>
         </div>
       </article>

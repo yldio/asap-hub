@@ -5,6 +5,7 @@ import NavigationHeader from '../NavigationHeader';
 
 describe('NavigationHeader', () => {
   const props: ComponentProps<typeof NavigationHeader> = {
+    userId: '1',
     projects: [],
     workingGroups: [],
   };

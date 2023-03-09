@@ -8,8 +8,10 @@ const { projects: projectsRoute, workingGroups: workingGroupsRoute } =
 
 describe('UserMenu', () => {
   const props: ComponentProps<typeof UserMenu> = {
+    userId: '1',
     projects: [],
     workingGroups: [],
+    closeUserMenu: jest.fn(),
   };
 
   it('renders the navigation items', () => {

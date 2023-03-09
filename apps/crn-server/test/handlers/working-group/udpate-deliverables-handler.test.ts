@@ -11,7 +11,7 @@ describe('Working Group update handler', () => {
 
   afterEach(() => jest.clearAllMocks());
 
-  test('updates deliverable statuses if working group is completed', async () => {
+  test('updates Pending/In Progress deliverable statuses to Not Started/Incomplete if working group is completed', async () => {
     const deliverables: WorkingGroupDeliverable[] = [
       { description: 'A pending deliverable', status: 'Pending' },
       { description: 'An in progress deliverable', status: 'In Progress' },
@@ -59,7 +59,7 @@ describe('Working Group update handler', () => {
     );
   });
 
-  test('updates deliverable statuses if working group is uncompleted', async () => {
+  test('updates Not Started/Incomplete deliverable statuses to Pending/In Progress if working group is uncompleted', async () => {
     const deliverables: WorkingGroupDeliverable[] = [
       { description: 'A not-started deliverable', status: 'Not Started' },
       { description: 'An incomplete deliverable', status: 'Incomplete' },

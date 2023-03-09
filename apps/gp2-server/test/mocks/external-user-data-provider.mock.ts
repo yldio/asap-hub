@@ -3,4 +3,5 @@ import { ExternalUserDataProvider } from '../../src/data-providers/external-user
 export const externalUserDataProviderMock: jest.Mocked<ExternalUserDataProvider> =
   {
     create: jest.fn(),
+    fetch: jest.fn(),
   };

@@ -212,7 +212,10 @@ export const appFactory = (libs: Libs = {}): Express => {
 
   const externalUserDataProvider =
     libs.externalUserDataProvider ||
-    new ExternalUserSquidexDataProvider(externalUserRestClient);
+    new ExternalUserSquidexDataProvider(
+      squidexGraphqlClient,
+      externalUserRestClient,
+    );
   // Controllers
 
   const workingGroupController =

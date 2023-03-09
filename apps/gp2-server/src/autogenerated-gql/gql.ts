@@ -19,6 +19,12 @@ const documents = {
     graphql.FetchEventsDocument,
   '\n  query FetchEvent($id: String!) {\n    findEventsContent(id: $id) {\n      ...EventContent\n    }\n  }\n  \n':
     graphql.FetchEventDocument,
+  '\n  fragment ExternalUsersContent on ExternalUsers {\n    id\n    flatData {\n      name\n      orcid\n    }\n  }\n':
+    graphql.ExternalUsersContentFragmentDoc,
+  '\n  query FetchExternalUser($id: String!) {\n    findExternalUsersContent(id: $id) {\n      ...ExternalUsersContent\n    }\n  }\n  \n':
+    graphql.FetchExternalUserDocument,
+  '\n  query FetchExternalUsers($top: Int, $skip: Int, $filter: String) {\n    queryExternalUsersContentsWithTotal(\n      top: $top\n      skip: $skip\n      filter: $filter\n      orderby: "data/name/iv"\n    ) {\n      total\n      items {\n        ...ExternalUsersContent\n      }\n    }\n  }\n  \n':
+    graphql.FetchExternalUsersDocument,
   '\n  fragment NewsContent on NewsAndEvents {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      title\n      shortText\n      link\n      linkText\n      sampleCount\n      articleCount\n      cohortCount\n      link\n      linkText\n    }\n  }\n':
     graphql.NewsContentFragmentDoc,
   '\n  query FetchNews($top: Int, $skip: Int) {\n    queryNewsAndEventsContentsWithTotal(\n      top: $top\n      skip: $skip\n      orderby: "created desc"\n    ) {\n      total\n      items {\n        ...NewsContent\n      }\n    }\n  }\n  \n':
@@ -85,6 +91,15 @@ export function gql(
 export function gql(
   source: '\n  query FetchEvent($id: String!) {\n    findEventsContent(id: $id) {\n      ...EventContent\n    }\n  }\n  \n',
 ): typeof documents['\n  query FetchEvent($id: String!) {\n    findEventsContent(id: $id) {\n      ...EventContent\n    }\n  }\n  \n'];
+export function gql(
+  source: '\n  fragment ExternalUsersContent on ExternalUsers {\n    id\n    flatData {\n      name\n      orcid\n    }\n  }\n',
+): typeof documents['\n  fragment ExternalUsersContent on ExternalUsers {\n    id\n    flatData {\n      name\n      orcid\n    }\n  }\n'];
+export function gql(
+  source: '\n  query FetchExternalUser($id: String!) {\n    findExternalUsersContent(id: $id) {\n      ...ExternalUsersContent\n    }\n  }\n  \n',
+): typeof documents['\n  query FetchExternalUser($id: String!) {\n    findExternalUsersContent(id: $id) {\n      ...ExternalUsersContent\n    }\n  }\n  \n'];
+export function gql(
+  source: '\n  query FetchExternalUsers($top: Int, $skip: Int, $filter: String) {\n    queryExternalUsersContentsWithTotal(\n      top: $top\n      skip: $skip\n      filter: $filter\n      orderby: "data/name/iv"\n    ) {\n      total\n      items {\n        ...ExternalUsersContent\n      }\n    }\n  }\n  \n',
+): typeof documents['\n  query FetchExternalUsers($top: Int, $skip: Int, $filter: String) {\n    queryExternalUsersContentsWithTotal(\n      top: $top\n      skip: $skip\n      filter: $filter\n      orderby: "data/name/iv"\n    ) {\n      total\n      items {\n        ...ExternalUsersContent\n      }\n    }\n  }\n  \n'];
 export function gql(
   source: '\n  fragment NewsContent on NewsAndEvents {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      title\n      shortText\n      link\n      linkText\n      sampleCount\n      articleCount\n      cohortCount\n      link\n      linkText\n    }\n  }\n',
 ): typeof documents['\n  fragment NewsContent on NewsAndEvents {\n    id\n    created\n    lastModified\n    version\n    flatData {\n      title\n      shortText\n      link\n      linkText\n      sampleCount\n      articleCount\n      cohortCount\n      link\n      linkText\n    }\n  }\n'];

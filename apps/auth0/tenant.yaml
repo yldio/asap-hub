@@ -13,10 +13,6 @@ actions:
     secrets:
       - name: PR_APP_DOMAIN
       - name: ASAP_API_URL
-      - name: BASE_PR_APP_DOMAIN
-        value: '##BASE_PR_APP_DOMAIN##'
-      - name: API_URL
-        value: '##API_URL##'
       - name: AUTH0_ADDITIONAL_CLAIM_DOMAIN
         value: '##AUTH0_ADDITIONAL_CLAIM_DOMAIN##'
       - name: AUTH0_SHARED_SECRET
@@ -35,10 +31,6 @@ actions:
     secrets:
       - name: PR_APP_DOMAIN
       - name: ASAP_API_URL
-      - name: BASE_PR_APP_DOMAIN
-        value: '##BASE_PR_APP_DOMAIN##'
-      - name: API_URL
-        value: '##API_URL##'
       - name: AUTH0_ADDITIONAL_CLAIM_DOMAIN
         value: '##AUTH0_ADDITIONAL_CLAIM_DOMAIN##'
       - name: AUTH0_SHARED_SECRET

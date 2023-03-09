@@ -1,7 +1,6 @@
 import { Auth0PostLoginApi } from '@vedicium/auth0-actions-sdk';
 import got from 'got';
 import type { Auth0PostLoginEventWithSecrets } from './types';
-// ##API_URL##'
 
 const getApiUrls = (event: Auth0PostLoginEventWithSecrets) => {
   const redirect_uri = new URLSearchParams(event.request.query).get(
@@ -13,13 +12,17 @@ const getApiUrls = (event: Auth0PostLoginEventWithSecrets) => {
     throw new Error('Missing redirect_uri');
   }
   const prUrlRegex = new RegExp(
-    `https://(?<pr_number>[0-9]+).${event.secrets.BASE_PR_APP_DOMAIN}`,
+    `https://(?<pr_number>[0-9]+).${
+      event.secrets.BASE_PR_APP_DOMAIN ?? '##BASE_PR_APP_DOMAIN##'
+    }`,
   );
   const matches = prUrlRegex.exec(redirect_uri);
   return [
     matches?.groups?.pr_number
-      ? `https://api-${matches.groups.pr_number}.${event.secrets.BASE_PR_APP_DOMAIN}`
-      : event.secrets.API_URL,
+      ? `https://api-${matches.groups.pr_number}.${
+          event.secrets.BASE_PR_APP_DOMAIN ?? '##BASE_PR_APP_DOMAIN##'
+        }`
+      : event.secrets.API_URL ?? '##API_URL##',
     redirect_uri,
   ];
 };

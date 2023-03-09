@@ -79,13 +79,17 @@ const getApiUrls = (event: Auth0PostLoginEventWithSecrets) => {
     throw new Error('Missing redirect_uri');
   }
   const prUrlRegex = new RegExp(
-    `https://(?<pr_number>[0-9]+).${event.secrets.BASE_PR_APP_DOMAIN}`,
+    `https://(?<pr_number>[0-9]+).${
+      event.secrets.BASE_PR_APP_DOMAIN ?? '##BASE_PR_APP_DOMAIN##'
+    }`,
   );
   const matches = prUrlRegex.exec(redirect_uri);
   return [
     matches?.groups?.pr_number
-      ? `https://api-${matches.groups.pr_number}.${event.secrets.BASE_PR_APP_DOMAIN}`
-      : event.secrets.API_URL,
+      ? `https://api-${matches.groups.pr_number}.${
+          event.secrets.BASE_PR_APP_DOMAIN ?? '##BASE_PR_APP_DOMAIN##'
+        }`
+      : event.secrets.API_URL ?? '##API_URL##',
     redirect_uri,
   ];
 };

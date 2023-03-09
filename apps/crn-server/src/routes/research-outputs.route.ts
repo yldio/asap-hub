@@ -3,7 +3,6 @@ import {
   ResearchOutputResponse,
   UserResponse,
 } from '@asap-hub/model';
-import { validateFetchOptions } from '@asap-hub/server-common';
 import {
   getUserRole,
   hasEditResearchOutputPermission,
@@ -17,6 +16,7 @@ import {
   validateResearchOutputPostRequestParametersIdentifiers,
   validateResearchOutputRequestQueryParameters,
   validateResearchOutputPutRequestParameters,
+  validateResearchOutputFetchOptions,
 } from '../validation/research-output.validation';
 
 export const researchOutputRouteFactory = (
@@ -27,11 +27,39 @@ export const researchOutputRouteFactory = (
   researchOutputRoutes.get(
     '/research-outputs',
     async (req, res: Response<ListResearchOutputResponse>) => {
-      const { query } = req;
+      const { query, loggedInUser } = req;
+      const { teamId, status, workingGroupId, ...options } =
+        validateResearchOutputFetchOptions(query);
+      const isRequestingDrafts = status === 'draft';
 
-      const options = validateFetchOptions(query);
+      if (isRequestingDrafts) {
+        const hasTeamRole = teamId
+          ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            getUserRole(loggedInUser!, 'teams', [teamId]) !== 'None'
+          : false;
 
-      const result = await researchOutputController.fetch(options);
+        const hasWorkingGroupRole = workingGroupId
+          ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            getUserRole(loggedInUser!, 'workingGroups', [workingGroupId]) !==
+            'None'
+          : false;
+
+        if (!hasTeamRole && !hasWorkingGroupRole) {
+          throw Boom.forbidden();
+        }
+      }
+
+      const result = await researchOutputController.fetch({
+        ...options,
+        ...(isRequestingDrafts && {
+          includeDrafts: true,
+          filter: {
+            status,
+            workingGroupId,
+            teamId,
+          },
+        }),
+      });
 
       res.json(result);
     },

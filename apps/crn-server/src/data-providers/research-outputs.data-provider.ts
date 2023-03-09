@@ -52,6 +52,23 @@ export const makeODataFilter = (
   return entries.length === 1 ? (entries[0] as Filter) : entries;
 };
 
+export const makeDraftFilter = ({
+  teamId,
+  workingGroupId,
+}: FetchResearchOutputFilter) => {
+  const query = [`status eq 'Draft'`];
+
+  if (teamId) {
+    query.push(`data/teams/iv in ['${teamId}']`);
+  }
+
+  if (workingGroupId) {
+    query.push(`data/workingGroups/iv in ['${workingGroupId}']`);
+  }
+
+  return query.join(' and ');
+};
+
 export interface ResearchOutputDataProvider {
   fetchById(id: string): Promise<ResearchOutputDataObject | null>;
   fetch(
@@ -95,7 +112,7 @@ export class ResearchOutputSquidexDataProvider
     take?: number;
     skip?: number;
     search?: string;
-    filter?: ResearchOutputFilter;
+    filter?: FetchResearchOutputFilter;
     includeDrafts?: boolean;
   }): Promise<ListResearchOutputDataObject> {
     const { search, filter, take = 8, skip = 0, includeDrafts } = options;
@@ -125,7 +142,10 @@ export class ResearchOutputSquidexDataProvider
         ? containsFilters[0]
         : { or: containsFilters }
       : null;
-    const filterQ = makeODataFilter(filter);
+    const filterQ =
+      filter?.status === 'draft'
+        ? makeDraftFilter(filter)
+        : makeODataFilter(filter);
     const filtersAndSearch = [filterQ, searchQ].filter(Boolean);
     const query =
       filtersAndSearch.length === 1 ? filtersAndSearch[0] : filtersAndSearch;
@@ -270,9 +290,16 @@ export class ResearchOutputSquidexDataProvider
   }
 }
 
-export type FetchResearchOutputOptions = FetchOptions<ResearchOutputFilter> & {
-  includeDrafts?: boolean;
+type FetchResearchOutputFilter = ResearchOutputFilter & {
+  status?: string;
+  teamId?: string;
+  workingGroupId?: string;
 };
+
+export type FetchResearchOutputOptions =
+  FetchOptions<FetchResearchOutputFilter> & {
+    includeDrafts?: boolean;
+  };
 
 const getAuthorIdList = (authorDataObject: AuthorUpsertDataObject) => {
   if ('userId' in authorDataObject) {

@@ -155,6 +155,7 @@ describe('Team Research Output', () => {
     organisms: [],
     environments: [],
     workingGroups: [],
+    relatedResearch: [],
   };
   it('makes an authorized POST request to create a research output', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })

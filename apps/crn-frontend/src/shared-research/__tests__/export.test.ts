@@ -37,7 +37,6 @@ describe('researchOutputToCSV', () => {
       type: '3D Printing',
       usedInPublication: false,
       methods: ['Activity Assay', 'RNA Single Cell'],
-      relatedResearch: undefined,
     };
     expect(researchOutputToCSV(output)).toEqual({
       created: 'created',

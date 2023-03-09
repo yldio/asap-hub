@@ -1,6 +1,7 @@
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { PageBanner } from '../organisms';
+import { mainStyles } from '../layout';
 
 const props = (
   entityType: CreateOutputPageProps['entityType'],
@@ -50,7 +51,7 @@ const CreateOutputPage: React.FC<CreateOutputPageProps> = ({
       noLayoutPadding
       {...props(entityType, documentType)}
     />
-    <main>{children}</main>
+    <main css={mainStyles}>{children}</main>
   </article>
 );
 

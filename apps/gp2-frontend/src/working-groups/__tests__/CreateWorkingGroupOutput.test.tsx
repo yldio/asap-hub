@@ -64,9 +64,11 @@ it('renders the title', async () => {
 
 it('publishes the output', async () => {
   const title = 'this is the output title';
+  const link = 'https://example.com';
   await renderCreateWorkingGroupOutput('form');
 
   userEvent.type(screen.getByRole('textbox', { name: /title/i }), title);
+  userEvent.type(screen.getByRole('textbox', { name: /url/i }), link);
   userEvent.click(screen.getByRole('button', { name: /publish/i }));
   await waitFor(() => {
     expect(screen.getByRole('button', { name: /publish/i })).toBeEnabled();
@@ -74,6 +76,7 @@ it('publishes the output', async () => {
   expect(mockCreateOutput).toHaveBeenCalledWith(
     {
       title,
+      link,
       documentType: 'Form',
       workingGroups: expect.arrayContaining(['working-group-id-1']),
       projects: undefined,

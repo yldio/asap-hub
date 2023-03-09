@@ -31,7 +31,7 @@ const renderCreateProjectOutput = async (
               initialEntries={[
                 gp2Routing
                   .projects({})
-                  .project({ projectId: '1' })
+                  .project({ projectId: 'project-id-1' })
                   .createOutput({ outputDocumentType: documentType }).$,
               ]}
             >
@@ -39,7 +39,7 @@ const renderCreateProjectOutput = async (
                 path={
                   gp2Routing.projects.template +
                   gp2Routing.projects({}).project.template +
-                  gp2Routing.projects({}).project({ projectId: '1' })
+                  gp2Routing.projects({}).project({ projectId: 'project-id-1' })
                     .createOutput.template
                 }
               >
@@ -73,7 +73,7 @@ it('publishes the output', async () => {
     {
       title,
       documentType: 'Form',
-      projects: expect.arrayContaining(['1']),
+      projects: expect.arrayContaining(['project-id-1']),
       workingGroups: undefined,
     },
     expect.anything(),

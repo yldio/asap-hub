@@ -1,6 +1,7 @@
 import { Auth0PostLoginApi } from '@vedicium/auth0-actions-sdk';
 import got from 'got';
 import type { Auth0PostLoginEventWithSecrets } from './types';
+// ##API_URL##'
 
 const getApiUrls = (event: Auth0PostLoginEventWithSecrets) => {
   const redirect_uri = new URLSearchParams(event.request.query).get(

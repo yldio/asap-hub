@@ -11,6 +11,8 @@ actions:
     deployed: true
     runtime: node16
     secrets:
+      - name: PR_APP_DOMAIN
+      - name: ASAP_API_URL
       - name: BASE_PR_APP_DOMAIN
         value: '##BASE_PR_APP_DOMAIN##'
       - name: API_URL
@@ -31,6 +33,8 @@ actions:
     deployed: true
     runtime: node16
     secrets:
+      - name: PR_APP_DOMAIN
+      - name: ASAP_API_URL
       - name: BASE_PR_APP_DOMAIN
         value: '##BASE_PR_APP_DOMAIN##'
       - name: API_URL

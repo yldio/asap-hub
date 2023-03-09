@@ -67,10 +67,8 @@ const OutputForm: React.FC<OutputFormType> = ({
               required
               pattern={UrlExpression}
               onChange={setLink}
-              getValidationMessage={(validationState) =>
-                validationState.valueMissing || validationState.patternMismatch
-                  ? 'Please enter a valid URL, starting with http://'
-                  : undefined
+              getValidationMessage={() =>
+                'Please enter a valid URL, starting with http://'
               }
               value={link ?? ''}
               enabled={!isSaving}

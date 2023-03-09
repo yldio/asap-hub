@@ -1,7 +1,9 @@
 import { gp2 } from '@asap-hub/model';
-import { render, screen } from '@testing-library/react';
+import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
+import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { StaticRouter } from 'react-router-dom';
+import { createMemoryHistory } from 'history';
+import { Router, StaticRouter } from 'react-router-dom';
 import OutputForm from '../OutputForm';
 
 describe('OutputForm', () => {
@@ -17,9 +19,11 @@ describe('OutputForm', () => {
     expect(screen.getByRole('button', { name: /cancel/i })).toBeVisible();
   });
   it('publish the form', async () => {
+    const history = createMemoryHistory();
     const createOutput = jest.fn();
+    createOutput.mockResolvedValue(gp2Fixtures.createOutputResponse());
     render(<OutputForm {...defaultProps} createOutput={createOutput} />, {
-      wrapper: StaticRouter,
+      wrapper: ({ children }) => <Router history={history}>{children}</Router>,
     });
     userEvent.type(
       screen.getByRole('textbox', { name: /title/i }),
@@ -39,6 +43,7 @@ describe('OutputForm', () => {
       link: 'https://example.com',
       documentType: 'Form',
     });
+    expect(history.location.pathname).toEqual(`/outputs`);
   });
 
   describe('article', () => {
@@ -106,5 +111,23 @@ describe('OutputForm', () => {
         subtype: 'Published',
       });
     });
+  });
+  describe('validation', () => {
+    it.each`
+      title      | label       | error
+      ${'Url'}   | ${/URL/i}   | ${'Please enter a valid URL, starting with http://'}
+      ${'Title'} | ${/title/i} | ${'Please fill out this field.'}
+      ${'Type'}  | ${/type/i}  | ${'Please fill out this field.'}
+    `(
+      'shows error message for missing value $title',
+      async ({ label, error }) => {
+        render(<OutputForm {...defaultProps} documentType="article" />, {
+          wrapper: StaticRouter,
+        });
+        const input = screen.getByLabelText(label);
+        fireEvent.focusOut(input);
+        expect(await screen.findByText(error)).toBeVisible();
+      },
+    );
   });
 });

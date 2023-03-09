@@ -36,6 +36,7 @@ const researchOutputResponse: Omit<
       title: 'Example Working Group',
     },
   ],
+  relatedResearch: [],
   sharingStatus: 'Public',
   contactEmails: [],
   labs: [],

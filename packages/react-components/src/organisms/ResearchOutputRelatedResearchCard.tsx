@@ -46,10 +46,14 @@ const ResearchOutputRelatedResearchCard: React.FC<
   isSaving,
   isEditMode,
 }) => (
-  <FormCard title="Are there any related outputs?">
+  <FormCard
+    title="Are there any related outputs?"
+    description="List all resources that were important to the creation of this output.
+      Only published outputs on the CRN Hub will be available below."
+  >
     <LabeledMultiSelect<ResearchOutputOption>
       title="Related Outputs"
-      description="List all resources that were important to the creation of this output. Only published outputs on the CRN Hub will be available below."
+      description=""
       subtitle="(optional)"
       enabled={!isSaving || !isEditMode}
       placeholder="Start typing..."

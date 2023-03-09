@@ -139,11 +139,10 @@ const parseGraphqlResearchOutputLite = ({
   'id' | 'title' | 'type' | 'documentType' | 'teams'
 > => ({
   id: researchOutputId,
-  title: flatData?.title || '',
-  type: researchOutputMapType(flatData?.type) || undefined,
+  title: flatData.title || '',
+  type: researchOutputMapType(flatData.type) || undefined,
   documentType:
-    flatData?.documentType &&
-    isResearchOutputDocumentType(flatData.documentType)
+    flatData.documentType && isResearchOutputDocumentType(flatData.documentType)
       ? flatData.documentType
       : 'Grant Document',
   teams:

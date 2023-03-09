@@ -219,7 +219,7 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
   teams: Pick<TeamResponse, 'id' | 'displayName'>[];
   workingGroups: Pick<WorkingGroupResponse, 'id' | 'title'>[];
   published: boolean;
-  relatedResearch?: Array<
+  relatedResearch: Array<
     Pick<
       ResearchOutputDataObject,
       'id' | 'title' | 'type' | 'documentType' | 'teams'
@@ -304,7 +304,7 @@ export type ResearchOutputPostRequest = {
   tags: string[];
   teams: string[];
   workingGroups: string[];
-  relatedResearch?: string[];
+  relatedResearch: string[];
   title: string;
   type?: ResearchOutputType;
   usageNotes?: string;

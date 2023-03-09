@@ -280,7 +280,7 @@ export const getResearchOutputPostRequest = (): ResearchOutputPostRequest => {
     labs: labs.map(({ id }) => id),
     authors: authors.map(({ id }) => ({ userId: id })),
     teams: teams.map(({ id }) => id),
-    relatedResearch: relatedResearch?.map(({ id }) => id),
+    relatedResearch: relatedResearch.map(({ id }) => id),
     workingGroups: workingGroups ? workingGroups.map(({ id }) => id) : [],
   };
 };

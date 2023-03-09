@@ -115,7 +115,7 @@ export type ResearchOutputPayload = {
   teams: NonNullable<
     ComponentProps<typeof ResearchOutputContributorsCard>['teams']
   >;
-  relatedResearch?: NonNullable<
+  relatedResearch: NonNullable<
     ComponentProps<typeof ResearchOutputRelatedResearchCard>['relatedResearch']
   >;
   usageNotes: ResearchOutputPostRequest['usageNotes'];
@@ -164,7 +164,7 @@ export const getPayload = ({
   authors: getPostAuthors(authors),
   labs: labs.map(({ value }) => value),
   teams: teams.map(({ value }) => value),
-  relatedResearch: relatedResearch?.map(({ value }) => value),
+  relatedResearch: relatedResearch.map(({ value }) => value),
   usageNotes,
   asapFunded: convertDecisionToBoolean(asapFunded),
   usedInPublication: convertDecisionToBoolean(usedInPublication),

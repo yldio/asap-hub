@@ -255,18 +255,21 @@ export const appFactory = (libs: Libs = {}): Express => {
     'users',
     libs.userSquidexDataProvider ||
       new UserSquidexDataProvider(squidexGraphqlClient, userRestClient),
-    'IS_CONTENTFUL_ENABLED',
+    'IS_CONTENTFUL_ENABLED_V2',
     false,
   );
   featureFlagDependencySwitch.setDependency(
     'users',
     libs.userContentfulDataProvider || new UserContentfulDataProvider(),
-    'IS_CONTENTFUL_ENABLED',
+    'IS_CONTENTFUL_ENABLED_V2',
     true,
   );
   const userDataProvider =
     libs.userDataProvider ||
-    featureFlagDependencySwitch.getDependency('users', 'IS_CONTENTFUL_ENABLED');
+    featureFlagDependencySwitch.getDependency(
+      'users',
+      'IS_CONTENTFUL_ENABLED_V2',
+    );
   const reminderDataProvider =
     libs.reminderDataProvider ||
     new ReminderSquidexDataProvider(squidexGraphqlClient);

@@ -1,6 +1,6 @@
 import { UserDataProvider } from '../data-providers/users.data-provider';
 
-const featureFlags = ['IS_CONTENTFUL_ENABLED'] as const;
+const featureFlags = ['IS_CONTENTFUL_ENABLED_V2'] as const;
 type FeatureFlag = typeof featureFlags[number];
 
 type DependencySwitch<T> = {
@@ -16,7 +16,7 @@ export class FeatureFlagDependencySwitch {
   private dependencies: {
     [key in FeatureFlag]: DependencyList;
   } = {
-    IS_CONTENTFUL_ENABLED: {
+    IS_CONTENTFUL_ENABLED_V2: {
       users: {
         true: undefined,
         false: undefined,
@@ -27,7 +27,7 @@ export class FeatureFlagDependencySwitch {
   private featureFlags: {
     [key in FeatureFlag]: boolean;
   } = {
-    IS_CONTENTFUL_ENABLED: false,
+    IS_CONTENTFUL_ENABLED_V2: false,
   };
 
   setDependency<T extends keyof DependencyList>(

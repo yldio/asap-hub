@@ -41,6 +41,7 @@ const {
   CRN_CONTENTFUL_ACCESS_TOKEN,
   CRN_CONTENTFUL_SPACE_ID,
   IS_CONTENTFUL_ENABLED = 'false',
+  IS_CONTENTFUL_ENABLED_V2 = 'false',
 } = process.env;
 
 const region = process.env.AWS_REGION as AWS['provider']['region'];
@@ -64,6 +65,7 @@ const contentfulEnvironment = CRN_CONTENTFUL_ENV!;
 const contentfulAccessToken = CRN_CONTENTFUL_ACCESS_TOKEN!;
 const contentfulSpaceId = CRN_CONTENTFUL_SPACE_ID!;
 const isContentfulEnabled = IS_CONTENTFUL_ENABLED;
+const isContentfulEnabledV2 = IS_CONTENTFUL_ENABLED_V2;
 
 const algoliaIndex = ALGOLIA_INDEX
   ? '${env:ALGOLIA_INDEX}'
@@ -134,6 +136,7 @@ const serverlessConfig: AWS = {
         ? '${env:CI_COMMIT_SHA}'
         : '${env:CURRENT_REVISION}',
       IS_CONTENTFUL_ENABLED: isContentfulEnabled,
+      IS_CONTENTFUL_ENABLED_V2: isContentfulEnabledV2,
       CONTENTFUL_ENV_ID: contentfulEnvironment,
       CONTENTFUL_ACCESS_TOKEN: contentfulAccessToken,
       CONTENTFUL_SPACE_ID: contentfulSpaceId,

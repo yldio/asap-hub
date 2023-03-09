@@ -78,8 +78,11 @@ outputs:
     description: 'Contentful Environment'
     value: ${{ steps.vars.outputs.contentful-environment }}
   is-contentful-enabled:
-    description: 'Is data fetched from Contentful'
+    description: 'Is news, pages and dashboard data fetched from Contentful'
     value: ${{ steps.vars.outputs.is-contentful-enabled }}
+  is-contentful-enabled-v2:
+    description: 'Is all remaining data fetched from Contentful'
+    value: ${{ steps.vars.outputs.is-contentful-enabled-v2 }}
   max-contentful-envs:
     description: 'Maximum Contentful environments'
     value: ${{ steps.vars.outputs.max-contentful-envs }}

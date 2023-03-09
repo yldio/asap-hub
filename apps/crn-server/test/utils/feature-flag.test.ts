@@ -7,13 +7,13 @@ describe('Feature Flag Dependency Switch', () => {
     featureFlagDependencySwitch.setDependency(
       'users',
       userDataProviderMock,
-      'IS_CONTENTFUL_ENABLED',
+      'IS_CONTENTFUL_ENABLED_V2',
       false,
     );
     expect(() =>
       featureFlagDependencySwitch.getDependency(
         'users',
-        'IS_CONTENTFUL_ENABLED',
+        'IS_CONTENTFUL_ENABLED_V2',
       ),
     ).toThrowError();
   });
@@ -23,27 +23,30 @@ describe('Feature Flag Dependency Switch', () => {
     featureFlagDependencySwitch.setDependency(
       'users',
       userDataProviderMock,
-      'IS_CONTENTFUL_ENABLED',
+      'IS_CONTENTFUL_ENABLED_V2',
       false,
     );
     featureFlagDependencySwitch.setDependency(
       'users',
       userDataProviderMock,
-      'IS_CONTENTFUL_ENABLED',
+      'IS_CONTENTFUL_ENABLED_V2',
       true,
     );
     const dependency = featureFlagDependencySwitch.getDependency(
       'users',
-      'IS_CONTENTFUL_ENABLED',
+      'IS_CONTENTFUL_ENABLED_V2',
     );
     featureFlagDependencySwitch.setDependency(
       'users',
       undefined,
-      'IS_CONTENTFUL_ENABLED',
+      'IS_CONTENTFUL_ENABLED_V2',
       true,
     );
 
-    featureFlagDependencySwitch.setFeatureFlag('IS_CONTENTFUL_ENABLED', true);
+    featureFlagDependencySwitch.setFeatureFlag(
+      'IS_CONTENTFUL_ENABLED_V2',
+      true,
+    );
     expect(() => dependency.fetch({})).toThrowError();
   });
 
@@ -62,23 +65,26 @@ describe('Feature Flag Dependency Switch', () => {
     featureFlagDependencySwitch.setDependency(
       'users',
       userDataProviderMockTrue,
-      'IS_CONTENTFUL_ENABLED',
+      'IS_CONTENTFUL_ENABLED_V2',
       true,
     );
     featureFlagDependencySwitch.setDependency(
       'users',
       userDataProviderMockFalse,
-      'IS_CONTENTFUL_ENABLED',
+      'IS_CONTENTFUL_ENABLED_V2',
       false,
     );
 
     // Set the current feature flag to false
-    featureFlagDependencySwitch.setFeatureFlag('IS_CONTENTFUL_ENABLED', false);
+    featureFlagDependencySwitch.setFeatureFlag(
+      'IS_CONTENTFUL_ENABLED_V2',
+      false,
+    );
 
     // Get the dependency
     const userDataProvider = featureFlagDependencySwitch.getDependency(
       'users',
-      'IS_CONTENTFUL_ENABLED',
+      'IS_CONTENTFUL_ENABLED_V2',
     );
 
     // Assert that the method was called on the correct dependency
@@ -87,7 +93,10 @@ describe('Feature Flag Dependency Switch', () => {
     expect(userDataProviderMockFalse.fetch).toHaveBeenCalled();
 
     // Switch the feature flag to true
-    featureFlagDependencySwitch.setFeatureFlag('IS_CONTENTFUL_ENABLED', true);
+    featureFlagDependencySwitch.setFeatureFlag(
+      'IS_CONTENTFUL_ENABLED_V2',
+      true,
+    );
 
     // Assert that the method was called on the other dependency after the switch
     expect(userDataProviderMockTrue.fetch).not.toHaveBeenCalled();

@@ -19,3 +19,4 @@ react-app-gp2-sentry-dsn=https://a087618d35f54407bf1919bf82da2cc6@o850903.ingest
 react-app-environment=development
 contentful-environment=Development
 is-contentful-enabled=true
+is-contentful-enabled-v2=false

@@ -74,6 +74,7 @@ import { CalendarSquidexDataProvider } from './data-providers/calendars.data-pro
 import { DashboardContentfulDataProvider } from './data-providers/contentful/dashboard.data-provider';
 import { NewsContentfulDataProvider } from './data-providers/contentful/news.data-provider';
 import { PageContentfulDataProvider } from './data-providers/contentful/pages.data-provider';
+import { UserContentfulDataProvider } from './data-providers/contentful/users.data-provider';
 import DashboardSquidexDataProvider, {
   DashboardDataProvider,
 } from './data-providers/dashboard.data-provider';
@@ -120,6 +121,7 @@ import {
   WorkingGroupDataProvider,
   WorkingGroupSquidexDataProvider,
 } from './data-providers/working-groups.data-provider';
+import { featureFlagMiddlewareFactory } from './middleware/feature-flag';
 import { permissionHandler } from './middleware/permission-handler';
 import { sentryTransactionIdMiddleware } from './middleware/sentry-transaction-id-handler';
 import { tracingHandlerFactory } from './middleware/tracing-handler';
@@ -140,6 +142,7 @@ import { userPublicRouteFactory, userRouteFactory } from './routes/user.route';
 import { workingGroupRouteFactory } from './routes/working-groups.route';
 import assignUserToContext from './utils/assign-user-to-context';
 import { getAuthToken } from './utils/auth';
+import { FeatureFlagDependencySwitch } from './utils/feature-flag';
 import pinoLogger from './utils/logger';
 import { shouldHandleError } from './utils/should-handle-error';
 
@@ -156,6 +159,7 @@ export const appFactory = (libs: Libs = {}): Express => {
    */
   // Libs
   const logger = libs.logger || pinoLogger;
+  const featureFlagDependencySwitch = new FeatureFlagDependencySwitch();
   // Middleware
   const httpLogger = libs.httpLogger || getHttpLogger({ logger });
   const errorHandler = errorHandlerFactory();
@@ -247,9 +251,25 @@ export const appFactory = (libs: Libs = {}): Express => {
   const tutorialsDataProvider =
     libs.tutorialsDataProvider ||
     new TutorialsSquidexDataProvider(squidexGraphqlClient);
+  featureFlagDependencySwitch.setDependency(
+    'users',
+    libs.userSquidexDataProvider ||
+      new UserSquidexDataProvider(squidexGraphqlClient, userRestClient),
+    'IS_CONTENTFUL_ENABLED_V2',
+    false,
+  );
+  featureFlagDependencySwitch.setDependency(
+    'users',
+    libs.userContentfulDataProvider || new UserContentfulDataProvider(),
+    'IS_CONTENTFUL_ENABLED_V2',
+    true,
+  );
   const userDataProvider =
     libs.userDataProvider ||
-    new UserSquidexDataProvider(squidexGraphqlClient, userRestClient);
+    featureFlagDependencySwitch.getDependency(
+      'users',
+      'IS_CONTENTFUL_ENABLED_V2',
+    );
   const reminderDataProvider =
     libs.reminderDataProvider ||
     new ReminderSquidexDataProvider(squidexGraphqlClient);
@@ -360,6 +380,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(tracingHandler);
   app.use(cors());
   app.use(express.json({ limit: '10MB' }));
+  app.use(featureFlagMiddlewareFactory(featureFlagDependencySwitch));
 
   /**
    * Public routes --->
@@ -461,6 +482,8 @@ export type Libs = {
   teamDataProvider?: TeamDataProvider;
   tutorialsDataProvider?: TutorialsDataProvider;
   userDataProvider?: UserDataProvider;
+  userSquidexDataProvider?: UserDataProvider;
+  userContentfulDataProvider?: UserDataProvider;
   eventDataProvider?: EventDataProvider;
   workingGroupDataProvider?: WorkingGroupDataProvider;
   authHandler?: AuthHandler;

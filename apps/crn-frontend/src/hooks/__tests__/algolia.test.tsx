@@ -5,6 +5,7 @@ import {
 import { renderHook } from '@testing-library/react-hooks';
 import { RecoilRoot } from 'recoil';
 import { algoliaSearchClientFactory } from '@asap-hub/algolia';
+import { setCurrentOverrides } from '@asap-hub/flags';
 
 import { useAlgolia } from '../algolia';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
@@ -29,6 +30,8 @@ describe('useAlgolia', () => {
     );
   });
   it('constructs algolia client', async () => {
+    setCurrentOverrides({ CONTENTFUL: false });
+
     const { result, waitForNextUpdate } = renderHook(() => useAlgolia(), {
       wrapper: ({ children }) => (
         <RecoilRoot>
@@ -45,5 +48,25 @@ describe('useAlgolia', () => {
       algoliaApiKey: 'algolia key',
     });
     expect(result.current.client).toBeDefined();
+  });
+
+  it('uses contentful index when the feature flag is on', async () => {
+    setCurrentOverrides({ CONTENTFUL: true });
+
+    const { waitForNextUpdate } = renderHook(() => useAlgolia(), {
+      wrapper: ({ children }) => (
+        <RecoilRoot>
+          <Auth0Provider user={{ algoliaApiKey: 'algolia key' }}>
+            <WhenReady>{children}</WhenReady>
+          </Auth0Provider>
+        </RecoilRoot>
+      ),
+    });
+    await waitForNextUpdate();
+    expect(mockAlgoliaSearchClientFactory).toHaveBeenCalledWith(
+      expect.objectContaining({
+        algoliaIndex: `${ALGOLIA_INDEX}-contentful`,
+      }),
+    );
   });
 });

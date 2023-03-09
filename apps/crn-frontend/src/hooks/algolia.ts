@@ -3,6 +3,7 @@ import {
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
 import { User } from '@asap-hub/auth';
+import { isEnabled } from '@asap-hub/flags';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { useEffect, useState } from 'react';
 import { ALGOLIA_APP_ID, ALGOLIA_INDEX } from '../config';
@@ -19,7 +20,9 @@ export const useAlgolia = () => {
 
     const client = algoliaSearchClientFactory({
       algoliaAppId: ALGOLIA_APP_ID,
-      algoliaIndex: ALGOLIA_INDEX,
+      algoliaIndex:
+        (isEnabled('CONTENTFUL') && `${ALGOLIA_INDEX}-contentful`) ||
+        ALGOLIA_INDEX,
       algoliaApiKey: user.algoliaApiKey,
     });
 

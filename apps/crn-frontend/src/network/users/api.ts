@@ -9,7 +9,11 @@ import {
   InstitutionsResponse,
 } from '@asap-hub/model';
 import type { AlgoliaSearchClient } from '@asap-hub/algolia';
-import { GetListOptions, createSentryHeaders } from '@asap-hub/frontend-utils';
+import {
+  GetListOptions,
+  createSentryHeaders,
+  createFeatureFlagHeaders,
+} from '@asap-hub/frontend-utils';
 
 import { API_BASE_URL } from '../../config';
 
@@ -18,8 +22,13 @@ export const getUser = async (
   authorization: string,
 ): Promise<UserResponse | undefined> => {
   const resp = await fetch(`${API_BASE_URL}/users/${id}`, {
-    headers: { authorization, ...createSentryHeaders() },
+    headers: {
+      authorization,
+      ...createSentryHeaders(),
+      ...createFeatureFlagHeaders(),
+    },
   });
+
   if (!resp.ok) {
     if (resp.status === 404) {
       return undefined;

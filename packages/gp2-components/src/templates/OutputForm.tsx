@@ -6,11 +6,18 @@ import {
   Form,
   GlobeIcon,
   LabeledDropdown,
+  pixels,
+  usePushFromHere,
 } from '@asap-hub/react-components';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { UrlExpression } from '@asap-hub/validation';
+import { css } from '@emotion/react';
 import { useState } from 'react';
+import { buttonWrapperStyle, mobileQuery } from '../layout';
+
 import { documentTypeMapper } from './CreateOutputPage';
+
+const { rem } = pixels;
 
 type OutputFormType = {
   createOutput: (
@@ -18,10 +25,12 @@ type OutputFormType = {
   ) => Promise<gp2Model.OutputResponse>;
   documentType: gp2Routing.OutputDocumentTypeParameter;
 };
+
 const OutputForm: React.FC<OutputFormType> = ({
   createOutput,
   documentType,
 }) => {
+  const historyPush = usePushFromHere();
   const [title, setTitle] = useState('');
   const [link, setLink] = useState('');
   const [type, setType] = useState('');
@@ -36,8 +45,10 @@ const OutputForm: React.FC<OutputFormType> = ({
 
   return (
     <Form dirty={title !== ''}>
-      {({ isSaving, getWrappedOnSave }) => (
-        <>
+      {({ isSaving, getWrappedOnSave, onCancel }) => (
+        <div
+          css={css({ display: 'flex', flexDirection: 'column', gap: rem(32) })}
+        >
           <FormCard title="What are you sharing?">
             <LabeledTextField
               title="URL"
@@ -90,13 +101,42 @@ const OutputForm: React.FC<OutputFormType> = ({
               enabled={!isSaving}
             />
           </FormCard>
-          <Button
-            primary
-            onClick={getWrappedOnSave(() => createOutput(currentPayload))}
+          <div
+            css={css({
+              display: 'flex',
+              gap: rem(24),
+              justifyContent: 'flex-end',
+              [mobileQuery]: {
+                flexDirection: 'column-reverse',
+              },
+            })}
           >
-            Publish
-          </Button>
-        </>
+            <div css={[buttonWrapperStyle, { margin: 0 }]}>
+              <Button noMargin enabled={!isSaving} onClick={onCancel}>
+                Cancel
+              </Button>
+            </div>
+            <div css={[buttonWrapperStyle, { margin: 0 }]}>
+              <Button
+                primary
+                noMargin
+                onClick={async () => {
+                  const researchOutput = await getWrappedOnSave(() =>
+                    createOutput(currentPayload),
+                  )();
+                  if (researchOutput) {
+                    const path = gp2Routing.outputs({}).$;
+                    historyPush(path);
+                  }
+                  return researchOutput;
+                }}
+                enabled={!isSaving}
+              >
+                Publish
+              </Button>
+            </div>
+          </div>
+        </div>
       )}
     </Form>
   );

@@ -1,4 +1,5 @@
 import { workingGroupsImage } from '../images';
+import { mainStyles } from '../layout';
 import { PageBanner } from '../organisms';
 
 const bannerProps = {
@@ -11,7 +12,7 @@ const bannerProps = {
 const OutputsPage: React.FC = ({ children }) => (
   <article>
     <PageBanner {...bannerProps}></PageBanner>
-    <main>{children}</main>
+    <main css={mainStyles}>{children}</main>
   </article>
 );
 

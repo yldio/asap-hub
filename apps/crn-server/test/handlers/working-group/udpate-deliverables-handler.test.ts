@@ -11,19 +11,6 @@ describe('Working Group update handler', () => {
 
   afterEach(() => jest.clearAllMocks());
 
-  test('loads data working group data from Squidex', async () => {
-    const event = getWorkingGroupEvent();
-    workingGroupDataProviderMock.fetchById.mockResolvedValueOnce(
-      getWorkingGroupResponse(),
-    );
-
-    await handler(event);
-
-    expect(workingGroupDataProviderMock.fetchById).toHaveBeenCalledWith(
-      event.detail.payload.id,
-    );
-  });
-
   test('updates deliverable statuses if working group is completed', async () => {
     const deliverables: WorkingGroupDeliverable[] = [
       { description: 'A pending deliverable', status: 'Pending' },

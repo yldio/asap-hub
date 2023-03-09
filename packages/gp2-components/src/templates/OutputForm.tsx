@@ -19,6 +19,19 @@ import { documentTypeMapper } from './CreateOutputPage';
 
 const { rem } = pixels;
 
+const footerStyles = css({
+  display: 'flex',
+  gap: rem(24),
+  justifyContent: 'flex-end',
+  [mobileQuery]: {
+    flexDirection: 'column-reverse',
+  },
+});
+const containerStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: rem(32),
+});
 type OutputFormType = {
   createOutput: (
     payload: gp2Model.OutputPostRequest,
@@ -46,9 +59,7 @@ const OutputForm: React.FC<OutputFormType> = ({
   return (
     <Form dirty={title !== ''}>
       {({ isSaving, getWrappedOnSave, onCancel }) => (
-        <div
-          css={css({ display: 'flex', flexDirection: 'column', gap: rem(32) })}
-        >
+        <div css={containerStyles}>
           <FormCard title="What are you sharing?">
             <LabeledTextField
               title="URL"
@@ -101,16 +112,7 @@ const OutputForm: React.FC<OutputFormType> = ({
               enabled={!isSaving}
             />
           </FormCard>
-          <div
-            css={css({
-              display: 'flex',
-              gap: rem(24),
-              justifyContent: 'flex-end',
-              [mobileQuery]: {
-                flexDirection: 'column-reverse',
-              },
-            })}
-          >
+          <div css={footerStyles}>
             <div css={[buttonWrapperStyle, { margin: 0 }]}>
               <Button noMargin enabled={!isSaving} onClick={onCancel}>
                 Cancel

@@ -1,4 +1,4 @@
-import { CalendarController } from '@asap-hub/server-common';
+import { CalendarController } from '@asap-hub/model';
 import { Router } from 'express';
 
 export const calendarRouteFactory = (

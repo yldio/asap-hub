@@ -1354,6 +1354,58 @@ type Calendars implements Content {
     """Optional number of items to take."""
     top: Int
   ): EventsResultDto
+  """Query Projects content items."""
+  referencingProjectsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [Projects!]
+  """Query Projects content items with total count."""
+  referencingProjectsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): ProjectsResultDto
+  """Query Working Groups content items."""
+  referencingWorkingGroupsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [WorkingGroups!]
+  """Query Working Groups content items with total count."""
+  referencingWorkingGroupsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): WorkingGroupsResultDto
   """The status of the content."""
   status: String!
   """The status color of the content."""
@@ -3035,6 +3087,32 @@ type Projects implements Content {
   newStatus: String
   """The status color of the content."""
   newStatusColor: String
+  """Query Calendars content items."""
+  referencesCalendarsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [Calendars!]
+  """Query Calendars content items with total count."""
+  referencesCalendarsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): CalendarsResultDto
   """Query Users content items."""
   referencesUsersContents(
     """Optional OData filter."""
@@ -3097,6 +3175,16 @@ type Projects implements Content {
   version: Int!
 }
 
+"""The structure of the Calendars field of the Projects content type."""
+type ProjectsDataCalendarsDto {
+  iv: [Calendars!]
+}
+
+"""The structure of the Calendars field of the Projects content input type."""
+input ProjectsDataCalendarsInputDto {
+  iv: [String!]
+}
+
 """The structure of the Description field of the Projects content type."""
 type ProjectsDataDescriptionDto {
   iv: String
@@ -3109,6 +3197,7 @@ input ProjectsDataDescriptionInputDto {
 
 """The structure of the Projects data type."""
 type ProjectsDataDto {
+  calendars: ProjectsDataCalendarsDto
   description: ProjectsDataDescriptionDto
   endDate: ProjectsDataEndDateDto
   keywords: ProjectsDataKeywordsDto
@@ -3137,6 +3226,7 @@ input ProjectsDataEndDateInputDto {
 
 """The structure of the Projects data input type."""
 input ProjectsDataInputDto {
+  calendars: ProjectsDataCalendarsInputDto
   description: ProjectsDataDescriptionInputDto
   endDate: ProjectsDataEndDateInputDto
   keywords: ProjectsDataKeywordsInputDto
@@ -3363,6 +3453,7 @@ input ProjectsDataTraineeProjectInputDto {
 
 """The structure of the flat Projects data type."""
 type ProjectsFlatDataDto {
+  calendars: [Calendars!]
   description: String
   endDate: Instant
   keywords: [String!]
@@ -4182,6 +4273,32 @@ type WorkingGroups implements Content {
   newStatus: String
   """The status color of the content."""
   newStatusColor: String
+  """Query Calendars content items."""
+  referencesCalendarsContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [Calendars!]
+  """Query Calendars content items with total count."""
+  referencesCalendarsContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): CalendarsResultDto
   """Query Users content items."""
   referencesUsersContents(
     """Optional OData filter."""
@@ -4270,6 +4387,16 @@ type WorkingGroups implements Content {
   version: Int!
 }
 
+"""The structure of the Calendars field of the Working Groups content type."""
+type WorkingGroupsDataCalendarsDto {
+  iv: [Calendars!]
+}
+
+"""The structure of the Calendars field of the Working Groups content input type."""
+input WorkingGroupsDataCalendarsInputDto {
+  iv: [String!]
+}
+
 """The structure of the Description field of the Working Groups content type."""
 type WorkingGroupsDataDescriptionDto {
   iv: String
@@ -4282,6 +4409,7 @@ input WorkingGroupsDataDescriptionInputDto {
 
 """The structure of the Working Groups data type."""
 type WorkingGroupsDataDto {
+  calendars: WorkingGroupsDataCalendarsDto
   description: WorkingGroupsDataDescriptionDto
   leadingMembers: WorkingGroupsDataLeadingMembersDto
   members: WorkingGroupsDataMembersDto
@@ -4294,6 +4422,7 @@ type WorkingGroupsDataDto {
 
 """The structure of the Working Groups data input type."""
 input WorkingGroupsDataInputDto {
+  calendars: WorkingGroupsDataCalendarsInputDto
   description: WorkingGroupsDataDescriptionInputDto
   leadingMembers: WorkingGroupsDataLeadingMembersInputDto
   members: WorkingGroupsDataMembersInputDto
@@ -4422,6 +4551,7 @@ input WorkingGroupsDataTitleInputDto {
 
 """The structure of the flat Working Groups data type."""
 type WorkingGroupsFlatDataDto {
+  calendars: [Calendars!]
   description: String
   leadingMembers: String
   members: [WorkingGroupsDataMembersChildDto!]

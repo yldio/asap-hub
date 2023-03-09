@@ -2,10 +2,7 @@ import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
   WorkingGroupListResponse,
   WorkingGroupResponse,
-  WorkingGroupDataObject,
 } from '@asap-hub/model';
-import { useCurrentUserCRN } from '@asap-hub/react-context';
-import { hasWorkingGroupsCreateUpdateResearchOutputPermissions } from '@asap-hub/validation';
 import {
   atomFamily,
   DefaultValue,
@@ -124,18 +121,4 @@ export const useWorkingGroups = (options: GetListOptions) => {
     throw workingGroups;
   }
   return workingGroups;
-};
-
-export const useCanCreateUpdateResearchOutput = (
-  workingGroup: WorkingGroupDataObject | undefined,
-): boolean => {
-  const user = useCurrentUserCRN();
-
-  if (user === null) return false;
-  if (user.role === 'Staff') return true;
-
-  return hasWorkingGroupsCreateUpdateResearchOutputPermissions(
-    user,
-    workingGroup,
-  );
 };

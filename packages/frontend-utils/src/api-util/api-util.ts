@@ -1,4 +1,5 @@
 import { ErrorResponse, ValidationErrorResponse } from '@asap-hub/model';
+import { isEnabled } from '@asap-hub/flags';
 import { configureScope } from '@sentry/react';
 
 export type GetListOptions = {
@@ -38,6 +39,10 @@ export const createSentryHeaders = (): {
     'X-Transaction-Id': transactionId,
   };
 };
+
+export const createFeatureFlagHeaders = () => ({
+  'X-Contentful-Enabled': isEnabled('CONTENTFUL') ? 'true' : 'false',
+});
 
 export class BackendError extends Error {
   public response;

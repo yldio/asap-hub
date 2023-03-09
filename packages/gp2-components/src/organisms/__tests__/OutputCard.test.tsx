@@ -42,11 +42,11 @@ describe('OutputCard', () => {
   });
   it('renders documentType and output type as pills', () => {
     render(
-      <OutputCard {...defaultProps} documentType="Articles" type="Research" />,
+      <OutputCard {...defaultProps} documentType="Article" type="Research" />,
     );
     expect(
       screen.getAllByRole('listitem').map(({ textContent }) => textContent),
-    ).toEqual(expect.arrayContaining(['Articles', 'Research']));
+    ).toEqual(expect.arrayContaining(['Article', 'Research']));
   });
   it('renders authors', () => {
     const author = gp2.createOutputResponse().authors[0];

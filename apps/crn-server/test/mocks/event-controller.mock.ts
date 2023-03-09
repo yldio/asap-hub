@@ -1,4 +1,4 @@
-import { EventController } from '@asap-hub/server-common';
+import { EventController } from '@asap-hub/model';
 
 export const eventControllerMock: jest.Mocked<EventController> = {
   create: jest.fn(),

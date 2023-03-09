@@ -6,30 +6,37 @@ import { chevronCircleDownIcon, chevronCircleUpIcon } from '../icons';
 import { perRem } from '../pixels';
 import { colorWithTransparency, lead } from '../colors';
 
-const previewStyles = css({
-  maxHeight: '120px',
-  overflow: 'hidden',
-  background: `linear-gradient(180deg, ${lead.rgb} 26.56%, ${
-    colorWithTransparency(lead, 0).rgba
-  } 100%)`,
-  WebkitBackgroundClip: 'text',
-  WebkitTextFillColor: 'transparent',
-  backgroundClip: 'text',
-  textFillColor: 'transparent',
-});
+const previewStyles = (containerMaxHeight: number | string) =>
+  css({
+    maxHeight: containerMaxHeight,
+    overflow: 'hidden',
+    background: `linear-gradient(180deg, ${lead.rgb} 26.56%, ${
+      colorWithTransparency(lead, 0).rgba
+    } 100%)`,
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
+    textFillColor: 'transparent',
+  });
 
 interface CollapsibleProps {
   readonly initiallyExpanded?: boolean;
   readonly children: React.ReactNode;
+  readonly containerMaxHeight?: number | string;
 }
 const Collapsible: React.FC<CollapsibleProps> = ({
   initiallyExpanded,
   children,
+  containerMaxHeight = '120px',
 }) => {
   const [expanded, setExpanded] = useState(initiallyExpanded);
   return (
     <div>
-      <div css={[expanded ? { display: 'flex' } : previewStyles]}>
+      <div
+        css={[
+          expanded ? { display: 'flex' } : previewStyles(containerMaxHeight),
+        ]}
+      >
         {children}
       </div>
       <div

@@ -1,399 +1,165 @@
+import { createUserResponse } from '@asap-hub/fixtures';
+import { disable } from '@asap-hub/flags';
+import { UserResponse } from '@asap-hub/model';
 import {
-  hasCreateUpdateResearchOutputPermissions,
-  hasWorkingGroupsCreateUpdateResearchOutputPermissions,
-  isUserProjectManagerOfTeams,
-  isUserProjectManagerOfWorkingGroups,
-  getUserPermissions,
-  noPermissions,
+  getUserRole,
+  hasEditResearchOutputPermission,
+  hasPublishResearchOutputPermission,
+  hasShareResearchOutputPermission,
 } from '../../src/permissions/research-output';
-import {
-  createResearchOutputResponse,
-  createUserResponse,
-  createWorkingGroupResponse,
-} from '@asap-hub/fixtures';
 
-describe('hasCreateUpdateResearchOutputPermissions', () => {
-  test('Should not have permissions when there are no teams assigned to the user', () => {
+const user = createUserResponse();
+
+describe.each`
+  association        | associationId
+  ${`teams`}         | ${`team-1`}
+  ${`workingGroups`} | ${`wg-1`}
+`('getUserRole - $association', ({ association, associationId }) => {
+  test('returns Staff when user has asap role as staff', () => {
     expect(
-      hasCreateUpdateResearchOutputPermissions(
-        {
-          ...createUserResponse(),
-          teams: [],
-        },
-        ['team-1', 'team-2'],
-      ),
-    ).toEqual(false);
+      getUserRole({ ...user, role: 'Staff' }, association, associationId),
+    ).toEqual('Staff');
   });
 
-  test('Should have the permission when the user has a Project Manager role inside the team that this resource belongs to', () => {
+  test(`returns Staff when user is Project Manager of ${association}`, () => {
     expect(
-      hasCreateUpdateResearchOutputPermissions(
+      getUserRole(
         {
-          ...createUserResponse(),
-          teams: [
+          ...user,
+          role: 'Grantee',
+          [association]: [
             {
-              id: 'team-1',
-              role: 'Lead PI (Core Leadership)',
-              displayName: 'Team A',
-              proposal: 'proposalId1',
-            },
-          ],
-        },
-        ['team-1', 'team-2'],
-      ),
-    ).toEqual(false);
-  });
-
-  test('Should have the permission when the user has a Project Manager role inside the team that this resource belongs to', () => {
-    expect(
-      hasCreateUpdateResearchOutputPermissions(
-        {
-          ...createUserResponse(),
-          teams: [
-            {
-              id: 'team-1',
+              ...user[association][0],
+              id: associationId,
               role: 'Project Manager',
-              displayName: 'Team A',
-              proposal: 'proposalId1',
             },
           ],
         },
-        ['team-1', 'team-2'],
+        association,
+        [associationId],
       ),
-    ).toEqual(true);
+    ).toEqual('Staff');
   });
 
-  test('Should have the permissions when the user has a Staff role in any team', () => {
+  test(`returns Member when user belongs to ${association} and they are not a PM`, () => {
     expect(
-      hasCreateUpdateResearchOutputPermissions(
+      getUserRole(
         {
-          ...createUserResponse(),
-          teams: [
+          ...user,
+          role: 'Grantee',
+          [association]: [
             {
-              id: 'team-id-3',
-              role: 'ASAP Staff',
-              displayName: 'Team A',
-              proposal: 'proposalId1',
+              ...user[association][0],
+              id: associationId,
+              role: 'Collaborating PI',
             },
           ],
         },
-        ['team-1', 'team-2'],
+        association,
+        [associationId],
       ),
-    ).toEqual(true);
+    ).toEqual('Member');
+  });
+
+  test(`returns None when user does not belong to ${association}`, () => {
+    expect(
+      getUserRole(
+        {
+          ...user,
+          role: 'Grantee',
+          [association]: [
+            {
+              ...user[association][0],
+              id: associationId,
+              role: 'Collaborating PI',
+            },
+          ],
+        },
+        association,
+        ['does-not-belong'],
+      ),
+    ).toEqual('None');
+  });
+
+  test(`returns None when user data is null`, () => {
+    expect(getUserRole(null, association, [associationId])).toEqual('None');
   });
 });
 
-describe('hasWorkingGroupsCreateUpdateResearchOutputPermissions', () => {
-  test('Should not have permissions when there is no working group', () => {
-    expect(
-      hasWorkingGroupsCreateUpdateResearchOutputPermissions(
-        {
-          ...createUserResponse(),
-          teams: [],
-        },
-        undefined,
-      ),
-    ).toEqual(false);
-  });
+describe('hasShareResearchOutputPermission', () => {
+  test.each`
+    userRole    | expected
+    ${`Staff`}  | ${true}
+    ${`Member`} | ${true}
+    ${`None`}   | ${false}
+  `(
+    'returns $expected when user role is $userRole',
+    ({ userRole, expected }) => {
+      expect(hasShareResearchOutputPermission(userRole)).toEqual(expected);
+    },
+  );
 
-  test('Should have the permission when the user has a Project Manager role inside the working group', () => {
-    expect(
-      hasWorkingGroupsCreateUpdateResearchOutputPermissions(
-        {
-          ...createUserResponse(),
-          id: 'leader-1',
-        },
-        {
-          ...createWorkingGroupResponse({}),
-          leaders: [
-            {
-              user: {
-                ...createUserResponse(),
-                id: 'leader-1',
-              },
-              role: 'Project Manager',
-              workstreamRole: 'Project Manager',
-            },
-          ],
-        },
-      ),
-    ).toEqual(true);
-  });
-
-  test('Should not have the permission when the user has a role that differs from Project Manager', () => {
-    expect(
-      hasWorkingGroupsCreateUpdateResearchOutputPermissions(
-        {
-          ...createUserResponse(),
-          id: 'leader-1',
-        },
-        {
-          ...createWorkingGroupResponse({}),
-          leaders: [
-            {
-              user: {
-                ...createUserResponse(),
-                id: 'not-leader-1',
-              },
-              role: 'Chair',
-              workstreamRole: 'not a project manager',
-            },
-          ],
-        },
-      ),
-    ).toEqual(false);
-  });
+  test.each`
+    userRole    | expected
+    ${`Staff`}  | ${true}
+    ${`Member`} | ${false}
+    ${`None`}   | ${false}
+  `(
+    'returns $expected when user role is $userRole and feature flag is disabled',
+    ({ userRole, expected }) => {
+      disable('DRAFT_RESEARCH_OUTPUT');
+      expect(hasShareResearchOutputPermission(userRole)).toEqual(expected);
+    },
+  );
 });
 
-describe('getUserPermissions', () => {
-  test('Should not have permissions when there is no user data', () => {
-    expect(getUserPermissions(null, createResearchOutputResponse())).toEqual(
-      noPermissions,
-    );
-  });
-  test('Should not have permissions when there is no research output data', () => {
-    expect(getUserPermissions(createUserResponse(), undefined)).toEqual(
-      noPermissions,
-    );
-  });
-  test('Should not have permission if the user is not a project manager or asap staff', () => {
-    expect(
-      getUserPermissions(
-        {
-          ...createUserResponse(),
-          teams: [
-            {
-              id: 'team-id-3',
-              role: 'Project Manager',
-              displayName: 'Team A',
-              proposal: 'proposalId1',
-            },
-          ],
-          workingGroups: [
-            {
-              id: 'wg-1',
-              role: 'Member',
-              active: true,
-              name: 'wg A',
-            },
-          ],
-        },
-        {
-          ...createResearchOutputResponse(),
-          teams: [{ id: 'team-id-3', displayName: 'Team A' }],
-          workingGroups: [{ id: 'wg-1', title: 'wg A' }],
-        },
-      ),
-    ).toEqual(noPermissions);
-  });
-  test('Should have permission if the user is a project manager on a team', () => {
-    expect(
-      getUserPermissions(
-        {
-          ...createUserResponse(),
-          teams: [
-            {
-              id: 'team-id-3',
-              role: 'Project Manager',
-              displayName: 'Team A',
-              proposal: 'proposalId1',
-            },
-          ],
-        },
-        {
-          ...createResearchOutputResponse(),
-          teams: [{ id: 'team-id-3', displayName: 'Team A' }],
-          workingGroups: undefined,
-        },
-      ),
-    ).toEqual({
-      createDraft: true,
-      editDraft: true,
-      publishDraft: true,
-      editPublished: true,
-    });
-  });
-  test('Should have permission if the user is a project manager on a working groups', () => {
-    expect(
-      getUserPermissions(
-        {
-          ...createUserResponse(),
-          workingGroups: [
-            {
-              id: 'wg-1',
-              role: 'Project Manager',
-              active: true,
-              name: 'wg A',
-            },
-          ],
-        },
-        {
-          ...createResearchOutputResponse(),
-          workingGroups: [{ id: 'wg-1', title: 'wg A' }],
-        },
-      ),
-    ).toEqual({
-      createDraft: true,
-      editDraft: true,
-      publishDraft: true,
-      editPublished: true,
-    });
-  });
-  test('Should have permission if the user is asap staff', () => {
-    expect(
-      getUserPermissions(
-        {
-          ...createUserResponse(),
-          role: 'Staff',
-          teams: [
-            {
-              id: 'team-id-3',
-              role: 'Key Personnel',
-              displayName: 'Team A',
-              proposal: 'proposalId1',
-            },
-          ],
-        },
-        {
-          ...createResearchOutputResponse(),
-          teams: [{ id: 'team-id-3', displayName: 'Team A' }],
-        },
-      ),
-    ).toEqual({
-      createDraft: true,
-      editDraft: true,
-      publishDraft: true,
-      editPublished: true,
-    });
-  });
+describe('hasPublishResearchOutputPermission', () => {
+  test.each`
+    userRole    | expected
+    ${`Staff`}  | ${true}
+    ${`Member`} | ${false}
+    ${`None`}   | ${false}
+  `(
+    'returns $expected when user role is $userRole',
+    ({ userRole, expected }) => {
+      expect(hasPublishResearchOutputPermission(userRole)).toEqual(expected);
+    },
+  );
 });
 
-describe('isUserProjectManagerOfTeams', () => {
-  test('Should not have permissions when there are no teams assigned to the user', () => {
-    expect(
-      isUserProjectManagerOfTeams(
-        {
-          ...createUserResponse(),
-          teams: [],
-        },
-        [
-          {
-            id: 'team-1',
-            displayName: 'Team A',
-          },
-        ],
-      ),
-    ).toEqual(false);
-  });
-  test('Should not have permissions when the user is not a PM', () => {
-    expect(
-      isUserProjectManagerOfTeams(
-        {
-          ...createUserResponse(),
-          teams: [
-            {
-              id: 'team-1',
-              role: 'Key Personnel',
-              displayName: 'Team A',
-              proposal: 'proposalId1',
-            },
-          ],
-        },
-        [
-          {
-            id: 'team-1',
-            displayName: 'Team A',
-          },
-        ],
-      ),
-    ).toEqual(false);
-  });
-  test('Should have the permission when the user has a Project Manager role inside the team', () => {
-    expect(
-      isUserProjectManagerOfTeams(
-        {
-          ...createUserResponse(),
-          teams: [
-            {
-              id: 'team-1',
-              role: 'Project Manager',
-              displayName: 'Team A',
-              proposal: 'proposalId1',
-            },
-          ],
-        },
-        [
-          {
-            id: 'team-1',
-            displayName: 'Team A',
-          },
-        ],
-      ),
-    ).toEqual(true);
-  });
-});
+describe('hasEditResearchOutputPermission', () => {
+  test.each`
+    userRole    | published | expected
+    ${`Staff`}  | ${true}   | ${true}
+    ${`Staff`}  | ${false}  | ${true}
+    ${`Member`} | ${true}   | ${false}
+    ${`Member`} | ${false}  | ${true}
+    ${`None`}   | ${true}   | ${false}
+    ${`None`}   | ${false}  | ${false}
+  `(
+    'returns $expected when user role is $userRole and published is $published',
+    ({ userRole, published, expected }) => {
+      expect(hasEditResearchOutputPermission(userRole, published)).toEqual(
+        expected,
+      );
+    },
+  );
 
-describe('isUserProjectManagerOfWorkingGroups', () => {
-  test('Should not have permissions when there are no working groups assigned to the user', () => {
-    expect(
-      isUserProjectManagerOfWorkingGroups(
-        {
-          ...createUserResponse(),
-          workingGroups: [],
-        },
-        [
-          {
-            id: 'WG-1',
-            title: 'WG A',
-          },
-        ],
-      ),
-    ).toEqual(false);
-  });
-  test('Should not have permissions when the user is not a PM', () => {
-    expect(
-      isUserProjectManagerOfWorkingGroups(
-        {
-          ...createUserResponse(),
-          workingGroups: [
-            {
-              id: 'wg-1',
-              role: 'Member',
-              active: true,
-              name: 'wg A',
-            },
-          ],
-        },
-        [
-          {
-            id: 'wg-1',
-            title: 'wg A',
-          },
-        ],
-      ),
-    ).toEqual(false);
-  });
-  test('Should have the permission when the user has a Project Manager role inside the working group', () => {
-    expect(
-      isUserProjectManagerOfWorkingGroups(
-        {
-          ...createUserResponse(),
-          workingGroups: [
-            {
-              id: 'wg-1',
-              role: 'Project Manager',
-              name: 'wg A',
-              active: true,
-            },
-          ],
-        },
-        [
-          {
-            id: 'wg-1',
-            title: 'wg A',
-          },
-        ],
-      ),
-    ).toEqual(true);
-  });
+  test.each`
+    userRole    | published | expected
+    ${`Staff`}  | ${true}   | ${true}
+    ${`Staff`}  | ${false}  | ${true}
+    ${`Member`} | ${true}   | ${false}
+    ${`Member`} | ${false}  | ${false}
+    ${`None`}   | ${true}   | ${false}
+    ${`None`}   | ${false}  | ${false}
+  `(
+    'returns $expected when user role is $userRole, published is $published and feature flag is disabled',
+    ({ userRole, published, expected }) => {
+      disable('DRAFT_RESEARCH_OUTPUT');
+      expect(hasEditResearchOutputPermission(userRole, published)).toEqual(
+        expected,
+      );
+    },
+  );
 });

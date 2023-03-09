@@ -2,11 +2,11 @@ import { FetchOptions, ListResponse } from '../common';
 import { ExternalUserResponse } from './external-user';
 
 export const outputDocumentTypes = [
-  'Forms',
-  'Updates',
-  'Training Materials',
-  'Data Releases',
-  'Articles',
+  'Form',
+  'Update',
+  'Training Material',
+  'Data Release',
+  'Article',
   'Code/Software',
 ] as const;
 
@@ -21,18 +21,18 @@ export const outputTypes = [
 ] as const;
 export type OutputType = typeof outputTypes[number];
 
-export const outputSubTypes = ['Preprints', 'Published'] as const;
-export type OutputSubType = typeof outputSubTypes[number];
+export const outputSubtypes = ['Preprints', 'Published'] as const;
+export type OutputSubtype = typeof outputSubtypes[number];
 
 export const outputDocumentTypeToType: Record<
   OutputDocumentType,
   Set<OutputType>
 > = {
-  Forms: new Set<OutputType>(),
-  Updates: new Set<OutputType>(),
-  'Training Materials': new Set<OutputType>(),
-  'Data Releases': new Set<OutputType>(),
-  Articles: new Set<OutputType>([
+  Form: new Set<OutputType>(),
+  Update: new Set<OutputType>(),
+  'Training Material': new Set<OutputType>(),
+  'Data Release': new Set<OutputType>(),
+  Article: new Set<OutputType>([
     'Research',
     'Review',
     'Letter',
@@ -50,7 +50,7 @@ export type OutputCoreObject = {
   publishDate?: string;
   title: string;
   type?: OutputType;
-  subtype?: OutputSubType;
+  subtype?: OutputSubtype;
 };
 
 export type UserAuthor = {
@@ -86,6 +86,8 @@ export type AuthorUpsertDataObject =
 export type OutputCreateDataObject = OutputCoreObject & {
   authors: AuthorUpsertDataObject[];
   createdBy: string;
+  workingGroups?: string[];
+  projects?: string[];
 };
 
 export type OutputUpdateDataObject = OutputCoreObject & {
@@ -111,7 +113,9 @@ export type OutputPostRequest = {
   publishDate?: string;
   title: string;
   type?: OutputType;
-  subtype?: OutputSubType;
+  subtype?: OutputSubtype;
+  workingGroups?: string[];
+  projects?: string[];
 };
 
 export type OutputPutRequest = OutputPostRequest;

@@ -101,6 +101,18 @@ describe('Working Group Data Provider', () => {
         leadingMembers: '',
       });
     });
+    test('Should default null calendars to undefined', async () => {
+      const mockResponse = getSquidexWorkingGroupsGraphqlResponse();
+      const workingGroup = getGraphQLWorkingGroup();
+      workingGroup.flatData.calendars = null;
+      mockResponse.queryWorkingGroupsContentsWithTotal!.items = [workingGroup];
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const { items } = await workingGroupDataProvider.fetch();
+      expect(items[0]).toMatchObject({
+        calendar: undefined,
+      });
+    });
   });
   describe('FetchById', () => {
     test('Should fetch the working group from squidex graphql', async () => {

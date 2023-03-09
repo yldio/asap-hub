@@ -5,6 +5,7 @@ export * from './messages';
 export {
   CardWithBackground,
   CollapsibleTable,
+  EventSpeakers,
   ExpandableText,
   HeaderLogo,
   IconWithLabel,
@@ -56,6 +57,7 @@ export {
 } from './organisms';
 export {
   BasicLayout,
+  CreateOutputPage,
   DashboardPage,
   DashboardPageBody,
   EventsPage,
@@ -67,6 +69,7 @@ export {
   OnboardingPage,
   OnboardingPreview,
   OnboardingWelcome,
+  OutputForm,
   OutputsPage,
   ProjectDetailPage,
   ProjectOverview,

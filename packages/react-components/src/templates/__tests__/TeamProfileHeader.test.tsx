@@ -154,19 +154,42 @@ it('renders workspace tabs when tools provided', () => {
   ]);
 });
 
-it('renders share an output button dropdown', () => {
-  render(
-    <ResearchOutputPermissionsContext.Provider
-      value={{ canCreateUpdate: true }}
-    >
-      <TeamProfileHeader {...boilerplateProps} />,
-    </ResearchOutputPermissionsContext.Provider>,
-  );
-  expect(
-    screen.queryByText(/article/i, { selector: 'span' }),
-  ).not.toBeVisible();
-  fireEvent.click(screen.getByText('Share an output'));
-  expect(screen.getByText(/article/i, { selector: 'span' })).toBeVisible();
+describe('Share an output button dropdown', () => {
+  const renderWithPermissionsContext = (
+    canShareResearchOutput: boolean = true,
+  ) =>
+    render(
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          canShareResearchOutput,
+          canEditResearchOutput: true,
+          canPublishResearchOutput: true,
+        }}
+      >
+        <TeamProfileHeader {...boilerplateProps} />,
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+
+  it('renders share an output button when user can share research output', () => {
+    renderWithPermissionsContext();
+
+    expect(
+      screen.queryByText(/article/i, { selector: 'span' }),
+    ).not.toBeVisible();
+    fireEvent.click(screen.getByRole('button', { name: /Share an output/i }));
+    expect(screen.getByText(/article/i, { selector: 'span' })).toBeVisible();
+    expect(
+      screen.getByText(/article/i, { selector: 'span' }).closest('a'),
+    ).toHaveAttribute('href', '/network/teams/42/create-output/article');
+  });
+
+  it('does not render share an output button dropdown when user cannot share research output', () => {
+    renderWithPermissionsContext(false);
+
+    expect(
+      screen.queryByRole('button', { name: /Share an output/i }),
+    ).not.toBeInTheDocument();
+  });
 });
 
 it('displays upcoming event count when team is active', () => {

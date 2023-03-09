@@ -1,3 +1,4 @@
+/** @jsxImportSource @emotion/react */
 import { ComponentProps, ReactNode } from 'react';
 import { css } from '@emotion/react';
 import { BasicEvent } from '@asap-hub/model';
@@ -49,7 +50,12 @@ const EventPage: React.FC<EventPageProps> = ({
   children,
   ...props
 }) => (
-  <div css={containerStyles}>
+  <div
+    css={({ components }) => [
+      containerStyles,
+      components?.EventPage?.containerStyles,
+    ]}
+  >
     <BackLink href={backHref} />
     <div css={cardsStyles}>
       <Card>

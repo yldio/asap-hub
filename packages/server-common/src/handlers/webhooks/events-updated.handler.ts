@@ -1,16 +1,31 @@
-import { CalendarDataObject } from '@asap-hub/model';
+import { CalendarDataProvider, gp2 } from '@asap-hub/model';
 import { framework as lambda } from '@asap-hub/services-common';
 import Boom from '@hapi/boom';
-import { CalendarDataProvider } from '../../data-providers';
 import { Logger, SyncCalendar } from '../../utils';
 
 export const webhookEventUpdatedHandlerFactory = (
-  calendarDataProvider: CalendarDataProvider,
+  calendarDataProvider: CalendarDataProvider | gp2.CalendarDataProvider,
   syncCalendar: SyncCalendar,
   logger: Logger,
   { googleApiToken }: { googleApiToken: string },
-): lambda.Handler =>
-  lambda.http(async (request) => {
+): lambda.Handler => {
+  const getCalendar = async (resourceId: string) => {
+    try {
+      const calendars = await calendarDataProvider.fetch({
+        resourceId,
+      });
+
+      if (!calendars.items[0]) {
+        throw new Error('Failed to fetch calendar by resource ID.');
+      }
+      const [calendar] = calendars.items;
+      return calendar;
+    } catch (error) {
+      logger.error(error, 'Error fetching calendar');
+      throw Boom.badGateway();
+    }
+  };
+  return lambda.http(async (request) => {
     logger.debug(JSON.stringify(request, null, 2), 'Request');
 
     const channelToken = request.headers['x-goog-channel-token'];
@@ -27,22 +42,7 @@ export const webhookEventUpdatedHandlerFactory = (
       throw Boom.badRequest('Missing x-goog-resource-id header');
     }
 
-    let calendar: CalendarDataObject;
-
-    try {
-      const calendars = await calendarDataProvider.fetch({
-        resourceId,
-      });
-
-      if (!calendars.items[0]) {
-        throw new Error('Failed to fetch calendar by resource ID.');
-      }
-
-      [calendar] = calendars.items;
-    } catch (error) {
-      logger.error(error, 'Error fetching calendar');
-      throw Boom.badGateway();
-    }
+    const calendar = await getCalendar(resourceId);
 
     const squidexCalendarId = calendar.id;
     const { googleCalendarId } = calendar;
@@ -66,3 +66,4 @@ export const webhookEventUpdatedHandlerFactory = (
       statusCode: 200,
     };
   });
+};

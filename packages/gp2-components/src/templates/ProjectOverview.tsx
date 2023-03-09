@@ -11,6 +11,7 @@ import { css } from '@emotion/react';
 import ExpandableText from '../molecules/ExpandableText';
 import { ProjectMilestones } from '../organisms';
 import EmailSection from '../organisms/EmailSection';
+import Events from '../organisms/Events';
 
 type ProjectOverviewProps = Pick<
   gp2.ProjectResponse,
@@ -20,6 +21,7 @@ type ProjectOverviewProps = Pick<
   | 'keywords'
   | 'milestones'
   | 'members'
+  | 'calendar'
 >;
 
 const { rem } = pixels;
@@ -52,6 +54,7 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
   keywords,
   milestones,
   members,
+  calendar,
 }) => (
   <div css={containerStyles}>
     {!!description && (
@@ -64,7 +67,7 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
     )}
     <div css={columnStyles}>
       <Card overrideStyles={cardStyles}>
-        <Headline3 noMargin>Contact Information</Headline3>
+        <Headline3 noMargin>Contact</Headline3>
         <div css={contentStyles}>
           <EmailSection
             contactEmails={[
@@ -74,13 +77,25 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
           />
         </div>
       </Card>
-      <Card overrideStyles={cardStyles}>
-        <Headline3 noMargin>Keywords</Headline3>
-        <div css={contentStyles}>
-          <TagList tags={keywords} />
-        </div>
-      </Card>
+      {calendar ? (
+        <Card overrideStyles={cardStyles}>
+          <Headline3 noMargin>Events</Headline3>
+          <Events
+            calendarId={calendar.id}
+            paragraph={
+              'Subscribe this project calendar to stay always updated with the latest events.'
+            }
+          />
+        </Card>
+      ) : undefined}
     </div>
+
+    <Card overrideStyles={cardStyles}>
+      <Headline3 noMargin>Keywords</Headline3>
+      <div css={contentStyles}>
+        <TagList tags={keywords} />
+      </div>
+    </Card>
     <Card>
       <Headline3 noMargin>{`Project Members (${members.length})`}</Headline3>
       <div css={contentStyles}>

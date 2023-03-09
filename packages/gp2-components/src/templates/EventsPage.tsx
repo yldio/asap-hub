@@ -3,6 +3,7 @@ import { gp2 } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 
 import { workingGroupsImage } from '../images';
+import { mainStyles } from '../layout';
 import { PageBanner } from '../organisms';
 
 const { rem } = pixels;
@@ -32,7 +33,7 @@ const EventsPage: React.FC = ({ children }) => (
         </TabNav>
       </div>
     </PageBanner>
-    <main>{children}</main>
+    <main css={mainStyles}>{children}</main>
   </article>
 );
 

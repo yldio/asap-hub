@@ -1304,6 +1304,14 @@ export type Calendars = Content & {
   referencingEventsContents: Maybe<Array<Events>>;
   /** Query Events content items with total count. */
   referencingEventsContentsWithTotal: Maybe<EventsResultDto>;
+  /** Query Projects content items. */
+  referencingProjectsContents: Maybe<Array<Projects>>;
+  /** Query Projects content items with total count. */
+  referencingProjectsContentsWithTotal: Maybe<ProjectsResultDto>;
+  /** Query Working Groups content items. */
+  referencingWorkingGroupsContents: Maybe<Array<WorkingGroups>>;
+  /** Query Working Groups content items with total count. */
+  referencingWorkingGroupsContentsWithTotal: Maybe<WorkingGroupsResultDto>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
@@ -1325,6 +1333,42 @@ export type CalendarsReferencingEventsContentsArgs = {
 
 /** The structure of a Calendars content type. */
 export type CalendarsReferencingEventsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Calendars content type. */
+export type CalendarsReferencingProjectsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Calendars content type. */
+export type CalendarsReferencingProjectsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Calendars content type. */
+export type CalendarsReferencingWorkingGroupsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Calendars content type. */
+export type CalendarsReferencingWorkingGroupsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -2960,6 +3004,10 @@ export type Projects = Content & {
   newStatus: Maybe<Scalars['String']>;
   /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
+  /** Query Calendars content items. */
+  referencesCalendarsContents: Maybe<Array<Calendars>>;
+  /** Query Calendars content items with total count. */
+  referencesCalendarsContentsWithTotal: Maybe<CalendarsResultDto>;
   /** Query Users content items. */
   referencesUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
@@ -2976,6 +3024,24 @@ export type Projects = Content & {
   url: Scalars['String'];
   /** The version of the objec. */
   version: Scalars['Int'];
+};
+
+/** The structure of a Projects content type. */
+export type ProjectsReferencesCalendarsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Projects content type. */
+export type ProjectsReferencesCalendarsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Projects content type. */
@@ -3014,6 +3080,16 @@ export type ProjectsReferencingOutputsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
+/** The structure of the Calendars field of the Projects content type. */
+export type ProjectsDataCalendarsDto = {
+  iv: Maybe<Array<Calendars>>;
+};
+
+/** The structure of the Calendars field of the Projects content input type. */
+export type ProjectsDataCalendarsInputDto = {
+  iv: InputMaybe<Array<Scalars['String']>>;
+};
+
 /** The structure of the Description field of the Projects content type. */
 export type ProjectsDataDescriptionDto = {
   iv: Maybe<Scalars['String']>;
@@ -3026,6 +3102,7 @@ export type ProjectsDataDescriptionInputDto = {
 
 /** The structure of the Projects data type. */
 export type ProjectsDataDto = {
+  calendars: Maybe<ProjectsDataCalendarsDto>;
   description: Maybe<ProjectsDataDescriptionDto>;
   endDate: Maybe<ProjectsDataEndDateDto>;
   keywords: Maybe<ProjectsDataKeywordsDto>;
@@ -3054,6 +3131,7 @@ export type ProjectsDataEndDateInputDto = {
 
 /** The structure of the Projects data input type. */
 export type ProjectsDataInputDto = {
+  calendars: InputMaybe<ProjectsDataCalendarsInputDto>;
   description: InputMaybe<ProjectsDataDescriptionInputDto>;
   endDate: InputMaybe<ProjectsDataEndDateInputDto>;
   keywords: InputMaybe<ProjectsDataKeywordsInputDto>;
@@ -3280,6 +3358,7 @@ export type ProjectsDataTraineeProjectInputDto = {
 
 /** The structure of the flat Projects data type. */
 export type ProjectsFlatDataDto = {
+  calendars: Maybe<Array<Calendars>>;
   description: Maybe<Scalars['String']>;
   endDate: Maybe<Scalars['Instant']>;
   keywords: Maybe<Array<Scalars['String']>>;
@@ -4075,6 +4154,10 @@ export type WorkingGroups = Content & {
   newStatus: Maybe<Scalars['String']>;
   /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
+  /** Query Calendars content items. */
+  referencesCalendarsContents: Maybe<Array<Calendars>>;
+  /** Query Calendars content items with total count. */
+  referencesCalendarsContentsWithTotal: Maybe<CalendarsResultDto>;
   /** Query Users content items. */
   referencesUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
@@ -4095,6 +4178,24 @@ export type WorkingGroups = Content & {
   url: Scalars['String'];
   /** The version of the objec. */
   version: Scalars['Int'];
+};
+
+/** The structure of a Working Groups content type. */
+export type WorkingGroupsReferencesCalendarsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Working Groups content type. */
+export type WorkingGroupsReferencesCalendarsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Working Groups content type. */
@@ -4151,6 +4252,16 @@ export type WorkingGroupsReferencingWorkingGroupNetworkContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
+/** The structure of the Calendars field of the Working Groups content type. */
+export type WorkingGroupsDataCalendarsDto = {
+  iv: Maybe<Array<Calendars>>;
+};
+
+/** The structure of the Calendars field of the Working Groups content input type. */
+export type WorkingGroupsDataCalendarsInputDto = {
+  iv: InputMaybe<Array<Scalars['String']>>;
+};
+
 /** The structure of the Description field of the Working Groups content type. */
 export type WorkingGroupsDataDescriptionDto = {
   iv: Maybe<Scalars['String']>;
@@ -4163,6 +4274,7 @@ export type WorkingGroupsDataDescriptionInputDto = {
 
 /** The structure of the Working Groups data type. */
 export type WorkingGroupsDataDto = {
+  calendars: Maybe<WorkingGroupsDataCalendarsDto>;
   description: Maybe<WorkingGroupsDataDescriptionDto>;
   leadingMembers: Maybe<WorkingGroupsDataLeadingMembersDto>;
   members: Maybe<WorkingGroupsDataMembersDto>;
@@ -4175,6 +4287,7 @@ export type WorkingGroupsDataDto = {
 
 /** The structure of the Working Groups data input type. */
 export type WorkingGroupsDataInputDto = {
+  calendars: InputMaybe<WorkingGroupsDataCalendarsInputDto>;
   description: InputMaybe<WorkingGroupsDataDescriptionInputDto>;
   leadingMembers: InputMaybe<WorkingGroupsDataLeadingMembersInputDto>;
   members: InputMaybe<WorkingGroupsDataMembersInputDto>;
@@ -4303,6 +4416,7 @@ export type WorkingGroupsDataTitleInputDto = {
 
 /** The structure of the flat Working Groups data type. */
 export type WorkingGroupsFlatDataDto = {
+  calendars: Maybe<Array<Calendars>>;
   description: Maybe<Scalars['String']>;
   leadingMembers: Maybe<Scalars['String']>;
   members: Maybe<Array<WorkingGroupsDataMembersChildDto>>;
@@ -4334,6 +4448,18 @@ export type CalendarsContentFragment = Pick<
     | 'resourceId'
     | 'expirationDate'
   >;
+  referencingProjectsContents: Maybe<
+    Array<
+      Pick<Projects, 'id'> & { flatData: Pick<ProjectsFlatDataDto, 'title'> }
+    >
+  >;
+  referencingWorkingGroupsContents: Maybe<
+    Array<
+      Pick<WorkingGroups, 'id'> & {
+        flatData: Pick<WorkingGroupsFlatDataDto, 'title'>;
+      }
+    >
+  >;
 };
 
 export type FetchCalendarQueryVariables = Exact<{
@@ -4351,6 +4477,20 @@ export type FetchCalendarQuery = {
         | 'syncToken'
         | 'resourceId'
         | 'expirationDate'
+      >;
+      referencingProjectsContents: Maybe<
+        Array<
+          Pick<Projects, 'id'> & {
+            flatData: Pick<ProjectsFlatDataDto, 'title'>;
+          }
+        >
+      >;
+      referencingWorkingGroupsContents: Maybe<
+        Array<
+          Pick<WorkingGroups, 'id'> & {
+            flatData: Pick<WorkingGroupsFlatDataDto, 'title'>;
+          }
+        >
       >;
     }
   >;
@@ -4377,6 +4517,20 @@ export type FetchCalendarsQuery = {
               | 'syncToken'
               | 'resourceId'
               | 'expirationDate'
+            >;
+            referencingProjectsContents: Maybe<
+              Array<
+                Pick<Projects, 'id'> & {
+                  flatData: Pick<ProjectsFlatDataDto, 'title'>;
+                }
+              >
+            >;
+            referencingWorkingGroupsContents: Maybe<
+              Array<
+                Pick<WorkingGroups, 'id'> & {
+                  flatData: Pick<WorkingGroupsFlatDataDto, 'title'>;
+                }
+              >
             >;
           }
         >
@@ -4878,6 +5032,11 @@ export type ProjectContentFragment = Pick<Projects, 'id'> & {
         >
       >
     >;
+    calendars: Maybe<
+      Array<
+        Pick<Calendars, 'id'> & { flatData: Pick<CalendarsFlatDataDto, 'name'> }
+      >
+    >;
   };
 };
 
@@ -4932,6 +5091,13 @@ export type FetchProjectQuery = {
               ProjectsDataResourcesChildDto,
               'type' | 'title' | 'description' | 'externalLink'
             >
+          >
+        >;
+        calendars: Maybe<
+          Array<
+            Pick<Calendars, 'id'> & {
+              flatData: Pick<CalendarsFlatDataDto, 'name'>;
+            }
           >
         >;
       };
@@ -4994,6 +5160,13 @@ export type FetchProjectsQuery = {
                     ProjectsDataResourcesChildDto,
                     'type' | 'title' | 'description' | 'externalLink'
                   >
+                >
+              >;
+              calendars: Maybe<
+                Array<
+                  Pick<Calendars, 'id'> & {
+                    flatData: Pick<CalendarsFlatDataDto, 'name'>;
+                  }
                 >
               >;
             };
@@ -5398,6 +5571,13 @@ export type WorkingGroupNetworkContentFragment = Pick<
                 >
               >
             >;
+            calendars: Maybe<
+              Array<
+                Pick<Calendars, 'id'> & {
+                  flatData: Pick<CalendarsFlatDataDto, 'name'>;
+                }
+              >
+            >;
           };
         }
       >
@@ -5439,6 +5619,13 @@ export type WorkingGroupNetworkContentFragment = Pick<
                   WorkingGroupsDataResourcesChildDto,
                   'type' | 'title' | 'description' | 'externalLink'
                 >
+              >
+            >;
+            calendars: Maybe<
+              Array<
+                Pick<Calendars, 'id'> & {
+                  flatData: Pick<CalendarsFlatDataDto, 'name'>;
+                }
               >
             >;
           };
@@ -5484,6 +5671,13 @@ export type WorkingGroupNetworkContentFragment = Pick<
                 >
               >
             >;
+            calendars: Maybe<
+              Array<
+                Pick<Calendars, 'id'> & {
+                  flatData: Pick<CalendarsFlatDataDto, 'name'>;
+                }
+              >
+            >;
           };
         }
       >
@@ -5525,6 +5719,13 @@ export type WorkingGroupNetworkContentFragment = Pick<
                   WorkingGroupsDataResourcesChildDto,
                   'type' | 'title' | 'description' | 'externalLink'
                 >
+              >
+            >;
+            calendars: Maybe<
+              Array<
+                Pick<Calendars, 'id'> & {
+                  flatData: Pick<CalendarsFlatDataDto, 'name'>;
+                }
               >
             >;
           };
@@ -5582,6 +5783,13 @@ export type FetchWorkingGroupNetworkQuery = {
                       >
                     >
                   >;
+                  calendars: Maybe<
+                    Array<
+                      Pick<Calendars, 'id'> & {
+                        flatData: Pick<CalendarsFlatDataDto, 'name'>;
+                      }
+                    >
+                  >;
                 };
               }
             >
@@ -5623,6 +5831,13 @@ export type FetchWorkingGroupNetworkQuery = {
                         WorkingGroupsDataResourcesChildDto,
                         'type' | 'title' | 'description' | 'externalLink'
                       >
+                    >
+                  >;
+                  calendars: Maybe<
+                    Array<
+                      Pick<Calendars, 'id'> & {
+                        flatData: Pick<CalendarsFlatDataDto, 'name'>;
+                      }
                     >
                   >;
                 };
@@ -5668,6 +5883,13 @@ export type FetchWorkingGroupNetworkQuery = {
                       >
                     >
                   >;
+                  calendars: Maybe<
+                    Array<
+                      Pick<Calendars, 'id'> & {
+                        flatData: Pick<CalendarsFlatDataDto, 'name'>;
+                      }
+                    >
+                  >;
                 };
               }
             >
@@ -5709,6 +5931,13 @@ export type FetchWorkingGroupNetworkQuery = {
                         WorkingGroupsDataResourcesChildDto,
                         'type' | 'title' | 'description' | 'externalLink'
                       >
+                    >
+                  >;
+                  calendars: Maybe<
+                    Array<
+                      Pick<Calendars, 'id'> & {
+                        flatData: Pick<CalendarsFlatDataDto, 'name'>;
+                      }
                     >
                   >;
                 };
@@ -5755,6 +5984,11 @@ export type WorkingGroupContentFragment = Pick<WorkingGroups, 'id'> & {
         >
       >
     >;
+    calendars: Maybe<
+      Array<
+        Pick<Calendars, 'id'> & { flatData: Pick<CalendarsFlatDataDto, 'name'> }
+      >
+    >;
   };
 };
 
@@ -5796,6 +6030,13 @@ export type FetchWorkingGroupQuery = {
               WorkingGroupsDataResourcesChildDto,
               'type' | 'title' | 'description' | 'externalLink'
             >
+          >
+        >;
+        calendars: Maybe<
+          Array<
+            Pick<Calendars, 'id'> & {
+              flatData: Pick<CalendarsFlatDataDto, 'name'>;
+            }
           >
         >;
       };
@@ -5847,6 +6088,13 @@ export type FetchWorkingGroupsQuery = {
                   >
                 >
               >;
+              calendars: Maybe<
+                Array<
+                  Pick<Calendars, 'id'> & {
+                    flatData: Pick<CalendarsFlatDataDto, 'name'>;
+                  }
+                >
+              >;
             };
           }
         >
@@ -5889,6 +6137,46 @@ export const CalendarsContentFragmentDoc = {
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'expirationDate' },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'referencingProjectsContents' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'flatData' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'referencingWorkingGroupsContents' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'flatData' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                    ],
+                  },
                 },
               ],
             },
@@ -6592,6 +6880,29 @@ export const ProjectContentFragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'calendars' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -7101,6 +7412,29 @@ export const WorkingGroupContentFragmentDoc = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'externalLink' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'calendars' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                          ],
+                        },
                       },
                     ],
                   },

@@ -1,3 +1,4 @@
+/** @jsxImportSource @emotion/react */
 import {
   useState,
   useEffect,
@@ -5,7 +6,7 @@ import {
   ReactNode,
   MouseEventHandler,
 } from 'react';
-import { css } from '@emotion/react';
+import { css, Theme } from '@emotion/react';
 import { Anchor, Button } from '../atoms';
 import { perRem, mobileScreen, formTargetWidth } from '../pixels';
 
@@ -91,17 +92,21 @@ const resetButtonStyles = css({
   },
 });
 
-const itemStyles = css({
-  whiteSpace: 'nowrap',
-  color: lead.rgb,
+const itemStyles = ({
+  primary100 = mint,
+  primary900 = pine,
+}: Theme['colors'] = {}) =>
+  css({
+    whiteSpace: 'nowrap',
+    color: lead.rgb,
 
-  ':hover': {
-    backgroundColor: mint.rgb,
-    span: {
-      color: pine.rgb,
+    ':hover': {
+      backgroundColor: primary100.rgba,
+      span: {
+        color: primary900.rgba,
+      },
     },
-  },
-});
+  });
 
 type LinkItemData = {
   item: ReactNode;
@@ -117,11 +122,13 @@ type ButtonItemData = {
 type DropdownButtonProps = {
   children?: ReadonlyArray<LinkItemData | ButtonItemData>;
   buttonChildren: (menuShown: boolean) => ReactNode;
+  noMargin?: boolean;
 };
 
 const DropdownButton: React.FC<DropdownButtonProps> = ({
   children = [],
   buttonChildren,
+  noMargin = false,
 }) => {
   const reference = useRef<HTMLDivElement>(null);
   const handleClick = () => setMenuShown(!menuShown);
@@ -145,14 +152,17 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({
 
   return (
     <div css={containerStyles} ref={reference}>
-      <Button small onClick={handleClick}>
+      <Button small noMargin={noMargin} onClick={handleClick}>
         {buttonChildren(menuShown)}
       </Button>
       <div css={menuWrapperStyles}>
         <div css={[menuContainerStyles, menuShown && showMenuStyles]}>
           <ul css={listStyles}>
             {children.map(({ item, href, onClick }, index) => (
-              <li key={`drop-${index}`} css={itemStyles}>
+              <li
+                key={`drop-${index}`}
+                css={({ colors }) => itemStyles(colors)}
+              >
                 {href ? (
                   <Anchor href={href}>
                     <span css={itemContentStyles}>{item}</span>

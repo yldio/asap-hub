@@ -8,12 +8,15 @@ import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { network, useRouteParams } from '@asap-hub/routing';
 
 import { usePaginationParams } from '../../hooks';
-import { useResearchOutputs } from '../../shared-research/state';
+import {
+  useResearchOutputs,
+  useCanShareResearchOutput,
+} from '../../shared-research/state';
 
 import { useUpcomingAndPastEvents } from '../events';
 import ProfileSwitch from '../ProfileSwitch';
 
-import { useCanCreateUpdateResearchOutput, useWorkingGroupById } from './state';
+import { useWorkingGroupById } from './state';
 
 const loadAbout = () =>
   import(/* webpackChunkName: "network-working-group-about" */ './About');
@@ -43,7 +46,9 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
   const { workingGroupId } = useRouteParams(route);
   const workingGroup = useWorkingGroupById(workingGroupId);
 
-  const canCreateUpdate = useCanCreateUpdateResearchOutput(workingGroup);
+  const canShareResearchOutput = useCanShareResearchOutput('workingGroups', [
+    workingGroupId,
+  ]);
 
   useEffect(() => {
     loadAbout()
@@ -78,7 +83,9 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
       upcoming: path + upcoming.template,
     };
     return (
-      <ResearchOutputPermissionsContext.Provider value={{ canCreateUpdate }}>
+      <ResearchOutputPermissionsContext.Provider
+        value={{ canShareResearchOutput }}
+      >
         <Switch>
           <Route path={path + createOutput.template}>
             <Frame title="Share Output">

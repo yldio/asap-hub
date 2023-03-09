@@ -7,6 +7,11 @@ it('renders <p> as a paragraph', () => {
   expect(getByText('text').tagName).toBe('P');
 });
 
+it('renders <u> as a underline', () => {
+  const { getByText } = render(<RichText text={'<p><u>underline</u></p>'} />);
+  expect(getByText('underline').tagName).toBe('U');
+});
+
 it('renders <iframe>', () => {
   const { getByTitle } = render(
     <RichText text={'<iframe title="Some Frame" />'} />,

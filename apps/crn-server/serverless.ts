@@ -41,6 +41,7 @@ const {
   CRN_CONTENTFUL_ACCESS_TOKEN,
   CRN_CONTENTFUL_SPACE_ID,
   IS_CONTENTFUL_ENABLED = 'false',
+  IS_CONTENTFUL_ENABLED_V2 = 'false',
   LOG_LEVEL,
 } = process.env;
 
@@ -65,6 +66,7 @@ const contentfulEnvironment = CRN_CONTENTFUL_ENV!;
 const contentfulAccessToken = CRN_CONTENTFUL_ACCESS_TOKEN!;
 const contentfulSpaceId = CRN_CONTENTFUL_SPACE_ID!;
 const isContentfulEnabled = IS_CONTENTFUL_ENABLED;
+const isContentfulEnabledV2 = IS_CONTENTFUL_ENABLED_V2;
 
 const algoliaIndex = ALGOLIA_INDEX
   ? '${env:ALGOLIA_INDEX}'
@@ -124,6 +126,7 @@ const serverlessConfig: AWS = {
         allowedHeaders: [
           'authorization',
           'x-transaction-id',
+          'x-contentful-enabled',
           'content-type',
           'accept',
           'origin',
@@ -158,6 +161,7 @@ const serverlessConfig: AWS = {
       ALGOLIA_APP_ID: `\${ssm:algolia-app-id-${envAlias}}`,
       CURRENT_REVISION: CI_COMMIT_SHA || '${env:CURRENT_REVISION}',
       IS_CONTENTFUL_ENABLED: isContentfulEnabled,
+      IS_CONTENTFUL_ENABLED_V2: isContentfulEnabledV2,
       CONTENTFUL_ENV_ID: contentfulEnvironment,
       CONTENTFUL_ACCESS_TOKEN: contentfulAccessToken,
       CONTENTFUL_SPACE_ID: contentfulSpaceId,

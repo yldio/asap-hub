@@ -3,12 +3,12 @@ import { SharedResearchOutput } from '@asap-hub/react-components';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 
 import {
-  text,
-  date,
   array,
+  boolean,
+  date,
   number,
   select,
-  boolean,
+  text,
 } from '@storybook/addon-knobs';
 
 import {
@@ -87,7 +87,11 @@ const props = (): ComponentProps<typeof SharedResearchOutput> => ({
 
 export const Normal = () => (
   <ResearchOutputPermissionsContext.Provider
-    value={{ canCreateUpdate: boolean('Can Edit', false) }}
+    value={{
+      canShareResearchOutput: true,
+      canEditResearchOutput: true,
+      canPublishResearchOutput: true,
+    }}
   >
     <SharedResearchOutput
       {...props()}
@@ -102,7 +106,11 @@ export const Normal = () => (
 );
 export const GrantDocument = () => (
   <ResearchOutputPermissionsContext.Provider
-    value={{ canCreateUpdate: boolean('Can Edit', false) }}
+    value={{
+      canShareResearchOutput: true,
+      canEditResearchOutput: true,
+      canPublishResearchOutput: true,
+    }}
   >
     <SharedResearchOutput
       {...props()}

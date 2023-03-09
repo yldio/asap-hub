@@ -15,6 +15,7 @@ type PageBannerProp = {
   title: string;
   description?: string;
   noMarginBottom?: boolean;
+  noLayoutPadding?: boolean;
   noBorderTop?: boolean;
 };
 
@@ -50,6 +51,10 @@ const textContainerStyles = (noMarginBottom: boolean) =>
     },
   });
 
+const removeLayoutPaddingStyles = {
+  marginTop: vminLinearCalcClamped(mobileScreen, -33, tabletScreen, -48, 'px'),
+};
+
 const imageBannerStyles = (image: string, position: string) =>
   css({
     width: '100%',
@@ -70,10 +75,11 @@ const PageBanner: React.FC<PageBannerProp> = ({
   title,
   description,
   noMarginBottom = false,
+  noLayoutPadding = false,
   noBorderTop = false,
   children,
 }) => (
-  <header css={headerStyles}>
+  <header css={[headerStyles, noLayoutPadding && removeLayoutPaddingStyles]}>
     {image && <div css={imageBannerStyles(image, position)}></div>}
     <div
       css={[cardStyles, accents.default, noBorderTop && { borderTopWidth: 0 }]}

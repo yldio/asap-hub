@@ -28,16 +28,7 @@ export type FetchCalendarProviderOptions = {
 
 type GraphqlCalendar = NonNullable<FetchCalendarQuery['findCalendarsContent']>;
 
-export interface CalendarDataProvider {
-  create(create: CalendarCreateDataObject): Promise<string>;
-  update(id: string, update: CalendarUpdateDataObject): Promise<void>;
-  fetch(
-    options?: FetchCalendarProviderOptions,
-  ): Promise<gp2.ListCalendarDataObject>;
-  fetchById(id: string): Promise<gp2.CalendarDataObject | null>;
-}
-
-export class CalendarSquidexDataProvider implements CalendarDataProvider {
+export class CalendarSquidexDataProvider implements gp2.CalendarDataProvider {
   constructor(
     private squidexRestClient: SquidexRestClient<RestCalendar, InputCalendar>,
     private squidexGraphqlClient: SquidexGraphqlClient,
@@ -129,4 +120,10 @@ export const parseGraphQlCalendarToDataObject = (
   version: item.version,
   expirationDate: item.flatData.expirationDate,
   syncToken: item.flatData.syncToken,
+  projects: item.referencingProjectsContents?.map(
+    ({ id, flatData: { title } }) => ({ id, title: title || '' }),
+  ),
+  workingGroups: item.referencingWorkingGroupsContents?.map(
+    ({ id, flatData: { title } }) => ({ id, title: title || '' }),
+  ),
 });

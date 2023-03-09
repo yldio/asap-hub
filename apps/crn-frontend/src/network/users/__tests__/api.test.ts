@@ -254,7 +254,9 @@ describe('getUsersAndExternalAuthors', () => {
 
 describe('getUser', () => {
   it('makes an authorized GET request for the user id', async () => {
-    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+    nock(API_BASE_URL, {
+      reqheaders: { authorization: 'Bearer x', 'X-Contentful-Enabled': 'true' },
+    })
       .get('/users/42')
       .reply(200, {});
     await getUser('42', 'Bearer x');

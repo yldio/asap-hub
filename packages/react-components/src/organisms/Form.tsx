@@ -13,13 +13,14 @@ const styles = css({
 });
 
 type FormProps<T> = {
-  onSave: () => Promise<T | void>;
   validate?: () => boolean;
   dirty: boolean; // mandatory so that it cannot be forgotten
   serverErrors?: ValidationErrorResponse['data'];
   children: (state: {
     isSaving: boolean;
-    onSave: () => void | Promise<T | void>;
+    getWrappedOnSave: (
+      onSaveFunction: () => Promise<T | void>,
+    ) => () => Promise<T | void>;
     onCancel: () => void;
   }) => ReactNode;
 };
@@ -27,7 +28,6 @@ const Form = <T extends void | Record<string, unknown>>({
   dirty,
   children,
   validate = () => true,
-  onSave,
   serverErrors = [],
 }: FormProps<T>): React.ReactElement => {
   const toast = useContext(ToastContext);
@@ -46,28 +46,29 @@ const Form = <T extends void | Record<string, unknown>>({
       formRef.current.reportValidity();
     }
   }, [serverErrors]);
-  const wrappedOnSave = async () => {
-    const parentValidation = validate();
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    if (formRef.current!.reportValidity() && parentValidation) {
-      setStatus('isSaving');
-      try {
-        const result = await onSave();
-        if (formRef.current) {
-          setStatus('hasSaved');
-        }
-        return result;
-      } catch {
-        if (formRef.current) {
-          setStatus('hasError');
-          toast(
-            'There was an error and we were unable to save your changes. Please try again.',
-          );
+  const getWrappedOnSave =
+    (onSaveFunction: () => Promise<T | void>) => async () => {
+      const parentValidation = validate();
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      if (formRef.current!.reportValidity() && parentValidation) {
+        setStatus('isSaving');
+        try {
+          const result = await onSaveFunction();
+          if (formRef.current) {
+            setStatus('hasSaved');
+          }
+          return result;
+        } catch {
+          if (formRef.current) {
+            setStatus('hasError');
+            toast(
+              'There was an error and we were unable to save your changes. Please try again.',
+            );
+          }
         }
       }
-    }
-    return Promise.resolve();
-  };
+      return Promise.resolve();
+    };
 
   const onCancel = () => {
     setStatus('initial');
@@ -91,7 +92,7 @@ const Form = <T extends void | Record<string, unknown>>({
         {children({
           onCancel,
           isSaving: status === 'isSaving',
-          onSave: wrappedOnSave,
+          getWrappedOnSave,
         })}
       </form>
     </>

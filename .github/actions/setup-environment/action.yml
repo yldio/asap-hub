@@ -41,6 +41,12 @@ outputs:
   crn-contentful-env-id:
     description: 'Environment ID for Contentful'
     value: ${{ steps.vars.outputs.crn-contentful-env-id }}
+  crn-base-pr-app-domain:
+    description: 'CRN Base PR App Domain'
+    value: ${{ steps.vars.outputs.crn-base-pr-app-domain }}
+  crn-auth0-additional-claim-domain:
+    description: 'CRN Auth0 Additional Claim Domain'
+    value: ${{ steps.vars.outputs.crn-auth0-additional-claim-domain }}
   crn-ci-auth0-client-id:
     description: 'CRN CI Auth0 Client Id'
     value: ${{ steps.vars.outputs.crn-ci-auth0-client-id }}
@@ -72,8 +78,11 @@ outputs:
     description: 'Contentful Environment'
     value: ${{ steps.vars.outputs.contentful-environment }}
   is-contentful-enabled:
-    description: 'Is data fetched from Contentful'
+    description: 'Is news, pages and dashboard data fetched from Contentful'
     value: ${{ steps.vars.outputs.is-contentful-enabled }}
+  is-contentful-enabled-v2:
+    description: 'Is all remaining data fetched from Contentful'
+    value: ${{ steps.vars.outputs.is-contentful-enabled-v2 }}
   max-contentful-envs:
     description: 'Maximum Contentful environments'
     value: ${{ steps.vars.outputs.max-contentful-envs }}
@@ -98,6 +107,12 @@ outputs:
   gp2-auth0-audience:
     description: 'GP2 Auth0 Audience'
     value: ${{ steps.vars.outputs.gp2-auth0-audience }}
+  gp2-base-pr-app-domain:
+    description: 'GP2 Base PR App Domain'
+    value: ${{ steps.vars.outputs.gp2-base-pr-app-domain }}
+  gp2-auth0-additional-claim-domain:
+    description: 'GP2 Auth0 Additional Claim Domain'
+    value: ${{ steps.vars.outputs.gp2-auth0-additional-claim-domain }}
   gp2-auth0-client-id:
     description: 'GP2 Auth0 Client ID'
     value: ${{ steps.vars.outputs.gp2-auth0-client-id }}

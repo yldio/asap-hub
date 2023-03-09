@@ -263,4 +263,25 @@ describe('convertHtmlToContentfulFormat', () => {
       },
     ]);
   });
+
+  it('converts html with new line', async () => {
+    const html = `<p>line 1</p>\n<p>&nbsp;</p>\n<p>line 2</p>`;
+    expect(convertHtmlToContentfulFormat(html).document.content).toEqual([
+      {
+        content: [{ data: {}, marks: [], nodeType: 'text', value: 'line 1' }],
+        data: {},
+        nodeType: 'paragraph',
+      },
+      {
+        content: [{ data: {}, marks: [], nodeType: 'text', value: ' ' }],
+        data: {},
+        nodeType: 'paragraph',
+      },
+      {
+        content: [{ data: {}, marks: [], nodeType: 'text', value: 'line 2' }],
+        data: {},
+        nodeType: 'paragraph',
+      },
+    ]);
+  });
 });

@@ -23,8 +23,9 @@
     "react-router-last-location": "2.0.1"
   },
   "dependencies": {
+    "@asap-hub/flags": "workspace:*",
     "@babel/runtime-corejs3": "7.21.0",
-    "csv-stringify": "6.2.4",
+    "csv-stringify": "6.3.0",
     "date-fns": "2.29.3",
     "react-titled": "1.1.1",
     "streamsaver": "2.0.6",

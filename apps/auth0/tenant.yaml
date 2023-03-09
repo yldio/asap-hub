@@ -11,8 +11,6 @@ actions:
     deployed: true
     runtime: node16
     secrets:
-      - name: PR_APP_DOMAIN
-      - name: ASAP_API_URL
       - name: AUTH0_ADDITIONAL_CLAIM_DOMAIN
         value: '##AUTH0_ADDITIONAL_CLAIM_DOMAIN##'
       - name: AUTH0_SHARED_SECRET
@@ -29,8 +27,6 @@ actions:
     deployed: true
     runtime: node16
     secrets:
-      - name: PR_APP_DOMAIN
-      - name: ASAP_API_URL
       - name: AUTH0_ADDITIONAL_CLAIM_DOMAIN
         value: '##AUTH0_ADDITIONAL_CLAIM_DOMAIN##'
       - name: AUTH0_SHARED_SECRET

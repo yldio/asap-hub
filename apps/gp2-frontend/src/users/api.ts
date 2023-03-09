@@ -48,14 +48,6 @@ export const getUsers = async (
   return resp.json();
 };
 
-// export const getExternalUsers = async(
-//   options: gp2.FetchUsersOptions,
-//   authorization: string,
-// ):Promise<gp2.ListExternalUserResponse>=>{
-//   const url = new URL('users', `${API_BASE_URL}/`);
-//   const resp = await(fetch())
-// }
-
 export const getUser = async (
   id: string,
   authorization: string,

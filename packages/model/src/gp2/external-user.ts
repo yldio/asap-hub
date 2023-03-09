@@ -1,10 +1,17 @@
 import { ListResponse } from '../common';
-import { UserResponse } from '../user';
+
+export type ExternalUserDataObject = {
+  id: string;
+  name: string;
+  orcid?: string;
+};
+
+export type ListExternalUserDataObject = ListResponse<ExternalUserDataObject>;
 
 export type ExternalUserResponse = Pick<
-  UserResponse,
-  'id' | 'displayName' | 'orcid'
->;
+  ExternalUserDataObject,
+  'id' | 'orcid'
+> & { displayName: string };
 
 export type ListExternalUserResponse = ListResponse<ExternalUserResponse>;
 

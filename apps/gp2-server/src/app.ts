@@ -32,6 +32,9 @@ import ContributingCohorts, {
   ContributingCohortController,
 } from './controllers/contributing-cohort.controller';
 import Events from './controllers/event.controller';
+import ExternalUsers, {
+  ExternalUsersController,
+} from './controllers/external-users.controller';
 import News, { NewsController } from './controllers/news.controller';
 import Outputs, { OutputController } from './controllers/output.controller';
 import Projects, { ProjectController } from './controllers/project.controller';
@@ -83,6 +86,7 @@ import {
 import { calendarRouteFactory } from './routes/calendar.route';
 import { contributingCohortRouteFactory } from './routes/contributing-cohort.route';
 import { eventRouteFactory } from './routes/event.route';
+import { externalUserRouteFactory } from './routes/external-user.route';
 import { newsRouteFactory } from './routes/news.route';
 import { outputRouteFactory } from './routes/output.route';
 import { projectRouteFactory } from './routes/project.route';
@@ -211,7 +215,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     new OutputSquidexDataProvider(squidexGraphqlClient, outputRestClient);
 
   const externalUserDataProvider =
-    libs.externalUserDataProvider ||
+    libs.externalUsersDataProvider ||
     new ExternalUserSquidexDataProvider(
       squidexGraphqlClient,
       externalUserRestClient,
@@ -227,6 +231,8 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.projectController || new Projects(projectDataProvider);
   const newsController = libs.newsController || new News(newsDataProvider);
   const eventController = libs.eventController || new Events(eventDataProvider);
+  const externalUsersController =
+    libs.externalUsersController || new ExternalUsers(externalUserDataProvider);
   const calendarController =
     libs.calendarController || new Calendars(calendarDataProvider);
   const outputController =
@@ -265,6 +271,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   );
   const projectRoutes = projectRouteFactory(projectController);
   const eventRoutes = eventRouteFactory(eventController);
+  const externalUsersRoutes = externalUserRouteFactory(externalUsersController);
   const calendarRoutes = calendarRouteFactory(calendarController);
   const outputRoutes = outputRouteFactory(outputController);
   app.use(userPublicRoutes);
@@ -281,6 +288,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(workingGroupNetworkRoutes);
   app.use(projectRoutes);
   app.use(eventRoutes);
+  app.use(externalUsersRoutes);
   app.use(calendarRoutes);
   app.use(outputRoutes);
 
@@ -307,8 +315,9 @@ export type Libs = {
   contributingCohortController?: ContributingCohortController;
   contributingCohortDataProvider?: ContributingCohortDataProvider;
   eventController?: gp2.EventController;
+  externalUsersController?: ExternalUsersController;
   eventDataProvider?: gp2.EventDataProvider;
-  externalUserDataProvider?: ExternalUserDataProvider;
+  externalUsersDataProvider?: ExternalUserDataProvider;
   logger?: Logger;
   newsController?: NewsController;
   newsDataProvider?: NewsDataProvider;

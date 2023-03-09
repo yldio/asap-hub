@@ -1,13 +1,25 @@
 import { GenericError } from '@asap-hub/errors';
+import { gp2 as gp2Squidex, SquidexRest } from '@asap-hub/squidex';
 import nock from 'nock';
 import { appName, baseUrl } from '../../src/config';
 
 import { getExternalUserCreateDataObject } from '../fixtures/external-users.fixtures';
 import { identity } from '../helpers/squidex';
-import { externalUserDataProviderMock } from '../mocks/external-user-data-provider.mock';
+import { getAuthToken } from '../../src/utils/auth';
+import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
+import { ExternalUserSquidexDataProvider } from '../../src/data-providers/external-users.data-provider';
 
 describe('External Users data provider', () => {
-  const externalUsersDataProvider = externalUserDataProviderMock;
+  const externalUserRestClient = new SquidexRest<gp2Squidex.RestExternalUser>(
+    getAuthToken,
+    'external-users',
+    { appName, baseUrl },
+  );
+  const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
+  const externalUsersDataProvider = new ExternalUserSquidexDataProvider(
+    squidexGraphqlClientMock,
+    externalUserRestClient,
+  );
 
   beforeAll(() => {
     identity();

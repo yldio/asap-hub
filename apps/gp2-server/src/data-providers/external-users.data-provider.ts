@@ -16,22 +16,19 @@ export interface ExternalUserDataProvider {
   create(input: gp2Model.ExternalUserCreateDataObject): Promise<string>;
   fetch(
     options: gp2Model.FetchUsersOptions,
-  ): Promise<gp2Model.ListExternalUserResponse>;
+  ): Promise<gp2Model.ListExternalUserDataObject>;
 }
 
 export const parseGraphQLExternalUserToDataObject = ({
   id,
-
-  flatData: externalUser,
+  flatData: { name, orcid },
 }: NonNullable<
   FetchExternalUserQuery['findExternalUsersContent']
->): gp2Model.ExternalUserResponse => {
-  return {
-    id,
-    displayName: externalUser.name || '',
-  };
-};
-
+>): gp2Model.ExternalUserDataObject => ({
+  id,
+  name: name || '',
+  orcid: orcid || undefined,
+});
 export class ExternalUserSquidexDataProvider
   implements ExternalUserDataProvider
 {
@@ -47,11 +44,12 @@ export class ExternalUserSquidexDataProvider
     });
     return id;
   }
+
   async fetch({
     take = 8,
     skip = 0,
     search,
-  }: gp2Model.FetchUsersOptions): Promise<gp2Model.ListExternalUserResponse> {
+  }: gp2Model.FetchUsersOptions): Promise<gp2Model.ListExternalUserDataObject> {
     const searchFilter = [
       ...(search || '')
         .split(' ')
@@ -73,7 +71,7 @@ export class ExternalUserSquidexDataProvider
     filter: string,
     top: number,
     skip: number,
-  ) {
+  ): Promise<gp2Model.ListExternalUserDataObject> {
     const { queryExternalUsersContentsWithTotal } = await this.queryFetchData(
       filter,
       top,

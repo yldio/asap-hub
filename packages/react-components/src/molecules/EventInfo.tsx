@@ -1,12 +1,12 @@
-import { ComponentProps } from 'react';
-import { css } from '@emotion/react';
 import { BasicEvent } from '@asap-hub/model';
 import { events } from '@asap-hub/routing';
+import { css } from '@emotion/react';
+import { ComponentProps } from 'react';
 
+import { EventTime, ImageLink, LinkHeadline, TagList } from '.';
 import { neutral900 } from '../colors';
-import { perRem, largeDesktopScreen, rem } from '../pixels';
 import { eventPlaceholderIcon } from '../icons';
-import { EventTime, TagList, LinkHeadline, ImageLink } from '.';
+import { largeDesktopScreen, perRem, rem } from '../pixels';
 
 const TITLE_LIMIT = 55;
 

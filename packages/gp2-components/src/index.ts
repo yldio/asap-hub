@@ -5,6 +5,7 @@ export * from './messages';
 export {
   CardWithBackground,
   CollapsibleTable,
+  EventOwner,
   EventSpeakers,
   ExpandableText,
   HeaderLogo,

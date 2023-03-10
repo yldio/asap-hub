@@ -1,7 +1,9 @@
-export { default as EditableCard } from './EditableCard';
 export { default as CardWithBackground } from './CardWithBackground';
 export { default as CollapsibleTable } from './CollapsibleTable';
 export { default as ContactSupport } from './ContactSupport';
+export { default as EditableCard } from './EditableCard';
+export { default as EventOwner } from './EventOwner';
+export { default as EventSpeakers } from './EventSpeakers';
 export { default as ExpandableText } from './ExpandableText';
 export { default as HeaderLogo } from './HeaderLogo';
 export { default as IconWithLabel } from './IconWithLabel';
@@ -11,4 +13,3 @@ export { default as UserCardInfo } from './UserCardInfo';
 export { default as UserMenu } from './UserMenu';
 export { default as UserPositions } from './UserPositions';
 export { default as UserRegion } from './UserRegion';
-export { default as EventSpeakers } from './EventSpeakers';

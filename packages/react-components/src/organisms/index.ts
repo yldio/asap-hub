@@ -1,4 +1,5 @@
 export { default as AdditionalMaterials } from './AdditionalMaterials';
+export { default as AuthorSelect } from './AuthorSelect';
 export { default as CalendarList } from './CalendarList';
 export { default as CheckboxGroup } from './CheckboxGroup';
 export { default as ComingSoon } from './ComingSoon';

@@ -10,11 +10,11 @@ it('renders a author multi select, passing through props for user', () => {
       subtitle="Subtitle"
       description="Description"
       suggestions={[
-        { label: 'Value', value: 'Value', user: createUserResponse() },
+        { label: 'Value', value: 'Value', author: createUserResponse() },
       ]}
       values={[
         {
-          user: {
+          author: {
             ...createUserResponse(),
             firstName: 'Andy',
             lastName: 'Smith',
@@ -39,11 +39,11 @@ it('renders a author multi select, passing through props for user with avatar', 
       subtitle="Subtitle"
       description="Description"
       suggestions={[
-        { label: 'Value', value: 'Value', user: createUserResponse() },
+        { label: 'Value', value: 'Value', author: createUserResponse() },
       ]}
       values={[
         {
-          user: {
+          author: {
             ...createUserResponse(),
             firstName: 'Andy',
             lastName: 'Smith',
@@ -70,11 +70,11 @@ it('renders a author multi select, passing through props for external author', (
       subtitle="Subtitle"
       description="Description"
       suggestions={[
-        { label: 'Value', value: 'Value', user: createUserResponse() },
+        { label: 'Value', value: 'Value', author: createUserResponse() },
       ]}
       values={[
         {
-          user: {
+          author: {
             id: 'external-author-id',
             displayName: 'Andy Smith',
           },

@@ -1,4 +1,4 @@
-import { ExternalAuthorResponse, UserResponse } from '@asap-hub/model';
+import { AuthorResponse } from '@asap-hub/model';
 import { isInternalUser } from '@asap-hub/validation';
 import { css } from '@emotion/react';
 import { ReactElement, ReactNode } from 'react';
@@ -21,7 +21,7 @@ const LabelWithAvatar = ({
   author,
   children,
 }: {
-  author?: UserResponse | ExternalAuthorResponse;
+  author?: AuthorResponse;
   children: ReactElement | ReactNode;
 }) =>
   author && isInternalUser(author) ? (
@@ -48,7 +48,7 @@ const optionStyles = css({
 });
 
 type AuthorOption = {
-  user?: UserResponse | ExternalAuthorResponse;
+  author?: AuthorResponse;
 } & MultiSelectOptionsType;
 
 type AuthorSelectProps = LabeledMultiSelectProps<AuthorOption>;
@@ -72,7 +72,7 @@ const AuthorSelect: React.FC<AuthorSelectProps> = (props) => (
       MultiValueLabel: (multiValueLabelProps) => (
         <components.MultiValueLabel {...multiValueLabelProps}>
           <div css={optionStyles}>
-            <LabelWithAvatar author={multiValueLabelProps.data.user}>
+            <LabelWithAvatar author={multiValueLabelProps.data.author}>
               {multiValueLabelProps.children}
             </LabelWithAvatar>
           </div>
@@ -81,8 +81,8 @@ const AuthorSelect: React.FC<AuthorSelectProps> = (props) => (
       Option: (optionProps) => (
         <components.Option {...optionProps}>
           <div css={optionStyles}>
-            {optionProps.data.user ? (
-              <LabelWithAvatar author={optionProps.data.user}>
+            {optionProps.data.author ? (
+              <LabelWithAvatar author={optionProps.data.author}>
                 {optionProps.children}
               </LabelWithAvatar>
             ) : (

@@ -137,10 +137,10 @@ export const getPayload = ({
   description,
   title,
   type: type as ResearchOutputPostRequest['type'],
-  authors: authors.map(({ value, user }) =>
-    !user
+  authors: authors.map(({ value, author }) =>
+    !author
       ? { externalAuthorName: value }
-      : isInternalUser(user)
+      : isInternalUser(author)
       ? { userId: value }
       : { externalAuthorId: value },
   ),

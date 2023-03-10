@@ -97,6 +97,7 @@ export {
 } from './molecules';
 export {
   AdditionalMaterials,
+  AuthorSelect,
   CalendarList,
   CheckboxGroup,
   ComingSoon,

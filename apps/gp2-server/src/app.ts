@@ -169,7 +169,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   });
   const externalUserRestClient = new SquidexRest<gp2Squidex.RestExternalUser>(
     getAuthToken,
-    'external-authors',
+    'external-users',
     {
       appName,
       baseUrl,

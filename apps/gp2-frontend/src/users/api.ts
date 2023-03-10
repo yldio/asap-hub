@@ -53,13 +53,11 @@ export const getExternalUsers = async (
   authorization: string,
 ): Promise<gp2.ListExternalUserResponse> => {
   const url = new URL('external-users', `${API_BASE_URL}/`);
-  if (search) url.searchParams.set('search', search);
-  if (take !== null) {
-    url.searchParams.set('take', String(take));
-  }
-  if (skip !== null) {
-    url.searchParams.set('skip', String(skip));
-  }
+
+  search && url.searchParams.set('search', search);
+  take && url.searchParams.set('take', String(take));
+  skip && url.searchParams.set('skip', String(skip));
+
   const resp = await fetch(url.toString(), {
     headers: { authorization, ...createSentryHeaders() },
   });

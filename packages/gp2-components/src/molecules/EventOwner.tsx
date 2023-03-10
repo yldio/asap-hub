@@ -18,30 +18,34 @@ const listItemStyles = css({
   display: 'flex',
 });
 
-const EventOwner: React.FC<
-  Pick<gp2Model.EventResponse, 'project' | 'workingGroup'>
-> = ({ project, workingGroup }) => {
+type EventOwnerProps = Pick<gp2Model.EventResponse, 'project' | 'workingGroup'>;
+const getProperties = ({ project, workingGroup }: EventOwnerProps) => {
+  if (workingGroup) {
+    return {
+      ...workingGroup,
+      href: workingGroups({}).workingGroup({
+        workingGroupId: workingGroup.id,
+      }).$,
+    };
+  }
+  return (
+    project && {
+      ...project,
+      href: projects({}).project({ projectId: project.id }).$,
+    }
+  );
+};
+
+const EventOwner: React.FC<EventOwnerProps> = ({ project, workingGroup }) => {
   const icon = workingGroup || !project ? workingGroupIcon : projectIcon;
-  const { title } = workingGroup || project || { title: 'GP2 Hub' };
+  const { title, href } = getProperties({ project, workingGroup }) || {
+    title: 'GP2 Hub',
+  };
 
   return (
     <div css={listItemStyles}>
       <IconWithLabel noMargin icon={icon}>
-        {workingGroup || project ? (
-          <Link
-            href={
-              workingGroup
-                ? workingGroups({}).workingGroup({
-                    workingGroupId: workingGroup.id,
-                  }).$
-                : projects({}).project({ projectId: project!.id }).$
-            }
-          >
-            {title}
-          </Link>
-        ) : (
-          title
-        )}
+        {href ? <Link href={href}>{title}</Link> : title}
       </IconWithLabel>
     </div>
   );

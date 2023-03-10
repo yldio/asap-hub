@@ -7,7 +7,6 @@ export default {
 };
 
 const props: ComponentProps<typeof UserMenu> = {
-  menuShown: false,
   closeUserMenu: () => {},
   projects: [],
   userId: '1',

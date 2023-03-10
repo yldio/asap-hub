@@ -7,7 +7,6 @@ export default {
 };
 
 const props: ComponentProps<typeof UserNavigation> = {
-  menuShown: false,
   projects: [],
   userId: '1',
   workingGroups: [],

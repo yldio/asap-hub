@@ -48,8 +48,7 @@ type UserMenuProps = Pick<
   gp2Model.UserResponse,
   'projects' | 'workingGroups'
 > & {
-  menuShown: boolean;
-  closeUserMenu: (menuShown: boolean) => void;
+  closeUserMenu: (showMenu: boolean) => void;
   userId: string;
 };
 
@@ -57,7 +56,6 @@ const UserMenu: React.FC<UserMenuProps> = ({
   userId,
   projects,
   workingGroups,
-  menuShown,
   closeUserMenu,
 }) => {
   let location: Location | undefined;
@@ -80,7 +78,6 @@ const UserMenu: React.FC<UserMenuProps> = ({
         <li>
           <NavigationLink
             href={usersRoutes({}).user({ userId }).$}
-            onClick={() => closeUserMenu(!menuShown)}
             icon={userIcon}
           >
             My Profile
@@ -96,7 +93,6 @@ const UserMenu: React.FC<UserMenuProps> = ({
                 <li key={`user-menu-project-${id}`}>
                   <NavigationLink
                     href={projectsRoute({}).project({ projectId: id }).$}
-                    onClick={() => closeUserMenu(!menuShown)}
                     icon={projectIcon}
                   >
                     My project: {title}
@@ -109,7 +105,6 @@ const UserMenu: React.FC<UserMenuProps> = ({
                   href={
                     workingGroupRoute({}).workingGroup({ workingGroupId: id }).$
                   }
-                  onClick={() => closeUserMenu(!menuShown)}
                   icon={workingGroupIcon}
                 >
                   My working group: {title}

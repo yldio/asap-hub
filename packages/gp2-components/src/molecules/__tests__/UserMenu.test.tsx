@@ -15,7 +15,6 @@ describe('UserMenu', () => {
     userId: '1',
     projects: [],
     workingGroups: [],
-    menuShown: false,
     closeUserMenu: jest.fn(),
   };
 

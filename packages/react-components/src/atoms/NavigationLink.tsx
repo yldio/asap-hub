@@ -73,14 +73,12 @@ interface NavigationLinkProps {
   readonly enabled?: boolean;
   readonly icon?: JSX.Element;
   readonly squareBorder?: boolean;
-  onClick?: () => void;
 }
 const NavigationLink: React.FC<NavigationLinkProps> = ({
   href,
   enabled = true,
   icon,
   squareBorder = false,
-  onClick,
   children,
 }) => {
   const [internal, url] = isInternalLink(href);
@@ -89,7 +87,6 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
     return (
       <NavHashLink
         to={url}
-        onClick={onClick}
         activeClassName={activeClassName}
         css={({ colors, components }) => [
           styles,
@@ -116,7 +113,6 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
   return (
     <a
       href={url}
-      onClick={onClick}
       css={({ colors, components }) => [
         styles,
         squareBorder && squareBorderStyles,

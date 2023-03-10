@@ -168,7 +168,6 @@ const Layout: FC<LayoutProps> = ({
               userId={userId}
               projects={projects}
               workingGroups={workingGroups}
-              menuShown={menuShown}
               closeUserMenu={setMenuShown}
             />
           </div>

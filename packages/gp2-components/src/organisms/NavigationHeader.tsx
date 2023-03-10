@@ -85,7 +85,7 @@ const NavigationHeader: React.FC<NavigationHeaderProps> = ({
       </div>
 
       <div css={desktopNavigationStyles}>
-        <UserNavigation {...userNavigationProps} menuShown={menuShown} />
+        <UserNavigation {...userNavigationProps} />
       </div>
     </div>
     <div css={[bottomBorderStyles, desktopNavigationStyles]} />

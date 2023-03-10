@@ -26,12 +26,14 @@ const getProperties = ({ project, workingGroup }: EventOwnerProps) => {
       href: workingGroups({}).workingGroup({
         workingGroupId: workingGroup.id,
       }).$,
+      icon: workingGroupIcon,
     };
   }
   return (
     project && {
       ...project,
       href: projects({}).project({ projectId: project.id }).$,
+      icon: projectIcon,
     }
   );
 };

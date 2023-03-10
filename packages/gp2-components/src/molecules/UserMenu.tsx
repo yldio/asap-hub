@@ -122,11 +122,7 @@ const UserMenu: React.FC<UserMenuProps> = ({
       )}
       <ul css={listStyles}>
         <li>
-          <NavigationLink
-            href={logout({}).$}
-            onClick={() => closeUserMenu(!menuShown)}
-            icon={logoutIcon}
-          >
+          <NavigationLink href={logout({}).$} icon={logoutIcon}>
             Log Out
           </NavigationLink>
         </li>

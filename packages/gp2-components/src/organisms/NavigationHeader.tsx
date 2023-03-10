@@ -70,7 +70,7 @@ type NavigationHeaderProps = {
   onToggleMenu: (menuOpen: boolean) => void;
 } & ComponentProps<typeof UserNavigation>;
 const NavigationHeader: React.FC<NavigationHeaderProps> = ({
-  menuShown = false,
+  menuShown,
   onToggleMenu = noop,
   ...userNavigationProps
 }) => (

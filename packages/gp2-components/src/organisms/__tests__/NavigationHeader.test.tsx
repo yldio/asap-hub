@@ -19,7 +19,7 @@ describe('NavigationHeader', () => {
   });
 
   it('renders a menu button if menuShown prop is false', () => {
-    render(<NavigationHeader {...props} menuShown={false} />);
+    render(<NavigationHeader {...props} />);
     expect(screen.getByTitle(/menu/i)).toBeInTheDocument();
   });
   it('renders a close button if menuShown prop is true', () => {

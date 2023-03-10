@@ -14,7 +14,6 @@ const layoutProps: Omit<ComponentProps<typeof Layout>, 'children'> = {
   projects: [],
   userId: '1',
   workingGroups: [],
-  menuShown: false,
 };
 export const Normal = () => (
   <Layout {...layoutProps}>

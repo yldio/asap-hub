@@ -403,7 +403,6 @@ describe('on submit', () => {
     await setupForm();
 
     userEvent.click(screen.getByRole('textbox', { name: /Related Outputs/i }));
-    // await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
     userEvent.click(screen.getByText('First Related Research'));
     await submitForm();
     expect(saveFn).toHaveBeenLastCalledWith({

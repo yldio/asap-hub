@@ -57,12 +57,10 @@ export class ExternalUserSquidexDataProvider
         .map(sanitiseForSquidex)
         .reduce(
           (acc: string[], word: string) =>
-            acc.concat(
-              `(${[[`contains(data/name/iv, '${word}')`]].join(' or ')})`,
-            ),
+            acc.concat(`${[`(contains(data/name/iv, '${word}'))`]}`),
           [],
         ),
-    ].join(' and ');
+    ].join(' or ');
 
     return this.queryForExternalUsers(searchFilter, take, skip);
   }

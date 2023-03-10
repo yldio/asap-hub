@@ -111,7 +111,7 @@ describe('Working Group update handler', () => {
     expect(workingGroupDataProviderMock.update).not.toHaveBeenCalled();
   });
 
-  test('does not send update request if fetch does not return a value', async () => {
+  test('throws without sending update request if fetch does not return a value', async () => {
     const deliverables: WorkingGroupDeliverable[] = [
       { description: 'A pending deliverable', status: 'Pending' },
       { description: 'An in progress deliverable', status: 'In Progress' },
@@ -120,7 +120,7 @@ describe('Working Group update handler', () => {
     workingGroupDataProviderMock.fetchById.mockResolvedValueOnce(null);
     workingGroupDataProviderMock.update.mockResolvedValueOnce();
 
-    await handler(event);
+    await expect(handler(event)).rejects.toThrow();
 
     expect(workingGroupDataProviderMock.update).not.toHaveBeenCalled();
   });

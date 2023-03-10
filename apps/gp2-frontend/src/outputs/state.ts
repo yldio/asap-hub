@@ -2,6 +2,7 @@ import { GetListOptions } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
 import { atom, selectorFamily, useRecoilState, useRecoilValue } from 'recoil';
 import { authorizationState } from '../auth/state';
+import { getExternalUsers, getUsers } from '../users/api';
 import { createOutput, getOutputs } from './api';
 
 export const outputsState = selectorFamily<
@@ -32,5 +33,27 @@ export const useCreateOutput = () => {
     const output = await createOutput(payload, authorization);
     setRefresh(refresh + 1);
     return output;
+  };
+};
+
+export const useAuthorSuggestions = () => {
+  const authorization = useRecoilValue(authorizationState);
+
+  return async (searchQuery: string) => {
+    const users = await getUsers(
+      { search: searchQuery, skip: 0, take: 10 },
+      authorization,
+    );
+    const externalUsers = await getExternalUsers(
+      { search: searchQuery, skip: 0, take: 10 },
+      authorization,
+    );
+    return [...users.items, ...externalUsers.items]
+      .map((author) => ({
+        author,
+        label: author.displayName,
+        value: author.id,
+      }))
+      .sort((a, b) => a.label.localeCompare(b.label));
   };
 };

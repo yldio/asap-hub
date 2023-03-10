@@ -18,7 +18,9 @@ import {
 import { getAuthToken } from '../../utils/auth';
 import { appName, baseUrl } from '../../config';
 
-type PartialMapping<T extends string> = { [S in T]?: T };
+type DeliverableStatusMapping = {
+  [S in DeliverableStatus]?: DeliverableStatus;
+};
 
 export const workingGroupUpdateHandler =
   (
@@ -40,7 +42,7 @@ export const workingGroupUpdateHandler =
       throw new Error(`Working group ${id} could not be found.`);
     }
 
-    const mapping: PartialMapping<DeliverableStatus> = workingGroup.complete
+    const mapping: DeliverableStatusMapping = workingGroup.complete
       ? {
           Pending: 'Not Started',
           'In Progress': 'Incomplete',

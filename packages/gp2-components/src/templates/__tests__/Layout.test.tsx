@@ -6,7 +6,6 @@ import { Layout } from '..';
 
 describe('Layout', () => {
   const props: Omit<ComponentProps<typeof Layout>, 'children'> = {
-    menuShown: false,
     userId: '1',
     projects: [],
     workingGroups: [],

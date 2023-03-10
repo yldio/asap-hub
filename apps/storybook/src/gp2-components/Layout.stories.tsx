@@ -10,7 +10,6 @@ export default {
 };
 
 const props: Omit<ComponentProps<typeof Layout>, 'children'> = {
-  menuShown: false,
   projects: [],
   userId: '1',
   workingGroups: [],

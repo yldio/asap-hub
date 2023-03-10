@@ -98,7 +98,7 @@ const userMenuStyles = css({
 
 type LayoutProps = {
   readonly children: ReactNode;
-} & Omit<ComponentProps<typeof UserMenu>, 'closeUserMenu'>;
+} & Omit<ComponentProps<typeof UserMenu>, 'menuShown' | 'closeUserMenu'>;
 const Layout: FC<LayoutProps> = ({
   children,
   projects,

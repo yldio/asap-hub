@@ -8,11 +8,11 @@ import {
   NavigationLink,
   pixels,
 } from '@asap-hub/react-components';
+import { useLocation } from 'react-router-dom';
+import { Location } from 'history';
+import { useEffect } from 'react';
 import { workingGroupIcon, projectIcon, userIcon } from '../icons';
 import { nonMobileQuery } from '../layout';
-import { useEffect } from 'react';
-import { Location } from 'history';
-import { useLocation } from 'react-router-dom';
 
 const { vminLinearCalc, mobileScreen, largeDesktopScreen, rem } = pixels;
 const {
@@ -72,7 +72,7 @@ const UserMenu: React.FC<UserMenuProps> = ({
   /* eslint-enable react-hooks/rules-of-hooks */
   useEffect(() => {
     closeUserMenu(false);
-  }, [location]);
+  }, [closeUserMenu, location]);
 
   return (
     <nav css={containerStyles}>

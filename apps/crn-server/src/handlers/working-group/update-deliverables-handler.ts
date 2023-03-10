@@ -37,7 +37,7 @@ export const workingGroupUpdateHandler =
     const workingGroup = await dataProvider.fetchById(id);
 
     if (!workingGroup) {
-      return;
+      throw new Error(`Working group ${id} could not be found.`);
     }
 
     const mapping: PartialMapping<DeliverableStatus> = workingGroup.complete

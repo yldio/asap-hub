@@ -5,6 +5,7 @@ import {
   parseEventSpeakerUser,
   parseGraphQLEvent,
   parseGraphQLSpeakers,
+  parseGraphQLWorkingGroupProjects,
 } from '../../src/entities/event.entity';
 import {
   getEventExternalSpeaker,
@@ -14,6 +15,8 @@ import {
   getSquidexGraphqlEventSpeakerWithExternalUser,
   getSquidexGraphqlEventSpeakerWithUser,
 } from '../fixtures/event.fixtures';
+import { getGraphQLProject } from '../fixtures/project.fixtures';
+import { getGraphQLWorkingGroup } from '../fixtures/working-group.fixtures';
 
 describe('events entity', () => {
   const graphqlEvent = getSquidexGraphqlEvent();
@@ -176,5 +179,33 @@ describe('events entity', () => {
     ]);
 
     expect(eventSpeakers).toStrictEqual([]);
+  });
+  describe('parseGraphQLWorkingGroupProjects', () => {
+    it('parses the working groups', () => {
+      const id = '42';
+      const title = 'some title';
+      const workingGroupData = getGraphQLWorkingGroup();
+      workingGroupData.id = id;
+      workingGroupData.flatData.title = title;
+      const { workingGroup, project } = parseGraphQLWorkingGroupProjects({
+        referencingWorkingGroupsContents: [workingGroupData],
+        referencingProjectsContents: [],
+      });
+      expect(workingGroup).toEqual({ id, title });
+      expect(project).toBeUndefined();
+    });
+    it('parses the project', () => {
+      const id = '42';
+      const title = 'some title';
+      const projectData = getGraphQLProject();
+      projectData.id = id;
+      projectData.flatData.title = title;
+      const { workingGroup, project } = parseGraphQLWorkingGroupProjects({
+        referencingWorkingGroupsContents: [],
+        referencingProjectsContents: [projectData],
+      });
+      expect(project).toEqual({ id, title });
+      expect(workingGroup).toBeUndefined();
+    });
   });
 });

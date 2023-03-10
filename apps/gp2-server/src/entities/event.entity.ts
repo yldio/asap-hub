@@ -102,16 +102,9 @@ export const parseGraphQLEvent = (
     item.flatData.calendar[0].flatData,
   );
 
-  const workingGroup =
-    item.flatData.calendar![0].referencingWorkingGroupsContents?.map((wg) => ({
-      id: wg.id,
-      title: wg.flatData.title || '',
-    }))[0] || undefined;
-  const project =
-    item.flatData.calendar![0].referencingProjectsContents?.map((p) => ({
-      id: p.id,
-      title: p.flatData.title || '',
-    }))[0] || undefined;
+  const { workingGroup, project } = parseGraphQLWorkingGroupProjects(
+    item.flatData.calendar[0],
+  );
   const startDate = DateTime.fromISO(item.flatData.startDate!);
 
   const meetingLink = item.flatData.meetingLink || undefined;
@@ -190,4 +183,26 @@ export const parseGraphQLEvent = (
     project,
     speakers,
   };
+};
+export type GraphqlEventCalendar = Pick<
+  NonNullable<
+    NonNullable<EventContentFragment['flatData']['calendar']>[number]
+  >,
+  'referencingProjectsContents' | 'referencingWorkingGroupsContents'
+>;
+
+export const parseGraphQLWorkingGroupProjects = (
+  calendar: GraphqlEventCalendar,
+) => {
+  const workingGroup =
+    calendar.referencingWorkingGroupsContents?.map((wg) => ({
+      id: wg.id,
+      title: wg.flatData.title || '',
+    }))[0] || undefined;
+  const project =
+    calendar.referencingProjectsContents?.map((p) => ({
+      id: p.id,
+      title: p.flatData.title || '',
+    }))[0] || undefined;
+  return { workingGroup, project };
 };

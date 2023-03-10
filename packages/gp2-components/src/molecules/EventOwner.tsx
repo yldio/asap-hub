@@ -39,9 +39,9 @@ const getProperties = ({ project, workingGroup }: EventOwnerProps) => {
 };
 
 const EventOwner: React.FC<EventOwnerProps> = ({ project, workingGroup }) => {
-  const icon = workingGroup || !project ? workingGroupIcon : projectIcon;
-  const { title, href } = getProperties({ project, workingGroup }) || {
+  const { title, href, icon } = getProperties({ project, workingGroup }) || {
     title: 'GP2 Hub',
+    icon: workingGroupIcon,
   };
 
   return (

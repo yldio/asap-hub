@@ -1,4 +1,5 @@
 export { default as BasicLayout } from './BasicLayout';
+export { default as CreateOutputPage } from './CreateOutputPage';
 export { default as DashboardPage } from './DashboardPage';
 export { default as DashboardPageBody } from './DashboardPageBody';
 export { default as EventsPage } from './EventsPage';
@@ -10,6 +11,7 @@ export { default as OnboardingGroups } from './OnboardingGroups';
 export { default as OnboardingPage } from './OnboardingPage';
 export { default as OnboardingPreview } from './OnboardingPreview';
 export { default as OnboardingWelcome } from './OnboardingWelcome';
+export { default as OutputForm } from './OutputForm';
 export { default as OutputsPage } from './OutputsPage';
 export { default as ProjectDetailPage } from './ProjectDetailPage';
 export { default as ProjectOverview } from './ProjectOverview';

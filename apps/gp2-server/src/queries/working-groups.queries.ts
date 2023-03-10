@@ -33,6 +33,12 @@ export const workingGroupContentQueryFragment = gql`
         description
         externalLink
       }
+      calendars {
+        id
+        flatData {
+          name
+        }
+      }
     }
   }
 `;

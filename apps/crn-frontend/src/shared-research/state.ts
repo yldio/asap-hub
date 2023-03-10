@@ -1,10 +1,14 @@
 import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
-  userPermissions,
 } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
-import { getUserPermissions } from '@asap-hub/validation';
+import {
+  getUserRole,
+  hasShareResearchOutputPermission,
+  hasEditResearchOutputPermission,
+  hasPublishResearchOutputPermission,
+} from '@asap-hub/validation';
 import {
   atom,
   atomFamily,
@@ -153,10 +157,29 @@ export const useSetResearchOutputItem = () => {
   );
 };
 
-export const useUserPermissions = (
-  researchOutputData: ResearchOutputResponse | undefined,
-): userPermissions => {
+export const useCanShareResearchOutput = (
+  association: 'teams' | 'workingGroups',
+  associationIds: string[],
+): boolean => {
   const user = useCurrentUserCRN();
+  const userRole = getUserRole(user, association, associationIds);
+  return hasShareResearchOutputPermission(userRole);
+};
 
-  return getUserPermissions(user, researchOutputData);
+export const useResearchOutputPermissions = (
+  association: 'teams' | 'workingGroups',
+  associationIds: string[],
+  published: boolean,
+): {
+  canEditResearchOutput: boolean;
+  canPublishResearchOutput: boolean;
+  canShareResearchOutput: boolean;
+} => {
+  const user = useCurrentUserCRN();
+  const userRole = getUserRole(user, association, associationIds);
+  return {
+    canEditResearchOutput: hasEditResearchOutputPermission(userRole, published),
+    canPublishResearchOutput: hasPublishResearchOutputPermission(userRole),
+    canShareResearchOutput: hasShareResearchOutputPermission(userRole),
+  };
 };

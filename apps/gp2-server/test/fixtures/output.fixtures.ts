@@ -95,7 +95,7 @@ export const getSquidexGraphqlOutput = (): NonNullable<
 export const getOutputDataObject = (): gp2Model.OutputDataObject => ({
   id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
   created: '2020-09-23T16:34:26.842Z',
-  documentType: 'Articles',
+  documentType: 'Article',
   type: 'Research',
   addedDate: '2021-05-21T13:18:31Z',
   title: 'Test Proposal 1234',

@@ -39,14 +39,15 @@ const eventBase = {
   request: {
     query: {
       invitation_code,
+      redirect_uri: 'http://example.com',
     },
     body: {},
   },
   user,
   secrets: {
-    ASAP_API_URL: apiUrl,
+    API_URL: apiUrl,
     AUTH0_SHARED_SECRET: '',
-    PR_APP_DOMAIN: '',
+    BASE_PR_APP_DOMAIN: '',
     AUTH0_ADDITIONAL_CLAIM_DOMAIN: '',
   },
 } as DeepPartial<Auth0PostLoginEventWithSecrets> as Auth0PostLoginEventWithSecrets;
@@ -60,6 +61,102 @@ const apiBase = {
 beforeEach(() => {
   nock.cleanAll();
   jest.clearAllMocks();
+});
+
+it('denies login if the redirect_uri is missing from query and body', async () => {
+  await onExecutePostLogin(
+    {
+      ...eventBase,
+      request: {
+        ...eventBase.request,
+        query: { invitation_code },
+        body: {},
+      },
+    },
+    apiBase,
+  );
+  expect(apiBase.access.deny).toHaveBeenCalledWith('Missing redirect_uri');
+});
+
+it('uses API_URL when the query redirect uri is not a PR URL', async () => {
+  const exampleApiUrl = 'http://api2.example.com';
+  nock(exampleApiUrl)
+    .post('/webhook/users/connections', {
+      code: invitation_code,
+      userId: user.user_id,
+    })
+    .reply(200);
+  await onExecutePostLogin(
+    {
+      ...eventBase,
+      request: {
+        ...eventBase.request,
+        query: { invitation_code, redirect_uri: 'NOTPR' },
+        body: {},
+      },
+      secrets: {
+        ...eventBase.secrets,
+        API_URL: exampleApiUrl,
+      },
+    },
+    apiBase,
+  );
+  expect(nock.isDone()).toBe(true);
+});
+
+it('constructs PR backend API from query redirect_uri', async () => {
+  nock('https://api-123.hub.example.com')
+    .post('/webhook/users/connections', {
+      code: invitation_code,
+      userId: user.user_id,
+    })
+    .reply(200);
+  await onExecutePostLogin(
+    {
+      ...eventBase,
+      request: {
+        ...eventBase.request,
+        body: {},
+        query: {
+          invitation_code,
+          redirect_uri: 'https://123.hub.example.com',
+        },
+      },
+      secrets: {
+        ...eventBase.secrets,
+        BASE_PR_APP_DOMAIN: 'hub.example.com',
+      },
+    },
+    apiBase,
+  );
+  expect(nock.isDone()).toBe(true);
+});
+
+it('constructs PR backend API from body redirect_uri', async () => {
+  nock('https://api-123.hub.example.com')
+    .post('/webhook/users/connections', {
+      code: invitation_code,
+      userId: user.user_id,
+    })
+    .reply(200);
+  await onExecutePostLogin(
+    {
+      ...eventBase,
+      request: {
+        ...eventBase.request,
+        query: { invitation_code },
+        body: {
+          redirect_uri: 'https://123.hub.example.com',
+        },
+      },
+      secrets: {
+        ...eventBase.secrets,
+        BASE_PR_APP_DOMAIN: 'hub.example.com',
+      },
+    },
+    apiBase,
+  );
+  expect(nock.isDone()).toBe(true);
 });
 
 it('should call the connections api with Auth0 UserId, invitation code and Shared Secret', async () => {

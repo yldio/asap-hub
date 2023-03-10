@@ -43,6 +43,7 @@ const researchOutputResponse: Omit<
   organisms: ['Rat', 'C. Elegans'],
   environments: ['In Vivo', 'In Cellulo'],
   subtype: 'Metabolite',
+  published: true,
 };
 
 export const createResearchOutputResponse = (

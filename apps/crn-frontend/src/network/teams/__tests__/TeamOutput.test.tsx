@@ -2,16 +2,17 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import { createResearchOutputResponse } from '@asap-hub/fixtures';
+import {
+  createResearchOutputResponse,
+  createUserResponse,
+} from '@asap-hub/fixtures';
 import { BackendError } from '@asap-hub/frontend-utils';
 import {
   ResearchOutputResponse,
+  UserResponse,
   ValidationErrorResponse,
 } from '@asap-hub/model';
-import {
-  ResearchOutputPermissionsContext,
-  ToastContext,
-} from '@asap-hub/react-context';
+import { ToastContext } from '@asap-hub/react-context';
 import { network, TeamOutputDocumentTypeParameter } from '@asap-hub/routing';
 import {
   render,
@@ -23,7 +24,7 @@ import userEvent, { specialChars } from '@testing-library/user-event';
 import { ContextType, Suspense } from 'react';
 import { Route, StaticRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import { createResearchOutput } from '../api';
+import { createResearchOutput, updateTeamResearchOutput } from '../api';
 import { refreshTeamState } from '../state';
 import TeamOutput from '../TeamOutput';
 
@@ -31,6 +32,8 @@ jest.setTimeout(30000);
 jest.mock('../api');
 jest.mock('../../users/api');
 jest.mock('../../../shared-research/api');
+
+const baseUser = createUserResponse();
 
 const mandatoryFields = async (
   {
@@ -72,12 +75,21 @@ const mandatoryFields = async (
   const button = isEditMode
     ? screen.getByRole('button', { name: /Save/i })
     : screen.getByRole('button', { name: /Publish/i });
+  const saveDraftButton = screen.queryByRole('button', { name: /Save Draft/i });
   return {
     publish: async () => {
       userEvent.click(button);
       await waitFor(() => {
         expect(button).toBeEnabled();
       });
+    },
+    saveDraft: async () => {
+      if (saveDraftButton) {
+        userEvent.click(saveDraftButton);
+        await waitFor(() => {
+          expect(saveDraftButton).toBeEnabled();
+        });
+      }
     },
   };
 };
@@ -89,10 +101,15 @@ const mockCreateResearchOutput = createResearchOutput as jest.MockedFunction<
   typeof createResearchOutput
 >;
 
+const mockUpdateResearchOutput =
+  updateTeamResearchOutput as jest.MockedFunction<
+    typeof updateTeamResearchOutput
+  >;
+
 interface RenderPageOptions {
+  user?: UserResponse;
   teamId: string;
   teamOutputDocumentType?: TeamOutputDocumentTypeParameter;
-  canCreateUpdate?: boolean;
   researchOutputData?: ResearchOutputResponse;
 }
 
@@ -134,20 +151,8 @@ it('switches research output type based on parameter', async () => {
   ).toBeInTheDocument();
 });
 
-it('Shows NotFoundPage when canCreate in ResearchOutputPermissions is false', async () => {
-  await renderPage({ teamId: '42', canCreateUpdate: false });
-  expect(
-    screen.queryByRole('heading', { name: /Share/i }),
-  ).not.toBeInTheDocument();
-  expect(
-    screen.getByRole('heading', {
-      name: /Sorry! We can’t seem to find that page/i,
-    }),
-  ).toBeInTheDocument();
-});
-
 it('can submit a form when form data is valid', async () => {
-  const teamId = 'team-42';
+  const teamId = '42';
   const link = 'https://example42.com';
   const title = 'example42 title';
   const description = 'example42 description';
@@ -200,7 +205,163 @@ it('can submit a form when form data is valid', async () => {
       usedInPublication: undefined,
     },
     expect.anything(),
+    true,
   );
+});
+
+it('can save draft when form data is valid', async () => {
+  const teamId = '42';
+  const link = 'https://example42.com';
+  const title = 'example42 title';
+  const description = 'example42 description';
+  const type = 'Animal Model';
+  const doi = '10.0777';
+
+  await renderPage({ teamId, teamOutputDocumentType: 'lab-resource' });
+
+  const { saveDraft } = await mandatoryFields({
+    link,
+    title,
+    description,
+    type,
+    doi,
+  });
+
+  userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
+  userEvent.click(screen.getByText('Example 1 Lab'));
+  userEvent.click(screen.getByRole('textbox', { name: /Authors/i }));
+  userEvent.click(screen.getByText('Person A 3'));
+
+  await saveDraft();
+
+  expect(mockCreateResearchOutput).toHaveBeenCalledWith(
+    {
+      doi,
+      documentType: 'Lab Resource',
+      tags: [],
+      sharingStatus: 'Network Only',
+      teams: [teamId],
+      link,
+      title,
+      description,
+      type,
+      labs: ['l0'],
+      authors: [
+        {
+          userId: 'user-id-2',
+        },
+      ],
+      methods: [],
+      organisms: [],
+      environments: [],
+      workingGroups: [],
+      labCatalogNumber: undefined,
+      publishDate: undefined,
+      subtype: undefined,
+      usageNotes: '',
+      asapFunded: undefined,
+      usedInPublication: undefined,
+    },
+    expect.anything(),
+    false,
+  );
+});
+
+it('can edit a research output', async () => {
+  const researchOutput = createResearchOutputResponse();
+  const teamId = researchOutput.teams[0].id;
+  const { type, description, title } = researchOutput;
+  const link = 'https://example42.com';
+  const doi = '10.0777';
+
+  await renderPage({
+    teamId: '42',
+    teamOutputDocumentType: 'article',
+    researchOutputData: { ...researchOutput, doi },
+  });
+
+  const { publish } = await mandatoryFields(
+    {
+      link,
+      title: '',
+      description: '',
+      type,
+      doi,
+    },
+    true,
+    true,
+  );
+  await publish();
+
+  expect(mockUpdateResearchOutput).toHaveBeenCalledWith(
+    researchOutput.id,
+    expect.objectContaining({
+      link,
+      title,
+      description,
+      teams: [teamId],
+    }),
+    expect.anything(),
+  );
+});
+
+it('can edit a draft research output', async () => {
+  const researchOutput = createResearchOutputResponse();
+  const teamId = researchOutput.teams[0].id;
+  const { type, description, title } = researchOutput;
+  const link = 'https://example42.com';
+  const doi = '10.0777';
+
+  await renderPage({
+    teamId: '42',
+    teamOutputDocumentType: 'article',
+    researchOutputData: { ...researchOutput, doi, published: false },
+  });
+
+  const { saveDraft } = await mandatoryFields(
+    {
+      link,
+      title: '',
+      description: '',
+      type,
+      doi,
+    },
+    true,
+    true,
+  );
+  await saveDraft();
+
+  expect(mockUpdateResearchOutput).toHaveBeenCalledWith(
+    researchOutput.id,
+    expect.objectContaining({
+      link,
+      title,
+      description,
+      teams: [teamId],
+    }),
+    expect.anything(),
+  );
+});
+
+test('displays sorry page when user does not have edit permission', async () => {
+  await renderPage({
+    user: {
+      ...baseUser,
+      teams: [
+        {
+          ...baseUser.teams[0],
+          role: 'Key Personnel',
+        },
+      ],
+    },
+    teamId: '42',
+    teamOutputDocumentType: 'article',
+    researchOutputData: {
+      ...createResearchOutputResponse(),
+      published: true,
+    },
+  });
+  expect(screen.getByText(/sorry.+page/i)).toBeVisible();
 });
 
 it('will show server side validation error for link', async () => {
@@ -282,7 +443,6 @@ it('will toast server side errors for unknown errors in edit mode', async () => 
     true,
     true,
   );
-
   await publish();
 
   expect(mockCreateResearchOutput).toHaveBeenCalled();
@@ -292,7 +452,10 @@ it('will toast server side errors for unknown errors in edit mode', async () => 
 });
 
 async function renderPage({
-  canCreateUpdate = true,
+  user = {
+    ...baseUser,
+    teams: [{ ...baseUser.teams[0], id: '42', role: 'Project Manager' }],
+  },
   teamId,
   teamOutputDocumentType = 'bioinformatics',
   researchOutputData,
@@ -311,7 +474,7 @@ async function renderPage({
     >
       <Suspense fallback="loading">
         <ToastContext.Provider value={mockToast}>
-          <Auth0Provider user={{}}>
+          <Auth0Provider user={user}>
             <WhenReady>
               <StaticRouter
                 location={
@@ -321,16 +484,12 @@ async function renderPage({
                     .createOutput({ teamOutputDocumentType }).$
                 }
               >
-                <ResearchOutputPermissionsContext.Provider
-                  value={{ canCreateUpdate }}
-                >
-                  <Route path={path}>
-                    <TeamOutput
-                      teamId={teamId}
-                      researchOutputData={researchOutputData}
-                    />
-                  </Route>
-                </ResearchOutputPermissionsContext.Provider>
+                <Route path={path}>
+                  <TeamOutput
+                    teamId={teamId}
+                    researchOutputData={researchOutputData}
+                  />
+                </Route>
               </StaticRouter>
             </WhenReady>
           </Auth0Provider>

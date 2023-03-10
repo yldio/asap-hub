@@ -4771,6 +4771,42 @@ export type FetchEventQuery = {
   >;
 };
 
+export type ExternalUsersContentFragment = Pick<ExternalUsers, 'id'> & {
+  flatData: Pick<ExternalUsersFlatDataDto, 'name' | 'orcid'>;
+};
+
+export type FetchExternalUserQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchExternalUserQuery = {
+  findExternalUsersContent: Maybe<
+    Pick<ExternalUsers, 'id'> & {
+      flatData: Pick<ExternalUsersFlatDataDto, 'name' | 'orcid'>;
+    }
+  >;
+};
+
+export type FetchExternalUsersQueryVariables = Exact<{
+  top: InputMaybe<Scalars['Int']>;
+  skip: InputMaybe<Scalars['Int']>;
+  filter: InputMaybe<Scalars['String']>;
+}>;
+
+export type FetchExternalUsersQuery = {
+  queryExternalUsersContentsWithTotal: Maybe<
+    Pick<ExternalUsersResultDto, 'total'> & {
+      items: Maybe<
+        Array<
+          Pick<ExternalUsers, 'id'> & {
+            flatData: Pick<ExternalUsersFlatDataDto, 'name' | 'orcid'>;
+          }
+        >
+      >;
+    }
+  >;
+};
+
 export type NewsContentFragment = Pick<
   NewsAndEvents,
   'id' | 'created' | 'lastModified' | 'version'
@@ -5032,6 +5068,11 @@ export type ProjectContentFragment = Pick<Projects, 'id'> & {
         >
       >
     >;
+    calendars: Maybe<
+      Array<
+        Pick<Calendars, 'id'> & { flatData: Pick<CalendarsFlatDataDto, 'name'> }
+      >
+    >;
   };
 };
 
@@ -5086,6 +5127,13 @@ export type FetchProjectQuery = {
               ProjectsDataResourcesChildDto,
               'type' | 'title' | 'description' | 'externalLink'
             >
+          >
+        >;
+        calendars: Maybe<
+          Array<
+            Pick<Calendars, 'id'> & {
+              flatData: Pick<CalendarsFlatDataDto, 'name'>;
+            }
           >
         >;
       };
@@ -5148,6 +5196,13 @@ export type FetchProjectsQuery = {
                     ProjectsDataResourcesChildDto,
                     'type' | 'title' | 'description' | 'externalLink'
                   >
+                >
+              >;
+              calendars: Maybe<
+                Array<
+                  Pick<Calendars, 'id'> & {
+                    flatData: Pick<CalendarsFlatDataDto, 'name'>;
+                  }
                 >
               >;
             };
@@ -5552,6 +5607,13 @@ export type WorkingGroupNetworkContentFragment = Pick<
                 >
               >
             >;
+            calendars: Maybe<
+              Array<
+                Pick<Calendars, 'id'> & {
+                  flatData: Pick<CalendarsFlatDataDto, 'name'>;
+                }
+              >
+            >;
           };
         }
       >
@@ -5593,6 +5655,13 @@ export type WorkingGroupNetworkContentFragment = Pick<
                   WorkingGroupsDataResourcesChildDto,
                   'type' | 'title' | 'description' | 'externalLink'
                 >
+              >
+            >;
+            calendars: Maybe<
+              Array<
+                Pick<Calendars, 'id'> & {
+                  flatData: Pick<CalendarsFlatDataDto, 'name'>;
+                }
               >
             >;
           };
@@ -5638,6 +5707,13 @@ export type WorkingGroupNetworkContentFragment = Pick<
                 >
               >
             >;
+            calendars: Maybe<
+              Array<
+                Pick<Calendars, 'id'> & {
+                  flatData: Pick<CalendarsFlatDataDto, 'name'>;
+                }
+              >
+            >;
           };
         }
       >
@@ -5679,6 +5755,13 @@ export type WorkingGroupNetworkContentFragment = Pick<
                   WorkingGroupsDataResourcesChildDto,
                   'type' | 'title' | 'description' | 'externalLink'
                 >
+              >
+            >;
+            calendars: Maybe<
+              Array<
+                Pick<Calendars, 'id'> & {
+                  flatData: Pick<CalendarsFlatDataDto, 'name'>;
+                }
               >
             >;
           };
@@ -5736,6 +5819,13 @@ export type FetchWorkingGroupNetworkQuery = {
                       >
                     >
                   >;
+                  calendars: Maybe<
+                    Array<
+                      Pick<Calendars, 'id'> & {
+                        flatData: Pick<CalendarsFlatDataDto, 'name'>;
+                      }
+                    >
+                  >;
                 };
               }
             >
@@ -5777,6 +5867,13 @@ export type FetchWorkingGroupNetworkQuery = {
                         WorkingGroupsDataResourcesChildDto,
                         'type' | 'title' | 'description' | 'externalLink'
                       >
+                    >
+                  >;
+                  calendars: Maybe<
+                    Array<
+                      Pick<Calendars, 'id'> & {
+                        flatData: Pick<CalendarsFlatDataDto, 'name'>;
+                      }
                     >
                   >;
                 };
@@ -5822,6 +5919,13 @@ export type FetchWorkingGroupNetworkQuery = {
                       >
                     >
                   >;
+                  calendars: Maybe<
+                    Array<
+                      Pick<Calendars, 'id'> & {
+                        flatData: Pick<CalendarsFlatDataDto, 'name'>;
+                      }
+                    >
+                  >;
                 };
               }
             >
@@ -5863,6 +5967,13 @@ export type FetchWorkingGroupNetworkQuery = {
                         WorkingGroupsDataResourcesChildDto,
                         'type' | 'title' | 'description' | 'externalLink'
                       >
+                    >
+                  >;
+                  calendars: Maybe<
+                    Array<
+                      Pick<Calendars, 'id'> & {
+                        flatData: Pick<CalendarsFlatDataDto, 'name'>;
+                      }
                     >
                   >;
                 };
@@ -5909,6 +6020,11 @@ export type WorkingGroupContentFragment = Pick<WorkingGroups, 'id'> & {
         >
       >
     >;
+    calendars: Maybe<
+      Array<
+        Pick<Calendars, 'id'> & { flatData: Pick<CalendarsFlatDataDto, 'name'> }
+      >
+    >;
   };
 };
 
@@ -5950,6 +6066,13 @@ export type FetchWorkingGroupQuery = {
               WorkingGroupsDataResourcesChildDto,
               'type' | 'title' | 'description' | 'externalLink'
             >
+          >
+        >;
+        calendars: Maybe<
+          Array<
+            Pick<Calendars, 'id'> & {
+              flatData: Pick<CalendarsFlatDataDto, 'name'>;
+            }
           >
         >;
       };
@@ -5999,6 +6122,13 @@ export type FetchWorkingGroupsQuery = {
                     WorkingGroupsDataResourcesChildDto,
                     'type' | 'title' | 'description' | 'externalLink'
                   >
+                >
+              >;
+              calendars: Maybe<
+                Array<
+                  Pick<Calendars, 'id'> & {
+                    flatData: Pick<CalendarsFlatDataDto, 'name'>;
+                  }
                 >
               >;
             };
@@ -6381,6 +6511,36 @@ export const EventContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<EventContentFragment, unknown>;
+export const ExternalUsersContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ExternalUsersContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'ExternalUsers' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'flatData' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'orcid' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ExternalUsersContentFragment, unknown>;
 export const NewsContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -6782,6 +6942,29 @@ export const ProjectContentFragmentDoc = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'externalLink' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'calendars' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                          ],
+                        },
                       },
                     ],
                   },
@@ -7299,6 +7482,29 @@ export const WorkingGroupContentFragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'calendars' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -7781,6 +7987,161 @@ export const FetchEventDocument = {
     ...EventContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchEventQuery, FetchEventQueryVariables>;
+export const FetchExternalUserDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchExternalUser' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'findExternalUsersContent' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'ExternalUsersContent' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...ExternalUsersContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchExternalUserQuery,
+  FetchExternalUserQueryVariables
+>;
+export const FetchExternalUsersDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchExternalUsers' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'top' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'filter' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: {
+              kind: 'Name',
+              value: 'queryExternalUsersContentsWithTotal',
+            },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'top' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'top' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'filter' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'filter' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'orderby' },
+                value: {
+                  kind: 'StringValue',
+                  value: 'data/name/iv',
+                  block: false,
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'ExternalUsersContent' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...ExternalUsersContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchExternalUsersQuery,
+  FetchExternalUsersQueryVariables
+>;
 export const FetchNewsDocument = {
   kind: 'Document',
   definitions: [

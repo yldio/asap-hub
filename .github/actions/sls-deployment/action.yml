@@ -110,6 +110,7 @@ runs:
         GP2_SQUIDEX_APP_NAME: ${{ steps.setup.outputs.gp2-squidex-app-name }}
         GP2_SQUIDEX_SHARED_SECRET: ${{ inputs.gp2-squidex-shared-secret }}
         IS_CONTENTFUL_ENABLED: ${{ steps.setup.outputs.is-contentful-enabled }}
+        IS_CONTENTFUL_ENABLED_V2: ${{ steps.setup.outputs.is-contentful-enabled-v2 }}
         LIGHTSTEP_TOKEN: ${{ inputs.lightstep-token }}
         NODE_ENV: 'production'
         NODE_OPTIONS: '--max-old-space-size=8192'

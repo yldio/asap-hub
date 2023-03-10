@@ -1,5 +1,5 @@
 import { ListResponse } from '../common';
-import { Resource } from './common';
+import { Calendar, Resource } from './common';
 
 export const workingGroupMemberRole = [
   'Lead',
@@ -26,6 +26,7 @@ export type WorkingGroupDataObject = {
   leadingMembers?: string;
   members: WorkingGroupMember[];
   resources?: Resource[];
+  calendar?: Calendar;
 };
 
 export type ListWorkingGroupDataObject = ListResponse<WorkingGroupDataObject>;

@@ -31,7 +31,7 @@ export interface Output<TAuthorConnection = string, TUserConnection = string> {
   documentType: RestOutputDocumentType;
   lastUpdatedPartial?: string;
   link?: string;
-  subtype?: gp2.OutputSubType;
+  subtype?: gp2.OutputSubtype;
   title: string;
   type?: RestOutputType;
   updatedBy?: TUserConnection[];

@@ -115,6 +115,7 @@ export const parseGraphQLResearchOutput = (
         id: group.id,
         title: group.flatData.title || '',
       })) || [],
+    published: true,
   };
 };
 

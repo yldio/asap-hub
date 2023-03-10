@@ -1,8 +1,9 @@
 import { css } from '@emotion/react';
 import { formatDistance } from 'date-fns';
-import { WorkingGroupLeader, WorkingGroupResponse } from '@asap-hub/model';
+import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
+import { WorkingGroupResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
-import { useCurrentUserCRN } from '@asap-hub/react-context';
+import { useContext } from 'react';
 
 import { mobileScreen, perRem, rem } from '../pixels';
 import { Link, Display, StateTag, TabLink, Caption } from '../atoms';
@@ -107,13 +108,6 @@ const dropdownButtonStyling = css({
   },
 });
 
-const isProjectManagerOrStaff = (
-  user: ReturnType<typeof useCurrentUserCRN>,
-  leaders: WorkingGroupLeader[],
-): boolean =>
-  user?.role === 'Staff' ||
-  leaders.some((l) => l.user.id === user?.id && l.role === 'Project Manager');
-
 type WorkingGroupPageHeaderProps = {
   readonly membersListElementId: string;
   readonly upcomingEventsCount?: number;
@@ -145,11 +139,10 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
   upcomingEventsCount,
   pastEventsCount,
 }) => {
-  const currentUserCRN = useCurrentUserCRN();
-  const isWorkingGroupProjectManagerOrStaff = isProjectManagerOrStaff(
-    currentUserCRN,
-    leaders,
+  const { canShareResearchOutput } = useContext(
+    ResearchOutputPermissionsContext,
   );
+
   const route = network({})
     .workingGroups({})
     .workingGroup({ workingGroupId: id });
@@ -172,7 +165,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
               .about({}).$
           }#${membersListElementId}`}
         />
-        {pointOfContact && !isWorkingGroupProjectManagerOrStaff && (
+        {pointOfContact && !canShareResearchOutput && (
           <div css={pointOfContactStyles}>
             <Link
               buttonStyle
@@ -185,7 +178,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
           </div>
         )}
 
-        {isWorkingGroupProjectManagerOrStaff && (
+        {canShareResearchOutput && (
           <div css={createStyles}>
             <DropdownButton
               buttonChildren={() => (

@@ -1,6 +1,6 @@
 import { createReadStream, ReadStream } from 'fs';
 import { PassThrough } from 'stream';
-import { parse } from '../../src';
+import { parse } from '../../src/utils/csv-parse';
 
 jest.mock('fs');
 

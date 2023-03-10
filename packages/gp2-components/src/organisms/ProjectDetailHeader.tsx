@@ -19,6 +19,7 @@ import { ComponentProps } from 'react';
 import { projectsImage } from '../images';
 import { detailHeaderStyles } from '../layout';
 import CardWithBackground from '../molecules/CardWithBackground';
+import ShareOutputButton from '../molecules/ShareOutputButton';
 
 import ProjectSummaryFooter from './ProjectSummaryFooter';
 import ProjectSummaryHeader from './ProjectSummaryHeader';
@@ -31,6 +32,7 @@ type ProjectDetailHeaderProps = ComponentProps<typeof ProjectSummaryHeader> &
     'id' | 'title' | 'startDate' | 'endDate' | 'members' | 'opportunitiesLink'
   > & {
     isProjectMember: boolean;
+    isAdministrator: boolean;
   };
 
 const infoContainerStyles = css({
@@ -70,6 +72,7 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = ({
   isProjectMember,
   traineeProject,
   opportunitiesLink,
+  isAdministrator,
 }) => (
   <header css={detailHeaderStyles}>
     {opportunitiesLink && (
@@ -105,6 +108,11 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = ({
           startDate={startDate}
           endDate={endDate}
         />
+        {isAdministrator && (
+          <div css={css({ marginLeft: 'auto' })}>
+            <ShareOutputButton id={id} entityType="project" />
+          </div>
+        )}
       </div>
     </CardWithBackground>
     <TabNav>

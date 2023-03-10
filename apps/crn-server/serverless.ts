@@ -41,6 +41,8 @@ const {
   CRN_CONTENTFUL_ACCESS_TOKEN,
   CRN_CONTENTFUL_SPACE_ID,
   IS_CONTENTFUL_ENABLED = 'false',
+  IS_CONTENTFUL_ENABLED_V2 = 'false',
+  LOG_LEVEL,
 } = process.env;
 
 const region = process.env.AWS_REGION as AWS['provider']['region'];
@@ -64,16 +66,42 @@ const contentfulEnvironment = CRN_CONTENTFUL_ENV!;
 const contentfulAccessToken = CRN_CONTENTFUL_ACCESS_TOKEN!;
 const contentfulSpaceId = CRN_CONTENTFUL_SPACE_ID!;
 const isContentfulEnabled = IS_CONTENTFUL_ENABLED;
+const isContentfulEnabledV2 = IS_CONTENTFUL_ENABLED_V2;
 
 const algoliaIndex = ALGOLIA_INDEX
   ? '${env:ALGOLIA_INDEX}'
   : `asap-hub_${envRef}`;
 const service = 'asap-hub';
+
 export const plugins = [
   './serverless-plugins/serverless-s3-sync',
   './serverless-plugins/serverless-iam-roles-per-function',
   './serverless-plugins/serverless-webpack',
 ];
+const offlinePlugins = [
+  './serverless-plugins/serverless-offline',
+  './serverless-plugins/serverless-offline-ssm',
+  './serverless-plugins/serverless-offline-aws-eventbridge',
+];
+
+const offlineSSM =
+  SLS_STAGE === 'local'
+    ? {
+        'algolia-app-id-dev': '${env:ALGOLIA_APP_ID}',
+        'algolia-index-api-key-dev': '${env:ALGOLIA_API_KEY}',
+        'algolia-search-api-key-dev': '${env:ALGOLIA_API_KEY}',
+        'auth0-shared-secret-dev': '${env:AUTH0_SHARED_SECRET}',
+        'google-api-token-dev': '${env:GOOGLE_API_TOKEN}',
+        'ses-region-dev': '${env:SES_REGION}',
+        'email-invite-sender-dev': '${env:EMAIL_SENDER}',
+        'email-invite-bcc-dev': '${env:EMAIL_BCC}',
+        'email-invite-return-dev': '${env:EMAIL_RETURN}',
+      }
+    : {};
+
+if (SLS_STAGE === 'local') {
+  plugins.push(...offlinePlugins);
+}
 
 const eventBusSource = 'asap.entity-updated';
 
@@ -94,10 +122,11 @@ const serverlessConfig: AWS = {
       cors: {
         allowedOrigins: [CRN_APP_URL],
         allowCredentials: true,
-        allowedMethods: ['options', 'post', 'get', 'put', 'delete', 'patch'],
+        allowedMethods: ['OPTIONS', 'POST', 'GET', 'PUT', 'DELETE', 'PATCH'],
         allowedHeaders: [
           'authorization',
           'x-transaction-id',
+          'x-contentful-enabled',
           'content-type',
           'accept',
           'origin',
@@ -127,13 +156,12 @@ const serverlessConfig: AWS = {
       SQUIDEX_SHARED_SECRET: squidexSharedSecret,
       REGION: '${env:AWS_REGION}',
       CRN_API_URL: '${env:CRN_API_URL}',
-      LOG_LEVEL: SLS_STAGE === 'production' ? 'error' : 'info',
+      LOG_LEVEL: LOG_LEVEL || (SLS_STAGE === 'production' ? 'error' : 'info'),
       NODE_OPTIONS: '--enable-source-maps',
       ALGOLIA_APP_ID: `\${ssm:algolia-app-id-${envAlias}}`,
-      CURRENT_REVISION: CI_COMMIT_SHA
-        ? '${env:CI_COMMIT_SHA}'
-        : '${env:CURRENT_REVISION}',
+      CURRENT_REVISION: CI_COMMIT_SHA || '${env:CURRENT_REVISION}',
       IS_CONTENTFUL_ENABLED: isContentfulEnabled,
+      IS_CONTENTFUL_ENABLED_V2: isContentfulEnabledV2,
       CONTENTFUL_ENV_ID: contentfulEnvironment,
       CONTENTFUL_ACCESS_TOKEN: contentfulAccessToken,
       CONTENTFUL_SPACE_ID: contentfulSpaceId,
@@ -223,6 +251,10 @@ const serverlessConfig: AWS = {
     ],
     webpack: {
       config: './webpack.config.js',
+    },
+    'serverless-offline-ssm': {
+      stages: ['local'],
+      ssm: offlineSSM,
     },
   },
   functions: {

@@ -154,6 +154,24 @@ export const validateResearchOutputPostRequestParameters = validateInput(
   },
 );
 
+const researchOutputRequestQueryParametersSchema: JSONSchemaType<{
+  publish?: boolean;
+}> = {
+  type: 'object',
+  properties: {
+    publish: { type: 'boolean', nullable: true },
+  },
+  additionalProperties: false,
+};
+
+export const validateResearchOutputRequestQueryParameters = validateInput(
+  researchOutputRequestQueryParametersSchema,
+  {
+    skipNull: true,
+    coerce: true,
+  },
+);
+
 export const validateResearchOutputPostRequestParametersIdentifiers = (
   data: ResearchOutputPostRequest,
 ): void => {

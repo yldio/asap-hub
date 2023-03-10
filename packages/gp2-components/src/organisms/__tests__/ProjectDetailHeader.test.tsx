@@ -13,6 +13,7 @@ describe('ProjectDetailHeader', () => {
     projectProposalUrl: 'www.google.pt',
     isProjectMember: true,
     traineeProject: false,
+    isAdministrator: false,
   };
 
   it('renders title, number of members and number of projects', () => {
@@ -45,5 +46,11 @@ describe('ProjectDetailHeader', () => {
     expect(
       screen.queryByRole('link', { name: 'Resources' }),
     ).not.toBeInTheDocument();
+  });
+  it('renders share output if you are an admin', () => {
+    render(<ProjectDetailHeader {...defaultProps} isAdministrator={true} />);
+    expect(
+      screen.getByRole('button', { name: /share an output/i }),
+    ).toBeVisible();
   });
 });

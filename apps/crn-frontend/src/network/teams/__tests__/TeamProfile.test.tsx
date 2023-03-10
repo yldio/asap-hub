@@ -8,7 +8,11 @@ import {
   createUserResponse,
 } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
-import { render, screen, waitFor } from '@testing-library/react';
+import {
+  render,
+  screen,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import { Suspense } from 'react';
@@ -29,19 +33,19 @@ const mockGetEventsFromAlgolia = getEvents as jest.MockedFunction<
   typeof getEvents
 >;
 
-afterEach(() => jest.clearAllMocks());
+afterEach(jest.clearAllMocks);
 
 it('renders the header info', async () => {
-  const { getByText } = await renderPage({
+  await renderPage({
     ...createTeamResponse(),
     displayName: 'Bla',
   });
-  expect(getByText(/Team.+Bla/i)).toBeVisible();
+  expect(screen.getByText(/Team.+Bla/i)).toBeVisible();
 });
 
 it('renders the about info', async () => {
-  const { getByText } = await renderPage();
-  expect(getByText(/project overview/i)).toBeVisible();
+  await renderPage();
+  expect(screen.getByText(/project overview/i)).toBeVisible();
 });
 
 it('navigates to the outputs tab', async () => {
@@ -84,7 +88,7 @@ it('share outputs page is rendered when user clicks share an output and chooses 
     initialEntries: [network({}).teams({}).team({ teamId: teamResponse.id }).$],
   });
 
-  const { findByText, getByText, queryByText } = await renderPage(
+  await renderPage(
     teamResponse,
     { teamId: teamResponse.id, currentTime: new Date() },
     {
@@ -92,20 +96,22 @@ it('share outputs page is rendered when user clicks share an output and chooses 
       teams: [
         {
           ...userResponse.teams[0],
+          id: teamResponse.id,
           role: 'ASAP Staff',
         },
       ],
     },
     history,
   );
-  expect(queryByText(/about/i)).toBeInTheDocument();
-  userEvent.click(await findByText(/share an output/i));
-  expect(getByText(/article/i, { selector: 'span' })).toBeVisible();
-  userEvent.click(getByText(/article/i, { selector: 'span' }));
+  expect(screen.getByText(/about/i)).toBeInTheDocument();
+  userEvent.click(await screen.findByText(/share an output/i));
+  expect(screen.getByText(/article/i, { selector: 'span' })).toBeVisible();
+  userEvent.click(screen.getByText(/article/i, { selector: 'span' }));
   expect(history.location.pathname).toEqual(
     `/network/teams/${teamResponse.id}/create-output/article`,
   );
-  expect(queryByText(/about/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(/about/i)).not.toBeInTheDocument();
+  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 });
 
 it('renders the 404 page for a missing team', async () => {
@@ -114,12 +120,12 @@ it('renders the 404 page for a missing team', async () => {
 });
 
 it('deep links to the teams list', async () => {
-  const { container, getByLabelText } = await renderPage({
+  const { container } = await renderPage({
     ...createTeamResponse({ teamMembers: 10 }),
     id: '42',
   });
 
-  const anchor = getByLabelText(/\+\d/i).closest('a');
+  const anchor = screen.getByLabelText(/\+\d/i).closest('a');
   expect(anchor).toBeVisible();
   const { hash } = new URL(anchor!.href, globalThis.location.href);
 
@@ -204,7 +210,7 @@ const renderPage = async (
     id === teamResponse.id ? teamResponse : undefined,
   );
 
-  const result = render(
+  const { container } = render(
     <RecoilRoot
       initializeState={({ set }) =>
         set(refreshTeamState(teamResponse.id), Math.random())
@@ -229,8 +235,6 @@ const renderPage = async (
       </Suspense>
     </RecoilRoot>,
   );
-  await waitFor(() =>
-    expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
-  return result;
+  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  return { container };
 };

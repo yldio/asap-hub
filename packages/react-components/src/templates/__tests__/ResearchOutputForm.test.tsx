@@ -17,6 +17,7 @@ import {
   ResearchOutputType,
   ResearchTagResponse,
 } from '@asap-hub/model';
+import { disable } from '@asap-hub/flags';
 import { fireEvent } from '@testing-library/dom';
 import {
   render,
@@ -29,14 +30,22 @@ import { createMemoryHistory, History } from 'history';
 import ResearchOutputForm from '../ResearchOutputForm';
 import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 import { createIdentifierField } from '../../utils/research-output-form';
+import { fern, paper } from '../../colors';
 
 const props: ComponentProps<typeof ResearchOutputForm> = {
   onSave: jest.fn(() => Promise.resolve()),
+  onSaveDraft: jest.fn(() => Promise.resolve()),
+  published: false,
   tagSuggestions: [],
   researchTags: [],
   documentType: 'Article',
   selectedTeams: [],
   typeOptions: Array.from(researchOutputDocumentTypeToType.Article.values()),
+  permissions: {
+    canEditResearchOutput: true,
+    canPublishResearchOutput: true,
+    canShareResearchOutput: true,
+  },
 };
 
 jest.setTimeout(60000);
@@ -145,6 +154,21 @@ it('pre populates the form with provided backend response', async () => {
   expect(screen.getByRole('button', { name: /Save/i })).toBeVisible();
 });
 
+it('displays keywords suggestions', async () => {
+  await render(
+    <StaticRouter>
+      <ResearchOutputForm
+        {...props}
+        tagSuggestions={['2D Cultures', 'Adenosine', 'Adrenal']}
+      />
+    </StaticRouter>,
+  );
+  userEvent.click(screen.getByText(/add a keyword/i));
+  expect(screen.getByText('2D Cultures')).toBeVisible();
+  expect(screen.getByText('Adenosine')).toBeVisible();
+  expect(screen.getByText('Adrenal')).toBeVisible();
+});
+
 it('displays selected teams', async () => {
   await render(
     <StaticRouter>
@@ -200,12 +224,14 @@ it('displays current team within the form', async () => {
 describe('on submit', () => {
   let history!: History;
   const id = '42';
+  const saveDraftFn = jest.fn();
   const saveFn = jest.fn();
   const getLabSuggestions = jest.fn();
   const getAuthorSuggestions = jest.fn();
 
   beforeEach(() => {
     history = createMemoryHistory();
+    saveDraftFn.mockResolvedValue({ id } as ResearchOutputResponse);
     saveFn.mockResolvedValue({ id } as ResearchOutputResponse);
     getLabSuggestions.mockResolvedValue([]);
     getAuthorSuggestions.mockResolvedValue([]);
@@ -273,6 +299,7 @@ describe('on submit', () => {
             researchOutputDocumentTypeToType[documentType],
           )}
           onSave={saveFn}
+          onSaveDraft={saveDraftFn}
           getLabSuggestions={getLabSuggestions}
           getAuthorSuggestions={getAuthorSuggestions}
           researchTags={researchTags}
@@ -678,5 +705,172 @@ describe('on submit', () => {
         [fieldName]: expected,
       });
     });
+  });
+
+  const saveDraft = async () => {
+    const button = screen.getByRole('button', { name: /Save Draft/i });
+    userEvent.click(button);
+
+    expect(
+      await screen.findByRole('button', { name: /Save Draft/i }),
+    ).toBeEnabled();
+    expect(
+      await screen.findByRole('button', { name: /Cancel/i }),
+    ).toBeEnabled();
+  };
+
+  it('can save draft with minimum data', async () => {
+    await setupForm();
+    await saveDraft();
+    expect(saveDraftFn).toHaveBeenLastCalledWith(expectedRequest);
+    expect(history.location.pathname).toEqual(`/shared-research/${id}`);
+  });
+});
+
+describe('form buttons', () => {
+  let history!: History;
+  const id = '42';
+  const saveFn = jest.fn();
+  const getLabSuggestions = jest.fn();
+  const getAuthorSuggestions = jest.fn();
+
+  beforeEach(() => {
+    history = createMemoryHistory();
+    saveFn.mockResolvedValue({ id } as ResearchOutputResponse);
+    getLabSuggestions.mockResolvedValue([]);
+    getAuthorSuggestions.mockResolvedValue([]);
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  const setupForm = async (
+    {
+      canEditResearchOutput = false,
+      canPublishResearchOutput = false,
+      published = false,
+      documentType = 'Article',
+      researchTags = [{ id: '1', name: 'research tag 1' }],
+    }: {
+      canEditResearchOutput?: boolean;
+      canPublishResearchOutput?: boolean;
+
+      published?: boolean;
+      documentType?: ComponentProps<typeof ResearchOutputForm>['documentType'];
+      researchTags?: ResearchTagResponse[];
+    } = {
+      documentType: 'Article',
+      researchTags: [],
+    },
+  ) => {
+    render(
+      <Router history={history}>
+        <ResearchOutputForm
+          {...props}
+          selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
+          documentType={documentType}
+          typeOptions={Array.from(
+            researchOutputDocumentTypeToType[documentType],
+          )}
+          onSave={saveFn}
+          getLabSuggestions={getLabSuggestions}
+          getAuthorSuggestions={getAuthorSuggestions}
+          researchTags={researchTags}
+          published={published}
+          permissions={{
+            canEditResearchOutput,
+            canPublishResearchOutput,
+            canShareResearchOutput: true,
+          }}
+        />
+      </Router>,
+    );
+  };
+
+  const primaryButtonBg = fern.rgb;
+  const notPrimaryButtonBg = paper.rgb;
+
+  it('shows Cancel, Save Draft and Publish buttons when user has editing and publishing permissions and the research output has not been published yet', async () => {
+    await setupForm({
+      canEditResearchOutput: true,
+      canPublishResearchOutput: true,
+      published: false,
+    });
+
+    const publishButton = screen.getByRole('button', {
+      name: /Publish/i,
+    });
+    expect(publishButton).toBeInTheDocument();
+    expect(publishButton).toHaveStyle(`background-color:${primaryButtonBg}`);
+
+    const saveDraftButton = screen.getByRole('button', { name: /Save Draft/i });
+    expect(saveDraftButton).toBeInTheDocument();
+    expect(saveDraftButton).toHaveStyle(
+      `background-color:${notPrimaryButtonBg}`,
+    );
+
+    const cancelButton = screen.getByRole('button', { name: /Cancel/i });
+    expect(cancelButton).toBeInTheDocument();
+    expect(cancelButton).toHaveStyle(`background-color:${notPrimaryButtonBg}`);
+  });
+
+  it('shows only Cancel and Publish buttons when user has editing and publishing permissions, the research output has not been published yet and feature flag is disabled', async () => {
+    disable('DRAFT_RESEARCH_OUTPUT');
+    await setupForm({
+      canEditResearchOutput: true,
+      canPublishResearchOutput: true,
+      published: false,
+    });
+
+    const publishButton = screen.getByRole('button', {
+      name: /Publish/i,
+    });
+    expect(publishButton).toBeInTheDocument();
+    expect(publishButton).toHaveStyle(`background-color:${primaryButtonBg}`);
+
+    expect(
+      screen.queryByRole('button', { name: /Save Draft/i }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('shows only Cancel and Save buttons when user has editing and publishing permission and the research output has already been published', async () => {
+    await setupForm({
+      canEditResearchOutput: true,
+      canPublishResearchOutput: true,
+      published: true,
+    });
+
+    expect(
+      screen.queryByRole('button', { name: /Publish/i }),
+    ).not.toBeInTheDocument();
+
+    const saveDraftButton = screen.getByRole('button', { name: /Save/i });
+    expect(saveDraftButton).toBeInTheDocument();
+    expect(saveDraftButton).toHaveStyle(`background-color:${primaryButtonBg}`);
+
+    const cancelButton = screen.getByRole('button', { name: /Cancel/i });
+    expect(cancelButton).toBeInTheDocument();
+    expect(cancelButton).toHaveStyle(`background-color:${notPrimaryButtonBg}`);
+  });
+
+  it('shows only Cancel and Save Draft buttons when user has editing permission and the research output has not been published yet', async () => {
+    await setupForm({
+      canEditResearchOutput: true,
+      canPublishResearchOutput: false,
+      published: false,
+    });
+
+    expect(
+      screen.queryByRole('button', { name: /Publish/i }),
+    ).not.toBeInTheDocument();
+
+    const saveDraftButton = screen.getByRole('button', { name: /Save Draft/i });
+    expect(saveDraftButton).toBeInTheDocument();
+    expect(saveDraftButton).toHaveStyle(`background-color:${primaryButtonBg}`);
+
+    const cancelButton = screen.getByRole('button', { name: /Cancel/i });
+    expect(cancelButton).toBeInTheDocument();
+    expect(cancelButton).toHaveStyle(`background-color:${notPrimaryButtonBg}`);
   });
 });

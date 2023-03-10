@@ -224,12 +224,12 @@ describe('WorkingGroupDetail', () => {
         .resources({}).$,
     });
     expect(
-      screen.queryByRole('heading', { name: /Contact Information/i }),
+      screen.queryByRole('heading', { name: /Contact/i }),
     ).not.toBeInTheDocument();
     userEvent.click(screen.getByRole('link', { name: /overview/i }));
 
     expect(
-      screen.getByRole('heading', { name: /Contact Information/i }),
+      screen.getByRole('heading', { name: /Contact/i }),
     ).toBeInTheDocument();
   });
   it.each(gp2Model.userRoles.filter((role) => role !== 'Administrator'))(

@@ -12,6 +12,7 @@ const {
   REGION,
   GOOGLE_API_CREDENTIALS_SECRET_ID,
   IS_CONTENTFUL_ENABLED,
+  IS_CONTENTFUL_ENABLED_V2,
   CONTENTFUL_SPACE_ID,
   CONTENTFUL_ACCESS_TOKEN,
   CONTENTFUL_ENV_ID,
@@ -38,6 +39,9 @@ const {
   SQUIDEX_CLIENT_SECRET,
   SQUIDEX_BASE_URL,
   SQUIDEX_APP_NAME,
+  EVENT_BRIDGE_ENDPOINT,
+  EVENT_BRIDGE_ACCESS_KEY,
+  EVENT_BRIDGE_SECRET,
 } = process.env;
 
 export const origin = APP_ORIGIN || 'https://dev.hub.asap.science';
@@ -71,6 +75,9 @@ export const userInviteBcc = EMAIL_BCC || 'hub.invites.dev@asap.science';
 export const userInviteReturn = EMAIL_RETURN || 'hub.invites.dev@asap.science';
 export const eventBus = EVENT_BUS || 'asap-events-dev';
 export const eventSource = EVENT_SOURCE || '';
+export const eventBridgeEndpoint = EVENT_BRIDGE_ENDPOINT;
+export const eventBridgeAccessKey = EVENT_BRIDGE_ACCESS_KEY;
+export const eventBridgeSecret = EVENT_BRIDGE_SECRET;
 export const cloudfrontDistributionId = CLOUDFRONT_DISTRIBUTION_ID || '';
 export const baseUrl = SQUIDEX_BASE_URL || 'http://localhost:4004';
 export const clientId = SQUIDEX_CLIENT_ID || 'squidex-client-id';
@@ -83,6 +90,8 @@ export const contentfulAccessToken =
 export const contentfulEnvId = CONTENTFUL_ENV_ID || 'contentful-environment-id';
 export const contentfulHost = CONTENTFUL_HOST || 'https://cdn.contentful.com';
 export const isContentfulEnabled = IS_CONTENTFUL_ENABLED === 'true' || false;
+export const isContentfulEnabledV2 =
+  IS_CONTENTFUL_ENABLED_V2 === 'true' || false;
 export const crnMeetingMaterialsDrive =
   CRN_MEETING_MATERIALS_DRIVE ||
   'https://drive.google.com/drive/u/0/folders/0AKtA9ScsuPjTUk9PVA?pli=1';

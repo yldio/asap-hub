@@ -110,7 +110,7 @@ describe('a grant document research output', () => {
       teams: [
         {
           displayName: 'Grant Document Team',
-          id: '123',
+          id: teams[0].id,
         },
       ],
       title: 'Grant Document title!',
@@ -128,7 +128,7 @@ describe('a grant document research output', () => {
       documentType: 'Grant Document',
       teams: [
         {
-          id: '0d074988-60c3-41e4-9f3a-e40cc65e5f4a',
+          id: teams[0].id,
           displayName: 'Sulzer, D',
         },
       ],
@@ -137,7 +137,7 @@ describe('a grant document research output', () => {
     const { getByText } = await renderComponent(researchOutputRoute.$);
     expect(getByText('Team Sulzer, D')).toHaveAttribute(
       'href',
-      expect.stringMatching(/0d074988-60c3-41e4-9f3a-e40cc65e5f4a/),
+      expect.stringMatching(teams[0].id),
     );
   });
 
@@ -152,6 +152,7 @@ describe('a grant document research output', () => {
         },
       ],
       workingGroups: undefined,
+      published: true,
     });
 
     await renderComponent(researchOutputRoute.editResearchOutput({}).$);
@@ -188,6 +189,12 @@ describe('a not-grant-document research output', () => {
       documentType: 'Protocol',
       tags: ['Example Tag'],
       title: 'Not-Grant-Document title!',
+      teams: [
+        {
+          id: teams[0].id,
+          displayName: 'Sulzer, D',
+        },
+      ],
     });
     const { getByRole, getByText } = await renderComponent(
       researchOutputRoute.$,
@@ -257,7 +264,7 @@ describe('a working group research output', () => {
     );
   });
 
-  it('renders the sorry page if you are not a project manager', async () => {
+  it('renders the sorry page if you are not a member of the working group', async () => {
     mockGetResearchOutput.mockResolvedValue({
       ...createResearchOutputResponse(),
       documentType: 'Article',
@@ -269,9 +276,9 @@ describe('a working group research output', () => {
         ...defaultUser,
         workingGroups: [
           {
-            id: 'wg0',
+            id: 'not-related-to-research-output',
             name: 'Example Working Group',
-            role: 'Chair',
+            role: 'Project Manager',
             active: true,
           },
         ],

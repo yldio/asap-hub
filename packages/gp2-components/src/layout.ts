@@ -51,3 +51,22 @@ export const detailHeaderStyles = css({
   flexDirection: 'column',
   gap: rem(32),
 });
+
+export const mainStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: rem(48),
+  padding: `${rem(48)} 0`,
+  [mobileQuery]: {
+    gap: rem(24),
+    padding: `${rem(32)} 0`,
+  },
+});
+
+export const buttonWrapperStyle = css({
+  margin: 'auto',
+  width: 'fit-content',
+  [mobileQuery]: {
+    width: '100%',
+  },
+});

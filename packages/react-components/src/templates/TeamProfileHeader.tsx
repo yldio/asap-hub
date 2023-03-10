@@ -135,7 +135,10 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   pastEventsCount,
 }) => {
   const route = network({}).teams({}).team({ teamId: id });
-  const { canCreateUpdate } = useContext(ResearchOutputPermissionsContext);
+  const { canShareResearchOutput } = useContext(
+    ResearchOutputPermissionsContext,
+  );
+
   const isActive = !inactiveSince;
 
   return (
@@ -146,13 +149,15 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
       </div>
 
       <section
-        css={canCreateUpdate ? createSectionStyles : contactSectionStyles}
+        css={
+          canShareResearchOutput ? createSectionStyles : contactSectionStyles
+        }
       >
         <UserAvatarList
           members={members}
           fullListRoute={`${route.about({}).$}#${teamListElementId}`}
         />
-        {pointOfContact && !canCreateUpdate && (
+        {pointOfContact && !canShareResearchOutput && (
           <div css={pointOfContactStyles}>
             <Link
               buttonStyle
@@ -170,7 +175,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
             <span>{getCounterString(labCount, 'Lab')}</span>
           </div>
         )}
-        {canCreateUpdate && (
+        {canShareResearchOutput && (
           <div css={createStyles}>
             <DropdownButton
               buttonChildren={() => (

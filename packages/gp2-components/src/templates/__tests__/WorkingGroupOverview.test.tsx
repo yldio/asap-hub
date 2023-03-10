@@ -16,7 +16,7 @@ describe('WorkingGroupOverview', () => {
   it('renders the contact information', () => {
     render(<WorkingGroupOverview {...defaultProps} />);
     expect(
-      screen.getByRole('heading', { name: 'Contact Information' }),
+      screen.getByRole('heading', { name: 'Contact' }),
     ).toBeInTheDocument();
   });
   it('renders the members list', () => {
@@ -53,5 +53,22 @@ describe('WorkingGroupOverview', () => {
       </WorkingGroupOverview>,
     );
     expect(screen.getByText('Working Group Members (0)')).toBeInTheDocument();
+  });
+  it('renders the events', () => {
+    render(
+      <WorkingGroupOverview
+        {...defaultProps}
+        calendar={{ id: '42', name: 'test' }}
+      />,
+    );
+
+    expect(screen.getByRole('heading', { name: 'Events' })).toBeVisible();
+  });
+  it('does not renders the events if there is no calendar', () => {
+    render(<WorkingGroupOverview {...defaultProps} calendar={undefined} />);
+
+    expect(
+      screen.queryByRole('heading', { name: 'Events' }),
+    ).not.toBeInTheDocument();
   });
 });

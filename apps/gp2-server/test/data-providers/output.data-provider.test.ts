@@ -92,12 +92,12 @@ describe('Outputs data provider', () => {
         );
       });
       test.each<[OutputsDataDocumentTypeEnum, gp2Model.OutputDocumentType]>([
-        [OutputsDataDocumentTypeEnum.Article, 'Articles'],
+        [OutputsDataDocumentTypeEnum.Article, 'Article'],
         [OutputsDataDocumentTypeEnum.CodeSoftware, 'Code/Software'],
-        [OutputsDataDocumentTypeEnum.DataRelease, 'Data Releases'],
-        [OutputsDataDocumentTypeEnum.Form, 'Forms'],
-        [OutputsDataDocumentTypeEnum.TrainingMaterial, 'Training Materials'],
-        [OutputsDataDocumentTypeEnum.Update, 'Updates'],
+        [OutputsDataDocumentTypeEnum.DataRelease, 'Data Release'],
+        [OutputsDataDocumentTypeEnum.Form, 'Form'],
+        [OutputsDataDocumentTypeEnum.TrainingMaterial, 'Training Material'],
+        [OutputsDataDocumentTypeEnum.Update, 'Update'],
       ])('parses the document type %s to %s', async (type, expected) => {
         const squidexGraphqlResponse = getSquidexOutputGraphqlResponse();
         squidexGraphqlResponse.findOutputsContent!.flatData.documentType = type;
@@ -462,7 +462,7 @@ describe('Outputs data provider', () => {
         skip: 0,
       });
 
-      expect(result.items[0]!.documentType).toEqual('Forms');
+      expect(result.items[0]!.documentType).toEqual('Form');
     });
 
     describe('Parameters', () => {

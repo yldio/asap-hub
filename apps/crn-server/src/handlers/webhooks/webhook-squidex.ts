@@ -3,7 +3,14 @@ import { squidexHandlerFactory } from '@asap-hub/server-common';
 import { framework as lambda } from '@asap-hub/services-common';
 import { Handler } from 'aws-lambda/handler';
 import { EventBridge } from 'aws-sdk';
-import { eventBus, eventSource, squidexSharedSecret } from '../../config';
+import {
+  eventBridgeEndpoint,
+  eventBridgeAccessKey,
+  eventBridgeSecret,
+  eventBus,
+  eventSource,
+  squidexSharedSecret,
+} from '../../config';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 
@@ -21,7 +28,11 @@ export const squidexWebhookFactory = (
   return lambda.http(squidexHandler);
 };
 
-const eventBridge = new EventBridge();
+const eventBridge = new EventBridge({
+  endpoint: eventBridgeEndpoint,
+  accessKeyId: eventBridgeAccessKey,
+  secretAccessKey: eventBridgeSecret,
+});
 
 export const handler: Handler = sentryWrapper(
   squidexWebhookFactory(eventBridge),

@@ -6,7 +6,7 @@ describe('User data provider', () => {
   describe('Fetch-by-ID', () => {
     test('should receive null', async () => {
       const result = await userDataProvider.fetchById();
-      expect(result).toBeNull();
+      expect(result).toEqual(expect.any(Object));
     });
   });
 

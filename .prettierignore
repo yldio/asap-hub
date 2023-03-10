@@ -12,6 +12,7 @@
 /apps/*/build*
 /packages/*/build*
 /apps/frontend/public/*unsupported-browser*
+/apps/*/.webpack/*
 
 # editors
 .vscode

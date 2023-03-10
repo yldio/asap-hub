@@ -1,6 +1,7 @@
 import { gp2 } from '@asap-hub/model';
 import {
   Card,
+  crossQuery,
   Headline3,
   MembersList,
   pixels,
@@ -9,10 +10,11 @@ import {
 import { css } from '@emotion/react';
 import ExpandableText from '../molecules/ExpandableText';
 import EmailSection from '../organisms/EmailSection';
+import Events from '../organisms/Events';
 
 type WorkingGroupOverviewProps = Pick<
   gp2.WorkingGroupResponse,
-  'members' | 'description' | 'primaryEmail' | 'secondaryEmail'
+  'members' | 'description' | 'primaryEmail' | 'secondaryEmail' | 'calendar'
 >;
 
 const { rem } = pixels;
@@ -27,12 +29,23 @@ const containerStyles = css({
 const contentStyles = css({
   marginTop: rem(32),
 });
+const cardStyles = css({ padding: `${rem(32)} ${rem(24)}` });
+const columnStyles = css({
+  display: 'grid',
+  columnGap: rem(32),
+  gridRowGap: rem(32),
+  [crossQuery]: {
+    gridTemplateColumns: '1fr 1fr',
+    rowGap: rem(32),
+  },
+});
 
 const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
   description,
   primaryEmail,
   secondaryEmail,
   members,
+  calendar,
 }) => (
   <div css={containerStyles}>
     <Card>
@@ -41,17 +54,30 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
         <ExpandableText>{description}</ExpandableText>
       </div>
     </Card>
-    <Card>
-      <Headline3 noMargin>Contact Information</Headline3>
-      <div css={contentStyles}>
-        <EmailSection
-          contactEmails={[
-            { email: primaryEmail, contact: 'WG Email' },
-            { email: secondaryEmail, contact: 'Lead Email' },
-          ]}
-        />
-      </div>
-    </Card>
+    <div css={columnStyles}>
+      <Card>
+        <Headline3 noMargin>Contact</Headline3>
+        <div css={contentStyles}>
+          <EmailSection
+            contactEmails={[
+              { email: primaryEmail, contact: 'WG Email' },
+              { email: secondaryEmail, contact: 'Lead Email' },
+            ]}
+          />
+        </div>
+      </Card>
+      {calendar ? (
+        <Card overrideStyles={cardStyles}>
+          <Headline3 noMargin>Events</Headline3>
+          <Events
+            calendarId={calendar.id}
+            paragraph={
+              'Subscribe this working group calendar to stay always updated with the latest events.'
+            }
+          />
+        </Card>
+      ) : undefined}
+    </div>
     <Card>
       <Headline3
         noMargin

@@ -9,6 +9,7 @@
   "include": ["src"],
   "references": [
     { "path": "../fixtures" },
+    { "path": "../flags" },
     { "path": "../model" },
     { "path": "../dom-test-utils" },
     { "path": "../react-components" }

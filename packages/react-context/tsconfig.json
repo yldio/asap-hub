@@ -11,6 +11,8 @@
   "references": [
     { "path": "../auth" },
     { "path": "../dom-test-utils" },
-    { "path": "../flags" }
+    { "path": "../flags" },
+    { "path": "../../packages/model" },
+    { "path": "../../packages/validation" }
   ]
 }

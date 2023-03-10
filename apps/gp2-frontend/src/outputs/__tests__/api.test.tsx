@@ -4,7 +4,7 @@ import { GetListOptions } from '@asap-hub/frontend-utils';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import nock from 'nock';
 import { API_BASE_URL } from '../../config';
-import { getOutput, getOutputs } from '../api';
+import { createOutput, getOutput, getOutputs } from '../api';
 
 jest.mock('../../config');
 
@@ -76,6 +76,27 @@ describe('getOutputs', () => {
       getOutputs('Bearer x', options),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch the Outputs. Expected status 2xx. Received status 500."`,
+    );
+  });
+});
+
+describe('createOutput', () => {
+  const payload = { title: 'output title', documentType: 'Form' as const };
+  it('makes an authorized POST request to create a research output', async () => {
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .post('/outputs', payload)
+      .reply(201, { id: 123 });
+
+    await createOutput(payload, 'Bearer x');
+    expect(nock.isDone()).toBe(true);
+  });
+  it('errors for an error status', async () => {
+    nock(API_BASE_URL).post('/outputs').reply(500, {});
+
+    await expect(
+      createOutput(payload, 'Bearer x'),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Failed to create output. Expected status 201. Received status 500."`,
     );
   });
 });

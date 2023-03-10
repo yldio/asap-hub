@@ -2,10 +2,19 @@ import { GenericError } from '@asap-hub/errors';
 import { gp2 as gp2Squidex, SquidexRest } from '@asap-hub/squidex';
 import nock from 'nock';
 import { appName, baseUrl } from '../../src/config';
-import { ExternalUserSquidexDataProvider } from '../../src/data-providers/external-users.data-provider';
-import { getAuthToken } from '../../src/utils/auth';
-import { getExternalUserCreateDataObject } from '../fixtures/external-users.fixtures';
+
+import {
+  getExternalUserCreateDataObject,
+  getExternalUserDataObject,
+  getSquidexExternalUsersGraphqlResponse,
+} from '../fixtures/external-users.fixtures';
 import { identity } from '../helpers/squidex';
+import { getAuthToken } from '../../src/utils/auth';
+import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
+import { ExternalUserSquidexDataProvider } from '../../src/data-providers/external-users.data-provider';
+import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
+
+import { gp2 } from '@asap-hub/model';
 
 describe('External Users data provider', () => {
   const externalUserRestClient = new SquidexRest<gp2Squidex.RestExternalUser>(
@@ -13,7 +22,14 @@ describe('External Users data provider', () => {
     'external-users',
     { appName, baseUrl },
   );
+  const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
   const externalUsersDataProvider = new ExternalUserSquidexDataProvider(
+    squidexGraphqlClientMock,
+    externalUserRestClient,
+  );
+  const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
+  const externalUsersMockGraphqlServer = new ExternalUserSquidexDataProvider(
+    squidexGraphqlClientMockServer,
     externalUserRestClient,
   );
 
@@ -22,6 +38,57 @@ describe('External Users data provider', () => {
   });
   beforeEach(() => {
     jest.clearAllMocks();
+  });
+
+  describe('fetch method', () => {
+    test('Should fetch the external users from squidex graphql', async () => {
+      const result = await externalUsersMockGraphqlServer.fetch({});
+      expect(result).toMatchObject({
+        total: 1,
+        items: [getExternalUserDataObject()],
+      });
+    });
+    test('Should return an empty result', async () => {
+      const mockResponse = getSquidexExternalUsersGraphqlResponse();
+      mockResponse.queryExternalUsersContentsWithTotal!.items = [];
+      mockResponse.queryExternalUsersContentsWithTotal!.total = 0;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const result = await externalUsersDataProvider.fetch({});
+      expect(result).toEqual({ total: 0, items: [] });
+    });
+  });
+
+  describe('search', () => {
+    test('Should query with filters and return the external-users', async () => {
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        getSquidexExternalUsersGraphqlResponse(),
+      );
+      const fetchOptions: gp2.FetchUsersOptions = {
+        take: 12,
+        skip: 2,
+        search: 'tony stark',
+        filter: {},
+      };
+      const users = await externalUsersDataProvider.fetch(fetchOptions);
+
+      const filterQuery =
+        "(contains(data/name/iv, 'tony'))" +
+        ' or' +
+        " (contains(data/name/iv, 'stark'))";
+      expect(squidexGraphqlClientMock.request).toBeCalledWith(
+        expect.anything(),
+        {
+          top: 12,
+          skip: 2,
+          filter: filterQuery,
+        },
+      );
+      expect(users).toMatchObject({
+        total: 1,
+        items: [getExternalUserDataObject()],
+      });
+    });
   });
 
   describe('Create method', () => {

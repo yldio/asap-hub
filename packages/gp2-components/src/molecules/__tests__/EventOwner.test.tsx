@@ -39,5 +39,28 @@ it('renders the working group name linking to the group and icon', () => {
 
 it('shows that the event is run by GP2 when there is no project or working group', () => {
   render(<EventOwner />);
-  expect(screen.getByText(/gp2 event/i)).not.toHaveAttribute('href');
+  expect(screen.getByText(/gp2 hub/i)).not.toHaveAttribute('href');
+});
+it('renders the working group name linking to the group and icon if there is a project too', () => {
+  render(
+    <EventOwner
+      workingGroup={{
+        ...gp2.createWorkingGroupResponse(),
+        id: 'grp',
+        title: 'My Working Group',
+      }}
+      project={{
+        ...gp2.createProjectResponse(),
+        id: 'grp',
+        title: 'My Project',
+      }}
+    />,
+  );
+  expect(screen.getByText('My Working Group')).toHaveAttribute(
+    'href',
+    expect.stringMatching(/grp$/),
+  );
+  expect(screen.getByTitle('Working Groups')).toBeInTheDocument();
+  expect(screen.queryByText('My Project')).not.toBeInTheDocument();
+  expect(screen.queryByTitle('Projects')).not.toBeInTheDocument();
 });

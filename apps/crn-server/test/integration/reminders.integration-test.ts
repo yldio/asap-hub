@@ -248,27 +248,27 @@ describe('Reminders', () => {
     let calendarId: string;
     let fetchRemindersOptions: FetchRemindersOptions;
 
-    beforeEach(async () => {
+    beforeAll(() => {
       jest.useFakeTimers();
+    });
 
+    beforeEach(async () => {
       const teamCreateDataObject = getTeamCreateDataObject();
       teamCreateDataObject.applicationNumber = chance.name();
       teamId = await teamDataProvider.create(teamCreateDataObject);
 
       const userCreateDataObject = getUserInput(teamId);
       userId = await userDataProvider.create(userCreateDataObject);
-    });
 
-    afterEach(async () => {
-      jest.useRealTimers();
-    });
-
-    beforeEach(async () => {
       const calendarInput = getCalendarInputForReminder();
       calendarId = await calendarDataProvider.create(calendarInput);
 
       const timezone = 'Europe/London';
       fetchRemindersOptions = { userId, timezone };
+    });
+
+    afterAll(async () => {
+      jest.useRealTimers();
     });
 
     test('Should see the reminder when the event is starting after midnight today', async () => {
@@ -389,9 +389,11 @@ describe('Reminders', () => {
     let calendarId: string;
     let fetchRemindersOptions: FetchRemindersOptions;
 
-    beforeEach(async () => {
+    beforeAll(() => {
       jest.useFakeTimers();
+    });
 
+    beforeEach(async () => {
       const teamCreateDataObject = getTeamCreateDataObject();
       teamCreateDataObject.applicationNumber = chance.name();
       teamId = await teamDataProvider.create(teamCreateDataObject);
@@ -403,7 +405,7 @@ describe('Reminders', () => {
       calendarId = await calendarDataProvider.create(calendarInput);
     });
 
-    afterEach(() => {
+    afterAll(() => {
       jest.useRealTimers();
     });
 
@@ -472,9 +474,11 @@ describe('Reminders', () => {
     let calendarId: string;
     let fetchRemindersOptions: FetchRemindersOptions;
 
-    beforeEach(async () => {
+    beforeAll(() => {
       jest.useFakeTimers();
+    });
 
+    beforeEach(async () => {
       const teamCreateDataObject = getTeamCreateDataObject();
       teamCreateDataObject.applicationNumber = chance.name();
       teamId = await teamDataProvider.create(teamCreateDataObject);
@@ -486,7 +490,7 @@ describe('Reminders', () => {
       calendarId = await calendarDataProvider.create(calendarInput);
     });
 
-    afterEach(async () => {
+    afterAll(async () => {
       jest.useRealTimers();
     });
 
@@ -612,9 +616,11 @@ describe('Reminders', () => {
     let calendarId: string;
     let fetchRemindersOptions: FetchRemindersOptions;
 
-    beforeEach(async () => {
+    beforeAll(() => {
       jest.useFakeTimers();
+    });
 
+    beforeEach(async () => {
       const teamCreateDataObject = getTeamCreateDataObject();
       teamCreateDataObject.applicationNumber = chance.name();
       teamId = await teamDataProvider.create(teamCreateDataObject);
@@ -622,7 +628,7 @@ describe('Reminders', () => {
       calendarId = await calendarDataProvider.create(calendarInput);
     });
 
-    afterEach(async () => {
+    afterAll(async () => {
       jest.useRealTimers();
     });
 
@@ -754,9 +760,11 @@ describe('Reminders', () => {
     let calendarId: string;
     let fetchRemindersOptions: FetchRemindersOptions;
 
-    beforeEach(async () => {
+    beforeAll(() => {
       jest.useFakeTimers();
+    });
 
+    beforeEach(async () => {
       const teamCreateDataObject = getTeamCreateDataObject();
       teamCreateDataObject.applicationNumber = chance.name();
       teamId = await teamDataProvider.create(teamCreateDataObject);
@@ -768,7 +776,7 @@ describe('Reminders', () => {
       calendarId = await calendarDataProvider.create(calendarInput);
     });
 
-    afterEach(() => {
+    afterAll(() => {
       jest.useRealTimers();
     });
 
@@ -929,9 +937,11 @@ describe('Reminders', () => {
       let calendarId: string;
       let fetchRemindersOptions: FetchRemindersOptions;
 
-      beforeEach(async () => {
+      beforeAll(() => {
         jest.useFakeTimers();
+      });
 
+      beforeEach(async () => {
         const teamCreateDataObject = getTeamCreateDataObject();
         teamCreateDataObject.applicationNumber = chance.name();
         const teamId = await teamDataProvider.create(teamCreateDataObject);
@@ -943,7 +953,7 @@ describe('Reminders', () => {
         calendarId = await calendarDataProvider.create(calendarInput);
       });
 
-      afterEach(() => {
+      afterAll(() => {
         jest.useRealTimers();
       });
 
@@ -1108,9 +1118,11 @@ describe('Reminders', () => {
     let userId1: string;
     let creatorId: string;
 
-    beforeEach(async () => {
+    beforeAll(() => {
       jest.useFakeTimers();
+    });
 
+    beforeEach(async () => {
       const teamCreateDataObject = getTeamCreateDataObject();
       teamCreateDataObject.applicationNumber = chance.name();
       teamId = await teamDataProvider.create(teamCreateDataObject);
@@ -1125,7 +1137,7 @@ describe('Reminders', () => {
       calendarId = await calendarDataProvider.create(calendarInput);
     });
 
-    afterEach(() => {
+    afterAll(() => {
       jest.useRealTimers();
     });
 

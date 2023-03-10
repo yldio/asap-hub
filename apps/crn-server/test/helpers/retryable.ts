@@ -1,26 +1,8 @@
-type Options = {
-  retries?: number;
-  delay?: number;
-};
+import retry from 'async-retry';
 
 export const retryable = async (
   fn: () => Promise<void> | undefined,
-  options: Options = {},
-  attempt: number = 1,
+  opts: {} = {},
 ): Promise<void> => {
-  const opts = {
-    delay: 2000,
-    retries: 3,
-    ...options,
-  };
-  try {
-    await fn();
-    return;
-  } catch (err) {
-    if (attempt === opts.retries) {
-      throw err;
-    }
-  }
-  await new Promise((resolve) => setTimeout(resolve, opts.delay));
-  await retryable(fn, opts, attempt + 1);
+  await retry(fn, { retries: 3, ...opts });
 };

@@ -2256,6 +2256,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "workspace:@types/asap-hub__inline-environment"\
       ],\
       [\
+        "@types/async-retry",\
+        "npm:1.4.5"\
+      ],\
+      [\
         "@types/auth0-js",\
         "npm:9.14.7"\
       ],\
@@ -3289,6 +3293,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [\
         "async-limiter",\
         "npm:1.0.1"\
+      ],\
+      [\
+        "async-retry",\
+        "npm:1.3.3"\
       ],\
       [\
         "async-sema",\
@@ -11234,6 +11242,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@sentry/serverless", "npm:6.19.7"],\
             ["@serverless/typescript", "npm:3.27.0"],\
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],\
+            ["@types/async-retry", "npm:1.4.5"],\
             ["@types/aws-lambda", "npm:8.10.111"],\
             ["@types/babel__preset-env", "npm:7.9.2"],\
             ["@types/chance", "npm:1.1.3"],\
@@ -11269,6 +11278,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["ajv-formats", "virtual:4b7d8bb1684f7f69bf042a03dae4d118ab00edf0e34f409e5270fb3cce9e5fcf8ce9581b8f5bc8597c1e50c52a23eba5d4eadeede8c58ab0be3187e2389e11d5#npm:2.1.1"],\
             ["algoliasearch", "npm:4.15.0"],\
             ["apr-intercept", "npm:3.0.4"],\
+            ["async-retry", "npm:1.3.3"],\
             ["aws-lambda", "npm:1.0.7"],\
             ["aws-sdk", "npm:2.1331.0"],\
             ["aws-xray-sdk", "npm:3.4.1"],\
@@ -35900,6 +35910,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT"\
         }]\
       ]],\
+      ["@types/async-retry", [\
+        ["npm:1.4.5", {\
+          "packageLocation": "./.yarn/cache/@types-async-retry-npm-1.4.5-337390a324-39413b8bf4.zip/node_modules/@types/async-retry/",\
+          "packageDependencies": [\
+            ["@types/async-retry", "npm:1.4.5"],\
+            ["@types/retry", "npm:0.12.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@types/auth0-js", [\
         ["npm:9.14.7", {\
           "packageLocation": "./.yarn/cache/@types-auth0-js-npm-9.14.7-deff66bbe8-dda4c3355a.zip/node_modules/@types/auth0-js/",\
@@ -37236,6 +37256,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-retry-npm-0.12.0-e4e6294a2c-61a072c763.zip/node_modules/@types/retry/",\
           "packageDependencies": [\
             ["@types/retry", "npm:0.12.0"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:0.12.2", {\
+          "packageLocation": "./.yarn/cache/@types-retry-npm-0.12.2-e1f0617c50-e567503571.zip/node_modules/@types/retry/",\
+          "packageDependencies": [\
+            ["@types/retry", "npm:0.12.2"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -40166,6 +40193,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/async-limiter-npm-1.0.1-7e6819bcdb-2b849695b4.zip/node_modules/async-limiter/",\
           "packageDependencies": [\
             ["async-limiter", "npm:1.0.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["async-retry", [\
+        ["npm:1.3.3", {\
+          "packageLocation": "./.yarn/cache/async-retry-npm-1.3.3-bc90c5cee0-38a7152ff7.zip/node_modules/async-retry/",\
+          "packageDependencies": [\
+            ["async-retry", "npm:1.3.3"],\
+            ["retry", "npm:0.13.1"]\
           ],\
           "linkType": "HARD"\
         }]\

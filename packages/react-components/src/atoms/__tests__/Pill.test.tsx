@@ -15,6 +15,7 @@ it.each`
   ${'warning'} | ${'rgb(206, 128, 26)'}  | ${'rgb(248, 237, 222)'} | ${'rgb(206, 128, 26)'}
   ${'info'}    | ${'rgb(12, 141, 195)'}  | ${'rgb(230, 243, 249)'} | ${'rgb(12, 141, 195)'}
   ${'neutral'} | ${'rgb(146, 153, 158)'} | ${'rgb(237, 241, 243)'} | ${'rgb(146, 153, 158)'}
+  ${'gray'}    | ${'transparent'}        | ${'rgb(237, 241, 243)'} | ${'rgb(77, 100, 107)'}
 `(
   'sets text color border and background color for $accent',
   ({ accent, border, text, background }) => {

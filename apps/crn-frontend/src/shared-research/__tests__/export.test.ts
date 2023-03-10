@@ -169,6 +169,13 @@ describe('researchOutputToCSV', () => {
     expect(researchOutputToCSV(output).relatedResearch).toMatchInlineSnapshot(
       `"t1,t2,t3"`,
     );
+    const outputWithoutRelatedResearch = {
+      ...output,
+      relatedResearch: [],
+    };
+    expect(
+      researchOutputToCSV(outputWithoutRelatedResearch).relatedResearch,
+    ).toMatchInlineSnapshot('""');
   });
 
   it('Removes HTML from RTF fields', () => {

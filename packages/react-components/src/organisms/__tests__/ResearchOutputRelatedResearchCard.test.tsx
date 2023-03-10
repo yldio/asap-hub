@@ -21,7 +21,7 @@ it('renders the contributors card form', async () => {
 });
 
 describe('Related Research Multiselect', () => {
-  it('should render provided values', () => {
+  it('should render provided values with and type when documentType is Article', () => {
     const { getByText } = render(
       <ResearchOutputRelatedResearchCard
         {...props}
@@ -35,7 +35,7 @@ describe('Related Research Multiselect', () => {
           {
             label: 'Second Related Research',
             value: '2',
-            type: 'Analysis',
+            type: 'Preprint',
             documentType: 'Article',
           },
         ]}
@@ -43,6 +43,7 @@ describe('Related Research Multiselect', () => {
     );
     expect(getByText(/first related/i)).toBeVisible();
     expect(getByText(/second related/i)).toBeVisible();
+    expect(getByText(/preprint/i)).toBeVisible();
   });
   it('should be able to select from the list of options', async () => {
     const loadOptions = jest.fn();

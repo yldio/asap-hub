@@ -49,8 +49,18 @@ describe('Related Research Multiselect', () => {
     const loadOptions = jest.fn();
     const mockOnChange = jest.fn();
     loadOptions.mockResolvedValue([
-      { label: 'First Related Research', value: '1' },
-      { label: 'Second Related Research', value: '2' },
+      {
+        label: 'First Related Research',
+        value: '1',
+        type: '3D Printing',
+        documentType: 'Report',
+      },
+      {
+        label: 'Second Related Research',
+        value: '2',
+        type: 'Preprint',
+        documentType: 'Article',
+      },
     ]);
 
     const { getByText, getByLabelText, queryByText } = render(
@@ -64,9 +74,15 @@ describe('Related Research Multiselect', () => {
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
+    expect(getByText(/preprint/i)).toBeVisible();
     userEvent.click(getByText('First Related Research'));
     expect(mockOnChange).toHaveBeenCalledWith([
-      { label: 'First Related Research', value: '1' },
+      {
+        label: 'First Related Research',
+        value: '1',
+        type: '3D Printing',
+        documentType: 'Report',
+      },
     ]);
   });
   it('should render message when there is no match', async () => {

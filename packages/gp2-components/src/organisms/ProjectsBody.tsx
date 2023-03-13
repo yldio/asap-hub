@@ -1,12 +1,38 @@
 import { gp2 } from '@asap-hub/model';
-import { pixels } from '@asap-hub/react-components';
+import {
+  contentSidePaddingWithNavigation,
+  Display,
+  Paragraph,
+  pixels,
+} from '@asap-hub/react-components';
 import { css } from '@emotion/react';
+import { projectIcon } from '../icons';
 import ProjectCard from './ProjectCard';
 
-const { rem } = pixels;
+const { largeDesktopScreen, mobileScreen, rem, vminLinearCalc } = pixels;
 export type ProjectsBodyProps = {
   projects: gp2.ListProjectResponse;
 };
+
+const styles = css({
+  padding: `${vminLinearCalc(
+    mobileScreen,
+    36,
+    largeDesktopScreen,
+    72,
+    'px',
+  )} ${contentSidePaddingWithNavigation()}`,
+
+  display: 'grid',
+  textAlign: 'center',
+
+  [`@media (min-width: ${mobileScreen.width + 1}px)`]: {
+    justifyItems: 'center',
+  },
+});
+
+const iconStyles = css({});
+
 const gridContainerStyles = css({
   display: 'flex',
   flexDirection: 'column',
@@ -16,9 +42,21 @@ const gridContainerStyles = css({
 
 const ProjectsBody: React.FC<ProjectsBodyProps> = ({ projects }) => (
   <article css={gridContainerStyles}>
-    {projects.items.map((project) => (
-      <ProjectCard key={project.id} {...project} />
-    ))}
+    {projects.items.length ? (
+      projects.items.map((project) => (
+        <ProjectCard key={project.id} {...project} />
+      ))
+    ) : (
+      <div css={styles}>
+        <span css={iconStyles}>{projectIcon}</span>
+        <div>
+          <Display styleAsHeading={3}>{'No projects available.'}</Display>
+          <Paragraph accent="lead">
+            {'When a GP2 admin creates a project, it will be listed here.'}
+          </Paragraph>
+        </div>
+      </div>
+    )}
   </article>
 );
 

@@ -26,7 +26,9 @@ export type FetchCalendarProviderOptions = {
   resourceId?: string;
 };
 
-type GraphqlCalendar = NonNullable<FetchCalendarQuery['findCalendarsContent']>;
+export type GraphqlCalendar = NonNullable<
+  FetchCalendarQuery['findCalendarsContent']
+>;
 
 export class CalendarSquidexDataProvider implements gp2.CalendarDataProvider {
   constructor(
@@ -111,6 +113,21 @@ export class CalendarSquidexDataProvider implements gp2.CalendarDataProvider {
   }
 }
 
+export const parseGraphQLReferences = ({
+  referencingProjectsContents,
+  referencingWorkingGroupsContents,
+}: Pick<
+  GraphqlCalendar,
+  'referencingProjectsContents' | 'referencingWorkingGroupsContents'
+>): Pick<gp2.CalendarDataObject, 'projects' | 'workingGroups'> => ({
+  projects: referencingProjectsContents?.map(({ id, flatData: { title } }) => ({
+    id,
+    title: title || '',
+  })),
+  workingGroups: referencingWorkingGroupsContents?.map(
+    ({ id, flatData: { title } }) => ({ id, title: title || '' }),
+  ),
+});
 export const parseGraphQlCalendarToDataObject = (
   item: GraphqlCalendar,
 ): gp2.CalendarDataObject => ({
@@ -120,10 +137,5 @@ export const parseGraphQlCalendarToDataObject = (
   version: item.version,
   expirationDate: item.flatData.expirationDate,
   syncToken: item.flatData.syncToken,
-  projects: item.referencingProjectsContents?.map(
-    ({ id, flatData: { title } }) => ({ id, title: title || '' }),
-  ),
-  workingGroups: item.referencingWorkingGroupsContents?.map(
-    ({ id, flatData: { title } }) => ({ id, title: title || '' }),
-  ),
+  ...parseGraphQLReferences(item),
 });

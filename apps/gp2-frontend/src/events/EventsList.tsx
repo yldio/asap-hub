@@ -1,4 +1,5 @@
 import { getEventListOptions } from '@asap-hub/frontend-utils';
+import { EventOwner } from '@asap-hub/gp2-components';
 import { gp2 } from '@asap-hub/model';
 import { EventsList } from '@asap-hub/react-components';
 import { usePagination, usePaginationParams } from '../hooks/pagination';
@@ -9,10 +10,15 @@ type EventListProps = {
   readonly past?: boolean;
 };
 
-export const eventMapper = ({ speakers, ...event }: gp2.EventResponse) => ({
+export const eventMapper = ({
+  speakers,
+  project,
+  workingGroup,
+  ...event
+}: gp2.EventResponse) => ({
   ...event,
   hasSpeakersToBeAnnounced: speakers.length === 0,
-  eventOwner: <div>GP2 Team</div>,
+  eventOwner: <EventOwner project={project} workingGroup={workingGroup} />,
 });
 
 const EventList: React.FC<EventListProps> = ({ currentTime, past = false }) => {

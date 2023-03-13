@@ -1,7 +1,11 @@
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { StaticRouter, Route } from 'react-router-dom';
-import { render } from '@testing-library/react';
+import {
+  render,
+  screen,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import { gp2 } from '@asap-hub/fixtures';
 import { events } from '@asap-hub/routing';
 
@@ -15,31 +19,28 @@ jest.mock('../api');
 const id = '42';
 
 const mockGetEvent = getEvent as jest.MockedFunction<typeof getEvent>;
-beforeEach(() => {
-  mockGetEvent.mockClear();
-  mockGetEvent.mockResolvedValue({
-    ...gp2.createEventResponse(),
-    id,
-  });
-});
+beforeEach(jest.resetAllMocks);
 
-const wrapper: React.FC = ({ children }) => (
-  <RecoilRoot
-    initializeState={({ set }) => set(refreshEventState(id), Math.random())}
-  >
-    <Auth0Provider user={{}}>
-      <WhenReady>
-        <Suspense fallback="Loading...">
-          <StaticRouter location={events({}).event({ eventId: id }).$}>
-            <Route path={events.template + events({}).event.template}>
-              {children}
-            </Route>
-          </StaticRouter>
-        </Suspense>
-      </WhenReady>
-    </Auth0Provider>
-  </RecoilRoot>
-);
+const renderEvent = async () => {
+  render(
+    <RecoilRoot
+      initializeState={({ set }) => set(refreshEventState(id), Math.random())}
+    >
+      <Auth0Provider user={{}}>
+        <WhenReady>
+          <Suspense fallback="Loading...">
+            <StaticRouter location={events({}).event({ eventId: id }).$}>
+              <Route path={events.template + events({}).event.template}>
+                <Event />
+              </Route>
+            </StaticRouter>
+          </Suspense>
+        </WhenReady>
+      </Auth0Provider>
+    </RecoilRoot>,
+  );
+  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+};
 
 it('displays the event with given id', async () => {
   mockGetEvent.mockResolvedValue({
@@ -47,14 +48,18 @@ it('displays the event with given id', async () => {
     id,
     title: 'Kool Event',
   });
-  const { findByText } = render(<Event />, { wrapper });
-  expect(await findByText('Kool Event', { exact: false })).toBeVisible();
+  await renderEvent();
+  expect(screen.getByText('Kool Event', { exact: false })).toBeVisible();
   expect(mockGetEvent.mock.calls).toEqual([[id, expect.anything()]]);
 });
 
 it('generates the back href', async () => {
-  const { findByText } = render(<Event />, { wrapper });
-  expect((await findByText(/back/i)).closest('a')).toHaveAttribute(
+  mockGetEvent.mockResolvedValue({
+    ...gp2.createEventResponse(),
+    id,
+  });
+  await renderEvent();
+  expect(screen.getByText(/back/i).closest('a')).toHaveAttribute(
     'href',
     expect.stringMatching(/events$/),
   );
@@ -62,6 +67,34 @@ it('generates the back href', async () => {
 
 it('falls back to the not found page for a missing event', async () => {
   mockGetEvent.mockResolvedValue(undefined);
-  const { findByText } = render(<Event />, { wrapper });
-  expect(await findByText(/sorry.+page/i)).toBeVisible();
+  await renderEvent();
+  expect(screen.getByText(/sorry.+page/i)).toBeVisible();
+});
+describe('Event Speakers', () => {
+  it('displays the speakers section when there are speakers', async () => {
+    mockGetEvent.mockResolvedValue({
+      ...gp2.createEventResponse({
+        numberOfInternalSpeakers: 1,
+        numberOfExternalSpeakers: 0,
+        numberOfSpeakersToBeAnnounced: 0,
+      }),
+      id,
+    });
+    await renderEvent();
+    expect(screen.getAllByText(/Speaker/i)).not.toHaveLength(0);
+  });
+  it('does not display the speakers section when there are non available', async () => {
+    mockGetEvent.mockResolvedValue({
+      ...gp2.createEventResponse({
+        numberOfInternalSpeakers: 0,
+        numberOfExternalSpeakers: 0,
+        numberOfSpeakersToBeAnnounced: 0,
+      }),
+      id,
+      title: 'Kool Event',
+    });
+    await renderEvent();
+
+    expect(screen.queryByText(/Speaker/i)).not.toBeInTheDocument();
+  });
 });

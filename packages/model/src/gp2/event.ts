@@ -1,6 +1,8 @@
 import { ListResponse } from '../common';
 import { BasicEvent } from '../event-common';
 import { CalendarResponse } from './calendar';
+import { ProjectResponse } from './project';
+import { WorkingGroupResponse } from './working-group';
 
 export interface EventSpeakerUser {
   id: string;
@@ -19,6 +21,8 @@ export interface SpeakerInfo {
 export type EventSpeaker = SpeakerInfo & { topic?: string };
 export interface EventDataObject extends BasicEvent {
   calendar: CalendarResponse;
+  project?: Pick<ProjectResponse, 'id' | 'title'>;
+  workingGroup?: Pick<WorkingGroupResponse, 'id' | 'title'>;
   speakers: EventSpeaker[];
 }
 

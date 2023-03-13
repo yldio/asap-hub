@@ -1,4 +1,6 @@
 import gql from 'graphql-tag';
+import { projectContentQueryFragment } from './projects.queries';
+import { workingGroupContentQueryFragment } from './working-groups.queries';
 
 export const eventContentFragment = gql`
   fragment EventContent on Events {
@@ -35,6 +37,12 @@ export const eventContentFragment = gql`
           color
           name
         }
+        referencingProjectsContents {
+          ...ProjectContent
+        }
+        referencingWorkingGroupsContents {
+          ...WorkingGroupContent
+        }
       }
       thumbnail {
         id
@@ -65,6 +73,8 @@ export const eventContentFragment = gql`
       }
     }
   }
+  ${projectContentQueryFragment},
+  ${workingGroupContentQueryFragment}
 `;
 
 export const FETCH_EVENTS = gql`

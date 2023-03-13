@@ -93,7 +93,7 @@ export const parseGraphQLSpeakers = (
 
 export const parseGraphQLEvent = (
   item: EventContentFragment,
-): gp2.EventResponse => {
+): gp2.EventDataObject => {
   if (!item.flatData.calendar?.[0]) {
     throw new Error(`Event (${item.id}) doesn't have a calendar"`);
   }
@@ -102,6 +102,9 @@ export const parseGraphQLEvent = (
     item.flatData.calendar[0].flatData,
   );
 
+  const { workingGroup, project } = parseGraphQLWorkingGroupProjects(
+    item.flatData.calendar[0],
+  );
   const startDate = DateTime.fromISO(item.flatData.startDate!);
 
   const meetingLink = item.flatData.meetingLink || undefined;
@@ -176,6 +179,30 @@ export const parseGraphQLEvent = (
     status: item.flatData.status,
     tags: item.flatData.tags ?? [],
     calendar,
+    workingGroup,
+    project,
     speakers,
   };
+};
+export type GraphqlEventCalendar = Pick<
+  NonNullable<
+    NonNullable<EventContentFragment['flatData']['calendar']>[number]
+  >,
+  'referencingProjectsContents' | 'referencingWorkingGroupsContents'
+>;
+
+export const parseGraphQLWorkingGroupProjects = (
+  calendar: GraphqlEventCalendar,
+) => {
+  const workingGroup =
+    calendar.referencingWorkingGroupsContents?.map((wg) => ({
+      id: wg.id,
+      title: wg.flatData.title || '',
+    }))[0] || undefined;
+  const project =
+    calendar.referencingProjectsContents?.map((p) => ({
+      id: p.id,
+      title: p.flatData.title || '',
+    }))[0] || undefined;
+  return { workingGroup, project };
 };

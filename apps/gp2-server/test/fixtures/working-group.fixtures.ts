@@ -15,8 +15,8 @@ import {
 
 export const getWorkingGroupDataObject =
   (): gp2Model.WorkingGroupDataObject => ({
-    id: '42',
-    title: 'Working Group',
+    id: '11',
+    title: 'a working group title',
     shortDescription: 'Short description',
     description: 'longer description',
     primaryEmail: 'primary.email@example.com',
@@ -125,9 +125,9 @@ export const getGraphQLWorkingGroupCalendar =
     },
   });
 export const getGraphQLWorkingGroup = (): GraphQLWorkingGroup => ({
-  id: '42',
+  id: '11',
   flatData: {
-    title: 'Working Group',
+    title: 'a working group title',
     shortDescription: 'Short description',
     description: 'longer description',
     primaryEmail: 'primary.email@example.com',

@@ -2,7 +2,7 @@ import { Frame, useBackHref } from '@asap-hub/frontend-utils';
 import { EventPage, NotFoundPage } from '@asap-hub/react-components';
 import { gp2, useRouteParams } from '@asap-hub/routing';
 
-import { EventSpeakers } from '@asap-hub/gp2-components';
+import { EventSpeakers, EventOwner } from '@asap-hub/gp2-components';
 import { useEventById } from './state';
 
 const Event: React.FC = () => {
@@ -18,9 +18,16 @@ const Event: React.FC = () => {
           {...event}
           backHref={backHref}
           displayCalendar={false}
-          eventOwner={<div>GP2 Team</div>}
+          eventOwner={
+            <EventOwner
+              project={event.project}
+              workingGroup={event.workingGroup}
+            />
+          }
         >
-          {event.speakers.length && <EventSpeakers speakers={event.speakers} />}
+          {event.speakers.length ? (
+            <EventSpeakers speakers={event.speakers} />
+          ) : undefined}
         </EventPage>
       </Frame>
     );

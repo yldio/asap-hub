@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
-  EventResponse,
+  EventDataObject,
   EventSpeaker,
   EventSpeakerExternalUserData,
   EventSpeakerUserData,
@@ -120,7 +120,7 @@ export const parseGraphQLSpeakers = (
 
 export const parseGraphQLEvent = (
   item: EventContentFragment,
-): EventResponse => {
+): EventDataObject => {
   if (!item.flatData.calendar?.[0]) {
     throw new Error(`Event (${item.id}) doesn't have a calendar"`);
   }

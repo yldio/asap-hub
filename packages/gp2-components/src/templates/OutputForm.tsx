@@ -40,7 +40,7 @@ type OutputFormType = {
     payload: gp2Model.OutputPostRequest,
   ) => Promise<gp2Model.OutputResponse>;
   documentType: gp2Routing.OutputDocumentTypeParameter;
-  readonly getAuthorSuggestions?: ComponentPropsWithRef<
+  readonly getAuthorSuggestions: ComponentPropsWithRef<
     typeof AuthorSelect
   >['loadOptions'];
 };
@@ -136,6 +136,7 @@ const OutputForm: React.FC<OutputFormType> = ({
               enabled={!isSaving}
               placeholder="Start typing..."
               loadOptions={getAuthorSuggestions}
+              externalLabel="Non GP2"
               onChange={setAuthors}
               values={authors}
               required
@@ -150,7 +151,7 @@ const OutputForm: React.FC<OutputFormType> = ({
                 Cancel
               </Button>
             </div>
-            <div css={[buttonWrapperStyle, { margin: 0 }]}>
+            <div css={[buttonWrapperStyle, { margin: `0 0 32px` }]}>
               <Button
                 primary
                 noMargin

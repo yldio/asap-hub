@@ -91,6 +91,35 @@ it('renders a author multi select, passing through props for external author', (
   expect(getByTitle('User Placeholder')).toBeInTheDocument();
 });
 
+it('renders a author multi select, passing through props for external author with a different label', () => {
+  const { getByText, getByTitle, getByLabelText } = render(
+    <AuthorSelect
+      title="Title"
+      subtitle="Subtitle"
+      description="Description"
+      externalLabel="Non GP2"
+      suggestions={[
+        { label: 'Value', value: 'Value', author: createUserResponse() },
+      ]}
+      values={[
+        {
+          author: {
+            id: 'external-author-id',
+            displayName: 'Andy Smith',
+          },
+          label: 'Andy Smith',
+          value: 'external-author-id',
+        },
+      ]}
+    />,
+  );
+  expect(getByLabelText(/Title/i)).toBeVisible();
+  expect(getByLabelText(/Subtitle/i)).toBeVisible();
+  expect(getByLabelText(/Description/i)).toBeVisible();
+  expect(getByText('Andy Smith (Non GP2)')).toBeVisible();
+  expect(getByTitle('User Placeholder')).toBeInTheDocument();
+});
+
 it('renders a new author option for new values', async () => {
   const { getByRole, queryByText, getByText } = render(
     <AuthorSelect

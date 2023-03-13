@@ -75,10 +75,10 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
           getLabSuggestions={getLabSuggestions}
           getAuthorSuggestions={(input) =>
             getAuthorSuggestions(input).then((users) =>
-              users.map((user) => ({
-                user,
-                label: user.displayName,
-                value: user.id,
+              users.map((author) => ({
+                author,
+                label: author.displayName,
+                value: author.id,
               })),
             )
           }

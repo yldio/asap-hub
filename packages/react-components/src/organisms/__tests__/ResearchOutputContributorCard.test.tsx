@@ -64,8 +64,8 @@ describe('Labs', () => {
     const loadOptions = jest.fn();
     const mockOnChange = jest.fn();
     loadOptions.mockResolvedValue([
-      { user: createUserResponse(), label: 'Author One', value: '1' },
-      { user: createUserResponse(), label: 'Author Two', value: '2' },
+      { author: createUserResponse(), label: 'Author One', value: '1' },
+      { author: createUserResponse(), label: 'Author Two', value: '2' },
     ]);
 
     const { getByText, getByLabelText, queryByText } = render(

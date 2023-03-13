@@ -1,26 +1,52 @@
 import { gp2 } from '@asap-hub/model';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
-import { fireEvent, render, screen } from '@testing-library/react';
+import {
+  fireEvent,
+  render,
+  screen,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import { Router, StaticRouter } from 'react-router-dom';
 import OutputForm from '../OutputForm';
 
 describe('OutputForm', () => {
+  const getAuthorSuggestions = jest.fn();
   const defaultProps = {
     createOutput: jest.fn(),
     documentType: 'form' as const,
+    getAuthorSuggestions,
   };
   it('renders all the base fields', () => {
     render(<OutputForm {...defaultProps} />, { wrapper: StaticRouter });
     expect(screen.getByRole('textbox', { name: /title/i })).toBeVisible();
     expect(screen.getByRole('textbox', { name: /url/i })).toBeVisible();
+    expect(screen.getByRole('textbox', { name: /authors/i })).toBeVisible();
     expect(screen.getByRole('button', { name: /publish/i })).toBeVisible();
     expect(screen.getByRole('button', { name: /cancel/i })).toBeVisible();
   });
   it('publish the form', async () => {
     const history = createMemoryHistory();
     const createOutput = jest.fn();
+    getAuthorSuggestions.mockResolvedValue([
+      {
+        author: {
+          ...gp2Fixtures.createUserResponse(),
+          displayName: 'Chris Blue',
+        },
+        label: 'Chris Blue',
+        value: 'u2',
+      },
+      {
+        author: {
+          ...gp2Fixtures.createExternalUserResponse(),
+          displayName: 'Chris Reed',
+        },
+        label: 'Chris Reed (Non CRN)',
+        value: 'u1',
+      },
+    ]);
     createOutput.mockResolvedValue(gp2Fixtures.createOutputResponse());
     render(<OutputForm {...defaultProps} createOutput={createOutput} />, {
       wrapper: ({ children }) => <Router history={history}>{children}</Router>,
@@ -33,6 +59,16 @@ describe('OutputForm', () => {
       screen.getByRole('textbox', { name: /url/i }),
       'https://example.com',
     );
+    const authors = screen.getByRole('textbox', { name: /Authors/i });
+    userEvent.click(authors);
+    await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+    userEvent.click(screen.getByText(/Chris Reed/i));
+    userEvent.click(authors);
+    userEvent.click(screen.getByText('Chris Blue'));
+    userEvent.click(authors);
+    userEvent.type(authors, 'Alex White');
+    await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+    userEvent.click(screen.getAllByText('Alex White')[1]);
     userEvent.click(screen.getByRole('button', { name: /publish/i }));
     expect(
       await screen.findByRole('button', { name: /publish/i }),
@@ -42,6 +78,11 @@ describe('OutputForm', () => {
       title: 'output title',
       link: 'https://example.com',
       documentType: 'Form',
+      authors: [
+        { externalUserId: 'u1' },
+        { userId: 'u2' },
+        { externalUserName: 'Alex White' },
+      ],
     });
     expect(history.location.pathname).toEqual(`/outputs`);
   });
@@ -75,6 +116,16 @@ describe('OutputForm', () => {
       expect(screen.getByRole('textbox', { name: /subtype/i })).toBeVisible();
     });
     it('publishes with type and subtype', async () => {
+      getAuthorSuggestions.mockResolvedValueOnce([
+        {
+          author: {
+            ...gp2Fixtures.createUserResponse(),
+            displayName: 'Chris Blue',
+          },
+          label: 'Chris Blue',
+          value: 'u2',
+        },
+      ]);
       const createOutput = jest.fn();
       render(
         <OutputForm
@@ -98,6 +149,11 @@ describe('OutputForm', () => {
       userEvent.click(screen.getByText('Research'));
       userEvent.click(screen.getByRole('textbox', { name: /subtype/i }));
       userEvent.click(screen.getByText('Published'));
+      const authors = screen.getByRole('textbox', { name: /Authors/i });
+      userEvent.click(authors);
+      await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+      userEvent.click(screen.getByText('Chris Blue'));
+      userEvent.click(screen.getByRole('button', { name: /publish/i }));
       userEvent.click(screen.getByRole('button', { name: /publish/i }));
       expect(
         await screen.findByRole('button', { name: /publish/i }),
@@ -109,6 +165,7 @@ describe('OutputForm', () => {
         documentType: 'Article',
         type: 'Research',
         subtype: 'Published',
+        authors: [{ userId: 'u2' }],
       });
     });
   });

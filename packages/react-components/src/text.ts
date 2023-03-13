@@ -131,7 +131,7 @@ export const headlineStyles = {
   } as CSSObject,
   5: {
     ...fontStyles,
-    fontFamily: 'Roboto Slab',
+    fontFamily: 'Roboto',
     fontWeight: 'bold',
   } as CSSObject,
   6: {

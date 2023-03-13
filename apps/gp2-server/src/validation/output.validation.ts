@@ -7,17 +7,6 @@ type OutputParameters = {
   outputId: string;
 };
 
-// type OutputsParameters = {
-//   take?: number;
-//   skip?: number;
-//   search?: string;
-//   filter: {
-//     workingGroups?: string;
-//     projects?: string;
-//     authors?: string | string[];
-//   };
-// };
-
 const { outputDocumentTypes, outputTypes, outputSubtypes } = gp2Model;
 const outputParametersValidationSchema: JSONSchemaType<OutputParameters> = {
   type: 'object',

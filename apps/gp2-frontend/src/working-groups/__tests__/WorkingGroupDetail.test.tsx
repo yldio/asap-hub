@@ -87,23 +87,6 @@ describe('WorkingGroupDetail', () => {
 
   it('renders header with title', async () => {
     const workingGroup = gp2Fixtures.createWorkingGroupResponse();
-    // getOutputsByKey('t', 'workingGroups', workingGroup.id, {
-    //   currentPage: 1,
-    //   filters: new Set<string>(),
-    //   pageSize: 1,
-    //   searchQuery: '',
-    // });
-    // const outputs = gp2Fixtures.createListOutputResponse(1);
-    // outputs.items[0].workingGroups = {
-    //   id: workingGroup.id,
-    //   title: 'Steering Committee',
-    // };
-    // console.log(
-    //   mockGetOutputsByKey,
-    //   getOutputsByKey,
-    //   mockGetWorkingGroup,
-    //   getWorkingGroup,
-    // );
     mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
     mockGetOutputs.mockResolvedValue(outputs);
 

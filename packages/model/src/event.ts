@@ -1,6 +1,6 @@
 import { CalendarResponse } from './calendar';
-import { ListResponse } from './common';
-import { BasicEvent } from './event-common';
+import { FetchOptions, ListResponse } from './common';
+import { BasicEvent, SortOptions } from './event-common';
 import { GroupResponse } from './group';
 import { TeamResponse } from './team';
 import { WorkingGroupResponse } from './working-group';
@@ -87,3 +87,19 @@ export type EventUpdateDataObject = Partial<
 
 export type EventCreateRequest = EventCreateDataObject;
 export type EventUpdateRequest = EventUpdateDataObject;
+
+type FilterOptions = {
+  workingGroupId?: string;
+  groupId?: string;
+  userId?: string;
+  externalAuthorId?: string;
+  teamId?: string;
+  googleId?: string;
+  hidden?: boolean;
+};
+
+export type FetchEventsOptions = {
+  after?: string;
+  before?: string;
+} & SortOptions &
+  FetchOptions<FilterOptions>;

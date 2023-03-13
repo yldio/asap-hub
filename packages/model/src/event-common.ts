@@ -1,5 +1,5 @@
 import { BasicCalendarResponse } from './calendar-common';
-import { AllOrNone, FetchOptions } from './common';
+import { AllOrNone } from './common';
 
 export const MEETING_LINK_AVAILABLE_HOURS_BEFORE_EVENT: number = 24;
 export const EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT: number = 1;
@@ -55,23 +55,7 @@ export const eventMaterialTypes: ReadonlyArray<
   >
 > = ['notes', 'videoRecording', 'presentation', 'meetingMaterials'];
 
-type SortOptions = AllOrNone<{
+export type SortOptions = AllOrNone<{
   sortBy: 'startDate' | 'endDate';
   sortOrder: 'asc' | 'desc';
 }>;
-
-type FilterOptions = {
-  workingGroupId?: string;
-  groupId?: string;
-  userId?: string;
-  externalAuthorId?: string;
-  teamId?: string;
-  googleId?: string;
-  hidden?: boolean;
-};
-
-export type FetchEventsOptions = {
-  after?: string;
-  before?: string;
-} & SortOptions &
-  FetchOptions<FilterOptions>;

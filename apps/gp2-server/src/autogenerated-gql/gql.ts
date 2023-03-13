@@ -19,6 +19,10 @@ const documents = {
     graphql.FetchEventsDocument,
   '\n  query FetchEvent($id: String!) {\n    findEventsContent(id: $id) {\n      ...EventContent\n    }\n  }\n  \n':
     graphql.FetchEventDocument,
+  '\n  query FetchGroupCalendar($id: String!) {\n    findProjectsContent(id: $id) {\n      flatData {\n        calendars {\n          id\n        }\n      }\n    }\n  }\n':
+    graphql.FetchGroupCalendarDocument,
+  '\n  query FetchWorkingGroupCalendar($id: String!) {\n    findWorkingGroupsContent(id: $id) {\n      flatData {\n        calendars {\n          id\n        }\n      }\n    }\n  }\n':
+    graphql.FetchWorkingGroupCalendarDocument,
   '\n  fragment ExternalUsersContent on ExternalUsers {\n    id\n    flatData {\n      name\n      orcid\n    }\n  }\n':
     graphql.ExternalUsersContentFragmentDoc,
   '\n  query FetchExternalUser($id: String!) {\n    findExternalUsersContent(id: $id) {\n      ...ExternalUsersContent\n    }\n  }\n  \n':
@@ -91,6 +95,12 @@ export function gql(
 export function gql(
   source: '\n  query FetchEvent($id: String!) {\n    findEventsContent(id: $id) {\n      ...EventContent\n    }\n  }\n  \n',
 ): typeof documents['\n  query FetchEvent($id: String!) {\n    findEventsContent(id: $id) {\n      ...EventContent\n    }\n  }\n  \n'];
+export function gql(
+  source: '\n  query FetchGroupCalendar($id: String!) {\n    findProjectsContent(id: $id) {\n      flatData {\n        calendars {\n          id\n        }\n      }\n    }\n  }\n',
+): typeof documents['\n  query FetchGroupCalendar($id: String!) {\n    findProjectsContent(id: $id) {\n      flatData {\n        calendars {\n          id\n        }\n      }\n    }\n  }\n'];
+export function gql(
+  source: '\n  query FetchWorkingGroupCalendar($id: String!) {\n    findWorkingGroupsContent(id: $id) {\n      flatData {\n        calendars {\n          id\n        }\n      }\n    }\n  }\n',
+): typeof documents['\n  query FetchWorkingGroupCalendar($id: String!) {\n    findWorkingGroupsContent(id: $id) {\n      flatData {\n        calendars {\n          id\n        }\n      }\n    }\n  }\n'];
 export function gql(
   source: '\n  fragment ExternalUsersContent on ExternalUsers {\n    id\n    flatData {\n      name\n      orcid\n    }\n  }\n',
 ): typeof documents['\n  fragment ExternalUsersContent on ExternalUsers {\n    id\n    flatData {\n      name\n      orcid\n    }\n  }\n'];

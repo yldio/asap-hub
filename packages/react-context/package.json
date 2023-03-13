@@ -21,7 +21,7 @@
     "@asap-hub/model": "workspace:*",
     "@asap-hub/validation": "workspace:*",
     "@babel/runtime-corejs3": "7.21.0",
-    "core-js": "3.29.0"
+    "core-js": "3.29.1"
   },
   "devDependencies": {
     "@asap-hub/dom-test-utils": "workspace:*",

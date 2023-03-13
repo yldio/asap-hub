@@ -7,7 +7,9 @@ export default {
 };
 
 const props: ComponentProps<typeof UserMenu> = {
+  closeUserMenu: () => {},
   projects: [],
+  userId: '1',
   workingGroups: [],
 };
 export const Normal = () => <UserMenu {...props} />;

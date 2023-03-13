@@ -1,22 +1,42 @@
 import { render, screen } from '@testing-library/react';
 import { ComponentProps } from 'react';
 import { gp2 as gp2Routing, logout } from '@asap-hub/routing';
+import userEvent from '@testing-library/user-event';
 import UserMenu from '../UserMenu';
 
-const { projects: projectsRoute, workingGroups: workingGroupsRoute } =
-  gp2Routing;
+const {
+  users: usersRoute,
+  projects: projectsRoute,
+  workingGroups: workingGroupsRoute,
+} = gp2Routing;
 
 describe('UserMenu', () => {
   const props: ComponentProps<typeof UserMenu> = {
+    userId: '1',
     projects: [],
     workingGroups: [],
+    closeUserMenu: jest.fn(),
   };
 
   it('renders the navigation items', () => {
     render(<UserMenu {...props} />);
-    const link = screen.getByRole('link', { name: /log out/i });
-    expect(link).toBeVisible();
-    expect(link).toHaveAttribute('href', logout({}).$);
+    const profileLink = screen.getByRole('link', { name: /my profile/i });
+    expect(profileLink).toBeVisible();
+    expect(profileLink).toHaveAttribute(
+      'href',
+      usersRoute({}).user({ userId: '1' }).$,
+    );
+    const logoutLink = screen.getByRole('link', { name: /log out/i });
+    expect(logoutLink).toBeVisible();
+    expect(logoutLink).toHaveAttribute('href', logout({}).$);
+  });
+
+  it('verifies the my profile button is clickable', () => {
+    const closeUserMenu = jest.fn();
+    render(<UserMenu {...props} closeUserMenu={closeUserMenu} />);
+    const profileLink = screen.getByRole('link', { name: /my profile/i });
+    userEvent.click(profileLink);
+    expect(closeUserMenu).toBeCalledWith(false);
   });
 
   it('renders the projects', () => {
@@ -44,6 +64,7 @@ describe('UserMenu', () => {
   });
 
   it('links to the project details', () => {
+    const closeUserMenu = jest.fn();
     const projects: typeof props['projects'] = [
       {
         id: '11',
@@ -52,13 +73,21 @@ describe('UserMenu', () => {
         members: [],
       },
     ];
-    render(<UserMenu {...props} projects={projects} />);
+    render(
+      <UserMenu {...props} projects={projects} closeUserMenu={closeUserMenu} />,
+    );
     expect(
       screen.getByRole('link', { name: /the first project title/i }),
     ).toHaveAttribute(
       'href',
       projectsRoute({}).project({ projectId: projects[0].id }).$,
     );
+
+    userEvent.click(
+      screen.getByRole('link', { name: /the first project title/i }),
+    );
+
+    expect(closeUserMenu).toBeCalledWith(false);
   });
 
   it('renders only active projects', () => {
@@ -117,6 +146,7 @@ describe('UserMenu', () => {
   });
 
   it('links to the working group detail page', () => {
+    const closeUserMenu = jest.fn();
     const workingGroups: typeof props['workingGroups'] = [
       {
         id: '11',
@@ -124,7 +154,13 @@ describe('UserMenu', () => {
         members: [],
       },
     ];
-    render(<UserMenu {...props} workingGroups={workingGroups} />);
+    render(
+      <UserMenu
+        {...props}
+        workingGroups={workingGroups}
+        closeUserMenu={closeUserMenu}
+      />,
+    );
     expect(
       screen.getByRole('link', { name: /the first wg title/i }),
     ).toHaveAttribute(
@@ -133,5 +169,9 @@ describe('UserMenu', () => {
         workingGroupId: workingGroups[0].id,
       }).$,
     );
+
+    userEvent.click(screen.getByRole('link', { name: /the first wg title/i }));
+
+    expect(closeUserMenu).toBeCalledWith(false);
   });
 });

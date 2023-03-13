@@ -20,11 +20,9 @@ const props = {
   isAdministrator: boolean('is admin', false),
 };
 
-const layoutProps: Pick<
-  ComponentProps<typeof Layout>,
-  'projects' | 'workingGroups'
-> = {
+const layoutProps: Omit<ComponentProps<typeof Layout>, 'children'> = {
   projects: [],
+  userId: '1',
   workingGroups: [],
 };
 export const Normal = () => (

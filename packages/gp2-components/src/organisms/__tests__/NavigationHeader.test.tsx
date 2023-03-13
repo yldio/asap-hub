@@ -5,8 +5,11 @@ import NavigationHeader from '../NavigationHeader';
 
 describe('NavigationHeader', () => {
   const props: ComponentProps<typeof NavigationHeader> = {
+    userId: '1',
     projects: [],
     workingGroups: [],
+    menuShown: false,
+    onToggleMenu: jest.fn(),
   };
   it('renders the gp2 logo', () => {
     render(<NavigationHeader {...props} />);
@@ -15,12 +18,12 @@ describe('NavigationHeader', () => {
     );
   });
 
-  it('renders a menu button if menuOpen prop is false', () => {
-    render(<NavigationHeader {...props} menuOpen={false} />);
+  it('renders a menu button if menuShown prop is false', () => {
+    render(<NavigationHeader {...props} />);
     expect(screen.getByTitle(/menu/i)).toBeInTheDocument();
   });
-  it('renders a close button if menuOpen prop is true', () => {
-    render(<NavigationHeader {...props} menuOpen={true} />);
+  it('renders a close button if menuShown prop is true', () => {
+    render(<NavigationHeader {...props} menuShown={true} />);
     expect(screen.getByTitle(/close/i)).toBeInTheDocument();
   });
   it('calls onMenuToggle when the menu toggle button is clicked', () => {

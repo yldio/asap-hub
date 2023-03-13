@@ -459,7 +459,7 @@ it.each([
     expect(mockUpdateResearchOutput).toHaveBeenCalledWith(
       id,
       expect.objectContaining({
-        documentType: 'Report',
+        documentType: 'Grant Document',
         link,
         title,
         description,

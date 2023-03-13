@@ -8,6 +8,7 @@ export * from './team';
 export * from './user';
 export * from './external-author';
 export * from './group';
+export * from './working-group';
 export * from './event';
 export * from './webhook';
 export * from './migration';

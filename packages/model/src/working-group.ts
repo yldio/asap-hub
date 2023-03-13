@@ -6,6 +6,7 @@ export const deliverableStatus = [
   'Complete',
   'In Progress',
   'Pending',
+  'Incomplete',
   'Not Started',
 ] as const;
 export type DeliverableStatus = typeof deliverableStatus[number];
@@ -54,6 +55,11 @@ export type WorkingGroupMembership = {
   active: boolean;
 };
 
+export type WorkingGroupDeliverable = {
+  description: string;
+  status: DeliverableStatus;
+};
+
 export type WorkingGroupDataObject = {
   id: string;
   title: string;
@@ -65,12 +71,21 @@ export type WorkingGroupDataObject = {
   complete: boolean;
   shortText: string;
   calendars: CalendarResponse[];
-  deliverables: {
-    description: string;
-    status: DeliverableStatus;
-  }[];
+  deliverables: WorkingGroupDeliverable[];
   readonly lastModifiedDate: string;
 };
+
+export type WorkingGroupUpdateDataObject = Partial<
+  Omit<WorkingGroupDataObject, 'leaders' | 'members' | 'calendars'> & {
+    calendars: string[];
+    leaders: {
+      user: string[];
+      role: string;
+      workstreamRole: string;
+    }[];
+    members: string[];
+  }
+>;
 
 export type WorkingGroupListDataObject = ListResponse<WorkingGroupDataObject>;
 

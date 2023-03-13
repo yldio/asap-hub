@@ -10,6 +10,7 @@ export type ExternalAuthorEvent = `ExternalAuthors${SquidexEntityEvent}`;
 export type GroupEvent = `Groups${SquidexEntityEvent}`;
 export type TeamEvent = `Teams${SquidexEntityEvent}`;
 export type ResearchOutputEvent = `ResearchOutputs${SquidexEntityEvent}`;
+export type WorkingGroupEvent = `WorkingGroups${SquidexEntityEvent}`;
 
 export type EventBusEvent =
   | CalendarEvent
@@ -19,7 +20,8 @@ export type EventBusEvent =
   | LabEvent
   | TeamEvent
   | UserEvent
-  | ResearchOutputEvent;
+  | ResearchOutputEvent
+  | WorkingGroupEvent;
 
 export type EventPayload = {
   type: EventEvent;
@@ -68,6 +70,25 @@ export type ResearchOutputPayload = {
     $type: 'EnrichedContentEvent';
     type: SquidexEntityEvent;
     id: string;
+  };
+};
+
+export type WorkingGroupDeliverable = {
+  description: string;
+  status: string;
+};
+
+export type WorkingGroupPayload = {
+  type: WorkingGroupEvent;
+  payload: {
+    $type: 'EnrichedContentEvent';
+    type: SquidexEntityEvent;
+    id: string;
+    data: {
+      title: { iv: string };
+      complete: { iv: boolean };
+      deliverables: { iv: WorkingGroupDeliverable[] };
+    };
   };
 };
 

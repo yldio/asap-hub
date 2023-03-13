@@ -2,8 +2,15 @@ import {
   FetchWorkingGroupOptions,
   WorkingGroupDataObject,
   WorkingGroupListDataObject,
+  WorkingGroupUpdateDataObject,
 } from '@asap-hub/model';
-import { SquidexGraphqlClient } from '@asap-hub/squidex';
+import {
+  RestWorkingGroup,
+  InputWorkingGroup,
+  SquidexGraphqlClient,
+  SquidexRestClient,
+  parseToSquidex,
+} from '@asap-hub/squidex';
 import { Filter } from 'odata-query';
 import {
   FetchWorkingGroupQuery,
@@ -21,12 +28,19 @@ import { buildODataFilter } from '../utils/odata';
 export interface WorkingGroupDataProvider {
   fetchById(id: string): Promise<WorkingGroupDataObject | null>;
   fetch(options: FetchWorkingGroupOptions): Promise<WorkingGroupListDataObject>;
+  update(id: string, data: WorkingGroupUpdateDataObject): Promise<void>;
 }
 
 export class WorkingGroupSquidexDataProvider
   implements WorkingGroupDataProvider
 {
-  constructor(private squidexGraphqlClient: SquidexGraphqlClient) {}
+  constructor(
+    private squidexGraphqlClient: SquidexGraphqlClient,
+    private squidexRestClient: SquidexRestClient<
+      RestWorkingGroup,
+      InputWorkingGroup
+    >,
+  ) {}
 
   async fetchById(id: string): Promise<WorkingGroupDataObject | null> {
     const { findWorkingGroupsContent: workingGroup } =
@@ -97,5 +111,9 @@ export class WorkingGroupSquidexDataProvider
       total,
       items: items.map(parseGraphQlWorkingGroup),
     };
+  }
+
+  async update(id: string, data: WorkingGroupUpdateDataObject): Promise<void> {
+    await this.squidexRestClient.patch(id, parseToSquidex(data));
   }
 }

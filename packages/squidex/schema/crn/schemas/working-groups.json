@@ -178,6 +178,7 @@
                 "Complete",
                 "In Progress",
                 "Pending",
+                "Incomplete",
                 "Not Started"
               ],
               "contentType": "Unspecified",

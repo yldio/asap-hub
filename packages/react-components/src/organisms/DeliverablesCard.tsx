@@ -12,7 +12,8 @@ const statusToAccent: Record<
   ComponentProps<typeof Pill>['accent']
 > = {
   'In Progress': 'info',
-  'Not Started': 'neutral',
+  Incomplete: 'warning',
+  'Not Started': 'error',
   Complete: 'green',
   Pending: 'neutral',
 };

@@ -9,6 +9,7 @@ import { perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { BackLink, CtaCard, TagList } from '../molecules';
 import {
+  RelatedResearch,
   RichText,
   SharedResearchAdditionalInformationCard,
   SharedResearchOutputHeaderCard,
@@ -42,6 +43,7 @@ type SharedResearchOutputProps = Pick<
   | 'environments'
   | 'subtype'
   | 'id'
+  | 'relatedResearch'
 > &
   ComponentProps<typeof SharedResearchOutputHeaderCard> & {
     backHref: string;
@@ -53,6 +55,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   usageNotes,
   contactEmails,
   id,
+  relatedResearch,
   ...props
 }) => {
   const isGrantDocument = ['Grant Document', 'Presentation'].includes(
@@ -119,9 +122,9 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             </div>
           </Card>
         )}
-        {/* TODO:  {!isGrantDocument && (
-          <RelatedResearch relatedResearch={props.relatedResearch} />
-        )} */}
+        {!isGrantDocument && relatedResearch?.length > 0 && (
+          <RelatedResearch relatedResearch={relatedResearch} />
+        )}
         {!isGrantDocument && (
           <SharedResearchAdditionalInformationCard {...props} />
         )}

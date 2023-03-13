@@ -19,7 +19,7 @@ import {
   grantDocument,
 } from '../icons';
 
-const iconRecord: Record<ResearchOutputDocumentType, EmotionJSX.Element> = {
+const icons: Record<ResearchOutputDocumentType, EmotionJSX.Element> = {
   Protocol: protocol,
   Article: article,
   Dataset: dataset,
@@ -32,7 +32,7 @@ const iconRecord: Record<ResearchOutputDocumentType, EmotionJSX.Element> = {
 
 export const getIconForDocumentType = (
   documentType: ResearchOutputDocumentType,
-): EmotionJSX.Element => iconRecord[documentType];
+): EmotionJSX.Element => icons[documentType];
 
 const container = css({
   display: 'grid',

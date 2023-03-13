@@ -182,6 +182,39 @@ describe('Not Grant Documents', () => {
       expect(getByText('text')).toBeVisible();
       expect(queryByRole('separator')).toBeVisible();
     });
+    it('displays the related research card when data provided', () => {
+      const { queryByText, getByText, rerender } = render(
+        <SharedResearchOutput
+          {...props}
+          documentType="Article"
+          relatedResearch={[]}
+        />,
+      );
+      expect(queryByText(/Related Research/i)).not.toBeInTheDocument();
+
+      rerender(
+        <SharedResearchOutput
+          {...props}
+          documentType="Article"
+          relatedResearch={[
+            {
+              id: 'id1',
+              title: 'Related research article',
+              teams: [{ id: 'team1', displayName: 'team 1' }],
+              type: 'Published',
+              documentType: 'Article',
+            },
+          ]}
+        />,
+      );
+      expect(getByText('Related Research')).toBeVisible();
+      expect(
+        getByText(
+          'Find out all shared research outputs that contributed to this one.',
+        ),
+      ).toBeVisible();
+      expect(getByText(/Related research article/i)).toBeVisible();
+    });
   });
 });
 

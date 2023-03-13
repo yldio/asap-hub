@@ -13,6 +13,7 @@ import { getAuthToken } from '../../src/utils/auth';
 import { getTeamCreateDataObject } from '../fixtures/teams.fixtures';
 import { getUserCreateDataObject } from '../fixtures/users.fixtures';
 import { createRandomOrcid } from '../helpers/users';
+import { teardownHelper } from '../helpers/teardown';
 
 const chance = new Chance();
 const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
@@ -42,6 +43,12 @@ const teamDataProvider = new TeamSquidexDataProvider(
 
 describe('Users', () => {
   let teamId: string;
+
+  const teardown = teardownHelper([userRestClient, teamRestClient]);
+
+  afterEach(async () => {
+    await teardown();
+  });
 
   beforeAll(async () => {
     const teamCreateDataObject = getTeamCreateDataObject();

@@ -101,12 +101,8 @@ jobs:
           SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
           SQUIDEX_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
           SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
-      - uses: Wandalen/wretry.action@master
-        name: Run integration tests
-        with:
-          command: yarn test:integration
-          attempt_limit: 3
-          attempt_delay: 2000
+      - name: Run integration tests
+        run: yarn test:integration
         env:
           APP: crn
           SQUIDEX_APP_NAME: ${{ steps.setup.outputs.crn-squidex-app-name }}-${{ github.run_id }}

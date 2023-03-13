@@ -15,6 +15,7 @@ import {
 } from '../fixtures/research-output.fixtures';
 import { getUserCreateDataObject } from '../fixtures/users.fixtures';
 import { UserSquidexDataProvider } from '../../src/data-providers/users.data-provider';
+import { teardownHelper } from '../helpers/teardown';
 
 const chance = new Chance();
 const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
@@ -46,7 +47,13 @@ const researchOutputDataProvider = new ResearchOutputSquidexDataProvider(
 describe('Research Outputs', () => {
   let userId: string;
 
-  beforeAll(async () => {
+  const teardown = teardownHelper([userRestClient, researchOutputRestClient]);
+
+  afterEach(async () => {
+    await teardown();
+  });
+
+  beforeEach(async () => {
     const userCreateDataObject = getUserCreateDataObject();
     userCreateDataObject.teams = [];
     userCreateDataObject.labIds = [];

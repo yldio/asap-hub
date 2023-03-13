@@ -38,8 +38,10 @@ import { getResearchOutputCreateDataObject } from '../fixtures/research-output.f
 import { getTeamCreateDataObject } from '../fixtures/teams.fixtures';
 import { getUserCreateDataObject } from '../fixtures/users.fixtures';
 import { createRandomOrcid } from '../helpers/users';
+import { teardownHelper } from '../helpers/teardown';
+import { retryable } from '../helpers/retryable';
 
-jest.setTimeout(30000);
+jest.setTimeout(120000);
 
 describe('Reminders', () => {
   const chance = new Chance();
@@ -97,6 +99,18 @@ describe('Reminders', () => {
     squidexGraphqlClient,
   );
 
+  const teardown = teardownHelper([
+    userRestClient,
+    teamRestClient,
+    researchOutputRestClient,
+    eventRestClient,
+    calendarRestClient,
+  ]);
+
+  afterEach(async () => {
+    await teardown();
+  });
+
   describe('Research Output Published Reminder', () => {
     let creatorId: string;
     let teamId: string;
@@ -124,8 +138,6 @@ describe('Reminders', () => {
         researchOutputInput,
       );
 
-      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
-
       const expectedReminder: ResearchOutputPublishedReminder = {
         id: `research-output-published-${researchOutputId}`,
         entity: 'Research Output',
@@ -137,9 +149,14 @@ describe('Reminders', () => {
           addedDate: researchOutputInput.addedDate,
         },
       };
-      expect(reminders).toEqual({
-        total: 1,
-        items: [expectedReminder],
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders).toEqual({
+          total: 1,
+          items: [expectedReminder],
+        });
       });
     });
 
@@ -153,11 +170,14 @@ describe('Reminders', () => {
 
       await researchOutputDataProvider.create(researchOutputInput);
 
-      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
-
-      expect(reminders).toEqual({
-        total: 0,
-        items: [],
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders).toEqual({
+          total: 0,
+          items: [],
+        });
       });
     });
 
@@ -170,11 +190,14 @@ describe('Reminders', () => {
 
       await researchOutputDataProvider.create(researchOutputInput);
 
-      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
-
-      expect(reminders).toEqual({
-        total: 0,
-        items: [],
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders).toEqual({
+          total: 0,
+          items: [],
+        });
       });
     });
 
@@ -201,42 +224,42 @@ describe('Reminders', () => {
         researchOutputInput3,
       );
 
-      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
-      const reminderIds = reminders.items.map(
-        (item) =>
-          (item as ResearchOutputPublishedReminder).data.researchOutputId,
-      );
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        const reminderIds = reminders.items.map(
+          (item) =>
+            (item as ResearchOutputPublishedReminder).data.researchOutputId,
+        );
 
-      expect(reminderIds).toEqual([
-        researchOutputId2,
-        researchOutputId3,
-        researchOutputId1,
-      ]);
+        expect(reminderIds).toEqual([
+          researchOutputId2,
+          researchOutputId3,
+          researchOutputId1,
+        ]);
+      });
     });
   });
 
   describe('Event Happening Today Reminder', () => {
     let userId: string;
+    let teamId: string;
     let calendarId: string;
-    let eventIdsForDeletion: string[] = [];
     let fetchRemindersOptions: FetchRemindersOptions;
 
-    beforeAll(async () => {
+    beforeAll(() => {
       jest.useFakeTimers();
-
-      const teamCreateDataObject = getTeamCreateDataObject();
-      teamCreateDataObject.applicationNumber = chance.name();
-      const teamId = await teamDataProvider.create(teamCreateDataObject);
-
-      const userCreateDataObject = getUserInput(teamId);
-      userId = await userDataProvider.create(userCreateDataObject);
-    });
-
-    afterAll(() => {
-      jest.useRealTimers();
     });
 
     beforeEach(async () => {
+      const teamCreateDataObject = getTeamCreateDataObject();
+      teamCreateDataObject.applicationNumber = chance.name();
+      teamId = await teamDataProvider.create(teamCreateDataObject);
+
+      const userCreateDataObject = getUserInput(teamId);
+      userId = await userDataProvider.create(userCreateDataObject);
+
       const calendarInput = getCalendarInputForReminder();
       calendarId = await calendarDataProvider.create(calendarInput);
 
@@ -244,11 +267,8 @@ describe('Reminders', () => {
       fetchRemindersOptions = { userId, timezone };
     });
 
-    afterEach(async () => {
-      await Promise.all(
-        eventIdsForDeletion.map((id) => eventRestClient.delete(id)),
-      );
-      eventIdsForDeletion = [];
+    afterAll(async () => {
+      jest.useRealTimers();
     });
 
     test('Should see the reminder when the event is starting after midnight today', async () => {
@@ -260,11 +280,8 @@ describe('Reminders', () => {
       eventInput.startDate = new Date('2022-08-10T15:00:00.0Z').toISOString();
 
       const eventId = await eventDataProvider.create(eventInput);
-      eventIdsForDeletion = [eventId];
 
       const event = await eventDataProvider.fetchById(eventId);
-      // requesting reminders for the user based in London where it is 6AM
-      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
 
       const expectedReminder: EventHappeningTodayReminder = {
         id: `event-happening-today-${eventId}`,
@@ -276,9 +293,16 @@ describe('Reminders', () => {
           title: event!.title,
         },
       };
-      expect(reminders).toEqual({
-        total: 1,
-        items: [expectedReminder],
+
+      await retryable(async () => {
+        // requesting reminders for the user based in London where it is 6AM
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders).toEqual({
+          total: 1,
+          items: [expectedReminder],
+        });
       });
     });
 
@@ -290,14 +314,16 @@ describe('Reminders', () => {
       // the event happening at 2PM in UTC
       eventInput.startDate = new Date('2022-08-10T14:00:00.0Z').toISOString();
 
-      const eventId = await eventDataProvider.create(eventInput);
-      eventIdsForDeletion = [eventId];
+      await eventDataProvider.create(eventInput);
 
-      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
-
-      expect(reminders).toEqual({
-        total: 0,
-        items: [],
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders).toEqual({
+          total: 0,
+          items: [],
+        });
       });
     });
 
@@ -309,17 +335,18 @@ describe('Reminders', () => {
       // the event happening at 3PM in UTC
       eventInput.startDate = new Date('2022-08-10T16:00:00.0Z').toISOString();
 
-      const eventId = await eventDataProvider.create(eventInput);
-      eventIdsForDeletion = [eventId];
+      await eventDataProvider.create(eventInput);
 
       // requesting reminders for the user based in LA where 5AM UTC is 10PM the previous day
       const timezone = 'America/Los_Angeles';
       const fetchRemindersOpts = { userId, timezone };
-      const reminders = await reminderDataProvider.fetch(fetchRemindersOpts);
 
-      expect(reminders).toEqual({
-        total: 0,
-        items: [],
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch(fetchRemindersOpts);
+        expect(reminders).toEqual({
+          total: 0,
+          items: [],
+        });
       });
     });
 
@@ -337,52 +364,49 @@ describe('Reminders', () => {
       eventInput2.startDate = new Date('2022-08-10T17:00:00.0Z').toISOString();
       const event2Id = await eventDataProvider.create(eventInput2);
 
-      eventIdsForDeletion = [event1Id, event2Id];
-
-      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
-
-      expect(reminders).toEqual({
-        total: 2,
-        items: [
-          expect.objectContaining({ id: `event-happening-today-${event2Id}` }),
-          expect.objectContaining({ id: `event-happening-today-${event1Id}` }),
-        ],
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders).toEqual({
+          total: 2,
+          items: [
+            expect.objectContaining({
+              id: `event-happening-today-${event2Id}`,
+            }),
+            expect.objectContaining({
+              id: `event-happening-today-${event1Id}`,
+            }),
+          ],
+        });
       });
     });
   });
 
   describe('Event Happening Now Reminder', () => {
     let userId: string;
+    let teamId: string;
     let calendarId: string;
-    let eventIdsForDeletion: string[] = [];
     let fetchRemindersOptions: FetchRemindersOptions;
 
-    beforeAll(async () => {
+    beforeAll(() => {
       jest.useFakeTimers();
+    });
 
+    beforeEach(async () => {
       const teamCreateDataObject = getTeamCreateDataObject();
       teamCreateDataObject.applicationNumber = chance.name();
-      const teamId = await teamDataProvider.create(teamCreateDataObject);
+      teamId = await teamDataProvider.create(teamCreateDataObject);
 
       const userCreateDataObject = getUserInput(teamId);
       userId = await userDataProvider.create(userCreateDataObject);
       fetchRemindersOptions = { userId, timezone: 'Europe/London' };
-    });
-
-    afterAll(() => {
-      jest.useRealTimers();
-    });
-
-    beforeEach(async () => {
       const calendarInput = getCalendarInputForReminder();
       calendarId = await calendarDataProvider.create(calendarInput);
     });
 
-    afterEach(async () => {
-      await Promise.all(
-        eventIdsForDeletion.map((id) => eventRestClient.delete(id)),
-      );
-      eventIdsForDeletion = [];
+    afterAll(() => {
+      jest.useRealTimers();
     });
 
     test('Should see the reminder when the event has started but has not finished', async () => {
@@ -395,10 +419,8 @@ describe('Reminders', () => {
       eventInput.endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
 
       const eventId = await eventDataProvider.create(eventInput);
-      eventIdsForDeletion = [eventId];
 
       const event = await eventDataProvider.fetchById(eventId);
-      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
 
       const expectedReminder: EventHappeningNowReminder = {
         id: `event-happening-now-${eventId}`,
@@ -412,9 +434,14 @@ describe('Reminders', () => {
         },
       };
 
-      expect(reminders).toEqual({
-        total: 1,
-        items: [expectedReminder],
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders).toEqual({
+          total: 1,
+          items: [expectedReminder],
+        });
       });
     });
 
@@ -427,14 +454,16 @@ describe('Reminders', () => {
       eventInput.startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
       eventInput.endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
 
-      const eventId = await eventDataProvider.create(eventInput);
-      eventIdsForDeletion = [eventId];
+      await eventDataProvider.create(eventInput);
 
-      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
-
-      expect(reminders).toEqual({
-        total: 0,
-        items: [],
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders).toEqual({
+          total: 0,
+          items: [],
+        });
       });
     });
   });
@@ -443,12 +472,13 @@ describe('Reminders', () => {
     let userId: string;
     let teamId: string;
     let calendarId: string;
-    let eventIdsForDeletion: string[] = [];
     let fetchRemindersOptions: FetchRemindersOptions;
 
-    beforeAll(async () => {
+    beforeAll(() => {
       jest.useFakeTimers();
+    });
 
+    beforeEach(async () => {
       const teamCreateDataObject = getTeamCreateDataObject();
       teamCreateDataObject.applicationNumber = chance.name();
       teamId = await teamDataProvider.create(teamCreateDataObject);
@@ -456,22 +486,12 @@ describe('Reminders', () => {
       const userCreateDataObject = getUserInput(teamId);
       userId = await userDataProvider.create(userCreateDataObject);
       fetchRemindersOptions = { userId, timezone: 'Europe/London' };
-    });
-
-    afterAll(() => {
-      jest.useRealTimers();
-    });
-
-    beforeEach(async () => {
       const calendarInput = getCalendarInputForReminder();
       calendarId = await calendarDataProvider.create(calendarInput);
     });
 
-    afterEach(async () => {
-      await Promise.all(
-        eventIdsForDeletion.map((id) => eventRestClient.delete(id)),
-      );
-      eventIdsForDeletion = [];
+    afterAll(async () => {
+      jest.useRealTimers();
     });
 
     test('Should see the reminder when the event has finished and user is speaker', async () => {
@@ -492,10 +512,7 @@ describe('Reminders', () => {
         },
       ];
       const eventId = await eventDataProvider.create(eventInput);
-      eventIdsForDeletion = [eventId];
       const event = await eventDataProvider.fetchById(eventId);
-
-      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
 
       const expectedReminder: SharePresentationReminder = {
         id: `share-presentation-${eventId}`,
@@ -509,9 +526,14 @@ describe('Reminders', () => {
         },
       };
 
-      expect(reminders).toEqual({
-        total: 1,
-        items: [expectedReminder],
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders).toEqual({
+          total: 1,
+          items: [expectedReminder],
+        });
       });
     });
 
@@ -524,14 +546,16 @@ describe('Reminders', () => {
       eventInput.startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
       eventInput.endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
       eventInput.speakers = [];
-      const eventId = await eventDataProvider.create(eventInput);
-      eventIdsForDeletion = [eventId];
+      await eventDataProvider.create(eventInput);
 
-      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
-
-      expect(reminders).toEqual({
-        total: 0,
-        items: [],
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders).toEqual({
+          total: 0,
+          items: [],
+        });
       });
     });
 
@@ -548,14 +572,16 @@ describe('Reminders', () => {
           team: [teamId],
         },
       ];
-      const eventId = await eventDataProvider.create(eventInput);
-      eventIdsForDeletion = [eventId];
+      await eventDataProvider.create(eventInput);
 
-      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
-
-      expect(reminders.items.map((reminder) => reminder.type)).toEqual([
-        'Happening Now',
-      ]);
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders.items.map((reminder) => reminder.type)).toEqual([
+          'Happening Now',
+        ]);
+      });
     });
 
     test('Should not see the reminder when the event is a future event', async () => {
@@ -571,54 +597,46 @@ describe('Reminders', () => {
           team: [teamId],
         },
       ];
-      const eventId = await eventDataProvider.create(eventInput);
-      eventIdsForDeletion = [eventId];
+      await eventDataProvider.create(eventInput);
 
-      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
-
-      expect(reminders).toEqual({
-        total: 0,
-        items: [],
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders).toEqual({
+          total: 0,
+          items: [],
+        });
       });
     });
   });
 
   describe('Publish Material Reminder', () => {
-    let userId: string;
     let teamId: string;
     let calendarId: string;
-    let eventIdsForDeletion: string[] = [];
     let fetchRemindersOptions: FetchRemindersOptions;
 
-    beforeAll(async () => {
+    beforeAll(() => {
       jest.useFakeTimers();
-
-      const teamCreateDataObject = getTeamCreateDataObject();
-      teamCreateDataObject.applicationNumber = chance.name();
-      teamId = await teamDataProvider.create(teamCreateDataObject);
-    });
-
-    afterAll(() => {
-      jest.useRealTimers();
     });
 
     beforeEach(async () => {
+      const teamCreateDataObject = getTeamCreateDataObject();
+      teamCreateDataObject.applicationNumber = chance.name();
+      teamId = await teamDataProvider.create(teamCreateDataObject);
       const calendarInput = getCalendarInputForReminder();
       calendarId = await calendarDataProvider.create(calendarInput);
     });
 
-    afterEach(async () => {
-      await Promise.all(
-        eventIdsForDeletion.map((id) => eventRestClient.delete(id)),
-      );
-      eventIdsForDeletion = [];
+    afterAll(async () => {
+      jest.useRealTimers();
     });
 
     test('Should see the reminder when the event has finished and user is staff', async () => {
       jest.setSystemTime(new Date('2022-08-10T11:05:00.0Z'));
 
       const userCreateDataObject = getUserInput(teamId);
-      userId = await userDataProvider.create({
+      const userId = await userDataProvider.create({
         ...userCreateDataObject,
         role: 'Staff',
       });
@@ -629,10 +647,7 @@ describe('Reminders', () => {
       eventInput.startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
       eventInput.endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
       const eventId = await eventDataProvider.create(eventInput);
-      eventIdsForDeletion = [eventId];
       const event = await eventDataProvider.fetchById(eventId);
-
-      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
 
       const expectedReminder: PublishMaterialReminder = {
         id: `publish-material-${eventId}`,
@@ -645,9 +660,14 @@ describe('Reminders', () => {
         },
       };
 
-      expect(reminders).toEqual({
-        total: 1,
-        items: [expectedReminder],
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders).toEqual({
+          total: 1,
+          items: [expectedReminder],
+        });
       });
     });
 
@@ -655,7 +675,7 @@ describe('Reminders', () => {
       jest.setSystemTime(new Date('2022-08-10T11:05:00.0Z'));
 
       const userCreateDataObject = getUserInput(teamId);
-      userId = await userDataProvider.create({
+      const userId = await userDataProvider.create({
         ...userCreateDataObject,
         role: 'Grantee',
       });
@@ -666,14 +686,16 @@ describe('Reminders', () => {
       eventInput.startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
       eventInput.endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
 
-      const eventId = await eventDataProvider.create(eventInput);
-      eventIdsForDeletion = [eventId];
+      await eventDataProvider.create(eventInput);
 
-      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
-
-      expect(reminders).toEqual({
-        total: 0,
-        items: [],
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders).toEqual({
+          total: 0,
+          items: [],
+        });
       });
     });
 
@@ -686,20 +708,22 @@ describe('Reminders', () => {
       eventInput.endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
 
       const userCreateDataObject = getUserInput(teamId);
-      userId = await userDataProvider.create({
+      const userId = await userDataProvider.create({
         ...userCreateDataObject,
         role: 'Staff',
       });
       fetchRemindersOptions = { userId, timezone: 'Europe/London' };
 
-      const eventId = await eventDataProvider.create(eventInput);
-      eventIdsForDeletion = [eventId];
+      await eventDataProvider.create(eventInput);
 
-      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
-
-      expect(reminders.items.map((reminder) => reminder.type)).toEqual([
-        'Happening Now',
-      ]);
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders.items.map((reminder) => reminder.type)).toEqual([
+          'Happening Now',
+        ]);
+      });
     });
 
     test('Should not see the reminder when the event is a future event', async () => {
@@ -710,20 +734,22 @@ describe('Reminders', () => {
       eventInput.endDate = new Date('2023-08-10T11:00:00.0Z').toISOString();
 
       const userCreateDataObject = getUserInput(teamId);
-      userId = await userDataProvider.create({
+      const userId = await userDataProvider.create({
         ...userCreateDataObject,
         role: 'Staff',
       });
       fetchRemindersOptions = { userId, timezone: 'Europe/London' };
 
-      const eventId = await eventDataProvider.create(eventInput);
-      eventIdsForDeletion = [eventId];
+      await eventDataProvider.create(eventInput);
 
-      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
-
-      expect(reminders).toEqual({
-        total: 0,
-        items: [],
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders).toEqual({
+          total: 0,
+          items: [],
+        });
       });
     });
   });
@@ -732,12 +758,13 @@ describe('Reminders', () => {
     let userId: string;
     let teamId: string;
     let calendarId: string;
-    let eventIdsForDeletion: string[] = [];
     let fetchRemindersOptions: FetchRemindersOptions;
 
-    beforeAll(async () => {
+    beforeAll(() => {
       jest.useFakeTimers();
+    });
 
+    beforeEach(async () => {
       const teamCreateDataObject = getTeamCreateDataObject();
       teamCreateDataObject.applicationNumber = chance.name();
       teamId = await teamDataProvider.create(teamCreateDataObject);
@@ -745,22 +772,12 @@ describe('Reminders', () => {
       const userCreateDataObject = getUserInput(teamId, 'Project Manager');
       userId = await userDataProvider.create(userCreateDataObject);
       fetchRemindersOptions = { userId, timezone: 'Europe/London' };
-    });
-
-    afterAll(() => {
-      jest.useRealTimers();
-    });
-
-    beforeEach(async () => {
       const calendarInput = getCalendarInputForReminder();
       calendarId = await calendarDataProvider.create(calendarInput);
     });
 
-    afterEach(async () => {
-      await Promise.all(
-        eventIdsForDeletion.map((id) => eventRestClient.delete(id)),
-      );
-      eventIdsForDeletion = [];
+    afterAll(() => {
+      jest.useRealTimers();
     });
 
     test('Should see the reminder when the event has finished and user is a PM of one of the speaker teams', async () => {
@@ -778,10 +795,7 @@ describe('Reminders', () => {
         },
       ];
       const eventId = await eventDataProvider.create(eventInput);
-      eventIdsForDeletion = [eventId];
       const event = await eventDataProvider.fetchById(eventId);
-
-      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
 
       const expectedReminder: UploadPresentationReminder = {
         id: `upload-presentation-${eventId}`,
@@ -794,9 +808,14 @@ describe('Reminders', () => {
         },
       };
 
-      expect(reminders).toEqual({
-        total: 1,
-        items: [expectedReminder],
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders).toEqual({
+          total: 1,
+          items: [expectedReminder],
+        });
       });
     });
 
@@ -808,6 +827,7 @@ describe('Reminders', () => {
       let speakerUserId;
 
       const anotherTeamCreateDataObject = getTeamCreateDataObject();
+      anotherTeamCreateDataObject.applicationNumber = chance.name();
       anotherTeamId = await teamDataProvider.create(
         anotherTeamCreateDataObject,
       );
@@ -831,14 +851,16 @@ describe('Reminders', () => {
         },
       ];
 
-      const eventId = await eventDataProvider.create(eventInput);
-      eventIdsForDeletion = [eventId];
+      await eventDataProvider.create(eventInput);
 
-      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
-
-      expect(reminders).toEqual({
-        total: 0,
-        items: [],
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders).toEqual({
+          total: 0,
+          items: [],
+        });
       });
     });
 
@@ -855,14 +877,16 @@ describe('Reminders', () => {
           team: [teamId],
         },
       ];
-      const eventId = await eventDataProvider.create(eventInput);
-      eventIdsForDeletion = [eventId];
+      await eventDataProvider.create(eventInput);
 
-      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
-
-      expect(reminders.items.map((reminder) => reminder.type)).toEqual([
-        'Happening Now',
-      ]);
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders.items.map((reminder) => reminder.type)).toEqual([
+          'Happening Now',
+        ]);
+      });
     });
 
     test('Should not see the reminder when the event is a future event', async () => {
@@ -878,14 +902,16 @@ describe('Reminders', () => {
           team: [teamId],
         },
       ];
-      const eventId = await eventDataProvider.create(eventInput);
-      eventIdsForDeletion = [eventId];
+      await eventDataProvider.create(eventInput);
 
-      const reminders = await reminderDataProvider.fetch(fetchRemindersOptions);
-
-      expect(reminders).toEqual({
-        total: 0,
-        items: [],
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders).toEqual({
+          total: 0,
+          items: [],
+        });
       });
     });
   });
@@ -909,12 +935,13 @@ describe('Reminders', () => {
     ({ material, materialUpdatedAtName, materialContentName }: TestProps) => {
       let userId: string;
       let calendarId: string;
-      let eventIdsForDeletion: string[] = [];
       let fetchRemindersOptions: FetchRemindersOptions;
 
-      beforeAll(async () => {
+      beforeAll(() => {
         jest.useFakeTimers();
+      });
 
+      beforeEach(async () => {
         const teamCreateDataObject = getTeamCreateDataObject();
         teamCreateDataObject.applicationNumber = chance.name();
         const teamId = await teamDataProvider.create(teamCreateDataObject);
@@ -922,22 +949,12 @@ describe('Reminders', () => {
         const userCreateDataObject = getUserInput(teamId);
         userId = await userDataProvider.create(userCreateDataObject);
         fetchRemindersOptions = { userId, timezone: 'Europe/London' };
-      });
-
-      afterAll(() => {
-        jest.useRealTimers();
-      });
-
-      beforeEach(async () => {
         const calendarInput = getCalendarInputForReminder();
         calendarId = await calendarDataProvider.create(calendarInput);
       });
 
-      afterEach(async () => {
-        await Promise.all(
-          eventIdsForDeletion.map((id) => eventRestClient.delete(id)),
-        );
-        eventIdsForDeletion = [];
+      afterAll(() => {
+        jest.useRealTimers();
       });
 
       test(`Should see the reminder when a ${material} was updated in an event between now and 24 hours ago`, async () => {
@@ -952,12 +969,7 @@ describe('Reminders', () => {
             '2022-09-26T08:00:00.0Z',
           ).toISOString(),
         });
-        eventIdsForDeletion = [eventId];
         const event = await eventDataProvider.fetchById(eventId);
-
-        const reminders = await reminderDataProvider.fetch(
-          fetchRemindersOptions,
-        );
 
         const expectedReminder = {
           id: `${material.toLowerCase()}-event-updated-${eventId}`,
@@ -970,9 +982,14 @@ describe('Reminders', () => {
           },
         };
 
-        expect(reminders).toEqual({
-          total: 1,
-          items: [expectedReminder],
+        await retryable(async () => {
+          const reminders = await reminderDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+          expect(reminders).toEqual({
+            total: 1,
+            items: [expectedReminder],
+          });
         });
       });
 
@@ -982,21 +999,21 @@ describe('Reminders', () => {
 
         const eventInput = getEventInput(calendarId);
 
-        const eventId = await eventDataProvider.create({
+        await eventDataProvider.create({
           ...eventInput,
           [materialUpdatedAtName]: new Date(
             '2022-09-22T08:00:00.0Z',
           ).toISOString(),
         });
-        eventIdsForDeletion = [eventId];
 
-        const reminders = await reminderDataProvider.fetch(
-          fetchRemindersOptions,
-        );
-
-        expect(reminders).toEqual({
-          total: 0,
-          items: [],
+        await retryable(async () => {
+          const reminders = await reminderDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+          expect(reminders).toEqual({
+            total: 0,
+            items: [],
+          });
         });
       });
 
@@ -1006,22 +1023,21 @@ describe('Reminders', () => {
 
         const eventInput = getEventInput(calendarId);
 
-        const eventId = await eventDataProvider.create({
+        await eventDataProvider.create({
           ...eventInput,
           [materialUpdatedAtName]: new Date(
             '2022-09-27T08:00:00.0Z',
           ).toISOString(),
         });
 
-        eventIdsForDeletion = [eventId];
-
-        const reminders = await reminderDataProvider.fetch(
-          fetchRemindersOptions,
-        );
-
-        expect(reminders).toEqual({
-          total: 0,
-          items: [],
+        await retryable(async () => {
+          const reminders = await reminderDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+          expect(reminders).toEqual({
+            total: 0,
+            items: [],
+          });
         });
       });
 
@@ -1031,16 +1047,16 @@ describe('Reminders', () => {
 
         const eventInput = getEventInput(calendarId);
 
-        const eventId = await eventDataProvider.create(eventInput);
-        eventIdsForDeletion = [eventId];
+        await eventDataProvider.create(eventInput);
 
-        const reminders = await reminderDataProvider.fetch(
-          fetchRemindersOptions,
-        );
-
-        expect(reminders).toEqual({
-          total: 0,
-          items: [],
+        await retryable(async () => {
+          const reminders = await reminderDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+          expect(reminders).toEqual({
+            total: 0,
+            items: [],
+          });
         });
       });
 
@@ -1056,13 +1072,7 @@ describe('Reminders', () => {
           [materialContentName]: 'I am a material',
         });
 
-        eventIdsForDeletion = [eventId];
-
-        const reminders = await reminderDataProvider.fetch(
-          fetchRemindersOptions,
-        );
         const event = await eventDataProvider.fetchById(eventId);
-
         const expectedReminder = {
           id: `${material.toLowerCase()}-event-updated-${eventId}`,
           entity: 'Event',
@@ -1074,9 +1084,14 @@ describe('Reminders', () => {
           },
         };
 
-        expect(reminders).toEqual({
-          total: 1,
-          items: [expectedReminder],
+        await retryable(async () => {
+          const reminders = await reminderDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+          expect(reminders).toEqual({
+            total: 1,
+            items: [expectedReminder],
+          });
         });
 
         // user erases material
@@ -1084,13 +1099,14 @@ describe('Reminders', () => {
           [materialContentName]: '',
         });
 
-        const remindersAfterUpdate = await reminderDataProvider.fetch(
-          fetchRemindersOptions,
-        );
-
-        expect(remindersAfterUpdate).toEqual({
-          total: 0,
-          items: [],
+        await retryable(async () => {
+          const remindersAfterUpdate = await reminderDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+          expect(remindersAfterUpdate).toEqual({
+            total: 0,
+            items: [],
+          });
         });
       });
     },
@@ -1101,11 +1117,12 @@ describe('Reminders', () => {
     let calendarId: string;
     let userId1: string;
     let creatorId: string;
-    let eventIdsForDeletion: string[] = [];
 
-    beforeAll(async () => {
+    beforeAll(() => {
       jest.useFakeTimers();
+    });
 
+    beforeEach(async () => {
       const teamCreateDataObject = getTeamCreateDataObject();
       teamCreateDataObject.applicationNumber = chance.name();
       teamId = await teamDataProvider.create(teamCreateDataObject);
@@ -1122,13 +1139,6 @@ describe('Reminders', () => {
 
     afterAll(() => {
       jest.useRealTimers();
-    });
-
-    afterEach(async () => {
-      await Promise.all(
-        eventIdsForDeletion.map((id) => eventRestClient.delete(id)),
-      );
-      eventIdsForDeletion = [];
     });
 
     test('Should retrieve multiple reminders and sort them by the date they refer to, in a ascending order (earliest first)', async () => {
@@ -1163,25 +1173,27 @@ describe('Reminders', () => {
       );
       const event1Id = await eventDataProvider.create(eventInput1);
       const event2Id = await eventDataProvider.create(eventInput2);
-      eventIdsForDeletion = [event1Id, event2Id];
 
-      const reminders = await reminderDataProvider.fetch({
-        userId: userId1,
-        timezone: 'Europe/London',
-      });
-
-      expect(reminders).toEqual({
-        total: 4,
-        items: [
-          expect.objectContaining({ id: `event-happening-today-${event1Id}` }),
-          expect.objectContaining({ id: `event-happening-now-${event2Id}` }),
-          expect.objectContaining({
-            id: `research-output-published-${researchOutputId1}`,
-          }),
-          expect.objectContaining({
-            id: `research-output-published-${researchOutputId2}`,
-          }),
-        ],
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch({
+          userId: userId1,
+          timezone: 'Europe/London',
+        });
+        expect(reminders).toEqual({
+          total: 4,
+          items: [
+            expect.objectContaining({
+              id: `event-happening-today-${event1Id}`,
+            }),
+            expect.objectContaining({ id: `event-happening-now-${event2Id}` }),
+            expect.objectContaining({
+              id: `research-output-published-${researchOutputId1}`,
+            }),
+            expect.objectContaining({
+              id: `research-output-published-${researchOutputId2}`,
+            }),
+          ],
+        });
       });
     });
   });

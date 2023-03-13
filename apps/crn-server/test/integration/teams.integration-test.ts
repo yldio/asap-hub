@@ -7,6 +7,7 @@ import {
   getTeamCreateDataObject,
   getTeamDataObject,
 } from '../fixtures/teams.fixtures';
+import { teardownHelper } from '../helpers/teardown';
 
 const chance = new Chance();
 const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
@@ -23,6 +24,12 @@ const teamDataProvider = new TeamSquidexDataProvider(
 );
 
 describe('Teams', () => {
+  const teardown = teardownHelper([teamRestClient]);
+
+  afterEach(async () => {
+    await teardown();
+  });
+
   test('Should create and fetch a team', async () => {
     const teamCreateDataObject = getTeamCreateDataObject();
     teamCreateDataObject.applicationNumber = chance.name();

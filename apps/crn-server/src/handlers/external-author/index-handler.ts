@@ -8,7 +8,6 @@ import {
   SquidexGraphql,
   SquidexRest,
 } from '@asap-hub/squidex';
-import { isBoom } from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 import {
   algoliaApiKey,
@@ -39,6 +38,11 @@ export const indexExternalAuthorHandler =
         event.detail.payload.id,
       );
 
+      if (!externalAuthor) {
+        await algoliaClient.remove(event.detail.payload.id);
+        return;
+      }
+
       logger.debug(`Fetched external author ${externalAuthor.displayName}`);
 
       await algoliaClient.save({
@@ -48,11 +52,6 @@ export const indexExternalAuthorHandler =
 
       logger.debug(`Saved external author  ${externalAuthor.displayName}`);
     } catch (e) {
-      if (isBoom(e) && e.output.statusCode === 404) {
-        await algoliaClient.remove(event.detail.payload.id);
-        return;
-      }
-
       logger.error(e, 'Error saving external author to Algolia');
       throw e;
     }

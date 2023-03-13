@@ -1,4 +1,3 @@
-import Boom from '@hapi/boom';
 import { indexExternalAuthorHandler } from '../../../src/handlers/external-author/index-handler';
 import {
   getExternalAuthorEvent,
@@ -49,7 +48,7 @@ describe('External Author index handler', () => {
   test('Should fetch the external author and remove the record in Algolia when external author is unpublished', async () => {
     const event = unpublishedEvent();
 
-    externalAuthorDataProviderMock.fetchById.mockRejectedValue(Boom.notFound());
+    externalAuthorDataProviderMock.fetchById.mockResolvedValueOnce(null);
 
     await indexHandler(event);
 
@@ -61,7 +60,7 @@ describe('External Author index handler', () => {
   test('Should fetch the external author and remove the record in Algolia when external author is deleted', async () => {
     const event = deleteEvent();
 
-    externalAuthorDataProviderMock.fetchById.mockRejectedValue(Boom.notFound());
+    externalAuthorDataProviderMock.fetchById.mockResolvedValueOnce(null);
 
     await indexHandler(event);
 
@@ -71,9 +70,11 @@ describe('External Author index handler', () => {
   });
 
   test('Should throw an error and do not trigger algolia when the external author request fails with another error code', async () => {
-    externalAuthorDataProviderMock.fetchById.mockRejectedValue(Boom.badData());
+    externalAuthorDataProviderMock.fetchById.mockRejectedValue(
+      new Error('Unknown error'),
+    );
 
-    await expect(indexHandler(createEvent())).rejects.toThrow(Boom.badData());
+    await expect(indexHandler(createEvent())).rejects.toThrow();
     expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
   });
 
@@ -91,7 +92,7 @@ describe('External Author index handler', () => {
   test('Should throw the algolia error when deleting the record fails', async () => {
     const algoliaError = new Error('ERROR');
 
-    externalAuthorDataProviderMock.fetchById.mockRejectedValue(Boom.notFound());
+    externalAuthorDataProviderMock.fetchById.mockResolvedValueOnce(null);
 
     algoliaSearchClientMock.remove.mockRejectedValueOnce(algoliaError);
 
@@ -147,9 +148,7 @@ describe('External Author index handler', () => {
       const unpublishedEv = unpublishedEvent(externalauthorId);
       const algoliaError = new Error('ERROR');
 
-      externalAuthorDataProviderMock.fetchById.mockRejectedValue(
-        Boom.notFound(),
-      );
+      externalAuthorDataProviderMock.fetchById.mockResolvedValue(null);
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -169,9 +168,7 @@ describe('External Author index handler', () => {
       const unpublishedEv = unpublishedEvent(externalauthorId);
       const algoliaError = new Error('ERROR');
 
-      externalAuthorDataProviderMock.fetchById.mockRejectedValue(
-        Boom.notFound(),
-      );
+      externalAuthorDataProviderMock.fetchById.mockResolvedValue(null);
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -191,9 +188,7 @@ describe('External Author index handler', () => {
       const deleteEv = deleteEvent(externalauthorId);
       const algoliaError = new Error('ERROR');
 
-      externalAuthorDataProviderMock.fetchById.mockRejectedValue(
-        Boom.notFound(),
-      );
+      externalAuthorDataProviderMock.fetchById.mockResolvedValue(null);
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -213,9 +208,7 @@ describe('External Author index handler', () => {
       const deleteEv = deleteEvent(externalauthorId);
       const algoliaError = new Error('ERROR');
 
-      externalAuthorDataProviderMock.fetchById.mockRejectedValue(
-        Boom.notFound(),
-      );
+      externalAuthorDataProviderMock.fetchById.mockResolvedValue(null);
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -235,9 +228,7 @@ describe('External Author index handler', () => {
       const deleteEv = deleteEvent(externalauthorId);
       const algoliaError = new Error('ERROR');
 
-      externalAuthorDataProviderMock.fetchById.mockRejectedValue(
-        Boom.notFound(),
-      );
+      externalAuthorDataProviderMock.fetchById.mockResolvedValue(null);
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -257,9 +248,7 @@ describe('External Author index handler', () => {
       const deleteEv = deleteEvent(externalauthorId);
       const algoliaError = new Error('ERROR');
 
-      externalAuthorDataProviderMock.fetchById.mockRejectedValue(
-        Boom.notFound(),
-      );
+      externalAuthorDataProviderMock.fetchById.mockResolvedValue(null);
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -278,9 +267,7 @@ describe('External Author index handler', () => {
       const unpublishedEv = unpublishedEvent(externalauthorId);
       const algoliaError = new Error('ERROR');
 
-      externalAuthorDataProviderMock.fetchById.mockRejectedValue(
-        Boom.notFound(),
-      );
+      externalAuthorDataProviderMock.fetchById.mockResolvedValue(null);
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -300,9 +287,7 @@ describe('External Author index handler', () => {
       const unpublishedEv = unpublishedEvent(externalauthorId);
       const algoliaError = new Error('ERROR');
 
-      externalAuthorDataProviderMock.fetchById.mockRejectedValue(
-        Boom.notFound(),
-      );
+      externalAuthorDataProviderMock.fetchById.mockResolvedValue(null);
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 

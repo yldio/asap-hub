@@ -161,14 +161,13 @@ describe('External Authors data provider', () => {
       expect(result).toMatchObject(getExternalAuthorResponse());
     });
 
-    test('Should throw when user is not found', async () => {
+    test('Should return null when user is not found', async () => {
       const mockResponse = getSquidexExternalAuthorGraphqlResponse();
       mockResponse.findExternalAuthorsContent = null;
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
-      await expect(
-        externalAuthorsDataProvider.fetchById('not-found'),
-      ).rejects.toThrow('Not Found');
+      const result = await externalAuthorsDataProvider.fetchById('not-found');
+      expect(result).toEqual(null);
     });
 
     test('Should return the user when it finds it', async () => {

@@ -1,4 +1,3 @@
-import Boom from '@hapi/boom';
 import {
   ExternalAuthorCreateDataObject,
   ListExternalAuthorResponse,
@@ -25,7 +24,7 @@ import {
 export interface ExternalAuthorDataProvider {
   create(input: ExternalAuthorCreateDataObject): Promise<string>;
   fetch(options: FetchOptions): Promise<ListExternalAuthorResponse>;
-  fetchById(id: string): Promise<ExternalAuthorResponse>;
+  fetchById(id: string): Promise<ExternalAuthorResponse | null>;
 }
 
 export class ExternalAuthorSquidexDataProvider
@@ -75,14 +74,14 @@ export class ExternalAuthorSquidexDataProvider
     };
   }
 
-  async fetchById(id: string): Promise<ExternalAuthorResponse> {
+  async fetchById(id: string): Promise<ExternalAuthorResponse | null> {
     const { findExternalAuthorsContent } =
       await this.squidexGraphqlClient.request<
         FetchExternalAuthorQuery,
         FetchExternalAuthorQueryVariables
       >(FETCH_EXTERNAL_AUTHOR, { id });
     if (!findExternalAuthorsContent) {
-      throw Boom.notFound();
+      return null;
     }
 
     return parseGraphQLExternalAuthor(findExternalAuthorsContent);

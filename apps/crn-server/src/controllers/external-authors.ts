@@ -1,3 +1,4 @@
+import { NotFoundError } from '@asap-hub/errors';
 import {
   ListExternalAuthorResponse,
   ExternalAuthorResponse,
@@ -18,6 +19,12 @@ export default class ExternalAuthors implements ExternalAuthorsController {
   }
 
   async fetchById(id: string): Promise<ExternalAuthorResponse> {
-    return this.externalAuthorDataProvider.fetchById(id);
+    const author = await this.externalAuthorDataProvider.fetchById(id);
+
+    if (!author) {
+      throw new NotFoundError(undefined, `Author with id ${id} not found.`);
+    }
+
+    return author;
   }
 }

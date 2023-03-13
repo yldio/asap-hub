@@ -22,10 +22,23 @@ describe('External Authors controller', () => {
 
   describe('FetchById', () => {
     test('calls through to data provider fetchById method', async () => {
-      await externalAuthorsController.fetchById('123');
+      externalAuthorDataProviderMock.fetchById.mockResolvedValueOnce({
+        id: '123',
+        displayName: 'Test Author',
+      });
+      const result = await externalAuthorsController.fetchById('123');
       expect(externalAuthorDataProviderMock.fetchById).toHaveBeenCalledWith(
         '123',
       );
+      expect(result).toEqual({
+        id: '123',
+        displayName: 'Test Author',
+      });
+    });
+
+    test('throws if no result is returned', async () => {
+      externalAuthorDataProviderMock.fetchById.mockResolvedValueOnce(null);
+      expect(externalAuthorsController.fetchById('123')).rejects.toThrow();
     });
   });
 });

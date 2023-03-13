@@ -12,6 +12,8 @@ import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import OutputList from '../outputs/OutputList';
+import { useOutputs } from '../outputs/state';
 import { usePutWorkingGroupResources, useWorkingGroupById } from './state';
 
 const { workingGroups } = gp2Routing;
@@ -27,6 +29,9 @@ const WorkingGroupDetail: FC<Record<string, never>> = () => {
   const { path } = useRouteMatch();
   const { workingGroupId } = useRouteParams(workingGroups({}).workingGroup);
   const workingGroup = useWorkingGroupById(workingGroupId);
+  const { total } = useOutputs({
+    filter: { workingGroups: workingGroupId },
+  });
 
   const currentUser = useCurrentUserGP2();
   const isWorkingGroupMember =
@@ -40,6 +45,7 @@ const WorkingGroupDetail: FC<Record<string, never>> = () => {
   const add = isAdministrator ? resourcesRoute.add({}).$ : undefined;
   const edit = isAdministrator ? editRoute.$ : undefined;
   const overview = workingGroupRoute.overview({}).$;
+  const outputs = workingGroupRoute.outputs({}).$;
   const resources = resourcesRoute.$;
 
   const updateWorkingGroupResources =
@@ -61,6 +67,7 @@ const WorkingGroupDetail: FC<Record<string, never>> = () => {
           {...workingGroup}
           isWorkingGroupMember={isWorkingGroupMember}
           isAdministrator={isAdministrator}
+          outputsTotal={total}
         >
           <Switch>
             <Route path={overview}>
@@ -106,6 +113,11 @@ const WorkingGroupDetail: FC<Record<string, never>> = () => {
                 </Frame>
               </Route>
             )}
+            <Route path={outputs}>
+              <Frame title="Shared Outputs">
+                <OutputList filters={{ workingGroups: workingGroupId }} />
+              </Frame>
+            </Route>
             <Redirect to={overview} />
           </Switch>
         </WorkingGroupDetailPage>

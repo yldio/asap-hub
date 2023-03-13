@@ -1,6 +1,4 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
-import { GetListOptions } from '@asap-hub/frontend-utils';
-
 import { gp2 as gp2Model } from '@asap-hub/model';
 import nock from 'nock';
 import { API_BASE_URL } from '../../config';
@@ -23,6 +21,7 @@ describe('getOutput', () => {
     const result = await getOutput(id, 'Bearer x');
     expect(result).toEqual(outputResponse);
   });
+
   it('returns undefined if server returns 404', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
       .get(`/outputs/unknown-id`)
@@ -49,11 +48,8 @@ describe('getOutputs', () => {
     expect(nock.isDone()).toBe(true);
     nock.cleanAll();
   });
-  const options: GetListOptions = {
-    searchQuery: '',
-    currentPage: 1,
-    pageSize: 10,
-    filters: new Set(),
+  const options: gp2Model.FetchOutputOptions = {
+    search: '',
   };
 
   it('returns a successfully fetched outputs', async () => {

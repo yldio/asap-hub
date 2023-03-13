@@ -13,7 +13,7 @@ const optionStyles = (showPill: boolean) =>
     display: 'grid',
     gridTemplateColumns: `min-content${showPill ? ' min-content' : ''} auto`,
     justifyItems: 'start',
-    alignItems: 'center',
+    alignItems: 'top',
     alignContent: 'center',
     columnGap: '12px',
     svg: {

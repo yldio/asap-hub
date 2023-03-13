@@ -1,4 +1,7 @@
-import { ResearchOutputResponse } from '@asap-hub/model';
+import {
+  ResearchOutputDocumentType,
+  ResearchOutputResponse,
+} from '@asap-hub/model';
 import { sharedResearch } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
@@ -16,33 +19,24 @@ import {
   grantDocument,
 } from '../icons';
 
-export const getIconForDocumentType = (
-  documentType: string,
-): EmotionJSX.Element => {
-  switch (documentType) {
-    case 'Protocol':
-      return protocol;
-    case 'Article':
-      return article;
-    case 'Dataset':
-      return dataset;
-    case 'Bioinformatics':
-      return bioinformatics;
-    case 'Lab Resource':
-      return labResource;
-    case 'Grant Document':
-      return grantDocument;
-    default:
-      return protocol;
-  }
+const iconRecord: Record<ResearchOutputDocumentType, EmotionJSX.Element> = {
+  Protocol: protocol,
+  Article: article,
+  Dataset: dataset,
+  Bioinformatics: bioinformatics,
+  'Lab Resource': labResource,
+  'Grant Document': grantDocument,
+  Presentation: protocol,
+  Report: protocol,
 };
+
+export const getIconForDocumentType = (
+  documentType: ResearchOutputDocumentType,
+): EmotionJSX.Element => iconRecord[documentType];
 
 const container = css({
   display: 'grid',
-  paddingTop: `${32 / perRem}em`,
-  paddingLeft: `${24 / perRem}em`,
-  paddingRight: `${24 / perRem}em`,
-  paddingBottom: `${32 / perRem}em`,
+  padding: `${32 / perRem}em ${24 / perRem}em`,
 });
 
 const descriptionStyles = css({
@@ -121,10 +115,7 @@ const RelatedResearch: React.FC<RecentSharedOutputProp> = ({
   const truncateFrom = 5;
   const [showMore, setShowMore] = useState(false);
   const displayShowMoreButton = relatedResearch.length > 5;
-  // orderList,
-  // ...(!displayShowMoreButton
-  //   ? [{ paddingBottom: `${24 / perRem}em` }]
-  //   : []),
+
   return (
     <Card padding={false}>
       <div
@@ -152,7 +143,7 @@ const RelatedResearch: React.FC<RecentSharedOutputProp> = ({
               <p css={paragraphStyle}>
                 {getIconForDocumentType(documentType)} {documentType}{' '}
                 {documentType === 'Article' && (
-                  <Pill accent="relatedResearch">{type}</Pill>
+                  <Pill accent="gray">{type}</Pill>
                 )}
               </p>
               <span css={[titleStyles, rowTitleStyles]}>Title</span>

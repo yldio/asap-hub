@@ -119,6 +119,9 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             </div>
           </Card>
         )}
+        {/* TODO:  {!isGrantDocument && (
+          <RelatedResearch relatedResearch={props.relatedResearch} />
+        )} */}
         {!isGrantDocument && (
           <SharedResearchAdditionalInformationCard {...props} />
         )}

@@ -30,7 +30,11 @@ export type AccentVariant =
   | 'neutral'
   | 'success'
   | 'warning'
+<<<<<<< HEAD
   | 'gray';
+=======
+  | 'relatedResearch';
+>>>>>>> eee54ad71 (Added new relatedResearch component)
 
 export const accents: Record<AccentVariant, CSSObject> = {
   default: {

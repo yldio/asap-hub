@@ -143,6 +143,7 @@ export {
   ResultList,
   RichText,
   RichTextCard,
+  RelatedResearch,
   SearchAndFilter,
   SharedResearchCard,
   SharedResearchListCard,

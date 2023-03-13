@@ -46,6 +46,7 @@ export { default as ResearchOutputRelatedResearchCard } from './ResearchOutputRe
 export { default as ResultList } from './ResultList';
 export { default as RichText } from './RichText';
 export { default as RichTextCard } from './RichTextCard';
+export { default as RelatedResearch } from './RelatedResearch';
 export { default as SearchAndFilter } from './SearchAndFilter';
 export { default as SharedResearchAdditionalInformationCard } from './SharedResearchAdditionalInformationCard';
 export { default as SharedResearchCard } from './SharedResearchCard';

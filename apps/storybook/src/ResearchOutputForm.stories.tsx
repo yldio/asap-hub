@@ -36,7 +36,7 @@ export const Normal = () => (
         new Promise((resolve) => {
           setTimeout(() => {
             resolve([
-              { label: 'user name', value: '1', user: createUserResponse() },
+              { label: 'user name', value: '1', author: createUserResponse() },
             ]);
           }, 1000);
         })
@@ -84,7 +84,7 @@ export const EditMode = () => (
         new Promise((resolve) => {
           setTimeout(() => {
             resolve([
-              { label: 'user name', value: '1', user: createUserResponse() },
+              { label: 'user name', value: '1', author: createUserResponse() },
             ]);
           }, 1000);
         })

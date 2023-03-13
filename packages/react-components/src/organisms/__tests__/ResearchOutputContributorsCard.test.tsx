@@ -28,8 +28,8 @@ describe('Authors Multiselect', () => {
     const onChangeAuthors = jest.fn();
     const getAuthorSuggestions = jest.fn();
     getAuthorSuggestions.mockResolvedValue([
-      { user: createUserResponse(), label: 'Author Two', value: '2' },
-      { user: createUserResponse(), label: 'Author One', value: '1' },
+      { author: createUserResponse(), label: 'Author Two', value: '2' },
+      { author: createUserResponse(), label: 'Author One', value: '1' },
     ]);
 
     render(

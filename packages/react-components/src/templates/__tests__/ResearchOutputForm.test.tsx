@@ -378,12 +378,12 @@ describe('on submit', () => {
   it('can submit existing internal and external and create a new external author', async () => {
     getAuthorSuggestions.mockResolvedValue([
       {
-        user: { ...createUserResponse(), displayName: 'Chris Blue' },
+        author: { ...createUserResponse(), displayName: 'Chris Blue' },
         label: 'Chris Blue',
         value: 'u2',
       },
       {
-        user: {
+        author: {
           ...createUserResponse(),
           email: undefined,
           displayName: 'Chris Reed',

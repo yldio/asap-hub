@@ -184,9 +184,9 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     >
   >(
     researchOutputData?.authors.map((author) => ({
+      author,
       value: author.id,
       label: author.displayName,
-      user: author,
     })) || [],
   );
 

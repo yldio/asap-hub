@@ -1,7 +1,7 @@
 import { CreateOutputPage, OutputForm } from '@asap-hub/gp2-components';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { useCreateOutput } from '../outputs/state';
+import { useAuthorSuggestions, useCreateOutput } from '../outputs/state';
 
 const { projects } = gp2Routing;
 
@@ -11,6 +11,7 @@ const CreateProjectOutput = () => {
     projects({}).project({ projectId }).createOutput,
   );
   const createOutput = useCreateOutput();
+  const getAuthorSuggestions = useAuthorSuggestions();
   return (
     <CreateOutputPage documentType={outputDocumentType} entityType="project">
       <OutputForm
@@ -22,6 +23,7 @@ const CreateProjectOutput = () => {
           })
         }
         documentType={outputDocumentType}
+        getAuthorSuggestions={getAuthorSuggestions}
       />
     </CreateOutputPage>
   );

@@ -8,11 +8,14 @@ import {
   LabeledTextField,
   pixels,
   usePushFromHere,
+  AuthorSelect,
+  noop,
 } from '@asap-hub/react-components';
+
 import { gp2 as gp2Routing } from '@asap-hub/routing';
-import { UrlExpression } from '@asap-hub/validation';
+import { isInternalUser, UrlExpression } from '@asap-hub/validation';
 import { css } from '@emotion/react';
-import { useState } from 'react';
+import { ComponentPropsWithRef, useState } from 'react';
 import { buttonWrapperStyle, mobileQuery } from '../layout';
 
 import { documentTypeMapper } from './CreateOutputPage';
@@ -37,23 +40,44 @@ type OutputFormType = {
     payload: gp2Model.OutputPostRequest,
   ) => Promise<gp2Model.OutputResponse>;
   documentType: gp2Routing.OutputDocumentTypeParameter;
+  readonly getAuthorSuggestions?: ComponentPropsWithRef<
+    typeof AuthorSelect
+  >['loadOptions'];
 };
+
+export const getPostAuthors = (
+  authors: ComponentPropsWithRef<typeof AuthorSelect>['values'],
+) =>
+  authors?.map(({ value, author }) => {
+    if (author) {
+      return isInternalUser(author)
+        ? { userId: value }
+        : { externalUserId: value };
+    }
+    return { externalUserName: value };
+  });
 
 const OutputForm: React.FC<OutputFormType> = ({
   createOutput,
   documentType,
+  getAuthorSuggestions = noop,
 }) => {
   const historyPush = usePushFromHere();
   const [title, setTitle] = useState('');
   const [link, setLink] = useState('');
   const [type, setType] = useState<gp2Model.OutputType | ''>('');
   const [subtype, setSubtype] = useState<gp2Model.OutputSubtype | ''>('');
-  const currentPayload = {
+  const [authors, setAuthors] = useState<
+    ComponentPropsWithRef<typeof AuthorSelect>['values']
+  >([]);
+
+  const currentPayload: gp2Model.OutputPostRequest = {
     title,
     documentType: documentTypeMapper[documentType],
     link,
     type: type || undefined,
     subtype: subtype || undefined,
+    authors: getPostAuthors(authors),
   };
 
   return (
@@ -110,13 +134,30 @@ const OutputForm: React.FC<OutputFormType> = ({
               enabled={!isSaving}
             />
           </FormCard>
+          <FormCard title="Who were the contributors?">
+            <AuthorSelect
+              title="Authors"
+              description=""
+              subtitle={'(required)'}
+              enabled={!isSaving}
+              placeholder="Start typing..."
+              loadOptions={getAuthorSuggestions}
+              externalLabel="Non GP2"
+              onChange={setAuthors}
+              values={authors}
+              required
+              noOptionsMessage={({ inputValue }) =>
+                `Sorry, no authors match ${inputValue}`
+              }
+            />
+          </FormCard>
           <div css={footerStyles}>
             <div css={[buttonWrapperStyle, { margin: 0 }]}>
               <Button noMargin enabled={!isSaving} onClick={onCancel}>
                 Cancel
               </Button>
             </div>
-            <div css={[buttonWrapperStyle, { margin: 0 }]}>
+            <div css={[buttonWrapperStyle, { margin: `0 0 ${rem(32)}` }]}>
               <Button
                 primary
                 noMargin

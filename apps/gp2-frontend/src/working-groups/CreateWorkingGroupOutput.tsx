@@ -1,7 +1,7 @@
 import { CreateOutputPage, OutputForm } from '@asap-hub/gp2-components';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
-import { useCreateOutput } from '../outputs/state';
+import { useAuthorSuggestions, useCreateOutput } from '../outputs/state';
 
 const { workingGroups } = gp2Routing;
 
@@ -12,7 +12,7 @@ const CreateWorkingGroupOutput = () => {
     workingGroups({}).workingGroup({ workingGroupId }).createOutput,
   );
   const createOutput = useCreateOutput();
-
+  const getAuthorSuggestions = useAuthorSuggestions();
   return (
     <CreateOutputPage
       documentType={outputDocumentType}
@@ -27,6 +27,7 @@ const CreateWorkingGroupOutput = () => {
           })
         }
         documentType={outputDocumentType}
+        getAuthorSuggestions={getAuthorSuggestions}
       />
     </CreateOutputPage>
   );

@@ -1,4 +1,4 @@
-import { ExternalAuthorResponse, UserResponse } from '@asap-hub/model';
+import { AuthorResponse } from '@asap-hub/model';
 import { isInternalUser } from '@asap-hub/validation';
 import { css } from '@emotion/react';
 import { ReactElement, ReactNode } from 'react';
@@ -19,9 +19,11 @@ const externalAuthorStyles = css({
 
 const LabelWithAvatar = ({
   author,
+  externalLabel,
   children,
 }: {
-  author?: UserResponse | ExternalAuthorResponse;
+  author?: AuthorResponse;
+  externalLabel: string;
   children: ReactElement | ReactNode;
 }) =>
   author && isInternalUser(author) ? (
@@ -36,7 +38,9 @@ const LabelWithAvatar = ({
   ) : (
     <>
       <div css={externalAuthorStyles}>{userPlaceholderIcon}</div>
-      <span>{children} (Non CRN)</span>
+      <span>
+        {children} ({externalLabel})
+      </span>
     </>
   );
 
@@ -48,12 +52,17 @@ const optionStyles = css({
 });
 
 type AuthorOption = {
-  user?: UserResponse | ExternalAuthorResponse;
+  author?: AuthorResponse;
 } & MultiSelectOptionsType;
 
-type AuthorSelectProps = LabeledMultiSelectProps<AuthorOption>;
+type AuthorSelectProps = LabeledMultiSelectProps<AuthorOption> & {
+  externalLabel?: string;
+};
 
-const AuthorSelect: React.FC<AuthorSelectProps> = (props) => (
+const AuthorSelect: React.FC<AuthorSelectProps> = ({
+  externalLabel = 'Non CRN',
+  ...props
+}) => (
   <LabeledMultiSelect<AuthorOption>
     {...props}
     creatable={true}
@@ -72,7 +81,10 @@ const AuthorSelect: React.FC<AuthorSelectProps> = (props) => (
       MultiValueLabel: (multiValueLabelProps) => (
         <components.MultiValueLabel {...multiValueLabelProps}>
           <div css={optionStyles}>
-            <LabelWithAvatar author={multiValueLabelProps.data.user}>
+            <LabelWithAvatar
+              author={multiValueLabelProps.data.author}
+              externalLabel={externalLabel}
+            >
               {multiValueLabelProps.children}
             </LabelWithAvatar>
           </div>
@@ -81,15 +93,18 @@ const AuthorSelect: React.FC<AuthorSelectProps> = (props) => (
       Option: (optionProps) => (
         <components.Option {...optionProps}>
           <div css={optionStyles}>
-            {optionProps.data.user ? (
-              <LabelWithAvatar author={optionProps.data.user}>
+            {optionProps.data.author ? (
+              <LabelWithAvatar
+                author={optionProps.data.author}
+                externalLabel={externalLabel}
+              >
                 {optionProps.children}
               </LabelWithAvatar>
             ) : (
               <>
                 {plusIcon}
                 <span>
-                  <strong>{optionProps.children} </strong>(Non CRN)
+                  <strong>{optionProps.children} </strong>({externalLabel})
                 </span>
               </>
             )}

@@ -5,6 +5,7 @@ import { API_BASE_URL } from '../../config';
 import {
   createUserApiUrl,
   getContributingCohorts,
+  getExternalUsers,
   getInstitutions,
   getUser,
   getUsers,
@@ -99,6 +100,57 @@ describe('getUsers', () => {
       getUsers(options, 'Bearer x'),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch the users. Expected status 2xx. Received status 500."`,
+    );
+  });
+});
+describe('getExternalUsers', () => {
+  afterEach(() => {
+    expect(nock.isDone()).toBe(true);
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
+  const options: gp2Model.FetchUsersOptions = {
+    search: 'some-search',
+    filter: {},
+    skip: 45,
+    take: 15,
+  };
+
+  it('returns a successfully fetched external users', async () => {
+    const externalUsers: gp2Model.ListExternalUserResponse = {
+      items: [gp2Fixtures.createExternalUserResponse()],
+      total: 1,
+    };
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .get('/external-users')
+      .query({
+        take: 15,
+        skip: 45,
+        search: 'some-search',
+      })
+      .reply(200, externalUsers);
+
+    const result = await getExternalUsers(options, 'Bearer x');
+    expect(result).toEqual(externalUsers);
+  });
+
+  it('errors for error status', async () => {
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .get('/external-users')
+      .query({
+        take: 15,
+        skip: 45,
+        search: 'some-search',
+      })
+      .reply(500);
+
+    await expect(
+      getExternalUsers(options, 'Bearer x'),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Failed to fetch the external users. Expected status 2xx. Received status 500."`,
     );
   });
 });

@@ -48,6 +48,27 @@ export const getUsers = async (
   return resp.json();
 };
 
+export const getExternalUsers = async (
+  { search, take, skip }: gp2.FetchUsersOptions,
+  authorization: string,
+): Promise<gp2.ListExternalUserResponse> => {
+  const url = new URL('external-users', `${API_BASE_URL}/`);
+
+  search && url.searchParams.set('search', search);
+  take && url.searchParams.set('take', String(take));
+  skip && url.searchParams.set('skip', String(skip));
+
+  const resp = await fetch(url.toString(), {
+    headers: { authorization, ...createSentryHeaders() },
+  });
+  if (!resp.ok) {
+    throw new Error(
+      `Failed to fetch the external users. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+    );
+  }
+  return resp.json();
+};
+
 export const getUser = async (
   id: string,
   authorization: string,

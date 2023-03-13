@@ -1,4 +1,5 @@
 export * from './auth';
+export * from './external-users';
 export * from './calendars';
 export * from './events';
 export * from './outputs';

@@ -6,6 +6,10 @@ export const getUsers = jest.fn(
   async ({ pageSize }: GetListOptions): Promise<gp2.ListUserResponse> =>
     gp2Fixtures.createUsersResponse(pageSize ?? 10),
 );
+export const getExternalUsers = jest.fn(
+  async (): Promise<gp2.ListExternalUserResponse> =>
+    gp2Fixtures.createListExternalUserResponse(),
+);
 
 export const getUser = jest.fn(
   async (id: string): Promise<gp2.UserResponse> => ({

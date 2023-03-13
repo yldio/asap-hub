@@ -162,7 +162,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     (researchOutputData?.tags as string[]) || [],
   );
   const [type, setType] = useState<ResearchOutputPostRequest['type'] | ''>(
-    researchOutputData?.type || '',
+    researchOutputData?.type || undefined,
   );
   const [title, setTitle] = useState<ResearchOutputPostRequest['title']>(
     researchOutputData?.title || '',
@@ -246,9 +246,10 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     researchOutputData?.subtype,
   );
 
-  const filteredResearchTags = researchTags.filter((d) =>
-    d.types?.includes(type),
-  );
+  const filteredResearchTags =
+    type !== undefined
+      ? researchTags.filter((d) => d.types?.includes(type))
+      : [];
 
   const currentPayload = getPayload({
     identifierType,

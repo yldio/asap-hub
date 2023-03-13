@@ -47,6 +47,7 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
       type: {
         type: 'string',
         enum: researchOutputTypes,
+        nullable: true,
       },
       description: { type: 'string' },
       tags: {
@@ -133,7 +134,6 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
     },
     required: [
       'documentType',
-      'type',
       'description',
       'tags',
       'title',

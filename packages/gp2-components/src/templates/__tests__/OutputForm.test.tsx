@@ -12,11 +12,9 @@ import { Router, StaticRouter } from 'react-router-dom';
 import OutputForm from '../OutputForm';
 
 describe('OutputForm', () => {
-  const getAuthorSuggestions = jest.fn();
   const defaultProps = {
     createOutput: jest.fn(),
     documentType: 'form' as const,
-    getAuthorSuggestions,
   };
   it('renders all the base fields', () => {
     render(<OutputForm {...defaultProps} />, { wrapper: StaticRouter });
@@ -27,6 +25,7 @@ describe('OutputForm', () => {
     expect(screen.getByRole('button', { name: /cancel/i })).toBeVisible();
   });
   it('publish the form', async () => {
+    const getAuthorSuggestions = jest.fn();
     const history = createMemoryHistory();
     const createOutput = jest.fn();
     getAuthorSuggestions.mockResolvedValue([
@@ -48,9 +47,18 @@ describe('OutputForm', () => {
       },
     ]);
     createOutput.mockResolvedValue(gp2Fixtures.createOutputResponse());
-    render(<OutputForm {...defaultProps} createOutput={createOutput} />, {
-      wrapper: ({ children }) => <Router history={history}>{children}</Router>,
-    });
+    render(
+      <OutputForm
+        {...defaultProps}
+        createOutput={createOutput}
+        getAuthorSuggestions={getAuthorSuggestions}
+      />,
+      {
+        wrapper: ({ children }) => (
+          <Router history={history}>{children}</Router>
+        ),
+      },
+    );
     userEvent.type(
       screen.getByRole('textbox', { name: /title/i }),
       'output title',
@@ -116,6 +124,7 @@ describe('OutputForm', () => {
       expect(screen.getByRole('textbox', { name: /subtype/i })).toBeVisible();
     });
     it('publishes with type and subtype', async () => {
+      const getAuthorSuggestions = jest.fn();
       getAuthorSuggestions.mockResolvedValueOnce([
         {
           author: {
@@ -132,6 +141,7 @@ describe('OutputForm', () => {
           {...defaultProps}
           documentType="article"
           createOutput={createOutput}
+          getAuthorSuggestions={getAuthorSuggestions}
         />,
         {
           wrapper: StaticRouter,

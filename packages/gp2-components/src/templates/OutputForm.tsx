@@ -40,10 +40,22 @@ type OutputFormType = {
     payload: gp2Model.OutputPostRequest,
   ) => Promise<gp2Model.OutputResponse>;
   documentType: gp2Routing.OutputDocumentTypeParameter;
-  readonly getAuthorSuggestions: ComponentPropsWithRef<
+  readonly getAuthorSuggestions?: ComponentPropsWithRef<
     typeof AuthorSelect
   >['loadOptions'];
 };
+
+export const getPostAuthors = (
+  authors: ComponentPropsWithRef<typeof AuthorSelect>['values'],
+) =>
+  authors?.map(({ value, author }) => {
+    if (author) {
+      return isInternalUser(author)
+        ? { userId: value }
+        : { externalUserId: value };
+    }
+    return { externalUserName: value };
+  });
 
 const OutputForm: React.FC<OutputFormType> = ({
   createOutput,
@@ -58,20 +70,14 @@ const OutputForm: React.FC<OutputFormType> = ({
   const [authors, setAuthors] = useState<
     ComponentPropsWithRef<typeof AuthorSelect>['values']
   >([]);
+
   const currentPayload: gp2Model.OutputPostRequest = {
     title,
     documentType: documentTypeMapper[documentType],
     link,
     type: type || undefined,
     subtype: subtype || undefined,
-    authors:
-      authors?.map(({ value, author }) =>
-        !author
-          ? { externalUserName: value }
-          : isInternalUser(author)
-          ? { userId: value }
-          : { externalUserId: value },
-      ) || [],
+    authors: getPostAuthors(authors),
   };
 
   return (
@@ -151,7 +157,7 @@ const OutputForm: React.FC<OutputFormType> = ({
                 Cancel
               </Button>
             </div>
-            <div css={[buttonWrapperStyle, { margin: `0 0 32px` }]}>
+            <div css={[buttonWrapperStyle, { margin: `0 0 ${rem(32)}` }]}>
               <Button
                 primary
                 noMargin

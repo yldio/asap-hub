@@ -8,7 +8,8 @@ import {
   ResearchOutputDocumentType,
 } from '@asap-hub/model';
 import { isInternalUser } from '@asap-hub/validation';
-import { ComponentProps } from 'react';
+import { ComponentProps, ComponentPropsWithRef } from 'react';
+import AuthorSelect from '../organisms/AuthorSelect';
 import ResearchOutputContributorsCard from '../organisms/ResearchOutputContributorsCard';
 
 export type getTeamState = {
@@ -67,6 +68,17 @@ export const isIdentifierModified = (
   researchOutputData.rrid !== identifier &&
   identifier !== '';
 
+export const getPostAuthors = (
+  authors: ComponentPropsWithRef<typeof AuthorSelect>['values'],
+) =>
+  authors?.map(({ value, author }) => {
+    if (author) {
+      return isInternalUser(author)
+        ? { userId: value }
+        : { externalAuthorId: value };
+    }
+    return { externalAuthorName: value };
+  });
 export const getPublishDate = (publishDate?: string): Date | undefined => {
   if (publishDate) {
     return new Date(publishDate);
@@ -137,13 +149,7 @@ export const getPayload = ({
   description,
   title,
   type: type as ResearchOutputPostRequest['type'],
-  authors: authors.map(({ value, author }) =>
-    !author
-      ? { externalAuthorName: value }
-      : isInternalUser(author)
-      ? { userId: value }
-      : { externalAuthorId: value },
-  ),
+  authors: getPostAuthors(authors),
   labs: labs.map(({ value }) => value),
   teams: teams.map(({ value }) => value),
   usageNotes,

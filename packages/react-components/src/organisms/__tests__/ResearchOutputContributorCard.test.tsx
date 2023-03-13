@@ -81,7 +81,7 @@ describe('Labs', () => {
     );
     userEvent.click(getByText('Author One'));
     expect(mockOnChange).toHaveBeenCalledWith([
-      { user: createUserResponse(), label: 'Author One', value: '1' },
+      { author: createUserResponse(), label: 'Author One', value: '1' },
     ]);
   });
   it('should render message when there is no match', async () => {

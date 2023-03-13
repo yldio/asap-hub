@@ -4,7 +4,6 @@ import {
   render,
   waitForElementToBeRemoved,
   screen,
-  waitFor,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
@@ -90,9 +89,7 @@ it('publishes the output', async () => {
   userEvent.click(authors);
   userEvent.click(screen.getByText(/Steve Rogers \(/i));
   userEvent.click(screen.getByRole('button', { name: /publish/i }));
-  await waitFor(() => {
-    expect(screen.getByRole('button', { name: /publish/i })).toBeEnabled();
-  });
+  expect(await screen.findByRole('button', { name: /publish/i })).toBeEnabled();
   expect(mockCreateOutput).toHaveBeenCalledWith(
     {
       title,

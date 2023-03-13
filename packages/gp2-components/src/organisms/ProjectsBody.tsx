@@ -6,7 +6,7 @@ import {
   pixels,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
-import { projectIcon } from '../icons';
+import { noProjectsIcon } from '../icons';
 import ProjectCard from './ProjectCard';
 
 const { largeDesktopScreen, mobileScreen, rem, vminLinearCalc } = pixels;
@@ -31,8 +31,6 @@ const styles = css({
   },
 });
 
-const iconStyles = css({});
-
 const gridContainerStyles = css({
   display: 'flex',
   flexDirection: 'column',
@@ -41,14 +39,16 @@ const gridContainerStyles = css({
 });
 
 const ProjectsBody: React.FC<ProjectsBodyProps> = ({ projects }) => (
-  <article css={gridContainerStyles}>
+  <article>
     {projects.items.length ? (
-      projects.items.map((project) => (
-        <ProjectCard key={project.id} {...project} />
-      ))
+      <div css={gridContainerStyles}>
+        {projects.items.map((project) => (
+          <ProjectCard key={project.id} {...project} />
+        ))}
+      </div>
     ) : (
       <div css={styles}>
-        <span css={iconStyles}>{projectIcon}</span>
+        <span>{noProjectsIcon}</span>
         <div>
           <Display styleAsHeading={3}>{'No projects available.'}</Display>
           <Paragraph accent="lead">

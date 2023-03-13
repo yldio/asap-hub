@@ -3,14 +3,26 @@ import { render, screen } from '@testing-library/react';
 import ProjectsBody from '../ProjectsBody';
 
 describe('ProjectsBody', () => {
-  it('renders a working group', () => {
+  it('renders the empty page if there aren\t any projects', () => {
+    render(<ProjectsBody projects={{ total: 0, items: [] }} />);
+    expect(
+      screen.getByRole('heading', { name: /no projects available/i }),
+    ).toBeVisible();
+    expect(
+      screen.getByText(
+        'When a GP2 admin creates a project, it will be listed here.',
+      ),
+    ).toBeVisible();
+  });
+
+  it('renders a project', () => {
     render(<ProjectsBody projects={gp2.createProjectsResponse()} />);
     expect(
       screen.getByRole('heading', { name: /Project Title/i }),
     ).toBeVisible();
   });
 
-  it('renders multiple working groups', () => {
+  it('renders multiple projects', () => {
     const projects = [
       gp2.createProjectResponse({ id: '11', title: 'Project 11' }),
       gp2.createProjectResponse({ id: '42', title: 'Project 42' }),

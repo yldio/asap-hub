@@ -10,6 +10,7 @@ export { default as gp2LogoFull } from './gp2-logo-full';
 export { default as gp2LogoSmall } from './gp2-logo-small';
 export { default as leftArrowIcon } from './left-arrow-icon';
 export { default as locationIcon } from './location-icon';
+export { default as noProjectsIcon } from './no-projects-icon';
 export { default as projectIcon } from './project-icon';
 export { default as regionAfricaIcon } from './region-africa-icon';
 export { default as regionAsiaIcon } from './region-asia-icon';

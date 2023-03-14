@@ -102,3 +102,27 @@ export const FETCH_EVENT = gql`
   }
   ${eventContentFragment}
 `;
+
+export const FETCH_PROJECT_CALENDAR = gql`
+  query FetchGroupCalendar($id: String!) {
+    findProjectsContent(id: $id) {
+      flatData {
+        calendars {
+          id
+        }
+      }
+    }
+  }
+`;
+
+export const FETCH_WORKING_GROUP_CALENDAR = gql`
+  query FetchWorkingGroupCalendar($id: String!) {
+    findWorkingGroupsContent(id: $id) {
+      flatData {
+        calendars {
+          id
+        }
+      }
+    }
+  }
+`;

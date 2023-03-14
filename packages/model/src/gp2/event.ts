@@ -1,5 +1,5 @@
-import { ListResponse } from '../common';
-import { BasicEvent } from '../event-common';
+import { FetchOptions, ListResponse } from '../common';
+import { BasicEvent, SortOptions } from '../event-common';
 import { CalendarResponse } from './calendar';
 import { ProjectResponse } from './project';
 import { WorkingGroupResponse } from './working-group';
@@ -61,3 +61,17 @@ export type EventUpdateDataObject = Partial<
 
 export type EventCreateRequest = EventCreateDataObject;
 export type EventUpdateRequest = EventUpdateDataObject;
+
+type FilterOptions = {
+  workingGroupId?: string;
+  projectId?: string;
+  userId?: string;
+  externalAuthorId?: string;
+  googleId?: string;
+};
+
+export type FetchEventsOptions = {
+  after?: string;
+  before?: string;
+} & SortOptions &
+  FetchOptions<FilterOptions>;

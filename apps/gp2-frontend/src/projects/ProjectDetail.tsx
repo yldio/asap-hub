@@ -13,6 +13,8 @@ import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { FC, lazy, useEffect } from 'react';
 import { usePutProjectResources, useProjectById } from './state';
+import { useOutputs } from '../outputs/state';
+import OutputList from '../outputs/OutputList';
 
 const { projects } = gp2Routing;
 
@@ -27,6 +29,9 @@ const ProjectDetail: FC<Record<string, never>> = () => {
   const { path } = useRouteMatch();
   const { projectId } = useRouteParams(projects({}).project);
   const project = useProjectById(projectId);
+  const { total } = useOutputs({
+    filter: { projects: projectId },
+  });
 
   const currentUser = useCurrentUserGP2();
   const isProjectMember =
@@ -39,6 +44,7 @@ const ProjectDetail: FC<Record<string, never>> = () => {
   const add = isAdministrator ? resourcesRoute.add({}).$ : undefined;
   const edit = isAdministrator ? editRoute.$ : undefined;
   const overview = projectRoute.overview({}).$;
+  const outputs = projectRoute.outputs({}).$;
   const resources = resourcesRoute.$;
 
   const updateProjectResources = usePutProjectResources(projectId);
@@ -58,6 +64,7 @@ const ProjectDetail: FC<Record<string, never>> = () => {
         <ProjectDetailPage
           isProjectMember={isProjectMember}
           isAdministrator={isAdministrator}
+          outputsTotal={total}
           {...project}
         >
           <Switch>
@@ -100,6 +107,11 @@ const ProjectDetail: FC<Record<string, never>> = () => {
                 </Frame>
               </Route>
             )}
+            <Route path={outputs}>
+              <Frame title="Shared Outputs">
+                <OutputList filters={{ projects: projectId }} />
+              </Frame>
+            </Route>
             <Redirect to={overview} />
           </Switch>
         </ProjectDetailPage>

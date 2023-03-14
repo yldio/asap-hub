@@ -13,10 +13,12 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getProject, putProjectResources } from '../api';
+import { getOutputs } from '../../outputs/api';
 import ProjectDetail from '../ProjectDetail';
 import { refreshProjectState } from '../state';
 
 jest.mock('../api');
+jest.mock('../../outputs/api');
 
 const renderProjectDetail = async ({
   id,
@@ -65,6 +67,7 @@ beforeEach(jest.resetAllMocks);
 
 describe('ProjectDetail', () => {
   const mockGetProject = getProject as jest.MockedFunction<typeof getProject>;
+  const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
   const mockPutProjectResources = putProjectResources as jest.MockedFunction<
     typeof putProjectResources
   >;
@@ -72,12 +75,14 @@ describe('ProjectDetail', () => {
   it('renders header with title', async () => {
     const project = gp2Fixtures.createProjectResponse();
     mockGetProject.mockResolvedValueOnce(project);
+    mockGetOutputs.mockResolvedValue({ items: [], total: 0 });
     await renderProjectDetail({ id: project.id });
     expect(screen.getByRole('banner')).toBeVisible();
   });
 
   it('renders not found if no project is returned', async () => {
     mockGetProject.mockResolvedValueOnce(undefined);
+    mockGetOutputs.mockResolvedValue({ items: [], total: 0 });
     await renderProjectDetail({ id: 'unknown-id' });
     expect(
       screen.getByRole('heading', {
@@ -85,6 +90,7 @@ describe('ProjectDetail', () => {
       }),
     ).toBeVisible();
   });
+
   it('renders the members section', async () => {
     const project = gp2Fixtures.createProjectResponse();
     project.members = [
@@ -96,9 +102,11 @@ describe('ProjectDetail', () => {
       },
     ];
     mockGetProject.mockResolvedValueOnce(project);
+    mockGetOutputs.mockResolvedValue({ items: [], total: 0 });
     await renderProjectDetail({ id: project.id });
     expect(screen.getByText(/project Members/i)).toBeVisible();
   });
+
   describe('resources', () => {
     it('renders the resources tab if the user is in the project', async () => {
       const project = gp2Fixtures.createProjectResponse();
@@ -111,9 +119,11 @@ describe('ProjectDetail', () => {
         },
       ];
       mockGetProject.mockResolvedValueOnce(project);
+      mockGetOutputs.mockResolvedValue({ items: [], total: 0 });
       await renderProjectDetail({ id: project.id, userId: '11' });
       expect(screen.getByRole('link', { name: /resources/i })).toBeVisible();
     });
+
     it('does not render the resources tab if the user is not in the project', async () => {
       const project = gp2Fixtures.createProjectResponse();
       project.members = [
@@ -125,11 +135,13 @@ describe('ProjectDetail', () => {
         },
       ];
       mockGetProject.mockResolvedValueOnce(project);
+      mockGetOutputs.mockResolvedValue({ items: [], total: 0 });
       await renderProjectDetail({ id: project.id, userId: '11' });
       expect(
         screen.queryByRole('link', { name: /resources/i }),
       ).not.toBeInTheDocument();
     });
+
     it('renders the resources if the user is in the project', async () => {
       const project = gp2Fixtures.createProjectResponse();
       project.members = [
@@ -141,6 +153,7 @@ describe('ProjectDetail', () => {
         },
       ];
       mockGetProject.mockResolvedValueOnce(project);
+      mockGetOutputs.mockResolvedValue({ items: [], total: 0 });
       await renderProjectDetail({
         id: project.id,
         userId: '23',
@@ -165,6 +178,7 @@ describe('ProjectDetail', () => {
         },
       ];
       mockGetProject.mockResolvedValueOnce(project);
+      mockGetOutputs.mockResolvedValue({ items: [], total: 0 });
       await renderProjectDetail({
         id: project.id,
         userId: '11',
@@ -178,6 +192,7 @@ describe('ProjectDetail', () => {
       ).not.toBeInTheDocument();
     });
   });
+
   it('clicking on the resource tab loads the resources', async () => {
     const project = gp2Fixtures.createProjectResponse();
     project.members = [
@@ -189,6 +204,7 @@ describe('ProjectDetail', () => {
       },
     ];
     mockGetProject.mockResolvedValueOnce(project);
+    mockGetOutputs.mockResolvedValue({ items: [], total: 0 });
     await renderProjectDetail({
       id: project.id,
       userId: '23',
@@ -210,6 +226,7 @@ describe('ProjectDetail', () => {
       },
     ];
     mockGetProject.mockResolvedValueOnce(project);
+    mockGetOutputs.mockResolvedValue({ items: [], total: 0 });
     await renderProjectDetail({
       id: project.id,
       userId: '23',
@@ -227,6 +244,7 @@ describe('ProjectDetail', () => {
       screen.getByRole('heading', { name: /Contact/i }),
     ).toBeInTheDocument();
   });
+
   it.each(gp2Model.userRoles.filter((role) => role !== 'Administrator'))(
     'does not render the add modal when the user is not an Administrator',
     async (role) => {
@@ -240,6 +258,7 @@ describe('ProjectDetail', () => {
         },
       ];
       mockGetProject.mockResolvedValueOnce(project);
+      mockGetOutputs.mockResolvedValue({ items: [], total: 0 });
       await renderProjectDetail({
         id: project.id,
         userId: '23',
@@ -255,6 +274,7 @@ describe('ProjectDetail', () => {
       ).not.toBeInTheDocument();
     },
   );
+
   it('renders the add modal when the user is an Administrator', async () => {
     const project = gp2Fixtures.createProjectResponse();
     project.members = [
@@ -266,6 +286,7 @@ describe('ProjectDetail', () => {
       },
     ];
     mockGetProject.mockResolvedValueOnce(project);
+    mockGetOutputs.mockResolvedValue({ items: [], total: 0 });
     await renderProjectDetail({
       id: project.id,
       userId: '23',
@@ -280,6 +301,7 @@ describe('ProjectDetail', () => {
       screen.getByRole('heading', { name: /Add resource/i }),
     ).toBeInTheDocument();
   });
+
   describe('Resources Modal', () => {
     const project = gp2Fixtures.createProjectResponse();
     project.members = [
@@ -290,8 +312,10 @@ describe('ProjectDetail', () => {
         role: 'Project lead',
       },
     ];
+
     it('does render the add and edit button to Administrators', async () => {
       mockGetProject.mockResolvedValueOnce(project);
+      mockGetOutputs.mockResolvedValue({ items: [], total: 0 });
       await renderProjectDetail({
         id: project.id,
         userId: '23',
@@ -305,10 +329,12 @@ describe('ProjectDetail', () => {
       expect(screen.getByRole('link', { name: /add/i })).toBeVisible();
       expect(screen.getByRole('link', { name: /edit/i })).toBeVisible();
     });
+
     it.each(gp2Model.userRoles.filter((role) => role !== 'Administrator'))(
       'does not render the add and edit button to non Administrators - %s',
       async (role) => {
         mockGetProject.mockResolvedValueOnce(project);
+        mockGetOutputs.mockResolvedValue({ items: [], total: 0 });
         await renderProjectDetail({
           id: project.id,
           userId: '23',
@@ -327,11 +353,13 @@ describe('ProjectDetail', () => {
         ).not.toBeInTheDocument();
       },
     );
+
     it('can submit an add modal when form data is valid', async () => {
       const title = 'example42 title';
       const type = 'Note';
 
       mockGetProject.mockResolvedValueOnce(project);
+      mockGetOutputs.mockResolvedValue({ items: [], total: 0 });
       mockPutProjectResources.mockResolvedValueOnce(project);
       await renderProjectDetail({
         id: project.id,
@@ -379,6 +407,7 @@ describe('ProjectDetail', () => {
 
       const projectResources = { ...project, resources };
       mockGetProject.mockResolvedValueOnce(projectResources);
+      mockGetOutputs.mockResolvedValue({ items: [], total: 0 });
       mockPutProjectResources.mockResolvedValueOnce(projectResources);
       await renderProjectDetail({
         id: projectResources.id,

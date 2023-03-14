@@ -33,6 +33,7 @@ type ProjectDetailHeaderProps = ComponentProps<typeof ProjectSummaryHeader> &
   > & {
     isProjectMember: boolean;
     isAdministrator: boolean;
+    outputsTotal?: number;
   };
 
 const infoContainerStyles = css({
@@ -73,6 +74,7 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = ({
   traineeProject,
   opportunitiesLink,
   isAdministrator,
+  outputsTotal = 0,
 }) => (
   <header css={detailHeaderStyles}>
     {opportunitiesLink && (
@@ -120,6 +122,11 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = ({
         href={gp2Routing.projects({}).project({ projectId: id }).overview({}).$}
       >
         Overview
+      </TabLink>
+      <TabLink
+        href={gp2Routing.projects({}).project({ projectId: id }).outputs({}).$}
+      >
+        Shared Outputs ({outputsTotal})
       </TabLink>
       {isProjectMember && (
         <TabLink

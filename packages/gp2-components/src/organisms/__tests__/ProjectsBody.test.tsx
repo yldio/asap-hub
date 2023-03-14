@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import ProjectsBody from '../ProjectsBody';
 
 describe('ProjectsBody', () => {
-  it('renders the empty page if there aren\t any projects', () => {
+  it("renders the empty page if there aren't any projects", () => {
     render(<ProjectsBody projects={{ total: 0, items: [] }} />);
     expect(
       screen.getByRole('heading', { name: /no projects available/i }),

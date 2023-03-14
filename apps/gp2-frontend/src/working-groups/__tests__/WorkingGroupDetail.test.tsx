@@ -12,11 +12,12 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getOutputs } from '../../outputs/api';
-import { getWorkingGroup, putWorkingGroupResources } from '../api';
 import { getEvents } from '../../events/api';
-import { refreshWorkingGroupState } from '../state';
+import { refreshEventsState } from '../../events/state';
+import { getOutputs } from '../../outputs/api';
 import { refreshOutputsState } from '../../outputs/state';
+import { getWorkingGroup, putWorkingGroupResources } from '../api';
+import { refreshWorkingGroupState } from '../state';
 import WorkingGroupDetail from '../WorkingGroupDetail';
 
 jest.mock('../api');
@@ -39,6 +40,7 @@ const renderWorkingGroupDetail = async ({
       initializeState={({ set }) => {
         set(refreshWorkingGroupState(id), Math.random());
         set(refreshOutputsState, Math.random());
+        set(refreshEventsState, Math.random());
       }}
     >
       <Suspense fallback="loading">
@@ -83,10 +85,7 @@ describe('WorkingGroupDetail', () => {
   const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
 
   beforeEach(() => {
-    mockGetEvents.mockResolvedValue({
-      total: 0,
-      items: [],
-    });
+    mockGetEvents.mockResolvedValue(gp2Fixtures.createListEventResponse(1));
   });
   const outputs = gp2Fixtures.createListOutputResponse(1);
   outputs.items[0].workingGroups = {
@@ -456,6 +455,28 @@ describe('WorkingGroupDetail', () => {
         expect.anything(),
       );
       await waitFor(() => expect(saveButton).toBeEnabled());
+    });
+  });
+  describe('the upcoming events tab', () => {
+    it('can be switched to', async () => {
+      const workingGroup = gp2Fixtures.createWorkingGroupResponse();
+      mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
+      mockGetOutputs.mockResolvedValue(outputs);
+      mockGetEvents.mockResolvedValue(gp2Fixtures.createListEventResponse(1));
+      await renderWorkingGroupDetail({ id: workingGroup.id });
+      userEvent.click(await screen.findByText(/upcoming/i));
+      expect(await screen.findByText(/Event 0/i)).toBeVisible();
+    });
+  });
+
+  describe('the past events tab', () => {
+    it('can be switched to', async () => {
+      const workingGroup = gp2Fixtures.createWorkingGroupResponse();
+      mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
+      mockGetOutputs.mockResolvedValue(outputs);
+      await renderWorkingGroupDetail({ id: workingGroup.id });
+      userEvent.click(await screen.findByText(/past/i));
+      expect(await screen.findByText(/Event 0/i)).toBeVisible();
     });
   });
 });

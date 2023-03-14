@@ -25,4 +25,5 @@ export { default as rightArrowIcon } from './right-arrow-icon';
 export { default as roleIcon } from './role-icon';
 export { default as userIcon } from './user-icon';
 export { default as usersIcon } from './users-icon';
+export { default as speakerIcon } from './speaker-icon';
 export { default as workingGroupIcon } from './working-group-icon';

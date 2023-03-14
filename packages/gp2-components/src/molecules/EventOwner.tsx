@@ -1,8 +1,8 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { Link } from '@asap-hub/react-components';
+import { Link, Paragraph } from '@asap-hub/react-components';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { ComponentProps } from 'react';
-import { projectIcon, workingGroupIcon } from '../icons';
+import { projectIcon, usersIcon, workingGroupIcon } from '../icons';
 import IconWithLabel from './IconWithLabel';
 
 const { projects, workingGroups } = gp2Routing;
@@ -32,7 +32,7 @@ const getProperties = ({
       }
     : {
         title: 'GP2 Hub',
-        icon: workingGroupIcon,
+        icon: usersIcon,
       };
 };
 
@@ -41,7 +41,13 @@ const EventOwner: React.FC<EventOwnerProps> = ({ project, workingGroup }) => {
 
   return (
     <IconWithLabel noMargin icon={icon}>
-      {href ? <Link href={href}>{title}</Link> : title}
+      {href ? (
+        <Link href={href}>{title}</Link>
+      ) : (
+        <Paragraph noMargin accent="lead">
+          {title}
+        </Paragraph>
+      )}
     </IconWithLabel>
   );
 };

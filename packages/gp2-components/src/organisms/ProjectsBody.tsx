@@ -1,35 +1,14 @@
 import { gp2 } from '@asap-hub/model';
-import {
-  contentSidePaddingWithNavigation,
-  Display,
-  Paragraph,
-  pixels,
-} from '@asap-hub/react-components';
+import { pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { noProjectsIcon } from '../icons';
+import { EmptyState } from '../molecules';
 import ProjectCard from './ProjectCard';
 
-const { largeDesktopScreen, mobileScreen, rem, vminLinearCalc } = pixels;
+const { rem } = pixels;
 export type ProjectsBodyProps = {
   projects: gp2.ListProjectResponse;
 };
-
-const styles = css({
-  padding: `${vminLinearCalc(
-    mobileScreen,
-    36,
-    largeDesktopScreen,
-    72,
-    'px',
-  )} ${contentSidePaddingWithNavigation()}`,
-
-  display: 'grid',
-  textAlign: 'center',
-
-  [`@media (min-width: ${mobileScreen.width + 1}px)`]: {
-    justifyItems: 'center',
-  },
-});
 
 const gridContainerStyles = css({
   display: 'flex',
@@ -47,15 +26,13 @@ const ProjectsBody: React.FC<ProjectsBodyProps> = ({ projects }) => (
         ))}
       </div>
     ) : (
-      <div css={styles}>
-        <span>{noProjectsIcon}</span>
-        <div>
-          <Display styleAsHeading={3}>{'No projects available.'}</Display>
-          <Paragraph accent="lead">
-            {'When a GP2 admin creates a project, it will be listed here.'}
-          </Paragraph>
-        </div>
-      </div>
+      <EmptyState
+        icon={noProjectsIcon}
+        title={'No projects available.'}
+        description={
+          'When a GP2 admin creates a project, it will be listed here.'
+        }
+      />
     )}
   </article>
 );

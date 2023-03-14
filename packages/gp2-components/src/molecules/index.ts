@@ -2,6 +2,7 @@ export { default as CardWithBackground } from './CardWithBackground';
 export { default as CollapsibleTable } from './CollapsibleTable';
 export { default as ContactSupport } from './ContactSupport';
 export { default as EditableCard } from './EditableCard';
+export { default as EmptyState } from './EmptyState';
 export { default as EventOwner } from './EventOwner';
 export { default as EventSpeakers } from './EventSpeakers';
 export { default as ExpandableText } from './ExpandableText';

@@ -1,10 +1,13 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
-import { GetListOptions } from '@asap-hub/frontend-utils';
-
 import { gp2 as gp2Model } from '@asap-hub/model';
 import nock from 'nock';
 import { API_BASE_URL } from '../../config';
-import { createOutput, getOutput, getOutputs } from '../api';
+import {
+  createOutput,
+  getOutput,
+  getOutputs,
+  createOutputApiUrl,
+} from '../api';
 
 jest.mock('../../config');
 
@@ -23,6 +26,7 @@ describe('getOutput', () => {
     const result = await getOutput(id, 'Bearer x');
     expect(result).toEqual(outputResponse);
   });
+
   it('returns undefined if server returns 404', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
       .get(`/outputs/unknown-id`)
@@ -49,11 +53,8 @@ describe('getOutputs', () => {
     expect(nock.isDone()).toBe(true);
     nock.cleanAll();
   });
-  const options: GetListOptions = {
-    searchQuery: '',
-    currentPage: 1,
-    pageSize: 10,
-    filters: new Set(),
+  const options: gp2Model.FetchOutputOptions = {
+    search: '',
   };
 
   it('returns a successfully fetched outputs', async () => {
@@ -99,4 +100,36 @@ describe('createOutput', () => {
       `"Failed to create output. Expected status 201. Received status 500."`,
     );
   });
+});
+
+describe('createOutputApiUrl', () => {
+  it('uses the values for take and skip params', async () => {
+    const url = createOutputApiUrl({
+      take: 10,
+      skip: 10,
+    });
+    expect(url.search).toMatchInlineSnapshot(`"?take=10&skip=10"`);
+  });
+
+  it('handles requests with a search query', async () => {
+    const url = createOutputApiUrl({
+      search: 'test123',
+    });
+    expect(url.searchParams.get('search')).toEqual('test123');
+  });
+
+  it.each`
+    name               | value
+    ${'projects'}      | ${['a project']}
+    ${'workingGroups'} | ${['a working group']}
+    ${'authors'}       | ${['an author', 'another author']}
+  `(
+    'handles requests with filters for $name - new',
+    async ({ name, value }) => {
+      const url = createOutputApiUrl({
+        filter: { [name]: value },
+      });
+      expect(url.searchParams.getAll(`filter[${name}]`)).toEqual(value);
+    },
+  );
 });

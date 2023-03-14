@@ -12,11 +12,14 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import { getOutputs } from '../../outputs/api';
 import { getWorkingGroup, putWorkingGroupResources } from '../api';
 import { refreshWorkingGroupState } from '../state';
+import { refreshOutputsState } from '../../outputs/state';
 import WorkingGroupDetail from '../WorkingGroupDetail';
 
 jest.mock('../api');
+jest.mock('../../outputs/api');
 
 const renderWorkingGroupDetail = async ({
   id,
@@ -33,6 +36,7 @@ const renderWorkingGroupDetail = async ({
     <RecoilRoot
       initializeState={({ set }) => {
         set(refreshWorkingGroupState(id), Math.random());
+        set(refreshOutputsState, Math.random());
       }}
     >
       <Suspense fallback="loading">
@@ -63,6 +67,7 @@ const renderWorkingGroupDetail = async ({
 
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };
+
 beforeEach(jest.resetAllMocks);
 describe('WorkingGroupDetail', () => {
   const mockGetWorkingGroup = getWorkingGroup as jest.MockedFunction<
@@ -72,16 +77,26 @@ describe('WorkingGroupDetail', () => {
     putWorkingGroupResources as jest.MockedFunction<
       typeof putWorkingGroupResources
     >;
+  const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
+
+  const outputs = gp2Fixtures.createListOutputResponse(1);
+  outputs.items[0].workingGroups = {
+    id: '42',
+    title: 'Steering Committee',
+  };
 
   it('renders header with title', async () => {
     const workingGroup = gp2Fixtures.createWorkingGroupResponse();
     mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
+    mockGetOutputs.mockResolvedValue(outputs);
+
     await renderWorkingGroupDetail({ id: workingGroup.id });
     expect(screen.getByRole('banner')).toBeVisible();
   });
 
   it('renders not found if no working group is returned', async () => {
     mockGetWorkingGroup.mockResolvedValueOnce(undefined);
+    mockGetOutputs.mockResolvedValue(outputs);
     await renderWorkingGroupDetail({ id: 'unknown-id' });
     expect(
       screen.getByRole('heading', {
@@ -101,9 +116,11 @@ describe('WorkingGroupDetail', () => {
       },
     ];
     mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
+    mockGetOutputs.mockResolvedValue(outputs);
     await renderWorkingGroupDetail({ id: workingGroup.id });
     expect(screen.getByText(/Working Group Members/i)).toBeVisible();
   });
+
   describe('resources', () => {
     it('renders the resources tab if the user is in the working group', async () => {
       const workingGroup = gp2Fixtures.createWorkingGroupResponse();
@@ -116,9 +133,11 @@ describe('WorkingGroupDetail', () => {
         },
       ];
       mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
+      mockGetOutputs.mockResolvedValue(outputs);
       await renderWorkingGroupDetail({ id: workingGroup.id, userId: '11' });
       expect(screen.getByRole('link', { name: /resources/i })).toBeVisible();
     });
+
     it('does not render the resources tab if the user is not in the working group', async () => {
       const workingGroup = gp2Fixtures.createWorkingGroupResponse();
       workingGroup.members = [
@@ -130,11 +149,13 @@ describe('WorkingGroupDetail', () => {
         },
       ];
       mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
+      mockGetOutputs.mockResolvedValue(outputs);
       await renderWorkingGroupDetail({ id: workingGroup.id, userId: '11' });
       expect(
         screen.queryByRole('link', { name: /resources/i }),
       ).not.toBeInTheDocument();
     });
+
     it('does renders the resources if the user is not in the working group', async () => {
       const workingGroup = gp2Fixtures.createWorkingGroupResponse();
       workingGroup.members = [
@@ -146,6 +167,7 @@ describe('WorkingGroupDetail', () => {
         },
       ];
       mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
+      mockGetOutputs.mockResolvedValue(outputs);
       await renderWorkingGroupDetail({
         id: workingGroup.id,
         userId: '23',
@@ -170,6 +192,7 @@ describe('WorkingGroupDetail', () => {
         },
       ];
       mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
+      mockGetOutputs.mockResolvedValue(outputs);
       await renderWorkingGroupDetail({
         id: workingGroup.id,
         userId: '11',
@@ -183,6 +206,7 @@ describe('WorkingGroupDetail', () => {
       ).not.toBeInTheDocument();
     });
   });
+
   it('clicking on the resource tab loads the resources', async () => {
     const workingGroup = gp2Fixtures.createWorkingGroupResponse();
     workingGroup.members = [
@@ -194,6 +218,7 @@ describe('WorkingGroupDetail', () => {
       },
     ];
     mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
+    mockGetOutputs.mockResolvedValue(outputs);
     await renderWorkingGroupDetail({
       id: workingGroup.id,
       userId: '23',
@@ -215,6 +240,7 @@ describe('WorkingGroupDetail', () => {
       },
     ];
     mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
+    mockGetOutputs.mockResolvedValue(outputs);
     await renderWorkingGroupDetail({
       id: workingGroup.id,
       userId: '23',
@@ -232,6 +258,7 @@ describe('WorkingGroupDetail', () => {
       screen.getByRole('heading', { name: /Contact/i }),
     ).toBeInTheDocument();
   });
+
   it.each(gp2Model.userRoles.filter((role) => role !== 'Administrator'))(
     'does not render the add modal when the user is not an Administrator',
     async (role) => {
@@ -245,6 +272,7 @@ describe('WorkingGroupDetail', () => {
         },
       ];
       mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
+      mockGetOutputs.mockResolvedValue(outputs);
       await renderWorkingGroupDetail({
         id: workingGroup.id,
         userId: '23',
@@ -260,6 +288,7 @@ describe('WorkingGroupDetail', () => {
       ).not.toBeInTheDocument();
     },
   );
+
   it('renders the add modal when the user is an Administrator', async () => {
     const workingGroup = gp2Fixtures.createWorkingGroupResponse();
     workingGroup.members = [
@@ -271,6 +300,7 @@ describe('WorkingGroupDetail', () => {
       },
     ];
     mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
+    mockGetOutputs.mockResolvedValue(outputs);
     await renderWorkingGroupDetail({
       id: workingGroup.id,
       userId: '23',
@@ -285,6 +315,7 @@ describe('WorkingGroupDetail', () => {
       screen.getByRole('heading', { name: /Add resource/i }),
     ).toBeInTheDocument();
   });
+
   describe('Resources Modal', () => {
     const workingGroup = gp2Fixtures.createWorkingGroupResponse();
     workingGroup.members = [
@@ -295,8 +326,10 @@ describe('WorkingGroupDetail', () => {
         role: 'Lead',
       },
     ];
+
     it('does render the add and edit button to Administrators', async () => {
       mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
+      mockGetOutputs.mockResolvedValue(outputs);
       await renderWorkingGroupDetail({
         id: workingGroup.id,
         userId: '23',
@@ -310,10 +343,12 @@ describe('WorkingGroupDetail', () => {
       expect(screen.getByRole('link', { name: /add/i })).toBeVisible();
       expect(screen.getByRole('link', { name: /edit/i })).toBeVisible();
     });
+
     it.each(gp2Model.userRoles.filter((role) => role !== 'Administrator'))(
       'does not render the add and edit button to non Administrators - %s',
       async (role) => {
         mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
+        mockGetOutputs.mockResolvedValue(outputs);
         await renderWorkingGroupDetail({
           id: workingGroup.id,
           userId: '23',
@@ -332,11 +367,13 @@ describe('WorkingGroupDetail', () => {
         ).not.toBeInTheDocument();
       },
     );
+
     it('can submit an add modal when form data is valid', async () => {
       const title = 'example42 title';
       const type = 'Note';
 
       mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
+      mockGetOutputs.mockResolvedValue(outputs);
       mockPutWorkingGroupResources.mockResolvedValueOnce(workingGroup);
       await renderWorkingGroupDetail({
         id: workingGroup.id,
@@ -384,6 +421,7 @@ describe('WorkingGroupDetail', () => {
 
       const workingGroupResources = { ...workingGroup, resources };
       mockGetWorkingGroup.mockResolvedValueOnce(workingGroupResources);
+      mockGetOutputs.mockResolvedValue(outputs);
       mockPutWorkingGroupResources.mockResolvedValueOnce(workingGroupResources);
       await renderWorkingGroupDetail({
         id: workingGroupResources.id,

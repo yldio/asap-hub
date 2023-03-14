@@ -1,5 +1,4 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { validateFetchOptions } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
 import { Response, Router } from 'express';
 import { OutputController } from '../controllers/output.controller';
@@ -7,6 +6,7 @@ import {
   validateOutputParameters,
   validateOutputPostRequestParameters,
   validateOutputPutRequestParameters,
+  validateOutputsParameters,
 } from '../validation/output.validation';
 
 export const outputRouteFactory = (
@@ -19,7 +19,7 @@ export const outputRouteFactory = (
     async (req, res: Response<gp2Model.ListOutputResponse>) => {
       const { query } = req;
 
-      const options = validateFetchOptions(query);
+      const options = validateOutputsParameters(query);
 
       const result = await outputController.fetch(options);
 

@@ -26,6 +26,7 @@ type WorkingGroupDetailHeaderProps = Pick<
   projects?: unknown[];
   isWorkingGroupMember: boolean;
   isAdministrator: boolean;
+  outputsTotal?: number;
 };
 
 const infoContainerStyles = css({
@@ -46,6 +47,7 @@ const WorkingGroupDetailHeader: React.FC<WorkingGroupDetailHeaderProps> = ({
   id,
   isWorkingGroupMember,
   isAdministrator,
+  outputsTotal = 0,
 }) => {
   const route = gp2Routing
     .workingGroups({})
@@ -74,6 +76,9 @@ const WorkingGroupDetailHeader: React.FC<WorkingGroupDetailHeaderProps> = ({
         {isWorkingGroupMember && (
           <TabLink href={route.resources({}).$}>Resources</TabLink>
         )}
+        <TabLink href={route.outputs({}).$}>
+          Shared Outputs ({outputsTotal})
+        </TabLink>
       </TabNav>
     </header>
   );

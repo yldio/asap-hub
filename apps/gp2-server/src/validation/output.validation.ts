@@ -6,6 +6,7 @@ import { JSONSchemaType } from 'ajv';
 type OutputParameters = {
   outputId: string;
 };
+
 const { outputDocumentTypes, outputTypes, outputSubtypes } = gp2Model;
 const outputParametersValidationSchema: JSONSchemaType<OutputParameters> = {
   type: 'object',
@@ -16,11 +17,55 @@ const outputParametersValidationSchema: JSONSchemaType<OutputParameters> = {
   additionalProperties: false,
 };
 
+const outputsParametersValidationSchema: JSONSchemaType<gp2Model.FetchOutputOptions> =
+  {
+    type: 'object',
+    properties: {
+      take: { type: 'number', nullable: true },
+      skip: { type: 'number', nullable: true },
+      search: { type: 'string', nullable: true },
+      filter: {
+        type: 'object',
+        properties: {
+          workingGroups: { type: 'string', nullable: true },
+          projects: { type: 'string', nullable: true },
+          authors: {
+            type: 'array',
+            items: { type: 'string' },
+            nullable: true,
+          },
+          documentType: {
+            type: 'array',
+            items: { type: 'string' },
+            nullable: true,
+          },
+          link: {
+            type: 'string',
+            nullable: true,
+            pattern: UrlExpression,
+          },
+          title: { type: 'string', nullable: true },
+        },
+        nullable: true,
+      },
+      includeDrafts: { type: 'boolean', nullable: true },
+    },
+    additionalProperties: false,
+  };
+
 export const validateOutputParameters = validateInput(
   outputParametersValidationSchema,
   {
     skipNull: false,
     coerce: false,
+  },
+);
+
+export const validateOutputsParameters = validateInput(
+  outputsParametersValidationSchema,
+  {
+    skipNull: true,
+    coerce: true,
   },
 );
 

@@ -56,14 +56,14 @@ describe('/outputs/ route', () => {
           take: 15,
           skip: 5,
           search: 'something',
-          filter: ['one', 'two'],
+          filter: { workingGroups: 'workingGroup1', projects: 'project1' },
         });
 
       const expectedParams = {
         take: 15,
         skip: 5,
         search: 'something',
-        filter: ['one', 'two'],
+        filter: { workingGroups: 'workingGroup1', projects: 'project1' },
       };
 
       expect(outputControllerMock.fetch).toBeCalledWith(expectedParams);

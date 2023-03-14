@@ -1,6 +1,32 @@
-import { createSentryHeaders, GetListOptions } from '@asap-hub/frontend-utils';
+import { createSentryHeaders } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
 import { API_BASE_URL } from '../config';
+
+export const createOutputApiUrl = ({
+  search,
+  take,
+  skip,
+  filter,
+}: gp2.FetchOutputOptions) => {
+  const url = new URL('outputs', `${API_BASE_URL}/`);
+  if (search) url.searchParams.set('search', search);
+  if (take) {
+    url.searchParams.set('take', String(take));
+  }
+  if (skip) {
+    url.searchParams.set('skip', String(skip));
+  }
+  const addFilter = (name: string, items?: string[]) =>
+    items?.forEach((item) => url.searchParams.append(`filter[${name}]`, item));
+  addFilter(
+    'workingGroups',
+    filter?.workingGroups ? [filter?.workingGroups] : undefined,
+  );
+  addFilter('projects', filter?.projects ? [filter?.projects] : undefined);
+  addFilter('authors', filter?.authors);
+
+  return url;
+};
 
 export const getOutput = async (
   id: string,
@@ -22,11 +48,9 @@ export const getOutput = async (
 
 export const getOutputs = async (
   authorization: string,
-  options: GetListOptions,
+  options: gp2.FetchOutputOptions,
 ): Promise<gp2.ListOutputResponse> => {
-  const url = new URL('outputs', `${API_BASE_URL}/`);
-
-  const resp = await fetch(url.toString(), {
+  const resp = await fetch(createOutputApiUrl(options), {
     headers: { authorization, ...createSentryHeaders() },
   });
 

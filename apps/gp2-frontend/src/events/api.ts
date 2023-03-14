@@ -7,11 +7,24 @@ import { API_BASE_URL } from '../config';
 
 export const getEvents = async (
   authorization: string,
-  { before, after }: GetEventListOptions,
+  { before, after, constraint }: GetEventListOptions<gp2.EventConstraint>,
 ): Promise<gp2.ListEventResponse> => {
   const url = new URL('events', `${API_BASE_URL}/`);
-  if (before) url.searchParams.set('before', before);
-  if (after) url.searchParams.set('after', after);
+  if (before) {
+    url.searchParams.set('before', before);
+  }
+  if (after) {
+    url.searchParams.set('after', after);
+  }
+
+  const addFilter = (name: string, item: string) =>
+    url.searchParams.append(`filter[${name}]`, item);
+  if (constraint?.workingGroupId) {
+    addFilter('workingGroupId', constraint?.workingGroupId);
+  }
+  if (constraint?.projectId) {
+    addFilter('projectId', constraint?.projectId);
+  }
   const resp = await fetch(url.toString(), {
     headers: { authorization, ...createSentryHeaders() },
   });

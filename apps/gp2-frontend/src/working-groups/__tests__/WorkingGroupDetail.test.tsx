@@ -14,12 +14,14 @@ import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getOutputs } from '../../outputs/api';
 import { getWorkingGroup, putWorkingGroupResources } from '../api';
+import { getEvents } from '../../events/api';
 import { refreshWorkingGroupState } from '../state';
 import { refreshOutputsState } from '../../outputs/state';
 import WorkingGroupDetail from '../WorkingGroupDetail';
 
 jest.mock('../api');
 jest.mock('../../outputs/api');
+jest.mock('../../events/api');
 
 const renderWorkingGroupDetail = async ({
   id,
@@ -56,7 +58,7 @@ const renderWorkingGroupDetail = async ({
                   gp2Routing.workingGroups({}).workingGroup.template
                 }
               >
-                <WorkingGroupDetail />
+                <WorkingGroupDetail currentTime={new Date()} />
               </Route>
             </MemoryRouter>
           </WhenReady>
@@ -78,7 +80,14 @@ describe('WorkingGroupDetail', () => {
       typeof putWorkingGroupResources
     >;
   const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
+  const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
 
+  beforeEach(() => {
+    mockGetEvents.mockResolvedValue({
+      total: 0,
+      items: [],
+    });
+  });
   const outputs = gp2Fixtures.createListOutputResponse(1);
   outputs.items[0].workingGroups = {
     id: '42',

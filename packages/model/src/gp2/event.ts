@@ -33,6 +33,8 @@ export type ListEventResponse = ListResponse<EventResponse>;
 export type EventConstraint = {
   userId?: string;
   notStatus?: string;
+  workingGroupId?: string;
+  projectId?: string;
 };
 
 export type EventCreateDataObject = Pick<

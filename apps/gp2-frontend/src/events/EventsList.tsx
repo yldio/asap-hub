@@ -13,6 +13,7 @@ import { useEvents } from './state';
 type EventListProps = {
   readonly currentTime: Date;
   readonly past?: boolean;
+  constraint?: gp2.EventConstraint;
 };
 
 export const eventMapper = ({
@@ -33,7 +34,11 @@ export const eventMapper = ({
   eventOwner: <EventOwner project={project} workingGroup={workingGroup} />,
 });
 
-const EventList: React.FC<EventListProps> = ({ currentTime, past = false }) => {
+const EventList: React.FC<EventListProps> = ({
+  currentTime,
+  past = false,
+  constraint,
+}) => {
   const { currentPage, pageSize } = usePaginationParams();
 
   const { items, total } = useEvents(
@@ -41,6 +46,7 @@ const EventList: React.FC<EventListProps> = ({ currentTime, past = false }) => {
       past,
       currentPage,
       pageSize,
+      constraint,
     }),
   );
 

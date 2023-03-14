@@ -12,8 +12,10 @@ import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import EventsList from '../events/EventsList';
 import OutputList from '../outputs/OutputList';
 import { useOutputs } from '../outputs/state';
+import { useUpcomingAndPastEvents } from './events';
 import { usePutWorkingGroupResources, useWorkingGroupById } from './state';
 
 const { workingGroups } = gp2Routing;
@@ -24,12 +26,14 @@ const loadCreateWorkingGroupOutput = () =>
   );
 
 const CreateWorkingGroupOutput = lazy(loadCreateWorkingGroupOutput);
-
-const WorkingGroupDetail: FC<Record<string, never>> = () => {
+type WorkingGroupDetailProps = {
+  currentTime: Date;
+};
+const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
   const { path } = useRouteMatch();
   const { workingGroupId } = useRouteParams(workingGroups({}).workingGroup);
   const workingGroup = useWorkingGroupById(workingGroupId);
-  const { total } = useOutputs({
+  const { total: outputsTotal } = useOutputs({
     filter: { workingGroups: workingGroupId },
   });
 
@@ -47,6 +51,8 @@ const WorkingGroupDetail: FC<Record<string, never>> = () => {
   const overview = workingGroupRoute.overview({}).$;
   const outputs = workingGroupRoute.outputs({}).$;
   const resources = resourcesRoute.$;
+  const upcoming = workingGroupRoute.upcoming({}).$;
+  const past = workingGroupRoute.past({}).$;
 
   const updateWorkingGroupResources =
     usePutWorkingGroupResources(workingGroupId);
@@ -54,7 +60,9 @@ const WorkingGroupDetail: FC<Record<string, never>> = () => {
   useEffect(() => {
     loadCreateWorkingGroupOutput();
   }, [workingGroup]);
-
+  const [upcomingEvents, pastEvents] = useUpcomingAndPastEvents(currentTime, {
+    workingGroupId,
+  });
   if (workingGroup) {
     return (
       <Switch>
@@ -67,7 +75,9 @@ const WorkingGroupDetail: FC<Record<string, never>> = () => {
           {...workingGroup}
           isWorkingGroupMember={isWorkingGroupMember}
           isAdministrator={isAdministrator}
-          outputsTotal={total}
+          outputsTotal={outputsTotal}
+          upcomingTotal={upcomingEvents.total}
+          pastTotal={pastEvents.total}
         >
           <Switch>
             <Route path={overview}>
@@ -116,6 +126,24 @@ const WorkingGroupDetail: FC<Record<string, never>> = () => {
             <Route path={outputs}>
               <Frame title="Shared Outputs">
                 <OutputList filters={{ workingGroups: workingGroupId }} />
+              </Frame>
+            </Route>
+            <Route path={upcoming}>
+              <Frame title="Upcoming Events">
+                <EventsList
+                  constraint={{ workingGroupId }}
+                  currentTime={currentTime}
+                  past={false}
+                />
+              </Frame>
+            </Route>
+            <Route path={past}>
+              <Frame title="Past Events">
+                <EventsList
+                  currentTime={currentTime}
+                  past={true}
+                  constraint={{ workingGroupId }}
+                />
               </Frame>
             </Route>
             <Redirect to={overview} />

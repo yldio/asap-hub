@@ -5,7 +5,7 @@ import {
 import { subHours } from 'date-fns';
 import { GetListOptions } from '../api-util';
 
-export type GetEventListOptions = GetListOptions &
+export type GetEventListOptions<Constraint = EventConstraint> = GetListOptions &
   (
     | {
         before: string;
@@ -18,7 +18,7 @@ export type GetEventListOptions = GetListOptions &
         sort?: undefined;
       }
   ) & {
-    constraint?: EventConstraint;
+    constraint?: Constraint;
   };
 
 export type EventListParams = {

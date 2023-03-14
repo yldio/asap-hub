@@ -52,13 +52,3 @@ export const getEntry = (fields: Field): Entry => ({
   },
   fields,
 });
-
-export const newsEntry = getEntry({
-  title: { 'en-US': 'Amazing News' },
-  shortText: { 'en-US': null },
-  thumbnail: { 'en-US': null },
-  frequency: { 'en-US': 'News Articles' },
-  link: { 'en-US': null },
-  linkText: { 'en-US': null },
-  text: { 'en-US': { data: {}, content: [], nodeType: 'document' } },
-});

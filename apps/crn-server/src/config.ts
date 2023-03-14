@@ -15,6 +15,7 @@ const {
   IS_CONTENTFUL_ENABLED_V2,
   CONTENTFUL_SPACE_ID,
   CONTENTFUL_ACCESS_TOKEN,
+  CONTENTFUL_MANAGEMENT_ACCESS_TOKEN,
   CONTENTFUL_ENV_ID,
   CONTENTFUL_HOST,
   CRN_API_URL,
@@ -87,6 +88,8 @@ export const sentryTraceSampleRate = 1.0;
 export const contentfulSpaceId = CONTENTFUL_SPACE_ID || 'contentful-space-id';
 export const contentfulAccessToken =
   CONTENTFUL_ACCESS_TOKEN || 'contentful-access-token';
+export const contentfulManagementAccessToken =
+  CONTENTFUL_MANAGEMENT_ACCESS_TOKEN || 'contentful-management-access-token';
 export const contentfulEnvId = CONTENTFUL_ENV_ID || 'contentful-environment-id';
 export const contentfulHost = CONTENTFUL_HOST || 'https://cdn.contentful.com';
 export const isContentfulEnabled = IS_CONTENTFUL_ENABLED === 'true' || false;

@@ -9,6 +9,7 @@
   "references": [
     { "path": "../../packages/errors" },
     { "path": "../../packages/model" },
+    { "path": "../../packages/contentful" },
     { "path": "../../packages/squidex" }
   ]
 }

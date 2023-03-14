@@ -373,6 +373,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/cms-data-sync@workspace:packages/cms-data-sync"
   dependencies:
+    "@asap-hub/contentful": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@asap-hub/squidex": "workspace:*"
     "@babel/runtime-corejs3": 7.21.0
@@ -402,7 +403,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@asap-hub/contentful@workspace:^, @asap-hub/contentful@workspace:packages/contentful":
+"@asap-hub/contentful@workspace:*, @asap-hub/contentful@workspace:packages/contentful":
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful@workspace:packages/contentful"
   dependencies:
@@ -422,6 +423,7 @@ __metadata:
     "@graphql-tools/mock": 8.7.19
     "@graphql-tools/schema": 8.5.1
     "@graphql-typed-document-node/core": 3.1.2
+    "@types/jest": ^29.4.0
     "@types/node": 14.18.37
     contentful-cli: 1.19.1
     contentful-management: ^10.19.3
@@ -582,7 +584,7 @@ __metadata:
   dependencies:
     "@asap-hub/algolia": "workspace:*"
     "@asap-hub/auth": "workspace:*"
-    "@asap-hub/contentful": "workspace:^"
+    "@asap-hub/contentful": "workspace:*"
     "@asap-hub/errors": "workspace:*"
     "@asap-hub/fixtures": "workspace:*"
     "@asap-hub/message-templates": "workspace:*"

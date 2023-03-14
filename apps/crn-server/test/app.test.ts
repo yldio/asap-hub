@@ -7,6 +7,11 @@ import { PageDataProvider } from '../src/data-providers/pages.data-provider';
 import { DashboardDataProvider } from '../src/data-providers/dashboard.data-provider';
 import { UserDataProvider } from '../src/data-providers/users.data-provider';
 
+jest.mock('@asap-hub/contentful', () => ({
+  getRestClient: jest.fn(),
+  getGraphQLClient: jest.fn(),
+}));
+
 describe('Contentful feature flag', () => {
   const OLD_ENV = process.env;
 

@@ -80,15 +80,6 @@
     "fsevents": {
       "built": false
     },
-    "open@7.2.1": {
-      "unplugged": true
-    },
-    "open@7.4.2": {
-      "unplugged": true
-    },
-    "open@8.4.0": {
-      "unplugged": true
-    },
     "serverless-offline@8.8.1": {
       "unplugged": true
     },

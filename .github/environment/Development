@@ -33,3 +33,4 @@ contentful-environment=Development
 is-contentful-enabled=true
 is-contentful-enabled-v2=false
 crn-contentful-env-id=Development
+crn-contentful-backup-bucket-name=asap-hub-dev-contentful-backup

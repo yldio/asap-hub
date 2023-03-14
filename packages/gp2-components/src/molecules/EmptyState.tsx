@@ -2,8 +2,8 @@ import {
   contentSidePaddingWithNavigation,
   Display,
   Paragraph,
+  pixels,
 } from '@asap-hub/react-components';
-import { pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ReactChild } from 'react';
 

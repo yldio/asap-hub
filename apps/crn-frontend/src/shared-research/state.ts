@@ -21,6 +21,7 @@ import {
 import { authorizationState } from '../auth/state';
 import { useAlgolia } from '../hooks/algolia';
 import {
+  getDraftResearchOutputs,
   getResearchOutput,
   getResearchOutputs,
   ResearchOutputListOptions,
@@ -129,14 +130,18 @@ export const useResearchOutputs = (options: ResearchOutputListOptions) => {
     researchOutputsState(options),
   );
   const { client } = useAlgolia();
+  const authorization = useRecoilValue(authorizationState);
   if (researchOutputs === undefined) {
-    throw getResearchOutputs(client, options)
-      .then(
-        (data): ListResearchOutputResponse => ({
-          total: data.nbHits,
-          items: data.hits,
-        }),
-      )
+    throw (
+      options.draftsOnly
+        ? getDraftResearchOutputs(options, authorization)
+        : getResearchOutputs(client, options).then(
+            (data): ListResearchOutputResponse => ({
+              total: data.nbHits,
+              items: data.hits,
+            }),
+          )
+    )
       .then(setResearchOutputs)
       .catch(setResearchOutputs);
   }

@@ -6,13 +6,25 @@ import {
   ResearchOutputResponse,
   ResearchTagResponse,
   FetchResearchTagsOptions,
+  ListResponse,
 } from '@asap-hub/model';
 import { API_BASE_URL } from '../config';
+import createListApiUrl from '../CreateListApiUrl';
 
-export type ResearchOutputListOptions = GetListOptions & {
+export type ResearchOutputListOptions =
+  | ResearchOutputPublishedListOptions
+  | ResearchOutputDraftListOptions;
+
+type ResearchOutputPublishedListOptions = GetListOptions & {
   teamId?: string;
   userId?: string;
   workingGroupId?: string;
+  draftsOnly?: false;
+};
+type ResearchOutputDraftListOptions = GetListOptions & {
+  userAssociationMember: boolean;
+  associationId: string;
+  draftsOnly: true;
 };
 
 export const getResearchOutput = async (
@@ -77,7 +89,7 @@ export const getAllFilters = (
 
 export const getResearchOutputs = (
   client: AlgoliaSearchClient,
-  options: ResearchOutputListOptions,
+  options: ResearchOutputPublishedListOptions,
 ) =>
   client
     .search(['research-output'], options.searchQuery, {
@@ -93,6 +105,33 @@ export const getResearchOutputs = (
     .catch((error: Error) => {
       throw new Error(`Could not search: ${error.message}`);
     });
+
+export const getDraftResearchOutputs = async (
+  options: ResearchOutputDraftListOptions,
+  authorization: string,
+): Promise<ListResponse<ResearchOutputResponse>> => {
+  if (options.userAssociationMember) {
+    const resp = await fetch(
+      createListApiUrl(
+        `research-outputs?status=draft&associationId=${options.associationId}`,
+        options,
+      ).toString(),
+      {
+        headers: { authorization },
+      },
+    );
+    if (!resp.ok) {
+      throw new Error(
+        `Failed to fetch draft research outputs. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      );
+    }
+    return resp.json();
+  }
+  return {
+    items: [],
+    total: 0,
+  };
+};
 
 export const getResearchTags = async (
   authorization: string,

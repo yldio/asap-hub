@@ -1,5 +1,5 @@
 import { EntityResponses, SearchEntityResponse } from '@asap-hub/algolia';
-import { ResearchOutputResponse } from '@asap-hub/model';
+import { ListResponse, ResearchOutputResponse } from '@asap-hub/model';
 import { isInternalUser } from '@asap-hub/validation';
 /* eslint-disable-next-line import/no-unresolved */
 import { Stringifier } from 'csv-stringify/browser/esm';
@@ -11,6 +11,8 @@ import {
 } from '@asap-hub/frontend-utils';
 
 export const MAX_ALGOLIA_RESULTS = 10000;
+// https://github.com/Squidex/squidex/blob/master/backend/src/Squidex/appsettings.json#L266
+export const MAX_SQUIDEX_RESULTS = 200;
 
 type ResearchOutputCSV = Record<
   keyof Omit<ResearchOutputResponse, 'team'>,
@@ -109,6 +111,33 @@ export const algoliaResultsToStream = async <T extends keyof EntityResponses>(
     data.hits.map(transform).forEach((row) => csvStream.write(row));
     currentPage += 1;
     morePages = currentPage <= data.nbPages - 1;
+  }
+  csvStream.end();
+};
+
+export const squidexResultsToStream = async <T>(
+  csvStream: Stringifier,
+  getResults: ({
+    currentPage,
+    pageSize,
+  }: Pick<GetListOptions, 'currentPage' | 'pageSize'>) => Readonly<
+    Promise<ListResponse<T>>
+  >,
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+  transform: (result: T) => Record<string, any>,
+) => {
+  let morePages = true;
+  let currentPage = 0;
+  while (morePages) {
+    // We are doing this in chunks and streams to avoid blob/ram limits.
+    // eslint-disable-next-line no-await-in-loop
+    const data = await getResults({
+      currentPage,
+      pageSize: MAX_SQUIDEX_RESULTS,
+    });
+    data.items.map(transform).forEach((row) => csvStream.write(row));
+    currentPage += 1;
+    morePages = currentPage * MAX_SQUIDEX_RESULTS < data.total;
   }
   csvStream.end();
 };

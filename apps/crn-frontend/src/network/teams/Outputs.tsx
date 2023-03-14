@@ -5,21 +5,26 @@ import {
   ResearchOutputsSearch,
   utils,
 } from '@asap-hub/react-components';
-import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import format from 'date-fns/format';
 import { ComponentProps } from 'react';
-import { TeamResponse } from '@asap-hub/model';
+import { ResearchOutputResponse, TeamResponse } from '@asap-hub/model';
+import { useRecoilValue } from 'recoil';
 
 import { usePagination, usePaginationParams, useSearch } from '../../hooks';
 import { useResearchOutputs } from '../../shared-research/state';
 
 import { useAlgolia } from '../../hooks/algolia';
-import { getResearchOutputs } from '../../shared-research/api';
+import {
+  getDraftResearchOutputs,
+  getResearchOutputs,
+} from '../../shared-research/api';
 import {
   algoliaResultsToStream,
   researchOutputToCSV,
+  squidexResultsToStream,
 } from '../../shared-research/export';
+import { authorizationState } from '../../auth/state';
 
 type OutputsListProps = Pick<
   ComponentProps<typeof ProfileOutputs>,
@@ -29,9 +34,13 @@ type OutputsListProps = Pick<
   searchQuery: string;
   filters: Set<string>;
   teamId: string;
+  userAssociationMember: boolean;
+  draftOutputs?: boolean;
 };
 type OutputsProps = {
   team: TeamResponse;
+  draftOutputs?: boolean;
+  userAssociationMember: boolean;
 };
 
 const OutputsList: React.FC<OutputsListProps> = ({
@@ -41,6 +50,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
   userAssociationMember,
   contactEmail,
   displayName,
+  draftOutputs,
 }) => {
   const { currentPage, pageSize, isListView, cardViewParams, listViewParams } =
     usePaginationParams();
@@ -50,30 +60,62 @@ const OutputsList: React.FC<OutputsListProps> = ({
     filters,
     currentPage,
     pageSize,
-    teamId,
+    ...(draftOutputs
+      ? {
+          userAssociationMember,
+          associationId: teamId,
+          draftsOnly: true,
+        }
+      : {
+          teamId,
+        }),
   });
+
   const { numberOfPages, renderPageHref } = usePagination(
     result.total,
     pageSize,
   );
   const { client } = useAlgolia();
+  const authorization = useRecoilValue(authorizationState);
   const exportResults = () =>
-    algoliaResultsToStream<typeof RESEARCH_OUTPUT_ENTITY_TYPE>(
-      createCsvFileStream(
-        `SharedOutputs_Team${utils
-          .titleCase(displayName)
-          .replace(/[\W_]+/g, '')}_${format(new Date(), 'MMddyy')}.csv`,
-        { header: true },
-      ),
-      (paginationParams) =>
-        getResearchOutputs(client, {
-          filters,
-          searchQuery,
-          teamId,
-          ...paginationParams,
-        }),
-      researchOutputToCSV,
-    );
+    draftOutputs
+      ? squidexResultsToStream<ResearchOutputResponse>(
+          createCsvFileStream(
+            `SharedOutputs_Drafts_Team_${utils
+              .titleCase(displayName)
+              .replace(/[\W_]+/g, '')}_${format(new Date(), 'MMddyy')}.csv`,
+            { header: true },
+          ),
+          (paginationParams) =>
+            getDraftResearchOutputs(
+              {
+                filters,
+                searchQuery,
+                userAssociationMember,
+                associationId: teamId,
+                draftsOnly: true,
+                ...paginationParams,
+              },
+              authorization,
+            ),
+          researchOutputToCSV,
+        )
+      : algoliaResultsToStream<typeof RESEARCH_OUTPUT_ENTITY_TYPE>(
+          createCsvFileStream(
+            `SharedOutputs_Team_${utils
+              .titleCase(displayName)
+              .replace(/[\W_]+/g, '')}_${format(new Date(), 'MMddyy')}.csv`,
+            { header: true },
+          ),
+          (paginationParams) =>
+            getResearchOutputs(client, {
+              filters,
+              searchQuery,
+              teamId,
+              ...paginationParams,
+            }),
+          researchOutputToCSV,
+        );
   return (
     <ProfileOutputs
       researchOutputs={result.items}
@@ -96,7 +138,11 @@ const OutputsList: React.FC<OutputsListProps> = ({
   );
 };
 
-const Outputs: React.FC<OutputsProps> = ({ team }) => {
+const Outputs: React.FC<OutputsProps> = ({
+  team,
+  userAssociationMember,
+  draftOutputs,
+}) => {
   const {
     filters,
     searchQuery,
@@ -113,9 +159,6 @@ const Outputs: React.FC<OutputsProps> = ({ team }) => {
     teamId: team.id,
   }).total;
 
-  const userAssociationMember = (useCurrentUserCRN()?.teams ?? []).some(
-    ({ id }) => id === team.id,
-  );
   return (
     <article>
       {hasOutputs && (
@@ -128,6 +171,7 @@ const Outputs: React.FC<OutputsProps> = ({ team }) => {
       )}
       <SearchFrame title="">
         <OutputsList
+          draftOutputs={draftOutputs}
           teamId={team.id}
           searchQuery={debouncedSearchQuery}
           filters={filters}

@@ -13,7 +13,7 @@ const loadEventsList = () =>
 const EventsList = lazy(loadEventsList);
 
 type RequiredPaths = 'about' | 'upcoming' | 'past';
-type OptionalPaths = 'calendar' | 'outputs' | 'workspace';
+type OptionalPaths = 'calendar' | 'outputs' | 'workspace' | 'draftOutputs';
 
 type ProfileSwitchProps = {
   About: FC;
@@ -23,6 +23,7 @@ type ProfileSwitchProps = {
   eventConstraint: EventConstraint;
   isActive?: boolean;
   Outputs?: FC;
+  DraftOutputs?: FC;
   paths: Record<RequiredPaths, string> & Partial<Record<OptionalPaths, string>>;
   type: ComponentProps<typeof NoEvents>['type'];
   Workspace?: FC;
@@ -39,6 +40,7 @@ const ProfileSwitch: FC<ProfileSwitchProps> = ({
   paths,
   type,
   Workspace,
+  DraftOutputs,
 }) => (
   <Frame title={displayName}>
     <Switch>
@@ -56,6 +58,13 @@ const ProfileSwitch: FC<ProfileSwitchProps> = ({
         <Route path={paths.outputs}>
           <SearchFrame title="Outputs">
             <Outputs />
+          </SearchFrame>
+        </Route>
+      )}
+      {DraftOutputs && (
+        <Route path={paths.draftOutputs}>
+          <SearchFrame title="Draft Outputs">
+            <DraftOutputs />
           </SearchFrame>
         </Route>
       )}

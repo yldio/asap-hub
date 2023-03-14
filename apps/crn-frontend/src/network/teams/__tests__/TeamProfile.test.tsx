@@ -34,6 +34,47 @@ const mockGetEventsFromAlgolia = getEvents as jest.MockedFunction<
 >;
 
 afterEach(jest.clearAllMocks);
+const renderPage = async (
+  teamResponse = createTeamResponse(),
+  { teamId = teamResponse.id, currentTime = new Date() } = {},
+  user = {},
+  history = createMemoryHistory({
+    initialEntries: [network({}).teams({}).team({ teamId }).$],
+  }),
+) => {
+  const mockGetTeam = getTeam as jest.MockedFunction<typeof getTeam>;
+  mockGetTeam.mockImplementation(async (id) =>
+    id === teamResponse.id ? teamResponse : undefined,
+  );
+
+  const { container } = render(
+    <RecoilRoot
+      initializeState={({ set }) =>
+        set(refreshTeamState(teamResponse.id), Math.random())
+      }
+    >
+      <Suspense fallback="loading">
+        <Auth0Provider user={user}>
+          <WhenReady>
+            <Router history={history}>
+              <Route
+                path={
+                  network.template +
+                  network({}).teams.template +
+                  network({}).teams({}).team.template
+                }
+              >
+                <TeamProfile currentTime={currentTime} />
+              </Route>
+            </Router>
+          </WhenReady>
+        </Auth0Provider>
+      </Suspense>
+    </RecoilRoot>,
+  );
+  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  return { container };
+};
 
 it('renders the header info', async () => {
   await renderPage({
@@ -192,45 +233,3 @@ it.each`
     },
   });
 });
-
-const renderPage = async (
-  teamResponse = createTeamResponse(),
-  { teamId = teamResponse.id, currentTime = new Date() } = {},
-  user = {},
-  history = createMemoryHistory({
-    initialEntries: [network({}).teams({}).team({ teamId }).$],
-  }),
-) => {
-  const mockGetTeam = getTeam as jest.MockedFunction<typeof getTeam>;
-  mockGetTeam.mockImplementation(async (id) =>
-    id === teamResponse.id ? teamResponse : undefined,
-  );
-
-  const { container } = render(
-    <RecoilRoot
-      initializeState={({ set }) =>
-        set(refreshTeamState(teamResponse.id), Math.random())
-      }
-    >
-      <Suspense fallback="loading">
-        <Auth0Provider user={user}>
-          <WhenReady>
-            <Router history={history}>
-              <Route
-                path={
-                  network.template +
-                  network({}).teams.template +
-                  network({}).teams({}).team.template
-                }
-              >
-                <TeamProfile currentTime={currentTime} />
-              </Route>
-            </Router>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
-  );
-  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
-  return { container };
-};

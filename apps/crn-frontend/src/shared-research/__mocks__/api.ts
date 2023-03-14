@@ -2,8 +2,12 @@ import {
   RESEARCH_OUTPUT_ENTITY_TYPE,
   SearchEntityResponse,
 } from '@asap-hub/algolia';
-import { ResearchOutputResponse } from '@asap-hub/model';
 import {
+  ListResearchOutputResponse,
+  ResearchOutputResponse,
+} from '@asap-hub/model';
+import {
+  createListResearchOutputResponse,
   createResearchOutputResponse,
   researchTagsResponse,
 } from '@asap-hub/fixtures';
@@ -23,4 +27,8 @@ export const getResearchOutputs = jest.fn(
   > => createResearchOutputListAlgoliaResponse(2),
 );
 
+export const getDraftResearchOutputs = jest.fn(
+  async (): Promise<ListResearchOutputResponse> =>
+    createListResearchOutputResponse(2),
+);
 export const getResearchTags = jest.fn(async () => researchTagsResponse);

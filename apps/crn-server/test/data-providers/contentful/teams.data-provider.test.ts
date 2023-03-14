@@ -158,7 +158,7 @@ describe('Teams data provider', () => {
             limit: 8,
             order: ['displayName_ASC'],
             skip: 5,
-            where: {},
+            where: { inactiveSince_exists: false },
           }),
         );
       });

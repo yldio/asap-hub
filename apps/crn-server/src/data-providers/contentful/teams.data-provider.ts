@@ -59,7 +59,9 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
       : {};
 
     const activeQuery =
-      filter?.active === false ? { inactiveSince_exists: true } : {};
+      typeof filter?.active === 'boolean'
+        ? { inactiveSince_exists: !filter?.active }
+        : {};
 
     const { teamsCollection } = await this.contentfulClient.request<
       FetchTeamsQuery,

@@ -12,4 +12,52 @@ describe('parseGraphQLResearchOutput', () => {
     output.flatData.workingGroups = null;
     expect(parseGraphQLResearchOutput(output).workingGroups).toStrictEqual([]);
   });
+
+  test('should flatten related research data', () => {
+    const baseRelatedResearch = {
+      id: '123',
+      flatData: {
+        title: 'RelatedR1',
+        type: 'Report',
+        documentType: 'Report',
+        teams: [{ id: 'team-id-1', flatData: { displayName: 'Team B' } }],
+      },
+    };
+
+    output.flatData.relatedResearch = [baseRelatedResearch];
+    expect(parseGraphQLResearchOutput(output).relatedResearch).toStrictEqual([
+      {
+        id: '123',
+        title: 'RelatedR1',
+        type: 'Report',
+        documentType: 'Report',
+        teams: [{ id: 'team-id-1', displayName: 'Team B' }],
+      },
+    ]);
+
+    output.flatData.relatedResearch = null;
+    expect(parseGraphQLResearchOutput(output).relatedResearch).toStrictEqual(
+      [],
+    );
+
+    output.flatData.relatedResearch = [
+      {
+        ...baseRelatedResearch,
+        flatData: {
+          ...baseRelatedResearch.flatData,
+          documentType: 'UnknowType',
+          teams: null,
+        },
+      },
+    ];
+    expect(parseGraphQLResearchOutput(output).relatedResearch).toStrictEqual([
+      {
+        id: '123',
+        title: 'RelatedR1',
+        type: 'Report',
+        documentType: 'Grant Document',
+        teams: [],
+      },
+    ]);
+  });
 });

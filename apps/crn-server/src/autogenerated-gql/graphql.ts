@@ -4051,6 +4051,10 @@ export type ResearchOutputs = Content & {
   referencesLabsContents: Maybe<Array<Labs>>;
   /** Query Labs content items with total count. */
   referencesLabsContentsWithTotal: Maybe<LabsResultDto>;
+  /** Query Research Outputs content items. */
+  referencesResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
+  /** Query Research Outputs content items with total count. */
+  referencesResearchOutputsContentsWithTotal: Maybe<ResearchOutputsResultDto>;
   /** Query Research Tags content items. */
   referencesResearchTagsContents: Maybe<Array<ResearchTags>>;
   /** Query Research Tags content items with total count. */
@@ -4067,6 +4071,10 @@ export type ResearchOutputs = Content & {
   referencesWorkingGroupsContents: Maybe<Array<WorkingGroups>>;
   /** Query Working Groups content items with total count. */
   referencesWorkingGroupsContentsWithTotal: Maybe<WorkingGroupsResultDto>;
+  /** Query Research Outputs content items. */
+  referencingResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
+  /** Query Research Outputs content items with total count. */
+  referencingResearchOutputsContentsWithTotal: Maybe<ResearchOutputsResultDto>;
   /** Query Teams content items. */
   referencingTeamsContents: Maybe<Array<Teams>>;
   /** Query Teams content items with total count. */
@@ -4110,6 +4118,24 @@ export type ResearchOutputsReferencesLabsContentsArgs = {
 
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesLabsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Research Outputs content type. */
+export type ResearchOutputsReferencesResearchOutputsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Research Outputs content type. */
+export type ResearchOutputsReferencesResearchOutputsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -4182,6 +4208,24 @@ export type ResearchOutputsReferencesWorkingGroupsContentsArgs = {
 
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesWorkingGroupsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Research Outputs content type. */
+export type ResearchOutputsReferencingResearchOutputsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Research Outputs content type. */
+export type ResearchOutputsReferencingResearchOutputsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -4330,6 +4374,7 @@ export type ResearchOutputsDataDto = {
   methods: Maybe<ResearchOutputsDataMethodsDto>;
   organisms: Maybe<ResearchOutputsDataOrganismsDto>;
   publishDate: Maybe<ResearchOutputsDataPublishDateDto>;
+  relatedResearch: Maybe<ResearchOutputsDataRelatedResearchDto>;
   rrid: Maybe<ResearchOutputsDataRridDto>;
   sharingStatus: Maybe<ResearchOutputsDataSharingStatusDto>;
   subtype: Maybe<ResearchOutputsDataSubtypeDto>;
@@ -4372,6 +4417,7 @@ export type ResearchOutputsDataInputDto = {
   methods: InputMaybe<ResearchOutputsDataMethodsInputDto>;
   organisms: InputMaybe<ResearchOutputsDataOrganismsInputDto>;
   publishDate: InputMaybe<ResearchOutputsDataPublishDateInputDto>;
+  relatedResearch: InputMaybe<ResearchOutputsDataRelatedResearchInputDto>;
   rrid: InputMaybe<ResearchOutputsDataRridInputDto>;
   sharingStatus: InputMaybe<ResearchOutputsDataSharingStatusInputDto>;
   subtype: InputMaybe<ResearchOutputsDataSubtypeInputDto>;
@@ -4459,6 +4505,16 @@ export type ResearchOutputsDataPublishDateDto = {
 export type ResearchOutputsDataPublishDateInputDto = {
   /** Date of publishing (outside the Hub). Only applies to outputs that have been published. */
   iv: InputMaybe<Scalars['Instant']>;
+};
+
+/** The structure of the Related Research field of the Research Outputs content type. */
+export type ResearchOutputsDataRelatedResearchDto = {
+  iv: Maybe<Array<ResearchOutputs>>;
+};
+
+/** The structure of the Related Research field of the Research Outputs content input type. */
+export type ResearchOutputsDataRelatedResearchInputDto = {
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Identifier (RRID) field of the Research Outputs content type. */
@@ -4605,6 +4661,7 @@ export type ResearchOutputsFlatDataDto = {
   organisms: Maybe<Array<ResearchTags>>;
   /** Date of publishing (outside the Hub). Only applies to outputs that have been published. */
   publishDate: Maybe<Scalars['Instant']>;
+  relatedResearch: Maybe<Array<ResearchOutputs>>;
   /** This must start with "RRID:" */
   rrid: Maybe<Scalars['String']>;
   sharingStatus: Maybe<Scalars['String']>;
@@ -8829,6 +8886,24 @@ export type ResearchOutputContentFragment = Pick<
             })
       >
     >;
+    relatedResearch: Maybe<
+      Array<
+        Pick<ResearchOutputs, 'id'> & {
+          flatData: Pick<
+            ResearchOutputsFlatDataDto,
+            'title' | 'type' | 'documentType'
+          > & {
+            teams: Maybe<
+              Array<
+                Pick<Teams, 'id'> & {
+                  flatData: Pick<TeamsFlatDataDto, 'displayName'>;
+                }
+              >
+            >;
+          };
+        }
+      >
+    >;
     labs: Maybe<
       Array<Pick<Labs, 'id'> & { flatData: Pick<LabsFlatDataDto, 'name'> }>
     >;
@@ -9000,6 +9075,24 @@ export type FetchResearchOutputQuery = {
                     >;
                   };
                 })
+          >
+        >;
+        relatedResearch: Maybe<
+          Array<
+            Pick<ResearchOutputs, 'id'> & {
+              flatData: Pick<
+                ResearchOutputsFlatDataDto,
+                'title' | 'type' | 'documentType'
+              > & {
+                teams: Maybe<
+                  Array<
+                    Pick<Teams, 'id'> & {
+                      flatData: Pick<TeamsFlatDataDto, 'displayName'>;
+                    }
+                  >
+                >;
+              };
+            }
           >
         >;
         labs: Maybe<
@@ -9190,6 +9283,24 @@ export type FetchResearchOutputsQuery = {
                           >;
                         };
                       })
+                >
+              >;
+              relatedResearch: Maybe<
+                Array<
+                  Pick<ResearchOutputs, 'id'> & {
+                    flatData: Pick<
+                      ResearchOutputsFlatDataDto,
+                      'title' | 'type' | 'documentType'
+                    > & {
+                      teams: Maybe<
+                        Array<
+                          Pick<Teams, 'id'> & {
+                            flatData: Pick<TeamsFlatDataDto, 'displayName'>;
+                          }
+                        >
+                      >;
+                    };
+                  }
                 >
               >;
               labs: Maybe<
@@ -12427,6 +12538,66 @@ export const ResearchOutputContentFragmentDoc = {
                                   {
                                     kind: 'Field',
                                     name: { kind: 'Name', value: 'orcid' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'relatedResearch' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'title' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'type' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'documentType' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'teams' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'flatData' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'displayName',
+                                          },
+                                        },
+                                      ],
+                                    },
                                   },
                                 ],
                               },

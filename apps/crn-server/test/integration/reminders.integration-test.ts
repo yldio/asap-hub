@@ -1246,6 +1246,7 @@ describe('Reminders', () => {
     methodIds: [],
     labIds: [],
     authors: [],
+    relatedResearchIds: [],
     addedDate: new Date().toISOString(),
   });
 });

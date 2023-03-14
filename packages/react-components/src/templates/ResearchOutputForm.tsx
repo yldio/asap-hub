@@ -20,6 +20,7 @@ import {
 import { mobileScreen, perRem } from '../pixels';
 import { Button } from '../atoms';
 import ResearchOutputContributorsCard from '../organisms/ResearchOutputContributorsCard';
+import ResearchOutputRelatedResearchCard from '../organisms/ResearchOutputRelatedResearchCard';
 import { usePushFromHere } from '../routing';
 import {
   noop,
@@ -54,6 +55,11 @@ type ResearchOutputFormProps = Pick<
     researchTags: ResearchTagResponse[];
     selectedTeams: NonNullable<
       ComponentProps<typeof ResearchOutputContributorsCard>['teams']
+    >;
+    getRelatedResearchSuggestions?: NonNullable<
+      ComponentProps<
+        typeof ResearchOutputRelatedResearchCard
+      >['getRelatedResearchSuggestions']
     >;
     researchOutputData?: ResearchOutputResponse;
     tagSuggestions: string[];
@@ -144,6 +150,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   getLabSuggestions = noop,
   getTeamSuggestions = noop,
   getAuthorSuggestions = noop,
+  getRelatedResearchSuggestions = noop,
   researchTags,
   serverValidationErrors,
   clearServerValidationError,
@@ -196,6 +203,21 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
         ComponentProps<typeof ResearchOutputContributorsCard>['teams']
       >
     >(selectedTeams);
+
+  const [relatedResearch, setRelatedResearch] = useState<
+    NonNullable<
+      ComponentProps<
+        typeof ResearchOutputRelatedResearchCard
+      >['relatedResearch']
+    >
+  >(
+    researchOutputData?.relatedResearch?.map((research) => ({
+      value: research.id,
+      label: research.title,
+      type: research.type,
+      documentType: research.documentType,
+    })) || [],
+  );
 
   const [description, setDescription] = useState<
     ResearchOutputPostRequest['description']
@@ -263,6 +285,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     authors,
     labs,
     teams,
+    relatedResearch,
     usageNotes,
     asapFunded,
     usedInPublication,
@@ -363,6 +386,13 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                 getTeamSuggestions={getTeamSuggestions}
                 isEditMode={!!researchOutputData}
                 authorsRequired={authorsRequired}
+              />
+              <ResearchOutputRelatedResearchCard
+                isSaving={isSaving}
+                relatedResearch={relatedResearch}
+                onChangeRelatedResearch={setRelatedResearch}
+                getRelatedResearchSuggestions={getRelatedResearchSuggestions}
+                isEditMode={!!researchOutputData}
               />
               <div css={formControlsContainerStyles}>
                 <div

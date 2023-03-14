@@ -49,6 +49,7 @@ export interface ResearchOutput<
   usageNotes?: string;
   usedInAPublication: DecisionOption;
   workingGroups: string[];
+  relatedResearch?: string[];
 }
 
 export interface RestResearchOutput extends Entity, Rest<ResearchOutput> {}
@@ -68,6 +69,7 @@ export interface GraphqlResearchOutput
   extends Entity,
     Graphql<ResearchOutput<GraphqlResearchOutputAuthors>> {
   referencingTeamsContents?: GraphqlTeam[];
+  referencingResearchOutputsContents?: GraphqlResearchOutput[];
 }
 
 export type ResearchOutputLabConnection = { id: string } & Graphql<{

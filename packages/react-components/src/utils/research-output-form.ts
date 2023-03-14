@@ -11,11 +11,19 @@ import { isInternalUser } from '@asap-hub/validation';
 import { ComponentProps, ComponentPropsWithRef } from 'react';
 import AuthorSelect from '../organisms/AuthorSelect';
 import ResearchOutputContributorsCard from '../organisms/ResearchOutputContributorsCard';
+import ResearchOutputRelatedResearchCard from '../organisms/ResearchOutputRelatedResearchCard';
+import { MultiSelectOptionsType } from '../atoms';
 
 export type getTeamState = {
   team: TeamResponse | undefined;
   researchOutputData: ResearchOutputResponse | undefined;
 };
+
+export type ResearchOutputOption = Pick<
+  ResearchOutputResponse,
+  'type' | 'documentType'
+> &
+  MultiSelectOptionsType;
 
 const identifierTypeToFieldName: Record<
   ResearchOutputIdentifierType,
@@ -107,6 +115,9 @@ export type ResearchOutputPayload = {
   teams: NonNullable<
     ComponentProps<typeof ResearchOutputContributorsCard>['teams']
   >;
+  relatedResearch: NonNullable<
+    ComponentProps<typeof ResearchOutputRelatedResearchCard>['relatedResearch']
+  >;
   usageNotes: ResearchOutputPostRequest['usageNotes'];
   asapFunded: DecisionOption;
   usedInPublication: DecisionOption;
@@ -131,6 +142,7 @@ export const getPayload = ({
   authors,
   labs,
   teams,
+  relatedResearch,
   usageNotes,
   asapFunded,
   usedInPublication,
@@ -152,6 +164,7 @@ export const getPayload = ({
   authors: getPostAuthors(authors),
   labs: labs.map(({ value }) => value),
   teams: teams.map(({ value }) => value),
+  relatedResearch: relatedResearch.map(({ value }) => value),
   usageNotes,
   asapFunded: convertDecisionToBoolean(asapFunded),
   usedInPublication: convertDecisionToBoolean(usedInPublication),

@@ -85,6 +85,11 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
         items: { type: 'string' },
         nullable: true,
       },
+      relatedResearch: {
+        type: 'array',
+        items: { type: 'string' },
+        nullable: true,
+      },
       authors: {
         type: 'array',
         items: {

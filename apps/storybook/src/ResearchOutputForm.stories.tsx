@@ -50,6 +50,32 @@ export const Normal = () => (
           }, 1000);
         })
       }
+      getRelatedResearchSuggestions={() =>
+        new Promise((resolve) => {
+          setTimeout(() => {
+            resolve([
+              {
+                label: 'Research 1',
+                value: '1',
+                type: 'Preprint',
+                documentType: 'Report',
+              },
+              {
+                label: 'Research With a very long name to display in the page',
+                value: '2',
+                type: 'Preprint',
+                documentType: 'Article',
+              },
+              {
+                label: 'Research 3',
+                value: '3',
+                type: 'Preprint',
+                documentType: 'Protocol',
+              },
+            ]);
+          }, 1000);
+        })
+      }
       researchTags={[researchTagMethodResponse]}
       published={boolean('Published', true)}
     />
@@ -95,6 +121,32 @@ export const EditMode = () => (
         new Promise((resolve) => {
           setTimeout(() => {
             resolve([{ label: 'team name', value: '1' }]);
+          }, 1000);
+        })
+      }
+      getRelatedResearchSuggestions={() =>
+        new Promise((resolve) => {
+          setTimeout(() => {
+            resolve([
+              {
+                label: 'Research 1',
+                value: '1',
+                type: 'Preprint',
+                documentType: 'Report',
+              },
+              {
+                label: 'Research With a very long name to display in the page',
+                value: '2',
+                type: 'Preprint',
+                documentType: 'Article',
+              },
+              {
+                label: 'Research 3',
+                value: '3',
+                type: 'Preprint',
+                documentType: 'Protocol',
+              },
+            ]);
           }, 1000);
         })
       }

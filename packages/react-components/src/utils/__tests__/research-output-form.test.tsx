@@ -95,6 +95,14 @@ describe('getResearchOutputPayload', () => {
       methods: [],
       organisms: [],
       environments: [],
+      relatedResearch: [
+        {
+          value: 'r99',
+          label: 'r99',
+          type: '3D Printing',
+          documentType: 'Grant Document',
+        },
+      ],
       subtype: 'Preclinical',
     };
     expect(
@@ -112,6 +120,7 @@ describe('getResearchOutputPayload', () => {
       publishDate: new Date('2020-01-01').toISOString(),
       identifierType: undefined,
       identifier: undefined,
+      relatedResearch: ['r99'],
     });
   });
 });

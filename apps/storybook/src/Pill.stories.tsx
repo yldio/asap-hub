@@ -9,7 +9,7 @@ export const Normal = () => (
   <Pill
     accent={select(
       'Accent',
-      ['default', 'green', 'warning', 'info', 'neutral'],
+      ['default', 'green', 'warning', 'info', 'neutral', 'gray'],
       'default',
     )}
     small={boolean('Small', true)}

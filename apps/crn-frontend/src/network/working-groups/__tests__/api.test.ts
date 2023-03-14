@@ -95,6 +95,7 @@ describe('working group research output', () => {
     methods: [],
     organisms: [],
     environments: [],
+    relatedResearch: [],
     authors: [{ userId: 'user-1' }],
     workingGroups: ['wg-1'],
   };

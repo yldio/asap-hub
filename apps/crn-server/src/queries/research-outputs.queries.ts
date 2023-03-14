@@ -112,6 +112,20 @@ export const researchOutputContentQueryFragment = gql`
           }
         }
       }
+      relatedResearch {
+        id
+        flatData {
+          title
+          type
+          documentType
+          teams {
+            id
+            flatData {
+              displayName
+            }
+          }
+        }
+      }
       labs {
         id
         flatData {

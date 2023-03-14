@@ -1,7 +1,12 @@
 import { getEventListOptions } from '@asap-hub/frontend-utils';
-import { EventOwner } from '@asap-hub/gp2-components';
+import {
+  EventOwner,
+  IconWithLabel,
+  speakerIcon,
+} from '@asap-hub/gp2-components';
 import { gp2 } from '@asap-hub/model';
-import { EventsList } from '@asap-hub/react-components';
+import { EventsList, Paragraph, utils } from '@asap-hub/react-components';
+
 import { usePagination, usePaginationParams } from '../hooks/pagination';
 import { useEvents } from './state';
 
@@ -18,6 +23,13 @@ export const eventMapper = ({
 }: gp2.EventResponse) => ({
   ...event,
   hasSpeakersToBeAnnounced: speakers.length === 0,
+  eventSpeakers: (
+    <IconWithLabel icon={speakerIcon}>
+      <Paragraph noMargin accent="lead">
+        {utils.getCounterString(speakers.length, 'Speaker')}
+      </Paragraph>
+    </IconWithLabel>
+  ),
   eventOwner: <EventOwner project={project} workingGroup={workingGroup} />,
 });
 

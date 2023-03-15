@@ -17250,12 +17250,6 @@ __metadata:
       built: false
     fsevents:
       built: false
-    open@7.2.1:
-      unplugged: true
-    open@7.4.2:
-      unplugged: true
-    open@8.4.0:
-      unplugged: true
     serverless-offline-aws-eventbridge@1.6.7:
       unplugged: true
     serverless-offline-ssm@6.2.0:

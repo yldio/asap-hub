@@ -1,0 +1,52 @@
+name: Contentful Backup
+description: Backs up the Contentful data
+
+inputs:
+  aws-access-key-id:
+    description: 'AWS Access Key ID'
+    required: true
+  aws-secret-access-key:
+    description: 'AWS Secret Access Key'
+    required: true
+  bucket-name:
+    description: 's3 bucket name for backup'
+    required: true
+  contentful-space-id:
+    description: 'Contenful Space ID'
+    required: true
+  contentful-environment:
+    description: 'Contentful Environment'
+    required: true
+  contentful-token:
+    description: 'Contentful Management Token'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Export Contentful Data
+      shell: bash
+      run: |
+        FILE_NAME=$(date +%s| cut -b1-13)-contentful-backup.json
+        # need to install unplugged native dependencies of `contentful-cli`
+        yarn
+        yarn workspace @asap-hub/contentful contentful space export \
+          --include-drafts true \
+          --use-verbose-renderer true \
+          --content-file $FILE_NAME \
+          --export-dir $GITHUB_WORKSPACE \
+          --space-id $CONTENTFUL_SPACE_ID \
+          --environment-id $CONTENTFUL_ENVIRONMENT \
+          --management-token $CONTENTFUL_TOKEN
+        echo "FILE_NAME=$FILE_NAME" >> $GITHUB_ENV
+      env:
+        CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
+        CONTENTFUL_ENVIRONMENT: ${{ inputs.contentful-environment }}
+        CONTENTFUL_TOKEN: ${{ inputs.contentful-token }}
+    - name: upload to S3
+      shell: bash
+      run: aws s3api put-object --bucket $BUCKET_NAME --key $FILE_NAME --body $FILE_NAME --storage-class STANDARD_IA
+      env:
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
+        BUCKET_NAME: ${{ inputs.bucket-name }}

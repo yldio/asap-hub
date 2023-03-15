@@ -26,10 +26,6 @@ const styles = css({
 
   display: 'grid',
   textAlign: 'center',
-
-  [`@media (min-width: ${mobileScreen.width + 1}px)`]: {
-    justifyItems: 'center',
-  },
 });
 
 const EmptyState: React.FC<EmptyStateProps> = ({

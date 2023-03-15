@@ -1,5 +1,4 @@
-import { gp2, useRouteParams } from '@asap-hub/routing';
-
+import { Frame } from '@asap-hub/frontend-utils';
 import {
   BiographyModal,
   ContactInformationModal,
@@ -12,11 +11,13 @@ import {
   UserDetailPage,
   UserOverview,
 } from '@asap-hub/gp2-components';
-import { NotFoundPage } from '@asap-hub/react-components';
-
 import { UserPatchRequest } from '@asap-hub/model';
+import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
-import { Route } from 'react-router-dom';
+import { gp2, useRouteParams } from '@asap-hub/routing';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import OutputList from '../outputs/OutputList';
+import { useOutputs } from '../outputs/state';
 import { getInstitutions } from './api';
 import locationSuggestions from './location-suggestions';
 import { useContributingCohorts, usePatchUserById, useUserById } from './state';
@@ -29,19 +30,26 @@ const UserDetail = () => {
   const isOwnProfile = userId === currentUser?.id;
   const user = useUserById(userId);
 
+  const { total } = useOutputs({
+    filter: { authors: [userId] },
+  });
+
+  const userRoute = users({}).user({ userId });
+
+  const overview = userRoute.overview({}).$;
+  const outputs = userRoute.outputs({}).$;
+
   const backToUserDetails = users({}).user({ userId }).$;
+  const userOverviewRoute = userRoute.overview({});
   const editHrefs = {
-    editBiographyHref: users({}).user({ userId }).editBiography({}).$,
-    editContactInfoHref: users({}).user({ userId }).editContactInfo({}).$,
-    editContributingCohortsHref: users({})
-      .user({ userId })
-      .editContributingCohorts({}).$,
-    editExternalProfilesHref: users({})
-      .user({ userId })
-      .editExternalProfiles({}).$,
-    editFundingStreamsHref: users({}).user({ userId }).editFundingStreams({}).$,
-    editKeywordsHref: users({}).user({ userId }).editKeywords({}).$,
-    editQuestionsHref: users({}).user({ userId }).editQuestions({}).$,
+    editBiographyHref: userOverviewRoute.editBiography({}).$,
+    editContactInfoHref: userOverviewRoute.editContactInfo({}).$,
+    editContributingCohortsHref: userOverviewRoute.editContributingCohorts({})
+      .$,
+    editExternalProfilesHref: userOverviewRoute.editExternalProfiles({}).$,
+    editFundingStreamsHref: userOverviewRoute.editFundingStreams({}).$,
+    editKeywordsHref: userOverviewRoute.editKeywords({}).$,
+    editQuestionsHref: userOverviewRoute.editQuestions({}).$,
   };
   const cohortOptions = useContributingCohorts();
   const patchUser = usePatchUserById(userId);
@@ -53,61 +61,77 @@ const UserDetail = () => {
 
   if (user) {
     return (
-      <UserDetailPage
-        editHref={
-          isOwnProfile
-            ? users({}).user({ userId }).editKeyInfo({}).$
-            : undefined
-        }
-        {...user}
-      >
-        <UserOverview {...user} {...(isOwnProfile ? editHrefs : {})} />
-        {isOwnProfile && (
-          <>
-            <Route path={users({}).user({ userId }).editKeyInfo({}).$}>
-              <KeyInformationModal
-                {...user}
-                {...commonModalProps}
-                locationSuggestions={locationSuggestions.map(
-                  ({ shortName }) => shortName,
+      <Switch>
+        <UserDetailPage
+          editHref={
+            isOwnProfile ? userOverviewRoute.editKeyInfo({}).$ : undefined
+          }
+          outputsTotal={total}
+          {...user}
+        >
+          <Switch>
+            <Route path={overview}>
+              <Frame title="Overview">
+                <UserOverview {...user} {...(isOwnProfile ? editHrefs : {})} />
+                {isOwnProfile && (
+                  <>
+                    <Route path={userOverviewRoute.editKeyInfo({}).$}>
+                      <KeyInformationModal
+                        {...user}
+                        {...commonModalProps}
+                        locationSuggestions={locationSuggestions.map(
+                          ({ shortName }) => shortName,
+                        )}
+                        loadInstitutionOptions={(searchQuery) =>
+                          getInstitutions({ searchQuery }).then((data) =>
+                            data.items.map(({ name }) => name),
+                          )
+                        }
+                      />
+                    </Route>
+                    <Route path={userOverviewRoute.editBiography({}).$}>
+                      <BiographyModal {...user} {...commonModalProps} />
+                    </Route>
+                    <Route path={userOverviewRoute.editContactInfo({}).$}>
+                      <ContactInformationModal
+                        {...user}
+                        {...commonModalProps}
+                      />
+                    </Route>
+                    <Route
+                      path={userOverviewRoute.editContributingCohorts({}).$}
+                    >
+                      <ContributingCohortsModal
+                        {...user}
+                        {...commonModalProps}
+                        cohortOptions={cohortOptions}
+                      />
+                    </Route>
+                    <Route path={userOverviewRoute.editExternalProfiles({}).$}>
+                      <ExternalProfilesModal {...user} {...commonModalProps} />
+                    </Route>
+                    <Route path={userOverviewRoute.editFundingStreams({}).$}>
+                      <FundingProviderModal {...user} {...commonModalProps} />
+                    </Route>
+                    <Route path={userOverviewRoute.editKeywords({}).$}>
+                      <KeywordsModal {...user} {...commonModalProps} />
+                    </Route>
+                    <Route path={userOverviewRoute.editQuestions({}).$}>
+                      <OpenQuestionsModal {...user} {...commonModalProps} />
+                    </Route>
+                  </>
                 )}
-                loadInstitutionOptions={(searchQuery) =>
-                  getInstitutions({ searchQuery }).then((data) =>
-                    data.items.map(({ name }) => name),
-                  )
-                }
-              />
+              </Frame>
             </Route>
-            <Route path={users({}).user({ userId }).editBiography({}).$}>
-              <BiographyModal {...user} {...commonModalProps} />
+            <Route path={outputs}>
+              <Frame title="Shared Outputs">
+                <OutputList filters={{ authors: [userId] }} />
+              </Frame>
             </Route>
-            <Route path={users({}).user({ userId }).editContactInfo({}).$}>
-              <ContactInformationModal {...user} {...commonModalProps} />
-            </Route>
-            <Route
-              path={users({}).user({ userId }).editContributingCohorts({}).$}
-            >
-              <ContributingCohortsModal
-                {...user}
-                {...commonModalProps}
-                cohortOptions={cohortOptions}
-              />
-            </Route>
-            <Route path={users({}).user({ userId }).editExternalProfiles({}).$}>
-              <ExternalProfilesModal {...user} {...commonModalProps} />
-            </Route>
-            <Route path={users({}).user({ userId }).editFundingStreams({}).$}>
-              <FundingProviderModal {...user} {...commonModalProps} />
-            </Route>
-            <Route path={users({}).user({ userId }).editKeywords({}).$}>
-              <KeywordsModal {...user} {...commonModalProps} />
-            </Route>
-            <Route path={users({}).user({ userId }).editQuestions({}).$}>
-              <OpenQuestionsModal {...user} {...commonModalProps} />
-            </Route>
-          </>
-        )}
-      </UserDetailPage>
+            <Redirect to={overview} />
+          </Switch>
+        </UserDetailPage>
+      </Switch>
     );
   }
   return <NotFoundPage />;

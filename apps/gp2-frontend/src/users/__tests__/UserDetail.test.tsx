@@ -12,6 +12,8 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import { getOutputs } from '../../outputs/api';
+import { refreshOutputsState } from '../../outputs/state';
 import {
   getContributingCohorts,
   getInstitutions,
@@ -22,6 +24,7 @@ import { refreshCohortsState, refreshUserState } from '../state';
 import UserDetail from '../UserDetail';
 
 jest.mock('../api');
+jest.mock('../../outputs/api');
 
 const renderUserDetail = async (id: string) => {
   render(
@@ -29,6 +32,7 @@ const renderUserDetail = async (id: string) => {
       initializeState={({ set }) => {
         set(refreshUserState(id), Math.random());
         set(refreshCohortsState, Math.random());
+        set(refreshOutputsState, Math.random());
       }}
     >
       <Suspense fallback="loading">
@@ -54,25 +58,27 @@ const renderUserDetail = async (id: string) => {
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };
 
+const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
+const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
+const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
+
+const mockGetInstitutions = getInstitutions as jest.MockedFunction<
+  typeof getInstitutions
+>;
+
+const mockGetContributingCohorts =
+  getContributingCohorts as jest.MockedFunction<typeof getContributingCohorts>;
+
+const contributingCohortResponse: gp2Model.ContributingCohortResponse[] = [
+  { id: '7', name: 'AGPDS' },
+  { id: '11', name: 'S3' },
+];
+
 describe('UserDetail', () => {
-  beforeEach(jest.resetAllMocks);
-  const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
-
-  const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
-
-  const mockGetInstitutions = getInstitutions as jest.MockedFunction<
-    typeof getInstitutions
-  >;
-
-  const mockGetContributingCohorts =
-    getContributingCohorts as jest.MockedFunction<
-      typeof getContributingCohorts
-    >;
-
-  const contributingCohortResponse: gp2Model.ContributingCohortResponse[] = [
-    { id: '7', name: 'AGPDS' },
-    { id: '11', name: 'S3' },
-  ];
+  beforeEach(() => {
+    jest.resetAllMocks();
+    mockGetOutputs.mockResolvedValue({ items: [], total: 0 });
+  });
 
   it('renders header with title', async () => {
     const user = gp2Fixtures.createUserResponse();
@@ -138,35 +144,35 @@ describe('UserDetail', () => {
       ] = editButtons;
 
       expect(keyInformationEditButton.getAttribute('href')).toBe(
-        '/users/testuserid/edit-key-info',
+        '/users/testuserid/overview/edit-key-info',
       );
 
       expect(contactInformationEditButton.getAttribute('href')).toBe(
-        '/users/testuserid/edit-contact-info',
+        '/users/testuserid/overview/edit-contact-info',
       );
 
       expect(keywordsEditButton.getAttribute('href')).toBe(
-        '/users/testuserid/edit-keywords',
+        '/users/testuserid/overview/edit-keywords',
       );
 
       expect(biographyEditButton.getAttribute('href')).toBe(
-        '/users/testuserid/edit-biography',
+        '/users/testuserid/overview/edit-biography',
       );
 
       expect(questionsEditButton.getAttribute('href')).toBe(
-        '/users/testuserid/edit-questions',
+        '/users/testuserid/overview/edit-questions',
       );
 
       expect(fundingStreamsEditButton.getAttribute('href')).toBe(
-        '/users/testuserid/edit-funding-streams',
+        '/users/testuserid/overview/edit-funding-streams',
       );
 
       expect(contributingCohortsEditButton.getAttribute('href')).toBe(
-        '/users/testuserid/edit-contributing-cohorts',
+        '/users/testuserid/overview/edit-contributing-cohorts',
       );
 
       expect(externalProfilesEditButton.getAttribute('href')).toBe(
-        '/users/testuserid/edit-external-profiles',
+        '/users/testuserid/overview/edit-external-profiles',
       );
     });
 

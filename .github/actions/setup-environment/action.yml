@@ -86,6 +86,9 @@ outputs:
   max-contentful-envs:
     description: 'Maximum Contentful environments'
     value: ${{ steps.vars.outputs.max-contentful-envs }}
+  crn-contentful-backup-bucket-name:
+    description: 'CRN Contentful Backup Bucket Name'
+    value: ${{ steps.vars.outputs.crn-contentful-backup-bucket-name }}
   crn-aws-acm-certificate-arn:
     description: 'CRN AWS ACM Certificate ARN'
     value: ${{ steps.vars.outputs.crn-aws-acm-certificate-arn }}

@@ -1,0 +1,41 @@
+name: Restore Contentful from backup
+on:
+  workflow_dispatch:
+    inputs:
+      backup-version:
+        required: true
+        description: Backup file to restore
+        type: string
+        default: latest
+      contentful-env:
+        required: true
+        type: string
+        description: Choose which Contentful environment to restore
+
+jobs:
+  restore-backup:
+    runs-on: ubuntu-latest
+    environment: Production
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:7b77d99657ab3718ed548ba366ffbcbb15315fd8
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: Production
+      - name: restore backup
+        uses: ./.github/actions/contentful-restore
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          bucket-name: ${{ steps.setup.outputs.crn-contentful-backup-bucket-name }}
+          backup-key: ${{ inputs.backup-version }}
+          contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
+          contentful-environment: ${{ inputs.contentful-env }}
+          contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}

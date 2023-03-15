@@ -38,7 +38,7 @@
     "@asap-hub/services-common": "workspace:*",
     "@asap-hub/squidex": "workspace:*",
     "@asap-hub/validation": "workspace:*",
-    "@babel/core": "7.21.0",
+    "@babel/core": "7.21.3",
     "@babel/register": "7.21.0",
     "@babel/runtime-corejs3": "7.21.0",
     "@hapi/boom": "9.1.4",

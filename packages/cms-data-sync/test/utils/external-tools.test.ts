@@ -1,8 +1,5 @@
 import { Environment } from 'contentful-management';
-import {
-  createExternalTool,
-  createExternalToolLinks,
-} from '../../src/utils/externalTools';
+import { createExternalTool, createExternalToolLinks } from '../../src/utils';
 import { getEntry } from '../fixtures';
 import { getContentfulEnvironmentMock } from '../mocks/contentful.mocks';
 

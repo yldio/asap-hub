@@ -17,6 +17,7 @@ export const migrateFromSquidexToContentfulFactory =
   ) => {
     const data = await fetchData();
 
+    console.log('\n\n\n\n', data, '\n\n\n\n');
     await clearContentfulEntries(contentfulEnvironment, contentTypeId);
 
     const entries = [];

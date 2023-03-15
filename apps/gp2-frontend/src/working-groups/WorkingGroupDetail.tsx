@@ -13,9 +13,9 @@ import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import EventsList from '../events/EventsList';
+import { useUpcomingAndPastEvents } from '../events/state';
 import OutputList from '../outputs/OutputList';
 import { useOutputs } from '../outputs/state';
-import { useUpcomingAndPastEvents } from './events';
 import { usePutWorkingGroupResources, useWorkingGroupById } from './state';
 
 const { workingGroups } = gp2Routing;

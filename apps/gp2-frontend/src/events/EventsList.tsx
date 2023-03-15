@@ -42,7 +42,7 @@ const EventList: React.FC<EventListProps> = ({
   const { currentPage, pageSize } = usePaginationParams();
 
   const { items, total } = useEvents(
-    getEventListOptions(currentTime, {
+    getEventListOptions<gp2.EventConstraint>(currentTime, {
       past,
       currentPage,
       pageSize,

@@ -7,7 +7,7 @@ import { API_BASE_URL } from '../config';
 
 export const getEvents = async (
   authorization: string,
-  { before, after, constraint }: GetEventListOptions<gp2.EventConstraint>,
+  { before, after, constraint, sort }: GetEventListOptions<gp2.EventConstraint>,
 ): Promise<gp2.ListEventResponse> => {
   const url = new URL('events', `${API_BASE_URL}/`);
   if (before) {
@@ -16,14 +16,20 @@ export const getEvents = async (
   if (after) {
     url.searchParams.set('after', after);
   }
-
+  if (sort) {
+    url.searchParams.set('sortBy', sort.sortBy);
+    url.searchParams.set('sortOrder', sort.sortOrder);
+  }
   const addFilter = (name: string, item: string) =>
     url.searchParams.append(`filter[${name}]`, item);
   if (constraint?.workingGroupId) {
-    addFilter('workingGroupId', constraint?.workingGroupId);
+    addFilter('workingGroupId', constraint.workingGroupId);
   }
   if (constraint?.projectId) {
-    addFilter('projectId', constraint?.projectId);
+    addFilter('projectId', constraint.projectId);
+  }
+  if (constraint?.userId) {
+    addFilter('userId', constraint.userId);
   }
   const resp = await fetch(url.toString(), {
     headers: { authorization, ...createSentryHeaders() },

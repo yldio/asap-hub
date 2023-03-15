@@ -1,5 +1,6 @@
 import { getEventListOptions } from '@asap-hub/frontend-utils';
 import { DashboardPageBody } from '@asap-hub/gp2-components';
+import { gp2 } from '@asap-hub/model';
 import { eventMapper } from '../events/EventsList';
 import { useEvents } from '../events/state';
 import { useNews } from './state';
@@ -11,7 +12,7 @@ type DashboardBodyProps = { currentTime: Date };
 const Body: React.FC<DashboardBodyProps> = ({ currentTime }) => {
   const news = useNews();
   const { items, total } = useEvents(
-    getEventListOptions(currentTime, {
+    getEventListOptions<gp2.EventConstraint>(currentTime, {
       past: false,
       pageSize,
     }),

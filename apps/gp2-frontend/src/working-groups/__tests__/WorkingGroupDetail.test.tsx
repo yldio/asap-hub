@@ -72,8 +72,8 @@ const renderWorkingGroupDetail = async ({
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };
 
-beforeEach(jest.resetAllMocks);
 describe('WorkingGroupDetail', () => {
+  beforeEach(jest.resetAllMocks);
   const mockGetWorkingGroup = getWorkingGroup as jest.MockedFunction<
     typeof getWorkingGroup
   >;
@@ -84,9 +84,6 @@ describe('WorkingGroupDetail', () => {
   const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
   const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
 
-  beforeEach(() => {
-    mockGetEvents.mockResolvedValue(gp2Fixtures.createListEventResponse(1));
-  });
   const outputs = gp2Fixtures.createListOutputResponse(1);
   outputs.items[0].workingGroups = {
     id: '42',
@@ -97,6 +94,7 @@ describe('WorkingGroupDetail', () => {
     const workingGroup = gp2Fixtures.createWorkingGroupResponse();
     mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
     mockGetOutputs.mockResolvedValue(outputs);
+    mockGetEvents.mockResolvedValue(gp2Fixtures.createListEventResponse(1));
 
     await renderWorkingGroupDetail({ id: workingGroup.id });
     expect(screen.getByRole('banner')).toBeVisible();
@@ -105,6 +103,7 @@ describe('WorkingGroupDetail', () => {
   it('renders not found if no working group is returned', async () => {
     mockGetWorkingGroup.mockResolvedValueOnce(undefined);
     mockGetOutputs.mockResolvedValue(outputs);
+    mockGetEvents.mockResolvedValue(gp2Fixtures.createListEventResponse(1));
     await renderWorkingGroupDetail({ id: 'unknown-id' });
     expect(
       screen.getByRole('heading', {
@@ -125,6 +124,7 @@ describe('WorkingGroupDetail', () => {
     ];
     mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
     mockGetOutputs.mockResolvedValue(outputs);
+    mockGetEvents.mockResolvedValue(gp2Fixtures.createListEventResponse(1));
     await renderWorkingGroupDetail({ id: workingGroup.id });
     expect(screen.getByText(/Working Group Members/i)).toBeVisible();
   });
@@ -142,6 +142,7 @@ describe('WorkingGroupDetail', () => {
       ];
       mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
       mockGetOutputs.mockResolvedValue(outputs);
+      mockGetEvents.mockResolvedValue(gp2Fixtures.createListEventResponse(1));
       await renderWorkingGroupDetail({ id: workingGroup.id, userId: '11' });
       expect(screen.getByRole('link', { name: /resources/i })).toBeVisible();
     });
@@ -158,6 +159,7 @@ describe('WorkingGroupDetail', () => {
       ];
       mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
       mockGetOutputs.mockResolvedValue(outputs);
+      mockGetEvents.mockResolvedValue(gp2Fixtures.createListEventResponse(1));
       await renderWorkingGroupDetail({ id: workingGroup.id, userId: '11' });
       expect(
         screen.queryByRole('link', { name: /resources/i }),
@@ -176,6 +178,7 @@ describe('WorkingGroupDetail', () => {
       ];
       mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
       mockGetOutputs.mockResolvedValue(outputs);
+      mockGetEvents.mockResolvedValue(gp2Fixtures.createListEventResponse(1));
       await renderWorkingGroupDetail({
         id: workingGroup.id,
         userId: '23',
@@ -201,6 +204,7 @@ describe('WorkingGroupDetail', () => {
       ];
       mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
       mockGetOutputs.mockResolvedValue(outputs);
+      mockGetEvents.mockResolvedValue(gp2Fixtures.createListEventResponse(1));
       await renderWorkingGroupDetail({
         id: workingGroup.id,
         userId: '11',
@@ -227,6 +231,7 @@ describe('WorkingGroupDetail', () => {
     ];
     mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
     mockGetOutputs.mockResolvedValue(outputs);
+    mockGetEvents.mockResolvedValue(gp2Fixtures.createListEventResponse(1));
     await renderWorkingGroupDetail({
       id: workingGroup.id,
       userId: '23',
@@ -249,6 +254,7 @@ describe('WorkingGroupDetail', () => {
     ];
     mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
     mockGetOutputs.mockResolvedValue(outputs);
+    mockGetEvents.mockResolvedValue(gp2Fixtures.createListEventResponse(1));
     await renderWorkingGroupDetail({
       id: workingGroup.id,
       userId: '23',
@@ -281,6 +287,7 @@ describe('WorkingGroupDetail', () => {
       ];
       mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
       mockGetOutputs.mockResolvedValue(outputs);
+      mockGetEvents.mockResolvedValue(gp2Fixtures.createListEventResponse(1));
       await renderWorkingGroupDetail({
         id: workingGroup.id,
         userId: '23',
@@ -309,6 +316,7 @@ describe('WorkingGroupDetail', () => {
     ];
     mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
     mockGetOutputs.mockResolvedValue(outputs);
+    mockGetEvents.mockResolvedValue(gp2Fixtures.createListEventResponse(1));
     await renderWorkingGroupDetail({
       id: workingGroup.id,
       userId: '23',
@@ -338,6 +346,7 @@ describe('WorkingGroupDetail', () => {
     it('does render the add and edit button to Administrators', async () => {
       mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
       mockGetOutputs.mockResolvedValue(outputs);
+      mockGetEvents.mockResolvedValue(gp2Fixtures.createListEventResponse(1));
       await renderWorkingGroupDetail({
         id: workingGroup.id,
         userId: '23',
@@ -357,6 +366,7 @@ describe('WorkingGroupDetail', () => {
       async (role) => {
         mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
         mockGetOutputs.mockResolvedValue(outputs);
+        mockGetEvents.mockResolvedValue(gp2Fixtures.createListEventResponse(1));
         await renderWorkingGroupDetail({
           id: workingGroup.id,
           userId: '23',
@@ -382,6 +392,7 @@ describe('WorkingGroupDetail', () => {
 
       mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
       mockGetOutputs.mockResolvedValue(outputs);
+      mockGetEvents.mockResolvedValue(gp2Fixtures.createListEventResponse(1));
       mockPutWorkingGroupResources.mockResolvedValueOnce(workingGroup);
       await renderWorkingGroupDetail({
         id: workingGroup.id,
@@ -430,6 +441,7 @@ describe('WorkingGroupDetail', () => {
       const workingGroupResources = { ...workingGroup, resources };
       mockGetWorkingGroup.mockResolvedValueOnce(workingGroupResources);
       mockGetOutputs.mockResolvedValue(outputs);
+      mockGetEvents.mockResolvedValue(gp2Fixtures.createListEventResponse(1));
       mockPutWorkingGroupResources.mockResolvedValueOnce(workingGroupResources);
       await renderWorkingGroupDetail({
         id: workingGroupResources.id,
@@ -463,8 +475,9 @@ describe('WorkingGroupDetail', () => {
       mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
       mockGetOutputs.mockResolvedValue(outputs);
       mockGetEvents.mockResolvedValue(gp2Fixtures.createListEventResponse(1));
+      mockGetEvents.mockResolvedValue(gp2Fixtures.createListEventResponse(1));
       await renderWorkingGroupDetail({ id: workingGroup.id });
-      userEvent.click(await screen.findByText(/upcoming/i));
+      userEvent.click(await screen.findByText(/upcoming events \(1\)/i));
       expect(await screen.findByText(/Event 0/i)).toBeVisible();
     });
   });
@@ -474,8 +487,9 @@ describe('WorkingGroupDetail', () => {
       const workingGroup = gp2Fixtures.createWorkingGroupResponse();
       mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
       mockGetOutputs.mockResolvedValue(outputs);
+      mockGetEvents.mockResolvedValue(gp2Fixtures.createListEventResponse(1));
       await renderWorkingGroupDetail({ id: workingGroup.id });
-      userEvent.click(await screen.findByText(/past/i));
+      userEvent.click(await screen.findByText(/past events \(1\)/i));
       expect(await screen.findByText(/Event 0/i)).toBeVisible();
     });
   });

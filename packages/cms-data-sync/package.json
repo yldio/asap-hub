@@ -34,7 +34,7 @@
     "@graphql-tools/graphql-file-loader": "7.5.16",
     "@graphql-tools/load": "7.8.13",
     "@graphql-tools/mock": "8.7.19",
-    "@graphql-tools/schema": "8.5.1",
+    "@graphql-tools/schema": "9.0.17",
     "@graphql-typed-document-node/core": "3.1.2",
     "@types/contentful-html-rich-text-converter": "workspace:^",
     "@types/jest": "^29.4.0",

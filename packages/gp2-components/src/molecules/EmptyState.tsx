@@ -1,13 +1,8 @@
-import {
-  contentSidePaddingWithNavigation,
-  Display,
-  Paragraph,
-  pixels,
-} from '@asap-hub/react-components';
+import { Display, Paragraph, pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ReactChild } from 'react';
 
-const { largeDesktopScreen, mobileScreen, vminLinearCalc } = pixels;
+const { rem } = pixels;
 
 interface EmptyStateProps {
   icon: ReactChild;
@@ -16,14 +11,7 @@ interface EmptyStateProps {
 }
 
 const styles = css({
-  padding: `${vminLinearCalc(
-    mobileScreen,
-    36,
-    largeDesktopScreen,
-    72,
-    'px',
-  )} ${contentSidePaddingWithNavigation()}`,
-
+  padding: `${rem(80)} 0`,
   display: 'grid',
   textAlign: 'center',
 });

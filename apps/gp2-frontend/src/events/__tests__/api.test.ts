@@ -44,19 +44,21 @@ describe('getEvent', () => {
 });
 
 describe('getEvents', () => {
-  afterEach(() => {
-    expect(nock.isDone()).toBe(true);
+  beforeEach(() => {
     nock.cleanAll();
   });
-  const options: GetEventListOptions = {
-    searchQuery: '',
-    currentPage: 1,
-    pageSize: 10,
-    filters: new Set(),
-    after: 'after',
-  };
+  afterEach(() => {
+    expect(nock.isDone()).toBe(true);
+  });
+  it('returns a successfully fetched events with after parameter', async () => {
+    const options: GetEventListOptions<gp2Model.EventConstraint> = {
+      searchQuery: '',
+      currentPage: 1,
+      pageSize: 10,
+      filters: new Set(),
+      after: 'after',
+    };
 
-  it('returns a successfully fetched events', async () => {
     const eventsResponse: gp2Model.ListEventResponse =
       gp2Fixtures.createListEventResponse(1);
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
@@ -69,8 +71,115 @@ describe('getEvents', () => {
     const result = await getEvents('Bearer x', options);
     expect(result).toEqual(eventsResponse);
   });
+  it('returns a successfully fetched events with before parameter', async () => {
+    const options: GetEventListOptions<gp2Model.EventConstraint> = {
+      searchQuery: '',
+      currentPage: 1,
+      pageSize: 10,
+      filters: new Set(),
+      before: 'before',
+      sort: { sortBy: 'endDate', sortOrder: 'desc' },
+    };
+
+    const eventsResponse: gp2Model.ListEventResponse =
+      gp2Fixtures.createListEventResponse(1);
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .get('/events')
+      .query({
+        before: 'before',
+        sortBy: 'endDate',
+        sortOrder: 'desc',
+      })
+      .reply(200, eventsResponse);
+
+    const result = await getEvents('Bearer x', options);
+    expect(result).toEqual(eventsResponse);
+  });
+  it('returns a successfully fetched events with working group parameter', async () => {
+    const options: GetEventListOptions<gp2Model.EventConstraint> = {
+      searchQuery: '',
+      currentPage: 1,
+      pageSize: 10,
+      filters: new Set(),
+      after: 'after',
+      constraint: {
+        workingGroupId: '42',
+      },
+    };
+
+    const eventsResponse: gp2Model.ListEventResponse =
+      gp2Fixtures.createListEventResponse(1);
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .get('/events')
+      .query({
+        after: 'after',
+        filter: { workingGroupId: '42' },
+      })
+      .reply(200, eventsResponse);
+
+    const result = await getEvents('Bearer x', options);
+    expect(result).toEqual(eventsResponse);
+  });
+  it('returns a successfully fetched events with project parameter', async () => {
+    const options: GetEventListOptions<gp2Model.EventConstraint> = {
+      searchQuery: '',
+      currentPage: 1,
+      pageSize: 10,
+      filters: new Set(),
+      after: 'after',
+      constraint: {
+        projectId: '42',
+      },
+    };
+
+    const eventsResponse: gp2Model.ListEventResponse =
+      gp2Fixtures.createListEventResponse(1);
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .get('/events')
+      .query({
+        after: 'after',
+        filter: { projectId: '42' },
+      })
+      .reply(200, eventsResponse);
+
+    const result = await getEvents('Bearer x', options);
+    expect(result).toEqual(eventsResponse);
+  });
+  it('returns a successfully fetched events with user parameter', async () => {
+    const options: GetEventListOptions<gp2Model.EventConstraint> = {
+      searchQuery: '',
+      currentPage: 1,
+      pageSize: 10,
+      filters: new Set(),
+      after: 'after',
+      constraint: {
+        userId: '42',
+      },
+    };
+
+    const eventsResponse: gp2Model.ListEventResponse =
+      gp2Fixtures.createListEventResponse(1);
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .get('/events')
+      .query({
+        after: 'after',
+        filter: { userId: '42' },
+      })
+      .reply(200, eventsResponse);
+
+    const result = await getEvents('Bearer x', options);
+    expect(result).toEqual(eventsResponse);
+  });
 
   it('errors for error status', async () => {
+    const options: GetEventListOptions<gp2Model.EventConstraint> = {
+      searchQuery: '',
+      currentPage: 1,
+      pageSize: 10,
+      filters: new Set(),
+      after: 'after',
+    };
+
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
       .get('/events')
       .query({

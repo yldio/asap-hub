@@ -13,12 +13,13 @@ import {
 import { css } from '@emotion/react';
 
 import { IconWithLabel } from '../molecules';
-import { projectIcon, workingGroupIcon } from '../icons';
+import { editIcon, projectIcon, workingGroupIcon } from '../icons';
 
 const { rem } = pixels;
 
 type OutputCardProps = Pick<
   gp2Model.OutputResponse,
+  | 'id'
   | 'addedDate'
   | 'title'
   | 'workingGroups'
@@ -31,6 +32,7 @@ type OutputCardProps = Pick<
 >;
 
 const OutputCard: React.FC<OutputCardProps> = ({
+  id,
   addedDate,
   title,
   workingGroups,
@@ -43,18 +45,40 @@ const OutputCard: React.FC<OutputCardProps> = ({
 }) => (
   <Card padding={false}>
     <div css={css({ padding: rem(24) })}>
-      <SharedResearchMetadata
-        pills={
-          [
-            workingGroups && 'Working Group',
-            projects && 'Project',
-            documentType,
-            type,
-            subtype,
-          ].filter(Boolean) as string[]
-        }
-        link={link}
-      />
+      <div css={css({ display: 'flex', gap: rem(24) })}>
+        <SharedResearchMetadata
+          pills={
+            [
+              workingGroups && 'Working Group',
+              projects && 'Project',
+              documentType,
+              type,
+              subtype,
+            ].filter(Boolean) as string[]
+          }
+          link={link}
+        />
+        <div css={css({ width: 'min-content' })}>
+          <Link
+            href={gp2Routing.outputs({}).output({ outputId: id }).edit({}).$}
+            buttonStyle
+            noMargin
+            small
+            fullWidth
+          >
+            <span
+              css={{
+                display: 'inline-flex',
+                gap: rem(8),
+                marginLeft: rem(6),
+              }}
+            >
+              {'Edit'}
+              {editIcon}
+            </span>
+          </Link>
+        </div>
+      </div>
 
       <div css={css({ margin: `${rem(12)} 0 ${rem(24)}` })}>
         <Headline2 styleAsHeading={4} noMargin>

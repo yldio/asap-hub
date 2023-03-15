@@ -4,7 +4,7 @@ import { ExternalUserResponse } from './external-user';
 export const outputDocumentTypes = [
   'Form',
   'Update',
-  'Training Material',
+  'Training Materials',
   'Data Release',
   'Article',
   'Code/Software',
@@ -30,7 +30,7 @@ export const outputDocumentTypeToType: Record<
 > = {
   Form: new Set<OutputType>(),
   Update: new Set<OutputType>(),
-  'Training Material': new Set<OutputType>(),
+  'Training Materials': new Set<OutputType>(),
   'Data Release': new Set<OutputType>(),
   Article: new Set<OutputType>([
     'Research',

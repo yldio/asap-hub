@@ -96,7 +96,7 @@ describe('Outputs data provider', () => {
         [OutputsDataDocumentTypeEnum.CodeSoftware, 'Code/Software'],
         [OutputsDataDocumentTypeEnum.DataRelease, 'Data Release'],
         [OutputsDataDocumentTypeEnum.Form, 'Form'],
-        [OutputsDataDocumentTypeEnum.TrainingMaterial, 'Training Material'],
+        [OutputsDataDocumentTypeEnum.TrainingMaterial, 'Training Materials'],
         [OutputsDataDocumentTypeEnum.Update, 'Update'],
       ])('parses the document type %s to %s', async (type, expected) => {
         const squidexGraphqlResponse = getSquidexOutputGraphqlResponse();

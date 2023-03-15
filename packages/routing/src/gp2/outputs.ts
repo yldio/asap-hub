@@ -1,5 +1,15 @@
-import { route } from 'typesafe-routes';
+import { route, stringParser } from 'typesafe-routes';
 
-const outputs = route('/outputs', {}, {});
+const edit = route('/edit', {}, {});
+
+const output = route(
+  '/:outputId',
+  { outputId: stringParser },
+  {
+    edit,
+  },
+);
+
+const outputs = route('/outputs', {}, { output });
 
 export default outputs;

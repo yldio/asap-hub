@@ -77,6 +77,7 @@ it('publishes the output', async () => {
     total: 1,
     items: [{ displayName: 'Steve Rogers', id: '2' }],
   });
+  mockCreateOutput.mockResolvedValueOnce(gp2.createOutputResponse());
   const title = 'this is the output title';
   const link = 'https://example.com';
   await renderCreateWorkingGroupOutput('form');

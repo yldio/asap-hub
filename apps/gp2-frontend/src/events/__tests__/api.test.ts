@@ -80,7 +80,6 @@ describe('getEvents', () => {
       pageSize: 10,
       filters: new Set(),
       before: 'before',
-      sort: { sortBy: 'endDate', sortOrder: 'desc' },
     };
 
     const eventsResponse: gp2Model.ListEventResponse =

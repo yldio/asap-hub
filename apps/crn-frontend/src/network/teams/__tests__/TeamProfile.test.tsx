@@ -190,10 +190,6 @@ it.each`
     constraint: {
       teamId: 't0',
     },
-    sort: {
-      sortBy: 'endDate',
-      sortOrder: 'desc',
-    },
   });
 });
 

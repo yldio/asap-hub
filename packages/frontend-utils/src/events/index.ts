@@ -12,12 +12,10 @@ export type GetEventListOptions<C extends Constraint = EventConstraint> =
       | {
           before: string;
           after?: undefined;
-          sort: { sortBy: 'endDate'; sortOrder: 'desc' };
         }
       | {
           after: string;
           before?: undefined;
-          sort?: undefined;
         }
     ) & {
       constraint?: C;
@@ -52,14 +50,6 @@ export const getEventListOptions = <C extends Constraint = EventConstraint>(
     constraint,
     pageSize,
     filters: new Set(),
-    ...(past
-      ? {
-          before: time,
-          sort: {
-            sortBy: 'endDate',
-            sortOrder: 'desc' as const,
-          },
-        }
-      : { after: time }),
+    ...(past ? { before: time } : { after: time }),
   };
 };

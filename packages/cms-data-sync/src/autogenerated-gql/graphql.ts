@@ -37,7 +37,7 @@ export type ApplicationMutations = {
   changeEventsContent: Maybe<Events>;
   /** Change a External authors content. */
   changeExternalAuthorsContent: Maybe<ExternalAuthors>;
-  /** Change a Groups content. */
+  /** Change a Interest Groups content. */
   changeGroupsContent: Maybe<Groups>;
   /** Change a Labs content. */
   changeLabsContent: Maybe<Labs>;
@@ -69,7 +69,7 @@ export type ApplicationMutations = {
   createEventsContent: Maybe<Events>;
   /** Creates an External authors content. */
   createExternalAuthorsContent: Maybe<ExternalAuthors>;
-  /** Creates an Groups content. */
+  /** Creates an Interest Groups content. */
   createGroupsContent: Maybe<Groups>;
   /** Creates an Labs content. */
   createLabsContent: Maybe<Labs>;
@@ -101,7 +101,7 @@ export type ApplicationMutations = {
   deleteEventsContent: EntitySavedResultDto;
   /** Delete an External authors content. */
   deleteExternalAuthorsContent: EntitySavedResultDto;
-  /** Delete an Groups content. */
+  /** Delete an Interest Groups content. */
   deleteGroupsContent: EntitySavedResultDto;
   /** Delete an Labs content. */
   deleteLabsContent: EntitySavedResultDto;
@@ -133,7 +133,7 @@ export type ApplicationMutations = {
   patchEventsContent: Maybe<Events>;
   /** Patch an External authors content by id. */
   patchExternalAuthorsContent: Maybe<ExternalAuthors>;
-  /** Patch an Groups content by id. */
+  /** Patch an Interest Groups content by id. */
   patchGroupsContent: Maybe<Groups>;
   /** Patch an Labs content by id. */
   patchLabsContent: Maybe<Labs>;
@@ -181,7 +181,7 @@ export type ApplicationMutations = {
    */
   publishExternalAuthorsContent: Maybe<ExternalAuthors>;
   /**
-   * Publish a Groups content.
+   * Publish a Interest Groups content.
    * @deprecated Use 'changeGroupsContent' instead
    */
   publishGroupsContent: Maybe<Groups>;
@@ -245,7 +245,7 @@ export type ApplicationMutations = {
   updateEventsContent: Maybe<Events>;
   /** Update an External authors content by id. */
   updateExternalAuthorsContent: Maybe<ExternalAuthors>;
-  /** Update an Groups content by id. */
+  /** Update an Interest Groups content by id. */
   updateGroupsContent: Maybe<Groups>;
   /** Update an Labs content by id. */
   updateLabsContent: Maybe<Labs>;
@@ -277,7 +277,7 @@ export type ApplicationMutations = {
   upsertEventsContent: Maybe<Events>;
   /** Upsert an External authors content by id. */
   upsertExternalAuthorsContent: Maybe<ExternalAuthors>;
-  /** Upsert an Groups content by id. */
+  /** Upsert an Interest Groups content by id. */
   upsertGroupsContent: Maybe<Groups>;
   /** Upsert an Labs content by id. */
   upsertLabsContent: Maybe<Labs>;
@@ -1179,7 +1179,7 @@ export type ApplicationQueries = {
   findEventsContent: Maybe<Events>;
   /** Find an External authors content by id. */
   findExternalAuthorsContent: Maybe<ExternalAuthors>;
-  /** Find an Groups content by id. */
+  /** Find an Interest Groups content by id. */
   findGroupsContent: Maybe<Groups>;
   /** Find an Labs content by id. */
   findLabsContent: Maybe<Labs>;
@@ -1225,9 +1225,9 @@ export type ApplicationQueries = {
   queryExternalAuthorsContents: Maybe<Array<ExternalAuthors>>;
   /** Query External authors content items with total count. */
   queryExternalAuthorsContentsWithTotal: Maybe<ExternalAuthorsResultDto>;
-  /** Query Groups content items. */
+  /** Query Interest Groups content items. */
   queryGroupsContents: Maybe<Array<Groups>>;
-  /** Query Groups content items with total count. */
+  /** Query Interest Groups content items with total count. */
   queryGroupsContentsWithTotal: Maybe<GroupsResultDto>;
   /** Query Labs content items. */
   queryLabsContents: Maybe<Array<Labs>>;
@@ -1809,9 +1809,9 @@ export type Calendars = Content & {
   referencingEventsContents: Maybe<Array<Events>>;
   /** Query Events content items with total count. */
   referencingEventsContentsWithTotal: Maybe<EventsResultDto>;
-  /** Query Groups content items. */
+  /** Query Interest Groups content items. */
   referencingGroupsContents: Maybe<Array<Groups>>;
-  /** Query Groups content items with total count. */
+  /** Query Interest Groups content items with total count. */
   referencingGroupsContentsWithTotal: Maybe<GroupsResultDto>;
   /** Query Working Groups content items. */
   referencingWorkingGroupsContents: Maybe<Array<WorkingGroups>>;
@@ -3194,7 +3194,7 @@ export type ExternalAuthorsResultDto = {
   total: Scalars['Int'];
 };
 
-/** The structure of a Groups content type. */
+/** The structure of a Interest Groups content type. */
 export type Groups = Content & {
   /** The timestamp when the object was created. */
   created: Scalars['Instant'];
@@ -3242,7 +3242,7 @@ export type Groups = Content & {
   version: Scalars['Int'];
 };
 
-/** The structure of a Groups content type. */
+/** The structure of a Interest Groups content type. */
 export type GroupsReferencesCalendarsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
@@ -3251,7 +3251,7 @@ export type GroupsReferencesCalendarsContentsArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-/** The structure of a Groups content type. */
+/** The structure of a Interest Groups content type. */
 export type GroupsReferencesCalendarsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
@@ -3260,7 +3260,7 @@ export type GroupsReferencesCalendarsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-/** The structure of a Groups content type. */
+/** The structure of a Interest Groups content type. */
 export type GroupsReferencesTeamsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
@@ -3269,7 +3269,7 @@ export type GroupsReferencesTeamsContentsArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-/** The structure of a Groups content type. */
+/** The structure of a Interest Groups content type. */
 export type GroupsReferencesTeamsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
@@ -3278,7 +3278,7 @@ export type GroupsReferencesTeamsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-/** The structure of a Groups content type. */
+/** The structure of a Interest Groups content type. */
 export type GroupsReferencesUsersContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
@@ -3287,7 +3287,7 @@ export type GroupsReferencesUsersContentsArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-/** The structure of a Groups content type. */
+/** The structure of a Interest Groups content type. */
 export type GroupsReferencesUsersContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
@@ -3296,39 +3296,39 @@ export type GroupsReferencesUsersContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-/** The structure of the This group is active field of the Groups content type. */
+/** The structure of the This group is active field of the Interest Groups content type. */
 export type GroupsDataActiveDto = {
   /** Active groups have Subscribe buttons and Calendar and Upcoming Events tabs */
   iv: Maybe<Scalars['Boolean']>;
 };
 
-/** The structure of the This group is active field of the Groups content input type. */
+/** The structure of the This group is active field of the Interest Groups content input type. */
 export type GroupsDataActiveInputDto = {
   /** Active groups have Subscribe buttons and Calendar and Upcoming Events tabs */
   iv: InputMaybe<Scalars['Boolean']>;
 };
 
-/** The structure of the Calendars field of the Groups content type. */
+/** The structure of the Calendars field of the Interest Groups content type. */
 export type GroupsDataCalendarsDto = {
   iv: Maybe<Array<Calendars>>;
 };
 
-/** The structure of the Calendars field of the Groups content input type. */
+/** The structure of the Calendars field of the Interest Groups content input type. */
 export type GroupsDataCalendarsInputDto = {
   iv: InputMaybe<Array<Scalars['String']>>;
 };
 
-/** The structure of the Description field of the Groups content type. */
+/** The structure of the Description field of the Interest Groups content type. */
 export type GroupsDataDescriptionDto = {
   iv: Maybe<Scalars['String']>;
 };
 
-/** The structure of the Description field of the Groups content input type. */
+/** The structure of the Description field of the Interest Groups content input type. */
 export type GroupsDataDescriptionInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
-/** The structure of the Groups data type. */
+/** The structure of the Interest Groups data type. */
 export type GroupsDataDto = {
   active: Maybe<GroupsDataActiveDto>;
   calendars: Maybe<GroupsDataCalendarsDto>;
@@ -3341,7 +3341,7 @@ export type GroupsDataDto = {
   tools: Maybe<GroupsDataToolsDto>;
 };
 
-/** The structure of the Groups data input type. */
+/** The structure of the Interest Groups data input type. */
 export type GroupsDataInputDto = {
   active: InputMaybe<GroupsDataActiveInputDto>;
   calendars: InputMaybe<GroupsDataCalendarsInputDto>;
@@ -3366,52 +3366,52 @@ export type GroupsDataLeadersChildInputDto = {
   user: InputMaybe<Array<Scalars['String']>>;
 };
 
-/** The structure of the Leaders field of the Groups content type. */
+/** The structure of the Leaders field of the Interest Groups content type. */
 export type GroupsDataLeadersDto = {
   iv: Maybe<Array<GroupsDataLeadersChildDto>>;
 };
 
-/** The structure of the Leaders field of the Groups content input type. */
+/** The structure of the Leaders field of the Interest Groups content input type. */
 export type GroupsDataLeadersInputDto = {
   iv: InputMaybe<Array<GroupsDataLeadersChildInputDto>>;
 };
 
-/** The structure of the Name field of the Groups content type. */
+/** The structure of the Name field of the Interest Groups content type. */
 export type GroupsDataNameDto = {
   iv: Maybe<Scalars['String']>;
 };
 
-/** The structure of the Name field of the Groups content input type. */
+/** The structure of the Name field of the Interest Groups content input type. */
 export type GroupsDataNameInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
-/** The structure of the Expertise (Tags) field of the Groups content type. */
+/** The structure of the Expertise (Tags) field of the Interest Groups content type. */
 export type GroupsDataTagsDto = {
   iv: Maybe<Array<Scalars['String']>>;
 };
 
-/** The structure of the Expertise (Tags) field of the Groups content input type. */
+/** The structure of the Expertise (Tags) field of the Interest Groups content input type. */
 export type GroupsDataTagsInputDto = {
   iv: InputMaybe<Array<Scalars['String']>>;
 };
 
-/** The structure of the Teams field of the Groups content type. */
+/** The structure of the Teams field of the Interest Groups content type. */
 export type GroupsDataTeamsDto = {
   iv: Maybe<Array<Teams>>;
 };
 
-/** The structure of the Teams field of the Groups content input type. */
+/** The structure of the Teams field of the Interest Groups content input type. */
 export type GroupsDataTeamsInputDto = {
   iv: InputMaybe<Array<Scalars['String']>>;
 };
 
-/** The structure of the Thumbnail field of the Groups content type. */
+/** The structure of the Thumbnail field of the Interest Groups content type. */
 export type GroupsDataThumbnailDto = {
   iv: Maybe<Array<Asset>>;
 };
 
-/** The structure of the Thumbnail field of the Groups content input type. */
+/** The structure of the Thumbnail field of the Interest Groups content input type. */
 export type GroupsDataThumbnailInputDto = {
   iv: InputMaybe<Array<Scalars['String']>>;
 };
@@ -3428,17 +3428,17 @@ export type GroupsDataToolsChildInputDto = {
   slack: InputMaybe<Scalars['String']>;
 };
 
-/** The structure of the External Tools field of the Groups content type. */
+/** The structure of the External Tools field of the Interest Groups content type. */
 export type GroupsDataToolsDto = {
   iv: Maybe<Array<GroupsDataToolsChildDto>>;
 };
 
-/** The structure of the External Tools field of the Groups content input type. */
+/** The structure of the External Tools field of the Interest Groups content input type. */
 export type GroupsDataToolsInputDto = {
   iv: InputMaybe<Array<GroupsDataToolsChildInputDto>>;
 };
 
-/** The structure of the flat Groups data type. */
+/** The structure of the flat Interest Groups data type. */
 export type GroupsFlatDataDto = {
   /** Active groups have Subscribe buttons and Calendar and Upcoming Events tabs */
   active: Maybe<Scalars['Boolean']>;
@@ -3452,7 +3452,7 @@ export type GroupsFlatDataDto = {
   tools: Maybe<Array<GroupsDataToolsChildDto>>;
 };
 
-/** List of Groups items and total count. */
+/** List of Interest Groups items and total count. */
 export type GroupsResultDto = {
   /** The contents. */
   items: Maybe<Array<Groups>>;
@@ -4051,6 +4051,10 @@ export type ResearchOutputs = Content & {
   referencesLabsContents: Maybe<Array<Labs>>;
   /** Query Labs content items with total count. */
   referencesLabsContentsWithTotal: Maybe<LabsResultDto>;
+  /** Query Research Outputs content items. */
+  referencesResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
+  /** Query Research Outputs content items with total count. */
+  referencesResearchOutputsContentsWithTotal: Maybe<ResearchOutputsResultDto>;
   /** Query Research Tags content items. */
   referencesResearchTagsContents: Maybe<Array<ResearchTags>>;
   /** Query Research Tags content items with total count. */
@@ -4063,6 +4067,14 @@ export type ResearchOutputs = Content & {
   referencesUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
   referencesUsersContentsWithTotal: Maybe<UsersResultDto>;
+  /** Query Working Groups content items. */
+  referencesWorkingGroupsContents: Maybe<Array<WorkingGroups>>;
+  /** Query Working Groups content items with total count. */
+  referencesWorkingGroupsContentsWithTotal: Maybe<WorkingGroupsResultDto>;
+  /** Query Research Outputs content items. */
+  referencingResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
+  /** Query Research Outputs content items with total count. */
+  referencingResearchOutputsContentsWithTotal: Maybe<ResearchOutputsResultDto>;
   /** Query Teams content items. */
   referencingTeamsContents: Maybe<Array<Teams>>;
   /** Query Teams content items with total count. */
@@ -4106,6 +4118,24 @@ export type ResearchOutputsReferencesLabsContentsArgs = {
 
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesLabsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Research Outputs content type. */
+export type ResearchOutputsReferencesResearchOutputsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Research Outputs content type. */
+export type ResearchOutputsReferencesResearchOutputsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -4160,6 +4190,42 @@ export type ResearchOutputsReferencesUsersContentsArgs = {
 
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesUsersContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Research Outputs content type. */
+export type ResearchOutputsReferencesWorkingGroupsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Research Outputs content type. */
+export type ResearchOutputsReferencesWorkingGroupsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Research Outputs content type. */
+export type ResearchOutputsReferencingResearchOutputsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Research Outputs content type. */
+export type ResearchOutputsReferencingResearchOutputsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -4308,6 +4374,7 @@ export type ResearchOutputsDataDto = {
   methods: Maybe<ResearchOutputsDataMethodsDto>;
   organisms: Maybe<ResearchOutputsDataOrganismsDto>;
   publishDate: Maybe<ResearchOutputsDataPublishDateDto>;
+  relatedResearch: Maybe<ResearchOutputsDataRelatedResearchDto>;
   rrid: Maybe<ResearchOutputsDataRridDto>;
   sharingStatus: Maybe<ResearchOutputsDataSharingStatusDto>;
   subtype: Maybe<ResearchOutputsDataSubtypeDto>;
@@ -4318,6 +4385,7 @@ export type ResearchOutputsDataDto = {
   updatedBy: Maybe<ResearchOutputsDataUpdatedByDto>;
   usageNotes: Maybe<ResearchOutputsDataUsageNotesDto>;
   usedInAPublication: Maybe<ResearchOutputsDataUsedInAPublicationDto>;
+  workingGroups: Maybe<ResearchOutputsDataWorkingGroupsDto>;
 };
 
 /** The structure of the Environment field of the Research Outputs content type. */
@@ -4349,6 +4417,7 @@ export type ResearchOutputsDataInputDto = {
   methods: InputMaybe<ResearchOutputsDataMethodsInputDto>;
   organisms: InputMaybe<ResearchOutputsDataOrganismsInputDto>;
   publishDate: InputMaybe<ResearchOutputsDataPublishDateInputDto>;
+  relatedResearch: InputMaybe<ResearchOutputsDataRelatedResearchInputDto>;
   rrid: InputMaybe<ResearchOutputsDataRridInputDto>;
   sharingStatus: InputMaybe<ResearchOutputsDataSharingStatusInputDto>;
   subtype: InputMaybe<ResearchOutputsDataSubtypeInputDto>;
@@ -4359,6 +4428,7 @@ export type ResearchOutputsDataInputDto = {
   updatedBy: InputMaybe<ResearchOutputsDataUpdatedByInputDto>;
   usageNotes: InputMaybe<ResearchOutputsDataUsageNotesInputDto>;
   usedInAPublication: InputMaybe<ResearchOutputsDataUsedInAPublicationInputDto>;
+  workingGroups: InputMaybe<ResearchOutputsDataWorkingGroupsInputDto>;
 };
 
 /** The structure of the Lab Catalog Number field of the Research Outputs content type. */
@@ -4435,6 +4505,16 @@ export type ResearchOutputsDataPublishDateDto = {
 export type ResearchOutputsDataPublishDateInputDto = {
   /** Date of publishing (outside the Hub). Only applies to outputs that have been published. */
   iv: InputMaybe<Scalars['Instant']>;
+};
+
+/** The structure of the Related Research field of the Research Outputs content type. */
+export type ResearchOutputsDataRelatedResearchDto = {
+  iv: Maybe<Array<ResearchOutputs>>;
+};
+
+/** The structure of the Related Research field of the Research Outputs content input type. */
+export type ResearchOutputsDataRelatedResearchInputDto = {
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Identifier (RRID) field of the Research Outputs content type. */
@@ -4543,6 +4623,16 @@ export type ResearchOutputsDataUsedInAPublicationInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
+/** The structure of the Working Group field of the Research Outputs content type. */
+export type ResearchOutputsDataWorkingGroupsDto = {
+  iv: Maybe<Array<WorkingGroups>>;
+};
+
+/** The structure of the Working Group field of the Research Outputs content input type. */
+export type ResearchOutputsDataWorkingGroupsInputDto = {
+  iv: InputMaybe<Array<Scalars['String']>>;
+};
+
 /** The structure of the flat Research Outputs data type. */
 export type ResearchOutputsFlatDataDto = {
   /** This must start with a letter */
@@ -4571,6 +4661,7 @@ export type ResearchOutputsFlatDataDto = {
   organisms: Maybe<Array<ResearchTags>>;
   /** Date of publishing (outside the Hub). Only applies to outputs that have been published. */
   publishDate: Maybe<Scalars['Instant']>;
+  relatedResearch: Maybe<Array<ResearchOutputs>>;
   /** This must start with "RRID:" */
   rrid: Maybe<Scalars['String']>;
   sharingStatus: Maybe<Scalars['String']>;
@@ -4584,6 +4675,7 @@ export type ResearchOutputsFlatDataDto = {
   usageNotes: Maybe<Scalars['String']>;
   /** "Not sure" will not be shown on the Hub */
   usedInAPublication: Maybe<Scalars['String']>;
+  workingGroups: Maybe<Array<WorkingGroups>>;
 };
 
 /** List of Research Outputs items and total count. */
@@ -4765,9 +4857,9 @@ export type Teams = Content & {
   referencingEventsContents: Maybe<Array<Events>>;
   /** Query Events content items with total count. */
   referencingEventsContentsWithTotal: Maybe<EventsResultDto>;
-  /** Query Groups content items. */
+  /** Query Interest Groups content items. */
   referencingGroupsContents: Maybe<Array<Groups>>;
-  /** Query Groups content items with total count. */
+  /** Query Interest Groups content items with total count. */
   referencingGroupsContentsWithTotal: Maybe<GroupsResultDto>;
   /** Query Research Outputs content items. */
   referencingResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
@@ -5244,9 +5336,9 @@ export type Users = Content & {
   referencingEventsContents: Maybe<Array<Events>>;
   /** Query Events content items with total count. */
   referencingEventsContentsWithTotal: Maybe<EventsResultDto>;
-  /** Query Groups content items. */
+  /** Query Interest Groups content items. */
   referencingGroupsContents: Maybe<Array<Groups>>;
-  /** Query Groups content items with total count. */
+  /** Query Interest Groups content items with total count. */
   referencingGroupsContentsWithTotal: Maybe<GroupsResultDto>;
   /** Query Research Outputs content items. */
   referencingResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
@@ -5968,6 +6060,10 @@ export type WorkingGroups = Content & {
   referencesUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
   referencesUsersContentsWithTotal: Maybe<UsersResultDto>;
+  /** Query Research Outputs content items. */
+  referencingResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
+  /** Query Research Outputs content items with total count. */
+  referencingResearchOutputsContentsWithTotal: Maybe<ResearchOutputsResultDto>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
@@ -6007,6 +6103,24 @@ export type WorkingGroupsReferencesUsersContentsArgs = {
 
 /** The structure of a Working Groups content type. */
 export type WorkingGroupsReferencesUsersContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Working Groups content type. */
+export type WorkingGroupsReferencingResearchOutputsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Working Groups content type. */
+export type WorkingGroupsReferencingResearchOutputsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -6226,6 +6340,30 @@ export type FetchPagesQuery = {
   >;
 };
 
+export type FetchTeamsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type FetchTeamsQuery = {
+  queryTeamsContents: Maybe<
+    Array<
+      Pick<Teams, 'id' | 'created' | 'lastModified' | 'version'> & {
+        flatData: Pick<
+          TeamsFlatDataDto,
+          | 'applicationNumber'
+          | 'displayName'
+          | 'inactiveSince'
+          | 'projectSummary'
+          | 'projectTitle'
+          | 'expertiseAndResourceTags'
+        > & {
+          tools: Maybe<
+            Array<Pick<TeamsDataToolsChildDto, 'description' | 'name' | 'url'>>
+          >;
+        };
+      }
+    >
+  >;
+};
+
 export const FetchNewsDocument = {
   kind: 'Document',
   definitions: [
@@ -6365,3 +6503,98 @@ export const FetchPagesDocument = {
     },
   ],
 } as unknown as DocumentNode<FetchPagesQuery, FetchPagesQueryVariables>;
+export const FetchTeamsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchTeams' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'queryTeamsContents' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'top' },
+                value: { kind: 'IntValue', value: '100' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'created' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'lastModified' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'version' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'flatData' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'applicationNumber' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'displayName' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'inactiveSince' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'projectSummary' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'projectTitle' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'expertiseAndResourceTags',
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'tools' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'description' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'url' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<FetchTeamsQuery, FetchTeamsQueryVariables>;

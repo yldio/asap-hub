@@ -1,8 +1,6 @@
 /* istanbul ignore file */
-import { migrateNews } from './news/news.data-migration';
-import { migratePages } from './pages/pages.data-migration';
+import { migrateTeams } from './teams/teams.data-migration';
 
 (async () => {
-  await migrateNews();
-  await migratePages();
+  await migrateTeams();
 })();

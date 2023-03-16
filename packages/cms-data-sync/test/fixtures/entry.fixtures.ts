@@ -55,3 +55,13 @@ export const newsEntry = getEntry({
   linkText: { 'en-US': null },
   text: { 'en-US': { data: {}, content: [], nodeType: 'document' } },
 });
+
+export const teamEntry = getEntry({
+  displayName: { 'en-US': 'Team ASAP' },
+  applicationNumber: { 'en-US': 2023 },
+  expertiseAndResourceTags: { 'en-US': undefined },
+  inactiveSince: { 'en-US': undefined },
+  projectSummary: { 'en-US': undefined },
+  projectTitle: { 'en-US': 'Beautiful Title' },
+  tools: { 'en-US': [] },
+});

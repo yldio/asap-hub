@@ -91,7 +91,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
                       breakdown of completed samples.
                     </Paragraph>
                     <ExternalLink
-                      href="https://hub.asap.science/discover/tutorials/d9c82f68-3f43-4dd8-83c0-179592fc8e42"
+                      href="https://gp2.org/cohort-dashboard-advanced/"
                       label="View Cohort Dashboard"
                     />
                   </article>
@@ -105,7 +105,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
                       Parkinson’s research.
                     </Paragraph>
                     <ExternalLink
-                      href="https://hub.asap.science/discover/tutorials/d9c82f68-3f43-4dd8-83c0-179592fc8e42"
+                      href="https://gp2.org/monogenic-resource-map/"
                       label="View Monogenic Map"
                     />
                   </article>
@@ -119,7 +119,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
                       clinical presentations.
                     </Paragraph>
                     <ExternalLink
-                      href="https://hub.asap.science/discover/tutorials/d9c82f68-3f43-4dd8-83c0-179592fc8e42"
+                      href="https://monogenic.gp2.org/monogenicportal.html"
                       label="View Monogenic Portal"
                     />
                   </article>
@@ -139,7 +139,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
                     policy is briefly summarized here.
                   </Paragraph>
                   <ExternalLink
-                    href="https://hub.asap.science/discover/tutorials/d9c82f68-3f43-4dd8-83c0-179592fc8e42"
+                    href="https://gp2.org/training/"
                     label="Read more"
                   />
                 </>

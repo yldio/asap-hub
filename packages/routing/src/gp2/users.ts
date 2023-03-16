@@ -25,6 +25,8 @@ const overview = route(
   },
 );
 const outputs = route('/outputs', {}, {});
+const upcoming = route('/upcoming', {}, {});
+const past = route('/past', {}, {});
 
 const user = route(
   '/:userId',
@@ -32,6 +34,8 @@ const user = route(
   {
     overview,
     outputs,
+    upcoming,
+    past,
   },
 );
 

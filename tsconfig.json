@@ -25,5 +25,10 @@
     "forceConsistentCasingInFileNames": true,
 
     "noErrorTruncation": true
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs"
+    }
   }
 }

@@ -5,11 +5,6 @@
     "rootDir": "src",
     "outDir": "build"
   },
-  "ts-node": {
-    "compilerOptions": {
-      "module": "commonjs"
-    }
-  },
   "include": ["src"],
   "references": [
     { "path": "../../packages/auth" },

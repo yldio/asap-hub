@@ -219,6 +219,25 @@ jobs:
           squidex-ci-client-secret: ${{ secrets.GP2_SQUIDEX_CI_CLIENT_SECRET }}
           squidex-shared-secret: ${{ secrets.GP2_SQUIDEX_SHARED_SECRET }}
 
+  crn-contentful-setup:
+    needs: [crn-sls-deploy]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Setup Contentful Environment
+        uses: ./.github/actions/contentful-setup
+        with:
+          contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
+          contentful-environment: ${{ inputs.crn-contentful-env }}
+          api-url: ${{ steps.setup.outputs.crn-api-url }}
+
   crn-contentful-migrate:
     needs: [crn-sls-deploy]
     # Run for branch-workflow only if the environment name is not that of dev or prod

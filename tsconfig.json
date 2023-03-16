@@ -26,5 +26,11 @@
 
     "noErrorTruncation": true,
     "noUncheckedIndexedAccess": true
+
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs"
+    }
   }
 }

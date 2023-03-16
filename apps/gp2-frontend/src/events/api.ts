@@ -4,33 +4,27 @@ import {
 } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
 import { API_BASE_URL } from '../config';
+import createListApiUrl from '../CreateListApiUrl';
 
 export const getEvents = async (
   authorization: string,
-  { before, after, constraint, sort }: GetEventListOptions<gp2.EventConstraint>,
+  options: GetEventListOptions<gp2.EventConstraint>,
 ): Promise<gp2.ListEventResponse> => {
-  const url = new URL('events', `${API_BASE_URL}/`);
+  const { before, after, constraint } = options;
+  const url = createListApiUrl('events', options);
   if (before) {
     url.searchParams.set('before', before);
+    url.searchParams.set('sortBy', 'endDate');
+    url.searchParams.set('sortOrder', 'desc');
   }
-  if (after) {
-    url.searchParams.set('after', after);
-  }
-  if (sort) {
-    url.searchParams.set('sortBy', sort.sortBy);
-    url.searchParams.set('sortOrder', sort.sortOrder);
-  }
-  const addFilter = (name: string, item: string) =>
-    url.searchParams.append(`filter[${name}]`, item);
-  if (constraint?.workingGroupId) {
-    addFilter('workingGroupId', constraint.workingGroupId);
-  }
-  if (constraint?.projectId) {
-    addFilter('projectId', constraint.projectId);
-  }
-  if (constraint?.userId) {
-    addFilter('userId', constraint.userId);
-  }
+  after && url.searchParams.set('after', after);
+  const addFilter = (name: string, item?: string) =>
+    item && url.searchParams.append(`filter[${name}]`, item);
+
+  addFilter('workingGroupId', constraint?.workingGroupId);
+  addFilter('projectId', constraint?.projectId);
+  addFilter('userId', constraint?.userId);
+
   const resp = await fetch(url.toString(), {
     headers: { authorization, ...createSentryHeaders() },
   });

@@ -87,10 +87,6 @@ it('sets before to an hour before date provided for past events', async () => {
     expect.anything(),
     expect.objectContaining({
       before: new Date('2020-01-01T11:00:00Z').toISOString(),
-      sort: {
-        sortBy: 'endDate',
-        sortOrder: 'desc',
-      },
     }),
   );
 });

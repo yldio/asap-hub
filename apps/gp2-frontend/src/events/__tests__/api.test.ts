@@ -65,6 +65,8 @@ describe('getEvents', () => {
       .get('/events')
       .query({
         after: 'after',
+        skip: 10,
+        take: 10,
       })
       .reply(200, eventsResponse);
 
@@ -78,7 +80,6 @@ describe('getEvents', () => {
       pageSize: 10,
       filters: new Set(),
       before: 'before',
-      sort: { sortBy: 'endDate', sortOrder: 'desc' },
     };
 
     const eventsResponse: gp2Model.ListEventResponse =
@@ -89,6 +90,8 @@ describe('getEvents', () => {
         before: 'before',
         sortBy: 'endDate',
         sortOrder: 'desc',
+        skip: 10,
+        take: 10,
       })
       .reply(200, eventsResponse);
 
@@ -114,6 +117,8 @@ describe('getEvents', () => {
       .query({
         after: 'after',
         filter: { workingGroupId: '42' },
+        skip: 10,
+        take: 10,
       })
       .reply(200, eventsResponse);
 
@@ -139,6 +144,8 @@ describe('getEvents', () => {
       .query({
         after: 'after',
         filter: { projectId: '42' },
+        skip: 10,
+        take: 10,
       })
       .reply(200, eventsResponse);
 
@@ -164,6 +171,8 @@ describe('getEvents', () => {
       .query({
         after: 'after',
         filter: { userId: '42' },
+        skip: 10,
+        take: 10,
       })
       .reply(200, eventsResponse);
 
@@ -184,6 +193,8 @@ describe('getEvents', () => {
       .get('/events')
       .query({
         after: 'after',
+        skip: 10,
+        take: 10,
       })
       .reply(500);
 

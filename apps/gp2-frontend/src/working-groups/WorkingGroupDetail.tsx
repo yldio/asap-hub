@@ -63,6 +63,7 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
   const [upcomingEvents, pastEvents] = useUpcomingAndPastEvents(currentTime, {
     workingGroupId,
   });
+
   if (workingGroup) {
     return (
       <Switch>

@@ -12,6 +12,8 @@ import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { FC, lazy, useEffect } from 'react';
+import EventsList from '../events/EventsList';
+import { useUpcomingAndPastEvents } from '../events/state';
 import { usePutProjectResources, useProjectById } from './state';
 import { useOutputs } from '../outputs/state';
 import OutputList from '../outputs/OutputList';
@@ -25,7 +27,10 @@ const loadCreateProjectOutput = () =>
 
 const CreateProjectOutput = lazy(loadCreateProjectOutput);
 
-const ProjectDetail: FC<Record<string, never>> = () => {
+type ProjectDetailProps = {
+  currentTime: Date;
+};
+const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
   const { path } = useRouteMatch();
   const { projectId } = useRouteParams(projects({}).project);
   const project = useProjectById(projectId);
@@ -46,6 +51,8 @@ const ProjectDetail: FC<Record<string, never>> = () => {
   const overview = projectRoute.overview({}).$;
   const outputs = projectRoute.outputs({}).$;
   const resources = resourcesRoute.$;
+  const upcoming = projectRoute.upcoming({}).$;
+  const past = projectRoute.past({}).$;
 
   const updateProjectResources = usePutProjectResources(projectId);
 
@@ -53,6 +60,9 @@ const ProjectDetail: FC<Record<string, never>> = () => {
     loadCreateProjectOutput();
   }, [project]);
 
+  const [upcomingEvents, pastEvents] = useUpcomingAndPastEvents(currentTime, {
+    projectId,
+  });
   if (project) {
     return (
       <Switch>
@@ -65,6 +75,8 @@ const ProjectDetail: FC<Record<string, never>> = () => {
           isProjectMember={isProjectMember}
           isAdministrator={isAdministrator}
           outputsTotal={total}
+          upcomingTotal={upcomingEvents.total}
+          pastTotal={pastEvents.total}
           {...project}
         >
           <Switch>
@@ -110,6 +122,24 @@ const ProjectDetail: FC<Record<string, never>> = () => {
             <Route path={outputs}>
               <Frame title="Shared Outputs">
                 <OutputList filters={{ projects: projectId }} />
+              </Frame>
+            </Route>
+            <Route path={upcoming}>
+              <Frame title="Upcoming Events">
+                <EventsList
+                  constraint={{ projectId }}
+                  currentTime={currentTime}
+                  past={false}
+                />
+              </Frame>
+            </Route>
+            <Route path={past}>
+              <Frame title="Past Events">
+                <EventsList
+                  currentTime={currentTime}
+                  past={true}
+                  constraint={{ projectId }}
+                />
               </Frame>
             </Route>
             <Redirect to={overview} />

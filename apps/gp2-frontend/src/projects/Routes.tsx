@@ -2,7 +2,7 @@ import { Frame } from '@asap-hub/frontend-utils';
 import { ProjectsPage } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/routing';
-import { lazy, useEffect } from 'react';
+import { lazy, useEffect, useState } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
 const loadProjectList = () =>
@@ -20,6 +20,7 @@ const Routes: React.FC<Record<string, never>> = () => {
   }, []);
   const { path } = useRouteMatch();
 
+  const [currentTime] = useState(new Date());
   return (
     <Switch>
       <Route exact path={path}>
@@ -30,7 +31,7 @@ const Routes: React.FC<Record<string, never>> = () => {
         </ProjectsPage>
       </Route>
       <Route path={path + projects({}).project.template}>
-        <ProjectDetail />
+        <ProjectDetail currentTime={currentTime} />
       </Route>
       <Route component={NotFoundPage} />
     </Switch>

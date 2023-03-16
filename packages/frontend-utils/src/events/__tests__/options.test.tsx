@@ -7,22 +7,12 @@ describe('getEventListOptions', () => {
         .after,
     ).toMatchInlineSnapshot(`"2021-01-01T04:00:00.000Z"`);
   });
-  it('does not set sort for upcoming events', () => {
-    expect(getEventListOptions(new Date(), { past: false }).sort).toBe(
-      undefined,
-    );
-  });
 
   it('sets before for past events', () => {
     expect(
       getEventListOptions(new Date('2021-01-01T05:00:00'), { past: true })
         .before,
     ).toMatchInlineSnapshot(`"2021-01-01T04:00:00.000Z"`);
-  });
-  it('sets sort for past events', () => {
-    expect(
-      getEventListOptions(new Date('2021-01-01T05:00:00'), { past: true }).sort,
-    ).toEqual({ sortBy: 'endDate', sortOrder: 'desc' });
   });
 
   it('passes through other options', () => {

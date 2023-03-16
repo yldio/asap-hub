@@ -13,12 +13,16 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getProject, putProjectResources } from '../api';
+import { getEvents } from '../../events/api';
 import { getOutputs } from '../../outputs/api';
 import ProjectDetail from '../ProjectDetail';
 import { refreshProjectState } from '../state';
+import { refreshOutputsState } from '../../outputs/state';
+import { refreshEventsState } from '../../events/state';
 
 jest.mock('../api');
 jest.mock('../../outputs/api');
+jest.mock('../../events/api');
 
 const renderProjectDetail = async ({
   id,
@@ -35,6 +39,8 @@ const renderProjectDetail = async ({
     <RecoilRoot
       initializeState={({ set }) => {
         set(refreshProjectState(id), Math.random());
+        set(refreshOutputsState, Math.random());
+        set(refreshEventsState, Math.random());
       }}
     >
       <Suspense fallback="loading">
@@ -51,7 +57,7 @@ const renderProjectDetail = async ({
                   gp2Routing.projects({}).project.template
                 }
               >
-                <ProjectDetail />
+                <ProjectDetail currentTime={new Date()} />
               </Route>
             </MemoryRouter>
           </WhenReady>
@@ -63,26 +69,28 @@ const renderProjectDetail = async ({
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };
 
-beforeEach(jest.resetAllMocks);
-
 describe('ProjectDetail', () => {
   const mockGetProject = getProject as jest.MockedFunction<typeof getProject>;
   const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
   const mockPutProjectResources = putProjectResources as jest.MockedFunction<
     typeof putProjectResources
   >;
+  const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
 
+  beforeEach(jest.resetAllMocks);
+  beforeEach(() => {
+    mockGetOutputs.mockResolvedValue(gp2Fixtures.createListOutputResponse(1));
+    mockGetEvents.mockResolvedValue(gp2Fixtures.createListEventResponse(1));
+  });
   it('renders header with title', async () => {
     const project = gp2Fixtures.createProjectResponse();
     mockGetProject.mockResolvedValueOnce(project);
-    mockGetOutputs.mockResolvedValue({ items: [], total: 0 });
     await renderProjectDetail({ id: project.id });
     expect(screen.getByRole('banner')).toBeVisible();
   });
 
   it('renders not found if no project is returned', async () => {
     mockGetProject.mockResolvedValueOnce(undefined);
-    mockGetOutputs.mockResolvedValue({ items: [], total: 0 });
     await renderProjectDetail({ id: 'unknown-id' });
     expect(
       screen.getByRole('heading', {
@@ -102,7 +110,6 @@ describe('ProjectDetail', () => {
       },
     ];
     mockGetProject.mockResolvedValueOnce(project);
-    mockGetOutputs.mockResolvedValue({ items: [], total: 0 });
     await renderProjectDetail({ id: project.id });
     expect(screen.getByText(/project Members/i)).toBeVisible();
   });
@@ -119,7 +126,6 @@ describe('ProjectDetail', () => {
         },
       ];
       mockGetProject.mockResolvedValueOnce(project);
-      mockGetOutputs.mockResolvedValue({ items: [], total: 0 });
       await renderProjectDetail({ id: project.id, userId: '11' });
       expect(screen.getByRole('link', { name: /resources/i })).toBeVisible();
     });
@@ -135,7 +141,6 @@ describe('ProjectDetail', () => {
         },
       ];
       mockGetProject.mockResolvedValueOnce(project);
-      mockGetOutputs.mockResolvedValue({ items: [], total: 0 });
       await renderProjectDetail({ id: project.id, userId: '11' });
       expect(
         screen.queryByRole('link', { name: /resources/i }),
@@ -153,7 +158,6 @@ describe('ProjectDetail', () => {
         },
       ];
       mockGetProject.mockResolvedValueOnce(project);
-      mockGetOutputs.mockResolvedValue({ items: [], total: 0 });
       await renderProjectDetail({
         id: project.id,
         userId: '23',
@@ -178,7 +182,6 @@ describe('ProjectDetail', () => {
         },
       ];
       mockGetProject.mockResolvedValueOnce(project);
-      mockGetOutputs.mockResolvedValue({ items: [], total: 0 });
       await renderProjectDetail({
         id: project.id,
         userId: '11',
@@ -204,7 +207,6 @@ describe('ProjectDetail', () => {
       },
     ];
     mockGetProject.mockResolvedValueOnce(project);
-    mockGetOutputs.mockResolvedValue({ items: [], total: 0 });
     await renderProjectDetail({
       id: project.id,
       userId: '23',
@@ -226,7 +228,6 @@ describe('ProjectDetail', () => {
       },
     ];
     mockGetProject.mockResolvedValueOnce(project);
-    mockGetOutputs.mockResolvedValue({ items: [], total: 0 });
     await renderProjectDetail({
       id: project.id,
       userId: '23',
@@ -258,7 +259,6 @@ describe('ProjectDetail', () => {
         },
       ];
       mockGetProject.mockResolvedValueOnce(project);
-      mockGetOutputs.mockResolvedValue({ items: [], total: 0 });
       await renderProjectDetail({
         id: project.id,
         userId: '23',
@@ -286,7 +286,6 @@ describe('ProjectDetail', () => {
       },
     ];
     mockGetProject.mockResolvedValueOnce(project);
-    mockGetOutputs.mockResolvedValue({ items: [], total: 0 });
     await renderProjectDetail({
       id: project.id,
       userId: '23',
@@ -315,7 +314,6 @@ describe('ProjectDetail', () => {
 
     it('does render the add and edit button to Administrators', async () => {
       mockGetProject.mockResolvedValueOnce(project);
-      mockGetOutputs.mockResolvedValue({ items: [], total: 0 });
       await renderProjectDetail({
         id: project.id,
         userId: '23',
@@ -334,7 +332,6 @@ describe('ProjectDetail', () => {
       'does not render the add and edit button to non Administrators - %s',
       async (role) => {
         mockGetProject.mockResolvedValueOnce(project);
-        mockGetOutputs.mockResolvedValue({ items: [], total: 0 });
         await renderProjectDetail({
           id: project.id,
           userId: '23',
@@ -359,7 +356,6 @@ describe('ProjectDetail', () => {
       const type = 'Note';
 
       mockGetProject.mockResolvedValueOnce(project);
-      mockGetOutputs.mockResolvedValue({ items: [], total: 0 });
       mockPutProjectResources.mockResolvedValueOnce(project);
       await renderProjectDetail({
         id: project.id,
@@ -407,7 +403,6 @@ describe('ProjectDetail', () => {
 
       const projectResources = { ...project, resources };
       mockGetProject.mockResolvedValueOnce(projectResources);
-      mockGetOutputs.mockResolvedValue({ items: [], total: 0 });
       mockPutProjectResources.mockResolvedValueOnce(projectResources);
       await renderProjectDetail({
         id: projectResources.id,
@@ -434,5 +429,34 @@ describe('ProjectDetail', () => {
       );
       await waitFor(() => expect(saveButton).toBeEnabled());
     });
+  });
+  describe('the upcoming events tab', () => {
+    it('can be switched to', async () => {
+      const project = gp2Fixtures.createProjectResponse();
+      mockGetProject.mockResolvedValueOnce(project);
+      await renderProjectDetail({ id: project.id });
+      userEvent.click(await screen.findByText(/upcoming events \(1\)/i));
+      expect(await screen.findByText(/Event 0/i)).toBeVisible();
+    });
+  });
+
+  describe('the past events tab', () => {
+    it('can be switched to', async () => {
+      const project = gp2Fixtures.createProjectResponse();
+      mockGetProject.mockResolvedValueOnce(project);
+      await renderProjectDetail({ id: project.id });
+      userEvent.click(await screen.findByText(/past events \(1\)/i));
+      expect(await screen.findByText(/Event 0/i)).toBeVisible();
+    });
+  });
+  it('displays the correct count', async () => {
+    const project = gp2Fixtures.createProjectResponse();
+    mockGetProject.mockResolvedValueOnce(project);
+    mockGetEvents
+      .mockResolvedValueOnce(gp2Fixtures.createListEventResponse(2))
+      .mockResolvedValueOnce(gp2Fixtures.createListEventResponse(3));
+    await renderProjectDetail({ id: project.id });
+    expect(await screen.findByText(/upcoming events \(2\)/i)).toBeVisible();
+    expect(await screen.findByText(/past events \(3\)/i)).toBeVisible();
   });
 });

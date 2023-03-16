@@ -34,6 +34,8 @@ type ProjectDetailHeaderProps = ComponentProps<typeof ProjectSummaryHeader> &
     isProjectMember: boolean;
     isAdministrator: boolean;
     outputsTotal?: number;
+    upcomingTotal?: number;
+    pastTotal?: number;
   };
 
 const infoContainerStyles = css({
@@ -75,69 +77,66 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = ({
   opportunitiesLink,
   isAdministrator,
   outputsTotal = 0,
-}) => (
-  <header css={detailHeaderStyles}>
-    {opportunitiesLink && (
-      <Card accent="information" padding={false}>
-        <div css={opportunitiesCardStyles}>
-          <div>{informationIcon}</div>
-          <div css={cardTextContainerStyles}>
-            <Subtitle noMargin>Opportunities Available</Subtitle>
-            <Paragraph noMargin>
-              This project is currently looking for additional team members.
-            </Paragraph>
-            <Link href={opportunitiesLink}>
-              <span css={css({ display: 'inline-flex' })}>
-                Read more <span css={infoIconStyles}>{externalLinkIcon}</span>
-              </span>
-            </Link>
+  upcomingTotal = 0,
+  pastTotal = 0,
+}) => {
+  const route = gp2Routing.projects({}).project({ projectId: id });
+  return (
+    <header css={detailHeaderStyles}>
+      {opportunitiesLink && (
+        <Card accent="information" padding={false}>
+          <div css={opportunitiesCardStyles}>
+            <div>{informationIcon}</div>
+            <div css={cardTextContainerStyles}>
+              <Subtitle noMargin>Opportunities Available</Subtitle>
+              <Paragraph noMargin>
+                This project is currently looking for additional team members.
+              </Paragraph>
+              <Link href={opportunitiesLink}>
+                <span css={css({ display: 'inline-flex' })}>
+                  Read more <span css={infoIconStyles}>{externalLinkIcon}</span>
+                </span>
+              </Link>
+            </div>
           </div>
-        </div>
-      </Card>
-    )}
-    <CardWithBackground image={projectsImage}>
-      <ProjectSummaryHeader
-        projectProposalUrl={projectProposalUrl}
-        status={status}
-        traineeProject={traineeProject}
-        opportunitiesLink={opportunitiesLink}
-      />
-      <Subtitle>Project</Subtitle>
-      <h2>{title}</h2>
-      <div css={infoContainerStyles}>
-        <ProjectSummaryFooter
-          members={members}
-          startDate={startDate}
-          endDate={endDate}
-        />
-        {isAdministrator && (
-          <div css={css({ marginLeft: 'auto' })}>
-            <ShareOutputButton id={id} entityType="project" />
-          </div>
-        )}
-      </div>
-    </CardWithBackground>
-    <TabNav>
-      <TabLink
-        href={gp2Routing.projects({}).project({ projectId: id }).overview({}).$}
-      >
-        Overview
-      </TabLink>
-      {isProjectMember && (
-        <TabLink
-          href={
-            gp2Routing.projects({}).project({ projectId: id }).resources({}).$
-          }
-        >
-          Resources
-        </TabLink>
+        </Card>
       )}
-      <TabLink
-        href={gp2Routing.projects({}).project({ projectId: id }).outputs({}).$}
-      >
-        Shared Outputs ({outputsTotal})
-      </TabLink>
-    </TabNav>
-  </header>
-);
+      <CardWithBackground image={projectsImage}>
+        <ProjectSummaryHeader
+          projectProposalUrl={projectProposalUrl}
+          status={status}
+          traineeProject={traineeProject}
+          opportunitiesLink={opportunitiesLink}
+        />
+        <Subtitle>Project</Subtitle>
+        <h2>{title}</h2>
+        <div css={infoContainerStyles}>
+          <ProjectSummaryFooter
+            members={members}
+            startDate={startDate}
+            endDate={endDate}
+          />
+          {isAdministrator && (
+            <div css={css({ marginLeft: 'auto' })}>
+              <ShareOutputButton id={id} entityType="project" />
+            </div>
+          )}
+        </div>
+      </CardWithBackground>
+      <TabNav>
+        <TabLink href={route.overview({}).$}>Overview</TabLink>
+        {isProjectMember && (
+          <TabLink href={route.resources({}).$}>Resources</TabLink>
+        )}
+        <TabLink href={route.outputs({}).$}>
+          Shared Outputs ({outputsTotal})
+        </TabLink>
+        <TabLink href={route.upcoming({}).$}>
+          Upcoming Events ({upcomingTotal})
+        </TabLink>
+        <TabLink href={route.past({}).$}>Past Events ({pastTotal})</TabLink>
+      </TabNav>
+    </header>
+  );
+};
 export default ProjectDetailHeader;

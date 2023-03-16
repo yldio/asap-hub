@@ -46,16 +46,15 @@ const EditModal: React.FC<EditModalProps> = ({
   noHeader = false,
 }) => {
   const formRef = useRef<HTMLFormElement>(null);
+  const historyPush = usePushFromHere();
   const [status, setStatus] = useState<
     'initial' | 'isSaving' | 'hasError' | 'hasSaved'
   >('initial');
   useEffect(() => {
-    if (status === 'hasSaved' && !dirty) {
-      setStatus('initial');
+    if (status === 'hasSaved') {
+      historyPush(backHref);
     }
-  }, [status, dirty]);
-
-  const historyPush = usePushFromHere();
+  }, [status, backHref, historyPush]);
 
   const asyncFunctionWrapper = async (cb: () => void | Promise<void>) => {
     const parentValidation = validate();
@@ -64,8 +63,9 @@ const EditModal: React.FC<EditModalProps> = ({
       setStatus('isSaving');
       try {
         await cb();
-        setStatus('hasSaved');
-        historyPush(backHref);
+        if (formRef.current) {
+          setStatus('hasSaved');
+        }
       } catch {
         if (!formRef.current) return;
         setStatus('hasError');

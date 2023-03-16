@@ -124,27 +124,11 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = ({
         </div>
       </CardWithBackground>
       <TabNav>
-        <TabLink
-          href={
-            gp2Routing.projects({}).project({ projectId: id }).overview({}).$
-          }
-        >
-          Overview
-        </TabLink>
+        <TabLink href={route.overview({}).$}>Overview</TabLink>
         {isProjectMember && (
-          <TabLink
-            href={
-              gp2Routing.projects({}).project({ projectId: id }).resources({}).$
-            }
-          >
-            Resources
-          </TabLink>
+          <TabLink href={route.resources({}).$}>Resources</TabLink>
         )}
-        <TabLink
-          href={
-            gp2Routing.projects({}).project({ projectId: id }).outputs({}).$
-          }
-        >
+        <TabLink href={route.outputs({}).$}>
           Shared Outputs ({outputsTotal})
         </TabLink>
         <TabLink href={route.upcoming({}).$}>

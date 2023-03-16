@@ -17,20 +17,14 @@ export const getEvents = async (
     url.searchParams.set('sortBy', 'endDate');
     url.searchParams.set('sortOrder', 'desc');
   }
-  if (after) {
-    url.searchParams.set('after', after);
-  }
-  const addFilter = (name: string, item: string) =>
-    url.searchParams.append(`filter[${name}]`, item);
-  if (constraint?.workingGroupId) {
-    addFilter('workingGroupId', constraint.workingGroupId);
-  }
-  if (constraint?.projectId) {
-    addFilter('projectId', constraint.projectId);
-  }
-  if (constraint?.userId) {
-    addFilter('userId', constraint.userId);
-  }
+  after && url.searchParams.set('after', after);
+  const addFilter = (name: string, item?: string) =>
+    item && url.searchParams.append(`filter[${name}]`, item);
+
+  addFilter('workingGroupId', constraint?.workingGroupId);
+  addFilter('projectId', constraint?.projectId);
+  addFilter('userId', constraint?.userId);
+
   const resp = await fetch(url.toString(), {
     headers: { authorization, ...createSentryHeaders() },
   });

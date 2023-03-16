@@ -13,9 +13,10 @@ import OutputForm from '../OutputForm';
 
 describe('OutputForm', () => {
   const defaultProps = {
-    createOutput: jest.fn(),
-    documentType: 'form' as const,
+    shareOutput: jest.fn(),
+    documentType: 'Form' as const,
   };
+  afterEach(jest.resetAllMocks);
   it('renders all the base fields', () => {
     render(<OutputForm {...defaultProps} />, { wrapper: StaticRouter });
     expect(screen.getByRole('textbox', { name: /title/i })).toBeVisible();
@@ -27,7 +28,7 @@ describe('OutputForm', () => {
   it('publish the form', async () => {
     const getAuthorSuggestions = jest.fn();
     const history = createMemoryHistory();
-    const createOutput = jest.fn();
+    const shareOutput = jest.fn();
     getAuthorSuggestions.mockResolvedValue([
       {
         author: {
@@ -46,11 +47,11 @@ describe('OutputForm', () => {
         value: 'u1',
       },
     ]);
-    createOutput.mockResolvedValue(gp2Fixtures.createOutputResponse());
+    shareOutput.mockResolvedValueOnce(gp2Fixtures.createOutputResponse());
     render(
       <OutputForm
         {...defaultProps}
-        createOutput={createOutput}
+        shareOutput={shareOutput}
         getAuthorSuggestions={getAuthorSuggestions}
       />,
       {
@@ -69,8 +70,8 @@ describe('OutputForm', () => {
     );
     const authors = screen.getByRole('textbox', { name: /Authors/i });
     userEvent.click(authors);
-    await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
-    userEvent.click(screen.getByText(/Chris Reed/i));
+
+    userEvent.click(await screen.findByText(/Chris Reed/i));
     userEvent.click(authors);
     userEvent.click(screen.getByText('Chris Blue'));
     userEvent.click(authors);
@@ -82,7 +83,7 @@ describe('OutputForm', () => {
       await screen.findByRole('button', { name: /publish/i }),
     ).toBeEnabled();
 
-    expect(createOutput).toHaveBeenCalledWith({
+    expect(shareOutput).toHaveBeenCalledWith({
       title: 'output title',
       link: 'https://example.com',
       documentType: 'Form',
@@ -97,7 +98,7 @@ describe('OutputForm', () => {
 
   describe('article', () => {
     it('renders type', () => {
-      render(<OutputForm {...defaultProps} documentType="article" />, {
+      render(<OutputForm {...defaultProps} documentType="Article" />, {
         wrapper: StaticRouter,
       });
       expect(screen.getByRole('textbox', { name: /type/i })).toBeVisible();
@@ -105,7 +106,7 @@ describe('OutputForm', () => {
     it.each<gp2.OutputType>(['Blog', 'Hot Topic', 'Letter', 'Review'])(
       '%d does not render subtype',
       (type) => {
-        render(<OutputForm {...defaultProps} documentType="article" />, {
+        render(<OutputForm {...defaultProps} documentType="Article" />, {
           wrapper: StaticRouter,
         });
         userEvent.click(screen.getByRole('textbox', { name: /type/i }));
@@ -116,7 +117,7 @@ describe('OutputForm', () => {
       },
     );
     it.each<gp2.OutputType>(['Research'])('%d renders subtype', (type) => {
-      render(<OutputForm {...defaultProps} documentType="article" />, {
+      render(<OutputForm {...defaultProps} documentType="Article" />, {
         wrapper: StaticRouter,
       });
       userEvent.click(screen.getByRole('textbox', { name: /type/i }));
@@ -124,6 +125,7 @@ describe('OutputForm', () => {
       expect(screen.getByRole('textbox', { name: /subtype/i })).toBeVisible();
     });
     it('publishes with type and subtype', async () => {
+      const history = createMemoryHistory();
       const getAuthorSuggestions = jest.fn();
       getAuthorSuggestions.mockResolvedValueOnce([
         {
@@ -135,16 +137,19 @@ describe('OutputForm', () => {
           value: 'u2',
         },
       ]);
-      const createOutput = jest.fn();
+      const shareOutput = jest.fn();
+      shareOutput.mockResolvedValueOnce(gp2Fixtures.createOutputResponse());
       render(
         <OutputForm
           {...defaultProps}
-          documentType="article"
-          createOutput={createOutput}
+          documentType="Article"
+          shareOutput={shareOutput}
           getAuthorSuggestions={getAuthorSuggestions}
         />,
         {
-          wrapper: StaticRouter,
+          wrapper: ({ children }) => (
+            <Router history={history}>{children}</Router>
+          ),
         },
       );
       userEvent.type(
@@ -164,12 +169,11 @@ describe('OutputForm', () => {
       await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
       userEvent.click(screen.getByText('Chris Blue'));
       userEvent.click(screen.getByRole('button', { name: /publish/i }));
-      userEvent.click(screen.getByRole('button', { name: /publish/i }));
       expect(
         await screen.findByRole('button', { name: /publish/i }),
       ).toBeEnabled();
 
-      expect(createOutput).toHaveBeenCalledWith({
+      expect(shareOutput).toHaveBeenCalledWith({
         title: 'output title',
         link: 'https://example.com',
         documentType: 'Article',
@@ -188,7 +192,7 @@ describe('OutputForm', () => {
     `(
       'shows error message for missing value $title',
       async ({ label, error }) => {
-        render(<OutputForm {...defaultProps} documentType="article" />, {
+        render(<OutputForm {...defaultProps} documentType="Article" />, {
           wrapper: StaticRouter,
         });
         const input = screen.getByLabelText(label);
@@ -196,5 +200,31 @@ describe('OutputForm', () => {
         expect(await screen.findByText(error)).toBeVisible();
       },
     );
+  });
+  describe('edit output', () => {
+    it('renders all the base fields', () => {
+      const title = 'Output Title';
+      const link = 'https://example.com/output';
+      const { authors } = gp2Fixtures.createOutputResponse();
+      authors[0].displayName = 'Tony Stark';
+      const output = {
+        ...defaultProps,
+        ...gp2Fixtures.createOutputResponse(),
+        title,
+        link,
+        authors,
+      };
+      render(<OutputForm {...output} />, { wrapper: StaticRouter });
+      expect(
+        screen.getByRole('textbox', { name: /title/i }),
+      ).toHaveDisplayValue(title);
+      expect(screen.getByRole('textbox', { name: /url/i })).toHaveDisplayValue(
+        link,
+      );
+      expect(screen.getByRole('textbox', { name: /authors/i })).toBeVisible();
+      expect(screen.getByText('Tony Stark')).toBeVisible();
+      expect(screen.getByRole('button', { name: /save/i })).toBeVisible();
+      expect(screen.getByRole('button', { name: /cancel/i })).toBeVisible();
+    });
   });
 });

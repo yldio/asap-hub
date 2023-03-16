@@ -1,13 +1,13 @@
 import { render, screen } from '@testing-library/react';
 import { CreateOutputPage } from '..';
-import { documentTypeMapper, EntityMappper } from '../CreateOutputPage';
+import { EntityMappper } from '../CreateOutputPage';
 
 describe('CreateOutputPage', () => {
   it.each(['workingGroup' as const, 'project' as const])(
     'renders the right title for entity %s',
     (entityType) => {
       render(
-        <CreateOutputPage entityType={entityType} documentType={'article'} />,
+        <CreateOutputPage entityType={entityType} documentType={'Article'} />,
       );
       expect(screen.getByRole('heading').textContent).toEqual(
         expect.stringContaining(EntityMappper[entityType]),
@@ -15,12 +15,12 @@ describe('CreateOutputPage', () => {
     },
   );
   it.each([
-    'article' as const,
-    'code-software' as const,
-    'data-release' as const,
-    'form' as const,
-    'training-materials' as const,
-    'update' as const,
+    'Article' as const,
+    'Code/Software' as const,
+    'Data Release' as const,
+    'Form' as const,
+    'Training Materials' as const,
+    'Update' as const,
   ])('renders the right title for document type %s', (documentType) => {
     render(
       <CreateOutputPage
@@ -29,7 +29,7 @@ describe('CreateOutputPage', () => {
       />,
     );
     expect(screen.getByRole('heading').textContent).toEqual(
-      expect.stringContaining(documentTypeMapper[documentType].toLowerCase()),
+      expect.stringContaining(documentType.toLowerCase()),
     );
   });
 });

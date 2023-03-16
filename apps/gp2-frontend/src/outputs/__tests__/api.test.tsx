@@ -7,6 +7,7 @@ import {
   getOutput,
   getOutputs,
   createOutputApiUrl,
+  updateOutput,
 } from '../api';
 
 jest.mock('../../config');
@@ -98,6 +99,36 @@ describe('createOutput', () => {
       createOutput(payload, 'Bearer x'),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to create output. Expected status 201. Received status 500."`,
+    );
+  });
+});
+
+describe('updateOutput', () => {
+  const outputResponse = gp2Fixtures.createOutputResponse();
+  const { id } = outputResponse;
+  const payload = { title: 'output title', documentType: 'Form' as const };
+  it('makes an authorized POST request to update a research output', async () => {
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .put(`/outputs/${id}`, payload)
+      .reply(201, { id: 123 });
+
+    await updateOutput(id, payload, 'Bearer x');
+    expect(nock.isDone()).toBe(true);
+  });
+  it('returns undefined if server returns 404', async () => {
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .put(`/outputs/unknown-id`)
+      .reply(404);
+    const result = await updateOutput('unknown-id', payload, 'Bearer x');
+    expect(result).toBeUndefined();
+  });
+  it('errors for an error status', async () => {
+    nock(API_BASE_URL).put(`/outputs/${id}`).reply(500, {});
+
+    await expect(
+      updateOutput(id, payload, 'Bearer x'),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Failed to update output ro0. Expected status 200. Received status 500."`,
     );
   });
 });

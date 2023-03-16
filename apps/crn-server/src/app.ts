@@ -293,7 +293,10 @@ export const appFactory = (libs: Libs = {}): Express => {
     new ResearchTagSquidexDataProvider(squidexGraphqlClient);
   const externalAuthorDataProvider =
     libs.externalAuthorDataProvider ||
-    new ExternalAuthorSquidexDataProvider(externalAuthorRestClient);
+    new ExternalAuthorSquidexDataProvider(
+      externalAuthorRestClient,
+      squidexGraphqlClient,
+    );
   const calendarDataProvider =
     libs.calendarDataProvider ||
     new CalendarSquidexDataProvider(calendarRestClient, squidexGraphqlClient);

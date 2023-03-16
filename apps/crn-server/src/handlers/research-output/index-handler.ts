@@ -80,6 +80,7 @@ const researchTagDataProvider = new ResearchTagSquidexDataProvider(
 );
 const externalAuthorDataProvider = new ExternalAuthorSquidexDataProvider(
   externalAuthorRestClient,
+  squidexGraphqlClient,
 );
 
 export const handler = sentryWrapper(

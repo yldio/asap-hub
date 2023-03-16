@@ -119,6 +119,7 @@ const getController = (entity: keyof EntityResponses) => {
   );
   const externalAuthorDataProvider = new ExternalAuthorSquidexDataProvider(
     externalAuthorsRestClient,
+    squidexGraphqlClient,
   );
   const assetDataProvider = new AssetSquidexDataProvider(userRestClient);
 
@@ -133,7 +134,7 @@ const getController = (entity: keyof EntityResponses) => {
       researchTagDataProvider,
       externalAuthorDataProvider,
     ),
-    'external-author': new ExternalAuthors(squidexGraphqlClient),
+    'external-author': new ExternalAuthors(externalAuthorDataProvider),
     event: new Events(eventDataProvider),
     lab: new Labs(squidexGraphqlClient),
   };

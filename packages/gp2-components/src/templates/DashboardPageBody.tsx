@@ -65,10 +65,6 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
                     Watch a series of short videos that highlight the different
                     aspects of the Hub.
                   </Paragraph>
-                  <ExternalLink
-                    href="https://hub.asap.science/discover/tutorials/d9c82f68-3f43-4dd8-83c0-179592fc8e42"
-                    label="Explore Videos"
-                  />
                 </>
               ),
             },
@@ -142,7 +138,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
                       (IP) policy is briefly summarized here.
                     </Paragraph>
                     <ExternalLink
-                      href="https://hub.asap.science/discover/tutorials/d9c82f68-3f43-4dd8-83c0-179592fc8e42"
+                      href="https://gp2.org/resources/intellectual-property-policy/"
                       label="Read more"
                     />
                   </article>
@@ -155,7 +151,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
                       policies to learn more.
                     </Paragraph>
                     <ExternalLink
-                      href="https://hub.asap.science/discover/tutorials/d9c82f68-3f43-4dd8-83c0-179592fc8e42"
+                      href="https://gp2.org/resources/publicationpolicy/"
                       label="Read more"
                     />
                   </article>
@@ -172,7 +168,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
                     you can request it below.
                   </Paragraph>
                   <ExternalLink
-                    href="https://hub.asap.science/discover/tutorials/d9c82f68-3f43-4dd8-83c0-179592fc8e42"
+                    href="https://docs.google.com/forms/d/e/1FAIpQLScYnKgzk-gxFW6a8CgEkwowjCnWGdWqLxwF9YWacYHMnSaPzg/viewform"
                     label="Request New Project"
                   />
                 </>

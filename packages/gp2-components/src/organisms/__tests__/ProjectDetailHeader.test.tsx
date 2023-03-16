@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react';
+import { ComponentProps } from 'react';
 import ProjectDetailHeader from '../ProjectDetailHeader';
 
 describe('ProjectDetailHeader', () => {
-  const defaultProps = {
+  const defaultProps: ComponentProps<typeof ProjectDetailHeader> = {
     id: '42',
-    backHref: '/back',
     title: 'Main Project',
     status: 'Active' as const,
     members: [],
@@ -14,6 +14,9 @@ describe('ProjectDetailHeader', () => {
     isProjectMember: true,
     traineeProject: false,
     isAdministrator: false,
+    outputsTotal: 0,
+    upcomingTotal: 0,
+    pastTotal: 0,
   };
 
   it('renders title, number of members and number of projects', () => {
@@ -51,6 +54,24 @@ describe('ProjectDetailHeader', () => {
     render(<ProjectDetailHeader {...defaultProps} isAdministrator={true} />);
     expect(
       screen.getByRole('button', { name: /share an output/i }),
+    ).toBeVisible();
+  });
+  it('renders outputs tab with the count', () => {
+    render(<ProjectDetailHeader {...defaultProps} outputsTotal={42} />);
+    expect(
+      screen.getByRole('link', { name: /shared outputs \(42\)/i }),
+    ).toBeVisible();
+  });
+  it('renders upcoming events tab with the count', () => {
+    render(<ProjectDetailHeader {...defaultProps} upcomingTotal={42} />);
+    expect(
+      screen.getByRole('link', { name: /upcoming events \(42\)/i }),
+    ).toBeVisible();
+  });
+  it('renders past events tab with the count', () => {
+    render(<ProjectDetailHeader {...defaultProps} pastTotal={42} />);
+    expect(
+      screen.getByRole('link', { name: /past events \(42\)/i }),
     ).toBeVisible();
   });
 });

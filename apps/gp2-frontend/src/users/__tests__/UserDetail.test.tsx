@@ -12,7 +12,9 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import { refreshEventsState } from '../../events/state';
 import { getOutputs } from '../../outputs/api';
+import { getEvents } from '../../events/api';
 import { refreshOutputsState } from '../../outputs/state';
 import {
   getContributingCohorts,
@@ -25,6 +27,7 @@ import UserDetail from '../UserDetail';
 
 jest.mock('../api');
 jest.mock('../../outputs/api');
+jest.mock('../../events/api');
 
 const renderUserDetail = async (id: string) => {
   render(
@@ -33,6 +36,7 @@ const renderUserDetail = async (id: string) => {
         set(refreshUserState(id), Math.random());
         set(refreshCohortsState, Math.random());
         set(refreshOutputsState, Math.random());
+        set(refreshEventsState, Math.random());
       }}
     >
       <Suspense fallback="loading">
@@ -46,7 +50,7 @@ const renderUserDetail = async (id: string) => {
                   gp2Routing.users.template + gp2Routing.users({}).user.template
                 }
               >
-                <UserDetail />
+                <UserDetail currentTime={new Date()} />
               </Route>
             </MemoryRouter>
           </WhenReady>
@@ -58,26 +62,29 @@ const renderUserDetail = async (id: string) => {
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };
 
-const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
-const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
-const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
-
-const mockGetInstitutions = getInstitutions as jest.MockedFunction<
-  typeof getInstitutions
->;
-
-const mockGetContributingCohorts =
-  getContributingCohorts as jest.MockedFunction<typeof getContributingCohorts>;
-
-const contributingCohortResponse: gp2Model.ContributingCohortResponse[] = [
-  { id: '7', name: 'AGPDS' },
-  { id: '11', name: 'S3' },
-];
-
 describe('UserDetail', () => {
+  beforeEach(jest.resetAllMocks);
+  const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
+  const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
+  const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
+  const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
+
+  const mockGetInstitutions = getInstitutions as jest.MockedFunction<
+    typeof getInstitutions
+  >;
+
+  const mockGetContributingCohorts =
+    getContributingCohorts as jest.MockedFunction<
+      typeof getContributingCohorts
+    >;
+
+  const contributingCohortResponse: gp2Model.ContributingCohortResponse[] = [
+    { id: '7', name: 'AGPDS' },
+    { id: '11', name: 'S3' },
+  ];
   beforeEach(() => {
-    jest.resetAllMocks();
-    mockGetOutputs.mockResolvedValue({ items: [], total: 0 });
+    mockGetOutputs.mockResolvedValue(gp2Fixtures.createListOutputResponse(1));
+    mockGetEvents.mockResolvedValue(gp2Fixtures.createListEventResponse(1));
   });
 
   it('renders header with title', async () => {
@@ -449,5 +456,34 @@ describe('UserDetail', () => {
         searchQuery: 'Stark Industries 1',
       });
     });
+  });
+  describe('the upcoming events tab', () => {
+    it('can be switched to', async () => {
+      const user = gp2Fixtures.createUserResponse();
+      mockGetUser.mockResolvedValueOnce(user);
+      await renderUserDetail(user.id);
+      userEvent.click(await screen.findByText(/upcoming events \(1\)/i));
+      expect(await screen.findByText(/Event 0/i)).toBeVisible();
+    });
+  });
+
+  describe('the past events tab', () => {
+    it('can be switched to', async () => {
+      const user = gp2Fixtures.createUserResponse();
+      mockGetUser.mockResolvedValueOnce(user);
+      await renderUserDetail(user.id);
+      userEvent.click(await screen.findByText(/past events \(1\)/i));
+      expect(await screen.findByText(/Event 0/i)).toBeVisible();
+    });
+  });
+  it('displays the correct count', async () => {
+    const user = gp2Fixtures.createUserResponse();
+    mockGetUser.mockResolvedValueOnce(user);
+    mockGetEvents
+      .mockResolvedValueOnce(gp2Fixtures.createListEventResponse(2))
+      .mockResolvedValueOnce(gp2Fixtures.createListEventResponse(3));
+    await renderUserDetail(user.id);
+    expect(await screen.findByText(/upcoming events \(2\)/i)).toBeVisible();
+    expect(await screen.findByText(/past events \(3\)/i)).toBeVisible();
   });
 });

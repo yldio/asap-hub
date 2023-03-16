@@ -1,4 +1,5 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
+import { ComponentProps } from 'react';
 
 import { WorkingGroupDetailHeader } from '@asap-hub/gp2-components';
 import { boolean } from '@storybook/addon-knobs';
@@ -8,11 +9,13 @@ export default {
   component: WorkingGroupDetailHeader,
 };
 
-const props = {
+const props: ComponentProps<typeof WorkingGroupDetailHeader> = {
   ...gp2Fixtures.createWorkingGroupResponse(),
-  backHref: '/',
   isWorkingGroupMember: false,
   isAdministrator: boolean('is admin', false),
+  outputsTotal: 1,
+  upcomingTotal: 2,
+  pastTotal: 4,
 };
 
 export const Normal = () => <WorkingGroupDetailHeader {...props} />;

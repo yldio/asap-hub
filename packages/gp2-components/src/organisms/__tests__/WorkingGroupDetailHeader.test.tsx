@@ -1,15 +1,18 @@
 import { render, screen } from '@testing-library/react';
+import { ComponentProps } from 'react';
 import WorkingGroupDetailHeader from '../WorkingGroupDetailHeader';
 
 describe('WorkingGroupDetailHeader', () => {
-  const defaultProps = {
-    backHref: '/back',
+  const defaultProps: ComponentProps<typeof WorkingGroupDetailHeader> = {
     title: 'Underrepresented Populations',
     members: [],
     projects: [],
     id: '1',
     isWorkingGroupMember: true,
     isAdministrator: false,
+    outputsTotal: 0,
+    upcomingTotal: 0,
+    pastTotal: 0,
   };
 
   it('renders title, number of members and number of projects', () => {
@@ -51,6 +54,24 @@ describe('WorkingGroupDetailHeader', () => {
     );
     expect(
       screen.getByRole('button', { name: /share an output/i }),
+    ).toBeVisible();
+  });
+  it('renders outputs tab with the count', () => {
+    render(<WorkingGroupDetailHeader {...defaultProps} outputsTotal={42} />);
+    expect(
+      screen.getByRole('link', { name: /shared outputs \(42\)/i }),
+    ).toBeVisible();
+  });
+  it('renders upcoming events tab with the count', () => {
+    render(<WorkingGroupDetailHeader {...defaultProps} upcomingTotal={42} />);
+    expect(
+      screen.getByRole('link', { name: /upcoming events \(42\)/i }),
+    ).toBeVisible();
+  });
+  it('renders past events tab with the count', () => {
+    render(<WorkingGroupDetailHeader {...defaultProps} pastTotal={42} />);
+    expect(
+      screen.getByRole('link', { name: /past events \(42\)/i }),
     ).toBeVisible();
   });
 });

@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react';
+import { ComponentProps } from 'react';
 import ProjectDetailPage from '../ProjectDetailPage';
 
 describe('ProjectDetailPage', () => {
-  const defaultProps = {
-    backHref: '/back',
+  const defaultProps: ComponentProps<typeof ProjectDetailPage> = {
     title: 'Main Project',
     status: 'Active' as const,
     members: [],
@@ -14,9 +14,12 @@ describe('ProjectDetailPage', () => {
     isProjectMember: true,
     traineeProject: false,
     isAdministrator: false,
+    outputsTotal: 0,
+    upcomingTotal: 0,
+    pastTotal: 0,
   };
   it('renders header', () => {
-    render(<ProjectDetailPage {...defaultProps}></ProjectDetailPage>);
+    render(<ProjectDetailPage {...defaultProps} />);
     expect(screen.getByRole('banner')).toBeVisible();
   });
   it('renders the body', () => {

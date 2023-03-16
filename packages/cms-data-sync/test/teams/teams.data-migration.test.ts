@@ -54,7 +54,7 @@ describe('Migrate teams', () => {
   const consoleLogRef = console.log;
 
   beforeEach(() => {
-    // console.log = jest.fn();
+    console.log = jest.fn();
 
     contenfulEnv = getContentfulEnvironmentMock();
     squidexGraphqlClientMock = {
@@ -86,7 +86,7 @@ describe('Migrate teams', () => {
   });
 
   afterAll(() => {
-    // console.log = consoleLogRef;
+    console.log = consoleLogRef;
   });
 
   it('clears contentful teams and externalTools entries', async () => {

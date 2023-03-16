@@ -22,15 +22,24 @@ export const createExternalTool = async (
 export const createExternalToolLinks = async (
   contentfulEnvironment: Environment,
   tools: Pick<TeamsDataToolsChildDto, 'description' | 'name' | 'url'>[],
+  id: string,
 ): Promise<SysLink[]> => {
   const cleanTools = tools.map((tool) =>
-    Object.entries(tool).reduce(
-      (acc, [key, value]) =>
-        value?.trim && value?.trim() === ''
-          ? acc // deleted field
-          : { ...acc, [key]: value },
-      {} as TeamTool,
-    ),
+    Object.entries(tool).reduce((acc, [key, value]) => {
+      if (key === 'url') {
+        const regex = new RegExp(
+          '^(ftp|http|https):\\/\\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-/]))?$',
+        );
+        if (value && !regex.test(value)) {
+          throw new Error(
+            `Invalid tool URL related linked to team with id: ${id}`,
+          );
+        }
+      }
+      return value?.trim && value?.trim() === ''
+        ? acc // deleted field
+        : { ...acc, [key]: value };
+    }, {} as TeamTool),
   );
 
   const contentfulPublishedTools = await createExternalTool(

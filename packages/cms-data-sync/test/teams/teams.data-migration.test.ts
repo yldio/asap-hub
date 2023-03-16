@@ -183,6 +183,25 @@ describe('Migrate teams', () => {
     });
   });
 
+  it('throws an error when trying to input a tool with invalid link', async () => {
+    const tool = {
+      name: 'Invalid link',
+      description: 'It contains a not valid url',
+      url: '123',
+    };
+    const teamWithInvalidURLTool = getTeamSquidexResponse();
+    teamWithInvalidURLTool.id = 'team-invalid-url-tool';
+    teamWithInvalidURLTool.flatData.tools = [tool];
+
+    squidexGraphqlClientMock.request.mockResolvedValueOnce({
+      queryTeamsContents: [teamWithInvalidURLTool],
+    });
+
+    await expect(migrateTeams()).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Invalid tool URL related linked to team with id: team-invalid-url-tool"`,
+    );
+  });
+
   it('does not fail if squidex does not return anything', async () => {
     squidexGraphqlClientMock.request.mockResolvedValueOnce({});
     const publishContentfulEntriesMock = publishContentfulEntries as jest.Mock;

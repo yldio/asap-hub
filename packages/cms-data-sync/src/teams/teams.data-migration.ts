@@ -46,7 +46,7 @@ export const migrateTeams = async () => {
     } = squidexTeamItem;
 
     const toolLinks = tools?.length
-      ? await createExternalToolLinks(contentfulEnvironment, tools)
+      ? await createExternalToolLinks(contentfulEnvironment, tools, id)
       : [];
 
     const teamPayload = {

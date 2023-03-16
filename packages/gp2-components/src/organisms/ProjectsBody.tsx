@@ -1,12 +1,15 @@
 import { gp2 } from '@asap-hub/model';
 import { pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
+import { noProjectsIcon } from '../icons';
+import { EmptyState } from '../molecules';
 import ProjectCard from './ProjectCard';
 
 const { rem } = pixels;
 export type ProjectsBodyProps = {
   projects: gp2.ListProjectResponse;
 };
+
 const gridContainerStyles = css({
   display: 'flex',
   flexDirection: 'column',
@@ -15,10 +18,22 @@ const gridContainerStyles = css({
 });
 
 const ProjectsBody: React.FC<ProjectsBodyProps> = ({ projects }) => (
-  <article css={gridContainerStyles}>
-    {projects.items.map((project) => (
-      <ProjectCard key={project.id} {...project} />
-    ))}
+  <article>
+    {projects.items.length ? (
+      <div css={gridContainerStyles}>
+        {projects.items.map((project) => (
+          <ProjectCard key={project.id} {...project} />
+        ))}
+      </div>
+    ) : (
+      <EmptyState
+        icon={noProjectsIcon}
+        title={'No projects available.'}
+        description={
+          'When a GP2 admin creates a project, it will be listed here.'
+        }
+      />
+    )}
   </article>
 );
 

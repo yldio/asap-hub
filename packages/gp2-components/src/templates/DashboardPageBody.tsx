@@ -19,6 +19,7 @@ import { events } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { useHistory } from 'react-router-dom';
+import { graduateIcon, projectIcon } from '../icons';
 import DashboardNews from '../organisms/DashboardNews';
 
 const { rem } = pixels;
@@ -66,7 +67,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
                   </Paragraph>
                   <ExternalLink
                     href="https://hub.asap.science/discover/tutorials/d9c82f68-3f43-4dd8-83c0-179592fc8e42"
-                    label="Explore videos"
+                    label="Explore Videos"
                   />
                 </>
               ),
@@ -128,19 +129,67 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
             },
             {
               icon: confidentialIcon,
-              title: 'Learn more about our IP Policy',
+              title: 'Learn more about our Policies',
+              description: (
+                <div>
+                  <article>
+                    <Subtitle>IP Policy</Subtitle>
+                    <Paragraph>
+                      In support of the ASAP strategic objectives of supporting
+                      collaborations, generating resources, and democratizing
+                      access to data, GP2 has been established as a
+                      pre-competitive consortium. GP2’s intellectual property
+                      (IP) policy is briefly summarized here.
+                    </Paragraph>
+                    <ExternalLink
+                      href="https://hub.asap.science/discover/tutorials/d9c82f68-3f43-4dd8-83c0-179592fc8e42"
+                      label="Read more"
+                    />
+                  </article>
+                  <article>
+                    <Subtitle>Publication Policy</Subtitle>
+                    <Paragraph>
+                      Dissemination of GP2 data is a major goal of the GP2
+                      project and ASAP encourages the broad, rapid, and open
+                      publication of results. Read about our publication
+                      policies to learn more.
+                    </Paragraph>
+                    <ExternalLink
+                      href="https://hub.asap.science/discover/tutorials/d9c82f68-3f43-4dd8-83c0-179592fc8e42"
+                      label="Read more"
+                    />
+                  </article>
+                </div>
+              ),
+            },
+            {
+              icon: projectIcon,
+              title: 'Request a New Project',
               description: (
                 <>
                   <Paragraph>
-                    In support of the ASAP strategic objectives of supporting
-                    collaborations, generating resources, and democratizing
-                    access to data, GP2 has been established as a
-                    pre-competitive consortium. GP2’s intellectual property (IP)
-                    policy is briefly summarized here.
+                    If you are interest in starting a new project in the GP2 Hub
+                    you can request it below.
+                  </Paragraph>
+                  <ExternalLink
+                    href="https://hub.asap.science/discover/tutorials/d9c82f68-3f43-4dd8-83c0-179592fc8e42"
+                    label="Request New Project"
+                  />
+                </>
+              ),
+            },
+            {
+              icon: graduateIcon,
+              title: 'Explore GP2 Online Trainings',
+              description: (
+                <>
+                  <Paragraph>
+                    Find out more about all available courses to improve your
+                    skills.
                   </Paragraph>
                   <ExternalLink
                     href="https://gp2.org/training/"
-                    label="Read more"
+                    label="View Courses"
                   />
                 </>
               ),

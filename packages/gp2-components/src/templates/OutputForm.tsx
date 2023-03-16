@@ -36,7 +36,7 @@ const containerStyles = css({
 type OutputFormType = {
   shareOutput: (
     payload: gp2Model.OutputPostRequest,
-  ) => Promise<gp2Model.OutputResponse>;
+  ) => Promise<gp2Model.OutputResponse | undefined>;
   documentType: gp2Model.OutputDocumentType;
   readonly getAuthorSuggestions?: ComponentPropsWithRef<
     typeof AuthorSelect

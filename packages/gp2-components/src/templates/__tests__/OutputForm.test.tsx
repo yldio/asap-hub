@@ -201,4 +201,30 @@ describe('OutputForm', () => {
       },
     );
   });
+  describe('edit output', () => {
+    it('renders all the base fields', () => {
+      const title = 'Output Title';
+      const link = 'https://example.com/output';
+      const { authors } = gp2Fixtures.createOutputResponse();
+      authors[0].displayName = 'Tony Stark';
+      const output = {
+        ...defaultProps,
+        ...gp2Fixtures.createOutputResponse(),
+        title,
+        link,
+        authors,
+      };
+      render(<OutputForm {...output} />, { wrapper: StaticRouter });
+      expect(
+        screen.getByRole('textbox', { name: /title/i }),
+      ).toHaveDisplayValue(title);
+      expect(screen.getByRole('textbox', { name: /url/i })).toHaveDisplayValue(
+        link,
+      );
+      expect(screen.getByRole('textbox', { name: /authors/i })).toBeVisible();
+      expect(screen.getByText('Tony Stark')).toBeVisible();
+      expect(screen.getByRole('button', { name: /save/i })).toBeVisible();
+      expect(screen.getByRole('button', { name: /cancel/i })).toBeVisible();
+    });
+  });
 });

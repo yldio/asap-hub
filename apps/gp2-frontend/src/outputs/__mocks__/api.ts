@@ -23,3 +23,13 @@ export const createOutput = jest.fn(
     documentType,
   }),
 );
+export const updateOutput = jest.fn(
+  async ({
+    title,
+    documentType,
+  }: gp2Model.OutputPutRequest): Promise<gp2Model.OutputResponse> => ({
+    ...gp2Fixtures.createOutputResponse(),
+    title,
+    documentType,
+  }),
+);

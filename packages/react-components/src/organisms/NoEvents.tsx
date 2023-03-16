@@ -1,17 +1,16 @@
 import { css } from '@emotion/react';
 import { calendarIcon } from '../icons';
-import { perRem, rem } from '../pixels';
+import { perRem } from '../pixels';
 import { charcoal, Display, Link, Paragraph } from '..';
 
 const wrapperStyle = css({
   textAlign: 'center',
-  paddingTop: rem(48),
 });
 
 const iconStyles = css({
   svg: {
-    width: `${40 / perRem}em`,
-    height: `${40 / perRem}em`,
+    width: `${48 / perRem}em`,
+    height: `${48 / perRem}em`,
     stroke: charcoal.rgb,
   },
 });

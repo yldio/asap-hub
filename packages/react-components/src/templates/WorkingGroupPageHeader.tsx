@@ -29,8 +29,7 @@ import { createMailTo } from '../mail';
 
 const containerStyles = css({
   backgroundColor: paper.rgb,
-  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)} 0`,
-  marginBottom: `${30 / perRem}em`,
+  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(10)} 0`,
   boxShadow: `0 2px 4px -2px ${steel.rgb}`,
 });
 

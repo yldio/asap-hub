@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 import { addLocaleToFields } from '@asap-hub/contentful';
 import { TeamTool } from '@asap-hub/model';
 import { Environment, SysLink } from 'contentful-management';

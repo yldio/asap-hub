@@ -29,13 +29,10 @@ export const migrateTeams = async () => {
       FetchTeamsQuery,
       FetchTeamsQueryVariables
     >(teamsQuery);
-    console.log('***', gqlTeams.queryTeamsContents);
     return gqlTeams.queryTeamsContents || [];
   };
 
   const parseTeamItem = async (team: TeamItem) => {
-    console.log('team', team);
-
     const { flatData: squidexTeamItem, id } = team;
 
     const {
@@ -48,7 +45,10 @@ export const migrateTeams = async () => {
       tools,
     } = squidexTeamItem;
 
-    console.log('tools', tools);
+    const toolLinks = tools?.length
+      ? await createExternalToolLinks(contentfulEnvironment, tools)
+      : [];
+
     const teamPayload = {
       applicationNumber,
       displayName,
@@ -56,9 +56,7 @@ export const migrateTeams = async () => {
       inactiveSince,
       projectSummary,
       projectTitle,
-      tools: tools
-        ? await createExternalToolLinks(contentfulEnvironment, tools)
-        : [],
+      tools: toolLinks,
     };
 
     return { id, ...teamPayload };

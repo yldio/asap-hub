@@ -33,9 +33,9 @@ type ProjectDetailHeaderProps = ComponentProps<typeof ProjectSummaryHeader> &
   > & {
     isProjectMember: boolean;
     isAdministrator: boolean;
-    outputsTotal?: number;
-    upcomingTotal?: number;
-    pastTotal?: number;
+    outputsTotal: number;
+    upcomingTotal: number;
+    pastTotal: number;
   };
 
 const infoContainerStyles = css({

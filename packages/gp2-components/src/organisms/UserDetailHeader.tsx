@@ -5,9 +5,9 @@ import { detailHeaderStyles } from '../layout';
 import UserDetailHeaderCard from './UserDetailHeaderCard';
 
 type UserDetailHeaderProps = ComponentProps<typeof UserDetailHeaderCard> & {
-  outputsTotal?: number;
-  upcomingTotal?: number;
-  pastTotal?: number;
+  outputsTotal: number;
+  upcomingTotal: number;
+  pastTotal: number;
 };
 
 const UserDetailHeader: React.FC<UserDetailHeaderProps> = ({

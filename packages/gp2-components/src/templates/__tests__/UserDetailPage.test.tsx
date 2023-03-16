@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react';
+import { ComponentProps } from 'react';
 import UserDetailPage from '../UserDetailPage';
 
 describe('UserDetailPage', () => {
-  const defaultProps = {
-    backHref: '/back',
+  const defaultProps: ComponentProps<typeof UserDetailPage> = {
     id: '1',
     displayName: 'Homer Simpson',
     firstName: 'Homer',
@@ -20,9 +20,12 @@ describe('UserDetailPage', () => {
     ],
     country: 'USA',
     city: 'Springfield',
+    outputsTotal: 0,
+    upcomingTotal: 0,
+    pastTotal: 0,
   };
   it('renders header', () => {
-    render(<UserDetailPage {...defaultProps}></UserDetailPage>);
+    render(<UserDetailPage {...defaultProps} />);
     expect(screen.getByRole('banner')).toBeVisible();
   });
   it('renders the body', () => {

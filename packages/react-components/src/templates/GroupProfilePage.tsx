@@ -2,12 +2,11 @@ import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 
 import GroupProfileHeader from './GroupProfileHeader';
-import { perRem } from '../pixels';
-import { contentSidePaddingWithNavigation } from '../layout';
+import { networkPageLayoutPaddingStyle } from '../layout';
 import { Toast } from '../organisms';
 
 const mainStyles = css({
-  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(10)}`,
+  padding: networkPageLayoutPaddingStyle,
 });
 
 type GroupProfilePageProps = ComponentProps<typeof GroupProfileHeader>;

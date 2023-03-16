@@ -1,12 +1,11 @@
 import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 
-import { perRem } from '../pixels';
 import WorkingGroupPageHeader from './WorkingGroupPageHeader';
-import { contentSidePaddingWithNavigation } from '../layout';
+import { networkPageLayoutPaddingStyle } from '../layout';
 
 const mainStyles = css({
-  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
+  padding: networkPageLayoutPaddingStyle,
 });
 
 const WorkingGroupPage: React.FC<

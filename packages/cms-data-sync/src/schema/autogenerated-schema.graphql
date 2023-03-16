@@ -122,7 +122,7 @@ type ApplicationMutations {
     status: String!
   ): ExternalAuthors
   """
-  Change a Groups content.
+  Change a Interest Groups content.
   """
   changeGroupsContent(
     """
@@ -458,7 +458,7 @@ type ApplicationMutations {
     status: String
   ): ExternalAuthors
   """
-  Creates an Groups content.
+  Creates an Interest Groups content.
   """
   createGroupsContent(
     """
@@ -754,7 +754,7 @@ type ApplicationMutations {
     id: String!
   ): EntitySavedResultDto!
   """
-  Delete an Groups content.
+  Delete an Interest Groups content.
   """
   deleteGroupsContent(
     """
@@ -982,7 +982,7 @@ type ApplicationMutations {
     id: String
   ): ExternalAuthors
   """
-  Patch an Groups content by id.
+  Patch an Interest Groups content by id.
   """
   patchGroupsContent(
     """
@@ -1275,7 +1275,7 @@ type ApplicationMutations {
   ): ExternalAuthors
     @deprecated(reason: "Use 'changeExternalAuthorsContent' instead")
   """
-  Publish a Groups content.
+  Publish a Interest Groups content.
   """
   publishGroupsContent(
     """
@@ -1594,7 +1594,7 @@ type ApplicationMutations {
     id: String
   ): ExternalAuthors
   """
-  Update an Groups content by id.
+  Update an Interest Groups content by id.
   """
   updateGroupsContent(
     """
@@ -1926,7 +1926,7 @@ type ApplicationMutations {
     status: String
   ): ExternalAuthors
   """
-  Upsert an Groups content by id.
+  Upsert an Interest Groups content by id.
   """
   upsertGroupsContent(
     """
@@ -2325,7 +2325,7 @@ type ApplicationQueries {
     version: Int
   ): ExternalAuthors
   """
-  Find an Groups content by id.
+  Find an Interest Groups content by id.
   """
   findGroupsContent(
     """
@@ -2760,7 +2760,7 @@ type ApplicationQueries {
     top: Int
   ): ExternalAuthorsResultDto
   """
-  Query Groups content items.
+  Query Interest Groups content items.
   """
   queryGroupsContents(
     """
@@ -2785,7 +2785,7 @@ type ApplicationQueries {
     top: Int
   ): [Groups!]
   """
-  Query Groups content items with total count.
+  Query Interest Groups content items with total count.
   """
   queryGroupsContentsWithTotal(
     """
@@ -3579,7 +3579,7 @@ type Calendars implements Content {
     top: Int
   ): EventsResultDto
   """
-  Query Groups content items.
+  Query Interest Groups content items.
   """
   referencingGroupsContents(
     """
@@ -3604,7 +3604,7 @@ type Calendars implements Content {
     top: Int
   ): [Groups!]
   """
-  Query Groups content items with total count.
+  Query Interest Groups content items with total count.
   """
   referencingGroupsContentsWithTotal(
     """
@@ -5923,7 +5923,7 @@ type ExternalAuthorsResultDto {
 }
 
 """
-The structure of a Groups content type.
+The structure of a Interest Groups content type.
 """
 type Groups implements Content {
   """
@@ -6143,7 +6143,7 @@ type Groups implements Content {
 }
 
 """
-The structure of the This group is active field of the Groups content type.
+The structure of the This group is active field of the Interest Groups content type.
 """
 type GroupsDataActiveDto {
   """
@@ -6153,7 +6153,7 @@ type GroupsDataActiveDto {
 }
 
 """
-The structure of the This group is active field of the Groups content input type.
+The structure of the This group is active field of the Interest Groups content input type.
 """
 input GroupsDataActiveInputDto {
   """
@@ -6163,35 +6163,35 @@ input GroupsDataActiveInputDto {
 }
 
 """
-The structure of the Calendars field of the Groups content type.
+The structure of the Calendars field of the Interest Groups content type.
 """
 type GroupsDataCalendarsDto {
   iv: [Calendars!]
 }
 
 """
-The structure of the Calendars field of the Groups content input type.
+The structure of the Calendars field of the Interest Groups content input type.
 """
 input GroupsDataCalendarsInputDto {
   iv: [String!]
 }
 
 """
-The structure of the Description field of the Groups content type.
+The structure of the Description field of the Interest Groups content type.
 """
 type GroupsDataDescriptionDto {
   iv: String
 }
 
 """
-The structure of the Description field of the Groups content input type.
+The structure of the Description field of the Interest Groups content input type.
 """
 input GroupsDataDescriptionInputDto {
   iv: String
 }
 
 """
-The structure of the Groups data type.
+The structure of the Interest Groups data type.
 """
 type GroupsDataDto {
   active: GroupsDataActiveDto
@@ -6206,7 +6206,7 @@ type GroupsDataDto {
 }
 
 """
-The structure of the Groups data input type.
+The structure of the Interest Groups data input type.
 """
 input GroupsDataInputDto {
   active: GroupsDataActiveInputDto
@@ -6237,70 +6237,70 @@ input GroupsDataLeadersChildInputDto {
 }
 
 """
-The structure of the Leaders field of the Groups content type.
+The structure of the Leaders field of the Interest Groups content type.
 """
 type GroupsDataLeadersDto {
   iv: [GroupsDataLeadersChildDto!]
 }
 
 """
-The structure of the Leaders field of the Groups content input type.
+The structure of the Leaders field of the Interest Groups content input type.
 """
 input GroupsDataLeadersInputDto {
   iv: [GroupsDataLeadersChildInputDto!]
 }
 
 """
-The structure of the Name field of the Groups content type.
+The structure of the Name field of the Interest Groups content type.
 """
 type GroupsDataNameDto {
   iv: String
 }
 
 """
-The structure of the Name field of the Groups content input type.
+The structure of the Name field of the Interest Groups content input type.
 """
 input GroupsDataNameInputDto {
   iv: String
 }
 
 """
-The structure of the Expertise (Tags) field of the Groups content type.
+The structure of the Expertise (Tags) field of the Interest Groups content type.
 """
 type GroupsDataTagsDto {
   iv: [String!]
 }
 
 """
-The structure of the Expertise (Tags) field of the Groups content input type.
+The structure of the Expertise (Tags) field of the Interest Groups content input type.
 """
 input GroupsDataTagsInputDto {
   iv: [String!]
 }
 
 """
-The structure of the Teams field of the Groups content type.
+The structure of the Teams field of the Interest Groups content type.
 """
 type GroupsDataTeamsDto {
   iv: [Teams!]
 }
 
 """
-The structure of the Teams field of the Groups content input type.
+The structure of the Teams field of the Interest Groups content input type.
 """
 input GroupsDataTeamsInputDto {
   iv: [String!]
 }
 
 """
-The structure of the Thumbnail field of the Groups content type.
+The structure of the Thumbnail field of the Interest Groups content type.
 """
 type GroupsDataThumbnailDto {
   iv: [Asset!]
 }
 
 """
-The structure of the Thumbnail field of the Groups content input type.
+The structure of the Thumbnail field of the Interest Groups content input type.
 """
 input GroupsDataThumbnailInputDto {
   iv: [String!]
@@ -6323,21 +6323,21 @@ input GroupsDataToolsChildInputDto {
 }
 
 """
-The structure of the External Tools field of the Groups content type.
+The structure of the External Tools field of the Interest Groups content type.
 """
 type GroupsDataToolsDto {
   iv: [GroupsDataToolsChildDto!]
 }
 
 """
-The structure of the External Tools field of the Groups content input type.
+The structure of the External Tools field of the Interest Groups content input type.
 """
 input GroupsDataToolsInputDto {
   iv: [GroupsDataToolsChildInputDto!]
 }
 
 """
-The structure of the flat Groups data type.
+The structure of the flat Interest Groups data type.
 """
 type GroupsFlatDataDto {
   """
@@ -6355,7 +6355,7 @@ type GroupsFlatDataDto {
 }
 
 """
-List of Groups items and total count.
+List of Interest Groups items and total count.
 """
 type GroupsResultDto {
   """
@@ -7514,6 +7514,56 @@ type ResearchOutputs implements Content {
     top: Int
   ): LabsResultDto
   """
+  Query Research Outputs content items.
+  """
+  referencesResearchOutputsContents(
+    """
+    Optional OData filter.
+    """
+    filter: String
+    """
+    Optional OData order definition.
+    """
+    orderby: String
+    """
+    Optional OData full text search.
+    """
+    search: String
+    """
+    Optional number of items to skip.
+    """
+    skip: Int = 0
+    """
+    Optional number of items to take.
+    """
+    top: Int
+  ): [ResearchOutputs!]
+  """
+  Query Research Outputs content items with total count.
+  """
+  referencesResearchOutputsContentsWithTotal(
+    """
+    Optional OData filter.
+    """
+    filter: String
+    """
+    Optional OData order definition.
+    """
+    orderby: String
+    """
+    Optional OData full text search.
+    """
+    search: String
+    """
+    Optional number of items to skip.
+    """
+    skip: Int = 0
+    """
+    Optional number of items to take.
+    """
+    top: Int
+  ): ResearchOutputsResultDto
+  """
   Query Research Tags content items.
   """
   referencesResearchTagsContents(
@@ -7663,6 +7713,106 @@ type ResearchOutputs implements Content {
     """
     top: Int
   ): UsersResultDto
+  """
+  Query Working Groups content items.
+  """
+  referencesWorkingGroupsContents(
+    """
+    Optional OData filter.
+    """
+    filter: String
+    """
+    Optional OData order definition.
+    """
+    orderby: String
+    """
+    Optional OData full text search.
+    """
+    search: String
+    """
+    Optional number of items to skip.
+    """
+    skip: Int = 0
+    """
+    Optional number of items to take.
+    """
+    top: Int
+  ): [WorkingGroups!]
+  """
+  Query Working Groups content items with total count.
+  """
+  referencesWorkingGroupsContentsWithTotal(
+    """
+    Optional OData filter.
+    """
+    filter: String
+    """
+    Optional OData order definition.
+    """
+    orderby: String
+    """
+    Optional OData full text search.
+    """
+    search: String
+    """
+    Optional number of items to skip.
+    """
+    skip: Int = 0
+    """
+    Optional number of items to take.
+    """
+    top: Int
+  ): WorkingGroupsResultDto
+  """
+  Query Research Outputs content items.
+  """
+  referencingResearchOutputsContents(
+    """
+    Optional OData filter.
+    """
+    filter: String
+    """
+    Optional OData order definition.
+    """
+    orderby: String
+    """
+    Optional OData full text search.
+    """
+    search: String
+    """
+    Optional number of items to skip.
+    """
+    skip: Int = 0
+    """
+    Optional number of items to take.
+    """
+    top: Int
+  ): [ResearchOutputs!]
+  """
+  Query Research Outputs content items with total count.
+  """
+  referencingResearchOutputsContentsWithTotal(
+    """
+    Optional OData filter.
+    """
+    filter: String
+    """
+    Optional OData order definition.
+    """
+    orderby: String
+    """
+    Optional OData full text search.
+    """
+    search: String
+    """
+    Optional number of items to skip.
+    """
+    skip: Int = 0
+    """
+    Optional number of items to take.
+    """
+    top: Int
+  ): ResearchOutputsResultDto
   """
   Query Teams content items.
   """
@@ -7916,6 +8066,7 @@ type ResearchOutputsDataDto {
   methods: ResearchOutputsDataMethodsDto
   organisms: ResearchOutputsDataOrganismsDto
   publishDate: ResearchOutputsDataPublishDateDto
+  relatedResearch: ResearchOutputsDataRelatedResearchDto
   rrid: ResearchOutputsDataRridDto
   sharingStatus: ResearchOutputsDataSharingStatusDto
   subtype: ResearchOutputsDataSubtypeDto
@@ -7926,6 +8077,7 @@ type ResearchOutputsDataDto {
   updatedBy: ResearchOutputsDataUpdatedByDto
   usageNotes: ResearchOutputsDataUsageNotesDto
   usedInAPublication: ResearchOutputsDataUsedInAPublicationDto
+  workingGroups: ResearchOutputsDataWorkingGroupsDto
 }
 
 """
@@ -7963,6 +8115,7 @@ input ResearchOutputsDataInputDto {
   methods: ResearchOutputsDataMethodsInputDto
   organisms: ResearchOutputsDataOrganismsInputDto
   publishDate: ResearchOutputsDataPublishDateInputDto
+  relatedResearch: ResearchOutputsDataRelatedResearchInputDto
   rrid: ResearchOutputsDataRridInputDto
   sharingStatus: ResearchOutputsDataSharingStatusInputDto
   subtype: ResearchOutputsDataSubtypeInputDto
@@ -7973,6 +8126,7 @@ input ResearchOutputsDataInputDto {
   updatedBy: ResearchOutputsDataUpdatedByInputDto
   usageNotes: ResearchOutputsDataUsageNotesInputDto
   usedInAPublication: ResearchOutputsDataUsedInAPublicationInputDto
+  workingGroups: ResearchOutputsDataWorkingGroupsInputDto
 }
 
 """
@@ -8089,6 +8243,20 @@ input ResearchOutputsDataPublishDateInputDto {
   Date of publishing (outside the Hub). Only applies to outputs that have been published.
   """
   iv: Instant
+}
+
+"""
+The structure of the Related Research field of the Research Outputs content type.
+"""
+type ResearchOutputsDataRelatedResearchDto {
+  iv: [ResearchOutputs!]
+}
+
+"""
+The structure of the Related Research field of the Research Outputs content input type.
+"""
+input ResearchOutputsDataRelatedResearchInputDto {
+  iv: [String!]
 }
 
 """
@@ -8250,6 +8418,20 @@ input ResearchOutputsDataUsedInAPublicationInputDto {
 }
 
 """
+The structure of the Working Group field of the Research Outputs content type.
+"""
+type ResearchOutputsDataWorkingGroupsDto {
+  iv: [WorkingGroups!]
+}
+
+"""
+The structure of the Working Group field of the Research Outputs content input type.
+"""
+input ResearchOutputsDataWorkingGroupsInputDto {
+  iv: [String!]
+}
+
+"""
 The structure of the flat Research Outputs data type.
 """
 type ResearchOutputsFlatDataDto {
@@ -8297,6 +8479,7 @@ type ResearchOutputsFlatDataDto {
   Date of publishing (outside the Hub). Only applies to outputs that have been published.
   """
   publishDate: Instant
+  relatedResearch: [ResearchOutputs!]
   """
   This must start with "RRID:"
   """
@@ -8316,6 +8499,7 @@ type ResearchOutputsFlatDataDto {
   "Not sure" will not be shown on the Hub
   """
   usedInAPublication: String
+  workingGroups: [WorkingGroups!]
 }
 
 """
@@ -8764,7 +8948,7 @@ type Teams implements Content {
     top: Int
   ): EventsResultDto
   """
-  Query Groups content items.
+  Query Interest Groups content items.
   """
   referencingGroupsContents(
     """
@@ -8789,7 +8973,7 @@ type Teams implements Content {
     top: Int
   ): [Groups!]
   """
-  Query Groups content items with total count.
+  Query Interest Groups content items with total count.
   """
   referencingGroupsContentsWithTotal(
     """
@@ -9651,7 +9835,7 @@ type Users implements Content {
     top: Int
   ): EventsResultDto
   """
-  Query Groups content items.
+  Query Interest Groups content items.
   """
   referencingGroupsContents(
     """
@@ -9676,7 +9860,7 @@ type Users implements Content {
     top: Int
   ): [Groups!]
   """
-  Query Groups content items with total count.
+  Query Interest Groups content items with total count.
   """
   referencingGroupsContentsWithTotal(
     """
@@ -10718,6 +10902,56 @@ type WorkingGroups implements Content {
     """
     top: Int
   ): UsersResultDto
+  """
+  Query Research Outputs content items.
+  """
+  referencingResearchOutputsContents(
+    """
+    Optional OData filter.
+    """
+    filter: String
+    """
+    Optional OData order definition.
+    """
+    orderby: String
+    """
+    Optional OData full text search.
+    """
+    search: String
+    """
+    Optional number of items to skip.
+    """
+    skip: Int = 0
+    """
+    Optional number of items to take.
+    """
+    top: Int
+  ): [ResearchOutputs!]
+  """
+  Query Research Outputs content items with total count.
+  """
+  referencingResearchOutputsContentsWithTotal(
+    """
+    Optional OData filter.
+    """
+    filter: String
+    """
+    Optional OData order definition.
+    """
+    orderby: String
+    """
+    Optional OData full text search.
+    """
+    search: String
+    """
+    Optional number of items to skip.
+    """
+    skip: Int = 0
+    """
+    Optional number of items to take.
+    """
+    top: Int
+  ): ResearchOutputsResultDto
   """
   The status of the content.
   """

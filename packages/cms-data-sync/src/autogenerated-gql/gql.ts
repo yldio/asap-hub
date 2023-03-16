@@ -7,6 +7,8 @@ const documents = {
     graphql.FetchNewsDocument,
   '\n  query FetchPages {\n    queryPagesContents(top: 100) {\n      id\n      flatData {\n        title\n        path\n        shortText\n        text\n        link\n        linkText\n      }\n    }\n  }\n':
     graphql.FetchPagesDocument,
+  '\n  query FetchTeams {\n    queryTeamsContents(top: 100) {\n      id\n      created\n      lastModified\n      version\n      flatData {\n        applicationNumber\n        displayName\n        inactiveSince\n        projectSummary\n        projectTitle\n        expertiseAndResourceTags\n        tools {\n          description\n          name\n          url\n        }\n      }\n    }\n  }\n':
+    graphql.FetchTeamsDocument,
 };
 
 export function gql(
@@ -15,6 +17,9 @@ export function gql(
 export function gql(
   source: '\n  query FetchPages {\n    queryPagesContents(top: 100) {\n      id\n      flatData {\n        title\n        path\n        shortText\n        text\n        link\n        linkText\n      }\n    }\n  }\n',
 ): typeof documents['\n  query FetchPages {\n    queryPagesContents(top: 100) {\n      id\n      flatData {\n        title\n        path\n        shortText\n        text\n        link\n        linkText\n      }\n    }\n  }\n'];
+export function gql(
+  source: '\n  query FetchTeams {\n    queryTeamsContents(top: 100) {\n      id\n      created\n      lastModified\n      version\n      flatData {\n        applicationNumber\n        displayName\n        inactiveSince\n        projectSummary\n        projectTitle\n        expertiseAndResourceTags\n        tools {\n          description\n          name\n          url\n        }\n      }\n    }\n  }\n',
+): typeof documents['\n  query FetchTeams {\n    queryTeamsContents(top: 100) {\n      id\n      created\n      lastModified\n      version\n      flatData {\n        applicationNumber\n        displayName\n        inactiveSince\n        projectSummary\n        projectTitle\n        expertiseAndResourceTags\n        tools {\n          description\n          name\n          url\n        }\n      }\n    }\n  }\n'];
 
 export function gql(source: string): unknown;
 export function gql(source: string) {

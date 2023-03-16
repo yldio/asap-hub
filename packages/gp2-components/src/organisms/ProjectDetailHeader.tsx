@@ -76,9 +76,9 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = ({
   traineeProject,
   opportunitiesLink,
   isAdministrator,
-  outputsTotal = 0,
-  upcomingTotal = 0,
-  pastTotal = 0,
+  outputsTotal,
+  upcomingTotal,
+  pastTotal,
 }) => {
   const route = gp2Routing.projects({}).project({ projectId: id });
   return (

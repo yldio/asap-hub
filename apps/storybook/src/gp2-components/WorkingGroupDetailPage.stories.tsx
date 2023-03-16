@@ -9,15 +9,16 @@ export default {
   decorators: [NoPaddingDecorator],
 };
 
-const props = {
+const props: ComponentProps<typeof WorkingGroupDetailPage> = {
   id: '',
   title: 'Underrepresented Populations',
   members: [],
-  shortDescription: '',
   projects: [],
-  backHref: '',
   isWorkingGroupMember: false,
   isAdministrator: boolean('is admin', false),
+  outputsTotal: 1,
+  upcomingTotal: 2,
+  pastTotal: 4,
 };
 
 const layoutProps: Omit<ComponentProps<typeof Layout>, 'children'> = {
@@ -27,7 +28,7 @@ const layoutProps: Omit<ComponentProps<typeof Layout>, 'children'> = {
 };
 export const Normal = () => (
   <Layout {...layoutProps}>
-    <WorkingGroupDetailPage {...props}></WorkingGroupDetailPage>
+    <WorkingGroupDetailPage {...props} />
   </Layout>
 );
 

@@ -1,4 +1,5 @@
 import { gp2 } from '@asap-hub/model';
+import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
   Card,
   crossQuery,
@@ -110,6 +111,7 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
               id,
             }),
           )}
+          overrideUsersRoute={gp2Routing.users({})}
         />
       </div>
     </Card>

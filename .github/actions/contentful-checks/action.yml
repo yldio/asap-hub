@@ -42,6 +42,15 @@ runs:
         CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
         CONTENTFUL_ENV_ID: ${{ inputs.contentful-master-env }}
         CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.contentful-token }}
+      # Determine whether the Contentful webhook setup has changed since master
+    - uses: technote-space/get-diff-action@v6
+      with:
+        PATTERNS: |
+          +src/**/*.ts
+        FILES: |
+          setup-webhook.ts
+      # Determine whether a dedicated environment is needed for this branch
+      # otherwise default to $CONTENTFUL_MASTER_ENV
     - name: Determine Environment
       id: determine-environment
       shell: bash
@@ -49,7 +58,7 @@ runs:
         CONTENTFUL_ENV=$CONTENTFUL_MASTER_ENV
         BRANCH_ENV=false
 
-        if [ "$OUTSTANDING_MIGRATIONS" != "0" ]; then
+        if [ "$OUTSTANDING_MIGRATIONS" != "0" ] || [ "$GIT_DIFF" != "" ]; then
           CONTENTFUL_ENV=crn-$PR_NUMBER
           BRANCH_ENV=true
         fi

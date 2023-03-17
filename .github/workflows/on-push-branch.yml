@@ -4,11 +4,22 @@ concurrency:
   cancel-in-progress: true
 on:
   pull_request:
-    types: [opened, synchronize]
+    types: [opened, synchronize, unlabeled]
     branches:
       - master
+    labels:
+      - no-ci
 jobs:
+  init:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "no-ci label found. Exiting."
+          exit 1
+        if: contains(github.event.pull_request.labels.*.name, 'no-ci')
   setup:
+    needs: [init]
+    if: github.event.name != 'unlabeled' || github.event.label.name == 'no-ci'
     runs-on: ubuntu-latest
     environment: Branch
     outputs:
@@ -35,6 +46,8 @@ jobs:
           max-contentful-envs: ${{ steps.setup.outputs.max-contentful-envs }}
 
   test:
+    needs: [init]
+    if: github.event.name != 'unlabeled' || github.event.label.name == 'no-ci'
     uses: ./.github/workflows/reusable-test.yml
     with:
       environment-name: Branch

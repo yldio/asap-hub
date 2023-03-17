@@ -492,7 +492,7 @@ __metadata:
     "@asap-hub/validation": "workspace:*"
     "@auth0/auth0-spa-js": 1.22.6
     "@babel/runtime-corejs3": 7.21.0
-    "@sentry/cli": 1.75.0
+    "@sentry/cli": 2.15.1
     "@sentry/react": 6.19.7
     "@sentry/tracing": 6.19.7
     "@testing-library/dom": 8.20.0
@@ -962,7 +962,7 @@ __metadata:
     "@asap-hub/validation": "workspace:*"
     "@auth0/auth0-spa-js": 1.22.6
     "@babel/runtime-corejs3": 7.21.0
-    "@sentry/cli": 1.75.0
+    "@sentry/cli": 2.15.1
     "@sentry/react": 6.19.7
     "@sentry/tracing": 6.19.7
     "@testing-library/dom": 8.20.0
@@ -11655,19 +11655,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/cli@npm:1.75.0":
-  version: 1.75.0
-  resolution: "@sentry/cli@npm:1.75.0"
+"@sentry/cli@npm:2.15.1":
+  version: 2.15.1
+  resolution: "@sentry/cli@npm:2.15.1"
   dependencies:
     https-proxy-agent: ^5.0.0
-    mkdirp: ^0.5.5
     node-fetch: ^2.6.7
     progress: ^2.0.3
     proxy-from-env: ^1.1.0
     which: ^2.0.2
   bin:
     sentry-cli: bin/sentry-cli
-  checksum: d5b130bb45bc96d0f738801343455e6a113d1cc9e16166f0d6bfa022809b557159f010677d2dc05adcdfa7f8ad23c401182b6daef720fa2a0bad82fa6e3b2148
+  checksum: 4c98982cf07b9bd128abfb44e164bfbdfd3177f4d2e3d656f12240ffeefb522fb04ddd365af3a00b0131f9659ff212885683a482a3b06f1b10b1ac24bff9bd92
   languageName: node
   linkType: hard
 
@@ -33042,7 +33041,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mkdirp@npm:^0.5.0, mkdirp@npm:^0.5.1, mkdirp@npm:^0.5.3, mkdirp@npm:^0.5.5, mkdirp@npm:~0.5.0, mkdirp@npm:~0.5.1":
+"mkdirp@npm:^0.5.0, mkdirp@npm:^0.5.1, mkdirp@npm:^0.5.3, mkdirp@npm:~0.5.0, mkdirp@npm:~0.5.1":
   version: 0.5.5
   resolution: "mkdirp@npm:0.5.5"
   dependencies:

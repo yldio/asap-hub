@@ -1909,7 +1909,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@sentry/cli",\
-        "npm:1.75.0"\
+        "npm:2.15.1"\
       ],\
       [\
         "@sentry/core",\
@@ -11043,7 +11043,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/validation", "workspace:packages/validation"],\
             ["@auth0/auth0-spa-js", "npm:1.22.6"],\
             ["@babel/runtime-corejs3", "npm:7.21.0"],\
-            ["@sentry/cli", "npm:1.75.0"],\
+            ["@sentry/cli", "npm:2.15.1"],\
             ["@sentry/react", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:6.19.7"],\
             ["@sentry/tracing", "npm:6.19.7"],\
             ["@testing-library/dom", "npm:8.20.0"],\
@@ -11789,7 +11789,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/validation", "workspace:packages/validation"],\
             ["@auth0/auth0-spa-js", "npm:1.22.6"],\
             ["@babel/runtime-corejs3", "npm:7.21.0"],\
-            ["@sentry/cli", "npm:1.75.0"],\
+            ["@sentry/cli", "npm:2.15.1"],\
             ["@sentry/react", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:6.19.7"],\
             ["@sentry/tracing", "npm:6.19.7"],\
             ["@testing-library/dom", "npm:8.20.0"],\
@@ -32876,13 +32876,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@sentry/cli", [\
-        ["npm:1.75.0", {\
-          "packageLocation": "./.yarn/unplugged/@sentry-cli-npm-1.75.0-398a323f0b/node_modules/@sentry/cli/",\
+        ["npm:2.15.1", {\
+          "packageLocation": "./.yarn/unplugged/@sentry-cli-npm-2.15.1-615db785a2/node_modules/@sentry/cli/",\
           "packageDependencies": [\
-            ["@sentry/cli", "npm:1.75.0"],\
+            ["@sentry/cli", "npm:2.15.1"],\
             ["https-proxy-agent", "npm:5.0.0"],\
-            ["mkdirp", "npm:0.5.5"],\
-            ["node-fetch", "virtual:398a323f0b1677616dc6fe2c9f8b1ee9debf90ce4562a76f813a5a72ee0d90d6e3f1449da63786ae567aa8de19c5f7566094901755009b923033906bc49a7a13#npm:2.6.7"],\
+            ["node-fetch", "virtual:615db785a200f3819e6f151ca24003820ec5c613fe9e994bb4b57fb3e94568eafa990794d8b14db65a98655016318d89fa2b309fc3ac4230b3ccf4e6d9ac19ee#npm:2.6.7"],\
             ["progress", "npm:2.0.3"],\
             ["proxy-from-env", "npm:1.1.0"],\
             ["which", "npm:2.0.2"]\
@@ -33125,7 +33124,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["make-dir", "npm:3.1.0"],\
             ["memoizee", "npm:0.4.15"],\
             ["ncjsm", "npm:4.3.2"],\
-            ["node-fetch", "virtual:398a323f0b1677616dc6fe2c9f8b1ee9debf90ce4562a76f813a5a72ee0d90d6e3f1449da63786ae567aa8de19c5f7566094901755009b923033906bc49a7a13#npm:2.6.7"],\
+            ["node-fetch", "virtual:615db785a200f3819e6f151ca24003820ec5c613fe9e994bb4b57fb3e94568eafa990794d8b14db65a98655016318d89fa2b309fc3ac4230b3ccf4e6d9ac19ee#npm:2.6.7"],\
             ["open", "npm:8.4.0"],\
             ["p-event", "npm:4.2.0"],\
             ["supports-color", "npm:8.1.1"],\
@@ -34483,7 +34482,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["globby", "npm:11.1.0"],\
             ["ip", "npm:2.0.0"],\
             ["lodash", "npm:4.17.21"],\
-            ["node-fetch", "virtual:398a323f0b1677616dc6fe2c9f8b1ee9debf90ce4562a76f813a5a72ee0d90d6e3f1449da63786ae567aa8de19c5f7566094901755009b923033906bc49a7a13#npm:2.6.7"],\
+            ["node-fetch", "virtual:615db785a200f3819e6f151ca24003820ec5c613fe9e994bb4b57fb3e94568eafa990794d8b14db65a98655016318d89fa2b309fc3ac4230b3ccf4e6d9ac19ee#npm:2.6.7"],\
             ["open", "npm:8.4.0"],\
             ["pretty-hrtime", "npm:1.0.3"],\
             ["prompts", "npm:2.4.0"],\
@@ -34614,7 +34613,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["find-up", "npm:5.0.0"],\
             ["fs-extra", "npm:9.0.1"],\
             ["html-webpack-plugin", "virtual:642ba10720c66005d9e358742447e40ebb01ba2a61ffbceb0e208c73971629676669fb83e813299cc192790c85d0c5c17e24c67dd32b035c7b77d1583a13c98e#npm:4.5.2"],\
-            ["node-fetch", "virtual:398a323f0b1677616dc6fe2c9f8b1ee9debf90ce4562a76f813a5a72ee0d90d6e3f1449da63786ae567aa8de19c5f7566094901755009b923033906bc49a7a13#npm:2.6.7"],\
+            ["node-fetch", "virtual:615db785a200f3819e6f151ca24003820ec5c613fe9e994bb4b57fb3e94568eafa990794d8b14db65a98655016318d89fa2b309fc3ac4230b3ccf4e6d9ac19ee#npm:2.6.7"],\
             ["pnp-webpack-plugin", "npm:1.6.4"],\
             ["react", "npm:17.0.2"],\
             ["react-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:17.0.2"],\
@@ -34677,7 +34676,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["find-up", "npm:5.0.0"],\
             ["fs-extra", "npm:9.0.1"],\
             ["html-webpack-plugin", "virtual:65218d00bbda4034073ee7e45ddadeab7c5a1a1bba0bf3cbfc14bcd2b04bdeef05bfbdcaf67793db8d7c62085cfd39b566903dd639f1d1594dcee5c5cd9c7b5c#npm:5.5.0"],\
-            ["node-fetch", "virtual:398a323f0b1677616dc6fe2c9f8b1ee9debf90ce4562a76f813a5a72ee0d90d6e3f1449da63786ae567aa8de19c5f7566094901755009b923033906bc49a7a13#npm:2.6.7"],\
+            ["node-fetch", "virtual:615db785a200f3819e6f151ca24003820ec5c613fe9e994bb4b57fb3e94568eafa990794d8b14db65a98655016318d89fa2b309fc3ac4230b3ccf4e6d9ac19ee#npm:2.6.7"],\
             ["process", "npm:0.11.10"],\
             ["react", "npm:17.0.2"],\
             ["react-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:17.0.2"],\
@@ -38415,7 +38414,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["event-target-polyfill", "npm:0.0.3"],\
             ["form-data-encoder", "npm:1.7.2"],\
             ["formdata-node", "npm:4.3.3"],\
-            ["node-fetch", "virtual:398a323f0b1677616dc6fe2c9f8b1ee9debf90ce4562a76f813a5a72ee0d90d6e3f1449da63786ae567aa8de19c5f7566094901755009b923033906bc49a7a13#npm:2.6.7"],\
+            ["node-fetch", "virtual:615db785a200f3819e6f151ca24003820ec5c613fe9e994bb4b57fb3e94568eafa990794d8b14db65a98655016318d89fa2b309fc3ac4230b3ccf4e6d9ac19ee#npm:2.6.7"],\
             ["undici", "npm:5.8.2"],\
             ["web-streams-polyfill", "npm:3.2.1"]\
           ],\
@@ -38430,7 +38429,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["busboy", "npm:1.6.0"],\
             ["form-data-encoder", "npm:1.7.2"],\
             ["formdata-node", "npm:4.3.3"],\
-            ["node-fetch", "virtual:398a323f0b1677616dc6fe2c9f8b1ee9debf90ce4562a76f813a5a72ee0d90d6e3f1449da63786ae567aa8de19c5f7566094901755009b923033906bc49a7a13#npm:2.6.7"],\
+            ["node-fetch", "virtual:615db785a200f3819e6f151ca24003820ec5c613fe9e994bb4b57fb3e94568eafa990794d8b14db65a98655016318d89fa2b309fc3ac4230b3ccf4e6d9ac19ee#npm:2.6.7"],\
             ["undici", "npm:5.8.2"],\
             ["web-streams-polyfill", "npm:3.2.1"]\
           ],\
@@ -44238,7 +44237,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["listr-verbose-renderer", "npm:0.6.0"],\
             ["lodash.startcase", "npm:4.4.0"],\
             ["mkdirp", "npm:2.1.3"],\
-            ["node-fetch", "virtual:398a323f0b1677616dc6fe2c9f8b1ee9debf90ce4562a76f813a5a72ee0d90d6e3f1449da63786ae567aa8de19c5f7566094901755009b923033906bc49a7a13#npm:2.6.7"],\
+            ["node-fetch", "virtual:615db785a200f3819e6f151ca24003820ec5c613fe9e994bb4b57fb3e94568eafa990794d8b14db65a98655016318d89fa2b309fc3ac4230b3ccf4e6d9ac19ee#npm:2.6.7"],\
             ["yargs", "npm:17.5.1"]\
           ],\
           "linkType": "HARD"\
@@ -44957,7 +44956,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/cross-fetch-npm-3.1.5-e414995db9-f6b8c6ee3e.zip/node_modules/cross-fetch/",\
           "packageDependencies": [\
             ["cross-fetch", "npm:3.1.5"],\
-            ["node-fetch", "virtual:398a323f0b1677616dc6fe2c9f8b1ee9debf90ce4562a76f813a5a72ee0d90d6e3f1449da63786ae567aa8de19c5f7566094901755009b923033906bc49a7a13#npm:2.6.7"]\
+            ["node-fetch", "virtual:615db785a200f3819e6f151ca24003820ec5c613fe9e994bb4b57fb3e94568eafa990794d8b14db65a98655016318d89fa2b309fc3ac4230b3ccf4e6d9ac19ee#npm:2.6.7"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -59390,10 +59389,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["virtual:398a323f0b1677616dc6fe2c9f8b1ee9debf90ce4562a76f813a5a72ee0d90d6e3f1449da63786ae567aa8de19c5f7566094901755009b923033906bc49a7a13#npm:2.6.7", {\
-          "packageLocation": "./.yarn/__virtual__/node-fetch-virtual-282defd654/0/cache/node-fetch-npm-2.6.7-777aa2a6df-8d816ffd1e.zip/node_modules/node-fetch/",\
+        ["virtual:615db785a200f3819e6f151ca24003820ec5c613fe9e994bb4b57fb3e94568eafa990794d8b14db65a98655016318d89fa2b309fc3ac4230b3ccf4e6d9ac19ee#npm:2.6.7", {\
+          "packageLocation": "./.yarn/__virtual__/node-fetch-virtual-99504c2c81/0/cache/node-fetch-npm-2.6.7-777aa2a6df-8d816ffd1e.zip/node_modules/node-fetch/",\
           "packageDependencies": [\
-            ["node-fetch", "virtual:398a323f0b1677616dc6fe2c9f8b1ee9debf90ce4562a76f813a5a72ee0d90d6e3f1449da63786ae567aa8de19c5f7566094901755009b923033906bc49a7a13#npm:2.6.7"],\
+            ["node-fetch", "virtual:615db785a200f3819e6f151ca24003820ec5c613fe9e994bb4b57fb3e94568eafa990794d8b14db65a98655016318d89fa2b309fc3ac4230b3ccf4e6d9ac19ee#npm:2.6.7"],\
             ["@types/encoding", null],\
             ["encoding", null],\
             ["whatwg-url", "npm:5.0.0"]\
@@ -59657,7 +59656,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["ext", "npm:1.6.0"],\
             ["fs2", "npm:0.3.9"],\
             ["memoizee", "npm:0.4.15"],\
-            ["node-fetch", "virtual:398a323f0b1677616dc6fe2c9f8b1ee9debf90ce4562a76f813a5a72ee0d90d6e3f1449da63786ae567aa8de19c5f7566094901755009b923033906bc49a7a13#npm:2.6.7"],\
+            ["node-fetch", "virtual:615db785a200f3819e6f151ca24003820ec5c613fe9e994bb4b57fb3e94568eafa990794d8b14db65a98655016318d89fa2b309fc3ac4230b3ccf4e6d9ac19ee#npm:2.6.7"],\
             ["semver", "npm:7.3.5"],\
             ["type", "npm:2.6.0"],\
             ["validate-npm-package-name", "npm:3.0.0"]\
@@ -66993,7 +66992,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jsonwebtoken", "npm:8.5.1"],\
             ["jszip", "npm:3.10.1"],\
             ["luxon", "npm:2.5.2"],\
-            ["node-fetch", "virtual:398a323f0b1677616dc6fe2c9f8b1ee9debf90ce4562a76f813a5a72ee0d90d6e3f1449da63786ae567aa8de19c5f7566094901755009b923033906bc49a7a13#npm:2.6.7"],\
+            ["node-fetch", "virtual:615db785a200f3819e6f151ca24003820ec5c613fe9e994bb4b57fb3e94568eafa990794d8b14db65a98655016318d89fa2b309fc3ac4230b3ccf4e6d9ac19ee#npm:2.6.7"],\
             ["node-schedule", "npm:2.1.1"],\
             ["p-memoize", "npm:4.0.4"],\
             ["p-queue", "npm:6.6.2"],\
@@ -71809,7 +71808,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["escape-goat", "npm:3.0.0"],\
             ["htmlparser2", "npm:4.1.0"],\
             ["mime", "npm:2.4.6"],\
-            ["node-fetch", "virtual:398a323f0b1677616dc6fe2c9f8b1ee9debf90ce4562a76f813a5a72ee0d90d6e3f1449da63786ae567aa8de19c5f7566094901755009b923033906bc49a7a13#npm:2.6.7"],\
+            ["node-fetch", "virtual:615db785a200f3819e6f151ca24003820ec5c613fe9e994bb4b57fb3e94568eafa990794d8b14db65a98655016318d89fa2b309fc3ac4230b3ccf4e6d9ac19ee#npm:2.6.7"],\
             ["valid-data-url", "npm:3.0.1"]\
           ],\
           "linkType": "HARD"\

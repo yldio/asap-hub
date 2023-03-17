@@ -2,6 +2,13 @@ name: Restore Contentful from backup
 on:
   workflow_dispatch:
     inputs:
+      environment:
+        required: true
+        description: Backup environment to restore
+        type: choice
+        options:
+          - Production
+          - Development
       backup-version:
         required: true
         description: Backup file to restore
@@ -10,12 +17,12 @@ on:
       contentful-env:
         required: true
         type: string
-        description: Choose which Contentful environment to restore
+        description: Contentful environment to restore into
 
 jobs:
   restore-backup:
     runs-on: ubuntu-latest
-    environment: Production
+    environment: ${{ inputs.environment }}
     container:
       image: ghcr.io/yldio/asap-hub/node-python-sq:7b77d99657ab3718ed548ba366ffbcbb15315fd8
       credentials:
@@ -28,7 +35,7 @@ jobs:
         id: setup
         uses: ./.github/actions/setup-environment
         with:
-          environment-name: Production
+          environment-name: ${{ inputs.environment }}
       - name: restore backup
         uses: ./.github/actions/contentful-restore
         with:

@@ -1,5 +1,10 @@
 import failOnConsole from 'jest-fail-on-console';
-failOnConsole();
+failOnConsole({
+  silenceMessage: (msg, method, context) =>
+    /Recoil: Spent 1[0-9]{1}\.[0-9]+ms computing a cache key/.test(
+      context.group,
+    ),
+});
 
 if (typeof document === 'object') {
   // jest-dom adds custom jest matchers for asserting on DOM nodes.

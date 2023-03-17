@@ -42,11 +42,7 @@ jobs:
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Test
-        uses: Wandalen/wretry.action@master
-        with:
-          command: CRN_API_URL=${{ steps.setup.outputs.crn-api-url }} yarn test:e2e
-          attempt_limit: 3
-          attempt_delay: 2000
+        run: CRN_API_URL=${{ steps.setup.outputs.crn-api-url }} yarn test:e2e
 
   test-e2e:
     runs-on: ubuntu-latest

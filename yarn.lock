@@ -29681,8 +29681,8 @@ __metadata:
   linkType: hard
 
 "jest-runner-eslint@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "jest-runner-eslint@npm:1.1.0"
+  version: 1.2.0
+  resolution: "jest-runner-eslint@npm:1.2.0"
   dependencies:
     chalk: ^3.0.0
     cosmiconfig: ^6.0.0
@@ -29691,7 +29691,7 @@ __metadata:
   peerDependencies:
     eslint: ^6 || ^7 || ^8
     jest: ^25.1 || ^26 || ^27 || ^28 || ^29
-  checksum: c4b2da40666c8cc1a7e9dbd1ac73a74bc2af6c3dd598b3a0bac224cffac6fb677d31082f14987982b3fb06b5c41602dbe31fe6beb107da4b3c1c17eb324d4907
+  checksum: 3efd27d6bae26075c97319fad26b183662b1ce3adff2e929324152d04d84eb1675031c76332c729b4cfa5a6e818e766dc6fddf9f941d45ba212fa57e44048803
   languageName: node
   linkType: hard
 

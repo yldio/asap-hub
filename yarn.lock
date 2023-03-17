@@ -376,7 +376,7 @@ __metadata:
     "@asap-hub/model": "workspace:*"
     "@asap-hub/squidex": "workspace:*"
     "@babel/runtime-corejs3": 7.21.0
-    "@contentful/rich-text-types": 16.0.2
+    "@contentful/rich-text-types": 16.0.3
     "@graphql-codegen/cli": 2.12.1
     "@graphql-codegen/gql-tag-operations-preset": 1.5.5
     "@graphql-codegen/introspection": 2.2.1
@@ -409,8 +409,8 @@ __metadata:
     "@asap-hub/errors": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@babel/runtime-corejs3": 7.21.0
-    "@contentful/rich-text-html-renderer": 16.0.2
-    "@contentful/rich-text-types": 16.0.2
+    "@contentful/rich-text-html-renderer": 16.0.3
+    "@contentful/rich-text-types": 16.0.3
     "@graphql-codegen/cli": 2.12.1
     "@graphql-codegen/gql-tag-operations-preset": 1.5.5
     "@graphql-codegen/introspection": 2.2.1
@@ -8677,20 +8677,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/rich-text-html-renderer@npm:16.0.2":
-  version: 16.0.2
-  resolution: "@contentful/rich-text-html-renderer@npm:16.0.2"
+"@contentful/rich-text-html-renderer@npm:16.0.3":
+  version: 16.0.3
+  resolution: "@contentful/rich-text-html-renderer@npm:16.0.3"
   dependencies:
-    "@contentful/rich-text-types": ^16.0.2
+    "@contentful/rich-text-types": ^16.0.3
     escape-html: ^1.0.3
-  checksum: dfd62bada8fa8d216d6a58f709f5cb61214834f5be9934ac1de7bacf7190d935b899aa0b9f7f1b0a421d90ba4367b1e5d3e2ee9d779a64527af367900f3e111d
+  checksum: df25fa1f246c56e7edf4628b5aa84ab029594d27908d150a3696515c28b4d2d9f44f075c898b7398302c72584d5e51ca9467c990f7e74c2844c0e57d083cb65d
   languageName: node
   linkType: hard
 
-"@contentful/rich-text-types@npm:16.0.2, @contentful/rich-text-types@npm:^16.0.2":
-  version: 16.0.2
-  resolution: "@contentful/rich-text-types@npm:16.0.2"
-  checksum: efa9a3e1bcd196f64c61f2ed820188d01aacbca05f5a64efa9d88390b165d9a51f1382bc7bc1305fe0e54e958556ec38f99b7164c073a6af3749dde9b0c84b42
+"@contentful/rich-text-types@npm:16.0.3, @contentful/rich-text-types@npm:^16.0.3":
+  version: 16.0.3
+  resolution: "@contentful/rich-text-types@npm:16.0.3"
+  checksum: 830c384ec6c5ea9d14ef867291065cbf9935a078b9ac4326db549175ddcd2efbd0f1adf980d9d9f9e9386dfed48745eeb920742230ef2e72bb2773f2c8901824
   languageName: node
   linkType: hard
 

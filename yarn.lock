@@ -13640,7 +13640,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/express@npm:4.17.17":
+"@types/express@npm:4.17.17, @types/express@npm:^4.17.14":
   version: 4.17.17
   resolution: "@types/express@npm:4.17.17"
   dependencies:
@@ -13986,6 +13986,15 @@ __metadata:
   dependencies:
     "@types/node": "npm:*"
   checksum: 33c30354641bc7849be7507e9f48685b1f487e944321a932650eac6c247c85184667f5e207ccfcab0da8cb24bde93a8372c09cacf1849e976bbf2cb90b26ce90
+  languageName: node
+  linkType: hard
+
+"@types/jsonwebtoken@npm:^9.0.0":
+  version: 9.0.1
+  resolution: "@types/jsonwebtoken@npm:9.0.1"
+  dependencies:
+    "@types/node": "*"
+  checksum: a7f0925e9a42ad3ae970364c63c5986d40da5c83d51d3f4e624eb0f064a380376f9e3fb3f2f837390a9ab80143f5d75fd51866da30e110f6b486a3379e1c768f
   languageName: node
   linkType: hard
 
@@ -17150,11 +17159,11 @@ __metadata:
   linkType: hard
 
 "auth0-deploy-cli@npm:^7.15.1":
-  version: 7.15.1
-  resolution: "auth0-deploy-cli@npm:7.15.1"
+  version: 7.17.0
+  resolution: "auth0-deploy-cli@npm:7.17.0"
   dependencies:
     ajv: ^6.12.6
-    auth0: ^2.42.0
+    auth0: ^3.0.0
     dot-prop: ^5.2.0
     fs-extra: ^10.1.0
     global-agent: ^2.1.12
@@ -17168,7 +17177,7 @@ __metadata:
     yargs: ^15.3.1
   bin:
     a0deploy: lib/index.js
-  checksum: b2dd82bd41fcef9f5b1ae1810a2ba1484727d6a2a1c4b825bdd6d771bf41298cf02abfacd5a98c05044450a6baf2545a2460a984e0330b67b18ffc559a1470cf
+  checksum: 20a4efe2b7d85438d70005b126e055a62b5ccf44811df05b2cb527bd1c731267b7479d7d59c45de7e2961cef3f232bccc0eb9b3c7f0509009b599177f4b3b6ea
   languageName: node
   linkType: hard
 
@@ -17188,7 +17197,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"auth0@npm:^2.39.0, auth0@npm:^2.42.0":
+"auth0@npm:^2.39.0":
   version: 2.44.0
   resolution: "auth0@npm:2.44.0"
   dependencies:
@@ -17200,6 +17209,22 @@ __metadata:
     rest-facade: ^1.16.3
     retry: ^0.13.1
   checksum: afcdf661b317146159fd51bb0c61dbb7d1c983106f45e14a5538e88656971090172a6b4629effd2bcdc818983960f62ed0ba5a3a1f0e50e84ed439db7e49df91
+  languageName: node
+  linkType: hard
+
+"auth0@npm:^3.0.0":
+  version: 3.3.0
+  resolution: "auth0@npm:3.3.0"
+  dependencies:
+    axios: ^0.27.2
+    form-data: ^3.0.1
+    jsonwebtoken: ^9.0.0
+    jwks-rsa: ^3.0.1
+    lru-memoizer: ^2.1.4
+    rest-facade: ^1.16.3
+    retry: ^0.13.1
+    uuid: ^9.0.0
+  checksum: de6317c5aa16e897db0d4157d0e9cf6df4b19d7c7f21febe17480b145726791f88f4e8d365296ef7a9c817cd5e85dc3e4be6a492f4474d892c35fcf92ab2ca35
   languageName: node
   linkType: hard
 
@@ -30288,6 +30313,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jose@npm:^4.10.4":
+  version: 4.13.1
+  resolution: "jose@npm:4.13.1"
+  checksum: 89be959573beee69bd443493887d78799fd42340b45afa2c6681beda30314bcdfa5575f6977203c199e4c3e0ec2fc18d3c94745e7f0d59db51dedfae0efee63d
+  languageName: node
+  linkType: hard
+
 "joycon@npm:^3.1.1":
   version: 3.1.1
   resolution: "joycon@npm:3.1.1"
@@ -30838,6 +30870,20 @@ __metadata:
     ms: ^2.1.2
     proxy-from-env: ^1.1.0
   checksum: 8635508425436031383b42b40ed9077807724da5b0ee51cbf6889e64688fb27c5ef29b6460f4fe2f3fc8c40e4333791300a540dd932e4c661bafda1f42de9ff6
+  languageName: node
+  linkType: hard
+
+"jwks-rsa@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "jwks-rsa@npm:3.0.1"
+  dependencies:
+    "@types/express": ^4.17.14
+    "@types/jsonwebtoken": ^9.0.0
+    debug: ^4.3.4
+    jose: ^4.10.4
+    limiter: ^1.1.5
+    lru-memoizer: ^2.1.4
+  checksum: 943bf7792d23761c1e9d1f4d1b67e967ea5b38968583a87a7c862f6df0b9c4a5a34a97fa82efcd375776476664b2916df757aafab69013ab05d3e1fa9fbc1363
   languageName: node
   linkType: hard
 

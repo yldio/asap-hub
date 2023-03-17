@@ -14,6 +14,7 @@ import OutputForm from '../OutputForm';
 describe('OutputForm', () => {
   const defaultProps = {
     shareOutput: jest.fn(),
+    getAuthorSuggestions: jest.fn(),
     documentType: 'Form' as const,
   };
   afterEach(jest.resetAllMocks);
@@ -127,7 +128,7 @@ describe('OutputForm', () => {
     it('publishes with type and subtype', async () => {
       const history = createMemoryHistory();
       const getAuthorSuggestions = jest.fn();
-      getAuthorSuggestions.mockResolvedValueOnce([
+      getAuthorSuggestions.mockResolvedValue([
         {
           author: {
             ...gp2Fixtures.createUserResponse(),

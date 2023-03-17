@@ -6,6 +6,7 @@ export { default as dashboardIcon } from './dashboard-icon';
 export { default as dateIcon } from './date-icon';
 export { default as editIcon } from './edit-icon';
 export { default as exportIcon } from './export-icon';
+export { default as graduateIcon } from './graduate-icon';
 export { default as gp2LogoFull } from './gp2-logo-full';
 export { default as gp2LogoSmall } from './gp2-logo-small';
 export { default as leftArrowIcon } from './left-arrow-icon';

@@ -1,7 +1,9 @@
 import failOnConsole from 'jest-fail-on-console';
 failOnConsole({
-  silenceMessage: (msg) =>
-    /Recoil: Spent 1[0-9]{1}\.[0-9]+ms computing a cache key/.test(msg),
+  silenceMessage: (msg, method, context) =>
+    /Recoil: Spent 1[0-9]{1}\.[0-9]+ms computing a cache key/.test(
+      context.group,
+    ),
 });
 
 if (typeof document === 'object') {

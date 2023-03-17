@@ -3328,7 +3328,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "auth0-deploy-cli",\
-        "npm:7.15.1"\
+        "npm:7.17.0"\
       ],\
       [\
         "auth0-js",\
@@ -10901,7 +10901,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/js-yaml", "npm:4.0.5"],\
             ["@types/node", "npm:14.18.38"],\
             ["@vedicium/auth0-actions-sdk", "npm:0.1.3"],\
-            ["auth0-deploy-cli", "npm:7.15.1"],\
+            ["auth0-deploy-cli", "npm:7.17.0"],\
             ["got", "npm:11.8.6"],\
             ["js-yaml", "npm:4.1.0"],\
             ["nock", "npm:13.3.0"],\
@@ -36122,6 +36122,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/node", "npm:13.11.1"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:9.0.1", {\
+          "packageLocation": "./.yarn/cache/@types-jsonwebtoken-npm-9.0.1-5f660fdf38-a7f0925e9a.zip/node_modules/@types/jsonwebtoken/",\
+          "packageDependencies": [\
+            ["@types/jsonwebtoken", "npm:9.0.1"],\
+            ["@types/node", "npm:13.11.1"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["@types/jwt-decode", [\
@@ -39790,15 +39798,30 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["retry", "npm:0.13.1"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:3.3.0", {\
+          "packageLocation": "./.yarn/cache/auth0-npm-3.3.0-9609036537-de6317c5aa.zip/node_modules/auth0/",\
+          "packageDependencies": [\
+            ["auth0", "npm:3.3.0"],\
+            ["axios", "npm:0.27.2"],\
+            ["form-data", "npm:3.0.1"],\
+            ["jsonwebtoken", "npm:9.0.0"],\
+            ["jwks-rsa", "npm:3.0.1"],\
+            ["lru-memoizer", "npm:2.1.4"],\
+            ["rest-facade", "virtual:95848c55bc812f7431aefaea3f5fea6196ec462ddb142b566eaa641fef37b7217aa1dc7ae8f3e239c02791b6cbade1d4a150e95e1208c1bf384335cc5a42230c#npm:1.16.3"],\
+            ["retry", "npm:0.13.1"],\
+            ["uuid", "npm:9.0.0"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["auth0-deploy-cli", [\
-        ["npm:7.15.1", {\
-          "packageLocation": "./.yarn/cache/auth0-deploy-cli-npm-7.15.1-48fa9f2930-b2dd82bd41.zip/node_modules/auth0-deploy-cli/",\
+        ["npm:7.17.0", {\
+          "packageLocation": "./.yarn/cache/auth0-deploy-cli-npm-7.17.0-4967b3fa7c-20a4efe2b7.zip/node_modules/auth0-deploy-cli/",\
           "packageDependencies": [\
-            ["auth0-deploy-cli", "npm:7.15.1"],\
+            ["auth0-deploy-cli", "npm:7.17.0"],\
             ["ajv", "npm:6.12.6"],\
-            ["auth0", "npm:2.44.0"],\
+            ["auth0", "npm:3.3.0"],\
             ["dot-prop", "npm:5.3.0"],\
             ["fs-extra", "npm:10.1.0"],\
             ["global-agent", "npm:2.2.0"],\
@@ -55834,6 +55857,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@panva/asn1.js", "npm:1.0.0"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:4.13.1", {\
+          "packageLocation": "./.yarn/cache/jose-npm-4.13.1-ecad744417-89be959573.zip/node_modules/jose/",\
+          "packageDependencies": [\
+            ["jose", "npm:4.13.1"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["joycon", [\
@@ -56423,6 +56453,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["lru-memoizer", "npm:2.1.4"],\
             ["ms", "npm:2.1.3"],\
             ["proxy-from-env", "npm:1.1.0"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:3.0.1", {\
+          "packageLocation": "./.yarn/cache/jwks-rsa-npm-3.0.1-395a869533-943bf7792d.zip/node_modules/jwks-rsa/",\
+          "packageDependencies": [\
+            ["jwks-rsa", "npm:3.0.1"],\
+            ["@types/express", "npm:4.17.17"],\
+            ["@types/jsonwebtoken", "npm:9.0.1"],\
+            ["debug", "virtual:fd8de37609258cc0a542fd94a84d3a92a7a50fe97add0d0ad2eb2de7df7a01a41d03004536a361279c31772f9825e9f1c1db0cf143d0ea8269bb824c9db84c63#npm:4.3.4"],\
+            ["jose", "npm:4.13.1"],\
+            ["limiter", "npm:1.1.5"],\
+            ["lru-memoizer", "npm:2.1.4"]\
           ],\
           "linkType": "HARD"\
         }]\

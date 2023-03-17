@@ -1,7 +1,8 @@
+import { Frame } from '@asap-hub/frontend-utils';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/routing';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { lazy, useEffect } from 'react';
+import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import Onboarding from './Onboarding';
 
 const loadWelcome = () =>
@@ -44,24 +45,27 @@ const Routes: React.FC<Record<string, never>> = () => {
       <Route exact path={path}>
         <Welcome />
       </Route>
-      <Onboarding>
-        <Route path={onboarding({}).coreDetails({}).$}>
-          <CoreDetails />
-        </Route>
-        <Route path={onboarding({}).background({}).$}>
-          <Background />
-        </Route>
-        <Route path={onboarding({}).groups({}).$}>
-          <Groups />
-        </Route>
-        <Route path={onboarding({}).additionalDetails({}).$}>
-          <AdditionalDetails />
-        </Route>
-        <Route path={onboarding({}).preview({}).$}>
-          <Preview />
-        </Route>
-      </Onboarding>
-
+      <Frame title={null}>
+        <Onboarding>
+          <Frame title={null}>
+            <Route path={onboarding({}).coreDetails({}).$}>
+              <CoreDetails />
+            </Route>
+            <Route path={onboarding({}).background({}).$}>
+              <Background />
+            </Route>
+            <Route path={onboarding({}).groups({}).$}>
+              <Groups />
+            </Route>
+            <Route path={onboarding({}).additionalDetails({}).$}>
+              <AdditionalDetails />
+            </Route>
+            <Route path={onboarding({}).preview({}).$}>
+              <Preview />
+            </Route>
+          </Frame>
+        </Onboarding>
+      </Frame>
       <Route component={NotFoundPage} />
     </Switch>
   );

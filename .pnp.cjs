@@ -2553,7 +2553,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@types/node",\
-        "npm:14.18.37"\
+        "npm:14.18.38"\
       ],\
       [\
         "@types/node-fetch",\
@@ -10775,7 +10775,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/fixtures", "workspace:packages/fixtures"],\
             ["@asap-hub/model", "workspace:packages/model"],\
             ["@babel/runtime-corejs3", "npm:7.21.0"],\
-            ["@types/node", "npm:14.18.37"],\
+            ["@types/node", "npm:14.18.38"],\
             ["@types/prettier", "npm:2.7.1"],\
             ["algoliasearch", "npm:4.15.0"],\
             ["prettier", "npm:2.7.1"]\
@@ -10840,7 +10840,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@auth0/auth0-spa-js", "npm:1.22.6"],\
             ["@babel/runtime-corejs3", "npm:7.21.0"],\
             ["@types/jest", "npm:29.4.0"],\
-            ["@types/node", "npm:14.18.37"]\
+            ["@types/node", "npm:14.18.38"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -10855,7 +10855,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/runtime-corejs3", "npm:7.21.0"],\
             ["@types/jest", "npm:29.4.0"],\
             ["@types/jsdom", "npm:16.2.15"],\
-            ["@types/node", "npm:14.18.37"],\
+            ["@types/node", "npm:14.18.38"],\
             ["core-js", "npm:3.29.1"],\
             ["jsdom", "virtual:de33b7f3967bc3d4e1b65a36474e1f3fe3baee525bcc768364cb7d2a670e909d0520585e1e3eefbe6e1e8973b0a9471bddf92500148da425f9a867a5090771fb#npm:16.7.0"]\
           ],\
@@ -10875,7 +10875,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/runtime-corejs3", "npm:7.21.0"],\
             ["@types/auth0-js", "npm:9.14.7"],\
             ["@types/jest", "npm:29.4.0"],\
-            ["@types/node", "npm:14.18.37"],\
+            ["@types/node", "npm:14.18.38"],\
             ["@types/pify", "npm:3.0.2"],\
             ["auth0-js", "npm:9.20.2"],\
             ["camelcase", "npm:6.3.0"],\
@@ -10899,7 +10899,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/runtime-corejs3", "npm:7.21.0"],\
             ["@types/jest", "npm:29.4.0"],\
             ["@types/js-yaml", "npm:4.0.5"],\
-            ["@types/node", "npm:14.18.37"],\
+            ["@types/node", "npm:14.18.38"],\
             ["@vedicium/auth0-actions-sdk", "npm:0.1.3"],\
             ["auth0-deploy-cli", "npm:7.15.1"],\
             ["got", "npm:11.8.6"],\
@@ -10932,7 +10932,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@graphql-typed-document-node/core", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:3.1.2"],\
             ["@types/contentful-html-rich-text-converter", "workspace:@types/contentful-html-rich-text-converter"],\
             ["@types/jest", "npm:29.4.0"],\
-            ["@types/node", "npm:14.18.37"],\
+            ["@types/node", "npm:14.18.38"],\
             ["@types/prettier", "npm:2.7.1"],\
             ["contentful-html-rich-text-converter", "https://github.com/yldio/contentful-html-rich-text-converter.git#commit=ba7abf23e1bff5f26cfb5e0f17dd32f3b45c8f57"],\
             ["contentful-management", "npm:10.19.3"],\
@@ -10966,7 +10966,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@graphql-tools/mock", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:8.7.19"],\
             ["@graphql-tools/schema", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:9.0.17"],\
             ["@graphql-typed-document-node/core", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:3.1.2"],\
-            ["@types/node", "npm:14.18.37"],\
+            ["@types/node", "npm:14.18.38"],\
             ["contentful-cli", "npm:1.19.1"],\
             ["contentful-management", "npm:10.19.3"],\
             ["contentful-migrate", "https://github.com/deluan/contentful-migrate.git#commit=37b9b898599b9ba48644534d3f340b4c169df212"],\
@@ -11054,7 +11054,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/history", "npm:4.7.11"],\
             ["@types/jest", "npm:29.4.0"],\
             ["@types/nock", "npm:11.1.0"],\
-            ["@types/node", "npm:14.18.37"],\
+            ["@types/node", "npm:14.18.38"],\
             ["@types/qs", "npm:6.9.7"],\
             ["@types/react", "npm:17.0.53"],\
             ["@types/react-dom", "npm:17.0.19"],\
@@ -11122,7 +11122,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@emotion/react", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:11.10.6"],\
             ["@emotion/server", "virtual:f53f6b44d9b092b2e1aa5b63bb87beb2480b63a8d0a2b1a23e0f956d506c3680d24881755aeeb3d594954cc38ab1cccd34ff5f34427de818908fd21d3b38370f#npm:11.10.0"],\
             ["@types/babel__core", "npm:7.20.0"],\
-            ["@types/node", "npm:14.18.37"],\
+            ["@types/node", "npm:14.18.38"],\
             ["@types/react", "npm:17.0.53"],\
             ["@types/react-dom", "npm:17.0.19"],\
             ["aws-sdk", "npm:2.1331.0"],\
@@ -11200,7 +11200,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/lodash.uniqby", "npm:4.7.7"],\
             ["@types/luxon", "npm:1.27.1"],\
             ["@types/mime-types", "npm:2.1.1"],\
-            ["@types/node", "npm:14.18.37"],\
+            ["@types/node", "npm:14.18.38"],\
             ["@types/parse-data-url", "npm:3.0.0"],\
             ["@types/pump", "npm:1.1.1"],\
             ["@types/serverless", "npm:3.12.11"],\
@@ -11383,7 +11383,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/core-js", null],\
             ["@types/history", "npm:4.7.11"],\
             ["@types/jest", "npm:29.4.0"],\
-            ["@types/node", "npm:14.18.37"],\
+            ["@types/node", "npm:14.18.38"],\
             ["@types/react", "npm:17.0.53"],\
             ["@types/react-error-boundary", null],\
             ["@types/react-router-dom", "npm:5.3.3"],\
@@ -11443,7 +11443,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/react", "virtual:62c7ec58dd69955f8ac9a6b533186c9c2adfe613fbc53211111199550b42e49684cf8582ccf253607db2a5e90990a1492b1a6d2645fd102ea82501f845583321#npm:11.2.7"],\
             ["@types/history", "npm:4.7.11"],\
             ["@types/jest", "npm:29.4.0"],\
-            ["@types/node", "npm:14.18.37"],\
+            ["@types/node", "npm:14.18.38"],\
             ["@types/react", "npm:17.0.53"],\
             ["@types/react-router-dom", "npm:5.3.3"],\
             ["@types/streamsaver", "npm:2.0.1"],\
@@ -11800,7 +11800,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/history", "npm:4.7.11"],\
             ["@types/jest", "npm:29.4.0"],\
             ["@types/nock", "npm:11.1.0"],\
-            ["@types/node", "npm:14.18.37"],\
+            ["@types/node", "npm:14.18.38"],\
             ["@types/react", "npm:17.0.53"],\
             ["@types/react-dom", "npm:17.0.19"],\
             ["@types/react-router-dom", "npm:5.3.3"],\
@@ -11858,7 +11858,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@emotion/react", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:11.10.6"],\
             ["@emotion/server", "virtual:f53f6b44d9b092b2e1aa5b63bb87beb2480b63a8d0a2b1a23e0f956d506c3680d24881755aeeb3d594954cc38ab1cccd34ff5f34427de818908fd21d3b38370f#npm:11.10.0"],\
             ["@types/babel__core", "npm:7.20.0"],\
-            ["@types/node", "npm:14.18.37"],\
+            ["@types/node", "npm:14.18.38"],\
             ["@types/react", "npm:17.0.53"],\
             ["@types/react-dom", "npm:17.0.19"],\
             ["aws-sdk", "npm:2.1331.0"],\
@@ -11916,7 +11916,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/lodash.matches", "npm:4.6.7"],\
             ["@types/luxon", "npm:1.27.1"],\
             ["@types/mime-types", "npm:2.1.1"],\
-            ["@types/node", "npm:14.18.37"],\
+            ["@types/node", "npm:14.18.38"],\
             ["@types/parse-data-url", "npm:3.0.0"],\
             ["@types/serverless", "npm:3.12.11"],\
             ["@types/source-map-support", "npm:0.5.4"],\
@@ -12665,7 +12665,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/core", "npm:7.21.3"],\
             ["@babel/preset-react", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.18.6"],\
             ["@babel/runtime-corejs3", "npm:7.21.0"],\
-            ["@types/node", "npm:14.18.37"],\
+            ["@types/node", "npm:14.18.38"],\
             ["@types/react", "npm:17.0.53"],\
             ["@types/react-dom", "npm:17.0.19"],\
             ["react", "npm:17.0.2"],\
@@ -36783,10 +36783,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:14.18.37", {\
-          "packageLocation": "./.yarn/cache/@types-node-npm-14.18.37-d3dace2145-d21e8c58dd.zip/node_modules/@types/node/",\
+        ["npm:14.18.38", {\
+          "packageLocation": "./.yarn/cache/@types-node-npm-14.18.38-b17d3e65a0-4f580c5e0f.zip/node_modules/@types/node/",\
           "packageDependencies": [\
-            ["@types/node", "npm:14.18.37"]\
+            ["@types/node", "npm:14.18.38"]\
           ],\
           "linkType": "HARD"\
         }],\
@@ -67083,7 +67083,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/__virtual__/serverless-webpack-virtual-30b1199b52/0/cache/serverless-webpack-npm-5.11.0-5851b06173-f1c68ca2d6.zip/node_modules/serverless-webpack/",\
           "packageDependencies": [\
             ["serverless-webpack", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:5.11.0"],\
-            ["@types/node", "npm:14.18.37"],\
+            ["@types/node", "npm:14.18.38"],\
             ["@types/serverless", "npm:3.12.11"],\
             ["@types/typescript", null],\
             ["@types/webpack", null],\
@@ -70025,7 +70025,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@tsconfig/node12", "npm:1.0.9"],\
             ["@tsconfig/node14", "npm:1.0.1"],\
             ["@tsconfig/node16", "npm:1.0.2"],\
-            ["@types/node", "npm:14.18.37"],\
+            ["@types/node", "npm:14.18.38"],\
             ["@types/swc__core", null],\
             ["@types/swc__wasm", null],\
             ["@types/typescript", null],\

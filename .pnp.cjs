@@ -1261,11 +1261,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@contentful/rich-text-html-renderer",\
-        "npm:16.0.2"\
+        "npm:16.0.3"\
       ],\
       [\
         "@contentful/rich-text-types",\
-        "npm:16.0.2"\
+        "npm:16.0.3"\
       ],\
       [\
         "@cspotcode/source-map-support",\
@@ -10918,7 +10918,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/model", "workspace:packages/model"],\
             ["@asap-hub/squidex", "workspace:packages/squidex"],\
             ["@babel/runtime-corejs3", "npm:7.21.0"],\
-            ["@contentful/rich-text-types", "npm:16.0.2"],\
+            ["@contentful/rich-text-types", "npm:16.0.3"],\
             ["@graphql-codegen/cli", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:2.12.1"],\
             ["@graphql-codegen/gql-tag-operations-preset", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:1.5.5"],\
             ["@graphql-codegen/introspection", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:2.2.1"],\
@@ -10953,8 +10953,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/errors", "workspace:packages/errors"],\
             ["@asap-hub/model", "workspace:packages/model"],\
             ["@babel/runtime-corejs3", "npm:7.21.0"],\
-            ["@contentful/rich-text-html-renderer", "npm:16.0.2"],\
-            ["@contentful/rich-text-types", "npm:16.0.2"],\
+            ["@contentful/rich-text-html-renderer", "npm:16.0.3"],\
+            ["@contentful/rich-text-types", "npm:16.0.3"],\
             ["@graphql-codegen/cli", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:2.12.1"],\
             ["@graphql-codegen/gql-tag-operations-preset", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:1.5.5"],\
             ["@graphql-codegen/introspection", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:2.2.1"],\
@@ -28027,21 +28027,21 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@contentful/rich-text-html-renderer", [\
-        ["npm:16.0.2", {\
-          "packageLocation": "./.yarn/cache/@contentful-rich-text-html-renderer-npm-16.0.2-05eaed8c7b-dfd62bada8.zip/node_modules/@contentful/rich-text-html-renderer/",\
+        ["npm:16.0.3", {\
+          "packageLocation": "./.yarn/cache/@contentful-rich-text-html-renderer-npm-16.0.3-e35d9d4559-df25fa1f24.zip/node_modules/@contentful/rich-text-html-renderer/",\
           "packageDependencies": [\
-            ["@contentful/rich-text-html-renderer", "npm:16.0.2"],\
-            ["@contentful/rich-text-types", "npm:16.0.2"],\
+            ["@contentful/rich-text-html-renderer", "npm:16.0.3"],\
+            ["@contentful/rich-text-types", "npm:16.0.3"],\
             ["escape-html", "npm:1.0.3"]\
           ],\
           "linkType": "HARD"\
         }]\
       ]],\
       ["@contentful/rich-text-types", [\
-        ["npm:16.0.2", {\
-          "packageLocation": "./.yarn/cache/@contentful-rich-text-types-npm-16.0.2-43c0e4904a-efa9a3e1bc.zip/node_modules/@contentful/rich-text-types/",\
+        ["npm:16.0.3", {\
+          "packageLocation": "./.yarn/cache/@contentful-rich-text-types-npm-16.0.3-a27e88fed2-830c384ec6.zip/node_modules/@contentful/rich-text-types/",\
           "packageDependencies": [\
-            ["@contentful/rich-text-types", "npm:16.0.2"]\
+            ["@contentful/rich-text-types", "npm:16.0.3"]\
           ],\
           "linkType": "HARD"\
         }]\

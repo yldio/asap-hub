@@ -144,7 +144,7 @@ it('overrides user link based on based on the overrideUserRoute prop fn', () => 
           firstLine: 'example',
         },
       ]}
-      overrideUserRoute={overrideUserRouteMock}
+      userRoute={overrideUserRouteMock}
     />,
   );
 

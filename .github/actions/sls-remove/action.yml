@@ -17,9 +17,6 @@ inputs:
   lightstep-token:
     description: 'Lightstep Token'
     required: true
-  crn-contentful-management-access-token:
-    description: 'CRN Contentful Management Access Token'
-    required: true
   crn-squidex-api-client-secret:
     description: 'Squidex Client Secret'
     required: true

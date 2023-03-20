@@ -13,6 +13,7 @@ import {
   RichText,
   SharedResearchAdditionalInformationCard,
   SharedResearchOutputHeaderCard,
+  Toast,
 } from '../organisms';
 import { createMailTo } from '../mail';
 import { editIcon } from '..';
@@ -44,6 +45,7 @@ type SharedResearchOutputProps = Pick<
   | 'subtype'
   | 'id'
   | 'relatedResearch'
+  | 'published'
 > &
   ComponentProps<typeof SharedResearchOutputHeaderCard> & {
     backHref: string;
@@ -56,6 +58,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   contactEmails,
   id,
   relatedResearch,
+  published,
   ...props
 }) => {
   const isGrantDocument = ['Grant Document', 'Presentation'].includes(
@@ -75,70 +78,78 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   );
 
   return (
-    <div css={containerStyles}>
-      <div css={buttonsContainer}>
-        <BackLink href={backHref} />
-        {canEditResearchOutput && !isGrantDocument && (
-          <div css={editButtonContainer}>
-            <Link
-              href={
-                sharedResearch({})
-                  .researchOutput({ researchOutputId: id })
-                  .editResearchOutput({}).$
-              }
-              buttonStyle
-              small
-              primary
-            >
-              {editIcon} Edit
-            </Link>
-          </div>
-        )}
-      </div>
-      <div css={cardsStyles}>
-        <SharedResearchOutputHeaderCard {...props} />
-        {((description && !isGrantDocument) || !!tags.length) && (
-          <Card>
-            {description && !isGrantDocument && (
-              <div css={{ paddingBottom: `${12 / perRem}em` }}>
-                <Headline2 styleAsHeading={4}>Description</Headline2>
-                <RichText poorText text={description} />
-              </div>
-            )}
-            {description && !isGrantDocument && !!tags.length && <Divider />}
-            {!!tags.length && (
-              <>
-                <Headline2 styleAsHeading={4}>Tags</Headline2>
-                <TagList tags={tags} />
-              </>
-            )}
-          </Card>
-        )}
-        {!isGrantDocument && usageNotes && (
-          <Card>
-            <div css={{ paddingBottom: `${12 / perRem}em` }}>
-              <Headline2 styleAsHeading={4}>Usage Notes</Headline2>
-              <RichText poorText text={usageNotes} />
+    <div>
+      {!published && (
+        <Toast accent="warning">
+          This draft is available to members in the working group listed below.
+          Only PMs can publish this output.
+        </Toast>
+      )}
+      <div css={containerStyles}>
+        <div css={buttonsContainer}>
+          <BackLink href={backHref} />
+          {canEditResearchOutput && !isGrantDocument && (
+            <div css={editButtonContainer}>
+              <Link
+                href={
+                  sharedResearch({})
+                    .researchOutput({ researchOutputId: id })
+                    .editResearchOutput({}).$
+                }
+                buttonStyle
+                small
+                primary
+              >
+                {editIcon} Edit
+              </Link>
             </div>
-          </Card>
-        )}
-        {!isGrantDocument && relatedResearch?.length > 0 && (
-          <RelatedResearch relatedResearch={relatedResearch} />
-        )}
-        {!isGrantDocument && (
-          <SharedResearchAdditionalInformationCard {...props} />
-        )}
-        {description && isGrantDocument && (
-          <Card>
-            <RichText toc text={description} />
-          </Card>
-        )}
-        {!!contactEmails.length && (
-          <CtaCard href={createMailTo(contactEmails)} buttonText="Contact PM">
-            <strong>Interested in what you have seen?</strong>
-            <br /> Reach out to the PMs associated with this output
-          </CtaCard>
-        )}
+          )}
+        </div>
+        <div css={cardsStyles}>
+          <SharedResearchOutputHeaderCard {...props} published={published} />
+          {((description && !isGrantDocument) || !!tags.length) && (
+            <Card>
+              {description && !isGrantDocument && (
+                <div css={{ paddingBottom: `${12 / perRem}em` }}>
+                  <Headline2 styleAsHeading={4}>Description</Headline2>
+                  <RichText poorText text={description} />
+                </div>
+              )}
+              {description && !isGrantDocument && !!tags.length && <Divider />}
+              {!!tags.length && (
+                <>
+                  <Headline2 styleAsHeading={4}>Tags</Headline2>
+                  <TagList tags={tags} />
+                </>
+              )}
+            </Card>
+          )}
+          {!isGrantDocument && usageNotes && (
+            <Card>
+              <div css={{ paddingBottom: `${12 / perRem}em` }}>
+                <Headline2 styleAsHeading={4}>Usage Notes</Headline2>
+                <RichText poorText text={usageNotes} />
+              </div>
+            </Card>
+          )}
+          {!isGrantDocument && relatedResearch?.length > 0 && (
+            <RelatedResearch relatedResearch={relatedResearch} />
+          )}
+          {!isGrantDocument && (
+            <SharedResearchAdditionalInformationCard {...props} />
+          )}
+          {description && isGrantDocument && (
+            <Card>
+              <RichText toc text={description} />
+            </Card>
+          )}
+          {!!contactEmails.length && (
+            <CtaCard href={createMailTo(contactEmails)} buttonText="Contact PM">
+              <strong>Interested in what you have seen?</strong>
+              <br /> Reach out to the PMs associated with this output
+            </CtaCard>
+          )}
+        </div>
       </div>
     </div>
   );

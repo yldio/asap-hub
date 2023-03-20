@@ -76,6 +76,16 @@ it('shows labs', () => {
   expect(getByText(/example lab/i)).toBeVisible();
 });
 
+it('shows draft state tag', () => {
+  const { getByText } = render(
+    <SharedResearchOutputHeaderCard
+      {...createResearchOutputResponse()}
+      published={false}
+    />,
+  );
+  expect(getByText(/Draft/i)).toBeVisible();
+});
+
 it('renders an output with document type and type', () => {
   const { getAllByRole, rerender } = render(
     <SharedResearchOutputHeaderCard

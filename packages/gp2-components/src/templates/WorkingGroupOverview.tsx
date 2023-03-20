@@ -95,7 +95,7 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
               id,
             }),
           )}
-          overrideUsersRoute={gp2Routing.users({})}
+          overrideUserRoute={gp2Routing.users({}).user}
         />
       </div>
     </Card>

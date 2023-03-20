@@ -111,7 +111,7 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
               id,
             }),
           )}
-          overrideUserRoute={gp2Routing.users({}).user}
+          userRoute={gp2Routing.users({}).user}
         />
       </div>
     </Card>

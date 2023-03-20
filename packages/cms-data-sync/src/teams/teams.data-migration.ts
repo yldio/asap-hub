@@ -1,3 +1,4 @@
+import { SysLink } from 'contentful-management';
 import { teamsQuery } from './teams.queries';
 import {
   FetchTeamsQuery,
@@ -45,9 +46,14 @@ export const migrateTeams = async () => {
       tools,
     } = squidexTeamItem;
 
-    const toolLinks = tools?.length
-      ? await createExternalToolLinks(contentfulEnvironment, tools, id)
-      : [];
+    let toolLinks: SysLink[] = [];
+    if (tools?.length) {
+      try {
+        toolLinks = await createExternalToolLinks(contentfulEnvironment, tools);
+      } catch {
+        logger(`Invalid tool URL linked to team with id: ${id}`, 'ERROR');
+      }
+    }
 
     const teamPayload = {
       applicationNumber,

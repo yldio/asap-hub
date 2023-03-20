@@ -22,7 +22,6 @@ export const createExternalTool = async (
 export const createExternalToolLinks = async (
   contentfulEnvironment: Environment,
   tools: Pick<TeamsDataToolsChildDto, 'description' | 'name' | 'url'>[],
-  id: string,
 ): Promise<SysLink[]> => {
   const cleanTools = tools.map((tool) =>
     Object.entries(tool).reduce((acc, [key, value]) => {
@@ -31,9 +30,7 @@ export const createExternalToolLinks = async (
           '^(ftp|http|https):\\/\\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-/]))?$',
         );
         if (value && !regex.test(value)) {
-          throw new Error(
-            `Invalid tool URL related linked to team with id: ${id}`,
-          );
+          throw new Error();
         }
       }
       return value?.trim && value?.trim() === ''

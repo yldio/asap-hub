@@ -239,7 +239,7 @@ describe('Migrate teams', () => {
     });
   });
 
-  it('throws an error when trying to input a tool with invalid link', async () => {
+  it('outputs an error message when trying to input a tool with invalid link', async () => {
     const tool = {
       name: 'Invalid link',
       description: 'It contains a not valid url',
@@ -253,8 +253,44 @@ describe('Migrate teams', () => {
       queryTeamsContents: [teamWithInvalidURLTool],
     });
 
-    await expect(migrateTeams()).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Invalid tool URL related linked to team with id: team-invalid-url-tool"`,
+    await migrateTeams();
+
+    expect(console.log).toHaveBeenCalledWith(
+      '\x1b[31m',
+      '[ERROR] Invalid tool URL linked to team with id: team-invalid-url-tool',
+    );
+  });
+
+  it('still creates the team even if there is a tool with invalid link', async () => {
+    const tool = {
+      name: 'Invalid link',
+      description: 'It contains a not valid url',
+      url: '123',
+    };
+    const teamWithInvalidURLTool = getTeamSquidexResponse();
+    teamWithInvalidURLTool.id = 'team-invalid-url-tool';
+    teamWithInvalidURLTool.flatData.tools = [tool];
+
+    squidexGraphqlClientMock.request.mockResolvedValueOnce({
+      queryTeamsContents: [teamWithInvalidURLTool],
+    });
+
+    await migrateTeams();
+
+    expect(contenfulEnv.createEntryWithId).toHaveBeenCalledWith(
+      'teams',
+      'team-invalid-url-tool',
+      {
+        fields: {
+          displayName: { 'en-US': 'Team ASAP' },
+          applicationNumber: { 'en-US': '2023' },
+          expertiseAndResourceTags: { 'en-US': [] },
+          inactiveSince: { 'en-US': null },
+          projectSummary: { 'en-US': null },
+          projectTitle: { 'en-US': 'Beautiful Title' },
+          tools: { 'en-US': [] },
+        },
+      },
     );
   });
 

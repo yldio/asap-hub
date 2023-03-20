@@ -5,15 +5,11 @@ on:
       environment-name:
         required: true
         description: The environment name
-        type: string
-      entity:
-        required: true
         type: choice
-        description: Choose which Contentful entity (or entities) to sync
-        default: everything-but-news-and-pages
         options:
-          - news-and-pages
-          - everything-but-news-and-pages
+          - Branch
+          - Development
+          - Production
       contentful-env:
         required: true
         type: string
@@ -42,26 +38,11 @@ jobs:
           environment-name: ${{ inputs.environment-name }}
       - name: Rebuild
         uses: ./.github/actions/build-rebuild
-      - name: Run CMS sync for everything but news and pages
-        if: ${{ inputs.entity == 'everything-but-news-and-pages' }}
+      - name: Run CMS sync
         run: |
           yarn build:babel
           yarn build:typecheck
           yarn workspace @asap-hub/cms-data-sync migrate
-        env:
-          CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.contentful-space-id }}
-          CONTENTFUL_ENV_ID: ${{ inputs.contentful-env }}
-          CRN_SQUIDEX_APP_NAME: ${{ inputs.squidex-app }}
-          CRN_SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
-          CRN_SQUIDEX_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
-          SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
-      - name: Run CMS sync for news and pages
-        if: ${{ inputs.entity == 'news-and-pages' }}
-        run: |
-          yarn build:babel
-          yarn build:typecheck
-          yarn workspace @asap-hub/cms-data-sync migrate:news-pages
         env:
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.contentful-space-id }}

@@ -1,5 +1,4 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
   Caption,
   Card,
@@ -10,10 +9,12 @@ import {
   SharedResearchMetadata,
   UsersList,
 } from '@asap-hub/react-components';
+import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 
-import { IconWithLabel } from '../molecules';
+import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { editIcon, projectIcon, workingGroupIcon } from '../icons';
+import { IconWithLabel } from '../molecules';
 
 const { rem } = pixels;
 
@@ -42,87 +43,96 @@ const OutputCard: React.FC<OutputCardProps> = ({
   subtype,
   authors,
   link,
-}) => (
-  <Card padding={false}>
-    <div css={css({ padding: rem(24) })}>
-      <div css={css({ display: 'flex', gap: rem(24) })}>
-        <SharedResearchMetadata
-          pills={
-            [
-              workingGroups && 'Working Group',
-              projects && 'Project',
-              documentType,
-              type,
-              subtype,
-            ].filter(Boolean) as string[]
-          }
-          link={link}
-        />
-        <div css={css({ width: 'min-content' })}>
-          <Link
-            href={gp2Routing.outputs({}).output({ outputId: id }).edit({}).$}
-            buttonStyle
-            noMargin
-            small
-            fullWidth
-          >
-            <span
-              css={{
-                display: 'inline-flex',
-                gap: rem(8),
-                marginLeft: rem(6),
-              }}
-            >
-              {'Edit'}
-              {editIcon}
-            </span>
-          </Link>
-        </div>
-      </div>
+}) => {
+  const currentUser = useCurrentUserGP2();
+  const isAdministrator = currentUser?.role === 'Administrator';
 
-      <div css={css({ margin: `${rem(12)} 0 ${rem(24)}` })}>
-        <Headline2 styleAsHeading={4} noMargin>
-          {title}
-        </Headline2>
+  return (
+    <Card padding={false}>
+      <div css={css({ padding: rem(24) })}>
+        <div css={css({ display: 'flex', gap: rem(24) })}>
+          <SharedResearchMetadata
+            pills={
+              [
+                workingGroups && 'Working Group',
+                projects && 'Project',
+                documentType,
+                type,
+                subtype,
+              ].filter(Boolean) as string[]
+            }
+            link={link}
+          />
+          {isAdministrator && (
+            <div css={css({ width: 'min-content' })}>
+              <Link
+                href={
+                  gp2Routing.outputs({}).output({ outputId: id }).edit({}).$
+                }
+                buttonStyle
+                noMargin
+                small
+                fullWidth
+              >
+                <span
+                  css={{
+                    display: 'inline-flex',
+                    gap: rem(8),
+                    marginLeft: rem(6),
+                  }}
+                >
+                  {'Edit'}
+                  {editIcon}
+                </span>
+              </Link>
+            </div>
+          )}
+        </div>
+        <div css={css({ margin: `${rem(12)} 0 ${rem(24)}` })}>
+          <Headline2 styleAsHeading={4} noMargin>
+            {title}
+          </Headline2>
+        </div>
+        <UsersList
+          users={authors.map((author) => ({
+            ...author,
+            href:
+              author.id && gp2Routing.users({}).user({ userId: author.id }).$,
+          }))}
+          max={3}
+        />
+        <div css={css({ margin: `${rem(4)} 0 ${rem(32)}` })}>
+          {workingGroups && (
+            <IconWithLabel noMargin icon={workingGroupIcon}>
+              <Link
+                href={
+                  gp2Routing
+                    .workingGroups({})
+                    .workingGroup({ workingGroupId: workingGroups.id }).$
+                }
+              >
+                {workingGroups.title}
+              </Link>
+            </IconWithLabel>
+          )}
+          {projects && (
+            <IconWithLabel noMargin icon={projectIcon}>
+              <Link
+                href={
+                  gp2Routing.projects({}).project({ projectId: projects.id }).$
+                }
+              >
+                {projects.title}
+              </Link>
+            </IconWithLabel>
+          )}
+        </div>
+        <Caption noMargin accent={'lead'} asParagraph>
+          Date Added: {formatDate(new Date(addedDate))}
+        </Caption>
       </div>
-      <UsersList
-        users={authors.map((author) => ({
-          ...author,
-          href: author.id && gp2Routing.users({}).user({ userId: author.id }).$,
-        }))}
-        max={3}
-      />
-      <div css={css({ margin: `${rem(4)} 0 ${rem(32)}` })}>
-        {workingGroups && (
-          <IconWithLabel noMargin icon={workingGroupIcon}>
-            <Link
-              href={
-                gp2Routing
-                  .workingGroups({})
-                  .workingGroup({ workingGroupId: workingGroups.id }).$
-              }
-            >
-              {workingGroups.title}
-            </Link>
-          </IconWithLabel>
-        )}
-        {projects && (
-          <IconWithLabel noMargin icon={projectIcon}>
-            <Link
-              href={
-                gp2Routing.projects({}).project({ projectId: projects.id }).$
-              }
-            >
-              {projects.title}
-            </Link>
-          </IconWithLabel>
-        )}
-      </div>
-      <Caption noMargin accent={'lead'} asParagraph>
-        Date Added: {formatDate(new Date(addedDate))}
-      </Caption>
-    </div>
-  </Card>
-);
+    </Card>
+  );
+};
 
 export default OutputCard;

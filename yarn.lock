@@ -388,7 +388,7 @@ __metadata:
     "@graphql-tools/load": 7.8.13
     "@graphql-tools/mock": 8.7.19
     "@graphql-tools/schema": 9.0.17
-    "@graphql-typed-document-node/core": 3.1.2
+    "@graphql-typed-document-node/core": 3.2.0
     "@types/contentful-html-rich-text-converter": "workspace:^"
     "@types/jest": ^29.4.0
     "@types/node": 14.18.38
@@ -422,7 +422,7 @@ __metadata:
     "@graphql-tools/load": 7.8.13
     "@graphql-tools/mock": 8.7.19
     "@graphql-tools/schema": 9.0.17
-    "@graphql-typed-document-node/core": 3.1.2
+    "@graphql-typed-document-node/core": 3.2.0
     "@types/jest": ^29.4.0
     "@types/node": 14.18.38
     contentful-cli: 1.19.1
@@ -609,7 +609,7 @@ __metadata:
     "@graphql-tools/load": 7.8.13
     "@graphql-tools/mock": 8.7.19
     "@graphql-tools/schema": 9.0.17
-    "@graphql-typed-document-node/core": 3.1.2
+    "@graphql-typed-document-node/core": 3.2.0
     "@hapi/boom": 9.1.4
     "@hapi/bourne": 2.1.0
     "@hapi/joi": 17.1.1
@@ -1069,7 +1069,7 @@ __metadata:
     "@graphql-tools/graphql-file-loader": 7.5.16
     "@graphql-tools/load": 7.8.13
     "@graphql-tools/mock": 8.7.19
-    "@graphql-typed-document-node/core": 3.1.2
+    "@graphql-typed-document-node/core": 3.2.0
     "@hapi/boom": 9.1.4
     "@sentry/serverless": 6.19.7
     "@serverless/typescript": 3.27.0
@@ -10029,12 +10029,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphql-typed-document-node/core@npm:3.1.2":
-  version: 3.1.2
-  resolution: "@graphql-typed-document-node/core@npm:3.1.2"
+"@graphql-typed-document-node/core@npm:3.2.0":
+  version: 3.2.0
+  resolution: "@graphql-typed-document-node/core@npm:3.2.0"
   peerDependencies:
     graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
-  checksum: a61afa025acdabd7833e4f654a5802fc1a526171f81e0c435c8e651050a5a0682499a2c7a51304ceb61fde36cd69fc7975ce5e1b16b9ba7ea474c649f33eea8b
+  checksum: fa44443accd28c8cf4cb96aaaf39d144a22e8b091b13366843f4e97d19c7bfeaf609ce3c7603a4aeffe385081eaf8ea245d078633a7324c11c5ec4b2011bb76d
   languageName: node
   linkType: hard
 

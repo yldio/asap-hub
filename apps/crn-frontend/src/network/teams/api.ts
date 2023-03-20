@@ -2,6 +2,7 @@ import {
   BackendError,
   createSentryHeaders,
   GetListOptions,
+  createFeatureFlagHeaders,
 } from '@asap-hub/frontend-utils';
 import {
   ListLabsResponse,
@@ -20,7 +21,11 @@ export const getTeam = async (
   authorization: string,
 ): Promise<TeamResponse | undefined> => {
   const resp = await fetch(`${API_BASE_URL}/teams/${id}`, {
-    headers: { authorization, ...createSentryHeaders() },
+    headers: {
+      authorization,
+      ...createSentryHeaders(),
+      ...createFeatureFlagHeaders(),
+    },
   });
   if (!resp.ok) {
     if (resp.status === 404) {
@@ -38,7 +43,11 @@ export const getTeams = async (
   authorization: string,
 ): Promise<ListTeamResponse> => {
   const resp = await fetch(createListApiUrl('teams', options).toString(), {
-    headers: { authorization, ...createSentryHeaders() },
+    headers: {
+      authorization,
+      ...createSentryHeaders(),
+      ...createFeatureFlagHeaders(),
+    },
   });
 
   if (!resp.ok) {
@@ -60,6 +69,7 @@ export const patchTeam = async (
       authorization,
       'content-type': 'application/json',
       ...createSentryHeaders(),
+      ...createFeatureFlagHeaders(),
     },
     body: JSON.stringify(patch),
   });

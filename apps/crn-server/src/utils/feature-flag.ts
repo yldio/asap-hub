@@ -1,3 +1,4 @@
+import { TeamDataProvider } from '../data-providers/teams.data-provider';
 import { UserDataProvider } from '../data-providers/users.data-provider';
 
 const featureFlags = ['IS_CONTENTFUL_ENABLED_V2'] as const;
@@ -10,6 +11,7 @@ type DependencySwitch<T> = {
 
 type DependencyList = {
   users: DependencySwitch<UserDataProvider>;
+  teams: DependencySwitch<TeamDataProvider>;
 };
 
 export class FeatureFlagDependencySwitch {
@@ -18,6 +20,10 @@ export class FeatureFlagDependencySwitch {
   } = {
     IS_CONTENTFUL_ENABLED_V2: {
       users: {
+        true: undefined,
+        false: undefined,
+      },
+      teams: {
         true: undefined,
         false: undefined,
       },

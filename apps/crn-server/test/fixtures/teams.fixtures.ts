@@ -1,3 +1,4 @@
+import { FetchTeamsQuery as ContentfulFetchTeamsQuery } from '@asap-hub/contentful';
 import {
   ListTeamResponse,
   TeamCreateDataObject,
@@ -13,6 +14,35 @@ import {
 import { TeamEvent, TeamPayload } from '../../src/handlers/event-bus';
 import { createEventBridgeEventMock } from '../helpers/events';
 import { getGraphQLUser } from './users.fixtures';
+
+export const getContenfulGraphqlTeam = (): NonNullable<
+  NonNullable<ContentfulFetchTeamsQuery['teamsCollection']>['items'][number]
+> => ({
+  sys: {
+    id: 'team-id-0',
+    firstPublishedAt: '2020-09-23T20:33:36Z',
+    publishedAt: '2020-11-26T11:56:04Z',
+    publishedVersion: 42,
+  },
+  displayName: 'Team A',
+  applicationNumber: 'ASAP-000420',
+  inactiveSince: null,
+  projectSummary: null,
+  projectTitle:
+    'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
+  expertiseAndResourceTags: ['Animal resources'],
+  toolsCollection: {
+    items: [],
+  },
+});
+
+export const getContentfulTeamsGraphqlResponse =
+  (): ContentfulFetchTeamsQuery => ({
+    teamsCollection: {
+      total: 1,
+      items: [getContenfulGraphqlTeam()],
+    },
+  });
 
 export const getListTeamResponse = (): ListTeamResponse => ({
   total: 1,

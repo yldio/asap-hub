@@ -15,6 +15,7 @@
     "schema:update:crn": "SQUIDEX_BASE_URL=$SQUIDEX_BASE_URL SQUIDEX_APP_NAME=$CRN_SQUIDEX_APP_NAME SQUIDEX_CLIENT_ID=$CRN_SQUIDEX_CLIENT_ID SQUIDEX_CLIENT_SECRET=$CRN_SQUIDEX_CLIENT_SECRET ./scripts/schema-update.sh"
   },
   "dependencies": {
+    "@asap-hub/contentful": "workspace:*",
     "@asap-hub/model": "workspace:*",
     "@asap-hub/squidex": "workspace:*",
     "@babel/runtime-corejs3": "7.21.0",

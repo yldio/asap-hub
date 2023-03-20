@@ -1,5 +1,5 @@
 import { BLOCKS, TopLevelBlockEnum } from '@contentful/rich-text-types';
-import { parseRichText } from '../src/utils';
+import { parseRichText, addLocaleToFields } from '../src/utils';
 import {
   assetId_1,
   assetId_2,
@@ -161,6 +161,20 @@ describe('parseRichText', () => {
       expect(() => parseRichText(rtf)).toThrowError(
         'Entry with id not-found does not exist in contentful',
       );
+    });
+  });
+});
+
+describe('addLocaleToFields', () => {
+  test('adds locale to fields', () => {
+    expect(
+      addLocaleToFields({
+        title: 'News',
+        description: 'Very informative news',
+      }),
+    ).toEqual({
+      description: { 'en-US': 'Very informative news' },
+      title: { 'en-US': 'News' },
     });
   });
 });

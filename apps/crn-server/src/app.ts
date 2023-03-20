@@ -1,4 +1,7 @@
-import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/contentful';
+import {
+  getGraphQLClient as getContentfulGraphQLClient,
+  getRestClient as getContentfulRestClient,
+} from '@asap-hub/contentful';
 import {
   CalendarController,
   EventController,
@@ -42,6 +45,7 @@ import {
   auth0Audience,
   baseUrl,
   contentfulAccessToken,
+  contentfulManagementAccessToken,
   contentfulEnvId,
   contentfulSpaceId,
   isContentfulEnabled,
@@ -75,6 +79,7 @@ import { CalendarSquidexDataProvider } from './data-providers/calendars.data-pro
 import { DashboardContentfulDataProvider } from './data-providers/contentful/dashboard.data-provider';
 import { NewsContentfulDataProvider } from './data-providers/contentful/news.data-provider';
 import { PageContentfulDataProvider } from './data-providers/contentful/pages.data-provider';
+import { TeamContentfulDataProvider } from './data-providers/contentful/teams.data-provider';
 import { UserContentfulDataProvider } from './data-providers/contentful/users.data-provider';
 import DashboardSquidexDataProvider, {
   DashboardDataProvider,
@@ -155,6 +160,14 @@ export const appFactory = (libs: Libs = {}): Express => {
     accessToken: contentfulAccessToken,
     environment: contentfulEnvId,
   });
+
+  const getContentfulRestClientFactory = () =>
+    getContentfulRestClient({
+      space: contentfulSpaceId,
+      accessToken: contentfulManagementAccessToken,
+      environment: contentfulEnvId,
+    });
+
   /**
    * Dependency Injection -->
    */
@@ -254,9 +267,32 @@ export const appFactory = (libs: Libs = {}): Express => {
   const pageDataProvider = isContentfulEnabled
     ? pageContentfulDataProvider
     : pageSquidexDataProvider;
+
+  featureFlagDependencySwitch.setDependency(
+    'teams',
+    libs.teamSquidexDataProvider ||
+      new TeamSquidexDataProvider(squidexGraphqlClient, teamRestClient),
+    'IS_CONTENTFUL_ENABLED_V2',
+    false,
+  );
+
+  featureFlagDependencySwitch.setDependency(
+    'teams',
+    libs.teamContentfulDataProvider ||
+      new TeamContentfulDataProvider(
+        contentfulGraphQLClient,
+        getContentfulRestClientFactory,
+      ),
+    'IS_CONTENTFUL_ENABLED_V2',
+    true,
+  );
   const teamDataProvider =
     libs.teamDataProvider ||
-    new TeamSquidexDataProvider(squidexGraphqlClient, teamRestClient);
+    featureFlagDependencySwitch.getDependency(
+      'teams',
+      'IS_CONTENTFUL_ENABLED_V2',
+    );
+
   const tutorialsDataProvider =
     libs.tutorialsDataProvider ||
     new TutorialsSquidexDataProvider(squidexGraphqlClient);
@@ -494,6 +530,8 @@ export type Libs = {
   reminderDataProvider?: ReminderDataProvider;
   researchOutputDataProvider?: ResearchOutputDataProvider;
   researchTagDataProvider?: ResearchTagDataProvider;
+  teamSquidexDataProvider?: TeamDataProvider;
+  teamContentfulDataProvider?: TeamDataProvider;
   teamDataProvider?: TeamDataProvider;
   tutorialsDataProvider?: TutorialsDataProvider;
   userDataProvider?: UserDataProvider;

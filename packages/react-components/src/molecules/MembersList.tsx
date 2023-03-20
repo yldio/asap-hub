@@ -75,7 +75,7 @@ interface MembersListProps {
   >;
   singleColumn?: boolean;
   readonly overrideNameStyles?: SerializedStyles;
-  readonly overrideUserRoute?: ({ userId }: { userId: string }) => {
+  readonly userRoute?: ({ userId }: { userId: string }) => {
     $: string;
   };
 }
@@ -83,7 +83,7 @@ const MembersList: React.FC<MembersListProps> = ({
   members,
   singleColumn = false,
   overrideNameStyles,
-  overrideUserRoute,
+  userRoute = network({}).users({}).user,
 }) => (
   <ul css={[containerStyles, singleColumn || multiColumnContainerStyles]}>
     {members.map(
@@ -95,9 +95,7 @@ const MembersList: React.FC<MembersListProps> = ({
         alumniSinceDate,
         ...member
       }) => {
-        const href = overrideUserRoute
-          ? overrideUserRoute({ userId: id }).$
-          : network({}).users({}).user({ userId: id }).$;
+        const href = userRoute({ userId: id }).$;
         const userAvatar = (
           <Avatar
             firstName={member.firstName}

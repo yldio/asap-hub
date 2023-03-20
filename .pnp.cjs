@@ -10915,6 +10915,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/cms-data-sync/",\
           "packageDependencies": [\
             ["@asap-hub/cms-data-sync", "workspace:packages/cms-data-sync"],\
+            ["@asap-hub/contentful", "workspace:packages/contentful"],\
             ["@asap-hub/model", "workspace:packages/model"],\
             ["@asap-hub/squidex", "workspace:packages/squidex"],\
             ["@babel/runtime-corejs3", "npm:7.21.0"],\
@@ -10966,6 +10967,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@graphql-tools/mock", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:8.7.19"],\
             ["@graphql-tools/schema", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:9.0.17"],\
             ["@graphql-typed-document-node/core", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:3.1.2"],\
+            ["@types/jest", "npm:29.4.0"],\
             ["@types/node", "npm:14.18.38"],\
             ["contentful-cli", "npm:1.19.1"],\
             ["contentful-management", "npm:10.19.3"],\

@@ -15,6 +15,12 @@ const documents = {
     graphql.PageContentFragmentDoc,
   '\n  query FetchPages($where: PagesFilter) {\n    pagesCollection(limit: 100, where: $where) {\n      total\n      items {\n        ...PageContent\n      }\n    }\n  }\n  \n':
     graphql.FetchPagesDocument,
+  '\n  fragment TeamsContent on Teams {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    displayName\n    applicationNumber\n    inactiveSince\n    projectSummary\n    projectTitle\n    expertiseAndResourceTags\n    toolsCollection {\n      items {\n        name\n        description\n        url\n      }\n    }\n  }\n':
+    graphql.TeamsContentFragmentDoc,
+  '\n  query FetchTeamById($id: String!) {\n    teams(id: $id) {\n      ...TeamsContent\n    }\n  }\n  \n':
+    graphql.FetchTeamByIdDocument,
+  '\n  query FetchTeams(\n    $limit: Int\n    $skip: Int\n    $order: [TeamsOrder]\n    $where: TeamsFilter\n  ) {\n    teamsCollection(limit: $limit, skip: $skip, order: $order, where: $where) {\n      total\n      items {\n        ...TeamsContent\n      }\n    }\n  }\n  \n':
+    graphql.FetchTeamsDocument,
 };
 
 export function gql(
@@ -35,6 +41,15 @@ export function gql(
 export function gql(
   source: '\n  query FetchPages($where: PagesFilter) {\n    pagesCollection(limit: 100, where: $where) {\n      total\n      items {\n        ...PageContent\n      }\n    }\n  }\n  \n',
 ): typeof documents['\n  query FetchPages($where: PagesFilter) {\n    pagesCollection(limit: 100, where: $where) {\n      total\n      items {\n        ...PageContent\n      }\n    }\n  }\n  \n'];
+export function gql(
+  source: '\n  fragment TeamsContent on Teams {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    displayName\n    applicationNumber\n    inactiveSince\n    projectSummary\n    projectTitle\n    expertiseAndResourceTags\n    toolsCollection {\n      items {\n        name\n        description\n        url\n      }\n    }\n  }\n',
+): typeof documents['\n  fragment TeamsContent on Teams {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    displayName\n    applicationNumber\n    inactiveSince\n    projectSummary\n    projectTitle\n    expertiseAndResourceTags\n    toolsCollection {\n      items {\n        name\n        description\n        url\n      }\n    }\n  }\n'];
+export function gql(
+  source: '\n  query FetchTeamById($id: String!) {\n    teams(id: $id) {\n      ...TeamsContent\n    }\n  }\n  \n',
+): typeof documents['\n  query FetchTeamById($id: String!) {\n    teams(id: $id) {\n      ...TeamsContent\n    }\n  }\n  \n'];
+export function gql(
+  source: '\n  query FetchTeams(\n    $limit: Int\n    $skip: Int\n    $order: [TeamsOrder]\n    $where: TeamsFilter\n  ) {\n    teamsCollection(limit: $limit, skip: $skip, order: $order, where: $where) {\n      total\n      items {\n        ...TeamsContent\n      }\n    }\n  }\n  \n',
+): typeof documents['\n  query FetchTeams(\n    $limit: Int\n    $skip: Int\n    $order: [TeamsOrder]\n    $where: TeamsFilter\n  ) {\n    teamsCollection(limit: $limit, skip: $skip, order: $order, where: $where) {\n      total\n      items {\n        ...TeamsContent\n      }\n    }\n  }\n  \n'];
 
 export function gql(source: string): unknown;
 export function gql(source: string) {

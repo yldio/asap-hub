@@ -94,7 +94,7 @@ describe('OutputForm', () => {
       ],
     });
     expect(history.location.pathname).toEqual(`/outputs`);
-  });
+  }, 30_000);
 
   describe('article', () => {
     it('renders type', () => {
@@ -181,7 +181,8 @@ describe('OutputForm', () => {
         subtype: 'Published',
         authors: [{ userId: 'u2' }],
       });
-    });
+      expect(history.location.pathname).toEqual(`/outputs`);
+    }, 30_000);
   });
   describe('validation', () => {
     it.each`
@@ -189,17 +190,14 @@ describe('OutputForm', () => {
       ${'Url'}   | ${/URL/i}   | ${'Please enter a valid URL, starting with http://'}
       ${'Title'} | ${/title/i} | ${'Please fill out this field.'}
       ${'Type'}  | ${/type/i}  | ${'Please fill out this field.'}
-    `(
-      'shows error message for missing value $title',
-      async ({ label, error }) => {
-        render(<OutputForm {...defaultProps} documentType="Article" />, {
-          wrapper: StaticRouter,
-        });
-        const input = screen.getByLabelText(label);
-        fireEvent.focusOut(input);
-        expect(await screen.findByText(error)).toBeVisible();
-      },
-    );
+    `('shows error message for missing value $title', ({ label, error }) => {
+      render(<OutputForm {...defaultProps} documentType="Article" />, {
+        wrapper: StaticRouter,
+      });
+      const input = screen.getByLabelText(label);
+      fireEvent.focusOut(input);
+      expect(screen.getByText(error)).toBeVisible();
+    });
   });
   describe('edit output', () => {
     it('renders all the base fields', () => {

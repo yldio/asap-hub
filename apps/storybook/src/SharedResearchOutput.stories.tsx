@@ -13,6 +13,7 @@ import {
 
 import {
   createLabs,
+  createListResearchOutputResponse,
   createListTeamResponse,
   createListUserResponse,
   createResearchOutputResponse,
@@ -83,6 +84,10 @@ const props = (): ComponentProps<typeof SharedResearchOutput> => ({
   workingGroups: number('Number of Working Groups', 0, { max: 1 })
     ? [createWorkingGroupResponse()]
     : undefined,
+  relatedResearch: createListResearchOutputResponse(
+    number('Number of related research items', 0),
+  ).items,
+  published: boolean('Published', true),
 });
 
 export const Normal = () => (

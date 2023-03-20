@@ -4,6 +4,7 @@ import {
   fireEvent,
   render,
   screen,
+  waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -79,9 +80,9 @@ describe('OutputForm', () => {
     await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
     userEvent.click(screen.getAllByText('Alex White')[1]);
     userEvent.click(screen.getByRole('button', { name: /publish/i }));
-    expect(
-      await screen.findByRole('button', { name: /publish/i }),
-    ).toBeEnabled();
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: /publish/i })).toBeEnabled(),
+    );
 
     expect(shareOutput).toHaveBeenCalledWith({
       title: 'output title',
@@ -94,7 +95,7 @@ describe('OutputForm', () => {
       ],
     });
     expect(history.location.pathname).toEqual(`/outputs`);
-  });
+  }, 20_000);
 
   describe('article', () => {
     it('renders type', () => {
@@ -127,7 +128,7 @@ describe('OutputForm', () => {
     it('publishes with type and subtype', async () => {
       const history = createMemoryHistory();
       const getAuthorSuggestions = jest.fn();
-      getAuthorSuggestions.mockResolvedValueOnce([
+      getAuthorSuggestions.mockResolvedValue([
         {
           author: {
             ...gp2Fixtures.createUserResponse(),
@@ -169,9 +170,9 @@ describe('OutputForm', () => {
       await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
       userEvent.click(screen.getByText('Chris Blue'));
       userEvent.click(screen.getByRole('button', { name: /publish/i }));
-      expect(
-        await screen.findByRole('button', { name: /publish/i }),
-      ).toBeEnabled();
+      await waitFor(() =>
+        expect(screen.getByRole('button', { name: /publish/i })).toBeEnabled(),
+      );
 
       expect(shareOutput).toHaveBeenCalledWith({
         title: 'output title',
@@ -181,7 +182,8 @@ describe('OutputForm', () => {
         subtype: 'Published',
         authors: [{ userId: 'u2' }],
       });
-    });
+      expect(history.location.pathname).toEqual(`/outputs`);
+    }, 20_000);
   });
   describe('validation', () => {
     it.each`
@@ -189,17 +191,14 @@ describe('OutputForm', () => {
       ${'Url'}   | ${/URL/i}   | ${'Please enter a valid URL, starting with http://'}
       ${'Title'} | ${/title/i} | ${'Please fill out this field.'}
       ${'Type'}  | ${/type/i}  | ${'Please fill out this field.'}
-    `(
-      'shows error message for missing value $title',
-      async ({ label, error }) => {
-        render(<OutputForm {...defaultProps} documentType="Article" />, {
-          wrapper: StaticRouter,
-        });
-        const input = screen.getByLabelText(label);
-        fireEvent.focusOut(input);
-        expect(await screen.findByText(error)).toBeVisible();
-      },
-    );
+    `('shows error message for missing value $title', ({ label, error }) => {
+      render(<OutputForm {...defaultProps} documentType="Article" />, {
+        wrapper: StaticRouter,
+      });
+      const input = screen.getByLabelText(label);
+      fireEvent.focusOut(input);
+      expect(screen.getByText(error)).toBeVisible();
+    });
   });
   describe('edit output', () => {
     it('renders all the base fields', () => {

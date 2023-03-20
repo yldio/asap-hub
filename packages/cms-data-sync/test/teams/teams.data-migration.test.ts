@@ -81,7 +81,6 @@ describe('Migrate teams', () => {
   });
 
   afterEach(() => {
-    jest.resetModules();
     jest.clearAllMocks();
   });
 

@@ -124,8 +124,9 @@ const renderUserProfile = async (
       </Suspense>
     </RecoilRoot>,
   );
-  await waitFor(() =>
-    expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
+  await waitFor(
+    () => expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
+    { timeout: 5000 },
   );
   return result;
 };

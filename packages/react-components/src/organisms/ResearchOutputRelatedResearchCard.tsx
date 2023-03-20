@@ -7,6 +7,7 @@ import { noop, ResearchOutputOption } from '../utils';
 import { perRem } from '../pixels';
 import { getIconForDocumentType } from './RecentSharedOutputs';
 import { Pill } from '../atoms';
+import { charcoal } from '../colors';
 
 const optionStyles = (showPill: boolean) =>
   css({
@@ -16,11 +17,17 @@ const optionStyles = (showPill: boolean) =>
     alignItems: 'top',
     alignContent: 'center',
     columnGap: '12px',
-    svg: {
-      width: '18px',
-      height: '18px',
-    },
   });
+
+const iconStyles = css({
+  svg: {
+    width: '18px',
+    height: '18px',
+    paddingLeft: `${3 / perRem}em`,
+    paddingTop: `${3 / perRem}em`,
+    stroke: charcoal.rgb,
+  },
+});
 
 type ResearchOutputRelatedResearchProps = {
   readonly relatedResearch: ComponentPropsWithRef<
@@ -81,7 +88,13 @@ const ResearchOutputRelatedResearchCard: React.FC<
                 multiValueLabelProps.data.documentType === 'Article',
               )}
             >
-              {getIconForDocumentType(multiValueLabelProps.data.documentType)}
+              {
+                <div css={iconStyles}>
+                  {getIconForDocumentType(
+                    multiValueLabelProps.data.documentType,
+                  )}
+                </div>
+              }
               {multiValueLabelProps.data.documentType === 'Article' && (
                 <Pill accent="gray">{multiValueLabelProps.data.type}</Pill>
               )}
@@ -94,7 +107,11 @@ const ResearchOutputRelatedResearchCard: React.FC<
             <div
               css={optionStyles(optionProps.data.documentType === 'Article')}
             >
-              {getIconForDocumentType(optionProps.data.documentType)}
+              {
+                <div css={iconStyles}>
+                  {getIconForDocumentType(optionProps.data.documentType)}
+                </div>
+              }
               {optionProps.data.documentType === 'Article' && (
                 <Pill accent="gray">{optionProps.data.type}</Pill>
               )}

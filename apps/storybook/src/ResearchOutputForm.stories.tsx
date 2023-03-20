@@ -58,10 +58,11 @@ export const Normal = () => (
                 label: 'Research 1',
                 value: '1',
                 type: 'Preprint',
-                documentType: 'Report',
+                documentType: 'Protocol',
               },
               {
-                label: 'Research With a very long name to display in the page',
+                label:
+                  'Research With a very long name to display in the page so it can show how it will look like in the select list and in the selected values',
                 value: '2',
                 type: 'Preprint',
                 documentType: 'Article',
@@ -70,7 +71,25 @@ export const Normal = () => (
                 label: 'Research 3',
                 value: '3',
                 type: 'Preprint',
-                documentType: 'Protocol',
+                documentType: 'Dataset',
+              },
+              {
+                label: 'Research 4',
+                value: '4',
+                type: 'Preprint',
+                documentType: 'Bioinformatics',
+              },
+              {
+                label: 'Research 5',
+                value: '5',
+                type: 'Preprint',
+                documentType: 'Lab Resource',
+              },
+              {
+                label: 'Research 6',
+                value: '6',
+                type: 'Preprint',
+                documentType: 'Grant Document',
               },
             ]);
           }, 1000);
@@ -132,10 +151,11 @@ export const EditMode = () => (
                 label: 'Research 1',
                 value: '1',
                 type: 'Preprint',
-                documentType: 'Report',
+                documentType: 'Protocol',
               },
               {
-                label: 'Research With a very long name to display in the page',
+                label:
+                  'Research With a very long name to display in the page so it can show how it will look like in the select list and in the selected values',
                 value: '2',
                 type: 'Preprint',
                 documentType: 'Article',
@@ -144,7 +164,25 @@ export const EditMode = () => (
                 label: 'Research 3',
                 value: '3',
                 type: 'Preprint',
-                documentType: 'Protocol',
+                documentType: 'Dataset',
+              },
+              {
+                label: 'Research 4',
+                value: '4',
+                type: 'Preprint',
+                documentType: 'Bioinformatics',
+              },
+              {
+                label: 'Research 5',
+                value: '5',
+                type: 'Preprint',
+                documentType: 'Lab Resource',
+              },
+              {
+                label: 'Research 6',
+                value: '6',
+                type: 'Preprint',
+                documentType: 'Grant Document',
               },
             ]);
           }, 1000);

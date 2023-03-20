@@ -1,7 +1,9 @@
 import { getEventListOptions } from '@asap-hub/frontend-utils';
 import {
+  EmptyState,
   EventOwner,
   IconWithLabel,
+  noEventCalendarIcon,
   speakerIcon,
 } from '@asap-hub/gp2-components';
 import { gp2 } from '@asap-hub/model';
@@ -34,6 +36,19 @@ export const eventMapper = ({
   eventOwner: <EventOwner project={project} workingGroup={workingGroup} />,
 });
 
+const eventEmptyStateText = {
+  past: {
+    title: 'No past events available.',
+    description:
+      'When a working group, project or GP2 hub event finishes, it will be displayed here.',
+  },
+  upcoming: {
+    title: 'No upcoming events available.',
+    description:
+      'When a working group, project or the GP2 hub creates an event it will be listed here.',
+  },
+};
+
 const EventList: React.FC<EventListProps> = ({
   currentTime,
   past = false,
@@ -50,15 +65,29 @@ const EventList: React.FC<EventListProps> = ({
     }),
   );
 
+  const { title, description } = past
+    ? eventEmptyStateText.past
+    : eventEmptyStateText.upcoming;
+
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
   return (
-    <EventsList
-      currentPageIndex={currentPage}
-      numberOfItems={total}
-      renderPageHref={renderPageHref}
-      numberOfPages={numberOfPages}
-      events={items.map(eventMapper)}
-    />
+    <>
+      {total ? (
+        <EventsList
+          currentPageIndex={currentPage}
+          numberOfItems={total}
+          renderPageHref={renderPageHref}
+          numberOfPages={numberOfPages}
+          events={items.map(eventMapper)}
+        />
+      ) : (
+        <EmptyState
+          icon={noEventCalendarIcon}
+          smallPadding
+          {...{ title, description }}
+        />
+      )}
+    </>
   );
 };
 

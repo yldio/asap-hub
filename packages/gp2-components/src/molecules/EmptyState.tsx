@@ -8,6 +8,7 @@ interface EmptyStateProps {
   icon: ReactChild;
   title: string;
   description: string;
+  smallPadding?: boolean;
 }
 
 const styles = css({
@@ -20,8 +21,9 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   icon,
   title,
   description,
+  smallPadding = false,
 }) => (
-  <div css={styles}>
+  <div css={[styles, smallPadding ? { padding: `${rem(32)} 0` } : {}]}>
     <span>{icon}</span>
     <div>
       <Display styleAsHeading={3}>{title}</Display>

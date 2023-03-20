@@ -26,6 +26,7 @@ const iconStyles = css({
     paddingLeft: `${3 / perRem}em`,
     paddingTop: `${3 / perRem}em`,
     stroke: charcoal.rgb,
+    strokeWidth: `${0.3 / perRem}em`,
   },
 });
 

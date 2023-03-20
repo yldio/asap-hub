@@ -1,6 +1,7 @@
 import { OutputCard } from '@asap-hub/gp2-components';
 import { gp2 } from '@asap-hub/model';
 import { ResultList } from '@asap-hub/react-components';
+import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { usePagination, usePaginationParams } from '../hooks/pagination';
 import { useOutputs } from './state';
 
@@ -14,6 +15,8 @@ const OutputList: React.FC<OutputListProps> = ({
   filters,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
+  const currentUser = useCurrentUserGP2();
+  const isAdministrator = currentUser?.role === 'Administrator';
 
   const { items, total } = useOutputs({
     search: searchQuery,
@@ -30,7 +33,11 @@ const OutputList: React.FC<OutputListProps> = ({
       renderPageHref={renderPageHref}
     >
       {items.map((output) => (
-        <OutputCard key={output.id} {...output} />
+        <OutputCard
+          key={output.id}
+          {...output}
+          isAdministrator={isAdministrator}
+        />
       ))}
     </ResultList>
   );

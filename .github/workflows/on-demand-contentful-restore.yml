@@ -4,20 +4,19 @@ on:
     inputs:
       environment:
         required: true
-        description: Backup environment to restore
+        description: Backup source environment to restore
         type: choice
         options:
           - Production
           - Development
       backup-version:
-        required: true
-        description: Backup file to restore
+        required: false
+        description: Backup file to restore - leave blank for latest
         type: string
-        default: latest
       contentful-env:
-        required: true
+        required: false
         type: string
-        description: Contentful environment to restore into
+        description: Contentful environment to restore into - leave blank to use Production/Development as selected above
 
 jobs:
   restore-backup:
@@ -44,5 +43,5 @@ jobs:
           bucket-name: ${{ steps.setup.outputs.crn-contentful-backup-bucket-name }}
           backup-key: ${{ inputs.backup-version }}
           contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
-          contentful-environment: ${{ inputs.contentful-env }}
+          contentful-environment: ${{ inputs.contentful-env || inputs.environment }}
           contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}

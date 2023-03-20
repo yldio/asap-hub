@@ -12,7 +12,7 @@ inputs:
     description: 's3 bucket name for backup'
     required: true
   contentful-space-id:
-    description: 'Contenful Space ID'
+    description: 'Contentful Space ID'
     required: true
   contentful-environment:
     description: 'Contentful Environment'

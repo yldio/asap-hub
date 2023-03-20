@@ -17,6 +17,9 @@ inputs:
   lightstep-token:
     description: 'Lightstep Token'
     required: true
+  crn-contentful-management-access-token:
+    description: 'CRN Contentful Management Access Token'
+    required: true
   crn-squidex-api-client-secret:
     description: 'Squidex Client Secret'
     required: true
@@ -66,6 +69,7 @@ runs:
         CRN_SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-api-client-id }}
         CRN_SQUIDEX_CLIENT_SECRET: ${{ inputs.crn-squidex-api-client-secret }}
         CRN_SQUIDEX_SHARED_SECRET: ${{ inputs.crn-squidex-shared-secret }}
+        CRN_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: 'n-a'
         CRN_CONTENTFUL_ENV: 'n-a'
         CRN_CONTENTFUL_ACCESS_TOKEN: 'n-a'
         CRN_CONTENTFUL_SPACE_ID: 'n-a'

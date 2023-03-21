@@ -29216,11 +29216,11 @@ __metadata:
   linkType: hard
 
 "jest-fail-on-console@npm:^3.1.0":
-  version: 3.1.0
-  resolution: "jest-fail-on-console@npm:3.1.0"
+  version: 3.1.1
+  resolution: "jest-fail-on-console@npm:3.1.1"
   dependencies:
     chalk: ^4.1.0
-  checksum: a4a279d025150f1a318368ddfcc73a3338943a168e4778bce77a9b7412934a1c97e77c33a467dec15cea2ceafa2533de9f825161f75e005409edac6796ceae3c
+  checksum: dbc244766fb78525b2d4a7e879678b91032acefa04694e17edb5917e325abf8ee356bdf728bc1c89058d67b9c8b3da4cd45515232eb9ab1b973a6b4f57bfb7af
   languageName: node
   linkType: hard
 

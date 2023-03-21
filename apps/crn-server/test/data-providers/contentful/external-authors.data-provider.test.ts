@@ -2,11 +2,14 @@ import {
   Environment,
   getContentfulGraphqlClientMockServer,
 } from '@asap-hub/contentful';
+import { GenericError } from '@asap-hub/errors';
 import { ExternalAuthorContentfulDataProvider } from '../../../src/data-providers/contentful/external-authors.data-provider';
+import { getEntry } from '../../fixtures/contentful.fixtures';
 import {
   getContentfulGraphqlExternalAuthorsResponse,
   getContentfulGraphqlExternalAuthor,
   getExternalAuthorResponse,
+  getExternalAuthorCreateDataObject,
 } from '../../fixtures/external-authors.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
@@ -106,6 +109,74 @@ describe('External Authors Contentful Data Provider', () => {
 
       const result = await externalAuthorsDataProvider.fetchById('user-id');
       expect(result).toEqual(getExternalAuthorResponse());
+    });
+  });
+
+  describe('Create method', () => {
+    test('Should create an external author', async () => {
+      const externalAuthorCreateDataObject =
+        getExternalAuthorCreateDataObject();
+
+      const externalAuthorMock = getEntry({});
+      externalAuthorMock.sys.id = 'author-1';
+      environmentMock.createEntry.mockResolvedValueOnce(externalAuthorMock);
+      externalAuthorMock.publish = jest
+        .fn()
+        .mockResolvedValueOnce(externalAuthorMock);
+
+      const result = await externalAuthorsDataProvider.create(
+        externalAuthorCreateDataObject,
+      );
+
+      expect(environmentMock.createEntry).toHaveBeenCalledWith(
+        'externalAuthors',
+        {
+          fields: {
+            name: { 'en-US': externalAuthorCreateDataObject.name },
+            orcid: { 'en-US': externalAuthorCreateDataObject.orcid },
+          },
+        },
+      );
+      expect(result).toEqual('author-1');
+    });
+
+    test('Should create an external author without ORCID', async () => {
+      const externalAuthorCreateDataObject =
+        getExternalAuthorCreateDataObject();
+      delete externalAuthorCreateDataObject.orcid;
+
+      const externalAuthorMock = getEntry({});
+      externalAuthorMock.sys.id = 'author-1';
+      environmentMock.createEntry.mockResolvedValueOnce(externalAuthorMock);
+      externalAuthorMock.publish = jest
+        .fn()
+        .mockResolvedValueOnce(externalAuthorMock);
+
+      const result = await externalAuthorsDataProvider.create(
+        externalAuthorCreateDataObject,
+      );
+
+      expect(environmentMock.createEntry).toHaveBeenCalledWith(
+        'externalAuthors',
+        {
+          fields: {
+            name: { 'en-US': externalAuthorCreateDataObject.name },
+            orcid: { 'en-US': undefined },
+          },
+        },
+      );
+      expect(result).toEqual('author-1');
+    });
+
+    test('Should throw when fails to create the external author', async () => {
+      const externalAuthorCreateDataObject =
+        getExternalAuthorCreateDataObject();
+
+      environmentMock.createEntry.mockRejectedValueOnce(new GenericError());
+
+      await expect(
+        externalAuthorsDataProvider.create(externalAuthorCreateDataObject),
+      ).rejects.toThrow(GenericError);
     });
   });
 });

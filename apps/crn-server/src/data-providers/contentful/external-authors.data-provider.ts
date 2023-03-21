@@ -88,6 +88,7 @@ export class ExternalAuthorContentfulDataProvider
       },
     });
 
+    await newEntry.publish();
     return newEntry.sys.id;
   }
 }

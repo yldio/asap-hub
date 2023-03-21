@@ -117,8 +117,14 @@ const formControlsTwoButtonsStyles = css({
 const formControlsThreeButtonsStyles = css({
   display: 'grid',
   alignItems: 'end',
-  gridGap: `${24 / perRem}em`,
+  gap: `${24 / perRem}em`,
   gridTemplateColumns: '1fr 1fr 1fr',
+  [`@media (max-width: 1110px)`]: {
+    'button:nth-of-type(2)': {
+      paddingLeft: `${4 / perRem}em`,
+      paddingRight: `${4 / perRem}em`,
+    },
+  },
   [`@media (max-width: 810px)`]: {
     gridTemplateColumns: '1fr',
     width: '100%',

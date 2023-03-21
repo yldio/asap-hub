@@ -1,5 +1,4 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
   Caption,
   Card,
@@ -10,10 +9,11 @@ import {
   SharedResearchMetadata,
   UsersList,
 } from '@asap-hub/react-components';
+import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 
-import { IconWithLabel } from '../molecules';
 import { editIcon, projectIcon, workingGroupIcon } from '../icons';
+import { IconWithLabel } from '../molecules';
 
 const { rem } = pixels;
 
@@ -29,7 +29,9 @@ type OutputCardProps = Pick<
   | 'documentType'
   | 'type'
   | 'subtype'
->;
+> & {
+  isAdministrator?: boolean;
+};
 
 const OutputCard: React.FC<OutputCardProps> = ({
   id,
@@ -42,6 +44,7 @@ const OutputCard: React.FC<OutputCardProps> = ({
   subtype,
   authors,
   link,
+  isAdministrator,
 }) => (
   <Card padding={false}>
     <div css={css({ padding: rem(24) })}>
@@ -58,28 +61,29 @@ const OutputCard: React.FC<OutputCardProps> = ({
           }
           link={link}
         />
-        <div css={css({ width: 'min-content' })}>
-          <Link
-            href={gp2Routing.outputs({}).output({ outputId: id }).edit({}).$}
-            buttonStyle
-            noMargin
-            small
-            fullWidth
-          >
-            <span
-              css={{
-                display: 'inline-flex',
-                gap: rem(8),
-                marginLeft: rem(6),
-              }}
+        {isAdministrator && (
+          <div css={css({ width: 'min-content' })}>
+            <Link
+              href={gp2Routing.outputs({}).output({ outputId: id }).edit({}).$}
+              buttonStyle
+              noMargin
+              small
+              fullWidth
             >
-              {'Edit'}
-              {editIcon}
-            </span>
-          </Link>
-        </div>
+              <span
+                css={{
+                  display: 'inline-flex',
+                  gap: rem(8),
+                  marginLeft: rem(6),
+                }}
+              >
+                {'Edit'}
+                {editIcon}
+              </span>
+            </Link>
+          </div>
+        )}
       </div>
-
       <div css={css({ margin: `${rem(12)} 0 ${rem(24)}` })}>
         <Headline2 styleAsHeading={4} noMargin>
           {title}

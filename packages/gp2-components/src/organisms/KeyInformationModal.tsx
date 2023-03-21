@@ -67,10 +67,10 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
       : [{ institution: '', role: '', department: '' }],
   );
 
-  const checkDirty = () =>
+  const isDirty =
     newFirstName !== firstName ||
     newLastName !== lastName ||
-    newDegrees !== degrees ||
+    newDegrees.some((newDegree, index) => newDegree !== degrees[index]) ||
     newRole !== role ||
     newRegion !== region ||
     newCountry !== country ||
@@ -81,6 +81,7 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
         newPosition.role !== positions[index]?.role ||
         newPosition.institution !== positions[index]?.institution,
     );
+
   return (
     <EditUserModal
       title="Key Information"
@@ -97,7 +98,7 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
         })
       }
       backHref={backHref}
-      dirty={checkDirty()}
+      dirty={isDirty}
     >
       {({ isSaving }) => (
         <>

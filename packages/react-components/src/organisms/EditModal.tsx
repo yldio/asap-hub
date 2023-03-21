@@ -1,13 +1,13 @@
-import { ComponentProps, ReactNode, useRef, useState, useEffect } from 'react';
-import { Prompt } from 'react-router-dom';
 import { css } from '@emotion/react';
+import { ComponentProps, ReactNode, useEffect, useRef, useState } from 'react';
+import { Prompt } from 'react-router-dom';
 
-import { ModalEditHeader, Modal } from '../molecules';
+import { paddingStyles } from '../card';
+import { Modal, ModalEditHeader } from '../molecules';
+import { perRem } from '../pixels';
+import { usePushFromHere } from '../routing';
 import { noop } from '../utils';
 import Toast from './Toast';
-import { paddingStyles } from '../card';
-import { usePushFromHere } from '../routing';
-import { perRem } from '../pixels';
 
 const styles = css({
   boxSizing: 'border-box',
@@ -46,16 +46,17 @@ const EditModal: React.FC<EditModalProps> = ({
   noHeader = false,
 }) => {
   const formRef = useRef<HTMLFormElement>(null);
+  const historyPush = usePushFromHere();
   const [status, setStatus] = useState<
     'initial' | 'isSaving' | 'hasError' | 'hasSaved'
   >('initial');
-  useEffect(() => {
-    if (status === 'hasSaved' && !dirty) {
-      setStatus('initial');
-    }
-  }, [status, dirty]);
 
-  const historyPush = usePushFromHere();
+  useEffect(() => {
+    if (status === 'hasSaved') {
+      setStatus('initial');
+      historyPush(backHref);
+    }
+  }, [status, backHref, historyPush]);
 
   const asyncFunctionWrapper = async (cb: () => void | Promise<void>) => {
     const parentValidation = validate();
@@ -64,8 +65,9 @@ const EditModal: React.FC<EditModalProps> = ({
       setStatus('isSaving');
       try {
         await cb();
-        setStatus('hasSaved');
-        historyPush(backHref);
+        if (formRef.current) {
+          setStatus('hasSaved');
+        }
       } catch {
         if (!formRef.current) return;
         setStatus('hasError');
@@ -73,14 +75,14 @@ const EditModal: React.FC<EditModalProps> = ({
     }
   };
 
+  const prompt =
+    status === 'isSaving' ||
+    status === 'hasError' ||
+    (status === 'initial' && dirty);
   return (
     <Modal padding={false}>
       <Prompt
-        when={
-          status === 'isSaving' ||
-          status === 'hasError' ||
-          (status === 'initial' && dirty)
-        }
+        when={prompt}
         message="Are you sure you want to leave the dialog? Unsaved changes will be lost."
       />
       {status === 'hasError' && (

@@ -75,11 +75,15 @@ interface MembersListProps {
   >;
   singleColumn?: boolean;
   readonly overrideNameStyles?: SerializedStyles;
+  readonly userRoute?: ({ userId }: { userId: string }) => {
+    $: string;
+  };
 }
 const MembersList: React.FC<MembersListProps> = ({
   members,
   singleColumn = false,
   overrideNameStyles,
+  userRoute = network({}).users({}).user,
 }) => (
   <ul css={[containerStyles, singleColumn || multiColumnContainerStyles]}>
     {members.map(
@@ -91,7 +95,7 @@ const MembersList: React.FC<MembersListProps> = ({
         alumniSinceDate,
         ...member
       }) => {
-        const href = network({}).users({}).user({ userId: id }).$;
+        const href = userRoute({ userId: id }).$;
         const userAvatar = (
           <Avatar
             firstName={member.firstName}

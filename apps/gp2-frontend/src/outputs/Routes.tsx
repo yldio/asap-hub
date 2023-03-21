@@ -14,7 +14,9 @@ const Outputs: FC<Record<string, never>> = () => {
       <Route exact path={path}>
         <Frame title="Outputs">
           <OutputsPage>
-            <OutputList />
+            <Frame title={null}>
+              <OutputList />
+            </Frame>
           </OutputsPage>
         </Frame>
       </Route>

@@ -5,12 +5,11 @@ on:
       environment-name:
         required: true
         description: The environment name
-        type: string
-      entity:
-        required: true
-        type: string
-        description: Choose which Contentful entity (or entities) to sync
-        default: all
+        type: choice
+        options:
+          - Branch
+          - Development
+          - Production
       contentful-env:
         required: true
         type: string
@@ -39,8 +38,7 @@ jobs:
           environment-name: ${{ inputs.environment-name }}
       - name: Rebuild
         uses: ./.github/actions/build-rebuild
-      - name: Run CMS sync for news
-        if: ${{ inputs.entity == 'news' || inputs.entity == 'all' }}
+      - name: Run CMS sync
         run: |
           yarn build:babel
           yarn build:typecheck

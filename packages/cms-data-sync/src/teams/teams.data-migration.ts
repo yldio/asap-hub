@@ -48,11 +48,11 @@ export const migrateTeams = async () => {
 
     let toolLinks: SysLink[] = [];
     if (tools?.length) {
-      try {
-        toolLinks = await createExternalToolLinks(contentfulEnvironment, tools);
-      } catch {
-        logger(`Invalid tool URL linked to team with id: ${id}`, 'ERROR');
-      }
+      toolLinks = await createExternalToolLinks(
+        contentfulEnvironment,
+        tools,
+        id,
+      );
     }
 
     const teamPayload = {

@@ -238,25 +238,78 @@ describe('Migrate teams', () => {
     });
   });
 
-  it('outputs an error message when trying to input a tool with invalid link', async () => {
-    const tool = {
+  it('outputs an error message when trying to input a tool with invalid link and create the team linked to the valid ones', async () => {
+    const invalidTool = {
       name: 'Invalid link',
       description: 'It contains a not valid url',
       url: '123',
     };
-    const teamWithInvalidURLTool = getTeamSquidexResponse();
-    teamWithInvalidURLTool.id = 'team-invalid-url-tool';
-    teamWithInvalidURLTool.flatData.tools = [tool];
+
+    const validTool = {
+      name: 'Valid link',
+      description: 'It contains a valid url',
+      url: 'https://www.contentful.com',
+    };
+
+    const teamSquidexResponse = getTeamSquidexResponse();
+    teamSquidexResponse.id = 'team-invalid-url-tool';
+    teamSquidexResponse.flatData.tools = [validTool, invalidTool, validTool];
 
     squidexGraphqlClientMock.request.mockResolvedValueOnce({
-      queryTeamsContents: [teamWithInvalidURLTool],
+      queryTeamsContents: [teamSquidexResponse],
     });
+
+    const toolMock = getEntry({});
+    toolMock.publish = jest.fn().mockResolvedValue(getEntry({}));
+    contenfulEnv.createEntry = jest.fn().mockResolvedValue(toolMock);
 
     await migrateTeams();
 
+    expect(contenfulEnv.createEntry).toHaveBeenCalledWith('externalTools', {
+      fields: {
+        name: { 'en-US': validTool.name },
+        url: { 'en-US': validTool.url },
+        description: { 'en-US': validTool.description },
+      },
+    });
+    expect(toolMock.publish).toBeCalled();
+
     expect(console.log).toHaveBeenCalledWith(
       '\x1b[31m',
-      '[ERROR] Invalid tool URL linked to team with id: team-invalid-url-tool',
+      '[ERROR] Invalid tool URL (123) linked to team with id: team-invalid-url-tool',
+    );
+
+    expect(contenfulEnv.createEntryWithId).toHaveBeenCalledWith(
+      'teams',
+      'team-invalid-url-tool',
+      {
+        fields: {
+          displayName: { 'en-US': 'Team ASAP' },
+          applicationNumber: { 'en-US': '2023' },
+          expertiseAndResourceTags: { 'en-US': [] },
+          inactiveSince: { 'en-US': null },
+          projectSummary: { 'en-US': null },
+          projectTitle: { 'en-US': 'Beautiful Title' },
+          tools: {
+            'en-US': [
+              {
+                sys: {
+                  id: 'entry-id',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+              {
+                sys: {
+                  id: 'entry-id',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
+          },
+        },
+      },
     );
   });
 

@@ -240,6 +240,62 @@ enum EntryOrder {
   sys_publishedVersion_DESC
 }
 
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalAuthors)"""
+type ExternalAuthors implements Entry {
+  contentfulMetadata: ContentfulMetadata!
+  linkedFrom(allowedLocales: [String]): ExternalAuthorsLinkingCollections
+  name(locale: String): String
+  orcid(locale: String): String
+  sys: Sys!
+}
+
+type ExternalAuthorsCollection {
+  items: [ExternalAuthors]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input ExternalAuthorsFilter {
+  AND: [ExternalAuthorsFilter]
+  OR: [ExternalAuthorsFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  name: String
+  name_contains: String
+  name_exists: Boolean
+  name_in: [String]
+  name_not: String
+  name_not_contains: String
+  name_not_in: [String]
+  orcid: String
+  orcid_contains: String
+  orcid_exists: Boolean
+  orcid_in: [String]
+  orcid_not: String
+  orcid_not_contains: String
+  orcid_not_in: [String]
+  sys: SysFilter
+}
+
+type ExternalAuthorsLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+}
+
+enum ExternalAuthorsOrder {
+  name_ASC
+  name_DESC
+  orcid_ASC
+  orcid_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
 """Team's external tools [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalTools)"""
 type ExternalTools implements Entry {
   contentfulMetadata: ContentfulMetadata!
@@ -741,6 +797,8 @@ type Query {
   dashboard(id: String!, locale: String, preview: Boolean): Dashboard
   dashboardCollection(limit: Int = 100, locale: String, order: [DashboardOrder], preview: Boolean, skip: Int = 0, where: DashboardFilter): DashboardCollection
   entryCollection(limit: Int = 100, locale: String, order: [EntryOrder], preview: Boolean, skip: Int = 0, where: EntryFilter): EntryCollection
+  externalAuthors(id: String!, locale: String, preview: Boolean): ExternalAuthors
+  externalAuthorsCollection(limit: Int = 100, locale: String, order: [ExternalAuthorsOrder], preview: Boolean, skip: Int = 0, where: ExternalAuthorsFilter): ExternalAuthorsCollection
   externalTools(id: String!, locale: String, preview: Boolean): ExternalTools
   externalToolsCollection(limit: Int = 100, locale: String, order: [ExternalToolsOrder], preview: Boolean, skip: Int = 0, where: ExternalToolsFilter): ExternalToolsCollection
   media(id: String!, locale: String, preview: Boolean): Media

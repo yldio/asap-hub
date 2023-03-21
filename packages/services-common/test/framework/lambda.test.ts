@@ -2,7 +2,7 @@ import { NotFoundError, ValidationError } from '@asap-hub/errors';
 import Boom from '@hapi/boom';
 import { origin } from '../../src/config';
 import * as helpers from '../../src/framework/helpers';
-import { http } from '../../src/framework/lambda';
+import { http, Request, Response } from '../../src/framework/lambda';
 import { apiGatewayEvent } from '../helpers/events';
 
 test('http returns 400 on invalid body', async () => {
@@ -20,6 +20,43 @@ test('http returns 400 on invalid body', async () => {
   );
   expect(result.statusCode).toStrictEqual(400);
   expect(spy).toHaveBeenCalled();
+});
+
+test('parses json body correctly', async () => {
+  const mockFn = jest
+    .fn<Promise<Response<unknown>>, [Request<unknown>]>()
+    .mockResolvedValueOnce({ statusCode: 200 });
+  const handler = http(mockFn);
+
+  await handler(
+    apiGatewayEvent({
+      body: '"test"',
+    }),
+  );
+  expect(mockFn).toBeCalledWith(
+    expect.objectContaining({
+      payload: 'test',
+    }),
+  );
+});
+
+test('parses base64 encoded json body correctly', async () => {
+  const mockFn = jest
+    .fn<Promise<Response<unknown>>, [Request<unknown>]>()
+    .mockResolvedValueOnce({ statusCode: 200 });
+  const handler = http(mockFn);
+
+  await handler(
+    apiGatewayEvent({
+      body: 'InRlc3Qi',
+      isBase64Encoded: true,
+    }),
+  );
+  expect(mockFn).toBeCalledWith(
+    expect.objectContaining({
+      payload: 'test',
+    }),
+  );
 });
 
 test('http returns statuCode of Boom error', async () => {

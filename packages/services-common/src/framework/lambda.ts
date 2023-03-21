@@ -147,7 +147,14 @@ export const http =
     // we assume the body is json
     let body;
     try {
-      body = event.body && Bourne.parse(event.body);
+      if (event.isBase64Encoded && event.body) {
+        const decodedPayload = Buffer.from(event.body, 'base64').toString(
+          'utf8',
+        );
+        body = Bourne.parse(decodedPayload);
+      } else {
+        body = event.body && Bourne.parse(event.body);
+      }
     } catch (err) {
       return errorResponse(err);
     }

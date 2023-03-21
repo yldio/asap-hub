@@ -133,15 +133,13 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
                   groupType="working"
                 />
               )}
-              DraftOutputs={() =>
-                canShareResearchOutput ? (
-                  <Outputs
-                    workingGroup={workingGroup}
-                    draftOutputs
-                    userAssociationMember
-                  />
-                ) : null
-              }
+              DraftOutputs={() => (
+                <Outputs
+                  workingGroup={workingGroup}
+                  draftOutputs
+                  userAssociationMember
+                />
+              )}
               currentTime={currentTime}
               displayName={workingGroup.title}
               eventConstraint={{ workingGroupId }}

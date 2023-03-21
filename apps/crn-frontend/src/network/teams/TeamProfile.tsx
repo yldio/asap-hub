@@ -134,15 +134,13 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
                   team={team}
                 />
               )}
-              DraftOutputs={() =>
-                canShareResearchOutput ? (
-                  <Outputs
-                    team={team}
-                    draftOutputs
-                    userAssociationMember={canShareResearchOutput}
-                  />
-                ) : null
-              }
+              DraftOutputs={() => (
+                <Outputs
+                  team={team}
+                  draftOutputs
+                  userAssociationMember={canShareResearchOutput}
+                />
+              )}
               paths={paths}
               type="team"
               Workspace={() => (

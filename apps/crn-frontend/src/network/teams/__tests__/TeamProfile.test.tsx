@@ -4,22 +4,28 @@ import {
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import {
   createListEventResponse,
+  createListResearchOutputResponse,
   createTeamResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
+import { TeamResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import {
   render,
   screen,
+  waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
-import { Suspense } from 'react';
+import { ComponentProps, Suspense } from 'react';
 import { Route, Router } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { getEvents } from '../../../events/api';
-import { getResearchOutputs } from '../../../shared-research/api';
+import {
+  getDraftResearchOutputs,
+  getResearchOutputs,
+} from '../../../shared-research/api';
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
 import { getTeam } from '../api';
 import { refreshTeamState } from '../state';
@@ -32,12 +38,16 @@ jest.mock('../../../events/api');
 const mockGetEventsFromAlgolia = getEvents as jest.MockedFunction<
   typeof getEvents
 >;
+const mockGetDraftResearchOutputs =
+  getDraftResearchOutputs as jest.MockedFunction<
+    typeof getDraftResearchOutputs
+  >;
 
 afterEach(jest.clearAllMocks);
 const renderPage = async (
-  teamResponse = createTeamResponse(),
+  teamResponse: TeamResponse = createTeamResponse(),
   { teamId = teamResponse.id, currentTime = new Date() } = {},
-  user = {},
+  user: ComponentProps<typeof Auth0Provider>['user'] = {},
   history = createMemoryHistory({
     initialEntries: [network({}).teams({}).team({ teamId }).$],
   }),
@@ -231,5 +241,68 @@ it.each`
     constraint: {
       teamId: 't0',
     },
+  });
+});
+
+describe('The draft output tab', () => {
+  it('does not renders the draft outputs tab for non team members', async () => {
+    mockGetDraftResearchOutputs.mockResolvedValue(
+      createListResearchOutputResponse(10),
+    );
+    await renderPage(undefined, undefined, {
+      ...createUserResponse(),
+      teams: [],
+    });
+    expect(screen.queryByText('Draft Outputs')).toBeNull();
+  });
+  it('renders the draft outputs tab for team members', async () => {
+    mockGetDraftResearchOutputs.mockResolvedValue({
+      ...createListResearchOutputResponse(10),
+      items: createListResearchOutputResponse(10).items.map(
+        (output, index) => ({ ...output, title: `Draft Output${index}` }),
+      ),
+    });
+    await renderPage(
+      {
+        ...createTeamResponse(),
+        id: 'example123',
+      },
+      {},
+      {
+        ...createUserResponse(),
+        teams: [
+          {
+            id: 'example123',
+            role: 'Key Personnel',
+          },
+        ],
+      },
+    );
+    userEvent.click(screen.getByText('Draft Outputs (10)'));
+    await waitFor(() => expect(mockGetDraftResearchOutputs).toHaveBeenCalled());
+    expect(screen.getByText('Draft Output0')).toBeVisible();
+  });
+
+  it('renders zero draft outputs tab for team members', async () => {
+    mockGetDraftResearchOutputs.mockResolvedValue(
+      createListResearchOutputResponse(0),
+    );
+    await renderPage(
+      {
+        ...createTeamResponse(),
+        id: 'example123',
+      },
+      {},
+      {
+        ...createUserResponse(),
+        teams: [
+          {
+            id: 'example123',
+            role: 'Key Personnel',
+          },
+        ],
+      },
+    );
+    expect(screen.getByText('Draft Outputs (0)')).toBeVisible();
   });
 });

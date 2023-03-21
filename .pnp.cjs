@@ -6411,7 +6411,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "jest-fail-on-console",\
-        "npm:3.1.0"\
+        "npm:3.1.1"\
       ],\
       [\
         "jest-get-type",\
@@ -10443,7 +10443,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["hyperform", "npm:0.12.1"],\
             ["jest", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:29.4.1"],\
             ["jest-environment-jsdom", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:29.4.1"],\
-            ["jest-fail-on-console", "npm:3.1.0"],\
+            ["jest-fail-on-console", "npm:3.1.1"],\
             ["jest-runner-eslint", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.2.0"],\
             ["jest-watch-select-projects", "npm:2.0.0"],\
             ["jest-watch-suspend", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.2"],\
@@ -39531,7 +39531,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["hyperform", "npm:0.12.1"],\
             ["jest", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:29.4.1"],\
             ["jest-environment-jsdom", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:29.4.1"],\
-            ["jest-fail-on-console", "npm:3.1.0"],\
+            ["jest-fail-on-console", "npm:3.1.1"],\
             ["jest-runner-eslint", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.2.0"],\
             ["jest-watch-select-projects", "npm:2.0.0"],\
             ["jest-watch-suspend", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.2"],\
@@ -54674,10 +54674,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["jest-fail-on-console", [\
-        ["npm:3.1.0", {\
-          "packageLocation": "./.yarn/cache/jest-fail-on-console-npm-3.1.0-2eb47be5f6-a4a279d025.zip/node_modules/jest-fail-on-console/",\
+        ["npm:3.1.1", {\
+          "packageLocation": "./.yarn/cache/jest-fail-on-console-npm-3.1.1-9bf938b5f6-dbc244766f.zip/node_modules/jest-fail-on-console/",\
           "packageDependencies": [\
-            ["jest-fail-on-console", "npm:3.1.0"],\
+            ["jest-fail-on-console", "npm:3.1.1"],\
             ["chalk", "npm:4.1.0"]\
           ],\
           "linkType": "HARD"\

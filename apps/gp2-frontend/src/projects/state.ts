@@ -1,8 +1,8 @@
+import { GetListOptions } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
 import {
   atom,
   atomFamily,
-  selector,
   selectorFamily,
   useRecoilCallback,
   useRecoilState,
@@ -11,17 +11,14 @@ import {
 import { authorizationState } from '../auth/state';
 import { getProject, getProjects, putProjectResources } from './api';
 
-const fetchProjectsState = selector<gp2.ListProjectResponse>({
-  key: 'fetchProjectsState',
-  get: ({ get }) => {
-    get(refreshProjectsState);
-    return getProjects(get(authorizationState));
-  },
-});
-
-const projectsState = atom<gp2.ListProjectResponse>({
+const projectsState = selectorFamily<gp2.ListProjectResponse, GetListOptions>({
   key: 'projects',
-  default: fetchProjectsState,
+  get:
+    (options) =>
+    ({ get }) => {
+      get(refreshProjectsState);
+      return getProjects(get(authorizationState), options);
+    },
 });
 
 export const refreshProjectsState = atom<number>({
@@ -34,7 +31,8 @@ export const refreshProjectState = atomFamily<number, string>({
   default: 0,
 });
 
-export const useProjectsState = () => useRecoilValue(projectsState);
+export const useProjectsState = (options: GetListOptions) =>
+  useRecoilValue(projectsState(options));
 
 const fetchProjectState = selectorFamily<
   gp2.ProjectResponse | undefined,

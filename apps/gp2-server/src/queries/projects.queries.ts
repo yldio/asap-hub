@@ -64,8 +64,12 @@ export const FETCH_PROJECT = gql`
 `;
 
 export const FETCH_PROJECTS = gql`
-  query FetchProjects {
-    queryProjectsContentsWithTotal(orderby: "created desc") {
+  query FetchProjects($top: Int, $skip: Int) {
+    queryProjectsContentsWithTotal(
+      top: $top
+      skip: $skip
+      orderby: "created desc"
+    ) {
       total
       items {
         ...ProjectContent

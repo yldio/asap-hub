@@ -1,14 +1,15 @@
 import { gp2 } from '@asap-hub/model';
-import { pixels } from '@asap-hub/react-components';
+import { pixels, ResultList } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
+import { ComponentProps } from 'react';
 import { noProjectsIcon } from '../icons';
 import { EmptyState } from '../molecules';
 import ProjectCard from './ProjectCard';
 
 const { rem } = pixels;
 export type ProjectsBodyProps = {
-  projects: gp2.ListProjectResponse;
-};
+  projects: gp2.ListProjectResponse['items'];
+} & Omit<ComponentProps<typeof ResultList>, 'children'>;
 
 const gridContainerStyles = css({
   display: 'flex',
@@ -17,13 +18,26 @@ const gridContainerStyles = css({
   marginTop: rem(48),
 });
 
-const ProjectsBody: React.FC<ProjectsBodyProps> = ({ projects }) => (
+const ProjectsBody: React.FC<ProjectsBodyProps> = ({
+  projects,
+  numberOfItems,
+  numberOfPages,
+  currentPageIndex,
+  renderPageHref,
+}) => (
   <article>
-    {projects.items.length ? (
+    {projects.length ? (
       <div css={gridContainerStyles}>
-        {projects.items.map((project) => (
-          <ProjectCard key={project.id} {...project} />
-        ))}
+        <ResultList
+          numberOfItems={numberOfItems}
+          numberOfPages={numberOfPages}
+          currentPageIndex={currentPageIndex}
+          renderPageHref={renderPageHref}
+        >
+          {projects.map((project) => (
+            <ProjectCard key={project.id} {...project} />
+          ))}
+        </ResultList>
       </div>
     ) : (
       <EmptyState

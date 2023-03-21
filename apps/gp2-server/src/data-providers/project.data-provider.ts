@@ -1,4 +1,4 @@
-import { gp2 as gp2Model } from '@asap-hub/model';
+import { FetchOptions, gp2 as gp2Model } from '@asap-hub/model';
 import {
   gp2 as gp2Squidex,
   SquidexGraphqlClient,
@@ -17,7 +17,7 @@ import { createUrl } from '../utils/urls';
 
 export interface ProjectDataProvider {
   fetchById(id: string): Promise<gp2Model.ProjectDataObject | null>;
-  fetch(): Promise<gp2Model.ListProjectDataObject>;
+  fetch(options: FetchOptions): Promise<gp2Model.ListProjectDataObject>;
   update(
     id: string,
     projectToUpdate: gp2Model.ProjectUpdateDataObject,
@@ -40,12 +40,13 @@ export class ProjectSquidexDataProvider implements ProjectDataProvider {
     return parseProjectToDataObject(findProjectsContent);
   }
 
-  async fetch(): Promise<gp2Model.ListProjectDataObject> {
+  async fetch(options: FetchOptions): Promise<gp2Model.ListProjectDataObject> {
+    const { take = 10, skip = 0 } = options;
     const { queryProjectsContentsWithTotal } =
       await this.squidexGraphqlClient.request<
         FetchProjectsQuery,
         FetchProjectsQueryVariables
-      >(FETCH_PROJECTS);
+      >(FETCH_PROJECTS, { top: take, skip });
 
     if (
       !queryProjectsContentsWithTotal ||

@@ -18,7 +18,7 @@ describe('Project controller', () => {
       projectDataProviderMock.fetch.mockResolvedValue(
         getListProjectDataObject(),
       );
-      const result = await projectController.fetch('11');
+      const result = await projectController.fetch({}, '11');
 
       expect(result).toEqual(getListProjectsResponse());
     });
@@ -28,7 +28,7 @@ describe('Project controller', () => {
         total: 0,
         items: [],
       });
-      const result = await projectController.fetch('11');
+      const result = await projectController.fetch({}, '11');
 
       expect(result).toEqual({ items: [], total: 0 });
     });
@@ -51,7 +51,7 @@ describe('Project controller', () => {
         items: [...list.items, nonMemberProject],
       };
       projectDataProviderMock.fetch.mockResolvedValue(listWithNonMemberProject);
-      const result = await projectController.fetch('11');
+      const result = await projectController.fetch({}, '11');
 
       const expectedItems = getListProjectsResponse().items;
       const { resources: _, ...expectedProject } = getProjectResponse();

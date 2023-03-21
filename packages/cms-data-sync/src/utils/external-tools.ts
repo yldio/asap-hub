@@ -25,7 +25,7 @@ export const createExternalToolLinks = async (
   tools: Pick<TeamsDataToolsChildDto, 'description' | 'name' | 'url'>[],
   teamId: string,
 ): Promise<SysLink[]> => {
-  const cleanTools = tools.reduce((tools: TeamTool[], tool) => {
+  const cleanTools = tools.reduce((toolsWithValidURLs: TeamTool[], tool) => {
     const regex = new RegExp(
       '^(ftp|http|https):\\/\\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-/]))?$',
     );
@@ -35,15 +35,15 @@ export const createExternalToolLinks = async (
         `Invalid tool URL (${tool.url}) linked to team with id: ${teamId}`,
         'ERROR',
       );
-      return tools;
+      return toolsWithValidURLs;
     }
 
-    tools.push({
+    toolsWithValidURLs.push({
       name: tool.name ?? '',
       url: tool.url ?? '',
       ...(tool.description ? { description: tool.description } : {}),
     });
-    return tools;
+    return toolsWithValidURLs;
   }, []);
 
   const contentfulPublishedTools = await createExternalTool(

@@ -82,6 +82,33 @@ describe('External Authors Contentful Data Provider', () => {
         total: 0,
       });
     });
+
+    test('Should use take and skip parameters', async () => {
+      const contentfulGraphqlResponse =
+        getContentfulGraphqlExternalAuthorsResponse();
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        contentfulGraphqlResponse,
+      );
+
+      const result = await externalAuthorsDataProvider.fetch({
+        take: 15,
+        skip: 11,
+      });
+
+      expect(result).toEqual({
+        items: [getExternalAuthorResponse()],
+        total: 1,
+      });
+
+      expect(contentfulGraphqlClientMock.request).toBeCalledWith(
+        expect.anything(),
+        {
+          limit: 15,
+          skip: 11,
+          order: ['name_ASC'],
+        },
+      );
+    });
   });
 
   describe('Fetch-by-id method', () => {
@@ -95,7 +122,7 @@ describe('External Authors Contentful Data Provider', () => {
 
     test('Should return null when user is not found', async () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        externalAuthorsDataProvider: null,
+        externalAuthors: null,
       });
 
       const result = await externalAuthorsDataProvider.fetchById('not-found');

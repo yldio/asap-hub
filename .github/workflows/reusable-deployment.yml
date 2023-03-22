@@ -31,6 +31,9 @@ on:
       CRN_CONTENTFUL_ACCESS_TOKEN:
         description: 'CRN Contentful Access Token'
         required: true
+      CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN:
+        description: 'CRN Contentful Webhook Authentication Token'
+        required: true
       CRN_SQUIDEX_API_CLIENT_SECRET:
         description: 'CRN API Squidex Client Secret'
         required: true
@@ -87,6 +90,7 @@ jobs:
           crn-contentful-management-access-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           crn-squidex-api-client-secret: ${{ secrets.CRN_SQUIDEX_API_CLIENT_SECRET }}
           crn-squidex-shared-secret: ${{ secrets.CRN_SQUIDEX_SHARED_SECRET }}
+          crn-contentful-webhook-authentication-token: ${{ secrets.CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN }}
           environment-name: ${{ inputs.environment-name }}
           lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
 
@@ -222,6 +226,7 @@ jobs:
   crn-contentful-setup:
     needs: [crn-sls-deploy]
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment-name }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -237,6 +242,7 @@ jobs:
           contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
           contentful-environment: ${{ inputs.crn-contentful-env }}
           api-url: ${{ steps.setup.outputs.crn-api-url }}
+          contentful-webhook-authentication-token: ${{ secrets.CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN }}
 
   crn-contentful-migrate:
     needs: [crn-sls-deploy]

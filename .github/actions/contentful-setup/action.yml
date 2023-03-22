@@ -14,6 +14,9 @@ inputs:
   api-url:
     description: 'API URL'
     required: true
+  contentful-webhook-authentication-token:
+    description: 'Contentful Webhook Authentication Token'
+    required: true
 
 runs:
   using: 'composite'
@@ -26,4 +29,5 @@ runs:
         CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
         CONTENTFUL_ENVIRONMENT: ${{ inputs.contentful-environment }}
         CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.contentful-token }}
+        CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN: ${{ inputs.contentful-webhook-authentication-token }}
         API_URL: ${{ inputs.api-url }}

@@ -40,13 +40,15 @@ const ProjectsBody: React.FC<ProjectsBodyProps> = ({
         </ResultList>
       </div>
     ) : (
-      <EmptyState
-        icon={noProjectsIcon}
-        title={'No projects available.'}
-        description={
-          'When a GP2 admin creates a project, it will be listed here.'
-        }
-      />
+      <div style={{ marginTop: rem(80) }}>
+        <EmptyState
+          icon={noProjectsIcon}
+          title={'No projects available.'}
+          description={
+            'When a GP2 admin creates a project, it will be listed here.'
+          }
+        />
+      </div>
     )}
   </article>
 );

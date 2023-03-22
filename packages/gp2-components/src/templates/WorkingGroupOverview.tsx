@@ -96,6 +96,7 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
             }),
           )}
           userRoute={gp2Routing.users({}).user}
+          overrideNameStyles={css({ overflowWrap: 'anywhere' })}
         />
       </div>
     </Card>

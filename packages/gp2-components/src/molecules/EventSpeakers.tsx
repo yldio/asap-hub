@@ -53,6 +53,10 @@ const secondaryTextStyles = css({
   color: colors.greyscale1000.rgb,
 });
 
+const textWrap = css({
+  overflowWrap: 'anywhere',
+});
+
 const topicStyles = css({
   overflowWrap: 'break-word',
 });
@@ -68,7 +72,7 @@ type UserSpeakerProps = {
 const UserSpeaker = ({ speaker }: UserSpeakerProps) => (
   <Link
     href={gp2Routing.users({}).user({ userId: speaker.id }).$}
-    overrideStyles={css({ display: 'flex' })}
+    overrideStyles={css([{ display: 'flex' }, textWrap])}
   >
     <div css={{ marginRight: 9 }}>
       <Avatar {...speaker} imageUrl={speaker.avatarUrl} />
@@ -82,7 +86,7 @@ type ExternalOrToBeAnnouncedProps = {
 };
 
 const ExternalOrToBeAnnounced = ({ speaker }: ExternalOrToBeAnnouncedProps) => (
-  <div css={[{ display: 'flex' }, secondaryTextStyles]}>
+  <div css={[{ display: 'flex' }, secondaryTextStyles, textWrap]}>
     <span css={{ marginRight: 9, height: 24 }}>{userPlaceholderIcon}</span>
     {speaker?.name || <i>To be announced</i>}
   </div>

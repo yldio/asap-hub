@@ -28,8 +28,8 @@ export const validateUserParameters = validateInput(
 const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
   type: 'object',
   properties: {
-    firstName: { type: 'string', nullable: true, minLength: 1 },
-    lastName: { type: 'string', nullable: true, minLength: 1 },
+    firstName: { type: 'string', nullable: true, minLength: 1, maxLength: 50 },
+    lastName: { type: 'string', nullable: true, minLength: 1, maxLength: 50 },
     degrees: {
       type: 'array',
       items: {

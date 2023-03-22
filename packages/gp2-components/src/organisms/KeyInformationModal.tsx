@@ -109,6 +109,7 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
             enabled={!isSaving}
             value={newFirstName}
             onChange={setNewFirstName}
+            maxLength={50}
           />
           <LabeledTextField
             title="Last Name"
@@ -117,6 +118,7 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
             enabled={!isSaving}
             value={newLastName}
             onChange={setNewLastName}
+            maxLength={50}
           />
           <LabeledMultiSelect
             title="Degree"

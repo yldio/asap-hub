@@ -70,6 +70,7 @@ runs:
         CRN_CONTENTFUL_ENV: 'n-a'
         CRN_CONTENTFUL_ACCESS_TOKEN: 'n-a'
         CRN_CONTENTFUL_SPACE_ID: 'n-a'
+        CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN: 'n-a'
         CURRENT_REVISION: ${{ github.sha }}
         GP2_AUTH0_AUDIENCE: ${{ steps.setup.outputs.gp2-auth0-audience }}
         GP2_AUTH0_CLIENT_ID: ${{ steps.setup.outputs.gp2-auth0-client-id }}

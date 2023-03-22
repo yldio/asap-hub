@@ -5,10 +5,13 @@ const contentfulManagementAccessToken =
   process.env.CONTENTFUL_MANAGEMENT_ACCESS_TOKEN!;
 const contentfulEnvironment = process.env.CONTENTFUL_ENVIRONMENT!;
 const apiUrl = process.env.API_URL!;
-
+const contentfulWebhookAuthenticationToken =
+  process.env.CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN!;
 const client = contentful.createClient({
   accessToken: contentfulManagementAccessToken,
 });
+
+console.log(contentfulWebhookAuthenticationToken);
 
 const app = async () => {
   const space = await client.getSpace(spaceId);
@@ -20,6 +23,13 @@ const app = async () => {
     filters: [
       {
         equals: [{ doc: 'sys.environment.sys.id' }, contentfulEnvironment],
+      },
+    ],
+    headers: [
+      {
+        key: 'Authorization',
+        value: contentfulWebhookAuthenticationToken,
+        secret: true,
       },
     ],
   });

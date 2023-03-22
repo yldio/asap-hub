@@ -16,6 +16,7 @@ if (NODE_ENV === 'production') {
     'CRN_CONTENTFUL_ACCESS_TOKEN',
     'CRN_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN',
     'CRN_CONTENTFUL_SPACE_ID',
+    'CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN',
   ].forEach((env) => {
     assert.ok(process.env[env], `${env} not defined`);
   });
@@ -42,6 +43,7 @@ const {
   CRN_CONTENTFUL_ACCESS_TOKEN,
   CRN_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN,
   CRN_CONTENTFUL_SPACE_ID,
+  CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN,
   IS_CONTENTFUL_ENABLED = 'false',
   IS_CONTENTFUL_ENABLED_V2 = 'false',
   LOG_LEVEL,
@@ -67,6 +69,8 @@ const squidexSharedSecret = CRN_SQUIDEX_SHARED_SECRET!;
 const contentfulEnvironment = CRN_CONTENTFUL_ENV!;
 const contentfulAccessToken = CRN_CONTENTFUL_ACCESS_TOKEN!;
 const contentfulManagementAccessToken = CRN_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN!;
+const contentfulWebhookAuthenticationToken =
+  CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN!;
 const contentfulSpaceId = CRN_CONTENTFUL_SPACE_ID!;
 const isContentfulEnabled = IS_CONTENTFUL_ENABLED;
 const isContentfulEnabledV2 = IS_CONTENTFUL_ENABLED_V2;
@@ -751,6 +755,8 @@ const serverlessConfig: AWS = {
         EVENT_BUS: 'asap-events-${self:provider.stage}',
         EVENT_SOURCE: eventBusSourceContentful,
         SENTRY_DSN: sentryDsnHandlers,
+        CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN:
+          contentfulWebhookAuthenticationToken,
       },
     },
     ...(NODE_ENV === 'production'

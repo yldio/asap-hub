@@ -83,7 +83,10 @@ describe('getOutputs', () => {
 });
 
 describe('createOutput', () => {
-  const payload = { title: 'output title', documentType: 'Form' as const };
+  const payload = {
+    title: 'output title',
+    documentType: 'Procedural Form' as const,
+  };
   it('makes an authorized POST request to create a research output', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
       .post('/outputs', payload)
@@ -106,7 +109,10 @@ describe('createOutput', () => {
 describe('updateOutput', () => {
   const outputResponse = gp2Fixtures.createOutputResponse();
   const { id } = outputResponse;
-  const payload = { title: 'output title', documentType: 'Form' as const };
+  const payload = {
+    title: 'output title',
+    documentType: 'Procedural Form' as const,
+  };
   it('makes an authorized POST request to update a research output', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
       .put(`/outputs/${id}`, payload)

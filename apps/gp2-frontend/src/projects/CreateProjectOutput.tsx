@@ -12,7 +12,7 @@ export const documentTypeMapper: Record<
   article: 'Article',
   'code-software': 'Code/Software',
   'data-release': 'Data Release',
-  form: 'Form',
+  'procedural-form': 'Procedural Form',
   'training-materials': 'Training Materials',
   update: 'Update',
 };

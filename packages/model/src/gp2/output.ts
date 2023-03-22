@@ -2,7 +2,7 @@ import { FetchOptions, ListResponse } from '../common';
 import { ExternalUserResponse } from './external-user';
 
 export const outputDocumentTypes = [
-  'Form',
+  'Procedural Form',
   'Update',
   'Training Materials',
   'Data Release',
@@ -28,7 +28,7 @@ export const outputDocumentTypeToType: Record<
   OutputDocumentType,
   Set<OutputType>
 > = {
-  Form: new Set<OutputType>(),
+  'Procedural Form': new Set<OutputType>(),
   Update: new Set<OutputType>(),
   'Training Materials': new Set<OutputType>(),
   'Data Release': new Set<OutputType>(),

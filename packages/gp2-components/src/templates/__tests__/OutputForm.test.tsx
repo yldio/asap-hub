@@ -14,7 +14,7 @@ import OutputForm from '../OutputForm';
 describe('OutputForm', () => {
   const defaultProps = {
     shareOutput: jest.fn(),
-    documentType: 'Form' as const,
+    documentType: 'Procedural Form' as const,
   };
   afterEach(jest.resetAllMocks);
   it('renders all the base fields', () => {
@@ -86,7 +86,7 @@ describe('OutputForm', () => {
     expect(shareOutput).toHaveBeenCalledWith({
       title: 'output title',
       link: 'https://example.com',
-      documentType: 'Form',
+      documentType: 'Procedural Form',
       authors: [
         { externalUserId: 'u1' },
         { userId: 'u2' },

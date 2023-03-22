@@ -20,7 +20,7 @@ describe('ShareOutputButton', () => {
       expect.stringContaining('article'),
       expect.stringContaining('code-software'),
       expect.stringContaining('data-release'),
-      expect.stringContaining('form'),
+      expect.stringContaining('procedural-form'),
       expect.stringContaining('training-materials'),
       expect.stringContaining('update'),
     ]);

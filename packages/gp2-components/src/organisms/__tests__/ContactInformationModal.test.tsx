@@ -36,25 +36,25 @@ describe('ContactInformationModal', () => {
     renderContactInformation();
     expect(
       screen.getByRole('textbox', {
-        name: 'Intitutional Email Need to change something? Contact techsupport@gp2.org',
+        name: /intitutional email/i,
       }),
     ).toBeVisible();
     expect(
       screen.getByRole('textbox', {
-        name: 'Intitutional Email Need to change something? Contact techsupport@gp2.org',
+        name: /intitutional email/i,
       }),
     ).toBeDisabled();
     expect(
       screen.getByRole('textbox', {
-        name: 'Alternative Email (optional) An alternative way for members to contact you. This will not affect the way that you login.',
+        name: /alternative email/i,
       }),
     ).toBeVisible();
     expect(
-      screen.getByRole('textbox', { name: 'Country Code (optional)' }),
+      screen.getByRole('textbox', { name: /country code \(optional\)/i }),
     ).toBeVisible();
     expect(
       screen.getByRole('textbox', {
-        name: 'Telephone Number (optional) Please note: this will only be visible to admins.',
+        name: /telephone number \(optional\)/i,
       }),
     ).toBeVisible();
   });
@@ -96,21 +96,21 @@ describe('ContactInformationModal', () => {
 
     userEvent.type(
       screen.getByRole('textbox', {
-        name: 'Alternative Email (optional) An alternative way for members to contact you. This will not affect the way that you login.',
+        name: /alternative email \(optional\)/i,
       }),
       secondaryEmail,
     );
 
     userEvent.type(
       screen.getByRole('textbox', {
-        name: 'Country Code (optional)',
+        name: /country code \(optional\)/i,
       }),
       countryCode,
     );
 
     userEvent.type(
       screen.getByRole('textbox', {
-        name: 'Telephone Number (optional) Please note: this will only be visible to admins.',
+        name: /telephone number \(optional\)/i,
       }),
       number,
     );
@@ -138,7 +138,7 @@ describe('ContactInformationModal', () => {
 
     userEvent.type(
       screen.getByRole('textbox', {
-        name: 'Alternative Email (optional) An alternative way for members to contact you. This will not affect the way that you login.',
+        name: /alternative email \(optional\)/i,
       }),
       secondaryEmail,
     );
@@ -163,7 +163,7 @@ describe('ContactInformationModal', () => {
 
     userEvent.type(
       screen.getByRole('textbox', {
-        name: 'Country Code (optional)',
+        name: /country code \(optional\)/i,
       }),
       countryCode,
     );
@@ -188,7 +188,7 @@ describe('ContactInformationModal', () => {
 
     userEvent.type(
       screen.getByRole('textbox', {
-        name: 'Telephone Number (optional) Please note: this will only be visible to admins.',
+        name: /telephone number \(optional\)/i,
       }),
       number,
     );

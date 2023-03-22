@@ -7,6 +7,9 @@ import {
   teamRole,
   workingGroupRole,
   ResearchOutputWorkingGroupResponse,
+  ResearchOutputTeamResponse,
+  TeamRole,
+  WorkingGroupRole,
 } from '@asap-hub/model';
 import { AuthHandler } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
@@ -32,6 +35,25 @@ describe('/research-outputs/ route', () => {
     authHandler: authHandlerMock,
     logger: loggerMock,
   });
+
+  const userTeam = {
+    id: 'team-1',
+    displayName: 'team 1',
+    role: 'Project Manager' as TeamRole,
+  };
+
+  const userWorkingGroup = {
+    id: 'wg-1',
+    name: 'wg 1',
+    role: 'Project Manager' as WorkingGroupRole,
+    active: true,
+  };
+
+  const user: UserResponse = {
+    ...createUserResponse(),
+    teams: [userTeam],
+    workingGroups: [userWorkingGroup],
+  };
 
   beforeEach(() => {
     userMockFactory.mockReturnValue(createUserResponse());
@@ -213,15 +235,13 @@ describe('/research-outputs/ route', () => {
       );
     });
     test('Should return 404 when you are trying to get a draft and are not part of the team', async () => {
-      userMockFactory.mockReturnValueOnce({
-        ...createUserResponse(),
-        teams: [{ id: 'team-1', displayName: 'team', role: 'Key Personnel' }],
-      });
+      userMockFactory.mockReturnValueOnce(user);
 
-      const researchOutputResponse = {
+      const researchOutputResponse: ResearchOutputTeamResponse = {
         ...getResearchOutputResponse(),
         published: false,
-        teams: [{ id: 'nop', displayName: 'team 1' }],
+        teams: [{ ...userTeam, id: 'nop' }],
+        workingGroups: undefined,
       };
 
       researchOutputControllerMock.fetchById.mockResolvedValueOnce(
@@ -233,19 +253,15 @@ describe('/research-outputs/ route', () => {
       expect(response.status).toEqual(404);
     });
     test('Should return 404 when you are trying to get a draft and are not part of the working group', async () => {
-      userMockFactory.mockReturnValueOnce({
-        ...createUserResponse(),
-        teams: [{ id: 'team-1', displayName: 'team', role: 'Key Personnel' }],
-        workingGroups: [
-          { id: 'wg-1', name: 'wg', role: 'Member', active: true },
-        ],
-      });
+      userMockFactory.mockReturnValueOnce(user);
 
       const researchOutputResponse: ResearchOutputWorkingGroupResponse = {
         ...getResearchOutputResponse(),
         published: false,
-        teams: [{ id: 'nop', displayName: 'team 1' }],
-        workingGroups: [{ id: 'nop', title: 'wg 1' }],
+        teams: [userTeam],
+        workingGroups: [
+          { ...userWorkingGroup, id: 'nop', title: 'not part of this wg' },
+        ],
       };
 
       researchOutputControllerMock.fetchById.mockResolvedValueOnce(
@@ -257,16 +273,13 @@ describe('/research-outputs/ route', () => {
       expect(response.status).toEqual(404);
     });
     test('Should return 200 when you are ASAP staff member and are trying to get a draft', async () => {
-      userMockFactory.mockReturnValueOnce({
-        ...createUserResponse(),
-        teams: [{ id: 'team-1', displayName: 'team', role: 'Key Personnel' }],
-        role: 'Staff',
-      });
+      userMockFactory.mockReturnValueOnce({ ...user, role: 'Staff' });
 
-      const researchOutputResponse = {
+      const researchOutputResponse: ResearchOutputWorkingGroupResponse = {
         ...getResearchOutputResponse(),
         published: false,
-        teams: [{ id: 'nop', displayName: 'team 1' }],
+        teams: [{ ...userTeam, id: 'nop' }],
+        workingGroups: [{ ...userWorkingGroup, id: 'nop', title: 'nop' }],
       };
 
       researchOutputControllerMock.fetchById.mockResolvedValueOnce(
@@ -279,19 +292,19 @@ describe('/research-outputs/ route', () => {
     });
     describe('Should return the team draft research output if you have the right permissions', () => {
       test.each(teamRole)('for commonTeam role %s', async (teamRole) => {
-        const commonTeamId = 'team-1';
-
-        const loggedInUser = {
-          ...createUserResponse(),
-          teams: [{ id: commonTeamId, displayName: 'team 1', role: teamRole }],
+        const loggedInUser: UserResponse = {
+          ...user,
+          teams: [{ ...userTeam, role: teamRole }],
+          workingGroups: [{ ...userWorkingGroup, id: 'nop' }],
         };
 
         userMockFactory.mockReturnValueOnce(loggedInUser);
 
-        const researchOutputResponse = {
+        const researchOutputResponse: ResearchOutputTeamResponse = {
           ...getResearchOutputResponse(),
           published: false,
-          teams: [{ id: commonTeamId, displayName: 'team 1' }],
+          teams: [{ ...userTeam }],
+          workingGroups: undefined,
         };
 
         researchOutputControllerMock.fetchById.mockResolvedValueOnce(
@@ -308,25 +321,24 @@ describe('/research-outputs/ route', () => {
       test.each(workingGroupRole)(
         'for workingGroup role %s',
         async (workingGroupRole) => {
-          const commonWorkingGroupId = 'wg-1';
-
-          const loggedInUser = {
-            ...createUserResponse(),
+          const loggedInUser: UserResponse = {
+            ...user,
+            teams: [{ ...userTeam, id: 'nop' }],
             workingGroups: [
               {
-                id: commonWorkingGroupId,
-                name: 'wg 1',
+                ...userWorkingGroup,
                 role: workingGroupRole,
-                active: true,
               },
             ],
           };
+
           userMockFactory.mockReturnValueOnce(loggedInUser);
           const researchOutputResponse: ResearchOutputWorkingGroupResponse = {
             ...createResearchOutputResponse(),
             published: false,
+            teams: [userTeam],
             workingGroups: [
-              { id: commonWorkingGroupId, title: 'Working Group' },
+              { ...userWorkingGroup, title: 'working group title' },
             ],
           };
 

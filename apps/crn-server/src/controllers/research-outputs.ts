@@ -364,13 +364,9 @@ export default class ResearchOutputs implements ResearchOutputController {
 }
 
 export interface ResearchOutputController {
-  fetch: (options: {
-    take?: number;
-    skip?: number;
-    search?: string;
-    filter?: ResearchOutputFilter;
-    includeDrafts?: boolean;
-  }) => Promise<ListResearchOutputResponse>;
+  fetch: (
+    options: ResearchOutputFetchOptions,
+  ) => Promise<ListResearchOutputResponse>;
 
   fetchById: (id: string) => Promise<ResearchOutputResponse>;
   create: (

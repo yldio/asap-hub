@@ -2,6 +2,10 @@ import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
+import {
+  getGraphQLClient as getContentfulGraphQLClient,
+  getRestClient as getContentfulRestClient,
+} from '@asap-hub/contentful';
 import { EventBridgeHandler } from '@asap-hub/server-common';
 import {
   RestExternalAuthor,
@@ -15,10 +19,16 @@ import {
   algoliaIndex,
   appName,
   baseUrl,
+  contentfulAccessToken,
+  contentfulEnvId,
+  contentfulManagementAccessToken,
+  contentfulSpaceId,
+  isContentfulEnabledV2,
 } from '../../config';
 import ResearchOutputs, {
   ResearchOutputController,
 } from '../../controllers/research-outputs';
+import { ExternalAuthorContentfulDataProvider } from '../../data-providers/contentful/external-authors.data-provider';
 import { ExternalAuthorSquidexDataProvider } from '../../data-providers/external-authors.data-provider';
 import { ResearchOutputSquidexDataProvider } from '../../data-providers/research-outputs.data-provider';
 import { ResearchTagSquidexDataProvider } from '../../data-providers/research-tags.data-provider';
@@ -64,6 +74,18 @@ export const indexResearchOutputByTeamHandler =
     }
   };
 
+const contentfulGraphQLClient = getContentfulGraphQLClient({
+  space: contentfulSpaceId,
+  accessToken: contentfulAccessToken,
+  environment: contentfulEnvId,
+});
+
+const getContentfulRestClientFactory = () =>
+  getContentfulRestClient({
+    space: contentfulSpaceId,
+    accessToken: contentfulManagementAccessToken,
+    environment: contentfulEnvId,
+  });
 const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
   appName,
   baseUrl,
@@ -85,11 +107,15 @@ const researchOutputDataProvider = new ResearchOutputSquidexDataProvider(
 const researchTagDataProvider = new ResearchTagSquidexDataProvider(
   squidexGraphqlClient,
 );
-const externalAuthorDataProvider = new ExternalAuthorSquidexDataProvider(
-  externalAuthorRestClient,
-  squidexGraphqlClient,
-);
-
+const externalAuthorDataProvider = isContentfulEnabledV2
+  ? new ExternalAuthorContentfulDataProvider(
+      contentfulGraphQLClient,
+      getContentfulRestClientFactory,
+    )
+  : new ExternalAuthorSquidexDataProvider(
+      externalAuthorRestClient,
+      squidexGraphqlClient,
+    );
 export const handler = sentryWrapper(
   indexResearchOutputByTeamHandler(
     new ResearchOutputs(

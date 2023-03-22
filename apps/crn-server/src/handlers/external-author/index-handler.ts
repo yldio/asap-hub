@@ -25,11 +25,11 @@ import {
   contentfulSpaceId,
   isContentfulEnabledV2,
 } from '../../config';
+import ExternalAuthors, {
+  ExternalAuthorsController,
+} from '../../controllers/external-authors';
 import { ExternalAuthorContentfulDataProvider } from '../../data-providers/contentful/external-authors.data-provider';
-import {
-  ExternalAuthorDataProvider,
-  ExternalAuthorSquidexDataProvider,
-} from '../../data-providers/external-authors.data-provider';
+import { ExternalAuthorSquidexDataProvider } from '../../data-providers/external-authors.data-provider';
 import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
@@ -37,14 +37,14 @@ import { ExternalAuthorEvent, ExternalAuthorPayload } from '../event-bus';
 
 export const indexExternalAuthorHandler =
   (
-    externalAuthorDataProvider: ExternalAuthorDataProvider,
+    externalAuthorController: ExternalAuthorsController,
     algoliaClient: AlgoliaSearchClient,
   ): EventBridgeHandler<ExternalAuthorEvent, ExternalAuthorPayload> =>
   async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
 
     try {
-      const externalAuthor = await externalAuthorDataProvider.fetchById(
+      const externalAuthor = await externalAuthorController.fetchById(
         event.detail.payload.id,
       );
 
@@ -93,23 +93,24 @@ const getContentfulRestClientFactory = () =>
     environment: contentfulEnvId,
   });
 
+const externalAuthorDataProvider = isContentfulEnabledV2
+  ? new ExternalAuthorContentfulDataProvider(
+      contentfulGraphQLClient,
+      getContentfulRestClientFactory,
+    )
+  : new ExternalAuthorSquidexDataProvider(
+      externalAuthorRestClient,
+      squidexGraphqlClient,
+    );
 /* istanbul ignore next */
 export const handler = sentryWrapper(
   indexExternalAuthorHandler(
-    isContentfulEnabledV2
-      ? new ExternalAuthorContentfulDataProvider(
-          contentfulGraphQLClient,
-          getContentfulRestClientFactory,
-        )
-      : new ExternalAuthorSquidexDataProvider(
-          externalAuthorRestClient,
-          squidexGraphqlClient,
-        ),
+    new ExternalAuthors(externalAuthorDataProvider),
     algoliaSearchClientFactory({ algoliaApiKey, algoliaAppId, algoliaIndex }),
   ),
 );
 
 export type ExternalAuthorIndexEventBridgeEvent = EventBridgeEvent<
   ExternalAuthorEvent,
-  ExternalAuthorDataProvider
+  ExternalAuthorsController
 >;

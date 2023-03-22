@@ -80,7 +80,6 @@ const ProfileCardList: React.FC<ProfileCardListProps> = ({ children }) => (
               href={editLink.href}
               label={editLink.label}
               enabled={editLink.enabled}
-              overrideStyles={css({ marginTop: 0 })}
             >
               {editIcon}
             </Link>

@@ -14,7 +14,7 @@ export const documentTypeMap: Record<
   [OutputsDataDocumentTypeEnum.Article]: 'Article',
   [OutputsDataDocumentTypeEnum.CodeSoftware]: 'Code/Software',
   [OutputsDataDocumentTypeEnum.DataRelease]: 'Data Release',
-  [OutputsDataDocumentTypeEnum.Form]: 'Form',
+  [OutputsDataDocumentTypeEnum.ProceduralForm]: 'Procedural Form',
   [OutputsDataDocumentTypeEnum.TrainingMaterial]: 'Training Materials',
   [OutputsDataDocumentTypeEnum.Update]: 'Update',
 };

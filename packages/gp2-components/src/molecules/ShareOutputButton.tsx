@@ -52,7 +52,7 @@ const ShareOutputButton: React.FC<ShareOutputButtonProps> = ({
       {{
         item: <>Form</>,
         href: route.createOutput({
-          outputDocumentType: 'form',
+          outputDocumentType: 'procedural-form',
         }).$,
       }}
       {{

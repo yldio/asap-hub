@@ -18,7 +18,7 @@ describe('CreateOutputPage', () => {
     'Article' as const,
     'Code/Software' as const,
     'Data Release' as const,
-    'Form' as const,
+    'Procedural Form' as const,
     'Training Materials' as const,
     'Update' as const,
   ])('renders the right title for document type %s', (documentType) => {

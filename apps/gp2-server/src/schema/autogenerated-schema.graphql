@@ -2862,8 +2862,8 @@ enum OutputsDataDocumentTypeEnum {
   Code_Software
   """Data_Release"""
   Data_Release
-  """Form"""
-  Form
+  """Procedural_Form"""
+  Procedural_Form
   """Training_Material"""
   Training_Material
   """Update"""

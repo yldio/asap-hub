@@ -2779,8 +2779,8 @@ export enum OutputsDataDocumentTypeEnum {
   CodeSoftware = 'Code_Software',
   /** Data_Release */
   DataRelease = 'Data_Release',
-  /** Form */
-  Form = 'Form',
+  /** Procedural_Form */
+  ProceduralForm = 'Procedural_Form',
   /** Training_Material */
   TrainingMaterial = 'Training_Material',
   /** Update */

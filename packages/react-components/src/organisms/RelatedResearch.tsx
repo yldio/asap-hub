@@ -172,7 +172,7 @@ const RelatedResearch: React.FC<RecentSharedOutputProp> = ({
                       }).$
                     }
                   >
-                    {teams[0].displayName}
+                    {teams[0]?.displayName || ''}
                   </Link>
                 </p>
               )}

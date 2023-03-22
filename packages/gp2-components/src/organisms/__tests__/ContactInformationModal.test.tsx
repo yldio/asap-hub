@@ -125,4 +125,79 @@ describe('ContactInformationModal', () => {
     });
     await waitFor(() => expect(getSaveButton()).toBeEnabled());
   });
+  it('does not allow invalid secondary email', async () => {
+    const onSave = jest.fn();
+    const email = 'goncalo.ramos@fpf.pt';
+    const secondaryEmail = 'not-an-email-address';
+    renderContactInformation({
+      email,
+      secondaryEmail: '',
+      telephone: undefined,
+      onSave,
+    });
+
+    userEvent.type(
+      screen.getByRole('textbox', {
+        name: 'Alternative Email (optional) An alternative way for members to contact you. This will not affect the way that you login.',
+      }),
+      secondaryEmail,
+    );
+
+    userEvent.click(getSaveButton());
+    expect(
+      screen.getByText(/please enter a valid email address/i),
+    ).toBeVisible();
+    expect(onSave).not.toHaveBeenCalled();
+    await waitFor(() => expect(getSaveButton()).toBeEnabled());
+  });
+  it('does not allow invalid telephone country code', async () => {
+    const onSave = jest.fn();
+    const email = 'goncalo.ramos@fpf.pt';
+    const countryCode = 'invalid-code';
+    renderContactInformation({
+      email,
+      secondaryEmail: '',
+      telephone: undefined,
+      onSave,
+    });
+
+    userEvent.type(
+      screen.getByRole('textbox', {
+        name: 'Country Code (optional)',
+      }),
+      countryCode,
+    );
+
+    userEvent.click(getSaveButton());
+    expect(
+      screen.getByText(/please enter a valid telephone country code/i),
+    ).toBeVisible();
+    expect(onSave).not.toHaveBeenCalled();
+    await waitFor(() => expect(getSaveButton()).toBeEnabled());
+  });
+  it('does not allow invalid telephone number', async () => {
+    const onSave = jest.fn();
+    const email = 'goncalo.ramos@fpf.pt';
+    const number = 'invalid-number';
+    renderContactInformation({
+      email,
+      secondaryEmail: '',
+      telephone: undefined,
+      onSave,
+    });
+
+    userEvent.type(
+      screen.getByRole('textbox', {
+        name: 'Telephone Number (optional) Please note: this will only be visible to admins.',
+      }),
+      number,
+    );
+
+    userEvent.click(getSaveButton());
+    expect(
+      screen.getByText(/please enter a valid telephone number/i),
+    ).toBeVisible();
+    expect(onSave).not.toHaveBeenCalled();
+    await waitFor(() => expect(getSaveButton()).toBeEnabled());
+  });
 });

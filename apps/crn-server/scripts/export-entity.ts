@@ -141,13 +141,13 @@ const getController = (entity: keyof EntityResponses) => {
     squidexGraphqlClient,
   );
   const externalAuthorDataProvider = isContentfulEnabled
-    ? new ExternalAuthorSquidexDataProvider(
-        externalAuthorsRestClient,
-        squidexGraphqlClient,
-      )
-    : new ExternalAuthorContentfulDataProvider(
+    ? new ExternalAuthorContentfulDataProvider(
         contentfulGraphQLClient,
         getContentfulRestClientFactory,
+      )
+    : new ExternalAuthorSquidexDataProvider(
+        externalAuthorsRestClient,
+        squidexGraphqlClient,
       );
 
   const assetDataProvider = new AssetSquidexDataProvider(userRestClient);

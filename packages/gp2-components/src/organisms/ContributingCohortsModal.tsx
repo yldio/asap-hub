@@ -7,7 +7,7 @@ import {
   pixels,
   Subtitle,
 } from '@asap-hub/react-components';
-import { UrlExpression } from '@asap-hub/validation';
+import { urlExpression } from '@asap-hub/validation';
 import { css } from '@emotion/react';
 import { ComponentProps, useState } from 'react';
 import { addIcon, binIcon } from '../icons';
@@ -173,7 +173,7 @@ const ContributingCohortsModal: React.FC<ContributingCohortsModalProps> = ({
                       enabled={!isSaving}
                       value={studyUrl || ''}
                       onChange={onChangeValue(index, 'studyUrl')}
-                      pattern={UrlExpression}
+                      pattern={urlExpression}
                       getValidationMessage={() =>
                         'Please enter a valid URL, starting with http://'
                       }

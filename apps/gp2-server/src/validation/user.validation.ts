@@ -1,7 +1,7 @@
 import { validateInput } from '@asap-hub/server-common';
 import { JSONSchemaType } from 'ajv';
 import { gp2 } from '@asap-hub/model';
-import { UrlExpression } from '@asap-hub/validation';
+import { urlExpression } from '@asap-hub/validation';
 
 const { userDegrees, userRegions, keywords, userContributingCohortRole } = gp2;
 type UserParameters = {
@@ -112,7 +112,7 @@ const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
           role: { type: 'string', enum: userContributingCohortRole },
           studyUrl: {
             type: 'string',
-            pattern: UrlExpression,
+            pattern: urlExpression,
             nullable: true,
           },
         },

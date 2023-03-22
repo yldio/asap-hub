@@ -1,9 +1,9 @@
 import { FetchOptions, gp2 } from '@asap-hub/model';
 import {
-  fetchOptionsValidationSchema,
   validateInput,
+  fetchOptionsValidationSchema,
 } from '@asap-hub/server-common';
-import { UrlExpression } from '@asap-hub/validation';
+import { urlExpression } from '@asap-hub/validation';
 import { JSONSchemaType } from 'ajv';
 
 type ProjectParameters = {
@@ -55,7 +55,7 @@ const projectPutRequestValidationSchema: JSONSchemaType<gp2.ProjectResourcesPutR
             description: { type: 'string', nullable: true },
             externalLink: {
               type: 'string',
-              pattern: UrlExpression,
+              pattern: urlExpression,
             },
           },
           required: ['title', 'type', 'externalLink'],

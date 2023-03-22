@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 // remember to update link pattern in the research-output.json squidex schema
-export const UrlExpression =
+export const urlExpression =
   "^(?:http(s)?:\\/\\/)[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#%[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$";
 
 // remember to update link pattern in the users.json squidex schema

@@ -13,7 +13,7 @@ import {
 } from '@asap-hub/react-components';
 
 import { gp2 as gp2Routing } from '@asap-hub/routing';
-import { isInternalUser, UrlExpression } from '@asap-hub/validation';
+import { isInternalUser, urlExpression } from '@asap-hub/validation';
 import { css } from '@emotion/react';
 import { ComponentPropsWithRef, useState } from 'react';
 import { buttonWrapperStyle, mobileQuery } from '../layout';
@@ -120,7 +120,7 @@ const OutputForm: React.FC<OutputFormType> = ({
               title="URL"
               subtitle={'(required)'}
               required
-              pattern={UrlExpression}
+              pattern={urlExpression}
               onChange={setLink}
               getValidationMessage={() =>
                 'Please enter a valid URL, starting with http://'

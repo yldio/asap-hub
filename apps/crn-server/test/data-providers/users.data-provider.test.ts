@@ -602,42 +602,25 @@ describe('User data provider', () => {
       expect(result).toEqual({ total: 0, items: [] });
     });
 
-    test('Should query with filters and return the users', async () => {
+    test('Should query with lab filters and return the users', async () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexUsersGraphqlResponse(),
       );
       const fetchOptions: FetchUsersOptions = {
         take: 12,
         skip: 2,
-        search: 'first last',
         filter: {
-          role: ['role', 'Staff'],
-          labId: ['lab-123', 'lab-456'],
-          teamId: ['team-123', 'team-456'],
+          labId: 'lab-123',
         },
       };
       const users = await userDataProvider.fetch(fetchOptions);
 
       const filterQuery =
-        "((data/teams/iv/id eq 'team-123') or (data/teams/iv/id eq 'team-456'))" +
-        ' and' +
-        " ((data/teams/iv/role eq 'role') or (data/teams/iv/role eq 'Staff'))" +
-        ' and' +
-        " ((data/labs/iv eq 'lab-123') or (data/labs/iv eq 'lab-456'))" +
+        "data/labs/iv eq 'lab-123'" +
         ' and' +
         ' data/onboarded/iv eq true' +
         ' and' +
-        " not(data/role/iv eq 'Hidden')" +
-        ' and' +
-        " ((contains(data/firstName/iv,'first'))" +
-        " or (contains(data/lastName/iv,'first'))" +
-        " or (contains(data/institution/iv,'first'))" +
-        " or (contains(data/expertiseAndResourceTags/iv,'first')))" +
-        ' and' +
-        " ((contains(data/firstName/iv,'last'))" +
-        " or (contains(data/lastName/iv,'last'))" +
-        " or (contains(data/institution/iv,'last'))" +
-        " or (contains(data/expertiseAndResourceTags/iv,'last')))";
+        " not(data/role/iv eq 'Hidden')";
       expect(squidexGraphqlClientMock.request).toBeCalledWith(
         expect.anything(),
         {
@@ -648,95 +631,40 @@ describe('User data provider', () => {
       );
       expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
     });
-    test('Should sanitise single quotes by doubling them', async () => {
+
+    test('Should query with team filters and return the users', async () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexUsersGraphqlResponse(),
       );
       const fetchOptions: FetchUsersOptions = {
         take: 12,
         skip: 2,
-        search: "'",
+        filter: {
+          role: ['role', 'Staff'],
+          teamId: 'team-123',
+        },
       };
-      await userDataProvider.fetch(fetchOptions);
+      const users = await userDataProvider.fetch(fetchOptions);
 
-      const expectedFilter =
-        "data/onboarded/iv eq true and not(data/role/iv eq 'Hidden') and" +
-        " ((contains(data/firstName/iv,''''))" +
-        " or (contains(data/lastName/iv,''''))" +
-        " or (contains(data/institution/iv,''''))" +
-        " or (contains(data/expertiseAndResourceTags/iv,'''')))";
-
+      const filterQuery =
+        "data/teams/iv/id eq 'team-123'" +
+        ' and' +
+        " ((data/teams/iv/role eq 'role') or (data/teams/iv/role eq 'Staff'))" +
+        ' and' +
+        ' data/onboarded/iv eq true' +
+        ' and' +
+        " not(data/role/iv eq 'Hidden')";
       expect(squidexGraphqlClientMock.request).toBeCalledWith(
         expect.anything(),
         {
           top: 12,
           skip: 2,
-          filter: expectedFilter,
+          filter: filterQuery,
         },
       );
+      expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
     });
-    test('Should escape double quotation mark by escaping it', async () => {
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        getSquidexUsersGraphqlResponse(),
-      );
-      const fetchOptions: FetchUsersOptions = {
-        take: 12,
-        skip: 2,
-        search: '"',
-      };
-      await userDataProvider.fetch(fetchOptions);
 
-      const expectedFilter =
-        "data/onboarded/iv eq true and not(data/role/iv eq 'Hidden') and" +
-        " ((contains(data/firstName/iv,'\"'))" +
-        " or (contains(data/lastName/iv,'\"'))" +
-        " or (contains(data/institution/iv,'\"'))" +
-        " or (contains(data/expertiseAndResourceTags/iv,'\"')))";
-
-      expect(squidexGraphqlClientMock.request).toBeCalledWith(
-        expect.anything(),
-        {
-          top: 12,
-          skip: 2,
-          filter: expectedFilter,
-        },
-      );
-    });
-    test('Should search with special characters', async () => {
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        getSquidexUsersGraphqlResponse(),
-      );
-      const fetchOptions: FetchUsersOptions = {
-        take: 12,
-        skip: 2,
-        search: 'Solène "session" **',
-      };
-      await userDataProvider.fetch(fetchOptions);
-
-      const expectedFilter =
-        "data/onboarded/iv eq true and not(data/role/iv eq 'Hidden') and" +
-        " ((contains(data/firstName/iv,'Solène'))" +
-        " or (contains(data/lastName/iv,'Solène'))" +
-        " or (contains(data/institution/iv,'Solène'))" +
-        " or (contains(data/expertiseAndResourceTags/iv,'Solène')))" +
-        ' and ((contains(data/firstName/iv,\'"session"\'))' +
-        ' or (contains(data/lastName/iv,\'"session"\'))' +
-        ' or (contains(data/institution/iv,\'"session"\'))' +
-        ' or (contains(data/expertiseAndResourceTags/iv,\'"session"\')))' +
-        " and ((contains(data/firstName/iv,'**'))" +
-        " or (contains(data/lastName/iv,'**'))" +
-        " or (contains(data/institution/iv,'**'))" +
-        " or (contains(data/expertiseAndResourceTags/iv,'**')))";
-
-      expect(squidexGraphqlClientMock.request).toBeCalledWith(
-        expect.anything(),
-        {
-          top: 12,
-          skip: 2,
-          filter: expectedFilter,
-        },
-      );
-    });
     test('Should query with code filters and return the users', async () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexUsersGraphqlResponse(),

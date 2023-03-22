@@ -17,12 +17,16 @@ export const getContentfulGraphqlClientMockServer = (
   });
   const mocks = {
     JSON: () => '2021-10-12T15:42:05Z',
+    DateTime: () => null,
     PagesCollection: resultDto,
     NewsCollection: resultDto,
     DashboardNewsCollection: resultDto,
     DashboardPagesCollection: resultDto,
     ExternalAuthorsCollection: resultDto,
     CalendarsCollection: resultDto,
+    TeamsCollection: resultDto,
+    UsersCollection: resultDto,
+    LabsCollection: resultDto,
     ...inputMocks,
   };
   const store = createMockStore({

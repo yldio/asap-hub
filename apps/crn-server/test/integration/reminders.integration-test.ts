@@ -281,20 +281,19 @@ describe('Reminders', () => {
 
       const eventId = await eventDataProvider.create(eventInput);
 
-      const event = await eventDataProvider.fetchById(eventId);
-
-      const expectedReminder: EventHappeningTodayReminder = {
-        id: `event-happening-today-${eventId}`,
-        entity: 'Event',
-        type: 'Happening Today',
-        data: {
-          eventId: event!.id,
-          startDate: event!.startDate,
-          title: event!.title,
-        },
-      };
-
       await retryable(async () => {
+        const event = await eventDataProvider.fetchById(eventId);
+
+        const expectedReminder: EventHappeningTodayReminder = {
+          id: `event-happening-today-${eventId}`,
+          entity: 'Event',
+          type: 'Happening Today',
+          data: {
+            eventId: event!.id,
+            startDate: event!.startDate,
+            title: event!.title,
+          },
+        };
         // requesting reminders for the user based in London where it is 6AM
         const reminders = await reminderDataProvider.fetch(
           fetchRemindersOptions,

@@ -20,7 +20,14 @@ import { TeamPayload } from '../../src/handlers/event-bus';
 import { createEventBridgeEventMock } from '../helpers/events';
 import { getGraphQLUser } from './users.fixtures';
 
-export const getContenfulGraphqlTeam = (): NonNullable<
+export const getContentfulGraphql = () => ({
+  Teams: () => getContentfulGraphqlTeam(),
+  TeamMembershipCollection: () => getContentfulGraphqlTeamMemberships(),
+  Users: () => getContentfulGraphqlTeamMembers(),
+  UsersLabsCollection: () => getContentfulGraphqlTeamMemberLabs(),
+});
+
+export const getContentfulGraphqlTeam = (): NonNullable<
   NonNullable<ContentfulFetchTeamsQuery['teamsCollection']>['items'][number]
 > => ({
   sys: {
@@ -39,13 +46,61 @@ export const getContenfulGraphqlTeam = (): NonNullable<
   toolsCollection: {
     items: [],
   },
+  linkedFrom: {
+    teamMembershipCollection: {
+      items: [
+        {
+          ...getContentfulGraphqlTeamMemberships().items[0],
+          linkedFrom: {
+            usersCollection: {
+              items: [
+                {
+                  ...getContentfulGraphqlTeamMembers(),
+                  labsCollection: getContentfulGraphqlTeamMemberLabs(),
+                },
+              ],
+            },
+          },
+        },
+      ],
+    },
+  },
+});
+
+export const getContentfulGraphqlTeamMemberships = () => ({
+  total: 1,
+  items: [
+    {
+      role: 'Lead PI (Core Leadership)',
+      inactiveSinceDate: null,
+    },
+  ],
+});
+
+export const getContentfulGraphqlTeamMembers = () => ({
+  sys: {
+    id: 'user-id-1',
+  },
+  email: 'H@rdy.io',
+  firstName: 'Tom',
+  lastName: 'Hardy',
+  avatar: null,
+  alumniSinceDate: '2020-09-23T20:45:22.000Z',
+});
+
+export const getContentfulGraphqlTeamMemberLabs = () => ({
+  total: 2,
+  items: [
+    { sys: { id: 'cd7be4902' }, name: 'Brighton' },
+    { sys: { id: 'cd7be4903' }, name: 'Liverpool' },
+  ],
 });
 
 export const getContentfulTeamsGraphqlResponse =
   (): ContentfulFetchTeamsQuery => ({
     teamsCollection: {
       total: 1,
-      items: [getContenfulGraphqlTeam()],
+      items: [getContentfulGraphqlTeam()],
     },
   });
 

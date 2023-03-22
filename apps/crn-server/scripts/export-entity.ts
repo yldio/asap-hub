@@ -120,7 +120,10 @@ const getController = (entity: keyof EntityResponses) => {
     baseUrl,
   });
   const userDataProvider = isContentfulEnabled
-    ? new UserContentfulDataProvider()
+    ? new UserContentfulDataProvider(
+        contentfulGraphQLClient,
+        getContentfulRestClientFactory,
+      )
     : new UserSquidexDataProvider(squidexGraphqlClient, userRestClient);
 
   const researchOutputDataProvider = new ResearchOutputSquidexDataProvider(

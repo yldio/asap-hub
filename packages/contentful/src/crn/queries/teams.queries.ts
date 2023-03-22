@@ -23,6 +23,38 @@ export const teamsContentQueryFragment = gql`
         url
       }
     }
+    linkedFrom {
+      teamMembershipCollection(limit: 100) {
+        items {
+          role
+          inactiveSinceDate
+          linkedFrom {
+            usersCollection(limit: 1) {
+              items {
+                sys {
+                  id
+                }
+                firstName
+                lastName
+                email
+                alumniSinceDate
+                avatar {
+                  url
+                }
+                labsCollection(limit: 5) {
+                  items {
+                    sys {
+                      id
+                    }
+                    name
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 `;
 

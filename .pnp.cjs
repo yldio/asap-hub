@@ -6554,6 +6554,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:2.3.1"\
       ],\
       [\
+        "json-patch",\
+        "npm:0.7.0"\
+      ],\
+      [\
         "json-refs",\
         "npm:3.0.15"\
       ],\
@@ -10880,6 +10884,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@graphql-tools/schema", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:9.0.17"],\
             ["@graphql-typed-document-node/core", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:3.2.0"],\
             ["@types/jest", "npm:29.4.0"],\
+            ["@types/json-patch", "npm:0.0.30"],\
             ["@types/node", "npm:18.15.11"],\
             ["contentful-cli", "npm:1.19.1"],\
             ["contentful-management", "npm:10.31.2"],\
@@ -10888,6 +10893,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["graphql-request", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:3.4.0"],\
             ["graphql-tag", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:2.12.6"],\
             ["graphql-typescript-integration", "npm:1.2.1"],\
+            ["json-patch", "npm:0.7.0"],\
             ["prettier", "npm:2.8.7"],\
             ["ts-node", "virtual:a165564317f0b92d7f72089df97002e7b69d2373ff7839f92d9f9e1bed5f710b4e712695583c77d16186478eb0c9ba6e1edcf723243579fe7c5a370e032217e7#npm:10.9.1"]\
           ],\
@@ -56796,6 +56802,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/json-parse-even-better-errors-npm-2.3.1-144d62256e-798ed4cf33.zip/node_modules/json-parse-even-better-errors/",\
           "packageDependencies": [\
             ["json-parse-even-better-errors", "npm:2.3.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["json-patch", [\
+        ["npm:0.7.0", {\
+          "packageLocation": "./.yarn/cache/json-patch-npm-0.7.0-3d4b736001-a220a7a295.zip/node_modules/json-patch/",\
+          "packageDependencies": [\
+            ["json-patch", "npm:0.7.0"]\
           ],\
           "linkType": "HARD"\
         }]\

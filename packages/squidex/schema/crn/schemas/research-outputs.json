@@ -305,6 +305,29 @@
         }
       },
       {
+        "name": "descriptionMD",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "defaultValue": "",
+          "isUnique": false,
+          "isEmbeddable": false,
+          "inlineEditable": false,
+          "createEnum": false,
+          "contentType": "Unspecified",
+          "editor": "RichText",
+          "label": "Description",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
         "name": "methods",
         "isHidden": false,
         "isLocked": false,

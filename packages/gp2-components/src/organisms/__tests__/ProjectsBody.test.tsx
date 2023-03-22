@@ -1,10 +1,18 @@
 import { gp2 } from '@asap-hub/fixtures';
+import { ResultList } from '@asap-hub/react-components';
 import { render, screen } from '@testing-library/react';
+import { ComponentProps } from 'react';
 import ProjectsBody from '../ProjectsBody';
 
 describe('ProjectsBody', () => {
+  const props: Omit<ComponentProps<typeof ResultList>, 'children'> = {
+    numberOfPages: 1,
+    numberOfItems: 3,
+    currentPageIndex: 0,
+    renderPageHref: () => '',
+  };
   it("renders the empty page if there aren't any projects", () => {
-    render(<ProjectsBody projects={{ total: 0, items: [] }} />);
+    render(<ProjectsBody {...props} projects={[]} />);
     expect(
       screen.getByRole('heading', { name: /no projects available/i }),
     ).toBeVisible();
@@ -16,7 +24,9 @@ describe('ProjectsBody', () => {
   });
 
   it('renders a project', () => {
-    render(<ProjectsBody projects={gp2.createProjectsResponse()} />);
+    render(
+      <ProjectsBody {...props} projects={gp2.createProjectsResponse().items} />,
+    );
     expect(
       screen.getByRole('heading', { name: /Project Title/i }),
     ).toBeVisible();
@@ -30,7 +40,7 @@ describe('ProjectsBody', () => {
 
     const projectsResponse = gp2.createProjectsResponse(projects);
 
-    render(<ProjectsBody projects={projectsResponse} />);
+    render(<ProjectsBody {...props} projects={projectsResponse.items} />);
     expect(screen.getByRole('heading', { name: /Project 11/i })).toBeVisible();
     expect(screen.getByRole('heading', { name: /Project 42/i })).toBeVisible();
   });

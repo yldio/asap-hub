@@ -1,4 +1,5 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
+import { GetListOptions } from '@asap-hub/frontend-utils';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import nock, { DataMatcherMap } from 'nock';
 import { API_BASE_URL } from '../../config';
@@ -44,6 +45,12 @@ describe('getProject', () => {
 });
 
 describe('getProjects', () => {
+  const options: GetListOptions = {
+    searchQuery: '',
+    currentPage: 1,
+    pageSize: 10,
+    filters: new Set(),
+  };
   afterEach(() => {
     expect(nock.isDone()).toBe(true);
     nock.cleanAll();
@@ -56,19 +63,27 @@ describe('getProjects', () => {
     };
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
       .get('/projects')
+      .query({
+        skip: 10,
+        take: 10,
+      })
       .reply(200, projectsResponse);
 
-    const result = await getProjects('Bearer x');
+    const result = await getProjects('Bearer x', options);
     expect(result).toEqual(projectsResponse);
   });
 
   it('errors for error status', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
       .get('/projects')
+      .query({
+        skip: 10,
+        take: 10,
+      })
       .reply(500);
 
     await expect(
-      getProjects('Bearer x'),
+      getProjects('Bearer x', options),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch the projects. Expected status 2xx. Received status 500."`,
     );

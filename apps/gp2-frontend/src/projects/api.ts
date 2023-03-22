@@ -1,11 +1,17 @@
-import { BackendError, createSentryHeaders } from '@asap-hub/frontend-utils';
+import {
+  BackendError,
+  createSentryHeaders,
+  GetListOptions,
+} from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
 import { API_BASE_URL } from '../config';
+import CreateListApiUrl from '../CreateListApiUrl';
 
 export const getProjects = async (
   authorization: string,
+  options: GetListOptions,
 ): Promise<gp2.ListProjectResponse> => {
-  const resp = await fetch(`${API_BASE_URL}/projects`, {
+  const resp = await fetch(CreateListApiUrl('projects', options), {
     headers: { authorization, ...createSentryHeaders() },
   });
   if (!resp.ok) {

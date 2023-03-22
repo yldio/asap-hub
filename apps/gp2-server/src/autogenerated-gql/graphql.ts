@@ -5516,7 +5516,10 @@ export type FetchProjectQuery = {
   >;
 };
 
-export type FetchProjectsQueryVariables = Exact<{ [key: string]: never }>;
+export type FetchProjectsQueryVariables = Exact<{
+  top: InputMaybe<Scalars['Int']>;
+  skip: InputMaybe<Scalars['Int']>;
+}>;
 
 export type FetchProjectsQuery = {
   queryProjectsContentsWithTotal: Maybe<
@@ -8984,6 +8987,18 @@ export const FetchProjectsDocument = {
       kind: 'OperationDefinition',
       operation: 'query',
       name: { kind: 'Name', value: 'FetchProjects' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'top' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+      ],
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
@@ -8991,6 +9006,22 @@ export const FetchProjectsDocument = {
             kind: 'Field',
             name: { kind: 'Name', value: 'queryProjectsContentsWithTotal' },
             arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'top' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'top' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'orderby' },

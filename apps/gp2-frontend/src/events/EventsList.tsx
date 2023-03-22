@@ -7,10 +7,17 @@ import {
   speakerIcon,
 } from '@asap-hub/gp2-components';
 import { gp2 } from '@asap-hub/model';
-import { EventsList, Paragraph, utils } from '@asap-hub/react-components';
+import {
+  EventsList,
+  Paragraph,
+  pixels,
+  utils,
+} from '@asap-hub/react-components';
 
 import { usePagination, usePaginationParams } from '../hooks/pagination';
 import { useEvents } from './state';
+
+const { rem } = pixels;
 
 type EventListProps = {
   readonly currentTime: Date;
@@ -81,11 +88,9 @@ const EventList: React.FC<EventListProps> = ({
           events={items.map(eventMapper)}
         />
       ) : (
-        <EmptyState
-          icon={noEventCalendarIcon}
-          smallPadding
-          {...{ title, description }}
-        />
+        <div style={{ marginTop: rem(32) }}>
+          <EmptyState icon={noEventCalendarIcon} {...{ title, description }} />
+        </div>
       )}
     </>
   );

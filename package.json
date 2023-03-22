@@ -125,7 +125,7 @@
     "@babel/runtime-corejs3": "7.21.0",
     "@emotion/jest": "^11.10.5",
     "@jeysal/babel-plugin-ramda": "2.0.1",
-    "@peculiar/webcrypto": "1.4.1",
+    "@peculiar/webcrypto": "1.4.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@types/jest": "^29.4.0",
     "@types/react-test-renderer": "17.0.2",

@@ -137,7 +137,7 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
                 <Outputs
                   workingGroup={workingGroup}
                   draftOutputs
-                  userAssociationMember
+                  userAssociationMember={canShareResearchOutput}
                 />
               )}
               currentTime={currentTime}

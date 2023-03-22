@@ -9,10 +9,10 @@ export const deliverableStatus = [
   'Incomplete',
   'Not Started',
 ] as const;
-export type DeliverableStatus = (typeof deliverableStatus)[number];
+export type DeliverableStatus = typeof deliverableStatus[number];
 
 export const workingGroupRole = ['Chair', 'Project Manager'] as const;
-export type WorkingGroupRole = (typeof workingGroupRole)[number];
+export type WorkingGroupRole = typeof workingGroupRole[number];
 
 export type WorkingGroupLeader = {
   readonly user: Pick<
@@ -51,7 +51,7 @@ export type WorkingGroupResponseMember = WorkingGroupMember & {
 export type WorkingGroupMembership = {
   id: string;
   name: string;
-  role: WorkingGroupRole;
+  role: 'Chair' | 'Project Manager' | 'Member';
   active: boolean;
 };
 

@@ -1,4 +1,8 @@
 import { EntityRecord, EntityResponses } from '@asap-hub/algolia';
+import {
+  getGraphQLClient as getContentfulGraphQLClient,
+  getRestClient as getContentfulRestClient,
+} from '@asap-hub/contentful';
 import { ListResponse } from '@asap-hub/model';
 import {
   getAccessTokenFactory,
@@ -16,6 +20,10 @@ import {
   baseUrl,
   clientId,
   clientSecret,
+  contentfulAccessToken,
+  contentfulEnvId,
+  contentfulManagementAccessToken,
+  contentfulSpaceId,
   isContentfulEnabled,
 } from '../src/config';
 import Events from '../src/controllers/events';
@@ -24,6 +32,7 @@ import Labs from '../src/controllers/labs';
 import ResearchOutputs from '../src/controllers/research-outputs';
 import Users from '../src/controllers/users';
 import { AssetSquidexDataProvider } from '../src/data-providers/assets.data-provider';
+import { ExternalAuthorContentfulDataProvider } from '../src/data-providers/contentful/external-authors.data-provider';
 import { UserContentfulDataProvider } from '../src/data-providers/contentful/users.data-provider';
 import { EventSquidexDataProvider } from '../src/data-providers/event.data-provider';
 import { ExternalAuthorSquidexDataProvider } from '../src/data-providers/external-authors.data-provider';
@@ -84,6 +93,20 @@ const getController = (entity: keyof EntityResponses) => {
     appName,
     baseUrl,
   });
+
+  const contentfulGraphQLClient = getContentfulGraphQLClient({
+    space: contentfulSpaceId,
+    accessToken: contentfulAccessToken,
+    environment: contentfulEnvId,
+  });
+
+  const getContentfulRestClientFactory = () =>
+    getContentfulRestClient({
+      space: contentfulSpaceId,
+      accessToken: contentfulManagementAccessToken,
+      environment: contentfulEnvId,
+    });
+
   const userRestClient = new SquidexRest<RestUser, InputUser>(
     getAuthToken,
     'users',
@@ -117,10 +140,16 @@ const getController = (entity: keyof EntityResponses) => {
   const researchTagDataProvider = new ResearchTagSquidexDataProvider(
     squidexGraphqlClient,
   );
-  const externalAuthorDataProvider = new ExternalAuthorSquidexDataProvider(
-    externalAuthorsRestClient,
-    squidexGraphqlClient,
-  );
+  const externalAuthorDataProvider = isContentfulEnabled
+    ? new ExternalAuthorSquidexDataProvider(
+        externalAuthorsRestClient,
+        squidexGraphqlClient,
+      )
+    : new ExternalAuthorContentfulDataProvider(
+        contentfulGraphQLClient,
+        getContentfulRestClientFactory,
+      );
+
   const assetDataProvider = new AssetSquidexDataProvider(userRestClient);
 
   const eventDataProvider = new EventSquidexDataProvider(

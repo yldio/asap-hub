@@ -17,7 +17,7 @@ on:
         required: false
         type: string
         description: The PR number to run for
-      crn-contentful-env:
+      contentful-environment-id:
         description: 'CRN Contentful environment name'
         required: true
         type: string
@@ -124,7 +124,7 @@ jobs:
           algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           algolia-index: '${{ steps.setup.outputs.algolia-index }}_temp'
           entity-type: 'external-author'
-          contentful-env: ${{ steps.setup.outputs.crn-contentful-env }}
+          contentful-env: ${{ inputs.contentful-environment-id }}
           contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
           contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
@@ -184,7 +184,7 @@ jobs:
           squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
           squidex-ci-client-id: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
           squidex-ci-client-secret: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
-          contentful-env: ${{ steps.setup.outputs.crn-contentful-env }}
+          contentful-env: ${{ inputs.contentful-environment-id }}
           contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
           contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
@@ -201,7 +201,7 @@ jobs:
           squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
           squidex-ci-client-id: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
           squidex-ci-client-secret: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
-          contentful-env: ${{ steps.setup.outputs.crn-contentful-env }}
+          contentful-env: ${{ inputs.contentful-environment-id }}
           contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
           contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
@@ -218,7 +218,7 @@ jobs:
           squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
           squidex-ci-client-id: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
           squidex-ci-client-secret: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
-          contentful-env: ${{ steps.setup.outputs.crn-contentful-env }}
+          contentful-env: ${{ inputs.contentful-environment-id }}
           contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
           contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
@@ -235,7 +235,7 @@ jobs:
           squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
           squidex-ci-client-id: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
           squidex-ci-client-secret: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
-          contentful-env: ${{ steps.setup.outputs.crn-contentful-env }}
+          contentful-env: ${{ inputs.contentful-environment-id }}
           contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
           contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}

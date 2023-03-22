@@ -103,7 +103,7 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
       )}
     </div>
     <Caption accent={'lead'} asParagraph>
-      Date Added: {formatDate(new Date(addedDate))}
+      Date Added: {formatDate(new Date(addedDate || created))}
     </Caption>
   </Card>
 );

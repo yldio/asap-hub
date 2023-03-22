@@ -34,6 +34,7 @@ export type AccentVariant =
 
 export const accents: Record<AccentVariant, CSSObject> = {
   default: {
+    backgroundColor: 'transparent',
     borderColor: colors.steel.rgb,
     color: colors.lead.rgb,
   },

@@ -15,6 +15,7 @@ const baseProps: ComponentProps<typeof ProfileOutputs> = {
   listViewHref: '',
   userAssociationMember: true,
   workingGroupAssociation: false,
+  draftOutputs: false,
 };
 
 it('renders output cards', () => {

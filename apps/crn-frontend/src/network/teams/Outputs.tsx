@@ -134,6 +134,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
       userAssociationMember={userAssociationMember}
       contactEmail={contactEmail}
       workingGroupAssociation={false}
+      draftOutputs={draftOutputs}
     />
   );
 };

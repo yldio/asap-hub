@@ -31,11 +31,13 @@ const iconStyles = css({
 type NoOutputsPageProps = {
   title: string;
   description: ReactNode;
+  hideExploreButton?: boolean;
 };
 
 const NoOutputsPage: React.FC<NoOutputsPageProps> = ({
   title,
   description,
+  hideExploreButton = false,
 }) => (
   <div css={styles}>
     <span css={iconStyles}>{libraryIcon}</span>
@@ -43,9 +45,11 @@ const NoOutputsPage: React.FC<NoOutputsPageProps> = ({
       <Display styleAsHeading={3}>{title}</Display>
       <Paragraph accent="lead">{description}</Paragraph>
     </div>
-    <Link buttonStyle primary href={sharedResearch({}).$}>
-      Explore Shared Research
-    </Link>
+    {!hideExploreButton && (
+      <Link buttonStyle primary href={sharedResearch({}).$}>
+        Explore Shared Research
+      </Link>
+    )}
   </div>
 );
 

@@ -1,3 +1,4 @@
+import { ExternalAuthorDataProvider } from '../data-providers/external-authors.data-provider';
 import { TeamDataProvider } from '../data-providers/teams.data-provider';
 import { UserDataProvider } from '../data-providers/users.data-provider';
 
@@ -12,6 +13,7 @@ type DependencySwitch<T> = {
 type DependencyList = {
   users: DependencySwitch<UserDataProvider>;
   teams: DependencySwitch<TeamDataProvider>;
+  externalAuthors: DependencySwitch<ExternalAuthorDataProvider>;
 };
 
 export class FeatureFlagDependencySwitch {
@@ -24,6 +26,10 @@ export class FeatureFlagDependencySwitch {
         false: undefined,
       },
       teams: {
+        true: undefined,
+        false: undefined,
+      },
+      externalAuthors: {
         true: undefined,
         false: undefined,
       },

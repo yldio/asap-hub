@@ -77,6 +77,7 @@ import {
 } from './data-providers/assets.data-provider';
 import { CalendarSquidexDataProvider } from './data-providers/calendars.data-provider';
 import { DashboardContentfulDataProvider } from './data-providers/contentful/dashboard.data-provider';
+import { ExternalAuthorContentfulDataProvider } from './data-providers/contentful/external-authors.data-provider';
 import { NewsContentfulDataProvider } from './data-providers/contentful/news.data-provider';
 import { PageContentfulDataProvider } from './data-providers/contentful/pages.data-provider';
 import { TeamContentfulDataProvider } from './data-providers/contentful/teams.data-provider';
@@ -327,12 +328,35 @@ export const appFactory = (libs: Libs = {}): Express => {
   const researchTagDataProvider =
     libs.researchTagDataProvider ||
     new ResearchTagSquidexDataProvider(squidexGraphqlClient);
+
+  featureFlagDependencySwitch.setDependency(
+    'externalAuthors',
+    libs.externalAuthorSquidexDataProvider ||
+      new ExternalAuthorSquidexDataProvider(
+        externalAuthorRestClient,
+        squidexGraphqlClient,
+      ),
+    'IS_CONTENTFUL_ENABLED_V2',
+    false,
+  );
+  featureFlagDependencySwitch.setDependency(
+    'externalAuthors',
+    libs.externalAuthorContentfulDataProvider ||
+      new ExternalAuthorContentfulDataProvider(
+        contentfulGraphQLClient,
+        getContentfulRestClientFactory,
+      ),
+    'IS_CONTENTFUL_ENABLED_V2',
+    true,
+  );
+
   const externalAuthorDataProvider =
     libs.externalAuthorDataProvider ||
-    new ExternalAuthorSquidexDataProvider(
-      externalAuthorRestClient,
-      squidexGraphqlClient,
+    featureFlagDependencySwitch.getDependency(
+      'externalAuthors',
+      'IS_CONTENTFUL_ENABLED_V2',
     );
+
   const calendarDataProvider =
     libs.calendarDataProvider ||
     new CalendarSquidexDataProvider(calendarRestClient, squidexGraphqlClient);
@@ -520,6 +544,8 @@ export type Libs = {
   dashboardDataProvider?: DashboardDataProvider;
   dashboardSquidexDataProvider?: DashboardDataProvider;
   dashboardContentfulDataProvider?: DashboardDataProvider;
+  externalAuthorSquidexDataProvider?: ExternalAuthorDataProvider;
+  externalAuthorContentfulDataProvider?: ExternalAuthorDataProvider;
   externalAuthorDataProvider?: ExternalAuthorDataProvider;
   groupDataProvider?: GroupDataProvider;
   newsContentfulDataProvider?: NewsDataProvider;

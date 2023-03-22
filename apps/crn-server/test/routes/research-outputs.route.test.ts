@@ -213,7 +213,10 @@ describe('/research-outputs/ route', () => {
       );
     });
     test('Should return 404 when you are trying to get a draft and are not part of the team', async () => {
-      userMockFactory.mockReturnValueOnce(createUserResponse());
+      userMockFactory.mockReturnValueOnce({
+        ...createUserResponse(),
+        teams: [{ id: 'team-1', displayName: 'team', role: 'Key Personnel' }],
+      });
 
       const researchOutputResponse = {
         ...getResearchOutputResponse(),
@@ -230,7 +233,13 @@ describe('/research-outputs/ route', () => {
       expect(response.status).toEqual(404);
     });
     test('Should return 404 when you are trying to get a draft and are not part of the working group', async () => {
-      userMockFactory.mockReturnValueOnce(createUserResponse());
+      userMockFactory.mockReturnValueOnce({
+        ...createUserResponse(),
+        teams: [{ id: 'team-1', displayName: 'team', role: 'Key Personnel' }],
+        workingGroups: [
+          { id: 'wg-1', name: 'wg', role: 'Member', active: true },
+        ],
+      });
 
       const researchOutputResponse: ResearchOutputWorkingGroupResponse = {
         ...getResearchOutputResponse(),
@@ -250,6 +259,7 @@ describe('/research-outputs/ route', () => {
     test('Should return 200 when you are ASAP staff member and are trying to get a draft', async () => {
       userMockFactory.mockReturnValueOnce({
         ...createUserResponse(),
+        teams: [{ id: 'team-1', displayName: 'team', role: 'Key Personnel' }],
         role: 'Staff',
       });
 

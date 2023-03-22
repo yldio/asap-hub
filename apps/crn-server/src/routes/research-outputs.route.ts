@@ -78,12 +78,10 @@ export const researchOutputRouteFactory = (
 
       const result = await researchOutputController.fetchById(researchOutputId);
 
-      if (!result.published) {
-        if (!hasAccessToDraft(req.loggedInUser, result)) {
-          throw Boom.notFound(
-            'You do not have permission to view this research-output',
-          );
-        }
+      if (!result.published && !hasAccessToDraft(req.loggedInUser, result)) {
+        throw Boom.notFound(
+          'You do not have permission to view this research-output',
+        );
       }
 
       res.json(result);

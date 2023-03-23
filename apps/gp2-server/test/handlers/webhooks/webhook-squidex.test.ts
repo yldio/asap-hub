@@ -1,3 +1,4 @@
+import { WebhookDetailType } from '@asap-hub/model';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { EventBridge } from 'aws-sdk';
 import { eventBus, eventSource } from '../../../src/config';
@@ -32,7 +33,7 @@ describe('Squidex event webhook', () => {
 
   test('Should return 204 when no event type is provided', async () => {
     const payload = getUserWebhookPayload('user-id', 'UsersUpdated');
-    payload.type = undefined as unknown as string;
+    payload.type = undefined as unknown as WebhookDetailType;
     const res = (await handler(
       createSignedPayload(payload),
     )) as APIGatewayProxyResult;
@@ -53,7 +54,7 @@ describe('Squidex event webhook', () => {
         {
           EventBusName: eventBus,
           Source: eventSource,
-          DetailType: 'UsersUpdated',
+          DetailType: 'UsersUpdated' satisfies WebhookDetailType,
           Detail: JSON.stringify(payload),
         },
       ],

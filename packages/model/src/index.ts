@@ -21,4 +21,5 @@ export * from './research-tag';
 export * from './team';
 export * from './tutorials';
 export * from './user';
+export * from './webhook';
 export * from './working-group';

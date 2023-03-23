@@ -6,7 +6,7 @@ import {
   ListExternalAuthorDataObject,
   ListExternalAuthorResponse,
 } from '@asap-hub/model';
-import { WebhookPayload, ExternalAuthor } from '@asap-hub/squidex';
+import { SquidexWebhookPayload, ExternalAuthor } from '@asap-hub/squidex';
 import { EventBridgeEvent } from 'aws-lambda';
 import {
   FetchExternalAuthorsQuery,
@@ -104,22 +104,23 @@ export const getExternalAuthorResponse = (): ExternalAuthorResponse =>
 export const getListExternalAuthorResponse = (): ListExternalAuthorResponse =>
   getListExternalAuthorDataObject();
 
-export const externalAuthorPublishedEvent: WebhookPayload<ExternalAuthor> = {
-  type: 'ExternalAuthorsPublished',
-  timestamp: '2021-02-15T13:11:25Z',
-  payload: {
-    $type: 'EnrichedContentEvent',
-    type: 'Published',
-    id: 'externalAuthorId',
-    created: '2020-07-31T15:52:33Z',
-    lastModified: '2020-07-31T15:52:33Z',
-    version: 42,
-    data: {
-      name: { iv: 'External Author' },
-      orcid: { iv: 'orcid-1' },
+export const externalAuthorPublishedEvent: SquidexWebhookPayload<ExternalAuthor> =
+  {
+    type: 'ExternalAuthorsPublished',
+    timestamp: '2021-02-15T13:11:25Z',
+    payload: {
+      $type: 'EnrichedContentEvent',
+      type: 'Published',
+      id: 'externalAuthorId',
+      created: '2020-07-31T15:52:33Z',
+      lastModified: '2020-07-31T15:52:33Z',
+      version: 42,
+      data: {
+        name: { iv: 'External Author' },
+        orcid: { iv: 'orcid-1' },
+      },
     },
-  },
-};
+  };
 
 export const getUserWebhookPayload = (
   id: string,

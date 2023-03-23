@@ -7,7 +7,12 @@ import {
   inactiveUserTag,
 } from '@asap-hub/model';
 import { UserEvent, UserPayload } from '@asap-hub/server-common';
-import { InputUser, RestUser, User, WebhookPayload } from '@asap-hub/squidex';
+import {
+  InputUser,
+  RestUser,
+  User,
+  SquidexWebhookPayload,
+} from '@asap-hub/squidex';
 import {
   FetchUserQuery,
   FetchUsersQuery,
@@ -419,7 +424,7 @@ export const userPatchRequest: UserPatchRequest = {
   ],
 };
 
-export const updateUserEvent: WebhookPayload<User> = {
+export const updateUserEvent: SquidexWebhookPayload<User> = {
   type: 'UsersUpdated',
   timestamp: '2021-02-15T13:11:25Z',
   payload: {
@@ -500,7 +505,7 @@ export const updateUserEvent: WebhookPayload<User> = {
   },
 };
 
-export const userPublishedEvent: WebhookPayload<User> = {
+export const userPublishedEvent: SquidexWebhookPayload<User> = {
   type: 'UsersPublished',
   timestamp: '2021-02-15T13:11:25Z',
   payload: {

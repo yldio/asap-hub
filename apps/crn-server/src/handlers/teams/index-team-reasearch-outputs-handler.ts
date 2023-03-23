@@ -117,6 +117,11 @@ const externalAuthorDataProvider = isContentfulEnabledV2
       externalAuthorRestClient,
       squidexGraphqlClient,
     );
+/* istanbul ignore next */
+const selectedAlgoliaIndex = isContentfulEnabledV2
+  ? algoliaIndex
+  : `${algoliaIndex}-contentful`;
+
 export const handler = sentryWrapper(
   indexResearchOutputByTeamHandler(
     new ResearchOutputs(
@@ -124,6 +129,10 @@ export const handler = sentryWrapper(
       researchTagDataProvider,
       externalAuthorDataProvider,
     ),
-    algoliaSearchClientFactory({ algoliaApiKey, algoliaAppId, algoliaIndex }),
+    algoliaSearchClientFactory({
+      algoliaApiKey,
+      algoliaAppId,
+      algoliaIndex: selectedAlgoliaIndex,
+    }),
   ),
 );

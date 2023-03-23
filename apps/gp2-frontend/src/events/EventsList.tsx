@@ -17,13 +17,13 @@ import {
 import { usePagination, usePaginationParams } from '../hooks/pagination';
 import { useEvents } from './state';
 
-const { rem } = pixels;
-
 type EventListProps = {
   readonly currentTime: Date;
   readonly past?: boolean;
   constraint?: gp2.EventConstraint;
 };
+
+const { rem } = pixels;
 
 export const eventMapper = ({
   speakers,
@@ -44,15 +44,37 @@ export const eventMapper = ({
 });
 
 const eventEmptyStateText = {
-  past: {
-    title: 'No past events available.',
-    description:
-      'When a working group, project or GP2 hub event finishes, it will be displayed here.',
+  eventPage: {
+    past: {
+      title: 'No past events available.',
+      description:
+        'When a working group, project or GP2 hub event finishes, it will be displayed here.',
+    },
+    upcoming: {
+      title: 'No upcoming events available.',
+      description:
+        'When a working group, project or the GP2 hub creates an event it will be listed here.',
+    },
   },
-  upcoming: {
-    title: 'No upcoming events available.',
-    description:
-      'When a working group, project or the GP2 hub creates an event it will be listed here.',
+  userPage: {
+    past: {
+      title: 'No past events available.',
+      description: 'It looks like this user hasn’t spoken at any events.',
+    },
+    upcoming: {
+      title: 'No upcoming events available.',
+      description: 'It looks like this user will not speak at any events.',
+    },
+  },
+  projectAndWorkingGroupPage: {
+    past: {
+      title: 'No past events available.',
+      description: 'When an event happens, it will be displayed here.',
+    },
+    upcoming: {
+      title: 'No upcoming events available.',
+      description: 'When a new event is available, it will be displayed here.',
+    },
   },
 };
 
@@ -72,13 +94,24 @@ const EventList: React.FC<EventListProps> = ({
     }),
   );
 
+  let stateInformation;
+  if (constraint) {
+    if ('userId' in constraint) {
+      stateInformation = eventEmptyStateText.userPage;
+    } else {
+      stateInformation = eventEmptyStateText.projectAndWorkingGroupPage;
+    }
+  } else {
+    stateInformation = eventEmptyStateText.eventPage;
+  }
+
   const { title, description } = past
-    ? eventEmptyStateText.past
-    : eventEmptyStateText.upcoming;
+    ? stateInformation.past
+    : stateInformation.upcoming;
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
   return (
-    <>
+    <div style={{ padding: `${rem(48)} 0` }}>
       {total ? (
         <EventsList
           currentPageIndex={currentPage}
@@ -88,11 +121,9 @@ const EventList: React.FC<EventListProps> = ({
           events={items.map(eventMapper)}
         />
       ) : (
-        <div style={{ marginTop: rem(32) }}>
-          <EmptyState icon={noEventCalendarIcon} {...{ title, description }} />
-        </div>
+        <EmptyState icon={noEventCalendarIcon} {...{ title, description }} />
       )}
-    </>
+    </div>
   );
 };
 

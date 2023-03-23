@@ -1,6 +1,8 @@
-import { Display, Paragraph } from '@asap-hub/react-components';
+import { Display, Paragraph, pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ReactChild } from 'react';
+
+const { rem } = pixels;
 
 interface EmptyStateProps {
   icon: ReactChild;
@@ -9,6 +11,7 @@ interface EmptyStateProps {
 }
 
 const styles = css({
+  padding: `${rem(32)} 0`,
   display: 'grid',
   textAlign: 'center',
 });

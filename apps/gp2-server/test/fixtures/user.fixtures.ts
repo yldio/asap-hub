@@ -3,7 +3,7 @@ import { UserEvent } from '@asap-hub/server-common';
 import {
   gp2 as gp2Squidex,
   parseToSquidex,
-  WebhookPayload,
+  SquidexWebhookPayload,
 } from '@asap-hub/squidex';
 import {
   FetchProjectsMembersQuery,
@@ -131,7 +131,7 @@ export const fetchExpectation: gp2.ListUserResponse = {
 export const getUserWebhookPayload = (
   id: string,
   type: UserEvent,
-): WebhookPayload<gp2Squidex.User> => ({
+): SquidexWebhookPayload<gp2Squidex.User> => ({
   type,
   timestamp: '2021-02-15T13:11:25Z',
   payload: {

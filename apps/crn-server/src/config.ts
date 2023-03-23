@@ -18,6 +18,7 @@ const {
   CONTENTFUL_MANAGEMENT_ACCESS_TOKEN,
   CONTENTFUL_ENV_ID,
   CONTENTFUL_HOST,
+  CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN,
   CRN_API_URL,
   CRN_MEETING_MATERIALS_DRIVE,
   GOOGLE_API_TOKEN,
@@ -92,6 +93,9 @@ export const contentfulManagementAccessToken =
   CONTENTFUL_MANAGEMENT_ACCESS_TOKEN || 'contentful-management-access-token';
 export const contentfulEnvId = CONTENTFUL_ENV_ID || 'contentful-environment-id';
 export const contentfulHost = CONTENTFUL_HOST || 'https://cdn.contentful.com';
+export const contentfulWebhookAuthenticationToken =
+  CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN ||
+  'contentful-webhook-authentication-token';
 export const isContentfulEnabled = IS_CONTENTFUL_ENABLED === 'true' || false;
 export const isContentfulEnabledV2 =
   IS_CONTENTFUL_ENABLED_V2 === 'true' || false;

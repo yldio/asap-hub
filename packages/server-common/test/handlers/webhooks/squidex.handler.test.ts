@@ -1,4 +1,5 @@
 import { User } from '@asap-hub/squidex';
+import { WebhookDetailType } from '@asap-hub/model';
 import { EventBridge } from 'aws-sdk';
 import { squidexHandlerFactory } from '../../../src/handlers/webhooks';
 import { getUserWebhookPayload } from '../../fixtures/users.fixtures';
@@ -66,7 +67,7 @@ describe('Squidex event webhook', () => {
         {
           EventBusName: eventBus,
           Source: eventSource,
-          DetailType: 'UsersUpdated',
+          DetailType: 'UsersUpdated' satisfies WebhookDetailType,
           Detail: JSON.stringify(payload),
         },
       ],

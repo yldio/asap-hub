@@ -1,5 +1,5 @@
 import { OrcidWork } from '@asap-hub/model';
-import { WebhookPayload, User, RestUser } from '@asap-hub/squidex';
+import { SquidexWebhookPayload, User, RestUser } from '@asap-hub/squidex';
 import { ORCIDWorksResponse } from '../../../src/utils/fetch-orcid';
 
 export const fetchUserResponse: RestUser = {
@@ -36,7 +36,7 @@ export const fetchUserResponse: RestUser = {
   version: 42,
 };
 
-export const updateUserEvent: WebhookPayload<User> = {
+export const updateUserEvent: SquidexWebhookPayload<User> = {
   type: 'UsersUpdated',
   timestamp: '2021-02-15T13:11:25Z',
   payload: {
@@ -117,7 +117,7 @@ export const updateUserEvent: WebhookPayload<User> = {
   },
 };
 
-export const createUserEvent: WebhookPayload<User> = {
+export const createUserEvent: SquidexWebhookPayload<User> = {
   type: 'UsersCreated',
   timestamp: '2021-02-15T13:11:25Z',
   payload: {

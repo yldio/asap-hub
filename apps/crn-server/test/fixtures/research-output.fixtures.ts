@@ -12,7 +12,7 @@ import {
   InputResearchOutput,
   ResearchOutput,
   Rest,
-  WebhookPayload,
+  SquidexWebhookPayload,
 } from '@asap-hub/squidex';
 import {
   EnrichedContentEventType,
@@ -220,7 +220,7 @@ export const getListResearchOutputResponse = ({
 export const getResearchOutputWebhookPayload = (
   id: string,
   type: ResearchOutputEvent,
-): WebhookPayload<ResearchOutput> => ({
+): SquidexWebhookPayload<ResearchOutput> => ({
   type,
   timestamp: '2021-02-15T13:11:25Z',
   payload: {

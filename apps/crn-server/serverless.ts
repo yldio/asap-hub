@@ -1,3 +1,4 @@
+import { WebhookDetailType } from '@asap-hub/model';
 import { AWS } from '@serverless/typescript';
 import assert from 'assert';
 
@@ -552,7 +553,7 @@ const serverlessConfig: AWS = {
                 'TeamsUpdated',
                 'TeamsUnpublished',
                 'TeamsDeleted',
-              ],
+              ] satisfies WebhookDetailType[],
             },
           },
         },

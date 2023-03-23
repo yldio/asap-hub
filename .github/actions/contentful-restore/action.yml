@@ -31,7 +31,7 @@ runs:
       id: get-backup
       shell: bash
       run: |
-        if [ "$BACKUP_VERSION" = "latest" ]; then
+        if [ "$BACKUP_VERSION" = "" ]; then
           echo "Fetching latest backup version"
           LATEST=$(aws s3api list-objects-v2 --bucket $BUCKET_NAME --query 'sort_by(Contents, &LastModified)[-1].Key' --output=text)
           echo "backup-key=$LATEST" >> $GITHUB_OUTPUT
@@ -41,8 +41,8 @@ runs:
         fi;
       env:
         BACKUP_VERSION: ${{inputs.backup-version}}
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
         BUCKET_NAME: ${{ inputs.bucket-name }}
     - name: restore-backup-file
       shell: bash

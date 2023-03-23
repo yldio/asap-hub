@@ -72,12 +72,13 @@ type UserSpeakerProps = {
 const UserSpeaker = ({ speaker }: UserSpeakerProps) => (
   <Link
     href={gp2Routing.users({}).user({ userId: speaker.id }).$}
-    overrideStyles={css([{ display: 'flex' }, textWrap])}
   >
-    <div css={{ marginRight: 9 }}>
-      <Avatar {...speaker} imageUrl={speaker.avatarUrl} />
+    <div css={[{ gap: 9, display: 'flex' }, textWrap]}>
+      <div>
+        <Avatar {...speaker} imageUrl={speaker.avatarUrl} />
+      </div>
+      {speaker.displayName}
     </div>
-    {speaker.displayName}
   </Link>
 );
 

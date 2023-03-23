@@ -3352,7 +3352,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "aws-sdk",\
-        "npm:2.1331.0"\
+        "npm:2.1341.0"\
       ],\
       [\
         "aws-sign2",\
@@ -10815,7 +10815,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["algoliasearch", "npm:4.15.0"],\
             ["apr-intercept", "npm:3.0.4"],\
             ["async-sema", "npm:3.1.1"],\
-            ["aws-sdk", "npm:2.1331.0"],\
+            ["aws-sdk", "npm:2.1341.0"],\
             ["csv-parse", "npm:4.16.3"],\
             ["got", "npm:11.8.6"],\
             ["jwt-encode", "npm:1.0.1"],\
@@ -11127,7 +11127,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/node", "npm:14.18.38"],\
             ["@types/react", "npm:17.0.53"],\
             ["@types/react-dom", "npm:17.0.19"],\
-            ["aws-sdk", "npm:2.1331.0"],\
+            ["aws-sdk", "npm:2.1341.0"],\
             ["babel-loader", "virtual:f53f6b44d9b092b2e1aa5b63bb87beb2480b63a8d0a2b1a23e0f956d506c3680d24881755aeeb3d594954cc38ab1cccd34ff5f34427de818908fd21d3b38370f#npm:8.3.0"],\
             ["babel-preset-react-app", "npm:10.0.1"],\
             ["core-js", "npm:3.29.1"],\
@@ -11218,7 +11218,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["apr-intercept", "npm:3.0.4"],\
             ["async-retry", "npm:1.3.3"],\
             ["aws-lambda", "npm:1.0.7"],\
-            ["aws-sdk", "npm:2.1331.0"],\
+            ["aws-sdk", "npm:2.1341.0"],\
             ["aws-xray-sdk", "npm:3.4.1"],\
             ["babel-loader", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:8.3.0"],\
             ["chance", "npm:1.1.11"],\
@@ -11863,7 +11863,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/node", "npm:14.18.38"],\
             ["@types/react", "npm:17.0.53"],\
             ["@types/react-dom", "npm:17.0.19"],\
-            ["aws-sdk", "npm:2.1331.0"],\
+            ["aws-sdk", "npm:2.1341.0"],\
             ["babel-loader", "virtual:f53f6b44d9b092b2e1aa5b63bb87beb2480b63a8d0a2b1a23e0f956d506c3680d24881755aeeb3d594954cc38ab1cccd34ff5f34427de818908fd21d3b38370f#npm:8.3.0"],\
             ["babel-preset-react-app", "npm:10.0.1"],\
             ["core-js", "npm:3.29.1"],\
@@ -11928,7 +11928,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["ajv", "npm:8.11.0"],\
             ["apr-intercept", "npm:3.0.4"],\
             ["aws-lambda", "npm:1.0.7"],\
-            ["aws-sdk", "npm:2.1331.0"],\
+            ["aws-sdk", "npm:2.1341.0"],\
             ["babel-loader", "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:8.3.0"],\
             ["copy-webpack-plugin", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:9.1.0"],\
             ["cors", "npm:2.8.5"],\
@@ -11985,7 +11985,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/babel__core", "npm:7.20.0"],\
             ["@types/react", "npm:17.0.53"],\
             ["@types/react-dom", "npm:17.0.19"],\
-            ["aws-sdk", "npm:2.1331.0"],\
+            ["aws-sdk", "npm:2.1341.0"],\
             ["babel-loader", "virtual:f53f6b44d9b092b2e1aa5b63bb87beb2480b63a8d0a2b1a23e0f956d506c3680d24881755aeeb3d594954cc38ab1cccd34ff5f34427de818908fd21d3b38370f#npm:8.3.0"],\
             ["babel-preset-react-app", "npm:10.0.1"],\
             ["core-js", "npm:3.29.1"],\
@@ -12522,7 +12522,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["ajv-formats", "virtual:4b7d8bb1684f7f69bf042a03dae4d118ab00edf0e34f409e5270fb3cce9e5fcf8ce9581b8f5bc8597c1e50c52a23eba5d4eadeede8c58ab0be3187e2389e11d5#npm:2.1.1"],\
             ["apr-intercept", "npm:3.0.4"],\
             ["aws-lambda", "npm:1.0.7"],\
-            ["aws-sdk", "npm:2.1331.0"],\
+            ["aws-sdk", "npm:2.1341.0"],\
             ["csv-parse", "npm:4.16.3"],\
             ["express", "npm:4.18.2"],\
             ["express-async-errors", "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:3.1.1"],\
@@ -39991,10 +39991,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:2.1331.0", {\
-          "packageLocation": "./.yarn/cache/aws-sdk-npm-2.1331.0-812001cc8c-19547d3f76.zip/node_modules/aws-sdk/",\
+        ["npm:2.1341.0", {\
+          "packageLocation": "./.yarn/cache/aws-sdk-npm-2.1341.0-e62e302241-d07a0ced88.zip/node_modules/aws-sdk/",\
           "packageDependencies": [\
-            ["aws-sdk", "npm:2.1331.0"],\
+            ["aws-sdk", "npm:2.1341.0"],\
             ["buffer", "npm:4.9.2"],\
             ["events", "npm:1.1.1"],\
             ["ieee754", "npm:1.1.13"],\
@@ -74565,7 +74565,7 @@ const DEFAULT_COMPRESSION_LEVEL = `mixed`;
 function toUnixTimestamp(time) {
   if (typeof time === `string` && String(+time) === time)
     return +time;
-  if (Number.isFinite(time)) {
+  if (typeof time === `number` && Number.isFinite(time)) {
     if (time < 0) {
       return Date.now() / 1e3;
     } else {
@@ -75147,7 +75147,7 @@ class ZipFS extends BasePortableFakeFS {
       resolvedP = ppath.resolve(parentP, ppath.basename(resolvedP));
       if (!resolveLastComponent || this.symlinkCount === 0)
         break;
-      const index = this.libzip.name.locate(this.zip, resolvedP.slice(1));
+      const index = this.libzip.name.locate(this.zip, resolvedP.slice(1), 0);
       if (index === -1)
         break;
       if (this.isSymbolicLink(index)) {
@@ -75172,7 +75172,7 @@ class ZipFS extends BasePortableFakeFS {
   allocateUnattachedSource(content) {
     const error = this.libzip.struct.errorS();
     const { buffer, byteLength } = this.allocateBuffer(content);
-    const source = this.libzip.source.fromUnattachedBuffer(buffer, byteLength, 0, true, error);
+    const source = this.libzip.source.fromUnattachedBuffer(buffer, byteLength, 0, 1, error);
     if (source === 0) {
       this.libzip.free(error);
       throw this.makeLibzipError(error);
@@ -75181,7 +75181,7 @@ class ZipFS extends BasePortableFakeFS {
   }
   allocateSource(content) {
     const { buffer, byteLength } = this.allocateBuffer(content);
-    const source = this.libzip.source.fromBuffer(this.zip, buffer, byteLength, 0, true);
+    const source = this.libzip.source.fromBuffer(this.zip, buffer, byteLength, 0, 1);
     if (source === 0) {
       this.libzip.free(buffer);
       throw this.makeLibzipError(this.libzip.getError(this.zip));
@@ -81615,7 +81615,7 @@ const makeInterface = (libzip) => ({
     locate: libzip.cwrap(`zip_name_locate`, `number`, [`number`, `string`, `number`])
   },
   source: {
-    fromUnattachedBuffer: libzip.cwrap(`zip_source_buffer_create`, `number`, [`number`, `number`, `number`, `number`]),
+    fromUnattachedBuffer: libzip.cwrap(`zip_source_buffer_create`, `number`, [`number`, ...number64, `number`, `number`]),
     fromBuffer: libzip.cwrap(`zip_source_buffer`, `number`, [`number`, `number`, ...number64, `number`]),
     free: libzip.cwrap(`zip_source_free`, null, [`number`]),
     keep: libzip.cwrap(`zip_source_keep`, null, [`number`]),
@@ -83512,7 +83512,7 @@ ${candidates.map((candidate) => `Not found: ${getPathForDisplay(candidate)}
       conditions: (_a = opts2.conditions) != null ? _a : defaultExportsConditions,
       readFileSyncFn: tryReadFile
     });
-    if (resolved instanceof URL) {
+    if (resolved instanceof url.URL) {
       return resolveUnqualified(npath.toPortablePath(url.fileURLToPath(resolved)), { extensions: opts2.extensions });
     } else {
       if (resolved.startsWith(`#`))

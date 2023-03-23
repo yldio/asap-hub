@@ -53,7 +53,7 @@ export const indexExternalAuthorHandler =
         return externalAuthor;
       } catch {
         await algoliaClient.remove(event.detail.payload.id);
-        return;
+        return null;
       }
     };
 

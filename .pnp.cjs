@@ -2593,7 +2593,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@types/prettier",\
-        "npm:2.7.1"\
+        "npm:2.7.2"\
       ],\
       [\
         "@types/pretty-hrtime",\
@@ -8194,7 +8194,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "prettier",\
-        "npm:2.7.1"\
+        "npm:2.8.6"\
       ],\
       [\
         "prettier-linter-helpers",\
@@ -10450,7 +10450,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-watch-typeahead", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:0.6.5"],\
             ["nock", "npm:13.3.0"],\
             ["node-fetch", "npm:3.0.0-beta.9"],\
-            ["prettier", "npm:2.7.1"],\
+            ["prettier", "npm:2.8.6"],\
             ["react-test-renderer", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:17.0.2"],\
             ["rimraf", "npm:3.0.2"],\
             ["ts-node", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:10.9.1"],\
@@ -10776,9 +10776,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/model", "workspace:packages/model"],\
             ["@babel/runtime-corejs3", "npm:7.21.0"],\
             ["@types/node", "npm:14.18.40"],\
-            ["@types/prettier", "npm:2.7.1"],\
+            ["@types/prettier", "npm:2.7.2"],\
             ["algoliasearch", "npm:4.15.0"],\
-            ["prettier", "npm:2.7.1"]\
+            ["prettier", "npm:2.8.6"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -10806,7 +10806,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jwt-decode", "npm:2.2.1"],\
             ["@types/jwt-encode", "workspace:@types/jwt-encode"],\
             ["@types/luxon", "npm:1.27.1"],\
-            ["@types/prettier", "npm:2.7.1"],\
+            ["@types/prettier", "npm:2.7.2"],\
             ["@types/pump", "npm:1.1.1"],\
             ["@types/through2-concurrent", "npm:2.0.1"],\
             ["@types/uuid", "npm:8.3.4"],\
@@ -10821,7 +10821,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jwt-encode", "npm:1.0.1"],\
             ["luxon", "npm:1.28.1"],\
             ["nock", "npm:13.3.0"],\
-            ["prettier", "npm:2.7.1"],\
+            ["prettier", "npm:2.8.6"],\
             ["pump", "npm:3.0.0"],\
             ["through2-concurrent", "npm:2.0.0"],\
             ["uuid", "npm:8.3.2"],\
@@ -10934,13 +10934,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/contentful-html-rich-text-converter", "workspace:@types/contentful-html-rich-text-converter"],\
             ["@types/jest", "npm:29.4.0"],\
             ["@types/node", "npm:14.18.40"],\
-            ["@types/prettier", "npm:2.7.1"],\
+            ["@types/prettier", "npm:2.7.2"],\
             ["contentful-html-rich-text-converter", "https://github.com/yldio/contentful-html-rich-text-converter.git#commit=ba7abf23e1bff5f26cfb5e0f17dd32f3b45c8f57"],\
             ["contentful-management", "npm:10.19.3"],\
             ["graphql", "npm:15.8.0"],\
             ["graphql-tag", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:2.12.6"],\
             ["graphql-typescript-integration", "npm:1.2.1"],\
-            ["prettier", "npm:2.7.1"],\
+            ["prettier", "npm:2.8.6"],\
             ["ts-node", "virtual:a165564317f0b92d7f72089df97002e7b69d2373ff7839f92d9f9e1bed5f710b4e712695583c77d16186478eb0c9ba6e1edcf723243579fe7c5a370e032217e7#npm:10.9.1"]\
           ],\
           "linkType": "SOFT"\
@@ -10976,7 +10976,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["graphql-request", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:3.4.0"],\
             ["graphql-tag", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:2.12.6"],\
             ["graphql-typescript-integration", "npm:1.2.1"],\
-            ["prettier", "npm:2.7.1"],\
+            ["prettier", "npm:2.8.6"],\
             ["ts-node", "virtual:a165564317f0b92d7f72089df97002e7b69d2373ff7839f92d9f9e1bed5f710b4e712695583c77d16186478eb0c9ba6e1edcf723243579fe7c5a370e032217e7#npm:10.9.1"]\
           ],\
           "linkType": "SOFT"\
@@ -11327,7 +11327,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-react", "virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:7.32.2"],\
             ["eslint-plugin-react-hooks", "virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:4.6.0"],\
             ["jest-config", "virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:27.5.1"],\
-            ["prettier", "npm:2.7.1"]\
+            ["prettier", "npm:2.8.6"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -36436,10 +36436,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:2.7.1", {\
-          "packageLocation": "./.yarn/cache/@types-prettier-npm-2.7.1-d46ada27e6-5e3f58e229.zip/node_modules/@types/prettier/",\
+        ["npm:2.7.2", {\
+          "packageLocation": "./.yarn/cache/@types-prettier-npm-2.7.2-6b2e2f518f-b47d76a525.zip/node_modules/@types/prettier/",\
           "packageDependencies": [\
-            ["@types/prettier", "npm:2.7.1"]\
+            ["@types/prettier", "npm:2.7.2"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -39539,7 +39539,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-watch-typeahead", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:0.6.5"],\
             ["nock", "npm:13.3.0"],\
             ["node-fetch", "npm:3.0.0-beta.9"],\
-            ["prettier", "npm:2.7.1"],\
+            ["prettier", "npm:2.8.6"],\
             ["react-test-renderer", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:17.0.2"],\
             ["rimraf", "npm:3.0.2"],\
             ["ts-node", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:10.9.1"],\
@@ -47994,7 +47994,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/prettier", null],\
             ["eslint", "npm:8.23.1"],\
             ["eslint-config-prettier", "virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:8.7.0"],\
-            ["prettier", "npm:2.7.1"],\
+            ["prettier", "npm:2.8.6"],\
             ["prettier-linter-helpers", "npm:1.0.0"]\
           ],\
           "packagePeers": [\
@@ -62898,6 +62898,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/prettier-npm-2.7.1-d1f40f5e1a-55a4409182.zip/node_modules/prettier/",\
           "packageDependencies": [\
             ["prettier", "npm:2.7.1"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:2.8.6", {\
+          "packageLocation": "./.yarn/cache/prettier-npm-2.8.6-24bd3d3356-8ac94fa67a.zip/node_modules/prettier/",\
+          "packageDependencies": [\
+            ["prettier", "npm:2.8.6"]\
           ],\
           "linkType": "HARD"\
         }]\

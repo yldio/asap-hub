@@ -35,9 +35,8 @@ const renderSharedResearchPage = async (pathname: string, query = '') => {
       </Suspense>
     </RecoilRoot>,
   );
-  await waitFor(
-    () => expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
-    { timeout: 5000 },
+  await waitFor(() =>
+    expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
   );
   return result;
 };

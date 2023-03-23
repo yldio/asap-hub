@@ -112,6 +112,7 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
             }),
           )}
           userRoute={gp2Routing.users({}).user}
+          overrideNameStyles={css({ overflowWrap: 'anywhere' })}
         />
       </div>
     </Card>

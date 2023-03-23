@@ -187,7 +187,9 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
         </div>
       </div>
 
-      <div css={[rowStyles, { gridArea: 'headline' }]}>
+      <div
+        css={[rowStyles, { gridArea: 'headline', overflowWrap: 'anywhere' }]}
+      >
         <Headline3 noMargin>
           {displayName}
           {degrees && !!degrees.length && `, ${degrees.join(', ')}`}

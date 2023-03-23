@@ -1,5 +1,4 @@
 import { NotFoundError } from '@asap-hub/errors';
-import Boom from '@hapi/boom';
 import { indexExternalAuthorHandler } from '../../../src/handlers/external-author/index-handler';
 import {
   getExternalAuthorEvent,

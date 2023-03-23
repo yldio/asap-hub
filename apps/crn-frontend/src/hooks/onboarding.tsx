@@ -28,7 +28,7 @@ const staffOrderedSteps = [
 
 const fieldToStep: Record<
   keyof Omit<ReturnType<typeof isUserOnboardable>, 'isOnboardable'>,
-  typeof orderedSteps[number] | typeof staffOrderedSteps[number]
+  (typeof orderedSteps)[number] | (typeof staffOrderedSteps)[number]
 > = {
   city: 'Details',
   institution: 'Details',
@@ -45,7 +45,7 @@ const staffSteps = (
   profileTab: NonNullable<ReturnType<typeof useCurrentUserProfileTabRoute>>,
   user: User,
 ): Record<
-  typeof staffOrderedSteps[number],
+  (typeof staffOrderedSteps)[number],
   { modalHref: string; label: string }
 > => ({
   Details: {
@@ -81,7 +81,7 @@ const defaultSteps = (
   profileTab: NonNullable<ReturnType<typeof useCurrentUserProfileTabRoute>>,
   user: User,
 ): Record<
-  typeof orderedSteps[number],
+  (typeof orderedSteps)[number],
   { modalHref: string; label: string }
 > => ({
   Details: {

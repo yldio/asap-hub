@@ -13,7 +13,7 @@ const orderedSteps = [
   'Preview',
 ] as const;
 
-export const stepToHref: Record<typeof orderedSteps[number], string> = {
+export const stepToHref: Record<(typeof orderedSteps)[number], string> = {
   'Core Details': gp2Routing.onboarding({}).coreDetails({}).$,
   Background: gp2Routing.onboarding({}).background({}).$,
   'GP2 Groups': gp2Routing.onboarding({}).groups({}).$,
@@ -23,7 +23,7 @@ export const stepToHref: Record<typeof orderedSteps[number], string> = {
 
 const fieldToStep: Record<
   keyof Omit<ReturnType<typeof isUserOnboardable>, 'isOnboardable'>,
-  typeof orderedSteps[number]
+  (typeof orderedSteps)[number]
 > = {
   firstName: 'Core Details',
   lastName: 'Core Details',

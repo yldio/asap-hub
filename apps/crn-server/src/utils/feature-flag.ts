@@ -2,7 +2,7 @@ import { TeamDataProvider } from '../data-providers/teams.data-provider';
 import { UserDataProvider } from '../data-providers/users.data-provider';
 
 const featureFlags = ['IS_CONTENTFUL_ENABLED_V2'] as const;
-type FeatureFlag = typeof featureFlags[number];
+type FeatureFlag = (typeof featureFlags)[number];
 
 type DependencySwitch<T> = {
   true?: T;

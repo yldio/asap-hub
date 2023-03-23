@@ -4,12 +4,12 @@ import { TeamRole } from './team';
 import { WorkingGroupMembership } from './working-group';
 
 export const userRole = ['Staff', 'Grantee', 'Guest', 'Hidden'] as const;
-export type Role = typeof userRole[number];
+export type Role = (typeof userRole)[number];
 
 export const activeUserTag = 'CRN Member';
 export const inactiveUserTag = 'Alumni Member';
 export const userTags = [activeUserTag, inactiveUserTag] as const;
-export type UserTag = typeof userTags[number];
+export type UserTag = (typeof userTags)[number];
 
 export const userDegree = [
   'BA',
@@ -22,7 +22,7 @@ export const userDegree = [
   'MA',
   'MBA',
 ] as const;
-export type UserDegree = typeof userDegree[number];
+export type UserDegree = (typeof userDegree)[number];
 
 export const isUserRole = (data: string): data is Role =>
   (userRole as ReadonlyArray<string>).includes(data);
@@ -86,7 +86,7 @@ export const orcidWorkType = [
   'WORKING_PAPER',
   'UNDEFINED',
 ] as const;
-export type OrcidWorkType = typeof orcidWorkType[number];
+export type OrcidWorkType = (typeof orcidWorkType)[number];
 
 export interface OrcidWork {
   id: string;

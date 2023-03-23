@@ -25,7 +25,7 @@ export const usePushFromPathname = (
   pathname: string,
 ): History<unknown>['push'] => {
   const history = useHistory();
-  return (...args: Parameters<typeof history['push']>) => {
+  return (...args: Parameters<(typeof history)['push']>) => {
     if (history.location.pathname === pathname) {
       history.push(...args);
     }

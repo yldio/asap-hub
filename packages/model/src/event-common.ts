@@ -6,7 +6,7 @@ export const EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT: number = 1;
 export const EVENT_CONSIDERED_IN_PROGRESS_MINUTES_BEFORE_EVENT: number = 5;
 
 export const eventStatus = ['Confirmed', 'Tentative', 'Cancelled'] as const;
-export type EventStatus = typeof eventStatus[number];
+export type EventStatus = (typeof eventStatus)[number];
 export const isEventStatus = (status: string | null): status is EventStatus =>
   eventStatus.includes(status as EventStatus);
 

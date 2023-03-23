@@ -8,8 +8,8 @@ export const newsFrequency = [
   'News Articles',
 ] as const;
 
-export type NewsType = typeof newsType[number];
-export type NewsFrequency = typeof newsFrequency[number];
+export type NewsType = (typeof newsType)[number];
+export type NewsFrequency = (typeof newsFrequency)[number];
 
 export type NewsDataObject = {
   id: string;

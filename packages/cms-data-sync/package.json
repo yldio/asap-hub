@@ -40,9 +40,9 @@
     "@types/contentful-html-rich-text-converter": "workspace:^",
     "@types/jest": "^29.4.0",
     "@types/node": "14.18.40",
-    "@types/prettier": "2.7.1",
+    "@types/prettier": "2.7.2",
     "graphql-typescript-integration": "1.2.1",
-    "prettier": "2.7.1",
+    "prettier": "2.8.6",
     "ts-node": "10.9.1"
   },
   "prettier": {

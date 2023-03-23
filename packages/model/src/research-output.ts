@@ -17,7 +17,7 @@ export const researchOutputDocumentTypes = [
 ] as const;
 
 export type ResearchOutputDocumentType =
-  typeof researchOutputDocumentTypes[number];
+  (typeof researchOutputDocumentTypes)[number];
 
 export const researchOutputTypes = [
   '3D Printing',
@@ -64,9 +64,9 @@ export const ResearchOutputPublishingEntitiesValues = <const>[
 ];
 
 export type ResearchOutputPublishingEntities =
-  typeof ResearchOutputPublishingEntitiesValues[number];
+  (typeof ResearchOutputPublishingEntitiesValues)[number];
 
-export type ResearchOutputType = typeof researchOutputTypes[number];
+export type ResearchOutputType = (typeof researchOutputTypes)[number];
 
 export const researchOutputDocumentTypeToType: Record<
   ResearchOutputDocumentType,
@@ -183,7 +183,7 @@ export const researchOutputToIdentifierType: Record<
 
 export const sharingStatuses = ['Public', 'Network Only'] as const;
 
-export type ResearchOutputSharingStatus = typeof sharingStatuses[number];
+export type ResearchOutputSharingStatus = (typeof sharingStatuses)[number];
 
 export type ResearchOutputCoreObject = {
   accession?: string;

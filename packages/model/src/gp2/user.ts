@@ -13,7 +13,7 @@ export const userRoles = [
   'Working Group Participant',
 ] as const;
 
-export type UserRole = typeof userRoles[number];
+export type UserRole = (typeof userRoles)[number];
 
 export const userDegrees = [
   'AA',
@@ -30,7 +30,7 @@ export const userDegrees = [
   'PhD',
   'PharmD',
 ] as const;
-export type UserDegree = typeof userDegrees[number];
+export type UserDegree = (typeof userDegrees)[number];
 
 export const userRegions = [
   'Africa',
@@ -42,7 +42,7 @@ export const userRegions = [
   'South America',
 ] as const;
 
-export type UserRegion = typeof userRegions[number];
+export type UserRegion = (typeof userRegions)[number];
 
 export type UserPosition = {
   role: string;
@@ -70,7 +70,7 @@ export const userContributingCohortRole = [
   'Co-Investigator',
 ] as const;
 export type UserContributingCohortRole =
-  typeof userContributingCohortRole[number];
+  (typeof userContributingCohortRole)[number];
 export type UserContributingCohort = {
   role: UserContributingCohortRole;
   studyUrl?: string;

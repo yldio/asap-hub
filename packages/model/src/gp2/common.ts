@@ -1,5 +1,5 @@
 export const resourceTypes = ['Link', 'Note'] as const;
-type ResourceTypes = typeof resourceTypes[number];
+type ResourceTypes = (typeof resourceTypes)[number];
 
 interface ResourceBase {
   title: string;
@@ -57,7 +57,7 @@ export const keywords = [
   'Parkinson disease',
 ] as const;
 
-export type Keyword = typeof keywords[number];
+export type Keyword = (typeof keywords)[number];
 export const isKeyword = (data: string | null): data is Keyword =>
   keywords.includes(data as Keyword);
 

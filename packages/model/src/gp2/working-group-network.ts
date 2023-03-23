@@ -8,7 +8,7 @@ export const workingGroupNetworkRole = [
   'support',
 ] as const;
 
-export type WorkingGroupNetworkRole = typeof workingGroupNetworkRole[number];
+export type WorkingGroupNetworkRole = (typeof workingGroupNetworkRole)[number];
 
 export type WorkingGroupNetworkDataObject = {
   role: WorkingGroupNetworkRole;

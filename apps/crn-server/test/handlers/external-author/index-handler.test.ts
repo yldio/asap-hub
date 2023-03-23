@@ -13,7 +13,86 @@ describe('External Author index handler', () => {
     algoliaSearchClientMock,
   );
 
+  const OLD_ENV = process.env;
+
+  beforeEach(() => {
+    jest.resetModules();
+    jest.resetAllMocks();
+    process.env = { ...OLD_ENV };
+  });
+
   afterEach(() => jest.clearAllMocks());
+
+  afterAll(() => {
+    process.env = OLD_ENV;
+  });
+
+  test('Should instantiate contentful data provider when feature flag is truthy', async () => {
+    process.env.IS_CONTENTFUL_ENABLED_V2 = 'true';
+
+    const {
+      indexExternalAuthorHandler,
+    } = require('../../../src/handlers/external-author/index-handler');
+    const {
+      ExternalAuthorContentfulDataProvider,
+    } = require('../../../src/data-providers/contentful/external-authors.data-provider');
+    const {
+      ExternalAuthorSquidexDataProvider,
+    } = require('../../../src/data-providers/external-authors.data-provider');
+    const { getGraphQLClient } = require('@asap-hub/contentful');
+
+    jest.mock('@asap-hub/contentful');
+    jest.mock(
+      '../../../src/data-providers/contentful/external-authors.data-provider',
+    );
+    jest.mock('../../../src/data-providers/external-authors.data-provider');
+
+    const event = createEvent();
+
+    const indexHandler = indexExternalAuthorHandler(
+      externalAuthorControllerMock,
+      algoliaSearchClientMock,
+    );
+
+    await indexHandler(event);
+
+    expect(getGraphQLClient).toHaveBeenCalled();
+    expect(ExternalAuthorContentfulDataProvider).toHaveBeenCalled();
+    expect(ExternalAuthorSquidexDataProvider).not.toHaveBeenCalled();
+  });
+
+  test('Should instantiate squidex data provider when feature flag is falsy', async () => {
+    process.env.IS_CONTENTFUL_ENABLED_V2 = 'false';
+
+    const event = createEvent();
+    const {
+      indexExternalAuthorHandler,
+    } = require('../../../src/handlers/external-author/index-handler');
+    const {
+      ExternalAuthorContentfulDataProvider,
+    } = require('../../../src/data-providers/contentful/external-authors.data-provider');
+    const {
+      ExternalAuthorSquidexDataProvider,
+    } = require('../../../src/data-providers/external-authors.data-provider');
+    const { getGraphQLClient } = require('@asap-hub/contentful');
+
+    jest.mock('@asap-hub/contentful');
+    jest.mock(
+      '../../../src/data-providers/contentful/external-authors.data-provider',
+    );
+    jest.mock('../../../src/data-providers/external-authors.data-provider');
+
+    const indexHandler = indexExternalAuthorHandler(
+      externalAuthorControllerMock,
+      algoliaSearchClientMock,
+    );
+
+    await indexHandler(event);
+
+    expect(getGraphQLClient).toHaveBeenCalled();
+    expect(ExternalAuthorContentfulDataProvider).not.toHaveBeenCalled();
+    expect(ExternalAuthorSquidexDataProvider).toHaveBeenCalled();
+  });
 
   test('Should fetch the external author and create a record in Algolia when the external author is created', async () => {
     const event = createEvent();

@@ -68,7 +68,7 @@ const ContactInformationModal: React.FC<ContactInformationModalProps> = ({
       {({ isSaving }) => (
         <>
           <LabeledTextField
-            title="Intitutional Email"
+            title="Institutional Email"
             description={<ContactSupport />}
             required
             enabled={false}

@@ -36,12 +36,12 @@ describe('ContactInformationModal', () => {
     renderContactInformation();
     expect(
       screen.getByRole('textbox', {
-        name: /intitutional email/i,
+        name: /institutional email/i,
       }),
     ).toBeVisible();
     expect(
       screen.getByRole('textbox', {
-        name: /intitutional email/i,
+        name: /institutional email/i,
       }),
     ).toBeDisabled();
     expect(

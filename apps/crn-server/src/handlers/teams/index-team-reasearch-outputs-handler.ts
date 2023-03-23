@@ -81,6 +81,7 @@ const contentfulGraphQLClient = getContentfulGraphQLClient({
 });
 
 const getContentfulRestClientFactory = () =>
+  /* istanbul ignore next */
   getContentfulRestClient({
     space: contentfulSpaceId,
     accessToken: contentfulManagementAccessToken,

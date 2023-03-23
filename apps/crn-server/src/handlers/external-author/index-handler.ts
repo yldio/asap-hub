@@ -43,27 +43,34 @@ export const indexExternalAuthorHandler =
   async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
 
-    try {
-      const externalAuthor = await externalAuthorController.fetchById(
-        event.detail.payload.id,
-      );
+    const getExternalAuthor = async () => {
+      try {
+        const externalAuthor = await externalAuthorController.fetchById(
+          event.detail.payload.id,
+        );
 
-      if (!externalAuthor) {
+        logger.debug(`Fetched external author ${externalAuthor.displayName}`);
+        return externalAuthor;
+      } catch {
         await algoliaClient.remove(event.detail.payload.id);
         return;
       }
+    };
 
-      logger.debug(`Fetched external author ${externalAuthor.displayName}`);
+    const externalAuthor = await getExternalAuthor();
 
-      await algoliaClient.save({
-        data: externalAuthor,
-        type: 'external-author',
-      });
+    if (externalAuthor) {
+      try {
+        await algoliaClient.save({
+          data: externalAuthor,
+          type: 'external-author',
+        });
 
-      logger.debug(`Saved external author  ${externalAuthor.displayName}`);
-    } catch (e) {
-      logger.error(e, 'Error saving external author to Algolia');
-      throw e;
+        logger.debug(`Saved external author  ${externalAuthor.displayName}`);
+      } catch (e) {
+        logger.error(e, 'Error saving external author to Algolia');
+        throw e;
+      }
     }
   };
 

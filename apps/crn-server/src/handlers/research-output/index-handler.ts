@@ -114,8 +114,8 @@ const externalAuthorDataProvider = isContentfulEnabledV2
 
 /* istanbul ignore next */
 const selectedAlgoliaIndex = isContentfulEnabledV2
-  ? algoliaIndex
-  : `${algoliaIndex}-contentful`;
+  ? `${algoliaIndex}-contentful`
+  : algoliaIndex;
 
 export const handler = sentryWrapper(
   indexResearchOutputHandler(

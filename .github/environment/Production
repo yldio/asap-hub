@@ -1,6 +1,6 @@
-algolia-api-key-name=algolia-api-key-ci-prod
-algolia-app-id-name=algolia-app-id-prod
-algolia-index=asap-hub_prod
+crn-algolia-api-key-name=algolia-api-key-ci-prod
+crn-algolia-app-id-name=algolia-app-id-prod
+crn-algolia-index=asap-hub_prod
 crn-api-url=https://api.hub.asap.science
 crn-app-url=https://hub.asap.science
 crn-auth-url=https://hub.asap.science/.auth/

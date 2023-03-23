@@ -11,7 +11,7 @@ import {
   pixels,
   utils,
 } from '@asap-hub/react-components';
-import { UrlExpression } from '@asap-hub/validation';
+import { urlExpression } from '@asap-hub/validation';
 import { css } from '@emotion/react';
 import { useState } from 'react';
 import { mobileQuery } from '../layout';
@@ -149,7 +149,7 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
               onChange={setNewExternalLink}
               getValidationMessage={() => 'Please enter a valid link'}
               required
-              pattern={UrlExpression}
+              pattern={urlExpression}
               enabled={!isSaving}
             />
           )}

@@ -1,20 +1,20 @@
-import { useState } from 'react';
-import { css } from '@emotion/react';
 import { UserPatchRequest, UserResponse } from '@asap-hub/model';
 import {
-  UrlExpression,
-  USER_SOCIAL_RESEARCHER_ID,
+  urlExpression,
   USER_SOCIAL_NOT_URL,
+  USER_SOCIAL_RESEARCHER_ID,
 } from '@asap-hub/validation';
+import { css } from '@emotion/react';
+import { useState } from 'react';
 
-import { LabeledTextField } from '../molecules';
-import { noop } from '../utils';
+import { Headline4, Link } from '../atoms';
 import { charcoal } from '../colors';
+import { GlobeIcon } from '../icons';
+import { mailToSupport } from '../mail';
+import { LabeledTextField } from '../molecules';
 import { EditModal } from '../organisms';
 import { perRem, smallDesktopScreen, tabletScreen } from '../pixels';
-import { GlobeIcon } from '../icons';
-import { Headline4, Link } from '../atoms';
-import { mailToSupport } from '../mail';
+import { noop } from '../utils';
 
 const fieldsContainerStyles = css({
   display: 'grid',
@@ -113,7 +113,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
             <LabeledTextField
               title="Website 1"
               subtitle="(Optional)"
-              pattern={UrlExpression}
+              pattern={urlExpression}
               getValidationMessage={() =>
                 'Please enter a valid URL, starting with http://'
               }
@@ -126,7 +126,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
             <LabeledTextField
               title="Website 2"
               subtitle="(Optional)"
-              pattern={UrlExpression}
+              pattern={urlExpression}
               getValidationMessage={() =>
                 'Please enter a valid URL, starting with http://'
               }

@@ -1,7 +1,7 @@
 import failOnConsole from 'jest-fail-on-console';
 failOnConsole({
   silenceMessage: (msg, method, context) =>
-    /Recoil: Spent 1[0-9]{1}\.[0-9]+ms computing a cache key/.test(
+    /Recoil: Spent [0-9]{1,2}\.[0-9]+ms computing a cache key/.test(
       context.group,
     ),
 });

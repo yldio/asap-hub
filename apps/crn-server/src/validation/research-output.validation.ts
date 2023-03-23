@@ -1,18 +1,18 @@
 import {
-  ResearchOutputPostRequest,
-  researchOutputTypes,
-  ResearchOutputIdentifierType,
-  researchOutputToIdentifierType,
   researchOutputDocumentTypes,
+  ResearchOutputIdentifierType,
+  ResearchOutputPostRequest,
   ResearchOutputPutRequest,
+  researchOutputToIdentifierType,
+  researchOutputTypes,
 } from '@asap-hub/model';
+import { validateInput } from '@asap-hub/server-common';
 import {
   ResearchOutputIdentifierValidationExpression,
-  UrlExpression,
+  urlExpression,
 } from '@asap-hub/validation';
 import Boom from '@hapi/boom';
 import { JSONSchemaType } from 'ajv';
-import { validateInput } from '@asap-hub/server-common';
 
 type ResearchOutputParameters = {
   researchOutputId: string;
@@ -73,7 +73,7 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
       link: {
         type: 'string',
         nullable: true,
-        pattern: UrlExpression,
+        pattern: urlExpression,
       },
       title: { type: 'string' },
       asapFunded: { type: 'boolean', nullable: true },

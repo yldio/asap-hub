@@ -1,7 +1,12 @@
-import { validateInput } from '@asap-hub/server-common';
-import { JSONSchemaType } from 'ajv';
 import { gp2 } from '@asap-hub/model';
-import { UrlExpression } from '@asap-hub/validation';
+import { validateInput } from '@asap-hub/server-common';
+import {
+  emailExpression,
+  telephoneCountryExpression,
+  telephoneNumberExpression,
+  urlExpression,
+} from '@asap-hub/validation';
+import { JSONSchemaType } from 'ajv';
 
 const { userDegrees, userRegions, keywords, userContributingCohortRole } = gp2;
 type UserParameters = {
@@ -60,14 +65,26 @@ const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
       nullable: true,
     },
     onboarded: { type: 'boolean', nullable: true },
-    secondaryEmail: { type: 'string', nullable: true },
+    secondaryEmail: {
+      type: 'string',
+      nullable: true,
+      pattern: emailExpression,
+    },
     telephone: {
       nullable: true,
       type: 'object',
       additionalProperties: false,
       properties: {
-        countryCode: { type: 'string', nullable: true },
-        number: { type: 'string', nullable: true },
+        countryCode: {
+          type: 'string',
+          nullable: true,
+          pattern: telephoneCountryExpression,
+        },
+        number: {
+          type: 'string',
+          nullable: true,
+          pattern: telephoneNumberExpression,
+        },
       },
     },
     keywords: {
@@ -112,7 +129,7 @@ const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
           role: { type: 'string', enum: userContributingCohortRole },
           studyUrl: {
             type: 'string',
-            pattern: UrlExpression,
+            pattern: urlExpression,
             nullable: true,
           },
         },

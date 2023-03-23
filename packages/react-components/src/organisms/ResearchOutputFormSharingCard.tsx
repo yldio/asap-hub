@@ -6,7 +6,7 @@ import {
   ResearchTagResponse,
   ValidationErrorResponse,
 } from '@asap-hub/model';
-import { UrlExpression } from '@asap-hub/validation';
+import { urlExpression } from '@asap-hub/validation';
 import { useEffect, useState } from 'react';
 import { getAjvErrorForPath } from '../ajv-errors';
 import { GlobeIcon } from '../icons';
@@ -114,7 +114,7 @@ const ResearchOutputFormSharingCard: React.FC<
         subtitle={urlRequired ? '(required)' : '(optional)'}
         required={urlRequired}
         description="Use the link of your document (for example, google document link)."
-        pattern={UrlExpression}
+        pattern={urlExpression}
         onChange={(newValue) => {
           clearServerValidationError('/link');
           onChangeLink(newValue);

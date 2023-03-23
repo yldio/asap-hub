@@ -1,5 +1,10 @@
 import { gp2 } from '@asap-hub/model';
 import { LabeledTextField, pixels } from '@asap-hub/react-components';
+import {
+  emailExpression,
+  telephoneCountryExpression,
+  telephoneNumberExpression,
+} from '@asap-hub/validation';
 import { css } from '@emotion/react';
 import { ComponentProps, useState } from 'react';
 import { mobileQuery } from '../layout';
@@ -63,7 +68,7 @@ const ContactInformationModal: React.FC<ContactInformationModalProps> = ({
       {({ isSaving }) => (
         <>
           <LabeledTextField
-            title="Intitutional Email"
+            title="Institutional Email"
             description={<ContactSupport />}
             required
             enabled={false}
@@ -76,6 +81,9 @@ const ContactInformationModal: React.FC<ContactInformationModalProps> = ({
             enabled={!isSaving}
             value={newSecondaryEmail}
             onChange={setNewSecondaryEmail}
+            type={'email'}
+            pattern={emailExpression}
+            getValidationMessage={() => 'Please enter a valid email address'}
           />
           <div css={telephoneContainerStyles}>
             <LabeledTextField
@@ -85,6 +93,10 @@ const ContactInformationModal: React.FC<ContactInformationModalProps> = ({
               enabled={!isSaving}
               value={newCountryCode}
               onChange={setNewCountryCode}
+              pattern={telephoneCountryExpression}
+              getValidationMessage={() =>
+                'Please enter a valid telephone country code'
+              }
             />
             <LabeledTextField
               title="Telephone Number"
@@ -93,6 +105,11 @@ const ContactInformationModal: React.FC<ContactInformationModalProps> = ({
               enabled={!isSaving}
               value={newNumber}
               onChange={setNewNumber}
+              pattern={telephoneNumberExpression}
+              getValidationMessage={() =>
+                'Please enter a valid telephone number'
+              }
+              type={'tel'}
             />
           </div>
         </>

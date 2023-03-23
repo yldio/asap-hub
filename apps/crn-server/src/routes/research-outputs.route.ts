@@ -82,18 +82,8 @@ export const researchOutputRouteFactory = (
     const createRequest = validateResearchOutputPostRequestParameters(body);
     validateResearchOutputPostRequestParametersIdentifiers(createRequest);
 
-    const userRole = getUserRole(
-      loggedInUser as UserResponse,
-      'teams',
-      createRequest.teams,
-    );
-
     const options = validateResearchOutputRequestQueryParameters(query);
     const publish = options.publish ?? true;
-
-    if (!loggedInUser || !hasEditResearchOutputPermission(userRole, false)) {
-      throw Boom.forbidden();
-    }
 
     const researchOutput = await researchOutputController.create(
       {

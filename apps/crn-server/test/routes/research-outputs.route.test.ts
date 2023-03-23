@@ -223,18 +223,6 @@ describe('/research-outputs/ route', () => {
       expect(response.body).toEqual(researchOutputResponse);
     });
 
-    test('Should return 403 when user is not permitted to create research output', async () => {
-      const researchOutput = getResearchOutputPostRequest();
-
-      const response = await supertest(app)
-        .post('/research-outputs/')
-        .send({
-          ...researchOutput,
-          teams: ['team-id-that-does-not-belong-to-user'],
-        });
-      expect(response.status).toBe(403);
-    });
-
     test('Should return a 500 error when creating a research output fails due to server error', async () => {
       const researchOutput = getResearchOutputPostRequest();
 

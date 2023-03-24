@@ -35,14 +35,6 @@ const divWithActionsStyle = css({
   },
 });
 
-const overrideButtonStyles = css({
-  margin: 0,
-  maxWidth: 'fit-content',
-  [mobileQuery]: {
-    maxWidth: '100%',
-  },
-});
-
 type ResourceModalProps = Partial<gp2.Resource> & {
   modalTitle: string;
   modalDescription: string;
@@ -166,28 +158,19 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
             />
           </div>
           <footer css={[footerStyles, padding24Styles]}>
-            <Link
-              href={backHref}
-              buttonStyle
-              noMargin
-              overrideStyles={css({
-                maxWidth: 'fit-content',
-              })}
-            >
-              Cancel
-            </Link>
+            <div>
+              <Link href={backHref} buttonStyle noMargin>
+                Cancel
+              </Link>
+            </div>
             <div css={css(divWithActionsStyle)}>
               {onDelete !== noop && (
-                <Button
-                  overrideStyles={overrideButtonStyles}
-                  onClick={() => asyncFunctionWrapper(onDelete)}
-                >
+                <Button noMargin onClick={() => asyncFunctionWrapper(onDelete)}>
                   Delete
                 </Button>
               )}
-
               <Button
-                overrideStyles={overrideButtonStyles}
+                noMargin
                 primary
                 onClick={() => asyncFunctionWrapper(onSaveFunction)}
                 enabled={!isSaving}

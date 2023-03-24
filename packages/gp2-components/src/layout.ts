@@ -100,4 +100,7 @@ export const formContainer = css({
   flexDirection: 'column',
   gap: rem(18),
   overflowY: 'scroll',
+  [mobileQuery]: {
+    overflowY: 'unset',
+  },
 });

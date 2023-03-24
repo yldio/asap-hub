@@ -2,7 +2,7 @@ import {
   ResearchOutputDocumentType,
   ResearchOutputResponse,
 } from '@asap-hub/model';
-import { sharedResearch } from '@asap-hub/routing';
+import { sharedResearch, network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import { useState } from 'react';
@@ -160,21 +160,24 @@ const RelatedResearch: React.FC<RecentSharedOutputProp> = ({
                 </Link>
               </p>
               <span css={[titleStyles, rowTitleStyles]}>Team</span>
+
               {teams.length > 1 ? (
                 <p css={paragraphStyle}>Multiple teams</p>
               ) : (
-                <p css={paragraphStyle}>
-                  <Link
-                    ellipsed
-                    href={
-                      sharedResearch({}).researchOutput({
-                        researchOutputId: id,
-                      }).$
-                    }
-                  >
-                    {teams[0].displayName}
-                  </Link>
-                </p>
+                teams[0] && (
+                  <p css={paragraphStyle}>
+                    <Link
+                      ellipsed
+                      href={
+                        network({}).teams({}).team({
+                          teamId: teams[0].id,
+                        }).$
+                      }
+                    >
+                      {teams[0].displayName}
+                    </Link>
+                  </p>
+                )
               )}
             </div>
           ))}

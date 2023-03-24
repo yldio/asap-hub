@@ -30,6 +30,7 @@ it('displays the related research links and icons', () => {
       relatedResearch={[
         {
           ...createResearchOutputResponse(),
+          id: 'id-1',
           documentType: 'Article',
           title: 'Genetics',
           type: 'Preprint',
@@ -40,8 +41,33 @@ it('displays the related research links and icons', () => {
   );
   expect(getAllByText('Article').length).toEqual(2);
   expect(getByText('Preprint')).toBeVisible();
-  expect(getByRole('link', { name: 'Team 1' })).toBeVisible();
-  expect(getByRole('link', { name: 'Genetics' })).toBeVisible();
+  expect(getByRole('link', { name: 'Team 1' })).toHaveAttribute(
+    'href',
+    '/network/teams/1',
+  );
+  expect(getByRole('link', { name: 'Genetics' })).toHaveAttribute(
+    'href',
+    '/shared-research/id-1',
+  );
+});
+
+it('does not display the team link if there is no team', () => {
+  const { getAllByRole } = render(
+    <RelatedResearch
+      relatedResearch={[
+        {
+          ...createResearchOutputResponse(),
+          id: 'id-1',
+          documentType: 'Article',
+          title: 'Genetics',
+          type: 'Preprint',
+          teams: [],
+        },
+      ]}
+    />,
+  );
+
+  expect(getAllByRole('link').length).toEqual(1);
 });
 
 it('displays the multiple teams label', () => {

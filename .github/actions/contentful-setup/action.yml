@@ -23,8 +23,7 @@ runs:
   steps:
     - name: Setup Contentful Webhook
       shell: bash
-      run: |
-        yarn workspace @asap-hub/contentful space:setup-webhook
+      run: yarn workspace @asap-hub/contentful space:setup-webhook
       env:
         CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
         CONTENTFUL_ENVIRONMENT: ${{ inputs.contentful-environment }}

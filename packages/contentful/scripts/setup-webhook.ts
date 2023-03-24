@@ -11,8 +11,6 @@ const client = contentful.createClient({
   accessToken: contentfulManagementAccessToken,
 });
 
-console.log(contentfulWebhookAuthenticationToken);
-
 const app = async () => {
   const space = await client.getSpace(spaceId);
 

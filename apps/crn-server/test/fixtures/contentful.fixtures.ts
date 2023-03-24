@@ -38,6 +38,7 @@ export const getEntry = (fields: Field): Entry => ({
   references: jest.fn(),
   metadata: { tags: [] },
   sys: {
+    automationTags: [],
     space: contenfulSpaceLink,
     id: 'entry-id',
     type: 'Entry',

@@ -77,7 +77,7 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
     currentPage: 0,
     searchQuery: '',
     pageSize,
-    associationId: workingGroupId,
+    workingGroupId,
   });
 
   if (workingGroup) {

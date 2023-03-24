@@ -63,7 +63,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
     ...(draftOutputs
       ? {
           userAssociationMember,
-          associationId: teamId,
+          teamId,
           draftsOnly: true,
         }
       : {
@@ -92,7 +92,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
                 filters,
                 searchQuery,
                 userAssociationMember,
-                associationId: teamId,
+                teamId,
                 draftsOnly: true,
                 ...paginationParams,
               },

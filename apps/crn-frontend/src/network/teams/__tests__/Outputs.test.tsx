@@ -238,7 +238,7 @@ it('triggers draft research output export with custom file name', async () => {
       {
         searchQuery: '',
         filters,
-        associationId: teamId,
+        teamId,
         draftsOnly: true,
         userAssociationMember: true,
         currentPage: 0,

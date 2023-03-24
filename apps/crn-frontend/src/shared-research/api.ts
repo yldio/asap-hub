@@ -23,7 +23,8 @@ type ResearchOutputPublishedListOptions = GetListOptions & {
 };
 type ResearchOutputDraftListOptions = GetListOptions & {
   userAssociationMember: boolean;
-  associationId: string;
+  teamId?: string;
+  workingGroupId?: string;
   draftsOnly: true;
 };
 
@@ -111,15 +112,18 @@ export const getDraftResearchOutputs = async (
   authorization: string,
 ): Promise<ListResponse<ResearchOutputResponse>> => {
   if (options.userAssociationMember) {
-    const resp = await fetch(
-      createListApiUrl(
-        `research-outputs?status=draft&associationId=${options.associationId}`,
-        options,
-      ).toString(),
-      {
-        headers: { authorization },
-      },
-    );
+    const url = createListApiUrl(`research-outputs`, options);
+    url.searchParams.set('status', 'draft');
+    if (options.workingGroupId) {
+      url.searchParams.set('workingGroupId', options.workingGroupId);
+    }
+    if (options.teamId) {
+      url.searchParams.set('teamId', options.teamId);
+    }
+
+    const resp = await fetch(url.toString(), {
+      headers: { authorization },
+    });
     if (!resp.ok) {
       throw new Error(
         `Failed to fetch draft research outputs. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,

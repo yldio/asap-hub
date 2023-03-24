@@ -304,7 +304,7 @@ describe('getDraftResearchOutputs', () => {
         pageSize: 10,
         searchQuery: '',
         userAssociationMember: true,
-        associationId: '123',
+        teamId: '123',
         currentPage: 0,
         draftsOnly: true,
         filters: new Set(),
@@ -314,12 +314,12 @@ describe('getDraftResearchOutputs', () => {
     expect(nock.isDone()).toBe(true);
   });
 
-  it('does a draft research outputs query and returns results for user association members', async () => {
+  it('does a draft team research outputs query and returns results for user association members', async () => {
     nock(API_BASE_URL)
       .get('/research-outputs')
       .query({
         status: 'draft',
-        associationId: '123',
+        teamId: '123',
         take: 10,
         skip: 0,
       })
@@ -330,7 +330,34 @@ describe('getDraftResearchOutputs', () => {
           pageSize: 10,
           searchQuery: '',
           userAssociationMember: true,
-          associationId: '123',
+          teamId: '123',
+          currentPage: 0,
+          draftsOnly: true,
+          filters: new Set(),
+        },
+        '',
+      ),
+    ).toEqual(createListResearchOutputResponse(1));
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('does a draft working group research outputs query and returns results for user association members', async () => {
+    nock(API_BASE_URL)
+      .get('/research-outputs')
+      .query({
+        status: 'draft',
+        workingGroupId: '123',
+        take: 10,
+        skip: 0,
+      })
+      .reply(200, createListResearchOutputResponse(1));
+    expect(
+      await getDraftResearchOutputs(
+        {
+          pageSize: 10,
+          searchQuery: '',
+          userAssociationMember: true,
+          workingGroupId: '123',
           currentPage: 0,
           draftsOnly: true,
           filters: new Set(),
@@ -348,7 +375,7 @@ describe('getDraftResearchOutputs', () => {
           pageSize: 10,
           searchQuery: '',
           userAssociationMember: false,
-          associationId: '123',
+          teamId: '123',
           currentPage: 0,
           draftsOnly: true,
           filters: new Set(),
@@ -369,7 +396,7 @@ describe('getDraftResearchOutputs', () => {
           pageSize: 10,
           searchQuery: '',
           userAssociationMember: true,
-          associationId: '123',
+          teamId: '123',
           currentPage: 0,
           draftsOnly: true,
           filters: new Set(),

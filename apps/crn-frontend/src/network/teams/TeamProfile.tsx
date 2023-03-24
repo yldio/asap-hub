@@ -76,7 +76,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
     currentPage: 0,
     searchQuery: '',
     pageSize,
-    associationId: teamId,
+    teamId,
   });
 
   if (team) {

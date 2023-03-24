@@ -177,12 +177,12 @@ export default class ResearchOutputs implements ResearchOutputController {
       workingGroups: researchOutputUpdateData.workingGroups,
     };
 
-    const researchOutputId = await this.researchOutputDataProvider.update(
+    await this.researchOutputDataProvider.update(
       id,
       researchOutputUpdateDataObject,
     );
 
-    return this.fetchById(researchOutputId);
+    return this.fetchById(id);
   }
 
   private async validateResearchOutput(
@@ -246,7 +246,6 @@ export default class ResearchOutputs implements ResearchOutputController {
     };
   }
 
-  // eslint-disable-next-line class-methods-use-this
   private validateTeamList(
     researchOutputData: ResearchOutputUpdateData,
     currentResearchOutput: ResearchOutputDataObject,
@@ -356,7 +355,6 @@ export default class ResearchOutputs implements ResearchOutputController {
       }),
     );
 
-  // eslint-disable-next-line class-methods-use-this
   private convertDataProviderWorkingGroupsToResponseType = (
     workingGroups: Pick<WorkingGroupResponse, 'id' | 'title'>[],
   ): [Pick<WorkingGroupResponse, 'id' | 'title'>] | undefined =>

@@ -1,8 +1,15 @@
-/* eslint-disable class-methods-use-this */
 import { ListUserDataObject, UserDataObject } from '@asap-hub/model';
-import { UserDataProvider } from '../users.data-provider';
+import { UserDataProvider } from '../types';
 
 export class UserContentfulDataProvider implements UserDataProvider {
+  async create(): Promise<string> {
+    throw new Error('Method not implemented.');
+  }
+
+  async update(): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+
   async fetchById(): Promise<UserDataObject | null> {
     return {
       id: '1',
@@ -40,13 +47,5 @@ export class UserContentfulDataProvider implements UserDataProvider {
       ],
       total: 1,
     };
-  }
-
-  async create(): Promise<string> {
-    throw new Error('Method not implemented.');
-  }
-
-  async update(): Promise<void> {
-    throw new Error('Method not implemented.');
   }
 }

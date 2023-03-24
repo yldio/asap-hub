@@ -1,13 +1,12 @@
 import {
   CalendarCreateDataObject,
-  CalendarDataObject as DefaultCalendarDataObject,
+  CalendarDataObject,
   CalendarUpdateDataObject,
-  EventCreateDataObject as DefaultEventCreateDataObject,
-  EventDataObject as DefaultEventDataObject,
-  EventUpdateDataObject as DefaultEventUpdateDataObject,
+  EventCreateDataObject,
+  EventDataObject,
+  EventUpdateDataObject,
   FetchEventsOptions,
-  ListCalendarDataObject as DefaultListCalendarDataObject,
-  ListEventDataObject as DefaultListEventDataObject,
+  ListResponse,
 } from '.';
 
 export type FetchCalendarProviderOptions = {
@@ -16,26 +15,40 @@ export type FetchCalendarProviderOptions = {
   resourceId?: string;
 };
 
-export interface CalendarDataProvider<
-  CalendarDataObject = DefaultCalendarDataObject,
-  ListCalendarDataObject = DefaultListCalendarDataObject,
-> {
-  create(create: CalendarCreateDataObject): Promise<string>;
-  update(id: string, update: CalendarUpdateDataObject): Promise<void>;
-  fetch(
-    options?: FetchCalendarProviderOptions,
-  ): Promise<ListCalendarDataObject>;
-  fetchById(id: string): Promise<CalendarDataObject | null>;
-}
+export type DataProvider<
+  TDataObject = null,
+  TFetchOptions = null,
+  TCreateData = null,
+  TCreateOptions = null,
+  TUpdateData = null,
+> = {
+  fetchById(id: string): Promise<TDataObject | null>;
+  fetch: (options: TFetchOptions) => Promise<ListResponse<TDataObject>>;
+} & (TCreateData extends null
+  ? // eslint-disable-next-line @typescript-eslint/ban-types
+    {}
+  : {
+      create(data: TCreateData, options?: TCreateOptions): Promise<string>;
+    }) &
+  (TUpdateData extends null
+    ? // eslint-disable-next-line @typescript-eslint/ban-types
+      {}
+    : {
+        update(id: string, data: TUpdateData): Promise<void>;
+      });
 
-export interface EventDataProvider<
-  EventDataObject = DefaultEventDataObject,
-  ListEventDataObject = DefaultListEventDataObject,
-  EventCreateDataObject = DefaultEventCreateDataObject,
-  EventUpdateDataObject = DefaultEventUpdateDataObject,
-> {
-  create(create: EventCreateDataObject): Promise<string>;
-  update(id: string, update: EventUpdateDataObject): Promise<void>;
-  fetch(options?: FetchEventsOptions): Promise<ListEventDataObject>;
-  fetchById(id: string): Promise<EventDataObject | null>;
-}
+export type CalendarDataProvider = DataProvider<
+  CalendarDataObject,
+  FetchCalendarProviderOptions,
+  CalendarCreateDataObject,
+  null,
+  CalendarUpdateDataObject
+>;
+
+export type EventDataProvider = DataProvider<
+  EventDataObject,
+  FetchEventsOptions,
+  EventCreateDataObject,
+  null,
+  EventUpdateDataObject
+>;

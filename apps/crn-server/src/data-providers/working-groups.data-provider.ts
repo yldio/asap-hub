@@ -3,6 +3,7 @@ import {
   WorkingGroupDataObject,
   WorkingGroupListDataObject,
   WorkingGroupUpdateDataObject,
+  DataProvider,
 } from '@asap-hub/model';
 import {
   RestWorkingGroup,
@@ -25,11 +26,13 @@ import {
 } from '../queries/working-groups.queries';
 import { buildODataFilter } from '../utils/odata';
 
-export interface WorkingGroupDataProvider {
-  fetchById(id: string): Promise<WorkingGroupDataObject | null>;
-  fetch(options: FetchWorkingGroupOptions): Promise<WorkingGroupListDataObject>;
-  update(id: string, data: WorkingGroupUpdateDataObject): Promise<void>;
-}
+export type WorkingGroupDataProvider = DataProvider<
+  WorkingGroupDataObject,
+  FetchWorkingGroupOptions,
+  null,
+  null,
+  WorkingGroupUpdateDataObject
+>;
 
 export class WorkingGroupSquidexDataProvider
   implements WorkingGroupDataProvider

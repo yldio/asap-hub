@@ -166,4 +166,12 @@ describe('Page data provider', () => {
       });
     });
   });
+
+  describe('Fetch-by-id', () => {
+    test('should throw an error', async () => {
+      await expect(pageDataProvider.fetchById()).rejects.toThrow(
+        'Method not implemented.',
+      );
+    });
+  });
 });

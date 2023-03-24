@@ -4,9 +4,10 @@ import {
   getWorkingGroupDataObject,
   getWorkingGroupResponse,
 } from '../fixtures/working-groups.fixtures';
-import { workingGroupDataProviderMock } from '../mocks/working-group-data-provider.mock';
+import { getDataProviderMock } from '../mocks/data-provider.mock';
 
 describe('Working Group controller', () => {
+  const workingGroupDataProviderMock = getDataProviderMock();
   const workingGroupController = new WorkingGroups(
     workingGroupDataProviderMock,
   );

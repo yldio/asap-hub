@@ -5,8 +5,12 @@ import {
   ResearchOutputPutRequest,
   researchOutputToIdentifierType,
   researchOutputTypes,
+  FetchOptions,
 } from '@asap-hub/model';
-import { validateInput } from '@asap-hub/server-common';
+import {
+  fetchOptionsValidationSchema,
+  validateInput,
+} from '@asap-hub/server-common';
 import {
   ResearchOutputIdentifierValidationExpression,
   urlExpression,
@@ -17,6 +21,32 @@ import { JSONSchemaType } from 'ajv';
 type ResearchOutputParameters = {
   researchOutputId: string;
 };
+
+type ResearchOutputFetchOptions = FetchOptions & {
+  status?: string;
+  teamId?: string;
+  workingGroupId?: string;
+};
+
+const researchOutputFetchOptionsValidationSchema: JSONSchemaType<ResearchOutputFetchOptions> =
+  {
+    type: 'object',
+    properties: {
+      ...fetchOptionsValidationSchema.properties,
+      status: { type: 'string', enum: ['draft'], nullable: true },
+      teamId: { type: 'string', nullable: true },
+      workingGroupId: { type: 'string', nullable: true },
+    },
+    additionalProperties: false,
+  };
+
+export const validateResearchOutputFetchOptions = validateInput(
+  researchOutputFetchOptionsValidationSchema,
+  {
+    skipNull: true,
+    coerce: true,
+  },
+);
 
 const researchOutputParametersValidationSchema: JSONSchemaType<ResearchOutputParameters> =
   {

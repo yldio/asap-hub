@@ -28,7 +28,7 @@
     "got": "11.8.6",
     "jwt-encode": "1.0.1",
     "luxon": "1.28.1",
-    "prettier": "2.8.6",
+    "prettier": "2.8.7",
     "pump": "3.0.0",
     "through2-concurrent": "2.0.0",
     "uuid": "8.3.2",

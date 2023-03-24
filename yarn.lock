@@ -394,7 +394,7 @@ __metadata:
     "@types/node": 14.18.42
     "@types/prettier": 2.7.2
     contentful-html-rich-text-converter: "yldio/contentful-html-rich-text-converter#v1.0.18"
-    contentful-management: ^10.19.3
+    contentful-management: 10.31.2
     graphql: 15.8.0
     graphql-tag: 2.12.6
     graphql-typescript-integration: 1.2.1
@@ -426,7 +426,7 @@ __metadata:
     "@types/jest": ^29.4.0
     "@types/node": 14.18.42
     contentful-cli: 1.19.1
-    contentful-management: ^10.19.3
+    contentful-management: 10.31.2
     contentful-migrate: "deluan/contentful-migrate#37b9b898599b9ba48644534d3f340b4c169df212"
     graphql: 15.8.0
     graphql-request: 3.4.0
@@ -20276,6 +20276,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"contentful-management@npm:10.31.2":
+  version: 10.31.2
+  resolution: "contentful-management@npm:10.31.2"
+  dependencies:
+    "@contentful/rich-text-types": ^16.0.3
+    "@types/json-patch": 0.0.30
+    axios: ^0.27.1
+    contentful-sdk-core: ^7.0.1
+    fast-copy: ^3.0.0
+    lodash.isplainobject: ^4.0.6
+    type-fest: ^3.0.0
+  checksum: 0ed7c608f686cff72f5be372115d5c0bf0cdcd31dd613c505d32cba1ca081bb65fc34ec4c2b13d765d069aae4bcc682306db06af96389f8958a4b0403b697d2d
+  languageName: node
+  linkType: hard
+
 "contentful-management@npm:^10.0.0":
   version: 10.14.0
   resolution: "contentful-management@npm:10.14.0"
@@ -20286,19 +20301,6 @@ __metadata:
     fast-copy: ^2.1.1
     lodash.isplainobject: ^4.0.6
   checksum: b72f79948c2cb4f4cecef906221cfc413f2bed4fbcb55992a6c8963660a293942e6deda3903686906ce51aecdf59ef42d5bff8697d256f8a1f9479fc9e88e8c2
-  languageName: node
-  linkType: hard
-
-"contentful-management@npm:^10.19.3":
-  version: 10.19.3
-  resolution: "contentful-management@npm:10.19.3"
-  dependencies:
-    "@types/json-patch": 0.0.30
-    axios: ^0.27.1
-    contentful-sdk-core: ^7.0.1
-    fast-copy: ^2.1.1
-    lodash.isplainobject: ^4.0.6
-  checksum: 8275b15acf3d9c30b8534378f07548b98579085f97b5aa7b221cc6049cad70232665f4b7013fe0129e727a729aeac0b7f1de728120d0bb4489d4eb8ca1444c4a
   languageName: node
   linkType: hard
 
@@ -41954,6 +41956,13 @@ __metadata:
   version: 2.19.0
   resolution: "type-fest@npm:2.19.0"
   checksum: a4ef07ece297c9fba78fc1bd6d85dff4472fe043ede98bd4710d2615d15776902b595abf62bd78339ed6278f021235fb28a96361f8be86ed754f778973a0d278
+  languageName: node
+  linkType: hard
+
+"type-fest@npm:^3.0.0":
+  version: 3.7.0
+  resolution: "type-fest@npm:3.7.0"
+  checksum: df6d65e7c78ee4eb90350720cbfef7ee66e815122b19a9faa4e24d604256b8596ed80cba7a5736fa0fc6b95e4e3d49713eb346e90d65a54f78a7e222efb6eda7
   languageName: node
   linkType: hard
 

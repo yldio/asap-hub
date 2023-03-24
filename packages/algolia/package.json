@@ -18,7 +18,7 @@
     "@asap-hub/model": "workspace:*",
     "@babel/runtime-corejs3": "7.21.0",
     "algoliasearch": "4.15.0",
-    "prettier": "2.8.6"
+    "prettier": "2.8.7"
   },
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",

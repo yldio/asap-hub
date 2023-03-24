@@ -1,5 +1,6 @@
 import { pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
+import colors from './templates/colors';
 
 const {
   largeDesktopScreen,
@@ -69,4 +70,34 @@ export const buttonWrapperStyle = css({
   [mobileQuery]: {
     width: '100%',
   },
+});
+
+export const modalStyles = css({
+  width: '100%',
+  height: '100%',
+  display: 'grid',
+  gridTemplateRows: `max-content 1fr max-content`,
+});
+
+export const footerStyles = css({
+  display: 'inline-flex',
+  gap: rem(24),
+  justifyContent: 'space-between',
+  [mobileQuery]: {
+    display: 'flex',
+    flexDirection: 'column-reverse',
+  },
+
+  borderTop: `1px solid ${colors.neutral500.rgb}`,
+});
+
+export const padding24Styles = css({
+  padding: rem(24),
+});
+
+export const formContainer = css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: rem(18),
+  overflowY: 'scroll',
 });

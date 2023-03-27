@@ -16,6 +16,7 @@ type EventListProps = {
   readonly currentTime: Date;
   readonly past?: boolean;
   constraint?: gp2.EventConstraint;
+  paddingTop?: number;
 };
 
 export const eventMapper = ({
@@ -75,6 +76,7 @@ const EventList: React.FC<EventListProps> = ({
   currentTime,
   past = false,
   constraint,
+  paddingTop = 48,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
 
@@ -114,7 +116,10 @@ const EventList: React.FC<EventListProps> = ({
           events={items.map(eventMapper)}
         />
       ) : (
-        <EmptyState icon={noEventCalendarIcon} {...{ title, description }} />
+        <EmptyState
+          icon={noEventCalendarIcon}
+          {...{ title, description, paddingTop }}
+        />
       )}
     </>
   );

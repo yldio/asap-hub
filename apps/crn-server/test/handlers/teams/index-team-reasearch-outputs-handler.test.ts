@@ -12,87 +12,8 @@ describe('Team Research Outputs Index', () => {
     algoliaSearchClientMock,
   );
 
-  const OLD_ENV = process.env;
-
-  beforeEach(() => {
-    jest.resetModules();
-    jest.resetAllMocks();
-    process.env = { ...OLD_ENV };
-  });
-
   afterEach(() => jest.clearAllMocks());
 
-  afterAll(() => {
-    process.env = OLD_ENV;
-  });
-
-  test('Should instantiate contentful data provider when feature flag is truthy', async () => {
-    process.env.IS_CONTENTFUL_ENABLED_V2 = 'true';
-
-    const {
-      indexResearchOutputByTeamHandler,
-    } = require('../../../src/handlers/teams/index-team-reasearch-outputs-handler');
-    const {
-      ExternalAuthorContentfulDataProvider,
-    } = require('../../../src/data-providers/contentful/external-authors.data-provider');
-    const {
-      ExternalAuthorSquidexDataProvider,
-    } = require('../../../src/data-providers/external-authors.data-provider');
-    const { getGraphQLClient } = require('@asap-hub/contentful');
-
-    jest.mock('@asap-hub/contentful');
-    jest.mock(
-      '../../../src/data-providers/contentful/external-authors.data-provider',
-    );
-    jest.mock('../../../src/data-providers/external-authors.data-provider');
-
-    const updateEvent = getEvent();
-
-    const indexHandler = indexResearchOutputByTeamHandler(
-      researchOutputControllerMock,
-      algoliaSearchClientMock,
-    );
-
-    await indexHandler(updateEvent);
-
-    expect(getGraphQLClient).toHaveBeenCalled();
-    expect(ExternalAuthorContentfulDataProvider).toHaveBeenCalled();
-    expect(ExternalAuthorSquidexDataProvider).not.toHaveBeenCalled();
-  });
-
-  test('Should instantiate squidex data provider when feature flag is falsy', async () => {
-    process.env.IS_CONTENTFUL_ENABLED_V2 = 'false';
-
-    const updateEvent = getEvent();
-
-    const {
-      indexResearchOutputByTeamHandler,
-    } = require('../../../src/handlers/teams/index-team-reasearch-outputs-handler');
-    const {
-      ExternalAuthorContentfulDataProvider,
-    } = require('../../../src/data-providers/contentful/external-authors.data-provider');
-    const {
-      ExternalAuthorSquidexDataProvider,
-    } = require('../../../src/data-providers/external-authors.data-provider');
-    const { getGraphQLClient } = require('@asap-hub/contentful');
-
-    jest.mock('@asap-hub/contentful');
-    jest.mock(
-      '../../../src/data-providers/contentful/external-authors.data-provider',
-    );
-    jest.mock('../../../src/data-providers/external-authors.data-provider');
-
-    const indexHandler = indexResearchOutputByTeamHandler(
-      researchOutputControllerMock,
-      algoliaSearchClientMock,
-    );
-
-    await indexHandler(updateEvent);
-
-    expect(getGraphQLClient).toHaveBeenCalled();
-    expect(ExternalAuthorContentfulDataProvider).not.toHaveBeenCalled();
-    expect(ExternalAuthorSquidexDataProvider).toHaveBeenCalled();
-  });
   test('Should fetch every research output and create a record on Algolia', async () => {
     const outputs = [
       { ...getResearchOutputResponse(), id: 'research-outputs-1' },

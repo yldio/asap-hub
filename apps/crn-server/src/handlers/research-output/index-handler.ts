@@ -2,10 +2,6 @@ import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
-import {
-  getGraphQLClient as getContentfulGraphQLClient,
-  getRestClient as getContentfulRestClient,
-} from '@asap-hub/contentful';
 import { EventBridgeHandler } from '@asap-hub/server-common';
 import {
   RestExternalAuthor,
@@ -20,11 +16,6 @@ import {
   algoliaIndex,
   appName,
   baseUrl,
-  contentfulAccessToken,
-  contentfulEnvId,
-  contentfulManagementAccessToken,
-  contentfulSpaceId,
-  isContentfulEnabledV2,
 } from '../../config';
 import ResearchOutputs, {
   ResearchOutputController,
@@ -36,7 +27,6 @@ import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
 import { ResearchOutputEvent, ResearchOutputPayload } from '../event-bus';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
-import { ExternalAuthorContentfulDataProvider } from '../../data-providers/contentful/external-authors.data-provider';
 
 export const indexResearchOutputHandler =
   (
@@ -67,20 +57,6 @@ export const indexResearchOutputHandler =
       throw e;
     }
   };
-
-const contentfulGraphQLClient = getContentfulGraphQLClient({
-  space: contentfulSpaceId,
-  accessToken: contentfulAccessToken,
-  environment: contentfulEnvId,
-});
-
-/* istanbul ignore next */
-const getContentfulRestClientFactory = () =>
-  getContentfulRestClient({
-    space: contentfulSpaceId,
-    accessToken: contentfulManagementAccessToken,
-    environment: contentfulEnvId,
-  });
 const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
   appName,
   baseUrl,
@@ -102,20 +78,10 @@ const researchOutputDataProvider = new ResearchOutputSquidexDataProvider(
 const researchTagDataProvider = new ResearchTagSquidexDataProvider(
   squidexGraphqlClient,
 );
-const externalAuthorDataProvider = isContentfulEnabledV2
-  ? new ExternalAuthorContentfulDataProvider(
-      contentfulGraphQLClient,
-      getContentfulRestClientFactory,
-    )
-  : new ExternalAuthorSquidexDataProvider(
-      externalAuthorRestClient,
-      squidexGraphqlClient,
-    );
-
-/* istanbul ignore next */
-const selectedAlgoliaIndex = isContentfulEnabledV2
-  ? `${algoliaIndex}-contentful`
-  : algoliaIndex;
+const externalAuthorDataProvider = new ExternalAuthorSquidexDataProvider(
+  externalAuthorRestClient,
+  squidexGraphqlClient,
+);
 
 export const handler = sentryWrapper(
   indexResearchOutputHandler(
@@ -127,7 +93,7 @@ export const handler = sentryWrapper(
     algoliaSearchClientFactory({
       algoliaApiKey,
       algoliaAppId,
-      algoliaIndex: selectedAlgoliaIndex,
+      algoliaIndex,
     }),
   ),
 );

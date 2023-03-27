@@ -1,3 +1,14 @@
+import {
+  createResearchOutputResponse,
+  createUserResponse,
+} from '@asap-hub/fixtures';
+import {
+  UserResponse,
+  teamRole,
+  workingGroupRole,
+  ResearchOutputWorkingGroupResponse,
+} from '@asap-hub/model';
+import { AuthHandler } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
@@ -7,17 +18,24 @@ import {
   getResearchOutputPutRequest,
   getResearchOutputResponse,
 } from '../fixtures/research-output.fixtures';
-import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { loggerMock } from '../mocks/logger.mock';
 import { researchOutputControllerMock } from '../mocks/research-outputs-controller.mock';
 
 describe('/research-outputs/ route', () => {
+  const userMockFactory = jest.fn<UserResponse, []>();
+  const authHandlerMock: AuthHandler = (req, _res, next) => {
+    req.loggedInUser = userMockFactory();
+    next();
+  };
   const app = appFactory({
     researchOutputController: researchOutputControllerMock,
     authHandler: authHandlerMock,
     logger: loggerMock,
   });
 
+  beforeEach(() => {
+    userMockFactory.mockReturnValue(createUserResponse());
+  });
   afterEach(() => {
     jest.resetAllMocks();
   });
@@ -192,6 +210,124 @@ describe('/research-outputs/ route', () => {
 
       expect(researchOutputControllerMock.fetchById).toBeCalledWith(
         researchOutputId,
+      );
+    });
+    test('Should return 404 when you are trying to get a draft and are not part of the team', async () => {
+      userMockFactory.mockReturnValueOnce(createUserResponse());
+
+      const researchOutputResponse = {
+        ...getResearchOutputResponse(),
+        published: false,
+        teams: [{ id: 'nop', displayName: 'team 1' }],
+      };
+
+      researchOutputControllerMock.fetchById.mockResolvedValueOnce(
+        researchOutputResponse,
+      );
+
+      const response = await supertest(app).get('/research-outputs/123');
+
+      expect(response.status).toEqual(404);
+    });
+    test('Should return 404 when you are trying to get a draft and are not part of the working group', async () => {
+      userMockFactory.mockReturnValueOnce(createUserResponse());
+
+      const researchOutputResponse: ResearchOutputWorkingGroupResponse = {
+        ...getResearchOutputResponse(),
+        published: false,
+        teams: [{ id: 'nop', displayName: 'team 1' }],
+        workingGroups: [{ id: 'nop', title: 'wg 1' }],
+      };
+
+      researchOutputControllerMock.fetchById.mockResolvedValueOnce(
+        researchOutputResponse,
+      );
+
+      const response = await supertest(app).get('/research-outputs/123');
+
+      expect(response.status).toEqual(404);
+    });
+    test('Should return 200 when you are ASAP staff member and are trying to get a draft', async () => {
+      userMockFactory.mockReturnValueOnce({
+        ...createUserResponse(),
+        role: 'Staff',
+      });
+
+      const researchOutputResponse = {
+        ...getResearchOutputResponse(),
+        published: false,
+        teams: [{ id: 'nop', displayName: 'team 1' }],
+      };
+
+      researchOutputControllerMock.fetchById.mockResolvedValueOnce(
+        researchOutputResponse,
+      );
+
+      const response = await supertest(app).get('/research-outputs/123');
+
+      expect(response.status).toEqual(200);
+    });
+    describe('Should return the team draft research output if you have the right permissions', () => {
+      test.each(teamRole)('for commonTeam role %s', async (teamRole) => {
+        const commonTeamId = 'team-1';
+
+        const loggedInUser = {
+          ...createUserResponse(),
+          teams: [{ id: commonTeamId, displayName: 'team 1', role: teamRole }],
+        };
+
+        userMockFactory.mockReturnValueOnce(loggedInUser);
+
+        const researchOutputResponse = {
+          ...getResearchOutputResponse(),
+          published: false,
+          teams: [{ id: commonTeamId, displayName: 'team 1' }],
+        };
+
+        researchOutputControllerMock.fetchById.mockResolvedValueOnce(
+          researchOutputResponse,
+        );
+
+        const response = await supertest(app).get('/research-outputs/123');
+
+        expect(response.status).toEqual(200);
+      });
+    });
+
+    describe('Should return the working group draft research output if you have the right permissions', () => {
+      test.each(workingGroupRole)(
+        'for workingGroup role %s',
+        async (workingGroupRole) => {
+          const commonWorkingGroupId = 'wg-1';
+
+          const loggedInUser = {
+            ...createUserResponse(),
+            workingGroups: [
+              {
+                id: commonWorkingGroupId,
+                name: 'wg 1',
+                role: workingGroupRole,
+                active: true,
+              },
+            ],
+          };
+          userMockFactory.mockReturnValueOnce(loggedInUser);
+          const researchOutputResponse: ResearchOutputWorkingGroupResponse = {
+            ...createResearchOutputResponse(),
+            published: false,
+            workingGroups: [
+              { id: commonWorkingGroupId, title: 'Working Group' },
+            ],
+          };
+
+          researchOutputControllerMock.fetchById.mockResolvedValueOnce(
+            researchOutputResponse,
+          );
+
+          const response = await supertest(app).get('/research-outputs/123');
+
+          expect(response.status).toEqual(200);
+        },
       );
     });
   });

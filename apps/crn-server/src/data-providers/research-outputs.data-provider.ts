@@ -96,7 +96,11 @@ export class ResearchOutputSquidexDataProvider
       await this.squidexGraphqlClient.request<
         FetchResearchOutputQuery,
         FetchResearchOutputQueryVariables
-      >(FETCH_RESEARCH_OUTPUT, { id, withTeams: true });
+      >(
+        FETCH_RESEARCH_OUTPUT,
+        { id, withTeams: true },
+        { includeDrafts: true },
+      );
 
     const { findResearchOutputsContent: researchOutputContent } =
       researchOutputGraphqlResponse;

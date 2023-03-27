@@ -96,7 +96,6 @@ jobs:
     uses: ./.github/workflows/reusable-algolia-sync.yml
     with:
       environment-name: Development
-      crn-contentful-env: Development
       contentful-environment-id: Development
       entity: all
     secrets:
@@ -145,7 +144,6 @@ jobs:
     with:
       environment-name: Production
       entity: all
-      crn-contentful-env: Production
       contentful-environment-id: Production
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}

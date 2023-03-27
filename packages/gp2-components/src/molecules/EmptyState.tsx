@@ -11,7 +11,7 @@ interface EmptyStateProps {
 }
 
 const styles = css({
-  padding: `${rem(32)} 0`,
+  padding: `${rem(48)} 0`,
   display: 'grid',
   textAlign: 'center',
 });

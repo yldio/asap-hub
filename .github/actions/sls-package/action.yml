@@ -69,7 +69,7 @@ runs:
       run: |
         yarn workspace @asap-hub/${{ inputs.app }} run pnpify serverless package --package $PWD/${{ inputs.app }}-sls-package
       env:
-        ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
+        ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-algolia-index }}
         AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
         AWS_REGION: ${{ steps.setup.outputs.aws-region }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}

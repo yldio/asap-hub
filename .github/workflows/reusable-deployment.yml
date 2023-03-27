@@ -118,7 +118,7 @@ jobs:
           gp2-squidex-shared-secret: ${{ secrets.GP2_SQUIDEX_SHARED_SECRET }}
           lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
 
-  algolia-settings:
+  crn-algolia-settings:
     needs: [crn-sls-deploy]
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
@@ -144,8 +144,8 @@ jobs:
         id: algolia-keys
         uses: ./.github/actions/algolia-keys
         with:
-          algolia-api-key-name: ${{ steps.setup.outputs.algolia-api-key-name }}
-          algolia-app-id-name: ${{ steps.setup.outputs.algolia-app-id-name }}
+          algolia-api-key-name: ${{ steps.setup.outputs.crn-algolia-api-key-name }}
+          algolia-app-id-name: ${{ steps.setup.outputs.crn-algolia-app-id-name }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -155,7 +155,7 @@ jobs:
         env:
           ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
-          ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
+          ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-algolia-index }}
       # TODO: CRN-1329 Remove this step once the migration is complete
       - name: Synchronize Schema for Contentful
         run: |
@@ -163,7 +163,7 @@ jobs:
         env:
           ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
-          ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
+          ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-algolia-index }}
 
   crn-squidex-schema:
     needs: [crn-sls-deploy]

@@ -1,23 +1,12 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
-import {
-  Divider,
-  LabeledMultiSelect,
-  Modal,
-  pixels,
-} from '@asap-hub/react-components';
-import { css } from '@emotion/react';
+import { LabeledMultiSelect, Modal } from '@asap-hub/react-components';
 
 import { useState } from 'react';
+import { formContainer, modalStyles, padding24Styles } from '../layout';
 import FilterModalFooter from '../molecules/FilterModalFooter';
 import FilterModalHeader from '../molecules/FilterModalHeader';
 
-const { rem } = pixels;
-
 const { userRegions, keywords } = gp2Model;
-
-const containerStyles = css({
-  padding: `${rem(32)} ${rem(24)}`,
-});
 
 type FiltersModalProps = {
   onBackClick: () => void;
@@ -82,53 +71,54 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
     selectedWorkingGroups.length;
   return (
     <Modal padding={false}>
-      <div css={containerStyles}>
+      <div css={modalStyles}>
         <FilterModalHeader numberOfFilter={numberOfFilter} />
-        <LabeledMultiSelect
-          title={'Expertise / Interests'}
-          placeholder="Start typing…"
-          values={getValues(selectedExpertise)}
-          suggestions={getValues([...keywords])}
-          onChange={onChange(setSelectedExpertise)}
-          noOptionsMessage={getNoOptionsMessage(
-            'Sorry, no current expertise / interests match',
-          )}
-        />
-        <LabeledMultiSelect
-          title={'Regions'}
-          placeholder="Start typing…"
-          values={getValues(selectedRegions)}
-          suggestions={getValues([...userRegions])}
-          onChange={onChange(setSelectedRegions)}
-          noOptionsMessage={getNoOptionsMessage(
-            'Sorry, no current regions match',
-          )}
-        />
-        <LabeledMultiSelect
-          title="Working Groups"
-          placeholder="Start typing…"
-          suggestions={workingGroups.map(entityToSelect).sort(sortByLabel)}
-          values={selectedWorkingGroups}
-          noOptionsMessage={getNoOptionsMessage(
-            'Sorry, no current working groups match',
-          )}
-          onChange={(newValues) => {
-            setSelectedWorkingGroups([...newValues]);
-          }}
-        />
-        <LabeledMultiSelect
-          title="Projects"
-          placeholder="Start typing…"
-          suggestions={projects.map(entityToSelect).sort(sortByLabel)}
-          values={selectedProjects}
-          noOptionsMessage={getNoOptionsMessage(
-            'Sorry, no current projects match',
-          )}
-          onChange={(newValues) => {
-            setSelectedProjects([...newValues]);
-          }}
-        />
-        <Divider />
+        <div css={[formContainer, padding24Styles]}>
+          <LabeledMultiSelect
+            title={'Expertise / Interests'}
+            placeholder="Start typing…"
+            values={getValues(selectedExpertise)}
+            suggestions={getValues([...keywords])}
+            onChange={onChange(setSelectedExpertise)}
+            noOptionsMessage={getNoOptionsMessage(
+              'Sorry, no current expertise / interests match',
+            )}
+          />
+          <LabeledMultiSelect
+            title={'Regions'}
+            placeholder="Start typing…"
+            values={getValues(selectedRegions)}
+            suggestions={getValues([...userRegions])}
+            onChange={onChange(setSelectedRegions)}
+            noOptionsMessage={getNoOptionsMessage(
+              'Sorry, no current regions match',
+            )}
+          />
+          <LabeledMultiSelect
+            title="Working Groups"
+            placeholder="Start typing…"
+            suggestions={workingGroups.map(entityToSelect).sort(sortByLabel)}
+            values={selectedWorkingGroups}
+            noOptionsMessage={getNoOptionsMessage(
+              'Sorry, no current working groups match',
+            )}
+            onChange={(newValues) => {
+              setSelectedWorkingGroups([...newValues]);
+            }}
+          />
+          <LabeledMultiSelect
+            title="Projects"
+            placeholder="Start typing…"
+            suggestions={projects.map(entityToSelect).sort(sortByLabel)}
+            values={selectedProjects}
+            noOptionsMessage={getNoOptionsMessage(
+              'Sorry, no current projects match',
+            )}
+            onChange={(newValues) => {
+              setSelectedProjects([...newValues]);
+            }}
+          />
+        </div>
         <FilterModalFooter
           onApply={() => {
             onApplyClick({

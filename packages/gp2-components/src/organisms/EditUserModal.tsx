@@ -1,38 +1,22 @@
 import { gp2 } from '@asap-hub/model';
 import {
   Button,
-  Divider,
   EditModal,
   Headline3,
   Link,
   noop,
   Paragraph,
-  pixels,
 } from '@asap-hub/react-components';
 
 import { css } from '@emotion/react';
 import { ReactNode } from 'react';
-import { mobileQuery } from '../layout';
-
-const { rem } = pixels;
-
-const buttonContainerStyles = css({
-  display: 'inline-flex',
-  gap: rem(24),
-  width: '100%',
-  justifyContent: 'space-between',
-  [mobileQuery]: {
-    display: 'flex',
-    flexDirection: 'column-reverse',
-  },
-  paddingTop: rem(24),
-});
-
-const formContainer = css({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: rem(18),
-});
+import {
+  footerStyles,
+  formContainer,
+  mobileQuery,
+  modalStyles,
+  padding24Styles,
+} from '../layout';
 
 const buttonStyles = css({
   width: 'fit-content',
@@ -69,22 +53,24 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
     onSave={onSave}
   >
     {({ isSaving }, asyncWrapper) => (
-      <div css={css({ width: '100%' })}>
-        <header>
+      <div css={modalStyles}>
+        <header css={padding24Styles}>
           <Headline3>{title}</Headline3>
           <Paragraph accent="lead">{description}</Paragraph>
         </header>
-        <div css={formContainer}>{children({ isSaving }, asyncWrapper)}</div>
-        <Divider />
-        <div css={buttonContainerStyles}>
+        <div css={[formContainer, padding24Styles]}>
+          {children({ isSaving }, asyncWrapper)}
+        </div>
+        <footer css={[footerStyles, padding24Styles]}>
           <div css={buttonStyles}>
-            <Link href={backHref} buttonStyle noMargin>
+            <Link href={backHref} buttonStyle fullWidth noMargin>
               Close
             </Link>
           </div>
           <div css={buttonStyles}>
             <Button
               primary
+              fullWidth
               onClick={() => asyncWrapper(onSave)}
               enabled={!isSaving}
               noMargin
@@ -92,7 +78,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
               Save
             </Button>
           </div>
-        </div>
+        </footer>
       </div>
     )}
   </EditModal>

@@ -40,6 +40,10 @@ declare module '@emotion/react' {
       EventPage?: {
         containerStyles: SerializedStyles;
       };
+      EditModal?: {
+        bodyStyles: SerializedStyles;
+        styles: SerializedStyles;
+      };
     };
   }
 }

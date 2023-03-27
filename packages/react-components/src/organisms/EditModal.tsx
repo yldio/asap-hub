@@ -1,3 +1,4 @@
+/** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import { ComponentProps, ReactNode, useEffect, useRef, useState } from 'react';
 import { Prompt } from 'react-router-dom';
@@ -90,7 +91,10 @@ const EditModal: React.FC<EditModalProps> = ({
           There was an error and we were unable to save your changes
         </Toast>
       )}
-      <form ref={formRef} css={styles}>
+      <form
+        ref={formRef}
+        css={({ components }) => [styles, components?.EditModal?.styles]}
+      >
         {!noHeader && (
           <ModalEditHeader
             title={title}
@@ -99,7 +103,12 @@ const EditModal: React.FC<EditModalProps> = ({
             onSave={() => asyncFunctionWrapper(onSave)}
           />
         )}
-        <main css={bodyStyles}>
+        <main
+          css={({ components }) => [
+            bodyStyles,
+            components?.EditModal?.bodyStyles,
+          ]}
+        >
           {children({ isSaving: status === 'isSaving' }, asyncFunctionWrapper)}
         </main>
       </form>

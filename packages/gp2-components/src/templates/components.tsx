@@ -45,6 +45,16 @@ const components = {
       padding: 0,
     },
   },
+  EditModal: {
+    bodyStyles: {
+      height: '100%',
+      boxSizing: 'border-box',
+      padding: 0,
+    },
+    styles: {
+      display: 'unset',
+    },
+  },
 };
 
 export default components;

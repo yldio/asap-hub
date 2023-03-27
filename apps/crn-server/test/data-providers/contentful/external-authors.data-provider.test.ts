@@ -8,7 +8,7 @@ import { getEntry } from '../../fixtures/contentful.fixtures';
 import {
   getContentfulGraphqlExternalAuthorsResponse,
   getContentfulGraphqlExternalAuthor,
-  getExternalAuthorResponse,
+  getExternalAuthorDataObject,
   getExternalAuthorCreateDataObject,
 } from '../../fixtures/external-authors.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
@@ -46,7 +46,7 @@ describe('External Authors Contentful Data Provider', () => {
 
       expect(result).toMatchObject({
         total: 1,
-        items: [getExternalAuthorResponse()],
+        items: [getExternalAuthorDataObject()],
       });
     });
 
@@ -96,7 +96,7 @@ describe('External Authors Contentful Data Provider', () => {
       });
 
       expect(result).toEqual({
-        items: [getExternalAuthorResponse()],
+        items: [getExternalAuthorDataObject()],
         total: 1,
       });
 
@@ -117,7 +117,7 @@ describe('External Authors Contentful Data Provider', () => {
         'user-id',
       );
 
-      expect(result).toMatchObject(getExternalAuthorResponse());
+      expect(result).toMatchObject(getExternalAuthorDataObject());
     });
 
     test('Should return null when user is not found', async () => {
@@ -135,7 +135,7 @@ describe('External Authors Contentful Data Provider', () => {
       });
 
       const result = await externalAuthorsDataProvider.fetchById('user-id');
-      expect(result).toEqual(getExternalAuthorResponse());
+      expect(result).toEqual(getExternalAuthorDataObject());
     });
   });
 

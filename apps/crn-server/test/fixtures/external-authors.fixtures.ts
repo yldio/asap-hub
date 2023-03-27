@@ -1,7 +1,9 @@
 import { FetchExternalAuthorsQuery as ContentfulFetchExternalAuthorsQuery } from '@asap-hub/contentful';
 import {
   ExternalAuthorCreateDataObject,
+  ExternalAuthorDataObject,
   ExternalAuthorResponse,
+  ListExternalAuthorDataObject,
   ListExternalAuthorResponse,
 } from '@asap-hub/model';
 import { WebhookPayload, ExternalAuthor } from '@asap-hub/squidex';
@@ -77,14 +79,14 @@ export const getGraphQLExternalAuthor = (
   },
 });
 
-export const getExternalAuthorResponse = (): ExternalAuthorResponse => ({
+export const getExternalAuthorDataObject = (): ExternalAuthorDataObject => ({
   id: 'external-author-id-1',
   displayName: 'external author one',
   orcid: 'orcid-1',
 });
 
-export const getListExternalAuthorResponse =
-  (): ListExternalAuthorResponse => ({
+export const getListExternalAuthorDataObject =
+  (): ListExternalAuthorDataObject => ({
     total: 2,
     items: [
       getExternalAuthorResponse(),
@@ -95,6 +97,12 @@ export const getListExternalAuthorResponse =
       },
     ],
   });
+
+export const getExternalAuthorResponse = (): ExternalAuthorResponse =>
+  getExternalAuthorDataObject();
+
+export const getListExternalAuthorResponse = (): ListExternalAuthorResponse =>
+  getListExternalAuthorDataObject();
 
 export const externalAuthorPublishedEvent: WebhookPayload<ExternalAuthor> = {
   type: 'ExternalAuthorsPublished',

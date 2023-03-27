@@ -1,8 +1,8 @@
 import {
   ExternalAuthorCreateDataObject,
-  ExternalAuthorResponse,
+  ExternalAuthorDataObject,
   FetchOptions,
-  ListExternalAuthorResponse,
+  ListExternalAuthorDataObject,
 } from '@asap-hub/model';
 
 import {
@@ -34,7 +34,7 @@ export class ExternalAuthorContentfulDataProvider
     private getRestClient: () => Promise<Environment>,
   ) {}
 
-  async fetch(options: FetchOptions): Promise<ListExternalAuthorResponse> {
+  async fetch(options: FetchOptions): Promise<ListExternalAuthorDataObject> {
     const { take = 8, skip = 0 } = options;
 
     const { externalAuthorsCollection } = await this.contentfulClient.request<
@@ -61,7 +61,7 @@ export class ExternalAuthorContentfulDataProvider
     };
   }
 
-  async fetchById(id: string): Promise<ExternalAuthorResponse | null> {
+  async fetchById(id: string): Promise<ExternalAuthorDataObject | null> {
     const { externalAuthors } = await this.contentfulClient.request<
       FetchExternalAuthorByIdQuery,
       FetchExternalAuthorByIdQueryVariables
@@ -95,7 +95,7 @@ export class ExternalAuthorContentfulDataProvider
 
 export const parseGraphQLExternalAuthor = (
   item: ExternalAuthorItem,
-): ExternalAuthorResponse => ({
+): ExternalAuthorDataObject => ({
   id: item.sys.id,
   orcid: item.orcid || undefined,
   displayName: item.name || '',

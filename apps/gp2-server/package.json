@@ -72,7 +72,7 @@
     "@types/lodash.matches": "4.6.7",
     "@types/luxon": "1.27.1",
     "@types/mime-types": "2.1.1",
-    "@types/node": "14.18.40",
+    "@types/node": "14.18.41",
     "@types/parse-data-url": "3.0.0",
     "@types/serverless": "3.12.11",
     "@types/source-map-support": "0.5.4",

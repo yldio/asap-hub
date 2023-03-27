@@ -9,7 +9,6 @@ import {
 } from '@asap-hub/model';
 import { parseDate } from '@asap-hub/squidex';
 import {
-  EnrichedContentEventType,
   FetchResearchOutputQuery,
   Labs,
   Scalars,
@@ -40,6 +39,7 @@ export const parseGraphQLResearchOutput = (
 
   const uniqueContactEmails = [...new Set(filteredContactEmails)];
 
+  const published = output.status === 'Published';
   const data = output.flatData;
   const type = researchOutputMapType(data.type);
 
@@ -120,7 +120,7 @@ export const parseGraphQLResearchOutput = (
         id: group.id,
         title: group.flatData.title || '',
       })) || [],
-    published: output.status === EnrichedContentEventType.Published,
+    published,
   };
 };
 

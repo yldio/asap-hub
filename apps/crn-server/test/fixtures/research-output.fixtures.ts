@@ -66,6 +66,7 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
   id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
   created: '2020-09-23T16:34:26.842Z',
   lastModified: '2021-05-14T14:48:46Z',
+  status: 'Published',
   version: 42,
   status: EnrichedContentEventType.Published,
   flatData: {

@@ -101,7 +101,6 @@ describe('ResearchOutputs controller', () => {
         NotFoundError,
       );
     });
-
     test('Should return the research output when it finds it', async () => {
       researchOutputDataProviderMock.fetchById.mockResolvedValueOnce(
         getResearchOutputDataObject(),

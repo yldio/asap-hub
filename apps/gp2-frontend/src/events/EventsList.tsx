@@ -7,12 +7,7 @@ import {
   speakerIcon,
 } from '@asap-hub/gp2-components';
 import { gp2 } from '@asap-hub/model';
-import {
-  EventsList,
-  Paragraph,
-  pixels,
-  utils,
-} from '@asap-hub/react-components';
+import { EventsList, Paragraph, utils } from '@asap-hub/react-components';
 
 import { usePagination, usePaginationParams } from '../hooks/pagination';
 import { useEvents } from './state';
@@ -22,8 +17,6 @@ type EventListProps = {
   readonly past?: boolean;
   constraint?: gp2.EventConstraint;
 };
-
-const { rem } = pixels;
 
 export const eventMapper = ({
   speakers,
@@ -111,7 +104,7 @@ const EventList: React.FC<EventListProps> = ({
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
   return (
-    <div style={{ padding: `${rem(48)} 0` }}>
+    <>
       {total ? (
         <EventsList
           currentPageIndex={currentPage}
@@ -123,7 +116,7 @@ const EventList: React.FC<EventListProps> = ({
       ) : (
         <EmptyState icon={noEventCalendarIcon} {...{ title, description }} />
       )}
-    </div>
+    </>
   );
 };
 

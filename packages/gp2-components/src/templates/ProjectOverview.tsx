@@ -31,7 +31,7 @@ const containerStyles = css({
   display: 'flex',
   flexDirection: 'column',
   gap: rem(32),
-  padding: `${rem(32)} 0 ${rem(48)}`,
+  padding: `0 0 ${rem(48)}`,
 });
 
 const contentStyles = css({

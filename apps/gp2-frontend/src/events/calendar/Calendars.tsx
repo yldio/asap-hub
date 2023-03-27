@@ -1,17 +1,11 @@
-import {
-  CalendarList,
-  EventsCalendar,
-  pixels,
-} from '@asap-hub/react-components';
+import { CalendarList, EventsCalendar } from '@asap-hub/react-components';
 
 import { useCalendars } from './state';
-
-const { rem } = pixels;
 
 const Calendars: React.FC<Record<string, never>> = () => {
   const { items } = useCalendars();
   return (
-    <div style={{ margin: `${rem(48)} 0` }}>
+    <div>
       <EventsCalendar calendars={items}>
         <CalendarList
           title="Subscribe to Working Groups on Calendar"

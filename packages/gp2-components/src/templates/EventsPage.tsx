@@ -3,7 +3,7 @@ import { gp2 } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 
 import { workingGroupsImage } from '../images';
-import { mobileQuery } from '../layout';
+import { mainStyles } from '../layout';
 import { PageBanner } from '../organisms';
 
 const { rem } = pixels;
@@ -15,16 +15,6 @@ const bannerProps = {
   description:
     'Discover past and upcoming events within the GP2 network to learn more about the great work that other members are doing.',
 };
-
-const mainStyles = css({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: rem(48),
-  [mobileQuery]: {
-    gap: rem(24),
-    padding: `${rem(32)} 0`,
-  },
-});
 
 const navStyles = css({
   marginTop: rem(32),

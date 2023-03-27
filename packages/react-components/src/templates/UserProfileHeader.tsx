@@ -24,7 +24,7 @@ const bigSizeQuery = `@media (min-width: ${tabletScreen.width}px)`;
 
 const containerStyles = css({
   backgroundColor: paper.rgb,
-  padding: `${12 / perRem}em ${contentSidePaddingWithNavigation(10)} 0`,
+  padding: `${12 / perRem}em ${contentSidePaddingWithNavigation(8)} 0`,
 
   display: 'grid',
   grid: `

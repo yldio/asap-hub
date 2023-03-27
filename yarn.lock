@@ -11490,16 +11490,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@peculiar/webcrypto@npm:1.4.2":
-  version: 1.4.2
-  resolution: "@peculiar/webcrypto@npm:1.4.2"
+"@peculiar/webcrypto@npm:1.4.3":
+  version: 1.4.3
+  resolution: "@peculiar/webcrypto@npm:1.4.3"
   dependencies:
     "@peculiar/asn1-schema": ^2.3.6
     "@peculiar/json-schema": ^1.1.12
     pvtsutils: ^1.3.2
     tslib: ^2.5.0
     webcrypto-core: ^1.7.7
-  checksum: a6caa2dade6783a8645dc2573e0294c359f6ecc27ab0960c1152fa171cf331590ce1e8dfde40cece462b3fbd870493980147b24cd797bb89d5d32def4a147119
+  checksum: 5604c02b7e9a8cef61bb4430e733e939c7737533ba65ba5fac4beb3a6d613add478ab45455cb57506789b6d00704d83e4965a0f712de3e8f40706e0961670e5c
   languageName: node
   linkType: hard
 
@@ -16887,7 +16887,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.21.0
     "@emotion/jest": ^11.10.5
     "@jeysal/babel-plugin-ramda": 2.0.1
-    "@peculiar/webcrypto": 1.4.2
+    "@peculiar/webcrypto": 1.4.3
     "@testing-library/jest-dom": ^5.16.5
     "@types/jest": ^29.4.0
     "@types/react-test-renderer": 17.0.2

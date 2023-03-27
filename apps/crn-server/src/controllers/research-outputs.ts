@@ -367,7 +367,6 @@ export interface ResearchOutputController {
   fetch: (
     options: ResearchOutputFetchOptions,
   ) => Promise<ListResearchOutputResponse>;
-
   fetchById: (id: string) => Promise<ResearchOutputResponse>;
   create: (
     researchOutputRequest: ResearchOutputCreateData,

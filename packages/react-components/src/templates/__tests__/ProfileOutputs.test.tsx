@@ -15,6 +15,7 @@ const baseProps: ComponentProps<typeof ProfileOutputs> = {
   listViewHref: '',
   userAssociationMember: true,
   workingGroupAssociation: false,
+  draftOutputs: false,
 };
 
 it('renders output cards', () => {
@@ -73,6 +74,9 @@ it('renders the no output page for your own team', () => {
   rerender(
     <ProfileOutputs
       {...baseProps}
+      numberOfItems={0}
+      numberOfPages={0}
+      researchOutputs={[]}
       userAssociationMember={true}
       contactEmail="example@example.com"
     />,
@@ -93,6 +97,9 @@ it('renders the no output page for another team', () => {
   rerender(
     <ProfileOutputs
       {...baseProps}
+      numberOfItems={0}
+      numberOfPages={0}
+      researchOutputs={[]}
       userAssociationMember={false}
       contactEmail="example@example.com"
     />,
@@ -107,13 +114,11 @@ it('renders the no outputs page for a working group', () => {
   const { getByRole, rerender } = render(
     <ProfileOutputs
       {...baseProps}
+      numberOfItems={0}
+      numberOfPages={0}
       userAssociationMember={false}
-      researchOutputs={[
-        {
-          ...createResearchOutputResponse(),
-        },
-      ]}
       workingGroupAssociation={true}
+      researchOutputs={[]}
     />,
   );
 
@@ -123,12 +128,44 @@ it('renders the no outputs page for a working group', () => {
   rerender(
     <ProfileOutputs
       {...baseProps}
+      numberOfItems={0}
+      numberOfPages={0}
       userAssociationMember={true}
-      researchOutputs={[createResearchOutputResponse()]}
+      researchOutputs={[]}
       workingGroupAssociation={true}
     />,
   );
   expect(getByRole('heading', { level: 1 }).textContent).toMatch(
     /Your working group/i,
+  );
+});
+
+it('renders the no draft output page for team', () => {
+  const { getByRole } = render(
+    <ProfileOutputs
+      {...baseProps}
+      draftOutputs
+      userAssociationMember={false}
+    />,
+  );
+  expect(getByRole('heading', { level: 1 }).textContent).toMatch(
+    /This team doesn’t have any draft outputs./i,
+  );
+});
+
+it('renders the no draft outputs page for a working group', () => {
+  const { getByRole } = render(
+    <ProfileOutputs
+      {...baseProps}
+      numberOfItems={0}
+      numberOfPages={0}
+      draftOutputs
+      workingGroupAssociation={true}
+      researchOutputs={[]}
+    />,
+  );
+
+  expect(getByRole('heading', { level: 1 }).textContent).toMatch(
+    /This working group doesn’t have any draft outputs./i,
   );
 });

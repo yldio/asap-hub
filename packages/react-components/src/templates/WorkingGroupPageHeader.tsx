@@ -113,6 +113,7 @@ type WorkingGroupPageHeaderProps = {
   readonly upcomingEventsCount?: number;
   readonly pastEventsCount?: number;
   readonly workingGroupsOutputsCount?: number;
+  readonly workingGroupsDraftOutputsCount?: number;
 } & Pick<
   WorkingGroupResponse,
   | 'id'
@@ -136,6 +137,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
   members,
   membersListElementId,
   workingGroupsOutputsCount = 0,
+  workingGroupsDraftOutputsCount,
   upcomingEventsCount,
   pastEventsCount,
 }) => {
@@ -264,8 +266,21 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
               .outputs({}).$
           }
         >
-          Working Group Outputs ({workingGroupsOutputsCount})
+          Outputs ({workingGroupsOutputsCount})
         </TabLink>
+        {workingGroupsDraftOutputsCount !== undefined && (
+          <TabLink
+            href={
+              network({})
+                .workingGroups({})
+                .workingGroup({ workingGroupId: id })
+                .draftOutputs({}).$
+            }
+          >
+            Draft Outputs ({workingGroupsDraftOutputsCount})
+          </TabLink>
+        )}
+
         {!complete && (
           <TabLink href={route.upcoming({}).$}>
             Upcoming Events {`(${upcomingEventsCount})`}

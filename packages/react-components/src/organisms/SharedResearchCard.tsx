@@ -2,11 +2,11 @@ import { ResearchOutputResponse } from '@asap-hub/model';
 import { network, sharedResearch } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 
-import { Card, Caption } from '../atoms';
+import { Card, Caption, StateTag } from '../atoms';
 import { AssociationList, LinkHeadline, UsersList } from '../molecules';
 import { formatDate } from '../date';
 import { SharedResearchMetadata } from '.';
-import { perRem } from '../pixels';
+import { perRem, rem } from '../pixels';
 
 const associationStyles = css({
   display: 'flex',
@@ -15,8 +15,16 @@ const associationStyles = css({
   rowGap: `${12 / perRem}em`,
 });
 
+const titleStyles = css({
+  display: 'flex',
+  columnGap: `${15 / perRem}em`,
+  flexWrap: 'wrap',
+  marginBottom: `${12 / perRem}em`,
+});
+
 type SharedResearchCardProps = Pick<
   ResearchOutputResponse,
+  | 'published'
   | 'addedDate'
   | 'authors'
   | 'created'
@@ -42,8 +50,9 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
   type,
   documentType,
   link,
+  published,
 }) => (
-  <Card>
+  <Card accent={published ? 'default' : 'neutral200'}>
     <SharedResearchMetadata
       pills={[
         workingGroups ? 'Working Group' : 'Team',
@@ -52,13 +61,20 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
       ]}
       link={link}
     />
-    <LinkHeadline
-      level={2}
-      styleAsHeading={4}
-      href={sharedResearch({}).researchOutput({ researchOutputId }).$}
-    >
-      {title}
-    </LinkHeadline>
+    <div css={titleStyles}>
+      <LinkHeadline
+        level={2}
+        styleAsHeading={4}
+        href={sharedResearch({}).researchOutput({ researchOutputId }).$}
+      >
+        {title}
+      </LinkHeadline>
+      {!published && (
+        <div css={{ margin: `auto 0 ${rem(12)} 0` }}>
+          <StateTag label="Draft" />
+        </div>
+      )}
+    </div>
     <UsersList
       max={3}
       users={authors.map((author) => ({
@@ -87,7 +103,7 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
       )}
     </div>
     <Caption accent={'lead'} asParagraph>
-      Date Added: {formatDate(new Date(addedDate))}
+      Date Added: {formatDate(new Date(addedDate || created))}
     </Caption>
   </Card>
 );

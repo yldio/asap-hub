@@ -19,6 +19,7 @@ export const Normal = () => {
       isListView={false}
       cardViewHref={''}
       listViewHref={''}
+      draftOutputs={boolean('Draft Outputs', false)}
       userAssociationMember={boolean('User is association member', true)}
       workingGroupAssociation={boolean(
         'Belongs to a working group association',

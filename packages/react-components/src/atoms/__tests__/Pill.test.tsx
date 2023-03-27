@@ -10,7 +10,7 @@ it('renders a tag label with content', () => {
 
 it.each`
   accent       | border                  | background              | text
-  ${'default'} | ${'rgb(223, 229, 234)'} | ${'rgb(255, 255, 255)'} | ${'rgb(77, 100, 107)'}
+  ${'default'} | ${'rgb(223, 229, 234)'} | ${'transparent'}        | ${'rgb(77, 100, 107)'}
   ${'green'}   | ${'rgb(40, 121, 83)'}   | ${'rgb(228, 245, 238)'} | ${'rgb(40, 121, 83)'}
   ${'warning'} | ${'rgb(206, 128, 26)'}  | ${'rgb(248, 237, 222)'} | ${'rgb(206, 128, 26)'}
   ${'info'}    | ${'rgb(12, 141, 195)'}  | ${'rgb(230, 243, 249)'} | ${'rgb(12, 141, 195)'}

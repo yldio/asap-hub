@@ -1,5 +1,6 @@
 import { AlgoliaSearchClient } from '@asap-hub/algolia';
 import {
+  createListResearchOutputResponse,
   createResearchOutputResponse,
   createResearchTagListResponse,
 } from '@asap-hub/fixtures';
@@ -9,7 +10,12 @@ import nock from 'nock';
 import { API_BASE_URL } from '../../config';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 import { createResearchOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
-import { getResearchOutput, getResearchOutputs, getResearchTags } from '../api';
+import {
+  getDraftResearchOutputs,
+  getResearchOutput,
+  getResearchOutputs,
+  getResearchTags,
+} from '../api';
 
 jest.mock('../../config');
 
@@ -253,7 +259,7 @@ describe('getResearchOutput', () => {
   });
 });
 
-describe('getReseachTags', () => {
+describe('getResearchTags', () => {
   it('makes an authorized GET request for the research tags', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
       .get('/research-tags')
@@ -283,6 +289,122 @@ describe('getReseachTags', () => {
       getResearchTags(''),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch research tags. Expected status 2xx. Received status 500."`,
+    );
+  });
+});
+
+describe('getDraftResearchOutputs', () => {
+  it('makes an authorized GET request for draft research outputs', async () => {
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .get('/research-outputs')
+      .query(true)
+      .reply(200, {});
+    await getDraftResearchOutputs(
+      {
+        pageSize: 10,
+        searchQuery: '',
+        userAssociationMember: true,
+        teamId: '123',
+        currentPage: 0,
+        draftsOnly: true,
+        filters: new Set(),
+      },
+      'Bearer x',
+    );
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('does a draft team research outputs query and returns results for user association members', async () => {
+    nock(API_BASE_URL)
+      .get('/research-outputs')
+      .query({
+        status: 'draft',
+        teamId: '123',
+        take: 10,
+        skip: 0,
+      })
+      .reply(200, createListResearchOutputResponse(1));
+    expect(
+      await getDraftResearchOutputs(
+        {
+          pageSize: 10,
+          searchQuery: '',
+          userAssociationMember: true,
+          teamId: '123',
+          currentPage: 0,
+          draftsOnly: true,
+          filters: new Set(),
+        },
+        '',
+      ),
+    ).toEqual(createListResearchOutputResponse(1));
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('does a draft working group research outputs query and returns results for user association members', async () => {
+    nock(API_BASE_URL)
+      .get('/research-outputs')
+      .query({
+        status: 'draft',
+        workingGroupId: '123',
+        take: 10,
+        skip: 0,
+      })
+      .reply(200, createListResearchOutputResponse(1));
+    expect(
+      await getDraftResearchOutputs(
+        {
+          pageSize: 10,
+          searchQuery: '',
+          userAssociationMember: true,
+          workingGroupId: '123',
+          currentPage: 0,
+          draftsOnly: true,
+          filters: new Set(),
+        },
+        '',
+      ),
+    ).toEqual(createListResearchOutputResponse(1));
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('returns an empty result when not an association member', async () => {
+    expect(
+      await getDraftResearchOutputs(
+        {
+          pageSize: 10,
+          searchQuery: '',
+          userAssociationMember: false,
+          teamId: '123',
+          currentPage: 0,
+          draftsOnly: true,
+          filters: new Set(),
+        },
+        '',
+      ),
+    ).toEqual({
+      items: [],
+      total: 0,
+    });
+  });
+
+  it('errors for another status', async () => {
+    nock(API_BASE_URL).get('/research-outputs').query(true).reply(500);
+    await expect(
+      getDraftResearchOutputs(
+        {
+          pageSize: 10,
+          searchQuery: '',
+          userAssociationMember: true,
+          teamId: '123',
+          currentPage: 0,
+          draftsOnly: true,
+          filters: new Set(),
+        },
+        '',
+      ),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Failed to fetch draft research outputs. Expected status 2xx. Received status 500."`,
     );
   });
 });

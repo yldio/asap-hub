@@ -129,3 +129,15 @@ it('displays authors when present', () => {
   );
   expect(getByText('ab')).toBeVisible();
 });
+
+it('displays draft tag when research output not published', () => {
+  const { getByText, queryByText, rerender } = render(
+    <SharedResearchCard {...sharedResearchCardProps} published={false} />,
+  );
+  expect(getByText('Draft')).toBeVisible();
+
+  rerender(
+    <SharedResearchCard {...sharedResearchCardProps} published={true} />,
+  );
+  expect(queryByText('Draft')).toBeNull();
+});

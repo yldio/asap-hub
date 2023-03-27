@@ -3,8 +3,8 @@ import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 
 import { Frame } from '@asap-hub/frontend-utils';
-import { NotFoundPage, WorkingGroupPage } from '@asap-hub/react-components';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
+import { NotFoundPage, WorkingGroupPage } from '@asap-hub/react-components';
 import { network, useRouteParams } from '@asap-hub/routing';
 
 import { usePaginationParams } from '../../hooks';
@@ -70,9 +70,26 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
     pageSize,
     workingGroupId,
   });
+  const outputDraftResults = useResearchOutputs({
+    filters: new Set(),
+    draftsOnly: true,
+    userAssociationMember: canShareResearchOutput,
+    currentPage: 0,
+    searchQuery: '',
+    pageSize,
+    workingGroupId,
+  });
 
   if (workingGroup) {
-    const { about, calendar, createOutput, outputs, past, upcoming } = route({
+    const {
+      about,
+      calendar,
+      createOutput,
+      outputs,
+      draftOutputs,
+      past,
+      upcoming,
+    } = route({
       workingGroupId,
     });
     const paths = {
@@ -81,6 +98,7 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
       outputs: path + outputs.template,
       past: path + past.template,
       upcoming: path + upcoming.template,
+      draftOutputs: path + draftOutputs.template,
     };
     return (
       <ResearchOutputPermissionsContext.Provider
@@ -96,8 +114,11 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
             upcomingEventsCount={upcomingEventsResult.total}
             pastEventsCount={pastEventsResult.total}
             membersListElementId={membersListElementId}
-            {...workingGroup}
+            workingGroupsDraftOutputsCount={
+              canShareResearchOutput ? outputDraftResults.total : undefined
+            }
             workingGroupsOutputsCount={outputResults.total}
+            {...workingGroup}
           >
             <ProfileSwitch
               About={() => (
@@ -112,11 +133,23 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
                   groupType="working"
                 />
               )}
+              DraftOutputs={() => (
+                <Outputs
+                  workingGroup={workingGroup}
+                  draftOutputs
+                  userAssociationMember={canShareResearchOutput}
+                />
+              )}
               currentTime={currentTime}
               displayName={workingGroup.title}
               eventConstraint={{ workingGroupId }}
               isActive={!workingGroup.complete}
-              Outputs={() => <Outputs workingGroup={workingGroup} />}
+              Outputs={() => (
+                <Outputs
+                  userAssociationMember={canShareResearchOutput}
+                  workingGroup={workingGroup}
+                />
+              )}
               paths={paths}
               type="working group"
             />

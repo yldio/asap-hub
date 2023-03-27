@@ -2,7 +2,10 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createTeamResponse } from '@asap-hub/fixtures';
+import {
+  createListResearchOutputResponse,
+  createTeamResponse,
+} from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
 
 import { RecoilRoot } from 'recoil';
@@ -10,10 +13,16 @@ import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import Outputs from '../Outputs';
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
-import { getResearchOutputs } from '../../../shared-research/api';
+import {
+  getDraftResearchOutputs,
+  getResearchOutputs,
+} from '../../../shared-research/api';
 import { researchOutputsState } from '../../../shared-research/state';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
-import { MAX_ALGOLIA_RESULTS } from '../../../shared-research/export';
+import {
+  MAX_ALGOLIA_RESULTS,
+  MAX_SQUIDEX_RESULTS,
+} from '../../../shared-research/export';
 
 jest.mock('@asap-hub/frontend-utils', () => {
   const original = jest.requireActual('@asap-hub/frontend-utils');
@@ -34,6 +43,10 @@ afterEach(() => {
 const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
   typeof getResearchOutputs
 >;
+const mockGetDraftResearchOutputs =
+  getDraftResearchOutputs as jest.MockedFunction<
+    typeof getDraftResearchOutputs
+  >;
 
 const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
   typeof createCsvFileStream
@@ -43,6 +56,8 @@ const renderOutputs = async (
   searchQuery = '',
   filters = new Set<string>(),
   team = createTeamResponse(),
+  userAssociationMember = false,
+  draftOutputs = false,
 ) => {
   const result = render(
     <RecoilRoot
@@ -85,7 +100,11 @@ const renderOutputs = async (
                   network({}).teams({}).team({ teamId: team.id }).outputs({}).$
                 }
               >
-                <Outputs team={team} />
+                <Outputs
+                  userAssociationMember={userAssociationMember}
+                  draftOutputs={draftOutputs}
+                  team={team}
+                />
               </Route>
             </MemoryRouter>
           </WhenReady>
@@ -180,7 +199,7 @@ it('triggers export with the same parameters and custom file name', async () => 
 
   userEvent.click(getByText(/export/i));
   expect(mockCreateCsvFileStream).toHaveBeenLastCalledWith(
-    expect.stringMatching(/SharedOutputs_TeamExampleTeam123_\d+\.csv/),
+    expect.stringMatching(/SharedOutputs_Team_ExampleTeam123_\d+\.csv/),
     expect.anything(),
   );
   await waitFor(() =>
@@ -191,5 +210,45 @@ it('triggers export with the same parameters and custom file name', async () => 
       currentPage: 0,
       pageSize: MAX_ALGOLIA_RESULTS,
     }),
+  );
+});
+
+it('triggers draft research output export with custom file name', async () => {
+  const filters = new Set();
+  const teamId = '12345';
+  mockGetDraftResearchOutputs.mockResolvedValue({
+    ...createListResearchOutputResponse(2),
+  });
+
+  const { getByText } = await renderOutputs(
+    '',
+    new Set(),
+    {
+      ...createTeamResponse({}),
+      id: teamId,
+      displayName: 'Team123',
+    },
+    true,
+    true,
+  );
+
+  userEvent.click(getByText(/export as csv/i));
+  await waitFor(() =>
+    expect(mockGetDraftResearchOutputs).toHaveBeenCalledWith(
+      {
+        searchQuery: '',
+        filters,
+        teamId,
+        draftsOnly: true,
+        userAssociationMember: true,
+        currentPage: 0,
+        pageSize: MAX_SQUIDEX_RESULTS,
+      },
+      expect.anything(),
+    ),
+  );
+  expect(mockCreateCsvFileStream).toHaveBeenLastCalledWith(
+    expect.stringMatching(/SharedOutputs_Drafts_Team_Team123_\d+\.csv/),
+    expect.anything(),
   );
 });

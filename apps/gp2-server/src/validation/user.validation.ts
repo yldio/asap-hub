@@ -5,6 +5,7 @@ import {
   telephoneCountryExpression,
   telephoneNumberExpression,
   urlExpression,
+  USER_SOCIAL_NOT_URL,
 } from '@asap-hub/validation';
 import { JSONSchemaType } from 'ajv';
 
@@ -141,14 +142,30 @@ const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
       nullable: true,
       additionalProperties: false,
       properties: {
-        googleScholar: { type: 'string', nullable: true },
-        orcid: { type: 'string', nullable: true },
-        researchGate: { type: 'string', nullable: true },
-        researcherId: { type: 'string', nullable: true },
-        blog: { type: 'string', nullable: true },
-        twitter: { type: 'string', nullable: true },
-        linkedIn: { type: 'string', nullable: true },
-        github: { type: 'string', nullable: true },
+        googleScholar: {
+          type: 'string',
+          pattern: urlExpression,
+          nullable: true,
+        },
+        orcid: {
+          type: 'string',
+          pattern: USER_SOCIAL_NOT_URL.source,
+          nullable: true,
+        },
+        researchGate: {
+          type: 'string',
+          pattern: urlExpression,
+          nullable: true,
+        },
+        researcherId: {
+          type: 'string',
+          pattern: USER_SOCIAL_NOT_URL.source,
+          nullable: true,
+        },
+        blog: { type: 'string', pattern: urlExpression, nullable: true },
+        twitter: { type: 'string', pattern: urlExpression, nullable: true },
+        linkedIn: { type: 'string', pattern: urlExpression, nullable: true },
+        github: { type: 'string', pattern: urlExpression, nullable: true },
       },
     },
   },

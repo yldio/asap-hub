@@ -350,6 +350,84 @@ export enum EntryOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalAuthors) */
+export type ExternalAuthors = Entry & {
+  contentfulMetadata: ContentfulMetadata;
+  linkedFrom?: Maybe<ExternalAuthorsLinkingCollections>;
+  name?: Maybe<Scalars['String']>;
+  orcid?: Maybe<Scalars['String']>;
+  sys: Sys;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalAuthors) */
+export type ExternalAuthorsLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalAuthors) */
+export type ExternalAuthorsNameArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalAuthors) */
+export type ExternalAuthorsOrcidArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type ExternalAuthorsCollection = {
+  items: Array<Maybe<ExternalAuthors>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type ExternalAuthorsFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ExternalAuthorsFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ExternalAuthorsFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  name?: InputMaybe<Scalars['String']>;
+  name_contains?: InputMaybe<Scalars['String']>;
+  name_exists?: InputMaybe<Scalars['Boolean']>;
+  name_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  name_not?: InputMaybe<Scalars['String']>;
+  name_not_contains?: InputMaybe<Scalars['String']>;
+  name_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  orcid?: InputMaybe<Scalars['String']>;
+  orcid_contains?: InputMaybe<Scalars['String']>;
+  orcid_exists?: InputMaybe<Scalars['Boolean']>;
+  orcid_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  orcid_not?: InputMaybe<Scalars['String']>;
+  orcid_not_contains?: InputMaybe<Scalars['String']>;
+  orcid_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+};
+
+export type ExternalAuthorsLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type ExternalAuthorsLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum ExternalAuthorsOrder {
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  OrcidAsc = 'orcid_ASC',
+  OrcidDesc = 'orcid_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 /** Team's external tools [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalTools) */
 export type ExternalTools = Entry & {
   contentfulMetadata: ContentfulMetadata;
@@ -1024,6 +1102,8 @@ export type Query = {
   dashboard?: Maybe<Dashboard>;
   dashboardCollection?: Maybe<DashboardCollection>;
   entryCollection?: Maybe<EntryCollection>;
+  externalAuthors?: Maybe<ExternalAuthors>;
+  externalAuthorsCollection?: Maybe<ExternalAuthorsCollection>;
   externalTools?: Maybe<ExternalTools>;
   externalToolsCollection?: Maybe<ExternalToolsCollection>;
   media?: Maybe<Media>;
@@ -1075,6 +1155,21 @@ export type QueryEntryCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<EntryFilter>;
+};
+
+export type QueryExternalAuthorsArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryExternalAuthorsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ExternalAuthorsOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ExternalAuthorsFilter>;
 };
 
 export type QueryExternalToolsArgs = {
@@ -1396,6 +1491,9 @@ export type FetchDashboardQuery = {
                             | ({ __typename: 'Dashboard' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
+                            | ({ __typename: 'ExternalAuthors' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                             | ({ __typename: 'ExternalTools' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -1455,6 +1553,9 @@ export type FetchDashboardQuery = {
                             | ({ __typename: 'Dashboard' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
+                            | ({ __typename: 'ExternalAuthors' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                             | ({ __typename: 'ExternalTools' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -1502,6 +1603,56 @@ export type FetchDashboardQuery = {
   }>;
 };
 
+export type ExternalAuthorsContentFragment = Pick<
+  ExternalAuthors,
+  'name' | 'orcid'
+> & {
+  sys: Pick<
+    Sys,
+    'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+  >;
+};
+
+export type FetchExternalAuthorByIdQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchExternalAuthorByIdQuery = {
+  externalAuthors?: Maybe<
+    Pick<ExternalAuthors, 'name' | 'orcid'> & {
+      sys: Pick<
+        Sys,
+        'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+      >;
+    }
+  >;
+};
+
+export type FetchExternalAuthorsQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ExternalAuthorsOrder>> | InputMaybe<ExternalAuthorsOrder>
+  >;
+}>;
+
+export type FetchExternalAuthorsQuery = {
+  externalAuthorsCollection?: Maybe<
+    Pick<ExternalAuthorsCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          Pick<ExternalAuthors, 'name' | 'orcid'> & {
+            sys: Pick<
+              Sys,
+              'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+            >;
+          }
+        >
+      >;
+    }
+  >;
+};
+
 export type NewsContentFragment = Pick<
   News,
   'title' | 'shortText' | 'frequency' | 'link' | 'linkText' | 'publishDate'
@@ -1515,6 +1666,7 @@ export type NewsContentFragment = Pick<
           inline: Array<
             Maybe<
               | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
@@ -1560,6 +1712,9 @@ export type FetchNewsByIdQuery = {
               inline: Array<
                 Maybe<
                   | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ExternalAuthors' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                         sys: Pick<Sys, 'id'>;
@@ -1620,6 +1775,9 @@ export type FetchNewsQuery = {
                         | ({ __typename: 'Dashboard' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'ExternalAuthors' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'ExternalTools' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -1671,6 +1829,7 @@ export type PageContentFragment = Pick<
           inline: Array<
             Maybe<
               | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
@@ -1715,6 +1874,9 @@ export type FetchPagesQuery = {
                     inline: Array<
                       Maybe<
                         | ({ __typename: 'Dashboard' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ExternalAuthors' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'ExternalTools' } & {
@@ -1839,6 +2001,45 @@ export type FetchTeamsQuery = {
   >;
 };
 
+export const ExternalAuthorsContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ExternalAuthorsContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'ExternalAuthors' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sys' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'firstPublishedAt' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'publishedAt' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'publishedVersion' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'orcid' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ExternalAuthorsContentFragment, unknown>;
 export const NewsContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -2341,6 +2542,158 @@ export const FetchDashboardDocument = {
     ...PageContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchDashboardQuery, FetchDashboardQueryVariables>;
+export const FetchExternalAuthorByIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchExternalAuthorById' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'externalAuthors' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'ExternalAuthorsContent' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...ExternalAuthorsContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchExternalAuthorByIdQuery,
+  FetchExternalAuthorByIdQueryVariables
+>;
+export const FetchExternalAuthorsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchExternalAuthors' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'order' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'ExternalAuthorsOrder' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'externalAuthorsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'order' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'ExternalAuthorsContent' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...ExternalAuthorsContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchExternalAuthorsQuery,
+  FetchExternalAuthorsQueryVariables
+>;
 export const FetchNewsByIdDocument = {
   kind: 'Document',
   definitions: [

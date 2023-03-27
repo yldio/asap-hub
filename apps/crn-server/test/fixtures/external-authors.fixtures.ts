@@ -1,3 +1,4 @@
+import { FetchExternalAuthorsQuery as ContentfulFetchExternalAuthorsQuery } from '@asap-hub/contentful';
 import {
   ExternalAuthorCreateDataObject,
   ExternalAuthorResponse,
@@ -15,6 +16,29 @@ import {
   ExternalAuthorPayload,
 } from '../../src/handlers/event-bus';
 import { createEventBridgeEventMock } from '../helpers/events';
+
+export const getContentfulGraphqlExternalAuthor = (): NonNullable<
+  NonNullable<
+    ContentfulFetchExternalAuthorsQuery['externalAuthorsCollection']
+  >['items'][number]
+> => ({
+  sys: {
+    id: 'external-author-id-1',
+    firstPublishedAt: '2021-11-23T20:45:22Z',
+    publishedAt: '2021-11-26T15:33:18Z',
+    publishedVersion: 45,
+  },
+  name: 'external author one',
+  orcid: 'orcid-1',
+});
+
+export const getContentfulGraphqlExternalAuthorsResponse =
+  (): ContentfulFetchExternalAuthorsQuery => ({
+    externalAuthorsCollection: {
+      total: 1,
+      items: [getContentfulGraphqlExternalAuthor()],
+    },
+  });
 
 export const getSquidexExternalAuthorGraphqlResponse =
   (): FetchExternalAuthorQuery => ({

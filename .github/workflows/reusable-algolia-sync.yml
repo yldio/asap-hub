@@ -17,7 +17,7 @@ on:
         required: false
         type: string
         description: The PR number to run for
-      crn-contentful-env:
+      contentful-environment-id:
         description: 'CRN Contentful environment name'
         required: true
         type: string
@@ -33,6 +33,9 @@ on:
         required: true
       CRN_CONTENTFUL_ACCESS_TOKEN:
         description: 'CRN Contentful Access Token'
+        required: true
+      CONTENTFUL_MANAGEMENT_TOKEN:
+        description: 'Contentful Management Token'
         required: true
 jobs:
   sync_index:
@@ -121,6 +124,10 @@ jobs:
           algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           algolia-index: '${{ steps.setup.outputs.algolia-index }}_temp'
           entity-type: 'external-author'
+          contentful-env: ${{ inputs.contentful-environment-id }}
+          contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
+          contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
           squidex-app-name: ${{ steps.setup.outputs.crn-squidex-app-name }}
           squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
           squidex-ci-client-id: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
@@ -177,8 +184,9 @@ jobs:
           squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
           squidex-ci-client-id: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
           squidex-ci-client-secret: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
-          contentful-env: ${{ steps.setup.outputs.crn-contentful-env }}
+          contentful-env: ${{ inputs.contentful-environment-id }}
           contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
+          contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
           data-store: 'contentful'
       - name: Import Users (USERs | ALL)
@@ -193,8 +201,9 @@ jobs:
           squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
           squidex-ci-client-id: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
           squidex-ci-client-secret: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
-          contentful-env: ${{ steps.setup.outputs.crn-contentful-env }}
+          contentful-env: ${{ inputs.contentful-environment-id }}
           contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
+          contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
           data-store: 'contentful'
       - name: Import External Authors (EXTERNAL_AUTHORS | ALL)
@@ -209,8 +218,9 @@ jobs:
           squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
           squidex-ci-client-id: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
           squidex-ci-client-secret: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
-          contentful-env: ${{ steps.setup.outputs.crn-contentful-env }}
+          contentful-env: ${{ inputs.contentful-environment-id }}
           contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
+          contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
           data-store: 'contentful'
       - name: Import Events (EVENTS | ALL)
@@ -225,8 +235,9 @@ jobs:
           squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
           squidex-ci-client-id: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
           squidex-ci-client-secret: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
-          contentful-env: ${{ steps.setup.outputs.crn-contentful-env }}
+          contentful-env: ${{ inputs.contentful-environment-id }}
           contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
+          contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
           data-store: 'contentful'
       - name: Override index with the temp one

@@ -3,8 +3,7 @@ import { render, screen } from '@testing-library/react';
 import Milestone from '../Milestone';
 
 describe('Milestone', () => {
-  type Milestone = gp2.Milestone;
-  const getMilestone = (overrides: Partial<Milestone>): Milestone => ({
+  const getMilestone = (overrides: Partial<gp2.Milestone>): gp2.Milestone => ({
     title: 'a title',
     status: 'Active',
     ...overrides,

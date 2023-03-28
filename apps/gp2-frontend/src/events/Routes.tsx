@@ -34,14 +34,14 @@ const Events: FC<Record<string, never>> = () => {
       <Route exact path={path + gp2.events({}).upcoming.template}>
         <EventsPage>
           <Frame title="Upcoming Events">
-            <EventList currentTime={currentTime} />
+            <EventList currentTime={currentTime} paddingTop={32} />
           </Frame>
         </EventsPage>
       </Route>
       <Route exact path={path + gp2.events({}).past.template}>
         <EventsPage>
           <Frame title="Past Events">
-            <EventList past currentTime={currentTime} />
+            <EventList past currentTime={currentTime} paddingTop={32} />
           </Frame>
         </EventsPage>
       </Route>

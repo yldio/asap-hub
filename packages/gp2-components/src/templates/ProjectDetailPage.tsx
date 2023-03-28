@@ -1,8 +1,12 @@
+import { pixels } from '@asap-hub/react-components';
 import { ComponentProps } from 'react';
+import { mainStyles } from '../layout';
 
 import ProjectDetailHeader from '../organisms/ProjectDetailHeader';
 
 type ProjectDetailPageProps = ComponentProps<typeof ProjectDetailHeader>;
+
+const { rem } = pixels;
 
 const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
   children,
@@ -10,7 +14,7 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
 }) => (
   <article>
     <ProjectDetailHeader {...headerProps} />
-    <main>{children}</main>
+    <main css={[mainStyles, { padding: `${rem(32)} 0` }]}>{children}</main>
   </article>
 );
 

@@ -1,15 +1,20 @@
 /* istanbul ignore file */
 const noEventCalendarIcon = (
-  <svg width={36} height={36} fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg
+    width={36}
+    height={36}
+    fill="url(#myGradient)"
+    xmlns="http://www.w3.org/2000/svg"
+  >
     <path
       fillRule="evenodd"
       clipRule="evenodd"
       d="M6.5.2a1.3 1.3 0 0 1 1.3 1.3v2.9H28V1.5a1.3 1.3 0 1 1 2.6 0v2.9h3.9a1.3 1.3 0 0 1 1.3 1.3v28.8a1.3 1.3 0 0 1-1.3 1.3h-33a1.3 1.3 0 0 1-1.3-1.3V5.7a1.3 1.3 0 0 1 1.3-1.3h3.7V1.5A1.3 1.3 0 0 1 6.5.2ZM2.8 15.8v17.4h30.4V15.8H2.8Zm30.4-2.6H2.8V7h30.4v6.2Z"
-      fill="url(#a)"
+      stroke="none"
     />
     <defs>
       <linearGradient
-        id="a"
+        id="myGradient"
         x1={0.2}
         y1={35.8}
         x2={35.8}

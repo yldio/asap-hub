@@ -7,22 +7,16 @@ import {
   speakerIcon,
 } from '@asap-hub/gp2-components';
 import { gp2 } from '@asap-hub/model';
-import {
-  EventsList,
-  Paragraph,
-  pixels,
-  utils,
-} from '@asap-hub/react-components';
+import { EventsList, Paragraph, utils } from '@asap-hub/react-components';
 
 import { usePagination, usePaginationParams } from '../hooks/pagination';
 import { useEvents } from './state';
-
-const { rem } = pixels;
 
 type EventListProps = {
   readonly currentTime: Date;
   readonly past?: boolean;
   constraint?: gp2.EventConstraint;
+  paddingTop?: number;
 };
 
 export const eventMapper = ({
@@ -44,22 +38,52 @@ export const eventMapper = ({
 });
 
 const eventEmptyStateText = {
-  past: {
-    title: 'No past events available.',
-    description:
-      'When a working group, project or GP2 hub event finishes, it will be displayed here.',
+  eventPage: {
+    past: {
+      title: 'No past events available.',
+      description:
+        'When a working group, project or GP2 hub event finishes, it will be displayed here.',
+    },
+    upcoming: {
+      title: 'No upcoming events available.',
+      description:
+        'When a working group, project or the GP2 hub creates an event it will be listed here.',
+    },
   },
-  upcoming: {
-    title: 'No upcoming events available.',
-    description:
-      'When a working group, project or the GP2 hub creates an event it will be listed here.',
+  userPage: {
+    past: {
+      title: 'No past events available.',
+      description: 'It looks like this user hasn’t spoken at any events.',
+    },
+    upcoming: {
+      title: 'No upcoming events available.',
+      description: 'It looks like this user will not speak at any events.',
+    },
   },
+  projectAndWorkingGroupPage: {
+    past: {
+      title: 'No past events available.',
+      description: 'When an event happens, it will be displayed here.',
+    },
+    upcoming: {
+      title: 'No upcoming events available.',
+      description: 'When a new event is available, it will be displayed here.',
+    },
+  },
+};
+
+const setStateInformation = (constraint: gp2.EventConstraint) => {
+  if ('userId' in constraint) {
+    return eventEmptyStateText.userPage;
+  }
+  return eventEmptyStateText.projectAndWorkingGroupPage;
 };
 
 const EventList: React.FC<EventListProps> = ({
   currentTime,
   past = false,
   constraint,
+  paddingTop = 48,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
 
@@ -72,9 +96,13 @@ const EventList: React.FC<EventListProps> = ({
     }),
   );
 
+  const stateInformation = constraint
+    ? setStateInformation(constraint)
+    : eventEmptyStateText.eventPage;
+
   const { title, description } = past
-    ? eventEmptyStateText.past
-    : eventEmptyStateText.upcoming;
+    ? stateInformation.past
+    : stateInformation.upcoming;
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
   return (
@@ -88,9 +116,10 @@ const EventList: React.FC<EventListProps> = ({
           events={items.map(eventMapper)}
         />
       ) : (
-        <div style={{ marginTop: rem(32) }}>
-          <EmptyState icon={noEventCalendarIcon} {...{ title, description }} />
-        </div>
+        <EmptyState
+          icon={noEventCalendarIcon}
+          {...{ title, description, paddingTop }}
+        />
       )}
     </>
   );

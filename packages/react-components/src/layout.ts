@@ -3,7 +3,6 @@ import {
   vminLinearCalc,
   mobileScreen,
   largeDesktopScreen,
-  perRem,
 } from './pixels';
 import { color } from './colors';
 
@@ -37,9 +36,3 @@ export const contentSidePaddingWithNavigation = (
     30 + ((12 - desktopCols) / 2) * (largeDesktopColWidth + largeDesktopColGap),
     'px',
   );
-
-export const networkContentTopPadding = `${48 / perRem}em`;
-
-export const networkPageLayoutPaddingStyle = `${networkContentTopPadding} ${contentSidePaddingWithNavigation(
-  8,
-)}`;

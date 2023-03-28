@@ -13,30 +13,35 @@ import {
   GraphQLWorkingGroupResource,
 } from '../../src/data-providers/working-group.data-provider';
 
-export const getWorkingGroupDataObject =
-  (): gp2Model.WorkingGroupDataObject => ({
-    id: '11',
-    title: 'a working group title',
-    shortDescription: 'Short description',
-    description: 'longer description',
-    primaryEmail: 'primary.email@example.com',
-    secondaryEmail: 'secondary.email@example.com',
-    leadingMembers: 'Leading members',
-    members: [
-      { userId: '11', firstName: 'Tony', lastName: 'Stark', role: 'Lead' },
-    ],
-    resources: [
-      {
-        type: 'Note',
-        description: 'Working group resource description',
-        title: 'Working group resource title',
-      },
-    ],
-    calendar: {
-      id: '42',
-      name: 'working group calendar',
+export const getWorkingGroupDataObject = (): gp2Model.WorkingGroupDataObject => ({
+  id: '11',
+  title: 'a working group title',
+  shortDescription: 'Short description',
+  description: 'longer description',
+  primaryEmail: 'primary.email@example.com',
+  secondaryEmail: 'secondary.email@example.com',
+  leadingMembers: 'Leading members',
+  members: [
+    { userId: '11', firstName: 'Tony', lastName: 'Stark', role: 'Lead' },
+  ],
+  milestones: [
+    {
+      title: 'A working group milestone',
+      status: 'Active',
     },
-  });
+  ],
+  resources: [
+    {
+      type: 'Note',
+      description: 'Working group resource description',
+      title: 'Working group resource title',
+    },
+  ],
+  calendar: {
+    id: '42',
+    name: 'working group calendar',
+  },
+});
 
 export const getWorkingGroupUpdateDataObject =
   (): gp2Model.WorkingGroupUpdateDataObject => ({

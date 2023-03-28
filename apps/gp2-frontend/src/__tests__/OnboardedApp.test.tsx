@@ -12,7 +12,6 @@ import { Auth0Provider, WhenReady } from '../auth/test-utils';
 import Dashboard from '../dashboard/Dashboard';
 import OnboardedApp from '../OnboardedApp';
 import { getUser } from '../users/api';
-import { refreshUserState } from '../users/state';
 
 // We're not actually interested in testing what's rendered since it's all
 // declarative routes at this level - get any backend requests out of the way
@@ -31,11 +30,7 @@ beforeEach(() => {
 const renderAuthenticatedApp = async () => {
   const id = '42';
   render(
-    <RecoilRoot
-      initializeState={({ set }) => {
-        set(refreshUserState(id), Math.random());
-      }}
-    >
+    <RecoilRoot>
       <Suspense fallback="loading">
         <Auth0Provider user={{ id }}>
           <WhenReady>

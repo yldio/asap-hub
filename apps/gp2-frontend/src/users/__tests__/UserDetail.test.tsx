@@ -12,17 +12,14 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { refreshEventsState } from '../../events/state';
 import { getOutputs } from '../../outputs/api';
 import { getEvents } from '../../events/api';
-import { refreshOutputsState } from '../../outputs/state';
 import {
   getContributingCohorts,
   getInstitutions,
   getUser,
   patchUser,
 } from '../api';
-import { refreshCohortsState, refreshUserState } from '../state';
 import UserDetail from '../UserDetail';
 
 jest.mock('../api');
@@ -31,14 +28,7 @@ jest.mock('../../events/api');
 
 const renderUserDetail = async (id: string) => {
   render(
-    <RecoilRoot
-      initializeState={({ set }) => {
-        set(refreshUserState(id), Math.random());
-        set(refreshCohortsState, Math.random());
-        set(refreshOutputsState, Math.random());
-        set(refreshEventsState, Math.random());
-      }}
-    >
+    <RecoilRoot>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>

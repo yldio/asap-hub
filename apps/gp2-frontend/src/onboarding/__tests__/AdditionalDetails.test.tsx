@@ -15,7 +15,6 @@ import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getContributingCohorts, getUser, patchUser } from '../../users/api';
-import { refreshCohortsState, refreshUserState } from '../../users/state';
 import AdditionalDetails from '../AdditionalDetails';
 
 jest.mock('../../users/api');
@@ -24,12 +23,7 @@ mockConsoleError();
 
 const renderAdditionalDetails = async (id: string) => {
   render(
-    <RecoilRoot
-      initializeState={({ set }) => {
-        set(refreshUserState(id), Math.random());
-        set(refreshCohortsState, Math.random());
-      }}
-    >
+    <RecoilRoot>
       <Suspense fallback="loading">
         <Auth0Provider user={{ onboarded: false, id }}>
           <WhenReady>

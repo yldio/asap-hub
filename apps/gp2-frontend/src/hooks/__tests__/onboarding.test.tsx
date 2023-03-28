@@ -8,7 +8,6 @@ import { gp2 } from '@asap-hub/routing';
 import { getUser } from '../../users/api';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { stepToHref, useOnboarding } from '../onboarding';
-import { refreshUserState } from '../../users/state';
 
 jest.mock('../../users/api');
 
@@ -31,11 +30,7 @@ const wrapper =
   ): React.FC =>
   ({ children }) =>
     (
-      <RecoilRoot
-        initializeState={({ set }) => {
-          user?.id && set(refreshUserState(user.id), Math.random());
-        }}
-      >
+      <RecoilRoot>
         <Auth0Provider user={{ id: user?.id, onboarded: user?.onboarded }}>
           <WhenReady>
             <MemoryRouter initialEntries={[step]}>{children}</MemoryRouter>

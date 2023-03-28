@@ -12,7 +12,6 @@ import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { useSearch } from '../../hooks/search';
 import { getUsers } from '../api';
-import { refreshUsersState } from '../state';
 import UserList from '../UserList';
 
 jest.mock('@asap-hub/frontend-utils', () => {
@@ -54,11 +53,7 @@ const renderUserList = async ({
   }));
 
   render(
-    <RecoilRoot
-      initializeState={({ set }) => {
-        set(refreshUsersState, Math.random());
-      }}
-    >
+    <RecoilRoot>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>

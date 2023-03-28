@@ -17,7 +17,6 @@ import { getProjects } from '../../projects/api';
 import { getWorkingGroups } from '../../working-groups/api';
 import { getUsers } from '../api';
 import { MAX_SQUIDEX_RESULTS } from '../export';
-import { refreshUsersState } from '../state';
 import UserDirectory from '../UserDirectory';
 
 jest.mock('@asap-hub/frontend-utils', () => {
@@ -79,11 +78,7 @@ const renderUserDirectory = async ({
   }));
 
   render(
-    <RecoilRoot
-      initializeState={({ set }) => {
-        set(refreshUsersState, Math.random());
-      }}
-    >
+    <RecoilRoot>
       <Suspense fallback="loading">
         <Auth0Provider
           user={{ role: isAdministrator ? 'Administrator' : undefined }}

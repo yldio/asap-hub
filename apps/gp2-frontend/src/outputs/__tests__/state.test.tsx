@@ -4,7 +4,6 @@ import React from 'react';
 import { gp2 } from '@asap-hub/fixtures';
 import { getExternalUsers, getUsers } from '../../users/api';
 import { useAuthorSuggestions } from '../state';
-import { refreshUsersState } from '../../users/state';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 
 jest.mock('../../users/api');
@@ -15,11 +14,7 @@ const mockGetExternalUsers = getExternalUsers as jest.MockedFunction<
 >;
 
 const wrapper: React.FC = ({ children }) => (
-  <RecoilRoot
-    initializeState={({ set }) => {
-      set(refreshUsersState, Math.random());
-    }}
-  >
+  <RecoilRoot>
     <Auth0Provider user={{}}>
       <WhenReady>{children}</WhenReady>
     </Auth0Provider>

@@ -10,7 +10,7 @@ import {
 import ResearchOutputsSearch from './ResearchOutputsSearch';
 
 const styles = css({
-  padding: `${24 / perRem}em calc(${36 / perRem}em + ${vminLinearCalc(
+  padding: `${0 / perRem}em calc(${36 / perRem}em + ${vminLinearCalc(
     mobileScreen,
     24,
     largeDesktopScreen,
@@ -18,7 +18,7 @@ const styles = css({
     'px',
   )}) 0`,
   [`@media (max-width: ${tabletScreen.max}px)`]: {
-    padding: `${24 / perRem}em 0 0`,
+    padding: 0,
   },
 });
 

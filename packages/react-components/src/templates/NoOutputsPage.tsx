@@ -3,13 +3,19 @@ import { sharedResearch } from '@asap-hub/routing';
 import { ReactNode } from 'react';
 
 import { Display, Paragraph, Link } from '../atoms';
-import { mobileScreen } from '../pixels';
+import { vminLinearCalc, mobileScreen, largeDesktopScreen } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { libraryIcon } from '../icons';
 import { charcoal } from '../colors';
 
 const styles = css({
-  padding: `0 ${contentSidePaddingWithNavigation()}`,
+  padding: `${vminLinearCalc(
+    mobileScreen,
+    36,
+    largeDesktopScreen,
+    72,
+    'px',
+  )} ${contentSidePaddingWithNavigation()}`,
 
   display: 'grid',
   textAlign: 'center',

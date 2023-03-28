@@ -3,11 +3,11 @@ import { css } from '@emotion/react';
 
 import UserProfileHeader from './UserProfileHeader';
 import { steel } from '../colors';
-import { networkPageLayoutPaddingStyle } from '../layout';
+import { contentSidePaddingWithNavigation } from '../layout';
 
 const contentStyles = css({
   borderTop: `1px solid ${steel.rgb}`,
-  padding: networkPageLayoutPaddingStyle,
+  padding: `0 ${contentSidePaddingWithNavigation(10)}`,
 });
 
 type UserProfilePageProps = ComponentProps<typeof UserProfileHeader> & {

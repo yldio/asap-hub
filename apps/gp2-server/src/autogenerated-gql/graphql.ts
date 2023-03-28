@@ -4278,6 +4278,7 @@ export type WorkingGroupsDataDto = {
   description: Maybe<WorkingGroupsDataDescriptionDto>;
   leadingMembers: Maybe<WorkingGroupsDataLeadingMembersDto>;
   members: Maybe<WorkingGroupsDataMembersDto>;
+  milestones: Maybe<WorkingGroupsDataMilestonesDto>;
   primaryEmail: Maybe<WorkingGroupsDataPrimaryEmailDto>;
   resources: Maybe<WorkingGroupsDataResourcesDto>;
   secondaryEmail: Maybe<WorkingGroupsDataSecondaryEmailDto>;
@@ -4291,6 +4292,7 @@ export type WorkingGroupsDataInputDto = {
   description: InputMaybe<WorkingGroupsDataDescriptionInputDto>;
   leadingMembers: InputMaybe<WorkingGroupsDataLeadingMembersInputDto>;
   members: InputMaybe<WorkingGroupsDataMembersInputDto>;
+  milestones: InputMaybe<WorkingGroupsDataMilestonesInputDto>;
   primaryEmail: InputMaybe<WorkingGroupsDataPrimaryEmailInputDto>;
   resources: InputMaybe<WorkingGroupsDataResourcesInputDto>;
   secondaryEmail: InputMaybe<WorkingGroupsDataSecondaryEmailInputDto>;
@@ -4337,6 +4339,41 @@ export enum WorkingGroupsDataMembersRoleEnum {
   Lead = 'Lead',
   /** Working_group_member */
   WorkingGroupMember = 'Working_group_member',
+}
+
+/** The structure of the Working Group Milestones nested schema. */
+export type WorkingGroupsDataMilestonesChildDto = {
+  description: Maybe<Scalars['String']>;
+  link: Maybe<Scalars['String']>;
+  status: Maybe<WorkingGroupsDataMilestonesStatusEnum>;
+  title: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Working Group Milestones nested schema. */
+export type WorkingGroupsDataMilestonesChildInputDto = {
+  description: InputMaybe<Scalars['String']>;
+  link: InputMaybe<Scalars['String']>;
+  status: InputMaybe<WorkingGroupsDataMilestonesStatusEnum>;
+  title: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Working Group Milestones field of the Working Groups content type. */
+export type WorkingGroupsDataMilestonesDto = {
+  iv: Maybe<Array<WorkingGroupsDataMilestonesChildDto>>;
+};
+
+/** The structure of the Working Group Milestones field of the Working Groups content input type. */
+export type WorkingGroupsDataMilestonesInputDto = {
+  iv: InputMaybe<Array<WorkingGroupsDataMilestonesChildInputDto>>;
+};
+
+export enum WorkingGroupsDataMilestonesStatusEnum {
+  /** Active */
+  Active = 'Active',
+  /** Completed */
+  Completed = 'Completed',
+  /** Not_Started */
+  NotStarted = 'Not_Started',
 }
 
 /** The structure of the Working Group Email field of the Working Groups content type. */
@@ -4420,6 +4457,7 @@ export type WorkingGroupsFlatDataDto = {
   description: Maybe<Scalars['String']>;
   leadingMembers: Maybe<Scalars['String']>;
   members: Maybe<Array<WorkingGroupsDataMembersChildDto>>;
+  milestones: Maybe<Array<WorkingGroupsDataMilestonesChildDto>>;
   primaryEmail: Maybe<Scalars['String']>;
   resources: Maybe<Array<WorkingGroupsDataResourcesChildDto>>;
   secondaryEmail: Maybe<Scalars['String']>;
@@ -4691,6 +4729,14 @@ export type EventContentFragment = Pick<
                     }
                   >
                 >;
+                milestones: Maybe<
+                  Array<
+                    Pick<
+                      WorkingGroupsDataMilestonesChildDto,
+                      'title' | 'description' | 'status' | 'link'
+                    >
+                  >
+                >;
                 resources: Maybe<
                   Array<
                     Pick<
@@ -4885,6 +4931,14 @@ export type FetchEventsQuery = {
                               }
                             >
                           >;
+                          milestones: Maybe<
+                            Array<
+                              Pick<
+                                WorkingGroupsDataMilestonesChildDto,
+                                'title' | 'description' | 'status' | 'link'
+                              >
+                            >
+                          >;
                           resources: Maybe<
                             Array<
                               Pick<
@@ -5072,6 +5126,14 @@ export type FetchEventQuery = {
                             >
                           >;
                         }
+                      >
+                    >;
+                    milestones: Maybe<
+                      Array<
+                        Pick<
+                          WorkingGroupsDataMilestonesChildDto,
+                          'title' | 'description' | 'status' | 'link'
+                        >
                       >
                     >;
                     resources: Maybe<
@@ -5977,6 +6039,14 @@ export type WorkingGroupNetworkContentFragment = Pick<
                 }
               >
             >;
+            milestones: Maybe<
+              Array<
+                Pick<
+                  WorkingGroupsDataMilestonesChildDto,
+                  'title' | 'description' | 'status' | 'link'
+                >
+              >
+            >;
             resources: Maybe<
               Array<
                 Pick<
@@ -6025,6 +6095,14 @@ export type WorkingGroupNetworkContentFragment = Pick<
                     >
                   >;
                 }
+              >
+            >;
+            milestones: Maybe<
+              Array<
+                Pick<
+                  WorkingGroupsDataMilestonesChildDto,
+                  'title' | 'description' | 'status' | 'link'
+                >
               >
             >;
             resources: Maybe<
@@ -6077,6 +6155,14 @@ export type WorkingGroupNetworkContentFragment = Pick<
                 }
               >
             >;
+            milestones: Maybe<
+              Array<
+                Pick<
+                  WorkingGroupsDataMilestonesChildDto,
+                  'title' | 'description' | 'status' | 'link'
+                >
+              >
+            >;
             resources: Maybe<
               Array<
                 Pick<
@@ -6125,6 +6211,14 @@ export type WorkingGroupNetworkContentFragment = Pick<
                     >
                   >;
                 }
+              >
+            >;
+            milestones: Maybe<
+              Array<
+                Pick<
+                  WorkingGroupsDataMilestonesChildDto,
+                  'title' | 'description' | 'status' | 'link'
+                >
               >
             >;
             resources: Maybe<
@@ -6189,6 +6283,14 @@ export type FetchWorkingGroupNetworkQuery = {
                       }
                     >
                   >;
+                  milestones: Maybe<
+                    Array<
+                      Pick<
+                        WorkingGroupsDataMilestonesChildDto,
+                        'title' | 'description' | 'status' | 'link'
+                      >
+                    >
+                  >;
                   resources: Maybe<
                     Array<
                       Pick<
@@ -6237,6 +6339,14 @@ export type FetchWorkingGroupNetworkQuery = {
                           >
                         >;
                       }
+                    >
+                  >;
+                  milestones: Maybe<
+                    Array<
+                      Pick<
+                        WorkingGroupsDataMilestonesChildDto,
+                        'title' | 'description' | 'status' | 'link'
+                      >
                     >
                   >;
                   resources: Maybe<
@@ -6289,6 +6399,14 @@ export type FetchWorkingGroupNetworkQuery = {
                       }
                     >
                   >;
+                  milestones: Maybe<
+                    Array<
+                      Pick<
+                        WorkingGroupsDataMilestonesChildDto,
+                        'title' | 'description' | 'status' | 'link'
+                      >
+                    >
+                  >;
                   resources: Maybe<
                     Array<
                       Pick<
@@ -6337,6 +6455,14 @@ export type FetchWorkingGroupNetworkQuery = {
                           >
                         >;
                       }
+                    >
+                  >;
+                  milestones: Maybe<
+                    Array<
+                      Pick<
+                        WorkingGroupsDataMilestonesChildDto,
+                        'title' | 'description' | 'status' | 'link'
+                      >
                     >
                   >;
                   resources: Maybe<
@@ -6390,6 +6516,14 @@ export type WorkingGroupContentFragment = Pick<WorkingGroups, 'id'> & {
         }
       >
     >;
+    milestones: Maybe<
+      Array<
+        Pick<
+          WorkingGroupsDataMilestonesChildDto,
+          'title' | 'description' | 'status' | 'link'
+        >
+      >
+    >;
     resources: Maybe<
       Array<
         Pick<
@@ -6436,6 +6570,14 @@ export type FetchWorkingGroupQuery = {
                 >
               >;
             }
+          >
+        >;
+        milestones: Maybe<
+          Array<
+            Pick<
+              WorkingGroupsDataMilestonesChildDto,
+              'title' | 'description' | 'status' | 'link'
+            >
           >
         >;
         resources: Maybe<
@@ -6492,6 +6634,14 @@ export type FetchWorkingGroupsQuery = {
                       >
                     >;
                   }
+                >
+              >;
+              milestones: Maybe<
+                Array<
+                  Pick<
+                    WorkingGroupsDataMilestonesChildDto,
+                    'title' | 'description' | 'status' | 'link'
+                  >
                 >
               >;
               resources: Maybe<
@@ -6911,6 +7061,25 @@ export const WorkingGroupContentFragmentDoc = {
                           ],
                         },
                       },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'milestones' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'status' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'link' } },
                     ],
                   },
                 },

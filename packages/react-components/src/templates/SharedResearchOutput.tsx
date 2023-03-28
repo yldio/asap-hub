@@ -81,8 +81,13 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
     <div>
       {!published && (
         <Toast accent="warning">
-          This draft is available to members in the working group listed below.
-          Only PMs can publish this output.
+          This draft is available to members in the{' '}
+          {props.workingGroups
+            ? 'working group'
+            : props.teams.length > 1
+            ? 'teams'
+            : 'team'}{' '}
+          listed below. Only PMs can publish this output.
         </Toast>
       )}
       <div css={containerStyles}>

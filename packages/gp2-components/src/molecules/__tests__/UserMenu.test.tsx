@@ -40,7 +40,7 @@ describe('UserMenu', () => {
   });
 
   it('renders the projects', () => {
-    const projects: (typeof props)['projects'] = [
+    const projects: typeof props['projects'] = [
       {
         id: '11',
         title: 'the first project title',
@@ -65,7 +65,7 @@ describe('UserMenu', () => {
 
   it('links to the project details', () => {
     const closeUserMenu = jest.fn();
-    const projects: (typeof props)['projects'] = [
+    const projects: typeof props['projects'] = [
       {
         id: '11',
         title: 'the first project title',
@@ -91,7 +91,7 @@ describe('UserMenu', () => {
   });
 
   it('renders only active projects', () => {
-    const projects: (typeof props)['projects'] = [
+    const projects: typeof props['projects'] = [
       {
         id: '11',
         title: 'the first project title',
@@ -124,7 +124,7 @@ describe('UserMenu', () => {
   });
 
   it('renders the working groups', () => {
-    const workingGroups: (typeof props)['workingGroups'] = [
+    const workingGroups: typeof props['workingGroups'] = [
       {
         id: '11',
         title: 'the first wg title',
@@ -147,7 +147,7 @@ describe('UserMenu', () => {
 
   it('links to the working group detail page', () => {
     const closeUserMenu = jest.fn();
-    const workingGroups: (typeof props)['workingGroups'] = [
+    const workingGroups: typeof props['workingGroups'] = [
       {
         id: '11',
         title: 'the first wg title',
@@ -185,5 +185,11 @@ describe('UserMenu', () => {
     );
     fireEvent.mouseDown(screen.getByRole('heading'));
     expect(closeUserMenu).toBeCalledWith(false);
+  });
+
+  it('renders the bottom links', () => {
+    render(<UserMenu {...props} />);
+    expect(screen.getByText(/terms/i)).toBeVisible();
+    expect(screen.getByText(/privacy/i)).toBeVisible();
   });
 });

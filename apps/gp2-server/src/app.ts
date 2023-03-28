@@ -14,6 +14,7 @@ import {
   InputCalendar,
   RestCalendar,
   RestEvent,
+  RestPage,
   SquidexGraphql,
   SquidexRest,
 } from '@asap-hub/squidex';
@@ -37,6 +38,7 @@ import ExternalUsers, {
 } from './controllers/external-users.controller';
 import News, { NewsController } from './controllers/news.controller';
 import Outputs, { OutputController } from './controllers/output.controller';
+import Pages, { PageController } from './controllers/page.controller';
 import Projects, { ProjectController } from './controllers/project.controller';
 import Users, { UserController } from './controllers/user.controller';
 import WorkingGroupNetwork, {
@@ -68,6 +70,10 @@ import {
   OutputSquidexDataProvider,
 } from './data-providers/output.data-provider';
 import {
+  PageDataProvider,
+  PageSquidexDataProvider,
+} from './data-providers/page.data-provider';
+import {
   ProjectDataProvider,
   ProjectSquidexDataProvider,
 } from './data-providers/project.data-provider';
@@ -89,6 +95,7 @@ import { eventRouteFactory } from './routes/event.route';
 import { externalUserRouteFactory } from './routes/external-user.route';
 import { newsRouteFactory } from './routes/news.route';
 import { outputRouteFactory } from './routes/output.route';
+import { pageRouteFactory } from './routes/page.route';
 import { projectRouteFactory } from './routes/project.route';
 import { userPublicRouteFactory, userRouteFactory } from './routes/user.route';
 import { workingGroupNetworkRouteFactory } from './routes/working-group-network.route';
@@ -175,6 +182,10 @@ export const appFactory = (libs: Libs = {}): Express => {
       baseUrl,
     },
   );
+  const pageRestClient = new SquidexRest<RestPage>(getAuthToken, 'pages', {
+    appName,
+    baseUrl,
+  });
   const decodeToken = decodeTokenFactory(auth0Audience);
   const userResponseCacheClient = new MemoryCacheClient<gp2.UserResponse>();
 
@@ -220,6 +231,9 @@ export const appFactory = (libs: Libs = {}): Express => {
       squidexGraphqlClient,
       externalUserRestClient,
     );
+  const pageSquidexDataProvider =
+    libs.pageSquidexDataProvider || new PageSquidexDataProvider(pageRestClient);
+
   // Controllers
 
   const workingGroupController =
@@ -230,6 +244,8 @@ export const appFactory = (libs: Libs = {}): Express => {
   const projectController =
     libs.projectController || new Projects(projectDataProvider);
   const newsController = libs.newsController || new News(newsDataProvider);
+  const pageController =
+    libs.pageController || new Pages(pageSquidexDataProvider);
   const eventController = libs.eventController || new Events(eventDataProvider);
   const externalUsersController =
     libs.externalUsersController || new ExternalUsers(externalUserDataProvider);
@@ -262,6 +278,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const userPublicRoutes = userPublicRouteFactory(userController);
   const userRoutes = userRouteFactory(userController);
   const newsRoutes = newsRouteFactory(newsController);
+  const pageRoutes = pageRouteFactory(pageController);
   const contributingCohortRoutes = contributingCohortRouteFactory(
     contributingCohortController,
   );
@@ -274,6 +291,10 @@ export const appFactory = (libs: Libs = {}): Express => {
   const externalUsersRoutes = externalUserRouteFactory(externalUsersController);
   const calendarRoutes = calendarRouteFactory(calendarController);
   const outputRoutes = outputRouteFactory(outputController);
+  /**
+   * Public routes --->
+   */
+  app.use(pageRoutes);
   app.use(userPublicRoutes);
   // Auth
   app.use(authHandler);
@@ -323,6 +344,8 @@ export type Libs = {
   newsDataProvider?: NewsDataProvider;
   outputController?: OutputController;
   outputDataProvider?: OutputDataProvider;
+  pageController?: PageController;
+  pageSquidexDataProvider?: PageDataProvider;
   projectController?: ProjectController;
   projectDataProvider?: ProjectDataProvider;
   userController?: UserController;

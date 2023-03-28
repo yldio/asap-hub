@@ -13,11 +13,8 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getEvents } from '../../events/api';
-import { refreshEventsState } from '../../events/state';
 import { getOutputs } from '../../outputs/api';
-import { refreshOutputsState } from '../../outputs/state';
 import { getWorkingGroup, putWorkingGroupResources } from '../api';
-import { refreshWorkingGroupState } from '../state';
 import WorkingGroupDetail from '../WorkingGroupDetail';
 
 jest.mock('../api');
@@ -36,13 +33,7 @@ const renderWorkingGroupDetail = async ({
   role?: gp2Model.UserRole;
 }) => {
   render(
-    <RecoilRoot
-      initializeState={({ set }) => {
-        set(refreshWorkingGroupState(id), Math.random());
-        set(refreshOutputsState, Math.random());
-        set(refreshEventsState, Math.random());
-      }}
-    >
+    <RecoilRoot>
       <Suspense fallback="loading">
         <Auth0Provider user={{ id: userId, role }}>
           <WhenReady>

@@ -19,10 +19,7 @@ import {
 const fetchWorkingGroupNetworkState =
   selector<gp2.ListWorkingGroupNetworkResponse>({
     key: 'fetchWorkingGroupNetwork',
-    get: ({ get }) => {
-      get(refreshWorkingGroupNetworkState);
-      return getWorkingGroupNetwork(get(authorizationState));
-    },
+    get: ({ get }) => getWorkingGroupNetwork(get(authorizationState)),
   });
 
 const workingGroupNetworkState = atom<gp2.ListWorkingGroupNetworkResponse>({
@@ -35,10 +32,6 @@ export const refreshWorkingGroupNetworkState = atom<number>({
   default: 0,
 });
 
-export const refreshWorkingGroupState = atomFamily<number, string>({
-  key: 'refreshWorkingGroup',
-  default: 0,
-});
 const fetchWorkingGroupState = selectorFamily<
   gp2.WorkingGroupResponse | undefined,
   string
@@ -47,7 +40,6 @@ const fetchWorkingGroupState = selectorFamily<
   get:
     (id) =>
     async ({ get }) => {
-      get(refreshWorkingGroupState(id));
       const authorization = get(authorizationState);
       return getWorkingGroup(id, authorization);
     },

@@ -5,7 +5,7 @@ export interface ListResponse<T> {
 
 export const decisionOptions = ['Yes', 'No', 'Not Sure'] as const;
 
-export type DecisionOption = (typeof decisionOptions)[number];
+export type DecisionOption = typeof decisionOptions[number];
 
 export type FetchPaginationOptions = {
   take?: number;

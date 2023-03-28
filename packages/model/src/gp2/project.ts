@@ -1,8 +1,13 @@
 import { ListResponse } from '../common';
-import { Calendar, Keyword, Milestone, MilestoneStatus, Resource } from './common';
+import {
+  Calendar,
+  Keyword,
+  Milestone,
+  Resource,
+} from './common';
 
 export const projectStatus = ['Active', 'Paused', 'Completed'] as const;
-export type ProjectStatus = (typeof projectStatus)[number];
+export type ProjectStatus = typeof projectStatus[number];
 
 export const projectMemberRole = [
   'Contributor',
@@ -11,7 +16,7 @@ export const projectMemberRole = [
   'Project lead',
   'Project manager',
 ] as const;
-export type ProjectMemberRole = (typeof projectMemberRole)[number];
+export type ProjectMemberRole = typeof projectMemberRole[number];
 
 export type ProjectMember = {
   avatarUrl?: string;

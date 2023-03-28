@@ -27,12 +27,6 @@ export const workingGroupContentQueryFragment = gql`
           }
         }
       }
-      milestones {
-        title
-        description
-        status
-        link
-      }
       resources {
         type
         title

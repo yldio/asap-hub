@@ -3,7 +3,7 @@ import {
   GetEventListOptions,
 } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
-import { atom, atomFamily, selectorFamily, useRecoilValue } from 'recoil';
+import { selectorFamily, useRecoilValue } from 'recoil';
 import { authorizationState } from '../auth/state';
 import { usePaginationParams } from '../hooks/pagination';
 import { getEvent, getEvents } from './api';
@@ -15,20 +15,8 @@ export const eventsState = selectorFamily<
   key: 'eventsState',
   get:
     (options) =>
-    ({ get }) => {
-      get(refreshEventsState);
-      return getEvents(get(authorizationState), options);
-    },
-});
-
-export const refreshEventsState = atom<number>({
-  key: 'refreshEventsState',
-  default: 0,
-});
-
-export const refreshEventState = atomFamily<number, string>({
-  key: 'refreshEvent',
-  default: 0,
+    ({ get }) =>
+      getEvents(get(authorizationState), options),
 });
 
 const fetchEventState = selectorFamily<gp2.EventResponse | undefined, string>({
@@ -36,7 +24,6 @@ const fetchEventState = selectorFamily<gp2.EventResponse | undefined, string>({
   get:
     (id) =>
     async ({ get }) => {
-      get(refreshEventState(id));
       const authorization = get(authorizationState);
       return getEvent(id, authorization);
     },

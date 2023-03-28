@@ -2,7 +2,7 @@ import { ResearchOutputResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { network } from '@asap-hub/routing';
 
-import { Card, Display } from '../atoms';
+import { Card, Display, StateTag } from '../atoms';
 import { lead } from '../colors';
 import { formatDate } from '../date';
 import { perRem, mobileScreen } from '../pixels';
@@ -29,6 +29,13 @@ const associationStyles = css({
   rowGap: `${6 / perRem}em`,
 });
 
+const headerStyle = css({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  gap: `${15 / perRem}em`,
+});
+
 type SharedResearchOutputHeaderCardProps = Pick<
   ResearchOutputResponse,
   | 'addedDate'
@@ -42,6 +49,7 @@ type SharedResearchOutputHeaderCardProps = Pick<
   | 'title'
   | 'type'
   | 'workingGroups'
+  | 'published'
 >;
 
 const SharedResearchOutputHeaderCard: React.FC<
@@ -58,6 +66,7 @@ const SharedResearchOutputHeaderCard: React.FC<
   documentType,
   type,
   link,
+  published,
 }) => (
   <Card>
     <SharedResearchMetadata
@@ -68,7 +77,11 @@ const SharedResearchOutputHeaderCard: React.FC<
       ]}
       link={link}
     />
-    <Display styleAsHeading={3}>{title}</Display>
+    <span css={headerStyle}>
+      <Display styleAsHeading={3}>{title}</Display>
+      {!published && <StateTag label="Draft" />}
+    </span>
+
     <UsersList
       users={authors.map((author) => ({
         ...author,

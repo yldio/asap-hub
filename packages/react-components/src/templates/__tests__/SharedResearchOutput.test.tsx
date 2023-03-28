@@ -215,6 +215,16 @@ describe('Not Grant Documents', () => {
       ).toBeVisible();
       expect(getByText(/Related research article/i)).toBeVisible();
     });
+    it('shows the toast for drafts', () => {
+      const { getByText } = render(
+        <SharedResearchOutput {...props} published={false} />,
+      );
+      expect(
+        getByText(
+          'This draft is available to members in the working group listed below. Only PMs can publish this output.',
+        ),
+      ).toBeInTheDocument();
+    });
   });
 });
 

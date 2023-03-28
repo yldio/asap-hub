@@ -1,6 +1,8 @@
 import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
+  ResearchOutputTeamResponse,
+  ResearchOutputWorkingGroupResponse,
   UserResponse,
 } from '@asap-hub/model';
 import {
@@ -69,9 +71,18 @@ export const researchOutputRouteFactory = (
     '/research-outputs/:researchOutputId',
     async (req, res: Response<ResearchOutputResponse>) => {
       const { params } = req;
+
+      if (!req.loggedInUser) throw Boom.forbidden();
+
       const { researchOutputId } = validateResearchOutputParameters(params);
 
       const result = await researchOutputController.fetchById(researchOutputId);
+
+      if (!result.published && !hasAccessToDraft(req.loggedInUser, result)) {
+        throw Boom.notFound(
+          'You do not have permission to view this research-output',
+        );
+      }
 
       res.json(result);
     },
@@ -141,4 +152,25 @@ export const researchOutputRouteFactory = (
   );
 
   return researchOutputRoutes;
+};
+
+export const hasAccessToDraft = (
+  loggedInUser: UserResponse,
+  researchOutput:
+    | ResearchOutputTeamResponse
+    | ResearchOutputWorkingGroupResponse,
+): boolean => {
+  if (loggedInUser.role === 'Staff') {
+    return true;
+  }
+  if (!researchOutput.workingGroups) {
+    return loggedInUser.teams.some((userTeam) =>
+      researchOutput.teams.find((outputTeam) => outputTeam.id === userTeam.id),
+    );
+  }
+  return loggedInUser.workingGroups.some((userWorkingGroup) =>
+    researchOutput?.workingGroups.find(
+      (outputWorkingGroup) => outputWorkingGroup.id === userWorkingGroup.id,
+    ),
+  );
 };

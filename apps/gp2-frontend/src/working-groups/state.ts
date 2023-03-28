@@ -27,7 +27,7 @@ const workingGroupNetworkState = atom<gp2.ListWorkingGroupNetworkResponse>({
   default: fetchWorkingGroupNetworkState,
 });
 
-export const refreshWorkingGroupNetworkState = atom<number>({
+const refreshWorkingGroupNetworkState = atom<number>({
   key: 'refreshWorkingGroupNetwork',
   default: 0,
 });

@@ -10,15 +10,10 @@ import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getProjects } from '../api';
 import Routes from '../Routes';
-import { refreshProjectsState } from '../state';
 
 const renderRoutes = async () => {
   render(
-    <RecoilRoot
-      initializeState={({ set }) => {
-        set(refreshProjectsState, Math.random());
-      }}
-    >
+    <RecoilRoot>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>

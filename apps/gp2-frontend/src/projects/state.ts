@@ -15,19 +15,12 @@ const projectsState = selectorFamily<gp2.ListProjectResponse, GetListOptions>({
   key: 'projects',
   get:
     (options) =>
-    ({ get }) => {
-      get(refreshProjectsState);
-      return getProjects(get(authorizationState), options);
-    },
+    ({ get }) =>
+      getProjects(get(authorizationState), options),
 });
 
-export const refreshProjectsState = atom<number>({
+const refreshProjectsState = atom<number>({
   key: 'refreshProjects',
-  default: 0,
-});
-
-export const refreshProjectState = atomFamily<number, string>({
-  key: 'refreshProject',
   default: 0,
 });
 
@@ -42,7 +35,6 @@ const fetchProjectState = selectorFamily<
   get:
     (id) =>
     async ({ get }) => {
-      get(refreshProjectState(id));
       const authorization = get(authorizationState);
       return getProject(id, authorization);
     },

@@ -1,5 +1,5 @@
 import { ListResponse } from '../common';
-import { Calendar, Resource } from './common';
+import { Calendar, Milestone, Resource } from './common';
 
 export const workingGroupMemberRole = [
   'Lead',
@@ -25,6 +25,7 @@ export type WorkingGroupDataObject = {
   secondaryEmail?: string;
   leadingMembers?: string;
   members: WorkingGroupMember[];
+  milestones: Milestone[];
   resources?: Resource[];
   calendar?: Calendar;
 };

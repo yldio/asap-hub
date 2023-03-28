@@ -1,15 +1,8 @@
 import { ListResponse } from '../common';
-import { Calendar, Keyword, Resource } from './common';
+import { Calendar, Keyword, Milestone, MilestoneStatus, Resource } from './common';
 
 export const projectStatus = ['Active', 'Paused', 'Completed'] as const;
 export type ProjectStatus = (typeof projectStatus)[number];
-
-export const projectMilestoneStatus = [
-  'Active',
-  'Not Started',
-  'Completed',
-] as const;
-export type ProjectMilestoneStatus = (typeof projectMilestoneStatus)[number];
 
 export const projectMemberRole = [
   'Contributor',
@@ -28,13 +21,6 @@ export type ProjectMember = {
   userId: string;
 };
 
-export type ProjectMilestone = {
-  description?: string;
-  link?: string;
-  status: ProjectMilestoneStatus;
-  title: string;
-};
-
 export type ProjectDataObject = {
   description?: string;
   endDate?: string;
@@ -42,7 +28,7 @@ export type ProjectDataObject = {
   keywords: Keyword[];
   leadEmail?: string;
   members: ProjectMember[];
-  milestones: ProjectMilestone[];
+  milestones: Milestone[];
   pmEmail?: string;
   projectProposalUrl?: string;
   startDate: string;

@@ -168,7 +168,7 @@ export function parseProjectToDataObject({
       if (!milestone.status) {
         throw new TypeError('milestone status is unknown');
       }
-      const status: gp2Model.ProjectMilestoneStatus =
+      const status: gp2Model.MilestoneStatus =
         milestone.status === 'Not_Started' ? 'Not Started' : milestone.status;
 
       return {

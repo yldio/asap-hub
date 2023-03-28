@@ -12,10 +12,16 @@ import { css } from '@emotion/react';
 import ExpandableText from '../molecules/ExpandableText';
 import EmailSection from '../organisms/EmailSection';
 import Events from '../organisms/Events';
+import { Milestones } from '../organisms';
 
 type WorkingGroupOverviewProps = Pick<
   gp2.WorkingGroupResponse,
-  'members' | 'description' | 'primaryEmail' | 'secondaryEmail' | 'calendar'
+  | 'members'
+  | 'description'
+  | 'primaryEmail'
+  | 'secondaryEmail'
+  | 'calendar'
+  | 'milestones'
 >;
 
 const { rem } = pixels;
@@ -47,6 +53,7 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
   secondaryEmail,
   members,
   calendar,
+  milestones,
 }) => (
   <div css={containerStyles}>
     <Card>
@@ -99,6 +106,16 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
           overrideNameStyles={css({ overflowWrap: 'anywhere' })}
         />
       </div>
+    </Card>
+    <Card padding={false} overrideStyles={cardStyles}>
+      <Milestones
+        milestones={milestones}
+        title="Working Group Milestones"
+        description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat"
+      />
     </Card>
   </div>
 );

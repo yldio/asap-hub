@@ -1,9 +1,9 @@
-import { ProjectMilestones } from '@asap-hub/gp2-components';
+import { Milestones } from '@asap-hub/gp2-components';
 import { number } from '@storybook/addon-knobs';
 
 export default {
   title: 'GP2 / Organisms / Project / Milestones',
-  component: ProjectMilestones,
+  component: Milestones,
 };
 
 const milestone = (id: number) => ({
@@ -14,9 +14,14 @@ const milestone = (id: number) => ({
 });
 
 export const Normal = () => (
-  <ProjectMilestones
+  <Milestones
     milestones={Array.from({ length: number('Milestone count', 5) }, (_, i) =>
       milestone(i),
     )}
+    title="Project Milestones"
+    description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+      eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+      minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+      aliquip ex ea commodo consequat"
   />
 );

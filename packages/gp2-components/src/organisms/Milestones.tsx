@@ -10,12 +10,14 @@ import {
 import { css } from '@emotion/react';
 import { useState } from 'react';
 import colors from '../templates/colors';
-import ProjectMilestone from './ProjectMilestone';
+import Milestone from './Milestone';
 
 const { rem } = pixels;
 
-type ProjectMilestonesProps = {
-  milestones: gp2.ProjectResponse['milestones'];
+type MilestonesProps = {
+  milestones: gp2.Milestone[];
+  title: string;
+  description: string;
 };
 
 const contentStyles = css({
@@ -39,8 +41,10 @@ const hideStyles = css({
   [`:nth-of-type(n+5)`]: { display: 'none' },
 });
 
-const ProjectMilestones: React.FC<ProjectMilestonesProps> = ({
+const Milestones: React.FC<MilestonesProps> = ({
   milestones,
+  title,
+  description,
 }) => {
   const minimumMilestonesToDisplay = 3;
   const [expanded, setExpanded] = useState(false);
@@ -53,18 +57,15 @@ const ProjectMilestones: React.FC<ProjectMilestonesProps> = ({
   };
   return (
     <>
-      <Headline3 noMargin>Project Milestones ({milestones.length})</Headline3>
+      <Headline3 noMargin>{title} ({milestones.length})</Headline3>
       <div css={[contentStyles]}>
         <Paragraph noMargin accent="lead">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat
+          {description}
         </Paragraph>
       </div>
       {milestones.map((milestone, index) => (
-        <div key={`project-milestone-${index}`} css={getMilestoneListStyles()}>
-          <ProjectMilestone milestone={milestone} />
+        <div key={`milestone-${index}`} css={getMilestoneListStyles()}>
+          <Milestone milestone={milestone} />
         </div>
       ))}
       {milestones.length > minimumMilestonesToDisplay && (
@@ -87,4 +88,4 @@ const ProjectMilestones: React.FC<ProjectMilestonesProps> = ({
   );
 };
 
-export default ProjectMilestones;
+export default Milestones;

@@ -18,10 +18,10 @@ const rowStyles = css({
 });
 
 type ProjectMilestoneProps = {
-  milestone: gp2.ProjectResponse['milestones'][0];
+  milestone: gp2.Milestone;
 };
 
-const ProjectMilestone: React.FC<ProjectMilestoneProps> = ({ milestone }) => (
+const Milestone: React.FC<ProjectMilestoneProps> = ({ milestone }) => (
   <>
     <div css={[rowStyles]}>
       <div css={css({ display: 'inline-flex' })}>
@@ -51,4 +51,4 @@ const ProjectMilestone: React.FC<ProjectMilestoneProps> = ({ milestone }) => (
   </>
 );
 
-export default ProjectMilestone;
+export default Milestone;

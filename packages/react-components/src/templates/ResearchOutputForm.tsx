@@ -120,12 +120,6 @@ const formControlsThreeButtonsStyles = css({
   gap: `${24 / perRem}em`,
   gridTemplateColumns: '1fr 1fr 1fr',
   [`@media (max-width: 1110px)`]: {
-    'button:nth-of-type(2)': {
-      paddingLeft: `${4 / perRem}em`,
-      paddingRight: `${4 / perRem}em`,
-    },
-  },
-  [`@media (max-width: 810px)`]: {
     gridTemplateColumns: '1fr',
     width: '100%',
     'button:nth-of-type(1)': {

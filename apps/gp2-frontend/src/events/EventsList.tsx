@@ -72,6 +72,13 @@ const eventEmptyStateText = {
   },
 };
 
+const setStateInformation = (constraint: gp2.EventConstraint) => {
+  if ('userId' in constraint) {
+    return eventEmptyStateText.userPage;
+  }
+  return eventEmptyStateText.projectAndWorkingGroupPage;
+};
+
 const EventList: React.FC<EventListProps> = ({
   currentTime,
   past = false,
@@ -89,16 +96,9 @@ const EventList: React.FC<EventListProps> = ({
     }),
   );
 
-  let stateInformation;
-  if (constraint) {
-    if ('userId' in constraint) {
-      stateInformation = eventEmptyStateText.userPage;
-    } else {
-      stateInformation = eventEmptyStateText.projectAndWorkingGroupPage;
-    }
-  } else {
-    stateInformation = eventEmptyStateText.eventPage;
-  }
+  const stateInformation = constraint
+    ? setStateInformation(constraint)
+    : eventEmptyStateText.eventPage;
 
   const { title, description } = past
     ? stateInformation.past

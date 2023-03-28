@@ -1,7 +1,7 @@
 import {
   ExternalAuthorCreateDataObject,
-  ListExternalAuthorResponse,
-  ExternalAuthorResponse,
+  ListExternalAuthorDataObject,
+  ExternalAuthorDataObject,
   FetchOptions,
 } from '@asap-hub/model';
 import {
@@ -23,8 +23,8 @@ import {
 
 export interface ExternalAuthorDataProvider {
   create(input: ExternalAuthorCreateDataObject): Promise<string>;
-  fetch(options: FetchOptions): Promise<ListExternalAuthorResponse>;
-  fetchById(id: string): Promise<ExternalAuthorResponse | null>;
+  fetch(options: FetchOptions): Promise<ListExternalAuthorDataObject>;
+  fetchById(id: string): Promise<ExternalAuthorDataObject | null>;
 }
 
 export class ExternalAuthorSquidexDataProvider
@@ -43,7 +43,7 @@ export class ExternalAuthorSquidexDataProvider
     return id;
   }
 
-  async fetch(options: FetchOptions): Promise<ListExternalAuthorResponse> {
+  async fetch(options: FetchOptions): Promise<ListExternalAuthorDataObject> {
     const { take = 8, skip = 0 } = options;
 
     const { queryExternalAuthorsContentsWithTotal } =
@@ -74,7 +74,7 @@ export class ExternalAuthorSquidexDataProvider
     };
   }
 
-  async fetchById(id: string): Promise<ExternalAuthorResponse | null> {
+  async fetchById(id: string): Promise<ExternalAuthorDataObject | null> {
     const { findExternalAuthorsContent } =
       await this.squidexGraphqlClient.request<
         FetchExternalAuthorQuery,

@@ -5,7 +5,7 @@ import { appName, baseUrl } from '../../src/config';
 import { ExternalAuthorSquidexDataProvider } from '../../src/data-providers/external-authors.data-provider';
 import { getAuthToken } from '../../src/utils/auth';
 import {
-  getExternalAuthorResponse,
+  getExternalAuthorDataObject,
   getSquidexExternalAuthorGraphqlResponse,
   getSquidexExternalAuthorsGraphqlResponse,
   getExternalAuthorCreateDataObject,
@@ -98,7 +98,7 @@ describe('External Authors data provider', () => {
 
       expect(result).toMatchObject({
         total: 8,
-        items: [getExternalAuthorResponse(), getExternalAuthorResponse()],
+        items: [getExternalAuthorDataObject(), getExternalAuthorDataObject()],
       });
     });
 
@@ -158,7 +158,7 @@ describe('External Authors data provider', () => {
         'user-id',
       );
 
-      expect(result).toMatchObject(getExternalAuthorResponse());
+      expect(result).toMatchObject(getExternalAuthorDataObject());
     });
 
     test('Should return null when user is not found', async () => {
@@ -175,7 +175,7 @@ describe('External Authors data provider', () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
       const result = await externalAuthorsDataProvider.fetchById('user-id');
-      expect(result).toEqual(getExternalAuthorResponse());
+      expect(result).toEqual(getExternalAuthorDataObject());
     });
   });
 });

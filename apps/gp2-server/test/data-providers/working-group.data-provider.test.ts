@@ -162,6 +162,16 @@ describe('Working Group Data Provider', () => {
       const { milestones } = parseWorkingGroupToDataObject(workingGroup);
       expect(milestones[0]?.description).toEqual(description);
     });
+
+    test('throws if status is not provided', () => {
+      const workingGroup = getGraphQLWorkingGroup();
+      const milestone = getGraphQLWorkingGroupMilestone();
+      milestone.status = null;
+      workingGroup.flatData.milestones = [milestone];
+      const callFunction = () => parseWorkingGroupToDataObject(workingGroup);
+      expect(callFunction).toThrow(TypeError);
+      expect(callFunction).toThrow('milestone status is unknown');
+    });
   });
 
   describe('Update', () => {

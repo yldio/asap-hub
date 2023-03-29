@@ -11,6 +11,7 @@ export const researchOutputContentQueryFragment = gql`
       documentType
       type
       description
+      descriptionMD
       link
       addedDate
       publishDate

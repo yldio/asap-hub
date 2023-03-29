@@ -18,6 +18,7 @@ export { default as Link } from './Link';
 export { default as LinkConditional } from './LinkConditional';
 export { default as MaterialAvailability } from './MaterialAvailability';
 export { default as MarkdownEditor } from './MarkdownEditor';
+export { default as Markdown } from './Markdown';
 export { default as MultiSelect } from './MultiSelect';
 export { default as NavigationLink } from './NavigationLink';
 export { default as Overlay } from './Overlay';

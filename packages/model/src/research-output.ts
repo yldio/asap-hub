@@ -190,6 +190,7 @@ export type ResearchOutputCoreObject = {
   addedDate: string;
   asapFunded?: boolean;
   description: string;
+  descriptionMD: string;
   documentType: ResearchOutputDocumentType;
   doi?: string;
   labCatalogNumber?: string;
@@ -289,6 +290,7 @@ export type ResearchOutputPostRequest = {
   asapFunded?: boolean;
   authors?: AuthorPostRequest[];
   description: string;
+  descriptionMD: string;
   documentType: ResearchOutputDocumentType;
   doi?: string;
   environments: string[];

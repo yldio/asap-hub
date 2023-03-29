@@ -4,7 +4,7 @@ import { ResearchOutputResponse } from '@asap-hub/model';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { sharedResearch } from '@asap-hub/routing';
 
-import { Card, Headline2, Divider, Link } from '../atoms';
+import { Card, Headline2, Divider, Link, Markdown } from '../atoms';
 import { perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { BackLink, CtaCard, TagList } from '../molecules';
@@ -35,6 +35,7 @@ const cardsStyles = css({
 type SharedResearchOutputProps = Pick<
   ResearchOutputResponse,
   | 'description'
+  | 'descriptionMD'
   | 'tags'
   | 'usageNotes'
   | 'contactEmails'
@@ -51,6 +52,7 @@ type SharedResearchOutputProps = Pick<
 
 const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   description,
+  descriptionMD,
   backHref,
   usageNotes,
   contactEmails,
@@ -73,6 +75,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   const { canEditResearchOutput } = useContext(
     ResearchOutputPermissionsContext,
   );
+  const hasDescription = description || descriptionMD;
 
   return (
     <div css={containerStyles}>
@@ -97,15 +100,16 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
       </div>
       <div css={cardsStyles}>
         <SharedResearchOutputHeaderCard {...props} />
-        {((description && !isGrantDocument) || !!tags.length) && (
+        {((hasDescription && !isGrantDocument) || !!tags.length) && (
           <Card>
-            {description && !isGrantDocument && (
+            {hasDescription && !isGrantDocument && (
               <div css={{ paddingBottom: `${12 / perRem}em` }}>
                 <Headline2 styleAsHeading={4}>Description</Headline2>
+                <Markdown value={descriptionMD}></Markdown>
                 <RichText poorText text={description} />
               </div>
             )}
-            {description && !isGrantDocument && !!tags.length && <Divider />}
+            {hasDescription && !isGrantDocument && !!tags.length && <Divider />}
             {!!tags.length && (
               <>
                 <Headline2 styleAsHeading={4}>Tags</Headline2>
@@ -128,8 +132,9 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
         {!isGrantDocument && (
           <SharedResearchAdditionalInformationCard {...props} />
         )}
-        {description && isGrantDocument && (
+        {hasDescription && isGrantDocument && (
           <Card>
+            <Markdown value={descriptionMD}></Markdown>
             <RichText toc text={description} />
           </Card>
         )}

@@ -44,6 +44,9 @@ declare module '@emotion/react' {
         bodyStyles: SerializedStyles;
         styles: SerializedStyles;
       };
+      ContentPage?: {
+        styles: SerializedStyles;
+      };
     };
   }
 }

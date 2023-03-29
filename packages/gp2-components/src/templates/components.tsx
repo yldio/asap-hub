@@ -55,6 +55,9 @@ const components = {
       display: 'unset',
     },
   },
+  ContentPage: {
+    styles: { padding: 0 },
+  },
 };
 
 export default components;

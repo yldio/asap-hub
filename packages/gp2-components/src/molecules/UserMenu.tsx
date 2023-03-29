@@ -10,10 +10,10 @@ import {
   NavigationLink,
   pixels,
 } from '@asap-hub/react-components';
-import { useLocation } from 'react-router-dom';
 import { Location } from 'history';
 import { useEffect } from 'react';
-import { workingGroupIcon, projectIcon, userIcon } from '../icons';
+import { useLocation } from 'react-router-dom';
+import { projectIcon, userIcon, workingGroupIcon } from '../icons';
 import { nonMobileQuery } from '../layout';
 
 const { vminLinearCalc, mobileScreen, largeDesktopScreen, rem } = pixels;
@@ -48,9 +48,8 @@ const listStyles = css({
 
 const bottomLinksStyles = css({
   flexGrow: 1,
-
   display: 'flex',
-  alignItems: 'flex-end',
+  justifyContent: 'center',
   padding: `${rem(12)}em ${rem(12)}em 0`,
 });
 

@@ -96,7 +96,7 @@ jobs:
         if: ${{ inputs.entity == 'research-outputs' || inputs.entity == 'all'}}
         uses: ./.github/actions/algolia-import-entity
         with:
-          algolia-api-key: ${{ steps.algolia-keys.outputs.crn-algolia-api-key }}
+          algolia-api-key: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           algolia-index: '${{ steps.setup.outputs.crn-algolia-index }}_temp'
           entity-type: 'research-output'

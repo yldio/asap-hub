@@ -1,6 +1,9 @@
+import { FetchExternalAuthorsQuery as ContentfulFetchExternalAuthorsQuery } from '@asap-hub/contentful';
 import {
   ExternalAuthorCreateDataObject,
+  ExternalAuthorDataObject,
   ExternalAuthorResponse,
+  ListExternalAuthorDataObject,
   ListExternalAuthorResponse,
 } from '@asap-hub/model';
 import { WebhookPayload, ExternalAuthor } from '@asap-hub/squidex';
@@ -15,6 +18,29 @@ import {
   ExternalAuthorPayload,
 } from '../../src/handlers/event-bus';
 import { createEventBridgeEventMock } from '../helpers/events';
+
+export const getContentfulGraphqlExternalAuthor = (): NonNullable<
+  NonNullable<
+    ContentfulFetchExternalAuthorsQuery['externalAuthorsCollection']
+  >['items'][number]
+> => ({
+  sys: {
+    id: 'external-author-id-1',
+    firstPublishedAt: '2021-11-23T20:45:22Z',
+    publishedAt: '2021-11-26T15:33:18Z',
+    publishedVersion: 45,
+  },
+  name: 'external author one',
+  orcid: 'orcid-1',
+});
+
+export const getContentfulGraphqlExternalAuthorsResponse =
+  (): ContentfulFetchExternalAuthorsQuery => ({
+    externalAuthorsCollection: {
+      total: 1,
+      items: [getContentfulGraphqlExternalAuthor()],
+    },
+  });
 
 export const getSquidexExternalAuthorGraphqlResponse =
   (): FetchExternalAuthorQuery => ({
@@ -53,14 +79,14 @@ export const getGraphQLExternalAuthor = (
   },
 });
 
-export const getExternalAuthorResponse = (): ExternalAuthorResponse => ({
+export const getExternalAuthorDataObject = (): ExternalAuthorDataObject => ({
   id: 'external-author-id-1',
   displayName: 'external author one',
   orcid: 'orcid-1',
 });
 
-export const getListExternalAuthorResponse =
-  (): ListExternalAuthorResponse => ({
+export const getListExternalAuthorDataObject =
+  (): ListExternalAuthorDataObject => ({
     total: 2,
     items: [
       getExternalAuthorResponse(),
@@ -71,6 +97,12 @@ export const getListExternalAuthorResponse =
       },
     ],
   });
+
+export const getExternalAuthorResponse = (): ExternalAuthorResponse =>
+  getExternalAuthorDataObject();
+
+export const getListExternalAuthorResponse = (): ListExternalAuthorResponse =>
+  getListExternalAuthorDataObject();
 
 export const externalAuthorPublishedEvent: WebhookPayload<ExternalAuthor> = {
   type: 'ExternalAuthorsPublished',

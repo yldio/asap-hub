@@ -350,6 +350,185 @@ export enum EntryOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalAuthors) */
+export type ExternalAuthors = Entry & {
+  contentfulMetadata: ContentfulMetadata;
+  linkedFrom?: Maybe<ExternalAuthorsLinkingCollections>;
+  name?: Maybe<Scalars['String']>;
+  orcid?: Maybe<Scalars['String']>;
+  sys: Sys;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalAuthors) */
+export type ExternalAuthorsLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalAuthors) */
+export type ExternalAuthorsNameArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalAuthors) */
+export type ExternalAuthorsOrcidArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type ExternalAuthorsCollection = {
+  items: Array<Maybe<ExternalAuthors>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type ExternalAuthorsFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ExternalAuthorsFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ExternalAuthorsFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  name?: InputMaybe<Scalars['String']>;
+  name_contains?: InputMaybe<Scalars['String']>;
+  name_exists?: InputMaybe<Scalars['Boolean']>;
+  name_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  name_not?: InputMaybe<Scalars['String']>;
+  name_not_contains?: InputMaybe<Scalars['String']>;
+  name_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  orcid?: InputMaybe<Scalars['String']>;
+  orcid_contains?: InputMaybe<Scalars['String']>;
+  orcid_exists?: InputMaybe<Scalars['Boolean']>;
+  orcid_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  orcid_not?: InputMaybe<Scalars['String']>;
+  orcid_not_contains?: InputMaybe<Scalars['String']>;
+  orcid_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+};
+
+export type ExternalAuthorsLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type ExternalAuthorsLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum ExternalAuthorsOrder {
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  OrcidAsc = 'orcid_ASC',
+  OrcidDesc = 'orcid_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+/** Team's external tools [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalTools) */
+export type ExternalTools = Entry & {
+  contentfulMetadata: ContentfulMetadata;
+  description?: Maybe<Scalars['String']>;
+  linkedFrom?: Maybe<ExternalToolsLinkingCollections>;
+  name?: Maybe<Scalars['String']>;
+  sys: Sys;
+  url?: Maybe<Scalars['String']>;
+};
+
+/** Team's external tools [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalTools) */
+export type ExternalToolsDescriptionArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** Team's external tools [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalTools) */
+export type ExternalToolsLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** Team's external tools [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalTools) */
+export type ExternalToolsNameArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** Team's external tools [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalTools) */
+export type ExternalToolsUrlArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type ExternalToolsCollection = {
+  items: Array<Maybe<ExternalTools>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type ExternalToolsFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ExternalToolsFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ExternalToolsFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  description?: InputMaybe<Scalars['String']>;
+  description_contains?: InputMaybe<Scalars['String']>;
+  description_exists?: InputMaybe<Scalars['Boolean']>;
+  description_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  description_not?: InputMaybe<Scalars['String']>;
+  description_not_contains?: InputMaybe<Scalars['String']>;
+  description_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  name?: InputMaybe<Scalars['String']>;
+  name_contains?: InputMaybe<Scalars['String']>;
+  name_exists?: InputMaybe<Scalars['Boolean']>;
+  name_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  name_not?: InputMaybe<Scalars['String']>;
+  name_not_contains?: InputMaybe<Scalars['String']>;
+  name_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+  url?: InputMaybe<Scalars['String']>;
+  url_contains?: InputMaybe<Scalars['String']>;
+  url_exists?: InputMaybe<Scalars['Boolean']>;
+  url_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  url_not?: InputMaybe<Scalars['String']>;
+  url_not_contains?: InputMaybe<Scalars['String']>;
+  url_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type ExternalToolsLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+  teamsCollection?: Maybe<TeamsCollection>;
+};
+
+export type ExternalToolsLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type ExternalToolsLinkingCollectionsTeamsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum ExternalToolsOrder {
+  DescriptionAsc = 'description_ASC',
+  DescriptionDesc = 'description_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
+}
+
 export enum ImageFormat {
   Avif = 'AVIF',
   /** JPG image format. */
@@ -923,6 +1102,10 @@ export type Query = {
   dashboard?: Maybe<Dashboard>;
   dashboardCollection?: Maybe<DashboardCollection>;
   entryCollection?: Maybe<EntryCollection>;
+  externalAuthors?: Maybe<ExternalAuthors>;
+  externalAuthorsCollection?: Maybe<ExternalAuthorsCollection>;
+  externalTools?: Maybe<ExternalTools>;
+  externalToolsCollection?: Maybe<ExternalToolsCollection>;
   media?: Maybe<Media>;
   mediaCollection?: Maybe<MediaCollection>;
   migration?: Maybe<Migration>;
@@ -931,6 +1114,8 @@ export type Query = {
   newsCollection?: Maybe<NewsCollection>;
   pages?: Maybe<Pages>;
   pagesCollection?: Maybe<PagesCollection>;
+  teams?: Maybe<Teams>;
+  teamsCollection?: Maybe<TeamsCollection>;
 };
 
 export type QueryAssetArgs = {
@@ -970,6 +1155,36 @@ export type QueryEntryCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<EntryFilter>;
+};
+
+export type QueryExternalAuthorsArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryExternalAuthorsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ExternalAuthorsOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ExternalAuthorsFilter>;
+};
+
+export type QueryExternalToolsArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryExternalToolsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ExternalToolsOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ExternalToolsFilter>;
 };
 
 export type QueryMediaArgs = {
@@ -1032,6 +1247,21 @@ export type QueryPagesCollectionArgs = {
   where?: InputMaybe<PagesFilter>;
 };
 
+export type QueryTeamsArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryTeamsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<TeamsOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<TeamsFilter>;
+};
+
 export type Sys = {
   environmentId: Scalars['String'];
   firstPublishedAt?: Maybe<Scalars['DateTime']>;
@@ -1078,6 +1308,160 @@ export type SysFilter = {
   publishedVersion_not_in?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
 };
 
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
+export type Teams = Entry & {
+  applicationNumber?: Maybe<Scalars['String']>;
+  contentfulMetadata: ContentfulMetadata;
+  displayName?: Maybe<Scalars['String']>;
+  expertiseAndResourceTags?: Maybe<Array<Maybe<Scalars['String']>>>;
+  inactiveSince?: Maybe<Scalars['DateTime']>;
+  linkedFrom?: Maybe<TeamsLinkingCollections>;
+  projectSummary?: Maybe<Scalars['String']>;
+  projectTitle?: Maybe<Scalars['String']>;
+  sys: Sys;
+  toolsCollection?: Maybe<TeamsToolsCollection>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
+export type TeamsApplicationNumberArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
+export type TeamsDisplayNameArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
+export type TeamsExpertiseAndResourceTagsArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
+export type TeamsInactiveSinceArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
+export type TeamsLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
+export type TeamsProjectSummaryArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
+export type TeamsProjectTitleArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
+export type TeamsToolsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type TeamsCollection = {
+  items: Array<Maybe<Teams>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type TeamsFilter = {
+  AND?: InputMaybe<Array<InputMaybe<TeamsFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<TeamsFilter>>>;
+  applicationNumber?: InputMaybe<Scalars['String']>;
+  applicationNumber_contains?: InputMaybe<Scalars['String']>;
+  applicationNumber_exists?: InputMaybe<Scalars['Boolean']>;
+  applicationNumber_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  applicationNumber_not?: InputMaybe<Scalars['String']>;
+  applicationNumber_not_contains?: InputMaybe<Scalars['String']>;
+  applicationNumber_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  displayName?: InputMaybe<Scalars['String']>;
+  displayName_contains?: InputMaybe<Scalars['String']>;
+  displayName_exists?: InputMaybe<Scalars['Boolean']>;
+  displayName_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  displayName_not?: InputMaybe<Scalars['String']>;
+  displayName_not_contains?: InputMaybe<Scalars['String']>;
+  displayName_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  expertiseAndResourceTags_contains_all?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  expertiseAndResourceTags_contains_none?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  expertiseAndResourceTags_contains_some?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  expertiseAndResourceTags_exists?: InputMaybe<Scalars['Boolean']>;
+  inactiveSince?: InputMaybe<Scalars['DateTime']>;
+  inactiveSince_exists?: InputMaybe<Scalars['Boolean']>;
+  inactiveSince_gt?: InputMaybe<Scalars['DateTime']>;
+  inactiveSince_gte?: InputMaybe<Scalars['DateTime']>;
+  inactiveSince_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  inactiveSince_lt?: InputMaybe<Scalars['DateTime']>;
+  inactiveSince_lte?: InputMaybe<Scalars['DateTime']>;
+  inactiveSince_not?: InputMaybe<Scalars['DateTime']>;
+  inactiveSince_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  projectSummary?: InputMaybe<Scalars['String']>;
+  projectSummary_contains?: InputMaybe<Scalars['String']>;
+  projectSummary_exists?: InputMaybe<Scalars['Boolean']>;
+  projectSummary_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  projectSummary_not?: InputMaybe<Scalars['String']>;
+  projectSummary_not_contains?: InputMaybe<Scalars['String']>;
+  projectSummary_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  projectTitle?: InputMaybe<Scalars['String']>;
+  projectTitle_contains?: InputMaybe<Scalars['String']>;
+  projectTitle_exists?: InputMaybe<Scalars['Boolean']>;
+  projectTitle_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  projectTitle_not?: InputMaybe<Scalars['String']>;
+  projectTitle_not_contains?: InputMaybe<Scalars['String']>;
+  projectTitle_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+  toolsCollection_exists?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type TeamsLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type TeamsLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum TeamsOrder {
+  ApplicationNumberAsc = 'applicationNumber_ASC',
+  ApplicationNumberDesc = 'applicationNumber_DESC',
+  DisplayNameAsc = 'displayName_ASC',
+  DisplayNameDesc = 'displayName_DESC',
+  InactiveSinceAsc = 'inactiveSince_ASC',
+  InactiveSinceDesc = 'inactiveSince_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export type TeamsToolsCollection = {
+  items: Array<Maybe<ExternalTools>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
 export type FetchDashboardQueryVariables = Exact<{ [key: string]: never }>;
 
 export type FetchDashboardQuery = {
@@ -1107,6 +1491,12 @@ export type FetchDashboardQuery = {
                             | ({ __typename: 'Dashboard' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
+                            | ({ __typename: 'ExternalAuthors' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                            | ({ __typename: 'ExternalTools' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                             | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                                   sys: Pick<Sys, 'id'>;
                                 })
@@ -1117,6 +1507,9 @@ export type FetchDashboardQuery = {
                                 sys: Pick<Sys, 'id'>;
                               })
                             | ({ __typename: 'Pages' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                            | ({ __typename: 'Teams' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
                           >
@@ -1160,6 +1553,12 @@ export type FetchDashboardQuery = {
                             | ({ __typename: 'Dashboard' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
+                            | ({ __typename: 'ExternalAuthors' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                            | ({ __typename: 'ExternalTools' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                             | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                                   sys: Pick<Sys, 'id'>;
                                 })
@@ -1170,6 +1569,9 @@ export type FetchDashboardQuery = {
                                 sys: Pick<Sys, 'id'>;
                               })
                             | ({ __typename: 'Pages' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                            | ({ __typename: 'Teams' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
                           >
@@ -1201,6 +1603,56 @@ export type FetchDashboardQuery = {
   }>;
 };
 
+export type ExternalAuthorsContentFragment = Pick<
+  ExternalAuthors,
+  'name' | 'orcid'
+> & {
+  sys: Pick<
+    Sys,
+    'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+  >;
+};
+
+export type FetchExternalAuthorByIdQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchExternalAuthorByIdQuery = {
+  externalAuthors?: Maybe<
+    Pick<ExternalAuthors, 'name' | 'orcid'> & {
+      sys: Pick<
+        Sys,
+        'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+      >;
+    }
+  >;
+};
+
+export type FetchExternalAuthorsQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ExternalAuthorsOrder>> | InputMaybe<ExternalAuthorsOrder>
+  >;
+}>;
+
+export type FetchExternalAuthorsQuery = {
+  externalAuthorsCollection?: Maybe<
+    Pick<ExternalAuthorsCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          Pick<ExternalAuthors, 'name' | 'orcid'> & {
+            sys: Pick<
+              Sys,
+              'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+            >;
+          }
+        >
+      >;
+    }
+  >;
+};
+
 export type NewsContentFragment = Pick<
   News,
   'title' | 'shortText' | 'frequency' | 'link' | 'linkText' | 'publishDate'
@@ -1214,12 +1666,15 @@ export type NewsContentFragment = Pick<
           inline: Array<
             Maybe<
               | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
                   })
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
             >
           >;
         };
@@ -1257,12 +1712,17 @@ export type FetchNewsByIdQuery = {
               inline: Array<
                 Maybe<
                   | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ExternalAuthors' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                         sys: Pick<Sys, 'id'>;
                       })
                   | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
                 >
               >;
             };
@@ -1315,6 +1775,12 @@ export type FetchNewsQuery = {
                         | ({ __typename: 'Dashboard' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'ExternalAuthors' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ExternalTools' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                               sys: Pick<Sys, 'id'>;
                             })
@@ -1323,6 +1789,7 @@ export type FetchNewsQuery = {
                           })
                         | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
                       >
                     >;
                   };
@@ -1362,12 +1829,15 @@ export type PageContentFragment = Pick<
           inline: Array<
             Maybe<
               | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
                   })
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
             >
           >;
         };
@@ -1406,6 +1876,12 @@ export type FetchPagesQuery = {
                         | ({ __typename: 'Dashboard' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'ExternalAuthors' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ExternalTools' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                               sys: Pick<Sys, 'id'>;
                             })
@@ -1414,6 +1890,7 @@ export type FetchPagesQuery = {
                           })
                         | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
                       >
                     >;
                   };
@@ -1441,6 +1918,128 @@ export type FetchPagesQuery = {
   >;
 };
 
+export type TeamsContentFragment = Pick<
+  Teams,
+  | 'displayName'
+  | 'applicationNumber'
+  | 'inactiveSince'
+  | 'projectSummary'
+  | 'projectTitle'
+  | 'expertiseAndResourceTags'
+> & {
+  sys: Pick<
+    Sys,
+    'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+  >;
+  toolsCollection?: Maybe<{
+    items: Array<Maybe<Pick<ExternalTools, 'name' | 'description' | 'url'>>>;
+  }>;
+};
+
+export type FetchTeamByIdQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchTeamByIdQuery = {
+  teams?: Maybe<
+    Pick<
+      Teams,
+      | 'displayName'
+      | 'applicationNumber'
+      | 'inactiveSince'
+      | 'projectSummary'
+      | 'projectTitle'
+      | 'expertiseAndResourceTags'
+    > & {
+      sys: Pick<
+        Sys,
+        'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+      >;
+      toolsCollection?: Maybe<{
+        items: Array<
+          Maybe<Pick<ExternalTools, 'name' | 'description' | 'url'>>
+        >;
+      }>;
+    }
+  >;
+};
+
+export type FetchTeamsQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<Array<InputMaybe<TeamsOrder>> | InputMaybe<TeamsOrder>>;
+  where?: InputMaybe<TeamsFilter>;
+}>;
+
+export type FetchTeamsQuery = {
+  teamsCollection?: Maybe<
+    Pick<TeamsCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          Pick<
+            Teams,
+            | 'displayName'
+            | 'applicationNumber'
+            | 'inactiveSince'
+            | 'projectSummary'
+            | 'projectTitle'
+            | 'expertiseAndResourceTags'
+          > & {
+            sys: Pick<
+              Sys,
+              'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+            >;
+            toolsCollection?: Maybe<{
+              items: Array<
+                Maybe<Pick<ExternalTools, 'name' | 'description' | 'url'>>
+              >;
+            }>;
+          }
+        >
+      >;
+    }
+  >;
+};
+
+export const ExternalAuthorsContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ExternalAuthorsContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'ExternalAuthors' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sys' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'firstPublishedAt' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'publishedAt' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'publishedVersion' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'orcid' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ExternalAuthorsContentFragment, unknown>;
 export const NewsContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -1776,6 +2375,76 @@ export const PageContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<PageContentFragment, unknown>;
+export const TeamsContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'TeamsContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Teams' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sys' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'firstPublishedAt' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'publishedAt' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'publishedVersion' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'applicationNumber' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'inactiveSince' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'projectSummary' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'projectTitle' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'expertiseAndResourceTags' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'toolsCollection' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<TeamsContentFragment, unknown>;
 export const FetchDashboardDocument = {
   kind: 'Document',
   definitions: [
@@ -1873,6 +2542,158 @@ export const FetchDashboardDocument = {
     ...PageContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchDashboardQuery, FetchDashboardQueryVariables>;
+export const FetchExternalAuthorByIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchExternalAuthorById' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'externalAuthors' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'ExternalAuthorsContent' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...ExternalAuthorsContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchExternalAuthorByIdQuery,
+  FetchExternalAuthorByIdQueryVariables
+>;
+export const FetchExternalAuthorsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchExternalAuthors' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'order' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'ExternalAuthorsOrder' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'externalAuthorsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'order' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'ExternalAuthorsContent' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...ExternalAuthorsContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchExternalAuthorsQuery,
+  FetchExternalAuthorsQueryVariables
+>;
 export const FetchNewsByIdDocument = {
   kind: 'Document',
   definitions: [
@@ -2105,3 +2926,168 @@ export const FetchPagesDocument = {
     ...PageContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchPagesQuery, FetchPagesQueryVariables>;
+export const FetchTeamByIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchTeamById' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'teams' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'TeamsContent' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...TeamsContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<FetchTeamByIdQuery, FetchTeamByIdQueryVariables>;
+export const FetchTeamsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchTeams' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'order' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'TeamsOrder' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'where' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'TeamsFilter' },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'teamsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'order' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'where' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'TeamsContent' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...TeamsContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<FetchTeamsQuery, FetchTeamsQueryVariables>;

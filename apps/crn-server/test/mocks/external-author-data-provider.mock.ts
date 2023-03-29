@@ -3,4 +3,6 @@ import { ExternalAuthorDataProvider } from '../../src/data-providers/external-au
 export const externalAuthorDataProviderMock: jest.Mocked<ExternalAuthorDataProvider> =
   {
     create: jest.fn(),
+    fetch: jest.fn(),
+    fetchById: jest.fn(),
   };

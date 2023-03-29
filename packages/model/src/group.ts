@@ -13,7 +13,7 @@ export type GroupTeam = Omit<TeamResponse, 'members' | 'labCount'>;
 
 export const groupRole = ['Chair', 'Project Manager'] as const;
 
-export type GroupRole = typeof groupRole[number];
+export type GroupRole = (typeof groupRole)[number];
 
 export type GroupLeader = {
   readonly user: UserResponse;

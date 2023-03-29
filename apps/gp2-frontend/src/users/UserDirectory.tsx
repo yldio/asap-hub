@@ -9,7 +9,12 @@ import { useSearch } from '../hooks/search';
 import { useProjectsState } from '../projects/state';
 import { useWorkingGroupsState } from '../working-groups/state';
 import { getUsers } from './api';
-import { squidexUsersResponseToStream, userFields, userToCSV } from './export';
+import {
+  MAX_SQUIDEX_RESULTS,
+  squidexUsersResponseToStream,
+  userFields,
+  userToCSV,
+} from './export';
 import UserList from './UserList';
 
 type UserDirectoryProps = Pick<
@@ -54,7 +59,12 @@ const UserDirectory: FC<UserDirectoryProps> = ({ displayFilters = false }) => {
       userToCSV,
     );
 
-  const { items: projects } = useProjectsState();
+  const { items: projects } = useProjectsState({
+    pageSize: MAX_SQUIDEX_RESULTS,
+    searchQuery: '',
+    currentPage: 0,
+    filters: new Set(),
+  });
   const { items: workingGroups } = useWorkingGroupsState();
   return (
     <UsersPageList

@@ -131,5 +131,16 @@ it('renders the provided number of research outputs', () => {
   const { getByText } = render(
     <WorkingGroupHeader {...baseProps} workingGroupsOutputsCount={2} />,
   );
-  expect(getByText('Working Group Outputs (2)')).toBeVisible();
+  expect(getByText('Outputs (2)')).toBeVisible();
+});
+
+it('renders the provided number of draft research outputs', () => {
+  const { getByText } = render(
+    <WorkingGroupHeader
+      {...baseProps}
+      workingGroupsOutputsCount={0}
+      workingGroupsDraftOutputsCount={4}
+    />,
+  );
+  expect(getByText('Draft Outputs (4)')).toBeVisible();
 });

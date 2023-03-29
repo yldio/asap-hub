@@ -1,8 +1,12 @@
+import { pixels } from '@asap-hub/react-components';
 import { ComponentProps } from 'react';
+import { mainStyles } from '../layout';
 
 import UserDetailHeader from '../organisms/UserDetailHeader';
 
 type UserDetailPageProps = ComponentProps<typeof UserDetailHeader>;
+
+const { rem } = pixels;
 
 const UserDetailPage: React.FC<UserDetailPageProps> = ({
   children,
@@ -10,7 +14,7 @@ const UserDetailPage: React.FC<UserDetailPageProps> = ({
 }) => (
   <article>
     <UserDetailHeader {...headerProps} />
-    <main>{children}</main>
+    <main css={[mainStyles, { padding: `${rem(32)} 0` }]}>{children}</main>
   </article>
 );
 

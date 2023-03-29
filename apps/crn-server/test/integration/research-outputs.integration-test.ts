@@ -16,6 +16,7 @@ import {
 import { getUserCreateDataObject } from '../fixtures/users.fixtures';
 import { UserSquidexDataProvider } from '../../src/data-providers/users.data-provider';
 import { teardownHelper } from '../helpers/teardown';
+import { retryable } from '../helpers/retryable';
 
 const chance = new Chance();
 const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
@@ -83,16 +84,20 @@ describe('Research Outputs', () => {
       researchOutputInput,
     );
 
-    const result = await researchOutputDataProvider.fetchById(researchOutputId);
+    await retryable(async () => {
+      const result = await researchOutputDataProvider.fetchById(
+        researchOutputId,
+      );
 
-    const expectedResult = getResearchOutputDataObject();
-    expectedResult.title = randomTitle;
-    expect(result).toEqual(
-      expect.objectContaining({
-        id: researchOutputId,
-        title: randomTitle,
-        link: researchOutputInput.link,
-      }),
-    );
+      const expectedResult = getResearchOutputDataObject();
+      expectedResult.title = randomTitle;
+      expect(result).toEqual(
+        expect.objectContaining({
+          id: researchOutputId,
+          title: randomTitle,
+          link: researchOutputInput.link,
+        }),
+      );
+    });
   });
 });

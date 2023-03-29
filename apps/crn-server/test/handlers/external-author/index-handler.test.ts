@@ -1,4 +1,4 @@
-import Boom from '@hapi/boom';
+import { NotFoundError } from '@asap-hub/errors';
 import { indexExternalAuthorHandler } from '../../../src/handlers/external-author/index-handler';
 import {
   getExternalAuthorEvent,
@@ -49,7 +49,9 @@ describe('External Author index handler', () => {
   test('Should fetch the external author and remove the record in Algolia when external author is unpublished', async () => {
     const event = unpublishedEvent();
 
-    externalAuthorControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+    externalAuthorControllerMock.fetchById.mockRejectedValue(
+      new NotFoundError(),
+    );
 
     await indexHandler(event);
 
@@ -61,20 +63,15 @@ describe('External Author index handler', () => {
   test('Should fetch the external author and remove the record in Algolia when external author is deleted', async () => {
     const event = deleteEvent();
 
-    externalAuthorControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+    externalAuthorControllerMock.fetchById.mockRejectedValue(
+      new NotFoundError(),
+    );
 
     await indexHandler(event);
 
     expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
       event.detail.payload.id,
     );
-  });
-
-  test('Should throw an error and do not trigger algolia when the external author request fails with another error code', async () => {
-    externalAuthorControllerMock.fetchById.mockRejectedValue(Boom.badData());
-
-    await expect(indexHandler(createEvent())).rejects.toThrow(Boom.badData());
-    expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
   });
 
   test('Should throw the algolia error when saving the record fails', async () => {
@@ -91,7 +88,9 @@ describe('External Author index handler', () => {
   test('Should throw the algolia error when deleting the record fails', async () => {
     const algoliaError = new Error('ERROR');
 
-    externalAuthorControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+    externalAuthorControllerMock.fetchById.mockRejectedValue(
+      new NotFoundError(),
+    );
 
     algoliaSearchClientMock.remove.mockRejectedValueOnce(algoliaError);
 
@@ -147,7 +146,9 @@ describe('External Author index handler', () => {
       const unpublishedEv = unpublishedEvent(externalauthorId);
       const algoliaError = new Error('ERROR');
 
-      externalAuthorControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      externalAuthorControllerMock.fetchById.mockRejectedValue(
+        new NotFoundError(),
+      );
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -167,7 +168,9 @@ describe('External Author index handler', () => {
       const unpublishedEv = unpublishedEvent(externalauthorId);
       const algoliaError = new Error('ERROR');
 
-      externalAuthorControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      externalAuthorControllerMock.fetchById.mockRejectedValue(
+        new NotFoundError(),
+      );
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -187,7 +190,9 @@ describe('External Author index handler', () => {
       const deleteEv = deleteEvent(externalauthorId);
       const algoliaError = new Error('ERROR');
 
-      externalAuthorControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      externalAuthorControllerMock.fetchById.mockRejectedValue(
+        new NotFoundError(),
+      );
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -207,7 +212,9 @@ describe('External Author index handler', () => {
       const deleteEv = deleteEvent(externalauthorId);
       const algoliaError = new Error('ERROR');
 
-      externalAuthorControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      externalAuthorControllerMock.fetchById.mockRejectedValue(
+        new NotFoundError(),
+      );
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -227,7 +234,9 @@ describe('External Author index handler', () => {
       const deleteEv = deleteEvent(externalauthorId);
       const algoliaError = new Error('ERROR');
 
-      externalAuthorControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      externalAuthorControllerMock.fetchById.mockRejectedValue(
+        new NotFoundError(),
+      );
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -247,7 +256,9 @@ describe('External Author index handler', () => {
       const deleteEv = deleteEvent(externalauthorId);
       const algoliaError = new Error('ERROR');
 
-      externalAuthorControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      externalAuthorControllerMock.fetchById.mockRejectedValue(
+        new NotFoundError(),
+      );
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -266,7 +277,9 @@ describe('External Author index handler', () => {
       const unpublishedEv = unpublishedEvent(externalauthorId);
       const algoliaError = new Error('ERROR');
 
-      externalAuthorControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      externalAuthorControllerMock.fetchById.mockRejectedValue(
+        new NotFoundError(),
+      );
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -286,7 +299,9 @@ describe('External Author index handler', () => {
       const unpublishedEv = unpublishedEvent(externalauthorId);
       const algoliaError = new Error('ERROR');
 
-      externalAuthorControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      externalAuthorControllerMock.fetchById.mockRejectedValue(
+        new NotFoundError(),
+      );
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 

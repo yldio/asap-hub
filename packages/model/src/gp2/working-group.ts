@@ -6,7 +6,7 @@ export const workingGroupMemberRole = [
   'Co-lead',
   'Working group member',
 ] as const;
-export type WorkingGroupMemberRole = typeof workingGroupMemberRole[number];
+export type WorkingGroupMemberRole = (typeof workingGroupMemberRole)[number];
 
 export type WorkingGroupMember = {
   userId: string;

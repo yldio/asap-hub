@@ -17,7 +17,7 @@ const Event: React.FC = () => {
         <EventPage
           {...event}
           backHref={backHref}
-          displayCalendar={false}
+          displayCalendar={true}
           eventOwner={
             <EventOwner
               project={event.project}

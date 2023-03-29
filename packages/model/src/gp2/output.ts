@@ -2,15 +2,15 @@ import { FetchOptions, ListResponse } from '../common';
 import { ExternalUserResponse } from './external-user';
 
 export const outputDocumentTypes = [
-  'Form',
+  'Procedural Form',
   'Update',
-  'Training Material',
+  'Training Materials',
   'Data Release',
   'Article',
   'Code/Software',
 ] as const;
 
-export type OutputDocumentType = typeof outputDocumentTypes[number];
+export type OutputDocumentType = (typeof outputDocumentTypes)[number];
 
 export const outputTypes = [
   'Research',
@@ -19,18 +19,18 @@ export const outputTypes = [
   'Hot Topic',
   'Blog',
 ] as const;
-export type OutputType = typeof outputTypes[number];
+export type OutputType = (typeof outputTypes)[number];
 
 export const outputSubtypes = ['Preprints', 'Published'] as const;
-export type OutputSubtype = typeof outputSubtypes[number];
+export type OutputSubtype = (typeof outputSubtypes)[number];
 
 export const outputDocumentTypeToType: Record<
   OutputDocumentType,
   Set<OutputType>
 > = {
-  Form: new Set<OutputType>(),
+  'Procedural Form': new Set<OutputType>(),
   Update: new Set<OutputType>(),
-  'Training Material': new Set<OutputType>(),
+  'Training Materials': new Set<OutputType>(),
   'Data Release': new Set<OutputType>(),
   Article: new Set<OutputType>([
     'Research',

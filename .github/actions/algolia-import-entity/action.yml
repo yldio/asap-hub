@@ -34,6 +34,9 @@ inputs:
   contentful-access-token:
     description: 'Contentful access token'
     required: true
+  contentful-management-token:
+    description: 'Contentful management token'
+    required: true
   data-store:
     description: 'Data store'
     required: false
@@ -63,6 +66,7 @@ runs:
         SQUIDEX_CLIENT_ID: ${{ inputs.squidex-ci-client-id }}
         SQUIDEX_CLIENT_SECRET: ${{ inputs.squidex-ci-client-secret }}
         CONTENTFUL_ACCESS_TOKEN: ${{ inputs.contentful-access-token }}
-        CONTENTFUL_ENV: ${{  inputs.contentful-env }}
+        CONTENTFUL_ENV_ID: ${{  inputs.contentful-env }}
+        CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{  inputs.contentful-management-token }}
         CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
         IS_CONTENTFUL_ENABLED: ${{ inputs.data-store == 'contentful' }}

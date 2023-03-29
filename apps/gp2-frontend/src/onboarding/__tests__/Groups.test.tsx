@@ -12,7 +12,6 @@ import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getUser } from '../../users/api';
-import { refreshUserState } from '../../users/state';
 import Groups from '../Groups';
 
 jest.mock('../../users/api');
@@ -21,11 +20,7 @@ mockConsoleError();
 
 const renderGroups = async (id: string) => {
   render(
-    <RecoilRoot
-      initializeState={({ set }) => {
-        set(refreshUserState(id), Math.random());
-      }}
-    >
+    <RecoilRoot>
       <Suspense fallback="loading">
         <Auth0Provider user={{ onboarded: false, id }}>
           <WhenReady>

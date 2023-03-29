@@ -307,7 +307,6 @@ describe('/users/ route', () => {
         ${'random string'} | ${'random string'}
       `('accepts $description as an input', ({ input }) => {
         test.each([
-          'secondaryEmail',
           'firstName',
           'lastName',
           'country',
@@ -328,7 +327,6 @@ describe('/users/ route', () => {
 
       test.each`
         field               | status | optional
-        ${'secondaryEmail'} | ${200} | ${true}
         ${'firstName'}      | ${400} | ${false}
         ${'lastName'}       | ${400} | ${false}
         ${'country'}        | ${400} | ${false}
@@ -345,6 +343,22 @@ describe('/users/ route', () => {
           expect(response.status).toBe(status);
         },
       );
+      test('allows null for secondary email', async () => {
+        const response = await supertest(app)
+          .patch(`/users/${loggedInUserId}`)
+          .send({
+            secondaryEmail: null,
+          });
+        expect(response.status).toBe(200);
+      });
+      test('does not allow invalid secondary email', async () => {
+        const response = await supertest(app)
+          .patch(`/users/${loggedInUserId}`)
+          .send({
+            secondaryEmail: 'invalid-email',
+          });
+        expect(response.status).toBe(400);
+      });
 
       describe('telephone', () => {
         test('allow valid inputs', async () => {
@@ -368,6 +382,16 @@ describe('/users/ route', () => {
             });
           expect(response.status).toBe(200);
         });
+        test('does not allow invalid country code', async () => {
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({
+              telephone: {
+                countryCode: 'invalid-code',
+              },
+            });
+          expect(response.status).toBe(400);
+        });
         test('allows only number', async () => {
           const response = await supertest(app)
             .patch(`/users/${loggedInUserId}`)
@@ -377,6 +401,16 @@ describe('/users/ route', () => {
               },
             });
           expect(response.status).toBe(200);
+        });
+        test('does not allow invalid number', async () => {
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({
+              telephone: {
+                number: 'invalid-number',
+              },
+            });
+          expect(response.status).toBe(400);
         });
         test('allows undefined telephone', async () => {
           const response = await supertest(app)

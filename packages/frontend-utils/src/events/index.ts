@@ -5,40 +5,40 @@ import {
 import { subHours } from 'date-fns';
 import { GetListOptions } from '../api-util';
 
-export type GetEventListOptions = GetListOptions &
-  (
-    | {
-        before: string;
-        after?: undefined;
-        sort: { sortBy: 'endDate'; sortOrder: 'desc' };
-      }
-    | {
-        after: string;
-        before?: undefined;
-        sort?: undefined;
-      }
-  ) & {
-    constraint?: EventConstraint;
-  };
+type Constraint = { [key: string]: string };
+export type GetEventListOptions<C extends Constraint = EventConstraint> =
+  GetListOptions &
+    (
+      | {
+          before: string;
+          after?: undefined;
+        }
+      | {
+          after: string;
+          before?: undefined;
+        }
+    ) & {
+      constraint?: C;
+    };
 
-export type EventListParams = {
+type EventListParams<C extends Constraint = EventConstraint> = {
   past: boolean;
   searchQuery?: string;
   currentPage?: number;
   pageSize?: number;
-  constraint?: EventConstraint;
+  constraint?: C;
 };
 
-export const getEventListOptions = (
+export const getEventListOptions = <C extends Constraint = EventConstraint>(
   currentTime: Date,
   {
     past,
     searchQuery = '',
     currentPage = 0,
     pageSize = 10,
-    constraint = {},
-  }: EventListParams,
-): GetEventListOptions => {
+    constraint,
+  }: EventListParams<C>,
+): GetEventListOptions<C> => {
   const time = subHours(
     currentTime,
     EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
@@ -50,14 +50,6 @@ export const getEventListOptions = (
     constraint,
     pageSize,
     filters: new Set(),
-    ...(past
-      ? {
-          before: time,
-          sort: {
-            sortBy: 'endDate',
-            sortOrder: 'desc' as const,
-          },
-        }
-      : { after: time }),
+    ...(past ? { before: time } : { after: time }),
   };
 };

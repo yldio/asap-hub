@@ -17,6 +17,9 @@ inputs:
   crn-contentful-access-token:
     description: 'CRN Contentful Access Token'
     required: false
+  crn-contentful-management-access-token:
+    description: 'CRN Contentful Management Access Token'
+    required: false
   crn-squidex-api-client-secret:
     description: 'Squidex Client Secret'
     required: false
@@ -66,7 +69,7 @@ runs:
       run: |
         yarn workspace @asap-hub/${{ inputs.app }} run pnpify serverless package --package $PWD/${{ inputs.app }}-sls-package
       env:
-        ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
+        ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-algolia-index }}
         AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
         AWS_REGION: ${{ steps.setup.outputs.aws-region }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
@@ -77,6 +80,7 @@ runs:
         CRN_AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.crn-aws-acm-certificate-arn }}
         CRN_CONTENTFUL_ACCESS_TOKEN: ${{ inputs.crn-contentful-access-token }}
         CRN_CONTENTFUL_ENV: ${{  inputs.crn-contentful-env }}
+        CRN_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.crn-contentful-management-access-token }}
         CRN_CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.contentful-space-id }}
         CRN_SENTRY_DSN_API: ${{ steps.setup.outputs.crn-sentry-dsn-api }}
         CRN_SENTRY_DSN_HANDLERS: ${{ steps.setup.outputs.crn-sentry-dsn-handlers }}

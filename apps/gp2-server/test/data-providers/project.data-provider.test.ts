@@ -53,8 +53,12 @@ describe('Project Data Provider', () => {
   beforeEach(jest.resetAllMocks);
 
   describe('Fetch', () => {
+    const options = {
+      take: 10,
+      skip: 0,
+    };
     test('Should fetch the project from squidex graphql', async () => {
-      const result = await projectDataProviderMockGraphqlServer.fetch();
+      const result = await projectDataProviderMockGraphqlServer.fetch(options);
 
       expect(result).toMatchObject(getListProjectDataObject());
     });
@@ -65,7 +69,7 @@ describe('Project Data Provider', () => {
       mockResponse.queryProjectsContentsWithTotal!.total = 0;
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
-      const result = await projectDataProvider.fetch();
+      const result = await projectDataProvider.fetch(options);
       expect(result).toEqual({ total: 0, items: [] });
     });
 
@@ -74,7 +78,7 @@ describe('Project Data Provider', () => {
       mockResponse.queryProjectsContentsWithTotal = null;
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
-      const result = await projectDataProvider.fetch();
+      const result = await projectDataProvider.fetch(options);
       expect(result).toEqual({ total: 0, items: [] });
     });
 
@@ -83,7 +87,7 @@ describe('Project Data Provider', () => {
       mockResponse.queryProjectsContentsWithTotal!.items = null;
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
-      const result = await projectDataProvider.fetch();
+      const result = await projectDataProvider.fetch(options);
       expect(result).toEqual({ total: 0, items: [] });
     });
 
@@ -95,7 +99,7 @@ describe('Project Data Provider', () => {
       mockResponse.queryProjectsContentsWithTotal!.items = [project];
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
-      const { items } = await projectDataProvider.fetch();
+      const { items } = await projectDataProvider.fetch(options);
       expect(items[0]).toMatchObject({
         title: '',
         startDate: '',
@@ -108,7 +112,7 @@ describe('Project Data Provider', () => {
       mockResponse.queryProjectsContentsWithTotal!.items = [project];
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
-      const { items } = await projectDataProvider.fetch();
+      const { items } = await projectDataProvider.fetch(options);
       expect(items[0]).toMatchObject({
         calendar: undefined,
       });

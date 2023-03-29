@@ -6,6 +6,7 @@ export const researchOutputContentQueryFragment = gql`
     created
     lastModified
     version
+    status
     flatData {
       title
       documentType

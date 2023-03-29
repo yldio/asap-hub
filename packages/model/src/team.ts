@@ -11,7 +11,7 @@ export const teamRole = [
   'ASAP Staff',
 ] as const;
 
-export type TeamRole = typeof teamRole[number];
+export type TeamRole = (typeof teamRole)[number];
 
 export type TeamTool = { name: string; description?: string; url: string };
 

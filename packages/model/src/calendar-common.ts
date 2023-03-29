@@ -44,7 +44,7 @@ export const googleLegacyCalendarColor = [
 ] as const;
 
 export type GoogleLegacyCalendarColor =
-  typeof googleLegacyCalendarColor[number];
+  (typeof googleLegacyCalendarColor)[number];
 
 export const isGoogleLegacyCalendarColor = (
   data: string | null,

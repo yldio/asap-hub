@@ -14,6 +14,7 @@ import { getTeamCreateDataObject } from '../fixtures/teams.fixtures';
 import { getUserCreateDataObject } from '../fixtures/users.fixtures';
 import { createRandomOrcid } from '../helpers/users';
 import { teardownHelper } from '../helpers/teardown';
+import { retryable } from '../helpers/retryable';
 
 const chance = new Chance();
 const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
@@ -69,14 +70,18 @@ describe('Users', () => {
     userCreateDataObject.firstName = firstName;
     userCreateDataObject.orcid = orcid;
     const userId = await userDataProvider.create(userCreateDataObject);
-    const result = await userDataProvider.fetchById(userId);
 
-    expect(result).toEqual(
-      expect.objectContaining({
-        firstName,
-        orcid,
-        teams: [expect.objectContaining({ id: teamId, role: 'Key Personnel' })],
-      }),
-    );
+    await retryable(async () => {
+      const result = await userDataProvider.fetchById(userId);
+      expect(result).toEqual(
+        expect.objectContaining({
+          firstName,
+          orcid,
+          teams: [
+            expect.objectContaining({ id: teamId, role: 'Key Personnel' }),
+          ],
+        }),
+      );
+    });
   });
 });

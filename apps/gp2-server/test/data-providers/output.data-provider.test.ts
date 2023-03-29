@@ -95,8 +95,8 @@ describe('Outputs data provider', () => {
         [OutputsDataDocumentTypeEnum.Article, 'Article'],
         [OutputsDataDocumentTypeEnum.CodeSoftware, 'Code/Software'],
         [OutputsDataDocumentTypeEnum.DataRelease, 'Data Release'],
-        [OutputsDataDocumentTypeEnum.Form, 'Form'],
-        [OutputsDataDocumentTypeEnum.TrainingMaterial, 'Training Material'],
+        [OutputsDataDocumentTypeEnum.ProceduralForm, 'Procedural Form'],
+        [OutputsDataDocumentTypeEnum.TrainingMaterial, 'Training Materials'],
         [OutputsDataDocumentTypeEnum.Update, 'Update'],
       ])('parses the document type %s to %s', async (type, expected) => {
         const squidexGraphqlResponse = getSquidexOutputGraphqlResponse();
@@ -452,7 +452,7 @@ describe('Outputs data provider', () => {
     test('Should return the document type on Outputs', async () => {
       const squidexGraphqlResponse = getSquidexOutputsGraphqlResponse();
       squidexGraphqlResponse.queryOutputsContentsWithTotal!.items![0]!.flatData.documentType =
-        OutputsDataDocumentTypeEnum.Form;
+        OutputsDataDocumentTypeEnum.ProceduralForm;
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         squidexGraphqlResponse,
       );
@@ -462,7 +462,7 @@ describe('Outputs data provider', () => {
         skip: 0,
       });
 
-      expect(result.items[0]!.documentType).toEqual('Form');
+      expect(result.items[0]!.documentType).toEqual('Procedural Form');
     });
 
     describe('Parameters', () => {

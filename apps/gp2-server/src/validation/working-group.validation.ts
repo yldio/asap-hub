@@ -1,6 +1,6 @@
 import { gp2 } from '@asap-hub/model';
 import { validateInput } from '@asap-hub/server-common';
-import { UrlExpression } from '@asap-hub/validation';
+import { urlExpression } from '@asap-hub/validation';
 import { JSONSchemaType } from 'ajv';
 
 type WorkingGroupParameters = {
@@ -38,7 +38,7 @@ const workingGroupPutRequestValidationSchema: JSONSchemaType<gp2.WorkingGroupRes
             description: { type: 'string', nullable: true },
             externalLink: {
               type: 'string',
-              pattern: UrlExpression,
+              pattern: urlExpression,
             },
           },
           required: ['title', 'type', 'externalLink'],

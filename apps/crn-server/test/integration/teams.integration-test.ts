@@ -8,6 +8,7 @@ import {
   getTeamDataObject,
 } from '../fixtures/teams.fixtures';
 import { teardownHelper } from '../helpers/teardown';
+import { retryable } from '../helpers/retryable';
 
 const chance = new Chance();
 const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
@@ -35,11 +36,13 @@ describe('Teams', () => {
     teamCreateDataObject.applicationNumber = chance.name();
 
     const id = await teamDataProvider.create(teamCreateDataObject);
-    const result = await teamDataProvider.fetchById(id);
-
     const { displayName, projectTitle } = getTeamDataObject();
-    expect(result).toEqual(
-      expect.objectContaining({ id, displayName, projectTitle }),
-    );
+
+    await retryable(async () => {
+      const result = await teamDataProvider.fetchById(id);
+      expect(result).toEqual(
+        expect.objectContaining({ id, displayName, projectTitle }),
+      );
+    });
   });
 });

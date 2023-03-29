@@ -99,3 +99,12 @@ export const parseRichText = (rtf: RichTextFromQuery) => {
   };
   return documentToHtmlString(rtf?.json, options);
 };
+
+export const addLocaleToFields = (payload: Record<string, unknown>) =>
+  Object.entries(payload).reduce(
+    (acc, [key, value]) => ({
+      ...acc,
+      [key]: { 'en-US': value },
+    }),
+    {},
+  );

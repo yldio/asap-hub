@@ -27,7 +27,7 @@ const unavailableStyles = css({
   },
 });
 
-const typeToReadable: Record<typeof eventMaterialTypes[number], string> = {
+const typeToReadable: Record<(typeof eventMaterialTypes)[number], string> = {
   meetingMaterials: 'Additional Materials',
   notes: 'Notes',
   presentation: 'Presentations',
@@ -36,7 +36,7 @@ const typeToReadable: Record<typeof eventMaterialTypes[number], string> = {
 
 type MaterialAvailabilityProps = {
   meetingMaterial: string | null | undefined;
-  meetingMaterialType: typeof eventMaterialTypes[number];
+  meetingMaterialType: (typeof eventMaterialTypes)[number];
 };
 
 const MaterialAvailability: React.FC<MaterialAvailabilityProps> = ({

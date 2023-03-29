@@ -1,5 +1,4 @@
-import { gp2 as gp2Routing } from '@asap-hub/routing';
-import { gp2 as gp2Model } from '@asap-hub/model';
+import { gp2 } from '@asap-hub/model';
 import { PageBanner } from '../organisms';
 import { mainStyles } from '../layout';
 
@@ -7,17 +6,15 @@ const props = (
   entityType: CreateOutputPageProps['entityType'],
   documentType: CreateOutputPageProps['documentType'],
 ) => ({
-  title: `Share a ${EntityMappper[entityType]} ${documentTypeMapper[
-    documentType
-  ].toLowerCase()}`,
-  description: `Share your ${EntityMappper[entityType]} ${documentTypeMapper[
-    documentType
-  ].toLowerCase()} with the GP2 network.`,
+  title: `Share a ${EntityMappper[entityType]} ${documentType.toLowerCase()}`,
+  description: `Share your ${
+    EntityMappper[entityType]
+  } ${documentType.toLowerCase()} with the GP2 network.`,
 });
 
 type CreateOutputPageProps = {
   entityType: 'workingGroup' | 'project';
-  documentType: gp2Routing.OutputDocumentTypeParameter;
+  documentType: gp2.OutputDocumentType;
 };
 
 export const EntityMappper: Record<
@@ -26,18 +23,6 @@ export const EntityMappper: Record<
 > = {
   workingGroup: 'working group',
   project: 'project',
-};
-
-export const documentTypeMapper: Record<
-  CreateOutputPageProps['documentType'],
-  gp2Model.OutputDocumentType
-> = {
-  article: 'Article',
-  'code-software': 'Code/Software',
-  'data-release': 'Data Release',
-  form: 'Form',
-  'training-materials': 'Training Material',
-  update: 'Update',
 };
 
 const CreateOutputPage: React.FC<CreateOutputPageProps> = ({

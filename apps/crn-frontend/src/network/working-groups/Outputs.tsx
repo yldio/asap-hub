@@ -1,11 +1,27 @@
-import { SearchFrame } from '@asap-hub/frontend-utils';
-import { WorkingGroupDataObject } from '@asap-hub/model';
-import { ProfileOutputs } from '@asap-hub/react-components';
-import { useCurrentUserCRN } from '@asap-hub/react-context';
+import { RESEARCH_OUTPUT_ENTITY_TYPE } from '@asap-hub/algolia';
+import { SearchFrame, createCsvFileStream } from '@asap-hub/frontend-utils';
+import {
+  ResearchOutputResponse,
+  WorkingGroupDataObject,
+} from '@asap-hub/model';
+import { ProfileOutputs, utils } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
+import { format } from 'date-fns';
 import { ComponentProps } from 'react';
+import { useRecoilValue } from 'recoil';
 
+import { authorizationState } from '../../auth/state';
 import { usePagination, usePaginationParams } from '../../hooks';
+import { useAlgolia } from '../../hooks/algolia';
+import {
+  getDraftResearchOutputs,
+  getResearchOutputs,
+} from '../../shared-research/api';
+import {
+  algoliaResultsToStream,
+  researchOutputToCSV,
+  squidexResultsToStream,
+} from '../../shared-research/export';
 import { useResearchOutputs } from '../../shared-research/state';
 
 type OutputsListProps = Pick<
@@ -16,9 +32,12 @@ type OutputsListProps = Pick<
   searchQuery: string;
   filters: Set<string>;
   workingGroupId: string;
+  draftOutputs?: boolean;
 };
 type OutputsProps = {
   workingGroup: WorkingGroupDataObject;
+  draftOutputs?: boolean;
+  userAssociationMember: boolean;
 };
 
 const OutputsList: React.FC<OutputsListProps> = ({
@@ -26,17 +45,67 @@ const OutputsList: React.FC<OutputsListProps> = ({
   userAssociationMember,
   searchQuery,
   filters,
+  draftOutputs,
+  displayName,
 }) => {
   const { currentPage, pageSize, isListView, cardViewParams, listViewParams } =
     usePaginationParams();
-
   const result = useResearchOutputs({
     searchQuery,
     filters,
     currentPage,
     pageSize,
-    workingGroupId,
+    ...(draftOutputs
+      ? {
+          userAssociationMember,
+          workingGroupId,
+          draftsOnly: draftOutputs,
+        }
+      : {
+          workingGroupId,
+        }),
   });
+  const { client } = useAlgolia();
+  const authorization = useRecoilValue(authorizationState);
+  const exportResults = () =>
+    draftOutputs
+      ? squidexResultsToStream<ResearchOutputResponse>(
+          createCsvFileStream(
+            `SharedOutputs_Drafts_WorkingGroup_${utils
+              .titleCase(displayName)
+              .replace(/[\W_]+/g, '')}_${format(new Date(), 'MMddyy')}.csv`,
+            { header: true },
+          ),
+          (paginationParams) =>
+            getDraftResearchOutputs(
+              {
+                filters,
+                searchQuery,
+                userAssociationMember,
+                workingGroupId,
+                draftsOnly: true,
+                ...paginationParams,
+              },
+              authorization,
+            ),
+          researchOutputToCSV,
+        )
+      : algoliaResultsToStream<typeof RESEARCH_OUTPUT_ENTITY_TYPE>(
+          createCsvFileStream(
+            `SharedOutputs_WorkingGroup_${utils
+              .titleCase(displayName)
+              .replace(/[\W_]+/g, '')}_${format(new Date(), 'MMddyy')}.csv`,
+            { header: true },
+          ),
+          (paginationParams) =>
+            getResearchOutputs(client, {
+              filters,
+              searchQuery,
+              workingGroupId,
+              ...paginationParams,
+            }),
+          researchOutputToCSV,
+        );
 
   const { numberOfPages, renderPageHref } = usePagination(
     result.total,
@@ -64,28 +133,28 @@ const OutputsList: React.FC<OutputsListProps> = ({
       }
       userAssociationMember={userAssociationMember}
       workingGroupAssociation
+      exportResults={exportResults}
+      draftOutputs={draftOutputs}
     />
   );
 };
 
-const Outputs: React.FC<OutputsProps> = ({ workingGroup }) => {
-  const currentUserId = useCurrentUserCRN()?.id;
-  const userAssociationMember = workingGroup.members.some(
-    (member) => member.user.id === currentUserId,
-  );
-
-  return (
-    <article>
-      <SearchFrame title="">
-        <OutputsList
-          workingGroupId={workingGroup.id}
-          searchQuery={''}
-          filters={new Set()}
-          displayName={workingGroup.title}
-          userAssociationMember={userAssociationMember}
-        />
-      </SearchFrame>
-    </article>
-  );
-};
+const Outputs: React.FC<OutputsProps> = ({
+  workingGroup,
+  draftOutputs,
+  userAssociationMember,
+}) => (
+  <article>
+    <SearchFrame title="">
+      <OutputsList
+        draftOutputs={draftOutputs}
+        workingGroupId={workingGroup.id}
+        searchQuery={''}
+        filters={new Set()}
+        displayName={workingGroup.title}
+        userAssociationMember={userAssociationMember}
+      />
+    </SearchFrame>
+  </article>
+);
 export default Outputs;

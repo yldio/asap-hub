@@ -240,6 +240,129 @@ enum EntryOrder {
   sys_publishedVersion_DESC
 }
 
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalAuthors)"""
+type ExternalAuthors implements Entry {
+  contentfulMetadata: ContentfulMetadata!
+  linkedFrom(allowedLocales: [String]): ExternalAuthorsLinkingCollections
+  name(locale: String): String
+  orcid(locale: String): String
+  sys: Sys!
+}
+
+type ExternalAuthorsCollection {
+  items: [ExternalAuthors]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input ExternalAuthorsFilter {
+  AND: [ExternalAuthorsFilter]
+  OR: [ExternalAuthorsFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  name: String
+  name_contains: String
+  name_exists: Boolean
+  name_in: [String]
+  name_not: String
+  name_not_contains: String
+  name_not_in: [String]
+  orcid: String
+  orcid_contains: String
+  orcid_exists: Boolean
+  orcid_in: [String]
+  orcid_not: String
+  orcid_not_contains: String
+  orcid_not_in: [String]
+  sys: SysFilter
+}
+
+type ExternalAuthorsLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+}
+
+enum ExternalAuthorsOrder {
+  name_ASC
+  name_DESC
+  orcid_ASC
+  orcid_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+"""Team's external tools [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalTools)"""
+type ExternalTools implements Entry {
+  contentfulMetadata: ContentfulMetadata!
+  description(locale: String): String
+  linkedFrom(allowedLocales: [String]): ExternalToolsLinkingCollections
+  name(locale: String): String
+  sys: Sys!
+  url(locale: String): String
+}
+
+type ExternalToolsCollection {
+  items: [ExternalTools]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input ExternalToolsFilter {
+  AND: [ExternalToolsFilter]
+  OR: [ExternalToolsFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  description: String
+  description_contains: String
+  description_exists: Boolean
+  description_in: [String]
+  description_not: String
+  description_not_contains: String
+  description_not_in: [String]
+  name: String
+  name_contains: String
+  name_exists: Boolean
+  name_in: [String]
+  name_not: String
+  name_not_contains: String
+  name_not_in: [String]
+  sys: SysFilter
+  url: String
+  url_contains: String
+  url_exists: Boolean
+  url_in: [String]
+  url_not: String
+  url_not_contains: String
+  url_not_in: [String]
+}
+
+type ExternalToolsLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  teamsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): TeamsCollection
+}
+
+enum ExternalToolsOrder {
+  description_ASC
+  description_DESC
+  name_ASC
+  name_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  url_ASC
+  url_DESC
+}
+
 """The 'HexColor' type represents color in `rgb:ffffff` string format."""
 scalar HexColor
 
@@ -674,6 +797,10 @@ type Query {
   dashboard(id: String!, locale: String, preview: Boolean): Dashboard
   dashboardCollection(limit: Int = 100, locale: String, order: [DashboardOrder], preview: Boolean, skip: Int = 0, where: DashboardFilter): DashboardCollection
   entryCollection(limit: Int = 100, locale: String, order: [EntryOrder], preview: Boolean, skip: Int = 0, where: EntryFilter): EntryCollection
+  externalAuthors(id: String!, locale: String, preview: Boolean): ExternalAuthors
+  externalAuthorsCollection(limit: Int = 100, locale: String, order: [ExternalAuthorsOrder], preview: Boolean, skip: Int = 0, where: ExternalAuthorsFilter): ExternalAuthorsCollection
+  externalTools(id: String!, locale: String, preview: Boolean): ExternalTools
+  externalToolsCollection(limit: Int = 100, locale: String, order: [ExternalToolsOrder], preview: Boolean, skip: Int = 0, where: ExternalToolsFilter): ExternalToolsCollection
   media(id: String!, locale: String, preview: Boolean): Media
   mediaCollection(limit: Int = 100, locale: String, order: [MediaOrder], preview: Boolean, skip: Int = 0, where: MediaFilter): MediaCollection
   migration(id: String!, locale: String, preview: Boolean): Migration
@@ -682,6 +809,8 @@ type Query {
   newsCollection(limit: Int = 100, locale: String, order: [NewsOrder], preview: Boolean, skip: Int = 0, where: NewsFilter): NewsCollection
   pages(id: String!, locale: String, preview: Boolean): Pages
   pagesCollection(limit: Int = 100, locale: String, order: [PagesOrder], preview: Boolean, skip: Int = 0, where: PagesFilter): PagesCollection
+  teams(id: String!, locale: String, preview: Boolean): Teams
+  teamsCollection(limit: Int = 100, locale: String, order: [TeamsOrder], preview: Boolean, skip: Int = 0, where: TeamsFilter): TeamsCollection
 }
 
 type Sys {
@@ -728,4 +857,102 @@ input SysFilter {
   publishedVersion_lte: Float
   publishedVersion_not: Float
   publishedVersion_not_in: [Float]
+}
+
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams)"""
+type Teams implements Entry {
+  applicationNumber(locale: String): String
+  contentfulMetadata: ContentfulMetadata!
+  displayName(locale: String): String
+  expertiseAndResourceTags(locale: String): [String]
+  inactiveSince(locale: String): DateTime
+  linkedFrom(allowedLocales: [String]): TeamsLinkingCollections
+  projectSummary(locale: String): String
+  projectTitle(locale: String): String
+  sys: Sys!
+  toolsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): TeamsToolsCollection
+}
+
+type TeamsCollection {
+  items: [Teams]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input TeamsFilter {
+  AND: [TeamsFilter]
+  OR: [TeamsFilter]
+  applicationNumber: String
+  applicationNumber_contains: String
+  applicationNumber_exists: Boolean
+  applicationNumber_in: [String]
+  applicationNumber_not: String
+  applicationNumber_not_contains: String
+  applicationNumber_not_in: [String]
+  contentfulMetadata: ContentfulMetadataFilter
+  displayName: String
+  displayName_contains: String
+  displayName_exists: Boolean
+  displayName_in: [String]
+  displayName_not: String
+  displayName_not_contains: String
+  displayName_not_in: [String]
+  expertiseAndResourceTags_contains_all: [String]
+  expertiseAndResourceTags_contains_none: [String]
+  expertiseAndResourceTags_contains_some: [String]
+  expertiseAndResourceTags_exists: Boolean
+  inactiveSince: DateTime
+  inactiveSince_exists: Boolean
+  inactiveSince_gt: DateTime
+  inactiveSince_gte: DateTime
+  inactiveSince_in: [DateTime]
+  inactiveSince_lt: DateTime
+  inactiveSince_lte: DateTime
+  inactiveSince_not: DateTime
+  inactiveSince_not_in: [DateTime]
+  projectSummary: String
+  projectSummary_contains: String
+  projectSummary_exists: Boolean
+  projectSummary_in: [String]
+  projectSummary_not: String
+  projectSummary_not_contains: String
+  projectSummary_not_in: [String]
+  projectTitle: String
+  projectTitle_contains: String
+  projectTitle_exists: Boolean
+  projectTitle_in: [String]
+  projectTitle_not: String
+  projectTitle_not_contains: String
+  projectTitle_not_in: [String]
+  sys: SysFilter
+  toolsCollection_exists: Boolean
+}
+
+type TeamsLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+}
+
+enum TeamsOrder {
+  applicationNumber_ASC
+  applicationNumber_DESC
+  displayName_ASC
+  displayName_DESC
+  inactiveSince_ASC
+  inactiveSince_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+type TeamsToolsCollection {
+  items: [ExternalTools]!
+  limit: Int!
+  skip: Int!
+  total: Int!
 }

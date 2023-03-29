@@ -23,7 +23,7 @@ import { getCounterString } from '../utils';
 
 const containerStyles = css({
   backgroundColor: paper.rgb,
-  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(10)} 0`,
+  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)} 0`,
 });
 
 const titleStyle = css({
@@ -119,6 +119,7 @@ type TeamProfileHeaderProps = Readonly<Omit<TeamResponse, 'tools'>> & {
   readonly upcomingEventsCount?: number;
   readonly teamOutputsCount?: number;
   readonly pastEventsCount?: number;
+  readonly teamDraftOutputsCount?: number;
 };
 
 const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
@@ -133,6 +134,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   upcomingEventsCount,
   teamOutputsCount = 0,
   pastEventsCount,
+  teamDraftOutputsCount,
 }) => {
   const route = network({}).teams({}).team({ teamId: id });
   const { canShareResearchOutput } = useContext(
@@ -221,9 +223,15 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
         {tools && (
           <TabLink href={route.workspace({}).$}>Team Workspace</TabLink>
         )}
+
         <TabLink href={route.outputs({}).$}>
-          Team Outputs ({teamOutputsCount})
+          Outputs ({teamOutputsCount})
         </TabLink>
+        {teamDraftOutputsCount !== undefined ? (
+          <TabLink href={route.draftOutputs({}).$}>
+            Draft Outputs ({teamDraftOutputsCount})
+          </TabLink>
+        ) : null}
         {isActive && (
           <TabLink href={route.upcoming({}).$}>
             Upcoming Events {`(${upcomingEventsCount})`}

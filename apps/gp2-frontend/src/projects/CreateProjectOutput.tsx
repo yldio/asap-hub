@@ -5,6 +5,18 @@ import { useAuthorSuggestions, useCreateOutput } from '../outputs/state';
 
 const { projects } = gp2Routing;
 
+export const documentTypeMapper: Record<
+  gp2Routing.OutputDocumentTypeParameter,
+  gp2Model.OutputDocumentType
+> = {
+  article: 'Article',
+  'code-software': 'Code/Software',
+  'data-release': 'Data Release',
+  'procedural-form': 'Procedural Form',
+  'training-materials': 'Training Materials',
+  update: 'Update',
+};
+
 const CreateProjectOutput = () => {
   const { projectId } = useRouteParams(projects({}).project);
   const { outputDocumentType } = useRouteParams(
@@ -13,16 +25,19 @@ const CreateProjectOutput = () => {
   const createOutput = useCreateOutput();
   const getAuthorSuggestions = useAuthorSuggestions();
   return (
-    <CreateOutputPage documentType={outputDocumentType} entityType="project">
+    <CreateOutputPage
+      documentType={documentTypeMapper[outputDocumentType]}
+      entityType="project"
+    >
       <OutputForm
-        createOutput={async (payload: gp2Model.OutputPostRequest) =>
+        shareOutput={async (payload: gp2Model.OutputPostRequest) =>
           createOutput({
             ...payload,
             workingGroups: undefined,
             projects: [projectId],
           })
         }
-        documentType={outputDocumentType}
+        documentType={documentTypeMapper[outputDocumentType]}
         getAuthorSuggestions={getAuthorSuggestions}
       />
     </CreateOutputPage>

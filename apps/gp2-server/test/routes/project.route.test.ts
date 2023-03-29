@@ -15,6 +15,10 @@ describe('/projects/ route', () => {
   afterEach(jest.resetAllMocks);
 
   describe('GET /projects', () => {
+    const query = {
+      take: 10,
+      skip: 0,
+    };
     test('Should return 200 when no projects are found', async () => {
       const { app } = getApp();
       projectControllerMock.fetch.mockResolvedValueOnce({
@@ -22,7 +26,9 @@ describe('/projects/ route', () => {
         items: [],
       });
 
-      const { status, body } = await supertest(app).get('/projects');
+      const { status, body } = await supertest(app)
+        .get('/projects')
+        .query(query);
 
       expect(status).toBe(200);
       expect(body).toEqual({
@@ -37,7 +43,9 @@ describe('/projects/ route', () => {
         getListProjectsResponse(),
       );
 
-      const { status, body } = await supertest(app).get('/projects');
+      const { status, body } = await supertest(app)
+        .get('/projects')
+        .query(query);
 
       expect(status).toBe(200);
       expect(body).toEqual(getListProjectsResponse());
@@ -45,9 +53,9 @@ describe('/projects/ route', () => {
 
     test('Should call the controller fetch method', async () => {
       const { app, loggedInUserId } = getApp();
-      await supertest(app).get('/projects');
+      await supertest(app).get('/projects').query(query);
 
-      expect(projectControllerMock.fetch).toBeCalledWith(loggedInUserId);
+      expect(projectControllerMock.fetch).toBeCalledWith(query, loggedInUserId);
     });
   });
   describe('GET /project/{project_id}', () => {

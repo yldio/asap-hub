@@ -1,10 +1,22 @@
-import { gp2 } from '@asap-hub/model';
-import { validateInput } from '@asap-hub/server-common';
-import { UrlExpression } from '@asap-hub/validation';
+import { FetchOptions, gp2 } from '@asap-hub/model';
+import {
+  validateInput,
+  fetchOptionsValidationSchema,
+} from '@asap-hub/server-common';
+import { urlExpression } from '@asap-hub/validation';
 import { JSONSchemaType } from 'ajv';
 
 type ProjectParameters = {
   projectId: string;
+};
+
+const projectFetchValidationSchema: JSONSchemaType<FetchOptions> = {
+  type: 'object',
+  properties: {
+    ...fetchOptionsValidationSchema.properties,
+  },
+  additionalProperties: false,
+  required: [],
 };
 
 const projectParametersValidationSchema: JSONSchemaType<ProjectParameters> = {
@@ -16,6 +28,13 @@ const projectParametersValidationSchema: JSONSchemaType<ProjectParameters> = {
   additionalProperties: false,
 };
 
+export const validateFetchProjectsParameters = validateInput(
+  projectFetchValidationSchema,
+  {
+    skipNull: true,
+    coerce: true,
+  },
+);
 export const validateProjectParameters = validateInput(
   projectParametersValidationSchema,
   {
@@ -36,7 +55,7 @@ const projectPutRequestValidationSchema: JSONSchemaType<gp2.ProjectResourcesPutR
             description: { type: 'string', nullable: true },
             externalLink: {
               type: 'string',
-              pattern: UrlExpression,
+              pattern: urlExpression,
             },
           },
           required: ['title', 'type', 'externalLink'],

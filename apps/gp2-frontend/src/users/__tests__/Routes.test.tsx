@@ -12,15 +12,10 @@ import { getUsers } from '../api';
 import { getProjects } from '../../projects/api';
 import { getWorkingGroups } from '../../working-groups/api';
 import Routes from '../Routes';
-import { refreshUsersState } from '../state';
 
 const renderRoutes = async () => {
   render(
-    <RecoilRoot
-      initializeState={({ set }) => {
-        set(refreshUsersState, Math.random());
-      }}
-    >
+    <RecoilRoot>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>

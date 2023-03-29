@@ -4,11 +4,19 @@ import {
   createUserResponse,
   createWorkingGroupResponse,
 } from '@asap-hub/fixtures';
-import { ResearchOutputResponse } from '@asap-hub/model';
+import {
+  ListResearchOutputResponse,
+  ResearchOutputResponse,
+} from '@asap-hub/model';
 import { Stringifier } from 'csv-stringify';
 
 import { createAlgoliaResponse } from '../../__fixtures__/algolia';
-import { researchOutputToCSV, algoliaResultsToStream } from '../export';
+import {
+  researchOutputToCSV,
+  algoliaResultsToStream,
+  squidexResultsToStream,
+  MAX_SQUIDEX_RESULTS,
+} from '../export';
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -190,6 +198,86 @@ describe('researchOutputToCSV', () => {
     expect(researchOutputToCSV(output).usageNotes).toMatchInlineSnapshot(
       `"example 123"`,
     );
+  });
+});
+
+describe('squidexResultsToStream', () => {
+  const mockCsvStream = {
+    write: jest.fn(),
+    end: jest.fn(),
+  };
+  it('streams one page of results', async () => {
+    await squidexResultsToStream(
+      mockCsvStream as unknown as Stringifier,
+      () =>
+        Promise.resolve<ListResearchOutputResponse>({
+          items: [createResearchOutputResponse()],
+          total: 1,
+        }),
+      (a) => a,
+    );
+    expect(mockCsvStream.write).toHaveBeenCalledWith(
+      expect.objectContaining(createResearchOutputResponse()),
+    );
+    expect(mockCsvStream.write).toHaveBeenCalledTimes(1);
+    expect(mockCsvStream.end).toHaveBeenCalledTimes(1);
+  });
+
+  it('streams multiple pages of results', async () => {
+    await squidexResultsToStream(
+      mockCsvStream as unknown as Stringifier,
+      (parameters) =>
+        Promise.resolve<ListResearchOutputResponse>({
+          items: [
+            {
+              ...createResearchOutputResponse(),
+              title: `${parameters.currentPage}`,
+            },
+          ],
+          total: 3 * MAX_SQUIDEX_RESULTS,
+        }),
+      (a) => a,
+    );
+    expect(mockCsvStream.write).toHaveBeenCalledWith(
+      expect.objectContaining({
+        title: '0',
+      }),
+    );
+    expect(mockCsvStream.write).toHaveBeenCalledWith(
+      expect.objectContaining({
+        title: '1',
+      }),
+    );
+    expect(mockCsvStream.write).toHaveBeenCalledWith(
+      expect.objectContaining({
+        title: '2',
+      }),
+    );
+    expect(mockCsvStream.write).toHaveBeenCalledTimes(3);
+    expect(mockCsvStream.end).toHaveBeenCalledTimes(1);
+  });
+
+  it('streams transformed results', async () => {
+    await squidexResultsToStream(
+      mockCsvStream as unknown as Stringifier,
+      () =>
+        Promise.resolve<ListResearchOutputResponse>({
+          items: [
+            {
+              ...createResearchOutputResponse(),
+              title: 'a',
+            },
+          ],
+          total: 2 * MAX_SQUIDEX_RESULTS,
+        }),
+      (a: ResearchOutputResponse) => ({ title: `${a.title}-b` }),
+    );
+    expect(mockCsvStream.write).toHaveBeenCalledWith(
+      expect.objectContaining({
+        title: 'a-b',
+      }),
+    );
+    expect(mockCsvStream.write).toHaveBeenCalledTimes(2);
   });
 });
 

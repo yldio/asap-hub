@@ -3,8 +3,11 @@ import {
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
 import { EventBridgeHandler } from '@asap-hub/server-common';
-import { SquidexGraphql } from '@asap-hub/squidex';
-import { isBoom } from '@hapi/boom';
+import {
+  RestExternalAuthor,
+  SquidexGraphql,
+  SquidexRest,
+} from '@asap-hub/squidex';
 import { EventBridgeEvent } from 'aws-lambda';
 import {
   algoliaApiKey,
@@ -16,6 +19,7 @@ import {
 import ExternalAuthors, {
   ExternalAuthorsController,
 } from '../../controllers/external-authors';
+import { ExternalAuthorSquidexDataProvider } from '../../data-providers/external-authors.data-provider';
 import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
@@ -29,39 +33,64 @@ export const indexExternalAuthorHandler =
   async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
 
-    try {
-      const externalAuthor = await externalAuthorController.fetchById(
-        event.detail.payload.id,
-      );
+    const getExternalAuthor = async () => {
+      try {
+        const externalAuthor = await externalAuthorController.fetchById(
+          event.detail.payload.id,
+        );
 
-      logger.debug(`Fetched external author ${externalAuthor.displayName}`);
-
-      await algoliaClient.save({
-        data: externalAuthor,
-        type: 'external-author',
-      });
-
-      logger.debug(`Saved external author  ${externalAuthor.displayName}`);
-    } catch (e) {
-      if (isBoom(e) && e.output.statusCode === 404) {
+        logger.debug(`Fetched external author ${externalAuthor.displayName}`);
+        return externalAuthor;
+      } catch {
         await algoliaClient.remove(event.detail.payload.id);
-        return;
+        return null;
       }
+    };
 
-      logger.error(e, 'Error saving external author to Algolia');
-      throw e;
+    const externalAuthor = await getExternalAuthor();
+
+    if (externalAuthor) {
+      try {
+        await algoliaClient.save({
+          data: externalAuthor,
+          type: 'external-author',
+        });
+
+        logger.debug(`Saved external author  ${externalAuthor.displayName}`);
+      } catch (e) {
+        logger.error(e, 'Error saving external author to Algolia');
+        throw e;
+      }
     }
   };
+
+const externalAuthorRestClient = new SquidexRest<RestExternalAuthor>(
+  getAuthToken,
+  'external-authors',
+  {
+    appName,
+    baseUrl,
+  },
+);
 const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
   appName,
   baseUrl,
 });
 
+const externalAuthorDataProvider = new ExternalAuthorSquidexDataProvider(
+  externalAuthorRestClient,
+  squidexGraphqlClient,
+);
+
 /* istanbul ignore next */
 export const handler = sentryWrapper(
   indexExternalAuthorHandler(
-    new ExternalAuthors(squidexGraphqlClient),
-    algoliaSearchClientFactory({ algoliaApiKey, algoliaAppId, algoliaIndex }),
+    new ExternalAuthors(externalAuthorDataProvider),
+    algoliaSearchClientFactory({
+      algoliaApiKey,
+      algoliaAppId,
+      algoliaIndex,
+    }),
   ),
 );
 

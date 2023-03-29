@@ -116,12 +116,7 @@ it('renders tabs', () => {
   render(<TeamProfileHeader {...boilerplateProps} />);
   expect(
     screen.getAllByRole('link').map(({ textContent }) => textContent),
-  ).toEqual([
-    'About',
-    'Team Outputs (0)',
-    'Upcoming Events (0)',
-    'Past Events (0)',
-  ]);
+  ).toEqual(['About', 'Outputs (0)', 'Upcoming Events (0)', 'Past Events (0)']);
 });
 
 it('does not render upcoming events tab when team is inactive', () => {
@@ -133,7 +128,7 @@ it('does not render upcoming events tab when team is inactive', () => {
   );
   expect(
     screen.getAllByRole('link').map(({ textContent }) => textContent),
-  ).toEqual(['About', 'Team Outputs (0)', 'Past Events (0)']);
+  ).toEqual(['About', 'Outputs (0)', 'Past Events (0)']);
 });
 
 it('renders workspace tabs when tools provided', () => {
@@ -148,7 +143,7 @@ it('renders workspace tabs when tools provided', () => {
   ).toEqual([
     'About',
     'Team Workspace',
-    'Team Outputs (0)',
+    'Outputs (0)',
     'Upcoming Events (0)',
     'Past Events (0)',
   ]);
@@ -214,5 +209,22 @@ it('displays past event count', () => {
 it('displays shared output count', () => {
   render(<TeamProfileHeader {...boilerplateProps} teamOutputsCount={11} />);
 
-  expect(screen.getByText('Team Outputs (11)')).toBeVisible();
+  expect(screen.getByText('Outputs (11)')).toBeVisible();
+});
+
+it('displays the draft shared output count', () => {
+  render(<TeamProfileHeader {...boilerplateProps} teamDraftOutputsCount={5} />);
+  expect(screen.getByText('Draft Outputs (5)')).toBeVisible();
+  render(<TeamProfileHeader {...boilerplateProps} teamDraftOutputsCount={0} />);
+  expect(screen.getByText('Draft Outputs (0)')).toBeVisible();
+});
+
+it('does not display the draft shared output count', () => {
+  render(
+    <TeamProfileHeader
+      {...boilerplateProps}
+      teamDraftOutputsCount={undefined}
+    />,
+  );
+  expect(screen.queryByText('Draft Outputs')).toBeNull();
 });

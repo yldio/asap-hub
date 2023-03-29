@@ -1,7 +1,13 @@
-import { validateInput } from '@asap-hub/server-common';
-import { JSONSchemaType } from 'ajv';
 import { gp2 } from '@asap-hub/model';
-import { UrlExpression } from '@asap-hub/validation';
+import { validateInput } from '@asap-hub/server-common';
+import {
+  emailExpression,
+  telephoneCountryExpression,
+  telephoneNumberExpression,
+  urlExpression,
+  USER_SOCIAL_NOT_URL,
+} from '@asap-hub/validation';
+import { JSONSchemaType } from 'ajv';
 
 const { userDegrees, userRegions, keywords, userContributingCohortRole } = gp2;
 type UserParameters = {
@@ -28,8 +34,8 @@ export const validateUserParameters = validateInput(
 const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
   type: 'object',
   properties: {
-    firstName: { type: 'string', nullable: true, minLength: 1 },
-    lastName: { type: 'string', nullable: true, minLength: 1 },
+    firstName: { type: 'string', nullable: true, minLength: 1, maxLength: 50 },
+    lastName: { type: 'string', nullable: true, minLength: 1, maxLength: 50 },
     degrees: {
       type: 'array',
       items: {
@@ -60,14 +66,26 @@ const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
       nullable: true,
     },
     onboarded: { type: 'boolean', nullable: true },
-    secondaryEmail: { type: 'string', nullable: true },
+    secondaryEmail: {
+      type: 'string',
+      nullable: true,
+      pattern: emailExpression,
+    },
     telephone: {
       nullable: true,
       type: 'object',
       additionalProperties: false,
       properties: {
-        countryCode: { type: 'string', nullable: true },
-        number: { type: 'string', nullable: true },
+        countryCode: {
+          type: 'string',
+          nullable: true,
+          pattern: telephoneCountryExpression,
+        },
+        number: {
+          type: 'string',
+          nullable: true,
+          pattern: telephoneNumberExpression,
+        },
       },
     },
     keywords: {
@@ -112,7 +130,7 @@ const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
           role: { type: 'string', enum: userContributingCohortRole },
           studyUrl: {
             type: 'string',
-            pattern: UrlExpression,
+            pattern: urlExpression,
             nullable: true,
           },
         },
@@ -124,14 +142,30 @@ const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
       nullable: true,
       additionalProperties: false,
       properties: {
-        googleScholar: { type: 'string', nullable: true },
-        orcid: { type: 'string', nullable: true },
-        researchGate: { type: 'string', nullable: true },
-        researcherId: { type: 'string', nullable: true },
-        blog: { type: 'string', nullable: true },
-        twitter: { type: 'string', nullable: true },
-        linkedIn: { type: 'string', nullable: true },
-        github: { type: 'string', nullable: true },
+        googleScholar: {
+          type: 'string',
+          pattern: urlExpression,
+          nullable: true,
+        },
+        orcid: {
+          type: 'string',
+          pattern: USER_SOCIAL_NOT_URL.source,
+          nullable: true,
+        },
+        researchGate: {
+          type: 'string',
+          pattern: urlExpression,
+          nullable: true,
+        },
+        researcherId: {
+          type: 'string',
+          pattern: USER_SOCIAL_NOT_URL.source,
+          nullable: true,
+        },
+        blog: { type: 'string', pattern: urlExpression, nullable: true },
+        twitter: { type: 'string', pattern: urlExpression, nullable: true },
+        linkedIn: { type: 'string', pattern: urlExpression, nullable: true },
+        github: { type: 'string', pattern: urlExpression, nullable: true },
       },
     },
   },

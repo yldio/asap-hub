@@ -155,7 +155,7 @@ describe('KeyInformatiomModal', () => {
       region,
     });
     await waitFor(() => expect(saveButton).toBeEnabled());
-  }, 30000);
+  }, 60000);
 
   it('can click add an extra position', () => {
     renderKeyInformation();

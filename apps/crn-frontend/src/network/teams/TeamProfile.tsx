@@ -69,9 +69,26 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
     pageSize,
     teamId,
   });
+  const outputDraftResults = useResearchOutputs({
+    filters: new Set(),
+    draftsOnly: true,
+    userAssociationMember: canShareResearchOutput,
+    currentPage: 0,
+    searchQuery: '',
+    pageSize,
+    teamId,
+  });
 
   if (team) {
-    const { about, createOutput, outputs, past, upcoming, workspace } = route({
+    const {
+      about,
+      createOutput,
+      outputs,
+      past,
+      upcoming,
+      workspace,
+      draftOutputs,
+    } = route({
       teamId,
     });
     const paths = {
@@ -80,6 +97,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
       past: path + past.template,
       upcoming: path + upcoming.template,
       workspace: path + workspace.template,
+      draftOutputs: path + draftOutputs.template,
     };
 
     return (
@@ -93,11 +111,14 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
             </Frame>
           </Route>
           <TeamProfilePage
+            {...team}
             teamListElementId={teamListElementId}
             upcomingEventsCount={upcomingEvents.total}
             pastEventsCount={pastEvents.total}
             teamOutputsCount={teamOutputsResult.total}
-            {...team}
+            teamDraftOutputsCount={
+              canShareResearchOutput ? outputDraftResults.total : undefined
+            }
           >
             <ProfileSwitch
               About={() => (
@@ -107,7 +128,19 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
               displayName={team.displayName}
               eventConstraint={{ teamId }}
               isActive={!team?.inactiveSince}
-              Outputs={() => <Outputs team={team} />}
+              Outputs={() => (
+                <Outputs
+                  userAssociationMember={canShareResearchOutput}
+                  team={team}
+                />
+              )}
+              DraftOutputs={() => (
+                <Outputs
+                  team={team}
+                  draftOutputs
+                  userAssociationMember={canShareResearchOutput}
+                />
+              )}
               paths={paths}
               type="team"
               Workspace={() => (

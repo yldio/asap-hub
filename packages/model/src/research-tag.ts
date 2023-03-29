@@ -1,7 +1,7 @@
 import { FetchOptions, ListResponse } from './common';
 
 export const researchTagEntities = ['Research Output', 'User'] as const;
-export type ResearchTagEntity = typeof researchTagEntities[number];
+export type ResearchTagEntity = (typeof researchTagEntities)[number];
 
 export const researchTagCategories = [
   'Method',
@@ -9,7 +9,7 @@ export const researchTagCategories = [
   'Environment',
   'Subtype',
 ] as const;
-export type ResearchTagCategory = typeof researchTagCategories[number];
+export type ResearchTagCategory = (typeof researchTagCategories)[number];
 
 export type ResearchTagDataObject = {
   readonly id: string;

@@ -969,20 +969,20 @@ describe('Reminders', () => {
             '2022-09-26T08:00:00.0Z',
           ).toISOString(),
         });
-        const event = await eventDataProvider.fetchById(eventId);
-
-        const expectedReminder = {
-          id: `${material.toLowerCase()}-event-updated-${eventId}`,
-          entity: 'Event',
-          type: `${material} Updated`,
-          data: {
-            eventId,
-            title: event!.title,
-            [materialUpdatedAtName]: event![materialUpdatedAtName],
-          },
-        };
 
         await retryable(async () => {
+          const event = await eventDataProvider.fetchById(eventId);
+
+          const expectedReminder = {
+            id: `${material.toLowerCase()}-event-updated-${eventId}`,
+            entity: 'Event',
+            type: `${material} Updated`,
+            data: {
+              eventId,
+              title: event!.title,
+              [materialUpdatedAtName]: event![materialUpdatedAtName],
+            },
+          };
           const reminders = await reminderDataProvider.fetch(
             fetchRemindersOptions,
           );

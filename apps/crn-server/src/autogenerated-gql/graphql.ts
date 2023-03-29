@@ -8775,7 +8775,7 @@ export type FetchReminderDataQuery = {
 
 export type ResearchOutputContentFragment = Pick<
   ResearchOutputs,
-  'id' | 'created' | 'lastModified' | 'version'
+  'id' | 'created' | 'lastModified' | 'version' | 'status'
 > & {
   flatData: Pick<
     ResearchOutputsFlatDataDto,
@@ -8966,7 +8966,10 @@ export type FetchResearchOutputQueryVariables = Exact<{
 
 export type FetchResearchOutputQuery = {
   findResearchOutputsContent: Maybe<
-    Pick<ResearchOutputs, 'id' | 'created' | 'lastModified' | 'version'> & {
+    Pick<
+      ResearchOutputs,
+      'id' | 'created' | 'lastModified' | 'version' | 'status'
+    > & {
       flatData: Pick<
         ResearchOutputsFlatDataDto,
         | 'title'
@@ -9171,7 +9174,7 @@ export type FetchResearchOutputsQuery = {
         Array<
           Pick<
             ResearchOutputs,
-            'id' | 'created' | 'lastModified' | 'version'
+            'id' | 'created' | 'lastModified' | 'version' | 'status'
           > & {
             flatData: Pick<
               ResearchOutputsFlatDataDto,
@@ -12057,6 +12060,7 @@ export const ResearchOutputContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'created' } },
           { kind: 'Field', name: { kind: 'Name', value: 'lastModified' } },
           { kind: 'Field', name: { kind: 'Name', value: 'version' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'status' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'flatData' },

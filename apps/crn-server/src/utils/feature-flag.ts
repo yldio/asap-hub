@@ -1,7 +1,9 @@
+import { ExternalAuthorDataProvider } from '../data-providers/external-authors.data-provider';
+import { TeamDataProvider } from '../data-providers/teams.data-provider';
 import { UserDataProvider } from '../data-providers/users.data-provider';
 
 const featureFlags = ['IS_CONTENTFUL_ENABLED_V2'] as const;
-type FeatureFlag = typeof featureFlags[number];
+type FeatureFlag = (typeof featureFlags)[number];
 
 type DependencySwitch<T> = {
   true?: T;
@@ -10,6 +12,8 @@ type DependencySwitch<T> = {
 
 type DependencyList = {
   users: DependencySwitch<UserDataProvider>;
+  teams: DependencySwitch<TeamDataProvider>;
+  externalAuthors: DependencySwitch<ExternalAuthorDataProvider>;
 };
 
 export class FeatureFlagDependencySwitch {
@@ -18,6 +22,14 @@ export class FeatureFlagDependencySwitch {
   } = {
     IS_CONTENTFUL_ENABLED_V2: {
       users: {
+        true: undefined,
+        false: undefined,
+      },
+      teams: {
+        true: undefined,
+        false: undefined,
+      },
+      externalAuthors: {
         true: undefined,
         false: undefined,
       },

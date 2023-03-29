@@ -52,6 +52,7 @@ const titleStyles = css({
   fontWeight: 'bold',
   fontSize: '26px',
   lineHeight: '32px',
+  overflowWrap: 'anywhere',
 });
 const avatarStyles = css({
   margin: 'auto',

@@ -1,4 +1,5 @@
 import { gp2 } from '@asap-hub/model';
+import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
   Card,
   crossQuery,
@@ -23,7 +24,7 @@ const containerStyles = css({
   display: 'flex',
   flexDirection: 'column',
   gap: rem(32),
-  padding: `${rem(32)} 0 ${rem(48)}`,
+  padding: `0 0 ${rem(48)}`,
 });
 
 const contentStyles = css({
@@ -94,6 +95,8 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
               id,
             }),
           )}
+          userRoute={gp2Routing.users({}).user}
+          overrideNameStyles={css({ overflowWrap: 'anywhere' })}
         />
       </div>
     </Card>

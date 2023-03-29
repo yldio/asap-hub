@@ -1,15 +1,22 @@
-import { FetchEventsOptions } from '@asap-hub/model';
+import { gp2 } from '@asap-hub/model';
 import {
   fetchOptionsValidationSchema,
   validateInput,
 } from '@asap-hub/server-common';
 import { JSONSchemaType } from 'ajv';
 
-const eventFetchValidationSchema: JSONSchemaType<FetchEventsOptions> = {
+const eventFetchValidationSchema: JSONSchemaType<gp2.FetchEventsOptions> = {
   type: 'object',
   properties: {
     ...fetchOptionsValidationSchema.properties,
-    groupId: { type: 'string', nullable: true },
+    filter: {
+      type: 'object',
+      properties: {
+        workingGroupId: { type: 'string', nullable: true },
+        projectId: { type: 'string', nullable: true },
+      },
+      nullable: true,
+    },
     sortBy: {
       type: 'string',
       enum: ['startDate', 'endDate'],

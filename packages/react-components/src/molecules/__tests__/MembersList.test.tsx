@@ -34,7 +34,7 @@ it('renders first, second and third line for each member', async () => {
   expect(someone).toHaveTextContent('Multiple Teams');
 });
 
-it('only shows thirdLine  if the user has that data', async () => {
+it('only shows thirdLine if the user has that data', async () => {
   const { getAllByRole } = render(
     <MembersList
       members={[
@@ -60,6 +60,7 @@ it('only shows thirdLine  if the user has that data', async () => {
   expect(batman).toHaveTextContent('Manchester Lab and Glasgow Lab');
   expect(someone).not.toHaveTextContent('Lab');
 });
+
 it('renders a team link if a teamList is provided for thirdLine', async () => {
   const { getByText } = render(
     <MembersList
@@ -129,4 +130,25 @@ it('renders alumni badge when there is an alumni member', async () => {
   );
 
   expect(queryByTitle('Alumni Badge')).not.toBeInTheDocument();
+});
+
+it('overrides user link based on based on the overrideUserRoute prop fn', () => {
+  const overrideUserRouteMock = jest
+    .fn()
+    .mockImplementation((_) => ({ $: 'some route' }));
+  render(
+    <MembersList
+      members={[
+        {
+          ...createListUserResponse(1).items[0],
+          firstLine: 'example',
+        },
+      ]}
+      userRoute={overrideUserRouteMock}
+    />,
+  );
+
+  expect(overrideUserRouteMock).toHaveBeenLastCalledWith({
+    userId: 'user-id-0',
+  });
 });

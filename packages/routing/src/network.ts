@@ -84,6 +84,8 @@ const teamOutputDocumentTypeParser = {
 };
 
 const team = (() => {
+  const draftOutputs = route('/draft-outputs', {}, {});
+
   const about = route('/about', {}, {});
   const outputs = route('/outputs', {}, {});
 
@@ -102,7 +104,7 @@ const team = (() => {
   return route(
     '/:teamId',
     { teamId: stringParser },
-    { about, workspace, outputs, createOutput, upcoming, past },
+    { about, workspace, outputs, createOutput, upcoming, past, draftOutputs },
   );
 })();
 const teams = route('/teams', {}, { team });
@@ -135,6 +137,7 @@ export type WorkingGroupOutputDocumentTypeParameter =
   | 'protocol';
 
 const workingGroup = (() => {
+  const draftOutputs = route('/draft-outputs', {}, {});
   const about = route('/about', {}, {});
   const outputs = route('/outputs', {}, {});
   const createOutput = route(
@@ -149,7 +152,7 @@ const workingGroup = (() => {
   return route(
     '/:workingGroupId',
     { workingGroupId: stringParser },
-    { about, createOutput, outputs, calendar, upcoming, past },
+    { about, createOutput, outputs, draftOutputs, calendar, upcoming, past },
   );
 })();
 

@@ -5,7 +5,7 @@ export type OutputDocumentTypeParameter =
   | 'article'
   | 'code-software'
   | 'data-release'
-  | 'form'
+  | 'procedural-form'
   | 'training-materials'
   | 'update';
 

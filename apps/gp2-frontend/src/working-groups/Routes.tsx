@@ -2,7 +2,7 @@ import { Frame } from '@asap-hub/frontend-utils';
 import { WorkingGroupsPage } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/routing';
-import { lazy, useEffect } from 'react';
+import { lazy, useEffect, useState } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
 const loadWorkingGroupList = () =>
@@ -22,6 +22,7 @@ const Routes: React.FC<Record<string, never>> = () => {
   }, []);
   const { path } = useRouteMatch();
 
+  const [currentTime] = useState(new Date());
   return (
     <Switch>
       <Route exact path={path}>
@@ -32,7 +33,7 @@ const Routes: React.FC<Record<string, never>> = () => {
         </WorkingGroupsPage>
       </Route>
       <Route path={path + workingGroups({}).workingGroup.template}>
-        <WorkingGroupDetail />
+        <WorkingGroupDetail currentTime={currentTime} />
       </Route>
       <Route component={NotFoundPage} />
     </Switch>

@@ -8,7 +8,6 @@ import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getNews } from '../api';
 import { getEvents } from '../../events/api';
 import Dashboard from '../Dashboard';
-import { refreshNewsState } from '../state';
 
 jest.mock('../api');
 jest.mock('../../events/api');
@@ -28,11 +27,7 @@ const renderDashboard = async ({
 }) => {
   render(
     <Suspense fallback="loading">
-      <RecoilRoot
-        initializeState={({ set }) => {
-          set(refreshNewsState, Math.random());
-        }}
-      >
+      <RecoilRoot>
         <Auth0Provider user={{ ...user, role: 'Network Collaborator' }}>
           <WhenReady>
             <Dashboard

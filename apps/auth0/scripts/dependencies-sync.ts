@@ -8,7 +8,7 @@ const main = async () => {
   try {
     const yamlFile = readFileSync(`./${fileName}`, 'utf8');
     const data = yaml.load(yamlFile) as Parameters<
-      typeof tools['tools']['deploy']
+      (typeof tools)['tools']['deploy']
     >[0];
 
     const actions = data.actions?.map((action) => {

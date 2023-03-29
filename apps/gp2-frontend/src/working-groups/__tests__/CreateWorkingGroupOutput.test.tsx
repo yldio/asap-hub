@@ -77,9 +77,10 @@ it('publishes the output', async () => {
     total: 1,
     items: [{ displayName: 'Steve Rogers', id: '2' }],
   });
+  mockCreateOutput.mockResolvedValueOnce(gp2.createOutputResponse());
   const title = 'this is the output title';
   const link = 'https://example.com';
-  await renderCreateWorkingGroupOutput('form');
+  await renderCreateWorkingGroupOutput('procedural-form');
 
   userEvent.type(screen.getByRole('textbox', { name: /title/i }), title);
   userEvent.type(screen.getByRole('textbox', { name: /url/i }), link);
@@ -94,7 +95,7 @@ it('publishes the output', async () => {
     {
       title,
       link,
-      documentType: 'Form',
+      documentType: 'Procedural Form',
       authors: [
         {
           userId: '1',

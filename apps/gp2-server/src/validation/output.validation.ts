@@ -1,6 +1,6 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { validateInput } from '@asap-hub/server-common';
-import { UrlExpression } from '@asap-hub/validation';
+import { urlExpression } from '@asap-hub/validation';
 import { JSONSchemaType } from 'ajv';
 
 type OutputParameters = {
@@ -42,7 +42,7 @@ const outputsParametersValidationSchema: JSONSchemaType<gp2Model.FetchOutputOpti
           link: {
             type: 'string',
             nullable: true,
-            pattern: UrlExpression,
+            pattern: urlExpression,
           },
           title: { type: 'string', nullable: true },
         },
@@ -90,7 +90,7 @@ const outputPostRequestValidationSchema: JSONSchemaType<gp2Model.OutputPostReque
       link: {
         type: 'string',
         nullable: true,
-        pattern: UrlExpression,
+        pattern: urlExpression,
       },
       title: { type: 'string' },
       publishDate: { type: 'string', format: 'date-time', nullable: true },

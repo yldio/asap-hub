@@ -1,11 +1,14 @@
 import { NotFoundError } from '@asap-hub/errors';
-import { gp2 } from '@asap-hub/model';
+import { FetchOptions, gp2 } from '@asap-hub/model';
 import { ProjectDataProvider } from '../data-providers/project.data-provider';
 import { removeNotAllowedResources } from '../utils/resources';
 
 export interface ProjectController {
   fetchById(id: string, loggedInUserId: string): Promise<gp2.ProjectResponse>;
-  fetch(loggedInUserId: string): Promise<gp2.ListProjectResponse>;
+  fetch(
+    options: FetchOptions,
+    loggedInUserId: string,
+  ): Promise<gp2.ListProjectResponse>;
   update(
     id: string,
     update: gp2.ProjectUpdateRequest,
@@ -16,8 +19,11 @@ export interface ProjectController {
 export default class Projects implements ProjectController {
   constructor(private projectDataProvider: ProjectDataProvider) {}
 
-  async fetch(loggedInUserId: string): Promise<gp2.ListProjectResponse> {
-    const projects = await this.projectDataProvider.fetch();
+  async fetch(
+    options: FetchOptions,
+    loggedInUserId: string,
+  ): Promise<gp2.ListProjectResponse> {
+    const projects = await this.projectDataProvider.fetch(options);
     return {
       ...projects,
       items: projects.items.map((project) =>

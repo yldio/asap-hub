@@ -1,7 +1,7 @@
 import { mockLocation } from '@asap-hub/dom-test-utils';
 import { authTestUtils } from '@asap-hub/gp2-components';
 import { ToastContext } from '@asap-hub/react-context';
-import { render, RenderResult, waitFor } from '@testing-library/react';
+import { render, RenderResult, waitFor, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import nock from 'nock';
 import { MemoryRouter, Route } from 'react-router-dom';
@@ -41,23 +41,23 @@ describe('the welcome page', () => {
     );
 
   it('renders a headline', async () => {
-    const { findByRole } = await renderWelcome();
-    expect((await findByRole('heading')).textContent).toMatch(
+    await renderWelcome();
+    expect((await screen.findByRole('heading')).textContent).toMatch(
       /Join the GP2 Hub/i,
     );
   });
 
   it('renders one button', async () => {
-    const { findByRole } = await renderWelcome();
-    expect((await findByRole('button')).textContent).toMatchInlineSnapshot(
-      `"Activate account"`,
-    );
+    await renderWelcome();
+    expect(
+      (await screen.findByRole('button')).textContent,
+    ).toMatchInlineSnapshot(`"Activate account"`);
   });
 
   describe('when clicking the button', () => {
     it('redirects to the signup page', async () => {
-      const { findByRole } = await renderWelcome();
-      userEvent.click(await findByRole('button'));
+      await renderWelcome();
+      userEvent.click(await screen.findByRole('button'));
       await waitFor(() => expect(mockAssign).toHaveBeenCalled());
 
       const { origin, pathname, searchParams } = new URL(
@@ -76,8 +76,8 @@ describe('the welcome page', () => {
       });
 
       it('shows an error message toast', async () => {
-        const { findByRole } = await renderWelcome();
-        userEvent.click(await findByRole('button'));
+        await renderWelcome();
+        userEvent.click(await screen.findByRole('button'));
         await waitFor(() => {
           expect(mockToast).toHaveBeenCalledWith(
             expect.stringMatching(/invalid/i),
@@ -93,8 +93,8 @@ describe('the welcome page', () => {
       });
 
       it('shows an error message toast', async () => {
-        const { findByRole } = await renderWelcome();
-        userEvent.click(await findByRole('button'));
+        await renderWelcome();
+        userEvent.click(await screen.findByRole('button'));
         await waitFor(() => {
           expect(mockToast).toHaveBeenCalledWith(
             expect.stringMatching(/error/i),
@@ -112,8 +112,8 @@ describe('the welcome page', () => {
       });
 
       it('shows an error message toast', async () => {
-        const { findByRole } = await renderWelcome();
-        userEvent.click(await findByRole('button'));
+        await renderWelcome();
+        userEvent.click(await screen.findByRole('button'));
         await waitFor(() => {
           expect(mockToast).toHaveBeenCalledWith(
             expect.stringContaining('Network Error'),

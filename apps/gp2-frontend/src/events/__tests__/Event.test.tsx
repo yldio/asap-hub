@@ -11,7 +11,6 @@ import { events } from '@asap-hub/routing';
 
 import Event from '../Event';
 import { getEvent } from '../api';
-import { refreshEventState } from '../state';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 
 jest.mock('../api');
@@ -23,9 +22,7 @@ beforeEach(jest.resetAllMocks);
 
 const renderEvent = async () => {
   render(
-    <RecoilRoot
-      initializeState={({ set }) => set(refreshEventState(id), Math.random())}
-    >
+    <RecoilRoot>
       <Auth0Provider user={{}}>
         <WhenReady>
           <Suspense fallback="Loading...">

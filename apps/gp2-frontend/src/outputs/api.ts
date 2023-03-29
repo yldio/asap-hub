@@ -83,3 +83,29 @@ export const createOutput = async (
   }
   return resp.json();
 };
+
+export const updateOutput = async (
+  outputId: string,
+  output: gp2.OutputPutRequest,
+  authorization: string,
+): Promise<gp2.OutputResponse | undefined> => {
+  const resp = await fetch(`${API_BASE_URL}/outputs/${outputId}`, {
+    method: 'PUT',
+    headers: {
+      authorization,
+      'content-type': 'application/json',
+      ...createSentryHeaders(),
+    },
+    body: JSON.stringify(output),
+  });
+
+  if (!resp.ok) {
+    if (resp.status === 404) {
+      return undefined;
+    }
+    throw new Error(
+      `Failed to update output ${outputId}. Expected status 200. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+    );
+  }
+  return resp.json();
+};

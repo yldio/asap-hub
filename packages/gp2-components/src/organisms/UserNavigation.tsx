@@ -20,6 +20,7 @@ const userMenuStyles = css({
   position: 'absolute',
   border: `1px solid ${steel.rgb}`,
   boxShadow: `0 2px 6px 0 ${colorWithTransparency(tin, 0.34).rgba}`,
+  right: 5,
 });
 const userMenuShownStyles = css({
   zIndex: 1,

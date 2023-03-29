@@ -11,17 +11,12 @@ import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getProjects } from '../api';
 import ProjectList from '../ProjectList';
-import { refreshProjectsState } from '../state';
 
 jest.mock('../api');
 
 const renderProjectsList = async () => {
   render(
-    <RecoilRoot
-      initializeState={({ set }) => {
-        set(refreshProjectsState, Math.random());
-      }}
-    >
+    <RecoilRoot>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>

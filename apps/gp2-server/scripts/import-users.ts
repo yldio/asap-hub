@@ -64,7 +64,7 @@ const app = async () => {
         ],
         role: 'Network Collaborator',
         onboarded: false,
-        degrees: [],
+        degrees: [data[10]! as gp2.UserDegree],
         keywords: [],
         questions: [],
         contributingCohorts: [],

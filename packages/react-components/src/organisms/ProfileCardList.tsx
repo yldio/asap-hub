@@ -14,8 +14,7 @@ import { editIcon } from '../icons';
 const styles = (numEntries: number) =>
   css({
     // compensate for cards having more bottom than top padding (see below)
-    paddingTop: `${24 / perRem}em`,
-    paddingBottom: `${12 / perRem}em`,
+    paddingBottom: `${24 / perRem}em`,
 
     display: 'grid',
     gridTemplate: `
@@ -39,11 +38,7 @@ const styles = (numEntries: number) =>
   });
 const cardStyles = css({
   // bottom only to separate from the pencil belonging to the next card
-  paddingBottom: `${24 / perRem}em`,
-  [`@media (min-width: ${tabletScreen.width}px)`]: {
-    // top to align with pencil on the side
-    paddingTop: `${12 / perRem}em`,
-  },
+  paddingBottom: `${32 / perRem}em`,
 });
 const editButtonStyles = css({
   justifySelf: 'end',

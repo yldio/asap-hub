@@ -1,6 +1,6 @@
 import { Button, pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
-import { mobileQuery } from '../layout';
+import { footerStyles, mobileQuery, padding24Styles } from '../layout';
 
 const { rem } = pixels;
 
@@ -28,32 +28,26 @@ const floatButtonContainerStyles = css({
   },
 });
 
-const overrideButtonStyles = css({
-  margin: 0,
-  maxWidth: 'fit-content',
-  [mobileQuery]: {
-    maxWidth: '100%',
-  },
-});
-
 const FilterModalFooter: React.FC<FilterModalFooterProps> = ({
   onReset,
   onApply,
   onClose,
 }) => (
-  <div css={buttonContainerStyles}>
-    <Button overrideStyles={overrideButtonStyles} onClick={onClose}>
-      Close
-    </Button>
+  <footer css={[footerStyles, padding24Styles]}>
+    <div>
+      <Button noMargin onClick={onClose}>
+        Close
+      </Button>
+    </div>
     <div css={[buttonContainerStyles, floatButtonContainerStyles]}>
-      <Button overrideStyles={overrideButtonStyles} onClick={onReset}>
+      <Button noMargin onClick={onReset}>
         Reset
       </Button>
-      <Button overrideStyles={overrideButtonStyles} primary onClick={onApply}>
+      <Button noMargin primary onClick={onApply}>
         Apply
       </Button>
     </div>
-  </div>
+  </footer>
 );
 
 export default FilterModalFooter;

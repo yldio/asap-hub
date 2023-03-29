@@ -10,7 +10,7 @@ export const eventRouteFactory = (
 ): Router => {
   const eventRoutes = Router();
 
-  eventRoutes.get<unknown, gp2.ListEventResponse>(
+  eventRoutes.get<gp2.EventConstraint, gp2.ListEventResponse>(
     '/events',
     async (req, res) => {
       const query = validateEventFetchParameters(req.query);

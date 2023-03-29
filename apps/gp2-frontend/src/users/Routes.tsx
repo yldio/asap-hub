@@ -2,21 +2,24 @@ import { Frame } from '@asap-hub/frontend-utils';
 import { UsersPage } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/routing';
-import { lazy, useEffect } from 'react';
+import { lazy, useEffect, useState } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
-import UserDirectory from './UserDirectory';
 
+const loadUserDirectory = () =>
+  import(/* webpackChunkName: "user-directory" */ './UserDirectory');
 const loadUserDetail = () =>
   import(/* webpackChunkName: "user-detail" */ './UserDetail');
 
 const UserDetail = lazy(loadUserDetail);
+const UserDirectory = lazy(loadUserDirectory);
 
 const { users } = gp2;
 const Routes: React.FC<Record<string, never>> = () => {
   useEffect(() => {
-    loadUserDetail();
+    loadUserDirectory().then(loadUserDetail);
   }, []);
   const { path } = useRouteMatch();
+  const [currentTime] = useState(new Date());
 
   return (
     <Switch>
@@ -35,7 +38,7 @@ const Routes: React.FC<Record<string, never>> = () => {
         </UsersPage>
       </Route>
       <Route path={path + users({}).user.template}>
-        <UserDetail />
+        <UserDetail currentTime={currentTime} />
       </Route>
       <Route component={NotFoundPage} />
     </Switch>

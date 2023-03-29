@@ -14,7 +14,6 @@ import { act } from 'react-test-renderer';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getUser, postUserAvatar } from '../../users/api';
-import { refreshUserState } from '../../users/state';
 import { useSelectAvatar } from '../useSelectAvatar';
 
 jest.mock('../../users/api');
@@ -51,11 +50,7 @@ const wrapper =
   ): React.FC =>
   ({ children }) =>
     (
-      <RecoilRoot
-        initializeState={({ set }) => {
-          user?.id && set(refreshUserState(user.id), Math.random());
-        }}
-      >
+      <RecoilRoot>
         <Suspense fallback="loading">
           <ToastContext.Provider value={mockToast}>
             <Auth0Provider

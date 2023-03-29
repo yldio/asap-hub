@@ -24,20 +24,8 @@ export const usersState = selectorFamily<
   key: 'usersState',
   get:
     (options) =>
-    ({ get }) => {
-      get(refreshUsersState);
-      return getUsers(options, get(authorizationState));
-    },
-});
-
-export const refreshUsersState = atom<number>({
-  key: 'refreshUsersState',
-  default: 0,
-});
-
-export const refreshUserState = atomFamily<number, string>({
-  key: 'refreshUser',
-  default: 0,
+    ({ get }) =>
+      getUsers(options, get(authorizationState)),
 });
 
 const fetchUserState = selectorFamily<gp2.UserResponse | undefined, string>({
@@ -45,7 +33,6 @@ const fetchUserState = selectorFamily<gp2.UserResponse | undefined, string>({
   get:
     (id) =>
     async ({ get }) => {
-      get(refreshUserState(id));
       const authorization = get(authorizationState);
       return getUser(id, authorization);
     },
@@ -99,14 +86,9 @@ export const usePostUserAvatarById = (id: string) => {
   };
 };
 
-export const refreshCohortsState = atom<number>({
-  key: 'refreshChorts',
-  default: 0,
-});
 const contributingCohortSelector = selector({
   key: 'contributingCohorts',
   get: ({ get }) => {
-    get(refreshCohortsState);
     const authorization = get(authorizationState);
     return getContributingCohorts(authorization);
   },

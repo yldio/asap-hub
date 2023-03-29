@@ -24,7 +24,6 @@ import {
   patchUser,
   postUserAvatar,
 } from '../../users/api';
-import { refreshUserState } from '../../users/state';
 import CoreDetails from '../CoreDetails';
 
 jest.mock('browser-image-compression');
@@ -44,11 +43,7 @@ const renderCoreDetails = async (
   ) => Partial<Auth0<gp2.User>>,
 ) => {
   render(
-    <RecoilRoot
-      initializeState={({ set }) => {
-        set(refreshUserState(id), Math.random());
-      }}
-    >
+    <RecoilRoot>
       <Suspense fallback="loading">
         <ToastContext.Provider value={mockToast}>
           <Auth0Provider

@@ -12,25 +12,23 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import { getOutputs } from '../../outputs/api';
+import { getEvents } from '../../events/api';
 import {
   getContributingCohorts,
   getInstitutions,
   getUser,
   patchUser,
 } from '../api';
-import { refreshCohortsState, refreshUserState } from '../state';
 import UserDetail from '../UserDetail';
 
 jest.mock('../api');
+jest.mock('../../outputs/api');
+jest.mock('../../events/api');
 
 const renderUserDetail = async (id: string) => {
   render(
-    <RecoilRoot
-      initializeState={({ set }) => {
-        set(refreshUserState(id), Math.random());
-        set(refreshCohortsState, Math.random());
-      }}
-    >
+    <RecoilRoot>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -42,7 +40,7 @@ const renderUserDetail = async (id: string) => {
                   gp2Routing.users.template + gp2Routing.users({}).user.template
                 }
               >
-                <UserDetail />
+                <UserDetail currentTime={new Date()} />
               </Route>
             </MemoryRouter>
           </WhenReady>
@@ -57,8 +55,9 @@ const renderUserDetail = async (id: string) => {
 describe('UserDetail', () => {
   beforeEach(jest.resetAllMocks);
   const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
-
   const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
+  const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
+  const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
 
   const mockGetInstitutions = getInstitutions as jest.MockedFunction<
     typeof getInstitutions
@@ -73,6 +72,10 @@ describe('UserDetail', () => {
     { id: '7', name: 'AGPDS' },
     { id: '11', name: 'S3' },
   ];
+  beforeEach(() => {
+    mockGetOutputs.mockResolvedValue(gp2Fixtures.createListOutputResponse(1));
+    mockGetEvents.mockResolvedValue(gp2Fixtures.createListEventResponse(1));
+  });
 
   it('renders header with title', async () => {
     const user = gp2Fixtures.createUserResponse();
@@ -138,35 +141,35 @@ describe('UserDetail', () => {
       ] = editButtons;
 
       expect(keyInformationEditButton.getAttribute('href')).toBe(
-        '/users/testuserid/edit-key-info',
+        '/users/testuserid/overview/edit-key-info',
       );
 
       expect(contactInformationEditButton.getAttribute('href')).toBe(
-        '/users/testuserid/edit-contact-info',
+        '/users/testuserid/overview/edit-contact-info',
       );
 
       expect(keywordsEditButton.getAttribute('href')).toBe(
-        '/users/testuserid/edit-keywords',
+        '/users/testuserid/overview/edit-keywords',
       );
 
       expect(biographyEditButton.getAttribute('href')).toBe(
-        '/users/testuserid/edit-biography',
+        '/users/testuserid/overview/edit-biography',
       );
 
       expect(questionsEditButton.getAttribute('href')).toBe(
-        '/users/testuserid/edit-questions',
+        '/users/testuserid/overview/edit-questions',
       );
 
       expect(fundingStreamsEditButton.getAttribute('href')).toBe(
-        '/users/testuserid/edit-funding-streams',
+        '/users/testuserid/overview/edit-funding-streams',
       );
 
       expect(contributingCohortsEditButton.getAttribute('href')).toBe(
-        '/users/testuserid/edit-contributing-cohorts',
+        '/users/testuserid/overview/edit-contributing-cohorts',
       );
 
       expect(externalProfilesEditButton.getAttribute('href')).toBe(
-        '/users/testuserid/edit-external-profiles',
+        '/users/testuserid/overview/edit-external-profiles',
       );
     });
 
@@ -443,5 +446,34 @@ describe('UserDetail', () => {
         searchQuery: 'Stark Industries 1',
       });
     });
+  });
+  describe('the upcoming events tab', () => {
+    it('can be switched to', async () => {
+      const user = gp2Fixtures.createUserResponse();
+      mockGetUser.mockResolvedValueOnce(user);
+      await renderUserDetail(user.id);
+      userEvent.click(await screen.findByText(/upcoming events \(1\)/i));
+      expect(await screen.findByText(/Event 0/i)).toBeVisible();
+    });
+  });
+
+  describe('the past events tab', () => {
+    it('can be switched to', async () => {
+      const user = gp2Fixtures.createUserResponse();
+      mockGetUser.mockResolvedValueOnce(user);
+      await renderUserDetail(user.id);
+      userEvent.click(await screen.findByText(/past events \(1\)/i));
+      expect(await screen.findByText(/Event 0/i)).toBeVisible();
+    });
+  });
+  it('displays the correct count', async () => {
+    const user = gp2Fixtures.createUserResponse();
+    mockGetUser.mockResolvedValueOnce(user);
+    mockGetEvents
+      .mockResolvedValueOnce(gp2Fixtures.createListEventResponse(2))
+      .mockResolvedValueOnce(gp2Fixtures.createListEventResponse(3));
+    await renderUserDetail(user.id);
+    expect(await screen.findByText(/upcoming events \(2\)/i)).toBeVisible();
+    expect(await screen.findByText(/past events \(3\)/i)).toBeVisible();
   });
 });

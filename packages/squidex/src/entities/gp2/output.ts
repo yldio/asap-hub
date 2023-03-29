@@ -10,7 +10,7 @@ import { GraphqlExternalUser } from '.';
 import { GraphqlUserAssoc } from './user';
 
 export type RestOutputDocumentType =
-  | 'Form'
+  | 'Procedural_Form'
   | 'Update'
   | 'Training_Material'
   | 'Data_Release'

@@ -4,8 +4,15 @@ import nock from 'nock';
 import { appName, baseUrl } from '../../src/config';
 import { ExternalAuthorSquidexDataProvider } from '../../src/data-providers/external-authors.data-provider';
 import { getAuthToken } from '../../src/utils/auth';
-import { getExternalAuthorCreateDataObject } from '../fixtures/external-authors.fixtures';
+import {
+  getExternalAuthorDataObject,
+  getSquidexExternalAuthorGraphqlResponse,
+  getSquidexExternalAuthorsGraphqlResponse,
+  getExternalAuthorCreateDataObject,
+} from '../fixtures/external-authors.fixtures';
 import { identity } from '../helpers/squidex';
+import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
+import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 
 describe('External Authors data provider', () => {
   const externalAuthorRestClient = new SquidexRest<RestExternalAuthor>(
@@ -13,9 +20,17 @@ describe('External Authors data provider', () => {
     'external-authors',
     { appName, baseUrl },
   );
+  const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
+  const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
   const externalAuthorsDataProvider = new ExternalAuthorSquidexDataProvider(
     externalAuthorRestClient,
+    squidexGraphqlClientMock,
   );
+  const externalAuthorsDataProviderWithServer =
+    new ExternalAuthorSquidexDataProvider(
+      externalAuthorRestClient,
+      squidexGraphqlClientMockServer,
+    );
 
   beforeAll(() => {
     identity();
@@ -74,6 +89,93 @@ describe('External Authors data provider', () => {
       await expect(
         externalAuthorsDataProvider.create(externalAuthorCreateDataObject),
       ).rejects.toThrow(GenericError);
+    });
+  });
+
+  describe('Fetch', () => {
+    test('Should fetch the users from squidex graphql', async () => {
+      const result = await externalAuthorsDataProviderWithServer.fetch({});
+
+      expect(result).toMatchObject({
+        total: 8,
+        items: [getExternalAuthorDataObject(), getExternalAuthorDataObject()],
+      });
+    });
+
+    test('Should return an empty result', async () => {
+      const mockResponse = getSquidexExternalAuthorsGraphqlResponse();
+      mockResponse.queryExternalAuthorsContentsWithTotal!.items = [];
+      mockResponse.queryExternalAuthorsContentsWithTotal!.total = 0;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const result = await externalAuthorsDataProvider.fetch({});
+      expect(result).toEqual({ items: [], total: 0 });
+    });
+
+    test('Should return an empty result when the client returns a response with query property set to null', async () => {
+      const mockResponse = getSquidexExternalAuthorsGraphqlResponse();
+      mockResponse.queryExternalAuthorsContentsWithTotal = null;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const result = await externalAuthorsDataProvider.fetch({});
+      expect(result).toEqual({ total: 0, items: [] });
+    });
+
+    test('Should return an empty result when the client returns a response with items property set to null', async () => {
+      const mockResponse = getSquidexExternalAuthorsGraphqlResponse();
+      mockResponse.queryExternalAuthorsContentsWithTotal!.items = null;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const result = await externalAuthorsDataProvider.fetch({});
+      expect(result).toEqual({ total: 0, items: [] });
+    });
+
+    test('Should use take and skip parameters', async () => {
+      const mockResponse = getSquidexExternalAuthorsGraphqlResponse();
+      mockResponse.queryExternalAuthorsContentsWithTotal!.items = [];
+      mockResponse.queryExternalAuthorsContentsWithTotal!.total = 0;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const result = await externalAuthorsDataProvider.fetch({
+        take: 15,
+        skip: 11,
+      });
+      expect(result).toEqual({ items: [], total: 0 });
+
+      expect(squidexGraphqlClientMock.request).toBeCalledWith(
+        expect.anything(),
+        {
+          top: 15,
+          skip: 11,
+        },
+      );
+    });
+  });
+
+  describe('FetchById', () => {
+    test('Should fetch the user from squidex graphql', async () => {
+      const result = await externalAuthorsDataProviderWithServer.fetchById(
+        'user-id',
+      );
+
+      expect(result).toMatchObject(getExternalAuthorDataObject());
+    });
+
+    test('Should return null when user is not found', async () => {
+      const mockResponse = getSquidexExternalAuthorGraphqlResponse();
+      mockResponse.findExternalAuthorsContent = null;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const result = await externalAuthorsDataProvider.fetchById('not-found');
+      expect(result).toEqual(null);
+    });
+
+    test('Should return the user when it finds it', async () => {
+      const mockResponse = getSquidexExternalAuthorGraphqlResponse();
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const result = await externalAuthorsDataProvider.fetchById('user-id');
+      expect(result).toEqual(getExternalAuthorDataObject());
     });
   });
 });

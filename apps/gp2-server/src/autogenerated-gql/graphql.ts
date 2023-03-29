@@ -41,6 +41,8 @@ export type ApplicationMutations = {
   changeNewsAndEventsContent: Maybe<NewsAndEvents>;
   /** Change a Outputs content. */
   changeOutputsContent: Maybe<Outputs>;
+  /** Change a Pages content. */
+  changePagesContent: Maybe<Pages>;
   /** Change a Projects content. */
   changeProjectsContent: Maybe<Projects>;
   /** Change a Users content. */
@@ -63,6 +65,8 @@ export type ApplicationMutations = {
   createNewsAndEventsContent: Maybe<NewsAndEvents>;
   /** Creates an Outputs content. */
   createOutputsContent: Maybe<Outputs>;
+  /** Creates an Pages content. */
+  createPagesContent: Maybe<Pages>;
   /** Creates an Projects content. */
   createProjectsContent: Maybe<Projects>;
   /** Creates an Users content. */
@@ -85,6 +89,8 @@ export type ApplicationMutations = {
   deleteNewsAndEventsContent: EntitySavedResultDto;
   /** Delete an Outputs content. */
   deleteOutputsContent: EntitySavedResultDto;
+  /** Delete an Pages content. */
+  deletePagesContent: EntitySavedResultDto;
   /** Delete an Projects content. */
   deleteProjectsContent: EntitySavedResultDto;
   /** Delete an Users content. */
@@ -107,6 +113,8 @@ export type ApplicationMutations = {
   patchNewsAndEventsContent: Maybe<NewsAndEvents>;
   /** Patch an Outputs content by id. */
   patchOutputsContent: Maybe<Outputs>;
+  /** Patch an Pages content by id. */
+  patchPagesContent: Maybe<Pages>;
   /** Patch an Projects content by id. */
   patchProjectsContent: Maybe<Projects>;
   /** Patch an Users content by id. */
@@ -151,6 +159,11 @@ export type ApplicationMutations = {
    */
   publishOutputsContent: Maybe<Outputs>;
   /**
+   * Publish a Pages content.
+   * @deprecated Use 'changePagesContent' instead
+   */
+  publishPagesContent: Maybe<Pages>;
+  /**
    * Publish a Projects content.
    * @deprecated Use 'changeProjectsContent' instead
    */
@@ -184,6 +197,8 @@ export type ApplicationMutations = {
   updateNewsAndEventsContent: Maybe<NewsAndEvents>;
   /** Update an Outputs content by id. */
   updateOutputsContent: Maybe<Outputs>;
+  /** Update an Pages content by id. */
+  updatePagesContent: Maybe<Pages>;
   /** Update an Projects content by id. */
   updateProjectsContent: Maybe<Projects>;
   /** Update an Users content by id. */
@@ -206,6 +221,8 @@ export type ApplicationMutations = {
   upsertNewsAndEventsContent: Maybe<NewsAndEvents>;
   /** Upsert an Outputs content by id. */
   upsertOutputsContent: Maybe<Outputs>;
+  /** Upsert an Pages content by id. */
+  upsertPagesContent: Maybe<Pages>;
   /** Upsert an Projects content by id. */
   upsertProjectsContent: Maybe<Projects>;
   /** Upsert an Users content by id. */
@@ -266,6 +283,14 @@ export type ApplicationMutationsChangeNewsAndEventsContentArgs = {
 
 /** The app mutations. */
 export type ApplicationMutationsChangeOutputsContentArgs = {
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  status: Scalars['String'];
+};
+
+/** The app mutations. */
+export type ApplicationMutationsChangePagesContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -361,6 +386,14 @@ export type ApplicationMutationsCreateOutputsContentArgs = {
 };
 
 /** The app mutations. */
+export type ApplicationMutationsCreatePagesContentArgs = {
+  data: PagesDataInputDto;
+  id: InputMaybe<Scalars['String']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
 export type ApplicationMutationsCreateProjectsContentArgs = {
   data: ProjectsDataInputDto;
   id: InputMaybe<Scalars['String']>;
@@ -435,6 +468,12 @@ export type ApplicationMutationsDeleteOutputsContentArgs = {
 };
 
 /** The app mutations. */
+export type ApplicationMutationsDeletePagesContentArgs = {
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+};
+
+/** The app mutations. */
 export type ApplicationMutationsDeleteProjectsContentArgs = {
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
@@ -503,6 +542,13 @@ export type ApplicationMutationsPatchNewsAndEventsContentArgs = {
 /** The app mutations. */
 export type ApplicationMutationsPatchOutputsContentArgs = {
   data: OutputsDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
+export type ApplicationMutationsPatchPagesContentArgs = {
+  data: PagesDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
@@ -592,6 +638,14 @@ export type ApplicationMutationsPublishOutputsContentArgs = {
 };
 
 /** The app mutations. */
+export type ApplicationMutationsPublishPagesContentArgs = {
+  dueTime: InputMaybe<Scalars['Instant']>;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  status: Scalars['String'];
+};
+
+/** The app mutations. */
 export type ApplicationMutationsPublishProjectsContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
   expectedVersion?: InputMaybe<Scalars['Int']>;
@@ -668,6 +722,13 @@ export type ApplicationMutationsUpdateNewsAndEventsContentArgs = {
 /** The app mutations. */
 export type ApplicationMutationsUpdateOutputsContentArgs = {
   data: OutputsDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
+export type ApplicationMutationsUpdatePagesContentArgs = {
+  data: PagesDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
@@ -771,6 +832,16 @@ export type ApplicationMutationsUpsertOutputsContentArgs = {
 };
 
 /** The app mutations. */
+export type ApplicationMutationsUpsertPagesContentArgs = {
+  data: PagesDataInputDto;
+  expectedVersion?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  patch?: InputMaybe<Scalars['Boolean']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
+  status: InputMaybe<Scalars['String']>;
+};
+
+/** The app mutations. */
 export type ApplicationMutationsUpsertProjectsContentArgs = {
   data: ProjectsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
@@ -828,6 +899,8 @@ export type ApplicationQueries = {
   findNewsAndEventsContent: Maybe<NewsAndEvents>;
   /** Find an Outputs content by id. */
   findOutputsContent: Maybe<Outputs>;
+  /** Find an Pages content by id. */
+  findPagesContent: Maybe<Pages>;
   /** Find an Projects content by id. */
   findProjectsContent: Maybe<Projects>;
   /** Find an Users content by id. */
@@ -868,6 +941,10 @@ export type ApplicationQueries = {
   queryOutputsContents: Maybe<Array<Outputs>>;
   /** Query Outputs content items with total count. */
   queryOutputsContentsWithTotal: Maybe<OutputsResultDto>;
+  /** Query Pages content items. */
+  queryPagesContents: Maybe<Array<Pages>>;
+  /** Query Pages content items with total count. */
+  queryPagesContentsWithTotal: Maybe<PagesResultDto>;
   /** Query Projects content items. */
   queryProjectsContents: Maybe<Array<Projects>>;
   /** Query Projects content items with total count. */
@@ -929,6 +1006,12 @@ export type ApplicationQueriesFindNewsAndEventsContentArgs = {
 
 /** The app queries. */
 export type ApplicationQueriesFindOutputsContentArgs = {
+  id: Scalars['String'];
+  version: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type ApplicationQueriesFindPagesContentArgs = {
   id: Scalars['String'];
   version: InputMaybe<Scalars['Int']>;
 };
@@ -1092,6 +1175,24 @@ export type ApplicationQueriesQueryOutputsContentsArgs = {
 
 /** The app queries. */
 export type ApplicationQueriesQueryOutputsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type ApplicationQueriesQueryPagesContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type ApplicationQueriesQueryPagesContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -2779,8 +2880,8 @@ export enum OutputsDataDocumentTypeEnum {
   CodeSoftware = 'Code_Software',
   /** Data_Release */
   DataRelease = 'Data_Release',
-  /** Form */
-  Form = 'Form',
+  /** Procedural_Form */
+  ProceduralForm = 'Procedural_Form',
   /** Training_Material */
   TrainingMaterial = 'Training_Material',
   /** Update */
@@ -2974,6 +3075,140 @@ export type OutputsFlatDataDto = {
 export type OutputsResultDto = {
   /** The contents. */
   items: Maybe<Array<Outputs>>;
+  /** The total count of  contents. */
+  total: Scalars['Int'];
+};
+
+/** The structure of a Pages content type. */
+export type Pages = Content & {
+  /** The timestamp when the object was created. */
+  created: Scalars['Instant'];
+  /** The user who created the object. */
+  createdBy: Scalars['String'];
+  /** The user who created the object. */
+  createdByUser: User;
+  /** The data of the content. */
+  data: PagesDataDto;
+  /** The edit token. */
+  editToken: Maybe<Scalars['String']>;
+  /** The flat data of the content. */
+  flatData: PagesFlatDataDto;
+  /** The ID of the object (usually GUID). */
+  id: Scalars['String'];
+  /** The timestamp when the object was updated the last time. */
+  lastModified: Scalars['Instant'];
+  /** The user who updated the object the last time. */
+  lastModifiedBy: Scalars['String'];
+  /** The user who updated the object the last time. */
+  lastModifiedByUser: User;
+  /** The new status of the content. */
+  newStatus: Maybe<Scalars['String']>;
+  /** The status color of the content. */
+  newStatusColor: Maybe<Scalars['String']>;
+  /** The status of the content. */
+  status: Scalars['String'];
+  /** The status color of the content. */
+  statusColor: Scalars['String'];
+  /** The URL to the content. */
+  url: Scalars['String'];
+  /** The version of the objec. */
+  version: Scalars['Int'];
+};
+
+/** The structure of the Pages data type. */
+export type PagesDataDto = {
+  link: Maybe<PagesDataLinkDto>;
+  linkText: Maybe<PagesDataLinkTextDto>;
+  path: Maybe<PagesDataPathDto>;
+  shortText: Maybe<PagesDataShortTextDto>;
+  text: Maybe<PagesDataTextDto>;
+  title: Maybe<PagesDataTitleDto>;
+};
+
+/** The structure of the Pages data input type. */
+export type PagesDataInputDto = {
+  link: InputMaybe<PagesDataLinkInputDto>;
+  linkText: InputMaybe<PagesDataLinkTextInputDto>;
+  path: InputMaybe<PagesDataPathInputDto>;
+  shortText: InputMaybe<PagesDataShortTextInputDto>;
+  text: InputMaybe<PagesDataTextInputDto>;
+  title: InputMaybe<PagesDataTitleInputDto>;
+};
+
+/** The structure of the External Link field of the Pages content type. */
+export type PagesDataLinkDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the External Link field of the Pages content input type. */
+export type PagesDataLinkInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the External Link Text field of the Pages content type. */
+export type PagesDataLinkTextDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the External Link Text field of the Pages content input type. */
+export type PagesDataLinkTextInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Path field of the Pages content type. */
+export type PagesDataPathDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Path field of the Pages content input type. */
+export type PagesDataPathInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Short Text field of the Pages content type. */
+export type PagesDataShortTextDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Short Text field of the Pages content input type. */
+export type PagesDataShortTextInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Text field of the Pages content type. */
+export type PagesDataTextDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Text field of the Pages content input type. */
+export type PagesDataTextInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Title field of the Pages content type. */
+export type PagesDataTitleDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Title field of the Pages content input type. */
+export type PagesDataTitleInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the flat Pages data type. */
+export type PagesFlatDataDto = {
+  link: Maybe<Scalars['String']>;
+  linkText: Maybe<Scalars['String']>;
+  path: Maybe<Scalars['String']>;
+  shortText: Maybe<Scalars['String']>;
+  text: Maybe<Scalars['String']>;
+  title: Maybe<Scalars['String']>;
+};
+
+/** List of Pages items and total count. */
+export type PagesResultDto = {
+  /** The contents. */
+  items: Maybe<Array<Pages>>;
   /** The total count of  contents. */
   total: Scalars['Int'];
 };
@@ -5516,7 +5751,10 @@ export type FetchProjectQuery = {
   >;
 };
 
-export type FetchProjectsQueryVariables = Exact<{ [key: string]: never }>;
+export type FetchProjectsQueryVariables = Exact<{
+  top: InputMaybe<Scalars['Int']>;
+  skip: InputMaybe<Scalars['Int']>;
+}>;
 
 export type FetchProjectsQuery = {
   queryProjectsContentsWithTotal: Maybe<
@@ -8984,6 +9222,18 @@ export const FetchProjectsDocument = {
       kind: 'OperationDefinition',
       operation: 'query',
       name: { kind: 'Name', value: 'FetchProjects' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'top' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+      ],
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
@@ -8991,6 +9241,22 @@ export const FetchProjectsDocument = {
             kind: 'Field',
             name: { kind: 'Name', value: 'queryProjectsContentsWithTotal' },
             arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'top' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'top' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'orderby' },

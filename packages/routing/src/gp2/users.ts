@@ -10,10 +10,9 @@ const editQuestions = route('/edit-questions', {}, {});
 const editFundingStreams = route('/edit-funding-streams', {}, {});
 const editContributingCohorts = route('/edit-contributing-cohorts', {}, {});
 const editExternalProfiles = route('/edit-external-profiles', {}, {});
-
-const user = route(
-  '/:userId',
-  { userId: stringParser },
+const overview = route(
+  '/overview',
+  {},
   {
     editKeyInfo,
     editContactInfo,
@@ -23,6 +22,20 @@ const user = route(
     editFundingStreams,
     editContributingCohorts,
     editExternalProfiles,
+  },
+);
+const outputs = route('/outputs', {}, {});
+const upcoming = route('/upcoming', {}, {});
+const past = route('/past', {}, {});
+
+const user = route(
+  '/:userId',
+  { userId: stringParser },
+  {
+    overview,
+    outputs,
+    upcoming,
+    past,
   },
 );
 

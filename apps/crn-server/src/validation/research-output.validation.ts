@@ -1,22 +1,52 @@
 import {
-  ResearchOutputPostRequest,
-  researchOutputTypes,
-  ResearchOutputIdentifierType,
-  researchOutputToIdentifierType,
   researchOutputDocumentTypes,
+  ResearchOutputIdentifierType,
+  ResearchOutputPostRequest,
   ResearchOutputPutRequest,
+  researchOutputToIdentifierType,
+  researchOutputTypes,
+  FetchOptions,
 } from '@asap-hub/model';
 import {
+  fetchOptionsValidationSchema,
+  validateInput,
+} from '@asap-hub/server-common';
+import {
   ResearchOutputIdentifierValidationExpression,
-  UrlExpression,
+  urlExpression,
 } from '@asap-hub/validation';
 import Boom from '@hapi/boom';
 import { JSONSchemaType } from 'ajv';
-import { validateInput } from '@asap-hub/server-common';
 
 type ResearchOutputParameters = {
   researchOutputId: string;
 };
+
+type ResearchOutputFetchOptions = FetchOptions & {
+  status?: string;
+  teamId?: string;
+  workingGroupId?: string;
+};
+
+const researchOutputFetchOptionsValidationSchema: JSONSchemaType<ResearchOutputFetchOptions> =
+  {
+    type: 'object',
+    properties: {
+      ...fetchOptionsValidationSchema.properties,
+      status: { type: 'string', enum: ['draft'], nullable: true },
+      teamId: { type: 'string', nullable: true },
+      workingGroupId: { type: 'string', nullable: true },
+    },
+    additionalProperties: false,
+  };
+
+export const validateResearchOutputFetchOptions = validateInput(
+  researchOutputFetchOptionsValidationSchema,
+  {
+    skipNull: true,
+    coerce: true,
+  },
+);
 
 const researchOutputParametersValidationSchema: JSONSchemaType<ResearchOutputParameters> =
   {
@@ -73,7 +103,7 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
       link: {
         type: 'string',
         nullable: true,
-        pattern: UrlExpression,
+        pattern: urlExpression,
       },
       title: { type: 'string' },
       asapFunded: { type: 'boolean', nullable: true },

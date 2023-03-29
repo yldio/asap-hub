@@ -8,15 +8,15 @@ inputs:
     description: 'The PR number'
     required: true
 outputs:
-  algolia-app-id-name:
-    description: 'Algolia App id SSM name'
-    value: ${{ steps.vars.outputs.algolia-app-id-name }}
-  algolia-api-key-name:
-    description: 'Algolia Api key SSM Name'
-    value: ${{ steps.vars.outputs.algolia-api-key-name }}
-  algolia-index:
-    description: 'Algolia Index'
-    value: ${{ steps.vars.outputs.algolia-index }}
+  crn-algolia-app-id-name:
+    description: 'CRN Algolia App id SSM name'
+    value: ${{ steps.vars.outputs.crn-algolia-app-id-name }}
+  crn-algolia-api-key-name:
+    description: 'CRN Algolia Api key SSM Name'
+    value: ${{ steps.vars.outputs.crn-algolia-api-key-name }}
+  crn-algolia-index:
+    description: 'CRN Algolia Index'
+    value: ${{ steps.vars.outputs.crn-algolia-index }}
   app-release:
     description: 'App Release'
     value: ${{ steps.vars.outputs.app-release }}
@@ -59,9 +59,9 @@ outputs:
   aws-region:
     description: 'AWS Region'
     value: ${{ steps.vars.outputs.aws-region }}
-  algolia-backup-bucket-name:
-    description: 'Algolia Backup Bucket Name'
-    value: ${{ steps.vars.outputs.algolia-backup-bucket-name }}
+  crn-algolia-backup-bucket-name:
+    description: 'CRN Algolia Backup Bucket Name'
+    value: ${{ steps.vars.outputs.crn-algolia-backup-bucket-name }}
   cache-prefix-definitions:
     description: 'Cache Prefix Definitions'
     value: ${{ steps.vars.outputs.cache-prefix-definitions }}
@@ -86,6 +86,9 @@ outputs:
   max-contentful-envs:
     description: 'Maximum Contentful environments'
     value: ${{ steps.vars.outputs.max-contentful-envs }}
+  crn-contentful-backup-bucket-name:
+    description: 'CRN Contentful Backup Bucket Name'
+    value: ${{ steps.vars.outputs.crn-contentful-backup-bucket-name }}
   crn-aws-acm-certificate-arn:
     description: 'CRN AWS ACM Certificate ARN'
     value: ${{ steps.vars.outputs.crn-aws-acm-certificate-arn }}
@@ -208,7 +211,7 @@ runs:
 
         if [ "$ENVIRONMENT_NAME" = "Branch" ]; then
           PR_NUMBER=${{ github.event.number || github.event.inputs.pr-number || inputs.pr-number }}
-          echo "algolia-index=asap-hub_CI-$PR_NUMBER" >> $GITHUB_OUTPUT
+          echo "crn-algolia-index=asap-hub_CI-$PR_NUMBER" >> $GITHUB_OUTPUT
           echo "app-release=${{ github.run_id }}-dev" >> $GITHUB_OUTPUT
           echo "crn-api-url=https://api-$PR_NUMBER.hub.asap.science" >> $GITHUB_OUTPUT
           echo "crn-app-url=https://$PR_NUMBER.hub.asap.science" >> $GITHUB_OUTPUT

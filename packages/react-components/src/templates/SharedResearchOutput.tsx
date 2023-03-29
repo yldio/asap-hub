@@ -13,9 +13,11 @@ import {
   RichText,
   SharedResearchAdditionalInformationCard,
   SharedResearchOutputHeaderCard,
+  Toast,
 } from '../organisms';
 import { createMailTo } from '../mail';
 import { editIcon } from '..';
+import { getResearchOutputAssociation } from '../utils';
 
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
@@ -45,6 +47,7 @@ type SharedResearchOutputProps = Pick<
   | 'subtype'
   | 'id'
   | 'relatedResearch'
+  | 'published'
 > &
   ComponentProps<typeof SharedResearchOutputHeaderCard> & {
     backHref: string;
@@ -58,6 +61,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   contactEmails,
   id,
   relatedResearch,
+  published,
   ...props
 }) => {
   const isGrantDocument = ['Grant Document', 'Presentation'].includes(
@@ -78,72 +82,82 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   const hasDescription = description || descriptionMD;
 
   return (
-    <div css={containerStyles}>
-      <div css={buttonsContainer}>
-        <BackLink href={backHref} />
-        {canEditResearchOutput && !isGrantDocument && (
-          <div css={editButtonContainer}>
-            <Link
-              href={
-                sharedResearch({})
-                  .researchOutput({ researchOutputId: id })
-                  .editResearchOutput({}).$
-              }
-              buttonStyle
-              small
-              primary
-            >
-              {editIcon} Edit
-            </Link>
-          </div>
+    <div>
+      {!published && (
+        <Toast accent="warning">{`This draft is available to members in the ${getResearchOutputAssociation(
+          props,
         )}
-      </div>
-      <div css={cardsStyles}>
-        <SharedResearchOutputHeaderCard {...props} />
-        {((hasDescription && !isGrantDocument) || !!tags.length) && (
-          <Card>
-            {hasDescription && !isGrantDocument && (
-              <div css={{ paddingBottom: `${12 / perRem}em` }}>
-                <Headline2 styleAsHeading={4}>Description</Headline2>
-                <Markdown value={descriptionMD}></Markdown>
-                <RichText poorText text={description} />
-              </div>
-            )}
-            {hasDescription && !isGrantDocument && !!tags.length && <Divider />}
-            {!!tags.length && (
-              <>
-                <Headline2 styleAsHeading={4}>Tags</Headline2>
-                <TagList tags={tags} />
-              </>
-            )}
-          </Card>
-        )}
-        {!isGrantDocument && usageNotes && (
-          <Card>
-            <div css={{ paddingBottom: `${12 / perRem}em` }}>
-              <Headline2 styleAsHeading={4}>Usage Notes</Headline2>
-              <RichText poorText text={usageNotes} />
+     listed below. Only PMs can publish this output.`}</Toast>
+      )}
+      <div css={containerStyles}>
+        <div css={buttonsContainer}>
+          <BackLink href={backHref} />
+          {canEditResearchOutput && !isGrantDocument && (
+            <div css={editButtonContainer}>
+              <Link
+                href={
+                  sharedResearch({})
+                    .researchOutput({ researchOutputId: id })
+                    .editResearchOutput({}).$
+                }
+                buttonStyle
+                small
+                primary
+              >
+                {editIcon} Edit
+              </Link>
             </div>
-          </Card>
-        )}
-        {!isGrantDocument && relatedResearch?.length > 0 && (
-          <RelatedResearch relatedResearch={relatedResearch} />
-        )}
-        {!isGrantDocument && (
-          <SharedResearchAdditionalInformationCard {...props} />
-        )}
-        {hasDescription && isGrantDocument && (
-          <Card>
-            <Markdown value={descriptionMD}></Markdown>
-            <RichText toc text={description} />
-          </Card>
-        )}
-        {!!contactEmails.length && (
-          <CtaCard href={createMailTo(contactEmails)} buttonText="Contact PM">
-            <strong>Interested in what you have seen?</strong>
-            <br /> Reach out to the PMs associated with this output
-          </CtaCard>
-        )}
+          )}
+        </div>
+        <div css={cardsStyles}>
+          <SharedResearchOutputHeaderCard {...props} published={published} />
+          {((hasDescription && !isGrantDocument) || !!tags.length) && (
+            <Card>
+              {description && !isGrantDocument && (
+                <div css={{ paddingBottom: `${12 / perRem}em` }}>
+                  <Headline2 styleAsHeading={4}>Description</Headline2>
+                  <Markdown value={descriptionMD}></Markdown>
+                  <RichText poorText text={description} />
+                </div>
+              )}
+              {hasDescription && !isGrantDocument && !!tags.length && (
+                <Divider />
+              )}
+              {!!tags.length && (
+                <>
+                  <Headline2 styleAsHeading={4}>Tags</Headline2>
+                  <TagList tags={tags} />
+                </>
+              )}
+            </Card>
+          )}
+          {!isGrantDocument && usageNotes && (
+            <Card>
+              <div css={{ paddingBottom: `${12 / perRem}em` }}>
+                <Headline2 styleAsHeading={4}>Usage Notes</Headline2>
+                <RichText poorText text={usageNotes} />
+              </div>
+            </Card>
+          )}
+          {!isGrantDocument && relatedResearch?.length > 0 && (
+            <RelatedResearch relatedResearch={relatedResearch} />
+          )}
+          {!isGrantDocument && (
+            <SharedResearchAdditionalInformationCard {...props} />
+          )}
+          {hasDescription && isGrantDocument && (
+            <Card>
+              <Markdown value={descriptionMD}></Markdown>
+              <RichText toc text={description} />
+            </Card>
+          )}
+          {!!contactEmails.length && (
+            <CtaCard href={createMailTo(contactEmails)} buttonText="Contact PM">
+              <strong>Interested in what you have seen?</strong>
+              <br /> Reach out to the PMs associated with this output
+            </CtaCard>
+          )}
+        </div>
       </div>
     </div>
   );

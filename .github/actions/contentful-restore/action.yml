@@ -1,0 +1,66 @@
+name: Contentful Restore
+description: Restores the Contentful data
+
+inputs:
+  aws-access-key-id:
+    description: 'AWS Access Key ID'
+    required: true
+  aws-secret-access-key:
+    description: 'AWS Secret Access Key'
+    required: true
+  bucket-name:
+    description: 's3 bucket name for backup'
+    required: true
+  backup-version:
+    description: 's3 key of backup file or "latest"'
+    required: true
+  contentful-space-id:
+    description: 'Contentful Space ID'
+    required: true
+  contentful-environment:
+    description: 'Contentful Environment'
+    required: true
+  contentful-token:
+    description: 'Contentful Management Token'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: get backup file
+      id: get-backup
+      shell: bash
+      run: |
+        if [ "$BACKUP_VERSION" = "" ]; then
+          echo "Fetching latest backup version"
+          LATEST=$(aws s3api list-objects-v2 --bucket $BUCKET_NAME --query 'sort_by(Contents, &LastModified)[-1].Key' --output=text)
+          echo "backup-key=$LATEST" >> $GITHUB_OUTPUT
+        else
+          echo "Using $BACKUP_VERSION"
+          echo "backup-key=$BACKUP_VERSION" >> $GITHUB_OUTPUT
+        fi;
+      env:
+        BACKUP_VERSION: ${{inputs.backup-version}}
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
+        BUCKET_NAME: ${{ inputs.bucket-name }}
+    - name: restore-backup-file
+      shell: bash
+      run: |
+        yarn
+        echo "Getting file: $BACKUP_KEY"
+        aws s3api get-object --bucket $BUCKET_NAME --key $BACKUP_KEY backup.json
+        yarn workspace @asap-hub/contentful contentful space import \
+          --use-verbose-renderer true \
+          --content-file $GITHUB_WORKSPACE/backup.json \
+          --space-id $CONTENTFUL_SPACE_ID \
+          --environment-id $CONTENTFUL_ENVIRONMENT \
+          --management-token $CONTENTFUL_TOKEN
+      env:
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
+        BUCKET_NAME: ${{ inputs.bucket-name }}
+        BACKUP_KEY: ${{ steps.get-backup.outputs.backup-key }}
+        CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
+        CONTENTFUL_ENVIRONMENT: ${{ inputs.contentful-environment }}
+        CONTENTFUL_TOKEN: ${{ inputs.contentful-token }}

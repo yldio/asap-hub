@@ -89,6 +89,17 @@ type ApplicationMutations {
     """The status for the content."""
     status: String!
   ): Outputs
+  """Change a Pages content."""
+  changePagesContent(
+    """The timestamp when the status should be changed."""
+    dueTime: Instant
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The status for the content."""
+    status: String!
+  ): Pages
   """Change a Projects content."""
   changeProjectsContent(
     """The timestamp when the status should be changed."""
@@ -210,6 +221,17 @@ type ApplicationMutations {
     """The initial status."""
     status: String
   ): Outputs
+  """Creates an Pages content."""
+  createPagesContent(
+    """The data for the content."""
+    data: PagesDataInputDto!
+    """The optional custom content ID."""
+    id: String
+    """Set to true to autopublish content on create."""
+    publish: Boolean = false
+    """The initial status."""
+    status: String
+  ): Pages
   """Creates an Projects content."""
   createProjectsContent(
     """The data for the content."""
@@ -298,6 +320,13 @@ type ApplicationMutations {
   ): EntitySavedResultDto!
   """Delete an Outputs content."""
   deleteOutputsContent(
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the content (usually GUID)."""
+    id: String!
+  ): EntitySavedResultDto!
+  """Delete an Pages content."""
+  deletePagesContent(
     """The expected version."""
     expectedVersion: Int = -2
     """The ID of the content (usually GUID)."""
@@ -394,6 +423,15 @@ type ApplicationMutations {
     """The ID of the object (usually GUID)."""
     id: String
   ): Outputs
+  """Patch an Pages content by id."""
+  patchPagesContent(
+    """The data for the content."""
+    data: PagesDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String
+  ): Pages
   """Patch an Projects content by id."""
   patchProjectsContent(
     """The data for the content."""
@@ -507,6 +545,17 @@ type ApplicationMutations {
     """The status for the content."""
     status: String!
   ): Outputs @deprecated(reason: "Use 'changeOutputsContent' instead")
+  """Publish a Pages content."""
+  publishPagesContent(
+    """The timestamp when the status should be changed."""
+    dueTime: Instant
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The status for the content."""
+    status: String!
+  ): Pages @deprecated(reason: "Use 'changePagesContent' instead")
   """Publish a Projects content."""
   publishProjectsContent(
     """The timestamp when the status should be changed."""
@@ -614,6 +663,15 @@ type ApplicationMutations {
     """The ID of the object (usually GUID)."""
     id: String
   ): Outputs
+  """Update an Pages content by id."""
+  updatePagesContent(
+    """The data for the content."""
+    data: PagesDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String
+  ): Pages
   """Update an Projects content by id."""
   updateProjectsContent(
     """The data for the content."""
@@ -755,6 +813,21 @@ type ApplicationMutations {
     """The initial status."""
     status: String
   ): Outputs
+  """Upsert an Pages content by id."""
+  upsertPagesContent(
+    """The data for the content."""
+    data: PagesDataInputDto!
+    """The expected version."""
+    expectedVersion: Int = -2
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """Makes the update as patch."""
+    patch: Boolean = false
+    """Set to true to autopublish content on create."""
+    publish: Boolean = false
+    """The initial status."""
+    status: String
+  ): Pages
   """Upsert an Projects content by id."""
   upsertProjectsContent(
     """The data for the content."""
@@ -873,6 +946,13 @@ type ApplicationQueries {
     """The optional version of the content to retrieve an older instance (not cached)."""
     version: Int
   ): Outputs
+  """Find an Pages content by id."""
+  findPagesContent(
+    """The ID of the object (usually GUID)."""
+    id: String!
+    """The optional version of the content to retrieve an older instance (not cached)."""
+    version: Int
+  ): Pages
   """Find an Projects content by id."""
   findProjectsContent(
     """The ID of the object (usually GUID)."""
@@ -1105,6 +1185,32 @@ type ApplicationQueries {
     """Optional number of items to take."""
     top: Int
   ): OutputsResultDto
+  """Query Pages content items."""
+  queryPagesContents(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): [Pages!]
+  """Query Pages content items with total count."""
+  queryPagesContentsWithTotal(
+    """Optional OData filter."""
+    filter: String
+    """Optional OData order definition."""
+    orderby: String
+    """Optional OData full text search."""
+    search: String
+    """Optional number of items to skip."""
+    skip: Int = 0
+    """Optional number of items to take."""
+    top: Int
+  ): PagesResultDto
   """Query Projects content items."""
   queryProjectsContents(
     """Optional OData filter."""
@@ -2862,8 +2968,8 @@ enum OutputsDataDocumentTypeEnum {
   Code_Software
   """Data_Release"""
   Data_Release
-  """Form"""
-  Form
+  """Procedural_Form"""
+  Procedural_Form
   """Training_Material"""
   Training_Material
   """Update"""
@@ -3057,6 +3163,140 @@ type OutputsFlatDataDto {
 type OutputsResultDto {
   """The contents."""
   items: [Outputs!]
+  """The total count of  contents."""
+  total: Int!
+}
+
+"""The structure of a Pages content type."""
+type Pages implements Content {
+  """The timestamp when the object was created."""
+  created: Instant!
+  """The user who created the object."""
+  createdBy: String!
+  """The user who created the object."""
+  createdByUser: User!
+  """The data of the content."""
+  data: PagesDataDto!
+  """The edit token."""
+  editToken: String
+  """The flat data of the content."""
+  flatData: PagesFlatDataDto!
+  """The ID of the object (usually GUID)."""
+  id: String!
+  """The timestamp when the object was updated the last time."""
+  lastModified: Instant!
+  """The user who updated the object the last time."""
+  lastModifiedBy: String!
+  """The user who updated the object the last time."""
+  lastModifiedByUser: User!
+  """The new status of the content."""
+  newStatus: String
+  """The status color of the content."""
+  newStatusColor: String
+  """The status of the content."""
+  status: String!
+  """The status color of the content."""
+  statusColor: String!
+  """The URL to the content."""
+  url: String!
+  """The version of the objec."""
+  version: Int!
+}
+
+"""The structure of the Pages data type."""
+type PagesDataDto {
+  link: PagesDataLinkDto
+  linkText: PagesDataLinkTextDto
+  path: PagesDataPathDto
+  shortText: PagesDataShortTextDto
+  text: PagesDataTextDto
+  title: PagesDataTitleDto
+}
+
+"""The structure of the Pages data input type."""
+input PagesDataInputDto {
+  link: PagesDataLinkInputDto
+  linkText: PagesDataLinkTextInputDto
+  path: PagesDataPathInputDto
+  shortText: PagesDataShortTextInputDto
+  text: PagesDataTextInputDto
+  title: PagesDataTitleInputDto
+}
+
+"""The structure of the External Link field of the Pages content type."""
+type PagesDataLinkDto {
+  iv: String
+}
+
+"""The structure of the External Link field of the Pages content input type."""
+input PagesDataLinkInputDto {
+  iv: String
+}
+
+"""The structure of the External Link Text field of the Pages content type."""
+type PagesDataLinkTextDto {
+  iv: String
+}
+
+"""The structure of the External Link Text field of the Pages content input type."""
+input PagesDataLinkTextInputDto {
+  iv: String
+}
+
+"""The structure of the Path field of the Pages content type."""
+type PagesDataPathDto {
+  iv: String
+}
+
+"""The structure of the Path field of the Pages content input type."""
+input PagesDataPathInputDto {
+  iv: String
+}
+
+"""The structure of the Short Text field of the Pages content type."""
+type PagesDataShortTextDto {
+  iv: String
+}
+
+"""The structure of the Short Text field of the Pages content input type."""
+input PagesDataShortTextInputDto {
+  iv: String
+}
+
+"""The structure of the Text field of the Pages content type."""
+type PagesDataTextDto {
+  iv: String
+}
+
+"""The structure of the Text field of the Pages content input type."""
+input PagesDataTextInputDto {
+  iv: String
+}
+
+"""The structure of the Title field of the Pages content type."""
+type PagesDataTitleDto {
+  iv: String
+}
+
+"""The structure of the Title field of the Pages content input type."""
+input PagesDataTitleInputDto {
+  iv: String
+}
+
+"""The structure of the flat Pages data type."""
+type PagesFlatDataDto {
+  link: String
+  linkText: String
+  path: String
+  shortText: String
+  text: String
+  title: String
+}
+
+"""List of Pages items and total count."""
+type PagesResultDto {
+  """The contents."""
+  items: [Pages!]
   """The total count of  contents."""
   total: Int!
 }

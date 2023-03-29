@@ -1,5 +1,6 @@
 import {
   createListEventResponse,
+  createListResearchOutputResponse,
   createUserResponse,
   createWorkingGroupResponse,
 } from '@asap-hub/fixtures';
@@ -7,15 +8,19 @@ import { network } from '@asap-hub/routing';
 import {
   render,
   screen,
+  waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import userEvent from '@testing-library/user-event';
-import { Suspense } from 'react';
+import { ComponentProps, Suspense } from 'react';
 import { Router, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
-import { getResearchOutputs } from '../../../shared-research/api';
+import {
+  getDraftResearchOutputs,
+  getResearchOutputs,
+} from '../../../shared-research/api';
 import { getWorkingGroup } from '../api';
 import { refreshWorkingGroupState } from '../state';
 import WorkingGroupProfile from '../WorkingGroupProfile';
@@ -29,6 +34,11 @@ jest.mock('../../../shared-research/api');
 const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
   typeof getResearchOutputs
 >;
+const mockGetDraftResearchOutputs =
+  getDraftResearchOutputs as jest.MockedFunction<
+    typeof getDraftResearchOutputs
+  >;
+
 mockGetResearchOutputs.mockResolvedValue({
   ...createResearchOutputListAlgoliaResponse(0),
 });
@@ -47,7 +57,7 @@ beforeEach(jest.clearAllMocks);
 const workingGroupResponse = createWorkingGroupResponse({});
 const workingGroupId = workingGroupResponse.id;
 const renderWorkingGroupProfile = async (
-  user = {},
+  user: ComponentProps<typeof Auth0Provider>['user'] = {},
   history = createMemoryHistory({
     initialEntries: [
       network({}).workingGroups({}).workingGroup({ workingGroupId }).$,
@@ -115,7 +125,14 @@ describe('the share outputs page', () => {
     await renderWorkingGroupProfile(
       {
         ...createUserResponse({}, 1),
-        workingGroups: [{ id: workingGroupId, role: 'Project Manager' }],
+        workingGroups: [
+          {
+            id: workingGroupId,
+            role: 'Project Manager',
+            active: true,
+            name: 'test',
+          },
+        ],
       },
       history,
     );
@@ -178,7 +195,14 @@ describe('the upcoming events tab', () => {
   it('cannot be switched to if the group is inactive', async () => {
     await renderWorkingGroupProfile({
       ...createWorkingGroupResponse(),
-      complete: true,
+      workingGroups: [
+        {
+          active: false,
+          id: '123',
+          name: 'test',
+          role: 'Chair',
+        },
+      ],
     });
     expect(screen.queryByText('Upcoming Events')).not.toBeInTheDocument();
   });
@@ -205,5 +229,57 @@ describe('the event tabs', () => {
     await renderWorkingGroupProfile();
 
     expect(await screen.findByText(/Past Events \(7\)/i)).toBeVisible();
+  });
+});
+
+describe('The draft output tab', () => {
+  it('renders the draft outputs tab for a working group member', async () => {
+    mockGetDraftResearchOutputs.mockResolvedValue({
+      ...createListResearchOutputResponse(10),
+      items: createListResearchOutputResponse(10).items.map(
+        (output, index) => ({ ...output, title: `Draft Output${index}` }),
+      ),
+    });
+    await renderWorkingGroupProfile({
+      ...createUserResponse(),
+      workingGroups: [
+        {
+          active: true,
+          id: workingGroupId,
+          name: 'test',
+          role: 'Member',
+        },
+      ],
+    });
+    userEvent.click(screen.getByText('Draft Outputs (10)'));
+    await waitFor(() => expect(mockGetDraftResearchOutputs).toHaveBeenCalled());
+    expect(screen.getByText('Draft Output0')).toBeVisible();
+  });
+  it('renders the draft outputs tab for a working group member when there are zero results', async () => {
+    mockGetDraftResearchOutputs.mockResolvedValue(
+      createListResearchOutputResponse(0),
+    );
+    await renderWorkingGroupProfile({
+      ...createUserResponse(),
+      workingGroups: [
+        {
+          active: true,
+          id: workingGroupId,
+          name: 'test',
+          role: 'Member',
+        },
+      ],
+    });
+    expect(screen.getByText('Draft Outputs (0)')).toBeVisible();
+  });
+  it('does not renders the draft outputs tab when user is not a member of the working group', async () => {
+    mockGetDraftResearchOutputs.mockResolvedValue(
+      createListResearchOutputResponse(10),
+    );
+    await renderWorkingGroupProfile({
+      ...createUserResponse(),
+      workingGroups: [],
+    });
+    expect(screen.queryByText('Draft Outputs')).toBeNull();
   });
 });

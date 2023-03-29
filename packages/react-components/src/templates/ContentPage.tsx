@@ -1,3 +1,4 @@
+/** @jsxImportSource @emotion/react */
 import { PageResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 

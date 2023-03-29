@@ -1961,7 +1961,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@serverless/typescript",\
-        "npm:3.27.0"\
+        "npm:3.29.0"\
       ],\
       [\
         "@serverless/utils",\
@@ -11178,7 +11178,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@hapi/bourne", "npm:2.1.0"],\
             ["@hapi/joi", "npm:17.1.1"],\
             ["@sentry/serverless", "npm:6.19.7"],\
-            ["@serverless/typescript", "npm:3.27.0"],\
+            ["@serverless/typescript", "npm:3.29.0"],\
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],\
             ["@types/async-retry", "npm:1.4.5"],\
             ["@types/aws-lambda", "npm:8.10.113"],\
@@ -11906,7 +11906,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@graphql-typed-document-node/core", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:3.2.0"],\
             ["@hapi/boom", "npm:9.1.4"],\
             ["@sentry/serverless", "npm:6.19.7"],\
-            ["@serverless/typescript", "npm:3.27.0"],\
+            ["@serverless/typescript", "npm:3.29.0"],\
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],\
             ["@types/aws-lambda", "npm:8.10.113"],\
             ["@types/cors", "npm:2.8.13"],\
@@ -33092,10 +33092,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@serverless/typescript", [\
-        ["npm:3.27.0", {\
-          "packageLocation": "./.yarn/cache/@serverless-typescript-npm-3.27.0-89bb900fad-c198f7b8d2.zip/node_modules/@serverless/typescript/",\
+        ["npm:3.29.0", {\
+          "packageLocation": "./.yarn/cache/@serverless-typescript-npm-3.29.0-3939f7da45-42ded7f8fd.zip/node_modules/@serverless/typescript/",\
           "packageDependencies": [\
-            ["@serverless/typescript", "npm:3.27.0"]\
+            ["@serverless/typescript", "npm:3.29.0"]\
           ],\
           "linkType": "HARD"\
         }]\

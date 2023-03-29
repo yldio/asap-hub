@@ -18,19 +18,12 @@ export const outputsState = selectorFamily<
   key: 'outputState',
   get:
     (options) =>
-    ({ get }) => {
-      get(refreshOutputsState);
-      return getOutputs(get(authorizationState), options);
-    },
+    ({ get }) =>
+      getOutputs(get(authorizationState), options),
 });
 
-export const refreshOutputsState = atom<number>({
+const refreshOutputsState = atom<number>({
   key: 'refreshOutputsState',
-  default: 0,
-});
-
-export const refreshOutputState = atomFamily<number, string>({
-  key: 'refreshOutputState',
   default: 0,
 });
 
@@ -40,7 +33,6 @@ const fetchOutputState = selectorFamily<gp2.OutputResponse | undefined, string>(
     get:
       (id) =>
       async ({ get }) => {
-        get(refreshOutputState(id));
         const authorization = get(authorizationState);
         return getOutput(id, authorization);
       },

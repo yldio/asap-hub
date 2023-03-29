@@ -14,6 +14,7 @@ module.exports = {
   setupFilesAfterEnv: [
     ...(setupFilesAfterEnv || []),
     require.resolve('../../jest/dom-extensions-setup-after-env.js'),
+    require.resolve('./reset-recoil.js'),
   ],
 
   transform: {

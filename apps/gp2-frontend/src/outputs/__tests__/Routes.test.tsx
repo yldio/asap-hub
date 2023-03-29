@@ -11,7 +11,6 @@ import { gp2 } from '@asap-hub/fixtures';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import Routes from '../Routes';
 import { getOutputs } from '../api';
-import { refreshOutputsState } from '../state';
 
 jest.mock('../api');
 const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
@@ -22,11 +21,7 @@ beforeEach(() => {
 
 const renderRoutes = async () => {
   render(
-    <RecoilRoot
-      initializeState={({ set }) => {
-        set(refreshOutputsState, Math.random());
-      }}
-    >
+    <RecoilRoot>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>

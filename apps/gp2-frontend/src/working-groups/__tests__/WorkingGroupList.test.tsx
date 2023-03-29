@@ -10,18 +10,13 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getWorkingGroupNetwork } from '../api';
-import { refreshWorkingGroupNetworkState } from '../state';
 import WorkingGroupList from '../WorkingGroupList';
 
 jest.mock('../api');
 
 const renderWorkingGroupsList = async () => {
   render(
-    <RecoilRoot
-      initializeState={({ set }) => {
-        set(refreshWorkingGroupNetworkState, Math.random());
-      }}
-    >
+    <RecoilRoot>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>

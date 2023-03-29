@@ -12,7 +12,6 @@ import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { updateOutput, getOutput } from '../api';
 import ShareOutput from '../ShareOutput';
-import { refreshOutputState } from '../state';
 
 jest.mock('../../outputs/api');
 
@@ -23,11 +22,7 @@ const mockGetOutput = getOutput as jest.MockedFunction<typeof getOutput>;
 
 const renderShareOutput = async (outputId: string = 'ro0') => {
   render(
-    <RecoilRoot
-      initializeState={({ set }) => {
-        set(refreshOutputState(outputId), Math.random());
-      }}
-    >
+    <RecoilRoot>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>

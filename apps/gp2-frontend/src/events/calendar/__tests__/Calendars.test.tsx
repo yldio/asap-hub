@@ -11,17 +11,12 @@ import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { getCalendars } from '../api';
 import Calendars from '../Calendars';
-import { refreshCalendarsState } from '../state';
 
 jest.mock('../api');
 
 const renderCalendars = async () => {
   render(
-    <RecoilRoot
-      initializeState={({ set }) => {
-        set(refreshCalendarsState, Math.random());
-      }}
-    >
+    <RecoilRoot>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>

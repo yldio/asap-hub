@@ -14,7 +14,6 @@ import { gp2 } from '@asap-hub/model';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getUser, patchUser } from '../../users/api';
-import { refreshUserState } from '../../users/state';
 import Onboarding from '../Onboarding';
 
 jest.mock('../../users/api');
@@ -23,11 +22,7 @@ mockConsoleError();
 
 const renderOnboarding = async (id: string) => {
   render(
-    <RecoilRoot
-      initializeState={({ set }) => {
-        set(refreshUserState(id), Math.random());
-      }}
-    >
+    <RecoilRoot>
       <Suspense fallback="loading">
         <Auth0Provider user={{ onboarded: false, id }}>
           <WhenReady>

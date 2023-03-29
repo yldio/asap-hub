@@ -16,9 +16,6 @@ import { getProject, putProjectResources } from '../api';
 import { getEvents } from '../../events/api';
 import { getOutputs } from '../../outputs/api';
 import ProjectDetail from '../ProjectDetail';
-import { refreshProjectState } from '../state';
-import { refreshOutputsState } from '../../outputs/state';
-import { refreshEventsState } from '../../events/state';
 
 jest.mock('../api');
 jest.mock('../../outputs/api');
@@ -36,13 +33,7 @@ const renderProjectDetail = async ({
   role?: gp2Model.UserRole;
 }) => {
   render(
-    <RecoilRoot
-      initializeState={({ set }) => {
-        set(refreshProjectState(id), Math.random());
-        set(refreshOutputsState, Math.random());
-        set(refreshEventsState, Math.random());
-      }}
-    >
+    <RecoilRoot>
       <Suspense fallback="loading">
         <Auth0Provider user={{ id: userId, role }}>
           <WhenReady>

@@ -214,6 +214,146 @@ export enum AssetOrder {
   WidthDesc = 'width_DESC',
 }
 
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/calendars) */
+export type Calendars = Entry & {
+  color?: Maybe<Scalars['String']>;
+  contentfulMetadata: ContentfulMetadata;
+  expirationDate?: Maybe<Scalars['Float']>;
+  googleCalendarId?: Maybe<Scalars['String']>;
+  linkedFrom?: Maybe<CalendarsLinkingCollections>;
+  name?: Maybe<Scalars['String']>;
+  resourceId?: Maybe<Scalars['String']>;
+  syncToken?: Maybe<Scalars['String']>;
+  sys: Sys;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/calendars) */
+export type CalendarsColorArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/calendars) */
+export type CalendarsExpirationDateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/calendars) */
+export type CalendarsGoogleCalendarIdArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/calendars) */
+export type CalendarsLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/calendars) */
+export type CalendarsNameArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/calendars) */
+export type CalendarsResourceIdArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/calendars) */
+export type CalendarsSyncTokenArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type CalendarsCollection = {
+  items: Array<Maybe<Calendars>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type CalendarsFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CalendarsFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CalendarsFilter>>>;
+  color?: InputMaybe<Scalars['String']>;
+  color_contains?: InputMaybe<Scalars['String']>;
+  color_exists?: InputMaybe<Scalars['Boolean']>;
+  color_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  color_not?: InputMaybe<Scalars['String']>;
+  color_not_contains?: InputMaybe<Scalars['String']>;
+  color_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  expirationDate?: InputMaybe<Scalars['Float']>;
+  expirationDate_exists?: InputMaybe<Scalars['Boolean']>;
+  expirationDate_gt?: InputMaybe<Scalars['Float']>;
+  expirationDate_gte?: InputMaybe<Scalars['Float']>;
+  expirationDate_in?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
+  expirationDate_lt?: InputMaybe<Scalars['Float']>;
+  expirationDate_lte?: InputMaybe<Scalars['Float']>;
+  expirationDate_not?: InputMaybe<Scalars['Float']>;
+  expirationDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
+  googleCalendarId?: InputMaybe<Scalars['String']>;
+  googleCalendarId_contains?: InputMaybe<Scalars['String']>;
+  googleCalendarId_exists?: InputMaybe<Scalars['Boolean']>;
+  googleCalendarId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  googleCalendarId_not?: InputMaybe<Scalars['String']>;
+  googleCalendarId_not_contains?: InputMaybe<Scalars['String']>;
+  googleCalendarId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  name?: InputMaybe<Scalars['String']>;
+  name_contains?: InputMaybe<Scalars['String']>;
+  name_exists?: InputMaybe<Scalars['Boolean']>;
+  name_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  name_not?: InputMaybe<Scalars['String']>;
+  name_not_contains?: InputMaybe<Scalars['String']>;
+  name_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  resourceId?: InputMaybe<Scalars['String']>;
+  resourceId_contains?: InputMaybe<Scalars['String']>;
+  resourceId_exists?: InputMaybe<Scalars['Boolean']>;
+  resourceId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  resourceId_not?: InputMaybe<Scalars['String']>;
+  resourceId_not_contains?: InputMaybe<Scalars['String']>;
+  resourceId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  syncToken?: InputMaybe<Scalars['String']>;
+  syncToken_contains?: InputMaybe<Scalars['String']>;
+  syncToken_exists?: InputMaybe<Scalars['Boolean']>;
+  syncToken_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  syncToken_not?: InputMaybe<Scalars['String']>;
+  syncToken_not_contains?: InputMaybe<Scalars['String']>;
+  syncToken_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+};
+
+export type CalendarsLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type CalendarsLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum CalendarsOrder {
+  ColorAsc = 'color_ASC',
+  ColorDesc = 'color_DESC',
+  ExpirationDateAsc = 'expirationDate_ASC',
+  ExpirationDateDesc = 'expirationDate_DESC',
+  GoogleCalendarIdAsc = 'googleCalendarId_ASC',
+  GoogleCalendarIdDesc = 'googleCalendarId_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  ResourceIdAsc = 'resourceId_ASC',
+  ResourceIdDesc = 'resourceId_DESC',
+  SyncTokenAsc = 'syncToken_ASC',
+  SyncTokenDesc = 'syncToken_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export type ContentfulMetadata = {
   tags: Array<Maybe<ContentfulTag>>;
 };
@@ -1099,6 +1239,8 @@ export type PagesTextLinks = {
 export type Query = {
   asset?: Maybe<Asset>;
   assetCollection?: Maybe<AssetCollection>;
+  calendars?: Maybe<Calendars>;
+  calendarsCollection?: Maybe<CalendarsCollection>;
   dashboard?: Maybe<Dashboard>;
   dashboardCollection?: Maybe<DashboardCollection>;
   entryCollection?: Maybe<EntryCollection>;
@@ -1131,6 +1273,21 @@ export type QueryAssetCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<AssetFilter>;
+};
+
+export type QueryCalendarsArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryCalendarsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<CalendarsOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<CalendarsFilter>;
 };
 
 export type QueryDashboardArgs = {
@@ -1462,6 +1619,78 @@ export type TeamsToolsCollection = {
   total: Scalars['Int'];
 };
 
+export type CalendarsContentFragment = Pick<
+  Calendars,
+  | 'googleCalendarId'
+  | 'name'
+  | 'color'
+  | 'syncToken'
+  | 'resourceId'
+  | 'expirationDate'
+> & {
+  sys: Pick<
+    Sys,
+    'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+  >;
+};
+
+export type FetchCalendarByIdQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchCalendarByIdQuery = {
+  calendars?: Maybe<
+    Pick<
+      Calendars,
+      | 'googleCalendarId'
+      | 'name'
+      | 'color'
+      | 'syncToken'
+      | 'resourceId'
+      | 'expirationDate'
+    > & {
+      sys: Pick<
+        Sys,
+        'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+      >;
+    }
+  >;
+};
+
+export type FetchCalendarsQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<
+    Array<InputMaybe<CalendarsOrder>> | InputMaybe<CalendarsOrder>
+  >;
+  where?: InputMaybe<CalendarsFilter>;
+}>;
+
+export type FetchCalendarsQuery = {
+  calendarsCollection?: Maybe<
+    Pick<CalendarsCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          Pick<
+            Calendars,
+            | 'googleCalendarId'
+            | 'name'
+            | 'color'
+            | 'syncToken'
+            | 'resourceId'
+            | 'expirationDate'
+          > & {
+            sys: Pick<
+              Sys,
+              'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+            >;
+          }
+        >
+      >;
+    }
+  >;
+};
+
 export type FetchDashboardQueryVariables = Exact<{ [key: string]: never }>;
 
 export type FetchDashboardQuery = {
@@ -1488,6 +1717,9 @@ export type FetchDashboardQuery = {
                       entries: {
                         inline: Array<
                           Maybe<
+                            | ({ __typename: 'Calendars' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                             | ({ __typename: 'Dashboard' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -1550,6 +1782,9 @@ export type FetchDashboardQuery = {
                       entries: {
                         inline: Array<
                           Maybe<
+                            | ({ __typename: 'Calendars' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                             | ({ __typename: 'Dashboard' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -1665,6 +1900,7 @@ export type NewsContentFragment = Pick<
         entries: {
           inline: Array<
             Maybe<
+              | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
@@ -1711,6 +1947,7 @@ export type FetchNewsByIdQuery = {
             entries: {
               inline: Array<
                 Maybe<
+                  | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ExternalAuthors' } & {
                       sys: Pick<Sys, 'id'>;
@@ -1772,6 +2009,9 @@ export type FetchNewsQuery = {
                   entries: {
                     inline: Array<
                       Maybe<
+                        | ({ __typename: 'Calendars' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Dashboard' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -1828,6 +2068,7 @@ export type PageContentFragment = Pick<
         entries: {
           inline: Array<
             Maybe<
+              | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
@@ -1873,6 +2114,9 @@ export type FetchPagesQuery = {
                   entries: {
                     inline: Array<
                       Maybe<
+                        | ({ __typename: 'Calendars' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Dashboard' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -2001,6 +2245,49 @@ export type FetchTeamsQuery = {
   >;
 };
 
+export const CalendarsContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'CalendarsContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Calendars' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sys' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'firstPublishedAt' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'publishedAt' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'publishedVersion' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'googleCalendarId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'color' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'syncToken' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'resourceId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'expirationDate' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<CalendarsContentFragment, unknown>;
 export const ExternalAuthorsContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -2445,6 +2732,174 @@ export const TeamsContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<TeamsContentFragment, unknown>;
+export const FetchCalendarByIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchCalendarById' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'calendars' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'CalendarsContent' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...CalendarsContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchCalendarByIdQuery,
+  FetchCalendarByIdQueryVariables
+>;
+export const FetchCalendarsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchCalendars' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'order' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'CalendarsOrder' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'where' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'CalendarsFilter' },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'calendarsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'order' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'where' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'CalendarsContent' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...CalendarsContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<FetchCalendarsQuery, FetchCalendarsQueryVariables>;
 export const FetchDashboardDocument = {
   kind: 'Document',
   definitions: [

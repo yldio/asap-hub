@@ -22,6 +22,7 @@ export const getContentfulGraphqlClientMockServer = (
     DashboardNewsCollection: resultDto,
     DashboardPagesCollection: resultDto,
     ExternalAuthorsCollection: resultDto,
+    CalendarsCollection: resultDto,
     ...inputMocks,
   };
   const store = createMockStore({

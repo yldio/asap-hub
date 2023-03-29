@@ -17,6 +17,7 @@ import {
 } from '../organisms';
 import { createMailTo } from '../mail';
 import { editIcon } from '..';
+import { getResearchOutputAssociation } from '../utils';
 
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
@@ -77,18 +78,14 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
     ResearchOutputPermissionsContext,
   );
 
-  const getDraftHeaderText = () => {
-    const association = props.workingGroups
-      ? 'working group'
-      : `team${props.teams.length > 1 ? 's' : ''}`;
-
-    return `This draft is available to members in the ${association}
-     listed below. Only PMs can publish this output.`;
-  };
-
   return (
     <div>
-      {!published && <Toast accent="warning">{getDraftHeaderText()}</Toast>}
+      {!published && (
+        <Toast accent="warning">{`This draft is available to members in the ${getResearchOutputAssociation(
+          props,
+        )}
+     listed below. Only PMs can publish this output.`}</Toast>
+      )}
       <div css={containerStyles}>
         <div css={buttonsContainer}>
           <BackLink href={backHref} />

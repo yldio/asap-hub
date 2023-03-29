@@ -99,7 +99,7 @@
     "@graphql-tools/mock": "8.7.19",
     "@graphql-tools/schema": "9.0.17",
     "@graphql-typed-document-node/core": "3.2.0",
-    "@serverless/typescript": "3.27.0",
+    "@serverless/typescript": "3.29.0",
     "@types/apr-intercept": "workspace:*",
     "@types/async-retry": "^1",
     "@types/aws-lambda": "8.10.113",

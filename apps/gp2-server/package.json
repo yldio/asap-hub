@@ -60,7 +60,7 @@
     "@graphql-tools/graphql-file-loader": "7.5.16",
     "@graphql-tools/load": "7.8.13",
     "@graphql-tools/mock": "8.7.19",
-    "@serverless/typescript": "3.27.0",
+    "@serverless/typescript": "3.29.0",
     "@types/apr-intercept": "workspace:*",
     "@types/aws-lambda": "8.10.113",
     "@types/cors": "2.8.13",

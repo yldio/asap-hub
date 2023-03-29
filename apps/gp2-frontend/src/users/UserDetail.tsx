@@ -19,6 +19,7 @@ import { FC } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
+import { useSelectAvatar } from '../hooks/useSelectAvatar';
 import OutputList from '../outputs/OutputList';
 import { useOutputs } from '../outputs/state';
 import { getInstitutions } from './api';
@@ -61,6 +62,8 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
   };
   const cohortOptions = useContributingCohorts();
   const patchUser = usePatchUserById(userId);
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const { avatarSaving, onImageSelect } = useSelectAvatar(currentUser!.id);
 
   const commonModalProps = {
     backHref: backToUserDetails,
@@ -80,6 +83,8 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
           outputsTotal={outputsTotal}
           upcomingTotal={upcomingEvents.total}
           pastTotal={pastEvents.total}
+          avatarSaving={avatarSaving}
+          onImageSelect={onImageSelect}
           {...user}
         >
           <Switch>

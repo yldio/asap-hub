@@ -78,7 +78,7 @@ jobs:
       - name: Copy index to a temporary index (ALL)
         run: algolia indices copy -y -w $SCOPE $ALGOLIA_INDEX $ALGOLIA_INDEX_TEMP
         env:
-          ALGOLIA_APPLICATION_ID: ${{ steps.algolia-keys.outputs.lgolia-app-id }}
+          ALGOLIA_APPLICATION_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           ALGOLIA_ADMIN_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-algolia-index }}
           ALGOLIA_INDEX_TEMP: '${{ steps.setup.outputs.crn-algolia-index }}_temp'
@@ -96,7 +96,7 @@ jobs:
         if: ${{ inputs.entity == 'research-outputs' || inputs.entity == 'all'}}
         uses: ./.github/actions/algolia-import-entity
         with:
-          algolia-api-key: ${{ steps.algolia-keys.outputs.crn-algolia-api-key }}
+          algolia-api-key: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           algolia-index: '${{ steps.setup.outputs.crn-algolia-index }}_temp'
           entity-type: 'research-output'

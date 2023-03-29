@@ -7,6 +7,7 @@ import {
   Paragraph,
   ResearcherIdIcon,
 } from '@asap-hub/react-components';
+import { urlExpression, USER_SOCIAL_NOT_URL } from '@asap-hub/validation';
 import { ComponentProps, useState } from 'react';
 import colors from '../templates/colors';
 import EditUserModal from './EditUserModal';
@@ -96,6 +97,7 @@ const ExternalProfilesModal: React.FC<ExternalProfilesModalProps> = ({
             title="Google Scholar"
             subtitle="(optional)"
             description="Type your Google Scholar profile URL."
+            pattern={urlExpression}
             labelIndicator={<GlobeIcon />}
             placeholder="https://www.example.com"
             enabled={!isSaving}
@@ -111,6 +113,7 @@ const ExternalProfilesModal: React.FC<ExternalProfilesModalProps> = ({
                 <OrcidIcon color={colors.neutral900.rgba} />
               </span>
             }
+            pattern={USER_SOCIAL_NOT_URL.source}
             placeholder="0000-0000-0000-0000"
             enabled={!isSaving}
             value={newOrcid}
@@ -120,6 +123,7 @@ const ExternalProfilesModal: React.FC<ExternalProfilesModalProps> = ({
             title="Research Gate"
             subtitle="(optional)"
             description="Type your Research Gate profile URL."
+            pattern={urlExpression}
             labelIndicator={<GlobeIcon />}
             placeholder="https://www.example.com"
             enabled={!isSaving}
@@ -130,6 +134,7 @@ const ExternalProfilesModal: React.FC<ExternalProfilesModalProps> = ({
             title="ResearcherID"
             subtitle="(optional)"
             description="Type your Researcher ID."
+            pattern={USER_SOCIAL_NOT_URL.source}
             labelIndicator={
               <span
                 css={{
@@ -157,6 +162,7 @@ const ExternalProfilesModal: React.FC<ExternalProfilesModalProps> = ({
             subtitle="(optional)"
             labelIndicator={<GlobeIcon />}
             placeholder="https://www.example.com"
+            pattern={urlExpression}
             enabled={!isSaving}
             value={newBlog}
             onChange={setBlog}
@@ -165,6 +171,7 @@ const ExternalProfilesModal: React.FC<ExternalProfilesModalProps> = ({
             title="Twitter"
             subtitle="(optional)"
             description="Type your Twitter profile URL."
+            pattern={urlExpression}
             labelIndicator={<GlobeIcon />}
             placeholder="https://www.example.com"
             enabled={!isSaving}
@@ -175,6 +182,7 @@ const ExternalProfilesModal: React.FC<ExternalProfilesModalProps> = ({
             title="LinkedIn"
             subtitle="(optional)"
             description="Type your LinkedIn profile URL."
+            pattern={urlExpression}
             labelIndicator={<GlobeIcon />}
             placeholder="https://www.example.com"
             enabled={!isSaving}
@@ -185,6 +193,7 @@ const ExternalProfilesModal: React.FC<ExternalProfilesModalProps> = ({
             title="Github"
             subtitle="(optional)"
             description="Type your Github profile URL."
+            pattern={urlExpression}
             labelIndicator={<GlobeIcon />}
             placeholder="https://www.example.com"
             enabled={!isSaving}

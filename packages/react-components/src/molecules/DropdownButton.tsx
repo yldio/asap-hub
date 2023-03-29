@@ -168,7 +168,13 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({
                     <span css={itemContentStyles}>{item}</span>
                   </Anchor>
                 ) : (
-                  <button css={resetButtonStyles} onClick={onClick}>
+                  <button
+                    css={resetButtonStyles}
+                    onClick={(e) => {
+                      setMenuShown(false);
+                      onClick && onClick(e);
+                    }}
+                  >
                     <span css={itemContentStyles}>{item}</span>
                   </button>
                 )}

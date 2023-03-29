@@ -3,6 +3,7 @@ import { ToastContext } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
 import { ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import { Prompt, useHistory } from 'react-router-dom';
+import { usePushFromHere } from '../routing';
 
 const styles = css({
   boxSizing: 'border-box',
@@ -18,6 +19,7 @@ type FormProps<T> = {
   serverErrors?: ValidationErrorResponse['data'];
   children: (state: {
     isSaving: boolean;
+    setRedirectOnSave: (url: string) => void;
     getWrappedOnSave: (
       onSaveFunction: () => Promise<T | void>,
     ) => () => Promise<T | void>;
@@ -32,10 +34,19 @@ const Form = <T extends void | Record<string, unknown>>({
 }: FormProps<T>): React.ReactElement => {
   const toast = useContext(ToastContext);
   const history = useHistory();
+
+  const pushFromHere = usePushFromHere();
+  const [redirectOnSave, setRedirectOnSave] = useState<string>();
+
   const formRef = useRef<HTMLFormElement>(null);
   const [status, setStatus] = useState<
     'initial' | 'isSaving' | 'hasError' | 'hasSaved'
   >('initial');
+  useEffect(() => {
+    if (status === 'hasSaved' && redirectOnSave) {
+      pushFromHere(redirectOnSave);
+    }
+  }, [status, redirectOnSave, pushFromHere]);
   useEffect(() => {
     if (status === 'hasSaved' && !dirty) {
       setStatus('initial');
@@ -93,6 +104,7 @@ const Form = <T extends void | Record<string, unknown>>({
           onCancel,
           isSaving: status === 'isSaving',
           getWrappedOnSave,
+          setRedirectOnSave,
         })}
       </form>
     </>

@@ -21,7 +21,7 @@ import { mobileScreen, perRem } from '../pixels';
 import { Button } from '../atoms';
 import ResearchOutputContributorsCard from '../organisms/ResearchOutputContributorsCard';
 import ResearchOutputRelatedResearchCard from '../organisms/ResearchOutputRelatedResearchCard';
-import { usePushFromHere } from '../routing';
+
 import {
   noop,
   getDecision,
@@ -157,7 +157,6 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   published,
   permissions,
 }) => {
-  const historyPush = usePushFromHere();
   const { canShareResearchOutput, canPublishResearchOutput } = permissions;
 
   const showSaveDraftButton =
@@ -306,7 +305,12 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
         serverErrors={serverValidationErrors}
         dirty={!equal(remotePayload, currentPayload)}
       >
-        {({ isSaving, getWrappedOnSave, onCancel: handleCancel }) => {
+        {({
+          isSaving,
+          getWrappedOnSave,
+          setRedirectOnSave,
+          onCancel: handleCancel,
+        }) => {
           const handleSave = getWrappedOnSave(() => onSave(currentPayload));
           const handleSaveDraft = getWrappedOnSave(() =>
             onSaveDraft(currentPayload),
@@ -413,10 +417,11 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                         const researchOutput = await handleSaveDraft();
                         if (researchOutput) {
                           const { id } = researchOutput;
-                          const path = sharedResearch({}).researchOutput({
-                            researchOutputId: id,
-                          }).$;
-                          historyPush(path);
+                          setRedirectOnSave(
+                            sharedResearch({}).researchOutput({
+                              researchOutputId: id,
+                            }).$,
+                          );
                         }
                         return researchOutput;
                       }}
@@ -434,10 +439,11 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                         const researchOutput = await handleSave();
                         if (researchOutput) {
                           const { id } = researchOutput;
-                          const path = sharedResearch({}).researchOutput({
-                            researchOutputId: id,
-                          }).$;
-                          historyPush(path);
+                          setRedirectOnSave(
+                            sharedResearch({}).researchOutput({
+                              researchOutputId: id,
+                            }).$,
+                          );
                         }
                         return researchOutput;
                       }}

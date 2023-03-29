@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react';
-import { TeamResponse } from '@asap-hub/model';
+import { ResearchOutputResponse, TeamResponse } from '@asap-hub/model';
+import { createResearchOutputResponse } from '@asap-hub/fixtures';
 
 import {
   equals,
@@ -8,6 +9,7 @@ import {
   isInternalLink,
   isLink,
   splitListBy,
+  getResearchOutputAssociation,
 } from '../index';
 
 describe('getSvgAspectRatio', () => {
@@ -130,5 +132,40 @@ describe('splitListBy', () => {
     );
     expect(inactiveTeams.length).toBe(2);
     expect(activeTeams.length).toBe(1);
+  });
+});
+
+describe('getResearchOutputAssociation', () => {
+  it('returns team for a research output with only a team', () => {
+    const researchOutput: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      teams: [{ id: '1', displayName: 'Team ASAP' }],
+      workingGroups: undefined,
+    };
+    expect(getResearchOutputAssociation(researchOutput)).toEqual('team');
+  });
+  it('returns teams for a research output with more than one teams', () => {
+    const researchOutput: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      teams: [
+        { id: '1', displayName: 'Team ASAP' },
+        { id: '2', displayName: 'Second team' },
+      ],
+      workingGroups: undefined,
+    };
+    expect(getResearchOutputAssociation(researchOutput)).toEqual('teams');
+  });
+  it('returns working group for a research output that has a working group', () => {
+    const researchOutput: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      teams: [
+        { id: '1', displayName: 'Team ASAP' },
+        { id: '2', displayName: 'Second team' },
+      ],
+      workingGroups: [{ id: '1', title: 'Working group' }],
+    };
+    expect(getResearchOutputAssociation(researchOutput)).toEqual(
+      'working group',
+    );
   });
 });

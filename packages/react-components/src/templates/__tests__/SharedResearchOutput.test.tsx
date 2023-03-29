@@ -215,16 +215,6 @@ describe('Not Grant Documents', () => {
       ).toBeVisible();
       expect(getByText(/Related research article/i)).toBeVisible();
     });
-    it('shows the toast for drafts', () => {
-      const { getByText } = render(
-        <SharedResearchOutput {...props} published={false} />,
-      );
-      expect(
-        getByText(
-          'This draft is available to members in the working group listed below. Only PMs can publish this output.',
-        ),
-      ).toBeInTheDocument();
-    });
   });
 });
 
@@ -262,4 +252,63 @@ it('merges different tag types in the correct order', () => {
       .map(({ textContent }) => textContent)
       .slice(3),
   ).toEqual(['method', 'organisms', 'environment', 'subtype', 'tag']);
+});
+
+describe('a draft output', () => {
+  it('shows the toast for team drafts that contain only one team', () => {
+    const { getByText } = render(
+      <SharedResearchOutput
+        {...props}
+        published={false}
+        teams={[{ id: 'team1', displayName: 'team 1' }]}
+        workingGroups={undefined}
+      />,
+    );
+    expect(
+      getByText(
+        'This draft is available to members in the team listed below. Only PMs can publish this output.',
+      ),
+    ).toBeVisible();
+    expect(getByText('Draft')).toBeVisible();
+  });
+  it('shows the toast for team drafts that contain more than one teams', () => {
+    const { getByText } = render(
+      <SharedResearchOutput
+        {...props}
+        published={false}
+        teams={[
+          { id: 'team1', displayName: 'team 1' },
+          { id: 'team2', displayName: 'team 2' },
+        ]}
+        workingGroups={undefined}
+      />,
+    );
+    expect(
+      getByText(
+        'This draft is available to members in the teams listed below. Only PMs can publish this output.',
+      ),
+    ).toBeVisible();
+    expect(getByText('Draft')).toBeVisible();
+  });
+  it('shows the toast for team drafts that contain a working group', () => {
+    const { getByText } = render(
+      <SharedResearchOutput
+        {...props}
+        published={false}
+        teams={[{ id: 'team1', displayName: 'team 1' }]}
+        workingGroups={[
+          {
+            id: 'wg1',
+            title: 'wg 1',
+          },
+        ]}
+      />,
+    );
+    expect(
+      getByText(
+        'This draft is available to members in the working group listed below. Only PMs can publish this output.',
+      ),
+    ).toBeVisible();
+    expect(getByText('Draft')).toBeVisible();
+  });
 });

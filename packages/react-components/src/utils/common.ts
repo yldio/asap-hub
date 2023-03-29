@@ -1,3 +1,4 @@
+import { ResearchOutputResponse } from '@asap-hub/model';
 import { renderToStaticMarkup } from 'react-dom/server';
 
 import {
@@ -87,3 +88,10 @@ export const splitListBy = <T>(
     },
     [[], []],
   );
+
+export const getResearchOutputAssociation = (
+  researchOutputData: Pick<ResearchOutputResponse, 'workingGroups' | 'teams'>,
+) =>
+  researchOutputData.workingGroups
+    ? 'working group'
+    : `team${researchOutputData.teams.length > 1 ? 's' : ''}`;

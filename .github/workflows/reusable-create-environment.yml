@@ -150,7 +150,7 @@ jobs:
           squidex-ci-client-secret: ${{ secrets.GP2_SQUIDEX_CI_CLIENT_SECRET }}
           squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
 
-  algolia-index:
+  crn-algolia-index:
     runs-on: ubuntu-latest
     environment: Branch
     container:
@@ -180,8 +180,8 @@ jobs:
         if: ${{ inputs.environment-name=='Branch' }}
         uses: ./.github/actions/algolia-keys
         with:
-          algolia-app-id-name: ${{ steps.setup.outputs.algolia-app-id-name }}
-          algolia-api-key-name: ${{ steps.setup.outputs.algolia-api-key-name }}
+          algolia-app-id-name: ${{ steps.setup.outputs.crn-algolia-app-id-name }}
+          algolia-api-key-name: ${{ steps.setup.outputs.crn-algolia-api-key-name }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
@@ -201,7 +201,7 @@ jobs:
         env:
           ALGOLIA_APPLICATION_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           ALGOLIA_ADMIN_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
-          ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
+          ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-algolia-index }}
       - name: Copy index from Dev
         if: ${{ inputs.environment-name=='Branch' && steps.index-exists.outputs.index-exists == 'false' }}
         shell: bash
@@ -211,8 +211,8 @@ jobs:
         env:
           ALGOLIA_APPLICATION_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           ALGOLIA_ADMIN_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
-          ALGOLIA_INDEX_DEV: ${{ steps.setup-dev.outputs.algolia-index }}
-          ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
+          ALGOLIA_INDEX_DEV: ${{ steps.setup-dev.outputs.crn-algolia-index }}
+          ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-algolia-index }}
       # TODO: CRN-1329 Remove this step once the migration is complete
       - name: Copy index from Dev
         if: ${{ inputs.environment-name=='Branch' && steps.index-exists.outputs.index-exists == 'false' }}
@@ -223,5 +223,5 @@ jobs:
         env:
           ALGOLIA_APPLICATION_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           ALGOLIA_ADMIN_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
-          ALGOLIA_INDEX_DEV: ${{ steps.setup-dev.outputs.algolia-index }}
-          ALGOLIA_INDEX: ${{ steps.setup.outputs.algolia-index }}
+          ALGOLIA_INDEX_DEV: ${{ steps.setup-dev.outputs.crn-algolia-index }}
+          ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-algolia-index }}

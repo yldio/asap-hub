@@ -90,9 +90,9 @@ const offlinePlugins = [
 const offlineSSM =
   SLS_STAGE === 'local'
     ? {
-        'algolia-app-id-dev': '${env:ALGOLIA_APP_ID}',
-        'algolia-index-api-key-dev': '${env:ALGOLIA_API_KEY}',
-        'algolia-search-api-key-dev': '${env:ALGOLIA_API_KEY}',
+        'crn-algolia-app-id-dev': '${env:ALGOLIA_APP_ID}',
+        'crn-algolia-index-api-key-dev': '${env:ALGOLIA_API_KEY}',
+        'crn-algolia-search-api-key-dev': '${env:ALGOLIA_API_KEY}',
         'auth0-shared-secret-dev': '${env:AUTH0_SHARED_SECRET}',
         'google-api-token-dev': '${env:GOOGLE_API_TOKEN}',
         'ses-region-dev': '${env:SES_REGION}',
@@ -480,7 +480,7 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
       },
@@ -504,7 +504,7 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
       },
@@ -529,7 +529,7 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
       },
@@ -553,7 +553,7 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
       },
@@ -577,7 +577,7 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
       },
@@ -601,7 +601,7 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
       },
@@ -678,7 +678,7 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
       },
@@ -697,7 +697,7 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
       },

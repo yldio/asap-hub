@@ -1,7 +1,7 @@
-algolia-api-key-name=algolia-api-key-ci-dev
-algolia-app-id-name=algolia-app-id-dev
-algolia-backup-bucket-name=asap-hub-dev-algolia-backup
-algolia-index=asap-hub_dev
+crn-algolia-api-key-name=crn-algolia-api-key-ci-dev
+crn-algolia-app-id-name=crn-algolia-app-id-dev
+crn-algolia-backup-bucket-name=asap-hub-dev-algolia-backup
+crn-algolia-index=asap-hub_dev
 crn-api-url=https://api-dev.hub.asap.science
 crn-app-url=https://dev.hub.asap.science
 crn-auth-url=https://dev.hub.asap.science/.auth/

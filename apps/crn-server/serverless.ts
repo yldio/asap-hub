@@ -443,7 +443,7 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
-    indexExternalAuthor: {
+    indexExternalAuthorSquidex: {
       handler: './src/handlers/external-author/index-handler.handler',
       events: [
         {
@@ -465,6 +465,32 @@ const serverlessConfig: AWS = {
         ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
+        IS_CONTENTFUL_ENABLED_V2: 'false',
+      },
+    },
+    indexExternalAuthorContentful: {
+      handler: './src/handlers/external-author/index-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSourceContentful],
+              'detail-type': [
+                'ExternalAuthorsPublished',
+                'ExternalAuthorsUpdated',
+                'ExternalAuthorsUnpublished',
+                'ExternalAuthorsDeleted',
+              ],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
+        SENTRY_DSN: sentryDsnHandlers,
+        IS_CONTENTFUL_ENABLED_V2: 'true',
       },
     },
     indexEvents: {

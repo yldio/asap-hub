@@ -8,6 +8,10 @@ import {
   SquidexGraphql,
   SquidexRest,
 } from '@asap-hub/squidex';
+import {
+  getGraphQLClient as getContentfulGraphQLClient,
+  getRestClient as getContentfulRestClient,
+} from '@asap-hub/contentful';
 import { EventBridgeEvent } from 'aws-lambda';
 import {
   algoliaApiKey,
@@ -15,11 +19,20 @@ import {
   algoliaIndex,
   appName,
   baseUrl,
+  contentfulAccessToken,
+  contentfulEnvId,
+  contentfulManagementAccessToken,
+  contentfulSpaceId,
+  isContentfulEnabledV2,
 } from '../../config';
 import ExternalAuthors, {
   ExternalAuthorsController,
 } from '../../controllers/external-authors';
-import { ExternalAuthorSquidexDataProvider } from '../../data-providers/external-authors.data-provider';
+import { ExternalAuthorContentfulDataProvider } from '../../data-providers/contentful/external-authors.data-provider';
+import {
+  ExternalAuthorDataProvider,
+  ExternalAuthorSquidexDataProvider,
+} from '../../data-providers/external-authors.data-provider';
 import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
@@ -64,23 +77,45 @@ export const indexExternalAuthorHandler =
     }
   };
 
-const externalAuthorRestClient = new SquidexRest<RestExternalAuthor>(
-  getAuthToken,
-  'external-authors',
-  {
+let externalAuthorDataProvider: ExternalAuthorDataProvider;
+
+if (isContentfulEnabledV2) {
+  const contentfulGraphQLClient = getContentfulGraphQLClient({
+    space: contentfulSpaceId,
+    accessToken: contentfulAccessToken,
+    environment: contentfulEnvId,
+  });
+
+  const getContentfulRestClientFactory = () =>
+    getContentfulRestClient({
+      space: contentfulSpaceId,
+      accessToken: contentfulManagementAccessToken,
+      environment: contentfulEnvId,
+    });
+
+  externalAuthorDataProvider = new ExternalAuthorContentfulDataProvider(
+    contentfulGraphQLClient,
+    getContentfulRestClientFactory,
+  );
+} else {
+  const externalAuthorRestClient = new SquidexRest<RestExternalAuthor>(
+    getAuthToken,
+    'external-authors',
+    {
+      appName,
+      baseUrl,
+    },
+  );
+  const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
     appName,
     baseUrl,
-  },
-);
-const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
-  appName,
-  baseUrl,
-});
+  });
 
-const externalAuthorDataProvider = new ExternalAuthorSquidexDataProvider(
-  externalAuthorRestClient,
-  squidexGraphqlClient,
-);
+  externalAuthorDataProvider = new ExternalAuthorSquidexDataProvider(
+    externalAuthorRestClient,
+    squidexGraphqlClient,
+  );
+}
 
 /* istanbul ignore next */
 export const handler = sentryWrapper(

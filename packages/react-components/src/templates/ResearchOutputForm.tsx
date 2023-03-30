@@ -297,7 +297,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     subtype,
   });
 
-  const [remotePayload] = useState(currentPayload);
+  const [remotePayload, setRemotePayload] = useState(currentPayload);
 
   return (
     <main css={mainStyles}>
@@ -310,111 +310,135 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
           getWrappedOnSave,
           setRedirectOnSave,
           onCancel: handleCancel,
-        }) => {
-          const handleSave = getWrappedOnSave(() => onSave(currentPayload));
-          const handleSaveDraft = getWrappedOnSave(() =>
-            onSaveDraft(currentPayload),
-          );
-          return (
-            <div css={contentStyles}>
-              <ResearchOutputFormSharingCard
-                serverValidationErrors={serverValidationErrors}
-                clearServerValidationError={clearServerValidationError}
-                isSaving={isSaving}
-                description={description}
-                onChangeDescription={setDescription}
-                title={title}
-                onChangeTitle={setTitle}
-                link={link}
-                onChangeLink={setLink}
-                type={type}
-                onChangeType={(newType) => {
-                  setType(newType);
-                  setMethods([]);
-                  setOrganisms([]);
-                  setEnvironments([]);
-                  setSubtype(undefined);
-                }}
-                subtype={subtype}
-                onChangeSubtype={setSubtype}
-                researchTags={filteredResearchTags}
-                asapFunded={asapFunded}
-                onChangeAsapFunded={setAsapFunded}
-                usedInPublication={usedInPublication}
-                onChangeUsedInPublication={setUsedInPublication}
-                sharingStatus={sharingStatus}
-                onChangeSharingStatus={setSharingStatus}
-                publishDate={publishDate}
-                onChangePublishDate={(date) =>
-                  setPublishDate(date ? new Date(date) : undefined)
+        }) => (
+          <div css={contentStyles}>
+            <ResearchOutputFormSharingCard
+              serverValidationErrors={serverValidationErrors}
+              clearServerValidationError={clearServerValidationError}
+              isSaving={isSaving}
+              description={description}
+              onChangeDescription={setDescription}
+              title={title}
+              onChangeTitle={setTitle}
+              link={link}
+              onChangeLink={setLink}
+              type={type}
+              onChangeType={(newType) => {
+                setType(newType);
+                setMethods([]);
+                setOrganisms([]);
+                setEnvironments([]);
+                setSubtype(undefined);
+              }}
+              subtype={subtype}
+              onChangeSubtype={setSubtype}
+              researchTags={filteredResearchTags}
+              asapFunded={asapFunded}
+              onChangeAsapFunded={setAsapFunded}
+              usedInPublication={usedInPublication}
+              onChangeUsedInPublication={setUsedInPublication}
+              sharingStatus={sharingStatus}
+              onChangeSharingStatus={setSharingStatus}
+              publishDate={publishDate}
+              onChangePublishDate={(date) =>
+                setPublishDate(date ? new Date(date) : undefined)
+              }
+              typeOptions={typeOptions}
+              urlRequired={urlRequired}
+              typeDescription="Select the type that matches your output the best."
+            />
+            <ResearchOutputExtraInformationCard
+              documentType={documentType}
+              isSaving={isSaving}
+              researchTags={filteredResearchTags}
+              tagSuggestions={tagSuggestions.map((suggestion) => ({
+                label: suggestion,
+                value: suggestion,
+              }))}
+              tags={tags}
+              onChangeTags={setTags}
+              usageNotes={usageNotes}
+              onChangeUsageNotes={setUsageNotes}
+              identifier={identifier}
+              setIdentifier={setIdentifier}
+              identifierType={identifierType}
+              setIdentifierType={setIdentifierType}
+              labCatalogNumber={labCatalogNumber}
+              onChangeLabCatalogNumber={setLabCatalogNumber}
+              methods={methods}
+              onChangeMethods={setMethods}
+              organisms={organisms}
+              onChangeOrganisms={setOrganisms}
+              environments={environments}
+              onChangeEnvironments={setEnvironments}
+            />
+            <ResearchOutputContributorsCard
+              isSaving={isSaving}
+              labs={labs}
+              getLabSuggestions={getLabSuggestions}
+              onChangeLabs={setLabs}
+              authors={authors}
+              getAuthorSuggestions={getAuthorSuggestions}
+              onChangeAuthors={setAuthors}
+              teams={teams}
+              onChangeTeams={setTeams}
+              getTeamSuggestions={getTeamSuggestions}
+              isEditMode={!!researchOutputData}
+              authorsRequired={authorsRequired}
+            />
+            <ResearchOutputRelatedResearchCard
+              isSaving={isSaving}
+              relatedResearch={relatedResearch}
+              onChangeRelatedResearch={setRelatedResearch}
+              getRelatedResearchSuggestions={getRelatedResearchSuggestions}
+              isEditMode={!!researchOutputData}
+            />
+            <div css={formControlsContainerStyles}>
+              <div
+                css={
+                  displayThreeButtons
+                    ? formControlsThreeButtonsStyles
+                    : formControlsTwoButtonsStyles
                 }
-                typeOptions={typeOptions}
-                urlRequired={urlRequired}
-                typeDescription="Select the type that matches your output the best."
-              />
-              <ResearchOutputExtraInformationCard
-                documentType={documentType}
-                isSaving={isSaving}
-                researchTags={filteredResearchTags}
-                tagSuggestions={tagSuggestions.map((suggestion) => ({
-                  label: suggestion,
-                  value: suggestion,
-                }))}
-                tags={tags}
-                onChangeTags={setTags}
-                usageNotes={usageNotes}
-                onChangeUsageNotes={setUsageNotes}
-                identifier={identifier}
-                setIdentifier={setIdentifier}
-                identifierType={identifierType}
-                setIdentifierType={setIdentifierType}
-                labCatalogNumber={labCatalogNumber}
-                onChangeLabCatalogNumber={setLabCatalogNumber}
-                methods={methods}
-                onChangeMethods={setMethods}
-                organisms={organisms}
-                onChangeOrganisms={setOrganisms}
-                environments={environments}
-                onChangeEnvironments={setEnvironments}
-              />
-              <ResearchOutputContributorsCard
-                isSaving={isSaving}
-                labs={labs}
-                getLabSuggestions={getLabSuggestions}
-                onChangeLabs={setLabs}
-                authors={authors}
-                getAuthorSuggestions={getAuthorSuggestions}
-                onChangeAuthors={setAuthors}
-                teams={teams}
-                onChangeTeams={setTeams}
-                getTeamSuggestions={getTeamSuggestions}
-                isEditMode={!!researchOutputData}
-                authorsRequired={authorsRequired}
-              />
-              <ResearchOutputRelatedResearchCard
-                isSaving={isSaving}
-                relatedResearch={relatedResearch}
-                onChangeRelatedResearch={setRelatedResearch}
-                getRelatedResearchSuggestions={getRelatedResearchSuggestions}
-                isEditMode={!!researchOutputData}
-              />
-              <div css={formControlsContainerStyles}>
-                <div
-                  css={
-                    displayThreeButtons
-                      ? formControlsThreeButtonsStyles
-                      : formControlsTwoButtonsStyles
-                  }
-                >
-                  <Button enabled={!isSaving} fullWidth onClick={handleCancel}>
-                    Cancel
+              >
+                <Button enabled={!isSaving} fullWidth onClick={handleCancel}>
+                  Cancel
+                </Button>
+                {showSaveDraftButton && (
+                  <Button
+                    enabled={!isSaving}
+                    fullWidth
+                    onClick={async () =>
+                      getWrappedOnSave(async () => {
+                        const researchOutput = await onSaveDraft(
+                          currentPayload,
+                        );
+                        setRemotePayload(currentPayload);
+                        if (researchOutput) {
+                          const { id } = researchOutput;
+                          setRedirectOnSave(
+                            sharedResearch({}).researchOutput({
+                              researchOutputId: id,
+                            }).$,
+                          );
+                        }
+                        return researchOutput;
+                      })()
+                    }
+                    primary={showSaveDraftButton && !showPublishButton}
+                  >
+                    Save Draft
                   </Button>
-                  {showSaveDraftButton && handleSaveDraft && (
-                    <Button
-                      enabled={!isSaving}
-                      fullWidth
-                      onClick={async () => {
-                        const researchOutput = await handleSaveDraft();
+                )}
+                {showPublishButton && (
+                  <Button
+                    enabled={!isSaving}
+                    fullWidth
+                    primary
+                    onClick={async () =>
+                      getWrappedOnSave(async () => {
+                        const researchOutput = await onSave(currentPayload);
+                        setRemotePayload(currentPayload);
                         if (researchOutput) {
                           const { id } = researchOutput;
                           setRedirectOnSave(
@@ -424,38 +448,16 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                           );
                         }
                         return researchOutput;
-                      }}
-                      primary={showSaveDraftButton && !showPublishButton}
-                    >
-                      Save Draft
-                    </Button>
-                  )}
-                  {showPublishButton && (
-                    <Button
-                      enabled={!isSaving}
-                      fullWidth
-                      primary
-                      onClick={async () => {
-                        const researchOutput = await handleSave();
-                        if (researchOutput) {
-                          const { id } = researchOutput;
-                          setRedirectOnSave(
-                            sharedResearch({}).researchOutput({
-                              researchOutputId: id,
-                            }).$,
-                          );
-                        }
-                        return researchOutput;
-                      }}
-                    >
-                      {published ? 'Save' : 'Publish'}
-                    </Button>
-                  )}
-                </div>
+                      })()
+                    }
+                  >
+                    {published ? 'Save' : 'Publish'}
+                  </Button>
+                )}
               </div>
             </div>
-          );
-        }}
+          </div>
+        )}
       </Form>
     </main>
   );

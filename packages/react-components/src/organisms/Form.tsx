@@ -45,13 +45,10 @@ const Form = <T extends void | Record<string, unknown>>({
   useEffect(() => {
     if (status === 'hasSaved' && redirectOnSave) {
       pushFromHere(redirectOnSave);
-    }
-  }, [status, redirectOnSave, pushFromHere]);
-  useEffect(() => {
-    if (status === 'hasSaved' && !dirty) {
+    } else if (status === 'hasSaved' && !dirty) {
       setStatus('initial');
     }
-  }, [status, dirty]);
+  }, [status, redirectOnSave, pushFromHere, dirty]);
   useEffect(() => {
     if (serverErrors.length && formRef.current) {
       formRef.current.reportValidity();

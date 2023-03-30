@@ -48,7 +48,7 @@ const props: ComponentProps<typeof ResearchOutputForm> = {
   },
 };
 
-jest.setTimeout(60000);
+// jest.setTimeout(60000);
 
 it('sets authors to required', () => {
   render(
@@ -376,7 +376,9 @@ describe('on submit', () => {
     await setupForm();
     await submitForm();
     expect(saveFn).toHaveBeenLastCalledWith(expectedRequest);
-    expect(history.location.pathname).toEqual(`/shared-research/${id}`);
+    await waitFor(() =>
+      expect(history.location.pathname).toEqual(`/shared-research/${id}`),
+    );
   });
 
   it('can submit a lab', async () => {
@@ -758,7 +760,9 @@ describe('on submit', () => {
     await setupForm();
     await saveDraft();
     expect(saveDraftFn).toHaveBeenLastCalledWith(expectedRequest);
-    expect(history.location.pathname).toEqual(`/shared-research/${id}`);
+    await waitFor(() =>
+      expect(history.location.pathname).toEqual(`/shared-research/${id}`),
+    );
   });
 });
 

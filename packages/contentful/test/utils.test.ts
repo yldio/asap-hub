@@ -1,5 +1,10 @@
 import { BLOCKS, TopLevelBlockEnum } from '@contentful/rich-text-types';
-import { parseRichText, addLocaleToFields } from '../src/utils';
+import { Entry } from 'contentful-management';
+import {
+  parseRichText,
+  addLocaleToFields,
+  updateEntryFields,
+} from '../src/utils';
 import {
   assetId_1,
   assetId_2,
@@ -176,5 +181,24 @@ describe('addLocaleToFields', () => {
       description: { 'en-US': 'Very informative news' },
       title: { 'en-US': 'News' },
     });
+  });
+});
+
+describe('updateEntryFields', () => {
+  test('updates entry fields', () => {
+    expect(
+      updateEntryFields(
+        {
+          fields: {
+            title: {
+              'en-US': 'Cells',
+            },
+          },
+        } as unknown as Entry,
+        {
+          title: 'Tissues',
+        },
+      ),
+    ).toEqual({ fields: { title: { 'en-US': 'Tissues' } } });
   });
 });

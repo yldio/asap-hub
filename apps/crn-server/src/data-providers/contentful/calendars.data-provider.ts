@@ -18,6 +18,7 @@ import {
   FetchCalendarsQueryVariables,
   Environment,
   CalendarsOrder,
+  updateEntryFields,
 } from '@asap-hub/contentful';
 
 export type CalendarItem = NonNullable<
@@ -93,11 +94,9 @@ export class CalendarContentfulDataProvider implements CalendarDataProvider {
 
     const calendar = await environment.getEntry(id);
 
-    Object.entries(update).forEach(([fieldName, fieldValue]) => {
-      calendar.fields[fieldName] = { 'en-US': fieldValue };
-    });
+    const calendarWithUpdatedFields = updateEntryFields(calendar, update);
 
-    const calendarUpdated = await calendar.update();
+    const calendarUpdated = await calendarWithUpdatedFields.update();
     await calendarUpdated.publish();
   }
 }

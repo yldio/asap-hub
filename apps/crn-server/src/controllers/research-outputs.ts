@@ -153,6 +153,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       accession: researchOutputUpdateData.accession,
       addedDate: currentResearchOutput.addedDate,
       asapFunded: researchOutputUpdateData.asapFunded,
+      descriptionMD: researchOutputUpdateData.descriptionMD,
       description: researchOutputUpdateData.description,
       documentType: researchOutputUpdateData.documentType,
       doi: researchOutputUpdateData.doi,

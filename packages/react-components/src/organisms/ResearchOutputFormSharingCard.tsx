@@ -22,12 +22,7 @@ import { noop } from '../utils';
 
 type ResearchOutputFormSharingCardProps = Pick<
   ResearchOutputPostRequest,
-  | 'link'
-  | 'title'
-  | 'description'
-  | 'descriptionMD'
-  | 'sharingStatus'
-  | 'subtype'
+  'link' | 'title' | 'descriptionMD' | 'sharingStatus' | 'subtype'
 > & {
   type?: ResearchOutputType | '';
   onChangeLink?: (newValue: string) => void;

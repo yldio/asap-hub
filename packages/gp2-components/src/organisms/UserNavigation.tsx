@@ -9,7 +9,7 @@ import {
 } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
-import { ComponentProps, useState } from 'react';
+import { ComponentProps, useEffect, useRef, useState } from 'react';
 import { smallDesktopQuery } from '../layout';
 
 import UserMenu from '../molecules/UserMenu';
@@ -42,11 +42,28 @@ type UserNavigationProps = Omit<
 >;
 
 const UserNavigation: React.FC<UserNavigationProps> = (userNavigationProps) => {
+  const reference = useRef<HTMLDivElement>(null);
   const [menuShown, setMenuShown] = useState(false);
   const { firstName, lastName, displayName, avatarUrl } =
     useCurrentUserGP2() || {};
+
+  useEffect(() => {
+    const handleClickOutside = (event: Event) => {
+      if (
+        reference.current &&
+        !reference.current.contains(event.target as Node)
+      ) {
+        setMenuShown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [setMenuShown, reference]);
   return (
-    <div css={css({ position: 'relative' })}>
+    <div css={css({ position: 'relative' })} ref={reference}>
       <UserMenuButton
         onClick={() => setMenuShown(!menuShown)}
         open={menuShown}

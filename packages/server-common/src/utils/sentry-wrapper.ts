@@ -3,20 +3,28 @@ import { Handler } from 'aws-lambda';
 
 export interface SentryConfig {
   currentRevision: string | undefined;
-  environment: string | undefined;
+  environment: string;
   sentryDsn: string | undefined;
   sentryTraceSampleRate: number | undefined;
 }
 
 export const sentryWrapperFactory =
-  (config: SentryConfig) =>
+  ({
+    sentryDsn,
+    sentryTraceSampleRate,
+    environment,
+    currentRevision,
+  }: SentryConfig) =>
   (handler: Handler): Handler => {
-    Sentry.AWSLambda.init({
-      dsn: config.sentryDsn,
-      tracesSampleRate: config.sentryTraceSampleRate,
-      environment: config.environment,
-      release: config.currentRevision,
-    });
+    if (['dev', 'Production'].includes(environment)) {
+      Sentry.AWSLambda.init({
+        dsn: sentryDsn,
+        tracesSampleRate: sentryTraceSampleRate,
+        environment,
+        release: currentRevision,
+      });
 
-    return Sentry.AWSLambda.wrapHandler(handler);
+      return Sentry.AWSLambda.wrapHandler(handler);
+    }
+    return handler;
   };

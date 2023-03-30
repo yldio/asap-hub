@@ -10,7 +10,7 @@ import {
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import ExpandableText from '../molecules/ExpandableText';
-import { ProjectMilestones } from '../organisms';
+import { Milestones } from '../organisms';
 import EmailSection from '../organisms/EmailSection';
 import Events from '../organisms/Events';
 
@@ -117,7 +117,14 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
       </div>
     </Card>
     <Card padding={false} overrideStyles={cardStyles}>
-      <ProjectMilestones milestones={milestones} />
+      <Milestones
+        milestones={milestones}
+        title="Project Milestones"
+        description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat"
+      />
     </Card>
   </div>
 );

@@ -65,3 +65,13 @@ export interface Calendar {
   id: string;
   name: string;
 }
+
+export const milestoneStatus = ['Active', 'Not Started', 'Completed'] as const;
+export type MilestoneStatus = (typeof milestoneStatus)[number];
+
+export type Milestone = {
+  description?: string;
+  link?: string;
+  status: MilestoneStatus;
+  title: string;
+};

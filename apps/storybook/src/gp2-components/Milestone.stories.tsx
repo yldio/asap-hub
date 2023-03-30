@@ -1,8 +1,8 @@
-import { ProjectMilestone } from '@asap-hub/gp2-components';
+import { Milestone } from '@asap-hub/gp2-components';
 
 export default {
-  title: 'GP2 / Organisms / Project / Milestone',
-  component: ProjectMilestone,
+  title: 'GP2 / Organisms / Milestone',
+  component: Milestone,
 };
 
 const milestone = (id: number) => ({
@@ -12,4 +12,4 @@ const milestone = (id: number) => ({
   link: 'http://example.com/',
 });
 
-export const Normal = () => <ProjectMilestone milestone={milestone(1)} />;
+export const Normal = () => <Milestone milestone={milestone(1)} />;

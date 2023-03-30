@@ -14,6 +14,7 @@ import { getAuthToken } from '../../src/utils/auth';
 import {
   getGraphQLWorkingGroup,
   getGraphQLWorkingGroupMember,
+  getGraphQLWorkingGroupMilestone,
   getGraphQLWorkingGroupResource,
   getListWorkingGroupDataObject,
   getRestWorkingGroupUpdateData,
@@ -101,6 +102,7 @@ describe('Working Group Data Provider', () => {
         leadingMembers: '',
       });
     });
+
     test('Should default null calendars to undefined', async () => {
       const mockResponse = getSquidexWorkingGroupsGraphqlResponse();
       const workingGroup = getGraphQLWorkingGroup();
@@ -114,6 +116,7 @@ describe('Working Group Data Provider', () => {
       });
     });
   });
+
   describe('FetchById', () => {
     test('Should fetch the working group from squidex graphql', async () => {
       const result = await workingGroupDataProviderMockGraphqlServer.fetchById(
@@ -122,12 +125,52 @@ describe('Working Group Data Provider', () => {
 
       expect(result).toMatchObject(getWorkingGroupDataObject());
     });
+
     test('Should return null when the working group is not found', async () => {
       const mockResponse = getSquidexWorkingGroupGraphqlResponse();
       mockResponse.findWorkingGroupsContent = null;
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
       expect(await workingGroupDataProvider.fetchById('not-found')).toBeNull();
+    });
+  });
+
+  describe('milestones', () => {
+    test('undefined milestones returns empty array', () => {
+      const workingGroup = getGraphQLWorkingGroup();
+      workingGroup.flatData.milestones = null;
+      const { milestones } = parseWorkingGroupToDataObject(workingGroup);
+      expect(milestones).toEqual([]);
+    });
+
+    test('if present it parses the link', () => {
+      const workingGroup = getGraphQLWorkingGroup();
+      const milestone = getGraphQLWorkingGroupMilestone();
+      const link = 'it-is-a-link';
+      milestone.link = link;
+      workingGroup.flatData.milestones = [milestone];
+      const { milestones } = parseWorkingGroupToDataObject(workingGroup);
+      expect(milestones[0]?.link).toEqual(link);
+    });
+
+    test('if present it parses the description', () => {
+      const workingGroup = getGraphQLWorkingGroup();
+      const milestone = getGraphQLWorkingGroupMilestone();
+      const description = 'it-is-a-description';
+      milestone.description = description;
+      workingGroup.flatData.milestones = [milestone];
+      const { milestones } = parseWorkingGroupToDataObject(workingGroup);
+      expect(milestones[0]?.description).toEqual(description);
+    });
+
+    test('throws if status is not provided', () => {
+      const workingGroup = getGraphQLWorkingGroup();
+      const milestone = getGraphQLWorkingGroupMilestone();
+      milestone.status = null;
+      workingGroup.flatData.milestones = [milestone];
+      const callFunction = () => parseWorkingGroupToDataObject(workingGroup);
+      expect(callFunction).toThrow(TypeError);
+      expect(callFunction).toThrow('milestone status is unknown');
     });
   });
 
@@ -276,6 +319,7 @@ describe('Working Group Data Provider', () => {
         const { resources: expectedResources } = getWorkingGroupDataObject();
         expect(resources).toStrictEqual(expectedResources);
       });
+
       test('should ignore an external link for a resource note', () => {
         const workingGroup = getGraphQLWorkingGroup();
         const resource = getGraphQLWorkingGroupResource();
@@ -286,6 +330,7 @@ describe('Working Group Data Provider', () => {
         const { resources: expectedResources } = getWorkingGroupDataObject();
         expect(resources).toStrictEqual(expectedResources);
       });
+
       test('should map a resource link', () => {
         const workingGroup = getGraphQLWorkingGroup();
         const externalLink = 'this is an external link';
@@ -303,6 +348,7 @@ describe('Working Group Data Provider', () => {
           },
         ]);
       });
+
       test('should ignore a resource if title is undefined.', () => {
         const workingGroup = getGraphQLWorkingGroup();
         const resource = getGraphQLWorkingGroupResource();
@@ -311,6 +357,7 @@ describe('Working Group Data Provider', () => {
         const { resources } = parseWorkingGroupToDataObject(workingGroup);
         expect(resources).toEqual([]);
       });
+
       test('should return a resource if description is undefined.', () => {
         const workingGroup = getGraphQLWorkingGroup();
         const resource = getGraphQLWorkingGroupResource();
@@ -320,6 +367,7 @@ describe('Working Group Data Provider', () => {
         const description = resources![0]?.description;
         expect(description).toBeUndefined();
       });
+
       test('should ignore a resource if external Link is undefined for a Link.', () => {
         const workingGroup = getGraphQLWorkingGroup();
         const externalLink = null;
@@ -330,6 +378,7 @@ describe('Working Group Data Provider', () => {
         const { resources } = parseWorkingGroupToDataObject(workingGroup);
         expect(resources).toEqual([]);
       });
+
       test('undefined resources returns empty array', () => {
         const workingGroup = getGraphQLWorkingGroup();
         workingGroup.flatData.resources = null;

@@ -22,6 +22,12 @@ const mockedWorkingGroup: gp2.WorkingGroupResponse = {
   description: 'This is a long description',
   leadingMembers: 'This is a list of leading members',
   resources: workingGroupResources,
+  milestones: [
+    {
+      title: 'milestone I',
+      status: 'Active',
+    },
+  ],
 };
 
 export const createWorkingGroupResponse = (

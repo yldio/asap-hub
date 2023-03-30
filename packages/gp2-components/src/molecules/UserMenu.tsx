@@ -10,7 +10,7 @@ import {
 } from '@asap-hub/react-components';
 import { useLocation } from 'react-router-dom';
 import { Location } from 'history';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { workingGroupIcon, projectIcon, userIcon } from '../icons';
 import { nonMobileQuery } from '../layout';
 
@@ -58,7 +58,6 @@ const UserMenu: React.FC<UserMenuProps> = ({
   workingGroups,
   closeUserMenu,
 }) => {
-  const reference = useRef<HTMLDivElement>(null);
   let location: Location | undefined;
 
   // This hook *is* called unconditionally despite what rules-of-hooks says
@@ -73,24 +72,8 @@ const UserMenu: React.FC<UserMenuProps> = ({
     closeUserMenu(false);
   }, [closeUserMenu, location]);
 
-  useEffect(() => {
-    const handleClickOutside = (event: Event) => {
-      if (
-        reference.current &&
-        !reference.current.contains(event.target as Node)
-      ) {
-        closeUserMenu(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [closeUserMenu, reference]);
-
   return (
-    <nav css={containerStyles} ref={reference}>
+    <nav css={containerStyles}>
       <ul css={listStyles}>
         <li>
           <NavigationLink

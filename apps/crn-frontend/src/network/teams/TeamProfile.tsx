@@ -128,19 +128,19 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
               displayName={team.displayName}
               eventConstraint={{ teamId }}
               isActive={!team?.inactiveSince}
-              Outputs={() => (
+              Outputs={
                 <Outputs
                   userAssociationMember={canShareResearchOutput}
                   team={team}
                 />
-              )}
-              DraftOutputs={() => (
+              }
+              DraftOutputs={
                 <Outputs
                   team={team}
                   draftOutputs
                   userAssociationMember={canShareResearchOutput}
                 />
-              )}
+              }
               paths={paths}
               type="team"
               Workspace={() => (

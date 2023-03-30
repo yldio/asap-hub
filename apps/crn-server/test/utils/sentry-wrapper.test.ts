@@ -24,6 +24,7 @@ describe('Sentry wrapper correctly calls functions', () => {
       tracesSampleRate: sentryTraceSampleRate,
       environment,
       release: currentRevision,
+      sampleRate: 1,
     });
     expect(Sentry.AWSLambda.wrapHandler).toHaveBeenCalledWith(handler);
   });

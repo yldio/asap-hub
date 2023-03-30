@@ -31,10 +31,10 @@ init({
   environment: ENVIRONMENT,
   // Is recommended adjusting this value in production, or using tracesSampler
   // for finer control
-  tracesSampleRate: 1.0,
+  tracesSampleRate: 0.2,
   attachStacktrace: true,
-  // Turn sampleRate on to reduce the amount of data sent to Sentry
-  // sampleRate: 0.1, // 0.1 = 10% of error events will be sent
+  // Turn sampleRate on to reduce the amount of errors sent to Sentry
+  sampleRate: 1.0, // 0.1 = 10% of error events will be sent
   allowUrls: [
     'gp2.asap.science/static/js/', // your code
     'gp2-hub.us.auth0.com', // code served from Auth0

@@ -9,7 +9,7 @@ import ResearchOutputFormSharingCard, {
 } from '../ResearchOutputFormSharingCard';
 
 const props: ComponentProps<typeof ResearchOutputFormSharingCard> = {
-  description: '',
+  descriptionMD: '',
   isSaving: false,
   title: '',
   link: '',
@@ -24,7 +24,7 @@ it('renders the card with provided values', () => {
   render(
     <ResearchOutputFormSharingCard
       {...props}
-      description="description"
+      descriptionMD="description"
       link="http://example.com"
       title="title"
       type={'Preprint'}

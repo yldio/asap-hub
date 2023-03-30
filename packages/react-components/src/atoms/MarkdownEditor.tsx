@@ -12,14 +12,12 @@ const MarkdownEditor = ({ value, onValueChanged }: MarkdownEditorProps) => {
     },
     access: {
       can: () => {
-        return { then: (fn: () => void) => fn() };
+        then: (fn: () => void) => fn();
       },
     },
     field: {
       dialogs: {},
-      getValue: () => {
-        return value;
-      },
+      getValue: () => value,
       onSchemaErrorsChanged: () => null,
       onIsDisabledChanged: () => null,
       onValueChanged: onValueChanged,

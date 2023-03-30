@@ -81,6 +81,7 @@ describe('getResearchOutputPayload', () => {
       tags: [],
       link: 'https://www.google.com',
       description: 'description',
+      descriptionMD: 'description MD',
       title: 'title',
       type: 'Preprint',
       authors: [{ value: 'a111', label: 'a111' }],

@@ -279,6 +279,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     documentType,
     tags,
     link,
+    description: '',
     descriptionMD,
     title,
     type,

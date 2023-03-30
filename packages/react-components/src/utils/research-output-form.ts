@@ -103,6 +103,7 @@ export type ResearchOutputPayload = {
   documentType: ResearchOutputDocumentType;
   tags: ResearchOutputPostRequest['tags'];
   link: ResearchOutputPostRequest['link'];
+  description: ResearchOutputPostRequest['description'];
   descriptionMD: ResearchOutputPostRequest['descriptionMD'];
   title: ResearchOutputPostRequest['title'];
   type: ResearchOutputPostRequest['type'] | '';
@@ -136,6 +137,7 @@ export const getPayload = ({
   documentType,
   tags,
   link,
+  description,
   descriptionMD,
   title,
   type,
@@ -158,6 +160,7 @@ export const getPayload = ({
   documentType,
   tags,
   link: String(link).trim() === '' ? undefined : link,
+  description,
   descriptionMD,
   title,
   type: type as ResearchOutputPostRequest['type'],

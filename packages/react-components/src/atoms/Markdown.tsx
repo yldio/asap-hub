@@ -6,7 +6,7 @@ function MarkdownLink(props: {
   href: string;
   title: string;
   className?: string;
-  children: any;
+  children: string;
 }) {
   const { children, ...rest } = props;
 
@@ -20,16 +20,14 @@ function MarkdownLink(props: {
 const Markdown = ({ value }: { value: string }) => {
   // See the list of allowed Tags here:
   // https://github.com/cure53/DOMPurify/blob/main/src/tags.js#L3-L121
-  const cleanHTML = useMemo(() => {
-    return DOMPurify.sanitize(value);
-  }, [value]);
+  const cleanHTML = useMemo(() => DOMPurify.sanitize(value), [value]);
 
   return (
     <MarkdownJSX
       options={{
         overrides: {
           a: {
-            component: MarkdownLink as any,
+            component: MarkdownLink,
           },
         },
       }}

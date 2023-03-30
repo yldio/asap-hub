@@ -265,6 +265,7 @@ describe('on submit', () => {
     link: 'http://example.com',
     title: 'example title',
     description: 'example description',
+    descriptionMD: 'example description',
     type: 'Preprint',
     labs: [],
     authors: [],

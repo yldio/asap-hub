@@ -93,6 +93,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       asapFunded: researchOutputCreateData.asapFunded,
       createdBy: researchOutputCreateData.createdBy,
       description: researchOutputCreateData.description,
+      descriptionMD: researchOutputCreateData.descriptionMD,
       documentType: researchOutputCreateData.documentType,
       doi: researchOutputCreateData.doi,
       environmentIds: environments,

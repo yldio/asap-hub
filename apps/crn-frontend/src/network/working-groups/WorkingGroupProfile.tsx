@@ -133,23 +133,23 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
                   groupType="working"
                 />
               )}
-              DraftOutputs={() => (
+              DraftOutputs={
                 <Outputs
                   workingGroup={workingGroup}
                   draftOutputs
                   userAssociationMember={canShareResearchOutput}
                 />
-              )}
+              }
               currentTime={currentTime}
               displayName={workingGroup.title}
               eventConstraint={{ workingGroupId }}
               isActive={!workingGroup.complete}
-              Outputs={() => (
+              Outputs={
                 <Outputs
                   userAssociationMember={canShareResearchOutput}
                   workingGroup={workingGroup}
                 />
-              )}
+              }
               paths={paths}
               type="working group"
             />

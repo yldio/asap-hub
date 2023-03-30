@@ -1,4 +1,4 @@
-import { ComponentProps, FC, lazy } from 'react';
+import { ComponentProps, FC, lazy, ReactElement } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
 import { NoEvents } from '@asap-hub/react-components';
@@ -22,8 +22,8 @@ type ProfileSwitchProps = {
   displayName: string;
   eventConstraint: EventConstraint;
   isActive?: boolean;
-  Outputs?: FC;
-  DraftOutputs?: FC;
+  Outputs?: ReactElement;
+  DraftOutputs?: ReactElement;
   paths: Record<RequiredPaths, string> & Partial<Record<OptionalPaths, string>>;
   type: ComponentProps<typeof NoEvents>['type'];
   Workspace?: FC;
@@ -56,16 +56,12 @@ const ProfileSwitch: FC<ProfileSwitchProps> = ({
       )}
       {Outputs && (
         <Route path={paths.outputs}>
-          <SearchFrame title="Outputs">
-            <Outputs />
-          </SearchFrame>
+          <SearchFrame title="Outputs">{Outputs}</SearchFrame>
         </Route>
       )}
       {DraftOutputs && (
         <Route path={paths.draftOutputs}>
-          <SearchFrame title="Draft Outputs">
-            <DraftOutputs />
-          </SearchFrame>
+          <SearchFrame title="Draft Outputs">{DraftOutputs}</SearchFrame>
         </Route>
       )}
       {Workspace && (

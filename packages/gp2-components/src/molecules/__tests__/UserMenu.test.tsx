@@ -186,4 +186,10 @@ describe('UserMenu', () => {
     fireEvent.mouseDown(screen.getByRole('heading'));
     expect(closeUserMenu).toBeCalledWith(false);
   });
+
+  it('renders the bottom links', () => {
+    render(<UserMenu {...props} />);
+    expect(screen.getByText(/terms/i)).toBeVisible();
+    expect(screen.getByText(/privacy/i)).toBeVisible();
+  });
 });

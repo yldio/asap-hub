@@ -50,7 +50,7 @@ const bottomLinksStyles = css({
   flexGrow: 1,
   display: 'flex',
   justifyContent: 'center',
-  padding: `${rem(12)}em ${rem(12)}em 0`,
+  padding: `${rem(12)} ${rem(12)} 0`,
 });
 
 type UserMenuProps = Pick<

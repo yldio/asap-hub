@@ -48,6 +48,7 @@ const Form = <T extends void | Record<string, unknown>>({
     } else if (status === 'hasSaved' && !dirty) {
       setStatus('initial');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, redirectOnSave, dirty]);
   useEffect(() => {
     if (serverErrors.length && formRef.current) {

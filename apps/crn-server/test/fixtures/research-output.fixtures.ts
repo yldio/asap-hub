@@ -72,7 +72,7 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
     title: 'Test Proposal 1234',
     documentType: 'Bioinformatics',
     description: 'Text',
-    descriptionMD: 'Text',
+    descriptionMD: 'Text MD',
     link: null,
     addedDate: '2021-05-21T13:18:31Z',
     publishDate: '2021-05-21T13:18:31Z',
@@ -360,6 +360,7 @@ export const getRestResearchOutputCreateData =
     addedDate: { iv: '2021-05-21T13:18:31Z' },
     publishDate: { iv: '2021-05-21T13:18:31Z' },
     description: { iv: 'Text' },
+    descriptionMD: { iv: 'Text MD' },
     tags: { iv: ['tag', 'test'] },
     methods: {
       iv: ['ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca'],

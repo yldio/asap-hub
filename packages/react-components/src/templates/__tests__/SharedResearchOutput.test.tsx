@@ -156,6 +156,7 @@ describe('Not Grant Documents', () => {
           documentType="Article"
           tags={['tag1']}
           description=""
+          descriptionMD=""
         />,
       );
       expect(queryByText(/tags/i, { selector: 'h2' })).toBeInTheDocument();

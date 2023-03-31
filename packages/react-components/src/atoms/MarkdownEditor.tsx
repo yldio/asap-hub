@@ -11,16 +11,16 @@ const MarkdownEditor = ({ value, onValueChanged }: MarkdownEditorProps) => {
       direction: [],
     },
     access: {
-      can: () => {
-        then: (fn: () => void) => fn();
-      },
+      can: () => ({
+        then: (fn: () => void) => fn(),
+      }),
     },
     field: {
       dialogs: {},
       getValue: () => value,
       onSchemaErrorsChanged: () => null,
       onIsDisabledChanged: () => null,
-      onValueChanged: onValueChanged,
+      onValueChanged,
     },
   };
   return <ContentfulMarkdownEditor isInitiallyDisabled={false} sdk={sdk} />;

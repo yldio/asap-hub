@@ -170,6 +170,7 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
     },
     required: [
       'documentType',
+      'descriptionMD',
       'tags',
       'title',
       'sharingStatus',

@@ -59,7 +59,8 @@
     "expect-playwright": "0.8.0",
     "vfile": "4.2.1",
     "@typescript-eslint/eslint-plugin": "5.54.1",
-    "@typescript-eslint/parser": "5.54.1"
+    "@typescript-eslint/parser": "5.54.1",
+    "@contentful/field-editor-markdown@1.1.16": "patch:@contentful/field-editor-markdown@npm%3A1.1.16#./.yarn/patches/@contentful-field-editor-markdown-npm-1.1.16-297013de9c.patch"
   },
   "dependenciesMeta": {
     "aws-sdk": {

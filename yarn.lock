@@ -9297,6 +9297,30 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@contentful/field-editor-markdown@patch:@contentful/field-editor-markdown@npm%3A1.1.16#./.yarn/patches/@contentful-field-editor-markdown-npm-1.1.16-297013de9c.patch::locator=asap-hub%40workspace%3A.":
+  version: 1.1.16
+  resolution: "@contentful/field-editor-markdown@patch:@contentful/field-editor-markdown@npm%3A1.1.16#./.yarn/patches/@contentful-field-editor-markdown-npm-1.1.16-297013de9c.patch::version=1.1.16&hash=d90f63&locator=asap-hub%40workspace%3A."
+  dependencies:
+    "@contentful/f36-components": ^4.0.27
+    "@contentful/f36-icons": ^4.1.0
+    "@contentful/f36-tokens": ^4.0.0
+    "@contentful/field-editor-shared": ^1.1.8
+    "@types/codemirror": 0.0.109
+    "@types/markdown-to-jsx": 6.11.3
+    codemirror: ^5.65.11
+    constate: ^3.2.0
+    dompurify: ^2.2.9
+    emotion: ^10.0.17
+    lodash: ^4.17.15
+    lodash-es: ^4.17.15
+    markdown-to-jsx: ^7.1.1
+  peerDependencies:
+    "@contentful/app-sdk": ^4.2.0
+    react: ">=16.8.0"
+  checksum: a4b4fc7ea8dbfd30483c1fad2c1e0573303490683cf6d9948bbe228cdcefdc89a27823952e5d859234afc1b2a7f9246223778293992eb671ec715cf12f170fda
+  languageName: node
+  linkType: hard
+
 "@contentful/field-editor-shared@npm:^1.1.8":
   version: 1.1.8
   resolution: "@contentful/field-editor-shared@npm:1.1.8"

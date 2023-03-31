@@ -1,4 +1,3 @@
-import { Frame } from '@asap-hub/frontend-utils';
 import {
   BiographyModal,
   ContactInformationModal,
@@ -19,6 +18,7 @@ import { FC } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
+import Frame from '../Frame';
 import { useSelectAvatar } from '../hooks/useSelectAvatar';
 import OutputList from '../outputs/OutputList';
 import { useOutputs } from '../outputs/state';

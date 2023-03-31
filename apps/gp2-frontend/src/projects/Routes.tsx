@@ -1,9 +1,9 @@
-import { Frame } from '@asap-hub/frontend-utils';
 import { ProjectsPage } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/routing';
 import { lazy, useEffect, useState } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import Frame from '../Frame';
 
 const loadProjectList = () =>
   import(/* webpackChunkName: "project-list" */ './ProjectList');

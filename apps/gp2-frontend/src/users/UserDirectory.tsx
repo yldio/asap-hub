@@ -1,10 +1,11 @@
-import { createCsvFileStream, Frame } from '@asap-hub/frontend-utils';
+import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import { UsersPageList } from '@asap-hub/gp2-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 } from '@asap-hub/routing';
 import { ComponentProps, FC } from 'react';
 import { useRecoilValue } from 'recoil';
 import { authorizationState } from '../auth/state';
+import Frame from '../Frame';
 import { useSearch } from '../hooks/search';
 import { useProjectsState } from '../projects/state';
 import { useWorkingGroupsState } from '../working-groups/state';

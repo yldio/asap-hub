@@ -1,4 +1,3 @@
-import { Frame } from '@asap-hub/frontend-utils';
 import {
   EditResourceModal,
   ProjectDetailPage,
@@ -17,6 +16,7 @@ import { useUpcomingAndPastEvents } from '../events/state';
 import { usePutProjectResources, useProjectById } from './state';
 import { useOutputs } from '../outputs/state';
 import OutputList from '../outputs/OutputList';
+import Frame from '../Frame';
 
 const { projects } = gp2Routing;
 

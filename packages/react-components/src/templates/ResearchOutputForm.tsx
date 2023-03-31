@@ -408,23 +408,19 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   <Button
                     enabled={!isSaving}
                     fullWidth
-                    onClick={async () =>
-                      getWrappedOnSave(async () => {
-                        const researchOutput = await onSaveDraft(
-                          currentPayload,
+                    onClick={getWrappedOnSave(async () => {
+                      const researchOutput = await onSaveDraft(currentPayload);
+                      setRemotePayload(currentPayload);
+                      if (researchOutput) {
+                        const { id } = researchOutput;
+                        setRedirectOnSave(
+                          sharedResearch({}).researchOutput({
+                            researchOutputId: id,
+                          }).$,
                         );
-                        setRemotePayload(currentPayload);
-                        if (researchOutput) {
-                          const { id } = researchOutput;
-                          setRedirectOnSave(
-                            sharedResearch({}).researchOutput({
-                              researchOutputId: id,
-                            }).$,
-                          );
-                        }
-                        return researchOutput;
-                      })()
-                    }
+                      }
+                      return researchOutput;
+                    })}
                     primary={showSaveDraftButton && !showPublishButton}
                   >
                     Save Draft
@@ -435,21 +431,19 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                     enabled={!isSaving}
                     fullWidth
                     primary
-                    onClick={async () =>
-                      getWrappedOnSave(async () => {
-                        const researchOutput = await onSave(currentPayload);
-                        setRemotePayload(currentPayload);
-                        if (researchOutput) {
-                          const { id } = researchOutput;
-                          setRedirectOnSave(
-                            sharedResearch({}).researchOutput({
-                              researchOutputId: id,
-                            }).$,
-                          );
-                        }
-                        return researchOutput;
-                      })()
-                    }
+                    onClick={getWrappedOnSave(async () => {
+                      const researchOutput = await onSave(currentPayload);
+                      setRemotePayload(currentPayload);
+                      if (researchOutput) {
+                        const { id } = researchOutput;
+                        setRedirectOnSave(
+                          sharedResearch({}).researchOutput({
+                            researchOutputId: id,
+                          }).$,
+                        );
+                      }
+                      return researchOutput;
+                    })}
                   >
                     {published ? 'Save' : 'Publish'}
                   </Button>

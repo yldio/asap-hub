@@ -247,8 +247,8 @@ describe('on submit', () => {
 
   beforeEach(() => {
     history = createMemoryHistory();
-    saveDraftFn.mockResolvedValue({ id } as ResearchOutputResponse);
-    saveFn.mockResolvedValue({ id } as ResearchOutputResponse);
+    saveDraftFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
+    saveFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
     getLabSuggestions.mockResolvedValue([]);
     getAuthorSuggestions.mockResolvedValue([]);
     getRelatedResearchSuggestions.mockResolvedValue([]);

@@ -16,7 +16,7 @@ export const sentryWrapperFactory =
     currentRevision,
   }: SentryConfig) =>
   (handler: Handler): Handler => {
-    if (['dev', 'Production'].includes(environment)) {
+    if (['dev', 'production'].includes(environment)) {
       Sentry.AWSLambda.init({
         dsn: sentryDsn,
         tracesSampleRate: sentryTraceSampleRate,

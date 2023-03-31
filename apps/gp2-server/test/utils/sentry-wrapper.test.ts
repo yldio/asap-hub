@@ -8,6 +8,13 @@ import {
   sentryTraceSampleRate,
 } from '../../src/config';
 
+jest.mock('../../src/config', () => ({
+  currentRevision: 1,
+  environment: 'production',
+  sentryDsn: 'sentry-dsn',
+  sentryTraceSampleRate: 1.3,
+}));
+
 describe('Sentry wrapper correctly calls functions', () => {
   test('should call the init & wrapHandler functions', () => {
     Sentry.AWSLambda.init = jest.fn((_) => true);

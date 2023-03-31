@@ -3,7 +3,7 @@ import { Handler } from 'aws-lambda';
 import { SentryConfig, sentryWrapperFactory } from '../../src/utils';
 
 describe('Sentry wrapper correctly calls functions', () => {
-  test.each(['dev', 'Production'])(
+  test.each(['dev', 'production'])(
     'for enviroment %s should call the init & wrapHandler functions',
     (environment) => {
       Sentry.AWSLambda.init = jest.fn((_) => true);
@@ -26,7 +26,7 @@ describe('Sentry wrapper correctly calls functions', () => {
       expect(Sentry.AWSLambda.init).toHaveBeenCalledWith({
         dsn: config.sentryDsn,
         tracesSampleRate: config.sentryTraceSampleRate,
-        environment: config.environment,
+        environment,
         release: config.currentRevision,
       });
       expect(Sentry.AWSLambda.wrapHandler).toHaveBeenCalledWith(handler);

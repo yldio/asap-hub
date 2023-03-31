@@ -48,7 +48,7 @@ const props: ComponentProps<typeof ResearchOutputForm> = {
   },
 };
 
-// jest.setTimeout(60000);
+jest.setTimeout(60000);
 
 it('sets authors to required', () => {
   render(

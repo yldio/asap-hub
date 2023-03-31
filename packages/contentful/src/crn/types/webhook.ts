@@ -1,4 +1,8 @@
-export interface ContentfulWebhookPublishPayload<T extends 'teams' | 'news'> {
+export type ContentfulWebhookPayloadType = 'teams' | 'news';
+
+export interface ContentfulWebhookPublishPayload<
+  T extends ContentfulWebhookPayloadType = ContentfulWebhookPayloadType,
+> {
   metadata: {
     tags: string[];
   };
@@ -51,7 +55,9 @@ export interface ContentfulWebhookPublishPayload<T extends 'teams' | 'news'> {
   };
 }
 
-export interface ContentfulWebhookUnpublishPayload<T extends 'teams' | 'news'> {
+export interface ContentfulWebhookUnpublishPayload<
+  T extends ContentfulWebhookPayloadType = ContentfulWebhookPayloadType,
+> {
   sys: {
     type: 'DeletedEntry';
     id: string;
@@ -83,6 +89,6 @@ export interface ContentfulWebhookUnpublishPayload<T extends 'teams' | 'news'> {
   };
 }
 
-export type ContentfulWebhookPayload<T extends 'teams' | 'news'> =
-  | ContentfulWebhookPublishPayload<T>
-  | ContentfulWebhookUnpublishPayload<T>;
+export type ContentfulWebhookPayload<
+  T extends ContentfulWebhookPayloadType = ContentfulWebhookPayloadType,
+> = ContentfulWebhookPublishPayload<T> | ContentfulWebhookUnpublishPayload<T>;

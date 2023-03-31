@@ -59,7 +59,7 @@ export const handler: Handler<APIGatewayEvent> = sentryWrapper(
 export const validateContentfulRequest = (
   request: lambda.Request,
   webhookAuthenticationToken: string,
-): request is lambda.Request<ContentfulWebhookPayload<'teams' | 'news'>> => {
+): request is lambda.Request<ContentfulWebhookPayload> => {
   if (!request.headers.authorization) {
     return false;
   }
@@ -72,7 +72,7 @@ export const validateContentfulRequest = (
 };
 
 const getDetailTypeFromRequest = (
-  request: lambda.Request<ContentfulWebhookPayload<'teams' | 'news'>>,
+  request: lambda.Request<ContentfulWebhookPayload>,
 ): WebhookDetailType => {
   const actions = request.headers['x-contentful-topic']?.split('.') ?? [];
   const action = actions[actions.length - 1] as 'publish' | 'unpublish';

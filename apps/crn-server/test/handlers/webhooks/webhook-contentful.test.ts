@@ -107,7 +107,7 @@ describe('Contentful event webhook', () => {
   });
 
   const createContentfulWebhookEvent = (
-    payload: ContentfulWebhookPayload<'teams' | 'news'>,
+    payload: ContentfulWebhookPayload,
     topicHeader: string = 'ContentManagement.Entry.publish',
   ) =>
     getApiGatewayEvent({

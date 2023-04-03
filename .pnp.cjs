@@ -3332,7 +3332,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "auth0-deploy-cli",\
-        "npm:7.17.0"\
+        "npm:7.17.1"\
       ],\
       [\
         "auth0-js",\
@@ -10905,7 +10905,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/js-yaml", "npm:4.0.5"],\
             ["@types/node", "npm:14.18.42"],\
             ["@vedicium/auth0-actions-sdk", "npm:0.1.3"],\
-            ["auth0-deploy-cli", "npm:7.17.0"],\
+            ["auth0-deploy-cli", "npm:7.17.1"],\
             ["got", "npm:11.8.6"],\
             ["js-yaml", "npm:4.1.0"],\
             ["nock", "npm:13.3.0"],\
@@ -39982,10 +39982,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["auth0-deploy-cli", [\
-        ["npm:7.17.0", {\
-          "packageLocation": "./.yarn/cache/auth0-deploy-cli-npm-7.17.0-4967b3fa7c-20a4efe2b7.zip/node_modules/auth0-deploy-cli/",\
+        ["npm:7.17.1", {\
+          "packageLocation": "./.yarn/cache/auth0-deploy-cli-npm-7.17.1-86c246709b-6f4a1db6e7.zip/node_modules/auth0-deploy-cli/",\
           "packageDependencies": [\
-            ["auth0-deploy-cli", "npm:7.17.0"],\
+            ["auth0-deploy-cli", "npm:7.17.1"],\
             ["ajv", "npm:6.12.6"],\
             ["auth0", "npm:3.3.0"],\
             ["dot-prop", "npm:5.3.0"],\

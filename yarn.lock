@@ -17362,8 +17362,8 @@ __metadata:
   linkType: hard
 
 "auth0-deploy-cli@npm:^7.15.1":
-  version: 7.17.0
-  resolution: "auth0-deploy-cli@npm:7.17.0"
+  version: 7.17.1
+  resolution: "auth0-deploy-cli@npm:7.17.1"
   dependencies:
     ajv: ^6.12.6
     auth0: ^3.0.0
@@ -17380,7 +17380,7 @@ __metadata:
     yargs: ^15.3.1
   bin:
     a0deploy: lib/index.js
-  checksum: 20a4efe2b7d85438d70005b126e055a62b5ccf44811df05b2cb527bd1c731267b7479d7d59c45de7e2961cef3f232bccc0eb9b3c7f0509009b599177f4b3b6ea
+  checksum: 6f4a1db6e7952c05fa47eb6108c52db49cce92358b5e474c40d725f91eade1b70dab33beb239c9bd9337fdbce964fd6ae60bfaf0c5f0c829ff02a4693c7fd95b
   languageName: node
   linkType: hard
 

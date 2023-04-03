@@ -36,7 +36,10 @@ const containerStyles = css({
 const contentStyles = css({
   marginTop: rem(32),
 });
-const cardStyles = css({ padding: `${rem(32)} ${rem(24)}` });
+const cardStyles = css({
+  padding: `${rem(32)} ${rem(24)}`,
+  overflowX: 'scroll',
+});
 const columnStyles = css({
   display: 'grid',
   columnGap: rem(32),
@@ -56,14 +59,14 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
   milestones,
 }) => (
   <div css={containerStyles}>
-    <Card>
+    <Card overrideStyles={cardStyles}>
       <Headline3 noMargin>Description</Headline3>
       <div css={contentStyles}>
         <ExpandableText>{description}</ExpandableText>
       </div>
     </Card>
     <div css={columnStyles}>
-      <Card>
+      <Card overrideStyles={cardStyles}>
         <Headline3 noMargin>Contact</Headline3>
         <div css={contentStyles}>
           <EmailSection
@@ -86,7 +89,7 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
         </Card>
       ) : undefined}
     </div>
-    <Card>
+    <Card overrideStyles={cardStyles}>
       <Headline3
         noMargin
       >{`Working Group Members (${members.length})`}</Headline3>
@@ -107,7 +110,7 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
         />
       </div>
     </Card>
-    <Card padding={false} overrideStyles={cardStyles}>
+    <Card overrideStyles={cardStyles}>
       <Milestones
         milestones={milestones}
         title="Working Group Milestones"

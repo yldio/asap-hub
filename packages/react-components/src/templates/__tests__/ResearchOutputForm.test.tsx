@@ -247,8 +247,8 @@ describe('on submit', () => {
 
   beforeEach(() => {
     history = createMemoryHistory();
-    saveDraftFn.mockResolvedValue({ id } as ResearchOutputResponse);
-    saveFn.mockResolvedValue({ id } as ResearchOutputResponse);
+    saveDraftFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
+    saveFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
     getLabSuggestions.mockResolvedValue([]);
     getAuthorSuggestions.mockResolvedValue([]);
     getRelatedResearchSuggestions.mockResolvedValue([]);
@@ -376,7 +376,9 @@ describe('on submit', () => {
     await setupForm();
     await submitForm();
     expect(saveFn).toHaveBeenLastCalledWith(expectedRequest);
-    expect(history.location.pathname).toEqual(`/shared-research/${id}`);
+    await waitFor(() =>
+      expect(history.location.pathname).toEqual(`/shared-research/${id}`),
+    );
   });
 
   it('can submit a lab', async () => {
@@ -758,7 +760,9 @@ describe('on submit', () => {
     await setupForm();
     await saveDraft();
     expect(saveDraftFn).toHaveBeenLastCalledWith(expectedRequest);
-    expect(history.location.pathname).toEqual(`/shared-research/${id}`);
+    await waitFor(() =>
+      expect(history.location.pathname).toEqual(`/shared-research/${id}`),
+    );
   });
 });
 

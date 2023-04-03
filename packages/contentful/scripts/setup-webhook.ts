@@ -13,24 +13,66 @@ const client = contentful.createClient({
 
 const app = async () => {
   const space = await client.getSpace(spaceId);
+  const webhook = await getWebhook();
 
-  space.createWebhookWithId(`${contentfulEnvironment.toLowerCase()}-webhook`, {
-    name: `${contentfulEnvironment} Webhook`,
-    url: `${apiUrl}/webhook/contentful`,
-    topics: ['Entry.save', 'Entry.publish', 'Entry.unpublish', 'Entry.delete'],
-    filters: [
+  const webhookName = `${contentfulEnvironment} Webhook`;
+  const webhookUrl = `${apiUrl}/webhook/contentful`;
+  const webhookTopics = [
+    'Entry.save',
+    'Entry.publish',
+    'Entry.unpublish',
+    'Entry.delete',
+  ];
+  const webhookFilters: contentful.WebhookFilter[] = [
+    {
+      equals: [{ doc: 'sys.environment.sys.id' }, contentfulEnvironment],
+    },
+  ];
+  const webhookHeaders = [
+    {
+      key: 'Authorization',
+      value: contentfulWebhookAuthenticationToken,
+      secret: true,
+    },
+  ];
+
+  if (webhook) {
+    webhook.url = webhookUrl;
+    webhook.topics = webhookTopics;
+    webhook.filters = webhookFilters;
+    webhook.headers = webhookHeaders;
+
+    await webhook.update();
+  } else {
+    space.createWebhookWithId(
+      `${contentfulEnvironment.toLowerCase()}-webhook`,
       {
-        equals: [{ doc: 'sys.environment.sys.id' }, contentfulEnvironment],
+        name: webhookName,
+        url: webhookUrl,
+        topics: webhookTopics,
+        filters: webhookFilters,
+        headers: webhookHeaders,
       },
-    ],
-    headers: [
-      {
-        key: 'Authorization',
-        value: contentfulWebhookAuthenticationToken,
-        secret: true,
-      },
-    ],
-  });
+    );
+  }
+
+  async function getWebhook(): Promise<contentful.WebHooks | undefined> {
+    try {
+      return space.getWebhook(`${contentfulEnvironment.toLowerCase()}-webhook`);
+    } catch (error) {
+      if (!(error instanceof Error)) {
+        throw error;
+      }
+
+      const messageJson = JSON.parse(error.message);
+
+      if (!('status' in messageJson) || messageJson.status !== 404) {
+        throw error;
+      }
+    }
+
+    return undefined;
+  }
 };
 
 app().catch((err) => {

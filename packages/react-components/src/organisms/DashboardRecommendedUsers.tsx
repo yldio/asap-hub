@@ -68,7 +68,7 @@ const DashboardRecommendedUsers: React.FC<DashboardRecommendedUsersProps> = ({
               {user.degree && `, ${user.degree}`}
             </Ellipsis>
           </LinkHeadline>
-          {user.teams.length > 0 && (
+          {user.teams.length > 0 && user.teams[0] && (
             <div css={roleStyles}>
               <Paragraph noMargin accent="lead">
                 {user.teams[0].role} on

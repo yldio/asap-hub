@@ -16,8 +16,8 @@ describe('ProjectResources', () => {
 
   it('renders a resource', () => {
     const [resource] = getResources();
-    resource.description = 'resource description';
-    render(<ProjectResources {...defaultProps} resources={[resource]} />);
+    resource!.description = 'resource description';
+    render(<ProjectResources {...defaultProps} resources={[resource!]} />);
     expect(screen.getByText(/resource description/i)).toBeVisible();
   });
 });

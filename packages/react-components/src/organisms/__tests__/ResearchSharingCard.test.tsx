@@ -104,7 +104,7 @@ it.each`
     screen.getByRole('group', { name: group }),
   ).getAllByRole('radio')[1];
 
-  userEvent.click(groupInput);
+  userEvent.click(groupInput!);
 
   expect(onChangeFn).toHaveBeenCalled();
 });

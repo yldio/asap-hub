@@ -53,7 +53,7 @@ describe('Layout', () => {
     });
 
     userEvent.click(
-      screen.getAllByText(/dashboard/i, { selector: 'nav *' })[0],
+      screen.getAllByText(/dashboard/i, { selector: 'nav *' })[0]!,
     );
     await waitFor(() => {
       expect(screen.getByLabelText(/close/i)).not.toBeVisible();
@@ -68,7 +68,7 @@ describe('Layout', () => {
     );
 
     userEvent.click(
-      screen.getAllByText(/dashboard/i, { selector: 'nav *' })[0],
+      screen.getAllByText(/dashboard/i, { selector: 'nav *' })[0]!,
     );
     expect(screen.getByRole('main').scrollTo).toHaveBeenCalled();
   });

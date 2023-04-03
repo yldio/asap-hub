@@ -4,7 +4,8 @@
     "composite": true,
     "rootDir": ".",
     "resolveJsonModule": true,
-    "outDir": "build"
+    "outDir": "build",
+    "noUncheckedIndexedAccess": false
   },
   "include": ["src", "test"],
   "references": [

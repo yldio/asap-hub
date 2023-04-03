@@ -141,12 +141,10 @@ export class Squidex<
       ...query,
       take: 1,
     });
-
-    if (items.length === 0) {
-      throw new NotFoundError(new Error('Not Found'));
+    if (items[0]) {
+      return items[0];
     }
-
-    return items[0];
+    throw new NotFoundError(new Error('Not Found'));
   }
 
   async create(json: C['data'], publish = true): Promise<T> {

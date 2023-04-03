@@ -1,4 +1,6 @@
 /** @jsxImportSource @emotion/react */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+
 import { aperture, filter, uniqBy, sortWith, pipe, ascend } from 'ramda';
 import { css, Theme } from '@emotion/react';
 
@@ -99,7 +101,7 @@ function* optimizeGaps(pageNumbers: PageNumber[]) {
     return;
   }
 
-  yield pageNumbers[0];
+  yield pageNumbers[0]!;
   for (const [prev, curr] of aperture(2, pageNumbers)) {
     // No point in leaving a gap of 1 if we can just render the number instead of the ellipsis
     if (prev.index + 1 === curr.index - 1) {
@@ -122,7 +124,7 @@ function* makeFillersMandatory(pageNumbers: PageNumber[]) {
     return;
   }
 
-  yield pageNumbers[0];
+  yield pageNumbers[0]!;
   for (const [prev, curr, next] of aperture(3, pageNumbers)) {
     if (
       prev.index + 1 === curr.index &&
@@ -139,7 +141,7 @@ function* makeFillersMandatory(pageNumbers: PageNumber[]) {
       yield curr;
     }
   }
-  yield pageNumbers[pageNumbers.length - 1];
+  yield pageNumbers[pageNumbers.length - 1]!;
 }
 
 interface PageControlsProps {
@@ -192,7 +194,7 @@ const PageControls: React.FC<PageControlsProps> = ({
   )();
 
   const shownPages = Array.from(
-    makeFillersMandatory(Array.from(optimizeGaps(desiredPages))),
+    makeFillersMandatory(Array.from(optimizeGaps(desiredPages)) || []),
   );
 
   return (

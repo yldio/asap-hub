@@ -33,8 +33,8 @@ it('renders one group card per group', async () => {
     <NetworkGroups
       {...props}
       groups={[
-        { ...props.groups[0], name: 'Group 0' },
-        { ...props.groups[1], name: 'Group 1' },
+        { ...props.groups[0]!, name: 'Group 0' },
+        { ...props.groups[1]!, name: 'Group 1' },
       ]}
     />,
   );

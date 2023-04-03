@@ -1,20 +1,3 @@
-const mockExternalAuthorSquidexDataProvider = jest.fn();
-const mockExternalAuthorContentfulDataProvider = jest.fn();
-
-jest.mock('../../src/data-providers/external-authors.data-provider', () => ({
-  ExternalAuthorSquidexDataProvider: jest
-    .fn()
-    .mockImplementation(() => mockExternalAuthorSquidexDataProvider),
-}));
-jest.mock(
-  '../../src/data-providers/contentful/external-authors.data-provider',
-  () => ({
-    ExternalAuthorContentfulDataProvider: jest
-      .fn()
-      .mockImplementation(() => mockExternalAuthorContentfulDataProvider),
-  }),
-);
-
 describe('External Authors Dependencies', () => {
   beforeEach(() => {
     jest.resetModules();
@@ -23,28 +6,33 @@ describe('External Authors Dependencies', () => {
   it('Should resolve External-Author Squidex Data Provider when the Contentful feature flag is off', async () => {
     process.env.IS_CONTENTFUL_ENABLED_V2 = 'false';
 
+    const { ExternalAuthorSquidexDataProvider } = await import(
+      '../../src/data-providers/external-authors.data-provider'
+    );
     const getExternalAuthorDataProviderModule = await import(
       '../../src/dependencies/external-authors.dependencies'
     );
     const externalAuthorDataProvider =
       getExternalAuthorDataProviderModule.getExternalAuthorDataProvider();
 
-    expect(externalAuthorDataProvider).toEqual(
-      mockExternalAuthorSquidexDataProvider,
+    expect(externalAuthorDataProvider).toBeInstanceOf(
+      ExternalAuthorSquidexDataProvider,
     );
   });
 
   it('Should resolve External-Author Squidex Data Provider when the Contentful feature flag is off', async () => {
     process.env.IS_CONTENTFUL_ENABLED_V2 = 'true';
-
+    const { ExternalAuthorContentfulDataProvider } = await import(
+      '../../src/data-providers/contentful/external-authors.data-provider'
+    );
     const getExternalAuthorDataProviderModule = await import(
       '../../src/dependencies/external-authors.dependencies'
     );
     const externalAuthorDataProvider =
       getExternalAuthorDataProviderModule.getExternalAuthorDataProvider();
 
-    expect(externalAuthorDataProvider).toEqual(
-      mockExternalAuthorContentfulDataProvider,
+    expect(externalAuthorDataProvider).toBeInstanceOf(
+      ExternalAuthorContentfulDataProvider,
     );
   });
 });

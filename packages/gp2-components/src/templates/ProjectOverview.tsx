@@ -47,7 +47,10 @@ const columnStyles = css({
     rowGap: rem(32),
   },
 });
-const cardStyles = css({ padding: `${rem(32)} ${rem(24)}` });
+const cardStyles = css({
+  padding: `${rem(32)} ${rem(24)}`,
+  overflowX: 'scroll',
+});
 const ProjectOverview: React.FC<ProjectOverviewProps> = ({
   description,
   pmEmail,

@@ -28,6 +28,7 @@ const rowStyles = css({
   borderBottom: `1px solid ${colors.neutral500.rgb}`,
   marginBottom: rem(12),
   padding: `${rem(16)} 0 ${rem(12)}`,
+  overflowX: 'scroll',
 });
 
 const buttonWrapperStyles = css({

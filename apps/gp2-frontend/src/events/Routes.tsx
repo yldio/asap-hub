@@ -1,10 +1,10 @@
 import { FC, lazy, useEffect, useState } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
-import { Frame } from '@asap-hub/frontend-utils';
 
 import { gp2 } from '@asap-hub/routing';
 import { EventsPage } from '@asap-hub/gp2-components';
 import Calendars from './calendar/Calendars';
+import Frame from '../Frame';
 
 const loadEventList = () =>
   import(/* webpackChunkName: "events-list" */ './EventsList');

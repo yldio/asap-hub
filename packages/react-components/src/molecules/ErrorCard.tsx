@@ -22,7 +22,7 @@ const underlineStyles = css({
   },
 });
 
-const mailto = (error: Error) =>
+const mailtoDefault = (error: Error) =>
   mailToSupport({
     subject: 'Error message on the ASAP Hub',
     body: `Dear ASAP Support,
@@ -45,6 +45,7 @@ type ErrorCardProps = {
   readonly description?: string;
   readonly title?: string;
   readonly refreshLink?: boolean;
+  readonly mailto?: (error: Error) => string;
 };
 
 const ErrorCard: React.FC<ErrorCardProps> = ({
@@ -52,6 +53,7 @@ const ErrorCard: React.FC<ErrorCardProps> = ({
   title,
   description,
   refreshLink = false,
+  mailto = mailtoDefault,
 }) => (
   <Card padding={false} accent="red">
     <div css={styles}>

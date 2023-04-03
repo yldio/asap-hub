@@ -1,4 +1,3 @@
-import { Frame } from '@asap-hub/frontend-utils';
 import {
   EditResourceModal,
   ResourceModal,
@@ -14,6 +13,7 @@ import { FC, lazy, useEffect } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
+import Frame from '../Frame';
 import OutputList from '../outputs/OutputList';
 import { useOutputs } from '../outputs/state';
 import { usePutWorkingGroupResources, useWorkingGroupById } from './state';

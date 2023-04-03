@@ -1,4 +1,3 @@
-import { Frame } from '@asap-hub/frontend-utils';
 import { BasicLayout, Theme } from '@asap-hub/gp2-components';
 import {
   GoogleTagManager,
@@ -17,6 +16,7 @@ import Logout from './auth/Logout';
 import SentryAuth0 from './auth/SentryAuth0';
 import Signin from './auth/Signin';
 import { ENVIRONMENT, GTM_CONTAINER_ID, RELEASE, SENTRY_DSN } from './config';
+import Frame from './Frame';
 import history from './history';
 
 init({

@@ -2,7 +2,8 @@ import { Layout } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Route } from '@asap-hub/routing';
-import { FC, lazy, useEffect, ComponentProps } from 'react';
+
+import { FC, lazy, useEffect, ComponentProps, useState } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import Frame from './Frame';
 import { useUserById } from './users/state';
@@ -47,6 +48,11 @@ const OnboardedApp: FC<ComponentProps<typeof Dashboard>> = ({
 
   const user = useCurrentUserGP2();
 
+  const [outputsBanner, setOutputsBanner] = useState<string | undefined>(
+    undefined,
+  );
+  const dimissOutputsBanner = () => setOutputsBanner(undefined);
+
   useEffect(() => {
     // order by the likelyhood of user navigating there
     loadDashboard()
@@ -80,12 +86,12 @@ const OnboardedApp: FC<ComponentProps<typeof Dashboard>> = ({
         </Route>
         <Route path={workingGroupsRoute.template}>
           <Frame title="Working Groups">
-            <WorkingGroups />
+            <WorkingGroups setBannerMessage={setOutputsBanner} />
           </Frame>
         </Route>
         <Route path={projectsRoute.template}>
           <Frame title="Projects">
-            <Projects />
+            <Projects setBannerMessage={setOutputsBanner} />
           </Frame>
         </Route>
         <Route path={eventsRoute.template}>
@@ -95,7 +101,11 @@ const OnboardedApp: FC<ComponentProps<typeof Dashboard>> = ({
         </Route>
         <Route path={outputsRoute.template}>
           <Frame title="Outputs">
-            <Outputs />
+            <Outputs
+              outputBanner={outputsBanner}
+              setBannerMessage={setOutputsBanner}
+              dismissBanner={dimissOutputsBanner}
+            />
           </Frame>
         </Route>
         <Route>

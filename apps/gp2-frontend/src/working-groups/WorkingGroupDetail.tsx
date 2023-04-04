@@ -9,7 +9,7 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
-import { FC, lazy, useEffect } from 'react';
+import { ComponentProps, FC, lazy, useEffect } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
@@ -28,8 +28,11 @@ const loadCreateWorkingGroupOutput = () =>
 const CreateWorkingGroupOutput = lazy(loadCreateWorkingGroupOutput);
 type WorkingGroupDetailProps = {
   currentTime: Date;
-};
-const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
+} & Pick<ComponentProps<typeof CreateWorkingGroupOutput>, 'setBannerMessage'>;
+const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({
+  currentTime,
+  setBannerMessage,
+}) => {
   const { path } = useRouteMatch();
   const { workingGroupId } = useRouteParams(workingGroups({}).workingGroup);
   const workingGroup = useWorkingGroupById(workingGroupId);
@@ -69,7 +72,7 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
       <Switch>
         <Route exact path={path + createOutputRoute.template}>
           <Frame title="Create Output">
-            <CreateWorkingGroupOutput />
+            <CreateWorkingGroupOutput setBannerMessage={setBannerMessage} />
           </Frame>
         </Route>
         <WorkingGroupDetailPage

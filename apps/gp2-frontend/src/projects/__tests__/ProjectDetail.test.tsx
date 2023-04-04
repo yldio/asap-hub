@@ -48,7 +48,10 @@ const renderProjectDetail = async ({
                   gp2Routing.projects({}).project.template
                 }
               >
-                <ProjectDetail currentTime={new Date()} />
+                <ProjectDetail
+                  currentTime={new Date()}
+                  setBannerMessage={jest.fn()}
+                />
               </Route>
             </MemoryRouter>
           </WhenReady>

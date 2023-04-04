@@ -51,7 +51,7 @@ const renderCreateWorkingGroupOutput = async (
                     .createOutput.template
                 }
               >
-                <CreateWorkingGroupOutput />
+                <CreateWorkingGroupOutput setBannerMessage={jest.fn()} />
               </Route>
             </MemoryRouter>
           </WhenReady>

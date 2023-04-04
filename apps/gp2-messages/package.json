@@ -8,7 +8,7 @@
   "scripts": {
     "build:babel": "../../scripts/build-babel.sh build",
     "watch:babel": "../../scripts/build-babel.sh watch",
-    "build": "node build-cjs/build",
+    "build": "node --openssl-legacy-provider build-cjs/build",
     "deploy": "node build-cjs/deploy",
     "typecheck": "tsc"
   },

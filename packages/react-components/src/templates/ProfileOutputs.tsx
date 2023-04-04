@@ -18,6 +18,7 @@ export type ProfileOutputsProps = Omit<
   contactEmail?: string;
   workingGroupAssociation: boolean;
   draftOutputs?: boolean;
+  hasOutputs: boolean;
 };
 
 const ProfileOutputs: React.FC<ProfileOutputsProps> = ({
@@ -34,6 +35,7 @@ const ProfileOutputs: React.FC<ProfileOutputsProps> = ({
   contactEmail,
   workingGroupAssociation,
   draftOutputs,
+  hasOutputs,
 }) => (
   <div css={containerStyles}>
     {numberOfItems ? (
@@ -70,15 +72,16 @@ const ProfileOutputs: React.FC<ProfileOutputsProps> = ({
               <>
                 {userAssociationMember
                   ? 'To start sharing research,'
-                  : 'To learn more about this team’s work,'}{' '}
+                  : 'To learn more about this team’s work,'}
                 <LinkConditional
                   href={
                     contactEmail ? createMailTo(contactEmail) : contactEmail
                   }
                 >
+                  {' '}
                   {userAssociationMember ? 'contact your PM' : 'contact the PM'}
                 </LinkConditional>
-                .
+                .{' '}
               </>
             )}
             In the meantime, try exploring research outputs shared by the

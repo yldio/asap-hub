@@ -4,14 +4,18 @@ import {
   ResearchOutputResponse,
   WorkingGroupDataObject,
 } from '@asap-hub/model';
-import { ProfileOutputs, utils } from '@asap-hub/react-components';
+import {
+  ProfileOutputs,
+  utils,
+  ResearchOutputsSearch,
+} from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
 import { format } from 'date-fns';
 import { ComponentProps } from 'react';
 import { useRecoilValue } from 'recoil';
 
 import { authorizationState } from '../../auth/state';
-import { usePagination, usePaginationParams } from '../../hooks';
+import { usePagination, usePaginationParams, useSearch } from '../../hooks';
 import { useAlgolia } from '../../hooks/algolia';
 import {
   getDraftResearchOutputs,
@@ -33,6 +37,7 @@ type OutputsListProps = Pick<
   filters: Set<string>;
   workingGroupId: string;
   draftOutputs?: boolean;
+  hasOutputs: boolean;
 };
 type OutputsProps = {
   workingGroup: WorkingGroupDataObject;
@@ -47,6 +52,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
   filters,
   draftOutputs,
   displayName,
+  hasOutputs,
 }) => {
   const { currentPage, pageSize, isListView, cardViewParams, listViewParams } =
     usePaginationParams();
@@ -135,6 +141,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
       workingGroupAssociation
       exportResults={exportResults}
       draftOutputs={draftOutputs}
+      hasOutputs={hasOutputs}
     />
   );
 };
@@ -143,18 +150,44 @@ const Outputs: React.FC<OutputsProps> = ({
   workingGroup,
   draftOutputs,
   userAssociationMember,
-}) => (
-  <article>
-    <SearchFrame title="">
-      <OutputsList
-        draftOutputs={draftOutputs}
-        workingGroupId={workingGroup.id}
-        searchQuery={''}
-        filters={new Set()}
-        displayName={workingGroup.title}
-        userAssociationMember={userAssociationMember}
-      />
-    </SearchFrame>
-  </article>
-);
+}) => {
+  const {
+    filters,
+    searchQuery,
+    toggleFilter,
+    setSearchQuery,
+    debouncedSearchQuery,
+  } = useSearch();
+  const { pageSize } = usePaginationParams();
+  const hasOutputs = !!useResearchOutputs({
+    searchQuery: '',
+    filters: new Set(),
+    currentPage: 0,
+    pageSize,
+    workingGroupId: workingGroup.id,
+  }).total;
+  return (
+    <article>
+      {hasOutputs && (
+        <ResearchOutputsSearch
+          onChangeSearch={setSearchQuery}
+          searchQuery={searchQuery}
+          onChangeFilter={toggleFilter}
+          filters={filters}
+        />
+      )}
+      <SearchFrame title="">
+        <OutputsList
+          draftOutputs={draftOutputs}
+          workingGroupId={workingGroup.id}
+          searchQuery={debouncedSearchQuery}
+          filters={filters}
+          displayName={workingGroup.title}
+          userAssociationMember={userAssociationMember}
+          hasOutputs={hasOutputs}
+        />
+      </SearchFrame>
+    </article>
+  );
+};
 export default Outputs;

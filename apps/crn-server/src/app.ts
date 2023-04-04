@@ -36,9 +36,8 @@ import {
 } from '@asap-hub/squidex';
 
 import * as Sentry from '@sentry/serverless';
-import AWSXray from 'aws-xray-sdk';
 import cors from 'cors';
-import express, { ErrorRequestHandler, Express, RequestHandler } from 'express';
+import express, { Express, RequestHandler } from 'express';
 import 'express-async-errors';
 import { Tracer } from 'opentracing';
 import {
@@ -465,12 +464,6 @@ export const appFactory = (libs: Libs = {}): Express => {
    */
 
   /* istanbul ignore next */
-  if (libs.xRay) {
-    app.use(libs.xRay.express.openSegment('default') as RequestHandler);
-    libs.xRay.middleware.enableDynamicNaming('*.hub.asap.science');
-  }
-
-  /* istanbul ignore next */
   if (libs.sentryRequestHandler) {
     app.use(libs.sentryRequestHandler());
   }
@@ -530,11 +523,6 @@ export const appFactory = (libs: Libs = {}): Express => {
       message: 'Not Found',
     });
   });
-
-  /* istanbul ignore next */
-  if (libs.xRay) {
-    app.use(libs.xRay.express.closeSegment() as ErrorRequestHandler);
-  }
 
   /* istanbul ignore next */
   if (libs.sentryErrorHandler) {
@@ -597,7 +585,6 @@ export type Libs = {
   logger?: Logger;
   // extra handlers only for tests and local development
   mockRequestHandlers?: RequestHandler[];
-  xRay?: typeof AWSXray;
   sentryErrorHandler?: typeof Sentry.Handlers.errorHandler;
   sentryRequestHandler?: typeof Sentry.Handlers.requestHandler;
   sentryTransactionIdHandler?: RequestHandler;

@@ -1,10 +1,11 @@
-import { User } from '@asap-hub/squidex';
+import { SquidexWebhookPayload, User } from '@asap-hub/squidex';
 import { WebhookDetailType } from '@asap-hub/model';
 import { EventBridge } from 'aws-sdk';
 import { squidexHandlerFactory } from '../../../src/handlers/webhooks';
 import { getUserWebhookPayload } from '../../fixtures/users.fixtures';
 import { getLambdaRequest } from '../../helpers/events';
 import { createSignedHeader } from '../../helpers/webhooks';
+import { WebhookDetail } from '@asap-hub/model/src';
 
 describe('Squidex event webhook', () => {
   const eventBus = 'event-bus';
@@ -61,6 +62,11 @@ describe('Squidex event webhook', () => {
     const event = getLambdaRequest<User>(payload, headers);
     const response = await handler(event);
 
+    const expectedDetail: WebhookDetail<SquidexWebhookPayload<User>> = {
+      resourceId: payload.payload.id,
+      ...payload,
+    };
+
     expect(response.statusCode).toStrictEqual(200);
     expect(evenBridgeMock.putEvents).toHaveBeenCalledWith({
       Entries: [
@@ -68,7 +74,7 @@ describe('Squidex event webhook', () => {
           EventBusName: eventBus,
           Source: eventSource,
           DetailType: 'UsersUpdated' satisfies WebhookDetailType,
-          Detail: JSON.stringify(payload),
+          Detail: JSON.stringify(expectedDetail),
         },
       ],
     });

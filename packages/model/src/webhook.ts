@@ -22,3 +22,7 @@ export type WebhookDetailType =
   | 'UsersPublished'
   | 'UsersUnpublished'
   | 'UsersUpdated';
+
+export type WebhookDetail<T extends object = object> = {
+  resourceId: string;
+} & T;

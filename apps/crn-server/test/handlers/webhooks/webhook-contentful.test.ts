@@ -1,5 +1,9 @@
-import { ContentfulWebhookPayload } from '@asap-hub/contentful';
-import { WebhookDetailType } from '@asap-hub/model';
+import {
+  ContentfulWebhookPayload,
+  ContentfulWebhookPublishPayload,
+  ContentfulWebhookUnpublishPayload,
+} from '@asap-hub/contentful';
+import { WebhookDetail, WebhookDetailType } from '@asap-hub/model';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { EventBridge } from 'aws-sdk';
 import { eventBus, eventSource } from '../../../src/config';
@@ -54,6 +58,13 @@ describe('Contentful event webhook', () => {
     const event = createContentfulWebhookEvent(payload);
     const res = (await handler(event)) as APIGatewayProxyResult;
 
+    const expectedDetail: WebhookDetail<
+      ContentfulWebhookPublishPayload<'teams'>
+    > = {
+      resourceId: payload.sys.id,
+      ...payload,
+    };
+
     expect(res.statusCode).toStrictEqual(200);
     expect(evenBridgeMock.putEvents).toHaveBeenCalledWith({
       Entries: [
@@ -61,7 +72,7 @@ describe('Contentful event webhook', () => {
           EventBusName: eventBus,
           Source: eventSource,
           DetailType: 'TeamsPublished' satisfies WebhookDetailType,
-          Detail: JSON.stringify(payload),
+          Detail: JSON.stringify(expectedDetail),
         },
       ],
     });
@@ -75,6 +86,13 @@ describe('Contentful event webhook', () => {
     );
     const res = (await handler(event)) as APIGatewayProxyResult;
 
+    const expectedDetail: WebhookDetail<
+      ContentfulWebhookUnpublishPayload<'teams'>
+    > = {
+      resourceId: payload.sys.id,
+      ...payload,
+    };
+
     expect(res.statusCode).toStrictEqual(200);
     expect(evenBridgeMock.putEvents).toHaveBeenCalledWith({
       Entries: [
@@ -82,7 +100,7 @@ describe('Contentful event webhook', () => {
           EventBusName: eventBus,
           Source: eventSource,
           DetailType: 'TeamsUnpublished' satisfies WebhookDetailType,
-          Detail: JSON.stringify(payload),
+          Detail: JSON.stringify(expectedDetail),
         },
       ],
     });
@@ -93,6 +111,13 @@ describe('Contentful event webhook', () => {
     const event = createContentfulWebhookEvent(payload);
     const res = (await handler(event)) as APIGatewayProxyResult;
 
+    const expectedDetail: WebhookDetail<
+      ContentfulWebhookPublishPayload<'news'>
+    > = {
+      resourceId: payload.sys.id,
+      ...payload,
+    };
+
     expect(res.statusCode).toStrictEqual(200);
     expect(evenBridgeMock.putEvents).toHaveBeenCalledWith({
       Entries: [
@@ -100,7 +125,7 @@ describe('Contentful event webhook', () => {
           EventBusName: eventBus,
           Source: eventSource,
           DetailType: 'NewsPublished' satisfies WebhookDetailType,
-          Detail: JSON.stringify(payload),
+          Detail: JSON.stringify(expectedDetail),
         },
       ],
     });

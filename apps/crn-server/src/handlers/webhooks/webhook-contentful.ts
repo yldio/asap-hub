@@ -2,7 +2,7 @@ import 'source-map-support/register';
 import Boom from '@hapi/boom';
 import { EventBridge } from 'aws-sdk';
 import { APIGatewayEvent, Handler } from 'aws-lambda';
-import { WebhookDetailType } from '@asap-hub/model';
+import { WebhookDetail, WebhookDetailType } from '@asap-hub/model';
 import { framework as lambda } from '@asap-hub/services-common';
 import { ContentfulWebhookPayload } from '@asap-hub/contentful';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
@@ -26,6 +26,7 @@ export const contentfulWebhookFactory = (
       }
 
       const detailType = getDetailTypeFromRequest(request);
+      const detail = getDetailFromRequest(request);
 
       await eventBridge
         .putEvents({
@@ -34,7 +35,7 @@ export const contentfulWebhookFactory = (
               EventBusName: eventBus,
               Source: eventSource,
               DetailType: detailType,
-              Detail: JSON.stringify(request.payload),
+              Detail: JSON.stringify(detail),
             },
           ],
         })
@@ -84,3 +85,10 @@ const getDetailTypeFromRequest = (
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   )}${action[0]!.toUpperCase()}${action.slice(1)}ed` as WebhookDetailType;
 };
+
+const getDetailFromRequest = (
+  request: lambda.Request<ContentfulWebhookPayload>,
+): WebhookDetail<ContentfulWebhookPayload> => ({
+  resourceId: request.payload.sys.id,
+  ...request.payload,
+});

@@ -1,5 +1,8 @@
 import { RestNews } from '@asap-hub/squidex';
-import { ContentfulWebhookPayload, FetchNewsQuery } from '@asap-hub/contentful';
+import {
+  ContentfulWebhookPublishPayload,
+  FetchNewsQuery,
+} from '@asap-hub/contentful';
 import {
   ListNewsDataObject,
   ListNewsResponse,
@@ -112,7 +115,7 @@ export const getListNewsResponse = (): ListNewsResponse => ({
 });
 
 export const getNewsPublishContentfulWebhookPayload =
-  (): ContentfulWebhookPayload<'news'> => ({
+  (): ContentfulWebhookPublishPayload<'news'> => ({
     metadata: {
       tags: [],
     },

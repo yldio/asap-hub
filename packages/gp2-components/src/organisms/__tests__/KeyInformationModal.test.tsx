@@ -102,7 +102,7 @@ describe('KeyInformatiomModal', () => {
       locationSuggestions: ['Portugal'],
       loadInstitutionOptions: jest
         .fn()
-        .mockResolvedValue([positions[0].institution]),
+        .mockResolvedValue([positions[0]!.institution]),
     });
     userEvent.type(
       screen.getByRole('textbox', { name: 'First Name (required)' }),
@@ -113,7 +113,7 @@ describe('KeyInformatiomModal', () => {
       lastName,
     );
     userEvent.click(screen.getByRole('textbox', { name: 'Degree (required)' }));
-    userEvent.click(screen.getByText(degrees[0]));
+    userEvent.click(screen.getByText(degrees[0]!));
     userEvent.click(
       screen.getByRole('textbox', {
         name: 'Region (required) Select the region you are based in.',
@@ -133,15 +133,15 @@ describe('KeyInformatiomModal', () => {
     userEvent.click(
       screen.getByRole('textbox', { name: 'Institution (required)' }),
     );
-    const institution = await screen.findByText(positions[0].institution);
+    const institution = await screen.findByText(positions[0]!.institution);
     userEvent.click(institution);
     userEvent.type(
       screen.getByRole('textbox', { name: 'Department (required)' }),
-      positions[0].department,
+      positions[0]!.department,
     );
     userEvent.type(
       screen.getByRole('textbox', { name: 'Role (required)' }),
-      positions[0].role,
+      positions[0]!.role,
     );
     const saveButton = getSaveButton();
     userEvent.click(saveButton);

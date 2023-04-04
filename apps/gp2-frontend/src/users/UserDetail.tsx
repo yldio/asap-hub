@@ -81,8 +81,8 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
             isOwnProfile ? userOverviewRoute.editKeyInfo({}).$ : undefined
           }
           outputsTotal={outputsTotal}
-          upcomingTotal={upcomingEvents.total}
-          pastTotal={pastEvents.total}
+          upcomingTotal={upcomingEvents?.total || 0}
+          pastTotal={pastEvents?.total || 0}
           avatarSaving={avatarSaving}
           onImageSelect={onImageSelect}
           {...user}

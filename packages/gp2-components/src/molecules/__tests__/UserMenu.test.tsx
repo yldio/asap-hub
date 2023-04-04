@@ -80,7 +80,7 @@ describe('UserMenu', () => {
       screen.getByRole('link', { name: /the first project title/i }),
     ).toHaveAttribute(
       'href',
-      projectsRoute({}).project({ projectId: projects[0].id }).$,
+      projectsRoute({}).project({ projectId: projects[0]!.id }).$,
     );
 
     userEvent.click(
@@ -166,7 +166,7 @@ describe('UserMenu', () => {
     ).toHaveAttribute(
       'href',
       workingGroupsRoute({}).workingGroup({
-        workingGroupId: workingGroups[0].id,
+        workingGroupId: workingGroups[0]!.id,
       }).$,
     );
 

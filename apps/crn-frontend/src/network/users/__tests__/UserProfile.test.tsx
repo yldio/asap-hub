@@ -181,7 +181,7 @@ it("links to the user's team", async () => {
     ...createUserResponse(),
     teams: [
       {
-        ...createUserTeams({ teams: 1 })[0],
+        ...createUserTeams({ teams: 1 })[0]!,
         id: '42',
         displayName: 'Kool Krew',
       },
@@ -193,7 +193,7 @@ it("links to the user's team", async () => {
         exact: false,
         selector: 'div ~ * *',
       })
-    )[0].closest('a')!.href,
+    )[0]!.closest('a')!.href,
   ).toContain('42');
 });
 

@@ -25,7 +25,7 @@ const Onboarding: React.FC = ({ children }) => {
       steps={onboardingState.steps}
       previousHref={onboardingState.previousStep}
       continueHref={onboardingState.nextStep}
-      isContinueEnabled={onboardingState.isContinueEnabled}
+      isContinueEnabled={onboardingState?.isContinueEnabled || false}
       publishUser={publishUser}
     >
       {children}

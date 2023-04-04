@@ -155,7 +155,7 @@ describe('when toggling from users to teams', () => {
     fireEvent.click(toggle);
     expect(searchBox.value).toEqual('test123');
     await waitFor(() => {
-      const [[options]] = mockGetTeams.mock.calls.slice(-1);
+      const [[options] = []] = mockGetTeams.mock.calls.slice(-1);
       expect(options).toMatchObject({
         searchQuery: 'test123',
         filters: new Set(),

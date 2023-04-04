@@ -47,22 +47,22 @@ describe('Resources', () => {
 
   it('renders a resource title', () => {
     const [resource] = getResources();
-    resource.title = 'resource title';
-    render(<Resources {...defaultProps()} resources={[resource]} />);
+    resource!.title = 'resource title';
+    render(<Resources {...defaultProps()} resources={[resource!]} />);
     expect(
       screen.getByRole('heading', { name: /resource title/i }),
     ).toBeVisible();
   });
   it('renders a resource description', () => {
     const [resource] = getResources();
-    resource.description = 'resource description';
-    render(<Resources {...defaultProps()} resources={[resource]} />);
+    resource!.description = 'resource description';
+    render(<Resources {...defaultProps()} resources={[resource!]} />);
     expect(screen.getByText(/resource description/i)).toBeVisible();
   });
   it('renders a link resource external link', () => {
     const [resource] = getResources();
     const resourceLink: gp2.Resource = {
-      ...resource,
+      ...resource!,
       type: 'Link',
       externalLink: 'http://a-link',
     };
@@ -74,31 +74,31 @@ describe('Resources', () => {
 
   it('renders a link resource pill for a link', () => {
     const [resource] = getResources();
-    resource.type = 'Link';
-    render(<Resources {...defaultProps()} resources={[resource]} />);
+    resource!.type = 'Link';
+    render(<Resources {...defaultProps()} resources={[resource!]} />);
     expect(screen.getByText('Link')).toBeVisible();
   });
 
   it('should not render a note resource external link', () => {
     const [resource] = getResources();
-    resource.type = 'Note';
-    render(<Resources {...defaultProps()} resources={[resource]} />);
+    resource!.type = 'Note';
+    render(<Resources {...defaultProps()} resources={[resource!]} />);
     expect(screen.queryByTestId('external-link-0')).not.toBeInTheDocument();
   });
 
   it('renders a note resource pill for a note', () => {
     const [resource] = getResources();
-    resource.type = 'Note';
-    render(<Resources {...defaultProps()} resources={[resource]} />);
+    resource!.type = 'Note';
+    render(<Resources {...defaultProps()} resources={[resource!]} />);
     expect(screen.getByText('Note')).toBeVisible();
   });
 
   it('renders multiple resources', () => {
     const [resource1, resource2] = getResources(2);
-    resource1.title = 'resource title 1';
-    resource2.title = 'resource title 2';
+    resource1!.title = 'resource title 1';
+    resource2!.title = 'resource title 2';
     render(
-      <Resources {...defaultProps()} resources={[resource1, resource2]} />,
+      <Resources {...defaultProps()} resources={[resource1!, resource2!]} />,
     );
     expect(
       screen.getByRole('heading', { name: /resource title 1/i }),

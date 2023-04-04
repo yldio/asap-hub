@@ -75,8 +75,8 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
           isProjectMember={isProjectMember}
           isAdministrator={isAdministrator}
           outputsTotal={total}
-          upcomingTotal={upcomingEvents.total}
-          pastTotal={pastEvents.total}
+          upcomingTotal={upcomingEvents?.total || 0}
+          pastTotal={pastEvents?.total || 0}
           {...project}
         >
           <Switch>

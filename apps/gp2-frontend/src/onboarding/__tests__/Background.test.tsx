@@ -74,7 +74,7 @@ describe('Background', () => {
     const [, biographyEditButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(biographyEditButton);
+    userEvent.click(biographyEditButton!);
     expect(screen.getByRole('dialog')).toBeVisible();
     userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {
@@ -96,7 +96,7 @@ describe('Background', () => {
     const [keywordsEditButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(keywordsEditButton);
+    userEvent.click(keywordsEditButton!);
     expect(screen.getByRole('dialog')).toBeVisible();
     userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {

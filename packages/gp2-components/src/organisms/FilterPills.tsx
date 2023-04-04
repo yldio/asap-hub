@@ -34,7 +34,8 @@ const getLabelFromArray = (
   id: string,
 ) => {
   const index = array.findIndex((elem) => elem.id === id);
-  return array[index].title ?? '';
+
+  return array[index]?.title ?? '';
 };
 
 const FilterPills: React.FC<FilterPillsProps> = ({

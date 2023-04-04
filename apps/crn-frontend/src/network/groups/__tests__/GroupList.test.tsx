@@ -87,10 +87,10 @@ it('filters inactive group teams from team count', async () => {
     items: createListGroupResponse(1).items.map((group) => ({
       ...group,
       teams: [
-        { ...group.teams[0], id: '1', inactiveSince: undefined },
-        { ...group.teams[0], id: '2', inactiveSince: undefined },
-        { ...group.teams[0], id: '3', inactiveSince: undefined },
-        { ...group.teams[0], id: '4', inactiveSince: undefined },
+        { ...group.teams[0]!, id: '1', inactiveSince: undefined },
+        { ...group.teams[0]!, id: '2', inactiveSince: undefined },
+        { ...group.teams[0]!, id: '3', inactiveSince: undefined },
+        { ...group.teams[0]!, id: '4', inactiveSince: undefined },
       ],
     })),
   });
@@ -100,10 +100,18 @@ it('filters inactive group teams from team count', async () => {
     items: createListGroupResponse(1).items.map((group) => ({
       ...group,
       teams: [
-        { ...group.teams[0], id: '1', inactiveSince: undefined },
-        { ...group.teams[0], id: '2', inactiveSince: new Date().toISOString() },
-        { ...group.teams[0], id: '3', inactiveSince: undefined },
-        { ...group.teams[0], id: '4', inactiveSince: new Date().toISOString() },
+        { ...group.teams[0]!, id: '1', inactiveSince: undefined },
+        {
+          ...group.teams[0]!,
+          id: '2',
+          inactiveSince: new Date().toISOString(),
+        },
+        { ...group.teams[0]!, id: '3', inactiveSince: undefined },
+        {
+          ...group.teams[0]!,
+          id: '4',
+          inactiveSince: new Date().toISOString(),
+        },
       ],
     })),
   });

@@ -101,7 +101,7 @@ describe('AdditionalDetails', () => {
     const [openQuestionsButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(openQuestionsButton);
+    userEvent.click(openQuestionsButton!);
     expect(screen.getByRole('dialog')).toBeVisible();
     userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {
@@ -124,7 +124,7 @@ describe('AdditionalDetails', () => {
     const [fundingProvidersButton] = screen.getAllByRole('link', {
       name: 'Optional Add',
     });
-    userEvent.click(fundingProvidersButton);
+    userEvent.click(fundingProvidersButton!);
     expect(screen.getByRole('dialog')).toBeVisible();
     userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {
@@ -158,7 +158,7 @@ describe('AdditionalDetails', () => {
     const [, cohortEditButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(cohortEditButton);
+    userEvent.click(cohortEditButton!);
     expect(await screen.findByRole('dialog')).toBeVisible();
     userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {
@@ -186,7 +186,7 @@ describe('AdditionalDetails', () => {
     const [, , externalProfilesButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(externalProfilesButton);
+    userEvent.click(externalProfilesButton!);
     expect(screen.getByRole('dialog')).toBeVisible();
     userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {

@@ -100,7 +100,7 @@ describe('FiltersModal', () => {
         .textContent,
     ).toContain(`0 filters`);
     userEvent.click(getProjectsField());
-    userEvent.click(screen.getByText(projects[0].title));
+    userEvent.click(screen.getByText(projects[0]!.title));
     expect(
       screen.getByText(/Apply filters to narrow down your search results.*/i)
         .textContent,
@@ -120,7 +120,7 @@ describe('FiltersModal', () => {
         .textContent,
     ).toContain(`0 filters`);
     userEvent.click(getWorkingGroupsField());
-    userEvent.click(screen.getByText(workingGroups[0].title));
+    userEvent.click(screen.getByText(workingGroups[0]!.title));
     expect(
       screen.getByText(/Apply filters to narrow down your search results.*/i)
         .textContent,
@@ -135,7 +135,7 @@ describe('FiltersModal', () => {
   });
   it('calls the onBackClick function on close', () => {
     render(<FiltersModal {...defaultProps} />);
-    const closeButton = screen.getAllByRole('button', { name: 'Close' })[1];
+    const closeButton = screen.getAllByRole('button', { name: 'Close' })[1]!;
     expect(closeButton).toBeVisible();
     userEvent.click(closeButton);
     expect(defaultProps.onBackClick).toHaveBeenCalledTimes(1);
@@ -174,25 +174,25 @@ describe('FiltersModal', () => {
   it('calls the onApplyClick function with correct project filters', () => {
     render(<FiltersModal {...defaultProps} projects={projects} />);
     userEvent.click(getProjectsField());
-    userEvent.click(screen.getByText(projects[0].title));
+    userEvent.click(screen.getByText(projects[0]!.title));
     userEvent.click(getApplyButton());
     expect(defaultProps.onApplyClick).toHaveBeenCalledWith({
       regions: [],
       keywords: [],
-      projects: [projects[0].id],
+      projects: [projects[0]!.id],
       workingGroups: [],
     });
   });
   it('calls the onApplyClick function with correct working group filters', () => {
     render(<FiltersModal {...defaultProps} workingGroups={workingGroups} />);
     userEvent.click(getWorkingGroupsField());
-    userEvent.click(screen.getByText(workingGroups[0].title));
+    userEvent.click(screen.getByText(workingGroups[0]!.title));
     userEvent.click(getApplyButton());
     expect(defaultProps.onApplyClick).toHaveBeenCalledWith({
       regions: [],
       keywords: [],
       projects: [],
-      workingGroups: [workingGroups[0].id],
+      workingGroups: [workingGroups[0]!.id],
     });
   });
 
@@ -200,8 +200,8 @@ describe('FiltersModal', () => {
     name               | getField                 | value
     ${'region'}        | ${getRegionsField}       | ${'Asia'}
     ${'expertise'}     | ${getExpertiseField}     | ${'Bash'}
-    ${'project'}       | ${getProjectsField}      | ${projects[0].title}
-    ${'working group'} | ${getWorkingGroupsField} | ${workingGroups[0].title}
+    ${'project'}       | ${getProjectsField}      | ${projects[0]!.title}
+    ${'working group'} | ${getWorkingGroupsField} | ${workingGroups[0]!.title}
   `('resets selected filter, $name, on Reset', ({ getField, value }) => {
     render(
       <FiltersModal
@@ -230,11 +230,11 @@ describe('FiltersModal', () => {
   });
 
   it.each`
-    name               | value                  | expected
-    ${'keywords'}      | ${'Bash'}              | ${'Bash'}
-    ${'regions'}       | ${'Asia'}              | ${'Asia'}
-    ${'projects'}      | ${projects[0].id}      | ${projects[0].title}
-    ${'workingGroups'} | ${workingGroups[0].id} | ${workingGroups[0].title}
+    name               | value                   | expected
+    ${'keywords'}      | ${'Bash'}               | ${'Bash'}
+    ${'regions'}       | ${'Asia'}               | ${'Asia'}
+    ${'projects'}      | ${projects[0]!.id}      | ${projects[0]!.title}
+    ${'workingGroups'} | ${workingGroups[0]!.id} | ${workingGroups[0]!.title}
   `('displays current filter $name', ({ name, value, expected }) => {
     const filters: gp2Model.FetchUsersFilter = {
       [name]: [value],
@@ -273,7 +273,7 @@ describe('FiltersModal', () => {
       userEvent.click(getProjectsField());
       const options =
         screen.getByText('ProjectA').parentElement?.childNodes || [];
-      expect(options[0]).toHaveTextContent('ProjectA');
+      expect(options[0]!).toHaveTextContent('ProjectA');
       expect(options[1]).toHaveTextContent('ProjectB');
       expect(options[2]).toHaveTextContent('ProjectC');
     });
@@ -298,7 +298,7 @@ describe('FiltersModal', () => {
       userEvent.click(getWorkingGroupsField());
       const options =
         screen.getByText('GroupA').parentElement?.childNodes || [];
-      expect(options[0]).toHaveTextContent('GroupA');
+      expect(options[0]!).toHaveTextContent('GroupA');
       expect(options[1]).toHaveTextContent('GroupB');
       expect(options[2]).toHaveTextContent('GroupC');
     });
@@ -323,7 +323,7 @@ describe('FiltersModal', () => {
       userEvent.click(getWorkingGroupsField());
       const options =
         screen.getByText('GroupA').parentElement?.childNodes || [];
-      expect(options[0]).toHaveTextContent('GroupA');
+      expect(options[0]!).toHaveTextContent('GroupA');
       expect(options[1]).toHaveTextContent('GroupB');
       expect(options[2]).toHaveTextContent('GroupC');
     });

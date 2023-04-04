@@ -23,7 +23,6 @@ export {
   Label,
   Link,
   Markdown,
-  MarkdownEditor,
   NavigationLink,
   Overlay,
   Paragraph,

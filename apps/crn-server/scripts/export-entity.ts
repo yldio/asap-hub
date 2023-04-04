@@ -1,8 +1,5 @@
 import { EntityRecord, EntityResponses } from '@asap-hub/algolia';
-import {
-  getGraphQLClient as getContentfulGraphQLClient,
-  getRestClient as getContentfulRestClient,
-} from '@asap-hub/contentful';
+import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/contentful';
 import { ListResponse } from '@asap-hub/model';
 import {
   getAccessTokenFactory,
@@ -22,7 +19,6 @@ import {
   clientSecret,
   contentfulAccessToken,
   contentfulEnvId,
-  contentfulManagementAccessToken,
   contentfulSpaceId,
   isContentfulEnabled,
 } from '../src/config';
@@ -39,6 +35,7 @@ import { ExternalAuthorSquidexDataProvider } from '../src/data-providers/externa
 import { ResearchOutputSquidexDataProvider } from '../src/data-providers/research-outputs.data-provider';
 import { ResearchTagSquidexDataProvider } from '../src/data-providers/research-tags.data-provider';
 import { UserSquidexDataProvider } from '../src/data-providers/users.data-provider';
+import { getContentfulRestClientFactory } from '../src/dependencies/clients.dependencies';
 
 export const exportEntity = async (
   entity: keyof EntityResponses,
@@ -99,13 +96,6 @@ const getController = (entity: keyof EntityResponses) => {
     accessToken: contentfulAccessToken,
     environment: contentfulEnvId,
   });
-
-  const getContentfulRestClientFactory = () =>
-    getContentfulRestClient({
-      space: contentfulSpaceId,
-      accessToken: contentfulManagementAccessToken,
-      environment: contentfulEnvId,
-    });
 
   const userRestClient = new SquidexRest<RestUser, InputUser>(
     getAuthToken,

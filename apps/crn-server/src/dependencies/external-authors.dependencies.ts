@@ -1,7 +1,4 @@
-import {
-  getGraphQLClient as getContentfulGraphQLClient,
-  getRestClient as getContentfulRestClient,
-} from '@asap-hub/contentful';
+import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/contentful';
 import {
   RestExternalAuthor,
   SquidexGraphql,
@@ -12,7 +9,6 @@ import {
   baseUrl,
   contentfulAccessToken,
   contentfulEnvId,
-  contentfulManagementAccessToken,
   contentfulSpaceId,
   isContentfulEnabledV2,
 } from '../config';
@@ -22,6 +18,7 @@ import {
   ExternalAuthorSquidexDataProvider,
 } from '../data-providers/external-authors.data-provider';
 import { getAuthToken } from '../utils/auth';
+import { getContentfulRestClientFactory } from './clients.dependencies';
 
 export const getExternalAuthorDataProvider = (): ExternalAuthorDataProvider => {
   if (isContentfulEnabledV2) {
@@ -30,13 +27,6 @@ export const getExternalAuthorDataProvider = (): ExternalAuthorDataProvider => {
       accessToken: contentfulAccessToken,
       environment: contentfulEnvId,
     });
-
-    const getContentfulRestClientFactory = () =>
-      getContentfulRestClient({
-        space: contentfulSpaceId,
-        accessToken: contentfulManagementAccessToken,
-        environment: contentfulEnvId,
-      });
 
     return new ExternalAuthorContentfulDataProvider(
       contentfulGraphQLClient,

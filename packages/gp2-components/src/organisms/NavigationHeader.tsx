@@ -6,12 +6,12 @@ import {
   steel,
   pixels,
   noop,
+  Anchor,
 } from '@asap-hub/react-components';
 
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
-import { smallDesktopQuery } from '../layout';
-import HeaderLogo from '../molecules/HeaderLogo';
+import { gp2LogoSmall } from '../icons';
 import MainNavigation from './MainNavigation';
 import UserNavigation from './UserNavigation';
 
@@ -22,15 +22,12 @@ const navigationHeaderstyles = css({
   padding: 0,
   display: 'flex',
   flexDirection: 'row',
-  maxWidth: '1100px',
-  justifyContent: 'center',
+  justifyContent: 'space-between',
   alignItems: 'center',
-  [smallDesktopQuery]: {
-    maxWidth: '880px',
-  },
   gap: rem(72),
-  margin: 'auto',
+  margin: `0 ${rem(24)}`,
   [drawerQuery]: {
+    margin: 0,
     width: '100%',
     justifyContent: 'flex-start',
     alignItems: 'stretch',
@@ -79,7 +76,15 @@ const NavigationHeader: React.FC<NavigationHeaderProps> = ({
       <div css={[menuButtonStyles]}>
         <MenuButton open={menuShown} onClick={() => onToggleMenu(!menuShown)} />
       </div>
-      <HeaderLogo />
+      <Anchor
+        css={{
+          display: 'flex',
+          padding: `${rem(16)} 0`,
+        }}
+        href={'/'}
+      >
+        {gp2LogoSmall}
+      </Anchor>
       <div css={desktopNavigationStyles}>
         <MainNavigation />
       </div>

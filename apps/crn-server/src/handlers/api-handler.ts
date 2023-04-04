@@ -4,9 +4,6 @@ import serverlessHttp from 'serverless-http';
 import { APIGatewayProxyEventV2 } from 'aws-lambda';
 import { Request as RequestExpress } from 'express';
 import * as LightStep from 'lightstep-tracer';
-import AWSXray from 'aws-xray-sdk';
-import http from 'http';
-import https from 'https';
 import * as Sentry from '@sentry/serverless';
 import { withRequest } from '@asap-hub/server-common';
 import { appFactory } from '../app';
@@ -19,13 +16,8 @@ const lsTracer = new LightStep.Tracer({
   nodejs_instrumentation: true,
 });
 
-AWSXray.captureHTTPsGlobal(http, true);
-AWSXray.captureHTTPsGlobal(https, true);
-AWSXray.capturePromise();
-
 const app = appFactory({
   tracer: lsTracer,
-  xRay: AWSXray,
   sentryErrorHandler: Sentry.Handlers.errorHandler,
   sentryRequestHandler: Sentry.Handlers.requestHandler,
 });

@@ -243,7 +243,7 @@ __metadata:
     "@asap-hub/fixtures": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@babel/runtime-corejs3": 7.21.0
-    "@types/node": 14.18.42
+    "@types/node": 18.15.11
     "@types/prettier": 2.7.2
     algoliasearch: 4.15.0
     prettier: 2.8.7
@@ -306,7 +306,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.21.0
     "@types/jest": ^29.4.0
     "@types/jsdom": 16.2.15
-    "@types/node": 14.18.42
+    "@types/node": 18.15.11
     core-js: 3.29.1
     jsdom: 16.7.0
   languageName: unknown
@@ -324,7 +324,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.21.0
     "@types/auth0-js": 9.14.7
     "@types/jest": ^29.4.0
-    "@types/node": 14.18.42
+    "@types/node": 18.15.11
     "@types/pify": 3.0.2
     auth0-js: 9.20.2
     camelcase: 6.3.0
@@ -346,7 +346,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.21.0
     "@types/jest": ^29.4.0
     "@types/js-yaml": ^4
-    "@types/node": 14.18.42
+    "@types/node": 18.15.11
     "@vedicium/auth0-actions-sdk": ^0.1.3
     auth0-deploy-cli: ^7.15.1
     got: 11.8.6
@@ -365,7 +365,7 @@ __metadata:
     "@auth0/auth0-spa-js": 1.22.6
     "@babel/runtime-corejs3": 7.21.0
     "@types/jest": ^29.4.0
-    "@types/node": 14.18.42
+    "@types/node": 18.15.11
   languageName: unknown
   linkType: soft
 
@@ -391,7 +391,7 @@ __metadata:
     "@graphql-typed-document-node/core": 3.2.0
     "@types/contentful-html-rich-text-converter": "workspace:^"
     "@types/jest": ^29.4.0
-    "@types/node": 14.18.42
+    "@types/node": 18.15.11
     "@types/prettier": 2.7.2
     contentful-html-rich-text-converter: "yldio/contentful-html-rich-text-converter#v1.0.18"
     contentful-management: ^10.19.3
@@ -424,7 +424,7 @@ __metadata:
     "@graphql-tools/schema": 9.0.17
     "@graphql-typed-document-node/core": 3.2.0
     "@types/jest": ^29.4.0
-    "@types/node": 14.18.42
+    "@types/node": 18.15.11
     contentful-cli: 1.19.1
     contentful-management: ^10.19.3
     contentful-migrate: "deluan/contentful-migrate#37b9b898599b9ba48644534d3f340b4c169df212"
@@ -505,7 +505,7 @@ __metadata:
     "@types/history": 4.7.11
     "@types/jest": ^29.4.0
     "@types/nock": 11.1.0
-    "@types/node": 14.18.42
+    "@types/node": 18.15.11
     "@types/qs": 6.9.7
     "@types/react": 17.0.55
     "@types/react-dom": 17.0.19
@@ -562,7 +562,7 @@ __metadata:
     "@emotion/react": 11.10.6
     "@emotion/server": 11.10.0
     "@types/babel__core": 7.20.0
-    "@types/node": 14.18.42
+    "@types/node": 18.15.11
     "@types/react": 17.0.55
     "@types/react-dom": 17.0.19
     aws-sdk: 2.1341.0
@@ -638,7 +638,7 @@ __metadata:
     "@types/lodash.uniqby": 4.7.7
     "@types/luxon": 1.27.1
     "@types/mime-types": 2.1.1
-    "@types/node": 14.18.42
+    "@types/node": 18.15.11
     "@types/parse-data-url": 3.0.0
     "@types/pump": 1.1.1
     "@types/serverless": 3.12.11
@@ -812,7 +812,7 @@ __metadata:
     "@testing-library/react": 11.2.7
     "@types/history": 4.7.11
     "@types/jest": ^29.4.0
-    "@types/node": 14.18.42
+    "@types/node": 18.15.11
     "@types/react": 17.0.55
     "@types/react-router-dom": 5.3.3
     "@types/streamsaver": 2.0.1
@@ -974,7 +974,7 @@ __metadata:
     "@types/history": 4.7.11
     "@types/jest": ^29.4.0
     "@types/nock": 11.1.0
-    "@types/node": 14.18.42
+    "@types/node": 18.15.11
     "@types/react": 17.0.55
     "@types/react-dom": 17.0.19
     "@types/react-router-dom": 5.3.3
@@ -1028,7 +1028,7 @@ __metadata:
     "@emotion/react": 11.10.6
     "@emotion/server": 11.10.0
     "@types/babel__core": 7.20.0
-    "@types/node": 14.18.42
+    "@types/node": 18.15.11
     "@types/react": 17.0.55
     "@types/react-dom": 17.0.19
     aws-sdk: 2.1341.0
@@ -1084,7 +1084,7 @@ __metadata:
     "@types/lodash.matches": 4.6.7
     "@types/luxon": 1.27.1
     "@types/mime-types": 2.1.1
-    "@types/node": 14.18.42
+    "@types/node": 18.15.11
     "@types/parse-data-url": 3.0.0
     "@types/serverless": 3.12.11
     "@types/source-map-support": 0.5.4
@@ -1484,7 +1484,7 @@ __metadata:
     "@babel/core": 7.21.4
     "@babel/preset-react": 7.18.6
     "@babel/runtime-corejs3": 7.21.0
-    "@types/node": 14.18.42
+    "@types/node": 18.15.11
     "@types/react": 17.0.55
     "@types/react-dom": 17.0.19
     react: 17.0.2
@@ -14333,10 +14333,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:14.18.42":
-  version: 14.18.42
-  resolution: "@types/node@npm:14.18.42"
-  checksum: 1c92f04a482ab54a21342b3911fc6f0093f04d3314197bc0e2f20012e9efc929c44e2ea41990b9b3cde420d7859c9ed716733f3e65c0cd6c2910a55799465f6b
+"@types/node@npm:18.15.11":
+  version: 18.15.11
+  resolution: "@types/node@npm:18.15.11"
+  checksum: 977b4ad04708897ff0eb049ecf82246d210939c82461922d20f7d2dcfd81bbc661582ba3af28869210f7e8b1934529dcd46bff7d448551400f9d48b9d3bddec3
   languageName: node
   linkType: hard
 

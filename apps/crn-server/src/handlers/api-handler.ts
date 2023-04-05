@@ -1,10 +1,10 @@
 /* istanbul ignore file */
-import 'source-map-support/register';
-import serverlessHttp from 'serverless-http';
+import { withRequest } from '@asap-hub/server-common';
+import * as Sentry from '@sentry/serverless';
 import { APIGatewayProxyEventV2 } from 'aws-lambda';
 import { Request as RequestExpress } from 'express';
-import * as Sentry from '@sentry/serverless';
-import { withRequest } from '@asap-hub/server-common';
+import serverlessHttp from 'serverless-http';
+import 'source-map-support/register';
 import { appFactory } from '../app';
 import { sentryWrapper } from '../utils/sentry-wrapper';
 

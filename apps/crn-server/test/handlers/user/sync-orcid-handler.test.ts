@@ -26,6 +26,7 @@ describe('POST /webhook/users/orcid', () => {
     });
     test('does not call sync method when there is not orcid', async () => {
       const event = createEvent();
+      event.detail.payload.data.orcid = undefined;
       const userResponse = getUserResponse();
       userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
 
@@ -40,7 +41,10 @@ describe('POST /webhook/users/orcid', () => {
       const event = updateEvent();
       const userResponse = getUserResponse();
       event.detail.payload.data.orcid = { iv: orcid };
-      event.detail.payload.dataOld = { orcid: { iv: notOrcid } };
+      event.detail.payload.dataOld = {
+        ...event.detail.payload.data,
+        orcid: { iv: notOrcid },
+      };
       userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
 
       await syncHandler(event);
@@ -55,7 +59,10 @@ describe('POST /webhook/users/orcid', () => {
       const event = updateEvent();
       const userResponse = getUserResponse();
       event.detail.payload.data.orcid = { iv: orcid };
-      event.detail.payload.dataOld = { orcid: { iv: orcid } };
+      event.detail.payload.dataOld = {
+        ...event.detail.payload.data,
+        orcid: { iv: orcid },
+      };
       userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
 
       await syncHandler(event);
@@ -65,6 +72,7 @@ describe('POST /webhook/users/orcid', () => {
     test('does not calls sync method when there is no orcid', async () => {
       // Arrange
       const event = updateEvent();
+      event.detail.payload.data.orcid = undefined;
       const userResponse = getUserResponse();
       userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
 

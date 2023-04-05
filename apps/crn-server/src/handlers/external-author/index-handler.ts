@@ -2,6 +2,7 @@ import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
+import { ExternalAuthorEvent } from '@asap-hub/model';
 import { EventBridgeHandler } from '@asap-hub/server-common';
 import { EventBridgeEvent } from 'aws-lambda';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
@@ -10,7 +11,7 @@ import ExternalAuthors, {
 } from '../../controllers/external-authors';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
-import { ExternalAuthorEvent, ExternalAuthorPayload } from '../event-bus';
+import { ExternalAuthorPayload } from '../event-bus';
 import { getExternalAuthorDataProvider } from '../../dependencies/external-authors.dependencies';
 
 export const indexExternalAuthorHandler =

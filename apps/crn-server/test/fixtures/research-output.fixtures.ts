@@ -3,6 +3,7 @@ import {
   ListResponse,
   ResearchOutputCreateDataObject,
   ResearchOutputDataObject,
+  ResearchOutputEvent,
   ResearchOutputPostRequest,
   ResearchOutputPutRequest,
   ResearchOutputResponse,
@@ -23,7 +24,6 @@ import {
   ResearchOutputCreateData,
   ResearchOutputUpdateData,
 } from '../../src/controllers/research-outputs';
-import { ResearchOutputEvent } from '../../src/handlers/event-bus';
 import { createEventBridgeEventMock } from '../helpers/events';
 import { getSquidexGraphqlTeam } from './teams.fixtures';
 import {

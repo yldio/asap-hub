@@ -1,7 +1,7 @@
 import { GoogleLegacyCalendarColor } from '@asap-hub/model';
 import { Entity, Rest, RestPayload } from '../common';
 
-interface Calendar {
+export interface Calendar {
   googleCalendarId: string;
   color: GoogleLegacyCalendarColor;
   name: string;

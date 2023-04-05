@@ -1,9 +1,7 @@
+import { ExternalAuthorEvent } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
-import {
-  ExternalAuthorEvent,
-  ExternalAuthorSquidexPayload,
-} from '../../../src/handlers/event-bus';
+import { ExternalAuthorSquidexPayload } from '../../../src/handlers/event-bus';
 import { indexExternalAuthorEventsHandler } from '../../../src/handlers/event/index-external-author-events-handler';
 import { getListEventResponse } from '../../fixtures/events.fixtures';
 import { getExternalAuthorSquidexEvent } from '../../fixtures/external-authors.fixtures';

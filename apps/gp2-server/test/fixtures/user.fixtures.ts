@@ -1,5 +1,4 @@
-import { gp2 } from '@asap-hub/model';
-import { UserEvent } from '@asap-hub/server-common';
+import { gp2, UserEvent } from '@asap-hub/model';
 import {
   gp2 as gp2Squidex,
   parseToSquidex,

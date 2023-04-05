@@ -2,7 +2,12 @@ import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
-import { EventController, EventResponse, ListResponse } from '@asap-hub/model';
+import {
+  EventController,
+  EventResponse,
+  ExternalAuthorEvent,
+  ListResponse,
+} from '@asap-hub/model';
 import { RestEvent, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import { EventBridgeEvent } from 'aws-lambda';
 import {
@@ -21,10 +26,7 @@ import {
   LoopOverCustomCollectionFetchOptions,
 } from '../../utils/loop-over-custom-colection';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
-import {
-  ExternalAuthorEvent,
-  ExternalAuthorSquidexPayload,
-} from '../event-bus';
+import { ExternalAuthorSquidexPayload } from '../event-bus';
 
 export const indexExternalAuthorEventsHandler =
   (

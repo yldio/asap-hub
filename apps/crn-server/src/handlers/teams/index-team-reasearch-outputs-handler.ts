@@ -2,6 +2,7 @@ import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
+import { TeamEvent } from '@asap-hub/model';
 import { EventBridgeHandler } from '@asap-hub/server-common';
 import {
   RestExternalAuthor,
@@ -25,7 +26,7 @@ import { ResearchTagSquidexDataProvider } from '../../data-providers/research-ta
 import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
-import { TeamEvent, TeamPayload } from '../event-bus';
+import { TeamPayload } from '../event-bus';
 
 export const indexResearchOutputByTeamHandler =
   (
@@ -35,8 +36,8 @@ export const indexResearchOutputByTeamHandler =
   async (event) => {
     const outputsIds = Array.from(
       new Set(
-        (event.detail.payload.data.outputs.iv ?? []).concat(
-          event.detail.payload.dataOld?.outputs.iv ?? [],
+        (event.detail.payload.data.outputs?.iv ?? []).concat(
+          event.detail.payload.dataOld?.outputs?.iv ?? [],
         ),
       ),
     );

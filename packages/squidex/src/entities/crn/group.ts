@@ -6,7 +6,7 @@ interface GroupUserConnection<T = string> {
   user: Array<T | undefined>;
 }
 
-interface Group<
+export interface Group<
   TUserConnection = string,
   TTeamConnection = string,
   TCalendar = string,

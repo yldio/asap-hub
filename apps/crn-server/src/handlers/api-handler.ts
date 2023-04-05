@@ -1,23 +1,14 @@
 /* istanbul ignore file */
-import 'source-map-support/register';
-import serverlessHttp from 'serverless-http';
+import { withRequest } from '@asap-hub/server-common';
+import * as Sentry from '@sentry/serverless';
 import { APIGatewayProxyEventV2 } from 'aws-lambda';
 import { Request as RequestExpress } from 'express';
-import * as LightStep from 'lightstep-tracer';
-import * as Sentry from '@sentry/serverless';
-import { withRequest } from '@asap-hub/server-common';
+import serverlessHttp from 'serverless-http';
+import 'source-map-support/register';
 import { appFactory } from '../app';
-import { lightstepToken, environment } from '../config';
 import { sentryWrapper } from '../utils/sentry-wrapper';
 
-const lsTracer = new LightStep.Tracer({
-  access_token: lightstepToken || '',
-  component_name: `asap-hub-express-${environment}`,
-  nodejs_instrumentation: true,
-});
-
 const app = appFactory({
-  tracer: lsTracer,
   sentryErrorHandler: Sentry.Handlers.errorHandler,
   sentryRequestHandler: Sentry.Handlers.requestHandler,
 });

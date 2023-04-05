@@ -17,8 +17,18 @@ import { isInternalUser, urlExpression } from '@asap-hub/validation';
 import { css } from '@emotion/react';
 import { ComponentPropsWithRef, useState } from 'react';
 import { buttonWrapperStyle, mobileQuery } from '../layout';
+import { EntityMappper } from './CreateOutputPage';
 
 const { rem } = pixels;
+
+const getBannerMessage = (
+  entityType: 'workingGroup' | 'project',
+  documentType: gp2Model.OutputDocumentType,
+  published: boolean,
+) =>
+  `${EntityMappper[entityType]} ${documentType} ${
+    published ? 'published' : 'saved'
+  } successfully.`;
 
 const footerStyles = css({
   display: 'flex',
@@ -34,9 +44,11 @@ const containerStyles = css({
   gap: rem(32),
 });
 type OutputFormType = {
+  entityType: 'workingGroup' | 'project';
   shareOutput: (
     payload: gp2Model.OutputPostRequest,
   ) => Promise<gp2Model.OutputResponse | undefined>;
+  setBannerMessage: (message: string) => void;
   documentType: gp2Model.OutputDocumentType;
   readonly getAuthorSuggestions?: ComponentPropsWithRef<
     typeof AuthorSelect
@@ -61,6 +73,7 @@ export const getPostAuthors = (
   });
 
 const OutputForm: React.FC<OutputFormType> = ({
+  entityType,
   shareOutput,
   documentType,
   getAuthorSuggestions = noop,
@@ -69,6 +82,7 @@ const OutputForm: React.FC<OutputFormType> = ({
   type,
   subtype,
   authors,
+  setBannerMessage,
 }) => {
   const historyPush = usePushFromHere();
   const [newTitle, setTitle] = useState(title || '');
@@ -198,6 +212,9 @@ const OutputForm: React.FC<OutputFormType> = ({
                   )();
                   if (researchOutput) {
                     const path = gp2Routing.outputs({}).$;
+                    setBannerMessage(
+                      getBannerMessage(entityType, documentType, !title),
+                    );
                     historyPush(path);
                   }
                   return researchOutput;

@@ -682,7 +682,6 @@ __metadata:
     nock: 13.3.0
     node-dev: 6.7.0
     odata-query: 7.0.3
-    opentracing: 0.14.7
     p-limit: 3.1.0
     parse-data-url: 3.0.0
     pump: 3.0.0
@@ -1436,7 +1435,6 @@ __metadata:
     jwt-encode: 1.0.1
     luxon: 1.28.1
     nock: 13.3.0
-    opentracing: 0.14.7
   languageName: unknown
   linkType: soft
 
@@ -34022,7 +34020,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"opentracing@npm:0.14.7, opentracing@npm:^0.14.7":
+"opentracing@npm:^0.14.7":
   version: 0.14.7
   resolution: "opentracing@npm:0.14.7"
   checksum: 5f7e44439062d056a2a72ac89eff463c9cf5659a2aea230ff7f5a226c5e960c195ce04ec2e2cc590140bbb9c5d2be11a5a50a23484cbe2d0e132af4309d4c904

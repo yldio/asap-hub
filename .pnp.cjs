@@ -11166,7 +11166,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["nock", "npm:13.3.0"],\
             ["node-dev", "npm:6.7.0"],\
             ["odata-query", "npm:7.0.3"],\
-            ["opentracing", "npm:0.14.7"],\
             ["p-limit", "npm:3.1.0"],\
             ["parse-data-url", "npm:3.0.0"],\
             ["pump", "npm:3.0.0"],\
@@ -12534,8 +12533,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jwt-decode", "npm:2.2.0"],\
             ["jwt-encode", "npm:1.0.1"],\
             ["luxon", "npm:1.28.1"],\
-            ["nock", "npm:13.3.0"],\
-            ["opentracing", "npm:0.14.7"]\
+            ["nock", "npm:13.3.0"]\
           ],\
           "linkType": "SOFT"\
         }]\

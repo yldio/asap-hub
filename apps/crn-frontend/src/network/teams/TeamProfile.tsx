@@ -113,8 +113,8 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
           <TeamProfilePage
             {...team}
             teamListElementId={teamListElementId}
-            upcomingEventsCount={upcomingEvents.total}
-            pastEventsCount={pastEvents.total}
+            upcomingEventsCount={upcomingEvents?.total || 0}
+            pastEventsCount={pastEvents?.total || 0}
             teamOutputsCount={teamOutputsResult.total}
             teamDraftOutputsCount={
               canShareResearchOutput ? outputDraftResults.total : undefined

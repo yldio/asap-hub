@@ -16,8 +16,8 @@ describe('WorkingGroupResources', () => {
 
   it('renders a resource', () => {
     const [resource] = getResources();
-    resource.description = 'resource description';
-    render(<WorkingGroupResources {...defaultProps} resources={[resource]} />);
+    resource!.description = 'resource description';
+    render(<WorkingGroupResources {...defaultProps} resources={[resource!]} />);
     expect(screen.getByText(/resource description/i)).toBeVisible();
   });
 });

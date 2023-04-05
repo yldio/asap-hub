@@ -77,8 +77,8 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
           isWorkingGroupMember={isWorkingGroupMember}
           isAdministrator={isAdministrator}
           outputsTotal={outputsTotal}
-          upcomingTotal={upcomingEvents.total}
-          pastTotal={pastEvents.total}
+          upcomingTotal={upcomingEvents?.total || 0}
+          pastTotal={pastEvents?.total || 0}
         >
           <Switch>
             <Route path={overview}>

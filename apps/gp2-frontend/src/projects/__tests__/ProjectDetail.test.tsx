@@ -405,7 +405,7 @@ describe('ProjectDetail', () => {
           .resources({}).$,
       });
 
-      const editButton = screen.getAllByRole('link', { name: /edit/i })[1];
+      const editButton = screen.getAllByRole('link', { name: /edit/i })[1]!;
       userEvent.click(editButton);
       const titleBox = screen.getByRole('textbox', { name: /title/i });
       userEvent.clear(titleBox);

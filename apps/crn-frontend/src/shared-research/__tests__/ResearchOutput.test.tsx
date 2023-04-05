@@ -110,7 +110,7 @@ describe('a grant document research output', () => {
       teams: [
         {
           displayName: 'Grant Document Team',
-          id: teams[0].id,
+          id: teams[0]!.id,
         },
       ],
       title: 'Grant Document title!',
@@ -128,7 +128,7 @@ describe('a grant document research output', () => {
       documentType: 'Grant Document',
       teams: [
         {
-          id: teams[0].id,
+          id: teams[0]!.id,
           displayName: 'Sulzer, D',
         },
       ],
@@ -137,7 +137,7 @@ describe('a grant document research output', () => {
     const { getByText } = await renderComponent(researchOutputRoute.$);
     expect(getByText('Team Sulzer, D')).toHaveAttribute(
       'href',
-      expect.stringMatching(teams[0].id),
+      expect.stringMatching(teams[0]!.id),
     );
   });
 
@@ -191,7 +191,7 @@ describe('a not-grant-document research output', () => {
       title: 'Not-Grant-Document title!',
       teams: [
         {
-          id: teams[0].id,
+          id: teams[0]!.id,
           displayName: 'Sulzer, D',
         },
       ],

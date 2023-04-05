@@ -56,7 +56,7 @@ it('reports changes as date objects', async () => {
   });
 
   expect(handleChange).toHaveBeenCalled();
-  const [newDate] = handleChange.mock.calls.slice(-1)[0];
+  const [newDate] = handleChange.mock.calls.slice(-1)[0]!;
   expect(formatISO(newDate as Date, { representation: 'date' })).toBe(
     '2019-02-01',
   );

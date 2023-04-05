@@ -32,7 +32,7 @@ describe('Dashboard News', () => {
   });
   it('renders the first news item', () => {
     const firstNewsItem: gp2.NewsResponse = {
-      ...defaultProps.items[0],
+      ...defaultProps.items[0]!,
       title: 'First News Item',
       shortText: 'this is a short text',
     };
@@ -45,7 +45,7 @@ describe('Dashboard News', () => {
   describe('multiple news events', () => {
     it('displays show more when theres more than 1 news item', () => {
       const newsItem: gp2.NewsResponse = {
-        ...defaultProps.items[0],
+        ...defaultProps.items[0]!,
         id: '1',
       };
       const { rerender } = render(<DashboardNews items={[newsItem]} />);
@@ -59,12 +59,12 @@ describe('Dashboard News', () => {
     });
     it('display all news when pressing show more', () => {
       const firstNewsItem: gp2.NewsResponse = {
-        ...defaultProps.items[0],
+        ...defaultProps.items[0]!,
         id: '1',
         title: 'First News',
       };
       const secondNewsItem: gp2.NewsResponse = {
-        ...defaultProps.items[0],
+        ...defaultProps.items[0]!,
         id: '2',
         title: 'Second News',
       };

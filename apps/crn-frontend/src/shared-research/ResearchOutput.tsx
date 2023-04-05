@@ -52,10 +52,12 @@ const ResearchOutput: React.FC = () => {
               researchOutputData={researchOutputData}
             />
           ) : (
-            <TeamOutput
-              teamId={researchOutputData.teams[0]?.id}
-              researchOutputData={researchOutputData}
-            />
+            researchOutputData.teams[0]?.id && (
+              <TeamOutput
+                teamId={researchOutputData.teams[0].id}
+                researchOutputData={researchOutputData}
+              />
+            )
           )}
         </Route>
       </ResearchOutputPermissionsContext.Provider>

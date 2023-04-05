@@ -52,7 +52,7 @@ describe('OutputCard', () => {
   });
 
   it('renders authors', () => {
-    const author = gp2.createOutputResponse().authors[0];
+    const author = gp2.createOutputResponse().authors[0]!;
     author.displayName = 'Tony Stark';
     author.id = '123';
     render(<OutputCard {...defaultProps} authors={[author]} />);

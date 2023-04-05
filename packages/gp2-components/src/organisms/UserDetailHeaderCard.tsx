@@ -177,6 +177,7 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
                   aria-label="Upload Avatar"
                   onChange={(event) =>
                     event.target.files?.length &&
+                    event.target.files[0] &&
                     onImageSelect(event.target.files[0])
                   }
                   css={{ display: 'none' }}

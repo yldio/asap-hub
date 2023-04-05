@@ -18,25 +18,27 @@ const [firstUser, secondUser] = createListUserResponse(2).items.map((user) => ({
 it('respects the singleColumn prop', async () => {
   page.setViewportSize(largeDesktopScreen);
   const { rerender, getByText } = render(
-    <MembersList members={[firstUser, secondUser]} />,
+    <MembersList members={[firstUser!, secondUser!]} />,
   );
   const { select, update } = await domToPlaywright(page, document);
 
   let first = await getBoundingClientRect(
-    select(getByText(firstUser.displayName)),
+    select(getByText(firstUser!.displayName)),
   );
   let second = await getBoundingClientRect(
-    select(getByText(secondUser.displayName)),
+    select(getByText(secondUser!.displayName)),
   );
   expect(second.y).toEqual(first.y);
   expect(second.x).toBeGreaterThan(first.x);
 
-  rerender(<MembersList singleColumn members={[firstUser, secondUser]} />);
+  rerender(<MembersList singleColumn members={[firstUser!, secondUser!]} />);
   update(document);
 
-  first = await getBoundingClientRect(select(getByText(firstUser.displayName)));
+  first = await getBoundingClientRect(
+    select(getByText(firstUser!.displayName)),
+  );
   second = await getBoundingClientRect(
-    select(getByText(secondUser.displayName)),
+    select(getByText(secondUser!.displayName)),
   );
   expect(second.x).toEqual(first.x);
   expect(second.y).toBeGreaterThan(first.y);

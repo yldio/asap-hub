@@ -59,7 +59,7 @@ it('renders a list of people when searching with algolia', async () => {
     ...listUserResponse,
     items: listUserResponse.items.map((item, itemIndex) => ({
       ...item,
-      displayName: names[itemIndex],
+      displayName: names[itemIndex]!,
     })),
   });
 

@@ -127,7 +127,11 @@ const components = {
       });
 
     getTags(children);
-    if (htmlElements.length && htmlElements[0].startsWith('<')) {
+    if (
+      htmlElements.length &&
+      htmlElements[0] &&
+      htmlElements[0].startsWith('<')
+    ) {
       return (
         <Link href={href}>
           <span dangerouslySetInnerHTML={{ __html: htmlElements.join('') }} />

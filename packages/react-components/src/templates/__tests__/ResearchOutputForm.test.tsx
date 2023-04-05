@@ -145,11 +145,11 @@ it('pre populates the form with provided backend response', async () => {
   expect(screen.getByText(researchOutputData.type!)).toBeVisible();
   expect(screen.getByText(researchOutputData.sharingStatus)).toBeVisible();
   expect(
-    screen.getByText(researchOutputData.authors[0].displayName),
+    screen.getByText(researchOutputData.authors[0]!.displayName),
   ).toBeVisible();
 
-  expect(screen.getByText(researchOutputData.tags[0])).toBeVisible();
-  expect(screen.getByText(researchOutputData.labs[0].name)).toBeVisible();
+  expect(screen.getByText(researchOutputData.tags[0]!)).toBeVisible();
+  expect(screen.getByText(researchOutputData.labs[0]!.name)).toBeVisible();
 
   expect(screen.getByRole('button', { name: /Save/i })).toBeVisible();
 });
@@ -439,7 +439,7 @@ describe('on submit', () => {
     userEvent.click(authors);
     userEvent.type(authors, 'Alex White');
     await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
-    userEvent.click(screen.getAllByText('Alex White')[1]);
+    userEvent.click(screen.getAllByText('Alex White')[1]!);
 
     await submitForm();
     expect(saveFn).toHaveBeenLastCalledWith({

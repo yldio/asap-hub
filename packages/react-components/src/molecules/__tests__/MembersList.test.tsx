@@ -8,7 +8,7 @@ it('renders first, second and third line for each member', async () => {
     <MembersList
       members={[
         {
-          ...createListUserResponse(1).items[0],
+          ...createListUserResponse(1).items[0]!,
           firstLine: 'Bat Man',
           secondLine: 'Boss',
           thirdLine: 'Multiple Teams',
@@ -39,7 +39,7 @@ it('only shows thirdLine if the user has that data', async () => {
     <MembersList
       members={[
         {
-          ...createListUserResponse(1).items[0],
+          ...createListUserResponse(1).items[0]!,
           firstLine: 'Bat Man',
           secondLine: 'Boss',
           thirdLine: 'Manchester Lab and Glasgow Lab',
@@ -90,7 +90,7 @@ it('accepts undefined value for second and third line', async () => {
     <MembersList
       members={[
         {
-          ...createListUserResponse(1).items[0],
+          ...createListUserResponse(1).items[0]!,
           firstLine: 'example',
         },
       ]}
@@ -107,7 +107,7 @@ it('renders alumni badge when there is an alumni member', async () => {
     <MembersList
       members={[
         {
-          ...createListUserResponse(1).items[0],
+          ...createListUserResponse(1).items[0]!,
           firstLine: 'example',
           alumniSinceDate: '2022-10-27',
         },
@@ -121,7 +121,7 @@ it('renders alumni badge when there is an alumni member', async () => {
     <MembersList
       members={[
         {
-          ...createListUserResponse(1).items[0],
+          ...createListUserResponse(1).items[0]!,
           firstLine: 'example',
           alumniSinceDate: undefined,
         },
@@ -140,7 +140,7 @@ it('overrides user link based on based on the overrideUserRoute prop fn', () => 
     <MembersList
       members={[
         {
-          ...createListUserResponse(1).items[0],
+          ...createListUserResponse(1).items[0]!,
           firstLine: 'example',
         },
       ]}

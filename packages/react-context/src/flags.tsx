@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { useContext, useState, useCallback, createContext, FC } from 'react';
 import {
   isEnabled,
@@ -18,7 +19,7 @@ const parseCookie = (cookies: string) =>
     .split(';')
     .reduce<Record<string, boolean> | undefined>((acc, cookie) => {
       const [key, val] = cookie.split('=');
-      const flagName = key.split('_').slice(1).join('_');
+      const flagName = key!.split('_').slice(1).join('_');
       const getFlag = (str: string) => {
         try {
           const parsed = JSON.parse(str);
@@ -30,7 +31,7 @@ const parseCookie = (cookies: string) =>
         }
       };
 
-      return key.trim().startsWith('ASAP') ? getFlag(val) : acc;
+      return key!.trim().startsWith('ASAP') ? getFlag(val!) : acc;
     }, undefined);
 
 export const FlagsContext = createContext<Flags>({

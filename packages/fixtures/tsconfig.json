@@ -2,7 +2,8 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "rootDir": "src",
-    "outDir": "build"
+    "outDir": "build",
+    "noUncheckedIndexedAccess": false
   },
   "include": ["src"],
   "references": [{ "path": "../model" }, { "path": "../auth" }]

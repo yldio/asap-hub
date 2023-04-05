@@ -24,6 +24,7 @@
     "allowJs": false,
     "forceConsistentCasingInFileNames": true,
 
-    "noErrorTruncation": true
+    "noErrorTruncation": true,
+    "noUncheckedIndexedAccess": true
   }
 }

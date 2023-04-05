@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { css } from '@emotion/react';
-import React, { ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { Paragraph, Headline3, TabButton, Button } from '../atoms';
 import { steel } from '../colors';
 import { perRem, rem } from '../pixels';
@@ -28,7 +29,7 @@ export type TabProps<T> = {
   items: ReadonlyArray<T>;
   truncateFrom?: number;
   disabled?: boolean;
-  empty: React.ReactNode;
+  empty: ReactNode;
 };
 
 type TabbedCardProps<T> = {
@@ -48,10 +49,12 @@ export const TabbedContent = <T extends object>({
   getShowMoreText,
   children,
 }: TabbedCardProps<T>) => {
+  const [active, setActive] = useState(activeTabIndex);
+  const [showMore, setShowMore] = useState(false);
+
   useEffect(() => setActive(activeTabIndex), [activeTabIndex]);
-  const [active, setActive] = React.useState(activeTabIndex);
-  const [showMore, setShowMore] = React.useState(false);
-  const { items, truncateFrom, empty } = tabs[active];
+
+  const { items, truncateFrom, empty } = tabs[active]!;
   const displayShowMoreButton =
     getShowMoreText && truncateFrom && items.length > truncateFrom;
 

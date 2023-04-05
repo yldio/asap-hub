@@ -81,6 +81,7 @@ const DashboardNews: React.FC<DashboardNewsProps> = ({ items }) => {
   const [expanded, setExpanded] = useState(false);
   const news = expanded ? items : items.slice(0, 1);
   const firstNews = items[0];
+  if (firstNews === undefined) return null;
   return (
     <Card>
       <Headline2>News and Updates</Headline2>

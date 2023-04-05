@@ -39,7 +39,7 @@ describe('UserWorkingGroups', () => {
   });
 
   it('renders working-group member count', () => {
-    const workingGroup = getWorkingGroups(1)[0];
+    const workingGroup = getWorkingGroups(1)[0]!;
     workingGroup.members = [
       { userId: 'user-1', role: 'Co-lead' },
       { userId: 'user-2', role: 'Co-lead' },
@@ -49,7 +49,7 @@ describe('UserWorkingGroups', () => {
   });
 
   it('renders working-group member single count', () => {
-    const workingGroup = getWorkingGroups(1)[0];
+    const workingGroup = getWorkingGroups(1)[0]!;
     workingGroup.members = [{ userId: 'user-1', role: 'Co-lead' }];
     renderUserWorkingGroups([workingGroup]);
     expect(screen.getByText('1 Member')).toBeVisible();
@@ -57,7 +57,7 @@ describe('UserWorkingGroups', () => {
 
   it.each(gp2.workingGroupMemberRole)('renders the role - %s', (role) => {
     const workingGroups: WorkingGroup = {
-      ...getWorkingGroups(1)[0],
+      ...getWorkingGroups(1)[0]!,
       members: [{ userId: id, role }],
     };
     render(

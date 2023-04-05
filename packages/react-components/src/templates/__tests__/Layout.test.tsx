@@ -74,7 +74,7 @@ it('closes the drawer on navigation', async () => {
     expect(getByLabelText(/close/i)).toBeVisible();
   });
 
-  userEvent.click(getAllByText(/network/i, { selector: 'nav *' })[0]);
+  userEvent.click(getAllByText(/network/i, { selector: 'nav *' })[0]!);
   await waitFor(() => {
     expect(getByLabelText(/close/i)).not.toBeVisible();
   });
@@ -87,7 +87,7 @@ it('scrolls to top between page navigations', async () => {
     </MemoryRouter>,
   );
 
-  userEvent.click(getAllByText(/network/i, { selector: 'nav *' })[0]);
+  userEvent.click(getAllByText(/network/i, { selector: 'nav *' })[0]!);
   expect(getByRole('main').scrollTo).toHaveBeenCalled();
 });
 

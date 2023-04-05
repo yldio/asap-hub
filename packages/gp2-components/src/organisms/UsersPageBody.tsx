@@ -30,19 +30,17 @@ const UsersPageBody: React.FC<UsersPageBodyProps> = ({
       ? users.total
       : (pageProps.currentPageIndex + 1) * users.items.length;
   return (
-    <>
-      <article css={containerStyles}>
-        <Subtitle styleAsHeading={6} bold>
-          Showing {firstItem}-{lastItem} of {users.total} results
-        </Subtitle>
-        {users.items.map((user) => (
-          <UserCard key={user.id} {...user} />
-        ))}
-        <section>
-          <PageControls {...pageProps} />
-        </section>
-      </article>
-    </>
+    <article css={containerStyles}>
+      <Subtitle styleAsHeading={6} bold>
+        Showing {firstItem}-{lastItem} of {users.total} results
+      </Subtitle>
+      {users.items.map((user) => (
+        <UserCard key={user.id} {...user} />
+      ))}
+      <section>
+        <PageControls {...pageProps} />
+      </section>
+    </article>
   );
 };
 

@@ -321,7 +321,7 @@ Check [on-demand-cms-sync.yml](./.github/workflows/on-demand-cms-sync.yml) for d
 
 ### Image name
 
-The current image tag in use is: be0ebbcbd0ff209d56070f09590c5d9622e8a6dc
+The current image tag in use is: f93db8bae8be7528565c2510dbc8e3eece97983d
 
 ### Build new image
 
@@ -347,7 +347,7 @@ To build new images:
 To change the image tag, run:
 
 ```sh
-  gsed -i s/be0ebbcbd0ff209d56070f09590c5d9622e8a6dc/some-new-tag/g .github/**/*.yml README.md
+  gsed -i s/f93db8bae8be7528565c2510dbc8e3eece97983d/some-new-tag/g .github/**/*.yml README.md
 ```
 
 ## Manage GitHub workflow runs logs

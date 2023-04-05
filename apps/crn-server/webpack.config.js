@@ -30,7 +30,6 @@ module.exports = {
     filename: '[name].js',
   },
   devtool: 'source-map',
-  externals: ['aws-sdk'],
   plugins: [
     new CopyPlugin({
       patterns: [{ from: './src/migrations', to: './migrations' }],

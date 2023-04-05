@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "engines": {
-    "node": "16.x"
+    "node": "18.x"
   },
   "module": "build/index.js",
   "main": "build-cjs/index.js",
@@ -20,6 +20,6 @@
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@auth0/auth0-spa-js": "1.22.6",
-    "@types/node": "14.18.42"
+    "@types/node": "18.15.11"
   }
 }

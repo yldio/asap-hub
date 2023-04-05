@@ -989,6 +989,7 @@ describe('ResearchOutputs data provider', () => {
           researchOutputDataProvider.update(
             researchOutputId,
             researchOutputRequest,
+            { publish: false },
           ),
         ).rejects.toThrow(GenericError);
       });
@@ -1003,6 +1004,7 @@ describe('ResearchOutputs data provider', () => {
           researchOutputDataProvider.update(
             researchOutputId,
             researchOutputRequest,
+            { publish: false },
           ),
         ).rejects.toThrow(GenericError);
       });
@@ -1018,6 +1020,7 @@ describe('ResearchOutputs data provider', () => {
           researchOutputDataProvider.update(
             researchOutputId,
             researchOutputRequest,
+            { publish: false },
           ),
         ).rejects.toThrow(NotFoundError);
       });

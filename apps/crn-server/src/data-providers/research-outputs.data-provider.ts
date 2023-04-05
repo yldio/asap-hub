@@ -281,10 +281,10 @@ export class ResearchOutputSquidexDataProvider
       updatedBy: [researchOutputData.updatedBy],
     });
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    // eslint-disable-next-line no-console
-    console.log(updateOptions);
+    if (updateOptions.publish) {
+      await this.researchOutputSquidexRestClient.publish(researchOutputId);
+    }
+
     await this.researchOutputSquidexRestClient.patch(researchOutputId, {
       doi: { iv: null },
       accession: { iv: null },
@@ -294,6 +294,13 @@ export class ResearchOutputSquidexDataProvider
       labs: researchOutput.labs,
       teams: researchOutput.teams,
     });
+<<<<<<< HEAD
+=======
+
+
+
+    return researchOutputId;
+>>>>>>> a1893e5b6 (Publish method)
   }
 }
 

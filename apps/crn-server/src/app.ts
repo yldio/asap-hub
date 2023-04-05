@@ -15,6 +15,7 @@ import {
   HttpLogger,
   Logger,
   MemoryCacheClient,
+  shouldHandleError,
 } from '@asap-hub/server-common';
 import {
   InputCalendar,
@@ -149,7 +150,6 @@ import assignUserToContext from './utils/assign-user-to-context';
 import { getAuthToken } from './utils/auth';
 import { FeatureFlagDependencySwitch } from './utils/feature-flag';
 import pinoLogger from './utils/logger';
-import { shouldHandleError } from './utils/should-handle-error';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -519,6 +519,9 @@ export const appFactory = (libs: Libs = {}): Express => {
     app.use(libs.sentryErrorHandler({ shouldHandleError }));
   }
 
+  app.use((err: any, _: any, __: any, next: Function) => {
+    next(err);
+  });
   app.use(errorHandler);
   app.disable('x-powered-by');
 
@@ -573,9 +576,9 @@ export type Libs = {
   tracer?: Tracer;
   httpLogger?: HttpLogger;
   logger?: Logger;
-  // extra handlers only for tests and local development
-  mockRequestHandlers?: RequestHandler[];
   sentryErrorHandler?: typeof Sentry.Handlers.errorHandler;
   sentryRequestHandler?: typeof Sentry.Handlers.requestHandler;
   sentryTransactionIdHandler?: RequestHandler;
+  // extra handlers only for tests and local development
+  mockRequestHandlers?: RequestHandler[];
 };

@@ -7,6 +7,7 @@ import {
   getHttpLogger,
   Logger,
   MemoryCacheClient,
+  shouldHandleError,
 } from '@asap-hub/server-common';
 import {
   getAccessTokenFactory,
@@ -18,8 +19,9 @@ import {
   SquidexGraphql,
   SquidexRest,
 } from '@asap-hub/squidex';
+import * as Sentry from '@sentry/serverless';
 import cors from 'cors';
-import express, { Express } from 'express';
+import express, { Express, RequestHandler } from 'express';
 import 'express-async-errors';
 import {
   appName,
@@ -110,6 +112,10 @@ export const appFactory = (libs: Libs = {}): Express => {
   const logger = libs.logger || pinoLogger;
 
   // Middleware
+  /* istanbul ignore next */
+  if (libs.sentryRequestHandler) {
+    app.use(libs.sentryRequestHandler());
+  }
   app.use(getHttpLogger({ logger }));
   app.use(cors());
   app.use(express.json({ limit: '10MB' }));
@@ -302,6 +308,10 @@ export const appFactory = (libs: Libs = {}): Express => {
   /**
    * Routes requiring onboarding below
    */
+  if (libs.mockRequestHandlers) {
+    app.use(libs.mockRequestHandlers);
+  }
+
   app.use(userRoutes);
   app.use(contributingCohortRoutes);
   app.use(newsRoutes);
@@ -321,6 +331,11 @@ export const appFactory = (libs: Libs = {}): Express => {
       message: 'Not Found',
     });
   });
+
+  /* istanbul ignore next */
+  if (libs.sentryErrorHandler) {
+    app.use(libs.sentryErrorHandler({ shouldHandleError }));
+  }
 
   app.use(errorHandler);
   app.disable('x-powered-by');
@@ -354,4 +369,9 @@ export type Libs = {
   workingGroupDataProvider?: WorkingGroupDataProvider;
   workingGroupNetworkController?: WorkingGroupNetworkController;
   workingGroupNetworkDataProvider?: WorkingGroupNetworkDataProvider;
+  sentryErrorHandler?: typeof Sentry.Handlers.errorHandler;
+  sentryRequestHandler?: typeof Sentry.Handlers.requestHandler;
+  // sentryTransactionIdHandler?: RequestHandler;
+  // extra handlers only for tests and local development
+  mockRequestHandlers?: RequestHandler[];
 };

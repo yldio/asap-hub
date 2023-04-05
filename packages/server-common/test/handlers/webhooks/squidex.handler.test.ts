@@ -1,6 +1,6 @@
 import { SquidexWebhookPayload, User } from '@asap-hub/squidex';
 import { WebhookDetailType } from '@asap-hub/model';
-import { EventBridge } from 'aws-sdk';
+import { EventBridge } from '@aws-sdk/client-eventbridge';
 import { squidexHandlerFactory } from '../../../src/handlers/webhooks';
 import { getUserWebhookPayload } from '../../fixtures/users.fixtures';
 import { getLambdaRequest } from '../../helpers/events';

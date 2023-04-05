@@ -13,13 +13,13 @@
     "watch:babel": "../../scripts/build-babel.sh watch"
   },
   "dependencies": {
+    "@aws-sdk/client-ses": "^3.306.0",
     "@babel/core": "7.21.4",
     "@babel/preset-react": "7.18.6",
     "@babel/runtime-corejs3": "7.21.0",
     "@emotion/cache": "11.10.5",
     "@emotion/react": "11.10.6",
     "@emotion/server": "11.10.0",
-    "aws-sdk": "2.1341.0",
     "babel-loader": "8.3.0",
     "babel-preset-react-app": "10.0.1",
     "core-js": "3.29.1",

@@ -1,6 +1,6 @@
 import 'source-map-support/register';
 import Boom from '@hapi/boom';
-import { EventBridge } from 'aws-sdk';
+import { EventBridge } from '@aws-sdk/client-eventbridge';
 import { APIGatewayEvent, Handler } from 'aws-lambda';
 import { WebhookDetail, WebhookDetailType } from '@asap-hub/model';
 import { framework as lambda } from '@asap-hub/services-common';
@@ -28,18 +28,16 @@ export const contentfulWebhookFactory = (
       const detailType = getDetailTypeFromRequest(request);
       const detail = getDetailFromRequest(request);
 
-      await eventBridge
-        .putEvents({
-          Entries: [
-            {
-              EventBusName: eventBus,
-              Source: eventSource,
-              DetailType: detailType,
-              Detail: JSON.stringify(detail),
-            },
-          ],
-        })
-        .promise();
+      await eventBridge.putEvents({
+        Entries: [
+          {
+            EventBusName: eventBus,
+            Source: eventSource,
+            DetailType: detailType,
+            Detail: JSON.stringify(detail),
+          },
+        ],
+      });
 
       return {
         statusCode: 200,
@@ -49,8 +47,10 @@ export const contentfulWebhookFactory = (
 
 const eventBridge = new EventBridge({
   endpoint: eventBridgeEndpoint,
-  accessKeyId: eventBridgeAccessKey,
-  secretAccessKey: eventBridgeSecret,
+  credentials: {
+    accessKeyId: eventBridgeAccessKey,
+    secretAccessKey: eventBridgeSecret,
+  },
 });
 
 export const handler: Handler<APIGatewayEvent> = sentryWrapper(

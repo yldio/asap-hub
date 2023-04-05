@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.1",
   "engines": {
-    "node": "16.x"
+    "node": "18.x"
   },
   "module": "build/index.js",
   "main": "build-cjs/index.js",
@@ -23,7 +23,7 @@
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@asap-hub/fixtures": "workspace:*",
-    "@types/node": "14.18.42",
+    "@types/node": "18.15.11",
     "@types/prettier": "2.7.2"
   }
 }

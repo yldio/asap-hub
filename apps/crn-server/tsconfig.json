@@ -5,9 +5,9 @@
     "rootDir": ".",
     "resolveJsonModule": true,
     "outDir": "build",
-    "lib": ["es2021"],
+    "lib": ["esnext"],
     "module": "commonjs",
-    "target": "es2021",
+    "target": "es2022",
     "noUncheckedIndexedAccess": true
   },
   "include": [

@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "engines": {
-    "node": "16.x"
+    "node": "18.x"
   },
   "scripts": {
     "start": "cross-env PORT=3002 TSC_COMPILE_ON_ERROR=true react-scripts start",

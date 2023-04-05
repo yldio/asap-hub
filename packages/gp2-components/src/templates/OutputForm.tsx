@@ -24,7 +24,7 @@ const { rem } = pixels;
 const getBannerMessage = (
   entityType: 'workingGroup' | 'project',
   documentType: gp2Model.OutputDocumentType,
-  published: boolean = false,
+  published: boolean,
 ) =>
   `${EntityMappper[entityType]} ${documentType} ${
     published ? 'published' : 'saved'

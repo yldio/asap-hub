@@ -27,7 +27,7 @@ const renderRoutes = async () => {
           <WhenReady>
             <MemoryRouter initialEntries={['/outputs']}>
               <Route path="/outputs">
-                <Routes />
+                <Routes setBannerMessage={jest.fn()} />
               </Route>
             </MemoryRouter>
           </WhenReady>

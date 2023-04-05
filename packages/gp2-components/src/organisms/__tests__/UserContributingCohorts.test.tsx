@@ -48,7 +48,7 @@ describe('UserContributingCohorts', () => {
   });
 
   it.each(gp2.userContributingCohortRole)('renders the role - %s', (role) => {
-    const cohort = { ...getCohorts(1)[0], role };
+    const cohort = { ...getCohorts(1)[0]!, role };
     render(
       <UserContributingCohorts
         contributingCohorts={[cohort]}

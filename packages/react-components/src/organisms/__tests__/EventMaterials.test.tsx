@@ -26,11 +26,11 @@ it('renders nothing until an event is over', () => {
 });
 
 describe.each`
-  type                  | typeText               | presentValue            | presentExpectedText          | missingValue
-  ${'notes'}            | ${'Notes'}             | ${'My Notes'}           | ${'My Notes'}                | ${undefined}
-  ${'presentation'}     | ${'Presentation'}      | ${'My Presentation'}    | ${'My Presentation'}         | ${undefined}
-  ${'videoRecording'}   | ${'Video recording'}   | ${'My Video recording'} | ${'My Video recording'}      | ${undefined}
-  ${'meetingMaterials'} | ${'Meeting materials'} | ${meetingMaterials}     | ${meetingMaterials[0].title} | ${[]}
+  type                  | typeText               | presentValue            | presentExpectedText           | missingValue
+  ${'notes'}            | ${'Notes'}             | ${'My Notes'}           | ${'My Notes'}                 | ${undefined}
+  ${'presentation'}     | ${'Presentation'}      | ${'My Presentation'}    | ${'My Presentation'}          | ${undefined}
+  ${'videoRecording'}   | ${'Video recording'}   | ${'My Video recording'} | ${'My Video recording'}       | ${undefined}
+  ${'meetingMaterials'} | ${'Meeting materials'} | ${meetingMaterials}     | ${meetingMaterials[0]!.title} | ${[]}
 `(
   'material of type $type',
   <T extends keyof EventMaterialsProps>({

@@ -38,7 +38,7 @@ const renderShareOutput = async (outputId: string = 'ro0') => {
                   gp2Routing.outputs({}).output({ outputId }).edit.template
                 }
               >
-                <ShareOutput />
+                <ShareOutput setBannerMessage={jest.fn()} />
               </Route>
             </MemoryRouter>
           </WhenReady>

@@ -67,7 +67,7 @@ describe('createMailTo', () => {
 describe('mailToFeedback', () => {
   it('creates default mail', () => {
     expect(mailToFeedback()).toMatchInlineSnapshot(
-      `"mailto:info@asap.science?subject=ASAP+Hub%3A+Hub+Feedback"`,
+      `"mailto:techsupport@asap.science?subject=ASAP+Hub%3A+Hub+Feedback"`,
     );
   });
 

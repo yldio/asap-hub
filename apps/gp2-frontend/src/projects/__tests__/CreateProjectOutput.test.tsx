@@ -49,7 +49,7 @@ const renderCreateProjectOutput = async (
                     .createOutput.template
                 }
               >
-                <CreateProjectOutput />
+                <CreateProjectOutput setBannerMessage={jest.fn()} />
               </Route>
             </MemoryRouter>
           </WhenReady>

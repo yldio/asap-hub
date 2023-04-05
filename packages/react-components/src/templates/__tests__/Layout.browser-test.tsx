@@ -30,7 +30,7 @@ describe('on desktop', () => {
       await findAllByText(/profile/i, {
         selector: 'nav *',
       })
-    )[0].closest('nav')!;
+    )[0]!.closest('nav')!;
     const { select } = await domToPlaywright(page, document);
 
     const scrollHeight = await page.$eval(
@@ -46,7 +46,7 @@ describe('on desktop', () => {
       await findAllByText(/profile/i, {
         selector: 'nav *',
       })
-    )[0].closest('nav')!;
+    )[0]!.closest('nav')!;
     const { select } = await domToPlaywright(page, document);
 
     const scrollHeight = await page.$eval(
@@ -62,7 +62,7 @@ describe('on desktop', () => {
       await findAllByText(/network/i, {
         selector: 'nav *',
       })
-    )[0].closest('nav')!;
+    )[0]!.closest('nav')!;
     const { select } = await domToPlaywright(page, document);
 
     const scrollHeight = await page.$eval(

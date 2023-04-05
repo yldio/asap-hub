@@ -37,7 +37,11 @@ export function arrayMove<T>(
 ): T[] {
   const slicedArray = array.slice();
   const removed = slicedArray.splice(from, 1)[0];
+  if (!removed) {
+    throw new Error('element couldnt be found');
+  }
   slicedArray.splice(to < 0 ? array.length + to : to, 0, removed);
+
   return slicedArray;
 }
 

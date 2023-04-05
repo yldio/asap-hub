@@ -51,7 +51,10 @@ const renderWorkingGroupDetail = async ({
                   gp2Routing.workingGroups({}).workingGroup.template
                 }
               >
-                <WorkingGroupDetail currentTime={new Date()} />
+                <WorkingGroupDetail
+                  currentTime={new Date()}
+                  setBannerMessage={jest.fn()}
+                />
               </Route>
             </MemoryRouter>
           </WhenReady>
@@ -76,7 +79,7 @@ describe('WorkingGroupDetail', () => {
   const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
 
   const outputs = gp2Fixtures.createListOutputResponse(1);
-  outputs.items[0].workingGroups = {
+  outputs.items[0]!.workingGroups = {
     id: '42',
     title: 'Steering Committee',
   };
@@ -418,7 +421,7 @@ describe('WorkingGroupDetail', () => {
           .resources({}).$,
       });
 
-      const editButton = screen.getAllByRole('link', { name: /edit/i })[1];
+      const editButton = screen.getAllByRole('link', { name: /edit/i })[1]!;
       userEvent.click(editButton);
       const titleBox = screen.getByRole('textbox', { name: /title/i });
       userEvent.clear(titleBox);

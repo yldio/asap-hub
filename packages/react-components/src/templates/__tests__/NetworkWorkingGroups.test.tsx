@@ -33,8 +33,8 @@ it('renders one group card per group', async () => {
     <NetworkWorkingGroups
       {...props}
       workingGroups={[
-        { ...props.workingGroups[0], title: 'Working Group 0' },
-        { ...props.workingGroups[1], title: 'Working Group 1' },
+        { ...props.workingGroups[0]!, title: 'Working Group 0' },
+        { ...props.workingGroups[1]!, title: 'Working Group 1' },
       ]}
     />,
   );

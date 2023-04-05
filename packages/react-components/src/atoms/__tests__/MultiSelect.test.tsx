@@ -84,6 +84,9 @@ describe('Sorting elements', () => {
     it('can insert at the end', () => {
       expect(arrayMove([1, 2, 3], 0, 2)).toEqual([2, 3, 1]);
     });
+    it('throws when element cant be found', () => {
+      expect(() => arrayMove([], 0, 2)).toThrow();
+    });
   });
 });
 
@@ -439,7 +442,7 @@ describe('Async', () => {
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
 
-    userEvent.click(getAllByText('Test')[1]);
+    userEvent.click(getAllByText('Test')[1]!);
 
     await waitFor(() => {
       expect(mockOnChange).toHaveBeenCalledWith([

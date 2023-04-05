@@ -111,8 +111,8 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
             </Frame>
           </Route>
           <WorkingGroupPage
-            upcomingEventsCount={upcomingEventsResult.total}
-            pastEventsCount={pastEventsResult.total}
+            upcomingEventsCount={upcomingEventsResult?.total || 0}
+            pastEventsCount={pastEventsResult?.total || 0}
             membersListElementId={membersListElementId}
             workingGroupsDraftOutputsCount={
               canShareResearchOutput ? outputDraftResults.total : undefined

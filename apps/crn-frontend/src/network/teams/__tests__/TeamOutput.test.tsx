@@ -273,7 +273,7 @@ it('can save draft when form data is valid', async () => {
 
 it('can edit a research output', async () => {
   const researchOutput = createResearchOutputResponse();
-  const teamId = researchOutput.teams[0].id;
+  const teamId = researchOutput.teams[0]!.id;
   const { type, descriptionMD, title } = researchOutput;
   const link = 'https://example42.com';
   const doi = '10.0777';
@@ -311,7 +311,7 @@ it('can edit a research output', async () => {
 
 it('can edit a draft research output', async () => {
   const researchOutput = createResearchOutputResponse();
-  const teamId = researchOutput.teams[0].id;
+  const teamId = researchOutput.teams[0]!.id;
   const { type, descriptionMD, title } = researchOutput;
   const link = 'https://example42.com';
   const doi = '10.0777';
@@ -353,7 +353,7 @@ test('displays sorry page when user does not have edit permission', async () => 
       ...baseUser,
       teams: [
         {
-          ...baseUser.teams[0],
+          ...baseUser.teams[0]!,
           role: 'Key Personnel',
         },
       ],
@@ -458,7 +458,7 @@ it('will toast server side errors for unknown errors in edit mode', async () => 
 async function renderPage({
   user = {
     ...baseUser,
-    teams: [{ ...baseUser.teams[0], id: '42', role: 'Project Manager' }],
+    teams: [{ ...baseUser.teams[0]!, id: '42', role: 'Project Manager' }],
   },
   teamId,
   teamOutputDocumentType = 'bioinformatics',

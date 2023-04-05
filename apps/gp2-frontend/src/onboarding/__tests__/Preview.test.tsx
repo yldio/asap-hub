@@ -174,7 +174,7 @@ describe('Preview', () => {
     const [keyInformationEditButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(keyInformationEditButton);
+    userEvent.click(keyInformationEditButton!);
     expect(screen.getByRole('dialog')).toBeVisible();
   });
 
@@ -203,7 +203,7 @@ describe('Preview', () => {
     const [keyInformationEditButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(keyInformationEditButton);
+    userEvent.click(keyInformationEditButton!);
 
     userEvent.type(await screen.findByDisplayValue('Stark Industries'), ' 1');
     expect(await screen.findByText('ExampleInst')).toBeVisible();
@@ -220,7 +220,7 @@ describe('Preview', () => {
     const [keyInformationEditButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(keyInformationEditButton);
+    userEvent.click(keyInformationEditButton!);
     expect(screen.getByRole('dialog')).toBeVisible();
     userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {
@@ -241,7 +241,7 @@ describe('Preview', () => {
     const [, contactInformationEditButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(contactInformationEditButton);
+    userEvent.click(contactInformationEditButton!);
     expect(screen.getByRole('dialog')).toBeVisible();
     userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {
@@ -269,7 +269,7 @@ describe('Preview', () => {
     const [, , , biographyEditButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(biographyEditButton);
+    userEvent.click(biographyEditButton!);
     expect(screen.getByRole('dialog')).toBeVisible();
     userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {
@@ -291,7 +291,7 @@ describe('Preview', () => {
     const [, , keywordsEditButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(keywordsEditButton);
+    userEvent.click(keywordsEditButton!);
     expect(screen.getByRole('dialog')).toBeVisible();
     userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {
@@ -312,7 +312,7 @@ describe('Preview', () => {
     const [, , , , openQuestionsButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(openQuestionsButton);
+    userEvent.click(openQuestionsButton!);
     expect(screen.getByRole('dialog')).toBeVisible();
     userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {
@@ -335,7 +335,7 @@ describe('Preview', () => {
     const [fundingProvidersButton] = screen.getAllByRole('link', {
       name: 'Optional Add',
     });
-    userEvent.click(fundingProvidersButton);
+    userEvent.click(fundingProvidersButton!);
     expect(screen.getByRole('dialog')).toBeVisible();
     userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {
@@ -369,7 +369,7 @@ describe('Preview', () => {
     const [, , , , , cohortEditButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(cohortEditButton);
+    userEvent.click(cohortEditButton!);
     expect(await screen.findByRole('dialog')).toBeVisible();
     userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {
@@ -397,7 +397,7 @@ describe('Preview', () => {
     const [, , , , , , externalProfilesButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(externalProfilesButton);
+    userEvent.click(externalProfilesButton!);
     expect(screen.getByRole('dialog')).toBeVisible();
     userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {

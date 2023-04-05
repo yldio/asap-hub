@@ -14,7 +14,9 @@ import OutputForm from '../OutputForm';
 describe('OutputForm', () => {
   const defaultProps = {
     shareOutput: jest.fn(),
+    setBannerMessage: jest.fn(),
     documentType: 'Procedural Form' as const,
+    entityType: 'workingGroup' as const,
   };
   afterEach(jest.resetAllMocks);
   it('renders all the base fields', () => {
@@ -29,6 +31,7 @@ describe('OutputForm', () => {
     const getAuthorSuggestions = jest.fn();
     const history = createMemoryHistory();
     const shareOutput = jest.fn();
+    const setBannerMessage = jest.fn();
     getAuthorSuggestions.mockResolvedValue([
       {
         author: {
@@ -52,6 +55,7 @@ describe('OutputForm', () => {
       <OutputForm
         {...defaultProps}
         shareOutput={shareOutput}
+        setBannerMessage={setBannerMessage}
         getAuthorSuggestions={getAuthorSuggestions}
       />,
       {
@@ -77,7 +81,7 @@ describe('OutputForm', () => {
     userEvent.click(authors);
     userEvent.type(authors, 'Alex White');
     await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
-    userEvent.click(screen.getAllByText('Alex White')[1]);
+    userEvent.click(screen.getAllByText('Alex White')[1]!);
     userEvent.click(screen.getByRole('button', { name: /publish/i }));
     expect(
       await screen.findByRole('button', { name: /publish/i }),
@@ -93,6 +97,11 @@ describe('OutputForm', () => {
         { externalUserName: 'Alex White' },
       ],
     });
+    expect(setBannerMessage).toHaveBeenCalledWith(
+      expect.stringMatching(
+        /working group procedural form published successfully./i,
+      ),
+    );
     expect(history.location.pathname).toEqual(`/outputs`);
   }, 30_000);
 
@@ -204,7 +213,7 @@ describe('OutputForm', () => {
       const title = 'Output Title';
       const link = 'https://example.com/output';
       const { authors } = gp2Fixtures.createOutputResponse();
-      authors[0].displayName = 'Tony Stark';
+      authors[0]!.displayName = 'Tony Stark';
       const output = {
         ...defaultProps,
         ...gp2Fixtures.createOutputResponse(),

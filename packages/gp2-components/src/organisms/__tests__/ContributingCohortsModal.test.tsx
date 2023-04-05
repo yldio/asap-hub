@@ -71,7 +71,7 @@ describe('ContributingCohortsModal', () => {
 
   it('there can be 9 cohorts', () => {
     const contributingCohorts = Array.from({ length: 9 }).map((_, i) => ({
-      ...defaultProps.contributingCohorts[0],
+      ...defaultProps.contributingCohorts[0]!,
       contributingCohortId: `${i}`,
     }));
     renderContributingCohorts({
@@ -86,7 +86,7 @@ describe('ContributingCohortsModal', () => {
 
   it('there can be only 10 cohorts', () => {
     const contributingCohorts = Array.from({ length: 10 }).map((_, i) => ({
-      ...defaultProps.contributingCohorts[0],
+      ...defaultProps.contributingCohorts[0]!,
       contributingCohortId: `${i}`,
     }));
     renderContributingCohorts({
@@ -101,7 +101,7 @@ describe('ContributingCohortsModal', () => {
 
   it('can remove an cohort', () => {
     const contributingCohorts = Array.from({ length: 2 }).map((_, i) => ({
-      ...defaultProps.contributingCohorts[0],
+      ...defaultProps.contributingCohorts[0]!,
       contributingCohortId: `${i}`,
     }));
     renderContributingCohorts({ contributingCohorts });
@@ -129,7 +129,7 @@ describe('ContributingCohortsModal', () => {
   it('removing the last', () => {
     const contributingCohorts = [
       {
-        ...defaultProps.contributingCohorts[0],
+        ...defaultProps.contributingCohorts[0]!,
       },
     ];
     const onSave = jest.fn();

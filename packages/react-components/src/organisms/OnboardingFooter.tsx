@@ -102,7 +102,7 @@ const OnboardingFooter: React.FC<OnboardingFooterProps> = ({
 }) => {
   if (!onboardModalHref || !onboardable) return null;
   const { incompleteSteps, totalSteps, isOnboardable } = onboardable;
-  if (incompleteSteps.length) {
+  if (incompleteSteps.length && incompleteSteps[0]) {
     const props = {
       isOnboardable,
       modalHref: incompleteSteps[0].modalHref,

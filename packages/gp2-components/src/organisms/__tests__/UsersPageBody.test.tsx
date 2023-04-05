@@ -39,7 +39,7 @@ const defaultProps = {
 
 describe('UsersPageBody', () => {
   it('renders a user', () => {
-    const userToRender = { items: [users.items[0]], total: 1 };
+    const userToRender = { items: [users.items[0]!], total: 1 };
     render(<UsersPageBody {...defaultProps} users={userToRender} />);
     expect(
       screen.getByRole('heading', { name: /Tony Stark, PhD/i }),

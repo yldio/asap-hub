@@ -57,8 +57,8 @@ const GroupProfile: FC<GroupProfileProps> = ({ currentTime }) => {
         groupTeamsHref={`${
           route({ groupId }).about({}).$
         }#${groupTeamsElementId}`}
-        upcomingEventsCount={upcomingEvents.total}
-        pastEventsCount={pastEvents.total}
+        upcomingEventsCount={upcomingEvents?.total || 0}
+        pastEventsCount={pastEvents?.total || 0}
         numberOfTeams={
           group.teams.filter(({ inactiveSince }) => !inactiveSince).length
         }

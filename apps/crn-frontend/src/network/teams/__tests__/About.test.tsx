@@ -69,7 +69,7 @@ it('renders the member links', async () => {
       ...createTeamResponse(),
       members: [
         {
-          ...createTeamResponse({ teamMembers: 1 }).members[0],
+          ...createTeamResponse({ teamMembers: 1 }).members[0]!,
           id: teamId,
           displayName: 'Mem',
         },

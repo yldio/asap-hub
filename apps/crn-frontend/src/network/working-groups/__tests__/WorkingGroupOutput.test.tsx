@@ -120,7 +120,7 @@ const renderPage = async ({
   user = {
     ...baseUser,
     workingGroups: [
-      { ...baseUser.workingGroups[0], id: 'wg1', role: 'Project Manager' },
+      { ...baseUser.workingGroups[0]!, id: 'wg1', role: 'Project Manager' },
     ],
   },
   workingGroupId = 'wg1',
@@ -348,7 +348,7 @@ it('displays sorry page when user does not have editing permissions', async () =
   await renderPage({
     user: {
       ...baseUser,
-      workingGroups: [{ ...baseUser.workingGroups[0], role: 'Member' }],
+      workingGroups: [{ ...baseUser.workingGroups[0]!, role: 'Member' }],
     },
     canEditResearchOutput: false,
     researchOutputData: {

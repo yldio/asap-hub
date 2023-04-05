@@ -32,7 +32,7 @@ describe('OpenQuestionsModal', () => {
   it('renders the question field', () => {
     const props = { questions: ['a question?'] };
     renderOpenQuestions(props);
-    expect(screen.getByRole('textbox')).toHaveTextContent(props.questions[0]);
+    expect(screen.getByRole('textbox')).toHaveTextContent(props.questions[0]!);
   });
 
   it('renders multiple questions', () => {
@@ -47,7 +47,7 @@ describe('OpenQuestionsModal', () => {
     screen
       .getAllByRole('textbox')
       .map((textarea, index) =>
-        expect(textarea).toHaveTextContent(props.questions[index]),
+        expect(textarea).toHaveTextContent(props.questions[index]!),
       );
   });
 
@@ -94,7 +94,7 @@ describe('OpenQuestionsModal', () => {
       name: 'Add Another Question Add',
     });
     userEvent.click(addButton);
-    const emptyTextArea = screen.getAllByRole('textbox')[3];
+    const emptyTextArea = screen.getAllByRole('textbox')[3]!;
     userEvent.type(emptyTextArea, newQuestion);
     expect(emptyTextArea).toHaveTextContent(newQuestion);
   });
@@ -141,7 +141,7 @@ describe('OpenQuestionsModal', () => {
       name: 'Add Another Question Add',
     });
     userEvent.click(addButton);
-    const emptyTextArea = screen.getAllByRole('textbox')[3];
+    const emptyTextArea = screen.getAllByRole('textbox')[3]!;
     userEvent.type(emptyTextArea, newQuestion);
     expect(emptyTextArea).toHaveTextContent(newQuestion);
     const saveButton = screen.getByRole('button', { name: 'Save' });

@@ -52,7 +52,7 @@ it.each(['Google', 'ORCID'])('initiates a SSO with %s', (provider) => {
   );
   expect(authorizeWithSso).toHaveBeenCalledTimes(1);
 
-  const [{ search }, connection] = mockAuthorizeWithSso.mock.calls[0];
+  const [{ search }, connection] = mockAuthorizeWithSso.mock.calls[0]!;
   expect(new URLSearchParams(search).get('response_type')).toBe('code');
   expect(connection).toMatch(new RegExp(provider, 'i'));
 });

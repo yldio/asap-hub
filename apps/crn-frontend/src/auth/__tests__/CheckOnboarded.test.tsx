@@ -24,7 +24,7 @@ const ownProfilePath = network({})
 
 const teamPage = network({})
   .teams({})
-  .team({ teamId: user.teams[0].id })
+  .team({ teamId: user.teams[0]!.id })
   .about({}).$;
 
 const outputs = network({}).users({}).user({ userId: user.id }).outputs({}).$;

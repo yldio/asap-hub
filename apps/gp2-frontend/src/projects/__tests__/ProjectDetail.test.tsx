@@ -48,7 +48,10 @@ const renderProjectDetail = async ({
                   gp2Routing.projects({}).project.template
                 }
               >
-                <ProjectDetail currentTime={new Date()} />
+                <ProjectDetail
+                  currentTime={new Date()}
+                  setBannerMessage={jest.fn()}
+                />
               </Route>
             </MemoryRouter>
           </WhenReady>
@@ -405,7 +408,7 @@ describe('ProjectDetail', () => {
           .resources({}).$,
       });
 
-      const editButton = screen.getAllByRole('link', { name: /edit/i })[1];
+      const editButton = screen.getAllByRole('link', { name: /edit/i })[1]!;
       userEvent.click(editButton);
       const titleBox = screen.getByRole('textbox', { name: /title/i });
       userEvent.clear(titleBox);

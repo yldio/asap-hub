@@ -168,7 +168,7 @@ describe('UserOverview', () => {
       expect(
         screen.getByRole('heading', { name: 'Open Questions' }),
       ).toBeVisible();
-      expect(screen.getByText(questions[0])).toBeVisible();
+      expect(screen.getByText(questions[0]!)).toBeVisible();
     });
     it('does not renders the questions if unavailable', () => {
       render(<UserOverview {...defaultProps} />);

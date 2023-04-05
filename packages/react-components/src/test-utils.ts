@@ -1,4 +1,5 @@
 /* istanbul ignore file */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { screen } from './pixels';
 
 // For TypeScript to understand the extended matcher
@@ -9,7 +10,7 @@ export const viewportCalc = (
   viewportScreen = screen(window.innerWidth, window.innerHeight),
 ): string => {
   const baseUnitRegex = /\d(cm|mm|in|px|pt|pc|em|ex|ch|rem)\W/g;
-
+  // @ts-ignore
   const [[, baseUnit], [, excessUnit] = []] =
     calcExpression.matchAll(baseUnitRegex);
   if (excessUnit) {

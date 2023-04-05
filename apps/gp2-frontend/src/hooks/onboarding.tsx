@@ -65,16 +65,16 @@ export const useOnboarding = (id: string) => {
     pathname.includes(step.href),
   );
   const previousStep =
-    currentStepIndex > 0 ? steps[currentStepIndex - 1].href : undefined;
+    currentStepIndex > 0 ? steps[currentStepIndex - 1]?.href : undefined;
   const nextStep =
     currentStepIndex < steps.length - 1
-      ? steps[currentStepIndex + 1].href
+      ? steps[currentStepIndex + 1]?.href
       : undefined;
   return {
     isOnboardable,
     steps,
     previousStep,
     nextStep,
-    isContinueEnabled: steps[currentStepIndex].completed,
+    isContinueEnabled: steps[currentStepIndex]?.completed,
   };
 };

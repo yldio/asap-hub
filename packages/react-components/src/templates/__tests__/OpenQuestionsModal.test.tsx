@@ -61,7 +61,7 @@ describe('triggers the save function', () => {
             index === 1 || index === 2 ? '(Required)' : '(Optional)'
           }`,
         ),
-        questions[index],
+        questions[index]!,
       );
 
     questions[1] && answerQuestion(1);

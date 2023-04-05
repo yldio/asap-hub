@@ -88,9 +88,9 @@ it('does not count inactive teams in the count', async () => {
   await renderGroupProfile({
     ...response,
     teams: [
-      { ...response.teams[0], id: '1', inactiveSince: undefined },
-      { ...response.teams[0], id: '2', inactiveSince: undefined },
-      { ...response.teams[0], id: '3', inactiveSince: undefined },
+      { ...response.teams[0]!, id: '1', inactiveSince: undefined },
+      { ...response.teams[0]!, id: '2', inactiveSince: undefined },
+      { ...response.teams[0]!, id: '3', inactiveSince: undefined },
     ],
   });
   expect(await screen.findByText(/3 team/i)).toBeVisible();
@@ -98,10 +98,10 @@ it('does not count inactive teams in the count', async () => {
   await renderGroupProfile({
     ...response,
     teams: [
-      { ...response.teams[0], id: '1', inactiveSince: undefined },
-      { ...response.teams[0], id: '2', inactiveSince: undefined },
+      { ...response.teams[0]!, id: '1', inactiveSince: undefined },
+      { ...response.teams[0]!, id: '2', inactiveSince: undefined },
       {
-        ...response.teams[0],
+        ...response.teams[0]!,
         id: '3',
         inactiveSince: new Date().toISOString(),
       },

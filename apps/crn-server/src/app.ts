@@ -516,9 +516,6 @@ export const appFactory = (libs: Libs = {}): Express => {
     app.use(libs.sentryErrorHandler({ shouldHandleError }));
   }
 
-  app.use((err: any, _: any, __: any, next: Function) => {
-    next(err);
-  });
   app.use(errorHandler);
   app.disable('x-powered-by');
 

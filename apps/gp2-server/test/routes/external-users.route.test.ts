@@ -2,17 +2,15 @@ import { gp2 } from '@asap-hub/model';
 import { AuthHandler } from '@asap-hub/server-common';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
-import {
-  getExternalUserResponse,
-  getFetchExternalUsersResponse,
-} from '../fixtures/external-users.fixtures';
+import { getFetchExternalUsersResponse } from '../fixtures/external-users.fixtures';
+import { getUserResponse } from '../fixtures/user.fixtures';
 import { ExternalusersControllerMock } from '../mocks/external-users.controller.mock';
 import { loggerMock } from '../mocks/logger.mock';
 
 describe('/external-users route', () => {
   const loggedInUserId = '11';
-  const loggedUser: gp2.ExternalUserResponse = {
-    ...getExternalUserResponse(),
+  const loggedUser: gp2.UserResponse = {
+    ...getUserResponse(),
     id: loggedInUserId,
   };
   const getLoggedUser = jest.fn().mockReturnValue(loggedUser);

@@ -5,6 +5,7 @@ export * from './logger';
 export * from './migrations';
 export * from './send-email';
 export * from './sentry-wrapper';
+export * from './should-handle-error';
 export * from './sync-google-calendar';
 export * from './sync-google-event';
 export * from './types';

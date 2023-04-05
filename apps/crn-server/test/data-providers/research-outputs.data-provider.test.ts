@@ -973,6 +973,7 @@ describe('ResearchOutputs data provider', () => {
         const result = await researchOutputDataProvider.update(
           researchOutputId,
           researchOutputUpdateData,
+          { publish: false },
         );
         expect(result).toEqual(researchOutputId);
       });
@@ -988,6 +989,7 @@ describe('ResearchOutputs data provider', () => {
           researchOutputDataProvider.update(
             researchOutputId,
             researchOutputRequest,
+            { publish: false },
           ),
         ).rejects.toThrow(GenericError);
       });
@@ -1002,6 +1004,7 @@ describe('ResearchOutputs data provider', () => {
           researchOutputDataProvider.update(
             researchOutputId,
             researchOutputRequest,
+            { publish: false },
           ),
         ).rejects.toThrow(GenericError);
       });
@@ -1017,6 +1020,7 @@ describe('ResearchOutputs data provider', () => {
           researchOutputDataProvider.update(
             researchOutputId,
             researchOutputRequest,
+            { publish: false },
           ),
         ).rejects.toThrow(NotFoundError);
       });

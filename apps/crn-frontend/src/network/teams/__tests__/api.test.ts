@@ -148,6 +148,7 @@ describe('Team Research Output', () => {
     sharingStatus: 'Public',
     publishDate: undefined,
     description: '',
+    descriptionMD: '',
     tags: [],
     type: 'Software',
     labs: ['lab1'],

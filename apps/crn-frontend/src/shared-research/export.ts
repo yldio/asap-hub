@@ -76,6 +76,7 @@ export const researchOutputToCSV = (
   accession: output.accession,
   labCatalogNumber: output.labCatalogNumber,
   description: htmlToCsvText(output.description),
+  descriptionMD: htmlToCsvText(output.descriptionMD),
   usageNotes: htmlToCsvText(output.usageNotes),
   contactEmails: output.contactEmails
     .map((item) => item)

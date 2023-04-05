@@ -21,7 +21,7 @@ export const createMailTo = (
 };
 
 export const mailToFeedback = (overrides?: MailOptions): string =>
-  createMailTo('info@asap.science', {
+  createMailTo('techsupport@asap.science', {
     subject: 'ASAP Hub: Hub Feedback',
     ...overrides,
   });

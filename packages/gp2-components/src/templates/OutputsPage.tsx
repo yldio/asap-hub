@@ -1,5 +1,6 @@
 import { pixels, Toast } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
+import { useEffect } from 'react';
 import { workingGroupsImage } from '../images';
 import { mainStyles } from '../layout';
 import { PageBanner } from '../organisms';
@@ -25,22 +26,27 @@ const OutputsPage: React.FC<OutputsPageProps> = ({
   outputBanner,
   dismissBanner,
   children,
-}) => (
-  <>
-    {outputBanner && (
-      <div css={css({ width: '100vw', position: 'absolute', top: 0, left: 0 })}>
-        <Toast accent="success" onClose={dismissBanner}>
-          {capitalizeFirstLetter(outputBanner)}
-        </Toast>
-      </div>
-    )}
-    <article
-      css={outputBanner ? { position: 'relative', marginTop: rem(48) } : {}}
-    >
-      <PageBanner {...bannerProps}></PageBanner>
-      <main css={mainStyles}>{children}</main>
-    </article>
-  </>
-);
+}) => {
+  useEffect(() => () => dismissBanner?.(), [dismissBanner]);
+  return (
+    <>
+      {outputBanner ? (
+        <div
+          css={css({ width: '100vw', position: 'absolute', top: 0, left: 0 })}
+        >
+          <Toast accent="success" onClose={dismissBanner}>
+            {capitalizeFirstLetter(outputBanner)}
+          </Toast>
+        </div>
+      ) : null}
+      <article
+        css={outputBanner ? { position: 'relative', marginTop: rem(48) } : {}}
+      >
+        <PageBanner {...bannerProps}></PageBanner>
+        <main css={mainStyles}>{children}</main>
+      </article>
+    </>
+  );
+};
 
 export default OutputsPage;

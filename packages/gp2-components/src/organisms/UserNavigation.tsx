@@ -86,9 +86,9 @@ const UserNavigation: React.FC<UserNavigationProps> = (userNavigationProps) => {
           event.preventDefault();
         }}
       >
-        <span
+        <div
           css={{
-            display: 'inline-flex',
+            display: 'flex',
             alignItems: 'center',
             gap: rem(16),
           }}
@@ -101,7 +101,7 @@ const UserNavigation: React.FC<UserNavigationProps> = (userNavigationProps) => {
           <span css={{ scale: '1' }}>
             {menuShown ? chevronUpIcon : chevronDownIcon}
           </span>
-        </span>
+        </div>
       </button>
       <div css={css([userMenuStyles, menuShown && userMenuShownStyles])}>
         <UserMenu {...userNavigationProps} closeUserMenu={setMenuShown} />

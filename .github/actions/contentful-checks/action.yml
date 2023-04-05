@@ -46,7 +46,7 @@ runs:
     - uses: technote-space/get-diff-action@v6
       with:
         PATTERNS: |
-          +src/**/*.ts
+          +packages/contentful/scripts/setup-webhook.ts
         FILES: |
           setup-webhook.ts
       # Determine whether a dedicated environment is needed for this branch

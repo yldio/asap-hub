@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { ComponentProps } from 'react';
 import { gp2 as gp2Routing, logout } from '@asap-hub/routing';
 import userEvent from '@testing-library/user-event';
@@ -173,5 +173,23 @@ describe('UserMenu', () => {
     userEvent.click(screen.getByRole('link', { name: /the first wg title/i }));
 
     expect(closeUserMenu).toBeCalledWith(false);
+  });
+
+  it('closes when the user clicks outside the User Menu', () => {
+    const closeUserMenu = jest.fn();
+    render(
+      <>
+        <h1>Title</h1>
+        <UserMenu {...props} closeUserMenu={closeUserMenu} />{' '}
+      </>,
+    );
+    fireEvent.mouseDown(screen.getByRole('heading'));
+    expect(closeUserMenu).toBeCalledWith(false);
+  });
+
+  it('renders the bottom links', () => {
+    render(<UserMenu {...props} />);
+    expect(screen.getByText(/terms/i)).toBeVisible();
+    expect(screen.getByText(/privacy/i)).toBeVisible();
   });
 });

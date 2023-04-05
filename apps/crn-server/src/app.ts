@@ -3,6 +3,7 @@ import {
   getRestClient as getContentfulRestClient,
 } from '@asap-hub/contentful';
 import {
+  CalendarDataProvider,
   CalendarController,
   EventController,
   EventDataProvider,
@@ -35,9 +36,8 @@ import {
 } from '@asap-hub/squidex';
 
 import * as Sentry from '@sentry/serverless';
-import AWSXray from 'aws-xray-sdk';
 import cors from 'cors';
-import express, { ErrorRequestHandler, Express, RequestHandler } from 'express';
+import express, { Express, RequestHandler } from 'express';
 import 'express-async-errors';
 import { Tracer } from 'opentracing';
 import {
@@ -76,6 +76,7 @@ import {
   AssetSquidexDataProvider,
 } from './data-providers/assets.data-provider';
 import { CalendarSquidexDataProvider } from './data-providers/calendars.data-provider';
+import { CalendarContentfulDataProvider } from './data-providers/contentful/calendars.data-provider';
 import { DashboardContentfulDataProvider } from './data-providers/contentful/dashboard.data-provider';
 import { ExternalAuthorContentfulDataProvider } from './data-providers/contentful/external-authors.data-provider';
 import { NewsContentfulDataProvider } from './data-providers/contentful/news.data-provider';
@@ -357,9 +358,31 @@ export const appFactory = (libs: Libs = {}): Express => {
       'IS_CONTENTFUL_ENABLED_V2',
     );
 
+  featureFlagDependencySwitch.setDependency(
+    'calendars',
+    libs.calendarSquidexDataProvider ||
+      new CalendarSquidexDataProvider(calendarRestClient, squidexGraphqlClient),
+    'IS_CONTENTFUL_ENABLED_V2',
+    false,
+  );
+  featureFlagDependencySwitch.setDependency(
+    'calendars',
+    libs.calendarContentfulDataProvider ||
+      new CalendarContentfulDataProvider(
+        contentfulGraphQLClient,
+        getContentfulRestClientFactory,
+      ),
+    'IS_CONTENTFUL_ENABLED_V2',
+    true,
+  );
+
   const calendarDataProvider =
     libs.calendarDataProvider ||
-    new CalendarSquidexDataProvider(calendarRestClient, squidexGraphqlClient);
+    featureFlagDependencySwitch.getDependency(
+      'calendars',
+      'IS_CONTENTFUL_ENABLED_V2',
+    );
+
   const workingGroupDataProvider =
     libs.workingGroupDataProvider ||
     new WorkingGroupSquidexDataProvider(
@@ -441,12 +464,6 @@ export const appFactory = (libs: Libs = {}): Express => {
    */
 
   /* istanbul ignore next */
-  if (libs.xRay) {
-    app.use(libs.xRay.express.openSegment('default') as RequestHandler);
-    libs.xRay.middleware.enableDynamicNaming('*.hub.asap.science');
-  }
-
-  /* istanbul ignore next */
   if (libs.sentryRequestHandler) {
     app.use(libs.sentryRequestHandler());
   }
@@ -508,11 +525,6 @@ export const appFactory = (libs: Libs = {}): Express => {
   });
 
   /* istanbul ignore next */
-  if (libs.xRay) {
-    app.use(libs.xRay.express.closeSegment() as ErrorRequestHandler);
-  }
-
-  /* istanbul ignore next */
   if (libs.sentryErrorHandler) {
     app.use(libs.sentryErrorHandler({ shouldHandleError }));
   }
@@ -540,7 +552,9 @@ export type Libs = {
   userController?: UserController;
   workingGroupsController?: WorkingGroupController;
   assetDataProvider?: AssetDataProvider;
-  calendarDataProvider?: CalendarSquidexDataProvider;
+  calendarDataProvider?: CalendarDataProvider;
+  calendarSquidexDataProvider?: CalendarDataProvider;
+  calendarContentfulDataProvider?: CalendarDataProvider;
   dashboardDataProvider?: DashboardDataProvider;
   dashboardSquidexDataProvider?: DashboardDataProvider;
   dashboardContentfulDataProvider?: DashboardDataProvider;
@@ -571,7 +585,6 @@ export type Libs = {
   logger?: Logger;
   // extra handlers only for tests and local development
   mockRequestHandlers?: RequestHandler[];
-  xRay?: typeof AWSXray;
   sentryErrorHandler?: typeof Sentry.Handlers.errorHandler;
   sentryRequestHandler?: typeof Sentry.Handlers.requestHandler;
   sentryTransactionIdHandler?: RequestHandler;

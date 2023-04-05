@@ -4653,6 +4653,7 @@ type WorkingGroupsDataDto {
   description: WorkingGroupsDataDescriptionDto
   leadingMembers: WorkingGroupsDataLeadingMembersDto
   members: WorkingGroupsDataMembersDto
+  milestones: WorkingGroupsDataMilestonesDto
   primaryEmail: WorkingGroupsDataPrimaryEmailDto
   resources: WorkingGroupsDataResourcesDto
   secondaryEmail: WorkingGroupsDataSecondaryEmailDto
@@ -4666,6 +4667,7 @@ input WorkingGroupsDataInputDto {
   description: WorkingGroupsDataDescriptionInputDto
   leadingMembers: WorkingGroupsDataLeadingMembersInputDto
   members: WorkingGroupsDataMembersInputDto
+  milestones: WorkingGroupsDataMilestonesInputDto
   primaryEmail: WorkingGroupsDataPrimaryEmailInputDto
   resources: WorkingGroupsDataResourcesInputDto
   secondaryEmail: WorkingGroupsDataSecondaryEmailInputDto
@@ -4712,6 +4714,41 @@ enum WorkingGroupsDataMembersRoleEnum {
   Lead
   """Working_group_member"""
   Working_group_member
+}
+
+"""The structure of the Working Group Milestones nested schema."""
+type WorkingGroupsDataMilestonesChildDto {
+  description: String
+  link: String
+  status: WorkingGroupsDataMilestonesStatusEnum
+  title: String
+}
+
+"""The structure of the Working Group Milestones nested schema."""
+input WorkingGroupsDataMilestonesChildInputDto {
+  description: String
+  link: String
+  status: WorkingGroupsDataMilestonesStatusEnum
+  title: String
+}
+
+"""The structure of the Working Group Milestones field of the Working Groups content type."""
+type WorkingGroupsDataMilestonesDto {
+  iv: [WorkingGroupsDataMilestonesChildDto!]
+}
+
+"""The structure of the Working Group Milestones field of the Working Groups content input type."""
+input WorkingGroupsDataMilestonesInputDto {
+  iv: [WorkingGroupsDataMilestonesChildInputDto!]
+}
+
+enum WorkingGroupsDataMilestonesStatusEnum {
+  """Active"""
+  Active
+  """Completed"""
+  Completed
+  """Not_Started"""
+  Not_Started
 }
 
 """The structure of the Working Group Email field of the Working Groups content type."""
@@ -4795,6 +4832,7 @@ type WorkingGroupsFlatDataDto {
   description: String
   leadingMembers: String
   members: [WorkingGroupsDataMembersChildDto!]
+  milestones: [WorkingGroupsDataMilestonesChildDto!]
   primaryEmail: String
   resources: [WorkingGroupsDataResourcesChildDto!]
   secondaryEmail: String

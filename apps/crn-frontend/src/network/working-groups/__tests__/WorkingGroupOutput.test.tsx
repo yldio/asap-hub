@@ -382,10 +382,10 @@ it('will show server side validation error for link', async () => {
 
   expect(mockCreateResearchOutput).toHaveBeenCalled();
   expect(
-    screen.getByText(
+    screen.queryAllByText(
       'A Research Output with this URL already exists. Please enter a different URL.',
-    ),
-  ).toBeVisible();
+    ).length,
+  ).toBeGreaterThan(1);
 
   const url = screen.getByRole('textbox', { name: /URL \(required\)/i });
   userEvent.type(url, 'a');

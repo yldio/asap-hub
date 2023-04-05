@@ -12,10 +12,16 @@ import { css } from '@emotion/react';
 import ExpandableText from '../molecules/ExpandableText';
 import EmailSection from '../organisms/EmailSection';
 import Events from '../organisms/Events';
+import { Milestones } from '../organisms';
 
 type WorkingGroupOverviewProps = Pick<
   gp2.WorkingGroupResponse,
-  'members' | 'description' | 'primaryEmail' | 'secondaryEmail' | 'calendar'
+  | 'members'
+  | 'description'
+  | 'primaryEmail'
+  | 'secondaryEmail'
+  | 'calendar'
+  | 'milestones'
 >;
 
 const { rem } = pixels;
@@ -30,7 +36,10 @@ const containerStyles = css({
 const contentStyles = css({
   marginTop: rem(32),
 });
-const cardStyles = css({ padding: `${rem(32)} ${rem(24)}` });
+const cardStyles = css({
+  padding: `${rem(32)} ${rem(24)}`,
+  overflowX: 'scroll',
+});
 const columnStyles = css({
   display: 'grid',
   columnGap: rem(32),
@@ -47,16 +56,17 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
   secondaryEmail,
   members,
   calendar,
+  milestones,
 }) => (
   <div css={containerStyles}>
-    <Card>
+    <Card overrideStyles={cardStyles}>
       <Headline3 noMargin>Description</Headline3>
       <div css={contentStyles}>
         <ExpandableText>{description}</ExpandableText>
       </div>
     </Card>
     <div css={columnStyles}>
-      <Card>
+      <Card overrideStyles={cardStyles}>
         <Headline3 noMargin>Contact</Headline3>
         <div css={contentStyles}>
           <EmailSection
@@ -79,7 +89,7 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
         </Card>
       ) : undefined}
     </div>
-    <Card>
+    <Card overrideStyles={cardStyles}>
       <Headline3
         noMargin
       >{`Working Group Members (${members.length})`}</Headline3>
@@ -99,6 +109,16 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
           overrideNameStyles={css({ overflowWrap: 'anywhere' })}
         />
       </div>
+    </Card>
+    <Card overrideStyles={cardStyles}>
+      <Milestones
+        milestones={milestones}
+        title="Working Group Milestones"
+        description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat"
+      />
     </Card>
   </div>
 );

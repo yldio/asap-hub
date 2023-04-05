@@ -50,18 +50,6 @@ it('displays the event with given id', async () => {
   expect(mockGetEvent.mock.calls).toEqual([[id, expect.anything()]]);
 });
 
-it('generates the back href', async () => {
-  mockGetEvent.mockResolvedValue({
-    ...gp2.createEventResponse(),
-    id,
-  });
-  await renderEvent();
-  expect(screen.getByText(/back/i).closest('a')).toHaveAttribute(
-    'href',
-    expect.stringMatching(/events$/),
-  );
-});
-
 it('falls back to the not found page for a missing event', async () => {
   mockGetEvent.mockResolvedValue(undefined);
   await renderEvent();

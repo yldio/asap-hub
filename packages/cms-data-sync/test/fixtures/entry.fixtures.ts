@@ -65,3 +65,8 @@ export const teamEntry = getEntry({
   projectTitle: { 'en-US': 'Beautiful Title' },
   tools: { 'en-US': [] },
 });
+
+export const externalAuthorEntry = getEntry({
+  name: { 'en-US': 'External Person' },
+  orcid: { 'en-US': '0000-0000-0000-0000' },
+});

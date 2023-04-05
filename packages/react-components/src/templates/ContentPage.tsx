@@ -1,10 +1,11 @@
-import { css } from '@emotion/react';
+/** @jsxImportSource @emotion/react */
 import { PageResponse } from '@asap-hub/model';
+import { css } from '@emotion/react';
 
-import { perRem } from '../pixels';
 import { Display } from '../atoms';
-import { RichText } from '../organisms';
 import { contentSidePaddingWithNavigation } from '../layout';
+import { RichText } from '../organisms';
+import { perRem } from '../pixels';
 
 const styles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
@@ -12,7 +13,7 @@ const styles = css({
 
 type ContentPageProps = Pick<PageResponse, 'text' | 'title'>;
 const ContentPage: React.FC<ContentPageProps> = ({ text, title }) => (
-  <article css={styles}>
+  <article css={({ components }) => [styles, components?.ContentPage?.styles]}>
     <Display>{title}</Display>
     <RichText toc text={text} />
   </article>

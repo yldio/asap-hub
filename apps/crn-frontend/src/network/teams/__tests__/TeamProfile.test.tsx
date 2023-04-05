@@ -112,6 +112,25 @@ it('navigates to the outputs tab', async () => {
   expect(await screen.findByText(/Output 1/i)).toBeVisible();
 });
 
+it('navigates to the outputs tab and is able to search', async () => {
+  const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
+    typeof getResearchOutputs
+  >;
+  mockGetResearchOutputs.mockResolvedValue({
+    ...createResearchOutputListAlgoliaResponse(1),
+  });
+  await renderPage();
+
+  userEvent.click(screen.getByText(/outputs/i, { selector: 'nav *' }));
+  expect(await screen.findByText(/Output 1/i)).toBeVisible();
+  expect(await screen.findByRole('searchbox')).toHaveAttribute(
+    'placeholder',
+    'Enter a keyword, method, resource…',
+  );
+  userEvent.type(screen.getByRole('searchbox'), 'test');
+  expect(await screen.findByRole('searchbox')).toHaveAttribute('value', 'test');
+});
+
 it('navigates to the workspace tab', async () => {
   await renderPage({
     ...createTeamResponse(),

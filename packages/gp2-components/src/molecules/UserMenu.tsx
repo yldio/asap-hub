@@ -1,17 +1,19 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { gp2 as gp2Routing, logout } from '@asap-hub/routing';
+import { gp2 as gp2Routing, logout, staticPages } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 
 import {
+  Anchor,
+  Caption,
   Divider,
   logoutIcon,
   NavigationLink,
   pixels,
 } from '@asap-hub/react-components';
-import { useLocation } from 'react-router-dom';
 import { Location } from 'history';
 import { useEffect } from 'react';
-import { workingGroupIcon, projectIcon, userIcon } from '../icons';
+import { useLocation } from 'react-router-dom';
+import { projectIcon, userIcon, workingGroupIcon } from '../icons';
 import { nonMobileQuery } from '../layout';
 
 const { vminLinearCalc, mobileScreen, largeDesktopScreen, rem } = pixels;
@@ -42,6 +44,13 @@ const listStyles = css({
   listStyle: 'none',
   margin: 0,
   padding: 0,
+});
+
+const bottomLinksStyles = css({
+  flexGrow: 1,
+  display: 'flex',
+  justifyContent: 'center',
+  padding: `${rem(12)} ${rem(12)} 0`,
 });
 
 type UserMenuProps = Pick<
@@ -122,6 +131,15 @@ const UserMenu: React.FC<UserMenuProps> = ({
           </NavigationLink>
         </li>
       </ul>
+      <div css={bottomLinksStyles}>
+        <Caption accent="lead" asParagraph>
+          <Anchor href={staticPages({}).terms({}).$}>Terms of Use</Anchor>
+          {'  ·  '}
+          <Anchor href={staticPages({}).privacyPolicy({}).$}>
+            Privacy Policy
+          </Anchor>
+        </Caption>
+      </div>
     </nav>
   );
 };

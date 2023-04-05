@@ -5,20 +5,24 @@ describe('WorkingGroupOverview', () => {
   const defaultProps = {
     description: 'this is a description',
     primaryEmail: 'primary@example.com',
+    milestones: [],
     members: [],
   };
+
   it('renders the description', () => {
     render(<WorkingGroupOverview {...defaultProps} />);
     expect(
       screen.getByRole('heading', { name: 'Description' }),
     ).toBeInTheDocument();
   });
+
   it('renders the contact information', () => {
     render(<WorkingGroupOverview {...defaultProps} />);
     expect(
       screen.getByRole('heading', { name: 'Contact' }),
     ).toBeInTheDocument();
   });
+
   it('renders the members list', () => {
     render(
       <WorkingGroupOverview
@@ -54,6 +58,7 @@ describe('WorkingGroupOverview', () => {
     );
     expect(screen.getByText('Working Group Members (0)')).toBeInTheDocument();
   });
+
   it('renders the events', () => {
     render(
       <WorkingGroupOverview
@@ -64,11 +69,27 @@ describe('WorkingGroupOverview', () => {
 
     expect(screen.getByRole('heading', { name: 'Events' })).toBeVisible();
   });
+
   it('does not renders the events if there is no calendar', () => {
     render(<WorkingGroupOverview {...defaultProps} calendar={undefined} />);
 
     expect(
       screen.queryByRole('heading', { name: 'Events' }),
     ).not.toBeInTheDocument();
+  });
+
+  it('displays the milestones', () => {
+    render(
+      <WorkingGroupOverview
+        {...defaultProps}
+        milestones={[{ title: 'the milestone', status: 'Active' }]}
+      />,
+    );
+    expect(
+      screen.getByRole('heading', { name: 'Working Group Milestones (1)' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: /the milestone/ }),
+    ).toBeInTheDocument();
   });
 });

@@ -1,10 +1,10 @@
-import { Frame } from '@asap-hub/frontend-utils';
 import { Layout } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Route } from '@asap-hub/routing';
 import { FC, lazy, useEffect, ComponentProps } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import Frame from './Frame';
 import { useUserById } from './users/state';
 
 const {

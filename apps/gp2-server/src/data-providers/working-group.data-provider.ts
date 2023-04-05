@@ -108,6 +108,12 @@ type GraphQLWorkingGroupMemberRole = NonNullable<
   GraphQLWorkingGroupMember['role']
 >;
 
+export type GraphQLWorkingGroupMilestone = NonNullable<
+  NonNullable<
+    NonNullable<GraphQLWorkingGroup['flatData']>['milestones']
+  >[number]
+>;
+
 export type GraphQLWorkingGroupResource = NonNullable<
   NonNullable<GraphQLWorkingGroup['flatData']>['resources']
 >[number];
@@ -158,6 +164,22 @@ export function parseWorkingGroupToDataObject({
       [],
     ) || [];
 
+  const milestones =
+    workingGroup.milestones?.map((milestone: GraphQLWorkingGroupMilestone) => {
+      if (!milestone.status) {
+        throw new TypeError('milestone status is unknown');
+      }
+      const status: gp2Model.MilestoneStatus =
+        milestone.status === 'Not_Started' ? 'Not Started' : milestone.status;
+
+      return {
+        title: milestone.title || '',
+        status,
+        link: milestone.link || undefined,
+        description: milestone.description || undefined,
+      };
+    }) || [];
+
   const resources = workingGroup.resources?.reduce(parseResources, []) || [];
 
   const { calendars } = workingGroup;
@@ -178,6 +200,7 @@ export function parseWorkingGroupToDataObject({
     secondaryEmail: workingGroup.secondaryEmail || undefined,
     leadingMembers: workingGroup.leadingMembers || '',
     members,
+    milestones,
     resources,
     calendar,
   };

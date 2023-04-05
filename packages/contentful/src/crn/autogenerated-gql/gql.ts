@@ -3,6 +3,12 @@ import * as graphql from './graphql';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
 const documents = {
+  '\n  fragment CalendarsContent on Calendars {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    googleCalendarId\n    name\n    color\n    syncToken\n    resourceId\n    expirationDate\n  }\n':
+    graphql.CalendarsContentFragmentDoc,
+  '\n  query FetchCalendarById($id: String!) {\n    calendars(id: $id) {\n      ...CalendarsContent\n    }\n  }\n  \n':
+    graphql.FetchCalendarByIdDocument,
+  '\n  query FetchCalendars(\n    $limit: Int\n    $skip: Int\n    $order: [CalendarsOrder]\n    $where: CalendarsFilter\n  ) {\n    calendarsCollection(\n      limit: $limit\n      skip: $skip\n      order: $order\n      where: $where\n    ) {\n      total\n      items {\n        ...CalendarsContent\n      }\n    }\n  }\n  \n':
+    graphql.FetchCalendarsDocument,
   '\n  query FetchDashboard {\n    dashboardCollection(limit: 1, order: sys_publishedAt_DESC) {\n      items {\n        newsCollection {\n          items {\n            ...NewsContent\n          }\n        }\n\n        pagesCollection {\n          items {\n            ...PageContent\n          }\n        }\n      }\n    }\n  }\n  \n  \n':
     graphql.FetchDashboardDocument,
   '\n  fragment ExternalAuthorsContent on ExternalAuthors {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    name\n    orcid\n  }\n':
@@ -29,6 +35,15 @@ const documents = {
     graphql.FetchTeamsDocument,
 };
 
+export function gql(
+  source: '\n  fragment CalendarsContent on Calendars {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    googleCalendarId\n    name\n    color\n    syncToken\n    resourceId\n    expirationDate\n  }\n',
+): (typeof documents)['\n  fragment CalendarsContent on Calendars {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    googleCalendarId\n    name\n    color\n    syncToken\n    resourceId\n    expirationDate\n  }\n'];
+export function gql(
+  source: '\n  query FetchCalendarById($id: String!) {\n    calendars(id: $id) {\n      ...CalendarsContent\n    }\n  }\n  \n',
+): (typeof documents)['\n  query FetchCalendarById($id: String!) {\n    calendars(id: $id) {\n      ...CalendarsContent\n    }\n  }\n  \n'];
+export function gql(
+  source: '\n  query FetchCalendars(\n    $limit: Int\n    $skip: Int\n    $order: [CalendarsOrder]\n    $where: CalendarsFilter\n  ) {\n    calendarsCollection(\n      limit: $limit\n      skip: $skip\n      order: $order\n      where: $where\n    ) {\n      total\n      items {\n        ...CalendarsContent\n      }\n    }\n  }\n  \n',
+): (typeof documents)['\n  query FetchCalendars(\n    $limit: Int\n    $skip: Int\n    $order: [CalendarsOrder]\n    $where: CalendarsFilter\n  ) {\n    calendarsCollection(\n      limit: $limit\n      skip: $skip\n      order: $order\n      where: $where\n    ) {\n      total\n      items {\n        ...CalendarsContent\n      }\n    }\n  }\n  \n'];
 export function gql(
   source: '\n  query FetchDashboard {\n    dashboardCollection(limit: 1, order: sys_publishedAt_DESC) {\n      items {\n        newsCollection {\n          items {\n            ...NewsContent\n          }\n        }\n\n        pagesCollection {\n          items {\n            ...PageContent\n          }\n        }\n      }\n    }\n  }\n  \n  \n',
 ): (typeof documents)['\n  query FetchDashboard {\n    dashboardCollection(limit: 1, order: sys_publishedAt_DESC) {\n      items {\n        newsCollection {\n          items {\n            ...NewsContent\n          }\n        }\n\n        pagesCollection {\n          items {\n            ...PageContent\n          }\n        }\n      }\n    }\n  }\n  \n  \n'];

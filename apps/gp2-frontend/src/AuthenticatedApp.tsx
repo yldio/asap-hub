@@ -1,5 +1,5 @@
 import { Auth0, gp2 as gp2Auth } from '@asap-hub/auth';
-import { Frame } from '@asap-hub/frontend-utils';
+
 import { BasicLayout } from '@asap-hub/gp2-components';
 import { Loading, NotFoundPage } from '@asap-hub/react-components';
 import { useAuth0GP2, useCurrentUserGP2 } from '@asap-hub/react-context';
@@ -7,6 +7,7 @@ import { FC, lazy, useEffect, useState } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { RecoilRoot, useRecoilState, useResetRecoilState } from 'recoil';
 import { auth0State } from './auth/state';
+import Frame from './Frame';
 
 const loadOnboardedApp = () =>
   import(/* webpackChunkName: "onboarded-app" */ './OnboardedApp');

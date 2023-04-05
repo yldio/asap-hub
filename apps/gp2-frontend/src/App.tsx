@@ -1,12 +1,11 @@
-import { Frame } from '@asap-hub/frontend-utils';
-import { Theme } from '@asap-hub/gp2-components';
+import { BasicLayout, Theme } from '@asap-hub/gp2-components';
 import {
   GoogleTagManager,
   ToastStack,
   UtilityBar,
 } from '@asap-hub/react-components';
 import { useFlags } from '@asap-hub/react-context';
-import { logout, welcome } from '@asap-hub/routing';
+import { logout, staticPages, welcome } from '@asap-hub/routing';
 import { init, reactRouterV5Instrumentation } from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
 import { FC, lazy, useEffect } from 'react';
@@ -17,6 +16,7 @@ import Logout from './auth/Logout';
 import SentryAuth0 from './auth/SentryAuth0';
 import Signin from './auth/Signin';
 import { ENVIRONMENT, GTM_CONTAINER_ID, RELEASE, SENTRY_DSN } from './config';
+import Frame from './Frame';
 import history from './history';
 
 init({
@@ -31,10 +31,10 @@ init({
   environment: ENVIRONMENT,
   // Is recommended adjusting this value in production, or using tracesSampler
   // for finer control
-  tracesSampleRate: 1.0,
+  tracesSampleRate: 0.2,
   attachStacktrace: true,
-  // Turn sampleRate on to reduce the amount of data sent to Sentry
-  // sampleRate: 0.1, // 0.1 = 10% of error events will be sent
+  // Turn sampleRate on to reduce the amount of errors sent to Sentry
+  sampleRate: 1.0, // 0.1 = 10% of error events will be sent
   allowUrls: [
     'gp2.asap.science/static/js/', // your code
     'gp2-hub.us.auth0.com', // code served from Auth0
@@ -57,19 +57,21 @@ init({
 const loadAuthProvider = () =>
   import(/* webpackChunkName: "auth-provider" */ './auth/AuthProvider');
 const AuthProvider = lazy(loadAuthProvider);
-
+const loadContent = () =>
+  import(/* webpackChunkName: "content" */ './content/Content');
 const loadAuthenticatedApp = () =>
   import(/* webpackChunkName: "authenticated-app" */ './AuthenticatedApp');
 const AuthenticatedApp = lazy(loadAuthenticatedApp);
 const loadWelcome = () =>
   import(/* webpackChunkName: "welcome" */ './welcome/Routes');
+const Content = lazy(loadContent);
 const Welcome = lazy(loadWelcome);
 
 const App: FC<Record<string, never>> = () => {
   const { setCurrentOverrides } = useFlags();
 
   useEffect(() => {
-    loadAuthenticatedApp().then(loadWelcome);
+    loadAuthenticatedApp().then(loadContent).then(loadWelcome);
     setCurrentOverrides();
   }, [setCurrentOverrides]);
 
@@ -94,6 +96,20 @@ const App: FC<Record<string, never>> = () => {
                     <Frame title="Logout">
                       <Logout />
                     </Frame>
+                  </Route>
+                  <Route exact path={staticPages({}).terms.template}>
+                    <BasicLayout>
+                      <Frame title={null}>
+                        <Content pageId="terms-and-conditions" />
+                      </Frame>
+                    </BasicLayout>
+                  </Route>
+                  <Route exact path={staticPages({}).privacyPolicy.template}>
+                    <BasicLayout>
+                      <Frame title={null}>
+                        <Content pageId="privacy-policy" />
+                      </Frame>
+                    </BasicLayout>
                   </Route>
                   <Route>
                     <CheckAuth>

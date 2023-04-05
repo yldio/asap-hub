@@ -62,15 +62,15 @@ const MessageLayout: React.FC<LayoutProps> = ({ children, appOrigin }) => (
     </div>
     <div css={footerContainerStyles}>
       <ul css={[containerStyles, footerContentContainerStyles]}>
-        <Link href={new URL(staticPages({}).terms({}).$, appOrigin).toString()}>
-          Privacy policy
-        </Link>
         <Link
           href={new URL(
             staticPages({}).privacyPolicy({}).$,
             appOrigin,
           ).toString()}
         >
+          Privacy policy
+        </Link>
+        <Link href={new URL(staticPages({}).terms({}).$, appOrigin).toString()}>
           Terms and conditions
         </Link>
       </ul>

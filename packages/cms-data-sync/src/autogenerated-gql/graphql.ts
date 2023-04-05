@@ -6301,6 +6301,20 @@ export type WorkingGroupsResultDto = {
   total: Scalars['Int'];
 };
 
+export type FetchExternalAuthorsQueryVariables = Exact<{
+  [key: string]: never;
+}>;
+
+export type FetchExternalAuthorsQuery = {
+  queryExternalAuthorsContents: Maybe<
+    Array<
+      Pick<ExternalAuthors, 'id'> & {
+        flatData: Pick<ExternalAuthorsFlatDataDto, 'name' | 'orcid'>;
+      }
+    >
+  >;
+};
+
 export type FetchNewsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type FetchNewsQuery = {
@@ -6364,6 +6378,52 @@ export type FetchTeamsQuery = {
   >;
 };
 
+export const FetchExternalAuthorsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchExternalAuthors' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'queryExternalAuthorsContents' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'top' },
+                value: { kind: 'IntValue', value: '100' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'flatData' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'orcid' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  FetchExternalAuthorsQuery,
+  FetchExternalAuthorsQueryVariables
+>;
 export const FetchNewsDocument = {
   kind: 'Document',
   definitions: [

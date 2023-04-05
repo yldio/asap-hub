@@ -2,9 +2,10 @@ import { FC } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { OutputsPage } from '@asap-hub/gp2-components';
 import { gp2 } from '@asap-hub/routing';
-import { Frame } from '@asap-hub/frontend-utils';
+
 import OutputList from './OutputList';
 import ShareOutput from './ShareOutput';
+import Frame from '../Frame';
 
 const Outputs: FC<Record<string, never>> = () => {
   const { path } = useRouteMatch();

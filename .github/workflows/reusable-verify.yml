@@ -41,8 +41,10 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Test
-        run: CRN_API_URL=${{ steps.setup.outputs.crn-api-url }} yarn test:e2e
+      - name: Test CRN
+        run: API_URL=${{ steps.setup.outputs.crn-api-url }} yarn test:e2e
+      - name: Test GP2
+        run: API_URL=${{ steps.setup.outputs.gp2-api-url }} yarn test:e2e
 
   test-e2e:
     runs-on: ubuntu-latest
@@ -64,12 +66,18 @@ jobs:
         if: ${{ inputs.environment-name=='Branch' }}
         run: |
           yarn workspace @asap-hub/e2e-tests run playwright install
-      - name: Test
+      - name: Test CRN
         if: ${{ inputs.environment-name=='Branch' }}
         run: |
           yarn workspace @asap-hub/e2e-tests run playwright test
         env:
-          CRN_APP_URL: ${{ steps.setup.outputs.crn-app-url }}
+          APP_URL: ${{ steps.setup.outputs.crn-app-url }}
+      - name: Test GP2
+        if: ${{ inputs.environment-name=='Branch' }}
+        run: |
+          yarn workspace @asap-hub/e2e-tests run playwright test
+        env:
+          APP_URL: ${{ steps.setup.outputs.gp2-app-url }}
 
   crn-squidex-schema:
     runs-on: ubuntu-latest

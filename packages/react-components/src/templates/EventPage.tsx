@@ -36,7 +36,7 @@ type EventPageProps = ComponentProps<typeof EventInfo> &
     | 'hideMeetingLink'
     | 'calendar'
   > & {
-    readonly backHref: string;
+    readonly backHref?: string;
     readonly displayCalendar: boolean;
     readonly eventConversation?: ReactNode;
   };
@@ -56,7 +56,7 @@ const EventPage: React.FC<EventPageProps> = ({
       components?.EventPage?.containerStyles,
     ]}
   >
-    <BackLink href={backHref} />
+    {backHref && <BackLink href={backHref} />}
     <div css={cardsStyles}>
       <Card>
         <EventInfo {...props} titleLimit={null} />

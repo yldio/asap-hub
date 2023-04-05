@@ -1,7 +1,7 @@
-import { Frame } from '@asap-hub/frontend-utils';
 import { DashboardPage } from '@asap-hub/gp2-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { ComponentProps, FC, lazy, useState } from 'react';
+import Frame from '../Frame';
 
 const loadBody = () =>
   import(/* webpackChunkName: "dashboard-body" */ './Body');

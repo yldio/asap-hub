@@ -91,6 +91,7 @@ import {
   WorkingGroupDataProvider,
   WorkingGroupSquidexDataProvider,
 } from './data-providers/working-group.data-provider';
+import { permissionHandler } from './middleware/permission-handler';
 import { calendarRouteFactory } from './routes/calendar.route';
 import { contributingCohortRouteFactory } from './routes/contributing-cohort.route';
 import { eventRouteFactory } from './routes/event.route';
@@ -313,6 +314,13 @@ export const appFactory = (libs: Libs = {}): Express => {
   }
 
   app.use(userRoutes);
+
+  // Permission check
+  app.use(permissionHandler);
+
+  /**
+   * Routes requiring onboarding below
+   */
   app.use(contributingCohortRoutes);
   app.use(newsRoutes);
   app.use(workingGroupRoutes);

@@ -8,6 +8,7 @@ import Boom, { isBoom } from '@hapi/boom';
 import { Router } from 'express';
 import parseURI from 'parse-data-url';
 import { UserController } from '../controllers/user.controller';
+import { permissionHandler } from '../middleware/permission-handler';
 import {
   validateUserParameters,
   validateUserPatchRequest,
@@ -44,6 +45,7 @@ export const userRouteFactory = (userController: UserController): Router =>
   Router()
     .get<gp2Model.FetchUsersOptions, gp2Model.ListUserResponse>(
       '/users',
+      permissionHandler,
       async (req, res) => {
         const options = validateFetchUsersOptions(req.query);
 
@@ -68,6 +70,14 @@ export const userRouteFactory = (userController: UserController): Router =>
 
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const loggedInUserId = req.loggedInUser!.id;
+
+        if (
+          req.loggedInUser?.onboarded !== true &&
+          userId !== req.loggedInUser?.id
+        ) {
+          throw Boom.forbidden('User is not onboarded');
+        }
+
         const user = await userController.fetchById(userId, loggedInUserId);
 
         res.json(user);

@@ -1,5 +1,9 @@
 export type WebhookDetailType =
   | 'ExternalAuthorsPublished'
+  | 'ExternalAuthorsCreated'
+  | 'ExternalAuthorsUpdated'
+  | 'ExternalAuthorsUnpublished'
+  | 'ExternalAuthorsDeleted'
   | 'LabsCreated'
   | 'LabsDeleted'
   | 'LabsPublished'

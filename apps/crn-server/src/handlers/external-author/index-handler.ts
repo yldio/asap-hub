@@ -24,13 +24,13 @@ export const indexExternalAuthorHandler =
     const getExternalAuthor = async () => {
       try {
         const externalAuthor = await externalAuthorController.fetchById(
-          event.detail.payload.id,
+          event.detail.resourceId,
         );
 
         logger.debug(`Fetched external author ${externalAuthor.displayName}`);
         return externalAuthor;
       } catch {
-        await algoliaClient.remove(event.detail.payload.id);
+        await algoliaClient.remove(event.detail.resourceId);
         return null;
       }
     };

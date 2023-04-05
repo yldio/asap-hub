@@ -1,9 +1,12 @@
+import { ContentfulWebhookPayload } from '@asap-hub/contentful';
+import { WebhookDetail } from '@asap-hub/model';
 import {
   CalendarEvent,
   LabEvent,
   SquidexEntityEvent,
   UserEvent,
 } from '@asap-hub/server-common';
+import { ExternalAuthor, SquidexWebhookPayload } from '@asap-hub/squidex';
 
 export type EventEvent = `Events${SquidexEntityEvent}`;
 export type ExternalAuthorEvent = `ExternalAuthors${SquidexEntityEvent}`;
@@ -32,19 +35,16 @@ export type EventPayload = {
   };
 };
 
-export type ExternalAuthorPayload = {
-  type: ExternalAuthorEvent;
-  timestamp: string;
-  payload: {
-    $type: 'EnrichedContentEvent';
-    type: SquidexEntityEvent;
-    id: string;
-    created: string;
-    lastModified: string;
-    version: number;
-    data: { [x: string]: { iv: unknown } | null };
-  };
-};
+export type ExternalAuthorSquidexPayload = WebhookDetail<
+  SquidexWebhookPayload<ExternalAuthor, ExternalAuthorEvent>
+>;
+export type ExternalAuthorContentfulPayload = WebhookDetail<
+  ContentfulWebhookPayload<'externalAuthors'>
+>;
+
+export type ExternalAuthorPayload =
+  | ExternalAuthorSquidexPayload
+  | ExternalAuthorContentfulPayload;
 
 export type GroupPayload = {
   type: GroupEvent;

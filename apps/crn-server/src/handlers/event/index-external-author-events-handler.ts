@@ -21,14 +21,17 @@ import {
   LoopOverCustomCollectionFetchOptions,
 } from '../../utils/loop-over-custom-colection';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
-import { ExternalAuthorEvent, ExternalAuthorPayload } from '../event-bus';
+import {
+  ExternalAuthorEvent,
+  ExternalAuthorSquidexPayload,
+} from '../event-bus';
 
 export const indexExternalAuthorEventsHandler =
   (
     eventController: EventController,
     algoliaClient: AlgoliaSearchClient,
   ): ((
-    event: EventBridgeEvent<ExternalAuthorEvent, ExternalAuthorPayload>,
+    event: EventBridgeEvent<ExternalAuthorEvent, ExternalAuthorSquidexPayload>,
   ) => Promise<void>) =>
   async (event) => {
     logger.debug(`Event ${event['detail-type']}`);

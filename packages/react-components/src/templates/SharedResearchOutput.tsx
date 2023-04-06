@@ -113,7 +113,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
           <SharedResearchOutputHeaderCard {...props} published={published} />
           {((hasDescription && !isGrantDocument) || !!tags.length) && (
             <Card>
-              {description && !isGrantDocument && (
+              {hasDescription && !isGrantDocument && (
                 <div css={{ paddingBottom: `${12 / perRem}em` }}>
                   <Headline2 styleAsHeading={4}>Description</Headline2>
                   <Markdown value={descriptionMD}></Markdown>

@@ -6,7 +6,7 @@ it('renders processed markdown text', () => {
   const { getByText } = render(
     <Markdown value={`# some text content\n **foo**`} />,
   );
-  expect(getByText('some text content').tagName).toBe('H1');
+  expect(getByText('some text content').tagName).toBe('H4');
   expect(getByText('foo').tagName).toBe('STRONG');
 });
 

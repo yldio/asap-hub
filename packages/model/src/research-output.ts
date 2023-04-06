@@ -243,6 +243,7 @@ export type ResearchOutputCreateDataObject = ResearchOutputCoreObject & {
   methodIds: string[];
   organismIds: string[];
   subtypeId?: string;
+  keywordIds: string[];
   teamIds: string[];
   workingGroups?: string[];
   relatedResearchIds?: string[];
@@ -255,6 +256,7 @@ export type ResearchOutputUpdateDataObject = ResearchOutputCoreObject & {
   methodIds: string[];
   organismIds: string[];
   subtypeId?: string;
+  keywordIds: string[];
   teamIds: string[];
   updatedBy: string;
   workingGroups: string[];

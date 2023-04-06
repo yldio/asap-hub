@@ -44,6 +44,7 @@ const researchOutputResponse: Omit<
   organisms: ['Rat', 'C. Elegans'],
   environments: ['In Vivo', 'In Cellulo'],
   subtype: 'Metabolite',
+  keywords: ['Etag', 'Exercise'],
   published: true,
 };
 

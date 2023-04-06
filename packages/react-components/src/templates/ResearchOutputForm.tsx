@@ -267,6 +267,10 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     researchOutputData?.subtype,
   );
 
+  const [keywords, setKeywords] = useState<string[]>(
+    researchOutputData?.keywords || [],
+  );
+
   const filteredResearchTags =
     type !== undefined
       ? researchTags.filter((d) => d.types?.includes(type))
@@ -295,6 +299,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     organisms,
     environments,
     subtype,
+    keywords,
   });
 
   const [remotePayload, setRemotePayload] = useState(currentPayload);
@@ -329,6 +334,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                 setOrganisms([]);
                 setEnvironments([]);
                 setSubtype(undefined);
+                setKeywords([]);
               }}
               subtype={subtype}
               onChangeSubtype={setSubtype}

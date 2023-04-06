@@ -55,6 +55,10 @@ export const researchOutputToCSV = (
     .map((item) => item)
     .sort(caseInsensitive)
     .join(','),
+  keywords: output.keywords
+    .map((item) => item)
+    .sort(caseInsensitive)
+    .join(','),
   organisms: output.organisms
     .map((item) => item)
     .sort(caseInsensitive)

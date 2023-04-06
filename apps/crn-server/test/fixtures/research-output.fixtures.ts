@@ -148,13 +148,6 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
         },
       },
     ],
-    keywords: [
-      {
-        flatData: {
-          name: 'Exercise',
-        },
-      },
-    ],
     workingGroups: [],
   },
 });
@@ -336,6 +329,7 @@ export const getResearchOutputCreateDataObject =
       organismIds: ['d77a7607-7b9a-4ef1-99ee-c389b33ea95b'],
       environmentIds: ['8a936e45-6d5e-42a6-8acd-b849ab10f3f8'],
       subtypeId: 'dd0da578-5573-4758-b1db-43a078f5076e',
+      keywordIds: ['12345'],
       link: 'http://a.link',
       type: 'Software',
       workingGroups: [],

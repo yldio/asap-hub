@@ -152,6 +152,7 @@ describe('Team Research Output', () => {
     type: 'Software',
     labs: ['lab1'],
     methods: [],
+    keywords: [],
     organisms: [],
     environments: [],
     workingGroups: [],

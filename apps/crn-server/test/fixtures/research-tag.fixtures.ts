@@ -47,6 +47,15 @@ export const getSquidexGraphqlResearchTags = (): NonNullable<
         entities: ['Research Output'],
       },
     },
+    {
+      id: '0368cc55-b2cb-484f-8f25-c1e37975ff32',
+      flatData: {
+        name: 'Keyword1',
+        category: 'Keyword',
+        types: [],
+        entities: ['Research Output'],
+      },
+    },
   ],
 });
 
@@ -73,7 +82,7 @@ export const getListResearchTagDataObject = (): ListResearchTagDataObject => ({
 
 export const getFullListResearchTagDataObject =
   (): ListResearchTagDataObject => ({
-    total: 4,
+    total: 5,
     items: [
       {
         id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
@@ -101,6 +110,13 @@ export const getFullListResearchTagDataObject =
         name: 'Metabolite',
         category: 'Subtype',
         types: ['Microscopy', 'Report'],
+        entities: ['Research Output'],
+      },
+      {
+        id: '0368cc55-b2cb-484f-8f25-c1e37975ff32',
+        name: 'Keyword1',
+        category: 'Keyword',
+        types: [],
         entities: ['Research Output'],
       },
     ],

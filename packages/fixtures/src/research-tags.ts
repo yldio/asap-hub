@@ -33,8 +33,8 @@ export const researchTagSubtypeResponse: ResearchTagResponse = {
 };
 
 export const researchTagKeywordResponse: ResearchTagResponse = {
-  id: '12345',
-  name: 'Exercise',
+  id: '0368cc55-b2cb-484f-8f25-c1e37975ff32',
+  name: 'Keyword1',
   category: 'Keyword',
   types: [],
   entities: ['Research Output'],

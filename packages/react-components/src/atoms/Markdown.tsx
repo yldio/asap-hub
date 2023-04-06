@@ -1,39 +1,28 @@
-import { useMemo } from 'react';
-import MarkdownJSX from 'markdown-to-jsx';
-import DOMPurify from 'dompurify';
+import { createElement } from 'react';
 
-function MarkdownLink(props: {
-  href: string;
-  title: string;
-  className?: string;
-  children: string;
-}) {
-  const { children, ...rest } = props;
-
-  return (
-    <a {...rest} target="_blank" rel="noopener noreferrer">
-      {children}
-    </a>
-  );
-}
+import unified from 'unified';
+import remark2rehype from 'remark-rehype';
+import markdown from 'remark-parse';
+import rehypeReact from 'rehype-react';
+import rehypeSanitize from 'rehype-sanitize';
+import { parseComponents, parseTagNames } from '../utils';
 
 const Markdown = ({ value }: { value: string }) => {
-  // See the list of allowed Tags here:
-  // https://github.com/cure53/DOMPurify/blob/main/src/tags.js#L3-L121
-  const cleanHTML = useMemo(() => DOMPurify.sanitize(value), [value]);
+  const processor = unified()
+    .use(markdown)
+    .use(remark2rehype)
+    .use(rehypeSanitize, { tagNames: parseTagNames() })
+    .use(rehypeReact, {
+      components: parseComponents,
+      createElement,
+    });
+
+  const { result } = processor.processSync(value);
 
   return (
-    <MarkdownJSX
-      options={{
-        overrides: {
-          a: {
-            component: MarkdownLink,
-          },
-        },
-      }}
-    >
-      {cleanHTML}
-    </MarkdownJSX>
+    <div>
+      <>{result}</>
+    </div>
   );
 };
 

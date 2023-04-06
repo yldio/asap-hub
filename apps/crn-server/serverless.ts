@@ -317,7 +317,7 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
-    subscribeCalendar: {
+    subscribeCalendarSquidex: {
       handler: './src/handlers/calendar/subscribe-handler.handler',
       events: [
         {
@@ -334,9 +334,30 @@ const serverlessConfig: AWS = {
         GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
+        IS_CONTENTFUL_ENABLED_V2: 'false',
       },
     },
-    resubscribeCalendars: {
+    subscribeCalendarContentful: {
+      handler: './src/handlers/calendar/subscribe-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSourceContentful],
+              'detail-type': ['CalendarsCreated', 'CalendarsUpdated'],
+            },
+          },
+        },
+      ],
+      environment: {
+        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
+        GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
+        SENTRY_DSN: sentryDsnHandlers,
+        IS_CONTENTFUL_ENABLED_V2: 'true',
+      },
+    },
+    resubscribeCalendarsSquidex: {
       handler: './src/handlers/calendar/resubscribe-handler.handler',
       timeout: 120,
       events: [
@@ -348,6 +369,22 @@ const serverlessConfig: AWS = {
         GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
+        IS_CONTENTFUL_ENABLED_V2: 'false',
+      },
+    },
+    resubscribeCalendarsContentful: {
+      handler: './src/handlers/calendar/resubscribe-handler.handler',
+      timeout: 120,
+      events: [
+        {
+          schedule: 'cron(0 1 * * ? *)',
+        },
+      ],
+      environment: {
+        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
+        GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
+        SENTRY_DSN: sentryDsnHandlers,
+        IS_CONTENTFUL_ENABLED_V2: 'true',
       },
     },
     syncUserOrcid: {

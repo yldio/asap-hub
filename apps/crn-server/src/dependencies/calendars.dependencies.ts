@@ -1,0 +1,45 @@
+import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/contentful';
+import { CalendarDataProvider } from '@asap-hub/model';
+import { RestCalendar, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
+import {
+  appName,
+  baseUrl,
+  contentfulAccessToken,
+  contentfulEnvId,
+  contentfulSpaceId,
+  isContentfulEnabledV2,
+} from '../config';
+import { CalendarSquidexDataProvider } from '../data-providers/calendars.data-provider';
+import { CalendarContentfulDataProvider } from '../data-providers/contentful/calendars.data-provider';
+import { getAuthToken } from '../utils/auth';
+import { getContentfulRestClientFactory } from './clients.dependencies';
+
+export const getCalendarDataProvider = (): CalendarDataProvider => {
+  if (isContentfulEnabledV2) {
+    const contentfulGraphQLClient = getContentfulGraphQLClient({
+      space: contentfulSpaceId,
+      accessToken: contentfulAccessToken,
+      environment: contentfulEnvId,
+    });
+
+    return new CalendarContentfulDataProvider(
+      contentfulGraphQLClient,
+      getContentfulRestClientFactory,
+    );
+  }
+
+  const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
+    appName,
+    baseUrl,
+  });
+  const calendarRestClient = new SquidexRest<RestCalendar>(
+    getAuthToken,
+    'calendars',
+    { appName, baseUrl },
+  );
+
+  return new CalendarSquidexDataProvider(
+    calendarRestClient,
+    squidexGraphqlClient,
+  );
+};

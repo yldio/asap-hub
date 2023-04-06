@@ -70,3 +70,9 @@ export const externalAuthorEntry = getEntry({
   name: { 'en-US': 'External Person' },
   orcid: { 'en-US': '0000-0000-0000-0000' },
 });
+
+export const calendarEntry = getEntry({
+  googleCalendarId: { 'en-US': '3@group.calendar.google.com' },
+  color: { 'en-US': '#2952A3' },
+  name: { 'en-US': 'Tech 4a - iPSCs - 3D & Co-cultures' },
+});

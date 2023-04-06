@@ -92,6 +92,7 @@ import {
   WorkingGroupSquidexDataProvider,
 } from './data-providers/working-group.data-provider';
 import { permissionHandler } from './middleware/permission-handler';
+import { sentryTransactionIdMiddleware } from './middleware/sentry-transaction-id-handler';
 import { calendarRouteFactory } from './routes/calendar.route';
 import { contributingCohortRouteFactory } from './routes/contributing-cohort.route';
 import { eventRouteFactory } from './routes/event.route';
@@ -113,13 +114,6 @@ export const appFactory = (libs: Libs = {}): Express => {
   const logger = libs.logger || pinoLogger;
 
   // Middleware
-  /* istanbul ignore next */
-  if (libs.sentryRequestHandler) {
-    app.use(libs.sentryRequestHandler());
-  }
-  app.use(getHttpLogger({ logger }));
-  app.use(cors());
-  app.use(express.json({ limit: '10MB' }));
 
   const errorHandler = errorHandlerFactory();
 
@@ -264,6 +258,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const contributingCohortController =
     libs.contributingCohortController ||
     new ContributingCohorts(contributingCohortDataProvider);
+
   /**
    * Public routes --->
    */
@@ -280,6 +275,8 @@ export const appFactory = (libs: Libs = {}): Express => {
       logger,
       assignUserToContext,
     );
+  const sentryTransactionIdHandler =
+    libs.sentryTransactionIdHandler || sentryTransactionIdMiddleware;
 
   // Routes
   const userPublicRoutes = userPublicRouteFactory(userController);
@@ -298,6 +295,15 @@ export const appFactory = (libs: Libs = {}): Express => {
   const externalUsersRoutes = externalUserRouteFactory(externalUsersController);
   const calendarRoutes = calendarRouteFactory(calendarController);
   const outputRoutes = outputRouteFactory(outputController);
+
+  /* istanbul ignore next */
+  if (libs.sentryRequestHandler) {
+    app.use(libs.sentryRequestHandler());
+  }
+  app.use(getHttpLogger({ logger }));
+  app.use(sentryTransactionIdHandler);
+  app.use(cors());
+  app.use(express.json({ limit: '10MB' }));
   /**
    * Public routes --->
    */
@@ -379,6 +385,7 @@ export type Libs = {
   workingGroupNetworkDataProvider?: WorkingGroupNetworkDataProvider;
   sentryErrorHandler?: typeof Sentry.Handlers.errorHandler;
   sentryRequestHandler?: typeof Sentry.Handlers.requestHandler;
+  sentryTransactionIdHandler?: RequestHandler;
   // sentryTransactionIdHandler?: RequestHandler;
   // extra handlers only for tests and local development
   mockRequestHandlers?: RequestHandler[];

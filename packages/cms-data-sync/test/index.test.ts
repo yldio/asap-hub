@@ -60,6 +60,8 @@ describe('Migrations', () => {
 
   beforeEach(() => {
     console.log = jest.fn();
+    process.env.CONTENTFUL_ENV_ID = 'crn-env-id';
+    process.env.VERBOSE_DATA_SYNC = 'true';
     jest.clearAllMocks();
   });
 
@@ -68,8 +70,6 @@ describe('Migrations', () => {
   });
 
   it('deactivates webhook and activates it again after running the migrations', async () => {
-    process.env.CONTENTFUL_ENV_ID = 'crn-env-id';
-
     await runMigrations();
 
     expect(spaceMock.getWebhook).toHaveBeenCalledWith('crn-env-id-webhook');
@@ -93,8 +93,6 @@ describe('Migrations', () => {
   });
 
   it('activates webhook back even if some migration failed', async () => {
-    process.env.CONTENTFUL_ENV_ID = 'crn-env-id';
-
     mockMigrateExternalAuthors.mockRejectedValueOnce(new Error('ops'));
 
     await runMigrations();

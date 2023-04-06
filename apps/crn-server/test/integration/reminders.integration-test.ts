@@ -1244,6 +1244,7 @@ describe('Reminders', () => {
     environmentIds: [],
     organismIds: [],
     methodIds: [],
+    keywordIds: [],
     labIds: [],
     authors: [],
     relatedResearchIds: [],

@@ -1,10 +1,9 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { AuthHandler } from '@asap-hub/server-common';
+import { AuthHandler, permissionHandler } from '@asap-hub/server-common';
 import { Router } from 'express';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
-import { permissionHandler } from '../../src/middleware/permission-handler';
 import { pageResponse } from '../fixtures/page.fixtures';
 import { getUserResponse } from '../fixtures/user.fixtures';
 import { pageControllerMock } from '../mocks/page-controller.mock';

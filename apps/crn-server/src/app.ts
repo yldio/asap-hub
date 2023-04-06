@@ -1,7 +1,7 @@
 import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/contentful';
 import {
-  CalendarDataProvider,
   CalendarController,
+  CalendarDataProvider,
   EventController,
   EventDataProvider,
   UserResponse,
@@ -15,6 +15,7 @@ import {
   HttpLogger,
   Logger,
   MemoryCacheClient,
+  permissionHandler,
   shouldHandleError,
 } from '@asap-hub/server-common';
 import {
@@ -43,6 +44,7 @@ import {
   baseUrl,
   contentfulAccessToken,
   contentfulEnvId,
+  contentfulManagementAccessToken,
   contentfulSpaceId,
   isContentfulEnabled,
 } from './config';
@@ -127,7 +129,6 @@ import {
 } from './data-providers/working-groups.data-provider';
 import { getContentfulRestClientFactory } from './dependencies/clients.dependencies';
 import { featureFlagMiddlewareFactory } from './middleware/feature-flag';
-import { permissionHandler } from './middleware/permission-handler';
 import { sentryTransactionIdMiddleware } from './middleware/sentry-transaction-id-handler';
 import { calendarRouteFactory } from './routes/calendars.route';
 import { dashboardRouteFactory } from './routes/dashboard.route';

@@ -1212,7 +1212,6 @@ __metadata:
     "@testing-library/react-hooks": 8.0.1
     "@testing-library/user-event": 12.8.3
     "@types/asap-hub__assets": "workspace:*"
-    "@types/dompurify": ^2.2.2
     "@types/hast-util-sanitize": "workspace:*"
     "@types/history": 4.7.11
     "@types/jest": ^29.4.0
@@ -1232,7 +1231,6 @@ __metadata:
     date-fns: 2.29.3
     date-fns-tz: 1.3.8
     dom-to-playwright: ^0.1.3
-    dompurify: ^2.2.9
     emotion-normalize: 11.0.1
     expect-playwright: ^0.8.0
     fast-check: 2.25.0
@@ -1241,7 +1239,6 @@ __metadata:
     history: 4.10.1
     jest-playwright-jsdom: ^0.0.4
     jest-playwright-preset: ^3.0.1
-    markdown-to-jsx: ^7.1.1
     playwright: ^1.30.0
     playwright-core: ^1.30.0
     ramda: 0.27.1
@@ -13695,15 +13692,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/dompurify@npm:^2.2.2":
-  version: 2.4.0
-  resolution: "@types/dompurify@npm:2.4.0"
-  dependencies:
-    "@types/trusted-types": "*"
-  checksum: b48cd81e997794ebc390c7c5bef1a67ec14a6f2f0521973e07e06af186c7583abe114d94d24868c0632b9573f5bd77131a4b76f3fffdf089ba99a4e53dd46c39
-  languageName: node
-  linkType: hard
-
 "@types/emscripten@npm:^1.38.0":
   version: 1.39.3
   resolution: "@types/emscripten@npm:1.39.3"
@@ -14927,13 +14915,6 @@ __metadata:
   version: 1.0.0
   resolution: "@types/treeify@npm:1.0.0"
   checksum: 1b2397030d13beee7f82b878ca80feeddb0d550a6b00d8be30082a370c0ac5985ecf7b9378cf93ea278ff00c3e900b416ae8d9379f2c7e8caecdece1dfc77380
-  languageName: node
-  linkType: hard
-
-"@types/trusted-types@npm:*":
-  version: 2.0.3
-  resolution: "@types/trusted-types@npm:2.0.3"
-  checksum: 4794804bc4a4a173d589841b6d26cf455ff5dc4f3e704e847de7d65d215f2e7043d8757e4741ce3a823af3f08260a8d04a1a6e9c5ec9b20b7b04586956a6b005
   languageName: node
   linkType: hard
 
@@ -22388,13 +22369,6 @@ __metadata:
   dependencies:
     domelementtype: ^2.3.0
   checksum: 0f58f4a6af63e6f3a4320aa446d28b5790a009018707bce2859dcb1d21144c7876482b5188395a188dfa974238c019e0a1e610d2fc269a12b2c192ea2b0b131c
-  languageName: node
-  linkType: hard
-
-"dompurify@npm:^2.2.9":
-  version: 2.4.5
-  resolution: "dompurify@npm:2.4.5"
-  checksum: d6d3c3b320f15cdb5b26aa1902c3275a3ab2c3705a9df4420bb94691d7c4df67959ec7b91e486c308320791b0ee000456f042734c45d76721e61c2768eac706e
   languageName: node
   linkType: hard
 
@@ -32107,15 +32081,6 @@ __metadata:
   version: 1.0.4
   resolution: "markdown-escapes@npm:1.0.4"
   checksum: 6833a93d72d3f70a500658872312c6fa8015c20cc835a85ae6901fa232683fbc6ed7118ebe920fea7c80039a560f339c026597d96eee0e9de602a36921804997
-  languageName: node
-  linkType: hard
-
-"markdown-to-jsx@npm:^7.1.1":
-  version: 7.1.9
-  resolution: "markdown-to-jsx@npm:7.1.9"
-  peerDependencies:
-    react: ">= 0.14.0"
-  checksum: 81ab9bd0ad93d4e90c39a67a4df2cc2d3b24579f8f018852f05abce442b246cee9cd705ea9d01304144729a48c972b8b535d40a33e04a0a05d5073958e96ae76
   languageName: node
   linkType: hard
 

@@ -2340,10 +2340,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:4.1.7"\
       ],\
       [\
-        "@types/dompurify",\
-        "npm:2.4.0"\
-      ],\
-      [\
         "@types/emscripten",\
         "npm:1.39.3"\
       ],\
@@ -2765,7 +2761,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@types/trusted-types",\
-        "npm:2.0.3"\
+        "npm:2.0.2"\
       ],\
       [\
         "@types/uglify-js",\
@@ -4609,10 +4605,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [\
         "domhandler",\
         "npm:5.0.3"\
-      ],\
-      [\
-        "dompurify",\
-        "npm:2.4.5"\
       ],\
       [\
         "domutils",\
@@ -7016,10 +7008,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [\
         "markdown-escapes",\
         "npm:1.0.4"\
-      ],\
-      [\
-        "markdown-to-jsx",\
-        "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:7.1.9"\
       ],\
       [\
         "marked",\
@@ -12005,7 +11993,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/user-event", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:12.8.3"],\
             ["@types/asap-hub__assets", "workspace:@types/asap-hub__assets"],\
             ["@types/asap-hub__react-context", null],\
-            ["@types/dompurify", "npm:2.4.0"],\
             ["@types/hast-util-sanitize", "workspace:@types/hast-util-sanitize"],\
             ["@types/history", "npm:4.7.11"],\
             ["@types/jest", "npm:29.4.0"],\
@@ -12025,7 +12012,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["date-fns", "npm:2.29.3"],\
             ["date-fns-tz", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:1.3.8"],\
             ["dom-to-playwright", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:0.1.3"],\
-            ["dompurify", "npm:2.4.5"],\
             ["emotion-normalize", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:11.0.1"],\
             ["expect-playwright", "npm:0.8.0"],\
             ["fast-check", "npm:2.25.0"],\
@@ -12034,7 +12020,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["history", "npm:4.10.1"],\
             ["jest-playwright-jsdom", "npm:0.0.4"],\
             ["jest-playwright-preset", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:3.0.1"],\
-            ["markdown-to-jsx", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:7.1.9"],\
             ["playwright", "npm:1.30.0"],\
             ["playwright-core", "npm:1.30.0"],\
             ["ramda", "npm:0.27.1"],\
@@ -12096,7 +12081,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/user-event", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:12.8.3"],\
             ["@types/asap-hub__assets", "workspace:@types/asap-hub__assets"],\
             ["@types/asap-hub__react-context", null],\
-            ["@types/dompurify", "npm:2.4.0"],\
             ["@types/hast-util-sanitize", "workspace:@types/hast-util-sanitize"],\
             ["@types/history", "npm:4.7.11"],\
             ["@types/jest", "npm:29.4.0"],\
@@ -12116,7 +12100,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["date-fns", "npm:2.29.3"],\
             ["date-fns-tz", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:1.3.8"],\
             ["dom-to-playwright", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:0.1.3"],\
-            ["dompurify", "npm:2.4.5"],\
             ["emotion-normalize", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:11.0.1"],\
             ["expect-playwright", "npm:0.8.0"],\
             ["fast-check", "npm:2.25.0"],\
@@ -12125,7 +12108,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["history", "npm:4.10.1"],\
             ["jest-playwright-jsdom", "npm:0.0.4"],\
             ["jest-playwright-preset", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:3.0.1"],\
-            ["markdown-to-jsx", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:7.1.9"],\
             ["playwright", "npm:1.30.0"],\
             ["playwright-core", "npm:1.30.0"],\
             ["ramda", "npm:0.27.1"],\
@@ -12191,7 +12173,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/user-event", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:12.8.3"],\
             ["@types/asap-hub__assets", "workspace:@types/asap-hub__assets"],\
             ["@types/asap-hub__react-context", null],\
-            ["@types/dompurify", "npm:2.4.0"],\
             ["@types/hast-util-sanitize", "workspace:@types/hast-util-sanitize"],\
             ["@types/history", "npm:4.7.11"],\
             ["@types/jest", "npm:29.4.0"],\
@@ -12211,7 +12192,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["date-fns", "npm:2.29.3"],\
             ["date-fns-tz", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:1.3.8"],\
             ["dom-to-playwright", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:0.1.3"],\
-            ["dompurify", "npm:2.4.5"],\
             ["emotion-normalize", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:11.0.1"],\
             ["expect-playwright", "npm:0.8.0"],\
             ["fast-check", "npm:2.25.0"],\
@@ -12220,7 +12200,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["history", "npm:4.10.1"],\
             ["jest-playwright-jsdom", "npm:0.0.4"],\
             ["jest-playwright-preset", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:3.0.1"],\
-            ["markdown-to-jsx", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:7.1.9"],\
             ["playwright", "npm:1.30.0"],\
             ["playwright-core", "npm:1.30.0"],\
             ["ramda", "npm:0.27.1"],\
@@ -12286,7 +12265,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/react-hooks", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:8.0.1"],\
             ["@testing-library/user-event", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:12.8.3"],\
             ["@types/asap-hub__assets", "workspace:@types/asap-hub__assets"],\
-            ["@types/dompurify", "npm:2.4.0"],\
             ["@types/hast-util-sanitize", "workspace:@types/hast-util-sanitize"],\
             ["@types/history", "npm:4.7.11"],\
             ["@types/jest", "npm:29.4.0"],\
@@ -12306,7 +12284,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["date-fns", "npm:2.29.3"],\
             ["date-fns-tz", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:1.3.8"],\
             ["dom-to-playwright", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:0.1.3"],\
-            ["dompurify", "npm:2.4.5"],\
             ["emotion-normalize", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:11.0.1"],\
             ["expect-playwright", "npm:0.8.0"],\
             ["fast-check", "npm:2.25.0"],\
@@ -12315,7 +12292,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["history", "npm:4.10.1"],\
             ["jest-playwright-jsdom", "npm:0.0.4"],\
             ["jest-playwright-preset", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:3.0.1"],\
-            ["markdown-to-jsx", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:7.1.9"],\
             ["playwright", "npm:1.30.0"],\
             ["playwright-core", "npm:1.30.0"],\
             ["ramda", "npm:0.27.1"],\
@@ -35706,16 +35682,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["@types/dompurify", [\
-        ["npm:2.4.0", {\
-          "packageLocation": "./.yarn/cache/@types-dompurify-npm-2.4.0-b6ea286bda-b48cd81e99.zip/node_modules/@types/dompurify/",\
-          "packageDependencies": [\
-            ["@types/dompurify", "npm:2.4.0"],\
-            ["@types/trusted-types", "npm:2.0.3"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
       ["@types/emscripten", [\
         ["npm:1.39.3", {\
           "packageLocation": "./.yarn/cache/@types-emscripten-npm-1.39.3-10b6af4117-9d049dc2cf.zip/node_modules/@types/emscripten/",\
@@ -37065,13 +37031,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-trusted-types-npm-2.0.2-035cb17c5e-3371eef5f1.zip/node_modules/@types/trusted-types/",\
           "packageDependencies": [\
             ["@types/trusted-types", "npm:2.0.2"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
-        ["npm:2.0.3", {\
-          "packageLocation": "./.yarn/cache/@types-trusted-types-npm-2.0.3-225cf76fb4-4794804bc4.zip/node_modules/@types/trusted-types/",\
-          "packageDependencies": [\
-            ["@types/trusted-types", "npm:2.0.3"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -46197,15 +46156,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["domhandler", "npm:5.0.3"],\
             ["domelementtype", "npm:2.3.0"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["dompurify", [\
-        ["npm:2.4.5", {\
-          "packageLocation": "./.yarn/cache/dompurify-npm-2.4.5-ce1b7c62a7-d6d3c3b320.zip/node_modules/dompurify/",\
-          "packageDependencies": [\
-            ["dompurify", "npm:2.4.5"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -57722,28 +57672,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/markdown-escapes-npm-1.0.4-6f56c61420-6833a93d72.zip/node_modules/markdown-escapes/",\
           "packageDependencies": [\
             ["markdown-escapes", "npm:1.0.4"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["markdown-to-jsx", [\
-        ["npm:7.1.9", {\
-          "packageLocation": "./.yarn/cache/markdown-to-jsx-npm-7.1.9-8f552cab87-81ab9bd0ad.zip/node_modules/markdown-to-jsx/",\
-          "packageDependencies": [\
-            ["markdown-to-jsx", "npm:7.1.9"]\
-          ],\
-          "linkType": "SOFT"\
-        }],\
-        ["virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:7.1.9", {\
-          "packageLocation": "./.yarn/__virtual__/markdown-to-jsx-virtual-c48089b876/0/cache/markdown-to-jsx-npm-7.1.9-8f552cab87-81ab9bd0ad.zip/node_modules/markdown-to-jsx/",\
-          "packageDependencies": [\
-            ["markdown-to-jsx", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:7.1.9"],\
-            ["@types/react", "npm:17.0.55"],\
-            ["react", "npm:17.0.2"]\
-          ],\
-          "packagePeers": [\
-            "@types/react",\
-            "react"\
           ],\
           "linkType": "HARD"\
         }]\

@@ -10,7 +10,7 @@ import rehypeReact from 'rehype-react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import githubSanitizationSchema from 'hast-util-sanitize/lib/github';
 
-import { parseComponents, parseTagNames } from '../utils';
+import { parseComponents, parseTagNames } from '../utils/parsing';
 import { Headline2 } from '../atoms';
 import { perRem } from '../pixels';
 import { charcoal, lead } from '../colors';

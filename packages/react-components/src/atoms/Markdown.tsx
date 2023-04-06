@@ -5,7 +5,7 @@ import remark2rehype from 'remark-rehype';
 import markdown from 'remark-parse';
 import rehypeReact from 'rehype-react';
 import rehypeSanitize from 'rehype-sanitize';
-import { parseComponents, parseTagNames } from '../utils';
+import { parseComponents, parseTagNames } from '../utils/parsing';
 
 const Markdown = ({ value }: { value: string }) => {
   const processor = unified()

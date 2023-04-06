@@ -1,4 +1,5 @@
-import { UserEvent, UserPayload } from '@asap-hub/server-common';
+import { UserEvent } from '@asap-hub/model';
+import { UserPayload } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 import { indexUserEventsHandler } from '../../../src/handlers/event/index-user-events-handler';

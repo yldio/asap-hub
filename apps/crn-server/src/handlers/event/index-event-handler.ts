@@ -2,7 +2,7 @@ import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
-import { EventController } from '@asap-hub/model';
+import { EventController, EventEvent } from '@asap-hub/model';
 import { EventBridgeHandler } from '@asap-hub/server-common';
 import { RestEvent, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import { isBoom } from '@hapi/boom';
@@ -19,7 +19,7 @@ import { EventSquidexDataProvider } from '../../data-providers/event.data-provid
 import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
-import { EventEvent, EventPayload } from '../event-bus';
+import { EventPayload } from '../event-bus';
 
 export const indexEventHandler =
   (

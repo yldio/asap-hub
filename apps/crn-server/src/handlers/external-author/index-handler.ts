@@ -2,28 +2,17 @@ import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
+import { ExternalAuthorEvent } from '@asap-hub/model';
 import { EventBridgeHandler } from '@asap-hub/server-common';
-import {
-  RestExternalAuthor,
-  SquidexGraphql,
-  SquidexRest,
-} from '@asap-hub/squidex';
 import { EventBridgeEvent } from 'aws-lambda';
-import {
-  algoliaApiKey,
-  algoliaAppId,
-  algoliaIndex,
-  appName,
-  baseUrl,
-} from '../../config';
+import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import ExternalAuthors, {
   ExternalAuthorsController,
 } from '../../controllers/external-authors';
-import { ExternalAuthorSquidexDataProvider } from '../../data-providers/external-authors.data-provider';
-import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
-import { ExternalAuthorEvent, ExternalAuthorPayload } from '../event-bus';
+import { ExternalAuthorPayload } from '../event-bus';
+import { getExternalAuthorDataProvider } from '../../dependencies/external-authors.dependencies';
 
 export const indexExternalAuthorHandler =
   (
@@ -36,13 +25,13 @@ export const indexExternalAuthorHandler =
     const getExternalAuthor = async () => {
       try {
         const externalAuthor = await externalAuthorController.fetchById(
-          event.detail.payload.id,
+          event.detail.resourceId,
         );
 
         logger.debug(`Fetched external author ${externalAuthor.displayName}`);
         return externalAuthor;
       } catch {
-        await algoliaClient.remove(event.detail.payload.id);
+        await algoliaClient.remove(event.detail.resourceId);
         return null;
       }
     };
@@ -64,28 +53,10 @@ export const indexExternalAuthorHandler =
     }
   };
 
-const externalAuthorRestClient = new SquidexRest<RestExternalAuthor>(
-  getAuthToken,
-  'external-authors',
-  {
-    appName,
-    baseUrl,
-  },
-);
-const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
-  appName,
-  baseUrl,
-});
-
-const externalAuthorDataProvider = new ExternalAuthorSquidexDataProvider(
-  externalAuthorRestClient,
-  squidexGraphqlClient,
-);
-
 /* istanbul ignore next */
 export const handler = sentryWrapper(
   indexExternalAuthorHandler(
-    new ExternalAuthors(externalAuthorDataProvider),
+    new ExternalAuthors(getExternalAuthorDataProvider()),
     algoliaSearchClientFactory({
       algoliaApiKey,
       algoliaAppId,

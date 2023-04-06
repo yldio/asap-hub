@@ -5,9 +5,14 @@ import {
   UserPatchRequest,
   UserResponse,
   inactiveUserTag,
+  UserEvent,
 } from '@asap-hub/model';
-import { UserEvent, UserPayload } from '@asap-hub/server-common';
-import { InputUser, RestUser, User, WebhookPayload } from '@asap-hub/squidex';
+import {
+  InputUser,
+  RestUser,
+  User,
+  SquidexWebhookPayload,
+} from '@asap-hub/squidex';
 import {
   FetchUserQuery,
   FetchUsersQuery,
@@ -419,7 +424,7 @@ export const userPatchRequest: UserPatchRequest = {
   ],
 };
 
-export const updateUserEvent: WebhookPayload<User> = {
+export const updateUserEvent: SquidexWebhookPayload<User> = {
   type: 'UsersUpdated',
   timestamp: '2021-02-15T13:11:25Z',
   payload: {
@@ -500,7 +505,7 @@ export const updateUserEvent: WebhookPayload<User> = {
   },
 };
 
-export const userPublishedEvent: WebhookPayload<User> = {
+export const userPublishedEvent: SquidexWebhookPayload<User> = {
   type: 'UsersPublished',
   timestamp: '2021-02-15T13:11:25Z',
   payload: {
@@ -550,8 +555,9 @@ export const userPublishedEvent: WebhookPayload<User> = {
 export const getUserWebhookPayload = (
   id: string,
   type: UserEvent,
-): UserPayload => ({
+): SquidexWebhookPayload<User, UserEvent> => ({
   type,
+  timestamp: '2021-02-15T13:11:25Z',
   payload: {
     $type: 'EnrichedContentEvent',
     type: 'Updated',
@@ -559,7 +565,40 @@ export const getUserWebhookPayload = (
     created: '2021-02-15T13:11:25Z',
     lastModified: '2021-02-15T13:11:25Z',
     version: 1,
-    data: {},
+    data: {
+      firstName: { iv: 'Gil' },
+      lastName: { iv: 'Eanes' },
+      role: {
+        iv: 'Grantee',
+      },
+      avatar: { iv: [] },
+      expertiseAndResourceTags: { iv: [] },
+      questions: { iv: [] },
+      teams: { iv: [] },
+      lastModifiedDate: {
+        iv: '2020-08-26T16:36:47.984Z',
+      },
+      connections: {
+        iv: [
+          {
+            code: 'c6fdb21b-32f3-4549-ac17-d0c83dc5335b',
+          },
+        ],
+      },
+      orcid: {
+        iv: '0000-0002-9079-593X',
+      },
+      email: {
+        iv: 'webhokk@ola.io',
+      },
+      onboarded: {
+        iv: true,
+      },
+      dismissedGettingStarted: {
+        iv: false,
+      },
+      labs: { iv: [] },
+    },
   },
 });
 

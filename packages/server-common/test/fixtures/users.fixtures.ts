@@ -1,5 +1,5 @@
-import { RestUser, User, WebhookPayload } from '@asap-hub/squidex';
-import { UserEvent } from '../../src/handlers/event-bus';
+import { UserEvent } from '@asap-hub/model';
+import { RestUser, User, SquidexWebhookPayload } from '@asap-hub/squidex';
 
 export const patchResponse = (): RestUser => ({
   id: 'userId',
@@ -47,7 +47,7 @@ export const restUserMock = patchResponse;
 export const getUserWebhookPayload = (
   id: string,
   type: UserEvent,
-): WebhookPayload<User> => ({
+): SquidexWebhookPayload<User> => ({
   type,
   timestamp: '2021-02-15T13:11:25Z',
   payload: {

@@ -1,8 +1,9 @@
 import { NotFoundError } from '@asap-hub/errors';
 import { indexExternalAuthorHandler } from '../../../src/handlers/external-author/index-handler';
 import {
-  getExternalAuthorEvent,
+  getExternalAuthorSquidexEvent,
   getExternalAuthorResponse,
+  getExternalAuthorContentfulEvent,
 } from '../../fixtures/external-authors.fixtures';
 import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { externalAuthorControllerMock } from '../../mocks/external-author-controller.mock';
@@ -15,8 +16,8 @@ describe('External Author index handler', () => {
 
   afterEach(() => jest.clearAllMocks());
 
-  test('Should fetch the external author and create a record in Algolia when the external author is created', async () => {
-    const event = createEvent();
+  test('Should fetch the external author and create a record in Algolia when the external author is created in Squidex', async () => {
+    const event = createEventSquidex();
     const externalauthorResponse = getExternalAuthorResponse();
     externalAuthorControllerMock.fetchById.mockResolvedValueOnce(
       externalauthorResponse,
@@ -24,7 +25,24 @@ describe('External Author index handler', () => {
 
     await indexHandler(event);
     expect(externalAuthorControllerMock.fetchById).toHaveBeenCalledWith(
-      event.detail.payload.id,
+      event.detail.resourceId,
+    );
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
+      data: externalauthorResponse,
+      type: 'external-author',
+    });
+  });
+
+  test('Should fetch the external author and create a record in Algolia when the external author is created in Contentful', async () => {
+    const event = createEventContentful();
+    const externalauthorResponse = getExternalAuthorResponse();
+    externalAuthorControllerMock.fetchById.mockResolvedValueOnce(
+      externalauthorResponse,
+    );
+
+    await indexHandler(event);
+    expect(externalAuthorControllerMock.fetchById).toHaveBeenCalledWith(
+      event.detail.resourceId,
     );
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
       data: externalauthorResponse,
@@ -56,7 +74,7 @@ describe('External Author index handler', () => {
     await indexHandler(event);
 
     expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
-      event.detail.payload.id,
+      event.detail.resourceId,
     );
   });
 
@@ -70,7 +88,7 @@ describe('External Author index handler', () => {
     await indexHandler(event);
 
     expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
-      event.detail.payload.id,
+      event.detail.resourceId,
     );
   });
 
@@ -109,7 +127,7 @@ describe('External Author index handler', () => {
         ...externalauthorResponse.data,
       });
 
-      await indexHandler(createEvent(externalauthorId));
+      await indexHandler(createEventSquidex(externalauthorId));
       await indexHandler(updateEvent(externalauthorId));
 
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
@@ -131,7 +149,7 @@ describe('External Author index handler', () => {
       );
 
       await indexHandler(updateEvent(externalauthorId));
-      await indexHandler(createEvent(externalauthorId));
+      await indexHandler(createEventSquidex(externalauthorId));
 
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
@@ -142,7 +160,7 @@ describe('External Author index handler', () => {
 
     test('receives the events created and unpublished in correct order', async () => {
       const externalauthorId = 'external-author-1234';
-      const createEv = createEvent(externalauthorId);
+      const createEv = createEventSquidex(externalauthorId);
       const unpublishedEv = unpublishedEvent(externalauthorId);
       const algoliaError = new Error('ERROR');
 
@@ -164,7 +182,7 @@ describe('External Author index handler', () => {
 
     test('receives the events created and unpublished in reverse order', async () => {
       const externalauthorId = 'external-author-1234';
-      const createEv = createEvent(externalauthorId);
+      const createEv = createEventSquidex(externalauthorId);
       const unpublishedEv = unpublishedEvent(externalauthorId);
       const algoliaError = new Error('ERROR');
 
@@ -186,7 +204,7 @@ describe('External Author index handler', () => {
 
     test('receives the events created and deleted in correct order', async () => {
       const externalauthorId = 'external-author-1234';
-      const createEv = createEvent(externalauthorId);
+      const createEv = createEventSquidex(externalauthorId);
       const deleteEv = deleteEvent(externalauthorId);
       const algoliaError = new Error('ERROR');
 
@@ -208,7 +226,7 @@ describe('External Author index handler', () => {
 
     test('receives the events created and deleted in reverse order', async () => {
       const externalauthorId = 'external-author-1234';
-      const createEv = createEvent(externalauthorId);
+      const createEv = createEventSquidex(externalauthorId);
       const deleteEv = deleteEvent(externalauthorId);
       const algoliaError = new Error('ERROR');
 
@@ -318,13 +336,16 @@ describe('External Author index handler', () => {
 });
 
 const unpublishedEvent = (id: string = 'external-author-1234') =>
-  getExternalAuthorEvent(id, 'ExternalAuthorsUnpublished');
+  getExternalAuthorSquidexEvent(id, 'ExternalAuthorsUnpublished');
 
 const deleteEvent = (id: string = 'external-author-1234') =>
-  getExternalAuthorEvent(id, 'ExternalAuthorsDeleted');
+  getExternalAuthorSquidexEvent(id, 'ExternalAuthorsDeleted');
 
-const createEvent = (id: string = 'external-author-1234') =>
-  getExternalAuthorEvent(id, 'ExternalAuthorsPublished');
+const createEventSquidex = (id: string = 'external-author-1234') =>
+  getExternalAuthorSquidexEvent(id, 'ExternalAuthorsPublished');
+
+const createEventContentful = (id: string = 'external-author-1234') =>
+  getExternalAuthorContentfulEvent(id, 'ExternalAuthorsPublished');
 
 const updateEvent = (id: string = 'external-author-1234') =>
-  getExternalAuthorEvent(id, 'ExternalAuthorsUpdated');
+  getExternalAuthorSquidexEvent(id, 'ExternalAuthorsUpdated');

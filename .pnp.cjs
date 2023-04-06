@@ -4076,7 +4076,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "contentful-management",\
-        "npm:10.19.3"\
+        "npm:10.31.2"\
       ],\
       [\
         "contentful-migrate",\
@@ -10884,7 +10884,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/node", "npm:18.15.11"],\
             ["@types/prettier", "npm:2.7.2"],\
             ["contentful-html-rich-text-converter", "https://github.com/yldio/contentful-html-rich-text-converter.git#commit=ba7abf23e1bff5f26cfb5e0f17dd32f3b45c8f57"],\
-            ["contentful-management", "npm:10.19.3"],\
+            ["contentful-management", "npm:10.31.2"],\
             ["graphql", "npm:15.8.0"],\
             ["graphql-tag", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:2.12.6"],\
             ["graphql-typescript-integration", "npm:1.2.1"],\
@@ -10918,7 +10918,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jest", "npm:29.4.0"],\
             ["@types/node", "npm:18.15.11"],\
             ["contentful-cli", "npm:1.19.1"],\
-            ["contentful-management", "npm:10.19.3"],\
+            ["contentful-management", "npm:10.31.2"],\
             ["contentful-migrate", "https://github.com/deluan/contentful-migrate.git#commit=37b9b898599b9ba48644534d3f340b4c169df212"],\
             ["graphql", "npm:15.8.0"],\
             ["graphql-request", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:3.4.0"],\
@@ -43809,15 +43809,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:10.19.3", {\
-          "packageLocation": "./.yarn/cache/contentful-management-npm-10.19.3-12cc99380c-8275b15acf.zip/node_modules/contentful-management/",\
+        ["npm:10.31.2", {\
+          "packageLocation": "./.yarn/cache/contentful-management-npm-10.31.2-241c4ebe3d-0ed7c608f6.zip/node_modules/contentful-management/",\
           "packageDependencies": [\
-            ["contentful-management", "npm:10.19.3"],\
+            ["contentful-management", "npm:10.31.2"],\
+            ["@contentful/rich-text-types", "npm:16.0.3"],\
             ["@types/json-patch", "npm:0.0.30"],\
             ["axios", "npm:0.27.2"],\
             ["contentful-sdk-core", "npm:7.0.2"],\
-            ["fast-copy", "npm:2.1.3"],\
-            ["lodash.isplainobject", "npm:4.0.6"]\
+            ["fast-copy", "npm:3.0.0"],\
+            ["lodash.isplainobject", "npm:4.0.6"],\
+            ["type-fest", "npm:3.7.0"]\
           ],\
           "linkType": "HARD"\
         }],\
@@ -70002,6 +70004,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/type-fest-npm-2.19.0-918b953248-a4ef07ece2.zip/node_modules/type-fest/",\
           "packageDependencies": [\
             ["type-fest", "npm:2.19.0"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:3.7.0", {\
+          "packageLocation": "./.yarn/cache/type-fest-npm-3.7.0-ffe4601b94-df6d65e7c7.zip/node_modules/type-fest/",\
+          "packageDependencies": [\
+            ["type-fest", "npm:3.7.0"]\
           ],\
           "linkType": "HARD"\
         }]\

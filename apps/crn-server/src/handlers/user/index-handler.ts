@@ -2,11 +2,8 @@ import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
-import {
-  EventBridgeHandler,
-  UserEvent,
-  UserPayload,
-} from '@asap-hub/server-common';
+import { UserEvent } from '@asap-hub/model';
+import { EventBridgeHandler, UserPayload } from '@asap-hub/server-common';
 import {
   InputUser,
   RestUser,

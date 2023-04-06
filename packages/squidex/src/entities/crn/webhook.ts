@@ -1,14 +1,18 @@
+import { WebhookDetailType } from '@asap-hub/model';
 import { Entity, Rest } from '../common';
 
-export interface WebhookPayload<T> {
-  type: string;
+export interface SquidexWebhookPayload<
+  TEntity,
+  TWebhookDetailType extends WebhookDetailType = WebhookDetailType,
+> {
+  type: TWebhookDetailType;
   timestamp: string;
   payload: Entity &
-    Rest<T> & {
+    Rest<TEntity> & {
       type: string;
       $type: string;
-      data: Rest<T>['data'];
-      dataOld?: Rest<T>['data'];
+      data: Rest<TEntity>['data'];
+      dataOld?: Rest<TEntity>['data'];
       [key: string]: string | number | unknown;
     };
 }

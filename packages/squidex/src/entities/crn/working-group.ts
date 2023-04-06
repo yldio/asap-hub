@@ -1,7 +1,7 @@
 import { DeliverableStatus } from '@asap-hub/model';
 import { Rest, RestPayload, Entity } from '../common';
 
-interface WorkingGroup {
+export interface WorkingGroup {
   title: string;
   complete: boolean;
   description: string;

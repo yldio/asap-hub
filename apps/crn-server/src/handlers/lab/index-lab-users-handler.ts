@@ -2,8 +2,7 @@ import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
-import { ListResponse, UserResponse } from '@asap-hub/model';
-import { LabEvent } from '@asap-hub/server-common';
+import { LabEvent, ListResponse, UserResponse } from '@asap-hub/model';
 import {
   InputUser,
   RestUser,

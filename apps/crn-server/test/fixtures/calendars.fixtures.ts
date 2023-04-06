@@ -2,11 +2,12 @@ import { FetchCalendarsQuery as ContentfulFetchCalendarsQuery } from '@asap-hub/
 import {
   CalendarCreateDataObject,
   CalendarDataObject,
+  CalendarEvent,
   CalendarResponse,
   ListCalendarDataObject,
   ListCalendarResponse,
 } from '@asap-hub/model';
-import { CalendarEvent, CalendarPayload } from '@asap-hub/server-common';
+import { CalendarPayload } from '@asap-hub/server-common';
 import { RestCalendar } from '@asap-hub/squidex';
 import {
   FetchCalendarQuery,
@@ -169,12 +170,15 @@ export const getCalendarWebhookEvent = (
   type: CalendarEvent,
 ): CalendarPayload => ({
   type,
+  timestamp: '2021-01-07T16:44:09Z',
   payload: {
     $type: 'EnrichedContentEvent',
     type: 'Updated',
     id: 'b57f3aed-9f07-49a6-a1c7-cc4948a3764f',
     data: getRestCalendar().data,
     version: 42,
+    created: '2021-01-07T16:44:09Z',
+    lastModified: '2021-01-07T16:44:09Z',
   },
 });
 

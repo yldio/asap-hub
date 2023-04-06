@@ -1,13 +1,12 @@
-import {
-  EventBridgeHandler,
-  UserEvent,
-  UserPayload,
-} from '@asap-hub/server-common';
+import { UserEvent } from '@asap-hub/model';
+import { EventBridgeHandler } from '@asap-hub/server-common';
 import {
   InputUser,
   RestUser,
   SquidexGraphql,
   SquidexRest,
+  SquidexWebhookPayload,
+  User,
 } from '@asap-hub/squidex';
 import { appName, baseUrl } from '../../config';
 import Users, { UserController } from '../../controllers/users';
@@ -18,7 +17,9 @@ import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 
 export const syncOrcidUserHandler =
-  (users: UserController): EventBridgeHandler<UserEvent, UserPayload> =>
+  (
+    users: UserController,
+  ): EventBridgeHandler<UserEvent, SquidexWebhookPayload<User, UserEvent>> =>
   async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
 

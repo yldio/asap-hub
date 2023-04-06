@@ -7,10 +7,14 @@ import {
   SquidexGraphql,
   SquidexRest,
 } from '@asap-hub/squidex';
-import { WorkingGroupDeliverable, DeliverableStatus } from '@asap-hub/model';
+import {
+  WorkingGroupDeliverable,
+  DeliverableStatus,
+  WorkingGroupEvent,
+} from '@asap-hub/model';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
-import { WorkingGroupEvent, WorkingGroupPayload } from '../event-bus';
+import { WorkingGroupPayload } from '../event-bus';
 import {
   WorkingGroupDataProvider,
   WorkingGroupSquidexDataProvider,

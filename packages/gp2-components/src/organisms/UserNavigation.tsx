@@ -28,9 +28,7 @@ const buttonResetStyles = css({
 const styles = css({
   padding: `${rem(12)} 0`,
   cursor: 'pointer',
-
   display: 'grid',
-  gridTemplateColumns: `auto ${rem(48)}em auto auto`,
   alignItems: 'center',
 });
 
@@ -98,9 +96,7 @@ const UserNavigation: React.FC<UserNavigationProps> = (userNavigationProps) => {
             firstName={firstName}
             lastName={lastName}
           />
-          <span css={{ scale: '1' }}>
-            {menuShown ? chevronUpIcon : chevronDownIcon}
-          </span>
+          <span>{menuShown ? chevronUpIcon : chevronDownIcon}</span>
         </div>
       </button>
       <div css={css([userMenuStyles, menuShown && userMenuShownStyles])}>

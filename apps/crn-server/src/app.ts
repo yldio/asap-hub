@@ -16,6 +16,7 @@ import {
   Logger,
   MemoryCacheClient,
   permissionHandler,
+  sentryTransactionIdMiddleware,
   shouldHandleError,
 } from '@asap-hub/server-common';
 import {
@@ -44,7 +45,6 @@ import {
   baseUrl,
   contentfulAccessToken,
   contentfulEnvId,
-  contentfulManagementAccessToken,
   contentfulSpaceId,
   isContentfulEnabled,
 } from './config';
@@ -129,7 +129,6 @@ import {
 } from './data-providers/working-groups.data-provider';
 import { getContentfulRestClientFactory } from './dependencies/clients.dependencies';
 import { featureFlagMiddlewareFactory } from './middleware/feature-flag';
-import { sentryTransactionIdMiddleware } from './middleware/sentry-transaction-id-handler';
 import { calendarRouteFactory } from './routes/calendars.route';
 import { dashboardRouteFactory } from './routes/dashboard.route';
 import { discoverRouteFactory } from './routes/discover.route';

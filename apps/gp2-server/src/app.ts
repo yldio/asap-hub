@@ -8,6 +8,7 @@ import {
   Logger,
   MemoryCacheClient,
   permissionHandler,
+  sentryTransactionIdMiddleware,
   shouldHandleError,
 } from '@asap-hub/server-common';
 import {
@@ -92,7 +93,6 @@ import {
   WorkingGroupDataProvider,
   WorkingGroupSquidexDataProvider,
 } from './data-providers/working-group.data-provider';
-import { sentryTransactionIdMiddleware } from './middleware/sentry-transaction-id-handler';
 import { calendarRouteFactory } from './routes/calendar.route';
 import { contributingCohortRouteFactory } from './routes/contributing-cohort.route';
 import { eventRouteFactory } from './routes/event.route';

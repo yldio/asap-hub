@@ -13,7 +13,7 @@ const client = contentful.createClient({
 
 const app = async () => {
   const space = await client.getSpace(spaceId);
-  const webhook = await getWebhook();
+  const webhook = await getWebhook(space);
 
   const webhookName = `${contentfulEnvironment} Webhook`;
   const webhookUrl = `${apiUrl}/webhook/contentful`;
@@ -55,24 +55,28 @@ const app = async () => {
       },
     );
   }
+};
 
-  async function getWebhook(): Promise<contentful.WebHooks | undefined> {
-    try {
-      return space.getWebhook(`${contentfulEnvironment.toLowerCase()}-webhook`);
-    } catch (error) {
-      if (!(error instanceof Error)) {
-        throw error;
-      }
-
-      const messageJson = JSON.parse(error.message);
-
-      if (!('status' in messageJson) || messageJson.status !== 404) {
-        throw error;
-      }
+export const getWebhook = async (
+  space: contentful.Space,
+): Promise<contentful.WebHooks | undefined> => {
+  try {
+    return await space.getWebhook(
+      `${contentfulEnvironment.toLowerCase()}-webhook`,
+    );
+  } catch (error) {
+    if (!(error instanceof Error)) {
+      throw error;
     }
 
-    return undefined;
+    const messageJson = JSON.parse(error.message);
+
+    if (!('status' in messageJson) || messageJson.status !== 404) {
+      throw error;
+    }
   }
+
+  return undefined;
 };
 
 app().catch((err) => {

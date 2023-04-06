@@ -6,12 +6,11 @@ import {
   steel,
   pixels,
   noop,
-  Anchor,
 } from '@asap-hub/react-components';
 
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
-import { gp2LogoSmall } from '../icons';
+import { HeaderLogo } from '../molecules';
 import MainNavigation from './MainNavigation';
 import UserNavigation from './UserNavigation';
 
@@ -76,15 +75,7 @@ const NavigationHeader: React.FC<NavigationHeaderProps> = ({
       <div css={[menuButtonStyles]}>
         <MenuButton open={menuShown} onClick={() => onToggleMenu(!menuShown)} />
       </div>
-      <Anchor
-        css={{
-          display: 'flex',
-          padding: `${rem(16)} 0`,
-        }}
-        href={'/'}
-      >
-        {gp2LogoSmall}
-      </Anchor>
+      <HeaderLogo />
       <div css={desktopNavigationStyles}>
         <MainNavigation />
       </div>

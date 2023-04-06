@@ -148,6 +148,13 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
         },
       },
     ],
+    keywords: [
+      {
+        flatData: {
+          name: 'Keyword1',
+        },
+      },
+    ],
     workingGroups: [],
   },
 });

@@ -4367,6 +4367,7 @@ export type ResearchOutputsDataDto = {
   documentType: Maybe<ResearchOutputsDataDocumentTypeDto>;
   doi: Maybe<ResearchOutputsDataDoiDto>;
   environments: Maybe<ResearchOutputsDataEnvironmentsDto>;
+  keywords: Maybe<ResearchOutputsDataKeywordsDto>;
   labCatalogNumber: Maybe<ResearchOutputsDataLabCatalogNumberDto>;
   labs: Maybe<ResearchOutputsDataLabsDto>;
   lastUpdatedPartial: Maybe<ResearchOutputsDataLastUpdatedPartialDto>;
@@ -4410,6 +4411,7 @@ export type ResearchOutputsDataInputDto = {
   documentType: InputMaybe<ResearchOutputsDataDocumentTypeInputDto>;
   doi: InputMaybe<ResearchOutputsDataDoiInputDto>;
   environments: InputMaybe<ResearchOutputsDataEnvironmentsInputDto>;
+  keywords: InputMaybe<ResearchOutputsDataKeywordsInputDto>;
   labCatalogNumber: InputMaybe<ResearchOutputsDataLabCatalogNumberInputDto>;
   labs: InputMaybe<ResearchOutputsDataLabsInputDto>;
   lastUpdatedPartial: InputMaybe<ResearchOutputsDataLastUpdatedPartialInputDto>;
@@ -4429,6 +4431,16 @@ export type ResearchOutputsDataInputDto = {
   usageNotes: InputMaybe<ResearchOutputsDataUsageNotesInputDto>;
   usedInAPublication: InputMaybe<ResearchOutputsDataUsedInAPublicationInputDto>;
   workingGroups: InputMaybe<ResearchOutputsDataWorkingGroupsInputDto>;
+};
+
+/** The structure of the Keywords field of the Research Outputs content type. */
+export type ResearchOutputsDataKeywordsDto = {
+  iv: Maybe<Array<ResearchTags>>;
+};
+
+/** The structure of the Keywords field of the Research Outputs content input type. */
+export type ResearchOutputsDataKeywordsInputDto = {
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Lab Catalog Number field of the Research Outputs content type. */
@@ -4651,6 +4663,7 @@ export type ResearchOutputsFlatDataDto = {
   /** DOIs must start with a number and cannot be a URL */
   doi: Maybe<Scalars['String']>;
   environments: Maybe<Array<ResearchTags>>;
+  keywords: Maybe<Array<ResearchTags>>;
   /** If this is a hyperlink, please start with "http://" or "https://" */
   labCatalogNumber: Maybe<Scalars['String']>;
   labs: Maybe<Array<Labs>>;
@@ -8942,6 +8955,7 @@ export type ResearchOutputContentFragment = Pick<
       Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
     >;
     subtype: Maybe<Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>>;
+    keywords: Maybe<Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>>;
   };
 };
 
@@ -9138,6 +9152,9 @@ export type FetchResearchOutputQuery = {
           Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
         >;
         subtype: Maybe<
+          Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
+        >;
+        keywords: Maybe<
           Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
         >;
       };
@@ -9351,6 +9368,9 @@ export type FetchResearchOutputsQuery = {
                 Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
               >;
               subtype: Maybe<
+                Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
+              >;
+              keywords: Maybe<
                 Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
               >;
             };
@@ -12836,6 +12856,28 @@ export const ResearchOutputContentFragmentDoc = {
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'subtype' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'keywords' },
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [

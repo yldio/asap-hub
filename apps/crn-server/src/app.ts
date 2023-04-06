@@ -1,7 +1,4 @@
-import {
-  getGraphQLClient as getContentfulGraphQLClient,
-  getRestClient as getContentfulRestClient,
-} from '@asap-hub/contentful';
+import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/contentful';
 import {
   CalendarDataProvider,
   CalendarController,
@@ -45,7 +42,6 @@ import {
   auth0Audience,
   baseUrl,
   contentfulAccessToken,
-  contentfulManagementAccessToken,
   contentfulEnvId,
   contentfulSpaceId,
   isContentfulEnabled,
@@ -129,6 +125,7 @@ import {
   WorkingGroupDataProvider,
   WorkingGroupSquidexDataProvider,
 } from './data-providers/working-groups.data-provider';
+import { getContentfulRestClientFactory } from './dependencies/clients.dependencies';
 import { featureFlagMiddlewareFactory } from './middleware/feature-flag';
 import { permissionHandler } from './middleware/permission-handler';
 import { sentryTransactionIdMiddleware } from './middleware/sentry-transaction-id-handler';
@@ -162,13 +159,6 @@ export const appFactory = (libs: Libs = {}): Express => {
     accessToken: contentfulAccessToken,
     environment: contentfulEnvId,
   });
-
-  const getContentfulRestClientFactory = () =>
-    getContentfulRestClient({
-      space: contentfulSpaceId,
-      accessToken: contentfulManagementAccessToken,
-      environment: contentfulEnvId,
-    });
 
   /**
    * Dependency Injection -->

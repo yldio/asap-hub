@@ -2,7 +2,7 @@ import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
-import { ListResponse, UserResponse } from '@asap-hub/model';
+import { ListResponse, TeamEvent, UserResponse } from '@asap-hub/model';
 import {
   InputUser,
   RestUser,
@@ -27,7 +27,7 @@ import {
   LoopOverCustomCollectionFetchOptions,
 } from '../../utils/loop-over-custom-colection';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
-import { TeamEvent, TeamPayload } from '../event-bus';
+import { TeamPayload } from '../event-bus';
 
 export const indexTeamUsersHandler =
   (

@@ -1,6 +1,7 @@
+import { GroupEvent } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
-import { GroupEvent, GroupPayload } from '../../../src/handlers/event-bus';
+import { GroupPayload } from '../../../src/handlers/event-bus';
 import { indexGroupEventsHandler } from '../../../src/handlers/event/index-group-events-handler';
 import { getListEventResponse } from '../../fixtures/events.fixtures';
 import { getGroupEvent } from '../../fixtures/groups.fixtures';

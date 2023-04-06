@@ -1,3 +1,4 @@
+import { WebhookDetailType } from '@asap-hub/model';
 import { AWS } from '@serverless/typescript';
 import assert from 'assert';
 
@@ -16,6 +17,7 @@ if (NODE_ENV === 'production') {
     'CRN_CONTENTFUL_ACCESS_TOKEN',
     'CRN_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN',
     'CRN_CONTENTFUL_SPACE_ID',
+    'CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN',
   ].forEach((env) => {
     assert.ok(process.env[env], `${env} not defined`);
   });
@@ -42,6 +44,7 @@ const {
   CRN_CONTENTFUL_ACCESS_TOKEN,
   CRN_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN,
   CRN_CONTENTFUL_SPACE_ID,
+  CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN,
   IS_CONTENTFUL_ENABLED = 'false',
   IS_CONTENTFUL_ENABLED_V2 = 'false',
   LOG_LEVEL,
@@ -67,6 +70,8 @@ const squidexSharedSecret = CRN_SQUIDEX_SHARED_SECRET!;
 const contentfulEnvironment = CRN_CONTENTFUL_ENV!;
 const contentfulAccessToken = CRN_CONTENTFUL_ACCESS_TOKEN!;
 const contentfulManagementAccessToken = CRN_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN!;
+const contentfulWebhookAuthenticationToken =
+  CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN!;
 const contentfulSpaceId = CRN_CONTENTFUL_SPACE_ID!;
 const isContentfulEnabled = IS_CONTENTFUL_ENABLED;
 const isContentfulEnabledV2 = IS_CONTENTFUL_ENABLED_V2;
@@ -106,7 +111,8 @@ if (SLS_STAGE === 'local') {
   plugins.push(...offlinePlugins);
 }
 
-const eventBusSource = 'asap.entity-updated';
+const eventBusSourceSquidex = 'asap.squidex';
+const eventBusSourceContentful = 'asap.contentful';
 
 const serverlessConfig: AWS = {
   service,
@@ -318,7 +324,7 @@ const serverlessConfig: AWS = {
           eventBridge: {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
-              source: [eventBusSource],
+              source: [eventBusSourceSquidex],
               'detail-type': ['CalendarsCreated', 'CalendarsUpdated'],
             },
           },
@@ -351,7 +357,7 @@ const serverlessConfig: AWS = {
           eventBridge: {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
-              source: [eventBusSource],
+              source: [eventBusSourceSquidex],
               'detail-type': ['UsersCreated', 'UsersUpdated'],
             },
             retryPolicy: {
@@ -371,7 +377,7 @@ const serverlessConfig: AWS = {
           eventBridge: {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
-              source: [eventBusSource],
+              source: [eventBusSourceSquidex],
               'detail-type': ['UsersPublished'],
             },
             retryPolicy: {
@@ -395,13 +401,13 @@ const serverlessConfig: AWS = {
           eventBridge: {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
-              source: [eventBusSource],
+              source: [eventBusSourceSquidex],
               'detail-type': [
                 'ResearchOutputsPublished',
                 'ResearchOutputsUpdated',
                 'ResearchOutputsUnpublished',
                 'ResearchOutputsDeleted',
-              ],
+              ] satisfies WebhookDetailType[],
             },
           },
         },
@@ -419,14 +425,14 @@ const serverlessConfig: AWS = {
           eventBridge: {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
-              source: [eventBusSource],
+              source: [eventBusSourceSquidex],
               'detail-type': [
                 'UsersPublished',
                 'UsersUpdated',
                 'UsersCreated',
                 'UsersUnpublished',
                 'UsersDeleted',
-              ],
+              ] satisfies WebhookDetailType[],
             },
           },
         },
@@ -437,20 +443,20 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
-    indexExternalAuthor: {
+    indexExternalAuthorSquidex: {
       handler: './src/handlers/external-author/index-handler.handler',
       events: [
         {
           eventBridge: {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
-              source: [eventBusSource],
+              source: [eventBusSourceSquidex],
               'detail-type': [
                 'ExternalAuthorsPublished',
                 'ExternalAuthorsUpdated',
                 'ExternalAuthorsUnpublished',
                 'ExternalAuthorsDeleted',
-              ],
+              ] satisfies WebhookDetailType[],
             },
           },
         },
@@ -459,6 +465,32 @@ const serverlessConfig: AWS = {
         ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
+        IS_CONTENTFUL_ENABLED_V2: 'false',
+      },
+    },
+    indexExternalAuthorContentful: {
+      handler: './src/handlers/external-author/index-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSourceContentful],
+              'detail-type': [
+                'ExternalAuthorsPublished',
+                'ExternalAuthorsUpdated',
+                'ExternalAuthorsUnpublished',
+                'ExternalAuthorsDeleted',
+              ] satisfies WebhookDetailType[],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
+        SENTRY_DSN: sentryDsnHandlers,
+        IS_CONTENTFUL_ENABLED_V2: 'true',
       },
     },
     indexEvents: {
@@ -468,13 +500,13 @@ const serverlessConfig: AWS = {
           eventBridge: {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
-              source: [eventBusSource],
+              source: [eventBusSourceSquidex],
               'detail-type': [
                 'EventsPublished',
                 'EventsUpdated',
                 'EventsUnpublished',
                 'EventsDeleted',
-              ],
+              ] satisfies WebhookDetailType[],
             },
           },
         },
@@ -492,13 +524,13 @@ const serverlessConfig: AWS = {
           eventBridge: {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
-              source: [eventBusSource],
+              source: [eventBusSourceSquidex],
               'detail-type': [
                 'UsersPublished',
                 'UsersUpdated',
                 'UsersUnpublished',
                 'UsersDeleted',
-              ],
+              ] satisfies WebhookDetailType[],
             },
           },
         },
@@ -517,13 +549,13 @@ const serverlessConfig: AWS = {
           eventBridge: {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
-              source: [eventBusSource],
+              source: [eventBusSourceSquidex],
               'detail-type': [
                 'ExternalAuthorsPublished',
                 'ExternalAuthorsUpdated',
                 'ExternalAuthorsUnpublished',
                 'ExternalAuthorsDeleted',
-              ],
+              ] satisfies WebhookDetailType[],
             },
           },
         },
@@ -541,13 +573,13 @@ const serverlessConfig: AWS = {
           eventBridge: {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
-              source: [eventBusSource],
+              source: [eventBusSourceSquidex],
               'detail-type': [
                 'TeamsPublished',
                 'TeamsUpdated',
                 'TeamsUnpublished',
                 'TeamsDeleted',
-              ],
+              ] satisfies WebhookDetailType[],
             },
           },
         },
@@ -565,13 +597,13 @@ const serverlessConfig: AWS = {
           eventBridge: {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
-              source: [eventBusSource],
+              source: [eventBusSourceSquidex],
               'detail-type': [
                 'GroupsPublished',
                 'GroupsUpdated',
                 'GroupsUnpublished',
                 'GroupsDeleted',
-              ],
+              ] satisfies WebhookDetailType[],
             },
           },
         },
@@ -589,13 +621,13 @@ const serverlessConfig: AWS = {
           eventBridge: {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
-              source: [eventBusSource],
+              source: [eventBusSourceSquidex],
               'detail-type': [
                 'LabsPublished',
                 'LabsUpdated',
                 'LabsUnpublished',
                 'LabsDeleted',
-              ],
+              ] satisfies WebhookDetailType[],
             },
           },
         },
@@ -671,7 +703,7 @@ const serverlessConfig: AWS = {
           eventBridge: {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
-              source: [eventBusSource],
+              source: [eventBusSourceSquidex],
               'detail-type': ['TeamsPublished', 'TeamsUpdated', 'TeamsDeleted'],
             },
           },
@@ -690,7 +722,7 @@ const serverlessConfig: AWS = {
           eventBridge: {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
-              source: [eventBusSource],
+              source: [eventBusSourceSquidex],
               'detail-type': ['TeamsPublished', 'TeamsUpdated', 'TeamsDeleted'],
             },
           },
@@ -710,7 +742,7 @@ const serverlessConfig: AWS = {
           eventBridge: {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
-              source: [eventBusSource],
+              source: [eventBusSourceSquidex],
               'detail-type': ['WorkingGroupsPublished', 'WorkingGroupsUpdated'],
             },
           },
@@ -732,8 +764,26 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         EVENT_BUS: 'asap-events-${self:provider.stage}',
-        EVENT_SOURCE: eventBusSource,
+        EVENT_SOURCE: eventBusSourceSquidex,
         SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
+    contentfulWebhook: {
+      handler: './src/handlers/webhooks/webhook-contentful.handler',
+      events: [
+        {
+          httpApi: {
+            method: 'POST',
+            path: '/webhook/contentful',
+          },
+        },
+      ],
+      environment: {
+        EVENT_BUS: 'asap-events-${self:provider.stage}',
+        EVENT_SOURCE: eventBusSourceContentful,
+        SENTRY_DSN: sentryDsnHandlers,
+        CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN:
+          contentfulWebhookAuthenticationToken,
       },
     },
     ...(NODE_ENV === 'production'

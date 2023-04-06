@@ -3,6 +3,7 @@ import {
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
 import { EventBridgeHandler } from '@asap-hub/server-common';
+import { ResearchOutputEvent } from '@asap-hub/model';
 import {
   RestExternalAuthor,
   RestResearchOutput,
@@ -25,7 +26,7 @@ import { ResearchOutputSquidexDataProvider } from '../../data-providers/research
 import { ResearchTagSquidexDataProvider } from '../../data-providers/research-tags.data-provider';
 import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
-import { ResearchOutputEvent, ResearchOutputPayload } from '../event-bus';
+import { ResearchOutputPayload } from '../event-bus';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 
 export const indexResearchOutputHandler =

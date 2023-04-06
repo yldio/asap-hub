@@ -1,12 +1,10 @@
+import { ExternalAuthorEvent } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
-import {
-  ExternalAuthorEvent,
-  ExternalAuthorPayload,
-} from '../../../src/handlers/event-bus';
+import { ExternalAuthorSquidexPayload } from '../../../src/handlers/event-bus';
 import { indexExternalAuthorEventsHandler } from '../../../src/handlers/event/index-external-author-events-handler';
 import { getListEventResponse } from '../../fixtures/events.fixtures';
-import { getExternalAuthorEvent } from '../../fixtures/external-authors.fixtures';
+import { getExternalAuthorSquidexEvent } from '../../fixtures/external-authors.fixtures';
 import { toPayload } from '../../helpers/algolia';
 import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { eventControllerMock } from '../../mocks/event-controller.mock';
@@ -15,23 +13,35 @@ const mapPayload = toPayload('event');
 
 const possibleEvents: [
   string,
-  EventBridgeEvent<ExternalAuthorEvent, ExternalAuthorPayload>,
+  EventBridgeEvent<ExternalAuthorEvent, ExternalAuthorSquidexPayload>,
 ][] = [
   [
     'created',
-    getExternalAuthorEvent('external-author-id', 'ExternalAuthorsCreated'),
+    getExternalAuthorSquidexEvent(
+      'external-author-id',
+      'ExternalAuthorsCreated',
+    ),
   ],
   [
     'updated',
-    getExternalAuthorEvent('external-author-id', 'ExternalAuthorsUpdated'),
+    getExternalAuthorSquidexEvent(
+      'external-author-id',
+      'ExternalAuthorsUpdated',
+    ),
   ],
   [
     'unpublished',
-    getExternalAuthorEvent('external-author-id', 'ExternalAuthorsUnpublished'),
+    getExternalAuthorSquidexEvent(
+      'external-author-id',
+      'ExternalAuthorsUnpublished',
+    ),
   ],
   [
     'deleted',
-    getExternalAuthorEvent('external-author-id', 'ExternalAuthorsDeleted'),
+    getExternalAuthorSquidexEvent(
+      'external-author-id',
+      'ExternalAuthorsDeleted',
+    ),
   ],
 ];
 
@@ -47,7 +57,10 @@ describe('Index Events on External Author event handler', () => {
 
     await expect(
       indexHandler(
-        getExternalAuthorEvent('external-author-id', 'ExternalAuthorsCreated'),
+        getExternalAuthorSquidexEvent(
+          'external-author-id',
+          'ExternalAuthorsCreated',
+        ),
       ),
     ).rejects.toThrow(Boom.badData());
     expect(algoliaSearchClientMock.saveMany).not.toHaveBeenCalled();
@@ -62,7 +75,10 @@ describe('Index Events on External Author event handler', () => {
 
     await expect(
       indexHandler(
-        getExternalAuthorEvent('external-author-id', 'ExternalAuthorsUpdated'),
+        getExternalAuthorSquidexEvent(
+          'external-author-id',
+          'ExternalAuthorsUpdated',
+        ),
       ),
     ).rejects.toThrow(algoliaError);
   });

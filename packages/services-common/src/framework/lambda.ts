@@ -142,12 +142,19 @@ const handlerError = (error: Error): APIGatewayProxyResultV2 => {
 // ensure any thrown exception is handled and returned correctly
 // complaining about `request` here is a lint rule bug
 export const http =
-  <T = unknown>(fn: (request: Request<T>) => Promise<Response<T>>) =>
+  <T = unknown, Y = T>(fn: (request: Request<T>) => Promise<Response<Y>>) =>
   async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
     // we assume the body is json
     let body;
     try {
-      body = event.body && Bourne.parse(event.body);
+      if (event.isBase64Encoded && event.body) {
+        const decodedPayload = Buffer.from(event.body, 'base64').toString(
+          'utf8',
+        );
+        body = Bourne.parse(decodedPayload);
+      } else {
+        body = event.body && Bourne.parse(event.body);
+      }
     } catch (err) {
       return errorResponse(err);
     }

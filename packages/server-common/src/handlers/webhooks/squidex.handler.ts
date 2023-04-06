@@ -1,7 +1,15 @@
+import { WebhookDetail, WebhookDetailType } from '@asap-hub/model';
 import { framework as lambda } from '@asap-hub/services-common';
-import { WebhookPayload } from '@asap-hub/squidex';
+import { SquidexWebhookPayload } from '@asap-hub/squidex';
 import { EventBridge } from 'aws-sdk';
 import { Logger, validateSquidexRequest } from '../../utils';
+
+const getDetailFromRequest = (
+  request: lambda.Request<SquidexWebhookPayload<unknown>>,
+): WebhookDetail<SquidexWebhookPayload<unknown>> => ({
+  resourceId: request.payload.payload.id,
+  ...request.payload,
+});
 
 export const squidexHandlerFactory =
   (
@@ -11,7 +19,7 @@ export const squidexHandlerFactory =
     eventSource: string,
     squidexSharedSecret: string,
   ): ((
-    request: lambda.Request<WebhookPayload<unknown>>,
+    request: lambda.Request<SquidexWebhookPayload<unknown>>,
   ) => Promise<{ statusCode: number }>) =>
   async (request) => {
     validateSquidexRequest(request, squidexSharedSecret);
@@ -25,14 +33,16 @@ export const squidexHandlerFactory =
       };
     }
 
+    const detail = getDetailFromRequest(request);
+
     await eventBridge
       .putEvents({
         Entries: [
           {
             EventBusName: eventBus,
             Source: eventSource,
-            DetailType: type,
-            Detail: JSON.stringify(request.payload),
+            DetailType: type satisfies WebhookDetailType,
+            Detail: JSON.stringify(detail),
           },
         ],
       })

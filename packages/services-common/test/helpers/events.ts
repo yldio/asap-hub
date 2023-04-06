@@ -1,7 +1,9 @@
 import { APIGatewayProxyEventV2 } from 'aws-lambda';
 import { URLSearchParams } from 'url';
 
-export const apiGatewayEvent = (event: Object): APIGatewayProxyEventV2 => {
+export const apiGatewayEvent = (
+  event: Partial<APIGatewayProxyEventV2>,
+): APIGatewayProxyEventV2 => {
   return {
     headers: {
       'Content-Type': 'application/json',

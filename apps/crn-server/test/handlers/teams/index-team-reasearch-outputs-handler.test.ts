@@ -1,10 +1,12 @@
 import { EventBridgeEvent } from 'aws-lambda';
 import { indexResearchOutputByTeamHandler } from '../../../src/handlers/teams/index-team-reasearch-outputs-handler';
-import { TeamEvent, TeamPayload } from '../../../src/handlers/event-bus';
+import { TeamPayload } from '../../../src/handlers/event-bus';
 import { createEventBridgeEventMock } from '../../helpers/events';
 import { getResearchOutputResponse } from '../../fixtures/research-output.fixtures';
 import { researchOutputControllerMock } from '../../mocks/research-outputs-controller.mock';
 import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
+import { TeamEvent } from '@asap-hub/model';
+import { getTeamsEvent } from '../../fixtures/teams.fixtures';
 
 describe('Team Research Outputs Index', () => {
   const indexHandler = indexResearchOutputByTeamHandler(
@@ -29,8 +31,14 @@ describe('Team Research Outputs Index', () => {
 
     updateEvent.detail.payload = {
       ...updateEvent.detail.payload,
-      data: { outputs: { iv: outputs.slice(0, 2).map(({ id }) => id) } },
-      dataOld: { outputs: { iv: [outputs[2]!.id] } },
+      data: {
+        ...updateEvent.detail.payload.data,
+        outputs: { iv: outputs.slice(0, 2).map(({ id }) => id) },
+      },
+      dataOld: {
+        ...updateEvent.detail.payload.data,
+        outputs: { iv: [outputs[2]!.id] },
+      },
     };
 
     await indexHandler(updateEvent);
@@ -51,9 +59,11 @@ describe('Team Research Outputs Index', () => {
     updateEvent.detail.payload = {
       ...updateEvent.detail.payload,
       data: {
+        ...updateEvent.detail.payload.data,
         outputs: { iv: [] },
       },
       dataOld: {
+        ...updateEvent.detail.payload.data,
         outputs: { iv: [] },
       },
     };
@@ -64,23 +74,7 @@ describe('Team Research Outputs Index', () => {
 });
 
 const getEvent = (): EventBridgeEvent<TeamEvent, TeamPayload> =>
-  createEventBridgeEventMock(createTeamSquidexWebhookPayload, 'TeamsPublished');
-
-const createTeamSquidexWebhookPayload: TeamPayload = {
-  type: 'TeamsPublished',
-  payload: {
-    $type: 'EnrichedContentEvent',
-    type: 'Published',
-    id: '0ecccf93-bd06-9821-90ea-783h7te652d',
-    data: {
-      outputs: {
-        iv: [],
-      },
-    },
-    dataOld: {
-      outputs: {
-        iv: [],
-      },
-    },
-  },
-};
+  createEventBridgeEventMock(
+    getTeamsEvent('TeamsPublished', 'TeamsPublished'),
+    'TeamsPublished',
+  );

@@ -1,108 +1,50 @@
+import { ContentfulWebhookPayload } from '@asap-hub/contentful';
 import {
-  CalendarEvent,
+  EventEvent,
+  ExternalAuthorEvent,
+  GroupEvent,
   LabEvent,
-  SquidexEntityEvent,
-  UserEvent,
-} from '@asap-hub/server-common';
+  ResearchOutputEvent,
+  TeamEvent,
+  WebhookDetail,
+  WorkingGroupEvent,
+} from '@asap-hub/model';
+import {
+  Event,
+  ExternalAuthor,
+  Group,
+  Lab,
+  ResearchOutput,
+  SquidexWebhookPayload,
+  Team,
+  WorkingGroup,
+} from '@asap-hub/squidex';
 
-export type EventEvent = `Events${SquidexEntityEvent}`;
-export type ExternalAuthorEvent = `ExternalAuthors${SquidexEntityEvent}`;
-export type GroupEvent = `Groups${SquidexEntityEvent}`;
-export type TeamEvent = `Teams${SquidexEntityEvent}`;
-export type ResearchOutputEvent = `ResearchOutputs${SquidexEntityEvent}`;
-export type WorkingGroupEvent = `WorkingGroups${SquidexEntityEvent}`;
+export type EventPayload = SquidexWebhookPayload<Event, EventEvent>;
 
-export type EventBusEvent =
-  | CalendarEvent
-  | EventEvent
-  | ExternalAuthorEvent
-  | GroupEvent
-  | LabEvent
-  | TeamEvent
-  | UserEvent
-  | ResearchOutputEvent
-  | WorkingGroupEvent;
+export type ExternalAuthorSquidexPayload = WebhookDetail<
+  SquidexWebhookPayload<ExternalAuthor, ExternalAuthorEvent>
+>;
+export type ExternalAuthorContentfulPayload = WebhookDetail<
+  ContentfulWebhookPayload<'externalAuthors'>
+>;
 
-export type EventPayload = {
-  type: EventEvent;
-  payload: {
-    $type: 'EnrichedContentEvent';
-    type: SquidexEntityEvent;
-    id: string;
-  };
-};
+export type ExternalAuthorPayload =
+  | ExternalAuthorSquidexPayload
+  | ExternalAuthorContentfulPayload;
 
-export type ExternalAuthorPayload = {
-  type: ExternalAuthorEvent;
-  timestamp: string;
-  payload: {
-    $type: 'EnrichedContentEvent';
-    type: SquidexEntityEvent;
-    id: string;
-    created: string;
-    lastModified: string;
-    version: number;
-    data: { [x: string]: { iv: unknown } | null };
-  };
-};
+export type GroupPayload = SquidexWebhookPayload<Group, GroupEvent>;
 
-export type GroupPayload = {
-  type: GroupEvent;
-  payload: {
-    $type: 'EnrichedContentEvent';
-    type: SquidexEntityEvent;
-    id: string;
-  };
-};
+export type LabPayload = SquidexWebhookPayload<Lab, LabEvent>;
 
-export type LabPayload = {
-  type: LabEvent;
-  payload: {
-    $type: 'EnrichedContentEvent';
-    type: SquidexEntityEvent;
-    id: string;
-  };
-};
+export type ResearchOutputPayload = SquidexWebhookPayload<
+  ResearchOutput,
+  ResearchOutputEvent
+>;
 
-export type ResearchOutputPayload = {
-  type: ResearchOutputEvent;
-  payload: {
-    $type: 'EnrichedContentEvent';
-    type: SquidexEntityEvent;
-    id: string;
-  };
-};
+export type WorkingGroupPayload = SquidexWebhookPayload<
+  WorkingGroup,
+  WorkingGroupEvent
+>;
 
-export type WorkingGroupDeliverable = {
-  description: string;
-  status: string;
-};
-
-export type WorkingGroupPayload = {
-  type: WorkingGroupEvent;
-  payload: {
-    $type: 'EnrichedContentEvent';
-    type: SquidexEntityEvent;
-    id: string;
-    data: {
-      title: { iv: string };
-      complete: { iv: boolean };
-      deliverables: { iv: WorkingGroupDeliverable[] };
-    };
-  };
-};
-
-export type TeamPayload = {
-  type: TeamEvent;
-  payload: {
-    $type: 'EnrichedContentEvent';
-    type: SquidexEntityEvent;
-    id: string;
-    data: {
-      outputs: { iv: string[] };
-    };
-    dataOld?: {
-      outputs: { iv: string[] };
-    };
-  };
-};
+export type TeamPayload = SquidexWebhookPayload<Team, TeamEvent>;

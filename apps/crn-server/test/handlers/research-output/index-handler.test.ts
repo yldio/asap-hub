@@ -1,9 +1,7 @@
+import { ResearchOutputEvent } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
-import {
-  ResearchOutputEvent,
-  ResearchOutputPayload,
-} from '../../../src/handlers/event-bus';
+import { ResearchOutputPayload } from '../../../src/handlers/event-bus';
 import { indexResearchOutputHandler } from '../../../src/handlers/research-output/index-handler';
 import {
   getResearchOutputEvent,

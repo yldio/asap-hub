@@ -1,10 +1,10 @@
-import { CalendarDataProvider, gp2 } from '@asap-hub/model';
+import { CalendarDataProvider, CalendarEvent, gp2 } from '@asap-hub/model';
 import { EventBridgeEvent } from 'aws-lambda';
 import { Auth } from 'googleapis';
 import 'source-map-support/register';
 import { Alerts, GetJWTCredentials, Logger } from '../../utils';
 import { validateBody } from '../../validation/subscribe-handler.validation';
-import { CalendarEvent, CalendarPayload } from '../event-bus';
+import { CalendarPayload } from '../event-bus';
 
 type Config = {
   asapApiUrl: string;

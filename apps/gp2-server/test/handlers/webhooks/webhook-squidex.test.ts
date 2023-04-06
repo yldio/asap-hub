@@ -1,3 +1,5 @@
+import { WebhookDetail, WebhookDetailType } from '@asap-hub/model';
+import { SquidexWebhookPayload, gp2 as gp2Squidex } from '@asap-hub/squidex';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { EventBridge } from 'aws-sdk';
 import { eventBus, eventSource } from '../../../src/config';
@@ -32,7 +34,7 @@ describe('Squidex event webhook', () => {
 
   test('Should return 204 when no event type is provided', async () => {
     const payload = getUserWebhookPayload('user-id', 'UsersUpdated');
-    payload.type = undefined as unknown as string;
+    payload.type = undefined as unknown as WebhookDetailType;
     const res = (await handler(
       createSignedPayload(payload),
     )) as APIGatewayProxyResult;
@@ -47,14 +49,21 @@ describe('Squidex event webhook', () => {
       createSignedPayload(payload),
     )) as APIGatewayProxyResult;
 
+    const expectedDetail: WebhookDetail<
+      SquidexWebhookPayload<gp2Squidex.User>
+    > = {
+      resourceId: payload.payload.id,
+      ...payload,
+    };
+
     expect(res.statusCode).toStrictEqual(200);
     expect(evenBridgeMock.putEvents).toHaveBeenCalledWith({
       Entries: [
         {
           EventBusName: eventBus,
           Source: eventSource,
-          DetailType: 'UsersUpdated',
-          Detail: JSON.stringify(payload),
+          DetailType: 'UsersUpdated' satisfies WebhookDetailType,
+          Detail: JSON.stringify(expectedDetail),
         },
       ],
     });

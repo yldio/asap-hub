@@ -216,6 +216,7 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
   methods: string[];
   organisms: string[];
   subtype?: string;
+  keywords: string[];
   teams: Pick<TeamResponse, 'id' | 'displayName'>[];
   workingGroups: Pick<WorkingGroupResponse, 'id' | 'title'>[];
   published: boolean;
@@ -302,6 +303,7 @@ export type ResearchOutputPostRequest = {
   sharingStatus: ResearchOutputSharingStatus;
   subtype?: string;
   tags: string[];
+  keywords: string[];
   teams: string[];
   workingGroups: string[];
   relatedResearch: string[];

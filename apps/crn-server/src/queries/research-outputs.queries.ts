@@ -180,6 +180,11 @@ export const researchOutputContentQueryFragment = gql`
           name
         }
       }
+      keywords {
+        flatData {
+          name
+        }
+      }
     }
   }
 `;

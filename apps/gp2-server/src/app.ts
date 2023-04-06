@@ -8,6 +8,7 @@ import {
   Logger,
   MemoryCacheClient,
   permissionHandler,
+  sentryTransactionIdMiddleware,
   shouldHandleError,
 } from '@asap-hub/server-common';
 import {
@@ -92,7 +93,6 @@ import {
   WorkingGroupDataProvider,
   WorkingGroupSquidexDataProvider,
 } from './data-providers/working-group.data-provider';
-import { sentryTransactionIdMiddleware } from './middleware/sentry-transaction-id-handler';
 import { calendarRouteFactory } from './routes/calendar.route';
 import { contributingCohortRouteFactory } from './routes/contributing-cohort.route';
 import { eventRouteFactory } from './routes/event.route';
@@ -312,22 +312,18 @@ export const appFactory = (libs: Libs = {}): Express => {
   // Auth
   app.use(authHandler);
 
-  /**
-   * Routes requiring onboarding below
-   */
   if (libs.mockRequestHandlers) {
     app.use(libs.mockRequestHandlers);
   }
 
   app.use(userRoutes);
-
+  app.use(contributingCohortRoutes);
   // Permission check
   app.use(permissionHandler);
 
   /**
    * Routes requiring onboarding below
    */
-  app.use(contributingCohortRoutes);
   app.use(newsRoutes);
   app.use(workingGroupRoutes);
   app.use(workingGroupNetworkRoutes);

@@ -1322,19 +1322,19 @@ const serverlessConfig: AWS = {
           ],
         },
       },
-      SubscribeCalendarDLQ: {
+      SubscribeCalendarSquidexDLQ: {
         Type: 'AWS::SQS::Queue',
         Properties: {
           MessageRetentionPeriod: 1_209_600, // 14 days
           QueueName:
-            '${self:service}-${self:provider.stage}-subscribe-calendar-dlq',
+            '${self:service}-${self:provider.stage}-subscribe-calendar-squidex-dlq',
         },
       },
-      SubscribeCalendarDLQPolicy: {
+      SubscribeCalendarSquidexDLQPolicy: {
         Type: 'AWS::SQS::QueuePolicy',
         Properties: {
           PolicyDocument: {
-            Id: '${self:service}-${self:provider.stage}-subscribe-calendar-dlq-policy',
+            Id: '${self:service}-${self:provider.stage}-subscribe-calendar-squidex-dlq-policy',
             Version: '2012-10-17',
             Statement: [
               {
@@ -1345,25 +1345,69 @@ const serverlessConfig: AWS = {
                 },
                 Action: 'sqs:SendMessage',
                 Resource: {
-                  'Fn::GetAtt': [`SubscribeCalendarDLQ`, 'Arn'],
+                  'Fn::GetAtt': [`SubscribeCalendarSquidexDLQ`, 'Arn'],
                 },
               },
             ],
           },
           Queues: [
             {
-              Ref: `SubscribeCalendarDLQ`,
+              Ref: `SubscribeCalendarSquidexDLQ`,
+            },
+          ],
+        },
+      },
+      SubscribeCalendarContentfulDLQ: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          MessageRetentionPeriod: 1_209_600, // 14 days
+          QueueName:
+            '${self:service}-${self:provider.stage}-subscribe-calendar-contentful-dlq',
+        },
+      },
+      SubscribeCalendarContentfulDLQPolicy: {
+        Type: 'AWS::SQS::QueuePolicy',
+        Properties: {
+          PolicyDocument: {
+            Id: '${self:service}-${self:provider.stage}-subscribe-calendar-contentful-dlq-policy',
+            Version: '2012-10-17',
+            Statement: [
+              {
+                Sid: 'Publisher-statement-id',
+                Effect: 'Allow',
+                Principal: {
+                  AWS: '*',
+                },
+                Action: 'sqs:SendMessage',
+                Resource: {
+                  'Fn::GetAtt': [`SubscribeCalendarContentfulDLQ`, 'Arn'],
+                },
+              },
+            ],
+          },
+          Queues: [
+            {
+              Ref: `SubscribeCalendarContentfulDLQ`,
             },
           ],
         },
       },
     },
     extensions: {
-      SubscribeCalendarLambdaFunction: {
+      SubscribeCalendarSquidexLambdaFunction: {
         Properties: {
           DeadLetterConfig: {
             TargetArn: {
-              'Fn::GetAtt': ['SubscribeCalendarDLQ', 'Arn'],
+              'Fn::GetAtt': ['SubscribeCalendarSquidexDLQ', 'Arn'],
+            },
+          },
+        },
+      },
+      SubscribeCalendarContentfulLambdaFunction: {
+        Properties: {
+          DeadLetterConfig: {
+            TargetArn: {
+              'Fn::GetAtt': ['SubscribeCalendarContentfulDLQ', 'Arn'],
             },
           },
         },

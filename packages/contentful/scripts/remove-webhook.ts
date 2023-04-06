@@ -1,5 +1,5 @@
 import * as contentful from 'contentful-management';
-import { getWebhook } from './setup-webhook';
+import { getWebhook } from './helpers';
 
 const spaceId = process.env.CONTENTFUL_SPACE_ID!;
 const contentfulManagementAccessToken =

@@ -1,10 +1,9 @@
 import { createUserResponse } from '@asap-hub/fixtures';
 import { UserResponse } from '@asap-hub/model';
-import { AuthHandler } from '@asap-hub/server-common';
+import { AuthHandler, permissionHandler } from '@asap-hub/server-common';
 import { Router } from 'express';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
-import { permissionHandler } from '../../src/middleware/permission-handler';
 import { listGroupsResponse } from '../fixtures/groups.fixtures';
 import { pageResponse } from '../fixtures/page.fixtures';
 import { getUserResponse } from '../fixtures/users.fixtures';

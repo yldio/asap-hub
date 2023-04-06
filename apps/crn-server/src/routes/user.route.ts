@@ -2,6 +2,7 @@
 
 import { UserResponse } from '@asap-hub/model';
 import {
+  permissionHandler,
   validateFetchOptions,
   validateUserInviteParameters,
 } from '@asap-hub/server-common';
@@ -11,7 +12,6 @@ import { Response, Router } from 'express';
 import parseURI from 'parse-data-url';
 import { GroupController } from '../controllers/groups';
 import { UserController } from '../controllers/users';
-import { permissionHandler } from '../middleware/permission-handler';
 import {
   validateUserParameters,
   validateUserPatchRequest,

@@ -1,5 +1,6 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 import {
+  permissionHandler,
   validateFetchUsersOptions,
   validateUserInviteParameters,
 } from '@asap-hub/server-common';
@@ -8,7 +9,6 @@ import Boom, { isBoom } from '@hapi/boom';
 import { Router } from 'express';
 import parseURI from 'parse-data-url';
 import { UserController } from '../controllers/user.controller';
-import { permissionHandler } from '../middleware/permission-handler';
 import {
   validateUserParameters,
   validateUserPatchRequest,

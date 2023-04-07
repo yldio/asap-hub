@@ -150,6 +150,20 @@ describe('Not Grant Documents', () => {
       expect(queryByRole('separator')).not.toBeInTheDocument();
     });
 
+    it('handles no description', () => {
+      const { queryByText } = render(
+        <SharedResearchOutput
+          {...props}
+          documentType="Article"
+          tags={['tag1']}
+          description={undefined}
+          descriptionMD={undefined}
+        />,
+      );
+      expect(
+        queryByText(/description/i, { selector: 'h2' }),
+      ).not.toBeInTheDocument();
+    });
     it('handles just tags', () => {
       const { queryByText, getByText, queryByRole } = render(
         <SharedResearchOutput

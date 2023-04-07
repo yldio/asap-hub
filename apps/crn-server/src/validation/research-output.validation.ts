@@ -79,7 +79,7 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
         enum: researchOutputTypes,
         nullable: true,
       },
-      description: { type: 'string' },
+      description: { type: 'string', nullable: true },
       descriptionMD: { type: 'string' },
       tags: {
         type: 'array',

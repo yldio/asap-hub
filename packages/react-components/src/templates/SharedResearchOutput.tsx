@@ -54,8 +54,8 @@ type SharedResearchOutputProps = Pick<
   } & ComponentProps<typeof SharedResearchAdditionalInformationCard>;
 
 const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
-  description,
-  descriptionMD,
+  description = '',
+  descriptionMD = '',
   backHref,
   usageNotes,
   contactEmails,

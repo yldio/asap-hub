@@ -189,8 +189,8 @@ export type ResearchOutputCoreObject = {
   accession?: string;
   addedDate: string;
   asapFunded?: boolean;
-  description: string;
-  descriptionMD: string;
+  description?: string;
+  descriptionMD?: string;
   documentType: ResearchOutputDocumentType;
   doi?: string;
   labCatalogNumber?: string;

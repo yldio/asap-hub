@@ -280,6 +280,8 @@ export const getResearchOutputPostRequest = (): ResearchOutputPostRequest => {
   } = getResearchOutputResponse();
   return {
     ...researchOutputResponse,
+    description: 'Text',
+    descriptionMD: 'Text MD',
     link: 'http://a.link',
     type: 'Software',
     labs: labs.map(({ id }) => id),

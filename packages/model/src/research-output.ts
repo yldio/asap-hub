@@ -289,7 +289,7 @@ export type ResearchOutputPostRequest = {
   accession?: string;
   asapFunded?: boolean;
   authors?: AuthorPostRequest[];
-  description: string;
+  description?: string;
   descriptionMD: string;
   documentType: ResearchOutputDocumentType;
   doi?: string;

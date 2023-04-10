@@ -297,8 +297,6 @@ export class ResearchOutputSquidexDataProvider
 <<<<<<< HEAD
 =======
 
-
-
     return researchOutputId;
 >>>>>>> a1893e5b6 (Publish method)
   }

@@ -26,10 +26,13 @@ export const contentfulWebhookFactory = (
       }
 
       const detailType = getDetailTypeFromRequest(request);
-      const detail = {
-        ...getDetailFromRequest(request),
-        type: detailType,
-      };
+      const detail =
+        detailType === 'CalendarsPublished'
+          ? {
+              ...getDetailFromRequest(request),
+              type: detailType,
+            }
+          : getDetailFromRequest(request);
 
       await eventBridge
         .putEvents({

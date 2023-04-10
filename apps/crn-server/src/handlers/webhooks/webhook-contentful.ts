@@ -26,7 +26,10 @@ export const contentfulWebhookFactory = (
       }
 
       const detailType = getDetailTypeFromRequest(request);
-      const detail = getDetailFromRequest(request);
+      const detail = {
+        ...getDetailFromRequest(request),
+        type: detailType,
+      };
 
       await eventBridge
         .putEvents({

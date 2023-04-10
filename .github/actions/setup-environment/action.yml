@@ -71,9 +71,9 @@ outputs:
   cache-prefix-transpile:
     description: 'Cache Prefix Transpile'
     value: ${{ steps.vars.outputs.cache-prefix-transpile }}
-  contentful-space-id:
+  crn-contentful-space-id:
     description: 'Contentful Space ID'
-    value: ${{ steps.vars.outputs.contentful-space-id }}
+    value: ${{ steps.vars.outputs.crn-contentful-space-id }}
   contentful-environment:
     description: 'Contentful Environment'
     value: ${{ steps.vars.outputs.contentful-environment }}

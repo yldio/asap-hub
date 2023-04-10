@@ -76,13 +76,13 @@ jobs:
             exit 1;
           fi
         env:
-          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.contentful-space-id }}
+          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           MAX_CONTENTFUL_ENVIRONMENTS: ${{ steps.setup.outputs.max-contentful-envs }}
       - name: Create Contentful environment
         run: yarn workspace @asap-hub/contentful space:create-environment:crn
         env:
-          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.contentful-space-id }}
+          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           CONTENTFUL_ENV_ID: ${{ inputs.crn-contentful-env }}
           CONTENTFUL_SOURCE_ENV: ${{ steps.setup.outputs.contentful-environment }}

@@ -211,7 +211,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       // TODO: Remove Boom from the controller layer
       // https://asaphub.atlassian.net/browse/CRN-777
       throw Boom.badRequest<ValidationErrorResponse['data']>(
-        VALIDATION_ERROR_MESSAGE + JSON.stringify(errors),
+        `${VALIDATION_ERROR_MESSAGE} ${JSON.stringify(errors)}`,
         errors,
       );
     }

@@ -105,7 +105,7 @@ export const calendarCreatedHandlerFactory =
   async (
     event: EventBridgeEvent<CalendarEvent, CalendarPayload>,
   ): Promise<'OK'> => {
-    logger.info(JSON.stringify(event, null, 2), 'Event input');
+    logger.debug(JSON.stringify(event, null, 2), 'Event input');
 
     const { type: eventType, payload } = validateBody(event.detail as never);
 

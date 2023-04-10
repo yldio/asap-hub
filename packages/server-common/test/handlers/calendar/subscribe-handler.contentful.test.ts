@@ -1,14 +1,14 @@
 import { EventBridgeEvent } from 'aws-lambda';
-import { CalendarEvent } from '@asap-hub/model';
+import { CalendarEvent, WebhookDetail } from '@asap-hub/model';
 import nock from 'nock';
 import {
-  calendarCreatedHandlerFactory,
   CalendarPayload,
   SubscribeToEventChanges,
   subscribeToEventChangesFactory,
   UnsubscribeFromEventChanges,
   unsubscribeFromEventChangesFactory,
 } from '../../../src';
+import { calendarCreatedHandlerFactory } from '../../../src/handlers/calendar/subscribe-handler.contentful';
 import { Alerts } from '../../../src/utils/alerts';
 import { GetJWTCredentials } from '../../../src/utils/aws-secret-manager';
 import { getCalendarDataObject } from '../../fixtures/calendar.fixtures';
@@ -27,9 +27,14 @@ import {
   outOfOrderSecondUpdateFromUnsubscribe,
 } from './fixtures/payload';
 import {
+  getCalendarContentfulEvent,
   getCalendarCreateEvent,
   getCalendarUpdateEvent,
 } from './webhook-sync-calendar.fixtures';
+import {
+  ContentfulWebhookPayload,
+  ContentfulWebhookPublishPayload,
+} from '@asap-hub/contentful';
 const googleApiUrl = 'https://www.googleapis.com/';
 
 describe('Calendar handler', () => {
@@ -52,15 +57,20 @@ describe('Calendar handler', () => {
   });
 
   describe('Validation', () => {
-    test('valid: additional fields in payload are allowed', async () => {
+    test('valid: additional fields are allowed', async () => {
       const event = getEvent();
-      (event.detail.payload as any).additionalField = 'hi';
+      (event.detail as any).additionalField = 'hi';
       const resourceId = 'some-resource-id';
       const expiration = 123456;
       subscribe.mockResolvedValueOnce({ resourceId, expiration });
 
       await expect(
-        handler(event as EventBridgeEvent<CalendarEvent, CalendarPayload>),
+        handler(
+          event as EventBridgeEvent<
+            CalendarEvent,
+            WebhookDetail<ContentfulWebhookPayload<'calendars'>>
+          >,
+        ),
       ).resolves.toBe('OK');
     });
 
@@ -518,9 +528,12 @@ describe('Unsubscribing', () => {
   });
 });
 
-const getEvent = (type?: CalendarEvent, detail?: CalendarPayload) =>
+const getEvent = (
+  type?: CalendarEvent,
+  detail?: WebhookDetail<ContentfulWebhookPayload<'calendars'>>,
+) =>
   createEventBridgeEventMock(
-    detail || getCalendarCreateEvent(),
+    detail || getCalendarContentfulEvent(),
     type || 'CalendarsPublished',
   );
 

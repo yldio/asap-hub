@@ -51,10 +51,10 @@ export const getCalendarUpdateEvent = (
   },
 });
 
-export const getCalendarContentfulWebhookDetail = (
-  id: string,
-): WebhookDetail<ContentfulWebhookPayload<'calendars'>> => ({
-  resourceId: id,
+export const getCalendarContentfulWebhookDetail = (): WebhookDetail<
+  ContentfulWebhookPayload<'calendars'>
+> => ({
+  resourceId: 'calendar-1',
   metadata: {
     tags: [],
   },
@@ -113,15 +113,12 @@ export const getCalendarContentfulWebhookDetail = (
   },
 });
 
-export const getCalendarContentfulEvent = (
-  id: string,
-  eventType: CalendarEvent,
-): EventBridgeEvent<
+export const getCalendarContentfulEvent = (): EventBridgeEvent<
   CalendarEvent,
   WebhookDetail<ContentfulWebhookPayload<'calendars'>>
 > =>
   createEventBridgeEventMock(
-    getCalendarContentfulWebhookDetail(id),
-    eventType,
-    id,
+    getCalendarContentfulWebhookDetail(),
+    'CalendarsPublished',
+    'calendar-1',
   );

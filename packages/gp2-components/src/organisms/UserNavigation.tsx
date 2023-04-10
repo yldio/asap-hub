@@ -1,18 +1,34 @@
 import {
+  Avatar,
+  chevronDownIcon,
+  chevronUpIcon,
   colorWithTransparency,
   drawerQuery,
   navigationGrey,
   paper,
   steel,
   tin,
-  UserMenuButton,
+  pixels,
 } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
 import { ComponentProps, useEffect, useRef, useState } from 'react';
-import { smallDesktopQuery } from '../layout';
 
 import UserMenu from '../molecules/UserMenu';
+
+const { rem } = pixels;
+
+const buttonStyles = css({
+  width: rem(80),
+  margin: 0,
+  padding: 0,
+  border: 'none',
+  backgroundColor: 'unset',
+  cursor: 'pointer',
+  display: 'flex',
+  alignItems: 'center',
+  gap: rem(16),
+});
 
 const userMenuStyles = css({
   backgroundColor: paper.rgb,
@@ -22,18 +38,13 @@ const userMenuStyles = css({
   boxShadow: `0 2px 6px 0 ${colorWithTransparency(tin, 0.34).rgba}`,
   right: 5,
 });
+
 const userMenuShownStyles = css({
   zIndex: 1,
   [drawerQuery]: {
     backgroundColor: navigationGrey.rgb,
   },
   display: 'unset',
-});
-const buttonTextStyles = css({
-  whiteSpace: 'nowrap',
-  [smallDesktopQuery]: {
-    display: 'none',
-  },
 });
 
 type UserNavigationProps = Omit<
@@ -44,8 +55,7 @@ type UserNavigationProps = Omit<
 const UserNavigation: React.FC<UserNavigationProps> = (userNavigationProps) => {
   const reference = useRef<HTMLDivElement>(null);
   const [menuShown, setMenuShown] = useState(false);
-  const { firstName, lastName, displayName, avatarUrl } =
-    useCurrentUserGP2() || {};
+  const { firstName, lastName, avatarUrl } = useCurrentUserGP2() || {};
 
   useEffect(() => {
     const handleClickOutside = (event: Event) => {
@@ -64,18 +74,22 @@ const UserNavigation: React.FC<UserNavigationProps> = (userNavigationProps) => {
   }, [setMenuShown, reference]);
   return (
     <div css={css({ position: 'relative' })} ref={reference}>
-      <UserMenuButton
-        onClick={() => setMenuShown(!menuShown)}
-        open={menuShown}
-        firstName={firstName}
-        lastName={lastName}
-        displayName={displayName}
-        avatarUrl={avatarUrl}
+      <button
+        aria-label="Toggle User Menu"
+        css={buttonStyles}
+        onClick={(event) => {
+          setMenuShown(!menuShown);
+          event.preventDefault();
+        }}
       >
-        <span css={buttonTextStyles}>{`Hi, ${
-          firstName ?? 'Unknown User'
-        }`}</span>
-      </UserMenuButton>
+        <Avatar
+          imageUrl={avatarUrl}
+          firstName={firstName}
+          lastName={lastName}
+          overrideStyles={css({ width: rem(40) })}
+        />
+        {menuShown ? chevronUpIcon : chevronDownIcon}
+      </button>
       <div css={css([userMenuStyles, menuShown && userMenuShownStyles])}>
         <UserMenu {...userNavigationProps} closeUserMenu={setMenuShown} />
       </div>

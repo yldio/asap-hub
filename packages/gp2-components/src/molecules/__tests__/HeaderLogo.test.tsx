@@ -6,12 +6,9 @@ describe('HeaderLogo', () => {
     render(<HeaderLogo />);
     expect(screen.getByRole('link').firstChild).toHaveTextContent(/GP2 Logo/);
   });
-  it('should have the small and full logo in the document', () => {
-    render(<HeaderLogo />);
-    const [fullLogo, smallLogo] = screen.getAllByTitle('GP2 Logo');
-    expect(fullLogo!.closest('a')?.className).toContain('fullLogo');
-    expect(fullLogo!.closest('a')?.href).toBe(globalThis.location.href);
-    expect(smallLogo!.closest('a')?.className).toContain('smallLogo');
-    expect(smallLogo!.closest('a')?.href).toBe(globalThis.location.href);
+  it('should have the right link when the logoHref is provided', () => {
+    render(<HeaderLogo logoHref={'http://example.com'} />);
+    const [smallLogo] = screen.getAllByTitle('GP2 Logo');
+    expect(smallLogo!.closest('a')?.href).toBe('http://example.com/');
   });
 });

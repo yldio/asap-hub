@@ -10,8 +10,7 @@ import {
 
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
-import { smallDesktopQuery } from '../layout';
-import HeaderLogo from '../molecules/HeaderLogo';
+import { HeaderLogo } from '../molecules';
 import MainNavigation from './MainNavigation';
 import UserNavigation from './UserNavigation';
 
@@ -22,15 +21,12 @@ const navigationHeaderstyles = css({
   padding: 0,
   display: 'flex',
   flexDirection: 'row',
-  maxWidth: '1100px',
-  justifyContent: 'center',
+  justifyContent: 'space-between',
   alignItems: 'center',
-  [smallDesktopQuery]: {
-    maxWidth: '880px',
-  },
   gap: rem(72),
-  margin: 'auto',
+  margin: `0 ${rem(24)}`,
   [drawerQuery]: {
+    margin: 0,
     width: '100%',
     justifyContent: 'flex-start',
     alignItems: 'stretch',

@@ -12414,7 +12414,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@asap-hub/server-common", "workspace:packages/server-common"],\
             ["@asap-hub/auth", "workspace:packages/auth"],\
-            ["@asap-hub/contentful", "workspace:packages/contentful"],\
             ["@asap-hub/errors", "workspace:packages/errors"],\
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],\
             ["@asap-hub/fixtures", "workspace:packages/fixtures"],\

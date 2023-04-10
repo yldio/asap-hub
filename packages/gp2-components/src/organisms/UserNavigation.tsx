@@ -18,18 +18,16 @@ import UserMenu from '../molecules/UserMenu';
 
 const { rem } = pixels;
 
-const buttonResetStyles = css({
+const buttonStyles = css({
   width: rem(80),
+  margin: 0,
   padding: 0,
-  backgroundColor: 'unset',
   border: 'none',
-  outline: 'none',
-});
-const styles = css({
-  padding: `${rem(12)} 0`,
+  backgroundColor: 'unset',
   cursor: 'pointer',
-  display: 'grid',
+  display: 'flex',
   alignItems: 'center',
+  gap: rem(16),
 });
 
 const userMenuStyles = css({
@@ -78,26 +76,19 @@ const UserNavigation: React.FC<UserNavigationProps> = (userNavigationProps) => {
     <div css={css({ position: 'relative' })} ref={reference}>
       <button
         aria-label="Toggle User Menu"
-        css={[buttonResetStyles, styles]}
+        css={buttonStyles}
         onClick={(event) => {
           setMenuShown(!menuShown);
           event.preventDefault();
         }}
       >
-        <div
-          css={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: rem(16),
-          }}
-        >
-          <Avatar
-            imageUrl={avatarUrl}
-            firstName={firstName}
-            lastName={lastName}
-          />
-          <span>{menuShown ? chevronUpIcon : chevronDownIcon}</span>
-        </div>
+        <Avatar
+          imageUrl={avatarUrl}
+          firstName={firstName}
+          lastName={lastName}
+          overrideStyles={css({ width: rem(40) })}
+        />
+        {menuShown ? chevronUpIcon : chevronDownIcon}
       </button>
       <div css={css([userMenuStyles, menuShown && userMenuShownStyles])}>
         <UserMenu {...userNavigationProps} closeUserMenu={setMenuShown} />

@@ -417,6 +417,7 @@ it('will toast server side errors for unknown errors', async () => {
 it.each([
   { status: 'draft', buttonName: 'Save Draft', published: false },
   { status: 'published', buttonName: 'Save', published: true },
+  { status: 'draft', buttonName: 'Publish', published: false },
 ])(
   'can edit a $status working group research output',
   async ({ buttonName, published }) => {
@@ -454,9 +455,9 @@ it.each([
     await waitFor(() => {
       expect(button).toBeEnabled();
       expect(history.location.pathname).toBe(
-        !published
-          ? '/shared-research/research-output-id'
-          : '/shared-research/research-output-id/publishedNow',
+        buttonName === 'Publish'
+          ? '/shared-research/research-output-id/publishedNow'
+          : '/shared-research/research-output-id',
       );
     });
 

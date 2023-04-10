@@ -299,8 +299,6 @@ export class ResearchOutputSquidexDataProvider
       teams: researchOutput.teams,
     });
 
-
-
     return researchOutputId;
   }
 }

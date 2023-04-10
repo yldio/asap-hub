@@ -58,7 +58,9 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   const createResearchOutput = usePostResearchOutput({ publish: true });
   const createDraftResearchOutput = usePostResearchOutput({ publish: false });
 
-  const updateResearchOutput = usePutResearchOutput({ publish: true });
+  const updateResearchOutput = usePutResearchOutput({
+    publish: !researchOutputData?.published,
+  });
   const updateDraftResearchOutput = usePutResearchOutput({ publish: false });
 
   const getLabSuggestions = useLabSuggestions();

@@ -112,7 +112,18 @@ describe('UserDetail', () => {
       ).toBeVisible();
     });
   });
+  describe('external profile', () => {
+    it('does not render upload avatar button if user is not the current user', async () => {
+      const user = gp2Fixtures.createUserResponse();
+      mockGetUser.mockResolvedValueOnce(user);
 
+      await renderUserDetail(user.id);
+
+      expect(
+        screen.queryByLabelText(/upload.+avatar/i),
+      ).not.toBeInTheDocument();
+    });
+  });
   describe('own profile', () => {
     it('renders edit buttons for each section', async () => {
       const user = gp2Fixtures.createUserResponse({
@@ -163,7 +174,14 @@ describe('UserDetail', () => {
       expect((await editButtons).length).toBe(4);
       expect((await addButtons).length).toBe(4);
     });
-
+    it('renders the upload avatar button', async () => {
+      const user = gp2Fixtures.createUserResponse({
+        id: 'testuserid',
+      });
+      mockGetUser.mockResolvedValueOnce(user);
+      await renderUserDetail(user.id);
+      expect(screen.getByLabelText(/upload.+avatar/i)).toBeVisible();
+    });
     it('saves the key information modal', async () => {
       const user = gp2Fixtures.createUserResponse({
         id: 'testuserid',

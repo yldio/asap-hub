@@ -135,7 +135,7 @@ export const calendarCreatedHandlerFactory =
 
       if (version > (payload.version as number)) {
         logger.warn(
-          `version received (${payload.version}) is older than current version: ${version}`,
+          `version recieved (${payload.version}) is older than current version: ${version}`,
         );
         return 'OK';
       }

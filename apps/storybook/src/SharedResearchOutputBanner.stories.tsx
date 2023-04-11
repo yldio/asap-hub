@@ -11,7 +11,6 @@ export default {
 export const Normal = () => (
   <SharedResearchOutputBanner
     published={boolean('Published', true)}
-    isPublishedNow={boolean('Is Published Now', true)}
     documentType={text('Document Type', 'Article')}
     association={select(
       'Association',

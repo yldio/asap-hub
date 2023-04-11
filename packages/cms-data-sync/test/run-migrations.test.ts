@@ -1,6 +1,6 @@
 import * as contentfulManagement from 'contentful-management';
 import { Space, WebHooks } from 'contentful-management';
-import { runMigrations } from '../src/index';
+import { runMigrations } from '../src/run-migrations';
 import { BLUE_COLOR, RED_COLOR } from '../src/utils';
 
 import { migrateTeams } from '../src/teams/teams.data-migration';

@@ -52,6 +52,12 @@ const webhookMock = {
   active: true,
 } as any as jest.Mocked<WebHooks>;
 
+const mockedSetter = jest.fn();
+
+Object.defineProperty(webhookMock, 'active', {
+  set: mockedSetter,
+});
+
 const spaceMock = {
   getWebhook: jest.fn().mockResolvedValue(webhookMock),
 } as any as jest.Mocked<Space>;
@@ -85,6 +91,7 @@ describe('Migrations', () => {
       BLUE_COLOR,
       '[DEBUG] Webhook deactivated',
     );
+    expect(mockedSetter).toHaveBeenNthCalledWith(1, false);
 
     expect(migrateTeams).toHaveBeenCalled();
     expect(migrateExternalAuthors).toHaveBeenCalled();
@@ -95,7 +102,7 @@ describe('Migrations', () => {
       BLUE_COLOR,
       '[DEBUG] Webhook activated',
     );
-    expect(webhookMock.active).toEqual(true);
+    expect(mockedSetter).toHaveBeenNthCalledWith(2, true);
   });
 
   it('activates webhook back even if some migration failed', async () => {
@@ -110,6 +117,7 @@ describe('Migrations', () => {
       BLUE_COLOR,
       '[DEBUG] Webhook deactivated',
     );
+    expect(mockedSetter).toHaveBeenNthCalledWith(1, false);
 
     expect(console.log).toHaveBeenNthCalledWith(
       2,
@@ -122,5 +130,6 @@ describe('Migrations', () => {
       BLUE_COLOR,
       '[DEBUG] Webhook activated',
     );
+    expect(mockedSetter).toHaveBeenNthCalledWith(2, true);
   });
 });

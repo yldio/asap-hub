@@ -255,7 +255,7 @@ export class ResearchOutputSquidexDataProvider
   async update(
     researchOutputId: string,
     input: ResearchOutputUpdateDataObject,
-    updateOptions = { publish: true },
+    updateOptions = { publish: false },
   ): Promise<string> {
     const {
       authors,

@@ -137,10 +137,6 @@ export const researchOutputRouteFactory = (
       // TODO: update the published value in hasEditResearchOutputPermission in
       // display draft task. Currently we are not sending the value published
 
-      // console.log('§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§');
-      // console.log('options', options);
-      // console.log('publish query', query);
-      // console.log('§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§');
       if (
         !loggedInUser ||
         !hasEditResearchOutputPermission(userRole, publish)

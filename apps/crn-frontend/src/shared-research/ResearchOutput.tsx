@@ -13,15 +13,15 @@ const ResearchOutput: React.FC = () => {
   const { researchOutputId } = useRouteParams(
     sharedResearch({}).researchOutput,
   );
-  // TODO: proper implementation
-  const matchPublishedNow = useRouteMatch({
+
+  const publishedNowPath = useRouteMatch({
     path: `${
       sharedResearch({}).researchOutput({ researchOutputId }).$
     }/publishedNow`,
     exact: true,
-  });
+  })?.path;
 
-  const isPublishedNow = !!matchPublishedNow;
+  const publishedNow = !!publishedNowPath;
 
   const { path } = useRouteMatch();
   const researchOutputData = useResearchOutputById(researchOutputId);
@@ -41,18 +41,15 @@ const ResearchOutput: React.FC = () => {
     researchOutputData ? researchOutputData.published : false,
   );
 
-  console.log('path', path);
-  console.log('matchPublishedNow', matchPublishedNow);
-  console.log('isPublishedNow', isPublishedNow);
   if (researchOutputData) {
     return (
       <ResearchOutputPermissionsContext.Provider value={permissions}>
-        <Route exact path={isPublishedNow ? matchPublishedNow?.path : path}>
+        <Route exact path={publishedNow ? publishedNowPath : path}>
           <Frame title={researchOutputData.title}>
             <SharedResearchOutput
               {...researchOutputData}
               backHref={backHref}
-              isPublishedNow={isPublishedNow}
+              publishedNow={publishedNow}
             />
           </Frame>
         </Route>

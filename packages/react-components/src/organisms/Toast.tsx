@@ -123,7 +123,7 @@ const accentStyles: Record<ToastAccents, CSSObject> = {
   successLarge: {
     backgroundColor: success100.rgb,
     color: success900.rgb,
-    svg: { stroke: success500.rgb, width: 24, height: 24 },
+    svg: { stroke: success500.rgb },
   },
 };
 

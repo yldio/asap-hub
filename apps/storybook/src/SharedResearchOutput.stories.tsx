@@ -88,7 +88,7 @@ const props = (): ComponentProps<typeof SharedResearchOutput> => ({
     number('Number of related research items', 0),
   ).items,
   published: boolean('Published', true),
-  isPublishedNow: boolean('Is Published Now', false),
+  publishedNow: boolean('Is Published Now', false),
 });
 
 export const Normal = () => (

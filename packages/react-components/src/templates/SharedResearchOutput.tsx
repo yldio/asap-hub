@@ -55,7 +55,7 @@ type SharedResearchOutputProps = Pick<
   ComponentProps<typeof SharedResearchOutputHeaderCard> & {
     backHref: string;
   } & ComponentProps<typeof SharedResearchAdditionalInformationCard> & {
-    isPublishedNow: boolean;
+    publishedNow: boolean;
   };
 
 const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
@@ -66,7 +66,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   id,
   relatedResearch,
   published,
-  isPublishedNow = false,
+  publishedNow,
   ...props
 }) => {
   const isGrantDocument = ['Grant Document', 'Presentation'].includes(
@@ -84,16 +84,14 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   const { canEditResearchOutput } = useContext(
     ResearchOutputPermissionsContext,
   );
-  const association = getResearchOutputAssociation(props);
 
   return (
     <div>
-      {(isPublishedNow || !published) && (
+      {(publishedNow || !published) && (
         <SharedResearchOutputBanner
-          published={published}
-          isPublishedNow={isPublishedNow}
+          published={published && publishedNow}
           documentType={props.documentType}
-          association={association}
+          association={getResearchOutputAssociation(props)}
         />
       )}
       <div css={containerStyles}>

@@ -3,7 +3,6 @@ import { render } from '@testing-library/react';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { researchOutputDocumentTypes } from '@asap-hub/model';
-import userEvent from '@testing-library/user-event';
 
 import SharedResearchOutput from '../SharedResearchOutput';
 
@@ -333,37 +332,6 @@ describe('a draft output', () => {
 });
 
 describe('a newly published output', () => {
-  it('has a closable toast', () => {
-    const { getByText, getByTitle } = render(
-      <SharedResearchOutput
-        {...props}
-        teams={[{ id: 'team1', displayName: 'team 1' }]}
-        workingGroups={undefined}
-        documentType="Article"
-        isPublishedNow
-      />,
-    );
-    const toast = getByText('Team Article published successfully.');
-    expect(toast).toBeVisible();
-    userEvent.click(getByTitle(/close/i));
-    expect(toast).not.toBeInTheDocument();
-  });
-  it('can never show the toast for a draft regardless of the url', () => {
-    const { queryByText } = render(
-      <SharedResearchOutput
-        {...props}
-        teams={[{ id: 'team1', displayName: 'team 1' }]}
-        workingGroups={undefined}
-        documentType="Article"
-        published={false}
-        isPublishedNow
-      />,
-    );
-    expect(
-      queryByText('team Article published successfully.'),
-    ).not.toBeInTheDocument();
-  });
-
   it.each(researchOutputDocumentTypes)(
     'shows the toast for team outputs with documentType: %s',
     (researchOutputDocumentType) => {

@@ -7,13 +7,17 @@ import { sharedResearch } from '@asap-hub/routing';
 import { Card, Headline2, Divider, Link, Markdown } from '../atoms';
 import { perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
-import { BackLink, CtaCard, TagList } from '../molecules';
+import {
+  BackLink,
+  CtaCard,
+  SharedResearchOutputBanner,
+  TagList,
+} from '../molecules';
 import {
   RelatedResearch,
   RichText,
   SharedResearchAdditionalInformationCard,
   SharedResearchOutputHeaderCard,
-  Toast,
 } from '../organisms';
 import { createMailTo } from '../mail';
 import { editIcon } from '..';
@@ -83,26 +87,17 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
     ResearchOutputPermissionsContext,
   );
   const hasDescription = description || descriptionMD;
-  const [showPublishedNowToast, setShowPublishedNowToast] =
-    React.useState(isPublishedNow);
+  const association = getResearchOutputAssociation(props);
 
   return (
     <div>
-      {!published && (
-        <Toast accent="warning">{`This draft is available to members in the ${getResearchOutputAssociation(
-          props,
-        )}
-     listed below. Only PMs can publish this output.`}</Toast>
-      )}
-      {showPublishedNowToast && published && (
-        <Toast
-          accent="successLarge"
-          onClose={() => setShowPublishedNowToast(false)}
-        >
-          {`${props.workingGroups ? 'Working Group' : 'Team '} ${
-            props.documentType
-          } published successfully.`}
-        </Toast>
+      {(isPublishedNow || !published) && (
+        <SharedResearchOutputBanner
+          published={published}
+          isPublishedNow={isPublishedNow}
+          documentType={props.documentType}
+          association={association}
+        />
       )}
       <div css={containerStyles}>
         <div css={buttonsContainer}>

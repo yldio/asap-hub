@@ -317,6 +317,8 @@ export type ResearchOutputPostRequest = {
   usedInPublication?: boolean;
 };
 
+export type ResearchOutputAssociations = 'team' | 'teams' | 'working group';
+
 export type ResearchOutputPutRequest = ResearchOutputPostRequest;
 
 type NonEmptyArray<T> = [T, ...T[]];

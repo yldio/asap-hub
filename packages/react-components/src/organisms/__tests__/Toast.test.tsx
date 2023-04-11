@@ -38,7 +38,8 @@ it.each<{
   { accent: 'error', iconTitle: 'Error Icon' },
   { accent: 'info', iconTitle: 'Information' },
   { accent: 'warning', iconTitle: 'Warning' },
-  { accent: 'success', iconTitle: 'Success Large' },
+  { accent: 'success', iconTitle: 'Success' },
+  { accent: 'successLarge', iconTitle: 'Success Large' },
 ])(
   'render the $iconTitle icon for Toast accent $accent',
   ({ accent, iconTitle }) => {

@@ -187,7 +187,7 @@ export type ResearchOutputSharingStatus = (typeof sharingStatuses)[number];
 
 export type ResearchOutputCoreObject = {
   accession?: string;
-  addedDate: string;
+  addedDate?: string;
   asapFunded?: boolean;
   description?: string;
   descriptionMD?: string;

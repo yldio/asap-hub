@@ -21,7 +21,7 @@ export interface ResearchOutput<
   TUserConnection = string,
 > {
   accession?: string;
-  addedDate: string;
+  addedDate?: string;
   adminNotes?: string;
   asapFunded: DecisionOption;
   authors?: TAuthorConnection[];

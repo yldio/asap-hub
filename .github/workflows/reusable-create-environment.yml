@@ -10,12 +10,12 @@ on:
       crn-contentful-env:
         description: 'CRN Contentful environment name'
         type: string
-      on-branch-env:
-        description: 'Is branch environment required'
+      crn-on-branch-env:
+        description: 'Is CRN branch environment required'
         required: true
         type: string
-      contentful-env-exists:
-        description: 'Does contentful environment already exist'
+      crn-contentful-env-exists:
+        description: 'Does CRN contentful environment already exist'
         required: true
         type: string
     secrets:
@@ -46,7 +46,7 @@ on:
 
 jobs:
   crn-contentful:
-    if: ${{ inputs.environment-name=='Branch' && inputs.on-branch-env == 'true' && inputs.contentful-env-exists == 'false'}}
+    if: ${{ inputs.environment-name=='Branch' && inputs.crn-on-branch-env == 'true' && inputs.crn-contentful-env-exists == 'false'}}
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
@@ -78,7 +78,7 @@ jobs:
         env:
           CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          MAX_CONTENTFUL_ENVIRONMENTS: ${{ steps.setup.outputs.max-contentful-envs }}
+          MAX_CONTENTFUL_ENVIRONMENTS: ${{ steps.setup.outputs.crn-max-contentful-envs }}
       - name: Create Contentful environment
         run: yarn workspace @asap-hub/contentful space:create-environment:crn
         env:

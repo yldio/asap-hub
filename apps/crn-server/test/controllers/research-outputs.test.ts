@@ -165,11 +165,6 @@ describe('ResearchOutputs controller', () => {
 
     describe('create options param', () => {
       test('Should call data provider with published equals false when it is passed as false', async () => {
-        const mockDate = new Date('2010-01-01');
-        const spy = jest
-          .spyOn(global, 'Date')
-          .mockImplementation(() => mockDate);
-
         const researchOutputCreateData = getResearchOutputCreateData();
         const researchOutputId = 'research-output-id-1';
         researchOutputDataProviderMock.create.mockResolvedValueOnce(
@@ -184,14 +179,14 @@ describe('ResearchOutputs controller', () => {
 
         const researchOutputCreateDataObject =
           getResearchOutputCreateDataObject();
+
         expect(researchOutputDataProviderMock.create).toBeCalledWith(
           {
             ...researchOutputCreateDataObject,
-            addedDate: mockDate.toISOString(),
+            addedDate: undefined,
           },
           { publish: false },
         );
-        spy.mockRestore();
       });
 
       test('Should call data provider with published equals true when create options is not passed', async () => {
@@ -572,6 +567,8 @@ describe('ResearchOutputs controller', () => {
     });
 
     test('Should update the research output and return it', async () => {
+      const mockDate = new Date('2010-01-01');
+      const spy = jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
       const researchOutputUpdateData = getResearchOutputUpdateData();
       researchOutputDataProviderMock.update.mockResolvedValueOnce(
         researchOutputId,
@@ -589,17 +586,29 @@ describe('ResearchOutputs controller', () => {
         getResearchOutputUpdateDataObject();
       expect(researchOutputDataProviderMock.update).toBeCalledWith(
         researchOutputId,
-        { ...researchOutputUpdateDataObject },
+        {
+          ...researchOutputUpdateDataObject,
+          addedDate: mockDate.toISOString(),
+        },
         { publish: true },
       );
+      spy.mockRestore();
     });
 
     describe('update options param', () => {
       test('Should call data provider with published equals false when it is passed as false', async () => {
-        const researchOutputUpdateData = getResearchOutputUpdateData();
+        const researchOutputUpdateData = {
+          ...getResearchOutputUpdateData(),
+          addedDate: null,
+        };
         researchOutputDataProviderMock.update.mockResolvedValueOnce(
           researchOutputId,
         );
+
+        researchOutputDataProviderMock.fetchById.mockResolvedValueOnce({
+          ...getResearchOutputDataObject(),
+          addedDate: undefined,
+        });
 
         const result = await researchOutputs.update(
           researchOutputId,
@@ -611,14 +620,23 @@ describe('ResearchOutputs controller', () => {
 
         const researchOutputUpdateDataObject =
           getResearchOutputUpdateDataObject();
+
         expect(researchOutputDataProviderMock.update).toBeCalledWith(
           researchOutputId,
-          { ...researchOutputUpdateDataObject },
+          {
+            ...researchOutputUpdateDataObject,
+            addedDate: undefined,
+          },
           { publish: false },
         );
       });
 
       test('Should call data provider with published equals true when create options is not passed', async () => {
+        const mockDate = new Date('2010-01-01');
+        const spy = jest
+          .spyOn(global, 'Date')
+          .mockImplementation(() => mockDate);
+
         const researchOutputUpdateData = getResearchOutputUpdateData();
         researchOutputDataProviderMock.update.mockResolvedValueOnce(
           researchOutputId,
@@ -635,9 +653,13 @@ describe('ResearchOutputs controller', () => {
           getResearchOutputUpdateDataObject();
         expect(researchOutputDataProviderMock.update).toBeCalledWith(
           researchOutputId,
-          { ...researchOutputUpdateDataObject },
+          {
+            ...researchOutputUpdateDataObject,
+            addedDate: mockDate.toISOString(),
+          },
           { publish: true },
         );
+        spy.mockRestore();
       });
     });
 

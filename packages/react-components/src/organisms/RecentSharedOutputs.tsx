@@ -118,9 +118,11 @@ const RecentSharedOutputs: React.FC<RecentSharedOutputProp> = ({ outputs }) => (
               {getIconForDocumentType(documentType)} {documentType}
             </p>
             <span css={[titleStyles, rowTitleStyles]}>Date</span>
-            <span>
-              {formatDateToTimezone(addedDate, 'E, d MMM y').toUpperCase()}
-            </span>
+            {addedDate && (
+              <span>
+                {formatDateToTimezone(addedDate, 'E, d MMM y').toUpperCase()}
+              </span>
+            )}
           </div>
         ))}
     </div>

@@ -151,7 +151,7 @@ it('switches research output type based on parameter', async () => {
   ).toBeInTheDocument();
 });
 
-it('can submit a form when form data is valid', async () => {
+it('can publish a form when the data is valid', async () => {
   const teamId = '42';
   const link = 'https://example42.com';
   const title = 'example42 title';
@@ -304,7 +304,7 @@ it('can edit a research output', async () => {
       teams: [teamId],
     }),
     expect.anything(),
-    true,
+    false,
   );
 });
 

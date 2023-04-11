@@ -89,7 +89,9 @@ export default class ResearchOutputs implements ResearchOutputController {
         researchOutputCreateData.authors ?? [],
       ),
       accession: researchOutputCreateData.accession,
-      addedDate: new Date(Date.now()).toISOString(),
+      ...(createOptions.publish
+        ? { addedDate: new Date(Date.now()).toISOString() }
+        : {}),
       asapFunded: researchOutputCreateData.asapFunded,
       createdBy: researchOutputCreateData.createdBy,
       description: researchOutputCreateData.description,
@@ -152,7 +154,13 @@ export default class ResearchOutputs implements ResearchOutputController {
         researchOutputUpdateData.authors ?? [],
       ),
       accession: researchOutputUpdateData.accession,
-      addedDate: currentResearchOutput.addedDate,
+      ...(updateOptions.publish || currentResearchOutput.addedDate
+        ? {
+            addedDate: updateOptions.publish
+              ? new Date(Date.now()).toISOString()
+              : currentResearchOutput.addedDate,
+          }
+        : {}),
       asapFunded: researchOutputUpdateData.asapFunded,
       description: researchOutputUpdateData.description,
       documentType: researchOutputUpdateData.documentType,

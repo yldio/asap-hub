@@ -180,8 +180,8 @@
           "label": "Added Date",
           "hints": "Date output was shared with ASAP Network (different from publication date)",
           "placeholder": "",
-          "isRequired": true,
-          "isRequiredOnPublish": false,
+          "isRequired": false,
+          "isRequiredOnPublish": true,
           "isHalfWidth": true
         }
       },

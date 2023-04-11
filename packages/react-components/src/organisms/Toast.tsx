@@ -89,7 +89,11 @@ const accentIcons: Record<ToastAccents, EmotionJSX.Element> = {
   error: errorIcon,
   info: informationIcon,
   warning: infoCircleYellowIcon,
+<<<<<<< HEAD
   success: successIcon,
+=======
+  success: successLargeIcon,
+>>>>>>> 8cf599522 (FE draft implementation of new route, toast, BE implementation of passing the published status up to the data provider, merge conflicts)
 };
 
 const accentStyles: Record<ToastAccents, CSSObject> = {

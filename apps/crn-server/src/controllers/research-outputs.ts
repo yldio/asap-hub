@@ -128,6 +128,7 @@ export default class ResearchOutputs implements ResearchOutputController {
   async update(
     id: string,
     researchOutputUpdateData: ResearchOutputUpdateData,
+    updateOptions = { publish: true },
   ): Promise<ResearchOutputResponse | null> {
     const currentResearchOutput =
       await this.researchOutputDataProvider.fetchById(id);
@@ -184,6 +185,7 @@ export default class ResearchOutputs implements ResearchOutputController {
     await this.researchOutputDataProvider.update(
       id,
       researchOutputUpdateDataObject,
+      updateOptions,
     );
 
     return this.fetchById(id);
@@ -385,6 +387,7 @@ export interface ResearchOutputController {
   update: (
     id: string,
     researchOutputRequest: ResearchOutputUpdateData,
+    updateOptions?: { publish: boolean },
   ) => Promise<ResearchOutputResponse | null>;
 }
 export type ResearchOutputCreateData = ResearchOutputPostRequest & {

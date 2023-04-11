@@ -779,10 +779,14 @@ describe('/research-outputs/ route', () => {
         .set('Accept', 'application/json');
 
       expect(response.status).toBe(200);
-      expect(researchOutputControllerMock.update).toBeCalledWith('abc123', {
-        ...researchOutputPutRequest,
-        updatedBy: 'user-id-0',
-      });
+      expect(researchOutputControllerMock.update).toBeCalledWith(
+        'abc123',
+        {
+          ...researchOutputPutRequest,
+          updatedBy: 'user-id-0',
+        },
+        { publish: true },
+      );
       expect(response.body).toEqual(researchOutputResponse);
     });
 
@@ -794,6 +798,50 @@ describe('/research-outputs/ route', () => {
           teams: ['team-id-that-does-not-belong-to-user'],
         });
       expect(response.status).toBe(403);
+    });
+
+    test.each([{ publish: false }, { publish: true }])(
+      'Should get the correct value for publish when it is $publish',
+      async ({ publish }) => {
+        const updateResearchOutputRequest = getResearchOutputPutRequest();
+
+        const response = await supertest(app)
+          .put('/research-outputs/test123')
+          .send(updateResearchOutputRequest)
+          .set('Accept', 'application/json')
+          .query(`publish=${publish}`);
+
+        expect(response.status).toBe(200);
+        expect(researchOutputControllerMock.update).toBeCalledWith(
+          'test123',
+          {
+            ...updateResearchOutputRequest,
+            updatedBy: 'user-id-0',
+          },
+          { publish },
+        );
+      },
+    );
+
+    test('Should send publish as true if query param is not set', async () => {
+      const updateResearchOutputRequest = getResearchOutputPutRequest();
+
+      const response = await supertest(app)
+        .put('/research-outputs/test123')
+        .send(updateResearchOutputRequest)
+        .set('Accept', 'application/json');
+
+      const publish = true;
+
+      expect(response.status).toBe(200);
+      expect(researchOutputControllerMock.update).toBeCalledWith(
+        'test123',
+        {
+          ...updateResearchOutputRequest,
+          updatedBy: 'user-id-0',
+        },
+        { publish },
+      );
     });
 
     describe('Parameter validation', () => {

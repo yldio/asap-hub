@@ -170,7 +170,7 @@ describe('Team Research Output', () => {
 
   it('makes an authorized PUT request to update a research output', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-      .put('/research-outputs/123', payload)
+      .put('/research-outputs/123?publish=false', payload)
       .reply(200, { id: 123 });
 
     await updateTeamResearchOutput('123', payload, 'Bearer x');
@@ -188,7 +188,9 @@ describe('Team Research Output', () => {
   });
 
   it('errors for an error status in edit mode', async () => {
-    nock(API_BASE_URL).put('/research-outputs/123').reply(500, {});
+    nock(API_BASE_URL)
+      .put('/research-outputs/123?publish=false')
+      .reply(500, {});
 
     await expect(
       updateTeamResearchOutput('123', payload, 'Bearer x'),

@@ -602,6 +602,7 @@ describe('ResearchOutputs controller', () => {
       const result = await researchOutputs.update(
         researchOutputId,
         researchOutputUpdateData,
+        { publish: true },
       );
 
       expect(result).toEqual(getResearchOutputResponse());
@@ -611,7 +612,55 @@ describe('ResearchOutputs controller', () => {
       expect(researchOutputDataProviderMock.update).toBeCalledWith(
         researchOutputId,
         { ...researchOutputUpdateDataObject },
+        { publish: true },
       );
+    });
+
+    describe('update options param', () => {
+      test('Should call data provider with published equals false when it is passed as false', async () => {
+        const researchOutputUpdateData = getResearchOutputUpdateData();
+        researchOutputDataProviderMock.update.mockResolvedValueOnce(
+          researchOutputId,
+        );
+
+        const result = await researchOutputs.update(
+          researchOutputId,
+          researchOutputUpdateData,
+          { publish: false },
+        );
+
+        expect(result).toEqual(getResearchOutputResponse());
+
+        const researchOutputUpdateDataObject =
+          getResearchOutputUpdateDataObject();
+        expect(researchOutputDataProviderMock.update).toBeCalledWith(
+          researchOutputId,
+          { ...researchOutputUpdateDataObject },
+          { publish: false },
+        );
+      });
+
+      test('Should call data provider with published equals true when create options is not passed', async () => {
+        const researchOutputUpdateData = getResearchOutputUpdateData();
+        researchOutputDataProviderMock.update.mockResolvedValueOnce(
+          researchOutputId,
+        );
+
+        const result = await researchOutputs.update(
+          researchOutputId,
+          researchOutputUpdateData,
+        );
+
+        expect(result).toEqual(getResearchOutputResponse());
+
+        const researchOutputUpdateDataObject =
+          getResearchOutputUpdateDataObject();
+        expect(researchOutputDataProviderMock.update).toBeCalledWith(
+          researchOutputId,
+          { ...researchOutputUpdateDataObject },
+          { publish: true },
+        );
+      });
     });
 
     describe('Validation', () => {
@@ -973,6 +1022,7 @@ describe('ResearchOutputs controller', () => {
               },
             ],
           }),
+          { publish: true },
         );
       });
     });

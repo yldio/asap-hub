@@ -378,8 +378,8 @@ describe('on submit', () => {
     await setupForm();
     await submitForm();
     expect(saveFn).toHaveBeenLastCalledWith(expectedRequest);
-    await waitFor(() =>
-      expect(history.location.pathname).toEqual(`/shared-research/${id}`),
+    expect(history.location.pathname).toEqual(
+      `/shared-research/${id}/publishedNow`,
     );
   });
 

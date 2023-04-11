@@ -2,6 +2,8 @@ import { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
+import { researchOutputDocumentTypes } from '@asap-hub/model';
+import userEvent from '@testing-library/user-event';
 
 import SharedResearchOutput from '../SharedResearchOutput';
 
@@ -12,6 +14,7 @@ const props: ComponentProps<typeof SharedResearchOutput> = {
   environments: [],
   organisms: [],
   backHref: '#',
+  isPublishedNow: false,
 };
 describe('Grant Documents', () => {
   it('renders an output with title and content', () => {
@@ -327,4 +330,81 @@ describe('a draft output', () => {
     ).toBeVisible();
     expect(getByText('Draft')).toBeVisible();
   });
+});
+
+describe('a newly published output', () => {
+  it('has a closable toast', () => {
+    const { getByText, getByTitle } = render(
+      <SharedResearchOutput
+        {...props}
+        teams={[{ id: 'team1', displayName: 'team 1' }]}
+        workingGroups={undefined}
+        documentType="Article"
+        isPublishedNow
+      />,
+    );
+    const toast = getByText('Team Article published successfully.');
+    expect(toast).toBeVisible();
+    userEvent.click(getByTitle(/close/i));
+    expect(toast).not.toBeInTheDocument();
+  });
+  it('can never show the toast for a draft regardless of the url', () => {
+    const { queryByText } = render(
+      <SharedResearchOutput
+        {...props}
+        teams={[{ id: 'team1', displayName: 'team 1' }]}
+        workingGroups={undefined}
+        documentType="Article"
+        published={false}
+        isPublishedNow
+      />,
+    );
+    expect(
+      queryByText('team Article published successfully.'),
+    ).not.toBeInTheDocument();
+  });
+
+  it.each(researchOutputDocumentTypes)(
+    'shows the toast for team outputs with documentType: %s',
+    (researchOutputDocumentType) => {
+      const { getByText } = render(
+        <SharedResearchOutput
+          {...props}
+          teams={[{ id: 'team1', displayName: 'team 1' }]}
+          workingGroups={undefined}
+          documentType={researchOutputDocumentType}
+          published={true}
+          isPublishedNow
+        />,
+      );
+      expect(
+        getByText(`Team ${researchOutputDocumentType} published successfully.`),
+      ).toBeVisible();
+    },
+  );
+  it.each(researchOutputDocumentTypes)(
+    'shows the toast for working group outputs with documentType: %s',
+    (researchOutputDocumentType) => {
+      const { getByText } = render(
+        <SharedResearchOutput
+          {...props}
+          teams={[{ id: 'team1', displayName: 'team 1' }]}
+          workingGroups={[
+            {
+              id: 'wg1',
+              title: 'wg 1',
+            },
+          ]}
+          documentType={researchOutputDocumentType}
+          published={true}
+          isPublishedNow
+        />,
+      );
+      expect(
+        getByText(
+          `Working Group ${researchOutputDocumentType} published successfully.`,
+        ),
+      ).toBeVisible();
+    },
+  );
 });

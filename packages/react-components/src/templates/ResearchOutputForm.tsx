@@ -444,9 +444,11 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                       if (researchOutput) {
                         const { id } = researchOutput;
                         setRedirectOnSave(
-                          sharedResearch({}).researchOutput({
-                            researchOutputId: id,
-                          }).$,
+                          sharedResearch({})
+                            .researchOutput({
+                              researchOutputId: id,
+                            })
+                            .researchOutputPublished({}).$,
                         );
                       }
                       return researchOutput;

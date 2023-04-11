@@ -121,10 +121,12 @@ export const researchOutputRouteFactory = (
   researchOutputRoutes.put(
     '/research-outputs/:researchOutputId',
     async (req, res) => {
-      const { body, params, loggedInUser } = req;
+      const { body, params, loggedInUser, query } = req;
       const { researchOutputId } = validateResearchOutputParameters(params);
       const updateRequest = validateResearchOutputPutRequestParameters(body);
       validateResearchOutputPostRequestParametersIdentifiers(body);
+      const options = validateResearchOutputRequestQueryParameters(query);
+      const publish = options.publish ?? true;
 
       const userRole = getUserRole(
         loggedInUser as UserResponse,
@@ -134,7 +136,15 @@ export const researchOutputRouteFactory = (
 
       // TODO: update the published value in hasEditResearchOutputPermission in
       // display draft task. Currently we are not sending the value published
-      if (!loggedInUser || !hasEditResearchOutputPermission(userRole, false)) {
+
+      // console.log('§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§');
+      // console.log('options', options);
+      // console.log('publish query', query);
+      // console.log('§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§');
+      if (
+        !loggedInUser ||
+        !hasEditResearchOutputPermission(userRole, publish)
+      ) {
         throw Boom.forbidden();
       }
 
@@ -145,6 +155,7 @@ export const researchOutputRouteFactory = (
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           updatedBy: loggedInUser!.id,
         },
+        { publish },
       );
 
       res.status(200).json(researchOutput);

@@ -76,6 +76,7 @@ export type ResearchOutputDataProvider = DataProvider<
   ResearchOutputCreateDataObject,
   { publish: boolean },
   ResearchOutputUpdateDataObject
+  
 >;
 
 export class ResearchOutputSquidexDataProvider
@@ -248,6 +249,7 @@ export class ResearchOutputSquidexDataProvider
   async update(
     researchOutputId: string,
     input: ResearchOutputUpdateDataObject,
+    updateOptions = { publish: true },
   ): Promise<void> {
     const {
       authors,
@@ -279,6 +281,10 @@ export class ResearchOutputSquidexDataProvider
       updatedBy: [researchOutputData.updatedBy],
     });
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    // eslint-disable-next-line no-console
+    console.log(updateOptions);
     await this.researchOutputSquidexRestClient.patch(researchOutputId, {
       doi: { iv: null },
       accession: { iv: null },

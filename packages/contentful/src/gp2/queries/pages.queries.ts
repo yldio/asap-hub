@@ -1,4 +1,6 @@
-import { gql } from 'graphql-tag';
+/* istanbul ignore file */
+
+import gql from 'graphql-tag';
 
 export const pagesContentQueryFragment = gql`
   fragment PageContent on Pages {

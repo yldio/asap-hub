@@ -26,6 +26,7 @@ export const Normal = () => {
         true,
       )}
       contactEmail={text('Contact Email', 'test@exmaple.com')}
+      hasOutputs={boolean('Has Outputs', true)}
     />
   );
 };

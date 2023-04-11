@@ -978,6 +978,39 @@ describe('ResearchOutputs data provider', () => {
         expect(result).toEqual(researchOutputId);
       });
 
+      test('Should publish a draft research-output and return its ID', async () => {
+        const researchOutputUpdateData = getResearchOutputUpdateDataObject();
+
+        const restResearchOutputUpdateData = getRestResearchOutputUpdateData();
+
+        nock(baseUrl)
+          .put(
+            `/api/content/${appName}/research-outputs/${researchOutputId}/status`,
+            {
+              status: 'Published',
+            },
+          )
+          .reply(200, { id: researchOutputId });
+
+        nock(baseUrl)
+          .patch(
+            `/api/content/${appName}/research-outputs/${researchOutputId}`,
+            {
+              ...restResearchOutputUpdateData,
+              updatedBy: { iv: [researchOutputUpdateData.updatedBy] },
+            },
+          )
+          .reply(201, { id: researchOutputId });
+
+        const result = await researchOutputDataProvider.update(
+          researchOutputId,
+          researchOutputUpdateData,
+          { publish: true },
+        );
+
+        expect(result).toEqual(researchOutputId);
+      });
+
       test('Should throw when fails to update the research output - 400', async () => {
         const researchOutputRequest = getResearchOutputUpdateDataObject();
 
@@ -1024,10 +1057,6 @@ describe('ResearchOutputs data provider', () => {
           ),
         ).rejects.toThrow(NotFoundError);
       });
-      // TODO: tests for
-      // - update draft to published
-      // - update draft to draft (no status change)
-      // - update published
     });
   });
 });

@@ -66,7 +66,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   id,
   relatedResearch,
   published,
-  isPublishedNow = false,
+  isPublishedNow,
   ...props
 }) => {
   const isGrantDocument = ['Grant Document', 'Presentation'].includes(

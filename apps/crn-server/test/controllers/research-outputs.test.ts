@@ -1,6 +1,8 @@
 import { GenericError, NotFoundError } from '@asap-hub/errors';
 import { when } from 'jest-when';
-import ResearchOutputs from '../../src/controllers/research-outputs';
+import ResearchOutputs, {
+  ResearchOutputUpdateData,
+} from '../../src/controllers/research-outputs';
 import { FetchResearchOutputOptions } from '../../src/data-providers/research-outputs.data-provider';
 import {
   getResearchOutputCreateData,
@@ -566,7 +568,33 @@ describe('ResearchOutputs controller', () => {
       ).rejects.toThrow(NotFoundError);
     });
 
-    test('Should update the research output and return it', async () => {
+    test('Should update an existing research output and return it', async () => {
+      const researchOutputUpdateData: ResearchOutputUpdateData = {
+        ...getResearchOutputUpdateData(),
+      };
+      researchOutputDataProviderMock.update.mockResolvedValueOnce(
+        researchOutputId,
+      );
+
+      const result = await researchOutputs.update(
+        researchOutputId,
+        researchOutputUpdateData,
+        { publish: false },
+      );
+
+      expect(result).toEqual(getResearchOutputResponse());
+
+      const researchOutputUpdateDataObject =
+        getResearchOutputUpdateDataObject();
+
+      expect(researchOutputDataProviderMock.update).toBeCalledWith(
+        researchOutputId,
+        researchOutputUpdateDataObject,
+        { publish: false },
+      );
+    });
+
+    test('Should update a draft research output and return it', async () => {
       const mockDate = new Date('2010-01-01');
       const spy = jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
       const researchOutputUpdateData = getResearchOutputUpdateData();

@@ -95,7 +95,7 @@ describe('Migrations', () => {
   it('activates webhook back even if some migration failed', async () => {
     mockMigrateExternalAuthors.mockRejectedValueOnce(new Error('ops'));
 
-    await runMigrations();
+    await expect(runMigrations()).rejects.toThrowError('ops');
 
     expect(spaceMock.getWebhook).toHaveBeenCalledWith('crn-env-id-webhook');
     expect(webhookMock.update).toHaveBeenCalled();

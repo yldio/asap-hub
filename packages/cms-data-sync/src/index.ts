@@ -29,16 +29,22 @@ export const runMigrations = async () => {
 
     logger('Webhook deactivated');
 
+    let error;
     try {
       await migrateTeams();
       await migrateExternalAuthors();
       await migrateCalendars();
-    } catch {
+    } catch (err) {
+      error = err;
       logger('Error migrating data', 'ERROR');
     } finally {
       webhook.active = true;
       await webhook.update();
       logger('Webhook activated');
+
+      if (error) {
+        throw error;
+      }
     }
   }
 };

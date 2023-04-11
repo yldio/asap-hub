@@ -1,4 +1,5 @@
 import * as contentfulManagement from 'contentful-management';
+import { Space, WebHooks } from 'contentful-management';
 import { runMigrations } from '../src/index';
 import { BLUE_COLOR, RED_COLOR } from '../src/utils';
 
@@ -46,10 +47,15 @@ const mockContentfulManagement = contentfulManagement as jest.Mocked<
   typeof contentfulManagement
 >;
 
-const webhookMock = { update: jest.fn(), active: true };
+const webhookMock = {
+  update: jest.fn(),
+  active: true,
+} as any as jest.Mocked<WebHooks>;
+
 const spaceMock = {
   getWebhook: jest.fn().mockResolvedValue(webhookMock),
-};
+} as any as jest.Mocked<Space>;
+
 const getSpaceFn = jest.fn().mockResolvedValue(spaceMock);
 mockContentfulManagement.createClient.mockReturnValue({
   getSpace: getSpaceFn,

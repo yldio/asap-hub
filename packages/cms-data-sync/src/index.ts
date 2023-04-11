@@ -43,6 +43,7 @@ export const runMigrations = async () => {
       logger('Webhook activated');
 
       if (error) {
+        // eslint-disable-next-line no-unsafe-finally
         throw error;
       }
     }

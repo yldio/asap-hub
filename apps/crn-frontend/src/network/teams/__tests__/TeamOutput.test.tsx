@@ -304,6 +304,7 @@ it('can edit a research output', async () => {
       teams: [teamId],
     }),
     expect.anything(),
+    true,
   );
 });
 
@@ -342,6 +343,7 @@ it('can edit a draft research output', async () => {
       teams: [teamId],
     }),
     expect.anything(),
+    false,
   );
 });
 

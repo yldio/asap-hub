@@ -5,11 +5,16 @@ const editResearchOutput = route(
   { researchOutputId: stringParser },
   {},
 );
+const researchOutputPublished = route(
+  '/publishedNow',
+  { researchOutputId: stringParser },
+  {},
+);
 
 const researchOutput = route(
   '/:researchOutputId',
   { researchOutputId: stringParser },
-  { editResearchOutput },
+  { editResearchOutput, researchOutputPublished },
 );
 
 const sharedResearch = route('/shared-research', {}, { researchOutput });

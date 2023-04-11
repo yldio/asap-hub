@@ -262,7 +262,7 @@ it('can submit a form when form data is valid', async () => {
   );
   await waitFor(() => {
     expect(history.location.pathname).toBe(
-      '/shared-research/research-output-id',
+      '/shared-research/research-output-id/publishedNow',
     );
   });
 });
@@ -454,7 +454,9 @@ it.each([
     await waitFor(() => {
       expect(button).toBeEnabled();
       expect(history.location.pathname).toBe(
-        '/shared-research/research-output-id',
+        !published
+          ? '/shared-research/research-output-id'
+          : '/shared-research/research-output-id/publishedNow',
       );
     });
 
@@ -468,6 +470,7 @@ it.each([
         workingGroups: [workingGroupId],
       }),
       expect.anything(),
+      published,
     );
   },
 );

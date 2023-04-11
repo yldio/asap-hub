@@ -1020,6 +1020,10 @@ describe('ResearchOutputs data provider', () => {
           ),
         ).rejects.toThrow(NotFoundError);
       });
+      // TODO: tests for
+      // - update draft to published
+      // - update draft to draft (no status change)
+      // - update published
     });
   });
 });

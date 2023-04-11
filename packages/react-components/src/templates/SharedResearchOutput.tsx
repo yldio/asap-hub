@@ -50,7 +50,9 @@ type SharedResearchOutputProps = Pick<
 > &
   ComponentProps<typeof SharedResearchOutputHeaderCard> & {
     backHref: string;
-  } & ComponentProps<typeof SharedResearchAdditionalInformationCard>;
+  } & ComponentProps<typeof SharedResearchAdditionalInformationCard> & {
+    isPublishedNow: boolean;
+  };
 
 const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   description,
@@ -60,6 +62,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   id,
   relatedResearch,
   published,
+  isPublishedNow = false,
   ...props
 }) => {
   const isGrantDocument = ['Grant Document', 'Presentation'].includes(
@@ -77,6 +80,8 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   const { canEditResearchOutput } = useContext(
     ResearchOutputPermissionsContext,
   );
+  const [showPublishedNowToast, setShowPublishedNowToast] =
+    React.useState(isPublishedNow);
 
   return (
     <div>
@@ -85,6 +90,13 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
           props,
         )}
      listed below. Only PMs can publish this output.`}</Toast>
+      )}
+      {showPublishedNowToast && published && (
+        <Toast accent="success" onClose={() => setShowPublishedNowToast(false)}>
+          {`${props.workingGroups ? 'Working Group' : 'Team '} ${
+            props.documentType
+          } published successfully.`}
+        </Toast>
       )}
       <div css={containerStyles}>
         <div css={buttonsContainer}>

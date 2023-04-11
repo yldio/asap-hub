@@ -155,7 +155,7 @@ export const usePostResearchOutput = ({ publish = true }) => {
   };
 };
 
-export const usePutResearchOutput = () => {
+export const usePutResearchOutput = ({ publish = false }) => {
   const authorization = useRecoilValue(authorizationState);
   const setResearchOutputItem = useSetResearchOutputItem();
   return async (id: string, payload: ResearchOutputPutRequest) => {
@@ -163,6 +163,7 @@ export const usePutResearchOutput = () => {
       id,
       payload,
       authorization,
+      publish,
     );
     setResearchOutputItem(researchOutput);
     return researchOutput;

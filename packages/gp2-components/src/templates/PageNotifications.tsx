@@ -7,7 +7,7 @@ import {
 import { css } from '@emotion/react';
 import { ReactNode, useEffect } from 'react';
 
-type PageNotificationsProps = {
+export type PageNotificationsProps = {
   page: Page;
   children: (notification?: Notification) => ReactNode;
 };

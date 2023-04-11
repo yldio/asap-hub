@@ -455,7 +455,7 @@ __metadata:
     "@types/history": 4.7.11
     "@types/jest": ^29.4.0
     "@types/jsdom": 16.2.15
-    "@types/react": 17.0.55
+    "@types/react": 17.0.57
     "@types/react-dom": 17.0.19
     "@types/react-router-dom": 5.3.3
     "@types/testing-library__jest-dom": 5.14.5
@@ -507,7 +507,7 @@ __metadata:
     "@types/nock": 11.1.0
     "@types/node": 18.15.11
     "@types/qs": 6.9.7
-    "@types/react": 17.0.55
+    "@types/react": 17.0.57
     "@types/react-dom": 17.0.19
     "@types/react-router-dom": 5.3.3
     "@types/react-test-renderer": 17.0.2
@@ -563,7 +563,7 @@ __metadata:
     "@emotion/server": 11.10.0
     "@types/babel__core": 7.20.0
     "@types/node": 18.15.11
-    "@types/react": 17.0.55
+    "@types/react": 17.0.57
     "@types/react-dom": 17.0.19
     aws-sdk: 2.1341.0
     babel-loader: 8.3.0
@@ -813,7 +813,7 @@ __metadata:
     "@types/history": 4.7.11
     "@types/jest": ^29.4.0
     "@types/node": 18.15.11
-    "@types/react": 17.0.55
+    "@types/react": 17.0.57
     "@types/react-router-dom": 5.3.3
     "@types/streamsaver": 2.0.1
     "@types/testing-library__jest-dom": 5.14.5
@@ -861,7 +861,7 @@ __metadata:
     "@types/history": 4.7.11
     "@types/jest": ^29.4.0
     "@types/jsdom": 16.2.15
-    "@types/react": 17.0.55
+    "@types/react": 17.0.57
     "@types/react-dom": 17.0.19
     "@types/react-router-dom": 5.3.3
     "@types/testing-library__jest-dom": 5.14.5
@@ -910,7 +910,7 @@ __metadata:
     "@types/hast-util-sanitize": "workspace:*"
     "@types/history": 4.7.11
     "@types/jest": ^29.4.0
-    "@types/react": 17.0.55
+    "@types/react": 17.0.57
     "@types/react-dom": 17.0.19
     "@types/react-router-dom": 5.3.3
     "@types/react-router-hash-link": 1.2.1
@@ -975,7 +975,7 @@ __metadata:
     "@types/jest": ^29.4.0
     "@types/nock": 11.1.0
     "@types/node": 18.15.11
-    "@types/react": 17.0.55
+    "@types/react": 17.0.57
     "@types/react-dom": 17.0.19
     "@types/react-router-dom": 5.3.3
     "@types/react-test-renderer": 17.0.2
@@ -1029,7 +1029,7 @@ __metadata:
     "@emotion/server": 11.10.0
     "@types/babel__core": 7.20.0
     "@types/node": 18.15.11
-    "@types/react": 17.0.55
+    "@types/react": 17.0.57
     "@types/react-dom": 17.0.19
     aws-sdk: 2.1341.0
     babel-loader: 8.3.0
@@ -1145,7 +1145,7 @@ __metadata:
     "@emotion/react": 11.10.6
     "@emotion/server": 11.10.0
     "@types/babel__core": 7.20.0
-    "@types/react": 17.0.55
+    "@types/react": 17.0.57
     "@types/react-dom": 17.0.19
     aws-sdk: 2.1341.0
     babel-loader: 8.3.0
@@ -1216,7 +1216,7 @@ __metadata:
     "@types/history": 4.7.11
     "@types/jest": ^29.4.0
     "@types/ramda": 0.27.20
-    "@types/react": 17.0.55
+    "@types/react": 17.0.57
     "@types/react-dom": 17.0.19
     "@types/react-router-dom": 5.3.3
     "@types/react-router-hash-link": 1.2.1
@@ -1285,7 +1285,7 @@ __metadata:
     "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": 8.0.1
     "@types/jest": ^29.4.0
-    "@types/react": 17.0.55
+    "@types/react": 17.0.57
     "@types/testing-library__jest-dom": 5.14.5
     "@types/testing-library__react": 10.0.1
     "@types/testing-library__react-hooks": 3.4.1
@@ -1460,7 +1460,7 @@ __metadata:
     "@storybook/manager-webpack5": ^6.5.13
     "@storybook/react": 6.5.16
     "@types/history": 4.7.11
-    "@types/react": 17.0.55
+    "@types/react": 17.0.57
     "@types/react-router-dom": 5.3.3
     babel-preset-react-app: 10.0.1
     core-js: 3.29.1
@@ -1485,7 +1485,7 @@ __metadata:
     "@babel/preset-react": 7.18.6
     "@babel/runtime-corejs3": 7.21.0
     "@types/node": 18.15.11
-    "@types/react": 17.0.55
+    "@types/react": 17.0.57
     "@types/react-dom": 17.0.19
     react: 17.0.2
     react-dom: 17.0.2
@@ -14607,14 +14607,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:17.0.55":
-  version: 17.0.55
-  resolution: "@types/react@npm:17.0.55"
+"@types/react@npm:17.0.57":
+  version: 17.0.57
+  resolution: "@types/react@npm:17.0.57"
   dependencies:
     "@types/prop-types": "*"
     "@types/scheduler": "*"
     csstype: ^3.0.2
-  checksum: 4220db270939ff5abc822a89619fe46b357214176b2adc7809ae65e5e5e0df57f2e69385d438e0e4bde3e25e0da577dae112bc2d767347062ccb8eabe24ac5a3
+  checksum: c6cb8d6d261fbdc2650e00260efaf0c0a241ca72f22a43e96f32f7ab0379e5e1522f4936b6d8f97c0d8793a4fd949a90e863daa2449824f7586903cc4d299d92
   languageName: node
   linkType: hard
 

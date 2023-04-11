@@ -168,12 +168,30 @@ describe('Team Research Output', () => {
     expect(nock.isDone()).toBe(true);
   });
 
+  it('makes an authorized POST request to create a draft research output', async () => {
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .post('/research-outputs?publish=false', payload)
+      .reply(201, { id: 123 });
+
+    await createResearchOutput(payload, 'Bearer x', false);
+    expect(nock.isDone()).toBe(true);
+  });
+
   it('makes an authorized PUT request to update a research output', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
       .put('/research-outputs/123?publish=false', payload)
       .reply(200, { id: 123 });
 
     await updateTeamResearchOutput('123', payload, 'Bearer x');
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('makes an authorized PUT request to update and publish a research output', async () => {
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .put('/research-outputs/123?publish=true', payload)
+      .reply(200, { id: 123 });
+
+    await updateTeamResearchOutput('123', payload, 'Bearer x', true);
     expect(nock.isDone()).toBe(true);
   });
 

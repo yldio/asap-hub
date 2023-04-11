@@ -4,25 +4,22 @@ import { Toast } from '../organisms';
 
 type SharedResearchOutputBannerProps = {
   published: boolean;
-  isPublishedNow: boolean;
   documentType: string;
   association: ResearchOutputAssociations;
 };
 
 const SharedResearchOutputBanner: React.FC<SharedResearchOutputBannerProps> = ({
   published,
-  isPublishedNow,
   documentType,
   association,
 }) => {
-  const [showPublishedNowToast, setShowPublishedNowToast] =
-    useState(isPublishedNow);
+  const [publishedNowBanner, setPublishedNowBanner] = useState(published);
   return (
     <div>
-      {showPublishedNowToast && published && (
+      {publishedNowBanner && (
         <Toast
           accent="successLarge"
-          onClose={() => setShowPublishedNowToast(false)}
+          onClose={() => setPublishedNowBanner(false)}
         >
           {`${
             association === 'working group' ? 'Working Group' : 'Team '

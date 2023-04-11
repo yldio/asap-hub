@@ -76,7 +76,6 @@ export type ResearchOutputDataProvider = DataProvider<
   ResearchOutputCreateDataObject,
   { publish: boolean },
   ResearchOutputUpdateDataObject
-  
 >;
 
 export class ResearchOutputSquidexDataProvider
@@ -294,11 +293,6 @@ export class ResearchOutputSquidexDataProvider
       labs: researchOutput.labs,
       teams: researchOutput.teams,
     });
-<<<<<<< HEAD
-=======
-
-    return researchOutputId;
->>>>>>> a1893e5b6 (Publish method)
   }
 }
 

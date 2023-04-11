@@ -13,7 +13,7 @@ const props: ComponentProps<typeof SharedResearchOutput> = {
   environments: [],
   organisms: [],
   backHref: '#',
-  isPublishedNow: false,
+  publishedNow: false,
 };
 describe('Grant Documents', () => {
   it('renders an output with title and content', () => {
@@ -273,6 +273,20 @@ it('merges different tag types in the correct order', () => {
 });
 
 describe('a draft output', () => {
+  it('can never display the published now banner for a draft', () => {
+    const { queryByText } = render(
+      <SharedResearchOutput
+        {...props}
+        published={false}
+        publishedNow={true}
+        teams={[{ id: 'team1', displayName: 'team 1' }]}
+        workingGroups={undefined}
+      />,
+    );
+    expect(
+      queryByText('Team Article published successfully.'),
+    ).not.toBeInTheDocument();
+  });
   it('shows the toast for team drafts that contain only one team', () => {
     const { getByText } = render(
       <SharedResearchOutput
@@ -342,7 +356,7 @@ describe('a newly published output', () => {
           workingGroups={undefined}
           documentType={researchOutputDocumentType}
           published={true}
-          isPublishedNow
+          publishedNow
         />,
       );
       expect(
@@ -365,7 +379,7 @@ describe('a newly published output', () => {
           ]}
           documentType={researchOutputDocumentType}
           published={true}
-          isPublishedNow
+          publishedNow
         />,
       );
       expect(

@@ -10,7 +10,6 @@ describe('a newly published output', () => {
         association="team"
         documentType="Article"
         published
-        isPublishedNow
       />,
     );
     expect(queryByText('Team Article published successfully.')).toBeVisible();
@@ -19,7 +18,6 @@ describe('a newly published output', () => {
         association="teams"
         documentType="Article"
         published
-        isPublishedNow
       />,
     );
     expect(queryByText('Team Article published successfully.')).toBeVisible();
@@ -31,7 +29,6 @@ describe('a newly published output', () => {
         association="working group"
         documentType="Article"
         published
-        isPublishedNow
       />,
     );
     expect(
@@ -44,7 +41,6 @@ describe('a newly published output', () => {
         association="team"
         documentType="Article"
         published
-        isPublishedNow
       />,
     );
     const toast = getByText('Team Article published successfully.');
@@ -55,26 +51,12 @@ describe('a newly published output', () => {
 });
 
 describe('a draft output', () => {
-  it('can never display the published now banner for a draft', () => {
-    const { queryByText } = render(
-      <SharedResearchOutputBanner
-        association="team"
-        documentType="Article"
-        published={false}
-        isPublishedNow
-      />,
-    );
-    expect(
-      queryByText('Working Group Article published successfully.'),
-    ).not.toBeInTheDocument();
-  });
-  it('shows the banner fora team association', () => {
+  it('shows the banner for a team association', () => {
     const { getByText } = render(
       <SharedResearchOutputBanner
         association="team"
         documentType="Article"
         published={false}
-        isPublishedNow={false}
       />,
     );
     expect(
@@ -89,7 +71,6 @@ describe('a draft output', () => {
         association="teams"
         documentType="Article"
         published={false}
-        isPublishedNow={false}
       />,
     );
     expect(
@@ -104,7 +85,6 @@ describe('a draft output', () => {
         association="working group"
         documentType="Article"
         published={false}
-        isPublishedNow={false}
       />,
     );
     expect(

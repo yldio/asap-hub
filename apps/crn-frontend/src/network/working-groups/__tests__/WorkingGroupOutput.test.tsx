@@ -419,12 +419,27 @@ it('will toast server side errors for unknown errors', async () => {
 });
 
 it.each([
-  { status: 'draft', buttonName: 'Save Draft', published: false },
-  { status: 'published', buttonName: 'Save', published: true },
-  { status: 'draft', buttonName: 'Publish', published: false },
+  {
+    status: 'draft',
+    buttonName: 'Save Draft',
+    published: false,
+    shouldPublish: false,
+  },
+  {
+    status: 'published',
+    buttonName: 'Save',
+    published: true,
+    shouldPublish: false,
+  },
+  {
+    status: 'draft',
+    buttonName: 'Publish',
+    published: false,
+    shouldPublish: true,
+  },
 ])(
   'can edit a $status working group research output',
-  async ({ buttonName, published }) => {
+  async ({ buttonName, published, shouldPublish }) => {
     const id = 'RO-ID';
     const workingGroupId = 'wg1';
     const link = 'https://example42.com';
@@ -475,7 +490,7 @@ it.each([
         workingGroups: [workingGroupId],
       }),
       expect.anything(),
-      published,
+      shouldPublish,
     );
   },
 );

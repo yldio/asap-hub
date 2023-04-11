@@ -95,7 +95,10 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
      listed below. Only PMs can publish this output.`}</Toast>
       )}
       {showPublishedNowToast && published && (
-        <Toast accent="success" onClose={() => setShowPublishedNowToast(false)}>
+        <Toast
+          accent="successLarge"
+          onClose={() => setShowPublishedNowToast(false)}
+        >
           {`${props.workingGroups ? 'Working Group' : 'Team '} ${
             props.documentType
           } published successfully.`}

@@ -1,6 +1,6 @@
 import { DashboardPage } from '@asap-hub/gp2-components';
-import { useCurrentUserGP2 } from '@asap-hub/react-context';
-import { ComponentProps, FC, lazy, useState } from 'react';
+
+import { FC, lazy, useState } from 'react';
 import Frame from '../Frame';
 
 const loadBody = () =>
@@ -8,29 +8,11 @@ const loadBody = () =>
 const Body = lazy(loadBody);
 loadBody();
 
-type DashboardProps = Pick<
-  ComponentProps<typeof DashboardPage>,
-  'dismissBanner' | 'showWelcomeBackBanner'
->;
-
-const Dashboard: FC<DashboardProps> = ({
-  showWelcomeBackBanner,
-  dismissBanner,
-}) => {
+const Dashboard: FC<Record<string, never>> = () => {
   const [currentTime] = useState(new Date());
-  const currentUser = useCurrentUserGP2();
-  if (!currentUser) {
-    throw new Error('Failed to find out who is currently logged in');
-  }
-
-  const { firstName } = currentUser;
 
   return (
-    <DashboardPage
-      firstName={firstName}
-      showWelcomeBackBanner={showWelcomeBackBanner}
-      dismissBanner={dismissBanner}
-    >
+    <DashboardPage>
       <Frame title={null}>
         <Body currentTime={currentTime} />
       </Frame>

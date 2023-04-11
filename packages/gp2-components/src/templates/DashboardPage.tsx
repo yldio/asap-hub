@@ -1,41 +1,21 @@
-import { css } from '@emotion/react';
-import { pixels, Toast } from '@asap-hub/react-components';
+import { pixels } from '@asap-hub/react-components';
 import DashboardHeader from '../organisms/DashboardHeader';
 import { mainStyles } from '../layout';
 
+import PageNotifications from './PageNotifications';
+
 const { rem } = pixels;
 
-type dashboardProps = {
-  showWelcomeBackBanner: boolean;
-  firstName: string;
-  dismissBanner: () => void;
-};
-
-const Dashboard: React.FC<dashboardProps> = ({
-  children,
-  showWelcomeBackBanner,
-  firstName,
-  dismissBanner,
-}) => (
-  <>
-    {showWelcomeBackBanner && (
-      <div css={css({ width: '100vw', position: 'absolute', top: 0, left: 0 })}>
-        <Toast accent="info" onClose={dismissBanner}>
-          {`Welcome back to the GP2 Hub${firstName ? `, ${firstName}` : ''}!`}
-        </Toast>
-      </div>
+const Dashboard: React.FC = ({ children }) => (
+  <PageNotifications page="dashboard">
+    {(notification) => (
+      <article
+        css={notification ? { position: 'relative', marginTop: rem(48) } : {}}
+      >
+        <DashboardHeader />
+        <main css={mainStyles}>{children}</main>
+      </article>
     )}
-    <article
-      css={
-        showWelcomeBackBanner
-          ? { position: 'relative', marginTop: rem(48) }
-          : {}
-      }
-    >
-      <DashboardHeader />
-      <main css={mainStyles}>{children}</main>
-    </article>
-  </>
+  </PageNotifications>
 );
-
 export default Dashboard;

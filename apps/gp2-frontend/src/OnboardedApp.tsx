@@ -3,7 +3,7 @@ import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Route } from '@asap-hub/routing';
 
-import { FC, lazy, useEffect, ComponentProps, useState } from 'react';
+import { FC, lazy, useEffect, useState } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import Frame from './Frame';
 import { useUserById } from './users/state';
@@ -40,10 +40,7 @@ const Users = lazy(loadUsers);
 const Events = lazy(loadEvents);
 const Outputs = lazy(loadOutputs);
 
-const OnboardedApp: FC<ComponentProps<typeof Dashboard>> = ({
-  showWelcomeBackBanner,
-  dismissBanner,
-}) => {
+const OnboardedApp: FC<Record<string, never>> = () => {
   const { path } = useRouteMatch();
 
   const user = useCurrentUserGP2();
@@ -73,10 +70,7 @@ const OnboardedApp: FC<ComponentProps<typeof Dashboard>> = ({
       <Switch>
         <Route exact path={path}>
           <Frame title="Dashboard">
-            <Dashboard
-              showWelcomeBackBanner={showWelcomeBackBanner}
-              dismissBanner={dismissBanner}
-            />
+            <Dashboard />
           </Frame>
         </Route>
         <Route path={usersRoute.template}>

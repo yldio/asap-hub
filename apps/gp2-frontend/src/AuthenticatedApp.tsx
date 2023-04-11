@@ -2,12 +2,17 @@ import { Auth0, gp2 as gp2Auth } from '@asap-hub/auth';
 
 import { BasicLayout } from '@asap-hub/gp2-components';
 import { Loading, NotFoundPage } from '@asap-hub/react-components';
-import { useAuth0GP2, useCurrentUserGP2 } from '@asap-hub/react-context';
+import {
+  useAuth0GP2,
+  useCurrentUserGP2,
+  useNotificationContext,
+} from '@asap-hub/react-context';
 import { FC, lazy, useEffect, useState } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { RecoilRoot, useRecoilState, useResetRecoilState } from 'recoil';
 import { auth0State } from './auth/state';
 import Frame from './Frame';
+import NotificationMessages from './NotificationMessages';
 
 const loadOnboardedApp = () =>
   import(/* webpackChunkName: "onboarded-app" */ './OnboardedApp');
@@ -35,22 +40,33 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
     // order by the likelyhood of user navigating there
     user?.onboarded ? loadOnboardedApp() : loadOnboarding();
   }, [user?.onboarded]);
+  const { addNotification } = useNotificationContext();
 
   const [showWelcomeBackBanner, setShowWelcomeBackBanner] = useState(
     user?.onboarded || false,
   );
+
+  const welcomeBackMessage = `Welcome back to the GP2 Hub${
+    user?.firstName ? `, ${user.firstName}` : ''
+  }!`;
+
+  useEffect(() => {
+    if (showWelcomeBackBanner) {
+      addNotification({
+        message: welcomeBackMessage,
+        page: 'dashboard',
+        type: 'info',
+      });
+      setShowWelcomeBackBanner(false);
+    }
+  }, [showWelcomeBackBanner, addNotification, welcomeBackMessage]);
+
   if (!user || !recoilAuth0) {
     return <Loading />;
   }
 
-  /* istanbul ignore next */
-  const dismissBanner = () => setShowWelcomeBackBanner(false);
-
   return user.onboarded ? (
-    <OnboardedApp
-      showWelcomeBackBanner={showWelcomeBackBanner}
-      dismissBanner={dismissBanner}
-    />
+    <OnboardedApp />
   ) : (
     <BasicLayout>
       <Switch>
@@ -69,7 +85,9 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
 
 const AuthenticatedAppWithRecoil: FC<Record<string, never>> = () => (
   <RecoilRoot>
-    <AuthenticatedApp />
+    <NotificationMessages>
+      <AuthenticatedApp />
+    </NotificationMessages>
   </RecoilRoot>
 );
 

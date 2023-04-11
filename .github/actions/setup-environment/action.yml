@@ -39,7 +39,7 @@ outputs:
     description: 'CRN Auth0 Domain'
     value: ${{ steps.vars.outputs.crn-auth0-domain }}
   crn-contentful-env-id:
-    description: 'Environment ID for Contentful'
+    description: 'CRN Environment ID for Contentful'
     value: ${{ steps.vars.outputs.crn-contentful-env-id }}
   crn-base-pr-app-domain:
     description: 'CRN Base PR App Domain'
@@ -71,9 +71,9 @@ outputs:
   cache-prefix-transpile:
     description: 'Cache Prefix Transpile'
     value: ${{ steps.vars.outputs.cache-prefix-transpile }}
-  contentful-space-id:
-    description: 'Contentful Space ID'
-    value: ${{ steps.vars.outputs.contentful-space-id }}
+  crn-contentful-space-id:
+    description: 'CRN Contentful Space ID'
+    value: ${{ steps.vars.outputs.crn-contentful-space-id }}
   contentful-environment:
     description: 'Contentful Environment'
     value: ${{ steps.vars.outputs.contentful-environment }}
@@ -83,9 +83,9 @@ outputs:
   is-contentful-enabled-v2:
     description: 'Is all remaining data fetched from Contentful'
     value: ${{ steps.vars.outputs.is-contentful-enabled-v2 }}
-  max-contentful-envs:
-    description: 'Maximum Contentful environments'
-    value: ${{ steps.vars.outputs.max-contentful-envs }}
+  crn-max-contentful-envs:
+    description: 'Maximum CRN Contentful environments'
+    value: ${{ steps.vars.outputs.crn-max-contentful-envs }}
   crn-contentful-backup-bucket-name:
     description: 'CRN Contentful Backup Bucket Name'
     value: ${{ steps.vars.outputs.crn-contentful-backup-bucket-name }}
@@ -104,6 +104,12 @@ outputs:
   gp2-aws-acm-certificate-arn:
     description: 'GP2 AWS ACM Certificate ARN'
     value: ${{ steps.vars.outputs.gp2-aws-acm-certificate-arn }}
+  gp2-contentful-env-id:
+    description: 'GP2 Environment ID for Contentful'
+    value: ${{ steps.vars.outputs.gp2-contentful-env-id }}
+  gp2-contentful-space-id:
+    description: 'GP2 Contentful Space ID'
+    value: ${{ steps.vars.outputs.gp2-contentful-space-id }}
   gp2-hostname:
     description: 'GP2 Hostname'
     value: ${{ steps.vars.outputs.gp2-hostname }}
@@ -222,6 +228,7 @@ runs:
           echo "crn-squidex-app-name=crn-$PR_NUMBER" >> $GITHUB_OUTPUT
           echo "crn-squidex-app-name-legacy=$PR_NUMBER" >> $GITHUB_OUTPUT
           echo "crn-contentful-env-id=crn-$PR_NUMBER" >> $GITHUB_OUTPUT
+          echo "gp2-contentful-env-id=gp2-$PR_NUMBER" >> $GITHUB_OUTPUT
           echo "gp2-squidex-app-name=gp2-$PR_NUMBER" >> $GITHUB_OUTPUT
         elif [ "$ENVIRONMENT_NAME" = 'Development' ]; then
           echo "app-release=${{ github.run_id }}-dev" >> $GITHUB_OUTPUT

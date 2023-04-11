@@ -239,7 +239,7 @@ jobs:
         uses: ./.github/actions/contentful-setup
         with:
           contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
+          contentful-space-id: ${{ steps.setup.outputs.crn-contentful-space-id }}
           contentful-environment: ${{ inputs.crn-contentful-env }}
           api-url: ${{ steps.setup.outputs.crn-api-url }}
           contentful-webhook-authentication-token: ${{ secrets.CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN }}
@@ -268,7 +268,7 @@ jobs:
           yarn workspace @asap-hub/contentful space:migrate:crn
         env:
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.contentful-space-id }}
+          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
           CONTENTFUL_ENV_ID: ${{ inputs.crn-contentful-env }}
   ses:
     needs: [crn-sls-deploy]

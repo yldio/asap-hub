@@ -42,6 +42,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           bucket-name: ${{ steps.setup.outputs.crn-contentful-backup-bucket-name }}
           backup-key: ${{ inputs.backup-version }}
-          contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
+          contentful-space-id: ${{ steps.setup.outputs.crn-contentful-space-id }}
           contentful-environment: ${{ inputs.contentful-env || inputs.environment }}
           contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}

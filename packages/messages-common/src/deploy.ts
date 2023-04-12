@@ -1,38 +1,29 @@
-import aws, { AWSError } from 'aws-sdk';
+import { SES, TemplateDoesNotExistException } from '@aws-sdk/client-ses';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { Configuration } from 'webpack';
 
 const region = process.argv[2] || 'us-east-1';
-const ses = new aws.SES({ apiVersion: '2010-12-01', region });
-
-const isAwsError = (error: unknown): error is AWSError =>
-  !!(error as AWSError)?.code;
+const ses = new SES({ apiVersion: '2010-12-01', region });
 
 const syncTemplate = async (src: string): Promise<void> => {
   const template = require(src);
   const templateName = template.TemplateName;
 
   try {
-    await ses
-      .getTemplate({
-        TemplateName: templateName,
-      })
-      .promise();
+    await ses.getTemplate({
+      TemplateName: templateName,
+    });
 
-    await ses
-      .updateTemplate({
-        Template: template,
-      })
-      .promise();
+    await ses.updateTemplate({
+      Template: template,
+    });
     console.log(`Template "${templateName}" updated.`);
   } catch (err) {
-    if (isAwsError(err) && err.code === 'TemplateDoesNotExist') {
-      await ses
-        .createTemplate({
-          Template: template,
-        })
-        .promise();
+    if (err instanceof TemplateDoesNotExistException) {
+      await ses.createTemplate({
+        Template: template,
+      });
       console.log(`Template "${templateName}" created.`);
     }
     throw err;

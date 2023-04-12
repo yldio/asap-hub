@@ -1,7 +1,7 @@
 import { WebhookDetail, WebhookDetailType } from '@asap-hub/model';
 import { Lab, SquidexWebhookPayload } from '@asap-hub/squidex';
 import { APIGatewayProxyResult } from 'aws-lambda';
-import { EventBridge } from 'aws-sdk';
+import { EventBridge } from '@aws-sdk/client-eventbridge';
 import { eventBus, eventSource } from '../../../src/config';
 import { squidexWebhookFactory } from '../../../src/handlers/webhooks/webhook-squidex';
 import { getLabWebhookPayload } from '../../fixtures/labs.fixtures';

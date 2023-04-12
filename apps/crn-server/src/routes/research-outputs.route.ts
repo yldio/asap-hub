@@ -8,6 +8,7 @@ import {
 import {
   getUserRole,
   hasEditResearchOutputPermission,
+  hasPublishResearchOutputPermission,
 } from '@asap-hub/validation';
 import Boom from '@hapi/boom';
 import { Response, Router } from 'express';
@@ -128,18 +129,22 @@ export const researchOutputRouteFactory = (
       const options = validateResearchOutputRequestQueryParameters(query);
       const publish = options.publish ?? true;
 
+      const isWorkingGroupOutput = updateRequest.workingGroups.length;
+
       const userRole = getUserRole(
         loggedInUser as UserResponse,
-        'teams',
-        updateRequest.teams,
+        isWorkingGroupOutput ? 'workingGroups' : 'teams',
+        isWorkingGroupOutput
+          ? updateRequest.workingGroups
+          : updateRequest.teams,
       );
 
-      // TODO: update the published value in hasEditResearchOutputPermission in
-      // display draft task. Currently we are not sending the value published
+      const result = await researchOutputController.fetchById(researchOutputId);
 
       if (
         !loggedInUser ||
-        !hasEditResearchOutputPermission(userRole, publish)
+        !hasEditResearchOutputPermission(userRole, result.published) ||
+        (publish && !hasPublishResearchOutputPermission(userRole))
       ) {
         throw Boom.forbidden();
       }

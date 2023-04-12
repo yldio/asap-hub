@@ -46,7 +46,7 @@ export interface ResearchOutputPublishedReminder
     researchOutputId: ResearchOutputDataObject['id'];
     documentType: ResearchOutputDataObject['documentType'];
     title: ResearchOutputDataObject['title'];
-    addedDate: ResearchOutputDataObject['addedDate'];
+    addedDate: string;
   };
 }
 

@@ -227,6 +227,14 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
   >;
 };
 
+export type DraftResearchOutputDataObject = Omit<
+  ResearchOutputDataObject,
+  'addedDate'
+>;
+export type PublishedResearchOutputDataObject = ResearchOutputDataObject & {
+  addedDate: string;
+};
+
 export type ListResearchOutputDataObject =
   ListResponse<ResearchOutputDataObject>;
 
@@ -246,6 +254,16 @@ export type ResearchOutputCreateDataObject = ResearchOutputCoreObject & {
   workingGroups?: string[];
   relatedResearchIds?: string[];
 };
+
+export type PublishResearchOutputCreateDataObject =
+  ResearchOutputCreateDataObject & {
+    addedDate: string;
+  };
+
+export type DraftResearchOutputCreateDataObject = Omit<
+  ResearchOutputCreateDataObject,
+  'addedDate'
+>;
 
 export type ResearchOutputUpdateDataObject = ResearchOutputCoreObject & {
   authors: AuthorUpsertDataObject[];

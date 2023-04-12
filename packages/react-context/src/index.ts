@@ -13,4 +13,9 @@ export {
 export { FlagsContext, LiveFlagsProvider, useFlags } from './flags';
 export { ResearchOutputPermissionsContext } from './permissions/research-output';
 export { ToastContext } from './toast';
+export {
+  useNotificationContext,
+  NotificationContext,
+} from './notification-message';
+export type { Notification, Page } from './notification-message';
 export { UserProfileContext } from './user-profile';

@@ -1,7 +1,6 @@
 import { User } from '@asap-hub/auth';
 import { gp2 } from '@asap-hub/fixtures';
 import { render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
@@ -15,24 +14,14 @@ jest.mock('../../events/api');
 afterEach(() => {
   jest.resetAllMocks();
 });
-const currentTime = new Date();
-const renderDashboard = async ({
-  user = {},
-  showWelcomeBackBanner = false,
-  dismissBanner = jest.fn(),
-}: {
-  user?: Partial<User>;
-  showWelcomeBackBanner?: boolean;
-  dismissBanner?: () => void;
-}) => {
+
+const renderDashboard = async ({ user = {} }: { user?: Partial<User> }) => {
   render(
     <Suspense fallback="loading">
       <RecoilRoot>
         <Auth0Provider user={{ ...user, role: 'Network Collaborator' }}>
           <WhenReady>
-            <Dashboard
-              {...{ showWelcomeBackBanner, dismissBanner, currentTime }}
-            />
+            <Dashboard />
           </WhenReady>
         </Auth0Provider>
       </RecoilRoot>
@@ -58,34 +47,10 @@ it('doesnt render the welcome back banner when its disabled', async () => {
   mockGetEvents.mockResolvedValueOnce(gp2.createListEventResponse(1));
   await renderDashboard({
     user: { firstName: 'Tony' },
-    showWelcomeBackBanner: false,
   });
   expect(
     screen.queryByText('Welcome back to the GP2 Hub, Tony!'),
   ).not.toBeInTheDocument();
-});
-
-it('renders the welcome back banner when its enabled', async () => {
-  mockGetNews.mockResolvedValueOnce(gp2.createNewsResponse());
-  mockGetEvents.mockResolvedValueOnce(gp2.createListEventResponse(1));
-  await renderDashboard({
-    user: { firstName: 'Tony' },
-    showWelcomeBackBanner: true,
-  });
-  expect(screen.getByText('Welcome back to the GP2 Hub, Tony!')).toBeVisible();
-});
-
-it('calls the dismissBanner function when pressing the close button on the welcome back banner', async () => {
-  const dismissBanner = jest.fn();
-  mockGetNews.mockResolvedValueOnce(gp2.createNewsResponse());
-  mockGetEvents.mockResolvedValueOnce(gp2.createListEventResponse(1));
-  await renderDashboard({
-    user: { firstName: 'Tony' },
-    showWelcomeBackBanner: true,
-    dismissBanner,
-  });
-  userEvent.click(screen.getByRole('button', { name: 'Close' }));
-  expect(dismissBanner).toHaveBeenCalled();
 });
 
 it('renders the news when theres at least one news', async () => {

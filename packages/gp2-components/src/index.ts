@@ -73,6 +73,7 @@ export {
   OnboardingWelcome,
   OutputForm,
   OutputsPage,
+  PageNotifications,
   ProjectDetailPage,
   ProjectOverview,
   ProjectResources,

@@ -19,9 +19,6 @@ on:
       AWS_SECRET_ACCESS_KEY:
         description: 'AWS Secret Access Key'
         required: true
-      LIGHTSTEP_TOKEN:
-        description: 'Lightstep Token'
-        required: true
       CRN_CI_AUTH0_CLIENT_SECRET:
         description: 'CRN CI Auth0 Client Secret'
         required: true
@@ -92,7 +89,6 @@ jobs:
           crn-squidex-shared-secret: ${{ secrets.CRN_SQUIDEX_SHARED_SECRET }}
           crn-contentful-webhook-authentication-token: ${{ secrets.CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN }}
           environment-name: ${{ inputs.environment-name }}
-          lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
 
   gp2-sls-deploy:
     concurrency:
@@ -120,7 +116,6 @@ jobs:
           gp2-auth0-shared-secret: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}
           gp2-squidex-api-client-secret: ${{ secrets.GP2_SQUIDEX_API_CLIENT_SECRET }}
           gp2-squidex-shared-secret: ${{ secrets.GP2_SQUIDEX_SHARED_SECRET }}
-          lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
 
   crn-algolia-settings:
     needs: [crn-sls-deploy]

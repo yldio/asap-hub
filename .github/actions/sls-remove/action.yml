@@ -14,9 +14,6 @@ inputs:
   aws-secret-access-key:
     description: 'AWS Secret Access Key'
     required: true
-  lightstep-token:
-    description: 'Lightstep Token'
-    required: true
   crn-squidex-api-client-secret:
     description: 'Squidex Client Secret'
     required: true
@@ -81,7 +78,6 @@ runs:
         GP2_SQUIDEX_API_CLIENT_ID: ${{ steps.setup.outputs.gp2-squidex-api-client-id }}
         GP2_SQUIDEX_API_CLIENT_SECRET: ${{ inputs.gp2-squidex-api-client-secret }}
         GP2_SQUIDEX_SHARED_SECRET: ${{ inputs.gp2-squidex-shared-secret }}
-        LIGHTSTEP_TOKEN: ${{ inputs.lightstep-token }}
         NODE_ENV: 'production'
         CRN_SENTRY_DSN_API: ${{ steps.setup.outputs.crn-sentry-dsn-api }}
         CRN_SENTRY_DSN_HANDLERS: ${{ steps.setup.outputs.crn-sentry-dsn-handlers }}

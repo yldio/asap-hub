@@ -36,7 +36,6 @@ import * as Sentry from '@sentry/serverless';
 import cors from 'cors';
 import express, { Express, RequestHandler } from 'express';
 import 'express-async-errors';
-import { Tracer } from 'opentracing';
 import {
   appName,
   auth0Audience,
@@ -129,7 +128,6 @@ import { getContentfulRestClientFactory } from './dependencies/clients.dependenc
 import { featureFlagMiddlewareFactory } from './middleware/feature-flag';
 import { permissionHandler } from './middleware/permission-handler';
 import { sentryTransactionIdMiddleware } from './middleware/sentry-transaction-id-handler';
-import { tracingHandlerFactory } from './middleware/tracing-handler';
 import { calendarRouteFactory } from './routes/calendars.route';
 import { dashboardRouteFactory } from './routes/dashboard.route';
 import { discoverRouteFactory } from './routes/discover.route';
@@ -425,7 +423,7 @@ export const appFactory = (libs: Libs = {}): Express => {
       logger,
       assignUserToContext,
     );
-  const tracingHandler = tracingHandlerFactory(libs.tracer);
+
   const sentryTransactionIdHandler =
     libs.sentryTransactionIdHandler || sentryTransactionIdMiddleware;
 
@@ -459,7 +457,6 @@ export const appFactory = (libs: Libs = {}): Express => {
   }
   app.use(httpLogger);
   app.use(sentryTransactionIdHandler);
-  app.use(tracingHandler);
   app.use(cors());
   app.use(express.json({ limit: '10MB' }));
   app.use(featureFlagMiddlewareFactory(featureFlagDependencySwitch));
@@ -570,7 +567,6 @@ export type Libs = {
   eventDataProvider?: EventDataProvider;
   workingGroupDataProvider?: WorkingGroupDataProvider;
   authHandler?: AuthHandler;
-  tracer?: Tracer;
   httpLogger?: HttpLogger;
   logger?: Logger;
   // extra handlers only for tests and local development

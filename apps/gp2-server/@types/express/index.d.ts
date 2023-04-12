@@ -1,6 +1,5 @@
 import { gp2 } from '@asap-hub/model';
 import { APIGatewayProxyEventV2 } from 'aws-lambda';
-import { Span } from 'opentracing';
 import { Logger } from 'pino-http';
 export {};
 

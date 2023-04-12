@@ -337,6 +337,7 @@ describe('Working Group Data Provider', () => {
             user: [graphqlUser],
             workstreamRole: 'Some role',
             role: 'Chair',
+            inactiveSinceDate: '2023-01-01',
           },
         ];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
@@ -351,6 +352,7 @@ describe('Working Group Data Provider', () => {
             user: parsedGraphQlWorkingGroupUser,
             workstreamRole: 'Some role',
             role: 'Chair',
+            inactiveSinceDate: '2023-01-01',
           },
         ]);
       });
@@ -360,6 +362,7 @@ describe('Working Group Data Provider', () => {
         squidexGraphqlResponse.findWorkingGroupsContent!.flatData.members = [
           {
             user: [graphqlUser],
+            inactiveSinceDate: '2023-01-01',
           },
         ];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
@@ -372,6 +375,7 @@ describe('Working Group Data Provider', () => {
         expect(response?.members).toStrictEqual([
           {
             user: parsedGraphQlWorkingGroupUser,
+            inactiveSinceDate: '2023-01-01',
           },
         ]);
       });
@@ -399,6 +403,7 @@ describe('Working Group Data Provider', () => {
         squidexGraphqlResponse.findWorkingGroupsContent!.flatData.members = [
           {
             user: [],
+            inactiveSinceDate: null,
           },
         ];
         squidexGraphqlResponse.findWorkingGroupsContent!.flatData.leaders = [
@@ -406,6 +411,7 @@ describe('Working Group Data Provider', () => {
             user: [],
             role: 'Chair',
             workstreamRole: 'Some role',
+            inactiveSinceDate: null,
           },
         ];
 
@@ -450,11 +456,12 @@ describe('Working Group Data Provider', () => {
                   user: [graphqlUser1],
                   role: 'Project Manager',
                   workstreamRole: 'PM',
+                  inactiveSinceDate: null,
                 },
               ];
           } else {
             squidexGraphqlResponse.findWorkingGroupsContent!.flatData.members =
-              [{ user: [graphqlUser1] }];
+              [{ user: [graphqlUser1], inactiveSinceDate: null }];
           }
 
           squidexGraphqlClientMock.request.mockResolvedValueOnce(

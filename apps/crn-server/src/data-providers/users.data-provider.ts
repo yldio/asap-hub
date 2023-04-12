@@ -346,6 +346,38 @@ export const parseUserToResponse = ({
   return response;
 };
 
+type GraphQLUserReferencingWorkingGroupsContent =
+  NonNullable<GraphQLUserReferencingWorkingGroupsContents>[number];
+
+export const parseGraphQLWorkingGroup = ({
+  workingGroup,
+  userId,
+  isAlumni,
+}: {
+  workingGroup: GraphQLUserReferencingWorkingGroupsContent;
+  userId: string;
+  isAlumni: boolean;
+}) => {
+  const leaderData = workingGroup.flatData.leaders?.find(
+    (leader) => leader.user?.[0]?.id === userId,
+  );
+  const memberData = workingGroup.flatData.members?.find(
+    (member) => member.user?.[0]?.id === userId,
+  );
+
+  const isInActive = !!(
+    leaderData?.inactiveSinceDate || memberData?.inactiveSinceDate
+  );
+  const wgRole = leaderData ? leaderData.role : 'Member';
+
+  return {
+    id: workingGroup.id,
+    name: workingGroup.flatData.title || '',
+    role: wgRole as 'Chair' | 'Project Manager' | 'Member',
+    active: workingGroup.flatData.complete ? false : !isAlumni && !isInActive,
+  };
+};
+
 export const parseGraphQLUserToDataObject = (
   item: GraphQLUser,
 ): UserDataObject => {
@@ -355,27 +387,21 @@ export const parseGraphQLUserToDataObject = (
   const flatExpertiseAndResourceTags =
     item.flatData.expertiseAndResourceTags || [];
   const createdDate = parseDate(item.created).toISOString();
-
   const role =
     item.flatData.role && isUserRole(item.flatData.role)
       ? item.flatData.role
       : 'Guest';
   const teams = parseGraphQLUserTeamConnections(flatTeams || []);
+  const isAlumni = !!item.flatData.alumniSinceDate;
+  const userId = item.id;
 
   const workingGroups = (item.referencingWorkingGroupsContents || []).map(
-    (wg) => {
-      const leaderData = wg.flatData.leaders?.find(
-        (leader) => leader.user?.[0]?.id === item.id,
-      );
-      const wgRole = leaderData ? leaderData.role : 'Member';
-
-      return {
-        id: wg.id,
-        name: wg.flatData.title || '',
-        role: wgRole as 'Chair' | 'Project Manager' | 'Member',
-        active: !wg.flatData.complete,
-      };
-    },
+    (workingGroup) =>
+      parseGraphQLWorkingGroup({
+        workingGroup,
+        isAlumni,
+        userId,
+      }),
   );
 
   const orcid = item.flatData.orcid || undefined;

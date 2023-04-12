@@ -6218,6 +6218,7 @@ export type WorkingGroupsDataInputDto = {
 
 /** The structure of the Leaders nested schema. */
 export type WorkingGroupsDataLeadersChildDto = {
+  inactiveSinceDate: Maybe<Scalars['Instant']>;
   role: Maybe<Scalars['String']>;
   user: Maybe<Array<Users>>;
   workstreamRole: Maybe<Scalars['String']>;
@@ -6225,6 +6226,7 @@ export type WorkingGroupsDataLeadersChildDto = {
 
 /** The structure of the Leaders nested schema. */
 export type WorkingGroupsDataLeadersChildInputDto = {
+  inactiveSinceDate: InputMaybe<Scalars['Instant']>;
   role: InputMaybe<Scalars['String']>;
   user: InputMaybe<Array<Scalars['String']>>;
   workstreamRole: InputMaybe<Scalars['String']>;
@@ -6242,11 +6244,13 @@ export type WorkingGroupsDataLeadersInputDto = {
 
 /** The structure of the Members nested schema. */
 export type WorkingGroupsDataMembersChildDto = {
+  inactiveSinceDate: Maybe<Scalars['Instant']>;
   user: Maybe<Array<Users>>;
 };
 
 /** The structure of the Members nested schema. */
 export type WorkingGroupsDataMembersChildInputDto = {
+  inactiveSinceDate: InputMaybe<Scalars['Instant']>;
   user: InputMaybe<Array<Scalars['String']>>;
 };
 
@@ -6821,7 +6825,7 @@ export type EventContentFragment = Pick<
                   Array<
                     Pick<
                       WorkingGroupsDataLeadersChildDto,
-                      'workstreamRole' | 'role'
+                      'workstreamRole' | 'role' | 'inactiveSinceDate'
                     > & {
                       user: Maybe<
                         Array<
@@ -6840,21 +6844,26 @@ export type EventContentFragment = Pick<
                   >
                 >;
                 members: Maybe<
-                  Array<{
-                    user: Maybe<
-                      Array<
-                        Pick<Users, 'id'> & {
-                          flatData: Pick<
-                            UsersFlatDataDto,
-                            | 'email'
-                            | 'firstName'
-                            | 'lastName'
-                            | 'alumniSinceDate'
-                          > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
-                        }
-                      >
-                    >;
-                  }>
+                  Array<
+                    Pick<
+                      WorkingGroupsDataMembersChildDto,
+                      'inactiveSinceDate'
+                    > & {
+                      user: Maybe<
+                        Array<
+                          Pick<Users, 'id'> & {
+                            flatData: Pick<
+                              UsersFlatDataDto,
+                              | 'email'
+                              | 'firstName'
+                              | 'lastName'
+                              | 'alumniSinceDate'
+                            > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+                          }
+                        >
+                      >;
+                    }
+                  >
                 >;
                 calendars: Maybe<
                   Array<
@@ -7284,7 +7293,7 @@ export type FetchEventsQuery = {
                             Array<
                               Pick<
                                 WorkingGroupsDataLeadersChildDto,
-                                'workstreamRole' | 'role'
+                                'workstreamRole' | 'role' | 'inactiveSinceDate'
                               > & {
                                 user: Maybe<
                                   Array<
@@ -7305,23 +7314,28 @@ export type FetchEventsQuery = {
                             >
                           >;
                           members: Maybe<
-                            Array<{
-                              user: Maybe<
-                                Array<
-                                  Pick<Users, 'id'> & {
-                                    flatData: Pick<
-                                      UsersFlatDataDto,
-                                      | 'email'
-                                      | 'firstName'
-                                      | 'lastName'
-                                      | 'alumniSinceDate'
-                                    > & {
-                                      avatar: Maybe<Array<Pick<Asset, 'id'>>>;
-                                    };
-                                  }
-                                >
-                              >;
-                            }>
+                            Array<
+                              Pick<
+                                WorkingGroupsDataMembersChildDto,
+                                'inactiveSinceDate'
+                              > & {
+                                user: Maybe<
+                                  Array<
+                                    Pick<Users, 'id'> & {
+                                      flatData: Pick<
+                                        UsersFlatDataDto,
+                                        | 'email'
+                                        | 'firstName'
+                                        | 'lastName'
+                                        | 'alumniSinceDate'
+                                      > & {
+                                        avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+                                      };
+                                    }
+                                  >
+                                >;
+                              }
+                            >
                           >;
                           calendars: Maybe<
                             Array<
@@ -7728,7 +7742,7 @@ export type FetchEventQuery = {
                       Array<
                         Pick<
                           WorkingGroupsDataLeadersChildDto,
-                          'workstreamRole' | 'role'
+                          'workstreamRole' | 'role' | 'inactiveSinceDate'
                         > & {
                           user: Maybe<
                             Array<
@@ -7747,21 +7761,26 @@ export type FetchEventQuery = {
                       >
                     >;
                     members: Maybe<
-                      Array<{
-                        user: Maybe<
-                          Array<
-                            Pick<Users, 'id'> & {
-                              flatData: Pick<
-                                UsersFlatDataDto,
-                                | 'email'
-                                | 'firstName'
-                                | 'lastName'
-                                | 'alumniSinceDate'
-                              > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
-                            }
-                          >
-                        >;
-                      }>
+                      Array<
+                        Pick<
+                          WorkingGroupsDataMembersChildDto,
+                          'inactiveSinceDate'
+                        > & {
+                          user: Maybe<
+                            Array<
+                              Pick<Users, 'id'> & {
+                                flatData: Pick<
+                                  UsersFlatDataDto,
+                                  | 'email'
+                                  | 'firstName'
+                                  | 'lastName'
+                                  | 'alumniSinceDate'
+                                > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+                              }
+                            >
+                          >;
+                        }
+                      >
                     >;
                     calendars: Maybe<
                       Array<
@@ -9769,12 +9788,19 @@ export type UsersContentFragment = Pick<
         flatData: Pick<WorkingGroupsFlatDataDto, 'title' | 'complete'> & {
           leaders: Maybe<
             Array<
-              Pick<WorkingGroupsDataLeadersChildDto, 'role'> & {
+              Pick<
+                WorkingGroupsDataLeadersChildDto,
+                'inactiveSinceDate' | 'role'
+              > & { user: Maybe<Array<Pick<Users, 'id'>>> }
+            >
+          >;
+          members: Maybe<
+            Array<
+              Pick<WorkingGroupsDataMembersChildDto, 'inactiveSinceDate'> & {
                 user: Maybe<Array<Pick<Users, 'id'>>>;
               }
             >
           >;
-          members: Maybe<Array<{ user: Maybe<Array<Pick<Users, 'id'>>> }>>;
         };
       }
     >
@@ -9872,12 +9898,20 @@ export type FetchUserQuery = {
             flatData: Pick<WorkingGroupsFlatDataDto, 'title' | 'complete'> & {
               leaders: Maybe<
                 Array<
-                  Pick<WorkingGroupsDataLeadersChildDto, 'role'> & {
-                    user: Maybe<Array<Pick<Users, 'id'>>>;
-                  }
+                  Pick<
+                    WorkingGroupsDataLeadersChildDto,
+                    'inactiveSinceDate' | 'role'
+                  > & { user: Maybe<Array<Pick<Users, 'id'>>> }
                 >
               >;
-              members: Maybe<Array<{ user: Maybe<Array<Pick<Users, 'id'>>> }>>;
+              members: Maybe<
+                Array<
+                  Pick<
+                    WorkingGroupsDataMembersChildDto,
+                    'inactiveSinceDate'
+                  > & { user: Maybe<Array<Pick<Users, 'id'>>> }
+                >
+              >;
             };
           }
         >
@@ -9985,13 +10019,19 @@ export type FetchUsersQuery = {
                   > & {
                     leaders: Maybe<
                       Array<
-                        Pick<WorkingGroupsDataLeadersChildDto, 'role'> & {
-                          user: Maybe<Array<Pick<Users, 'id'>>>;
-                        }
+                        Pick<
+                          WorkingGroupsDataLeadersChildDto,
+                          'inactiveSinceDate' | 'role'
+                        > & { user: Maybe<Array<Pick<Users, 'id'>>> }
                       >
                     >;
                     members: Maybe<
-                      Array<{ user: Maybe<Array<Pick<Users, 'id'>>> }>
+                      Array<
+                        Pick<
+                          WorkingGroupsDataMembersChildDto,
+                          'inactiveSinceDate'
+                        > & { user: Maybe<Array<Pick<Users, 'id'>>> }
+                      >
                     >;
                   };
                 }
@@ -10105,7 +10145,10 @@ export type WorkingGroupContentFragment = Pick<
     >;
     leaders: Maybe<
       Array<
-        Pick<WorkingGroupsDataLeadersChildDto, 'workstreamRole' | 'role'> & {
+        Pick<
+          WorkingGroupsDataLeadersChildDto,
+          'workstreamRole' | 'role' | 'inactiveSinceDate'
+        > & {
           user: Maybe<
             Array<
               Pick<Users, 'id'> & {
@@ -10120,18 +10163,20 @@ export type WorkingGroupContentFragment = Pick<
       >
     >;
     members: Maybe<
-      Array<{
-        user: Maybe<
-          Array<
-            Pick<Users, 'id'> & {
-              flatData: Pick<
-                UsersFlatDataDto,
-                'email' | 'firstName' | 'lastName' | 'alumniSinceDate'
-              > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
-            }
-          >
-        >;
-      }>
+      Array<
+        Pick<WorkingGroupsDataMembersChildDto, 'inactiveSinceDate'> & {
+          user: Maybe<
+            Array<
+              Pick<Users, 'id'> & {
+                flatData: Pick<
+                  UsersFlatDataDto,
+                  'email' | 'firstName' | 'lastName' | 'alumniSinceDate'
+                > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+              }
+            >
+          >;
+        }
+      >
     >;
     calendars: Maybe<
       Array<
@@ -10169,7 +10214,7 @@ export type FetchWorkingGroupQuery = {
           Array<
             Pick<
               WorkingGroupsDataLeadersChildDto,
-              'workstreamRole' | 'role'
+              'workstreamRole' | 'role' | 'inactiveSinceDate'
             > & {
               user: Maybe<
                 Array<
@@ -10185,18 +10230,20 @@ export type FetchWorkingGroupQuery = {
           >
         >;
         members: Maybe<
-          Array<{
-            user: Maybe<
-              Array<
-                Pick<Users, 'id'> & {
-                  flatData: Pick<
-                    UsersFlatDataDto,
-                    'email' | 'firstName' | 'lastName' | 'alumniSinceDate'
-                  > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
-                }
-              >
-            >;
-          }>
+          Array<
+            Pick<WorkingGroupsDataMembersChildDto, 'inactiveSinceDate'> & {
+              user: Maybe<
+                Array<
+                  Pick<Users, 'id'> & {
+                    flatData: Pick<
+                      UsersFlatDataDto,
+                      'email' | 'firstName' | 'lastName' | 'alumniSinceDate'
+                    > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+                  }
+                >
+              >;
+            }
+          >
         >;
         calendars: Maybe<
           Array<
@@ -10245,7 +10292,7 @@ export type FetchWorkingGroupsQuery = {
                 Array<
                   Pick<
                     WorkingGroupsDataLeadersChildDto,
-                    'workstreamRole' | 'role'
+                    'workstreamRole' | 'role' | 'inactiveSinceDate'
                   > & {
                     user: Maybe<
                       Array<
@@ -10264,18 +10311,26 @@ export type FetchWorkingGroupsQuery = {
                 >
               >;
               members: Maybe<
-                Array<{
-                  user: Maybe<
-                    Array<
-                      Pick<Users, 'id'> & {
-                        flatData: Pick<
-                          UsersFlatDataDto,
-                          'email' | 'firstName' | 'lastName' | 'alumniSinceDate'
-                        > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
-                      }
-                    >
-                  >;
-                }>
+                Array<
+                  Pick<
+                    WorkingGroupsDataMembersChildDto,
+                    'inactiveSinceDate'
+                  > & {
+                    user: Maybe<
+                      Array<
+                        Pick<Users, 'id'> & {
+                          flatData: Pick<
+                            UsersFlatDataDto,
+                            | 'email'
+                            | 'firstName'
+                            | 'lastName'
+                            | 'alumniSinceDate'
+                          > & { avatar: Maybe<Array<Pick<Asset, 'id'>>> };
+                        }
+                      >
+                    >;
+                  }
+                >
               >;
               calendars: Maybe<
                 Array<
@@ -11361,6 +11416,10 @@ export const WorkingGroupContentFragmentDoc = {
                       { kind: 'Field', name: { kind: 'Name', value: 'role' } },
                       {
                         kind: 'Field',
+                        name: { kind: 'Name', value: 'inactiveSinceDate' },
+                      },
+                      {
+                        kind: 'Field',
                         name: { kind: 'Name', value: 'user' },
                         selectionSet: {
                           kind: 'SelectionSet',
@@ -11422,6 +11481,10 @@ export const WorkingGroupContentFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'inactiveSinceDate' },
+                      },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'user' },
@@ -12982,6 +13045,13 @@ export const UsersContentFragmentDoc = {
                           selections: [
                             {
                               kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'inactiveSinceDate',
+                              },
+                            },
+                            {
+                              kind: 'Field',
                               name: { kind: 'Name', value: 'role' },
                             },
                             {
@@ -13006,6 +13076,13 @@ export const UsersContentFragmentDoc = {
                         selectionSet: {
                           kind: 'SelectionSet',
                           selections: [
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'inactiveSinceDate',
+                              },
+                            },
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'user' },

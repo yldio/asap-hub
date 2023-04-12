@@ -6498,6 +6498,7 @@ input WorkingGroupsDataInputDto {
 
 """The structure of the Leaders nested schema."""
 type WorkingGroupsDataLeadersChildDto {
+  inactiveSinceDate: Instant
   role: String
   user: [Users!]
   workstreamRole: String
@@ -6505,6 +6506,7 @@ type WorkingGroupsDataLeadersChildDto {
 
 """The structure of the Leaders nested schema."""
 input WorkingGroupsDataLeadersChildInputDto {
+  inactiveSinceDate: Instant
   role: String
   user: [String!]
   workstreamRole: String
@@ -6522,11 +6524,13 @@ input WorkingGroupsDataLeadersInputDto {
 
 """The structure of the Members nested schema."""
 type WorkingGroupsDataMembersChildDto {
+  inactiveSinceDate: Instant
   user: [Users!]
 }
 
 """The structure of the Members nested schema."""
 input WorkingGroupsDataMembersChildInputDto {
+  inactiveSinceDate: Instant
   user: [String!]
 }
 

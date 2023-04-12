@@ -17,6 +17,7 @@ export const workingGroupContentQueryFragment = gql`
       leaders {
         workstreamRole
         role
+        inactiveSinceDate
         user {
           id
           flatData {
@@ -31,6 +32,7 @@ export const workingGroupContentQueryFragment = gql`
         }
       }
       members {
+        inactiveSinceDate
         user {
           id
           flatData {

@@ -11,6 +11,7 @@ import { appName, baseUrl } from '../../src/config';
 import {
   GraphqlUserTeam,
   parseGraphQLUserTeamConnections,
+  parseGraphQLWorkingGroup,
   parseUserToResponse,
   UserSquidexDataProvider,
 } from '../../src/data-providers/users.data-provider';
@@ -302,6 +303,7 @@ describe('User data provider', () => {
     });
     test('Should provide connected working groups', async () => {
       const mockResponse = getSquidexUserGraphqlResponse();
+      mockResponse.findUsersContent!.flatData.alumniSinceDate = null;
       mockResponse.findUsersContent!.id = 'user-id-1';
       mockResponse.findUsersContent!.referencingWorkingGroupsContents = [
         {
@@ -313,6 +315,7 @@ describe('User data provider', () => {
               {
                 user: [{ id: 'user-id-1' }],
                 role: 'Chair',
+                inactiveSinceDate: null,
               },
             ],
             members: [],
@@ -324,7 +327,7 @@ describe('User data provider', () => {
             title: 'WG TWO',
             complete: false,
             leaders: [],
-            members: [{ user: [{ id: 'user-id-1' }] }],
+            members: [{ user: [{ id: 'user-id-1' }], inactiveSinceDate: null }],
           },
         },
         {
@@ -333,12 +336,15 @@ describe('User data provider', () => {
             title: 'WG THREE',
             complete: true,
             leaders: [],
-            members: [{ user: [{ id: 'user-id-1' }] }],
+            members: [{ user: [{ id: 'user-id-1' }], inactiveSinceDate: null }],
           },
         },
       ];
       squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
       const expectedResponse = getUserDataObject();
+      expectedResponse.alumniSinceDate = undefined;
+      expectedResponse._tags = ['CRN Member'];
+
       expectedResponse.workingGroups = [
         { id: 'wg-1', name: 'WG ONE', role: 'Chair', active: true },
         { id: 'wg-2', name: 'WG TWO', role: 'Member', active: true },
@@ -855,6 +861,201 @@ describe('User data provider', () => {
           dismissedGettingStarted: undefined,
         });
         expect(thirdResult.dismissedGettingStarted).toEqual(false);
+      });
+    });
+    describe('parseGraphQLUserWorkingGroup', () => {
+      test('should parse working group', () => {
+        const workingGroup = {
+          id: 'wg-1',
+          flatData: {
+            title: 'WG ONE',
+            complete: false,
+            leaders: [
+              {
+                user: [{ id: 'user-id-1' }],
+                role: 'Chair',
+                inactiveSinceDate: null,
+              },
+            ],
+            members: [],
+          },
+        };
+        const parsedWorkingGroup = parseGraphQLWorkingGroup({
+          workingGroup,
+          userId: 'user-id-1',
+          isAlumni: false,
+        });
+        expect(parsedWorkingGroup).toEqual({
+          id: 'wg-1',
+          name: 'WG ONE',
+          role: 'Chair',
+          active: true,
+        });
+      });
+
+      test('should set role to leadership role for leaders', () => {
+        const workingGroup = {
+          id: 'wg-1',
+          flatData: {
+            title: 'WG ONE',
+            complete: false,
+            leaders: [
+              {
+                user: [{ id: 'user-id-1' }],
+                role: 'Chair',
+                inactiveSinceDate: '2020-09-23T20:45:22Z',
+              },
+            ],
+            members: [],
+          },
+        };
+        const parsedWorkingGroup = parseGraphQLWorkingGroup({
+          workingGroup,
+          userId: 'user-id-1',
+          isAlumni: false,
+        });
+        expect(parsedWorkingGroup.role).toBe('Chair');
+      });
+
+      test('should set role to `Member` for members', () => {
+        const workingGroup = {
+          id: 'wg-1',
+          flatData: {
+            title: 'WG ONE',
+            complete: false,
+            members: [
+              {
+                user: [{ id: 'user-id-1' }],
+                inactiveSinceDate: '2020-09-23T20:45:22Z',
+              },
+            ],
+            leaders: [],
+          },
+        };
+        const parsedWorkingGroup = parseGraphQLWorkingGroup({
+          workingGroup,
+          userId: 'user-id-1',
+          isAlumni: false,
+        });
+        expect(parsedWorkingGroup.role).toBe('Member');
+      });
+
+      test('should set active to false if leader is set to inactive', () => {
+        const workingGroup = {
+          id: 'wg-1',
+          flatData: {
+            title: 'WG ONE',
+            complete: false,
+            leaders: [
+              {
+                user: [{ id: 'user-id-1' }],
+                role: 'Chair',
+                inactiveSinceDate: '2020-09-23T20:45:22Z',
+              },
+            ],
+            members: [],
+          },
+        };
+        const parsedWorkingGroup = parseGraphQLWorkingGroup({
+          workingGroup,
+          userId: 'user-id-1',
+          isAlumni: false,
+        });
+        expect(parsedWorkingGroup.active).toBe(false);
+      });
+
+      test('should set active to false if leader is set as alumni', () => {
+        const workingGroup = {
+          id: 'wg-1',
+          flatData: {
+            title: 'WG ONE',
+            complete: false,
+            leaders: [
+              {
+                user: [{ id: 'user-id-1' }],
+                role: 'Chair',
+                inactiveSinceDate: null,
+              },
+            ],
+            members: [],
+          },
+        };
+        const parsedWorkingGroup = parseGraphQLWorkingGroup({
+          workingGroup,
+          userId: 'user-id-1',
+          isAlumni: true,
+        });
+        expect(parsedWorkingGroup.active).toBe(false);
+      });
+
+      test('should set active to false if member is set to inactive', () => {
+        const workingGroup = {
+          id: 'wg-1',
+          flatData: {
+            title: 'WG ONE',
+            complete: false,
+            members: [
+              {
+                user: [{ id: 'user-id-1' }],
+                inactiveSinceDate: '2020-09-23T20:45:22Z',
+              },
+            ],
+            leaders: [],
+          },
+        };
+        const parsedWorkingGroup = parseGraphQLWorkingGroup({
+          workingGroup,
+          userId: 'user-id-1',
+          isAlumni: false,
+        });
+        expect(parsedWorkingGroup.active).toBe(false);
+      });
+
+      test('should set active to false if member is set as alumni', () => {
+        const workingGroup = {
+          id: 'wg-1',
+          flatData: {
+            title: 'WG ONE',
+            complete: false,
+            members: [
+              {
+                user: [{ id: 'user-id-1' }],
+                inactiveSinceDate: null,
+              },
+            ],
+            leaders: [],
+          },
+        };
+        const parsedWorkingGroup = parseGraphQLWorkingGroup({
+          workingGroup,
+          userId: 'user-id-1',
+          isAlumni: true,
+        });
+        expect(parsedWorkingGroup.active).toBe(false);
+      });
+
+      test('should set active to false if working group is complete', () => {
+        const workingGroup = {
+          id: 'wg-1',
+          flatData: {
+            title: 'WG ONE',
+            complete: true,
+            leaders: [
+              {
+                user: [{ id: 'user-id-1' }],
+                role: 'Chair',
+                inactiveSinceDate: null,
+              },
+            ],
+            members: [],
+          },
+        };
+        const parsedWorkingGroup = parseGraphQLWorkingGroup({
+          workingGroup,
+          userId: 'user-id-1',
+          isAlumni: false,
+        });
+        expect(parsedWorkingGroup.active).toBe(false);
       });
     });
   });

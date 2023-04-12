@@ -593,7 +593,7 @@ describe('ResearchOutputs controller', () => {
       ).rejects.toThrow(NotFoundError);
     });
 
-    test('Should update an existing research output and return it', async () => {
+    test('Should update a published existing research output and return it', async () => {
       const researchOutputUpdateData: ResearchOutputUpdateData = {
         ...getResearchOutputUpdateData(),
       };

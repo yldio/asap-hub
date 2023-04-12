@@ -506,7 +506,7 @@ const getEventMaterialsRemindersFromQuery = (
 
 const getSortDate = (reminder: ReminderDataObject): DateTime => {
   if (reminder.entity === 'Research Output') {
-    return DateTime.fromISO(reminder.data.addedDate || '');
+    return DateTime.fromISO(reminder.data.addedDate);
   }
 
   if (reminder.type === 'Happening Today') {

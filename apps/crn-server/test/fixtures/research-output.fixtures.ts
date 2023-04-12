@@ -1,6 +1,8 @@
 import {
+  DraftResearchOutputDataObject,
   ListResearchOutputResponse,
   ListResponse,
+  PublishedResearchOutputDataObject,
   ResearchOutputCreateDataObject,
   ResearchOutputDataObject,
   ResearchOutputEvent,
@@ -202,7 +204,11 @@ export const getResearchOutputDataObject = (): ResearchOutputDataObject => ({
   keywords: ['Keyword1'],
   published: true,
 });
-
+export const getDraftResearchOutputDataObject =
+  (): DraftResearchOutputDataObject => ({
+    ...getResearchOutputDataObject(),
+    published: false,
+  });
 export const getListResearchOutputDataObject =
   (): ListResponse<ResearchOutputDataObject> => ({
     total: 1,

@@ -767,8 +767,15 @@ describe('/research-outputs/ route', () => {
       accession: _accession,
       ...researchOutputPutRequest
     } = getResearchOutputPutRequest();
-
+    beforeEach(() => {
+      researchOutputControllerMock.fetchById.mockResolvedValueOnce(
+        researchOutputResponse,
+      );
+    });
     test('Should send the data to the controller and return status 200 along with all the research output data', async () => {
+      researchOutputControllerMock.fetchById.mockResolvedValueOnce(
+        researchOutputResponse,
+      );
       researchOutputControllerMock.update.mockResolvedValueOnce(
         researchOutputResponse,
       );
@@ -800,14 +807,103 @@ describe('/research-outputs/ route', () => {
       expect(response.status).toBe(403);
     });
 
+    test('Should return 403 when user is not permitted to publish a research output', async () => {
+      userMockFactory.mockReturnValueOnce({
+        ...user,
+        teams: [{ id: 'team-1', displayName: 'team-1', role: 'Key Personnel' }],
+      });
+      researchOutputControllerMock.fetchById.mockResolvedValueOnce({
+        ...researchOutputResponse,
+        teams: [{ id: 'team-1', displayName: 'team-1' }],
+        published: false,
+      });
+      const response = await supertest(app)
+        .put('/research-outputs/abc123')
+        .send({ ...researchOutputPutRequest, teams: ['team-1'] })
+        .query({ publish: true });
+      expect(response.status).toBe(403);
+    });
+
+    test('Should return 200 when user is permitted to publish a research output as team PM', async () => {
+      userMockFactory.mockReturnValueOnce({
+        ...user,
+        role: 'Grantee',
+        teams: [
+          { id: 'team-1', displayName: 'team-1', role: 'Project Manager' },
+        ],
+      });
+      researchOutputControllerMock.fetchById.mockResolvedValueOnce({
+        ...researchOutputResponse,
+        teams: [{ id: 'team-1', displayName: 'team-1' }],
+        workingGroups: undefined,
+        published: false,
+      });
+      const response = await supertest(app)
+        .put('/research-outputs/abc123')
+        .send({ ...researchOutputPutRequest, teams: ['team-1'] })
+        .query({ publish: true });
+      expect(response.status).toBe(200);
+    });
+
+    test('Should return 200 when user is permitted to publish a research output as working group PM', async () => {
+      userMockFactory.mockReturnValueOnce({
+        ...user,
+        role: 'Grantee',
+        teams: [{ id: 'team-1', displayName: 'team-1', role: 'Key Personnel' }],
+        workingGroups: [
+          { id: 'wg-1', name: 'wg-1', role: 'Project Manager', active: true },
+        ],
+      });
+      researchOutputControllerMock.fetchById.mockResolvedValueOnce({
+        ...researchOutputResponse,
+        teams: [{ id: 'team-1', displayName: 'team-1' }],
+        workingGroups: [{ id: 'wg-1', title: 'wg-1' }],
+        published: false,
+      });
+      const response = await supertest(app)
+        .put('/research-outputs/abc123')
+        .send({ ...researchOutputPutRequest, workingGroups: ['wg-1'] })
+        .query({ publish: true });
+      expect(response.status).toBe(200);
+    });
+
+    test('Should return 200 when user is permitted to publish a research output as a ASAP staff', async () => {
+      userMockFactory.mockReturnValueOnce({
+        ...user,
+        role: 'Staff',
+        teams: [{ id: 'team-1', displayName: 'team-1', role: 'Key Personnel' }],
+        workingGroups: [
+          { id: 'wg-1', name: 'wg-1', role: 'Member', active: true },
+        ],
+      });
+      researchOutputControllerMock.fetchById.mockResolvedValueOnce({
+        ...researchOutputResponse,
+        teams: [{ id: 'not-his-team', displayName: 'team-12' }],
+        workingGroups: [{ id: 'not-his-wg', title: 'wg-12' }],
+        published: false,
+      });
+      const response = await supertest(app)
+        .put('/research-outputs/abc123')
+        .send(researchOutputPutRequest)
+        .query({ publish: true });
+      expect(response.status).toBe(200);
+    });
+
     test.each([{ publish: false }, { publish: true }])(
       'Should get the correct value for publish when it is $publish',
       async ({ publish }) => {
-        const updateResearchOutputRequest = getResearchOutputPutRequest();
+        researchOutputControllerMock.fetchById.mockResolvedValueOnce({
+          ...researchOutputResponse,
+          published: false,
+        });
+
+        researchOutputControllerMock.update.mockResolvedValueOnce(
+          researchOutputResponse,
+        );
 
         const response = await supertest(app)
           .put('/research-outputs/test123')
-          .send(updateResearchOutputRequest)
+          .send(researchOutputPutRequest)
           .set('Accept', 'application/json')
           .query(`publish=${publish}`);
 
@@ -815,7 +911,7 @@ describe('/research-outputs/ route', () => {
         expect(researchOutputControllerMock.update).toBeCalledWith(
           'test123',
           {
-            ...updateResearchOutputRequest,
+            ...researchOutputPutRequest,
             updatedBy: 'user-id-0',
           },
           { publish },
@@ -824,6 +920,9 @@ describe('/research-outputs/ route', () => {
     );
 
     test('Should send publish as true if query param is not set', async () => {
+      researchOutputControllerMock.fetchById.mockResolvedValueOnce(
+        researchOutputResponse,
+      );
       const updateResearchOutputRequest = getResearchOutputPutRequest();
 
       const response = await supertest(app)

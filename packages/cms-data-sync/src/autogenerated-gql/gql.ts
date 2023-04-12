@@ -3,6 +3,8 @@ import * as graphql from './graphql';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
 const documents = {
+  '\n  query FetchCalendars {\n    queryCalendarsContents(top: 100) {\n      id\n      flatData {\n        googleCalendarId\n        name\n        color\n      }\n    }\n  }\n':
+    graphql.FetchCalendarsDocument,
   '\n  query FetchExternalAuthors {\n    queryExternalAuthorsContents(top: 100) {\n      id\n      flatData {\n        name\n        orcid\n      }\n    }\n  }\n':
     graphql.FetchExternalAuthorsDocument,
   '\n  query FetchNews {\n    queryNewsAndEventsContents(top: 100) {\n      id\n      created\n      flatData {\n        title\n        shortText\n        text\n        thumbnail {\n          id\n          fileName\n          thumbnailUrl\n          mimeType\n          fileType\n        }\n        frequency\n        link\n        linkText\n      }\n    }\n  }\n':
@@ -13,6 +15,9 @@ const documents = {
     graphql.FetchTeamsDocument,
 };
 
+export function gql(
+  source: '\n  query FetchCalendars {\n    queryCalendarsContents(top: 100) {\n      id\n      flatData {\n        googleCalendarId\n        name\n        color\n      }\n    }\n  }\n',
+): (typeof documents)['\n  query FetchCalendars {\n    queryCalendarsContents(top: 100) {\n      id\n      flatData {\n        googleCalendarId\n        name\n        color\n      }\n    }\n  }\n'];
 export function gql(
   source: '\n  query FetchExternalAuthors {\n    queryExternalAuthorsContents(top: 100) {\n      id\n      flatData {\n        name\n        orcid\n      }\n    }\n  }\n',
 ): (typeof documents)['\n  query FetchExternalAuthors {\n    queryExternalAuthorsContents(top: 100) {\n      id\n      flatData {\n        name\n        orcid\n      }\n    }\n  }\n'];

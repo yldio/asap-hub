@@ -2,12 +2,28 @@
 
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import assert from 'assert';
-import { createClient } from 'contentful-management';
+import {
+  createClient,
+  RestAdapter,
+  MakeRequestOptions,
+} from 'contentful-management';
 
-import { getAccessTokenFactory, SquidexGraphql } from '@asap-hub/squidex';
+import {
+  createUrlFactory,
+  getAccessTokenFactory,
+  SquidexGraphql,
+} from '@asap-hub/squidex';
+import { rateLimiter } from './rate-limiter';
 
 export const isVerbose = () =>
   process.env.VERBOSE_DATA_SYNC && process.env.VERBOSE_DATA_SYNC === 'true';
+
+class ApiAdapter extends RestAdapter {
+  async makeRequest<R>(options: MakeRequestOptions): Promise<R> {
+    await rateLimiter.removeTokens(1);
+    return super.makeRequest(options);
+  }
+}
 
 export const getSquidexAndContentfulClients = async () => {
   [
@@ -44,7 +60,9 @@ export const getSquidexAndContentfulClients = async () => {
   });
 
   const contentfulClient = createClient({
-    accessToken: CONTENTFUL_MANAGEMENT_ACCESS_TOKEN!,
+    apiAdapter: new ApiAdapter({
+      accessToken: CONTENTFUL_MANAGEMENT_ACCESS_TOKEN!,
+    }),
   });
 
   const contentfulSpace = await contentfulClient.getSpace(CONTENTFUL_SPACE_ID!);
@@ -54,3 +72,8 @@ export const getSquidexAndContentfulClients = async () => {
 
   return { contentfulEnvironment, squidexGraphqlClient };
 };
+
+export const createAssetUrl = createUrlFactory({
+  appName: process.env.CRN_SQUIDEX_APP_NAME!,
+  baseUrl: process.env.SQUIDEX_BASE_URL!,
+});

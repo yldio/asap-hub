@@ -97,7 +97,7 @@ export const migrateAsset = async (
       .filter((asset): asset is ContentfulAsset => asset !== null)
       .map(async (asset) => {
         const processedAsset = await asset.processForAllLocales();
-        processedAsset.publish();
+        return processedAsset.publish();
       }),
   );
 };

@@ -515,6 +515,12 @@ describe('User data provider', () => {
 
     beforeEach(() => {
       environmentMock.getEntry.mockResolvedValueOnce(entry);
+      jest.useFakeTimers({
+        now: new Date('2023-01-01T12:00:00.000Z'),
+      });
+    });
+    afterEach(() => {
+      jest.useRealTimers();
     });
 
     test('fetches entry from contentful and passes to `patchAndPublish`', async () => {
@@ -574,6 +580,16 @@ describe('User data provider', () => {
             id: 'abc123',
           },
         },
+      });
+    });
+
+    test('sets `createdDate` when a user is onboarded', async () => {
+      await userDataProvider.update('123', {
+        onboarded: true,
+      });
+      expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+        onboarded: true,
+        createdDate: '2023-01-01T12:00:00.000Z',
       });
     });
   });

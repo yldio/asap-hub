@@ -81,7 +81,40 @@ describe('clearContentfulEntries', () => {
   it('calls getEntries with the given contentModel', async () => {
     await clearContentfulEntries(envMock, 'news');
 
-    expect(envMock.getEntries).toHaveBeenCalledWith({ content_type: 'news' });
+    expect(envMock.getEntries).toHaveBeenCalledWith({
+      content_type: 'news',
+      limit: 100,
+      skip: 0,
+    });
+  });
+
+  it('gets more pages of entries if total is more than page size', async () => {
+    envMock.getEntries.mockReset();
+    jest.spyOn(envMock, 'getEntries').mockResolvedValue({
+      total: 250,
+      items: Array.from(100).fill(newsEntry),
+      skip: 0,
+      limit: 100,
+      toPlainObject: jest.fn(),
+      sys: { type: 'Array' },
+    });
+    await clearContentfulEntries(envMock, 'news');
+
+    expect(envMock.getEntries).toHaveBeenCalledWith({
+      content_type: 'news',
+      limit: 100,
+      skip: 0,
+    });
+    expect(envMock.getEntries).toHaveBeenCalledWith({
+      content_type: 'news',
+      limit: 100,
+      skip: 100,
+    });
+    expect(envMock.getEntries).toHaveBeenCalledWith({
+      content_type: 'news',
+      limit: 100,
+      skip: 200,
+    });
   });
 
   describe('verifies if entry is publish', () => {
@@ -141,7 +174,7 @@ describe('publishContentfulEntries', () => {
     await publishContentfulEntries([newsEntry]);
     expect(console.log).toHaveBeenCalledWith(
       '\x1b[32m',
-      `[INFO] Published entry ${newsEntry.sys.id}.`,
+      expect.stringContaining(`[INFO] Published entry ${newsEntry.sys.id}.`),
     );
   });
 });

@@ -15,6 +15,7 @@ export const usersContentQueryFragment = gql`
     alumniLocation
     biography
     connections
+    createdDate
     degree
     email
     contactEmail

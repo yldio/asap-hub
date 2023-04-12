@@ -20,43 +20,71 @@ export const checkIfEntryAlreadyExistsInContentful = async (
   }
 };
 
+export const fetchContentfulEntries = async (
+  contentfulEnvironment: Environment,
+  contentType: string,
+  skip: number = 0,
+): Promise<Entry[]> => {
+  const PAGE_SIZE = 100;
+  const entries = await contentfulEnvironment.getEntries({
+    content_type: contentType,
+    skip,
+    limit: PAGE_SIZE,
+  });
+  if (entries.total > skip + entries.items.length) {
+    const nextPage = await fetchContentfulEntries(
+      contentfulEnvironment,
+      contentType,
+      skip + PAGE_SIZE,
+    );
+    return [...(entries.items || []), ...nextPage];
+  }
+  return entries.items || [];
+};
+
 export const clearContentfulEntries = async (
   contentfulEnvironment: Environment,
   contentType: string,
 ) => {
-  const entries = await contentfulEnvironment.getEntries({
-    content_type: contentType,
-  });
+  const entries = await fetchContentfulEntries(
+    contentfulEnvironment,
+    contentType,
+  );
   logger(
-    `Cleaning Contentful Entries from content-type ${contentType}...`,
+    `Cleaning ${entries.length} Contentful entries from content-type ${contentType}...`,
     'INFO',
   );
-
+  const total = entries.length;
+  let n = 0;
   await Promise.all(
-    entries.items.map(async (entry) => {
+    entries.map(async (entry) => {
       if (entry.isPublished()) {
         await entry.unpublish();
       }
-    }),
-  );
-
-  await Promise.all(
-    entries.items.map(async (entry) => {
       await entry.delete();
-      logger(`Entry with ID ${entry.sys.id} deleted`, 'INFO');
+      n += 1;
+      logger(`Entry with ID ${entry.sys.id} deleted. (${n}/${total})`, 'INFO');
     }),
   );
 };
 
 export const publishContentfulEntries = async (entries: Entry[]) => {
-  for (const entry of entries) {
-    try {
-      const published = await entry.publish();
-      logger(`Published entry ${published.sys.id}.`, 'INFO');
-    } catch (err) {
-      logger(`Entry with ID ${entry.sys.id} could not be published.`, 'ERROR');
-    }
-  }
+  const total = entries.length;
+  let n = 0;
+  await Promise.all(
+    entries.map(async (entry) => {
+      try {
+        const published = await entry.publish();
+        n += 1;
+        logger(`Published entry ${published.sys.id}. (${n}/${total})`, 'INFO');
+      } catch (err) {
+        logger(
+          `Entry with ID ${entry.sys.id} could not be published.`,
+          'ERROR',
+        );
+      }
+    }),
+  );
 };
 
 // Leaving it here because we could use

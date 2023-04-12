@@ -6634,6 +6634,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:3.1.0"\
       ],\
       [\
+        "just-performance",\
+        "npm:4.3.0"\
+      ],\
+      [\
         "jwa",\
         "npm:1.4.1"\
       ],\
@@ -6743,7 +6747,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "limiter",\
-        "npm:1.1.5"\
+        "npm:2.1.0"\
       ],\
       [\
         "lines-and-columns",\
@@ -10868,6 +10872,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["graphql", "npm:15.8.0"],\
             ["graphql-tag", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:2.12.6"],\
             ["graphql-typescript-integration", "npm:1.2.1"],\
+            ["limiter", "npm:2.1.0"],\
             ["prettier", "npm:2.8.7"],\
             ["ts-node", "virtual:a165564317f0b92d7f72089df97002e7b69d2373ff7839f92d9f9e1bed5f710b4e712695583c77d16186478eb0c9ba6e1edcf723243579fe7c5a370e032217e7#npm:10.9.1"]\
           ],\
@@ -56507,6 +56512,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["just-performance", [\
+        ["npm:4.3.0", {\
+          "packageLocation": "./.yarn/cache/just-performance-npm-4.3.0-f44d9625fd-37e226e308.zip/node_modules/just-performance/",\
+          "packageDependencies": [\
+            ["just-performance", "npm:4.3.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["jwa", [\
         ["npm:1.4.1", {\
           "packageLocation": "./.yarn/cache/jwa-npm-1.4.1-4f19d6572c-ff30ea7c2d.zip/node_modules/jwa/",\
@@ -56907,6 +56921,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/limiter-npm-1.1.5-aa11b1b2de-2d51d3a8be.zip/node_modules/limiter/",\
           "packageDependencies": [\
             ["limiter", "npm:1.1.5"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:2.1.0", {\
+          "packageLocation": "./.yarn/cache/limiter-npm-2.1.0-c871d6a034-989092bfda.zip/node_modules/limiter/",\
+          "packageDependencies": [\
+            ["limiter", "npm:2.1.0"],\
+            ["just-performance", "npm:4.3.0"]\
           ],\
           "linkType": "HARD"\
         }]\

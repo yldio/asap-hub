@@ -162,6 +162,13 @@ const cleanUser = (userToUpdate: UserUpdateDataObject) =>
         ...(value as UserSocialLinks),
       };
     }
+    if (key === 'onboarded' && value === true) {
+      return {
+        ...acc,
+        onboarded: true,
+        createdDate: new Date().toISOString(),
+      };
+    }
     return { ...acc, [key]: value };
   }, {} as { [key: string]: unknown });
 
@@ -231,7 +238,7 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
     orcidWorks: [],
     id: item.sys.id,
     _tags: [item.alumniSinceDate ? inactiveUserTag : activeUserTag],
-    createdDate: item.sys.firstPublishedAt,
+    createdDate: item.createdDate || item.sys.firstPublishedAt,
     lastModifiedDate: item.sys.publishedAt,
     workingGroups: [],
     onboarded: !!item.onboarded,

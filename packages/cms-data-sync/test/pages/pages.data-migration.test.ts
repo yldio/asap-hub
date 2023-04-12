@@ -54,7 +54,7 @@ describe('Migrate Pages', () => {
     });
 
     contentfulEnv.getEntries.mockResolvedValueOnce({
-      total: 1,
+      total: 0,
       items: [],
       skip: 0,
       limit: 10,

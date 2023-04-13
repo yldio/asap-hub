@@ -214,6 +214,7 @@ export const parseContentfulGraphQlTeams = (item: TeamItem): TeamDataObject => {
 
       const { role, inactiveSinceDate } = membership;
       const {
+        sys,
         firstName,
         lastName,
         email,
@@ -221,7 +222,7 @@ export const parseContentfulGraphQlTeams = (item: TeamItem): TeamDataObject => {
         labsCollection,
         alumniSinceDate,
       } = membership.linkedFrom?.usersCollection?.items[0] || {};
-      const id = membership.linkedFrom?.usersCollection?.items[0]?.sys.id;
+      const id = sys?.id;
 
       if (!id) {
         return userList;

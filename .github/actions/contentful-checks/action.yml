@@ -2,9 +2,6 @@ name: Contentful Checks
 description: Defines outputs to set up Contentful-based steps
 
 inputs:
-  pr-number:
-    description: 'PR Number'
-    required: true
   contentful-space-id:
     description: 'Contentful Space ID'
     required: true
@@ -14,6 +11,10 @@ inputs:
   contentful-token:
     description: 'Contentful access token'
     required: true
+  contentful-environment-id:
+    description: 'Contentful environment name'
+    required: true
+    type: string
 
 outputs:
   contentful-env:
@@ -59,7 +60,7 @@ runs:
         BRANCH_ENV=false
 
         if [ "$OUTSTANDING_MIGRATIONS" != "0" ] || [ "$GIT_DIFF" != "" ]; then
-          CONTENTFUL_ENV=crn-$PR_NUMBER
+          CONTENTFUL_ENV=$CONTENTFUL_ENV_ID
           BRANCH_ENV=true
         fi
 
@@ -68,7 +69,7 @@ runs:
         echo "on-branch-env=$BRANCH_ENV" >> $GITHUB_OUTPUT
       env:
         CONTENTFUL_MASTER_ENV: ${{ inputs.contentful-master-env }}
-        PR_NUMBER: ${{ inputs.pr-number }}
+        CONTENTFUL_ENV_ID: ${{ inputs.contentful-environment-id }}
     - name: Determine whether the Contentful environment has been created
       id: check-contentful-exists
       shell: bash

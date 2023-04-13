@@ -32,20 +32,18 @@ jobs:
         id: get-crn-contentful-state
         uses: ./.github/actions/contentful-checks
         with:
-          pr-number: ${{ steps.setup.outputs.pr-number }}
           contentful-space-id: ${{ steps.setup.outputs.crn-contentful-space-id }}
           contentful-master-env: ${{ steps.setup.outputs.contentful-environment }}
           contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          app: crn
+          contentful-environment-id: ${{ steps.setup.outputs.crn-contentful-env-id }}
       - name: Get GP2 Contentful Environment state
         id: get-gp2-contentful-state
         uses: ./.github/actions/contentful-checks
         with:
-          pr-number: ${{ steps.setup.outputs.pr-number }}
           contentful-space-id: ${{ steps.setup.outputs.gp2-contentful-space-id }}
           contentful-master-env: ${{ steps.setup.outputs.contentful-environment }}
           contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          app: gp2
+          contentful-environment-id: ${{ steps.setup.outputs.gp2-contentful-env-id }}
 
   test:
     uses: ./.github/workflows/reusable-test.yml
@@ -105,6 +103,7 @@ jobs:
     with:
       environment-name: Branch
       crn-contentful-env: ${{ needs.setup.outputs.crn-contentful-env }}
+      gp2-contentful-env: ${{ needs.setup.outputs.gp2-contentful-env }}
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

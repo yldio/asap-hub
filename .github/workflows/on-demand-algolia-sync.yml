@@ -52,6 +52,7 @@ jobs:
           contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           max-contentful-envs: ${{ steps.setup.outputs.max-contentful-envs }}
           contentful-environment-id: ${{ steps.setup.outputs.crn-contentful-env-id }}
+          app: crn
   algolia:
     uses: ./.github/workflows/reusable-algolia-sync.yml
     with:

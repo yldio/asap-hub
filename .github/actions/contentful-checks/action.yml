@@ -15,6 +15,10 @@ inputs:
     description: 'Contentful environment name'
     required: true
     type: string
+  app:
+    description: 'crn or gp2'
+    required: true
+    type: string
 
 outputs:
   contentful-env:
@@ -37,12 +41,13 @@ runs:
       id: count-outstanding-migrations
       shell: bash
       run: |
-        OUTSTANDING_MIGRATIONS=$(yarn workspace @asap-hub/contentful space:migrate:count)
+        OUTSTANDING_MIGRATIONS=$(yarn contentful:migration:count:$APP)
         echo "OUTSTANDING_MIGRATIONS=$OUTSTANDING_MIGRATIONS" >> $GITHUB_ENV
       env:
         CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
         CONTENTFUL_ENV_ID: ${{ inputs.contentful-master-env }}
         CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.contentful-token }}
+        APP: ${{ inputs.app }}
       # Determine whether the Contentful webhook setup has changed since master
     - uses: technote-space/get-diff-action@v6
       with:
@@ -102,7 +107,7 @@ runs:
           echo "New Contentful environment required but has not yet been created."
           echo "migrations-up-to-date=true" >> $GITHUB_OUTPUT
         else
-          OUTSTANDING_MIGRATIONS=$(yarn workspace @asap-hub/contentful space:migrate:count)
+          OUTSTANDING_MIGRATIONS=$(yarn contentful:migration:count:$APP)
 
           if [[ "$OUTSTANDING_MIGRATIONS" == "0" ]]; then
             echo "All migrations have been run on target environment."
@@ -118,3 +123,4 @@ runs:
         CONTENTFUL_MASTER_ENV: ${{ inputs.contentful-master-env }}
         CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
         CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.contentful-token }}
+        APP: ${{ inputs.app }}

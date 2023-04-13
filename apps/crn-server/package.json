@@ -136,7 +136,7 @@
     "jest-when": "3.5.2",
     "jwt-encode": "1.0.1",
     "node-dev": "6.7.0",
-    "serverless": "3.28.1",
+    "serverless": "3.30.1",
     "serverless-iam-roles-per-function": "2.0.2",
     "serverless-offline": "8.8.1",
     "serverless-offline-aws-eventbridge": "1",

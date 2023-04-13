@@ -287,7 +287,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     new TutorialsSquidexDataProvider(squidexGraphqlClient);
   featureFlagDependencySwitch.setDependency(
     'assets',
-    libs.assetDataProvider || new AssetSquidexDataProvider(userRestClient),
+    libs.assetSquidexDataProvider || new AssetSquidexDataProvider(userRestClient),
     'IS_CONTENTFUL_ENABLED_V2',
     false,
   );
@@ -560,6 +560,7 @@ export type Libs = {
   userController?: UserController;
   workingGroupsController?: WorkingGroupController;
   assetDataProvider?: AssetDataProvider;
+  assetSquidexDataProvider?: AssetDataProvider;
   assetContentfulDataProvider?: AssetDataProvider;
   calendarDataProvider?: CalendarDataProvider;
   calendarSquidexDataProvider?: CalendarDataProvider;

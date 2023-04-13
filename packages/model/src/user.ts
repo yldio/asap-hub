@@ -247,6 +247,7 @@ export type FetchUsersFilter =
       orcid?: never;
     };
 
-export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;
+export type FetchUsersOptions = Omit<FetchOptions<FetchUsersFilter>, 'search'>;
+
 
 export type UserRole = 'Staff' | 'Member' | 'None';

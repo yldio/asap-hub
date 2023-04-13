@@ -73,7 +73,7 @@ export class UserContentfulDataProvider implements UserDataProvider {
     };
   }
 
-  async fetchUsers(options: FetchUsersOptions) {
+  private async fetchUsers(options: FetchUsersOptions) {
     const { take = 8, skip = 0 } = options;
 
     const where = generateFetchQueryFilter(options);

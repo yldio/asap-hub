@@ -1,23 +1,22 @@
-import { createUserResponse } from '@asap-hub/fixtures';
-import { UserResponse } from '@asap-hub/model';
+import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import { AuthHandler, permissionHandler } from '@asap-hub/server-common';
 import { Router } from 'express';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
-import { listGroupsResponse } from '../fixtures/groups.fixtures';
 import { pageResponse } from '../fixtures/page.fixtures';
-import { getUserResponse } from '../fixtures/users.fixtures';
-import { groupControllerMock } from '../mocks/group-controller.mock';
+import { getUserResponse } from '../fixtures/user.fixtures';
 import { pageControllerMock } from '../mocks/page-controller.mock';
+import { projectControllerMock } from '../mocks/project-controller.mock';
 import { userControllerMock } from '../mocks/user-controller.mock';
 
 describe('Permission middleware', () => {
-  const mockUser = createUserResponse();
-  const nonOnboardedUserMock: UserResponse = {
+  const mockUser = getUserResponse();
+  const nonOnboardedUserMock: gp2Model.UserResponse = {
     ...mockUser,
     onboarded: false,
   };
-  const userMockFactory = jest.fn<UserResponse | undefined, []>();
+  const userMockFactory = jest.fn<gp2Model.UserResponse | undefined, []>();
   const authHandlerMock: AuthHandler = (req, _res, next) => {
     req.loggedInUser = userMockFactory();
     next();
@@ -32,7 +31,7 @@ describe('Permission middleware', () => {
   );
 
   const appWithMockedAuth = appFactory({
-    groupController: groupControllerMock,
+    projectController: projectControllerMock,
     userController: userControllerMock,
     pageController: pageControllerMock,
     authHandler: authHandlerMock,
@@ -83,10 +82,12 @@ describe('Permission middleware', () => {
         userMockFactory.mockReturnValueOnce(mockUser);
       });
 
-      test('Should allow access to /groups endpoint', async () => {
-        groupControllerMock.fetch.mockResolvedValueOnce(listGroupsResponse);
+      test('Should allow access to /projects endpoint', async () => {
+        projectControllerMock.fetch.mockResolvedValueOnce(
+          gp2Fixtures.createProjectsResponse(),
+        );
 
-        const response = await supertest(appWithMockedAuth).get('/groups');
+        const response = await supertest(appWithMockedAuth).get('/projects');
 
         expect(response.status).toBe(200);
       });
@@ -142,7 +143,7 @@ describe('Permission middleware', () => {
 
           const response = await supertest(appWithMockedAuth)
             .patch(`/users/${mockUser.id}`)
-            .send({ jobTitle: 'CEO' });
+            .send({ firstName: 'Tony' });
 
           expect(response.status).toBe(200);
         });

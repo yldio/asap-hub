@@ -7,6 +7,9 @@ import {
   getHttpLogger,
   Logger,
   MemoryCacheClient,
+  permissionHandler,
+  sentryTransactionIdMiddleware,
+  shouldHandleError,
 } from '@asap-hub/server-common';
 import {
   getAccessTokenFactory,
@@ -18,8 +21,9 @@ import {
   SquidexGraphql,
   SquidexRest,
 } from '@asap-hub/squidex';
+import * as Sentry from '@sentry/serverless';
 import cors from 'cors';
-import express, { Express } from 'express';
+import express, { Express, RequestHandler } from 'express';
 import 'express-async-errors';
 import {
   appName,
@@ -110,9 +114,6 @@ export const appFactory = (libs: Libs = {}): Express => {
   const logger = libs.logger || pinoLogger;
 
   // Middleware
-  app.use(getHttpLogger({ logger }));
-  app.use(cors());
-  app.use(express.json({ limit: '10MB' }));
 
   const errorHandler = errorHandlerFactory();
 
@@ -257,6 +258,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const contributingCohortController =
     libs.contributingCohortController ||
     new ContributingCohorts(contributingCohortDataProvider);
+
   /**
    * Public routes --->
    */
@@ -273,6 +275,8 @@ export const appFactory = (libs: Libs = {}): Express => {
       logger,
       assignUserToContext,
     );
+  const sentryTransactionIdHandler =
+    libs.sentryTransactionIdHandler || sentryTransactionIdMiddleware;
 
   // Routes
   const userPublicRoutes = userPublicRouteFactory(userController);
@@ -291,6 +295,15 @@ export const appFactory = (libs: Libs = {}): Express => {
   const externalUsersRoutes = externalUserRouteFactory(externalUsersController);
   const calendarRoutes = calendarRouteFactory(calendarController);
   const outputRoutes = outputRouteFactory(outputController);
+
+  /* istanbul ignore next */
+  if (libs.sentryRequestHandler) {
+    app.use(libs.sentryRequestHandler());
+  }
+  app.use(getHttpLogger({ logger }));
+  app.use(sentryTransactionIdHandler);
+  app.use(cors());
+  app.use(express.json({ limit: '10MB' }));
   /**
    * Public routes --->
    */
@@ -299,11 +312,18 @@ export const appFactory = (libs: Libs = {}): Express => {
   // Auth
   app.use(authHandler);
 
+  if (libs.mockRequestHandlers) {
+    app.use(libs.mockRequestHandlers);
+  }
+
+  app.use(userRoutes);
+  app.use(contributingCohortRoutes);
+  // Permission check
+  app.use(permissionHandler);
+
   /**
    * Routes requiring onboarding below
    */
-  app.use(userRoutes);
-  app.use(contributingCohortRoutes);
   app.use(newsRoutes);
   app.use(workingGroupRoutes);
   app.use(workingGroupNetworkRoutes);
@@ -321,6 +341,11 @@ export const appFactory = (libs: Libs = {}): Express => {
       message: 'Not Found',
     });
   });
+
+  /* istanbul ignore next */
+  if (libs.sentryErrorHandler) {
+    app.use(libs.sentryErrorHandler({ shouldHandleError }));
+  }
 
   app.use(errorHandler);
   app.disable('x-powered-by');
@@ -354,4 +379,10 @@ export type Libs = {
   workingGroupDataProvider?: WorkingGroupDataProvider;
   workingGroupNetworkController?: WorkingGroupNetworkController;
   workingGroupNetworkDataProvider?: WorkingGroupNetworkDataProvider;
+  sentryErrorHandler?: typeof Sentry.Handlers.errorHandler;
+  sentryRequestHandler?: typeof Sentry.Handlers.requestHandler;
+  sentryTransactionIdHandler?: RequestHandler;
+  // sentryTransactionIdHandler?: RequestHandler;
+  // extra handlers only for tests and local development
+  mockRequestHandlers?: RequestHandler[];
 };

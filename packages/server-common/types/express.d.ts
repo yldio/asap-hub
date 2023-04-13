@@ -1,3 +1,6 @@
+import { gp2, UserResponse } from '@asap-hub/model';
+import { APIGatewayProxyEventV2 } from 'aws-lambda';
+import { Logger } from 'pino-http';
 export {};
 
 declare global {
@@ -6,6 +9,7 @@ declare global {
     interface Request {
       context: APIGatewayProxyEventV2['requestContext'];
       span?: Span;
+      loggedInUser?: UserResponse | gp2.UserResponse;
     }
 
     interface Response {

@@ -1,7 +1,7 @@
 import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/contentful';
 import {
-  CalendarDataProvider,
   CalendarController,
+  CalendarDataProvider,
   EventController,
   EventDataProvider,
   UserResponse,
@@ -15,6 +15,9 @@ import {
   HttpLogger,
   Logger,
   MemoryCacheClient,
+  permissionHandler,
+  sentryTransactionIdMiddleware,
+  shouldHandleError,
 } from '@asap-hub/server-common';
 import {
   InputCalendar,
@@ -126,8 +129,6 @@ import {
 } from './data-providers/working-groups.data-provider';
 import { getContentfulRestClientFactory } from './dependencies/clients.dependencies';
 import { featureFlagMiddlewareFactory } from './middleware/feature-flag';
-import { permissionHandler } from './middleware/permission-handler';
-import { sentryTransactionIdMiddleware } from './middleware/sentry-transaction-id-handler';
 import { calendarRouteFactory } from './routes/calendars.route';
 import { dashboardRouteFactory } from './routes/dashboard.route';
 import { discoverRouteFactory } from './routes/discover.route';
@@ -147,7 +148,6 @@ import assignUserToContext from './utils/assign-user-to-context';
 import { getAuthToken } from './utils/auth';
 import { FeatureFlagDependencySwitch } from './utils/feature-flag';
 import pinoLogger from './utils/logger';
-import { shouldHandleError } from './utils/should-handle-error';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -423,7 +423,6 @@ export const appFactory = (libs: Libs = {}): Express => {
       logger,
       assignUserToContext,
     );
-
   const sentryTransactionIdHandler =
     libs.sentryTransactionIdHandler || sentryTransactionIdMiddleware;
 
@@ -569,9 +568,9 @@ export type Libs = {
   authHandler?: AuthHandler;
   httpLogger?: HttpLogger;
   logger?: Logger;
-  // extra handlers only for tests and local development
-  mockRequestHandlers?: RequestHandler[];
   sentryErrorHandler?: typeof Sentry.Handlers.errorHandler;
   sentryRequestHandler?: typeof Sentry.Handlers.requestHandler;
   sentryTransactionIdHandler?: RequestHandler;
+  // extra handlers only for tests and local development
+  mockRequestHandlers?: RequestHandler[];
 };

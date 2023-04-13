@@ -41,22 +41,6 @@ describe('squidex wrapper', () => {
     await expect(() => client.publish('42')).rejects.toThrow(GenericError);
   });
 
-  it('return GenericError on HTTP Error', async () => {
-    nock(baseUrl)
-      .put(`/api/content/${appName}/${collection}/42/status`)
-      .reply(500);
-
-    await expect(() => client.publish('42')).rejects.toThrow(GenericError);
-  });
-
-  it('return GenericError on HTTP Error', async () => {
-    nock(baseUrl)
-      .put(`/api/content/${appName}/${collection}/42/status`)
-      .reply(500);
-
-    await expect(() => client.publish('42')).rejects.toThrow(GenericError);
-  });
-
   it('publishes a specific document', async () => {
     nock(baseUrl)
       .put(`/api/content/${appName}/${collection}/42/status`, {

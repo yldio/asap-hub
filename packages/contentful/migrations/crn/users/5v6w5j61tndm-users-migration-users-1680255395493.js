@@ -99,9 +99,6 @@ module.exports.up = function (migration) {
     .required(true)
     .validations([
       {
-        unique: true,
-      },
-      {
         regexp: {
           pattern: '^\\w[\\w.-]*@([\\w-]+\\.)+[\\w-]+$',
           flags: null,

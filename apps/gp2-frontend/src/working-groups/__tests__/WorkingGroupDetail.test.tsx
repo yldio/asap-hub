@@ -51,10 +51,7 @@ const renderWorkingGroupDetail = async ({
                   gp2Routing.workingGroups({}).workingGroup.template
                 }
               >
-                <WorkingGroupDetail
-                  currentTime={new Date()}
-                  setBannerMessage={jest.fn()}
-                />
+                <WorkingGroupDetail currentTime={new Date()} />
               </Route>
             </MemoryRouter>
           </WhenReady>

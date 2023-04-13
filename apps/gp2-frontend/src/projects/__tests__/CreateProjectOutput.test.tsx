@@ -10,6 +10,7 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import NotificationMessages from '../../NotificationMessages';
 import { createOutput } from '../../outputs/api';
 import { getExternalUsers, getUsers } from '../../users/api';
 import CreateProjectOutput from '../CreateProjectOutput';
@@ -49,7 +50,9 @@ const renderCreateProjectOutput = async (
                     .createOutput.template
                 }
               >
-                <CreateProjectOutput setBannerMessage={jest.fn()} />
+                <NotificationMessages>
+                  <CreateProjectOutput />
+                </NotificationMessages>
               </Route>
             </MemoryRouter>
           </WhenReady>

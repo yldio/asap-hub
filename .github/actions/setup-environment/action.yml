@@ -104,6 +104,9 @@ outputs:
   gp2-aws-acm-certificate-arn:
     description: 'GP2 AWS ACM Certificate ARN'
     value: ${{ steps.vars.outputs.gp2-aws-acm-certificate-arn }}
+  gp2-max-contentful-envs:
+    description: 'Maximum GP2 Contentful environments'
+    value: ${{ steps.vars.outputs.gp2-max-contentful-envs }}
   gp2-contentful-env-id:
     description: 'GP2 Environment ID for Contentful'
     value: ${{ steps.vars.outputs.gp2-contentful-env-id }}

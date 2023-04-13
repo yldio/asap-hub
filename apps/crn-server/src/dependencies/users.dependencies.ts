@@ -4,6 +4,7 @@ import {
   InputUser,
   SquidexGraphql,
   SquidexRest,
+  SquidexRestClient,
 } from '@asap-hub/squidex';
 import {
   appName,
@@ -26,11 +27,18 @@ import {
 import { getAuthToken } from '../utils/auth';
 import { getContentfulRestClientFactory } from './clients.dependencies';
 
-const getRestClient = () =>
-  new SquidexRest<RestUser, InputUser>(getAuthToken, 'users', {
+let restClient: SquidexRestClient<RestUser, InputUser> | undefined;
+
+const getRestClient = (): SquidexRestClient<RestUser, InputUser> => {
+  if (restClient) {
+    return restClient;
+  }
+  restClient = new SquidexRest<RestUser, InputUser>(getAuthToken, 'users', {
     appName,
     baseUrl,
   });
+  return restClient;
+};
 
 export const getUserDataProvider = (): UserDataProvider => {
   if (isContentfulEnabledV2) {

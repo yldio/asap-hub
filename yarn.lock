@@ -424,7 +424,6 @@ __metadata:
     "@graphql-tools/schema": 9.0.17
     "@graphql-typed-document-node/core": 3.2.0
     "@types/jest": ^29.4.0
-    "@types/json-patch": ^0
     "@types/node": 18.15.11
     contentful-cli: 1.19.1
     contentful-management: 10.31.2
@@ -433,7 +432,6 @@ __metadata:
     graphql-request: 3.4.0
     graphql-tag: 2.12.6
     graphql-typescript-integration: 1.2.1
-    json-patch: ^0.7.0
     prettier: 2.8.7
     ts-node: 10.9.1
   languageName: unknown
@@ -14954,7 +14952,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/json-patch@npm:0.0.30, @types/json-patch@npm:^0":
+"@types/json-patch@npm:0.0.30":
   version: 0.0.30
   resolution: "@types/json-patch@npm:0.0.30"
   checksum: 279092cedb5fabd653d2865fff0afb39fd517db5745ed5fdf01a3f00e3dff9317395c699211e7c2a36b903a6dfbe1be173ba361c9fd7c9bccd160d5828b678ce
@@ -31446,13 +31444,6 @@ __metadata:
   version: 2.3.1
   resolution: "json-parse-even-better-errors@npm:2.3.1"
   checksum: 798ed4cf3354a2d9ccd78e86d2169515a0097a5c133337807cdf7f1fc32e1391d207ccfc276518cc1d7d8d4db93288b8a50ba4293d212ad1336e52a8ec0a941f
-  languageName: node
-  linkType: hard
-
-"json-patch@npm:^0.7.0":
-  version: 0.7.0
-  resolution: "json-patch@npm:0.7.0"
-  checksum: a220a7a295a73dfca244ed4f1941c134d841951b124bc0e452484d5e5c573c4bfbdcfd92a9842cb773db014e57061932a42a8531b9927e275b6d893222872c44
   languageName: node
   linkType: hard
 

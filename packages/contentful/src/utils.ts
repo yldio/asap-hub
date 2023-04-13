@@ -1,4 +1,3 @@
-import type { OpPatch } from 'json-patch';
 import { Entry } from 'contentful-management';
 import { Document, Node } from '@contentful/rich-text-types';
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer';
@@ -126,7 +125,7 @@ export const patchAndPublish = async (
   entry: Entry,
   fields: Record<string, unknown>,
 ): Promise<void> => {
-  const patch: OpPatch[] = Object.entries(fields).map(([key, value]) => ({
+  const patch: Parameters<Entry["patch"]>[0] = Object.entries(fields).map(([key, value]) => ({
     op: Object.prototype.hasOwnProperty.call(entry.fields, key)
       ? 'replace'
       : 'add',

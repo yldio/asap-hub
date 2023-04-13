@@ -479,6 +479,76 @@ describe('Teams data provider', () => {
 
         expect(result?.members).toEqual([]);
       });
+
+      test('should sort team members by role priority', async () => {
+        const contentfulGraphQLResponse = {
+          teams: {
+            ...getContentfulGraphqlTeam(),
+            linkedFrom: {
+              teamMembershipCollection: {
+                total: 1,
+                items: [
+                  {
+                    role: 'Key Personnel',
+                    inactiveSinceDate: null,
+                    linkedFrom: {
+                      usersCollection: {
+                        total: 1,
+                        items: [{
+                          ...getContentfulGraphqlTeamMembers(),
+                          sys: {
+                            id: '1',
+                          },
+                        }],
+                      },
+                    },
+                  },
+                  {
+                    role: 'Lead PI (Core Leadership)',
+                    inactiveSinceDate: null,
+                    linkedFrom: {
+                      usersCollection: {
+                        total: 1,
+                        items: [{
+                          ...getContentfulGraphqlTeamMembers(),
+                          sys: {
+                            id: '2',
+                          },
+                        }],
+                      },
+                    },
+                  },
+                  {
+                    role: 'Project Manager',
+                    inactiveSinceDate: null,
+                    linkedFrom: {
+                      usersCollection: {
+                        total: 1,
+                        items: [{
+                          ...getContentfulGraphqlTeamMembers(),
+                          sys: {
+                            id: '3',
+                          },
+                        }],
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          contentfulGraphQLResponse,
+        );
+        const result = await teamDataProvider.fetchById('1');
+        expect(result?.members).toEqual([
+          expect.objectContaining({ role: 'Lead PI (Core Leadership)', id: '2' }),
+          expect.objectContaining({ role: 'Project Manager', id: '3' }),
+          expect.objectContaining({ role: 'Key Personnel', id: '1' }),
+        ]);
+      });
     });
 
     describe('labs', () => {

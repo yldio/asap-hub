@@ -582,11 +582,10 @@ describe('ResearchOutputs controller', () => {
         { publish: false },
       );
 
-      expect(result).toEqual(getResearchOutputResponse());
-
       const researchOutputUpdateDataObject =
         getResearchOutputUpdateDataObject();
 
+      expect(result).toEqual(getResearchOutputResponse());
       expect(researchOutputDataProviderMock.update).toBeCalledWith(
         researchOutputId,
         researchOutputUpdateDataObject,
@@ -644,11 +643,10 @@ describe('ResearchOutputs controller', () => {
           { publish: false },
         );
 
-        expect(result).toEqual(getResearchOutputResponse());
-
         const researchOutputUpdateDataObject =
           getResearchOutputUpdateDataObject();
 
+        expect(result).toEqual(getResearchOutputResponse());
         expect(researchOutputDataProviderMock.update).toBeCalledWith(
           researchOutputId,
           {
@@ -675,10 +673,10 @@ describe('ResearchOutputs controller', () => {
           researchOutputUpdateData,
         );
 
-        expect(result).toEqual(getResearchOutputResponse());
-
         const researchOutputUpdateDataObject =
           getResearchOutputUpdateDataObject();
+
+        expect(result).toEqual(getResearchOutputResponse());
         expect(researchOutputDataProviderMock.update).toBeCalledWith(
           researchOutputId,
           {

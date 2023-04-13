@@ -324,7 +324,7 @@ module.exports.up = function (migration) {
   users
     .createField('reachOut')
     .name('Reach Out')
-    .type('Symbol')
+    .type('Text')
     .localized(false)
     .required(false)
     .validations([])
@@ -429,7 +429,7 @@ module.exports.up = function (migration) {
 
   users
     .createField('role')
-    .name('Role')
+    .name('ASAP Hub Role')
     .type('Symbol')
     .localized(false)
     .required(true)
@@ -544,17 +544,17 @@ module.exports.up = function (migration) {
   users.changeFieldControl('github', 'builtin', 'singleLine', {});
   users.changeFieldControl('googleScholar', 'builtin', 'singleLine', {});
   users.changeFieldControl('researchGate', 'builtin', 'singleLine', {});
-  users.changeFieldControl('responsibilities', 'builtin', 'markdown', {});
-  users.changeFieldControl('researchInterests', 'builtin', 'markdown', {});
+  users.changeFieldControl('responsibilities', 'builtin', 'multipleLine', {});
+  users.changeFieldControl('researchInterests', 'builtin', 'multipleLine', {});
 
-  users.changeFieldControl('reachOut', 'builtin', 'singleLine', {
+  users.changeFieldControl('reachOut', 'builtin', 'multipleLine', {
     helpText: 'Reach out reasons (only relevant for \\"Staff\\" users)',
   });
 
   users.changeFieldControl(
     'expertiseAndResourceDescription',
     'builtin',
-    'markdown',
+    'multipleLine',
     {},
   );
   users.changeFieldControl(
@@ -564,12 +564,16 @@ module.exports.up = function (migration) {
     {},
   );
   users.changeFieldControl('questions', 'builtin', 'tagEditor', {});
-  users.changeFieldControl('biography', 'builtin', 'markdown', {});
-  users.changeFieldControl('adminNotes', 'builtin', 'markdown', {});
+  users.changeFieldControl('biography', 'builtin', 'multipleLine', {});
+  users.changeFieldControl('adminNotes', 'builtin', 'multipleLine', {});
   users.changeFieldControl('onboarded', 'builtin', 'boolean', {});
-  users.changeFieldControl('dismissedGettingStarted', 'builtin', 'boolean', {});
+  users.changeFieldControl('dismissedGettingStarted', 'builtin', 'boolean', {
+    helpText: 'Use this to hide the Getting Started component on the home page',
+  });
   users.changeFieldControl('connections', 'builtin', 'tagEditor', {});
-  users.changeFieldControl('role', 'builtin', 'dropdown', {});
+  users.changeFieldControl('role', 'builtin', 'dropdown', {
+    helpText: 'Role on the ASAP Hub'
+  });
   users.changeFieldControl('orcidLastSyncDate', 'builtin', 'datePicker', {});
   users.changeFieldControl(
     'orcidLastModifiedDate',

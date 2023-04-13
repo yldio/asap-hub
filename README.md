@@ -207,13 +207,13 @@ If you don't understand these concepts, you will need to familiarise yourself wi
 Once you've completed the steps above, you can create a new migration file with:
 
 ```sh
-yarn workspace @asap-hub/contentful ctf-migrate create <name> -c <content_type>
+   MIGRATION_TYPE=<content_type> MIGRATION_NAME=<name> yarn contentful:migration:generate:<app_name>
 ```
 
 So if you wanted to add a `foo` field to the `bar` content type:
 
 ```sh
-yarn workspace @asap-hub/contentful ctf-migrate create add-foo-field -c bar
+   MIGRATION_TYPE=bar MIGRATION_NAME=add-foo-field yarn contentful:migration:generate:crn
 ```
 
 Note: the `content_type` is the slug, not the display name, so `externalAuthors` not `External Authors`.
@@ -235,10 +235,8 @@ So, if you want to create or modify a content type using the approach above, you
 4. Run the script to generate the migration
 
    ```sh
-   yarn generate:migration:crn -c <content_type>
+   MIGRATION_TYPE=media yarn contentful:migration:generate:gp2
    ```
-
-   If you don't pass `-c <content_type>` flag, it will generate the migration for all the changes you made, not only a specific content type.
 
    This will generate a file with the `up` part of the migration. Be aware that you might need to edit a few things. For example, if you are editing an existing content model, you will have to change `createContentType` to `editContentType` in the generated migration.
 
@@ -268,7 +266,8 @@ yarn contentful:migration:count:gp2
 To run outstanding migrations, first do a dry run:
 
 ```sh
-yarn workspace @asap-hub/contentful ctf-migrate up --all --dry-run
+yarn contentful:migration:dryrun:crn
+yarn contentful:migration:dryrun:gp2
 ```
 
 Then repeat the command without `--dry-run` if all looks good.

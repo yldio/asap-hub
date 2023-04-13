@@ -259,7 +259,8 @@ yarn workspace @asap-hub/contentful ctf-migrate init
 If you want to know the number of migrations which have not yet been applied to the target environment:
 
 ```sh
-yarn workspace @asap-hub/contentful space:migrate:crn:count
+yarn contentful:migration:count:crn
+yarn contentful:migration:count:gp2
 ```
 
 ### Running Migrations

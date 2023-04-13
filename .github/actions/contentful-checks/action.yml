@@ -36,7 +36,7 @@ runs:
       id: count-outstanding-migrations
       shell: bash
       run: |
-        OUTSTANDING_MIGRATIONS=$(yarn workspace @asap-hub/contentful space:migrate:crn:count)
+        OUTSTANDING_MIGRATIONS=$(yarn workspace @asap-hub/contentful space:migrate:count)
         echo "OUTSTANDING_MIGRATIONS=$OUTSTANDING_MIGRATIONS" >> $GITHUB_ENV
       env:
         CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
@@ -101,7 +101,7 @@ runs:
           echo "New Contentful environment required but has not yet been created."
           echo "migrations-up-to-date=true" >> $GITHUB_OUTPUT
         else
-          OUTSTANDING_MIGRATIONS=$(yarn workspace @asap-hub/contentful space:migrate:crn:count)
+          OUTSTANDING_MIGRATIONS=$(yarn workspace @asap-hub/contentful space:migrate:count)
 
           if [[ "$OUTSTANDING_MIGRATIONS" == "0" ]]; then
             echo "All migrations have been run on target environment."

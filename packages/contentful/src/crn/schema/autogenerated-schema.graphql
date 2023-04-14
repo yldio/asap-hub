@@ -264,7 +264,9 @@ input DashboardFilter {
   AND: [DashboardFilter]
   OR: [DashboardFilter]
   contentfulMetadata: ContentfulMetadataFilter
+  news: cfNewsNestedFilter
   newsCollection_exists: Boolean
+  pages: cfPagesNestedFilter
   pagesCollection_exists: Boolean
   sys: SysFilter
 }
@@ -1142,6 +1144,7 @@ input TeamsFilter {
   projectTitle_not_contains: String
   projectTitle_not_in: [String]
   sys: SysFilter
+  tools: cfExternalToolsNestedFilter
   toolsCollection_exists: Boolean
 }
 
@@ -1348,6 +1351,7 @@ input UsersFilter {
   jobTitle_not: String
   jobTitle_not_contains: String
   jobTitle_not_in: [String]
+  labs: cfLabsNestedFilter
   labsCollection_exists: Boolean
   lastName: String
   lastName_contains: String
@@ -1438,6 +1442,7 @@ input UsersFilter {
   role_not_contains: String
   role_not_in: [String]
   sys: SysFilter
+  teams: cfTeamMembershipNestedFilter
   teamsCollection_exists: Boolean
   twitter: String
   twitter_contains: String
@@ -1512,8 +1517,6 @@ enum UsersOrder {
   orcidLastSyncDate_DESC
   orcid_ASC
   orcid_DESC
-  reachOut_ASC
-  reachOut_DESC
   researchGate_ASC
   researchGate_DESC
   researcherId_ASC
@@ -1541,6 +1544,172 @@ type UsersTeamsCollection {
   limit: Int!
   skip: Int!
   total: Int!
+}
+
+input cfExternalToolsNestedFilter {
+  AND: [cfExternalToolsNestedFilter]
+  OR: [cfExternalToolsNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  description: String
+  description_contains: String
+  description_exists: Boolean
+  description_in: [String]
+  description_not: String
+  description_not_contains: String
+  description_not_in: [String]
+  name: String
+  name_contains: String
+  name_exists: Boolean
+  name_in: [String]
+  name_not: String
+  name_not_contains: String
+  name_not_in: [String]
+  sys: SysFilter
+  url: String
+  url_contains: String
+  url_exists: Boolean
+  url_in: [String]
+  url_not: String
+  url_not_contains: String
+  url_not_in: [String]
+}
+
+input cfLabsNestedFilter {
+  AND: [cfLabsNestedFilter]
+  OR: [cfLabsNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  name: String
+  name_contains: String
+  name_exists: Boolean
+  name_in: [String]
+  name_not: String
+  name_not_contains: String
+  name_not_in: [String]
+  sys: SysFilter
+}
+
+input cfNewsNestedFilter {
+  AND: [cfNewsNestedFilter]
+  OR: [cfNewsNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  frequency: String
+  frequency_contains: String
+  frequency_exists: Boolean
+  frequency_in: [String]
+  frequency_not: String
+  frequency_not_contains: String
+  frequency_not_in: [String]
+  link: String
+  linkText: String
+  linkText_contains: String
+  linkText_exists: Boolean
+  linkText_in: [String]
+  linkText_not: String
+  linkText_not_contains: String
+  linkText_not_in: [String]
+  link_contains: String
+  link_exists: Boolean
+  link_in: [String]
+  link_not: String
+  link_not_contains: String
+  link_not_in: [String]
+  publishDate: DateTime
+  publishDate_exists: Boolean
+  publishDate_gt: DateTime
+  publishDate_gte: DateTime
+  publishDate_in: [DateTime]
+  publishDate_lt: DateTime
+  publishDate_lte: DateTime
+  publishDate_not: DateTime
+  publishDate_not_in: [DateTime]
+  shortText: String
+  shortText_contains: String
+  shortText_exists: Boolean
+  shortText_in: [String]
+  shortText_not: String
+  shortText_not_contains: String
+  shortText_not_in: [String]
+  sys: SysFilter
+  text_contains: String
+  text_exists: Boolean
+  text_not_contains: String
+  thumbnail_exists: Boolean
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
+}
+
+input cfPagesNestedFilter {
+  AND: [cfPagesNestedFilter]
+  OR: [cfPagesNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  link: String
+  linkText: String
+  linkText_contains: String
+  linkText_exists: Boolean
+  linkText_in: [String]
+  linkText_not: String
+  linkText_not_contains: String
+  linkText_not_in: [String]
+  link_contains: String
+  link_exists: Boolean
+  link_in: [String]
+  link_not: String
+  link_not_contains: String
+  link_not_in: [String]
+  path: String
+  path_contains: String
+  path_exists: Boolean
+  path_in: [String]
+  path_not: String
+  path_not_contains: String
+  path_not_in: [String]
+  shortText: String
+  shortText_contains: String
+  shortText_exists: Boolean
+  shortText_in: [String]
+  shortText_not: String
+  shortText_not_contains: String
+  shortText_not_in: [String]
+  sys: SysFilter
+  text_contains: String
+  text_exists: Boolean
+  text_not_contains: String
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
+}
+
+input cfTeamMembershipNestedFilter {
+  AND: [cfTeamMembershipNestedFilter]
+  OR: [cfTeamMembershipNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  inactiveSinceDate: DateTime
+  inactiveSinceDate_exists: Boolean
+  inactiveSinceDate_gt: DateTime
+  inactiveSinceDate_gte: DateTime
+  inactiveSinceDate_in: [DateTime]
+  inactiveSinceDate_lt: DateTime
+  inactiveSinceDate_lte: DateTime
+  inactiveSinceDate_not: DateTime
+  inactiveSinceDate_not_in: [DateTime]
+  role: String
+  role_contains: String
+  role_exists: Boolean
+  role_in: [String]
+  role_not: String
+  role_not_contains: String
+  role_not_in: [String]
+  sys: SysFilter
+  team_exists: Boolean
 }
 
 input cfTeamsNestedFilter {

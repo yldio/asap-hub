@@ -89,6 +89,9 @@ jobs:
       crn-on-branch-env: ${{ needs.setup.outputs.crn-on-branch-env }}
       crn-contentful-env-exists: ${{ needs.setup.outputs.crn-contentful-env-exists }}
       crn-contentful-env: ${{ needs.setup.outputs.crn-contentful-env }}
+      gp2-on-branch-env: ${{ needs.setup.outputs.gp2-on-branch-env }}
+      gp2-contentful-env-exists: ${{ needs.setup.outputs.gp2-contentful-env-exists }}
+      gp2-contentful-env: ${{ needs.setup.outputs.gp2-contentful-env }}
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

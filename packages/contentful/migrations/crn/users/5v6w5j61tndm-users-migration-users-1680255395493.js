@@ -100,7 +100,7 @@ module.exports.up = function (migration) {
     .validations([
       {
         regexp: {
-          pattern: '^\\w[\\w.-]*@([\\w-]+\\.)+[\\w-]+$',
+          pattern: '^\\w[\\w.-+]*@([\\w-]+\\.)+[\\w-]+$',
           flags: null,
         },
       },
@@ -190,7 +190,7 @@ module.exports.up = function (migration) {
     .validations([
       {
         regexp: {
-          pattern: '^\\w[\\w.-]*@([\\w-]+\\.)+[\\w-]+$',
+          pattern: '^\\w[\\w.-+]*@([\\w-]+\\.)+[\\w-]+$',
           flags: null,
         },
       },

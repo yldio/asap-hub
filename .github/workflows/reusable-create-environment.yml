@@ -54,6 +54,9 @@ on:
       CRN_CONTENTFUL_ACCESS_TOKEN:
         description: 'CRN Contentful Access Token'
         required: true
+      GP2_CONTENTFUL_ACCESS_TOKEN:
+        description: 'GP2 Contentful Access Token'
+        required: true
 
 jobs:
   crn-contentful:

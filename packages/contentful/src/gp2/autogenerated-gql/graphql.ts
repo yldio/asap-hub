@@ -418,6 +418,76 @@ export enum MediaOrder {
   UrlDesc = 'url_DESC',
 }
 
+/** Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/migration) */
+export type Migration = Entry & {
+  contentTypeId?: Maybe<Scalars['String']>;
+  contentfulMetadata: ContentfulMetadata;
+  linkedFrom?: Maybe<MigrationLinkingCollections>;
+  state?: Maybe<Scalars['JSON']>;
+  sys: Sys;
+};
+
+/** Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/migration) */
+export type MigrationContentTypeIdArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/migration) */
+export type MigrationLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/migration) */
+export type MigrationStateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type MigrationCollection = {
+  items: Array<Maybe<Migration>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type MigrationFilter = {
+  AND?: InputMaybe<Array<InputMaybe<MigrationFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<MigrationFilter>>>;
+  contentTypeId?: InputMaybe<Scalars['String']>;
+  contentTypeId_contains?: InputMaybe<Scalars['String']>;
+  contentTypeId_exists?: InputMaybe<Scalars['Boolean']>;
+  contentTypeId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  contentTypeId_not?: InputMaybe<Scalars['String']>;
+  contentTypeId_not_contains?: InputMaybe<Scalars['String']>;
+  contentTypeId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  state_exists?: InputMaybe<Scalars['Boolean']>;
+  sys?: InputMaybe<SysFilter>;
+};
+
+export type MigrationLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type MigrationLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum MigrationOrder {
+  ContentTypeIdAsc = 'contentTypeId_ASC',
+  ContentTypeIdDesc = 'contentTypeId_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/pages) */
 export type Pages = Entry & {
   contentfulMetadata: ContentfulMetadata;
@@ -573,6 +643,8 @@ export type Query = {
   entryCollection?: Maybe<EntryCollection>;
   media?: Maybe<Media>;
   mediaCollection?: Maybe<MediaCollection>;
+  migration?: Maybe<Migration>;
+  migrationCollection?: Maybe<MigrationCollection>;
   pages?: Maybe<Pages>;
   pagesCollection?: Maybe<PagesCollection>;
 };
@@ -614,6 +686,21 @@ export type QueryMediaCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<MediaFilter>;
+};
+
+export type QueryMigrationArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryMigrationCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<MigrationOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<MigrationFilter>;
 };
 
 export type QueryPagesArgs = {
@@ -691,6 +778,7 @@ export type PageContentFragment = Pick<
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
                   })
+              | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
             >
           >;
@@ -730,6 +818,9 @@ export type FetchPagesQuery = {
                         | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                               sys: Pick<Sys, 'id'>;
                             })
+                        | ({ __typename: 'Migration' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                       >
                     >;

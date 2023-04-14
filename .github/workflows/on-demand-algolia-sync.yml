@@ -47,11 +47,12 @@ jobs:
         id: get-contentful-state
         uses: ./.github/actions/contentful-checks
         with:
-          pr-number: ${{ github.event.inputs.pr-number}}
           contentful-space-id: ${{ steps.setup.outputs.crn-contentful-space-id }}
           contentful-master-env: ${{ steps.setup.outputs.contentful-environment }}
           contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           max-contentful-envs: ${{ steps.setup.outputs.max-contentful-envs }}
+          contentful-environment-id: ${{ steps.setup.outputs.crn-contentful-env-id }}
+          app: crn
   algolia:
     uses: ./.github/workflows/reusable-algolia-sync.yml
     with:

@@ -332,6 +332,54 @@ enum MediaOrder {
   url_DESC
 }
 
+"""Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/migration)"""
+type Migration implements Entry {
+  contentTypeId(locale: String): String
+  contentfulMetadata: ContentfulMetadata!
+  linkedFrom(allowedLocales: [String]): MigrationLinkingCollections
+  state(locale: String): JSON
+  sys: Sys!
+}
+
+type MigrationCollection {
+  items: [Migration]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input MigrationFilter {
+  AND: [MigrationFilter]
+  OR: [MigrationFilter]
+  contentTypeId: String
+  contentTypeId_contains: String
+  contentTypeId_exists: Boolean
+  contentTypeId_in: [String]
+  contentTypeId_not: String
+  contentTypeId_not_contains: String
+  contentTypeId_not_in: [String]
+  contentfulMetadata: ContentfulMetadataFilter
+  state_exists: Boolean
+  sys: SysFilter
+}
+
+type MigrationLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+}
+
+enum MigrationOrder {
+  contentTypeId_ASC
+  contentTypeId_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/pages)"""
 type Pages implements Entry {
   contentfulMetadata: ContentfulMetadata!
@@ -448,6 +496,8 @@ type Query {
   entryCollection(limit: Int = 100, locale: String, order: [EntryOrder], preview: Boolean, skip: Int = 0, where: EntryFilter): EntryCollection
   media(id: String!, locale: String, preview: Boolean): Media
   mediaCollection(limit: Int = 100, locale: String, order: [MediaOrder], preview: Boolean, skip: Int = 0, where: MediaFilter): MediaCollection
+  migration(id: String!, locale: String, preview: Boolean): Migration
+  migrationCollection(limit: Int = 100, locale: String, order: [MigrationOrder], preview: Boolean, skip: Int = 0, where: MigrationFilter): MigrationCollection
   pages(id: String!, locale: String, preview: Boolean): Pages
   pagesCollection(limit: Int = 100, locale: String, order: [PagesOrder], preview: Boolean, skip: Int = 0, where: PagesFilter): PagesCollection
 }

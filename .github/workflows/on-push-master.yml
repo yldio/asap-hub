@@ -74,6 +74,7 @@ jobs:
     with:
       environment-name: Development
       crn-contentful-env: Development
+      gp2-contentful-env: Development
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -121,6 +122,7 @@ jobs:
     with:
       environment-name: Production
       crn-contentful-env: Production
+      gp2-contentful-env: Production
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

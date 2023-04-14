@@ -4,6 +4,8 @@ import {
   FetchUsersOptions,
   inactiveUserTag,
   UserResponse,
+  UserDataObject,
+  UserSocialLinks,
 } from '@asap-hub/model';
 import { InputUser, RestUser, SquidexRest } from '@asap-hub/squidex';
 import nock, { DataMatcherMap } from 'nock';
@@ -385,6 +387,76 @@ describe('User data provider', () => {
         expect(result?._tags).toEqual([tagValue]);
       },
     );
+
+    describe('default values', () => {
+      const stringFields = {
+        email: null,
+        firstName: null,
+        lastName: null,
+      };
+      const fields = {
+        contactEmail: null,
+        biography: null,
+        jobTitle: null,
+        city: null,
+        country: null,
+        institution: null,
+        orcid: null,
+        orcidLastModifiedDate: null,
+        orcidLastSyncDate: null,
+        alumniLocation: null,
+        alumniSinceDate: null,
+        reachOut: null,
+        researchInterests: null,
+        responsibilities: null,
+        expertiseAndResourceDescription: null,
+      };
+      const social = {
+        website1: null,
+        website2: null,
+        linkedIn: null,
+        orcid: null,
+        researcherId: null,
+        twitter: null,
+        github: null,
+        googleScholar: null,
+        researchGate: null,
+      };
+
+      let result: UserDataObject | null = null;
+
+      beforeAll(async () => {
+        const mockResponse = getSquidexUserGraphqlResponse();
+        mockResponse.findUsersContent!.flatData = {
+          ...mockResponse.findUsersContent!.flatData,
+          ...stringFields,
+          ...fields,
+          social: [social],
+        };
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        result = await userDataProvider.fetchById('123');
+      });
+
+      test.each(Object.keys(stringFields) as (keyof UserDataObject)[])(
+        '%s should default null value to an empty string',
+        async (key) => {
+          expect(result?.[key]).toEqual('');
+        },
+      );
+      test.each(Object.keys(fields) as (keyof UserDataObject)[])(
+        '%s should default null value to undefined',
+        async (key) => {
+          expect(result?.[key]).toBeUndefined();
+        },
+      );
+      test.each(Object.keys(social) as (keyof UserSocialLinks)[])(
+        'social.%s should default null value to undefined',
+        async (key) => {
+          expect(result?.social?.[key]).toBeUndefined();
+        },
+      );
+    });
   });
 
   describe('Update', () => {

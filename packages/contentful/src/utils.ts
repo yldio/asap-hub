@@ -125,15 +125,17 @@ export const patchAndPublish = async (
   entry: Entry,
   fields: Record<string, unknown>,
 ): Promise<void> => {
-  const patch: Parameters<Entry["patch"]>[0] = Object.entries(fields).map(([key, value]) => ({
-    op: Object.prototype.hasOwnProperty.call(entry.fields, key)
-      ? 'replace'
-      : 'add',
-    path: `/fields/${key}`,
-    value: {
-      'en-US': value,
-    },
-  }));
+  const patch: Parameters<Entry['patch']>[0] = Object.entries(fields).map(
+    ([key, value]) => ({
+      op: Object.prototype.hasOwnProperty.call(entry.fields, key)
+        ? 'replace'
+        : 'add',
+      path: `/fields/${key}`,
+      value: {
+        'en-US': value,
+      },
+    }),
+  );
   const result = await entry.patch(patch);
   await result.publish();
 };

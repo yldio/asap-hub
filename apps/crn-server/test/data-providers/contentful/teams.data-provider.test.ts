@@ -494,12 +494,14 @@ describe('Teams data provider', () => {
                     linkedFrom: {
                       usersCollection: {
                         total: 1,
-                        items: [{
-                          ...getContentfulGraphqlTeamMembers(),
-                          sys: {
-                            id: '1',
+                        items: [
+                          {
+                            ...getContentfulGraphqlTeamMembers(),
+                            sys: {
+                              id: '1',
+                            },
                           },
-                        }],
+                        ],
                       },
                     },
                   },
@@ -509,12 +511,14 @@ describe('Teams data provider', () => {
                     linkedFrom: {
                       usersCollection: {
                         total: 1,
-                        items: [{
-                          ...getContentfulGraphqlTeamMembers(),
-                          sys: {
-                            id: '2',
+                        items: [
+                          {
+                            ...getContentfulGraphqlTeamMembers(),
+                            sys: {
+                              id: '2',
+                            },
                           },
-                        }],
+                        ],
                       },
                     },
                   },
@@ -524,12 +528,14 @@ describe('Teams data provider', () => {
                     linkedFrom: {
                       usersCollection: {
                         total: 1,
-                        items: [{
-                          ...getContentfulGraphqlTeamMembers(),
-                          sys: {
-                            id: '3',
+                        items: [
+                          {
+                            ...getContentfulGraphqlTeamMembers(),
+                            sys: {
+                              id: '3',
+                            },
                           },
-                        }],
+                        ],
                       },
                     },
                   },
@@ -544,7 +550,10 @@ describe('Teams data provider', () => {
         );
         const result = await teamDataProvider.fetchById('1');
         expect(result?.members).toEqual([
-          expect.objectContaining({ role: 'Lead PI (Core Leadership)', id: '2' }),
+          expect.objectContaining({
+            role: 'Lead PI (Core Leadership)',
+            id: '2',
+          }),
           expect.objectContaining({ role: 'Project Manager', id: '3' }),
           expect.objectContaining({ role: 'Key Personnel', id: '1' }),
         ]);

@@ -572,7 +572,7 @@ module.exports.up = function (migration) {
   });
   users.changeFieldControl('connections', 'builtin', 'tagEditor', {});
   users.changeFieldControl('role', 'builtin', 'dropdown', {
-    helpText: 'Role on the ASAP Hub'
+    helpText: 'Role on the ASAP Hub',
   });
   users.changeFieldControl('orcidLastSyncDate', 'builtin', 'datePicker', {});
   users.changeFieldControl(

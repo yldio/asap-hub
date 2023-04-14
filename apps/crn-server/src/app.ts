@@ -287,7 +287,8 @@ export const appFactory = (libs: Libs = {}): Express => {
     new TutorialsSquidexDataProvider(squidexGraphqlClient);
   featureFlagDependencySwitch.setDependency(
     'assets',
-    libs.assetSquidexDataProvider || new AssetSquidexDataProvider(userRestClient),
+    libs.assetSquidexDataProvider ||
+      new AssetSquidexDataProvider(userRestClient),
     'IS_CONTENTFUL_ENABLED_V2',
     false,
   );

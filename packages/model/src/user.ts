@@ -249,5 +249,4 @@ export type FetchUsersFilter =
 
 export type FetchUsersOptions = Omit<FetchOptions<FetchUsersFilter>, 'search'>;
 
-
 export type UserRole = 'Staff' | 'Member' | 'None';

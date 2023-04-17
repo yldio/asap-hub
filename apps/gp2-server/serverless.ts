@@ -570,6 +570,24 @@ const serverlessConfig: AWS = {
           },
         },
       },
+      ContentfulBackupBucket: {
+        Type: 'AWS::S3::Bucket',
+        Condition: 'IsDevOrProd',
+        DeletionPolicy: 'Retain',
+        Properties: {
+          BucketName:
+            '${self:service}-${self:provider.stage}-contentful-backup',
+          LifecycleConfiguration: {
+            Rules: [
+              {
+                Id: 'delete-after-3-months',
+                Status: 'Enabled',
+                ExpirationInDays: 90,
+              },
+            ],
+          },
+        },
+      },
       CloudFrontOriginAccessIdentityFrontend: {
         Type: 'AWS::CloudFront::CloudFrontOriginAccessIdentity',
         Properties: {

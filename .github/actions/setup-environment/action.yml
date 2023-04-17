@@ -30,7 +30,7 @@ outputs:
     description: 'Cache Prefix Transpile'
     value: ${{ steps.vars.outputs.cache-prefix-transpile }}
   contentful-environment:
-    description: 'Contentful Environment
+    description: 'Contentful Environment'
     value: ${{ steps.vars.outputs.contentful-environment }}
   crn-algolia-api-key-name:
     description: 'CRN Algolia Api key SSM Name'

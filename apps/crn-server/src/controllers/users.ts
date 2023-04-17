@@ -9,10 +9,8 @@ import {
 } from '@asap-hub/model';
 import Intercept from 'apr-intercept';
 import { AssetDataProvider } from '../data-providers/assets.data-provider';
-import {
-  parseUserToResponse,
-  UserDataProvider,
-} from '../data-providers/users.data-provider';
+import { UserDataProvider } from '../data-providers/types';
+import { parseUserToResponse } from '../data-providers/users.data-provider';
 import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
 
 export interface UserController extends UserControllerBase<UserResponse> {
@@ -78,11 +76,11 @@ export default class Users implements UserController {
     avatar: Buffer,
     contentType: string,
   ): Promise<UserResponse> {
-    const assetId = await this.assetDataProvider.create(
+    const assetId = await this.assetDataProvider.create({
       id,
       avatar,
       contentType,
-    );
+    });
     return this.update(id, { avatar: assetId });
   }
 

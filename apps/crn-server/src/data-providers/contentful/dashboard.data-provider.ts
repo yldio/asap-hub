@@ -5,7 +5,7 @@ import {
   FetchDashboardQueryVariables,
 } from '@asap-hub/contentful';
 import { DashboardDataObject } from '@asap-hub/model';
-import { DashboardDataProvider } from '../dashboard.data-provider';
+import { DashboardDataProvider } from '../types';
 import { NewsItem, parseContentfulGraphQlNews } from './news.data-provider';
 import { PageItem, parseContentfulGraphQlPages } from './pages.data-provider';
 

@@ -177,4 +177,10 @@ describe('Research Tags data provider', () => {
       });
     });
   });
+
+  describe('Fetch-by-id', () => {
+    test('should throw an error', async () => {
+      await expect(researchTagDataProvider.fetchById()).rejects.toThrow();
+    });
+  });
 });

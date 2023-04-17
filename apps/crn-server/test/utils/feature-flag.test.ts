@@ -1,7 +1,9 @@
 import { FeatureFlagDependencySwitch } from '../../src/utils/feature-flag';
-import { userDataProviderMock } from '../mocks/user-data-provider.mock';
+import { getDataProviderMock } from '../mocks/data-provider.mock';
 
 describe('Feature Flag Dependency Switch', () => {
+  const userDataProviderMock = getDataProviderMock();
+
   test('Should throw when resolving a dependency that is not bound for both true and false values of the feature flag', () => {
     const featureFlagDependencySwitch = new FeatureFlagDependencySwitch();
     featureFlagDependencySwitch.setDependency(

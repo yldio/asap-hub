@@ -3,10 +3,11 @@ import nock from 'nock';
 import Users from '../../src/controllers/users';
 import * as orcidFixtures from '../fixtures/orcid.fixtures';
 import { getUserDataObject, getUserResponse } from '../fixtures/users.fixtures';
-import { assetDataProviderMock } from '../mocks/asset-data-provider.mock';
-import { userDataProviderMock } from '../mocks/user-data-provider.mock';
+import { getDataProviderMock } from '../mocks/data-provider.mock';
 
 describe('Users controller', () => {
+  const assetDataProviderMock = getDataProviderMock();
+  const userDataProviderMock = getDataProviderMock();
   const userController = new Users(userDataProviderMock, assetDataProviderMock);
 
   beforeEach(() => {
@@ -137,11 +138,11 @@ describe('Users controller', () => {
       expect(userDataProviderMock.update).toHaveBeenCalledWith('user-id', {
         avatar: '42',
       });
-      expect(assetDataProviderMock.create).toHaveBeenCalledWith(
-        'user-id',
-        Buffer.from('avatar'),
-        'image/jpeg',
-      );
+      expect(assetDataProviderMock.create).toHaveBeenCalledWith({
+        id: 'user-id',
+        avatar: Buffer.from('avatar'),
+        contentType: 'image/jpeg',
+      });
       expect(userDataProviderMock.fetchById).toHaveBeenCalledWith('user-id');
     });
 

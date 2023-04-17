@@ -1,7 +1,8 @@
 import ExternalAuthors from '../../src/controllers/external-authors';
-import { externalAuthorDataProviderMock } from '../mocks/external-author-data-provider.mock';
+import { getDataProviderMock } from '../mocks/data-provider.mock';
 
 describe('External Authors controller', () => {
+  const externalAuthorDataProviderMock = getDataProviderMock();
   const externalAuthorsController = new ExternalAuthors(
     externalAuthorDataProviderMock,
   );

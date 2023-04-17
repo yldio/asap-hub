@@ -6,6 +6,7 @@ import {
   ResearchOutputCreateDataObject,
   ResearchOutputDataObject,
   ResearchOutputUpdateDataObject,
+  DataProvider,
 } from '@asap-hub/model';
 import {
   InputResearchOutput,
@@ -69,17 +70,13 @@ export const makeDraftFilter = ({
   return query.join(' and ');
 };
 
-export interface ResearchOutputDataProvider {
-  fetchById(id: string): Promise<ResearchOutputDataObject | null>;
-  fetch(
-    options: FetchResearchOutputOptions,
-  ): Promise<ListResearchOutputDataObject>;
-  create(
-    input: ResearchOutputCreateDataObject,
-    createOptions?: { publish: boolean },
-  ): Promise<string>;
-  update(id: string, input: ResearchOutputUpdateDataObject): Promise<string>;
-}
+export type ResearchOutputDataProvider = DataProvider<
+  ResearchOutputDataObject,
+  FetchResearchOutputOptions,
+  ResearchOutputCreateDataObject,
+  { publish: boolean },
+  ResearchOutputUpdateDataObject
+>;
 
 export class ResearchOutputSquidexDataProvider
   implements ResearchOutputDataProvider
@@ -112,13 +109,9 @@ export class ResearchOutputSquidexDataProvider
     return parseGraphQLResearchOutput(researchOutputContent);
   }
 
-  async fetch(options: {
-    take?: number;
-    skip?: number;
-    search?: string;
-    filter?: FetchResearchOutputFilter;
-    includeDrafts?: boolean;
-  }): Promise<ListResearchOutputDataObject> {
+  async fetch(
+    options: FetchResearchOutputOptions,
+  ): Promise<ListResearchOutputDataObject> {
     const { search, filter, take = 8, skip = 0, includeDrafts } = options;
 
     const containsFilters = (search || '')
@@ -253,7 +246,7 @@ export class ResearchOutputSquidexDataProvider
   async update(
     researchOutputId: string,
     input: ResearchOutputUpdateDataObject,
-  ): Promise<string> {
+  ): Promise<void> {
     const {
       authors,
       teamIds: _teamIds,
@@ -291,8 +284,6 @@ export class ResearchOutputSquidexDataProvider
       labs: researchOutput.labs,
       teams: researchOutput.teams,
     });
-
-    return researchOutputId;
   }
 }
 

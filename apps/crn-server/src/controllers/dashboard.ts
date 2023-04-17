@@ -1,5 +1,5 @@
 import { DashboardResponse } from '@asap-hub/model';
-import { DashboardDataProvider } from '../data-providers/dashboard.data-provider';
+import { DashboardDataProvider } from '../data-providers/types';
 
 export interface DashboardController {
   fetch: () => Promise<DashboardResponse>;

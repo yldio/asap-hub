@@ -956,7 +956,7 @@ describe('ResearchOutputs data provider', () => {
     describe('Update', () => {
       const researchOutputId = 'updated-output-id';
 
-      test('Should update the existing research-output and return its ID', async () => {
+      test('Should update the existing research-output', async () => {
         const researchOutputUpdateData = getResearchOutputUpdateDataObject();
 
         const restResearchOutputUpdateData = getRestResearchOutputUpdateData();
@@ -970,11 +970,12 @@ describe('ResearchOutputs data provider', () => {
           )
           .reply(201, { id: researchOutputId });
 
-        const result = await researchOutputDataProvider.update(
-          researchOutputId,
-          researchOutputUpdateData,
-        );
-        expect(result).toEqual(researchOutputId);
+        await expect(
+          researchOutputDataProvider.update(
+            researchOutputId,
+            researchOutputUpdateData,
+          ),
+        ).resolves.not.toThrow();
       });
 
       test('Should throw when fails to update the research output - 400', async () => {

@@ -1936,4 +1936,12 @@ describe('Reminder Data Provider', () => {
       });
     });
   });
+
+  describe('Fetch-by-id', () => {
+    test('should throw an error', async () => {
+      await expect(reminderDataProvider.fetchById()).rejects.toThrow(
+        'Method not implemented.',
+      );
+    });
+  });
 });

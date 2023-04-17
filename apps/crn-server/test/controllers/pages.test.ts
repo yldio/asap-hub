@@ -1,8 +1,9 @@
 import { NotFoundError } from '@asap-hub/errors';
 import Pages from '../../src/controllers/pages';
-import { pageDataProviderMock } from '../mocks/pages-data-provider.mock';
+import { getDataProviderMock } from '../mocks/data-provider.mock';
 
 describe('Page controller', () => {
+  const pageDataProviderMock = getDataProviderMock();
   const pageController = new Pages(pageDataProviderMock);
   const mockPage = {
     id: 'some-id',

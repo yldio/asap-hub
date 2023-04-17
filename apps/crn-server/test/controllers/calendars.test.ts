@@ -5,10 +5,11 @@ import {
   getListCalendarResponse,
   getCalendarDataObject,
 } from '../fixtures/calendars.fixtures';
-import { calendarDataProviderMock } from '../mocks/calendar-data-provider.mock';
+import { getDataProviderMock } from '../mocks/data-provider.mock';
 import { CalendarUpdateRequest } from '@asap-hub/model';
 
 describe('Calendars Controller', () => {
+  const calendarDataProviderMock = getDataProviderMock();
   const calendarsController = new Calendars(calendarDataProviderMock);
 
   beforeEach(() => {

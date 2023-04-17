@@ -5,6 +5,7 @@ import {
   TeamDataObject,
   TeamTool,
   TeamUpdateDataObject,
+  DataProvider,
 } from '@asap-hub/model';
 import {
   InputTeam,
@@ -23,12 +24,13 @@ import { parseGraphQLTeam } from '../entities';
 import { FETCH_TEAM, FETCH_TEAMS } from '../queries/teams.queries';
 import logger from '../utils/logger';
 
-export interface TeamDataProvider {
-  fetchById(id: string): Promise<TeamDataObject | null>;
-  fetch(options: FetchTeamsOptions): Promise<ListTeamDataObject>;
-  update(id: string, update: TeamUpdateDataObject): Promise<void>;
-  create(input: TeamCreateDataObject): Promise<string>;
-}
+export type TeamDataProvider = DataProvider<
+  TeamDataObject,
+  FetchTeamsOptions,
+  TeamCreateDataObject,
+  null,
+  TeamUpdateDataObject
+>;
 
 export class TeamSquidexDataProvider implements TeamDataProvider {
   squidexGraphqlClient: SquidexGraphqlClient;

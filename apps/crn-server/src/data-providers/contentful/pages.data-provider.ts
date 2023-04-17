@@ -7,13 +7,14 @@ import {
   RichTextFromQuery,
 } from '@asap-hub/contentful';
 import { ListPageDataObject, PageDataObject } from '@asap-hub/model';
-import {
-  FetchPagesProviderOptions,
-  PageDataProvider,
-} from '../pages.data-provider';
+import { FetchPagesProviderOptions, PageDataProvider } from '../types';
 
 export class PageContentfulDataProvider implements PageDataProvider {
   constructor(private contentfulClient: GraphQLClient) {}
+
+  async fetchById(): Promise<null> {
+    throw new Error('Method not implemented.');
+  }
 
   async fetch(
     options?: FetchPagesProviderOptions,

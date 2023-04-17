@@ -94,4 +94,12 @@ describe('Pages Contentful Data Provider', () => {
       );
     });
   });
+
+  describe('Fetch-by-id', () => {
+    test('should throw an error', async () => {
+      await expect(pageDataProvider.fetchById()).rejects.toThrow(
+        'Method not implemented.',
+      );
+    });
+  });
 });

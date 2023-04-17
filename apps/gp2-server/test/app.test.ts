@@ -1,9 +1,7 @@
 import supertest from 'supertest';
 import { authHandlerMock } from './mocks/auth-handler.mock';
 
-import {
-  PageDataProvider,
-} from '../src/data-providers/types';
+import { PageDataProvider } from '../src/data-providers/types';
 
 describe('Contentful feature flag', () => {
   const OLD_ENV = process.env;

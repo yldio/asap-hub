@@ -244,11 +244,14 @@ export const appFactory = (libs: Libs = {}): Express => {
       squidexGraphqlClient,
       externalUserRestClient,
     );
-  const pageDataProvider =
-    libs.pageSquidexDataProvider ||
-    (isContentfulEnabled
-      ? new PageContentfulDataProvider(contentfulGraphQLClient)
-      : new PageSquidexDataProvider(pageRestClient));
+  const pageSquidexDataProvider =
+    libs.pageSquidexDataProvider || new PageSquidexDataProvider(pageRestClient);
+  const pageContentfulDataProvider =
+    libs.pageContentfulDataProvider ||
+    new PageContentfulDataProvider(contentfulGraphQLClient);
+  const pageDataProvider = isContentfulEnabled
+    ? pageContentfulDataProvider
+    : pageSquidexDataProvider;
 
   // Controllers
 
@@ -385,6 +388,7 @@ export type Libs = {
   outputDataProvider?: OutputDataProvider;
   pageController?: PageController;
   pageSquidexDataProvider?: PageDataProvider;
+  pageContentfulDataProvider?: PageDataProvider;
   projectController?: ProjectController;
   projectDataProvider?: ProjectDataProvider;
   userController?: UserController;

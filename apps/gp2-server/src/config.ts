@@ -67,7 +67,7 @@ export const userInviteSender = EMAIL_SENDER || `"GP2 Hub" <gp2@asap.science>`;
 export const userInviteBcc = EMAIL_BCC || 'gp2.invites.dev@asap.science';
 export const userInviteReturn = EMAIL_RETURN || 'gp2.invites.dev@asap.science';
 export const sentryTraceSampleRate = 1.0;
-export const isContentfulEnabled = GP2_CONTENTFUL_ENABLED || false;
+export const isContentfulEnabled = GP2_CONTENTFUL_ENABLED === 'true' || false;
 export const contentfulAccessToken =
   CONTENTFUL_ACCESS_TOKEN || 'contentful-access-token';
 export const contentfulManagementAccessToken =

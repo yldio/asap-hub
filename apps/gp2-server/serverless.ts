@@ -18,7 +18,7 @@ import assert from 'assert';
   'GP2_SENTRY_DSN_HANDLERS',
   'GP2_CONTENTFUL_ENV',
   'GP2_CONTENTFUL_ACCESS_TOKEN',
-  'CONTENTFUL_MANAGEMENT_ACCESS_TOKEN',
+  'GP2_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN',
   'GP2_CONTENTFUL_SPACE_ID',
 ].forEach((env) => {
   assert.ok(process.env[env], `${env} not defined`);

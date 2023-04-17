@@ -22,7 +22,7 @@ import { noop } from '../utils';
 
 type ResearchOutputFormSharingCardProps = Pick<
   ResearchOutputPostRequest,
-  'link' | 'title' | 'description' | 'sharingStatus' | 'subtype'
+  'link' | 'title' | 'descriptionMD' | 'sharingStatus' | 'subtype'
 > & {
   type?: ResearchOutputType | '';
   onChangeLink?: (newValue: string) => void;
@@ -59,7 +59,7 @@ const ResearchOutputFormSharingCard: React.FC<
   isSaving,
   link,
   title,
-  description,
+  descriptionMD,
   type,
   typeOptions,
   subtype,
@@ -192,7 +192,7 @@ const ResearchOutputFormSharingCard: React.FC<
         getValidationMessage={() => 'Please enter a description'}
         required
         enabled={!isSaving}
-        value={description}
+        value={descriptionMD}
       />
       <LabeledRadioButtonGroup
         title="Has this output been funded by ASAP"

@@ -189,7 +189,8 @@ export type ResearchOutputCoreObject = {
   accession?: string;
   addedDate: string;
   asapFunded?: boolean;
-  description: string;
+  description?: string;
+  descriptionMD?: string;
   documentType: ResearchOutputDocumentType;
   doi?: string;
   labCatalogNumber?: string;
@@ -288,7 +289,8 @@ export type ResearchOutputPostRequest = {
   accession?: string;
   asapFunded?: boolean;
   authors?: AuthorPostRequest[];
-  description: string;
+  description?: string;
+  descriptionMD: string;
   documentType: ResearchOutputDocumentType;
   doi?: string;
   environments: string[];

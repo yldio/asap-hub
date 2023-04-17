@@ -216,6 +216,8 @@ export class ResearchOutputSquidexDataProvider
 
     const { usedInPublication, ...researchOutput } = parseToSquidex({
       ...researchOutputData,
+      description: researchOutputData.description,
+      descriptionMD: researchOutputData.descriptionMD,
       asapFunded: convertBooleanToDecision(researchOutputData.asapFunded),
       usedInPublication: convertBooleanToDecision(
         researchOutputData.usedInPublication,

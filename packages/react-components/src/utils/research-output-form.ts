@@ -104,6 +104,7 @@ export type ResearchOutputPayload = {
   tags: ResearchOutputPostRequest['tags'];
   link: ResearchOutputPostRequest['link'];
   description: ResearchOutputPostRequest['description'];
+  descriptionMD: ResearchOutputPostRequest['descriptionMD'];
   title: ResearchOutputPostRequest['title'];
   type: ResearchOutputPostRequest['type'] | '';
   authors: NonNullable<
@@ -137,6 +138,7 @@ export const getPayload = ({
   tags,
   link,
   description,
+  descriptionMD,
   title,
   type,
   authors,
@@ -159,6 +161,7 @@ export const getPayload = ({
   tags,
   link: String(link).trim() === '' ? undefined : link,
   description,
+  descriptionMD,
   title,
   type: type as ResearchOutputPostRequest['type'],
   authors: getPostAuthors(authors),

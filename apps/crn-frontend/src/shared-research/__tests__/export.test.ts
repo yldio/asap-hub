@@ -27,6 +27,7 @@ describe('researchOutputToCSV', () => {
       ...createResearchOutputResponse(),
       created: 'created',
       description: 'description',
+      descriptionMD: '',
       id: 'id',
       lastUpdatedPartial: 'lastUpdatedPartial',
       sharingStatus: 'Network Only',
@@ -189,6 +190,7 @@ describe('researchOutputToCSV', () => {
   it('Removes HTML from RTF fields', () => {
     const output: ResearchOutputResponse = {
       ...createResearchOutputResponse(),
+      descriptionMD: '',
       description: '<a>example</a> <p>123</p>',
       usageNotes: '<a>example</a> <p>123</p>',
     };

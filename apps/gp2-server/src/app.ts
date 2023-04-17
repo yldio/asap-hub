@@ -245,9 +245,10 @@ export const appFactory = (libs: Libs = {}): Express => {
       externalUserRestClient,
     );
   const pageDataProvider =
-  libs.pageSquidexDataProvider || (isContentfulEnabled
-    ? new PageContentfulDataProvider(contentfulGraphQLClient)
-    : new PageSquidexDataProvider(pageRestClient));
+    libs.pageSquidexDataProvider ||
+    (isContentfulEnabled
+      ? new PageContentfulDataProvider(contentfulGraphQLClient)
+      : new PageSquidexDataProvider(pageRestClient));
 
   // Controllers
 
@@ -259,8 +260,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const projectController =
     libs.projectController || new Projects(projectDataProvider);
   const newsController = libs.newsController || new News(newsDataProvider);
-  const pageController =
-    libs.pageController || new Pages(pageDataProvider);
+  const pageController = libs.pageController || new Pages(pageDataProvider);
   const eventController = libs.eventController || new Events(eventDataProvider);
   const externalUsersController =
     libs.externalUsersController || new ExternalUsers(externalUserDataProvider);

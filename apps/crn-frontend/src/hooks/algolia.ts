@@ -24,6 +24,8 @@ export const useAlgolia = () => {
         (isEnabled('CONTENTFUL') && `${ALGOLIA_INDEX}-contentful`) ||
         ALGOLIA_INDEX,
       algoliaApiKey: user.algoliaApiKey,
+      clickAnalytics: true,
+      userToken: user.id,
     });
 
     return {

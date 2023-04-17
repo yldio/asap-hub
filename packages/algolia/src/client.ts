@@ -65,6 +65,8 @@ export class AlgoliaSearchClient {
   public constructor(
     private index: SearchIndex,
     private reverseEventsIndex: SearchIndex,
+    private userToken?: SearchOptions['userToken'],
+    private clickAnalytics?: SearchOptions['clickAnalytics'],
   ) {
     // do nothing
   }
@@ -99,6 +101,8 @@ export class AlgoliaSearchClient {
 
     const options: SearchOptions = {
       ...requestOptions,
+      clickAnalytics: this.clickAnalytics,
+      userToken: this.userToken,
       filters: requestOptions?.filters
         ? `${requestOptions.filters} AND (${entityTypesFilter})`
         : entityTypesFilter,

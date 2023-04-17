@@ -16,6 +16,10 @@ import assert from 'assert';
   'GP2_SQUIDEX_SHARED_SECRET',
   'GP2_SENTRY_DSN_API',
   'GP2_SENTRY_DSN_HANDLERS',
+  'GP2_CONTENTFUL_ENV',
+  'GP2_CONTENTFUL_ACCESS_TOKEN',
+  'CONTENTFUL_MANAGEMENT_ACCESS_TOKEN',
+  'GP2_CONTENTFUL_SPACE_ID',
 ].forEach((env) => {
   assert.ok(process.env[env], `${env} not defined`);
 });
@@ -38,6 +42,12 @@ const squidexBaseUrl = process.env.SQUIDEX_BASE_URL!;
 const squidexClientId = process.env.GP2_SQUIDEX_API_CLIENT_ID!;
 const squidexClientSecret = process.env.GP2_SQUIDEX_API_CLIENT_SECRET!;
 const squidexSharedSecret = process.env.GP2_SQUIDEX_SHARED_SECRET!;
+const contentfulEnvironment = process.env.GP2_CONTENTFUL_ENV!;
+const contentfulAccessToken = process.env.GP2_CONTENTFUL_ACCESS_TOKEN!;
+const contentfulManagementAccessToken =
+  process.env.GP2_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN!;
+const contentfulSpaceId = process.env.GP2_CONTENTFUL_SPACE_ID!;
+const isContentfulEnabled = process.env.GP2_CONTENTFUL_ENABLED || 'false';
 const stage = process.env.SLS_STAGE!;
 const sentryDsnApi = process.env.GP2_SENTRY_DSN_API!;
 const sentryDsnHandlers = process.env.GP2_SENTRY_DSN_HANDLERS!;
@@ -106,6 +116,11 @@ const serverlessConfig: AWS = {
       CURRENT_REVISION: currentRevision
         ? '${env:CI_COMMIT_SHA}'
         : '${env:CURRENT_REVISION}',
+      GP2_CONTENTFUL_ENABLED: isContentfulEnabled,
+      CONTENTFUL_ENV_ID: contentfulEnvironment,
+      CONTENTFUL_ACCESS_TOKEN: contentfulAccessToken,
+      CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: contentfulManagementAccessToken,
+      CONTENTFUL_SPACE_ID: contentfulSpaceId,
     },
     iam: {
       role: {

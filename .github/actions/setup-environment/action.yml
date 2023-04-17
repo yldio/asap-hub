@@ -30,7 +30,7 @@ outputs:
     description: 'Cache Prefix Transpile'
     value: ${{ steps.vars.outputs.cache-prefix-transpile }}
   contentful-environment:
-    description: 'Contentful Environment'
+    description: 'Contentful Environment
     value: ${{ steps.vars.outputs.contentful-environment }}
   crn-algolia-api-key-name:
     description: 'CRN Algolia Api key SSM Name'
@@ -146,6 +146,9 @@ outputs:
   gp2-contentful-space-id:
     description: 'GP2 Contentful Space ID'
     value: ${{ steps.vars.outputs.gp2-contentful-space-id }}
+  gp2-contentful-enabled:
+    description: 'Is GP2 data fetched from Contentful'
+    value: ${{ steps.vars.outputs.gp2-contentful-enabled }}
   gp2-hostname:
     description: 'GP2 Hostname'
     value: ${{ steps.vars.outputs.gp2-hostname }}

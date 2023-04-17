@@ -17,6 +17,10 @@ describe('Contentful feature flag', () => {
   });
 
   describe('Page Data Provider', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
     const pageSquidexDataProviderMock = {
       fetch: jest.fn(),
     } as unknown as jest.Mocked<PageDataProvider>;

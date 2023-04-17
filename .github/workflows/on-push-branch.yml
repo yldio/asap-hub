@@ -61,6 +61,7 @@ jobs:
     with:
       environment-name: Branch
       crn-contentful-env: ${{ needs.setup.outputs.crn-contentful-env }}
+      gp2-contentful-env: ${{ needs.setup.outputs.gp2-contentful-env }}
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

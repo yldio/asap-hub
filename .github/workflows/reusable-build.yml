@@ -11,6 +11,10 @@ on:
         description: 'CRN Contentful environment name'
         type: string
         required: true
+      gp2-contentful-env:
+        description: 'GP2 Contentful environment name'
+        type: string
+        required: true
     secrets:
       AWS_ACCESS_KEY_ID:
         description: 'AWS Access Key ID'

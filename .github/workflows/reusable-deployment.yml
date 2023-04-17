@@ -47,6 +47,9 @@ on:
       GP2_CI_AUTH0_CLIENT_SECRET:
         description: 'GP2 CI Auth0 Client Secret'
         required: true
+      GP2_CONTENTFUL_ACCESS_TOKEN:
+        description: 'GP2 Contentful Access Token'
+        required: true
       GP2_SQUIDEX_API_CLIENT_SECRET:
         description: 'GP2 API Squidex Client Secret'
         required: true

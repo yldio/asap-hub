@@ -1,20 +1,13 @@
 import { CreateOutputPage, OutputForm } from '@asap-hub/gp2-components';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
-import { ComponentProps, FC } from 'react';
+import { FC } from 'react';
 import { useAuthorSuggestions, useCreateOutput } from '../outputs/state';
 import { documentTypeMapper } from '../projects/CreateProjectOutput';
 
 const { workingGroups } = gp2Routing;
 
-type CreateOutputsProps = Pick<
-  ComponentProps<typeof OutputForm>,
-  'setBannerMessage'
->;
-
-const CreateWorkingGroupOutput: FC<CreateOutputsProps> = ({
-  setBannerMessage,
-}) => {
+const CreateWorkingGroupOutput: FC<Record<string, never>> = () => {
   const { workingGroupId } = useRouteParams(workingGroups({}).workingGroup);
 
   const { outputDocumentType } = useRouteParams(
@@ -29,7 +22,6 @@ const CreateWorkingGroupOutput: FC<CreateOutputsProps> = ({
     >
       <OutputForm
         entityType="workingGroup"
-        setBannerMessage={setBannerMessage}
         shareOutput={async (payload: gp2Model.OutputPostRequest) =>
           createOutput({
             ...payload,

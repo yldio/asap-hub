@@ -10,7 +10,7 @@ import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { ComponentProps, FC, lazy, useEffect } from 'react';
+import { FC, lazy, useEffect } from 'react';
 import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
 import { usePutProjectResources, useProjectById } from './state';
@@ -29,11 +29,8 @@ const CreateProjectOutput = lazy(loadCreateProjectOutput);
 
 type ProjectDetailProps = {
   currentTime: Date;
-} & Pick<ComponentProps<typeof CreateProjectOutput>, 'setBannerMessage'>;
-const ProjectDetail: FC<ProjectDetailProps> = ({
-  currentTime,
-  setBannerMessage,
-}) => {
+};
+const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
   const { path } = useRouteMatch();
   const { projectId } = useRouteParams(projects({}).project);
   const project = useProjectById(projectId);
@@ -71,7 +68,7 @@ const ProjectDetail: FC<ProjectDetailProps> = ({
       <Switch>
         <Route exact path={path + createOutputRoute.template}>
           <Frame title="Create Output">
-            <CreateProjectOutput setBannerMessage={setBannerMessage} />
+            <CreateProjectOutput />
           </Frame>
         </Route>
         <ProjectDetailPage

@@ -244,6 +244,7 @@ jobs:
         crn-squidex-remove,
         gp2-squidex-remove,
         crn-contentful-remove,
+        gp2-contentful-remove,
         crn-algolia-index,
       ]
     if: ${{ failure() && (github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub') }}

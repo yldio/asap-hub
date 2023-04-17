@@ -44,6 +44,15 @@ inputs:
   gp2-squidex-shared-secret:
     description: 'Squidex Shared Secret'
     required: false
+  gp2-contentful-env:
+    description: 'GP2 Contentful Environment'
+    required: false
+  gp2-contentful-access-token:
+    description: 'GP2 Contentful Access Token'
+    required: false
+  gp2-contentful-management-access-token:
+    description: 'GP2 Contentful Management Access Token'
+    required: false
   gp2-auth0-shared-secret:
     description: 'GP2 Auth0 Shared Secret'
     required: false
@@ -107,6 +116,11 @@ runs:
         GP2_SQUIDEX_API_CLIENT_SECRET: ${{ inputs.gp2-squidex-api-client-secret }}
         GP2_SQUIDEX_APP_NAME: ${{ steps.setup.outputs.gp2-squidex-app-name }}
         GP2_SQUIDEX_SHARED_SECRET: ${{ inputs.gp2-squidex-shared-secret }}
+        GP2_CONTENTFUL_ACCESS_TOKEN: ${{ inputs.gp2-contentful-access-token }}
+        GP2_CONTENTFUL_ENV: ${{ inputs.gp2-contentful-env }}
+        GP2_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.gp2-contentful-management-access-token }}
+        GP2_CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.gp2-contentful-space-id }}
+        GP2_CONTENTFUL_ENABLED: ${{ steps.setup.outputs.gp2-contentful-enabled }}
         IS_CONTENTFUL_ENABLED: ${{ steps.setup.outputs.is-contentful-enabled }}
         IS_CONTENTFUL_ENABLED_V2: ${{ steps.setup.outputs.is-contentful-enabled-v2 }}
         NODE_ENV: 'production'

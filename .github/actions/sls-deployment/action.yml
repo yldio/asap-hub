@@ -40,6 +40,7 @@ inputs:
     required: false
   gp2-contentful-env:
     description: 'GP2 Contentful Environment'
+    required: false
   gp2-contentful-access-token:
     description: 'GP2 Contentful Access Token'
     required: false

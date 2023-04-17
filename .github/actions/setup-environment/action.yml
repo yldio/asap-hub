@@ -137,6 +137,9 @@ outputs:
   gp2-ci-auth0-client-id:
     description: 'GP2 CI Auth0 Client Id'
     value: ${{ steps.vars.outputs.gp2-ci-auth0-client-id }}
+  gp2-contentful-backup-bucket-name:
+    description: 'GP2 Contentful Backup Bucket Name'
+    value: ${{ steps.vars.outputs.gp2-contentful-backup-bucket-name }}
   gp2-contentful-env-id:
     description: 'GP2 Environment ID for Contentful'
     value: ${{ steps.vars.outputs.gp2-contentful-env-id }}

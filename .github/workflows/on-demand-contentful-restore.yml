@@ -9,6 +9,13 @@ on:
         options:
           - Production
           - Development
+      app:
+        required: true
+        description: CRN or GP2
+        type: choice
+        options:
+          - crn
+          - gp2
       backup-version:
         required: false
         description: Backup file to restore - leave blank for latest
@@ -35,13 +42,37 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment }}
+      - name: Determine Environment
+        id: determine-environment
+        shell: bash
+        run: |
+          CONTENTFUL_ENV=$CONTENTFUL_MASTER_ENV
+          BRANCH_ENV=false
+
+          if [[ "$APP" == "gp2" ]]
+          then
+            CONTENTFUL_SPACE_ID=$GP2_CONTENTFUL_SPACE_ID
+            BUCKET_NAME=$GP2_BUCKET_NAME
+          else
+            CONTENTFUL_SPACE_ID=$CRN_CONTENTFUL_SPACE_ID
+            BUCKET_NAME=$CRN_BUCKET_NAME
+          fi
+
+          echo "contentful-space-id=$CONTENTFUL_SPACE_ID" >> $GITHUB_OUTPUT
+          echo "bucket-name=$BUCKET_NAME" >> $GITHUB_OUTPUT
+        env:
+          APP: ${{ inputs.app }}
+          CRN_BUCKET_NAME: ${{ steps.setup.outputs.crn-contentful-backup-bucket-name }}
+          CRN_CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
+          GP2_BUCKET_NAME: ${{ steps.setup.outputs.gp2-contentful-backup-bucket-name }}
+          GP2_CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.gp2-contentful-space-id }}
       - name: restore backup
         uses: ./.github/actions/contentful-restore
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          bucket-name: ${{ steps.setup.outputs.crn-contentful-backup-bucket-name }}
+          bucket-name: ${{ steps.determine-environment.outputs.bucket-name }}
           backup-key: ${{ inputs.backup-version }}
-          contentful-space-id: ${{ steps.setup.outputs.crn-contentful-space-id }}
+          contentful-space-id: ${{ steps.determine-environment.outputs.contentful-space-id }}
           contentful-environment: ${{ inputs.contentful-env || inputs.environment }}
           contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}

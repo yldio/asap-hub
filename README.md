@@ -282,7 +282,7 @@ There are also convenience methods for this:
 Rollbacks are per-content type, and can be used like this:
 
 ```sh
-yarn ctf-migrate down -c <content_type> --dry-run
+CONTENTFUL_MIGRATIONS_DIR=migrations/crn yarn ctf-migrate down -c <content_type> --dry-run
 ```
 
 Then repeat the command without `--dry-run` if all looks good.

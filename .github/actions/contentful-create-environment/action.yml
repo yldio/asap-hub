@@ -1,0 +1,53 @@
+name: Contentful Setup
+description: Setup Webhooks for Contentful
+
+inputs:
+  contentful-space-id:
+    description: 'Contentful Space ID'
+    required: true
+  contentful-environment-id:
+    description: 'Contentful Environent ID'
+    required: true
+  contentful-environment:
+    description: 'Contentful Environment'
+    required: true
+  contentful-management-token:
+    description: 'Contentful Management Token'
+    required: true
+  contentful-access-token:
+    description: 'Contentful Access Token'
+    required: true
+  max-contentful-envs:
+    description: 'maximum environments'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Determine whether we have reached the environment limit for our Contentful space
+      shell: bash
+      run: |
+        ENVIRONMENTS=$(curl --silent \
+                            --request GET \
+                            --header "Authorization: Bearer ${CONTENTFUL_MANAGEMENT_ACCESS_TOKEN}" \
+                            https://api.contentful.com/spaces/${CONTENTFUL_SPACE_ID}/environments \
+                            | jq '.total' -r)
+
+        if [[ "$ENVIRONMENTS" == "$MAX_CONTENTFUL_ENVIRONMENTS" ]]; then
+          echo "Max Contentful environments reached. Cannot create more."
+          exit 1;
+        fi
+      env:
+        CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
+        CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.contentful-management-token }}
+        MAX_CONTENTFUL_ENVIRONMENTS: ${{ inputs.max-contentful-envs }}
+    - name: Create Contentful environment
+      shell: bash
+      run: |
+        yarn workspace @asap-hub/contentful space:create-environment
+      env:
+        CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
+        CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.contentful-management-token }}
+        CONTENTFUL_ENV_ID: ${{ inputs.contentful-environment-id }}
+        CONTENTFUL_SOURCE_ENV: ${{ inputs.contentful-environment }}
+        CONTENTFUL_ACCESS_TOKEN: ${{ inputs.contentful-access-token }}

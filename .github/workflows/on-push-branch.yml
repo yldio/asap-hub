@@ -89,6 +89,9 @@ jobs:
       crn-on-branch-env: ${{ needs.setup.outputs.crn-on-branch-env }}
       crn-contentful-env-exists: ${{ needs.setup.outputs.crn-contentful-env-exists }}
       crn-contentful-env: ${{ needs.setup.outputs.crn-contentful-env }}
+      gp2-on-branch-env: ${{ needs.setup.outputs.gp2-on-branch-env }}
+      gp2-contentful-env-exists: ${{ needs.setup.outputs.gp2-contentful-env-exists }}
+      gp2-contentful-env: ${{ needs.setup.outputs.gp2-contentful-env }}
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -98,6 +101,7 @@ jobs:
       GP2_SQUIDEX_SHARED_SECRET: ${{ secrets.GP2_SQUIDEX_SHARED_SECRET }}
       CONTENTFUL_MANAGEMENT_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
       CRN_CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
+      GP2_CONTENTFUL_ACCESS_TOKEN: ${{ secrets.GP2_CONTENTFUL_ACCESS_TOKEN }}
 
   deployment:
     needs: [setup, test, build-analysis, create-environment]

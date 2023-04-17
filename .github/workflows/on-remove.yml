@@ -164,6 +164,37 @@ jobs:
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           CONTENTFUL_ENVIRONMENT: ${{ steps.setup.outputs.crn-contentful-env-id }}
 
+  gp2-contentful-remove:
+    if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:f93db8bae8be7528565c2510dbc8e3eece97983d
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    environment: Branch
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Check PR number
+        if: ${{ github.event.inputs.pr-number }}
+        uses: ./.github/actions/is-number
+        with:
+          number: ${{ github.event.inputs.pr-number }}
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: Branch
+      - name: Contentful Environment Teardown
+        id: contentful-env-teardown
+        shell: bash
+        run: bash .github/scripts/contentful/teardown.sh
+        env:
+          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.gp2-contentful-space-id }}
+          CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          CONTENTFUL_ENV_ID: ${{ steps.setup.outputs.gp2-contentful-env-id }}
+
   crn-algolia-index:
     if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
     runs-on: ubuntu-latest

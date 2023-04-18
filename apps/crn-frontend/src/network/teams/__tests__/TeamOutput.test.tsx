@@ -368,7 +368,7 @@ it('can edit and publish a draft research output', async () => {
     {
       link,
       title: '',
-      description: '',
+      descriptionMD: '',
       type,
       doi,
     },

@@ -968,17 +968,18 @@ describe('ResearchOutputs data provider', () => {
               updatedBy: { iv: [researchOutputUpdateData.updatedBy] },
             },
           )
-          .reply(201, { id: researchOutputId });
+          .reply(201);
 
         await expect(
           researchOutputDataProvider.update(
             researchOutputId,
             researchOutputUpdateData,
+            { publish: false },
           ),
         ).resolves.not.toThrow();
       });
 
-      test('Should default to not publish the existing research-output and return its ID', async () => {
+      test('Should default to not publish the existing research-output', async () => {
         const researchOutputUpdateData = getResearchOutputUpdateDataObject();
 
         const restResearchOutputUpdateData = getRestResearchOutputUpdateData();
@@ -992,14 +993,15 @@ describe('ResearchOutputs data provider', () => {
           )
           .reply(201, { id: researchOutputId });
 
-        const result = await researchOutputDataProvider.update(
-          researchOutputId,
-          researchOutputUpdateData,
-        );
-        expect(result).toEqual(researchOutputId);
+        await expect(
+          researchOutputDataProvider.update(
+            researchOutputId,
+            researchOutputUpdateData,
+          ),
+        ).resolves.not.toThrow();
       });
 
-      test('Should publish a draft research-output and return its ID', async () => {
+      test('Should publish a draft research-output', async () => {
         const researchOutputUpdateData = getResearchOutputUpdateDataObject();
 
         const restResearchOutputUpdateData = getRestResearchOutputUpdateData();
@@ -1011,7 +1013,7 @@ describe('ResearchOutputs data provider', () => {
               status: 'Published',
             },
           )
-          .reply(200, { id: researchOutputId });
+          .reply(200);
 
         nock(baseUrl)
           .patch(
@@ -1021,15 +1023,15 @@ describe('ResearchOutputs data provider', () => {
               updatedBy: { iv: [researchOutputUpdateData.updatedBy] },
             },
           )
-          .reply(201, { id: researchOutputId });
+          .reply(201);
 
-        const result = await researchOutputDataProvider.update(
-          researchOutputId,
-          researchOutputUpdateData,
-          { publish: true },
-        );
-
-        expect(result).toEqual(researchOutputId);
+        await expect(
+          researchOutputDataProvider.update(
+            researchOutputId,
+            researchOutputUpdateData,
+            { publish: true },
+          ),
+        ).resolves.not.toThrow();
       });
 
       test('Should throw when fails to update the research output - 400', async () => {

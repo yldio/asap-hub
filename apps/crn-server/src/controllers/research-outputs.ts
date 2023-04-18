@@ -190,11 +190,11 @@ export default class ResearchOutputs implements ResearchOutputController {
       workingGroups: researchOutputUpdateData.workingGroups,
     };
 
-    // const updateOptions = { publish: shouldPublish };
+    const updateOptions = { publish: shouldPublish };
     await this.researchOutputDataProvider.update(
       id,
       researchOutputUpdateDataObject,
-      // updateOptions,
+      updateOptions,
     );
 
     return this.fetchById(id);

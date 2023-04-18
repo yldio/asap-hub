@@ -49,13 +49,8 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
 
   const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
 
-  const createResearchOutput = usePostResearchOutput({ publish: true });
-  const createDraftResearchOutput = usePostResearchOutput({ publish: false });
-
-  const updateResearchOutput = usePutResearchOutput({
-    publish: !researchOutputData?.published,
-  });
-  const updateDraftResearchOutput = usePutResearchOutput({ publish: false });
+  const createResearchOutput = usePostResearchOutput();
+  const updateResearchOutput = usePutResearchOutput();
 
   const getLabSuggestions = useLabSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();
@@ -116,27 +111,32 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
               ? updateResearchOutput(researchOutputData.id, {
                   ...output,
                   workingGroups: [workingGroupId],
+                  published: true,
                 }).catch(handleError(['/link', '/title'], setErrors))
               : createResearchOutput({
                   ...output,
                   workingGroups: [workingGroupId],
+                  published: true,
                 }).catch(handleError(['/link', '/title'], setErrors))
           }
           onSaveDraft={(output) =>
             researchOutputData
-              ? updateDraftResearchOutput(researchOutputData.id, {
+              ? updateResearchOutput(researchOutputData.id, {
                   ...output,
                   workingGroups: [workingGroupId],
+                  published: false,
                 }).catch(handleError(['/link', '/title'], setErrors))
-              : createDraftResearchOutput({
+              : createResearchOutput({
                   ...output,
                   workingGroups: [workingGroupId],
+                  published: false,
                 }).catch(handleError(['/link', '/title'], setErrors))
           }
         />
       </Frame>
     );
   }
+
   return <NotFoundPage />;
 };
 

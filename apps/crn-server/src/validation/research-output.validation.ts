@@ -166,6 +166,9 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
         nullable: true,
         pattern: ResearchOutputIdentifierValidationExpression.RRID,
       },
+      published: {
+        type: 'boolean',
+      },
     },
     required: [
       'documentType',
@@ -183,24 +186,6 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
 
 export const validateResearchOutputPostRequestParameters = validateInput(
   researchOutputPostRequestValidationSchema,
-  {
-    skipNull: true,
-    coerce: true,
-  },
-);
-
-const researchOutputRequestQueryParametersSchema: JSONSchemaType<{
-  publish?: boolean;
-}> = {
-  type: 'object',
-  properties: {
-    publish: { type: 'boolean', nullable: true },
-  },
-  additionalProperties: false,
-};
-
-export const validateResearchOutputRequestQueryParameters = validateInput(
-  researchOutputRequestQueryParametersSchema,
   {
     skipNull: true,
     coerce: true,

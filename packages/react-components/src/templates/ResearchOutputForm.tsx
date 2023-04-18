@@ -295,6 +295,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     organisms,
     environments,
     subtype,
+    published,
   });
 
   const [remotePayload, setRemotePayload] = useState(currentPayload);

@@ -276,6 +276,7 @@ describe('on submit', () => {
     usageNotes: '',
     workingGroups: [],
     relatedResearch: [],
+    published: false,
   };
   type Data = Pick<
     ResearchOutputPostRequest,
@@ -759,7 +760,10 @@ describe('on submit', () => {
   it('can save draft with minimum data', async () => {
     await setupForm();
     await saveDraft();
-    expect(saveDraftFn).toHaveBeenLastCalledWith(expectedRequest);
+    expect(saveDraftFn).toHaveBeenLastCalledWith({
+      ...expectedRequest,
+      published: false,
+    });
     await waitFor(() =>
       expect(history.location.pathname).toEqual(`/shared-research/${id}`),
     );

@@ -17,7 +17,6 @@ import {
   validateResearchOutputParameters,
   validateResearchOutputPostRequestParameters,
   validateResearchOutputPostRequestParametersIdentifiers,
-  validateResearchOutputRequestQueryParameters,
   validateResearchOutputPutRequestParameters,
   validateResearchOutputFetchOptions,
 } from '../validation/research-output.validation';
@@ -90,7 +89,7 @@ export const researchOutputRouteFactory = (
   );
 
   researchOutputRoutes.post('/research-outputs', async (req, res) => {
-    const { body, loggedInUser, query } = req;
+    const { body, loggedInUser } = req;
     const createRequest = validateResearchOutputPostRequestParameters(body);
     validateResearchOutputPostRequestParametersIdentifiers(createRequest);
 
@@ -100,21 +99,18 @@ export const researchOutputRouteFactory = (
       createRequest.teams,
     );
 
-    const options = validateResearchOutputRequestQueryParameters(query);
-    const publish = options.publish ?? true;
-
-    if (!loggedInUser || !hasEditResearchOutputPermission(userRole, false)) {
+    if (
+      !loggedInUser ||
+      !hasEditResearchOutputPermission(userRole, createRequest.published)
+    ) {
       throw Boom.forbidden();
     }
 
-    const researchOutput = await researchOutputController.create(
-      {
-        ...createRequest,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        createdBy: loggedInUser!.id,
-      },
-      { publish },
-    );
+    const researchOutput = await researchOutputController.create({
+      ...createRequest,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      createdBy: loggedInUser!.id,
+    });
 
     res.status(201).json(researchOutput);
   });
@@ -122,24 +118,21 @@ export const researchOutputRouteFactory = (
   researchOutputRoutes.put(
     '/research-outputs/:researchOutputId',
     async (req, res) => {
-      const { body, params, loggedInUser, query } = req;
+      const { body, params, loggedInUser } = req;
       const { researchOutputId } = validateResearchOutputParameters(params);
       const updateRequest = validateResearchOutputPutRequestParameters(body);
       validateResearchOutputPostRequestParametersIdentifiers(body);
-      const options = validateResearchOutputRequestQueryParameters(query);
-      const publish = options.publish ?? true;
 
-      const isWorkingGroupOutput = updateRequest.workingGroups.length;
+      const workingGroupOutput = updateRequest.workingGroups.length;
 
       const userRole = getUserRole(
         loggedInUser as UserResponse,
-        isWorkingGroupOutput ? 'workingGroups' : 'teams',
-        isWorkingGroupOutput
-          ? updateRequest.workingGroups
-          : updateRequest.teams,
+        workingGroupOutput ? 'workingGroups' : 'teams',
+        workingGroupOutput ? updateRequest.workingGroups : updateRequest.teams,
       );
 
       const result = await researchOutputController.fetchById(researchOutputId);
+      const publish = updateRequest.published && !result.published;
 
       if (
         !loggedInUser ||
@@ -156,7 +149,6 @@ export const researchOutputRouteFactory = (
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           updatedBy: loggedInUser!.id,
         },
-        { publish },
       );
 
       res.status(200).json(researchOutput);

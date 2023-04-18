@@ -1,4 +1,4 @@
-import { ComponentProps, useContext } from 'react';
+import React, { ComponentProps, useContext } from 'react';
 import { css } from '@emotion/react';
 import { ToastContext } from '@asap-hub/react-context';
 
@@ -59,6 +59,7 @@ type ResultListProps = ComponentProps<typeof PageControls> & {
   readonly listViewHref?: string;
   readonly noEventsComponent?: React.ReactNode;
   readonly children: React.ReactNode;
+  readonly algoliaIndexName?: string;
 };
 const ResultList: React.FC<ResultListProps> = ({
   numberOfItems,
@@ -68,11 +69,12 @@ const ResultList: React.FC<ResultListProps> = ({
   listViewHref,
   children,
   noEventsComponent,
+  algoliaIndexName,
   ...pageControlsProps
 }) => {
   const toast = useContext(ToastContext);
   return (
-    <article>
+    <article data-insights-index={algoliaIndexName}>
       <header
         css={[headerStyles, numberOfItems === 0 && headerNoResultsStyles]}
       >

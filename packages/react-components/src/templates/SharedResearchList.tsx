@@ -1,4 +1,5 @@
 import { ComponentProps } from 'react';
+import AlgoliaHit from '../atoms/AlgoliaHit';
 
 import {
   ResultList,
@@ -28,8 +29,10 @@ const SharedResearchList: React.FC<SharedResearchListProps> = ({
     {cardListProps.isListView ? (
       <SharedResearchListCard researchOutputs={researchOutputs} />
     ) : (
-      researchOutputs.map((output) => (
-        <SharedResearchCard key={output.id} {...output} />
+      researchOutputs.map((output, index) => (
+        <AlgoliaHit key={output.id} index={index}>
+          <SharedResearchCard {...output} />
+        </AlgoliaHit>
       ))
     )}
   </ResultList>

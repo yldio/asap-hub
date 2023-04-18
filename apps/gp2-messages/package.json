@@ -24,7 +24,7 @@
     "@emotion/react": "11.10.6",
     "@emotion/server": "11.10.0",
     "@types/node": "18.15.11",
-    "aws-sdk": "2.1341.0",
+    "aws-sdk": "2.1360.0",
     "babel-loader": "8.3.0",
     "babel-preset-react-app": "10.0.1",
     "core-js": "3.29.1",

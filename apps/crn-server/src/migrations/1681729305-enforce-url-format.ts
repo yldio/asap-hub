@@ -10,6 +10,8 @@ import { Migration } from '@asap-hub/server-common';
 import { applyToAllItemsInCollection } from '../utils/migrations';
 
 export default class EnforceUrlFormat extends Migration {
+  isPatchingEnabled = false;
+
   processEvents = async (): Promise<void> => {
     await applyToAllItemsInCollection<RestEvent>(
       'events',
@@ -21,11 +23,17 @@ export default class EnforceUrlFormat extends Migration {
           console.log(
             `Event ${event.id} does not have a valid meeting link. Adding https:// prefix.`,
           );
-          await squidexClient.patch(event.id, {
-            meetingLink: {
-              iv: `https://${event.data.meetingLink.iv}`,
-            },
-          });
+          if (this.isPatchingEnabled) {
+            await squidexClient.patch(event.id, {
+              meetingLink: {
+                iv: `https://${event.data.meetingLink.iv}`,
+              },
+            });
+          } else {
+            console.log(
+              `Before: ${event.data.meetingLink.iv}\nAfter: https://${event.data.meetingLink.iv}`,
+            );
+          }
         }
       },
     );
@@ -39,11 +47,17 @@ export default class EnforceUrlFormat extends Migration {
           console.log(
             `Page ${page.id} does not have a valid link. Adding https:// prefix.`,
           );
-          await squidexClient.patch(page.id, {
-            link: {
-              iv: `https://${page.data.link.iv}`,
-            },
-          });
+          if (this.isPatchingEnabled) {
+            await squidexClient.patch(page.id, {
+              link: {
+                iv: `https://${page.data.link.iv}`,
+              },
+            });
+          } else {
+            console.log(
+              `Before: ${page.data.link.iv}\nAfter: https://${page.data.link.iv}`,
+            );
+          }
         }
       },
     );
@@ -57,11 +71,17 @@ export default class EnforceUrlFormat extends Migration {
           console.log(
             `News ${news.id} does not have a valid link. Adding https:// prefix.`,
           );
-          await squidexClient.patch(news.id, {
-            link: {
-              iv: `https://${news.data.link.iv}`,
-            },
-          });
+          if (this.isPatchingEnabled) {
+            await squidexClient.patch(news.id, {
+              link: {
+                iv: `https://${news.data.link.iv}`,
+              },
+            });
+          } else {
+            console.log(
+              `Before: ${news.data.link.iv}\nAfter: https://${news.data.link.iv}`,
+            );
+          }
         }
       },
     );
@@ -89,11 +109,21 @@ export default class EnforceUrlFormat extends Migration {
             console.log(
               `Team ${team.id} does not have a valid tool link(s). Adding https:// prefix.`,
             );
-            await squidexClient.patch(team.id, {
-              tools: {
-                iv: tools,
-              },
-            });
+            if (this.isPatchingEnabled) {
+              await squidexClient.patch(team.id, {
+                tools: {
+                  iv: tools,
+                },
+              });
+            } else {
+              console.log(
+                `Before: ${JSON.stringify(
+                  team.data.tools.iv,
+                  null,
+                  2,
+                )}\nAfter: ${JSON.stringify(tools, null, 2)}`,
+              );
+            }
           }
         }
       },
@@ -133,11 +163,21 @@ export default class EnforceUrlFormat extends Migration {
             console.log(
               `User ${user.id} does not have a valid social website(s). Adding https:// prefix.`,
             );
-            await squidexClient.patch(user.id, {
-              social: {
-                iv: social,
-              },
-            });
+            if (this.isPatchingEnabled) {
+              await squidexClient.patch(user.id, {
+                social: {
+                  iv: social,
+                },
+              });
+            } else {
+              console.log(
+                `Before: ${JSON.stringify(
+                  user.data.social.iv,
+                  null,
+                  2,
+                )}\nAfter: ${JSON.stringify(social, null, 2)}`,
+              );
+            }
           }
         }
       },

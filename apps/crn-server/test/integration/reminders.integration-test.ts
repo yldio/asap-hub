@@ -6,7 +6,7 @@ import {
   EventStatus,
   FetchRemindersOptions,
   PublishMaterialReminder,
-  PublishResearchOutputCreateDataObject,
+  PublishedResearchOutputCreateDataObject,
   ResearchOutputPublishedReminder,
   SharePresentationReminder,
   TeamRole,
@@ -1234,7 +1234,7 @@ describe('Reminders', () => {
   const getResearchOutputInput = (
     teamId: string,
     creatorId: string,
-  ): PublishResearchOutputCreateDataObject => ({
+  ): PublishedResearchOutputCreateDataObject => ({
     ...getResearchOutputCreateDataObject(),
     teamIds: [teamId],
     createdBy: creatorId,

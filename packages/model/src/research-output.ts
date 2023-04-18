@@ -258,7 +258,7 @@ export type ResearchOutputCreateDataObject = ResearchOutputCoreObject & {
   relatedResearchIds?: string[];
 };
 
-export type PublishResearchOutputCreateDataObject =
+export type PublishedResearchOutputCreateDataObject =
   ResearchOutputCreateDataObject & {
     addedDate: string;
   };
@@ -333,6 +333,7 @@ export type ResearchOutputPostRequest = {
   type?: ResearchOutputType;
   usageNotes?: string;
   usedInPublication?: boolean;
+  published: boolean;
 };
 
 export type ResearchOutputAssociations = 'team' | 'teams' | 'working group';

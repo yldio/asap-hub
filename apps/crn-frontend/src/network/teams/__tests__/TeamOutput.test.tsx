@@ -208,9 +208,9 @@ it('can publish a form when the data is valid', async () => {
       usageNotes: '',
       asapFunded: undefined,
       usedInPublication: undefined,
+      published: true,
     },
     expect.anything(),
-    true,
   );
 });
 
@@ -269,9 +269,9 @@ it('can save draft when form data is valid', async () => {
       usageNotes: '',
       asapFunded: undefined,
       usedInPublication: undefined,
+      published: false,
     },
     expect.anything(),
-    false,
   );
 });
 
@@ -310,7 +310,6 @@ it('can edit a research output', async () => {
       teams: [teamId],
     }),
     expect.anything(),
-    false,
   );
 });
 
@@ -349,7 +348,6 @@ it('can edit a draft research output', async () => {
       teams: [teamId],
     }),
     expect.anything(),
-    false,
   );
 });
 
@@ -389,7 +387,6 @@ it('can edit and publish a draft research output', async () => {
       teams: [teamId],
     }),
     expect.anything(),
-    true,
   );
 });
 

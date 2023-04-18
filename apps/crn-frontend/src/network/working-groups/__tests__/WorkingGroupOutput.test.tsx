@@ -258,9 +258,9 @@ it('can submit a form when form data is valid', async () => {
       usageNotes: '',
       asapFunded: undefined,
       usedInPublication: undefined,
+      published: true,
     },
     expect.anything(),
-    true,
   );
   await waitFor(() => {
     expect(history.location.pathname).toBe(
@@ -335,9 +335,9 @@ it('can save draft when form data is valid', async () => {
       usageNotes: '',
       asapFunded: undefined,
       usedInPublication: undefined,
+      published: false,
     },
     expect.anything(),
-    false,
   );
   await waitFor(() => {
     expect(history.location.pathname).toBe(
@@ -488,9 +488,9 @@ it.each([
         title,
         descriptionMD,
         workingGroups: [workingGroupId],
+        published: shouldPublish,
       }),
       expect.anything(),
-      shouldPublish,
     );
   },
 );

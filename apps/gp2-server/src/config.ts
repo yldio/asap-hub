@@ -6,7 +6,7 @@ const {
   AUTH0_SHARED_SECRET,
   GP2_API_URL,
   GP2_CONTENTFUL_ENABLED,
-  GP2_CONTENTFUL_SPACE_ID,
+  CONTENTFUL_SPACE_ID,
   CONTENTFUL_ENV_ID,
   CONTENTFUL_ACCESS_TOKEN,
   CONTENTFUL_HOST,
@@ -75,4 +75,4 @@ export const contentfulManagementAccessToken =
 export const contentfulEnvId = CONTENTFUL_ENV_ID || 'Development';
 export const contentfulHost = CONTENTFUL_HOST || 'https://cdn.contentful.com';
 export const contentfulSpaceId =
-  GP2_CONTENTFUL_SPACE_ID || 'contentful-space-id';
+  CONTENTFUL_SPACE_ID || 'contentful-space-id';

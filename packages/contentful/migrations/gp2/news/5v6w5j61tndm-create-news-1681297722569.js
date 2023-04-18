@@ -26,6 +26,34 @@ module.exports.up = function (migration) {
     .omitted(false);
 
   news
+    .createField('sampleCount')
+    .name('Number of samples')
+    .type('Integer')
+    .localized(false)
+    .required(true)
+    .validations([])
+    .disabled(false)
+    .omitted(false);
+  news
+    .createField('articleCount')
+    .name('Number of articles')
+    .type('Integer')
+    .localized(false)
+    .required(true)
+    .validations([])
+    .disabled(false)
+    .omitted(false);
+  news
+    .createField('cohortCount')
+    .name('Number of cohorts')
+    .type('Integer')
+    .localized(false)
+    .required(true)
+    .validations([])
+    .disabled(false)
+    .omitted(false);
+
+  news
     .createField('link')
     .name('External Link')
     .type('Symbol')

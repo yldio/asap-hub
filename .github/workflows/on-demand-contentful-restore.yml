@@ -49,14 +49,14 @@ jobs:
           CONTENTFUL_ENV=$CONTENTFUL_MASTER_ENV
           BRANCH_ENV=false
 
-          if [[ "$APP" == "gp2" ]]
-          then
+          # if [[ "$APP" == "gp2" ]]
+          # then
             CONTENTFUL_SPACE_ID=$GP2_CONTENTFUL_SPACE_ID
             BUCKET_NAME=$GP2_BUCKET_NAME
-          else
-            CONTENTFUL_SPACE_ID=$CRN_CONTENTFUL_SPACE_ID
-            BUCKET_NAME=$CRN_BUCKET_NAME
-          fi
+          # else
+          #   CONTENTFUL_SPACE_ID=$CRN_CONTENTFUL_SPACE_ID
+          #   BUCKET_NAME=$CRN_BUCKET_NAME
+          # fi
 
           echo "contentful-space-id=$CONTENTFUL_SPACE_ID" >> $GITHUB_OUTPUT
           echo "bucket-name=$BUCKET_NAME" >> $GITHUB_OUTPUT

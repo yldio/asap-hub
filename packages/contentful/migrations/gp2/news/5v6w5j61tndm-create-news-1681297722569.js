@@ -4,7 +4,7 @@ module.exports.up = function (migration) {
   const news = migration
     .createContentType('news')
     .name('News')
-    .description('ASAP Hub News')
+    .description('Hub News')
     .displayField('title');
   news
     .createField('title')

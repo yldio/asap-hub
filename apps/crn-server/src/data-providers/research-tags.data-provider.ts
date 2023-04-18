@@ -3,7 +3,9 @@ import {
   isResearchTagCategory,
   isResearchTagEntity,
   ListResearchTagDataObject,
+  ResearchTagDataObject,
   ResearchTagEntity,
+  DataProvider,
 } from '@asap-hub/model';
 import { sanitiseForSquidex, SquidexGraphqlClient } from '@asap-hub/squidex';
 import {
@@ -13,15 +15,20 @@ import {
 import { FETCH_RESEARCH_TAGS } from '../queries/research-tags.queries';
 import logger from '../utils/logger';
 
-export interface ResearchTagDataProvider {
-  fetch(options: FetchResearchTagsOptions): Promise<ListResearchTagDataObject>;
-}
+export type ResearchTagDataProvider = DataProvider<
+  ResearchTagDataObject,
+  FetchResearchTagsOptions
+>;
 
 export class ResearchTagSquidexDataProvider implements ResearchTagDataProvider {
   squidexGraphqlClient: SquidexGraphqlClient;
 
   constructor(squidexGraphqlClient: SquidexGraphqlClient) {
     this.squidexGraphqlClient = squidexGraphqlClient;
+  }
+
+  async fetchById(): Promise<null> {
+    throw new Error('Method not implemented.');
   }
 
   async fetch(

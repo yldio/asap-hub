@@ -218,9 +218,9 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     })) || [],
   );
 
-  const [description, setDescription] = useState<
-    ResearchOutputPostRequest['description']
-  >(researchOutputData?.description || '');
+  const [descriptionMD, setDescription] = useState<
+    ResearchOutputPostRequest['descriptionMD']
+  >(researchOutputData?.descriptionMD || '');
   const [link, setLink] = useState<ResearchOutputPostRequest['link']>(
     researchOutputData?.link || '',
   );
@@ -282,7 +282,8 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     documentType,
     tags,
     link,
-    description,
+    description: '',
+    descriptionMD,
     title,
     type,
     authors,
@@ -321,7 +322,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
               serverValidationErrors={serverValidationErrors}
               clearServerValidationError={clearServerValidationError}
               isSaving={isSaving}
-              description={description}
+              descriptionMD={descriptionMD}
               onChangeDescription={setDescription}
               title={title}
               onChangeTitle={setTitle}

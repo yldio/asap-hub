@@ -78,6 +78,7 @@ export const parseGraphQLResearchOutput = (
     type: type || undefined,
     title: data.title || '',
     description: data.description || '',
+    descriptionMD: data.descriptionMD || '',
     tags: data.tags || [],
     publishDate: data.publishDate || undefined,
     labCatalogNumber: data.labCatalogNumber || undefined,

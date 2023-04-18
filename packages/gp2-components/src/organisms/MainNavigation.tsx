@@ -46,7 +46,7 @@ const listStyles = css({
   display: 'flex',
   flexDirection: 'row',
   listStyle: 'none',
-  gap: rem(48),
+  gap: rem(16),
   [drawerQuery]: {
     flexDirection: 'column',
     gap: 0,

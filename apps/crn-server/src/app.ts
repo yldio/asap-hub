@@ -1,7 +1,7 @@
 import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/contentful';
 import {
-  CalendarDataProvider,
   CalendarController,
+  CalendarDataProvider,
   EventController,
   EventDataProvider,
   UserResponse,
@@ -15,6 +15,9 @@ import {
   HttpLogger,
   Logger,
   MemoryCacheClient,
+  permissionHandler,
+  sentryTransactionIdMiddleware,
+  shouldHandleError,
 } from '@asap-hub/server-common';
 import {
   InputCalendar,
@@ -36,7 +39,6 @@ import * as Sentry from '@sentry/serverless';
 import cors from 'cors';
 import express, { Express, RequestHandler } from 'express';
 import 'express-async-errors';
-import { Tracer } from 'opentracing';
 import {
   appName,
   auth0Audience,
@@ -79,9 +81,7 @@ import { NewsContentfulDataProvider } from './data-providers/contentful/news.dat
 import { PageContentfulDataProvider } from './data-providers/contentful/pages.data-provider';
 import { TeamContentfulDataProvider } from './data-providers/contentful/teams.data-provider';
 import { UserContentfulDataProvider } from './data-providers/contentful/users.data-provider';
-import DashboardSquidexDataProvider, {
-  DashboardDataProvider,
-} from './data-providers/dashboard.data-provider';
+import DashboardSquidexDataProvider from './data-providers/dashboard.data-provider';
 import { EventSquidexDataProvider } from './data-providers/event.data-provider';
 import {
   ExternalAuthorDataProvider,
@@ -92,10 +92,7 @@ import {
   GroupSquidexDataProvider,
 } from './data-providers/groups.data-provider';
 import { NewsSquidexDataProvider } from './data-providers/news.data-provider';
-import {
-  PageDataProvider,
-  PageSquidexDataProvider,
-} from './data-providers/pages.data-provider';
+import { PageSquidexDataProvider } from './data-providers/pages.data-provider';
 import {
   ReminderDataProvider,
   ReminderSquidexDataProvider,
@@ -116,20 +113,19 @@ import {
   TutorialsDataProvider,
   TutorialsSquidexDataProvider,
 } from './data-providers/tutorials.data-provider';
-import { NewsDataProvider } from './data-providers/types';
 import {
+  NewsDataProvider,
+  PageDataProvider,
   UserDataProvider,
-  UserSquidexDataProvider,
-} from './data-providers/users.data-provider';
+  DashboardDataProvider,
+} from './data-providers/types';
+import { UserSquidexDataProvider } from './data-providers/users.data-provider';
 import {
   WorkingGroupDataProvider,
   WorkingGroupSquidexDataProvider,
 } from './data-providers/working-groups.data-provider';
 import { getContentfulRestClientFactory } from './dependencies/clients.dependencies';
 import { featureFlagMiddlewareFactory } from './middleware/feature-flag';
-import { permissionHandler } from './middleware/permission-handler';
-import { sentryTransactionIdMiddleware } from './middleware/sentry-transaction-id-handler';
-import { tracingHandlerFactory } from './middleware/tracing-handler';
 import { calendarRouteFactory } from './routes/calendars.route';
 import { dashboardRouteFactory } from './routes/dashboard.route';
 import { discoverRouteFactory } from './routes/discover.route';
@@ -149,7 +145,6 @@ import assignUserToContext from './utils/assign-user-to-context';
 import { getAuthToken } from './utils/auth';
 import { FeatureFlagDependencySwitch } from './utils/feature-flag';
 import pinoLogger from './utils/logger';
-import { shouldHandleError } from './utils/should-handle-error';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -425,7 +420,6 @@ export const appFactory = (libs: Libs = {}): Express => {
       logger,
       assignUserToContext,
     );
-  const tracingHandler = tracingHandlerFactory(libs.tracer);
   const sentryTransactionIdHandler =
     libs.sentryTransactionIdHandler || sentryTransactionIdMiddleware;
 
@@ -459,7 +453,6 @@ export const appFactory = (libs: Libs = {}): Express => {
   }
   app.use(httpLogger);
   app.use(sentryTransactionIdHandler);
-  app.use(tracingHandler);
   app.use(cors());
   app.use(express.json({ limit: '10MB' }));
   app.use(featureFlagMiddlewareFactory(featureFlagDependencySwitch));
@@ -570,12 +563,11 @@ export type Libs = {
   eventDataProvider?: EventDataProvider;
   workingGroupDataProvider?: WorkingGroupDataProvider;
   authHandler?: AuthHandler;
-  tracer?: Tracer;
   httpLogger?: HttpLogger;
   logger?: Logger;
-  // extra handlers only for tests and local development
-  mockRequestHandlers?: RequestHandler[];
   sentryErrorHandler?: typeof Sentry.Handlers.errorHandler;
   sentryRequestHandler?: typeof Sentry.Handlers.requestHandler;
   sentryTransactionIdHandler?: RequestHandler;
+  // extra handlers only for tests and local development
+  mockRequestHandlers?: RequestHandler[];
 };

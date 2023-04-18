@@ -4525,6 +4525,16 @@ input ResearchOutputsDataDescriptionInputDto {
   iv: String
 }
 
+"""The structure of the Description field of the Research Outputs content type."""
+type ResearchOutputsDataDescriptionMDDto {
+  iv: String
+}
+
+"""The structure of the Description field of the Research Outputs content input type."""
+input ResearchOutputsDataDescriptionMDInputDto {
+  iv: String
+}
+
 """The structure of the Document type field of the Research Outputs content type."""
 type ResearchOutputsDataDocumentTypeDto {
   iv: String
@@ -4556,6 +4566,7 @@ type ResearchOutputsDataDto {
   authors: ResearchOutputsDataAuthorsDto
   createdBy: ResearchOutputsDataCreatedByDto
   description: ResearchOutputsDataDescriptionDto
+  descriptionMD: ResearchOutputsDataDescriptionMDDto
   documentType: ResearchOutputsDataDocumentTypeDto
   doi: ResearchOutputsDataDoiDto
   environments: ResearchOutputsDataEnvironmentsDto
@@ -4600,6 +4611,7 @@ input ResearchOutputsDataInputDto {
   authors: ResearchOutputsDataAuthorsInputDto
   createdBy: ResearchOutputsDataCreatedByInputDto
   description: ResearchOutputsDataDescriptionInputDto
+  descriptionMD: ResearchOutputsDataDescriptionMDInputDto
   documentType: ResearchOutputsDataDocumentTypeInputDto
   doi: ResearchOutputsDataDoiInputDto
   environments: ResearchOutputsDataEnvironmentsInputDto
@@ -4859,6 +4871,7 @@ type ResearchOutputsFlatDataDto {
   createdBy: [Users!]
   """The Hub will only show text or hyperlinks. Other formatting will be ignored (e.g. bold, color, size)"""
   description: String
+  descriptionMD: String
   documentType: String
   """DOIs must start with a number and cannot be a URL"""
   doi: String

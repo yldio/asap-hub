@@ -28,6 +28,7 @@ export interface ResearchOutput<
   contactEmails: string[];
   createdBy?: TUserConnection[];
   description: string;
+  descriptionMD: string;
   documentType: ResearchOutputDocumentType;
   doi?: string;
   environments: string[];

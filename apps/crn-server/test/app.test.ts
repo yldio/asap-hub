@@ -2,10 +2,12 @@ import supertest from 'supertest';
 import { authHandlerMock } from './mocks/auth-handler.mock';
 import { appFactory as appFactoryDefault } from '../src/app';
 
-import { NewsDataProvider } from '../src/data-providers/types';
-import { PageDataProvider } from '../src/data-providers/pages.data-provider';
-import { DashboardDataProvider } from '../src/data-providers/dashboard.data-provider';
-import { UserDataProvider } from '../src/data-providers/users.data-provider';
+import {
+  DashboardDataProvider,
+  NewsDataProvider,
+  PageDataProvider,
+  UserDataProvider,
+} from '../src/data-providers/types';
 
 describe('Contentful feature flag', () => {
   const OLD_ENV = process.env;
@@ -21,15 +23,15 @@ describe('Contentful feature flag', () => {
   });
 
   describe('News Data Provider', () => {
-    const newsSquidexDataProviderMock: jest.Mocked<NewsDataProvider> = {
+    const newsSquidexDataProviderMock = {
       fetch: jest.fn(),
       fetchById: jest.fn(),
-    };
+    } as unknown as jest.Mocked<NewsDataProvider>;
 
-    const newsContentfulDataProviderMock: jest.Mocked<NewsDataProvider> = {
+    const newsContentfulDataProviderMock = {
       fetch: jest.fn(),
       fetchById: jest.fn(),
-    };
+    } as unknown as jest.Mocked<NewsDataProvider>;
 
     test('news controller uses squidex data provider when IS_CONTENTFUL_ENABLED is false', async () => {
       process.env.IS_CONTENTFUL_ENABLED = 'false';
@@ -84,13 +86,13 @@ describe('Contentful feature flag', () => {
   });
 
   describe('Page Data Provider', () => {
-    const pageSquidexDataProviderMock: jest.Mocked<PageDataProvider> = {
+    const pageSquidexDataProviderMock = {
       fetch: jest.fn(),
-    };
+    } as unknown as jest.Mocked<PageDataProvider>;
 
-    const pageContentfulDataProviderMock: jest.Mocked<PageDataProvider> = {
+    const pageContentfulDataProviderMock = {
       fetch: jest.fn(),
-    };
+    } as unknown as jest.Mocked<PageDataProvider>;
 
     test('page controller uses squidex data provider when IS_CONTENTFUL_ENABLED is false', async () => {
       process.env.IS_CONTENTFUL_ENABLED = 'false';
@@ -151,7 +153,6 @@ describe('Contentful feature flag', () => {
       {
         fetch: jest.fn(),
       };
-
     test('Dashboard controller uses squidex data provider when IS_CONTENTFUL_ENABLED is false', async () => {
       process.env.IS_CONTENTFUL_ENABLED = 'false';
 

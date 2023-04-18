@@ -11,6 +11,7 @@ import {
   AuthorSelect,
   noop,
 } from '@asap-hub/react-components';
+import { useNotificationContext } from '@asap-hub/react-context';
 
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { isInternalUser, urlExpression } from '@asap-hub/validation';
@@ -30,6 +31,9 @@ const getBannerMessage = (
     published ? 'published' : 'saved'
   } successfully.`;
 
+const capitalizeFirstLetter = (string: string) =>
+  string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+
 const footerStyles = css({
   display: 'flex',
   gap: rem(24),
@@ -48,7 +52,6 @@ type OutputFormType = {
   shareOutput: (
     payload: gp2Model.OutputPostRequest,
   ) => Promise<gp2Model.OutputResponse | undefined>;
-  setBannerMessage: (message: string) => void;
   documentType: gp2Model.OutputDocumentType;
   readonly getAuthorSuggestions?: ComponentPropsWithRef<
     typeof AuthorSelect
@@ -82,7 +85,6 @@ const OutputForm: React.FC<OutputFormType> = ({
   type,
   subtype,
   authors,
-  setBannerMessage,
 }) => {
   const historyPush = usePushFromHere();
   const [newTitle, setTitle] = useState(title || '');
@@ -100,6 +102,14 @@ const OutputForm: React.FC<OutputFormType> = ({
       value: author.id,
     })) || [],
   );
+  const { addNotification } = useNotificationContext();
+
+  const setBannerMessage = (message: string) =>
+    addNotification({
+      message: capitalizeFirstLetter(message),
+      page: 'outputs',
+      type: 'success',
+    });
 
   const currentPayload: gp2Model.OutputPostRequest = {
     title: newTitle,

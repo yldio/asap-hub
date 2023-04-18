@@ -157,7 +157,6 @@ const serverlessConfig: AWS = {
       DEBUG: SLS_STAGE === 'production' ? '' : 'crn-server,http',
       NODE_ENV: '${env:NODE_ENV}',
       ENVIRONMENT: '${env:SLS_STAGE}',
-      LIGHTSTEP_TOKEN: '${env:LIGHTSTEP_TOKEN}',
       SQUIDEX_APP_NAME: squidexAppName,
       SQUIDEX_BASE_URL: squidexBaseUrl,
       SQUIDEX_CLIENT_ID: squidexClientId,

@@ -7,9 +7,10 @@ import {
   getListNewsDataObject,
   getListNewsResponse,
 } from '../fixtures/news.fixtures';
-import { newsDataProviderMock } from '../mocks/news-data-provider.mock';
+import { getDataProviderMock } from '../mocks/data-provider.mock';
 
 describe('News controller', () => {
+  const newsDataProviderMock = getDataProviderMock();
   const newsController = new News(newsDataProviderMock);
 
   describe('Fetch method', () => {

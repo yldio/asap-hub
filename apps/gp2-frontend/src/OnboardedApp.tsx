@@ -3,7 +3,7 @@ import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Route } from '@asap-hub/routing';
 
-import { FC, lazy, useEffect, ComponentProps, useState } from 'react';
+import { FC, lazy, useEffect } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import Frame from './Frame';
 import { useUserById } from './users/state';
@@ -40,18 +40,10 @@ const Users = lazy(loadUsers);
 const Events = lazy(loadEvents);
 const Outputs = lazy(loadOutputs);
 
-const OnboardedApp: FC<ComponentProps<typeof Dashboard>> = ({
-  showWelcomeBackBanner,
-  dismissBanner,
-}) => {
+const OnboardedApp: FC<Record<string, never>> = () => {
   const { path } = useRouteMatch();
 
   const user = useCurrentUserGP2();
-
-  const [outputsBanner, setOutputsBanner] = useState<string | undefined>(
-    undefined,
-  );
-  const dimissOutputsBanner = () => setOutputsBanner(undefined);
 
   useEffect(() => {
     // order by the likelyhood of user navigating there
@@ -73,10 +65,7 @@ const OnboardedApp: FC<ComponentProps<typeof Dashboard>> = ({
       <Switch>
         <Route exact path={path}>
           <Frame title="Dashboard">
-            <Dashboard
-              showWelcomeBackBanner={showWelcomeBackBanner}
-              dismissBanner={dismissBanner}
-            />
+            <Dashboard />
           </Frame>
         </Route>
         <Route path={usersRoute.template}>
@@ -86,12 +75,12 @@ const OnboardedApp: FC<ComponentProps<typeof Dashboard>> = ({
         </Route>
         <Route path={workingGroupsRoute.template}>
           <Frame title="Working Groups">
-            <WorkingGroups setBannerMessage={setOutputsBanner} />
+            <WorkingGroups />
           </Frame>
         </Route>
         <Route path={projectsRoute.template}>
           <Frame title="Projects">
-            <Projects setBannerMessage={setOutputsBanner} />
+            <Projects />
           </Frame>
         </Route>
         <Route path={eventsRoute.template}>
@@ -101,11 +90,7 @@ const OnboardedApp: FC<ComponentProps<typeof Dashboard>> = ({
         </Route>
         <Route path={outputsRoute.template}>
           <Frame title="Outputs">
-            <Outputs
-              outputBanner={outputsBanner}
-              setBannerMessage={setOutputsBanner}
-              dismissBanner={dimissOutputsBanner}
-            />
+            <Outputs />
           </Frame>
         </Route>
         <Route>

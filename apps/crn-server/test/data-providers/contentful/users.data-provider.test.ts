@@ -22,13 +22,17 @@ describe('User data provider', () => {
 
   describe('Create', () => {
     test('should throw an error', async () => {
-      await expect(userDataProvider.create()).rejects.toThrow();
+      await expect(userDataProvider.create()).rejects.toThrow(
+        'Method not implemented.',
+      );
     });
   });
 
   describe('Update', () => {
     test('should throw an error', async () => {
-      await expect(userDataProvider.update()).rejects.toThrow();
+      await expect(userDataProvider.update()).rejects.toThrow(
+        'Method not implemented.',
+      );
     });
   });
 });

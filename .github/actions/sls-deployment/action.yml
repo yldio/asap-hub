@@ -14,9 +14,6 @@ inputs:
   aws-secret-access-key:
     description: 'AWS Secret Access Key'
     required: true
-  lightstep-token:
-    description: 'Lightstep Token'
-    required: true
   crn-contentful-env:
     description: 'CRN Contentful Environment'
     required: false
@@ -97,7 +94,7 @@ runs:
         CRN_CONTENTFUL_ACCESS_TOKEN: ${{ inputs.crn-contentful-access-token }}
         CRN_CONTENTFUL_ENV: ${{ inputs.crn-contentful-env }}
         CRN_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.crn-contentful-management-access-token }}
-        CRN_CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.contentful-space-id }}
+        CRN_CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
         CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN: ${{ inputs.crn-contentful-webhook-authentication-token }}
         CRN_SENTRY_DSN_API: ${{ steps.setup.outputs.crn-sentry-dsn-api }}
         CRN_SENTRY_DSN_HANDLERS: ${{ steps.setup.outputs.crn-sentry-dsn-handlers }}
@@ -119,7 +116,6 @@ runs:
         GP2_SQUIDEX_SHARED_SECRET: ${{ inputs.gp2-squidex-shared-secret }}
         IS_CONTENTFUL_ENABLED: ${{ steps.setup.outputs.is-contentful-enabled }}
         IS_CONTENTFUL_ENABLED_V2: ${{ steps.setup.outputs.is-contentful-enabled-v2 }}
-        LIGHTSTEP_TOKEN: ${{ inputs.lightstep-token }}
         NODE_ENV: 'production'
         NODE_OPTIONS: '--max-old-space-size=8192'
         SLS_STAGE: ${{ steps.setup.outputs.sls-stage}}

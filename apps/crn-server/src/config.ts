@@ -7,7 +7,6 @@ const {
   AUTH0_SHARED_SECRET,
   AWS_SES_ENDPOINT,
   SQUIDEX_SHARED_SECRET,
-  LIGHTSTEP_TOKEN,
   ENVIRONMENT,
   REGION,
   GOOGLE_API_CREDENTIALS_SECRET_ID,
@@ -48,7 +47,6 @@ const {
 
 export const origin = APP_ORIGIN || 'https://dev.hub.asap.science';
 export const sesEndpoint = AWS_SES_ENDPOINT;
-export const lightstepToken = LIGHTSTEP_TOKEN;
 export const environment = ENVIRONMENT
   ? ENVIRONMENT.toLowerCase()
   : 'development';
@@ -78,8 +76,8 @@ export const userInviteReturn = EMAIL_RETURN || 'hub.invites.dev@asap.science';
 export const eventBus = EVENT_BUS || 'asap-events-dev';
 export const eventSource = EVENT_SOURCE || '';
 export const eventBridgeEndpoint = EVENT_BRIDGE_ENDPOINT;
-export const eventBridgeAccessKey = EVENT_BRIDGE_ACCESS_KEY;
-export const eventBridgeSecret = EVENT_BRIDGE_SECRET;
+export const eventBridgeAccessKey = EVENT_BRIDGE_ACCESS_KEY || '';
+export const eventBridgeSecret = EVENT_BRIDGE_SECRET || '';
 export const cloudfrontDistributionId = CLOUDFRONT_DISTRIBUTION_ID || '';
 export const baseUrl = SQUIDEX_BASE_URL || 'http://localhost:4004';
 export const clientId = SQUIDEX_CLIENT_ID || 'squidex-client-id';

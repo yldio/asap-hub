@@ -1,13 +1,17 @@
 /* istanbul ignore file */
-import 'source-map-support/register';
+import { withRequest } from '@asap-hub/server-common';
+import * as Sentry from '@sentry/serverless';
+import { APIGatewayProxyEventV2 } from 'aws-lambda';
 import { Request as RequestExpress } from 'express';
 import serverlessHttp from 'serverless-http';
-import { APIGatewayProxyEventV2 } from 'aws-lambda';
-import { withRequest } from '@asap-hub/server-common';
+import 'source-map-support/register';
 import { appFactory } from '../app';
 import { sentryWrapper } from '../utils/sentry-wrapper';
 
-const app = appFactory({});
+const app = appFactory({
+  sentryErrorHandler: Sentry.Handlers.errorHandler,
+  sentryRequestHandler: Sentry.Handlers.requestHandler,
+});
 
 interface RequestWithContext extends RequestExpress {
   context: APIGatewayProxyEventV2['requestContext'];

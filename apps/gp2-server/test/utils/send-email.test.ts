@@ -1,5 +1,5 @@
 import { gp2WelcomeTemplate } from '@asap-hub/server-common';
-import { SES } from 'aws-sdk';
+import { SES } from '@aws-sdk/client-ses';
 import {
   userInviteBcc,
   userInviteReturn,
@@ -9,7 +9,7 @@ import { sendEmailFactory } from '../../src/utils/send-email';
 
 describe('Send Email helper', () => {
   const sesMock = {
-    sendTemplatedEmail: jest.fn().mockReturnValue({ promise: jest.fn() }),
+    sendTemplatedEmail: jest.fn(),
   } as unknown as jest.Mocked<SES>;
   const sendEmail = sendEmailFactory(sesMock);
 

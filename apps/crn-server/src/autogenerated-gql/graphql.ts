@@ -4333,6 +4333,16 @@ export type ResearchOutputsDataDescriptionInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
+/** The structure of the Description field of the Research Outputs content type. */
+export type ResearchOutputsDataDescriptionMdDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Description field of the Research Outputs content input type. */
+export type ResearchOutputsDataDescriptionMdInputDto = {
+  iv: InputMaybe<Scalars['String']>;
+};
+
 /** The structure of the Document type field of the Research Outputs content type. */
 export type ResearchOutputsDataDocumentTypeDto = {
   iv: Maybe<Scalars['String']>;
@@ -4364,6 +4374,7 @@ export type ResearchOutputsDataDto = {
   authors: Maybe<ResearchOutputsDataAuthorsDto>;
   createdBy: Maybe<ResearchOutputsDataCreatedByDto>;
   description: Maybe<ResearchOutputsDataDescriptionDto>;
+  descriptionMD: Maybe<ResearchOutputsDataDescriptionMdDto>;
   documentType: Maybe<ResearchOutputsDataDocumentTypeDto>;
   doi: Maybe<ResearchOutputsDataDoiDto>;
   environments: Maybe<ResearchOutputsDataEnvironmentsDto>;
@@ -4408,6 +4419,7 @@ export type ResearchOutputsDataInputDto = {
   authors: InputMaybe<ResearchOutputsDataAuthorsInputDto>;
   createdBy: InputMaybe<ResearchOutputsDataCreatedByInputDto>;
   description: InputMaybe<ResearchOutputsDataDescriptionInputDto>;
+  descriptionMD: InputMaybe<ResearchOutputsDataDescriptionMdInputDto>;
   documentType: InputMaybe<ResearchOutputsDataDocumentTypeInputDto>;
   doi: InputMaybe<ResearchOutputsDataDoiInputDto>;
   environments: InputMaybe<ResearchOutputsDataEnvironmentsInputDto>;
@@ -4659,6 +4671,7 @@ export type ResearchOutputsFlatDataDto = {
   createdBy: Maybe<Array<Users>>;
   /** The Hub will only show text or hyperlinks. Other formatting will be ignored (e.g. bold, color, size) */
   description: Maybe<Scalars['String']>;
+  descriptionMD: Maybe<Scalars['String']>;
   documentType: Maybe<Scalars['String']>;
   /** DOIs must start with a number and cannot be a URL */
   doi: Maybe<Scalars['String']>;
@@ -8783,6 +8796,7 @@ export type ResearchOutputContentFragment = Pick<
     | 'documentType'
     | 'type'
     | 'description'
+    | 'descriptionMD'
     | 'link'
     | 'addedDate'
     | 'publishDate'
@@ -8976,6 +8990,7 @@ export type FetchResearchOutputQuery = {
         | 'documentType'
         | 'type'
         | 'description'
+        | 'descriptionMD'
         | 'link'
         | 'addedDate'
         | 'publishDate'
@@ -9184,6 +9199,7 @@ export type FetchResearchOutputsQuery = {
               | 'documentType'
               | 'type'
               | 'description'
+              | 'descriptionMD'
               | 'link'
               | 'addedDate'
               | 'publishDate'
@@ -12078,6 +12094,10 @@ export const ResearchOutputContentFragmentDoc = {
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'type' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'descriptionMD' },
+                },
                 { kind: 'Field', name: { kind: 'Name', value: 'link' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'addedDate' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'publishDate' } },

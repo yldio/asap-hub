@@ -11,6 +11,10 @@ on:
         description: 'CRN Contentful environment name'
         required: true
         type: string
+      gp2-contentful-env:
+        description: 'GP2 Contentful environment name'
+        required: true
+        type: string
 
     secrets:
       AWS_ACCESS_KEY_ID:
@@ -18,9 +22,6 @@ on:
         required: true
       AWS_SECRET_ACCESS_KEY:
         description: 'AWS Secret Access Key'
-        required: true
-      LIGHTSTEP_TOKEN:
-        description: 'Lightstep Token'
         required: true
       CRN_CI_AUTH0_CLIENT_SECRET:
         description: 'CRN CI Auth0 Client Secret'
@@ -92,7 +93,6 @@ jobs:
           crn-squidex-shared-secret: ${{ secrets.CRN_SQUIDEX_SHARED_SECRET }}
           crn-contentful-webhook-authentication-token: ${{ secrets.CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN }}
           environment-name: ${{ inputs.environment-name }}
-          lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
 
   gp2-sls-deploy:
     concurrency:
@@ -120,7 +120,6 @@ jobs:
           gp2-auth0-shared-secret: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}
           gp2-squidex-api-client-secret: ${{ secrets.GP2_SQUIDEX_API_CLIENT_SECRET }}
           gp2-squidex-shared-secret: ${{ secrets.GP2_SQUIDEX_SHARED_SECRET }}
-          lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
 
   crn-algolia-settings:
     needs: [crn-sls-deploy]
@@ -227,6 +226,11 @@ jobs:
     needs: [crn-sls-deploy]
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:f93db8bae8be7528565c2510dbc8e3eece97983d
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -239,7 +243,7 @@ jobs:
         uses: ./.github/actions/contentful-setup
         with:
           contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
+          contentful-space-id: ${{ steps.setup.outputs.crn-contentful-space-id }}
           contentful-environment: ${{ inputs.crn-contentful-env }}
           api-url: ${{ steps.setup.outputs.crn-api-url }}
           contentful-webhook-authentication-token: ${{ secrets.CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN }}
@@ -265,11 +269,39 @@ jobs:
           environment-name: ${{ inputs.environment-name }}
       - name: Run Contentful migrations
         run: |
-          yarn workspace @asap-hub/contentful space:migrate:crn
+          yarn contentful:migration:run:crn
         env:
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.contentful-space-id }}
+          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
           CONTENTFUL_ENV_ID: ${{ inputs.crn-contentful-env }}
+
+  gp2-contentful-migrate:
+    needs: [gp2-sls-deploy]
+    # Run for branch-workflow only if the environment name is not that of dev or prod
+    if: ${{ (inputs.environment-name == 'Branch' && inputs.gp2-contentful-env != 'Development' &&  inputs.gp2-contentful-env !='Production') || inputs.environment-name != 'Branch' }}
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment-name }}
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:7b77d99657ab3718ed548ba366ffbcbb15315fd8
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Run Contentful migrations
+        run: |
+          yarn contentful:migration:run:gp2
+        env:
+          CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.gp2-contentful-space-id }}
+          CONTENTFUL_ENV_ID: ${{ inputs.gp2-contentful-env }}
+
   ses:
     needs: [crn-sls-deploy]
     runs-on: ubuntu-latest

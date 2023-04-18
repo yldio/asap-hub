@@ -1,8 +1,4 @@
 /* istanbul ignore file */
-import { migrateExternalAuthors } from './external-authors/external-authors.data-migration';
-import { migrateTeams } from './teams/teams.data-migration';
+import { runMigrations } from './run-migrations';
 
-(async () => {
-  await migrateTeams();
-  await migrateExternalAuthors();
-})();
+runMigrations();

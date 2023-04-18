@@ -26,7 +26,33 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           bucket-name: ${{ steps.setup.outputs.crn-contentful-backup-bucket-name }}
-          contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
+          contentful-space-id: ${{ steps.setup.outputs.crn-contentful-space-id }}
+          contentful-environment: ${{ steps.setup.outputs.contentful-environment }}
+          contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+
+  gp2-contentful:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:f93db8bae8be7528565c2510dbc8e3eece97983d
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    environment: Development
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: Development
+      - name: Backup
+        uses: ./.github/actions/contentful-backup
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          bucket-name: ${{ steps.setup.outputs.gp2-contentful-backup-bucket-name }}
+          contentful-space-id: ${{ steps.setup.outputs.gp2-contentful-space-id }}
           contentful-environment: ${{ steps.setup.outputs.contentful-environment }}
           contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
 

@@ -18,9 +18,6 @@ on:
       AWS_SECRET_ACCESS_KEY:
         description: 'AWS Secret Access Key'
         required: true
-      LIGHTSTEP_TOKEN:
-        description: 'Lightstep Token'
-        required: true
       CONTENTFUL_MANAGEMENT_TOKEN:
         description: 'Contentful Management Token'
         required: true
@@ -246,7 +243,6 @@ jobs:
           crn-squidex-api-client-secret: ${{ secrets.CRN_SQUIDEX_API_CLIENT_SECRET }}
           crn-squidex-shared-secret: ${{ secrets.CRN_SQUIDEX_SHARED_SECRET }}
           environment-name: ${{ inputs.environment-name }}
-          lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}
 
   gp2-sls-package:
     needs: [definitions, transpile, rebuild]
@@ -270,4 +266,3 @@ jobs:
           gp2-auth0-shared-secret: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}
           gp2-squidex-api-client-secret: ${{ secrets.GP2_SQUIDEX_API_CLIENT_SECRET }}
           gp2-squidex-shared-secret: ${{ secrets.GP2_SQUIDEX_SHARED_SECRET }}
-          lightstep-token: ${{ secrets.LIGHTSTEP_TOKEN }}

@@ -1,15 +1,10 @@
 import { CreateOutputPage, OutputForm } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { gp2, useRouteParams } from '@asap-hub/routing';
-import { ComponentProps } from 'react';
+
 import { useAuthorSuggestions, useOutputById, useUpdateOutput } from './state';
 
-type ShareOutputProps = Pick<
-  ComponentProps<typeof OutputForm>,
-  'setBannerMessage'
->;
-
-const ShareOutput: React.FC<ShareOutputProps> = ({ setBannerMessage }) => {
+const ShareOutput: React.FC<Record<string, never>> = () => {
   const { outputId } = useRouteParams(gp2.outputs({}).output);
   const output = useOutputById(outputId);
   const entityType = output?.workingGroups ? 'workingGroup' : 'project';
@@ -26,7 +21,6 @@ const ShareOutput: React.FC<ShareOutputProps> = ({ setBannerMessage }) => {
       <OutputForm
         {...output}
         entityType={entityType}
-        setBannerMessage={setBannerMessage}
         shareOutput={shareOutput}
         getAuthorSuggestions={getAuthorSuggestions}
       />

@@ -1,21 +1,16 @@
 import { ListPageDataObject } from '@asap-hub/model';
 import { RestPage, SquidexRestClient } from '@asap-hub/squidex';
 import { parsePage } from '../entities';
-
-export interface PageDataProvider {
-  fetch: (options?: FetchPagesProviderOptions) => Promise<ListPageDataObject>;
-}
-
-export type FetchPagesProviderOptions = {
-  filter?: {
-    path?: string;
-  };
-};
+import { FetchPagesProviderOptions, PageDataProvider } from './types';
 
 export class PageSquidexDataProvider implements PageDataProvider {
   constructor(
     private readonly pageSquidexRestClient: SquidexRestClient<RestPage>,
   ) {}
+
+  async fetchById(): Promise<null> {
+    throw new Error('Method not implemented.');
+  }
 
   async fetch(
     options?: FetchPagesProviderOptions,

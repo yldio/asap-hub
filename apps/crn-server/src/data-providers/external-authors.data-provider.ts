@@ -3,6 +3,7 @@ import {
   ListExternalAuthorDataObject,
   ExternalAuthorDataObject,
   FetchOptions,
+  DataProvider,
 } from '@asap-hub/model';
 import {
   RestExternalAuthor,
@@ -21,11 +22,11 @@ import {
   FETCH_EXTERNAL_AUTHORS,
 } from '../queries/external-authors.queries';
 
-export interface ExternalAuthorDataProvider {
-  create(input: ExternalAuthorCreateDataObject): Promise<string>;
-  fetch(options: FetchOptions): Promise<ListExternalAuthorDataObject>;
-  fetchById(id: string): Promise<ExternalAuthorDataObject | null>;
-}
+export type ExternalAuthorDataProvider = DataProvider<
+  ExternalAuthorDataObject,
+  FetchOptions,
+  ExternalAuthorCreateDataObject
+>;
 
 export class ExternalAuthorSquidexDataProvider
   implements ExternalAuthorDataProvider

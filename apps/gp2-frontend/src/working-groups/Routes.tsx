@@ -1,7 +1,7 @@
 import { WorkingGroupsPage } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/routing';
-import { ComponentProps, lazy, useEffect, useState } from 'react';
+import { lazy, useEffect, useState } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import Frame from '../Frame';
 
@@ -15,13 +15,8 @@ const loadWorkingGroupDetail = () =>
 const WorkingGroupList = lazy(loadWorkingGroupList);
 const WorkingGroupDetail = lazy(loadWorkingGroupDetail);
 
-type WorkingGroupsProps = Pick<
-  ComponentProps<typeof WorkingGroupDetail>,
-  'setBannerMessage'
->;
-
 const { workingGroups } = gp2;
-const Routes: React.FC<WorkingGroupsProps> = ({ setBannerMessage }) => {
+const Routes: React.FC<Record<string, never>> = () => {
   useEffect(() => {
     loadWorkingGroupList().then(loadWorkingGroupDetail);
   }, []);
@@ -38,10 +33,7 @@ const Routes: React.FC<WorkingGroupsProps> = ({ setBannerMessage }) => {
         </WorkingGroupsPage>
       </Route>
       <Route path={path + workingGroups({}).workingGroup.template}>
-        <WorkingGroupDetail
-          currentTime={currentTime}
-          setBannerMessage={setBannerMessage}
-        />
+        <WorkingGroupDetail currentTime={currentTime} />
       </Route>
       <Route component={NotFoundPage} />
     </Switch>

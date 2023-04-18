@@ -10,6 +10,7 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import NotificationMessages from '../../NotificationMessages';
 import { createOutput } from '../../outputs/api';
 import { getUsers, getExternalUsers } from '../../users/api';
 import CreateWorkingGroupOutput from '../CreateWorkingGroupOutput';
@@ -51,7 +52,9 @@ const renderCreateWorkingGroupOutput = async (
                     .createOutput.template
                 }
               >
-                <CreateWorkingGroupOutput setBannerMessage={jest.fn()} />
+                <NotificationMessages>
+                  <CreateWorkingGroupOutput />
+                </NotificationMessages>
               </Route>
             </MemoryRouter>
           </WhenReady>

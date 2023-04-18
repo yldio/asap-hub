@@ -84,7 +84,7 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
           upcomingTotal={upcomingEvents?.total || 0}
           pastTotal={pastEvents?.total || 0}
           avatarSaving={avatarSaving}
-          onImageSelect={onImageSelect}
+          onImageSelect={isOwnProfile ? onImageSelect : undefined}
           {...user}
         >
           <Switch>

@@ -36,6 +36,7 @@ type OutputsListProps = Pick<
   teamId: string;
   userAssociationMember: boolean;
   draftOutputs?: boolean;
+  hasOutputs: boolean;
 };
 type OutputsProps = {
   team: TeamResponse;
@@ -51,6 +52,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
   contactEmail,
   displayName,
   draftOutputs,
+  hasOutputs,
 }) => {
   const { currentPage, pageSize, isListView, cardViewParams, listViewParams } =
     usePaginationParams();
@@ -135,6 +137,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
       contactEmail={contactEmail}
       workingGroupAssociation={false}
       draftOutputs={draftOutputs}
+      hasOutputs={hasOutputs}
     />
   );
 };
@@ -179,6 +182,7 @@ const Outputs: React.FC<OutputsProps> = ({
           userAssociationMember={userAssociationMember}
           contactEmail={team?.pointOfContact?.email}
           displayName={team?.displayName ?? ''}
+          hasOutputs={hasOutputs}
         />
       </SearchFrame>
     </article>

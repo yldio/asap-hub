@@ -15,7 +15,7 @@ export const MAX_ALGOLIA_RESULTS = 10000;
 export const MAX_SQUIDEX_RESULTS = 200;
 
 type ResearchOutputCSV = Record<
-  keyof Omit<ResearchOutputResponse, 'team'>,
+  keyof Omit<ResearchOutputResponse, 'team' | 'descriptionMD'>,
   CSVValue
 >;
 
@@ -79,7 +79,9 @@ export const researchOutputToCSV = (
   rrid: output.rrid,
   accession: output.accession,
   labCatalogNumber: output.labCatalogNumber,
-  description: htmlToCsvText(output.description),
+  description: [htmlToCsvText(output.description), output.descriptionMD]
+    .filter((item) => item && item.length !== 0)
+    .join(' '),
   usageNotes: htmlToCsvText(output.usageNotes),
   contactEmails: output.contactEmails
     .map((item) => item)

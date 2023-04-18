@@ -12,10 +12,14 @@ jobs:
     runs-on: ubuntu-latest
     environment: Branch
     outputs:
-      crn-contentful-env: ${{ steps.get-contentful-state.outputs.contentful-env }}
-      on-branch-env: ${{ steps.get-contentful-state.outputs.on-branch-env }}
-      contentful-env-exists: ${{ steps.get-contentful-state.outputs.contentful-env-exists }}
-      contentful-limit-reached: ${{ steps.get-contentful-state.outputs.contentful-limit-reached }}
+      crn-contentful-env: ${{ steps.get-crn-contentful-state.outputs.contentful-env }}
+      crn-on-branch-env: ${{ steps.get-crn-contentful-state.outputs.on-branch-env }}
+      crn-contentful-env-exists: ${{ steps.get-crn-contentful-state.outputs.contentful-env-exists }}
+      crn-contentful-limit-reached: ${{ steps.get-crn-contentful-state.outputs.contentful-limit-reached }}
+      gp2-contentful-env: ${{ steps.get-gp2-contentful-state.outputs.contentful-env }}
+      gp2-on-branch-env: ${{ steps.get-gp2-contentful-state.outputs.on-branch-env }}
+      gp2-contentful-env-exists: ${{ steps.get-gp2-contentful-state.outputs.contentful-env-exists }}
+      gp2-contentful-limit-reached: ${{ steps.get-gp2-contentful-state.outputs.contentful-limit-reached }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -24,14 +28,24 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: Branch
-      - name: Get Contentful Environment state
-        id: get-contentful-state
+      - name: Get CRN Contentful Environment state
+        id: get-crn-contentful-state
         uses: ./.github/actions/contentful-checks
         with:
-          pr-number: ${{ steps.setup.outputs.pr-number }}
-          contentful-space-id: ${{ steps.setup.outputs.contentful-space-id }}
+          contentful-space-id: ${{ steps.setup.outputs.crn-contentful-space-id }}
           contentful-master-env: ${{ steps.setup.outputs.contentful-environment }}
           contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          contentful-environment-id: ${{ steps.setup.outputs.crn-contentful-env-id }}
+          app: crn
+      - name: Get GP2 Contentful Environment state
+        id: get-gp2-contentful-state
+        uses: ./.github/actions/contentful-checks
+        with:
+          contentful-space-id: ${{ steps.setup.outputs.gp2-contentful-space-id }}
+          contentful-master-env: ${{ steps.setup.outputs.contentful-environment }}
+          contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          contentful-environment-id: ${{ steps.setup.outputs.gp2-contentful-env-id }}
+          app: gp2
 
   test:
     uses: ./.github/workflows/reusable-test.yml
@@ -50,7 +64,6 @@ jobs:
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
       CRN_CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
       CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN: ${{ secrets.CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN }}
       CONTENTFUL_MANAGEMENT_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
@@ -73,9 +86,12 @@ jobs:
     uses: ./.github/workflows/reusable-create-environment.yml
     with:
       environment-name: Branch
-      on-branch-env: ${{ needs.setup.outputs.on-branch-env }}
-      contentful-env-exists: ${{ needs.setup.outputs.contentful-env-exists }}
+      crn-on-branch-env: ${{ needs.setup.outputs.crn-on-branch-env }}
+      crn-contentful-env-exists: ${{ needs.setup.outputs.crn-contentful-env-exists }}
       crn-contentful-env: ${{ needs.setup.outputs.crn-contentful-env }}
+      gp2-on-branch-env: ${{ needs.setup.outputs.gp2-on-branch-env }}
+      gp2-contentful-env-exists: ${{ needs.setup.outputs.gp2-contentful-env-exists }}
+      gp2-contentful-env: ${{ needs.setup.outputs.gp2-contentful-env }}
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -85,6 +101,7 @@ jobs:
       GP2_SQUIDEX_SHARED_SECRET: ${{ secrets.GP2_SQUIDEX_SHARED_SECRET }}
       CONTENTFUL_MANAGEMENT_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
       CRN_CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
+      GP2_CONTENTFUL_ACCESS_TOKEN: ${{ secrets.GP2_CONTENTFUL_ACCESS_TOKEN }}
 
   deployment:
     needs: [setup, test, build-analysis, create-environment]
@@ -92,10 +109,10 @@ jobs:
     with:
       environment-name: Branch
       crn-contentful-env: ${{ needs.setup.outputs.crn-contentful-env }}
+      gp2-contentful-env: ${{ needs.setup.outputs.gp2-contentful-env }}
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      LIGHTSTEP_TOKEN: ${{ secrets.LIGHTSTEP_TOKEN }}
       CONTENTFUL_MANAGEMENT_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
       CRN_CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
       CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN: ${{ secrets.CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN }}
@@ -109,16 +126,19 @@ jobs:
       GP2_SQUIDEX_SHARED_SECRET: ${{ secrets.GP2_SQUIDEX_SHARED_SECRET }}
       GP2_AUTH0_SHARED_SECRET: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}
       GP2_CI_AUTH0_CLIENT_SECRET: ${{ secrets.GP2_CI_AUTH0_CLIENT_SECRET }}
+
   verify:
     needs: [setup, deployment]
     uses: ./.github/workflows/reusable-verify.yml
     with:
       environment-name: Branch
       crn-contentful-env: ${{ needs.setup.outputs.crn-contentful-env }}
+      gp2-contentful-env: ${{ needs.setup.outputs.gp2-contentful-env }}
     secrets:
       CRN_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
       GP2_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.GP2_SQUIDEX_CI_CLIENT_SECRET }}
       CRN_CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
+      GP2_CONTENTFUL_ACCESS_TOKEN: ${{ secrets.GP2_CONTENTFUL_ACCESS_TOKEN }}
 
   branch-pipeline-success:
     runs-on: ubuntu-latest

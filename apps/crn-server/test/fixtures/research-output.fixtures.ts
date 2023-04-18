@@ -72,6 +72,7 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
     title: 'Test Proposal 1234',
     documentType: 'Bioinformatics',
     description: 'Text',
+    descriptionMD: 'Text MD',
     link: null,
     addedDate: '2021-05-21T13:18:31Z',
     publishDate: '2021-05-21T13:18:31Z',
@@ -167,6 +168,7 @@ export const getResearchOutputDataObject = (): ResearchOutputDataObject => ({
   addedDate: '2021-05-21T13:18:31Z',
   title: 'Test Proposal 1234',
   description: 'Text',
+  descriptionMD: 'Text MD',
   tags: ['tag', 'test'],
   authors: fetchExpectation.items,
   teams: [{ id: 'team-id-0', displayName: 'Team A' }],
@@ -286,6 +288,8 @@ export const getResearchOutputPostRequest = (): ResearchOutputPostRequest => {
   } = getResearchOutputResponse();
   return {
     ...researchOutputResponse,
+    description: 'Text',
+    descriptionMD: 'Text MD',
     link: 'http://a.link',
     type: 'Software',
     labs: labs.map(({ id }) => id),
@@ -368,6 +372,7 @@ export const getRestResearchOutputCreateData =
     addedDate: { iv: '2021-05-21T13:18:31Z' },
     publishDate: { iv: '2021-05-21T13:18:31Z' },
     description: { iv: 'Text' },
+    descriptionMD: { iv: 'Text MD' },
     tags: { iv: ['tag', 'test'] },
     methods: {
       iv: ['ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca'],

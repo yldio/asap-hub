@@ -3,7 +3,7 @@ import {
   inviteHandlerFactory,
 } from '@asap-hub/server-common';
 import { gp2 as gp2Squidex, SquidexRest } from '@asap-hub/squidex';
-import { SES } from 'aws-sdk';
+import { SES } from '@aws-sdk/client-ses';
 import { appName, baseUrl, origin, sesRegion } from '../../config';
 import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';

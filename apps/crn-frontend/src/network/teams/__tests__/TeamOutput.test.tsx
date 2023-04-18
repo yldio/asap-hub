@@ -39,13 +39,13 @@ const mandatoryFields = async (
   {
     link = 'http://example.com',
     title = 'example title',
-    description = 'example description',
+    descriptionMD = 'example description',
     type = 'Preprint',
     doi = '10.1234',
   }: {
     link?: string;
     title?: string;
-    description?: string;
+    descriptionMD?: string;
     type?: string;
     doi?: string;
   },
@@ -58,7 +58,7 @@ const mandatoryFields = async (
   userEvent.type(screen.getByRole('textbox', { name: /title/i }), title);
   userEvent.type(
     screen.getByRole('textbox', { name: /description/i }),
-    description,
+    descriptionMD,
   );
 
   const typeInput = screen.getByRole('textbox', { name: /Select the type/i });
@@ -155,7 +155,7 @@ it('can submit a form when form data is valid', async () => {
   const teamId = '42';
   const link = 'https://example42.com';
   const title = 'example42 title';
-  const description = 'example42 description';
+  const descriptionMD = 'example42 description';
   const type = 'Animal Model';
   const doi = '10.0777';
 
@@ -164,7 +164,7 @@ it('can submit a form when form data is valid', async () => {
   const { publish } = await mandatoryFields({
     link,
     title,
-    description,
+    descriptionMD,
     type,
     doi,
   });
@@ -185,7 +185,8 @@ it('can submit a form when form data is valid', async () => {
       teams: [teamId],
       link,
       title,
-      description,
+      description: '',
+      descriptionMD,
       type,
       labs: ['l0'],
       authors: [
@@ -215,7 +216,7 @@ it('can save draft when form data is valid', async () => {
   const teamId = '42';
   const link = 'https://example42.com';
   const title = 'example42 title';
-  const description = 'example42 description';
+  const descriptionMD = 'example42 description';
   const type = 'Animal Model';
   const doi = '10.0777';
 
@@ -224,7 +225,7 @@ it('can save draft when form data is valid', async () => {
   const { saveDraft } = await mandatoryFields({
     link,
     title,
-    description,
+    descriptionMD,
     type,
     doi,
   });
@@ -245,7 +246,8 @@ it('can save draft when form data is valid', async () => {
       teams: [teamId],
       link,
       title,
-      description,
+      descriptionMD,
+      description: '',
       type,
       labs: ['l0'],
       authors: [
@@ -274,7 +276,7 @@ it('can save draft when form data is valid', async () => {
 it('can edit a research output', async () => {
   const researchOutput = createResearchOutputResponse();
   const teamId = researchOutput.teams[0]!.id;
-  const { type, description, title } = researchOutput;
+  const { type, descriptionMD, title } = researchOutput;
   const link = 'https://example42.com';
   const doi = '10.0777';
 
@@ -288,7 +290,7 @@ it('can edit a research output', async () => {
     {
       link,
       title: '',
-      description: '',
+      descriptionMD: '',
       type,
       doi,
     },
@@ -302,7 +304,7 @@ it('can edit a research output', async () => {
     expect.objectContaining({
       link,
       title,
-      description,
+      descriptionMD,
       teams: [teamId],
     }),
     expect.anything(),
@@ -312,7 +314,7 @@ it('can edit a research output', async () => {
 it('can edit a draft research output', async () => {
   const researchOutput = createResearchOutputResponse();
   const teamId = researchOutput.teams[0]!.id;
-  const { type, description, title } = researchOutput;
+  const { type, descriptionMD, title } = researchOutput;
   const link = 'https://example42.com';
   const doi = '10.0777';
 
@@ -326,7 +328,7 @@ it('can edit a draft research output', async () => {
     {
       link,
       title: '',
-      description: '',
+      descriptionMD: 'descriptionMD',
       type,
       doi,
     },
@@ -340,7 +342,7 @@ it('can edit a draft research output', async () => {
     expect.objectContaining({
       link,
       title,
-      description,
+      descriptionMD,
       teams: [teamId],
     }),
     expect.anything(),
@@ -424,7 +426,7 @@ it('will toast server side errors for unknown errors', async () => {
 it('will toast server side errors for unknown errors in edit mode', async () => {
   const link = 'https://example42.com';
   const title = 'example42 title';
-  const description = 'example42 description';
+  const descriptionMD = 'example42 description';
   const type = 'Animal Model';
   const doi = '10.0777';
 
@@ -440,7 +442,7 @@ it('will toast server side errors for unknown errors in edit mode', async () => 
     {
       link,
       title,
-      description,
+      descriptionMD,
       type,
       doi,
     },

@@ -16,6 +16,7 @@ const baseProps: ComponentProps<typeof ProfileOutputs> = {
   userAssociationMember: true,
   workingGroupAssociation: false,
   draftOutputs: false,
+  hasOutputs: false,
 };
 
 it('renders output cards', () => {
@@ -167,5 +168,15 @@ it('renders the no draft outputs page for a working group', () => {
 
   expect(getByRole('heading', { level: 1 }).textContent).toMatch(
     /This working group doesn’t have any draft outputs./i,
+  );
+});
+
+it('renders no results found page when there are outputs but none returned', () => {
+  const { getByRole } = render(
+    <ProfileOutputs {...baseProps} numberOfItems={0} hasOutputs={true} />,
+  );
+
+  expect(getByRole('heading', { level: 1 }).textContent).toMatch(
+    /No results have been found/i,
   );
 });

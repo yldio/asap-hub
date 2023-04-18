@@ -13,6 +13,7 @@ export { default as OnboardingPreview } from './OnboardingPreview';
 export { default as OnboardingWelcome } from './OnboardingWelcome';
 export { default as OutputForm } from './OutputForm';
 export { default as OutputsPage } from './OutputsPage';
+export { default as PageNotifications } from './PageNotifications';
 export { default as ProjectDetailPage } from './ProjectDetailPage';
 export { default as ProjectOverview } from './ProjectOverview';
 export { default as ProjectResources } from './ProjectResources';

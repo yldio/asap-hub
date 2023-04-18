@@ -1,5 +1,7 @@
 import { welcome } from '@asap-hub/message-templates';
-import AWS_SES, { SES } from '@aws-sdk/client-ses';
+import { AWSError } from 'aws-sdk';
+import SES, { SendTemplatedEmailResponse } from 'aws-sdk/clients/ses';
+import { PromiseResult } from 'aws-sdk/lib/request';
 
 export interface Welcome {
   displayName: string;
@@ -16,13 +18,13 @@ export type SendEmail = (params: {
   to: string[];
   template: SendEmailTemplate;
   values: typeof welcome;
-}) => Promise<AWS_SES.SendTemplatedEmailCommandOutput>;
+}) => Promise<PromiseResult<SendTemplatedEmailResponse, AWSError>>;
 
 export const createSendEmailFactory =
   (userInviteBcc: string, userInviteReturn: string, userInviteSender: string) =>
   (ses: SES): SendEmail =>
   async ({ to, template, values }) => {
-    const params: AWS_SES.SendTemplatedEmailCommandInput = {
+    const params: SES.SendTemplatedEmailRequest = {
       Destination: {
         ToAddresses: to,
         BccAddresses: [userInviteBcc],
@@ -33,5 +35,5 @@ export const createSendEmailFactory =
       ReturnPath: userInviteReturn,
     };
 
-    return ses.sendTemplatedEmail(params);
+    return ses.sendTemplatedEmail(params).promise();
   };

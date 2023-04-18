@@ -2,7 +2,7 @@ import 'source-map-support/register';
 import { squidexHandlerFactory } from '@asap-hub/server-common';
 import { framework as lambda } from '@asap-hub/services-common';
 import { Handler } from 'aws-lambda/handler';
-import { EventBridge } from '@aws-sdk/client-eventbridge';
+import { EventBridge } from 'aws-sdk';
 import {
   eventBridgeEndpoint,
   eventBridgeAccessKey,
@@ -30,10 +30,8 @@ export const squidexWebhookFactory = (
 
 const eventBridge = new EventBridge({
   endpoint: eventBridgeEndpoint,
-  credentials: {
-    accessKeyId: eventBridgeAccessKey,
-    secretAccessKey: eventBridgeSecret,
-  },
+  accessKeyId: eventBridgeAccessKey,
+  secretAccessKey: eventBridgeSecret,
 });
 
 export const handler: Handler = sentryWrapper(

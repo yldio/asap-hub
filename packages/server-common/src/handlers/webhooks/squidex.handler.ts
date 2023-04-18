@@ -1,7 +1,7 @@
 import { WebhookDetail, WebhookDetailType } from '@asap-hub/model';
 import { framework as lambda } from '@asap-hub/services-common';
 import { SquidexWebhookPayload } from '@asap-hub/squidex';
-import { EventBridge } from '@aws-sdk/client-eventbridge';
+import { EventBridge } from 'aws-sdk';
 import { Logger, validateSquidexRequest } from '../../utils';
 
 const getDetailFromRequest = (
@@ -35,16 +35,18 @@ export const squidexHandlerFactory =
 
     const detail = getDetailFromRequest(request);
 
-    await eventBridge.putEvents({
-      Entries: [
-        {
-          EventBusName: eventBus,
-          Source: eventSource,
-          DetailType: type satisfies WebhookDetailType,
-          Detail: JSON.stringify(detail),
-        },
-      ],
-    });
+    await eventBridge
+      .putEvents({
+        Entries: [
+          {
+            EventBusName: eventBus,
+            Source: eventSource,
+            DetailType: type satisfies WebhookDetailType,
+            Detail: JSON.stringify(detail),
+          },
+        ],
+      })
+      .promise();
 
     return {
       statusCode: 200,

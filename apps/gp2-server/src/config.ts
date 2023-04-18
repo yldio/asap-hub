@@ -74,5 +74,4 @@ export const contentfulManagementAccessToken =
   CONTENTFUL_MANAGEMENT_ACCESS_TOKEN || 'contentful-management-access-token';
 export const contentfulEnvId = CONTENTFUL_ENV_ID || 'Development';
 export const contentfulHost = CONTENTFUL_HOST || 'https://cdn.contentful.com';
-export const contentfulSpaceId =
-  CONTENTFUL_SPACE_ID || 'contentful-space-id';
+export const contentfulSpaceId = CONTENTFUL_SPACE_ID || 'contentful-space-id';

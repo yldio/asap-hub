@@ -21,7 +21,7 @@
     "@babel/runtime-corejs3": "7.21.0",
     "@contentful/rich-text-types": "16.0.3",
     "contentful-html-rich-text-converter": "yldio/contentful-html-rich-text-converter#v1.0.18",
-    "contentful-management": "10.31.2",
+    "contentful-management": "10.32.0",
     "graphql": "15.8.0",
     "graphql-tag": "2.12.6"
   },

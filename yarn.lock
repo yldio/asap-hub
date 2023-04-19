@@ -394,7 +394,7 @@ __metadata:
     "@types/node": 18.15.11
     "@types/prettier": 2.7.2
     contentful-html-rich-text-converter: "yldio/contentful-html-rich-text-converter#v1.0.18"
-    contentful-management: 10.31.2
+    contentful-management: 10.32.0
     graphql: 15.8.0
     graphql-tag: 2.12.6
     graphql-typescript-integration: 1.2.1
@@ -426,7 +426,7 @@ __metadata:
     "@types/jest": ^29.4.0
     "@types/node": 18.15.11
     contentful-cli: 1.19.1
-    contentful-management: 10.31.2
+    contentful-management: 10.32.0
     contentful-migrate: "deluan/contentful-migrate#37b9b898599b9ba48644534d3f340b4c169df212"
     graphql: 15.8.0
     graphql-request: 3.4.0
@@ -20539,9 +20539,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"contentful-management@npm:10.31.2":
-  version: 10.31.2
-  resolution: "contentful-management@npm:10.31.2"
+"contentful-management@npm:10.32.0":
+  version: 10.32.0
+  resolution: "contentful-management@npm:10.32.0"
   dependencies:
     "@contentful/rich-text-types": ^16.0.3
     "@types/json-patch": 0.0.30
@@ -20550,7 +20550,7 @@ __metadata:
     fast-copy: ^3.0.0
     lodash.isplainobject: ^4.0.6
     type-fest: ^3.0.0
-  checksum: 0ed7c608f686cff72f5be372115d5c0bf0cdcd31dd613c505d32cba1ca081bb65fc34ec4c2b13d765d069aae4bcc682306db06af96389f8958a4b0403b697d2d
+  checksum: 827d7fc32d46110354f08f772c7d6e110780b314f50e23e565a7dca832fdeaf46413977114790b650e090e73d82699c6b2a1fe31f42422f45e589d4a963370eb
   languageName: node
   linkType: hard
 

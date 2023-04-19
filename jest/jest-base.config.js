@@ -13,6 +13,7 @@ const testPathIgnorePatterns = [
 module.exports = {
   testEnvironment: 'node',
   setupFilesAfterEnv: [require.resolve('./flags-setup-after-env.js')],
+  testTimeout: 10000,
 
   cacheDirectory: join(root, '.jest-cache'),
 

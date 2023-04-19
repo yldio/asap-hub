@@ -3,24 +3,9 @@ import {
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
 import { LabEvent, ListResponse, UserResponse } from '@asap-hub/model';
-import {
-  InputUser,
-  RestUser,
-  SquidexGraphql,
-  SquidexRest,
-} from '@asap-hub/squidex';
 import { EventBridgeEvent } from 'aws-lambda';
-import {
-  algoliaApiKey,
-  algoliaAppId,
-  algoliaIndex,
-  appName,
-  baseUrl,
-} from '../../config';
+import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import Users, { UserController } from '../../controllers/users';
-import { AssetSquidexDataProvider } from '../../data-providers/assets.data-provider';
-import { UserSquidexDataProvider } from '../../data-providers/users.data-provider';
-import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
 import {
   loopOverCustomCollection,
@@ -28,6 +13,10 @@ import {
 } from '../../utils/loop-over-custom-colection';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { LabPayload } from '../event-bus';
+import {
+  getUserDataProvider,
+  getAssetDataProvider,
+} from '../../dependencies/users.dependencies';
 
 export const indexLabUsersHandler =
   (
@@ -45,7 +34,7 @@ export const indexLabUsersHandler =
     > =>
       userController.fetch({
         filter: {
-          labId: [event.detail.payload.id],
+          labId: event.detail.payload.id,
         },
         skip,
         take,
@@ -73,28 +62,10 @@ export const indexLabUsersHandler =
     await loopOverCustomCollection(fetchFunction, processingFunction, 8);
   };
 
-const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
-  appName,
-  baseUrl,
-});
-const userSquidexRestClient = new SquidexRest<RestUser, InputUser>(
-  getAuthToken,
-  'users',
-  {
-    appName,
-    baseUrl,
-  },
-);
-const userDataProvider = new UserSquidexDataProvider(
-  squidexGraphqlClient,
-  userSquidexRestClient,
-);
-const assetDataProvider = new AssetSquidexDataProvider(userSquidexRestClient);
-
 /* istanbul ignore next */
 export const handler = sentryWrapper(
   indexLabUsersHandler(
-    new Users(userDataProvider, assetDataProvider),
+    new Users(getUserDataProvider(), getAssetDataProvider()),
     algoliaSearchClientFactory({
       algoliaApiKey,
       algoliaAppId,

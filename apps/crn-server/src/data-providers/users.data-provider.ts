@@ -22,7 +22,6 @@ import {
   SquidexGraphqlClient,
   SquidexRestClient,
 } from '@asap-hub/squidex';
-import { Filter } from 'odata-query';
 import {
   FetchUserQuery,
   FetchUserQueryVariables,
@@ -185,22 +184,7 @@ const cleanUser = (userToUpdate: UserUpdateDataObject) =>
     return setValue(value);
   }, {} as { [key: string]: { iv: unknown } });
 
-const generateFetchQueryFilter = ({ search, filter }: FetchUsersOptions) => {
-  const searchFilter = (search || '')
-    .split(' ')
-    .filter(Boolean) // removes whitespaces
-    .reduce(
-      (acc: Filter[], word: string) =>
-        acc.concat({
-          or: [
-            { 'data/firstName/iv': { contains: word } },
-            { 'data/lastName/iv': { contains: word } },
-            { 'data/institution/iv': { contains: word } },
-            { 'data/expertiseAndResourceTags/iv': { contains: word } },
-          ],
-        }),
-      [],
-    );
+const generateFetchQueryFilter = ({ filter }: FetchUsersOptions) => {
   const {
     role,
     labId,
@@ -212,9 +196,9 @@ const generateFetchQueryFilter = ({ search, filter }: FetchUsersOptions) => {
   } = filter || {};
   const filterRoles = buildEqFilterForWords('teams', role, 'role');
 
-  const filterLabs = buildEqFilterForWords('labs', labId);
+  const filterLabs = labId && { 'data/labs/iv': labId };
 
-  const filterTeams = buildEqFilterForWords('teams', teamId, 'id');
+  const filterTeams = teamId && { 'data/teams/iv/id': teamId };
   const filterCode = code && { 'data/connections/iv/code': code };
 
   const filterHidden = hidden && { not: { 'data/role/iv': 'Hidden' } };
@@ -229,7 +213,6 @@ const generateFetchQueryFilter = ({ search, filter }: FetchUsersOptions) => {
     filterNonOnboarded,
     filterHidden,
     filterOrcid,
-    ...searchFilter,
   ].filter(Boolean);
   return buildODataFilter(queryFilter);
 };

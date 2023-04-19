@@ -1,13 +1,16 @@
 import {
   FetchOptions,
+  LabResponse,
   ListTeamDataObject,
   TeamCreateDataObject,
   TeamDataObject,
   TeamTool,
   TeamUpdateDataObject,
+  TeamMember,
 } from '@asap-hub/model';
 
 import {
+  patchAndPublish,
   GraphQLClient,
   FETCH_TEAMS,
   FETCH_TEAM_BY_ID,
@@ -20,10 +23,18 @@ import {
   addLocaleToFields,
 } from '@asap-hub/contentful';
 
+import { isTeamRole, priorities } from '../../entities';
+
 import { TeamDataProvider } from '../teams.data-provider';
 
 export type TeamItem = NonNullable<
   NonNullable<FetchTeamsQuery['teamsCollection']>['items'][number]
+>;
+
+export type Membership = NonNullable<
+  NonNullable<
+    NonNullable<TeamItem['linkedFrom']>['teamMembershipCollection']
+  >['items'][number]
 >;
 
 type TeamFilter = {
@@ -112,21 +123,14 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
 
     const team = await environment.getEntry(id);
 
-    const teamUpdated = await team.patch([
-      {
-        op: 'replace',
-        path: '/fields/tools/en-US',
-        value: publishedTools.map((tool) => ({
-          sys: {
-            type: 'Link',
-            linkType: 'Entry',
-            id: tool.sys.id,
-          },
-        })),
+    const tools = publishedTools.map((tool) => ({
+      sys: {
+        type: 'Link',
+        linkType: 'Entry',
+        id: tool.sys.id,
       },
-    ]);
-
-    await teamUpdated.publish();
+    }));
+    await patchAndPublish(team, { tools });
   }
 
   async create(input: TeamCreateDataObject): Promise<string> {
@@ -166,8 +170,6 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
 }
 
 export const teamUnreadyResponse = {
-  labCount: 0,
-  members: [],
   pointOfContact: undefined,
   proposalURL: undefined,
 };
@@ -182,7 +184,6 @@ export const parseContentfulGraphQlTeams = (item: TeamItem): TeamDataObject => {
     },
     [],
   );
-
   const tools = (item.toolsCollection?.items || []).reduce(
     (teamTools: TeamTool[], tool) => {
       if (!tool || !tool.name || !tool.url) {
@@ -203,6 +204,76 @@ export const parseContentfulGraphQlTeams = (item: TeamItem): TeamDataObject => {
     [],
   );
 
+  const members: TeamMember[] = (
+    item.linkedFrom?.teamMembershipCollection?.items || []
+  ).reduce(
+    (userList: TeamMember[], membership: Membership | null): TeamMember[] => {
+      if (!membership) {
+        return userList;
+      }
+
+      const { role, inactiveSinceDate } = membership;
+      const {
+        sys,
+        firstName,
+        lastName,
+        email,
+        avatar,
+        labsCollection,
+        alumniSinceDate,
+      } = membership.linkedFrom?.usersCollection?.items[0] || {};
+      const id = sys?.id;
+
+      if (!id) {
+        return userList;
+      }
+
+      if (!role || !isTeamRole(role)) {
+        return userList;
+      }
+
+      const labs: LabResponse[] = (labsCollection?.items || []).reduce(
+        (userLabs: LabResponse[], lab): LabResponse[] => {
+          if (!lab) {
+            return userLabs;
+          }
+
+          return [
+            ...userLabs,
+            {
+              id: lab.sys.id,
+              name: lab.name || '',
+            },
+          ];
+        },
+        [],
+      );
+
+      return [
+        ...userList,
+        {
+          id,
+          firstName: firstName ?? '',
+          lastName: lastName ?? '',
+          email: email ?? '',
+          role: role ?? '',
+          inactiveSinceDate: inactiveSinceDate ?? undefined,
+          alumniSinceDate,
+          avatarUrl: avatar?.url ?? undefined,
+          displayName: `${firstName} ${lastName}`,
+          labs,
+        },
+      ];
+    },
+    [],
+  );
+
+  const labCount = members
+    .flatMap((member) => member.labs || [])
+    .filter(
+      (lab, index, labs) => labs.findIndex((l) => l.id === lab.id) === index,
+    ).length;
+
   return {
     id: item.sys.id ?? '',
     displayName: item.displayName ?? '',
@@ -212,6 +283,8 @@ export const parseContentfulGraphQlTeams = (item: TeamItem): TeamDataObject => {
     expertiseAndResourceTags,
     tools,
     projectSummary: item.projectSummary ?? undefined,
+    members: members.sort((a, b) => priorities[a.role] - priorities[b.role]),
+    labCount,
 
     // TODO implement below when users (CRN-1164),
     // labs (CRN-1263) and RO (CRN-1253) are ready

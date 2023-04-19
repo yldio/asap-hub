@@ -4,27 +4,16 @@ import {
 } from '@asap-hub/algolia';
 import { UserEvent } from '@asap-hub/model';
 import { EventBridgeHandler, UserPayload } from '@asap-hub/server-common';
-import {
-  InputUser,
-  RestUser,
-  SquidexGraphql,
-  SquidexRest,
-} from '@asap-hub/squidex';
 import { isBoom, Boom } from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
-import {
-  algoliaApiKey,
-  algoliaAppId,
-  algoliaIndex,
-  appName,
-  baseUrl,
-} from '../../config';
+import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import Users, { UserController } from '../../controllers/users';
-import { AssetSquidexDataProvider } from '../../data-providers/assets.data-provider';
-import { UserSquidexDataProvider } from '../../data-providers/users.data-provider';
-import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
+import {
+  getUserDataProvider,
+  getAssetDataProvider,
+} from '../../dependencies/users.dependencies';
 
 /* istanbul ignore next */
 export const indexUserHandler =
@@ -65,28 +54,10 @@ export const indexUserHandler =
     }
   };
 
-const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
-  appName,
-  baseUrl,
-});
-const userRestClient = new SquidexRest<RestUser, InputUser>(
-  getAuthToken,
-  'users',
-  {
-    appName,
-    baseUrl,
-  },
-);
-const userDataProvider = new UserSquidexDataProvider(
-  squidexGraphqlClient,
-  userRestClient,
-);
-const assetDataProvider = new AssetSquidexDataProvider(userRestClient);
-
 /* istanbul ignore next */
 export const handler = sentryWrapper(
   indexUserHandler(
-    new Users(userDataProvider, assetDataProvider),
+    new Users(getUserDataProvider(), getAssetDataProvider()),
     algoliaSearchClientFactory({ algoliaApiKey, algoliaAppId, algoliaIndex }),
   ),
 );

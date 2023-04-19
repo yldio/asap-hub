@@ -69,12 +69,10 @@ import Users, { UserController } from './controllers/users';
 import WorkingGroups, {
   WorkingGroupController,
 } from './controllers/working-groups';
-import {
-  AssetDataProvider,
-  AssetSquidexDataProvider,
-} from './data-providers/assets.data-provider';
+import { AssetSquidexDataProvider } from './data-providers/assets.data-provider';
 import { CalendarSquidexDataProvider } from './data-providers/calendars.data-provider';
 import { CalendarContentfulDataProvider } from './data-providers/contentful/calendars.data-provider';
+import { AssetContentfulDataProvider } from './data-providers/contentful/assets.data-provider';
 import { DashboardContentfulDataProvider } from './data-providers/contentful/dashboard.data-provider';
 import { ExternalAuthorContentfulDataProvider } from './data-providers/contentful/external-authors.data-provider';
 import { NewsContentfulDataProvider } from './data-providers/contentful/news.data-provider';
@@ -114,6 +112,7 @@ import {
   TutorialsSquidexDataProvider,
 } from './data-providers/tutorials.data-provider';
 import {
+  AssetDataProvider,
   NewsDataProvider,
   PageDataProvider,
   UserDataProvider,
@@ -222,8 +221,6 @@ export const appFactory = (libs: Libs = {}): Express => {
   const userResponseCacheClient = new MemoryCacheClient<UserResponse>();
 
   // Data Providers
-  const assetDataProvider =
-    libs.assetDataProvider || new AssetSquidexDataProvider(userRestClient);
   const dashboardSquidexDataProvider =
     libs.dashboardSquidexDataProvider ||
     new DashboardSquidexDataProvider(squidexGraphqlClient);
@@ -284,6 +281,20 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.tutorialsDataProvider ||
     new TutorialsSquidexDataProvider(squidexGraphqlClient);
   featureFlagDependencySwitch.setDependency(
+    'assets',
+    libs.assetSquidexDataProvider ||
+      new AssetSquidexDataProvider(userRestClient),
+    'IS_CONTENTFUL_ENABLED_V2',
+    false,
+  );
+  featureFlagDependencySwitch.setDependency(
+    'assets',
+    libs.assetContentfulDataProvider ||
+      new AssetContentfulDataProvider(getContentfulRestClientFactory),
+    'IS_CONTENTFUL_ENABLED_V2',
+    true,
+  );
+  featureFlagDependencySwitch.setDependency(
     'users',
     libs.userSquidexDataProvider ||
       new UserSquidexDataProvider(squidexGraphqlClient, userRestClient),
@@ -292,7 +303,11 @@ export const appFactory = (libs: Libs = {}): Express => {
   );
   featureFlagDependencySwitch.setDependency(
     'users',
-    libs.userContentfulDataProvider || new UserContentfulDataProvider(),
+    libs.userContentfulDataProvider ||
+      new UserContentfulDataProvider(
+        contentfulGraphQLClient,
+        getContentfulRestClientFactory,
+      ),
     'IS_CONTENTFUL_ENABLED_V2',
     true,
   );
@@ -300,6 +315,12 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.userDataProvider ||
     featureFlagDependencySwitch.getDependency(
       'users',
+      'IS_CONTENTFUL_ENABLED_V2',
+    );
+  const assetDataProvider =
+    libs.assetDataProvider ||
+    featureFlagDependencySwitch.getDependency(
+      'assets',
       'IS_CONTENTFUL_ENABLED_V2',
     );
   const reminderDataProvider =
@@ -535,6 +556,8 @@ export type Libs = {
   userController?: UserController;
   workingGroupsController?: WorkingGroupController;
   assetDataProvider?: AssetDataProvider;
+  assetSquidexDataProvider?: AssetDataProvider;
+  assetContentfulDataProvider?: AssetDataProvider;
   calendarDataProvider?: CalendarDataProvider;
   calendarSquidexDataProvider?: CalendarDataProvider;
   calendarContentfulDataProvider?: CalendarDataProvider;

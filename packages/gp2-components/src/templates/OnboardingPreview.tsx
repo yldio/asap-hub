@@ -105,6 +105,7 @@ const OnboardingPreview: React.FC<OnboardingPreviewProps> = ({
     />
     <UserFundingStreams
       fundingStreams={fundingStreams}
+      firstName={headerProps.firstName}
       editHref={editFundingStreamsHref}
     />
     <UserContributingCohorts

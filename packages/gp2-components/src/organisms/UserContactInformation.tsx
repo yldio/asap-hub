@@ -23,8 +23,7 @@ const UserContactInformation: React.FC<UserContactInformationProps> = ({
   >
     {editHref && !secondaryEmail ? (
       <UserProfilePlaceholderCard>
-        Provide alternative contact details to your institutional email used to
-        sign up.
+        Provide alternative contact details.
       </UserProfilePlaceholderCard>
     ) : (
       <EmailSection

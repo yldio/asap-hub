@@ -53,14 +53,14 @@ const OnboardingWelcome: React.FC<Record<string, never>> = () => (
       </Paragraph>
       <ul>
         <li>
-          <em>Learn and connect</em> with like minded members
+          <em>Learn and connect</em> with like-minded members
         </li>
         <li>
           <em>Track and manage group activities</em> within both your projects
           and working groups
         </li>
         <li>
-          <em>Keep informed and updated</em> with what's happening all around
+          <em>Stay informed and updated</em> with what's happening all around
           the GP2 program
         </li>
       </ul>
@@ -73,7 +73,7 @@ const OnboardingWelcome: React.FC<Record<string, never>> = () => (
     </CardWithOffsetBackground>
     <Caption accent="lead">
       <strong>Please note —</strong> all information provided can only be viewed
-      by other GP2 members that have also registered.
+      by other GP2 members who have also registered.
     </Caption>
     <footer css={footerStyles}>
       <div css={buttonWrapperStyle}>

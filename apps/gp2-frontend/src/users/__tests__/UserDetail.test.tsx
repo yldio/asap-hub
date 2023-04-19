@@ -108,7 +108,7 @@ describe('UserDetail', () => {
         screen.getByRole('heading', { name: /Contact information/i }),
       ).toBeVisible();
       expect(
-        screen.getByRole('heading', { name: /funding providers/i }),
+        screen.getByRole('heading', { name: /Financial Disclosures/i }),
       ).toBeVisible();
     });
   });

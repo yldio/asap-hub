@@ -60,8 +60,7 @@ const UserPositions: React.FC<UserPositionsProps> = ({
       <header>
         <Headline4 styleAsHeading={3}>Positions</Headline4>
         <Paragraph accent="lead">
-          Share the positions inside the institutions where you are working (up
-          to three).
+          Share your institutional positions (up to three)
         </Paragraph>
       </header>
       {positions.map((position, index) => (

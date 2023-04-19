@@ -22,6 +22,7 @@ export {
   Headline6,
   Label,
   Link,
+  Markdown,
   NavigationLink,
   Overlay,
   Paragraph,

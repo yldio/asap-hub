@@ -19,7 +19,7 @@ const renderRoutes = async () => {
           <WhenReady>
             <MemoryRouter initialEntries={['/projects']}>
               <Route path="/projects">
-                <Routes setBannerMessage={jest.fn()} />
+                <Routes />
               </Route>
             </MemoryRouter>
           </WhenReady>

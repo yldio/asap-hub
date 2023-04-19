@@ -5,10 +5,11 @@ import {
   getGroupResponse,
 } from '../fixtures/groups.fixtures';
 import { getUserDataObject } from '../fixtures/users.fixtures';
-import { groupDataProviderMock } from '../mocks/group-data-provider.mock';
-import { userDataProviderMock } from '../mocks/user-data-provider.mock';
+import { getDataProviderMock } from '../mocks/data-provider.mock';
 
 describe('Group controller', () => {
+  const groupDataProviderMock = getDataProviderMock();
+  const userDataProviderMock = getDataProviderMock();
   const groupController = new Groups(
     groupDataProviderMock,
     userDataProviderMock,

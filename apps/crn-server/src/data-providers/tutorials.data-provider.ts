@@ -1,4 +1,4 @@
-import { TutorialsDataObject } from '@asap-hub/model';
+import { TutorialsDataObject, DataProvider } from '@asap-hub/model';
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import {
   FetchTutorialsQuery,
@@ -7,11 +7,15 @@ import {
 import { parseGraphQLTutorials } from '../entities';
 import { FETCH_TUTORIAL } from '../queries/tutorials.queries';
 
-export interface TutorialsDataProvider {
-  fetchById(id: string): Promise<TutorialsDataObject | null>;
-}
+export type TutorialsDataProvider = DataProvider<TutorialsDataObject>;
+
 export class TutorialsSquidexDataProvider implements TutorialsDataProvider {
   constructor(private squidexGraphqlClient: SquidexGraphqlClient) {}
+
+  async fetch(): Promise<{ items: TutorialsDataObject[]; total: number }> {
+    throw new Error('Method not implemented.');
+  }
+
   async fetchById(id: string): Promise<TutorialsDataObject | null> {
     const { findTutorialsContent } = await this.squidexGraphqlClient.request<
       FetchTutorialsQuery,

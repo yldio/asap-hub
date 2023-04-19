@@ -8,48 +8,9 @@ inputs:
     description: 'The PR number'
     required: true
 outputs:
-  crn-algolia-app-id-name:
-    description: 'CRN Algolia App id SSM name'
-    value: ${{ steps.vars.outputs.crn-algolia-app-id-name }}
-  crn-algolia-api-key-name:
-    description: 'CRN Algolia Api key SSM Name'
-    value: ${{ steps.vars.outputs.crn-algolia-api-key-name }}
-  crn-algolia-index:
-    description: 'CRN Algolia Index'
-    value: ${{ steps.vars.outputs.crn-algolia-index }}
   app-release:
     description: 'App Release'
     value: ${{ steps.vars.outputs.app-release }}
-  crn-api-url:
-    description: 'CRN API Url'
-    value: ${{ steps.vars.outputs.crn-api-url }}
-  crn-app-url:
-    description: 'CRN APP Url'
-    value: ${{ steps.vars.outputs.crn-app-url }}
-  crn-auth-url:
-    description: 'CRN Auth Url'
-    value: ${{ steps.vars.outputs.crn-auth-url }}
-  crn-auth0-audience:
-    description: 'CRN Auth0 Audience'
-    value: ${{ steps.vars.outputs.crn-auth0-audience }}
-  crn-auth0-client-id:
-    description: 'CRN Auth0 Client ID'
-    value: ${{ steps.vars.outputs.crn-auth0-client-id }}
-  crn-auth0-domain:
-    description: 'CRN Auth0 Domain'
-    value: ${{ steps.vars.outputs.crn-auth0-domain }}
-  crn-contentful-env-id:
-    description: 'CRN Environment ID for Contentful'
-    value: ${{ steps.vars.outputs.crn-contentful-env-id }}
-  crn-base-pr-app-domain:
-    description: 'CRN Base PR App Domain'
-    value: ${{ steps.vars.outputs.crn-base-pr-app-domain }}
-  crn-auth0-additional-claim-domain:
-    description: 'CRN Auth0 Additional Claim Domain'
-    value: ${{ steps.vars.outputs.crn-auth0-additional-claim-domain }}
-  crn-ci-auth0-client-id:
-    description: 'CRN CI Auth0 Client Id'
-    value: ${{ steps.vars.outputs.crn-ci-auth0-client-id }}
   aws-acm-asap-science-certificate-arn:
     description: 'AWS ACM ASAP Science Certificate ARN'
     value: ${{ steps.vars.outputs.aws-acm-asap-science-certificate-arn }}
@@ -59,9 +20,6 @@ outputs:
   aws-region:
     description: 'AWS Region'
     value: ${{ steps.vars.outputs.aws-region }}
-  crn-algolia-backup-bucket-name:
-    description: 'CRN Algolia Backup Bucket Name'
-    value: ${{ steps.vars.outputs.crn-algolia-backup-bucket-name }}
   cache-prefix-definitions:
     description: 'Cache Prefix Definitions'
     value: ${{ steps.vars.outputs.cache-prefix-definitions }}
@@ -71,27 +29,84 @@ outputs:
   cache-prefix-transpile:
     description: 'Cache Prefix Transpile'
     value: ${{ steps.vars.outputs.cache-prefix-transpile }}
-  crn-contentful-space-id:
-    description: 'CRN Contentful Space ID'
-    value: ${{ steps.vars.outputs.crn-contentful-space-id }}
   contentful-environment:
     description: 'Contentful Environment'
     value: ${{ steps.vars.outputs.contentful-environment }}
-  is-contentful-enabled:
-    description: 'Is news, pages and dashboard data fetched from Contentful'
-    value: ${{ steps.vars.outputs.is-contentful-enabled }}
-  is-contentful-enabled-v2:
-    description: 'Is all remaining data fetched from Contentful'
-    value: ${{ steps.vars.outputs.is-contentful-enabled-v2 }}
-  crn-max-contentful-envs:
-    description: 'Maximum CRN Contentful environments'
-    value: ${{ steps.vars.outputs.crn-max-contentful-envs }}
-  crn-contentful-backup-bucket-name:
-    description: 'CRN Contentful Backup Bucket Name'
-    value: ${{ steps.vars.outputs.crn-contentful-backup-bucket-name }}
+  crn-algolia-api-key-name:
+    description: 'CRN Algolia Api key SSM Name'
+    value: ${{ steps.vars.outputs.crn-algolia-api-key-name }}
+  crn-algolia-app-id-name:
+    description: 'CRN Algolia App id SSM name'
+    value: ${{ steps.vars.outputs.crn-algolia-app-id-name }}
+  crn-algolia-backup-bucket-name:
+    description: 'CRN Algolia Backup Bucket Name'
+    value: ${{ steps.vars.outputs.crn-algolia-backup-bucket-name }}
+  crn-algolia-index:
+    description: 'CRN Algolia Index'
+    value: ${{ steps.vars.outputs.crn-algolia-index }}
+  crn-api-url:
+    description: 'CRN API Url'
+    value: ${{ steps.vars.outputs.crn-api-url }}
+  crn-app-url:
+    description: 'CRN APP Url'
+    value: ${{ steps.vars.outputs.crn-app-url }}
+  crn-auth-url:
+    description: 'CRN Auth Url'
+    value: ${{ steps.vars.outputs.crn-auth-url }}
+  crn-auth0-additional-claim-domain:
+    description: 'CRN Auth0 Additional Claim Domain'
+    value: ${{ steps.vars.outputs.crn-auth0-additional-claim-domain }}
+  crn-auth0-audience:
+    description: 'CRN Auth0 Audience'
+    value: ${{ steps.vars.outputs.crn-auth0-audience }}
+  crn-auth0-client-id:
+    description: 'CRN Auth0 Client ID'
+    value: ${{ steps.vars.outputs.crn-auth0-client-id }}
+  crn-auth0-domain:
+    description: 'CRN Auth0 Domain'
+    value: ${{ steps.vars.outputs.crn-auth0-domain }}
   crn-aws-acm-certificate-arn:
     description: 'CRN AWS ACM Certificate ARN'
     value: ${{ steps.vars.outputs.crn-aws-acm-certificate-arn }}
+  crn-base-pr-app-domain:
+    description: 'CRN Base PR App Domain'
+    value: ${{ steps.vars.outputs.crn-base-pr-app-domain }}
+  crn-ci-auth0-client-id:
+    description: 'CRN CI Auth0 Client Id'
+    value: ${{ steps.vars.outputs.crn-ci-auth0-client-id }}
+  crn-contentful-backup-bucket-name:
+    description: 'CRN Contentful Backup Bucket Name'
+    value: ${{ steps.vars.outputs.crn-contentful-backup-bucket-name }}
+  crn-contentful-env-id:
+    description: 'CRN Environment ID for Contentful'
+    value: ${{ steps.vars.outputs.crn-contentful-env-id }}
+  crn-contentful-space-id:
+    description: 'CRN Contentful Space ID'
+    value: ${{ steps.vars.outputs.crn-contentful-space-id }}
+  crn-max-contentful-envs:
+    description: 'Maximum CRN Contentful environments'
+    value: ${{ steps.vars.outputs.crn-max-contentful-envs }}
+  crn-sentry-dsn-api:
+    description: 'CRN Sentry DSN API'
+    value: ${{ steps.vars.outputs.crn-sentry-dsn-api }}
+  crn-sentry-dsn-handlers:
+    description: 'CRN Sentry DSN Handlers'
+    value: ${{ steps.vars.outputs.crn-sentry-dsn-handlers }}
+  crn-squidex-api-client-id:
+    description: 'CRN API Squidex Client ID'
+    value: ${{ steps.vars.outputs.crn-squidex-api-client-id }}
+  crn-squidex-app-name-legacy:
+    description: 'Legacy CRN Squidex App Name'
+    value: ${{ steps.vars.outputs.crn-squidex-app-name-legacy }}
+  crn-squidex-app-name:
+    description: 'CRN Squidex App Name'
+    value: ${{ steps.vars.outputs.crn-squidex-app-name }}
+  crn-squidex-backup-bucket-name:
+    description: 'CRN Squidex Backup Bucket Name'
+    value: ${{ steps.vars.outputs.crn-squidex-backup-bucket-name }}
+  crn-squidex-ci-client-id:
+    description: 'CRN CI Squidex Client ID'
+    value: ${{ steps.vars.outputs.crn-squidex-ci-client-id }}
   gp2-api-url:
     description: 'GP2 API Url'
     value: ${{ steps.vars.outputs.gp2-api-url }}
@@ -101,9 +116,30 @@ outputs:
   gp2-auth-url:
     description: 'GP2 Auth Url'
     value: ${{ steps.vars.outputs.gp2-auth-url }}
+  gp2-auth0-additional-claim-domain:
+    description: 'GP2 Auth0 Additional Claim Domain'
+    value: ${{ steps.vars.outputs.gp2-auth0-additional-claim-domain }}
+  gp2-auth0-audience:
+    description: 'GP2 Auth0 Audience'
+    value: ${{ steps.vars.outputs.gp2-auth0-audience }}
+  gp2-auth0-client-id:
+    description: 'GP2 Auth0 Client ID'
+    value: ${{ steps.vars.outputs.gp2-auth0-client-id }}
+  gp2-auth0-domain:
+    description: 'GP2 Auth0 Domain'
+    value: ${{ steps.vars.outputs.gp2-auth0-domain }}
   gp2-aws-acm-certificate-arn:
     description: 'GP2 AWS ACM Certificate ARN'
     value: ${{ steps.vars.outputs.gp2-aws-acm-certificate-arn }}
+  gp2-base-pr-app-domain:
+    description: 'GP2 Base PR App Domain'
+    value: ${{ steps.vars.outputs.gp2-base-pr-app-domain }}
+  gp2-ci-auth0-client-id:
+    description: 'GP2 CI Auth0 Client Id'
+    value: ${{ steps.vars.outputs.gp2-ci-auth0-client-id }}
+  gp2-contentful-backup-bucket-name:
+    description: 'GP2 Contentful Backup Bucket Name'
+    value: ${{ steps.vars.outputs.gp2-contentful-backup-bucket-name }}
   gp2-contentful-env-id:
     description: 'GP2 Environment ID for Contentful'
     value: ${{ steps.vars.outputs.gp2-contentful-env-id }}
@@ -113,90 +149,60 @@ outputs:
   gp2-hostname:
     description: 'GP2 Hostname'
     value: ${{ steps.vars.outputs.gp2-hostname }}
-  gp2-auth0-audience:
-    description: 'GP2 Auth0 Audience'
-    value: ${{ steps.vars.outputs.gp2-auth0-audience }}
-  gp2-base-pr-app-domain:
-    description: 'GP2 Base PR App Domain'
-    value: ${{ steps.vars.outputs.gp2-base-pr-app-domain }}
-  gp2-auth0-additional-claim-domain:
-    description: 'GP2 Auth0 Additional Claim Domain'
-    value: ${{ steps.vars.outputs.gp2-auth0-additional-claim-domain }}
-  gp2-auth0-client-id:
-    description: 'GP2 Auth0 Client ID'
-    value: ${{ steps.vars.outputs.gp2-auth0-client-id }}
-  gp2-auth0-domain:
-    description: 'GP2 Auth0 Domain'
-    value: ${{ steps.vars.outputs.gp2-auth0-domain }}
-  gp2-ci-auth0-client-id:
-    description: 'GP2 CI Auth0 Client Id'
-    value: ${{ steps.vars.outputs.gp2-ci-auth0-client-id }}
-  pr-number:
-    description: 'PR Number'
-    value: ${{ steps.vars.outputs.pr-number }}
-  print-sync-logs-on-success:
-    description: 'Print sync logs on success'
-    value: ${{ steps.vars.outputs.print-sync-logs-on-success }}
-  react-app-environment:
-    description: 'React App Environment'
-    value: ${{ steps.vars.outputs.react-app-environment }}
-  react-app-gtm-container-id:
-    description: 'React App GTM Container ID'
-    value: ${{ steps.vars.outputs.react-app-gtm-container-id }}
-  react-app-crn-sentry-dsn:
-    description: 'React App CRN Sentry DSN'
-    value: ${{ steps.vars.outputs.react-app-crn-sentry-dsn }}
-  react-app-gp2-sentry-dsn:
-    description: 'React App GP2 Sentry DSN'
-    value: ${{ steps.vars.outputs.react-app-gp2-sentry-dsn }}
-  crn-sentry-dsn-api:
-    description: 'CRN Sentry DSN API'
-    value: ${{ steps.vars.outputs.crn-sentry-dsn-api }}
-  crn-sentry-dsn-handlers:
-    description: 'CRN Sentry DSN Handlers'
-    value: ${{ steps.vars.outputs.crn-sentry-dsn-handlers }}
+  gp2-max-contentful-envs:
+    description: 'Maximum GP2 Contentful environments'
+    value: ${{ steps.vars.outputs.gp2-max-contentful-envs }}
   gp2-sentry-dsn-api:
     description: 'GP2 Sentry DSN API'
     value: ${{ steps.vars.outputs.gp2-sentry-dsn-api }}
   gp2-sentry-dsn-handlers:
     description: 'GP2 Sentry DSN Handlers'
     value: ${{ steps.vars.outputs.gp2-sentry-dsn-handlers }}
-  ses-region:
-    description: 'SES Region'
-    value: ${{ steps.vars.outputs.ses-region }}
-  sls-stage:
-    description: 'SLS Stage'
-    value: ${{ steps.vars.outputs.sls-stage }}
-  crn-squidex-app-name:
-    description: 'CRN Squidex App Name'
-    value: ${{ steps.vars.outputs.crn-squidex-app-name }}
-  crn-squidex-app-name-legacy:
-    description: 'Legacy CRN Squidex App Name'
-    value: ${{ steps.vars.outputs.crn-squidex-app-name-legacy }}
-  crn-squidex-backup-bucket-name:
-    description: 'CRN Squidex Backup Bucket Name'
-    value: ${{ steps.vars.outputs.crn-squidex-backup-bucket-name }}
-  squidex-base-url:
-    description: 'Squidex Base Url'
-    value: ${{ steps.vars.outputs.squidex-base-url }}
-  crn-squidex-api-client-id:
-    description: 'CRN API Squidex Client ID'
-    value: ${{ steps.vars.outputs.crn-squidex-api-client-id }}
-  crn-squidex-ci-client-id:
-    description: 'CRN CI Squidex Client ID'
-    value: ${{ steps.vars.outputs.crn-squidex-ci-client-id }}
+  gp2-squidex-api-client-id:
+    description: 'GP2 API Squidex Client ID'
+    value: ${{ steps.vars.outputs.gp2-squidex-api-client-id }}
   gp2-squidex-app-name:
     description: 'GP2 Squidex App Name'
     value: ${{ steps.vars.outputs.gp2-squidex-app-name }}
   gp2-squidex-backup-bucket-name:
     description: 'GP2 Squidex Backup Bucket Name'
     value: ${{ steps.vars.outputs.gp2-squidex-backup-bucket-name }}
-  gp2-squidex-api-client-id:
-    description: 'GP2 API Squidex Client ID'
-    value: ${{ steps.vars.outputs.gp2-squidex-api-client-id }}
   gp2-squidex-ci-client-id:
     description: 'GP2 CI Squidex Client ID'
     value: ${{ steps.vars.outputs.gp2-squidex-ci-client-id }}
+  is-contentful-enabled-v2:
+    description: 'Is all remaining data fetched from Contentful'
+    value: ${{ steps.vars.outputs.is-contentful-enabled-v2 }}
+  is-contentful-enabled:
+    description: 'Is news, pages and dashboard data fetched from Contentful'
+    value: ${{ steps.vars.outputs.is-contentful-enabled }}
+  pr-number:
+    description: 'PR Number'
+    value: ${{ steps.vars.outputs.pr-number }}
+  print-sync-logs-on-success:
+    description: 'Print sync logs on success'
+    value: ${{ steps.vars.outputs.print-sync-logs-on-success }}
+  react-app-crn-sentry-dsn:
+    description: 'React App CRN Sentry DSN'
+    value: ${{ steps.vars.outputs.react-app-crn-sentry-dsn }}
+  react-app-environment:
+    description: 'React App Environment'
+    value: ${{ steps.vars.outputs.react-app-environment }}
+  react-app-gp2-sentry-dsn:
+    description: 'React App GP2 Sentry DSN'
+    value: ${{ steps.vars.outputs.react-app-gp2-sentry-dsn }}
+  react-app-gtm-container-id:
+    description: 'React App GTM Container ID'
+    value: ${{ steps.vars.outputs.react-app-gtm-container-id }}
+  ses-region:
+    description: 'SES Region'
+    value: ${{ steps.vars.outputs.ses-region }}
+  sls-stage:
+    description: 'SLS Stage'
+    value: ${{ steps.vars.outputs.sls-stage }}
+  squidex-base-url:
+    description: 'Squidex Base Url'
+    value: ${{ steps.vars.outputs.squidex-base-url }}
 runs:
   using: 'composite'
   steps:

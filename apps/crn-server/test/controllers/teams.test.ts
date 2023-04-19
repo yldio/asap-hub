@@ -2,9 +2,10 @@ import { NotFoundError } from '@asap-hub/errors';
 import Teams from '../../src/controllers/teams';
 import { getTeamDataObject, getTeamResponse } from '../fixtures/teams.fixtures';
 
-import { teamDataProviderMock } from '../mocks/team-data-provider.mock';
+import { getDataProviderMock } from '../mocks/data-provider.mock';
 
 describe('Team Controller', () => {
+  const teamDataProviderMock = getDataProviderMock();
   const teamController = new Teams(teamDataProviderMock);
 
   afterEach(() => {

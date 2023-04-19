@@ -3,9 +3,10 @@ import {
   getDashboardResponse,
   getDashboardDataObject,
 } from '../fixtures/dashboard.fixtures';
-import { dashboardDataProviderMock } from '../mocks/dashboard-data-provider.mock';
+import { getDataProviderMock } from '../mocks/data-provider.mock';
 
 describe('Dashboard controller', () => {
+  const dashboardDataProviderMock = getDataProviderMock();
   const dashboardController = new Dashboard(dashboardDataProviderMock);
 
   describe('Fetch method', () => {

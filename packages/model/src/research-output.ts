@@ -189,7 +189,8 @@ export type ResearchOutputCoreObject = {
   accession?: string;
   addedDate: string;
   asapFunded?: boolean;
-  description: string;
+  description?: string;
+  descriptionMD?: string;
   documentType: ResearchOutputDocumentType;
   doi?: string;
   labCatalogNumber?: string;
@@ -216,6 +217,7 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
   methods: string[];
   organisms: string[];
   subtype?: string;
+  keywords: string[];
   teams: Pick<TeamResponse, 'id' | 'displayName'>[];
   workingGroups: Pick<WorkingGroupResponse, 'id' | 'title'>[];
   published: boolean;
@@ -242,6 +244,7 @@ export type ResearchOutputCreateDataObject = ResearchOutputCoreObject & {
   methodIds: string[];
   organismIds: string[];
   subtypeId?: string;
+  keywordIds: string[];
   teamIds: string[];
   workingGroups?: string[];
   relatedResearchIds?: string[];
@@ -254,6 +257,7 @@ export type ResearchOutputUpdateDataObject = ResearchOutputCoreObject & {
   methodIds: string[];
   organismIds: string[];
   subtypeId?: string;
+  keywordIds: string[];
   teamIds: string[];
   updatedBy: string;
   workingGroups: string[];
@@ -288,7 +292,8 @@ export type ResearchOutputPostRequest = {
   accession?: string;
   asapFunded?: boolean;
   authors?: AuthorPostRequest[];
-  description: string;
+  description?: string;
+  descriptionMD: string;
   documentType: ResearchOutputDocumentType;
   doi?: string;
   environments: string[];
@@ -302,6 +307,7 @@ export type ResearchOutputPostRequest = {
   sharingStatus: ResearchOutputSharingStatus;
   subtype?: string;
   tags: string[];
+  keywords: string[];
   teams: string[];
   workingGroups: string[];
   relatedResearch: string[];

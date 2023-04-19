@@ -3,10 +3,11 @@ import {
   getWorkingGroupEvent,
   getWorkingGroupResponse,
 } from '../../fixtures/working-groups.fixtures';
-import { workingGroupDataProviderMock } from '../../mocks/working-group-data-provider.mock';
+import { getDataProviderMock } from '../../mocks/data-provider.mock';
 import { WorkingGroupDeliverable } from '@asap-hub/model';
 
 describe('Working Group update handler', () => {
+  const workingGroupDataProviderMock = getDataProviderMock();
   const handler = workingGroupUpdateHandler(workingGroupDataProviderMock);
 
   afterEach(() => jest.clearAllMocks());
@@ -20,7 +21,6 @@ describe('Working Group update handler', () => {
     workingGroupDataProviderMock.fetchById.mockResolvedValueOnce(
       getWorkingGroupResponse({ complete: true, deliverables }),
     );
-    workingGroupDataProviderMock.update.mockResolvedValueOnce();
 
     await handler(event);
 
@@ -44,7 +44,6 @@ describe('Working Group update handler', () => {
     workingGroupDataProviderMock.fetchById.mockResolvedValueOnce(
       getWorkingGroupResponse({ complete: true, deliverables }),
     );
-    workingGroupDataProviderMock.update.mockResolvedValueOnce();
 
     await handler(event);
 
@@ -68,7 +67,6 @@ describe('Working Group update handler', () => {
     workingGroupDataProviderMock.fetchById.mockResolvedValueOnce(
       getWorkingGroupResponse({ complete: false, deliverables }),
     );
-    workingGroupDataProviderMock.update.mockResolvedValueOnce();
 
     await handler(event);
 
@@ -92,7 +90,6 @@ describe('Working Group update handler', () => {
     workingGroupDataProviderMock.fetchById.mockResolvedValueOnce(
       getWorkingGroupResponse({ complete: false, deliverables }),
     );
-    workingGroupDataProviderMock.update.mockResolvedValueOnce();
 
     await handler(event);
 
@@ -104,7 +101,6 @@ describe('Working Group update handler', () => {
     workingGroupDataProviderMock.fetchById.mockResolvedValueOnce(
       getWorkingGroupResponse({ complete: false, deliverables: [] }),
     );
-    workingGroupDataProviderMock.update.mockResolvedValueOnce();
 
     await handler(event);
 
@@ -118,7 +114,6 @@ describe('Working Group update handler', () => {
     ];
     const event = getWorkingGroupEvent({ complete: true, deliverables });
     workingGroupDataProviderMock.fetchById.mockResolvedValueOnce(null);
-    workingGroupDataProviderMock.update.mockResolvedValueOnce();
 
     await expect(handler(event)).rejects.toThrow();
 

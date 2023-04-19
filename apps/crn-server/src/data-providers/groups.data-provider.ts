@@ -2,6 +2,7 @@ import {
   FetchGroupOptions,
   GroupDataObject,
   ListGroupDataObject,
+  DataProvider,
 } from '@asap-hub/model';
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import { Filter } from 'odata-query';
@@ -15,10 +16,10 @@ import { parseGraphQLGroup } from '../entities';
 import { FETCH_GROUP, FETCH_GROUPS } from '../queries/groups.queries';
 import { buildODataFilter } from '../utils/odata';
 
-export interface GroupDataProvider {
-  fetchById(id: string): Promise<GroupDataObject | null>;
-  fetch(options: FetchGroupOptions): Promise<ListGroupDataObject>;
-}
+export type GroupDataProvider = DataProvider<
+  GroupDataObject,
+  FetchGroupOptions
+>;
 
 export class GroupSquidexDataProvider implements GroupDataProvider {
   squidexGraphqlClient: SquidexGraphqlClient;

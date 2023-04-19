@@ -10,6 +10,7 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import NotificationMessages from '../../NotificationMessages';
 import { updateOutput, getOutput } from '../api';
 import ShareOutput from '../ShareOutput';
 
@@ -38,7 +39,9 @@ const renderShareOutput = async (outputId: string = 'ro0') => {
                   gp2Routing.outputs({}).output({ outputId }).edit.template
                 }
               >
-                <ShareOutput setBannerMessage={jest.fn()} />
+                <NotificationMessages>
+                  <ShareOutput />
+                </NotificationMessages>
               </Route>
             </MemoryRouter>
           </WhenReady>

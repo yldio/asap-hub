@@ -11,11 +11,12 @@ import {
   getResearchOutputUpdateDataObject,
 } from '../fixtures/research-output.fixtures';
 import { getFullListResearchTagDataObject } from '../fixtures/research-tag.fixtures';
-import { researchOutputDataProviderMock } from '../mocks/research-output-data-provider.mock';
-import { researchTagDataProviderMock } from '../mocks/research-tag-data-provider.mock';
-import { externalAuthorDataProviderMock } from '../mocks/external-author-data-provider.mock';
+import { getDataProviderMock } from '../mocks/data-provider.mock';
 
 describe('ResearchOutputs controller', () => {
+  const researchOutputDataProviderMock = getDataProviderMock();
+  const researchTagDataProviderMock = getDataProviderMock();
+  const externalAuthorDataProviderMock = getDataProviderMock();
   const researchOutputs = new ResearchOutputs(
     researchOutputDataProviderMock,
     researchTagDataProviderMock,
@@ -480,6 +481,30 @@ describe('ResearchOutputs controller', () => {
           }),
         );
       });
+
+      test('Should throw a validation error when the selected keyword does not exist', async () => {
+        const researchOutputInputData = getResearchOutputCreateData();
+        researchOutputInputData.keywords = ['Keyword1', 'non-existent-keyword'];
+
+        await expect(
+          researchOutputs.create(researchOutputInputData),
+        ).rejects.toThrowError(
+          expect.objectContaining({
+            message: 'Validation error',
+            data: [
+              {
+                instancePath: 'keywords',
+                keyword: 'invalid',
+                message: 'non-existent-keyword does not exist',
+                params: {
+                  type: 'string',
+                },
+                schemaPath: `#/properties/keyword/invalid`,
+              },
+            ],
+          }),
+        );
+      });
     });
 
     describe('Authors', () => {
@@ -573,9 +598,6 @@ describe('ResearchOutputs controller', () => {
 
     test('Should update the research output and return it', async () => {
       const researchOutputUpdateData = getResearchOutputUpdateData();
-      researchOutputDataProviderMock.update.mockResolvedValueOnce(
-        researchOutputId,
-      );
 
       const result = await researchOutputs.update(
         researchOutputId,

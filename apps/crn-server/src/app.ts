@@ -82,9 +82,7 @@ import { NewsContentfulDataProvider } from './data-providers/contentful/news.dat
 import { PageContentfulDataProvider } from './data-providers/contentful/pages.data-provider';
 import { TeamContentfulDataProvider } from './data-providers/contentful/teams.data-provider';
 import { UserContentfulDataProvider } from './data-providers/contentful/users.data-provider';
-import DashboardSquidexDataProvider, {
-  DashboardDataProvider,
-} from './data-providers/dashboard.data-provider';
+import DashboardSquidexDataProvider from './data-providers/dashboard.data-provider';
 import { EventSquidexDataProvider } from './data-providers/event.data-provider';
 import {
   ExternalAuthorDataProvider,
@@ -95,10 +93,7 @@ import {
   GroupSquidexDataProvider,
 } from './data-providers/groups.data-provider';
 import { NewsSquidexDataProvider } from './data-providers/news.data-provider';
-import {
-  PageDataProvider,
-  PageSquidexDataProvider,
-} from './data-providers/pages.data-provider';
+import { PageSquidexDataProvider } from './data-providers/pages.data-provider';
 import {
   ReminderDataProvider,
   ReminderSquidexDataProvider,
@@ -119,11 +114,13 @@ import {
   TutorialsDataProvider,
   TutorialsSquidexDataProvider,
 } from './data-providers/tutorials.data-provider';
-import { NewsDataProvider } from './data-providers/types';
 import {
+  NewsDataProvider,
+  PageDataProvider,
   UserDataProvider,
-  UserSquidexDataProvider,
-} from './data-providers/users.data-provider';
+  DashboardDataProvider,
+} from './data-providers/types';
+import { UserSquidexDataProvider } from './data-providers/users.data-provider';
 import {
   WorkingGroupDataProvider,
   WorkingGroupSquidexDataProvider,

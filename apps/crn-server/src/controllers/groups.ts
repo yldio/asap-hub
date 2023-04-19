@@ -7,7 +7,7 @@ import {
 } from '@asap-hub/model';
 import uniqBy from 'lodash.uniqby';
 import { GroupDataProvider } from '../data-providers/groups.data-provider';
-import { UserDataProvider } from '../data-providers/users.data-provider';
+import { UserDataProvider } from '../data-providers/types';
 
 export interface GroupController {
   fetch: (options: FetchOptions) => Promise<ListGroupResponse>;

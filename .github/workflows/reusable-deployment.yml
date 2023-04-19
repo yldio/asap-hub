@@ -278,7 +278,7 @@ jobs:
   gp2-contentful-migrate:
     needs: [gp2-sls-deploy]
     # Run for branch-workflow only if the environment name is not that of dev or prod
-    if: ${{ (inputs.environment-name == 'Branch' && inputs.gp2-contentful-env == 'Development' &&  inputs.gp2-contentful-env !='Production') || inputs.environment-name != 'Branch' }}
+    if: ${{ (inputs.environment-name == 'Branch' && inputs.gp2-contentful-env != 'Development' &&  inputs.gp2-contentful-env !='Production') || inputs.environment-name != 'Branch' }}
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:

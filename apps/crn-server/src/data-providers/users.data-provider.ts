@@ -34,15 +34,10 @@ import { FETCH_USER, FETCH_USERS } from '../queries/users.queries';
 import logger from '../utils/logger';
 import { createUrl } from '../utils/urls';
 import { buildEqFilterForWords, buildODataFilter } from '../utils/odata';
+import { UserDataProvider } from './types';
 
 export type CMSOrcidWork = OrcidWork;
 
-export interface UserDataProvider {
-  fetchById(id: string): Promise<UserDataObject | null>;
-  fetch(options: FetchUsersOptions): Promise<ListUserDataObject>;
-  create(input: UserCreateDataObject): Promise<string>;
-  update(id: string, update: UserUpdateDataObject): Promise<void>;
-}
 export class UserSquidexDataProvider implements UserDataProvider {
   constructor(
     private squidexGraphqlClient: SquidexGraphqlClient,

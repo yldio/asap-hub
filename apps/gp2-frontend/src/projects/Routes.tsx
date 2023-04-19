@@ -1,7 +1,7 @@
 import { ProjectsPage } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/routing';
-import { ComponentProps, lazy, useEffect, useState } from 'react';
+import { lazy, useEffect, useState } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import Frame from '../Frame';
 
@@ -13,13 +13,8 @@ const loadProjectDetail = () =>
 const ProjectList = lazy(loadProjectList);
 const ProjectDetail = lazy(loadProjectDetail);
 
-type ProjectsProps = Pick<
-  ComponentProps<typeof ProjectDetail>,
-  'setBannerMessage'
->;
-
 const { projects } = gp2;
-const Routes: React.FC<ProjectsProps> = ({ setBannerMessage }) => {
+const Routes: React.FC<Record<string, never>> = () => {
   useEffect(() => {
     loadProjectList().then(loadProjectDetail);
   }, []);
@@ -36,10 +31,7 @@ const Routes: React.FC<ProjectsProps> = ({ setBannerMessage }) => {
         </ProjectsPage>
       </Route>
       <Route path={path + projects({}).project.template}>
-        <ProjectDetail
-          currentTime={currentTime}
-          setBannerMessage={setBannerMessage}
-        />
+        <ProjectDetail currentTime={currentTime} />
       </Route>
       <Route component={NotFoundPage} />
     </Switch>

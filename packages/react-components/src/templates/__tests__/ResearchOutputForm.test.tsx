@@ -119,7 +119,7 @@ it('pre populates the form with provided backend response', async () => {
     ...createResearchOutputResponse(),
     title: 'test title',
     link: 'https://test.com',
-    description: 'test description',
+    descriptionMD: 'test description',
     type: 'Genetic Data - DNA' as ResearchOutputType,
     tags: ['testAddedTag'],
     labs: [
@@ -140,7 +140,7 @@ it('pre populates the form with provided backend response', async () => {
     </StaticRouter>,
   );
 
-  expect(screen.getByText(researchOutputData.description)).toBeVisible();
+  expect(screen.getByText(researchOutputData.descriptionMD)).toBeVisible();
   expect(screen.getByDisplayValue(researchOutputData.title)).toBeVisible();
   expect(screen.getByText(researchOutputData.type!)).toBeVisible();
   expect(screen.getByText(researchOutputData.sharingStatus)).toBeVisible();
@@ -264,7 +264,8 @@ describe('on submit', () => {
     tags: [],
     link: 'http://example.com',
     title: 'example title',
-    description: 'example description',
+    description: '',
+    descriptionMD: 'example description',
     type: 'Preprint',
     labs: [],
     authors: [],
@@ -276,16 +277,17 @@ describe('on submit', () => {
     usageNotes: '',
     workingGroups: [],
     relatedResearch: [],
+    keywords: [],
   };
   type Data = Pick<
     ResearchOutputPostRequest,
-    'link' | 'title' | 'description' | 'type'
+    'link' | 'title' | 'descriptionMD' | 'type'
   >;
 
   const setupForm = async (
     {
       data = {
-        description: 'example description',
+        descriptionMD: 'example description',
         title: 'example title',
         type: 'Preprint',
         link: 'http://example.com',
@@ -298,7 +300,7 @@ describe('on submit', () => {
       researchTags?: ResearchTagResponse[];
     } = {
       data: {
-        description: 'example description',
+        descriptionMD: 'example description',
         title: 'example title',
         type: 'Preprint',
         link: 'http://example.com',
@@ -333,7 +335,7 @@ describe('on submit', () => {
       target: { value: data.title },
     });
     fireEvent.change(screen.getByLabelText(/description/i), {
-      target: { value: data.description },
+      target: { value: data.descriptionMD },
     });
 
     const typeDropdown = screen.getByRole('textbox', {

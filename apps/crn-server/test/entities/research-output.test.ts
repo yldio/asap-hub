@@ -60,4 +60,13 @@ describe('parseGraphQLResearchOutput', () => {
       },
     ]);
   });
+
+  test('should flatten keywords data', () => {
+    expect(parseGraphQLResearchOutput(output).keywords).toStrictEqual([
+      'Keyword1',
+    ]);
+
+    output.flatData.keywords = null;
+    expect(parseGraphQLResearchOutput(output).keywords).toStrictEqual([]);
+  });
 });

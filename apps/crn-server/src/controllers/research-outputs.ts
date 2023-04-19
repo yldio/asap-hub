@@ -81,7 +81,7 @@ export default class ResearchOutputs implements ResearchOutputController {
     createOptions = { publish: true },
   ): Promise<ResearchOutputResponse | null> {
     await this.validateResearchOutput(researchOutputCreateData);
-    const { methods, organisms, environments, subtype } =
+    const { methods, organisms, environments, subtype, keywords } =
       await this.parseResearchTags(researchOutputCreateData);
 
     const researchOutputCreateDataObject: ResearchOutputCreateDataObject = {
@@ -93,6 +93,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       asapFunded: researchOutputCreateData.asapFunded,
       createdBy: researchOutputCreateData.createdBy,
       description: researchOutputCreateData.description,
+      descriptionMD: researchOutputCreateData.descriptionMD,
       documentType: researchOutputCreateData.documentType,
       doi: researchOutputCreateData.doi,
       environmentIds: environments,
@@ -105,6 +106,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       rrid: researchOutputCreateData.rrid,
       sharingStatus: researchOutputCreateData.sharingStatus,
       subtypeId: subtype,
+      keywordIds: keywords,
       tags: researchOutputCreateData.tags,
       teamIds: researchOutputCreateData.teams,
       relatedResearchIds: researchOutputCreateData.relatedResearch,
@@ -143,7 +145,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       currentResearchOutput,
     );
 
-    const { methods, organisms, environments, subtype } =
+    const { methods, organisms, environments, subtype, keywords } =
       await this.parseResearchTags(researchOutputUpdateData);
 
     const researchOutputUpdateDataObject: ResearchOutputUpdateDataObject = {
@@ -153,6 +155,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       accession: researchOutputUpdateData.accession,
       addedDate: currentResearchOutput.addedDate,
       asapFunded: researchOutputUpdateData.asapFunded,
+      descriptionMD: researchOutputUpdateData.descriptionMD,
       description: researchOutputUpdateData.description,
       documentType: researchOutputUpdateData.documentType,
       doi: researchOutputUpdateData.doi,
@@ -166,6 +169,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       rrid: researchOutputUpdateData.rrid,
       sharingStatus: researchOutputUpdateData.sharingStatus,
       subtypeId: subtype,
+      keywordIds: keywords,
       tags: researchOutputUpdateData.tags,
       teamIds: researchOutputUpdateData.teams,
       relatedResearchIds: researchOutputUpdateData.relatedResearch,
@@ -177,12 +181,12 @@ export default class ResearchOutputs implements ResearchOutputController {
       workingGroups: researchOutputUpdateData.workingGroups,
     };
 
-    const researchOutputId = await this.researchOutputDataProvider.update(
+    await this.researchOutputDataProvider.update(
       id,
       researchOutputUpdateDataObject,
     );
 
-    return this.fetchById(researchOutputId);
+    return this.fetchById(id);
   }
 
   private async validateResearchOutput(
@@ -209,7 +213,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       // TODO: Remove Boom from the controller layer
       // https://asaphub.atlassian.net/browse/CRN-777
       throw Boom.badRequest<ValidationErrorResponse['data']>(
-        VALIDATION_ERROR_MESSAGE,
+        `${VALIDATION_ERROR_MESSAGE} ${JSON.stringify(errors)}`,
         errors,
       );
     }
@@ -246,7 +250,6 @@ export default class ResearchOutputs implements ResearchOutputController {
     };
   }
 
-  // eslint-disable-next-line class-methods-use-this
   private validateTeamList(
     researchOutputData: ResearchOutputUpdateData,
     currentResearchOutput: ResearchOutputDataObject,
@@ -333,11 +336,19 @@ export default class ResearchOutputs implements ResearchOutputController {
         )
       : undefined;
 
+    const keywords = mapResearchTags(
+      researchTags,
+      'Keyword',
+      researchOutputData.keywords,
+      'keywords',
+    );
+
     return {
       methods,
       organisms,
       environments,
       subtype,
+      keywords,
     };
   }
 
@@ -356,7 +367,6 @@ export default class ResearchOutputs implements ResearchOutputController {
       }),
     );
 
-  // eslint-disable-next-line class-methods-use-this
   private convertDataProviderWorkingGroupsToResponseType = (
     workingGroups: Pick<WorkingGroupResponse, 'id' | 'title'>[],
   ): [Pick<WorkingGroupResponse, 'id' | 'title'>] | undefined =>
@@ -440,12 +450,14 @@ type ResearchOutputInputTags = {
   organisms: string[];
   environments: string[];
   subtype?: string;
+  keywords: string[];
 };
 type ResearchOutputParsedTags = {
   methods: string[];
   organisms: string[];
   environments: string[];
   subtype?: string;
+  keywords: string[];
 };
 
 export type ResearchOutputFetchOptions = {

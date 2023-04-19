@@ -33,8 +33,7 @@ import {
   Maybe,
 } from '@asap-hub/contentful';
 import { isTeamRole } from '../../entities';
-
-import { UserDataProvider } from '../users.data-provider';
+import { UserDataProvider } from '../types';
 
 export type UserItem = NonNullable<
   NonNullable<FetchUsersQuery['usersCollection']>['items'][number]
@@ -44,6 +43,7 @@ export type TeamMembership = NonNullable<
 >;
 
 export class UserContentfulDataProvider implements UserDataProvider {
+
   constructor(
     private contentfulClient: GraphQLClient,
     private getRestClient: () => Promise<Environment>,

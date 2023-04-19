@@ -1,8 +1,8 @@
 import { CalendarDataProvider } from '@asap-hub/model';
 import { ExternalAuthorDataProvider } from '../data-providers/external-authors.data-provider';
 import { TeamDataProvider } from '../data-providers/teams.data-provider';
-import { UserDataProvider } from '../data-providers/users.data-provider';
 import { AssetDataProvider } from '../data-providers/assets.data-provider';
+import { UserDataProvider } from '../data-providers/types';
 
 const featureFlags = ['IS_CONTENTFUL_ENABLED_V2'] as const;
 type FeatureFlag = (typeof featureFlags)[number];

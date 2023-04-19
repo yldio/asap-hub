@@ -405,6 +405,25 @@
         }
       },
       {
+        "name": "keywords",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "References",
+          "allowDuplicates": false,
+          "resolveReference": false,
+          "mustBePublished": true,
+          "editor": "Tags",
+          "schemaIds": ["research-tags"],
+          "label": "Keywords",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": true
+        }
+      },
+      {
         "name": "tags",
         "isHidden": false,
         "isLocked": false,

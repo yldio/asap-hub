@@ -129,6 +129,7 @@ export type ResearchOutputPayload = {
   organisms: string[];
   environments: string[];
   subtype?: string;
+  keywords: string[];
 };
 
 export const getPayload = ({
@@ -155,6 +156,7 @@ export const getPayload = ({
   organisms,
   environments,
   subtype,
+  keywords,
 }: ResearchOutputPayload): ResearchOutputPostRequest => ({
   ...createIdentifierField(identifierType, identifier),
   documentType,
@@ -179,4 +181,5 @@ export const getPayload = ({
   organisms,
   environments,
   subtype,
+  keywords,
 });

@@ -96,6 +96,7 @@ describe('getResearchOutputPayload', () => {
       methods: [],
       organisms: [],
       environments: [],
+      keywords: [],
       relatedResearch: [
         {
           value: 'r99',

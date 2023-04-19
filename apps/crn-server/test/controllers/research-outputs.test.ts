@@ -481,6 +481,30 @@ describe('ResearchOutputs controller', () => {
           }),
         );
       });
+
+      test('Should throw a validation error when the selected keyword does not exist', async () => {
+        const researchOutputInputData = getResearchOutputCreateData();
+        researchOutputInputData.keywords = ['Keyword1', 'non-existent-keyword'];
+
+        await expect(
+          researchOutputs.create(researchOutputInputData),
+        ).rejects.toThrowError(
+          expect.objectContaining({
+            message: 'Validation error',
+            data: [
+              {
+                instancePath: 'keywords',
+                keyword: 'invalid',
+                message: 'non-existent-keyword does not exist',
+                params: {
+                  type: 'string',
+                },
+                schemaPath: `#/properties/keyword/invalid`,
+              },
+            ],
+          }),
+        );
+      });
     });
 
     describe('Authors', () => {

@@ -44,6 +44,7 @@ export interface ResearchOutput<
   sharingStatus: ResearchOutputSharingStatus;
   subtype: string[];
   tags?: string[];
+  keywords?: string[];
   title: string;
   type?: ResearchOutputType;
   updatedBy?: TUserConnection[];

@@ -32,14 +32,23 @@ export const researchTagSubtypeResponse: ResearchTagResponse = {
   entities: ['Research Output'],
 };
 
+export const researchTagKeywordResponse: ResearchTagResponse = {
+  id: '0368cc55-b2cb-484f-8f25-c1e37975ff32',
+  name: 'Keyword1',
+  category: 'Keyword',
+  types: [],
+  entities: ['Research Output'],
+};
+
 export const researchTagsResponse: ResearchTagResponse[] = [
   researchTagMethodResponse,
   researchTagOrganismResponse,
   researchTagEnvironmentResponse,
   researchTagSubtypeResponse,
+  researchTagKeywordResponse,
 ];
 
 export const createResearchTagListResponse = (): ListResearchTagResponse => ({
   items: researchTagsResponse,
-  total: 4,
+  total: 5,
 });

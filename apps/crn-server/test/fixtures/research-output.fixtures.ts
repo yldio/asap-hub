@@ -149,6 +149,13 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
         },
       },
     ],
+    keywords: [
+      {
+        flatData: {
+          name: 'Keyword1',
+        },
+      },
+    ],
     workingGroups: [],
   },
 });
@@ -192,6 +199,7 @@ export const getResearchOutputDataObject = (): ResearchOutputDataObject => ({
   organisms: ['Rat'],
   environments: ['In Vitro'],
   subtype: 'Metabolite',
+  keywords: ['Keyword1'],
   published: true,
 });
 
@@ -311,6 +319,7 @@ export const getResearchOutputCreateDataObject =
       environments: _environments,
       organisms: _organisms,
       subtype: _subtype,
+      keywords: _keywords,
       id: _id,
       lastUpdatedPartial: _lastUpdatedPartial,
       created: _created,
@@ -331,6 +340,7 @@ export const getResearchOutputCreateDataObject =
       organismIds: ['d77a7607-7b9a-4ef1-99ee-c389b33ea95b'],
       environmentIds: ['8a936e45-6d5e-42a6-8acd-b849ab10f3f8'],
       subtypeId: 'dd0da578-5573-4758-b1db-43a078f5076e',
+      keywordIds: ['0368cc55-b2cb-484f-8f25-c1e37975ff32'],
       link: 'http://a.link',
       type: 'Software',
       workingGroups: [],
@@ -375,6 +385,9 @@ export const getRestResearchOutputCreateData =
     },
     subtype: {
       iv: ['dd0da578-5573-4758-b1db-43a078f5076e'],
+    },
+    keywords: {
+      iv: ['0368cc55-b2cb-484f-8f25-c1e37975ff32'],
     },
     type: { iv: 'Software' },
     labs: {

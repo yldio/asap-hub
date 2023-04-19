@@ -203,6 +203,7 @@ export class ResearchOutputSquidexDataProvider
       environmentIds,
       organismIds,
       subtypeId,
+      keywordIds,
       workingGroups,
       ...researchOutputData
     } = input;
@@ -222,6 +223,7 @@ export class ResearchOutputSquidexDataProvider
       teams: teamIds,
       relatedResearch: relatedResearchIds,
       methods: methodIds,
+      keywords: keywordIds,
       environments: environmentIds,
       organisms: organismIds,
       workingGroups,
@@ -256,6 +258,7 @@ export class ResearchOutputSquidexDataProvider
       environmentIds,
       organismIds,
       subtypeId,
+      keywordIds,
       ...researchOutputData
     } = input;
     const { usedInPublication, ...researchOutput } = parseToSquidex({
@@ -272,6 +275,7 @@ export class ResearchOutputSquidexDataProvider
       environments: environmentIds,
       organisms: organismIds,
       subtype: (subtypeId && [subtypeId]) || [],
+      keywords: keywordIds,
       updatedBy: [researchOutputData.updatedBy],
     });
 

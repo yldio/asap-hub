@@ -116,6 +116,10 @@ export const parseGraphQLResearchOutput = (
         environment.flatData.name ? [environment.flatData.name] : [],
       ) || [],
     subtype: data.subtype?.[0]?.flatData.name || undefined,
+    keywords:
+      data.keywords?.flatMap((method) =>
+        method.flatData.name ? [method.flatData.name] : [],
+      ) || [],
     workingGroups:
       data.workingGroups?.map((group) => ({
         id: group.id,

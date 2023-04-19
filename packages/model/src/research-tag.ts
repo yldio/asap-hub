@@ -8,6 +8,7 @@ export const researchTagCategories = [
   'Organism',
   'Environment',
   'Subtype',
+  'Keyword',
 ] as const;
 export type ResearchTagCategory = (typeof researchTagCategories)[number];
 

@@ -101,6 +101,10 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
         type: 'string',
         nullable: true,
       },
+      keywords: {
+        type: 'array',
+        items: { type: 'string' },
+      },
       link: {
         type: 'string',
         nullable: true,
@@ -178,6 +182,7 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
       'methods',
       'organisms',
       'environments',
+      'keywords',
     ],
     additionalProperties: false,
   };

@@ -81,7 +81,7 @@ export default class ResearchOutputs implements ResearchOutputController {
     createOptions = { publish: true },
   ): Promise<ResearchOutputResponse | null> {
     await this.validateResearchOutput(researchOutputCreateData);
-    const { methods, organisms, environments, subtype } =
+    const { methods, organisms, environments, subtype, keywords } =
       await this.parseResearchTags(researchOutputCreateData);
 
     const researchOutputCreateDataObject: ResearchOutputCreateDataObject = {
@@ -106,6 +106,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       rrid: researchOutputCreateData.rrid,
       sharingStatus: researchOutputCreateData.sharingStatus,
       subtypeId: subtype,
+      keywordIds: keywords,
       tags: researchOutputCreateData.tags,
       teamIds: researchOutputCreateData.teams,
       relatedResearchIds: researchOutputCreateData.relatedResearch,
@@ -144,7 +145,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       currentResearchOutput,
     );
 
-    const { methods, organisms, environments, subtype } =
+    const { methods, organisms, environments, subtype, keywords } =
       await this.parseResearchTags(researchOutputUpdateData);
 
     const researchOutputUpdateDataObject: ResearchOutputUpdateDataObject = {
@@ -168,6 +169,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       rrid: researchOutputUpdateData.rrid,
       sharingStatus: researchOutputUpdateData.sharingStatus,
       subtypeId: subtype,
+      keywordIds: keywords,
       tags: researchOutputUpdateData.tags,
       teamIds: researchOutputUpdateData.teams,
       relatedResearchIds: researchOutputUpdateData.relatedResearch,
@@ -211,7 +213,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       // TODO: Remove Boom from the controller layer
       // https://asaphub.atlassian.net/browse/CRN-777
       throw Boom.badRequest<ValidationErrorResponse['data']>(
-        VALIDATION_ERROR_MESSAGE,
+        `${VALIDATION_ERROR_MESSAGE} ${JSON.stringify(errors)}`,
         errors,
       );
     }
@@ -334,11 +336,19 @@ export default class ResearchOutputs implements ResearchOutputController {
         )
       : undefined;
 
+    const keywords = mapResearchTags(
+      researchTags,
+      'Keyword',
+      researchOutputData.keywords,
+      'keywords',
+    );
+
     return {
       methods,
       organisms,
       environments,
       subtype,
+      keywords,
     };
   }
 
@@ -440,12 +450,14 @@ type ResearchOutputInputTags = {
   organisms: string[];
   environments: string[];
   subtype?: string;
+  keywords: string[];
 };
 type ResearchOutputParsedTags = {
   methods: string[];
   organisms: string[];
   environments: string[];
   subtype?: string;
+  keywords: string[];
 };
 
 export type ResearchOutputFetchOptions = {

@@ -46,6 +46,7 @@ describe('researchOutputToCSV', () => {
       type: '3D Printing',
       usedInPublication: false,
       methods: ['Activity Assay', 'RNA Single Cell'],
+      keywords: ['Keyword1', 'Keyword2'],
     };
     expect(researchOutputToCSV(output)).toEqual({
       created: 'created',
@@ -75,6 +76,7 @@ describe('researchOutputToCSV', () => {
       workingGroups: expect.anything(),
       relatedResearch: '',
       methods: 'Activity Assay,RNA Single Cell',
+      keywords: 'Keyword1,Keyword2',
       organisms: 'C. Elegans,Rat',
       environments: 'In Cellulo,In Vivo',
       subtype: 'Metabolite',

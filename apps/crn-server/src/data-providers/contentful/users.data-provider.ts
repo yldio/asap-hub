@@ -43,7 +43,6 @@ export type TeamMembership = NonNullable<
 >;
 
 export class UserContentfulDataProvider implements UserDataProvider {
-
   constructor(
     private contentfulClient: GraphQLClient,
     private getRestClient: () => Promise<Environment>,
@@ -121,11 +120,9 @@ export class UserContentfulDataProvider implements UserDataProvider {
     return usersCollection || { total: 0, items: [] };
   }
 
-  /* eslint-disable class-methods-use-this */
   async create(): Promise<string> {
     throw new Error('Method not implemented.');
   }
-  /* eslint-enable class-methods-use-this */
 
   async update(id: string, data: UserUpdateDataObject): Promise<void> {
     const fields = cleanUser(data);

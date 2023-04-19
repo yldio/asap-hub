@@ -69,10 +69,7 @@ import Users, { UserController } from './controllers/users';
 import WorkingGroups, {
   WorkingGroupController,
 } from './controllers/working-groups';
-import {
-  AssetDataProvider,
-  AssetSquidexDataProvider,
-} from './data-providers/assets.data-provider';
+import { AssetSquidexDataProvider } from './data-providers/assets.data-provider';
 import { CalendarSquidexDataProvider } from './data-providers/calendars.data-provider';
 import { CalendarContentfulDataProvider } from './data-providers/contentful/calendars.data-provider';
 import { AssetContentfulDataProvider } from './data-providers/contentful/assets.data-provider';
@@ -115,6 +112,7 @@ import {
   TutorialsSquidexDataProvider,
 } from './data-providers/tutorials.data-provider';
 import {
+  AssetDataProvider,
   NewsDataProvider,
   PageDataProvider,
   UserDataProvider,

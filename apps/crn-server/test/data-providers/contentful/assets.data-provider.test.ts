@@ -1,5 +1,5 @@
 import { Environment, Asset } from '@asap-hub/contentful';
-import { AssetDataProvider } from '../../../src/data-providers/assets.data-provider';
+import { AssetDataProvider } from '../../../src/data-providers/types';
 import { AssetContentfulDataProvider } from '../../../src/data-providers/contentful/assets.data-provider';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
 
@@ -33,13 +33,25 @@ describe('Assets data provider', () => {
     jest.resetAllMocks();
   });
 
+  describe('Fetch', () => {
+    test('not implemented', async () => {
+      expect(async () => assetsDataProvider.fetch(null)).rejects.toThrow();
+    });
+  });
+
+  describe('Fetch by ID', () => {
+    test('not implemented', async () => {
+      expect(async () => assetsDataProvider.fetchById('123')).rejects.toThrow();
+    });
+  });
+
   describe('Create', () => {
     test('uploads, processes and publishes an asset', async () => {
-      await assetsDataProvider.create(
-        'abc',
-        Buffer.from('file buffer'),
-        'image/jpeg',
-      );
+      await assetsDataProvider.create({
+        id: 'abc',
+        avatar: Buffer.from('file buffer'),
+        contentType: 'image/jpeg',
+      });
       expect(environmentMock.createAssetFromFiles).toHaveBeenCalledWith({
         fields: {
           title: { 'en-US': expect.any(String) },

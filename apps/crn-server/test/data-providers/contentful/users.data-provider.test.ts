@@ -14,7 +14,7 @@ import {
   getUserCreateDataObject,
 } from '../../fixtures/users.fixtures';
 import { getEntry } from '../../fixtures/contentful.fixtures';
-import { UserDataProvider } from '../../../src/data-providers/users.data-provider';
+import { UserDataProvider } from '../../../src/data-providers/types';
 import { UserContentfulDataProvider } from '../../../src/data-providers/contentful/users.data-provider';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
@@ -579,7 +579,7 @@ describe('User data provider', () => {
   });
 
   describe('Create', () => {
-    test('pending', async () => {
+    test('not implemented', async () => {
       expect(async () =>
         userDataProvider.create(getUserCreateDataObject()),
       ).rejects.toThrow();

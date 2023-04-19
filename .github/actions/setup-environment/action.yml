@@ -146,6 +146,9 @@ outputs:
   gp2-contentful-space-id:
     description: 'GP2 Contentful Space ID'
     value: ${{ steps.vars.outputs.gp2-contentful-space-id }}
+  gp2-contentful-enabled:
+    description: 'Is GP2 data fetched from Contentful'
+    value: ${{ steps.vars.outputs.gp2-contentful-enabled }}
   gp2-hostname:
     description: 'GP2 Hostname'
     value: ${{ steps.vars.outputs.gp2-hostname }}

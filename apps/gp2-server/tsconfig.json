@@ -19,6 +19,7 @@
   ],
   "references": [
     { "path": "../../packages/auth" },
+    { "path": "../../packages/contentful" },
     { "path": "../../packages/errors" },
     { "path": "../../packages/fixtures" },
     { "path": "../../packages/message-templates" },

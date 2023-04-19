@@ -1,3 +1,4 @@
+import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/contentful';
 import { gp2 } from '@asap-hub/model';
 import {
   AuthHandler,
@@ -31,6 +32,10 @@ import {
   baseUrl,
   clientId,
   clientSecret,
+  isContentfulEnabled,
+  contentfulAccessToken,
+  contentfulEnvId,
+  contentfulSpaceId,
 } from './config';
 import Calendars from './controllers/calendar.controller';
 import ContributingCohorts, {
@@ -56,6 +61,7 @@ import {
   AssetSquidexDataProvider,
 } from './data-providers/asset.data-provider';
 import { CalendarSquidexDataProvider } from './data-providers/calendar.data-provider';
+import { PageContentfulDataProvider } from './data-providers/contentful/page.data-provider';
 import {
   ContributingCohortDataProvider,
   ContributingCohortSquidexDataProvider,
@@ -109,6 +115,12 @@ import pinoLogger from './utils/logger';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
+
+  const contentfulGraphQLClient = getContentfulGraphQLClient({
+    space: contentfulSpaceId,
+    accessToken: contentfulAccessToken,
+    environment: contentfulEnvId,
+  });
 
   // Libs
   const logger = libs.logger || pinoLogger;
@@ -234,6 +246,12 @@ export const appFactory = (libs: Libs = {}): Express => {
     );
   const pageSquidexDataProvider =
     libs.pageSquidexDataProvider || new PageSquidexDataProvider(pageRestClient);
+  const pageContentfulDataProvider =
+    libs.pageContentfulDataProvider ||
+    new PageContentfulDataProvider(contentfulGraphQLClient);
+  const pageDataProvider = isContentfulEnabled
+    ? pageContentfulDataProvider
+    : pageSquidexDataProvider;
 
   // Controllers
 
@@ -245,8 +263,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const projectController =
     libs.projectController || new Projects(projectDataProvider);
   const newsController = libs.newsController || new News(newsDataProvider);
-  const pageController =
-    libs.pageController || new Pages(pageSquidexDataProvider);
+  const pageController = libs.pageController || new Pages(pageDataProvider);
   const eventController = libs.eventController || new Events(eventDataProvider);
   const externalUsersController =
     libs.externalUsersController || new ExternalUsers(externalUserDataProvider);
@@ -371,6 +388,7 @@ export type Libs = {
   outputDataProvider?: OutputDataProvider;
   pageController?: PageController;
   pageSquidexDataProvider?: PageDataProvider;
+  pageContentfulDataProvider?: PageDataProvider;
   projectController?: ProjectController;
   projectDataProvider?: ProjectDataProvider;
   userController?: UserController;

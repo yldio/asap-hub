@@ -5,6 +5,12 @@ const {
   AUTH0_CLIENT_ID,
   AUTH0_SHARED_SECRET,
   GP2_API_URL,
+  GP2_CONTENTFUL_ENABLED,
+  CONTENTFUL_SPACE_ID,
+  CONTENTFUL_ENV_ID,
+  CONTENTFUL_ACCESS_TOKEN,
+  CONTENTFUL_HOST,
+  CONTENTFUL_MANAGEMENT_ACCESS_TOKEN,
   ENVIRONMENT,
   REGION,
   GOOGLE_API_CREDENTIALS_SECRET_ID,
@@ -61,3 +67,11 @@ export const userInviteSender = EMAIL_SENDER || `"GP2 Hub" <gp2@asap.science>`;
 export const userInviteBcc = EMAIL_BCC || 'gp2.invites.dev@asap.science';
 export const userInviteReturn = EMAIL_RETURN || 'gp2.invites.dev@asap.science';
 export const sentryTraceSampleRate = 1.0;
+export const isContentfulEnabled = GP2_CONTENTFUL_ENABLED === 'true' || false;
+export const contentfulAccessToken =
+  CONTENTFUL_ACCESS_TOKEN || 'contentful-access-token';
+export const contentfulManagementAccessToken =
+  CONTENTFUL_MANAGEMENT_ACCESS_TOKEN || 'contentful-management-access-token';
+export const contentfulEnvId = CONTENTFUL_ENV_ID || 'Development';
+export const contentfulHost = CONTENTFUL_HOST || 'https://cdn.contentful.com';
+export const contentfulSpaceId = CONTENTFUL_SPACE_ID || 'contentful-space-id';

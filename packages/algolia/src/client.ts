@@ -107,13 +107,23 @@ export class AlgoliaSearchClient {
         ? `${requestOptions.filters} AND (${entityTypesFilter})`
         : entityTypesFilter,
     };
-
-    return descendingEvents
-      ? this.reverseEventsIndex.search<DistributeToEntityRecords<T>>(
-          query,
-          options,
-        )
-      : this.index.search<DistributeToEntityRecords<T>>(query, options);
+    if (descendingEvents) {
+      const result = await this.reverseEventsIndex.search<
+        DistributeToEntityRecords<T>
+      >(query, options);
+      return {
+        ...result,
+        index: this.reverseEventsIndex.indexName,
+      };
+    }
+    const result = await this.index.search<DistributeToEntityRecords<T>>(
+      query,
+      options,
+    );
+    return {
+      ...result,
+      index: this.index.indexName,
+    };
   }
 
   private static getAlgoliaObject(

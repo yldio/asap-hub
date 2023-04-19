@@ -41,7 +41,7 @@ const EventList: React.FC<EventListProps> = ({
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
 
-  const { items, total } = useEvents(
+  const { items, total, algoliaIndexName, algoliaQueryId } = useEvents(
     getEventListOptions(currentTime, {
       past,
       searchQuery,
@@ -63,6 +63,8 @@ const EventList: React.FC<EventListProps> = ({
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
   return (
     <EventsList
+      algoliaIndexName={algoliaIndexName}
+      algoliaQueryId={algoliaQueryId}
       currentPageIndex={currentPage}
       numberOfItems={total}
       renderPageHref={renderPageHref}

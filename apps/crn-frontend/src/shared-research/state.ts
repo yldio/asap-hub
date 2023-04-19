@@ -32,7 +32,14 @@ type RefreshResearchOutputListOptions = ResearchOutputListOptions & {
 };
 
 const researchOutputIndexState = atomFamily<
-  { ids: ReadonlyArray<string>; total: number } | Error | undefined,
+  | {
+      ids: ReadonlyArray<string>;
+      total: number;
+      algoliaQueryId?: string;
+      algoliaIndexName?: string;
+    }
+  | Error
+  | undefined,
   RefreshResearchOutputListOptions
 >({
   key: 'researchOutputIndex',
@@ -66,7 +73,12 @@ export const researchOutputsState = selectorFamily<
         if (researchOutput === undefined) return undefined;
         researchOutputs.push(researchOutput);
       }
-      return { total: index.total, items: researchOutputs };
+      return {
+        total: index.total,
+        items: researchOutputs,
+        algoliaQueryId: index.algoliaQueryId,
+        algoliaIndexName: index.algoliaIndexName,
+      };
     },
   set:
     (options) =>
@@ -91,6 +103,8 @@ export const researchOutputsState = selectorFamily<
         set(researchOutputIndexState(indexStateOptions), {
           total: researchOutputs.total,
           ids: researchOutputs.items.map(({ id }) => id),
+          algoliaIndexName: researchOutputs.algoliaIndexName,
+          algoliaQueryId: researchOutputs.algoliaQueryId,
         });
       }
     },
@@ -139,6 +153,8 @@ export const useResearchOutputs = (options: ResearchOutputListOptions) => {
             (data): ListResearchOutputResponse => ({
               total: data.nbHits,
               items: data.hits,
+              algoliaQueryId: data.queryID,
+              algoliaIndexName: data.index,
             }),
           )
     )

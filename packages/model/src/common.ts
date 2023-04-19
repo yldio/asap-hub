@@ -1,6 +1,8 @@
 export interface ListResponse<T> {
   readonly total: number;
   readonly items: T[];
+  readonly algoliaQueryId?: string;
+  readonly algoliaIndexName?: string;
 }
 
 export const decisionOptions = ['Yes', 'No', 'Not Sure'] as const;

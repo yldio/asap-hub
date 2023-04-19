@@ -35,7 +35,9 @@ describe('useAlgolia', () => {
     const { result, waitForNextUpdate } = renderHook(() => useAlgolia(), {
       wrapper: ({ children }) => (
         <RecoilRoot>
-          <Auth0Provider user={{ algoliaApiKey: 'algolia key' }}>
+          <Auth0Provider
+            user={{ algoliaApiKey: 'algolia key', id: 'usertoken' }}
+          >
             <WhenReady>{children}</WhenReady>
           </Auth0Provider>
         </RecoilRoot>
@@ -46,6 +48,8 @@ describe('useAlgolia', () => {
       algoliaIndex: ALGOLIA_INDEX,
       algoliaAppId: ALGOLIA_APP_ID,
       algoliaApiKey: 'algolia key',
+      clickAnalytics: true,
+      userToken: 'usertoken',
     });
     expect(result.current.client).toBeDefined();
   });

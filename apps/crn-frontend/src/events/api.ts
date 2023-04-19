@@ -31,7 +31,12 @@ export const getEvents = async (
     !!before,
   );
 
-  return { items: result.hits, total: result.nbHits };
+  return {
+    items: result.hits,
+    total: result.nbHits,
+    algoliaIndexName: result.index,
+    algoliaQueryId: result.queryID,
+  };
 };
 
 export const getSquidexUrl = (options: GetEventListOptions): URL =>

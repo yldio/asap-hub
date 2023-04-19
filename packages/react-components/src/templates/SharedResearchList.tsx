@@ -19,10 +19,11 @@ type SharedResearchListProps = Omit<
   >;
   readonly listViewHref: string;
   readonly cardViewHref: string;
-};
+} & Pick<ComponentProps<typeof AlgoliaHit>, 'algoliaQueryId'>;
 
 const SharedResearchList: React.FC<SharedResearchListProps> = ({
   researchOutputs,
+  algoliaQueryId,
   ...cardListProps
 }) => (
   <ResultList {...cardListProps}>
@@ -30,7 +31,12 @@ const SharedResearchList: React.FC<SharedResearchListProps> = ({
       <SharedResearchListCard researchOutputs={researchOutputs} />
     ) : (
       researchOutputs.map((output, index) => (
-        <AlgoliaHit key={output.id} index={index}>
+        <AlgoliaHit
+          key={output.id}
+          index={index}
+          algoliaQueryId={algoliaQueryId}
+          objectId={output.id}
+        >
           <SharedResearchCard {...output} />
         </AlgoliaHit>
       ))

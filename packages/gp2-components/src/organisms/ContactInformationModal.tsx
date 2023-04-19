@@ -52,7 +52,7 @@ const ContactInformationModal: React.FC<ContactInformationModalProps> = ({
   return (
     <EditUserModal
       title="Contact Information"
-      description="Provide alternative contact details to your institutional email used to sign up."
+      description="Provide alternative contact details."
       onSave={() =>
         onSave({
           secondaryEmail: newSecondaryEmail,

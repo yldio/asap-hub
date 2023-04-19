@@ -26,7 +26,7 @@ describe('FundingProviderModal', () => {
   it('renders a dialog with the right title', () => {
     renderFundingProvider();
     expect(screen.getByRole('dialog')).toContainElement(
-      screen.getByRole('heading', { name: 'Funding Providers' }),
+      screen.getByRole('heading', { name: 'Financial Disclosures' }),
     );
   });
 

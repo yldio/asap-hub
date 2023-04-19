@@ -21,7 +21,7 @@ const FundingProviderModal: React.FC<FundingProviderModalProps> = ({
 
   return (
     <EditUserModal
-      title={'Funding Providers'}
+      title={'Financial Disclosures'}
       description={
         'This information will be pulled for when GP2 publications arise to share financial conflicts of interests for publications. Please make sure this is up to date!'
       }

@@ -149,14 +149,14 @@ describe('UserOverview', () => {
         <UserOverview {...defaultProps} fundingStreams={fundingStreams} />,
       );
       expect(
-        screen.getByRole('heading', { name: 'Funding Providers' }),
+        screen.getByRole('heading', { name: 'Financial Disclosures' }),
       ).toBeInTheDocument();
       expect(screen.getByText(fundingStreams)).toBeVisible();
     });
     it('does not renders the funding streams if unavailable', () => {
       render(<UserOverview {...defaultProps} />);
       expect(
-        screen.queryByRole('heading', { name: 'Funding Providers' }),
+        screen.queryByRole('heading', { name: 'Financial Disclosures' }),
       ).not.toBeInTheDocument();
     });
   });

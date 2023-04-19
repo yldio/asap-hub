@@ -91,7 +91,7 @@ describe('OnboardingPreview', () => {
     'Projects',
     'Working Groups',
     'Open Questions',
-    'Funding Providers',
+    'Financial Disclosures',
     'Contributing Cohort Studies',
     'External Profiles',
   ])('renders the %s card', (name) => {

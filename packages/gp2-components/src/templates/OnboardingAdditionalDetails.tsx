@@ -35,9 +35,9 @@ const OnboardingAdditionalDetails: React.FC<
 }) => (
   <>
     <Paragraph noMargin>
-      Adding additional details to your profile will help to tell other members
-      your story and contact you regarding relevant conversations. This step is
-      completely optional.
+      Adding additional details to your profile will inform other members about
+      your specific interests and will aid in connecting you with other members
+      regarding relevant workstreams. This step is completely optional.
     </Paragraph>
     <UserQuestions
       firstName={firstName}
@@ -46,6 +46,7 @@ const OnboardingAdditionalDetails: React.FC<
     />
     <UserFundingStreams
       fundingStreams={fundingStreams}
+      firstName={firstName}
       editHref={editFundingStreamsHref}
     />
     <UserContributingCohorts

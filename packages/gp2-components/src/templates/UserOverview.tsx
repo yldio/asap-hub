@@ -106,6 +106,7 @@ const UserOverview: React.FC<UserOverviewProps> = ({
     {(editFundingStreamsHref || fundingStreams) && (
       <UserFundingStreams
         fundingStreams={fundingStreams}
+        firstName={firstName}
         editHref={editFundingStreamsHref}
       />
     )}

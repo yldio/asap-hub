@@ -1,0 +1,41 @@
+{
+  "name": "@asap-hub/gp2-auth-frontend-2",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "engines": {
+    "node": "18.x"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@asap-hub/auth-frontend-utils": "workspace:*",
+    "@asap-hub/gp2-components": "workspace:*",
+    "@asap-hub/react-components": "workspace:*",
+    "react": "17.0.2",
+    "react-app-polyfill": "3.0.0",
+    "react-dom": "17.0.2",
+    "react-router-dom": "5.3.4"
+  },
+  "devDependencies": {
+    "@asap-hub/dom-test-utils": "workspace:*",
+    "@babel/runtime-corejs3": "7.21.0",
+    "@testing-library/dom": "8.20.0",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "11.2.7",
+    "@testing-library/user-event": "12.8.3",
+    "@types/jest": "^29.4.0",
+    "@types/jsdom": "16.2.15",
+    "@types/react": "17.0.58",
+    "@types/react-dom": "17.0.19",
+    "@types/react-router-dom": "5.3.3",
+    "@types/testing-library__jest-dom": "5.14.5",
+    "@types/testing-library__react": "10.0.1",
+    "@vitejs/plugin-react": "^3.1.0",
+    "typescript": "4.9.5",
+    "vite": "^4.2.0"
+  }
+}

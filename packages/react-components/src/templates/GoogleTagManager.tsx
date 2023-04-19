@@ -22,7 +22,8 @@ const GoogleTagManager: React.FC<GoogleTagManagerProps> = ({ containerId }) => {
       });
       const scriptUrl = new URL('https://www.googletagmanager.com/gtm.js');
       scriptUrl.searchParams.set('id', containerId);
-      import(/* webpackIgnore: true */ scriptUrl.href);
+
+      import(/* @vite-ignore */ /* webpackIgnore: true */ scriptUrl.href);
     }
   });
 

@@ -32,10 +32,10 @@ import {
   baseUrl,
   clientId,
   clientSecret,
-  isContentfulEnabled,
   contentfulAccessToken,
   contentfulEnvId,
   contentfulSpaceId,
+  isContentfulEnabled,
 } from './config';
 import Calendars from './controllers/calendar.controller';
 import ContributingCohorts, {
@@ -71,22 +71,17 @@ import {
   ExternalUserDataProvider,
   ExternalUserSquidexDataProvider,
 } from './data-providers/external-users.data-provider';
-import {
-  NewsDataProvider,
-  NewsSquidexDataProvider,
-} from './data-providers/news.data-provider';
+import { NewsSquidexDataProvider } from './data-providers/news.data-provider';
 import {
   OutputDataProvider,
   OutputSquidexDataProvider,
 } from './data-providers/output.data-provider';
-import {
-  PageDataProvider,
-  PageSquidexDataProvider,
-} from './data-providers/page.data-provider';
+import { PageSquidexDataProvider } from './data-providers/page.data-provider';
 import {
   ProjectDataProvider,
   ProjectSquidexDataProvider,
 } from './data-providers/project.data-provider';
+import { NewsDataProvider, PageDataProvider } from './data-providers/types';
 import {
   UserDataProvider,
   UserSquidexDataProvider,

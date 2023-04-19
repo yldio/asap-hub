@@ -953,6 +953,67 @@ export type SysFilter = {
   publishedVersion_not_in?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
 };
 
+export type NewsContentFragment = Pick<
+  News,
+  | 'title'
+  | 'shortText'
+  | 'sampleCount'
+  | 'articleCount'
+  | 'cohortCount'
+  | 'link'
+  | 'linkText'
+  | 'publishDate'
+> & { sys: Pick<Sys, 'id' | 'firstPublishedAt'> };
+
+export type FetchNewsByIdQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchNewsByIdQuery = {
+  news?: Maybe<
+    Pick<
+      News,
+      | 'title'
+      | 'shortText'
+      | 'sampleCount'
+      | 'articleCount'
+      | 'cohortCount'
+      | 'link'
+      | 'linkText'
+      | 'publishDate'
+    > & { sys: Pick<Sys, 'id' | 'firstPublishedAt'> }
+  >;
+};
+
+export type FetchNewsQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<Array<InputMaybe<NewsOrder>> | InputMaybe<NewsOrder>>;
+  where?: InputMaybe<NewsFilter>;
+}>;
+
+export type FetchNewsQuery = {
+  newsCollection?: Maybe<
+    Pick<NewsCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          Pick<
+            News,
+            | 'title'
+            | 'shortText'
+            | 'sampleCount'
+            | 'articleCount'
+            | 'cohortCount'
+            | 'link'
+            | 'linkText'
+            | 'publishDate'
+          > & { sys: Pick<Sys, 'id' | 'firstPublishedAt'> }
+        >
+      >;
+    }
+  >;
+};
+
 export type PageContentFragment = Pick<
   Pages,
   'title' | 'path' | 'shortText' | 'link' | 'linkText'
@@ -1040,6 +1101,46 @@ export type FetchPagesQuery = {
   >;
 };
 
+export const NewsContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'NewsContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'News' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sys' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'firstPublishedAt' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'shortText' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sampleCount' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'articleCount' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'cohortCount' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'link' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'linkText' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'publishDate' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<NewsContentFragment, unknown>;
 export const PageContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -1200,6 +1301,171 @@ export const PageContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<PageContentFragment, unknown>;
+export const FetchNewsByIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchNewsById' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'news' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'NewsContent' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...NewsContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<FetchNewsByIdQuery, FetchNewsByIdQueryVariables>;
+export const FetchNewsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchNews' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'order' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'NewsOrder' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'where' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'NewsFilter' },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'newsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'order' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'where' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'NewsContent' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...NewsContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<FetchNewsQuery, FetchNewsQueryVariables>;
 export const FetchPagesDocument = {
   kind: 'Document',
   definitions: [

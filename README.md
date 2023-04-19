@@ -207,13 +207,13 @@ If you don't understand these concepts, you will need to familiarise yourself wi
 Once you've completed the steps above, you can create a new migration file with:
 
 ```sh
-   MIGRATION_TYPE=<content_type> MIGRATION_NAME=<name> yarn contentful:migration:generate:<app_name>
+   MIGRATION_TYPE=<content_type> MIGRATION_NAME=<name> yarn contentful:migration:create:<app_name>
 ```
 
 So if you wanted to add a `foo` field to the `bar` content type:
 
 ```sh
-   MIGRATION_TYPE=bar MIGRATION_NAME=add-foo-field yarn contentful:migration:generate:crn
+   MIGRATION_TYPE=bar MIGRATION_NAME=add-foo-field yarn contentful:migration:create:crn
 ```
 
 Note: the `content_type` is the slug, not the display name, so `externalAuthors` not `External Authors`.

@@ -29,6 +29,8 @@
     "clean": "rimraf \"{apps,packages}/*/{build*,*.tsbuildinfo}\" \"coverage\" \".serverless*\"",
     "contentful:migration:count:crn": "APP=crn ./packages/contentful/scripts/migration-count.sh",
     "contentful:migration:count:gp2": "APP=gp2 ./packages/contentful/scripts/migration-count.sh",
+    "contentful:migration:create:crn": "APP=crn ./packages/contentful/scripts/migration-create.sh",
+    "contentful:migration:create:gp2": "APP=gp2 ./packages/contentful/scripts/migration-create.sh",
     "contentful:migration:dryrun:crn": "APP=crn ./packages/contentful/scripts/migration-dryrun.sh",
     "contentful:migration:dryrun:gp2": "APP=gp2 ./packages/contentful/scripts/migration-dryrun.sh",
     "contentful:migration:generate:crn": "APP=crn ./packages/contentful/scripts/migration-generate.sh",

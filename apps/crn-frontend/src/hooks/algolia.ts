@@ -27,6 +27,9 @@ export const useAlgolia = () => {
       clickAnalytics: true,
       userToken: user.id,
     });
+    window.dataLayer?.push({
+      algoliaUserToken: user.id,
+    });
 
     return {
       client,

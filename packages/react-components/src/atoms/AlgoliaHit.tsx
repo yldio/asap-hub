@@ -1,7 +1,7 @@
 interface AlgoliaHitProps {
   objectId?: string;
   algoliaQueryId?: string;
-  index?: number;
+  index: number;
 }
 const AlgoliaHit: React.FC<AlgoliaHitProps> = ({
   objectId,

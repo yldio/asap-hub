@@ -1,4 +1,4 @@
-import React, { ComponentProps, useContext } from 'react';
+import React, { ComponentProps, useContext, useEffect } from 'react';
 import { css } from '@emotion/react';
 import { ToastContext } from '@asap-hub/react-context';
 
@@ -73,6 +73,11 @@ const ResultList: React.FC<ResultListProps> = ({
   ...pageControlsProps
 }) => {
   const toast = useContext(ToastContext);
+  useEffect(() => {
+    if (algoliaIndexName) {
+      window.dataLayer?.push({ event: 'Hits Viewed' });
+    }
+  }, [algoliaIndexName, pageControlsProps.currentPageIndex]);
   return (
     <article data-insights-index={algoliaIndexName}>
       <header

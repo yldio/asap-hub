@@ -1,11 +1,11 @@
-import { getContentfulGraphqlClientMockServer } from '@asap-hub/contentful';
+import { getGP2ContentfulGraphqlClientMockServer } from '@asap-hub/contentful';
 import { GraphQLError } from 'graphql';
 import { NewsContentfulDataProvider } from '../../../src/data-providers/contentful/news.data-provider';
 import {
+  getListNewsDataObject,
   getContentfulGraphqlNews,
   getContentfulNewsGraphqlResponse,
-} from '../../fixtures/news-contentful.fixtures';
-import { getListNewsDataObject } from '../../fixtures/news.fixtures';
+} from '../../fixtures/news.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 
 describe('News data provider', () => {
@@ -16,7 +16,7 @@ describe('News data provider', () => {
   );
 
   const contentfulGraphqlClientMockServer =
-    getContentfulGraphqlClientMockServer({
+    getGP2ContentfulGraphqlClientMockServer({
       News: () => getContentfulGraphqlNews(),
     });
 
@@ -27,7 +27,7 @@ describe('News data provider', () => {
   afterEach(jest.resetAllMocks);
 
   describe('Fetch method', () => {
-    test.only('Should fetch the list of news from Contentful GraphQl', async () => {
+    test('Should fetch the list of news from Contentful GraphQl', async () => {
       const result = await newsDataProviderMockGraphql.fetch({});
 
       expect(result).toMatchObject(getListNewsDataObject());
@@ -100,40 +100,13 @@ describe('News data provider', () => {
           limit: null,
           order: ['publishDate_DESC'],
           skip: null,
-          where: { frequency_in: undefined, title_contains: null },
+          where: { title_contains: null },
         }),
       );
     });
 
-    describe('Frequency Filter', () => {
-      test('Should query data properly when only CRN Quarterly frequency is selected', async () => {
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-          getContentfulNewsGraphqlResponse(),
-        );
-
-        const result = await newsDataProvider.fetch({
-          take: 8,
-          skip: 5,
-          filter: {
-            frequency: ['CRN Quarterly'],
-          },
-        });
-
-        expect(result).toEqual(getListNewsDataObject());
-        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-          expect.anything(),
-          expect.objectContaining({
-            limit: 8,
-            order: ['publishDate_DESC'],
-            skip: 5,
-            where: { frequency_in: ['CRN Quarterly'], title_contains: null },
-          }),
-        );
-      });
-    });
-
     describe('Text Filter', () => {
-      test('Should query data properly when passing search param and no frequency is selected', async () => {
+      test('Should query data properly when passing search param is selected', async () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
           getContentfulNewsGraphqlResponse(),
         );
@@ -149,12 +122,12 @@ describe('News data provider', () => {
             limit: null,
             order: ['publishDate_DESC'],
             skip: null,
-            where: { frequency_in: undefined, title_contains: 'hey' },
+            where: { title_contains: 'hey' },
           }),
         );
       });
 
-      test('Should query data properly when passing search param and frequency is selected', async () => {
+      test('Should query data properly when passing search param', async () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
           getContentfulNewsGraphqlResponse(),
         );
@@ -163,7 +136,6 @@ describe('News data provider', () => {
           take: 8,
           skip: 5,
           filter: {
-            frequency: ['CRN Quarterly', 'News Articles'],
             title: 'hey',
           },
         });
@@ -176,7 +148,6 @@ describe('News data provider', () => {
             skip: 5,
             order: ['publishDate_DESC'],
             where: {
-              frequency_in: ['CRN Quarterly', 'News Articles'],
               title_contains: 'hey',
             },
           }),

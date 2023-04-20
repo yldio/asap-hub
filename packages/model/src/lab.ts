@@ -6,6 +6,5 @@ export type LabDataObject = {
 };
 export type ListLabDataObject = ListResponse<LabDataObject>;
 
-
 export type LabResponse = LabDataObject;
 export type ListLabsResponse = ListResponse<LabResponse>;

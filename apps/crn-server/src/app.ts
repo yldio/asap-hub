@@ -144,6 +144,10 @@ import assignUserToContext from './utils/assign-user-to-context';
 import { getAuthToken } from './utils/auth';
 import { FeatureFlagDependencySwitch } from './utils/feature-flag';
 import pinoLogger from './utils/logger';
+import {
+  LabDataProvider,
+  LabSquidexDataProvider,
+} from './data-providers/labs.data-provider';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -399,6 +403,9 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.eventDataProvider ||
     new EventSquidexDataProvider(eventRestClient, squidexGraphqlClient);
 
+  const labDataProvider =
+    libs.labDataProvider || new LabSquidexDataProvider(squidexGraphqlClient);
+
   // Controllers
   const calendarController =
     libs.calendarController || new Calendars(calendarDataProvider);
@@ -427,7 +434,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.tutorialsController || new Tutorials(tutorialsDataProvider);
   const userController =
     libs.userController || new Users(userDataProvider, assetDataProvider);
-  const labsController = libs.labsController || new Labs(squidexGraphqlClient);
+  const labsController = libs.labsController || new Labs(labDataProvider);
   const workingGroupsController =
     libs.workingGroupsController || new WorkingGroups(workingGroupDataProvider);
 
@@ -568,6 +575,7 @@ export type Libs = {
   externalAuthorContentfulDataProvider?: ExternalAuthorDataProvider;
   externalAuthorDataProvider?: ExternalAuthorDataProvider;
   groupDataProvider?: GroupDataProvider;
+  labDataProvider?: LabDataProvider;
   newsContentfulDataProvider?: NewsDataProvider;
   newsDataProvider?: NewsDataProvider;
   newsSquidexDataProvider?: NewsDataProvider;

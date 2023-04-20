@@ -22,9 +22,7 @@ describe('Pages Contentful Data Provider', () => {
     contentfulGraphqlClientMockServer,
   );
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+  afterEach(jest.resetAllMocks);
 
   describe('Fetch method', () => {
     test('Should fetch the list of Pages from Contentful GraphQl', async () => {
@@ -91,6 +89,14 @@ describe('Pages Contentful Data Provider', () => {
         {
           where: { path: '/privacy-policy' },
         },
+      );
+    });
+  });
+  describe('Fetch-by-id method', () => {
+    test('Should throw as not implemented', async () => {
+      expect.assertions(1);
+      await expect(pageDataProvider.fetchById()).rejects.toThrow(
+        /Method not implemented/i,
       );
     });
   });

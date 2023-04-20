@@ -18,5 +18,6 @@ module.exports = {
     'no-redeclare': 'off',
     '@typescript-eslint/no-empty-function': ['error'],
     '@typescript-eslint/no-redeclare': ['error'],
+    'class-methods-use-this': 'off',
   },
 };

@@ -1,7 +1,7 @@
-import { gql } from 'graphql-tag';
+import gql from 'graphql-tag';
 
 export const contributingCohortsContentQueryFragment = gql`
-  fragment ContributingCohortsContent on ContributingCohorts {
+  fragment ContributingCohortsData on ContributingCohorts {
     id
     flatData {
       name
@@ -18,7 +18,7 @@ export const FETCH_CONTRIBUTING_COHORTS = gql`
     ) {
       total
       items {
-        ...ContributingCohortsContent
+        ...ContributingCohortsData
       }
     }
   }

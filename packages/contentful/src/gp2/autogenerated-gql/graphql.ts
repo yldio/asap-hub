@@ -953,7 +953,7 @@ export type SysFilter = {
   publishedVersion_not_in?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
 };
 
-export type NewsContentFragment = Pick<
+export type NewsContentDataFragment = Pick<
   News,
   | 'title'
   | 'shortText'
@@ -1014,7 +1014,7 @@ export type FetchNewsQuery = {
   >;
 };
 
-export type PageContentFragment = Pick<
+export type PageContentDataFragment = Pick<
   Pages,
   'title' | 'path' | 'shortText' | 'link' | 'linkText'
 > & {
@@ -1101,12 +1101,12 @@ export type FetchPagesQuery = {
   >;
 };
 
-export const NewsContentFragmentDoc = {
+export const NewsContentDataFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'NewsContent' },
+      name: { kind: 'Name', value: 'NewsContentData' },
       typeCondition: {
         kind: 'NamedType',
         name: { kind: 'Name', value: 'News' },
@@ -1140,13 +1140,13 @@ export const NewsContentFragmentDoc = {
       },
     },
   ],
-} as unknown as DocumentNode<NewsContentFragment, unknown>;
-export const PageContentFragmentDoc = {
+} as unknown as DocumentNode<NewsContentDataFragment, unknown>;
+export const PageContentDataFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'PageContent' },
+      name: { kind: 'Name', value: 'PageContentData' },
       typeCondition: {
         kind: 'NamedType',
         name: { kind: 'Name', value: 'Pages' },
@@ -1300,7 +1300,7 @@ export const PageContentFragmentDoc = {
       },
     },
   ],
-} as unknown as DocumentNode<PageContentFragment, unknown>;
+} as unknown as DocumentNode<PageContentDataFragment, unknown>;
 export const FetchNewsByIdDocument = {
   kind: 'Document',
   definitions: [
@@ -1342,7 +1342,7 @@ export const FetchNewsByIdDocument = {
               selections: [
                 {
                   kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'NewsContent' },
+                  name: { kind: 'Name', value: 'NewsContentData' },
                 },
               ],
             },
@@ -1350,7 +1350,7 @@ export const FetchNewsByIdDocument = {
         ],
       },
     },
-    ...NewsContentFragmentDoc.definitions,
+    ...NewsContentDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchNewsByIdQuery, FetchNewsByIdQueryVariables>;
 export const FetchNewsDocument = {
@@ -1452,7 +1452,7 @@ export const FetchNewsDocument = {
                     selections: [
                       {
                         kind: 'FragmentSpread',
-                        name: { kind: 'Name', value: 'NewsContent' },
+                        name: { kind: 'Name', value: 'NewsContentData' },
                       },
                     ],
                   },
@@ -1463,7 +1463,7 @@ export const FetchNewsDocument = {
         ],
       },
     },
-    ...NewsContentFragmentDoc.definitions,
+    ...NewsContentDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchNewsQuery, FetchNewsQueryVariables>;
 export const FetchPagesDocument = {
@@ -1519,7 +1519,7 @@ export const FetchPagesDocument = {
                     selections: [
                       {
                         kind: 'FragmentSpread',
-                        name: { kind: 'Name', value: 'PageContent' },
+                        name: { kind: 'Name', value: 'PageContentData' },
                       },
                     ],
                   },
@@ -1530,6 +1530,6 @@ export const FetchPagesDocument = {
         ],
       },
     },
-    ...PageContentFragmentDoc.definitions,
+    ...PageContentDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchPagesQuery, FetchPagesQueryVariables>;

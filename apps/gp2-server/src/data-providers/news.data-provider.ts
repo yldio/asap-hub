@@ -16,6 +16,9 @@ export type GraphqlNews = NonNullable<
 >;
 export class NewsSquidexDataProvider implements NewsDataProvider {
   constructor(private squidexGraphqlClient: SquidexGraphqlClient) {}
+  async fetchById(): Promise<null> {
+    throw new Error('Method not implemented.');
+  }
 
   async fetch(
     _?: FetchNewsProviderOptions,
@@ -28,9 +31,6 @@ export class NewsSquidexDataProvider implements NewsDataProvider {
       total: items ? total : 0,
       items: (items || []).map(parseNews),
     };
-  }
-  async fetchById(): Promise<null> {
-    throw new Error('Method not implemented.');
   }
 }
 

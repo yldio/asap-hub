@@ -3,7 +3,7 @@ import { projectContentQueryFragment } from './projects.queries';
 import { workingGroupContentQueryFragment } from './working-groups.queries';
 
 export const eventContentFragment = gql`
-  fragment EventContent on Events {
+  fragment EventData on Events {
     id
     lastModified
     version
@@ -38,10 +38,10 @@ export const eventContentFragment = gql`
           name
         }
         referencingProjectsContents {
-          ...ProjectContent
+          ...ProjectData
         }
         referencingWorkingGroupsContents {
-          ...WorkingGroupContent
+          ...WorkingGroupData
         }
       }
       thumbnail {
@@ -87,7 +87,7 @@ export const FETCH_EVENTS = gql`
     ) {
       total
       items {
-        ...EventContent
+        ...EventData
       }
     }
   }
@@ -97,7 +97,7 @@ export const FETCH_EVENTS = gql`
 export const FETCH_EVENT = gql`
   query FetchEvent($id: String!) {
     findEventsContent(id: $id) {
-      ...EventContent
+      ...EventData
     }
   }
   ${eventContentFragment}

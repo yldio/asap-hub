@@ -4708,7 +4708,7 @@ export type WorkingGroupsResultDto = {
   total: Scalars['Int'];
 };
 
-export type CalendarsContentFragment = Pick<
+export type CalendarsDataFragment = Pick<
   Calendars,
   'id' | 'created' | 'lastModified' | 'version'
 > & {
@@ -4812,7 +4812,7 @@ export type FetchCalendarsQuery = {
   >;
 };
 
-export type ContributingCohortsContentFragment = Pick<
+export type ContributingCohortsDataFragment = Pick<
   ContributingCohorts,
   'id'
 > & { flatData: Pick<ContributingCohortsFlatDataDto, 'name'> };
@@ -4836,7 +4836,7 @@ export type FetchContributingCohortsQuery = {
   >;
 };
 
-export type EventContentFragment = Pick<
+export type EventDataFragment = Pick<
   Events,
   'id' | 'lastModified' | 'version' | 'created'
 > & {
@@ -5443,7 +5443,7 @@ export type FetchWorkingGroupCalendarQuery = {
   }>;
 };
 
-export type ExternalUsersContentFragment = Pick<ExternalUsers, 'id'> & {
+export type ExternalUsersDataFragment = Pick<ExternalUsers, 'id'> & {
   flatData: Pick<ExternalUsersFlatDataDto, 'name' | 'orcid'>;
 };
 
@@ -5479,7 +5479,7 @@ export type FetchExternalUsersQuery = {
   >;
 };
 
-export type NewsContentFragment = Pick<
+export type NewsDataFragment = Pick<
   NewsAndEvents,
   'id' | 'created' | 'lastModified' | 'version'
 > & {
@@ -5523,7 +5523,7 @@ export type FetchNewsQuery = {
   >;
 };
 
-export type OutputContentFragment = Pick<
+export type OutputDataFragment = Pick<
   Outputs,
   'id' | 'created' | 'lastModified' | 'version'
 > & {
@@ -5693,7 +5693,7 @@ export type FetchOutputsQuery = {
   >;
 };
 
-export type ProjectContentFragment = Pick<Projects, 'id'> & {
+export type ProjectDataFragment = Pick<Projects, 'id'> & {
   flatData: Pick<
     ProjectsFlatDataDto,
     | 'title'
@@ -5888,7 +5888,7 @@ export type FetchProjectsQuery = {
   >;
 };
 
-export type UsersContentFragment = Pick<
+export type UsersDataFragment = Pick<
   Users,
   'id' | 'created' | 'lastModified' | 'version'
 > & {
@@ -6198,7 +6198,7 @@ export type FetchUsersQuery = {
   >;
 };
 
-export type ProjectMembersContentFragment = {
+export type ProjectMembersDataFragment = {
   flatData: {
     members: Maybe<Array<{ user: Maybe<Array<Pick<Users, 'id'>>> }>>;
   };
@@ -6218,7 +6218,7 @@ export type FetchProjectsMembersQuery = {
   >;
 };
 
-export type WorkingGroupMembersContentFragment = {
+export type WorkingGroupMembersDataFragment = {
   flatData: {
     members: Maybe<Array<{ user: Maybe<Array<Pick<Users, 'id'>>> }>>;
   };
@@ -6238,7 +6238,7 @@ export type FetchWorkingGroupsMembersQuery = {
   >;
 };
 
-export type WorkingGroupNetworkContentFragment = Pick<
+export type WorkingGroupNetworkDataFragment = Pick<
   WorkingGroupNetwork,
   'id'
 > & {
@@ -6725,7 +6725,7 @@ export type FetchWorkingGroupNetworkQuery = {
   >;
 };
 
-export type WorkingGroupContentFragment = Pick<WorkingGroups, 'id'> & {
+export type WorkingGroupDataFragment = Pick<WorkingGroups, 'id'> & {
   flatData: Pick<
     WorkingGroupsFlatDataDto,
     | 'title'
@@ -6902,12 +6902,12 @@ export type FetchWorkingGroupsQuery = {
   >;
 };
 
-export const CalendarsContentFragmentDoc = {
+export const CalendarsDataFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'CalendarsContent' },
+      name: { kind: 'Name', value: 'CalendarsData' },
       typeCondition: {
         kind: 'NamedType',
         name: { kind: 'Name', value: 'Calendars' },
@@ -6984,13 +6984,13 @@ export const CalendarsContentFragmentDoc = {
       },
     },
   ],
-} as unknown as DocumentNode<CalendarsContentFragment, unknown>;
-export const ContributingCohortsContentFragmentDoc = {
+} as unknown as DocumentNode<CalendarsDataFragment, unknown>;
+export const ContributingCohortsDataFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'ContributingCohortsContent' },
+      name: { kind: 'Name', value: 'ContributingCohortsData' },
       typeCondition: {
         kind: 'NamedType',
         name: { kind: 'Name', value: 'ContributingCohorts' },
@@ -7013,13 +7013,13 @@ export const ContributingCohortsContentFragmentDoc = {
       },
     },
   ],
-} as unknown as DocumentNode<ContributingCohortsContentFragment, unknown>;
-export const ProjectContentFragmentDoc = {
+} as unknown as DocumentNode<ContributingCohortsDataFragment, unknown>;
+export const ProjectDataFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'ProjectContent' },
+      name: { kind: 'Name', value: 'ProjectData' },
       typeCondition: {
         kind: 'NamedType',
         name: { kind: 'Name', value: 'Projects' },
@@ -7191,13 +7191,13 @@ export const ProjectContentFragmentDoc = {
       },
     },
   ],
-} as unknown as DocumentNode<ProjectContentFragment, unknown>;
-export const WorkingGroupContentFragmentDoc = {
+} as unknown as DocumentNode<ProjectDataFragment, unknown>;
+export const WorkingGroupDataFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'WorkingGroupContent' },
+      name: { kind: 'Name', value: 'WorkingGroupData' },
       typeCondition: {
         kind: 'NamedType',
         name: { kind: 'Name', value: 'WorkingGroups' },
@@ -7367,13 +7367,13 @@ export const WorkingGroupContentFragmentDoc = {
       },
     },
   ],
-} as unknown as DocumentNode<WorkingGroupContentFragment, unknown>;
-export const EventContentFragmentDoc = {
+} as unknown as DocumentNode<WorkingGroupDataFragment, unknown>;
+export const EventDataFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'EventContent' },
+      name: { kind: 'Name', value: 'EventData' },
       typeCondition: {
         kind: 'NamedType',
         name: { kind: 'Name', value: 'Events' },
@@ -7494,7 +7494,7 @@ export const EventContentFragmentDoc = {
                           selections: [
                             {
                               kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'ProjectContent' },
+                              name: { kind: 'Name', value: 'ProjectData' },
                             },
                           ],
                         },
@@ -7510,10 +7510,7 @@ export const EventContentFragmentDoc = {
                           selections: [
                             {
                               kind: 'FragmentSpread',
-                              name: {
-                                kind: 'Name',
-                                value: 'WorkingGroupContent',
-                              },
+                              name: { kind: 'Name', value: 'WorkingGroupData' },
                             },
                           ],
                         },
@@ -7661,16 +7658,16 @@ export const EventContentFragmentDoc = {
         ],
       },
     },
-    ...ProjectContentFragmentDoc.definitions,
-    ...WorkingGroupContentFragmentDoc.definitions,
+    ...ProjectDataFragmentDoc.definitions,
+    ...WorkingGroupDataFragmentDoc.definitions,
   ],
-} as unknown as DocumentNode<EventContentFragment, unknown>;
-export const ExternalUsersContentFragmentDoc = {
+} as unknown as DocumentNode<EventDataFragment, unknown>;
+export const ExternalUsersDataFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'ExternalUsersContent' },
+      name: { kind: 'Name', value: 'ExternalUsersData' },
       typeCondition: {
         kind: 'NamedType',
         name: { kind: 'Name', value: 'ExternalUsers' },
@@ -7694,13 +7691,13 @@ export const ExternalUsersContentFragmentDoc = {
       },
     },
   ],
-} as unknown as DocumentNode<ExternalUsersContentFragment, unknown>;
-export const NewsContentFragmentDoc = {
+} as unknown as DocumentNode<ExternalUsersDataFragment, unknown>;
+export const NewsDataFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'NewsContent' },
+      name: { kind: 'Name', value: 'NewsData' },
       typeCondition: {
         kind: 'NamedType',
         name: { kind: 'Name', value: 'NewsAndEvents' },
@@ -7737,13 +7734,13 @@ export const NewsContentFragmentDoc = {
       },
     },
   ],
-} as unknown as DocumentNode<NewsContentFragment, unknown>;
-export const OutputContentFragmentDoc = {
+} as unknown as DocumentNode<NewsDataFragment, unknown>;
+export const OutputDataFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'OutputContent' },
+      name: { kind: 'Name', value: 'OutputData' },
       typeCondition: {
         kind: 'NamedType',
         name: { kind: 'Name', value: 'Outputs' },
@@ -7952,13 +7949,13 @@ export const OutputContentFragmentDoc = {
       },
     },
   ],
-} as unknown as DocumentNode<OutputContentFragment, unknown>;
-export const UsersContentFragmentDoc = {
+} as unknown as DocumentNode<OutputDataFragment, unknown>;
+export const UsersDataFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'UsersContent' },
+      name: { kind: 'Name', value: 'UsersData' },
       typeCondition: {
         kind: 'NamedType',
         name: { kind: 'Name', value: 'Users' },
@@ -8233,13 +8230,13 @@ export const UsersContentFragmentDoc = {
       },
     },
   ],
-} as unknown as DocumentNode<UsersContentFragment, unknown>;
-export const ProjectMembersContentFragmentDoc = {
+} as unknown as DocumentNode<UsersDataFragment, unknown>;
+export const ProjectMembersDataFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'ProjectMembersContent' },
+      name: { kind: 'Name', value: 'ProjectMembersData' },
       typeCondition: {
         kind: 'NamedType',
         name: { kind: 'Name', value: 'Projects' },
@@ -8282,13 +8279,13 @@ export const ProjectMembersContentFragmentDoc = {
       },
     },
   ],
-} as unknown as DocumentNode<ProjectMembersContentFragment, unknown>;
-export const WorkingGroupMembersContentFragmentDoc = {
+} as unknown as DocumentNode<ProjectMembersDataFragment, unknown>;
+export const WorkingGroupMembersDataFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'WorkingGroupMembersContent' },
+      name: { kind: 'Name', value: 'WorkingGroupMembersData' },
       typeCondition: {
         kind: 'NamedType',
         name: { kind: 'Name', value: 'WorkingGroups' },
@@ -8331,13 +8328,13 @@ export const WorkingGroupMembersContentFragmentDoc = {
       },
     },
   ],
-} as unknown as DocumentNode<WorkingGroupMembersContentFragment, unknown>;
-export const WorkingGroupNetworkContentFragmentDoc = {
+} as unknown as DocumentNode<WorkingGroupMembersDataFragment, unknown>;
+export const WorkingGroupNetworkDataFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'WorkingGroupNetworkContent' },
+      name: { kind: 'Name', value: 'WorkingGroupNetworkData' },
       typeCondition: {
         kind: 'NamedType',
         name: { kind: 'Name', value: 'WorkingGroupNetwork' },
@@ -8360,7 +8357,7 @@ export const WorkingGroupNetworkContentFragmentDoc = {
                     selections: [
                       {
                         kind: 'FragmentSpread',
-                        name: { kind: 'Name', value: 'WorkingGroupContent' },
+                        name: { kind: 'Name', value: 'WorkingGroupData' },
                       },
                     ],
                   },
@@ -8373,7 +8370,7 @@ export const WorkingGroupNetworkContentFragmentDoc = {
                     selections: [
                       {
                         kind: 'FragmentSpread',
-                        name: { kind: 'Name', value: 'WorkingGroupContent' },
+                        name: { kind: 'Name', value: 'WorkingGroupData' },
                       },
                     ],
                   },
@@ -8386,7 +8383,7 @@ export const WorkingGroupNetworkContentFragmentDoc = {
                     selections: [
                       {
                         kind: 'FragmentSpread',
-                        name: { kind: 'Name', value: 'WorkingGroupContent' },
+                        name: { kind: 'Name', value: 'WorkingGroupData' },
                       },
                     ],
                   },
@@ -8399,7 +8396,7 @@ export const WorkingGroupNetworkContentFragmentDoc = {
                     selections: [
                       {
                         kind: 'FragmentSpread',
-                        name: { kind: 'Name', value: 'WorkingGroupContent' },
+                        name: { kind: 'Name', value: 'WorkingGroupData' },
                       },
                     ],
                   },
@@ -8410,9 +8407,9 @@ export const WorkingGroupNetworkContentFragmentDoc = {
         ],
       },
     },
-    ...WorkingGroupContentFragmentDoc.definitions,
+    ...WorkingGroupDataFragmentDoc.definitions,
   ],
-} as unknown as DocumentNode<WorkingGroupNetworkContentFragment, unknown>;
+} as unknown as DocumentNode<WorkingGroupNetworkDataFragment, unknown>;
 export const FetchCalendarDocument = {
   kind: 'Document',
   definitions: [
@@ -8454,7 +8451,7 @@ export const FetchCalendarDocument = {
               selections: [
                 {
                   kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'CalendarsContent' },
+                  name: { kind: 'Name', value: 'CalendarsData' },
                 },
               ],
             },
@@ -8462,7 +8459,7 @@ export const FetchCalendarDocument = {
         ],
       },
     },
-    ...CalendarsContentFragmentDoc.definitions,
+    ...CalendarsDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchCalendarQuery, FetchCalendarQueryVariables>;
 export const FetchCalendarsDocument = {
@@ -8552,7 +8549,7 @@ export const FetchCalendarsDocument = {
                     selections: [
                       {
                         kind: 'FragmentSpread',
-                        name: { kind: 'Name', value: 'CalendarsContent' },
+                        name: { kind: 'Name', value: 'CalendarsData' },
                       },
                     ],
                   },
@@ -8563,7 +8560,7 @@ export const FetchCalendarsDocument = {
         ],
       },
     },
-    ...CalendarsContentFragmentDoc.definitions,
+    ...CalendarsDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchCalendarsQuery, FetchCalendarsQueryVariables>;
 export const FetchContributingCohortsDocument = {
@@ -8635,7 +8632,7 @@ export const FetchContributingCohortsDocument = {
                         kind: 'FragmentSpread',
                         name: {
                           kind: 'Name',
-                          value: 'ContributingCohortsContent',
+                          value: 'ContributingCohortsData',
                         },
                       },
                     ],
@@ -8647,7 +8644,7 @@ export const FetchContributingCohortsDocument = {
         ],
       },
     },
-    ...ContributingCohortsContentFragmentDoc.definitions,
+    ...ContributingCohortsDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<
   FetchContributingCohortsQuery,
@@ -8740,7 +8737,7 @@ export const FetchEventsDocument = {
                     selections: [
                       {
                         kind: 'FragmentSpread',
-                        name: { kind: 'Name', value: 'EventContent' },
+                        name: { kind: 'Name', value: 'EventData' },
                       },
                     ],
                   },
@@ -8751,7 +8748,7 @@ export const FetchEventsDocument = {
         ],
       },
     },
-    ...EventContentFragmentDoc.definitions,
+    ...EventDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchEventsQuery, FetchEventsQueryVariables>;
 export const FetchEventDocument = {
@@ -8795,7 +8792,7 @@ export const FetchEventDocument = {
               selections: [
                 {
                   kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'EventContent' },
+                  name: { kind: 'Name', value: 'EventData' },
                 },
               ],
             },
@@ -8803,7 +8800,7 @@ export const FetchEventDocument = {
         ],
       },
     },
-    ...EventContentFragmentDoc.definitions,
+    ...EventDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchEventQuery, FetchEventQueryVariables>;
 export const FetchGroupCalendarDocument = {
@@ -8991,7 +8988,7 @@ export const FetchExternalUserDocument = {
               selections: [
                 {
                   kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'ExternalUsersContent' },
+                  name: { kind: 'Name', value: 'ExternalUsersData' },
                 },
               ],
             },
@@ -8999,7 +8996,7 @@ export const FetchExternalUserDocument = {
         ],
       },
     },
-    ...ExternalUsersContentFragmentDoc.definitions,
+    ...ExternalUsersDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<
   FetchExternalUserQuery,
@@ -9088,7 +9085,7 @@ export const FetchExternalUsersDocument = {
                     selections: [
                       {
                         kind: 'FragmentSpread',
-                        name: { kind: 'Name', value: 'ExternalUsersContent' },
+                        name: { kind: 'Name', value: 'ExternalUsersData' },
                       },
                     ],
                   },
@@ -9099,7 +9096,7 @@ export const FetchExternalUsersDocument = {
         ],
       },
     },
-    ...ExternalUsersContentFragmentDoc.definitions,
+    ...ExternalUsersDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<
   FetchExternalUsersQuery,
@@ -9172,7 +9169,7 @@ export const FetchNewsDocument = {
                     selections: [
                       {
                         kind: 'FragmentSpread',
-                        name: { kind: 'Name', value: 'NewsContent' },
+                        name: { kind: 'Name', value: 'NewsData' },
                       },
                     ],
                   },
@@ -9183,7 +9180,7 @@ export const FetchNewsDocument = {
         ],
       },
     },
-    ...NewsContentFragmentDoc.definitions,
+    ...NewsDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchNewsQuery, FetchNewsQueryVariables>;
 export const FetchOutputDocument = {
@@ -9227,7 +9224,7 @@ export const FetchOutputDocument = {
               selections: [
                 {
                   kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'OutputContent' },
+                  name: { kind: 'Name', value: 'OutputData' },
                 },
               ],
             },
@@ -9235,7 +9232,7 @@ export const FetchOutputDocument = {
         ],
       },
     },
-    ...OutputContentFragmentDoc.definitions,
+    ...OutputDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchOutputQuery, FetchOutputQueryVariables>;
 export const FetchOutputsDocument = {
@@ -9318,7 +9315,7 @@ export const FetchOutputsDocument = {
                     selections: [
                       {
                         kind: 'FragmentSpread',
-                        name: { kind: 'Name', value: 'OutputContent' },
+                        name: { kind: 'Name', value: 'OutputData' },
                       },
                     ],
                   },
@@ -9329,7 +9326,7 @@ export const FetchOutputsDocument = {
         ],
       },
     },
-    ...OutputContentFragmentDoc.definitions,
+    ...OutputDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchOutputsQuery, FetchOutputsQueryVariables>;
 export const FetchProjectDocument = {
@@ -9373,7 +9370,7 @@ export const FetchProjectDocument = {
               selections: [
                 {
                   kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'ProjectContent' },
+                  name: { kind: 'Name', value: 'ProjectData' },
                 },
               ],
             },
@@ -9381,7 +9378,7 @@ export const FetchProjectDocument = {
         ],
       },
     },
-    ...ProjectContentFragmentDoc.definitions,
+    ...ProjectDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchProjectQuery, FetchProjectQueryVariables>;
 export const FetchProjectsDocument = {
@@ -9448,7 +9445,7 @@ export const FetchProjectsDocument = {
                     selections: [
                       {
                         kind: 'FragmentSpread',
-                        name: { kind: 'Name', value: 'ProjectContent' },
+                        name: { kind: 'Name', value: 'ProjectData' },
                       },
                     ],
                   },
@@ -9459,7 +9456,7 @@ export const FetchProjectsDocument = {
         ],
       },
     },
-    ...ProjectContentFragmentDoc.definitions,
+    ...ProjectDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchProjectsQuery, FetchProjectsQueryVariables>;
 export const FetchUserDocument = {
@@ -9503,7 +9500,7 @@ export const FetchUserDocument = {
               selections: [
                 {
                   kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'UsersContent' },
+                  name: { kind: 'Name', value: 'UsersData' },
                 },
               ],
             },
@@ -9511,7 +9508,7 @@ export const FetchUserDocument = {
         ],
       },
     },
-    ...UsersContentFragmentDoc.definitions,
+    ...UsersDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchUserQuery, FetchUserQueryVariables>;
 export const FetchUsersDocument = {
@@ -9594,7 +9591,7 @@ export const FetchUsersDocument = {
                     selections: [
                       {
                         kind: 'FragmentSpread',
-                        name: { kind: 'Name', value: 'UsersContent' },
+                        name: { kind: 'Name', value: 'UsersData' },
                       },
                     ],
                   },
@@ -9605,7 +9602,7 @@ export const FetchUsersDocument = {
         ],
       },
     },
-    ...UsersContentFragmentDoc.definitions,
+    ...UsersDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchUsersQuery, FetchUsersQueryVariables>;
 export const FetchProjectsMembersDocument = {
@@ -9646,7 +9643,7 @@ export const FetchProjectsMembersDocument = {
               selections: [
                 {
                   kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'ProjectMembersContent' },
+                  name: { kind: 'Name', value: 'ProjectMembersData' },
                 },
               ],
             },
@@ -9654,7 +9651,7 @@ export const FetchProjectsMembersDocument = {
         ],
       },
     },
-    ...ProjectMembersContentFragmentDoc.definitions,
+    ...ProjectMembersDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<
   FetchProjectsMembersQuery,
@@ -9698,7 +9695,7 @@ export const FetchWorkingGroupsMembersDocument = {
               selections: [
                 {
                   kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'WorkingGroupMembersContent' },
+                  name: { kind: 'Name', value: 'WorkingGroupMembersData' },
                 },
               ],
             },
@@ -9706,7 +9703,7 @@ export const FetchWorkingGroupsMembersDocument = {
         ],
       },
     },
-    ...WorkingGroupMembersContentFragmentDoc.definitions,
+    ...WorkingGroupMembersDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<
   FetchWorkingGroupsMembersQuery,
@@ -9730,7 +9727,7 @@ export const FetchWorkingGroupNetworkDocument = {
               selections: [
                 {
                   kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'WorkingGroupNetworkContent' },
+                  name: { kind: 'Name', value: 'WorkingGroupNetworkData' },
                 },
               ],
             },
@@ -9738,7 +9735,7 @@ export const FetchWorkingGroupNetworkDocument = {
         ],
       },
     },
-    ...WorkingGroupNetworkContentFragmentDoc.definitions,
+    ...WorkingGroupNetworkDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<
   FetchWorkingGroupNetworkQuery,
@@ -9785,7 +9782,7 @@ export const FetchWorkingGroupDocument = {
               selections: [
                 {
                   kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'WorkingGroupContent' },
+                  name: { kind: 'Name', value: 'WorkingGroupData' },
                 },
               ],
             },
@@ -9793,7 +9790,7 @@ export const FetchWorkingGroupDocument = {
         ],
       },
     },
-    ...WorkingGroupContentFragmentDoc.definitions,
+    ...WorkingGroupDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<
   FetchWorkingGroupQuery,
@@ -9838,7 +9835,7 @@ export const FetchWorkingGroupsDocument = {
                     selections: [
                       {
                         kind: 'FragmentSpread',
-                        name: { kind: 'Name', value: 'WorkingGroupContent' },
+                        name: { kind: 'Name', value: 'WorkingGroupData' },
                       },
                     ],
                   },
@@ -9849,7 +9846,7 @@ export const FetchWorkingGroupsDocument = {
         ],
       },
     },
-    ...WorkingGroupContentFragmentDoc.definitions,
+    ...WorkingGroupDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<
   FetchWorkingGroupsQuery,

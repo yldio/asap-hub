@@ -1,7 +1,5 @@
 import {
-  FETCH_PAGES,
-  FetchPagesQuery,
-  FetchPagesQueryVariables,
+  gp2,
   GraphQLClient,
   parseRichText,
   RichTextFromQuery,
@@ -19,9 +17,9 @@ export class PageContentfulDataProvider implements PageDataProvider {
     options?: FetchPagesProviderOptions,
   ): Promise<ListPageDataObject> {
     const { pagesCollection } = await this.contentfulClient.request<
-      FetchPagesQuery,
-      FetchPagesQueryVariables
-    >(FETCH_PAGES, {
+      gp2.FetchPagesQuery,
+      gp2.FetchPagesQueryVariables
+    >(gp2.FETCH_PAGES, {
       where: { path: options?.filter?.path || null },
     });
 
@@ -42,7 +40,7 @@ export class PageContentfulDataProvider implements PageDataProvider {
 }
 
 export type PageItem = NonNullable<
-  NonNullable<FetchPagesQuery['pagesCollection']>['items'][number]
+  NonNullable<gp2.FetchPagesQuery['pagesCollection']>['items'][number]
 >;
 
 export const parseContentfulGraphQlPages = (

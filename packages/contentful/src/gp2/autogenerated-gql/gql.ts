@@ -3,33 +3,33 @@ import * as graphql from './graphql';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
 const documents = {
-  '\n  fragment NewsContent on News {\n    sys {\n      id\n      firstPublishedAt\n    }\n    title\n    shortText\n    sampleCount\n    articleCount\n    cohortCount\n    link\n    linkText\n    publishDate\n  }\n':
-    graphql.NewsContentFragmentDoc,
-  '\n  query FetchNewsById($id: String!) {\n    news(id: $id) {\n      ...NewsContent\n    }\n  }\n  \n':
+  '\n  fragment NewsContentData on News {\n    sys {\n      id\n      firstPublishedAt\n    }\n    title\n    shortText\n    sampleCount\n    articleCount\n    cohortCount\n    link\n    linkText\n    publishDate\n  }\n':
+    graphql.NewsContentDataFragmentDoc,
+  '\n  query FetchNewsById($id: String!) {\n    news(id: $id) {\n      ...NewsContentData\n    }\n  }\n  \n':
     graphql.FetchNewsByIdDocument,
-  '\n  query FetchNews(\n    $limit: Int\n    $skip: Int\n    $order: [NewsOrder]\n    $where: NewsFilter\n  ) {\n    newsCollection(limit: $limit, skip: $skip, order: $order, where: $where) {\n      total\n      items {\n        ...NewsContent\n      }\n    }\n  }\n  \n':
+  '\n  query FetchNews(\n    $limit: Int\n    $skip: Int\n    $order: [NewsOrder]\n    $where: NewsFilter\n  ) {\n    newsCollection(limit: $limit, skip: $skip, order: $order, where: $where) {\n      total\n      items {\n        ...NewsContentData\n      }\n    }\n  }\n  \n':
     graphql.FetchNewsDocument,
-  '\n  fragment PageContent on Pages {\n    sys {\n      id\n    }\n    title\n    path\n    shortText\n    text {\n      json\n      links {\n        entries {\n          inline {\n            sys {\n              id\n            }\n            __typename\n            ... on Media {\n              url\n            }\n          }\n        }\n        assets {\n          block {\n            sys {\n              id\n            }\n            url\n            description\n            contentType\n            width\n            height\n          }\n        }\n      }\n    }\n    link\n    linkText\n  }\n':
-    graphql.PageContentFragmentDoc,
-  '\n  query FetchPages($where: PagesFilter) {\n    pagesCollection(limit: 100, where: $where) {\n      total\n      items {\n        ...PageContent\n      }\n    }\n  }\n  \n':
+  '\n  fragment PageContentData on Pages {\n    sys {\n      id\n    }\n    title\n    path\n    shortText\n    text {\n      json\n      links {\n        entries {\n          inline {\n            sys {\n              id\n            }\n            __typename\n            ... on Media {\n              url\n            }\n          }\n        }\n        assets {\n          block {\n            sys {\n              id\n            }\n            url\n            description\n            contentType\n            width\n            height\n          }\n        }\n      }\n    }\n    link\n    linkText\n  }\n':
+    graphql.PageContentDataFragmentDoc,
+  '\n  query FetchPages($where: PagesFilter) {\n    pagesCollection(limit: 100, where: $where) {\n      total\n      items {\n        ...PageContentData\n      }\n    }\n  }\n  \n':
     graphql.FetchPagesDocument,
 };
 
 export function gql(
-  source: '\n  fragment NewsContent on News {\n    sys {\n      id\n      firstPublishedAt\n    }\n    title\n    shortText\n    sampleCount\n    articleCount\n    cohortCount\n    link\n    linkText\n    publishDate\n  }\n',
-): (typeof documents)['\n  fragment NewsContent on News {\n    sys {\n      id\n      firstPublishedAt\n    }\n    title\n    shortText\n    sampleCount\n    articleCount\n    cohortCount\n    link\n    linkText\n    publishDate\n  }\n'];
+  source: '\n  fragment NewsContentData on News {\n    sys {\n      id\n      firstPublishedAt\n    }\n    title\n    shortText\n    sampleCount\n    articleCount\n    cohortCount\n    link\n    linkText\n    publishDate\n  }\n',
+): (typeof documents)['\n  fragment NewsContentData on News {\n    sys {\n      id\n      firstPublishedAt\n    }\n    title\n    shortText\n    sampleCount\n    articleCount\n    cohortCount\n    link\n    linkText\n    publishDate\n  }\n'];
 export function gql(
-  source: '\n  query FetchNewsById($id: String!) {\n    news(id: $id) {\n      ...NewsContent\n    }\n  }\n  \n',
-): (typeof documents)['\n  query FetchNewsById($id: String!) {\n    news(id: $id) {\n      ...NewsContent\n    }\n  }\n  \n'];
+  source: '\n  query FetchNewsById($id: String!) {\n    news(id: $id) {\n      ...NewsContentData\n    }\n  }\n  \n',
+): (typeof documents)['\n  query FetchNewsById($id: String!) {\n    news(id: $id) {\n      ...NewsContentData\n    }\n  }\n  \n'];
 export function gql(
-  source: '\n  query FetchNews(\n    $limit: Int\n    $skip: Int\n    $order: [NewsOrder]\n    $where: NewsFilter\n  ) {\n    newsCollection(limit: $limit, skip: $skip, order: $order, where: $where) {\n      total\n      items {\n        ...NewsContent\n      }\n    }\n  }\n  \n',
-): (typeof documents)['\n  query FetchNews(\n    $limit: Int\n    $skip: Int\n    $order: [NewsOrder]\n    $where: NewsFilter\n  ) {\n    newsCollection(limit: $limit, skip: $skip, order: $order, where: $where) {\n      total\n      items {\n        ...NewsContent\n      }\n    }\n  }\n  \n'];
+  source: '\n  query FetchNews(\n    $limit: Int\n    $skip: Int\n    $order: [NewsOrder]\n    $where: NewsFilter\n  ) {\n    newsCollection(limit: $limit, skip: $skip, order: $order, where: $where) {\n      total\n      items {\n        ...NewsContentData\n      }\n    }\n  }\n  \n',
+): (typeof documents)['\n  query FetchNews(\n    $limit: Int\n    $skip: Int\n    $order: [NewsOrder]\n    $where: NewsFilter\n  ) {\n    newsCollection(limit: $limit, skip: $skip, order: $order, where: $where) {\n      total\n      items {\n        ...NewsContentData\n      }\n    }\n  }\n  \n'];
 export function gql(
-  source: '\n  fragment PageContent on Pages {\n    sys {\n      id\n    }\n    title\n    path\n    shortText\n    text {\n      json\n      links {\n        entries {\n          inline {\n            sys {\n              id\n            }\n            __typename\n            ... on Media {\n              url\n            }\n          }\n        }\n        assets {\n          block {\n            sys {\n              id\n            }\n            url\n            description\n            contentType\n            width\n            height\n          }\n        }\n      }\n    }\n    link\n    linkText\n  }\n',
-): (typeof documents)['\n  fragment PageContent on Pages {\n    sys {\n      id\n    }\n    title\n    path\n    shortText\n    text {\n      json\n      links {\n        entries {\n          inline {\n            sys {\n              id\n            }\n            __typename\n            ... on Media {\n              url\n            }\n          }\n        }\n        assets {\n          block {\n            sys {\n              id\n            }\n            url\n            description\n            contentType\n            width\n            height\n          }\n        }\n      }\n    }\n    link\n    linkText\n  }\n'];
+  source: '\n  fragment PageContentData on Pages {\n    sys {\n      id\n    }\n    title\n    path\n    shortText\n    text {\n      json\n      links {\n        entries {\n          inline {\n            sys {\n              id\n            }\n            __typename\n            ... on Media {\n              url\n            }\n          }\n        }\n        assets {\n          block {\n            sys {\n              id\n            }\n            url\n            description\n            contentType\n            width\n            height\n          }\n        }\n      }\n    }\n    link\n    linkText\n  }\n',
+): (typeof documents)['\n  fragment PageContentData on Pages {\n    sys {\n      id\n    }\n    title\n    path\n    shortText\n    text {\n      json\n      links {\n        entries {\n          inline {\n            sys {\n              id\n            }\n            __typename\n            ... on Media {\n              url\n            }\n          }\n        }\n        assets {\n          block {\n            sys {\n              id\n            }\n            url\n            description\n            contentType\n            width\n            height\n          }\n        }\n      }\n    }\n    link\n    linkText\n  }\n'];
 export function gql(
-  source: '\n  query FetchPages($where: PagesFilter) {\n    pagesCollection(limit: 100, where: $where) {\n      total\n      items {\n        ...PageContent\n      }\n    }\n  }\n  \n',
-): (typeof documents)['\n  query FetchPages($where: PagesFilter) {\n    pagesCollection(limit: 100, where: $where) {\n      total\n      items {\n        ...PageContent\n      }\n    }\n  }\n  \n'];
+  source: '\n  query FetchPages($where: PagesFilter) {\n    pagesCollection(limit: 100, where: $where) {\n      total\n      items {\n        ...PageContentData\n      }\n    }\n  }\n  \n',
+): (typeof documents)['\n  query FetchPages($where: PagesFilter) {\n    pagesCollection(limit: 100, where: $where) {\n      total\n      items {\n        ...PageContentData\n      }\n    }\n  }\n  \n'];
 
 export function gql(source: string): unknown;
 export function gql(source: string) {

@@ -1,7 +1,8 @@
+/* istanbul ignore file */
 import { gql } from 'graphql-tag';
 
 export const newsContentQueryFragment = gql`
-  fragment NewsContent on News {
+  fragment NewsContentData on News {
     sys {
       id
       firstPublishedAt
@@ -20,7 +21,7 @@ export const newsContentQueryFragment = gql`
 export const FETCH_NEWS_BY_ID = gql`
   query FetchNewsById($id: String!) {
     news(id: $id) {
-      ...NewsContent
+      ...NewsContentData
     }
   }
   ${newsContentQueryFragment}
@@ -36,7 +37,7 @@ export const FETCH_NEWS = gql`
     newsCollection(limit: $limit, skip: $skip, order: $order, where: $where) {
       total
       items {
-        ...NewsContent
+        ...NewsContentData
       }
     }
   }

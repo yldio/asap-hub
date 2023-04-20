@@ -16,15 +16,16 @@ describe('Page data provider', () => {
     identity();
   });
 
-  afterEach(() => {
-    expect(nock.isDone()).toBe(true);
-  });
+  beforeEach(jest.resetAllMocks);
 
-  afterEach(() => {
-    nock.cleanAll();
-  });
+  describe('Fetch', () => {
+    afterEach(() => {
+      expect(nock.isDone()).toBe(true);
+    });
 
-  describe('Fetch method', () => {
+    afterEach(() => {
+      nock.cleanAll();
+    });
     test('Should return an empty result when no pages are found', async () => {
       const path = '/not-found';
 
@@ -164,6 +165,15 @@ describe('Page data provider', () => {
           },
         ],
       });
+    });
+  });
+
+  describe('Fetch-by-id method', () => {
+    test('Should throw as not implemented', async () => {
+      expect.assertions(1);
+      await expect(pageDataProvider.fetchById()).rejects.toThrow(
+        /Method not implemented/i,
+      );
     });
   });
 });

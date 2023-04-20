@@ -1,9 +1,9 @@
 /* istanbul ignore file */
 
-import gql from 'graphql-tag';
+import { gql } from 'graphql-tag';
 
 export const pagesContentQueryFragment = gql`
-  fragment PageContent on Pages {
+  fragment PageContentData on Pages {
     sys {
       id
     }
@@ -48,7 +48,7 @@ export const FETCH_PAGES = gql`
     pagesCollection(limit: 100, where: $where) {
       total
       items {
-        ...PageContent
+        ...PageContentData
       }
     }
   }

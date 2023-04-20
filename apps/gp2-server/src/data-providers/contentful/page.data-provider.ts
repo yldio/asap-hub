@@ -1,27 +1,25 @@
 import {
-  FETCH_PAGES,
-  FetchPagesQuery,
-  FetchPagesQueryVariables,
+  gp2,
   GraphQLClient,
   parseRichText,
   RichTextFromQuery,
 } from '@asap-hub/contentful';
 import { ListPageDataObject, PageDataObject } from '@asap-hub/model';
-import {
-  FetchPagesProviderOptions,
-  PageDataProvider,
-} from '../page.data-provider';
+import { FetchPagesProviderOptions, PageDataProvider } from '../types';
 
 export class PageContentfulDataProvider implements PageDataProvider {
   constructor(private contentfulClient: GraphQLClient) {}
 
+  async fetchById(): Promise<null> {
+    throw new Error('Method not implemented.');
+  }
   async fetch(
     options?: FetchPagesProviderOptions,
   ): Promise<ListPageDataObject> {
     const { pagesCollection } = await this.contentfulClient.request<
-      FetchPagesQuery,
-      FetchPagesQueryVariables
-    >(FETCH_PAGES, {
+      gp2.FetchPagesQuery,
+      gp2.FetchPagesQueryVariables
+    >(gp2.FETCH_PAGES, {
       where: { path: options?.filter?.path || null },
     });
 
@@ -42,7 +40,7 @@ export class PageContentfulDataProvider implements PageDataProvider {
 }
 
 export type PageItem = NonNullable<
-  NonNullable<FetchPagesQuery['pagesCollection']>['items'][number]
+  NonNullable<gp2.FetchPagesQuery['pagesCollection']>['items'][number]
 >;
 
 export const parseContentfulGraphQlPages = (

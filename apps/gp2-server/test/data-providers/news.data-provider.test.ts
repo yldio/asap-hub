@@ -82,4 +82,12 @@ describe('News data provider', () => {
       });
     });
   });
+  describe('Fetch-by-id method', () => {
+    test('Should throw as not implemented', async () => {
+      expect.assertions(1);
+      await expect(newsDataProvider.fetchById()).rejects.toThrow(
+        /Method not implemented/i,
+      );
+    });
+  });
 });

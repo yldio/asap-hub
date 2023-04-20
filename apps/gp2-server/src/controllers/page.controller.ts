@@ -1,7 +1,6 @@
-import { PageResponse } from '@asap-hub/model';
 import { GenericError, NotFoundError } from '@asap-hub/errors';
-
-import { PageDataProvider } from '../data-providers/page.data-provider';
+import { PageResponse } from '@asap-hub/model';
+import { PageDataProvider } from '../data-providers/types';
 
 export default class Pages implements PageController {
   constructor(private pageDataProvider: PageDataProvider) {}

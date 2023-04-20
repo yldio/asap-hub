@@ -1,4 +1,4 @@
-import { FetchPagesQuery } from '@asap-hub/contentful';
+import { gp2 } from '@asap-hub/contentful';
 import { PageResponse } from '@asap-hub/model';
 
 export const pageResponse: PageResponse = {
@@ -11,7 +11,7 @@ export const pageResponse: PageResponse = {
   linkText: 'linkText',
 };
 
-export const getContentfulPagesGraphqlResponse = (): FetchPagesQuery => ({
+export const getContentfulPagesGraphqlResponse = (): gp2.FetchPagesQuery => ({
   pagesCollection: {
     total: 1,
     items: [getContentfulGraphqlPages()],
@@ -19,7 +19,7 @@ export const getContentfulPagesGraphqlResponse = (): FetchPagesQuery => ({
 });
 
 export const getContentfulGraphqlPages = (): NonNullable<
-  NonNullable<FetchPagesQuery['pagesCollection']>['items'][number]
+  NonNullable<gp2.FetchPagesQuery['pagesCollection']>['items'][number]
 > => ({
   sys: {
     id: 'some-id',

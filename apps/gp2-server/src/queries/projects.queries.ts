@@ -1,7 +1,7 @@
 import { gql } from 'graphql-tag';
 
 export const projectContentQueryFragment = gql`
-  fragment ProjectContent on Projects {
+  fragment ProjectData on Projects {
     id
     flatData {
       title
@@ -57,7 +57,7 @@ export const projectContentQueryFragment = gql`
 export const FETCH_PROJECT = gql`
   query FetchProject($id: String!) {
     findProjectsContent(id: $id) {
-      ...ProjectContent
+      ...ProjectData
     }
   }
   ${projectContentQueryFragment}
@@ -72,7 +72,7 @@ export const FETCH_PROJECTS = gql`
     ) {
       total
       items {
-        ...ProjectContent
+        ...ProjectData
       }
     }
   }

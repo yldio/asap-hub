@@ -1,7 +1,7 @@
 import { gql } from 'graphql-tag';
 
 export const usersContentQueryFragment = gql`
-  fragment UsersContent on Users {
+  fragment UsersData on Users {
     id
     created
     lastModified
@@ -89,7 +89,7 @@ export const usersContentQueryFragment = gql`
 export const FETCH_USER = gql`
   query FetchUser($id: String!) {
     findUsersContent(id: $id) {
-      ...UsersContent
+      ...UsersData
     }
   }
   ${usersContentQueryFragment}
@@ -105,7 +105,7 @@ export const FETCH_USERS = gql`
     ) {
       total
       items {
-        ...UsersContent
+        ...UsersData
       }
     }
   }
@@ -113,7 +113,7 @@ export const FETCH_USERS = gql`
 `;
 
 export const projectMembersContentQueryFragment = gql`
-  fragment ProjectMembersContent on Projects {
+  fragment ProjectMembersData on Projects {
     flatData {
       members {
         user {
@@ -127,14 +127,14 @@ export const projectMembersContentQueryFragment = gql`
 export const FETCH_PROJECTS_MEMBERS = gql`
   query FetchProjectsMembers($filter: String) {
     queryProjectsContents(filter: $filter) {
-      ...ProjectMembersContent
+      ...ProjectMembersData
     }
   }
   ${projectMembersContentQueryFragment}
 `;
 
 export const workingGroupMembersContentQueryFragment = gql`
-  fragment WorkingGroupMembersContent on WorkingGroups {
+  fragment WorkingGroupMembersData on WorkingGroups {
     flatData {
       members {
         user {
@@ -148,7 +148,7 @@ export const workingGroupMembersContentQueryFragment = gql`
 export const FETCH_WORKINGGROUPS_MEMBERS = gql`
   query FetchWorkingGroupsMembers($filter: String) {
     queryWorkingGroupsContents(filter: $filter) {
-      ...WorkingGroupMembersContent
+      ...WorkingGroupMembersData
     }
   }
   ${workingGroupMembersContentQueryFragment}

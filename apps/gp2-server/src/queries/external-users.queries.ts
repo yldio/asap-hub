@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export const externalUsersContentQueryFragment = gql`
-  fragment ExternalUsersContent on ExternalUsers {
+  fragment ExternalUsersData on ExternalUsers {
     id
     flatData {
       name
@@ -13,7 +13,7 @@ export const externalUsersContentQueryFragment = gql`
 export const FETCH_EXTERNAL_USER = gql`
   query FetchExternalUser($id: String!) {
     findExternalUsersContent(id: $id) {
-      ...ExternalUsersContent
+      ...ExternalUsersData
     }
   }
   ${externalUsersContentQueryFragment}
@@ -29,7 +29,7 @@ export const FETCH_EXTERNAL_USERS = gql`
     ) {
       total
       items {
-        ...ExternalUsersContent
+        ...ExternalUsersData
       }
     }
   }

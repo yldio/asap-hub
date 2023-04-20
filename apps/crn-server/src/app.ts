@@ -400,7 +400,7 @@ export const appFactory = (libs: Libs = {}): Express => {
       externalAuthorDataProvider,
     );
   const researchTagController =
-    libs.researchTagController || new ResearchTags(squidexGraphqlClient);
+    libs.researchTagController || new ResearchTags(researchTagDataProvider);
   const teamController = libs.teamController || new Teams(teamDataProvider);
   const tutorialsController =
     libs.tutorialsController || new Tutorials(tutorialsDataProvider);

@@ -488,6 +488,178 @@ export enum MigrationOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+/** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
+export type News = Entry & {
+  articleCount?: Maybe<Scalars['Int']>;
+  cohortCount?: Maybe<Scalars['Int']>;
+  contentfulMetadata: ContentfulMetadata;
+  link?: Maybe<Scalars['String']>;
+  linkText?: Maybe<Scalars['String']>;
+  linkedFrom?: Maybe<NewsLinkingCollections>;
+  publishDate?: Maybe<Scalars['DateTime']>;
+  sampleCount?: Maybe<Scalars['Int']>;
+  shortText?: Maybe<Scalars['String']>;
+  sys: Sys;
+  title?: Maybe<Scalars['String']>;
+};
+
+/** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
+export type NewsArticleCountArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
+export type NewsCohortCountArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
+export type NewsLinkArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
+export type NewsLinkTextArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
+export type NewsLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
+export type NewsPublishDateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
+export type NewsSampleCountArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
+export type NewsShortTextArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
+export type NewsTitleArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type NewsCollection = {
+  items: Array<Maybe<News>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type NewsFilter = {
+  AND?: InputMaybe<Array<InputMaybe<NewsFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<NewsFilter>>>;
+  articleCount?: InputMaybe<Scalars['Int']>;
+  articleCount_exists?: InputMaybe<Scalars['Boolean']>;
+  articleCount_gt?: InputMaybe<Scalars['Int']>;
+  articleCount_gte?: InputMaybe<Scalars['Int']>;
+  articleCount_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  articleCount_lt?: InputMaybe<Scalars['Int']>;
+  articleCount_lte?: InputMaybe<Scalars['Int']>;
+  articleCount_not?: InputMaybe<Scalars['Int']>;
+  articleCount_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  cohortCount?: InputMaybe<Scalars['Int']>;
+  cohortCount_exists?: InputMaybe<Scalars['Boolean']>;
+  cohortCount_gt?: InputMaybe<Scalars['Int']>;
+  cohortCount_gte?: InputMaybe<Scalars['Int']>;
+  cohortCount_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  cohortCount_lt?: InputMaybe<Scalars['Int']>;
+  cohortCount_lte?: InputMaybe<Scalars['Int']>;
+  cohortCount_not?: InputMaybe<Scalars['Int']>;
+  cohortCount_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  link?: InputMaybe<Scalars['String']>;
+  linkText?: InputMaybe<Scalars['String']>;
+  linkText_contains?: InputMaybe<Scalars['String']>;
+  linkText_exists?: InputMaybe<Scalars['Boolean']>;
+  linkText_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  linkText_not?: InputMaybe<Scalars['String']>;
+  linkText_not_contains?: InputMaybe<Scalars['String']>;
+  linkText_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  link_contains?: InputMaybe<Scalars['String']>;
+  link_exists?: InputMaybe<Scalars['Boolean']>;
+  link_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  link_not?: InputMaybe<Scalars['String']>;
+  link_not_contains?: InputMaybe<Scalars['String']>;
+  link_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  publishDate?: InputMaybe<Scalars['DateTime']>;
+  publishDate_exists?: InputMaybe<Scalars['Boolean']>;
+  publishDate_gt?: InputMaybe<Scalars['DateTime']>;
+  publishDate_gte?: InputMaybe<Scalars['DateTime']>;
+  publishDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  publishDate_lt?: InputMaybe<Scalars['DateTime']>;
+  publishDate_lte?: InputMaybe<Scalars['DateTime']>;
+  publishDate_not?: InputMaybe<Scalars['DateTime']>;
+  publishDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  sampleCount?: InputMaybe<Scalars['Int']>;
+  sampleCount_exists?: InputMaybe<Scalars['Boolean']>;
+  sampleCount_gt?: InputMaybe<Scalars['Int']>;
+  sampleCount_gte?: InputMaybe<Scalars['Int']>;
+  sampleCount_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  sampleCount_lt?: InputMaybe<Scalars['Int']>;
+  sampleCount_lte?: InputMaybe<Scalars['Int']>;
+  sampleCount_not?: InputMaybe<Scalars['Int']>;
+  sampleCount_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  shortText?: InputMaybe<Scalars['String']>;
+  shortText_contains?: InputMaybe<Scalars['String']>;
+  shortText_exists?: InputMaybe<Scalars['Boolean']>;
+  shortText_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  shortText_not?: InputMaybe<Scalars['String']>;
+  shortText_not_contains?: InputMaybe<Scalars['String']>;
+  shortText_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type NewsLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type NewsLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum NewsOrder {
+  ArticleCountAsc = 'articleCount_ASC',
+  ArticleCountDesc = 'articleCount_DESC',
+  CohortCountAsc = 'cohortCount_ASC',
+  CohortCountDesc = 'cohortCount_DESC',
+  LinkTextAsc = 'linkText_ASC',
+  LinkTextDesc = 'linkText_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  SampleCountAsc = 'sampleCount_ASC',
+  SampleCountDesc = 'sampleCount_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/pages) */
 export type Pages = Entry & {
   contentfulMetadata: ContentfulMetadata;
@@ -645,6 +817,8 @@ export type Query = {
   mediaCollection?: Maybe<MediaCollection>;
   migration?: Maybe<Migration>;
   migrationCollection?: Maybe<MigrationCollection>;
+  news?: Maybe<News>;
+  newsCollection?: Maybe<NewsCollection>;
   pages?: Maybe<Pages>;
   pagesCollection?: Maybe<PagesCollection>;
 };
@@ -701,6 +875,21 @@ export type QueryMigrationCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<MigrationFilter>;
+};
+
+export type QueryNewsArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryNewsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<NewsOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<NewsFilter>;
 };
 
 export type QueryPagesArgs = {
@@ -779,6 +968,7 @@ export type PageContentFragment = Pick<
                     sys: Pick<Sys, 'id'>;
                   })
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
             >
           >;
@@ -821,6 +1011,7 @@ export type FetchPagesQuery = {
                         | ({ __typename: 'Migration' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                       >
                     >;

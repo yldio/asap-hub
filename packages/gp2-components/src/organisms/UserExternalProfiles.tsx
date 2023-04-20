@@ -25,7 +25,7 @@ const iconsColor = colors.neutral900.rgb;
 const externalProfilesContainerStyles = css({
   display: 'flex',
   flexDirection: 'column',
-  gap: rem(20),
+  gap: rem(16),
 });
 
 const networkInfo: Record<

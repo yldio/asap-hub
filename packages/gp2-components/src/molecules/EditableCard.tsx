@@ -21,6 +21,7 @@ type EditableCardProps = {
 const { rem } = pixels;
 
 const containerStyles = css({
+  margin: rem(24),
   display: 'grid',
   grid: `
     "headline edit" max-content
@@ -28,7 +29,7 @@ const containerStyles = css({
     /auto min-content
     `,
   columnGap: rem(32),
-  rowGap: rem(12),
+  rowGap: rem(32),
   [mobileQuery]: {
     grid: `
     "edit" auto
@@ -45,7 +46,7 @@ const EditableCard: React.FC<EditableCardProps> = ({
   edit = true,
   children,
 }) => (
-  <Card>
+  <Card padding={false}>
     <article css={containerStyles}>
       <div css={[{ gridArea: 'headline' }]}>
         <Headline3 noMargin>{title}</Headline3>
@@ -58,7 +59,16 @@ const EditableCard: React.FC<EditableCardProps> = ({
         )}
       </div>
       {editHref && (
-        <div css={[{ gridArea: 'edit' }]}>
+        <div
+          css={[
+            {
+              gridArea: 'edit',
+              [mobileQuery]: {
+                marginBottom: rem(-8),
+              },
+            },
+          ]}
+        >
           <Link href={editHref} buttonStyle noMargin small fullWidth>
             <span
               css={{

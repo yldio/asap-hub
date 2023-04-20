@@ -1,6 +1,8 @@
 import { FetchOptions } from '@asap-hub/model';
 import Labs from '../../src/controllers/labs';
+import { LabSquidexDataProvider } from '../../src/data-providers/labs.data-provider';
 import {
+  getListLabDataObject,
   getListLabsResponse,
   getSquidexLabsGraphqlResponse,
 } from '../fixtures/labs.fixtures';
@@ -10,17 +12,17 @@ import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.moc
 
 describe('labs controller', () => {
   const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
-  const labs = new Labs(squidexGraphqlClientMock);
+  const labDataProvider = new LabSquidexDataProvider(squidexGraphqlClientMock);
 
   const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
-  const labsMockGraphql = new Labs(squidexGraphqlClientMockServer);
+  const labDataProviderMockGraphql = new LabSquidexDataProvider(squidexGraphqlClientMockServer);
   beforeAll(() => {
     identity();
   });
   describe('fetch', () => {
     it('Should fetch labs from squidex graphql', async () => {
-      const result = await labsMockGraphql.fetch({});
-      expect(result).toMatchObject(getListLabsResponse());
+      const result = await labDataProviderMockGraphql.fetch({});
+      expect(result).toMatchObject(getListLabDataObject());
     });
     it('Should query with search query and return labs', async () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
@@ -29,7 +31,7 @@ describe('labs controller', () => {
       const fetchOptions: FetchOptions = {
         search: 'lab name',
       };
-      await labs.fetch(fetchOptions);
+      await labDataProvider.fetch(fetchOptions);
       const queryFilter = `contains(data/name/iv, 'lab') and contains(data/name/iv, 'name')`;
       expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
         expect.anything(),
@@ -46,7 +48,7 @@ describe('labs controller', () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         squidexGraphqlResponse,
       );
-      const result = await labs.fetch({});
+      const result = await labDataProvider.fetch({});
       expect(result).toMatchObject({ items: [], total: 0 });
     });
     it('Should return an empty array when items returns null', async () => {
@@ -58,7 +60,7 @@ describe('labs controller', () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         squidexGraphqlResponse,
       );
-      const result = await labs.fetch({});
+      const result = await labDataProvider.fetch({});
       expect(result).toMatchObject({ items: [], total: 0 });
     });
   });

@@ -61,6 +61,7 @@ import {
   AssetSquidexDataProvider,
 } from './data-providers/asset.data-provider';
 import { CalendarSquidexDataProvider } from './data-providers/calendar.data-provider';
+import { NewsContentfulDataProvider } from './data-providers/contentful/news.data-provider';
 import { PageContentfulDataProvider } from './data-providers/contentful/page.data-provider';
 import {
   ContributingCohortDataProvider,
@@ -209,8 +210,12 @@ export const appFactory = (libs: Libs = {}): Express => {
   const userDataProvider =
     libs.userDataProvider ||
     new UserSquidexDataProvider(squidexGraphqlClient, userRestClient);
-  const newsDataProvider =
-    libs.newsDataProvider || new NewsSquidexDataProvider(squidexGraphqlClient);
+  const newsSquidexDataProvider =
+    libs.newsSquidexDataProvider ||
+    new NewsSquidexDataProvider(squidexGraphqlClient);
+  const newsContentfulDataProvider =
+    libs.newsContentfulDataProvider ||
+    new NewsContentfulDataProvider(contentfulGraphQLClient);
   const workingGroupDataProvider =
     libs.workingGroupDataProvider ||
     new WorkingGroupSquidexDataProvider(
@@ -248,6 +253,9 @@ export const appFactory = (libs: Libs = {}): Express => {
     ? pageContentfulDataProvider
     : pageSquidexDataProvider;
 
+  const newsDataProvider = isContentfulEnabled
+    ? newsContentfulDataProvider
+    : newsSquidexDataProvider;
   // Controllers
 
   const workingGroupController =
@@ -373,28 +381,29 @@ export type Libs = {
   contributingCohortController?: ContributingCohortController;
   contributingCohortDataProvider?: ContributingCohortDataProvider;
   eventController?: gp2.EventController;
-  externalUsersController?: ExternalUsersController;
   eventDataProvider?: gp2.EventDataProvider;
+  externalUsersController?: ExternalUsersController;
   externalUsersDataProvider?: ExternalUserDataProvider;
   logger?: Logger;
+  newsContentfulDataProvider?: NewsDataProvider;
   newsController?: NewsController;
-  newsDataProvider?: NewsDataProvider;
+  newsSquidexDataProvider?: NewsDataProvider;
   outputController?: OutputController;
   outputDataProvider?: OutputDataProvider;
+  pageContentfulDataProvider?: PageDataProvider;
   pageController?: PageController;
   pageSquidexDataProvider?: PageDataProvider;
-  pageContentfulDataProvider?: PageDataProvider;
   projectController?: ProjectController;
   projectDataProvider?: ProjectDataProvider;
+  sentryErrorHandler?: typeof Sentry.Handlers.errorHandler;
+  sentryRequestHandler?: typeof Sentry.Handlers.requestHandler;
+  sentryTransactionIdHandler?: RequestHandler;
   userController?: UserController;
   userDataProvider?: UserDataProvider;
   workingGroupController?: WorkingGroupController;
   workingGroupDataProvider?: WorkingGroupDataProvider;
   workingGroupNetworkController?: WorkingGroupNetworkController;
   workingGroupNetworkDataProvider?: WorkingGroupNetworkDataProvider;
-  sentryErrorHandler?: typeof Sentry.Handlers.errorHandler;
-  sentryRequestHandler?: typeof Sentry.Handlers.requestHandler;
-  sentryTransactionIdHandler?: RequestHandler;
   // sentryTransactionIdHandler?: RequestHandler;
   // extra handlers only for tests and local development
   mockRequestHandlers?: RequestHandler[];

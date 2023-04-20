@@ -1,3 +1,4 @@
+import { getContentfulGraphqlClientMockServer } from '@asap-hub/contentful';
 import { GraphQLError } from 'graphql';
 import { NewsContentfulDataProvider } from '../../../src/data-providers/contentful/news.data-provider';
 import {
@@ -6,7 +7,6 @@ import {
 } from '../../fixtures/news-contentful.fixtures';
 import { getListNewsDataObject } from '../../fixtures/news.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
-import { getContentfulGraphqlClientMockServer } from '../../mocks/graphql-client.mock';
 
 describe('News data provider', () => {
   const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();

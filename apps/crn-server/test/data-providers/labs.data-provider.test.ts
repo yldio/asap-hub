@@ -1,29 +1,31 @@
 import { FetchOptions } from '@asap-hub/model';
-import Labs from '../../src/controllers/labs';
 import { LabSquidexDataProvider } from '../../src/data-providers/labs.data-provider';
 import {
   getListLabDataObject,
-  getListLabsResponse,
   getSquidexLabsGraphqlResponse,
 } from '../fixtures/labs.fixtures';
-import { identity } from '../helpers/squidex';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
 
-describe('labs controller', () => {
+describe('Lab Squidex Data Provider', () => {
   const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
   const labDataProvider = new LabSquidexDataProvider(squidexGraphqlClientMock);
 
   const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
-  const labDataProviderMockGraphql = new LabSquidexDataProvider(squidexGraphqlClientMockServer);
-  beforeAll(() => {
-    identity();
+  const labDataProviderMockGraphql = new LabSquidexDataProvider(
+    squidexGraphqlClientMockServer,
+  );
+
+  afterEach(() => {
+    jest.resetAllMocks();
   });
-  describe('fetch', () => {
+
+  describe('Fetch', () => {
     it('Should fetch labs from squidex graphql', async () => {
       const result = await labDataProviderMockGraphql.fetch({});
       expect(result).toMatchObject(getListLabDataObject());
     });
+
     it('Should query with search query and return labs', async () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexLabsGraphqlResponse(),
@@ -42,6 +44,7 @@ describe('labs controller', () => {
         },
       );
     });
+
     it('Should return an empty array when the client returns null', async () => {
       const squidexGraphqlResponse = getSquidexLabsGraphqlResponse();
       squidexGraphqlResponse.queryLabsContentsWithTotal = null;
@@ -51,6 +54,7 @@ describe('labs controller', () => {
       const result = await labDataProvider.fetch({});
       expect(result).toMatchObject({ items: [], total: 0 });
     });
+
     it('Should return an empty array when items returns null', async () => {
       const squidexGraphqlResponse = getSquidexLabsGraphqlResponse();
       squidexGraphqlResponse.queryLabsContentsWithTotal = {
@@ -62,6 +66,14 @@ describe('labs controller', () => {
       );
       const result = await labDataProvider.fetch({});
       expect(result).toMatchObject({ items: [], total: 0 });
+    });
+  });
+
+  describe('Fetch-by-id', () => {
+    test('Should throw an error', async () => {
+      await expect(labDataProvider.fetchById()).rejects.toThrow(
+        'Method not implemented.',
+      );
     });
   });
 });

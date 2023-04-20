@@ -85,7 +85,9 @@ const CollapsibleTable: React.FC<CollapsibleTableProps> = ({
     <>
       <div css={[rowStyles, gridTitleStyles]}>
         {headings.map((heading, idx) => (
-          <Subtitle key={`heading-${idx}`}>{heading}</Subtitle>
+          <Subtitle key={`heading-${idx}`} noMargin>
+            {heading}
+          </Subtitle>
         ))}
       </div>
       {children.map(({ id, values }, index) => (

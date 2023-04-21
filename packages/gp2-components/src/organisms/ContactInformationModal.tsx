@@ -1,8 +1,11 @@
 import { gp2 } from '@asap-hub/model';
-import { LabeledTextField, pixels } from '@asap-hub/react-components';
+import {
+  LabeledDropdown,
+  LabeledTextField,
+  pixels,
+} from '@asap-hub/react-components';
 import {
   emailExpression,
-  telephoneCountryExpression,
   telephoneNumberExpression,
 } from '@asap-hub/validation';
 import { css } from '@emotion/react';
@@ -27,6 +30,7 @@ type ContactInformationModalProps = Pick<
 > &
   Pick<ComponentProps<typeof EditUserModal>, 'backHref'> & {
     onSave: (userData: gp2.UserPatchRequest) => Promise<void>;
+    countryCodeSuggestions: { name: string; dialCode: string }[];
   };
 
 const ContactInformationModal: React.FC<ContactInformationModalProps> = ({
@@ -35,6 +39,7 @@ const ContactInformationModal: React.FC<ContactInformationModalProps> = ({
   email,
   secondaryEmail,
   telephone,
+  countryCodeSuggestions,
 }) => {
   const [newSecondaryEmail, setNewSecondaryEmail] = useState(
     secondaryEmail || '',
@@ -86,18 +91,21 @@ const ContactInformationModal: React.FC<ContactInformationModalProps> = ({
             getValidationMessage={() => 'Please enter a valid email address'}
           />
           <div css={telephoneContainerStyles}>
-            <LabeledTextField
-              title="Country Code"
-              subtitle={optional}
-              showDescriptionSpace
-              enabled={!isSaving}
-              value={newCountryCode}
-              onChange={setNewCountryCode}
-              pattern={telephoneCountryExpression}
-              getValidationMessage={() =>
-                'Please enter a valid telephone country code'
-              }
-            />
+            <div css={css({ flex: `0 0 ${rem(208)}` })}>
+              <LabeledDropdown
+                title="Country Code"
+                subtitle={optional}
+                enabled={!isSaving}
+                value={newCountryCode}
+                description=" "
+                onChange={setNewCountryCode}
+                options={countryCodeSuggestions.map(({ name, dialCode }) => ({
+                  label: `${name} (${dialCode})`,
+                  value: dialCode,
+                }))}
+              />
+            </div>
+
             <LabeledTextField
               title="Telephone Number"
               subtitle={optional}

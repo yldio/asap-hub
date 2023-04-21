@@ -16,6 +16,7 @@ import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { Route } from 'react-router-dom';
 import { useSelectAvatar } from '../hooks/useSelectAvatar';
 import { getInstitutions } from '../users/api';
+import countryCodesSuggestions from '../users/country-codes-suggestions';
 import locationSuggestions from '../users/location-suggestions';
 
 import {
@@ -81,7 +82,11 @@ const Preview: React.FC<Record<string, never>> = () => {
           />
         </Route>
         <Route path={editContactInfo({}).$}>
-          <ContactInformationModal {...userData} {...commonModalProps} />
+          <ContactInformationModal
+            {...userData}
+            {...commonModalProps}
+            countryCodeSuggestions={countryCodesSuggestions}
+          />
         </Route>
         <Route path={editBiography({}).$}>
           <BiographyModal {...userData} {...commonModalProps} />

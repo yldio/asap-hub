@@ -23,6 +23,7 @@ import { useSelectAvatar } from '../hooks/useSelectAvatar';
 import OutputList from '../outputs/OutputList';
 import { useOutputs } from '../outputs/state';
 import { getInstitutions } from './api';
+import countryCodesSuggestions from './country-codes-suggestions';
 import locationSuggestions from './location-suggestions';
 import { useContributingCohorts, usePatchUserById, useUserById } from './state';
 
@@ -114,6 +115,7 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
                       <ContactInformationModal
                         {...user}
                         {...commonModalProps}
+                        countryCodeSuggestions={countryCodesSuggestions}
                       />
                     </Route>
                     <Route

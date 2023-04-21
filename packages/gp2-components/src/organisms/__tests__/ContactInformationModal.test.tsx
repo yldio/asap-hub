@@ -14,6 +14,7 @@ describe('ContactInformationModal', () => {
   >;
   const defaultProps: ContactInformationModalProps = {
     ...gp2Fixtures.createUserResponse(),
+    countryCodeSuggestions: [],
     backHref: '',
     onSave: jest.fn(),
   };
@@ -62,10 +63,10 @@ describe('ContactInformationModal', () => {
   it('calls onSave with the right arguments', async () => {
     const onSave = jest.fn();
     const email = 'goncalo.ramos@fpf.pt';
-    const secondaryEmail = '';
+    const secondaryEmail = 'goncalo@fpf.pt';
     const telephone = {
-      countryCode: '',
-      number: '',
+      countryCode: '+351',
+      number: '911111111',
     };
     renderContactInformation({
       email,
@@ -92,6 +93,7 @@ describe('ContactInformationModal', () => {
       secondaryEmail: '',
       telephone: undefined,
       onSave,
+      countryCodeSuggestions: [{ dialCode: '+351', name: 'Portugal' }],
     });
 
     userEvent.type(
@@ -101,12 +103,12 @@ describe('ContactInformationModal', () => {
       secondaryEmail,
     );
 
-    userEvent.type(
+    userEvent.click(
       screen.getByRole('textbox', {
         name: /country code \(optional\)/i,
       }),
-      countryCode,
     );
+    userEvent.click(screen.getByText('Portugal (+351)'));
 
     userEvent.type(
       screen.getByRole('textbox', {
@@ -150,31 +152,7 @@ describe('ContactInformationModal', () => {
     expect(onSave).not.toHaveBeenCalled();
     await waitFor(() => expect(getSaveButton()).toBeEnabled());
   });
-  it('does not allow invalid telephone country code', async () => {
-    const onSave = jest.fn();
-    const email = 'goncalo.ramos@fpf.pt';
-    const countryCode = 'invalid-code';
-    renderContactInformation({
-      email,
-      secondaryEmail: '',
-      telephone: undefined,
-      onSave,
-    });
 
-    userEvent.type(
-      screen.getByRole('textbox', {
-        name: /country code \(optional\)/i,
-      }),
-      countryCode,
-    );
-
-    userEvent.click(getSaveButton());
-    expect(
-      screen.getByText(/please enter a valid telephone country code/i),
-    ).toBeVisible();
-    expect(onSave).not.toHaveBeenCalled();
-    await waitFor(() => expect(getSaveButton()).toBeEnabled());
-  });
   it('does not allow invalid telephone number', async () => {
     const onSave = jest.fn();
     const email = 'goncalo.ramos@fpf.pt';

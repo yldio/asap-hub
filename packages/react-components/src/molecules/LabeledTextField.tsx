@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { Label, Paragraph, TextField } from '../atoms';
 import { lead } from '../colors';
-import { perRem, tabletScreen } from '../pixels';
+import { perRem } from '../pixels';
 
 const containerStyles = css({
   paddingBottom: `${18 / perRem}em`,
@@ -11,12 +11,7 @@ const containerStyles = css({
 const descriptionStyles = css({
   color: lead.rgb,
 });
-const forceDescriptionStyles = css({
-  display: 'inline-block',
-  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
-    display: 'unset',
-  },
-});
+
 const hintStyles = css({
   ':empty': {
     display: 'none',
@@ -31,7 +26,6 @@ type LabeledTextFieldProps = {
   readonly subtitle?: React.ReactNode;
   readonly description?: React.ReactNode;
   readonly hint?: React.ReactNode;
-  readonly showDescriptionSpace?: boolean;
 } & Exclude<ComponentProps<typeof TextField>, 'id'>;
 
 const subtitleStyles = css({
@@ -43,7 +37,7 @@ const LabeledTextField: React.FC<LabeledTextFieldProps> = ({
   subtitle,
   description,
   hint,
-  showDescriptionSpace = false,
+
   ...textFieldProps
 }) => (
   <div css={containerStyles}>
@@ -52,14 +46,7 @@ const LabeledTextField: React.FC<LabeledTextFieldProps> = ({
         <strong>{title}</strong>
         <span css={subtitleStyles}>{subtitle}</span>
         <br />
-        <span
-          css={[
-            descriptionStyles,
-            ...(showDescriptionSpace ? [forceDescriptionStyles] : []),
-          ]}
-        >
-          {description}
-        </span>
+        <span css={[descriptionStyles]}>{description}</span>
       </Paragraph>
     </Label>
     <div css={hintStyles}>{hint}</div>

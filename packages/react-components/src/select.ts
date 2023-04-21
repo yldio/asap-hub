@@ -102,7 +102,6 @@ export const reactSelectStyles = (
   }),
   control: (_provided, { isFocused, isDisabled }) => ({
     ...baseStyles,
-
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -132,6 +131,11 @@ export const reactSelectStyles = (
   placeholder: (provided) => ({
     ...provided,
     color: lead.rgb,
+  }),
+  menu: (provided: CSSObject) => ({
+    ...provided,
+
+    zIndex: 300,
   }),
 });
 

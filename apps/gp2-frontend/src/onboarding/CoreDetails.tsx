@@ -9,6 +9,7 @@ import { gp2 } from '@asap-hub/routing';
 import { Route } from 'react-router-dom';
 import { useSelectAvatar } from '../hooks/useSelectAvatar';
 import { getInstitutions } from '../users/api';
+import countryCodesSuggestions from '../users/country-codes-suggestions';
 import locationSuggestions from '../users/location-suggestions';
 import { usePatchUserById, useUserById } from '../users/state';
 
@@ -49,6 +50,7 @@ const CoreDetails: React.FC<Record<string, never>> = () => {
         <Route path={onboarding({}).coreDetails({}).editContactInfo({}).$}>
           <ContactInformationModal
             {...userData}
+            countryCodeSuggestions={countryCodesSuggestions}
             backHref={onboarding({}).coreDetails({}).$}
             onSave={(patchedUser) => patchUser(patchedUser)}
           />

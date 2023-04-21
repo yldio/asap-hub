@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { ReactElement } from 'react';
 import { Dropdown, DropdownProps, Label, Paragraph } from '../atoms';
 import { lead } from '../colors';
-import { perRem } from '../pixels';
+import { perRem, tabletScreen } from '../pixels';
 import { Info } from '.';
 
 const subtitleStyles = css({
@@ -11,6 +11,10 @@ const subtitleStyles = css({
 
 const descriptionStyles = css({
   color: lead.rgb,
+  display: 'inline-block',
+  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
+    display: 'unset',
+  },
 });
 
 const infoStyle = css({
@@ -52,7 +56,9 @@ export default function LabeledDropdown<V extends string>({
             </span>
           )}
           <br />
-          <span css={descriptionStyles}>{description}</span>
+          {description ? (
+            <span css={descriptionStyles}>{description}</span>
+          ) : null}
         </Paragraph>
       </Label>
     </div>

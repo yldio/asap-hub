@@ -28,9 +28,9 @@ const WorkingGroupsTabbedCard: React.FC<WorkingGroupsTabbedCardProps> = ({
 }) => {
   if (!groups) return null;
 
-  const [inactiveMemberships, activeMemberships] = splitListBy(
+  const [activeMemberships, inactiveMemberships] = splitListBy(
     groups,
-    (group) => isUserAlumni || !group?.active,
+    (group) => group.active,
   );
 
   return (

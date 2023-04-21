@@ -138,6 +138,7 @@ export interface UserDataObject extends Invitee {
   expertiseAndResourceDescription?: string;
   expertiseAndResourceTags: string[];
   id: string;
+  inactiveSinceDate?: string;
   labs: LabResponse[];
   lastModifiedDate: string;
   onboarded?: boolean | null;

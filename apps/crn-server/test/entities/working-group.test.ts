@@ -61,7 +61,7 @@ describe('parseGraphQLWorkingGroup', () => {
 });
 
 describe('toWorkingGroupResponse', () => {
-  test('should set `isActive` to true for leaders & members if they are not alumni and working group is in progress', () => {
+  test('should set `isActive` to true for leaders & members if they are not alumni, inactiveSinceDate not set and working group is in progress', () => {
     const leaders = createWorkingGroupLeaders(1).map(
       ({ isActive, ...leader }) => ({
         ...leader,
@@ -150,6 +150,49 @@ describe('toWorkingGroupResponse', () => {
       ({ isActive, ...member }) => ({
         ...member,
         user: { ...member.user, alumniSinceDate: new Date().toISOString() },
+      }),
+    );
+    const workingGroup = {
+      ...getWorkingGroupDataObject(),
+      leaders,
+      members,
+      complete: false,
+    };
+
+    expect(toWorkingGroupResponse(workingGroup)).toEqual({
+      id: '123',
+      title: 'Working Group Title',
+      description: 'Working Group Description',
+      shortText: 'Working Group Short Text',
+      deliverables: [],
+      leaders: [{ ...leaders[0], isActive: false }],
+      members: [{ ...members[0], isActive: false }],
+      complete: false,
+      lastModifiedDate: '2021-01-01T00:00:00.000Z',
+      externalLink: 'https://example.com',
+      calendars: [
+        {
+          id: 'hub@asap.science',
+          color: '#B1365F',
+          name: 'ASAP Hub',
+          groups: [],
+          workingGroups: [],
+        },
+      ],
+    });
+  });
+
+  test('should set `isActive` to false for leaders & members if they are set to inactive', () => {
+    const leaders = createWorkingGroupLeaders(1).map(
+      ({ isActive, ...leader }) => ({
+        ...leader,
+        inactiveSinceDate: new Date().toISOString(),
+      }),
+    );
+    const members = createWorkingGroupMembers(1).map(
+      ({ isActive, ...member }) => ({
+        ...member,
+        inactiveSinceDate: new Date().toISOString(),
       }),
     );
     const workingGroup = {

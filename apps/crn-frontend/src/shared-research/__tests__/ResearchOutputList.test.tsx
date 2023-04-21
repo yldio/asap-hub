@@ -105,3 +105,26 @@ it('triggers and export with the same parameters', async () => {
     pageSize: MAX_ALGOLIA_RESULTS,
   });
 });
+
+it('renders an algolia tagged result list and hit', async () => {
+  const listResearchOutput = createResearchOutputListAlgoliaResponse(1);
+
+  mockGetResearchOutputs.mockResolvedValue({
+    ...listResearchOutput,
+    queryID: 'queryId',
+    index: 'index',
+    hits: listResearchOutput.hits.map((hit) => ({ ...hit, id: 'hitId' })),
+  });
+
+  const { container } = await renderResearchOutputList();
+  const resultListHtml = container.querySelector('*[data-insights-index]');
+  expect(resultListHtml?.getAttribute('data-insights-index')).toEqual('index');
+  const hitHtml = resultListHtml?.querySelector('*[data-insights-object-id]');
+  expect(hitHtml?.attributes).toMatchInlineSnapshot(`
+    NamedNodeMap {
+      "data-insights-object-id": "hitId",
+      "data-insights-position": "1",
+      "data-insights-query-id": "queryId",
+    }
+  `);
+});

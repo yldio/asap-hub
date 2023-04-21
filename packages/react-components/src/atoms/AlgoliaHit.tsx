@@ -11,7 +11,7 @@ const AlgoliaHit: React.FC<AlgoliaHitProps> = ({
 }) => (
   <div
     data-insights-object-id={objectId}
-    data-insights-position={index ? index + 1 : undefined}
+    data-insights-position={index !== undefined ? index + 1 : undefined}
     data-insights-query-id={algoliaQueryId}
   >
     {children}

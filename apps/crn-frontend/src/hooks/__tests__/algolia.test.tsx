@@ -21,6 +21,16 @@ jest.mock('@asap-hub/algolia', () => {
     algoliaSearchClientFactory: mockAlgoliaSearchClientFactory,
   };
 });
+beforeEach(() => {
+  Object.defineProperty(window, 'dataLayer', {
+    configurable: true,
+    value: [],
+  });
+});
+afterEach(() => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  delete (window as any).dataLayer;
+});
 
 describe('useAlgolia', () => {
   it('throws when user is not provided', () => {
@@ -29,7 +39,7 @@ describe('useAlgolia', () => {
       new Error('Algolia unavailable while not logged in'),
     );
   });
-  it('constructs algolia client', async () => {
+  it('constructs algolia client linking GTM and Algolia with Auth0 user id', async () => {
     setCurrentOverrides({ CONTENTFUL: false });
 
     const { result, waitForNextUpdate } = renderHook(() => useAlgolia(), {
@@ -44,6 +54,14 @@ describe('useAlgolia', () => {
       ),
     });
     await waitForNextUpdate();
+
+    expect(window.dataLayer).toEqual(
+      expect.arrayContaining([
+        {
+          algoliaUserToken: 'usertoken',
+        },
+      ]),
+    );
     expect(mockAlgoliaSearchClientFactory).toHaveBeenCalledWith({
       algoliaIndex: ALGOLIA_INDEX,
       algoliaAppId: ALGOLIA_APP_ID,

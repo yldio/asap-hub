@@ -67,3 +67,28 @@ it('renders a list of people when searching with algolia', async () => {
   expect(container.textContent).toContain('Person A');
   expect(container.textContent).toContain('Person B');
 });
+
+it('renders an algolia tagged result list and hit', async () => {
+  const listUserResponse = createListUserResponse(1);
+  mockGetUsers.mockResolvedValue({
+    ...listUserResponse,
+    algoliaIndexName: 'index',
+    algoliaQueryId: 'queryId',
+    items: listUserResponse.items.map((item, itemIndex) => ({
+      ...item,
+      id: 'hitId',
+    })),
+  });
+
+  const { container } = await renderUserList();
+  const resultListHtml = container.querySelector('*[data-insights-index]');
+  expect(resultListHtml?.getAttribute('data-insights-index')).toEqual('index');
+  const hitHtml = resultListHtml?.querySelector('*[data-insights-object-id]');
+  expect(hitHtml?.attributes).toMatchInlineSnapshot(`
+    NamedNodeMap {
+      "data-insights-object-id": "hitId",
+      "data-insights-position": "1",
+      "data-insights-query-id": "queryId",
+    }
+  `);
+});

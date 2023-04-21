@@ -229,11 +229,11 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
   >;
 };
 
-export type DraftResearchOutputDataObject = Omit<
+export type ResearchOutputDraftDataObject = Omit<
   ResearchOutputDataObject,
   'addedDate'
 >;
-export type PublishedResearchOutputDataObject = ResearchOutputDataObject & {
+export type ResearchOutputPublishedDataObject = ResearchOutputDataObject & {
   addedDate: string;
 };
 

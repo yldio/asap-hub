@@ -141,6 +141,13 @@ export default class ResearchOutputs implements ResearchOutputController {
       );
     }
 
+    if (
+      currentResearchOutput.published &&
+      !researchOutputUpdateData.published
+    ) {
+      throw Boom.badRequest();
+    }
+
     await this.validateResearchOutput(
       researchOutputUpdateData,
       id,
@@ -150,19 +157,14 @@ export default class ResearchOutputs implements ResearchOutputController {
     const { methods, organisms, environments, subtype, keywords } =
       await this.parseResearchTags(researchOutputUpdateData);
 
-    const shouldPublish =
-      researchOutputUpdateData.published &&
-      !currentResearchOutput.addedDate &&
-      !currentResearchOutput.published;
-
     const researchOutputUpdateDataObject: ResearchOutputUpdateDataObject = {
       authors: await this.mapAuthorsPostRequestToId(
         researchOutputUpdateData.authors ?? [],
       ),
       accession: researchOutputUpdateData.accession,
-      addedDate: shouldPublish
-        ? new Date(Date.now()).toISOString()
-        : currentResearchOutput.addedDate,
+      addedDate: researchOutputUpdateData.published
+        ? currentResearchOutput.addedDate || new Date(Date.now()).toISOString()
+        : undefined,
       asapFunded: researchOutputUpdateData.asapFunded,
       descriptionMD: researchOutputUpdateData.descriptionMD,
       description: researchOutputUpdateData.description,
@@ -190,7 +192,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       workingGroups: researchOutputUpdateData.workingGroups,
     };
 
-    const updateOptions = { publish: shouldPublish };
+    const updateOptions = { publish: researchOutputUpdateData.published };
     await this.researchOutputDataProvider.update(
       id,
       researchOutputUpdateDataObject,

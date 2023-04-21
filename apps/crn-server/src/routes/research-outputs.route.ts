@@ -8,7 +8,6 @@ import {
 import {
   getUserRole,
   hasEditResearchOutputPermission,
-  hasPublishResearchOutputPermission,
 } from '@asap-hub/validation';
 import Boom from '@hapi/boom';
 import { Response, Router } from 'express';
@@ -131,13 +130,9 @@ export const researchOutputRouteFactory = (
         workingGroupOutput ? updateRequest.workingGroups : updateRequest.teams,
       );
 
-      const result = await researchOutputController.fetchById(researchOutputId);
-      const publish = updateRequest.published && !result.published;
-
       if (
         !loggedInUser ||
-        !hasEditResearchOutputPermission(userRole, result.published) ||
-        (publish && !hasPublishResearchOutputPermission(userRole))
+        !hasEditResearchOutputPermission(userRole, updateRequest.published)
       ) {
         throw Boom.forbidden();
       }

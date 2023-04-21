@@ -1,8 +1,8 @@
 import {
-  DraftResearchOutputDataObject,
+  ResearchOutputDraftDataObject,
   ListResearchOutputResponse,
   ListResponse,
-  PublishedResearchOutputDataObject,
+  ResearchOutputPublishedDataObject,
   ResearchOutputCreateDataObject,
   ResearchOutputDataObject,
   ResearchOutputEvent,
@@ -163,7 +163,7 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
 });
 
 export const getResearchOutputDataObject =
-  (): PublishedResearchOutputDataObject => ({
+  (): ResearchOutputPublishedDataObject => ({
     id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
     created: '2020-09-23T16:34:26.842Z',
     documentType: 'Bioinformatics',
@@ -206,7 +206,7 @@ export const getResearchOutputDataObject =
     published: true,
   });
 export const getDraftResearchOutputDataObject =
-  (): DraftResearchOutputDataObject => ({
+  (): ResearchOutputDraftDataObject => ({
     ...getResearchOutputDataObject(),
     published: false,
   });

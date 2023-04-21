@@ -1,6 +1,6 @@
 import { ListResponse } from './common';
 import { EventResponse } from './event';
-import { ResearchOutputDataObject } from './research-output';
+import { ResearchOutputPublishedDataObject } from './research-output';
 
 type ReminderEntity = 'Research Output' | 'Event';
 
@@ -43,10 +43,10 @@ export interface ResearchOutputPublishedReminder
   entity: 'Research Output';
   type: 'Published';
   data: {
-    researchOutputId: ResearchOutputDataObject['id'];
-    documentType: ResearchOutputDataObject['documentType'];
-    title: ResearchOutputDataObject['title'];
-    addedDate: string;
+    researchOutputId: ResearchOutputPublishedDataObject['id'];
+    documentType: ResearchOutputPublishedDataObject['documentType'];
+    title: ResearchOutputPublishedDataObject['title'];
+    addedDate: ResearchOutputPublishedDataObject['addedDate'];
   };
 }
 

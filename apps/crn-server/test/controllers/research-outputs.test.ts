@@ -561,6 +561,23 @@ describe('ResearchOutputs controller', () => {
       ).rejects.toThrow(NotFoundError);
     });
 
+    test('Should throw when trying to unpublish a published research output', async () => {
+      researchOutputDataProviderMock.fetchById.mockResolvedValue({
+        ...getResearchOutputDataObject(),
+        published: true,
+      });
+      researchOutputDataProviderMock.update.mockResolvedValueOnce(
+        researchOutputId,
+      );
+
+      await expect(
+        researchOutputs.update(researchOutputId, {
+          ...getResearchOutputUpdateData(),
+          published: false,
+        }),
+      ).rejects.toThrow(Error);
+    });
+
     test('Should update a published existing research output and return it', async () => {
       const researchOutputUpdateData: ResearchOutputUpdateData = {
         ...getResearchOutputUpdateData(),
@@ -581,7 +598,7 @@ describe('ResearchOutputs controller', () => {
       expect(researchOutputDataProviderMock.update).toBeCalledWith(
         researchOutputId,
         researchOutputUpdateDataObject,
-        { publish: false },
+        { publish: true },
       );
     });
 
@@ -617,8 +634,6 @@ describe('ResearchOutputs controller', () => {
     });
 
     test('Should publish a draft research output and return it', async () => {
-      const mockDate = new Date('2010-01-01');
-      const spy = jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
       researchOutputDataProviderMock.fetchById.mockResolvedValue({
         ...getResearchOutputDataObject(),
         published: false,
@@ -637,11 +652,92 @@ describe('ResearchOutputs controller', () => {
         researchOutputId,
         {
           ...getResearchOutputUpdateDataObject(),
-          addedDate: mockDate.toISOString(),
+          addedDate: expect.anything(),
         },
+
         { publish: true },
       );
-      spy.mockRestore();
+    });
+
+    describe('The added date field', () => {
+      test('Should always be undefined for a draft', async () => {
+        researchOutputDataProviderMock.fetchById.mockResolvedValue({
+          ...getResearchOutputDataObject(),
+          published: false,
+          addedDate: undefined,
+        });
+        researchOutputDataProviderMock.update.mockResolvedValueOnce(
+          researchOutputId,
+        );
+
+        await researchOutputs.update(researchOutputId, {
+          ...getResearchOutputUpdateData(),
+          published: false,
+        });
+
+        expect(researchOutputDataProviderMock.update).toBeCalledWith(
+          researchOutputId,
+          {
+            ...getResearchOutputUpdateDataObject(),
+            addedDate: undefined,
+          },
+          { publish: false },
+        );
+      });
+      test('Should be created when publishing a draft', async () => {
+        const mockDate = new Date('2010-01-01');
+        const spy = jest
+          .spyOn(global, 'Date')
+          .mockImplementation(() => mockDate);
+        researchOutputDataProviderMock.fetchById.mockResolvedValue({
+          ...getResearchOutputDataObject(),
+          published: false,
+          addedDate: undefined,
+        });
+        researchOutputDataProviderMock.update.mockResolvedValueOnce(
+          researchOutputId,
+        );
+
+        await researchOutputs.update(researchOutputId, {
+          ...getResearchOutputUpdateData(),
+          published: true,
+        });
+
+        expect(researchOutputDataProviderMock.update).toBeCalledWith(
+          researchOutputId,
+          {
+            ...getResearchOutputUpdateDataObject(),
+            addedDate: mockDate.toISOString(),
+          },
+          { publish: true },
+        );
+        spy.mockRestore();
+      });
+
+      test('Should use the initial value when updating a published output', async () => {
+        researchOutputDataProviderMock.fetchById.mockResolvedValue({
+          ...getResearchOutputDataObject(),
+          published: true,
+          addedDate: '2020-01-01',
+        });
+        researchOutputDataProviderMock.update.mockResolvedValueOnce(
+          researchOutputId,
+        );
+
+        await researchOutputs.update(researchOutputId, {
+          ...getResearchOutputUpdateData(),
+          published: true,
+        });
+
+        expect(researchOutputDataProviderMock.update).toBeCalledWith(
+          researchOutputId,
+          {
+            ...getResearchOutputUpdateDataObject(),
+            addedDate: '2020-01-01',
+          },
+          { publish: true },
+        );
+      });
     });
 
     describe('Validation', () => {
@@ -1003,7 +1099,7 @@ describe('ResearchOutputs controller', () => {
               },
             ],
           }),
-          { publish: false },
+          { publish: true },
         );
       });
     });

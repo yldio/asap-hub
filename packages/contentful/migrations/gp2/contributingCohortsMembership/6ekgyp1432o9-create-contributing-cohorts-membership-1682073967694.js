@@ -1,4 +1,5 @@
-module.exports.description = 'Create contributing cohorts membership content model';
+module.exports.description =
+  'Create contributing cohorts membership content model';
 
 module.exports.up = function (migration) {
   const contributingCohortsMembership = migration

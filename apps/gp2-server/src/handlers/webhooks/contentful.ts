@@ -5,9 +5,6 @@ import { APIGatewayEvent, Handler } from 'aws-lambda';
 import 'source-map-support/register';
 import {
   contentfulWebhookAuthenticationToken,
-  eventBridgeAccessKey,
-  eventBridgeEndpoint,
-  eventBridgeSecret,
   eventBus,
   eventSource,
 } from '../../config';
@@ -25,13 +22,7 @@ export const contentfulWebhookFactory = (
   return lambda.http(handler);
 };
 
-const eventBridge = new EventBridge({
-  endpoint: eventBridgeEndpoint,
-  credentials: {
-    accessKeyId: eventBridgeAccessKey,
-    secretAccessKey: eventBridgeSecret,
-  },
-});
+const eventBridge = new EventBridge({});
 
 export const handler: Handler<APIGatewayEvent> = sentryWrapper(
   contentfulWebhookFactory(eventBridge),

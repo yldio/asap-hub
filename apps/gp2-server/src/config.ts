@@ -33,6 +33,7 @@ const {
   SQUIDEX_SHARED_SECRET,
   AUTH0_AUDIENCE,
   CLOUDFRONT_DISTRIBUTION_ID,
+  CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN,
 } = process.env;
 
 export const cloudfrontDistributionId = CLOUDFRONT_DISTRIBUTION_ID || '';
@@ -50,6 +51,9 @@ export const baseUrl = SQUIDEX_BASE_URL || 'http://localhost:4004';
 export const clientId = SQUIDEX_CLIENT_ID || '';
 export const clientSecret = SQUIDEX_CLIENT_SECRET || '';
 export const currentRevision = CURRENT_REVISION || 'default';
+export const contentfulWebhookAuthenticationToken =
+  CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN ||
+  'contentful-webhook-authentication-token';
 export const environment = ENVIRONMENT
   ? ENVIRONMENT.toLowerCase()
   : 'development';

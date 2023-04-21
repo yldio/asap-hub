@@ -6,7 +6,7 @@ import {
   auth0SharedSecret as secret,
   baseUrl,
 } from '../../../src/config';
-import { rawHandler } from '../../../src/handlers/webhooks/webhook-connect-by-code';
+import { rawHandler } from '../../../src/handlers/webhooks/connect-by-code';
 import {
   generateGraphqlFetchUsersResponse,
   getGraphQLUser,

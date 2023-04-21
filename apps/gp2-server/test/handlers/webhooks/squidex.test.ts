@@ -1,9 +1,9 @@
 import { WebhookDetail, WebhookDetailType } from '@asap-hub/model';
-import { SquidexWebhookPayload, gp2 as gp2Squidex } from '@asap-hub/squidex';
-import { APIGatewayProxyResult } from 'aws-lambda';
+import { gp2 as gp2Squidex, SquidexWebhookPayload } from '@asap-hub/squidex';
 import { EventBridge } from '@aws-sdk/client-eventbridge';
+import { APIGatewayProxyResult } from 'aws-lambda';
 import { eventBus, eventSource } from '../../../src/config';
-import { squidexWebhookFactory } from '../../../src/handlers/webhooks/webhook-squidex';
+import { squidexWebhookFactory } from '../../../src/handlers/webhooks/squidex';
 import { getUserWebhookPayload } from '../../fixtures/user.fixtures';
 import { getApiGatewayEvent } from '../../helpers/events';
 import { createSignedPayload } from '../../helpers/webhooks';

@@ -76,11 +76,8 @@ describe('ContactInformationModal', () => {
     });
     userEvent.click(getSaveButton());
     expect(onSave).toHaveBeenCalledWith({
-      secondaryEmail: undefined,
-      telephone: {
-        countryCode: undefined,
-        number: undefined,
-      },
+      secondaryEmail,
+      telephone,
     });
     await waitFor(() => expect(getSaveButton()).toBeEnabled());
   });

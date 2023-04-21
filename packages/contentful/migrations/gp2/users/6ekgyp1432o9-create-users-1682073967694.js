@@ -43,16 +43,35 @@ module.exports.up = function (migration) {
   users
     .createField('degree')
     .name('Degree')
-    .type('Symbol')
+    .type('Array')
     .localized(false)
     .required(false)
-    .validations([
-      {
-        in: ['BA', 'BSc', 'MD', 'MD, PhD', 'PhD', 'MPH', 'MSc', 'MA', 'MBA'],
-      },
-    ])
+    .validations([])
     .disabled(false)
-    .omitted(false);
+    .omitted(false)
+    .items({
+      type: 'Symbol',
+
+      validations: [
+        {
+          in: [
+            'AA',
+            'AAS',
+            'BA',
+            'BSc',
+            'MA',
+            'MBA',
+            'MBBS',
+            'MD',
+            'MD_PhD',
+            'MPH',
+            'MSc',
+            'PhD',
+            'PharmD',
+          ],
+        },
+      ],
+    });
 
   users
     .createField('country')
@@ -82,8 +101,6 @@ module.exports.up = function (migration) {
     .disabled(false)
     .omitted(false);
 
-  //positions
-
   users
     .createField('email')
     .name('Email')
@@ -100,6 +117,7 @@ module.exports.up = function (migration) {
     ])
     .disabled(false)
     .omitted(false);
+
   users
     .createField('alternativeEmail')
     .name('Alternative Email')
@@ -117,9 +135,105 @@ module.exports.up = function (migration) {
     .disabled(false)
     .omitted(false);
 
-  //country code
-  //telephone number
-  //keywords
+  users
+    .createField('telephoneCountryCode')
+    .name('Country Code')
+    .type('Symbol')
+    .localized(false)
+    .required(false)
+    .validations([
+      {
+        regexp: {
+          pattern: '^\\+*[1-9]{0,3}$',
+          flags: null,
+        },
+      },
+    ])
+    .disabled(false)
+    .omitted(false);
+
+  users
+    .createField('telephoneNumber')
+    .name('Telephone Number')
+    .type('Symbol')
+    .localized(false)
+    .required(false)
+    .validations([
+      {
+        regexp: {
+          pattern: '^\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{3,4}$',
+          flags: null,
+        },
+      },
+    ])
+    .disabled(false)
+    .omitted(false);
+
+  users
+    .createField('keywords')
+    .name('Keywords')
+    .type('Array')
+    .localized(false)
+    .required(false)
+    .validations([
+      {
+        size: {
+          min: 1,
+          max: 10,
+        },
+      },
+    ])
+    .disabled(false)
+    .omitted(false)
+    .items({
+      type: 'Symbol',
+
+      validations: [
+        {
+          in: [
+            'Administrative Support',
+            'Bash',
+            'Biobanking',
+            'Biostatistics',
+            'Career Development',
+            'Communications',
+            'Computer Science',
+            'Course Management',
+            'Data Science',
+            'Diversity',
+            'Education',
+            'Epidemiology',
+            'Genetics',
+            'Genomics',
+            'GP2 Opportunities',
+            'GP2 PhD',
+            'Laboratory Science',
+            'Machine Learning',
+            'Molecular Biology',
+            'Movement Disorders',
+            'Neurodegeneration',
+            'Neurogenetics',
+            'Neuroimaging',
+            'Neurology',
+            'Operations',
+            'Outreach',
+            'Parkinson disease',
+            'Patient Advocate',
+            'Patient Engagement',
+            'Pharmacogenomics',
+            'Program Management',
+            'Project Management',
+            'Python',
+            'R',
+            'Research Communications',
+            'Research Grants',
+            'Stata',
+            'Training',
+            "GP2 Master's",
+          ],
+        },
+      ],
+    });
 
   users
     .createField('biography')
@@ -155,7 +269,33 @@ module.exports.up = function (migration) {
     .disabled(false)
     .omitted(false);
 
-  //contributing cohorts
+  users
+    .createField('contributingCohorts')
+    .name('Contributing Cohorts')
+    .type('Array')
+    .localized(false)
+    .required(false)
+    .validations([
+      {
+        size: {
+          min: 0,
+          max: 10,
+        },
+      },
+    ])
+    .disabled(false)
+    .omitted(false)
+    .items({
+      type: 'Link',
+
+      validations: [
+        {
+          linkContentType: ['contributingCohortsMembership'],
+        },
+      ],
+
+      linkType: 'Entry',
+    });
 
   users
     .createField('blog')
@@ -211,6 +351,7 @@ module.exports.up = function (migration) {
     .validations([])
     .disabled(false)
     .omitted(false);
+
   users
     .createField('orcid')
     .name('ORCID')
@@ -232,6 +373,7 @@ module.exports.up = function (migration) {
     ])
     .disabled(false)
     .omitted(false);
+
   users
     .createField('researchGate')
     .name('Research Gate')
@@ -292,24 +434,42 @@ module.exports.up = function (migration) {
     .disabled(false)
     .omitted(false);
 
-  //Activated Date
-
+  users
+    .createField('activatedDate')
+    .name('Activated Date')
+    .type('Date')
+    .localized(false)
+    .required(false)
+    .validations([])
+    .disabled(true)
+    .omitted(false);
   users.changeFieldControl('firstName', 'builtin', 'singleLine', {});
   users.changeFieldControl('lastName', 'builtin', 'singleLine', {});
   users.changeFieldControl('avatar', 'builtin', 'assetLinkEditor', {});
-  users.changeFieldControl('degree', 'builtin', 'dropdown', {});
+  users.changeFieldControl('degree', 'builtin', 'checkbox', {});
   users.changeFieldControl('country', 'builtin', 'singleLine', {});
   users.changeFieldControl('city', 'builtin', 'singleLine', {});
   users.changeFieldControl('region', 'builtin', 'singleLine', {});
-  //positions
   users.changeFieldControl('email', 'builtin', 'singleLine', {});
   users.changeFieldControl('alternativeEmail', 'builtin', 'singleLine', {});
-  //countryCode
-  //telephoneNumber
-  //keywords
+  users.changeFieldControl('telephoneCountryCode', 'builtin', 'singleLine', {});
+  users.changeFieldControl('telephoneNumber', 'builtin', 'singleLine', {});
+  users.changeFieldControl('keywords', 'builtin', 'checkbox', {});
   users.changeFieldControl('biography', 'builtin', 'multipleLine', {});
   users.changeFieldControl('questions', 'builtin', 'tagEditor', {});
   users.changeFieldControl('fundingStreams', 'builtin', 'multipleLine', {});
+
+  users.changeFieldControl(
+    'contributingCohorts',
+    'builtin',
+    'entryLinksEditor',
+    {
+      bulkEditing: false,
+      showLinkEntityAction: false,
+      showCreateEntityAction: true,
+    },
+  );
+
   users.changeFieldControl('blog', 'builtin', 'urlEditor', {});
   users.changeFieldControl('linkedIn', 'builtin', 'singleLine', {});
   users.changeFieldControl('twitter', 'builtin', 'singleLine', {});
@@ -319,10 +479,13 @@ module.exports.up = function (migration) {
   users.changeFieldControl('researchGate', 'builtin', 'singleLine', {});
   users.changeFieldControl('researcherId', 'builtin', 'singleLine', {});
   users.changeFieldControl('connections', 'builtin', 'tagEditor', {});
+
   users.changeFieldControl('role', 'builtin', 'dropdown', {
     helpText: 'Role on the GP2 Hub',
   });
+
   users.changeFieldControl('onboarded', 'builtin', 'boolean', {});
+  users.changeFieldControl('activatedDate', 'builtin', 'datePicker', {});
 };
 
 module.exports.down = (migration) => {

@@ -36,7 +36,7 @@ const addButtonStyles = css({
   },
 });
 
-const required = '(required)';
+const optional = '(optional)';
 
 type OpenQuestionsModalProps = Pick<gp2Model.UserResponse, 'questions'> &
   Pick<ComponentProps<typeof EditUserModal>, 'backHref'> & {
@@ -78,7 +78,7 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
     <EditUserModal
       title="Open Questions"
       description="Share the research questions that interest you and drive your work (up to five). This will give other members a good sense of the kinds of problems that you’re interested in solving."
-      onSave={() => onSave({ questions: newQuestions })}
+      onSave={() => onSave({ questions: newQuestions.filter(Boolean) })}
       backHref={backHref}
       dirty={checkDirty()}
     >
@@ -88,7 +88,7 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
             <div css={rowStyles} key={`question-${index}`}>
               <div css={headerStyles}>
                 <p>
-                  <strong>Question {index + 1}</strong> {required}
+                  <strong>Question {index + 1}</strong> {optional}
                 </p>
                 <div css={{ margin: 0 }}>
                   <Button onClick={onRemove(index)} small>
@@ -99,7 +99,6 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
               <TextArea
                 enabled={!isSaving}
                 value={question}
-                required
                 onChange={onChangeValue(index)}
                 maxLength={250}
                 getValidationMessage={() => 'Please enter a question'}

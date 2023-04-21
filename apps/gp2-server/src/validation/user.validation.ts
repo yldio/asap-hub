@@ -149,7 +149,7 @@ const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
         },
         orcid: {
           type: 'string',
-          pattern: USER_SOCIAL_NOT_URL.source,
+          pattern: urlExpression,
           nullable: true,
         },
         researchGate: {

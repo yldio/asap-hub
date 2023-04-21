@@ -55,9 +55,12 @@ export default function LabeledDropdown<V extends string>({
               </Info>
             </span>
           )}
-          <br />
+
           {description ? (
-            <span css={descriptionStyles}>{description}</span>
+            <>
+              <br />
+              <span css={descriptionStyles}>{description}</span>
+            </>
           ) : null}
         </Paragraph>
       </Label>

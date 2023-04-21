@@ -50,6 +50,9 @@ on:
       GP2_CONTENTFUL_ACCESS_TOKEN:
         description: 'GP2 Contentful Access Token'
         required: true
+      GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN:
+        description: 'GP2 Contentful Webhook Authentication Token'
+        required: true
       GP2_SQUIDEX_API_CLIENT_SECRET:
         description: 'GP2 API Squidex Client Secret'
         required: true
@@ -89,12 +92,12 @@ jobs:
           app: crn-server
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          crn-contentful-env: ${{ inputs.crn-contentful-env }}
           crn-contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
+          crn-contentful-env: ${{ inputs.crn-contentful-env }}
           crn-contentful-management-access-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          crn-contentful-webhook-authentication-token: ${{ secrets.CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN }}
           crn-squidex-api-client-secret: ${{ secrets.CRN_SQUIDEX_API_CLIENT_SECRET }}
           crn-squidex-shared-secret: ${{ secrets.CRN_SQUIDEX_SHARED_SECRET }}
-          crn-contentful-webhook-authentication-token: ${{ secrets.CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN }}
           environment-name: ${{ inputs.environment-name }}
 
   gp2-sls-deploy:
@@ -121,9 +124,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           environment-name: ${{ inputs.environment-name }}
           gp2-auth0-shared-secret: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}
-          gp2-contentful-env: ${{ inputs.gp2-contentful-env }}
           gp2-contentful-access-token: ${{ secrets.GP2_CONTENTFUL_ACCESS_TOKEN }}
+          gp2-contentful-env: ${{ inputs.gp2-contentful-env }}
           gp2-contentful-management-access-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          gp2-contentful-webhook-authentication-token: ${{ secrets.GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN }}
           gp2-squidex-api-client-secret: ${{ secrets.GP2_SQUIDEX_API_CLIENT_SECRET }}
           gp2-squidex-shared-secret: ${{ secrets.GP2_SQUIDEX_SHARED_SECRET }}
 
@@ -248,10 +252,10 @@ jobs:
       - name: Setup Contentful Environment
         uses: ./.github/actions/contentful-setup
         with:
-          contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          contentful-space-id: ${{ steps.setup.outputs.crn-contentful-space-id }}
-          contentful-environment: ${{ inputs.crn-contentful-env }}
           api-url: ${{ steps.setup.outputs.crn-api-url }}
+          contentful-environment: ${{ inputs.crn-contentful-env }}
+          contentful-space-id: ${{ steps.setup.outputs.crn-contentful-space-id }}
+          contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           contentful-webhook-authentication-token: ${{ secrets.CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN }}
 
   crn-contentful-migrate:
@@ -277,9 +281,35 @@ jobs:
         run: |
           yarn contentful:migration:run:crn
         env:
+          CONTENTFUL_ENV_ID: ${{ inputs.crn-contentful-env }}
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
-          CONTENTFUL_ENV_ID: ${{ inputs.crn-contentful-env }}
+
+  gp2-contentful-setup:
+    needs: [gp2-sls-deploy]
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment-name }}
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:f93db8bae8be7528565c2510dbc8e3eece97983d
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Setup Contentful Environment
+        uses: ./.github/actions/contentful-setup
+        with:
+          api-url: ${{ steps.setup.outputs.gp2-api-url }}
+          contentful-environment: ${{ inputs.gp2-contentful-env }}
+          contentful-space-id: ${{ steps.setup.outputs.gp2-contentful-space-id }}
+          contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          contentful-webhook-authentication-token: ${{ secrets.GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN }}
 
   gp2-contentful-migrate:
     needs: [gp2-sls-deploy]
@@ -304,9 +334,9 @@ jobs:
         run: |
           yarn contentful:migration:run:gp2
         env:
+          CONTENTFUL_ENV_ID: ${{ inputs.gp2-contentful-env }}
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.gp2-contentful-space-id }}
-          CONTENTFUL_ENV_ID: ${{ inputs.gp2-contentful-env }}
 
   ses:
     needs: [crn-sls-deploy]

@@ -151,9 +151,9 @@ export default class ResearchOutputs implements ResearchOutputController {
       await this.parseResearchTags(researchOutputUpdateData);
 
     const shouldPublish =
-      researchOutputUpdateData.published === true &&
-      currentResearchOutput.addedDate === undefined &&
-      currentResearchOutput.published === false;
+      researchOutputUpdateData.published &&
+      !currentResearchOutput.addedDate &&
+      !currentResearchOutput.published;
 
     const researchOutputUpdateDataObject: ResearchOutputUpdateDataObject = {
       authors: await this.mapAuthorsPostRequestToId(

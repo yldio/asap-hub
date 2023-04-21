@@ -85,7 +85,6 @@ export {
   PageControls,
   PillList,
   SearchField,
-  SharedResearchOutputBanner,
   TabbedCard,
   TabNav,
   TagList,

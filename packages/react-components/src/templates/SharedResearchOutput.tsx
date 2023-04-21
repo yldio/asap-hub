@@ -1,4 +1,4 @@
-import React, { ComponentProps, useContext } from 'react';
+import React, { ComponentProps, useContext, useState } from 'react';
 import { css } from '@emotion/react';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
@@ -7,17 +7,13 @@ import { sharedResearch } from '@asap-hub/routing';
 import { Card, Headline2, Divider, Link, Markdown } from '../atoms';
 import { perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
-import {
-  BackLink,
-  CtaCard,
-  SharedResearchOutputBanner,
-  TagList,
-} from '../molecules';
+import { BackLink, CtaCard, TagList } from '../molecules';
 import {
   RelatedResearch,
   RichText,
   SharedResearchAdditionalInformationCard,
   SharedResearchOutputHeaderCard,
+  Toast,
 } from '../organisms';
 import { createMailTo } from '../mail';
 import { editIcon } from '..';
@@ -88,14 +84,28 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   );
   const hasDescription = description || descriptionMD;
 
+  const association = getResearchOutputAssociation(props);
+  const [publishedNowBanner, setPublishedNowBanner] = useState(published);
+
   return (
     <div>
       {(publishedNow || !published) && (
-        <SharedResearchOutputBanner
-          published={published && publishedNow}
-          documentType={props.documentType}
-          association={getResearchOutputAssociation(props)}
-        />
+        <div>
+          {publishedNowBanner && (
+            <Toast
+              accent="successLarge"
+              onClose={() => setPublishedNowBanner(false)}
+            >
+              {`${
+                association === 'working group' ? 'Working Group' : 'Team '
+              } ${props.documentType} published successfully.`}
+            </Toast>
+          )}
+          {!published && (
+            <Toast accent="warning">{`This draft is available to members in the ${association}
+   listed below. Only PMs can publish this output.`}</Toast>
+          )}
+        </div>
       )}
       <div css={containerStyles}>
         <div css={buttonsContainer}>

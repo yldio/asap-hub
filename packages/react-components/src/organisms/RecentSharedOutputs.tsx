@@ -100,7 +100,7 @@ const RecentSharedOutputs: React.FC<RecentSharedOutputProp> = ({ outputs }) => (
         <span css={titleStyles}>Date Added</span>
       </div>
       {outputs &&
-        outputs.map(({ id, documentType, addedDate, title }) => (
+        outputs.map(({ id, documentType, addedDate, title, created }) => (
           <div key={id} css={[rowStyles]}>
             <span css={[titleStyles, rowTitleStyles]}>Event</span>
             <Link
@@ -118,11 +118,12 @@ const RecentSharedOutputs: React.FC<RecentSharedOutputProp> = ({ outputs }) => (
               {getIconForDocumentType(documentType)} {documentType}
             </p>
             <span css={[titleStyles, rowTitleStyles]}>Date</span>
-            {addedDate && (
-              <span>
-                {formatDateToTimezone(addedDate, 'E, d MMM y').toUpperCase()}
-              </span>
-            )}
+            <span>
+              {formatDateToTimezone(
+                addedDate || created,
+                'E, d MMM y',
+              ).toUpperCase()}
+            </span>
           </div>
         ))}
     </div>

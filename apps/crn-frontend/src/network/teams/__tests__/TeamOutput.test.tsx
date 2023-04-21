@@ -354,7 +354,7 @@ it('can edit a draft research output', async () => {
 it('can edit and publish a draft research output', async () => {
   const researchOutput = createResearchOutputResponse();
   const teamId = researchOutput.teams[0]!.id;
-  const { type, description, title } = researchOutput;
+  const { type, title } = researchOutput;
   const link = 'https://example42.com';
   const doi = '10.0777';
 
@@ -364,17 +364,17 @@ it('can edit and publish a draft research output', async () => {
     researchOutputData: { ...researchOutput, doi, published: false },
   });
 
+  const initiallyPublished = false;
   const { publish } = await mandatoryFields(
     {
       link,
       title: '',
-      descriptionMD: '',
       type,
       doi,
     },
     true,
     true,
-    false,
+    initiallyPublished,
   );
   await publish();
 
@@ -383,7 +383,7 @@ it('can edit and publish a draft research output', async () => {
     expect.objectContaining({
       link,
       title,
-      description,
+      published: true,
       teams: [teamId],
     }),
     expect.anything(),

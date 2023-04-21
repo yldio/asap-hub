@@ -144,26 +144,46 @@ describe('ResearchOutputs controller', () => {
       const mockDate = new Date('2010-01-01');
       const spy = jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
 
-      const researchOutputCreateData = getResearchOutputCreateData();
       const researchOutputId = 'research-output-id-1';
       researchOutputDataProviderMock.create.mockResolvedValueOnce(
         researchOutputId,
       );
 
-      const result = await researchOutputs.create(researchOutputCreateData);
+      const result = await researchOutputs.create(
+        getResearchOutputCreateData(),
+      );
 
       expect(result).toEqual(getResearchOutputResponse());
-
-      const researchOutputCreateDataObject =
-        getResearchOutputCreateDataObject();
       expect(researchOutputDataProviderMock.create).toBeCalledWith(
         {
-          ...researchOutputCreateDataObject,
+          ...getResearchOutputCreateDataObject(),
           addedDate: mockDate.toISOString(),
         },
         { publish: true },
       );
       spy.mockRestore();
+    });
+
+    test('Should create a draft research output and return it', async () => {
+      const researchOutputId = 'research-output-id-1';
+      researchOutputDataProviderMock.create.mockResolvedValueOnce(
+        researchOutputId,
+      );
+
+      const result = await researchOutputs.create({
+        ...getResearchOutputCreateData(),
+        published: false,
+      });
+
+      expect(result).toEqual(getResearchOutputResponse());
+
+      expect(researchOutputDataProviderMock.create).toBeCalledWith(
+        {
+          ...getResearchOutputCreateDataObject(),
+          addedDate: undefined,
+        },
+        { publish: false },
+      );
     });
 
     describe('Validating uniqueness', () => {

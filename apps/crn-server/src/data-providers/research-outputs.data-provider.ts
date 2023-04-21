@@ -281,10 +281,6 @@ export class ResearchOutputSquidexDataProvider
       updatedBy: [researchOutputData.updatedBy],
     });
 
-    if (updateOptions.publish) {
-      await this.researchOutputSquidexRestClient.publish(researchOutputId);
-    }
-
     await this.researchOutputSquidexRestClient.patch(researchOutputId, {
       doi: { iv: null },
       accession: { iv: null },
@@ -294,6 +290,10 @@ export class ResearchOutputSquidexDataProvider
       labs: researchOutput.labs,
       teams: researchOutput.teams,
     });
+
+    if (updateOptions.publish) {
+      await this.researchOutputSquidexRestClient.publish(researchOutputId);
+    }
   }
 }
 

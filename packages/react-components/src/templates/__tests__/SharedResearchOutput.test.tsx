@@ -1,5 +1,6 @@
 import { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { researchOutputDocumentTypes } from '@asap-hub/model';
@@ -346,6 +347,22 @@ describe('a draft output', () => {
 });
 
 describe('a newly published output', () => {
+  it('has a closable toast', () => {
+    const { getByText, getByTitle } = render(
+      <SharedResearchOutput
+        {...props}
+        teams={[{ id: 'team1', displayName: 'team 1' }]}
+        workingGroups={undefined}
+        documentType="Article"
+        published={true}
+        publishedNow
+      />,
+    );
+    const toast = getByText('Team Article published successfully.');
+    expect(toast).toBeVisible();
+    userEvent.click(getByTitle(/close/i));
+    expect(toast).not.toBeInTheDocument();
+  });
   it.each(researchOutputDocumentTypes)(
     'shows the toast for team outputs with documentType: %s',
     (researchOutputDocumentType) => {

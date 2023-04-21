@@ -714,7 +714,7 @@ describe('ResearchOutputs controller', () => {
         spy.mockRestore();
       });
 
-      test('Should use the initial value when updating a published output', async () => {
+      test('Should use the existing value when updating a published output', async () => {
         researchOutputDataProviderMock.fetchById.mockResolvedValue({
           ...getResearchOutputDataObject(),
           published: true,

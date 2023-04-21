@@ -10,6 +10,7 @@ import {
   ResearchOutputTeamResponse,
   TeamRole,
   WorkingGroupRole,
+  Role,
 } from '@asap-hub/model';
 import { AuthHandler } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
@@ -128,7 +129,7 @@ describe('/research-outputs/ route', () => {
     });
 
     describe('Drafts', () => {
-      test('Should only return drafts', async () => {
+      test('Should exclusively return drafts', async () => {
         const listResearchOutputResponse = getListResearchOutputResponse();
 
         listResearchOutputResponse.items[0]!.published = false;
@@ -388,6 +389,127 @@ describe('/research-outputs/ route', () => {
           teams: ['team-id-that-does-not-belong-to-user'],
         });
       expect(response.status).toBe(403);
+    });
+
+    describe('Creating a research output from a team', () => {
+      test.each([
+        {
+          publish: false,
+          teamRole: 'Key Personnel',
+          expected: 201,
+          userRole: 'Grantee',
+        },
+        {
+          publish: false,
+          teamRole: 'Project Manager',
+          expected: 201,
+          userRole: 'Grantee',
+        },
+        {
+          publish: false,
+          teamRole: 'Key Personnel',
+          expected: 201,
+          userRole: 'Staff',
+        },
+        {
+          publish: true,
+          teamRole: 'Project Manager',
+          expected: 201,
+          userRole: 'Grantee',
+        },
+        {
+          publish: true,
+          teamRole: 'Key Personnel',
+          expected: 403,
+          userRole: 'Grantee',
+        },
+        {
+          publish: true,
+          teamRole: 'Key Personnel',
+          expected: 201,
+          userRole: 'Staff',
+        },
+      ])(
+        'Should return $expected when a user has team role: $teamRole and has user role: $userRole and tries to publish: $publish',
+        async ({ publish, teamRole, expected, userRole }) => {
+          userMockFactory.mockReturnValueOnce({
+            ...user,
+            role: userRole as Role,
+            teams: [
+              {
+                id: 'team-1',
+                displayName: 'team-1',
+                role: teamRole as TeamRole,
+              },
+            ],
+            workingGroups: [
+              { id: 'wg-1', name: 'wg-1', role: 'Member', active: true },
+            ],
+          });
+          const response = await supertest(app)
+            .post('/research-outputs')
+            .send({
+              ...getResearchOutputPostRequest(),
+              teams: ['team-1'],
+              published: publish,
+            });
+          expect(response.status).toBe(expected);
+        },
+      );
+    });
+
+    describe('Creating a research output from a working group', () => {
+      test.each([
+        {
+          publish: false,
+          wgRole: 'Member',
+          expected: 201,
+          userRole: 'Grantee',
+        },
+        {
+          publish: false,
+          wgRole: 'Project Manager',
+          expected: 201,
+          userRole: 'Grantee',
+        },
+        {
+          publish: true,
+          wgRole: 'Project Manager',
+          expected: 201,
+          userRole: 'Grantee',
+        },
+        { publish: true, wgRole: 'Member', expected: 403, userRole: 'Grantee' },
+        { publish: false, wgRole: 'Member', expected: 201, userRole: 'Staff' },
+        { publish: true, wgRole: 'Member', expected: 201, userRole: 'Staff' },
+      ])(
+        'Should return $expected when a user has WG role: $wgRole and has user role: $userRole and tries to publish: $publish',
+        async ({ publish, wgRole, expected, userRole }) => {
+          userMockFactory.mockReturnValueOnce({
+            ...user,
+            role: userRole as Role,
+            teams: [
+              { id: 'team-1', displayName: 'team-1', role: 'Collaborating PI' },
+            ],
+            workingGroups: [
+              {
+                id: 'wg-1',
+                name: 'wg-1',
+                role: wgRole as WorkingGroupRole,
+                active: true,
+              },
+            ],
+          });
+          const response = await supertest(app)
+            .post('/research-outputs')
+            .send({
+              ...getResearchOutputPostRequest(),
+              teams: ['not-a-team'],
+              workingGroups: ['wg-1'],
+              published: publish,
+            });
+          expect(response.status).toBe(expected);
+        },
+      );
     });
 
     test('Should return a 500 error when creating a research output fails due to server error', async () => {
@@ -785,9 +907,10 @@ describe('/research-outputs/ route', () => {
     });
 
     describe('Publishing a research output', () => {
-      test('Should return 403 when user does not have sufficient permissions in the team', async () => {
+      test('Should return 403 when user is not ASAP Staff or team PM', async () => {
         userMockFactory.mockReturnValueOnce({
           ...user,
+          role: 'Grantee',
           teams: [
             { id: 'team-1', displayName: 'team-1', role: 'Key Personnel' },
           ],
@@ -802,9 +925,10 @@ describe('/research-outputs/ route', () => {
         expect(response.status).toBe(403);
       });
 
-      test('Should return 403 when user does not have sufficient permissions in the working group', async () => {
+      test('Should return 403 when user is not ASAP Staff or working group PM', async () => {
         userMockFactory.mockReturnValueOnce({
           ...user,
+          role: 'Grantee',
           workingGroups: [
             { id: 'wg-1', name: 'wg-1', role: 'Member', active: true },
           ],

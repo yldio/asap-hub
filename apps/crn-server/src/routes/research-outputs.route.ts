@@ -92,10 +92,12 @@ export const researchOutputRouteFactory = (
     const createRequest = validateResearchOutputPostRequestParameters(body);
     validateResearchOutputPostRequestParametersIdentifiers(createRequest);
 
+    const workingGroupOutput = createRequest.workingGroups.length;
+
     const userRole = getUserRole(
       loggedInUser as UserResponse,
-      'teams',
-      createRequest.teams,
+      workingGroupOutput ? 'workingGroups' : 'teams',
+      workingGroupOutput ? createRequest.workingGroups : createRequest.teams,
     );
 
     if (

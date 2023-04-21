@@ -95,6 +95,7 @@ input AssetFilter {
 
 type AssetLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  usersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): UsersCollection
 }
 
 enum AssetOrder {
@@ -142,6 +143,113 @@ Represents a tag entity for finding and organizing content easily.
 type ContentfulTag {
   id: String
   name: String
+}
+
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/contributingCohorts)"""
+type ContributingCohorts implements Entry {
+  contentfulMetadata: ContentfulMetadata!
+  linkedFrom(allowedLocales: [String]): ContributingCohortsLinkingCollections
+  name(locale: String): String
+  sys: Sys!
+}
+
+type ContributingCohortsCollection {
+  items: [ContributingCohorts]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input ContributingCohortsFilter {
+  AND: [ContributingCohortsFilter]
+  OR: [ContributingCohortsFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  name: String
+  name_contains: String
+  name_exists: Boolean
+  name_in: [String]
+  name_not: String
+  name_not_contains: String
+  name_not_in: [String]
+  sys: SysFilter
+}
+
+type ContributingCohortsLinkingCollections {
+  contributingCohortsMembershipCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): ContributingCohortsMembershipCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+}
+
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/contributingCohortsMembership)"""
+type ContributingCohortsMembership implements Entry {
+  contentfulMetadata: ContentfulMetadata!
+  contributingCohort(locale: String, preview: Boolean): ContributingCohorts
+  linkedFrom(allowedLocales: [String]): ContributingCohortsMembershipLinkingCollections
+  role(locale: String): String
+  studyLink(locale: String): String
+  sys: Sys!
+}
+
+type ContributingCohortsMembershipCollection {
+  items: [ContributingCohortsMembership]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input ContributingCohortsMembershipFilter {
+  AND: [ContributingCohortsMembershipFilter]
+  OR: [ContributingCohortsMembershipFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  contributingCohort: cfContributingCohortsNestedFilter
+  contributingCohort_exists: Boolean
+  role: String
+  role_contains: String
+  role_exists: Boolean
+  role_in: [String]
+  role_not: String
+  role_not_contains: String
+  role_not_in: [String]
+  studyLink: String
+  studyLink_contains: String
+  studyLink_exists: Boolean
+  studyLink_in: [String]
+  studyLink_not: String
+  studyLink_not_contains: String
+  studyLink_not_in: [String]
+  sys: SysFilter
+}
+
+type ContributingCohortsMembershipLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  usersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): UsersCollection
+}
+
+enum ContributingCohortsMembershipOrder {
+  role_ASC
+  role_DESC
+  studyLink_ASC
+  studyLink_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+enum ContributingCohortsOrder {
+  name_ASC
+  name_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
 }
 
 """
@@ -613,6 +721,10 @@ scalar Quality
 type Query {
   asset(id: String!, locale: String, preview: Boolean): Asset
   assetCollection(limit: Int = 100, locale: String, order: [AssetOrder], preview: Boolean, skip: Int = 0, where: AssetFilter): AssetCollection
+  contributingCohorts(id: String!, locale: String, preview: Boolean): ContributingCohorts
+  contributingCohortsCollection(limit: Int = 100, locale: String, order: [ContributingCohortsOrder], preview: Boolean, skip: Int = 0, where: ContributingCohortsFilter): ContributingCohortsCollection
+  contributingCohortsMembership(id: String!, locale: String, preview: Boolean): ContributingCohortsMembership
+  contributingCohortsMembershipCollection(limit: Int = 100, locale: String, order: [ContributingCohortsMembershipOrder], preview: Boolean, skip: Int = 0, where: ContributingCohortsMembershipFilter): ContributingCohortsMembershipCollection
   entryCollection(limit: Int = 100, locale: String, order: [EntryOrder], preview: Boolean, skip: Int = 0, where: EntryFilter): EntryCollection
   media(id: String!, locale: String, preview: Boolean): Media
   mediaCollection(limit: Int = 100, locale: String, order: [MediaOrder], preview: Boolean, skip: Int = 0, where: MediaFilter): MediaCollection
@@ -622,6 +734,8 @@ type Query {
   newsCollection(limit: Int = 100, locale: String, order: [NewsOrder], preview: Boolean, skip: Int = 0, where: NewsFilter): NewsCollection
   pages(id: String!, locale: String, preview: Boolean): Pages
   pagesCollection(limit: Int = 100, locale: String, order: [PagesOrder], preview: Boolean, skip: Int = 0, where: PagesFilter): PagesCollection
+  users(id: String!, locale: String, preview: Boolean): Users
+  usersCollection(limit: Int = 100, locale: String, order: [UsersOrder], preview: Boolean, skip: Int = 0, where: UsersFilter): UsersCollection
 }
 
 type Sys {
@@ -668,4 +782,322 @@ input SysFilter {
   publishedVersion_lte: Float
   publishedVersion_not: Float
   publishedVersion_not_in: [Float]
+}
+
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users)"""
+type Users implements Entry {
+  activatedDate(locale: String): DateTime
+  alternativeEmail(locale: String): String
+  avatar(locale: String, preview: Boolean): Asset
+  biography(locale: String): String
+  blog(locale: String): String
+  city(locale: String): String
+  connections(locale: String): [String]
+  contentfulMetadata: ContentfulMetadata!
+  contributingCohortsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): UsersContributingCohortsCollection
+  country(locale: String): String
+  degree(locale: String): [String]
+  email(locale: String): String
+  firstName(locale: String): String
+  fundingStreams(locale: String): String
+  github(locale: String): String
+  googleScholar(locale: String): String
+  keywords(locale: String): [String]
+  lastName(locale: String): String
+  linkedFrom(allowedLocales: [String]): UsersLinkingCollections
+  linkedIn(locale: String): String
+  onboarded(locale: String): Boolean
+  orcid(locale: String): String
+  questions(locale: String): [String]
+  region(locale: String): String
+  researchGate(locale: String): String
+  researcherId(locale: String): String
+  role(locale: String): String
+  sys: Sys!
+  telephoneCountryCode(locale: String): String
+  telephoneNumber(locale: String): String
+  twitter(locale: String): String
+}
+
+type UsersCollection {
+  items: [Users]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+type UsersContributingCohortsCollection {
+  items: [ContributingCohortsMembership]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input UsersFilter {
+  AND: [UsersFilter]
+  OR: [UsersFilter]
+  activatedDate: DateTime
+  activatedDate_exists: Boolean
+  activatedDate_gt: DateTime
+  activatedDate_gte: DateTime
+  activatedDate_in: [DateTime]
+  activatedDate_lt: DateTime
+  activatedDate_lte: DateTime
+  activatedDate_not: DateTime
+  activatedDate_not_in: [DateTime]
+  alternativeEmail: String
+  alternativeEmail_contains: String
+  alternativeEmail_exists: Boolean
+  alternativeEmail_in: [String]
+  alternativeEmail_not: String
+  alternativeEmail_not_contains: String
+  alternativeEmail_not_in: [String]
+  avatar_exists: Boolean
+  biography: String
+  biography_contains: String
+  biography_exists: Boolean
+  biography_in: [String]
+  biography_not: String
+  biography_not_contains: String
+  biography_not_in: [String]
+  blog: String
+  blog_contains: String
+  blog_exists: Boolean
+  blog_in: [String]
+  blog_not: String
+  blog_not_contains: String
+  blog_not_in: [String]
+  city: String
+  city_contains: String
+  city_exists: Boolean
+  city_in: [String]
+  city_not: String
+  city_not_contains: String
+  city_not_in: [String]
+  connections_contains_all: [String]
+  connections_contains_none: [String]
+  connections_contains_some: [String]
+  connections_exists: Boolean
+  contentfulMetadata: ContentfulMetadataFilter
+  contributingCohorts: cfContributingCohortsMembershipNestedFilter
+  contributingCohortsCollection_exists: Boolean
+  country: String
+  country_contains: String
+  country_exists: Boolean
+  country_in: [String]
+  country_not: String
+  country_not_contains: String
+  country_not_in: [String]
+  degree_contains_all: [String]
+  degree_contains_none: [String]
+  degree_contains_some: [String]
+  degree_exists: Boolean
+  email: String
+  email_contains: String
+  email_exists: Boolean
+  email_in: [String]
+  email_not: String
+  email_not_contains: String
+  email_not_in: [String]
+  firstName: String
+  firstName_contains: String
+  firstName_exists: Boolean
+  firstName_in: [String]
+  firstName_not: String
+  firstName_not_contains: String
+  firstName_not_in: [String]
+  fundingStreams: String
+  fundingStreams_contains: String
+  fundingStreams_exists: Boolean
+  fundingStreams_in: [String]
+  fundingStreams_not: String
+  fundingStreams_not_contains: String
+  fundingStreams_not_in: [String]
+  github: String
+  github_contains: String
+  github_exists: Boolean
+  github_in: [String]
+  github_not: String
+  github_not_contains: String
+  github_not_in: [String]
+  googleScholar: String
+  googleScholar_contains: String
+  googleScholar_exists: Boolean
+  googleScholar_in: [String]
+  googleScholar_not: String
+  googleScholar_not_contains: String
+  googleScholar_not_in: [String]
+  keywords_contains_all: [String]
+  keywords_contains_none: [String]
+  keywords_contains_some: [String]
+  keywords_exists: Boolean
+  lastName: String
+  lastName_contains: String
+  lastName_exists: Boolean
+  lastName_in: [String]
+  lastName_not: String
+  lastName_not_contains: String
+  lastName_not_in: [String]
+  linkedIn: String
+  linkedIn_contains: String
+  linkedIn_exists: Boolean
+  linkedIn_in: [String]
+  linkedIn_not: String
+  linkedIn_not_contains: String
+  linkedIn_not_in: [String]
+  onboarded: Boolean
+  onboarded_exists: Boolean
+  onboarded_not: Boolean
+  orcid: String
+  orcid_contains: String
+  orcid_exists: Boolean
+  orcid_in: [String]
+  orcid_not: String
+  orcid_not_contains: String
+  orcid_not_in: [String]
+  questions_contains_all: [String]
+  questions_contains_none: [String]
+  questions_contains_some: [String]
+  questions_exists: Boolean
+  region: String
+  region_contains: String
+  region_exists: Boolean
+  region_in: [String]
+  region_not: String
+  region_not_contains: String
+  region_not_in: [String]
+  researchGate: String
+  researchGate_contains: String
+  researchGate_exists: Boolean
+  researchGate_in: [String]
+  researchGate_not: String
+  researchGate_not_contains: String
+  researchGate_not_in: [String]
+  researcherId: String
+  researcherId_contains: String
+  researcherId_exists: Boolean
+  researcherId_in: [String]
+  researcherId_not: String
+  researcherId_not_contains: String
+  researcherId_not_in: [String]
+  role: String
+  role_contains: String
+  role_exists: Boolean
+  role_in: [String]
+  role_not: String
+  role_not_contains: String
+  role_not_in: [String]
+  sys: SysFilter
+  telephoneCountryCode: String
+  telephoneCountryCode_contains: String
+  telephoneCountryCode_exists: Boolean
+  telephoneCountryCode_in: [String]
+  telephoneCountryCode_not: String
+  telephoneCountryCode_not_contains: String
+  telephoneCountryCode_not_in: [String]
+  telephoneNumber: String
+  telephoneNumber_contains: String
+  telephoneNumber_exists: Boolean
+  telephoneNumber_in: [String]
+  telephoneNumber_not: String
+  telephoneNumber_not_contains: String
+  telephoneNumber_not_in: [String]
+  twitter: String
+  twitter_contains: String
+  twitter_exists: Boolean
+  twitter_in: [String]
+  twitter_not: String
+  twitter_not_contains: String
+  twitter_not_in: [String]
+}
+
+type UsersLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+}
+
+enum UsersOrder {
+  activatedDate_ASC
+  activatedDate_DESC
+  alternativeEmail_ASC
+  alternativeEmail_DESC
+  blog_ASC
+  blog_DESC
+  city_ASC
+  city_DESC
+  country_ASC
+  country_DESC
+  email_ASC
+  email_DESC
+  firstName_ASC
+  firstName_DESC
+  github_ASC
+  github_DESC
+  googleScholar_ASC
+  googleScholar_DESC
+  lastName_ASC
+  lastName_DESC
+  linkedIn_ASC
+  linkedIn_DESC
+  onboarded_ASC
+  onboarded_DESC
+  orcid_ASC
+  orcid_DESC
+  region_ASC
+  region_DESC
+  researchGate_ASC
+  researchGate_DESC
+  researcherId_ASC
+  researcherId_DESC
+  role_ASC
+  role_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  telephoneCountryCode_ASC
+  telephoneCountryCode_DESC
+  telephoneNumber_ASC
+  telephoneNumber_DESC
+  twitter_ASC
+  twitter_DESC
+}
+
+input cfContributingCohortsMembershipNestedFilter {
+  AND: [cfContributingCohortsMembershipNestedFilter]
+  OR: [cfContributingCohortsMembershipNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  contributingCohort_exists: Boolean
+  role: String
+  role_contains: String
+  role_exists: Boolean
+  role_in: [String]
+  role_not: String
+  role_not_contains: String
+  role_not_in: [String]
+  studyLink: String
+  studyLink_contains: String
+  studyLink_exists: Boolean
+  studyLink_in: [String]
+  studyLink_not: String
+  studyLink_not_contains: String
+  studyLink_not_in: [String]
+  sys: SysFilter
+}
+
+input cfContributingCohortsNestedFilter {
+  AND: [cfContributingCohortsNestedFilter]
+  OR: [cfContributingCohortsNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  name: String
+  name_contains: String
+  name_exists: Boolean
+  name_in: [String]
+  name_not: String
+  name_not_contains: String
+  name_not_in: [String]
+  sys: SysFilter
 }

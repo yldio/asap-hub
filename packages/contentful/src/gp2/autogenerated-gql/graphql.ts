@@ -174,9 +174,17 @@ export type AssetFilter = {
 
 export type AssetLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  usersCollection?: Maybe<UsersCollection>;
 };
 
 export type AssetLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type AssetLinkingCollectionsUsersCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
@@ -229,6 +237,175 @@ export type ContentfulTag = {
   id?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
 };
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/contributingCohorts) */
+export type ContributingCohorts = Entry & {
+  contentfulMetadata: ContentfulMetadata;
+  linkedFrom?: Maybe<ContributingCohortsLinkingCollections>;
+  name?: Maybe<Scalars['String']>;
+  sys: Sys;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/contributingCohorts) */
+export type ContributingCohortsLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/contributingCohorts) */
+export type ContributingCohortsNameArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type ContributingCohortsCollection = {
+  items: Array<Maybe<ContributingCohorts>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type ContributingCohortsFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ContributingCohortsFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ContributingCohortsFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  name?: InputMaybe<Scalars['String']>;
+  name_contains?: InputMaybe<Scalars['String']>;
+  name_exists?: InputMaybe<Scalars['Boolean']>;
+  name_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  name_not?: InputMaybe<Scalars['String']>;
+  name_not_contains?: InputMaybe<Scalars['String']>;
+  name_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+};
+
+export type ContributingCohortsLinkingCollections = {
+  contributingCohortsMembershipCollection?: Maybe<ContributingCohortsMembershipCollection>;
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type ContributingCohortsLinkingCollectionsContributingCohortsMembershipCollectionArgs =
+  {
+    limit?: InputMaybe<Scalars['Int']>;
+    locale?: InputMaybe<Scalars['String']>;
+    preview?: InputMaybe<Scalars['Boolean']>;
+    skip?: InputMaybe<Scalars['Int']>;
+  };
+
+export type ContributingCohortsLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/contributingCohortsMembership) */
+export type ContributingCohortsMembership = Entry & {
+  contentfulMetadata: ContentfulMetadata;
+  contributingCohort?: Maybe<ContributingCohorts>;
+  linkedFrom?: Maybe<ContributingCohortsMembershipLinkingCollections>;
+  role?: Maybe<Scalars['String']>;
+  studyLink?: Maybe<Scalars['String']>;
+  sys: Sys;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/contributingCohortsMembership) */
+export type ContributingCohortsMembershipContributingCohortArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/contributingCohortsMembership) */
+export type ContributingCohortsMembershipLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/contributingCohortsMembership) */
+export type ContributingCohortsMembershipRoleArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/contributingCohortsMembership) */
+export type ContributingCohortsMembershipStudyLinkArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type ContributingCohortsMembershipCollection = {
+  items: Array<Maybe<ContributingCohortsMembership>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type ContributingCohortsMembershipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ContributingCohortsMembershipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ContributingCohortsMembershipFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  contributingCohort?: InputMaybe<CfContributingCohortsNestedFilter>;
+  contributingCohort_exists?: InputMaybe<Scalars['Boolean']>;
+  role?: InputMaybe<Scalars['String']>;
+  role_contains?: InputMaybe<Scalars['String']>;
+  role_exists?: InputMaybe<Scalars['Boolean']>;
+  role_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  role_not?: InputMaybe<Scalars['String']>;
+  role_not_contains?: InputMaybe<Scalars['String']>;
+  role_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  studyLink?: InputMaybe<Scalars['String']>;
+  studyLink_contains?: InputMaybe<Scalars['String']>;
+  studyLink_exists?: InputMaybe<Scalars['Boolean']>;
+  studyLink_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  studyLink_not?: InputMaybe<Scalars['String']>;
+  studyLink_not_contains?: InputMaybe<Scalars['String']>;
+  studyLink_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+};
+
+export type ContributingCohortsMembershipLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+  usersCollection?: Maybe<UsersCollection>;
+};
+
+export type ContributingCohortsMembershipLinkingCollectionsEntryCollectionArgs =
+  {
+    limit?: InputMaybe<Scalars['Int']>;
+    locale?: InputMaybe<Scalars['String']>;
+    preview?: InputMaybe<Scalars['Boolean']>;
+    skip?: InputMaybe<Scalars['Int']>;
+  };
+
+export type ContributingCohortsMembershipLinkingCollectionsUsersCollectionArgs =
+  {
+    limit?: InputMaybe<Scalars['Int']>;
+    locale?: InputMaybe<Scalars['String']>;
+    preview?: InputMaybe<Scalars['Boolean']>;
+    skip?: InputMaybe<Scalars['Int']>;
+  };
+
+export enum ContributingCohortsMembershipOrder {
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  StudyLinkAsc = 'studyLink_ASC',
+  StudyLinkDesc = 'studyLink_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum ContributingCohortsOrder {
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
 
 export type Entry = {
   contentfulMetadata: ContentfulMetadata;
@@ -812,6 +989,10 @@ export type PagesTextLinks = {
 export type Query = {
   asset?: Maybe<Asset>;
   assetCollection?: Maybe<AssetCollection>;
+  contributingCohorts?: Maybe<ContributingCohorts>;
+  contributingCohortsCollection?: Maybe<ContributingCohortsCollection>;
+  contributingCohortsMembership?: Maybe<ContributingCohortsMembership>;
+  contributingCohortsMembershipCollection?: Maybe<ContributingCohortsMembershipCollection>;
   entryCollection?: Maybe<EntryCollection>;
   media?: Maybe<Media>;
   mediaCollection?: Maybe<MediaCollection>;
@@ -821,6 +1002,8 @@ export type Query = {
   newsCollection?: Maybe<NewsCollection>;
   pages?: Maybe<Pages>;
   pagesCollection?: Maybe<PagesCollection>;
+  users?: Maybe<Users>;
+  usersCollection?: Maybe<UsersCollection>;
 };
 
 export type QueryAssetArgs = {
@@ -836,6 +1019,36 @@ export type QueryAssetCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<AssetFilter>;
+};
+
+export type QueryContributingCohortsArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryContributingCohortsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ContributingCohortsOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ContributingCohortsFilter>;
+};
+
+export type QueryContributingCohortsMembershipArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryContributingCohortsMembershipCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ContributingCohortsMembershipOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ContributingCohortsMembershipFilter>;
 };
 
 export type QueryEntryCollectionArgs = {
@@ -907,6 +1120,21 @@ export type QueryPagesCollectionArgs = {
   where?: InputMaybe<PagesFilter>;
 };
 
+export type QueryUsersArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryUsersCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<UsersOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<UsersFilter>;
+};
+
 export type Sys = {
   environmentId: Scalars['String'];
   firstPublishedAt?: Maybe<Scalars['DateTime']>;
@@ -951,6 +1179,486 @@ export type SysFilter = {
   publishedVersion_lte?: InputMaybe<Scalars['Float']>;
   publishedVersion_not?: InputMaybe<Scalars['Float']>;
   publishedVersion_not_in?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type Users = Entry & {
+  activatedDate?: Maybe<Scalars['DateTime']>;
+  alternativeEmail?: Maybe<Scalars['String']>;
+  avatar?: Maybe<Asset>;
+  biography?: Maybe<Scalars['String']>;
+  blog?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']>;
+  connections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  contentfulMetadata: ContentfulMetadata;
+  contributingCohortsCollection?: Maybe<UsersContributingCohortsCollection>;
+  country?: Maybe<Scalars['String']>;
+  degree?: Maybe<Array<Maybe<Scalars['String']>>>;
+  email?: Maybe<Scalars['String']>;
+  firstName?: Maybe<Scalars['String']>;
+  fundingStreams?: Maybe<Scalars['String']>;
+  github?: Maybe<Scalars['String']>;
+  googleScholar?: Maybe<Scalars['String']>;
+  keywords?: Maybe<Array<Maybe<Scalars['String']>>>;
+  lastName?: Maybe<Scalars['String']>;
+  linkedFrom?: Maybe<UsersLinkingCollections>;
+  linkedIn?: Maybe<Scalars['String']>;
+  onboarded?: Maybe<Scalars['Boolean']>;
+  orcid?: Maybe<Scalars['String']>;
+  questions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  region?: Maybe<Scalars['String']>;
+  researchGate?: Maybe<Scalars['String']>;
+  researcherId?: Maybe<Scalars['String']>;
+  role?: Maybe<Scalars['String']>;
+  sys: Sys;
+  telephoneCountryCode?: Maybe<Scalars['String']>;
+  telephoneNumber?: Maybe<Scalars['String']>;
+  twitter?: Maybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersActivatedDateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersAlternativeEmailArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersAvatarArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersBiographyArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersBlogArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersCityArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersConnectionsArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersContributingCohortsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersCountryArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersDegreeArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersEmailArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersFirstNameArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersFundingStreamsArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersGithubArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersGoogleScholarArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersKeywordsArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersLastNameArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersLinkedInArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersOnboardedArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersOrcidArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersQuestionsArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersRegionArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersResearchGateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersResearcherIdArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersRoleArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersTelephoneCountryCodeArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersTelephoneNumberArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersTwitterArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type UsersCollection = {
+  items: Array<Maybe<Users>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type UsersContributingCohortsCollection = {
+  items: Array<Maybe<ContributingCohortsMembership>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type UsersFilter = {
+  AND?: InputMaybe<Array<InputMaybe<UsersFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<UsersFilter>>>;
+  activatedDate?: InputMaybe<Scalars['DateTime']>;
+  activatedDate_exists?: InputMaybe<Scalars['Boolean']>;
+  activatedDate_gt?: InputMaybe<Scalars['DateTime']>;
+  activatedDate_gte?: InputMaybe<Scalars['DateTime']>;
+  activatedDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  activatedDate_lt?: InputMaybe<Scalars['DateTime']>;
+  activatedDate_lte?: InputMaybe<Scalars['DateTime']>;
+  activatedDate_not?: InputMaybe<Scalars['DateTime']>;
+  activatedDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  alternativeEmail?: InputMaybe<Scalars['String']>;
+  alternativeEmail_contains?: InputMaybe<Scalars['String']>;
+  alternativeEmail_exists?: InputMaybe<Scalars['Boolean']>;
+  alternativeEmail_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  alternativeEmail_not?: InputMaybe<Scalars['String']>;
+  alternativeEmail_not_contains?: InputMaybe<Scalars['String']>;
+  alternativeEmail_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  avatar_exists?: InputMaybe<Scalars['Boolean']>;
+  biography?: InputMaybe<Scalars['String']>;
+  biography_contains?: InputMaybe<Scalars['String']>;
+  biography_exists?: InputMaybe<Scalars['Boolean']>;
+  biography_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  biography_not?: InputMaybe<Scalars['String']>;
+  biography_not_contains?: InputMaybe<Scalars['String']>;
+  biography_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  blog?: InputMaybe<Scalars['String']>;
+  blog_contains?: InputMaybe<Scalars['String']>;
+  blog_exists?: InputMaybe<Scalars['Boolean']>;
+  blog_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  blog_not?: InputMaybe<Scalars['String']>;
+  blog_not_contains?: InputMaybe<Scalars['String']>;
+  blog_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  city?: InputMaybe<Scalars['String']>;
+  city_contains?: InputMaybe<Scalars['String']>;
+  city_exists?: InputMaybe<Scalars['Boolean']>;
+  city_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  city_not?: InputMaybe<Scalars['String']>;
+  city_not_contains?: InputMaybe<Scalars['String']>;
+  city_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  connections_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  connections_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  connections_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  connections_exists?: InputMaybe<Scalars['Boolean']>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  contributingCohorts?: InputMaybe<CfContributingCohortsMembershipNestedFilter>;
+  contributingCohortsCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  country?: InputMaybe<Scalars['String']>;
+  country_contains?: InputMaybe<Scalars['String']>;
+  country_exists?: InputMaybe<Scalars['Boolean']>;
+  country_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  country_not?: InputMaybe<Scalars['String']>;
+  country_not_contains?: InputMaybe<Scalars['String']>;
+  country_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  degree_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  degree_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  degree_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  degree_exists?: InputMaybe<Scalars['Boolean']>;
+  email?: InputMaybe<Scalars['String']>;
+  email_contains?: InputMaybe<Scalars['String']>;
+  email_exists?: InputMaybe<Scalars['Boolean']>;
+  email_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  email_not?: InputMaybe<Scalars['String']>;
+  email_not_contains?: InputMaybe<Scalars['String']>;
+  email_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  firstName?: InputMaybe<Scalars['String']>;
+  firstName_contains?: InputMaybe<Scalars['String']>;
+  firstName_exists?: InputMaybe<Scalars['Boolean']>;
+  firstName_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  firstName_not?: InputMaybe<Scalars['String']>;
+  firstName_not_contains?: InputMaybe<Scalars['String']>;
+  firstName_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  fundingStreams?: InputMaybe<Scalars['String']>;
+  fundingStreams_contains?: InputMaybe<Scalars['String']>;
+  fundingStreams_exists?: InputMaybe<Scalars['Boolean']>;
+  fundingStreams_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  fundingStreams_not?: InputMaybe<Scalars['String']>;
+  fundingStreams_not_contains?: InputMaybe<Scalars['String']>;
+  fundingStreams_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  github?: InputMaybe<Scalars['String']>;
+  github_contains?: InputMaybe<Scalars['String']>;
+  github_exists?: InputMaybe<Scalars['Boolean']>;
+  github_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  github_not?: InputMaybe<Scalars['String']>;
+  github_not_contains?: InputMaybe<Scalars['String']>;
+  github_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  googleScholar?: InputMaybe<Scalars['String']>;
+  googleScholar_contains?: InputMaybe<Scalars['String']>;
+  googleScholar_exists?: InputMaybe<Scalars['Boolean']>;
+  googleScholar_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  googleScholar_not?: InputMaybe<Scalars['String']>;
+  googleScholar_not_contains?: InputMaybe<Scalars['String']>;
+  googleScholar_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  keywords_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  keywords_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  keywords_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  keywords_exists?: InputMaybe<Scalars['Boolean']>;
+  lastName?: InputMaybe<Scalars['String']>;
+  lastName_contains?: InputMaybe<Scalars['String']>;
+  lastName_exists?: InputMaybe<Scalars['Boolean']>;
+  lastName_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  lastName_not?: InputMaybe<Scalars['String']>;
+  lastName_not_contains?: InputMaybe<Scalars['String']>;
+  lastName_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  linkedIn?: InputMaybe<Scalars['String']>;
+  linkedIn_contains?: InputMaybe<Scalars['String']>;
+  linkedIn_exists?: InputMaybe<Scalars['Boolean']>;
+  linkedIn_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  linkedIn_not?: InputMaybe<Scalars['String']>;
+  linkedIn_not_contains?: InputMaybe<Scalars['String']>;
+  linkedIn_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  onboarded?: InputMaybe<Scalars['Boolean']>;
+  onboarded_exists?: InputMaybe<Scalars['Boolean']>;
+  onboarded_not?: InputMaybe<Scalars['Boolean']>;
+  orcid?: InputMaybe<Scalars['String']>;
+  orcid_contains?: InputMaybe<Scalars['String']>;
+  orcid_exists?: InputMaybe<Scalars['Boolean']>;
+  orcid_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  orcid_not?: InputMaybe<Scalars['String']>;
+  orcid_not_contains?: InputMaybe<Scalars['String']>;
+  orcid_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  questions_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  questions_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  questions_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  questions_exists?: InputMaybe<Scalars['Boolean']>;
+  region?: InputMaybe<Scalars['String']>;
+  region_contains?: InputMaybe<Scalars['String']>;
+  region_exists?: InputMaybe<Scalars['Boolean']>;
+  region_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  region_not?: InputMaybe<Scalars['String']>;
+  region_not_contains?: InputMaybe<Scalars['String']>;
+  region_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  researchGate?: InputMaybe<Scalars['String']>;
+  researchGate_contains?: InputMaybe<Scalars['String']>;
+  researchGate_exists?: InputMaybe<Scalars['Boolean']>;
+  researchGate_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  researchGate_not?: InputMaybe<Scalars['String']>;
+  researchGate_not_contains?: InputMaybe<Scalars['String']>;
+  researchGate_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  researcherId?: InputMaybe<Scalars['String']>;
+  researcherId_contains?: InputMaybe<Scalars['String']>;
+  researcherId_exists?: InputMaybe<Scalars['Boolean']>;
+  researcherId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  researcherId_not?: InputMaybe<Scalars['String']>;
+  researcherId_not_contains?: InputMaybe<Scalars['String']>;
+  researcherId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  role?: InputMaybe<Scalars['String']>;
+  role_contains?: InputMaybe<Scalars['String']>;
+  role_exists?: InputMaybe<Scalars['Boolean']>;
+  role_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  role_not?: InputMaybe<Scalars['String']>;
+  role_not_contains?: InputMaybe<Scalars['String']>;
+  role_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+  telephoneCountryCode?: InputMaybe<Scalars['String']>;
+  telephoneCountryCode_contains?: InputMaybe<Scalars['String']>;
+  telephoneCountryCode_exists?: InputMaybe<Scalars['Boolean']>;
+  telephoneCountryCode_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  telephoneCountryCode_not?: InputMaybe<Scalars['String']>;
+  telephoneCountryCode_not_contains?: InputMaybe<Scalars['String']>;
+  telephoneCountryCode_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  telephoneNumber?: InputMaybe<Scalars['String']>;
+  telephoneNumber_contains?: InputMaybe<Scalars['String']>;
+  telephoneNumber_exists?: InputMaybe<Scalars['Boolean']>;
+  telephoneNumber_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  telephoneNumber_not?: InputMaybe<Scalars['String']>;
+  telephoneNumber_not_contains?: InputMaybe<Scalars['String']>;
+  telephoneNumber_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  twitter?: InputMaybe<Scalars['String']>;
+  twitter_contains?: InputMaybe<Scalars['String']>;
+  twitter_exists?: InputMaybe<Scalars['Boolean']>;
+  twitter_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  twitter_not?: InputMaybe<Scalars['String']>;
+  twitter_not_contains?: InputMaybe<Scalars['String']>;
+  twitter_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type UsersLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type UsersLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum UsersOrder {
+  ActivatedDateAsc = 'activatedDate_ASC',
+  ActivatedDateDesc = 'activatedDate_DESC',
+  AlternativeEmailAsc = 'alternativeEmail_ASC',
+  AlternativeEmailDesc = 'alternativeEmail_DESC',
+  BlogAsc = 'blog_ASC',
+  BlogDesc = 'blog_DESC',
+  CityAsc = 'city_ASC',
+  CityDesc = 'city_DESC',
+  CountryAsc = 'country_ASC',
+  CountryDesc = 'country_DESC',
+  EmailAsc = 'email_ASC',
+  EmailDesc = 'email_DESC',
+  FirstNameAsc = 'firstName_ASC',
+  FirstNameDesc = 'firstName_DESC',
+  GithubAsc = 'github_ASC',
+  GithubDesc = 'github_DESC',
+  GoogleScholarAsc = 'googleScholar_ASC',
+  GoogleScholarDesc = 'googleScholar_DESC',
+  LastNameAsc = 'lastName_ASC',
+  LastNameDesc = 'lastName_DESC',
+  LinkedInAsc = 'linkedIn_ASC',
+  LinkedInDesc = 'linkedIn_DESC',
+  OnboardedAsc = 'onboarded_ASC',
+  OnboardedDesc = 'onboarded_DESC',
+  OrcidAsc = 'orcid_ASC',
+  OrcidDesc = 'orcid_DESC',
+  RegionAsc = 'region_ASC',
+  RegionDesc = 'region_DESC',
+  ResearchGateAsc = 'researchGate_ASC',
+  ResearchGateDesc = 'researchGate_DESC',
+  ResearcherIdAsc = 'researcherId_ASC',
+  ResearcherIdDesc = 'researcherId_DESC',
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TelephoneCountryCodeAsc = 'telephoneCountryCode_ASC',
+  TelephoneCountryCodeDesc = 'telephoneCountryCode_DESC',
+  TelephoneNumberAsc = 'telephoneNumber_ASC',
+  TelephoneNumberDesc = 'telephoneNumber_DESC',
+  TwitterAsc = 'twitter_ASC',
+  TwitterDesc = 'twitter_DESC',
+}
+
+export type CfContributingCohortsMembershipNestedFilter = {
+  AND?: InputMaybe<
+    Array<InputMaybe<CfContributingCohortsMembershipNestedFilter>>
+  >;
+  OR?: InputMaybe<
+    Array<InputMaybe<CfContributingCohortsMembershipNestedFilter>>
+  >;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  contributingCohort_exists?: InputMaybe<Scalars['Boolean']>;
+  role?: InputMaybe<Scalars['String']>;
+  role_contains?: InputMaybe<Scalars['String']>;
+  role_exists?: InputMaybe<Scalars['Boolean']>;
+  role_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  role_not?: InputMaybe<Scalars['String']>;
+  role_not_contains?: InputMaybe<Scalars['String']>;
+  role_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  studyLink?: InputMaybe<Scalars['String']>;
+  studyLink_contains?: InputMaybe<Scalars['String']>;
+  studyLink_exists?: InputMaybe<Scalars['Boolean']>;
+  studyLink_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  studyLink_not?: InputMaybe<Scalars['String']>;
+  studyLink_not_contains?: InputMaybe<Scalars['String']>;
+  studyLink_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+};
+
+export type CfContributingCohortsNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfContributingCohortsNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfContributingCohortsNestedFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  name?: InputMaybe<Scalars['String']>;
+  name_contains?: InputMaybe<Scalars['String']>;
+  name_exists?: InputMaybe<Scalars['Boolean']>;
+  name_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  name_not?: InputMaybe<Scalars['String']>;
+  name_not_contains?: InputMaybe<Scalars['String']>;
+  name_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
 };
 
 export type NewsContentDataFragment = Pick<
@@ -1025,12 +1733,19 @@ export type PageContentDataFragment = Pick<
         entries: {
           inline: Array<
             Maybe<
+              | ({ __typename: 'ContributingCohorts' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'ContributingCohortsMembership' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
                   })
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
             >
           >;
         };
@@ -1066,6 +1781,12 @@ export type FetchPagesQuery = {
                   entries: {
                     inline: Array<
                       Maybe<
+                        | ({ __typename: 'ContributingCohorts' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ContributingCohortsMembership' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                               sys: Pick<Sys, 'id'>;
                             })
@@ -1074,6 +1795,7 @@ export type FetchPagesQuery = {
                           })
                         | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
                       >
                     >;
                   };

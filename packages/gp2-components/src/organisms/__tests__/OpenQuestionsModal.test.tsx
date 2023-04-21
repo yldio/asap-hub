@@ -156,17 +156,16 @@ describe('OpenQuestionsModal', () => {
     });
   });
 
-  it("doesn't allow the saveButton to save an empty question", async () => {
+  it('when saving an empty question it will remove it from the questions list', async () => {
     const onSave = jest.fn();
     const props = {
-      questions: [],
+      questions: ['Am I a question?', ''],
       onSave,
     };
     renderOpenQuestions(props);
 
     const saveButton = screen.getByRole('button', { name: 'Save' });
     await waitFor(() => userEvent.click(saveButton));
-    expect(onSave).not.toBeCalled();
-    expect(screen.getByText(/Please enter a question/)).toBeVisible();
+    expect(onSave).toHaveBeenCalledWith({ questions: ['Am I a question?'] });
   });
 });

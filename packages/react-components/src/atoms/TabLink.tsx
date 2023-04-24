@@ -4,15 +4,15 @@ import { NavLink } from 'react-router-dom';
 import { css, Theme } from '@emotion/react';
 
 import { layoutStyles } from '../text';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { fern, lead, charcoal } from '../colors';
 import { useHasRouter } from '../routing';
 
 const activeClassName = 'active-link';
 const styles = css({
   display: 'inline-block',
-  paddingTop: `${24 / perRem}em`,
-  paddingBottom: `${12 / perRem}em`,
+  paddingTop: rem(24),
+  paddingBottom: rem(16),
 
   color: lead.rgb,
   textDecoration: 'none',
@@ -20,8 +20,8 @@ const styles = css({
 });
 const activeStyles = ({ colors: { primary500 = fern } = {} }: Theme) =>
   css({
-    paddingBottom: `${(12 - 4) / perRem}em`,
-    borderBottom: `solid ${4 / perRem}em ${primary500.rgba}`,
+    paddingBottom: rem(16),
+    borderBottom: `solid ${rem(4)} ${primary500.rgba}`,
 
     color: charcoal.rgb,
     fontWeight: 'bold',

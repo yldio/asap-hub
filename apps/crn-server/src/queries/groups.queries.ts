@@ -21,7 +21,6 @@ export const groupContentQueryFragment = gql`
       }
       leaders {
         role
-        inactiveSinceDate
         user {
           id
           created

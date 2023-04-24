@@ -14,9 +14,7 @@ describe('Squidex event webhook', () => {
   } as unknown as jest.Mocked<EventBridge>;
   const handler = squidexWebhookFactory(evenBridgeMock);
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+  beforeEach(jest.resetAllMocks);
 
   test('Should return 403 when the request is not signed correctly', async () => {
     const event = getApiGatewayEvent({

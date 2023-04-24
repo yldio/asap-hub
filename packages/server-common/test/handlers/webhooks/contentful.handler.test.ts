@@ -20,15 +20,10 @@ describe('Contentful event webhook', () => {
     eventSource,
   );
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+  beforeEach(jest.resetAllMocks);
 
   test('Should return 401 when the request has no Authorization header', async () => {
-    const payload = {
-      type: 'something',
-      payload: { some: 'event' },
-    };
+    const payload = getNewsPublishContentfulWebhookPayload();
     const event = getLambdaRequest(payload, {});
 
     expect(handler(event)).rejects.toThrowError('Unauthorized');
@@ -36,10 +31,7 @@ describe('Contentful event webhook', () => {
   });
 
   test('Should return 401 when the request has an invalid authentication token', async () => {
-    const payload = {
-      type: 'something',
-      payload: { some: 'event' },
-    };
+    const payload = getNewsPublishContentfulWebhookPayload();
     const headers = { Authorization: 'invalid-token' };
     const event = getLambdaRequest(payload, headers);
     expect(handler(event)).rejects.toThrowError('Unauthorized');

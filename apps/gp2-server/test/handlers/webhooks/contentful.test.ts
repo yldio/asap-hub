@@ -18,9 +18,7 @@ describe('Contentful event webhook', () => {
     'contentful-webhook-authentication-token';
   const handler = contentfulWebhookFactory(evenBridgeMock);
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+  beforeEach(jest.resetAllMocks);
 
   test('Should return 401 when the request has no Authorization header', async () => {
     const event = getApiGatewayEvent({

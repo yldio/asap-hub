@@ -25,16 +25,17 @@ describe('Squidex event webhook', () => {
     squidexSharedSecret,
   );
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+  beforeEach(jest.resetAllMocks);
 
   test('Should throw Forbidden when the request is not signed correctly', async () => {
+    const type: WebhookDetailType = 'UsersUpdated';
     const payload = {
       ...getUserWebhookPayload('user-id', 'UsersUpdated'),
-      type: 'user',
+      type,
     };
-    const event = getLambdaRequest<User>(payload, { 'x-signature': 'XYZ' });
+    const event = getLambdaRequest<SquidexWebhookPayload<User>>(payload, {
+      'x-signature': 'XYZ',
+    });
 
     expect(handler(event)).rejects.toThrowError('Forbidden');
 
@@ -44,11 +45,14 @@ describe('Squidex event webhook', () => {
   test('Should return 204 when no event type is provided', async () => {
     const payload = {
       ...getUserWebhookPayload('user-id', 'UsersUpdated'),
-      type: undefined as unknown as string,
+      type: undefined as unknown as WebhookDetailType,
     };
     const headers = createSignedHeader<User>(payload, squidexSharedSecret);
 
-    const event = getLambdaRequest<User>(payload, headers);
+    const event = getLambdaRequest<SquidexWebhookPayload<User>>(
+      payload,
+      headers,
+    );
     const response = await handler(event);
     expect(response).toEqual({ statusCode: 204 });
     expect(evenBridgeMock.putEvents).not.toHaveBeenCalled();
@@ -59,7 +63,10 @@ describe('Squidex event webhook', () => {
       ...getUserWebhookPayload('user-id', 'UsersUpdated'),
     };
     const headers = createSignedHeader<User>(payload, squidexSharedSecret);
-    const event = getLambdaRequest<User>(payload, headers);
+    const event = getLambdaRequest<SquidexWebhookPayload<User>>(
+      payload,
+      headers,
+    );
     const { statusCode } = await handler(event);
 
     const expectedDetail: WebhookDetail<SquidexWebhookPayload<User>> = {

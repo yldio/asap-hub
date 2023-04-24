@@ -1,5 +1,4 @@
 import { framework as lambda } from '@asap-hub/services-common';
-import { WebhookPayload } from '@asap-hub/squidex';
 import {
   APIGatewayProxyEventV2,
   Context,
@@ -13,9 +12,9 @@ type RecursivePartial<T> = {
 };
 
 export const getLambdaRequest = <T>(
-  payload: WebhookPayload<T>,
+  payload: T,
   headers: Record<string, string>,
-): lambda.Request<WebhookPayload<T>> => {
+): lambda.Request<T> => {
   return {
     headers: {
       'Content-Type': 'application/json',
@@ -56,7 +55,9 @@ export const getApiGatewayEvent = (
     },
     version: '2.0',
     pathParameters: undefined,
-    rawQueryString: new URLSearchParams(event.queryStringParameters).toString(),
+    rawQueryString: new URLSearchParams(
+      event.queryStringParameters as Record<string, string>,
+    ).toString(),
     ...event,
     body:
       typeof event.body === 'object'

@@ -8,15 +8,20 @@ const contentfulEnvironment = process.env.CONTENTFUL_ENVIRONMENT!;
 const apiUrl = process.env.API_URL!;
 const contentfulWebhookAuthenticationToken =
   process.env.CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN!;
+const environmentName = process.env.ENVIRONMENT_NAME!;
+const prEnvironmentName = process.env.PR_CONTENTFUL_ENV_ID!;
+
 const client = contentful.createClient({
   accessToken: contentfulManagementAccessToken,
 });
 
 const app = async () => {
+  const environmentId =
+    environmentName === 'Branch' ? prEnvironmentName : contentfulEnvironment;
   const space = await client.getSpace(spaceId);
-  const webhook = await getWebhook(space);
+  const webhook = await getWebhook(environmentId, space);
 
-  const webhookName = `${contentfulEnvironment} Webhook`;
+  const webhookName = `${environmentName} Webhook`;
   const webhookUrl = `${apiUrl}/webhook/contentful`;
   const webhookTopics = [
     'Entry.save',
@@ -45,16 +50,13 @@ const app = async () => {
 
     await webhook.update();
   } else {
-    space.createWebhookWithId(
-      `${contentfulEnvironment.toLowerCase()}-webhook`,
-      {
-        name: webhookName,
-        url: webhookUrl,
-        topics: webhookTopics,
-        filters: webhookFilters,
-        headers: webhookHeaders,
-      },
-    );
+    space.createWebhookWithId(`${environmentId.toLowerCase()}-webhook`, {
+      name: webhookName,
+      url: webhookUrl,
+      topics: webhookTopics,
+      filters: webhookFilters,
+      headers: webhookHeaders,
+    });
   }
 };
 

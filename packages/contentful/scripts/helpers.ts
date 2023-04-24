@@ -1,14 +1,11 @@
 import * as contentful from 'contentful-management';
 
-const contentfulEnvironment = process.env.CONTENTFUL_ENVIRONMENT!;
-
 export const getWebhook = async (
+  id: string,
   space: contentful.Space,
 ): Promise<contentful.WebHooks | undefined> => {
   try {
-    return await space.getWebhook(
-      `${contentfulEnvironment.toLowerCase()}-webhook`,
-    );
+    return await space.getWebhook(`${id.toLowerCase()}-webhook`);
   } catch (error) {
     if (!(error instanceof Error)) {
       throw error;

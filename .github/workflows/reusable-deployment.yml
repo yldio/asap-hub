@@ -257,6 +257,8 @@ jobs:
           contentful-space-id: ${{ steps.setup.outputs.crn-contentful-space-id }}
           contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           contentful-webhook-authentication-token: ${{ secrets.CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN }}
+          environment-name: ${{ inputs.environment-name }}
+          pr-contentful-env-id: ${{ steps.setup.outputs.crn-contentful-env-id }}
 
   crn-contentful-migrate:
     needs: [crn-sls-deploy]
@@ -310,6 +312,8 @@ jobs:
           contentful-space-id: ${{ steps.setup.outputs.gp2-contentful-space-id }}
           contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           contentful-webhook-authentication-token: ${{ secrets.GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN }}
+          environment-name: ${{ inputs.environment-name }}
+          pr-contentful-env-id: ${{ steps.setup.outputs.gp2-contentful-env-id }}
 
   gp2-contentful-migrate:
     needs: [gp2-sls-deploy]

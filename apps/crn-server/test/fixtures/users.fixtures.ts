@@ -98,7 +98,7 @@ export const getGraphQLUser = (
   user: Partial<NonNullable<FetchUserQuery['findUsersContent']>> = {},
 ): NonNullable<FetchUserQuery['findUsersContent']> => ({
   id: 'user-id-1',
-  lastModified: '2020-10-26T15:33:18Z',
+  lastModified: '2021-09-23T20:45:22.000Z',
   version: 42,
   created: '2020-09-23T20:45:22Z',
   ...user,
@@ -129,7 +129,7 @@ export const getGraphQLUser = (
     lastName: 'Hardy',
     country: 'United Kingdom',
     city: 'London',
-    lastModifiedDate: '',
+    lastModifiedDate: '2021-09-23T20:45:22.000Z',
     questions: [{ question: 'Question 1' }, { question: 'Question 2' }],
     orcid: '123-456-789',
     social: null,
@@ -300,7 +300,7 @@ export const getUserResponse = (): UserResponse => ({
   lastName: 'Hardy',
   country: 'United Kingdom',
   city: 'London',
-  lastModifiedDate: '2020-09-23T20:45:22.000Z',
+  lastModifiedDate: '2021-09-23T20:45:22.000Z',
   workingGroups: [],
   expertiseAndResourceDescription: 'some expertise and resource description',
   orcidWorks: [
@@ -368,7 +368,7 @@ export const fetchExpectation: ListUserResponse = {
       email: 'iwillbeback@arnold.com',
       firstName: 'Arnold',
       lastName: 'Schwatzneger',
-      lastModifiedDate: '2020-09-23T20:45:22.000Z',
+      lastModifiedDate: '2021-09-23T20:45:22.000Z',
       workingGroups: [],
       orcidWorks: [
         {
@@ -645,7 +645,7 @@ export const getUserDataObject = (): UserDataObject => ({
   lastName: 'Hardy',
   country: 'United Kingdom',
   city: 'London',
-  lastModifiedDate: '2020-09-23T20:45:22.000Z',
+  lastModifiedDate: '2021-09-23T20:45:22.000Z',
   workingGroups: [],
   orcidWorks: [
     {
@@ -778,12 +778,13 @@ export const getContentfulGraphql = (props = {}) => {
 export const getContentfulGraphqlUser = (props = {}) => ({
   sys: {
     id: 'user-id-1',
-    firstPublishedAt: '2020-09-23T20:45:22.000Z',
-    publishedAt: '2020-09-23T20:45:22.000Z',
+    firstPublishedAt: '2021-09-23T20:45:22.000Z',
+    publishedAt: '2021-09-23T20:45:22.000Z',
   },
   avatar: null,
   biography: 'some bio',
   onboarded: true,
+  createdDate: '2020-09-23T20:45:22.000Z',
   dismissedGettingStarted: false,
   connections: ['some-code'],
   alumniLocation: 'some alumni location',

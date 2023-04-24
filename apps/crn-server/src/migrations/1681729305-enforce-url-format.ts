@@ -20,6 +20,7 @@ export default class EnforceUrlFormat extends Migration {
           event.data.meetingLink?.iv &&
           !event.data.meetingLink.iv.startsWith('http')
         ) {
+          // eslint-disable-next-line no-console
           console.log(
             `Event ${event.id} does not have a valid meeting link. Adding https:// prefix.`,
           );
@@ -30,6 +31,7 @@ export default class EnforceUrlFormat extends Migration {
               },
             });
           } else {
+            // eslint-disable-next-line no-console
             console.log(
               `Before: ${event.data.meetingLink.iv}\nAfter: https://${event.data.meetingLink.iv}`,
             );
@@ -44,6 +46,7 @@ export default class EnforceUrlFormat extends Migration {
       'pages',
       async (page, squidexClient) => {
         if (page.data.link?.iv && !page.data.link.iv.startsWith('http')) {
+          // eslint-disable-next-line no-console
           console.log(
             `Page ${page.id} does not have a valid link. Adding https:// prefix.`,
           );
@@ -54,6 +57,7 @@ export default class EnforceUrlFormat extends Migration {
               },
             });
           } else {
+            // eslint-disable-next-line no-console
             console.log(
               `Before: ${page.data.link.iv}\nAfter: https://${page.data.link.iv}`,
             );
@@ -68,6 +72,7 @@ export default class EnforceUrlFormat extends Migration {
       'news-and-events',
       async (news, squidexClient) => {
         if (news.data.link?.iv && !news.data.link.iv.startsWith('http')) {
+          // eslint-disable-next-line no-console
           console.log(
             `News ${news.id} does not have a valid link. Adding https:// prefix.`,
           );
@@ -78,6 +83,7 @@ export default class EnforceUrlFormat extends Migration {
               },
             });
           } else {
+            // eslint-disable-next-line no-console
             console.log(
               `Before: ${news.data.link.iv}\nAfter: https://${news.data.link.iv}`,
             );
@@ -106,6 +112,7 @@ export default class EnforceUrlFormat extends Migration {
           });
 
           if (shouldUpdate) {
+            // eslint-disable-next-line no-console
             console.log(
               `Team ${team.id} does not have a valid tool link(s). Adding https:// prefix.`,
             );
@@ -116,6 +123,7 @@ export default class EnforceUrlFormat extends Migration {
                 },
               });
             } else {
+              // eslint-disable-next-line no-console
               console.log(
                 `Before: ${JSON.stringify(
                   team.data.tools.iv,
@@ -166,6 +174,7 @@ export default class EnforceUrlFormat extends Migration {
           });
 
           if (shouldUpdate) {
+            // eslint-disable-next-line no-console
             console.log(
               `User ${user.id} does not have a valid social website(s). Adding https:// prefix.`,
             );
@@ -176,6 +185,7 @@ export default class EnforceUrlFormat extends Migration {
                 },
               });
             } else {
+              // eslint-disable-next-line no-console
               console.log(
                 `Before: ${JSON.stringify(
                   user.data.social.iv,
@@ -199,6 +209,7 @@ export default class EnforceUrlFormat extends Migration {
   };
   down = async (): Promise<void> => {
     // No down migration
+    // eslint-disable-next-line no-console
     console.log('No down migration for this migration.');
   };
 }

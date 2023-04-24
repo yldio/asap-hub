@@ -36,7 +36,7 @@ describe('Contentful event webhook', () => {
     expect(res.statusCode).toStrictEqual(401);
   });
 
-  test('Should return 401 when the request has an invalid authentication token', async () => {
+  test('Should return 403 when the request has an invalid authentication token', async () => {
     const event = getApiGatewayEvent({
       headers: {
         Authorization: 'invalid-token',
@@ -45,7 +45,7 @@ describe('Contentful event webhook', () => {
     });
     const res = (await handler(event)) as APIGatewayProxyResult;
 
-    expect(res.statusCode).toStrictEqual(401);
+    expect(res.statusCode).toStrictEqual(403);
   });
 
   test('Should put the team-published event into the event bus and return 200', async () => {

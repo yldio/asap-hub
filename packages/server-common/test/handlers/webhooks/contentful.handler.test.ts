@@ -34,9 +34,9 @@ describe('Contentful event webhook', () => {
 
   test('Should return 401 when the request has an invalid authentication token', async () => {
     const payload = getNewsPublishContentfulWebhookPayload();
-    const headers = { Authorization: 'invalid-token' };
+    const headers = { authorization: 'invalid-token' };
     const event = getLambdaRequest(payload, headers);
-    expect(handler(event)).rejects.toThrowError('Unauthorized');
+    expect(handler(event)).rejects.toThrowError('Forbidden');
     expect(evenBridgeMock.putEvents).not.toHaveBeenCalled();
   });
 
@@ -67,5 +67,42 @@ describe('Contentful event webhook', () => {
         },
       ],
     });
+    expect(logger.debug).toBeCalledWith(
+      expect.stringMatching(/Event added to event-bus/i),
+    );
+  });
+
+  test('Should log errors when they occur', async () => {
+    const payload = getNewsPublishContentfulWebhookPayload();
+    const headers = {
+      authorization: contentfulWebhookAuthenticationToken,
+      'x-contentful-topic': 'publish',
+    };
+    evenBridgeMock.putEvents = jest
+      .fn()
+      .mockRejectedValue(new Error('error message from putEvents'));
+    const handlerWithError = contentfulHandlerFactory(
+      contentfulWebhookAuthenticationToken,
+      evenBridgeMock,
+      eventBus,
+      eventSource,
+      logger,
+    );
+    const event = getLambdaRequest(payload, headers);
+    const { statusCode } = await handlerWithError(event);
+    expect(logger.error).toBeCalledTimes(2);
+    expect(logger.error).nthCalledWith(
+      1,
+      expect.stringMatching(
+        /An error occurred putting onto the event bus event-bus/i,
+      ),
+    );
+    expect(logger.error).nthCalledWith(
+      2,
+      expect.stringMatching(
+        /The error message\: error message from putEvents/i,
+      ),
+    );
+    expect(statusCode).toStrictEqual(500);
   });
 });

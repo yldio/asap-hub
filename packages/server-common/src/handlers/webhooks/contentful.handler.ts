@@ -2,15 +2,8 @@ import { ContentfulWebhookPayload } from '@asap-hub/contentful';
 import { WebhookDetail, WebhookDetailType } from '@asap-hub/model';
 import { framework as lambda } from '@asap-hub/services-common';
 import { EventBridge } from '@aws-sdk/client-eventbridge';
-import Boom from '@hapi/boom';
 import { Logger } from '../../utils';
-
-const validateContentfulRequest = (
-  request: lambda.Request,
-  webhookAuthenticationToken: string,
-): request is lambda.Request<ContentfulWebhookPayload> =>
-  !!request.headers.authorization &&
-  request.headers.authorization === webhookAuthenticationToken;
+import { validateContentfulRequest } from '../../utils/validate-contentful-request';
 
 const getDetailTypeFromRequest = (
   request: lambda.Request<ContentfulWebhookPayload>,
@@ -43,17 +36,11 @@ export const contentfulHandlerFactory =
     request: lambda.Request<ContentfulWebhookPayload>,
   ) => Promise<{ statusCode: number }>) =>
   async (request) => {
-    if (!validateContentfulRequest(request, webhookAuthenticationToken)) {
-      logger.error('Unauthorized request');
-      throw Boom.unauthorized();
-    }
+    validateContentfulRequest(request, webhookAuthenticationToken);
 
     try {
       const detailType = getDetailTypeFromRequest(request);
       const detail = getDetailFromRequest(request);
-
-      logger.info(`Event detail type ${detailType}`);
-      logger.info(`Event detail ${detail}`);
 
       await eventBridge.putEvents({
         Entries: [
@@ -65,16 +52,17 @@ export const contentfulHandlerFactory =
           },
         ],
       });
-      logger.info(`Event added to ${eventBus}`);
+      logger.debug(
+        `Event added to ${eventBus} detail Type: ${detailType} detail: ${JSON.stringify(
+          detail,
+        )}`,
+      );
 
       return {
         statusCode: 200,
       };
     } catch (err) {
-      logger.error(
-        `An error occurred putting onto the eventBus ${eventBus}`,
-        err,
-      );
+      logger.error(`An error occurred putting onto the event bus ${eventBus}`);
       if (err instanceof Error) {
         logger.error(`The error message: ${err.message}`);
       }

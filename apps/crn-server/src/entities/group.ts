@@ -42,6 +42,7 @@ export const parseGraphQLGroup = (
         {
           user: parseGraphQLUser(leader.user[0]),
           role: leader.role as GroupRole,
+          inactiveSinceDate: leader.inactiveSinceDate,
         },
       ];
     },

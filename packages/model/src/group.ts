@@ -18,6 +18,7 @@ export type GroupRole = (typeof groupRole)[number];
 export type GroupLeader = {
   readonly user: UserResponse;
   readonly role: GroupRole;
+  readonly inactiveSinceDate?: string;
 };
 
 export const isGroupRole = (data: string | null): data is GroupRole =>

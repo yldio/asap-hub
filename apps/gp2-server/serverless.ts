@@ -345,7 +345,7 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        EVENT_BUS: 'asap-events-${self:provider.stage}',
+        EVENT_BUS: eventBus,
         EVENT_SOURCE: eventBusSourceContentful,
         SENTRY_DSN: sentryDsnHandlers,
         CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN:

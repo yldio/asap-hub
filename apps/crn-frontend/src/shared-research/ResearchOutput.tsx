@@ -15,9 +15,9 @@ const ResearchOutput: React.FC = () => {
   );
 
   const publishedNowPath = useRouteMatch({
-    path: `${
-      sharedResearch({}).researchOutput({ researchOutputId }).$
-    }/publishedNow`,
+    path: sharedResearch({})
+      .researchOutput({ researchOutputId })
+      .researchOutputPublished({ researchOutputId }).$,
     exact: true,
   })?.path;
 

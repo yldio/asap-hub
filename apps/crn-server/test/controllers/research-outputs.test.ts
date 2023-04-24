@@ -1,8 +1,6 @@
 import { GenericError, NotFoundError } from '@asap-hub/errors';
 import { when } from 'jest-when';
-import ResearchOutputs, {
-  ResearchOutputUpdateData,
-} from '../../src/controllers/research-outputs';
+import ResearchOutputs from '../../src/controllers/research-outputs';
 import { FetchResearchOutputOptions } from '../../src/data-providers/research-outputs.data-provider';
 import {
   getResearchOutputCreateData,
@@ -575,29 +573,27 @@ describe('ResearchOutputs controller', () => {
           ...getResearchOutputUpdateData(),
           published: false,
         }),
-      ).rejects.toThrow(Error);
+      ).rejects.toThrow(
+        expect.objectContaining({
+          message: 'Cannot unpublish a research output',
+        }),
+      );
     });
 
     test('Should update a published existing research output and return it', async () => {
-      const researchOutputUpdateData: ResearchOutputUpdateData = {
-        ...getResearchOutputUpdateData(),
-      };
       researchOutputDataProviderMock.update.mockResolvedValueOnce(
         researchOutputId,
       );
 
-      const result = await researchOutputs.update(
-        researchOutputId,
-        researchOutputUpdateData,
-      );
-
-      const researchOutputUpdateDataObject =
-        getResearchOutputUpdateDataObject();
+      const result = await researchOutputs.update(researchOutputId, {
+        ...getResearchOutputUpdateData(),
+        published: true,
+      });
 
       expect(result).toEqual(getResearchOutputResponse());
       expect(researchOutputDataProviderMock.update).toBeCalledWith(
         researchOutputId,
-        researchOutputUpdateDataObject,
+        getResearchOutputUpdateDataObject(),
         { publish: true },
       );
     });

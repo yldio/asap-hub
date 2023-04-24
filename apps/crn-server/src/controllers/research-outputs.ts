@@ -145,7 +145,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       currentResearchOutput.published &&
       !researchOutputUpdateData.published
     ) {
-      throw Boom.badRequest();
+      throw Boom.badRequest('Cannot unpublish a research output');
     }
 
     await this.validateResearchOutput(

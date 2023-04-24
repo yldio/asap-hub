@@ -10,6 +10,7 @@ import {
   logger,
   createAssetUrl,
   createAsset,
+  paginatedFetch,
 } from '../utils';
 import { migrateFromSquidexToContentfulFactory } from '../utils/migration';
 import { date } from '../utils/normalise';
@@ -33,24 +34,15 @@ export const migrateUsers = async () => {
 
   await clearContentfulEntries(contentfulEnvironment, 'teamMembership');
 
-  const fetchAllData = async (skip: number = 0): Promise<UserItem[]> => {
-    const PAGE_SIZE = 100;
-    const { queryUsersContentsWithTotal } = await squidexGraphqlClient.request<
-      FetchUsersQuery,
-      FetchUsersQueryVariables
-    >(usersQuery, { take: PAGE_SIZE, skip });
-    if (!queryUsersContentsWithTotal || !queryUsersContentsWithTotal.items) {
-      return [];
-    }
-    if (
-      queryUsersContentsWithTotal.total >
-      skip + queryUsersContentsWithTotal.items.length
-    ) {
-      const nextPage: UserItem[] = await fetchAllData(skip + PAGE_SIZE);
-      return [...(queryUsersContentsWithTotal.items || []), ...nextPage];
-    }
-    return queryUsersContentsWithTotal.items || [];
-  };
+  const fetchAllData = async (): Promise<UserItem[]> =>
+    paginatedFetch<UserItem>(async (take: number, skip: number) => {
+      const { queryUsersContentsWithTotal } =
+        await squidexGraphqlClient.request<
+          FetchUsersQuery,
+          FetchUsersQueryVariables
+        >(usersQuery, { take, skip });
+      return queryUsersContentsWithTotal;
+    });
 
   const fetchData = async (): Promise<UserItem[]> => {
     const entries = await fetchAllData();

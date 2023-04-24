@@ -6244,6 +6244,7 @@ export type WorkingGroupsDataInputDto = {
 
 /** The structure of the Leaders nested schema. */
 export type WorkingGroupsDataLeadersChildDto = {
+  inactiveSinceDate: Maybe<Scalars['Instant']>;
   role: Maybe<Scalars['String']>;
   user: Maybe<Array<Users>>;
   workstreamRole: Maybe<Scalars['String']>;
@@ -6251,6 +6252,7 @@ export type WorkingGroupsDataLeadersChildDto = {
 
 /** The structure of the Leaders nested schema. */
 export type WorkingGroupsDataLeadersChildInputDto = {
+  inactiveSinceDate: InputMaybe<Scalars['Instant']>;
   role: InputMaybe<Scalars['String']>;
   user: InputMaybe<Array<Scalars['String']>>;
   workstreamRole: InputMaybe<Scalars['String']>;
@@ -6268,11 +6270,13 @@ export type WorkingGroupsDataLeadersInputDto = {
 
 /** The structure of the Members nested schema. */
 export type WorkingGroupsDataMembersChildDto = {
+  inactiveSinceDate: Maybe<Scalars['Instant']>;
   user: Maybe<Array<Users>>;
 };
 
 /** The structure of the Members nested schema. */
 export type WorkingGroupsDataMembersChildInputDto = {
+  inactiveSinceDate: InputMaybe<Scalars['Instant']>;
   user: InputMaybe<Array<Scalars['String']>>;
 };
 
@@ -6343,16 +6347,21 @@ export type FetchCalendarsQuery = {
 };
 
 export type FetchExternalAuthorsQueryVariables = Exact<{
-  [key: string]: never;
+  take: InputMaybe<Scalars['Int']>;
+  skip: InputMaybe<Scalars['Int']>;
 }>;
 
 export type FetchExternalAuthorsQuery = {
-  queryExternalAuthorsContents: Maybe<
-    Array<
-      Pick<ExternalAuthors, 'id'> & {
-        flatData: Pick<ExternalAuthorsFlatDataDto, 'name' | 'orcid'>;
-      }
-    >
+  queryExternalAuthorsContentsWithTotal: Maybe<
+    Pick<ExternalAuthorsResultDto, 'total'> & {
+      items: Maybe<
+        Array<
+          Pick<ExternalAuthors, 'id'> & {
+            flatData: Pick<ExternalAuthorsFlatDataDto, 'name' | 'orcid'>;
+          }
+        >
+      >;
+    }
   >;
 };
 
@@ -6597,31 +6606,73 @@ export const FetchExternalAuthorsDocument = {
       kind: 'OperationDefinition',
       operation: 'query',
       name: { kind: 'Name', value: 'FetchExternalAuthors' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'take' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+      ],
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'queryExternalAuthorsContents' },
+            name: {
+              kind: 'Name',
+              value: 'queryExternalAuthorsContentsWithTotal',
+            },
             arguments: [
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'top' },
-                value: { kind: 'IntValue', value: '100' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'take' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
               },
             ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'flatData' },
+                  name: { kind: 'Name', value: 'items' },
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'orcid' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'orcid' },
+                            },
+                          ],
+                        },
+                      },
                     ],
                   },
                 },

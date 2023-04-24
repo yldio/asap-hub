@@ -1,5 +1,6 @@
 import { Environment, Entry } from 'contentful-management';
 import { logger } from './logs';
+import { paginatedFetch } from './fetch';
 
 export const checkIfEntryAlreadyExistsInContentful = async (
   contentfulEnvironment: Environment,
@@ -23,24 +24,14 @@ export const checkIfEntryAlreadyExistsInContentful = async (
 export const fetchContentfulEntries = async (
   contentfulEnvironment: Environment,
   contentType: string,
-  skip: number = 0,
-): Promise<Entry[]> => {
-  const PAGE_SIZE = 100;
-  const entries = await contentfulEnvironment.getEntries({
-    content_type: contentType,
-    skip,
-    limit: PAGE_SIZE,
-  });
-  if (entries.total > skip + entries.items.length) {
-    const nextPage = await fetchContentfulEntries(
-      contentfulEnvironment,
-      contentType,
-      skip + PAGE_SIZE,
-    );
-    return [...(entries.items || []), ...nextPage];
-  }
-  return entries.items || [];
-};
+): Promise<Entry[]> =>
+  paginatedFetch<Entry>(async (limit: number, skip: number) =>
+    contentfulEnvironment.getEntries({
+      content_type: contentType,
+      skip,
+      limit,
+    }),
+  );
 
 export const clearContentfulEntries = async (
   contentfulEnvironment: Environment,

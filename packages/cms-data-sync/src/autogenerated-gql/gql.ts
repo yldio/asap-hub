@@ -5,7 +5,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 const documents = {
   '\n  query FetchCalendars {\n    queryCalendarsContents(top: 100) {\n      id\n      flatData {\n        googleCalendarId\n        name\n        color\n      }\n    }\n  }\n':
     graphql.FetchCalendarsDocument,
-  '\n  query FetchExternalAuthors {\n    queryExternalAuthorsContents(top: 100) {\n      id\n      flatData {\n        name\n        orcid\n      }\n    }\n  }\n':
+  '\n  query FetchExternalAuthors($take: Int, $skip: Int) {\n    queryExternalAuthorsContentsWithTotal(top: $take, skip: $skip) {\n      total\n      items {\n        id\n        flatData {\n          name\n          orcid\n        }\n      }\n    }\n  }\n':
     graphql.FetchExternalAuthorsDocument,
   '\n  query FetchLabs($take: Int, $skip: Int) {\n    queryLabsContentsWithTotal(top: $take, skip: $skip) {\n      total\n      items {\n        id\n        created\n        lastModified\n        version\n        flatData {\n          name\n        }\n      }\n    }\n  }\n':
     graphql.FetchLabsDocument,
@@ -23,8 +23,8 @@ export function gql(
   source: '\n  query FetchCalendars {\n    queryCalendarsContents(top: 100) {\n      id\n      flatData {\n        googleCalendarId\n        name\n        color\n      }\n    }\n  }\n',
 ): (typeof documents)['\n  query FetchCalendars {\n    queryCalendarsContents(top: 100) {\n      id\n      flatData {\n        googleCalendarId\n        name\n        color\n      }\n    }\n  }\n'];
 export function gql(
-  source: '\n  query FetchExternalAuthors {\n    queryExternalAuthorsContents(top: 100) {\n      id\n      flatData {\n        name\n        orcid\n      }\n    }\n  }\n',
-): (typeof documents)['\n  query FetchExternalAuthors {\n    queryExternalAuthorsContents(top: 100) {\n      id\n      flatData {\n        name\n        orcid\n      }\n    }\n  }\n'];
+  source: '\n  query FetchExternalAuthors($take: Int, $skip: Int) {\n    queryExternalAuthorsContentsWithTotal(top: $take, skip: $skip) {\n      total\n      items {\n        id\n        flatData {\n          name\n          orcid\n        }\n      }\n    }\n  }\n',
+): (typeof documents)['\n  query FetchExternalAuthors($take: Int, $skip: Int) {\n    queryExternalAuthorsContentsWithTotal(top: $take, skip: $skip) {\n      total\n      items {\n        id\n        flatData {\n          name\n          orcid\n        }\n      }\n    }\n  }\n'];
 export function gql(
   source: '\n  query FetchLabs($take: Int, $skip: Int) {\n    queryLabsContentsWithTotal(top: $take, skip: $skip) {\n      total\n      items {\n        id\n        created\n        lastModified\n        version\n        flatData {\n          name\n        }\n      }\n    }\n  }\n',
 ): (typeof documents)['\n  query FetchLabs($take: Int, $skip: Int) {\n    queryLabsContentsWithTotal(top: $take, skip: $skip) {\n      total\n      items {\n        id\n        created\n        lastModified\n        version\n        flatData {\n          name\n        }\n      }\n    }\n  }\n'];

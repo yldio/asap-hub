@@ -311,6 +311,20 @@
               "isRequiredOnPublish": false,
               "isHalfWidth": true
             }
+          },
+          {
+            "name": "inactiveSinceDate",
+            "properties": {
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": true,
+              "fieldType": "DateTime",
+              "editor": "Date",
+              "label": "Inactive Since"
+            },
+            "isLocked": false,
+            "isHidden": false,
+            "isDisabled": false
           }
         ]
       },

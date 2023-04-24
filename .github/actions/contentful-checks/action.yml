@@ -14,9 +14,11 @@ inputs:
   contentful-environment-id:
     description: 'Contentful environment name'
     required: true
+    type: string
   app:
     description: 'crn or gp2'
     required: true
+    type: string
 
 outputs:
   contentful-env:
@@ -46,6 +48,13 @@ runs:
         CONTENTFUL_ENV_ID: ${{ inputs.contentful-master-env }}
         CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.contentful-token }}
         APP: ${{ inputs.app }}
+      # Determine whether the Contentful webhook setup has changed since master
+    - uses: technote-space/get-diff-action@v6
+      with:
+        PATTERNS: |
+          +packages/contentful/scripts/setup-webhook.ts
+        FILES: |
+          setup-webhook.ts
       # Determine whether a dedicated environment is needed for this branch
       # otherwise default to $CONTENTFUL_MASTER_ENV
     - name: Determine Environment

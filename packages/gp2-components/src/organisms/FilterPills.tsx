@@ -27,6 +27,9 @@ const containerStyles = css({
   width: '100%',
   gap: rem(8),
   paddingTop: rem(24),
+  ':empty': {
+    display: 'none',
+  },
 });
 
 const getLabelFromArray = (

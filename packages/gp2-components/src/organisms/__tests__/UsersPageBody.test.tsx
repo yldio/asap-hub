@@ -57,7 +57,7 @@ describe('UsersPageBody', () => {
   });
 
   describe('Pagination information', () => {
-    it('renders "Showing 0-0 of 0 results" when there are no results', () => {
+    it('renders UsersEmpty State when there are no results', () => {
       const noUsers = {
         items: [],
         total: 0,
@@ -74,7 +74,12 @@ describe('UsersPageBody', () => {
           users={noUsers}
         />,
       );
-      expect(screen.getByText('Showing 0-0 of 0 results')).toBeVisible();
+      expect(
+        screen.queryByText('Showing 0-0 of 0 results'),
+      ).not.toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', { name: 'No users have been found.' }),
+      ).toBeVisible();
     });
 
     describe('first page', () => {

@@ -51,6 +51,7 @@ export const detailHeaderStyles = css({
   display: 'flex',
   flexDirection: 'column',
   gap: rem(32),
+  borderBottom: `1px solid ${colors.neutral500.rgb}`,
 });
 
 export const mainStyles = css({

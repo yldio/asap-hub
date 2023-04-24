@@ -137,22 +137,28 @@ export default class EnforceUrlFormat extends Migration {
         if (user.data.social?.iv) {
           let shouldUpdate = false;
 
-          const social = user.data.social.iv.map((social) => {
-            let newSocial = social;
+          const social = user.data.social.iv.map((socialValue) => {
+            let newSocial = socialValue;
 
-            if (social.website1 && !social.website1.startsWith('http')) {
+            if (
+              socialValue.website1 &&
+              !socialValue.website1.startsWith('http')
+            ) {
               shouldUpdate = true;
               newSocial = {
                 ...newSocial,
-                website1: `https://${social.website1}`,
+                website1: `https://${socialValue.website1}`,
               };
             }
 
-            if (social.website2 && !social.website2.startsWith('http')) {
+            if (
+              socialValue.website2 &&
+              !socialValue.website2.startsWith('http')
+            ) {
               shouldUpdate = true;
               newSocial = {
                 ...newSocial,
-                website2: `https://${social.website2}`,
+                website2: `https://${socialValue.website2}`,
               };
             }
 
@@ -191,5 +197,8 @@ export default class EnforceUrlFormat extends Migration {
     await this.processTeams();
     await this.processUsers();
   };
-  down = async (): Promise<void> => {};
+  down = async (): Promise<void> => {
+    // No down migration
+    console.log('No down migration for this migration.');
+  };
 }

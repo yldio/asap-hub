@@ -74,7 +74,7 @@ describe('Migrate external authors', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    jest.resetAllMocks();
   });
 
   afterAll(() => {
@@ -93,6 +93,26 @@ describe('Migrate external authors', () => {
     expect(clearContentfulEntriesMock).toHaveBeenCalledWith(
       expect.anything(),
       'externalAuthors',
+    );
+  });
+
+  it('fetches all pages of data from squidex', async () => {
+    squidexGraphqlClientMock.request.mockResolvedValue({
+      queryExternalAuthorsContentsWithTotal: {
+        total: 200,
+        items: Array(100).fill(externalAuthorWithOrcid),
+      },
+    });
+
+    await migrateExternalAuthors();
+
+    expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+      expect.anything(),
+      { take: 100, skip: 0 },
+    );
+    expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+      expect.anything(),
+      { take: 100, skip: 100 },
     );
   });
 

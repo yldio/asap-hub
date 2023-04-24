@@ -4,7 +4,7 @@
   "license": "MIT",
   "workspaces": [
     "apps/*",
-    "packages/*",
+    "packages/**",
     "@types/*"
   ],
   "engines": {
@@ -23,7 +23,7 @@
     "algolia:set-settings": "yarn workspace @asap-hub/asap-cli algolia:set-settings",
     "build": "yarn build:typecheck && yarn build:babel && yarn typecheck && yarn build:frontend",
     "build:babel": "yarn workspaces foreach -vp -j 2 run build:babel",
-    "build:frontend": "yarn workspaces foreach -j 2 --exclude asap-hub -vp run build",
+    "build:frontend": "yarn workspaces foreach -j 2 --exclude asap-hub --exclude \"*/contentful-app-*\" -vp run build",
     "build:typecheck": "tsc -b -v $(node scripts/get-composite-ts-projects.js)",
     "check:packages": "yarn install --immutable --immutable-cache",
     "clean": "rimraf \"{apps,packages}/*/{build*,*.tsbuildinfo}\" \"coverage\" \".serverless*\"",

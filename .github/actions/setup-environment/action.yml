@@ -29,9 +29,24 @@ outputs:
   cache-prefix-transpile:
     description: 'Cache Prefix Transpile'
     value: ${{ steps.vars.outputs.cache-prefix-transpile }}
+  contentful-app-disabled-fields:
+    description: 'Contentful App Extension Disabled Fields Id'
+    value: ${{ steps.vars.outputs.contentful-app-disabled-fields }}
+  contentful-app-event-additional-materials:
+    description: 'Contentful App Extension Event Additional Materials Id'
+    value: ${{ steps.vars.outputs.contentful-app-event-additional-materials }}
+  contentful-app-event-speakers-title:
+    description: 'Contentful App Extension Event Speakers Title Id'
+    value: ${{ steps.vars.outputs.contentful-app-event-speakers-title }}
+  contentful-app-field-as-updated-at:
+    description: 'Contentful App Extension Field As Updated At Id'
+    value: ${{ steps.vars.outputs.contentful-app-field-as-updated-at }}
   contentful-environment:
     description: 'Contentful Environment'
     value: ${{ steps.vars.outputs.contentful-environment }}
+  contentful-organization-id:
+    description: 'Contentful Organization Id'
+    value: ${{ steps.vars.outputs.contentful-organization-id }}
   crn-algolia-api-key-name:
     description: 'CRN Algolia Api key SSM Name'
     value: ${{ steps.vars.outputs.crn-algolia-api-key-name }}

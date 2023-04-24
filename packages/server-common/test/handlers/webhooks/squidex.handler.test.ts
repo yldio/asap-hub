@@ -6,6 +6,7 @@ import { squidexHandlerFactory } from '../../../src/handlers/webhooks';
 import { getUserWebhookPayload } from '../../fixtures/users.fixtures';
 import { getLambdaRequest } from '../../helpers/events';
 import { createSignedHeader } from '../../helpers/webhooks';
+import { loggerMock as logger } from '../../mocks/logger.mock';
 
 describe('Squidex event webhook', () => {
   const eventBus = 'event-bus';
@@ -14,9 +15,6 @@ describe('Squidex event webhook', () => {
   const evenBridgeMock = {
     putEvents: jest.fn().mockReturnValue({ promise: jest.fn() }),
   } as unknown as jest.Mocked<EventBridge>;
-  const logger = {
-    debug: jest.fn(),
-  } as any;
   const handler = squidexHandlerFactory(
     evenBridgeMock,
     logger,

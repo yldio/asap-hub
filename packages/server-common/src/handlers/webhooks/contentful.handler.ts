@@ -3,6 +3,7 @@ import { WebhookDetail, WebhookDetailType } from '@asap-hub/model';
 import { framework as lambda } from '@asap-hub/services-common';
 import { EventBridge } from '@aws-sdk/client-eventbridge';
 import Boom from '@hapi/boom';
+import { Logger } from '../../utils';
 
 const validateContentfulRequest = (
   request: lambda.Request,
@@ -37,29 +38,48 @@ export const contentfulHandlerFactory =
     eventBridge: EventBridge,
     eventBus: string,
     eventSource: string,
+    logger: Logger,
   ): ((
     request: lambda.Request<ContentfulWebhookPayload>,
   ) => Promise<{ statusCode: number }>) =>
   async (request) => {
     if (!validateContentfulRequest(request, webhookAuthenticationToken)) {
+      logger.error('Unauthorized request');
       throw Boom.unauthorized();
     }
 
-    const detailType = getDetailTypeFromRequest(request);
-    const detail = getDetailFromRequest(request);
+    try {
+      const detailType = getDetailTypeFromRequest(request);
+      const detail = getDetailFromRequest(request);
 
-    await eventBridge.putEvents({
-      Entries: [
-        {
-          EventBusName: eventBus,
-          Source: eventSource,
-          DetailType: detailType,
-          Detail: JSON.stringify(detail),
-        },
-      ],
-    });
+      logger.info(`Event detail type ${detailType}`);
+      logger.info(`Event detail ${detail}`);
 
-    return {
-      statusCode: 200,
-    };
+      await eventBridge.putEvents({
+        Entries: [
+          {
+            EventBusName: eventBus,
+            Source: eventSource,
+            DetailType: detailType,
+            Detail: JSON.stringify(detail),
+          },
+        ],
+      });
+      logger.info(`Event added to ${eventBus}`);
+
+      return {
+        statusCode: 200,
+      };
+    } catch (err) {
+      logger.error(
+        `An error occurred putting onto the eventBus ${eventBus}`,
+        err,
+      );
+      if (err instanceof Error) {
+        logger.error(`The error message: ${err.message}`);
+      }
+      return {
+        statusCode: 500,
+      };
+    }
   };

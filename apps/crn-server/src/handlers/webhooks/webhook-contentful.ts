@@ -11,6 +11,7 @@ import {
   eventBus,
   eventSource,
 } from '../../config';
+import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 
 export const contentfulWebhookFactory = (
@@ -21,6 +22,7 @@ export const contentfulWebhookFactory = (
     eventBridge,
     eventBus,
     eventSource,
+    logger,
   );
   return lambda.http(handler);
 };

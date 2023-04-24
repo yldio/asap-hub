@@ -4,6 +4,7 @@ import { EventBridge } from '@aws-sdk/client-eventbridge';
 import { contentfulHandlerFactory } from '../../../src/handlers/webhooks';
 import { getNewsPublishContentfulWebhookPayload } from '../../fixtures/news.fixtures';
 import { getLambdaRequest } from '../../helpers/events';
+import { loggerMock as logger } from '../../mocks/logger.mock';
 
 describe('Contentful event webhook', () => {
   const eventBus = 'event-bus';
@@ -18,6 +19,7 @@ describe('Contentful event webhook', () => {
     evenBridgeMock,
     eventBus,
     eventSource,
+    logger,
   );
 
   beforeEach(jest.resetAllMocks);

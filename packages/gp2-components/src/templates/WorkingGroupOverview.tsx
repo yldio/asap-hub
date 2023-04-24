@@ -37,7 +37,7 @@ const contentStyles = css({
   marginTop: rem(32),
 });
 const cardStyles = css({
-  padding: `${rem(32)} ${rem(24)}`,
+  padding: rem(24),
   overflowX: 'scroll',
 });
 const columnStyles = css({

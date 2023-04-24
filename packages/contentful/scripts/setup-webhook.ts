@@ -1,5 +1,5 @@
 import * as contentful from 'contentful-management';
-import { getWebhook } from './helpers';
+import { getWebhook, getWebhookId } from './helpers';
 
 const spaceId = process.env.CONTENTFUL_SPACE_ID!;
 const contentfulManagementAccessToken =
@@ -21,20 +21,20 @@ const app = async () => {
   const space = await client.getSpace(spaceId);
   const webhook = await getWebhook(environmentId, space);
 
-  const webhookName = `${environmentName} Webhook`;
-  const webhookUrl = `${apiUrl}/webhook/contentful`;
-  const webhookTopics = [
+  const name = `${environmentId} Webhook`;
+  const url = `${apiUrl}/webhook/contentful`;
+  const topics = [
     'Entry.save',
     'Entry.publish',
     'Entry.unpublish',
     'Entry.delete',
   ];
-  const webhookFilters: contentful.WebhookFilter[] = [
+  const filters: contentful.WebhookFilter[] = [
     {
       equals: [{ doc: 'sys.environment.sys.id' }, contentfulEnvironment],
     },
   ];
-  const webhookHeaders = [
+  const headers = [
     {
       key: 'Authorization',
       value: contentfulWebhookAuthenticationToken,
@@ -43,19 +43,20 @@ const app = async () => {
   ];
 
   if (webhook) {
-    webhook.url = webhookUrl;
-    webhook.topics = webhookTopics;
-    webhook.filters = webhookFilters;
-    webhook.headers = webhookHeaders;
+    webhook.url = url;
+    webhook.topics = topics;
+    webhook.filters = filters;
+    webhook.headers = headers;
 
     await webhook.update();
   } else {
-    space.createWebhookWithId(`${environmentId.toLowerCase()}-webhook`, {
-      name: webhookName,
-      url: webhookUrl,
-      topics: webhookTopics,
-      filters: webhookFilters,
-      headers: webhookHeaders,
+    const webhookId = getWebhookId(environmentId);
+    space.createWebhookWithId(webhookId, {
+      name,
+      url,
+      topics,
+      filters,
+      headers,
     });
   }
 };

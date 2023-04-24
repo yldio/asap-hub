@@ -1,11 +1,14 @@
 import * as contentful from 'contentful-management';
 
+export const getWebhookId = (id: string) => `${id.toLowerCase()}-webhook`;
+
 export const getWebhook = async (
   id: string,
   space: contentful.Space,
 ): Promise<contentful.WebHooks | undefined> => {
   try {
-    return await space.getWebhook(`${id.toLowerCase()}-webhook`);
+    const webhookId = getWebhookId(id);
+    return await space.getWebhook(webhookId);
   } catch (error) {
     if (!(error instanceof Error)) {
       throw error;

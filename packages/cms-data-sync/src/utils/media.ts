@@ -14,7 +14,6 @@ export const createMediaEntries = async (
         await checkIfEntryAlreadyExistsInContentful(contentfulEnvironment, id);
       if (!isMediaAlreadyInContentful) {
         console.log(`Creating media with id ${id}.`);
-
         return contentfulEnvironment.createEntryWithId('media', id, fields);
       }
       return null;

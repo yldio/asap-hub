@@ -398,6 +398,7 @@ __metadata:
     graphql: 15.8.0
     graphql-tag: 2.12.6
     graphql-typescript-integration: 1.2.1
+    limiter: ^2.1.0
     prettier: 2.8.7
     ts-node: 10.9.1
   languageName: unknown
@@ -31086,6 +31087,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"just-performance@npm:4.3.0":
+  version: 4.3.0
+  resolution: "just-performance@npm:4.3.0"
+  checksum: 37e226e308689b27ad7e0cdb2b2181c8be85f28cb0026db4b68c189f4894828a2865ea4a7a5f3488f4e3390bac1f9428fc6e40a554c068b08e5992e26920e376
+  languageName: node
+  linkType: hard
+
 "jwa@npm:^1.4.1":
   version: 1.4.1
   resolution: "jwa@npm:1.4.1"
@@ -31459,6 +31467,15 @@ __metadata:
   version: 1.1.5
   resolution: "limiter@npm:1.1.5"
   checksum: 2d51d3a8bef131aada820b76530f8223380a0079aa0fffdfd3ec47ac2f65763225cb4c62a2f22347f4898c5eeb248edfec991c4a4f5b608dfca0aaa37ac48071
+  languageName: node
+  linkType: hard
+
+"limiter@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "limiter@npm:2.1.0"
+  dependencies:
+    just-performance: 4.3.0
+  checksum: 989092bfdafeefb37bd139f6451f165d449a628cd6fbe9308ed5147a9af24631f031e16466a3e48283418e0bea45c06aa1710f8f8945bc56ea7ef01f94ed5c65
   languageName: node
   linkType: hard
 

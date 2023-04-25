@@ -234,6 +234,21 @@ describe('User data provider', () => {
       expect(result!._tags).toEqual(['CRN Member']);
     });
 
+    test('should fall back to `firstPublishedAt` if `createdDate` does not exist', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: getContentfulGraphqlUser({
+          sys: {
+            firstPublishedAt: '2018-02-14T12:00:00.000Z',
+          },
+          createdDate: null,
+        }),
+      });
+
+      const result = await userDataProvider.fetchById('123');
+
+      expect(result!.createdDate).toEqual('2018-02-14T12:00:00.000Z');
+    });
+
     describe('default values', () => {
       const stringFields = {
         email: null,
@@ -515,6 +530,12 @@ describe('User data provider', () => {
 
     beforeEach(() => {
       environmentMock.getEntry.mockResolvedValueOnce(entry);
+      jest.useFakeTimers({
+        now: new Date('2023-01-01T12:00:00.000Z'),
+      });
+    });
+    afterEach(() => {
+      jest.useRealTimers();
     });
 
     test('fetches entry from contentful and passes to `patchAndPublish`', async () => {

@@ -8012,6 +8012,20 @@ input ResearchOutputsDataDescriptionInputDto {
 }
 
 """
+The structure of the Description field of the Research Outputs content type.
+"""
+type ResearchOutputsDataDescriptionMDDto {
+  iv: String
+}
+
+"""
+The structure of the Description field of the Research Outputs content input type.
+"""
+input ResearchOutputsDataDescriptionMDInputDto {
+  iv: String
+}
+
+"""
 The structure of the Document type field of the Research Outputs content type.
 """
 type ResearchOutputsDataDocumentTypeDto {
@@ -8056,9 +8070,11 @@ type ResearchOutputsDataDto {
   authors: ResearchOutputsDataAuthorsDto
   createdBy: ResearchOutputsDataCreatedByDto
   description: ResearchOutputsDataDescriptionDto
+  descriptionMD: ResearchOutputsDataDescriptionMDDto
   documentType: ResearchOutputsDataDocumentTypeDto
   doi: ResearchOutputsDataDoiDto
   environments: ResearchOutputsDataEnvironmentsDto
+  keywords: ResearchOutputsDataKeywordsDto
   labCatalogNumber: ResearchOutputsDataLabCatalogNumberDto
   labs: ResearchOutputsDataLabsDto
   lastUpdatedPartial: ResearchOutputsDataLastUpdatedPartialDto
@@ -8105,9 +8121,11 @@ input ResearchOutputsDataInputDto {
   authors: ResearchOutputsDataAuthorsInputDto
   createdBy: ResearchOutputsDataCreatedByInputDto
   description: ResearchOutputsDataDescriptionInputDto
+  descriptionMD: ResearchOutputsDataDescriptionMDInputDto
   documentType: ResearchOutputsDataDocumentTypeInputDto
   doi: ResearchOutputsDataDoiInputDto
   environments: ResearchOutputsDataEnvironmentsInputDto
+  keywords: ResearchOutputsDataKeywordsInputDto
   labCatalogNumber: ResearchOutputsDataLabCatalogNumberInputDto
   labs: ResearchOutputsDataLabsInputDto
   lastUpdatedPartial: ResearchOutputsDataLastUpdatedPartialInputDto
@@ -8127,6 +8145,20 @@ input ResearchOutputsDataInputDto {
   usageNotes: ResearchOutputsDataUsageNotesInputDto
   usedInAPublication: ResearchOutputsDataUsedInAPublicationInputDto
   workingGroups: ResearchOutputsDataWorkingGroupsInputDto
+}
+
+"""
+The structure of the Keywords field of the Research Outputs content type.
+"""
+type ResearchOutputsDataKeywordsDto {
+  iv: [ResearchTags!]
+}
+
+"""
+The structure of the Keywords field of the Research Outputs content input type.
+"""
+input ResearchOutputsDataKeywordsInputDto {
+  iv: [String!]
 }
 
 """
@@ -8457,12 +8489,14 @@ type ResearchOutputsFlatDataDto {
   The Hub will only show text or hyperlinks. Other formatting will be ignored (e.g. bold, color, size)
   """
   description: String
+  descriptionMD: String
   documentType: String
   """
   DOIs must start with a number and cannot be a URL
   """
   doi: String
   environments: [ResearchTags!]
+  keywords: [ResearchTags!]
   """
   If this is a hyperlink, please start with "http://" or "https://"
   """
@@ -11090,6 +11124,7 @@ input WorkingGroupsDataInputDto {
 The structure of the Leaders nested schema.
 """
 type WorkingGroupsDataLeadersChildDto {
+  inactiveSinceDate: Instant
   role: String
   user: [Users!]
   workstreamRole: String
@@ -11099,6 +11134,7 @@ type WorkingGroupsDataLeadersChildDto {
 The structure of the Leaders nested schema.
 """
 input WorkingGroupsDataLeadersChildInputDto {
+  inactiveSinceDate: Instant
   role: String
   user: [String!]
   workstreamRole: String
@@ -11122,6 +11158,7 @@ input WorkingGroupsDataLeadersInputDto {
 The structure of the Members nested schema.
 """
 type WorkingGroupsDataMembersChildDto {
+  inactiveSinceDate: Instant
   user: [Users!]
 }
 
@@ -11129,6 +11166,7 @@ type WorkingGroupsDataMembersChildDto {
 The structure of the Members nested schema.
 """
 input WorkingGroupsDataMembersChildInputDto {
+  inactiveSinceDate: Instant
   user: [String!]
 }
 

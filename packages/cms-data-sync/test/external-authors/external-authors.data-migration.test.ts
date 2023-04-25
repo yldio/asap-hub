@@ -25,13 +25,19 @@ const getExternalAuthorSquidexResponse: () => NonNullable<
 
 const externalAuthorWithOrcid = getExternalAuthorSquidexResponse();
 const squidexResponseWithOrcid: FetchExternalAuthorsQuery = {
-  queryExternalAuthorsContents: [externalAuthorWithOrcid],
+  queryExternalAuthorsContentsWithTotal: {
+    total: 1,
+    items: [externalAuthorWithOrcid],
+  },
 };
 
 const externalAuthorWithoutOrcid = getExternalAuthorSquidexResponse();
 externalAuthorWithoutOrcid.flatData.orcid = null;
 const squidexResponseWithoutOrcid: FetchExternalAuthorsQuery = {
-  queryExternalAuthorsContents: [externalAuthorWithoutOrcid],
+  queryExternalAuthorsContentsWithTotal: {
+    total: 1,
+    items: [externalAuthorWithoutOrcid],
+  },
 };
 
 describe('Migrate external authors', () => {
@@ -68,7 +74,7 @@ describe('Migrate external authors', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    jest.resetAllMocks();
   });
 
   afterAll(() => {
@@ -87,6 +93,26 @@ describe('Migrate external authors', () => {
     expect(clearContentfulEntriesMock).toHaveBeenCalledWith(
       expect.anything(),
       'externalAuthors',
+    );
+  });
+
+  it('fetches all pages of data from squidex', async () => {
+    squidexGraphqlClientMock.request.mockResolvedValue({
+      queryExternalAuthorsContentsWithTotal: {
+        total: 200,
+        items: Array(100).fill(externalAuthorWithOrcid),
+      },
+    });
+
+    await migrateExternalAuthors();
+
+    expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+      expect.anything(),
+      { take: 100, skip: 0 },
+    );
+    expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+      expect.anything(),
+      { take: 100, skip: 100 },
     );
   });
 
@@ -135,7 +161,10 @@ describe('Migrate external authors', () => {
     externalAuthorWithInvalidOrcid.id = 'invalid-external-author-orcid';
     externalAuthorWithInvalidOrcid.flatData.orcid = '1-2-3-4';
     const squidexResponseWithInvalidOrcid: FetchExternalAuthorsQuery = {
-      queryExternalAuthorsContents: [externalAuthorWithInvalidOrcid],
+      queryExternalAuthorsContentsWithTotal: {
+        total: 1,
+        items: [externalAuthorWithInvalidOrcid],
+      },
     };
 
     squidexGraphqlClientMock.request.mockResolvedValueOnce(

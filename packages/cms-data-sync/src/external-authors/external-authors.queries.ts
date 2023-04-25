@@ -1,12 +1,15 @@
 import { gql } from 'graphql-tag';
 
 export const externalAuthorsQuery = gql`
-  query FetchExternalAuthors {
-    queryExternalAuthorsContents(top: 100) {
-      id
-      flatData {
-        name
-        orcid
+  query FetchExternalAuthors($take: Int, $skip: Int) {
+    queryExternalAuthorsContentsWithTotal(top: $take, skip: $skip) {
+      total
+      items {
+        id
+        flatData {
+          name
+          orcid
+        }
       }
     }
   }

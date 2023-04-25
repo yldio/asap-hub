@@ -1189,6 +1189,7 @@ type Users implements Entry {
   contactEmail(locale: String): String
   contentfulMetadata: ContentfulMetadata!
   country(locale: String): String
+  createdDate(locale: String): DateTime
   degree(locale: String): String
   dismissedGettingStarted(locale: String): Boolean
   email(locale: String): String
@@ -1288,6 +1289,15 @@ input UsersFilter {
   country_not: String
   country_not_contains: String
   country_not_in: [String]
+  createdDate: DateTime
+  createdDate_exists: Boolean
+  createdDate_gt: DateTime
+  createdDate_gte: DateTime
+  createdDate_in: [DateTime]
+  createdDate_lt: DateTime
+  createdDate_lte: DateTime
+  createdDate_not: DateTime
+  createdDate_not_in: [DateTime]
   degree: String
   degree_contains: String
   degree_exists: Boolean
@@ -1489,6 +1499,8 @@ enum UsersOrder {
   contactEmail_DESC
   country_ASC
   country_DESC
+  createdDate_ASC
+  createdDate_DESC
   degree_ASC
   degree_DESC
   dismissedGettingStarted_ASC

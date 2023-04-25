@@ -76,3 +76,18 @@ export const calendarEntry = getEntry({
   color: { 'en-US': '#2952A3' },
   name: { 'en-US': 'Tech 4a - iPSCs - 3D & Co-cultures' },
 });
+
+export const userEntry = getEntry({
+  firstName: { 'en-US': 'Test' },
+  lastName: { 'en-US': 'User' },
+  email: { 'en-US': 'test@example.com' },
+});
+
+export const teamMembershipEntry = getEntry({
+  role: 'Project Manager',
+  inactiveSinceDate: '2021-12-23T12:00:00.000Z',
+});
+
+export const labEntry = getEntry({
+  name: { 'en-US': 'Test' },
+});

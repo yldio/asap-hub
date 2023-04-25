@@ -1,4 +1,4 @@
-import { Environment } from 'contentful-management';
+import { Environment, Entry } from 'contentful-management';
 import { addLocaleToFields } from '@asap-hub/contentful';
 import { clearContentfulEntries, publishContentfulEntries } from './entries';
 import { logger as loggerFunc } from './logs';
@@ -18,47 +18,52 @@ export const migrateFromSquidexToContentfulFactory =
     const data = await fetchData();
 
     await clearContentfulEntries(contentfulEnvironment, contentTypeId);
+    let n = 0;
+    const entries = await Promise.all(
+      data.map(async (item) => {
+        const parsed = await parseData(item);
 
-    const entries = [];
-    for (const item of data) {
-      const parsed = await parseData(item);
+        const { id, ...payload } = parsed;
 
-      const { id, ...payload } = parsed;
+        try {
+          const entry = await contentfulEnvironment.createEntryWithId(
+            contentTypeId,
+            id,
+            {
+              fields: addLocaleToFields(payload),
+            },
+          );
+          n += 1;
+          logger(`Created entry with id ${id}. (${n}/${data.length})`, 'INFO');
+          return entry;
+        } catch (err) {
+          logger(`Error details of entry ${id}:\n${err}`, 'ERROR');
 
-      try {
-        const entry = await contentfulEnvironment.createEntryWithId(
-          contentTypeId,
-          id,
-          {
-            fields: addLocaleToFields(payload),
-          },
-        );
-        entries.push(entry);
-      } catch (err) {
-        logger(`Error details of entry ${id}:\n${err}`, 'ERROR-DEBUG');
-
-        if (fallbackParseData) {
-          try {
-            const fallbackParsed = await fallbackParseData(payload);
-            const { id: _id, ...fallbackPayload } = fallbackParsed;
-            const fallbackEntry = await contentfulEnvironment.createEntryWithId(
-              contentTypeId,
-              id,
-              {
-                fields: addLocaleToFields(fallbackPayload),
-              },
-            );
-            logger(
-              `Entry with ID ${id} was uploaded with fallback data`,
-              'ERROR',
-            );
-            entries.push(fallbackEntry);
-          } catch {
-            logger(`There is a problem creating entry ${id}`, 'ERROR');
+          if (fallbackParseData) {
+            try {
+              const fallbackParsed = await fallbackParseData(payload);
+              const { id: _id, ...fallbackPayload } = fallbackParsed;
+              const fallbackEntry =
+                await contentfulEnvironment.createEntryWithId(
+                  contentTypeId,
+                  id,
+                  {
+                    fields: addLocaleToFields(fallbackPayload),
+                  },
+                );
+              logger(
+                `Entry with ID ${id} was uploaded with fallback data`,
+                'ERROR',
+              );
+              return fallbackEntry;
+            } catch {
+              logger(`There is a problem creating entry ${id}`, 'ERROR');
+            }
           }
         }
-      }
-    }
+        return null;
+      }),
+    );
 
-    await publishContentfulEntries(entries);
+    await publishContentfulEntries(entries.filter(Boolean) as Entry[]);
   };

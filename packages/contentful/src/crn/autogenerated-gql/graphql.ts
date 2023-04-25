@@ -1869,6 +1869,7 @@ export type Users = Entry & {
   contactEmail?: Maybe<Scalars['String']>;
   contentfulMetadata: ContentfulMetadata;
   country?: Maybe<Scalars['String']>;
+  createdDate?: Maybe<Scalars['DateTime']>;
   degree?: Maybe<Scalars['String']>;
   dismissedGettingStarted?: Maybe<Scalars['Boolean']>;
   email?: Maybe<Scalars['String']>;
@@ -1944,6 +1945,11 @@ export type UsersContactEmailArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
 export type UsersCountryArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
+export type UsersCreatedDateArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -2165,6 +2171,15 @@ export type UsersFilter = {
   country_not?: InputMaybe<Scalars['String']>;
   country_not_contains?: InputMaybe<Scalars['String']>;
   country_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  createdDate?: InputMaybe<Scalars['DateTime']>;
+  createdDate_exists?: InputMaybe<Scalars['Boolean']>;
+  createdDate_gt?: InputMaybe<Scalars['DateTime']>;
+  createdDate_gte?: InputMaybe<Scalars['DateTime']>;
+  createdDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  createdDate_lt?: InputMaybe<Scalars['DateTime']>;
+  createdDate_lte?: InputMaybe<Scalars['DateTime']>;
+  createdDate_not?: InputMaybe<Scalars['DateTime']>;
+  createdDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   degree?: InputMaybe<Scalars['String']>;
   degree_contains?: InputMaybe<Scalars['String']>;
   degree_exists?: InputMaybe<Scalars['Boolean']>;
@@ -2385,6 +2400,8 @@ export enum UsersOrder {
   ContactEmailDesc = 'contactEmail_DESC',
   CountryAsc = 'country_ASC',
   CountryDesc = 'country_DESC',
+  CreatedDateAsc = 'createdDate_ASC',
+  CreatedDateDesc = 'createdDate_DESC',
   DegreeAsc = 'degree_ASC',
   DegreeDesc = 'degree_DESC',
   DismissedGettingStartedAsc = 'dismissedGettingStarted_ASC',
@@ -3433,6 +3450,7 @@ export type UsersContentFragment = Pick<
   | 'alumniLocation'
   | 'biography'
   | 'connections'
+  | 'createdDate'
   | 'degree'
   | 'email'
   | 'contactEmail'
@@ -3498,6 +3516,7 @@ export type FetchUserByIdQuery = {
       | 'alumniLocation'
       | 'biography'
       | 'connections'
+      | 'createdDate'
       | 'degree'
       | 'email'
       | 'contactEmail'
@@ -3571,6 +3590,7 @@ export type FetchUsersQuery = {
             | 'alumniLocation'
             | 'biography'
             | 'connections'
+            | 'createdDate'
             | 'degree'
             | 'email'
             | 'contactEmail'
@@ -3652,6 +3672,7 @@ export type FetchUsersByTeamIdQuery = {
                     | 'alumniLocation'
                     | 'biography'
                     | 'connections'
+                    | 'createdDate'
                     | 'degree'
                     | 'email'
                     | 'contactEmail'
@@ -3738,6 +3759,7 @@ export type FetchUsersByLabIdQuery = {
                 | 'alumniLocation'
                 | 'biography'
                 | 'connections'
+                | 'createdDate'
                 | 'degree'
                 | 'email'
                 | 'contactEmail'
@@ -4537,6 +4559,7 @@ export const UsersContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'alumniLocation' } },
           { kind: 'Field', name: { kind: 'Name', value: 'biography' } },
           { kind: 'Field', name: { kind: 'Name', value: 'connections' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdDate' } },
           { kind: 'Field', name: { kind: 'Name', value: 'degree' } },
           { kind: 'Field', name: { kind: 'Name', value: 'email' } },
           { kind: 'Field', name: { kind: 'Name', value: 'contactEmail' } },

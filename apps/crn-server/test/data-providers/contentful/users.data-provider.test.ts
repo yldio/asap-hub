@@ -237,13 +237,16 @@ describe('User data provider', () => {
     test('should fall back to `firstPublishedAt` if `createdDate` does not exist', async () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         users: getContentfulGraphqlUser({
+          sys: {
+            firstPublishedAt: '2018-02-14T12:00:00.000Z',
+          },
           createdDate: null,
         }),
       });
 
       const result = await userDataProvider.fetchById('123');
 
-      expect(result!.createdDate).toEqual('2021-09-23T20:45:22.000Z');
+      expect(result!.createdDate).toEqual('2018-02-14T12:00:00.000Z');
     });
 
     describe('default values', () => {

@@ -28,7 +28,10 @@ const SharedResearchList: React.FC<SharedResearchListProps> = ({
 }) => (
   <ResultList {...cardListProps}>
     {cardListProps.isListView ? (
-      <SharedResearchListCard researchOutputs={researchOutputs} />
+      <SharedResearchListCard
+        algoliaQueryId={algoliaQueryId}
+        researchOutputs={researchOutputs}
+      />
     ) : (
       researchOutputs.map((output, index) => (
         <AlgoliaHit

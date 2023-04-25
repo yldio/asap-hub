@@ -3474,12 +3474,14 @@ input GroupsDataInputDto {
 
 """The structure of the Leaders nested schema."""
 type GroupsDataLeadersChildDto {
+  inactiveSinceDate: Instant
   role: String
   user: [Users!]
 }
 
 """The structure of the Leaders nested schema."""
 input GroupsDataLeadersChildInputDto {
+  inactiveSinceDate: Instant
   role: String
   user: [String!]
 }

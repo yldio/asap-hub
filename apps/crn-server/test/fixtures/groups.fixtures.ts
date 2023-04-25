@@ -420,10 +420,12 @@ export const getSquidexGraphqlGroup = (): NonNullable<
     leaders: [
       {
         role: 'Chair',
+        inactiveSinceDate: undefined,
         user: [getGraphQLUser()],
       },
       {
         role: 'Project Manager',
+        inactiveSinceDate: undefined,
         user: [getGraphQLUser()],
       },
     ],

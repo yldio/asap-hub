@@ -3356,12 +3356,14 @@ export type GroupsDataInputDto = {
 
 /** The structure of the Leaders nested schema. */
 export type GroupsDataLeadersChildDto = {
+  inactiveSinceDate: Maybe<Scalars['Instant']>;
   role: Maybe<Scalars['String']>;
   user: Maybe<Array<Users>>;
 };
 
 /** The structure of the Leaders nested schema. */
 export type GroupsDataLeadersChildInputDto = {
+  inactiveSinceDate: InputMaybe<Scalars['Instant']>;
   role: InputMaybe<Scalars['String']>;
   user: InputMaybe<Array<Scalars['String']>>;
 };
@@ -6709,7 +6711,10 @@ export type EventContentFragment = Pick<
                 >;
                 leaders: Maybe<
                   Array<
-                    Pick<GroupsDataLeadersChildDto, 'role'> & {
+                    Pick<
+                      GroupsDataLeadersChildDto,
+                      'role' | 'inactiveSinceDate'
+                    > & {
                       user: Maybe<
                         Array<
                           Pick<
@@ -7162,7 +7167,10 @@ export type FetchEventsQuery = {
                           >;
                           leaders: Maybe<
                             Array<
-                              Pick<GroupsDataLeadersChildDto, 'role'> & {
+                              Pick<
+                                GroupsDataLeadersChildDto,
+                                'role' | 'inactiveSinceDate'
+                              > & {
                                 user: Maybe<
                                   Array<
                                     Pick<
@@ -7621,7 +7629,10 @@ export type FetchEventQuery = {
                     >;
                     leaders: Maybe<
                       Array<
-                        Pick<GroupsDataLeadersChildDto, 'role'> & {
+                        Pick<
+                          GroupsDataLeadersChildDto,
+                          'role' | 'inactiveSinceDate'
+                        > & {
                           user: Maybe<
                             Array<
                               Pick<
@@ -8060,7 +8071,7 @@ export type GroupsContentFragment = Pick<
     >;
     leaders: Maybe<
       Array<
-        Pick<GroupsDataLeadersChildDto, 'role'> & {
+        Pick<GroupsDataLeadersChildDto, 'role' | 'inactiveSinceDate'> & {
           user: Maybe<
             Array<
               Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
@@ -8318,7 +8329,10 @@ export type FetchGroupsQuery = {
               >;
               leaders: Maybe<
                 Array<
-                  Pick<GroupsDataLeadersChildDto, 'role'> & {
+                  Pick<
+                    GroupsDataLeadersChildDto,
+                    'role' | 'inactiveSinceDate'
+                  > & {
                     user: Maybe<
                       Array<
                         Pick<
@@ -8573,7 +8587,7 @@ export type FetchGroupQuery = {
         >;
         leaders: Maybe<
           Array<
-            Pick<GroupsDataLeadersChildDto, 'role'> & {
+            Pick<GroupsDataLeadersChildDto, 'role' | 'inactiveSinceDate'> & {
               user: Maybe<
                 Array<
                   Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
@@ -10932,6 +10946,10 @@ export const GroupsContentFragmentDoc = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'role' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'inactiveSinceDate' },
+                      },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'user' },

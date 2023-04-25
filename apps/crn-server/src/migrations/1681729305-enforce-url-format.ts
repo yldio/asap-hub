@@ -12,14 +12,30 @@ import { applyToAllItemsInCollection } from '../utils/migrations';
 export default class EnforceUrlFormat extends Migration {
   isPatchingEnabled = false;
 
+  cleanupUrl = (url?: string) => {
+    if (!url) {
+      return null;
+    }
+    // trim whitespaces and lowercase the http(s) protocol.
+    // Do not lowercase the rest of the url as it might contain query parameters that are case-sensitive (e.g. password of a zoom meeting).
+    url = url
+      .trim()
+      .replace('HTTP://', 'http://')
+      .replace('HTTPS://', 'https://');
+    if (url.length === 0) {
+      return null;
+    }
+    return url;
+  };
+
   processEvents = async (): Promise<void> => {
+    // eslint-disable-next-line no-console
+    console.log('Processing events...');
     await applyToAllItemsInCollection<RestEvent>(
       'events',
       async (event, squidexClient) => {
-        if (
-          event.data.meetingLink?.iv &&
-          !event.data.meetingLink.iv.startsWith('http')
-        ) {
+        const cleanedUrl = this.cleanupUrl(event.data.meetingLink?.iv);
+        if (cleanedUrl && !cleanedUrl.startsWith('http')) {
           // eslint-disable-next-line no-console
           console.log(
             `Event ${event.id} does not have a valid meeting link. Adding https:// prefix.`,
@@ -27,13 +43,13 @@ export default class EnforceUrlFormat extends Migration {
           if (this.isPatchingEnabled) {
             await squidexClient.patch(event.id, {
               meetingLink: {
-                iv: `https://${event.data.meetingLink.iv}`,
+                iv: `https://${cleanedUrl}`,
               },
             });
           } else {
             // eslint-disable-next-line no-console
             console.log(
-              `Before: ${event.data.meetingLink.iv}\nAfter: https://${event.data.meetingLink.iv}`,
+              `Before: ${event.data.meetingLink?.iv}\nAfter: https://${cleanedUrl}`,
             );
           }
         }
@@ -42,10 +58,13 @@ export default class EnforceUrlFormat extends Migration {
   };
 
   processPages = async (): Promise<void> => {
+    // eslint-disable-next-line no-console
+    console.log('Processing pages...');
     await applyToAllItemsInCollection<RestPage>(
       'pages',
       async (page, squidexClient) => {
-        if (page.data.link?.iv && !page.data.link.iv.startsWith('http')) {
+        const cleanedUrl = this.cleanupUrl(page.data.link?.iv);
+        if (cleanedUrl && !cleanedUrl.startsWith('http')) {
           // eslint-disable-next-line no-console
           console.log(
             `Page ${page.id} does not have a valid link. Adding https:// prefix.`,
@@ -53,13 +72,13 @@ export default class EnforceUrlFormat extends Migration {
           if (this.isPatchingEnabled) {
             await squidexClient.patch(page.id, {
               link: {
-                iv: `https://${page.data.link.iv}`,
+                iv: `https://${cleanedUrl}`,
               },
             });
           } else {
             // eslint-disable-next-line no-console
             console.log(
-              `Before: ${page.data.link.iv}\nAfter: https://${page.data.link.iv}`,
+              `Before: ${page.data.link?.iv}\nAfter: https://${cleanedUrl}`,
             );
           }
         }
@@ -68,10 +87,13 @@ export default class EnforceUrlFormat extends Migration {
   };
 
   processNewsAndEvents = async (): Promise<void> => {
+    // eslint-disable-next-line no-console
+    console.log('Processing news and events...');
     await applyToAllItemsInCollection<RestNews>(
       'news-and-events',
       async (news, squidexClient) => {
-        if (news.data.link?.iv && !news.data.link.iv.startsWith('http')) {
+        const cleanedUrl = this.cleanupUrl(news.data.link?.iv);
+        if (cleanedUrl && !cleanedUrl.startsWith('http')) {
           // eslint-disable-next-line no-console
           console.log(
             `News ${news.id} does not have a valid link. Adding https:// prefix.`,
@@ -79,13 +101,13 @@ export default class EnforceUrlFormat extends Migration {
           if (this.isPatchingEnabled) {
             await squidexClient.patch(news.id, {
               link: {
-                iv: `https://${news.data.link.iv}`,
+                iv: `https://${cleanedUrl}`,
               },
             });
           } else {
             // eslint-disable-next-line no-console
             console.log(
-              `Before: ${news.data.link.iv}\nAfter: https://${news.data.link.iv}`,
+              `Before: ${news.data.link?.iv}\nAfter: https://${cleanedUrl}`,
             );
           }
         }
@@ -94,6 +116,8 @@ export default class EnforceUrlFormat extends Migration {
   };
 
   processTeams = async (): Promise<void> => {
+    // eslint-disable-next-line no-console
+    console.log('Processing teams...');
     await applyToAllItemsInCollection<RestTeam>(
       'teams',
       async (team, squidexClient) => {
@@ -101,11 +125,12 @@ export default class EnforceUrlFormat extends Migration {
           let shouldUpdate = false;
 
           const tools = team.data.tools.iv.map((tool) => {
-            if (tool.url && !tool.url.startsWith('http')) {
+            const cleanedUrl = this.cleanupUrl(tool.url);
+            if (cleanedUrl && !cleanedUrl.startsWith('http')) {
               shouldUpdate = true;
               return {
                 ...tool,
-                url: `https://${tool.url}`,
+                url: `https://${cleanedUrl}`,
               };
             }
             return tool;
@@ -139,6 +164,8 @@ export default class EnforceUrlFormat extends Migration {
   };
 
   processUsers = async (): Promise<void> => {
+    // eslint-disable-next-line no-console
+    console.log('Processing users...');
     await applyToAllItemsInCollection<RestUser>(
       'users',
       async (user, squidexClient) => {
@@ -148,25 +175,21 @@ export default class EnforceUrlFormat extends Migration {
           const social = user.data.social.iv.map((socialValue) => {
             let newSocial = socialValue;
 
-            if (
-              socialValue.website1 &&
-              !socialValue.website1.startsWith('http')
-            ) {
+            let cleanedUrl = this.cleanupUrl(socialValue.website1);
+            if (cleanedUrl && !cleanedUrl.startsWith('http')) {
               shouldUpdate = true;
               newSocial = {
                 ...newSocial,
-                website1: `https://${socialValue.website1}`,
+                website1: `https://${cleanedUrl}`,
               };
             }
 
-            if (
-              socialValue.website2 &&
-              !socialValue.website2.startsWith('http')
-            ) {
+            cleanedUrl = this.cleanupUrl(socialValue.website2);
+            if (cleanedUrl && !cleanedUrl.startsWith('http')) {
               shouldUpdate = true;
               newSocial = {
                 ...newSocial,
-                website2: `https://${socialValue.website2}`,
+                website2: `https://${cleanedUrl}`,
               };
             }
 

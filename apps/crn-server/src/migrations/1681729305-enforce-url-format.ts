@@ -18,14 +18,14 @@ export default class EnforceUrlFormat extends Migration {
     }
     // trim whitespaces and lowercase the http(s) protocol.
     // Do not lowercase the rest of the url as it might contain query parameters that are case-sensitive (e.g. password of a zoom meeting).
-    url = url
+    const cleanedUrl = url
       .trim()
       .replace('HTTP://', 'http://')
       .replace('HTTPS://', 'https://');
-    if (url.length === 0) {
+    if (cleanedUrl.length === 0) {
       return null;
     }
-    return url;
+    return cleanedUrl;
   };
 
   processEvents = async (): Promise<void> => {

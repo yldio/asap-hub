@@ -40,7 +40,13 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
-          "allowedValues": ["Method", "Organism", "Environment", "Subtype"],
+          "allowedValues": [
+            "Method",
+            "Organism",
+            "Environment",
+            "Subtype",
+            "Keyword"
+          ],
           "isUnique": false,
           "isEmbeddable": false,
           "inlineEditable": false,

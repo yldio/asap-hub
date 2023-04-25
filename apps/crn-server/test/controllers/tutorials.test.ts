@@ -5,9 +5,10 @@ import {
   getTutorialResponse,
 } from '../fixtures/tutorials.fixtures';
 
-import { tutorialDataProviderMock } from '../mocks/tutorials-data-provider.mock';
+import { getDataProviderMock } from '../mocks/data-provider.mock';
 
 describe('Team Controller', () => {
+  const tutorialDataProviderMock = getDataProviderMock();
   const tutorialsController = new Tutorials(tutorialDataProviderMock);
 
   afterEach(() => {

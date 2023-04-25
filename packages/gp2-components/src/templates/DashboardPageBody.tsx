@@ -34,6 +34,12 @@ const viewAllStyles = css({
   textAlign: 'center',
 });
 
+const accodionItemStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '32px',
+});
+
 type DashboardPageBodyProps = {
   news: gp2.ListNewsResponse;
   totalOfUpcomingEvents: number;
@@ -72,13 +78,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
               icon: toolsIcon,
               title: 'Explore the GP2 Generated Tools',
               description: (
-                <div
-                  css={css({
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '48px',
-                  })}
-                >
+                <div css={accodionItemStyles}>
                   <article>
                     <Subtitle>Cohort Dashboard</Subtitle>
                     <Paragraph>
@@ -125,9 +125,9 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
             },
             {
               icon: confidentialIcon,
-              title: 'Learn more about our Policies',
+              title: 'Learn More About our Policies',
               description: (
-                <div>
+                <div css={accodionItemStyles}>
                   <article>
                     <Subtitle>IP Policy</Subtitle>
                     <Paragraph>
@@ -152,6 +152,20 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
                     </Paragraph>
                     <ExternalLink
                       href="https://gp2.org/resources/publicationpolicy/"
+                      label="Read more"
+                    />
+                  </article>
+                  <article>
+                    <Subtitle>Code of Conduct</Subtitle>
+                    <Paragraph>
+                      Each investigator on GP2 should have a clear understanding
+                      of GP2’s goals, the central tenets underlying the
+                      achievement of these goals, and trust. In order to
+                      facilitate these goals, we describe the code of conduct
+                      for investigators in GP2. Read about it here.
+                    </Paragraph>
+                    <ExternalLink
+                      href="https://gp2.org/resources/codeofconduct/"
                       label="Read more"
                     />
                   </article>

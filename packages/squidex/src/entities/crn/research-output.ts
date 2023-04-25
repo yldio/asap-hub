@@ -28,6 +28,7 @@ export interface ResearchOutput<
   contactEmails: string[];
   createdBy?: TUserConnection[];
   description: string;
+  descriptionMD: string;
   documentType: ResearchOutputDocumentType;
   doi?: string;
   environments: string[];
@@ -43,6 +44,7 @@ export interface ResearchOutput<
   sharingStatus: ResearchOutputSharingStatus;
   subtype: string[];
   tags?: string[];
+  keywords?: string[];
   title: string;
   type?: ResearchOutputType;
   updatedBy?: TUserConnection[];

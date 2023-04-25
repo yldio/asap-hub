@@ -18,6 +18,17 @@ on:
         description: 'Does CRN contentful environment already exist'
         required: true
         type: string
+      gp2-contentful-env:
+        description: 'GP2 Contentful environment name'
+        type: string
+      gp2-on-branch-env:
+        description: 'Is GP2 branch environment required'
+        required: true
+        type: string
+      gp2-contentful-env-exists:
+        description: 'Does GP2 contentful environment already exist'
+        required: true
+        type: string
     secrets:
       AWS_ACCESS_KEY_ID:
         description: 'AWS Access Key ID'
@@ -43,6 +54,9 @@ on:
       CRN_CONTENTFUL_ACCESS_TOKEN:
         description: 'CRN Contentful Access Token'
         required: true
+      GP2_CONTENTFUL_ACCESS_TOKEN:
+        description: 'GP2 Contentful Access Token'
+        required: true
 
 jobs:
   crn-contentful:
@@ -62,31 +76,42 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Determine whether we have reached the environment limit for our Contentful space
-        shell: bash
-        run: |
-          ENVIRONMENTS=$(curl --silent \
-                              --request GET \
-                              --header "Authorization: Bearer ${CONTENTFUL_MANAGEMENT_ACCESS_TOKEN}" \
-                              https://api.contentful.com/spaces/${CONTENTFUL_SPACE_ID}/environments \
-                              | jq '.total' -r)
+      - name: Create Contentful App
+        uses: ./.github/actions/contentful-create-environment
+        with:
+          contentful-space-id: ${{ steps.setup.outputs.crn-contentful-space-id }}
+          contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          contentful-environment: ${{ steps.setup.outputs.contentful-environment }}
+          contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
+          max-contentful-envs: ${{ steps.setup.outputs.crn-max-contentful-envs }}
+          contentful-environment-id: ${{ inputs.crn-contentful-env }}
 
-          if [[ "$ENVIRONMENTS" == "$MAX_CONTENTFUL_ENVIRONMENTS" ]]; then
-            echo "Max Contentful environments reached. Cannot create more."
-            exit 1;
-          fi
-        env:
-          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
-          CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          MAX_CONTENTFUL_ENVIRONMENTS: ${{ steps.setup.outputs.crn-max-contentful-envs }}
-      - name: Create Contentful environment
-        run: yarn workspace @asap-hub/contentful space:create-environment:crn
-        env:
-          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
-          CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          CONTENTFUL_ENV_ID: ${{ inputs.crn-contentful-env }}
-          CONTENTFUL_SOURCE_ENV: ${{ steps.setup.outputs.contentful-environment }}
-          CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
+  gp2-contentful:
+    if: ${{ inputs.environment-name=='Branch' && inputs.gp2-on-branch-env == 'true' && inputs.gp2-contentful-env-exists == 'false'}}
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment-name }}
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:f93db8bae8be7528565c2510dbc8e3eece97983d
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Create Contentful App
+        uses: ./.github/actions/contentful-create-environment
+        with:
+          contentful-space-id: ${{ steps.setup.outputs.gp2-contentful-space-id }}
+          contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          contentful-environment: ${{ steps.setup.outputs.contentful-environment }}
+          contentful-access-token: ${{ secrets.GP2_CONTENTFUL_ACCESS_TOKEN }}
+          max-contentful-envs: ${{ steps.setup.outputs.gp2-max-contentful-envs }}
+          contentful-environment-id: ${{ inputs.gp2-contentful-env }}
 
   crn-squidex:
     runs-on: ubuntu-latest

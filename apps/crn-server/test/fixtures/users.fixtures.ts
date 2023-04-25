@@ -768,3 +768,88 @@ export const getInputUser = (): InputUser['data'] => ({
     iv: [],
   },
 });
+
+export const getContentfulGraphql = (props = {}) => {
+  return {
+    Users: () => getContentfulGraphqlUser(props),
+  };
+};
+
+export const getContentfulGraphqlUser = (props = {}) => ({
+  sys: {
+    id: 'user-id-1',
+    firstPublishedAt: '2020-09-23T20:45:22.000Z',
+    publishedAt: '2020-09-23T20:45:22.000Z',
+  },
+  avatar: null,
+  biography: 'some bio',
+  onboarded: true,
+  dismissedGettingStarted: false,
+  connections: ['some-code'],
+  alumniLocation: 'some alumni location',
+  alumniSinceDate: '2020-09-23T20:45:22.000Z',
+  expertiseAndResourceDescription: 'some expertise and resource description',
+  orcidLastModifiedDate: '2020-09-23T20:45:22.000Z',
+  orcidLastSyncDate: '2020-09-23T20:45:22.000Z',
+  questions: ['Question 1', 'Question 2'],
+  expertiseAndResourceTags: [
+    'expertise 1',
+    'expertise 2',
+    'expertise 3',
+    'expertise 4',
+    'expertise 5',
+  ],
+  institution: 'some institution',
+  jobTitle: 'some job title',
+  reachOut: 'some reach out',
+  responsibilities: 'some responsibilities',
+  researchInterests: 'some research interests',
+  email: 'H@rdy.io',
+  contactEmail: 'T@rdy.io',
+  firstName: 'Tom',
+  lastName: 'Hardy',
+  country: 'United Kingdom',
+  city: 'London',
+  orcid: '123-456-789',
+  degree: 'MPH',
+  github: null,
+  twitter: null,
+  website1: null,
+  website2: null,
+  researchGate: null,
+  researcherId: null,
+  googleScholar: null,
+  linkedIn: null,
+  role: 'Grantee',
+  labsCollection: {
+    total: 2,
+    items: [
+      { sys: { id: 'cd7be4902' }, name: 'Brighton' },
+      { sys: { id: 'cd7be4903' }, name: 'Liverpool' },
+    ],
+  },
+  teamsCollection: {
+    total: 1,
+    items: [
+      {
+        role: 'Lead PI (Core Leadership)',
+        inactiveSinceDate: null,
+        team: {
+          sys: {
+            id: 'team-id-0',
+          },
+          displayName: 'Team A',
+        },
+      },
+    ],
+  },
+  ...props,
+});
+
+export const getContentfulRestUser = () => ({
+  fields: {},
+  update: () =>
+    Promise.resolve({
+      publish: jest.fn(),
+    }),
+});

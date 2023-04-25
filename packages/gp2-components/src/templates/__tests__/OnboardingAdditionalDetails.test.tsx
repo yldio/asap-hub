@@ -16,13 +16,15 @@ describe('OnboardingAdditionalDetails', () => {
   it('renders the page description', () => {
     render(<OnboardingAdditionalDetails {...defaultProps} />);
     expect(
-      screen.getByText(/Adding additional details to your profile will help/i),
+      screen.getByText(
+        /Adding additional details to your profile will inform/i,
+      ),
     ).toBeVisible();
   });
 
   it.each([
     'Open Questions',
-    'Funding Providers',
+    'Financial Disclosures',
     'Contributing Cohort Studies',
     'External Profiles',
   ])('renders the %s card', (name) => {

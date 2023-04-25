@@ -18,6 +18,7 @@ export const parseGraphQLWorkingGroupMembers = (
   members?.flatMap((member) =>
     member.user?.[0]
       ? {
+          inactiveSinceDate: member.inactiveSinceDate,
           user: {
             id: member.user[0]?.id || '',
             firstName: member.user[0]?.flatData.firstName || '',
@@ -43,6 +44,7 @@ export const parseGraphQLWorkingGroupLeaders = (
       ? {
           role: leader.role as WorkingGroupRole,
           workstreamRole: leader.workstreamRole || '',
+          inactiveSinceDate: leader.inactiveSinceDate,
           user: {
             id: leader.user[0]?.id || '',
             firstName: leader.user[0]?.flatData.firstName || '',
@@ -116,12 +118,14 @@ export const toWorkingGroupResponse = (
     ...leader,
     isActive: workingGroup.complete
       ? false
-      : !!leader?.user?.alumniSinceDate === false,
+      : !!leader?.user?.alumniSinceDate === false &&
+        !!leader?.inactiveSinceDate === false,
   })),
   members: workingGroup.members.map((member) => ({
     ...member,
     isActive: workingGroup.complete
       ? false
-      : !!member?.user?.alumniSinceDate === false,
+      : !!member?.user?.alumniSinceDate === false &&
+        !!member?.inactiveSinceDate === false,
   })),
 });

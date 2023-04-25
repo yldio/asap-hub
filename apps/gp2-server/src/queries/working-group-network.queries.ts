@@ -2,20 +2,20 @@ import { gql } from 'graphql-tag';
 import { workingGroupContentQueryFragment } from './working-groups.queries';
 
 export const workingGroupNetworkQueryFragment = gql`
-  fragment WorkingGroupNetworkContent on WorkingGroupNetwork {
+  fragment WorkingGroupNetworkData on WorkingGroupNetwork {
     id
     flatData {
       support {
-        ...WorkingGroupContent
+        ...WorkingGroupData
       }
       complexDisease {
-        ...WorkingGroupContent
+        ...WorkingGroupData
       }
       monogenic {
-        ...WorkingGroupContent
+        ...WorkingGroupData
       }
       operational {
-        ...WorkingGroupContent
+        ...WorkingGroupData
       }
     }
   }
@@ -25,7 +25,7 @@ export const workingGroupNetworkQueryFragment = gql`
 export const FETCH_WORKING_GROUP_NETWORK = gql`
   query FetchWorkingGroupNetwork {
     queryWorkingGroupNetworkContents {
-      ...WorkingGroupNetworkContent
+      ...WorkingGroupNetworkData
     }
   }
   ${workingGroupNetworkQueryFragment}

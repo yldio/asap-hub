@@ -22,7 +22,6 @@ import {
   SquidexGraphqlClient,
   SquidexRestClient,
 } from '@asap-hub/squidex';
-import { Filter } from 'odata-query';
 import {
   FetchUserQuery,
   FetchUserQueryVariables,
@@ -35,15 +34,10 @@ import { FETCH_USER, FETCH_USERS } from '../queries/users.queries';
 import logger from '../utils/logger';
 import { createUrl } from '../utils/urls';
 import { buildEqFilterForWords, buildODataFilter } from '../utils/odata';
+import { UserDataProvider } from './types';
 
 export type CMSOrcidWork = OrcidWork;
 
-export interface UserDataProvider {
-  fetchById(id: string): Promise<UserDataObject | null>;
-  fetch(options: FetchUsersOptions): Promise<ListUserDataObject>;
-  create(input: UserCreateDataObject): Promise<string>;
-  update(id: string, update: UserUpdateDataObject): Promise<void>;
-}
 export class UserSquidexDataProvider implements UserDataProvider {
   constructor(
     private squidexGraphqlClient: SquidexGraphqlClient,
@@ -190,22 +184,7 @@ const cleanUser = (userToUpdate: UserUpdateDataObject) =>
     return setValue(value);
   }, {} as { [key: string]: { iv: unknown } });
 
-const generateFetchQueryFilter = ({ search, filter }: FetchUsersOptions) => {
-  const searchFilter = (search || '')
-    .split(' ')
-    .filter(Boolean) // removes whitespaces
-    .reduce(
-      (acc: Filter[], word: string) =>
-        acc.concat({
-          or: [
-            { 'data/firstName/iv': { contains: word } },
-            { 'data/lastName/iv': { contains: word } },
-            { 'data/institution/iv': { contains: word } },
-            { 'data/expertiseAndResourceTags/iv': { contains: word } },
-          ],
-        }),
-      [],
-    );
+const generateFetchQueryFilter = ({ filter }: FetchUsersOptions) => {
   const {
     role,
     labId,
@@ -217,9 +196,9 @@ const generateFetchQueryFilter = ({ search, filter }: FetchUsersOptions) => {
   } = filter || {};
   const filterRoles = buildEqFilterForWords('teams', role, 'role');
 
-  const filterLabs = buildEqFilterForWords('labs', labId);
+  const filterLabs = labId && { 'data/labs/iv': labId };
 
-  const filterTeams = buildEqFilterForWords('teams', teamId, 'id');
+  const filterTeams = teamId && { 'data/teams/iv/id': teamId };
   const filterCode = code && { 'data/connections/iv/code': code };
 
   const filterHidden = hidden && { not: { 'data/role/iv': 'Hidden' } };
@@ -234,7 +213,6 @@ const generateFetchQueryFilter = ({ search, filter }: FetchUsersOptions) => {
     filterNonOnboarded,
     filterHidden,
     filterOrcid,
-    ...searchFilter,
   ].filter(Boolean);
   return buildODataFilter(queryFilter);
 };
@@ -346,6 +324,38 @@ export const parseUserToResponse = ({
   return response;
 };
 
+type GraphQLUserReferencingWorkingGroupsContent =
+  NonNullable<GraphQLUserReferencingWorkingGroupsContents>[number];
+
+export const parseGraphQLWorkingGroup = ({
+  workingGroup,
+  userId,
+  isAlumni,
+}: {
+  workingGroup: GraphQLUserReferencingWorkingGroupsContent;
+  userId: string;
+  isAlumni: boolean;
+}) => {
+  const leaderData = workingGroup.flatData.leaders?.find(
+    (leader) => leader.user?.[0]?.id === userId,
+  );
+  const memberData = workingGroup.flatData.members?.find(
+    (member) => member.user?.[0]?.id === userId,
+  );
+
+  const isInActive = !!(
+    leaderData?.inactiveSinceDate || memberData?.inactiveSinceDate
+  );
+  const wgRole = leaderData ? leaderData.role : 'Member';
+
+  return {
+    id: workingGroup.id,
+    name: workingGroup.flatData.title || '',
+    role: wgRole as 'Chair' | 'Project Manager' | 'Member',
+    active: workingGroup.flatData.complete ? false : !isAlumni && !isInActive,
+  };
+};
+
 export const parseGraphQLUserToDataObject = (
   item: GraphQLUser,
 ): UserDataObject => {
@@ -355,27 +365,21 @@ export const parseGraphQLUserToDataObject = (
   const flatExpertiseAndResourceTags =
     item.flatData.expertiseAndResourceTags || [];
   const createdDate = parseDate(item.created).toISOString();
-
   const role =
     item.flatData.role && isUserRole(item.flatData.role)
       ? item.flatData.role
       : 'Guest';
   const teams = parseGraphQLUserTeamConnections(flatTeams || []);
+  const isAlumni = !!item.flatData.alumniSinceDate;
+  const userId = item.id;
 
   const workingGroups = (item.referencingWorkingGroupsContents || []).map(
-    (wg) => {
-      const leaderData = wg.flatData.leaders?.find(
-        (leader) => leader.user?.[0]?.id === item.id,
-      );
-      const wgRole = leaderData ? leaderData.role : 'Member';
-
-      return {
-        id: wg.id,
-        name: wg.flatData.title || '',
-        role: wgRole as 'Chair' | 'Project Manager' | 'Member',
-        active: !wg.flatData.complete,
-      };
-    },
+    (workingGroup) =>
+      parseGraphQLWorkingGroup({
+        workingGroup,
+        isAlumni,
+        userId,
+      }),
   );
 
   const orcid = item.flatData.orcid || undefined;

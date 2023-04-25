@@ -15,6 +15,7 @@ const researchOutputResponse: Omit<
   lastModifiedDate: '2020-12-10T20:36:54Z',
   title: 'Output',
   description: 'description',
+  descriptionMD: 'descriptionMD',
   documentType: 'Grant Document',
   type: '3D Printing',
   tags: ['test', 'tag'],
@@ -44,6 +45,7 @@ const researchOutputResponse: Omit<
   organisms: ['Rat', 'C. Elegans'],
   environments: ['In Vivo', 'In Cellulo'],
   subtype: 'Metabolite',
+  keywords: ['Etag', 'Exercise'],
   published: true,
 };
 

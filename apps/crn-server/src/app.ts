@@ -69,21 +69,17 @@ import Users, { UserController } from './controllers/users';
 import WorkingGroups, {
   WorkingGroupController,
 } from './controllers/working-groups';
-import {
-  AssetDataProvider,
-  AssetSquidexDataProvider,
-} from './data-providers/assets.data-provider';
+import { AssetSquidexDataProvider } from './data-providers/assets.data-provider';
 import { CalendarSquidexDataProvider } from './data-providers/calendars.data-provider';
 import { CalendarContentfulDataProvider } from './data-providers/contentful/calendars.data-provider';
+import { AssetContentfulDataProvider } from './data-providers/contentful/assets.data-provider';
 import { DashboardContentfulDataProvider } from './data-providers/contentful/dashboard.data-provider';
 import { ExternalAuthorContentfulDataProvider } from './data-providers/contentful/external-authors.data-provider';
 import { NewsContentfulDataProvider } from './data-providers/contentful/news.data-provider';
 import { PageContentfulDataProvider } from './data-providers/contentful/pages.data-provider';
 import { TeamContentfulDataProvider } from './data-providers/contentful/teams.data-provider';
 import { UserContentfulDataProvider } from './data-providers/contentful/users.data-provider';
-import DashboardSquidexDataProvider, {
-  DashboardDataProvider,
-} from './data-providers/dashboard.data-provider';
+import DashboardSquidexDataProvider from './data-providers/dashboard.data-provider';
 import { EventSquidexDataProvider } from './data-providers/event.data-provider';
 import {
   ExternalAuthorDataProvider,
@@ -94,10 +90,7 @@ import {
   GroupSquidexDataProvider,
 } from './data-providers/groups.data-provider';
 import { NewsSquidexDataProvider } from './data-providers/news.data-provider';
-import {
-  PageDataProvider,
-  PageSquidexDataProvider,
-} from './data-providers/pages.data-provider';
+import { PageSquidexDataProvider } from './data-providers/pages.data-provider';
 import {
   ReminderDataProvider,
   ReminderSquidexDataProvider,
@@ -118,11 +111,14 @@ import {
   TutorialsDataProvider,
   TutorialsSquidexDataProvider,
 } from './data-providers/tutorials.data-provider';
-import { NewsDataProvider } from './data-providers/types';
 import {
+  AssetDataProvider,
+  NewsDataProvider,
+  PageDataProvider,
   UserDataProvider,
-  UserSquidexDataProvider,
-} from './data-providers/users.data-provider';
+  DashboardDataProvider,
+} from './data-providers/types';
+import { UserSquidexDataProvider } from './data-providers/users.data-provider';
 import {
   WorkingGroupDataProvider,
   WorkingGroupSquidexDataProvider,
@@ -148,6 +144,10 @@ import assignUserToContext from './utils/assign-user-to-context';
 import { getAuthToken } from './utils/auth';
 import { FeatureFlagDependencySwitch } from './utils/feature-flag';
 import pinoLogger from './utils/logger';
+import {
+  LabDataProvider,
+  LabSquidexDataProvider,
+} from './data-providers/labs.data-provider';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -225,8 +225,6 @@ export const appFactory = (libs: Libs = {}): Express => {
   const userResponseCacheClient = new MemoryCacheClient<UserResponse>();
 
   // Data Providers
-  const assetDataProvider =
-    libs.assetDataProvider || new AssetSquidexDataProvider(userRestClient);
   const dashboardSquidexDataProvider =
     libs.dashboardSquidexDataProvider ||
     new DashboardSquidexDataProvider(squidexGraphqlClient);
@@ -287,6 +285,20 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.tutorialsDataProvider ||
     new TutorialsSquidexDataProvider(squidexGraphqlClient);
   featureFlagDependencySwitch.setDependency(
+    'assets',
+    libs.assetSquidexDataProvider ||
+      new AssetSquidexDataProvider(userRestClient),
+    'IS_CONTENTFUL_ENABLED_V2',
+    false,
+  );
+  featureFlagDependencySwitch.setDependency(
+    'assets',
+    libs.assetContentfulDataProvider ||
+      new AssetContentfulDataProvider(getContentfulRestClientFactory),
+    'IS_CONTENTFUL_ENABLED_V2',
+    true,
+  );
+  featureFlagDependencySwitch.setDependency(
     'users',
     libs.userSquidexDataProvider ||
       new UserSquidexDataProvider(squidexGraphqlClient, userRestClient),
@@ -295,7 +307,11 @@ export const appFactory = (libs: Libs = {}): Express => {
   );
   featureFlagDependencySwitch.setDependency(
     'users',
-    libs.userContentfulDataProvider || new UserContentfulDataProvider(),
+    libs.userContentfulDataProvider ||
+      new UserContentfulDataProvider(
+        contentfulGraphQLClient,
+        getContentfulRestClientFactory,
+      ),
     'IS_CONTENTFUL_ENABLED_V2',
     true,
   );
@@ -303,6 +319,12 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.userDataProvider ||
     featureFlagDependencySwitch.getDependency(
       'users',
+      'IS_CONTENTFUL_ENABLED_V2',
+    );
+  const assetDataProvider =
+    libs.assetDataProvider ||
+    featureFlagDependencySwitch.getDependency(
+      'assets',
       'IS_CONTENTFUL_ENABLED_V2',
     );
   const reminderDataProvider =
@@ -381,6 +403,9 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.eventDataProvider ||
     new EventSquidexDataProvider(eventRestClient, squidexGraphqlClient);
 
+  const labDataProvider =
+    libs.labDataProvider || new LabSquidexDataProvider(squidexGraphqlClient);
+
   // Controllers
   const calendarController =
     libs.calendarController || new Calendars(calendarDataProvider);
@@ -403,13 +428,13 @@ export const appFactory = (libs: Libs = {}): Express => {
       externalAuthorDataProvider,
     );
   const researchTagController =
-    libs.researchTagController || new ResearchTags(squidexGraphqlClient);
+    libs.researchTagController || new ResearchTags(researchTagDataProvider);
   const teamController = libs.teamController || new Teams(teamDataProvider);
   const tutorialsController =
     libs.tutorialsController || new Tutorials(tutorialsDataProvider);
   const userController =
     libs.userController || new Users(userDataProvider, assetDataProvider);
-  const labsController = libs.labsController || new Labs(squidexGraphqlClient);
+  const labsController = libs.labsController || new Labs(labDataProvider);
   const workingGroupsController =
     libs.workingGroupsController || new WorkingGroups(workingGroupDataProvider);
 
@@ -538,6 +563,8 @@ export type Libs = {
   userController?: UserController;
   workingGroupsController?: WorkingGroupController;
   assetDataProvider?: AssetDataProvider;
+  assetSquidexDataProvider?: AssetDataProvider;
+  assetContentfulDataProvider?: AssetDataProvider;
   calendarDataProvider?: CalendarDataProvider;
   calendarSquidexDataProvider?: CalendarDataProvider;
   calendarContentfulDataProvider?: CalendarDataProvider;
@@ -548,6 +575,7 @@ export type Libs = {
   externalAuthorContentfulDataProvider?: ExternalAuthorDataProvider;
   externalAuthorDataProvider?: ExternalAuthorDataProvider;
   groupDataProvider?: GroupDataProvider;
+  labDataProvider?: LabDataProvider;
   newsContentfulDataProvider?: NewsDataProvider;
   newsDataProvider?: NewsDataProvider;
   newsSquidexDataProvider?: NewsDataProvider;

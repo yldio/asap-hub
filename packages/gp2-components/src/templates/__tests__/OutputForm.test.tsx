@@ -9,12 +9,12 @@ import {
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import { Router, StaticRouter } from 'react-router-dom';
+import { NotificationContext } from '@asap-hub/react-context';
 import OutputForm from '../OutputForm';
 
 describe('OutputForm', () => {
   const defaultProps = {
     shareOutput: jest.fn(),
-    setBannerMessage: jest.fn(),
     documentType: 'Procedural Form' as const,
     entityType: 'workingGroup' as const,
   };
@@ -31,7 +31,7 @@ describe('OutputForm', () => {
     const getAuthorSuggestions = jest.fn();
     const history = createMemoryHistory();
     const shareOutput = jest.fn();
-    const setBannerMessage = jest.fn();
+    const addNotification = jest.fn();
     getAuthorSuggestions.mockResolvedValue([
       {
         author: {
@@ -55,12 +55,19 @@ describe('OutputForm', () => {
       <OutputForm
         {...defaultProps}
         shareOutput={shareOutput}
-        setBannerMessage={setBannerMessage}
         getAuthorSuggestions={getAuthorSuggestions}
       />,
       {
         wrapper: ({ children }) => (
-          <Router history={history}>{children}</Router>
+          <NotificationContext.Provider
+            value={{
+              notifications: [],
+              addNotification,
+              removeNotification: jest.fn(),
+            }}
+          >
+            <Router history={history}>{children}</Router>
+          </NotificationContext.Provider>
         ),
       },
     );
@@ -97,10 +104,12 @@ describe('OutputForm', () => {
         { externalUserName: 'Alex White' },
       ],
     });
-    expect(setBannerMessage).toHaveBeenCalledWith(
-      expect.stringMatching(
-        /working group procedural form published successfully./i,
-      ),
+    expect(addNotification).toHaveBeenCalledWith(
+      expect.objectContaining({
+        message: 'Working group procedural form published successfully.',
+        page: 'outputs',
+        type: 'success',
+      }),
     );
     expect(history.location.pathname).toEqual(`/outputs`);
   }, 30_000);
@@ -157,7 +166,15 @@ describe('OutputForm', () => {
         />,
         {
           wrapper: ({ children }) => (
-            <Router history={history}>{children}</Router>
+            <NotificationContext.Provider
+              value={{
+                notifications: [],
+                addNotification: jest.fn(),
+                removeNotification: jest.fn(),
+              }}
+            >
+              <Router history={history}>{children}</Router>
+            </NotificationContext.Provider>
           ),
         },
       );

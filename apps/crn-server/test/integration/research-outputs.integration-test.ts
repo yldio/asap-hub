@@ -73,6 +73,7 @@ describe('Research Outputs', () => {
     researchOutputInput.methodIds = [];
     researchOutputInput.teamIds = [];
     researchOutputInput.relatedResearchIds = [];
+    researchOutputInput.keywordIds = [];
     researchOutputInput.labIds = [];
     researchOutputInput.authors = [{ userId }];
     researchOutputInput.createdBy = userId;

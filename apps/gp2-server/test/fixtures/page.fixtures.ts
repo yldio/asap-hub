@@ -1,3 +1,4 @@
+import { gp2 } from '@asap-hub/contentful';
 import { PageResponse } from '@asap-hub/model';
 
 export const pageResponse: PageResponse = {
@@ -9,3 +10,51 @@ export const pageResponse: PageResponse = {
   link: 'link',
   linkText: 'linkText',
 };
+
+export const getContentfulPagesGraphqlResponse = (): gp2.FetchPagesQuery => ({
+  pagesCollection: {
+    total: 1,
+    items: [getContentfulGraphqlPages()],
+  },
+});
+
+export const getContentfulGraphqlPages = (): NonNullable<
+  NonNullable<gp2.FetchPagesQuery['pagesCollection']>['items'][number]
+> => ({
+  sys: {
+    id: 'some-id',
+  },
+  title: 'Privacy Policy',
+  path: '/privacy-policy',
+  shortText: 'short text',
+  link: 'link',
+  linkText: 'linkText',
+  text: {
+    json: {
+      nodeType: 'document',
+      data: {},
+      content: [
+        {
+          nodeType: 'heading-1',
+          data: {},
+          content: [
+            {
+              nodeType: 'text',
+              value: 'Privacy Policy',
+              marks: [],
+              data: {},
+            },
+          ],
+        },
+      ],
+    },
+    links: {
+      entries: {
+        inline: [],
+      },
+      assets: {
+        block: [],
+      },
+    },
+  },
+});

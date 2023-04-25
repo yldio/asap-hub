@@ -4,7 +4,6 @@ import { gp2 as gp2squidex } from '@asap-hub/squidex';
 import { applyToAllItemsInCollection } from '../utils/migrations';
 
 export default class MoveResearchOutputTextToDescription extends Migration {
-  // eslint-disable-next-line class-methods-use-this
   up = async (): Promise<void> => {
     await applyToAllItemsInCollection<gp2squidex.RestUser>(
       'users',
@@ -13,7 +12,6 @@ export default class MoveResearchOutputTextToDescription extends Migration {
       },
     );
   };
-  // eslint-disable-next-line class-methods-use-this
   down = async (): Promise<void> => {
     await applyToAllItemsInCollection<gp2squidex.RestUser>(
       'users',

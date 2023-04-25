@@ -1,20 +1,13 @@
 import { UserEvent } from '@asap-hub/model';
 import { EventBridgeHandler } from '@asap-hub/server-common';
-import {
-  InputUser,
-  RestUser,
-  SquidexGraphql,
-  SquidexRest,
-  SquidexWebhookPayload,
-  User,
-} from '@asap-hub/squidex';
-import { appName, baseUrl } from '../../config';
+import { SquidexWebhookPayload, User } from '@asap-hub/squidex';
 import Users, { UserController } from '../../controllers/users';
-import { AssetSquidexDataProvider } from '../../data-providers/assets.data-provider';
-import { UserSquidexDataProvider } from '../../data-providers/users.data-provider';
-import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
+import {
+  getUserDataProvider,
+  getAssetDataProvider,
+} from '../../dependencies/users.dependencies';
 
 export const syncOrcidUserHandler =
   (
@@ -41,24 +34,8 @@ export const syncOrcidUserHandler =
     }
   };
 
-const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
-  appName,
-  baseUrl,
-});
-const userRestClient = new SquidexRest<RestUser, InputUser>(
-  getAuthToken,
-  'users',
-  {
-    appName,
-    baseUrl,
-  },
-);
-const userDataProvider = new UserSquidexDataProvider(
-  squidexGraphqlClient,
-  userRestClient,
-);
-const assetDataProvider = new AssetSquidexDataProvider(userRestClient);
-
 export const handler = sentryWrapper(
-  syncOrcidUserHandler(new Users(userDataProvider, assetDataProvider)),
+  syncOrcidUserHandler(
+    new Users(getUserDataProvider(), getAssetDataProvider()),
+  ),
 );

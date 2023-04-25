@@ -1,7 +1,7 @@
 import { gql } from 'graphql-tag';
 
 export const workingGroupContentQueryFragment = gql`
-  fragment WorkingGroupContent on WorkingGroups {
+  fragment WorkingGroupData on WorkingGroups {
     id
     flatData {
       title
@@ -52,7 +52,7 @@ export const workingGroupContentQueryFragment = gql`
 export const FETCH_WORKING_GROUP = gql`
   query FetchWorkingGroup($id: String!) {
     findWorkingGroupsContent(id: $id) {
-      ...WorkingGroupContent
+      ...WorkingGroupData
     }
   }
   ${workingGroupContentQueryFragment}
@@ -63,7 +63,7 @@ export const FETCH_WORKING_GROUPS = gql`
     queryWorkingGroupsContentsWithTotal(orderby: "created desc") {
       total
       items {
-        ...WorkingGroupContent
+        ...WorkingGroupData
       }
     }
   }

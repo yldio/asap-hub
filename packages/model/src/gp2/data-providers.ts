@@ -3,21 +3,26 @@ import {
   EventCreateDataObject,
   EventDataObject,
   EventUpdateDataObject,
-  ListCalendarDataObject,
-  ListEventDataObject,
+  FetchEventsOptions,
 } from '.';
 import {
-  CalendarDataProvider as CalendarDataProviderBase,
-  EventDataProvider as EventDataProviderBase,
+  CalendarCreateDataObject,
+  CalendarUpdateDataObject,
+  DataProvider,
+  FetchCalendarProviderOptions,
 } from '..';
 
-export type CalendarDataProvider = CalendarDataProviderBase<
+export type CalendarDataProvider = DataProvider<
   CalendarDataObject,
-  ListCalendarDataObject
+  FetchCalendarProviderOptions,
+  CalendarCreateDataObject,
+  null,
+  CalendarUpdateDataObject
 >;
-export type EventDataProvider = EventDataProviderBase<
+export type EventDataProvider = DataProvider<
   EventDataObject,
-  ListEventDataObject,
+  FetchEventsOptions,
   EventCreateDataObject,
+  null,
   EventUpdateDataObject
 >;

@@ -42,4 +42,12 @@ describe('Team Data Provider', () => {
       expect(await tutorialDataProvider.fetchById(tutorialId)).toBeNull();
     });
   });
+
+  describe('Fetch', () => {
+    test('should throw an error', async () => {
+      await expect(tutorialDataProvider.fetch()).rejects.toThrow(
+        'Method not implemented.',
+      );
+    });
+  });
 });

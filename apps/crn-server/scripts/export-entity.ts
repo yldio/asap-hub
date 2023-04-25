@@ -32,6 +32,7 @@ import { ExternalAuthorContentfulDataProvider } from '../src/data-providers/cont
 import { UserContentfulDataProvider } from '../src/data-providers/contentful/users.data-provider';
 import { EventSquidexDataProvider } from '../src/data-providers/event.data-provider';
 import { ExternalAuthorSquidexDataProvider } from '../src/data-providers/external-authors.data-provider';
+import { LabSquidexDataProvider } from '../src/data-providers/labs.data-provider';
 import { ResearchOutputSquidexDataProvider } from '../src/data-providers/research-outputs.data-provider';
 import { ResearchTagSquidexDataProvider } from '../src/data-providers/research-tags.data-provider';
 import { UserSquidexDataProvider } from '../src/data-providers/users.data-provider';
@@ -120,7 +121,10 @@ const getController = (entity: keyof EntityResponses) => {
     baseUrl,
   });
   const userDataProvider = isContentfulEnabled
-    ? new UserContentfulDataProvider()
+    ? new UserContentfulDataProvider(
+        contentfulGraphQLClient,
+        getContentfulRestClientFactory,
+      )
     : new UserSquidexDataProvider(squidexGraphqlClient, userRestClient);
 
   const researchOutputDataProvider = new ResearchOutputSquidexDataProvider(
@@ -146,6 +150,7 @@ const getController = (entity: keyof EntityResponses) => {
     eventsRestClient,
     squidexGraphqlClient,
   );
+  const labDataProvider = new LabSquidexDataProvider(squidexGraphqlClient);
   const controllerMap = {
     user: new Users(userDataProvider, assetDataProvider),
     'research-output': new ResearchOutputs(
@@ -155,7 +160,7 @@ const getController = (entity: keyof EntityResponses) => {
     ),
     'external-author': new ExternalAuthors(externalAuthorDataProvider),
     event: new Events(eventDataProvider),
-    lab: new Labs(squidexGraphqlClient),
+    lab: new Labs(labDataProvider),
   };
 
   return controllerMap[entity];

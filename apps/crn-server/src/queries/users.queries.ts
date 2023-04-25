@@ -12,12 +12,14 @@ export const usersContentQueryFragment = gql`
         title
         complete
         leaders {
+          inactiveSinceDate
           role
           user {
             id
           }
         }
         members {
+          inactiveSinceDate
           user {
             id
           }

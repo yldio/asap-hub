@@ -3,24 +3,9 @@ import {
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
 import { ListResponse, TeamEvent, UserResponse } from '@asap-hub/model';
-import {
-  InputUser,
-  RestUser,
-  SquidexGraphql,
-  SquidexRest,
-} from '@asap-hub/squidex';
 import { EventBridgeEvent } from 'aws-lambda';
-import {
-  algoliaApiKey,
-  algoliaAppId,
-  algoliaIndex,
-  appName,
-  baseUrl,
-} from '../../config';
+import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import Users, { UserController } from '../../controllers/users';
-import { AssetSquidexDataProvider } from '../../data-providers/assets.data-provider';
-import { UserSquidexDataProvider } from '../../data-providers/users.data-provider';
-import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
 import {
   loopOverCustomCollection,
@@ -28,6 +13,10 @@ import {
 } from '../../utils/loop-over-custom-colection';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { TeamPayload } from '../event-bus';
+import {
+  getUserDataProvider,
+  getAssetDataProvider,
+} from '../../dependencies/users.dependencies';
 
 export const indexTeamUsersHandler =
   (
@@ -45,7 +34,7 @@ export const indexTeamUsersHandler =
     > =>
       userController.fetch({
         filter: {
-          teamId: [event.detail.payload.id],
+          teamId: event.detail.payload.id,
         },
         skip,
         take,
@@ -73,26 +62,8 @@ export const indexTeamUsersHandler =
     await loopOverCustomCollection(fetchFunction, processingFunction, 8);
   };
 
-const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
-  appName,
-  baseUrl,
-});
-const userRestClient = new SquidexRest<RestUser, InputUser>(
-  getAuthToken,
-  'users',
-  {
-    appName,
-    baseUrl,
-  },
-);
-const userDataProvider = new UserSquidexDataProvider(
-  squidexGraphqlClient,
-  userRestClient,
-);
-const assetDataProvider = new AssetSquidexDataProvider(userRestClient);
-
 const rawHandler = indexTeamUsersHandler(
-  new Users(userDataProvider, assetDataProvider),
+  new Users(getUserDataProvider(), getAssetDataProvider()),
   algoliaSearchClientFactory({ algoliaApiKey, algoliaAppId, algoliaIndex }),
 );
 

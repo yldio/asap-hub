@@ -606,7 +606,7 @@ describe('/research-outputs/ route', () => {
 
       test.each([
         'documentType',
-        'description',
+        'descriptionMD',
         'tags',
         'title',
         'sharingStatus',
@@ -935,7 +935,7 @@ describe('/research-outputs/ route', () => {
 
       test.each([
         'documentType',
-        'description',
+        'descriptionMD',
         'tags',
         'title',
         'sharingStatus',

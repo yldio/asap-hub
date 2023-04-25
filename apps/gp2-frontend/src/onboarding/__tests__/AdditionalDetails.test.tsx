@@ -70,7 +70,7 @@ describe('AdditionalDetails', () => {
       screen.getByRole('heading', { name: 'Open Questions' }),
     ).toBeVisible();
     expect(
-      screen.getByRole('heading', { name: 'Funding Providers' }),
+      screen.getByRole('heading', { name: 'Financial Disclosures' }),
     ).toBeVisible();
     expect(
       screen.getByRole('heading', { name: 'Contributing Cohort Studies' }),

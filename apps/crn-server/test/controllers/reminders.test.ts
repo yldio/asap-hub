@@ -22,10 +22,11 @@ import {
   getPublishMaterialReminder,
   getUploadPresentationReminder,
 } from '../fixtures/reminders.fixtures';
-import { reminderDataProviderMock } from '../mocks/reminder-data-provider.mock';
+import { getDataProviderMock } from '../mocks/data-provider.mock';
 import { crnMeetingMaterialsDrive } from '../../src/config';
 
 describe('Reminder Controller', () => {
+  const reminderDataProviderMock = getDataProviderMock();
   const reminderController = new Reminders(reminderDataProviderMock);
 
   afterEach(() => {

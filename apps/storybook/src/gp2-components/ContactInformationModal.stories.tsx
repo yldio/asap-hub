@@ -12,6 +12,7 @@ const props: ComponentProps<typeof ContactInformationModal> = {
   ...gp2Fixtures.createUserResponse(),
   backHref: '#',
   onSave: () => Promise.resolve(),
+  countryCodeSuggestions: [{ name: 'United Kingdom', dialCode: '+44' }],
 };
 
 export const Normal = () => (

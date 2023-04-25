@@ -1,7 +1,7 @@
-import { gql } from 'graphql-tag';
+import gql from 'graphql-tag';
 
 export const newsContentQueryFragment = gql`
-  fragment NewsContent on NewsAndEvents {
+  fragment NewsData on NewsAndEvents {
     id
     created
     lastModified
@@ -29,7 +29,7 @@ export const FETCH_NEWS = gql`
     ) {
       total
       items {
-        ...NewsContent
+        ...NewsData
       }
     }
   }

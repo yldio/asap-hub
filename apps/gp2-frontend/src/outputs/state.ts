@@ -18,8 +18,10 @@ export const outputsState = selectorFamily<
   key: 'outputState',
   get:
     (options) =>
-    ({ get }) =>
-      getOutputs(get(authorizationState), options),
+    ({ get }) => {
+      get(refreshOutputsState);
+      return getOutputs(get(authorizationState), options);
+    },
 });
 
 const refreshOutputsState = atom<number>({

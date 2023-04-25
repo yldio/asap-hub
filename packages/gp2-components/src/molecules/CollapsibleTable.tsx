@@ -19,7 +19,7 @@ const rowStyles = css({
   rowGap: rem(32),
   [nonMobileQuery]: {
     gridTemplateColumns: '1fr 196px 156px',
-    columnGap: `${rem(24)}`,
+    columnGap: rem(24),
     rowGap: 0,
   },
   ':last-child': {
@@ -32,7 +32,7 @@ const rowStyles = css({
 const gridTitleStyles = css({
   borderBottom: 'none',
   marginBottom: 0,
-  paddingBottom: 0,
+  padding: 0,
   [mobileQuery]: {
     display: 'none',
   },
@@ -85,7 +85,9 @@ const CollapsibleTable: React.FC<CollapsibleTableProps> = ({
     <>
       <div css={[rowStyles, gridTitleStyles]}>
         {headings.map((heading, idx) => (
-          <Subtitle key={`heading-${idx}`}>{heading}</Subtitle>
+          <Subtitle key={`heading-${idx}`} noMargin>
+            {heading}
+          </Subtitle>
         ))}
       </div>
       {children.map(({ id, values }, index) => (

@@ -3,23 +3,28 @@ import { UserProfilePlaceholderCard } from '@asap-hub/react-components';
 import { ComponentProps } from 'react';
 import { EditableCard, ExpandableText } from '../molecules';
 
-type UserFundingStreamsProps = Pick<gp2.UserResponse, 'fundingStreams'> &
+type UserFundingStreamsProps = Pick<
+  gp2.UserResponse,
+  'fundingStreams' | 'firstName'
+> &
   Pick<ComponentProps<typeof EditableCard>, 'editHref'>;
 
 const UserFundingStreams: React.FC<UserFundingStreamsProps> = ({
   fundingStreams,
   editHref,
+  firstName,
 }) => (
   <EditableCard
     editHref={editHref}
-    title="Funding Providers"
+    title="Financial Disclosures"
+    subtitle={`${firstName} has funding from the following sources:`}
     edit={!!fundingStreams}
     optional
   >
     {editHref && !fundingStreams ? (
       <UserProfilePlaceholderCard>
-        List out the funding providers that you recieve in order to carry out
-        your work.
+        Please list any funding sources you would need to disclose in a
+        resulting GP2 publication where you are listed as an author.
       </UserProfilePlaceholderCard>
     ) : (
       <ExpandableText>{fundingStreams}</ExpandableText>

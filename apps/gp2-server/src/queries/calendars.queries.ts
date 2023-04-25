@@ -1,7 +1,7 @@
-import gql from 'graphql-tag';
+import { gql } from 'graphql-tag';
 
 export const calendarContentQueryFragment = gql`
-  fragment CalendarsContent on Calendars {
+  fragment CalendarsData on Calendars {
     id
     created
     lastModified
@@ -32,7 +32,7 @@ export const calendarContentQueryFragment = gql`
 export const FETCH_CALENDAR = gql`
   query FetchCalendar($id: String!) {
     findCalendarsContent(id: $id) {
-      ...CalendarsContent
+      ...CalendarsData
     }
   }
   ${calendarContentQueryFragment}
@@ -48,7 +48,7 @@ export const FETCH_CALENDARS = gql`
     ) {
       total
       items {
-        ...CalendarsContent
+        ...CalendarsData
       }
     }
   }

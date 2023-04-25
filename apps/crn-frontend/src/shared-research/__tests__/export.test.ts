@@ -27,6 +27,7 @@ describe('researchOutputToCSV', () => {
       ...createResearchOutputResponse(),
       created: 'created',
       description: 'description',
+      descriptionMD: '',
       id: 'id',
       lastUpdatedPartial: 'lastUpdatedPartial',
       sharingStatus: 'Network Only',
@@ -45,6 +46,7 @@ describe('researchOutputToCSV', () => {
       type: '3D Printing',
       usedInPublication: false,
       methods: ['Activity Assay', 'RNA Single Cell'],
+      keywords: ['Keyword1', 'Keyword2'],
     };
     expect(researchOutputToCSV(output)).toEqual({
       created: 'created',
@@ -74,6 +76,7 @@ describe('researchOutputToCSV', () => {
       workingGroups: expect.anything(),
       relatedResearch: '',
       methods: 'Activity Assay,RNA Single Cell',
+      keywords: 'Keyword1,Keyword2',
       organisms: 'C. Elegans,Rat',
       environments: 'In Cellulo,In Vivo',
       subtype: 'Metabolite',
@@ -189,6 +192,7 @@ describe('researchOutputToCSV', () => {
   it('Removes HTML from RTF fields', () => {
     const output: ResearchOutputResponse = {
       ...createResearchOutputResponse(),
+      descriptionMD: '',
       description: '<a>example</a> <p>123</p>',
       usageNotes: '<a>example</a> <p>123</p>',
     };

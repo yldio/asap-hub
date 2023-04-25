@@ -8,8 +8,10 @@ import {
 } from '../fixtures/events.fixtures';
 import { identity } from '../helpers/squidex';
 
-import { eventDataProviderMock } from '../mocks/event-data-provider.mock';
+import { getDataProviderMock } from '../mocks/data-provider.mock';
+
 describe('Event controller', () => {
+  const eventDataProviderMock = getDataProviderMock();
   const eventController = new Events(eventDataProviderMock);
 
   beforeAll(() => identity());

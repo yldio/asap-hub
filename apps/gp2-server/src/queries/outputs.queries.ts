@@ -1,7 +1,7 @@
-import gql from 'graphql-tag';
+import { gql } from 'graphql-tag';
 
 export const outputContentQueryFragment = gql`
-  fragment OutputContent on Outputs {
+  fragment OutputData on Outputs {
     id
     created
     lastModified
@@ -62,7 +62,7 @@ export const outputContentQueryFragment = gql`
 export const FETCH_OUTPUT = gql`
   query FetchOutput($id: String!) {
     findOutputsContent(id: $id) {
-      ...OutputContent
+      ...OutputData
     }
   }
   ${outputContentQueryFragment}
@@ -78,7 +78,7 @@ export const FETCH_OUTPUTS = gql`
     ) {
       total
       items {
-        ...OutputContent
+        ...OutputData
       }
     }
   }

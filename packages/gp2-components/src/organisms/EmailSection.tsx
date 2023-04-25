@@ -1,4 +1,10 @@
-import { Button, lead, Link, mail, pixels } from '@asap-hub/react-components';
+import {
+  Button,
+  Link,
+  mail,
+  pixels,
+  Subtitle,
+} from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import copyIcon from '../icons/copy-icon';
 
@@ -33,13 +39,6 @@ const buttonStyles = css({
   width: rem(40),
 });
 
-const captionStyles = css({
-  margin: `0 0 ${rem(8)}`,
-  fontSize: rem(14),
-  lineHeight: rem(16),
-  color: lead.rgb,
-});
-
 const EmailSection: React.FC<EmailSectionProps> = ({ contactEmails }) => (
   <div css={containerStyles}>
     {contactEmails.map(
@@ -52,8 +51,16 @@ const EmailSection: React.FC<EmailSectionProps> = ({ contactEmails }) => (
             >
               {copyIcon}
             </Button>
-            <div>
-              <h6 css={captionStyles}>{contact}</h6>
+            <div
+              css={css({
+                display: 'flex',
+                gap: rem(8),
+                flexDirection: 'column',
+              })}
+            >
+              <Subtitle noMargin accent="lead">
+                {contact}
+              </Subtitle>
               <Link href={createMailTo(email)}>{email}</Link>
             </div>
           </div>

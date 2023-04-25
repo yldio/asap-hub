@@ -27,6 +27,7 @@ export type WorkingGroupLeader = {
   >;
   readonly role: WorkingGroupRole;
   readonly workstreamRole: string;
+  readonly inactiveSinceDate?: string;
 };
 export type WorkingGroupResponseLeader = WorkingGroupLeader & {
   readonly isActive: boolean;
@@ -43,6 +44,7 @@ export type WorkingGroupMember = {
     | 'email'
     | 'avatarUrl'
   >;
+  readonly inactiveSinceDate?: string;
 };
 export type WorkingGroupResponseMember = WorkingGroupMember & {
   readonly isActive: boolean;

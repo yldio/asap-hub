@@ -138,6 +138,7 @@ export interface UserDataObject extends Invitee {
   expertiseAndResourceDescription?: string;
   expertiseAndResourceTags: string[];
   id: string;
+  inactiveSinceDate?: string;
   labs: LabResponse[];
   lastModifiedDate: string;
   onboarded?: boolean | null;
@@ -218,16 +219,35 @@ export interface UserAvatarPostRequest {
 
 export type ListUserResponse = ListResponse<UserResponse>;
 
-export type FetchUsersFilter = {
-  role?: string[];
-  labId?: string[];
-  teamId?: string[];
-  code?: string;
-  hidden?: boolean;
-  onboarded?: boolean;
-  orcid?: string;
-};
+export type FetchUsersFilter =
+  | {
+      labId?: never;
+      role?: never;
+      teamId?: never;
+      code?: string;
+      hidden?: boolean;
+      onboarded?: boolean;
+      orcid?: string;
+    }
+  | {
+      labId?: string;
+      role?: never;
+      teamId?: never;
+      code?: never;
+      hidden?: never;
+      onboarded?: never;
+      orcid?: never;
+    }
+  | {
+      labId?: never;
+      role?: string[];
+      teamId?: string;
+      code?: never;
+      hidden?: never;
+      onboarded?: never;
+      orcid?: never;
+    };
 
-export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;
+export type FetchUsersOptions = Omit<FetchOptions<FetchUsersFilter>, 'search'>;
 
 export type UserRole = 'Staff' | 'Member' | 'None';

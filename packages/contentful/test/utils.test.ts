@@ -4,6 +4,7 @@ import {
   parseRichText,
   addLocaleToFields,
   updateEntryFields,
+  patchAndPublish,
 } from '../src/utils';
 import {
   assetId_1,
@@ -200,5 +201,42 @@ describe('updateEntryFields', () => {
         },
       ),
     ).toEqual({ fields: { title: { 'en-US': 'Tissues' } } });
+  });
+});
+
+describe('patchAndPublish', () => {
+  let entry;
+  let publish;
+
+  beforeEach(() => {
+    publish = jest.fn();
+    entry = {
+      fields: {},
+      patch: jest.fn().mockResolvedValueOnce({ publish }),
+    };
+  });
+
+  test('converts data object passed to a json patch with locales', async () => {
+    await patchAndPublish(entry, { foo: 'bar', baz: 1 });
+    expect(entry.patch).toHaveBeenCalledWith([
+      { op: 'add', path: '/fields/foo', value: { 'en-US': 'bar' } },
+      { op: 'add', path: '/fields/baz', value: { 'en-US': 1 } },
+    ]);
+  });
+
+  test('patches with a "replace" op if field exists on entry', async () => {
+    entry.fields = {
+      foo: null,
+    };
+    await patchAndPublish(entry, { foo: 'bar', baz: 1 });
+    expect(entry.patch).toHaveBeenCalledWith([
+      { op: 'replace', path: '/fields/foo', value: { 'en-US': 'bar' } },
+      { op: 'add', path: '/fields/baz', value: { 'en-US': 1 } },
+    ]);
+  });
+
+  test('calls publish on the return value of the patch function', async () => {
+    await patchAndPublish(entry, { foo: 'bar' });
+    expect(publish).toHaveBeenCalled();
   });
 });

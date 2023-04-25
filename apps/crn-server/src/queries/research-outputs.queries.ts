@@ -12,6 +12,7 @@ export const researchOutputContentQueryFragment = gql`
       documentType
       type
       description
+      descriptionMD
       link
       addedDate
       publishDate
@@ -176,6 +177,11 @@ export const researchOutputContentQueryFragment = gql`
         }
       }
       subtype {
+        flatData {
+          name
+        }
+      }
+      keywords {
         flatData {
           name
         }

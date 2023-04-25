@@ -10,6 +10,7 @@ import {
   infoCircleYellowIcon,
   informationIcon,
   successIcon,
+  successLargeIcon,
 } from '../icons';
 import {
   perRem,
@@ -83,13 +84,19 @@ const wrapStyles = css({
   flexFlow: 'row',
 });
 
-export type ToastAccents = 'error' | 'info' | 'warning' | 'success';
+export type ToastAccents =
+  | 'error'
+  | 'info'
+  | 'warning'
+  | 'success'
+  | 'successLarge';
 
 const accentIcons: Record<ToastAccents, EmotionJSX.Element> = {
   error: errorIcon,
   info: informationIcon,
   warning: infoCircleYellowIcon,
   success: successIcon,
+  successLarge: successLargeIcon,
 };
 
 const accentStyles: Record<ToastAccents, CSSObject> = {
@@ -109,6 +116,11 @@ const accentStyles: Record<ToastAccents, CSSObject> = {
     svg: { stroke: warning500.rgb },
   },
   success: {
+    backgroundColor: success100.rgb,
+    color: success900.rgb,
+    svg: { stroke: success500.rgb },
+  },
+  successLarge: {
     backgroundColor: success100.rgb,
     color: success900.rgb,
     svg: { stroke: success500.rgb },

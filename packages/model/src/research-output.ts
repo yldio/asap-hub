@@ -187,7 +187,7 @@ export type ResearchOutputSharingStatus = (typeof sharingStatuses)[number];
 
 export type ResearchOutputCoreObject = {
   accession?: string;
-  addedDate: string;
+  addedDate?: string;
   asapFunded?: boolean;
   description?: string;
   descriptionMD?: string;
@@ -229,6 +229,14 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
   >;
 };
 
+export type ResearchOutputDraftDataObject = Omit<
+  ResearchOutputDataObject,
+  'addedDate'
+>;
+export type ResearchOutputPublishedDataObject = ResearchOutputDataObject & {
+  addedDate: string;
+};
+
 export type ListResearchOutputDataObject =
   ListResponse<ResearchOutputDataObject>;
 
@@ -249,6 +257,16 @@ export type ResearchOutputCreateDataObject = ResearchOutputCoreObject & {
   workingGroups?: string[];
   relatedResearchIds?: string[];
 };
+
+export type PublishedResearchOutputCreateDataObject =
+  ResearchOutputCreateDataObject & {
+    addedDate: string;
+  };
+
+export type DraftResearchOutputCreateDataObject = Omit<
+  ResearchOutputCreateDataObject,
+  'addedDate'
+>;
 
 export type ResearchOutputUpdateDataObject = ResearchOutputCoreObject & {
   authors: AuthorUpsertDataObject[];
@@ -315,7 +333,10 @@ export type ResearchOutputPostRequest = {
   type?: ResearchOutputType;
   usageNotes?: string;
   usedInPublication?: boolean;
+  published: boolean;
 };
+
+export type ResearchOutputAssociations = 'team' | 'teams' | 'working group';
 
 export type ResearchOutputPutRequest = ResearchOutputPostRequest;
 

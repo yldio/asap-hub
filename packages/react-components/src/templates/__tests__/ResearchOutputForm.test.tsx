@@ -278,6 +278,7 @@ describe('on submit', () => {
     workingGroups: [],
     relatedResearch: [],
     keywords: [],
+    published: false,
   };
   type Data = Pick<
     ResearchOutputPostRequest,
@@ -378,8 +379,8 @@ describe('on submit', () => {
     await setupForm();
     await submitForm();
     expect(saveFn).toHaveBeenLastCalledWith(expectedRequest);
-    await waitFor(() =>
-      expect(history.location.pathname).toEqual(`/shared-research/${id}`),
+    expect(history.location.pathname).toEqual(
+      `/shared-research/${id}/publishedNow`,
     );
   });
 
@@ -761,7 +762,10 @@ describe('on submit', () => {
   it('can save draft with minimum data', async () => {
     await setupForm();
     await saveDraft();
-    expect(saveDraftFn).toHaveBeenLastCalledWith(expectedRequest);
+    expect(saveDraftFn).toHaveBeenLastCalledWith({
+      ...expectedRequest,
+      published: false,
+    });
     await waitFor(() =>
       expect(history.location.pathname).toEqual(`/shared-research/${id}`),
     );

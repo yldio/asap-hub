@@ -75,7 +75,8 @@ export type ResearchOutputDataProvider = DataProvider<
   FetchResearchOutputOptions,
   ResearchOutputCreateDataObject,
   { publish: boolean },
-  ResearchOutputUpdateDataObject
+  ResearchOutputUpdateDataObject,
+  { publish: boolean }
 >;
 
 export class ResearchOutputSquidexDataProvider
@@ -248,6 +249,7 @@ export class ResearchOutputSquidexDataProvider
   async update(
     researchOutputId: string,
     input: ResearchOutputUpdateDataObject,
+    updateOptions = { publish: false },
   ): Promise<void> {
     const {
       authors,
@@ -288,6 +290,10 @@ export class ResearchOutputSquidexDataProvider
       labs: researchOutput.labs,
       teams: researchOutput.teams,
     });
+
+    if (updateOptions.publish) {
+      await this.researchOutputSquidexRestClient.publish(researchOutputId);
+    }
   }
 }
 

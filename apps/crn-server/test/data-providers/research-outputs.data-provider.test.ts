@@ -968,12 +968,68 @@ describe('ResearchOutputs data provider', () => {
               updatedBy: { iv: [researchOutputUpdateData.updatedBy] },
             },
           )
+          .reply(201);
+
+        await expect(
+          researchOutputDataProvider.update(
+            researchOutputId,
+            researchOutputUpdateData,
+            { publish: false },
+          ),
+        ).resolves.not.toThrow();
+      });
+
+      test('Should default to not publish the existing research-output', async () => {
+        const researchOutputUpdateData = getResearchOutputUpdateDataObject();
+
+        const restResearchOutputUpdateData = getRestResearchOutputUpdateData();
+        nock(baseUrl)
+          .patch(
+            `/api/content/${appName}/research-outputs/${researchOutputId}`,
+            {
+              ...restResearchOutputUpdateData,
+              updatedBy: { iv: [researchOutputUpdateData.updatedBy] },
+            },
+          )
           .reply(201, { id: researchOutputId });
 
         await expect(
           researchOutputDataProvider.update(
             researchOutputId,
             researchOutputUpdateData,
+          ),
+        ).resolves.not.toThrow();
+      });
+
+      test('Should publish a draft research-output', async () => {
+        const researchOutputUpdateData = getResearchOutputUpdateDataObject();
+
+        const restResearchOutputUpdateData = getRestResearchOutputUpdateData();
+
+        nock(baseUrl)
+          .put(
+            `/api/content/${appName}/research-outputs/${researchOutputId}/status`,
+            {
+              status: 'Published',
+            },
+          )
+          .reply(200);
+
+        nock(baseUrl)
+          .patch(
+            `/api/content/${appName}/research-outputs/${researchOutputId}`,
+            {
+              ...restResearchOutputUpdateData,
+              updatedBy: { iv: [researchOutputUpdateData.updatedBy] },
+            },
+          )
+          .reply(201);
+
+        await expect(
+          researchOutputDataProvider.update(
+            researchOutputId,
+            researchOutputUpdateData,
+            { publish: true },
           ),
         ).resolves.not.toThrow();
       });
@@ -989,6 +1045,7 @@ describe('ResearchOutputs data provider', () => {
           researchOutputDataProvider.update(
             researchOutputId,
             researchOutputRequest,
+            { publish: false },
           ),
         ).rejects.toThrow(GenericError);
       });
@@ -1003,6 +1060,7 @@ describe('ResearchOutputs data provider', () => {
           researchOutputDataProvider.update(
             researchOutputId,
             researchOutputRequest,
+            { publish: false },
           ),
         ).rejects.toThrow(GenericError);
       });
@@ -1018,6 +1076,7 @@ describe('ResearchOutputs data provider', () => {
           researchOutputDataProvider.update(
             researchOutputId,
             researchOutputRequest,
+            { publish: false },
           ),
         ).rejects.toThrow(NotFoundError);
       });

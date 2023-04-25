@@ -55,8 +55,8 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   const team = useTeamById(teamId);
   const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
 
-  const createResearchOutput = usePostResearchOutput({ publish: true });
-  const createDraftResearchOutput = usePostResearchOutput({ publish: false });
+  const createResearchOutput = usePostResearchOutput();
+
   const updateResearchOutput = usePutResearchOutput();
 
   const getLabSuggestions = useLabSuggestions();
@@ -116,21 +116,24 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
           permissions={permissions}
           onSave={(output) =>
             researchOutputData
-              ? updateResearchOutput(researchOutputData.id, output).catch(
-                  handleError(['/link', '/title'], setErrors),
-                )
-              : createResearchOutput(output).catch(
+              ? updateResearchOutput(researchOutputData.id, {
+                  ...output,
+                  published: true,
+                }).catch(handleError(['/link', '/title'], setErrors))
+              : createResearchOutput({ ...output, published: true }).catch(
                   handleError(['/link', '/title'], setErrors),
                 )
           }
           onSaveDraft={(output) =>
             researchOutputData
-              ? updateResearchOutput(researchOutputData.id, output).catch(
-                  handleError(['/link', '/title'], setErrors),
-                )
-              : createDraftResearchOutput(output).catch(
-                  handleError(['/link', '/title'], setErrors),
-                )
+              ? updateResearchOutput(researchOutputData.id, {
+                  ...output,
+                  published: false,
+                }).catch(handleError(['/link', '/title'], setErrors))
+              : createResearchOutput({
+                  ...output,
+                  published: false,
+                }).catch(handleError(['/link', '/title'], setErrors))
           }
         />
       </Frame>

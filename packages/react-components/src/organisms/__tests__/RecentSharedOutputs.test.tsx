@@ -36,6 +36,23 @@ it('renders the table research outputs', () => {
   ).toBeVisible();
 });
 
+it('falls back to created date if addedDate is undefined', () => {
+  const { getByText } = render(
+    <RecentSharedOutputs
+      outputs={[
+        {
+          ...createResearchOutputResponse(),
+          addedDate: undefined,
+          created: '2022-01-01',
+        },
+      ]}
+    />,
+  );
+  expect(
+    getByText(formatDateToTimezone('2022-01-01', 'E, d MMM y').toUpperCase()),
+  ).toBeVisible();
+});
+
 it('tests getIconForDocumentType return the correct icon', () => {
   expect(getIconForDocumentType('Article')).toEqual(article);
   expect(getIconForDocumentType('Protocol')).toEqual(protocol);

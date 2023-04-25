@@ -78,7 +78,6 @@ export default class ResearchOutputs implements ResearchOutputController {
 
   async create(
     researchOutputCreateData: ResearchOutputCreateData,
-    createOptions = { publish: true },
   ): Promise<ResearchOutputResponse | null> {
     await this.validateResearchOutput(researchOutputCreateData);
     const { methods, organisms, environments, subtype, keywords } =
@@ -89,7 +88,9 @@ export default class ResearchOutputs implements ResearchOutputController {
         researchOutputCreateData.authors ?? [],
       ),
       accession: researchOutputCreateData.accession,
-      addedDate: new Date(Date.now()).toISOString(),
+      addedDate: researchOutputCreateData.published
+        ? new Date(Date.now()).toISOString()
+        : undefined,
       asapFunded: researchOutputCreateData.asapFunded,
       createdBy: researchOutputCreateData.createdBy,
       description: researchOutputCreateData.description,
@@ -117,6 +118,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       workingGroups: researchOutputCreateData.workingGroups,
     };
 
+    const createOptions = { publish: researchOutputCreateData.published };
     const researchOutputId = await this.researchOutputDataProvider.create(
       researchOutputCreateDataObject,
       createOptions,
@@ -139,6 +141,13 @@ export default class ResearchOutputs implements ResearchOutputController {
       );
     }
 
+    if (
+      currentResearchOutput.published &&
+      !researchOutputUpdateData.published
+    ) {
+      throw Boom.badRequest('Cannot unpublish a research output');
+    }
+
     await this.validateResearchOutput(
       researchOutputUpdateData,
       id,
@@ -153,7 +162,9 @@ export default class ResearchOutputs implements ResearchOutputController {
         researchOutputUpdateData.authors ?? [],
       ),
       accession: researchOutputUpdateData.accession,
-      addedDate: currentResearchOutput.addedDate,
+      addedDate: researchOutputUpdateData.published
+        ? currentResearchOutput.addedDate || new Date(Date.now()).toISOString()
+        : undefined,
       asapFunded: researchOutputUpdateData.asapFunded,
       descriptionMD: researchOutputUpdateData.descriptionMD,
       description: researchOutputUpdateData.description,
@@ -181,9 +192,11 @@ export default class ResearchOutputs implements ResearchOutputController {
       workingGroups: researchOutputUpdateData.workingGroups,
     };
 
+    const updateOptions = { publish: researchOutputUpdateData.published };
     await this.researchOutputDataProvider.update(
       id,
       researchOutputUpdateDataObject,
+      updateOptions,
     );
 
     return this.fetchById(id);
@@ -380,7 +393,6 @@ export interface ResearchOutputController {
   fetchById: (id: string) => Promise<ResearchOutputResponse>;
   create: (
     researchOutputRequest: ResearchOutputCreateData,
-    createOptions?: { publish: boolean },
   ) => Promise<ResearchOutputResponse | null>;
   update: (
     id: string,

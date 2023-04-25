@@ -301,6 +301,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     environments,
     subtype,
     keywords,
+    published,
   });
 
   const [remotePayload, setRemotePayload] = useState(currentPayload);
@@ -443,11 +444,15 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                       setRemotePayload(currentPayload);
                       if (researchOutput) {
                         const { id } = researchOutput;
-                        setRedirectOnSave(
-                          sharedResearch({}).researchOutput({
+                        const savePath = sharedResearch({}).researchOutput({
+                          researchOutputId: id,
+                        }).$;
+                        const publishPath = sharedResearch({})
+                          .researchOutput({
                             researchOutputId: id,
-                          }).$,
-                        );
+                          })
+                          .researchOutputPublished({}).$;
+                        setRedirectOnSave(published ? savePath : publishPath);
                       }
                       return researchOutput;
                     })}

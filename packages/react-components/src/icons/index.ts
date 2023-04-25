@@ -86,6 +86,7 @@ export { default as showPasswordIcon } from './show-password';
 export { default as slackIcon } from './slack';
 export { default as speakerIcon } from './speaker';
 export { default as successIcon } from './success';
+export { default as successLargeIcon } from './success-large';
 export { default as systemCalendarIcon } from './system-calendar';
 export { default as TeamIcon } from './team';
 export { default as tickIcon } from './tick';

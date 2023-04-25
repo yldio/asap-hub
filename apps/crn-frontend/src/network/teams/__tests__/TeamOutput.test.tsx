@@ -51,6 +51,7 @@ const mandatoryFields = async (
   },
   isLinkRequired: boolean = false,
   isEditMode: boolean = false,
+  published: boolean = true,
 ) => {
   const url = isLinkRequired ? /url \(required\)/i : /url \(optional\)/i;
 
@@ -72,9 +73,10 @@ const mandatoryFields = async (
     screen.getByPlaceholderText('DOI number e.g. 10.5555/YFRU1371'),
     doi,
   );
-  const button = isEditMode
-    ? screen.getByRole('button', { name: /Save/i })
-    : screen.getByRole('button', { name: /Publish/i });
+  const button =
+    isEditMode && published
+      ? screen.getByRole('button', { name: /Save/i })
+      : screen.getByRole('button', { name: /Publish/i });
   const saveDraftButton = screen.queryByRole('button', { name: /Save Draft/i });
   return {
     publish: async () => {
@@ -151,7 +153,7 @@ it('switches research output type based on parameter', async () => {
   ).toBeInTheDocument();
 });
 
-it('can submit a form when form data is valid', async () => {
+it('can publish a form when the data is valid', async () => {
   const teamId = '42';
   const link = 'https://example42.com';
   const title = 'example42 title';
@@ -206,9 +208,9 @@ it('can submit a form when form data is valid', async () => {
       usageNotes: '',
       asapFunded: undefined,
       usedInPublication: undefined,
+      published: true,
     },
     expect.anything(),
-    true,
   );
 });
 
@@ -267,9 +269,9 @@ it('can save draft when form data is valid', async () => {
       usageNotes: '',
       asapFunded: undefined,
       usedInPublication: undefined,
+      published: false,
     },
     expect.anything(),
-    false,
   );
 });
 
@@ -343,6 +345,45 @@ it('can edit a draft research output', async () => {
       link,
       title,
       descriptionMD,
+      teams: [teamId],
+    }),
+    expect.anything(),
+  );
+});
+
+it('can edit and publish a draft research output', async () => {
+  const researchOutput = createResearchOutputResponse();
+  const teamId = researchOutput.teams[0]!.id;
+  const { type, title } = researchOutput;
+  const link = 'https://example42.com';
+  const doi = '10.0777';
+
+  await renderPage({
+    teamId: '42',
+    teamOutputDocumentType: 'article',
+    researchOutputData: { ...researchOutput, doi, published: false },
+  });
+
+  const initiallyPublished = false;
+  const { publish } = await mandatoryFields(
+    {
+      link,
+      title: '',
+      type,
+      doi,
+    },
+    true,
+    true,
+    initiallyPublished,
+  );
+  await publish();
+
+  expect(mockUpdateResearchOutput).toHaveBeenCalledWith(
+    researchOutput.id,
+    expect.objectContaining({
+      link,
+      title,
+      published: true,
       teams: [teamId],
     }),
     expect.anything(),

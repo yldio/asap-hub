@@ -21,6 +21,7 @@ export type DataProvider<
   TCreateData = null,
   TCreateOptions = null,
   TUpdateData = null,
+  TUpdateOptions = null,
 > = {
   fetchById(id: string): Promise<TDataObject | null>;
   fetch: (options: TFetchOptions) => Promise<ListResponse<TDataObject>>;
@@ -34,7 +35,11 @@ export type DataProvider<
     ? // eslint-disable-next-line @typescript-eslint/ban-types
       {}
     : {
-        update(id: string, data: TUpdateData): Promise<void>;
+        update(
+          id: string,
+          data: TUpdateData,
+          options?: TUpdateOptions,
+        ): Promise<void>;
       });
 
 export type CalendarDataProvider = DataProvider<

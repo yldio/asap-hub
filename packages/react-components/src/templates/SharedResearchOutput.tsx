@@ -1,4 +1,4 @@
-import React, { ComponentProps, useContext } from 'react';
+import React, { ComponentProps, useContext, useState } from 'react';
 import { css } from '@emotion/react';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
@@ -51,7 +51,9 @@ type SharedResearchOutputProps = Pick<
 > &
   ComponentProps<typeof SharedResearchOutputHeaderCard> & {
     backHref: string;
-  } & ComponentProps<typeof SharedResearchAdditionalInformationCard>;
+  } & ComponentProps<typeof SharedResearchAdditionalInformationCard> & {
+    publishedNow: boolean;
+  };
 
 const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   description = '',
@@ -62,6 +64,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   id,
   relatedResearch,
   published,
+  publishedNow,
   ...props
 }) => {
   const isGrantDocument = ['Grant Document', 'Presentation'].includes(
@@ -81,13 +84,28 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   );
   const hasDescription = description || descriptionMD;
 
+  const association = getResearchOutputAssociation(props);
+  const [publishedNowBanner, setPublishedNowBanner] = useState(published);
+
   return (
     <div>
-      {!published && (
-        <Toast accent="warning">{`This draft is available to members in the ${getResearchOutputAssociation(
-          props,
-        )}
-     listed below. Only PMs can publish this output.`}</Toast>
+      {(publishedNow || !published) && (
+        <div>
+          {publishedNowBanner && (
+            <Toast
+              accent="successLarge"
+              onClose={() => setPublishedNowBanner(false)}
+            >
+              {`${
+                association === 'working group' ? 'Working Group' : 'Team '
+              } ${props.documentType} published successfully.`}
+            </Toast>
+          )}
+          {!published && (
+            <Toast accent="warning">{`This draft is available to members in the ${association}
+   listed below. Only PMs can publish this output.`}</Toast>
+          )}
+        </div>
       )}
       <div css={containerStyles}>
         <div css={buttonsContainer}>

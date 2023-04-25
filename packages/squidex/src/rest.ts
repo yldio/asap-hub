@@ -243,6 +243,25 @@ export class Squidex<
     }
   }
 
+  async publish(id: string): Promise<T> {
+    try {
+      const res = await this.client
+        .put(`${this.collection}/${id}/status`, {
+          body: JSON.stringify({ status: 'Published' }),
+        })
+        .json();
+
+      return res as T;
+    } catch (err) {
+      if (err instanceof HTTPError) {
+        if (err.response.statusCode === 404) {
+          throw new NotFoundError(err);
+        }
+      }
+      throw new GenericError(err instanceof Error ? err : undefined);
+    }
+  }
+
   async put(id: string, json: Partial<T['data']>): Promise<T> {
     try {
       const res = await this.client

@@ -13,4 +13,5 @@ export const getSquidexClientMock = <
   put: jest.fn(),
   patch: jest.fn(),
   fetchOne: jest.fn(),
+  publish: jest.fn(),
 });

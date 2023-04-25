@@ -16,7 +16,6 @@ import {
   validateResearchOutputParameters,
   validateResearchOutputPostRequestParameters,
   validateResearchOutputPostRequestParametersIdentifiers,
-  validateResearchOutputRequestQueryParameters,
   validateResearchOutputPutRequestParameters,
   validateResearchOutputFetchOptions,
 } from '../validation/research-output.validation';
@@ -89,31 +88,30 @@ export const researchOutputRouteFactory = (
   );
 
   researchOutputRoutes.post('/research-outputs', async (req, res) => {
-    const { body, loggedInUser, query } = req;
+    const { body, loggedInUser } = req;
     const createRequest = validateResearchOutputPostRequestParameters(body);
     validateResearchOutputPostRequestParametersIdentifiers(createRequest);
 
+    const workingGroupOutput = createRequest.workingGroups.length;
+
     const userRole = getUserRole(
       loggedInUser as UserResponse,
-      'teams',
-      createRequest.teams,
+      workingGroupOutput ? 'workingGroups' : 'teams',
+      workingGroupOutput ? createRequest.workingGroups : createRequest.teams,
     );
 
-    const options = validateResearchOutputRequestQueryParameters(query);
-    const publish = options.publish ?? true;
-
-    if (!loggedInUser || !hasEditResearchOutputPermission(userRole, false)) {
+    if (
+      !loggedInUser ||
+      !hasEditResearchOutputPermission(userRole, createRequest.published)
+    ) {
       throw Boom.forbidden();
     }
 
-    const researchOutput = await researchOutputController.create(
-      {
-        ...createRequest,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        createdBy: loggedInUser!.id,
-      },
-      { publish },
-    );
+    const researchOutput = await researchOutputController.create({
+      ...createRequest,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      createdBy: loggedInUser!.id,
+    });
 
     res.status(201).json(researchOutput);
   });
@@ -126,15 +124,18 @@ export const researchOutputRouteFactory = (
       const updateRequest = validateResearchOutputPutRequestParameters(body);
       validateResearchOutputPostRequestParametersIdentifiers(body);
 
+      const workingGroupOutput = updateRequest.workingGroups.length;
+
       const userRole = getUserRole(
         loggedInUser as UserResponse,
-        'teams',
-        updateRequest.teams,
+        workingGroupOutput ? 'workingGroups' : 'teams',
+        workingGroupOutput ? updateRequest.workingGroups : updateRequest.teams,
       );
 
-      // TODO: update the published value in hasEditResearchOutputPermission in
-      // display draft task. Currently we are not sending the value published
-      if (!loggedInUser || !hasEditResearchOutputPermission(userRole, false)) {
+      if (
+        !loggedInUser ||
+        !hasEditResearchOutputPermission(userRole, updateRequest.published)
+      ) {
         throw Boom.forbidden();
       }
 

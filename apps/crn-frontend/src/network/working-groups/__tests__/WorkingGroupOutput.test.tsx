@@ -258,13 +258,13 @@ it('can submit a form when form data is valid', async () => {
       usageNotes: '',
       asapFunded: undefined,
       usedInPublication: undefined,
+      published: true,
     },
     expect.anything(),
-    true,
   );
   await waitFor(() => {
     expect(history.location.pathname).toBe(
-      '/shared-research/research-output-id',
+      '/shared-research/research-output-id/publishedNow',
     );
   });
 });
@@ -335,9 +335,9 @@ it('can save draft when form data is valid', async () => {
       usageNotes: '',
       asapFunded: undefined,
       usedInPublication: undefined,
+      published: false,
     },
     expect.anything(),
-    false,
   );
   await waitFor(() => {
     expect(history.location.pathname).toBe(
@@ -419,11 +419,27 @@ it('will toast server side errors for unknown errors', async () => {
 });
 
 it.each([
-  { status: 'draft', buttonName: 'Save Draft', published: false },
-  { status: 'published', buttonName: 'Save', published: true },
+  {
+    status: 'draft',
+    buttonName: 'Save Draft',
+    published: false,
+    shouldPublish: false,
+  },
+  {
+    status: 'published',
+    buttonName: 'Save',
+    published: true,
+    shouldPublish: false,
+  },
+  {
+    status: 'draft',
+    buttonName: 'Publish',
+    published: false,
+    shouldPublish: true,
+  },
 ])(
   'can edit a $status working group research output',
-  async ({ buttonName, published }) => {
+  async ({ buttonName, published, shouldPublish }) => {
     const id = 'RO-ID';
     const workingGroupId = 'wg1';
     const link = 'https://example42.com';
@@ -458,7 +474,9 @@ it.each([
     await waitFor(() => {
       expect(button).toBeEnabled();
       expect(history.location.pathname).toBe(
-        '/shared-research/research-output-id',
+        buttonName === 'Publish'
+          ? '/shared-research/research-output-id/publishedNow'
+          : '/shared-research/research-output-id',
       );
     });
 
@@ -470,6 +488,7 @@ it.each([
         title,
         descriptionMD,
         workingGroups: [workingGroupId],
+        published: shouldPublish,
       }),
       expect.anything(),
     );

@@ -3,6 +3,10 @@ import * as graphql from './graphql';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
 const documents = {
+  '\n  fragment ContributingCohortsContentData on ContributingCohorts {\n    sys {\n      id\n    }\n    name\n  }\n':
+    graphql.ContributingCohortsContentDataFragmentDoc,
+  '\n  query FetchContributingCohorts(\n    $limit: Int\n    $skip: Int\n    $order: [ContributingCohortsOrder]\n  ) {\n    contributingCohortsCollection(limit: $limit, skip: $skip, order: $order) {\n      total\n      items {\n        ...ContributingCohortsContentData\n      }\n    }\n  }\n  \n':
+    graphql.FetchContributingCohortsDocument,
   '\n  fragment NewsContentData on News {\n    sys {\n      id\n      firstPublishedAt\n    }\n    title\n    shortText\n    sampleCount\n    articleCount\n    cohortCount\n    link\n    linkText\n    publishDate\n  }\n':
     graphql.NewsContentDataFragmentDoc,
   '\n  query FetchNewsById($id: String!) {\n    news(id: $id) {\n      ...NewsContentData\n    }\n  }\n  \n':
@@ -15,6 +19,12 @@ const documents = {
     graphql.FetchPagesDocument,
 };
 
+export function gql(
+  source: '\n  fragment ContributingCohortsContentData on ContributingCohorts {\n    sys {\n      id\n    }\n    name\n  }\n',
+): (typeof documents)['\n  fragment ContributingCohortsContentData on ContributingCohorts {\n    sys {\n      id\n    }\n    name\n  }\n'];
+export function gql(
+  source: '\n  query FetchContributingCohorts(\n    $limit: Int\n    $skip: Int\n    $order: [ContributingCohortsOrder]\n  ) {\n    contributingCohortsCollection(limit: $limit, skip: $skip, order: $order) {\n      total\n      items {\n        ...ContributingCohortsContentData\n      }\n    }\n  }\n  \n',
+): (typeof documents)['\n  query FetchContributingCohorts(\n    $limit: Int\n    $skip: Int\n    $order: [ContributingCohortsOrder]\n  ) {\n    contributingCohortsCollection(limit: $limit, skip: $skip, order: $order) {\n      total\n      items {\n        ...ContributingCohortsContentData\n      }\n    }\n  }\n  \n'];
 export function gql(
   source: '\n  fragment NewsContentData on News {\n    sys {\n      id\n      firstPublishedAt\n    }\n    title\n    shortText\n    sampleCount\n    articleCount\n    cohortCount\n    link\n    linkText\n    publishDate\n  }\n',
 ): (typeof documents)['\n  fragment NewsContentData on News {\n    sys {\n      id\n      firstPublishedAt\n    }\n    title\n    shortText\n    sampleCount\n    articleCount\n    cohortCount\n    link\n    linkText\n    publishDate\n  }\n'];

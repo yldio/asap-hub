@@ -865,7 +865,19 @@ const serverlessConfig: AWS = {
         DeletionPolicy: 'Delete',
         Properties: {
           BucketName: '${self:service}-${self:provider.stage}-frontend',
-          AccessControl: 'PublicRead',
+          OwnershipControls: {
+            Rules: [
+              {
+                ObjectOwnership: 'ObjectWriter',
+              },
+            ],
+          },
+          PublicAccessBlockConfiguration: {
+            BlockPublicAcls: false,
+            BlockPublicPolicy: false,
+            IgnorePublicAcls: false,
+            RestrictPublicBuckets: false,
+          },
           CorsConfiguration: {
             CorsRules: [
               {
@@ -883,7 +895,19 @@ const serverlessConfig: AWS = {
         DeletionPolicy: 'Delete',
         Properties: {
           BucketName: '${self:service}-${self:provider.stage}-auth-frontend',
-          AccessControl: 'PublicRead',
+          OwnershipControls: {
+            Rules: [
+              {
+                ObjectOwnership: 'ObjectWriter',
+              },
+            ],
+          },
+          PublicAccessBlockConfiguration: {
+            BlockPublicAcls: false,
+            BlockPublicPolicy: false,
+            IgnorePublicAcls: false,
+            RestrictPublicBuckets: false,
+          },
           CorsConfiguration: {
             CorsRules: [
               {
@@ -901,7 +925,19 @@ const serverlessConfig: AWS = {
         DeletionPolicy: 'Delete',
         Properties: {
           BucketName: '${self:service}-${self:provider.stage}-storybook',
-          AccessControl: 'PublicRead',
+          OwnershipControls: {
+            Rules: [
+              {
+                ObjectOwnership: 'ObjectWriter',
+              },
+            ],
+          },
+          PublicAccessBlockConfiguration: {
+            BlockPublicAcls: false,
+            BlockPublicPolicy: false,
+            IgnorePublicAcls: false,
+            RestrictPublicBuckets: false,
+          },
           CorsConfiguration: {
             CorsRules: [
               {
@@ -922,7 +958,19 @@ const serverlessConfig: AWS = {
         DeletionPolicy: 'Delete',
         Properties: {
           BucketName: '${self:service}-${self:provider.stage}-messages-static',
-          AccessControl: 'PublicRead',
+          OwnershipControls: {
+            Rules: [
+              {
+                ObjectOwnership: 'ObjectWriter',
+              },
+            ],
+          },
+          PublicAccessBlockConfiguration: {
+            BlockPublicAcls: false,
+            BlockPublicPolicy: false,
+            IgnorePublicAcls: false,
+            RestrictPublicBuckets: false,
+          },
           CorsConfiguration: {
             CorsRules: [
               {

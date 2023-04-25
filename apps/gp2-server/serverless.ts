@@ -455,7 +455,19 @@ const serverlessConfig: AWS = {
         DeletionPolicy: 'Delete',
         Properties: {
           BucketName: '${self:service}-${self:provider.stage}-gp2-frontend',
-          AccessControl: 'PublicRead',
+          OwnershipControls: {
+            Rules: [
+              {
+                ObjectOwnership: 'ObjectWriter',
+              },
+            ],
+          },
+          PublicAccessBlockConfiguration: {
+            BlockPublicAcls: false,
+            BlockPublicPolicy: false,
+            IgnorePublicAcls: false,
+            RestrictPublicBuckets: false,
+          },
           CorsConfiguration: {
             CorsRules: [
               {
@@ -474,7 +486,19 @@ const serverlessConfig: AWS = {
         Properties: {
           BucketName:
             '${self:service}-${self:provider.stage}-gp2-auth-frontend',
-          AccessControl: 'PublicRead',
+          OwnershipControls: {
+            Rules: [
+              {
+                ObjectOwnership: 'ObjectWriter',
+              },
+            ],
+          },
+          PublicAccessBlockConfiguration: {
+            BlockPublicAcls: false,
+            BlockPublicPolicy: false,
+            IgnorePublicAcls: false,
+            RestrictPublicBuckets: false,
+          },
           CorsConfiguration: {
             CorsRules: [
               {
@@ -492,7 +516,19 @@ const serverlessConfig: AWS = {
         DeletionPolicy: 'Delete',
         Properties: {
           BucketName: '${self:service}-${self:provider.stage}-messages-static',
-          AccessControl: 'PublicRead',
+          OwnershipControls: {
+            Rules: [
+              {
+                ObjectOwnership: 'ObjectWriter',
+              },
+            ],
+          },
+          PublicAccessBlockConfiguration: {
+            BlockPublicAcls: false,
+            BlockPublicPolicy: false,
+            IgnorePublicAcls: false,
+            RestrictPublicBuckets: false,
+          },
           CorsConfiguration: {
             CorsRules: [
               {

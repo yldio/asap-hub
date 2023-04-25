@@ -34,6 +34,15 @@ jest.mock('../../users/api');
 jest.mock('../../../shared-research/api');
 
 const baseUser = createUserResponse();
+const baseResearchOutput: ResearchOutputResponse = {
+  ...createResearchOutputResponse(),
+  teams: [
+    {
+      id: '42',
+      displayName: 'Jakobsson, J',
+    },
+  ],
+};
 
 const mandatoryFields = async (
   {
@@ -126,7 +135,7 @@ it('Renders the research output', async () => {
   ).toBeInTheDocument();
 });
 
-it('Renders the correct button in create mode', async () => {
+it('displays the publish button for new research outputs', async () => {
   await renderPage({
     teamId: '42',
     teamOutputDocumentType: 'bioinformatics',
@@ -135,11 +144,11 @@ it('Renders the correct button in create mode', async () => {
   expect(screen.getByRole('button', { name: /Publish/i })).toBeInTheDocument();
 });
 
-it('Renders the correct button in edit mode', async () => {
+it('displays the save button for existing research outputs', async () => {
   await renderPage({
     teamId: '42',
     teamOutputDocumentType: 'bioinformatics',
-    researchOutputData: createResearchOutputResponse(),
+    researchOutputData: baseResearchOutput,
   });
 
   expect(screen.getByRole('button', { name: /Save/i })).toBeInTheDocument();
@@ -276,16 +285,15 @@ it('can save draft when form data is valid', async () => {
 });
 
 it('can edit a research output', async () => {
-  const researchOutput = createResearchOutputResponse();
-  const teamId = researchOutput.teams[0]!.id;
-  const { type, descriptionMD, title } = researchOutput;
+  const teamId = baseResearchOutput.teams[0]!.id;
+  const { type, descriptionMD, title } = baseResearchOutput;
   const link = 'https://example42.com';
   const doi = '10.0777';
 
   await renderPage({
     teamId: '42',
     teamOutputDocumentType: 'article',
-    researchOutputData: { ...researchOutput, doi },
+    researchOutputData: { ...baseResearchOutput, doi },
   });
 
   const { publish } = await mandatoryFields(
@@ -302,7 +310,7 @@ it('can edit a research output', async () => {
   await publish();
 
   expect(mockUpdateResearchOutput).toHaveBeenCalledWith(
-    researchOutput.id,
+    baseResearchOutput.id,
     expect.objectContaining({
       link,
       title,
@@ -314,7 +322,7 @@ it('can edit a research output', async () => {
 });
 
 it('can edit a draft research output', async () => {
-  const researchOutput = createResearchOutputResponse();
+  const researchOutput = baseResearchOutput;
   const teamId = researchOutput.teams[0]!.id;
   const { type, descriptionMD, title } = researchOutput;
   const link = 'https://example42.com';
@@ -352,7 +360,7 @@ it('can edit a draft research output', async () => {
 });
 
 it('can edit and publish a draft research output', async () => {
-  const researchOutput = createResearchOutputResponse();
+  const researchOutput = baseResearchOutput;
   const teamId = researchOutput.teams[0]!.id;
   const { type, title } = researchOutput;
   const link = 'https://example42.com';
@@ -404,7 +412,7 @@ test('displays sorry page when user does not have edit permission', async () => 
     teamId: '42',
     teamOutputDocumentType: 'article',
     researchOutputData: {
-      ...createResearchOutputResponse(),
+      ...baseResearchOutput,
       published: true,
     },
   });
@@ -476,7 +484,7 @@ it('will toast server side errors for unknown errors in edit mode', async () => 
   await renderPage({
     teamId: '42',
     teamOutputDocumentType: 'article',
-    researchOutputData: { ...createResearchOutputResponse(), doi },
+    researchOutputData: { ...baseResearchOutput, doi },
   });
 
   const { publish } = await mandatoryFields(

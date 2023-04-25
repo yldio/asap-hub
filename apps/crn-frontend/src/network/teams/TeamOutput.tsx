@@ -69,7 +69,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
 
   const permissions = useResearchOutputPermissions(
     'teams',
-    [teamId],
+    researchOutputData?.teams.map(({ id }) => id) ?? [teamId],
     published,
   );
 

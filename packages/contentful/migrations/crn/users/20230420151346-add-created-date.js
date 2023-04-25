@@ -11,7 +11,6 @@ module.exports.up = (migration) => {
     .validations([])
     .disabled(false)
     .omitted(false);
-  users.changeFieldControl('createdDate', 'app', '2finDNk15g5UtOq4DaLNxv', {});
 };
 
 module.exports.down = (migration) => {

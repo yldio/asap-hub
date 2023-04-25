@@ -162,13 +162,6 @@ const cleanUser = (userToUpdate: UserUpdateDataObject) =>
         ...(value as UserSocialLinks),
       };
     }
-    if (key === 'onboarded' && value === true) {
-      return {
-        ...acc,
-        onboarded: true,
-        createdDate: new Date().toISOString(),
-      };
-    }
     return { ...acc, [key]: value };
   }, {} as { [key: string]: unknown });
 

@@ -594,16 +594,6 @@ describe('User data provider', () => {
         },
       });
     });
-
-    test('sets `createdDate` when a user is onboarded', async () => {
-      await userDataProvider.update('123', {
-        onboarded: true,
-      });
-      expect(patchAndPublish).toHaveBeenCalledWith(entry, {
-        onboarded: true,
-        createdDate: '2023-01-01T12:00:00.000Z',
-      });
-    });
   });
 
   describe('Create', () => {

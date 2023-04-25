@@ -1,4 +1,4 @@
-import { ContributingCohortDataProvider } from "../../src/data-providers/types";
+import { ContributingCohortDataProvider } from '../../src/data-providers/types';
 
 export const contributingCohortDataProviderMock: jest.Mocked<ContributingCohortDataProvider> =
   {

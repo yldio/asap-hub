@@ -75,11 +75,11 @@ export const fetchContributingCohortResponse = () => ({
 });
 
 export const getContributingCohortInput =
-(): gp2Squidex.InputContributingCohort['data'] => {
-  const input = getContributingCohortCreateDataObject();
+  (): gp2Squidex.InputContributingCohort['data'] => {
+    const input = getContributingCohortCreateDataObject();
 
-  return parseToSquidex(input);
-};
+    return parseToSquidex(input);
+  };
 
 export const getContributingCohortContentfulEntry = () =>
   getEntry({

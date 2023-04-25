@@ -124,7 +124,7 @@ export const updateEntryFields = (
 export const patchAndPublish = async (
   entry: Entry,
   fields: Record<string, unknown>,
-): Promise<void> => {
+): Promise<Entry> => {
   const patch: Parameters<Entry['patch']>[0] = Object.entries(fields).map(
     ([key, value]) => ({
       op: Object.prototype.hasOwnProperty.call(entry.fields, key)
@@ -137,5 +137,5 @@ export const patchAndPublish = async (
     }),
   );
   const result = await entry.patch(patch);
-  await result.publish();
+  return result.publish();
 };

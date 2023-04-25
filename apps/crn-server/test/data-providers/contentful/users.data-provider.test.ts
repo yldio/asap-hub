@@ -2,6 +2,7 @@ import {
   patchAndPublish,
   getContentfulGraphqlClientMockServer,
   Environment,
+  Entry,
   FETCH_USERS,
   FETCH_USERS_BY_LAB_ID,
   FETCH_USERS_BY_TEAM_ID,
@@ -515,6 +516,21 @@ describe('User data provider', () => {
 
     beforeEach(() => {
       environmentMock.getEntry.mockResolvedValueOnce(entry);
+      const mockPatchAndPublish = patchAndPublish as jest.MockedFunction<
+        typeof patchAndPublish
+      >;
+      mockPatchAndPublish.mockResolvedValue({
+        sys: {
+          publishedVersion: 2,
+        },
+      } as Entry);
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        users: {
+          sys: {
+            publishedVersion: 2,
+          },
+        },
+      });
     });
 
     test('fetches entry from contentful and passes to `patchAndPublish`', async () => {
@@ -575,6 +591,47 @@ describe('User data provider', () => {
           },
         },
       });
+    });
+
+    test('checks version of published data and polls until they match', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: {
+          sys: {
+            publishedVersion: 1,
+          },
+        },
+      });
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: {
+          sys: {
+            publishedVersion: 1,
+          },
+        },
+      });
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: {
+          sys: {
+            publishedVersion: 2,
+          },
+        },
+      });
+
+      await userDataProvider.update('123', {
+        firstName: 'Colin',
+      });
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledTimes(3);
+    });
+
+    test('throws if polling query does not return a value', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: null,
+      });
+
+      expect(async () =>
+        userDataProvider.update('123', {
+          firstName: 'Colin',
+        }),
+      ).rejects.toThrow();
     });
   });
 

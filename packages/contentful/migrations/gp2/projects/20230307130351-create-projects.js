@@ -6,6 +6,7 @@ module.exports.up = (migration) => {
     .name('Projects')
     .description('')
     .displayField('title');
+
   projects
     .createField('title')
     .name('Title')
@@ -16,9 +17,9 @@ module.exports.up = (migration) => {
     .disabled(false)
     .omitted(false);
 
-  users
+  projects
     .createField('members')
-    .name('members')
+    .name('Members')
     .type('Array')
     .localized(false)
     .required(false)
@@ -185,8 +186,47 @@ module.exports.up = (migration) => {
       ],
     });
 
-  // Milestones
-  // Resources
+  projects
+    .createField('milestones')
+    .name('Milestones')
+    .type('Array')
+    .localized(false)
+    .required(false)
+    .validations([])
+    .disabled(false)
+    .omitted(false)
+    .items({
+      type: 'Link',
+
+      validations: [
+        {
+          linkContentType: ['milestones'],
+        },
+      ],
+
+      linkType: 'Entry',
+    });
+
+  projects
+    .createField('resources')
+    .name('Resources')
+    .type('Array')
+    .localized(false)
+    .required(false)
+    .validations([])
+    .disabled(false)
+    .omitted(false)
+    .items({
+      type: 'Link',
+
+      validations: [
+        {
+          linkContentType: ['resources'],
+        },
+      ],
+
+      linkType: 'Entry',
+    });
 
   projects
     .createField('traineeProject')

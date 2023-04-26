@@ -1,13 +1,13 @@
-module.exports.description = 'Create milestone content model';
+module.exports.description = 'Create resources content model';
 
 module.exports.up = function (migration) {
-  const resource = migration
-    .createContentType('milestone')
-    .name('Milestone')
+  const resources = migration
+    .createContentType('resources')
+    .name('Resources')
     .description('')
     .displayField('type');
 
-  resource
+  resources
     .createField('type')
     .name('Type')
     .type('Symbol')
@@ -20,7 +20,7 @@ module.exports.up = function (migration) {
     ])
     .disabled(false)
     .omitted(false);
-  resource
+  resources
     .createField('title')
     .name('Title')
     .type('Text')
@@ -30,7 +30,7 @@ module.exports.up = function (migration) {
     .disabled(false)
     .omitted(false);
 
-  resource
+  resources
     .createField('description')
     .name('Description')
     .type('Text')
@@ -40,7 +40,7 @@ module.exports.up = function (migration) {
     .disabled(false)
     .omitted(false);
 
-  resource
+  resources
     .createField('externalLink')
     .name('External Link')
     .type('Symbol')
@@ -58,14 +58,14 @@ module.exports.up = function (migration) {
     .disabled(false)
     .omitted(false);
 
-  resource.changeFieldControl('title', 'builtin', 'singleLine', {});
-  resource.changeFieldControl('type', 'builtin', 'dropdown', {});
-  resource.changeFieldControl('description', 'builtin', 'multiLine', {});
-  resource.changeFieldControl('externalLink', 'builtin', 'urlEditor', {
+  resources.changeFieldControl('title', 'builtin', 'singleLine', {});
+  resources.changeFieldControl('type', 'builtin', 'dropdown', {});
+  resources.changeFieldControl('description', 'builtin', 'multiLine', {});
+  resources.changeFieldControl('externalLink', 'builtin', 'urlEditor', {
     helpText: 'URL must start with http:// or https://',
   });
 };
 
 module.exports.down = (migration) => {
-  migration.deleteContentType('projectMembership');
+  migration.deleteContentType('resources');
 };

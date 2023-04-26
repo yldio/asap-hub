@@ -1,13 +1,13 @@
-module.exports.description = 'Create milestone content model';
+module.exports.description = 'Create milestones content model';
 
 module.exports.up = function (migration) {
-  const milestone = migration
-    .createContentType('milestone')
-    .name('Milestone')
+  const milestones = migration
+    .createContentType('milestones')
+    .name('Milestones')
     .description('')
     .displayField('title');
 
-  milestone
+  milestones
     .createField('title')
     .name('Title')
     .type('Text')
@@ -17,7 +17,7 @@ module.exports.up = function (migration) {
     .disabled(false)
     .omitted(false);
 
-  milestone
+  milestones
     .createField('description')
     .name('Description')
     .type('Text')
@@ -27,7 +27,7 @@ module.exports.up = function (migration) {
     .disabled(false)
     .omitted(false);
 
-  milestone
+  milestones
     .createField('status')
     .name('Status')
     .type('Symbol')
@@ -41,7 +41,7 @@ module.exports.up = function (migration) {
     .disabled(false)
     .omitted(false);
 
-  milestone
+  milestones
     .createField('externalLink')
     .name('External Link')
     .type('Symbol')
@@ -59,14 +59,14 @@ module.exports.up = function (migration) {
     .disabled(false)
     .omitted(false);
 
-  milestone.changeFieldControl('title', 'builtin', 'singleLine', {});
-  milestone.changeFieldControl('role', 'builtin', 'dropdown', {});
-  milestone.changeFieldControl('description', 'builtin', 'multiLine', {});
-  milestone.changeFieldControl('externalLink', 'builtin', 'urlEditor', {
+  milestones.changeFieldControl('title', 'builtin', 'singleLine', {});
+  milestones.changeFieldControl('role', 'builtin', 'dropdown', {});
+  milestones.changeFieldControl('description', 'builtin', 'multiLine', {});
+  milestones.changeFieldControl('externalLink', 'builtin', 'urlEditor', {
     helpText: 'URL must start with http:// or https://',
   });
 };
 
 module.exports.down = (migration) => {
-  migration.deleteContentType('projectMembership');
+  migration.deleteContentType('milestones');
 };

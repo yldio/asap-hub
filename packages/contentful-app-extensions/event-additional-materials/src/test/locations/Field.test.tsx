@@ -1,3 +1,4 @@
+import '@testing-library/jest-dom';
 import React from 'react';
 import Field from '../../locations/Field';
 import { fireEvent, render, screen } from '@testing-library/react';

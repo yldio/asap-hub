@@ -40,18 +40,8 @@ describe('Cronjob - Sync Users ORCID', () => {
         orcidWorks: fixtures.ORCIDWorksDeserialisedExpectation,
       },
     };
-    const userNotToSync = {
-      ...user,
-      flatData: {
-        ...user.flatData,
-        orcidLastSyncDate: new Date().toISOString(),
-        orcid,
-        orcidWorks: fixtures.ORCIDWorksDeserialisedExpectation,
-      },
-    };
     const outdatedUsersResponse = generateGraphqlFetchUsersResponse([
       userToSync,
-      userNotToSync,
     ]);
     const singleUserResponse = getSquidexUserGraphqlResponse(userToSync);
 

@@ -5,7 +5,9 @@ import {
   SquidexGraphql,
   SquidexRest,
 } from '@asap-hub/squidex';
-import pLimit from 'p-limit';
+import pThrottle from 'p-throttle';
+import { DateTime } from 'luxon';
+import { UserDataObject, UserResponse } from '@asap-hub/model';
 import { appName, baseUrl } from '../../config';
 import Users from '../../controllers/users';
 import { AssetSquidexDataProvider } from '../../data-providers/assets.data-provider';
@@ -14,9 +16,6 @@ import { getAuthToken } from '../../utils/auth';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 
 const rawHandler = async (): Promise<lambda.Response> => {
-  const ONE_MONTH = 1000 * 60 * 60 * 24 * 31;
-
-  const limit = pLimit(5);
   const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
     appName,
     baseUrl,
@@ -35,22 +34,31 @@ const rawHandler = async (): Promise<lambda.Response> => {
   );
   const assetDataProvider = new AssetSquidexDataProvider(userRestClient);
   const users = new Users(userDataProvider, assetDataProvider);
+  const orcidLastSyncDate = DateTime.now()
+    .set({ hour: 0, minute: 0 })
+    .minus({ months: 1 })
+    .toISO();
 
-  const { items: outdatedUsers } = await users.fetch({
-    take: 30,
+  const { items: outdatedUsers } = await userDataProvider.fetch({
+    take: 100,
     filter: {
       orcid: '-',
+      orcidLastSyncDate,
     },
   });
 
+  // orcid rate limit 24 request per second
+  const throttle = pThrottle({
+    limit: 24,
+    interval: 1000,
+  });
+
+  const throttledSyncOrcidProfile = throttle(async (user: UserDataObject) =>
+    users.syncOrcidProfile(user.id, user as UserResponse),
+  );
+
   await Promise.all(
-    outdatedUsers
-      .filter(
-        (user) =>
-          !user.orcidLastSyncDate ||
-          Date.now() - Date.parse(user.orcidLastSyncDate) > ONE_MONTH,
-      )
-      .map((user) => limit(() => users.syncOrcidProfile(user.id, user))),
+    outdatedUsers.map((user) => throttledSyncOrcidProfile(user)),
   );
 
   return {

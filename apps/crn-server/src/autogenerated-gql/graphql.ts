@@ -10052,6 +10052,7 @@ export type FetchUsersQueryVariables = Exact<{
   top: InputMaybe<Scalars['Int']>;
   skip: InputMaybe<Scalars['Int']>;
   filter: InputMaybe<Scalars['String']>;
+  orderBy: InputMaybe<Scalars['String']>;
 }>;
 
 export type FetchUsersQuery = {
@@ -15626,6 +15627,14 @@ export const FetchUsersDocument = {
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'orderBy' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -15662,9 +15671,8 @@ export const FetchUsersDocument = {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'orderby' },
                 value: {
-                  kind: 'StringValue',
-                  value: 'data/firstName/iv,data/lastName/iv',
-                  block: false,
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'orderBy' },
                 },
               },
             ],

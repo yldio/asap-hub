@@ -7583,7 +7583,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "p-limit",\
-        "npm:3.1.0"\
+        "npm:2.3.0"\
       ],\
       [\
         "p-locate",\
@@ -11179,7 +11179,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["nock", "npm:13.3.0"],\
             ["node-dev", "npm:6.7.0"],\
             ["odata-query", "npm:7.0.3"],\
-            ["p-limit", "npm:3.1.0"],\
+            ["p-throttle", "npm:4.1.1"],\
             ["parse-data-url", "npm:3.0.0"],\
             ["pump", "npm:3.0.0"],\
             ["react-router-dom", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:5.3.4"],\

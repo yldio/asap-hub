@@ -126,14 +126,24 @@ export class UserSquidexDataProvider implements UserDataProvider {
   async fetch(options: FetchUsersOptions): Promise<ListUserDataObject> {
     const queryFilter = generateFetchQueryFilter(options);
     const { take = 8, skip = 0 } = options;
-    return this.queryForUsers(queryFilter, take, skip);
+    const orderBy = options.filter?.orcidLastSyncDate
+      ? 'data/orcidLastSyncDate/iv'
+      : 'data/firstName/iv,data/lastName/iv';
+
+    return this.queryForUsers(queryFilter, take, skip, orderBy);
   }
 
-  private async queryForUsers(filter: string, top: number, skip: number) {
+  private async queryForUsers(
+    filter: string,
+    top: number,
+    skip: number,
+    orderBy: string,
+  ) {
     const { queryUsersContentsWithTotal } = await this.queryFetchData(
       filter,
       top,
       skip,
+      orderBy,
     );
 
     const { total = 0, items = [] } = queryUsersContentsWithTotal || {};
@@ -143,11 +153,16 @@ export class UserSquidexDataProvider implements UserDataProvider {
       items: (items || []).map(parseGraphQLUserToDataObject),
     };
   }
-  private async queryFetchData(filter: string, top: number, skip: number) {
+  private async queryFetchData(
+    filter: string,
+    top: number,
+    skip: number,
+    orderBy: string,
+  ) {
     return this.squidexGraphqlClient.request<
       FetchUsersQuery,
       FetchUsersQueryVariables
-    >(FETCH_USERS, { filter, top, skip });
+    >(FETCH_USERS, { filter, top, skip, orderBy });
   }
   private async queryFetchByIdData(id: string) {
     return this.squidexGraphqlClient.request<
@@ -193,6 +208,7 @@ const generateFetchQueryFilter = ({ filter }: FetchUsersOptions) => {
     onboarded = true,
     hidden = true,
     orcid,
+    orcidLastSyncDate,
   } = filter || {};
   const filterRoles = buildEqFilterForWords('teams', role, 'role');
 
@@ -203,7 +219,10 @@ const generateFetchQueryFilter = ({ filter }: FetchUsersOptions) => {
 
   const filterHidden = hidden && { not: { 'data/role/iv': 'Hidden' } };
   const filterNonOnboarded = onboarded && { 'data/onboarded/iv': true };
-  const filterOrcid = orcid && { 'data/order/iv': { contains: orcid } };
+  const filterOrcid = orcid && { 'data/orcid/iv': { contains: orcid } };
+  const filterOrcidLastSyncDate = orcidLastSyncDate && {
+    'data/orcidLastSyncDate/iv': { le: orcidLastSyncDate },
+  };
 
   const queryFilter = [
     filterTeams,
@@ -213,7 +232,9 @@ const generateFetchQueryFilter = ({ filter }: FetchUsersOptions) => {
     filterNonOnboarded,
     filterHidden,
     filterOrcid,
+    filterOrcidLastSyncDate,
   ].filter(Boolean);
+
   return buildODataFilter(queryFilter);
 };
 

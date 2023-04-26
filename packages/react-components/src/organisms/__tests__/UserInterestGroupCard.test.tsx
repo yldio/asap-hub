@@ -155,3 +155,21 @@ it('renders correctly when user is inactive leader', () => {
   expect(getByText(`Active Collaborations (0)`)).toBeVisible();
   expect(getByText(`Past Collaborations (1)`)).toBeVisible();
 });
+
+it('renders correcly for inactive groups', () => {
+  const interestGroups = [
+    {
+      ...createGroupResponse(),
+      active: false,
+    },
+  ];
+  const { getByText } = render(
+    <UserInterestGroupCard
+      displayName={displayName}
+      groups={interestGroups}
+      id={userId}
+    />,
+  );
+  expect(getByText(`Active Collaborations (0)`)).toBeVisible();
+  expect(getByText(`Past Collaborations (1)`)).toBeVisible();
+});

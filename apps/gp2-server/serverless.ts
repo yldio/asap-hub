@@ -477,6 +477,13 @@ const serverlessConfig: AWS = {
         DeletionPolicy: 'Delete',
         Properties: {
           BucketName: '${self:service}-${self:provider.stage}-gp2-frontend',
+          OwnershipControls: {
+            Rules: [
+              {
+                ObjectOwnership: 'BucketOwnerPreferred',
+              },
+            ],
+          },
           AccessControl: 'PublicRead',
           CorsConfiguration: {
             CorsRules: [
@@ -496,6 +503,13 @@ const serverlessConfig: AWS = {
         Properties: {
           BucketName:
             '${self:service}-${self:provider.stage}-gp2-auth-frontend',
+          OwnershipControls: {
+            Rules: [
+              {
+                ObjectOwnership: 'BucketOwnerPreferred',
+              },
+            ],
+          },
           AccessControl: 'PublicRead',
           CorsConfiguration: {
             CorsRules: [
@@ -514,6 +528,13 @@ const serverlessConfig: AWS = {
         DeletionPolicy: 'Delete',
         Properties: {
           BucketName: '${self:service}-${self:provider.stage}-messages-static',
+          OwnershipControls: {
+            Rules: [
+              {
+                ObjectOwnership: 'BucketOwnerPreferred',
+              },
+            ],
+          },
           AccessControl: 'PublicRead',
           CorsConfiguration: {
             CorsRules: [

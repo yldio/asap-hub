@@ -872,6 +872,9 @@ const serverlessConfig: AWS = {
               },
             ],
           },
+          PublicAccessBlockConfiguration: {
+            BlockPublicPolicy: false,
+          },
           AccessControl: 'PublicRead',
           CorsConfiguration: {
             CorsRules: [
@@ -897,6 +900,9 @@ const serverlessConfig: AWS = {
               },
             ],
           },
+          PublicAccessBlockConfiguration: {
+            BlockPublicPolicy: false,
+          },
           AccessControl: 'PublicRead',
           CorsConfiguration: {
             CorsRules: [
@@ -921,6 +927,9 @@ const serverlessConfig: AWS = {
                 ObjectOwnership: 'BucketOwnerPreferred',
               },
             ],
+          },
+          PublicAccessBlockConfiguration: {
+            BlockPublicPolicy: false,
           },
           AccessControl: 'PublicRead',
           CorsConfiguration: {
@@ -949,6 +958,9 @@ const serverlessConfig: AWS = {
                 ObjectOwnership: 'BucketOwnerPreferred',
               },
             ],
+          },
+          PublicAccessBlockConfiguration: {
+            BlockPublicPolicy: false,
           },
           AccessControl: 'PublicRead',
           CorsConfiguration: {

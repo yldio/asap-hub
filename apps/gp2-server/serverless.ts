@@ -20,6 +20,7 @@ import assert from 'assert';
   'GP2_CONTENTFUL_ACCESS_TOKEN',
   'GP2_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN',
   'GP2_CONTENTFUL_SPACE_ID',
+  'GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN',
 ].forEach((env) => {
   assert.ok(process.env[env], `${env} not defined`);
 });
@@ -48,13 +49,16 @@ const contentfulManagementAccessToken =
   process.env.GP2_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN!;
 const contentfulSpaceId = process.env.GP2_CONTENTFUL_SPACE_ID!;
 const isContentfulEnabled = process.env.GP2_CONTENTFUL_ENABLED || 'false';
+const contentfulWebhookAuthenticationToken =
+  process.env.GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN!;
 const stage = process.env.SLS_STAGE!;
 const sentryDsnApi = process.env.GP2_SENTRY_DSN_API!;
 const sentryDsnHandlers = process.env.GP2_SENTRY_DSN_HANDLERS!;
 
 const envAlias = process.env.SLS_STAGE === 'production' ? 'prod' : 'dev';
 const eventBus = `gp2-events-${stage}`;
-const eventBusSource = 'asap.entity-updated';
+const eventBusSourceSquidex = 'gp2.squidex';
+const eventBusSourceContentful = 'gp2.contentful';
 
 const service = 'gp2-hub';
 const appHostname = stage === 'production' ? hostname : `${stage}.${hostname}`;
@@ -222,7 +226,7 @@ const serverlessConfig: AWS = {
       },
     },
     auth0FetchByCode: {
-      handler: './src/handlers/webhooks/fetch-by-code-handler.handler',
+      handler: './src/handlers/webhooks/fetch-by-code.handler',
       events: [
         {
           httpApi: {
@@ -238,7 +242,7 @@ const serverlessConfig: AWS = {
       },
     },
     auth0ConnectByCode: {
-      handler: './src/handlers/webhooks/webhook-connect-by-code.handler',
+      handler: './src/handlers/webhooks/connect-by-code.handler',
       events: [
         {
           httpApi: {
@@ -260,7 +264,7 @@ const serverlessConfig: AWS = {
           eventBridge: {
             eventBus,
             pattern: {
-              source: [eventBusSource],
+              source: [eventBusSourceSquidex],
               'detail-type': ['CalendarsCreated', 'CalendarsUpdated'],
             },
           },
@@ -297,7 +301,7 @@ const serverlessConfig: AWS = {
           eventBridge: {
             eventBus,
             pattern: {
-              source: [eventBusSource],
+              source: [eventBusSourceSquidex],
               'detail-type': ['UsersPublished'],
             },
             retryPolicy: {
@@ -315,7 +319,7 @@ const serverlessConfig: AWS = {
       },
     },
     squidexWebhook: {
-      handler: './src/handlers/webhooks/webhook-squidex.handler',
+      handler: './src/handlers/webhooks/squidex.handler',
       events: [
         {
           httpApi: {
@@ -326,13 +330,31 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         EVENT_BUS: eventBus,
-        EVENT_SOURCE: eventBusSource,
+        EVENT_SOURCE: eventBusSourceSquidex,
         SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
+    contentfulWebhook: {
+      handler: './src/handlers/webhooks/contentful.handler',
+      events: [
+        {
+          httpApi: {
+            method: 'POST',
+            path: '/webhook/contentful',
+          },
+        },
+      ],
+      environment: {
+        EVENT_BUS: eventBus,
+        EVENT_SOURCE: eventBusSourceContentful,
+        SENTRY_DSN: sentryDsnHandlers,
+        CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN:
+          contentfulWebhookAuthenticationToken,
       },
     },
     eventsUpdated: {
       timeout: 300,
-      handler: './src/handlers/webhooks/webhook-events-updated.handler',
+      handler: './src/handlers/webhooks/events-updated.handler',
       events: [
         {
           httpApi: {
@@ -348,14 +370,14 @@ const serverlessConfig: AWS = {
       },
     },
     runMigrations: {
-      handler: './src/handlers/webhooks/webhook-run-migrations.run',
+      handler: './src/handlers/webhooks/run-migrations.run',
       timeout: 900,
       environment: {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
     rollbackMigrations: {
-      handler: './src/handlers/webhooks/webhook-run-migrations.rollback',
+      handler: './src/handlers/webhooks/run-migrations.rollback',
       timeout: 900,
       environment: {
         SENTRY_DSN: sentryDsnHandlers,

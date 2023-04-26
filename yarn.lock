@@ -1323,6 +1323,7 @@ __metadata:
   resolution: "@asap-hub/server-common@workspace:packages/server-common"
   dependencies:
     "@asap-hub/auth": "workspace:*"
+    "@asap-hub/contentful": "workspace:*"
     "@asap-hub/errors": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/fixtures": "workspace:*"

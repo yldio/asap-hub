@@ -2,21 +2,26 @@ name: Contentful Setup
 description: Setup Webhooks for Contentful
 
 inputs:
-  contentful-space-id:
-    description: 'Contenful Space ID'
+  api-url:
+    description: 'API URL'
     required: true
   contentful-environment:
     description: 'Contentful Environment'
     required: true
+  contentful-space-id:
+    description: 'Contenful Space ID'
+    required: true
   contentful-token:
     description: 'Contentful Management Token'
-    required: true
-  api-url:
-    description: 'API URL'
     required: true
   contentful-webhook-authentication-token:
     description: 'Contentful Webhook Authentication Token'
     required: true
+  environment-name:
+    description: 'The name of the environment to cache'
+    required: true
+  pr-contentful-env-id:
+    description: 'The id of the Contentful PR environment'
 
 runs:
   using: 'composite'
@@ -25,8 +30,10 @@ runs:
       shell: bash
       run: yarn workspace @asap-hub/contentful space:setup-webhook
       env:
-        CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
+        API_URL: ${{ inputs.api-url }}
         CONTENTFUL_ENVIRONMENT: ${{ inputs.contentful-environment }}
         CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.contentful-token }}
+        CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
         CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN: ${{ inputs.contentful-webhook-authentication-token }}
-        API_URL: ${{ inputs.api-url }}
+        ENVIRONMENT_NAME: ${{ inputs.environment-name }}
+        PR_CONTENTFUL_ENV_ID: ${{ inputs.pr-contentful-env-id }}

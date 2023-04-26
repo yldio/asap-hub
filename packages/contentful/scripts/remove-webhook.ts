@@ -4,13 +4,16 @@ import { getWebhook } from './helpers';
 const spaceId = process.env.CONTENTFUL_SPACE_ID!;
 const contentfulManagementAccessToken =
   process.env.CONTENTFUL_MANAGEMENT_ACCESS_TOKEN!;
+
+const contentfulEnvironment = process.env.CONTENTFUL_ENVIRONMENT!;
+
 const client = contentful.createClient({
   accessToken: contentfulManagementAccessToken,
 });
 
 const app = async () => {
   const space = await client.getSpace(spaceId);
-  const webhook = await getWebhook(space);
+  const webhook = await getWebhook(contentfulEnvironment, space);
 
   if (webhook) {
     await webhook.delete();

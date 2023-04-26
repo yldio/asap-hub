@@ -16,7 +16,26 @@ module.exports.up = (migration) => {
     .disabled(false)
     .omitted(false);
 
-  // Members
+  users
+    .createField('members')
+    .name('members')
+    .type('Array')
+    .localized(false)
+    .required(false)
+    .validations([])
+    .disabled(false)
+    .omitted(false)
+    .items({
+      type: 'Link',
+
+      validations: [
+        {
+          linkContentType: ['projectMembership'],
+        },
+      ],
+
+      linkType: 'Entry',
+    });
 
   projects
     .createField('startDate')

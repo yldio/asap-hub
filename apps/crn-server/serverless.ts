@@ -872,7 +872,12 @@ const serverlessConfig: AWS = {
               },
             ],
           },
-          AccessControl: 'PublicRead',
+          PublicAccessBlockConfiguration: {
+            BlockPublicPolicy: false,
+            BlockPublicAcls: false,
+            IgnorePublicAcls: false,
+            RestrictPublicBuckets: false,
+          },
           CorsConfiguration: {
             CorsRules: [
               {
@@ -897,7 +902,12 @@ const serverlessConfig: AWS = {
               },
             ],
           },
-          AccessControl: 'PublicRead',
+          PublicAccessBlockConfiguration: {
+            BlockPublicPolicy: false,
+            BlockPublicAcls: false,
+            IgnorePublicAcls: false,
+            RestrictPublicBuckets: false,
+          },
           CorsConfiguration: {
             CorsRules: [
               {
@@ -922,7 +932,12 @@ const serverlessConfig: AWS = {
               },
             ],
           },
-          AccessControl: 'PublicRead',
+          PublicAccessBlockConfiguration: {
+            BlockPublicPolicy: false,
+            BlockPublicAcls: false,
+            IgnorePublicAcls: false,
+            RestrictPublicBuckets: false,
+          },
           CorsConfiguration: {
             CorsRules: [
               {
@@ -950,7 +965,12 @@ const serverlessConfig: AWS = {
               },
             ],
           },
-          AccessControl: 'PublicRead',
+          PublicAccessBlockConfiguration: {
+            BlockPublicPolicy: false,
+            BlockPublicAcls: false,
+            IgnorePublicAcls: false,
+            RestrictPublicBuckets: false,
+          },
           CorsConfiguration: {
             CorsRules: [
               {

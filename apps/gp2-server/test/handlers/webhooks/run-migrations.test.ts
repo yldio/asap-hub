@@ -5,7 +5,7 @@ import promises from 'fs/promises';
 import {
   rollbackHandler,
   runHandler,
-} from '../../../src/handlers/webhooks/webhook-run-migrations';
+} from '../../../src/handlers/webhooks/run-migrations';
 import pinoLogger from '../../../src/utils/logger';
 
 const mockUp = jest.fn();

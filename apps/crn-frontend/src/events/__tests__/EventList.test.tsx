@@ -90,3 +90,29 @@ it('sets before to an hour before date provided for past events', async () => {
     }),
   );
 });
+
+it('renders an algolia tagged result list and hit', async () => {
+  const events = createListEventResponse(1);
+  mockGetEvents.mockClear().mockResolvedValue({
+    ...events,
+    items: events.items.map((item) => ({ ...item, id: 'hitId' })),
+    algoliaIndexName: 'index',
+    algoliaQueryId: 'queryId',
+  });
+
+  const { container } = await renderEventsListPage(
+    '',
+    new Date('2020-01-01T12:00:00Z'),
+    true,
+  );
+  const resultListHtml = container.querySelector('*[data-insights-index]');
+  expect(resultListHtml?.getAttribute('data-insights-index')).toEqual('index');
+  const hitHtml = resultListHtml?.querySelector('*[data-insights-object-id]');
+  expect(hitHtml?.attributes).toMatchInlineSnapshot(`
+    NamedNodeMap {
+      "data-insights-object-id": "hitId",
+      "data-insights-position": "1",
+      "data-insights-query-id": "queryId",
+    }
+  `);
+});

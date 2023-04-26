@@ -1,8 +1,9 @@
-import { Fragment, FC, ComponentProps } from 'react';
+import { FC, ComponentProps } from 'react';
 import { css } from '@emotion/react';
 
 import { rem } from '../pixels';
 import { ResultList, EventCard } from '../organisms';
+import AlgoliaHit from '../atoms/AlgoliaHit';
 
 const containerStyles = css({
   display: 'grid',
@@ -11,15 +12,24 @@ const containerStyles = css({
 
 type EventsListProps = Omit<ComponentProps<typeof ResultList>, 'children'> & {
   events: ComponentProps<typeof EventCard>[];
-};
+} & Pick<ComponentProps<typeof AlgoliaHit>, 'algoliaQueryId'>;
 
-const EventsListPage: FC<EventsListProps> = ({ events, ...props }) => (
+const EventsListPage: FC<EventsListProps> = ({
+  events,
+  algoliaQueryId,
+  ...props
+}) => (
   <div css={containerStyles}>
     <ResultList {...props}>
-      {events.map(({ ...event }) => (
-        <Fragment key={event.id}>
+      {events.map(({ ...event }, index) => (
+        <AlgoliaHit
+          key={event.id}
+          algoliaQueryId={algoliaQueryId}
+          objectId={event.id}
+          index={index}
+        >
           <EventCard {...event} />
-        </Fragment>
+        </AlgoliaHit>
       ))}
     </ResultList>
   </div>

@@ -1,7 +1,7 @@
 import { WebhookDetail, WebhookDetailType } from '@asap-hub/model';
 import { Lab, SquidexWebhookPayload } from '@asap-hub/squidex';
-import { APIGatewayProxyResult } from 'aws-lambda';
 import { EventBridge } from '@aws-sdk/client-eventbridge';
+import { APIGatewayProxyResult } from 'aws-lambda';
 import { eventBus, eventSource } from '../../../src/config';
 import { squidexWebhookFactory } from '../../../src/handlers/webhooks/webhook-squidex';
 import { getLabWebhookPayload } from '../../fixtures/labs.fixtures';
@@ -14,9 +14,7 @@ describe('Squidex event webhook', () => {
   } as unknown as jest.Mocked<EventBridge>;
   const handler = squidexWebhookFactory(evenBridgeMock);
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+  beforeEach(jest.resetAllMocks);
 
   test('Should return 403 when the request is not signed correctly', async () => {
     const event = getApiGatewayEvent({

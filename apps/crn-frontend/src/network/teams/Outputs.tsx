@@ -120,6 +120,8 @@ const OutputsList: React.FC<OutputsListProps> = ({
         );
   return (
     <ProfileOutputs
+      algoliaIndexName={result.algoliaIndexName}
+      algoliaQueryId={result.algoliaQueryId}
       researchOutputs={result.items}
       exportResults={exportResults}
       numberOfItems={result.total}

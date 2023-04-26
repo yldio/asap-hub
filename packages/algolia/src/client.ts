@@ -65,6 +65,8 @@ export class AlgoliaSearchClient {
   public constructor(
     private index: SearchIndex,
     private reverseEventsIndex: SearchIndex,
+    private userToken?: SearchOptions['userToken'],
+    private clickAnalytics?: SearchOptions['clickAnalytics'],
   ) {
     // do nothing
   }
@@ -99,17 +101,29 @@ export class AlgoliaSearchClient {
 
     const options: SearchOptions = {
       ...requestOptions,
+      clickAnalytics: this.clickAnalytics,
+      userToken: this.userToken,
       filters: requestOptions?.filters
         ? `${requestOptions.filters} AND (${entityTypesFilter})`
         : entityTypesFilter,
     };
-
-    return descendingEvents
-      ? this.reverseEventsIndex.search<DistributeToEntityRecords<T>>(
-          query,
-          options,
-        )
-      : this.index.search<DistributeToEntityRecords<T>>(query, options);
+    if (descendingEvents) {
+      const result = await this.reverseEventsIndex.search<
+        DistributeToEntityRecords<T>
+      >(query, options);
+      return {
+        ...result,
+        index: this.reverseEventsIndex.indexName,
+      };
+    }
+    const result = await this.index.search<DistributeToEntityRecords<T>>(
+      query,
+      options,
+    );
+    return {
+      ...result,
+      index: this.index.indexName,
+    };
   }
 
   private static getAlgoliaObject(

@@ -1,4 +1,5 @@
-import { ComponentProps, Fragment, FC } from 'react';
+import { ComponentProps, FC } from 'react';
+import AlgoliaHit from '../atoms/AlgoliaHit';
 
 import { ResultList, PeopleCard } from '../organisms';
 
@@ -9,17 +10,23 @@ type NetworkPeopleProps = Omit<
   readonly people: ReadonlyArray<
     { readonly id: string } & ComponentProps<typeof PeopleCard>
   >;
-};
+} & Pick<ComponentProps<typeof AlgoliaHit>, 'algoliaQueryId'>;
 
 const NetworkPeople: FC<NetworkPeopleProps> = ({
   people,
+  algoliaQueryId,
   ...cardListProps
 }) => (
   <ResultList {...cardListProps}>
-    {people.map((person) => (
-      <Fragment key={person.id}>
+    {people.map((person, index) => (
+      <AlgoliaHit
+        key={person.id}
+        algoliaQueryId={algoliaQueryId}
+        objectId={person.id}
+        index={index}
+      >
         <PeopleCard {...person} />
-      </Fragment>
+      </AlgoliaHit>
     ))}
   </ResultList>
 );

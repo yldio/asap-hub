@@ -29,12 +29,6 @@ inputs:
   crn-squidex-shared-secret:
     description: 'Squidex Shared Secret'
     required: false
-  is-contentful-enabled:
-    description: 'Is Contentful Enabled'
-    required: false
-  is-contentful-enabled-v2:
-    description: 'Is Contentful Enabled V2'
-    required: false
   environment-name:
     description: 'The environment name'
     required: true
@@ -52,6 +46,9 @@ inputs:
     required: false
   gp2-contentful-management-access-token:
     description: 'GP2 Contentful Management Access Token'
+    required: false
+  gp2-contentful-webhook-authentication-token:
+    description: 'GP2 Contentful Webhook Authentication Token'
     required: false
   gp2-auth0-shared-secret:
     description: 'GP2 Auth0 Shared Secret'
@@ -112,6 +109,7 @@ runs:
         GP2_CONTENTFUL_ACCESS_TOKEN: ${{ inputs.gp2-contentful-access-token }}
         GP2_CONTENTFUL_ENV: ${{ inputs.gp2-contentful-env }}
         GP2_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.gp2-contentful-management-access-token }}
+        GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN: ${{ inputs.gp2-contentful-webhook-authentication-token }}
         GP2_CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.gp2-contentful-space-id }}
         GP2_CONTENTFUL_ENABLED: ${{ steps.setup.outputs.gp2-contentful-enabled }}
         GP2_HOSTNAME: ${{ steps.setup.outputs.gp2-hostname }}

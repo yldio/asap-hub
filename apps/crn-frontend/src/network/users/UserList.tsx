@@ -46,9 +46,10 @@ const UserList: React.FC<UserListProps> = ({
     result.total,
     pageSize,
   );
-
   return (
     <NetworkPeople
+      algoliaIndexName={result.algoliaIndexName}
+      algoliaQueryId={result.algoliaQueryId}
       people={result.items}
       numberOfItems={result.total}
       numberOfPages={numberOfPages}

@@ -15,7 +15,14 @@ import { useAlgolia } from '../hooks/algolia';
 import { getEvent, getEvents } from './api';
 
 const eventIndexState = atomFamily<
-  { ids: ReadonlyArray<string>; total: number } | Error | undefined,
+  | {
+      ids: ReadonlyArray<string>;
+      total: number;
+      algoliaQueryId?: string;
+      algoliaIndexName?: string;
+    }
+  | Error
+  | undefined,
   GetEventListOptions
 >({
   key: 'eventIndex',
@@ -37,7 +44,12 @@ export const eventsState = selectorFamily<
         if (event === undefined) return undefined;
         events.push(event);
       }
-      return { total: index.total, items: events };
+      return {
+        total: index.total,
+        items: events,
+        algoliaIndexName: index.algoliaIndexName,
+        algoliaQueryId: index.algoliaQueryId,
+      };
     },
   set:
     (options) =>
@@ -55,6 +67,8 @@ export const eventsState = selectorFamily<
         set(eventIndexState(options), {
           total: newEvents.total,
           ids: newEvents.items.map((event) => event.id),
+          algoliaIndexName: newEvents.algoliaIndexName,
+          algoliaQueryId: newEvents.algoliaQueryId,
         });
       }
     },

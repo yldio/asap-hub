@@ -1,18 +1,13 @@
 import {
   ContentfulWebhookPayload,
   ContentfulWebhookPublishPayload,
-  ContentfulWebhookUnpublishPayload,
 } from '@asap-hub/contentful';
 import { WebhookDetail, WebhookDetailType } from '@asap-hub/model';
 import { EventBridge } from '@aws-sdk/client-eventbridge';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { eventBus, eventSource } from '../../../src/config';
-import { contentfulWebhookFactory } from '../../../src/handlers/webhooks/webhook-contentful';
+import { contentfulWebhookFactory } from '../../../src/handlers/webhooks/contentful';
 import { getNewsPublishContentfulWebhookPayload } from '../../fixtures/news.fixtures';
-import {
-  getTeamPublishContentfulWebhookPayload,
-  getTeamUnpublishContentfulWebhookPayload,
-} from '../../fixtures/teams.fixtures';
 import { getApiGatewayEvent } from '../../helpers/events';
 
 describe('Contentful event webhook', () => {
@@ -46,59 +41,6 @@ describe('Contentful event webhook', () => {
     const res = (await handler(event)) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(403);
-  });
-
-  test('Should put the team-published event into the event bus and return 200', async () => {
-    const payload = getTeamPublishContentfulWebhookPayload();
-    const event = createContentfulWebhookEvent(payload);
-    const res = (await handler(event)) as APIGatewayProxyResult;
-
-    const expectedDetail: WebhookDetail<
-      ContentfulWebhookPublishPayload<'teams'>
-    > = {
-      resourceId: payload.sys.id,
-      ...payload,
-    };
-
-    expect(res.statusCode).toStrictEqual(200);
-    expect(evenBridgeMock.putEvents).toHaveBeenCalledWith({
-      Entries: [
-        {
-          EventBusName: eventBus,
-          Source: eventSource,
-          DetailType: 'TeamsPublished' satisfies WebhookDetailType,
-          Detail: JSON.stringify(expectedDetail),
-        },
-      ],
-    });
-  });
-
-  test('Should put the team-unpublished event into the event bus and return 200', async () => {
-    const payload = getTeamUnpublishContentfulWebhookPayload();
-    const event = createContentfulWebhookEvent(
-      payload,
-      'ContentManagement.Entry.unpublish',
-    );
-    const res = (await handler(event)) as APIGatewayProxyResult;
-
-    const expectedDetail: WebhookDetail<
-      ContentfulWebhookUnpublishPayload<'teams'>
-    > = {
-      resourceId: payload.sys.id,
-      ...payload,
-    };
-
-    expect(res.statusCode).toStrictEqual(200);
-    expect(evenBridgeMock.putEvents).toHaveBeenCalledWith({
-      Entries: [
-        {
-          EventBusName: eventBus,
-          Source: eventSource,
-          DetailType: 'TeamsUnpublished' satisfies WebhookDetailType,
-          Detail: JSON.stringify(expectedDetail),
-        },
-      ],
-    });
   });
 
   test('Should put the news-published event into the event bus and return 200', async () => {

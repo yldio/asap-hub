@@ -22,6 +22,8 @@ export type ProfileOutputsProps = Omit<
 };
 
 const ProfileOutputs: React.FC<ProfileOutputsProps> = ({
+  algoliaIndexName,
+  algoliaQueryId,
   researchOutputs,
   numberOfItems,
   numberOfPages,
@@ -40,6 +42,8 @@ const ProfileOutputs: React.FC<ProfileOutputsProps> = ({
   <div css={containerStyles}>
     {numberOfItems ? (
       <SharedResearchList
+        algoliaIndexName={algoliaIndexName}
+        algoliaQueryId={algoliaQueryId}
         exportResults={exportResults}
         researchOutputs={researchOutputs}
         numberOfItems={numberOfItems}

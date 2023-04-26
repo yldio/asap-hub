@@ -7,6 +7,12 @@
     "node": "18.x"
   },
   "scripts": {
+    "algolia:delete-index": "ts-node --transpile-only src/cli.ts algolia:delete-index",
+    "algolia:clear-index": "ts-node --transpile-only src/cli.ts algolia:clear-index",
+    "algolia:get-settings": "ts-node --transpile-only src/cli.ts algolia:get-settings",
+    "algolia:move-index": "ts-node --transpile-only src/cli.ts algolia:move-index",
+    "algolia:remove-records": "ts-node --transpile-only src/cli.ts algolia:remove-records",
+    "algolia:set-settings": "ts-node --transpile-only src/cli.ts algolia:set-settings",
     "build:babel": "../../scripts/build-babel.sh build",
     "watch:babel": "../../scripts/build-babel.sh watch",
     "typecheck": "tsc"

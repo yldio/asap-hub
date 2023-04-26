@@ -794,6 +794,9 @@ const serverlessConfig: AWS = {
                 schedule: 'rate(1 hour)', // run every hour
               },
             ],
+            environment: {
+              SENTRY_DSN: sentryDsnHandlers,
+            },
           },
         }
       : {}),

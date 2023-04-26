@@ -178,7 +178,7 @@ describe('When the role is staff', () => {
     );
     expect(getByText(/contact/i).closest('a')).toHaveAttribute(
       'href',
-      'mailto:techsupport@asap.science?subject=ASAP+Hub%3A+Tech+support',
+      'mailto:techsupport@asap.science?subject=ASAP%20Hub%3A%20Tech%20support',
     );
   });
   it('doesnt render contact card if isOwnProfile is true', async () => {

@@ -1,4 +1,5 @@
-import { createGroupResponse } from '@asap-hub/fixtures';
+import { GroupRole } from '@asap-hub/model';
+import { createGroupResponse, createUserResponse } from '@asap-hub/fixtures';
 import { fireEvent, render } from '@testing-library/react';
 import UserInterestGroupCard from '../UserInterestGroupCard';
 
@@ -14,9 +15,15 @@ const groups = [
 
 const displayName = 'Octavian';
 
+const userId = 'user-id';
+
 it('renders correctly for a normal user', () => {
   const { getByText } = render(
-    <UserInterestGroupCard displayName={displayName} groups={groups} />,
+    <UserInterestGroupCard
+      displayName={displayName}
+      groups={groups}
+      id={userId}
+    />,
   );
   expect(getByText(`${displayName}'s Interest Groups`)).toBeVisible();
   expect(
@@ -33,7 +40,11 @@ it('renders correctly for a normal user', () => {
 
 it('cannot switch to the disabled tab', () => {
   const { getByRole, rerender } = render(
-    <UserInterestGroupCard displayName={displayName} groups={groups} />,
+    <UserInterestGroupCard
+      displayName={displayName}
+      groups={groups}
+      id={userId}
+    />,
   );
 
   expect(
@@ -48,6 +59,7 @@ it('cannot switch to the disabled tab', () => {
       displayName={displayName}
       groups={groups}
       alumniSinceDate="2020-01-02"
+      id={userId}
     />,
   );
   expect(
@@ -64,6 +76,7 @@ it('renders correctly for an alumni user', () => {
       displayName={displayName}
       groups={groups}
       alumniSinceDate="2020-01-02"
+      id={userId}
     />,
   );
 
@@ -76,7 +89,11 @@ it('renders correctly for an alumni user', () => {
 
 it('can click the show more/ less button', () => {
   const { getAllByText, getByText } = render(
-    <UserInterestGroupCard displayName={displayName} groups={groups} />,
+    <UserInterestGroupCard
+      displayName={displayName}
+      groups={groups}
+      id={userId}
+    />,
   );
 
   expect(getAllByText('Member')).toHaveLength(5);
@@ -84,4 +101,57 @@ it('can click the show more/ less button', () => {
   expect(getAllByText('Member')).toHaveLength(7);
   fireEvent.click(getByText('View less interest groups'), 'click');
   expect(getAllByText('Member')).toHaveLength(5);
+});
+
+it('displays the proper role for a group leader', () => {
+  const interestGroups = [
+    {
+      ...createGroupResponse(),
+      leaders: [
+        {
+          user: {
+            ...createUserResponse(),
+            id: userId,
+          },
+          role: 'Chair' as GroupRole,
+          inactiveSinceDate: undefined,
+        },
+      ],
+    },
+  ];
+  const { getByText } = render(
+    <UserInterestGroupCard
+      displayName={displayName}
+      groups={interestGroups}
+      id={userId}
+    />,
+  );
+  expect(getByText('Chair')).toBeInTheDocument();
+});
+
+it('renders correctly when user is inactive leader', () => {
+  const interestGroups = [
+    {
+      ...createGroupResponse(),
+      leaders: [
+        {
+          user: {
+            ...createUserResponse(),
+            id: userId,
+          },
+          role: 'Chair' as GroupRole,
+          inactiveSinceDate: new Date().toISOString(),
+        },
+      ],
+    },
+  ];
+  const { getByText } = render(
+    <UserInterestGroupCard
+      displayName={displayName}
+      groups={interestGroups}
+      id={userId}
+    />,
+  );
+  expect(getByText(`Active Collaborations (0)`)).toBeVisible();
+  expect(getByText(`Past Collaborations (1)`)).toBeVisible();
 });

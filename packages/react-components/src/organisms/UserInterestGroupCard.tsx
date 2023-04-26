@@ -97,12 +97,13 @@ const UserInterestGroupCard: React.FC<UserInterestGroupCardProps> = ({
   alumniSinceDate,
   groups,
 }) => {
-  console.log(id);
   const [activeMemberships, inactiveMemberships] = splitListBy(
     groups,
     (group) => {
       if (group.active) {
-        const leader = group.leaders.find((leader) => leader.user.id === id);
+        const leader = group.leaders.find(
+          (leaderData) => leaderData.user.id === id,
+        );
         if (leader?.inactiveSinceDate) {
           return false;
         }

@@ -1,12 +1,8 @@
-import {
-  gp2 as gp2Squidex,
-  RestUser,
-  SquidexRestClient,
-} from '@asap-hub/squidex';
 import { EventBridgeEvent } from 'aws-lambda';
 import path from 'path';
 import url from 'url';
 import { v4 as uuidV4 } from 'uuid';
+import { gp2, UserDataObject, UserUpdateDataObject } from '@asap-hub/model';
 import {
   EventBridgeHandler,
   Logger,
@@ -15,73 +11,69 @@ import {
 } from '../../utils';
 import { UserPayload } from '../event-bus';
 
-const uuidMatch =
-  /^([\d\w]{8})-?([\d\w]{4})-?([\d\w]{4})-?([\d\w]{4})-?([\d\w]{12})|[{0x]*([\d\w]{8})[0x, ]{4}([\d\w]{4})[0x, ]{4}([\d\w]{4})[0x, {]{5}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})$/;
+interface DataProvider {
+  fetchById(id: string): Promise<gp2.UserDataObject | UserDataObject | null>;
+  update(
+    id: string,
+    user: gp2.UserUpdateDataObject | UserUpdateDataObject,
+  ): Promise<void>;
+}
 
 export const inviteHandlerFactory =
-  (
+  <Provider extends DataProvider>(
     sendEmail: SendEmail,
-    userClient: SquidexRestClient<RestUser | gp2Squidex.RestUser>,
+    dataProvider: Provider,
     origin: string,
     logger: Logger,
     template: SendEmailTemplate = 'Crn-Welcome',
   ): EventBridgeHandler<'UsersPublished', UserPayload> =>
   async (event) => {
-    let user: RestUser | gp2Squidex.RestUser;
-
-    try {
-      user = await userClient.fetchById(event.detail.payload.id);
-    } catch (error) {
-      logger.error(error, 'Error while fetching user');
+    const user = await dataProvider.fetchById(event.detail.resourceId);
+    if (!user) {
       throw new Error(
-        `Unable to find a user with ID ${event.detail.payload.id}`,
+        `Unable to find a user with ID ${event.detail.resourceId}`,
       );
     }
 
-    logger.debug(
-      `Attempting to invite user with ID ${event.detail.payload.id}, e-mail address ${user.data.email}`,
-    );
-
-    const previousCode = user.data.connections.iv
-      ?.map((c) => c.code)
-      .find((c) => c.match(uuidMatch));
-
-    if (previousCode) {
+    if (user.connections?.length) {
       logger.info(
         `Found a previous invitation code for user ${user.id}, exiting...`,
       );
       return;
     }
-    const newCode = uuidV4();
+
+    logger.debug(
+      `Attempting to invite user with ID ${event.detail.resourceId}, e-mail address ${user.email}`,
+    );
+
+    const code = uuidV4();
 
     try {
-      await userClient.patch(user.id, {
-        connections: {
-          iv: [...(user.data.connections.iv || []), { code: newCode }],
-        },
+      await dataProvider.update(user.id, {
+        connections: [{ code }],
       });
     } catch (error) {
       logger.error(error, 'Error while saving user data');
       throw new Error(
-        `Unable to save the code for the user with ID ${event.detail.payload.id}`,
+        `Unable to save the code for the user with ID ${event.detail.resourceId}`,
       );
     }
 
-    const link = new url.URL(path.join(`/welcome/${newCode}`), origin);
+    const link = new url.URL(path.join(`/welcome/${code}`), origin);
 
     try {
       await sendEmail({
-        to: [user.data.email.iv],
+        to: [user.email],
         template,
         values: {
-          firstName: user.data.firstName.iv,
+          firstName: user.firstName,
           link: link.toString(),
         },
       });
     } catch (error) {
       logger.error(error, 'Error while sending email');
       throw new Error(
-        `Unable to send the email for the user with ID ${event.detail.payload.id}`,
+        `Unable to send the email for the user with ID ${event.detail.resourceId}`,
       );
     }
 

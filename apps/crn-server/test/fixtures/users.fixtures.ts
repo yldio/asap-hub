@@ -6,6 +6,7 @@ import {
   UserResponse,
   inactiveUserTag,
   UserEvent,
+  WebhookDetail,
 } from '@asap-hub/model';
 import {
   InputUser,
@@ -555,9 +556,10 @@ export const userPublishedEvent: SquidexWebhookPayload<User> = {
 export const getUserWebhookPayload = (
   id: string,
   type: UserEvent,
-): SquidexWebhookPayload<User, UserEvent> => ({
+): WebhookDetail<SquidexWebhookPayload<User, UserEvent>> => ({
   type,
   timestamp: '2021-02-15T13:11:25Z',
+  resourceId: id,
   payload: {
     $type: 'EnrichedContentEvent',
     type: 'Updated',

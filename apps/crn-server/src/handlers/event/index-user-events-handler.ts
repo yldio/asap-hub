@@ -45,7 +45,7 @@ export const indexUserEventsHandler =
       eventController.fetch({
         skip,
         take,
-        filter: { userId: event.detail.payload.id },
+        filter: { userId: event.detail.resourceId },
       });
 
     const processingFunction = async (

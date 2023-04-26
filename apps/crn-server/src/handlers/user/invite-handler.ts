@@ -1,23 +1,25 @@
+/* istanbul ignore file */
 import { inviteHandlerFactory } from '@asap-hub/server-common';
-import { RestUser, SquidexRest } from '@asap-hub/squidex';
 import { SES } from '@aws-sdk/client-ses';
-import { appName, baseUrl, origin, sesRegion } from '../../config';
-import { getAuthToken } from '../../utils/auth';
+import { origin, sesRegion } from '../../config';
 import logger from '../../utils/logger';
 import { sendEmailFactory } from '../../utils/send-email';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
+import { UserDataProvider } from '../../data-providers/types';
+import { getUserDataProvider } from '../../dependencies/users.dependencies';
 
 const ses = new SES({
   apiVersion: '2010-12-01',
   region: sesRegion,
 });
 
-const userRestClient = new SquidexRest<RestUser>(getAuthToken, 'users', {
-  appName,
-  baseUrl,
-});
+const userDataProvider = getUserDataProvider();
 
-/* istanbul ignore next */
 export const handler = sentryWrapper(
-  inviteHandlerFactory(sendEmailFactory(ses), userRestClient, origin, logger),
+  inviteHandlerFactory<UserDataProvider>(
+    sendEmailFactory(ses),
+    userDataProvider,
+    origin,
+    logger,
+  ),
 );

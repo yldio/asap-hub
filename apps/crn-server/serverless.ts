@@ -95,6 +95,9 @@ const offlinePlugins = [
 const offlineSSM =
   SLS_STAGE === 'local'
     ? {
+        'algolia-app-id-dev': '${env:ALGOLIA_APP_ID}',
+        'algolia-index-api-key-dev': '${env:ALGOLIA_API_KEY}',
+        'algolia-search-api-key-dev': '${env:ALGOLIA_API_KEY}',
         'crn-algolia-app-id-dev': '${env:ALGOLIA_APP_ID}',
         'crn-algolia-index-api-key-dev': '${env:ALGOLIA_API_KEY}',
         'crn-algolia-search-api-key-dev': '${env:ALGOLIA_API_KEY}',
@@ -369,7 +372,7 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
-    inviteUser: {
+    inviteUserSquidex: {
       handler: './src/handlers/user/invite-handler.handler',
       events: [
         {
@@ -391,6 +394,32 @@ const serverlessConfig: AWS = {
         EMAIL_BCC: `\${ssm:email-invite-bcc-${envAlias}}`,
         EMAIL_RETURN: `\${ssm:email-invite-return-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
+        IS_CONTENTFUL_ENABLED_V2: 'false',
+      },
+    },
+    inviteUserContentful: {
+      handler: './src/handlers/user/invite-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSourceContentful],
+              'detail-type': ['UsersPublished'],
+            },
+            retryPolicy: {
+              maximumRetryAttempts: 2,
+            },
+          },
+        },
+      ],
+      environment: {
+        SES_REGION: `\${ssm:ses-region-${envAlias}}`,
+        EMAIL_SENDER: `\${ssm:email-invite-sender-${envAlias}}`,
+        EMAIL_BCC: `\${ssm:email-invite-bcc-${envAlias}}`,
+        EMAIL_RETURN: `\${ssm:email-invite-return-${envAlias}}`,
+        SENTRY_DSN: sentryDsnHandlers,
+        IS_CONTENTFUL_ENABLED_V2: 'true',
       },
     },
     indexResearchOutput: {

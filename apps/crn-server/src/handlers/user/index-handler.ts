@@ -25,7 +25,7 @@ export const indexUserHandler =
     logger.debug(`Event ${event['detail-type']}`);
 
     try {
-      const user = await userController.fetchById(event.detail.payload.id);
+      const user = await userController.fetchById(event.detail.resourceId);
 
       logger.debug(`Fetched user ${user.id}`);
 
@@ -37,15 +37,15 @@ export const indexUserHandler =
 
         logger.debug(`User saved ${user.id}`);
       } else {
-        await algoliaClient.remove(event.detail.payload.id);
+        await algoliaClient.remove(event.detail.resourceId);
 
         logger.debug(`User removed ${user.id}`);
       }
     } catch (e) {
       if (isBoom(e) && (e as Boom).output.statusCode === 404) {
-        await algoliaClient.remove(event.detail.payload.id);
+        await algoliaClient.remove(event.detail.resourceId);
 
-        logger.debug(`User removed ${event.detail.payload.id}`);
+        logger.debug(`User removed ${event.detail.resourceId}`);
         return;
       }
 

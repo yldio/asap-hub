@@ -2,6 +2,8 @@ name: Pipeline Contentful App Extensions
 
 on:
   push:
+    branches:
+      - master
 
 jobs:
   check-updates:
@@ -58,7 +60,7 @@ jobs:
         id: setup
         uses: ./.github/actions/setup-environment
         with:
-          environment-name: Branch
+          environment-name: Production
       - name: Build apps
         run: yarn workspaces foreach -j 2 --include "*/contentful-app-*" -vp run build
 

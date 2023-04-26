@@ -785,21 +785,17 @@ const serverlessConfig: AWS = {
           contentfulWebhookAuthenticationToken,
       },
     },
-    ...(NODE_ENV === 'production'
-      ? {
-          cronjobSyncOrcid: {
-            handler: './src/handlers/webhooks/cronjob-sync-orcid.handler',
-            events: [
-              {
-                schedule: 'rate(1 hour)', // run every hour
-              },
-            ],
-            environment: {
-              SENTRY_DSN: sentryDsnHandlers,
-            },
-          },
-        }
-      : {}),
+    cronjobSyncOrcid: {
+      handler: './src/handlers/webhooks/cronjob-sync-orcid.handler',
+      events: [
+        {
+          schedule: 'rate(1 hour)', // run every hour
+        },
+      ],
+      environment: {
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
   },
   resources: {
     Conditions: {

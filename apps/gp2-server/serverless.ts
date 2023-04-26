@@ -458,16 +458,11 @@ const serverlessConfig: AWS = {
           OwnershipControls: {
             Rules: [
               {
-                ObjectOwnership: 'ObjectWriter',
+                ObjectOwnership: 'BucketOwnerPreferred',
               },
             ],
           },
-          PublicAccessBlockConfiguration: {
-            BlockPublicAcls: false,
-            BlockPublicPolicy: false,
-            IgnorePublicAcls: false,
-            RestrictPublicBuckets: false,
-          },
+          AccessControl: 'PublicRead',
           CorsConfiguration: {
             CorsRules: [
               {
@@ -489,16 +484,11 @@ const serverlessConfig: AWS = {
           OwnershipControls: {
             Rules: [
               {
-                ObjectOwnership: 'ObjectWriter',
+                ObjectOwnership: 'BucketOwnerPreferred',
               },
             ],
           },
-          PublicAccessBlockConfiguration: {
-            BlockPublicAcls: false,
-            BlockPublicPolicy: false,
-            IgnorePublicAcls: false,
-            RestrictPublicBuckets: false,
-          },
+          AccessControl: 'PublicRead',
           CorsConfiguration: {
             CorsRules: [
               {
@@ -519,16 +509,11 @@ const serverlessConfig: AWS = {
           OwnershipControls: {
             Rules: [
               {
-                ObjectOwnership: 'ObjectWriter',
+                ObjectOwnership: 'BucketOwnerPreferred',
               },
             ],
           },
-          PublicAccessBlockConfiguration: {
-            BlockPublicAcls: false,
-            BlockPublicPolicy: false,
-            IgnorePublicAcls: false,
-            RestrictPublicBuckets: false,
-          },
+          AccessControl: 'PublicRead',
           CorsConfiguration: {
             CorsRules: [
               {

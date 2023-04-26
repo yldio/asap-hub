@@ -17,6 +17,6 @@ describe('Field component', () => {
   it('displays field text', () => {
     const { getByText } = render(<Field />);
 
-    expect(getByText('Hello World')).toBeInTheDocument();
+    expect(screen.getByText('Hello World')).toBeInTheDocument();
   });
 });

@@ -1,6 +1,6 @@
 import React from 'react';
 import Field from '../../locations/Field';
-import { render, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 
 import { useSDK } from '@contentful/react-apps-toolkit';
 
@@ -65,13 +65,13 @@ describe('Field component', () => {
       },
     };
     (useSDK as jest.Mock).mockReturnValue(mockBaseSdk);
-    const { getByText } = render(<Field />);
+    render(<Field />);
     await waitFor(() => {
       expect(mockBaseSdk.field.setValue).toHaveBeenCalledWith(
         'Team A - User B',
       );
     });
 
-    expect(getByText('Team A - User B')).toBeInTheDocument();
+    expect(screen.getByText('Team A - User B')).toBeInTheDocument();
   });
 });

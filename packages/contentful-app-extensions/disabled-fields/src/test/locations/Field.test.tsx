@@ -1,6 +1,6 @@
 import React from 'react';
 import Field from '../../locations/Field';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 jest.mock('@contentful/react-apps-toolkit', () => ({
   useSDK: () => ({
@@ -15,7 +15,7 @@ jest.mock('@contentful/react-apps-toolkit', () => ({
 
 describe('Field component', () => {
   it('displays field text', () => {
-    const { getByText } = render(<Field />);
+    render(<Field />);
 
     expect(screen.getByText('Hello World')).toBeInTheDocument();
   });

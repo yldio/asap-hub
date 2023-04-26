@@ -1,6 +1,6 @@
 import React from 'react';
 import Field from '../../locations/Field';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 import { useSDK } from '@contentful/react-apps-toolkit';
 
@@ -40,9 +40,9 @@ describe('Field component', () => {
         },
       },
     }));
-    const { getByText } = render(<Field />);
+    render(<Field />);
 
-    expect(getByText('2023-04-12T16:05:00.000Z')).toBeInTheDocument();
+    expect(screen.getByText('2023-04-12T16:05:00.000Z')).toBeInTheDocument();
   });
 
   it('updates the field value when observed field changes', () => {
@@ -124,10 +124,10 @@ describe('Field component', () => {
     };
     (useSDK as jest.Mock).mockReturnValue(mockTestSdk);
 
-    const { getByText } = render(<Field />);
+    render(<Field />);
 
     expect(mockTestSdk.entry.getSys).toHaveBeenCalled();
     expect(mockTestSdk.entry.onSysChanged).toHaveBeenCalled();
-    expect(getByText('2023-04-14T18:00:00.000Z')).toBeInTheDocument();
+    expect(screen.getByText('2023-04-14T18:00:00.000Z')).toBeInTheDocument();
   });
 });

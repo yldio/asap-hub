@@ -1,6 +1,6 @@
 import React from 'react';
 import Field from '../../locations/Field';
-import { fireEvent, getByRole, render } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { useSDK } from '@contentful/react-apps-toolkit';
 
 const mockBaseSdk = {
@@ -29,14 +29,12 @@ describe('Field component', () => {
         ]),
       },
     });
-    const { getByText, container } = render(<Field />);
+    render(<Field />);
 
     expect(
-      getByText('Youtube Channel - https://www.youtube.com/id'),
+      screen.getByText('Youtube Channel - https://www.youtube.com/id'),
     ).toBeInTheDocument();
-    expect(
-      getByRole(container, 'button', { name: /remove/i }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /remove/i })).toBeInTheDocument();
   });
 
   it('renders only input fields and add button initially when there is not any previous additional material', () => {
@@ -46,14 +44,14 @@ describe('Field component', () => {
         getValue: jest.fn(() => []),
       },
     });
-    const { queryByRole, getByLabelText, container } = render(<Field />);
+    render(<Field />);
 
-    expect(getByLabelText(/title/i)).toBeInTheDocument();
-    expect(getByLabelText(/url/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/title/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/url/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /add/i })).toBeInTheDocument();
     expect(
-      getByRole(container, 'button', { name: /add/i }),
-    ).toBeInTheDocument();
-    expect(queryByRole('button', { name: /remove/i })).not.toBeInTheDocument();
+      screen.queryByRole('button', { name: /remove/i }),
+    ).not.toBeInTheDocument();
   });
 
   it('updates additional materials field value', () => {
@@ -65,29 +63,27 @@ describe('Field component', () => {
       },
     };
     (useSDK as jest.Mock).mockReturnValue(mockSdk);
-    const { getByText, queryByRole, getByLabelText, container } = render(
-      <Field />,
-    );
-
-    expect(queryByRole('button', { name: /remove/i })).not.toBeInTheDocument();
+    render(<Field />);
 
     expect(
-      getByRole(container, 'button', { name: /add/i }),
-    ).toBeInTheDocument();
+      screen.queryByRole('button', { name: /remove/i }),
+    ).not.toBeInTheDocument();
+
+    expect(screen.getByRole('button', { name: /add/i })).toBeInTheDocument();
 
     const titleInput = 'Presentation';
     const urlInput = 'http://www.google-drive.com/presentation-id';
-    fireEvent.change(getByLabelText(/title/i), {
+    fireEvent.change(screen.getByLabelText(/title/i), {
       target: { value: titleInput },
     });
-    fireEvent.change(getByLabelText(/url/i), { target: { value: urlInput } });
+    fireEvent.change(screen.getByLabelText(/url/i), {
+      target: { value: urlInput },
+    });
 
-    fireEvent.click(getByRole(container, 'button', { name: /add/i }));
+    fireEvent.click(screen.getByRole('button', { name: /add/i }));
 
-    expect(getByText(`${titleInput} - ${urlInput}`)).toBeInTheDocument();
-    expect(
-      getByRole(container, 'button', { name: /remove/i }),
-    ).toBeInTheDocument();
+    expect(screen.getByText(`${titleInput} - ${urlInput}`)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /remove/i })).toBeInTheDocument();
 
     expect(mockSdk.field.setValue).toHaveBeenCalledWith([
       {
@@ -111,23 +107,23 @@ describe('Field component', () => {
       },
     };
     (useSDK as jest.Mock).mockReturnValue(mockSdk);
-    const { queryByRole, getByText, container } = render(<Field />);
+    render(<Field />);
 
     expect(
-      getByText('Youtube Channel - https://www.youtube.com/id'),
+      screen.getByText('Youtube Channel - https://www.youtube.com/id'),
     ).toBeInTheDocument();
-    expect(
-      getByRole(container, 'button', { name: /remove/i }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /remove/i })).toBeInTheDocument();
 
-    fireEvent.click(getByRole(container, 'button', { name: /remove/i }));
+    fireEvent.click(screen.getByRole('button', { name: /remove/i }));
 
     expect(mockSdk.field.setValue).toBeCalledWith([]);
 
     expect(
-      queryByRole('Youtube Channel - https://www.youtube.com/id'),
+      screen.queryByRole('Youtube Channel - https://www.youtube.com/id'),
     ).not.toBeInTheDocument();
-    expect(queryByRole('button', { name: /remove/i })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: /remove/i }),
+    ).not.toBeInTheDocument();
   });
 
   it('shows an error message when url inputted is invalid', () => {
@@ -142,22 +138,24 @@ describe('Field component', () => {
       },
     };
     (useSDK as jest.Mock).mockReturnValue(mockSdk);
-    const { queryByRole, getByLabelText, container } = render(<Field />);
-
-    expect(queryByRole('button', { name: /remove/i })).not.toBeInTheDocument();
+    render(<Field />);
 
     expect(
-      getByRole(container, 'button', { name: /add/i }),
-    ).toBeInTheDocument();
+      screen.queryByRole('button', { name: /remove/i }),
+    ).not.toBeInTheDocument();
+
+    expect(screen.getByRole('button', { name: /add/i })).toBeInTheDocument();
 
     const titleInput = 'Presentation';
     const urlInput = 'invalid-url';
-    fireEvent.change(getByLabelText(/title/i), {
+    fireEvent.change(screen.getByLabelText(/title/i), {
       target: { value: titleInput },
     });
-    fireEvent.change(getByLabelText(/url/i), { target: { value: urlInput } });
+    fireEvent.change(screen.getByLabelText(/url/i), {
+      target: { value: urlInput },
+    });
 
-    fireEvent.click(getByRole(container, 'button', { name: /add/i }));
+    fireEvent.click(screen.getByRole('button', { name: /add/i }));
 
     expect(mockSdk.notifier.error).toHaveBeenCalledWith(
       'Invalid URL in Additional Materials',
@@ -176,18 +174,20 @@ describe('Field component', () => {
       },
     };
     (useSDK as jest.Mock).mockReturnValue(mockSdk);
-    const { queryByRole, getByLabelText, container } = render(<Field />);
-
-    expect(queryByRole('button', { name: /remove/i })).not.toBeInTheDocument();
+    render(<Field />);
 
     expect(
-      getByRole(container, 'button', { name: /add/i }),
-    ).toBeInTheDocument();
+      screen.queryByRole('button', { name: /remove/i }),
+    ).not.toBeInTheDocument();
+
+    expect(screen.getByRole('button', { name: /add/i })).toBeInTheDocument();
 
     const urlInput = 'http://www.google-drive.com/presentation-id';
-    fireEvent.change(getByLabelText(/url/i), { target: { value: urlInput } });
+    fireEvent.change(screen.getByLabelText(/url/i), {
+      target: { value: urlInput },
+    });
 
-    fireEvent.click(getByRole(container, 'button', { name: /add/i }));
+    fireEvent.click(screen.getByRole('button', { name: /add/i }));
 
     expect(mockSdk.notifier.error).toHaveBeenCalledWith(
       'A not empty title is required in Additional Materials',

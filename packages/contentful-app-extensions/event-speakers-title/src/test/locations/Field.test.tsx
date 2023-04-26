@@ -1,5 +1,5 @@
 import React from 'react';
-import Field from './Field';
+import Field from '../../locations/Field';
 import { render, waitFor } from '@testing-library/react';
 
 import { useSDK } from '@contentful/react-apps-toolkit';

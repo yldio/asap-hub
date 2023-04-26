@@ -1,5 +1,5 @@
 import React from 'react';
-import Field from './Field';
+import Field from '../../locations/Field';
 import { render } from '@testing-library/react';
 
 jest.mock('@contentful/react-apps-toolkit', () => ({

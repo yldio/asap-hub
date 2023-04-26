@@ -44,6 +44,9 @@ inputs:
   gp2-contentful-access-token:
     description: 'GP2 Contentful Access Token'
     required: false
+  gp2-contentful-enabled:
+    description: 'Is GP2 Contentful Enabled'
+    required: false
   gp2-contentful-management-access-token:
     description: 'GP2 Contentful Management Access Token'
     required: false

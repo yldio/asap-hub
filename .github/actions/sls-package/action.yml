@@ -29,12 +29,6 @@ inputs:
   crn-squidex-shared-secret:
     description: 'Squidex Shared Secret'
     required: false
-  is-contentful-enabled:
-    description: 'Is Contentful Enabled'
-    required: false
-  is-contentful-enabled-v2:
-    description: 'Is Contentful Enabled V2'
-    required: false
   environment-name:
     description: 'The environment name'
     required: true

@@ -69,7 +69,12 @@ export const getUsers = async (
     hitsPerPage: pageSize ?? undefined,
   });
 
-  return { items: result.hits, total: result.nbHits };
+  return {
+    items: result.hits,
+    total: result.nbHits,
+    algoliaIndexName: result.index,
+    algoliaQueryId: result.queryID,
+  };
 };
 
 export const getUsersAndExternalAuthors = async (
@@ -87,7 +92,12 @@ export const getUsersAndExternalAuthors = async (
     },
   );
 
-  return { items: result.hits, total: result.nbHits };
+  return {
+    items: result.hits,
+    total: result.nbHits,
+    algoliaIndexName: result.index,
+    algoliaQueryId: result.queryID,
+  };
 };
 
 export const patchUser = async (

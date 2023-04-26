@@ -1,4 +1,4 @@
-import { ComponentProps, useContext } from 'react';
+import React, { ComponentProps, useContext, useEffect } from 'react';
 import { css } from '@emotion/react';
 import { ToastContext } from '@asap-hub/react-context';
 
@@ -59,6 +59,7 @@ type ResultListProps = ComponentProps<typeof PageControls> & {
   readonly listViewHref?: string;
   readonly noEventsComponent?: React.ReactNode;
   readonly children: React.ReactNode;
+  readonly algoliaIndexName?: string;
 };
 const ResultList: React.FC<ResultListProps> = ({
   numberOfItems,
@@ -68,11 +69,17 @@ const ResultList: React.FC<ResultListProps> = ({
   listViewHref,
   children,
   noEventsComponent,
+  algoliaIndexName,
   ...pageControlsProps
 }) => {
   const toast = useContext(ToastContext);
+  useEffect(() => {
+    if (algoliaIndexName) {
+      window.dataLayer?.push({ event: 'Hits Viewed' });
+    }
+  }, [algoliaIndexName, pageControlsProps.currentPageIndex]);
   return (
-    <article>
+    <article data-insights-index={algoliaIndexName}>
       <header
         css={[headerStyles, numberOfItems === 0 && headerNoResultsStyles]}
       >

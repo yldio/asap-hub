@@ -13,6 +13,17 @@ const props: Omit<ComponentProps<typeof ResultList>, 'children'> = {
   renderPageHref: () => '',
 };
 
+beforeEach(() => {
+  Object.defineProperty(window, 'dataLayer', {
+    configurable: true,
+    value: [],
+  });
+});
+afterEach(() => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  delete (window as any).dataLayer;
+});
+
 it.each([
   [1, /(^|\D)1 result($|\W)/i],
   [5, /(^|\D)5 results($|\W)/i],
@@ -109,4 +120,24 @@ it('renders custom component when no results found', () => {
     </ResultList>,
   );
   expect(screen.queryByText(/Custom No Events Component/i)).toBeInTheDocument();
+});
+
+it('triggers algolia hits viewed on render', () => {
+  render(
+    <ResultList {...props} algoliaIndexName={undefined}>
+      Hits rendered
+    </ResultList>,
+  );
+  expect(window.dataLayer).toEqual([]);
+
+  render(
+    <ResultList {...props} algoliaIndexName="Example">
+      Hits rendered
+    </ResultList>,
+  );
+  expect(window.dataLayer).toEqual([
+    {
+      event: 'Hits Viewed',
+    },
+  ]);
 });

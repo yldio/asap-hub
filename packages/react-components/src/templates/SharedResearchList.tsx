@@ -1,4 +1,5 @@
 import { ComponentProps } from 'react';
+import AlgoliaHit from '../atoms/AlgoliaHit';
 
 import {
   ResultList,
@@ -18,18 +19,29 @@ type SharedResearchListProps = Omit<
   >;
   readonly listViewHref: string;
   readonly cardViewHref: string;
-};
+} & Pick<ComponentProps<typeof AlgoliaHit>, 'algoliaQueryId'>;
 
 const SharedResearchList: React.FC<SharedResearchListProps> = ({
   researchOutputs,
+  algoliaQueryId,
   ...cardListProps
 }) => (
   <ResultList {...cardListProps}>
     {cardListProps.isListView ? (
-      <SharedResearchListCard researchOutputs={researchOutputs} />
+      <SharedResearchListCard
+        algoliaQueryId={algoliaQueryId}
+        researchOutputs={researchOutputs}
+      />
     ) : (
-      researchOutputs.map((output) => (
-        <SharedResearchCard key={output.id} {...output} />
+      researchOutputs.map((output, index) => (
+        <AlgoliaHit
+          key={output.id}
+          index={index}
+          algoliaQueryId={algoliaQueryId}
+          objectId={output.id}
+        >
+          <SharedResearchCard {...output} />
+        </AlgoliaHit>
       ))
     )}
   </ResultList>

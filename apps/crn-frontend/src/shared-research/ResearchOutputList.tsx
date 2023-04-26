@@ -49,6 +49,8 @@ const ResearchOutputList: React.FC<ResearchOutputListProps> = ({
 
   return (
     <SharedResearchList
+      algoliaIndexName={result.algoliaIndexName}
+      algoliaQueryId={result.algoliaQueryId}
       researchOutputs={result.items}
       numberOfItems={result.total}
       numberOfPages={numberOfPages}

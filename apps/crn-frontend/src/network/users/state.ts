@@ -18,7 +18,14 @@ import { useAlgolia } from '../../hooks/algolia';
 import { getUser, getUsers, patchUser, postUserAvatar } from './api';
 
 const userIndexState = atomFamily<
-  { ids: ReadonlyArray<string>; total: number } | Error | undefined,
+  | {
+      ids: ReadonlyArray<string>;
+      total: number;
+      algoliaQueryId?: string;
+      algoliaIndexName?: string;
+    }
+  | Error
+  | undefined,
   GetListOptions
 >({
   key: 'userIndex',
@@ -40,7 +47,12 @@ export const usersState = selectorFamily<
         if (user === undefined) return undefined;
         users.push(user);
       }
-      return { total: index.total, items: users };
+      return {
+        total: index.total,
+        items: users,
+        algoliaIndexName: index.algoliaIndexName,
+        algoliaQueryId: index.algoliaQueryId,
+      };
     },
   set:
     (options) =>
@@ -58,6 +70,8 @@ export const usersState = selectorFamily<
         set(userIndexState(options), {
           total: newUsers.total,
           ids: newUsers.items.map((user) => user.id),
+          algoliaIndexName: newUsers.algoliaIndexName,
+          algoliaQueryId: newUsers.algoliaQueryId,
         });
       }
     },

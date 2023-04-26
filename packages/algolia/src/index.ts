@@ -19,12 +19,16 @@ export const algoliaSearchClientNativeFactory = ({
 type AlgoliaSearchClientFactoryParams =
   AlgoliaSearchClientNativeFactoryParams & {
     algoliaIndex: string;
+    userToken?: ConstructorParameters<typeof AlgoliaSearchClient>['2'];
+    clickAnalytics?: ConstructorParameters<typeof AlgoliaSearchClient>['3'];
   };
 
 export const algoliaSearchClientFactory = ({
   algoliaIndex,
   algoliaApiKey,
   algoliaAppId,
+  userToken,
+  clickAnalytics,
 }: AlgoliaSearchClientFactoryParams): AlgoliaSearchClient => {
   const algoliaSearchClient = algoliasearch(algoliaAppId, algoliaApiKey);
 
@@ -33,5 +37,10 @@ export const algoliaSearchClientFactory = ({
     `${algoliaIndex}-reverse-timestamp`,
   );
 
-  return new AlgoliaSearchClient(index, reverseIndex);
+  return new AlgoliaSearchClient(
+    index,
+    reverseIndex,
+    userToken,
+    clickAnalytics,
+  );
 };

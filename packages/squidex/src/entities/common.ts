@@ -3,6 +3,7 @@ export interface Entity {
   created: string;
   lastModified: string;
   version: number;
+  status?: string;
 }
 
 export interface Rest<T> {

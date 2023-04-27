@@ -193,17 +193,20 @@ const serverlessConfig: AWS = {
         bucketName: '${self:service}-${self:provider.stage}-gp2-frontend',
         deleteRemoved: false,
         localDir: '../gp2-frontend/build',
+        acl: 'public-read',
       },
       {
         bucketName: '${self:service}-${self:provider.stage}-gp2-auth-frontend',
         bucketPrefix: '.auth',
         localDir: '../gp2-auth-frontend/build',
+        acl: 'public-read',
       },
       {
         bucketName: '${self:service}-${self:provider.stage}-messages-static',
         deleteRemoved: false,
         bucketPrefix: '.messages-static',
         localDir: '../gp2-messages/build-templates/static',
+        acl: 'public-read',
       },
     ],
   },
@@ -474,20 +477,8 @@ const serverlessConfig: AWS = {
       },
       FrontendBucket: {
         Type: 'AWS::S3::Bucket',
-        DeletionPolicy: 'Delete',
         Properties: {
           BucketName: '${self:service}-${self:provider.stage}-gp2-frontend',
-          OwnershipControls: {
-            Rules: [
-              {
-                ObjectOwnership: 'BucketOwnerPreferred',
-              },
-            ],
-          },
-          PublicAccessBlockConfiguration: {
-            BlockPublicPolicy: false,
-          },
-          AccessControl: 'PublicRead',
           CorsConfiguration: {
             CorsRules: [
               {
@@ -502,21 +493,9 @@ const serverlessConfig: AWS = {
       },
       AuthFrontendBucket: {
         Type: 'AWS::S3::Bucket',
-        DeletionPolicy: 'Delete',
         Properties: {
           BucketName:
             '${self:service}-${self:provider.stage}-gp2-auth-frontend',
-          OwnershipControls: {
-            Rules: [
-              {
-                ObjectOwnership: 'BucketOwnerPreferred',
-              },
-            ],
-          },
-          PublicAccessBlockConfiguration: {
-            BlockPublicPolicy: false,
-          },
-          AccessControl: 'PublicRead',
           CorsConfiguration: {
             CorsRules: [
               {
@@ -531,20 +510,8 @@ const serverlessConfig: AWS = {
       },
       MessagesStaticBucket: {
         Type: 'AWS::S3::Bucket',
-        DeletionPolicy: 'Delete',
         Properties: {
           BucketName: '${self:service}-${self:provider.stage}-messages-static',
-          OwnershipControls: {
-            Rules: [
-              {
-                ObjectOwnership: 'BucketOwnerPreferred',
-              },
-            ],
-          },
-          PublicAccessBlockConfiguration: {
-            BlockPublicPolicy: false,
-          },
-          AccessControl: 'PublicRead',
           CorsConfiguration: {
             CorsRules: [
               {

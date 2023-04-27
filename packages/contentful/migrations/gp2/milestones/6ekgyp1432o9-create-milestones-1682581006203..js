@@ -22,7 +22,7 @@ module.exports.up = function (migration) {
     .name('Description')
     .type('Text')
     .localized(false)
-    .required(true)
+    .required(false)
     .validations([])
     .disabled(false)
     .omitted(false);
@@ -60,8 +60,9 @@ module.exports.up = function (migration) {
     .omitted(false);
 
   milestones.changeFieldControl('title', 'builtin', 'singleLine', {});
-  milestones.changeFieldControl('role', 'builtin', 'dropdown', {});
-  milestones.changeFieldControl('description', 'builtin', 'multiLine', {});
+  milestones.changeFieldControl('status', 'builtin', 'dropdown', {});
+  milestones.changeFieldControl('description', 'builtin', 'multipleLine', {});
+
   milestones.changeFieldControl('externalLink', 'builtin', 'urlEditor', {
     helpText: 'URL must start with http:// or https://',
   });

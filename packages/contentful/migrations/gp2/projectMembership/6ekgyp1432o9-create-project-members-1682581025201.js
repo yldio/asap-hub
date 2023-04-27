@@ -15,7 +15,7 @@ module.exports.up = function (migration) {
     .required(true)
     .validations([
       {
-        linkContentType: ['user'],
+        linkContentType: ['users'],
       },
     ])
     .disabled(false)
@@ -42,15 +42,10 @@ module.exports.up = function (migration) {
     .disabled(false)
     .omitted(false);
 
-  projectMembership.changeFieldControl(
-    'contributingCohort',
-    'builtin',
-    'entryLinkEditor',
-    {
-      showLinkEntityAction: true,
-      showCreateEntityAction: false,
-    },
-  );
+  projectMembership.changeFieldControl('user', 'builtin', 'entryLinkEditor', {
+    showLinkEntityAction: true,
+    showCreateEntityAction: false,
+  });
 
   projectMembership.changeFieldControl('role', 'builtin', 'dropdown', {});
 };

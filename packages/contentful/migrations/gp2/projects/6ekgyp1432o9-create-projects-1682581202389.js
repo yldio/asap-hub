@@ -10,7 +10,7 @@ module.exports.up = (migration) => {
   projects
     .createField('title')
     .name('Title')
-    .type('Text')
+    .type('Symbol')
     .localized(false)
     .required(true)
     .validations([])
@@ -28,7 +28,6 @@ module.exports.up = (migration) => {
     .omitted(false)
     .items({
       type: 'Link',
-
       validations: [
         {
           linkContentType: ['projectMembership'],
@@ -60,7 +59,7 @@ module.exports.up = (migration) => {
 
   projects
     .createField('calendars')
-    .name('Calendars Tools')
+    .name('Calendars')
     .type('Link')
     .localized(false)
     .required(false)
@@ -70,7 +69,8 @@ module.exports.up = (migration) => {
       },
     ])
     .disabled(false)
-    .omitted(false);
+    .omitted(false)
+    .linkType('Entry');
 
   projects
     .createField('status')
@@ -131,7 +131,7 @@ module.exports.up = (migration) => {
     .name('PM Email')
     .type('Symbol')
     .localized(false)
-    .required(true)
+    .required(false)
     .validations([
       {
         unique: true,
@@ -151,7 +151,7 @@ module.exports.up = (migration) => {
     .name('Lead Email')
     .type('Symbol')
     .localized(false)
-    .required(true)
+    .required(false)
     .validations([
       {
         unique: true,
@@ -260,13 +260,23 @@ module.exports.up = (migration) => {
     .omitted(false);
 
   projects.changeFieldControl('title', 'builtin', 'singleLine', {});
-  projects.changeFieldControl('startDate', 'builtin', 'datePicker', {});
-  projects.changeFieldControl('endDate', 'builtin', 'datePicker', {});
-  projects.changeFieldControl('calendars', 'builtin', 'entryLinksEditor', {});
+  projects.changeFieldControl('startDate', 'builtin', 'datePicker', {
+    ampm: '24',
+    format: 'dateonly',
+  });
+  projects.changeFieldControl('endDate', 'builtin', 'datePicker', {
+    ampm: '24',
+    format: 'dateonly',
+  });
+  projects.changeFieldControl('calendars', 'builtin', 'entryLinkEditor', {
+    showLinkEntityAction: true,
+    showCreateEntityAction: false,
+  });
   projects.changeFieldControl('projectProposal', 'builtin', 'urlEditor', {
     helpText: 'URL must start with http:// or https://',
   });
-  projects.changeFieldControl('description', 'builtin', 'multiLine', {});
+  projects.changeFieldControl('description', 'builtin', 'multipleLine', {});
+
   projects.changeFieldControl('pmEmail', 'builtin', 'singleLine', {});
   projects.changeFieldControl('leadEmail', 'builtin', 'singleLine', {});
   projects.changeFieldControl('keywords', 'builtin', 'tagEditor', {});

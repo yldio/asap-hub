@@ -35,7 +35,7 @@ module.exports.up = function (migration) {
     .name('Description')
     .type('Text')
     .localized(false)
-    .required(true)
+    .required(false)
     .validations([])
     .disabled(false)
     .omitted(false);
@@ -60,7 +60,8 @@ module.exports.up = function (migration) {
 
   resources.changeFieldControl('title', 'builtin', 'singleLine', {});
   resources.changeFieldControl('type', 'builtin', 'dropdown', {});
-  resources.changeFieldControl('description', 'builtin', 'multiLine', {});
+  resources.changeFieldControl('description', 'builtin', 'multipleLine', {});
+
   resources.changeFieldControl('externalLink', 'builtin', 'urlEditor', {
     helpText: 'URL must start with http:// or https://',
   });

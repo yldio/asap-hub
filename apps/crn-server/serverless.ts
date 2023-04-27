@@ -878,7 +878,6 @@ const serverlessConfig: AWS = {
             IgnorePublicAcls: false,
             RestrictPublicBuckets: false,
           },
-          AccessControl: 'PublicRead',
           CorsConfiguration: {
             CorsRules: [
               {
@@ -909,7 +908,6 @@ const serverlessConfig: AWS = {
             IgnorePublicAcls: false,
             RestrictPublicBuckets: false,
           },
-          AccessControl: 'PublicRead',
           CorsConfiguration: {
             CorsRules: [
               {
@@ -940,7 +938,6 @@ const serverlessConfig: AWS = {
             IgnorePublicAcls: false,
             RestrictPublicBuckets: false,
           },
-          AccessControl: 'PublicRead',
           CorsConfiguration: {
             CorsRules: [
               {
@@ -974,7 +971,6 @@ const serverlessConfig: AWS = {
             IgnorePublicAcls: false,
             RestrictPublicBuckets: false,
           },
-          AccessControl: 'PublicRead',
           CorsConfiguration: {
             CorsRules: [
               {

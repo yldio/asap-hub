@@ -524,69 +524,6 @@ const serverlessConfig: AWS = {
           },
         },
       },
-      BucketPolicyFrontend: {
-        Type: 'AWS::S3::BucketPolicy',
-        Properties: {
-          Bucket: '${self:service}-${self:provider.stage}-gp2-frontend',
-          PolicyDocument: {
-            Statement: [
-              {
-                Action: ['s3:GetObject'],
-                Effect: 'Allow',
-                Principal: '*',
-                Resource: {
-                  'Fn::Join': [
-                    '',
-                    [{ 'Fn::GetAtt': ['FrontendBucket', 'Arn'] }, '/*'],
-                  ],
-                },
-              },
-            ],
-          },
-        },
-      },
-      BucketPolicyAuthFrontend: {
-        Type: 'AWS::S3::BucketPolicy',
-        Properties: {
-          Bucket: '${self:service}-${self:provider.stage}-gp2-auth-frontend',
-          PolicyDocument: {
-            Statement: [
-              {
-                Action: ['s3:GetObject'],
-                Effect: 'Allow',
-                Principal: '*',
-                Resource: {
-                  'Fn::Join': [
-                    '',
-                    [{ 'Fn::GetAtt': ['AuthFrontendBucket', 'Arn'] }, '/*'],
-                  ],
-                },
-              },
-            ],
-          },
-        },
-      },
-      BucketPolicyMessagesStatic: {
-        Type: 'AWS::S3::BucketPolicy',
-        Properties: {
-          Bucket: '${self:service}-${self:provider.stage}-messages-static',
-          PolicyDocument: {
-            Statement: [
-              {
-                Action: ['s3:GetObject'],
-                Effect: 'Allow',
-                Principal: '*',
-                Resource: {
-                  'Fn::Join': [
-                    '',
-                    [{ 'Fn::GetAtt': ['MessagesStaticBucket', 'Arn'] }, '/*'],
-                  ],
-                },
-              },
-            ],
-          },
-        },
-      },
       DataBackupBucket: {
         Type: 'AWS::S3::Bucket',
         Condition: 'IsDevOrProd',

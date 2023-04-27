@@ -117,7 +117,8 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
-          "pattern": "",
+          "pattern": "^(?:http(s)?:\\/\\/)[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#%[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
+          "patternMessage": "URL must start with http:// or https://",
           "isUnique": false,
           "isEmbeddable": false,
           "inlineEditable": true,

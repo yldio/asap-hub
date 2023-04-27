@@ -23,6 +23,15 @@ describe('userToCSV', () => {
       role: 'Trainee',
       onboarded: true,
       fundingStreams: 'funding stream',
+      biography: 'this is a biography',
+      social: {
+        googleScholar: 'googleScholar',
+        orcid: 'orcid',
+        blog: 'blog',
+        twitter: 'twitter',
+        linkedIn: 'linkedIn',
+        github: 'github',
+      },
     };
     expect(userToCSV(userResponse)).toEqual({
       email: 'T@ark.io',
@@ -31,7 +40,16 @@ describe('userToCSV', () => {
       region: 'Europe',
       role: 'Trainee',
       fundingStreams: 'funding stream',
+      biography: 'this is a biography',
+      googleScholar: 'googleScholar',
+      orcid: 'orcid',
+      blog: 'blog',
+      twitter: 'twitter',
+      linkedIn: 'linkedIn',
+      github: 'github',
       createdDate: expect.anything(),
+      keywords: expect.anything(),
+      questions: expect.anything(),
       location: expect.anything(),
       contributingCohorts: expect.anything(),
       degrees: expect.anything(),
@@ -209,6 +227,20 @@ describe('userToCSV', () => {
     };
     const { activatedDate } = userToCSV(userResponse);
     expect(activatedDate).toEqual('28th December 2021');
+  });
+  it('allows and undefined social', () => {
+    const userResponse: gp2Model.UserResponse = {
+      ...gp2Fixtures.createUserResponse(),
+      social: undefined,
+    };
+    const { googleScholar, orcid, blog, twitter, linkedIn, github } =
+      userToCSV(userResponse);
+    expect(googleScholar).toBeUndefined();
+    expect(orcid).toBeUndefined();
+    expect(blog).toBeUndefined();
+    expect(twitter).toBeUndefined();
+    expect(linkedIn).toBeUndefined();
+    expect(github).toBeUndefined();
   });
 
   it('formats the undefined activatedDate', () => {

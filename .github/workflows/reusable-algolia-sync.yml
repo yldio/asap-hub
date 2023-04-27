@@ -83,7 +83,7 @@ jobs:
           ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-algolia-index }}
           ALGOLIA_INDEX_TEMP: '${{ steps.setup.outputs.crn-algolia-index }}_temp'
           # Do not copy the records if all entities are being synced
-          SCOPE: ${{ inputs.entity == 'all' && '-s settings' || '' }}
+          SCOPE: ${{ inputs.entity == 'all' && '-s settings,synonyms' || '-s synonyms' }}
       - name: Remove the entity data (ENTITY)
         if: ${{ inputs.entity != 'all'}}
         run: yarn algolia:remove-records -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_TEMP -e $ENTITY_TYPE
@@ -163,7 +163,7 @@ jobs:
           ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-algolia-index }}
           ALGOLIA_INDEX_TEMP: '${{ steps.setup.outputs.crn-algolia-index }}_temp'
           # Do not copy the records if all entities are being synced
-          SCOPE: ${{ inputs.entity == 'all' && '-s settings' || '' }}
+          SCOPE: ${{ inputs.entity == 'all' && '-s settings,synonyms' || '-s synonyms' }}
       - name: Remove the entity data (ENTITY)
         if: ${{ inputs.entity != 'all'}}
         run: yarn algolia:remove-records -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_TEMP -e $ENTITY_TYPE

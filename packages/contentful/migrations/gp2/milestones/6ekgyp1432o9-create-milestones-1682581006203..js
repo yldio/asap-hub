@@ -10,7 +10,7 @@ module.exports.up = function (migration) {
   milestones
     .createField('title')
     .name('Title')
-    .type('Text')
+    .type('Symbol')
     .localized(false)
     .required(true)
     .validations([])
@@ -20,7 +20,7 @@ module.exports.up = function (migration) {
   milestones
     .createField('description')
     .name('Description')
-    .type('Text')
+    .type('Symbol')
     .localized(false)
     .required(false)
     .validations([])
@@ -61,7 +61,7 @@ module.exports.up = function (migration) {
 
   milestones.changeFieldControl('title', 'builtin', 'singleLine', {});
   milestones.changeFieldControl('status', 'builtin', 'dropdown', {});
-  milestones.changeFieldControl('description', 'builtin', 'multipleLine', {});
+  milestones.changeFieldControl('description', 'builtin', 'singleLine', {});
 
   milestones.changeFieldControl('externalLink', 'builtin', 'urlEditor', {
     helpText: 'URL must start with http:// or https://',

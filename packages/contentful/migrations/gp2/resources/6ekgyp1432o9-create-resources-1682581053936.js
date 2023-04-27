@@ -5,7 +5,7 @@ module.exports.up = function (migration) {
     .createContentType('resources')
     .name('Resources')
     .description('')
-    .displayField('type');
+    .displayField('title');
 
   resources
     .createField('type')
@@ -23,7 +23,7 @@ module.exports.up = function (migration) {
   resources
     .createField('title')
     .name('Title')
-    .type('Text')
+    .type('Symbol')
     .localized(false)
     .required(true)
     .validations([])
@@ -33,7 +33,7 @@ module.exports.up = function (migration) {
   resources
     .createField('description')
     .name('Description')
-    .type('Text')
+    .type('Symbol')
     .localized(false)
     .required(false)
     .validations([])
@@ -60,7 +60,7 @@ module.exports.up = function (migration) {
 
   resources.changeFieldControl('title', 'builtin', 'singleLine', {});
   resources.changeFieldControl('type', 'builtin', 'dropdown', {});
-  resources.changeFieldControl('description', 'builtin', 'multipleLine', {});
+  resources.changeFieldControl('description', 'builtin', 'singleLine', {});
 
   resources.changeFieldControl('externalLink', 'builtin', 'urlEditor', {
     helpText: 'URL must start with http:// or https://',

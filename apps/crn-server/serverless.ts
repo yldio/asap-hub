@@ -240,22 +240,26 @@ const serverlessConfig: AWS = {
         bucketName: '${self:service}-${self:provider.stage}-frontend',
         deleteRemoved: false,
         localDir: '../crn-frontend/build',
+        acl: 'public-read',
       },
       {
         bucketName: '${self:service}-${self:provider.stage}-auth-frontend',
         bucketPrefix: '.auth',
         localDir: '../crn-auth-frontend/build',
+        acl: 'public-read',
       },
       {
         bucketName: '${self:service}-${self:provider.stage}-storybook',
         bucketPrefix: '.storybook',
         localDir: '../storybook/build',
+        acl: 'public-read',
       },
       {
         bucketName: '${self:service}-${self:provider.stage}-messages-static',
         deleteRemoved: false,
         bucketPrefix: '.messages-static',
         localDir: '../crn-messages/build-templates/static',
+        acl: 'public-read',
       },
     ],
     webpack: {
@@ -862,22 +866,8 @@ const serverlessConfig: AWS = {
       },
       FrontendBucket: {
         Type: 'AWS::S3::Bucket',
-        DeletionPolicy: 'Delete',
         Properties: {
           BucketName: '${self:service}-${self:provider.stage}-frontend',
-          OwnershipControls: {
-            Rules: [
-              {
-                ObjectOwnership: 'BucketOwnerPreferred',
-              },
-            ],
-          },
-          PublicAccessBlockConfiguration: {
-            BlockPublicPolicy: false,
-            BlockPublicAcls: false,
-            IgnorePublicAcls: false,
-            RestrictPublicBuckets: false,
-          },
           CorsConfiguration: {
             CorsRules: [
               {
@@ -892,22 +882,8 @@ const serverlessConfig: AWS = {
       },
       AuthFrontendBucket: {
         Type: 'AWS::S3::Bucket',
-        DeletionPolicy: 'Delete',
         Properties: {
           BucketName: '${self:service}-${self:provider.stage}-auth-frontend',
-          OwnershipControls: {
-            Rules: [
-              {
-                ObjectOwnership: 'BucketOwnerPreferred',
-              },
-            ],
-          },
-          PublicAccessBlockConfiguration: {
-            BlockPublicPolicy: false,
-            BlockPublicAcls: false,
-            IgnorePublicAcls: false,
-            RestrictPublicBuckets: false,
-          },
           CorsConfiguration: {
             CorsRules: [
               {
@@ -922,22 +898,8 @@ const serverlessConfig: AWS = {
       },
       StorybookBucket: {
         Type: 'AWS::S3::Bucket',
-        DeletionPolicy: 'Delete',
         Properties: {
           BucketName: '${self:service}-${self:provider.stage}-storybook',
-          OwnershipControls: {
-            Rules: [
-              {
-                ObjectOwnership: 'BucketOwnerPreferred',
-              },
-            ],
-          },
-          PublicAccessBlockConfiguration: {
-            BlockPublicPolicy: false,
-            BlockPublicAcls: false,
-            IgnorePublicAcls: false,
-            RestrictPublicBuckets: false,
-          },
           CorsConfiguration: {
             CorsRules: [
               {
@@ -955,22 +917,8 @@ const serverlessConfig: AWS = {
       },
       MessagesStaticBucket: {
         Type: 'AWS::S3::Bucket',
-        DeletionPolicy: 'Delete',
         Properties: {
           BucketName: '${self:service}-${self:provider.stage}-messages-static',
-          OwnershipControls: {
-            Rules: [
-              {
-                ObjectOwnership: 'BucketOwnerPreferred',
-              },
-            ],
-          },
-          PublicAccessBlockConfiguration: {
-            BlockPublicPolicy: false,
-            BlockPublicAcls: false,
-            IgnorePublicAcls: false,
-            RestrictPublicBuckets: false,
-          },
           CorsConfiguration: {
             CorsRules: [
               {

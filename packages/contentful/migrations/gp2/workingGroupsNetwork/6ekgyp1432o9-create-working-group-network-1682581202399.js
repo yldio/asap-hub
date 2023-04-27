@@ -20,9 +20,6 @@ module.exports.up = (migration) => {
       validations: [
         {
           linkContentType: ['workingGroups'],
-          size: {
-            min: 1,
-          },
         },
       ],
 
@@ -43,9 +40,6 @@ module.exports.up = (migration) => {
       validations: [
         {
           linkContentType: ['workingGroups'],
-          size: {
-            min: 1,
-          },
         },
       ],
 
@@ -66,9 +60,6 @@ module.exports.up = (migration) => {
       validations: [
         {
           linkContentType: ['workingGroups'],
-          size: {
-            min: 1,
-          },
         },
       ],
 
@@ -88,9 +79,6 @@ module.exports.up = (migration) => {
       validations: [
         {
           linkContentType: ['workingGroups'],
-          size: {
-            min: 1,
-          },
         },
       ],
 

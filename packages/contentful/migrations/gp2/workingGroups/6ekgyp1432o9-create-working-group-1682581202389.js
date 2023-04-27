@@ -317,37 +317,6 @@ module.exports.up = (migration) => {
     'singleLine',
     {},
   );
-
-  // #####
-  workingGroups.changeFieldControl('startDate', 'builtin', 'datePicker', {
-    ampm: '24',
-    format: 'dateonly',
-  });
-  workingGroups.changeFieldControl('endDate', 'builtin', 'datePicker', {
-    ampm: '24',
-    format: 'dateonly',
-  });
-  workingGroups.changeFieldControl('calendars', 'builtin', 'entryLinkEditor', {
-    showLinkEntityAction: true,
-    showCreateEntityAction: false,
-  });
-  workingGroups.changeFieldControl('projectProposal', 'builtin', 'urlEditor', {
-    helpText: 'URL must start with http:// or https://',
-  });
-  workingGroups.changeFieldControl('pmEmail', 'builtin', 'singleLine', {});
-  workingGroups.changeFieldControl('leadEmail', 'builtin', 'singleLine', {});
-  workingGroups.changeFieldControl('keywords', 'builtin', 'tagEditor', {});
-  workingGroups.changeFieldControl('traineeProject', 'builtin', 'boolean', {
-    helpText: 'check if project is a trainee project',
-  });
-  workingGroups.changeFieldControl(
-    'opportunitiesLink',
-    'builtin',
-    'urlEditor',
-    {
-      helpText: 'URL must start with http:// or https://',
-    },
-  );
 };
 
 module.exports.down = (migration) => {

@@ -44,6 +44,7 @@ import {
   parseContentfulGraphqlCalendarPartialToDataObject,
 } from '../../entities';
 import { parseCalendarDataObjectToResponse } from '../../controllers/calendars';
+import { waitForUpdated } from '../../utils/wait-for-updated';
 
 export type EventItem = NonNullable<
   NonNullable<FetchEventsQuery['eventsCollection']>['items'][number]
@@ -55,11 +56,15 @@ export class EventContentfulDataProvider implements EventDataProvider {
     private getRestClient: () => Promise<Environment>,
   ) {}
 
-  async fetchById(id: string): Promise<EventDataObject | null> {
-    const { events } = await this.contentfulClient.request<
+  private fetchEventById(id: string) {
+    return this.contentfulClient.request<
       FetchEventByIdQuery,
       FetchEventByIdQueryVariables
     >(FETCH_EVENT_BY_ID, { id });
+  }
+
+  async fetchById(id: string): Promise<EventDataObject | null> {
+    const { events } = await this.fetchEventById(id);
 
     if (!events) {
       return null;
@@ -190,7 +195,15 @@ export class EventContentfulDataProvider implements EventDataProvider {
   async update(id: string, update: EventUpdateDataObject): Promise<void> {
     const environment = await this.getRestClient();
     const event = await environment.getEntry(id);
-    await patchAndPublish(event, update);
+    const result = await patchAndPublish(event, update);
+
+    const fetchEventById = () => this.fetchEventById(id);
+
+    await waitForUpdated<FetchEventByIdQuery>(
+      result.sys.publishedVersion || Infinity,
+      fetchEventById,
+      'events',
+    );
   }
 }
 

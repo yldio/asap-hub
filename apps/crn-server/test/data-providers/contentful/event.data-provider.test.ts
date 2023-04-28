@@ -1,4 +1,5 @@
 import {
+  Entry,
   Environment,
   getContentfulGraphqlClientMockServer,
   patchAndPublish,
@@ -589,6 +590,22 @@ describe('Events Contentful Data Provider', () => {
     });
 
     test('fetches entry from contentful and passes to `patchAndPublish`', async () => {
+      const mockPatchAndPublish = patchAndPublish as jest.MockedFunction<
+        typeof patchAndPublish
+      >;
+      mockPatchAndPublish.mockResolvedValue({
+        sys: {
+          publishedVersion: 2,
+        },
+      } as Entry);
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        events: {
+          sys: {
+            publishedVersion: 2,
+          },
+        },
+      });
+
       await eventDataProvider.update('123', {
         hidden: false,
       });

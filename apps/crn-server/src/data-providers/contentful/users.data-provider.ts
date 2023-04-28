@@ -32,8 +32,8 @@ import {
   Environment,
   Maybe,
 } from '@asap-hub/contentful';
-import retry from 'async-retry';
 import { isTeamRole } from '../../entities';
+import { waitForUpdated } from '../../utils/wait-for-updated';
 import { UserDataProvider } from '../types';
 
 export type UserItem = NonNullable<
@@ -49,11 +49,15 @@ export class UserContentfulDataProvider implements UserDataProvider {
     private getRestClient: () => Promise<Environment>,
   ) {}
 
-  async fetchById(id: string): Promise<UserDataObject | null> {
-    const { users } = await this.contentfulClient.request<
+  private fetchUserById(id: string) {
+    return this.contentfulClient.request<
       FetchUserByIdQuery,
       FetchUserByIdQueryVariables
     >(FETCH_USER_BY_ID, { id });
+  }
+
+  async fetchById(id: string): Promise<UserDataObject | null> {
+    const { users } = await this.fetchUserById(id);
 
     if (!users) {
       return null;
@@ -130,25 +134,13 @@ export class UserContentfulDataProvider implements UserDataProvider {
     const environment = await this.getRestClient();
     const user = await environment.getEntry(id);
     const result = await patchAndPublish(user, fields);
-    await this.waitForUpdated(id, result.sys.publishedVersion || Infinity);
-  }
 
-  private async waitForUpdated(id: string, version: number) {
-    return retry(
-      // eslint-disable-next-line consistent-return
-      async (bail) => {
-        const { users } = await this.contentfulClient.request<
-          FetchUserByIdQuery,
-          FetchUserByIdQueryVariables
-        >(FETCH_USER_BY_ID, { id });
-        if (!users) {
-          return bail(new Error('Not found'));
-        }
-        if ((users.sys.publishedVersion || 0) < version) {
-          throw new Error('Not synced');
-        }
-      },
-      { minTimeout: 100 },
+    const fetchEventById = () => this.fetchUserById(id);
+
+    await waitForUpdated<FetchUserByIdQuery>(
+      result.sys.publishedVersion || Infinity,
+      fetchEventById,
+      'users',
     );
   }
 }

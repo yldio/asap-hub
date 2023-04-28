@@ -40,20 +40,6 @@ module.exports.up = (migration) => {
 
   outputs
     .createField('type')
-    .name('SubType')
-    .type('Symbol')
-    .localized(false)
-    .required(false)
-    .validations([
-      {
-        in: ['Preprints', 'Published'],
-      },
-    ])
-    .disabled(false)
-    .omitted(false);
-
-  outputs
-    .createField('type')
     .name('Type')
     .type('Symbol')
     .localized(false)
@@ -61,6 +47,20 @@ module.exports.up = (migration) => {
     .validations([
       {
         in: ['Research', 'Review', 'Letter', 'Hot_Topic', 'Blog'],
+      },
+    ])
+    .disabled(false)
+    .omitted(false);
+
+  outputs
+    .createField('subtype')
+    .name('SubType')
+    .type('Symbol')
+    .localized(false)
+    .required(false)
+    .validations([
+      {
+        in: ['Preprints', 'Published'],
       },
     ])
     .disabled(false)
@@ -193,7 +193,7 @@ module.exports.up = (migration) => {
     .omitted(false);
 
   outputs.changeFieldControl('title', 'builtin', 'singleLine', {});
-  outputs.changeFieldControl('addedData', 'builtin', 'datePicker', {
+  outputs.changeFieldControl('addedDate', 'builtin', 'datePicker', {
     ampm: '12',
     format: 'timeZ',
     helpText:
@@ -205,7 +205,7 @@ module.exports.up = (migration) => {
     helpText: 'Does not include changes to Publish Date and Admin notes',
   });
 
-  outputs.changeFieldControl('externalLink', 'builtin', 'urlEditor', {
+  outputs.changeFieldControl('link', 'builtin', 'urlEditor', {
     helpText: 'URL must start with http:// or https://',
   });
   outputs.changeFieldControl('publishDate', 'builtin', 'datePicker', {});
